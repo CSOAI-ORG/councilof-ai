@@ -1,0 +1,51 @@
+{
+  "as_of": "2026-09-06",
+  "not_a_certificate": true,
+  "payload": {
+    "artifact_sha256": {
+      "board": "641c4e5282e5ade8ace0e6b52f6d8b71f50db7620f1354eea672829ba9b1cb50",
+      "machine": "21078951da5ba01f71eb3e0275b442674d0d15acd25c18f708189dc1fe6607b5",
+      "robots": "624fb1c3a4111a381e6b36e96ce207414acfe5f332fb49cc09874467318b6dec"
+    },
+    "by_group": {
+      "data": "FFPPP",
+      "governance": "FFFFF",
+      "method_transparency": "FFFFP",
+      "operations": "FFFPU",
+      "provenance": "FFFFF",
+      "reproducibility": "PPPPP",
+      "statistics": "FFFFF"
+    },
+    "flags": {
+      "keyless": true,
+      "no_model_judgment": true,
+      "read_only": true,
+      "self_assessed": false,
+      "writes_board": false
+    },
+    "full_row": "https://councilof.ai/interop/benchmark-quality/2026-09-06/uk-aisi-inspect.json",
+    "kind": "csoai.benchmark-quality-register/1.0",
+    "legal_entity": "UK AI Security Institute",
+    "method": "35 deterministic predicates over 3 cached artifacts. Scorer: re.search plus an RFC 9309 path evaluation. No language model judged anything.",
+    "n": {
+      "fail": 24,
+      "pass": 10,
+      "predicates": 35,
+      "resolved": 34,
+      "unmeasured": 1
+    },
+    "not_a_ranking": "Counts, not a score. This card cannot be compared with another to order publishers.",
+    "publisher": "UK AISI (Inspect)",
+    "recompute": "python3 scripts/benchmark_quality/register.py --check",
+    "results_surface_client_rendered": false
+  },
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "source_urls": [
+    "https://inspect.aisi.org.uk/",
+    "https://api.github.com/search/repositories?q=inspect+user:UKGovernmentBEIS&sort=stars",
+    "https://inspect.aisi.org.uk/robots.txt"
+  ],
+  "status": "STAGED",
+  "subject": "UK AISI (Inspect) \u2014 disclosure on three public artifacts, 2026-09-06",
+  "surface": "benchmark-quality.v1"
+}

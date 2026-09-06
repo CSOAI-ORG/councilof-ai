@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="/static/img/favicon.ico">
+	<title>Stanford CRFM</title>
+	<link rel="stylesheet" href="/static/css/plugins.css">
+	<link rel="stylesheet" href="/static/css/sandbox-aqua.css">
+	<link rel="stylesheet" href="/static/css/dm.css">
+	<link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body>
+	<div class="content-wrapper">
+		<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    .hidden { display: none; }
+    .research-dropdown::after,
+    .research-dropdown > a::after {
+        content: none !important;
+    }
+
+    .research-dropdown > a {
+        background-image: none !important;
+    }
+
+    .dropdown-item {
+        transition: background-color 0.3s ease;
+    }
+    .dropdown-item a {
+        color: black;
+        text-decoration: none;
+    }
+    .dropdown-item:hover a {
+        color: #53A8C7; 
+    }
+    </style>
+</head>
+
+<div style='background-color: #8c1515; padding-top:0.5em; padding-bottom:0.5em; margin-bottom:0.2em'>
+    <div class="container flex-lg-row flex-nowrap align-items-center" >
+        <a href="https://www.stanford.edu/" target="_blank">
+            <img src="/static/img/header/stanford-white.png" style="width: 160px; margin-top:7px">
+        </a>
+    </div>
+</div>
+
+<header class="wrapper bg-light pt-1">
+    <nav class="navbar classic transparent navbar-expand-lg navbar-light">
+        <div class="container flex-lg-row flex-nowrap align-items-center">
+            <div class="navbar-brand w-100 d-flex flex-row align-items-center">
+                <a href="/">
+                    <img class="nav_logo1" src="/static/img/header/crfm-rgb.png" style="width:9em; margin-top:3px">
+                </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="https://hai.stanford.edu/" target="_blank">
+                    <img class="nav_logo2" src="/static/img/header/hai.png" style="width:14em; margin-top:3px">
+                </a>
+                <div class="ms-auto">
+                    <button class="navbar-toggler hamburger" data-toggle="offcanvas-nav"><span></span></button>
+                </div>
+            </div>
+            <div class="navbar-collapse offcanvas-nav">
+                <ul class="navbar-nav" style="list-style-type: none;">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/people.html">People</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/report.html">Report</a>
+                    </li>
+                    <li id="dropdownContainer" class="nav-item inline-block dropdown research-dropdown" style="position: relative; list-style-type: none;">
+                        <a id="dropdownButton" class="nav-link text-black">Research</a>
+                        <div>
+                            <ul id="dropdownMenu" class="hidden absolute border border-solid border-black mb-3 z-10 dropdown-content menu shadow-lg bg-base-100 rounded-box " role="menu" style="list-style-type: none; position: absolute; top: 100%; left: 0; min-width: max-content; width: auto; padding: 0.5rem 0; text-align: left; background-color: #FEFEFE;">
+                                <li class="z-40 dropdown-item" style="text-align: left;"><a href="https://crfm.stanford.edu/helm" class="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap" role="menuitem" style="text-align: left;">HELM</a></li>
+                                <li class="z-40 dropdown-item" style="text-align: left;"><a href="https://crfm.stanford.edu/2023/06/16/levanter-1_0-release.html" class="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap" role="menuitem" style="text-align: left;">Levanter</a></li>
+                                <li class="z-40 dropdown-item" style="text-align: left;"><a href="https://crfm.stanford.edu/fmti" class="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap" role="menuitem" style="text-align: left;">FMTI</a></li>
+                                <li class="z-40 dropdown-item" style="text-align: left;"><a href="https://crfm.stanford.edu/open-fms/" class="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap" role="menuitem" style="text-align: left;">Openness</a></li>
+                                <li class="z-40 dropdown-item" style="text-align: left;"><a href="https://crfm.stanford.edu/ecosystem-graphs/" class="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap" role="menuitem" style="text-align: left;">Ecosystem Graphs</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/policy.html">Policy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog.html">Blog</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dropdownContainer = document.getElementById('dropdownContainer');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+    
+        dropdownContainer.addEventListener('mouseenter', () => {
+            dropdownMenu.classList.remove('hidden');
+        });
+    
+        dropdownContainer.addEventListener('mouseleave', () => {
+            dropdownMenu.classList.add('hidden');
+        });
+    });
+    </script>
+</header>
+
+		<section class="wrapper bg-light" style="margin-top:1em">
+			<div class="container py-lg-8 gx-lg-8 gx-xl-12 py-md-4">
+				<style type="text/css" media="screen">
+  section {
+    margin: 10px auto;
+    max-width: 600px;
+    text-align: center;
+  }
+  h1 {
+    margin: 30px 0;
+    font-size: 4em;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+</style>
+
+<div class="container">
+  <h1>404</h1>
+
+  <p><strong>Page not found :(</strong></p>
+  <p>The requested page could not be found.</p>
+</div>
+
+			</div>
+		</section>
+		<footer class="bg-light mt-8">
+    <div class="container pb-7">
+        <hr class="mt-auto mb-7" />
+        <div class="d-md-flex align-items-center justify-content-between">
+            <p class="mb-2 mb-lg-0" style="">
+                CRFM is grateful to our <a href="/support.html">supporters</a>.
+            </p>
+        </div>
+        <div class="d-md-flex align-items-center justify-content-between">
+            <p class="mb-2 mb-lg-0">
+                © 2021–2025. Stanford Center for Research on Foundation Models.
+                <br>
+                <span style="font-size:0.92em">Designed by <a href="http://www.joonsungpark.com/" target="_blank" style="color:#61697A">Joon Sung Park</a>.</span>
+            </p>
+        </div>
+    </div>
+</footer>
+<div class="progress-wrap">
+    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+    </svg>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
+<script src="/static/js/plugins.js"></script>
+<script src="/static/js/scripts.js"></script>
+
+	</div>
+</body>
+</html>

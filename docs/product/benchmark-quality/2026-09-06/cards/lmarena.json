@@ -1,0 +1,51 @@
+{
+  "as_of": "2026-09-06",
+  "not_a_certificate": true,
+  "payload": {
+    "artifact_sha256": {
+      "board": "07776ab8f02a51b98fb2eb2cca3b79bd459ac586352463889e4b1a751de8e588",
+      "machine": "f74a7db3ca1b054bb9f209a8159736cc855dfc298fcb765b4693f49b33e450f7",
+      "robots": "0f07764eea11b13aff3f6be1f24fbd40934a45062b83f94fc8cb2ca224262a22"
+    },
+    "by_group": {
+      "data": "FFFPP",
+      "governance": "FFFFF",
+      "method_transparency": "FFFPP",
+      "operations": "FFFPU",
+      "provenance": "FFFFF",
+      "reproducibility": "FFFFU",
+      "statistics": "FFFFP"
+    },
+    "flags": {
+      "keyless": true,
+      "no_model_judgment": true,
+      "read_only": true,
+      "self_assessed": false,
+      "writes_board": false
+    },
+    "full_row": "https://councilof.ai/interop/benchmark-quality/2026-09-06/lmarena.json",
+    "kind": "csoai.benchmark-quality-register/1.0",
+    "legal_entity": "LMArena / Arena Intelligence Inc.",
+    "method": "35 deterministic predicates over 3 cached artifacts. Scorer: re.search plus an RFC 9309 path evaluation. No language model judged anything.",
+    "n": {
+      "fail": 27,
+      "pass": 6,
+      "predicates": 35,
+      "resolved": 33,
+      "unmeasured": 2
+    },
+    "not_a_ranking": "Counts, not a score. This card cannot be compared with another to order publishers.",
+    "publisher": "LMArena",
+    "recompute": "python3 scripts/benchmark_quality/register.py --check",
+    "results_surface_client_rendered": false
+  },
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "source_urls": [
+    "https://arena.ai/leaderboard",
+    "https://huggingface.co/api/datasets?search=lmarena&full=true&limit=50",
+    "https://arena.ai/robots.txt"
+  ],
+  "status": "STAGED",
+  "subject": "LMArena \u2014 disclosure on three public artifacts, 2026-09-06",
+  "surface": "benchmark-quality.v1"
+}

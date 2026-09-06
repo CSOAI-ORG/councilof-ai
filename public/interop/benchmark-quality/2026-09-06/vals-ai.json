@@ -1,0 +1,51 @@
+{
+  "as_of": "2026-09-06",
+  "not_a_certificate": true,
+  "payload": {
+    "artifact_sha256": {
+      "board": "51ea8c5c1d75efb7232ab18c343abea4a51e68eb972447628613c492667cd0b0",
+      "machine": "718fcd14d401f6f6db184a25b441bd75a9bb5c38c54c5a65c4af4adf0db6b568",
+      "robots": "f7210268d162e20f54e83a7adca97e86ce82d26a3a89e8519463b347e8661d2e"
+    },
+    "by_group": {
+      "data": "FPPPP",
+      "governance": "FFFFF",
+      "method_transparency": "FPPPP",
+      "operations": "FFFPU",
+      "provenance": "FFFFF",
+      "reproducibility": "FFPPU",
+      "statistics": "FFPPP"
+    },
+    "flags": {
+      "keyless": true,
+      "no_model_judgment": true,
+      "read_only": true,
+      "self_assessed": false,
+      "writes_board": false
+    },
+    "full_row": "https://councilof.ai/interop/benchmark-quality/2026-09-06/vals-ai.json",
+    "kind": "csoai.benchmark-quality-register/1.0",
+    "legal_entity": "Vals AI, Inc.",
+    "method": "35 deterministic predicates over 3 cached artifacts. Scorer: re.search plus an RFC 9309 path evaluation. No language model judged anything.",
+    "n": {
+      "fail": 19,
+      "pass": 14,
+      "predicates": 35,
+      "resolved": 33,
+      "unmeasured": 2
+    },
+    "not_a_ranking": "Counts, not a score. This card cannot be compared with another to order publishers.",
+    "publisher": "Vals AI",
+    "recompute": "python3 scripts/benchmark_quality/register.py --check",
+    "results_surface_client_rendered": false
+  },
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "source_urls": [
+    "https://www.vals.ai/home",
+    "https://huggingface.co/api/datasets?search=vals-ai&full=true&limit=50",
+    "https://www.vals.ai/robots.txt"
+  ],
+  "status": "STAGED",
+  "subject": "Vals AI \u2014 disclosure on three public artifacts, 2026-09-06",
+  "surface": "benchmark-quality.v1"
+}

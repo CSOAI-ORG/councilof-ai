@@ -1,0 +1,51 @@
+{
+  "as_of": "2026-09-06",
+  "not_a_certificate": true,
+  "payload": {
+    "artifact_sha256": {
+      "board": "e6efa02824bce95606e32c9d7321b822d2ea34a8e9fd129a92697fb2e2f69a6d",
+      "machine": "ec6c69373714c6c1b8c937e7ee655eaa0747b7356218330412310e2bbccdf8c3",
+      "robots": "b44d67c4be2498693fac564500c94ce97275df4ff97d1ccd33daec4b2dbadcc4"
+    },
+    "by_group": {
+      "data": "FFFPP",
+      "governance": "FFFFP",
+      "method_transparency": "FFFPP",
+      "operations": "FFFPU",
+      "provenance": "FFFFF",
+      "reproducibility": "FFFFU",
+      "statistics": "FFFFF"
+    },
+    "flags": {
+      "keyless": true,
+      "no_model_judgment": true,
+      "read_only": true,
+      "self_assessed": false,
+      "writes_board": false
+    },
+    "full_row": "https://councilof.ai/interop/benchmark-quality/2026-09-06/artificial-analysis.json",
+    "kind": "csoai.benchmark-quality-register/1.0",
+    "legal_entity": "Artificial Analysis Pty Ltd",
+    "method": "35 deterministic predicates over 3 cached artifacts. Scorer: re.search plus an RFC 9309 path evaluation. No language model judged anything.",
+    "n": {
+      "fail": 27,
+      "pass": 6,
+      "predicates": 35,
+      "resolved": 33,
+      "unmeasured": 2
+    },
+    "not_a_ranking": "Counts, not a score. This card cannot be compared with another to order publishers.",
+    "publisher": "Artificial Analysis",
+    "recompute": "python3 scripts/benchmark_quality/register.py --check",
+    "results_surface_client_rendered": false
+  },
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "source_urls": [
+    "https://artificialanalysis.ai/leaderboards/models",
+    "https://huggingface.co/api/datasets?search=artificialanalysis&full=true&limit=50",
+    "https://artificialanalysis.ai/robots.txt"
+  ],
+  "status": "STAGED",
+  "subject": "Artificial Analysis \u2014 disclosure on three public artifacts, 2026-09-06",
+  "surface": "benchmark-quality.v1"
+}

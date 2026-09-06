@@ -44,6 +44,47 @@
 // re-fetching — the date is the whole claim.
 // ─────────────────────────────────────────────────────────────────────────────────────────
 
+// ─────────────────────────────────────────────────────────────────────────────────────────
+// TWO REGISTERS ARE SERVED FROM THIS ROUTE, AND THEY DISAGREE ABOUT ONE THING ON PURPOSE.
+//
+//   v0.1 (this file)  grades BENCHMARKS — MMLU, SWE-bench, GPQA and so on. Council of AI
+//                     publishes none of them, so the impartiality firewall below is exactly
+//                     right: we must not appear among the things we assess.
+//
+//   v1  (?register=v1) grades BENCHMARK PUBLISHERS — LMArena, Vals AI, HELM, Epoch AI,
+//                     Artificial Analysis, Scale SEAL, UK AISI — and we ARE one of those.
+//                     Excluding ourselves from a register of publishers would not be
+//                     impartiality, it would be an exemption. So v1 includes us, graded by
+//                     the same 35 predicates from the same 3 artifacts, flagged
+//                     `self_assessed: true` on every surface it touches, and a self-assessed
+//                     row is never independent evidence about us.
+//
+// Both statements are on both payloads. Neither register was quietly changed to match the
+// other. If you think one of them is wrong, that is a conversation the corrections route
+// exists for. v1 is produced by scripts/benchmark_quality/register.py from bytes committed
+// under scripts/fixtures/benchmark-quality/; this route imports the producer's output and
+// hand-maintains none of it.
+// ─────────────────────────────────────────────────────────────────────────────────────────
+// The explicit `.ts` here diverges from the extensionless convention used by the other
+// functions, deliberately and with both resolvers checked: esbuild accepts either, but
+// `node --experimental-strip-types` — which scripts/export-benchmark-quality.mjs uses to
+// load this very file — resolves only the explicit form. Extensionless bundles fine and
+// breaks the export tool, which is the kind of failure that shows up a month later.
+import { V1_INDEX as v1Index } from "./_benchmark-quality-v1.ts";
+
+/**
+ * GET /api/benchmark-quality — what evaluators disclose about their own process, measured with
+ * deterministic predicates. The scorer is a regular expression; no language model judges anything.
+ * Default: the v0.1 register of BENCHMARKS, which structurally excludes Council of AI.
+ * ?register=v1: the register of BENCHMARK PUBLISHERS, which includes Council of AI as one of eight
+ * rows, flagged self_assessed and graded from the same three public artifacts as everyone else.
+ * Counts are not a score. Unsolicited, no subject participated, and not a certification of anyone.
+ *
+ * (This JSDoc exists because the OpenAPI walker takes the FIRST comment block in the file, and it
+ * had been taking `The day every artifact cited in this file was actually fetched.` — the note
+ * above a constant — and publishing it as the summary of a public endpoint.)
+ */
+
 /** The day every artifact cited in this file was actually fetched. */
 export const ASSESSED_ON = "2026-08-23";
 
@@ -833,6 +874,19 @@ export function buildRegister() {
     access: "public_artifacts_only",
     result_semantics: RESULT_SEMANTICS,
     impartiality_policy: IMPARTIALITY_POLICY,
+    related_register: {
+      surface: v1Index.surface,
+      grades: "benchmark PUBLISHERS, not benchmarks",
+      status: v1Index.status,
+      index: "https://councilof.ai/interop/benchmark-quality/index.json",
+      full: v1Index.full_register,
+      api: "https://councilof.ai/api/benchmark-quality?register=v1",
+      self_inclusion:
+        "v1 INCLUDES Council of AI as one of its eight rows, flagged self_assessed. That is the " +
+        "opposite of the firewall on this payload, and deliberately so: this register grades " +
+        "benchmarks we do not publish, and v1 grades publishers, which we are. Read " +
+        "`self_assessment` on the v1 payload before quoting our row.",
+    },
     impartiality: {
       enforced_in_code: true,
       enforced_by: "applyImpartialityFirewall() in functions/api/benchmark-quality.ts",
@@ -860,8 +914,39 @@ export function buildRegister() {
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const id = url.searchParams.get("benchmark");
+  const which = url.searchParams.get("register");
 
-  const body = buildRegister() as Record<string, unknown>;
+  // v1 — the publisher register, served straight from the producer's committed output.
+  // No data is written here; if this route and the file disagree, the file is right and
+  // `python3 scripts/benchmark_quality/register.py --check` says so in CI.
+  const body = (which === "v1"
+    ? {
+        ...v1Index,
+        note:
+          "This is the v1 INDEX. The full register, every predicate with the bytes and the " +
+          "SHA-256 that decided it, is the `full_register` URL. Counts here are not a score " +
+          "and must not be used to rank publishers.",
+        related_register: {
+          surface: SCHEMA,
+          grades: "benchmarks, not publishers",
+          api: "https://councilof.ai/api/benchmark-quality",
+          self_inclusion:
+            "The v0.1 register at this route EXCLUDES Council of AI by an impartiality " +
+            "firewall enforced in code, because it grades benchmarks we do not publish. v1 " +
+            "includes us because it grades publishers and we are one. Both rules are " +
+            "published; neither was changed to match the other.",
+        },
+      }
+    : buildRegister()) as Record<string, unknown>;
+  if (which === "v1") {
+    return new Response(JSON.stringify(body, null, 2), {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "public, max-age=300",
+        "access-control-allow-origin": "*",
+      },
+    });
+  }
   if (id) {
     const all = body.records as BuiltRecord[];
     const one = all.filter((r) => r.id === id);

@@ -1,0 +1,51 @@
+{
+  "as_of": "2026-09-06",
+  "not_a_certificate": true,
+  "payload": {
+    "artifact_sha256": {
+      "board": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+      "machine": "1f1e6932c5f19a0318b922415060ec0f660f44e49d8ac960077ae77c144ed652",
+      "robots": "7fe65597c932138eed828d20cff824d768f57660eea387ac73ae5c8b9359f528"
+    },
+    "by_group": {
+      "data": "FFPPP",
+      "governance": "FFPPP",
+      "method_transparency": "FFPPP",
+      "operations": "FFPPU",
+      "provenance": "PPPPP",
+      "reproducibility": "FFFPU",
+      "statistics": "FFFFF"
+    },
+    "flags": {
+      "keyless": true,
+      "no_model_judgment": true,
+      "read_only": true,
+      "self_assessed": true,
+      "writes_board": false
+    },
+    "full_row": "https://councilof.ai/interop/benchmark-quality/2026-09-06/council-of-ai.json",
+    "kind": "csoai.benchmark-quality-register/1.0",
+    "legal_entity": "CSOAI Ltd (GB, Companies House 16939677)",
+    "method": "35 deterministic predicates over 3 cached artifacts. Scorer: re.search plus an RFC 9309 path evaluation. No language model judged anything.",
+    "n": {
+      "fail": 16,
+      "pass": 17,
+      "predicates": 35,
+      "resolved": 33,
+      "unmeasured": 2
+    },
+    "not_a_ranking": "Counts, not a score. This card cannot be compared with another to order publishers.",
+    "publisher": "Council of AI",
+    "recompute": "python3 scripts/benchmark_quality/register.py --check",
+    "results_surface_client_rendered": false
+  },
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "source_urls": [
+    "https://councilof.ai/board/",
+    "https://huggingface.co/api/datasets?search=csoai&full=true&limit=50",
+    "https://councilof.ai/robots.txt"
+  ],
+  "status": "STAGED",
+  "subject": "Council of AI \u2014 disclosure on three public artifacts, 2026-09-06",
+  "surface": "benchmark-quality.v1"
+}
