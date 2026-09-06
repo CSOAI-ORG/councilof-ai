@@ -296,6 +296,9 @@ def test_millable_probes_uncheckable_for_live_providers() -> None:
     assert mapped == ["Qwen/Qwen3-8B:featherless-ai"]
     assert "Qwen/Qwen3-8B:groq" not in mapped
     assert "nebius" not in "".join(mapped)
+    feat = mill_router_names("Qwen/Qwen3-Embedding-4B", "feature", ["deepinfra"], uncheckable=True)
+    assert feat == ["Qwen/Qwen3-Embedding-4B:deepinfra"]
+    assert "hf-inference" not in "".join(feat)
 
 
 def test_millable_retries_nonchat_after_chat_policy_spray() -> None:

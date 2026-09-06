@@ -211,7 +211,7 @@ def payload_for_kind(kind: str, tag: str = "") -> dict:
 
 
 def mill_nonchat(
-    tok: str, slug: str, kind: str, tag: str, names: list[str]
+    tok: str, slug: str, kind: str, tag: str, names: list[str], *, hf_infer_ok: bool = True
 ) -> tuple[str, str, str]:
     """Reachability mill for embed/fill-mask/class. Returns status, text, endpoint.
 
@@ -223,9 +223,18 @@ def mill_nonchat(
             st, txt = embed(tok, name)
             if st == "OK":
                 return st, txt, EMBED_ROUTER
+        if not hf_infer_ok:
+            return st, txt, EMBED_ROUTER
         st, txt = hf_infer(tok, slug, payload_for_kind(kind, tag))
         return st, txt, HF_INFER
     if kind in ("fill-mask", "text"):
+        if not hf_infer_ok:
+            st, txt = "UNCHECKABLE", "no-provider"
+            for name in names:
+                st, txt = embed(tok, name)
+                if st == "OK":
+                    return st, txt, EMBED_ROUTER
+            return st, txt, EMBED_ROUTER
         payloads = [payload_for_kind(kind, tag)]
         if kind == "fill-mask":
             payloads = [
@@ -244,6 +253,8 @@ def mill_nonchat(
         st, txt = embed(tok, name)
         if st == "OK":
             return st, txt, EMBED_ROUTER
+    if not hf_infer_ok:
+        return st, txt, EMBED_ROUTER
     st, txt = hf_infer(tok, slug, payload_for_kind("feature", tag))
     return st, txt, HF_INFER
 
@@ -378,16 +389,27 @@ def main() -> int:
             rec["note"] = (
                 "HF Inference Providers reachability mill. Not a GSPC board rewrite. n<30 unquotable."
             )
-            st, txt, endpoint = mill_nonchat(tok, slug, kind, tag, router_names)
+            st, txt, endpoint = mill_nonchat(
+                tok, slug, kind, tag, router_names, hf_infer_ok=not uncheckable
+            )
+            if uncheckable and st != "OK":
+                for name in router_names:
+                    st, txt = chat(tok, name, INSTR + GOV_ITEMS[0][0])
+                    if st == "OK":
+                        rec["router_model"] = name
+                        endpoint = ROUTER
+                        break
             rec["endpoint"] = endpoint
             rec["hits"] = 1 if st == "OK" else 0
             rec["answers"] = [{"call": st, "raw": txt[:80]}]
             if st == "OK":
                 rec["status"] = "practice-mill"
-                rec["router_model"] = router_names[0]
+                rec["router_model"] = rec.get("router_model") or router_names[0]
             else:
                 rec["status"] = "UNCHECKABLE"
                 rec["reason"] = txt[:200]
+            if uncheckable:
+                rec["route_kind"] = "chat-mapped" if kind == "chat" else f"{kind}-mapped"
         else:
             hits = 0
             answers = []

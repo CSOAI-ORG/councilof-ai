@@ -254,9 +254,8 @@ def mill_router_names(
     if uncheckable:
         if not mapped:
             return []
-        if kind == "chat":
-            return [f"{slug}:{p}" for p in mapped if p != "hf-inference"]
-        return mill_names_for_kind(slug, kind, mapped)
+        # Mapped suffixes only. Bare + hf-inference already 400'd.
+        return [f"{slug}:{p}" for p in mapped if p != "hf-inference"]
     return mill_names_for_kind(slug, kind, mapped)
 
 
@@ -274,7 +273,10 @@ def millable_slugs(models: list[dict]) -> list[str]:
             continue
         st = m.get("status") or "UNMEASURED"
         tag = m.get("pipeline_tag") or ""
-        if tag in SKIP_TAGS:
+        live_now = [p for p in (m.get("providers_live") or []) if p]
+        # SKIP_TAGS drops LoRA windows. Original HF2200 rows that Hub still
+        # lists on a live provider must mill even if the tag is image/ASR.
+        if tag in SKIP_TAGS and not (st == "UNCHECKABLE" and live_now):
             continue
         if st in ALREADY_TRIED:
             continue
@@ -289,9 +291,9 @@ def millable_slugs(models: list[dict]) -> list[str]:
             probed = "providers_live" in m
             live_list = [p for p in (m.get("providers_live") or []) if p] if probed else None
             if probed and live_list:
-                if last_kind in ("chat-mapped",):
+                if last_kind.endswith("-mapped"):
                     continue
-                if _unserved_weight_pack(slug):
+                if _unserved_weight_pack(slug, include_base=False):
                     continue
                 out.append(slug)
                 continue
