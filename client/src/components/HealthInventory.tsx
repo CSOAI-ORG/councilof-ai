@@ -1,13 +1,35 @@
+import { useEffect, useState } from "react";
 import {
+  boardCorrectionsLine,
   boardHealthLine,
+  type CorrectionsRead,
   HEALTH_FACTS,
   HEALTH_NEVER,
   HEALTH_PUBLIC_LINE,
   HEALTH_RULING,
   LIVE_HEALTH_PIN,
+  readCorrectionsCount,
 } from "@/lib/healthInventory";
 
 export default function HealthInventory({ tone = "dark" }: { tone?: "dark" | "light" }) {
+  // The corrections count is DERIVED, never typed. It moved 39 -> 47 between
+  // 2026-09-02 and 2026-09-06; anything pinned in the bundle ships stale.
+  const [corrections, setCorrections] = useState<CorrectionsRead>({
+    state: "unread",
+    reason: "not read yet",
+  });
+
+  useEffect(() => {
+    let live = true;
+    void fetch("/api/corrections", { headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((j) => live && setCorrections(readCorrectionsCount(j)))
+      .catch((err: Error) => live && setCorrections({ state: "unread", reason: err.message }));
+    return () => {
+      live = false;
+    };
+  }, []);
+
   const dark = tone === "dark";
   const panel = dark
     ? "rounded-2xl border border-emerald-400/20 bg-emerald-950/40 p-4"
@@ -28,12 +50,17 @@ export default function HealthInventory({ tone = "dark" }: { tone?: "dark" | "li
         </h2>
         <p className={`mt-3 text-sm ${body}`}>
           How healthy the record is, as at {LIVE_HEALTH_PIN.as_at}: {LIVE_HEALTH_PIN.board},{" "}
-          {LIVE_HEALTH_PIN.empty} empty, {LIVE_HEALTH_PIN.index_rows} signed index rows,{" "}
-          {LIVE_HEALTH_PIN.corrections} corrections. That is coverage. It is not a grade of
-          the model, and it is a snapshot — the living board is GET /api/gspc.
+          {LIVE_HEALTH_PIN.empty} empty, {LIVE_HEALTH_PIN.index_rows} signed index rows. That is
+          coverage. It is not a grade of the model, and it is a snapshot — the living board is
+          GET /api/gspc.
         </p>
         <p className={`mt-3 font-mono text-[13px] ${title}`}>{HEALTH_PUBLIC_LINE}</p>
-        <p className={`mt-2 text-sm ${body}`}>Board today: {boardHealthLine()}</p>
+        <p className={`mt-2 text-sm ${body}`}>
+          Board as at {LIVE_HEALTH_PIN.as_at}: {boardHealthLine()}
+        </p>
+        <p className={`mt-2 text-sm ${body}`} data-testid="corrections-line">
+          {boardCorrectionsLine(corrections)}
+        </p>
       </div>
 
       <ul className="grid gap-3 sm:grid-cols-2">
