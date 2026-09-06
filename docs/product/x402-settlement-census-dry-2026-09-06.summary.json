@@ -1,0 +1,62 @@
+{
+  "schema": "csoai.x402-settlement-census/0.1-dry",
+  "mode": "DRY",
+  "as_of": "2026-09-06T05:52:02Z",
+  "usdc_spent": "0.0000",
+  "population": {
+    "census_rows": 3520,
+    "eligible": 316,
+    "probed": 316,
+    "eligibility": "conformant AND network eip155:8453 AND scheme exact AND amount a positive integer <= 50000 units (0.05 USDC) AND not one of our own hosts"
+  },
+  "result": {
+    "still_issue_a_parseable_402": 314,
+    "no_challenge": 2,
+    "no_challenge_hosts": [
+      "api.utilia.ink",
+      "x402-paid-service.iholt.workers.dev"
+    ],
+    "x402_version": {
+      "2": 314
+    }
+  },
+  "price_drift_since_2026_09_05": {
+    "count": 1,
+    "rows": [
+      {
+        "host": "api.babyblueviper.com",
+        "advertised_units": 23904,
+        "challenge_units": 23994
+      }
+    ]
+  },
+  "beneficiary_concentration": {
+    "distinct_pay_to": 174,
+    "top3_share_of_live_doors": 29.0,
+    "top3": [
+      {
+        "pay_to": "0x2880EdfFF13100677Bf97A3CBdF3Bc34771C4E5E",
+        "hosts": 62
+      },
+      {
+        "pay_to": "0xFFc458dB291b4ABcE020fE3de4f91F2770E537b1",
+        "hosts": 18
+      },
+      {
+        "pay_to": "0xEf879BFD6C4AccB8F795136de90246e1EC245e06",
+        "hosts": 11
+      }
+    ],
+    "note": "174 addresses collect for 314 doors, and the three largest collect for 91 of them. A directory of many hosts is not a market of many beneficiaries."
+  },
+  "latency_s": {
+    "median": 0.28,
+    "p95": 0.95
+  },
+  "what_this_is_not": [
+    "No payment was sent and nothing was signed. DRY records what each door ASKS, never what it delivers.",
+    "DELIVERED / REFUSED / MISMATCH cannot be known until a settled run; every row here reads DRY or NO_CHALLENGE.",
+    "This is not a recommendation of any host, and no host was contacted."
+  ],
+  "reproduce": "python3 scripts/grants/x402-settlement-census.py --census <conformance jsonl> --max-hosts 400 --out <path>   # DRY is the default; SETTLE=1 is required to send money"
+}
