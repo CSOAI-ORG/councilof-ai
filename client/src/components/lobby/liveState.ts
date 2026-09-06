@@ -146,6 +146,12 @@ export interface LiveState {
     verified: StateFact | null;
     positions: StateFact | null;
     bodiesPublished: StateFact | null;
+    /** Signed-manifest published count (not the on-disk directory count). */
+    bodiesPublishedSigned: StateFact | null;
+    bodiesWithheldSigned: StateFact | null;
+    signedWithheldNowOnDisk: StateFact | null;
+    /** Human rule reconciling signed-published vs on-disk directory. */
+    signedVsDiskRule: string | null;
   };
   census: {
     listingsObserved: StateFact | null;
