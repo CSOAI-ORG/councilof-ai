@@ -1,0 +1,67 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "predicate": {
+    "figure": {
+      "accuracy": 0.9333,
+      "axis": "openness",
+      "issuer": "CSOAI Ltd",
+      "kind": "gspc.measurement-card",
+      "model": "deepseek-ai/DeepSeek-V3.2",
+      "n": 30,
+      "route": "hf-router",
+      "status": "MEASURED",
+      "unmeasured": []
+    },
+    "inputs": {
+      "bank_sha256": null,
+      "grader": null,
+      "items_sha256": null,
+      "n": 30,
+      "rerun": null
+    },
+    "never": [
+      "a certificate",
+      "a grade",
+      "a rank",
+      "a claim that the signature makes the figure true"
+    ],
+    "not_a_certification": true,
+    "not_a_conformity_assessment": true,
+    "note": "cannot be recomputed from this attestation: bank_sha256, items_sha256, grader absent. The signature attests only that we published this figure at this time.",
+    "reproducible": false,
+    "source": {
+      "canonical_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=False)",
+      "card_id": "01a6498dda8d94fc3e1f4ea64fc3fc6a9cfb1ee888c7083bc3021db9aa37a090",
+      "card_kind": "gspc.measurement-card",
+      "preimage_rule": "sha256(canonical body)",
+      "signature_alg": "Ed25519",
+      "signature_present": true,
+      "signature_state_here": "NOT_VERIFIED_BY_THIS_PRODUCER",
+      "signed_under_did": "did:web:csoai.org#board-attestation-1",
+      "verify_yourself": [
+        "curl -s https://councilof.ai/.well-known/did.json  # take verificationMethod #board-attestation-1",
+        "python3 -c \"import json,hashlib;c=json.load(open(CARD));print(hashlib.sha256(json.dumps(c['body'],sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()==c['id'])\""
+      ]
+    },
+    "status_vocabulary": {
+      "MEASURED": "n>=30 items of a frozen published bank scored by a deterministic grader (scripts/sign_mill_cards.py). Weaker than every certification, accreditation and conformity term in every vocabulary this maps onto.",
+      "UNMEASURED": "n<30, or no run. Absence of a field means UNMEASURED. Empty is never zero.",
+      "authority": "https://councilof.ai/api/gspc",
+      "crosswalk": "https://councilof.ai/interop/crosswalk/intoto/index.json"
+    },
+    "unreproducible": [
+      "bank_sha256",
+      "items_sha256",
+      "grader"
+    ]
+  },
+  "predicateType": "https://councilof.ai/attestations/measurement/v1",
+  "subject": [
+    {
+      "digest": {
+        "sha256": "01a6498dda8d94fc3e1f4ea64fc3fc6a9cfb1ee888c7083bc3021db9aa37a090"
+      },
+      "name": "gspc-measurement-card/openness/deepseek-ai/DeepSeek-V3.2"
+    }
+  ]
+}

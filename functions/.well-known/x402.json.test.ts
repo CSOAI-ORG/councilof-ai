@@ -107,3 +107,36 @@ describe(".well-known/x402.json — every advertised resource is one that can ac
     expect(eb!.url).not.toMatch(/obligation=<id>/);
   });
 });
+
+describe("door descriptions are buyer-first (2026-09-06)", () => {
+  it("every non-quarantined resource carries a deliverable-first description", async () => {
+    const body = await get();
+    const resources = body.resources as { url: string; description?: string }[];
+    for (const r of resources) {
+      expect(r.description, `${r.url} must carry a description`).toBeTruthy();
+      expect(r.description!.length, `${r.url} description too short to rank`).toBeGreaterThan(40);
+      // first clause = the deliverable, not doctrine: must NOT open with estate-speak
+      expect(r.description!.toLowerCase()).toMatch(
+        /^(live board totals|signed measurement card|signed compliance evidence bundle|signed derivative data feed|inclusion proof bundle|rwa asset evidence|art\. 50 marking evidence|provider change record|signed receipts batch)/,
+      );
+    }
+  });
+});
+
+describe("resources are v1-shaped (accepts[] with outputSchema)", () => {
+  it("every resource declares the v1 PaymentRequirements", async () => {
+    const body = await get();
+    const resources = body.resources as {
+      url: string;
+      accepts?: { scheme: string; network: string; payTo: string; description: string; outputSchema?: object }[];
+    }[];
+    for (const r of resources) {
+      expect(r.accepts, `${r.url} must declare accepts[] for v1 consumers`).toBeTruthy();
+      const a = r.accepts![0];
+      expect(a.scheme).toBe("exact");
+      expect(a.network).toMatch(/base/i);
+      expect(a.payTo).toMatch(/^0x/i);
+      expect(a.outputSchema).toBeTruthy();
+    }
+  });
+});

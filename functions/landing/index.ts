@@ -4,7 +4,7 @@ export function onRequest() {
     status: 308,
     headers: {
       location: "/os?lobby=home",
-      "cache-control": "public, max-age=300",
+      "cache-control": "public, s-maxage=86400, stale-while-revalidate=86400",
     },
   });
 }
