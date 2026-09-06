@@ -7,7 +7,7 @@
 |---|---|
 | free preview | HTTP 200 · 57485 B |
 | paid door | HTTP 402 (settle unlocks) |
-| deliverable | FREE PREVIEW returns content; paid artefact at the 402 |
+| deliverable | DELIVERABLE — free preview answers with real bytes. Advertised. |
 
 ## What you receive
 The artefact described in docs/product/provider-diff-feed.md: signed cards, assembled server-side from
