@@ -290,8 +290,16 @@ def main() -> int:
             rec["hits"] = hits
             rec["answers"] = answers
             if all(a["call"] != "OK" for a in answers):
-                rec["status"] = "UNCHECKABLE"
-                rec["reason"] = answers[0]["raw"] if answers else "no calls"
+                st2, txt2 = hf_infer(tok, slug, payload_for_kind("feature"))
+                rec["answers"].append({"call": st2, "raw": txt2[:80], "fallback": "feature"})
+                if st2 == "OK":
+                    rec["status"] = "practice-mill"
+                    rec["endpoint"] = HF_INFER + slug
+                    rec["route_kind"] = "chat-then-feature"
+                    rec["hits"] = 1
+                else:
+                    rec["status"] = "UNCHECKABLE"
+                    rec["reason"] = answers[0]["raw"] if answers else txt2[:200]
             else:
                 rec["status"] = "practice-mill"
                 rec["accuracy"] = round(hits / len(bank), 4)

@@ -124,9 +124,7 @@ def millable_slugs(models: list[dict]) -> list[str]:
             continue
         if _unserved_weight_pack(slug):
             continue
-        tag = m.get("pipeline_tag") or ""
-        if tag in ROUTER_TAGS or tag == "":
-            out.append(slug)
+        out.append(slug)
     return out
 
 

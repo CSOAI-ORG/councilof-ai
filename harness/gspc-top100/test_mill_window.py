@@ -133,7 +133,8 @@ def test_millable_includes_embed_and_fill_mask() -> None:
     assert "google-bert/bert-base-uncased" in got
     assert "BAAI/bge-small-en-v1.5" in got
     assert "Qwen/Qwen3-8B" in got
-    assert "google/siglip2" not in got
+    assert "google/siglip2" in got
+    assert route_kind("zero-shot-image-classification") == "try-chat-then-feature"
     assert route_kind("sentence-similarity") == "similarity"
     assert route_kind("text-generation") == "chat"
     assert route_kind("fill-mask") == "fill-mask"
