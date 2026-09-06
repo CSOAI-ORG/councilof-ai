@@ -51,6 +51,17 @@ INDEXES = ["INDEX", "INDEX-safety", "INDEX-art5-affect", "INDEX-empty3"]
 TIMEOUT = 45
 LEDGER = "https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl"
 
+# A satellite is a filtered VIEW of INDEX.jsonl, produced by flip_hub_queue.py from the
+# LIVE cards (see docs/operations/SATELLITE-INDEX-PRODUCER.md). Nothing produced them
+# before 2026-09-05: they were hand-made once and froze, and the 70 stale rows that
+# followed are why this check exists at all. Deriving them removed the class -- this
+# keeps it removed, because a producer only holds while nothing writes around it.
+SATELLITE_AXES = {
+    "INDEX-safety": {"safety"},
+    "INDEX-art5-affect": {"art5-safeguard", "affect"},
+    "INDEX-empty3": {"machinery-conformity", "cross-reality", "detector-interop"},
+}
+
 
 def superseded_ids() -> set[str]:
     """Card ids SUPERSEDED.jsonl says are no longer the live card for their pair.
@@ -162,7 +173,36 @@ def main() -> int:
             "\nFix by REGENERATING the index through mill_index_row() and re-uploading.\n"
             "Never edit a signed card to agree with an index."
         )
-    if drift or stale:
+    # A satellite must be a SUBSET of INDEX.jsonl and carry only its own axes. Either
+    # failure means something wrote a satellite directly instead of deriving it, which is
+    # exactly how the 70 stale rows arrived -- and those rows were self-consistent, so
+    # neither of the checks above would have caught them.
+    by_index: dict[str, list[dict]] = {}
+    for name, row in rows:
+        by_index.setdefault(name, []).append(row)
+    main_ids = {str(r.get("card_sha256") or "") for r in by_index.get("INDEX", [])}
+    off = []
+    for name, axes in SATELLITE_AXES.items():
+        for row in by_index.get(name, []):
+            cid = str(row.get("card_sha256") or "")
+            if cid not in main_ids:
+                off.append((name, row, "cites a card INDEX.jsonl does not carry"))
+            elif str(row.get("axis") or "") not in axes:
+                off.append((name, row, f"axis {row.get('axis')!r} is outside {sorted(axes)}"))
+
+    if off:
+        print(f"[FAIL] {len(off)} satellite row(s) are not a view of INDEX.jsonl.\n")
+        for name, row, why in off[:20]:
+            print(f"  {name}: {row.get('model')} / {row.get('axis')}\n    {why}")
+        if len(off) > 20:
+            print(f"  ... and {len(off) - 20} more")
+        print(
+            "\nA satellite is a filtered view of INDEX.jsonl, derived by flip_hub_queue.py from\n"
+            "the LIVE cards. A row here that INDEX.jsonl does not carry was written directly,\n"
+            "and a hand-written satellite is what froze 70 stale rows into the census.\n"
+        )
+
+    if drift or stale or off:
         return 1
 
     print(
@@ -200,10 +240,33 @@ def selftest() -> int:
             return json.dumps({"body": {"status": "UNMEASURED"}}).encode()
         return fake
 
+    def make_sat(sat_sha: str, sat_axis: str):
+        """INDEX carries one live safety card; INDEX-safety carries the row under test."""
+        def fake(url: str) -> bytes:
+            if url == LEDGER:
+                return b""
+            if url.endswith(".jsonl"):
+                if url == BASE + "INDEX.jsonl":
+                    return (json.dumps({
+                        "model": "a/one", "axis": "safety", "status": "MEASURED",
+                        "card_sha256": LIVE, "card_url": "https://x/card.json",
+                    }) + "\n").encode()
+                if url == BASE + "INDEX-safety.jsonl":
+                    return (json.dumps({
+                        "model": "a/one", "axis": sat_axis, "status": "MEASURED",
+                        "card_sha256": sat_sha, "card_url": "https://x/card.json",
+                    }) + "\n").encode()
+                return b""
+            return json.dumps({"body": {"status": "MEASURED"}}).encode()
+        return fake
+
     cases = [
         ("a row citing a RETIRED card must FAIL", make(RETIRED, True), 1),
         ("the same row citing the LIVE card must PASS", make(LIVE, True), 0),
         ("an empty ledger must PASS (nothing retired)", make(RETIRED, False), 0),
+        ("a satellite that is a true view of INDEX must PASS", make_sat(LIVE, "safety"), 0),
+        ("a satellite row INDEX does not carry must FAIL", make_sat(RETIRED, "safety"), 1),
+        ("a satellite row outside its own axes must FAIL", make_sat(LIVE, "governance"), 1),
     ]
     failures = 0
     for label, faker, want in cases:
