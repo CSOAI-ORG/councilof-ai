@@ -40,7 +40,7 @@ def test_mill_script_does_not_slice_prefix() -> None:
     src = (HERE.parents[1] / "scripts" / "mill_hf_inference.py").read_text()
     assert "slugs[:limit]" not in src
     assert "select_window" in src
-    assert "chat_capable_slugs" in src
+    assert "millable_slugs" in src
 
 
 def test_pick_emptiest_skips_measured() -> None:

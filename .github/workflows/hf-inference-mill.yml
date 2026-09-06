@@ -93,7 +93,10 @@ jobs:
           )
           try:
               with urllib.request.urlopen(req, timeout=60) as r:
-                  d = json.loads(r.read())
+                  raw = r.read()
+              # 6 Sep 17:01 cron: json.loads Extra data col 316 skipped mill
+              # while the job stayed green. First object is the verdict.
+              d, _ = json.JSONDecoder().raw_decode(raw.decode("utf-8", "replace").lstrip())
               txt = ((d.get("choices") or [{}])[0].get("message") or {}).get("content")
               out["status"] = "INFERENCE_OK"
               out["http"] = 200
@@ -146,6 +149,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: use hub-queue lock if present (git lock is all UNMEASURED)
+        run: |
+          set -euo pipefail
+          if curl -fsSL -H "Authorization: Bearer ${HF_TOKEN}" \
+            -o /tmp/HF2200.lock.json \
+            "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/locks/HF2200.lock.json"; then
+            python3 -c 'import json; d=json.load(open("/tmp/HF2200.lock.json")); print("hub lock n_measured", d.get("n_measured"), "n_locked", d.get("n_locked"))'
+            cp /tmp/HF2200.lock.json public/fleet/HF2200.lock.json
+          else
+            echo "HUB_LOCK_MISS mill will use git lock (all UNMEASURED)"
+          fi
       - name: mill HF2200 shard via router
         run: |
           set -euo pipefail
@@ -179,6 +193,14 @@ jobs:
       - name: patch HF2200.lock.json from shard mill-out (n_measured is counted)
         run: |
           set -euo pipefail
+          if ! curl -fsSL -H "Authorization: Bearer ${HF_TOKEN}" \
+            -o public/fleet/HF2200.lock.json \
+            "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/locks/HF2200.lock.json"; then
+            echo "HUB_LOCK_MISS refusing to upload a git-zero overwrite"
+            echo "HUB_LOCK_NOT_PUBLISHED"
+            exit 1
+          fi
+          python3 -c 'import json; d=json.load(open("public/fleet/HF2200.lock.json")); print("hub lock before mill n_measured", d.get("n_measured"), "n_locked", d.get("n_locked"))'
           python3 scripts/mill_lock_update.py public/fleet/HF2200.lock.json mill-shards
           python3 - <<'PY'
           import json
@@ -205,7 +227,8 @@ jobs:
           print("uploading n_measured", lock["n_measured"])
           if not tok:
               print("HF_TOKEN empty — lock stays in the artifact only")
-              raise SystemExit(0)
+              print("HUB_LOCK_NOT_PUBLISHED")
+              raise SystemExit(1)
           HfApi(token=tok).upload_file(
               path_or_fileobj="public/fleet/HF2200.lock.json",
               path_in_repo="locks/HF2200.lock.json",
