@@ -1,5 +1,10 @@
 # Frozen banks, served from this origin
 
+Seven of the nine deterministic-fact banks are published here. `gspc-safety` and
+`gspc-continuity` are held back: their names collide with axes the pod already grades
+against different banks (`gspc-agi` and `gspc-asi`), and two banks behind one axis label
+would make a cell ambiguous about its own source.
+
 A bank published here is readable by anyone, with no account and no token:
 
     curl -sL https://councilof.ai/interop/banks/gspc-transparency.jsonl -o bank.jsonl
@@ -31,6 +36,25 @@ Two further properties, both recorded in the baseline file:
   one does not, so contamination here is UNCHECKABLE rather than absent.
 - **Generated, not authored.** Rows carry `source: gen-missing-banks-transparency-unsealed`,
   against `csoai-authored` on the behavioural banks.
+
+## What a parrot scores on each, measured 2026-09-06
+
+| bank | parrot | keywords already in their own prompt | canary |
+|---|---:|---:|---:|
+| `gspc-accountability` | 20/30 = **0.6667** | 124 of 136 | 0 |
+| `gspc-human-vs-ai` | 20/30 = **0.6667** | 110 of 133 | 0 |
+| `gspc-fairness` | 19/30 = **0.6333** | 112 of 139 | 0 |
+| `gspc-creativity` | 17/30 = 0.5667 | 115 of 136 | 0 |
+| `gspc-efficiency` | 17/30 = 0.5667 | 108 of 129 | 0 |
+| `gspc-sovereignty` | 11/30 = 0.3667 | 110 of 141 | 0 |
+| `gspc-transparency` | 9/30 = 0.3000 | 90 of 128 | 0 |
+| **combined** | **113/210 = 0.5381** | **769 of 942 (82%)** | **0** |
+
+The same check on the fourteen published behavioural banks scores **0.0000** on every one.
+
+Dropping every keyword that is already in its own prompt does not rescue these: it removes
+82% of them and leaves no bank with 30 usable rows, so each falls below the `n>=30`
+threshold it was built to clear. They need re-authoring, not a filter.
 
 ## Recompute it yourself
 
