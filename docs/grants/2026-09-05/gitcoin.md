@@ -24,7 +24,7 @@ Target: https://gitcoin.co/mechanisms · Rounds: https://gitcoin.co/campaigns ·
 **Description** —
 Council of AI (CSOAI Ltd, UK 16939677) is an independent AI-governance measurement body. We publish measurement cards about what AI models actually do — refusals, marking of generated content, behaviour under regulated obligations — across 22 axes. The live board reads "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate." (https://councilof.ai/api/gspc, 2026-09-05).
 
-Every card is Ed25519-signed under did:web:csoai.org, every card hash is a leaf in a public Merkle root (167 cards, root.json as of 2026-09-05T12:39:29Z), the root is witnessed in a public transparency log, and every mistake is in a public CC-BY corrections record (46 entries). Anyone can verify a card offline with our open-source verifier — `pip install csoai-gspc` or the MCP server `csoai-gspc-mcp` — or over MCP at https://councilof.ai/mcp.
+Every card is Ed25519-signed under did:web:csoai.org, every card hash is a leaf in a public Merkle root (168 cards, root.json as of 2026-09-05T16:02:38Z), the root is witnessed in a public transparency log, and every mistake is in a public CC-BY corrections record (46 entries). Anyone can verify a card offline with our open-source verifier — `pip install csoai-gspc` or the MCP server `csoai-gspc-mcp` — or over MCP at https://councilof.ai/mcp.
 
 What the round would fund: the public-good part — the verifier libraries, the root format's v2 (RFC 6962 domain separation), conformance vectors and a second independent implementation, key rotation and a security audit. Not funded: the measurement banks, the site, or the paid doors.
 
