@@ -74,6 +74,10 @@ export function Header() {
     setSearchOpen(false);
   }, [location]);
 
+  // /gspc-verify stays free + loginless — no Sign In chrome on this route.
+  const loginlessVerify =
+    location === '/gspc-verify' || location.startsWith('/gspc-verify/');
+
   if (hideChrome) return null;
 
   return (
@@ -232,7 +236,9 @@ export function Header() {
               </>
             ) : (
               <>
-                <Link href="/login"><Button variant="ghost" size="sm" className="text-muted-foreground font-medium">Sign In</Button></Link>
+                {!loginlessVerify && (
+                  <Link href="/login"><Button variant="ghost" size="sm" className="text-muted-foreground font-medium">Sign In</Button></Link>
+                )}
                 <Link href="/assess"><Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm">Get measured</Button></Link>
               </>
             )}
@@ -304,7 +310,9 @@ export function Header() {
                   </>
                 ) : (
                   <>
-                    <a href="/login" className="block"><Button variant="outline" className="w-full" onClick={() => setMobileMenuOpen(false)}>Sign In</Button></a>
+                    {!loginlessVerify && (
+                      <a href="/login" className="block"><Button variant="outline" className="w-full" onClick={() => setMobileMenuOpen(false)}>Sign In</Button></a>
+                    )}
                     <a href="/assess" className="block"><Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={() => setMobileMenuOpen(false)}>Get measured</Button></a>
                   </>
                 )}
