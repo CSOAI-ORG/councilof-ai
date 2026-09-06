@@ -147,7 +147,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         rail: railMode(env),
         not_paid_reason: payment.reason,
         catalog: `${origin}/api/x402`,
-        explainer: `${origin}/pricing-free`,
+        explainer: `${origin}/pricing`,
       },
     });
     return paymentRequiredResponse(paymentRequired);

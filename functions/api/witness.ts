@@ -217,7 +217,7 @@ async function handle(request: Request, env: Env, body: Uint8Array | null): Prom
         rail: railMode(env),
         not_paid_reason: payment.reason,
         catalog: `${origin}/api/x402`,
-        explainer: `${origin}/pricing-free`,
+        explainer: `${origin}/pricing`,
       },
     });
     return paymentRequiredResponse(paymentRequired);
