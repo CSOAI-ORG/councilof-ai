@@ -125,6 +125,34 @@ def chat(tok: str, model: str, prompt: str) -> tuple[str, str]:
     return "OK", txt
 
 
+def embed(tok: str, model: str) -> tuple[str, str]:
+    """Non-chat models (embed/vision/GGUF) 400 on /chat/completions. One embedding call is a reachability mill, n=1 unquotable."""
+    payload = json.dumps({"model": model, "input": "council of ai mill probe", "encoding_format": "float"}).encode()
+    req = urllib.request.Request(
+        "https://router.huggingface.co/v1/embeddings",
+        data=payload,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {tok}",
+            "Content-Type": "application/json",
+            "User-Agent": UA,
+            "X-HF-Bill-To": (os.environ.get("HF_BILL_TO") or "csoai").strip(),
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            d = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        err = e.read()[:200].decode("utf-8", "replace")
+        return "UNCHECKABLE", f"HTTP {e.code} {err[:160]}"
+    except Exception as e:
+        return "UNCHECKABLE", type(e).__name__
+    vec = ((d.get("data") or [{}])[0].get("embedding")) or []
+    if vec:
+        return "OK", f"dim={len(vec)}"
+    return "UNCHECKABLE", "empty embedding"
+
+
 def parse_token(text: str) -> str | None:
     up = text.upper().replace("-", "_").replace(" ", "_")
     for t in TOKENS:
@@ -216,8 +244,15 @@ def main() -> int:
         rec["hits"] = hits
         rec["answers"] = answers
         if all(a["call"] != "OK" for a in answers):
-            rec["status"] = "UNCHECKABLE"
-            rec["reason"] = answers[0]["raw"] if answers else "no calls"
+            est, etxt = embed(tok, slug)
+            rec["embed"] = {"call": est, "raw": etxt[:80]}
+            if est == "OK":
+                rec["status"] = "practice-mill"
+                rec["n"] = 1
+                rec["note"] = "Embedding probe via Inference Providers. Not a GSPC board rewrite. n<30 unquotable."
+            else:
+                rec["status"] = "UNCHECKABLE"
+                rec["reason"] = answers[0]["raw"] if answers else etxt
         else:
             rec["status"] = "practice-mill"
             rec["accuracy"] = round(hits / len(GOV_ITEMS), 4)
