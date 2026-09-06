@@ -86,16 +86,17 @@
     <section class="door" data-door="free">
       <div class="tag">Door 1 · free</div>
       <h3>Verify / measure free paths</h3>
-      <p class="desc">No charge. Re-check signed cards and the public board. Measurement credential — never certification, never sell rank.</p>
+      <p class="desc">No charge. Live cite <code>/api/free-door</code> (amount 0). Re-check signed cards and the public board. Measurement credential — never certification, never sell rank.</p>
       <div class="row">
         <button type="button" class="btn-primary" data-quote="free">Quote</button>
       </div>
       <div class="panel" id="panel-free">
         <h4>Quote</h4>
-        <div class="quote-line">amount: 0 · charge: none · path: /gspc-verify · login: not required</div>
-        <p class="desc">Confirm opens the free verifier. Nothing is billed.</p>
+        <div class="quote-line">cite: /api/free-door · amount: 0 · maxAmountRequired: 0 · charge: none · login: not required</div>
+        <p class="desc">Confirm opens the free-door challenge (price zero forever) and the free verifier. Nothing is billed. A grade is never sold.</p>
         <div class="row">
-          <a class="btn-primary" href="/gspc-verify">Confirm · open verify</a>
+          <a class="btn-primary" href="/api/free-door">Confirm · /api/free-door (amount 0)</a>
+          <a class="btn-ghost" href="/gspc-verify">verify</a>
           <a class="btn-ghost" href="/api/gspc">Board API</a>
         </div>
       </div>
@@ -111,7 +112,7 @@
       <div class="panel" id="panel-x402">
         <h4>Quote</h4>
         <div class="quote-line" id="x402-quote">loading live discovery…</div>
-        <div class="warn">Settlement UNCHECKABLE until a published facilitator receipt and on-chain result can be independently checked. Bazaar densify sits until settle receipt.</div>
+        <div class="warn">Settlement UNCHECKABLE until a published facilitator receipt and on-chain result can be independently checked. Bazaar densify sits until settle receipt. <strong>payTo ≠ payer</strong> — merchant address is not the signer/payer; never fund settle from payTo 0x2126… as if it were your wallet.</div>
         <p class="desc">Confirm opens discovery / status only — do not treat a challenge as paid.</p>
         <div class="row">
           <a class="btn-primary" href="/.well-known/x402.json">Confirm · open x402 discovery</a>
@@ -155,7 +156,7 @@
   <div class="meta">
     <span class="meta-key">Network</span><span class="meta-val">eip155:8453 (Base)</span>
     <span class="meta-key">Asset</span><span class="meta-val">USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)</span>
-    <span class="meta-key">payTo</span><span class="meta-val">0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31</span>
+    <span class="meta-key">payTo</span><span class="meta-val">0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 (merchant · ≠ payer)</span>
     <span class="meta-key">Standard</span><span class="meta-val">EIP-3009 transferWithAuthorization</span>
     <span class="meta-key">Discovery</span><span class="meta-val">https://councilof.ai/.well-known/x402.json</span>
     <span class="meta-key">Verify</span><span class="meta-val">https://councilof.ai/gspc-verify</span>
@@ -196,7 +197,8 @@
         var resources = j.resources || j.accepts || j.offers || [];
         var n = Array.isArray(resources) ? resources.length : 0;
         var network = j.network || (j.extra && j.extra.network) || "eip155:8453";
-        box.textContent = "live discovery ok · resources/offers listed: " + n + " · network hint: " + network + " · amount: see discovery (not invented here) · settlement: UNCHECKABLE until receipt";
+        var payTo = (j.accepts && j.accepts[0] && j.accepts[0].payTo) || (Array.isArray(resources) && resources[0] && resources[0].payTo) || "see discovery";
+        box.textContent = "live discovery ok · resources/offers listed: " + n + " · network hint: " + network + " · amount: see discovery (not invented here) · payTo: " + payTo + " · payTo≠payer (merchant≠signer) · settlement: UNCHECKABLE until receipt";
       })
       .catch(function () {
         box.textContent = "discovery unreachable from this browser — open /.well-known/x402.json; amount not invented on this page";
