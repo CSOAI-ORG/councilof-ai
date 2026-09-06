@@ -82,10 +82,10 @@ export default function AssessTool() {
           <ShieldCheck className="h-7 w-7 text-emerald-600" />
           <h1 className="text-3xl font-black tracking-tight">Get measured</h1>
         </div>
+        <p className="text-sm font-semibold text-foreground mb-2">Paid assessment — booking not live</p>
         <p className="text-muted-foreground mb-4">
-          Paid measurement. Booking is not live. Coming — Paddle. The public verifies free.
-          Never a bought rank. Empty means we have not measured that system — we do not guess.
-          Not a certificate.
+          Coming — Paddle. Waitlist only. No price on this page until Nick names one. A signed pack enquiry is an enquiry, never a bought rank. Public verify stays free at /gspc-verify. Never a grade. Never Stripe. Never free RAS.
+          Empty means we have not measured that system — we do not guess. Not a certificate.
         </p>
         <p className="mb-8 text-sm text-muted-foreground">
           Waitlist and scope live on <a href="/measure" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">/measure</a>.
@@ -115,11 +115,11 @@ export default function AssessTool() {
                 onChange={(e) => setForm({ ...form, logging: e.target.checked })} /> Logging / record-keeping</label>
             </div>
             <Button onClick={run} disabled={true} className="w-full" aria-disabled="true">
-              Coming — Paddle · booking not live
+              Coming — Paddle
             </Button>
             <p className="text-xs text-muted-foreground">
-              Signed measurement is a paid engagement. Checkout is not on this page. Do not treat a disabled
-              button as a free run. {loading ? "Not running." : null}
+              Coming — Paddle. Waitlist only. No price on this page until Nick names one. A signed pack enquiry is an enquiry, never a bought rank. Public verify stays free at /gspc-verify. Never a grade. Never Stripe. Never free RAS.
+              Do not treat a disabled button as a free run. {loading ? "Not running." : null}
               {error && <span className="text-red-600"> {error}</span>}
             </p>
           </CardContent>
