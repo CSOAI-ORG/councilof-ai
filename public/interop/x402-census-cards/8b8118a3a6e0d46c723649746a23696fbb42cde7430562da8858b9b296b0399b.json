@@ -1,0 +1,47 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "agents.bytemine.ai",
+ "as_of": "2026-09-06T06:42:15Z",
+ "source_urls": [
+  "https://agents.bytemine.ai/functions/v1/api-gateway/contacts/search",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "agents.bytemine.ai",
+  "resource": "https://agents.bytemine.ai/functions/v1/api-gateway/contacts/search",
+  "status": "REFUSED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x6b2891b824206b0dc9884751fdbaf73e9cce651b",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x9b143a686a7265f42dbedb509906deef0f6cd0fed4e08ca2ab0383ae7506560e",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.73,
+   "paid": 4.05
+  },
+  "delivered_bytes": 66,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:42:15Z",
+  "n": 1,
+  "note": "a settlement transaction was reported and the retried request was still refused: money moved, nothing was delivered"
+ },
+ "sha256": "8b8118a3a6e0d46c723649746a23696fbb42cde7430562da8858b9b296b0399b",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

@@ -1,0 +1,47 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.loyalspark.online",
+ "as_of": "2026-09-06T06:38:16Z",
+ "source_urls": [
+  "https://api.loyalspark.online/x402-gateway/recipient-api/offers",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.loyalspark.online",
+  "resource": "https://api.loyalspark.online/x402-gateway/recipient-api/offers",
+  "status": "REFUSED",
+  "asked_units": 1000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x40a8CdD6a10EC1a8cB3dFb2834675e7a2CF4ad8b",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": null,
+  "settle_tx_state": "host reported a settlement but its PAYMENT-RESPONSE did not parse into a tx reference",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.24,
+   "paid": 3.35
+  },
+  "delivered_bytes": 117,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:38:16Z",
+  "n": 1,
+  "note": "a settlement transaction was reported and the retried request was still refused: money moved, nothing was delivered"
+ },
+ "sha256": "53fb1a7bd02b4512119381a491ea17a71b38fd119031eb6f5981986fa4553892",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

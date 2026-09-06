@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "gblin.digital",
+ "as_of": "2026-09-06T06:38:47Z",
+ "source_urls": [
+  "https://gblin.digital/api/x402/treasury-state",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "gblin.digital",
+  "resource": "https://gblin.digital/api/x402/treasury-state",
+  "status": "DELIVERED",
+  "asked_units": 1000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x0ebA5d314F4f5Dcb7A094953Fa9311a45172dd1B",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xe94125d5410929cccaee23b6b223f3d1518667d764b5ed7cd80c51e1796918a8",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 1.26,
+   "paid": 3.77
+  },
+  "delivered_bytes": 948,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:38:47Z",
+  "n": 1
+ },
+ "sha256": "94a07e29e552277bd549a7bdfe8f531114db20edeb0b173f140025b856a193b2",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

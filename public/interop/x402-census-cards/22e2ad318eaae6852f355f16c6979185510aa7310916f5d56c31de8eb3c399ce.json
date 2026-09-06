@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "aurelius-node-01.onrender.com",
+ "as_of": "2026-09-06T06:45:53Z",
+ "source_urls": [
+  "https://aurelius-node-01.onrender.com/api/v1/supply",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "aurelius-node-01.onrender.com",
+  "resource": "https://aurelius-node-01.onrender.com/api/v1/supply",
+  "status": "DELIVERED",
+  "asked_units": 50000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x239DE97929b20F27aa503B236d33420670Bf5Ad1",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": null,
+  "settle_tx_state": "host reported a settlement but its PAYMENT-RESPONSE did not parse into a tx reference",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.25,
+   "paid": 1.46
+  },
+  "delivered_bytes": 20628,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:45:53Z",
+  "n": 1
+ },
+ "sha256": "22e2ad318eaae6852f355f16c6979185510aa7310916f5d56c31de8eb3c399ce",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

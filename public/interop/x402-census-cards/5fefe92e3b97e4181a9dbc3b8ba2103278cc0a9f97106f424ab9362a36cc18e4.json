@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "router.mudko.com",
+ "as_of": "2026-09-06T06:41:43Z",
+ "source_urls": [
+  "https://router.mudko.com/api/x402/route",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "router.mudko.com",
+  "resource": "https://router.mudko.com/api/x402/route",
+  "status": "DELIVERED",
+  "asked_units": 5000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x53598173ce7c26025bab0520d9e9d0c28fbcf7de",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xc89bd63a3473b8d5d9347b7e1790d9749d463558a5edd531e799b7ce12ad0e54",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.22,
+   "paid": 1.23
+  },
+  "delivered_bytes": 304,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:41:43Z",
+  "n": 1
+ },
+ "sha256": "5fefe92e3b97e4181a9dbc3b8ba2103278cc0a9f97106f424ab9362a36cc18e4",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.gitbeacon.dev",
+ "as_of": "2026-09-06T06:42:55Z",
+ "source_urls": [
+  "https://api.gitbeacon.dev/v1/repos",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.gitbeacon.dev",
+  "resource": "https://api.gitbeacon.dev/v1/repos",
+  "status": "DELIVERED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xf444abc53f5e1e73caec7df64d147ddb119514a0",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x48a513d3e40a2e85385d0c7c7909e08e810da72d6bdfa80f20a1704bf4167b99",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.44,
+   "paid": 1.42
+  },
+  "delivered_bytes": 32262,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:42:55Z",
+  "n": 1
+ },
+ "sha256": "7192cca4cdec39d95090cfc6ce9b8a4672ff729dccebb798b074504c78b8ec97",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

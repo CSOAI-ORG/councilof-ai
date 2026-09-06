@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.myceliasignal.com",
+ "as_of": "2026-09-06T06:43:01Z",
+ "source_urls": [
+  "https://api.myceliasignal.com/oracle/price/btc/usd",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.myceliasignal.com",
+  "resource": "https://api.myceliasignal.com/oracle/price/btc/usd",
+  "status": "DELIVERED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xD593832Ce9C2B13B192ba50B55dd9AF44e96700d",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x5e38782c8ad1df3678955311227cedebd67f9c1053908400ded9dbb9aafdd0a7",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.6,
+   "paid": 2.53
+  },
+  "delivered_bytes": 614,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:43:01Z",
+  "n": 1
+ },
+ "sha256": "21a33e5ff4c83301af62eafd596c2feba1d62fe7c8a5aca4306c0ab41542f70c",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

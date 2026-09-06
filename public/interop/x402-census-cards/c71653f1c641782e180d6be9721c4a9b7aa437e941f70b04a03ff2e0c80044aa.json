@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "mimirapi.com",
+ "as_of": "2026-09-06T06:39:02Z",
+ "source_urls": [
+  "https://mimirapi.com/v1/ping",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "mimirapi.com",
+  "resource": "https://mimirapi.com/v1/ping",
+  "status": "DELIVERED",
+  "asked_units": 1000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x40e5A6647803c2DD686049dcDC5F9c34817D7a7F",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x635bfbd0956b1ddd0930236c42cdc4f159124842d86565b99ac03d0c1d9c2f8b",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.09,
+   "paid": 1.19
+  },
+  "delivered_bytes": 58,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:39:02Z",
+  "n": 1
+ },
+ "sha256": "c71653f1c641782e180d6be9721c4a9b7aa437e941f70b04a03ff2e0c80044aa",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

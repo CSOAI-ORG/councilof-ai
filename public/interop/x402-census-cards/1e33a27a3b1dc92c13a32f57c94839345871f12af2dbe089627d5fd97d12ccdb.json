@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "soren.com",
+ "as_of": "2026-09-06T06:44:00Z",
+ "source_urls": [
+  "https://soren.com/v1/paid-ping",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "soren.com",
+  "resource": "https://soren.com/v1/paid-ping",
+  "status": "DELIVERED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xaDc3A47EFbD82Ed724a0E9A3D08D5A1A8e6586fd",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x195d7336770d9feb7b832e1ae70c83d125f9e9f590751c353ddd7ef1961cd7d5",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.23,
+   "paid": 1.46
+  },
+  "delivered_bytes": 288,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:44:00Z",
+  "n": 1
+ },
+ "sha256": "1e33a27a3b1dc92c13a32f57c94839345871f12af2dbe089627d5fd97d12ccdb",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

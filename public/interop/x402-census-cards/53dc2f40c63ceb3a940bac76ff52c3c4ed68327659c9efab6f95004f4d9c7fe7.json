@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "dev.emblemvault.ai",
+ "as_of": "2026-09-06T06:39:47Z",
+ "source_urls": [
+  "https://dev.emblemvault.ai/api/tools/execute/unified/getAllPositions",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "dev.emblemvault.ai",
+  "resource": "https://dev.emblemvault.ai/api/tools/execute/unified/getAllPositions",
+  "status": "DELIVERED",
+  "asked_units": 1200,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x0BbEFF1EE4114976F84D1e1C44150515719fD176",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x2d9546dab00af1e8416845e472ae50265103fc03d7f23fdf2040e7c465c43bbb",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 6.29,
+   "paid": 1.72
+  },
+  "delivered_bytes": 102,
+  "delivered_content_type": "application/json",
+  "advertised_mime": null,
+  "observed_at": "2026-09-06T06:39:47Z",
+  "n": 1
+ },
+ "sha256": "53dc2f40c63ceb3a940bac76ff52c3c4ed68327659c9efab6f95004f4d9c7fe7",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}
