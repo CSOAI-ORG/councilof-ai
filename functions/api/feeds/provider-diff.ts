@@ -179,9 +179,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   // ── x402 door: the signed historical batch ──
   const description =
-    "Provider document diff feed — signed historical batch: every hash-only diff leaf with its inclusion proof, assembled. Nothing about what changed or why. Measurement, not certification. " +
-    CSOAI_LID +
-    ".";
+    "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.";
   const accepts = x402Accepts(env, resourceUrl, { skuId: SKU_ID, tier: "history_batch", description });
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
 

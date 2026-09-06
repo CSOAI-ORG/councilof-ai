@@ -219,9 +219,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   const description =
-    "Receipts batch: every signed card-v0 measurement leaf in a time window with its inclusion path and carrying root(s), " +
-    "assembled from the public root history. History assembly only — recent leaves are free; never a conclusion. " +
-    CSOAI_LID + ".";
+    "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly — not a conclusion.";
   const accepts = x402Accepts(env, resourceUrl, { skuId: SKU, tier: "per_batch", description });
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
 

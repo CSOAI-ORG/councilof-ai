@@ -233,8 +233,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   const description =
-    `Evidence bundle mapped to ${ob.control_id}: OSCAL 1.1.0 assessment-results assembled from already-signed CSOAI cards ` +
-    `(observations, relevant-to). Measurement, not certification — never a conformity determination. ${CSOAI_LID}.`;
+    `An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to ${ob.control_id}. Not a conformity determination.`;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "evidence_bundle", tier: "bundle", description });
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
 

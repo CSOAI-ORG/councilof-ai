@@ -91,9 +91,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const knownAxis = axis ? AXES.some((a) => a.axis === axis) : null;
 
   const description =
-    "Request attestation (RAS): commission a signed card-v0 receipt for one subject on the frozen bank — " +
-    "re-serves existing signed measurement cards, never invents a score. Measurement, not certification. " +
-    CSOAI_LID + ".";
+    "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.";
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
 

@@ -35,9 +35,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
   // (bundle) branch; the free ?sha= inclusion never needs it.
   const resourceUrl = u("/api/proof?bundle=1");
   const description =
-    "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. " +
-    CSOAI_LID +
-    ".";
+    "The inclusion-proof bundle for the last published Merkle root, re-served. Not a grade.";
   // The SAME accepts entry is advertised in the 402 and handed to the facilitator, so what the
   // client signed against is what gets verified and settled.
   const accepts = bundle

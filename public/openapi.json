@@ -165,7 +165,7 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.2+a270f3a00c27",
+    "version": "0.2+19d1ecba5a69",
     "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Every 402 carries a server-signed offer and every settled 200 a signed receipt, per the x402 Offer & Receipt extension (JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json). Check either without trusting this document: POST it to /api/receipts/verify, or run scripts/verify_receipt.py, which reads did.json and contacts nobody. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
@@ -269,7 +269,7 @@
     },
     "/api/art50/marking-evidence": {
       "get": {
-        "description": "Article 50 marking evidence: one signed card-v0 leaf recording whether a machine-readable mark was DETECTED in one output by named methods at one time (C2PA recomputed; watermarks UNCHECKABLE where no public detector exists). Beside it, the verbatim Art 50(2) text hash and the Art 99(4) ceiling. Detection at a time, never a conformity opinion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.",
         "operationId": "x402_art50_marking_evidence",
         "parameters": [
           {
@@ -297,12 +297,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Article 50 marking evidence: one signed card-v0 leaf recording whether a machine-readable mark was DETECTED in one output by named methods at one time (C2PA recomputed; watermarks UNCHECKABLE where no public detector exists). Beside it, the verbatim Art 50(2) text hash and the Art 99(4) ceiling. Detection at a time, never a conformity opinion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                  "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.",
                   "type": "object"
                 }
               }
             },
-            "description": "Article 50 marking evidence: one signed card-v0 leaf recording whether a machine-readable mark was DETECTED in one output by named methods at one time (C2PA recomputed; watermarks UNCHECKABLE where no public detector exists). Beside it, the verbatim Art 50(2) text hash and the Art 99(4) ceiling. Detection at a time, never a conformity opinion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate.."
+            "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion."
           },
           "402": {
             "content": {
@@ -425,7 +425,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Article 50 marking evidence: one signed card-v0 leaf recording whether a machine-readable mark was DETECTED in one output by named methods at one time (C2PA recomputed; watermarks UNCHECKABLE where no public detector exists). Beside it, the verbatim Art 50(2) text hash and the Art 99(4) ceiling. Detection at a time, never a conformity opinion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Article 50 marking evidenc",
                     "tags": [
@@ -1037,7 +1037,7 @@
     },
     "/api/eunomia-data": {
       "get": {
-        "description": "Signed enforcement + measurement feed, assembled (DATA only \u2014 never scores, never ranked). Measurement, not certification. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
         "operationId": "x402_eunomia_data",
         "parameters": [
           {
@@ -1056,12 +1056,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "one feed document: signed signals index, signed First-Fine Watch, root.json, card index \u2014 each block with its published signature",
+                  "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
                   "type": "object"
                 }
               }
             },
-            "description": "one feed document: signed signals index, signed First-Fine Watch, root.json, card index \u2014 each block with its published signature"
+            "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking."
           },
           "402": {
             "content": {
@@ -1169,7 +1169,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Signed enforcement + measurement feed, assembled (DATA only \u2014 never scores, never ranked). Measurement, not certification. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Data Feed",
                     "tags": [
@@ -1231,7 +1231,7 @@
     },
     "/api/evidence-bundle": {
       "get": {
-        "description": "Evidence bundle mapped to EU-AI-ACT-50: OSCAL 1.1.0 assessment-results assembled from already-signed CSOAI cards (observations, relevant-to). Measurement, not certification \u2014 never a conformity determination. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to EU-AI-ACT-50. Not a conformity determination.",
         "operationId": "x402_evidence_bundle",
         "parameters": [
           {
@@ -1274,12 +1274,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "OSCAL 1.1.0 assessment-results of already-signed cards (observations, relevant-to) + one manifest card-v0 (surface evidence.bundle) + the existing signed pack where one exists (/packs/eu-article-50)",
+                  "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one named obligation. Not a conformity determination.",
                   "type": "object"
                 }
               }
             },
-            "description": "OSCAL 1.1.0 assessment-results of already-signed cards (observations, relevant-to) + one manifest card-v0 (surface evidence.bundle) + the existing signed pack where one exists (/packs/eu-article-50)"
+            "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one named obligation. Not a conformity determination."
           },
           "402": {
             "content": {
@@ -1403,7 +1403,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Evidence bundle mapped to EU-AI-ACT-50: OSCAL 1.1.0 assessment-results assembled from already-signed CSOAI cards (observations, relevant-to). Measurement, not certification \u2014 never a conformity determination. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to EU-AI-ACT-50. Not a conformity determination.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Evidence Bundle",
                     "tags": [
@@ -1525,7 +1525,7 @@
     },
     "/api/feeds/provider-diff": {
       "get": {
-        "description": "Provider document diff feed \u2014 signed historical batch: every hash-only diff leaf with its inclusion proof, assembled. Nothing about what changed or why. Measurement, not certification. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only \u2014 no page content, no verdict.",
         "operationId": "x402_feeds_provider_diff",
         "parameters": [
           {
@@ -1553,12 +1553,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "every hash-only csoai.diff.provider-terms/0.1 leaf to date with its inclusion proof to the signed root, assembled; or a bespoke per-partner target list on the same method (GBP invoice: ?invoice=gbp&commissioned_by=<org>)",
+                  "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only \u2014 no page content, no verdict.",
                   "type": "object"
                 }
               }
             },
-            "description": "every hash-only csoai.diff.provider-terms/0.1 leaf to date with its inclusion proof to the signed root, assembled; or a bespoke per-partner target list on the same method (GBP invoice: ?invoice=gbp&commissioned_by=<org>)"
+            "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only \u2014 no page content, no verdict."
           },
           "402": {
             "content": {
@@ -1667,7 +1667,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Provider document diff feed \u2014 signed historical batch: every hash-only diff leaf with its inclusion proof, assembled. Nothing about what changed or why. Measurement, not certification. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only \u2014 no page content, no verdict.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Provider Diff Feed",
                     "tags": [
@@ -1787,7 +1787,7 @@
     },
     "/api/free-door": {
       "get": {
-        "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
+        "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
         "operationId": "x402_free_door",
         "parameters": [],
         "responses": {
@@ -1795,12 +1795,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
+                  "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
                   "type": "object"
                 }
               }
             },
-            "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one."
+            "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification."
           },
           "402": {
             "content": {
@@ -1835,7 +1835,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
+                    "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
                     "mimeType": "application/json",
                     "url": "https://councilof.ai/api/free-door"
                   },
@@ -2282,7 +2282,7 @@
     },
     "/api/proof": {
       "get": {
-        "description": "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "description": "The inclusion-proof bundle for the last published Merkle root, re-served. Not a grade.",
         "operationId": "x402_proof",
         "parameters": [
           {
@@ -2302,12 +2302,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                  "description": "The inclusion-proof bundle for the last published Merkle root, re-served. Not a grade.",
                   "type": "object"
                 }
               }
             },
-            "description": "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate.."
+            "description": "The inclusion-proof bundle for the last published Merkle root, re-served. Not a grade."
           },
           "402": {
             "content": {
@@ -2414,7 +2414,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "description": "The inclusion-proof bundle for the last published Merkle root, re-served. Not a grade.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Proof Bundle",
                     "tags": [
@@ -2499,7 +2499,7 @@
     },
     "/api/receipts/batch": {
       "get": {
-        "description": "Receipts batch: every signed card-v0 measurement leaf in a time window with its inclusion path and carrying root(s), assembled from the public root history. History assembly only \u2014 recent leaves are free; never a conclusion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "description": "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly \u2014 not a conclusion.",
         "operationId": "x402_receipts_batch",
         "parameters": [
           {
@@ -2540,12 +2540,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "one canonical csoai.receipts.batch/0.1 document: every card-v0 leaf with as_of in the window (\u2264200), each with its Merkle inclusion path and the public root(s) that carried it (from /receipts/root-history.json \u2014 the git history of root.json indexed at build time), plus one signed manifest card-v0 (surface receipts.batch) citing the batch sha256",
+                  "description": "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly \u2014 not a conclusion.",
                   "type": "object"
                 }
               }
             },
-            "description": "one canonical csoai.receipts.batch/0.1 document: every card-v0 leaf with as_of in the window (\u2264200), each with its Merkle inclusion path and the public root(s) that carried it (from /receipts/root-history.json \u2014 the git history of root.json indexed at build time), plus one signed manifest card-v0 (surface receipts.batch) citing the batch sha256"
+            "description": "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly \u2014 not a conclusion."
           },
           "402": {
             "content": {
@@ -2674,7 +2674,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Receipts batch: every signed card-v0 measurement leaf in a time window with its inclusion path and carrying root(s), assembled from the public root history. History assembly only \u2014 recent leaves are free; never a conclusion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "description": "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly \u2014 not a conclusion.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Receipts Batch",
                     "tags": [
@@ -2875,7 +2875,7 @@
     },
     "/api/request-attestation": {
       "get": {
-        "description": "one card-v0 leaf, surface ras.commission, \u22643KB payload, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present (else sig_ed25519:null, declared)",
+        "description": "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
         "operationId": "x402_request_attestation",
         "parameters": [
           {
@@ -2901,12 +2901,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "one card-v0 leaf, surface ras.commission, \u22643KB payload, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present (else sig_ed25519:null, declared)",
+                  "description": "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
                   "type": "object"
                 }
               }
             },
-            "description": "one card-v0 leaf, surface ras.commission, \u22643KB payload, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present (else sig_ed25519:null, declared)"
+            "description": "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell."
           },
           "402": {
             "content": {
@@ -2944,7 +2944,7 @@
                     }
                   },
                   "resource": {
-                    "description": "one card-v0 leaf, surface ras.commission, \u22643KB payload, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present (else sig_ed25519:null, declared)",
+                    "description": "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
                     "mimeType": "application/json",
                     "url": "https://councilof.ai/api/request-attestation?subject=<id>&axis=<slug>"
                   },
@@ -3043,7 +3043,7 @@
     },
     "/api/rwa/evidence": {
       "get": {
-        "description": "one canonical card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1 \u2014 the same schema as the free public-root leaf), \u22643072 bytes: AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, holders as the reader has them, per-fetch sha256 + inputs_sha256, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present",
+        "description": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee.",
         "operationId": "x402_rwa_evidence",
         "parameters": [
           {
@@ -3075,12 +3075,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "one canonical card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1 \u2014 the same schema as the free public-root leaf), \u22643072 bytes: AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, holders as the reader has them, per-fetch sha256 + inputs_sha256, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present",
+                  "description": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee.",
                   "type": "object"
                 }
               }
             },
-            "description": "one canonical card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1 \u2014 the same schema as the free public-root leaf), \u22643072 bytes: AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, holders as the reader has them, per-fetch sha256 + inputs_sha256, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present"
+            "description": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee."
           },
           "402": {
             "content": {
@@ -3118,7 +3118,7 @@
                     }
                   },
                   "resource": {
-                    "description": "one canonical card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1 \u2014 the same schema as the free public-root leaf), \u22643072 bytes: AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, holders as the reader has them, per-fetch sha256 + inputs_sha256, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present",
+                    "description": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee.",
                     "mimeType": "application/json",
                     "url": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>"
                   },
