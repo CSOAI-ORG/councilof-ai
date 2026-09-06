@@ -140,7 +140,7 @@ export const HEALTH_TERMS: HealthTerm[] = [
     term: "Addendum / erratum",
     use: "use",
     they_say: "We were wrong. The chart is appended, not silently edited.",
-    we_say: "GET /api/corrections. Thirty entries. Honesty asset.",
+    we_say: "GET /api/corrections. The entry count is read from the ledger, never typed here. Honesty asset.",
   },
   {
     id: "problem-list",

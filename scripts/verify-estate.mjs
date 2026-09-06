@@ -11,6 +11,8 @@
  *
  *   node scripts/verify-estate.mjs             # all 335 cards + the root
  *   node scripts/verify-estate.mjs --limit 25  # quick sample
+ *   node scripts/verify-estate.mjs --limit 25 --did-drift public/.well-known/did.json
+ *                                   # also: does the repo copy of the DID match the live host?
  *
  * Exit 0 if every check passes, 1 otherwise.
  *
@@ -21,6 +23,7 @@
  * measurement correctness.
  */
 import { createHash, createPublicKey, verify as edVerify } from "node:crypto";
+import { readFileSync } from "node:fs";
 
 const SITE = process.env.CSOAI_SITE || "https://councilof.ai";
 const DID_URL = process.env.CSOAI_DID || "https://csoai.org/.well-known/did.json";
@@ -142,6 +145,34 @@ const keys = Object.fromEntries(
 );
 console.log(`DID ${did.id} publishes ${Object.keys(keys).length} keys: ${Object.keys(keys).join(", ")}\n`);
 
+// F64: does the repo's committed copy of the DID still say what the live host serves?
+// The keys are served from csoai.org (Pages project `csoai-site`); this repo carries its own
+// copy at public/.well-known/did.json. Nothing compared them. Rotate a key on one side and the
+// cards keep verifying against the live DID while the committed copy quietly describes a key
+// that no longer signs anything — and the drift is invisible until a stranger picks the wrong
+// copy. Opt-in, because a stranger running this script has no repo: without --did-drift the
+// verification path below still touches nothing but published bytes.
+{
+  const i = process.argv.indexOf("--did-drift");
+  if (i > -1) {
+    const local = JSON.parse(readFileSync(process.argv[i + 1], "utf8"));
+    const flat = (d) => JSON.stringify([
+      d.id,
+      ...(d.verificationMethod || [])
+        .filter((v) => v.publicKeyJwk?.x)
+        .map((v) => `${v.id.split("#").pop()}=${v.publicKeyJwk.x}`)
+        .sort(),
+    ]);
+    if (flat(local) === flat(did)) {
+      console.log(`committed DID copy            : matches ${DID_URL} (id + ${Object.keys(keys).length} keys)\n`);
+    } else {
+      fail(`the committed DID copy disagrees with ${DID_URL}`);
+      console.error(`    live      ${flat(did)}`);
+      console.error(`    committed ${flat(local)}`);
+    }
+  }
+}
+
 // ---- the signed cards ------------------------------------------------------------------------
 let index;
 try {
@@ -175,11 +206,22 @@ console.log(`  id == sha256(canonical(body)) : ${idOK}/${cards.length}`);
 console.log(`  agrees with card_index        : ${idxOK}/${cards.length}`);
 console.log(`  Ed25519 signature valid       : ${sigOK}/${cards.length}`);
 
-// is the card key the one the DID publishes?
-const cardKey = cards[0]?.pubkey;
-const boundTo = Object.entries(keys).find(([, k]) => k.toString("hex") === cardKey)?.[0];
-if (boundTo) console.log(`  card key bound to DID         : #${boundTo}`);
-else fail("card signing key is NOT in the published DID document");
+// F64: are the card keys the ones the DID publishes?
+// This used to read cards[0].pubkey and bind that ONE key. It passed — but by coincidence, not
+// by check: a set where card 0 is DID-bound and card 200 is signed by a key nobody published
+// would have printed a clean "card key bound to DID" line. The caveat this script prints at the
+// end ("one key signs every card") was likewise asserted and never measured.
+// card_index.json carries every card's pubkey, so the WHOLE population is checked from the one
+// request already made — --limit samples which card BODIES to fetch, never which keys to trust.
+const byKey = new Map();
+for (const c of index.cards) byKey.set(c.pubkey, (byKey.get(c.pubkey) || 0) + 1);
+const didHex = new Map(Object.entries(keys).map(([id, k]) => [k.toString("hex"), id]));
+console.log(`  distinct card signing keys    : ${byKey.size} across ${index.cards.length} cards`);
+for (const [pk, n] of [...byKey].sort((a, b) => b[1] - a[1])) {
+  const id = didHex.get(pk);
+  if (id) console.log(`    #${id} signs ${n}`);
+  else fail(`${n} card(s) are signed by ${pk.slice(0, 16)}…, which the DID does NOT publish`);
+}
 
 // ---- the signed root -------------------------------------------------------------------------
 const root = await getJSON(`${SITE}/root.json`);
@@ -197,13 +239,60 @@ else if (edVerify(null, rootPre, edKey(keys[rootKid]), Buffer.from(root.sig_ed25
   console.log(`\nroot.json signature           : VALID against #${rootKid} (${root.card_count} cards, merkle ${root.merkle_root.slice(0, 12)}…)`);
 else fail(`root.json signature INVALID against #${rootKid}`);
 
+// ---- Rule B artefacts ------------------------------------------------------------------------
+//
+// The estate publishes TWO canonicalisations and until 2026-09-06 this verifier only knew one.
+//
+//   Rule A  the 335 measurement cards. CPython json.dumps(sort_keys, separators, ensure_ascii=True):
+//           non-ASCII escaped, and an integral float renders "0.0". Reproducing it in JavaScript
+//           needs the raw numeric literals preserved — see parsePreservingNumbers above.
+//   Rule B  harness/arena/canon.py. Sorted keys, compact, ensure_ascii=FALSE, and integral floats
+//           NORMALISED TO INTS. That is precisely what a JS engine does natively, so Rule B needs
+//           none of the machinery Rule A does — JSON.stringify over sorted keys IS Rule B.
+//
+// The signature is Ed25519 over the content_id AS ASCII HEX — not over the preimage, and not over
+// the digest bytes. Neither artefact publishes that; it was established by trial on 2026-09-06 and
+// is recorded here so the next reader does not repeat it.
+const ruleB = (v) =>
+  Array.isArray(v) ? "[" + v.map(ruleB).join(",") + "]"
+  : v && typeof v === "object"
+    ? "{" + Object.keys(v).sort().map((k) => JSON.stringify(k) + ":" + ruleB(v[k])).join(",") + "}"
+    : JSON.stringify(v);
+
+for (const name of ["arena_scoreboard", "eat_compliance_board"]) {
+  let doc;
+  try { doc = await getJSON(`${SITE}/signed/${name}.json`); }
+  catch (e) { fail(`fetch ${name}: ${e.message}`); continue; }
+  const sig = doc.signature;
+  if (!sig?.sig || !sig?.content_id) { fail(`${name}: no signature block`); continue; }
+  const { signature: _drop, ...body } = doc;
+  const cid = createHash("sha256").update(Buffer.from(ruleB(body))).digest("hex");
+  if (cid !== sig.content_id) { fail(`${name}: content_id does not recompute`); continue; }
+  const kid = String(sig.kid || "").split("#").pop();
+  const pk = keys[kid];
+  if (!pk) { fail(`${name}: names key #${kid}, which the DID does not publish`); continue; }
+  try {
+    if (edVerify(null, Buffer.from(cid, "ascii"), edKey(pk), Buffer.from(sig.sig, "hex")))
+      console.log(`Rule B ${name.padEnd(22)}: VALID against #${kid}`);
+    else fail(`${name}: Ed25519 INVALID against #${kid}`);
+  } catch (e) { fail(`${name}: Ed25519 error — ${e.message}`); }
+}
+
+// gspc-board.signed.json is Rule B too but has its own preimage shape and its own published
+// verifier — `node scripts/gspc-board-verify.mjs <file>`, named in the artefact's own `verify`
+// field. It is deliberately NOT reimplemented here: duplicating a subtle recipe in a second place
+// is how the two drift, and the artefact already tells a reader exactly what to run.
+console.log(`Rule B gspc-board.signed    : run scripts/gspc-board-verify.mjs (its own published verifier)`);
+
 // ---- the anchor question, answered honestly ---------------------------------------------------
 const anchored = ["ots", "opentimestamps", "anchor", "rekor"].some((k) => JSON.stringify(root).toLowerCase().includes(`"${k}`));
 console.log(`root anchored to a timechain  : ${anchored ? "yes" : "NO — signed, not anchored"}`);
 
 console.log(`
 what a pass here does NOT establish
-  · one key signs every card, so this proves CUSTODY, not independence
+  · ${byKey.size === 1
+      ? "one key signs every card, so this proves CUSTODY, not independence"
+      : `${byKey.size} keys sign these cards; that is separation of keys, not of parties`}
   · the root is signed and not anchored, so this proves WHO and not WHEN
   · signature validity is not measurement correctness`);
 

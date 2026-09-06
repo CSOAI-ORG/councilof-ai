@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/x402-census-round-v1.json",
+  "title": "x402 settlement census — one ROUND",
+  "description": "One buyer's-eye round: every host in a fixed population paid once, at one moment, by a wallet the publisher controls, with the outcome of each purchase recorded. A round is the unit of the time series; two rounds make a delta (x402-census-delta-v1.json). Produced only by scripts/grants/x402_census_round.py from the round's own committed rows — every number here is derived, and `--check` recomputes the whole document and fails on a single changed byte. This document is measurement, not certification: it grades nothing, ranks nothing and recommends nothing, and REFUSED is not evidence of bad faith. No state above UNMEASURED is written at any level of this surface; per-host state belongs to the OIDC signer at n>=30 paid observations and lives on the card-v0 leaves, not here.",
+  "type": "object",
+  "required": [
+    "schema",
+    "round_id",
+    "mode",
+    "as_of",
+    "network",
+    "asset",
+    "population",
+    "caps",
+    "payer",
+    "rows",
+    "outcome",
+    "paid_rows",
+    "settlement_receipts",
+    "take_and_refuse",
+    "spend_usdc",
+    "pay_to",
+    "caveats",
+    "reproduce"
+  ],
+  "properties": {
+    "schema": { "const": "csoai.x402-census.round/0.1" },
+    "round_id": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "The UTC date the round was purchased. Rounds sort by this id and by nothing else."
+    },
+    "mode": {
+      "enum": ["SETTLE", "DRY"],
+      "description": "SETTLE means a signed payment was actually sent. A DRY-only pass is not a round: it records terms, not deliveries."
+    },
+    "as_of": {
+      "type": ["string", "null"],
+      "description": "The LAST observed_at in the rows — never the time the file was written. A producer that stamps now() reports a change on every rebuild and tells a reader nothing."
+    },
+    "window": {
+      "type": "object",
+      "description": "first and last observed_at. A round takes minutes, not an instant, and says so.",
+      "required": ["first_observed", "last_observed"]
+    },
+    "network": { "type": "string", "description": "CAIP-2 chain id of the settlement network." },
+    "asset": { "type": "string" },
+    "population": {
+      "type": "object",
+      "required": ["probed", "dry_probed", "eligibility", "hosts_sha256"],
+      "description": "hosts_sha256 is sha256 over the sorted newline-joined host list: two rounds with the same digest probed literally the same population, which is what makes a delta a time series rather than two unrelated samples.",
+      "properties": {
+        "probed": { "type": "integer", "minimum": 0 },
+        "dry_probed": { "type": "integer", "minimum": 0 },
+        "eligibility": { "type": "string" },
+        "hosts_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "caps": {
+      "type": "object",
+      "required": ["per_host_units", "total_usdc"],
+      "description": "Hard spend caps in force for the round. These are OUR costs, not a price list: nothing this estate sells appears anywhere on this surface."
+    },
+    "payer": {
+      "type": "object",
+      "required": ["addresses", "note"],
+      "description": "The throwaway wallet the purchases came from. Every unit is a cost; no row here is revenue, and our own hosts are excluded from the population so no row can be a self-settlement."
+    },
+    "rows": {
+      "type": "object",
+      "required": ["settle", "dry"],
+      "description": "Path, sha256 and row count of each pass. The sha256 is the anchor: change one byte of the rows and every derived number in this file stops recomputing."
+    },
+    "outcome": {
+      "type": "object",
+      "required": ["DELIVERED", "REFUSED", "MISMATCH", "NO_CHALLENGE"],
+      "description": "DELIVERED paid and answered with the advertised type; REFUSED paid and answered 402/4xx again; MISMATCH paid and answered 2xx with the wrong body; NO_CHALLENGE stopped returning a parseable 402 before anything was sent."
+    },
+    "paid_rows": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Rows where a signed payment was actually sent: DELIVERED + REFUSED + MISMATCH. This, not the delivered count, is what an observation accrues on — a series that counts only successes is not a measurement."
+    },
+    "settlement_receipts": {
+      "type": "object",
+      "required": ["tx_hash", "unparseable", "none"],
+      "description": "Whether the host returned a settlement reference of its own. `none` is common and is not an accusation."
+    },
+    "take_and_refuse": {
+      "type": "object",
+      "required": ["hosts", "usdc", "definition"],
+      "description": "Hosts that reported a settlement transaction in their own PAYMENT-RESPONSE and refused the retried request anyway. The definition travels with the number so nobody has to guess what was counted, and each row carries the tx hash so a reader checks the chain instead of trusting us."
+    },
+    "spend_usdc": { "type": "number", "minimum": 0 },
+    "pay_to": {
+      "type": "object",
+      "required": ["distinct", "top1_hosts"],
+      "description": "Concentration of the addresses the challenges name. A fact about the doors, not about any operator."
+    },
+    "latency_s": { "type": "object" },
+    "x402_version": { "type": "object" },
+    "dry_vs_settle": {
+      "type": "object",
+      "required": ["challenge_units_changed", "dropped", "added"],
+      "description": "The DRY pass runs minutes before the paid pass over the same hosts, so a door that moved its terms between the two is visible without waiting a week."
+    },
+    "caveats": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "type": "string" },
+      "description": "Carried in the artefact, never left to a covering note. At minimum: REFUSED is not proof of bad faith, and one purchase at one moment is not a pattern."
+    },
+    "reproduce": { "type": "string", "description": "The exact command a stranger runs to recompute this file." }
+  }
+}

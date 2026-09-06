@@ -9,8 +9,9 @@
       "kind": "telephony",
       "scope": "Send SMS + place calls. Every message signed.",
       "endpoint": "/api/phone",
-      "status": "live",
-      "wasm_required": false
+      "status": "not_live",
+      "wasm_required": false,
+      "note": "endpoint does not exist on the edge (404, no handler file) — measured 2026-09-06"
     },
     {
       "id": "document-scanner",
@@ -18,8 +19,9 @@
       "kind": "ocr",
       "scope": "Scan docs (PDF / image / handwritten). Every field signed.",
       "endpoint": "/api/scanner",
-      "status": "live",
-      "wasm_required": false
+      "status": "not_live",
+      "wasm_required": false,
+      "note": "endpoint does not exist on the edge (404, no handler file) — measured 2026-09-06"
     },
     {
       "id": "qr-code-scanner",
@@ -27,8 +29,9 @@
       "kind": "qr",
       "scope": "Scan QR codes. Every code resolved + signed.",
       "endpoint": "/api/qr",
-      "status": "live",
-      "wasm_required": false
+      "status": "not_live",
+      "wasm_required": false,
+      "note": "endpoint does not exist on the edge (404, no handler file) — measured 2026-09-06"
     }
   ],
   "claims_audit_2026-09-05": {

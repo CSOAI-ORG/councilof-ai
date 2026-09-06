@@ -284,13 +284,22 @@ have zero identifier overlap. Machine-readable state: `/interop/root-witness-lat
 Additional x402 tool names may be advertised by discovery. Pricing and successful
 production settlement are pending verification; a 402 challenge is not a payment receipt.
 
-## 8. THE 5 ACCESS SURFACES
+## 8. THE ACCESS SURFACES
 
-1. MCP — `POST https://councilof.ai/mcp`
-2. Chrome MV3 extension source — `https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify` (source; no store install claimed)
-3. Grok plugin — github.com/CSOAI-ORG/council-of-ai-grok
-4. Hermes integration — no public install package is currently advertised
-5. REST + curl — `curl https://councilof.ai/api/gspc`
+The count is not in this heading on purpose: it was "THE 5 ACCESS SURFACES" while two live
+doors — the AG-UI stream and the A2A binding — were missing from the list below, so the heading
+was a number that had stopped being true. Count the rows.
+
+1. MCP (agent to tools) — `POST https://councilof.ai/mcp`
+2. A2A (agent to agent) — `POST https://councilof.ai/api/a2a`, JSON-RPC v1.0; SendMessage answers
+   with the live lid derived from /api/gspc. The interface `/.well-known/agent-card.json` names.
+3. AG-UI (agent to user) — `GET https://councilof.ai/api/agui/gspc-state`, SSE STATE_DELTA +
+   TEXT_MESSAGE_CONTENT derived from /api/gspc per request. Presentation transport: it renders
+   the board and awards nothing. Human view of the same board: https://councilof.ai/dashboard
+4. Chrome MV3 extension source — `https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify` (source; no store install claimed)
+5. Grok plugin — github.com/CSOAI-ORG/council-of-ai-grok
+6. Hermes integration — no public install package is currently advertised
+7. REST + curl — `curl https://councilof.ai/api/gspc`
 
 ---
 # Repository snapshot generated 2026-09-03; verify freshness against current endpoints.

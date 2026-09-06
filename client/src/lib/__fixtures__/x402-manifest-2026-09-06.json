@@ -1,0 +1,62 @@
+{
+ "schema": "csoai.x402/0.2",
+ "x402Version": 2,
+ "scheme": "exact",
+ "network": "eip155:8453",
+ "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+ "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+ "mode": "live",
+ "resources": [
+  {
+   "method": "GET",
+   "url": "https://councilof.ai/api/free-door",
+   "paid_for": null,
+   "amount": "0",
+   "note": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
+   "indexed_in": "x402 Bazaar (PayAI)"
+  },
+  {
+   "method": "GET",
+   "url": "https://councilof.ai/api/request-attestation?subject=<id>&axis=<slug>",
+   "paid_for": "issuance"
+  },
+  {
+   "method": "GET",
+   "url": "https://councilof.ai/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1",
+   "paid_for": "assembly"
+  },
+  {
+   "method": "GET",
+   "url": "https://councilof.ai/api/eunomia-data?feed=1",
+   "paid_for": "assembly"
+  },
+  {
+   "method": "GET",
+   "url": "https://councilof.ai/api/proof?bundle=1",
+   "paid_for": "assembly"
+  },
+  {
+   "method": "GET",
+   "url": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>",
+   "paid_for": "issuance",
+   "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1"
+  },
+  {
+   "method": "GET",
+   "url": "https://councilof.ai/api/art50/marking-evidence?url=<https://\u2026>",
+   "paid_for": "assembly",
+   "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=<https://\u2026>&preview=1"
+  },
+  {
+   "method": "GET",
+   "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+   "paid_for": "assembly"
+  },
+  {
+   "method": "GET",
+   "url": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>",
+   "paid_for": "assembly",
+   "free_preview": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>&preview=1"
+  }
+ ]
+}

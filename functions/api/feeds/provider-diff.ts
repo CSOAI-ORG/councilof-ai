@@ -21,7 +21,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "../_x402";
@@ -212,6 +212,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         per: "history-batch",
         lid: CSOAI_LID,
         preview: { n_targets: free.n_targets, n_diffs_total: free.n_diffs_total, as_of: free.as_of, recent_free: `${origin}/api/feeds/provider-diff` },
+        // named in the challenge itself: where a stranger looks for free, and what settling buys
+        free_preview: `${origin}/api/feeds/provider-diff`,
+        deliverable: "every provider-terms diff leaf to date, assembled, with its inclusion proof to the signed public root",
         invoice_alternative: `${origin}/api/feeds/provider-diff?invoice=gbp&commissioned_by=<org>`,
         rail: railMode(env),
         not_paid_reason: payment.reason,
@@ -219,7 +222,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         catalog: `${origin}/api/x402`,
       },
     });
-    return paymentRequiredResponse(paymentRequired);
+    return paymentRequiredResponseSigned(paymentRequired, env);
   }
 
   // Paid: assemble from the published bytes. Every block is what is already served; nothing invented.

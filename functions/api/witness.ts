@@ -33,7 +33,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
@@ -175,7 +175,8 @@ async function handle(request: Request, env: Env, body: Uint8Array | null): Prom
     leaf: { kind: LEAF_KIND, surface: "public.notice", attests: ATTESTS, cap_bytes: 3072 },
     presumption: PRESUMPTION,
     free_status: statusUrl(sha256),
-    free_verify: `${origin}/api/proof?sha=<card sha256 from status>`,
+    free_preview: `${origin}/api/witness`,
+        free_verify: `${origin}/api/proof?sha=<card sha256 from status>`,
     free_root: `${origin}/root.json`,
     free_anchors: `${origin}/interop/root-witness-latest.json`,
   };
@@ -220,7 +221,7 @@ async function handle(request: Request, env: Env, body: Uint8Array | null): Prom
         explainer: `${origin}/pricing`,
       },
     });
-    return paymentRequiredResponse(paymentRequired);
+    return paymentRequiredResponseSigned(paymentRequired, env);
   }
 
   // Paid: timestamp, then queue. The TSA failing never voids the leaf — it is declared.

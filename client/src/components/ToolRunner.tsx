@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import X402PayButton from "@/components/X402PayButton";
+import type { X402Challenge } from "@/lib/x402Wallet";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -232,6 +234,55 @@ export function isPaidTool(tool: RunnerTool): boolean {
   return tool.csoai?.paid === true;
 }
 
+/**
+ * Pull an x402 challenge out of a tool result. A door answers 402 with an
+ * `accepts` array; we sign the FIRST entry only, and we return null rather
+ * than guess when the fields a signature needs are not all present.
+ */
+export function challengeFromResult(
+  result: RunnerToolResult,
+): X402Challenge | null {
+  const roots: unknown[] = [result.structuredContent, (result as { raw?: unknown }).raw];
+  for (const root of roots) {
+    if (!root || typeof root !== "object") continue;
+    const bag = root as Record<string, unknown>;
+    const nested = bag.error && typeof bag.error === "object" ? (bag.error as Record<string, unknown>) : null;
+    for (const holder of [bag, nested]) {
+      if (!holder) continue;
+      const accepts = holder.accepts;
+      if (!Array.isArray(accepts) || accepts.length === 0) continue;
+      const a = accepts[0] as Record<string, unknown>;
+      const payTo = typeof a.payTo === "string" ? a.payTo : null;
+      const amount =
+        typeof a.amount === "string"
+          ? a.amount
+          : typeof a.maxAmountRequired === "string"
+            ? a.maxAmountRequired
+            : null;
+      const resource =
+        typeof a.resource === "string"
+          ? a.resource
+          : typeof holder.resource === "string"
+            ? (holder.resource as string)
+            : null;
+      if (!payTo || !amount || !resource) continue;
+      return {
+        network: typeof a.network === "string" ? a.network : undefined,
+        asset: typeof a.asset === "string" ? a.asset : undefined,
+        payTo,
+        amount,
+        resource,
+        nonce: typeof a.nonce === "string" ? a.nonce : null,
+        extra:
+          a.extra && typeof a.extra === "object"
+            ? (a.extra as { name?: string; version?: string })
+            : null,
+      };
+    }
+  }
+  return null;
+}
+
 export function resultOutcome(result: RunnerToolResult): string | null {
   const payload = result.structuredContent;
   if (!payload || typeof payload !== "object" || Array.isArray(payload))
@@ -245,7 +296,8 @@ function fieldPlaceholder(name: string, kind: FieldKind): string {
   if (kind === "array") return '[\n  "value"\n]';
   if (kind === "json-or-string")
     return "Paste a card URL, JSON string, or JSON object";
-  if (name === "x_payment") return "Paste the wallet-signed x402 payload";
+  if (name === "x_payment")
+    return "Filled in by Pay with wallet, or paste a signed x402 payload";
   return name;
 }
 
@@ -358,6 +410,11 @@ export default function ToolRunner({
       return next;
     });
   }
+
+  const payChallenge = useMemo(
+    () => (output ? challengeFromResult(output.result) : null),
+    [output],
+  );
 
   async function run() {
     if (!active || busy) return;
@@ -557,10 +614,19 @@ export default function ToolRunner({
                     <code className="font-mono text-[11px]">x_payment</code> to
                     receive the route’s 402 challenge and any published free
                     preview. Nothing is charged by that call. This page never
-                    asks for a seed phrase or private key and does not sign
-                    wallet payments.
+                    asks for a seed phrase or private key. Payment is signed in
+                    your own wallet and only the signature is sent.
                   </p>
                 </div>
+              ) : null}
+
+              {payChallenge ? (
+                <X402PayButton
+                  challenge={payChallenge}
+                  url={payChallenge.resource}
+                  onPaid={(body) => setField("x_payment", body)}
+                  className="mt-5"
+                />
               ) : null}
 
               <form

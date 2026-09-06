@@ -1,5 +1,18 @@
 # Sovereign Tech Fund (Sovereign Tech Agency, DE) — 2026-09-05
 
+> **Measured facts, each naming the endpoint or file that returns it.** Re-fetch before sending.
+>
+> - **Buyer's-eye x402 census (measured artefact).** 316 conformant hosts paid for real: **100 DELIVERED**,
+>   **213 REFUSED**, 2 NO_CHALLENGE, 1 MISMATCH. **13 hosts recorded an on-chain settlement and still
+>   delivered nothing** (0.193 USDC), each row carrying its tx hash so a reader can check the chain.
+>   Dataset: <https://huggingface.co/datasets/csoai/x402-settlement-census> — `summary-2026-09-06.json`.
+>   *One purchase per host, one moment: a single refusal is not a pattern. 1.3398 USDC spent, all of it ours.*
+> - **Revenue.** `/api/revenue` → `one_number.all_time` = **0** distinct non-self payers, status **MEASURED**.
+>   Separately `settled_usdc.count` is **`null`, status UNMEASURED** — null is not zero, and neither is
+>   revenue. Self-settlements (5) and zero-value settlements (4) are recorded and are never payers.
+> - **Hub cells.** `/api/hub-cards` → `counts`. These are **third-party models on the Hub, never our own
+>   coverage** — the endpoint says so in its own `population` field.
+
 Target: https://apply.sovereign.tech/ · Programme page: https://www.sovereign.tech/programs/fund · Form preview (PDF, "1 November 2024"): https://www.sovereign.tech/public/files/Application-Form-Sovereign-Tech-Fund-1-November-2024.pdf · Facts: `FACTS-2026-09-05.json`
 
 ## Status
@@ -90,7 +103,7 @@ The proposed activities benefit each group by removing the single points of fail
 **Describe a specific scenario for the use of your technology and how this meets the needs of your target groups. (300 words)**
 A procurement officer in a public body must show, before contract award, that a chatbot vendor's model marks AI-generated output in the way Article 50 of the EU AI Act expects, and must be able to show the same evidence at audit two years later.
 Today: the officer asks the vendor, receives a PDF, and files it.
-With our technology: the officer (or the vendor) fetches the measurement card for that model and axis from `https://councilof.ai/api/card/…`, or commissions one. The card carries the subject, the frozen bank's hash, the as-of, the measured payload and `sig_ed25519`. The officer's tooling — `pip install csoai-gspc`, or the MCP tool `verify_card` from any agent client — resolves `did:web:csoai.org`, verifies the signature, recomputes the leaf, checks inclusion against the published `root.json` (root, `card_count` and DID signed together), and confirms the root's witness entry in the public transparency log. Two years later the same three checks still pass with the same bytes, or a corrections entry states exactly what changed and when.
+With our technology: the officer (or the vendor) fetches the measurement card for that model and axis from `https://councilof.ai/signed/cards/<sha256>.json` — the index at `https://councilof.ai/signed/card_index.json` lists every card's `card_url` — or commissions one. The card carries the subject, the frozen bank's hash, the as-of, the measured payload and `sig_ed25519`. The officer's tooling — `pip install csoai-gspc`, or the MCP tool `verify_card` from any agent client — resolves `did:web:csoai.org`, verifies the signature, recomputes the leaf, checks inclusion against the published `root.json` (root, `card_count` and DID signed together), and confirms the root's witness entry in the public transparency log. Two years later the same three checks still pass with the same bytes, or a corrections entry states exactly what changed and when.
 What the scenario needs, and what the funded work supplies: a verifier that does not phone home (standard library + Ed25519); a root format without the odd-node duplication caveat (RFC 6962 domain separation, v2); conformance vectors so the officer's auditor can run an independent implementation; a documented key-rotation ledger so a key change does not orphan old evidence; and an external security review of the signing and witness path. None of this is the measurement itself — the card would say the same thing without the grant. It is the assurance that the check is sound.
 
 **How was the work on the project made possible so far (structurally, financially, including volunteer work)? If applicable, list others sources of funding that you applied for and/or received. (300 words)**
@@ -108,10 +121,10 @@ Volunteer contribution: none beyond the maintainer; two external reviewers have 
 - Bus factor of one. One person writes the signer, the verifier, the edge and the corrections. The format is documented, but no second implementation exists to prove the documentation is sufficient.
 - Key custody. Signing is a single Ed25519 key issued to the edge via OIDC. Rotation has no ledger; a "3-of-3 threshold" once described in metadata was JSON, not cryptography, and was retracted. A real rotation and multi-party story is needed before others rely on the DID.
 - Tree construction. `root.json` v1 duplicates an odd node (Bitcoin-style). It is collision-prone in the CVE-2012-2459 sense and safe only because `card_count` is inside the signed preimage; verifiers must reject mismatched lengths. Moving to RFC 6962 domain separation changes every root — a migration, not a patch.
-- Signed-bytes discipline. Two incidents this month: a silent edit that broke a signature for five days, and 26 cards published with a digest in the `sig_ed25519` field (C-2026-0905-02). Both are now guarded in CI; both show that the guards arrived after the mistake.
+- Signed-bytes discipline. Two incidents this month: a silent edit that broke a signature for five days, and 26 cards published with a digest in the `sig_ed25519` field (C-2026-0905-02, `/api/corrections`). Both are now guarded in CI; both show that the guards arrived after the mistake.
 - Dependency and build hygiene. No SBOM, no reproducible-build check, no fuzzing of the canonicalisation and parsers that the verifier trusts.
 - Standards follow-through. The SCITT framing draft is an individual submission with no implementation report yet; the A2A issue is open.
-- Coverage of the mill is bounded by inference endpoints (13 of the top 60 models reachable), which is a measurement problem, not a verifier problem — listed so the scope boundary is clear.
+- Coverage of the mill is bounded by inference-provider availability — `public/fleet/FLEET-B.providers.json` records **31 of 40** locked models with a live provider (`as_of` 2026-08-31, source `GET huggingface.co/api/models/{slug}?expand[]=inferenceProviderMapping`). This is a measurement problem, not a verifier problem — listed so the scope boundary is clear.
 - Issue backlog and roadmapping are done in one person's head and a set of markdown files; there is no maintainer succession plan.
 
 **What are possible alternatives to your project and how does your project compare to them? (300 words)**
@@ -175,3 +188,27 @@ Blog or other publication
 ## Owner line
 
 Create the account at https://apply.sovereign.tech (native account, email confirmation, keep "notification emails" ON) and paste the text above in order. Everything else is done.
+
+## The x402 settlement census, and what it does and does not show
+
+On 6 September 2026 we paid **316** conformant x402 hosts on Base (`eip155:8453`) with correctly
+signed USDC payments (dataset: <https://huggingface.co/datasets/csoai/x402-settlement-census>) and recorded what came back: **100 DELIVERED, 213 REFUSED**, 2 NO_CHALLENGE,
+1 MISMATCH. **104 of the 316 rows carry an on-chain settlement transaction hash**, and **13 hosts
+recorded a settlement and still delivered nothing** (0.193 USDC).
+
+Verifiable without asking us. Taking the earliest settlement in the dataset,
+`0x01f5646ebaa2f705b3e94cd9d4733399fc404c1166c8415d9ee53aea81c0b626`, an `eth_getTransactionReceipt`
+against `mainnet.base.org` returns **block 50943667, status SUCCESS**, `to`
+`0x833589fcd6edb6e08f4c7c32d4f71b54bda02913` — the USDC contract on Base. Every other row's hash
+checks the same way.
+
+Dataset: <https://huggingface.co/datasets/csoai/x402-settlement-census>
+
+**This is expenditure, not income.** Total spend **1.3398 USDC**, every cent of it ours. Paying
+other people is a cost. Our own `/api/revenue` reports `one_number.all_time` = **0** distinct
+non-self payers (status MEASURED) and `settled_usdc.count` = **null** (UNMEASURED). We have never
+been paid by a stranger, and this application does not imply otherwise.
+
+**What it is not:** not a ranking, not a recommendation, and no host is named. REFUSED is not proof
+of bad faith — a host may rate-limit, require an account, or have changed terms between the
+challenge and the retry. One purchase per host, at one moment: a single refusal is not a pattern.

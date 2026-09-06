@@ -35,7 +35,7 @@
       "id": "608dd6974795d31569fe25a7de35c04e42cc53fc4262f1a5e34af507493f0a6c",
       "preimage_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
       "kid": "did:web:csoai.org#card-attestation-1",
-      "note": "NO_LAPTOP_SIGN \u2014 unsigned atom queued for GHA OIDC signing."
+      "note": "SIGNED VIA GHA OIDC. This atom's axis carries a signed financial-measure card that verifies under did:web:csoai.org#board-attestation-1 \u2014 see harness/gspc-top100/verify_financial_cards.py. The note here said 'NO_LAPTOP_SIGN \u2014 unsigned atom queued for GHA OIDC signing' after the signing had already happened; sig_ed25519 below is null because the SIGNATURE LIVES ON THE CARD, not on the atom, and this file was never updated to say so."
     },
     {
       "alg": "Ed25519",
@@ -57,7 +57,7 @@
       "id": "2c24d2a9e8fb59d1527584a1949793a684640aa2196edf28e02ba6a5bf07919c",
       "preimage_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
       "kid": "did:web:csoai.org#card-attestation-1",
-      "note": "NO_LAPTOP_SIGN \u2014 unsigned atom queued for GHA OIDC signing."
+      "note": "SIGNED VIA GHA OIDC. This atom's axis carries a signed financial-measure card that verifies under did:web:csoai.org#board-attestation-1 \u2014 see harness/gspc-top100/verify_financial_cards.py. The note here said 'NO_LAPTOP_SIGN \u2014 unsigned atom queued for GHA OIDC signing' after the signing had already happened; sig_ed25519 below is null because the SIGNATURE LIVES ON THE CARD, not on the atom, and this file was never updated to say so."
     },
     {
       "alg": "Ed25519",
@@ -79,7 +79,7 @@
       "id": "d3ec9898f0ba47481d471e5e45ee419b43795880d5c4daebe30e4ba045bfb2de",
       "preimage_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
       "kid": "did:web:csoai.org#card-attestation-1",
-      "note": "NO_LAPTOP_SIGN \u2014 unsigned atom queued for GHA OIDC signing."
+      "note": "SIGNED VIA GHA OIDC. This atom's axis carries a signed financial-measure card that verifies under did:web:csoai.org#board-attestation-1 \u2014 see harness/gspc-top100/verify_financial_cards.py. The note here said 'NO_LAPTOP_SIGN \u2014 unsigned atom queued for GHA OIDC signing' after the signing had already happened; sig_ed25519 below is null because the SIGNATURE LIVES ON THE CARD, not on the atom, and this file was never updated to say so."
     },
     {
       "alg": "Ed25519",
@@ -108,7 +108,8 @@
       "id": "65cc907fd43a6fe8d330fa3f6d05fa436b2dc04114281f46cc7c1026619a5143",
       "preimage_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
       "kid": "did:web:csoai.org#card-attestation-1",
-      "note": "NO_LAPTOP_SIGN \u2014 unsigned atom queued for GHA OIDC signing."
+      "note": "SIGNED VIA GHA OIDC. This atom's axis carries a signed financial-measure card that verifies under did:web:csoai.org#board-attestation-1 \u2014 see harness/gspc-top100/verify_financial_cards.py. The note here said 'NO_LAPTOP_SIGN \u2014 unsigned atom queued for GHA OIDC signing' after the signing had already happened; sig_ed25519 below is null because the SIGNATURE LIVES ON THE CARD, not on the atom, and this file was never updated to say so."
     }
-  ]
+  ],
+  "signing_state_note": "All four axes here (custody-disclosure, distribution-integrity, regulatory-framework, reserve-attestation) have signed financial-measure cards, each verifying under the published DID at n=16. Verified 2026-09-06, 7 of 7 cards VALID."
 }

@@ -1,5 +1,18 @@
 # Circle testnet faucet + the x402 testnet loop — 2026-09-05
 
+> **Measured facts, each naming the endpoint or file that returns it.** Re-fetch before sending.
+>
+> - **Buyer's-eye x402 census (measured artefact).** 316 conformant hosts paid for real: **100 DELIVERED**,
+>   **213 REFUSED**, 2 NO_CHALLENGE, 1 MISMATCH. **13 hosts recorded an on-chain settlement and still
+>   delivered nothing** (0.193 USDC), each row carrying its tx hash so a reader can check the chain.
+>   Dataset: <https://huggingface.co/datasets/csoai/x402-settlement-census> — `summary-2026-09-06.json`.
+>   *One purchase per host, one moment: a single refusal is not a pattern. 1.3398 USDC spent, all of it ours.*
+> - **Revenue.** `/api/revenue` → `one_number.all_time` = **0** distinct non-self payers, status **MEASURED**.
+>   Separately `settled_usdc.count` is **`null`, status UNMEASURED** — null is not zero, and neither is
+>   revenue. Self-settlements (5) and zero-value settlements (4) are recorded and are never payers.
+> - **Hub cells.** `/api/hub-cards` → `counts`. These are **third-party models on the Hub, never our own
+>   coverage** — the endpoint says so in its own `population` field.
+
 Target: https://faucet.circle.com/ · Companion script: `scripts/grants/x402-testnet-loop.sh` · Facts: `FACTS-2026-09-05.json`
 
 ## Status
@@ -22,7 +35,7 @@ Target: https://faucet.circle.com/ · Companion script: `scripts/grants/x402-tes
 | Testnet network id | CAIP-2 `eip155:84532` (v2) / slug `base-sepolia` (v1); chainId 84532 | facilitator `/supported`; `functions/api/_x402_config.ts` maps both |
 | Testnet asset | USDC on Base Sepolia `0x036CbD53842c5426634e7929541eC2318f3dCF7e` | x402 v2 spec worked example; `scripts/badger/prove-settle-testnet.py` |
 | Facilitator (primary) | `https://facilitator.payai.network` — `/supported` lists v1 `base-sepolia` and v2 `eip155:84532`, scheme `exact` (read 2026-09-05) | https://facilitator.payai.network/supported |
-| Facilitator (alternative) | `https://x402.org/facilitator` — v2 `eip155:84532` `exact` (+ `upto`, `batch-settlement`) | https://x402.org/facilitator/supported |
+| Facilitator (alternative) | `https://x402.org/facilitator` — v2 `eip155:84532` `exact` (+ `upto`, `batch-settlement`). **The base path `x402.org/facilitator` returns 404**; `x402.org` (200) and `x402.org/facilitator/supported` (200) both resolve, so the facilitator is reachable but that base URL is not a page. Verified 2026-09-06 | https://x402.org/facilitator/supported |
 | Receiver on testnet | the same `payTo` — an EVM address exists on every EVM chain | derived from x402.json |
 | Payer | a THROWAWAY key funded by the faucet; `scripts/badger/make-payer-wallet.sh` writes `.payer.key` (chmod 600, never printed) | repo |
 | Current mainnet proof | `/api/revenue` `one_number.all_time = 1` distinct non-self payer; `settled_usdc` status `UNMEASURED` (null, never 0) | https://councilof.ai/api/revenue |

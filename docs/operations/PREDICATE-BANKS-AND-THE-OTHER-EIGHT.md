@@ -73,8 +73,47 @@ Two different frozen banks behind one axis label would make a cell ambiguous abo
 
 `csoai/gspc-slot15` is a **0-byte** file: unmeasurable, which is not the same as empty and not zero.
 
+## A second blocker, measured 2026-09-06: all nine are PRIVATE
+
+Every one of the nine returns **401 to an anonymous reader** — the dataset page and the data file
+alike. The fourteen behavioural banks all return 200. Same client, same minute:
+
+| banks | page | data file | anonymous reader |
+|---|---:|---:|---|
+| the 14 behavioural (`gspc-agi` … `gspc-gov`, `items.jsonl`) | 200 | 200 | **can read them** |
+| the 9 predicate (`gspc-accountability` … `gspc-continuity`, `gspc-<axis>.jsonl`) | 401 | 401 | **cannot** |
+
+    for b in accountability creativity efficiency fairness human-vs-ai \
+             sovereignty transparency safety continuity; do
+      printf '%s ' "$b"
+      curl -sL -o /dev/null -w '%{http_code}\n' \
+        "https://huggingface.co/datasets/csoai/gspc-$b/resolve/main/gspc-$b.jsonl"
+    done
+
+**This section's own example command, above, does not work for a stranger.** It was written on
+2026-09-05 from a session holding an org token, and the anonymous case was never tried. A read that
+succeeds because of who is asking is not evidence that the bank is published.
+
+This matters independently of the canon ruling below, and it is the harder of the two:
+
+- A cell is stranger-recomputable when a stranger can fetch the bank, run the predicate and get the
+  same `n` and accuracy. For these nine that is impossible at step one, for anyone outside the org.
+- So even a `yes` ruling would produce 35 cells citing a bank no reader can open. A signed card over
+  an unfetchable bank is a card that must be taken on trust, which is the thing the board exists not
+  to ask for.
+- Nothing is mis-stated on the board today: the pod does not grade these nine, so no live cell cites
+  them. This is a blocker on the *next* step, not a defect in a published number.
+
+Making the nine public is an **owner decision** (they may be private deliberately). It is also
+cheap, and it is a precondition for the eight-axis work rather than a consequence of it — so it is
+worth answering before the ruling, not after.
+
 ## The ask
 
 Rule on whether the deterministic-fact axes are graded per-model. If yes, they need their own
 canonical set and their own cell namespace, not a widened `CANONICAL_MODEL_AXES`. If no, say so and
 the nine banks stop being candidate coverage. Either way the answer is worth **35 cells** at n=30.
+
+And, separately and first: publish the nine, or say they stay private. Measured 2026-09-06 —
+9 of 9 are 401 to an anonymous reader, so no card graded against them could be recomputed by
+anyone outside the org.

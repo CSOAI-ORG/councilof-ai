@@ -220,8 +220,49 @@ describe("the zero price must survive verifyX402Payment itself", () => {
     expect(res.status).toBe(402);
     const body = (await res.json()) as { csoai?: { not_paid_reason?: string } };
     expect(body.csoai?.not_paid_reason).toBeTruthy();
-    // and a caller who presented nothing gets the plain challenge, with no verdict invented
-    const plain = (await (await call()).json()) as Record<string, unknown>;
-    expect(plain.csoai).toBeUndefined();
+    // and a caller who presented nothing gets the plain challenge, with no verdict invented.
+    //
+    // TWO CHANGES LANDED ON THIS ASSERTION AT ONCE, and they agree about the rule while
+    // disagreeing about how to say it.
+    //
+    // It used to read `expect(plain.csoai).toBeUndefined()`, because not_paid_reason was the ONLY
+    // thing the block ever carried, so "no block" and "no invented verdict" were one sentence.
+    // Then Phase E made every 402 advertise its free preview and its deliverable in that block,
+    // and the offer-receipt extension (#1663) added `offer_receipt` through the shared responder
+    // (_x402_offer.ts:217 spreads the existing csoai and appends it). Neither is a statement
+    // about a caller: one says where to look for free and what settling buys, the other is
+    // provenance about our own signature.
+    //
+    // So the rule is stated as what it always meant — nothing here speaks about a payment that
+    // was never presented — and every key that IS allowed is named, so a fourth key cannot arrive
+    // unnoticed the way these two did.
+    const plain = (await (await call()).json()) as {
+      csoai?: { not_paid_reason?: string; free_preview?: string; deliverable?: string };
+    };
+    expect(plain.csoai?.not_paid_reason).toBeUndefined();
+    expect(Object.keys(plain.csoai ?? {}).sort())
+      .toEqual(["deliverable", "free_preview", "offer_receipt"]);
+    expect(plain.csoai?.free_preview).toBe("https://councilof.ai/api/free-door");
+    expect(plain.csoai?.deliverable).toBeTruthy();
+  });
+
+  // MEASURED 2026-09-06 against the live PayAI index: our entry's stored `description` is EXACTLY
+  // 120 characters, cut mid-sentence — "...free forever — this". That is the whole of what an agent
+  // browsing 28,230 resources is shown before it decides whether to open the door, and the record
+  // is a snapshot: it was written on 5 Sep and six settlements since have not refreshed it.
+  //
+  // So the first sentence has to survive alone at 120. Today it is 118 — it fits by two
+  // characters, and by accident rather than by rule. One more word in the opening clause and the
+  // Bazaar's copy of our only listing ends mid-word again, with nothing anywhere reporting it.
+  it("says the whole first sentence inside the 120 characters the Bazaar keeps", async () => {
+    const { DESCRIPTION } = await import("./free-door");
+    const first = DESCRIPTION.split(". ")[0] + ".";
+    expect(first.length,
+      `the Bazaar stores 120 chars; this first sentence is ${first.length} and would be cut mid-word`)
+      .toBeLessThanOrEqual(120);
+    expect(first, "the first sentence must name what the door serves, not only its price")
+      .toMatch(/board totals|signed root/);
+    expect(DESCRIPTION, "no price on any surface — the amount lives in accepts[] and nowhere else")
+      .not.toMatch(/\$|USDC|\d+\s*(cent|usd)/i);
   });
 });

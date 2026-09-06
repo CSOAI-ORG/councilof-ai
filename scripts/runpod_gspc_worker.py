@@ -991,6 +991,7 @@ def stage_unsigned_card(
     evidence_sha256: str,
     hits: int,
     n: int,
+    parse_errors: int,
     transport_errors: int,
     reason: str,
 ) -> dict[str, Any]:
@@ -1020,6 +1021,7 @@ def stage_unsigned_card(
             "model_manifest_digest": model_manifest_digest,
             "instrument_sha256": instrument_sha256,
             "items_sha256": evidence_sha256,
+            "parse_errors_excluded": parse_errors,
             "transport_errors_excluded": transport_errors,
         },
     }
@@ -1266,6 +1268,12 @@ def run_once(
     else:
         reason = "unsigned compute output; admission and verification required"
 
+    graded_n = transport_ok - parse_errors
+    # NOT appended to `reason`: that string becomes body.unmeasured, which the intake
+    # verifier requires to be EXACTLY the admission-boundary sentence. Appending rejected
+    # every run that had a parse error -- the runs this change exists for. The count is a
+    # PIN in compute_evidence, recomputed by the verifier, not prose on a contract string.
+
     card = stage_unsigned_card(
         config=config,
         run_id=run_id,
@@ -1274,12 +1282,28 @@ def run_once(
         instrument_sha256=instrument_sha256,
         evidence_sha256=evidence_sha256,
         hits=correct,
-        n=transport_ok,
+        parse_errors=parse_errors,
+        # An item whose response carried no parseable label was NOT answered, and is
+        # therefore not a wrong answer either. transport errors already left n; parse
+        # errors stayed in it, and the counter below was literally named
+        # "parse_errors_counted_wrong". On 2026-09-06 four local-mill runs returned
+        # 36 of 36 items with parsed_label null and done_reason "length" -- the token
+        # budget expired inside a reasoning preamble -- and the card recorded accuracy
+        # 0.0 at n=36, which the signer sets MEASURED. Absent is not zero.
+        n=graded_n,
         transport_errors=transport_errors,
         reason=reason,
     )
     card_bytes = canonical_json_bytes(card) + b"\n"
-    landable = halted_code is None and transport_errors == 0 and attempted == len(items)
+    # A run where nothing parsed measured nothing. It must not present a landable
+    # candidate: n=0 has no accuracy, and the old code would have offered n=36
+    # accuracy 0.0 for exactly that run.
+    landable = (
+        halted_code is None
+        and transport_errors == 0
+        and attempted == len(items)
+        and graded_n > 0
+    )
     candidate_name = "card-unsigned.json" if landable else "card-incomplete.json"
     run_finished = utc_now()
     run_manifest = {
@@ -1301,7 +1325,8 @@ def run_once(
             "attempted": attempted,
             "transport_ok": transport_ok,
             "transport_errors_excluded": transport_errors,
-            "parse_errors_counted_wrong": parse_errors,
+            "parse_errors_excluded": parse_errors,
+            "graded_n": graded_n,
             "correct": correct,
         },
         "complete": attempted == len(items) and halted_code is None,
@@ -1311,7 +1336,9 @@ def run_once(
         "landable_candidate": landable,
         "signature": None,
         "detail_code": halted_code
-        or ("TRANSPORT_ERRORS" if transport_errors else "COMPLETE_UNSIGNED"),
+        or ("TRANSPORT_ERRORS" if transport_errors else
+            "ALL_UNPARSED" if graded_n == 0 else
+            "COMPLETE_UNSIGNED"),
     }
     exclusive_write_bytes(
         run_dir / "run.json",

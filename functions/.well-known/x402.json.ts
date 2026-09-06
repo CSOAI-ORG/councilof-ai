@@ -4,6 +4,7 @@
  * the metered resources live on THIS origin. No amounts here — they live in each 402 challenge.
  */
 import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "../api/_x402_config";
+import { OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL, X402_SIGNER_KID } from "../api/_x402_offer";
 import { USDC_BASE } from "../api/_skus";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 
@@ -20,6 +21,36 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
     payTo: resolvePayTo(env),
     mode: rail.mode,
     mode_note: rail.note,
+    // WHAT THIS RAIL SUPPORTS BEYOND THE BASE PROTOCOL. Declared here so an agent learns it
+    // before it spends a request finding out. `offer-receipt` is the x402 Offer & Receipt
+    // extension: every 402 this estate emits carries a server-signed offer, and every settled
+    // 200 carries a signed receipt. Both are JWS/EdDSA under a key published in our DID
+    // document — a format the extension names in §3.3, verified by a mechanism it names in
+    // §4.5.1, so this is the spec, not a dialect of it.
+    extensions: {
+      "offer-receipt": {
+        supported: true,
+        spec: OFFER_RECEIPT_SPEC_URL,
+        spec_commit: OFFER_RECEIPT_SPEC_SHA,
+        format: "jws",
+        alg: "EdDSA",
+        kid: X402_SIGNER_KID,
+        did_document: "https://csoai.org/.well-known/did.json",
+        offers: "every 402 from this estate, in extensions['offer-receipt'].info.offers[] (§4.1)",
+        receipts:
+          "every settled 200, in the X-PAYMENT-RESPONSE SettlementResponse under " +
+          "extensions['offer-receipt'].info.receipt (§5.1)",
+        eip712:
+          "NOT offered. The extension admits eip712 and jws; the edge holds one Ed25519 key and no " +
+          "secp256k1 signer, so we emit jws only. A client that requires eip712 should treat this " +
+          "rail as unsigned rather than expect a format we cannot produce.",
+        verify: {
+          hosted: `${origin}/api/receipts/verify`,
+          offline: "scripts/verify_receipt.py in github.com/CSOAI-ORG/councilof-ai — reads did.json, asks us nothing",
+        },
+        receipts_by_payer: `${origin}/api/receipts?payer=0x…`,
+      },
+    },
     resources: [
       // The ONLY resource of ours the x402 Bazaar actually indexes, and it was missing from the
       // document agents read after they find the domain. Discovery pointed one way and the

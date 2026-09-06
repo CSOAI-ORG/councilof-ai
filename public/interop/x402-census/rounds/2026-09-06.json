@@ -1,0 +1,107 @@
+{
+  "schema": "csoai.x402-census.round/0.1",
+  "round_id": "2026-09-06",
+  "mode": "SETTLE",
+  "as_of": "2026-09-06T06:46:22Z",
+  "window": {
+    "first_observed": "2026-09-06T06:37:56Z",
+    "last_observed": "2026-09-06T06:46:22Z"
+  },
+  "network": "eip155:8453",
+  "asset": "USDC",
+  "population": {
+    "probed": 316,
+    "dry_probed": 316,
+    "eligibility": "conformant AND eip155:8453 AND scheme exact AND amount a positive integer <= per_host_cap units AND not one of our own hosts",
+    "hosts_sha256": "9e541451f52ebd862ca9660144801269af6ce5dc14f1850e0ba008a4cda0e3db"
+  },
+  "caps": {
+    "per_host_units": 50000,
+    "total_usdc": 5.5
+  },
+  "payer": {
+    "addresses": [
+      "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7"
+    ],
+    "note": "a throwaway wallet the estate controls; every unit here is a cost, never revenue"
+  },
+  "rows": {
+    "settle": {
+      "path": "docs/product/x402-census/rounds/2026-09-06/settle.jsonl",
+      "sha256": "5c6b991d99ee7a80cc14a3c72e94ac6dbeda42348ea87916f4576520cbe2ac0b",
+      "n": 316
+    },
+    "dry": {
+      "path": "docs/product/x402-census/rounds/2026-09-06/dry.jsonl",
+      "sha256": "39726b120bcab150f65acabadcea4b7c64e2684fee8ae01cb5219094af673b3c",
+      "n": 316
+    }
+  },
+  "outcome": {
+    "DELIVERED": {
+      "hosts": 100,
+      "pct": 31.6
+    },
+    "REFUSED": {
+      "hosts": 213,
+      "pct": 67.4
+    },
+    "MISMATCH": {
+      "hosts": 1,
+      "pct": 0.3
+    },
+    "NO_CHALLENGE": {
+      "hosts": 2,
+      "pct": 0.6
+    }
+  },
+  "paid_rows": 314,
+  "settlement_receipts": {
+    "tx_hash": 100,
+    "unparseable": 4,
+    "none": 210
+  },
+  "take_and_refuse": {
+    "hosts": 13,
+    "usdc": 0.193,
+    "definition": "status REFUSED and settle_tx is a 0x-prefixed 32-byte hash reported in the host's own PAYMENT-RESPONSE"
+  },
+  "spend_usdc": 1.339794,
+  "pay_to": {
+    "distinct": 173,
+    "top1_hosts": 62
+  },
+  "latency_s": {
+    "probe_median": 0.27,
+    "paid_median": 0.64
+  },
+  "x402_version": {
+    "2": 314,
+    "None": 2
+  },
+  "dry_vs_settle": {
+    "challenge_units_changed": 1,
+    "dropped": [],
+    "added": []
+  },
+  "caveats": [
+    "REFUSED is not proof of bad faith: a host may rate-limit, require an account, or have changed terms between the challenge and the retry.",
+    "One purchase per host, one moment. A single refusal is not a pattern; the second round next week is what makes it one.",
+    "Self excluded: our own hosts are never in the population; paying ourselves would be a self-settlement.",
+    "No host was contacted, ranked or recommended. A row says what happened; the chain says whether it happened."
+  ],
+  "reproduce": "python3 scripts/grants/x402_census_round.py --round-id 2026-09-06 --run --hosts-from <previous round> (DRY always; SETTLE=1 X402_PAYER_KEY=<throwaway> for the paid pass)",
+  "urls": {
+    "rows_settle": "https://huggingface.co/datasets/csoai/x402-settlement-census/resolve/main/rounds/2026-09-06/settle.jsonl",
+    "rows_dry": "https://huggingface.co/datasets/csoai/x402-settlement-census/resolve/main/rounds/2026-09-06/dry.jsonl",
+    "rows_in_repo": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/product/x402-census/rounds/2026-09-06/settle.jsonl",
+    "analysis": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/product/x402-census/rounds/2026-09-06/analysis.md",
+    "deltas": [],
+    "root": "https://councilof.ai/root.json",
+    "witness_pointer": "https://councilof.ai/interop/root-witness-pointer.json"
+  },
+  "leaves": {
+    "staged": null,
+    "note": "none staged for this round: its 316 purchases are already published as the 104 cards under /interop/x402-census-cards/, and a second leaf set for the same event would fork one corpus into two. No leaves URL is published because there are no leaves to serve."
+  }
+}

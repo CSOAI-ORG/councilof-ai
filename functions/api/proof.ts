@@ -9,7 +9,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
@@ -86,6 +86,11 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
           lid: CSOAI_LID,
           never: ["grade", "rank", "certificate"],
           free: { one_inclusion: "/api/proof?sha=<64-hex>" },
+          // Every 402 on this rail names, in the challenge itself, where a stranger can look for
+          // free and exactly what settling buys. Five of nine doors carried neither on 2026-09-06,
+          // so a buyer reading the challenge could not tell what they were paying for.
+          free_preview: "/api/proof?sha=<64-hex>",
+          deliverable: "one inclusion proof for the given leaf against the signed public root, with the root and the path — verification of it stays free forever",
           settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
           verification:
             "x402 facilitator /verify (fail-closed; unverified receipts are refused)",
@@ -95,7 +100,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
           catalog: u("/api/x402"),
         },
       });
-      return paymentRequiredResponse(paymentRequired);
+      return paymentRequiredResponseSigned(paymentRequired, env);
     }
   }
 

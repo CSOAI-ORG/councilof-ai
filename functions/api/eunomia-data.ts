@@ -18,7 +18,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
@@ -92,9 +92,13 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         queryParamsSchema: { properties: { feed: { type: "string", const: "1" } }, required: ["feed"] },
         outputExample: { schema: "csoai.eunomia-data/0.2", kind: "feed", blocks: { signals: {}, first_fine_watch: {}, root: {}, card_index: {} } },
       }),
-      csoai: { schema: "csoai.eunomia-data/0.2", per: "feed-pull", lid: CSOAI_LID, ...preview, rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402` },
+      csoai: { schema: "csoai.eunomia-data/0.2", per: "feed-pull", lid: CSOAI_LID, ...preview,
+        // named in the challenge so a buyer knows where to look for free and what settling buys
+        free_preview: `${origin}/api/eunomia-data`,
+        deliverable: "the assembled signed data feed for this lane — data only, never a score and never a rank",
+        rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402` },
     });
-    return paymentRequiredResponse(paymentRequired);
+    return paymentRequiredResponseSigned(paymentRequired, env);
   }
 
   if (env.REVENUE_KV) {

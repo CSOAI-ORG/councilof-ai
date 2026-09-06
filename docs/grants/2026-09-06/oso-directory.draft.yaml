@@ -1,0 +1,19 @@
+# DRAFT — not submitted. Target: opensource-observer/oss-directory data/projects/c/csoai-org.yaml
+# Validate with their `pnpm run validate` before any PR; a PR needs an owner ruling (others' repo).
+# Field names follow the README's artifact kinds (git repositories, npm, pypi, websites); schema
+# version and exact keys must be checked against src/resources/schema in their repo.
+version: 7
+name: csoai-org
+display_name: Council of AI (CSOAI)
+description: >-
+  Independent measurement of AI-model behaviour on frozen banks, published as Ed25519-signed cards
+  under a public Merkle root with a Rekor witness and a public corrections ledger. Free verifier
+  (PyPI csoai-gspc, npm csoai-gspc-mcp). Measurement, not certification.
+websites:
+  - url: https://councilof.ai
+github:
+  - url: https://github.com/CSOAI-ORG
+npm:
+  - url: https://www.npmjs.com/package/csoai-gspc-mcp
+pypi:
+  - url: https://pypi.org/project/csoai-gspc

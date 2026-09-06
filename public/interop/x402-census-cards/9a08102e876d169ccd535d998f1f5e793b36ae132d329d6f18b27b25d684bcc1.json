@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "x402.cambrian.network",
+ "as_of": "2026-09-06T06:46:13Z",
+ "source_urls": [
+  "https://x402.cambrian.network/api/v1/evm/chains",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "x402.cambrian.network",
+  "resource": "https://x402.cambrian.network/api/v1/evm/chains",
+  "status": "DELIVERED",
+  "asked_units": 50000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x4c3b0b1cab290300bd5a36ad5f33a607acbd7ac3",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x7625612c46153328d09642711b93183ce9dbcf007ba7f2e2fd799601e038b73b",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.27,
+   "paid": 2.01
+  },
+  "delivered_bytes": 124,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:46:13Z",
+  "n": 1
+ },
+ "sha256": "9a08102e876d169ccd535d998f1f5e793b36ae132d329d6f18b27b25d684bcc1",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

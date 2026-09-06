@@ -80,22 +80,25 @@ def main() -> None:
             "blocked_by_key": ["Firecrawl API key (news) — web_search/web_extract down",
                                "HF token (badges public)", "burner $5 (x402 live)", "EAS schema"],
         },
+        # OWNER RULING 2026-09-06: no prices. Amounts belong only in a resource's 402
+        # challenge. "PRICED" is replaced by whether a DOOR EXISTS, which is the fact a reader
+        # can check: curl the door and see a 402, or do not list it.
         "revenue_loops": [
-            {"loop": "Evidence bundle", "sku": "evidence-bundle", "price": 0.50, "state": "PRICED"},
-            {"loop": "EU AI Act attestation", "sku": "eu-ai-act-pack", "price": 0.50, "state": "PRICED"},
-            {"loop": "SWIFT/bank census pack", "sku": "swift-bank-pack", "price": 0.25, "state": "PRICED"},
-            {"loop": "XRPL asset evidence", "sku": "xrpl-asset-evidence", "price": 0.05, "state": "PRICED"},
-            {"loop": "Signed data feed", "sku": "signed-data-feed", "price": 1.00, "state": "PRICED"},
-            {"loop": "Receipts batch", "sku": "receipts-batch", "price": 0.25, "state": "PRICED"},
-            {"loop": "Provider diff feed", "sku": "provider-diff-feed", "price": 1.00, "state": "PRICED"},
-            {"loop": "Commission card", "sku": "commission-card", "price": 0.02, "state": "PRICED"},
-            {"loop": "A2A settlement share (board: 1.5%)", "sku": "a2a-share", "price": "1.5% of settled value", "state": "CONCEPT — needs settlement design"},
-            {"loop": "Grants (operator)", "target": "£280K potential", "state": "STAGED — 4 bodies, 5-min clicks"},
+            {"loop": "Evidence bundle", "sku": "evidence-bundle", "door": "/api/evidence-bundle?...&bundle=1", "state": "DOOR LIVE"},
+            {"loop": "EU AI Act attestation", "sku": "eu-ai-act-pack", "door": "/api/evidence-bundle?obligation=article-50|article-53&subject=<model>&bundle=1", "state": "DOOR LIVE"},
+            {"loop": "XRPL asset evidence", "sku": "xrpl-asset-evidence", "door": "/api/rwa/evidence", "state": "DOOR LIVE"},
+            {"loop": "Signed data feed", "sku": "signed-data-feed", "door": "/api/eunomia-data", "state": "DOOR LIVE"},
+            {"loop": "Receipts batch", "sku": "receipts-batch", "door": "/api/receipts/batch", "state": "DOOR LIVE"},
+            {"loop": "Provider diff feed", "sku": "provider-diff-feed", "door": "/api/feeds/provider-diff", "state": "DOOR LIVE"},
+            {"loop": "Commission card", "sku": "commission-card", "door": "/api/request-attestation", "state": "DOOR LIVE"},
+            {"loop": "SWIFT/bank census pack", "sku": "swift-bank-pack", "door": None, "state": "NO DOOR — /api/swift is a free reader (kind: reader, 200 not 402). Not offered until a door exists."},
+            {"loop": "A2A settlement share", "sku": "a2a-share", "door": None, "state": "CONCEPT — needs settlement design; no amount stated"},
+            {"loop": "Grants (operator)", "state": "STAGED — 4 bodies, 5-min clicks"},
         ],
         "x402_ready": [s["sku"] for s in [
             {"sku": "commission-card"}, {"sku": "evidence-bundle"}, {"sku": "signed-data-feed"},
             {"sku": "xrpl-asset-evidence"}, {"sku": "provider-diff-feed"}, {"sku": "receipts-batch"},
-            {"sku": "eu-ai-act-pack"}, {"sku": "swift-bank-pack"}]],
+            {"sku": "eu-ai-act-pack"}]],   # swift-bank-pack removed: no door
         "layer0_ceremony": {
             "live": "merkle_root 05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
             "ots_receipts": "684 bytes / 4 calendars (a.pool, b.pool, alice, bob) — REAL pending stamps",

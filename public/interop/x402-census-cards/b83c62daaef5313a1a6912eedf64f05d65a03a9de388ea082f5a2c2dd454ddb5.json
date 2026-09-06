@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "402.com.tr",
+ "as_of": "2026-09-06T06:42:09Z",
+ "source_urls": [
+  "https://402.com.tr/api/x402/chain-status",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "402.com.tr",
+  "resource": "https://402.com.tr/api/x402/chain-status",
+  "status": "DELIVERED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x973a31858f4d2125f48c880542da11a2796f12d6",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x4107159101b6a70451b06490663bb4abe177e4418fcf7161e5527bc6de1c1e93",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.6,
+   "paid": 2.11
+  },
+  "delivered_bytes": 916,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:42:09Z",
+  "n": 1
+ },
+ "sha256": "b83c62daaef5313a1a6912eedf64f05d65a03a9de388ea082f5a2c2dd454ddb5",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

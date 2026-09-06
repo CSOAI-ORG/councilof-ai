@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useSiteChromeHidden } from "@/lib/osChrome";
 
 // CookieConsent — a persistent (localStorage, not per-session) GDPR consent
@@ -14,9 +14,33 @@ export function hasAnalyticsConsent(): boolean {
   try { return localStorage.getItem(STORAGE_KEY) === "accepted"; } catch { return false; }
 }
 
+/**
+ * The banner is fixed to the bottom edge, and so is the workspace launcher
+ * (CouncilLobby, `bottom-5 right-5`). Measured on /products at 1280x800 on
+ * 2026-09-06 they collided: the 158.34px pill overlapped the banner by 19.5px
+ * across its whole width and covered 98.34px of the "Accept analytics" button.
+ * The banner reserved `pr-16 sm:pr-20` (80px) for it; the pill needs 178.34px,
+ * so the reservation was short by 98.34px — exactly the measured overlap.
+ *
+ * A reserved padding cannot work: the pill's width depends on its label, which
+ * is hidden below `sm`. So the banner publishes its OWN measured height and the
+ * launcher lifts by it. Nothing is typed; a taller wrapped banner pushes the
+ * pill further on its own.
+ */
+const BANNER_H_VAR = "--cookie-banner-h";
+
 export default function CookieConsent() {
   const hideChrome = useSiteChromeHidden();
   const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  const publishHeight = useCallback((px: number) => {
+    try {
+      document.documentElement.style.setProperty(BANNER_H_VAR, `${px}px`);
+    } catch {
+      // non-DOM environment — the launcher's own fallback of 0px applies.
+    }
+  }, []);
 
   useEffect(() => {
     try {
@@ -25,6 +49,26 @@ export default function CookieConsent() {
       // localStorage unavailable (private mode / disabled) — don't block rendering, just skip the banner.
     }
   }, []);
+
+  // Measure what actually rendered, and keep measuring: the banner wraps to two
+  // rows at narrow widths, which changes its height.
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) {
+      publishHeight(0);
+      return;
+    }
+    publishHeight(el.offsetHeight);
+    const ro =
+      typeof ResizeObserver === "function"
+        ? new ResizeObserver(() => publishHeight(el.offsetHeight))
+        : null;
+    ro?.observe(el);
+    return () => {
+      ro?.disconnect();
+      publishHeight(0); // dismissed or unmounted — the pill drops back to bottom-5
+    };
+  }, [visible, hideChrome, publishHeight]);
 
   function choose(value: "accepted" | "declined") {
     try { localStorage.setItem(STORAGE_KEY, value); } catch {}
@@ -35,9 +79,10 @@ export default function CookieConsent() {
 
   return (
     <div
+      ref={ref}
       role="region"
       aria-label="Cookie consent"
-      className="fixed bottom-0 inset-x-0 z-[60] border-t border-border bg-card/95 px-3 py-1.5 pr-16 text-foreground sm:pr-20"
+      className="fixed bottom-0 inset-x-0 z-[60] border-t border-border bg-card/95 px-3 py-1.5 text-foreground"
     >
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2">
       <p className="text-[11px] leading-snug text-muted-foreground">

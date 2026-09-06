@@ -1,6 +1,6 @@
 {
-  "name": "Council of AI \u2014 Measurement Agent",
-  "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance \u00b7 Safety \u00b7 Provenance \u00b7 Continuity) \u2014 quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here \u2014 with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
+  "name": "Council of AI — Measurement Agent",
+  "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
   "version": "1.1.0",
   "provider": {
     "organization": "CSOAI Ltd",
@@ -22,13 +22,18 @@
     "extensions": [
       {
         "uri": "https://councilof.ai/a2a/extensions/signed-receipts/v1/",
-        "description": "Ed25519-signed task-outcome receipts plus a did:web key-trust convention for AgentCard signing (A2A v1.0 \u00a78.4). A receipt is evidence of what was claimed, not a certification, and a signature over it is an integrity claim rather than a truth claim.",
-        "required": false
+        "required": false,
+        "description": "A DRAFT WE PUBLISH AND DO NOT YET EMIT: this agent attaches no receipt to a response today. Declared because we author the specification, not because the door implements it. Ed25519-signed task-outcome receipts plus a did:web key-trust convention for AgentCard signing (A2A v1.0 §8.4). A receipt is evidence of what was claimed, not a certification, and a signature over it is an integrity claim rather than a truth claim."
       },
       {
         "uri": "https://councilof.ai/.well-known/x402.json",
-        "description": "x402 discovery index for the agent pay rail (also GET /api/x402). Free door amount 0 at /api/free-door. Verification stays free. payTo is merchant not payer. Self-settle is not revenue. Settlement UNCHECKABLE until facilitator receipt. Measurement credential, never a grade.",
-        "required": false
+        "required": false,
+        "description": "x402 discovery index for the agent pay rail (also GET /api/x402). Free door amount 0 at /api/free-door. Verification stays free. payTo is merchant not payer. Self-settle is not revenue. Settlement is PROVEN on Base mainnet: transaction hashes are published in docs/product/SETTLED-DOORS and verifiable on chain by anyone, independently of this server. Measurement credential, never a grade."
+      },
+      {
+        "uri": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+        "required": false,
+        "description": "x402 Offer & Receipt extension (v0.6), JWS profile. Every HTTP 402 this agent's doors emit carries a server-signed offer committing to the terms in each accepts[] entry; every settled response carries a signed receipt. Format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1, resolvable at https://csoai.org/.well-known/did.json (an authorization mechanism the extension names in section 4.5.1). eip712 is NOT emitted: the edge holds one Ed25519 key and no secp256k1 signer, and a format we cannot produce is better declared missing than faked. A receipt proves this server signed those bytes; it is not by itself proof that money moved, and the transaction field, when present, is a claim to check against the chain."
       }
     ]
   },
@@ -52,13 +57,13 @@
       ],
       "examples": [
         "SendMessage {\"message\": {\"messageId\": \"m-1\", \"role\": \"ROLE_USER\", \"parts\": [{\"text\": \"board\"}]}}",
-        "GET /api/gspc \u2014 the same board, outside A2A"
+        "GET /api/gspc — the same board, outside A2A"
       ]
     },
     {
       "id": "east-west-crosswalk",
       "name": "East-West crosswalk & cross-border card",
-      "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only \u2014 determination stays with authorities.",
+      "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only — determination stays with authorities.",
       "tags": [
         "cross-border",
         "crosswalk",
@@ -66,7 +71,7 @@
         "verification"
       ],
       "examples": [
-        "GET /api/cross \u2014 cross-border signed card"
+        "GET /api/cross — cross-border signed card"
       ]
     },
     {
@@ -85,7 +90,7 @@
     {
       "id": "benchmark-quality-register",
       "name": "Benchmark-quality register",
-      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only \u2014 no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
+      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
       "tags": [
         "meta-evaluation",
         "benchmark-quality",
@@ -108,7 +113,7 @@
         "c2pa"
       ],
       "examples": [
-        "POST /api/detect \u2014 multipart image or JSON manifest"
+        "POST /api/detect — multipart image or JSON manifest"
       ]
     },
     {
@@ -127,7 +132,7 @@
     {
       "id": "x402-discovery",
       "name": "x402 discovery + free door",
-      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode live, Base eip155:8453, USDC; amounts from challenge only \u2014 no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing \u2014 proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming\u2014Paddle not live. No card-processor invent. Measurement, never certification.",
+      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode live, Base eip155:8453, USDC; amounts from challenge only — no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing — proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming—Paddle not live. No card-processor invent. Measurement, never certification. Signed offers and receipts: every 402 carries extensions['offer-receipt'].info.offers[] (one server-signed offer per accepts[] entry) and every settled 200 returns a signed receipt in the X-PAYMENT-RESPONSE SettlementResponse — x402 Offer & Receipt extension, format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1. Verify either without trusting us: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json. Your own receipts: GET /api/receipts?payer=0x... (status UNRECORDED means no store is bound on that deployment, never that you did not pay). We emit jws only and no eip712 — the edge holds one Ed25519 key and no secp256k1 signer.",
       "tags": [
         "x402",
         "discovery",
@@ -138,7 +143,10 @@
         "GET https://councilof.ai/.well-known/x402.json",
         "GET https://councilof.ai/api/free-door",
         "GET https://councilof.ai/api/gspc",
-        "GET https://councilof.ai/gspc-verify"
+        "GET https://councilof.ai/gspc-verify",
+        "GET https://councilof.ai/api/free-door  # read extensions['offer-receipt'].info.offers[0].signature",
+        "POST https://councilof.ai/api/receipts/verify -d '{\"receipt\":\"eyJ...\"}'",
+        "GET https://councilof.ai/api/receipts?payer=0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7"
       ]
     }
   ],

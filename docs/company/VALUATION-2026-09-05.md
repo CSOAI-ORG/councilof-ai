@@ -90,7 +90,7 @@ The set holds 1,059 active competitors, 64 funded, 6 exited, **$725M** raised ac
 |---|---|---|---|---|
 | Strength of team | 30% | 1 officer vs peers with funded teams | **0.30×** | 0.090 |
 | Size of opportunity | 25% | EU AI Act tailwind; sector median AI-governance valuation ~$24M; 1,061 competitors | **1.10×** | 0.275 |
-| Product / technology | 15% | 292 doors, 335 signed cards, live rail, DOI-anchored method — strongest axis | **1.60×** | 0.240 |
+| Product / technology | 15% | 292 doors (`/.well-known/index.json`), 335 signed cards (`/signed/card_index.json`), live rail, DOI-anchored method — strongest axis | **1.60×** | 0.240 |
 | Competitive environment | 10% | 1,059 active competitors, $725M deployed; CSOAI 104th | **0.70×** | 0.070 |
 | Marketing / sales channels | 10% | 330 registry servers; but 0 settled receipts and 0 paying customers | **0.60×** | 0.060 |
 | Need for further investment | 5% | Unfunded; no runway artefact published | **0.70×** | 0.035 |

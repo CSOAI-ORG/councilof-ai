@@ -1,0 +1,92 @@
+# Rebuild and publish csoai/agent-interop-census.
+#
+# WHY THIS EXISTS. The census was built and published from a laptop three times
+# on 2026-09-05/06, and then the local `hf` login silently dropped mid-session:
+# `hf auth whoami` -> "Not logged in", token 0 chars, upload -> "Invalid username
+# or password". HF_TOKEN exists in this repo as an Actions secret, so CI could
+# publish while that shell could not. A producer that depends on a login one
+# machine happens to be holding is not a producer.
+#
+# MANUAL ONLY. workflow_dispatch, no schedule: enabling a schedule is the owner's
+# gate, and this job writes to a public dataset.
+#
+# It fails closed. If a source cannot be enumerated the build says so in
+# totals.json rather than publishing a smaller number as if it were the whole
+# population — see the "publish" step's checks.
+
+name: agent-interop-census
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Upload to Hugging Face (false = build and print totals only)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agent-interop-census
+  cancel-in-progress: false
+
+jobs:
+  census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+
+      - name: Install the Hugging Face CLI
+        run: pip install --quiet "huggingface_hub[cli]"
+
+      - name: Collect — official MCP registry (cursor-paginated, deduped, loop-detected)
+        run: python3 scripts/census/collect-mcp-registry.py
+
+      - name: Collect — Hugging Face Spaces matching "mcp"
+        run: python3 scripts/census/collect-hf-spaces.py
+
+      - name: Collect — Hugging Face models and datasets matching "mcp"
+        run: python3 scripts/census/collect-hf-mcp.py
+
+      - name: Collect — Smithery registry
+        run: python3 scripts/census/collect-smithery.py
+        continue-on-error: true # Smithery caps enumeration at 5 pages; a short read is recorded, not fatal
+
+      - name: Build the dataset
+        run: python3 scripts/census/build-agent-interop-census.py
+
+      - name: Refuse to publish a census that claims a grade
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          rows = graded = 0
+          for line in open("/tmp/census-ds/census.jsonl"):
+              d = json.loads(line); rows += 1
+              if d.get("graded") is not False or d.get("measurement") is not None:
+                  graded += 1
+          t = json.load(open("/tmp/census-ds/totals.json"))
+          print(f"rows={rows} graded={graded} totals.rows_total={t['rows_total']}")
+          if graded:
+              sys.exit(f"REFUSING: {graded} row(s) claim a grade. A census indexes; it never grades.")
+          if rows != t["rows_total"]:
+              sys.exit(f"REFUSING: totals.json says {t['rows_total']} but the file holds {rows}.")
+          if not t.get("mcp_registry_enumeration_complete"):
+              print("NOTE: registry enumeration incomplete — totals carry the flag and the card says so.")
+          PY
+
+      - name: Publish
+        if: ${{ inputs.publish }}
+        run: |
+          hf auth whoami
+          hf upload csoai/agent-interop-census /tmp/census-ds . --repo-type dataset \
+            --commit-message "census rebuild ${{ github.run_id }} — derived at run time"
+
+      - name: Totals
+        run: python3 -c "import json;print(json.dumps(json.load(open('/tmp/census-ds/totals.json')),indent=1)[:2000])"

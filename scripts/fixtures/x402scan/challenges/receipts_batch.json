@@ -1,0 +1,190 @@
+{
+  "accepts": [
+    {
+      "amount": "100000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "100000",
+      "maxTimeoutSeconds": 300,
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "catalog": "https://councilof.ai/api/x402",
+    "deliverable": "the canonical batch (hashes to preview.batch_sha256) + one signed manifest card-v0 (surface receipts.batch)",
+    "explainer": "https://councilof.ai/pricing",
+    "free_preview": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-06T08%3A22%3A25Z&preview=1",
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "settlement or payment receipts — none are published (/api/receipts/latest is UNPUBLISHED)",
+      "a conclusion about any leaf, subject or asset",
+      "a grade, a rank, a certificate"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "per": "batch",
+    "preview": {
+      "batch_bytes": 530521,
+      "batch_sha256": "4a5570f6a5e2daa0d9e2b3163ae1579d68f7a401cfd9296d2491af2fa97738cc",
+      "cap": 200,
+      "count": 200,
+      "matched": 1382,
+      "next_from": "2026-09-02T07:56:40Z",
+      "roots_in_window": 29,
+      "roots_indexed_total": 29,
+      "sources": {
+        "current_root": "https://councilof.ai/root.json",
+        "leaves": "https://councilof.ai/cards-bundle.json",
+        "roots": "https://councilof.ai/receipts/root-history.json",
+        "settlement_receipts": "NONE published — /api/receipts/latest is UNPUBLISHED; this is a batch of measurement leaves, not payment receipts"
+      },
+      "span": {
+        "first_as_of": "2026-08-28T09:06:28.399Z",
+        "last_as_of": "2026-09-02T07:56:40Z"
+      },
+      "truncated": true,
+      "what_this_is": "card-v0 measurement leaves published under signed public roots, assembled for a time window with their inclusion paths and carrying roots",
+      "what_this_is_not": [
+        "settlement or payment receipts — none are published (/api/receipts/latest is UNPUBLISHED)",
+        "a conclusion about any leaf, subject or asset",
+        "a grade, a rank, a certificate"
+      ],
+      "window": {
+        "from": "2026-01-01T00:00:00Z",
+        "to": "2026-09-06T08:22:25Z"
+      }
+    },
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.receipts.batch/0.1"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "queryParams": {
+            "from": "2026-01-01T00:00:00Z",
+            "to": "2026-09-06T08:22:25Z"
+          },
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "batch": {
+              "cap": 200,
+              "count": 0,
+              "items": [],
+              "roots": [],
+              "window": {
+                "from": "<iso>",
+                "to": "<iso>"
+              }
+            },
+            "batch_sha256": "<64-hex>",
+            "kind": "batch",
+            "manifest_card": {
+              "sig_ed25519": "<hex or null>",
+              "surface": "receipts.batch"
+            },
+            "schema": "csoai.receipts.batch/0.1"
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "queryParams": {
+                "properties": {
+                  "from": {
+                    "description": "Window start (ISO-8601). Required.",
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "preview": {
+                    "const": "1",
+                    "description": "Free: count, span and the sha256 of the batch bytes, without the leaves",
+                    "type": "string"
+                  },
+                  "to": {
+                    "description": "Window end (ISO-8601). Defaults to now.",
+                    "format": "date-time",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "from"
+                ],
+                "type": "object"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Receipts batch: every signed card-v0 measurement leaf in a time window with its inclusion path and carrying root(s), assembled from the public root history. History assembly only — recent leaves are free; never a conclusion. 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate..",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Receipts Batch",
+    "tags": [
+      "receipts",
+      "merkle",
+      "history",
+      "attestation",
+      "x402"
+    ],
+    "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-06T08%3A22%3A25Z"
+  },
+  "x402Version": 2
+}

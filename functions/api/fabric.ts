@@ -313,6 +313,30 @@ export async function buildFabricManifest(
   const observedAtMs = Number.isFinite(parsedObservedAt)
     ? parsedObservedAt
     : Date.now();
+  // A2A v1.0 SendMessage. The door requires messageId AND parts (§7.1); a request missing
+  // either gets -32602 with HTTP 200, which is why the rail below reads the JSON-RPC body and
+  // not the status. This probe asks the same question a peer agent would.
+  const a2aInit: RequestInit = {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+      "A2A-Version": "1.0",
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: "fabric-probe",
+      method: "SendMessage",
+      params: {
+        message: {
+          messageId: "fabric-probe",
+          role: "user",
+          parts: [{ kind: "text", text: "board" }],
+        },
+      },
+    }),
+  };
+
   const mcpInit: RequestInit = {
     method: "POST",
     headers: { accept: "application/json", "content-type": "application/json" },
@@ -330,7 +354,7 @@ export async function buildFabricManifest(
     cardMatrix,
     aguiState,
     agentCard,
-    a2aKey,
+    a2aRuntime,
     compute,
     providerCanary,
     actionJobs,
@@ -353,7 +377,7 @@ export async function buildFabricManifest(
       false,
     ),
     boundedProbe(origin, "/.well-known/agent-card.json", fetcher),
-    boundedProbe(origin, "/api/a2a/key", fetcher),
+    boundedProbe(origin, "/api/a2a", fetcher, a2aInit),
     boundedProbe(origin, "/api/compute", fetcher),
     boundedProbe(origin, "/api/provider-canary", fetcher),
     boundedProbe(origin, "/api/action-jobs", fetcher),
@@ -515,20 +539,51 @@ export async function buildFabricManifest(
     );
   }
 
-  if (a2aKey.ok && a2aKey.json) {
+  // A2A JSON-RPC answers HTTP 200 for protocol errors too, so `probe.ok` says only that bytes
+  // came back. What makes this rail RUNTIME_OBSERVED is a `result` carrying a message with
+  // parts — i.e. the door actually routed and answered. An `error` member, or a `result` in a
+  // shape we did not ask for, is reported as the error it is and never as a working runtime.
+  const a2aRpcError = a2aRuntime.json?.error as { code?: unknown; message?: unknown } | undefined;
+  const a2aMessage = (a2aRuntime.json?.result as { message?: { parts?: unknown } } | undefined)
+    ?.message;
+  const a2aAnswered =
+    a2aRuntime.ok && !a2aRpcError && Array.isArray(a2aMessage?.parts) && a2aMessage.parts.length > 0;
+
+  if (a2aAnswered) {
     rails.push(
       rail(observedAt, {
         id: "a2a-runtime",
         label: "A2A runtime",
         role: "peer-agent task transport",
         protocol: "A2A",
-        state: "CATALOGUED",
-        endpoint: "/api/a2a/key",
-        evidence_ref: "/api/a2a/key",
+        state: "RUNTIME_OBSERVED",
+        endpoint: "/api/a2a",
+        evidence_ref: "/api/a2a",
         summary:
-          "The public-key endpoint answered. Key reachability does not prove task routing, execution, or A2A conformance.",
+          "SendMessage was routed and answered with a message. This proves the A2A transport answers a peer agent; it does not establish task execution, streaming, or A2A conformance certification.",
         freshness_seconds: null,
         last_error: null,
+      }),
+    );
+  } else if (a2aRuntime.ok) {
+    // Reachable but not answering A2A. Naming the JSON-RPC code is the whole point: a bare
+    // UNREACHABLE here would repeat the defect this replaced, where the manifest reported a
+    // live door as absent because the probe asked the wrong path.
+    rails.push(
+      rail(observedAt, {
+        id: "a2a-runtime",
+        label: "A2A runtime",
+        role: "peer-agent task transport",
+        protocol: "A2A",
+        state: "UNCHECKABLE",
+        endpoint: "/api/a2a",
+        evidence_ref: "/api/a2a",
+        summary:
+          "The endpoint answered but not with an A2A message, so task transport is not established.",
+        freshness_seconds: null,
+        last_error: a2aRpcError
+          ? `JSON-RPC error ${String(a2aRpcError.code ?? "unknown")}: ${String(a2aRpcError.message ?? "no message")}`
+          : "no result.message.parts in the response",
       }),
     );
   } else {
@@ -538,10 +593,10 @@ export async function buildFabricManifest(
         label: "A2A runtime",
         role: "peer-agent task transport",
         protocol: "A2A",
-        endpoint: "/api/a2a/key",
-        probe: a2aKey,
+        endpoint: "/api/a2a",
+        probe: a2aRuntime,
         summary:
-          "No reachable same-origin A2A key endpoint was observed; task execution remains unproven.",
+          "No reachable same-origin A2A endpoint was observed; task transport remains unproven.",
       }),
     );
   }

@@ -62,9 +62,12 @@ def build_hf_index() -> dict:
         ],
         "probe_endpoint": "/api/probe",
         "results_endpoint": "/api/results",
-        "badge_url": "https://councilof.ai/badge/csoai-22axis.json",
+        # /badge/<id>.json never existed. The endpoint that does is /api/badge, documented on the
+        # agent card as GET /api/badge?card=<signed-card-sha256>&subject=<url-encoded-subject>.
+        "badge_url": "https://councilof.ai/api/badge",
         "publish_to": "https://huggingface.co/csoai-org",
-        "signed_card_count": "335 (live)",
+        # A count typed into a generator is a count nothing retires. Quote the artifact.
+        "signed_card_count_source": "https://councilof.ai/signed/card_index.json -> n_cards (must equal n_cells and cards[].length; if they disagree neither is quotable)",
         "greenfields_target": 22,
         "greenfields_have": 0,
         "doctrine": "every model gets measured. no model escapes measurement.",
@@ -76,7 +79,10 @@ def build_hf_marketplace() -> dict:
     return {
         "schema": "csoai.huggingface-marketplace/0.1",
         "as_of": now(),
-        "principle": "CSOAI is the official 22-axis measurement badge provider for HuggingFace.",
+        # "official ... provider for HuggingFace" asserts a relationship with another company that
+        # does not exist and was never granted. We publish measurements of public models; nobody
+        # appointed us to anything.
+        "principle": "Council of AI publishes 22-axis measurements of publicly listed models. This is not an official HuggingFace programme and no endorsement by HuggingFace is claimed or implied.",
         "vendor": {
             "name": "Council of AI",
             "vendor_id": "csoai",
@@ -84,13 +90,32 @@ def build_hf_marketplace() -> dict:
             "logo": "https://councilof.ai/csoai-icon.svg",
             "contact": "nicholas@csoai.org",
         },
+        # D24. Every badge here states a RAIL STATE, and four of the six used to state one they
+        # did not have. facts.json holds ots_atom_anchor and eas as PLANNED, and carries no
+        # registered fact for Rekor at all — so "is Bitcoin-anchored", "is Rekor-signed" and
+        # "is EAS-attested" were present-tense claims about rails that do not run. The BFT row
+        # additionally carried two strings brand-gate forbids on a public surface, one of them a
+        # claim retracted on 2026-07-29 (n_eff ~1.21 of 3).
+        #
+        # A planned rail keeps its row — publishing the gap is the point — but says "will" and
+        # carries status "planned". Only a live rail speaks in the present tense.
         "badges": [
-            {"id": "csoai-22axis", "name": "CSOAI 22-axis measured", "criteria": "Model scored on all 22 axes with valid signatures"},
-            {"id": "csoai-card-validated", "name": "CSOAI card validated", "criteria": "Model has a valid 3KB signed card on the chain"},
-            {"id": "csoai-ots-anchored", "name": "CSOAI OTS-anchored", "criteria": "Model card is Bitcoin-anchored via OTS"},
-            {"id": "csoai-rekor-anchored", "name": "CSOAI Rekor-anchored", "criteria": "Model card is Sigstore Rekor-signed"},
-            {"id": "csoai-eas-anchored", "name": "CSOAI EAS-anchored", "criteria": "Model card is EAS-attested on Base"},
-            {"id": "csoai-bft-23", "name": "CSOAI 23/33 BFT attested", "criteria": "Attested by 23 of 33 sovereign council agents"},
+            {"id": "csoai-22axis", "name": "CSOAI 22-axis measured",
+             "criteria": "Model scored on all 22 axes with valid signatures", "status": "active"},
+            {"id": "csoai-card-validated", "name": "CSOAI card validated",
+             "criteria": "Model has a valid 3KB signed card on the chain", "status": "active"},
+            {"id": "csoai-ots-anchored", "name": "CSOAI OTS anchoring (planned)",
+             "criteria": "Model card will be Bitcoin-anchored via OpenTimestamps once per-card anchoring issues (planned). The published root is OTS-anchored today; individual cards are not, and stamping an atom is not anchoring it.",
+             "status": "planned"},
+            {"id": "csoai-rekor-anchored", "name": "CSOAI Rekor anchoring (planned)",
+             "criteria": "Model card will be Sigstore Rekor-logged once that rail issues (planned). No fact is registered for Rekor, so nothing polices this claim and it is not made.",
+             "status": "planned"},
+            {"id": "csoai-eas-anchored", "name": "CSOAI EAS attestation (planned)",
+             "criteria": "Model card will be EAS-attested on Base once the EAS rail issues (planned).",
+             "status": "planned"},
+            {"id": "csoai-bft-23", "name": "CSOAI 23/33 council threshold",
+             "criteria": "Attested by 23 of 33 council agents (designed threshold). Live fault tolerance is unproven and the earlier claim was retracted on 2026-07-29.",
+             "status": "active"},
         ],
         "registration": {
             "hf_organization": "csoai-org",
@@ -213,7 +238,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
 <body>
 <header><h1>Council of AI — Games Arcade</h1></header>
 <main>
-<p style="color: #4b5563;">10 sovereign games. Every turn emits a 3KB signed card. Anchored to OTS + Rekor + EAS.</p>
+<p style="color: #4b5563;">10 Council games. Every turn emits a 3KB signed card, Ed25519-signed and free to verify. Per-card anchoring to OpenTimestamps, and EAS attestation, are planned — not live.</p>
 <div class="grid">
   <a href="/dashboard/games/council-town" class="card"><div class="icon">🏛️</div><h2>Council Town</h2><p>Agent groups deliberate in shared world.</p><div class="meta"><span class="pill">LIVE</span></div></a>
   <a href="/dashboard/games/council-minds" class="card"><div class="icon">🧠</div><h2>Council Minds</h2><p>Structured multi-perspective deliberation.</p><div class="meta"><span class="pill">LIVE</span></div></a>

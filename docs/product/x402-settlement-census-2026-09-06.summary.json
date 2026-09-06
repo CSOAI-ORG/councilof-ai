@@ -1,0 +1,181 @@
+{
+  "schema": "csoai.x402-settlement-census/0.1",
+  "mode": "SETTLE",
+  "as_of": "2026-09-06T06:48:44Z",
+  "network": "eip155:8453",
+  "asset": "USDC",
+  "spend": {
+    "usdc_total": 1.3398,
+    "cap_usdc": 5.5,
+    "per_host_cap_units": 50000,
+    "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7"
+  },
+  "population": {
+    "eligible_probed": 316,
+    "eligibility": "conformant AND eip155:8453 AND scheme exact AND amount a positive integer <= 50000 units AND not one of our own hosts"
+  },
+  "outcome": {
+    "REFUSED": {
+      "hosts": 213,
+      "pct": 67.4
+    },
+    "DELIVERED": {
+      "hosts": 100,
+      "pct": 31.6
+    },
+    "NO_CHALLENGE": {
+      "hosts": 2,
+      "pct": 0.6
+    },
+    "MISMATCH": {
+      "hosts": 1,
+      "pct": 0.3
+    }
+  },
+  "headline": "Two in three conformant x402 hosts REFUSED a correctly-signed payment. 100 of 316 delivered. This is the buyer's-eye number the Bazaar indexes do not carry: being listed and conformant is not the same as taking money and answering.",
+  "took_a_settlement_and_still_refused": {
+    "hosts": 13,
+    "usdc": 0.193,
+    "note": "These recorded an on-chain settlement transaction in their own PAYMENT-RESPONSE and then answered the retried request with 402/4xx anyway. Money moved; nothing was delivered. Each row carries its tx hash, so any reader can check the chain rather than take our word.",
+    "rows": [
+      {
+        "host": "api.vibe.airforce",
+        "units": 1000,
+        "settle_tx": "0xe9bba7f8d3e52b5f53b346e566173a896382f047596eb8150c76fa49f389bc15"
+      },
+      {
+        "host": "5108-x402.community.iamstarchild.com",
+        "units": 2000,
+        "settle_tx": "0x00aa4923b82a19d1447f07c10e284c02e7c3ef36508ed1b6e8b7bc3dc8a4e08a"
+      },
+      {
+        "host": "agent.api.0x.org",
+        "units": 10000,
+        "settle_tx": "0xddf564dbe6cfb93d0b8aee0f88e5a7c28d559d3a14a08e1c1157ae369592c793"
+      },
+      {
+        "host": "agents.bytemine.ai",
+        "units": 10000,
+        "settle_tx": "0x9b143a686a7265f42dbedb509906deef0f6cd0fed4e08ca2ab0383ae7506560e"
+      },
+      {
+        "host": "linklens-sand.vercel.app",
+        "units": 10000,
+        "settle_tx": "0xb6e0cc06928e709d183306a6b28222466277ac0562f64057c84d84d578b65eb2"
+      },
+      {
+        "host": "rentcast.x402.paysponge.com",
+        "units": 10000,
+        "settle_tx": "0x05adb3a1be357a1e09488d64fa9f99fc20e2b816dc279809e5116554607f4330"
+      },
+      {
+        "host": "tripadvisor.x402.paysponge.com",
+        "units": 10000,
+        "settle_tx": "0x66cfef13db6641a6e8d74a04c70c6eec04b0108a988d5bdc290b9f76cf6a6877"
+      },
+      {
+        "host": "url-extractor.x402.paysponge.com",
+        "units": 10000,
+        "settle_tx": "0xe8c860ce72c6ef82952202584ae6eebcf5702321216aa557a0dcc5bd0e83d788"
+      },
+      {
+        "host": "agent-proxy.alchemy.com",
+        "units": 20000,
+        "settle_tx": "0x452d1ba528cbc7ff2e684451bdcb7de9fe94c98cacb7e6727a3949ce090c0685"
+      },
+      {
+        "host": "agents.x402stock.xyz",
+        "units": 20000,
+        "settle_tx": "0x4a577262638e4316cc86cb280b10c551c1109a72d2c4a887cc5c3ec5aafe3986"
+      },
+      {
+        "host": "screenshotone.x402.paysponge.com",
+        "units": 20000,
+        "settle_tx": "0x97e33e1d05380a9ed2eea8e7c950d1eae1db68f3046713c968783c02c28437fb"
+      },
+      {
+        "host": "wolframalpha.x402.paysponge.com",
+        "units": 20000,
+        "settle_tx": "0xce4b39d1831455267fb55216613d362157703ed06bf715934cdc482d0658a2c1"
+      },
+      {
+        "host": "formo.x402.paysponge.com",
+        "units": 50000,
+        "settle_tx": "0xaec93dcc900b7e5cee0fc8d515cd02ed56690624518be0b894944614be03856f"
+      }
+    ]
+  },
+  "mismatch": [
+    {
+      "host": "keyronne.com",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 6153,
+      "note": "paid, answered 2xx, body was not the advertised type"
+    }
+  ],
+  "delivered_sample": [
+    {
+      "host": "agentkit-x402-buy.netlify.app",
+      "units": 1000,
+      "mime": "application/json",
+      "bytes": 374,
+      "settle_tx": "0x01f5646ebaa2f705b3e94cd9d4733399fc404c1166c8415d9ee53aea81c0b626"
+    },
+    {
+      "host": "api-dev-v2.ixs.finance",
+      "units": 1000,
+      "mime": "application/json",
+      "bytes": 4164,
+      "settle_tx": "0x6f81943e3000ac403e51fdc22be3cddeb2239e30dfcf5906cda918ccfa47acc6"
+    },
+    {
+      "host": "api-v2.ixs.finance",
+      "units": 1000,
+      "mime": "application/json",
+      "bytes": 11639,
+      "settle_tx": "0x468b1e8ff8349800e40a1b8b8882a56bd2a15732af1220231067ee58ddfc2576"
+    },
+    {
+      "host": "api.borisinc.com",
+      "units": 1000,
+      "mime": null,
+      "bytes": 79,
+      "settle_tx": "0x607fa785f58e86bdd1547db8ad3f4003077297a790822b2c8149da3fdc230577"
+    },
+    {
+      "host": "api.getsly.ai",
+      "units": 1000,
+      "mime": "application/json",
+      "bytes": 429,
+      "settle_tx": null
+    },
+    {
+      "host": "api.govparse.io",
+      "units": 1000,
+      "mime": "application/json",
+      "bytes": 561,
+      "settle_tx": "0x060679bd3446abd4c1162cac0e07a1a51445dda00a3111632fcac1006e44bf4e"
+    },
+    {
+      "host": "api.metalend.tech",
+      "units": 1000,
+      "mime": "application/json",
+      "bytes": 2320,
+      "settle_tx": "0x81767feeb9542d9fcd12bf05d617b19451a1a7594eeae7d500a6330320785dfd"
+    },
+    {
+      "host": "api.predictionmarketdata.io",
+      "units": 1000,
+      "mime": null,
+      "bytes": 182632,
+      "settle_tx": "0xec4bbe4f81eef81a4fc4039540dafe318cded001ce441e561bab80b0bad557d2"
+    }
+  ],
+  "what_this_is_not": [
+    "Not a recommendation or a ranking of any host. No host was contacted.",
+    "REFUSED is not proof of bad faith: a host may rate-limit, require an account, or have changed terms between the challenge and the retry.",
+    "One purchase per host, one moment. A single refusal is not a pattern; the second round next week is what makes it one.",
+    "No revenue: every USDC here left our own wallet. Paying anyone is a cost, and paying ourselves would be a self-settlement."
+  ],
+  "reproduce": "SETTLE=1 X402_PAYER_KEY=<key> python3 scripts/grants/x402-settlement-census.py --max-hosts 316 --total-cap 5.5 --out <path>"
+}

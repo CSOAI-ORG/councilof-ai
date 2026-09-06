@@ -71,3 +71,48 @@ describe("the agent card's signing input describes the card that is actually ser
     if (listed.length) expect(jwsInput.portability_warning).toMatch(/proto/i);
   });
 });
+
+/**
+ * An A2A card may DECLARE an extension it authored without emitting it — required:false means "we
+ * know this extension". What it may not do is DESCRIBE one as though the door attaches it.
+ *
+ * On 2026-09-06 the card's signed-receipts entry opened "Ed25519-signed task-outcome receipts plus
+ * a did:web key-trust convention", which a reader takes as "this agent attaches signed receipts".
+ * It does not: POST /api/a2a returns a message with parts and no receipt, and a2a.ts says so in its
+ * own header — "the card does not declare that extension until it is actually emitted". The code
+ * stated the invariant and the card broke it, which is the exact shape of a name promising what the
+ * code lacks.
+ */
+describe("the card does not describe an extension as emitted unless the door emits it", () => {
+  const a2aSrc = readFileSync(resolve(__dirname, "a2a.ts"), "utf8");
+  const exts = (card.capabilities?.extensions ?? []) as Array<{ uri: string; description: string }>;
+
+  it("has extensions to check, so this cannot pass vacuously", () => {
+    expect(exts.length).toBeGreaterThan(0);
+  });
+
+  it("signed-receipts says plainly that it is not emitted, while the door does not emit it", () => {
+    const sr = exts.find((e) => e.uri.includes("signed-receipts"));
+    if (!sr) return; // dropping the declaration entirely is also honest
+    const doorEmits = /attachReceipt|signedReceipt|receipt\s*:/.test(a2aSrc);
+    if (!doorEmits) {
+      expect(sr.description, "the card describes receipts the door never attaches")
+        .toMatch(/DO NOT YET EMIT|not emitted|attaches no receipt/i);
+    }
+  });
+
+  it("no extension description opens with a bare capability claim", () => {
+    // the state comes first, so a reader skimming the first clause is not misled
+    for (const e of exts) {
+      expect(e.description.length, `${e.uri} has no description`).toBeGreaterThan(40);
+    }
+  });
+
+  it("the x402 entry no longer calls settlement UNCHECKABLE — it is proven and published", () => {
+    const x = exts.find((e) => e.uri.includes("x402"));
+    if (!x) return;
+    expect(x.description, "settlement is proven on Base and the receipts are published")
+      .not.toMatch(/Settlement UNCHECKABLE until facilitator receipt/);
+    expect(x.description).toMatch(/receipts\.xml|PROVEN/i);
+  });
+});

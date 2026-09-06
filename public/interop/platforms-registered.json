@@ -1,6 +1,6 @@
 {
   "schema": "csoai.platforms-registered/0.1",
-  "as_of": "20260905T175500Z",
+  "as_of": "20260906T081500Z",
   "principle": "CSOAI is listed where a listing can be PROVEN by a URL that shows the entry. A platform's homepage is not proof of a listing.",
   "registrations": [
     {
@@ -14,7 +14,7 @@
     {
       "platform": "A2A Registry",
       "url": "https://a2a-protocol.org/registry",
-      "manifest": "https://councilof.ai/.well-known/a2a.json",
+      "manifest": null,
       "status": "planned",
       "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
     },
@@ -28,21 +28,21 @@
     {
       "platform": "Poe Bots",
       "url": "https://poe.com/bots",
-      "manifest": "https://councilof.ai/interop/poe-bot.json",
+      "manifest": null,
       "status": "planned",
       "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
     },
     {
       "platform": "Coze Marketplace",
       "url": "https://www.coze.com/marketplace",
-      "manifest": "https://councilof.ai/interop/coze-bot.json",
+      "manifest": null,
       "status": "planned",
       "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
     },
     {
       "platform": "HuggingChat",
       "url": "https://huggingface.co/chat",
-      "manifest": "https://councilof.ai/.well-known/huggingface.json",
+      "manifest": null,
       "status": "planned",
       "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
     },
@@ -119,36 +119,37 @@
     {
       "platform": "Hermes Agent Marketplace",
       "url": "https://hermes-agent.nousresearch.com/marketplace",
-      "manifest": "https://councilof.ai/.well-known/hermes-agent.json",
+      "manifest": null,
       "status": "planned",
       "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
     },
     {
       "platform": "LM Studio",
       "url": "https://lmstudio.ai/plugins",
-      "manifest": "https://councilof.ai/interop/lmstudio-plugin.json",
+      "manifest": null,
       "status": "planned",
       "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
     },
     {
       "platform": "Ollama Library",
       "url": "https://ollama.com/library",
-      "manifest": "https://councilof.ai/interop/ollama-plugin.json",
+      "manifest": null,
       "status": "planned",
       "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
     },
     {
       "platform": "Smithery MCP",
       "url": "https://smithery.ai",
-      "manifest": "https://councilof.ai/interop/smithery-mcp.json",
+      "manifest": null,
       "status": "live",
-      "proof_url": "https://smithery.ai/server/csoai/gspc",
-      "proof": "csoai/gspc listed; HTTP 200 2026-09-05"
+      "proof_url": "https://smithery.ai/server/csoai/gspc-mcp",
+      "proof": "csoai/gspc-mcp listed; HTTP 200 2026-09-06. Its tools[] is exactly the seven free tools POST https://councilof.ai/mcp serves: board_totals, get_axis, get_card, get_root, list_cards, verify_card, verify_inclusion. Derived by comparing the Smithery detail endpoint with a live tools/list, not read off the page.",
+      "known_defect": "A SECOND listing, csoai/gspc, is a stale duplicate and this row used to point at it. It names eight tools of which four do not exist on the server (measure, verify, jail-probe, enter-arena \u2014 tools/call answers -32601 for measure and jail-probe) and omits three that do (get_root, get_card, verify_inclusion). Its connection, https://gspc--csoai.run.tools, answers 401. Nothing in this repository produces either listing: there is no smithery.yaml here and no CSOAI-ORG/gspc repository, so both are dashboard-side records that only the account holder can change. The fix is to RETIRE csoai/gspc, not to edit a manifest \u2014 csoai/gspc-mcp is already correct. Owner ask; see OWNER-ASKS. Until then this row points at the correct listing and says the duplicate exists rather than quietly linking past it."
     },
     {
       "platform": "Glama MCP",
       "url": "https://glama.ai/mcp",
-      "manifest": "https://councilof.ai/interop/glama-mcp.json",
+      "manifest": null,
       "status": "live",
       "proof_url": "https://glama.ai/mcp/servers?query=csoai",
       "proof": "7 csoai-*-mcp servers listed; HTTP 200 2026-09-05"
@@ -156,32 +157,33 @@
     {
       "platform": "MCP.so",
       "url": "https://mcp.so",
-      "manifest": "https://councilof.ai/interop/mcp-so.json",
+      "manifest": null,
       "status": "planned",
       "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
     },
     {
       "platform": "MCP Market (Cursor)",
       "url": "https://cursor.com/mcp",
-      "manifest": "https://councilof.ai/interop/cursor-mcp.json",
+      "manifest": null,
       "status": "planned",
       "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
     },
     {
       "platform": "Anthropic Computer Use",
       "url": "https://anthropic.com/computer-use",
-      "manifest": "https://councilof.ai/interop/anthropic-cu.json",
+      "manifest": null,
       "status": "planned",
       "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
     },
     {
       "platform": "OpenAI Operator",
       "url": "https://openai.com/operator",
-      "manifest": "https://councilof.ai/interop/openai-operator.json",
+      "manifest": null,
       "status": "planned",
       "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
     }
   ],
   "doctrine": "Inside every AI. Every chat. Every marketplace.",
+  "manifest_rule": "manifest is the CSOAI-side file a platform reads. It is null when no such file exists \u2014 it is never a URL we intend to create. On 2026-09-06 thirteen of these twenty-five named a councilof.ai path that 404s, two of them on live rows, so the field advertised thirteen doors that were not there. Nothing read the field, which is why it rotted unnoticed; scripts/outward-claims-guard.mjs now fails if a non-null manifest does not resolve. For the three MCP directory rows the served machine surface is POST https://councilof.ai/mcp, not a per-directory file.",
   "status_rule": "live = proof_url shows a CSOAI entry, verified at as_of. planned = no such proof is held. 'submitted' was retired 2026-09-05: it recorded an intention and read as a result, and 22 of 25 entries carried it with only the platform's homepage as their url."
 }

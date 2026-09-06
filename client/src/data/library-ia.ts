@@ -105,6 +105,10 @@ export const PRIMARY_PATHS = new Set<string>([
   "/watchdog-hub",
   // Evidence
   "/honesty", "/refutation-ledger", "/firewall-charter", "/doctrine", "/api-docs", "/status", "/rating-the-raters",
+  // /services is a primary nav destination (HeaderNav PRIMARY_LINKS). Without an
+  // entry here it renders under the "Reference / archive" banner — a nav item
+  // leading to a page that calls itself archived.
+  "/services",
   "/system-card", "/xrpl-attest", "/claims-register",
   // Academy (folded into Company in the nav; the pages are still current)
   "/academy", "/courses", "/training", "/verify-certificate", "/accreditation",

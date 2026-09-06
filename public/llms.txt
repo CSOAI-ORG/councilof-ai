@@ -29,6 +29,30 @@ Jail is a measured containment floor on the behavioural half of the board — no
 Affect is MEASURED when the API says so; counsel-pending labels stay honest when present.
 Do not quote scores, n, leaders, or stamp tables from this file.
 
+## Agent-UI stream (agents)
+- Living GSPC as AG-UI events: GET https://councilof.ai/api/agui/gspc-state — SSE STATE_DELTA + TEXT_MESSAGE_CONTENT, derived from GET /api/gspc per request. Read-only presentation transport; it renders the board, it never awards a state. Empty cells stay visible; no score is invented to fill a frame.
+- Human view of the same board: https://councilof.ai/dashboard
+- This is AG-UI (agent to user). MCP is agent to tools; A2A is agent to agent (POST https://councilof.ai/api/a2a). Three different rails — do not read one as another, and do not treat this stream as an A2A extension.
+
+## x402 discovery (agents)
+- Discovery: GET https://councilof.ai/.well-known/x402.json — mode live · Base eip155:8453 · USDC (amounts from challenge only; no invent price)
+- Catalog: GET https://councilof.ai/api/x402
+- Free door (amount 0): GET https://councilof.ai/api/free-door — settles, charges nothing; proves the rail
+- Signed offers: every 402 carries `extensions["offer-receipt"].info.offers[]` — one server-signed offer per `accepts[]` entry (x402 Offer & Receipt extension, format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1)
+- Signed receipts: every settled 200 returns one in the X-PAYMENT-RESPONSE SettlementResponse at `extensions["offer-receipt"].info.receipt`
+- Check either without trusting us: POST https://councilof.ai/api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json
+- Your receipts: GET https://councilof.ai/api/receipts?payer=0x… — status UNRECORDED means no store is bound on that deployment, never that you did not pay
+- We emit jws only, never eip712: the edge holds one Ed25519 key and no secp256k1 signer. A format we cannot produce is declared missing, not faked
+- A receipt proves this server signed those bytes. It is not proof money moved; check `transaction` against Base yourself
+- Verify stays free: https://councilof.ai/gspc-verify
+- Living board: GET https://councilof.ai/api/gspc — quote `totals.public_count` + `totals.lid` (never freeze here)
+- Human: free + x402 pay-as-you-go · human booking not live · no processor named
+- Agents: payTo is merchant receive — never the signer
+- Self-settle proves the rail; stranger revenue is separate (do not invent buyers)
+- Jail goldbank: https://huggingface.co/datasets/csoai/gspc-jail-goldbank
+- Measurement, not certification. Never sell a rank.
+
+
 ## Overlay notes (not a 23rd axis)
 
 notes: overlay ARC-AGI UNMEASURED until a frozen gold bank exists; not a 23rd axis. Quote live `totals.public_count` from GET https://councilof.ai/api/gspc — do not freeze any pair in this file (live derives 22·22·0 after #1077). Do not bump the board to 23. Do not add an axis to gspc.ts / /api/gspc / board_living.json. See /gspc-overlays.json and /schema/gspc-axes-notes.json.
@@ -73,11 +97,11 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Verify free: https://councilof.ai/gspc-verify
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Agent card: https://councilof.ai/.well-known/agent-card.json
-- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 11 tools after this release: seven free readers plus four x402-metered evidence tools. `witness_hash` is quarantined on HTTP. No CSOAI account; package presence does not prove paid settlement or delivery.
+- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 11 tools: seven free readers plus four x402-metered evidence tools. `witness_hash` is quarantined on HTTP. No CSOAI account; package presence does not prove paid settlement or delivery.
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
 - MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp@0.2.1` lists 12 tools (7 free + 5 x402). The live HTTP door lists 11 because `witness_hash` is quarantined there. Registry https://registry.npmjs.org/csoai-gspc-mcp
 - MCP registry: io.github.CSOAI-ORG/gspc (server 1.2.0 → https://councilof.ai/mcp)
-- Smithery: https://smithery.ai/servers/csoai/gspc
+- Smithery: https://smithery.ai/server/csoai/gspc-mcp — its tools[] is exactly the seven free tools /mcp serves. A second listing, csoai/gspc, is a stale duplicate naming four tools that do not exist; do not use it.
 - Open banks: https://huggingface.co/csoai
 
 - Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
@@ -148,13 +172,3 @@ Measurement only. Nothing here is a conformity mark. No SOV names. No invented s
   There is no "certified" badge and there never will be.
 - One-command MCP install: claude mcp add gspc -- npx -y csoai-gspc-mcp
 - Python reader and card verifier: pip install "csoai-gspc[verify]"
-
-## x402 discovery (agent pay rail)
-
-Live discovery — always fetch, do not freeze prices or product lists here:
-- GET https://councilof.ai/.well-known/x402.json
-- GET https://councilof.ai/api/x402
-- Free door (amount 0 forever): GET https://councilof.ai/api/free-door
-- Human/agent pay desk UX: https://councilof.ai/pay
-
-Locks: verification stays free; measurement credential never a grade; self-settle ≠ revenue; settlement UNCHECKABLE until facilitator receipt. payTo is merchant, not payer.

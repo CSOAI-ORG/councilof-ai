@@ -1,0 +1,67 @@
+{
+  "_what": "one entry per door whose live 402 was captured by build_openapi.py --fetch-challenges; header bytes matter because x402scan warns above 16 KiB (HEADERS_OVERFLOW)",
+  "doors": {
+    "art50_marking_evidence": {
+      "fixture": "challenges/art50_marking_evidence.json",
+      "http_status": 402,
+      "payment_required_header_bytes": 7552,
+      "response_headers_bytes": 8167,
+      "sampled_query": {
+        "url": "https://councilof.ai/og-image.png"
+      },
+      "url": "https://councilof.ai/api/art50/marking-evidence"
+    },
+    "eunomia_data": {
+      "fixture": "challenges/eunomia_data.json",
+      "http_status": 402,
+      "payment_required_header_bytes": 3832,
+      "response_headers_bytes": 4443,
+      "sampled_query": {
+        "feed": "1"
+      },
+      "url": "https://councilof.ai/api/eunomia-data?feed=1"
+    },
+    "evidence_bundle": {
+      "fixture": "challenges/evidence_bundle.json",
+      "http_status": 402,
+      "payment_required_header_bytes": 17244,
+      "response_headers_bytes": 17860,
+      "sampled_query": {
+        "bundle": "1",
+        "obligation": "article-50"
+      },
+      "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1"
+    },
+    "feeds_provider_diff": {
+      "fixture": "challenges/feeds_provider_diff.json",
+      "http_status": 402,
+      "payment_required_header_bytes": 3416,
+      "response_headers_bytes": 4031,
+      "sampled_query": {
+        "history": "1"
+      },
+      "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
+    },
+    "proof": {
+      "fixture": "challenges/proof.json",
+      "http_status": 402,
+      "payment_required_header_bytes": 3112,
+      "response_headers_bytes": 3719,
+      "sampled_query": {
+        "bundle": "1"
+      },
+      "url": "https://councilof.ai/api/proof?bundle=1"
+    },
+    "receipts_batch": {
+      "fixture": "challenges/receipts_batch.json",
+      "http_status": 402,
+      "payment_required_header_bytes": 5624,
+      "response_headers_bytes": 6239,
+      "sampled_query": {
+        "from": "2026-01-01T00:00:00Z",
+        "to": "2026-09-06T08:22:25Z"
+      },
+      "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-06T08%3A22%3A25Z"
+    }
+  }
+}

@@ -43,10 +43,6 @@
     "deploy:staging:dry": "bash scripts/deploy-staging.sh --dry",
     "deploy:staging:skip-test": "npm run build:client && bash scripts/deploy-staging.sh --skip-test",
     "deploy:staging:rollback": "bash scripts/deploy-staging.sh --rollback",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio",
     "hive:recon": "node scripts/hive-recon.mjs",
     "sov:personas": "node scripts/persona-e2e.mjs",
     "prerender": "node scripts/prerender.mjs && node scripts/inject-workspace-launcher.mjs --dir dist/client && node scripts/inject-workspace-launcher.mjs --dir dist/client --check",
@@ -68,7 +64,8 @@
     "quest:instruments:check": "node scripts/generate-gspc-quest-instruments.mjs --check",
     "workspace-launcher": "node scripts/inject-workspace-launcher.mjs --dir dist/client",
     "workspace-launcher:check": "node scripts/inject-workspace-launcher.mjs --dir dist/client --check",
-    "workspace-launcher:selftest": "node scripts/inject-workspace-launcher.mjs --selftest"
+    "workspace-launcher:selftest": "node scripts/inject-workspace-launcher.mjs --selftest",
+    "check:functions": "tsc -p tsconfig.functions.json --noEmit"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
@@ -167,6 +164,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260906.1",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/vite": "^4.1.3",

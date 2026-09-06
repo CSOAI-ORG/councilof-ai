@@ -1,0 +1,27 @@
+{
+ "schema": "csoai.revenue-history/0.1",
+ "note": "Daily readings of /api/revenue, copied verbatim. Append-only: a day already present is never rewritten. A self-settlement is not revenue and never counts toward all_time; absent is recorded as null, never as zero.",
+ "gates": {
+  "0 for 30 days": "shape or price is wrong; do not add doors",
+  "≥1 repeat": "open the next door",
+  "≥5 distinct in 30d": "it is a product"
+ },
+ "days": [
+  {
+   "date": "2026-09-06",
+   "read_at": "2026-09-06T08:26:16Z",
+   "source": "https://councilof.ai/api/revenue",
+   "all_time": 0,
+   "last_30d": 0,
+   "settlements": 0,
+   "self_settlements": 5,
+   "zero_value_settlements": 4,
+   "records_unreadable": 0,
+   "status": "MEASURED",
+   "definition_sha256": "7773c36"
+  }
+ ],
+ "as_of": "2026-09-06T08:26:16Z",
+ "days_recorded": 1,
+ "consecutive_days_at_zero_buyers": 1
+}

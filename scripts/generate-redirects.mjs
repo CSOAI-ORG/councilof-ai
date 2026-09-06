@@ -59,6 +59,12 @@ const EXISTING = [
   // Redirected rather than duplicated: two copies of a schema drift, and the first time they
   // do the estate has two answers to "what is a measurement card". The $id stays exactly what
   // the documents already declare.
+  // /favicon.ico was 404 site-wide. Every browser and every crawler asks for it unprompted, and
+  // public/.well-known/mcp/server-card.json publishes it as `icon_url` — so an MCP client that
+  // renders our server icon got nothing. Redirected to the icon we already serve rather than
+  // committing a second copy in another format: one icon, one source of truth. Browsers accept
+  // an SVG here; the content-type is image/svg+xml either way.
+  "/favicon.ico           /csoai-icon.svg      308",
   "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
   "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
   "/arena                 /dashboard?tab=play  308",

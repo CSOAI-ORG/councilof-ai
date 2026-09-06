@@ -55,7 +55,10 @@ export default function CouncilLobby() {
       data-council-global-launcher=""
       aria-label="Open the Council of AI workspace"
       title="Open the Council of AI workspace"
-      className="fixed bottom-5 right-5 z-[70] inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#04624a] px-3.5 text-white shadow-lg ring-1 ring-emerald-300/30 transition hover:bg-[#034d3b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#04624a] focus-visible:ring-offset-2 motion-reduce:transition-none"
+      // Lifts above the cookie banner by the banner's OWN measured height
+      // (CookieConsent publishes --cookie-banner-h). 0px when there is no banner.
+      style={{ bottom: "calc(1.25rem + var(--cookie-banner-h, 0px))" }}
+      className="fixed right-5 z-[70] inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#04624a] px-3.5 text-white shadow-lg ring-1 ring-emerald-300/30 transition hover:bg-[#034d3b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#04624a] focus-visible:ring-offset-2 motion-reduce:transition-none"
     >
       <img src="/csoai-icon.svg" alt="" className="h-6 w-6 rounded-md" />
       <span className="hidden text-xs font-semibold sm:inline">

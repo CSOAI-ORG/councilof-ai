@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.newsgurus.ai",
+ "as_of": "2026-09-06T06:40:03Z",
+ "source_urls": [
+  "https://api.newsgurus.ai/x402/agents/status",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.newsgurus.ai",
+  "resource": "https://api.newsgurus.ai/x402/agents/status",
+  "status": "DELIVERED",
+  "asked_units": 2000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xa9a38639Ed4Aebc04092E21F3399c56545450713",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x7b7e8702a84417e6cbfdbe08899f2f8ebe4e08bd313b783e13cdd63ec7935abd",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.59,
+   "paid": 8.02
+  },
+  "delivered_bytes": 6550,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:40:03Z",
+  "n": 1
+ },
+ "sha256": "efea14d26dde616904d8ed19aed3344b894370a5de9d4320a5eb9d1adaacc35d",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

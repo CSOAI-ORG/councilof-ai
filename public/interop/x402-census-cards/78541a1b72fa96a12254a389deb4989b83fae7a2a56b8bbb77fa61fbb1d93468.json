@@ -1,0 +1,47 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "agent.api.0x.org",
+ "as_of": "2026-09-06T06:42:12Z",
+ "source_urls": [
+  "https://agent.api.0x.org/v1/x402/swap-allowance-holder-quote",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "agent.api.0x.org",
+  "resource": "https://agent.api.0x.org/v1/x402/swap-allowance-holder-quote",
+  "status": "REFUSED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xb15a55e85FdF5edc41B6c1eaf7813e2c6e6def59",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xddf564dbe6cfb93d0b8aee0f88e5a7c28d559d3a14a08e1c1157ae369592c793",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.57,
+   "paid": 1.22
+  },
+  "delivered_bytes": 295,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:42:12Z",
+  "n": 1,
+  "note": "a settlement transaction was reported and the retried request was still refused: money moved, nothing was delivered"
+ },
+ "sha256": "78541a1b72fa96a12254a389deb4989b83fae7a2a56b8bbb77fa61fbb1d93468",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

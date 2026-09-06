@@ -10,10 +10,21 @@
  * SNAPSHOT, not a live read. Taken 2026-09-02 from GET /api/gspc
  * (22 axis · 22 measured · 0 empty · 969 items) and GET /api/corrections (39).
  *
+ * 2026-09-06: the pin said items: 893 while this very header said 969, and the
+ * live board still sums 969 across its 22 axes. The struct was wrong against its
+ * own provenance line; corrected to 969.
+ *
  * These two numbers move: corrections went 30 → 38 → 39 inside 2026-09-02
  * alone. Any figure pinned here is stale the moment the ledger appends, so it
  * MUST be rendered as "as at <date>" and never as a live count. The living
- * board is GET https://councilof.ai/api/gspc.
+ * board is GET https://councilof.ai/api/gspc, and the living corrections ledger
+ * is GET https://councilof.ai/api/corrections — a different door, which the page
+ * used to omit while quoting a corrections figure.
+ *
+ * 2026-09-06: corrections stood at 47, so the pinned 39 had drifted 20% in four
+ * days exactly as predicted. The count is now DERIVED at run time by the
+ * component; the pin below survives only as a dated fallback for when the door
+ * does not answer.
  */
 
 export type FactState = "present" | "empty" | "unknown";
@@ -44,11 +55,14 @@ export const LIVE_HEALTH_PIN = {
   declared: 22,
   measured: 22,
   empty: 0,
-  items: 893,
+  items: 969,
   index_rows: 15,
   index_schema: "csoai.sov-signal-index/1",
   not_a_certification: true,
-  corrections: 39,
+  /** Whole-ledger count from GET /api/corrections. Moves independently of the
+   *  board fields above, so it carries its own date. Read live 2026-09-06. */
+  corrections: 47,
+  corrections_as_at: "6 September 2026",
   as_at: "2 September 2026",
   board: "22 axis · 22 measured",
 } as const;
@@ -159,20 +173,25 @@ export function healthLine(input: {
   evidence: FactState;
   rerun: FactState;
   eligibility: string;
-  corrections: number;
+  /** Corrections touching THIS digest. "unknown" when no per-digest
+   *  query exists — never the whole-ledger total, which is a bigger number. */
+  corrections: number | "unknown";
 }): string {
   return `${input.measured} measured of ${input.declared} declared; verify ${input.verify}; evidence ${input.evidence}; rerun ${input.rerun}; eligibility ${input.eligibility}; corrections touching this digest ${input.corrections}.`;
 }
 
 export function boardHealthLine(): string {
-  // FLAGGED 2026-09-02, owner ruling needed — NOT fixed here.
-  // healthLine() renders this field as "corrections touching this digest N",
-  // but LIVE_HEALTH_PIN.corrections is the WHOLE ledger count from
-  // GET /api/corrections (39), which counts corrections to everything in the
-  // estate, not the ones touching this digest. Those are different numbers and
-  // the smaller one is almost certainly the truthful answer here. Passing the
-  // ledger total makes the sentence overstate. Left as-is only because
-  // narrowing it needs a per-digest correction query that does not exist yet.
+  // RESOLVED 2026-09-06 (was FLAGGED 2026-09-02). The old body passed
+  // LIVE_HEALTH_PIN.corrections — the WHOLE-ledger count from GET /api/corrections
+  // — into a slot whose grammar reads "corrections touching this digest N". Those
+  // are different populations and the ledger total is the bigger one, so the
+  // sentence overstated: it claimed 39 corrections touched this digest when 39 was
+  // every correction in the estate.
+  //
+  // The per-digest query still does not exist. So the slot answers "unknown",
+  // which is the true answer, instead of borrowing a number from a different
+  // question. The ledger total keeps its own sentence — live — in
+  // boardCorrectionsLine() below.
   return healthLine({
     measured: LIVE_HEALTH_PIN.measured,
     declared: LIVE_HEALTH_PIN.declared,
@@ -180,6 +199,45 @@ export function boardHealthLine(): string {
     evidence: "present",
     rerun: "empty",
     eligibility: "board",
-    corrections: LIVE_HEALTH_PIN.corrections,
+    corrections: "unknown",
   });
+}
+
+/**
+ * A read of GET /api/corrections.
+ *
+ * The ledger publishes NO count field — the live document's keys are
+ * schema, policy, license, publisher, corrections, signature, signature_state,
+ * note — so the count is the array's length or it is nothing. A `?? 0` here
+ * would render "0 corrections" for a ledger we simply could not reach, and
+ * "0 corrections" reads as "we have never been wrong". Absent is not zero.
+ */
+export type CorrectionsRead =
+  | { state: "live"; count: number }
+  | { state: "unread"; reason: string };
+
+export function readCorrectionsCount(doc: unknown): CorrectionsRead {
+  if (!doc || typeof doc !== "object") return { state: "unread", reason: "no document" };
+  const arr = (doc as { corrections?: unknown }).corrections;
+  if (!Array.isArray(arr)) return { state: "unread", reason: "no corrections array" };
+  return { state: "live", count: arr.length };
+}
+
+/**
+ * The ledger total, derived at run time — never pinned.
+ *
+ * This file's own header records why: corrections went 30 -> 38 -> 39 inside
+ * 2026-09-02 alone, and by 2026-09-06 the ledger stood at 47. Anything typed
+ * here is stale before it deploys. When the door does not answer we say the
+ * pinned figure is a pin, with its date, rather than passing it off as current.
+ */
+export function boardCorrectionsLine(read: CorrectionsRead): string {
+  if (read.state === "live") {
+    return `${read.count} corrections in the ledger, read from GET /api/corrections.`;
+  }
+  return (
+    `Corrections ledger unread (${read.reason}). The last figure we pinned is ` +
+    `${LIVE_HEALTH_PIN.corrections}, as at ${LIVE_HEALTH_PIN.corrections_as_at} — a pin, not a live count. ` +
+    `The living ledger is GET /api/corrections.`
+  );
 }

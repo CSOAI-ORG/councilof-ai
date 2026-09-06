@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.nativebtc.org",
+ "as_of": "2026-09-06T06:41:20Z",
+ "source_urls": [
+  "https://api.nativebtc.org/v1/mempool/stream-ticket",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.nativebtc.org",
+  "resource": "https://api.nativebtc.org/v1/mempool/stream-ticket",
+  "status": "DELIVERED",
+  "asked_units": 5000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x0300E73759B357ceeE5A248d1801eCb8abf7A1d4",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x6ad72259e84fc6dbe09f9fdaa9a78863bb81ff7ad9fceab457b214d102485244",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.63,
+   "paid": 1.09
+  },
+  "delivered_bytes": 325,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:41:20Z",
+  "n": 1
+ },
+ "sha256": "b0445c4457834fc98571d2c71e7a25012da57db6659a93404e8845ae0d2746bb",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}
