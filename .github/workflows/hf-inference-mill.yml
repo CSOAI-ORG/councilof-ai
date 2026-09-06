@@ -1,10 +1,11 @@
 name: hf-inference-mill
 
-# FLEET-B mill via Hugging Face Inference Providers (router.huggingface.co/v1).
+# HF2200 mill via Hugging Face Inference Providers (router.huggingface.co/v1).
 # Weights stay on the Hub. Never a GSPC board rewrite. n<30 unquotable.
-# Needs secrets.HF_INFERENCE_TOKEN with Inference Providers scope.
-# Fail-closed 403 is an overnight SUCCESS (artifact INFERENCE_FAIL), so GitHub
-# does not disable the hourly cron. Do not invent scores.
+# Bills the csoai Team org via X-HF-Bill-To (personal monthly credits 402 otherwise).
+# 20 shards × 30 models = 600/hour; rotation by hour covers 2200 in four runs.
+# INFERENCE_FAIL stays cron-surviving (exit 0) but is written to the job summary
+# and coverage.json — a run that measured nothing is not coverage_success.
 
 on:
   schedule:
@@ -12,15 +13,19 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: "Max FLEET-B slugs this hour"
+        description: "Models per shard this hour"
         type: string
-        default: "8"
+        default: "30"
+      hour_block:
+        description: "Optional hour override for rotation (integer unix-hour)"
+        type: string
+        default: ""
   workflow_run:
     workflows: ["public-root"]
     types: [completed]
 
 concurrency:
-  group: hf-inference-mill
+  group: hf-inference-mill-${{ github.run_id }}
   cancel-in-progress: false
 
 permissions:
@@ -30,16 +35,24 @@ jobs:
   mill:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     env:
-      HF_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HUGGINGFACE_TOKEN: ${{ secrets.HF_TOKEN }}
-      HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HF_INFERENCE_TOKEN: ${{ secrets.HF_TOKEN }}
       HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
-      FLEET_LOCK: public/fleet/FLEET-B.lock.json
+      HF_BILL_TO: csoai
+      FLEET_LOCK: public/fleet/HF2200.lock.json
       FLEET_PROVIDERS: public/fleet/FLEET-B.providers.json
       MILL_OUT: mill-out
-      MILL_LIMIT: ${{ github.event.inputs.limit || '8' }}
+      MILL_LIMIT: ${{ github.event.inputs.limit || '30' }}
+      MILL_SHARD: ${{ matrix.shard }}
+      MILL_N_SHARDS: "20"
+      MILL_BANK_N: "1"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,34 +60,43 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: probe Inference Providers
+      - name: probe Inference Providers (org bill-to)
         id: probe
         run: |
           set -euo pipefail
           mkdir -p mill-out
           python3 - <<'PY'
           import json, os, urllib.request, sys
-          tok = (os.environ.get("HF_INFERENCE_TOKEN") or os.environ.get("HF_TOKEN") or "").strip()
+          tok = (os.environ.get("HF_TOKEN") or os.environ.get("HF_INFERENCE_TOKEN") or "").strip()
+          org = (os.environ.get("HF_BILL_TO") or "csoai").strip()
           out = {
               "kind": "gspc.practice-mill/0.1",
               "writes_board": False,
               "router": "https://router.huggingface.co/v1/chat/completions",
+              "bill_to": org,
               "status": "UNCHECKABLE",
           }
           gha = os.environ.get("GITHUB_OUTPUT") or ""
+          summary = os.environ.get("GITHUB_STEP_SUMMARY") or ""
           def emit(ok: str) -> None:
               if gha:
                   with open(gha, "a", encoding="utf-8") as fh:
                       fh.write(f"ok={ok}\n")
+          def shout(line: str) -> None:
+              print(line, flush=True)
+              if summary:
+                  with open(summary, "a", encoding="utf-8") as fh:
+                      fh.write(line + "\n")
           if not tok:
               out["status"] = "INFERENCE_FAIL"
-              out["note"] = "HF_INFERENCE_TOKEN empty"
+              out["note"] = "HF_TOKEN empty"
               open("mill-out/probe.json", "w", encoding="utf-8").write(json.dumps(out, indent=2) + "\n")
-              print("INFERENCE_FAIL empty-token")
+              shout("## INFERENCE_FAIL")
+              shout("HF_TOKEN empty. Cron survives; this is not coverage.")
               emit("0")
               sys.exit(0)
           payload = json.dumps({
-              "model": "Qwen/Qwen3-8B:featherless-ai",
+              "model": "Qwen/Qwen2.5-7B-Instruct:featherless-ai",
               "messages": [{"role": "user", "content": "Reply with EXACTLY one token: HELLO"}],
               "max_tokens": 4,
               "temperature": 0,
@@ -87,16 +109,21 @@ jobs:
                   "Authorization": f"Bearer {tok}",
                   "Content-Type": "application/json",
                   "User-Agent": "csoai-hf-inference-mill",
+                  "X-HF-Bill-To": org,
               },
           )
           try:
               with urllib.request.urlopen(req, timeout=60) as r:
+                  code = r.status
                   d = json.loads(r.read())
               txt = ((d.get("choices") or [{}])[0].get("message") or {}).get("content")
+              if code != 200:
+                  raise RuntimeError(f"HTTP {code}")
               out["status"] = "INFERENCE_OK"
+              out["http"] = 200
               out["probe"] = repr(txt)[:80]
               open("mill-out/probe.json", "w", encoding="utf-8").write(json.dumps(out, indent=2) + "\n")
-              print("INFERENCE_OK", repr(txt)[:80])
+              shout("INFERENCE_OK HTTP 200 bill_to="+org)
               emit("1")
           except Exception as e:
               body = e.read()[:240].decode("utf-8", "replace") if hasattr(e, "read") else str(e)
@@ -105,20 +132,43 @@ jobs:
               out["http"] = code
               out["body"] = body
               open("mill-out/probe.json", "w", encoding="utf-8").write(json.dumps(out, indent=2) + "\n")
-              print("INFERENCE_FAIL", code, body)
+              shout("## INFERENCE_FAIL")
+              shout(f"HTTP {code} {body}")
+              shout("Cron survives; this is not coverage. A 403 is fail-closed.")
               emit("0")
               sys.exit(0)
           PY
-      - name: mill FLEET-B via router
+      - name: mill HF2200 shard via router
         if: steps.probe.outputs.ok == '1'
         run: |
           set -euo pipefail
           mkdir -p mill-out
           python3 scripts/mill_hf_inference.py
+      - name: coverage is not success when nothing was measured
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, os, sys
+          p = pathlib.Path("mill-out/coverage.json")
+          probe = pathlib.Path("mill-out/probe.json")
+          summary = os.environ.get("GITHUB_STEP_SUMMARY") or ""
+          def shout(line):
+              print(line, flush=True)
+              if summary:
+                  open(summary, "a", encoding="utf-8").write(line + "\n")
+          if not p.exists():
+              shout("## MEASURED_NOTHING / INFERENCE_FAIL")
+              shout("No coverage.json. Not coverage_success.")
+              sys.exit(0)
+          c = json.loads(p.read_text())
+          shout(f"## coverage status={c.get('status')} coverage_success={c.get('coverage_success')}")
+          if not c.get("coverage_success"):
+              shout("A run that measured nothing is not coverage. Job stays green so the hourly cron is not disabled.")
+          PY
       - name: upload mill JSON (not a board rewrite)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hf-inference-mill
+          name: hf-inference-mill-${{ matrix.shard }}
           path: mill-out
           if-no-files-found: warn

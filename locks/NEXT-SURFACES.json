@@ -1,0 +1,47 @@
+{
+  "kind": "csoai.catalog-census/0.1",
+  "as_of": "2026-09-06T16:30:00Z",
+  "note": "Named with population size and a reachability probe. Not a measurement. enters_board_means is false for all of these.",
+  "surfaces": [
+    {
+      "name": "HF2200",
+      "population": 2200,
+      "n_measured": 0,
+      "probe": "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/locks/HF2200.lock.json",
+      "probe_ok": true,
+      "enters_board_means": false
+    },
+    {
+      "name": "hub-queue queue.jsonl",
+      "population": 2773,
+      "n_queue": 2410,
+      "probe": "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl",
+      "probe_ok": true,
+      "enters_board_means": false
+    },
+    {
+      "name": "FLEET-B",
+      "population": 40,
+      "probe": "https://councilof.ai/fleet/FLEET-B.lock.json",
+      "probe_ok": true,
+      "enters_board_means": false
+    },
+    {
+      "name": "HF census",
+      "population": 3032028,
+      "n_measured": 0,
+      "probe": "locks/HF2200.lock.json census_n field (hub-queue lock)",
+      "probe_ok": true,
+      "enters_board_means": false,
+      "note": "Not milled tonight."
+    },
+    {
+      "name": "Kaggle Models",
+      "population": 1200,
+      "population_note": "Counted tonight by paginating kaggle models list --page-size 100; catalog continues past page 24.",
+      "probe": "kaggle models list --sort-by downloadCount --csv",
+      "probe_ok": true,
+      "enters_board_means": false
+    }
+  ]
+}

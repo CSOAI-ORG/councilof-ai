@@ -18,6 +18,9 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from mill_select import classify_run, select_window
+
 UA = "CSOAI-HF-INF/0.1"
 ROUTER = "https://router.huggingface.co/v1/chat/completions"
 API_MODEL = "https://huggingface.co/api/models/"
@@ -84,6 +87,19 @@ def token() -> str:
     raise SystemExit("no HF token")
 
 
+def bill_headers(tok: str) -> dict[str, str]:
+    """Team org credits only apply when X-HF-Bill-To is set. Personal 402 otherwise."""
+    h = {
+        "Authorization": f"Bearer {tok}",
+        "Content-Type": "application/json",
+        "User-Agent": UA,
+    }
+    org = (os.environ.get("HF_BILL_TO") or "csoai").strip()
+    if org:
+        h["X-HF-Bill-To"] = org
+    return h
+
+
 def get_json(url: str, tok: str, timeout: int = 30):
     req = urllib.request.Request(url, headers={"Authorization": f"Bearer {tok}", "User-Agent": UA})
     with urllib.request.urlopen(req, timeout=timeout) as r:
@@ -102,11 +118,7 @@ def chat(tok: str, model: str, prompt: str) -> tuple[str, str]:
         ROUTER,
         data=body,
         method="POST",
-        headers={
-            "Authorization": f"Bearer {tok}",
-            "Content-Type": "application/json",
-            "User-Agent": UA,
-        },
+        headers=bill_headers(tok),
     )
     try:
         with urllib.request.urlopen(req, timeout=90) as r:
@@ -149,25 +161,27 @@ def main() -> int:
     lock = json.loads(lock_path.read_text())
     out_dir = Path(os.environ.get("MILL_OUT", str(lock_path.parent / "hf-inference")))
     out_dir.mkdir(parents=True, exist_ok=True)
-    slugs = [m["slug"] for m in lock["models"]]
+    slugs = [m["slug"] for m in lock.get("models") or [] if m.get("slug")]
     limit = int(os.environ.get("MILL_LIMIT", "8"))
-    # ROTATE. This was `slugs[:limit]`, which takes the SAME first `limit` models every
-    # run. On an hourly cron that is the whole fleet's budget spent on eight slugs for
-    # ever: the Inference Providers usage page shows Qwen3-8B on 1,980 requests and
-    # Qwen2.5-7B on 1,640, while hundreds of other models sit at 1. Breadth is the point
-    # of a fleet measurement -- re-measuring the same eight adds no coverage at all.
-    #
-    # Deterministic rotation by hour needs no cursor file and no state: nothing is
-    # committed to public/fleet/hf-inference (0 files on master), so there is nothing to
-    # dedup against. offset advances one window per hour and wraps, so 40 slugs at 8 per
-    # hour are fully covered every 5 hours and every model is measured equally often.
-    # MILL_OFFSET overrides it for a targeted re-run.
-    if os.environ.get("MILL_OFFSET"):
-        offset = int(os.environ["MILL_OFFSET"]) % max(len(slugs), 1)
-    else:
-        offset = (int(time.time()) // 3600 * limit) % max(len(slugs), 1)
-    window = [slugs[(offset + i) % len(slugs)] for i in range(min(limit, len(slugs)))]
-    print(f"fleet={len(slugs)} limit={limit} offset={offset} window={window}", flush=True)
+    shard = int(os.environ.get("MILL_SHARD", "0"))
+    n_shards = int(os.environ.get("MILL_N_SHARDS", "1"))
+    hour = int(time.time()) // 3600
+    off_env = os.environ.get("MILL_OFFSET")
+    window, start = select_window(
+        slugs,
+        limit=limit,
+        hour=hour,
+        offset=int(off_env) if off_env else None,
+        shard=shard,
+        n_shards=n_shards,
+    )
+    print(
+        f"fleet={len(slugs)} limit={limit} shard={shard}/{n_shards} "
+        f"hour={hour} start={start} window={window}",
+        flush=True,
+    )
+    bank_n = int(os.environ.get("MILL_BANK_N", str(len(GOV_ITEMS))))
+    bank = GOV_ITEMS[: max(1, min(bank_n, len(GOV_ITEMS)))]
     rows = []
     for slug in window:
         rec = {
@@ -176,7 +190,7 @@ def main() -> int:
             "endpoint": ROUTER,
             "router_model": slug,  # widget snippets use slug:featherless-ai ; try bare first then suffix
             "axis": "governance",
-            "n": len(GOV_ITEMS),
+            "n": len(bank),
             "status": "UNMEASURED",
             "note": "HF Inference Providers mill. Not a GSPC board rewrite. n<30 unquotable.",
         }
@@ -198,7 +212,7 @@ def main() -> int:
                     break
         order = [p for p in providers if p in mapped] + [p for p in mapped if p not in providers]
         router_names = [f"{slug}:{p}" for p in order] or [slug] + [f"{slug}:{p}" for p in providers]
-        for prompt, expected in GOV_ITEMS:
+        for prompt, expected in bank:
             st, txt = "UNCHECKABLE", "no-provider"
             for name in router_names:
                 st, txt = chat(tok, name, INSTR + prompt)
@@ -218,22 +232,32 @@ def main() -> int:
             rec["reason"] = answers[0]["raw"] if answers else "no calls"
         else:
             rec["status"] = "practice-mill"
-            rec["accuracy"] = round(hits / len(GOV_ITEMS), 4)
+            rec["accuracy"] = round(hits / len(bank), 4)
         rows.append(rec)
         print(slug, rec["status"], rec.get("accuracy"), rec.get("inference_meta"), rec.get("reason", "")[:80], flush=True)
+    measured = [r["slug"] for r in rows if r.get("status") == "practice-mill"]
+    verdict = classify_run(probe_ok=True, n_measured_this_shard=len(measured))
     blob = {
         "kind": "csoai.hf-inference-mill/0.1",
         "as_of": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "router": ROUTER,
         "n_models": len(rows),
+        "n_measured_this_shard": len(measured),
         "writes_board": False,
         "not_a_certification": True,
+        "coverage": verdict,
+        "window": window,
+        "shard": shard,
+        "n_shards": n_shards,
+        "start": start,
         "rows": rows,
     }
-    p = out_dir / f"hf_inf_{int(time.time())}.json"
+    p = out_dir / f"hf_inf_{int(time.time())}_s{shard}.json"
     p.write_text(json.dumps(blob, indent=2) + "\n")
+    (out_dir / "coverage.json").write_text(json.dumps(verdict, indent=2) + "\n")
     print("wrote", p)
-    return 0
+    print("coverage", verdict["status"], "n_measured_this_shard", len(measured), flush=True)
+    return 0 if verdict["status"] != "MEASURED_NOTHING" else 0
 
 
 if __name__ == "__main__":

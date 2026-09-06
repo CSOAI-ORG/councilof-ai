@@ -81,15 +81,23 @@ jobs:
                   row["dataset_write"][repo] = {"http": c, "can_write": c == 200}
                   if c not in (200,):
                       row["dataset_write"][repo]["why"] = b.decode(errors="replace")[:160]
-              c, b = call(
-                  ROUTER,
-                  tok,
-                  json.dumps({
-                      "model": "Qwen/Qwen2.5-7B-Instruct",
-                      "messages": [{"role": "user", "content": "Reply with EXACTLY one token: HELLO"}],
-                      "max_tokens": 4,
-                  }).encode(),
-              )
+              # Team org credits require X-HF-Bill-To. Personal monthly credits 402 otherwise.
+              req = urllib.request.Request(ROUTER, data=json.dumps({
+                  "model": "Qwen/Qwen2.5-7B-Instruct:featherless-ai",
+                  "messages": [{"role": "user", "content": "Reply with EXACTLY one token: HELLO"}],
+                  "max_tokens": 4,
+              }).encode(), method="POST")
+              req.add_header("Authorization", f"Bearer {tok}")
+              req.add_header("Content-Type", "application/json")
+              req.add_header("User-Agent", "csoai-hf-token-scope-probe")
+              req.add_header("X-HF-Bill-To", "csoai")
+              try:
+                  with urllib.request.urlopen(req, timeout=40) as r:
+                      c, b = r.status, r.read()[:200]
+              except urllib.error.HTTPError as e:
+                  c, b = e.code, e.read()[:200]
+              except Exception as e:
+                  c, b = 0, f"{type(e).__name__}: {e}".encode()[:200]
               row["inference_providers"] = {"http": c, "ok": c == 200}
               if c != 200:
                   row["inference_providers"]["why"] = b.decode(errors="replace")[:160]
