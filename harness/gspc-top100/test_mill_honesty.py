@@ -35,6 +35,13 @@ sys.path.insert(0, str(HERE.parents[1] / "scripts"))
 import flip_hub_queue as fq  # noqa: E402
 
 
+def test_mill_script_does_not_slice_prefix() -> None:
+    """#1692 defect: `slugs[:limit]` re-measured the same eight forever."""
+    src = (HERE.parents[1] / "scripts" / "mill_hf_inference.py").read_text()
+    assert "slugs[:limit]" not in src
+    assert "select_window" in src
+
+
 def test_pick_emptiest_skips_measured() -> None:
     rows = [
         {"rank": 1, "id": "a/measured", "status": "MEASURED", "card_id": "abc"},

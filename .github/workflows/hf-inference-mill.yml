@@ -1,10 +1,11 @@
 name: hf-inference-mill
 
-# FLEET-B mill via Hugging Face Inference Providers (router.huggingface.co/v1).
+# HF2200 mill via Hugging Face Inference Providers (router.huggingface.co/v1).
 # Weights stay on the Hub. Never a GSPC board rewrite. n<30 unquotable.
-# Needs secrets.HF_INFERENCE_TOKEN with Inference Providers scope.
-# Fail-closed 403 is an overnight SUCCESS (artifact INFERENCE_FAIL), so GitHub
-# does not disable the hourly cron. Do not invent scores.
+# Needs secrets.HF_INFERENCE_TOKEN with Inference Providers scope, billed to csoai org.
+# Fail-closed 402/403 is an overnight SUCCESS (artifact INFERENCE_FAIL) so GitHub
+# does not disable the hourly cron — the string INFERENCE_FAIL MUST appear in the
+# job summary, not only the artifact. Do not invent scores.
 
 on:
   schedule:
@@ -12,9 +13,9 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: "Max FLEET-B slugs this hour"
+        description: "Models per shard this hour (default 30)"
         type: string
-        default: "8"
+        default: "30"
   workflow_run:
     workflows: ["public-root"]
     types: [completed]
@@ -27,26 +28,19 @@ permissions:
   contents: read
 
 jobs:
-  mill:
+  probe:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
+    outputs:
+      ok: ${{ steps.probe.outputs.ok }}
     env:
-      HF_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
-      HUGGINGFACE_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
-      HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
-      FLEET_LOCK: public/fleet/FLEET-B.lock.json
-      FLEET_PROVIDERS: public/fleet/FLEET-B.providers.json
-      MILL_OUT: mill-out
-      MILL_LIMIT: ${{ github.event.inputs.limit || '8' }}
+      HF_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: master
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
       - name: probe Inference Providers
         id: probe
         run: |
@@ -62,15 +56,21 @@ jobs:
               "status": "UNCHECKABLE",
           }
           gha = os.environ.get("GITHUB_OUTPUT") or ""
+          summary = os.environ.get("GITHUB_STEP_SUMMARY") or ""
           def emit(ok: str) -> None:
               if gha:
                   with open(gha, "a", encoding="utf-8") as fh:
                       fh.write(f"ok={ok}\n")
+          def note(line: str) -> None:
+              print(line, flush=True)
+              if summary:
+                  with open(summary, "a", encoding="utf-8") as fh:
+                      fh.write(line + "\n")
           if not tok:
               out["status"] = "INFERENCE_FAIL"
               out["note"] = "HF_INFERENCE_TOKEN empty"
               open("mill-out/probe.json", "w", encoding="utf-8").write(json.dumps(out, indent=2) + "\n")
-              print("INFERENCE_FAIL empty-token")
+              note("INFERENCE_FAIL empty-token")
               emit("0")
               sys.exit(0)
           payload = json.dumps({
@@ -94,9 +94,10 @@ jobs:
                   d = json.loads(r.read())
               txt = ((d.get("choices") or [{}])[0].get("message") or {}).get("content")
               out["status"] = "INFERENCE_OK"
+              out["http"] = 200
               out["probe"] = repr(txt)[:80]
               open("mill-out/probe.json", "w", encoding="utf-8").write(json.dumps(out, indent=2) + "\n")
-              print("INFERENCE_OK", repr(txt)[:80])
+              note("INFERENCE_OK HTTP 200")
               emit("1")
           except Exception as e:
               body = e.read()[:240].decode("utf-8", "replace") if hasattr(e, "read") else str(e)
@@ -105,12 +106,45 @@ jobs:
               out["http"] = code
               out["body"] = body
               open("mill-out/probe.json", "w", encoding="utf-8").write(json.dumps(out, indent=2) + "\n")
-              print("INFERENCE_FAIL", code, body)
+              note(f"INFERENCE_FAIL {code} {body}")
               emit("0")
               sys.exit(0)
           PY
-      - name: mill FLEET-B via router
-        if: steps.probe.outputs.ok == '1'
+      - name: upload probe (not a board rewrite)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf-inference-probe
+          path: mill-out
+          if-no-files-found: warn
+
+  mill:
+    needs: probe
+    if: needs.probe.outputs.ok == '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    env:
+      HF_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      FLEET_LOCK: public/fleet/HF2200.lock.json
+      FLEET_PROVIDERS: public/fleet/FLEET-B.providers.json
+      MILL_OUT: mill-out
+      MILL_LIMIT: ${{ github.event.inputs.limit || '30' }}
+      MILL_SHARD: ${{ matrix.shard }}
+      MILL_SHARDS: "20"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: mill HF2200 shard via router
         run: |
           set -euo pipefail
           mkdir -p mill-out
@@ -119,6 +153,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hf-inference-mill
+          name: hf-inference-mill-${{ matrix.shard }}
           path: mill-out
           if-no-files-found: warn
+
