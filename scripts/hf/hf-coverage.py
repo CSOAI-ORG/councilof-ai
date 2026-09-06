@@ -120,10 +120,25 @@ def mapping_for(model_id: str, token: str) -> dict:
     return out
 
 
-def hub_list(token: str, pipeline_tag: str = "text-generation", page: int = 1000, max_pages: int = 20) -> list[dict]:
+def hub_list(
+    token: str,
+    pipeline_tag: str = "text-generation",
+    page: int = 1000,
+    max_pages: int = 20,
+    sort: str = "downloads",
+) -> list[dict]:
     """Every Hub model with pipeline_tag=<tag> that ANY Inference Provider maps (inference_provider=all),
-    by downloads, with its mapping in the same response. Pages by the Link: rel=next cursor."""
-    url = (f"https://huggingface.co/api/models?pipeline_tag={pipeline_tag}&inference_provider=all&sort=downloads"
+    with its mapping in the same response. Pages by the Link: rel=next cursor.
+
+    `sort` matters more than it looks. A downloads-ranked list is a list of what was
+    popular BEFORE today, so it structurally cannot contain a model released this week
+    however reachable that model is. Measured 2026-09-05: of 60 HF trending
+    text-generation models, 39 were in neither the queue nor this file's population —
+    11 of 12 probed had no provider mapping and are rightly absent, but
+    deepseek-ai/DeepSeek-V4-Flash-Vision-Exp maps to deepinfra, fireworks-ai and novita
+    and was missing purely because it is new. Callers should union a recency-ranked page
+    (see hub_list_union) rather than trust one ordering."""
+    url = (f"https://huggingface.co/api/models?pipeline_tag={pipeline_tag}&inference_provider=all&sort={sort}"
            f"&direction=-1&limit={page}&expand[]=inferenceProviderMapping&expand[]=downloads&expand[]=pipeline_tag&expand[]=gated")
     out: list[dict] = []
     for _ in range(max_pages):
@@ -142,6 +157,33 @@ def hub_list(token: str, pipeline_tag: str = "text-generation", page: int = 1000
             break
         url = nxt
     return out
+
+
+def hub_list_union(token: str, pipeline_tag: str = "text-generation", page: int = 1000,
+                   max_pages: int = 20, trending_pages: int = 1) -> tuple[list[dict], dict]:
+    """The downloads-ranked population UNIONed with a trendingScore-ranked page.
+
+    Returns (models, provenance) so the report can state where its population came from
+    instead of implying one exists. Deduped by id, first sighting wins. The trending
+    fetch is one extra request; if it fails the run continues on downloads alone and the
+    provenance says so — a recency page that did not answer is UNCHECKABLE, and pretending
+    the population is complete without it is the error this function exists to stop."""
+    base = hub_list(token, pipeline_tag, page, max_pages, sort="downloads")
+    seen = {str(m.get("id")) for m in base}
+    prov = {"downloads_rows": len(base), "trending_rows": 0, "trending_added": 0, "trending_read": False}
+    try:
+        trend = hub_list(token, pipeline_tag, page, trending_pages, sort="trendingScore")
+        prov["trending_read"] = True
+        prov["trending_rows"] = len(trend)
+        for m in trend:
+            mid = str(m.get("id"))
+            if mid and mid not in seen:
+                seen.add(mid)
+                base.append(m)
+                prov["trending_added"] += 1
+    except Exception as e:  # noqa: BLE001 - reported, never swallowed
+        prov["trending_error"] = str(e).splitlines()[0][:120]
+    return base, prov
 
 
 def mapping_from_listed(m: dict) -> dict:
@@ -266,8 +308,11 @@ def main() -> int:
     # queue are the EXPANSION candidates; their mapping comes with the row, so no per-model call.
     listed: dict[str, dict] = {}
     hub_extra: list[dict] = []
+    hub_provenance = {"used": False}
     if args.hub_list:
-        for m in hub_list(token):
+        hub_models, hub_provenance = hub_list_union(token)
+        hub_provenance["used"] = True
+        for m in hub_models:
             mid = str(m.get("id") or "")
             if mid:
                 listed[mid] = m
@@ -457,6 +502,10 @@ def main() -> int:
             "frozen": args.frozen if fp.is_file() else None,
             "dead_slugs": args.dead if Path(args.dead).is_file() else None,
         },
+        # Where the population came from, so a reader is not left to assume one ordering
+        # was enough. trending_added > 0 means the downloads ranking alone would have
+        # missed that many reachable models purely for being new.
+        "population_provenance": hub_provenance,
         "counts": {
             "queue_rows": len(rows),
             "queue_servable_tag_rows": len(cand),
@@ -492,6 +541,19 @@ def main() -> int:
     op = Path(args.out)
     op.parent.mkdir(parents=True, exist_ok=True)
     op.write_text(json.dumps(out, indent=1, ensure_ascii=True) + "\n", encoding="utf-8")
+
+    # A counts-only sibling. The full file is ~3.4 MB because it carries a models[] row
+    # for every one of ~6,600 models, so anything that fetches it to quote ONE number
+    # pays the whole payload -- and a figure that is expensive to fetch quietly stops
+    # being fetched, which is how a page ends up quoting a stale constant instead. Same
+    # bytes for the counts, minus the rows.
+    counts_path = op.with_name(op.stem + "-counts" + op.suffix)
+    slim = {k: v for k, v in out.items() if k != "models"}
+    slim["full_table"] = f"/interop/{op.name}"
+    slim["models_omitted"] = len(out.get("models") or [])
+    counts_path.write_text(json.dumps(slim, indent=1, ensure_ascii=True) + "\n", encoding="utf-8")
+    print(f"counts-only sibling: {counts_path.name} "
+          f"({counts_path.stat().st_size} B vs {op.stat().st_size} B)")
     print(json.dumps({k: v for k, v in out["counts"].items()}, indent=1))
     print("providers_ranked (top 12):")
     for p in provider_rank[:12]:
