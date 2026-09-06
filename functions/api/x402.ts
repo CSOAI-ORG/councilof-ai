@@ -152,7 +152,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
       financial_firewall: "No token, credit, or cash-settled index. Attestation is not tokenisation and confers no ownership.",
     },
     lid: CSOAI_LID,
-    explainer: u("/pricing-free"),
+    explainer: u("/pricing"),
     revenue_truth: u("/api/revenue"),
   };
   return new Response(JSON.stringify(body, null, 2), {

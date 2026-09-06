@@ -80,7 +80,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
     catalog: `${origin}/api/x402`,
     board: `${origin}/api/gspc`,
     verify: `${origin}/gspc-verify`,
-    explainer: `${origin}/pricing-free`,
+    explainer: `${origin}/pricing`,
     agent_paths: ["@x402/fetch", "x402-fetch (v1)", "curl -i <resource> → read accepts[]"],
   };
   return new Response(JSON.stringify(body, null, 2), {

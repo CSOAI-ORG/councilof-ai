@@ -72,7 +72,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   };
 
   if (!wantFeed) {
-    return json({ schema: "csoai.eunomia-data/0.2", kind: "preview", ...preview, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402`, explainer: `${origin}/pricing-free` }, rail: railMode(env) });
+    return json({ schema: "csoai.eunomia-data/0.2", kind: "preview", ...preview, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402`, explainer: `${origin}/pricing` }, rail: railMode(env) });
   }
 
   const description = "Signed enforcement + measurement feed, assembled (DATA only — never scores, never ranked). Measurement, not certification. " + CSOAI_LID + ".";

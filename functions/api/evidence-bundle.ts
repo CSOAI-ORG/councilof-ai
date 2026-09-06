@@ -229,7 +229,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   if (!bundle) {
-    return json({ schema: "csoai.evidence-bundle/0.1", kind: "preview", ...preview, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay the accepts[] entry (x402) → retry with X-PAYMENT", invoice: { how: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`, note: "for a buyer who cannot pay USDC: returns a quotation reference, never an amount and never the pack — CSOAI LTD invoices and delivers on settlement" }, catalog: `${origin}/api/x402`, explainer: `${origin}/pricing-free` }, rail: railMode(env) });
+    return json({ schema: "csoai.evidence-bundle/0.1", kind: "preview", ...preview, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay the accepts[] entry (x402) → retry with X-PAYMENT", invoice: { how: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`, note: "for a buyer who cannot pay USDC: returns a quotation reference, never an amount and never the pack — CSOAI LTD invoices and delivers on settlement" }, catalog: `${origin}/api/x402`, explainer: `${origin}/pricing` }, rail: railMode(env) });
   }
 
   const description =
