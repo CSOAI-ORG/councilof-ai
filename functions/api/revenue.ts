@@ -133,11 +133,23 @@ async function oneNumber(env: Env): Promise<Record<string, unknown>> {
     let selfSettlements = 0;
     let zeroValueSettlements = 0;
     let unreadable = 0;
+    // WHETHER THE FACILITATOR SAID IT INDEXED US. _x402.ts records this on every settle
+    // (readBazaarOutcome, the EXTENSION-RESPONSES sidechannel) precisely because a facilitator
+    // only MAY report the outcome and x402#2112 records one that never does, leaving services
+    // silently unindexed. It has been written to every settlement record and surfaced NOWHERE:
+    // the single number that answers "why are we not in the Bazaar" was measured and unreadable.
+    //
+    // Counted across ALL records, self included — Move A settled our own doors, and those are
+    // exactly the settles whose indexing outcome we need. Aggregate only, like everything here.
+    const bazaarOutcomes: Record<string, number> = {};
     for (const name of keys) {
       const raw = await kv.get(name);
       if (!raw) { unreadable++; continue; }
-      let r: { payer?: string | null; self?: boolean; settled_at?: string; zero_value?: boolean; amount_atomic?: string | null };
+      let r: { payer?: string | null; self?: boolean; settled_at?: string; zero_value?: boolean;
+               amount_atomic?: string | null; bazaar?: { status?: string } | null };
       try { r = JSON.parse(raw); } catch { unreadable++; continue; }
+      const bz = r.bazaar?.status ?? "ABSENT";
+      bazaarOutcomes[bz] = (bazaarOutcomes[bz] ?? 0) + 1;
       if (r.self) { selfSettlements++; continue; }
       // A SETTLEMENT OF ZERO IS NOT A PURCHASE. Measured 2026-09-05: one zero-value settle through
       // /api/free-door, signed by an EPHEMERAL wallet created in a probe, moved all_time from 0 to
@@ -171,6 +183,16 @@ async function oneNumber(env: Env): Promise<Record<string, unknown>> {
         "Non-self settlements that moved 0, or carried no readable amount. Recorded for audit, " +
         "never counted as a payer — paying nothing does not make a buyer. Seeds and probes land here.",
       records_unreadable: unreadable, source: "REVENUE_KV settled:tx:* records",
+      indexing: {
+        facilitator_bazaar_outcomes: bazaarOutcomes,
+        note:
+          "Per settlement record, what the facilitator reported on the EXTENSION-RESPONSES " +
+          "sidechannel at settle time. REPORTED means it said something; UNREPORTED means it " +
+          "said nothing, which is NOT the same as not being indexed and is NOT evidence that we " +
+          "are. ABSENT means the record predates the field. Nothing here is a claim about any " +
+          "index — read the index itself: scripts/interop/x402-bazaar-audit.py walks PayAI and " +
+          "Coinbase CDP to completion and is the only thing that can say whether we are in one.",
+      },
       gates: { "0 for 30 days": "shape or price is wrong; do not add doors", "≥1 repeat": "open the next door", "≥5 distinct in 30d": "it is a product" } };
   } catch (e) {
     return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null,
