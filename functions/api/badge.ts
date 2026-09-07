@@ -200,9 +200,16 @@ const cardBadge = async (
   origin: string,
   hash: string,
   expectedSubject: string | null,
+  claim: string | null = null,
 ): Promise<AxisBadge> => {
   const h = hash.toLowerCase();
   const label = "card";
+  const claimNorm = (claim || "").trim().toLowerCase();
+  // A hub badge must never claim certification. "issued" = the card exists;
+  // "verified" = a real subject-bound card; "measured" only after the signer signs.
+  if (claimNorm === "certified" || claimNorm === "certification") {
+    return { label, message: "not a certificate", colour: GREY, state: "refused" };
+  }
   if (!/^[0-9a-f]{64}$/.test(h)) {
     return { label, message: "invalid ref", colour: GREY, state: "invalid" };
   }
@@ -216,10 +223,7 @@ const cardBadge = async (
     const entry = (idx.cards || []).find(
       (candidate) => typeof candidate.card === "string" && candidate.card.toLowerCase() === h,
     );
-    if (!entry) return { label, message: "not in index", colour: GREY, state: "not-found" };
-    if (entry.signed !== true) {
-      return { label, message: "unsigned", colour: GREY, state: "unsigned" };
-    }
+    if (!entry) return { label, message: "card not found", colour: GREY, state: "not-found" };
 
     const expectedPath = `/signed/cards/${h}.json`;
     if (entry.card_url !== expectedPath) {
@@ -227,18 +231,39 @@ const cardBadge = async (
     }
     const cardRes = await fetch(new URL(expectedPath, origin).toString());
     if (!cardRes.ok) {
-      return { label, message: "card unavailable", colour: GREY, state: "unavailable" };
+      return { label, message: "card not found", colour: GREY, state: "not-found" };
     }
     const card = await cardRes.json();
-    const verdict = await verifyCard(card, []);
-    if (!verdict.valid || verdict.id !== h) {
-      return { label, message: "invalid signature", colour: GREY, state: "invalid" };
-    }
     if (boundSubject(card) !== expectedSubject) {
       return { label, message: "subject mismatch", colour: GREY, state: "subject-mismatch" };
     }
 
     const axis = typeof entry.axis === "string" ? entry.axis.slice(0, 40) : "card";
+
+    if (claimNorm === "issued") {
+      return { label: axis, message: "issued", colour: LIME, state: "issued" };
+    }
+    if (claimNorm === "verified") {
+      return { label: axis, message: "verified", colour: LIME, state: "verified" };
+    }
+
+    if (entry.signed !== true) {
+      if (claimNorm === "measured") {
+        return { label: axis, message: "unmeasured", colour: GREY, state: "unmeasured" };
+      }
+      return { label, message: "unsigned", colour: GREY, state: "unsigned" };
+    }
+    const verdict = await verifyCard(card, []);
+    const signedValid = Boolean(verdict.valid && verdict.id === h);
+    if (claimNorm === "measured") {
+      if (!signedValid) {
+        return { label: axis, message: "unmeasured", colour: GREY, state: "unmeasured" };
+      }
+      return { label: axis, message: "measured", colour: GREEN, state: "measured" };
+    }
+    if (!signedValid) {
+      return { label, message: "invalid signature", colour: GREY, state: "invalid" };
+    }
     return {
       label: axis,
       message: "valid · subject-bound",
@@ -261,10 +286,16 @@ export const onRequestGet: PagesFunction = async (context) => {
   // ── Per-axis or per-card badge (real live status; never a fabricated number) ──
   const axisParam = url.searchParams.get("axis");
   const cardParam = url.searchParams.get("card");
-  if (axisParam || cardParam) {
+  const claimParam = url.searchParams.get("claim");
+  if (axisParam || cardParam || claimParam) {
     const b = axisParam
       ? axisBadge(axisParam)
-      : await cardBadge(url.origin, cardParam as string, url.searchParams.get("subject"));
+      : await cardBadge(
+          url.origin,
+          cardParam || "",
+          url.searchParams.get("subject"),
+          claimParam,
+        );
     if (format === "shields") {
       return new Response(
         JSON.stringify({ schemaVersion: 1, label: b.label, message: b.message, color: b.colour }),
