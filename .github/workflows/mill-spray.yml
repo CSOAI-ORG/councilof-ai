@@ -35,3 +35,19 @@ jobs:
       axis: ${{ matrix.axis }}
       grade: ${{ github.event.inputs.grade || '36' }}
     secrets: inherit
+  # Reusable mill jobs do not emit a hub-queue-mill workflow_run, so land
+  # would never see the cards. Kick land against this spray run_id; it
+  # downloads every hub-queue-mill-* artifact (rglob unsigned-*.json).
+  land:
+    needs: mill
+    if: always()
+    runs-on: ubuntu-latest
+    permissions: { actions: write, contents: read }
+    steps:
+      - name: dispatch hub-queue-land for this spray
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run hub-queue-land.yml --repo "$GITHUB_REPOSITORY" -f run_id="${{ github.run_id }}"
+          echo "land dispatched for spray ${{ github.run_id }}"

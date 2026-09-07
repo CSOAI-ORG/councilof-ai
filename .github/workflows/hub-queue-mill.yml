@@ -238,7 +238,9 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hub-queue-mill-${{ github.run_id }}
+          # Axis in the name so mill-spray's four reusable jobs do not clobber
+          # one artifact. Land downloads hub-queue-mill-* from the run.
+          name: hub-queue-mill-${{ github.run_id }}-${{ inputs.axis || github.event.inputs.axis || 'axis' }}
           # dead_slugs.jsonl travels with the cards. append_dead_slugs() updates it in the
           # runner and nothing carried it out, so every run's discoveries died with the job:
           # the committed file held 5 rows from 2026-09-02 while each run reported
