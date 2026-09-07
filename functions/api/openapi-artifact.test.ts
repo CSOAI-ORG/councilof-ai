@@ -115,6 +115,16 @@ describe("the free surface is declared, not probed", () => {
   it("keeps the quarantined and not-implemented markers the other tests read", () => {
     expect(spec.paths["/api/learn-loop"].get["x-csoai-lifecycle"]).toBe("QUARANTINED_PRE_RELEASE");
   });
+
+  it("GET /api/fulfill is a closed door (404), not a public 200", () => {
+    // Live GET returns 404 configured:false. Declaring 200 + security [] made
+    // x402scan treat it as a public read. What would make this fail: responses.200.
+    const op = spec.paths["/api/fulfill"].get;
+    expect(op.responses["404"]).toBeTruthy();
+    expect(op.responses["200"]).toBeUndefined();
+    expect(op["x-csoai-lifecycle"]).toBe("DOOR_CLOSED");
+    expect(op.security).toBeUndefined();
+  });
 });
 
 describe("no money is typed as a number, and no prose carries a price", () => {
