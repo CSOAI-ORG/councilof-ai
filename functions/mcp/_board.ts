@@ -184,6 +184,23 @@ export async function getRootTool(origin: string) {
   }
 }
 
+export async function x402TrustTool(origin: string) {
+  try {
+    const d = (await fetchOriginJson(origin, "/interop/x402-trust/latest.json")) as Record<string, unknown>;
+    return {
+      state: "VALID",
+      source: `${origin}/interop/x402-trust/latest.json`,
+      kind: d.kind ?? null,
+      as_of: d.as_of ?? null,
+      counts: d.counts ?? null,
+      headline: d.headline ?? null,
+      not_a_certification: true,
+    };
+  } catch (e) {
+    return { ...unreachablePayload(origin, "/interop/x402-trust/latest.json", e), state: "UNREACHABLE" };
+  }
+}
+
 export async function getCardTool(origin: string, args: Record<string, unknown>) {
   const sha = String(args.sha256 || "").trim().toLowerCase();
   if (!/^[0-9a-f]{64}$/.test(sha)) {

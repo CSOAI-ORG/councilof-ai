@@ -14,6 +14,7 @@ import {
   listCardsTool,
   getRootTool,
   getCardTool,
+  x402TrustTool,
   verifyInclusionTool,
 } from "./_board";
 
@@ -77,6 +78,8 @@ function sharedToolSummary(name: string, payload: Record<string, unknown>): stri
       return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
     case "verify_inclusion":
       return `${payload.state ?? "?"} — inclusion against live merkle.`;
+    case "x402_trust":
+      return `${payload.state ?? "?"} — ${(payload.headline as string) || "catalog trust counts"}.`;
     default:
       return name;
   }
@@ -105,6 +108,8 @@ export async function handleSharedTool(
               ? await getCardTool(origin, args)
               : name === "verify_inclusion"
                 ? await verifyInclusionTool(origin, args)
+                : name === "x402_trust"
+                ? await x402TrustTool(origin)
               : await verifyCardThreeState(args, origin);
   return rpc(id, {
     content: [

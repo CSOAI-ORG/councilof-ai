@@ -136,8 +136,10 @@ def run(out_dir: str, catalog_url: str):
     out.mkdir(parents=True, exist_ok=True)
     stamp = deadline.split("T")[0]
     (out / f"{stamp}.json").write_text(json.dumps(summary, indent=2) + "\n")
+    # The stable pointer the MCP x402_trust tool reads — always the newest round.
+    (out / "latest.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(counts, indent=1))
-    print("wrote", out / f"{stamp}.json")
+    print("wrote", out / f"{stamp}.json", "and latest.json")
     return 0
 
 
