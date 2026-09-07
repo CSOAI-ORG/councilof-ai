@@ -146,9 +146,15 @@ describe("Glama's recorded tool truth is derived, not asserted", () => {
     (r: { id: string }) => r.id === "glama",
   );
 
-  it("the names recorded as Glama's are exactly the names the door serves", () => {
-    expect(row.tool_counts.names).toEqual(served);
+  it("served_by_the_door tracks the canonical files; Glama names are the last probe", () => {
     expect(row.tool_counts.served_by_the_door).toBe(served.length);
+    // Last probe may lag the door. Never fill a directory name we have not seen there.
+    for (const n of row.tool_counts.names as string[]) {
+      expect(served, n).toContain(n);
+    }
+    if ((row.tool_counts.names as string[]).length !== served.length) {
+      expect(row.tool_counts.verdict).not.toBe("TRUE");
+    }
   });
 
   it("TRUE is only claimed when declared equals served", () => {
