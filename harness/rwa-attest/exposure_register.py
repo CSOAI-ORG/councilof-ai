@@ -1,29 +1,31 @@
 #!/usr/bin/env python3
-"""exposure_register.py — deterministic GPU-free white-label exposure register.
+"""exposure_register.py — deterministic GPU-free white-label exposure register (schema-v0.5).
 
-Mines a genuinely-new white-label finding WITHOUT model inference (no GPU contention).
-It combines the estate's LIVE signed GSPC board (measured axis accuracy + harm) with the
-LIVE signed regulation feed (obligation fine-tier per deadline) into a deterministic
-exposure ranking: for each measured axis, the mapped fine-tier × measured gap gives an
-objective harm-weighted exposure signal. This is the white-label regulator / AI-liability
-insurer "sort every compliance problem + fine exposure before anyone is contacted" value.
+Combines the estate's LIVE signed GSPC board (measured axis accuracy + harm) with the LIVE
+signed regulation feed (obligation fine-tier per deadline) into a deterministic exposure
+ranking: for each measured axis, the mapped fine-tier × measured gap gives an objective
+harm-weighted exposure signal. This is the white-label regulator / AI-liability insurer
+"sort every compliance problem + fine exposure" value.
 
-Honesty: reference-parameter estimate, NOT a legal opinion, NOT a fine prediction, NOT
-investment/liability advice. Uses PUBLISHED statutory maximum tiers as the exposure cap
-and the measured accuracy gap as the exposure scalar — a deterministic reference ordering,
-not a forecast. Axes without a measured accuracy are UNMEASURED (reported, never coerced).
+SCHEMA-CURRENT (2026-09-05): the live board serves top-level `accuracy` on only a subset of
+axes; for the rest it is either in `historical_measurement_record` or DELIBERATELY WITHHELD
+(public_leader_state == "EXCLUDED_OWN_MODEL" — a neutral body does not rank its own models).
+This tool resolves accuracy from the top-level field OR the historical record, and marks
+withheld-for-neutrality axes as WITHHELD (ranked on harm, accuracy never invented).
+
+Honesty: reference-parameter estimate, NOT legal opinion, NOT a fine prediction, NOT
+investment/liability advice. Published statutory maxima are the exposure cap; the measured
+accuracy gap is the exposure scalar — a deterministic reference ordering, not a forecast.
 
 Usage: python3 exposure_register.py [--json]
 """
-import argparse, json, sys, urllib.request
+import argparse, hashlib, json, sys, urllib.request
 
 GSPC = "https://councilof.ai/api/gspc"
 REG = "https://councilof.ai/api/regulation"
 
 # GSPC measured CANON axis -> canonical EU AI Act fine tier (deterministic map, matches the
-# white-label regulator tooling; tiers are the published statutory maxima). Keys are the
-# live board's canonical axis names (the 22-axis canon under ADR-001, NOT the pod's internal
-# 15 model-comparison keys).
+# white-label regulator tooling; tiers are the published statutory maxima).
 AXIS_FINE = {
     "governance": "up to €35,000,000 or 7% (Art 99(3))",
     "safety": "up to €35,000,000 or 7% (Art 99(3))",
@@ -40,12 +42,20 @@ AXIS_FINE = {
     "affect": "up to €35,000,000 or 7% (Art 99(3))",
     "jail": "up to €15,000,000 or 3% (Art 99(4))",
 }
-# Numeric exposure cap for the deterministic scalar (7% -> 35M, 3% -> 15M).
 TIER_CAP = {"7": 35_000_000, "3": 15_000_000}
 
 def get(url):
-    return json.loads(urllib.request.urlopen(urllib.request.Request(
-        url, headers={"User-Agent": "csoai-exposure-register/0.1"}), timeout=20).read())
+    req = urllib.request.Request(url, headers={"User-Agent": "csoai-exposure-register/0.5"})
+    return json.loads(urllib.request.urlopen(req, timeout=20).read())
+
+def resolve_accuracy(ax):
+    v = ax.get("accuracy")
+    if v is not None:
+        return v
+    h = ax.get("historical_measurement_record")
+    if isinstance(h, dict) and h.get("accuracy") is not None:
+        return h["accuracy"]
+    return None
 
 def main():
     ap = argparse.ArgumentParser()
@@ -54,51 +64,58 @@ def main():
     g = get(GSPC); r = get(REG)
     axes = {ax.get("axis"): ax for ax in g.get("axes", [])}
 
-    rows = []
+    rows, withheld = [], []
     for name, fine in AXIS_FINE.items():
         ax = axes.get(name)
-        if not ax or ax.get("status") != "MEASURED" or ax.get("accuracy") is None:
+        if not ax or ax.get("status") != "MEASURED":
             continue
-        acc = ax["accuracy"]; harm = ax.get("mean_harm")
+        acc = resolve_accuracy(ax); harm = ax.get("mean_harm")
         cap = TIER_CAP.get("7" if "7%" in fine else "3", 15_000_000)
-        # Deterministic exposure scalar: (1 - accuracy) * harm-mass if harm present,
-        # else (1 - accuracy) alone. Reference ordering, not a forecast.
+        if acc is None and ax.get("public_leader_state") == "EXCLUDED_OWN_MODEL":
+            # accuracy withheld-for-neutrality: rank on harm alone, never invent acc.
+            scalar = harm if harm is not None else 0.0
+            withheld.append({"axis": name, "accuracy": "WITHHELD_FOR_NEUTRALITY",
+                             "mean_harm": round(harm, 3) if harm is not None else None,
+                             "fine_tier": fine, "exposure_index": round(scalar, 3),
+                             "exposure_cap_eur": cap, "n": ax.get("n")})
+            continue
+        if acc is None:
+            continue
         scalar = (1.0 - acc) * (harm if harm is not None else 1.0)
-        rows.append({
-            "axis": name,
-            "accuracy": round(acc, 3),
-            "mean_harm": round(harm, 3) if harm is not None else None,
-            "fine_tier": fine,
-            "exposure_cap_eur": cap,
-            "exposure_index": round(scalar, 3),  # deterministic reference scalar 0..1
-            "n": ax.get("n"),
-        })
+        rows.append({"axis": name, "accuracy": round(acc, 3),
+                     "mean_harm": round(harm, 3) if harm is not None else None,
+                     "fine_tier": fine, "exposure_index": round(scalar, 3),
+                     "exposure_cap_eur": cap, "n": ax.get("n")})
     rows.sort(key=lambda r: -r["exposure_index"])
+    withheld.sort(key=lambda r: -r["exposure_index"])
 
     body = {
-        "schema": "csoai.white-label-exposure-register/0.1",
+        "schema": "csoai.white-label-exposure-register/0.5",
         "sources": {"gspc": GSPC, "regulation": REG},
-        "measured_on": g.get("measured_on"),
+        "measured_on": (lambda mo: {"date": mo.get("date"),
+                                    "note": "board is signed (did:web:csoai.org#board-attestation-1); accuracy withheld-for-neutrality on AXES whose public leader is the estate's own model"} if isinstance(mo, dict) else mo)(g.get("measured_on")),
         "doctrine": ("Deterministic reference exposure register over the estate OWN signed "
                      "board + published statutory fine tiers. Measurement, not certification. "
                      "NOT legal opinion, NOT a fine prediction, NOT investment/liability advice. "
                      "exposure_index = (1-accuracy)*harm (harm-mass if present) — a reference "
-                     "ordering scale to the published maximum tier, not a forecast. Axes without "
-                     "a measured accuracy are UNMEASURED (reported, not coerced)."),
+                     "ordering scale to the published maximum tier, not a forecast. Axes whose "
+                     "accuracy is withheld-for-neutrality are ranked on harm alone and reported "
+                     "WITHHELD_FOR_NEUTRALITY (never invented)."),
         "exposure_ranked": rows,
-        "unmeasured_axes": [name for name in AXIS_FINE
-                            if name not in {r["axis"] for r in rows}],
+        "neutrality_withheld": withheld,
     }
 
     if a.json:
         print(json.dumps(body, indent=1, ensure_ascii=False))
         return
 
-    print(f"white-label exposure register | measured_on={body['measured_on']}")
-    print(f"{'axis':<18} {'acc':<6} {'harm':<6} {'exposure_index':<15} cap")
+    print(f"white-label exposure register v0.5 | measured_on={body['measured_on']}")
+    print(f"{'axis':<22} {'acc':<8} {'harm':<8} {'exposure':<9} cap")
     for r in rows:
-        print(f"{r['axis']:<18} {r['accuracy']:<6} {str(r['mean_harm']):<6} {r['exposure_index']:<15} {r['fine_tier'][:40]}")
-    print(f"\nunmeasured (not coerced): {body['unmeasured_axes']}")
+        print(f"{r['axis']:<22} {r['accuracy']:<8} {str(r['mean_harm']):<8} {r['exposure_index']:<9} {r['fine_tier'][:38]}")
+    print(f"\nneutrality_withheld (ranked on harm, accuracy NOT asserted):")
+    for r in withheld:
+        print(f"  {r['axis']:<22} harm={r['mean_harm']} exposure={r['exposure_index']} {r['fine_tier'][:34]}")
 
 if __name__ == "__main__":
     main()
