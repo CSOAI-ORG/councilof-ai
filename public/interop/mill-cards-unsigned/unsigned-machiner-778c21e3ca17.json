@@ -1,0 +1,23 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "machinery-conformity",
+    "model": "microsoft/Phi-4-mini-instruct",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.5667,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router"
+  },
+  "id": "778c21e3ca1789c97f15d121d7c962372b6cdcd2cf3372214c502c57e41de05b",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1"
+}
