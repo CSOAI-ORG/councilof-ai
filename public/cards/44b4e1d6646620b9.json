@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-07T12:21:43.655Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 1,
+      "issuer": "Quantoz",
+      "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1000000,
+      "symbol": "USDQ",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "44b4e1d6646620b95fdb8b4a78efeac43922635596121c797a21eabe75895cd8",
+    "sig_ed25519": null,
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL USDQ public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml",
+      "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
+    ]
+  },
+  "proof": [
+    "b18392c8c4fb1abd19b3a7f2be924340be58d5beed2beac10b05465bcd8994df",
+    "1c0f7106f96167a08a71d9c4767ffc518913daf3b4ec48c67b9ccd0eafa5bce4",
+    "d9387adb520c63575f869891fb0d0da08b13dd6647f0b12be2ff1b6c84cb2e17",
+    "4147843328fd425bfded5e19e0b0decc33d54b28710555a667b204e68d6280e1",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "42746bf1fff0cffdbeeb77ef41a7f3f0f7faffc2e01c4e309450d6fb41f30f7a",
+    "1f8c18a81018ce899f5e63b552f96cdf0a7061f0e7f8a85225af2e22ac9a498c",
+    "d09d7e14e16219757bfaa5b88c40632ab4cab87305f2ef97a4731da118636783"
+  ]
+}

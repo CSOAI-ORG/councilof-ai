@@ -1,0 +1,46 @@
+{
+  "card": {
+    "as_of": "2026-09-07T12:21:43.655Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 430,
+      "issuer": "Bitstamp",
+      "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 4960395.479908825,
+      "symbol": "EUR.bs",
+      "verified_domain": null,
+      "verified_via": "XRPLMeta registry"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "607ab349e827208ab48526dc75437870798dc475c1d5f3592113b0642a8db91a",
+    "sig_ed25519": "3ebbacd48cd136c1556d65a4707f7d2dbb48ca2490afb611c5185dc9d9f780b8d171c806b09ed9f80dfb801cd499424aaba56f3ae5412902f101cb6ad1dd0905",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EUR.bs public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "500b694c629e2a12cdb1eaa0c657f388f80753c3cf5f69070c9e38570a258fdc",
+    "7164935b8d00b4b6137d0c1f82aec2ba3978afcec2783b24929e6db2a6591e38",
+    "954049fbc8ed4fb62bdeaf908ec0687c35fbc1c18673a0c1f1e4e9f4fe62e745",
+    "4ce770d4d1d44237f956068846bf58d7d5ccf8d3d4cb95358ac97aeea9d2503c",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "42746bf1fff0cffdbeeb77ef41a7f3f0f7faffc2e01c4e309450d6fb41f30f7a",
+    "1f8c18a81018ce899f5e63b552f96cdf0a7061f0e7f8a85225af2e22ac9a498c",
+    "d09d7e14e16219757bfaa5b88c40632ab4cab87305f2ef97a4731da118636783"
+  ]
+}

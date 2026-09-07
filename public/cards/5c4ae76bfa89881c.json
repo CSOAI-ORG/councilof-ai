@@ -1,0 +1,46 @@
+{
+  "card": {
+    "as_of": "2026-09-07T12:21:43.655Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 120,
+      "issuer": "Société Générale-FORGE",
+      "issuer_address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 10000000,
+      "symbol": "EURCV",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "5c4ae76bfa89881cfdfb1dca301e02ecc25d2d53411804ee5aab6811a674165c",
+    "sig_ed25519": "8a930fd999411fe1a490a3b9f9d470f35913351bca7106a196584536e3ea9b33f913dc2f67dfbc2fde8c835e777860f2a94ddc814a2845755f0eca3fbe314d06",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EURCV public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "ca958d76bbde63d9c895e86ebe3fa1fa632482b4dac86aaf33dff11a6f033068",
+    "1e61e79ccb81aaa2136b5987e4860aa80e54ba8da04edd4e80c96aad5326b9de",
+    "954049fbc8ed4fb62bdeaf908ec0687c35fbc1c18673a0c1f1e4e9f4fe62e745",
+    "4ce770d4d1d44237f956068846bf58d7d5ccf8d3d4cb95358ac97aeea9d2503c",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "42746bf1fff0cffdbeeb77ef41a7f3f0f7faffc2e01c4e309450d6fb41f30f7a",
+    "1f8c18a81018ce899f5e63b552f96cdf0a7061f0e7f8a85225af2e22ac9a498c",
+    "d09d7e14e16219757bfaa5b88c40632ab4cab87305f2ef97a4731da118636783"
+  ]
+}
