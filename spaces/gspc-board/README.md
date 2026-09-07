@@ -24,6 +24,8 @@ CENSUS_3M leftover: census + digest + queue + lock. Remainder UNMEASURED. Hub li
 **UNSIGNED staging (HF Jobs mill):** cards the mill stages under `csoai/gspc-hub-cards/staged-unsigned/<date>/<axis>/` carry `"signature": null`. UNSIGNED — becomes MEASURED only after a VALID signature; nothing here is a rank. A staged card's hits/n are card bytes, not a score; n<30 unquotable; TIE is never a win. Staging never changes `n_measured`, any cell, `mill-cards/`, `INDEX.jsonl` or `cards.jsonl`. Per-model state, every axis verbatim: https://huggingface.co/spaces/csoai/gspc-lookup
 
 - Live board: https://councilof.ai/api/gspc
+- x402 trust: https://councilof.ai/interop/x402-trust/latest.json
+- Hub census register (counts + card links, never a grade): https://councilof.ai/interop/hf-census/SUMMARY.json
 - Per-model lookup (every axis, verbatim): https://huggingface.co/spaces/csoai/gspc-lookup
 - Verify (free): https://councilof.ai/gspc-verify
 - How to verify: https://councilof.ai/signed/HOW-TO-VERIFY.md

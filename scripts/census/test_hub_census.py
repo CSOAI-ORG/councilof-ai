@@ -329,6 +329,16 @@ class HubCensusAxisSourceTests(unittest.TestCase):
                 self.assertNotIn("issuer", cov)
         _assert_no_grade_fields(register)
 
+    def test_org_register_caps_card_links_but_n_is_the_fetch(self) -> None:
+        cap = hub_census.MAX_ORG_CARD_LINKS
+        fixtures = [representative_listing(i, org="alpha") for i in range(cap + 5)]
+        register = build_org_register([listing_record(raw) for raw in fixtures])
+        row = register["orgs"][0]
+        self.assertEqual(row["n"], cap + 5)
+        self.assertEqual(len(row["card_links"]), cap)
+        self.assertEqual(register["n"], cap + 5)
+        self.assertEqual(register["n_measured"], 0)
+
     def test_write_counts_only_and_collect_use_the_same_fetch_n(self) -> None:
         fixtures = [representative_listing(i, org="gamma") for i in range(4)]
         opener = fixture_hub_opener(fixtures, page_size=2)
@@ -382,6 +392,46 @@ class HubCensusAxisSourceTests(unittest.TestCase):
                 self.assertTrue(all(r["gspc_state"] == GSPC_STATE for r in [
                     json.loads(line) for line in (Path(tmp) / "listings.jsonl").read_text().splitlines() if line
                 ]))
+
+
+class HubCensusPublishPathTests(unittest.TestCase):
+    def test_census_delta_workflow_publishes_counts_only_via_shipped_collector(self) -> None:
+        path = Path(__file__).resolve().parents[2] / ".github/workflows/census-delta.yml"
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("scripts/census/hub_census.py", text)
+        self.assertIn("--publish-dir public/interop/hf-census", text)
+        self.assertIn("axis-sources.json", text)
+        self.assertIn("org-register.json", text)
+        self.assertIn("n_measured", text)
+        self.assertIn("listings.jsonl", text)
+        self.assertNotIn("router.huggingface.co", text)
+        self.assertNotIn("echo $HF_TOKEN", text)
+        self.assertNotIn("print(os.environ", text)
+
+    def test_agent_facing_copy_has_the_three_urls_and_register_language(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        need = (
+            "https://councilof.ai/api/gspc",
+            "https://councilof.ai/interop/x402-trust/latest.json",
+            "https://councilof.ai/signed/HOW-TO-VERIFY.md",
+        )
+        files = [
+            root / "public/interop/hf-census/README.md",
+            root / "public/interop/hf-census/dataset-card.md",
+            root / "spaces/gspc-board/README.md",
+        ]
+        for path in files:
+            text = path.read_text(encoding="utf-8")
+            for url in need:
+                self.assertIn(url, text, msg=f"{path} missing {url}")
+            lowered = text.lower()
+            self.assertIn("count", lowered, msg=f"{path} missing counts language")
+            self.assertIn("card", lowered, msg=f"{path} missing card language")
+            self.assertRegex(
+                lowered,
+                r"never a grade|not a grade|never\s+model grades",
+                msg=f"{path} missing register/not-a-grade language",
+            )
 
 
 if __name__ == "__main__":

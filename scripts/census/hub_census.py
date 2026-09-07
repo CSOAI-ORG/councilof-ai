@@ -138,6 +138,7 @@ SAFETY_WORDING_MARKERS = (
     "guardrail",
     "rai",
 )
+MAX_ORG_CARD_LINKS = 20
 GRADE_KEYS = frozenset(
     {
         "grade",
@@ -437,7 +438,7 @@ def build_org_register(records: list[dict[str, Any]]) -> dict[str, Any]:
         )
         slot["n"] += 1
         link = f"{HUB_CARD}/{ident}"
-        if link not in slot["card_links"]:
+        if link not in slot["card_links"] and len(slot["card_links"]) < MAX_ORG_CARD_LINKS:
             slot["card_links"].append(link)
         hits = axis_source_hits(record)
         for axis in FINANCIAL_AXES:

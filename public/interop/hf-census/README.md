@@ -25,6 +25,11 @@ https://councilof.ai/signed/HOW-TO-VERIFY.md
 signs a card. "issued" on a badge means the card exists. "certified" is never
 a claim this register makes.
 
+The living loop is `.github/workflows/census-delta.yml`: Hub API pagination
+(`scripts/census/hub_census.py collect --mode delta --publish-dir public/interop/hf-census`),
+never a probe, never `listings.jsonl` in git. A complete Hub walk is unbounded;
+`n` is always the fetch that wrote the file.
+
 ## Badge
 
 Embed a subject-bound card, not a certificate:
