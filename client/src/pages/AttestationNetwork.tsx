@@ -61,21 +61,16 @@ function BoardTriple({ totals }: { totals: GspcTotals | null }) {
       </p>
     );
   }
-  const triple = `${totals.axes}·${totals.measured_axes}·${totals.unmeasured_axes}`;
   return (
     <div className="rounded-2xl border border-emerald-400/30 bg-emerald-950/40 p-5">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">
-        Living GSPC · derived totals
+        Living GSPC · derived totals · GET /api/gspc
       </p>
-      <p className="mt-2 text-3xl font-black tracking-tight text-slate-50">{triple}</p>
+      <p className="mt-2 text-3xl font-black tracking-tight text-slate-50">
+        {totals.public_count || `${totals.axes} axis · ${totals.measured_axes} measured`}
+      </p>
       <p className="mt-1 text-sm text-slate-400">
-        axes · measured · unmeasured
-        {totals.public_count ? (
-          <>
-            {" "}
-            — <span className="text-slate-300">{totals.public_count}</span>
-          </>
-        ) : null}
+        unmeasured_axes={totals.unmeasured_axes} — first-class empty, not a score
       </p>
       <p className="mt-3 text-xs text-slate-500">
         Hub cite: re-GET{" "}
