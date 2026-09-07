@@ -1,0 +1,23 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "swarm",
+    "model": "t-tech/T-lite-it-2.1",
+    "issuer": "CSOAI Ltd",
+    "n": 20,
+    "accuracy": 1,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "n<30 unquotable; 10 of 30 items returned no parseable label"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router"
+  },
+  "id": "97b5785bb1d23c2c6c2a6647f825ff5d2f53686844534c2771fa2cecc69d22fa",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1"
+}
