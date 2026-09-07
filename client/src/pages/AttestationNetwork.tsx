@@ -8,7 +8,7 @@
  * - Board totals ONLY from live GET /api/gspc (derive axes·measured·unmeasured)
  * - Never certify · never invent scores · never hardcode a disagreeing triple
  * - PayAI/x402 = indexers, not our facilitator product
- * - Paddle = human rail; no fake live checkout until wired
+ * - Human MoR checkout: Coming—named rail only; no fake live Buy on this page
  */
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
@@ -103,7 +103,7 @@ export default function AttestationNetwork() {
   useEffect(() => {
     document.title = "Council Attestation Network | Council of AI";
     setMetaDescription(
-      "Measure → sign → root → anchor. Verify free forever. Agents settle signed recordings over x402; humans use Paddle when live. Living board from GET /api/gspc. Measurement, never certification.",
+      "Measure → sign → root → anchor. Verify free forever. Agents settle signed recordings over x402; human MoR checkout is Coming—named rail only. Living board from GET /api/gspc. Measurement, never certification.",
     );
   }, []);
 
@@ -259,24 +259,6 @@ export default function AttestationNetwork() {
             <Link href="/pricing-free" className="text-emerald-300 underline-offset-2 hover:underline">
               /pricing-free
             </Link>
-          </div>
-        </section>
-
-        <section aria-labelledby="human-h" className="mt-14">
-          <h2 id="human-h" className="text-xl font-bold text-emerald-300">
-            Humans — Paddle when live
-          </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-400">
-            Human merchant-of-record checkout is the Paddle rail — additive to agent x402, same
-            doctrine: pay for signed recording / assembly, never for a grade.
-          </p>
-          <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-950/20 p-5 text-sm text-amber-100/80">
-            Human checkout (Paddle) — named rail; goes live when KYC / MoR is ready. Until then,
-            verify free and use the agent x402 doors at{" "}
-            <Link href="/pricing-free" className="underline">
-              /pricing-free
-            </Link>
-            . No fake Buy button on this page.
           </div>
         </section>
 
