@@ -3,7 +3,7 @@
  *
  * tools/call name=measure | jail-probe — mill-tool DROPPED. Do not claim a signed
  * measurement card from this door. Use read-only board_totals / get_axis.
- * HTTP /mcp is seven FREE tools (board_totals get_axis verify_card list_cards get_root get_card verify_inclusion)
+ * HTTP /mcp is eight FREE tools (board_totals get_axis verify_card list_cards get_root get_card verify_inclusion x402_trust)
  * plus four PAID tools (commission_card art50_marking_evidence rwa_evidence receipts_batch —
  * ./paid-tools.json, handled by ./_paid.ts: unpaid → the route's 402 challenge as structuredContent).
  * Payment travels as the `x_payment` ARGUMENT and this door sets the X-PAYMENT header itself, so which
@@ -214,7 +214,7 @@ export const onRequest: PagesFunction = async (ctx) => {
         capabilities: { tools: {} },
         serverInfo: { name: "csoai-gspc-mcp", version: MCP_HTTP_SERVER_VERSION },
         instructions:
-          "GSPC MCP. Seven free read-only tools: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion. Four paid tools over the x402 rail: commission_card art50_marking_evidence rwa_evidence receipts_batch — call without x_payment to receive the 402 challenge as structuredContent, pay from your wallet and call again with x_payment. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification free. The witness_hash SKU is quarantined pre-release and is not advertised. mill-tool measure dropped. Dead worker is 404; this Pages /mcp is the door. Remote URL https://councilof.ai/mcp. The npm stdio package csoai-gspc-mcp reads the same two definitions files; payment is the x_payment argument, so which tools it carries is a packaging choice of its version, not a limit of stdio. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.",
+          "GSPC MCP. Eight free read-only tools: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion x402_trust. Four paid tools over the x402 rail: commission_card art50_marking_evidence rwa_evidence receipts_batch — call without x_payment to receive the 402 challenge as structuredContent, pay from your wallet and call again with x_payment. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification free. The witness_hash SKU is quarantined pre-release and is not advertised. mill-tool measure dropped. Dead worker is 404; this Pages /mcp is the door. Remote URL https://councilof.ai/mcp. The npm stdio package csoai-gspc-mcp reads the same two definitions files; payment is the x_payment argument, so which tools it carries is a packaging choice of its version, not a limit of stdio. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.",
       });
     }
 
@@ -234,7 +234,7 @@ export const onRequest: PagesFunction = async (ctx) => {
 
     if (call?.method === "tools/list") {
       // Serve the local honest tool list. Dead worker csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door.
-      // Free seven first, then the paid four (./paid-tools.json). Same list for every caller — the
+      // Free eight first, then the paid four (./paid-tools.json). Same list for every caller — the
       // catalogue is free and no tool carries a trust label.
       return rpc(call.id, { tools: [...(GSPC_TOOLS as { tools: unknown[] }).tools, ...PAID_TOOL_DEFS] });
     }

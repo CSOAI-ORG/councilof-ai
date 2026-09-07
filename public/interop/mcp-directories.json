@@ -32,9 +32,9 @@
       "tool_counts": {
         "note": "The mandate is 'the listing resolves and the tool count is true'. Declared counts are read from Smithery's detail endpoint; served tools are DERIVED from the two canonical files the door reads (functions/mcp/gspc-tools.json + paid-tools.json), never typed. Neither hosted deployment could be called directly: gspc--csoai.run.tools answers 401 at / and 404 at /mcp, so Smithery's runtime needs a key we do not hold. The comparison is therefore declared-vs-source, not declared-vs-tools/list.",
         "served_by_the_door": {
-          "free": 7,
+          "free": 8,
           "paid": 4,
-          "total": 11,
+          "total": 12,
           "names": [
             "board_totals",
             "get_axis",
@@ -43,6 +43,7 @@
             "get_root",
             "get_card",
             "verify_inclusion",
+            "x402_trust",
             "commission_card",
             "art50_marking_evidence",
             "rwa_evidence",
@@ -54,7 +55,10 @@
             "qualifiedName": "csoai/gspc-mcp",
             "declared": 7,
             "verdict": "TRUE BUT INCOMPLETE",
-            "detail": "Its seven are exactly the free seven the door serves. It advertises none of the four x402-metered tools, so a client reading this listing cannot discover them."
+            "detail": "Its seven are the first seven free tools the door serves. The door now also serves x402_trust plus four x402-metered tools; a client reading this listing cannot discover those five.",
+            "served_not_declared": [
+              "x402_trust"
+            ]
           },
           {
             "qualifiedName": "csoai/gspc",
@@ -74,7 +78,8 @@
               "commission_card",
               "art50_marking_evidence",
               "rwa_evidence",
-              "receipts_batch"
+              "receipts_batch",
+              "x402_trust"
             ]
           }
         ]
@@ -99,9 +104,9 @@
         "probe": "curl -sL https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/a2a-governance-bridge-mcp | grep -o 'Unhealthy'"
       },
       "tool_counts": {
-        "verdict": "TRUE",
+        "verdict": "UNCHECKABLE",
         "declared": 11,
-        "served_by_the_door": 11,
+        "served_by_the_door": 12,
         "names": [
           "art50_marking_evidence",
           "board_totals",
@@ -115,7 +120,7 @@
           "verify_card",
           "verify_inclusion"
         ],
-        "detail": "Glama publishes one page per tool under the Council of AI GSPC connector: 11 pages, and the 11 names are IDENTICAL to the set the door serves (7 free + 4 paid), with nothing extra and nothing missing. This is the only directory whose tool count is exactly right. It is also the only one that advertises the four x402-metered tools — Smithery's accurate listing (csoai/gspc-mcp) shows the free seven and hides the paid four, and its other listing (csoai/gspc) advertises four tools the door refuses by name.",
+        "detail": "Last Glama probe recorded 11 tool pages identical to the then-door (7 free + 4 paid). The door now also serves x402_trust (8 free + 4 paid = 12). Glama has not been re-probed since that add, so declared=11 stays and verdict is UNCHECKABLE — not TRUE. names[] is the last probe, not the live door.",
         "probe": "compare the /mcp/connectors/ sitemap leaves that are tool pages against jq -r '.tools[].name' functions/mcp/{gspc,paid}-tools.json"
       },
       "tool_count_audit": {

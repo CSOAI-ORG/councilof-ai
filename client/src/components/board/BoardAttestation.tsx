@@ -259,7 +259,7 @@ export default function BoardAttestation({
             )}
             {goldRun && (
               <p className={`mt-1 text-[10px] ${textMuted}`}>
-                living_stamp.gold_run {formatDate(goldRun)} — payload stamp, not a live re-measure. Board counts stay derived (22·22·0); no new MEASURED invented here.
+                living_stamp.gold_run {formatDate(goldRun)} — payload stamp, not a live re-measure. Board counts stay derived from GET /api/gspc; no new MEASURED invented here.
               </p>
             )}
             <p className={`mt-1 text-[11px] ${dark ? "text-sky-200/70" : "text-sky-900/80"}`}>

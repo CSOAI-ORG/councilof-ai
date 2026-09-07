@@ -9,7 +9,7 @@ const call = async (body: unknown, env: Record<string, unknown> = {}) =>
   onRequest({ request: new Request(`${ORIGIN}/mcp`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }), env, params: {} } as never);
 const rpc = (method: string, params?: unknown, id = 1) => ({ jsonrpc: "2.0", id, method, ...(params ? { params } : {}) });
 
-const FREE_SEVEN = ["board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion"];
+const FREE_EIGHT = ["board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion", "x402_trust"];
 const PAID_FOUR = ["commission_card", "art50_marking_evidence", "rwa_evidence", "receipts_batch"];
 
 /**
@@ -47,12 +47,12 @@ function stubOrigin(opts: { deployed: string[]; paidOk?: boolean }) {
 }
 afterEach(() => vi.unstubAllGlobals());
 
-describe("/mcp tools/list — seven free + four paid, catalogue free, nothing labelled safe", () => {
-  it("lists the free seven first and the paid four after, one definitions file each", async () => {
+describe("/mcp tools/list — eight free + four paid, catalogue free, nothing labelled safe", () => {
+  it("lists the free eight first and the paid four after, one definitions file each", async () => {
     const r = await (await call(rpc("tools/list"))).json();
     const names = r.result.tools.map((t: { name: string }) => t.name);
-    expect(names).toEqual([...FREE_SEVEN, ...PAID_FOUR]);
-    expect((FREE as { tools: unknown[] }).tools).toHaveLength(7);
+    expect(names).toEqual([...FREE_EIGHT, ...PAID_FOUR]);
+    expect((FREE as { tools: unknown[] }).tools).toHaveLength(8);
     expect((PAID as { tools: unknown[] }).tools).toHaveLength(4);
     expect([...PAID_TOOL_NAMES]).toEqual(PAID_FOUR);
   });
@@ -73,10 +73,10 @@ describe("/mcp tools/list — seven free + four paid, catalogue free, nothing la
     expect(JSON.stringify(PAID)).not.toMatch(/[£$€]\s?\d/);
   });
 
-  it("the free seven definitions are byte-identical to what the stdio server reads (no drift)", async () => {
+  it("the free eight definitions are byte-identical to what the stdio server reads (no drift)", async () => {
     const { readFileSync } = await import("node:fs");
     const canonical = JSON.parse(readFileSync(new URL("./gspc-tools.json", import.meta.url), "utf8"));
-    expect(canonical.tools.map((t: { name: string }) => t.name)).toEqual(FREE_SEVEN);
+    expect(canonical.tools.map((t: { name: string }) => t.name)).toEqual(FREE_EIGHT);
     expect(canonical.tools.some((t: { name: string }) => PAID_FOUR.includes(t.name))).toBe(false);
   });
 
@@ -153,7 +153,7 @@ describe("/mcp tools/call — paid tools", () => {
     }
   });
 
-  it("bad arguments are refused before any fetch; the free seven still dispatch to their own handler", async () => {
+  it("bad arguments are refused before any fetch; the free eight still dispatch to their own handler", async () => {
     const seen = stubOrigin({ deployed: [] });
     const r = await (await call(rpc("tools/call", { name: "witness_hash", arguments: {} }))).json();
     expect(r.error).toMatchObject({ code: -32601 });
