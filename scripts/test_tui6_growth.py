@@ -31,8 +31,17 @@ class Tui6GrowthArtefacts(unittest.TestCase):
         counts = latest.get("counts")
         if counts is None:
             counts = next(r["counts"] for r in latest["rounds"] if r.get("source") == "payai")
-        int_parts = [v for k, v in counts.items() if k != "total" and isinstance(v, int)]
-        self.assertEqual(counts["total"], sum(int_parts))
+        catalog_keys = (
+            "challenge_402",
+            "serves_200",
+            "alive_but_needs_input",
+            "alive_needs_input",
+            "template_no_reply",
+            "dead_404_or_unreachable",
+            "other_error",
+        )
+        catalog_sum = sum(int(counts.get(k, 0) or 0) for k in catalog_keys)
+        self.assertEqual(counts["total"], catalog_sum)
         self.assertIn("challenge_402", counts)
         self.assertIn("dead_404_or_unreachable", counts)
 
