@@ -5,11 +5,11 @@
 - Board: csoai.gspc-axes/0.5 · 22 slots · 22 MEASURED · 0 unmeasured · "22 axis · 22 measured".
   Observed on 2026-08-12 (behavioural) / 2026-08-18 (jail) / 2026-08-25 (financial-fact) — WEEKS OLD.
 - Instrument: 19-model fleet. Jail = 7-model fleet (never conflate with board fleet).
-- Hub population (GET `/api/hub-cards` → `.counts`, as_of `2026-09-07T04:16:35.252Z`): **856 cells / 856 MEASURED / 0 UNMEASURED** (third-party models; NOT the board). Do not re-paste the Sep-5 Hub triple (cells 699 · measured 629 · unmeasured 70).
+- Hub population (GET `/api/hub-cards` → `.counts`, as_of `2026-09-07T05:32:14.949Z`): **885 cells / 885 MEASURED / 0 UNMEASURED** (third-party models; NOT the board). Re-GET; do not freeze a typed triple.
 - Journey: ask→scope→inspect→explain WORKS; propose→approve→fix→retest→receipt backends = 404 (no runtime).
 - MCP: 11 tools over HTTP (7 free + 4 paid); stdio npm = 12 (extra witness_hash, 503-gated);
   npm SDK csoai-gspc-mcp@0.2.1 = byte-identical to mcp/gspc-server.
-- Cards — three populations, never fused: `/api/cards` living registry **336** signed; `/signed/card_index.json` **n_cards=335** (corpus 3 only); `/api/root` / `root.json` **card_count=168**. Disk counts are not live API. **335/335** is valid only when labelled *signed card index* — wrong as root or `/api/cards` headline.
+- Cards — three populations, never fused: `/api/cards` living registry **336** signed; `/signed/card_index.json` **n_cards=335** (corpus 3 only); `/api/root` / `root.json` **card_count=168**. Disk counts are not live API. **335/335** is valid only when labelled *signed card index* — wrong as root or `/api/cards` headline. Ceremony: card verify ≠ root inclusion (index∩root leaves = 0); never sell “335 in the root.”
 - Deploys: Cloudflare Pages only. Never vercel; never wrangler-pages from a laptop.
 
 ## Doctrine (binding)
