@@ -137,7 +137,14 @@ jobs:
       HF_INFERENCE_TOKEN: ${{ secrets.HF_TOKEN }}
       HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_BILL_TO: csoai
-      FLEET_LOCK: public/fleet/HF2200.lock.json
+      # SERVED, not HF2200. The 2026-09-06T23:53Z run attempted 283 models from HF2200
+      # across 20 shards and every one returned UNCHECKABLE with HTTP 400 "the requested
+      # model is not supported" — 283 of 283, none for credits or auth. HF2200 ranks by
+      # DOWNLOADS, and downloads is not servability: sentence-transformers, base
+      # checkpoints and tiny test models dominate it and no provider serves them.
+      # SERVED.lock.json keeps only models whose inferenceProviderMapping is non-empty
+      # (265 of 2,000 scanned — a 13% hit rate), which is the set the router can reach.
+      FLEET_LOCK: public/fleet/SERVED.lock.json
       FLEET_PROVIDERS: public/fleet/FLEET-B.providers.json
       MILL_OUT: mill-out
       MILL_LIMIT: ${{ github.event.inputs.limit || '110' }}

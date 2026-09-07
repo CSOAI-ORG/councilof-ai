@@ -85,6 +85,9 @@ TEXT_TAGS = frozenset(
     }
 )
 ROUTER_TAGS = CHAT_TAGS | FEATURE_TAGS | SIMILARITY_TAGS | FILL_MASK_TAGS | TEXT_TAGS
+# Chat mill last-fail (nebius / provider-or-policy) is not an embed miss.
+NONCHAT_RETRY_TAGS = FEATURE_TAGS | SIMILARITY_TAGS | FILL_MASK_TAGS | TEXT_TAGS
+CHAT_ROUTE_KINDS = frozenset({"", "chat", "try-chat-then-feature"})
 
 # LoRA/image windows 400 on chat/embeddings (mill 34050320277 shard 15: 0/91).
 # Drop them so remaining chat-like UNMEASURED get the slots.
@@ -101,10 +104,12 @@ SKIP_TAGS = frozenset(
 )
 
 
-def _unserved_weight_pack(slug: str) -> bool:
+def _unserved_weight_pack(slug: str, *, include_base: bool = True) -> bool:
     low = slug.lower()
     if any(m in low for m in UNSERVED_MARKERS):
         return True
+    if not include_base:
+        return False
     name = low.rsplit("/", 1)[-1]
     return name.endswith("-base")
 
@@ -188,9 +193,80 @@ def provider_order(mapped: list[str], defaults: list[str] | tuple[str, ...] = DE
     return base
 
 
+def resolve_route(
+    lock_tag: str, hub_tag: str, lock_status: str, slug: str = ""
+) -> tuple[str, str]:
+    """Pick pipeline_tag + route_kind. Pure. No HTTP.
+
+    Empty lock tags are re-probed on Hub. If Hub fills a chat tag on a row
+    the chat mill already marked UNCHECKABLE, do not spray groq/nebius again.
+    """
+    lock_tag = (lock_tag or "").strip()
+    hub_tag = (hub_tag or "").strip()
+    # millable decided from the lock tag. Hub must not retag MiniLM as chat.
+    tag = lock_tag or hub_tag
+    kind = route_kind(tag, slug)
+    if (lock_status or "") == "UNCHECKABLE" and not lock_tag and kind == "chat":
+        return tag, "try-chat-then-feature"
+    return tag, kind
+
+
+def mill_names_for_kind(
+    slug: str,
+    kind: str,
+    mapped: list[str] | None = None,
+    defaults: list[str] | tuple[str, ...] = DEFAULT_PROVIDERS,
+) -> list[str]:
+    """Which router model names to try. Pure. No HTTP.
+
+    Chat: bare slug then defaults (never hf-inference first).
+    Pass defaults=() for an UNCHECKABLE retry so an empty Hub mapping
+    is the bare slug only — DEFAULT spray is what wrote 1311 nebius 400s.
+    Non-chat: bare slug then hf-inference — MiniLM/bge/bert 200s on that path.
+    """
+    mapped = list(mapped or [])
+    if kind == "chat":
+        order = provider_order(mapped, defaults)
+        return [slug] + [f"{slug}:{p}" for p in order]
+    names = [slug, f"{slug}:hf-inference"]
+    for p in mapped:
+        if not p or p == "hf-inference":
+            continue
+        n = f"{slug}:{p}"
+        if n not in names:
+            names.append(n)
+    return names
+
+
+def mill_router_names(
+    slug: str,
+    kind: str,
+    mapped: list[str] | None,
+    *,
+    uncheckable: bool = False,
+) -> list[str]:
+    """HTTP mill names. Empty list means do not call the router.
+
+    Uncheckable chat + empty mapping: the bare slug. Hub [] is not a 400.
+    Uncheckable + mapped: mapped suffixes only (do not respray hf-inference).
+    """
+    mapped = [p for p in (mapped or []) if p and p != "nebius"]
+    if uncheckable:
+        if mapped:
+            return [f"{slug}:{p}" for p in mapped if p != "hf-inference"]
+        if kind == "chat":
+            return [slug]
+        return []
+    return mill_names_for_kind(slug, kind, mapped)
+
+
 def millable_slugs(models: list[dict]) -> list[str]:
-    """UNMEASURED, plus UNCHECKABLE that only failed on hf-inference.
-    practice-mill / MEASURED stay out. A green tick is not evidence."""
+    """UNMEASURED, plus UNCHECKABLE that still have a 200-route.
+
+    millable=0 is not thousands coverage. Hub live mapping is the route.
+    A probed-empty mapping must not respray known-unsupported 400s.
+    practice-mill / MEASURED stay out. A green tick is not evidence.
+    """
     out: list[str] = []
     for m in models:
         slug = m.get("slug")
@@ -198,28 +274,51 @@ def millable_slugs(models: list[dict]) -> list[str]:
             continue
         st = m.get("status") or "UNMEASURED"
         tag = m.get("pipeline_tag") or ""
-        if tag in SKIP_TAGS:
+        live_now = [p for p in (m.get("providers_live") or []) if p]
+        # SKIP_TAGS drops LoRA windows. Original HF2200 rows that Hub still
+        # lists on a live provider must mill even if the tag is image/ASR.
+        if tag in SKIP_TAGS and not (st == "UNCHECKABLE" and live_now):
             continue
         if st in ALREADY_TRIED:
             continue
         if st == "UNMEASURED" and m.get("unmeasured_reason") == "no live Inference Provider":
             continue
         if st == "UNCHECKABLE":
-            if _unserved_weight_pack(slug):
-                continue
-            name = slug.lower().rsplit("/", 1)[-1]
-            if name.endswith("-base"):
-                continue
             reason = (m.get("reason") or "").lower()
             if "429" in reason:
                 out.append(slug)
                 continue
-            # Already sprayed the router (bare slug + providers). Last call was
-            # often invalid nebius; do not spend another hour on the same 286.
-            if "provider or policy" in reason or "nebius" in reason:
+            last_kind = m.get("route_kind") or ""
+            probed = "providers_live" in m
+            live_list = [p for p in (m.get("providers_live") or []) if p] if probed else None
+            if probed and live_list:
+                if last_kind.endswith("-mapped"):
+                    continue
+                if _unserved_weight_pack(slug, include_base=False):
+                    continue
+                out.append(slug)
                 continue
-            if "hf-inference" not in reason and tag not in CHAT_TAGS:
+            if probed and not live_list:
+                # Hub [] is not a router 400. Chat-like mill the bare slug
+                # unless chat-bare / *-mapped already ran. GGUF/quant packs
+                # are not a chat 200-route.
+                if _unserved_weight_pack(slug, include_base=False):
+                    continue
+                if tag in CHAT_TAGS and last_kind not in ("chat-bare",) and not last_kind.endswith("-mapped"):
+                    out.append(slug)
                 continue
+            # Restore dropped providers_live. The mill reason is the evidence.
+            if "no live inference provider" in reason:
+                continue
+            if "http 400" in reason or "http 404" in reason or "http 410" in reason:
+                continue
+            # Not Hub-probed: millable so mill can GET live mapping.
+            # HTTP mill runs only if mill_router_names is nonempty.
+            # -base is a chat-mill miss, not a Hub-probe skip (ModernBERT-base).
+            if _unserved_weight_pack(slug, include_base=False):
+                continue
+            out.append(slug)
+            continue
         out.append(slug)
     return out
 
@@ -250,11 +349,17 @@ def select_window(
     return start, window
 
 
-def mill_exit_for_window(n_lock_models: int, n_millable: int, n_window: int) -> int:
+def mill_exit_for_window(
+    n_lock_models: int, n_millable: int, n_window: int, start: int = 0
+) -> int:
     """Empty window is not coverage success. Exhausted millable must not
-    fail the cron (GitHub disables scheduled workflows after repeated red)."""
+    fail the cron (GitHub disables scheduled workflows after repeated red).
+    A remainder shard whose start is past millable is also not MILL_EMPTY —
+    34058589553 mill (19) went red on start=285 of 285."""
     if n_window > 0:
         return 0
     if n_lock_models > 0 and n_millable == 0:
+        return 0
+    if n_millable > 0 and start >= n_millable:
         return 0
     return 1
