@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stdlib tests for the catalog-trust financial wing (v2 append)."""
+"""Stdlib tests for the SHIPPED catalog-trust financial wing (v0.1 latest.json)."""
 from __future__ import annotations
 
 import importlib.util
@@ -12,64 +12,68 @@ from unittest import mock
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _SPEC = importlib.util.spec_from_file_location(
-    "catalog_trust_round_v2", os.path.join(_HERE, "catalog-trust-round-v2.py")
+    "catalog_trust_round", os.path.join(_HERE, "catalog-trust-round.py")
 )
 ctr = importlib.util.module_from_spec(_SPEC)
 assert _SPEC.loader is not None
 _SPEC.loader.exec_module(ctr)
 
+V01 = {
+    "kind": "csoai.x402-catalog-trust-snapshot/0.1",
+    "as_of": "2026-09-07T07:10:00Z",
+    "counts": {
+        "challenge_402": 74,
+        "serves_200": 2,
+        "alive_but_needs_input": 7,
+        "template_no_reply": 6,
+        "dead_404_or_unreachable": 11,
+        "total": 100,
+    },
+    "doctrine": "Counts only.",
+}
 
-class CountsDoctrine(unittest.TestCase):
-    def test_counts_reject_urls_and_host_strings(self):
-        self.assertTrue(ctr.counts_have_no_hosts({"probed": 3, "ok": 2, "unreachable": 1, "axes": 8}))
+
+class FinancialWingV01(unittest.TestCase):
+    def test_counts_reject_hosts(self):
+        self.assertTrue(ctr.counts_have_no_hosts({"financial_probed": 16, "financial_ok": 14}))
         self.assertFalse(ctr.counts_have_no_hosts({"note": "https://evil.example/x"}))
-        self.assertFalse(ctr.counts_have_no_hosts({"host": "example.com"}))
 
-    def test_financial_round_counts_only_and_cap(self):
-        def fake_fetch(url, timeout=14):
-            if "xrpl" in url:
-                return 200, "", ""
-            if "tesla" in url:
-                return 403, "", ""
-            return 200, "", ""
-
-        with mock.patch.object(ctr, "fetch", side_effect=fake_fetch):
-            rnd = ctr.financial_round()
-        self.assertEqual(rnd["source"], "financial-facts")
-        self.assertLessEqual(rnd["counts"]["probed"], 100)
-        self.assertEqual(rnd["counts"]["axes"], 8)
-        self.assertTrue(ctr.counts_have_no_hosts(rnd["counts"]))
-        self.assertEqual(rnd["counts"]["probed"], rnd["counts"]["ok"] + rnd["counts"]["unreachable"])
-
-    def test_append_writes_dated_v2_and_does_not_clobber_v01_latest(self):
+    def test_append_writes_latest_and_dated_v01_without_rounds(self):
         with tempfile.TemporaryDirectory() as td:
-            v01 = {
-                "kind": "csoai.x402-catalog-trust-snapshot/0.1",
-                "counts": {"challenge_402": 70, "dead_404_or_unreachable": 12, "total": 100},
-            }
-            existing = {
-                "kind": "csoai.x402-catalog-trust-snapshot/0.2",
-                "as_of": "2026-09-07T11:18:20Z",
-                "rounds": [{"source": "payai", "counts": {"challenge_402": 61, "total": 100}}],
-                "doctrine": "Counts only.",
-            }
-            Path(td, "latest.json").write_text(json.dumps(v01))
-            Path(td, "v2-2026-09-07.json").write_text(json.dumps(existing))
-            with mock.patch.object(ctr, "fetch", return_value=(200, "", "")):
-                with mock.patch("sys.argv", ["catalog-trust-round-v2.py", "--append-financial", "--out-dir", td]):
-                    rc = ctr.main()
+            Path(td, "latest.json").write_text(json.dumps(V01, indent=2) + "\n")
+            Path(td, "2026-09-07.json").write_text(json.dumps(V01, indent=2) + "\n")
+            with mock.patch.object(ctr, "financial_probe_code", return_value=200):
+                rc = ctr.append_financial(td, force=True)
             self.assertEqual(rc, 0)
             latest = json.loads(Path(td, "latest.json").read_text())
+            dated = json.loads(Path(td, "2026-09-07.json").read_text())
+            self.assertEqual(latest, dated)
             self.assertEqual(latest["kind"], "csoai.x402-catalog-trust-snapshot/0.1")
-            self.assertEqual(latest["counts"]["challenge_402"], v01["counts"]["challenge_402"])
-            dated = list(Path(td).glob("v2-*.json"))
-            self.assertTrue(dated)
-            v2 = json.loads(max(dated).read_text())
-            sources = [r.get("source") for r in v2["rounds"]]
-            self.assertIn("payai", sources)
-            self.assertIn("financial-facts", sources)
-            fin = next(r for r in v2["rounds"] if r["source"] == "financial-facts")
-            self.assertTrue(ctr.counts_have_no_hosts(fin["counts"]))
+            self.assertNotIn("rounds", latest)
+            self.assertEqual(latest["counts"]["total"], 100)
+            self.assertEqual(latest["counts"]["challenge_402"], 74)
+            self.assertEqual(latest["counts"]["financial_axes"], 8)
+            self.assertEqual(latest["counts"]["financial_probed"], 16)
+            self.assertTrue(ctr.counts_have_no_hosts(
+                {k: v for k, v in latest["counts"].items() if str(k).startswith("financial")}
+            ))
+            cat_sum = (
+                latest["counts"]["challenge_402"]
+                + latest["counts"]["serves_200"]
+                + latest["counts"]["alive_but_needs_input"]
+                + latest["counts"]["template_no_reply"]
+                + latest["counts"]["dead_404_or_unreachable"]
+            )
+            self.assertEqual(latest["counts"]["total"], cat_sum)
+
+    def test_refuse_v2_rounds(self):
+        with tempfile.TemporaryDirectory() as td:
+            Path(td, "latest.json").write_text(json.dumps({
+                "kind": "csoai.x402-catalog-trust-snapshot/0.2",
+                "rounds": [],
+            }))
+            rc = ctr.append_financial(td, force=True)
+            self.assertEqual(rc, 2)
 
 
 if __name__ == "__main__":

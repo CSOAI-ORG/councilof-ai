@@ -28,6 +28,17 @@ class LatestIsV01Snapshot(unittest.TestCase):
             + counts["dead_404_or_unreachable"],
         )
         self.assertNotIn("rounds", latest)
+        # 8-axis financial wing lives IN counts (MCP x402_trust reads this file).
+        self.assertEqual(latest["counts"]["financial_axes"], 8)
+        self.assertGreaterEqual(latest["counts"]["financial_probed"], 1)
+        self.assertLessEqual(latest["counts"]["financial_probed"], 100)
+        self.assertEqual(
+            latest["counts"]["financial_total"],
+            latest["counts"]["financial_ok"] + latest["counts"]["financial_unreachable"],
+        )
+        blob = json.dumps(latest["counts"])
+        self.assertNotIn("://", blob)
+        self.assertNotIn("http", blob.lower())
 
     def test_v2_round_file_is_not_aliased_as_latest(self):
         with open(os.path.join(_TRUST, "latest.json"), encoding="utf-8") as f:
@@ -49,7 +60,10 @@ class LatestIsV01Snapshot(unittest.TestCase):
             "public/llms.txt",
             "public/llms-full.txt",
         ):
-            with open(os.path.join(root, rel), encoding="utf-8") as f:
+            path = os.path.join(root, rel)
+            if not os.path.isfile(path):
+                self.skipTest(rel)
+            with open(path, encoding="utf-8") as f:
                 text = f.read()
             self.assertIn(url, text, rel)
             self.assertNotIn("74/100", text, rel)

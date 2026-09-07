@@ -1,6 +1,6 @@
 {
   "kind": "csoai.x402-catalog-trust-snapshot/0.1",
-  "population": "PayAI facilitator catalog — 100 rows × 1 DRY probe each (challenge terms only; nothing signed, nothing sent)",
+  "population": "PayAI facilitator catalog \u2014 100 rows \u00d7 1 DRY probe each (challenge terms only; nothing signed, nothing sent)",
   "as_of": "2026-09-07T07:10:00Z",
   "counts": {
     "challenge_402": 74,
@@ -8,10 +8,16 @@
     "alive_but_needs_input": 7,
     "template_no_reply": 6,
     "dead_404_or_unreachable": 11,
-    "total": 100
+    "total": 100,
+    "financial_probed": 16,
+    "financial_ok": 15,
+    "financial_unreachable": 1,
+    "financial_challenge_402": 0,
+    "financial_axes": 8,
+    "financial_total": 16
   },
   "headline": "74 of 100 rows answer a correct 402 challenge; 11 rows do not exist on the wire.",
-  "doctrine": "A 402 is NOT delivery; a 404 is a catalog row that does not exist. Counts only — the host list is withheld by design (a public list would name non-conformant parties); methodology published. Measurement, never certification.",
+  "doctrine": "A 402 is NOT delivery; a 404 is a catalog row that does not exist. Counts only \u2014 the host list is withheld by design (a public list would name non-conformant parties); methodology published. Measurement, never certification.",
   "method": "One GET per row (template params substituted where the row is a URL-template), UA csoai-trust-audit/0.1, 15s timeout, 12 workers, zero payment, zero signing, zero side effect.",
   "paid_step": {
     "href": "https://councilof.ai/api/x402",
@@ -28,5 +34,6 @@
     "refused": 213,
     "take_and_refuse": 13,
     "take_and_refuse_pct": 4.1
-  }
+  },
+  "financial_as_of": "2026-09-07T13:08:42Z"
 }
