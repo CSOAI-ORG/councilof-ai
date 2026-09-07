@@ -8,6 +8,7 @@
 import { Link } from 'wouter';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import FooterVerifyStrip from './FooterVerifyStrip';
+import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
 
 interface FooterLink {
@@ -246,6 +247,13 @@ export function Footer() {
 
         {/* Find us / verify us — live platform logos + listings */}
         <FooterVerifyStrip />
+
+        <p data-paid-step="x402" className="text-muted-foreground text-xs text-center mt-4 mb-2">
+          {PAID_STEP_LINE}{" "}
+          <a href={PAID_STEP_HREF} className="text-primary hover:underline">
+            GET {PAID_STEP_HREF}
+          </a>
+        </p>
 
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
