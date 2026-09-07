@@ -1,0 +1,30 @@
+name: catalog-trust-round
+on:
+  schedule:
+    - cron: "17 */6 * * *"   # every 6h, off the :07 root tick and the :17 HF mill clash
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: catalog-trust
+  cancel-in-progress: false
+
+jobs:
+  round:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - name: DRY round — probe the live catalog, counts only
+        run: |
+          python3 scripts/catalog-trust-round.py --out-dir public/interop/x402-trust
+      - name: land the artefact
+        run: |
+          git config user.name "csoai-catalog-trust"
+          git config user.email "trust@csoai.org"
+          git add public/interop/x402-trust/ docs/interop/X402-CATALOG-TRUST-*.md 2>/dev/null || true
+          git commit -m "catalog-trust round: newest snapshot (machine-produced)" && git push origin master || echo "no new snapshot (unchanged or empty) — nothing to land"
