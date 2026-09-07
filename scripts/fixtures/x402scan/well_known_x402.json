@@ -61,12 +61,12 @@
     {
       "method": "GET",
       "paid_for": "issuance",
-      "url": "https://councilof.ai/api/request-attestation?subject=<id>&axis=<slug>"
+      "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id"
     },
     {
       "method": "GET",
       "paid_for": "assembly",
-      "url": "https://councilof.ai/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1"
+      "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1"
     },
     {
       "method": "GET",
@@ -79,16 +79,16 @@
       "url": "https://councilof.ai/api/proof?bundle=1"
     },
     {
-      "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1",
+      "free_preview": "https://councilof.ai/api/rwa/evidence?asset=RLUSD&preview=1",
       "method": "GET",
       "paid_for": "issuance",
-      "url": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>"
+      "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD"
     },
     {
-      "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=<https://…>&preview=1",
+      "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1",
       "method": "GET",
       "paid_for": "assembly",
-      "url": "https://councilof.ai/api/art50/marking-evidence?url=<https://…>"
+      "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png"
     },
     {
       "method": "GET",
@@ -96,10 +96,10 @@
       "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
     },
     {
-      "free_preview": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>&preview=1",
+      "free_preview": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1",
       "method": "GET",
       "paid_for": "assembly",
-      "url": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>"
+      "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z"
     }
   ],
   "schema": "csoai.x402/0.2",

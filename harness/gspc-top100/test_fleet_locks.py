@@ -90,6 +90,44 @@ def test_uncheckable_is_not_n_measured_and_does_not_downgrade() -> None:
     assert out["n_measured"] == 2
 
 
+def test_apply_mill_persists_route_kind_so_nonchat_retry_is_once() -> None:
+    """Without route_kind on the lock, millable retries embed rows forever.
+    A green land that omits the field protects nothing."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from mill_lock_update import apply_mill  # noqa: E402
+    from mill_window import millable_slugs  # noqa: E402
+
+    lock = {
+        "n_measured": 0,
+        "models": [
+            {
+                "slug": "sentence-transformers/all-MiniLM-L6-v2",
+                "pipeline_tag": "sentence-similarity",
+                "status": "UNCHECKABLE",
+            }
+        ],
+    }
+    assert "sentence-transformers/all-MiniLM-L6-v2" in millable_slugs(lock["models"])
+    mill = {
+        "as_of": "2026-09-06T21:00:00Z",
+        "rows": [
+            {
+                "slug": "sentence-transformers/all-MiniLM-L6-v2",
+                "status": "UNCHECKABLE",
+                "route_kind": "similarity",
+                "pipeline_tag": "sentence-similarity",
+                "reason": "HTTP 400 embeddings not served",
+                "providers_live": [],
+            }
+        ],
+    }
+    out = apply_mill(lock, mill)
+    assert out["models"][0]["route_kind"] == "similarity"
+    assert out["n_measured"] == 0
+    assert "sentence-transformers/all-MiniLM-L6-v2" not in millable_slugs(out["models"])
+
+
 def test_apply_mill_does_not_persist_429_as_uncheckable() -> None:
     import sys
     sys.path.insert(0, str(ROOT / "scripts"))
@@ -216,6 +254,48 @@ def test_restore_original_membership_drops_injected_slugs() -> None:
     assert out["membership"] == "hf2200-download-ranked"
 
 
+def test_restore_persists_route_kind_and_nonchat_reason() -> None:
+    """apply_mill wrote route_kind; restore then rebuilt from git original
+    and dropped it, so millable stayed 449. What would make this fail:
+    overlay UNCHECKABLE MiniLM coming back without route_kind."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from mill_lock_update import restore_original_membership  # noqa: E402
+    from mill_window import millable_slugs  # noqa: E402
+
+    original = {
+        "n_locked": 2,
+        "writes_board": False,
+        "enters_board_means": False,
+        "models": [
+            {"slug": "nomic-ai/nomic-embed-text-v1.5", "status": "UNMEASURED", "pipeline_tag": "sentence-similarity"},
+            {"slug": "orig/b", "status": "UNMEASURED", "pipeline_tag": "text-generation"},
+        ],
+    }
+    overlay = {
+        "models": [
+            {
+                "slug": "nomic-ai/nomic-embed-text-v1.5",
+                "status": "UNCHECKABLE",
+                "pipeline_tag": "sentence-similarity",
+                "route_kind": "similarity",
+                "reason": 'HTTP 400 {"error":"Model not supported by provider hf-inference"}',
+                "last_mill": "2026-09-06T20:29:00Z",
+            }
+        ]
+    }
+    out = restore_original_membership(original, [overlay])
+    row = out["models"][0]
+    assert row["status"] == "UNCHECKABLE"
+    assert row["route_kind"] == "similarity"
+    assert row["last_mill"] == "2026-09-06T20:29:00Z"
+    assert "hf-inference" in (row.get("reason") or "")
+    overlay["models"][0]["providers_live"] = []
+    out = restore_original_membership(original, [overlay])
+    assert out["models"][0]["providers_live"] == []
+    assert "nomic-ai/nomic-embed-text-v1.5" not in millable_slugs(out["models"])
+
+
 def test_workflow_lands_from_hub_queue_not_git_zero() -> None:
     """A green land-lock that patches the git lock (all UNMEASURED) and
     uploads it would wipe hub-queue n_measured. The workflow must fetch
@@ -236,9 +316,11 @@ if __name__ == "__main__":
     test_workflow_surfaces_inference_fail_in_summary()
     test_apply_mill_counts_practice_mill_into_n_measured()
     test_uncheckable_is_not_n_measured_and_does_not_downgrade()
+    test_apply_mill_persists_route_kind_so_nonchat_retry_is_once()
     test_apply_mill_does_not_persist_429_as_uncheckable()
     test_rebuild_keeps_practice_mill_and_prefers_chat()
     test_stamp_zero_provider_does_not_invent_n_measured()
     test_restore_original_membership_drops_injected_slugs()
+    test_restore_persists_route_kind_and_nonchat_reason()
     test_workflow_lands_from_hub_queue_not_git_zero()
-    print("test_fleet_locks: 10 passed")
+    print("test_fleet_locks: 12 passed")

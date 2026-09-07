@@ -70,7 +70,7 @@ describe("/api/receipts/batch — input", () => {
 
   it("400 without from, on an unparseable to, and when to precedes from", async () => {
     stubStatic();
-    expect((await batch(ctx("/api/receipts/batch"))).status).toBe(400);
+    expect((await batch(ctx("/api/receipts/batch"))).status).toBe(402);
     expect((await batch(ctx("/api/receipts/batch?from=2026-09-01T00:00:00Z&to=nope"))).status).toBe(400);
     expect((await batch(ctx("/api/receipts/batch?from=2026-09-02T00:00:00Z&to=2026-09-01T00:00:00Z"))).status).toBe(400);
   });

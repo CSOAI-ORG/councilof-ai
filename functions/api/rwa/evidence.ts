@@ -298,11 +298,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const preview = url.searchParams.get("preview") === "1";
   const resourceUrl = `${origin}/api/rwa/evidence?asset=${encodeURIComponent(asset || "<symbol|issuer_address>")}`;
 
-  if (!asset || !(ADDR_RE.test(asset) || SYM_RE.test(asset))) {
+  const valid = !!(asset && (ADDR_RE.test(asset) || SYM_RE.test(asset)));
+  if (!valid && preview) {
     return json({ schema: "csoai.rwa-evidence/0.1", error: "bad_request", reason: "pass asset=<XRPL symbol from /api/xrpl or an r-address>", free_reader: `${origin}/api/xrpl`, preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` }, 400);
   }
 
-  const description = `A signed XRPL evidence card for ${asset}: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.`;
+  const description = `A signed XRPL evidence card for ${asset || "<asset>"}: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.`;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
   const payment = preview ? { ok: false as const, reason: "preview" } : await verifyX402Payment(request, env, resourceUrl, accepts[0]);
 
@@ -316,7 +317,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         accepts,
         bazaar: declareBazaarHttpGet({
           method: "GET",
-          queryParams: { asset },
+          queryParams: { asset: asset || "RLUSD" },
           queryParamsSchema: { properties: { asset: { type: "string", description: "XRPL issued-asset symbol (see /api/xrpl) or issuer r-address" } }, required: ["asset"] },
           outputExample: { schema: SCHEMA, surface: "public.notice", subject: "XRPL <SYMBOL> (<issuer>) two-way domain <PASS|FAIL|UNCHECKABLE> + on-chain obligation", payload: { kind: KIND, state: "PROBED", account_root: { flags_decoded: {} }, onchain_obligation: {}, inputs_sha256: "<hex>" }, sha256: "<hex>", sig_ed25519: "<hex or null>", unmeasured: [] },
         }),
@@ -335,6 +336,10 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       }),
       env,
     );
+  }
+
+  if (!valid) {
+    return json({ schema: "csoai.rwa-evidence/0.1", error: "bad_request", reason: "pass asset=<XRPL symbol from /api/xrpl or an r-address>", free_reader: `${origin}/api/xrpl`, preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` }, 400);
   }
 
   const found = await resolveAsset(origin, asset);
@@ -410,3 +415,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
   });
 };
+
+/** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
+export const onRequestPost = onRequestGet;
