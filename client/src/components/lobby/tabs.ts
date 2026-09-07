@@ -44,6 +44,7 @@ export type LobbyTabId =
   | "fabric"
   | "tools"
   | "xrpl"
+  | "swift"
   | "verify"
   | "cards"
   | "state"
@@ -227,6 +228,16 @@ export const LOBBY_TABS: LobbyTab[] = [
     kind: "native",
     cues: /\\b(xrpl instruments?|xrpl catalogue|public[- ]root catalogue|xrpl assets|rwa evidence|xrpl public root)\\b/i,
   },
+  {
+    id: "swift",
+    label: "SWIFT · x402",
+    blurb:
+      "SWIFT census from GET /api/swift and XRPL reader from GET /api/xrpl — live fields only. x402 doors with verify free; challenge amounts live at the 402.",
+    path: "",
+    kind: "native",
+    cues: /\b(swift|swift census|x402|free[- ]door|pay ?rail|agent pay|metamask next)\b/i,
+  },
+
   {
     id: "archive",
     label: "Provable archive",
@@ -774,6 +785,7 @@ const DASHBOARD_NAV_DEFINITION: {
     label: "Work",
     tabs: [
       { id: "board", label: "GSPC board" },
+      { id: "swift", label: "SWIFT · x402" },
       { id: "evidence", label: "Evidence" },
       { id: "tools", label: "Improve" },
       { id: "learn", label: "Learning" },
@@ -876,6 +888,8 @@ export function normalizeLobbyTabId(id: string): string {
     scoreboard: "board",
     chat: "home",
     "ag-ui": "home",
+    x402: "swift",
+    "x402-doors": "swift",
   };
   return aliases[value] || value || "home";
 }
