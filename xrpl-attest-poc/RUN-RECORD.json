@@ -1,0 +1,23 @@
+{
+ "schema": "csoai.xrpl-attest-run/0.1",
+ "network": "XRPL DEVNET",
+ "honesty": "TESTNET proof-of-capability only. Synthetic subject. Not an investment, not a rating, not a conformity mark. Attesting is permissionless; authorization inside any permissioned domain still requires the relying party to trust this issuer key.",
+ "evidence": {
+  "source": "https://councilof.ai/signed/card_index.json",
+  "card": "82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c",
+  "axis": "care-refusal-protect",
+  "sha256_of_canonical_entry": "b0ea177a8d08358d2c18e0d6a260d1a850b211c2821fbd629b4ac103350a4d72",
+  "ed25519_sig": "4484dbf63a94bd1cc134bc97b6b99cad5d657a5f291a2fa776cc241fb91f868945c0928065dd223d846d8ad24c956a5b0d7188480d25c64e8b2ebebf3c032704",
+  "signer_kid": "cose-interop-1",
+  "signer_pub": "25456441b98690872008e303ef17bfd3864f751ca761d0402043565b1585dcea"
+ },
+ "attestor_account": "rpeqYSxvWwVeYx8oCsDM4fSrKsheuie52u",
+ "subject_account": "rBkftm76iPPjT3zBnfS7yLiMzK4tBZkgCs",
+ "memo_attach_tx": "BC89F5163B1C398816104C8E05B60EAD63904EE2DE2EA6AB9371F9EABBF157A1",
+ "credential_attach_tx": "958BA25801A068AEA1507FC1649A862C33D59A1D715924794D98D2C66254DC4B",
+ "explorer": [
+  "https://devnet.xrpl.org/transactions/BC89F5163B1C398816104C8E05B60EAD63904EE2DE2EA6AB9371F9EABBF157A1",
+  "https://devnet.xrpl.org/transactions/958BA25801A068AEA1507FC1649A862C33D59A1D715924794D98D2C66254DC4B"
+ ],
+ "refresh_note": "07 Sep 2026: memo re-attached against live card_index (digest_mismatch_vs_live). CredentialCreate tecDUPLICATE \u2014 reused 958BA258\u2026 . No signature invented."
+}
