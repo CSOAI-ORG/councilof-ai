@@ -28,3 +28,10 @@ declared facts. Every row signed (Ed25519, estate key); corrections appended.
 - Scores are facts-about-facts, never a statement the server is "safe". No rating
   of security posture, no certification, no endorsement. Registry snapshot dated.
 - Recompute: run `score.py` against the canon registry — byte-identical or signed-new.
+
+## 2026-09-05 · Independent advisory — CVE-2026-44428 (MCP Registry OIDC token replay)
+We measure MCP server disclosure-integrity independently (v0.1, 311 entries). A live
+incident in the measured surface (CVE-2026-44428, MCP Registry OIDC token replay) is
+recorded in a separate signed advisory (public/interop/mcp-cve-advisory.json). We do NOT
+patch, grade-as-certified, or endorse — we measure and publish methodology. Both are
+stranger-verifiable (Ed25519, offline verifier + CI action).
