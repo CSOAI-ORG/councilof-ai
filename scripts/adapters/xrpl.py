@@ -13,7 +13,7 @@ import urllib.request
 from typing import Any
 
 METRICS_URL = "https://xrpl.fi/api/metrics"
-UA = "csoai-public-root-writer/0 (+https://councilof.ai/root.json)"
+UA = "csoai-public-root-writer/0 (+https://councilof.ai/root.json; Mozilla/5.0)"
 
 # Locked 16 from sheet 07. Do not silently expand.
 LOCKED_16: list[dict[str, str]] = [
@@ -165,7 +165,7 @@ def collect() -> dict[str, Any]:
         "leaves": leaves,
         "sidecar": {
             "xrpl_fi_assetCount": metrics.get("assetCount"),
-            "xrpl_fi_updatedAt": as_of,
+            "xrpl_fi_updatedAt": metrics.get("updatedAt") or as_of,
             "xrpl_asset_count_attempted": 16,
             "represented_tvl": {
                 "usd": tvl,
