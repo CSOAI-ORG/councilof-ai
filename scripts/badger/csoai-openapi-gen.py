@@ -102,6 +102,8 @@ def discover_endpoints() -> list[dict]:
             ],
             # Some read-only routes publish static summaries without proof material.
             "unsigned_static": "@openapi-unsigned-static" in text,
+            # Deployed GET that returns 404 by contract (door closed). Not absent.
+            "door_closed": "@openapi-closed" in text,
         })
     return endpoints
 
@@ -138,9 +140,15 @@ def build_openapi(endpoints: list[dict]) -> dict:
             not_implemented = bool(ep.get("not_implemented")) or verb in ep.get("not_implemented_methods", [])
             method_not_allowed = verb in ep.get("method_not_allowed_methods", [])
             unsigned_static = bool(ep.get("unsigned_static"))
+            door_closed = bool(ep.get("door_closed"))
             if method_not_allowed:
                 response_status = "405"
                 response_description = "Method not allowed — use the documented read method"
+            elif door_closed:
+                response_status = "404"
+                response_description = (
+                    "Door closed — no public prices; a grade is never sold"
+                )
             elif not_implemented:
                 response_status = "501"
                 response_description = (
@@ -171,6 +179,12 @@ def build_openapi(endpoints: list[dict]) -> dict:
             }
             if method_not_allowed:
                 op["x-csoai-lifecycle"] = "METHOD_NOT_ALLOWED"
+            elif door_closed:
+                op["x-csoai-lifecycle"] = "DOOR_CLOSED"
+                op["responses"]["404"]["content"]["application/json"]["example"] = {
+                    "configured": False,
+                    "public_prices": False,
+                }
             elif not_implemented:
                 op["x-csoai-lifecycle"] = "NOT_IMPLEMENTED"
                 op["responses"]["501"]["content"]["application/json"]["example"] = {
@@ -190,7 +204,8 @@ def build_openapi(endpoints: list[dict]) -> dict:
                     "signed": False,
                     "measurement_not_certification": True,
                 }
-            if (not unavailable and not not_implemented and not method_not_allowed and not unsigned_static
+            if (not unavailable and not not_implemented and not method_not_allowed
+                    and not unsigned_static and not door_closed
                     and "live" in ep and ep["live"].get("ok")):
                 op["responses"]["200"]["content"]["application/json"]["example"] = {
                     "_top_keys": ep["live"].get("top_keys", []),

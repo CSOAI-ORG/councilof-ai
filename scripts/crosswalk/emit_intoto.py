@@ -255,8 +255,17 @@ def render(cards: list[dict]) -> dict[str, str]:
         ),
         "source_corpus": {
             "path": "public/interop/mill-cards-signed/",
-            "signed_cards_total": None,  # filled by caller — a count, never typed
-            "measured": None,
+            # NO COUNTS HERE. They were `signed_cards_total` and `measured`, recomputed from the
+            # live corpus on every run and frozen into a committed artefact. Every mill landing PR
+            # ADDS cards, so the corpus grew, the committed number went stale, and the
+            # producer-manifest gate failed with "DIFFERS index.json" — on the very PRs that caused
+            # the growth. Seven landings (33 provenance cards) deadlocked behind it: they could not
+            # merge without regenerating a file that only changes because they merged.
+            # A count of a moving corpus is not a property of this index. Read it where it lives.
+            "count_is_not_frozen_here": (
+                "Count the corpus at read time: the directory named in `path`. A number copied into "
+                "a committed file is stale the moment the corpus moves."
+            ),
             "note": (
                 "Separate corpus from the public root (public/cards/, 0 identifier overlap) and from "
                 "public/signed/cards/. See public/interop/root-witness-pointer.json."
@@ -289,8 +298,6 @@ def main() -> int:
         return 1
 
     files, index = render(chosen)
-    index["source_corpus"]["signed_cards_total"] = len(cards)
-    index["source_corpus"]["measured"] = sum(1 for c in cards if c["body"].get("status") == "MEASURED")
     files["index.json"] = json.dumps(index, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
 
     if args.check:
@@ -309,7 +316,8 @@ def main() -> int:
             print("\n".join(drift), file=sys.stderr)
             print(f"CHECK FAILED — {len(drift)} file(s); re-run without --check", file=sys.stderr)
             return 1
-        print(f"CHECK OK — {len(files)} files, {len(chosen)} axes, {index['source_corpus']['measured']} MEASURED in corpus")
+        measured_now = sum(1 for c in cards if c["body"].get("status") == "MEASURED")
+        print(f"CHECK OK — {len(files)} files, {len(chosen)} axes, {measured_now} MEASURED in corpus at read time")
         return 0
 
     DST.mkdir(parents=True, exist_ok=True)

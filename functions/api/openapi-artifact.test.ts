@@ -72,7 +72,7 @@ describe("the paid operations are exactly the doors in /.well-known/x402.json", 
   });
 
   it.each(paid().map(({ path, method, op }) => [`${method.toUpperCase()} ${path}`, op]))("%s documents the 402 challenge shape and the 200 deliverable", (_label, op) => {
-    expect(op["x-payment-info"].protocols).toEqual([{ x402: {} }]);
+    expect(op["x-payment-info"].protocols).toEqual(["x402"]);
     expect(op["x-payment-info"].price, "no price in the document — amounts live only in the 402").toBeUndefined();
     expect(op.security, "a paid op must not opt out of security").toBeUndefined();
     const r402 = op.responses["402"];
@@ -114,6 +114,16 @@ describe("the free surface is declared, not probed", () => {
 
   it("keeps the quarantined and not-implemented markers the other tests read", () => {
     expect(spec.paths["/api/learn-loop"].get["x-csoai-lifecycle"]).toBe("QUARANTINED_PRE_RELEASE");
+  });
+
+  it("GET /api/fulfill is a closed door (404), not a public 200", () => {
+    // Live GET returns 404 configured:false. Declaring 200 + security [] made
+    // x402scan treat it as a public read. What would make this fail: responses.200.
+    const op = spec.paths["/api/fulfill"].get;
+    expect(op.responses["404"]).toBeTruthy();
+    expect(op.responses["200"]).toBeUndefined();
+    expect(op["x-csoai-lifecycle"]).toBe("DOOR_CLOSED");
+    expect(op.security).toBeUndefined();
   });
 });
 

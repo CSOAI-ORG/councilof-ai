@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequestGet as ras } from "./request-attestation";
 import { onRequestGet as bundle } from "./evidence-bundle";
-import { onRequestGet as feed } from "./eunomia-data";
+import { onRequestGet as feed, onRequestPost as feedPost } from "./eunomia-data";
 import { onRequestGet as catalog } from "./x402";
 import { onRequestGet as wellKnown } from "../.well-known/x402.json";
 import { ESTATE_PAY_TO } from "./_x402_config";
@@ -97,12 +97,11 @@ describe("Tier 1 — /api/request-attestation", () => {
 });
 
 describe("Tier 2 — /api/evidence-bundle", () => {
-  it("lists obligations on a missing id (400) and an unknown one (404)", async () => {
+  it("bare GET and unknown obligation 402 so an indexer can discover the door", async () => {
     stubStatic();
-    expect((await bundle(ctx("/api/evidence-bundle"))).status).toBe(400);
+    expect((await bundle(ctx("/api/evidence-bundle"))).status).toBe(402);
     const r = await bundle(ctx("/api/evidence-bundle?obligation=sox"));
-    expect(r.status).toBe(404);
-    expect((await r.json()).obligations.map((o: { id: string }) => o.id)).toContain("article-53");
+    expect(r.status).toBe(402);
   });
 
   it("free preview counts only SIGNED relevant cards and says relevant-to", async () => {
@@ -150,6 +149,20 @@ describe("Tier 3 — /api/eunomia-data", () => {
     expect(r.status).toBe(402);
     expect(JSON.stringify(await r.json())).not.toMatch(/price_usd|amount_usd/);
   });
+
+  it("POST ?feed=1 also 402s — gold-402's gate POSTs {}", async () => {
+    stubStatic();
+    const r = await feedPost({
+      request: new Request(ORIGIN + "/api/eunomia-data?feed=1", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: "{}",
+      }),
+      env: {},
+      params: {},
+    } as never);
+    expect(r.status).toBe(402);
+  });
 });
 
 describe("catalog + discovery", () => {
@@ -172,7 +185,10 @@ describe("catalog + discovery", () => {
     const w = await (await wellKnown(ctx("/.well-known/x402.json"))).json();
     expect(w).toMatchObject({ schema: "csoai.x402/0.2", mode: "challenge-only", payTo: ESTATE_PAY_TO, network: "eip155:8453" });
     expect(w.resources.every((r: { url: string }) => r.url.startsWith(ORIGIN))).toBe(true);
-    expect(w.resources.map((r: { url: string }) => r.url)).toContain(`${ORIGIN}/api/receipts/batch?from=<iso>&to=<iso>`);
+    // Indexers GET resources[].url as written. The template lives on url_template;
+    // the url itself must be a probe that already 402s (measured 2026-09-06).
+    expect(w.resources.map((r: { url: string }) => r.url)).toContain(`${ORIGIN}/api/receipts/batch?from=2026-01-01T00:00:00Z`);
+    expect(w.resources.every((r: { url: string }) => !r.url.includes("<"))).toBe(true);
     expect(w.mcp.paid_tools).toContain("receipts_batch");
     expect(JSON.stringify(w)).not.toMatch(/mock|pack\.councilof\.ai/);
     const live = await (await catalog(ctx("/api/x402", { X402_FACILITATOR_URL: "https://f.example" }))).json();

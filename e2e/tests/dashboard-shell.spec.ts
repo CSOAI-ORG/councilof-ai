@@ -110,7 +110,7 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
-test("sidebar exposes the ten primary user jobs as direct /dashboard?tab= links", async ({
+test("sidebar exposes the eleven primary user jobs as direct /dashboard?tab= links", async ({
   page,
 }) => {
   await openTab(page, "board");
@@ -130,6 +130,7 @@ test("sidebar exposes the ten primary user jobs as direct /dashboard?tab= links"
     "/dashboard?tab=measured",
     "/dashboard?tab=verify",
     "/dashboard?tab=board",
+    "/dashboard?tab=swift",
     "/dashboard?tab=evidence",
     "/dashboard?tab=tools",
     "/dashboard?tab=learn",
@@ -176,6 +177,7 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     "play",
     "explore",
     "board",
+    "swift",
     "results",
     "models",
     "measured",
@@ -287,6 +289,7 @@ test("a cold /os door converges on the canonical Dashboard", async ({
   page,
 }) => {
   await expectColdDoor(page, "/os?lobby=verify", "verify");
+  await expectColdDoor(page, "/os?lobby=swift", "swift");
 });
 
 test("a cold /gspc-scoreboard door converges on the canonical Dashboard", async ({
