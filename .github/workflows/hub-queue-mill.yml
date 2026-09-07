@@ -30,7 +30,17 @@ on:
       # executed runs, ≈ 340/day. 48 h therefore covers ≈ 340-680 cells, not 5,490 — that
       # ceiling is GitHub's schedule starvation and one sequential door, not the grade count.
       grade: { description: "how many probe-live models to grade", type: string, default: "36" }
-concurrency: { group: hub-queue-mill, cancel-in-progress: false }
+  workflow_call:
+    inputs:
+      axis: { type: string, default: "" }
+      grade: { type: string, default: "36" }
+# Per-axis group so mill-spray can run up to N axes at once. A blank axis
+# (schedule / emptiest) still serialises with other emptiest runs. Each mill
+# stays sequential inside the job — featherless 403s on a burst from ONE
+# process; four axes is four sequential doors, not one 4-wide burst.
+concurrency:
+  group: hub-queue-mill-${{ inputs.axis || github.event.inputs.axis || 'emptiest' }}
+  cancel-in-progress: false
 permissions: { contents: read, pull-requests: read }
 jobs:
   mill:
@@ -55,8 +65,8 @@ jobs:
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY || secrets.OPENROUTER_TOKEN }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      AXIS_INPUT: ${{ github.event.inputs.axis }}
-      GRADE: ${{ github.event.inputs.grade || '36' }}
+      AXIS_INPUT: ${{ inputs.axis || github.event.inputs.axis }}
+      GRADE: ${{ inputs.grade || github.event.inputs.grade || '36' }}
     steps:
       - uses: actions/checkout@v4
         with: { ref: master }
