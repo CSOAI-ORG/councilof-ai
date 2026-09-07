@@ -1,7 +1,7 @@
 name: mill-spray
 # Fan the hub-queue mill across axes. Each mill job stays sequential (one
-# model at a time). max-parallel 4 is four sequential doors, not a 4-wide
-# burst on one provider. MEASURED only after OIDC sign + VALID + n>=30.
+# model at a time). max-parallel 8 is eight sequential doors, not an
+# 8-wide burst on one provider. MEASURED only after OIDC sign + VALID + n>=30.
 on:
   workflow_dispatch:
     inputs:
@@ -13,7 +13,7 @@ jobs:
   mill:
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 8
       matrix:
         axis:
           - governance
