@@ -63,7 +63,7 @@ What is actually differentiated is the *method*, and each element is checkable r
 | **A Merkle root over the estate** | `/root.json` → 167 cards, `sig_ed25519` | — |
 | **Recomputable for free by a stranger** | `/api/x402` → `invariants.recomputable_for_free`; 9 free-forever URLs | Competitors gate at some tier |
 | **A public corrections ledger** | `/api/corrections` → **46 issued** | **This is the rarest one.** Almost nobody publishes their own errors. |
-| **UNMEASURED as a first-class published state** | `/api/hub-cards` → 70 of 761 cells say UNMEASURED | Leaderboards report what they measured and stay silent on the rest |
+| **UNMEASURED as a first-class published state** | `/api/hub-cards` → 0 of 856 cells say UNMEASURED (live as_of 2026-09-07T04:16:35.252Z; prior 70 of 761 STALE) | Leaderboards report what they measured and stay silent on the rest |
 | **Measurement, never certification** | `/api/x402` → `invariants.never_a_grade`, `measurement_not_certification` | AIUC and the TIC industry certify; that is a different, regulated posture |
 
 **The honest form of the moat claim — narrowed 2026-09-06 after actually testing it**
