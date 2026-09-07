@@ -415,3 +415,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
   });
 };
+
+/** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
+export const onRequestPost = onRequestGet;

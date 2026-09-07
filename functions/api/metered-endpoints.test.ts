@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequestGet as ras } from "./request-attestation";
 import { onRequestGet as bundle } from "./evidence-bundle";
-import { onRequestGet as feed } from "./eunomia-data";
+import { onRequestGet as feed, onRequestPost as feedPost } from "./eunomia-data";
 import { onRequestGet as catalog } from "./x402";
 import { onRequestGet as wellKnown } from "../.well-known/x402.json";
 import { ESTATE_PAY_TO } from "./_x402_config";
@@ -148,6 +148,20 @@ describe("Tier 3 — /api/eunomia-data", () => {
     const r = await feed(ctx("/api/eunomia-data?feed=1"));
     expect(r.status).toBe(402);
     expect(JSON.stringify(await r.json())).not.toMatch(/price_usd|amount_usd/);
+  });
+
+  it("POST ?feed=1 also 402s — gold-402's gate POSTs {}", async () => {
+    stubStatic();
+    const r = await feedPost({
+      request: new Request(ORIGIN + "/api/eunomia-data?feed=1", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: "{}",
+      }),
+      env: {},
+      params: {},
+    } as never);
+    expect(r.status).toBe(402);
   });
 });
 
