@@ -37,6 +37,14 @@ DEFAULT_CATALOG = "https://facilitator.payai.network/discovery/resources"
 SUBMIT_UA = "csoai-catalog-trust/0.1"
 V01_KIND = "csoai.x402-catalog-trust-snapshot/0.1"
 V01_DATED = "2026-09-07.json"
+ORIGIN = "https://councilof.ai"
+PAID_STEP = {
+    "href": f"{ORIGIN}/api/x402",
+    "feed": f"{ORIGIN}/api/eunomia-data?feed=1",
+    "commission": f"{ORIGIN}/api/request-attestation",
+    "seller": f"{ORIGIN}/api/x402-trust-seller",
+    "mcp": "commission_card",
+}
 
 TEMPLATE_PARAM = re.compile(r":([A-Za-z0-9_]+)")
 
@@ -150,6 +158,44 @@ def too_soon(iso: str | None, hours: int = 2) -> bool:
     return datetime.now(timezone.utc) - ts < timedelta(hours=hours)
 
 
+def load_settlement_census(path: Path) -> dict | None:
+    """Copy integers from settlement-census-counts.json. Never type them."""
+    if not path.is_file():
+        return None
+    try:
+        doc = json.loads(path.read_text())
+    except Exception:
+        return None
+    src = doc.get("counts") if isinstance(doc, dict) else None
+    if not isinstance(src, dict):
+        return None
+    out: dict = {"source": doc.get("source"), "as_of": doc.get("as_of")}
+    for k in ("eligible_probed", "delivered", "refused", "take_and_refuse", "take_and_refuse_pct"):
+        v = src.get(k)
+        if isinstance(v, bool) or not isinstance(v, (int, float)):
+            continue
+        out[k] = v
+    return out if "take_and_refuse" in out else None
+
+
+def stamp_growth_fields(body: dict, out_dir: Path, prev: dict | None = None) -> dict:
+    """Every snapshot the 6h cron writes must still point at the paid door."""
+    prev = prev or {}
+    counts = dict(body.get("counts") or {})
+    prev_counts = prev.get("counts") if isinstance(prev.get("counts"), dict) else {}
+    for k, v in prev_counts.items():
+        if str(k).startswith("financial_") and k not in counts:
+            counts[k] = v
+    body["counts"] = counts
+    if prev.get("financial_as_of") and not body.get("financial_as_of"):
+        body["financial_as_of"] = prev["financial_as_of"]
+    body["paid_step"] = PAID_STEP
+    census = load_settlement_census(out_dir / "settlement-census-counts.json")
+    if census:
+        body["settlement_census"] = census
+    return body
+
+
 def append_financial(out_dir: str, force: bool = False) -> int:
     """Merge 8-axis source counts into the v0.1 snapshot the MCP tool reads.
 
@@ -179,6 +225,7 @@ def append_financial(out_dir: str, force: bool = False) -> int:
     counts.update(extra)
     body["counts"] = counts
     body["financial_as_of"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    stamp_growth_fields(body, out, prev=body)
     text = json.dumps(body, indent=2) + "\n"
     latest.write_text(text)
     dated.write_text(text)
@@ -270,6 +317,14 @@ def run(out_dir: str, catalog_url: str):
     }
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
+    prev = {}
+    latest_path = out / "latest.json"
+    if latest_path.is_file():
+        try:
+            prev = json.loads(latest_path.read_text())
+        except Exception:
+            prev = {}
+    stamp_growth_fields(summary, out, prev=prev)
     stamp = deadline.split("T")[0]
     (out / f"{stamp}.json").write_text(json.dumps(summary, indent=2) + "\n")
     # The stable pointer the MCP x402_trust tool reads — always the newest round.

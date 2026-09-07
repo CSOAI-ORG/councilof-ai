@@ -75,6 +75,74 @@ class FinancialWingV01(unittest.TestCase):
             rc = ctr.append_financial(td, force=True)
             self.assertEqual(rc, 2)
 
+    def test_append_stamps_paid_step(self):
+        with tempfile.TemporaryDirectory() as td:
+            Path(td, "latest.json").write_text(json.dumps(V01, indent=2) + "\n")
+            Path(td, "2026-09-07.json").write_text(json.dumps(V01, indent=2) + "\n")
+            with mock.patch.object(ctr, "financial_probe_code", return_value=200):
+                rc = ctr.append_financial(td, force=True)
+            self.assertEqual(rc, 0)
+            latest = json.loads(Path(td, "latest.json").read_text())
+            self.assertEqual(latest["paid_step"], ctr.PAID_STEP)
+            self.assertEqual(latest["paid_step"]["mcp"], "commission_card")
+
+
+class GrowthStamp(unittest.TestCase):
+    def test_settlement_copied_not_typed(self):
+        eligible, refused = 7, 2
+        pct = round(100.0 * refused / eligible, 1)
+        with tempfile.TemporaryDirectory() as td:
+            Path(td, "settlement-census-counts.json").write_text(json.dumps({
+                "source": "fixture",
+                "as_of": "2026-09-06T00:00:00Z",
+                "counts": {
+                    "eligible_probed": eligible,
+                    "take_and_refuse": refused,
+                    "take_and_refuse_pct": pct,
+                },
+            }))
+            got = ctr.load_settlement_census(Path(td, "settlement-census-counts.json"))
+        self.assertEqual(got["eligible_probed"], eligible)
+        self.assertEqual(got["take_and_refuse"], refused)
+        self.assertEqual(got["take_and_refuse_pct"], pct)
+
+    def test_run_mocked_catalog_writes_paid_step(self):
+        catalog = [{"resource": "https://example.com/a"}, {"resource": "https://example.com/b"}]
+
+        class Fake:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+            def read(self, n=-1):
+                return json.dumps(catalog).encode()
+
+        with tempfile.TemporaryDirectory() as td:
+            Path(td, "settlement-census-counts.json").write_text(json.dumps({
+                "source": "fixture",
+                "as_of": "2026-09-06T00:00:00Z",
+                "counts": {"eligible_probed": 7, "take_and_refuse": 2, "take_and_refuse_pct": round(100.0 * 2 / 7, 1)},
+            }))
+            Path(td, "latest.json").write_text(json.dumps({
+                **V01,
+                "counts": {**V01["counts"], "financial_probed": 16, "financial_ok": 15},
+                "financial_as_of": "2026-09-07T11:00:00Z",
+            }))
+            with mock.patch.object(ctr.urllib.request, "urlopen", return_value=Fake()):
+                with mock.patch.object(ctr, "fetch", return_value=(402, "application/json", '{"accepts":[]}')):
+                    rc = ctr.run(td, "https://facilitator.payai.network/discovery/resources")
+            self.assertEqual(rc, 0)
+            latest = json.loads(Path(td, "latest.json").read_text())
+            self.assertEqual(latest["paid_step"]["mcp"], "commission_card")
+            self.assertEqual(latest["paid_step"]["feed"], "https://councilof.ai/api/eunomia-data?feed=1")
+            self.assertEqual(latest["settlement_census"]["take_and_refuse"], 2)
+            self.assertEqual(latest["counts"]["financial_probed"], 16)
+            self.assertEqual(latest["financial_as_of"], "2026-09-07T11:00:00Z")
+            self.assertEqual(latest["counts"]["challenge_402"], 2)
+            self.assertEqual(latest["counts"]["total"], 2)
+
 
 if __name__ == "__main__":
     unittest.main()
