@@ -32,7 +32,7 @@ import { PAID_TOOL_NAMES, PAID_TOOL_DEFS, handlePaidTool } from "./_paid";
 // MCP Registry `server.version` is the remote implementation identity, so this
 // must match the corresponding registry descriptor. The npm stdio package is a
 // separate implementation and may be published on a different schedule.
-const MCP_HTTP_SERVER_VERSION = "1.3.0";
+const MCP_HTTP_SERVER_VERSION = "1.4.0";
 
 async function proxy(ctx: Parameters<PagesFunction>[0], bodyText: string | null): Promise<Response> {
   const url = new URL(ctx.request.url);
