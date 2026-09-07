@@ -14,8 +14,11 @@ from mill_window import (  # noqa: E402
     chat_capable_slugs,
     live_providers,
     mill_exit_for_window,
+    mill_names_for_kind,
+    mill_router_names,
     millable_slugs,
     provider_order,
+    resolve_route,
     route_kind,
     select_window,
 )
@@ -117,6 +120,7 @@ def test_millable_skips_already_tried() -> None:
     got = millable_slugs(models)
     assert "a/unmeasured" in got
     assert "b/practiced" not in got
+    # HTTP 400 is a mill even if restore dropped providers_live.
     assert "c/uncheckable" not in got
     # Quant packs must be attempted so UNCHECKABLE is recorded, not skipped.
     assert "Qwen/Qwen2.5-7B-Instruct-AWQ" in got
@@ -125,8 +129,8 @@ def test_millable_skips_already_tried() -> None:
 
 
 def test_millable_retries_hf_inference_uncheckable() -> None:
-    """1445 UNCHECKABLE were 'not supported by provider hf-inference'.
-    Those re-enter the window. Other UNCHECKABLE do not loop forever."""
+    """Chat-tag UNCHECKABLE still retry (bare slug 200s). A non-chat
+    hf-inference miss already ran the embed route — do not loop it."""
     models = [
         {
             "slug": "nomic-ai/nomic-embed-text-v1.5",
@@ -147,9 +151,9 @@ def test_millable_retries_hf_inference_uncheckable() -> None:
         },
     ]
     got = millable_slugs(models)
-    assert "nomic-ai/nomic-embed-text-v1.5" in got
-    # Bare-slug chat 200s on the router; retry chat-tag UNCHECKABLE.
-    assert "Qwen/Qwen3-8B" in got
+    # HTTP 400 is a mill even if restore dropped providers_live.
+    assert "nomic-ai/nomic-embed-text-v1.5" not in got
+    assert "Qwen/Qwen3-8B" not in got
     assert "Qwen/Qwen2.5-7B-Instruct" not in got
 
 
@@ -202,7 +206,7 @@ def test_live_providers_uses_mapping_keys_not_model_ids() -> None:
 
 def test_millable_does_not_respray_provider_policy_fails() -> None:
     """34049312401: 286 millable were resprayed; last 400 was invalid nebius.
-    Those already had a real router attempt. Do not mill them every hour."""
+    A later chat-bare retry is allowed once. After route_kind=chat, stop."""
     models = [
         {
             "slug": "facebook/opt-125m",
@@ -216,10 +220,240 @@ def test_millable_does_not_respray_provider_policy_fails() -> None:
             "status": "UNCHECKABLE",
             "reason": 'HTTP 400 {"error":"Model not supported by provider hf-inference"}',
         },
+        {
+            "slug": "Qwen/Qwen2.5-7B-Instruct",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat",
+            "providers_live": [],
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+    ]
+    got = millable_slugs(models)
+    # HTTP 400 without providers_live is already milled (restore dropped the key).
+    assert "facebook/opt-125m" not in got
+    # Empty mapping + route_kind=chat is Hub-probe only; mill the bare slug.
+    assert "Qwen/Qwen2.5-7B-Instruct" in got
+    assert "nomic-ai/nomic-embed-text-v1.5" not in got
+    # After chat-bare the reason is no longer nebius. Bare respray is forbidden
+    # once Hub has been probed empty. Missing providers_live still needs a probe.
+    models[0]["route_kind"] = "chat-bare"
+    models[0]["reason"] = "HTTP 400 {\"error\":{\"message\":\"The requested model 'facebook/opt-125m' is not supported.\"}}"
+    models[0]["providers_live"] = []
+    got = millable_slugs(models)
+    assert "facebook/opt-125m" not in got
+
+
+def test_millable_probes_uncheckable_for_live_providers() -> None:
+    """millable=0 is not terminal. Hub live mapping is the 200-route.
+    What would make this fail: skipping chat-bare forever even when
+    providers_live is together, or HTTP-milling an empty mapping."""
+    models = [
+        {
+            "slug": "Qwen/Qwen3-8B",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat-bare",
+            "reason": "HTTP 400 not supported",
+            "providers_live": ["featherless-ai"],
+        },
+        {
+            "slug": "facebook/opt-125m",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat-bare",
+            "reason": "HTTP 400 not supported",
+            "providers_live": [],
+        },
+        {
+            "slug": "meta-llama/Llama-3.1-8B-Instruct",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat-mapped",
+            "reason": "HTTP 400 not supported",
+            "providers_live": ["together"],
+        },
+        {
+            "slug": "needs/probe",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+        },
+    ]
+    got = millable_slugs(models)
+    assert "Qwen/Qwen3-8B" in got
+    assert "facebook/opt-125m" not in got
+    assert "meta-llama/Llama-3.1-8B-Instruct" not in got
+    assert "needs/probe" in got
+    # Empty mapping is not terminal for chat: mill the bare slug.
+    # chat-bare already 400'd that call; chat-mapped already 400'd mapped.
+    assert mill_router_names("facebook/opt-125m", "chat", [], uncheckable=True) == [
+        "facebook/opt-125m"
+    ]
+    mapped = mill_router_names("Qwen/Qwen3-8B", "chat", ["featherless-ai"], uncheckable=True)
+    assert mapped == ["Qwen/Qwen3-8B:featherless-ai"]
+    assert "Qwen/Qwen3-8B:groq" not in mapped
+    assert "nebius" not in "".join(mapped)
+    feat = mill_router_names("Qwen/Qwen3-Embedding-4B", "feature", ["deepinfra"], uncheckable=True)
+    assert feat == ["Qwen/Qwen3-Embedding-4B:deepinfra"]
+    assert "hf-inference" not in "".join(feat)
+
+
+def test_millable_honors_reason_when_restore_drops_providers_live() -> None:
+    """Published lock lost providers_live/route_kind; millable reopened to
+    1049. A HTTP 400 or 'no live Inference Provider' reason is the mill.
+    What would make this fail: treating a missing key as never-tried."""
+    models = [
+        {
+            "slug": "cross-encoder/ms-marco-MiniLM-L6-v2",
+            "pipeline_tag": "text-ranking",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"The requested model 'cross-encoder/ms-marco-MiniLM-L6-v2' is not a chat model.\"}}",
+        },
+        {
+            "slug": "google/gemma-4-E4B-it",
+            "pipeline_tag": "any-to-any",
+            "status": "UNCHECKABLE",
+            "reason": "no live Inference Provider",
+        },
+        {
+            "slug": "needs/probe",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+        },
+        {
+            "slug": "rate/limited",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 429 Too Many Requests",
+        },
+    ]
+    got = millable_slugs(models)
+    assert "cross-encoder/ms-marco-MiniLM-L6-v2" not in got
+    assert "google/gemma-4-E4B-it" not in got
+    assert "needs/probe" in got
+    assert "rate/limited" in got
+
+
+def test_empty_mapping_chat_mills_bare_slug_not_treated_terminal() -> None:
+    """Hub inferenceProviderMapping=[] is not a router 400. Chat-like
+    UNCHECKABLE with empty mapping mill the bare slug. What would make
+    this fail: millable=0 because providers_live=[]."""
+    models = [
+        {
+            "slug": "google/gemma-4-E4B-it",
+            "pipeline_tag": "any-to-any",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat",
+            "reason": "no live Inference Provider",
+            "providers_live": [],
+        },
+        {
+            "slug": "facebook/opt-125m",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat-bare",
+            "reason": "HTTP 400 not supported",
+            "providers_live": [],
+        },
+        {
+            "slug": "Qwen/Qwen3-8B",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat-mapped",
+            "reason": "HTTP 400 not supported",
+            "providers_live": ["together"],
+        },
+        {
+            "slug": "openai/whisper-tiny",
+            "pipeline_tag": "automatic-speech-recognition",
+            "status": "UNCHECKABLE",
+            "route_kind": "try-chat-then-feature",
+            "reason": "no live Inference Provider",
+            "providers_live": [],
+        },
+    ]
+    got = millable_slugs(models)
+    assert "google/gemma-4-E4B-it" in got
+    assert "facebook/opt-125m" not in got
+    assert "Qwen/Qwen3-8B" not in got
+    assert "openai/whisper-tiny" not in got
+    assert mill_router_names("google/gemma-4-E4B-it", "chat", [], uncheckable=True) == [
+        "google/gemma-4-E4B-it"
+    ]
+    models.append(
+        {
+            "slug": "unsloth/Qwen3-8B-GGUF",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "feature",
+            "reason": "no live Inference Provider",
+            "providers_live": [],
+        }
+    )
+    got = millable_slugs(models)
+    assert "unsloth/Qwen3-8B-GGUF" not in got
+    assert "google/gemma-4-E4B-it" in got
+
+
+def test_millable_retries_nonchat_after_chat_policy_spray() -> None:
+    """Chat mill last-fail was nebius. Embed/fill-mask/class rows were never
+    hit on their route. MILL_EXHAUSTED is not evidence they cannot 200.
+    What would make this fail: treating provider-or-policy as terminal for
+    sentence-similarity the same way as text-generation."""
+    models = [
+        {
+            "slug": "facebook/opt-125m",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+        {
+            "slug": "sentence-transformers/all-MiniLM-L6-v2",
+            "pipeline_tag": "sentence-similarity",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+        {
+            "slug": "answerdotai/ModernBERT-base",
+            "pipeline_tag": "fill-mask",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+        {
+            "slug": "BAAI/bge-small-en-v1.5",
+            "pipeline_tag": "feature-extraction",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+        {
+            "slug": "dslim/bert-base-NER",
+            "pipeline_tag": "token-classification",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+        {
+            "slug": "sentence-transformers/all-MiniLM-L6-v2-done",
+            "pipeline_tag": "sentence-similarity",
+            "status": "UNCHECKABLE",
+            "route_kind": "similarity",
+            "reason": "HTTP 400 embeddings not served",
+            "providers_live": [],
+        },
     ]
     got = millable_slugs(models)
     assert "facebook/opt-125m" not in got
-    assert "nomic-ai/nomic-embed-text-v1.5" in got
+    assert "sentence-transformers/all-MiniLM-L6-v2" not in got
+    assert "answerdotai/ModernBERT-base" not in got
+    assert "BAAI/bge-small-en-v1.5" not in got
+    assert "dslim/bert-base-NER" not in got
+    assert "sentence-transformers/all-MiniLM-L6-v2-done" not in got
+    models[1]["providers_live"] = ["together"]
+    models[1]["route_kind"] = "chat-bare"
+    got = millable_slugs(models)
+    assert "sentence-transformers/all-MiniLM-L6-v2" in got
+    assert route_kind("sentence-similarity") == "similarity"
+    assert route_kind("fill-mask") == "fill-mask"
+    assert route_kind("token-classification") == "text"
 
 
 def test_millable_drops_image_lora_windows() -> None:
@@ -241,6 +475,36 @@ def test_millable_drops_image_lora_windows() -> None:
     assert "prithivMLmods/QIE-outfit" not in got
     assert "black-forest-labs/FLUX.2-klein-4B" not in got
     assert "Qwen/Qwen2.5-3B-Instruct" in got
+
+
+def test_millable_original_reachable_despite_skip_tags() -> None:
+    """Original HF2200 image/ASR rows Hub still lists on a provider must mill.
+    Unstamped LoRAs stay out. Membership is not expanded."""
+    models = [
+        {
+            "slug": "Falconsai/nsfw_image_detection",
+            "pipeline_tag": "image-classification",
+            "status": "UNCHECKABLE",
+            "providers_live": ["hf-inference"],
+            "reason": "HTTP 400 chat miss",
+        },
+        {
+            "slug": "prithivMLmods/QIE-outfit",
+            "pipeline_tag": "text-to-image",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 chat miss",
+        },
+        {
+            "slug": "Qwen/Qwen3-8B",
+            "pipeline_tag": "text-generation",
+            "status": "practice-mill",
+            "providers_live": ["featherless-ai"],
+        },
+    ]
+    got = millable_slugs(models)
+    assert "Falconsai/nsfw_image_detection" in got
+    assert "prithivMLmods/QIE-outfit" not in got
+    assert "Qwen/Qwen3-8B" not in got
 
 
 def test_millable_includes_embed_and_fill_mask() -> None:
@@ -287,6 +551,53 @@ def test_payload_for_kind_is_the_200_shapes() -> None:
     assert "sentences" in sim["inputs"]
     assert payload_for_kind("fill-mask")["inputs"] == "The [MASK] is here"
     assert payload_for_kind("feature")["inputs"] == "hello world"
+    zs = payload_for_kind("text", "zero-shot-classification")
+    assert zs["inputs"] == "This is a test."
+    assert "candidate_labels" in zs["parameters"]
+    qa = payload_for_kind("text", "question-answering")
+    assert "question" in qa["inputs"] and "context" in qa["inputs"]
+
+
+def test_resolve_route_refuses_chat_respray_on_empty_lock_tag() -> None:
+    """215 empty-tag UNCHECKABLE would Hub-fill as text-generation and
+    spray nebius again. What would make this fail: using Hub chat tag as
+    a fresh mill."""
+    tag, kind = resolve_route("", "text-generation", "UNCHECKABLE", "google/electra-base-discriminator")
+    assert tag == "text-generation"
+    assert kind == "try-chat-then-feature"
+    tag, kind = resolve_route("", "fill-mask", "UNCHECKABLE", "google/electra-base-discriminator")
+    assert kind == "fill-mask"
+    tag, kind = resolve_route("", "text-generation", "UNMEASURED", "Qwen/Qwen3-8B")
+    assert kind == "chat"
+    tag, kind = resolve_route("sentence-similarity", "text-generation", "UNCHECKABLE")
+    assert tag == "sentence-similarity"
+    assert kind == "similarity"
+
+
+def test_mill_names_uncheckable_chat_is_bare_plus_mapped_not_default_spray() -> None:
+    """DEFAULT spray is what wrote 1311 nebius 400s. A retry with empty
+    Hub mapping must be the bare slug only. What would make this fail:
+    provider_order filling groq/cerebras when mapped is []."""
+    bare = mill_names_for_kind("facebook/opt-125m", "chat", [], defaults=())
+    assert bare == ["facebook/opt-125m"]
+    mapped = mill_names_for_kind("Qwen/Qwen3-8B", "chat", ["featherless-ai"], defaults=())
+    assert mapped[0] == "Qwen/Qwen3-8B"
+    assert "Qwen/Qwen3-8B:featherless-ai" in mapped
+    assert "Qwen/Qwen3-8B:groq" not in mapped
+    assert "nebius" not in "".join(mapped)
+
+
+def test_mill_names_nonchat_pins_hf_inference_not_groq() -> None:
+    """Chat mill never defaults hf-inference. Embed mill must, or MiniLM
+    never 200s. What would make this fail: spraying groq onto bge."""
+    chat = mill_names_for_kind("Qwen/Qwen3-8B", "chat", ["featherless-ai"])
+    assert chat[0] == "Qwen/Qwen3-8B"
+    assert "Qwen/Qwen3-8B:featherless-ai" in chat
+    assert "Qwen/Qwen3-8B:hf-inference" not in chat
+    feat = mill_names_for_kind("BAAI/bge-small-en-v1.5", "feature", [])
+    assert feat[0] == "BAAI/bge-small-en-v1.5"
+    assert feat[1] == "BAAI/bge-small-en-v1.5:hf-inference"
+    assert "BAAI/bge-small-en-v1.5:groq" not in feat
 
 
 def test_exhausted_millable_is_not_a_cron_killing_fail() -> None:
@@ -294,6 +605,10 @@ def test_exhausted_millable_is_not_a_cron_killing_fail() -> None:
     assert mill_exit_for_window(0, 0, 0) == 1
     assert mill_exit_for_window(2200, 10, 0) == 1
     assert mill_exit_for_window(2200, 10, 8) == 0
+    # 34058589553 mill (19): millable=285, start=285, empty remainder.
+    # That is not MILL_EMPTY. What would make this fail: exit 1 on the last shard.
+    assert mill_exit_for_window(2200, 285, 0, start=285) == 0
+    assert mill_exit_for_window(2200, 285, 0, start=0) == 1
 
 
 if __name__ == "__main__":
@@ -310,9 +625,17 @@ if __name__ == "__main__":
     test_provider_order_never_defaults_to_hf_inference()
     test_live_providers_uses_mapping_keys_not_model_ids()
     test_millable_does_not_respray_provider_policy_fails()
+    test_millable_probes_uncheckable_for_live_providers()
+    test_millable_honors_reason_when_restore_drops_providers_live()
+    test_empty_mapping_chat_mills_bare_slug_not_treated_terminal()
+    test_millable_retries_nonchat_after_chat_policy_spray()
     test_millable_drops_image_lora_windows()
+    test_millable_original_reachable_despite_skip_tags()
     test_millable_includes_embed_and_fill_mask()
     test_shards_cover_2200_at_limit_110()
     test_payload_for_kind_is_the_200_shapes()
+    test_resolve_route_refuses_chat_respray_on_empty_lock_tag()
+    test_mill_names_uncheckable_chat_is_bare_plus_mapped_not_default_spray()
+    test_mill_names_nonchat_pins_hf_inference_not_groq()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 18 passed")
+    print("test_mill_window: 26 passed")
