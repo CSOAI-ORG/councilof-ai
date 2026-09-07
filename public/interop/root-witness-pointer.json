@@ -1,20 +1,20 @@
 {
  "kind": "csoai.root-witness-pointer/v0",
- "as_of": "2026-09-07T05:48:00Z",
+ "as_of": "2026-09-07T12:30:40Z",
  "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
  "live_root": {
   "url": "https://councilof.ai/root.json",
   "also": "https://councilof.ai/api/root",
-  "sha256": "f11f09b7f781a9885696e2d6598f2f307800a5236f7ead22718d880dc8d7c3bd",
+  "sha256": "8bc1d43a5d2df18a24dbb9275e6357d4be9f6e23d06902902959c5ec9ee45b3c",
   "bytes": 14590,
-  "merkle_root": "8f39bc2f44d9c57726aac767cd31e63e73e1beb9f4c59eba7726abd1c0114aa8",
+  "merkle_root": "1340de5eb7ebb45344a6c662179cc35ab08bd9008c359834108cae597fdc541b",
   "card_count": 168,
-  "as_of": "2026-09-06T23:49:21Z"
+  "as_of": "2026-09-07T12:30:34Z"
  },
  "corpus_scope": {
   "relationship": "SEPARATE_CORPORA",
   "public_root_count": 168,
-  "public_root_sha256": "f11f09b7f781a9885696e2d6598f2f307800a5236f7ead22718d880dc8d7c3bd",
+  "public_root_sha256": "8bc1d43a5d2df18a24dbb9275e6357d4be9f6e23d06902902959c5ec9ee45b3c",
   "signed_card_count": 335,
   "signed_card_id_overlap": 0,
   "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
@@ -24,38 +24,27 @@
   "url": "https://councilof.ai/interop/root-witness-latest.json",
   "path": "public/interop/root-witness-latest.json",
   "status": "PUBLISHED",
-  "dated_copy": "public/interop/root-witness-2026-09-06-f11f09b7.json"
+  "dated_copy": "public/interop/root-witness-2026-09-07-8bc1d43a.json"
  },
  "drift": {
-  "status": "MATCH",
-  "checked_at": "2026-09-07T05:48:00Z",
+  "status": "DRIFTED",
+  "checked_at": "2026-09-07T12:30:40Z",
   "checked_against": "https://councilof.ai/root.json",
-  "witness_artifact_sha256": "f11f09b7f781a9885696e2d6598f2f307800a5236f7ead22718d880dc8d7c3bd",
+  "witness_artifact_sha256": "8bc1d43a5d2df18a24dbb9275e6357d4be9f6e23d06902902959c5ec9ee45b3c",
   "live_root_sha256": "f11f09b7f781a9885696e2d6598f2f307800a5236f7ead22718d880dc8d7c3bd",
-  "witness_artifact_merkle_root": "8f39bc2f44d9c57726aac767cd31e63e73e1beb9f4c59eba7726abd1c0114aa8",
+  "witness_artifact_merkle_root": "1340de5eb7ebb45344a6c662179cc35ab08bd9008c359834108cae597fdc541b",
   "live_root_merkle_root": "8f39bc2f44d9c57726aac767cd31e63e73e1beb9f4c59eba7726abd1c0114aa8",
   "live_root_bytes": 14590,
-  "match_sha256": true,
-  "match_merkle_root": true,
-  "reason": "live root.json bytes and merkle_root equal the witnessed artifact and the Irys receipt (f11f09b7 / 8f39bc2f); MATCH is an observation at checked_at, not a standing all-clear",
-  "history": [
-   {
-    "status": "DRIFTED",
-    "checked_at": "2026-09-06T23:49:26Z",
-    "live_root_sha256": "02616ae7522313bbe6e25d168a7bd6666850f4772506c821df1e7781b01ff0bf",
-    "witness_artifact_sha256": "f11f09b7f781a9885696e2d6598f2f307800a5236f7ead22718d880dc8d7c3bd",
-    "note": "historical DRIFTED observation retained when Irys witness recorded; live root now equals f11f09b7"
-   }
-  ]
+  "match_sha256": false,
+  "match_merkle_root": false,
+  "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
  },
- "witness_status_observed_at": "2026-09-06T23:49:25Z",
+ "witness_status_observed_at": "2026-09-07T12:30:39Z",
  "witnesses": {
   "rekor": "WITNESSED",
   "ots": "STAMPED_PENDING_BITCOIN",
   "eas_base": "NOT_YET",
-  "xrpl_memo": "NOT_YET",
-  "irys": "WITNESSED",
-  "arweave_native": "NOT_YET"
+  "xrpl_memo": "NOT_YET"
  },
  "hard_stops": [
   "Do not invent an .ots file or fake Rekor UUID for current live root.",
@@ -66,9 +55,9 @@
  "conflict": {
   "status": "NONE",
   "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
-  "as_of": "2026-09-06T23:49:21Z",
-  "merkle_root": "8f39bc2f44d9c57726aac767cd31e63e73e1beb9f4c59eba7726abd1c0114aa8",
-  "sidecars_scanned": 19,
+  "as_of": "2026-09-07T12:30:34Z",
+  "merkle_root": "1340de5eb7ebb45344a6c662179cc35ab08bd9008c359834108cae597fdc541b",
+  "sidecars_scanned": 20,
   "conflicts": [],
   "byte_variants": [],
   "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"

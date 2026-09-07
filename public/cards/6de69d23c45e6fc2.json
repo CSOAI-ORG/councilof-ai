@@ -1,0 +1,49 @@
+{
+  "card": {
+    "as_of": "2026-09-07T12:28:11Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "regulatory-framework",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "is the governing regime declared and confirmable?"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6de69d23c45e6fc20e766465e601ec1004847c76e040b72417a8cf7e976bd8ae",
+    "sig_ed25519": "9e1ad905dd9b0cc275e4f875386db3f2729eb70c6b19913276d870e11aac8d1b32a8728ff4c30d9701079b7625008addca7b93078a5b3c0cb7fafa0aa458b20c",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-regulatory-framework"
+    ],
+    "subject": "GSPC regulatory-framework UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "regulatory-framework",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "2bb1e6363492f973811351832f775475a46f2c5c78d35333863427c807be4f4f",
+    "38ab7ba901479a7af7c7c92e4bf5740b0a3456e240d310750cf05f5ab14e28b8",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "46a5cb98b5f6b3fe551a418b6ae3a03aee8ac0d736793257223df5f646952d89",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "e38a5d5677093ed889f2ae75ac069fd9918d7c037daabdd5e908d7de9ee47f99",
+    "1f8c18a81018ce899f5e63b552f96cdf0a7061f0e7f8a85225af2e22ac9a498c",
+    "d09d7e14e16219757bfaa5b88c40632ab4cab87305f2ef97a4731da118636783"
+  ]
+}

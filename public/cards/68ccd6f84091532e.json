@@ -1,0 +1,44 @@
+{
+  "card": {
+    "as_of": "2026-09-07T12:21:43.655Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Treasuries",
+      "holders": 50,
+      "issuer": "Ondo Finance",
+      "issuer_address": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1657065.565236341,
+      "symbol": "OUSG",
+      "verified_domain": "ondo.finance",
+      "verified_via": "Bidirectional domain match"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "68ccd6f84091532e22d2d419b0f53dd6f1fddc4a897e37c347c2215e0fd1268d",
+    "sig_ed25519": "b4fbc1b26387fdf3fc2b9d658e5d2ed6cc27c28f170a990d822df2e8932011cbddaa885e79fe4609743d45da06b0f32b0dca90c4c9db6f4238cd34ce801e5604",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL OUSG public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "3f0157dd8a93316acea90f0bde1bb56aaf649ab0b6424f179902a2c9036e436f",
+    "8cefdd9f68a9afb46d57abd447694e6375d5c9f9647a23c7818343bf6329b7ee",
+    "a83e6c9e574dae3751ab105697b11d67b883ef85b1f9a9b1bd51f9be9923b0d5",
+    "4ce770d4d1d44237f956068846bf58d7d5ccf8d3d4cb95358ac97aeea9d2503c",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "42746bf1fff0cffdbeeb77ef41a7f3f0f7faffc2e01c4e309450d6fb41f30f7a",
+    "1f8c18a81018ce899f5e63b552f96cdf0a7061f0e7f8a85225af2e22ac9a498c",
+    "d09d7e14e16219757bfaa5b88c40632ab4cab87305f2ef97a4731da118636783"
+  ]
+}
