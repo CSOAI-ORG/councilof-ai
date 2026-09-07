@@ -19,7 +19,7 @@ to fill the hole. That is the whole point of the file.
 | Fact | Value @ 2026-09-05 | Source URL |
 |---|---|---|
 | Board axes | **22 axes / 22 measured / 0 unmeasured** | `/api/gspc` → `totals` |
-| Hub cells | **856 cells, 856 measured, 0 unmeasured** (GET `/api/hub-cards` as_of `2026-09-07T04:16:35.252Z`; prior 856/856/0 STALE) | `/api/hub-cards` → `counts` |
+| Hub cells | **885 cells, 885 measured, 0 unmeasured** (GET `/api/hub-cards` as_of `2026-09-07T05:32:14.949Z`; prior 885/885/0 STALE) | `/api/hub-cards` → `counts` |
 | Signed card index | **335** (`n_cards == n_cells == cards[].length`) | `/signed/card_index.json` |
 | Cards under the signed Merkle root | **167**, root `6347384a…`, `sig_ed25519` present | `/root.json` |
 | Published doors | **292** | `/.well-known/index.json` → `total_doors` |
