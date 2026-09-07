@@ -56,6 +56,18 @@ describe("llms.txt derives the tool counts it publishes", () => {
     expect(out, "published llms.txt must not freeze the census pair").not.toMatch(/74\/100/);
   });
 
+  it("names the paid-step doors without freezing an amount", () => {
+    const tmpl = R("scripts/llms/llms.txt.tmpl");
+    const out = R("public/llms.txt");
+    for (const f of [tmpl, out]) {
+      expect(f).toContain("https://councilof.ai/api/eunomia-data?feed=1");
+      expect(f).toContain("https://councilof.ai/api/request-attestation?subject=<id>");
+      expect(f).toContain("commission_card");
+      expect(f).toContain("https://councilof.ai/api/x402-trust-seller");
+      expect(f, "amounts belong only in a 402 accepts[]").not.toMatch(/0\.02|\$\d/);
+    }
+  });
+
   it("registry version in llms.txt matches the shipped server.json, not a frozen 1.2.0", () => {
     const ver = J("mcp/gspc-server/server.json").version;
     expect(ver).toBe("1.4.0");
