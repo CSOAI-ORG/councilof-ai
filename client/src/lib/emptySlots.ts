@@ -16,7 +16,7 @@ export type SlotFill = {
 
 /** Prefer live GET; this static line is only a last-observation fallback. */
 export const BOARD_LIVE_RULING =
-  "Live board: GET /api/gspc — 22 axis · 22 measured · 0 unmeasured. Empty-as-finding only when unmeasured_axes > 0.";
+  "Live board: GET /api/gspc — 22 axis · 22 measured · 0 unmeasured. Empty-as-finding only when unmeasured_axes > 0. A slot stays UNMEASURED until a signed cell exists — never fill with 0.";
 
 /** @deprecated name kept for imports; no longer claims seven UNMEASURED slots. */
 export const EMPTY_SLOT_RULING = BOARD_LIVE_RULING;
@@ -109,3 +109,4 @@ export const CENSUS_SITES = [
     does: "Discovery of declared weights. Listing is not a run.",
   },
 ] as const;
+
