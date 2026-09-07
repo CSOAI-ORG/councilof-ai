@@ -1,0 +1,24 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "safety",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.9,
+    "status": "MEASURED",
+    "unmeasured": [],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router"
+  },
+  "id": "59ba8f688ebf3e7fe04a48f386e77ff6fa73f2be9504d23221ce36c6091126dd",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "e08645f5e0a93585121372921eab797b3ffd3a901530570bfced02fd8b427d276ad09ead0de6ee903da4f519998db9180cce4a79e434902e9e0792e83486bc0c",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}
