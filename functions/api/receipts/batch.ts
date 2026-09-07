@@ -175,9 +175,52 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   };
   const from = parseIso(fromRaw);
   const to = toRaw ? parseIso(toRaw) : new Date();
-  if (!fromRaw || !from) return json({ schema: SCHEMA, error: "bad_request", reason: "from: an ISO-8601 instant is required", usage }, 400);
+  if (preview && (!fromRaw || !from)) return json({ schema: SCHEMA, error: "bad_request", reason: "from: an ISO-8601 instant is required", usage }, 400);
+  if (preview && !to) return json({ schema: SCHEMA, error: "bad_request", reason: "to: not an ISO-8601 instant", usage }, 400);
+  if (preview && from && to && to.getTime() < from.getTime()) return json({ schema: SCHEMA, error: "bad_request", reason: "to is before from", usage }, 400);
+
+  if (!preview && (!fromRaw || !from)) {
+    const resourceUrl = `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`;
+    const description =
+      "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly — not a conclusion.";
+    const accepts = x402Accepts(env, resourceUrl, { skuId: SKU, tier: "per_batch", description });
+    const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+    if (!payment.ok) {
+      return paymentRequiredResponseSigned(
+        buildPaymentRequiredV2({
+          resourceUrl,
+          description,
+          serviceName: "CSOAI Receipts Batch",
+          tags: ["receipts", "merkle", "history", "attestation", "x402"],
+          accepts,
+          bazaar: declareBazaarHttpGet({
+            method: "GET",
+            queryParams: { from: "2026-01-01T00:00:00Z" },
+            queryParamsSchema: {
+              properties: {
+                from: { type: "string", format: "date-time", description: "Window start (ISO-8601). Required." },
+                to: { type: "string", format: "date-time", description: "Window end (ISO-8601). Defaults to now." },
+                preview: { type: "string", const: "1", description: "Free: count, span and the sha256 of the batch bytes, without the leaves" },
+              },
+              required: ["from"],
+            },
+            outputExample: {
+              schema: SCHEMA,
+              kind: "batch",
+              batch: { window: { from: "<iso>", to: "<iso>" }, count: 0, cap: BATCH_CAP, roots: [], items: [] },
+              batch_sha256: "<64-hex>",
+            },
+          }),
+          csoai: { schema: SCHEMA, lid: CSOAI_LID, usage, never: ["conclusion", "certificate", "grade"] },
+        }),
+        env,
+      );
+    }
+    return json({ schema: SCHEMA, error: "bad_request", reason: "from: an ISO-8601 instant is required", usage }, 400);
+  }
+
   if (!to) return json({ schema: SCHEMA, error: "bad_request", reason: "to: not an ISO-8601 instant", usage }, 400);
-  if (to.getTime() < from.getTime()) return json({ schema: SCHEMA, error: "bad_request", reason: "to is before from", usage }, 400);
+  if (from && to.getTime() < from.getTime()) return json({ schema: SCHEMA, error: "bad_request", reason: "to is before from", usage }, 400);
 
   // Sources — read, never typed. Two subrequests regardless of corpus size.
   const [bundle, history, root] = await Promise.all([

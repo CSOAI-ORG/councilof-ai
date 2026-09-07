@@ -97,12 +97,11 @@ describe("Tier 1 — /api/request-attestation", () => {
 });
 
 describe("Tier 2 — /api/evidence-bundle", () => {
-  it("lists obligations on a missing id (400) and an unknown one (404)", async () => {
+  it("bare GET and unknown obligation 402 so an indexer can discover the door", async () => {
     stubStatic();
-    expect((await bundle(ctx("/api/evidence-bundle"))).status).toBe(400);
+    expect((await bundle(ctx("/api/evidence-bundle"))).status).toBe(402);
     const r = await bundle(ctx("/api/evidence-bundle?obligation=sox"));
-    expect(r.status).toBe(404);
-    expect((await r.json()).obligations.map((o: { id: string }) => o.id)).toContain("article-53");
+    expect(r.status).toBe(402);
   });
 
   it("free preview counts only SIGNED relevant cards and says relevant-to", async () => {

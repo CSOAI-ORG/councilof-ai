@@ -143,13 +143,45 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const ob = obRaw ? resolveObligation(obRaw) : null;
 
   if (!ob) {
-    return json({
+    const listing = {
       schema: "csoai.evidence-bundle/0.1",
       error: obRaw ? "unknown_obligation" : "missing_obligation",
       obligations: Object.values(OBLIGATIONS).map((o) => ({ id: o.id, control_id: o.control_id, title: o.title, counsel_confirmed: o.counsel_confirmed, existing_pack: o.existing_pack })),
       usage: "GET /api/evidence-bundle?obligation=article-50|article-53|dora|cra&subject=<s>  (add &bundle=1 to buy the assembled OSCAL bundle)",
       never: ["conformity determination", "certificate", "score", "rank"],
-    }, obRaw ? 404 : 400);
+    };
+    const resourceUrl = new URL("/api/evidence-bundle?obligation=article-50&bundle=1", origin).toString();
+    const description =
+      "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one obligation. Not a conformity determination.";
+    const accepts = x402Accepts(env, resourceUrl, { skuId: "evidence_bundle", tier: "bundle", description });
+    const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+    if (!payment.ok) {
+      return paymentRequiredResponseSigned(
+        buildPaymentRequiredV2({
+          resourceUrl,
+          description,
+          serviceName: "CSOAI Evidence Bundle",
+          tags: ["evidence", "oscal", "eu-ai-act", "dora", "cra"],
+          accepts,
+          bazaar: declareBazaarHttpGet({
+            method: "GET",
+            queryParams: { obligation: "article-50", bundle: "1" },
+            queryParamsSchema: {
+              properties: {
+                obligation: { type: "string", enum: Object.keys(OBLIGATIONS) },
+                subject: { type: "string" },
+                bundle: { type: "string", const: "1" },
+              },
+              required: ["obligation", "bundle"],
+            },
+            outputExample: { schema: "csoai.evidence-bundle/0.1", kind: "bundle" },
+          }),
+          csoai: { ...listing, lid: CSOAI_LID },
+        }),
+        env,
+      );
+    }
+    return json(listing, obRaw ? 404 : 400);
   }
 
   const corpus = await loadCards(origin);
