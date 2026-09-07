@@ -45,34 +45,46 @@ jobs:
           print("self-test PASS")
           PY
 
-      - name: deps (kaggle 1.7.x reads ~/.kaggle/kaggle.json)
+      - name: deps (current kaggle CLI — SaveKernel wants Bearer, not legacy key)
         if: ${{ inputs.dry_run != true }}
-        run: pip install --quiet "kaggle<2"
+        run: pip install --quiet kaggle
 
-      - name: kaggle.json from secrets (CLI ignores env vars)
+      - name: kaggle auth from GHA secrets (never print values)
         if: ${{ inputs.dry_run != true }}
         env:
+          KAGGLE_ACCESS_TOKEN: ${{ secrets.KAGGLE_ACCESS_TOKEN }}
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
         run: |
           set -euo pipefail
-          if [ -z "${KAGGLE_USERNAME:-}" ] || [ -z "${KAGGLE_KEY:-}" ]; then
-            echo "KAGGLE_USERNAME/KAGGLE_KEY missing — skipped (TUI-5: GHA secrets only)"
-            echo "skipped=true" >> "$GITHUB_ENV"
-            exit 0
-          fi
           mkdir -p ~/.kaggle
-          python3 - <<'PY'
+          chmod 700 ~/.kaggle
+          if [ -n "${KAGGLE_ACCESS_TOKEN:-}" ]; then
+            # Kaggle CLI 2.x: ~/.kaggle/access_token or KAGGLE_API_TOKEN (KGAT_…).
+            printf '%s' "$KAGGLE_ACCESS_TOKEN" > ~/.kaggle/access_token
+            chmod 600 ~/.kaggle/access_token
+            echo "auth=access_token" >> "$GITHUB_ENV"
+            echo "kaggle access_token written"
+          elif [ -n "${KAGGLE_USERNAME:-}" ] && [ -n "${KAGGLE_KEY:-}" ]; then
+            python3 - <<'PY'
           import json, os, pathlib
           p = pathlib.Path.home() / ".kaggle" / "kaggle.json"
           p.write_text(json.dumps({"username": os.environ["KAGGLE_USERNAME"], "key": os.environ["KAGGLE_KEY"]}))
           p.chmod(0o600)
-          print("kaggle.json written")
+          print("kaggle.json written (legacy)")
           PY
+            echo "auth=legacy_json" >> "$GITHUB_ENV"
+          else
+            echo "no Kaggle secrets — skipped (TUI-5: GHA secrets only)"
+            echo "skipped=true" >> "$GITHUB_ENV"
+            exit 0
+          fi
 
       - name: kaggle kernels push
         if: ${{ inputs.dry_run != true && env.skipped != 'true' }}
         working-directory: gpu-offload/kaggle-community-cells
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_ACCESS_TOKEN }}
         run: |
           set -euo pipefail
           kaggle kernels push -p .
@@ -80,6 +92,8 @@ jobs:
 
       - name: poll (up to 40 min)
         if: ${{ inputs.dry_run != true && env.skipped != 'true' }}
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_ACCESS_TOKEN }}
         run: |
           set -euo pipefail
           KERNEL=nicktempleman/csoai-kaggle-community-cells
@@ -97,6 +111,8 @@ jobs:
 
       - name: harvest mill-out
         if: ${{ inputs.dry_run != true && env.skipped != 'true' }}
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_ACCESS_TOKEN }}
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/kaggle-out"
