@@ -41,7 +41,7 @@ const PIPELINE = [
   },
   {
     k: "4 · Anchor",
-    v: "Irys L1 bundler witness of the published root. OTS / Rekor when ready — cite only what is live.",
+    v: "Irys L1 bundler witness of the published root. OpenTimestamps / Rekor atom-anchor remain planned — cite a Bitcoin block only when one exists.",
   },
 ] as const;
 
