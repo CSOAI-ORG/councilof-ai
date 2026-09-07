@@ -1,0 +1,26 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "machinery-conformity",
+    "model": "TsinghuaC3I/Llama-3-8B-UltraMedical",
+    "issuer": "CSOAI Ltd",
+    "n": 6,
+    "accuracy": 0.6667,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "n<30 unquotable"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router"
+  },
+  "id": "2003910b78e3410b7f8a420163687dd5092c00eec62fb283773ed54a4d954907",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "69d71a7489df17ec5cf1cbe11e57bf0251895e02b90cd4871dd17a377865b2ac601823aabfb37bcd3ef60f389df3d10134809c06e50bad0839fa1df0e40d5306",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 6,
+  "quotable": false,
+  "not_a_certificate": true
+}
