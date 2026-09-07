@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { x402Accepts, verifyX402Payment, readBazaarOutcome, buildPaymentRequiredV2, toLegacyNetwork, toV1Requirements } from "./_x402";
+import { x402Accepts, verifyX402Payment, readBazaarOutcome, buildPaymentRequiredV2, toLegacyNetwork, toV1Requirements, hasPaymentHeader } from "./_x402";
 import { ESTATE_PAY_TO, resolvePayTo, railMode, USDC_BASE_EIP712 } from "./_x402_config";
 import { USDC_BASE } from "./_skus";
 
@@ -39,6 +39,20 @@ describe("x402 rail — money destination and token domain", () => {
     const pr = buildPaymentRequiredV2({ resourceUrl: RESOURCE, description: "d", serviceName: "s", accepts, bazaar: { info: {}, schema: {} } });
     expect((pr.accepts as { extra: { name: string } }[])[0].extra.name).toBe("USD Coin");
     expect(pr.x402Version).toBe(2);
+  });
+
+  it("v2 accepts[] still carry the v1 fields a Circle/PayAI v1 client reads (resource, description, mimeType)", () => {
+    const accepts = x402Accepts({}, RESOURCE, { skuId: "issuance", tier: "reserve", description: "a signed card" });
+    const pr = buildPaymentRequiredV2({ resourceUrl: RESOURCE, description: "a signed card", serviceName: "s", accepts, bazaar: { info: {}, schema: {} } });
+    expect((pr.accepts as Record<string, unknown>[])[0]).toMatchObject({
+      resource: RESOURCE,
+      description: "a signed card",
+      mimeType: "application/json",
+      network: "eip155:8453",
+      amount: expect.stringMatching(/^\d+$/),
+    });
+    expect(hasPaymentHeader(new Request(RESOURCE))).toBe(false);
+    expect(hasPaymentHeader(new Request(RESOURCE, { headers: { "x-payment": "x" } }))).toBe(true);
   });
 
   it("reports an honest mode: challenge-only until a facilitator is provisioned", () => {

@@ -104,6 +104,21 @@ describe("Tier 2 — /api/evidence-bundle", () => {
     expect(r.status).toBe(402);
   });
 
+  it("a presented payment on a missing/unknown obligation never reaches the facilitator", async () => {
+    let facilitatorCalls = 0;
+    stubStatic(() => {
+      facilitatorCalls += 1;
+      return new Response(JSON.stringify({ isValid: true, success: true, transaction: "0xtx" }));
+    });
+    const hdr = btoa(JSON.stringify({ x402Version: 2, scheme: "exact", network: "eip155:8453", payload: {} }));
+    const missing = await bundle(ctx("/api/evidence-bundle", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
+    expect(missing.status).toBe(400);
+    expect((await missing.json()).error).toBe("missing_obligation");
+    const unknown = await bundle(ctx("/api/evidence-bundle?obligation=sox", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
+    expect(unknown.status).toBe(404);
+    expect(facilitatorCalls).toBe(0);
+  });
+
   it("free preview counts only SIGNED relevant cards and says relevant-to", async () => {
     stubStatic();
     const r = await bundle(ctx("/api/evidence-bundle?obligation=gpai&subject=gpt-4o"));
