@@ -1,0 +1,112 @@
+name: kaggle-community-cells
+
+# TUI-5 D/A — push the community-cell kernel with GHA Kaggle secrets (never the Mac).
+# Cap ≤100 probes is inside the kernel. Batch job, not an endpoint loop.
+# Does not stamp MEASURED. Kernel output is unsigned mill cards for land_mill_cards.py.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build and test only — do not kaggle kernels push"
+        type: boolean
+        default: false
+
+concurrency:
+  group: kaggle-community-cells
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: kernel self-test (no Kaggle token)
+        working-directory: gpu-offload/kaggle-community-cells
+        run: |
+          python3 - <<'PY'
+          from kaggle_community_cells import make_unsigned, filename_for
+          w = make_unsigned(axis="jail", model="kaggle:default", n=20, accuracy=0.5, route="kaggle-community")
+          assert w["signature"] is None
+          assert w["body"]["status"] == "UNMEASURED"
+          assert filename_for(w).startswith("unsigned-jail-")
+          src = open("kaggle_community_cells.py").read()
+          assert "from mill_card" not in src
+          print("self-test PASS")
+          PY
+
+      - name: deps (kaggle 1.7.x reads ~/.kaggle/kaggle.json)
+        if: ${{ inputs.dry_run != true }}
+        run: pip install --quiet "kaggle<2"
+
+      - name: kaggle.json from secrets (CLI ignores env vars)
+        if: ${{ inputs.dry_run != true }}
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${KAGGLE_USERNAME:-}" ] || [ -z "${KAGGLE_KEY:-}" ]; then
+            echo "KAGGLE_USERNAME/KAGGLE_KEY missing — skipped (TUI-5: GHA secrets only)"
+            echo "skipped=true" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          mkdir -p ~/.kaggle
+          python3 - <<'PY'
+          import json, os, pathlib
+          p = pathlib.Path.home() / ".kaggle" / "kaggle.json"
+          p.write_text(json.dumps({"username": os.environ["KAGGLE_USERNAME"], "key": os.environ["KAGGLE_KEY"]}))
+          p.chmod(0o600)
+          print("kaggle.json written")
+          PY
+
+      - name: kaggle kernels push
+        if: ${{ inputs.dry_run != true && env.skipped != 'true' }}
+        working-directory: gpu-offload/kaggle-community-cells
+        run: |
+          set -euo pipefail
+          kaggle kernels push -p .
+          echo "pushed nicktempleman/csoai-kaggle-community-cells"
+
+      - name: poll (up to 40 min)
+        if: ${{ inputs.dry_run != true && env.skipped != 'true' }}
+        run: |
+          set -euo pipefail
+          KERNEL=nicktempleman/csoai-kaggle-community-cells
+          for i in $(seq 1 40); do
+            st=$(kaggle kernels status "$KERNEL" 2>/dev/null || true)
+            echo "poll $i: $st"
+            case "$st" in
+              *COMPLETE*) exit 0 ;;
+              *ERROR*|*CANCEL*) echo "RUN FAILED: $st"; exit 1 ;;
+            esac
+            sleep 60
+          done
+          echo "still running after 40 min — artifact harvest skipped; kernel is the batch job"
+          exit 0
+
+      - name: harvest mill-out
+        if: ${{ inputs.dry_run != true && env.skipped != 'true' }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/kaggle-out"
+          kaggle kernels output nicktempleman/csoai-kaggle-community-cells -p "$RUNNER_TEMP/kaggle-out" || true
+          ls -la "$RUNNER_TEMP/kaggle-out" || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kaggle-community-cells-${{ github.run_id }}
+          path: ${{ runner.temp }}/kaggle-out
+          if-no-files-found: ignore
+          retention-days: 14
