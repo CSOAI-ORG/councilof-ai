@@ -1,0 +1,26 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "conformance",
+    "model": "upstage/SOLAR-10.7B-Instruct-v1.0",
+    "issuer": "CSOAI Ltd",
+    "n": 23,
+    "accuracy": 0.9565,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "n<30 unquotable"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router"
+  },
+  "id": "40d40087ba854c0847ff9e98fb49feb18e6aab3595a96e00135cbe51774d77b8",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "cfbede3129f81d47bacfa60bd06cdc0c2cebfdf184537e62c19b815978a8305fc3db1275bec01947fd95d9d9a1d5f376d2e589bbbd27f86bdc993e057d6a440c",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 23,
+  "quotable": false,
+  "not_a_certificate": true
+}
