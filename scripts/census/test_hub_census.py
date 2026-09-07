@@ -407,6 +407,10 @@ class HubCensusPublishPathTests(unittest.TestCase):
         self.assertNotIn("router.huggingface.co", text)
         self.assertNotIn("echo $HF_TOKEN", text)
         self.assertNotIn("print(os.environ", text)
+        self.assertNotRegex(text, r"(?m)^\s+git push origin HEAD:master\s*$")
+        self.assertIn("gh pr create", text)
+        self.assertIn("census/delta-", text)
+        self.assertIn("git push origin \"HEAD:$BR\"", text)
 
     def test_agent_facing_copy_has_the_three_urls_and_register_language(self) -> None:
         root = Path(__file__).resolve().parents[2]
