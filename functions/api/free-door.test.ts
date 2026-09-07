@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { DESCRIPTION, onRequestGet } from "./free-door";
+import { DESCRIPTION, onRequestGet, onRequestPost } from "./free-door";
 
 const call = async () =>
   (onRequestGet as unknown as (c: unknown) => Promise<Response>)({
@@ -14,6 +14,19 @@ describe("/api/free-door — a real 402 door whose true price is zero", () => {
   // This one speaks 402 so an indexer has something to catalogue.
   it("answers 402, not 200 — an indexer needs a payable door", async () => {
     expect((await call()).status).toBe(402);
+  });
+
+  // gold-402 submit_check.py POSTs {}. A GET-only Function 404s that probe.
+  it("answers 402 on POST as well as GET", async () => {
+    const res = await (onRequestPost as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request("https://councilof.ai/api/free-door", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: "{}",
+      }),
+      env: {},
+    });
+    expect(res.status).toBe(402);
   });
 
   it("advertises a price of exactly zero, in both v1 and v2 fields", async () => {

@@ -1,0 +1,73 @@
+{
+  "$comment": "Additive fragment for card-v0 surface gspc.skill.spectrometry — Wave G 7 Sep 2026. NOT a board axis. Measure owns payload profile.",
+  "surface": "gspc.skill.spectrometry",
+  "payload": {
+    "type": "object",
+    "required": [
+      "kind",
+      "not_a_certification",
+      "not_a_score",
+      "not_safe_to_install_verdict",
+      "subject_skill",
+      "method",
+      "result",
+      "honesty"
+    ],
+    "properties": {
+      "kind": { "const": "skill-spectrometry" },
+      "not_a_certification": { "const": true },
+      "not_a_score": { "const": true },
+      "not_safe_to_install_verdict": { "const": true },
+      "subject_skill": {
+        "type": "object",
+        "required": ["uri", "content_sha256", "format"],
+        "properties": {
+          "uri": { "type": "string" },
+          "content_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "format": { "enum": ["skill.md", "dir", "zip", "git"] }
+        }
+      },
+      "method": {
+        "type": "object",
+        "required": ["name", "tool", "tool_version", "license", "flags", "llm_pass"],
+        "properties": {
+          "name": { "const": "skillspector-static-v0" },
+          "tool": { "const": "NVIDIA/SkillSpector" },
+          "tool_version": { "type": "string" },
+          "tool_commit": { "type": ["string", "null"] },
+          "license": { "const": "Apache-2.0" },
+          "flags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "contains": { "const": "--no-llm" }
+          },
+          "llm_pass": { "const": false }
+        }
+      },
+      "result": {
+        "type": "object",
+        "required": ["status", "n", "n_unit"],
+        "properties": {
+          "status": { "enum": ["VALID", "INVALID", "UNCHECKABLE"] },
+          "n": { "type": "integer", "minimum": 1 },
+          "n_unit": { "const": "skill" },
+          "findings_n": { "type": ["integer", "null"], "minimum": 0 },
+          "categories_hit": { "type": "array", "items": { "type": "string" } },
+          "raw_artifact_sha256": { "type": ["string", "null"] },
+          "note": { "type": "string" }
+        }
+      },
+      "honesty": {
+        "type": "object",
+        "required": ["substrate_not_rival", "board_authority", "signed_path", "invalid_rule"],
+        "properties": {
+          "substrate_not_rival": { "const": true },
+          "board_authority": { "type": "string" },
+          "signed_path": { "type": "string" },
+          "invalid_rule": { "const": "any finding → INVALID; zero findings → VALID; tool fail → UNCHECKABLE" }
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

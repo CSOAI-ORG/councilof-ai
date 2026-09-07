@@ -1,0 +1,53 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "gspc.skill.spectrometry",
+  "subject": "b0-01-clean-echo \u2014 example UNSIGNED nest (not a mint)",
+  "as_of": "2026-09-07T00:00:00Z",
+  "source_urls": [
+    "https://github.com/NVIDIA/SkillSpector",
+    "file:///workspace/wave-g-skillspector-2026-09-07/b0-fixtures/B0-MANIFEST.json"
+  ],
+  "payload": {
+    "kind": "skill-spectrometry",
+    "not_a_certification": true,
+    "not_a_score": true,
+    "not_safe_to_install_verdict": true,
+    "subject_skill": {
+      "uri": "file:///workspace/wave-g-skillspector-2026-09-07/b0-fixtures/clean-echo/skill",
+      "content_sha256": "294527da1dadb9110d5cb8aa7455ebde5d4ce88cd78de3cba2df3d412aeebccf",
+      "format": "dir"
+    },
+    "method": {
+      "name": "skillspector-static-v0",
+      "tool": "NVIDIA/SkillSpector",
+      "tool_version": "pin-before-run",
+      "tool_commit": null,
+      "license": "Apache-2.0",
+      "flags": [
+        "--no-llm"
+      ],
+      "llm_pass": false
+    },
+    "result": {
+      "status": "UNCHECKABLE",
+      "n": 1,
+      "n_unit": "skill",
+      "findings_n": null,
+      "categories_hit": [],
+      "raw_artifact_sha256": null,
+      "note": "Example UNSIGNED nest only \u2014 scan not run yet. Not a mint. Never copy 0\u2013100."
+    },
+    "honesty": {
+      "substrate_not_rival": true,
+      "board_authority": "GET https://councilof.ai/api/gspc \u2014 22\u00b722\u00b70; this surface is not a board axis invent",
+      "signed_path": "n\u226530 bank census + 4way + keystone before public SIGNED",
+      "invalid_rule": "any finding \u2192 INVALID; zero findings \u2192 VALID; tool fail \u2192 UNCHECKABLE"
+    }
+  },
+  "sha256": "9a60949f04e32cdb81a4903838259d59de6ea48ce53be3ca47115f493c42371f",
+  "unmeasured": [
+    "skillspector run not executed",
+    "tool_version not pinned"
+  ],
+  "sig_ed25519": null
+}

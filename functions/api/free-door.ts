@@ -207,3 +207,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // /api/proof, /api/eunomia-data and /api/rwa/evidence all answered header=True.
   return paymentRequiredResponseSigned(answer, env);
 };
+
+/** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
+export const onRequestPost = onRequestGet;

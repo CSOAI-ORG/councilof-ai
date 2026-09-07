@@ -417,7 +417,7 @@ def compose(fix: Path = FIX) -> dict:
             "summary": summary,
             "description": description,
             "tags": tags,
-            "x-payment-info": {"protocols": [{"x402": {}}]},
+            "x-payment-info": {"protocols": ["x402"]},
             "parameters": parameters,
             "responses": {
                 "402": {
