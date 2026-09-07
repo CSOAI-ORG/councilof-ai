@@ -1,0 +1,29 @@
+{
+  "schema": "csoai.measurement/0.1",
+  "title": "Agent-skill scanners emit a 0-100 score on incomplete analysis",
+  "as_of": "2026-09-07T02:56:05Z",
+  "method": {
+    "tool": "NVIDIA SkillSpector (Apache-2.0)",
+    "tool_repo": "https://github.com/NVIDIA/SkillSpector",
+    "invocation": "skillspector scan <dir> --no-llm --format json",
+    "llm_analyzers": "UNAVAILABLE \u2014 no API key; three semantic analyzers were skipped and the run is static-only",
+    "corpus": "agent skills installed on one operator machine",
+    "reproduce": "clone the tool, run the invocation above over any skill directory, read analysis_completeness.is_complete"
+  },
+  "n": 12,
+  "finding": {
+    "scored_while_incomplete": 12,
+    "coverage_below_100": 3,
+    "high_or_critical_on_partial_coverage": 3,
+    "statement": "Of n=12 skills, 12 received a numeric 0-100 risk score while analysis_completeness.is_complete was false. 3 were labelled HIGH or CRITICAL on coverage below 100%. The score does not carry its own coverage, so a reader cannot tell how much of the artefact was actually read."
+  },
+  "verdict": "UNCHECKABLE",
+  "why_uncheckable": "A severity computed over part of an artefact is not a property of the artefact. This measurement reports the scanner's own completeness field and takes no position on whether any individual skill is safe. n=12 is below the n>=30 rule, so this is not a GSPC grade and enters no board.",
+  "not_published_here": "Per-skill scores and names are deliberately withheld. Several skills are third-party, and an independent audit found YARA-based scanners flag ordinary MCP tool instructions as prompt injection. Naming a company adversely from an automated pattern match, before disclosure to that company, is not a measurement this estate publishes.",
+  "counts_by_severity_only": {
+    "MEDIUM": 3,
+    "LOW": 6,
+    "CRITICAL": 2,
+    "HIGH": 1
+  }
+}
