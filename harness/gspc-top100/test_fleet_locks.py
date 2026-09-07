@@ -15,9 +15,19 @@ def test_hf2200_lock_is_a_real_queue() -> None:
     assert isinstance(lock["n_measured"], int)
     assert lock["enters_board_means"] is False
     assert lock["writes_board"] is False
+    # status_all is board-MEASURED, not mill coverage. practice-mill
+    # increments n_measured; it does not mint a MEASURED stamp.
     assert lock["status_all"] == "UNMEASURED"
     assert lock.get("queue_as_of")
-    assert lock["models"][0]["status"] == "UNMEASURED"
+    allowed = {"UNMEASURED", "practice-mill", "UNCHECKABLE"}
+    assert all((m.get("status") or "UNMEASURED") in allowed for m in lock["models"])
+    assert all(m.get("status") != "MEASURED" for m in lock["models"])
+    counted = sum(
+        1
+        for m in lock["models"]
+        if (m.get("status") or "UNMEASURED") in {"practice-mill", "MEASURED"}
+    )
+    assert lock["n_measured"] == counted
 
 
 def test_kaggle_lock_is_a_real_queue() -> None:
