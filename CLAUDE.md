@@ -49,7 +49,7 @@ Shared working agreement for ALL agents on this repo. Read this first.
 - **UNMEASURED is first-class** — never claim MEASURED before it is measured, and never invent a number.
 - No public $ prices. Verification is free forever; a grade is never sold.
 - Banned public strings are enforced by `scripts/brand-gate.mjs` (incl. internal codenames).
-- The **signed card index** (`public/signed/card_index.json`) is **335/335** — `n_cards == n_cells == cards[].length`, and all 335 verify (`/api/state` → `card_chain.bodies_verified_valid`, kind `measured`). This is corpus 3 of three and is **not** the public-root leaf count; see `council-os/CARD-CORPORA.md` before quoting any card number. The 150-row floor is a **subset of that chain**. Do not clamp to 150 or 313. See `BOARD-RULING.md`.
+- The **signed card index** (`public/signed/card_index.json`) is **335/335** — `n_cards == n_cells == cards[].length`, and all 335 verify (`/api/state` → `card_chain.bodies_verified_valid`, kind `measured`). This is corpus 3 of three. Living registry `GET /api/cards` is **336** signed; public root `GET /api/root` / `root.json` `card_count` is **168** (2026-09-07 live). Never paste 335/335 as those. See `council-os/CARD-CORPORA.md` before quoting any card number. The 150-row floor is a **subset of that chain**. Do not clamp to 150 or 313. See `BOARD-RULING.md`.
 
 ## How we work (see council-os/LANE-PROTOCOL.md for the evidence — the four incidents these rules are for)
 - **One lane = one writer = one branch/worktree.** Never a shared checkout. Claim in council-os/LANES.md.
