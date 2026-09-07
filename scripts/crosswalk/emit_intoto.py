@@ -323,7 +323,16 @@ def main() -> int:
     DST.mkdir(parents=True, exist_ok=True)
     for name, text in sorted(files.items()):
         (DST / name).write_text(text, encoding="utf-8")
-    print(f"WROTE {len(files)} files to {DST.relative_to(ROOT)} — {len(chosen)} axes")
+    # --check treats leftover statements as ORPHAN. A mill harvest that
+    # changes the lex-smallest MEASURED card per axis must drop the old
+    # file or gates fail after a write that otherwise did its job.
+    removed = 0
+    for extra in sorted(DST.glob("*.json")):
+        if extra.name not in files:
+            extra.unlink()
+            removed += 1
+            print(f"REMOVED orphan {extra.name}")
+    print(f"WROTE {len(files)} files to {DST.relative_to(ROOT)} — {len(chosen)} axes" + (f", removed {removed} orphan(s)" if removed else ""))
     return 0
 
 
