@@ -1,0 +1,26 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "affect",
+    "model": "nvidia/Llama-3.1-Nemotron-Nano-8B-v1",
+    "issuer": "CSOAI Ltd",
+    "n": 28,
+    "accuracy": 0.5714,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "n<30 unquotable"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router"
+  },
+  "id": "fdec6f888d29591fc64629dcfebe1bfbf0a110595b1a01e44b4ddad5feaa3ac5",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "2ebbbc8fe326594a9d089b4f77398f8ccf9900b528bc88aa987f4e47d62a1451f85e4ebc8ad04f8b6d257042ae21a1d7d9643449b05b816c68d1316613e26e0e",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 28,
+  "quotable": false,
+  "not_a_certificate": true
+}
