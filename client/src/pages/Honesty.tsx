@@ -4,6 +4,7 @@ import { setMetaDescription } from "@/lib/utils";
 import { useBoardCount } from "@/lib/boardCount";
 import { useEstateFacts } from "@/lib/estateFacts";
 import { ANCHORING_CLAIM } from "@/data/anchoringClaim";
+import FaqBlock from "@/components/FaqBlock";
 
 /**
  * /honesty — the honesty gate: what this estate publishes against itself.
@@ -46,6 +47,31 @@ const ARTICLE_LD = {
   description:
     "Council of AI publishes the results that embarrass it: its own fine-tunes below base models in its own signed arena reference, the cards it withholds and the exact limit of what the chain proves about them, the board slots it has not measured, and a corrections ledger that includes a verification of its own that could not observe failure.",
 };
+
+
+/** FAQ mirrors the five visible honesty sections — FAQPage JSON-LD must match rendered text. */
+const HONESTY_FAQ = [
+  {
+    q: "Do Council of AI fine-tunes beat the bases they started from?",
+    a: "No. On the signed arena reference at /arena/elo_reference.json, our council fine-tunes sit below the bases we started from. That finding is read from the published artifact at load time — not typed — and it is the most credible thing we can publish because it contradicts our own product narrative.",
+  },
+  {
+    q: "What does the cryptographic chain prove — and where does it stop?",
+    a: "A complete-looking manifest is not a signature. We publish the exact limit of what the chain proves about withheld cards, with no RFC-3161 timestamp authority and no blockchain anchoring behind any card (timestamp_authority: none). Verify the signed envelope yourself under /signed/chain.json with /signed/verify-card.mjs.",
+  },
+  {
+    q: "What board slots have you not measured?",
+    a: "UNMEASURED slots are published so the gap is visible. A slot stays UNMEASURED when the sample is too small (nothing below thirty usable graded items), when the instrument is not frozen and published, or when legal gold labels are still with counsel. UNMEASURED is a disclosure about us, not a failing grade for anyone else's AI system. Live counts: GET /api/gspc.",
+  },
+  {
+    q: "Where do you publish what you got wrong?",
+    a: "The corrections ledger at GET /api/corrections records what was wrong, how it was caught, and what changed. Entries are appended; none is edited or deleted. Most were caught by our own instrument turned on its owner — including a verifier that could not observe failure and a card-store verification that returned zero.",
+  },
+  {
+    q: "What is the difference between MEASURED, UNMEASURED, and REPORTED?",
+    a: "MEASURED is a graded run on our frozen instruments, signed. UNMEASURED is honestly empty, published so the gap is visible. REPORTED is a figure published by someone else, cited and dated, carried for context and left unsigned. A REPORTED number never enters our board and is never averaged with a MEASURED one. Machine-readable set: GET /api/reported.",
+  },
+] as const;
 
 /** Our own fine-tunes, read from the signed arena reference rather than typed. */
 function OurFineTunes() {
@@ -319,6 +345,14 @@ export default function Honesty() {
           <code>GET councilof.ai/api/reported</code>. Scores move: read every figure as of its
           capture date and follow the source for the live number.
         </p>
+
+        <FaqBlock
+          className="mt-12 !bg-transparent !py-0"
+          title="Honesty, stated as questions"
+          intro="The same five disclosures as the sections above — structured so answer engines can cite them without inventing a sixth."
+          items={[...HONESTY_FAQ]}
+          openCount={1}
+        />
 
         <div className="mt-12 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
           The instrument measures everyone, including the people selling it. Check the board at{" "}
