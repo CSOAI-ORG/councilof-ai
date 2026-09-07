@@ -170,6 +170,35 @@ const RULES = [
   },
 ];
 
+const PATH_BANNED = /\b(sovos|sov3\d*|dorado|cibola|ceasai)\b/i;
+
+/**
+ * Whole-body public-JSON codename scan. `/signed/` is evidence (real model ids).
+ * `/fleet/*.lock.json` is a catalog of other people's models — a Kaggle author
+ * named "Jhoan Dorado" is not our product (brand-gate #1694). Estate prose on
+ * those files (note, coverage_note, …) is still gated.
+ */
+function publicJsonCodenameHit(rel, raw) {
+  if (/^\/signed\//.test(rel)) return null;
+  let scan = raw;
+  if (/^\/fleet\/[^/]+\.lock\.json$/.test(rel)) {
+    try {
+      const lock = JSON.parse(raw);
+      scan = JSON.stringify({
+        kind: lock.kind,
+        fleet: lock.fleet,
+        note: lock.note,
+        coverage_note: lock.coverage_note,
+        downloads_rank_note: lock.downloads_rank_note,
+        halt: lock.halt,
+      });
+    } catch {
+      /* unparseable lock: keep scanning the whole body */
+    }
+  }
+  return scan.match(PATH_BANNED);
+}
+
 const DISPLAY_KEYS = /^(name|title|label|headline|criteria|tagline|cta|heading|display_name|badge_name)$/i;
 function jsonDisplayHits(obj, rel) {
   const hits = [];
@@ -237,6 +266,20 @@ if (SELFTEST) {
     // the corrected copy now in the tree
     ["/interop/hf-badges-index.json", { badges: [{ name: "CSOAI 23/33 council threshold", criteria: "Attested by 23 of 33 council agents (designed threshold)" }] }],
   ];
+  // Fleet locks quote third-party identity. The public-json sweep must not
+  // treat a Kaggle surname as our Dorado product; estate prose still fails.
+  if (publicJsonCodenameHit("/fleet/KAGGLE.lock.json", JSON.stringify({
+    note: "EVERY row UNMEASURED. Being in this lock is not coverage.",
+    models: [{ author: "Jhoan Dorado", ref: "jhoandorado/basic-datection", title: "basic-datection" }],
+  }))) {
+    console.error("\u2716 selftest: fleet lock third-party author now fails public-json"); bad++;
+  }
+  if (!publicJsonCodenameHit("/fleet/KAGGLE.lock.json", JSON.stringify({
+    note: "Dorado mill of Kaggle weights",
+    models: [],
+  }))) {
+    console.error("\u2716 selftest: fleet lock estate prose no longer catches Dorado in note"); bad++;
+  }
   for (const [rel, obj] of SWEEP_CATCH) {
     if (jsonDisplayHits(obj, rel).length === 0) {
       console.error(`\u2716 selftest: json display sweep no longer catches ${JSON.stringify(obj)}`); bad++;
@@ -311,7 +354,6 @@ if (!fs.existsSync(DIST)) {
 // publicly for months as a ROUTE PATH and a JSON FILENAME: /api/dorado and
 // /arena/dorado_market.json both served 200 while this gate reported clean. A URL is a
 // public surface. So: every served path, and the body of every public .json, is checked.
-const PATH_BANNED = /\b(sovos|sov3\d*|dorado|cibola|ceasai)\b/i;
 function walkAll(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -343,10 +385,9 @@ for (const f of walkAll(DIST)) {
     // Signed measurement cards / chain / index carry the real model id
     // (sov33-v7:latest). Renaming them would falsify the Ed25519 record.
     // Same carve-out as regulator-console — evidence, not marketing display.
-    if (/^\/signed\//.test(rel)) continue;
     let raw = "";
     try { raw = fs.readFileSync(f, "utf8"); } catch { continue; }
-    const m = raw.match(PATH_BANNED);
+    const m = publicJsonCodenameHit(rel, raw);
     if (m) pathFailures.push(`${rel}  [public-json] "${m[0]}" in a publicly served JSON body`);
   }
 }
