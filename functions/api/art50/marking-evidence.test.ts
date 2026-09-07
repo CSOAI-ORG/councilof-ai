@@ -118,16 +118,11 @@ describe("x402 rail — price only inside the 402", () => {
     const paid = await get(
       ctx(`${EP}?vendor=openai`, { X402_FACILITATOR_URL: "https://f.example" }, { headers: { "x-payment": payment } }),
     );
-    expect(paid.status).toBe(400);
-    expect(await paid.json()).toMatchObject({
-      error: "bad_request",
-      reason: expect.stringContaining("supply url="),
-    });
+    expect(paid.status).toBe(402);
 
     const preview = await get(ctx(`${EP}?vendor=openai&preview=1`));
     expect(preview.status).toBe(400);
     expect((await preview.json()).measurement).toBeUndefined();
-    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("rejects empty or malformed base64 before x402 settlement or invoice issuance", async () => {

@@ -103,7 +103,22 @@ describe(".well-known/x402.json — every advertised resource is one that can ac
     const m = await get();
     const eb = m.resources.find((r) => r.url.includes("/api/evidence-bundle"));
     expect(eb).toBeTruthy();
-    expect(eb!.url).toMatch(/obligation=<[^>]*dora[^>]*>/);
+    expect(eb!.url).toContain("obligation=article-50");
+    expect(eb!.url).toContain("bundle=1");
     expect(eb!.url).not.toMatch(/obligation=<id>/);
+  });
+
+  // CDP / a naive indexer GETs resources[].url as written. Angle-bracket
+  // templates 400 (asset=<symbol|issuer_address>, url=<https://…>).
+  // OpenAPI already samples required params to 402; this document must too.
+  // What would make this fail: a resource.url that still contains "<".
+  it("every resources[].url is a probeable GET, not an unreplaced template", async () => {
+    const m = await get();
+    const templated = m.resources.filter((r) => r.url.includes("<"));
+    expect(templated.map((r) => r.url), "indexers fetch this field as-is and 400").toEqual([]);
+    for (const r of m.resources) {
+      expect(() => new URL(r.url), r.url).not.toThrow();
+      expect(r.url, r.url).not.toMatch(/[^\x00-\x7F]/);
+    }
   });
 });

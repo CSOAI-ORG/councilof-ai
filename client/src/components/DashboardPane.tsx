@@ -31,6 +31,9 @@ const LobbyVerifyPane = lazy(
 const DashboardStatePane = lazy(
   () => import("@/components/DashboardStatePane"),
 );
+const DashboardSwiftX402Pane = lazy(
+  () => import("@/components/DashboardSwiftX402Pane"),
+);
 const DashboardAttestationsPane = lazy(
   () => import("@/components/DashboardAttestationsPane"),
 );
@@ -75,6 +78,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   xrpl: XrplInstrumentsPane, // XRPL public-root catalogue table (GET /api/xrpl), derived at load
   verify: LobbyVerifyPane,
   state: DashboardStatePane, // tapes beside the board: estate doors + XRPL reader (#1099)
+  swift: DashboardSwiftX402Pane, // SWIFT census + x402 doors (stranger /os?lobby=swift)
   attestations: DashboardAttestationsPane, // the one root, its witnesses (states verbatim), search, corrections ledger
   cards: LobbyCardsPane, // signed-cards browser, native
   evidence: LobbyEvidencePane, // GPAI evidence pack, native
