@@ -2,7 +2,9 @@ name: hf-inference-mill
 
 # HF2200 mill via Hugging Face Inference Providers (router.huggingface.co/v1).
 # Weights stay on the Hub. Never a GSPC board rewrite. n<30 unquotable.
-# Needs secrets.HF_INFERENCE_TOKEN with Inference Providers scope, billed to csoai org.
+# Needs secrets.HF_INFERENCE_TOKEN (Inference Providers scope, billed to csoai).
+# Fall back to HF_TOKEN only if the dedicated secret is unset — do not bind
+# HF_INFERENCE_TOKEN to secrets.HF_TOKEN (that hid the live inference secret).
 # Fail-closed 402/403 is an overnight SUCCESS (artifact INFERENCE_FAIL) so GitHub
 # does not disable the hourly cron — the string INFERENCE_FAIL MUST appear in the
 # job summary, not only the artifact. Do not invent scores.
@@ -35,8 +37,8 @@ jobs:
     outputs:
       ok: ${{ steps.probe.outputs.ok }}
     env:
-      HF_INFERENCE_TOKEN: ${{ secrets.HF_TOKEN }}
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN || secrets.HF_TOKEN }}
+      HF_TOKEN: ${{ secrets.HF_TOKEN || secrets.HUGGINGFACE_TOKEN }}
       HF_BILL_TO: csoai
     steps:
       - uses: actions/checkout@v4
@@ -133,9 +135,9 @@ jobs:
       matrix:
         shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     env:
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
-      HF_INFERENCE_TOKEN: ${{ secrets.HF_TOKEN }}
-      HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_TOKEN: ${{ secrets.HF_TOKEN || secrets.HUGGINGFACE_TOKEN }}
+      HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN || secrets.HF_TOKEN }}
+      HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN || secrets.HUGGINGFACE_TOKEN }}
       HF_BILL_TO: csoai
       # SERVED, not HF2200. The 2026-09-06T23:53Z run attempted 283 models from HF2200
       # across 20 shards and every one returned UNCHECKABLE with HTTP 400 "the requested
