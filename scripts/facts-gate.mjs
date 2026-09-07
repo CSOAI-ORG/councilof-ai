@@ -203,6 +203,11 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
 
     const before = text.slice(Math.max(0, m.index - 40), m.index);
     if (BREAKDOWN_BEFORE.test(before)) continue;
+    // Derived triple 22·22·0 with labels "axes · measured · unmeasured".
+    // Prerender concatenates the heading number with the next paragraph, so
+    // COUNT_RE sees "0 axes". That 0 is unmeasured_axes, not a board-total claim.
+    // A real sentence "The board carries 0 axes." has no N·M· before the digit.
+    if (/\d{1,3}[·.]\d{1,3}[·.]\s*$/.test(before)) continue;
     if (QUALIFIED_AFTER.test(text.slice(COUNT_RE.lastIndex))) continue;
 
     // A subset claim is only a subset if it is SMALLER than the whole. "23 axes
@@ -564,6 +569,8 @@ const SELFTEST_CASES = [
   ["stale count: the pre-sweep 14", "<p>The board measures 14 axes across the fleet.</p>", true],
   ["board self-description: 13 canonical axes + jail (a GSPC-family stamp)", "<p>Measured on 2026-08-12 (13 canonical axes) · 2026-08-18 (jail).</p>", false],
   ["honest swept grammar", "<p>22 axes · 22 measured — every slot has a run behind it.</p>", false],
+  ["derived triple flattened 22·22·0 axes · measured · unmeasured (reproduces 1804 deploy)", "<p>Living GSPC · derived totals 22·22·0 axes · measured · unmeasured — 22 axis · 22 measured</p>", false],
+  ["VIOLATION: a real 0-axes board-total claim still fails", "<p>The board currently carries 0 axes.</p>", true],
   ["22 measured is now true, not an overclaim", "<p>The board publishes 22 measured axes.</p>", false],
   ["all 22 axes are measured is now honest", "<p>All 22 axes are measured and signed.</p>", false],
   ["VIOLATION: 30 measured axes (more than the board carries)", "<p>The board publishes 30 measured axes.</p>", true],
