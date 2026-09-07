@@ -86,10 +86,22 @@ describe("MCP discovery keeps implementation identities truthful", () => {
     expect(REGISTRY_DESCRIPTOR.description).toMatch(/measure, never certify/i);
   });
 
-  it("does not echo a protocolVersion this door does not speak", async () => {
-    // A green tick that accepted the client's 2025-03-26 would claim a
-    // redesign we have not implemented. The discovery catalog date
-    // (2026-07-28 on /.well-known/mcp.json) is a different namespace.
+  it("negotiates exactly the versions it speaks — current wire on offer, base pin otherwise", async () => {
+    // The door now implements the 2026-07-28 wire (server/discover + the
+    // resultType/ttlMs/cacheScope envelope). A 2026-07-28 client gets it; the
+    // intermediate versions are still NOT implemented, so a 2025-03-26 client
+    // is answered with the base pin — never an echo of a version it does not
+    // speak. The discovery catalog date (schema_version on /.well-known/
+    // mcp.json) is a different namespace from the JSON-RPC wire version.
+    const current = await post("initialize", {
+      protocolVersion: "2026-07-28",
+      capabilities: {},
+      clientInfo: { name: "current-client", version: "0" },
+    });
+    expect(current.result.protocolVersion).toBe("2026-07-28");
+    expect(current.result.serverInfo.version).toBe("1.3.0");
+    expect(current.result.instructions).toMatch(/registry server\.version identifies this pages http implementation/i);
+
     const newer = await post("initialize", {
       protocolVersion: "2025-03-26",
       capabilities: {},
@@ -104,5 +116,56 @@ describe("MCP discovery keeps implementation identities truthful", () => {
       clientInfo: { name: "pin-client", version: "0" },
     });
     expect(pin.result.protocolVersion).toBe("2024-11-05");
+
+    // _meta.protocolVersion carries the version in the 2026-07-28 shape.
+    const viaMeta = await post("initialize", {
+      protocolVersion: "2024-11-05",
+      _meta: { protocolVersion: "2026-07-28" },
+      capabilities: {},
+      clientInfo: { name: "meta-client", version: "0" },
+    });
+    expect(viaMeta.result.protocolVersion).toBe("2026-07-28");
+  });
+
+  it("serves server/discover on the 2026-07-28 wire and stays quiet otherwise", async () => {
+    await post("initialize", {
+      protocolVersion: "2026-07-28",
+      capabilities: {},
+      clientInfo: { name: "disc-client", version: "0" },
+    });
+    const disc = await post("server/discover");
+    expect(disc.result.serverInfo).toEqual({
+      name: "csoai-gspc-mcp",
+      version: "1.3.0",
+    });
+    expect(disc.result.capabilities).toEqual({ tools: {} });
+  });
+
+  it("adds the cache envelope to tool results on the 2026-07-28 wire", async () => {
+    await post("initialize", {
+      protocolVersion: "2026-07-28",
+      capabilities: {},
+      clientInfo: { name: "env-client", version: "0" },
+    });
+    const call = await post("tools/call", {
+      name: "get_root",
+      arguments: {},
+    });
+    expect(call.result.resultType).toBe("ToolResult");
+    expect(call.result.ttlMs).toBeGreaterThan(0);
+    expect(call.result.cacheScope).toBe("shared");
+    expect(call.result.structuredContent).toBeTruthy();
+
+    // The base pin keeps the classic shape — no envelope it never had.
+    await post("initialize", {
+      protocolVersion: "2024-11-05",
+      capabilities: {},
+      clientInfo: { name: "env-client", version: "0" },
+    });
+    const baseCall = await post("tools/call", {
+      name: "get_root",
+      arguments: {},
+    });
+    expect(baseCall.result.resultType).toBeUndefined();
   });
 });

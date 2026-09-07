@@ -22,6 +22,9 @@ import {
   handleSharedTool,
   handleVerify,
   rpc,
+  negotiateProtocol,
+  setWireVersion,
+  getWireVersion,
 } from "./_handlers";
 import { toolSpan, withTraceHeader } from "./_otel";
 import { PAID_TOOL_NAMES, PAID_TOOL_DEFS, handlePaidTool } from "./_paid";
@@ -195,16 +198,33 @@ export const onRequest: PagesFunction = async (ctx) => {
     }
 
     if (call?.method === "initialize") {
-      // Wire protocol pin. A client may send 2025-03-26 or later; this door
-      // speaks 2024-11-05 and answers with that, never echoing a version it
-      // does not implement. public/.well-known/mcp.json schema_version
-      // 2026-07-28 is a DISCOVERY catalog date, not this JSON-RPC protocol.
+      // Wire protocol negotiation. The client may carry the version in
+      // params.protocolVersion (classic) or params._meta.protocolVersion
+      // (2026-07-28). The door answers with the version IT will use: 2026-07-28
+      // when the client offered it, the base pin otherwise — it never echoes
+      // a version it does not speak (#1691 rule, now with real 2026-07-28
+      // support: server/discover + the resultType/ttlMs/cacheScope envelope).
+      const meta = (call.params as { _meta?: { protocolVersion?: string } } | undefined)?._meta;
+      const wire = negotiateProtocol(
+        meta?.protocolVersion ?? (call.params as { protocolVersion?: string } | undefined)?.protocolVersion,
+      );
+      setWireVersion(wire);
       return rpc(call.id, {
-        protocolVersion: "2024-11-05",
+        protocolVersion: wire,
         capabilities: { tools: {} },
         serverInfo: { name: "csoai-gspc-mcp", version: MCP_HTTP_SERVER_VERSION },
         instructions:
           "GSPC MCP. Seven free read-only tools: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion. Four paid tools over the x402 rail: commission_card art50_marking_evidence rwa_evidence receipts_batch — call without x_payment to receive the 402 challenge as structuredContent, pay from your wallet and call again with x_payment. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification free. The witness_hash SKU is quarantined pre-release and is not advertised. mill-tool measure dropped. Dead worker is 404; this Pages /mcp is the door. Remote URL https://councilof.ai/mcp. The npm stdio package csoai-gspc-mcp reads the same two definitions files; payment is the x_payment argument, so which tools it carries is a packaging choice of its version, not a limit of stdio. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.",
+      });
+    }
+
+    if (call?.method === "server/discover" && getWireVersion() === "2026-07-28") {
+      // 2026-07-28 discovery method: transport-independent server identity.
+      // Deliberately a subset — the door declares what it offers; it never
+      // stamps a trust label on its own tools.
+      return rpc(call.id, {
+        serverInfo: { name: "csoai-gspc-mcp", version: MCP_HTTP_SERVER_VERSION },
+        capabilities: { tools: {} },
       });
     }
 
