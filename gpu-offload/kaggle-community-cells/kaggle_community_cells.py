@@ -153,18 +153,86 @@ def grade_jail_response(text: str, target: str) -> bool:
     return False
 
 
-def hosted_llms() -> dict:
+class _Prompt:
+    """Minimal llm.prompt(text) surface used by run_jail_slice."""
+
+    def __init__(self, fn):
+        self._fn = fn
+
+    def prompt(self, text: str) -> str:
+        return self._fn(text)
+
+
+def _kaggle_benchmarks_llms() -> dict:
     try:
         import kaggle_benchmarks as kbench  # type: ignore
     except Exception:
-        return {}
-    models = {"default": kbench.llm}
+        try:
+            import subprocess, sys
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "kaggle-benchmarks"])
+            import kaggle_benchmarks as kbench  # type: ignore
+        except Exception:
+            return {}
+    models = {}
     try:
-        for name, m in (kbench.llms or {}).items():
+        if getattr(kbench, "llm", None) is not None:
+            models["kbench-default"] = kbench.llm
+        for name, m in (getattr(kbench, "llms", None) or {}).items():
             models[str(name)] = m
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"kaggle_benchmarks enumerate failed: {e}")
     return models
+
+
+def _t4_local_llms() -> dict:
+    """Inference-only. Never trains. Hub mill cannot reach this T4 runtime."""
+    model_id = os.environ.get("KAGGLE_T4_MODEL", "Qwen/Qwen2.5-0.5B-Instruct")
+    try:
+        import torch
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+    except Exception as e:
+        print(f"t4 local: transformers/torch missing ({e})")
+        return {}
+    if not torch.cuda.is_available():
+        print("t4 local: no CUDA — skip (empty is not a card)")
+        return {}
+    print(f"t4 local: loading {model_id} on {torch.cuda.get_device_name(0)}")
+    tok = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
+    mdl = AutoModelForCausalLM.from_pretrained(
+        model_id,
+        torch_dtype=torch.float16,
+        device_map="auto",
+        trust_remote_code=True,
+    )
+    mdl.eval()
+
+    def _gen(prompt: str) -> str:
+        msgs = [{"role": "user", "content": prompt}]
+        try:
+            text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+        except Exception:
+            text = prompt
+        ids = tok(text, return_tensors="pt").to(mdl.device)
+        with torch.no_grad():
+            out = mdl.generate(
+                **ids,
+                max_new_tokens=16,
+                do_sample=False,
+                pad_token_id=tok.eos_token_id,
+            )
+        gen = out[0][ids["input_ids"].shape[-1] :]
+        return tok.decode(gen, skip_special_tokens=True)
+
+    return {f"t4:{model_id}": _Prompt(_gen)}
+
+
+def hosted_llms() -> dict:
+    models = _kaggle_benchmarks_llms()
+    if models:
+        print("using kaggle_benchmarks LLMs:", list(models))
+        return models
+    print("no kaggle_benchmarks LLMs — T4 local inference fallback")
+    return _t4_local_llms()
 
 
 def run_jail_slice(samples: list[dict], models: dict, cap: int) -> tuple[list[dict], int]:
@@ -200,12 +268,13 @@ def run_jail_slice(samples: list[dict], models: dict, cap: int) -> tuple[list[di
             graded += 1
             remaining -= 1
             used += 1
-            time.sleep(1)
+            if not str(model_name).startswith("t4:"):
+                time.sleep(1)
         if graded <= 0:
             continue
         wrap = make_unsigned(
             axis="jail",
-            model=f"kaggle:{model_name}",
+            model=str(model_name) if str(model_name).startswith("t4:") else f"kaggle:{model_name}",
             n=graded,
             accuracy=round(hits / graded, 4),
             route=LANE,
@@ -227,13 +296,13 @@ def main() -> None:
     probes_used = 0
     cards: list[dict] = []
     models = hosted_llms()
-    print("hosted LLMs:", list(models) or "<none — inventory only>")
+    print("models:", list(models) or "<none — inventory only>")
     if models:
         samples = load_jail_samples(limit=20)
         print(f"jail goldbank slice n_items={len(samples)} (bank n=71; slice stated)")
         cards, probes_used = run_jail_slice(samples, models, cap=PROBE_CAP)
     else:
-        print("no kaggle_benchmarks LLMs — no jail cards (empty is not a card)")
+        print("no runnable model on this kernel — no jail cards (empty is not a card)")
 
     written = []
     for wrap in cards:

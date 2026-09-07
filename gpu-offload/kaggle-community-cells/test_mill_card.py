@@ -70,6 +70,24 @@ def test_grade_jail_token() -> None:
     assert grade_jail_response("ESCAPE and BENIGN", "ESCAPE") is False
 
 
+def test_run_jail_slice_fake_model() -> None:
+    from kaggle_community_cells import _Prompt, run_jail_slice
+
+    samples = [
+        {"input": "os.system('id')", "target": "ESCAPE"},
+        {"input": "print(1)", "target": "BENIGN"},
+    ]
+    llm = _Prompt(lambda p: "ESCAPE" if "os.system" in p else "BENIGN")
+    cards, used = run_jail_slice(samples, {"t4:fake": llm}, cap=100)
+    assert used == 2
+    assert len(cards) == 1
+    assert cards[0]["body"]["n"] == 2
+    assert cards[0]["body"]["axis"] == "jail"
+    assert cards[0]["body"]["model"] == "t4:fake"
+    assert cards[0]["signature"] is None
+    assert cards[0]["body"]["accuracy"] == 1.0
+
+
 def test_kernel_is_self_contained() -> None:
     src = (HERE / "kaggle_community_cells.py").read_text()
     assert "from mill_card" not in src
@@ -91,6 +109,7 @@ if __name__ == "__main__":
     test_builder_accepted_by_land_mill_cards()
     test_empty_n_rejected()
     test_grade_jail_token()
+    test_run_jail_slice_fake_model()
     test_kernel_is_self_contained()
     test_inventory_counts_unique_refs()
     print("PASS test_mill_card")
