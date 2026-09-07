@@ -1,6 +1,6 @@
 {
   "kind": "csoai.x402-catalog-trust-snapshot/0.1",
-  "population": "PayAI facilitator catalog \u2014 100 rows \u00d7 1 DRY probe each (challenge terms only; nothing signed, nothing sent)",
+  "population": "PayAI facilitator catalog — 100 rows × 1 DRY probe each (challenge terms only; nothing signed, nothing sent)",
   "as_of": "2026-09-07T07:10:00Z",
   "counts": {
     "challenge_402": 74,
@@ -11,6 +11,22 @@
     "total": 100
   },
   "headline": "74 of 100 rows answer a correct 402 challenge; 11 rows do not exist on the wire.",
-  "doctrine": "A 402 is NOT delivery; a 404 is a catalog row that does not exist. Counts only \u2014 the host list is withheld by design (a public list would name non-conformant parties); methodology published. Measurement, never certification.",
-  "method": "One GET per row (template params substituted where the row is a URL-template), UA csoai-trust-audit/0.1, 15s timeout, 12 workers, zero payment, zero signing, zero side effect."
+  "doctrine": "A 402 is NOT delivery; a 404 is a catalog row that does not exist. Counts only — the host list is withheld by design (a public list would name non-conformant parties); methodology published. Measurement, never certification.",
+  "method": "One GET per row (template params substituted where the row is a URL-template), UA csoai-trust-audit/0.1, 15s timeout, 12 workers, zero payment, zero signing, zero side effect.",
+  "paid_step": {
+    "href": "https://councilof.ai/api/x402",
+    "feed": "https://councilof.ai/api/eunomia-data?feed=1",
+    "commission": "https://councilof.ai/api/request-attestation",
+    "seller": "https://councilof.ai/api/x402-trust-seller",
+    "mcp": "commission_card"
+  },
+  "settlement_census": {
+    "source": "docs/product/x402-settlement-census-2026-09-06.summary.json",
+    "as_of": "2026-09-06T06:48:44Z",
+    "eligible_probed": 316,
+    "delivered": 100,
+    "refused": 213,
+    "take_and_refuse": 13,
+    "take_and_refuse_pct": 4.1
+  }
 }
