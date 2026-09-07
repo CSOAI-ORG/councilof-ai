@@ -172,7 +172,10 @@ describe("catalog + discovery", () => {
     const w = await (await wellKnown(ctx("/.well-known/x402.json"))).json();
     expect(w).toMatchObject({ schema: "csoai.x402/0.2", mode: "challenge-only", payTo: ESTATE_PAY_TO, network: "eip155:8453" });
     expect(w.resources.every((r: { url: string }) => r.url.startsWith(ORIGIN))).toBe(true);
-    expect(w.resources.map((r: { url: string }) => r.url)).toContain(`${ORIGIN}/api/receipts/batch?from=<iso>&to=<iso>`);
+    // Indexers GET resources[].url as written. The template lives on url_template;
+    // the url itself must be a probe that already 402s (measured 2026-09-06).
+    expect(w.resources.map((r: { url: string }) => r.url)).toContain(`${ORIGIN}/api/receipts/batch?from=2026-01-01T00:00:00Z`);
+    expect(w.resources.every((r: { url: string }) => !r.url.includes("<"))).toBe(true);
     expect(w.mcp.paid_tools).toContain("receipts_batch");
     expect(JSON.stringify(w)).not.toMatch(/mock|pack\.councilof\.ai/);
     const live = await (await catalog(ctx("/api/x402", { X402_FACILITATOR_URL: "https://f.example" }))).json();

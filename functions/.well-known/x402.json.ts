@@ -71,25 +71,17 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         note: "Payable and priced at zero — it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
         indexed_in: "x402 Bazaar (PayAI)",
       },
-      { method: "GET", url: `${origin}/api/request-attestation?subject=<id>&axis=<slug>`, paid_for: "issuance" },
-      // `<id>` meant a MODEL id two lines above and an OBLIGATION id here, so a buyer reading
-      // this file tries the obvious thing and gets 404 unknown_obligation. Probed 2026-09-05:
-      // obligation=gpt-4o -> 404, obligation=dora|eu-cra|article-50|article-53 -> 402. The
-      // endpoint does return the valid list in its 404 body, so the buyer can recover — but a
-      // placeholder that names what it wants costs nothing and spends no round trip.
-      { method: "GET", url: `${origin}/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1`, paid_for: "assembly" },
+      // `url` is what an indexer GETs. Angle-bracket templates 400 (measured 2026-09-06:
+      // asset=<symbol|issuer_address> → 400; OpenAPI-sampled asset=RLUSD → 402). Templates
+      // stay on url_template for humans. Probe values match OpenAPI required-param examples.
+      { method: "GET", url: `${origin}/api/request-attestation?subject=model-or-subject-id`, url_template: `${origin}/api/request-attestation?subject=<id>&axis=<slug>`, paid_for: "issuance" },
+      { method: "GET", url: `${origin}/api/evidence-bundle?obligation=article-50&bundle=1`, url_template: `${origin}/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1`, paid_for: "assembly" },
       { method: "GET", url: `${origin}/api/eunomia-data?feed=1`, paid_for: "assembly" },
       { method: "GET", url: `${origin}/api/proof?bundle=1`, paid_for: "assembly" },
-      { method: "GET", url: `${origin}/api/rwa/evidence?asset=<symbol|issuer_address>`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` },
-      // PARAMETER NAME, CHECKED AGAINST THE HANDLER, NOT ASSUMED. This advertised `vendor=<slug>`
-      // and the endpoint reads only `url=` (marking-evidence.ts: searchParams.get("url")); the
-      // string "vendor" appears nowhere in it. A buyer following this document got
-      // 400 bad_request and never reached a payment challenge — a door listed as buyable that
-      // could not be bought. Probed live 2026-09-05: ?vendor=openai -> 400,
-      // ?url=<a real asset> -> 402.
-      { method: "GET", url: `${origin}/api/art50/marking-evidence?url=<https://…>`, paid_for: "assembly", free_preview: `${origin}/api/art50/marking-evidence?url=<https://…>&preview=1` },
+      { method: "GET", url: `${origin}/api/rwa/evidence?asset=RLUSD`, url_template: `${origin}/api/rwa/evidence?asset=<symbol|issuer_address>`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=RLUSD&preview=1` },
+      { method: "GET", url: `${origin}/api/art50/marking-evidence?url=https://councilof.ai/og-image.png`, url_template: `${origin}/api/art50/marking-evidence?url=<https://…>`, paid_for: "assembly", free_preview: `${origin}/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1` },
       { method: "GET", url: `${origin}/api/feeds/provider-diff?history=1`, paid_for: "assembly" },
-      { method: "GET", url: `${origin}/api/receipts/batch?from=<iso>&to=<iso>`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=<iso>&to=<iso>&preview=1` },
+      { method: "GET", url: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, url_template: `${origin}/api/receipts/batch?from=<iso>&to=<iso>`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1` },
     ],
     mcp: {
       url: `${origin}/mcp`,
