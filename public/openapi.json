@@ -3653,6 +3653,21 @@
         "summary": "* GET /api/x402 \u2014 the machine catalog of the metered rail. NO AMOUNTS HERE.\n *\n * One resource per entry, each with a free preview and a 402 door. Amounts\n * surface only inside a 402 challenge (accep"
       }
     },
+    "/api/x402-trust-seller": {
+      "get": {
+        "operationId": "get__api_x402-trust-seller",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "* GET /api/x402-trust-seller?host=<catalog-host>\n *\n * Per-skin seller-side trust page: a catalog owner sees a pointer at their own\n * verified-count door, sold as MCP `commission_card` (request-attes"
+      }
+    },
     "/api/xrpl": {
       "get": {
         "operationId": "get__api_xrpl",
@@ -3746,7 +3761,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 89,
+    "public_operations": 90,
     "quarantined": [
       {
         "buyable": false,
