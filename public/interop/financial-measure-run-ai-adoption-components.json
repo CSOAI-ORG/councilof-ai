@@ -1,39 +1,35 @@
 {
- "schema": "csoai.financial-measure-run/0.2",
+ "schema": "csoai.financial-measure-run/0.4",
  "axis": "ai-adoption-components",
- "as_of": "2026-09-01T04:12:34Z",
- "network": "public HTTP + XRPL MAINNET account_info/gateway_balances",
- "issuers": "RLUSD, Ondo OUSG, OpenEden TBILL, Archax×abrdn, Braza USDB, Braza BBRL",
- "n": 2,
+ "as_of": "2026-09-07T11:30:35Z",
+ "n": 1,
+ "n_unit": "public series",
  "status": "MEASURED",
  "risk_verdict": "UNMEASURED",
- "rubric": "deterministic cited public series. Not an index. No formula file.",
+ "three_state": "PASS / FAIL / UNCHECKABLE per fact. UNREACHABLE page => UNCHECKABLE, never FAIL.",
+ "producer": "scripts/grade_financial_ledgers.py",
+ "honesty": "Facts MEASURED from this run's fetches. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. No model, no accuracy, no leader. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
  "measured": [
   {
-   "series": "EU27 enterprises 10+ staff using any AI",
+   "series": "EU27 enterprises using any AI (isoc_eb_ai)",
+   "status": "MEASURED",
    "year": 2024,
-   "value": 13.48,
+   "value": 55.03,
    "unit": "%",
-   "source": "Eurostat isoc_eb_ai (E_AI_TANY, PC_ENT, EU27_2020)",
-   "surface": "/interop/ai-economy-index.v0.1.json"
+   "source": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/isoc_eb_ai?format=JSON&lang=EN&indic_is=E_AI_TANY&unit=PC_ENT&geo=EU27_2020"
   },
   {
    "series": "EU27 large enterprises 250+ using any AI",
-   "year": 2024,
-   "value": 41.17,
-   "unit": "%",
-   "source": "Eurostat isoc_eb_ai",
-   "surface": "/interop/ai-economy-index.v0.1.json"
+   "status": "UNCHECKABLE",
+   "note": "sizeclas split not isolated this run; not invented from the headline cell",
+   "source": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/isoc_eb_ai?format=JSON&lang=EN&indic_is=E_AI_TANY&unit=PC_ENT&geo=EU27_2020"
   }
  ],
- "honesty": "Facts MEASURED. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. Self-declare is not attestation. No model, no accuracy, no leader.",
  "index_formula": false,
- "bank_gaps": [
-  "compute-price",
-  "AI-investment",
-  "sector-output",
-  "published formula"
- ],
  "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
- "content_id": "749dc30be408d1d9e925fd41475261bbb3e4018ce606df9fabaa7471122b8995"
+ "tally": {
+  "UNCHECKABLE": 1,
+  "MEASURED": 1
+ },
+ "content_id": "a3ccf93a5ea63e6df9991f18f35dfb63ba2f1a533dad85a09ea52774cfe74267"
 }

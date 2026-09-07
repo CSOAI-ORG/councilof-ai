@@ -252,4 +252,16 @@ def selftest() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(selftest() if "--selftest" in sys.argv[1:] else main())
+    args = sys.argv[1:]
+    if "--selftest" in args:
+        sys.exit(selftest())
+    rc = 0
+    # TUI-2: the 8 GSPC financial deterministic-facts axes. Same process, second
+    # rubric (issuer flags + series). --banks-only skips it; --facts-only skips
+    # the bank/SWIFT n cards this file originally wrote.
+    if "--banks-only" not in args:
+        from gspc_financial_facts import main as facts_main
+        rc = facts_main(["--dry-run"] if "--dry-run" in args else [])
+        if "--facts-only" in args:
+            sys.exit(rc)
+    sys.exit(main() or rc)

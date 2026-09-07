@@ -1,0 +1,171 @@
+{
+ "schema": "csoai.financial-measure-run/0.4",
+ "axis": "provenance-controls",
+ "as_of": "2026-09-07T11:30:35Z",
+ "n": 6,
+ "n_unit": "issuer accounts (not bank items)",
+ "status": "MEASURED",
+ "risk_verdict": "UNMEASURED",
+ "three_state": "per instrument MEASURED | UNREACHABLE. Flags are booleans, not a score.",
+ "producer": "scripts/grade_financial_ledgers.py",
+ "honesty": "Facts MEASURED from this run's fetches. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. No model, no accuracy, no leader. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
+ "measured": [
+  {
+   "instrument": "RLUSD (Ripple USD)",
+   "mainnet_issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+   "control_facts": {
+    "status": "MEASURED",
+    "facts": {
+     "allowlisting_enforced": false,
+     "issuer_can_freeze": true,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": false,
+     "DefaultRipple": true,
+     "DisallowXRP": true,
+     "GlobalFreeze": false,
+     "NoFreeze": false,
+     "RequireDest": true
+    },
+    "domain": "https://ripple.com/",
+    "risk_verdict": "UNMEASURED",
+    "as_of": "2026-09-07T11:30:35Z",
+    "source": "https://s1.ripple.com:51234/"
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Ondo OUSG",
+   "mainnet_issuer": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+   "control_facts": {
+    "status": "MEASURED",
+    "facts": {
+     "allowlisting_enforced": true,
+     "issuer_can_freeze": true,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": true,
+     "DefaultRipple": false,
+     "DisallowXRP": false,
+     "GlobalFreeze": false,
+     "NoFreeze": false,
+     "RequireDest": false
+    },
+    "domain": "ondo.finance",
+    "risk_verdict": "UNMEASURED",
+    "as_of": "2026-09-07T11:30:35Z",
+    "source": "https://s1.ripple.com:51234/"
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "OpenEden TBILL",
+   "mainnet_issuer": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+   "control_facts": {
+    "status": "MEASURED",
+    "facts": {
+     "allowlisting_enforced": true,
+     "issuer_can_freeze": true,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": true,
+     "DefaultRipple": true,
+     "DisallowXRP": true,
+     "GlobalFreeze": false,
+     "NoFreeze": false,
+     "RequireDest": false
+    },
+    "domain": "openeden.com",
+    "risk_verdict": "UNMEASURED",
+    "as_of": "2026-09-07T11:30:35Z",
+    "source": "https://s1.ripple.com:51234/"
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Archax abrdn MMF",
+   "mainnet_issuer": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+   "control_facts": {
+    "status": "MEASURED",
+    "facts": {
+     "allowlisting_enforced": true,
+     "issuer_can_freeze": true,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": true,
+     "DefaultRipple": true,
+     "DisallowXRP": false,
+     "GlobalFreeze": false,
+     "NoFreeze": false,
+     "RequireDest": false
+    },
+    "domain": "archax.com",
+    "risk_verdict": "UNMEASURED",
+    "as_of": "2026-09-07T11:30:35Z",
+    "source": "https://s1.ripple.com:51234/"
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Braza USDB",
+   "mainnet_issuer": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+   "control_facts": {
+    "status": "MEASURED",
+    "facts": {
+     "allowlisting_enforced": false,
+     "issuer_can_freeze": true,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": false,
+     "DefaultRipple": true,
+     "DisallowXRP": false,
+     "GlobalFreeze": false,
+     "NoFreeze": false,
+     "RequireDest": false
+    },
+    "domain": "tokens.brazacripto.com.br",
+    "risk_verdict": "UNMEASURED",
+    "as_of": "2026-09-07T11:30:35Z",
+    "source": "https://s1.ripple.com:51234/"
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Braza BBRL",
+   "mainnet_issuer": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+   "control_facts": {
+    "status": "MEASURED",
+    "facts": {
+     "allowlisting_enforced": false,
+     "issuer_can_freeze": true,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": false,
+     "DefaultRipple": true,
+     "DisallowXRP": false,
+     "GlobalFreeze": false,
+     "NoFreeze": false,
+     "RequireDest": false
+    },
+    "domain": "tokens.brazacripto.com.br",
+    "risk_verdict": "UNMEASURED",
+    "as_of": "2026-09-07T11:30:35Z",
+    "source": "https://s1.ripple.com:51234/"
+   },
+   "risk_verdict_status": "UNMEASURED"
+  }
+ ],
+ "network": "XRPL MAINNET account_info (validated)",
+ "tally": {
+  "MEASURED": 6
+ },
+ "coverage": "6 of 6 locatable issuer addresses",
+ "roster_source": "https://councilof.ai/api/xrpl",
+ "content_id": "ce146f7e52f780afb3d065eeca9a5c6bcb6de6a5928784b6a2255ff68599cd98"
+}
