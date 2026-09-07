@@ -256,9 +256,22 @@ def card_text_of(card_data: dict[str, Any], tags: list[str]) -> str:
     return " ".join(str(c).lower() for c in chunks if c)
 
 
+_MARKER_RES: dict[tuple[str, ...], re.Pattern[str]] = {}
+
+
 def has_marker(text: str, markers: tuple[str, ...]) -> bool:
-    hay = f" {text.lower()} "
-    return any(marker in hay or marker in text.lower() for marker in markers)
+    """Token-boundary match. 'rai' must not fire inside 'training' or 'brain'."""
+    if not text or not markers:
+        return False
+    compiled = _MARKER_RES.get(markers)
+    if compiled is None:
+        parts = [
+            rf"(?<![a-z0-9_]){re.escape(marker.lower())}(?![a-z0-9_])"
+            for marker in markers
+        ]
+        compiled = re.compile("|".join(parts))
+        _MARKER_RES[markers] = compiled
+    return compiled.search(text.lower()) is not None
 
 
 def listing_record(raw: dict[str, Any], source: str = "huggingface") -> dict[str, Any]:

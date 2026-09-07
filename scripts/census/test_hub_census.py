@@ -31,6 +31,8 @@ axis_source_hits = hub_census.axis_source_hits
 build_axis_source_document = hub_census.build_axis_source_document
 build_org_register = hub_census.build_org_register
 write_counts_only = hub_census.write_counts_only
+has_marker = hub_census.has_marker
+SAFETY_WORDING_MARKERS = hub_census.SAFETY_WORDING_MARKERS
 
 
 def representative_listing(
@@ -75,6 +77,39 @@ def representative_listing(
             "trainers": [f"{org}-trainer"],
             "library_name": "transformers",
             "safety": "card-claimed safety wording vs the measured banks",
+        },
+    }
+
+
+def training_only_listing(index: int = 99, *, org: str = "gamma") -> dict:
+    """Hub listing whose card is a training description only — no safety tag/wording.
+
+    The substrings 'training' and 'brain' contain 'rai'; that must not count as
+    safety_wording or increment conformance/safety n.
+    """
+    return {
+        "id": f"{org}/continued-training-{index:04d}",
+        "author": org,
+        "sha": f"{index + 7:040x}"[:40],
+        "lastModified": "2026-09-07T00:00:00.000Z",
+        "createdAt": "2026-08-01T00:00:00.000Z",
+        "downloads": index,
+        "likes": 0,
+        "pipeline_tag": "text-generation",
+        "tags": ["text-generation", "training"],
+        "gated": False,
+        "private": False,
+        "library_name": "transformers",
+        "license": "apache-2.0",
+        "siblings": [{"rfilename": "config.json"}, {"rfilename": "README.md"}],
+        "cardData": {
+            "license": "apache-2.0",
+            "created_by": org,
+            "trainers": [f"{org}-trainer"],
+            "library_name": "transformers",
+            "description": (
+                "Continued training on public corpora using a brain-inspired tokenizer."
+            ),
         },
     }
 
@@ -209,6 +244,52 @@ class HubCensusAxisSourceTests(unittest.TestCase):
         self.assertEqual(build_axis_source_document(two)["n"], 2)
         self.assertEqual(build_axis_source_document(three)["axes"]["provenance"]["n"], 3)
         self.assertEqual(build_axis_source_document(two)["axes"]["provenance"]["n"], 2)
+
+    def test_has_marker_does_not_match_rai_inside_training_or_brain(self) -> None:
+        self.assertFalse(
+            has_marker(
+                "Continued training on public corpora using a brain-inspired tokenizer.",
+                SAFETY_WORDING_MARKERS,
+            )
+        )
+        self.assertFalse(has_marker("training", SAFETY_WORDING_MARKERS))
+        self.assertFalse(has_marker("brain", SAFETY_WORDING_MARKERS))
+        self.assertTrue(has_marker("standalone rai eval set", SAFETY_WORDING_MARKERS))
+        self.assertTrue(has_marker("card-claimed safety wording", SAFETY_WORDING_MARKERS))
+
+    def test_training_description_does_not_increment_conformance_or_safety(self) -> None:
+        fixtures = [
+            representative_listing(0, org="alpha"),
+            training_only_listing(1, org="gamma"),
+        ]
+        records = [listing_record(raw) for raw in fixtures]
+        self.assertTrue(records[0]["safety_wording"])
+        self.assertFalse(records[1]["safety_wording"])
+        self.assertNotIn("safety", [str(t).lower() for t in records[1]["tags"]])
+        hits = axis_source_hits(records[1])
+        self.assertFalse(hits["conformance"])
+        self.assertFalse(hits["safety"])
+        doc = build_axis_source_document(records)
+        self.assertEqual(doc["n"], 2)
+        self.assertEqual(doc["n_measured"], 0)
+        self.assertEqual(doc["axes"]["conformance"]["n"], 1)
+        self.assertEqual(doc["axes"]["safety"]["n"], 1)
+        self.assertEqual(doc["axes"]["provenance"]["n"], 2)
+
+    def test_collect_training_only_does_not_inflate_safety_n(self) -> None:
+        fixtures = [
+            representative_listing(0, org="alpha"),
+            training_only_listing(1, org="gamma"),
+        ]
+        opener = fixture_hub_opener(fixtures, page_size=10)
+        with tempfile.TemporaryDirectory() as tmp:
+            result = collect(Path(tmp), resume=False, opener=opener, page_size=10)
+            self.assertEqual(result["summary"]["n"], 2)
+            self.assertEqual(result["summary"]["n_measured"], 0)
+            self.assertEqual(result["axis_sources"]["n"], 2)
+            self.assertEqual(result["axis_sources"]["axes"]["safety"]["n"], 1)
+            self.assertEqual(result["axis_sources"]["axes"]["conformance"]["n"], 1)
+            self.assertEqual(result["axis_sources"]["axes"]["provenance"]["n"], 2)
 
     def test_org_register_is_directory_not_a_lab_grade(self) -> None:
         fixtures = [
