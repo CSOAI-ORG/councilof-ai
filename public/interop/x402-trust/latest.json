@@ -1,0 +1,28 @@
+{
+  "kind": "csoai.x402-catalog-trust-snapshot/0.2",
+  "as_of": "2026-09-07T11:18:20Z",
+  "rounds": [
+    {
+      "source": "payai",
+      "counts": {
+        "challenge_402": 61,
+        "serves_200": 0,
+        "alive_needs_input": 30,
+        "template_no_reply": 6,
+        "dead_404_or_unreachable": 3,
+        "other_error": 0,
+        "total": 100
+      }
+    },
+    {
+      "source": "x402scan",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "source": "agenttools",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "doctrine": "Counts only. A 402 is not delivery; a 404 is a phantom. Host details withheld. Never a certificate.",
+  "method": "One DRY GET per resource (template params substituted), UA csoai-catalog-trust/0.2, 15s timeout, 12 workers, zero payment/sign/side-effect."
+}
