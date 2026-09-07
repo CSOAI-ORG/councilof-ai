@@ -193,17 +193,21 @@ def _t4_local_llms() -> dict:
     except Exception as e:
         print(f"t4 local: transformers/torch missing ({e})")
         return {}
-    if not torch.cuda.is_available():
-        print("t4 local: no CUDA — skip (empty is not a card)")
-        return {}
-    print(f"t4 local: loading {model_id} on {torch.cuda.get_device_name(0)}")
+    gpu_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu"
+    cap = torch.cuda.get_device_capability(0) if torch.cuda.is_available() else (0, 0)
+    # Kaggle free GPU is often P100 (sm_60). Current Kaggle torch wheels are sm_70+.
+    # 0.5B on CPU is honest and fits the cap; do not emit cards from a CUDA that cannot run.
+    use_cuda = bool(torch.cuda.is_available() and cap[0] >= 7)
+    device = "cuda" if use_cuda else "cpu"
+    dtype = torch.float16 if use_cuda else torch.float32
+    print(f"t4 local: loading {model_id} device={device} gpu={gpu_name} cap={cap}")
     tok = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
-    mdl = AutoModelForCausalLM.from_pretrained(
-        model_id,
-        torch_dtype=torch.float16,
-        device_map="auto",
-        trust_remote_code=True,
-    )
+    load_kw: dict = {"trust_remote_code": True, "torch_dtype": dtype}
+    if use_cuda:
+        load_kw["device_map"] = "auto"
+    mdl = AutoModelForCausalLM.from_pretrained(model_id, **load_kw)
+    if not use_cuda:
+        mdl = mdl.to(device)
     mdl.eval()
 
     def _gen(prompt: str) -> str:
@@ -212,7 +216,9 @@ def _t4_local_llms() -> dict:
             text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
         except Exception:
             text = prompt
-        ids = tok(text, return_tensors="pt").to(mdl.device)
+        dev = next(mdl.parameters()).device
+        ids = tok(text, return_tensors="pt")
+        ids = {k: v.to(dev) for k, v in ids.items()}
         with torch.no_grad():
             out = mdl.generate(
                 **ids,
@@ -307,7 +313,9 @@ def main() -> None:
     written = []
     for wrap in cards:
         name = filename_for(wrap)
-        (out_dir / name).write_text(json.dumps(wrap, separators=(",", ":")) + "\n")
+        payload = json.dumps(wrap, separators=(",", ":")) + "\n"
+        (out_dir / name).write_text(payload)
+        (WORKING / name).write_text(payload)  # kaggle kernels output harvests /kaggle/working top-level
         written.append(name)
 
     report = {
