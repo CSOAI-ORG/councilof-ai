@@ -137,15 +137,95 @@ def run_round(source_name: str, rows: list[str], max_workers: int = 12):
     }
 
 
+# Unique public sources behind the 8 GSPC financial axes. Host names live HERE,
+# never in the snapshot `counts` dict.
+FINANCIAL_FACT_URLS = [
+    "https://councilof.ai/api/xrpl",
+    "https://s1.ripple.com:51234/",
+    "https://ripple.com/solutions/stablecoin/transparency/",
+    "https://app.ondo.finance/legal-documentation/us",
+    "https://www.circle.com/transparency",
+    "https://www.bitstamp.net",
+    "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/isoc_eb_ai?format=JSON&lang=EN&indic_is=E_AI_TANY&unit=PC_ENT&geo=EU27_2020",
+    "https://api.worldbank.org/v2/country/EUU/indicator/SL.TLF.CACT.ZS?format=json&per_page=1",
+    "https://www.figure.ai",
+    "https://agilityrobotics.com",
+    "https://bostondynamics.com",
+    "https://www.unitree.com",
+    "https://www.apptronik.com",
+    "https://www.1x.tech",
+    "https://www.tesla.com/AI",
+    "https://www.sanctuary.ai",
+]
+
+
+def counts_have_no_hosts(counts: dict) -> bool:
+    blob = json.dumps(counts)
+    if "://" in blob or "http" in blob.lower():
+        return False
+    for k, v in counts.items():
+        if not re.match(r"^[a-z][a-z0-9_]*$", str(k)):
+            return False
+        if isinstance(v, str) or (v is not None and not isinstance(v, (int, float, bool))):
+            return False
+    return True
+
+
+def financial_round() -> dict:
+    """One probe per 8-axis public source. Counts only."""
+    probed = ok = unreach = challenge = 0
+    for url in FINANCIAL_FACT_URLS:
+        code, _, _ = fetch(url)
+        probed += 1
+        if code == 402:
+            challenge += 1
+            ok += 1
+        elif code in (-1, 0) or code >= 400:
+            unreach += 1
+        else:
+            ok += 1
+    counts = {
+        "probed": probed,
+        "ok": ok,
+        "unreachable": unreach,
+        "challenge_402": challenge,
+        "axes": 8,
+        "total": probed,
+    }
+    if not counts_have_no_hosts(counts):
+        raise RuntimeError("financial counts leaked a host name")
+    if counts["probed"] > 100:
+        raise RuntimeError("probe cap 100 exceeded")
+    return {"source": "financial-facts", "counts": counts}
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--sources", default="payai,x402scan,agenttools")
     p.add_argument("--out-dir", default="public/interop/x402-trust")
+    p.add_argument("--append-financial", action="store_true",
+                   help="probe the 8 financial-axis sources and merge into latest.json; skip catalog re-probe")
     a = p.parse_args()
 
     out = Path(a.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    if a.append_financial:
+        latest_path = out / "latest.json"
+        if latest_path.exists():
+            body = json.loads(latest_path.read_text())
+            rounds = [r for r in (body.get("rounds") or []) if r.get("source") != "financial-facts"]
+        else:
+            body, rounds = {"kind": "csoai.x402-catalog-trust-snapshot/0.2", "doctrine": "Counts only. A 402 is not delivery; a 404 is a phantom. Host details withheld. Never a certificate.", "method": "financial-facts append"}, []
+        rounds.append(financial_round())
+        body["rounds"] = rounds
+        body["as_of"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        (out / f"v2-{stamp}.json").write_text(json.dumps(body, indent=2) + "\n")
+        latest_path.write_text(json.dumps(body, indent=2) + "\n")
+        print(json.dumps(rounds[-1]))
+        print("wrote", out / f"v2-{stamp}.json", "and latest.json")
+        return 0
 
     rounds = []
     for name in a.sources.split(","):

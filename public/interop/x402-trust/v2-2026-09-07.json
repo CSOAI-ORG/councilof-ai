@@ -1,6 +1,6 @@
 {
   "kind": "csoai.x402-catalog-trust-snapshot/0.2",
-  "as_of": "2026-09-07T11:18:20Z",
+  "as_of": "2026-09-07T11:53:08Z",
   "rounds": [
     {
       "source": "payai",
@@ -21,6 +21,17 @@
     {
       "source": "agenttools",
       "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "source": "financial-facts",
+      "counts": {
+        "probed": 16,
+        "ok": 14,
+        "unreachable": 2,
+        "challenge_402": 0,
+        "axes": 8,
+        "total": 16
+      }
     }
   ],
   "doctrine": "Counts only. A 402 is not delivery; a 404 is a phantom. Host details withheld. Never a certificate.",

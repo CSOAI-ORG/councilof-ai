@@ -74,6 +74,10 @@ export interface AxisScore {
   dataset?: string;
   dataset_note?: string;
   evidence_url?: string;
+  // Producer stamp for a deterministic-facts run (scripts/grade_financial_ledgers.py).
+  // Absent on model-comparison axes. Never a typed 2026-08-25.
+  facts_as_of?: string;
+  facts_status?: "MEASURED" | "UNMEASURED" | "UNREACHABLE";
   // Signature state of the referenced deterministic-facts run artifact. This is
   // explicit data, not inferred from a content_id: a hash is not a signature.
   // Model-comparison axes use signed per-model cards instead and leave this absent.

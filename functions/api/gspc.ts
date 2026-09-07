@@ -8,6 +8,7 @@ import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { MEASURED_IN_LANE } from "./_gspc_lane";
+import { FINANCIAL_FACTS_AS_OF, financialFamilyBlock } from "./_gspc_fin_as_of";
 
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
@@ -221,7 +222,16 @@ export const onRequestGet: PagesFunction = async (context) => {
   // The PUBLIC view: our own models removed from every leader slot. Everything downstream
   // (totals, separation stats, means, the axes array, the living stamp) derives from this,
   // so a council model can never re-enter a public count.
-  const selected = selectedRaw.map(excludeOwnLeader).map(dropUncardedLeader);
+  const finFacts = FINANCIAL_FACTS_AS_OF.axes as Record<string, { as_of?: string; status?: string }>;
+  const selected = selectedRaw.map(excludeOwnLeader).map(dropUncardedLeader).map((a) => {
+    if (a.family !== "financial") return a;
+    const row = finFacts[a.axis];
+    if (!row || typeof row.as_of !== "string") return a;
+    const facts_status = row.status === "UNREACHABLE" || row.status === "UNMEASURED" || row.status === "MEASURED"
+      ? row.status
+      : undefined;
+    return { ...a, facts_as_of: row.as_of, ...(facts_status ? { facts_status } : {}) };
+  });
   const ownLedExcludedAxes = selectedRaw
     .filter((a) => a.kind === "model-comparison" && isOwnCouncilModel(a.leader))
     .map((a) => a.axis);
@@ -371,7 +381,7 @@ export const onRequestGet: PagesFunction = async (context) => {
             note: "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically.",
           },
           financial: {
-            ...bySelectedFamily("financial"),
+            ...financialFamilyBlock(bySelectedFamily("financial").axes, bySelectedFamily("financial").measured),
             note: "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs — " +
               "issuer-account flags read off the public ledger (financial n=16 on the live XRPL " +
               "reader; provenance-controls n=6) and public statistical series, graded by rule with no " +
@@ -379,7 +389,8 @@ export const onRequestGet: PagesFunction = async (context) => {
               "a leader, an accuracy or a separation determination, and none contributes to any mean " +
               "below — measured is not the same as scored. The two former index slots are measured as " +
               "component facts (ai-adoption-components, labour-components), never restored to the " +
-              "retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05).",
+              "retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05). as_of is the producer run " +
+              "(scripts/grade_financial_ledgers.py), never a typed 2026-08-25.",
           },
         },
         sweep_note:

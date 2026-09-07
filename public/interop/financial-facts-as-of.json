@@ -1,0 +1,94 @@
+{
+ "schema": "csoai.financial-facts-as-of/0.1",
+ "as_of": "2026-09-07T11:30:35Z",
+ "reader_state": "REACHABLE",
+ "reader_as_of": "2026-09-06T23:49:21Z",
+ "source": "/interop/financial-facts-as-of.json",
+ "producer": "scripts/grade_financial_ledgers.py",
+ "risk_verdict": "UNMEASURED",
+ "probe_count": 23,
+ "axes": {
+  "provenance-controls": {
+   "n": 6,
+   "as_of": "2026-09-07T11:30:35Z",
+   "status": "MEASURED",
+   "tally": {
+    "MEASURED": 6
+   },
+   "evidence_url": "/interop/financial-measure-run-provenance-controls.json"
+  },
+  "reserve-attestation": {
+   "n": 16,
+   "as_of": "2026-09-07T11:30:35Z",
+   "status": "MEASURED",
+   "tally": {
+    "PASS": 3,
+    "FAIL": 4,
+    "UNCHECKABLE": 9
+   },
+   "evidence_url": "/interop/financial-measure-run-reserve-attestation.json"
+  },
+  "regulatory-framework": {
+   "n": 16,
+   "as_of": "2026-09-07T11:30:35Z",
+   "status": "MEASURED",
+   "tally": {
+    "PASS": 4,
+    "FAIL": 3,
+    "UNCHECKABLE": 9
+   },
+   "evidence_url": "/interop/financial-measure-run-regulatory-framework.json"
+  },
+  "distribution-integrity": {
+   "n": 16,
+   "as_of": "2026-09-07T11:30:35Z",
+   "status": "MEASURED",
+   "tally": {
+    "PASS": 16
+   },
+   "evidence_url": "/interop/financial-measure-run-distribution-integrity.json"
+  },
+  "custody-disclosure": {
+   "n": 16,
+   "as_of": "2026-09-07T11:30:35Z",
+   "status": "MEASURED",
+   "tally": {
+    "PASS": 1,
+    "FAIL": 6,
+    "UNCHECKABLE": 9
+   },
+   "evidence_url": "/interop/financial-measure-run-custody-disclosure.json"
+  },
+  "ai-adoption-components": {
+   "n": 1,
+   "as_of": "2026-09-07T11:30:35Z",
+   "status": "MEASURED",
+   "tally": {
+    "UNCHECKABLE": 1,
+    "MEASURED": 1
+   },
+   "evidence_url": "/interop/financial-measure-run-ai-adoption-components.json"
+  },
+  "labour-components": {
+   "n": 1,
+   "as_of": "2026-09-07T11:30:35Z",
+   "status": "MEASURED",
+   "tally": {
+    "UNREACHABLE": 1,
+    "MEASURED": 1
+   },
+   "evidence_url": "/interop/financial-measure-run-labour-components.json"
+  },
+  "humanoid-labour-index": {
+   "n": 8,
+   "as_of": "2026-09-07T11:30:35Z",
+   "status": "MEASURED",
+   "tally": {
+    "PASS": 1,
+    "FAIL": 6,
+    "UNCHECKABLE": 1
+   },
+   "evidence_url": "/interop/financial-measure-run-humanoid-labour-index.json"
+  }
+ }
+}

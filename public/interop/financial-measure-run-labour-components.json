@@ -1,37 +1,34 @@
 {
- "schema": "csoai.financial-measure-run/0.2",
+ "schema": "csoai.financial-measure-run/0.4",
  "axis": "labour-components",
- "as_of": "2026-09-01T04:12:34Z",
- "network": "public HTTP + XRPL MAINNET account_info/gateway_balances",
- "issuers": "RLUSD, Ondo OUSG, OpenEden TBILL, Archax×abrdn, Braza USDB, Braza BBRL",
- "n": 2,
+ "as_of": "2026-09-07T11:30:35Z",
+ "n": 1,
+ "n_unit": "public series",
  "status": "MEASURED",
  "risk_verdict": "UNMEASURED",
- "rubric": "deterministic cited public series. Not an index. No formula file.",
+ "three_state": "PASS / FAIL / UNCHECKABLE per fact. UNREACHABLE page => UNCHECKABLE, never FAIL.",
+ "producer": "scripts/grade_financial_ledgers.py",
+ "honesty": "Facts MEASURED from this run's fetches. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. No model, no accuracy, no leader. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
  "measured": [
   {
    "series": "EU participation rate",
-   "year": 2024,
-   "value": 57.58,
-   "unit": "%",
-   "surface": "/interop/human-labour-index.v0.1.json"
+   "status": "UNREACHABLE",
+   "source": "https://api.worldbank.org/v2/country/EUU/indicator/SL.TLF.CACT.ZS?format=json&per_page=8"
   },
   {
    "series": "EU unemployment rate",
-   "year": 2024,
-   "value": 5.92,
+   "status": "MEASURED",
+   "year": "2025",
+   "value": 5.92604538207809,
    "unit": "%",
-   "surface": "/interop/human-labour-index.v0.1.json"
+   "source": "https://api.worldbank.org/v2/country/EUU/indicator/SL.UEM.TOTL.ZS?format=json&per_page=8"
   }
  ],
- "honesty": "Facts MEASURED. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. Self-declare is not attestation. No model, no accuracy, no leader.",
  "index_formula": false,
- "bank_gaps": [
-  "displacement",
-  "wages",
-  "hours-by-AI-exposure",
-  "published formula"
- ],
  "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
- "content_id": "20b41e6c3f7a7ffffc9556b080c010c2f041953903617f0db15b0e0ac7df5a56"
+ "tally": {
+  "UNREACHABLE": 1,
+  "MEASURED": 1
+ },
+ "content_id": "be45e14d56a338d763625ee41303221987dc96fae287ecfd4308df21c3b4e835"
 }
