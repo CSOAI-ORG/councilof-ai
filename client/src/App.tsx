@@ -295,6 +295,7 @@ const PlansPage = lazy(() => import("./pages/PlansPage"));
 const OnboardOS = lazy(() => import("./pages/OnboardOS"));
 const GovGraph = lazy(() => import("./pages/GovGraph"));
 const NetworkPage = lazy(() => import("./pages/NetworkPage"));
+const AttestationNetwork = lazy(() => import("./pages/AttestationNetwork"));
 const RegulatorAtlas = lazy(() => import("./pages/RegulatorAtlas"));
 const Competitors = lazy(() => import("./pages/Competitors"));
 const ToolCommons = lazy(() => import("./pages/ToolCommons"));
@@ -319,6 +320,7 @@ function ScrollToTop() {
 const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — the rail is free, metered routes quote at the 402 | Council of AI",
   "/products": "Council OS — the SKUs, one workspace | Council of AI",
+    "/attestation": "Council Attestation Network | Council of AI",
   "/badge": "White-label badge — Council of AI",
   "/get-listed": "You are listed. You are not graded. — Council of AI",
   "/licensing-agreement": "Measurement licence — evidence and data | Council of AI",
@@ -732,6 +734,8 @@ function App() {
                   <Route path="/deepfake-protection" component={Protect} />
                   <Route path="/ontology" component={Ontology} />
                   <Route path="/network" component={NetworkPage} />
+                                      <Route path="/attestation" component={AttestationNetwork} />
+                                      <Route path="/attestation-network">{() => <Redirect to="/attestation" />}</Route>
                   <Route path="/sovereign-network">{() => <Redirect to="/network" />}</Route>
                   <Route path="/agents-network" component={NetworkPage} />
                   <Route path="/regulators" component={RegulatorAtlas} />
