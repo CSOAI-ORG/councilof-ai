@@ -1,6 +1,6 @@
 {
  "kind": "csoai.root-witness/v1",
- "as_of": "2026-09-06T23:49:26Z",
+ "as_of": "2026-09-07T05:48:00Z",
  "note": "Witnesses for the live signed public root — existence/time of these exact bytes. Not certification, not endorsement, not a rank sale. Never mint a token. ONE root anchor, never N leaves.",
  "artifact": {
   "url": "https://councilof.ai/root.json",
@@ -67,6 +67,25 @@
   "xrpl_memo": {
    "status": "NOT_YET",
    "reason": "needs a funded XRPL account (owner); one memo tx carrying sha256(root.json)"
+  },
+  "irys": {
+   "status": "WITNESSED",
+   "kind": "irys-l1-bundler",
+   "id": "XiohTfKHMF1YaVBtUhzjSrUayokpEUTXjoUaReYJa6y",
+   "url": "https://gateway.irys.xyz/XiohTfKHMF1YaVBtUhzjSrUayokpEUTXjoUaReYJa6y",
+   "bytes": 14590,
+   "sha256": "f11f09b7f781a9885696e2d6598f2f307800a5236f7ead22718d880dc8d7c3bd",
+   "merkle_root": "8f39bc2f44d9c57726aac767cd31e63e73e1beb9f4c59eba7726abd1c0114aa8",
+   "card_count": 168,
+   "observed_at": "2026-09-07T05:48:00Z",
+   "cost_usd": 0,
+   "note": "Third-party public receipt of these exact root.json bytes. Irys bundler seeds Irys L1, not native Arweave.",
+   "native_arweave": {
+    "status": "NOT_YET",
+    "url": "https://arweave.net/XiohTfKHMF1YaVBtUhzjSrUayokpEUTXjoUaReYJa6y",
+    "observed": "HTTP 302 then 404",
+    "note": "Not an arweave.net transaction. Native Arweave still needs an AR wallet."
+   }
   }
  },
  "verify_hints": [
