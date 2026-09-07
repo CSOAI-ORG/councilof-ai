@@ -7,6 +7,7 @@ name: census-delta
 # public/signed/hub-census-baseline.json. After SUMMARY lands, dispatch
 # census-tick so public-root cites the digest in publisher-health only
 # (not a new card-v0 surface). Index dump, not a probe, not a mill.
+# Land on a branch + PR. Direct push to master is GH006 (required gates).
 
 on:
   schedule:
@@ -21,6 +22,7 @@ concurrency:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   delta:
@@ -89,6 +91,9 @@ jobs:
           rm -f /tmp/hub-census-delta/listings.jsonl
           test ! -f public/interop/hf-census/listings.jsonl
       - name: commit SUMMARY + counts-only register
+        id: land
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git config user.name "csoai-census-delta"
@@ -103,10 +108,19 @@ jobs:
           } || true
           if git diff --cached --quiet; then
             echo "no SUMMARY change"
+            echo "landed=0" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git commit -m "census-delta: counts-only register, n_measured=0 ($(date -u +%Y-%m-%dT%H:%MZ))"
-          git push origin HEAD:master
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          BR="census/delta-${STAMP}"
+          git checkout -b "$BR"
+          git commit -m "census-delta: counts-only register, n_measured=0 (${STAMP})"
+          git push origin "HEAD:$BR"
+          gh pr create --base master --head "$BR" \
+            --title "census-delta: counts-only register, n_measured=0 (${STAMP})" \
+            --body "Hub API index dump (not a probe, not a mill). \`n_measured=0\`. Never \`listings.jsonl\`. 22-axis counts + org register under \`public/interop/hf-census/\`. A listing is DISCOVERED, not a grade."
+          echo "landed=1" >> "$GITHUB_OUTPUT"
+          echo "branch=$BR" >> "$GITHUB_OUTPUT"
       - name: dispatch census-tick
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
