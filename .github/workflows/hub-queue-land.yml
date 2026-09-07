@@ -10,7 +10,7 @@ name: hub-queue-land
 
 on:
   workflow_run:
-    workflows: ["hub-queue-mill"]
+    workflows: ["hub-queue-mill", "mill-spray"]
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -50,9 +50,16 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p staged
-          if ! gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" -n "hub-queue-mill-$RUN_ID" -D staged; then
-            echo "no artifact hub-queue-mill-$RUN_ID (mill staged nothing or run had no keys) — nothing to land"
+          # mill-spray uploads one artifact per axis (hub-queue-mill-<run>-<axis>).
+          # A single mill still matches hub-queue-mill-<run>-axis.
+          if gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" -p "hub-queue-mill-*" -D staged 2>/dev/null; then
+            echo "downloaded hub-queue-mill-* from $RUN_ID"
+          elif gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" -n "hub-queue-mill-$RUN_ID" -D staged 2>/dev/null; then
+            echo "downloaded hub-queue-mill-$RUN_ID (legacy name)"
+          else
+            echo "no mill artifact on $RUN_ID — nothing to land"
           fi
+          find staged -type f | head -50
           ls -la staged || true
       - name: land honest UNSIGNED cards into the sign inbox (dedupe per (model, axis))
         id: land
