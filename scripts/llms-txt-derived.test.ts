@@ -55,4 +55,16 @@ describe("llms.txt derives the tool counts it publishes", () => {
     expect(tmpl, "template must not freeze the census pair").not.toMatch(/74\/100/);
     expect(out, "published llms.txt must not freeze the census pair").not.toMatch(/74\/100/);
   });
+
+  it("registry version in llms.txt matches the shipped server.json, not a frozen 1.2.0", () => {
+    const ver = J("mcp/gspc-server/server.json").version;
+    expect(ver).toBe("1.4.0");
+    const out = R("public/llms.txt");
+    const tmpl = R("scripts/llms/llms.txt.tmpl");
+    expect(out).toContain(`(server ${ver} → https://councilof.ai/mcp)`);
+    expect(out).toContain(`server **${ver}**`);
+    expect(tmpl).toContain(`(server ${ver} → https://councilof.ai/mcp)`);
+    expect(tmpl).toContain(`server **${ver}**`);
+  });
+
 });
