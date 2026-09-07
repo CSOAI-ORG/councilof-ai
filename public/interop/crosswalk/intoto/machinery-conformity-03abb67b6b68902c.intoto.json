@@ -2,11 +2,11 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 0.3333,
+      "accuracy": 0.4,
       "axis": "machinery-conformity",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+      "model": "microsoft/Phi-3-mini-4k-instruct",
       "n": 30,
       "route": "hf-router",
       "status": "MEASURED",
@@ -31,7 +31,7 @@
     "reproducible": false,
     "source": {
       "canonical_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=False)",
-      "card_id": "04a71377b637cfdc26177f26c98bad043fca8a6213f28ddd1e47e11426f11e21",
+      "card_id": "03abb67b6b68902c4669606ad70a892b363a8cf5d8c3e83cb12dba4f9db365aa",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -59,9 +59,9 @@
   "subject": [
     {
       "digest": {
-        "sha256": "04a71377b637cfdc26177f26c98bad043fca8a6213f28ddd1e47e11426f11e21"
+        "sha256": "03abb67b6b68902c4669606ad70a892b363a8cf5d8c3e83cb12dba4f9db365aa"
       },
-      "name": "gspc-measurement-card/machinery-conformity/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
+      "name": "gspc-measurement-card/machinery-conformity/microsoft/Phi-3-mini-4k-instruct"
     }
   ]
 }
