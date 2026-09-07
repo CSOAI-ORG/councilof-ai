@@ -51,7 +51,10 @@ from pathlib import Path
 from typing import Any, Callable, Iterable
 
 KIND = "csoai.hub-census/0.1"
+AXIS_SOURCES_KIND = "csoai.hf-census-axis-sources/0.1"
+ORG_REGISTER_KIND = "csoai.hub-org-register/0.1"
 HUB_MODELS = "https://huggingface.co/api/models"
+HUB_CARD = "https://huggingface.co"
 EXPAND = (
     "sha",
     "lastModified",
@@ -62,11 +65,95 @@ EXPAND = (
     "gated",
     "private",
     "library_name",
+    "author",
+    "cardData",
+    "siblings",
+    "createdAt",
 )
 LISTING_STATE = "DISCOVERED"
 GSPC_STATE = "UNMEASURED"
 USER_AGENT = "csoai-hub-census/0.1 (+https://councilof.ai)"
 LINK_NEXT = re.compile(r'<([^>]+)>\s*;\s*rel="next"', re.I)
+BEHAVIOURAL_AXES = (
+    "governance",
+    "safety",
+    "provenance",
+    "continuity",
+    "conformance",
+    "openness",
+    "machinery-conformity",
+    "care",
+    "cross-reality",
+    "detector-interop",
+    "art5-safeguard",
+    "swarm",
+    "affect",
+    "jail",
+)
+FINANCIAL_AXES = (
+    "provenance-controls",
+    "reserve-attestation",
+    "regulatory-framework",
+    "distribution-integrity",
+    "custody-disclosure",
+    "ai-adoption-components",
+    "labour-components",
+    "humanoid-labour-index",
+)
+ALL_AXES = BEHAVIOURAL_AXES + FINANCIAL_AXES
+AXIS_SOURCE_FIELDS = {
+    "provenance": ("license", "created-by", "sha"),
+    "openness": ("license", "siblings"),
+    "continuity": ("lastModified", "trainers"),
+    "conformance": ("safety_wording", "tags"),
+    "machinery-conformity": ("library_name", "runtime_requirements"),
+    "governance": ("author", "org"),
+    "safety": ("safety_wording", "tags"),
+    "care": ("tags", "card_text"),
+    "cross-reality": ("tags", "card_text"),
+    "detector-interop": ("tags", "card_text"),
+    "art5-safeguard": ("tags", "card_text"),
+    "swarm": ("tags", "card_text"),
+    "affect": ("tags", "card_text"),
+    "jail": ("tags", "card_text"),
+}
+# Remaining 8 are directory coverage of who-runs-what, never issuer grades (TUI-2).
+for _fin in FINANCIAL_AXES:
+    AXIS_SOURCE_FIELDS[_fin] = ("org", "author", "id")
+AXIS_TAG_MARKERS = {
+    "safety": ("safety", "alignment", "harmless", "responsible", "guardrail"),
+    "care": ("care", "medical", "health", "wellbeing"),
+    "cross-reality": ("xr", "cross-reality", "multimodal", "3d", "robotics"),
+    "detector-interop": ("watermark", "detector", "c2pa", "provenance-tag"),
+    "art5-safeguard": ("art5", "article-5", "article5", "prohibited"),
+    "swarm": ("swarm", "multi-agent", "multiagent"),
+    "affect": ("affect", "emotion", "sentiment"),
+    "jail": ("jail", "jailbreak", "red-team", "redteam"),
+}
+SAFETY_WORDING_MARKERS = (
+    "safety",
+    "alignment",
+    "harmless",
+    "responsible",
+    "guardrail",
+    "rai",
+)
+MAX_ORG_CARD_LINKS = 20
+GRADE_KEYS = frozenset(
+    {
+        "grade",
+        "graded",
+        "score",
+        "rank",
+        "ranking",
+        "lab-score",
+        "lab_score",
+        "certified",
+        "certification",
+        "issuer",
+        "issuer-grade",
+    }
+)
 
 
 def utcnow() -> str:
@@ -105,25 +192,319 @@ def token() -> str | None:
         return None
 
 
+def _as_dict(value: Any) -> dict[str, Any]:
+    return value if isinstance(value, dict) else {}
+
+
+def _as_str_list(value: Any) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, (list, tuple)):
+        out: list[str] = []
+        for item in value:
+            if item is None:
+                continue
+            out.append(str(item))
+        return out
+    return [str(value)]
+
+
+def sibling_names(raw: Any) -> list[str]:
+    names: list[str] = []
+    if not isinstance(raw, list):
+        return names
+    for item in raw:
+        if isinstance(item, str) and item.strip():
+            names.append(item.strip())
+        elif isinstance(item, dict):
+            name = item.get("rfilename") or item.get("filename") or item.get("name")
+            if name:
+                names.append(str(name))
+    return names
+
+
+def license_of(raw: dict[str, Any], card_data: dict[str, Any], tags: list[str]) -> str | None:
+    for candidate in (raw.get("license"), card_data.get("license")):
+        if isinstance(candidate, str) and candidate.strip():
+            return candidate.strip()
+        if isinstance(candidate, list) and candidate:
+            return str(candidate[0])
+    for tag in tags:
+        text = str(tag)
+        if text.lower().startswith("license:"):
+            return text.split(":", 1)[1].strip() or None
+    return None
+
+
+def org_of(ident: Any, author: Any) -> str | None:
+    if isinstance(author, str) and author.strip():
+        return author.strip()
+    if isinstance(ident, str) and "/" in ident:
+        return ident.split("/", 1)[0].strip() or None
+    return None
+
+
+def card_text_of(card_data: dict[str, Any], tags: list[str]) -> str:
+    chunks = list(tags)
+    for key in ("tags", "model-index", "language", "datasets", "base_model"):
+        chunks.extend(_as_str_list(card_data.get(key)))
+    for key in ("text", "description", "notes", "safety", "license"):
+        value = card_data.get(key)
+        if isinstance(value, str):
+            chunks.append(value)
+    return " ".join(str(c).lower() for c in chunks if c)
+
+
+_MARKER_RES: dict[tuple[str, ...], re.Pattern[str]] = {}
+
+
+def has_marker(text: str, markers: tuple[str, ...]) -> bool:
+    """Token-boundary match. 'rai' must not fire inside 'training' or 'brain'."""
+    if not text or not markers:
+        return False
+    compiled = _MARKER_RES.get(markers)
+    if compiled is None:
+        parts = [
+            rf"(?<![a-z0-9_]){re.escape(marker.lower())}(?![a-z0-9_])"
+            for marker in markers
+        ]
+        compiled = re.compile("|".join(parts))
+        _MARKER_RES[markers] = compiled
+    return compiled.search(text.lower()) is not None
+
+
 def listing_record(raw: dict[str, Any], source: str = "huggingface") -> dict[str, Any]:
+    card_data = _as_dict(raw.get("cardData") or raw.get("card_data"))
+    tags = _as_str_list(raw.get("tags") or card_data.get("tags"))
+    ident = raw.get("id")
+    author = raw.get("author") or raw.get("created-by") or raw.get("created_by") or card_data.get("created_by") or card_data.get("created-by")
+    if not author and isinstance(ident, str) and "/" in ident:
+        author = ident.split("/", 1)[0]
+    trainers = card_data.get("trainers") or card_data.get("trainer") or raw.get("trainers")
+    runtime = (
+        raw.get("runtime_requirements")
+        or card_data.get("runtime")
+        or card_data.get("library_name")
+        or raw.get("library_name")
+        or raw.get("libraryName")
+    )
+    text = card_text_of(card_data, tags)
+    safety_wording = has_marker(text, SAFETY_WORDING_MARKERS)
+    org = org_of(ident, author)
+    files = sibling_names(raw.get("siblings") or raw.get("files") or card_data.get("siblings"))
     return {
-        "id": raw.get("id"),
+        "id": ident,
         "source": source,
         "source_revision": raw.get("sha"),
         "last_modified": raw.get("lastModified") or raw.get("last_modified"),
+        "created_at": raw.get("createdAt") or raw.get("created_at") or card_data.get("created"),
         "listing_state": LISTING_STATE,
         "gspc_state": GSPC_STATE,
         "downloads": raw.get("downloads"),
         "likes": raw.get("likes"),
         "pipeline_tag": raw.get("pipeline_tag") or raw.get("pipelineTag"),
-        "tags": raw.get("tags") or [],
+        "tags": tags,
         "gated": raw.get("gated"),
         "private": raw.get("private"),
-        "library_name": raw.get("library_name") or raw.get("libraryName"),
+        "library_name": raw.get("library_name") or raw.get("libraryName") or card_data.get("library_name"),
+        "license": license_of(raw, card_data, tags),
+        "created_by": author,
+        "author": author,
+        "org": org,
+        "trainers": _as_str_list(trainers),
+        "siblings": files,
+        "runtime_requirements": runtime,
+        "safety_wording": safety_wording,
+        "card_text": text,
         "artefact_manifest_digest": None,
         "lineage": None,
         "runtime_variant": None,
     }
+
+
+def axis_source_hits(record: dict[str, Any]) -> dict[str, bool]:
+    """Which of the 22 axes have Hub metadata that could source a later measurement.
+
+    A hit is DISCOVERED source material, never a grade. Financial axes hit when
+    the listing has an org/author — directory coverage of who runs what.
+    """
+    tags_text = " ".join(str(t).lower() for t in (record.get("tags") or []))
+    card_text = str(record.get("card_text") or "")
+    blob = f"{tags_text} {card_text}".lower()
+    license_v = record.get("license")
+    hits = {
+        "provenance": bool(license_v or record.get("created_by") or record.get("source_revision")),
+        "openness": bool(license_v or record.get("siblings")),
+        "continuity": bool(record.get("last_modified") or record.get("trainers")),
+        "conformance": bool(record.get("safety_wording")),
+        "machinery-conformity": bool(record.get("library_name") or record.get("runtime_requirements")),
+        "governance": bool(record.get("org") or record.get("author")),
+    }
+    for axis, markers in AXIS_TAG_MARKERS.items():
+        hits[axis] = has_marker(blob, markers) or (axis == "safety" and bool(record.get("safety_wording")))
+    org_present = bool(record.get("org") or record.get("author") or record.get("id"))
+    for axis in FINANCIAL_AXES:
+        hits[axis] = org_present
+    return {axis: bool(hits.get(axis)) for axis in ALL_AXES}
+
+
+def iter_records(jsonl_path: Path) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    if not jsonl_path.exists():
+        return rows
+    with jsonl_path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(row, dict) and row.get("id"):
+                rows.append(row)
+    return rows
+
+
+def _strip_grade_keys(payload: Any) -> Any:
+    if isinstance(payload, dict):
+        return {
+            key: _strip_grade_keys(value)
+            for key, value in payload.items()
+            if str(key).lower() not in GRADE_KEYS
+        }
+    if isinstance(payload, list):
+        return [_strip_grade_keys(item) for item in payload]
+    return payload
+
+
+def build_axis_source_document(records: list[dict[str, Any]]) -> dict[str, Any]:
+    n = len(records)
+    buckets = {
+        axis: {
+            "n": 0,
+            "source_fields": list(AXIS_SOURCE_FIELDS[axis]),
+            "listing_state": LISTING_STATE,
+            "gspc_state": GSPC_STATE,
+            "kind": "directory" if axis in FINANCIAL_AXES else "axis-source",
+        }
+        for axis in ALL_AXES
+    }
+    for record in records:
+        hits = axis_source_hits(record)
+        for axis, hit in hits.items():
+            if hit:
+                buckets[axis]["n"] += 1
+    return _strip_grade_keys(
+        {
+            "kind": AXIS_SOURCES_KIND,
+            "n": n,
+            "n_measured": 0,
+            "listing_state_all": LISTING_STATE,
+            "status_all": GSPC_STATE,
+            "axes": buckets,
+            "note": (
+                "Counts-only Hub axis-source census. Each n is the number of fetched "
+                "listings whose Hub metadata could source that axis. DISCOVERED/"
+                "UNMEASURED only. A listing is not a GSPC grade. Financial axis "
+                "names here are directory coverage (who runs what), not issuer grades."
+            ),
+        }
+    )
+
+
+def build_org_register(records: list[dict[str, Any]]) -> dict[str, Any]:
+    orgs: dict[str, dict[str, Any]] = {}
+    for record in records:
+        ident = record.get("id")
+        if not ident:
+            continue
+        org = record.get("org") or org_of(ident, record.get("author") or record.get("created_by"))
+        if not org:
+            org = "unknown"
+        slot = orgs.setdefault(
+            org,
+            {
+                "org": org,
+                "n": 0,
+                "card_links": [],
+                "coverage": {
+                    axis: {"n": 0, "kind": "directory"}
+                    for axis in FINANCIAL_AXES
+                },
+            },
+        )
+        slot["n"] += 1
+        link = f"{HUB_CARD}/{ident}"
+        if link not in slot["card_links"] and len(slot["card_links"]) < MAX_ORG_CARD_LINKS:
+            slot["card_links"].append(link)
+        hits = axis_source_hits(record)
+        for axis in FINANCIAL_AXES:
+            if hits.get(axis):
+                slot["coverage"][axis]["n"] += 1
+    rows = sorted(orgs.values(), key=lambda row: (-int(row["n"]), str(row["org"])))
+    return _strip_grade_keys(
+        {
+            "kind": ORG_REGISTER_KIND,
+            "n": len(records),
+            "n_measured": 0,
+            "n_orgs": len(rows),
+            "listing_state_all": LISTING_STATE,
+            "status_all": GSPC_STATE,
+            "financial_axes_role": "directory",
+            "orgs": rows,
+            "note": (
+                "Hub-level directory of discovered listings by lab/org. Each row is "
+                "n plus Hub card links. Not a grade, not a rank, not an issuer, not "
+                "XRPL. The 8 financial axis names are coverage/directory fields only."
+            ),
+        }
+    )
+
+
+def write_counts_only(
+    out_dir: Path,
+    records: list[dict[str, Any]] | None = None,
+    *,
+    jsonl_path: Path | None = None,
+    source: str | None = None,
+) -> dict[str, Any]:
+    """Write counts-only artifacts. Never writes listings.jsonl or weights."""
+    if records is None:
+        if jsonl_path is None:
+            jsonl_path = out_dir / "listings.jsonl"
+        records = iter_records(jsonl_path)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    axis_doc = build_axis_source_document(records)
+    org_doc = build_org_register(records)
+    unique_ids = [row.get("id") for row in records if row.get("id")]
+    existing = load_json(out_dir / "SUMMARY.json", {})
+    origin = source or existing.get("source") or "huggingface.co/api/models"
+    axis_doc = {**axis_doc, "source": origin, "n_measured": 0}
+    org_doc = {**org_doc, "source": origin, "n_measured": 0}
+    summary = {
+        "kind": KIND,
+        "listing_state_all": LISTING_STATE,
+        "status_all": GSPC_STATE,
+        "n": len(unique_ids),
+        "n_unique_ids": len(set(unique_ids)),
+        "n_measured": 0,
+        "weights_downloaded": 0,
+        "gpu_inference": 0,
+        "source": origin,
+        "axis_source_file": "axis-sources.json",
+        "org_register_file": "org-register.json",
+        "note": (
+            "Counts-only Hub census. n equals unique fetched ids. n_measured is 0: "
+            "a listing is DISCOVERED, not a GSPC grade. Do not stamp MEASURED."
+        ),
+    }
+    atomic_json(out_dir / "axis-sources.json", axis_doc)
+    atomic_json(out_dir / "org-register.json", org_doc)
+    atomic_json(out_dir / "SUMMARY.json", {**load_json(out_dir / "SUMMARY.json", {}), **summary})
+    return {"summary": summary, "axis_sources": axis_doc, "org_register": org_doc}
 
 
 def start_url(page_size: int, sort: str = "lastModified", direction: int = -1) -> str:
@@ -223,17 +604,44 @@ def load_seen(jsonl_path: Path) -> set[str]:
 
 
 def synthetic_model(index: int) -> dict[str, Any]:
+    org = "census-test"
+    name = f"model-{index:07d}"
     return {
-        "id": f"census-test/model-{index:07d}",
+        "id": f"{org}/{name}",
+        "author": org,
         "sha": f"{index:040x}"[:40],
         "lastModified": "2026-08-31T00:00:00.000Z",
+        "createdAt": "2026-01-01T00:00:00.000Z",
         "downloads": index,
         "likes": 0,
         "pipeline_tag": "text-generation",
-        "tags": ["test"],
+        "tags": [
+            "test",
+            "license:apache-2.0",
+            "safety",
+            "care",
+            "multimodal",
+            "watermark",
+            "art5",
+            "swarm",
+            "affect",
+            "jailbreak",
+        ],
         "gated": False,
         "private": False,
         "library_name": "transformers",
+        "license": "apache-2.0",
+        "siblings": [
+            {"rfilename": "config.json"},
+            {"rfilename": "README.md"},
+        ],
+        "cardData": {
+            "license": "apache-2.0",
+            "created_by": org,
+            "trainers": ["synthetic-trainer"],
+            "library_name": "transformers",
+            "tags": ["safety", "care"],
+        },
     }
 
 
@@ -250,6 +658,28 @@ def synthetic_hub_opener(*, total: int, page_size: int = 1000) -> Callable[..., 
         rows = [synthetic_model(i) for i in range(start, end)]
         headers: dict[str, str] = {}
         if end < total:
+            next_qs = dict(urllib.parse.parse_qsl(parsed.query, keep_blank_values=True))
+            next_qs["cursor"] = str(end)
+            next_url = urllib.parse.urlunparse(parsed._replace(query=urllib.parse.urlencode(next_qs)))
+            headers["link"] = f'<{next_url}>; rel="next"'
+        return {"body": json.dumps(rows).encode("utf-8"), "headers": headers, "status": 200}
+
+    return opener
+
+
+def fixture_hub_opener(listings: list[dict[str, Any]], page_size: int = 1000) -> Callable[..., Any]:
+    """Serve an explicit listing list through the same Link-cursor contract."""
+
+    def opener(request: urllib.request.Request) -> dict[str, Any]:
+        parsed = urllib.parse.urlparse(request.full_url)
+        qs = urllib.parse.parse_qs(parsed.query)
+        cursor = int(qs.get("cursor", ["0"])[0])
+        size = int(qs.get("limit", [str(page_size)])[0])
+        start = cursor
+        end = min(start + size, len(listings))
+        rows = listings[start:end]
+        headers: dict[str, str] = {}
+        if end < len(listings):
             next_qs = dict(urllib.parse.parse_qsl(parsed.query, keep_blank_values=True))
             next_qs["cursor"] = str(end)
             next_url = urllib.parse.urlunparse(parsed._replace(query=urllib.parse.urlencode(next_qs)))
@@ -356,6 +786,8 @@ def collect(
     opener: Callable[..., Any] | None = None,
     sleep_s: float = 0.0,
     progress: Callable[[dict[str, Any]], None] | None = None,
+    publish_dir: Path | None = None,
+    source: str | None = None,
 ) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
     jsonl_path = out_dir / "listings.jsonl"
@@ -452,8 +884,18 @@ def collect(
                 time.sleep(sleep_s)
 
     summary = write_summary(out_dir, state, jsonl_path)
+    origin = source or ("synthetic-hub-opener" if opener is not None else "huggingface.co/api/models")
+    artifacts = write_counts_only(out_dir, jsonl_path=jsonl_path, source=origin)
+    if publish_dir is not None:
+        write_counts_only(publish_dir, jsonl_path=jsonl_path, source=origin)
     atomic_json(cursor_path, state)
-    return {"state": state, "summary": summary, "jsonl": str(jsonl_path)}
+    return {
+        "state": state,
+        "summary": {**summary, **artifacts["summary"]},
+        "jsonl": str(jsonl_path),
+        "axis_sources": artifacts["axis_sources"],
+        "org_register": artifacts["org_register"],
+    }
 
 
 def restart_test(
@@ -549,8 +991,24 @@ def build_parser() -> argparse.ArgumentParser:
     collect_p.add_argument("--fresh", action="store_true")
     collect_p.add_argument("--since", default=None, help="ISO timestamp for delta watermark")
     collect_p.add_argument("--overlap-hours", type=float, default=6.0)
+    collect_p.add_argument(
+        "--publish-dir",
+        type=Path,
+        default=None,
+        help="Write counts-only axis-sources.json + org-register.json here (never listings.jsonl)",
+    )
+    collect_p.add_argument(
+        "--synthetic",
+        action="store_true",
+        help="Use the in-process Hub stand-in (no live API, no probes, no weights)",
+    )
+    collect_p.add_argument("--synthetic-total", type=int, default=32)
 
-    sub.add_parser("digest", parents=[common])
+    counts_p = sub.add_parser("counts", parents=[common])
+    counts_p.add_argument("--publish-dir", type=Path, default=None)
+
+    digest_p = sub.add_parser("digest", parents=[common])
+    digest_p.add_argument("--publish-dir", type=Path, default=None)
 
     restart = sub.add_parser("restart-test", parents=[common])
     restart.add_argument("--total", type=int, default=10_000)
@@ -571,6 +1029,10 @@ def _progress(state: dict[str, Any]) -> None:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.cmd == "collect":
+        opener = None
+        if getattr(args, "synthetic", False):
+            total = max(int(args.synthetic_total), int(args.limit or 0), 1)
+            opener = synthetic_hub_opener(total=total, page_size=args.page_size)
         result = collect(
             args.out_dir,
             limit=args.limit,
@@ -581,14 +1043,27 @@ def main(argv: list[str] | None = None) -> int:
             overlap_hours=args.overlap_hours,
             sleep_s=args.sleep,
             progress=_progress,
+            opener=opener,
+            publish_dir=getattr(args, "publish_dir", None),
+            source="synthetic-hub-opener" if opener is not None else "huggingface.co/api/models",
         )
         json.dump(result["summary"], sys.stdout, indent=2)
+        sys.stdout.write("\n")
+        return 0
+    if args.cmd == "counts":
+        artifacts = write_counts_only(args.out_dir, jsonl_path=args.out_dir / "listings.jsonl")
+        if args.publish_dir is not None:
+            write_counts_only(args.publish_dir, jsonl_path=args.out_dir / "listings.jsonl")
+        json.dump(artifacts["summary"], sys.stdout, indent=2)
         sys.stdout.write("\n")
         return 0
     if args.cmd == "digest":
         state = load_json(args.out_dir / "cursor.json", empty_state(args.out_dir, mode="baseline", page_size=1000, limit=None))
         summary = write_summary(args.out_dir, state, args.out_dir / "listings.jsonl")
-        json.dump(summary, sys.stdout, indent=2)
+        artifacts = write_counts_only(args.out_dir, jsonl_path=args.out_dir / "listings.jsonl")
+        if getattr(args, "publish_dir", None) is not None:
+            write_counts_only(args.publish_dir, jsonl_path=args.out_dir / "listings.jsonl")
+        json.dump({**summary, **artifacts["summary"]}, sys.stdout, indent=2)
         sys.stdout.write("\n")
         return 0
     if args.cmd == "restart-test":

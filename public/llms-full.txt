@@ -34,7 +34,12 @@ Quote live `counts`. A 402 is not delivery; a 404 is a phantom. Do not freeze a 
       "financial": {
         "axes": 8,
         "measured": 8,
-        "note": "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs — issuer-account flags read off the public ledger (financial n=16 on the live XRPL reader; provenance-controls n=6) and public statistical series, graded by rule with no model, no fleet and no judgement. None of the eight is a model comparison, so none has a leader, an accuracy or a separation determination, and none contributes to any mean below — measured is not the same as scored. The two former index slots are measured as component facts (ai-adoption-components, labour-components), never restored to the retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05)."
+        "as_of": "2026-09-07T11:30:35Z",
+        "reader_state": "REACHABLE",
+        "reader_as_of": "2026-09-06T23:49:21Z",
+        "source": "/interop/financial-facts-as-of.json",
+        "risk_verdict": "UNMEASURED",
+        "note": "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs — issuer-account flags read off the public ledger (financial n=16 on the live XRPL reader; provenance-controls n=6) and public statistical series, graded by rule with no model, no fleet and no judgement. None of the eight is a model comparison, so none has a leader, an accuracy or a separation determination, and none contributes to any mean below — measured is not the same as scored. The two former index slots are measured as component facts (ai-adoption-components, labour-components), never restored to the retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05). as_of is the producer run (scripts/grade_financial_ledgers.py), never a typed 2026-08-25."
       }
     },
     "sweep_note": "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept state. All 8 now carry published deterministic-facts run artifacts, so every one of the 22 axis on the board has a run behind it: 14 model-comparison axes and 8 deterministic-fact axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. 1 run artifact carries an Ed25519 signature; 7 are content-addressed but unsigned. No signature is inferred from a content_id.",

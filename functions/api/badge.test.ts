@@ -132,3 +132,113 @@ describe("/api/badge card binding", () => {
     });
   });
 });
+
+const assertNoCertificationClaim = (payload: unknown) => {
+  const text = typeof payload === "string" ? payload : JSON.stringify(payload);
+  expect(text.toLowerCase()).not.toMatch(/certified|certification/);
+};
+
+describe("/api/badge issued verified measured claims", () => {
+  const base = `card=${HASH}&subject=${encodeURIComponent(SUBJECT)}`;
+
+  it("issued and verified require a real subject-bound card; missing card stays grey", async () => {
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = new URL(
+        typeof input === "string" ? input : input instanceof URL ? input : input.url,
+      );
+      if (url.pathname === "/signed/card_index.json") {
+        return Response.json({ cards: [] });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    vi.stubGlobal("fetch", fetcher);
+
+    for (const claim of ["issued", "verified"]) {
+      const json = await (await invoke(`${base}&claim=${claim}&format=json`)).json();
+      expect(json.state).toBe("not-found");
+      expect(json.color).toBe("#9ca3af");
+      expect(json.message).toBe("card not found");
+      expect(String(json.message).toLowerCase()).not.toContain("measured");
+      assertNoCertificationClaim(json);
+
+      const shields = await (await invoke(`${base}&claim=${claim}&format=shields`)).json();
+      expect(shields.message).toBe("card not found");
+      expect(shields.color).toBe("#9ca3af");
+      assertNoCertificationClaim(shields);
+
+      const svg = await (await invoke(`${base}&claim=${claim}`)).text();
+      expect(svg).toContain("card not found");
+      expect(svg.toLowerCase()).not.toContain("measured");
+      assertNoCertificationClaim(svg);
+    }
+  });
+
+  it("issued means the card exists; verified means subject-bound; neither says certified", async () => {
+    installFetch();
+    vi.mocked(verifyCard).mockResolvedValue({ valid: false, id: HASH } as never);
+
+    const issued = await (await invoke(`${base}&claim=issued&format=json`)).json();
+    expect(issued).toMatchObject({
+      state: "issued",
+      message: "issued",
+      color: "#65a30d",
+    });
+    expect(String(issued.message).toLowerCase()).not.toContain("measured");
+    assertNoCertificationClaim(issued);
+
+    const verified = await (await invoke(`${base}&claim=verified&format=json`)).json();
+    expect(verified).toMatchObject({
+      state: "verified",
+      message: "verified",
+      color: "#65a30d",
+    });
+    expect(String(verified.message).toLowerCase()).not.toContain("measured");
+    assertNoCertificationClaim(verified);
+
+    const svg = await (await invoke(`${base}&claim=issued`)).text();
+    expect(svg).toContain("issued");
+    assertNoCertificationClaim(svg);
+  });
+
+  it("measured is absent unless the card is signed-valid", async () => {
+    installFetch();
+    vi.mocked(verifyCard).mockResolvedValue({ valid: false, id: HASH } as never);
+    const unsignedMeasured = await (
+      await invoke(`${base}&claim=measured&format=json`)
+    ).json();
+    expect(unsignedMeasured.state).toBe("unmeasured");
+    expect(unsignedMeasured.color).toBe("#9ca3af");
+    expect(unsignedMeasured.message).toBe("unmeasured");
+    assertNoCertificationClaim(unsignedMeasured);
+
+    vi.mocked(verifyCard).mockResolvedValue({ valid: true, id: HASH } as never);
+    const measured = await (await invoke(`${base}&claim=measured&format=json`)).json();
+    expect(measured).toMatchObject({
+      state: "measured",
+      message: "measured",
+      color: "#16a34a",
+    });
+    assertNoCertificationClaim(measured);
+
+    const shields = await (await invoke(`${base}&claim=measured&format=shields`)).json();
+    expect(shields.message).toBe("measured");
+    assertNoCertificationClaim(shields);
+  });
+
+  it("never claims certified, even when asked", async () => {
+    const json = await (await invoke(`${base}&claim=certified&format=json`)).json();
+    expect(json.state).toBe("refused");
+    expect(json.color).toBe("#9ca3af");
+    expect(json.message).toBe("not a certificate");
+    assertNoCertificationClaim(json);
+
+    const shields = await (await invoke(`claim=certified&format=shields`)).json();
+    expect(shields.message).toBe("not a certificate");
+    expect(shields.color).toBe("#9ca3af");
+    assertNoCertificationClaim(shields);
+
+    const svg = await (await invoke("claim=certified")).text();
+    expect(svg).toContain("not a certificate");
+    assertNoCertificationClaim(svg);
+  });
+});

@@ -35,7 +35,21 @@ python3 scripts/census/hub_census.py collect \
 
 # Rewrite SUMMARY.json + sha256 of listings.jsonl (census digest, not a GSPC cell)
 python3 scripts/census/hub_census.py digest --out-dir /tmp/hub-census-baseline
+
+# Counts-only 22-axis buckets + lab/org register (synthetic Hub, no probes)
+python3 scripts/census/hub_census.py collect \
+  --out-dir /tmp/hub-census-counts --fresh --synthetic --synthetic-total 32 --limit 32 \
+  --publish-dir public/interop/hf-census
 ```
+
+Counts-only artifacts (`axis-sources.json`, `org-register.json`, `SUMMARY.json`)
+live at `public/interop/hf-census/`. `n` is the unique id count of the fetch
+that wrote the file. `n_measured` is 0. The org register is who-runs-what
+(card links), never a lab grade. Agent-facing copy:
+
+- https://councilof.ai/api/gspc
+- https://councilof.ai/interop/x402-trust/latest.json
+- https://councilof.ai/signed/HOW-TO-VERIFY.md
 
 `cursor.json` stores the exact Hub `rel=next` URL after every page. A crash
 re-fetches the current page; the seen-set skips ids already written.
