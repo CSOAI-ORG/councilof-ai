@@ -53,7 +53,8 @@ describe("/api/rwa/evidence — helpers match the eater", () => {
 describe("/api/rwa/evidence — doors", () => {
   it("400 without a usable asset; 404 for an asset the free reader does not list (no payment taken)", async () => {
     stub();
-    expect((await evidence(ctx("/api/rwa/evidence"))).status).toBe(400);
+    // Bare GET must 402 so x402scan/CDP can index. 400 hid the door.
+    expect((await evidence(ctx("/api/rwa/evidence"))).status).toBe(402);
     const r = await evidence(ctx("/api/rwa/evidence?asset=NOPE&preview=1"));
     expect(r.status).toBe(404);
     expect((await r.json()).known_symbols).toEqual(["BBRL"]);

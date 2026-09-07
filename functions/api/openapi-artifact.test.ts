@@ -72,7 +72,7 @@ describe("the paid operations are exactly the doors in /.well-known/x402.json", 
   });
 
   it.each(paid().map(({ path, method, op }) => [`${method.toUpperCase()} ${path}`, op]))("%s documents the 402 challenge shape and the 200 deliverable", (_label, op) => {
-    expect(op["x-payment-info"].protocols).toEqual([{ x402: {} }]);
+    expect(op["x-payment-info"].protocols).toEqual(["x402"]);
     expect(op["x-payment-info"].price, "no price in the document — amounts live only in the 402").toBeUndefined();
     expect(op.security, "a paid op must not opt out of security").toBeUndefined();
     const r402 = op.responses["402"];
