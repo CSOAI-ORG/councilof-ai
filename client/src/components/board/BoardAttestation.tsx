@@ -38,6 +38,7 @@ interface SiteAttestation {
 interface LivingStamp {
   source?: string;
   updated?: string;
+  gold_run?: string;
   signed?: boolean;
   verification_state?: string;
   verifiable?: boolean;
@@ -72,7 +73,14 @@ interface InLaneAxis {
 interface BoardAttestationProps {
   data: {
     site_attestation?: SiteAttestation;
-    measured_on?: { living_stamp?: LivingStamp };
+    measured_on?: {
+      date?: string;
+      model?: string;
+      endpoint?: string;
+      grading?: string;
+      note?: string;
+      living_stamp?: LivingStamp;
+    };
     totals?: BoardTotals;
     measured_in_lane?: InLaneAxis[];
   } | null;
@@ -121,6 +129,8 @@ export default function BoardAttestation({
   const dark = variant === "dark";
   const att = data?.site_attestation;
   const stamp = data?.measured_on?.living_stamp;
+  const measuredOnDate = data?.measured_on?.date;
+  const goldRun = stamp?.gold_run;
   const totals = data?.totals;
   const inLane = data?.measured_in_lane;
 
@@ -234,6 +244,28 @@ export default function BoardAttestation({
               Fetch /.well-known/did.json → verify sig over canonical(payload minus site_attestation).
             </p>
           </button>
+        )}
+
+        {/* Measurement freshness — Aug dates are weeks old; not a live re-measure */}
+        {(measuredOnDate || goldRun) && (
+          <div className={`mt-3 rounded-lg border ${dark ? "border-sky-500/30 bg-sky-950/30" : "border-sky-300 bg-sky-50"} p-3`}>
+            <p className={`text-[10px] uppercase tracking-wide ${dark ? "text-sky-300/80" : "text-sky-800"}`}>
+              Measurement freshness · derived from GET /api/gspc · measured_on
+            </p>
+            {measuredOnDate && (
+              <p className={`mt-1 text-[12px] ${textPrimary}`}>
+                {measuredOnDate}
+              </p>
+            )}
+            {goldRun && (
+              <p className={`mt-1 text-[10px] ${textMuted}`}>
+                living_stamp.gold_run {formatDate(goldRun)} — payload stamp, not a live re-measure. Board counts stay derived (22·22·0); no new MEASURED invented here.
+              </p>
+            )}
+            <p className={`mt-1 text-[11px] ${dark ? "text-sky-200/70" : "text-sky-900/80"}`}>
+              These run dates are weeks old. Freshness is labelled; the board is not re-stamped from this UI.
+            </p>
+          </div>
         )}
 
         {/* Living Stamp Warning */}
