@@ -45,4 +45,14 @@ describe("llms.txt derives the tool counts it publishes", () => {
     const words = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"];
     expect(out).toMatch(new RegExp(`exactly the ${words[free]} free tools`));
   });
+
+  it("points at the live catalog-trust snapshot and does not freeze its counts", () => {
+    const tmpl = R("scripts/llms/llms.txt.tmpl");
+    const out = R("public/llms.txt");
+    const url = "https://councilof.ai/interop/x402-trust/latest.json";
+    expect(tmpl).toContain(url);
+    expect(out).toContain(url);
+    expect(tmpl, "template must not freeze the census pair").not.toMatch(/74\/100/);
+    expect(out, "published llms.txt must not freeze the census pair").not.toMatch(/74\/100/);
+  });
 });

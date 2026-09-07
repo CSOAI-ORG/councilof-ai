@@ -41,27 +41,35 @@ class CountsDoctrine(unittest.TestCase):
         self.assertTrue(ctr.counts_have_no_hosts(rnd["counts"]))
         self.assertEqual(rnd["counts"]["probed"], rnd["counts"]["ok"] + rnd["counts"]["unreachable"])
 
-    def test_append_writes_dated_and_latest(self):
+    def test_append_writes_dated_v2_and_does_not_clobber_v01_latest(self):
         with tempfile.TemporaryDirectory() as td:
+            v01 = {
+                "kind": "csoai.x402-catalog-trust-snapshot/0.1",
+                "counts": {"challenge_402": 70, "dead_404_or_unreachable": 12, "total": 100},
+            }
             existing = {
                 "kind": "csoai.x402-catalog-trust-snapshot/0.2",
                 "as_of": "2026-09-07T11:18:20Z",
                 "rounds": [{"source": "payai", "counts": {"challenge_402": 61, "total": 100}}],
                 "doctrine": "Counts only.",
             }
-            Path(td, "latest.json").write_text(json.dumps(existing))
+            Path(td, "latest.json").write_text(json.dumps(v01))
+            Path(td, "v2-2026-09-07.json").write_text(json.dumps(existing))
             with mock.patch.object(ctr, "fetch", return_value=(200, "", "")):
                 with mock.patch("sys.argv", ["catalog-trust-round-v2.py", "--append-financial", "--out-dir", td]):
                     rc = ctr.main()
             self.assertEqual(rc, 0)
             latest = json.loads(Path(td, "latest.json").read_text())
-            sources = [r.get("source") for r in latest["rounds"]]
-            self.assertIn("payai", sources)
-            self.assertIn("financial-facts", sources)
-            fin = next(r for r in latest["rounds"] if r["source"] == "financial-facts")
-            self.assertTrue(ctr.counts_have_no_hosts(fin["counts"]))
+            self.assertEqual(latest["kind"], "csoai.x402-catalog-trust-snapshot/0.1")
+            self.assertEqual(latest["counts"]["challenge_402"], v01["counts"]["challenge_402"])
             dated = list(Path(td).glob("v2-*.json"))
             self.assertTrue(dated)
+            v2 = json.loads(max(dated).read_text())
+            sources = [r.get("source") for r in v2["rounds"]]
+            self.assertIn("payai", sources)
+            self.assertIn("financial-facts", sources)
+            fin = next(r for r in v2["rounds"] if r["source"] == "financial-facts")
+            self.assertTrue(ctr.counts_have_no_hosts(fin["counts"]))
 
 
 if __name__ == "__main__":
