@@ -204,7 +204,7 @@ def main():
     p.add_argument("--sources", default="payai,x402scan,agenttools")
     p.add_argument("--out-dir", default="public/interop/x402-trust")
     p.add_argument("--append-financial", action="store_true",
-                   help="probe the 8 financial-axis sources and merge into latest.json; skip catalog re-probe")
+                   help="probe the 8 financial-axis sources and merge into v2-YYYY-MM-DD.json; never overwrite latest.json (v0.1 catalog snapshot)")
     a = p.parse_args()
 
     out = Path(a.out_dir)
@@ -212,19 +212,19 @@ def main():
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     if a.append_financial:
-        latest_path = out / "latest.json"
-        if latest_path.exists():
-            body = json.loads(latest_path.read_text())
+        v2s = sorted(out.glob("v2-*.json"))
+        if v2s:
+            body = json.loads(v2s[-1].read_text())
             rounds = [r for r in (body.get("rounds") or []) if r.get("source") != "financial-facts"]
         else:
             body, rounds = {"kind": "csoai.x402-catalog-trust-snapshot/0.2", "doctrine": "Counts only. A 402 is not delivery; a 404 is a phantom. Host details withheld. Never a certificate.", "method": "financial-facts append"}, []
         rounds.append(financial_round())
         body["rounds"] = rounds
+        body["kind"] = "csoai.x402-catalog-trust-snapshot/0.2"
         body["as_of"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         (out / f"v2-{stamp}.json").write_text(json.dumps(body, indent=2) + "\n")
-        latest_path.write_text(json.dumps(body, indent=2) + "\n")
         print(json.dumps(rounds[-1]))
-        print("wrote", out / f"v2-{stamp}.json", "and latest.json")
+        print("wrote", out / f"v2-{stamp}.json")
         return 0
 
     rounds = []
@@ -251,10 +251,9 @@ def main():
         "method": "One DRY GET per resource (template params substituted), UA %s, 15s timeout, 12 workers, zero payment/sign/side-effect." % UA,
     }
     (out / f"v2-{stamp}.json").write_text(json.dumps(body, indent=2) + "\n")
-    (out / "latest.json").write_text(json.dumps(body, indent=2) + "\n")
     for rnd in rounds:
         print(json.dumps(rnd))
-    print("wrote", out / f"v2-{stamp}.json", "and latest.json")
+    print("wrote", out / f"v2-{stamp}.json")
     return 0
 
 

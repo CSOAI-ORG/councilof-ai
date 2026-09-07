@@ -1,39 +1,16 @@
 {
-  "kind": "csoai.x402-catalog-trust-snapshot/0.2",
-  "as_of": "2026-09-07T11:53:08Z",
-  "rounds": [
-    {
-      "source": "payai",
-      "counts": {
-        "challenge_402": 61,
-        "serves_200": 0,
-        "alive_needs_input": 30,
-        "template_no_reply": 6,
-        "dead_404_or_unreachable": 3,
-        "other_error": 0,
-        "total": 100
-      }
-    },
-    {
-      "source": "x402scan",
-      "error": "HTTP Error 404: Not Found"
-    },
-    {
-      "source": "agenttools",
-      "error": "HTTP Error 404: Not Found"
-    },
-    {
-      "source": "financial-facts",
-      "counts": {
-        "probed": 16,
-        "ok": 14,
-        "unreachable": 2,
-        "challenge_402": 0,
-        "axes": 8,
-        "total": 16
-      }
-    }
-  ],
-  "doctrine": "Counts only. A 402 is not delivery; a 404 is a phantom. Host details withheld. Never a certificate.",
-  "method": "One DRY GET per resource (template params substituted), UA csoai-catalog-trust/0.2, 15s timeout, 12 workers, zero payment/sign/side-effect."
+  "kind": "csoai.x402-catalog-trust-snapshot/0.1",
+  "population": "PayAI facilitator catalog \u2014 100 rows \u00d7 1 DRY probe each (challenge terms only; nothing signed, nothing sent)",
+  "as_of": "2026-09-07T07:10:00Z",
+  "counts": {
+    "challenge_402": 74,
+    "serves_200": 2,
+    "alive_but_needs_input": 7,
+    "template_no_reply": 6,
+    "dead_404_or_unreachable": 11,
+    "total": 100
+  },
+  "headline": "74 of 100 rows answer a correct 402 challenge; 11 rows do not exist on the wire.",
+  "doctrine": "A 402 is NOT delivery; a 404 is a catalog row that does not exist. Counts only \u2014 the host list is withheld by design (a public list would name non-conformant parties); methodology published. Measurement, never certification.",
+  "method": "One GET per row (template params substituted where the row is a URL-template), UA csoai-trust-audit/0.1, 15s timeout, 12 workers, zero payment, zero signing, zero side effect."
 }

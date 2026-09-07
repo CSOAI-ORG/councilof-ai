@@ -5,6 +5,11 @@
 The GSPC board: **22 axis · 22 measured** = 14 model-comparison + 8 deterministic-fact.
 Measurement, not certification. Anyone can re-check.
 
+## 1b. x402 catalog trust (counts only — fetch, never freeze)
+
+GET https://councilof.ai/interop/x402-trust/latest.json
+Quote live `counts`. A 402 is not delivery; a 404 is a phantom. Do not freeze a pair in this file.
+
 ## 2. CURRENT BOARD SNAPSHOT
 
 ```json
