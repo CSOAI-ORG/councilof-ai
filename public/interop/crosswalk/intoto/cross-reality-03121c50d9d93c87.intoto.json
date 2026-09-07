@@ -2,12 +2,13 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 0,
+      "accuracy": 0.5333,
       "axis": "cross-reality",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "Qwen/Qwen3-30B-A3B",
+      "model": "deepseek-ai/DeepSeek-V3.2-Exp",
       "n": 30,
+      "route": "hf-router",
       "status": "MEASURED",
       "unmeasured": []
     },
@@ -30,7 +31,7 @@
     "reproducible": false,
     "source": {
       "canonical_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=False)",
-      "card_id": "047e7a524d3dfc8f4bca59ec484ae534d012df3e5db3b3394fbbd981771f1b1a",
+      "card_id": "03121c50d9d93c8793ff257804237c7c98c4d684109c10719deac8c74b95d4bf",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -58,9 +59,9 @@
   "subject": [
     {
       "digest": {
-        "sha256": "047e7a524d3dfc8f4bca59ec484ae534d012df3e5db3b3394fbbd981771f1b1a"
+        "sha256": "03121c50d9d93c8793ff257804237c7c98c4d684109c10719deac8c74b95d4bf"
       },
-      "name": "gspc-measurement-card/cross-reality/Qwen/Qwen3-30B-A3B"
+      "name": "gspc-measurement-card/cross-reality/deepseek-ai/DeepSeek-V3.2-Exp"
     }
   ]
 }
