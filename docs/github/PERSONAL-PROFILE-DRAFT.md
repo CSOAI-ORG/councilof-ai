@@ -69,15 +69,15 @@ Ed25519 cards → Merkle root → transparency-log witness → corrections ledge
 | layer | live now | where |
 |---|---|---|
 | 1 · Ed25519-signed measurement cards | **335** cards (`n_cards == n_cells`: True), one key `d4cb0eaa…` = `did:web:csoai.org#card-attestation-1` | [`/signed/card_index.json`](https://councilof.ai/signed/card_index.json) · [how to verify](https://councilof.ai/signed/HOW-TO-VERIFY.md) |
-| 2 · Signed Merkle public root | `csoai.public-root/v1` · root `6347384aa686…` · **167** leaves (`card_count == len(card_sha256)`: True) · as_of `2026-09-05T12:39:29Z` · signed: True | [`/root.json`](https://councilof.ai/root.json) · [how to verify the root](https://councilof.ai/signed/HOW-TO-VERIFY-ROOT.md) |
+| 2 · Signed Merkle public root | `csoai.public-root/v1` · root `8f39bc2f44d9…` · **168** leaves (`card_count == len(card_sha256)`: True) · as_of `2026-09-06T23:49:21Z` · signed: True | [`/root.json`](https://councilof.ai/root.json) · [how to verify the root](https://councilof.ai/signed/HOW-TO-VERIFY-ROOT.md) |
 | 3 · Transparency-log witness | Rekor **WITNESSED** · OpenTimestamps `STAMPED_PENDING_BITCOIN` · EAS `NOT_YET` · witnessed root `6347384aa686…` equals live `root.json` at derive time: **True** · pointer's own last drift check `DRIFTED` at `2026-09-05T12:39:37Z` · conflict `NONE` | [`/interop/root-witness-pointer.json`](https://councilof.ai/interop/root-witness-pointer.json) · [sidecar](https://councilof.ai/interop/root-witness-latest.json) |
 | 4 · Corrections ledger | **46** entries · latest `C-2026-0822-01` (2026-08-22) · signature_state **STALE** · CC-BY-4.0 | [`/api/corrections`](https://councilof.ai/api/corrections) |
 | Living board stamp | **SIGNED** under `did:web:csoai.org#board-attestation-1` | [`/api/gspc` → `measured_on.living_stamp`](https://councilof.ai/api/gspc) |
-| Third-party Hub cells | **826** cells: MEASURED 756 · UNMEASURED 70 · complete read: True | [`/api/hub-cards`](https://councilof.ai/api/hub-cards) |
+| Third-party Hub cells | **856** cells: MEASURED 856 · UNMEASURED 0 · complete read: True (as_of `2026-09-07T04:16:35.252Z`) | [`/api/hub-cards`](https://councilof.ai/api/hub-cards) |
 | Keys (DID) | `did:web:csoai.org` · 5 verification methods · card key x=`1MsOqhbV9Q…` | [`/.well-known/did.json`](https://csoai.org/.well-known/did.json) |
 | A2A agent card · x402 manifest | `Council of AI — Measurement Agent`, 6 skills · `csoai.x402/0.2`, network `eip155:8453`, mode `live`, 9 metered resources | [`/.well-known/agent.json`](https://councilof.ai/.well-known/agent.json) · [`/.well-known/x402.json`](https://councilof.ai/.well-known/x402.json) |
 
-Three different card numbers appear above on purpose and are never reconciled here: the **signed-card chain** (335), the **public-root leaf count** (167) and the **Hub cells** (826) are three populations with three source URLs. Quote each with its URL.
+Four populations appear above on purpose and are never reconciled here: the **signed-card index** (335 via `/signed/card_index.json`), the **living `/api/cards` registry** (336), the **public-root leaf count** (168 via `/root.json`), and the **Hub cells** (856/856/0 via `/api/hub-cards`). Quote each with its URL — never paste 335/335 as root or living API cards.
 
 **Buyers (the one number):** `distinct_nonself_payers` = **0** all-time · 0 in 30 d · 0 settlements · status MEASURED — read from [`/api/revenue`](https://councilof.ai/api/revenue). Published because a measurement body that hides its own zero has no standing to publish anyone else's.
 

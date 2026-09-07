@@ -19,7 +19,7 @@ to fill the hole. That is the whole point of the file.
 | Fact | Value @ 2026-09-05 | Source URL |
 |---|---|---|
 | Board axes | **22 axes / 22 measured / 0 unmeasured** | `/api/gspc` → `totals` |
-| Hub cells | **761 cells, 691 measured, 70 unmeasured** | `/api/hub-cards` → `counts` |
+| Hub cells | **856 cells, 856 measured, 0 unmeasured** (GET `/api/hub-cards` as_of `2026-09-07T04:16:35.252Z`; prior 856/856/0 STALE) | `/api/hub-cards` → `counts` |
 | Signed card index | **335** (`n_cards == n_cells == cards[].length`) | `/signed/card_index.json` |
 | Cards under the signed Merkle root | **167**, root `6347384a…`, `sig_ed25519` present | `/root.json` |
 | Published doors | **292** | `/.well-known/index.json` → `total_doors` |
@@ -52,7 +52,7 @@ Berkus assigns value for de-risking, not for earnings. The classic ceiling is ~�
 | Factor (risk it retires) | Artefact that proves it, or absence | Score |
 |---|---|---|
 | **Sound idea** (basic value) | `/api/gspc` serves 22 axes with 22 measured and 0 unmeasured, and `/.well-known/index.json` serves **292 doors**. The thesis is not a deck; it is an answering surface. | **£0.4M** |
-| **Prototype** (technology risk) | `/api/hub-cards` → 761 cells with **691 measured**; `/signed/card_index.json` → **335/335**; `/root.json` → **167** cards under a Merkle root carrying `sig_ed25519`; `councilof.ai/mcp` → 200; `/api/x402` rail `mode: live` with facilitator provisioned. This is the strongest factor and the artefacts are independently re-runnable. | **£0.5M** |
+| **Prototype** (technology risk) | `/api/hub-cards` → 761 cells with **691 measured**; `/signed/card_index.json` → **335/335 (signed index only; living `/api/cards`=336; root=168)**; `/root.json` → **167** cards under a Merkle root carrying `sig_ed25519`; `councilof.ai/mcp` → 200; `/api/x402` rail `mode: live` with facilitator provisioned. This is the strongest factor and the artefacts are independently re-runnable. | **£0.5M** |
 | **Quality management team** (execution risk) | Companies House 16939677 shows **one officer**. There is no artefact that evidences a second person. Scoring this above zero would be, in the August analysis's own words, *"gaming"*. | **£0.0M** |
 | **Strategic relationships** (market risk) | **330** servers in the official MCP registry and 292 doors are *distribution*, not relationships. Probing found **no signed commercial agreement, no counterparty signature, and no countersigned attestation** anywhere in the estate — `/.well-known/erc-8004-registries.json` records that even the ERC-8004 validator path is blocked on an upstream unshipped registry. Standards-body membership is participation, not endorsement. | **£0.1M** |
 | **Product rollout / sales** (production risk) | `/api/revenue` → `settled_usdc.count` is **null**. No receipt has settled. `free_forever` lists 9 URLs that are free by doctrine. There is no artefact of a sale. | **£0.0M** |
