@@ -1,0 +1,91 @@
+{
+  "kind": "csoai.skill-spectrometry.bank/b0",
+  "as_of": "2026-09-07",
+  "method": "skillspector-static-v0",
+  "flags": [
+    "--no-llm"
+  ],
+  "surface": "gspc.skill.spectrometry",
+  "n": 5,
+  "n_unit": "skills",
+  "not_a_score": true,
+  "writes_board": false,
+  "board_authority": "GET https://councilof.ai/api/gspc \u2014 22\u00b722\u00b70; this bank is NOT a board axis",
+  "items": [
+    {
+      "id": "b0-01-clean-echo",
+      "path": "/workspace/wave-g-skillspector-2026-09-07/b0-fixtures/clean-echo/skill",
+      "uri": "file:///workspace/wave-g-skillspector-2026-09-07/b0-fixtures/clean-echo/skill",
+      "format": "dir",
+      "content_sha256": "294527da1dadb9110d5cb8aa7455ebde5d4ce88cd78de3cba2df3d412aeebccf",
+      "skill_md_sha256": "9d559c5deadc0ef6b2682ba7c4a85d4bf17f616b84ebe38af781d1dbe5a99901",
+      "expected_status": "VALID",
+      "method": "skillspector-static-v0",
+      "flags": [
+        "--no-llm"
+      ],
+      "note": "no tools/network/env \u2014 expect zero findings under skillspector-static-v0",
+      "source": "measure-b0-fixtures-2026-09-07"
+    },
+    {
+      "id": "b0-02-prompt-inject",
+      "path": "/workspace/wave-g-skillspector-2026-09-07/b0-fixtures/prompt-inject/skill",
+      "uri": "file:///workspace/wave-g-skillspector-2026-09-07/b0-fixtures/prompt-inject/skill",
+      "format": "dir",
+      "content_sha256": "d05756148601fee8e1f658eb4d16fd892ef657823b0b29fe3d60d5408c781a55",
+      "skill_md_sha256": "c182f7ddb9e21e9adb36f9cdd222161755a951eef6d02deed5fdfd61f7d2e505",
+      "expected_status": "INVALID",
+      "method": "skillspector-static-v0",
+      "flags": [
+        "--no-llm"
+      ],
+      "note": "instruction-override bait \u2014 expect \u22651 finding",
+      "source": "measure-b0-fixtures-2026-09-07"
+    },
+    {
+      "id": "b0-03-data-exfil",
+      "path": "/workspace/wave-g-skillspector-2026-09-07/b0-fixtures/data-exfil/skill",
+      "uri": "file:///workspace/wave-g-skillspector-2026-09-07/b0-fixtures/data-exfil/skill",
+      "format": "dir",
+      "content_sha256": "2caf42c79c15c2379e6d27a56a0f05ebe8976fca0f41045c25166fefdb6fbd7f",
+      "skill_md_sha256": "4ed3c037e5f879b302d6207bdb567b83e428be47a1587315c460b4082a5c8c86",
+      "expected_status": "INVALID",
+      "method": "skillspector-static-v0",
+      "flags": [
+        "--no-llm"
+      ],
+      "note": "env+POST exfil bait \u2014 expect \u22651 finding",
+      "source": "measure-b0-fixtures-2026-09-07"
+    },
+    {
+      "id": "b0-04-privilege-shell",
+      "path": "/workspace/wave-g-skillspector-2026-09-07/b0-fixtures/privilege-shell/skill",
+      "uri": "file:///workspace/wave-g-skillspector-2026-09-07/b0-fixtures/privilege-shell/skill",
+      "format": "dir",
+      "content_sha256": "e62196a4279adf933fb98bf4ebfe7b49465dc518847d366837e1c3c1469f5767",
+      "skill_md_sha256": "a82610686491104c2bbab447bcaf1fe93c265ca1b8d21f395eefb1768ef30400",
+      "expected_status": "INVALID",
+      "method": "skillspector-static-v0",
+      "flags": [
+        "--no-llm"
+      ],
+      "note": "sudo/curl|bash bait \u2014 expect \u22651 finding",
+      "source": "measure-b0-fixtures-2026-09-07"
+    },
+    {
+      "id": "b0-05-missing-broken",
+      "path": "/workspace/wave-g-skillspector-2026-09-07/b0-fixtures/missing-broken/empty-dir",
+      "uri": "file:///workspace/wave-g-skillspector-2026-09-07/b0-fixtures/missing-broken/empty-dir",
+      "format": "dir",
+      "content_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "skill_md_sha256": null,
+      "expected_status": "UNCHECKABLE",
+      "method": "skillspector-static-v0",
+      "flags": [
+        "--no-llm"
+      ],
+      "note": "no SKILL.md \u2014 tool fail / unsupported",
+      "source": "measure-b0-fixtures-2026-09-07"
+    }
+  ]
+}
