@@ -135,8 +135,45 @@ export const CORS = {
   "access-control-allow-headers": "content-type",
 };
 
+// Wire protocol support. The door speaks exactly two versions: the base pin
+// (2024-11-05) and the current wire (2026-07-28) whose deltas we implement —
+// server/discover, _meta.protocolVersion and the resultType/ttlMs/cacheScope
+// tool-result envelope. It never echoes an intermediate version it does not
+// speak: a client offering 2025-* is answered with the base pin (unchanged
+// from the #1691 rule — the catalog date on /.well-known/mcp.json is a
+// different namespace from the JSON-RPC wire version).
+export const MCP_BASE_PROTOCOL = "2024-11-05";
+export const MCP_CURRENT_PROTOCOL = "2026-07-28";
+
+let wireVersion = MCP_BASE_PROTOCOL;
+export function setWireVersion(v: string) {
+  wireVersion = v;
+}
+export function getWireVersion() {
+  return wireVersion;
+}
+export function negotiateProtocol(offered?: string): string {
+  if (!offered) return MCP_BASE_PROTOCOL;
+  if (offered === MCP_CURRENT_PROTOCOL) return MCP_CURRENT_PROTOCOL;
+  if (offered === MCP_BASE_PROTOCOL) return MCP_BASE_PROTOCOL;
+  return MCP_BASE_PROTOCOL;
+}
+
 export function rpc(id: unknown, result: unknown) {
-  return Response.json({ jsonrpc: "2.0", id: id ?? null, result }, { headers: { ...CORS } });
+  let r = result;
+  // 2026-07-28 tool results carry the cache envelope. Only tool results (they
+  // carry structuredContent) get it; every other result shape stays as-is.
+  if (
+    wireVersion === MCP_CURRENT_PROTOCOL &&
+    r !== null &&
+    typeof r === "object" &&
+    !Array.isArray(r) &&
+    "structuredContent" in r &&
+    !("resultType" in r)
+  ) {
+    r = { ...r, resultType: "ToolResult", ttlMs: 300_000, cacheScope: "shared" };
+  }
+  return Response.json({ jsonrpc: "2.0", id: id ?? null, result: r }, { headers: { ...CORS } });
 }
 
 async function loadAnchors(origin: string): Promise<Anchor[]> {
