@@ -1935,15 +1935,20 @@
       "get": {
         "operationId": "get__api_fulfill",
         "responses": {
-          "200": {
+          "404": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "configured": false,
+                  "public_prices": false
+                }
+              }
             },
-            "description": "OK"
+            "description": "Door closed \u2014 no public prices; a grade is never sold"
           }
         },
-        "security": [],
-        "summary": "* GET /api/fulfill \u2014 public fulfillment door is closed.\n *\n * No public prices. A grade is never sold. Verify is free at /gspc-verify.\n * Get measured at /assess. We do not remediate. Empty cells stay"
+        "summary": "* GET /api/fulfill \u2014 public fulfillment door is closed.\n *\n * No public prices. A grade is never sold. Verify is free at /gspc-verify.\n * Get measured at /assess. We do not remediate. Empty cells stay",
+        "x-csoai-lifecycle": "DOOR_CLOSED"
       }
     },
     "/api/growth-loops": {
@@ -3759,7 +3764,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 85,
+    "public_operations": 84,
     "quarantined": [
       {
         "buyable": false,
