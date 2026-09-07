@@ -59,7 +59,9 @@ jobs:
           else
             echo "no mill artifact on $RUN_ID — nothing to land"
           fi
-          find staged -type f | head -50
+          # head closes the pipe early; with pipefail that is SIGPIPE/exit 1
+          # once a spray uploads >50 files (run 34091210424).
+          find staged -type f | head -50 || true
           ls -la staged || true
       - name: land honest UNSIGNED cards into the sign inbox (dedupe per (model, axis))
         id: land
