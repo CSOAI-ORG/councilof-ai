@@ -308,3 +308,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     { "cache-control": "no-store", ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}) },
   );
 };
+
+/** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
+export const onRequestPost = onRequestGet;

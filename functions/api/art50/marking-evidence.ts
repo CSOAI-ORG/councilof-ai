@@ -261,6 +261,45 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
   const input = await readInput(request, url);
   if (input.error) return json({ schema: KIND, error: "uncheckable", reason: input.error, url: input.url, http: input.http }, input.error.includes("cap") ? 413 : 400);
   if (!input.source) {
+    if (preview) {
+      return json(
+        {
+          schema: KIND,
+          error: "bad_request",
+          reason: "supply url=<https://…> or POST the bytes / a manifest to measure",
+        },
+        400,
+      );
+    }
+    const description =
+      "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.";
+    const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
+    const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+    if (!payment.ok) {
+      return paymentRequiredResponseSigned(
+        buildPaymentRequiredV2({
+          resourceUrl,
+          description,
+          serviceName: "CSOAI Art50 Marking",
+          tags: ["art50", "marking", "c2pa", "x402"],
+          accepts,
+          bazaar: declareBazaarHttpGet({
+            method: "GET",
+            queryParams: { url: "https://councilof.ai/og-image.png" },
+            queryParamsSchema: {
+              properties: {
+                url: { type: "string", format: "uri", description: "HTTPS URL of the output to measure" },
+                preview: { type: "string", const: "1" },
+              },
+              required: ["url"],
+            },
+            outputExample: { schema: KIND, measurement: { checked: [] } },
+          }),
+          csoai: { schema: KIND, lid: CSOAI_LID, never: ["conformity", "certificate"] },
+        }),
+        env,
+      );
+    }
     return json(
       {
         schema: KIND,

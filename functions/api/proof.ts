@@ -284,3 +284,6 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
     note: "Inclusion from the card wrapper. public/proofs/ may trail up to the last publish.",
   });
 };
+
+/** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
+export const onRequestPost = onRequestGet;

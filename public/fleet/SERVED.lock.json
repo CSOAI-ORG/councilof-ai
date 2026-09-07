@@ -1,0 +1,2536 @@
+{
+  "kind": "csoai.fleet-lock/0.1",
+  "fleet": "SERVED",
+  "as_of": "2026-09-07T02:26:21Z",
+  "n_locked": 265,
+  "scanned": 2000,
+  "hit_rate": "265 of 2000 text-generation models scanned had a live inference provider",
+  "selector": "GET /api/models?pipeline_tag=text-generation&sort=downloads&expand[]=inferenceProviderMapping, keeping only rows whose inferenceProviderMapping is non-empty Every row carries pipeline_tag=text-generation, which is how the mill chooses the chat endpoint.",
+  "why": "HF2200 ranks by DOWNLOADS, which is not the same as SERVABLE. The 2026-09-06T23:53Z mill run proves it: 20 shards attempted 283 models and every one came back UNCHECKABLE with HTTP 400 'The requested model ... is not supported' \u2014 283 of 283, none for credits or auth. A model with no inference provider cannot be measured through the router at any budget, so a lock ranked by downloads spends the whole fleet budget on models that answer 400.",
+  "status_all": "UNMEASURED",
+  "n_measured": 0,
+  "enters_board_means": false,
+  "live_board": "GET https://councilof.ai/api/gspc",
+  "not_a_claim": "Having a provider means REACHABLE, not measured. Every row here is UNMEASURED until a run produces n>=30 on an axis; n<30 stays unquotable.",
+  "models": [
+    {
+      "slug": "Qwen/Qwen3-0.6B",
+      "downloads": 21510837,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-8B",
+      "downloads": 13209969,
+      "providers": [
+        "nscale",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-7B-Instruct",
+      "downloads": 11049595,
+      "providers": [
+        "together",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-1.5B-Instruct",
+      "downloads": 7308263,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-3B-Instruct",
+      "downloads": 6815899,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
+      "downloads": 6769333,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "openai/gpt-oss-20b",
+      "downloads": 6522380,
+      "providers": [
+        "groq",
+        "novita",
+        "nscale",
+        "together",
+        "featherless-ai",
+        "ovhcloud",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-4B",
+      "downloads": 6275473,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "meta-llama/Llama-3.2-1B-Instruct",
+      "downloads": 6081863,
+      "providers": [
+        "featherless-ai",
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-0.5B-Instruct",
+      "downloads": 5880393,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "meta-llama/Llama-3.1-8B-Instruct",
+      "downloads": 5630085,
+      "providers": [
+        "novita",
+        "nscale",
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "openai/gpt-oss-120b",
+      "downloads": 5229370,
+      "providers": [
+        "groq",
+        "novita",
+        "cerebras",
+        "nscale",
+        "together",
+        "fireworks-ai",
+        "featherless-ai",
+        "scaleway",
+        "baseten",
+        "ovhcloud",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-32B",
+      "downloads": 5153212,
+      "providers": [
+        "nscale",
+        "featherless-ai",
+        "deepinfra",
+        "groq",
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "downloads": 4486631,
+      "providers": [
+        "novita",
+        "together",
+        "fireworks-ai",
+        "baseten",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-4B-Instruct-2507",
+      "downloads": 3548944,
+      "providers": [
+        "nscale",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-1.7B",
+      "downloads": 3447859,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-14B-Instruct",
+      "downloads": 2655159,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "google/gemma-3-1b-it",
+      "downloads": 2504623,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "downloads": 2301302,
+      "providers": [
+        "nscale",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-30B-A3B",
+      "downloads": 2147543,
+      "providers": [
+        "deepinfra",
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-32B-Instruct",
+      "downloads": 2092946,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-4B-Base",
+      "downloads": 1976108,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "downloads": 1919973,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-4.7-Flash",
+      "downloads": 1915940,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "zai-org",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-1.7B-Base",
+      "downloads": 1901396,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "nvidia/Gemma-4-31B-IT-NVFP4",
+      "downloads": 1812977,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V4-Flash",
+      "downloads": 1757120,
+      "providers": [
+        "novita",
+        "deepinfra",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-14B",
+      "downloads": 1734782,
+      "providers": [
+        "nscale",
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "downloads": 1703797,
+      "providers": [
+        "nscale",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-0.5B",
+      "downloads": 1688938,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "downloads": 1663874,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "ornith-ai/Ornith-1.0-9B",
+      "downloads": 1585573,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V3.2",
+      "downloads": 1555091,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "meta-llama/Llama-3.2-3B-Instruct",
+      "downloads": 1450387,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "meta-llama/Meta-Llama-3-8B-Instruct",
+      "downloads": 1385115,
+      "providers": [
+        "featherless-ai",
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "farbodtavakkoli/OTel-LLM-27B-IT",
+      "downloads": 1346989,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-5.2-FP8",
+      "downloads": 1316966,
+      "providers": [
+        "zai-org"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "mistralai/Mistral-7B-Instruct-v0.2",
+      "downloads": 1266011,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "MiniMaxAI/MiniMax-M2.7",
+      "downloads": 1222347,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+      "downloads": 1180522,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
+      "downloads": 1098601,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-1.5B",
+      "downloads": 1075947,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V3-0324",
+      "downloads": 1042736,
+      "providers": [
+        "featherless-ai",
+        "deepinfra",
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V3",
+      "downloads": 1039268,
+      "providers": [
+        "deepinfra",
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-5.2",
+      "downloads": 997060,
+      "providers": [
+        "novita",
+        "together",
+        "fireworks-ai",
+        "featherless-ai",
+        "zai-org",
+        "scaleway",
+        "baseten",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "OBLITERATUS/Qwen3.8-27B-OBLITERATED",
+      "downloads": 995160,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
+      "downloads": 991215,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "downloads": 862841,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-0.6B-Base",
+      "downloads": 852011,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "meta-llama/Llama-3.3-70B-Instruct",
+      "downloads": 834520,
+      "providers": [
+        "novita",
+        "together",
+        "featherless-ai",
+        "scaleway",
+        "ovhcloud",
+        "groq"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2-0.5B",
+      "downloads": 823089,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-R1",
+      "downloads": 789555,
+      "providers": [
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2-1.5B-Instruct",
+      "downloads": 736554,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+      "downloads": 736011,
+      "providers": [
+        "featherless-ai",
+        "scaleway"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "google/gemma-2-9b-it",
+      "downloads": 702140,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "downloads": 695929,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "microsoft/phi-4",
+      "downloads": 695440,
+      "providers": [
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-7B",
+      "downloads": 686151,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "google/gemma-2-2b-it",
+      "downloads": 652058,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "prism-ml/Ternary-Bonsai-27B-gguf",
+      "downloads": 638408,
+      "providers": [
+        "together"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V4-Pro",
+      "downloads": 634620,
+      "providers": [
+        "novita",
+        "baseten",
+        "deepinfra",
+        "together",
+        "fireworks-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-14B-Base",
+      "downloads": 627436,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "dphn/Dolphin-Mistral-24B-Venice-Edition",
+      "downloads": 608429,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "swiss-ai/Apertus-8B-Instruct-2509",
+      "downloads": 589150,
+      "providers": [
+        "publicai",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Math-1.5B",
+      "downloads": 585792,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-7B",
+      "downloads": 580134,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+      "downloads": 549248,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "microsoft/Phi-3-mini-4k-instruct",
+      "downloads": 475938,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+      "downloads": 471700,
+      "providers": [
+        "fireworks-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "microsoft/Phi-4-mini-instruct",
+      "downloads": 455935,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-3B-Instruct",
+      "downloads": 441457,
+      "providers": [
+        "nscale",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-72B-Instruct",
+      "downloads": 439408,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "MiniMaxAI/MiniMax-M2.5",
+      "downloads": 433501,
+      "providers": [
+        "novita",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "IlyaGusev/saiga_llama3_8b",
+      "downloads": 411059,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-5.3",
+      "downloads": 410074,
+      "providers": [
+        "novita",
+        "together",
+        "fireworks-ai",
+        "zai-org",
+        "baseten",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-Coder-Next",
+      "downloads": 408899,
+      "providers": [
+        "novita",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-8B-Base",
+      "downloads": 407176,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4",
+      "downloads": 405326,
+      "providers": [
+        "fireworks-ai",
+        "together"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "NousResearch/Hermes-3-Llama-3.1-8B",
+      "downloads": 392876,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2-7B-Instruct",
+      "downloads": 388915,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+      "downloads": 373671,
+      "providers": [
+        "nscale",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+      "downloads": 373244,
+      "providers": [
+        "nscale",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-4B-Thinking-2507",
+      "downloads": 364616,
+      "providers": [
+        "nscale",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+      "downloads": 362759,
+      "providers": [
+        "nscale"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-5.1-FP8",
+      "downloads": 345513,
+      "providers": [
+        "zai-org"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/Meta-Llama-3.1-8B-Instruct",
+      "downloads": 343037,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "meta-llama/Llama-3.1-70B-Instruct",
+      "downloads": 339980,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-235B-A22B",
+      "downloads": 328696,
+      "providers": [
+        "novita",
+        "nscale",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "InternScience/Agents-A1-4B",
+      "downloads": 326564,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "ornith-ai/Ornith-1.5-9B",
+      "downloads": 325585,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "XiaomiMiMo/MiMo-V2.5",
+      "downloads": 323869,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "NousResearch/Meta-Llama-3.1-8B-Instruct",
+      "downloads": 305409,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-3B",
+      "downloads": 302757,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+      "downloads": 279721,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "TrevorJS/gemma-4-31B-it-uncensored",
+      "downloads": 270624,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2-0.5B-Instruct",
+      "downloads": 269700,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "allenai/Olmo-3-7B-Instruct",
+      "downloads": 255727,
+      "providers": [
+        "publicai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Math-1.5B-Instruct",
+      "downloads": 250899,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2-7B",
+      "downloads": 247508,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/Qwen2.5-7B-Instruct",
+      "downloads": 245432,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-1.5B",
+      "downloads": 238075,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+      "downloads": 231785,
+      "providers": [
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "MiniMaxAI/MiniMax-M2",
+      "downloads": 227557,
+      "providers": [
+        "novita",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V3.1",
+      "downloads": 226677,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-R1-0528",
+      "downloads": 213477,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-7B-Instruct-1M",
+      "downloads": 209251,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "QCRI/Fanar-1-9B-Instruct",
+      "downloads": 207699,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "moonshotai/Kimi-Linear-48B-A3B-Instruct",
+      "downloads": 183415,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/Qwen2.5-Coder-7B-Instruct",
+      "downloads": 169958,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "mistralai/Mistral-7B-Instruct-v0.1",
+      "downloads": 163030,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "moonshotai/Kimi-K2-Instruct",
+      "downloads": 160774,
+      "providers": [
+        "novita",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-14B",
+      "downloads": 157808,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3Guard-Gen-0.6B",
+      "downloads": 156542,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "meta-llama/Llama-Guard-3-8B",
+      "downloads": 156001,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V4-Pro-0813",
+      "downloads": 154525,
+      "providers": [
+        "novita",
+        "together",
+        "fireworks-ai",
+        "baseten",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "typhoon-ai/typhoon2.5-qwen3-4b",
+      "downloads": 149594,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Efficient-Large-Model/gemma-2-2b-it",
+      "downloads": 143029,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-32B-FP8",
+      "downloads": 142727,
+      "providers": [
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "yentinglin/Llama-3-Taiwan-8B-Instruct",
+      "downloads": 140526,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "TsinghuaC3I/Llama-3-8B-UltraMedical",
+      "downloads": 133696,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+      "downloads": 129310,
+      "providers": [
+        "novita",
+        "nscale",
+        "scaleway",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2-1.5B",
+      "downloads": 119896,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "meta-llama/Llama-2-13b-chat-hf",
+      "downloads": 118931,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/Llama-3.1-8B-Instruct",
+      "downloads": 116151,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-4.5-Air",
+      "downloads": 114206,
+      "providers": [
+        "novita",
+        "zai-org"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "stepfun-ai/Step-3.5-Flash",
+      "downloads": 111933,
+      "providers": [
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "latam-gpt/Llama-3.1-70B-LatamGPT-SFT-1.0",
+      "downloads": 105249,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3Guard-Gen-4B",
+      "downloads": 104753,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.5",
+      "downloads": 103088,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/gemma-3-1b-it",
+      "downloads": 95642,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "NousResearch/Meta-Llama-3-8B-Instruct",
+      "downloads": 89835,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-5.1",
+      "downloads": 86751,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "zai-org",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+      "downloads": 83902,
+      "providers": [
+        "novita",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "openthaigpt/openthaigpt1.5-7b-instruct",
+      "downloads": 83115,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+      "downloads": 82681,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "XiaomiMiMo/MiMo-V2-Flash",
+      "downloads": 82586,
+      "providers": [
+        "featherless-ai",
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "LaaP-ai/qwen-base-invoicev1.01-1.5B",
+      "downloads": 81097,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-4.5",
+      "downloads": 80940,
+      "providers": [
+        "zai-org"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-14B",
+      "downloads": 78912,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "nvidia/Llama-3.1-Nemotron-Nano-8B-v1",
+      "downloads": 75443,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen1.5-0.5B-Chat",
+      "downloads": 74014,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "typhoon-ai/llama3.1-typhoon2-8b-instruct",
+      "downloads": 73648,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-14B-Instruct-1M",
+      "downloads": 71918,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "SentientAGI/Dobby-Mini-Unhinged-Llama-3.1-8B",
+      "downloads": 71870,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/QwQ-32B",
+      "downloads": 70356,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "openai/gpt-oss-safeguard-20b",
+      "downloads": 68133,
+      "providers": [
+        "groq",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Goedel-LM/Goedel-Prover-V2-32B",
+      "downloads": 67963,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/Qwen2.5-14B-Instruct",
+      "downloads": 66239,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-5",
+      "downloads": 64771,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "zai-org",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V3.2-Exp",
+      "downloads": 64295,
+      "providers": [
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-32B",
+      "downloads": 63487,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "HuggingFaceH4/zephyr-7b-beta",
+      "downloads": 63153,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-4.7",
+      "downloads": 59938,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "zai-org",
+        "baseten",
+        "deepinfra",
+        "cerebras"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "PrimeIntellect/Qwen3-0.6B",
+      "downloads": 57454,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "utter-project/EuroLLM-22B-Instruct-2512",
+      "downloads": 57264,
+      "providers": [
+        "publicai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Vikhrmodels/Vikhr-Nemo-12B-Instruct-R-21-09-24",
+      "downloads": 55570,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Math-7B-Instruct",
+      "downloads": 54407,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "meta-llama/Meta-Llama-3-70B-Instruct",
+      "downloads": 53642,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen1.5-0.5B",
+      "downloads": 52142,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3.8-2.4T-A95B",
+      "downloads": 51714,
+      "providers": [
+        "novita",
+        "together",
+        "fireworks-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3Guard-Gen-8B",
+      "downloads": 50268,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "GritLM/GritLM-7B",
+      "downloads": 49404,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "codellama/CodeLlama-7b-Instruct-hf",
+      "downloads": 48439,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "poolside/Laguna-S-2.1",
+      "downloads": 46646,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+      "downloads": 46538,
+      "providers": [
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "fdtn-ai/Foundation-Sec-1.1-8B-Instruct",
+      "downloads": 45977,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "moonshotai/Kimi-K2-Thinking",
+      "downloads": 45685,
+      "providers": [
+        "featherless-ai",
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Math-7B",
+      "downloads": 44452,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "skt/A.X-4.0-Light",
+      "downloads": 43818,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "OBLITERATUS/gemma-4-E4B-it-OBLITERATED",
+      "downloads": 40123,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "fdtn-ai/Foundation-Sec-8B-Instruct",
+      "downloads": 37798,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "moonshotai/Kimi-K2-Instruct-0905",
+      "downloads": 36773,
+      "providers": [
+        "novita",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "google/gemma-2-27b-it",
+      "downloads": 35328,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/gemma-2-2b-it",
+      "downloads": 35218,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "win10/EVE-27b-XENO-HAT-DeepSeek-V4-Flash",
+      "downloads": 33582,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "nvidia/Llama-3.1-8B-Instruct-FP8",
+      "downloads": 33385,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "upstage/SOLAR-10.7B-Instruct-v1.0",
+      "downloads": 33198,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-Z1-32B-0414",
+      "downloads": 33125,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen1.5-1.8B-Chat",
+      "downloads": 32038,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+      "downloads": 31719,
+      "providers": [
+        "novita",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2-72B-Instruct",
+      "downloads": 31166,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/gemma-2b-it",
+      "downloads": 31153,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "MiniMaxAI/MiniMax-M2.1",
+      "downloads": 31101,
+      "providers": [
+        "novita",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/Qwen3-8B",
+      "downloads": 30869,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "NousResearch/Meta-Llama-3.1-70B-Instruct",
+      "downloads": 29863,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "XiaomiMiMo/MiMo-V2.5-Pro",
+      "downloads": 29447,
+      "providers": [
+        "novita",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/Mistral-Small-24B-Instruct-2501",
+      "downloads": 26869,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "google/gemma-7b-it",
+      "downloads": 26546,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "swiss-ai/Apertus-70B-Instruct-2509",
+      "downloads": 26202,
+      "providers": [
+        "publicai",
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/llama-3-8b-Instruct",
+      "downloads": 25966,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "KISTI-KONI/KONI-Llama3.1-8B-Instruct-20241024",
+      "downloads": 25545,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "mlabonne/NeuralMonarch-7B",
+      "downloads": 25028,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "google/medgemma-27b-text-it",
+      "downloads": 24107,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-4-9B-0414",
+      "downloads": 23940,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Featherless-Chat-Models/llama2-13b-chat-hf",
+      "downloads": 23663,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "fdtn-ai/Foundation-Sec-8B-Reasoning",
+      "downloads": 23366,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/Llama-3.3-70B-Instruct",
+      "downloads": 23024,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-3B",
+      "downloads": 23001,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
+      "downloads": 22710,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "baidu/ERNIE-4.5-21B-A3B-PT",
+      "downloads": 22193,
+      "providers": [
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-0.5B",
+      "downloads": 21573,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "DreamFast/gemma-3-12b-it-heretic-v2",
+      "downloads": 20309,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-4.7-FP8",
+      "downloads": 20101,
+      "providers": [
+        "zai-org"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/llama-2-7b-chat",
+      "downloads": 19568,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "AEON-7/Qwen3.8-27B-AEON-ULTIMATE-UNCENSORED-BF16",
+      "downloads": 19339,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen1.5-4B",
+      "downloads": 19144,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "ibm-granite/granite-4.2-3b",
+      "downloads": 19003,
+      "providers": [
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Intel/neural-chat-7b-v3-3",
+      "downloads": 18864,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "inclusionAI/Ling-3.0-flash",
+      "downloads": 18655,
+      "providers": [
+        "novita",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/gemma-2-9b-it",
+      "downloads": 18563,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Salesforce/Llama-xLAM-2-8b-fc-r",
+      "downloads": 18170,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "m8than/Mistral-Nemo-Instruct-2407-lenient-chatfix",
+      "downloads": 18037,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "m8than/gemma-2-9b-it",
+      "downloads": 17846,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "zai-org/GLM-4.6",
+      "downloads": 17422,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "zai-org",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "ibm-granite/granite-4.2-8b",
+      "downloads": 17294,
+      "providers": [
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "m8than/Llama-2-7b-chat-hf",
+      "downloads": 17205,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Nanbeige/Nanbeige4.1-3B",
+      "downloads": 17085,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "DreamFast/gemma-3-12b-it-heretic",
+      "downloads": 17019,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "allenai/Llama-3.1-Tulu-3-8B-SFT",
+      "downloads": 16975,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V3.1-Terminus",
+      "downloads": 16898,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "FlagAlpha/Llama3-Chinese-8B-Instruct",
+      "downloads": 16820,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "DeepHat/DeepHat-V1-7B",
+      "downloads": 16268,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "WeiboAI/VibeThinker-3B",
+      "downloads": 16187,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Zynerji/Ektome-Qwen3.8-27B-PristinelyUncensored",
+      "downloads": 15865,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "typhoon-ai/llama-3-typhoon-v1.5-8b-instruct",
+      "downloads": 15764,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Featherless-Chat-Models/Mistral-7B-Instruct-v0.2",
+      "downloads": 15399,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/Meta-Llama-3.1-70B-Instruct",
+      "downloads": 15388,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen1.5-4B-Chat",
+      "downloads": 15379,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "RLHFlow/Llama3.1-8B-PRM-Deepseek-Data",
+      "downloads": 15256,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "qqlabs/llama3_1_relevance_dev",
+      "downloads": 15192,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen1.5-1.8B",
+      "downloads": 14558,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "mlabonne/NeuralDaredevil-8B-abliterated",
+      "downloads": 14074,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/QwQ-32B-Preview",
+      "downloads": 14071,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "lmstudio-community/Devstral-Small-2507-MLX-bf16",
+      "downloads": 14057,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "princeton-nlp/Llama-3-8B-ProLong-64k-Base",
+      "downloads": 13396,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "huihui-ai/Qwen2.5-32B-Instruct-abliterated",
+      "downloads": 13141,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen1.5-14B-Chat",
+      "downloads": 13105,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Orenguteng/Llama-3.1-8B-Lexi-Uncensored-V2",
+      "downloads": 12825,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "typhoon-ai/llama-3-typhoon-v1.5-8b",
+      "downloads": 12414,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "NousResearch/Meta-Llama-3-70B-Instruct",
+      "downloads": 12413,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "tencent/Hy3",
+      "downloads": 12256,
+      "providers": [
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen3-235B-A22B-Thinking-2507",
+      "downloads": 12191,
+      "providers": [
+        "novita",
+        "featherless-ai",
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF",
+      "downloads": 11860,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "nvidia/Llama-3.1-Nemotron-Safety-Guard-8B-v3",
+      "downloads": 11099,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "empero-ai/Qwable-9B-Claude-Fable-5",
+      "downloads": 10965,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "mlabonne/Meta-Llama-3.1-8B-Instruct-abliterated",
+      "downloads": 10902,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "OpenPipe/Qwen3-14B-Instruct",
+      "downloads": 10824,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Qwen/Qwen2-72B",
+      "downloads": 10809,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "openchat/openchat-3.5-0106",
+      "downloads": 10654,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "tokyotech-llm/Qwen3-Swallow-32B-RL-v0.2",
+      "downloads": 10630,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "CohereLabs/c4ai-command-r7b-12-2024",
+      "downloads": 10517,
+      "providers": [
+        "cohere"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "NousResearch/Hermes-2-Theta-Llama-3-8B",
+      "downloads": 10372,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "nvidia/Llama3-ChatQA-1.5-8B",
+      "downloads": 10359,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "DeepMount00/Llama-3-8b-Ita",
+      "downloads": 10358,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "openchat/openchat-3.6-8b-20240522",
+      "downloads": 10291,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "unsloth/gemma-2-27b-it",
+      "downloads": 10241,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "ibm-granite/granite-4.2-30b",
+      "downloads": 9783,
+      "providers": [
+        "deepinfra"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "allenai/Llama-3.1-Tulu-3-8B-DPO",
+      "downloads": 9558,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "VAGOsolutions/Llama-3-SauerkrautLM-8b-Instruct",
+      "downloads": 9445,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "NousResearch/Nous-Hermes-2-SOLAR-10.7B",
+      "downloads": 9406,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "alpindale/WizardLM-2-8x22B",
+      "downloads": 9384,
+      "providers": [
+        "novita"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "Goedel-LM/Goedel-Prover-V2-8B",
+      "downloads": 9121,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "shenzhi-wang/Llama3-8B-Chinese-Chat",
+      "downloads": 9029,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "vicgalle/Configurable-Hermes-2-Pro-Llama-3-8B",
+      "downloads": 8951,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    },
+    {
+      "slug": "tokyotech-llm/Llama-3-Swallow-8B-Instruct-v0.1",
+      "downloads": 8736,
+      "providers": [
+        "featherless-ai"
+      ],
+      "status": "UNMEASURED",
+      "pipeline_tag": "text-generation"
+    }
+  ]
+}

@@ -72,6 +72,13 @@ const EXISTING = [
   // and it emits one file at public/publisher-health.json. A second copy under
   // /signed/ would drift. Redirect the signed path to the one writer.
   "/signed/publisher-health.json  /publisher-health.json  308",
+  // Revenue densify leftover 2026-09-07: GET /public/openapi.json 404. The
+  // OpenAPI document lives at public/openapi.json in git and is served at
+  // /openapi.json on Pages (public/ is the site root). /public/openapi.json
+  // is a mistaken path some CDP/docs crawls still try — send them to the
+  // canonical apex doc rather than leaving a soft miss.
+  "/public/openapi.json   /openapi.json   308",
+  "/public/openapi.json/  /openapi.json   308",
   "/arena                 /dashboard?tab=play  308",
   "/arena/                /dashboard?tab=play  308",
   "/arena.html            /dashboard?tab=play  308",
