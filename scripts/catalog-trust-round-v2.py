@@ -37,9 +37,13 @@ SOURCES = {
         "resource": lambda r: r.get("resource") or r.get("url") or "",
     },
     "x402scan": {
-        "url": "https://api.x402scan.com/v1/resources",  # public read; if 404, the round reports UNREACHABLE, never a fake count
-        "rows": lambda d: d if isinstance(d, list) else d.get("items", d.get("resources", d.get("data", []))),
-        "resource": lambda r: r.get("resource") or r.get("url") or r.get("endpoint") or "",
+        # Real source: the site's tRPC procedure (found 07 Sep). The catalog holds 3,540
+        # resources; one round probes a rolling 100-slice (probe cap). Rows carry the
+        # `resource` URL + `method` + `accepts` + `origin`; `_count.toolCalls` = 3540.
+        "url": "https://www.x402scan.com/api/trpc/public.resources.search?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limit%22%3A100%7D%7D%7D",
+        "rows": lambda d: d[0]["result"]["data"]["json"],
+        "resource": lambda r: r.get("resource") or r.get("url") or "",
+        "slice": 100,
     },
     "agenttools": {
         "url": "https://agent-tools.cloud/api/x402/services",
@@ -161,6 +165,11 @@ def main():
         if not resources:
             rounds.append({"source": name, "error": "catalog not readable"})
             continue
+        sl = spec.get("slice", len(resources))
+        if len(resources) > sl:
+            window = int(time.time()) // 7200  # rolling 2h window
+            start = (window * sl) % len(resources)
+            resources = resources[start:start + sl] + (resources[: (start + sl) % len(resources)] if start + sl > len(resources) else [])
         rounds.append(run_round(name, resources))
 
     body = {
