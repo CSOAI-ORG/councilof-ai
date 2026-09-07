@@ -1,0 +1,37 @@
+name: mill-spray
+# Fan the hub-queue mill across axes. Each mill job stays sequential (one
+# model at a time). max-parallel 4 is four sequential doors, not a 4-wide
+# burst on one provider. MEASURED only after OIDC sign + VALID + n>=30.
+on:
+  workflow_dispatch:
+    inputs:
+      grade:
+        description: "probe-live models per axis (36 fits the 60-minute mill job)"
+        type: string
+        default: "36"
+jobs:
+  mill:
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        axis:
+          - governance
+          - safety
+          - provenance
+          - continuity
+          - conformance
+          - openness
+          - machinery-conformity
+          - care
+          - cross-reality
+          - detector-interop
+          - art5-safeguard
+          - swarm
+          - affect
+          - jail
+    uses: ./.github/workflows/hub-queue-mill.yml
+    with:
+      axis: ${{ matrix.axis }}
+      grade: ${{ github.event.inputs.grade || '36' }}
+    secrets: inherit
