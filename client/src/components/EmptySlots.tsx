@@ -1,4 +1,4 @@
-import { CENSUS_SITES, EMPTY_SLOT_RULING, EMPTY_SLOTS } from "@/lib/emptySlots";
+import { BOARD_LIVE_RULING, CENSUS_SITES, EMPTY_SLOTS } from "@/lib/emptySlots";
 
 export default function EmptySlots({ tone = "dark" }: { tone?: "dark" | "light" }) {
   const dark = tone === "dark";
@@ -14,11 +14,18 @@ export default function EmptySlots({ tone = "dark" }: { tone?: "dark" | "light" 
     <section className="mt-12 space-y-8" data-testid="empty-slots" aria-labelledby="empty-slots-h">
       <div>
         <p className={`font-mono text-[11px] uppercase tracking-[0.18em] ${muted}`}>
-          Seven empty slots · honest next
+          Board honesty · live GET
         </p>
         <h2 id="empty-slots-h" className={`mt-2 text-xl font-bold ${head}`}>
-          {EMPTY_SLOT_RULING}
+          {BOARD_LIVE_RULING}
         </h2>
+        <p className={`mt-3 text-sm ${body}`}>
+          Instrument notes for axes that once sat as empty placeholders. They are not a claim that
+          seven slots are UNMEASURED today — read{" "}
+          <code className="text-[12px]">GET /api/gspc</code> for{" "}
+          <code className="text-[12px]">totals</code>. Empty-as-finding only when{" "}
+          <code className="text-[12px]">unmeasured_axes &gt; 0</code>.
+        </p>
       </div>
       <ul className="grid gap-3 sm:grid-cols-2">
         {EMPTY_SLOTS.map((row) => (

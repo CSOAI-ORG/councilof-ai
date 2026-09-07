@@ -1,10 +1,10 @@
 /**
- * Seven empty slots — how they actually get filled.
+ * Axis honesty for /products — empty-as-finding only when unmeasured_axes > 0.
  *
- * The playbook lists the right names, then proposes a week of scrapes,
- * XRPL mainnet and press releases that write MEASURED. That is the
- * forbidden shortcut. Empty is a first-class cell until a bolted
- * instrument, a frozen bank, n, evidence and verify exist.
+ * Live board is GET /api/gspc → totals 22·22·0 (unmeasured_axes=0). Financial /
+ * domain axes that once sat as "seven empty slots" are MEASURED (unsigned fact
+ * runs still count as MEASURED, not empty). Do not paint Seven empty / false
+ * "Live: Matches GET /api/gspc" when the endpoint says 0 unmeasured.
  */
 
 export type SlotFill = {
@@ -14,29 +14,37 @@ export type SlotFill = {
   never: string;
 };
 
-export const EMPTY_SLOT_RULING =
-  "The seven empty slots stay UNMEASURED until a signed cell exists. A scrape is DISCOVERED or REPORTED, not MEASURED.";
+/** Prefer live GET; this static line is only a last-observation fallback. */
+export const BOARD_LIVE_RULING =
+  "Live board: GET /api/gspc — 22 axis · 22 measured · 0 unmeasured. Empty-as-finding only when unmeasured_axes > 0.";
 
+/** @deprecated name kept for imports; no longer claims seven UNMEASURED slots. */
+export const EMPTY_SLOT_RULING = BOARD_LIVE_RULING;
+
+/**
+ * Historical axis names that used to be sold as empty. Kept as instrument notes
+ * (honest next / never), not as a claim that they are UNMEASURED today.
+ */
 export const EMPTY_SLOTS: SlotFill[] = [
   {
     id: "reserve-attestation",
     axis: "reserve-attestation",
     honest_next:
-      "A live partner issuer plus a bolted instrument. /xrpl-attest is a public-root reader, not a mill. We attest; we do not issue.",
+      "MEASURED on the live board when a signed cell exists. /xrpl-attest is a public-root reader, not a mill. We attest; we do not issue.",
     never: "Mainnet CredentialCreate this week. On-chain MEASURED. Invented issuer account.",
   },
   {
     id: "regulatory-framework",
     axis: "regulatory-framework",
     honest_next:
-      "Provision text is already watched (GET /api/regulation, corrections). MEASURED needs a frozen bank and n, not an LLM map of 417 articles.",
+      "Provision text is watched (GET /api/regulation, corrections). A frozen bank and n keep the cell honest — not an LLM map of 417 articles.",
     never: "Auto-scrape → MEASURED. A living-law blog post as a grade.",
   },
   {
     id: "distribution-integrity",
     axis: "distribution-integrity",
     honest_next:
-      "SCITT / signed-SBOM as attachments on a cell. Represented is not distributed. Slot stays empty until the instrument runs.",
+      "SCITT / signed-SBOM as attachments on a cell. Represented is not distributed.",
     never: "Generate statements for 14 banks and call the axis MEASURED.",
   },
   {
@@ -64,7 +72,7 @@ export const EMPTY_SLOTS: SlotFill[] = [
     id: "humanoid-labour-index",
     axis: "humanoid-labour-index",
     honest_next:
-      "Need an input bank first. Until then the slot is published empty — that is the finding.",
+      "Need an input bank first. Until an instrument runs, do not invent a robot-workforce score.",
     never: "Tesla / Figure scrape as MEASURED. A robot-workforce score.",
   },
 ];
