@@ -4,13 +4,14 @@ import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 import { capture, replay, publicCardURL } from './gspc-replay-kit.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const fixture = readFileSync(join(root, 'packages/gspc-card-verifier/test/fixtures/01-genuine.json'));
 const id = JSON.parse(fixture).id;
 const url = `https://councilof.ai/signed/cards/${id}.json`;
-const commit = 'bbb50e8d5ebdf5c2719b711cb7a933633508afed';
+const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
 async function kit() {
   const out = join(mkdtempSync(join(tmpdir(), 'gspc-replay-test-')), 'kit');
   const result = await capture({ out, commit, urls: [url], repo: root, fetcher: async () => new Response(fixture) });
@@ -63,4 +64,23 @@ test('uncheckable card does not become an accepted buyer record', async () => {
   const card = JSON.parse(fixture); delete card.signature;
   const out = join(mkdtempSync(join(tmpdir(), 'gspc-replay-uncheckable-')), 'kit');
   await assert.rejects(capture({ out, commit, urls: [url], repo: root, fetcher: async () => new Response(JSON.stringify(card)) }), /Card UNCHECKABLE/);
+});
+
+test('mill-card URLs retain full verified ids, declared model manifests and small-sample state', async () => {
+  for (const name of ['signed-affect-187a110f7e0b.json', 'signed-swarm-38e08f837618.json']) {
+    const bytes = readFileSync(join(root, 'public/interop/mill-cards-signed', name));
+    const card = JSON.parse(bytes);
+    const millURL = `https://councilof.ai/interop/mill-cards-signed/${name}`;
+    const out = join(mkdtempSync(join(tmpdir(), 'gspc-replay-mill-')), 'kit');
+    const captured = await capture({ out, commit, urls: [millURL], repo: root, fetcher: async () => new Response(bytes) });
+    const verified = await replay({ dir: out, expectedManifestSha: captured.manifest_sha256 });
+    assert.equal(verified.records[0].id, card.id);
+    const record = JSON.parse(readFileSync(join(out, 'buyer-evidence.json'))).records[0];
+    assert.equal(record.exact_model_revision_as_declared, card.body.compute_evidence.model_manifest_digest);
+    assert.equal(record.status_as_declared, card.body.status);
+    assert.deepEqual(record.measurement_limits_as_declared, card.body.unmeasured);
+    const wrongURL = millURL.replace(card.id.slice(0, 12), '0'.repeat(12));
+    const wrongOut = join(mkdtempSync(join(tmpdir(), 'gspc-replay-mill-wrong-')), 'kit');
+    await assert.rejects(capture({ out: wrongOut, commit, urls: [wrongURL], repo: root, fetcher: async () => new Response(bytes) }), /content id differs/);
+  }
 });

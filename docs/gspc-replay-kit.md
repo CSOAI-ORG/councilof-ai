@@ -17,6 +17,8 @@ The destination must not exist. Keep the printed `manifest_sha256` outside the k
 
 This historical example demonstrates verification, **not current model quality**. Its signed body lacks a sample size and exact model revision. The export preserves those gaps; it does not fill them in or turn its old framing into a current coverage claim.
 
+The kit also accepts published `/interop/mill-cards-signed/signed-<axis>-<12-hex-prefix>.json` URLs. Select the exact URL from the board, and pass the full reviewed commit containing the compatible verifier profile. The filename prefix is not the trust anchor: the entire returned content ID and signature must verify. Declared model-manifest digests and `UNMEASURED` small-sample states are preserved; a valid signature does not promote a result into a grade. A review-branch card returning 404 is not published and cannot be captured as public evidence.
+
 ## Replay offline
 
 ```bash

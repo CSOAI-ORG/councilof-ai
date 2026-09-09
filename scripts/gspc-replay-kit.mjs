@@ -11,6 +11,8 @@ const ROOT = resolve(dirname(SELF), '..');
 const PACKAGE = 'packages/gspc-card-verifier';
 const SOURCES = ['src/verify.mjs', 'src/canonical.mjs', 'profile/csoai-gspc-1.json', 'LICENSE', 'NOTICE'];
 const HEX = /^[a-f0-9]{64}$/;
+const LEGACY_CARD_PATH = /^\/signed\/cards\/([a-f0-9]{64})\.json$/;
+const MILL_CARD_PATH = /^\/interop\/mill-cards-signed\/signed-[a-z0-9-]+-([a-f0-9]{12})\.json$/;
 const LIMITS = [
   'Signature verification authenticates the signed statement, not measurement correctness.',
   'Selected records only: no claim of corpus completeness or current applicability.',
@@ -25,10 +27,20 @@ export function publicCardURL(value) {
   const u = new URL(value);
   if (u.protocol !== 'https:' || !['councilof.ai', 'csoai.org'].includes(u.hostname)
       || u.port || u.username || u.password || u.search || u.hash
-      || !/^\/signed\/cards\/[a-f0-9]{64}\.json$/.test(u.pathname)) {
+      || !(LEGACY_CARD_PATH.test(u.pathname) || MILL_CARD_PATH.test(u.pathname))) {
     throw new Error('Only explicit public Council HTTPS signed-card URLs are supported');
   }
   return u.href;
+}
+
+function urlNamesCard(url, id) {
+  if (!HEX.test(id ?? '')) return false;
+  const path = new URL(url).pathname;
+  const full = LEGACY_CARD_PATH.exec(path);
+  if (full) return full[1] === id;
+  const compact = MILL_CARD_PATH.exec(path);
+  // A filename prefix is only routing; the verifier authenticates the full id.
+  return compact?.[1] === id.slice(0, 12);
 }
 
 async function getCard(url, fetcher) {
@@ -45,14 +57,18 @@ async function getCard(url, fetcher) {
 
 function summary(card) {
   const b = card.body;
+  const revision = b.model_revision ?? b.compute_evidence?.model_manifest_digest ?? null;
+  const limits = b.limits ?? b.unmeasured ?? null;
   return {
     card_id: card.id, axis: b.axis ?? null, model: b.model ?? null,
     measured_at_as_declared: b.measured_at ?? b.created ?? b.ts ?? null,
     sample_size_as_declared: b.n ?? b.n_items ?? null,
-    status_as_declared: b.status ?? null, exact_model_revision_as_declared: b.model_revision ?? null,
+    status_as_declared: b.status ?? null, exact_model_revision_as_declared: revision,
+    revision_source_field: b.model_revision != null ? 'model_revision' : revision != null ? 'compute_evidence.model_manifest_digest' : null,
+    measurement_limits_as_declared: limits,
     measurement_body: b, scope_note: 'Fields copied from the signed body; not independently validated facts.',
     missing_information: ['sample size', 'exact model revision', 'measurement limits'].filter((_, i) =>
-      [b.n ?? b.n_items, b.model_revision, b.limits][i] == null),
+      [b.n ?? b.n_items, revision, limits][i] == null),
   };
 }
 
@@ -88,7 +104,7 @@ export async function capture({ out, commit, urls, fetcher = fetch, repo = ROOT 
   const records = [];
   for (const { url, bytes } of snapshots) {
     const { card, original, negative } = await checkCard(bytes, verifyCard, profile);
-    if (!url.endsWith(`/${card.id}.json`)) throw new Error('Requested content id differs from returned card id');
+    if (!urlNamesCard(url, card.id)) throw new Error('Requested content id differs from returned card id');
     const file = `cards/${card.id}.json`;
     put(file, bytes);
     records.push({ url, file, file_sha256: sha256(bytes), verification: original, tamper_control: negative, ...summary(card) });
@@ -130,7 +146,7 @@ export async function replay({ dir, expectedManifestSha }) {
     publicCardURL(r.url);
     if (r.file_sha256 !== m.files[r.file]) throw new Error('Record digest disagreement');
     const checked = await checkCard(readFileSync(join(dir, r.file)), verifyCard, profile);
-    if (!r.url.endsWith(`/${checked.card.id}.json`)) throw new Error('Record URL/id disagreement');
+    if (!urlNamesCard(r.url, checked.card.id)) throw new Error('Record URL/id disagreement');
     const exported = buyer.records.find(x => x.card_id === checked.card.id);
     if (!exported || JSON.stringify(exported.measurement_body) !== JSON.stringify(checked.card.body)) throw new Error('Buyer export differs from signed body');
     results.push({ id: checked.card.id, original: checked.original.state, tampered: checked.negative.state });
