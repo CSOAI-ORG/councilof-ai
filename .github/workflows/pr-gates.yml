@@ -108,6 +108,17 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: npm ci --no-audit --no-fund
 
+      # This used to run only after merge in deploy.yml. PR #1847 passed every hosted
+      # PR check and then the master deployment stopped because TypeScript errors had
+      # risen above the committed ceiling. Keep the same non-mutating ratchet on both
+      # sides of the merge boundary, and print diagnostics when it fails so the gate is
+      # actionable instead of reporting only a count.
+      - name: TypeScript debt ratchet — selftest, then non-mutating check
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          npm run ts-ratchet:selftest
+          npm run ts-ratchet
+
       # `scripts` joined this line on 2026-09-06. It was absent, and EIGHT test files under
       # scripts/ had therefore never run in CI - 1007 assertions, including the vocabulary gate
       # over docs/PROVABLE-ARCHIVE-METHOD.md and the outreach drafts, the EAS attestation
