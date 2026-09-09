@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { afterAll } from "vitest";
@@ -17,6 +17,7 @@ import { afterAll } from "vitest";
  * scanned reaches the index's own declared total.
  */
 const SCRIPT = resolve(import.meta.dirname, "x402-bazaar-audit.py");
+const SEED_SCRIPT = resolve(import.meta.dirname, "../badger/finish-the-rail.sh");
 
 function run(sourceUrl) {
   try {
@@ -98,5 +99,16 @@ describe("the Bazaar audit refuses to turn a partial read into a population", ()
     const [i] = JSON.parse(r.out).indexes;
     expect(i.population_complete).toBe(true);
     expect(i.ours).toEqual([]);
+  });
+});
+
+describe("the free Bazaar seed follows the live door contract", () => {
+  it("derives the authorization and accepted timeout instead of freezing a second value", () => {
+    const source = readFileSync(SEED_SCRIPT, "utf8");
+    expect(source).toContain('timeout=int(acc.get("maxTimeoutSeconds"))');
+    expect(source).toContain('"validBefore":now+timeout');
+    expect(source).toContain('"maxTimeoutSeconds":timeout');
+    expect(source).not.toContain('"validBefore":now+900');
+    expect(source).not.toContain('"maxTimeoutSeconds":900');
   });
 });
