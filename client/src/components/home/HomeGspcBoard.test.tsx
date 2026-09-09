@@ -19,10 +19,16 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import HomeGspcBoard, {
   BoardStrip,
+  HubResultsBoard,
+  HUB_CARDS_PAGE_URL,
   SPACE_PAGE_URL,
   STRIP_N,
+  hubAxes,
   leaderStateOf,
+  measuredHubCells,
   separationLabel,
+  topHubModels,
+  type HubCardsPayload,
   visibleAxes,
 } from "./HomeGspcBoard";
 import { loadGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
@@ -62,6 +68,57 @@ const payload: GspcPayload = {
   schema: "mock",
   totals: { axes: comparison.length + facts.length, measured_axes: comparison.length + facts.length, public_count: MOCK_COUNT },
   axes: [...comparison, ...facts],
+};
+
+const hubPayload: HubCardsPayload = {
+  schema: "csoai.hub-cards/0.2",
+  as_of: "2026-09-07T10:00:00Z",
+  source: "huggingface.co/datasets/csoai/gspc-hub-cards",
+  population: "third-party models on the Hub — NOT the CSOAI fleet",
+  counts: { complete: true, measured: 12, unmeasured: 1, cells: 13 },
+  cells: [
+    ...Array.from({ length: 10 }, (_, index) => ({
+      model: `publisher/model-${index + 1}`,
+      axis: "gspc-safety",
+      status: "MEASURED",
+      accuracy: 1 - index / 20,
+      n: 30,
+      card_sha256: `sha-${index + 1}`,
+      card_url: `/signed/cards/card-${index + 1}.json`,
+      signed: true,
+    })),
+    {
+      model: "publisher/tied-model",
+      axis: "gspc-safety",
+      status: "MEASURED",
+      accuracy: 1,
+      n: 30,
+      card_sha256: "sha-tied",
+      card_url: "/signed/cards/card-tied.json",
+      signed: true,
+    },
+    {
+      model: "publisher/other-axis",
+      axis: "gspc-governance",
+      status: "MEASURED",
+      accuracy: 0.7,
+      n: 30,
+      card_sha256: "sha-other",
+      card_url: "/signed/cards/card-other.json",
+      signed: true,
+    },
+    {
+      model: "publisher/pending",
+      axis: "gspc-safety",
+      status: "UNMEASURED",
+      accuracy: 0.99,
+      n: 30,
+      card_sha256: "sha-pending",
+      card_url: "/signed/cards/card-pending.json",
+      signed: true,
+      unmeasured: ["signed-pending-verify"],
+    },
+  ],
 };
 
 const rowCount = (html: string) => (html.match(/data-axis-row="/g) ?? []).length;
@@ -214,5 +271,38 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("Board is unreachable right now. Empty stays empty.");
     expect(html).not.toContain("data-axis-row=");
     expect(html).not.toContain("<iframe");
+  });
+
+  it("renders the Hub feed as a separate interactive measured-model table", () => {
+    const html = renderToStaticMarkup(<HomeGspcBoard data={payload} hubData={hubPayload} />);
+    expect(html).toContain("Hugging Face measured-model results");
+    expect(html).toContain('data-testid="hub-results-table"');
+    expect(html).toContain(`href="${HUB_CARDS_PAGE_URL}"`);
+    expect(html).toContain("12 published MEASURED cells · 12 models · 2 model axes");
+    expect(html).toContain("publisher/model-1");
+    expect(html).not.toContain("publisher/pending");
+    expect(html.match(/data-hub-model-row=/g) ?? []).toHaveLength(9);
+    expect(html).toContain("Ordering is not a separation test");
+    expect(html).toContain("deterministic fact axes do not rank models");
+  });
+
+  it("filters Hub rows by exact published state and sorts without fusing instruments", () => {
+    expect(hubAxes(hubPayload)).toEqual(["gspc-governance", "gspc-safety"]);
+    expect(measuredHubCells(hubPayload)).toHaveLength(12);
+    const leaders = topHubModels(hubPayload, "gspc-safety");
+    expect(leaders).toHaveLength(9);
+    expect(leaders[0].accuracy).toBe(1);
+    expect(leaders[1].accuracy).toBe(1);
+    expect(leaders.every((cell) => cell.axis === "gspc-safety" && cell.status === "MEASURED" && cell.signed)).toBe(true);
+  });
+
+  it("withholds Hub population totals when an index read is incomplete", () => {
+    const partial: HubCardsPayload = {
+      ...hubPayload,
+      counts: { complete: false, measured: null, unmeasured: null, cells: null, read_so_far: { measured: 12, cells: 13 } },
+    };
+    const html = renderToStaticMarkup(<HubResultsBoard data={partial} />);
+    expect(html).toContain("Partial read · 12 retrieved MEASURED cells · population totals withheld");
+    expect(html).not.toContain("12 published MEASURED cells");
   });
 });

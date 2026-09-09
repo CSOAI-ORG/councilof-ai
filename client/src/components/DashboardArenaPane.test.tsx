@@ -6,9 +6,12 @@ import DashboardArenaPane, {
   DASHBOARD_ARENA_CONTRACT,
   defaultArenaAxis,
   fetchArenaScoreboard,
+  generatePracticeRounds,
   initialArenaPair,
   isPublicArenaModelId,
   parseArenaScoreboard,
+  scorePracticeDecisions,
+  simulatePracticeDecisions,
 } from "./DashboardArenaPane";
 
 const PAYLOAD = {
@@ -40,6 +43,31 @@ const PAYLOAD = {
 };
 
 describe("dashboard measured arena", () => {
+  it("recovers the seeded practice mechanic without treating it as evidence", () => {
+    const first = generatePracticeRounds(42, 8);
+    const repeat = generatePracticeRounds(42, 8);
+    const next = generatePracticeRounds(43, 8);
+
+    expect(first).toEqual(repeat);
+    expect(next).not.toEqual(first);
+    expect(first).toHaveLength(8);
+    expect(first.every((round) => typeof round.critical === "boolean")).toBe(
+      true,
+    );
+  });
+
+  it("scores the human and simulated opponent against the same ground truth", () => {
+    const rounds = generatePracticeRounds(42, 8);
+    const perfect = rounds.map((round) =>
+      round.critical ? ("escalate" as const) : ("resolve" as const),
+    );
+    const opponent = simulatePracticeDecisions(rounds, 0.7, 42);
+
+    expect(scorePracticeDecisions(perfect, rounds).f1).toBe(1);
+    expect(opponent).toHaveLength(rounds.length);
+    expect(simulatePracticeDecisions(rounds, 0.7, 42)).toEqual(opponent);
+  });
+
   it("states the current replay, chat, AG-UI, A2UI and live-battle boundaries", () => {
     expect(DASHBOARD_ARENA_CONTRACT).toMatchObject({
       replay: {
@@ -91,7 +119,13 @@ describe("dashboard measured arena", () => {
     const html = renderToStaticMarkup(
       <DashboardArenaPane initialData={board} />,
     );
-    expect(html).toContain("Compare two historical subjects");
+    expect(html).toContain("Practice decisions, then inspect evidence");
+    expect(html).toContain("The Boss&#x27;s Chair");
+    expect(html).toContain("Private practice · simulated opponent");
+    expect(html).toContain("decisions remain in this browser");
+    expect(html).toContain(
+      "No model call, evidence admission, signing, or training reuse occurs",
+    );
     expect(html).toContain("SIGNED HISTORICAL ARTEFACT");
     expect(html).toContain("legacy, noncanonical 15-axis arena taxonomy");
     expect(html).toContain("not the canonical 22-axis GSPC board");

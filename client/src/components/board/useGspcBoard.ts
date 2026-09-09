@@ -101,6 +101,11 @@ const LIVE_GSPC = "https://councilof.ai/api/gspc";
 
 let inflight: Promise<GspcPayload> | null = null;
 
+function isLocalPreview(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+}
+
 async function fetchGspcPayload(url: string): Promise<GspcPayload> {
   const r = await fetch(url, { headers: { accept: "application/json" } });
   if (!r.ok) throw new Error(`${url} answered HTTP ${r.status}`);
@@ -126,7 +131,11 @@ export function loadGspcBoard(): Promise<GspcPayload> {
     inflight = fetchGspcPayload(GSPC_ENDPOINT)
       .catch((e) => {
         const msg = String((e as Error)?.message ?? e);
-        if (/HTML|not JSON|Unexpected token/i.test(msg)) {
+        // Vite returns 404 for Pages Functions while a prerender server may return
+        // the SPA HTML. Both are preview-only transport failures; the live board
+        // remains the authority, so localhost may read it rather than render an
+        // invented empty state.
+        if (isLocalPreview() || /HTML|not JSON|Unexpected token/i.test(msg)) {
           return fetchGspcPayload(LIVE_GSPC);
         }
         throw e;
