@@ -1,10 +1,20 @@
 #!/bin/bash
-# Start (or confirm) the scheduler in a tmux session named "loops" — one session per lane, per README-LANES.
+# Start/confirm one persistent-volume scheduler supervisor; tmux is not required.
 set -u
 . "$(dirname "$0")/lib.sh"
-chmod +x "$LOOPS"/*.sh
-if alive "[s]cheduler.sh"; then echo "scheduler already running: pids $(pids_of '[s]cheduler.sh' | tr '\n' ' ')"; exit 0; fi
-tmux has-session -t loops 2>/dev/null && tmux kill-session -t loops
-tmux new-session -d -s loops -c "$LOOPS" "bash $LOOPS/scheduler.sh"
+command -v flock >/dev/null || { echo "flock is required"; exit 1; }
+if ! flock -n "$STATE/supervisor.lock" true; then
+  echo "scheduler supervisor already running"
+  exit 0
+fi
+if alive "[s]cheduler.sh" && flock -n "$STATE/scheduler.lock" true; then
+  echo "An older unmanaged scheduler is running; confirm and stop that scheduler before upgrading"
+  exit 1
+fi
+nohup bash "$LOOPS/supervise.sh" >>"$LOGS/scheduler-supervisor.nohup.log" 2>&1 </dev/null &
 sleep 2
-alive "[s]cheduler.sh" && echo "scheduler started in tmux session 'loops' (pids $(pids_of '[s]cheduler.sh' | tr '\n' ' '))" || { echo "FAILED to start scheduler"; exit 1; }
+if flock -n "$STATE/supervisor.lock" true; then
+  echo "FAILED to start scheduler supervisor"
+  exit 1
+fi
+echo "scheduler supervisor is running"
