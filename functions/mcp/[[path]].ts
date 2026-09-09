@@ -1,250 +1,343 @@
-/**
- * /mcp — the public MCP endpoint.
- *
- * tools/call name=measure | jail-probe — mill-tool DROPPED. Do not claim a signed
- * measurement card from this door. Use read-only board_totals / get_axis.
- * HTTP /mcp is eight FREE tools (board_totals get_axis verify_card list_cards get_root get_card verify_inclusion x402_trust)
- * plus four PAID tools (commission_card art50_marking_evidence rwa_evidence receipts_batch —
- * ./paid-tools.json, handled by ./_paid.ts: unpaid → the route's 402 challenge as structuredContent).
- * Payment travels as the `x_payment` ARGUMENT and this door sets the X-PAYMENT header itself, so which
- * tools a package carries is a packaging choice, never a property of the transport. npm csoai-gspc-mcp
- * carried the seven free tools up to 0.1.1 and all twelve from 0.2.0.
- * POST /v1/measure is 404; this handler does not implement it.
- * Dead worker csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; Pages /mcp is the door.
- */
-
-import GSPC_TOOLS from "./gspc-tools.json";
+/** Public MCP: request-scoped SDK server; eight free tools and four x402 tools. */
 import {
-  CORS,
-  HOP_BY_HOP,
-  UPSTREAM,
-  SHARED_TOOL_NAMES,
-  handleSharedTool,
-  handleVerify,
-  rpc,
-  negotiateProtocol,
-  setWireVersion,
-  getWireVersion,
-} from "./_handlers";
+  createMcpHandler,
+  fromJsonSchema,
+  hostHeaderValidationResponse,
+  McpServer,
+  originValidationResponse,
+  type Tool,
+} from "@modelcontextprotocol/server";
+import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/server/validators/cf-worker";
+import GSPC_TOOLS from "./gspc-tools.json";
+import { sharedToolResult, verifyToolResult } from "./_handlers";
+import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
 import { toolSpan, withTraceHeader } from "./_otel";
-import { PAID_TOOL_NAMES, PAID_TOOL_DEFS, handlePaidTool } from "./_paid";
 
-// MCP Registry `server.version` is the remote implementation identity, so this
-// must match the corresponding registry descriptor. The npm stdio package is a
-// separate implementation and may be published on a different schedule.
-const MCP_HTTP_SERVER_VERSION = "1.4.1";
+// HTTP runtime and registry descriptor share an identity; npm releases separately.
+export const MCP_HTTP_SERVER_VERSION = "1.4.2";
+const SERVER_INFO = {
+  name: "csoai-gspc-mcp",
+  version: MCP_HTTP_SERVER_VERSION,
+};
+const INSTRUCTIONS =
+  "GSPC MCP. Eight free read-only tools and four paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT; each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.";
+const CORS = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, HEAD, POST, OPTIONS",
+  "access-control-allow-headers":
+    "Content-Type, Accept, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Session-Id, Last-Event-ID",
+  "access-control-expose-headers":
+    "MCP-Protocol-Version, Mcp-Session-Id, x-otel-trace-id",
+};
+// Wire cap accommodates 20 MiB base64 input; this is not a concurrency SLA.
+export const MCP_MAX_REQUEST_BYTES = 28 * 1024 * 1024;
+const BODY_TIMEOUT_MS = 10_000;
+const HOSTS = [
+  "councilof.ai",
+  "www.councilof.ai",
+  "csoai.org",
+  "www.csoai.org",
+  "localhost",
+  "127.0.0.1",
+  "[::1]",
+];
+const BROWSER_ORIGINS = [...HOSTS, "chatgpt.com", "claude.ai"];
+const DEFINITIONS = [...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[];
+// The SDK's no-eval adapter retains the canonical JSON Schema. No parallel catalog.
+const validator = new CfWorkerJsonSchemaValidator();
+type JsonSchema = Parameters<typeof fromJsonSchema>[0];
+const TOOLS = DEFINITIONS.map((definition) => ({
+  definition,
+  inputSchema: fromJsonSchema<Record<string, unknown>>(
+    definition.inputSchema as JsonSchema,
+    validator,
+  ),
+  outputSchema: definition.outputSchema
+    ? fromJsonSchema<Record<string, unknown>>(
+        definition.outputSchema,
+        validator,
+      )
+    : undefined,
+}));
 
-async function proxy(ctx: Parameters<PagesFunction>[0], bodyText: string | null): Promise<Response> {
-  const url = new URL(ctx.request.url);
-  const subpath = url.pathname.replace(/^\/mcp\/?/, "");
-  const target = subpath ? `${UPSTREAM}/${subpath}${url.search}` : `${UPSTREAM}${url.search}`;
+const mcp = createMcpHandler(
+  ({ requestInfo }) => {
+    if (!requestInfo) throw new Error("HTTP request context required");
+    const origin = new URL(requestInfo.url).origin;
+    const server = new McpServer(SERVER_INFO, {
+      instructions: INSTRUCTIONS,
+      capabilities: { tools: { listChanged: false } },
+      cacheHints: {
+        "server/discover": { ttlMs: 300_000, cacheScope: "public" },
+        "tools/list": { ttlMs: 300_000, cacheScope: "public" },
+      },
+    });
+    for (const { definition, inputSchema, outputSchema } of TOOLS) {
+      server.registerTool(
+        definition.name,
+        {
+          description: definition.description,
+          inputSchema,
+          ...(outputSchema ? { outputSchema } : {}),
+        },
+        (args) =>
+          PAID_TOOL_NAMES.has(definition.name)
+            ? paidToolResult(definition.name, args, origin)
+            : sharedToolResult(definition.name, args, origin),
+      );
+    }
+    // Historical unlisted alias; it does not inflate the twelve canonical tools.
+    server.registerTool(
+      "verify",
+      {
+        description: "Compatibility alias for signed-card verification.",
+        inputSchema: fromJsonSchema<Record<string, unknown>>(
+          { type: "object" },
+          validator,
+        ),
+      },
+      (args) => verifyToolResult(args, origin),
+    );
+    server.server.setRequestHandler("tools/list", () => ({
+      tools: DEFINITIONS,
+    }));
+    return server;
+  },
+  { legacy: "stateless", maxSubscriptions: 0 },
+);
 
-  const forwardHeaders = new Headers();
-  for (const [k, v] of ctx.request.headers) {
-    if (!HOP_BY_HOP.has(k.toLowerCase()) && k.toLowerCase() !== "host") forwardHeaders.set(k, v);
-  }
+function jsonError(
+  status: number,
+  code: number,
+  message: string,
+  id?: string | number,
+): Response {
+  return Response.json(
+    {
+      jsonrpc: "2.0",
+      ...(id !== undefined ? { id } : {}),
+      error: { code, message },
+    },
+    {
+      status,
+      headers: { ...CORS, "cache-control": "no-store" },
+    },
+  );
+}
 
-  const init: RequestInit & { duplex?: string } = {
-    method: ctx.request.method,
-    headers: forwardHeaders,
-  };
-  if (bodyText !== null) {
-    init.body = bodyText;
-  } else if (ctx.request.body) {
-    init.body = ctx.request.body;
-    init.duplex = "half";
-  }
-
-  const upstream = await fetch(target, init as RequestInit);
-
-  const responseHeaders = new Headers();
-  for (const [k, v] of upstream.headers) {
-    if (!HOP_BY_HOP.has(k.toLowerCase())) responseHeaders.set(k, v);
-  }
-  for (const [k, v] of Object.entries(CORS)) responseHeaders.set(k, v);
-
-  return new Response(upstream.body, {
-    status: upstream.status,
-    statusText: upstream.statusText,
-    headers: responseHeaders,
+function withHeaders(response: Response): Response {
+  const headers = new Headers(response.headers);
+  for (const [key, value] of Object.entries(CORS)) headers.set(key, value);
+  // Caller-supplied verification inputs and paid deliverables are never shared-cacheable.
+  headers.set("cache-control", "no-store");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
   });
 }
 
-export const onRequest: PagesFunction = async (ctx) => {
-  if (ctx.request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
-
-  const origin = new URL(ctx.request.url).origin;
-
-  // A plain GET /mcp used to proxy the upstream's 404 — so the very link llms.txt
-  // hands to agents answered "not found" unless they already knew to POST. Answer
-  // browsers and probes with a discovery document instead. An SSE-capable MCP
-  // client asking for an event stream is still proxied untouched.
-  {
-    const url = new URL(ctx.request.url);
-    const isRoot = url.pathname.replace(/\/+$/, "") === "/mcp";
-    const wantsSse = (ctx.request.headers.get("accept") ?? "").includes("text/event-stream");
-    if ((ctx.request.method === "GET" || ctx.request.method === "HEAD") && isRoot && !wantsSse) {
-      return Response.json(
-        {
-          ok: true,
-          protocol: "MCP (JSON-RPC 2.0). POST this URL: initialize -> tools/list -> tools/call.",
-          transport: "streamable-http",
-          server: "csoai-gspc-mcp",
-          server_info: {
-            name: "csoai-gspc-mcp",
-            version: MCP_HTTP_SERVER_VERSION,
-            release_train: "pages-http",
-          },
-          doctrine:
-            "We measure, never certify. Verdicts are three-state (VALID / INVALID / UNCHECKABLE). An unmeasured axis is a first-class answer. This GET is a discovery document, not the protocol.",
-          // The one-command path. It existed only in the npm README, where nobody discovering
-          // this door would look, so the shortest real install was invisible at the point of
-          // discovery. Stated first, before any prose about transports.
-          install: {
-            remote: "Add https://councilof.ai/mcp as a streamable-HTTP MCP server — no install at all.",
-            claude_code: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
-            any_client: "npx -y csoai-gspc-mcp",
-            no_install_at_all: "curl -s https://councilof.ai/api/gspc — the board, one GET, no key and no account.",
-            python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
-          },
-          stdio_alternative:
-            "node mcp/gspc-server/index.mjs from https://github.com/CSOAI-ORG/councilof-ai (package csoai-gspc-mcp) — built from corresponding shared definitions but released independently. Payment travels as the x_payment ARGUMENT and each door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Ask that package which tools its version lists; this door does not track its release schedule.",
-          paid_tools: {
-            names: [...PAID_TOOL_NAMES],
-            how: "tools/call without x_payment returns the route's x402 402 challenge (accepts[], PAYMENT-REQUIRED) as structuredContent. That challenge is not settlement, delivery or revenue. Amounts live only inside a 402.",
-            doctrine: "measurement, not certification — no tool carries or awards a trust label of any kind; the catalogue and every free tool stay free",
-            catalog: `${origin}/api/x402`,
-          },
-          board: `${origin}/api/gspc`,
-          signed_cards: `${origin}/signed/card_index.json`,
-          how_to_verify: `${origin}/signed/HOW-TO-VERIFY.md`,
-          registry_evidence: "evidence/mcp-registry.json in the repo — probed, never asserted",
-        },
-        { headers: { ...CORS, "cache-control": "public, max-age=300" } },
-      );
-    }
-  }
-
-  // Only POSTed JSON-RPC is inspected; everything else streams through untouched.
-  let bodyText: string | null = null;
-  let call: { method?: string; id?: unknown; params?: { name?: string; arguments?: Record<string, unknown> } } | null =
-    null;
-
-  if (ctx.request.method === "POST") {
-    try {
-      bodyText = await ctx.request.text();
-      const parsed = JSON.parse(bodyText);
-      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) call = parsed;
-    } catch {
-      call = null; // not JSON — proxy the bytes we already read
-    }
-  }
-
-  // Optional GenAI span for tool calls (H22). No-op unless CSOAI_OTEL is set; when on, the
-  // trace id rides back on x-otel-trace-id and the OTLP span is logged to the Workers tail.
-  const otelTid =
-    call?.method === "tools/call" && call.params?.name
-      ? toolSpan((ctx.env ?? {}) as Record<string, unknown>, String(call.params.name))
-      : null;
-
+async function readBody(request: Request): Promise<string> {
+  const length = request.headers.get("content-length");
+  if (
+    length !== null &&
+    (!/^\d+$/.test(length) || Number(length) > MCP_MAX_REQUEST_BYTES)
+  )
+    throw new RangeError("body limit");
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  const parts: string[] = [];
+  let bytes = 0;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<never>((_, reject) => {
+    timer = setTimeout(
+      () => reject(new Error("body timeout")),
+      BODY_TIMEOUT_MS,
+    );
+  });
   try {
-    if (call?.method === "tools/call" && call.params?.name === "verify") {
-      return withTraceHeader(await handleVerify(call.id, call.params.arguments ?? {}, origin), otelTid);
+    while (true) {
+      const { done, value } = await Promise.race([reader.read(), deadline]);
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > MCP_MAX_REQUEST_BYTES) throw new RangeError("body limit");
+      parts.push(decoder.decode(value, { stream: true }));
     }
+    parts.push(decoder.decode());
+    return parts.join("");
+  } finally {
+    clearTimeout(timer);
+    // Hostile streams may never resolve cancellation; never await that promise.
+    void reader.cancel().catch(() => {});
+    reader.releaseLock();
+  }
+}
 
-    if (call?.method === "tools/call" && (call.params?.name === "measure" || call.params?.name === "jail-probe")) {
-      return Response.json(
-        {
-          jsonrpc: "2.0",
-          id: call.id ?? null,
-          error: {
-            code: -32601,
-            message:
-              "mill-tool `" +
-              call.params.name +
-              "` dropped. Use read-only board_totals / get_axis / get_root. POST /v1/measure is 404; this door does not mill.",
-          },
+function object(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+export const onRequest: PagesFunction = async ({ request, env }) => {
+  const url = new URL(request.url);
+  const hosts = [...HOSTS];
+  // Only this deployment's configured preview is allowed, not all pages.dev hosts.
+  const preview = (env as Record<string, unknown> | undefined)?.CF_PAGES_URL;
+  if (typeof preview === "string") {
+    try {
+      hosts.push(new URL(preview).hostname);
+    } catch {
+      /* invalid config grants nothing */
+    }
+  }
+  // Fetch-native synthetic requests can omit Host; use their URL authority in
+  // that case. An explicit conflicting Host must still be rejected.
+  const guardHeaders = new Headers(request.headers);
+  if (!hosts.includes(url.hostname))
+    return jsonError(403, -32600, "Request host is not allowed.");
+  if (!guardHeaders.has("host")) guardHeaders.set("host", url.host);
+  const guardRequest = new Request(request.url, { headers: guardHeaders });
+  const rejected =
+    hostHeaderValidationResponse(guardRequest, hosts) ??
+    originValidationResponse(request, [...BROWSER_ORIGINS, ...hosts]);
+  if (rejected) return withHeaders(rejected);
+  if (url.pathname.replace(/\/+$/, "") !== "/mcp")
+    return jsonError(404, -32601, "MCP endpoint is /mcp.");
+  if (request.method === "OPTIONS")
+    return new Response(null, { status: 204, headers: CORS });
+  if (
+    (request.method === "GET" || request.method === "HEAD") &&
+    !(request.headers.get("accept") ?? "").includes("text/event-stream")
+  ) {
+    const origin = url.origin;
+    const document = {
+      ok: true,
+      protocol:
+        "MCP: modern clients declare per-request metadata; legacy Streamable HTTP clients initialize, then tools/list and tools/call. This GET document is not the protocol.",
+      transport: "streamable-http",
+      server: SERVER_INFO.name,
+      server_info: { ...SERVER_INFO, release_train: "pages-http" },
+      doctrine:
+        "We measure, never certify. Verification is VALID / INVALID / UNCHECKABLE; an unmeasured axis is a first-class answer.",
+      install: {
+        remote: "Add https://councilof.ai/mcp as a Streamable HTTP MCP server.",
+        claude_code: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
+        any_client: "npx -y csoai-gspc-mcp",
+        no_install_at_all: "curl -s https://councilof.ai/api/gspc",
+        python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
+      },
+      stdio_alternative:
+        "npm csoai-gspc-mcp and the Pages HTTP implementation are released independently. Payment travels as the x_payment ARGUMENT; each door sets the X-PAYMENT header itself. Ask each installed version for its tools/list.",
+      paid_tools: {
+        names: [...PAID_TOOL_NAMES],
+        how: "Call without x_payment for a 402 challenge. A challenge is not settlement, delivery or revenue.",
+        doctrine:
+          "measurement, not certification; the catalog and verification remain free",
+        catalog: `${origin}/api/x402`,
+      },
+      board: `${origin}/api/gspc`,
+      signed_cards: `${origin}/signed/card_index.json`,
+      how_to_verify: `${origin}/signed/HOW-TO-VERIFY.md`,
+      registry_evidence:
+        "evidence/mcp-registry.json in the repo; registry publication is separate from this runtime.",
+    };
+    return new Response(
+      request.method === "HEAD" ? null : JSON.stringify(document),
+      {
+        headers: {
+          ...CORS,
+          "content-type": "application/json",
+          "cache-control": "public, max-age=300",
         },
-        { headers: { ...CORS } },
-      );
-    }
+      },
+    );
+  }
+  if (request.method !== "POST")
+    return new Response(null, {
+      status: 405,
+      headers: { ...CORS, allow: "POST, GET, HEAD, OPTIONS" },
+    });
+  if (
+    request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !==
+    "application/json"
+  )
+    return jsonError(415, -32600, "Use Content-Type: application/json.");
 
-    if (call?.method === "tools/call" && call.params?.name && PAID_TOOL_NAMES.has(call.params.name)) {
-      return withTraceHeader(
-        await handlePaidTool(call.id, call.params.name, call.params.arguments ?? {}, origin),
-        otelTid,
-      );
-    }
-
-    if (call?.method === "tools/call" && call.params?.name && SHARED_TOOL_NAMES.has(call.params.name)) {
-      return withTraceHeader(
-        await handleSharedTool(call.id, call.params.name, call.params.arguments ?? {}, origin),
-        otelTid,
-      );
-    }
-
-    if (call?.method === "tools/call" && call.params?.name) {
-      return Response.json(
-        {
-          jsonrpc: "2.0",
-          id: call.id ?? null,
-          error: {
-            code: -32601,
-            message: `Tool not found: ${call.params.name}. Use tools/list for the currently available tools.`,
-          },
-        },
-        { headers: { ...CORS } },
-      );
-    }
-
-    if (call?.method === "initialize") {
-      // Wire protocol negotiation. The client may carry the version in
-      // params.protocolVersion (classic) or params._meta.protocolVersion
-      // (2026-07-28). The door answers with the version IT will use: 2026-07-28
-      // when the client offered it, the base pin otherwise — it never echoes
-      // a version it does not speak (#1691 rule, now with real 2026-07-28
-      // support: server/discover + the resultType/ttlMs/cacheScope envelope).
-      const meta = (call.params as { _meta?: { protocolVersion?: string } } | undefined)?._meta;
-      const wire = negotiateProtocol(
-        meta?.protocolVersion ?? (call.params as { protocolVersion?: string } | undefined)?.protocolVersion,
-      );
-      setWireVersion(wire);
-      return rpc(call.id, {
-        protocolVersion: wire,
-        capabilities: { tools: {} },
-        serverInfo: { name: "csoai-gspc-mcp", version: MCP_HTTP_SERVER_VERSION },
-        instructions:
-          "GSPC MCP. Eight free read-only tools: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion x402_trust. Four paid tools over the x402 rail: commission_card art50_marking_evidence rwa_evidence receipts_batch — call without x_payment to receive the 402 challenge as structuredContent, pay from your wallet and call again with x_payment. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification free. The witness_hash SKU is quarantined pre-release and is not advertised. mill-tool measure dropped. Dead worker is 404; this Pages /mcp is the door. Remote URL https://councilof.ai/mcp. The npm stdio package csoai-gspc-mcp reads the same two definitions files; payment is the x_payment argument, so which tools it carries is a packaging choice of its version, not a limit of stdio. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.",
-      });
-    }
-
-    if (call?.method === "server/discover" && getWireVersion() === "2026-07-28") {
-      // 2026-07-28 discovery method: transport-independent server identity.
-      // Deliberately a subset — the door declares what it offers; it never
-      // stamps a trust label on its own tools.
-      return rpc(call.id, {
-        serverInfo: { name: "csoai-gspc-mcp", version: MCP_HTTP_SERVER_VERSION },
-        capabilities: { tools: {} },
-      });
-    }
-
-    if (call?.method === "notifications/initialized") {
-      return new Response(null, { status: 204, headers: CORS });
-    }
-
-    if (call?.method === "tools/list") {
-      // Serve the local honest tool list. Dead worker csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door.
-      // Free eight first, then the paid four (./paid-tools.json). Same list for every caller — the
-      // catalogue is free and no tool carries a trust label.
-      return rpc(call.id, { tools: [...(GSPC_TOOLS as { tools: unknown[] }).tools, ...PAID_TOOL_DEFS] });
-    }
-
-    return await proxy(ctx, bodyText);
-  } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : "unknown";
-    return Response.json(
-      { error: "mcp upstream unavailable", detail: msg },
-      { status: 502, headers: { ...CORS, "content-type": "application/json" } },
+  let body: string;
+  try {
+    body = await readBody(request);
+  } catch (error) {
+    return jsonError(
+      error instanceof RangeError ? 413 : 400,
+      -32600,
+      "Request body exceeds the size/time limit or is not valid UTF-8.",
+    );
+  }
+  let call: unknown;
+  try {
+    call = JSON.parse(body);
+  } catch {
+    return jsonError(400, -32700, "Invalid JSON.");
+  }
+  const id =
+    object(call) &&
+    (typeof call.id === "string" ||
+      (typeof call.id === "number" && Number.isSafeInteger(call.id)))
+      ? call.id
+      : undefined;
+  if (
+    !object(call) ||
+    call.jsonrpc !== "2.0" ||
+    typeof call.method !== "string" ||
+    ("id" in call && id === undefined) ||
+    (call.params !== undefined && !object(call.params))
+  ) {
+    return jsonError(
+      400,
+      -32600,
+      "Expected one JSON-RPC request with object params and a string or integer id.",
+      id,
+    );
+  }
+  // Never execute payment-bearing work as an id-less notification.
+  if (id === undefined && !call.method.startsWith("notifications/"))
+    return jsonError(400, -32600, "A request id is required for this method.");
+  const params = object(call.params) ? call.params : {};
+  // Published SDK 2.0.0 accepts a modern body without its version header.
+  // Keep the normative HTTP requirement at our mount until upstream closes it.
+  if (
+    object(params._meta) &&
+    "io.modelcontextprotocol/protocolVersion" in params._meta &&
+    !request.headers.has("MCP-Protocol-Version")
+  ) {
+    return jsonError(
+      400,
+      -32020,
+      "MCP-Protocol-Version header is required for modern requests.",
+      id,
+    );
+  }
+  const traceId =
+    call.method === "tools/call" && typeof params.name === "string"
+      ? toolSpan((env ?? {}) as Record<string, unknown>, params.name)
+      : null;
+  try {
+    const boundedRequest = new Request(request.url, {
+      method: "POST",
+      headers: request.headers,
+      body,
+      signal: request.signal,
+    });
+    return withTraceHeader(
+      withHeaders(await mcp.fetch(boundedRequest)),
+      traceId,
+    );
+  } catch {
+    return jsonError(
+      500,
+      -32603,
+      "MCP request failed. Delivery and settlement are unconfirmed; inspect receipts before retrying paid work.",
+      id,
     );
   }
 };

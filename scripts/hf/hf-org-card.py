@@ -32,6 +32,7 @@ from pathlib import Path
 
 API = "https://councilof.ai/api/gspc"
 MCP = "https://councilof.ai/mcp"
+MCP_PROTOCOL = "2026-07-28"
 ORG = "csoai"
 TARGETS = {"README": "space", "gspc-board": "space"}
 BOARD_DATASET = f"{ORG}/gspc-board"
@@ -190,10 +191,38 @@ def hf_upload(local: Path, repo: str, kind: str, path_in_repo: str, msg: str) ->
 
 
 def mcp_tool_count() -> tuple[int | None, str]:
-    body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}).encode()
-    js, reason = fetch_json(MCP, data=body, headers={"content-type": "application/json", "accept": "application/json, text/event-stream"})
-    tools = ((js or {}).get("result") or {}).get("tools")
-    return (len(tools), "") if isinstance(tools, list) else (None, reason or "no result.tools")
+    # JSON-only decoding needs the request-scoped modern contract, not a legacy
+    # request whose successful response may be SSE. This never invokes a tool.
+    body = json.dumps({
+        "jsonrpc": "2.0", "id": 1, "method": "tools/list",
+        "params": {"_meta": {
+            "io.modelcontextprotocol/protocolVersion": MCP_PROTOCOL,
+            "io.modelcontextprotocol/clientCapabilities": {},
+        }},
+    }).encode()
+    js, reason = fetch_json(MCP, data=body, headers={
+        "content-type": "application/json",
+        "accept": "application/json, text/event-stream",
+        "MCP-Protocol-Version": MCP_PROTOCOL,
+        "Mcp-Method": "tools/list",
+    })
+    if (not isinstance(js, dict) or js.get("jsonrpc") != "2.0"
+            or type(js.get("id")) is not int or js["id"] != 1 or "error" in js):
+        return None, reason or "no matching MCP tools/list result"
+    result = js.get("result")
+    if not isinstance(result, dict) or result.get("resultType") != "complete":
+        return None, "MCP tools/list result is not complete"
+    if result.get("nextCursor"):
+        return None, "MCP tools/list is paginated; total count is unmeasured"
+    tools = result.get("tools")
+    if not isinstance(tools, list) or any(
+        not isinstance(tool, dict) or not isinstance(tool.get("name"), str)
+        or not tool["name"].strip() for tool in tools
+    ):
+        return None, "no valid result.tools list"
+    if len({tool["name"] for tool in tools}) != len(tools):
+        return None, "duplicate MCP tool names; count is ambiguous"
+    return len(tools), ""
 
 
 # ── front matter ──────────────────────────────────────────────────────────────────────────

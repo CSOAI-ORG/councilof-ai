@@ -29,13 +29,11 @@ const typedTool: RunnerTool = {
 };
 
 describe("MCP tool form model", () => {
-  it("keeps production same-origin and gives local review builds one live fallback", () => {
+  it("keeps catalog probes same-origin unless public fallback is explicit", () => {
     expect(mcpRpcEndpoints("councilof.ai")).toEqual(["/mcp"]);
-    expect(mcpRpcEndpoints("127.0.0.1")).toEqual([
-      "/mcp",
-      "https://councilof.ai/mcp",
-    ]);
-    expect(mcpRpcEndpoints("localhost")).toEqual([
+    expect(mcpRpcEndpoints("127.0.0.1")).toEqual(["/mcp"]);
+    expect(mcpRpcEndpoints("localhost")).toEqual(["/mcp"]);
+    expect(mcpRpcEndpoints("localhost", "tools/list", true)).toEqual([
       "/mcp",
       "https://councilof.ai/mcp",
     ]);

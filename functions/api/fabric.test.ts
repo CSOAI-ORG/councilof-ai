@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { createHash, generateKeyPairSync, sign } from "node:crypto";
+import { onRequest as onMcpRequest } from "../mcp/[[path]]";
 import {
   buildFabricManifest,
   onRequestGet,
@@ -43,6 +44,7 @@ function fixtureFetcher(
     a2aReachable?: boolean;
     a2aRpcError?: boolean;
     invalidRootSignature?: boolean;
+    origin?: string;
   } = {},
 ) {
   const currentRoot = ROOT_MERKLE;
@@ -71,7 +73,7 @@ function fixtureFetcher(
   return vi.fn(
     async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
       const url = new URL(String(input));
-      expect(url.origin).toBe("https://example.test");
+      expect(url.origin).toBe(options.origin ?? "https://example.test");
       expect(init?.signal).toBeInstanceOf(AbortSignal);
 
       if (url.pathname === "/mcp") {
@@ -297,6 +299,54 @@ const byId = (manifest: FabricManifest, id: string) => {
 };
 
 describe("GET /api/fabric", () => {
+  it("observes the actual request-scoped MCP handler, not an invented JSON fixture", async () => {
+    const origin = "https://councilof.ai";
+    const otherRails = fixtureFetcher({ origin });
+    const externalFetch = vi.fn(async () => {
+      throw new Error("No external network or tool execution permitted");
+    });
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = externalFetch;
+    let mcpCalls = 0;
+    try {
+      const manifest = await buildFabricManifest(
+        `${origin}/api/fabric`,
+        async (input, init) => {
+          const request = new Request(input, init);
+          if (new URL(request.url).pathname !== "/mcp") return otherRails(input, init);
+          mcpCalls += 1;
+          expect(request.headers.get("MCP-Protocol-Version")).toBe("2026-07-28");
+          expect(request.headers.get("Mcp-Method")).toBe("tools/list");
+          expect(await request.clone().json()).toMatchObject({
+            jsonrpc: "2.0", id: "fabric-probe", method: "tools/list",
+            params: { _meta: {
+              "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+              "io.modelcontextprotocol/clientCapabilities": {},
+            } },
+          });
+          const response = await onMcpRequest({ request, env: {} } as never);
+          expect(response.status).toBe(200);
+          expect(response.headers.get("content-type")).toContain("application/json");
+          expect(await response.clone().json()).toMatchObject({
+            id: "fabric-probe", result: { resultType: "complete" },
+          });
+          return response;
+        },
+        OBSERVED_AT,
+      );
+      expect(mcpCalls).toBe(1);
+      expect(otherRails).toHaveBeenCalledTimes(15);
+      expect(externalFetch).not.toHaveBeenCalled();
+      expect(byId(manifest, "mcp-tools")).toMatchObject({
+        state: "RUNTIME_OBSERVED",
+        summary: expect.stringContaining("12 tool declarations"),
+        writes_board: false,
+      });
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
   it("normalizes live evidence without promoting declarations to execution", async () => {
     const fetcher = fixtureFetcher();
     const manifest = await buildFabricManifest(
