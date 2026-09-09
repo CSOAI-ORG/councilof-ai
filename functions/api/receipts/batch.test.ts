@@ -74,6 +74,18 @@ describe("/api/receipts/batch — input", () => {
     expect((await batch(ctx("/api/receipts/batch?from=2026-09-01T00:00:00Z&to=nope"))).status).toBe(400);
     expect((await batch(ctx("/api/receipts/batch?from=2026-09-02T00:00:00Z&to=2026-09-01T00:00:00Z"))).status).toBe(400);
   });
+
+  it("a presented payment without from never reaches the facilitator", async () => {
+    let facilitatorCalls = 0;
+    stubStatic(() => {
+      facilitatorCalls += 1;
+      return settles("/settle");
+    });
+    const r = await batch(ctx("/api/receipts/batch", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": paidReceipt() }));
+    expect(r.status).toBe(400);
+    expect((await r.json()).reason).toMatch(/before presenting payment/);
+    expect(facilitatorCalls).toBe(0);
+  });
 });
 
 describe("/api/receipts/batch — free preview", () => {

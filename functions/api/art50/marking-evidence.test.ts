@@ -179,6 +179,19 @@ describe("x402 rail — price only inside the 402", () => {
     expect(JSON.stringify(b.csoai.preview)).not.toMatch(FORBIDDEN);
   });
 
+  it("a presented payment with no url/bytes never reaches the facilitator", async () => {
+    let facilitatorCalls = 0;
+    stubFetch(() => {
+      facilitatorCalls += 1;
+      return new Response(JSON.stringify({ isValid: true, success: true, transaction: "0xtx" }));
+    });
+    const hdr = btoa(JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }));
+    const r = await get(ctx(EP, { X402_FACILITATOR_URL: "https://f.example" }, { headers: { "x-payment": hdr } }));
+    expect(r.status).toBe(400);
+    expect((await r.json()).reason).toMatch(/before presenting payment/);
+    expect(facilitatorCalls).toBe(0);
+  });
+
   it("paid: ONE card-v0 leaf (art50.marking-evidence) citing the settle tx, ≤3KB, unsigned-declared without a key", async () => {
     stubFetch((p) => new Response(JSON.stringify(p.endsWith("/verify") ? { isValid: true } : { success: true, transaction: "0xtx", network: "base", payer: "0xp" })));
     const hdr = btoa(JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }));

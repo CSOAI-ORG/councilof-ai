@@ -32,6 +32,7 @@ import {
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
   paymentRequiredResponseSigned,
+  hasPaymentHeader,
   CSOAI_LID,
   type X402Env,
 } from "../_x402";
@@ -180,6 +181,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (preview && from && to && to.getTime() < from.getTime()) return json({ schema: SCHEMA, error: "bad_request", reason: "to is before from", usage }, 400);
 
   if (!preview && (!fromRaw || !from)) {
+    if (hasPaymentHeader(request)) {
+      return json({ schema: SCHEMA, error: "bad_request", reason: "from: an ISO-8601 instant is required before presenting payment", usage }, 400);
+    }
     const resourceUrl = `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`;
     const description =
       "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly — not a conclusion.";

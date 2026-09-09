@@ -60,6 +60,27 @@ describe("/api/rwa/evidence — doors", () => {
     expect((await r.json()).known_symbols).toEqual(["BBRL"]);
   });
 
+  it("a presented payment for a missing or unknown asset never reaches the facilitator", async () => {
+    let facilitatorCalls = 0;
+    stub();
+    const orig = globalThis.fetch;
+    vi.stubGlobal("fetch", async (u: string | URL | Request, init?: RequestInit) => {
+      const url = new URL(String(u instanceof Request ? u.url : u));
+      if (url.host === "f.example") {
+        facilitatorCalls += 1;
+        return new Response(JSON.stringify({ isValid: true, success: true, transaction: "0xtx" }));
+      }
+      return orig(u, init);
+    });
+    const hdr = btoa(JSON.stringify({ x402Version: 2, scheme: "exact", network: "eip155:8453", payload: {} }));
+    const env = { X402_FACILITATOR_URL: "https://f.example" };
+    expect((await evidence(ctx("/api/rwa/evidence", env, { "x-payment": hdr }))).status).toBe(400);
+    const unknown = await evidence(ctx("/api/rwa/evidence?asset=NOPE", env, { "x-payment": hdr }));
+    expect(unknown.status).toBe(404);
+    expect((await unknown.json()).note).toMatch(/No payment was taken/);
+    expect(facilitatorCalls).toBe(0);
+  });
+
   it("402: the same accepts entry as request-attestation, payTo from ESTATE_PAY_TO, preview pointer, no verdict words", async () => {
     stub();
     const r = await evidence(ctx("/api/rwa/evidence?asset=BBRL"));
