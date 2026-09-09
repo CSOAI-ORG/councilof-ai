@@ -22,6 +22,7 @@ import { useEffect, useId, useState, type ReactNode } from "react";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import { axisRunEvidence } from "../board/runEvidence";
 import { axisMeta } from "../../lib/axisRegulation";
+import { hubCardsFeed } from "./hubCardsFeed";
 
 /** Public distribution mirror for the canonical GET /api/gspc board. */
 export const SPACE_PAGE_URL = "https://huggingface.co/spaces/csoai/gspc-board";
@@ -58,31 +59,7 @@ export interface HubCardsPayload {
   cells?: HubCell[];
 }
 
-const HUB_CARDS_ENDPOINT = "/api/hub-cards";
-const LIVE_HUB_CARDS_ENDPOINT = "https://councilof.ai/api/hub-cards";
-let hubCardsInflight: Promise<HubCardsPayload> | null = null;
-
-async function fetchHubCards(url: string): Promise<HubCardsPayload> {
-  const response = await fetch(url, { headers: { accept: "application/json" } });
-  if (!response.ok) throw new Error(`${url} answered HTTP ${response.status}`);
-  const text = (await response.text()).replace(/^\uFEFF/, "").trim();
-  if (!text || text.startsWith("<")) throw new Error(`${url} returned HTML, not JSON`);
-  const payload = JSON.parse(text) as HubCardsPayload;
-  if (!Array.isArray(payload.cells)) throw new Error(`${url} is not a Hub-card feed`);
-  return payload;
-}
-
-export function loadHubCards(): Promise<HubCardsPayload> {
-  if (!hubCardsInflight) {
-    hubCardsInflight = fetchHubCards(HUB_CARDS_ENDPOINT)
-      .catch(() => fetchHubCards(LIVE_HUB_CARDS_ENDPOINT))
-      .catch((error) => {
-        hubCardsInflight = null;
-        throw error;
-      });
-  }
-  return hubCardsInflight;
-}
+export const loadHubCards = hubCardsFeed.load;
 
 export interface HubCardsState {
   data: HubCardsPayload | null;
@@ -99,17 +76,7 @@ export function useHubCardsFeed(
 
   useEffect(() => {
     if (injected !== undefined) return;
-    let active = true;
-    loadHubCards()
-      .then((data) => {
-        if (active) setLive({ data, error: null, loading: false });
-      })
-      .catch((error: unknown) => {
-        if (active) setLive({ data: null, error: error instanceof Error ? error.message : String(error), loading: false });
-      });
-    return () => {
-      active = false;
-    };
+    return hubCardsFeed.subscribe(setLive);
   }, [injected]);
 
   return injected !== undefined ? { data: injected, error: injectedError, loading: false } : live;
@@ -429,9 +396,9 @@ export function HubResultsBoard({
 
       <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60" data-testid="hub-results-count">
         {error
-          ? "Hub results are unreachable. No result was inferred."
+          ? data ? "Refresh failed · showing the previous snapshot, not current results." : "Hub results are unreachable. No result was inferred."
           : loading
-            ? "Reading published Hub cells…"
+            ? data ? "Refreshing Hub cells · showing the previous snapshot." : "Reading published Hub cells…"
             : cells.length === 0
               ? "No signed MEASURED Hub cells were returned."
               : complete
@@ -440,7 +407,7 @@ export function HubResultsBoard({
       </p>
       {asOf ? <p className="mt-1 text-xs text-slate-500 dark:text-emerald-100/55">Feed observed {asOf}</p> : null}
 
-      {!error && !loading && axes.length > 0 ? (
+      {data && axes.length > 0 ? (
         <>
           <div className="mt-4 flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Hugging Face measured model axes">
             {axes.map((axis) => (
@@ -518,7 +485,7 @@ export default function HomeGspcBoard({
   hubData?: HubCardsPayload | null;
   hubError?: string | null;
 }) {
-  // Injected data (SSR, tests) bypasses the fetch; otherwise the shared hook does one live read.
+  // Injected data (SSR, tests) bypasses the Hub subscription; live readers share its refresh lifecycle.
   const live = useGspcBoard();
   const data = injected !== undefined ? injected : live.data;
   const error = injected !== undefined ? injectedError : live.error;

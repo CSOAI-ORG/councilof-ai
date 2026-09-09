@@ -35,6 +35,7 @@ const installFetch = (broken: string[] = [], status = 500) => {
   const mocked = vi.fn(async (input: string | URL | Request) => {
     const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     calls.push(url);
+    if (url === TREE) return listedIndexes();
     const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
     if (broken.includes(name)) return new Response("upstream said no", { status });
     return new Response(FILES[name] ?? "", { status: 200 });
@@ -54,13 +55,16 @@ afterEach(() => {
 });
 
 describe("/api/hub-cards", () => {
-  it("publishes totals only when every index answered", async () => {
+  it("publishes totals only when discovery, every index and the ledger answered", async () => {
     installFetch([]);
     const { res, body } = await invoke();
     const counts = body.counts as unknown as Record<string, unknown>;
 
     expect(res.status).toBe(200);
     expect(counts.complete).toBe(true);
+    expect(counts.indexes_all_read).toBe(true);
+    expect(counts.superseded_ledger_read).toBe(true);
+    expect(res.headers.get('cache-control')).toBe('public, max-age=600');
     expect(counts.cells).toBe(5);
     expect(counts.measured).toBe(2);
     expect(counts.unmeasured).toBe(3);
@@ -117,6 +121,7 @@ describe("/api/hub-cards", () => {
     let safetyAttempts = 0;
     const mocked = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
       const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      if (url === TREE) return listedIndexes();
       const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
       if (name === "INDEX-safety") {
         safetyAttempts++;
@@ -179,6 +184,7 @@ const installStale = (ledgerBody: string | null) => {
     "fetch",
     vi.fn(async (input: string | URL | Request) => {
       const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      if (url === TREE) return listedIndexes();
       if (url === LEDGER) {
         return ledgerBody === null
           ? new Response("no", { status: 500 })
@@ -215,11 +221,17 @@ describe("/api/hub-cards — the live card, not every card ever signed", () => {
 
   it("an unreadable ledger is UNCHECKABLE, never an empty ledger", async () => {
     installStale(null);
-    const { body } = await invoke();
+    const { res, body } = await invoke();
     const counts = body.counts as unknown as Record<string, unknown>;
     const honesty = body.honesty as unknown as Record<string, string>;
     // null, not 0 — "I could not check" is not "nothing was superseded".
     expect(counts.superseded_excluded).toBeNull();
+    expect(counts.superseded_ledger_read).toBe(false);
+    expect(counts.complete).toBe(false);
+    expect(res.headers.get('cache-control')).toBe('public, max-age=60');
+    expect(counts.cells).toBeNull();
+    expect(counts.measured).toBeNull();
+    expect(counts.read_so_far).toMatchObject({ cells: 1, measured: 1 });
     expect(honesty.superseded_ledger).toMatch(/UNREADABLE/);
     expect(honesty.superseded_ledger).toMatch(/UPPER BOUND/);
   });
@@ -234,6 +246,7 @@ describe("/api/hub-cards — the live card, not every card ever signed", () => {
 // ---------------------------------------------------------------------------
 
 const TREE = "https://huggingface.co/api/datasets/csoai/gspc-hub-cards/tree/main/mill-cards";
+const listedIndexes = () => new Response(JSON.stringify(Object.keys(FILES).map(name => ({ type: 'file', path: `mill-cards/${name}.jsonl` }))));
 
 /** Serve a dataset listing (or fail it) plus one row per named index. */
 const installDiscovery = (names: string[] | null) => {
@@ -268,15 +281,19 @@ describe("/api/hub-cards — the index list is discovered, not remembered", () =
 
   it("falls back to the known four when the listing fails, and says so", async () => {
     installDiscovery(null);
-    const { body } = await invoke();
+    const { res, body } = await invoke();
     const counts = body.counts as unknown as Record<string, unknown>;
     const honesty = body.honesty as unknown as Record<string, string>;
     expect(counts.indexes_total).toBe(4);
     expect(counts.indexes_discovered).toBe(false);
     expect(honesty.index_list_is).toMatch(/UNCHECKABLE/);
-    // The census stays on the air: a listing hiccup did not touch the indexes.
-    expect(counts.cells).toBe(4);
-    expect(counts.complete).toBe(true);
+    // Rows stay available, but an unknown index list cannot yield a total.
+    expect(counts.cells).toBeNull();
+    expect(counts.read_so_far).toMatchObject({ cells: 4 });
+    expect(counts.indexes_all_read).toBe(true);
+    expect(counts.complete).toBe(false);
+    expect(res.headers.get('cache-control')).toBe('public, max-age=60');
+    expect(honesty.unreachable_is_not_empty).not.toBe('All published indexes were read.');
   });
 
   it("an EMPTY listing is not a population of zero", async () => {
@@ -286,6 +303,8 @@ describe("/api/hub-cards — the index list is discovered, not remembered", () =
     // Trusting an empty listing would publish cells: 0 as a fact about the estate.
     expect(counts.indexes_discovered).toBe(false);
     expect(counts.indexes_total).toBe(4);
-    expect(counts.cells).toBe(4);
+    expect(counts.cells).toBeNull();
+    expect(counts.complete).toBe(false);
+    expect(counts.read_so_far).toMatchObject({ cells: 4 });
   });
 });

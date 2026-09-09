@@ -229,12 +229,11 @@ export const onRequestGet: PagesFunction = async (ctx) => {
   const duplicatesCollapsed = afterLedger.length - cells.length;
   const unread = reads.filter((r): r is Extract<IndexRead, { ok: false }> => !r.ok);
   const reached = reads.length - unread.length;
-  // `complete` keeps meaning "every index we read answered". It is deliberately NOT
-  // tied to discovery: if the dataset listing hiccups, all four indexes still read
-  // fine, and nulling the census over that would take a working number off the air
-  // for a failure that did not touch it. The uncertainty is stated instead —
-  // `indexes_discovered` and the honesty line — exactly as the ledger read is.
-  const complete = unread.length === 0;
+  // A known-index subtotal is not a discovered population; an unread supersession
+  // ledger cannot establish which rows are current. Keep rows available, but
+  // withhold population totals until all three checks succeeded.
+  const allIndexesRead = unread.length === 0;
+  const complete = discovered !== null && allIndexesRead && supersededIds !== null;
 
   const seen = { measured: 0, unmeasured: 0, other: 0, cells: cells.length };
   for (const c of cells) {
@@ -258,8 +257,8 @@ export const onRequestGet: PagesFunction = async (ctx) => {
         "These cells are not the 22-axis board. The board is GET /api/gspc; quote totals.public_count.",
       own_fleet_is_elsewhere:
         "GET /api/findings carries the CSOAI fleet, which is a different population and is measured against the same frozen banks.",
-      unreachable_is_not_empty: complete
-        ? "All published indexes were read."
+      unreachable_is_not_empty: allIndexesRead
+        ? discovered ? "All discovered published indexes were read." : "All known fallback indexes were read; the full index list is UNCHECKABLE."
         : `Only ${reached} of ${indexes.length} indexes answered (unread: ${unreadList
             .map((u) => u.index)
             .join(", ")}). Missing rows are UNCHECKABLE, not absent.`,
@@ -283,8 +282,8 @@ export const onRequestGet: PagesFunction = async (ctx) => {
         "n_measured on /api/state → hub_census counts a DIFFERENT population (the 3M-listing " +
         "census walk) and is not this number.",
       partial_read_has_no_total: complete
-        ? "Every index answered, so counts are the whole published population."
-        : "An index did not answer, so measured/unmeasured/cells are null. A subtotal is not a total, and the rows behind an unread index are disproportionately UNMEASURED — publishing the subtotal would understate what is unmeasured. Read counts.read_so_far instead, and treat it as a floor, never as the population.",
+        ? "Discovery, every index and the supersession ledger answered, so counts describe the observed published population."
+        : "Discovery, an index, or the supersession ledger could not be checked, so population totals are null. counts.read_so_far describes retrieved rows only: it may omit unread rows or include superseded rows, and is neither a guaranteed floor nor a complete live population.",
     },
     counts: {
       complete,
@@ -301,6 +300,8 @@ export const onRequestGet: PagesFunction = async (ctx) => {
       indexes_read: reached,
       indexes_total: indexes.length,
       indexes_discovered: discovered !== null,
+      indexes_all_read: allIndexesRead,
+      superseded_ledger_read: supersededIds !== null,
       indexes_unread: unreadList,
     },
     cells,
