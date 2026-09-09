@@ -132,6 +132,19 @@ bash scripts/prerender-run.sh --dist dist/client --wait 900 --min 350
 
 Do **not** run `npx vite build` from the repo root (it picks up a dead `src/`). Do **not** `vercel deploy` this site.
 
+## Agents — paid artefacts (x402)
+
+The board and verification stay free. Metered artefacts (issuance, evidence assembly, signed feeds) are on the x402 rail. Amounts live only in the HTTP 402 challenge — this README does not invent a price. A grade is never sold.
+
+- Catalog: https://councilof.ai/api/x402
+- Manifest: https://councilof.ai/.well-known/x402.json
+- MCP: https://councilof.ai/mcp (`commission_card` and the other paid tools return a 402 as `structuredContent` until paid)
+- PayAPI Market (discovery only — buyers pay the estate wallet, not PayAPI): https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed
+
+```json
+{"mcpServers":{"payapi":{"url":"https://payapi.market/mcp"}}}
+```
+
 ## Documentation
 
 - [Measurement body overview](https://councilof.ai/about/)
