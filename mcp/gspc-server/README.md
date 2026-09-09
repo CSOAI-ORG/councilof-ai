@@ -23,45 +23,53 @@ are reported as two labelled numbers and never reconciled.
 | `get_root` | GET `https://councilof.ai/root.json`. Three states: VALID / UNREACHABLE / UNCHECKABLE. Separate from GSPC. Never a certificate. |
 | `get_card` | GET one card-v0 leaf by sha256. VALID / INVALID (not a leaf) / UNCHECKABLE (fetch failed). A 404 leaf is INVALID, not UNCHECKABLE. |
 | `verify_inclusion` | GET `/api/proof?sha=`. VALID (included) / INVALID (not a leaf) / UNCHECKABLE (proof endpoint unreachable). |
+| `x402_trust` | Latest x402 catalog trust snapshot: counts of correct challenges and phantom resources. A 402 is a challenge, not delivery. |
 
-Seven free tools above; five metered ones below. `tools/list` returns all twelve, and
+Eight free tools above; four metered ones below. `tools/list` returns all twelve, and
 `wired-tools.test.mjs` fails if a listed tool does not run or a running tool is not listed.
 
-The same seven free tools, from the same definitions file
+The same eight free tools, from the same definitions file
 (`functions/mcp/gspc-tools.json`), are served over HTTP at
 `https://councilof.ai/mcp` (streamable HTTP, JSON-RPC 2.0 POST). Use whichever
 transport your client speaks; the contracts are identical.
 
-### The five x402-metered tools — carried here since 0.2.0
+### The four x402-metered tools
 
 | tool | route | free path |
 |---|---|---|
 | `commission_card` | `/api/request-attestation` | — (a payment never mints a MEASURED cell) |
 | `art50_marking_evidence` | `/api/art50/marking-evidence` | `preview: true` |
 | `rwa_evidence` | `/api/rwa/evidence` | `preview: true` (unsigned state) |
-| `witness_hash` | `/api/witness` | — |
 | `receipts_batch` | `/api/receipts/batch` | `preview: true` (count, span, roots, batch sha256) |
 
 Payment travels as the **`x_payment` argument**, not as a transport header — so stdio carries these
 exactly as the HTTP door does. Up to 0.1.1 this README said the opposite ("stdio has no payment header to
 forward"); that was a statement about the transport, and it was wrong about the mechanism. The server
-forwards your `x_payment` verbatim as the `X-PAYMENT` header on one request to `councilof.ai` and never
-inspects, signs or invents a receipt. Settlement is the route's job, fail-closed.
+forwards your `x_payment` verbatim as the `X-PAYMENT` header on one request to `councilof.ai`. It never
+authenticates, signs or invents a receipt; it only classifies the opaque response's receipt shape.
+Settlement is the route's job, fail-closed.
 
-Four honest statuses, and no fifth:
+Top-level statuses describe delivery, not settlement:
 
 - **`PAYMENT_REQUIRED`** — the route answered 402. The full challenge (`accepts[]`, the `PAYMENT-REQUIRED`
-  header) comes back as `structuredContent`. Nothing was charged. A challenge is an answer, not a failure.
-- **`DELIVERED`** — the route answered 2xx, with the settle echo when the route sent one.
+  header) comes back as `structuredContent`. With no `x_payment`, nothing was charged by that request. If
+  an authorization was presented, settlement remains `UNCONFIRMED`; inspect before signing or retrying.
+  A challenge is an answer, not a failure.
+- **`DELIVERED`** — the route answered 2xx and returned a deliverable. Inspect `delivery_kind`:
+  `PREVIEW_OR_FREE`, `DELIVERED_SETTLEMENT_UNCONFIRMED`, `DELIVERED_RECEIPT_GAP`, or
+  `DELIVERED_WITH_ROUTE_RECEIPT`. `receipt_state: PRESENT_UNVERIFIED` means a JWS-shaped receipt was
+  present in the route's opaque response; this wrapper has not verified it.
 - **`NOT_DEPLOYED`** — the route answered 404 on this origin. Said plainly, never a fabricated result.
-- **`UNREACHABLE`** / **`BAD_ARGUMENTS`** — the call could not be made. Nothing was charged.
+- **`UNREACHABLE`** / **`BAD_ARGUMENTS`** — the call could not be made. After an authorization is
+  presented, a transport failure makes delivery and settlement unknown; never retry blindly.
 
-**Known limitation, stated rather than hidden (2026-09-04):** the free `preview` paths and the 402
-challenge work today, but **settlement on the live rail is failing** — a genuine signed EIP-3009
-authorization is rejected by the facilitator with HTTP 400 after the buyer signs, because the facilitator
-now advertises two x402 dialects for Base and the wrong one is being selected. The fix is written and
-tested but not merged. Until it is, treat the paid paths as: challenge yes, delivery no. This server
-reports what the route actually said and never converts a failed settlement into a result.
+The package does not infer settlement from a challenge, a 2xx, or its own request. It reports delivery
+and the route's settlement evidence separately: a 402 is `PAYMENT_REQUIRED`, a 2xx is `DELIVERED`,
+and a transport failure remains `UNREACHABLE`. A settle echo is `REPORTED_BY_ROUTE`, not independent
+chain verification; a missing or unreadable signed receipt is a named gap and never a silent success.
+`settlement_state` is exactly `NOT_REQUESTED`, `UNCONFIRMED`, or `REPORTED_BY_ROUTE`.
+`receipt_state` on a delivered result is exactly `NOT_REQUESTED`, `ABSENT`, `MISSING`, `UNREADABLE`,
+or `PRESENT_UNVERIFIED`.
 
 Every paid deliverable is measurement, not certification; no tool on either transport carries a trust
 label; amounts appear only inside a 402 challenge.

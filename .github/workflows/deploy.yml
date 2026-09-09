@@ -59,6 +59,12 @@ jobs:
       - name: Sitemap truth gate — every listed URL is one the edge serves
         run: npm run guard:sitemap-truth
 
+      # /api/revenue names this exact reader as the authoritative way to distinguish
+      # index presence from facilitator intent. Keep the proof path executable, but do
+      # not put hundreds of live third-party requests on the release critical path.
+      - name: x402 index auditor — offline pagination and fail-closed contract
+        run: npm run test:x402-index-audit
+
       # _redirects guard. Cloudflare stops parsing the file after 100 DYNAMIC rules and
       # only warns; on 2026-08-26 that silently dropped the last 53 lines including the
       # SPA catch-all, and the deploy still went green. Selftest first so a guard that

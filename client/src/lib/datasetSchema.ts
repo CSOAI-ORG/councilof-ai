@@ -86,10 +86,10 @@ export function gspcAxisDatasets(): Record<string, unknown>[] {
       measurementTechnique: GSPC_MEASUREMENT_TECHNIQUE,
       variableMeasured: a.task,
       isPartOf: { "@type": "Dataset", name: "GSPC board", url: `${BASE}/gspc-scoreboard` },
-      distribution: [
-        { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: hf },
-      ],
     };
+    // A Hub repository page is a valid Dataset URL, but it is not itself a JSON
+    // download. Do not emit DataDownload until the registry publishes a stable,
+    // file-specific content URL and its actual media type.
     // A minted DOI makes the bank citable; it is only asserted when real.
     if (doi) {
       node.identifier = doi;

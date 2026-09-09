@@ -22,8 +22,32 @@ const doorPaid = J(resolve(ROOT, "functions/mcp/paid-tools.json")).tools.map((t:
 
 describe("the packaged MCP server advertises exactly what the door serves", () => {
   it("reads the door's canonical lists, so this cannot pass vacuously", () => {
-    expect(doorFree.length).toBeGreaterThan(3);
-    expect(doorPaid.length).toBeGreaterThan(0);
+    expect(doorFree).toHaveLength(8);
+    expect(doorPaid).toHaveLength(4);
+    expect([...doorFree, ...doorPaid]).toHaveLength(12);
+    expect([...doorFree, ...doorPaid]).not.toContain("witness_hash");
+  });
+
+  it("keeps the package, runtime and registry package reference on one release version", () => {
+    const pkg = J(resolve(__dirname, "package.json"));
+    const registry = J(resolve(__dirname, "server.json"));
+    const runtime = readFileSync(resolve(__dirname, "index.mjs"), "utf8");
+    expect(registry.packages).toHaveLength(1);
+    expect(registry.packages[0].identifier).toBe(pkg.name);
+    expect(registry.packages[0].version).toBe(pkg.version);
+    expect(runtime).toContain('new URL("./package.json", import.meta.url)');
+    expect(runtime).not.toMatch(/const VERSION\s*=\s*"\d+\.\d+\.\d+"/);
+  });
+
+  it("keeps npm's rendered description short and accurate", () => {
+    const { description } = J(resolve(__dirname, "package.json"));
+    expect(description.length).toBeLessThanOrEqual(255);
+    expect(description).toContain("Twelve tools: eight free readers and four x402-metered evidence tools");
+  });
+
+  it("ships both canonical tool banks in the Docker client", () => {
+    const dockerfile = readFileSync(resolve(__dirname, "Dockerfile"), "utf8");
+    expect(dockerfile).toContain("gspc-tools.json paid-tools.json");
   });
 
   it("pack.mjs copies from the canonical sources and invents nothing", () => {

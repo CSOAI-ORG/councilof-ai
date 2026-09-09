@@ -337,14 +337,27 @@ export async function buildFabricManifest(
     }),
   };
 
+  // Request-scoped modern MCP returns a complete JSON result. A legacy probe
+  // with JSON-only Accept is rejected; merely accepting SSE is not enough for
+  // boundedProbe's JSON decoder. Declare the protocol and capabilities here.
   const mcpInit: RequestInit = {
     method: "POST",
-    headers: { accept: "application/json", "content-type": "application/json" },
+    headers: {
+      accept: "application/json, text/event-stream",
+      "content-type": "application/json",
+      "MCP-Protocol-Version": "2026-07-28",
+      "Mcp-Method": "tools/list",
+    },
     body: JSON.stringify({
       jsonrpc: "2.0",
       id: "fabric-probe",
       method: "tools/list",
-      params: {},
+      params: {
+        _meta: {
+          "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+          "io.modelcontextprotocol/clientCapabilities": {},
+        },
+      },
     }),
   };
 

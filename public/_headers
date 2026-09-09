@@ -47,6 +47,12 @@
 
 /
   Cache-Control: no-cache, must-revalidate
+  Link: <https://councilof.ai/.well-known/api-catalog>; rel="api-catalog"
+
+# Public read-only MCP connection metadata, consumed by browser and server clients.
+/.well-known/mcp/server-card.json
+  Content-Type: application/json
+  Access-Control-Allow-Origin: *
 
 # A2A v1.0 agent card (RFC 8615, N5-13)
 /.well-known/agent-card.json

@@ -17,8 +17,9 @@ import { useBoardCount } from "@/lib/boardCount";
  * the 2026-08-28 Series A packaging canon. Does not add a fifth commercial
  * door. GPAI / CRA / financial / academy remain modules under Ledger or OS.
  *
- * Public prices stay off this page (owner ruling 2026-08-26). Paid SKUs:
- * on enquiry via /licensing-agreement.
+ * Public prices stay off this page (owner ruling 2026-08-26). Machine jobs
+ * disclose their amount in the live 402 challenge; enterprise Ledger and Data
+ * work remain on enquiry.
  */
 
 export const SKUS = [
@@ -31,10 +32,10 @@ export const SKUS = [
   },
   {
     id: "run",
-    name: "Run / re-attest",
-    href: "/assess",
-    tag: "Enquiry",
-    what: "We measure the named system again when the law or the model moves. Get measured is the lead. Paid is the re-attest loop.",
+    name: "Request attestation",
+    href: "/dashboard?tab=measured",
+    tag: "Scoped commission",
+    what: "Name a subject and optional axis. The paid route returns a commission receipt and re-serves signed cards already on file; it does not promise an instant fresh measurement.",
   },
   {
     id: "ledger",
@@ -67,7 +68,7 @@ const FREE_RAIL = [
   { name: "The live board", href: "/gspc-scoreboard", what: "Every quotable axis, measured or honestly UNMEASURED." },
   { name: "The API", href: "/api/gspc", what: "The same board, machine-readable. Agents welcome.", external: true },
   { name: "The method", href: "/methodology", what: "The frozen rules every number above is computed under." },
-  { name: "Metered for agents", href: "/pricing-free", what: "Three artefacts an agent can buy over HTTP 402 (USDC on Base) — issuance, assembly, cadence. Never a grade." },
+  { name: "Choose an actual job", href: "/dashboard?task=pricing-overview&tab=measured", what: "Free verification, existing RWA or Article 50 evidence, provider history, or a scoped commission. Paid routes disclose the exact amount only in their live 402 challenge." },
   { name: "Live board badge", href: "/badge/board.svg", what: "One SVG that re-renders from the live board — embed it anywhere, it never types a number." },
   
 ];
@@ -116,10 +117,10 @@ const MODULES = [
     what: "A record that a course was completed. It attests learning, never conformity, and is not an accreditation.",
   },
   {
-    name: "Get measured",
+    name: "Request a scoped attestation",
     href: "/dashboard?tab=measured",
-    tag: "Free card",
-    what: "We run your system against the frozen tests that apply to it and hand you a signed record you keep. Publishing it is your decision.",
+    tag: "Commission",
+    what: "Commission a receipt for a named subject and inspect signed measurements already on file. A fresh run remains UNMEASURED until a published run exists.",
   },
 ];
 
@@ -138,37 +139,39 @@ export default function Products() {
     <div className="min-h-screen bg-[#03110b]">
     <main className="mx-auto max-w-5xl px-5 py-14 text-slate-100 sm:px-8">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">
-        Council of AI — verify free, three arms on enquiry
+        Council of AI — verify free · jobs by artefact · enterprise on enquiry
       </p>
       <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight sm:text-4xl">
-        Verify is free. Three things invoice.
+        Verify for free. Choose the work you need.
       </h1>
       <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-300">
-        We measure AI systems against frozen, published tests, sign the result, and
-        sell the evidence — never the score, never a certificate, never to anyone we rank.
+        Retrieve existing evidence, inspect provider history, or commission a scoped
+        receipt. We sell the artefact — never the score, never a certificate, never
+        to anyone we rank.
       </p>
 
-      {/* The five access surfaces — every way a user can reach the measurement rail today. */}
-      <section aria-label="Five access surfaces" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      {/* Public runtime doors and source integrations. Source-only projects say so: a
+          repository is inspectable, but it is not a browser-store or host installation. */}
+      <section aria-label="Runtime and integration status" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/mcp">
           <p className="font-mono text-sm text-emerald-100">MCP</p>
           <p className="mt-1 text-xs text-emerald-200/80">{toolSummary()}</p>
           <p className="mt-1 text-[11px] text-emerald-300/60">POST /mcp</p>
         </a>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/extension/">
-          <p className="font-mono text-sm text-emerald-100">Browser extension</p>
-          <p className="mt-1 text-xs text-emerald-200/80">MV3 — overlays badge on Hugging Face, OpenRouter, Replicate</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">/extension/</p>
+        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify" target="_blank" rel="noreferrer">
+          <p className="font-mono text-sm text-emerald-100">Browser extension source</p>
+          <p className="mt-1 text-xs text-emerald-200/80">MV3 prototype — load unpacked from the public repository</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">No browser-store install claimed</p>
         </a>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/tools">
-          <p className="font-mono text-sm text-emerald-100">Plugin</p>
-          <p className="mt-1 text-xs text-emerald-200/80">Council of AI Grok plugin — 4 skills, 4 commands</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">/tools</p>
+        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="https://github.com/CSOAI-ORG/council-of-ai-grok" target="_blank" rel="noreferrer">
+          <p className="font-mono text-sm text-emerald-100">Grok integration source</p>
+          <p className="mt-1 text-xs text-emerald-200/80">Inspect the public plugin repository; host installation is separate</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">Source, not a store listing</p>
         </a>
         <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/what-is-new.html">
-          <p className="font-mono text-sm text-emerald-100">Hermes skill</p>
-          <p className="mt-1 text-xs text-emerald-200/80">~/.hermes/skills/council-of-ai/ — 6/6 tests pass</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">skill_view</p>
+          <p className="font-mono text-sm text-emerald-100">Hermes integration notes</p>
+          <p className="mt-1 text-xs text-emerald-200/80">Historical local integration, documented for inspection</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">No public installation package</p>
         </a>
         <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="https://councilof.ai/api/gspc" target="_blank" rel="noreferrer">
           <p className="font-mono text-sm text-emerald-100">REST + curl</p>

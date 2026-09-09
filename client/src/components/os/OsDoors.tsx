@@ -1,5 +1,6 @@
 import { useEffect, useState, lazy, Suspense } from "react";
-import { FREE_TOOL_NAMES } from "@/lib/mcpTools";
+import { FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
+import { mcpRpc } from "@/lib/mcpHttp";
 import { Link, useLocation, useSearch } from "wouter";
 import { FOCUS } from "@/components/lobby/glass";
 import { osDoorHref, osPanelHref } from "@/lib/lobbyLink";
@@ -57,7 +58,7 @@ function CardsDoor() {
 }
 
 // The fallback shown when the live /mcp probe fails — which, during the 2026-09-05 outage, is
-// what every visitor actually sees. It listed FOUR tools while the door serves eleven, so the
+// what every visitor actually sees. It listed FOUR tools while the door serves twelve, so the
 // page understated us most in the exact circumstance where it was the only thing on screen.
 // Derived now; the blurbs stay hand-written because only a human can write those.
 const TOOL_BLURBS: Record<string, string> = {
@@ -101,13 +102,8 @@ function HarnessDoor() {
     const t0 = performance.now();
     (async () => {
       try {
-        const res = await fetch("/mcp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+        const data = await mcpRpc("tools/list");
+        if (data.error) throw new Error(data.error.message || "MCP tools/list failed");
         const tools = ((data?.result?.tools as { name?: string; description?: string }[]) || [])
           .filter((t) => t?.name)
           .map((t) => ({
@@ -203,7 +199,7 @@ function HarnessDoor() {
         )}
         {probe.status === "down" && (
           <span>
-            MCP probe failed ({probe.error}). Showing last-known tool names — try again from your client.
+            MCP probe failed ({probe.error}). Showing the known free tool names — try again from your client.
           </span>
         )}
         <a href="https://councilof.ai/mcp" className={`ml-auto font-medium underline-offset-2 hover:underline ${FOCUS}`}>
@@ -266,7 +262,7 @@ function HarnessDoor() {
           ))}
         </ul>
         <p className="mt-3 text-xs text-slate-500">
-          Four tools only. COMPUTE is a Council OS terminal function, not a fifth MCP tool.
+          {FREE_TOOL_NAMES.length} free tools plus {PAID_TOOL_NAMES.length} x402-metered tools when live. COMPUTE is a Council OS terminal function, not another MCP tool.
         </p>
       </div>
       <div className="rounded-xl border border-slate-200 bg-white p-5">

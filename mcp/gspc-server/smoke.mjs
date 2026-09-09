@@ -74,8 +74,21 @@ notify("notifications/initialized");
 const list = await rpc("tools/list");
 const names = list.result.tools.map((t) => t.name);
 console.log(`tools: ${names.join(", ")}`);
-const seven = ["board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion"];
-expect("tools/list is seven wired names", names.join(","), seven.join(","));
+const twelve = [
+  "board_totals",
+  "get_axis",
+  "verify_card",
+  "list_cards",
+  "get_root",
+  "get_card",
+  "verify_inclusion",
+  "x402_trust",
+  "commission_card",
+  "art50_marking_evidence",
+  "rwa_evidence",
+  "receipts_batch",
+];
+expect("tools/list is the canonical twelve names (8 free + 4 metered)", names.join(","), twelve.join(","));
 
 // ---- live tools ----
 const totals = await rpc("tools/call", { name: "board_totals", arguments: {} });

@@ -34,26 +34,40 @@ import { OFFER_RECEIPT_SPEC_SHA, X402_SIGNER_KID } from "./_x402_offer";
 import { RECEIPTS_BATCH_DESCRIPTION } from "./_x402_descriptions";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 
-export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATOR_URL?: string }> = async ({ request, env }) => {
+export const onRequestGet: PagesFunction<{
+  X402_PAY_TO?: string;
+  X402_FACILITATOR_URL?: string;
+  BOARD_SIGN_KEY_PKCS8_B64?: string;
+}> = async ({ request, env }) => {
   const origin = new URL(request.url).origin;
   const u = (p: string) => `${origin}${p}`;
+  const rail = railMode(env);
+  const boardSigningKeyConfigured = Boolean((env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim());
   const body = {
     schema: "csoai.x402-catalog/0.3",
     one_line: "Verification is free forever. Agents pay per artefact: issuance, assembly, cadence — never a grade.",
     rail: {
-      ...railMode(env),
+      ...rail,
       scheme: "exact",
       network: NETWORK_CAIP2_BASE,
       asset: { symbol: USDC_BASE.symbol, contract: USDC_BASE.asset, decimals: USDC_BASE.decimals },
       pay_to: resolvePayTo(env),
       amounts: "only inside each resource's 402 challenge (accepts[].amount) — never on this catalog, never in prose",
       well_known: u("/.well-known/x402.json"),
-      // Signed offers on every 402, signed receipts on every settle — the x402 Offer & Receipt
-      // extension, JWS/EdDSA under a key in our DID document. The full declaration, with the
-      // spec commit and the reason we emit no eip712, is on /.well-known/x402.json.
+      // The x402 Offer & Receipt extension is conditionally emitted. Offers need the board key;
+      // receipts additionally need a facilitator-confirmed settlement that names a payer. The
+      // full declaration, including gap fields and the JWS-only profile, is on .well-known.
       offer_receipt: {
-        offers: "in every 402 body and PAYMENT-REQUIRED header, at extensions['offer-receipt'].info.offers[]",
-        receipts: "in every settled X-PAYMENT-RESPONSE, at extensions['offer-receipt'].info.receipt",
+        emission: "conditional",
+        board_signing_key_configured: boardSigningKeyConfigured,
+        facilitator_configured: rail.facilitator_configured,
+        offers:
+          "signed only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be " +
+          "committed; otherwise csoai.offer_receipt names the gap and no offer-receipt block is attached",
+        receipts:
+          "signed only after facilitator-confirmed settlement when the facilitator names a payer and " +
+          "BOARD_SIGN_KEY_PKCS8_B64 is provisioned; otherwise receiptGap names why no signed receipt " +
+          "was attached",
         format: "jws (EdDSA)",
         kid: X402_SIGNER_KID,
         spec_commit: OFFER_RECEIPT_SPEC_SHA,

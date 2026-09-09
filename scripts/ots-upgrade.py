@@ -95,4 +95,10 @@ def main(paths: list[str]) -> int:
 
 
 if __name__ == "__main__":
+    # Reviewed exact-card maintenance is manifest-bound, offline by default and
+    # stages into a new directory. Preserve the legacy invocation for callers
+    # outside this release; do not silently change their input/output contract.
+    if any(arg == "--manifest" or arg.startswith("--manifest=") for arg in sys.argv[1:]):
+        from maintain_card_ots import main as manifest_main
+        sys.exit(manifest_main(sys.argv[1:]))
     sys.exit(main(sys.argv[1:] or ["public/interop/layer0-ceremony-2026-09-03.json.ots"]))

@@ -32,7 +32,9 @@ import { createInterface } from "node:readline";
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-const VERSION = "0.2.0";
+const PACKAGE = JSON.parse(readFileSync(fileURLToPath(new URL("./package.json", import.meta.url)), "utf8"));
+const VERSION = PACKAGE.version;
+if (typeof VERSION !== "string" || !VERSION) throw new Error("package.json has no valid version");
 const ORIGIN = process.env.GSPC_ORIGIN || "https://councilof.ai";
 const FETCH_TIMEOUT_MS = 15000;
 
@@ -64,8 +66,9 @@ const FREE_TOOLS = JSON.parse(readFileSync(TOOLS_PATH, "utf8")).tools;
  *
  * Payment travels as the `x_payment` TOOL ARGUMENT, not as a transport header, so stdio carries
  * these exactly as the HTTP door does: the argument is forwarded verbatim as the X-PAYMENT header
- * on one same-origin request, and this server never inspects, signs or invents a receipt.
- * Settlement is the route's job, fail-closed. Without `x_payment` the tool returns the route's own
+ * on one same-origin request. This server never authenticates, signs or invents a receipt; it only
+ * classifies the opaque response's receipt shape. Settlement is the route's job, fail-closed.
+ * Without `x_payment` the tool returns the route's own
  * 402 challenge, which is an answer and not a failure — and `preview` is free where a tool offers it.
  */
 const PAID_TOOLS_PATH = firstExisting([
@@ -368,6 +371,29 @@ async function verifyInclusion(args) {
   }
 }
 
+/**
+ * Mirror the HTTP MCP tool's public x402-trust contract. The snapshot is the
+ * canonical measured artefact; this package delegates to it instead of
+ * copying counts or manufacturing a trust verdict locally.
+ */
+async function x402Trust() {
+  const path = "/interop/x402-trust/latest.json";
+  try {
+    const d = await fetchJson(path);
+    return {
+      state: "VALID",
+      source: `${ORIGIN}${path}`,
+      kind: d.kind ?? null,
+      as_of: d.as_of ?? null,
+      counts: d.counts ?? null,
+      headline: d.headline ?? null,
+      not_a_certification: true,
+    };
+  } catch (e) {
+    return { ...unreachable(path, e), state: "UNREACHABLE" };
+  }
+}
+
 /* ---------------------------------------------------------------- paid tools */
 
 const PAID_DOCTRINE =
@@ -413,12 +439,6 @@ function buildPaidRequest(name, args) {
       u.searchParams.set("asset", str("asset"));
       if (flag("preview")) u.searchParams.set("preview", "1");
       break;
-    case "witness_hash":
-      if (!str("sha256") && !str("url")) return { error: "sha256 or url is required" };
-      if (str("sha256")) u.searchParams.set("sha256", str("sha256").toLowerCase());
-      if (str("url")) u.searchParams.set("url", str("url"));
-      if (str("label")) u.searchParams.set("label", str("label"));
-      break;
     case "receipts_batch":
       if (!str("from")) return { error: "from is required (ISO-8601)" };
       u.searchParams.set("from", str("from"));
@@ -431,17 +451,73 @@ function buildPaidRequest(name, args) {
   return { url: u.toString(), init: { method, headers, ...(body ? { body } : {}) }, route };
 }
 
+function inspectReceipt(paymentResponse) {
+  if (!paymentResponse) return "ABSENT";
+  try {
+    const normalized = paymentResponse.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+    const decoded = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(padded), (c) => c.charCodeAt(0))));
+    const receipt = decoded?.extensions?.["offer-receipt"]?.info?.receipt;
+    return receipt &&
+      typeof receipt === "object" &&
+      !Array.isArray(receipt) &&
+      receipt.format === "jws" &&
+      typeof receipt.signature === "string" &&
+      /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(receipt.signature)
+      ? "PRESENT_UNVERIFIED"
+      : "MISSING";
+  } catch {
+    return "UNREADABLE";
+  }
+}
+
+function settlementFields(paymentPresented, paymentResponse) {
+  if (paymentResponse) {
+    return {
+      settlement_state: "REPORTED_BY_ROUTE",
+      payment_response_header: paymentResponse,
+    };
+  }
+  if (paymentPresented) return { settlement_state: "UNCONFIRMED" };
+  return { settlement_state: "NOT_REQUESTED", nothing_charged: true };
+}
+
+function deliveryFields(paymentPresented, paymentResponse) {
+  const receiptState = paymentResponse
+    ? inspectReceipt(paymentResponse)
+    : paymentPresented
+      ? "ABSENT"
+      : "NOT_REQUESTED";
+  if (!paymentPresented) {
+    return { delivery_kind: "PREVIEW_OR_FREE", receipt_state: receiptState };
+  }
+  if (!paymentResponse) {
+    return { delivery_kind: "DELIVERED_SETTLEMENT_UNCONFIRMED", receipt_state: receiptState };
+  }
+  if (receiptState === "PRESENT_UNVERIFIED") {
+    return { delivery_kind: "DELIVERED_WITH_ROUTE_RECEIPT", receipt_state: receiptState };
+  }
+  return {
+    delivery_kind: "DELIVERED_RECEIPT_GAP",
+    receipt_state: receiptState,
+    receipt_gap:
+      "The route reported settlement, but its opaque response did not carry a readable offer-receipt JWS. Inspect the route, chain and facilitator; do not retry blindly.",
+  };
+}
+
 /**
  * Forward one paid tool to its route and report what came back, in the route's own words.
  * 402 is PAYMENT_REQUIRED and not an error; 404 is NOT_DEPLOYED and never a fabricated result.
  */
 async function callPaidTool(name, args) {
   const tool = PAID_BY_NAME.get(name);
+  const paymentPresented = typeof args.x_payment === "string" && args.x_payment.trim().length > 0;
   const base = {
     tool: name,
     route: tool.csoai.route,
     sku: tool.csoai.sku,
     rail: tool.csoai.rail,
+    payment_presented: paymentPresented,
     doctrine: PAID_DOCTRINE,
     not_a_certification: true,
   };
@@ -456,11 +532,30 @@ async function callPaidTool(name, args) {
       ...base,
       status: "UNREACHABLE",
       reason: e instanceof Error ? e.message : String(e),
-      note: "The route could not be fetched. Nothing was charged, and no result is invented.",
+      delivery_state: "UNKNOWN",
+      ...settlementFields(paymentPresented),
+      note: paymentPresented
+        ? "The route could not be fetched. Delivery and settlement are unknown; inspect the wallet, chain and facilitator before signing or retrying."
+        : "The route could not be fetched. No payment authorization was presented, and no result is invented.",
     };
   }
 
-  const text = await res.text();
+  let text;
+  try {
+    text = await res.text();
+  } catch {
+    return {
+      ...base,
+      status: "UNREADABLE_RESPONSE",
+      http_status: res.status,
+      reason: "the evidence route response could not be read",
+      delivery_state: "UNKNOWN",
+      ...settlementFields(paymentPresented),
+      note: paymentPresented
+        ? "Delivery and settlement are unknown; inspect the wallet, chain and facilitator before signing or retrying."
+        : "No payment authorization was presented, and no result is invented.",
+    };
+  }
   let body = null;
   try {
     body = text ? JSON.parse(text) : null;
@@ -475,19 +570,57 @@ async function callPaidTool(name, args) {
       http_status: 402,
       payment_required: body,
       payment_required_header: res.headers.get("payment-required"),
+      delivery_state: "NOT_DELIVERED",
+      ...settlementFields(paymentPresented),
       note:
-        "A challenge is an answer, not a failure. Pay from your own wallet against accepts[] and " +
-        "call again with x_payment. Nothing was charged by this call.",
+        "A challenge is an answer, not a failure. " +
+        (paymentPresented
+          ? "A payment authorization was presented, but this response does not prove settlement. Inspect the wallet, chain and facilitator before signing or retrying."
+          : "Pay from your own wallet against accepts[] and call again with x_payment. No payment authorization was presented; nothing was charged by this request."),
     };
   }
   if (res.status === 404) {
-    return { ...base, status: "NOT_DEPLOYED", http_status: 404, body, note: `${tool.csoai.route} is not on ${ORIGIN}.` };
+    return {
+      ...base,
+      status: "NOT_DEPLOYED",
+      http_status: 404,
+      body,
+      delivery_state: "NOT_DELIVERED",
+      ...settlementFields(paymentPresented),
+      note: paymentPresented
+        ? `${tool.csoai.route} is not on ${ORIGIN}. Settlement is unconfirmed; inspect the wallet, chain and facilitator before signing or retrying.`
+        : `${tool.csoai.route} is not on ${ORIGIN}. No payment authorization was presented; nothing was charged by this request.`,
+    };
   }
   if (res.ok) {
     const settle = res.headers.get("x-payment-response");
-    return { ...base, status: "DELIVERED", http_status: res.status, body, ...(settle ? { x_payment_response: settle } : {}) };
+    return {
+      ...base,
+      status: "DELIVERED",
+      http_status: res.status,
+      body,
+      deliverable: body,
+      delivery_state: "DELIVERED",
+      ...settlementFields(paymentPresented, settle),
+      ...deliveryFields(paymentPresented, settle),
+      payment_response_header: settle,
+      ...(settle ? { x_payment_response: settle } : {}),
+    };
   }
-  return { ...base, status: String(res.status), http_status: res.status, body };
+  const settle = res.headers.get("x-payment-response");
+  return {
+    ...base,
+    status: `HTTP_${res.status}`,
+    http_status: res.status,
+    body,
+    delivery_state: "NOT_DELIVERED",
+    ...settlementFields(paymentPresented, settle),
+    note: settle
+      ? "Settlement was reported by the route; inspect the receipt before retrying."
+      : paymentPresented
+        ? "Settlement is unconfirmed; inspect the wallet, chain and facilitator before signing or retrying."
+        : "No payment authorization was presented; nothing was charged by this request.",
+  };
 }
 
 const HANDLERS = {
@@ -498,6 +631,7 @@ const HANDLERS = {
   get_root: getRoot,
   get_card: getCard,
   verify_inclusion: verifyInclusion,
+  x402_trust: x402Trust,
 };
 
 /* ----------------------------------------------------------------- transport */
@@ -539,13 +673,14 @@ function summaryLine(name, payload) {
       return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
     case "verify_inclusion":
       return `${payload.state ?? "?"} — inclusion against live merkle.`;
+    case "x402_trust":
+      return `${payload.state ?? "?"} — ${payload.headline || "catalog trust counts"}.`;
     case "commission_card":
     case "art50_marking_evidence":
     case "rwa_evidence":
-    case "witness_hash":
     case "receipts_batch":
       return `${payload.status ?? "?"} — ${payload.route ?? name}${
-        payload.status === "PAYMENT_REQUIRED" ? "; nothing charged" : ""
+        payload.status === "PAYMENT_REQUIRED" && payload.payment_presented === false ? "; nothing charged" : ""
       }${payload.reason ? " — " + payload.reason : ""}. ${PAID_DOCTRINE}.`;
     default:
       return name;

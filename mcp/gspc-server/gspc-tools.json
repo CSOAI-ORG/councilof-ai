@@ -114,6 +114,29 @@
         ],
         "additionalProperties": false
       }
+    },
+    {
+      "name": "x402_trust",
+      "description": "GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire. Counts only by doctrine — host details withheld; a 402 is NOT delivery; measurement, never certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "counts": {
+            "type": "object"
+          },
+          "headline": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": "string"
+          }
+        }
+      }
     }
   ]
 }

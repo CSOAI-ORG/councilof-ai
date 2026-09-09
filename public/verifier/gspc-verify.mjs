@@ -901,6 +901,7 @@ const BUNDLED_PROFILE = {
   "ruleProfiles": {
     "sha256(canonical body)": {
       "$comment": "Mill cards (did-keyed, signed by scripts/sign_financial_runs.py canonical_bytes). Measured across the 102 published: 88 accuracies carry a decimal point, 9 are bare `0`, 5 are bare `1` \u2014 this generation never writes 0.0 or 1.0. It also canonicalises with ensure_ascii=False, unlike the legacy rule.",
+      "$comment_runpod_counters": "scripts/runpod_gspc_worker.py initialises parse_errors and transport_errors as integer zero, increments them by int(...) / 1, and writes these exact two fields in compute_evidence. Their bare-integer encoding is part of this producer's schema, not inferred from a sampled numeric value. Classification is limited to this mill preimage rule; unknown integral fields still stop verification.",
       "ensureAscii": false,
       "numbers": {
         "floatFields": [
@@ -913,6 +914,8 @@ const BUNDLED_PROFILE = {
         "intFields": [
           "accuracy",
           "count",
+          "parse_errors_excluded",
+          "transport_errors_excluded",
           "n",
           "n_cards",
           "n_cells",

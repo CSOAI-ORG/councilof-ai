@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import X402PayButton from "@/components/X402PayButton";
+import { useEffect, useMemo, useRef, useState } from "react";
+import X402PayButton, {
+  type X402ExecutionResult,
+} from "@/components/X402PayButton";
 import type { X402Challenge } from "@/lib/x402Wallet";
 import {
   AlertTriangle,
@@ -21,13 +23,7 @@ import {
 
 export type JsonSchema = {
   type?:
-    | "object"
-    | "array"
-    | "string"
-    | "number"
-    | "integer"
-    | "boolean"
-    | "null";
+    "object" | "array" | "string" | "number" | "integer" | "boolean" | "null";
   description?: string;
   properties?: Record<string, JsonSchema>;
   required?: string[];
@@ -50,7 +46,7 @@ export type RunnerTool = Omit<SovTool, "inputSchema"> & {
   };
 };
 
-export type RunnerToolResult = ToolResult & {
+export type RunnerToolResult = Omit<ToolResult, "state"> & {
   state: "runtime_observed" | "unreachable" | "unchecked";
   structuredContent?: unknown;
 };
@@ -85,6 +81,59 @@ function normalizeToolResult(result: ToolResult): RunnerToolResult {
 
 type FieldDraft = string | boolean;
 type ToolDraft = Record<string, FieldDraft>;
+
+export type PaymentContext = Readonly<{
+  toolName: string;
+  args: Readonly<Record<string, unknown>>;
+  draftVersion: number;
+}>;
+
+function cloneAndFreezeJson(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return Object.freeze(value.map(cloneAndFreezeJson));
+  }
+  if (value && typeof value === "object") {
+    const cloned = Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, item]) => [
+        key,
+        cloneAndFreezeJson(item),
+      ]),
+    );
+    return Object.freeze(cloned);
+  }
+  return value;
+}
+
+/** Bind a 402 challenge to the exact typed tool call that produced it. */
+export function createPaymentContext(
+  toolName: string,
+  args: Record<string, unknown>,
+  draftVersion: number,
+): PaymentContext {
+  return Object.freeze({
+    toolName,
+    args: cloneAndFreezeJson(args) as Readonly<Record<string, unknown>>,
+    draftVersion,
+  });
+}
+
+export function paymentContextMatches(
+  context: PaymentContext,
+  toolName: string | null,
+  draftVersion: number,
+): boolean {
+  return context.toolName === toolName && context.draftVersion === draftVersion;
+}
+
+export function paymentCallForContext(
+  context: PaymentContext,
+  paymentHeader: string,
+): { toolName: string; args: Record<string, unknown> } {
+  return {
+    toolName: context.toolName,
+    args: { ...context.args, x_payment: paymentHeader },
+  };
+}
 
 export type ToolArgumentsResult =
   | { ok: true; args: Record<string, unknown> }
@@ -251,7 +300,10 @@ function resourceUrl(value: unknown): string | null {
 export function challengeFromResult(
   result: RunnerToolResult,
 ): X402Challenge | null {
-  const roots: unknown[] = [result.structuredContent, (result as { raw?: unknown }).raw];
+  const roots: unknown[] = [
+    result.structuredContent,
+    (result as { raw?: unknown }).raw,
+  ];
   const raw = (result as { raw?: Record<string, unknown> }).raw;
   const rpcResult =
     raw && typeof raw.result === "object" && raw.result
@@ -261,7 +313,10 @@ export function challengeFromResult(
   for (const root of roots) {
     if (!root || typeof root !== "object") continue;
     const bag = root as Record<string, unknown>;
-    const nested = bag.error && typeof bag.error === "object" ? (bag.error as Record<string, unknown>) : null;
+    const nested =
+      bag.error && typeof bag.error === "object"
+        ? (bag.error as Record<string, unknown>)
+        : null;
     const paymentRequired =
       bag.payment_required && typeof bag.payment_required === "object"
         ? (bag.payment_required as Record<string, unknown>)
@@ -280,13 +335,35 @@ export function challengeFromResult(
             : null;
       const resource = resourceUrl(a.resource) || resourceUrl(holder.resource);
       if (!payTo || !amount || !resource) continue;
+      const resourceInfo =
+        holder.resource &&
+        typeof holder.resource === "object" &&
+        !Array.isArray(holder.resource)
+          ? (holder.resource as { url: string; [key: string]: unknown })
+          : { url: resource };
       return {
+        x402Version:
+          typeof holder.x402Version === "number"
+            ? holder.x402Version
+            : undefined,
+        chainId:
+          typeof holder.chainId === "number" ? holder.chainId : undefined,
+        accepted: a,
+        resourceInfo,
+        extensions:
+          holder.extensions &&
+          typeof holder.extensions === "object" &&
+          !Array.isArray(holder.extensions)
+            ? (holder.extensions as Record<string, unknown>)
+            : undefined,
         network: typeof a.network === "string" ? a.network : undefined,
         asset: typeof a.asset === "string" ? a.asset : undefined,
         payTo,
         amount,
         resource,
         nonce: typeof a.nonce === "string" ? a.nonce : null,
+        maxTimeoutSeconds:
+          typeof a.maxTimeoutSeconds === "number" ? a.maxTimeoutSeconds : null,
         extra:
           a.extra && typeof a.extra === "object"
             ? (a.extra as { name?: string; version?: string })
@@ -359,10 +436,25 @@ export default function ToolRunner({
   const [output, setOutput] = useState<{
     result: RunnerToolResult;
     observedAt: string;
+    paymentContext?: PaymentContext;
   } | null>(null);
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState<"" | "copied" | "blocked">("");
   const [reloadKey, setReloadKey] = useState(0);
+  const mountedRef = useRef(true);
+  const activeNameRef = useRef<string | null>(null);
+  const draftVersionRef = useRef(0);
+  const paymentContextRef = useRef<PaymentContext | null>(null);
+  const paidRetryInFlightRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      draftVersionRef.current += 1;
+      paymentContextRef.current = null;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -374,7 +466,11 @@ export default function ToolRunner({
         setListState("unreachable");
         setListReason(reply.reason);
         setTools([]);
+        activeNameRef.current = null;
+        draftVersionRef.current += 1;
+        paymentContextRef.current = null;
         setActive(null);
+        setOutput(null);
         return;
       }
       setListState("catalogued");
@@ -385,8 +481,12 @@ export default function ToolRunner({
         advertisedTools.find((tool) => tool.name === "board_totals") ||
         advertisedTools[0] ||
         null;
+      activeNameRef.current = first?.name ?? null;
+      draftVersionRef.current += 1;
+      paymentContextRef.current = null;
       setActive(first);
       setDraft(first ? prefillToolDraft(first, initialArguments) : {});
+      setOutput(null);
     });
     return () => {
       cancelled = true;
@@ -408,6 +508,9 @@ export default function ToolRunner({
   const required = new Set(active?.inputSchema?.required || []);
 
   function pick(tool: RunnerTool) {
+    activeNameRef.current = tool.name;
+    draftVersionRef.current += 1;
+    paymentContextRef.current = null;
     setActive(tool);
     setDraft(initialToolDraft(tool));
     setErrors({});
@@ -416,6 +519,9 @@ export default function ToolRunner({
   }
 
   function setField(name: string, value: FieldDraft) {
+    draftVersionRef.current += 1;
+    paymentContextRef.current = null;
+    setOutput(null);
     setDraft((current) => ({ ...current, [name]: value }));
     setErrors((current) => {
       if (!current[name]) return current;
@@ -425,26 +531,134 @@ export default function ToolRunner({
     });
   }
 
+  const paymentContext = output?.paymentContext ?? null;
   const payChallenge = useMemo(
-    () => (output ? challengeFromResult(output.result) : null),
-    [output],
+    () =>
+      output && paymentContext ? challengeFromResult(output.result) : null,
+    [output, paymentContext],
   );
 
   async function run() {
     if (!active || busy) return;
-    const parsed = coerceToolArguments(active, draft);
+    const tool = active;
+    const parsed = coerceToolArguments(tool, draft);
     if ("errors" in parsed) {
       setErrors(parsed.errors);
       return;
     }
     setErrors({});
+    paymentContextRef.current = null;
     setOutput(null);
     setBusy(true);
-    const result = normalizeToolResult(
-      await callTool(active.name, parsed.args),
+    const version = draftVersionRef.current;
+    const paymentContext = createPaymentContext(
+      tool.name,
+      parsed.args,
+      version,
     );
-    setOutput({ result, observedAt: new Date().toISOString() });
-    setBusy(false);
+    try {
+      const result = normalizeToolResult(
+        await callTool(tool.name, parsed.args),
+      );
+      if (
+        mountedRef.current &&
+        paymentContextMatches(
+          paymentContext,
+          activeNameRef.current,
+          draftVersionRef.current,
+        )
+      ) {
+        paymentContextRef.current = paymentContext;
+        setOutput({
+          result,
+          observedAt: new Date().toISOString(),
+          paymentContext,
+        });
+      }
+    } finally {
+      if (mountedRef.current) setBusy(false);
+    }
+  }
+
+  function isPaymentContextCurrent(context: PaymentContext): boolean {
+    return (
+      mountedRef.current &&
+      paymentContextRef.current === context &&
+      paymentContextMatches(
+        context,
+        activeNameRef.current,
+        draftVersionRef.current,
+      )
+    );
+  }
+
+  async function executePayment(
+    context: PaymentContext,
+    paymentHeader: string,
+  ): Promise<X402ExecutionResult> {
+    if (paidRetryInFlightRef.current || !isPaymentContextCurrent(context)) {
+      return {
+        status: "failed",
+        detail:
+          "The payment terms are stale or already being used. Run the job again before paying.",
+      };
+    }
+
+    paidRetryInFlightRef.current = true;
+    // Consume this challenge before the await. Even two callbacks in the same
+    // render cannot replay one approval twice.
+    paymentContextRef.current = null;
+    setErrors({});
+    setBusy(true);
+    try {
+      // Retry the SAME MCP tool with its original typed arguments. The payment
+      // payload is an argument only; ToolRunner never substitutes a response
+      // body into x_payment and never reconstructs the route as a bare GET.
+      const paidCall = paymentCallForContext(context, paymentHeader);
+      const result = normalizeToolResult(
+        await callTool(paidCall.toolName, paidCall.args),
+      );
+      if (
+        mountedRef.current &&
+        paymentContextMatches(
+          context,
+          activeNameRef.current,
+          draftVersionRef.current,
+        )
+      ) {
+        setOutput({ result, observedAt: new Date().toISOString() });
+      }
+      const outcome = resultOutcome(result);
+      const structured =
+        result.structuredContent &&
+        typeof result.structuredContent === "object" &&
+        !Array.isArray(result.structuredContent)
+          ? (result.structuredContent as Record<string, unknown>)
+          : null;
+      const paymentResponse =
+        typeof structured?.payment_response_header === "string"
+          ? structured.payment_response_header
+          : null;
+      if (outcome === "DELIVERED") {
+        return { status: "delivered", paymentResponse };
+      }
+      if (outcome === "PAYMENT_REQUIRED") {
+        return {
+          status: "reissued",
+          detail:
+            "The same MCP tool returned PAYMENT_REQUIRED again. The payment was not accepted.",
+        };
+      }
+      return {
+        status: "failed",
+        detail: outcome
+          ? `The paid retry returned ${outcome}, not DELIVERED.`
+          : result.text || "The paid retry returned no delivery state.",
+      };
+    } finally {
+      paidRetryInFlightRef.current = false;
+      if (mountedRef.current) setBusy(false);
+    }
   }
 
   function copyOutput() {
@@ -629,16 +843,20 @@ export default function ToolRunner({
                     receive the route’s 402 challenge and any published free
                     preview. Nothing is charged by that call. This page never
                     asks for a seed phrase or private key. Payment is signed in
-                    your own wallet and only the signature is sent.
+                    your own wallet and only the signed payment payload is sent.
                   </p>
                 </div>
               ) : null}
 
-              {payChallenge ? (
+              {payChallenge && paymentContext ? (
                 <X402PayButton
                   challenge={payChallenge}
-                  url={payChallenge.resource}
-                  onPaid={(body) => setField("x_payment", body)}
+                  executePayment={(header) =>
+                    executePayment(paymentContext, header)
+                  }
+                  isContextCurrent={() =>
+                    isPaymentContextCurrent(paymentContext)
+                  }
                   className="mt-5"
                 />
               ) : null}

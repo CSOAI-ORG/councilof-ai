@@ -46,6 +46,29 @@ permissions:
   contents: read
 
 jobs:
+  card-verifier-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            packages/gspc-card-verifier
+            scripts
+            public/signed
+            public/verifier
+            public/interop/mill-cards-signed
+            mcp/gspc-server
+            client/src/lib
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Existing offline verifier fixtures
+        working-directory: packages/gspc-card-verifier
+        run: npm test
+      - name: All RunPod cards and buyer replay — no network or signing
+        run: node --test scripts/test_runpod_verifier_parity.mjs scripts/test_gspc_replay_kit.mjs
+
   gates:
     runs-on: ubuntu-latest
     timeout-minutes: 30

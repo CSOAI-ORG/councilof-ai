@@ -3,6 +3,6 @@
 # Health = initialize + tools/list. We measure, never certify.
 FROM node:22-alpine
 WORKDIR /app
-COPY package.json gspc-tools.json index.mjs verify-card.mjs ./
+COPY package.json gspc-tools.json paid-tools.json index.mjs verify-card.mjs ./
 USER node
 CMD ["node", "index.mjs"]

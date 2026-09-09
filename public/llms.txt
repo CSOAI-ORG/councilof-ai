@@ -98,10 +98,10 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Verify free: https://councilof.ai/gspc-verify
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Agent card: https://councilof.ai/.well-known/agent-card.json
-- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 12 tools: eight free readers plus four x402-metered evidence tools. `witness_hash` is quarantined on HTTP. No CSOAI account; package presence does not prove paid settlement or delivery.
+- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 12 tools: eight free readers plus four x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
-- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp@0.2.1` lists 12 tools (7 free + 5 x402). The live HTTP door lists 12 because `witness_hash` is quarantined there. Registry https://registry.npmjs.org/csoai-gspc-mcp
-- MCP registry: io.github.CSOAI-ORG/gspc (server 1.4.0 → https://councilof.ai/mcp)
+- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 12-tool contract as the HTTP door.
+- MCP registry: io.github.CSOAI-ORG/gspc → https://councilof.ai/mcp. Query the official registry for the currently published server version.
 - Smithery: https://smithery.ai/server/csoai/gspc-mcp — its tools[] is exactly the eight free tools /mcp serves. A second listing, csoai/gspc, is a stale duplicate naming four tools that do not exist; do not use it.
 - Open banks: https://huggingface.co/csoai
 
@@ -114,7 +114,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 Printers of the live board. Reach is distribution. Authority stays GET /api/gspc + lid + signed cards + free verify. Do not treat directory listings or download counters as grades. Never invent download numbers in this file; quote Hub live if needed.
 
 - Hugging Face org: https://huggingface.co/csoai
-- MCP flagship: POST https://councilof.ai/mcp — registry id io.github.CSOAI-ORG/gspc server **1.4.0**
+- MCP flagship: POST https://councilof.ai/mcp — registry id io.github.CSOAI-ORG/gspc
 - npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`)
 - Glama directory search (flagship discovery UNSTABLE on 2026-09-04; other CSOAI servers are present): https://glama.ai/mcp/servers?query=csoai
 - Kaggle twin: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board

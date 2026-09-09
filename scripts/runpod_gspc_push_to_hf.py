@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import stat
 import sys
 import tempfile
@@ -108,7 +109,33 @@ def private_head(api: Any, repo: str) -> str:
     return info.sha
 
 
-def credential_sources() -> list[tuple[str, str]]:
+def credential_sources(token_file: Path | None = None) -> list[tuple[str, str]]:
+    if token_file is not None:
+        # Scheduled jobs use one explicitly provisioned, private credential.
+        # Never substitute an account-wide environment/cache token if it fails.
+        descriptor = None
+        try:
+            descriptor = os.open(token_file, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+            info = os.fstat(descriptor)
+            if (not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid()
+                    or stat.S_IMODE(info.st_mode) & 0o077 or not 1 <= info.st_size <= 4096):
+                raise IntakeError("intake credential file must be owner-only, regular and nonempty")
+            with os.fdopen(descriptor, "rb") as handle:
+                descriptor = None
+                raw = handle.read(4097)
+            if len(raw) > 4096:
+                raise IntakeError("intake credential file exceeds the size limit")
+            token = raw.decode("ascii").strip()
+            if not re.fullmatch(r"hf_[A-Za-z0-9]{16,200}", token):
+                raise IntakeError("intake credential file has an invalid token format")
+            return [("explicit private-intake credential file", token)]
+        except IntakeError:
+            raise
+        except (OSError, UnicodeError):
+            raise IntakeError("explicit intake credential file could not be read; no fallback used") from None
+        finally:
+            if descriptor is not None:
+                os.close(descriptor)
     sources = [
         ("HF_TOKEN", (os.environ.get("HF_TOKEN") or "").strip()),
         ("HUGGINGFACE_TOKEN", (os.environ.get("HUGGINGFACE_TOKEN") or "").strip()),
@@ -121,11 +148,11 @@ def credential_sources() -> list[tuple[str, str]]:
     return sources
 
 
-def connect(repo: str, api_class: Any) -> tuple[Any, str, set[str]]:
+def connect(repo: str, api_class: Any, token_file: Path | None = None) -> tuple[Any, str, set[str]]:
     # Prove credentials against the actual private repo. Never print exception
     # text: SDK errors may contain headers, URLs, or credentials.
     tried = []
-    for name, token in credential_sources():
+    for name, token in credential_sources(token_file):
         if not token:
             tried.append(f"{name}: empty/unset")
             continue
@@ -212,6 +239,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default="/workspace/gspc-24x7")
     ap.add_argument("--repo", default=REPO)
+    ap.add_argument("--token-file", type=Path,
+                    help="use only this owner-only private-intake credential; never fall back")
     ap.add_argument("--dry-run", action="store_true", help="compare and list commits; never upload")
     args = ap.parse_args()
     root = Path(args.root).absolute()
@@ -231,7 +260,7 @@ def main() -> int:
             return 0
         with tempfile.TemporaryDirectory(prefix="runpod-intake-") as temporary:
             frozen = freeze_runs(root, runs, Path(temporary))
-            api, revision, upstream = connect(args.repo, HfApi)
+            api, revision, upstream = connect(args.repo, HfApi, args.token_file)
             pushed, skipped = push_runs(
                 api, args.repo, revision, upstream, frozen, CommitOperationAdd,
                 dry_run=args.dry_run,

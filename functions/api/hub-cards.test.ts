@@ -35,6 +35,7 @@ const installFetch = (broken: string[] = [], status = 500) => {
   const mocked = vi.fn(async (input: string | URL | Request) => {
     const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     calls.push(url);
+    if (url === TREE) return listedIndexes();
     const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
     if (broken.includes(name)) return new Response("upstream said no", { status });
     return new Response(FILES[name] ?? "", { status: 200 });
@@ -54,13 +55,16 @@ afterEach(() => {
 });
 
 describe("/api/hub-cards", () => {
-  it("publishes totals only when every index answered", async () => {
+  it("publishes totals only when discovery, every index and the ledger answered", async () => {
     installFetch([]);
     const { res, body } = await invoke();
     const counts = body.counts as unknown as Record<string, unknown>;
 
     expect(res.status).toBe(200);
     expect(counts.complete).toBe(true);
+    expect(counts.indexes_all_read).toBe(true);
+    expect(counts.superseded_ledger_read).toBe(true);
+    expect(res.headers.get('cache-control')).toBe('public, max-age=600');
     expect(counts.cells).toBe(5);
     expect(counts.measured).toBe(2);
     expect(counts.unmeasured).toBe(3);
@@ -111,12 +115,70 @@ describe("/api/hub-cards", () => {
     }
   });
 
+  it.each([
+    ["malformed JSON", "{"],
+    [
+      "a string false signature",
+      JSON.stringify({
+        model: "a/three",
+        axis: "safety",
+        status: "UNMEASURED",
+        signed: "false",
+      }),
+    ],
+    [
+      "a boolean false signature",
+      JSON.stringify({
+        model: "a/three",
+        axis: "safety",
+        status: "UNMEASURED",
+        signed: false,
+      }),
+    ],
+    [
+      "a coerced model",
+      JSON.stringify({
+        model: 7,
+        axis: "safety",
+        status: "UNMEASURED",
+        signed: true,
+      }),
+    ],
+  ])(
+    "withholds totals when an index contains %s",
+    async (_label, invalidRow) => {
+      const original = FILES["INDEX-safety"];
+      FILES["INDEX-safety"] = `${row("a/valid", "safety", "UNMEASURED")}\n${invalidRow}`;
+      try {
+        installFetch([]);
+        const { body } = await invoke();
+        const counts = body.counts as unknown as Record<string, unknown>;
+
+        expect(counts.complete).toBe(false);
+        expect(counts.cells).toBeNull();
+        expect(counts.measured).toBeNull();
+        expect(counts.unmeasured).toBeNull();
+        expect(counts.indexes_unread).toEqual([
+          expect.objectContaining({
+            index: "INDEX-safety.jsonl",
+            reason: expect.stringMatching(/invalid jsonl row 2/),
+          }),
+        ]);
+        // A valid-looking row from an invalid source is not admitted piecemeal.
+        expect(counts.read_so_far).toMatchObject({ cells: 4, unmeasured: 2 });
+      } finally {
+        FILES["INDEX-safety"] = original;
+      }
+    },
+  );
+
   // A failure cached by `cacheEverything` keeps an index dark for the whole TTL.
   // One retry outside the cache is what turns a transient throttle back into data.
   it("retries a failed index once outside the cache before calling it unread", async () => {
     let safetyAttempts = 0;
     const mocked = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
       const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      if (url === TREE) return listedIndexes();
       const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
       if (name === "INDEX-safety") {
         safetyAttempts++;
@@ -174,25 +236,36 @@ const STALE: Record<string, string> = {
   "INDEX-empty3": "",
 };
 
-const installStale = (ledgerBody: string | null) => {
+const installStale = (
+  ledgerBody: string | null,
+  files: Record<string, string> = STALE,
+) => {
   vi.stubGlobal(
     "fetch",
     vi.fn(async (input: string | URL | Request) => {
       const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      if (url === TREE) return listedIndexes();
       if (url === LEDGER) {
         return ledgerBody === null
           ? new Response("no", { status: 500 })
           : new Response(ledgerBody, { status: 200 });
       }
       const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
-      return new Response(STALE[name] ?? "", { status: 200 });
+      return new Response(files[name] ?? "", { status: 200 });
     }),
   );
 };
 
 describe("/api/hub-cards — the live card, not every card ever signed", () => {
   it("drops a card the ledger has replaced and keeps its replacement's status", async () => {
-    installStale(JSON.stringify({ superseded_id: "oldsha", by_id: "newsha" }));
+    installStale(
+      JSON.stringify({
+        superseded_id: "oldsha",
+        by_id: "newsha",
+        model: "a/one",
+        axis: "safety",
+      }),
+    );
     const { body } = await invoke();
     const counts = body.counts as unknown as Record<string, unknown>;
     // Without the ledger read this is {cells: 2, measured: 1, unmeasured: 1}.
@@ -200,7 +273,101 @@ describe("/api/hub-cards — the live card, not every card ever signed", () => {
     expect(counts.measured).toBe(1);
     expect(counts.unmeasured).toBe(0);
     expect(counts.superseded_excluded).toBe(1);
+    expect(counts.supersessions_resolved).toBe(true);
+    expect(counts.supersessions_unresolved).toEqual([]);
     expect(counts.rows_served_by_indexes).toBe(2);
+  });
+
+  it("withholds totals and keeps a predecessor when by_id is absent from the indexes", async () => {
+    installStale(
+      JSON.stringify({
+        superseded_id: "oldsha",
+        by_id: "missing-newsha",
+        model: "a/one",
+        axis: "safety",
+      }),
+      {
+        INDEX: "",
+        "INDEX-safety": carded("a/one", "safety", "UNMEASURED", "oldsha"),
+        "INDEX-art5-affect": "",
+        "INDEX-empty3": "",
+      },
+    );
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+
+    expect(counts.complete).toBe(false);
+    expect(counts.cells).toBeNull();
+    expect(counts.superseded_excluded).toBe(0);
+    expect(counts.supersessions_resolved).toBe(false);
+    expect(counts.supersessions_unresolved).toEqual([
+      expect.objectContaining({
+        superseded_id: "oldsha",
+        by_id: "missing-newsha",
+        reason: "replacement is absent from observed indexes",
+      }),
+    ]);
+    expect(counts.read_so_far).toMatchObject({ cells: 1, unmeasured: 1 });
+  });
+
+  it("withholds totals when by_id exists only for a different model/axis pair", async () => {
+    installStale(
+      JSON.stringify({
+        superseded_id: "oldsha",
+        by_id: "newsha",
+        model: "a/one",
+        axis: "safety",
+      }),
+      {
+        INDEX: carded("b/two", "governance", "MEASURED", "newsha"),
+        "INDEX-safety": carded("a/one", "safety", "UNMEASURED", "oldsha"),
+        "INDEX-art5-affect": "",
+        "INDEX-empty3": "",
+      },
+    );
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+
+    expect(counts.complete).toBe(false);
+    expect(counts.cells).toBeNull();
+    expect(counts.superseded_excluded).toBe(0);
+    expect(counts.supersessions_unresolved).toEqual([
+      expect.objectContaining({ reason: "replacement pair does not match predecessor" }),
+    ]);
+    expect(counts.read_so_far).toMatchObject({ cells: 2 });
+  });
+
+  it.each([
+    ["malformed JSON", '{"superseded_id":"oldsha"'],
+    [
+      "a non-string model",
+      JSON.stringify({
+        superseded_id: "oldsha",
+        by_id: "newsha",
+        model: 7,
+        axis: "safety",
+      }),
+    ],
+    [
+      "a self-supersession",
+      JSON.stringify({
+        superseded_id: "oldsha",
+        by_id: "oldsha",
+        model: "a/one",
+        axis: "safety",
+      }),
+    ],
+  ])("treats a ledger row with %s as unreadable", async (_label, ledgerRow) => {
+    installStale(ledgerRow);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    const honesty = body.honesty as unknown as Record<string, string>;
+
+    expect(counts.complete).toBe(false);
+    expect(counts.cells).toBeNull();
+    expect(counts.superseded_ledger_read).toBe(false);
+    expect(counts.superseded_excluded).toBeNull();
+    expect(honesty.superseded_ledger).toMatch(/invalid jsonl row 1/);
   });
 
   it("collapses a duplicate pair so one (model, axis) is one cell", async () => {
@@ -215,11 +382,17 @@ describe("/api/hub-cards — the live card, not every card ever signed", () => {
 
   it("an unreadable ledger is UNCHECKABLE, never an empty ledger", async () => {
     installStale(null);
-    const { body } = await invoke();
+    const { res, body } = await invoke();
     const counts = body.counts as unknown as Record<string, unknown>;
     const honesty = body.honesty as unknown as Record<string, string>;
     // null, not 0 — "I could not check" is not "nothing was superseded".
     expect(counts.superseded_excluded).toBeNull();
+    expect(counts.superseded_ledger_read).toBe(false);
+    expect(counts.complete).toBe(false);
+    expect(res.headers.get('cache-control')).toBe('public, max-age=60');
+    expect(counts.cells).toBeNull();
+    expect(counts.measured).toBeNull();
+    expect(counts.read_so_far).toMatchObject({ cells: 1, measured: 1 });
     expect(honesty.superseded_ledger).toMatch(/UNREADABLE/);
     expect(honesty.superseded_ledger).toMatch(/UPPER BOUND/);
   });
@@ -234,6 +407,7 @@ describe("/api/hub-cards — the live card, not every card ever signed", () => {
 // ---------------------------------------------------------------------------
 
 const TREE = "https://huggingface.co/api/datasets/csoai/gspc-hub-cards/tree/main/mill-cards";
+const listedIndexes = () => new Response(JSON.stringify(Object.keys(FILES).map(name => ({ type: 'file', path: `mill-cards/${name}.jsonl` }))));
 
 /** Serve a dataset listing (or fail it) plus one row per named index. */
 const installDiscovery = (names: string[] | null) => {
@@ -268,15 +442,19 @@ describe("/api/hub-cards — the index list is discovered, not remembered", () =
 
   it("falls back to the known four when the listing fails, and says so", async () => {
     installDiscovery(null);
-    const { body } = await invoke();
+    const { res, body } = await invoke();
     const counts = body.counts as unknown as Record<string, unknown>;
     const honesty = body.honesty as unknown as Record<string, string>;
     expect(counts.indexes_total).toBe(4);
     expect(counts.indexes_discovered).toBe(false);
     expect(honesty.index_list_is).toMatch(/UNCHECKABLE/);
-    // The census stays on the air: a listing hiccup did not touch the indexes.
-    expect(counts.cells).toBe(4);
-    expect(counts.complete).toBe(true);
+    // Rows stay available, but an unknown index list cannot yield a total.
+    expect(counts.cells).toBeNull();
+    expect(counts.read_so_far).toMatchObject({ cells: 4 });
+    expect(counts.indexes_all_read).toBe(true);
+    expect(counts.complete).toBe(false);
+    expect(res.headers.get('cache-control')).toBe('public, max-age=60');
+    expect(honesty.unreachable_is_not_empty).not.toBe('All published indexes were read.');
   });
 
   it("an EMPTY listing is not a population of zero", async () => {
@@ -286,6 +464,8 @@ describe("/api/hub-cards — the index list is discovered, not remembered", () =
     // Trusting an empty listing would publish cells: 0 as a fact about the estate.
     expect(counts.indexes_discovered).toBe(false);
     expect(counts.indexes_total).toBe(4);
-    expect(counts.cells).toBe(4);
+    expect(counts.cells).toBeNull();
+    expect(counts.complete).toBe(false);
+    expect(counts.read_so_far).toMatchObject({ cells: 4 });
   });
 });

@@ -305,4 +305,18 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("Partial read · 12 retrieved MEASURED cells · population totals withheld");
     expect(html).not.toContain("12 published MEASURED cells");
   });
+
+  it("keeps a previous table visible during refresh and labels a failed refresh stale", () => {
+    const pending = renderToStaticMarkup(<HubResultsBoard data={hubPayload} loading />);
+    expect(pending).toContain('Refreshing Hub cells · showing the previous snapshot.');
+    expect(pending).toContain('data-testid="hub-results-table"');
+    const stale = renderToStaticMarkup(<HubResultsBoard data={hubPayload} error="offline" />);
+    expect(stale).toContain('Refresh failed · showing the previous snapshot, not current results.');
+    expect(stale).toContain('data-testid="hub-results-table"');
+    expect(stale).toContain('Feed observed 2026-09-07T10:00:00Z');
+    expect(stale).not.toContain('12 published MEASURED cells');
+    const unavailable = renderToStaticMarkup(<HubResultsBoard data={null} error="offline" />);
+    expect(unavailable).toContain('Hub results are unreachable. No result was inferred.');
+    expect(unavailable).not.toContain('data-testid="hub-results-table"');
+  });
 });

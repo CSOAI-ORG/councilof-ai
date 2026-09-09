@@ -2,8 +2,8 @@
 # github.com/docker/mcp-registry and open the PR from the owner's account.
 # Posting under CSOAI's name on a third party's repository is the owner's, not an agent's.
 #
-# Every field below is derived from a live probe, recorded in
-# docs/press/OUTWARD-SUBMISSIONS.md under "Docker MCP Registry".
+# The public endpoint remains the runtime authority. Tool names and counts are checked against
+# functions/mcp/{gspc,paid}-tools.json by scripts/docker-mcp-submission.test.ts.
 name: csoai-gspc
 type: remote
 meta:
@@ -15,7 +15,7 @@ meta:
     - remote
 about:
   title: CSOAI GSPC Measurement Board
-  description: Read a public AI-measurement board and verify any signed measurement card offline. Seven free read-only tools; four metered tools answer an HTTP 402 challenge. Measurement, not certification.
+  description: Inspect the public GSPC board and verify Council-issued Ed25519 measurement cards. 8 free tools and 4 optional x402-metered evidence tools. Measurement, not certification.
   icon: https://councilof.ai/csoai-icon.svg
 remote:
   transport_type: streamable-http

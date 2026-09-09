@@ -37,6 +37,8 @@ jobs:
         run: |
           python3 scripts/runpod_gspc_bridge_to_mill.py --selftest
           python3 -m unittest discover -s scripts -p test_runpod_gspc_push_to_hf.py
+          python3 -m unittest discover -s scripts -p test_runpod_gspc_upload_heartbeat.py
+          python3 -m unittest discover -s scripts -p test_pod_loop_supervisor.py
           python3 -m unittest discover -s scripts -p test_runpod_signing_artifact.py
           python3 scripts/verify_runpod_gspc_intake.py --help > /dev/null
 

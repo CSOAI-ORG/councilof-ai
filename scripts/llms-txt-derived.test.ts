@@ -56,15 +56,13 @@ describe("llms.txt derives the tool counts it publishes", () => {
     expect(out, "published llms.txt must not freeze the census pair").not.toMatch(/74\/100/);
   });
 
-  it("registry version in llms.txt matches the shipped server.json, not a frozen 1.2.0", () => {
-    const ver = J("mcp/gspc-server/server.json").version;
-    expect(ver).toBe("1.4.0");
+  it("does not pre-announce an unpublished package or registry version", () => {
     const out = R("public/llms.txt");
     const tmpl = R("scripts/llms/llms.txt.tmpl");
-    expect(out).toContain(`(server ${ver} → https://councilof.ai/mcp)`);
-    expect(out).toContain(`server **${ver}**`);
-    expect(tmpl).toContain(`(server ${ver} → https://councilof.ai/mcp)`);
-    expect(tmpl).toContain(`server **${ver}**`);
+    expect(tmpl).toContain("Query https://registry.npmjs.org/csoai-gspc-mcp for the published version");
+    expect(tmpl).toContain("Query the official registry for the currently published server version");
+    expect(out).not.toMatch(/csoai-gspc-mcp@\d+\.\d+\.\d+/);
+    expect(out).not.toMatch(/registry id io\.github\.CSOAI-ORG\/gspc server \*\*\d+/);
   });
 
 });
