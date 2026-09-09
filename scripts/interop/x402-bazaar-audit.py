@@ -103,7 +103,9 @@ def scan(
         pagination = payload.get("pagination")
         if not isinstance(page, list) or not isinstance(pagination, dict):
             raise ValueError("the index response lacks items[] or pagination{}")
-        total = pagination.get("total")
+        if "total" not in pagination:
+            raise ValueError("the index declared no pagination.total")
+        total = pagination["total"]
         reported_offset = pagination.get("offset", offset if not paged else None)
         if isinstance(total, bool) or not isinstance(total, int) or total < 0:
             raise ValueError("pagination.total is not a non-negative integer")
