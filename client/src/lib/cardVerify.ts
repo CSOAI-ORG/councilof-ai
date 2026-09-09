@@ -87,6 +87,13 @@ const FLOAT_FIELDS = new Set(["accuracy", "ci_low", "ci_high", "recall", "precis
 
 /** The DID verification method whose key signs measurement cards. */
 export const CARD_KEY_ID = "did:web:csoai.org#card-attestation-1";
+export const BOARD_KEY_ID = "did:web:csoai.org#board-attestation-1";
+
+/** Offline pins for the two measurement-card generations rendered in Council OS. */
+const PINNED_DID_KEYS: Record<string, string> = {
+  [CARD_KEY_ID]: "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+  [BOARD_KEY_ID]: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+};
 
 /** JSON string escaping with ensure_ascii=True — non-ASCII becomes \\uXXXX, as CPython does. */
 function jsonString(s: string): string {
@@ -236,6 +243,7 @@ export async function verifyCard(card: unknown, pinnedKey: Uint8Array | null): P
     id: string;
     signature: string;
     pubkey?: string;
+    did?: string;
     alg?: string;
     body: unknown;
     preimage_rule?: string;
@@ -243,31 +251,48 @@ export async function verifyCard(card: unknown, pinnedKey: Uint8Array | null): P
   };
   const axis = typeof (c.body as any)?.axis === "string" ? (c.body as any).axis : undefined;
 
-  if (typeof c.pubkey !== "string" || !c.pubkey)
-    return { state: "UNCHECKABLE", reason: "The card names no public key, so there is nothing to pin it to.", id: c.id, axis };
+  const hasPubkey = typeof c.pubkey === "string" && !!c.pubkey;
+  const hasDid = typeof c.did === "string" && !!c.did;
+  if (!hasPubkey && !hasDid)
+    return { state: "UNCHECKABLE", reason: "The card names neither an inline public key nor a DID key reference.", id: c.id, axis };
+  if (hasPubkey && hasDid)
+    return { state: "UNCHECKABLE", reason: "The card names two key authorities; this verifier will not guess which one controls the signature.", id: c.id, axis };
 
-  if (!pinnedKey)
-    return {
-      state: "UNCHECKABLE",
-      reason:
-        "The published card key could not be read from /.well-known/did.json, so authenticity could not be established. " +
-        "That is a statement about this check, not about the card.",
-      id: c.id,
-      axis,
-    };
+  let verificationKey: Uint8Array;
+  let verificationKeyId: string;
 
-  if (c.pubkey !== hex(pinnedKey.buffer.slice(pinnedKey.byteOffset, pinnedKey.byteOffset + pinnedKey.byteLength) as ArrayBuffer))
-    return {
-      state: "INVALID",
-      reason: `The card is signed by a key that is not ${CARD_KEY_ID}. A self-consistent card signed by an unpublished key proves nothing.`,
-      id: c.id,
-      axis,
-    };
+  if (hasDid) {
+    const pinnedHex = PINNED_DID_KEYS[c.did as string];
+    if (!pinnedHex)
+      return { state: "UNCHECKABLE", reason: `The DID key reference ${c.did} is not pinned by this verifier.`, id: c.id, axis };
+    verificationKey = unhex(pinnedHex);
+    verificationKeyId = c.did as string;
+  } else {
+    if (!pinnedKey)
+      return {
+        state: "UNCHECKABLE",
+        reason:
+          "The published card key could not be read from /.well-known/did.json, so authenticity could not be established. " +
+          "That is a statement about this check, not about the card.",
+        id: c.id,
+        axis,
+      };
+
+    if (c.pubkey !== hex(pinnedKey.buffer.slice(pinnedKey.byteOffset, pinnedKey.byteOffset + pinnedKey.byteLength) as ArrayBuffer))
+      return {
+        state: "INVALID",
+        reason: `The card is signed by a key that is not ${CARD_KEY_ID}. A self-consistent card signed by an unpublished key proves nothing.`,
+        id: c.id,
+        axis,
+      };
+    verificationKey = pinnedKey;
+    verificationKeyId = CARD_KEY_ID;
+  }
 
   let preimage: Uint8Array;
   try {
     const rule = c.preimage_rule || c.canon || "cpython-v1";
-    const fn = rule === "jcs-rfc8785" ? canonicalJcs : canonicalPy;
+    const fn = rule === "jcs-rfc8785" || rule === "sha256(canonical body)" ? canonicalJcs : canonicalPy;
     preimage = new TextEncoder().encode(fn(c.body));
   } catch (e: any) {
     return { state: "UNCHECKABLE", reason: `The body could not be canonicalised: ${e?.message ?? e}.`, id: c.id, axis };
@@ -285,7 +310,7 @@ export async function verifyCard(card: unknown, pinnedKey: Uint8Array | null): P
 
   let key: CryptoKey;
   try {
-    key = await crypto.subtle.importKey("raw", pinnedKey as unknown as BufferSource, { name: "Ed25519" }, false, ["verify"]);
+    key = await crypto.subtle.importKey("raw", verificationKey as unknown as BufferSource, { name: "Ed25519" }, false, ["verify"]);
   } catch {
     return {
       state: "UNCHECKABLE",
@@ -311,10 +336,10 @@ export async function verifyCard(card: unknown, pinnedKey: Uint8Array | null): P
   return ok
     ? {
         state: "VALID",
-        reason: `sha256 of the canonical body equals the card id, and the signature verifies under ${CARD_KEY_ID}.`,
+        reason: `sha256 of the canonical body equals the card id, and the signature verifies under ${verificationKeyId}.`,
         id: c.id,
         axis,
-        keyId: CARD_KEY_ID,
+        keyId: verificationKeyId,
         digest,
       }
     : {
