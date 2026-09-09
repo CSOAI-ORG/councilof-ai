@@ -69,8 +69,12 @@ if res_in.get("serviceName"): resource["serviceName"]=res_in["serviceName"]
 if res_in.get("tags"): resource["tags"]=res_in["tags"]
 
 a=Account.create(); now=int(time.time())
+try: timeout=int(acc.get("maxTimeoutSeconds"))
+except (TypeError,ValueError): timeout=0
+if timeout <= 0:
+    print("     REFUSING: the live door declares no usable maxTimeoutSeconds."); sys.exit(1)
 auth={"from":a.address,"to":acc["payTo"],"value":0,"validAfter":0,
-      "validBefore":now+900,"nonce":"0x"+secrets.token_hex(32)}
+      "validBefore":now+timeout,"nonce":"0x"+secrets.token_hex(32)}
 t={"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","type":"string"},
      {"name":"chainId","type":"uint256"},{"name":"verifyingContract","type":"address"}],
    "TransferWithAuthorization":[{"name":"from","type":"address"},{"name":"to","type":"address"},
@@ -82,7 +86,7 @@ t={"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","t
 sg=Account.sign_message(encode_typed_data(full_message=t),a.key).signature.hex()
 if not sg.startswith("0x"): sg="0x"+sg
 accepted={"scheme":"exact","network":"eip155:8453","amount":"0","asset":acc["asset"],
-          "payTo":acc["payTo"],"maxTimeoutSeconds":900,
+          "payTo":acc["payTo"],"maxTimeoutSeconds":timeout,
           "extra":{k:v for k,v in acc["extra"].items() if k in ("name","version")}}
 body={"x402Version":2,
       "paymentPayload":{"x402Version":2,"resource":resource,"accepted":accepted,
