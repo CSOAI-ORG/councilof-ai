@@ -18,15 +18,137 @@
  *
  * Hugging Face remains a public distribution surface, not a second authority.
  */
-import { useId, useState, type ReactNode } from "react";
+import { useEffect, useId, useState, type ReactNode } from "react";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import { axisRunEvidence } from "../board/runEvidence";
 import { axisMeta } from "../../lib/axisRegulation";
 
 /** Public distribution mirror for the canonical GET /api/gspc board. */
 export const SPACE_PAGE_URL = "https://huggingface.co/spaces/csoai/gspc-board";
+export const HUB_CARDS_PAGE_URL = "https://huggingface.co/datasets/csoai/gspc-hub-cards";
 /** Rows the strip shows before "Load more". A UI constant, not a board count. */
 export const STRIP_N = 9;
+
+export interface HubCell {
+  model: string;
+  axis: string;
+  status: string;
+  accuracy: number | null;
+  n: number | null;
+  card_sha256: string | null;
+  card_url: string | null;
+  signed: boolean;
+  unmeasured?: string[];
+}
+
+export interface HubCardsPayload {
+  schema?: string;
+  as_of?: string;
+  source?: string;
+  population?: string;
+  counts?: {
+    complete?: boolean;
+    measured?: number | null;
+    unmeasured?: number | null;
+    cells?: number | null;
+    read_so_far?: { measured?: number; unmeasured?: number; cells?: number };
+    indexes_read?: number;
+    indexes_total?: number;
+  };
+  cells?: HubCell[];
+}
+
+const HUB_CARDS_ENDPOINT = "/api/hub-cards";
+const LIVE_HUB_CARDS_ENDPOINT = "https://councilof.ai/api/hub-cards";
+let hubCardsInflight: Promise<HubCardsPayload> | null = null;
+
+async function fetchHubCards(url: string): Promise<HubCardsPayload> {
+  const response = await fetch(url, { headers: { accept: "application/json" } });
+  if (!response.ok) throw new Error(`${url} answered HTTP ${response.status}`);
+  const text = (await response.text()).replace(/^\uFEFF/, "").trim();
+  if (!text || text.startsWith("<")) throw new Error(`${url} returned HTML, not JSON`);
+  const payload = JSON.parse(text) as HubCardsPayload;
+  if (!Array.isArray(payload.cells)) throw new Error(`${url} is not a Hub-card feed`);
+  return payload;
+}
+
+export function loadHubCards(): Promise<HubCardsPayload> {
+  if (!hubCardsInflight) {
+    hubCardsInflight = fetchHubCards(HUB_CARDS_ENDPOINT)
+      .catch(() => fetchHubCards(LIVE_HUB_CARDS_ENDPOINT))
+      .catch((error) => {
+        hubCardsInflight = null;
+        throw error;
+      });
+  }
+  return hubCardsInflight;
+}
+
+export interface HubCardsState {
+  data: HubCardsPayload | null;
+  error: string | null;
+  loading: boolean;
+}
+
+/** Shared Hub read for the homepage and Council OS; injected data keeps tests deterministic. */
+export function useHubCardsFeed(
+  injected?: HubCardsPayload | null,
+  injectedError: string | null = null,
+): HubCardsState {
+  const [live, setLive] = useState<HubCardsState>({ data: null, error: null, loading: injected === undefined });
+
+  useEffect(() => {
+    if (injected !== undefined) return;
+    let active = true;
+    loadHubCards()
+      .then((data) => {
+        if (active) setLive({ data, error: null, loading: false });
+      })
+      .catch((error: unknown) => {
+        if (active) setLive({ data: null, error: error instanceof Error ? error.message : String(error), loading: false });
+      });
+    return () => {
+      active = false;
+    };
+  }, [injected]);
+
+  return injected !== undefined ? { data: injected, error: injectedError, loading: false } : live;
+}
+
+/** Only cells whose published body says MEASURED and signed enter the table. */
+export function measuredHubCells(data: HubCardsPayload | null | undefined): HubCell[] {
+  return (data?.cells ?? []).filter(
+    (cell) =>
+      cell.status.toUpperCase() === "MEASURED" &&
+      cell.signed === true &&
+      typeof cell.accuracy === "number" &&
+      Number.isFinite(cell.accuracy),
+  );
+}
+
+/** Hub axes are their own instrument. This list is never joined to the eight fact axes. */
+export function hubAxes(data: HubCardsPayload | null | undefined): string[] {
+  return [...new Set(measuredHubCells(data).map((cell) => cell.axis))].sort((a, b) => a.localeCompare(b));
+}
+
+/** Open on the axis with the most admitted rows so the first view is useful rather than alphabetically accidental. */
+export function defaultHubAxis(data: HubCardsPayload | null | undefined): string {
+  const counts = new Map<string, number>();
+  for (const cell of measuredHubCells(data)) counts.set(cell.axis, (counts.get(cell.axis) ?? 0) + 1);
+  return [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] ?? "";
+}
+
+export function topHubModels(data: HubCardsPayload | null | undefined, axis: string, limit = STRIP_N): HubCell[] {
+  return measuredHubCells(data)
+    .filter((cell) => cell.axis === axis)
+    .sort((a, b) => (b.accuracy as number) - (a.accuracy as number) || a.model.localeCompare(b.model))
+    .slice(0, limit);
+}
+
+function hubAxisLabel(axis: string): string {
+  if (axis.startsWith("gspc-")) return boardAxisLabel(axis.slice("gspc-".length));
+  return axis.replace(/[-_]/g, " ").replace(/\b\w/g, (character) => character.toUpperCase());
+}
 
 export function fmtPct(v: unknown): string {
   if (typeof v !== "number" || !Number.isFinite(v)) return "";
@@ -265,12 +387,143 @@ export function BoardStrip({
   );
 }
 
-export default function HomeGspcBoard({ data: injected, error: injectedError = null }: { data?: GspcPayload | null; error?: string | null }) {
+export function HubResultsBoard({
+  data,
+  error = null,
+  loading = false,
+}: {
+  data: HubCardsPayload | null;
+  error?: string | null;
+  loading?: boolean;
+}) {
+  const axes = hubAxes(data);
+  const fallbackAxis = defaultHubAxis(data);
+  const [selectedAxis, setSelectedAxis] = useState(fallbackAxis);
+
+  useEffect(() => {
+    if (!selectedAxis || !axes.includes(selectedAxis)) setSelectedAxis(fallbackAxis);
+  }, [axes, fallbackAxis, selectedAxis]);
+
+  const rows = topHubModels(data, selectedAxis);
+  const cells = measuredHubCells(data);
+  const modelCount = new Set(cells.map((cell) => cell.model)).size;
+  const complete = data?.counts?.complete === true;
+  const measuredTotal = complete && typeof data?.counts?.measured === "number" ? data.counts.measured : null;
+  const asOf = typeof data?.as_of === "string" && data.as_of ? data.as_of : null;
+
+  return (
+    <div className="mt-6 border-t border-slate-200 pt-5 dark:border-emerald-900/40" aria-labelledby="hub-results-h">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h3 id="hub-results-h" className="text-lg font-bold text-slate-900 dark:text-emerald-50">
+            Hugging Face measured-model results
+          </h3>
+          <p className="mt-1 max-w-3xl text-sm text-slate-600 dark:text-emerald-100/70">
+            Third-party Hub cells from <code>/api/hub-cards</code>. This is a separate benchmark instrument from the 22-axis board above: model axes rank measured cells; deterministic fact axes do not rank models.
+          </p>
+        </div>
+        <a href={HUB_CARDS_PAGE_URL} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
+          Open published Hub dataset
+        </a>
+      </div>
+
+      <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60" data-testid="hub-results-count">
+        {error
+          ? "Hub results are unreachable. No result was inferred."
+          : loading
+            ? "Reading published Hub cells…"
+            : cells.length === 0
+              ? "No signed MEASURED Hub cells were returned."
+              : complete
+                ? `${measuredTotal ?? cells.length} published MEASURED cells · ${modelCount} models · ${axes.length} model ${axes.length === 1 ? "axis" : "axes"}`
+                : `Partial read · ${cells.length} retrieved MEASURED cells · population totals withheld`}
+      </p>
+      {asOf ? <p className="mt-1 text-xs text-slate-500 dark:text-emerald-100/55">Feed observed {asOf}</p> : null}
+
+      {!error && !loading && axes.length > 0 ? (
+        <>
+          <div className="mt-4 flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Hugging Face measured model axes">
+            {axes.map((axis) => (
+              <button
+                key={axis}
+                type="button"
+                role="tab"
+                aria-selected={axis === selectedAxis}
+                onClick={() => setSelectedAxis(axis)}
+                className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+                  axis === selectedAxis
+                    ? "border-emerald-700 bg-emerald-800 text-white dark:border-emerald-400 dark:bg-emerald-400 dark:text-[#04110b]"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-emerald-400 dark:border-emerald-900/50 dark:bg-white/5 dark:text-emerald-100"
+                }`}
+              >
+                {hubAxisLabel(axis)}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-2 overflow-x-auto rounded-2xl border border-slate-200 dark:border-emerald-900/40">
+            <table className="w-full min-w-[36rem]" data-testid="hub-results-table">
+              <caption className="sr-only">Top nine published measured model cells for {hubAxisLabel(selectedAxis)}, ordered by score.</caption>
+              <thead className="bg-slate-50 dark:bg-white/5">
+                <tr>
+                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Rank</th>
+                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Model</th>
+                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Score</th>
+                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Evidence</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((cell, index) => {
+                  const rank = rows.findIndex((candidate) => candidate.accuracy === cell.accuracy) + 1;
+                  return (
+                    <tr key={`${cell.model}-${cell.axis}`} data-hub-model-row={cell.model} className="border-t border-slate-100 dark:border-emerald-900/30">
+                      <td className="px-3 py-2 text-sm font-bold text-slate-500 dark:text-emerald-100/60">{rank}</td>
+                      <td className="px-3 py-2 text-sm font-semibold text-slate-900 dark:text-emerald-50">
+                        {cell.model}
+                        {index === 0 ? <span className="ml-2 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/55">score order</span> : null}
+                      </td>
+                      <td className="px-3 py-2 text-sm tabular-nums text-slate-800 dark:text-emerald-100">
+                        {fmtPct(cell.accuracy)}{typeof cell.n === "number" ? <span className="ml-2 text-xs text-slate-500 dark:text-emerald-100/55">n {cell.n}</span> : null}
+                      </td>
+                      <td className="px-3 py-2 text-sm">
+                        {cell.card_url ? (
+                          <a href={cell.card_url} className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">Signed card</a>
+                        ) : (
+                          <span className="text-slate-500 dark:text-emerald-100/55">Card URL unavailable</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-2 text-xs text-slate-500 dark:text-emerald-100/60">
+            Top nine by published score on the selected frozen bank. Ordering is not a separation test, winner claim, compliance verdict, or certificate. Open the signed card to verify a row.
+          </p>
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+export default function HomeGspcBoard({
+  data: injected,
+  error: injectedError = null,
+  hubData: injectedHub,
+  hubError: injectedHubError = null,
+}: {
+  data?: GspcPayload | null;
+  error?: string | null;
+  hubData?: HubCardsPayload | null;
+  hubError?: string | null;
+}) {
   // Injected data (SSR, tests) bypasses the fetch; otherwise the shared hook does one live read.
   const live = useGspcBoard();
   const data = injected !== undefined ? injected : live.data;
   const error = injected !== undefined ? injectedError : live.error;
   const loading = injected !== undefined ? false : live.loading;
+  const { data: hubData, error: hubError, loading: hubLoading } = useHubCardsFeed(injectedHub, injectedHubError);
   const count = publicCountOf(data);
   const axes: GspcAxis[] = Array.isArray(data?.axes) ? (data!.axes as GspcAxis[]) : [];
 
@@ -342,6 +595,8 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
         </a>
         <span className="text-slate-500 dark:text-emerald-100/60"> · csoai/gspc-board (distribution mirror; canonical live data is GET /api/gspc)</span>
       </div>
+
+      <HubResultsBoard data={hubData} error={hubError} loading={hubLoading} />
 
       <p className="mt-4 text-sm text-slate-600 dark:text-emerald-100/70">Measurement, not certification. Empty stays empty.</p>
     </section>

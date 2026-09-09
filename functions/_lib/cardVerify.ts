@@ -66,6 +66,11 @@ export const PINNED_ANCHORS: Anchor[] = [
   { id: CARD_ATTESTATION_KID, hex: CARD_ATTESTATION_HEX },
 ];
 
+/** Resolve a DID-keyed card only against the verifier's offline pin set. */
+function pinnedKeyForDid(did: string): Anchor | null {
+  return PINNED_ANCHORS.find((anchor) => anchor.id === did) ?? null;
+}
+
 /* ------------------------------------------------------------------ canonical */
 
 /**
@@ -149,6 +154,31 @@ export function pyCanonical(v: unknown, isFloatField: FloatFieldTest = NO_FLOAT_
             typeof val === "number" ? pyNumber(val, isFloatField(k)) : pyCanonical(val, isFloatField);
           return pyString(k) + ":" + rendered;
         })
+        .join(",") +
+      "}"
+    );
+  }
+  throw new Error("value is not JSON");
+}
+
+/**
+ * Canonical JSON used by the mill signer (`ensure_ascii=False`, integral values as
+ * integers). This is deliberately a named second rule: silently trying both rules
+ * would turn an unknown preimage into an invented verdict.
+ */
+export function millCanonical(v: unknown): string {
+  if (v === null) return "null";
+  if (typeof v === "boolean") return v ? "true" : "false";
+  if (typeof v === "number") return pyNumber(v, false);
+  if (typeof v === "string") return JSON.stringify(v);
+  if (Array.isArray(v)) return "[" + v.map((x) => millCanonical(x)).join(",") + "]";
+  if (typeof v === "object") {
+    const o = v as Record<string, unknown>;
+    return (
+      "{" +
+      Object.keys(o)
+        .sort(byCodePoint)
+        .map((k) => JSON.stringify(k) + ":" + millCanonical(o[k]))
         .join(",") +
       "}"
     );
@@ -305,7 +335,7 @@ export function detectFamily(rec: unknown): Family {
     isObj(rec.body) &&
     typeof rec.id === "string" &&
     typeof rec.signature === "string" &&
-    typeof rec.pubkey === "string"
+    (typeof rec.pubkey === "string" || typeof rec.did === "string")
   ) {
     return "gspc.measurement-card";
   }
@@ -366,16 +396,48 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
   let sigOver: Uint8Array; // the bytes the SIGNATURE covers (not always the preimage)
   let sigRaw: string | null;
   let keyRaw: string | null;
+  let namedKeyId: string | null = null;
   let idLabel: string;
 
   try {
     if (family === "gspc.measurement-card") {
       idLabel = "Card id";
       declaredId = r.id as string;
-      preimage = utf8(pyCanonical(r.body, GSPC_FLOAT_FIELDS));
+      const rule = typeof r.preimage_rule === "string" ? r.preimage_rule : "";
+      preimage = utf8(
+        rule === "sha256(canonical body)"
+          ? millCanonical(r.body)
+          : pyCanonical(r.body, GSPC_FLOAT_FIELDS),
+      );
       sigOver = preimage; // Ed25519 over the preimage bytes themselves
       sigRaw = r.signature as string;
-      keyRaw = r.pubkey as string;
+      const hasPubkey = typeof r.pubkey === "string";
+      const hasDid = typeof r.did === "string";
+      if (hasPubkey && hasDid) {
+        checks.push({
+          label: "Signing key",
+          ok: null,
+          code: "key_ambiguous",
+          detail: "UNCHECKABLE — the card names both an inline public key and a DID key reference; the verifier will not guess which authority controls the signature.",
+        });
+        return { family, family_label: FAMILY_LABEL[family], valid: false, reasons: ["key_ambiguous"], checks, id: declaredId };
+      }
+      if (hasDid) {
+        namedKeyId = r.did as string;
+        const pin = pinnedKeyForDid(namedKeyId);
+        if (!pin) {
+          checks.push({
+            label: "Signing key",
+            ok: null,
+            code: "key_not_pinned",
+            detail: `UNCHECKABLE — ${namedKeyId} is not in this verifier's offline pin set.`,
+          });
+          return { family, family_label: FAMILY_LABEL[family], valid: false, reasons: ["key_not_pinned"], checks, id: declaredId };
+        }
+        keyRaw = pin.hex;
+      } else {
+        keyRaw = typeof r.pubkey === "string" ? r.pubkey : null;
+      }
     } else {
       idLabel = "content_id";
       declaredId = r.content_id as string;
@@ -414,7 +476,7 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
   // is a search for the preimage, not a guess at a verdict; the signature must still
   // verify over exactly those bytes below. Only attempted when the first rendering fails.
   let integralAsInt = false;
-  if (!idOk && family === "gspc.measurement-card") {
+  if (!idOk && family === "gspc.measurement-card" && r.preimage_rule !== "sha256(canonical body)") {
     const alt = utf8(pyCanonical(r.body, NO_FLOAT_FIELDS));
     const altHex = await sha256hex(alt);
     if (altHex === declaredId) {
@@ -474,13 +536,13 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
           `${keyHex.slice(0, 8)}… is published as ${pinnedHit.id} — matched against the anchor ` +
           `set pinned in this verifier's source, so no key was looked up at check time.`,
       });
-      if (family === "gspc.measurement-card" && keyHex !== CARD_ATTESTATION_HEX) {
+      if (family === "gspc.measurement-card" && !namedKeyId && keyHex !== CARD_ATTESTATION_HEX) {
         fail("wrong_anchor_for_family");
         checks.push({
           label: "Expected anchor",
           ok: false,
           code: "wrong_anchor_for_family",
-          detail: `A gspc.measurement-card must be signed by ${CARD_ATTESTATION_KID}; this one is not.`,
+          detail: `A legacy inline-key gspc.measurement-card must be signed by ${CARD_ATTESTATION_KID}; this one is not.`,
         });
       }
     } else {

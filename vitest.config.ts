@@ -20,6 +20,11 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // red on master, running nothing. Specific prefixes are listed before the bare
 // `@` so the longest match wins however the resolver iterates.
 export default defineConfig({
+  // Match the application's React transform. Several component tests render
+  // TSX directly through Vitest rather than through client/vite.config.ts.
+  esbuild: {
+    jsx: 'automatic',
+  },
   resolve: {
     alias: {
       '@/components': path.resolve(here, './client/src/components'),

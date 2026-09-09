@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Briefcase, Users, Heart, Globe, BookOpen, Shield, Clock, MapPin, Send, CheckCircle } from "lucide-react";
+import { Briefcase, Users, Globe, BookOpen, Shield, Clock, MapPin, Send } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,51 +11,36 @@ const fadeInUp = {
   transition: { duration: 0.5 }
 };
 
-const openPositions = [
+const collaborationAreas = [
   {
-    title: "AI Safety Researcher",
+    title: "Measurement & Safety Research",
     department: "Research",
-    location: "Remote / London",
-    type: "Full-time",
-    description: "Help develop and refine AI safety frameworks, contribute to the Council architecture, and advance the field of AI governance."
+    location: "Remote",
+    type: "Research collaboration",
+    description: "Propose a bounded experiment, dataset, or reproducibility study that can strengthen an existing GSPC instrument."
   },
   {
-    title: "Full Stack Developer",
+    title: "Open-source Engineering",
     department: "Engineering",
     location: "Remote",
-    type: "Full-time",
-    description: "Build and maintain the CSOAI platform using React, TypeScript, and Node.js. Work on compliance tools, training systems, and monitoring infrastructure."
+    type: "Contributor collaboration",
+    description: "Improve verifiers, adapters, measurement harnesses, accessibility, or end-to-end tests through a clearly scoped contribution."
   },
   {
-    title: "Training Content Developer",
-    department: "Education",
+    title: "Standards & Reproducibility",
+    department: "Standards",
     location: "Remote",
-    type: "Full-time / Contract",
-    description: "Create comprehensive AI safety training materials covering global frameworks like EU AI Act, NIST RMF, ISO 42001, and more."
-  },
-  {
-    title: "Compliance Analyst",
-    department: "Operations",
-    location: "Remote / London",
-    type: "Full-time",
-    description: "Help organizations get measured against the rules that govern them. Conduct assessments and publish what we cannot measure. A grade is never sold."
-  },
-  {
-    title: "Community Manager",
-    department: "Community",
-    location: "Remote",
-    type: "Full-time",
-    description: "Build and nurture the CSOAI analyst community. Organize events, facilitate discussions, and support our growing network of AI safety professionals."
+    type: "Technical collaboration",
+    description: "Bring test vectors, implementation evidence, or a standards mapping that other people can independently recompute."
   }
 ];
 
-const benefits = [
-  { icon: Globe, title: "Remote-First", description: "Work from anywhere in the world" },
-  { icon: Clock, title: "Flexible Hours", description: "Work when you're most productive" },
-  { icon: BookOpen, title: "Learning Budget", description: "Annual budget for courses & conferences" },
-  { icon: Heart, title: "Health & Wellness", description: "Comprehensive health coverage" },
-  { icon: Users, title: "Equity Options", description: "Share in our mission's success" },
-  { icon: Shield, title: "Mission-Driven", description: "Work that matters for humanity" }
+const collaborationPrinciples = [
+  { icon: Globe, title: "Remote by default", description: "Collaborate from wherever the work can be reproduced" },
+  { icon: Clock, title: "Bounded scope", description: "Agree the question, evidence and finish line before work begins" },
+  { icon: BookOpen, title: "Open methods", description: "Prefer publishable methods, test vectors and transparent limitations" },
+  { icon: Users, title: "Named contribution", description: "Credit work clearly and preserve authorship and provenance" },
+  { icon: Shield, title: "Evidence first", description: "A signature proves the record; it does not turn a result into certification" }
 ];
 
 const values = [
@@ -91,19 +76,19 @@ export default function Careers() {
           >
             <Badge variant="outline" className="mb-4">
               <Briefcase className="h-3 w-3 mr-1" />
-              Join Our Team
+              Work with Council of AI
             </Badge>
             <h1 className="text-4xl md:text-4xl font-bold mb-6">
-              Build the Future of AI Safety
+              Collaborate on Independent AI Measurement
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
-              Join CSOAI and help create a world where AI and humanity thrive together.
-              We're building the infrastructure for responsible AI governance.
+              Bring a research question, test vector, dataset, or open-source contribution.
+              We will define the scope, evidence and terms before any work begins.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <a href="#positions">
                 <Button size="lg">
-                  View Open Positions
+                  View Collaboration Areas
                 </Button>
               </a>
               <Link href="/about">
@@ -125,13 +110,13 @@ export default function Careers() {
           >
             <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
             <p className="text-lg text-muted-foreground mb-8">
-              CSOAI builds relationship-based AI safety infrastructure: measurement instruments, signed attestation records, and role-based training.
-              We're not a think tank or policy shop—we're building real operational systems for
-              AI governance, training, and economic redistribution through the Prosperity Fund.
+              CSOAI builds measurement instruments, signed evidence records, reproducible
+              verification and learning workflows. We measure scoped runs; we do not sell a
+              certification or substitute for a regulator, assessor, employer, or legal adviser.
             </p>
             <div className="p-6 rounded-xl bg-primary/5 border border-primary/20">
               <p className="text-xl font-medium text-primary">
-                "Prosperity, safety, and abundance for all through responsible AI governance."
+                "If a result matters, another person should be able to recompute it."
               </p>
             </div>
           </motion.div>
@@ -166,18 +151,19 @@ export default function Careers() {
         </div>
       </section>
 
-      {/* Benefits Section */}
+      {/* Collaboration terms — no invented employment benefits */}
       <section className="py-16 bg-muted/50">
         <div className="container mx-auto px-4">
           <motion.div {...fadeInUp} className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Benefits & Perks</h2>
+            <h2 className="text-3xl font-bold mb-4">How Collaboration Works</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              We take care of our team so they can focus on taking care of humanity.
+              We are not currently advertising paid full-time vacancies. This page is an invitation
+              to discuss collaboration, not a promise of employment, salary, benefits, or equity.
             </p>
           </motion.div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {benefits.map((benefit, index) => {
-              const Icon = benefit.icon;
+            {collaborationPrinciples.map((principle, index) => {
+              const Icon = principle.icon;
               return (
                 <motion.div
                   key={index}
@@ -190,8 +176,8 @@ export default function Careers() {
                         <Icon className="h-6 w-6 text-primary" />
                       </div>
                       <div>
-                        <h3 className="font-semibold mb-1">{benefit.title}</h3>
-                        <p className="text-sm text-muted-foreground">{benefit.description}</p>
+                        <h3 className="font-semibold mb-1">{principle.title}</h3>
+                        <p className="text-sm text-muted-foreground">{principle.description}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -202,17 +188,18 @@ export default function Careers() {
         </div>
       </section>
 
-      {/* Open Positions Section */}
+      {/* Collaboration areas */}
       <section id="positions" className="py-16 scroll-mt-20">
         <div className="container mx-auto px-4">
           <motion.div {...fadeInUp} className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Open Positions</h2>
+            <h2 className="text-3xl font-bold mb-4">Collaboration Areas</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Join our growing team and make a real impact on the future of AI.
+              These are active problem areas, not advertised jobs. Send a concrete proposal and
+              we will reply honestly about fit, scope, funding and timing.
             </p>
           </motion.div>
           <div className="max-w-4xl mx-auto space-y-6">
-            {openPositions.map((position, index) => (
+            {collaborationAreas.map((position, index) => (
               <motion.div
                 key={index}
                 {...fadeInUp}
@@ -238,8 +225,8 @@ export default function Careers() {
                           </span>
                         </div>
                       </div>
-                      <a href="mailto:nicholas@csoai.org?subject=Application">
-                        Apply Now
+                      <a href="mailto:nicholas@csoai.org?subject=CSOAI%20collaboration%20proposal">
+                        Start a conversation
                         <Send className="ml-2 h-4 w-4" />
                       </a>
                     </div>
@@ -255,14 +242,14 @@ export default function Careers() {
       <section className="py-16 bg-muted/50">
         <div className="container mx-auto px-4">
           <motion.div {...fadeInUp} className="max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">Don't See Your Role?</h2>
+            <h2 className="text-2xl font-bold mb-4">Have a Concrete Experiment?</h2>
             <p className="text-muted-foreground mb-6">
-              We're always looking for talented individuals passionate about AI safety.
-              Send us your resume and tell us how you'd like to contribute.
+              Tell us the question, the evidence you can bring, what another person should be able
+              to reproduce, and the time or funding constraints. Please do not send sensitive data.
             </p>
-            <a href="mailto:careers@csoai.org">
+            <a href="mailto:research@csoai.org?subject=Reproducible%20research%20proposal">
               <Button size="lg" variant="outline">
-                Send Us Your Resume
+                Propose a collaboration
                 <Send className="ml-2 h-4 w-4" />
               </Button>
             </a>
@@ -276,15 +263,15 @@ export default function Careers() {
           <motion.div {...fadeInUp}>
             <Card className="max-w-4xl mx-auto bg-gradient-to-br from-primary/5 to-emerald-500/10 border-primary/20">
               <CardContent className="p-8 text-center">
-                <h2 className="text-2xl font-bold mb-4">Ready to Make an Impact?</h2>
+                <h2 className="text-2xl font-bold mb-4">Prefer to Start by Reproducing?</h2>
                 <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                  Join us in building the infrastructure for responsible AI governance.
-                  Together, we can ensure AI serves humanity's best interests.
+                  Inspect the public method, verify a signed card, or run a learning module before
+                  proposing work. A useful challenge to the evidence is a contribution too.
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center">
                   <a href="#positions">
                     <Button size="lg">
-                      View Open Positions
+                      View Collaboration Areas
                     </Button>
                   </a>
                   <Link href="/training">

@@ -242,6 +242,11 @@ export function toV2Requirements(a: X402Accept): Record<string, unknown> {
   };
 }
 
+/** True when the caller presented an x402 payment envelope. Used to refuse settling an undeliverable request. */
+export function hasPaymentHeader(request: Request): boolean {
+  return !!(request.headers.get("x-payment") || request.headers.get("payment-signature"));
+}
+
 /** Wallets whose payments are the estate paying itself: payTo plus X402_SELF_WALLETS. Lowercased. */
 export function selfWallets(env: Pick<X402Env, "X402_PAY_TO" | "X402_SELF_WALLETS">): Set<string> {
   const out = new Set<string>();
@@ -736,6 +741,10 @@ export function buildPaymentRequiredV2(opts: PaymentRequiredV2Opts): Record<stri
       payTo: a.payTo,
       maxTimeoutSeconds: a.maxTimeoutSeconds,
       extra: a.extra,
+      // v1 clients read these on the accept entry; v2 also has top-level resource.url.
+      resource: a.resource || opts.resourceUrl,
+      description: a.description || opts.description.slice(0, 500),
+      mimeType: a.mimeType || "application/json",
     };
   });
   return {

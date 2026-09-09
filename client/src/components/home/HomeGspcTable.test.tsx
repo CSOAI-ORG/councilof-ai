@@ -13,6 +13,7 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import HomeGspcTable from "./HomeGspcTable";
+import type { HubCardsPayload } from "./HomeGspcBoard";
 import { leaderCell, leadersNote, lidOf, publicLeaders, separationText, statusText, tally, tallyLine, unreadLine } from "./homeGspcTableReaders";
 import type { GspcAxis, GspcPayload } from "../board/useGspcBoard";
 
@@ -29,8 +30,16 @@ const axes: GspcAxis[] = [
 
 const payload: GspcPayload = { totals: { lid: LID, public_count: "6 axis · 5 measured (mock)", public_leader_count: 2 }, axes };
 
-function render(p: GspcPayload | null, error: string | null = null) {
-  return renderToStaticMarkup(<HomeGspcTable data={p} error={error} />);
+const hubPayload: HubCardsPayload = {
+  counts: { complete: true, measured: 2, cells: 2 },
+  cells: [
+    { model: "publisher/model-a", axis: "gspc-safety", status: "MEASURED", accuracy: 0.9, n: 30, card_sha256: "a", card_url: "/signed/a.json", signed: true },
+    { model: "publisher/model-b", axis: "gspc-safety", status: "MEASURED", accuracy: 0.8, n: 30, card_sha256: "b", card_url: "/signed/b.json", signed: true },
+  ],
+};
+
+function render(p: GspcPayload | null, error: string | null = null, hubData?: HubCardsPayload | null) {
+  return renderToStaticMarkup(<HomeGspcTable data={p} error={error} hubData={hubData} />);
 }
 
 describe("homeGspcTable readers", () => {
@@ -130,5 +139,14 @@ describe("HomeGspcTable renders the payload and nothing else", () => {
     expect(html).toContain("The board did not publish a lid sentence.");
     expect(html).toContain("The board returned no rows.");
     expect(html).toContain("publishes no public leader score today");
+  });
+
+  it("shares the separately labelled Hub results table with Council OS", () => {
+    const html = render(payload, null, hubPayload);
+    expect(html).toContain("Hugging Face measured-model results");
+    expect(html).toContain("2 published MEASURED cells · 2 models · 1 model axis");
+    expect(html).toContain("publisher/model-a");
+    expect(html).toContain("publisher/model-b");
+    expect(html).toContain("separate benchmark instrument from the 22-axis board");
   });
 });

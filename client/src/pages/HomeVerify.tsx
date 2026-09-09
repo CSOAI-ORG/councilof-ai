@@ -13,8 +13,6 @@ import HomeFilms from "@/components/home/HomeFilms";
 import HomeCinematicWorlds from "@/components/home/HomeCinematicWorlds";
 import HomeGspcTable from "@/components/home/HomeGspcTable";
 import HomeUnderstand from "@/components/home/HomeUnderstand";
-import HfLivingRecord from "@/components/HfLivingRecord";
-import ReachStrip from "@/components/ReachStrip";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
 
@@ -125,10 +123,6 @@ export default function HomeVerify() {
         <div className="mt-20 sm:mt-24">
           <HomeGspcTable heading="The living board" highlight={axis} onSelect={setAxis} />
         </div>
-
-        <HfLivingRecord />
-
-        <ReachStrip />
 
         <section aria-labelledby="ask-h" className="mt-20 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-[0_20px_44px_-32px_rgba(4,18,12,.45)] sm:mt-24 sm:p-8">
           <h2 id="ask-h" className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">

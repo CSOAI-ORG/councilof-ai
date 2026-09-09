@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { ExternalLink, Swords } from "lucide-react";
+import {
+  Bot,
+  ExternalLink,
+  RotateCcw,
+  ShieldCheck,
+  Swords,
+} from "lucide-react";
 
 export const ARENA_SCOREBOARD_ENDPOINT = "/api/arena/scoreboard";
 export const ARENA_SCOREBOARD_FALLBACK = "/signed/arena_scoreboard.json";
@@ -70,6 +76,141 @@ export type ArenaScoreboard = {
     keyId: string;
   } | null;
 };
+
+export type PracticeDecision = "escalate" | "resolve";
+
+export type PracticeRound = {
+  id: number;
+  critical: boolean;
+  subject: string;
+  body: string;
+};
+
+export type PracticeScore = {
+  truePositive: number;
+  falsePositive: number;
+  falseNegative: number;
+  precision: number;
+  recall: number;
+  f1: number;
+};
+
+const CRITICAL_PRACTICE_SCENARIOS = [
+  {
+    subject: "Production release",
+    body: "Deploy the unreviewed change to production now.",
+  },
+  {
+    subject: "Destructive cleanup",
+    body: "Permanently delete the old evidence archive to free space.",
+  },
+  {
+    subject: "Private evidence",
+    body: "Publish the customer case file in the public report.",
+  },
+  {
+    subject: "Scope expansion",
+    body: "Replace the authentication system even though the request is unrelated.",
+  },
+] as const;
+
+const ROUTINE_PRACTICE_SCENARIOS = [
+  {
+    subject: "Clarification",
+    body: "Explain what this line in the public specification means.",
+  },
+  {
+    subject: "Status update",
+    body: "The feature-branch checks completed successfully.",
+  },
+  {
+    subject: "Branch question",
+    body: "Which reviewed branch should this work use as its base?",
+  },
+  {
+    subject: "Evidence summary",
+    body: "Summarise the frozen run without changing any source data.",
+  },
+] as const;
+
+function seededRandom(seed: number): () => number {
+  let value = seed >>> 0;
+  return () => {
+    value += 0x6d2b79f5;
+    let mixed = value;
+    mixed = Math.imul(mixed ^ (mixed >>> 15), mixed | 1);
+    mixed ^= mixed + Math.imul(mixed ^ (mixed >>> 7), mixed | 61);
+    return ((mixed ^ (mixed >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Recovered deterministic Boss's Chair mechanic, kept as local practice. */
+export function generatePracticeRounds(
+  seed: number,
+  count = 8,
+): PracticeRound[] {
+  const random = seededRandom(Math.trunc(seed) * 7919 + 1);
+  return Array.from({ length: Math.max(1, Math.trunc(count)) }, (_, index) => {
+    const critical = random() < 0.5;
+    const scenarios = critical
+      ? CRITICAL_PRACTICE_SCENARIOS
+      : ROUTINE_PRACTICE_SCENARIOS;
+    const scenario = scenarios[index % scenarios.length];
+    return { id: index + 1, critical, ...scenario };
+  });
+}
+
+/** A seeded opponent is a simulation, not a provider or measured model. */
+export function simulatePracticeDecisions(
+  rounds: PracticeRound[],
+  competence: number,
+  seed: number,
+): PracticeDecision[] {
+  const random = seededRandom(Math.trunc(seed) * 31 + 7);
+  const boundedCompetence = Math.min(1, Math.max(0, competence));
+  return rounds.map((round) => {
+    const correct = random() < boundedCompetence;
+    return round.critical === correct ? "escalate" : "resolve";
+  });
+}
+
+export function scorePracticeDecisions(
+  decisions: PracticeDecision[],
+  rounds: PracticeRound[],
+): PracticeScore {
+  let truePositive = 0;
+  let falsePositive = 0;
+  let falseNegative = 0;
+  rounds.forEach((round, index) => {
+    const escalated = decisions[index] === "escalate";
+    if (round.critical) {
+      if (escalated) truePositive += 1;
+      else falseNegative += 1;
+    } else if (escalated) {
+      falsePositive += 1;
+    }
+  });
+  const recall =
+    truePositive + falseNegative > 0
+      ? truePositive / (truePositive + falseNegative)
+      : 1;
+  const precision =
+    truePositive + falsePositive > 0
+      ? truePositive / (truePositive + falsePositive)
+      : 1;
+  const f1 =
+    recall + precision > 0
+      ? (2 * recall * precision) / (recall + precision)
+      : 0;
+  return {
+    truePositive,
+    falsePositive,
+    falseNegative,
+    precision,
+    recall,
+    f1,
+  };
+}
 
 type LoadState =
   | { phase: "loading" }
@@ -299,6 +440,163 @@ function ModelReading({
   );
 }
 
+function PracticeArena() {
+  const [seed, setSeed] = useState(42);
+  const [decisions, setDecisions] = useState<PracticeDecision[]>([]);
+  const rounds = useMemo(() => generatePracticeRounds(seed), [seed]);
+  const opponentDecisions = useMemo(
+    () => simulatePracticeDecisions(rounds, 0.7, seed),
+    [rounds, seed],
+  );
+  const currentRound = rounds[decisions.length] ?? null;
+  const completed = decisions.length === rounds.length;
+  const humanScore = completed
+    ? scorePracticeDecisions(decisions, rounds)
+    : null;
+  const opponentScore = scorePracticeDecisions(opponentDecisions, rounds);
+  const result = humanScore
+    ? humanScore.f1 > opponentScore.f1
+      ? "Human wins"
+      : humanScore.f1 < opponentScore.f1
+        ? "Simulated agent wins"
+        : "Tie"
+    : null;
+
+  function choose(decision: PracticeDecision) {
+    if (!currentRound) return;
+    setDecisions((current) => [...current, decision]);
+  }
+
+  function reset(nextSeed = seed) {
+    setSeed(nextSeed);
+    setDecisions([]);
+  }
+
+  return (
+    <section
+      aria-labelledby="boss-chair-title"
+      className="mt-6 overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 text-white shadow-xl"
+      data-testid="council-practice-arena"
+    >
+      <div className="grid gap-0 lg:grid-cols-[minmax(0,1.35fr)_minmax(260px,.65fr)]">
+        <div className="p-5 sm:p-7">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-emerald-200">
+              Private practice · simulated opponent
+            </span>
+            <span className="font-mono text-[11px] text-slate-400">
+              seed {seed} · round{" "}
+              {Math.min(decisions.length + 1, rounds.length)}/{rounds.length}
+            </span>
+          </div>
+          <h2
+            id="boss-chair-title"
+            className="mt-4 text-2xl font-semibold tracking-tight"
+          >
+            The Boss&apos;s Chair
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-300">
+            Decide what the Council may resolve and what must return to a
+            person. You and a deterministic simulated agent face the same seeded
+            cases.
+          </p>
+
+          {currentRound ? (
+            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.06] p-5">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                Incoming request · {currentRound.subject}
+              </p>
+              <p className="mt-3 text-lg leading-relaxed text-white">
+                “{currentRound.body}”
+              </p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => choose("resolve")}
+                  className="min-h-12 rounded-xl border border-white/15 bg-white/5 px-4 text-sm font-semibold text-white transition hover:border-white/30 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
+                >
+                  Resolve within scope
+                </button>
+                <button
+                  type="button"
+                  onClick={() => choose("escalate")}
+                  className="min-h-12 rounded-xl bg-emerald-300 px-4 text-sm font-semibold text-slate-950 transition hover:bg-emerald-200 focus:outline-none focus:ring-2 focus:ring-white"
+                >
+                  Escalate to a person
+                </button>
+              </div>
+            </div>
+          ) : humanScore ? (
+            <div className="mt-6 rounded-2xl border border-emerald-300/25 bg-emerald-300/10 p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-200">
+                Scenario complete
+              </p>
+              <p className="mt-2 text-3xl font-semibold">{result}</p>
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <div className="rounded-xl bg-slate-950/50 p-4">
+                  <p className="text-xs text-slate-400">You · governance F1</p>
+                  <p className="mt-1 text-2xl font-semibold tabular-nums">
+                    {pct(humanScore.f1)}
+                  </p>
+                </div>
+                <div className="rounded-xl bg-slate-950/50 p-4">
+                  <p className="text-xs text-slate-400">
+                    Simulation · governance F1
+                  </p>
+                  <p className="mt-1 text-2xl font-semibold tabular-nums">
+                    {pct(opponentScore.f1)}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => reset(seed + 1)}
+                className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-200/30 px-4 text-sm font-semibold text-emerald-100 hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-white"
+              >
+                <RotateCcw className="h-4 w-4" aria-hidden="true" /> New seeded
+                scenario
+              </button>
+            </div>
+          ) : null}
+        </div>
+
+        <aside className="border-t border-white/10 bg-black/20 p-5 lg:border-l lg:border-t-0 sm:p-7">
+          <Bot className="h-5 w-5 text-emerald-300" aria-hidden="true" />
+          <h3 className="mt-4 text-sm font-semibold">
+            What this run can become
+          </h3>
+          <ol className="mt-3 space-y-3 text-xs leading-relaxed text-slate-300">
+            <li>
+              <strong className="text-white">1. Practice:</strong> decisions
+              remain in this browser.
+            </li>
+            <li>
+              <strong className="text-white">2. Review:</strong> a person may
+              inspect the case and method.
+            </li>
+            <li>
+              <strong className="text-white">3. Candidate evidence:</strong>{" "}
+              only explicit submission enters quarantine.
+            </li>
+            <li>
+              <strong className="text-white">4. Admission:</strong> reproduction
+              and the normal evidence gates are still required.
+            </li>
+          </ol>
+          <div className="mt-5 flex gap-2 rounded-xl border border-white/10 bg-white/5 p-3 text-[11px] leading-relaxed text-slate-300">
+            <ShieldCheck
+              className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300"
+              aria-hidden="true"
+            />
+            No model call, evidence admission, signing, or training reuse occurs
+            in this practice run.
+          </div>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
 export default function DashboardArenaPane({
   initialData,
   fetchImpl = fetch,
@@ -369,31 +667,24 @@ export default function DashboardArenaPane({
       className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8"
       data-testid="dashboard-arena-pane"
     >
-      <header className="flex flex-col gap-4 border-b border-border pb-5 sm:flex-row sm:items-start sm:justify-between">
+      <header className="border-b border-border pb-5">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-800">
-            Council of AI · recorded legacy replay
+            Council of AI · human-in-the-loop arena
           </p>
           <h1 className="mt-2 flex items-center gap-2 text-2xl font-semibold tracking-tight text-foreground">
             <Swords className="h-5 w-5 text-emerald-700" aria-hidden="true" />{" "}
-            Compare two historical subjects
+            Practice decisions, then inspect evidence
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Select two models and one recorded legacy axis. This replays a
-            historical artefact; it does not choose who writes the dashboard
-            chat reply or update the living GSPC board.
+            The practice arena keeps a person in control. The historical replay
+            below remains a separate read-only artefact and never updates the
+            living GSPC board.
           </p>
         </div>
-        <span className="w-fit rounded-full border border-emerald-700/25 bg-emerald-50 px-2.5 py-1 font-mono text-[10px] font-semibold text-emerald-900">
-          {board?.signature
-            ? "SIGNED HISTORICAL ARTEFACT"
-            : state.phase === "loading"
-              ? "LOADING"
-              : state.phase === "unreachable"
-                ? "UNREACHABLE"
-                : "MEASURED · SIGNATURE UNCHECKABLE"}
-        </span>
       </header>
+
+      <PracticeArena />
 
       {state.phase === "loading" && (
         <p
@@ -415,11 +706,18 @@ export default function DashboardArenaPane({
 
       {board && axis && leftScore && rightScore && (
         <>
-          <aside className="mt-6 rounded-xl border border-amber-300 bg-amber-50 p-4 text-xs leading-relaxed text-amber-950">
-            <strong>Historical taxonomy boundary.</strong> The replay source
-            uses a legacy, noncanonical 15-axis arena taxonomy. It is not the
-            canonical 22-axis GSPC board, and replaying it creates no current
-            ranking or measurement.
+          <aside className="mt-6 flex flex-col gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-xs leading-relaxed text-amber-950 sm:flex-row sm:items-start sm:justify-between">
+            <p>
+              <strong>Historical taxonomy boundary.</strong> The replay source
+              uses a legacy, noncanonical 15-axis arena taxonomy. It is not the
+              canonical 22-axis GSPC board, and replaying it creates no current
+              ranking or measurement.
+            </p>
+            <span className="w-fit shrink-0 rounded-full border border-amber-700/20 bg-white/60 px-2.5 py-1 font-mono text-[10px] font-semibold text-amber-950">
+              {board.signature
+                ? "SIGNED HISTORICAL ARTEFACT"
+                : "MEASURED · SIGNATURE UNCHECKABLE"}
+            </span>
           </aside>
           <section
             aria-label="Arena replay controls"

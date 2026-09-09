@@ -27,6 +27,7 @@ import {
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
   paymentRequiredResponseSigned,
+  hasPaymentHeader,
   CSOAI_LID,
   type X402Env,
 } from "../_x402";
@@ -302,6 +303,18 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (!valid && preview) {
     return json({ schema: "csoai.rwa-evidence/0.1", error: "bad_request", reason: "pass asset=<XRPL symbol from /api/xrpl or an r-address>", free_reader: `${origin}/api/xrpl`, preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` }, 400);
   }
+  // Unpaid bare GET stays 402 so an indexer can discover the door. A presented payment
+  // must never settle until the asset is a deliverable the free reader already lists.
+  if (hasPaymentHeader(request) && !valid) {
+    return json({ schema: "csoai.rwa-evidence/0.1", error: "bad_request", reason: "pass asset=<XRPL symbol from /api/xrpl or an r-address> before presenting payment", free_reader: `${origin}/api/xrpl`, preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` }, 400);
+  }
+  let found: Awaited<ReturnType<typeof resolveAsset>> | null = null;
+  if (hasPaymentHeader(request) && valid) {
+    found = await resolveAsset(origin, asset);
+    if (!found.row || !found.row.issuer_address) {
+      return json({ schema: "csoai.rwa-evidence/0.1", error: "not_found", reason: `asset ${asset} is not in the public reader`, known_symbols: found.known, read_from: found.source, note: "Buyer-led: only assets the free reader already lists are evidenced. No payment was taken for a 404." }, 404);
+    }
+  }
 
   const description = `A signed XRPL evidence card for ${asset || "<asset>"}: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.`;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
@@ -342,17 +355,17 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.rwa-evidence/0.1", error: "bad_request", reason: "pass asset=<XRPL symbol from /api/xrpl or an r-address>", free_reader: `${origin}/api/xrpl`, preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` }, 400);
   }
 
-  const found = await resolveAsset(origin, asset);
-  if (!found.row || !found.row.issuer_address) {
-    return json({ schema: "csoai.rwa-evidence/0.1", error: "not_found", reason: `asset ${asset} is not in the public reader`, known_symbols: found.known, read_from: found.source, note: "Buyer-led: only assets the free reader already lists are evidenced. No payment was taken for a 404." }, 404);
+  const resolved = found ?? (await resolveAsset(origin, asset));
+  if (!resolved.row || !resolved.row.issuer_address) {
+    return json({ schema: "csoai.rwa-evidence/0.1", error: "not_found", reason: `asset ${asset} is not in the public reader`, known_symbols: resolved.known, read_from: resolved.source, note: "Buyer-led: only assets the free reader already lists are evidenced. No payment was taken for a 404." }, 404);
   }
 
-  const built = await buildPayload(origin, found.row, found.reader_as_of, found.source.startsWith("http") ? found.source : `${origin}/api/xrpl`);
-  const sym = String(found.row.symbol);
+  const built = await buildPayload(origin, resolved.row, resolved.reader_as_of, resolved.source.startsWith("http") ? resolved.source : `${origin}/api/xrpl`);
+  const sym = String(resolved.row.symbol);
   const envelope = (payload: Record<string, unknown>) => ({
     schema: SCHEMA,
     surface: "public.notice",
-    subject: `XRPL ${sym} (${found.row!.issuer || "issuer"}) two-way domain ${payload.two_way_domain} + on-chain obligation`,
+    subject: `XRPL ${sym} (${resolved.row!.issuer || "issuer"}) two-way domain ${payload.two_way_domain} + on-chain obligation`,
     as_of: built.fetched_at,
     source_urls: built.source_urls,
     payload,

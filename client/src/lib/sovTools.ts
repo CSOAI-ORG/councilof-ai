@@ -29,16 +29,40 @@ export type ToolResult = {
   state?: "runtime_observed" | "unreachable";
 };
 
-/** The JSON-RPC endpoint. NOT `${GW}/mcp` — that is the registry artifact, GET-only. */
-const RPC = "/mcp";
+/**
+ * The JSON-RPC endpoint. NOT `${GW}/mcp` — that is the registry artifact,
+ * GET-only. A Vite-only review build has no Pages Functions process behind
+ * `/mcp`, so localhost may retry the public runtime after the same-origin
+ * probe fails. Production never crosses origins.
+ */
+export function mcpRpcEndpoints(hostname?: string): string[] {
+  const local = hostname === "localhost" || hostname === "127.0.0.1";
+  return local ? ["/mcp", "https://councilof.ai/mcp"] : ["/mcp"];
+}
 
 async function rpc(method: string, params?: any): Promise<any> {
-  const r = await fetch(RPC, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ jsonrpc: "2.0", id: Date.now(), method, params }),
-  });
-  return r.json();
+  const hostname =
+    typeof window === "undefined" ? undefined : window.location.hostname;
+  let lastError: unknown = new Error("the MCP runtime did not answer");
+  for (const endpoint of mcpRpcEndpoints(hostname)) {
+    try {
+      const r = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: Date.now(), method, params }),
+      });
+      if (!r.ok) {
+        lastError = new Error(`${endpoint} returned HTTP ${r.status}`);
+        continue;
+      }
+      return await r.json();
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("the MCP runtime did not answer");
 }
 
 // The live, server-executed governance tools (govern, sign, verify, talk, agent-card).

@@ -9,6 +9,7 @@ import {
   type RunnerTool,
   type RunnerToolResult,
 } from "./ToolRunner";
+import { mcpRpcEndpoints } from "@/lib/sovTools";
 
 const typedTool: RunnerTool = {
   name: "typed_tool",
@@ -28,6 +29,18 @@ const typedTool: RunnerTool = {
 };
 
 describe("MCP tool form model", () => {
+  it("keeps production same-origin and gives local review builds one live fallback", () => {
+    expect(mcpRpcEndpoints("councilof.ai")).toEqual(["/mcp"]);
+    expect(mcpRpcEndpoints("127.0.0.1")).toEqual([
+      "/mcp",
+      "https://councilof.ai/mcp",
+    ]);
+    expect(mcpRpcEndpoints("localhost")).toEqual([
+      "/mcp",
+      "https://councilof.ai/mcp",
+    ]);
+  });
+
   it("recognises primitive, JSON and object-or-string schemas", () => {
     expect(fieldKind({ type: "integer" })).toBe("integer");
     expect(fieldKind({ type: "boolean" })).toBe("boolean");

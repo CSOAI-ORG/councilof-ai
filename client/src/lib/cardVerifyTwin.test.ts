@@ -9,7 +9,7 @@
  * neither was dropped; only this one moved.
  */
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { canonicalPy, looksLikeCard, verifyCard } from "./cardVerify";
 // The PUBLISHED verifier a stranger runs. Imported here on purpose: this suite's
 // whole job is to prove the browser twin and the published Node original cannot
@@ -38,6 +38,9 @@ function pinnedKey(): Uint8Array {
  *  repo carries more card files than the index names, and the index is the
  *  authority (BOARD-RULING.md: the verifiable floor is what the index contains). */
 const declared: { card: string; axis: string }[] = index.cards;
+const MILL_DIR = "public/interop/mill-cards-signed";
+const millFiles = readdirSync(new URL(`../../../${MILL_DIR}/`, import.meta.url))
+  .filter((f) => f.startsWith("signed-") && f.endsWith(".json"));
 
 const load = (id: string) => readJson(`public/signed/cards/${id}.json`);
 
@@ -113,5 +116,18 @@ describe("cardVerify — the browser twin of public/signed/verify-card.mjs", () 
   it("recognises the card shape without asserting anything about it", () => {
     expect(looksLikeCard(load(declared[0].card))).toBe(true);
     expect(looksLikeCard({ content_id: "x", signature: "y" })).toBe(false);
+  });
+
+  it("agrees on the DID-keyed Hugging Face mill-card generation", async () => {
+    expect(millFiles.length).toBeGreaterThan(0);
+    const disagree: string[] = [];
+    for (const file of millFiles) {
+      const card = readJson(`${MILL_DIR}/${file}`);
+      const browser = await verifyCard(card, null);
+      const published = await verifyCardPublished(card);
+      if (browser.state !== "VALID" || published.state !== "VALID" || browser.state !== published.state)
+        disagree.push(`${file}: browser=${browser.state} published=${published.state}`);
+    }
+    expect(disagree).toEqual([]);
   });
 });

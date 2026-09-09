@@ -61,7 +61,8 @@ jobs:
       - name: Verify every run independently
         run: |
           set -euo pipefail
-          ok=0; bad=0
+          ok=0; legacy=0; bad=0
+          : > legacy-intake.txt
           # EVERY path handed to the verifier must be absolute -- it refuses a relative one
           # for --run-dir exactly as it does for --bank-allowlist. Search from the absolute root
           # so `find` emits absolute paths rather than post-fixing them.
@@ -77,17 +78,29 @@ jobs:
                  --quarantine-root "$GITHUB_WORKSPACE/quarantine" 2>&1); then
               ok=$((ok+1))
             else
-              bad=$((bad+1)); echo "REJECTED $d :: $out"
+              # Runs emitted before the parse-error denominator fix cannot satisfy the
+              # current schema. They stay rejected and never reach staging, but must not
+              # prevent an independently valid new run from landing. Everything else is
+              # still a hard failure. The bridge below reads verified quarantine output,
+              # never this source tree, so this exception cannot bypass verification.
+              if printf '%s' "$out" | grep -q 'parse_errors_excluded'; then
+                legacy=$((legacy+1))
+                printf '%s\n' "$d" >> legacy-intake.txt
+                echo "LEGACY_QUARANTINED $d :: $out"
+              else
+                bad=$((bad+1)); echo "REJECTED $d :: $out"
+              fi
             fi
           done
-          echo "VERIFIED $ok · REJECTED $bad"
+          echo "VERIFIED $ok · LEGACY_QUARANTINED $legacy · REJECTED $bad"
           echo "verified=$ok" >> "$GITHUB_OUTPUT"
+          [ "$ok" -gt 0 ] || { echo "no current-schema run verified; refusing an empty stage"; exit 1; }
           [ "$bad" -eq 0 ] || { echo "a run failed intake verification"; exit 1; }
 
       - name: Stage the verified runs for the signer
         run: |
           python3 scripts/runpod_gspc_bridge_to_mill.py \
-            --intake intake/gspc-24x7 \
+            --intake "$GITHUB_WORKSPACE/quarantine" \
             --out public/interop/mill-cards-unsigned
 
       - name: Publish the staged cards as an artifact for review

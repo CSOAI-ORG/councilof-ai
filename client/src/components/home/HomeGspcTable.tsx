@@ -22,7 +22,12 @@
  */
 import { useEffect, useState } from "react";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
-import { boardAxisLabel } from "./HomeGspcBoard";
+import {
+  boardAxisLabel,
+  HubResultsBoard,
+  useHubCardsFeed,
+  type HubCardsPayload,
+} from "./HomeGspcBoard";
 import {
   familyText,
   fmtPct,
@@ -162,6 +167,8 @@ export default function HomeGspcTable({
   onSelect,
   data: injected,
   error: injectedError = null,
+  hubData: injectedHub,
+  hubError: injectedHubError = null,
 }: {
   className?: string;
   /** The page owns the heading text; the table owns everything read off the API. */
@@ -172,11 +179,15 @@ export default function HomeGspcTable({
   /** Injected payload (tests, SSR) bypasses the fetch. */
   data?: GspcPayload | null;
   error?: string | null;
+  /** Same Hub feed as Council OS; kept distinct from the governance board instrument. */
+  hubData?: HubCardsPayload | null;
+  hubError?: string | null;
 }) {
   const live = useGspcBoard();
   const data = injected !== undefined ? injected : live.data;
   const error = injected !== undefined ? injectedError : live.error;
   const loading = injected !== undefined ? false : live.loading;
+  const { data: hubData, error: hubError, loading: hubLoading } = useHubCardsFeed(injectedHub, injectedHubError);
 
   const [picked, setPicked] = useState<string | null>(null);
   const want = (highlight || picked || "").toLowerCase();
@@ -410,6 +421,8 @@ export default function HomeGspcTable({
           </div>
         </>
       ) : null}
+
+      <HubResultsBoard data={hubData} error={hubError} loading={hubLoading} />
     </section>
   );
 }

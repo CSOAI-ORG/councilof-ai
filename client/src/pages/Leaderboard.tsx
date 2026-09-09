@@ -14,9 +14,10 @@
  * bottom. Lead by example.
  *
  * Data core: client/src/lib/gspcFleet.ts (reads /signed/card-matrix.json). Counts
- * are derived from the arrays there, never typed here. The axis-level statistics
- * (n, Wilson interval, separation test) come from the governance board
- * (/api/gspc) via useGspcBoard — a DIFFERENT instrument, linked, never summed.
+ * are derived from the arrays there, never typed here. The governance board
+ * (/api/gspc) is a DIFFERENT instrument: it is linked for context, never used as
+ * statistical evidence for a benchmark-matrix leader unless both surfaces
+ * identify the exact same signed measurement.
  */
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -160,8 +161,9 @@ function Board({ matrix, board, pinnedKey }: { matrix: FleetMatrix; board: impor
     [matrix.axes, relevant],
   );
 
-  // Board-twin lookup: enrich an axis column with the governance board's n /
-  // Wilson / separation where a twin exists. A LINK across instruments, not a sum.
+  // Board-twin lookup supplies contextual links only. Its evidence can support a
+  // benchmark header statistic only when axis, leader, score and signed card URL
+  // identify the exact same measurement (see axisStatEvidence).
   const boardAxisByName = useMemo(() => {
     const map = new Map<string, GspcAxis>();
     for (const a of board?.axes ?? []) if (a?.axis) map.set(String(a.axis).toLowerCase(), a);
@@ -430,7 +432,7 @@ function MatrixGrid(props: {
                   key={a.id}
                   className={`min-w-[92px] cursor-pointer border-l border-emerald-500/10 px-2 py-2 text-center align-bottom transition-colors hover:bg-emerald-500/10 ${active ? "bg-emerald-500/15" : ""}`}
                   onClick={() => onSortAxis(a.id)}
-                  title={`${meta.blurb}\n\nClick to rank the fleet by this axis.${twin ? `\nGovernance twin: ${twin.axis} (n=${twin.n ?? "—"}).` : ""}`}
+                  title={`${meta.blurb}\n\nClick to rank the fleet by this axis.${twin ? `\nRelated governance axis: ${twin.axis}. Its cohort statistics are not transferred.` : ""}`}
                 >
                   <div className={`font-bold leading-tight ${active ? "text-emerald-200" : "text-emerald-100/85"}`}>{meta.label}</div>
                   <AxisStat axisId={a.id} matrix={props.matrix} twin={twin} />
@@ -526,18 +528,59 @@ function MatrixGrid(props: {
   );
 }
 
-/** The small stat under an axis header: leader interval where an n is real, else honest silence. */
+/**
+ * Resolve an interval only when its cohort belongs to the exact benchmark
+ * leader. A governance twin is a different measurement unless it names the
+ * same axis, model, score and signed card URL. Similar labels are not identity.
+ */
+export function axisStatEvidence(axisId: string, matrix: FleetMatrix, twin?: GspcAxis) {
+  const axis = matrix.axes.find((a) => a.id === axisId);
+  if (!axis) return null;
+  const leader = matrix.cells
+    .filter((cell) => cell.axis === axisId && Number.isFinite(cell.accuracy))
+    .sort((a, b) => b.accuracy - a.accuracy)[0];
+  if (!leader || leader.accuracy !== axis.best_accuracy) return null;
+
+  const twinEvidenceUrl = typeof twin?.evidence_url === "string"
+    ? twin.evidence_url
+    : typeof twin?.card_url === "string"
+      ? twin.card_url
+      : null;
+  const twinN = typeof twin?.n === "number" && Number.isInteger(twin.n) && twin.n > 0 ? twin.n : null;
+  const exactTwinMeasurement = Boolean(
+    twin
+    && twin.axis === axisId
+    && twin.leader === leader.model
+    && twin.accuracy === leader.accuracy
+    && twinEvidenceUrl === leader.card_url
+    && twin.status === "MEASURED"
+    && twinN,
+  );
+
+  if (exactTwinMeasurement && twinN) {
+    const interval = twin?.interval;
+    if (
+      interval
+      && interval.length === 2
+      && interval.every((value) => typeof value === "number" && Number.isFinite(value))
+      && interval[0] >= 0
+      && interval[0] <= leader.accuracy
+      && interval[1] >= leader.accuracy
+      && interval[1] <= 1
+    ) {
+      return { lo: interval[0], hi: interval[1], n: twinN, nSource: "exact matching signed measurement" };
+    }
+    return wilson(leader.accuracy, twinN, "exact matching signed measurement");
+  }
+
+  return wilson(leader.accuracy, axisBankN(axisId), "benchmark axis id declares cohort n");
+}
+
+/** The small stat under an axis header: exact leader interval, else honest unavailability. */
 function AxisStat({ axisId, matrix, twin }: { axisId: string; matrix: FleetMatrix; twin?: GspcAxis }) {
   const axis = matrix.axes.find((a) => a.id === axisId);
   if (!axis) return null;
-  // Prefer the governance board's published interval + n for the twin; else the
-  // *-30 family's declared n; else say nothing rather than invent an interval.
-  const boardInterval = twin?.interval;
-  const boardN = typeof twin?.n === "number" ? twin!.n : null;
-  const parsedN = axisBankN(axisId);
-  const w = boardInterval
-    ? { lo: boardInterval[0], hi: boardInterval[1], n: boardN ?? 0, nSource: "governance board" }
-    : wilson(axis.best_accuracy, boardN ?? parsedN, boardN ? "governance board n" : "axis id declares n");
+  const w = axisStatEvidence(axisId, matrix, twin);
   return (
     <div className="mt-1 space-y-0.5">
       <div className="text-[9px] text-emerald-300/50" title="Best measured figure on this axis across the fleet.">
@@ -548,8 +591,8 @@ function AxisStat({ axisId, matrix, twin }: { axisId: string; matrix: FleetMatri
           95% {pct(w.lo)}–{pct(w.hi)}
         </div>
       ) : (
-        <div className="text-[9px] text-emerald-300/25" title="A compact card carries accuracy but not a per-cell n, and no governance twin publishes one — so no interval is shown rather than a fabricated one.">
-          n on frozen bank
+        <div className="text-[9px] text-emerald-300/25" title="The benchmark leader's signed card carries accuracy but not a cohort n. A related governance measurement is not the same cohort, so its interval is not borrowed.">
+          interval unavailable
         </div>
       )}
       <div className="text-[9px] text-emerald-300/30">{axis.models} models</div>
@@ -569,10 +612,10 @@ function TwoInstrumentNote({ matrix, board }: { matrix: FleetMatrix; board: any 
         <Link href="/board" className="text-emerald-300 underline">governance board</Link>{" "}
         (<span className="font-mono">/api/gspc</span>
         {board?.totals?.axes ? `, ${board.totals.axes} slots` : ""}) is a <strong>different instrument</strong> measuring
-        governance axes, and it is the authority on axis-level statistics — n, Wilson intervals, and the separation test.
+        governance axes, and it is the authority on statistics for its own measurements — n, Wilson intervals, and the separation test.
         {" "}The two axis sets are different on purpose and are never added together. Where a benchmark axis has a
-        governance twin, its column header borrows the board&rsquo;s interval and links across — it does not fuse the two
-        counts. {matrix.not_the_board ? `“${matrix.not_the_board}”` : ""}
+        governance twin, the column links across for context but does not borrow the board&rsquo;s cohort statistics.
+        {" "}{matrix.not_the_board ? `“${matrix.not_the_board}”` : ""}
       </p>
     </div>
   );
@@ -629,9 +672,9 @@ function SelfAudit({ matrix, counts, board }: { matrix: FleetMatrix; counts: Ret
             : "Every axis carries at least 10 models."}
         </li>
         <li>
-          <strong>Per-cell n is not on the compact card.</strong> Cards carry accuracy, not the bank size, so most inline
-          Wilson intervals come from the governance twin or the axis&rsquo;s declared bank — and where neither exists we
-          show none rather than invent one.
+          <strong>Per-cell n is not on the compact card.</strong> Cards carry accuracy, not the bank size, so an inline
+          Wilson interval appears only when the benchmark axis declares its own cohort size, or an API record identifies
+          the exact same signed leader measurement. Related governance cohorts are never substituted.
         </li>
         <li>
           <strong>The living stamp is UNCHECKABLE by a stranger.</strong> The signed cards are verifiable; the claim that

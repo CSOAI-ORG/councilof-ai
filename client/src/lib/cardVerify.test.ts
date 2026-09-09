@@ -30,6 +30,7 @@ import {
 const ROOT = resolve(__dirname, "../../..");
 const CARD_DIR = resolve(ROOT, "public/signed/cards");
 const SIGNAL_DIR = resolve(ROOT, "public/signals");
+const MILL_DIR = resolve(ROOT, "public/interop/mill-cards-signed");
 
 const readJson = (p: string) => JSON.parse(readFileSync(p, "utf8"));
 const ANCHORS: Anchor[] = anchorsFromDid(readJson(resolve(ROOT, "public/.well-known/did.json")));
@@ -81,6 +82,28 @@ describe("gspc.measurement-card — the whole published corpus", () => {
 
   it("escapes non-ASCII the way ensure_ascii=True does", () => {
     expect(pyCanonical({ note: "a — b" })).toBe('{"note":"a \\u2014 b"}');
+  });
+});
+
+describe("DID-keyed mill measurement cards", () => {
+  const millFiles = readdirSync(MILL_DIR).filter((f) => f.startsWith("signed-") && f.endsWith(".json"));
+
+  it("recognises and verifies every published mill card against its named offline pin", async () => {
+    expect(millFiles.length).toBeGreaterThan(0);
+    const failures: { file: string; reasons: string[] }[] = [];
+    for (const f of millFiles) {
+      const card = readJson(resolve(MILL_DIR, f));
+      expect(detectFamily(card)).toBe("gspc.measurement-card");
+      const verdict = await verifyCard(card, ANCHORS);
+      if (!verdict.valid) failures.push({ file: f, reasons: verdict.reasons });
+    }
+    expect(failures).toEqual([]);
+  });
+
+  it("does not guess an unknown DID or a dual-key authority", async () => {
+    const card = readJson(resolve(MILL_DIR, millFiles[0]));
+    expect((await verifyCard({ ...card, did: "did:web:example.invalid#k1" }, ANCHORS)).reasons).toContain("key_not_pinned");
+    expect((await verifyCard({ ...card, pubkey: CARD_ATTESTATION_HEX }, ANCHORS)).reasons).toContain("key_ambiguous");
   });
 });
 

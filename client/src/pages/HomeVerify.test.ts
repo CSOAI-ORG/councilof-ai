@@ -8,12 +8,9 @@ const src = [
   readFileSync(resolve(here, "HomeVerify.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/home/HomeComposer.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/home/HomeGspcTable.tsx"), "utf8"),
+  readFileSync(resolve(here, "../components/home/HomeGspcBoard.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/home/homeGspcTableReaders.ts"), "utf8"),
   readFileSync(resolve(here, "../components/home/HomeFilms.tsx"), "utf8"),
-  readFileSync(resolve(here, "../components/HfLivingRecord.tsx"), "utf8"),
-  readFileSync(resolve(here, "../lib/hfLivingRecord.ts"), "utf8"),
-  readFileSync(resolve(here, "../components/ReachStrip.tsx"), "utf8"),
-  readFileSync(resolve(here, "../lib/reachStrip.ts"), "utf8"),
 ]
   .join("\n")
   .replace(/\/\*[\s\S]*?\*\//g, "")
@@ -47,14 +44,13 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain("home-models-ranked");
     expect(src).not.toContain("HomeDemoLoop");
     expect(src).not.toContain("PluginBlock");
-    expect(src).toContain("HfLivingRecord");
-    expect(src).toContain("ReachStrip");
-    expect(src).toContain("Printers of the live board");
+    expect(src).toContain("Hugging Face measured-model results");
+    expect(src).toContain("/api/hub-cards");
+    expect(src).not.toContain("Printers of the live board");
     expect(src).not.toContain("glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc");
     expect(src).not.toContain("glama.ai/mcp/servers/CSOAI-ORG/councilof-ai");
-    expect(src).toContain("10.5281/zenodo.21991104");
     expect(src).toMatch(/not a certificate/i);
-    expect(src).toContain("huggingface.co/datasets/csoai/gspc-board");
+    expect(src).toContain("huggingface.co/datasets/csoai/gspc-hub-cards");
     expect(src).not.toContain("OsShell");
     expect(src).not.toMatch(/certified organization|buy a rank|rank for sale/i);
   });
@@ -137,8 +133,8 @@ describe("home lock — later merges must not restore the desk video", () => {
   it("HomeVerify.tsx stays living-board first with no HomeDemoLoop", () => {
     const home = readFileSync(resolve(here, "HomeVerify.tsx"), "utf8");
     expect(home).toContain("HomeGspcTable");
-    expect(home).toContain("HfLivingRecord");
-    expect(home).toContain("ReachStrip");
+    expect(home).not.toContain("HfLivingRecord");
+    expect(home).not.toContain("ReachStrip");
     expect(home).toContain("The living board");
     expect(home).toMatch(/Check a claim\. Request a measurement\./);
     expect(home).not.toContain("HomeDemoLoop");

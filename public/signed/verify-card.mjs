@@ -30,8 +30,13 @@ const ORIGIN = "https://councilof.ai";
 // that the file is self-consistent — anyone can alter a body and sign it with a key they
 // just generated. Authenticity requires pinning to the key published in our DID document:
 //   did:web:csoai.org#card-attestation-1
+const CARD_KEY_ID = "did:web:csoai.org#card-attestation-1";
 const PINNED_PUBKEY_HEX =
   "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38";
+const PINNED_DID_KEYS = Object.freeze({
+  [CARD_KEY_ID]: PINNED_PUBKEY_HEX,
+  "did:web:csoai.org#board-attestation-1": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+});
 
 // Fields whose values are floats in our schema. See "THE HONEST LIMIT" above.
 const FLOAT_FIELDS = new Set(["accuracy", "ci_low", "ci_high", "recall", "precision", "f1"]);
@@ -142,18 +147,35 @@ function jcsString(s) {
 export async function verifyCard(card) {
   if (!card || typeof card !== "object" || !card.body)
     return { state: "UNCHECKABLE", reason: "not a card: no body" };
-  if (!card.pubkey || !card.signature || !card.id)
-    return { state: "UNCHECKABLE", reason: "missing pubkey, signature or id" };
+  if (!card.signature || !card.id)
+    return { state: "UNCHECKABLE", reason: "missing signature or id" };
+  const hasPubkey = typeof card.pubkey === "string" && !!card.pubkey;
+  const hasDid = typeof card.did === "string" && !!card.did;
+  if (!hasPubkey && !hasDid)
+    return { state: "UNCHECKABLE", reason: "card names neither an inline public key nor a DID key reference" };
+  if (hasPubkey && hasDid)
+    return { state: "UNCHECKABLE", reason: "card names two key authorities; verifier will not guess" };
 
-  if (card.pubkey !== PINNED_PUBKEY_HEX)
-    return { state: "INVALID", reason: "pubkey is not the published card-attestation key" };
+  let keyHex;
+  let keyId;
+  if (hasDid) {
+    keyHex = PINNED_DID_KEYS[card.did];
+    keyId = card.did;
+    if (!keyHex)
+      return { state: "UNCHECKABLE", reason: `DID key reference ${card.did} is not pinned by this verifier` };
+  } else {
+    if (card.pubkey !== PINNED_PUBKEY_HEX)
+      return { state: "INVALID", reason: "pubkey is not the published card-attestation key" };
+    keyHex = card.pubkey;
+    keyId = CARD_KEY_ID;
+  }
 
   let preimage;
   try {
     // Preimage-rule dispatch (roadmap item 1): absent = legacy CPython v1; "jcs-rfc8785" = JCS v2.
     // Never re-sign v1 cards — the verifier dispatches on the field.
     const rule = card.preimage_rule || card.canon || "cpython-v1";
-    const fn = rule === "jcs-rfc8785" ? canonicalJcs : canonical;
+    const fn = rule === "jcs-rfc8785" || rule === "sha256(canonical body)" ? canonicalJcs : canonical;
     preimage = new TextEncoder().encode(fn(card.body));
   } catch (e) {
     return { state: "UNCHECKABLE", reason: `cannot canonicalise: ${e.message}` };
@@ -165,13 +187,13 @@ export async function verifyCard(card) {
 
   let key;
   try {
-    key = await crypto.subtle.importKey("raw", unhex(card.pubkey), "Ed25519", false, ["verify"]);
+    key = await crypto.subtle.importKey("raw", unhex(keyHex), "Ed25519", false, ["verify"]);
   } catch {
     return { state: "UNCHECKABLE", reason: "this runtime has no Ed25519 (needs Node 19+)" };
   }
   const ok = await crypto.subtle.verify("Ed25519", key, unhex(card.signature), preimage);
   return ok
-    ? { state: "VALID", id: card.id, axis: card.body.axis }
+    ? { state: "VALID", id: card.id, axis: card.body.axis, keyId }
     : { state: "INVALID", reason: "signature does not verify under the pinned key" };
 }
 

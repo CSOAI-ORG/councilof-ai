@@ -27,6 +27,7 @@ import {
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
   paymentRequiredResponseSigned,
+  hasPaymentHeader,
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
@@ -84,8 +85,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   }
   // Validate the paid request before touching the facilitator. A missing subject used to reach
   // /verify and /settle first, then return 400 below — charging for an undeliverable commission.
-  const hasPaymentHeader = !!(request.headers.get("x-payment") || request.headers.get("payment-signature"));
-  if (hasPaymentHeader && !subject) {
+  if (hasPaymentHeader(request) && !subject) {
     return json({ schema: "csoai.request-attestation/0.2", error: "bad_request", reason: "pass subject=<id> (and optional axis=) before presenting payment", lid: CSOAI_LID }, 400);
   }
   const knownAxis = axis ? AXES.some((a) => a.axis === axis) : null;

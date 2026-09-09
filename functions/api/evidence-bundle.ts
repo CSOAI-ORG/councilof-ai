@@ -26,6 +26,7 @@ import {
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
   paymentRequiredResponseSigned,
+  hasPaymentHeader,
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
@@ -150,6 +151,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       usage: "GET /api/evidence-bundle?obligation=article-50|article-53|dora|cra&subject=<s>  (add &bundle=1 to buy the assembled OSCAL bundle)",
       never: ["conformity determination", "certificate", "score", "rank"],
     };
+    // Unpaid bare/unknown-obligation stays 402 so an indexer can discover the door.
+    // A presented payment must never settle: there is nothing to deliver yet.
+    if (hasPaymentHeader(request)) {
+      return json({ ...listing, reason: "pass obligation=<article-50|article-53|dora|cra>&bundle=1 before presenting payment" }, obRaw ? 404 : 400);
+    }
     const resourceUrl = new URL("/api/evidence-bundle?obligation=article-50&bundle=1", origin).toString();
     const description =
       "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one obligation. Not a conformity determination.";
