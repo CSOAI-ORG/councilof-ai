@@ -12,6 +12,8 @@ WHAT IT DERIVES, AND FROM WHERE (nothing in the artefact is typed here):
                       scripts/fixtures/x402scan/api_x402.json         (/api/x402: rail, tiers, deliverables)
                       scripts/fixtures/x402scan/challenges/<door>.json (the door's own live 402, where captured)
                       functions/api/_skus.ts + the door handler        (default amount for an uncaptured door)
+                      functions/api/x402-descriptions.json             (canonical descriptions where a stale
+                                                                        live capture could overstate a product)
   the lid             scripts/fixtures/x402scan/api_gspc_totals.json  (/api/gspc totals.lid — read, never typed;
                       must equal /api/x402 lid or the build fails)
   ownership proofs    scripts/fixtures/x402scan/ownership_proofs.json (optional; owner-signed, see
@@ -64,6 +66,11 @@ CATALOG_FIXTURES = {
     "well_known_x402.json": "/.well-known/x402.json",
     "api_x402.json": "/api/x402",
     "api_gspc_totals.json": "/api/gspc",
+}
+DESCRIPTION_SOURCE = REPO / "functions" / "api" / "x402-descriptions.json"
+DESCRIPTION_PATHS = {
+    "/api/proof": "proof_bundle",
+    "/api/receipts/batch": "receipts_batch",
 }
 
 
@@ -273,6 +280,7 @@ def compose(fix: Path = FIX) -> dict:
     free_forever = cat.get("free_forever", [])
     defaults = sku_default_usd()
     decimals = int(rail["asset"]["decimals"])
+    canonical_descriptions = load(DESCRIPTION_SOURCE)
 
     # 1. the free read surface, from the existing walker
     walker = load_walker()
@@ -396,15 +404,18 @@ def compose(fix: Path = FIX) -> dict:
             })
             seen.add("sha")
 
-        description = (challenge or {}).get("resource", {}).get("description") or (tier or {}).get("deliverable") or r.get("note") or ""
+        canonical_description = canonical_descriptions.get(DESCRIPTION_PATHS.get(path, ""))
+        description = canonical_description or (challenge or {}).get("resource", {}).get("description") or (tier or {}).get("deliverable") or r.get("note") or ""
         note = FREE_TIER_OP_NOTE.get(path)
         if note and note not in description:
             description = f"{description.rstrip()} {note}".strip() if description else note
-        deliverable = (tier or {}).get("deliverable") or (challenge or {}).get("resource", {}).get("description") or r.get("note") or ""
+        deliverable = canonical_description or (tier or {}).get("deliverable") or (challenge or {}).get("resource", {}).get("description") or r.get("note") or ""
         summary = (tier or {}).get("name") or (challenge or {}).get("resource", {}).get("serviceName") or f"{r.get('paid_for') or 'free'} door — {path}"
         tags = ["x402", r.get("paid_for") or "free"]
         if challenge:
             example = {k: challenge[k] for k in ("x402Version", "error", "resource", "accepts", "extensions") if k in challenge}
+            if canonical_description and isinstance(example.get("resource"), dict):
+                example["resource"] = {**example["resource"], "description": canonical_description}
         else:
             example = {"x402Version": 2, "error": "Payment required",
                        "resource": {"url": r["url"], "description": description, "mimeType": "application/json"},
@@ -452,7 +463,7 @@ def compose(fix: Path = FIX) -> dict:
         (fix / n).read_bytes() for n in sorted(CATALOG_FIXTURES) if (fix / n).exists()
     ] + [(fix / "challenge_index.json").read_bytes()] * ((fix / "challenge_index.json").exists()) + [
         p.read_bytes() for p in sorted((fix / "challenges").glob("*.json"))
-    ]
+    ] + [DESCRIPTION_SOURCE.read_bytes()]
     version = f"{cat['schema'].rsplit('/', 1)[-1]}+{sha12(*fixture_bytes)}"
     guidance = (
         f"Free board: GET /api/gspc — quote totals.lid verbatim, never compose a count. "

@@ -16,6 +16,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { onRequestGet } from "./x402.json";
+import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION } from "../api/_x402_descriptions";
 import FREE from "../mcp/gspc-tools.json";
 import PAID from "../mcp/paid-tools.json";
 
@@ -26,7 +27,7 @@ const get = async () => {
     env: {},
   });
   return (await res.json()) as {
-    resources: { url: string; method: string; accepts?: { maxTimeoutSeconds?: number }[] }[];
+    resources: { url: string; method: string; description?: string; accepts?: { description?: string; maxTimeoutSeconds?: number }[] }[];
     quarantined?: { url: string; buyable: boolean; lifecycle: string }[];
     mcp: { free_tools: string[]; paid_tools: string[] };
   };
@@ -145,9 +146,23 @@ describe("door descriptions are buyer-first (2026-09-06)", () => {
       expect(r.description!.length, `${r.url} description too short to rank`).toBeGreaterThan(40);
       // first clause = the deliverable, not doctrine: must NOT open with estate-speak
       expect(r.description!.toLowerCase()).toMatch(
-        /^(live board totals|signed measurement card|signed compliance evidence bundle|signed derivative data feed|inclusion proof bundle|rwa asset evidence|art\. 50 marking evidence|provider change record|signed receipts batch)/,
+        /^(live board totals|signed measurement card|signed compliance evidence bundle|signed derivative data feed|inclusion proof bundle|rwa asset evidence|art\. 50 marking evidence|provider change record|historical measurement-card batch)/,
       );
     }
+  });
+
+  it("binds proof and batch discovery copy to what their handlers actually deliver", async () => {
+    const body = await get();
+    const proof = body.resources.find((r) => new URL(r.url).pathname === "/api/proof");
+    const batch = body.resources.find((r) => new URL(r.url).pathname === "/api/receipts/batch");
+
+    expect(proof?.description).toBe(PROOF_BUNDLE_DESCRIPTION);
+    expect(proof?.accepts?.[0]?.description).toBe(PROOF_BUNDLE_DESCRIPTION);
+    expect(proof?.description).not.toMatch(/Rekor|OpenTimestamps/);
+
+    expect(batch?.description).toBe(RECEIPTS_BATCH_DESCRIPTION);
+    expect(batch?.accepts?.[0]?.description).toBe(RECEIPTS_BATCH_DESCRIPTION);
+    expect(batch?.description).not.toMatch(/every settlement record|payer(?:'|’)s view/i);
   });
 });
 

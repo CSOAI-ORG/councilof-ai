@@ -37,6 +37,7 @@ import {
   type X402Env,
 } from "../_x402";
 import { railMode } from "../_x402_config";
+import { RECEIPTS_BATCH_DESCRIPTION } from "../_x402_descriptions";
 import { signPayload, cardV0, canonicalBytes, sha256Hex } from "../../_lib/cardSign";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
@@ -185,8 +186,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       return json({ schema: SCHEMA, error: "bad_request", reason: "from: an ISO-8601 instant is required before presenting payment", usage }, 400);
     }
     const resourceUrl = `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`;
-    const description =
-      "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly — not a conclusion.";
+    const description = RECEIPTS_BATCH_DESCRIPTION;
     const accepts = x402Accepts(env, resourceUrl, { skuId: SKU, tier: "per_batch", description });
     const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
     if (!payment.ok) {
@@ -265,8 +265,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: SCHEMA, kind: "preview", ...previewBody, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT; the paid bytes hash to batch_sha256", invoice: "or quote batch_sha256 to nicholas@csoai.org for a CSOAI LTD invoice (owner-decision; nothing is granted on a claim)", catalog: `${origin}/api/x402` }, rail: railMode(env), lid: CSOAI_LID });
   }
 
-  const description =
-    "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly — not a conclusion.";
+  const description = RECEIPTS_BATCH_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: SKU, tier: "per_batch", description });
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
 
