@@ -26,7 +26,8 @@ const errored = rows.filter((r) => r.err);
 // snapshot would ship a hard "Page Not Found" that answers 200) is not thin and not an
 // error — it is the prerenderer working. Count it separately and name it.
 const skipped404 = rows.filter((r) => r.skipped404);
-const thin = rows.filter((r) => !r.ok && !r.err && !r.skipped404);
+const clientOnly = rows.filter((r) => r.clientOnly);
+const thin = rows.filter((r) => !r.ok && !r.err && !r.skipped404 && !r.clientOnly);
 const ok = rows.filter((r) => r.ok);
 
 const countHtml = (d) => {
@@ -43,8 +44,9 @@ const countHtml = (d) => {
 };
 const onDisk = countHtml(dist);
 
-console.log(`  routes ${rows.length} | ok ${ok.length} | thin ${thin.length} | errored ${errored.length} | refused-404 ${skipped404.length}`);
+console.log(`  routes ${rows.length} | ok ${ok.length} | thin ${thin.length} | errored ${errored.length} | refused-404 ${skipped404.length} | client-only ${clientOnly.length}`);
 if (skipped404.length) console.log(`  refused (no route, honest-404, nothing written): ${skipped404.map((r) => r.route).join(", ")}`);
+if (clientOnly.length) console.log(`  client-only (SPA shell, needs Pages Functions): ${clientOnly.map((r) => r.route).join(", ")}`);
 console.log(`  html on disk ${onDisk}`);
 if (errored.length) {
   console.error(`✗ prerender: ${errored.length} route(s) FAILED. First 3:`);

@@ -81,6 +81,19 @@ const CONC = Number(arg("conc", 4));
 // localhost:PORT staging origin the snapshot runs on). Override with --prod-origin if the
 // canonical host ever changes.
 const PROD_ORIGIN = arg("prod-origin", "https://councilof.ai");
+// Pages that fetch Functions the Vite preview does not serve. Baking their
+// "Failed to fetch" / "fetch failed" text is what the bake-guard exists to
+// stop; skipping the snapshot leaves the SPA shell, which hydrates on the
+// live host. Added 2026-09-09 after #1847 blocked every master deploy.
+const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
+  "/assess",
+  "/assess/",
+  "/assessment",
+  "/mcp-tools",
+  "/tool-commons",
+  "/pricing",
+  "/sovereign-pricing",
+]);
 // The origin the /api/ and /signed/ PROXY reads from, which is NOT the same question as the
 // canonical host above. Until 2026-09-05 one flag answered both, and that coupling is what made
 // the outage of that day unfixable from here: every /api/* Function was 404ing in production,
@@ -542,6 +555,17 @@ async function worker(id) {
   while (queue.length) {
     const route = queue.shift();
     const rec = { route, chars: 0, ok: false };
+    // These pages call Pages Functions (/api/assess, /api/lead, MCP /tools, x402)
+    // that do not exist on the Vite preview used for prerender. The snapshot then
+    // contains "Failed to fetch" / "fetch failed" and the bake-guard correctly
+    // refuses to ship it — which blocked production after #1847 (7 routes, 2026-09-09).
+    // They remain real client routes via the SPA shell; crawlers hydrate.
+    if (CLIENT_ONLY_FUNCTION_ROUTES.has(route)) {
+      rec.clientOnly = true;
+      results.push(rec);
+      console.log(`SKIP ${String(0).padStart(6)}ch  ${route}  client-only (needs Pages Functions; SPA shell)`);
+      continue;
+    }
     try {
       // `networkidle` is the right wait for most routes but the wrong bar for a few heavy
       // ones: /world mounts a 3D globe with ~9 large assets and intermittently needs more
@@ -684,7 +708,8 @@ try {
 // ---------------------------------------------------------------- report
 const ok = results.filter(r => r.ok);
 const skipped404 = results.filter(r => r.skipped404);
-const thin = results.filter(r => !r.ok && !r.err && !r.skipped404);
+const clientOnly = results.filter(r => r.clientOnly);
+const thin = results.filter(r => !r.ok && !r.err && !r.skipped404 && !r.clientOnly);
 const err = results.filter(r => r.err);
 const noDesc = ok.filter(r => !r.hasDesc);
 const dupTitle = {};
@@ -709,6 +734,10 @@ if (dataMiss.length) {
   console.log(`    Every route that fetches one of these bakes a fetch error and is refused above.`);
   console.log(`    This is NOT a fault in the routes. Point the proxy at a healthy origin with`);
   console.log(`    --data-origin <origin>; it does not touch the canonical host (--prod-origin).`);
+}
+if (clientOnly.length) {
+  console.log(`  ${clientOnly.length} SKIPPED — client-only, needs Pages Functions; SPA shell:`);
+  console.log(`     ${clientOnly.map(r => r.route).join(", ")}`);
 }
 if (skipped404.length) {
   console.log(`  ${skipped404.length} SKIPPED — no route, renders the honest-404; nothing written:`);
