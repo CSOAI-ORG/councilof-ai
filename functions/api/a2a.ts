@@ -117,6 +117,22 @@ class RequestBodyError extends Error {
   }
 }
 
+function cancelReaderWithoutWaiting(reader: ReadableStreamDefaultReader<Uint8Array>, reason: string): void {
+  try {
+    // A hostile underlying source may return a cancel promise that never settles. Cancellation
+    // must be initiated, but the public request deadline may not depend on that promise.
+    void reader.cancel(reason).catch(() => undefined);
+  } catch {
+    // Some custom streams throw synchronously from cancel. The bounded error still wins.
+  }
+  try {
+    reader.releaseLock();
+  } catch {
+    // A pending read can keep the lock briefly. cancel() settles it on conforming streams; a
+    // hostile stream must not keep this handler open merely so we can release its reader lock.
+  }
+}
+
 async function readBoundedRequestText(request: Request): Promise<string> {
   const rawLength = request.headers.get("content-length");
   const declared = rawLength === null ? null : Number(rawLength);
@@ -139,18 +155,23 @@ async function readBoundedRequestText(request: Request): Promise<string> {
       if (!value) continue;
       total += value.byteLength;
       if (total > MAX_REQUEST_BYTES) {
-        await reader.cancel("request too large").catch(() => undefined);
+        cancelReaderWithoutWaiting(reader, "request too large");
         throw new RequestBodyError("REQUEST_TOO_LARGE");
       }
       chunks.push(value);
     }
   } catch (error) {
     if (error instanceof RequestBodyError && error.kind === "REQUEST_READ_TIMEOUT") {
-      await reader.cancel("request read timeout").catch(() => undefined);
+      cancelReaderWithoutWaiting(reader, "request read timeout");
     }
     throw error;
   } finally {
     if (timer !== undefined) clearTimeout(timer);
+    try {
+      reader.releaseLock();
+    } catch {
+      // Already released after cancellation, or a hostile pending read still owns the lock.
+    }
   }
 
   const bytes = new Uint8Array(total);
@@ -177,7 +198,7 @@ async function readBoundedText(response: Response, maxBytes: number): Promise<st
     if (!value) continue;
     total += value.byteLength;
     if (total > maxBytes) {
-      await reader.cancel("response too large");
+      cancelReaderWithoutWaiting(reader, "response too large");
       throw new SourceError(`response exceeds ${maxBytes} bytes`, response.url, "RESPONSE_TOO_LARGE");
     }
     chunks.push(value);
