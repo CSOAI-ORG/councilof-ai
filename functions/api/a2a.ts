@@ -36,6 +36,7 @@ export const A2A_PROTOCOL_VERSION = "1.0";
 const CARD_PATH = "/.well-known/agent-card.json";
 const BOARD_PATH = "/api/gspc";
 const MAX_REQUEST_BYTES = 256 * 1024;
+const REQUEST_READ_TIMEOUT_MS = 5_000;
 const MAX_SOURCE_RESPONSE_BYTES = 1024 * 1024;
 const SOURCE_TIMEOUT_MS = 8_000;
 export const REGISTER =
@@ -108,7 +109,58 @@ class SourceError extends Error {
   }
 }
 
-const byteLength = (value: string): number => new TextEncoder().encode(value).byteLength;
+class RequestBodyError extends Error {
+  constructor(readonly kind: "REQUEST_TOO_LARGE" | "REQUEST_READ_TIMEOUT") {
+    super(kind === "REQUEST_TOO_LARGE"
+      ? `request exceeds ${MAX_REQUEST_BYTES} bytes`
+      : `request body did not finish within ${REQUEST_READ_TIMEOUT_MS}ms`);
+  }
+}
+
+async function readBoundedRequestText(request: Request): Promise<string> {
+  const rawLength = request.headers.get("content-length");
+  const declared = rawLength === null ? null : Number(rawLength);
+  if (declared !== null && Number.isFinite(declared) && declared > MAX_REQUEST_BYTES) {
+    throw new RequestBodyError("REQUEST_TOO_LARGE");
+  }
+  if (!request.body) return "";
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<never>((_resolve, reject) => {
+    timer = setTimeout(() => reject(new RequestBodyError("REQUEST_READ_TIMEOUT")), REQUEST_READ_TIMEOUT_MS);
+  });
+  try {
+    while (true) {
+      const { done, value } = await Promise.race([reader.read(), deadline]);
+      if (done) break;
+      if (!value) continue;
+      total += value.byteLength;
+      if (total > MAX_REQUEST_BYTES) {
+        await reader.cancel("request too large").catch(() => undefined);
+        throw new RequestBodyError("REQUEST_TOO_LARGE");
+      }
+      chunks.push(value);
+    }
+  } catch (error) {
+    if (error instanceof RequestBodyError && error.kind === "REQUEST_READ_TIMEOUT") {
+      await reader.cancel("request read timeout").catch(() => undefined);
+    }
+    throw error;
+  } finally {
+    if (timer !== undefined) clearTimeout(timer);
+  }
+
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(bytes);
+}
 
 async function readBoundedText(response: Response, maxBytes: number): Promise<string> {
   const declared = Number(response.headers.get("content-length"));
@@ -188,25 +240,25 @@ const exactKeys = (input: Json, required: string[], optional: string[] = []): bo
 
 function parseSkillSelection(message: Json): SkillSelection | string {
   const parts = Array.isArray(message.parts) ? message.parts : [];
-  const selectors: Json[] = [];
-  for (const rawPart of parts) {
-    const part = record(rawPart);
-    const data = record(part?.data);
-    if (data && (Object.prototype.hasOwnProperty.call(data, "skill") || Object.prototype.hasOwnProperty.call(data, "input"))) {
-      selectors.push(data);
-    }
+  if (parts.length !== 1) {
+    return "exactly one Part is required; additional semantic parts are not ignored";
   }
-  if (selectors.length > 1) return "exactly one Part.data {skill,input} selector is allowed";
-  if (selectors.length === 0) {
-    const textParts = parts
-      .map((part) => str(record(part)?.text)?.trim().toLowerCase() ?? null)
-      .filter((value): value is string => value !== null);
-    if (parts.length === 1 && textParts.length === 1 && textParts[0] === "board") {
-      return { skill: "gspc-board", input: {} };
-    }
-    return "one Part.data {skill,input} selector is required (legacy text compatibility is only the exact word `board`)";
+  const part = record(parts[0]);
+  if (!part) return "the single Part must be an object";
+  const semanticKeys = ["text", "data", "url", "raw"].filter((key) =>
+    Object.prototype.hasOwnProperty.call(part, key));
+  if (semanticKeys.length !== 1) {
+    return "Part content is a oneof: supply exactly one of text, data, url, or raw";
   }
-  const selector = selectors[0];
+  if (semanticKeys[0] === "text") {
+    if (str(part.text)?.trim().toLowerCase() === "board") return { skill: "gspc-board", input: {} };
+    return "structured Part.data {skill,input} is required (legacy text compatibility is only the exact word `board`)";
+  }
+  if (semanticKeys[0] !== "data") {
+    return `Part.${semanticKeys[0]} is not supported; use structured Part.data {skill,input}`;
+  }
+  const selector = record(part.data);
+  if (!selector) return "Part.data must be an object containing {skill,input}";
   if (!exactKeys(selector, ["skill", "input"])) return "selector must contain exactly {skill,input}";
   const skill = str(selector.skill);
   if (!skill || !SKILL_ID_SET.has(skill)) return `unknown skill; choose one of: ${SKILL_IDS.join(", ")}`;
@@ -540,17 +592,17 @@ export const onRequestPost: PagesFunction = async (context) => {
   const { request } = context;
   const origin = new URL(request.url).origin;
 
-  const declaredLength = Number(request.headers.get("content-length"));
-  if (Number.isFinite(declaredLength) && declaredLength > MAX_REQUEST_BYTES) {
-    return rpcError(null, A2A_ERROR.INVALID_REQUEST, `request exceeds ${MAX_REQUEST_BYTES} bytes`, "REQUEST_TOO_LARGE");
-  }
   let parsed: unknown;
   let text: string;
   try {
-    text = await request.text();
-    if (byteLength(text) > MAX_REQUEST_BYTES) {
-      return rpcError(null, A2A_ERROR.INVALID_REQUEST, `request exceeds ${MAX_REQUEST_BYTES} bytes`, "REQUEST_TOO_LARGE");
+    text = await readBoundedRequestText(request);
+  } catch (error) {
+    if (error instanceof RequestBodyError) {
+      return rpcError(null, A2A_ERROR.INVALID_REQUEST, error.message, error.kind);
     }
+    return rpcError(null, A2A_ERROR.INVALID_REQUEST, "request body could not be read", "REQUEST_READ_FAILED");
+  }
+  try {
     parsed = JSON.parse(text);
   } catch {
     return rpcError(null, A2A_ERROR.PARSE, "request body is not JSON", "PARSE_ERROR");
