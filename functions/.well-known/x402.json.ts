@@ -10,7 +10,11 @@ import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION } from "../api/_x4
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 
-export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATOR_URL?: string }> = async ({ request, env }) => {
+export const onRequestGet: PagesFunction<{
+  X402_PAY_TO?: string;
+  X402_FACILITATOR_URL?: string;
+  BOARD_SIGN_KEY_PKCS8_B64?: string;
+}> = async ({ request, env }) => {
   const origin = new URL(request.url).origin;
   // v1-shaped PaymentRequirements (x402 spec v1 §5.1.2): a v1 consumer — Circle's own
   // Gateway included — parses resources[].accepts[]; without it the door is invisible to
@@ -29,6 +33,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
   });
 
   const rail = railMode(env);
+  const boardSigningKeyConfigured = Boolean((env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim());
   const body = {
     schema: "csoai.x402/0.2",
     one_line: "agents pay per artefact — issuance, assembly, cadence; the board and verification stay free",
@@ -39,28 +44,34 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
     payTo: resolvePayTo(env),
     mode: rail.mode,
     mode_note: rail.note,
-    // WHAT THIS RAIL SUPPORTS BEYOND THE BASE PROTOCOL. Declared here so an agent learns it
-    // before it spends a request finding out. `offer-receipt` is the x402 Offer & Receipt
-    // extension: every 402 this estate emits carries a server-signed offer, and every settled
-    // 200 carries a signed receipt. Both are JWS/EdDSA under a key published in our DID
-    // document — a format the extension names in §3.3, verified by a mechanism it names in
-    // §4.5.1, so this is the spec, not a dialect of it.
+    // WHAT THIS RAIL SUPPORTS BEYOND THE BASE PROTOCOL. Declared here so an agent learns the
+    // runtime conditions before it spends a request finding them out. `offer-receipt` is the x402
+    // Offer & Receipt extension, but its signatures are conditional: offers require the board
+    // key; receipts additionally require facilitator-confirmed settlement that names a payer.
+    // The format is JWS/EdDSA under a key published in our DID document — a format the extension
+    // names in §3.3, verified by a mechanism it names in §4.5.1.
     extensions: {
       "offer-receipt": {
         supported: true,
+        emission: "conditional",
+        board_signing_key_configured: boardSigningKeyConfigured,
+        facilitator_configured: rail.facilitator_configured,
         spec: OFFER_RECEIPT_SPEC_URL,
         spec_commit: OFFER_RECEIPT_SPEC_SHA,
         format: "jws",
         alg: "EdDSA",
         kid: X402_SIGNER_KID,
         did_document: "https://csoai.org/.well-known/did.json",
-        offers: "every 402 from this estate, in extensions['offer-receipt'].info.offers[] (§4.1)",
+        offers:
+          "signed only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be " +
+          "committed; otherwise the 402 omits the offer-receipt block and csoai.offer_receipt names the gap",
         receipts:
-          "every settled 200, in the X-PAYMENT-RESPONSE SettlementResponse under " +
-          "extensions['offer-receipt'].info.receipt (§5.1)",
+          "signed only after facilitator-confirmed settlement when the facilitator names a payer and " +
+          "BOARD_SIGN_KEY_PKCS8_B64 is provisioned; otherwise receiptGap names why no signed receipt " +
+          "was attached",
         eip712:
-          "NOT offered. The extension admits eip712 and jws; the edge holds one Ed25519 key and no " +
-          "secp256k1 signer, so we emit jws only. A client that requires eip712 should treat this " +
+          "NOT offered. The extension admits eip712 and jws; when a board key is provisioned the edge " +
+          "can emit jws but has no secp256k1 signer. A client that requires eip712 should treat this " +
           "rail as unsigned rather than expect a format we cannot produce.",
         verify: {
           hosted: `${origin}/api/receipts/verify`,

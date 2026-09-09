@@ -115,4 +115,21 @@ describe("the card does not describe an extension as emitted unless the door emi
       .not.toMatch(/Settlement UNCHECKABLE until facilitator receipt/);
     expect(x.description).toMatch(/receipts\.xml|PROVEN/i);
   });
+
+  it("describes x402 signatures as conditional and names both gap paths", () => {
+    const x = exts.find((e) => e.uri.includes("extension-offer-and-receipt"));
+    expect(x, "the offer-and-receipt extension must remain discoverable").toBeTruthy();
+    expect(x!.description).toMatch(/CONDITIONALLY EMITTED/);
+    expect(x!.description).toMatch(/only when BOARD_SIGN_KEY_PKCS8_B64/);
+    expect(x!.description).toMatch(/only after facilitator-confirmed settlement.*payer.*board key/i);
+    expect(x!.description).toMatch(/csoai\.offer_receipt.*receiptGap/);
+    expect(x!.description).not.toMatch(/\bevery (?:HTTP )?402\b|\bevery settled\b/i);
+
+    const skills = (card.skills ?? []) as Array<{ id?: string; description: string }>;
+    const skill = skills.find((s) => s.id === "x402-discovery");
+    expect(skill, "the x402 discovery skill must remain on the card").toBeTruthy();
+    expect(skill.description).toMatch(/Signed offers and receipts are conditional/);
+    expect(skill.description).toMatch(/facilitator-confirmed settlement.*payer.*board key/i);
+    expect(skill.description).not.toMatch(/\bevery (?:HTTP )?402\b|\bevery settled\b/i);
+  });
 });
