@@ -94,4 +94,22 @@ describe('shared living Hub feed', () => {
     expect(state).toEqual({ data: null, error: 'unreachable', loading: false });
     stop();
   });
+
+  it('refreshes after a slow first response without waiting for a second ten-minute interval', async () => {
+    let resolve!: (value: HubCardsPayload) => void;
+    const request = vi.fn(() => new Promise<HubCardsPayload>(done => { resolve = done; }));
+    const feed = createHubCardsFeed(request);
+    const stop = feed.subscribe(vi.fn());
+    await flush();
+    await vi.advanceTimersByTimeAsync(5_000);
+    resolve(snapshot('delayed'));
+    await feed.load();
+    await vi.advanceTimersByTimeAsync(HUB_REFRESH_MS - 5_000);
+    expect(request).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(request).toHaveBeenCalledTimes(2);
+    resolve(snapshot('next'));
+    await feed.load();
+    stop();
+  });
 });

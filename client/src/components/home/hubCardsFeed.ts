@@ -56,7 +56,11 @@ export function createHubCardsFeed(request: () => Promise<HubCardsPayload>) {
     listeners.add(listener);
     listener(state);
     if (listeners.size === 1) {
-      timer = setInterval(refresh, HUB_REFRESH_MS);
+      // Check the cache clock once a minute, but fetch only after the 10-minute
+      // TTL. A timer started just before the initial request must not miss the
+      // expiry by milliseconds and leave the same data up for twenty minutes.
+      // This also lets the one-minute failure cooldown recover on its own.
+      timer = setInterval(refresh, RETRY_MS);
       if (typeof window !== 'undefined') window.addEventListener('focus', refresh);
       if (typeof document !== 'undefined') document.addEventListener('visibilitychange', refresh);
     }
