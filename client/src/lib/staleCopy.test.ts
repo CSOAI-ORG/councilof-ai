@@ -24,6 +24,10 @@ describe("stale copy honesty", () => {
     ]) {
       expect(payDesk).toContain(`/dashboard?tab=tools&amp;tool=${tool}`.replace("&amp;", "&"));
     }
+    expect(payDesk).toContain(
+      "https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed",
+    );
+    expect(payDesk).toContain("https://payapi.market/mcp");
     expect(payDesk).toContain('fetch("/api/x402"');
     expect(payDesk).toContain('fetch("/api/revenue"');
     expect(payDesk).not.toMatch(/settlement\s+(?:stays\s+)?UNCHECKABLE|No <code>\/proof<\/code> until live/i);
