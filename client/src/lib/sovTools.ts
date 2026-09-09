@@ -63,7 +63,19 @@ export async function callTool(name: string, args: Record<string, any>): Promise
     const text = content.map((c: any) => c && c.text).filter(Boolean).join("\n") || JSON.stringify(d && d.result ? d.result : d);
     return { ok: d?.result?.isError !== true, state: "runtime_observed", text, raw: d };
   } catch (e) {
-    return { ok: false, state: "unreachable", text: "Couldn't reach the MCP runtime — check your connection and try again." };
+    const timedOut = e instanceof Error && /timed out/i.test(e.message);
+    const paymentPresented =
+      typeof args.x_payment === "string" && args.x_payment.trim() !== "";
+    return {
+      ok: false,
+      state: "unreachable",
+      text:
+        paymentPresented
+          ? `The paid MCP request ${timedOut ? "timed out" : "did not complete"}. Delivery and settlement are unknown. Inspect the wallet, chain and facilitator before signing or retrying.`
+          : timedOut
+            ? "The MCP request timed out. No result was inferred."
+            : "Couldn't reach the MCP runtime — check your connection and try again.",
+    };
   }
 }
 

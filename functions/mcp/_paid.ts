@@ -7,13 +7,16 @@
  * ./gspc-tools.json are untouched.
  *
  * MECHANISM: a paid tool forwards to its route on the SAME origin with the caller's `x_payment`
- * argument as the X-PAYMENT header (verbatim; this module never inspects, signs or invents a
- * receipt — settlement is the route's job via functions/api/_x402.ts, fail-closed). The route's
+ * argument as the X-PAYMENT header (verbatim; this module never authenticates, signs or invents a
+ * receipt — it only classifies the opaque response's receipt shape). Settlement is the route's job
+ * via functions/api/_x402.ts, fail-closed. The route's
  * reply comes back as structuredContent in three honest states:
  *   402 → status PAYMENT_REQUIRED: the full x402 v2 body (accepts[], extensions.bazaar, csoai
  *         preview) + the PAYMENT-REQUIRED header, so an MCP client pays from its own wallet and
  *         calls again with x_payment. isError:false — a challenge is an answer, not a failure.
- *   2xx → status DELIVERED: the route body + the X-PAYMENT-RESPONSE settle echo when present.
+ *   2xx → status DELIVERED: delivery is separate from settlement and receipt state. A free preview,
+ *         a paid delivery with no settle echo, a settle echo with a receipt gap, and a settle echo
+ *         carrying an unverified JWS receipt are four different structured states.
  *   404 → status NOT_DEPLOYED: the route is not on this origin — said plainly, never a fabricated
  *         result.
  *   other → status = the HTTP status, body passed through.
@@ -33,6 +36,68 @@ export const PAID_TOOL_DEFS = (PAID_TOOLS as { tools: unknown[] }).tools;
 
 const DOCTRINE =
   "measurement, not certification — no tool here carries or awards a trust label of any kind; verification stays free";
+
+type ReceiptState = "NOT_REQUESTED" | "ABSENT" | "UNREADABLE" | "MISSING" | "PRESENT_UNVERIFIED";
+
+function inspectReceipt(paymentResponse?: string | null): ReceiptState {
+  if (!paymentResponse) return "ABSENT";
+  try {
+    const normalized = paymentResponse.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+    const binary = atob(padded);
+    const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+    const decoded = JSON.parse(new TextDecoder().decode(bytes)) as Record<string, unknown>;
+    const extensions = decoded?.extensions;
+    if (!extensions || typeof extensions !== "object" || Array.isArray(extensions)) return "MISSING";
+    const offerReceipt = (extensions as Record<string, unknown>)["offer-receipt"];
+    if (!offerReceipt || typeof offerReceipt !== "object" || Array.isArray(offerReceipt)) return "MISSING";
+    const info = (offerReceipt as Record<string, unknown>).info;
+    if (!info || typeof info !== "object" || Array.isArray(info)) return "MISSING";
+    const receipt = (info as Record<string, unknown>).receipt;
+    if (!receipt || typeof receipt !== "object" || Array.isArray(receipt)) return "MISSING";
+    const format = (receipt as Record<string, unknown>).format;
+    const signature = (receipt as Record<string, unknown>).signature;
+    return format === "jws" &&
+      typeof signature === "string" &&
+      /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(signature)
+      ? "PRESENT_UNVERIFIED"
+      : "MISSING";
+  } catch {
+    return "UNREADABLE";
+  }
+}
+
+function deliveryFields(paymentPresented: boolean, paymentResponse?: string | null) {
+  const receiptState = paymentResponse
+    ? inspectReceipt(paymentResponse)
+    : paymentPresented
+      ? "ABSENT"
+      : "NOT_REQUESTED";
+  if (!paymentPresented) {
+    return {
+      delivery_kind: "PREVIEW_OR_FREE",
+      receipt_state: receiptState,
+    } as const;
+  }
+  if (!paymentResponse) {
+    return {
+      delivery_kind: "DELIVERED_SETTLEMENT_UNCONFIRMED",
+      receipt_state: receiptState,
+    } as const;
+  }
+  if (receiptState === "PRESENT_UNVERIFIED") {
+    return {
+      delivery_kind: "DELIVERED_WITH_ROUTE_RECEIPT",
+      receipt_state: receiptState,
+    } as const;
+  }
+  return {
+    delivery_kind: "DELIVERED_RECEIPT_GAP",
+    receipt_state: receiptState,
+    receipt_gap:
+      "The route reported settlement, but its opaque response did not carry a readable offer-receipt JWS. Inspect the route, chain and facilitator; do not retry blindly.",
+  } as const;
+}
 
 /** Build the same-origin request for a paid tool from its arguments. */
 export function buildPaidRequest(
@@ -251,6 +316,7 @@ export async function paidToolResult(
   }
   if (res.ok) {
     const paymentResponse = res.headers.get("x-payment-response");
+    const delivered = deliveryFields(paymentPresented, paymentResponse);
     const payload = {
       ...base,
       status: "DELIVERED",
@@ -258,11 +324,20 @@ export async function paidToolResult(
       delivery_state: "DELIVERED",
       deliverable: body,
       ...settlementFields(paymentResponse),
+      ...delivered,
       payment_response_header: paymentResponse,
     };
+    const deliverySummary =
+      delivered.delivery_kind === "PREVIEW_OR_FREE"
+        ? "Preview or free delivery observed; no payment authorization was presented."
+        : delivered.delivery_kind === "DELIVERED_SETTLEMENT_UNCONFIRMED"
+          ? "Delivery was observed, but settlement is unconfirmed; inspect the wallet, chain and facilitator before retrying."
+          : delivered.delivery_kind === "DELIVERED_RECEIPT_GAP"
+            ? "Settlement was reported by the route, but its receipt is missing or unreadable; inspect it before retrying."
+            : "Settlement and a JWS receipt were reported by the route; the receipt is present but not independently verified here.";
     return reply(
       payload,
-      `DELIVERED — ${tool.csoai.route} HTTP ${res.status}. ${paymentResponse ? "Settlement was reported by the route." : retryWarning} ${DOCTRINE}.`,
+      `DELIVERED — ${tool.csoai.route} HTTP ${res.status}. ${deliverySummary} ${DOCTRINE}.`,
     );
   }
   const reportedPayment = res.headers.get("x-payment-response");

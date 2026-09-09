@@ -45,20 +45,31 @@ transport your client speaks; the contracts are identical.
 Payment travels as the **`x_payment` argument**, not as a transport header — so stdio carries these
 exactly as the HTTP door does. Up to 0.1.1 this README said the opposite ("stdio has no payment header to
 forward"); that was a statement about the transport, and it was wrong about the mechanism. The server
-forwards your `x_payment` verbatim as the `X-PAYMENT` header on one request to `councilof.ai` and never
-inspects, signs or invents a receipt. Settlement is the route's job, fail-closed.
+forwards your `x_payment` verbatim as the `X-PAYMENT` header on one request to `councilof.ai`. It never
+authenticates, signs or invents a receipt; it only classifies the opaque response's receipt shape.
+Settlement is the route's job, fail-closed.
 
-Four honest statuses, and no fifth:
+Top-level statuses describe delivery, not settlement:
 
 - **`PAYMENT_REQUIRED`** — the route answered 402. The full challenge (`accepts[]`, the `PAYMENT-REQUIRED`
-  header) comes back as `structuredContent`. Nothing was charged. A challenge is an answer, not a failure.
-- **`DELIVERED`** — the route answered 2xx, with the settle echo when the route sent one.
+  header) comes back as `structuredContent`. With no `x_payment`, nothing was charged by that request. If
+  an authorization was presented, settlement remains `UNCONFIRMED`; inspect before signing or retrying.
+  A challenge is an answer, not a failure.
+- **`DELIVERED`** — the route answered 2xx and returned a deliverable. Inspect `delivery_kind`:
+  `PREVIEW_OR_FREE`, `DELIVERED_SETTLEMENT_UNCONFIRMED`, `DELIVERED_RECEIPT_GAP`, or
+  `DELIVERED_WITH_ROUTE_RECEIPT`. `receipt_state: PRESENT_UNVERIFIED` means a JWS-shaped receipt was
+  present in the route's opaque response; this wrapper has not verified it.
 - **`NOT_DEPLOYED`** — the route answered 404 on this origin. Said plainly, never a fabricated result.
-- **`UNREACHABLE`** / **`BAD_ARGUMENTS`** — the call could not be made. Nothing was charged.
+- **`UNREACHABLE`** / **`BAD_ARGUMENTS`** — the call could not be made. After an authorization is
+  presented, a transport failure makes delivery and settlement unknown; never retry blindly.
 
-The package does not infer settlement from a challenge or from its own request. It reports the live
-route's response: only a successful response with the route's settlement echo is `DELIVERED`; a 402 is
-`PAYMENT_REQUIRED`, and a transport failure remains `UNREACHABLE`.
+The package does not infer settlement from a challenge, a 2xx, or its own request. It reports delivery
+and the route's settlement evidence separately: a 402 is `PAYMENT_REQUIRED`, a 2xx is `DELIVERED`,
+and a transport failure remains `UNREACHABLE`. A settle echo is `REPORTED_BY_ROUTE`, not independent
+chain verification; a missing or unreadable signed receipt is a named gap and never a silent success.
+`settlement_state` is exactly `NOT_REQUESTED`, `UNCONFIRMED`, or `REPORTED_BY_ROUTE`.
+`receipt_state` on a delivered result is exactly `NOT_REQUESTED`, `ABSENT`, `MISSING`, `UNREADABLE`,
+or `PRESENT_UNVERIFIED`.
 
 Every paid deliverable is measurement, not certification; no tool on either transport carries a trust
 label; amounts appear only inside a 402 challenge.

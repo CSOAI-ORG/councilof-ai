@@ -29,7 +29,10 @@ type Envelope = {
       nothing_charged?: boolean;
       payment_presented: boolean;
       delivery_state: string;
+      delivery_kind: string;
       settlement_state: string;
+      receipt_state: string;
+      receipt_gap?: string;
       not_a_certification: boolean;
       deliverable: Record<string, unknown>;
       payment_response_header: string | null;
@@ -123,7 +126,7 @@ const MECHANISM = /x_payment\s+ARGUMENT/i;
 function stubOrigin(opts: {
   deployed: string[];
   paidOk?: boolean;
-  receipt?: boolean;
+  receipt?: boolean | "gap" | "unreadable";
   errorStatus?: number;
 }) {
   const seen: Request[] = [];
@@ -141,7 +144,30 @@ function stubOrigin(opts: {
         return new Response(JSON.stringify({ error: "upstream_error" }), {
           status: opts.errorStatus,
         });
-      if (req.headers.get("x-payment") && opts.paidOk !== false) {
+      if (
+        (req.headers.get("x-payment") && opts.paidOk !== false) ||
+        url.searchParams.get("preview") === "1"
+      ) {
+        const settlementResponse = btoa(
+          JSON.stringify({
+            success: true,
+            transaction: `0x${"a".repeat(64)}`,
+            ...(opts.receipt === "gap"
+              ? {}
+              : {
+                  extensions: {
+                    "offer-receipt": {
+                      info: {
+                        receipt: {
+                          format: "jws",
+                          signature: "eyJhbGciOiJFZERTQSJ9.eyJ2ZXJzaW9uIjoxfQ.c2ln",
+                        },
+                      },
+                    },
+                  },
+                }),
+          }),
+        );
         return new Response(
           JSON.stringify({
             schema: "x",
@@ -151,9 +177,14 @@ function stubOrigin(opts: {
           {
             status: 200,
             headers:
-              opts.receipt === false
+              !req.headers.get("x-payment") || opts.receipt === false
                 ? {}
-                : { "x-payment-response": "c2V0dGxlZA==" },
+                : {
+                    "x-payment-response":
+                      opts.receipt === "unreadable"
+                        ? "not-base64"
+                        : settlementResponse,
+                  },
           },
         );
       }
@@ -329,7 +360,7 @@ describe("/mcp tools/call — paid tools", () => {
     expect(JSON.stringify(r)).not.toContain(token);
   });
 
-  it("paid: forwards x_payment as the X-PAYMENT header verbatim and returns the deliverable + settle echo", async () => {
+  it("paid: keeps delivery distinct while reporting a present, unverified route receipt", async () => {
     const seen = stubOrigin({ deployed: ["/api/receipts/batch"] });
     const r = await call(
       rpc("tools/call", {
@@ -347,10 +378,13 @@ describe("/mcp tools/call — paid tools", () => {
       kind: "deliverable",
       route: "/api/receipts/batch",
     });
-    expect(sc.payment_response_header).toBe("c2V0dGxlZA==");
+    expect(sc.payment_response_header).toBeTruthy();
     expect(sc.payment_presented).toBe(true);
     expect(sc.delivery_state).toBe("DELIVERED");
+    expect(sc.delivery_kind).toBe("DELIVERED_WITH_ROUTE_RECEIPT");
     expect(sc.settlement_state).toBe("REPORTED_BY_ROUTE");
+    expect(sc.receipt_state).toBe("PRESENT_UNVERIFIED");
+    expect(r.result.content[0].text).toMatch(/not independently verified/i);
     expect(seen[0].headers.get("x-payment")).toBe("eyJ4NDAyIjoxfQ==");
     expect(new URL(seen[0].url).searchParams.get("from")).toBe(
       "2026-08-31T00:00:00Z",
@@ -375,23 +409,64 @@ describe("/mcp tools/call — paid tools", () => {
     const sc = r.result.structuredContent;
     expect(sc.status).toBe("DELIVERED");
     expect(sc.delivery_state).toBe("DELIVERED");
+    expect(sc.delivery_kind).toBe("DELIVERED_SETTLEMENT_UNCONFIRMED");
     expect(sc.settlement_state).toBe("UNCONFIRMED");
+    expect(sc.receipt_state).toBe("ABSENT");
     expect(sc.payment_response_header).toBeNull();
     expect(sc.nothing_charged).toBeUndefined();
-    expect(r.result.content[0].text).toMatch(/Settlement is unconfirmed/);
+    expect(r.result.content[0].text).toMatch(/settlement is unconfirmed/i);
     expect(JSON.stringify(r)).not.toContain(token);
   });
 
-  it("preview=true is forwarded as the free preview flag (no payment needed)", async () => {
+  it("preview=true is a delivered preview, never a settled paid result", async () => {
     const seen = stubOrigin({ deployed: ["/api/receipts/batch"] });
-    await call(
+    const r = await call(
       rpc("tools/call", {
         name: "receipts_batch",
         arguments: { from: "2026-08-31T00:00:00Z", preview: true },
       }),
     );
     expect(new URL(seen[0].url).searchParams.get("preview")).toBe("1");
+    expect(r.result.structuredContent).toMatchObject({
+      status: "DELIVERED",
+      delivery_state: "DELIVERED",
+      delivery_kind: "PREVIEW_OR_FREE",
+      settlement_state: "NOT_REQUESTED",
+      receipt_state: "NOT_REQUESTED",
+      nothing_charged: true,
+    });
+    expect(r.result.content[0].text).toMatch(/preview or free delivery/i);
   });
+
+  it.each([
+    ["gap", "MISSING"],
+    ["unreadable", "UNREADABLE"],
+  ] as const)(
+    "reports a delivered receipt gap when the settlement header is %s",
+    async (receipt, receiptState) => {
+      stubOrigin({ deployed: ["/api/receipts/batch"], receipt });
+      const token = `test-only-${receipt}-authorization`;
+      const r = await call(
+        rpc("tools/call", {
+          name: "receipts_batch",
+          arguments: {
+            from: "2026-08-31T00:00:00Z",
+            x_payment: token,
+          },
+        }),
+      );
+      expect(r.result.structuredContent).toMatchObject({
+        status: "DELIVERED",
+        delivery_state: "DELIVERED",
+        delivery_kind: "DELIVERED_RECEIPT_GAP",
+        settlement_state: "REPORTED_BY_ROUTE",
+        receipt_state: receiptState,
+      });
+      expect(r.result.structuredContent.receipt_gap).toMatch(/do not retry blindly/i);
+      expect(r.result.content[0].text).toMatch(/missing or unreadable/i);
+      expect(JSON.stringify(r)).not.toContain(token);
+    },
+  );
 
   it("a route not on this origin yet answers NOT_DEPLOYED — nothing invented, nothing charged", async () => {
     stubOrigin({ deployed: [] });

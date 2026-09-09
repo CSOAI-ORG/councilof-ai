@@ -28,9 +28,12 @@ Four optional x402-metered evidence tools are also discoverable:
 
 Payment is explicit in the tool's `x_payment` argument. A schema-valid unpaid call returns
 `PAYMENT_REQUIRED` with the route's challenge; it is not settlement, delivery or revenue.
-`DELIVERED` is reserved for a successful response carrying the route's settlement evidence.
-The package never invents a receipt or promotes a payment challenge into a result. The Article 50,
-RWA and receipts tools also expose documented free preview modes; a commission does not.
+`DELIVERED` means only that the route returned a 2xx deliverable. Its `delivery_kind` then separates
+`PREVIEW_OR_FREE`, `DELIVERED_SETTLEMENT_UNCONFIRMED`, `DELIVERED_RECEIPT_GAP`, and
+`DELIVERED_WITH_ROUTE_RECEIPT`. Even the last state reports an opaque route receipt as
+`PRESENT_UNVERIFIED`; clients verify it separately. The package never invents a receipt or promotes a
+payment challenge into a result. The Article 50, RWA and receipts tools also expose documented free
+preview modes; a commission does not.
 
 ## Connect
 

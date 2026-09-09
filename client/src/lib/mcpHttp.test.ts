@@ -1,7 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequest } from "../../../functions/mcp/[[path]]";
 import { ALL_TOOL_NAMES } from "./mcpTools";
-import { MCP_PROTOCOL_VERSION, mcpRpc, mcpRpcEndpoints } from "./mcpHttp";
+import {
+  MCP_PROTOCOL_VERSION,
+  MCP_REQUEST_TIMEOUT_MS,
+  mcpRpc,
+  mcpRpcEndpoints,
+} from "./mcpHttp";
 
 const ORIGIN = "https://councilof.ai";
 const VERSION_META = "io.modelcontextprotocol/protocolVersion";
@@ -21,7 +26,10 @@ async function throughHandler(request: Request): Promise<Response> {
   } as never);
 }
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 
 describe("browser MCP request contract", () => {
   it("falls back only for local tools/list and receives the exact canonical 12", async () => {
@@ -185,6 +193,44 @@ describe("browser MCP request contract", () => {
       ),
     ).rejects.toThrow();
     expect(network).toHaveBeenCalledTimes(1);
+  });
+
+  it("bounds the whole request and does not fall back after its deadline", async () => {
+    vi.useFakeTimers();
+    const network = vi.fn(
+      (_input: RequestInfo | URL, init?: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          const signal = init?.signal;
+          expect(signal).toBeInstanceOf(AbortSignal);
+          signal?.addEventListener(
+            "abort",
+            () => reject(signal.reason),
+            { once: true },
+          );
+        }),
+    );
+    vi.stubGlobal("fetch", network);
+
+    const result = mcpRpc(
+      "tools/list",
+      {},
+      {
+        hostname: "localhost",
+        allowPublicCatalogFallback: true,
+        timeoutMs: 25,
+      },
+    ).then(
+      () => "resolved",
+      (error: Error) => error.message,
+    );
+    await vi.advanceTimersByTimeAsync(25);
+
+    await expect(result).resolves.toBe("MCP request timed out after 25ms");
+    expect(network).toHaveBeenCalledTimes(1);
+  });
+
+  it("publishes one finite default deadline", () => {
+    expect(MCP_REQUEST_TIMEOUT_MS).toBe(30_000);
   });
 
   it("keeps local catalog probes same-origin unless fallback is explicit", async () => {
