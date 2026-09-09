@@ -118,7 +118,9 @@ describe("x402 rail — price only inside the 402", () => {
     const paid = await get(
       ctx(`${EP}?vendor=openai`, { X402_FACILITATOR_URL: "https://f.example" }, { headers: { "x-payment": payment } }),
     );
-    expect(paid.status).toBe(402);
+    expect(paid.status).toBe(400);
+    expect((await paid.json()).reason).toMatch(/before presenting payment/);
+    expect(fetchSpy).not.toHaveBeenCalled();
 
     const preview = await get(ctx(`${EP}?vendor=openai&preview=1`));
     expect(preview.status).toBe(400);
