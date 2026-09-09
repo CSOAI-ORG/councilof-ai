@@ -42,10 +42,6 @@ const HOSTS = [
   "[::1]",
 ];
 const BROWSER_ORIGINS = [...HOSTS, "chatgpt.com", "claude.ai"];
-type McpPagesContext = {
-  request: Request;
-  env?: Record<string, unknown>;
-};
 const DEFINITIONS = [...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[];
 // The SDK's no-eval adapter retains the canonical JSON Schema. No parallel catalog.
 const validator = new CfWorkerJsonSchemaValidator();

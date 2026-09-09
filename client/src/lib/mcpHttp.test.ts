@@ -234,7 +234,7 @@ describe("browser MCP request contract", () => {
   });
 
   it("keeps local catalog probes same-origin unless fallback is explicit", async () => {
-    const network = vi.fn(async (_input: RequestInfo | URL) => {
+    const network = vi.fn(async () => {
       throw new Error("local Vite preview has no Pages Function");
     });
     vi.stubGlobal("fetch", network);
