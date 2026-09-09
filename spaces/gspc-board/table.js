@@ -1,5 +1,6 @@
 /* CSOAI-GSPC public board. Live GET /api/gspc. */
 const API = "https://councilof.ai/api/gspc";
+const HUB_CARDS = "https://councilof.ai/api/hub-cards";
 // ONE lid everywhere: print totals.lid verbatim (Blueprint §2.3); never derive a second sentence.
 function printLid(data){ const el=document.getElementById("lid"); if(!el) return; const lid=data&&data.totals&&data.totals.lid; el.textContent = lid ? ("Lid: "+lid) : "Lid: UNCHECKABLE — /api/gspc did not answer"; }
 const CARDS = "https://councilof.ai/signed/card_index.json";
@@ -16,7 +17,7 @@ const PILLARS = [
   { id: "saf", title: "Safety", axes: ["safety", "jail", "art5-safeguard", "care", "affect", "swarm"] },
   { id: "prv", title: "Provenance", axes: ["provenance", "provenance-controls", "openness", "conformance"] },
   { id: "con", title: "Continuity", axes: ["continuity", "machinery-conformity", "cross-reality", "detector-interop"] },
-  { id: "mkt", title: "Markets", axes: ["reserve-attestation", "regulatory-framework", "distribution-integrity", "custody-disclosure", "ai-economy-index", "human-labour-index", "humanoid-labour-index"] },
+  { id: "mkt", title: "Markets", axes: ["reserve-attestation", "regulatory-framework", "distribution-integrity", "custody-disclosure", "ai-adoption-components", "labour-components", "humanoid-labour-index"] },
 ];
 
 const ALIAS = {
@@ -33,7 +34,7 @@ const ALIAS = {
 
 const READ = [
   { title: "A listing is not a grade", body: "A Hub name can sit on a public list. That is DISCOVERED. It is not a GSPC cell." },
-  { title: "The board snapshot is signed", body: "Fifteen axes carry a signed measurement. Public cards check. They do not yet name a unique weight file." },
+  { title: "The board snapshot is signed", body: "Every measured axis carries a published measurement. Public cards check. They do not yet name a unique weight file." },
   { title: "An empty slot is a finding", body: "Twenty-two axes stay on the map so the gaps stay visible. No invented zero, no invented leader." },
   { title: "A TIE is not a win", body: "When the leader interval contains the fleet mean, the point lead is not a measured advantage. Jail is a measured floor." },
 ];
@@ -43,13 +44,13 @@ const EMPTY_NEXT = {
   "regulatory-framework": { next: "Provision text is already watched. A grade needs a frozen bank and n.", not: "A scrape of a gazette becoming a grade." },
   "distribution-integrity": { next: "A signed supply statement attached to a cell, after the instrument runs.", not: "Generating statements and calling the axis measured." },
   "custody-disclosure": { next: "The public trust root is planted. A grade is a disclosure instrument on a subject.", not: "A signer invented on a laptop." },
-  "ai-economy-index": { next: "Dated aggregates may be cited as reported. They join the board only with a frozen bank.", not: "An investable index." },
-  "human-labour-index": { next: "Public statistical series can be cited as reported. Displacement is not a Council diagnosis.", not: "A prognosis of the labour market." },
+  "ai-adoption-components": { next: "Dated aggregates may be cited as reported. They join the board only with a frozen bank.", not: "An investable index." },
+  "labour-components": { next: "Public statistical series can be cited as reported. Displacement is not a Council diagnosis.", not: "A prognosis of the labour market." },
   "humanoid-labour-index": { next: "An input bank first. Until then the published empty slot is the finding.", not: "A robot-workforce score." },
 };
 
 const CENSUS_SITES = [
-  { id: "huggingface", title: "Hugging Face Hub", status: "planted", does: "Planted list: 2,410 names from a downloads-limited walk. A dated Hub listing walk observed 3,032,028 ids; none graded. A listing is DISCOVERED." },
+  { id: "huggingface", title: "Hugging Face Hub", status: "planted", does: "The current planted list is read from its live summary below. A separate dated Hub listing walk remains a discovery census, not a grade." },
   { id: "openrouter", title: "OpenRouter", status: "next", does: "Hosted names as a public catalogue. Not a measurement target until this board grades a unique run." },
   { id: "ollama", title: "Ollama library", status: "next", does: "A library card is a listing, not a grade." },
   { id: "kaggle", title: "Kaggle", status: "next", does: "Benchmark tasks after cost and reproducibility gates." },
@@ -68,12 +69,16 @@ const DOORS = [
 ];
 
 let BOARD = null;
+let HUB = null;
+let QUEUE_SUMMARY = null;
+let CENSUS_WALK_SUMMARY = null;
 let INDEX = [];
 let CORRS = [];
 let selected = null;
 let pillarFilter = null;
 let query = "";
 let lbAxis = "governance";
+let hubAxis = "";
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({
@@ -211,11 +216,15 @@ function renderRuling(queueN, walkN) {
   const el = document.getElementById("ruling");
   if (!el || !BOARD) return;
   const t = BOARD.totals || {};
-  const planted = queueN != null ? Number(queueN).toLocaleString("en-GB") : "2,410";
+  const planted = queueN != null ? Number(queueN).toLocaleString("en-GB") : "an unavailable number of";
   const walk = walkN != null ? Number(walkN).toLocaleString("en-GB") : null;
+  const hubMeasured = HUB?.counts?.complete ? Number(HUB.counts.measured).toLocaleString("en-GB") : null;
+  const hubText = hubMeasured
+    ? ` Separately, the published Hub index currently serves ${hubMeasured} signed model-axis cells.`
+    : "";
   el.textContent = walk
-    ? `CSOAI-GSPC measures AI health. The public board contains ${t.measured_axes ?? 15} measured axes on a signed snapshot. ${walk} Hub listings were observed; none graded. ${planted} names remain on the planted public list. A listing is not a grade. A rank is never sold.`
-    : `CSOAI-GSPC measures AI health. The public board contains ${t.measured_axes ?? 15} measured axes on a signed snapshot. ${planted} models are listed and not yet graded. A listing is not a grade. A rank is never sold.`;
+    ? `CSOAI-GSPC measures AI health. The public board contains ${t.measured_axes ?? "an unavailable number of"} measured axes on a signed snapshot. A dated census observed ${walk} Hub listings; that census graded none. ${planted} names are in the separate planted list.${hubText} A listing is not a grade. A rank is never sold.`
+    : `CSOAI-GSPC measures AI health. The public board contains ${t.measured_axes ?? "an unavailable number of"} measured axes on a signed snapshot. ${planted} names are in the separate planted list.${hubText} A listing is not a grade. A rank is never sold.`;
 }
 
 function renderPillars() {
@@ -379,6 +388,58 @@ function renderModels() {
   });
 }
 
+function hubAxes() {
+  return [...new Set((HUB?.cells || []).map((cell) => String(cell.axis || "")).filter(Boolean))].sort();
+}
+
+function renderHubCells() {
+  const select = document.getElementById("hub-axis");
+  const body = document.querySelector("#hub-table tbody");
+  const note = document.getElementById("hub-note");
+  const tape = document.getElementById("hub-tape");
+  if (!select || !body || !note || !tape) return;
+
+  if (!HUB) {
+    body.innerHTML = '<tr><td colspan="6" class="err">UNCHECKABLE — the Hub-cell endpoint did not answer.</td></tr>';
+    note.textContent = "No local fallback is substituted for a failed live fetch.";
+    tape.innerHTML = "";
+    return;
+  }
+
+  const axes = hubAxes();
+  if (!hubAxis || !axes.includes(hubAxis)) hubAxis = axes.includes("governance") ? "governance" : (axes[0] || "");
+  select.innerHTML = axes.map((axis) => `<option value="${esc(axis)}"${axis === hubAxis ? " selected" : ""}>${esc(axis)}</option>`).join("");
+  select.onchange = () => {
+    hubAxis = select.value;
+    renderHubCells();
+  };
+
+  const cells = (HUB.cells || [])
+    .filter((cell) => cell.axis === hubAxis)
+    .filter((cell) => !query.trim() || String(cell.model || "").toLowerCase().includes(query.trim().toLowerCase()))
+    .sort((a, b) => (Number(b.accuracy) || -1) - (Number(a.accuracy) || -1) || String(a.model).localeCompare(String(b.model)));
+  const models = new Set((HUB.cells || []).map((cell) => cell.model).filter(Boolean));
+  const counts = HUB.counts || {};
+  tape.innerHTML = [
+    [counts.measured ?? "-", "Published measured cells"],
+    [models.size, "Third-party models"],
+    [axes.length, "Model axes"],
+    [counts.indexes_read ?? "-", "Indexes read"],
+    [counts.duplicates_collapsed ?? "-", "Duplicates collapsed"],
+  ].map(([value, label]) => `<div><b>${esc(value)}</b><span>${esc(label)}</span></div>`).join("");
+  note.textContent = counts.complete
+    ? `${cells.length} published cell${cells.length === 1 ? "" : "s"} on ${hubAxis}; showing the top nine by the card's published figure. All discovered indexes answered.`
+    : `Partial read. ${counts.indexes_unread?.length || "Some"} index file(s) did not answer; no total is claimed.`;
+  body.innerHTML = cells.slice(0, 9).map((cell, index) => `<tr>
+    <td>${index + 1}</td>
+    <td>${esc(cell.model)}</td>
+    <td>${pct(cell.accuracy)}</td>
+    <td>${esc(cell.n ?? "-")}</td>
+    <td>${chip(cell.status)}</td>
+    <td>${cell.card_url ? `<a href="${esc(cell.card_url)}" target="_blank" rel="noreferrer">Open</a>` : "-"}</td>
+  </tr>`).join("") || '<tr><td colspan="6">No published cell matches this filter.</td></tr>';
+}
+
 function rows(pairs) {
   return `<thead><tr><th>Field</th><th>Published value</th></tr></thead><tbody>` +
     pairs.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${v}</td></tr>`).join("") +
@@ -502,6 +563,10 @@ function renderRead() {
 function renderEmpty() {
   const empty = (BOARD?.axes || []).filter((a) => !measuredOf(a));
   const el = document.getElementById("empty-box");
+  const heading = document.getElementById("empty-h");
+  if (heading) heading.textContent = empty.length
+    ? `${empty.length} published empty slot${empty.length === 1 ? "" : "s"}`
+    : "No empty slots in the current board";
   el.innerHTML = empty.map((a) => {
     const extra = EMPTY_NEXT[a.axis] || { next: a.note || "Published empty.", not: "An invented zero." };
     return `<article class="panel gap" data-axis="${esc(a.axis)}" tabindex="0">
@@ -510,7 +575,7 @@ function renderEmpty() {
       <p class="fine"><b>Next published step.</b> ${esc(extra.next)}</p>
       <p class="fine"><b>What this is not.</b> ${esc(extra.not)}</p>
     </article>`;
-  }).join("");
+  }).join("") || '<p class="fine">Every current board slot carries a measurement. This changes only when the live board changes.</p>';
   el.querySelectorAll("[data-axis]").forEach((n) => {
     n.onclick = () => openAxis(n.getAttribute("data-axis"));
   });
@@ -542,14 +607,16 @@ async function renderQueue() {
   let walk = null;
   try {
     walk = await loadJson(CENSUS_WALK);
+    CENSUS_WALK_SUMMARY = walk;
     if (walk && typeof walk.n_unique_ids === "number") walkN = walk.n_unique_ids;
   } catch (e) {
     walk = null;
   }
   try {
     const q = await loadJson(QUEUE);
+    QUEUE_SUMMARY = q;
     document.getElementById("queue").textContent =
-      `Planted list: ${q.n} · all ungraded · graded in this list: ${q.n_measured} · as of ${q.as_of}\n${q.filter || ""}\n${q.note || ""}`;
+      `Planted list: ${q.n} · top-level MEASURED: ${q.n_measured ?? "-"} · measured (model, axis) cells: ${q.n_measured_axes ?? "-"} · as of ${q.as_of}\n${q.filter || ""}\n${q.note || ""}`;
     const ruling = document.getElementById("census-ruling");
     if (ruling) {
       ruling.textContent = walkN != null
@@ -647,6 +714,7 @@ function applySearch() {
   renderMap();
   renderBoardTable();
   renderModels();
+  renderHubCells();
   if (lbAxis) renderLeaderboard(lbAxis);
 }
 
@@ -691,6 +759,14 @@ async function boot() {
     if (BOARD) { renderTape(BOARD); renderHealth(); renderHonesty(); }
     if (selected) openAxis(selected);
   } catch { CORRS = []; }
+  try {
+    HUB = await loadJson(HUB_CARDS);
+    renderHubCells();
+    renderRuling(QUEUE_SUMMARY?.n, CENSUS_WALK_SUMMARY?.n_unique_ids);
+  } catch {
+    HUB = null;
+    renderHubCells();
+  }
   renderQueue();
 }
 
