@@ -1,0 +1,58 @@
+name: RunPod maintenance — credential-free selftest
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/runpod-maintenance-selftest.yml"
+      - "scripts/pod-loops/**"
+      - "scripts/runpod_gspc_worker.py"
+      - "scripts/runpod_gspc_push_to_hf.py"
+      - "scripts/runpod_gspc_upload_heartbeat.py"
+      - "scripts/test_pod_loop_supervisor.py"
+      - "scripts/test_runpod_gspc_worker.py"
+      - "scripts/test_runpod_gspc_push_to_hf.py"
+      - "scripts/test_runpod_gspc_upload_heartbeat.py"
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/runpod-maintenance-selftest.yml"
+      - "scripts/pod-loops/**"
+      - "scripts/runpod_gspc_worker.py"
+      - "scripts/runpod_gspc_push_to_hf.py"
+      - "scripts/runpod_gspc_upload_heartbeat.py"
+      - "scripts/test_pod_loop_supervisor.py"
+      - "scripts/test_runpod_gspc_worker.py"
+      - "scripts/test_runpod_gspc_push_to_hf.py"
+      - "scripts/test_runpod_gspc_upload_heartbeat.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-selftest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check pod-loop shell syntax
+        run: |
+          bash -n \
+            scripts/pod-loops/container-start.sh \
+            scripts/pod-loops/lib.sh \
+            scripts/pod-loops/scheduler.sh \
+            scripts/pod-loops/start.sh \
+            scripts/pod-loops/stop.sh \
+            scripts/pod-loops/supervise.sh
+
+      - name: Run credential-free maintenance tests
+        run: |
+          python3 -m unittest discover -s scripts -p test_runpod_gspc_worker.py
+          python3 -m unittest discover -s scripts -p test_runpod_gspc_push_to_hf.py
+          python3 -m unittest discover -s scripts -p test_runpod_gspc_upload_heartbeat.py
+          python3 -m unittest discover -s scripts -p test_pod_loop_supervisor.py

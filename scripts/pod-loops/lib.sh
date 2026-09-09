@@ -5,7 +5,9 @@
 #   /workspace/lanes/logs/    one log per loop, one line per run, UTC-stamped
 #   /workspace/lanes/out/     outputs (snapshots, jsonl, summaries); never deleted by any loop
 #   /workspace/lanes/state/   idempotence stamps and "last seen" values
-#   /workspace/lanes/.secrets/hf_token   the ONLY place a loop reads an HF token from (owner-placed, 0600)
+#   /workspace/lanes/.secrets/hf_token   legacy public-loop upload token (owner-placed, 0600)
+# The private-intake heartbeat does not call hf_token_present(). Its uploader
+# exclusively opens /workspace/lanes/.secrets/runpod-intake-hf-token.
 LANES=${LANES:-/workspace/lanes}
 LOOPS=$LANES/loops
 LOGS=$LANES/logs
@@ -34,7 +36,7 @@ stamp() {
   echo "$slot" > "$f"; return 0
 }
 
-# HF token: read from the one file, else from a NON-EMPTY $HF_TOKEN. Never echoed.
+# Legacy public-loop HF token: read from its file, else a NON-EMPTY $HF_TOKEN. Never echoed.
 # The pod's own doc (docs/operations/RUNPOD-POD-TO-HF-PUSH.md) records that HF_TOKEN was once
 # exported EMPTY here, so an empty string is treated as absent.
 hf_token_present() {
