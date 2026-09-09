@@ -12,8 +12,23 @@ const claim = readFileSync(resolve(__dirname, "../data/anchoringClaim.ts"), "utf
 const productsFill = readFileSync(resolve(__dirname, "./productFill.ts"), "utf8");
 const sov = readFileSync(resolve(__dirname, "./sovExternalAudit.ts"), "utf8");
 const playbook = readFileSync(resolve(__dirname, "./playbookAudit.ts"), "utf8");
+const payDesk = readFileSync(resolve(__dirname, "../../../public/pay.html"), "utf8");
 
 describe("stale copy honesty", () => {
+  it("the public pay desk reaches the real wallet-enabled MCP jobs and reads live settlement state", () => {
+    for (const tool of [
+      "commission_card",
+      "rwa_evidence",
+      "art50_marking_evidence",
+      "receipts_batch",
+    ]) {
+      expect(payDesk).toContain(`/dashboard?tab=tools&amp;tool=${tool}`.replace("&amp;", "&"));
+    }
+    expect(payDesk).toContain('fetch("/api/x402"');
+    expect(payDesk).toContain('fetch("/api/revenue"');
+    expect(payDesk).not.toMatch(/settlement\s+(?:stays\s+)?UNCHECKABLE|No <code>\/proof<\/code> until live/i);
+  });
+
   it("RAS pack cites the living board, not a 13-axis product", () => {
     expect(pack).toMatch(/Not a 13-axis product/);
     expect(pack).toMatch(/GET \/api\/gspc/);
