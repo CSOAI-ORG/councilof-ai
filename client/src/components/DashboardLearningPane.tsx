@@ -56,6 +56,12 @@ type ScenarioReply = {
   scenarios?: LearningScenario[];
 };
 
+export function learningScenarioUrl(axis: string, hostname?: string): string {
+  const path = `/api/learning-scenarios?axis=${encodeURIComponent(axis)}`;
+  const local = hostname === "127.0.0.1" || hostname === "localhost";
+  return local ? `https://councilof.ai${path}` : path;
+}
+
 const STAGE_HELP: Record<LearningStageId, string> = {
   learn:
     "Read the instrument and the live regulatory pointers before answering.",
@@ -143,7 +149,10 @@ export default function DashboardLearningPane() {
     setScenarioState("READING");
     setScenarioNote("Reading current sources…");
     fetch(
-      `/api/learning-scenarios?axis=${encodeURIComponent(selected.axis.id)}`,
+      learningScenarioUrl(
+        selected.axis.id,
+        typeof window === "undefined" ? undefined : window.location.hostname,
+      ),
       {
         headers: { accept: "application/json" },
         signal: controller.signal,
