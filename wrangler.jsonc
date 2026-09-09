@@ -45,6 +45,14 @@
     {
       "binding": "WITNESS_KV",
       "id": "8244f80354c24a9ebadd227a8192a045"
+    },
+    // LEADS — /api/lead and /api/contact. Namespace `LEADS` already existed
+    // (8c460488…) but was never bound, so GET /api/lead returned {bound:false}
+    // and every inbound commercial request vanished. Binding it stores the
+    // JSON the form already posts; it does not invent leads.
+    {
+      "binding": "LEADS",
+      "id": "8c460488aa6444c187890a579511bf93"
     }
   ]
 }
