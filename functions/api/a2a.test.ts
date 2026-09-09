@@ -269,6 +269,34 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
       .toBe(A2A_ERROR.INVALID_PARAMS);
   });
 
+  it("rejects invalid Part oneofs and extra semantic parts instead of ignoring them", async () => {
+    const base = (parts: unknown[]) => rpc({
+      jsonrpc: "2.0",
+      id: 10,
+      method: "SendMessage",
+      params: { message: { messageId: "m-oneof", role: "ROLE_USER", parts } },
+    });
+    const textAndData = await base([{
+      text: "board",
+      data: { skill: "x402-discovery", input: {} },
+    }]);
+    expect(textAndData.json.error.data[0].reason).toBe("INVALID_SKILL_SELECTOR");
+    expect(textAndData.json.error.message).toMatch(/oneof/i);
+
+    const extraPart = await base([
+      { data: { skill: "gspc-board", input: {} } },
+      { text: "ignore this" },
+    ]);
+    expect(extraPart.json.error.data[0].reason).toBe("INVALID_SKILL_SELECTOR");
+    expect(extraPart.json.error.message).toMatch(/additional semantic parts are not ignored/i);
+
+    for (const key of ["url", "raw"] as const) {
+      const unsupported = await base([{ [key]: "https://example.com/not-called" }]);
+      expect(unsupported.json.error.code).toBe(A2A_ERROR.INVALID_PARAMS);
+      expect(unsupported.json.error.message).toMatch(/not supported/i);
+    }
+  });
+
   it("rejects oversized requests before routing", async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
@@ -281,6 +309,69 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
     const json = await res.json() as { error: { data: Array<{ reason: string }> } };
     expect(json.error.data[0].reason).toBe("REQUEST_TOO_LARGE");
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it.each([undefined, "1"])(
+    "bounds an oversized stream with %s Content-Length and cancels before consuming it",
+    async (contentLength) => {
+      const fetchMock = vi.fn();
+      vi.stubGlobal("fetch", fetchMock);
+      let pulls = 0;
+      let cancelReason = "";
+      const stream = new ReadableStream<Uint8Array>({
+        pull(controller) {
+          pulls += 1;
+          controller.enqueue(new Uint8Array(100 * 1024));
+          if (pulls === 10) controller.close();
+        },
+        cancel(reason) {
+          cancelReason = String(reason);
+        },
+      }, { highWaterMark: 0 });
+      const headers: Record<string, string> = { "content-type": "application/json" };
+      if (contentLength !== undefined) headers["content-length"] = contentLength;
+      const request = new Request("https://councilof.ai/api/a2a", {
+        method: "POST",
+        headers,
+        body: stream,
+        duplex: "half",
+      } as RequestInit & { duplex: "half" });
+      const res = await onRequestPost({ request } as never);
+      const json = await res.json() as { error: { data: Array<{ reason: string }> } };
+      expect(json.error.data[0].reason).toBe("REQUEST_TOO_LARGE");
+      expect(pulls).toBeLessThan(10);
+      expect(cancelReason).toBe("request too large");
+      expect(fetchMock).not.toHaveBeenCalled();
+    },
+  );
+
+  it("times out and cancels a request stream that never finishes", async () => {
+    vi.useFakeTimers();
+    try {
+      const fetchMock = vi.fn();
+      vi.stubGlobal("fetch", fetchMock);
+      let cancelReason = "";
+      const stream = new ReadableStream<Uint8Array>({
+        cancel(reason) {
+          cancelReason = String(reason);
+        },
+      }, { highWaterMark: 0 });
+      const request = new Request("https://councilof.ai/api/a2a", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: stream,
+        duplex: "half",
+      } as RequestInit & { duplex: "half" });
+      const result = onRequestPost({ request } as never);
+      await vi.advanceTimersByTimeAsync(5_001);
+      const res = await result;
+      const json = await res.json() as { error: { data: Array<{ reason: string }> } };
+      expect(json.error.data[0].reason).toBe("REQUEST_READ_TIMEOUT");
+      expect(cancelReason).toBe("request read timeout");
+      expect(fetchMock).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("fails closed when a handler response is oversized", async () => {
