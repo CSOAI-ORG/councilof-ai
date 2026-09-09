@@ -7,7 +7,11 @@ flock -n 9 || exit 0
 printf '%s\n' "$$" > "$STATE/supervisor.pid"
 child=""
 stop() {
-  [ -z "$child" ] || kill -TERM "$child" 2>/dev/null || true
+  if [ -n "$child" ]; then
+    kill -TERM "$child" 2>/dev/null || true
+    wait "$child" 2>/dev/null || true
+  fi
+  : > "$STATE/scheduler.pid"
   exit 0
 }
 trap stop TERM INT
@@ -16,9 +20,11 @@ while true; do
   # Keep the supervisor lease out of the scheduler and its job descendants.
   bash "$LOOPS/scheduler.sh" 9>&- &
   child=$!
+  printf '%s\n' "$child" > "$STATE/scheduler.pid"
   wait "$child"
   result=$?
   child=""
+  : > "$STATE/scheduler.pid"
   log scheduler-supervisor "scheduler exited=$result; retry in 30 seconds"
   sleep 30 &
   child=$!
