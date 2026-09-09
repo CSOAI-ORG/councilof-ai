@@ -28,6 +28,7 @@ a disclosure printed beside a wrong number does not repair the number.)
 """
 import argparse, json, re, sys, time, urllib.request, urllib.error
 from pathlib import Path
+from urllib.parse import urlsplit
 
 INDEXES = [
     ("PayAI", "https://facilitator.payai.network/discovery/resources"),
@@ -38,6 +39,7 @@ UA = "csoai-bazaar-audit/0.1 (+https://councilof.ai/interop/)"
 OURS = ("councilof.ai", "csoai.org")
 OUT = Path("docs/product/X402-BAZAAR-AUDIT.md")
 DOOR_BUILDER = Path("functions/api/_x402.ts")
+X402_MANIFEST = Path("scripts/fixtures/x402scan/well_known_x402.json")
 PAGE = 1000
 
 
@@ -89,6 +91,43 @@ def ours(items):
                   key=lambda x: str(x.get("resource")))
 
 
+def resource_url(value):
+    """Return a URL from either discovery index's resource representation."""
+    return value.get("url", "") if isinstance(value, dict) else str(value or "")
+
+
+def route_key(value):
+    """Compare product routes without confusing example query values for new products."""
+    parsed = urlsplit(resource_url(value))
+    return f"{parsed.scheme}://{parsed.netloc}{parsed.path}".rstrip("/")
+
+
+def manifest_routes():
+    """The product doors we claim agents can discover, read from the shipped manifest."""
+    doc = json.loads(X402_MANIFEST.read_text())
+    return [r["url"] for r in doc.get("resources", []) if r.get("url")]
+
+
+def add_manifest_coverage(result, declared_routes):
+    """Show current, stale, and missing product doors instead of only counting our hits."""
+    declared = {route_key(url): url for url in declared_routes}
+    indexed = {}
+    for listing in result["ours"]:
+        indexed.setdefault(route_key(listing["resource"]), []).append(listing)
+    current = [url for key, url in declared.items()
+               if any(not row["listing_disagrees_with_door"] for row in indexed.get(key, []))]
+    stale = [url for key, url in declared.items()
+             if indexed.get(key) and not any(not row["listing_disagrees_with_door"]
+                                             for row in indexed[key])]
+    missing = [url for key, url in declared.items() if key not in indexed]
+    result["manifest_declared"] = len(declared)
+    result["manifest_indexed"] = sum(1 for key in declared if key in indexed)
+    result["manifest_current"] = current
+    result["manifest_stale"] = stale
+    result["manifest_missing"] = missing
+    return result
+
+
 def reading(name, url, door_timeout):
     """One index, fully scanned, or an exception naming why it could not be."""
     items, total = scan(url)
@@ -116,10 +155,11 @@ def main():
     a = ap.parse_args()
     targets = [("source", a.source)] if a.source else INDEXES
     door_timeout = door_max_timeout()
+    declared_routes = manifest_routes()
     readings = []
     for name, url in targets:
         try:
-            readings.append(reading(name, url, door_timeout))
+            readings.append(add_manifest_coverage(reading(name, url, door_timeout), declared_routes))
         except (urllib.error.URLError, ValueError, KeyError) as e:
             print(f"UNCHECKABLE {name} {type(e).__name__}: {e}; {OUT} left untouched", file=sys.stderr)
             return 2
@@ -128,6 +168,7 @@ def main():
         "as_of": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "door_max_timeout_seconds": door_timeout,
         "door_max_timeout_source": str(DOOR_BUILDER),
+        "x402_manifest_source": str(X402_MANIFEST),
         "indexes": readings,
     }
     if a.json:
@@ -148,7 +189,14 @@ def main():
                   f"- `{r['url']}`",
                   f"- scanned **{r['scanned']} of a declared {r['declared_total']}** — complete, which is",
                   f"  what makes the finding a claim rather than a guess",
-                  f"- ours: **{len(r['ours'])}**", ""]
+                  f"- ours: **{len(r['ours'])}** listings",
+                  f"- manifest coverage: **{r['manifest_indexed']} of {r['manifest_declared']}** doors indexed; "
+                  f"**{len(r['manifest_current'])}** current, **{len(r['manifest_stale'])}** stale, "
+                  f"**{len(r['manifest_missing'])}** missing", ""]
+        if r["manifest_stale"]:
+            lines += ["Stale manifest doors: " + ", ".join(f"`{route_key(u)}`" for u in r["manifest_stale"]), ""]
+        if r["manifest_missing"]:
+            lines += ["Missing manifest doors: " + ", ".join(f"`{route_key(u)}`" for u in r["manifest_missing"]), ""]
         if r["ours"]:
             lines += ["| resource | last updated | x402 | serviceName | tags | amount | maxTimeout |",
                       "|---|---|---|---|---|---|---|"]
