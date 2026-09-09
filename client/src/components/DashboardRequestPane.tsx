@@ -6,6 +6,7 @@ import {
   ShieldAlert,
   WalletCards,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useSearch } from "wouter";
 import ToolRunner from "./ToolRunner";
@@ -18,6 +19,169 @@ export const REQUEST_ATTESTATION_CONTRACT = {
   freshRunState: "UNMEASURED",
   verifyRoute: "/dashboard?tab=verify",
 } as const;
+
+const JOB_CATALOG_ROUTE = "/api/x402";
+
+type CatalogResource = {
+  id?: string;
+  resource?: string;
+  deliverable?: string;
+};
+
+type CatalogTool = {
+  name?: string;
+  route?: string;
+};
+
+type JobCatalog = {
+  rail?: {
+    mode?: string;
+    network?: string;
+    asset?: { symbol?: string };
+    amounts?: string;
+  };
+  resources?: CatalogResource[];
+  free_forever?: string[];
+  mcp?: { paid_tools?: CatalogTool[] };
+};
+
+export type ActualJob = {
+  id: "verify" | "rwa" | "article50" | "provider-history" | "commission";
+  title: string;
+  state: string;
+  outcome: string;
+  href: string;
+  action: string;
+  payment: string;
+};
+
+function localHref(value: string): string | null {
+  try {
+    const url = new URL(value, "https://councilof.ai");
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return null;
+  }
+}
+
+function article50Href(value: string): string | null {
+  try {
+    const url = new URL(value, "https://councilof.ai");
+    url.searchParams.set("obligation", "article-50");
+    url.searchParams.set("bundle", "1");
+    if (/[<>]/.test(url.searchParams.get("subject") || "")) {
+      url.searchParams.delete("subject");
+    }
+    return `${url.pathname}${url.search}`;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Turn the live machine catalogue into the small set of jobs a person can
+ * actually complete here. Missing catalogue entries disappear; the UI never
+ * fills a gap with a guessed route, outcome, price or product.
+ */
+export function buildActualJobs(catalog: unknown): ActualJob[] {
+  const body = (catalog || {}) as JobCatalog;
+  const resources = Array.isArray(body.resources) ? body.resources : [];
+  const free = Array.isArray(body.free_forever) ? body.free_forever : [];
+  const paidTools = Array.isArray(body.mcp?.paid_tools)
+    ? body.mcp!.paid_tools!
+    : [];
+  const resource = (id: string) => resources.find((entry) => entry.id === id);
+  const tool = (name: string) => paidTools.find((entry) => entry.name === name);
+  const paidDisclosure =
+    body.rail?.asset?.symbol &&
+    body.rail.network &&
+    body.rail.mode &&
+    body.rail.amounts
+      ? `Pay-as-you-go x402 in ${body.rail.asset.symbol} on ${body.rail.network} · rail ${body.rail.mode} · ${body.rail.amounts}. Opening a route is not a charge; wallet authorisation and successful settlement are required.`
+      : null;
+  const jobs: ActualJob[] = [];
+
+  const verify = free.find(
+    (url) => localHref(url)?.split("?")[0] === "/gspc-verify",
+  );
+  if (verify) {
+    jobs.push({
+      id: "verify",
+      title: "Verify existing evidence",
+      state: "FREE",
+      outcome:
+        "Recompute a card's body hash and check its Ed25519 signature in your browser.",
+      href: localHref(verify)!,
+      action: "Open free verifier",
+      payment: "Free forever. No wallet, account or purchase.",
+    });
+  }
+
+  const rwa = resource("rwa_evidence");
+  const rwaTool = tool("rwa_evidence");
+  if (rwa?.deliverable && rwaTool?.route && paidDisclosure) {
+    jobs.push({
+      id: "rwa",
+      title: "Retrieve RWA evidence",
+      state: "EXISTING VERTICAL",
+      outcome: rwa.deliverable,
+      href: `/dashboard?tab=tools&tool=${encodeURIComponent(rwaTool.name!)}`,
+      action: "Choose an XRPL asset",
+      payment: paidDisclosure,
+    });
+  }
+
+  const article50 = resource("evidence_bundle");
+  const article50Route = article50?.resource
+    ? article50Href(article50.resource)
+    : null;
+  if (article50?.deliverable && article50Route && paidDisclosure) {
+    jobs.push({
+      id: "article50",
+      title: "Retrieve an Article 50 pack",
+      state: "EXISTING PACK",
+      outcome: article50.deliverable,
+      href: article50Route,
+      action: "Open Article 50 challenge",
+      payment: paidDisclosure,
+    });
+  }
+
+  const history = resource("provider_diff_feed");
+  const historyRoute = history?.resource ? localHref(history.resource) : null;
+  if (
+    history?.deliverable &&
+    historyRoute &&
+    !/[<>]/.test(historyRoute) &&
+    paidDisclosure
+  ) {
+    jobs.push({
+      id: "provider-history",
+      title: "Obtain provider change history",
+      state: "HISTORICAL ASSEMBLY",
+      outcome: history.deliverable,
+      href: historyRoute,
+      action: "Open history challenge",
+      payment: paidDisclosure,
+    });
+  }
+
+  const commission = resource("issuance");
+  const commissionTool = tool("commission_card");
+  if (commission?.deliverable && commissionTool?.route && paidDisclosure) {
+    jobs.push({
+      id: "commission",
+      title: "Request a scoped attestation",
+      state: "COMMISSION",
+      outcome: commission.deliverable,
+      href: "#request-attestation-runner",
+      action: "Name the subject and axis",
+      payment: `${paidDisclosure} This commissions a receipt and re-serves evidence already on file; it does not trigger or promise an instant fresh measurement.`,
+    });
+  }
+
+  return jobs;
+}
 
 const STEPS = [
   {
@@ -50,6 +214,31 @@ export default function DashboardRequestPane() {
     ...(params.get("subject") ? { subject: params.get("subject")! } : {}),
     ...(params.get("axis") ? { axis: params.get("axis")! } : {}),
   };
+  const [catalogState, setCatalogState] = useState<
+    | { state: "loading" }
+    | { state: "ready"; jobs: ActualJob[] }
+    | { state: "unavailable" }
+  >({ state: "loading" });
+
+  useEffect(() => {
+    let active = true;
+    fetch(JOB_CATALOG_ROUTE, { headers: { accept: "application/json" } })
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((catalog) => {
+        if (!active) return;
+        const jobs = buildActualJobs(catalog);
+        setCatalogState(
+          jobs.length ? { state: "ready", jobs } : { state: "unavailable" },
+        );
+      })
+      .catch(() => active && setCatalogState({ state: "unavailable" }));
+    return () => {
+      active = false;
+    };
+  }, []);
   return (
     <section
       className="mx-auto max-w-6xl px-5 py-7 sm:px-8"
@@ -103,6 +292,79 @@ export default function DashboardRequestPane() {
           </div>
         </div>
       </div>
+
+      <section
+        className="mt-5 rounded-2xl border border-border bg-card p-4 sm:p-5"
+        aria-labelledby="actual-job-title"
+      >
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-800">
+              Actual jobs · sourced from the live catalogue
+            </p>
+            <h2
+              id="actual-job-title"
+              className="mt-1 text-lg font-semibold text-foreground"
+            >
+              Choose the outcome you need.
+            </h2>
+          </div>
+          <a
+            href={JOB_CATALOG_ROUTE}
+            className="font-mono text-[10px] text-muted-foreground underline underline-offset-2 hover:text-emerald-800"
+          >
+            GET {JOB_CATALOG_ROUTE}
+          </a>
+        </div>
+        <p className="mt-2 max-w-3xl text-xs leading-relaxed text-muted-foreground">
+          Only jobs present in the current machine catalogue appear below. A
+          conformance census or generic inspection is not a live purchase and is
+          not presented as one.
+        </p>
+
+        {catalogState.state === "loading" ? (
+          <p className="mt-4 text-xs text-muted-foreground" role="status">
+            Reading the live job catalogue…
+          </p>
+        ) : catalogState.state === "unavailable" ? (
+          <p
+            className="mt-4 rounded-xl border border-amber-800/20 bg-amber-50/70 p-3 text-xs text-amber-950"
+            role="status"
+          >
+            The live catalogue could not be read, so no paid job links are being
+            guessed. Verification remains available above and below.
+          </p>
+        ) : (
+          <ul className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+            {catalogState.jobs.map((job) => (
+              <li
+                key={job.id}
+                className="flex flex-col rounded-xl border border-border bg-background p-3.5"
+              >
+                <p className="font-mono text-[9px] font-bold uppercase tracking-[0.13em] text-emerald-800">
+                  {job.state}
+                </p>
+                <h3 className="mt-1.5 text-sm font-semibold text-foreground">
+                  {job.title}
+                </h3>
+                <p className="mt-2 flex-1 text-[11px] leading-relaxed text-muted-foreground">
+                  {job.outcome}
+                </p>
+                <p className="mt-3 border-t border-border pt-2.5 text-[10px] leading-relaxed text-muted-foreground">
+                  {job.payment}
+                </p>
+                <a
+                  href={job.href}
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-emerald-800 hover:underline"
+                >
+                  {job.action}{" "}
+                  <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <ol
         className="mt-5 grid gap-3 lg:grid-cols-3"
@@ -192,7 +454,7 @@ export default function DashboardRequestPane() {
         </div>
       </aside>
 
-      <div className="mt-6">
+      <div className="mt-6" id="request-attestation-runner">
         <ToolRunner
           initialToolName={REQUEST_ATTESTATION_CONTRACT.tool}
           initialArguments={initialArguments}

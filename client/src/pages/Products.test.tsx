@@ -7,7 +7,7 @@ import { SKUS } from "./Products";
 /**
  * /products — anchored page tests (v2.1 gates, source-scan style: no DOM deps).
  * Asserts the three page anchors: the four public SKU lines, the
- * /pricing-free rail link, and the price-free doctrine.
+ * live Council OS job chooser, and the price-free doctrine.
  */
 
 const dir = dirname(fileURLToPath(import.meta.url));
@@ -18,7 +18,7 @@ describe("/products anchored page", () => {
     expect(SKUS).toHaveLength(4);
     expect(SKUS.map((s) => s.id)).toEqual(["verify", "run", "ledger", "data"]);
     expect(SKUS[0].href).toBe("/gspc-verify");
-    expect(SKUS[1].href).toBe("/assess");
+    expect(SKUS[1].href).toBe("/dashboard?tab=measured");
   });
 
   it("never sells a grade or a certificate in any SKU prose", () => {
@@ -29,8 +29,9 @@ describe("/products anchored page", () => {
     expect(blob).toMatch(/never a purchased public rank|never buy a score/);
   });
 
-  it("links the metered /pricing-free page (free rail wiring)", () => {
-    expect(src).toMatch(/href: "\/pricing-free"/);
+  it("links metered work to the live Council OS job chooser", () => {
+    expect(src).toMatch(/href: "\/dashboard\?task=pricing-overview&tab=measured"/);
+    expect(src).not.toMatch(/href: "\/pricing-free"/);
   });
 
   it("never prints a price-like string (price-gate doctrine)", () => {
