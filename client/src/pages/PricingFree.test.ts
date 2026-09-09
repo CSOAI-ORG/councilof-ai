@@ -29,10 +29,12 @@ describe("/pricing-free — the explainer names no price and sells no grade", ()
     expect(src).toMatch(/free forever/i);
   });
 
-  it("is wired four ways: route, prerender, PRIMARY_PATHS (no archive banner), and linked from /products", () => {
+  it("preserves the pricing explainer while products routes buyers into the real job chooser", () => {
     expect(app).toMatch(/path="\/pricing-free"/);
     expect(prerender).toMatch(/"\/pricing-free"/);
     expect(ia).toMatch(/"\/pricing-free"/);
-    expect(readFileSync(join(dir, "Products.tsx"), "utf8")).toMatch(/href: "\/pricing-free"/);
+    const products = readFileSync(join(dir, "Products.tsx"), "utf8");
+    expect(products).toMatch(/href: "\/dashboard\?task=pricing-overview&tab=measured"/);
+    expect(products).toMatch(/Paid routes disclose the exact amount only in their live 402 challenge/);
   });
 });
