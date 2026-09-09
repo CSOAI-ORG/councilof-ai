@@ -25,10 +25,11 @@ class HeartbeatTests(unittest.TestCase):
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
         self.uploader = self.root / "uploader.py"
-        self.uploader.write_text("# def private_head(\n# def freeze_runs(\n# parent_commit=revision\n")
+        self.uploader.write_text('# def private_head(\n# def freeze_runs(\n# parent_commit=revision\n# "--token-file"\n')
         self.args = argparse.Namespace(state_dir=self.root / "state", uploader=self.uploader,
                                        root=self.root / "runs", interval_seconds=21600,
-                                       timeout_seconds=1200, now=False, dry_run=False)
+                                       timeout_seconds=1200, now=False, dry_run=False,
+                                       token_file=self.root / "private-intake-token")
         self.output = io.StringIO()
         redirect = contextlib.redirect_stdout(self.output)
         redirect.__enter__()
@@ -38,6 +39,8 @@ class HeartbeatTests(unittest.TestCase):
         self.assertEqual(command[0], sys.executable)
         self.assertEqual(command[1], str(self.uploader))
         self.assertIn(heartbeat.REPO, command)
+        token_index = command.index("--token-file")
+        self.assertEqual(command[token_index + 1], str(self.args.token_file))
         self.assertEqual(kwargs["timeout"], 1200)
         self.assertEqual(len(kwargs["pass_fds"]), 1)
         kwargs["stdout"].write("pod-push: complete runs 56 · pushed 0 · already upstream 56 · partial skipped 14\n".encode())
@@ -126,9 +129,38 @@ class HeartbeatTests(unittest.TestCase):
         def unknown(command, **kwargs):
             kwargs["stdout"].write(b"SUCCESS 100% all signed SECRET\n")
             return types.SimpleNamespace(returncode=0)
-        self.assertEqual(self.run_once(unknown), 0)
+        self.assertEqual(self.run_once(unknown), 1)
+        self.assertEqual(self.latest()["state"], "UNCONFIRMED_OUTPUT")
         self.assertIsNone(self.latest()["counts"])
         self.assertNotIn("SECRET", json.dumps(self.latest()) + self.output.getvalue())
+
+    def test_empty_batch_is_distinct_from_successful_upload(self):
+        def empty(command, **kwargs):
+            kwargs["stdout"].write(b"nothing complete to push (14 partial)\n")
+            return types.SimpleNamespace(returncode=0)
+        self.assertEqual(self.run_once(empty), 0)
+        self.assertEqual(self.latest()["state"], "NO_COMPLETE_RUNS")
+        self.assertEqual(self.latest()["counts"]["complete_runs"], 0)
+        self.assertEqual(self.latest()["counts"]["partial_skipped"], 14)
+
+    def test_inconsistent_counts_are_unconfirmed_not_success(self):
+        def inconsistent(command, **kwargs):
+            kwargs["stdout"].write("pod-push: complete runs 56 · pushed 2 · already upstream 56 · partial skipped 14\n".encode())
+            return types.SimpleNamespace(returncode=0)
+        self.assertEqual(self.run_once(inconsistent), 1)
+        self.assertEqual(self.latest()["state"], "UNCONFIRMED_OUTPUT")
+
+    def test_nonfinite_due_time_is_preserved_and_refused(self):
+        self.args.state_dir.mkdir()
+        latest = self.args.state_dir / "latest.json"
+        for due in [float("nan"), float("inf"), True]:
+            original = json.dumps({"schema": heartbeat.SCHEMA, "next_due_epoch": due})
+            latest.write_text(original)
+            runner = mock.Mock()
+            with self.assertRaisesRegex(ValueError, "invalid prior upload receipt"):
+                self.run_once(runner)
+            runner.assert_not_called()
+            self.assertEqual(latest.read_text(), original)
 
 
 if __name__ == "__main__":
