@@ -883,10 +883,10 @@ function App() {
                   <Route path="/consensus">{() => <Redirect to="/council" />}</Route>
                   <Route path="/world">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
                   <Route path="/map-regions" component={RegionsMap} />
-                  <Route path="/compare" component={Compare} />
-                  <Route path="/vs" component={Compare} />
+                  <Route path="/compare">{() => <Compare />}</Route>
+                  <Route path="/vs">{() => <Compare />}</Route>
                   <Route path="/vs/:slug">{(p: any) => <Compare focus={p.slug} />}</Route>
-                  <Route path="/vs-competitors" component={Compare} />
+                  <Route path="/vs-competitors">{() => <Compare />}</Route>
                   <Route path="/rfc-0024" component={Fedramp} />
                   <Route path="/aug-2026" component={Readiness} />
                   <Route path="/governance-council" component={Agents} />

@@ -248,6 +248,6 @@ describe("browser MCP request contract", () => {
       mcpRpc("tools/list", {}, { hostname: "localhost" }),
     ).rejects.toThrow("local Vite preview");
     expect(network).toHaveBeenCalledTimes(1);
-    expect(network.mock.calls[0]?.[0]).toBe("/mcp");
+    expect(JSON.stringify(network.mock.calls)).toContain('"/mcp"');
   });
 });

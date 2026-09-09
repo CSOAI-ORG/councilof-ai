@@ -182,10 +182,7 @@ function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-export const onRequest = async ({
-  request,
-  env,
-}: McpPagesContext): Promise<Response> => {
+export const onRequest = async ({ request, env }: { request: Request; env?: unknown }) => {
   const url = new URL(request.url);
   const hosts = [...HOSTS];
   // Only this deployment's configured preview is allowed, not all pages.dev hosts.

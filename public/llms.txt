@@ -53,6 +53,30 @@ Do not quote scores, n, leaders, or stamp tables from this file.
 - Jail goldbank: https://huggingface.co/datasets/csoai/gspc-jail-goldbank
 - Measurement, not certification. Never sell a rank.
 
+## Paid artefacts (agents)
+
+Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a price from this file. A 402 is not delivery. A grade is never sold.
+
+- Catalog: GET https://councilof.ai/api/x402
+- Manifest: GET https://councilof.ai/.well-known/x402.json (mode live, Base eip155:8453, USDC)
+- MCP: POST https://councilof.ai/mcp — tools/call without `x_payment` returns the route's 402 as structuredContent; pay, then call again with `x_payment`. Quote `paid_tools.names` from GET https://councilof.ai/mcp; do not freeze the list here.
+- HTTP doors (GET → 402 unless `X-PAYMENT` / facilitator settlement):
+  - https://councilof.ai/api/request-attestation?subject=<id>
+  - https://councilof.ai/api/eunomia-data?feed=1
+  - https://councilof.ai/api/proof?bundle=1
+  - https://councilof.ai/api/rwa/evidence?asset=<symbol>
+  - https://councilof.ai/api/receipts/batch?from=<iso>
+  - https://councilof.ai/api/art50/marking-evidence?url=<https-url>
+  - https://councilof.ai/api/feeds/provider-diff?history=1
+  - https://councilof.ai/api/evidence-bundle?obligation=article-50&subject=<id>&bundle=1
+- Free preview: omit `bundle=1` or add `preview=1` as the 402 body documents. Verify stays free: https://councilof.ai/gspc-verify
+- PayAPI Market (discovery only — buyers pay the estate payTo, not PayAPI; no listing fee):
+  - https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed
+  - MCP search: https://payapi.market/mcp
+
+```json
+{"mcpServers":{"payapi":{"url":"https://payapi.market/mcp"}}}
+```
 
 ## Overlay notes (not a 23rd axis)
 
