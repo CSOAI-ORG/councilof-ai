@@ -14,6 +14,17 @@ the heartbeat refuses an uploader without the reviewed atomic and explicit-token
 interfaces. The scheduler invokes owned shell files through `bash`, so a fresh
 0644 copy is supported and no broad executable-bit mutation is required.
 
+Two similarly named source paths already have different duties; do not collapse
+or silently substitute them during this maintenance:
+
+- `/workspace/lanes/councilof-ai` is `$REPO` in `pod-loops/lib.sh` and remains
+  the source used by older public-data shell loops.
+- `/workspace/council-of-ai` is the dedicated intake checkout invoked directly
+  by `scheduler.sh` for the heartbeat and atomic uploader.
+
+The installation checklist must inspect and update each required path explicitly.
+The new pre-merge selftest proves repository logic, not either live checkout.
+
 The layout follows `/workspace/lanes/README-LANES.md`: durable state and output
 stay under `/workspace`; scratch stays on the container disk. Do not touch the
 worker's directories or the `sovos-merge-800` network volume.
