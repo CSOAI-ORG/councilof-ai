@@ -46,6 +46,12 @@ class FakeHub:
 
 
 class SyncTests(unittest.TestCase):
+    def test_mirror_rechecks_after_the_root_actually_reaches_production(self):
+        workflow = (ROOT / ".github/workflows/hf-gspc-surface-sync.yml").read_text()
+        deploy = (ROOT / ".github/workflows/deploy.yml").read_text().splitlines()[0]
+        self.assertIn(deploy.removeprefix("name: "), workflow)
+        self.assertIn('github.event.workflow_run.conclusion == \'success\'', workflow)
+
     def test_shell_input_is_exactly_the_four_committed_head_blobs(self):
         files, revision = committed_shell(ROOT)
         self.assertEqual(tuple(files), ("README.md", "index.html", "style.css", "table.js"))

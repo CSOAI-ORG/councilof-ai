@@ -15,7 +15,12 @@ on:
       - spaces/gspc-board/style.css
       - spaces/gspc-board/table.js
   workflow_run:
-    workflows: ["public-root"]
+    # The producer can finish before its PR is merged or its root reaches the
+    # apex. Reconcile again after deployment so the mirror cannot remain one
+    # release behind while faithfully copying yesterday's production bytes.
+    workflows:
+      - "public-root"
+      - "Build + deploy site (prerender + fields + tour → both domains)"
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -55,6 +60,8 @@ jobs:
             scripts/sync_hf_gspc.py
             scripts/test_sync_hf_gspc.py
             scripts/watch_public_root.py
+            .github/workflows/hf-gspc-surface-sync.yml
+            .github/workflows/deploy.yml
             spaces/gspc-board/README.md
             spaces/gspc-board/index.html
             spaces/gspc-board/style.css
