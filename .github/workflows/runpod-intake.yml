@@ -36,9 +36,11 @@ jobs:
       - name: Selftest before trusting either script
         run: |
           python3 scripts/runpod_gspc_bridge_to_mill.py --selftest
+          python3 -m unittest discover -s scripts -p test_runpod_signing_artifact.py
           python3 scripts/verify_runpod_gspc_intake.py --help > /dev/null
 
       - name: Pull the durable intake
+        id: pull
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
@@ -49,13 +51,19 @@ jobs:
           fi
           python3 - <<'PY'
           import os, pathlib
-          from huggingface_hub import snapshot_download
+          from huggingface_hub import HfApi, snapshot_download
+          info = HfApi(token=os.environ["HF_TOKEN"]).repo_info(
+              "csoai/runpod-gspc-intake", repo_type="dataset")
+          if info.private is not True or not info.sha:
+              raise SystemExit("intake must be private and revision-pinned")
           p = snapshot_download("csoai/runpod-gspc-intake", repo_type="dataset",
-                                token=os.environ["HF_TOKEN"], local_dir="intake")
+                                token=os.environ["HF_TOKEN"], revision=info.sha, local_dir="intake")
           n = len(list(pathlib.Path(p).rglob("card-unsigned.json")))
           print(f"pulled {n} run cards")
           if n == 0:
               raise SystemExit("intake pulled 0 cards — refusing to proceed on an empty read")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write(f"revision={info.sha}\n")
           PY
 
       - name: Verify every run independently
@@ -98,15 +106,23 @@ jobs:
           [ "$bad" -eq 0 ] || { echo "a run failed intake verification"; exit 1; }
 
       - name: Stage the verified runs for the signer
+        env:
+          INTAKE_REVISION: ${{ steps.pull.outputs.revision }}
         run: |
+          set -euo pipefail
           python3 scripts/runpod_gspc_bridge_to_mill.py \
             --intake "$GITHUB_WORKSPACE/quarantine" \
-            --out public/interop/mill-cards-unsigned
+            --out "$RUNNER_TEMP/runpod-signing-artifact/cards"
+          python3 scripts/runpod_signing_artifact.py manifest \
+            --quarantine "$GITHUB_WORKSPACE/quarantine" \
+            --artifact-dir "$RUNNER_TEMP/runpod-signing-artifact" \
+            --intake-revision "$INTAKE_REVISION" \
+            --allowlist "$GITHUB_WORKSPACE/scripts/runpod_gspc_bank_allowlist.current.json"
 
       - name: Publish the staged cards as an artifact for review
         uses: actions/upload-artifact@v4
         with:
-          name: mill-cards-unsigned-${{ github.run_id }}
-          path: public/interop/mill-cards-unsigned/
+          name: runpod-signing-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/runpod-signing-artifact/
           if-no-files-found: error
           retention-days: 14
