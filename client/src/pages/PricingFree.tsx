@@ -48,7 +48,7 @@ const STEPS = [
   { k: "1 · Ask", v: "GET the resource. You get HTTP 402 with an accepts[] entry: scheme exact, USDC on Base, the receiving address, and the amount for that artefact. The same body carries a free preview of what already exists, so nobody buys blind." },
   { k: "2 · Pay", v: "Any x402 client (for example @x402/fetch) signs a USDC transfer authorisation for exactly that amount and retries with the X-PAYMENT header. Funds go straight to the estate wallet; there is no card form, no account, no subscription." },
   { k: "3 · Settle", v: "We hand the receipt to a facilitator to verify and settle on-chain. Until settlement succeeds, nothing is granted — a header is not a payment." },
-  { k: "4 · Receive", v: "The artefact returns with an X-PAYMENT-RESPONSE echo of the settlement. Verify it free at /gspc-verify, today or in ten years, without asking us." },
+  { k: "4 · Receive", v: "The artefact returns with the facilitator's X-PAYMENT-RESPONSE settlement echo. Check its transaction against the named chain. When a Council JWS receipt is also attached, verify that signature free at /api/receipts/verify; /gspc-verify is for measurement cards, not payment headers." },
 ];
 
 const RULES = [

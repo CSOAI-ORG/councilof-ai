@@ -5,6 +5,7 @@ import {
   RECORD_RELATED,
   RECORD_SLIDES,
 } from "../data/deckWorlds/whereTheRecordLives";
+import softwareHeritage from "../../../public/.well-known/software-heritage.json";
 
 const SNAPSHOT = "swh:1:snp:7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c";
 
@@ -43,5 +44,15 @@ describe("evidence discovery metadata", () => {
     expect(RECORD_SLIDES[1].points?.some((point) =>
       point.text.includes("2 September 2026"),
     )).toBe(true);
+
+    expect(softwareHeritage.primary_snapshot.swhid).toBe(SNAPSHOT);
+    expect(softwareHeritage.independent_verification.visit_observed).toMatchObject({
+      origin: "https://github.com/CSOAI-ORG/councilof-ai",
+      status: "full",
+      snapshot: SNAPSHOT.replace("swh:1:snp:", ""),
+    });
+    expect(softwareHeritage.independent_verification.visit_response_sha256).toMatch(/^[0-9a-f]{64}$/);
+    expect(softwareHeritage.independent_verification.snapshot_response_sha256).toMatch(/^[0-9a-f]{64}$/);
+    expect(softwareHeritage.independent_verification.scope).toContain("not the current release");
   });
 });

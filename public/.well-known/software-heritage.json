@@ -2,16 +2,32 @@
   "schema": "csoai.well-known/0.1",
   "slug": "software-heritage",
   "name": "Software Heritage — independent archival of this estate",
-  "description": "Third-party archival state. Software Heritage has archived this estate on its own initiative; this door records what it holds, with the SWHID, so the durability claim is checkable rather than asserted.",
+  "description": "Third-party archival state. Software Heritage records an archived visit for this estate; this door records what its API returned, with the SWHID, so the durability claim is checkable rather than asserted.",
   "as_of": "20260905T180000Z",
   "state": "ARCHIVED_BY_THIRD_PARTY",
-  "why_this_matters": "Every other durability claim in this estate rests on our own signature. This one does not: Software Heritage is an independent, UNESCO-backed archive that crawled and stored these origins without being asked, so the bytes survive us and the archival is not our assertion.",
+  "why_this_matters": "Every other durability claim in this estate rests on our own signature. This one does not: Software Heritage is an independent archive whose API records a full visit and snapshot for this origin. Archival is a third-party fact, not our endorsement or a promise of permanence.",
   "primary_snapshot": {
     "origin": "https://github.com/CSOAI-ORG/councilof-ai",
     "swhid": "swh:1:snp:7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c",
     "visit_date": "2026-09-02T15:13:58.885000+00:00",
     "visit_status": "full",
     "probe": "curl -s 'https://archive.softwareheritage.org/api/1/origin/https://github.com/CSOAI-ORG/councilof-ai/visits/?limit=1'"
+  },
+  "independent_verification": {
+    "checked_at": "2026-09-09T13:14:44Z",
+    "visit_api": "https://archive.softwareheritage.org/api/1/origin/https://github.com/CSOAI-ORG/councilof-ai/visits/?per_page=10",
+    "visit_response_sha256": "2587f96852d6d94ee7745cee055a63c90bfdcd756a983a4df4fdbc68aacddbed",
+    "visit_observed": {
+      "origin": "https://github.com/CSOAI-ORG/councilof-ai",
+      "visit": 1,
+      "date": "2026-09-02T15:13:58.885000+00:00",
+      "status": "full",
+      "snapshot": "7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c"
+    },
+    "snapshot_api": "https://archive.softwareheritage.org/api/1/snapshot/7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c/",
+    "snapshot_response_sha256": "fd099b7013df7931a399d306ff4aa419672b442cf76523c85196092b57935764",
+    "snapshot_id_observed": "7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c",
+    "scope": "These digests bind the exact API responses observed at checked_at. They verify the archived visit and snapshot identifier, not the current release."
   },
   "origins_archived": {
     "total": 57,

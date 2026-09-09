@@ -34,14 +34,14 @@
     {
       "id": "error-states",
       "name": "Error states",
-      "scope": "Graceful failures. Every error has a signed receipt.",
+      "scope": "Graceful failures render an explicit user-visible error state. No receipt is implied.",
       "deliverable": "client/src/components/lobby/ErrorBoundary.tsx",
       "status": "live"
     },
     {
       "id": "toast-notifications",
       "name": "Toast notifications",
-      "scope": "Real-time feedback. Every toast emits a signed event card.",
+      "scope": "Real-time UI feedback. Toasts are presentation state and do not emit signed event cards.",
       "deliverable": "client/src/components/lobby/Toaster.tsx",
       "status": "live"
     },
