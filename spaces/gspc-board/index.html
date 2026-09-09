@@ -34,6 +34,7 @@
     <nav class="top-nav jump" aria-label="CSOAI-GSPC">
       <a href="#ontology">Axes</a>
       <a href="#boards">Leaderboards</a>
+      <a href="#hub-cells">Hub cells</a>
       <a href="#models">Models</a>
       <a href="#tape-table">Board</a>
       <a href="https://councilof.ai/gspc-verify">Verify</a>
@@ -49,9 +50,7 @@
     <h1>CSOAI-GSPC</h1>
     <p id="lid" class="lid">Lid: loading live GET /api/gspc…</p>
     <p class="lede" id="ruling">
-      CSOAI-GSPC measures AI health. Fifteen axes carry a signed measurement.
-      3,032,028 Hub listings were observed; none graded. 2,410 names remain on the planted public list.
-      A listing is not a grade. A rank is never sold.
+      Reading the live board and the separate Hugging Face measurement population…
     </p>
     <div class="tape" id="tape" aria-live="polite"></div>
   </section>
@@ -96,6 +95,39 @@
         <tbody></tbody>
       </table>
     </div>
+  </section>
+
+  <section id="hub-cells" class="block" aria-labelledby="hub-h">
+    <div class="head">
+      <div>
+        <p class="kicker">Hugging Face measured cells</p>
+        <h2 id="hub-h">Top nine published measurements by axis</h2>
+      </div>
+      <label class="pick">
+        <span class="sr">Hugging Face axis</span>
+        <select id="hub-axis"></select>
+      </label>
+    </div>
+    <p class="fine" id="hub-note">Reading the complete published Hub indexes…</p>
+    <div class="tape" id="hub-tape" aria-live="polite"></div>
+    <div class="scroll">
+      <table class="sheet" id="hub-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Model</th>
+            <th>Figure</th>
+            <th>n</th>
+            <th>Status</th>
+            <th>Signed card</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6">Loading published Hugging Face measurements…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fine">This is the third-party Hub population from <code>GET /api/hub-cards</code>. It is not the Council fleet and it does not alter the canonical 22-axis board above.</p>
   </section>
 
   <section id="models" class="block" aria-labelledby="mod-h">
@@ -187,7 +219,7 @@
   <section id="empty" class="block" aria-labelledby="empty-h">
     <div class="head">
       <p class="kicker">Published empty</p>
-      <h2 id="empty-h">Seven slots exist so the gap is visible</h2>
+      <h2 id="empty-h">Published empty slots</h2>
     </div>
     <div class="grid2" id="empty-box"></div>
   </section>

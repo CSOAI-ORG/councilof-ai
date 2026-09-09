@@ -19,12 +19,16 @@ describe("gspc-board Space is CSOAI-GSPC", () => {
     expect(html).toContain('id="ontology"');
     expect(html).toContain('id="graph"');
     expect(html).toContain('id="board-table"');
+    expect(html).toContain('id="hub-cells"');
+    expect(html).toContain('id="hub-axis"');
+    expect(html).toContain('id="hub-table"');
     expect(html).toContain('id="desk"');
     expect(html).toContain('id="find-table"');
     expect(html).toContain('id="rec-table"');
     expect(html).toContain('id="honest-table"');
     expect(html).toContain('id="fleet"');
     expect(js).toContain("https://councilof.ai/api/gspc");
+    expect(js).toContain("https://councilof.ai/api/hub-cards");
     expect(js).toContain("signed/card_index.json");
     expect(js).toContain("openAxis");
     expect(js).toContain("PILLARS");
@@ -57,14 +61,19 @@ describe("gspc-board Space is CSOAI-GSPC", () => {
     expect(css).toContain(".jump");
   });
 
-  it("quotes the listed queue and signed snapshot without running ahead of the evidence", () => {
+  it("reads current populations without freezing stale queue or measurement counts", () => {
     expect(blob).toContain("CSOAI-GSPC measures AI health");
     expect(blob).toContain("signed snapshot");
-    expect(js).toContain("2,410");
-    expect(js).toContain("listed and not yet graded");
-    expect(js).toContain("3,032,028");
-    expect(js).toContain("none graded");
+    expect(blob).toContain("3,032,028");
+    expect(js).toContain("that census graded none");
     expect(js).toContain("census-manifest.json");
+    expect(js).toContain("Published measured cells");
+    expect(js).toContain("Third-party models");
+    expect(blob).toContain("It is not the Council fleet");
+    expect(readme).toContain("Do not freeze their counts");
+    expect(blob).not.toContain("2,410");
+    expect(blob).not.toContain("Fifteen axes");
+    expect(blob).not.toContain("Seven slots");
     expect(js).not.toContain("The full Hub listing walk is ready, not finished");
     expect(js).toContain("Rows behind the board");
     expect(js).toContain("do not yet bind a subject or weight-manifest digest");
