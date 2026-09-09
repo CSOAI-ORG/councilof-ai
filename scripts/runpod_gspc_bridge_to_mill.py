@@ -33,6 +33,7 @@ them silently.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import pathlib
 import sys
@@ -54,20 +55,41 @@ def cell_key(body: dict) -> str:
 
 
 def collect(intake: pathlib.Path) -> tuple[list[dict], list[dict], list[str]]:
-    """Return (staged, superseded_in_pass, problems). Never raises on one bad file."""
+    """Return verified candidates only.
+
+    ``verify_runpod_gspc_intake.py`` writes ``candidate.json`` beside a
+    ``verification.json`` receipt in a private quarantine directory.  Reading
+    the original ``card-unsigned.json`` tree here would bypass that boundary,
+    so the bridge accepts only that paired output and rechecks the copied-file
+    digest before selecting the newest run for each cell.
+    """
     by_cell: dict[str, list[tuple[str, dict, pathlib.Path]]] = defaultdict(list)
     problems: list[str] = []
-    for card in sorted(intake.rglob("card-unsigned.json")):
+    for card in sorted(intake.rglob("candidate.json")):
         try:
-            wrap = json.loads(card.read_text(encoding="utf-8"))
+            raw = card.read_bytes()
+            wrap = json.loads(raw.decode("utf-8"))
+            verification = json.loads((card.parent / "verification.json").read_text(encoding="utf-8"))
         except Exception as e:  # noqa: BLE001
-            problems.append(f"{card}: unreadable ({type(e).__name__})")
+            problems.append(f"{card}: candidate or verification unreadable ({type(e).__name__})")
+            continue
+        source_hashes = verification.get("source_hashes")
+        if (
+            verification.get("schema") != "csoai.runpod-gspc-intake-verification/0.1"
+            or verification.get("state") != "VERIFIED_QUARANTINE"
+            or not isinstance(source_hashes, dict)
+            or source_hashes.get("card_file_sha256") != hashlib.sha256(raw).hexdigest()
+        ):
+            problems.append(f"{card}: verification receipt does not bind candidate bytes")
             continue
         body = wrap.get("body")
         if not isinstance(body, dict):
             problems.append(f"{card}: no body object")
             continue
-        run_id = str((body.get("compute_evidence") or {}).get("run_id") or card.parent.name)
+        run_id = str((body.get("compute_evidence") or {}).get("run_id") or "")
+        if not run_id or run_id != verification.get("run_id"):
+            problems.append(f"{card}: run id does not match verification receipt")
+            continue
         by_cell[cell_key(body)].append((run_id, body, card))
 
     staged, superseded = [], []
@@ -107,13 +129,26 @@ def selftest() -> int:
         root = pathlib.Path(td)
         for i, body in enumerate((a, b)):
             d = root / f"r{i}"; d.mkdir()
-            (d / "card-unsigned.json").write_text(json.dumps({"body": body}))
+            raw = json.dumps({"body": body}).encode()
+            (d / "candidate.json").write_bytes(raw)
+            (d / "verification.json").write_text(json.dumps({
+                "schema": "csoai.runpod-gspc-intake-verification/0.1",
+                "state": "VERIFIED_QUARANTINE",
+                "run_id": body["compute_evidence"]["run_id"],
+                "source_hashes": {"card_file_sha256": hashlib.sha256(raw).hexdigest()},
+            }))
         staged, sup, probs = collect(root)
         if len(staged) != 1: print(f"selftest FAIL: one cell must stage once, got {len(staged)}"); bad += 1
         if staged and staged[0]["run_id"] != "20260905T010000.0Z-bbb":
             print("selftest FAIL: newest run must win"); bad += 1
         if len(sup) != 1: print(f"selftest FAIL: older run must be reported, got {len(sup)}"); bad += 1
         if probs: print(f"selftest FAIL: unexpected problems {probs}"); bad += 1
+        # A candidate without a receipt is never bridge input.
+        orphan = root / "orphan"; orphan.mkdir()
+        (orphan / "candidate.json").write_text(json.dumps({"body": a}))
+        _staged, _sup, orphan_problems = collect(orphan)
+        if _staged or not orphan_problems:
+            print("selftest FAIL: unverified candidate must be refused"); bad += 1
     # a body over the cap must be refused, not truncated
     with tempfile.TemporaryDirectory() as td:
         out = pathlib.Path(td)
@@ -134,7 +169,7 @@ def selftest() -> int:
         print("selftest FAIL: bridge assigns a status; the signer owns it"); bad += 1
     if not assign.search('body["status"] = "MEASURED"'):
         print("selftest FAIL: the status check cannot detect an assignment"); bad += 1
-    print("selftest OK — 5 decision cases" if not bad else f"selftest: {bad} wrong")
+    print("selftest OK — 6 decision cases" if not bad else f"selftest: {bad} wrong")
     return 1 if bad else 0
 
 

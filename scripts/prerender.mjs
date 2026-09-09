@@ -497,6 +497,9 @@ let relaunching = null;
 const browserGone = e =>
   /Target (?:page, context or browser|closed)|browser has been closed|Browser closed|has been closed/i
     .test(e?.message || "");
+const routeNavigationRace = e =>
+  /Execution context was destroyed|Cannot find context with specified id|frame was detached/i
+    .test(e?.message || "");
 
 async function relaunchBrowser(seenGen) {
   if (browserGen !== seenGen) return;        // another worker already replaced it
@@ -625,8 +628,19 @@ async function worker(id) {
       rec.bytes = html.length;
       rec.errs = errs.splice(0).slice(0, 1);
     } catch (e) {
-      // The browser vanished under us. That is not this route's fault — requeue it.
+      // A client-side redirect or late navigation can replace the execution context
+      // between the paint check and page.content(). That is a transient page-level race,
+      // not a failed route and not a dead browser. Retry the route in a fresh page, but
+      // keep the retry bounded so a real redirect loop still blocks the build.
       const n = retried.get(route) || 0;
+      if (routeNavigationRace(e) && n < RETRIES_PER_ROUTE) {
+        retried.set(route, n + 1);
+        queue.push(route);
+        try { await page.close(); } catch {}
+        page = await openPage();
+        continue;
+      }
+      // The browser vanished under us. That is not this route's fault — requeue it.
       if (browserGone(e) && n < RETRIES_PER_ROUTE) {
         retried.set(route, n + 1);
         queue.push(route);
