@@ -150,27 +150,28 @@ export default function Products() {
         to anyone we rank.
       </p>
 
-      {/* The five access surfaces — every way a user can reach the measurement rail today. */}
-      <section aria-label="Five access surfaces" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      {/* Public runtime doors and source integrations. Source-only projects say so: a
+          repository is inspectable, but it is not a browser-store or host installation. */}
+      <section aria-label="Runtime and integration status" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/mcp">
           <p className="font-mono text-sm text-emerald-100">MCP</p>
           <p className="mt-1 text-xs text-emerald-200/80">{toolSummary()}</p>
           <p className="mt-1 text-[11px] text-emerald-300/60">POST /mcp</p>
         </a>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/extension/">
-          <p className="font-mono text-sm text-emerald-100">Browser extension</p>
-          <p className="mt-1 text-xs text-emerald-200/80">MV3 — overlays badge on Hugging Face, OpenRouter, Replicate</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">/extension/</p>
+        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify" target="_blank" rel="noreferrer">
+          <p className="font-mono text-sm text-emerald-100">Browser extension source</p>
+          <p className="mt-1 text-xs text-emerald-200/80">MV3 prototype — load unpacked from the public repository</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">No browser-store install claimed</p>
         </a>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/tools">
-          <p className="font-mono text-sm text-emerald-100">Plugin</p>
-          <p className="mt-1 text-xs text-emerald-200/80">Council of AI Grok plugin — 4 skills, 4 commands</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">/tools</p>
+        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="https://github.com/CSOAI-ORG/council-of-ai-grok" target="_blank" rel="noreferrer">
+          <p className="font-mono text-sm text-emerald-100">Grok integration source</p>
+          <p className="mt-1 text-xs text-emerald-200/80">Inspect the public plugin repository; host installation is separate</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">Source, not a store listing</p>
         </a>
         <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/what-is-new.html">
-          <p className="font-mono text-sm text-emerald-100">Hermes skill</p>
-          <p className="mt-1 text-xs text-emerald-200/80">~/.hermes/skills/council-of-ai/ — 6/6 tests pass</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">skill_view</p>
+          <p className="font-mono text-sm text-emerald-100">Hermes integration notes</p>
+          <p className="mt-1 text-xs text-emerald-200/80">Historical local integration, documented for inspection</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">No public installation package</p>
         </a>
         <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="https://councilof.ai/api/gspc" target="_blank" rel="noreferrer">
           <p className="font-mono text-sm text-emerald-100">REST + curl</p>

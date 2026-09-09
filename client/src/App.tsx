@@ -291,7 +291,6 @@ const EmbedPage = lazy(() => import("./pages/EmbedPage"));
 const BadgeKit = lazy(() => import("./pages/BadgeKit"));
 const GetListed = lazy(() => import("./pages/GetListed"));
 const RealWorldMap = lazy(() => import("./pages/RealWorldMap"));
-const PlansPage = lazy(() => import("./pages/PlansPage"));
 const OnboardOS = lazy(() => import("./pages/OnboardOS"));
 const GovGraph = lazy(() => import("./pages/GovGraph"));
 const NetworkPage = lazy(() => import("./pages/NetworkPage"));
@@ -974,7 +973,10 @@ function App() {
                   <Route path="/scorecard/:systemId" component={ComplianceScorecard} />
                   <Route path="/knowledge-base" component={KnowledgeBase} />
                   <Route path="/enterprise-onboarding" component={EnterpriseOnboarding} />
-                  <Route path="/pricing" component={PlansPage} />
+                  {/* Every x402 challenge points at /pricing for the human explanation. Keep
+                      that path on the catalogue-backed Council OS chooser: the retired plans
+                      page promises cadence and free issuance that the live rail does not. */}
+                  <Route path="/pricing" component={Pricing} />
                   <Route path="/products" component={Products} />
                   <Route path="/pricing-free" component={ContentReviewNotice} />
                   <Route path="/catalog">{() => <Redirect to="/products" />}</Route>

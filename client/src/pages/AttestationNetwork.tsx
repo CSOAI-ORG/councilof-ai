@@ -158,7 +158,7 @@ export default function AttestationNetwork() {
             Living board JSON →
           </a>
           <Link
-            href="/pricing-free"
+            href="/pricing"
             className="rounded-full border border-amber-400/40 bg-amber-400/10 px-5 py-2 text-sm font-bold text-amber-100 hover:bg-amber-400/20"
           >
             Agent pay path →
@@ -251,8 +251,8 @@ export default function AttestationNetwork() {
             >
               /.well-known/x402.json
             </a>
-            <Link href="/pricing-free" className="text-emerald-300 underline-offset-2 hover:underline">
-              /pricing-free
+            <Link href="/pricing" className="text-emerald-300 underline-offset-2 hover:underline">
+              /pricing
             </Link>
           </div>
         </section>
