@@ -63,31 +63,115 @@ type IndexRead =
   | { ok: true; name: string; cells: Cell[] }
   | { ok: false; name: string; reason: string };
 
-function parseRows(text: string, name: string): Cell[] {
+type ParsedRows =
+  | { ok: true; cells: Cell[] }
+  | { ok: false; reason: string };
+
+interface Supersession {
+  superseded_id: string;
+  by_id: string;
+  model: string;
+  axis: string;
+}
+
+type UnresolvedSupersession = Supersession & { reason: string };
+
+type LedgerRead =
+  | { ok: true; entries: Supersession[] }
+  | { ok: false; reason: string };
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+const isOptionalString = (value: unknown): value is string | null | undefined =>
+  value === undefined || value === null || typeof value === "string";
+
+const isOptionalNumber = (value: unknown): value is number | null | undefined =>
+  value === undefined ||
+  value === null ||
+  (typeof value === "number" && Number.isFinite(value));
+
+function parseRows(text: string, name: string): ParsedRows {
   const out: Cell[] = [];
-  for (const line of text.split("\n")) {
+  for (const [offset, line] of text.split("\n").entries()) {
     const t = line.trim();
     if (!t) continue;
+    let value: unknown;
     try {
-      const o = JSON.parse(t) as Record<string, unknown>;
-      out.push({
-        model: String(o.model ?? ""),
-        axis: String(o.axis ?? ""),
-        // passed through verbatim — never derived, never defaulted
-        status: String(o.status ?? "UNCHECKABLE"),
-        accuracy: typeof o.accuracy === "number" ? o.accuracy : null,
-        n: typeof o.n === "number" ? o.n : null,
-        card_sha256: o.card_sha256 ? String(o.card_sha256) : null,
-        card_url: o.card_url ? String(o.card_url) : null,
-        signed: Boolean(o.signed),
-        unmeasured: Array.isArray(o.unmeasured) ? (o.unmeasured as string[]) : [],
-        index: `${name}.jsonl`,
-      });
+      value = JSON.parse(t) as unknown;
     } catch {
-      /* one bad line must not lose the file */
+      return { ok: false, reason: `invalid jsonl row ${offset + 1}: malformed JSON` };
     }
+
+    if (!isRecord(value)) {
+      return {
+        ok: false,
+        reason: `invalid jsonl row ${offset + 1}: row is not an object`,
+      };
+    }
+    const o = value;
+    if (typeof o.model !== "string" || !o.model.trim()) {
+      return {
+        ok: false,
+        reason: `invalid jsonl row ${offset + 1}: model must be a non-empty string`,
+      };
+    }
+    if (typeof o.axis !== "string" || !o.axis.trim()) {
+      return { ok: false, reason: `invalid jsonl row ${offset + 1}: axis must be a non-empty string` };
+    }
+    if (typeof o.status !== "string" || !o.status.trim()) {
+      return {
+        ok: false,
+        reason: `invalid jsonl row ${offset + 1}: status must be a non-empty string`,
+      };
+    }
+    if (o.signed !== true) {
+      return { ok: false, reason: `invalid jsonl row ${offset + 1}: signed must be boolean true` };
+    }
+    if (!isOptionalNumber(o.accuracy)) {
+      return {
+        ok: false,
+        reason: `invalid jsonl row ${offset + 1}: accuracy must be a finite number or null`,
+      };
+    }
+    if (!isOptionalNumber(o.n)) {
+      return { ok: false, reason: `invalid jsonl row ${offset + 1}: n must be a finite number or null` };
+    }
+    if (!isOptionalString(o.card_sha256)) {
+      return {
+        ok: false,
+        reason: `invalid jsonl row ${offset + 1}: card_sha256 must be a string or null`,
+      };
+    }
+    if (!isOptionalString(o.card_url)) {
+      return { ok: false, reason: `invalid jsonl row ${offset + 1}: card_url must be a string or null` };
+    }
+    if (
+      o.unmeasured !== undefined &&
+      (!Array.isArray(o.unmeasured) ||
+        !o.unmeasured.every((item) => typeof item === "string"))
+    ) {
+      return {
+        ok: false,
+        reason: `invalid jsonl row ${offset + 1}: unmeasured must be an array of strings`,
+      };
+    }
+
+    out.push({
+      model: o.model,
+      axis: o.axis,
+      // passed through verbatim — never derived, never defaulted
+      status: o.status,
+      accuracy: o.accuracy ?? null,
+      n: o.n ?? null,
+      card_sha256: o.card_sha256 ?? null,
+      card_url: o.card_url ?? null,
+      signed: true,
+      unmeasured: o.unmeasured ?? [],
+      index: `${name}.jsonl`,
+    });
   }
-  return out;
+  return { ok: true, cells: out };
 }
 
 /**
@@ -104,7 +188,10 @@ async function attempt(name: string, cached: boolean): Promise<IndexRead> {
   try {
     const r = await fetch(`${HUB}/${name}.jsonl`, init);
     if (!r.ok) return { ok: false, name, reason: `http ${r.status}` };
-    return { ok: true, name, cells: parseRows(await r.text(), name) };
+    const parsed = parseRows(await r.text(), name);
+    return parsed.ok
+      ? { ok: true, name, cells: parsed.cells }
+      : { ok: false, name, reason: parsed.reason };
   } catch (e) {
     return { ok: false, name, reason: `fetch failed: ${(e as Error)?.message ?? "unknown"}` };
   }
@@ -161,8 +248,50 @@ async function discoverIndexes(): Promise<string[] | null> {
  * "status is passed through" true of the LIVE card rather than of any card that
  * was ever signed.
  */
-async function readSupersededIds(origin: string): Promise<Set<string> | null> {
+function parseSupersessions(text: string): LedgerRead {
+  const entries: Supersession[] = [];
+  for (const [offset, line] of text.split("\n").entries()) {
+    const t = line.trim();
+    if (!t) continue;
+    let value: unknown;
+    try {
+      value = JSON.parse(t) as unknown;
+    } catch {
+      return { ok: false, reason: `invalid jsonl row ${offset + 1}: malformed JSON` };
+    }
+    if (!isRecord(value)) {
+      return {
+        ok: false,
+        reason: `invalid jsonl row ${offset + 1}: row is not an object`,
+      };
+    }
+    for (const field of ["superseded_id", "by_id", "model", "axis"] as const) {
+      if (typeof value[field] !== "string" || !value[field].trim()) {
+        return {
+          ok: false,
+          reason: `invalid jsonl row ${offset + 1}: ${field} must be a non-empty string`,
+        };
+      }
+    }
+    if (value.superseded_id === value.by_id) {
+      return {
+        ok: false,
+        reason: `invalid jsonl row ${offset + 1}: superseded_id and by_id must differ`,
+      };
+    }
+    entries.push({
+      superseded_id: value.superseded_id as string,
+      by_id: value.by_id as string,
+      model: value.model as string,
+      axis: value.axis as string,
+    });
+  }
+  return { ok: true, entries };
+}
+
+async function readSupersessions(origin: string): Promise<LedgerRead> {
   const url = `${origin}/interop/mill-cards-signed/SUPERSEDED.jsonl`;
+  let reason = "unreadable";
   for (const cached of [true, false]) {
     const init: RequestInit = { headers: { Accept: "application/jsonl, text/plain" } };
     if (cached) {
@@ -170,27 +299,21 @@ async function readSupersededIds(origin: string): Promise<Set<string> | null> {
     }
     try {
       const r = await fetch(url, init);
-      if (!r.ok) continue;
-      const ids = new Set<string>();
-      for (const line of (await r.text()).split("\n")) {
-        const t = line.trim();
-        if (!t) continue;
-        try {
-          const o = JSON.parse(t) as Record<string, unknown>;
-          if (o.superseded_id) ids.add(String(o.superseded_id));
-        } catch {
-          /* one bad ledger line must not lose the rest */
-        }
+      if (!r.ok) {
+        reason = `http ${r.status}`;
+        continue;
       }
-      return ids;
-    } catch {
-      /* fall through to the uncached attempt */
+      const parsed = parseSupersessions(await r.text());
+      if (parsed.ok) return parsed;
+      reason = parsed.reason;
+    } catch (e) {
+      reason = `fetch failed: ${(e as Error)?.message ?? "unknown"}`;
     }
   }
-  // NOT an empty set. "I could not read the ledger" and "nothing is superseded"
-  // are different facts, and returning the empty set would silently assert the
-  // second one and quietly overstate the census.
-  return null;
+  // NOT an empty successful ledger. "I could not read the ledger" and "nothing
+  // is superseded" are different facts; conflating them quietly overstates the
+  // census.
+  return { ok: false, reason };
 }
 
 export const onRequestGet: PagesFunction = async (ctx) => {
@@ -207,19 +330,59 @@ export const onRequestGet: PagesFunction = async (ctx) => {
   }
   const discovered = await discoverIndexes();
   const indexes = discovered ?? KNOWN_INDEXES;
-  const [reads, supersededIds] = await Promise.all([
+  const [reads, ledger] = await Promise.all([
     Promise.all(indexes.map(readIndex)),
-    readSupersededIds(origin),
+    readSupersessions(origin),
   ]);
   const rawCells = reads.flatMap((r) => (r.ok ? r.cells : []));
 
-  // Drop cards the ledger has replaced, then collapse the remaining duplicates so
-  // one (model, axis) is one cell. Index order decides which row survives, and
-  // INDEX.jsonl — the only one that is rebuilt — is first.
-  const afterLedger = supersededIds
-    ? rawCells.filter((c) => !(c.card_sha256 && supersededIds.has(c.card_sha256)))
+  // A ledger assertion is not enough to delete an observed row. The exact by_id
+  // replacement must also be in the observed Hub indexes and name the same pair.
+  // Otherwise the cross-host publication is incomplete and no total is quotable.
+  const cellsById = new Map<string, Cell[]>();
+  for (const cell of rawCells) {
+    if (!cell.card_sha256) continue;
+    const matches = cellsById.get(cell.card_sha256) ?? [];
+    matches.push(cell);
+    cellsById.set(cell.card_sha256, matches);
+  }
+  const excludableIds = new Set<string>();
+  const unresolvedSupersessions: UnresolvedSupersession[] = [];
+  if (ledger.ok) {
+    for (const entry of ledger.entries) {
+      const predecessors = cellsById.get(entry.superseded_id) ?? [];
+      if (!predecessors.length) continue;
+      const replacements = cellsById.get(entry.by_id) ?? [];
+      const expectedPair = `${entry.model}\u0000${entry.axis}`;
+      const predecessorMatches = predecessors.every(
+        (cell) => `${cell.model}\u0000${cell.axis}` === expectedPair,
+      );
+      const replacementMatches =
+        replacements.length > 0 &&
+        replacements.every(
+          (cell) => `${cell.model}\u0000${cell.axis}` === expectedPair,
+        );
+      if (!predecessorMatches) {
+        unresolvedSupersessions.push({
+          ...entry,
+          reason: "predecessor pair does not match ledger",
+        });
+      } else if (!replacementMatches) {
+        unresolvedSupersessions.push({
+          ...entry,
+          reason: replacements.length
+            ? "replacement pair does not match predecessor"
+            : "replacement is absent from observed indexes",
+        });
+      } else {
+        excludableIds.add(entry.superseded_id);
+      }
+    }
+  }
+  const afterLedger = ledger.ok
+    ? rawCells.filter((cell) => !(cell.card_sha256 && excludableIds.has(cell.card_sha256)))
     : rawCells;
-  const supersededExcluded = supersededIds ? rawCells.length - afterLedger.length : null;
+  const supersededExcluded = ledger.ok ? rawCells.length - afterLedger.length : null;
   const byPair = new Map<string, Cell>();
   for (const c of afterLedger) {
     const key = `${c.model}\u0000${c.axis}`;
@@ -233,7 +396,8 @@ export const onRequestGet: PagesFunction = async (ctx) => {
   // ledger cannot establish which rows are current. Keep rows available, but
   // withhold population totals until all three checks succeeded.
   const allIndexesRead = unread.length === 0;
-  const complete = discovered !== null && allIndexesRead && supersededIds !== null;
+  const supersessionsResolved = ledger.ok && unresolvedSupersessions.length === 0;
+  const complete = discovered !== null && allIndexesRead && supersessionsResolved;
 
   const seen = { measured: 0, unmeasured: 0, other: 0, cells: cells.length };
   for (const c of cells) {
@@ -266,24 +430,29 @@ export const onRequestGet: PagesFunction = async (ctx) => {
         ? `Discovered from the dataset: ${indexes.length} index file(s) published under mill-cards/.`
         : "UNCHECKABLE — the dataset listing did not answer, so this fell back to the four indexes this endpoint knows about. There may be others, so counts are not claimed complete.",
       one_cell_per_pair:
-        "A (model, axis) appears once. Cards the SUPERSEDED.jsonl ledger has replaced are dropped, then duplicates are collapsed keeping the row from the rebuilt INDEX.jsonl. Before this the same pair could be counted twice with two different statuses.",
-      superseded_ledger: supersededIds
-        ? `Read. ${supersededExcluded} served row(s) referenced a card the ledger has replaced and were dropped; the replacement carries the live status.`
-        : "UNREADABLE. Staleness could not be checked, so no row was dropped and these counts are an UPPER BOUND on the live population, not the population.",
+        "A (model, axis) appears once. A predecessor is dropped only when its exact by_id replacement is observed for the same pair; unresolved supersessions withhold totals. Remaining duplicates are collapsed keeping the row from the rebuilt INDEX.jsonl.",
+      superseded_ledger: ledger.ok
+        ? unresolvedSupersessions.length
+          ? `Read, but ${unresolvedSupersessions.length} observed predecessor row(s) lacked an observed same-pair replacement. No unresolved predecessor was dropped and population totals are withheld.`
+          : `Read. ${supersededExcluded} served row(s) referenced a card whose exact same-pair replacement was observed and were dropped.`
+        : `UNREADABLE (${ledger.reason}). Staleness could not be checked, so no row was dropped and these counts are an UPPER BOUND on the live population, not the population.`,
       // LP07/08. Five numbers here describe the same population and nothing said how
       // they relate, so a reader met 1232, 376, 0, 856 and 856 with no way to check any
       // of them against the others. Stated once, with the live values, so the arithmetic
       // is visible rather than reconstructable.
       cell_arithmetic:
         `rows_served_by_indexes ${rawCells.length} − duplicates_collapsed ${duplicatesCollapsed}` +
-        (supersededIds ? ` − superseded_excluded ${supersededExcluded}` : " − superseded_excluded UNCHECKABLE") +
-        ` = cells ${cells.length}. Of those cells, measured ${seen.measured} carry a signed body reading MEASURED. ` +
+        (ledger.ok ? ` − superseded_excluded ${supersededExcluded}` : " − superseded_excluded UNCHECKABLE") +
+        ` = read_so_far.cells ${cells.length}. Of those retrieved cells, read_so_far.measured ${seen.measured} carry a signed body reading MEASURED. ` +
+        (complete
+          ? "All completeness gates passed, so the count fields expose these as population totals. "
+          : "A completeness gate failed, so these retrieved-row figures are not population totals and the count fields are null. ") +
         "The terms are never added to each other, and none of them is a coverage score. " +
         "n_measured on /api/state → hub_census counts a DIFFERENT population (the 3M-listing " +
         "census walk) and is not this number.",
       partial_read_has_no_total: complete
-        ? "Discovery, every index and the supersession ledger answered, so counts describe the observed published population."
-        : "Discovery, an index, or the supersession ledger could not be checked, so population totals are null. counts.read_so_far describes retrieved rows only: it may omit unread rows or include superseded rows, and is neither a guaranteed floor nor a complete live population.",
+        ? "Discovery, every index and the supersession ledger answered, and every observed predecessor had its exact same-pair replacement; counts therefore describe the observed published population."
+        : "Discovery, an index, the supersession ledger, or an observed replacement could not be checked, so population totals are null. counts.read_so_far describes retrieved rows only: it may omit unread rows or include unresolved predecessors, and is neither a guaranteed floor nor a complete live population.",
     },
     counts: {
       complete,
@@ -301,7 +470,9 @@ export const onRequestGet: PagesFunction = async (ctx) => {
       indexes_total: indexes.length,
       indexes_discovered: discovered !== null,
       indexes_all_read: allIndexesRead,
-      superseded_ledger_read: supersededIds !== null,
+      superseded_ledger_read: ledger.ok,
+      supersessions_resolved: supersessionsResolved,
+      supersessions_unresolved: unresolvedSupersessions,
       indexes_unread: unreadList,
     },
     cells,
