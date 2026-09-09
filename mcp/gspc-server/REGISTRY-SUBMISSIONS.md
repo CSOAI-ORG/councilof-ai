@@ -6,7 +6,7 @@ gaming.** We measure, never certify; every listing links to a recomputable verif
 
 ## The asset
 - Public repo: `https://github.com/CSOAI-ORG/councilof-ai` (server in `mcp/gspc-server/`)
-- Remote HTTP MCP: `https://councilof.ai/mcp` (streamable-http, no auth, **11 tools** — 7 free, 4 x402-metered)
+- Remote HTTP MCP: `https://councilof.ai/mcp` (streamable-http, no auth; derive the live tool count from `tools/list`)
 - stdio npm: `csoai-gspc-mcp` (`npx -y csoai-gspc-mcp`) — independently versioned. Do not write a tool
   count or version here; live `tools/list` and `npm view csoai-gspc-mcp version` are the authorities.
 - A2A agent card: `https://councilof.ai/.well-known/agent-card.json`
@@ -35,7 +35,7 @@ nothing to install. Re-derive from `tools/list` and `npm view` before every subm
 
 | # | Registry | Mechanism | Status | Ranking levers |
 |---|----------|-----------|--------|----------------|
-| 1 | **Official MCP Registry** | `mcp-publisher` CLI (GitHub OAuth device flow) | **LISTED** `io.github.CSOAI-ORG/gspc` v1.2.0; corrected v1.3.0 descriptor is local until separately published | flat metadata; completeness of `server.json` (packages, remotes, description) drives downstream renders |
+| 1 | **Official MCP Registry** | `mcp-publisher` CLI (GitHub OAuth device flow) | **LISTED** `io.github.CSOAI-ORG/gspc` v1.4.0; local v1.4.1 descriptor points to npm 0.2.2 and remains unpublished until that package exists | flat metadata; completeness of `server.json` (packages, remotes, description) drives downstream renders |
 | 2 | **A2A registry (a2aregistry.org)** | one API POST of the well-known URI | **STAGED** (owner to run curl) | health-check liveness (re-polled ~30 min), skills/capabilities completeness |
 | 3 | **A2A Registry (a2a-registry.org)** | PR a JSON agent file; CI validates | **STAGED** | liveness + card completeness |
 | 4 | **Smithery** | submit HTTPS URL at smithery.ai/new; auto-scans tools | **STAGED** | clean tool scan; usage/tool-call volume; verified-vendor badge (separate, gated) |

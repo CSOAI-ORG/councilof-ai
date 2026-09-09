@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Drive the shipped stdio server: tools/list must be exactly the names that
- * tools/call actually runs — the seven free tools and the five x402-metered ones.
+ * tools/call actually runs — the eight free tools and the four x402-metered ones.
  * A listed tool that does not run, or a running tool that is not listed, fails here.
  * Spawns index.mjs — not a reimplementation.
  */
@@ -17,12 +17,12 @@ const FREE = [
   "get_root",
   "get_card",
   "verify_inclusion",
+  "x402_trust",
 ];
 const PAID = [
   "commission_card",
   "art50_marking_evidence",
   "rwa_evidence",
-  "witness_hash",
   "receipts_batch",
 ];
 const ALL = [...FREE, ...PAID];
@@ -90,7 +90,7 @@ const ps = preview.result?.structuredContent?.status;
 check("receipts_batch preview is free and answers", ["DELIVERED", "PAYMENT_REQUIRED", "UNREACHABLE"].includes(ps), `status=${ps}`);
 
 // An unpaid call to a metered tool is a challenge, not a charge and not a result.
-const challenge = await rpc("tools/call", { name: "witness_hash", arguments: { sha256: "0".repeat(64) } });
+const challenge = await rpc("tools/call", { name: "commission_card", arguments: { subject: "gspc-contract-check" } });
 const cs = challenge.result?.structuredContent;
 check(
   "unpaid metered call returns a challenge, never a deliverable",

@@ -89,7 +89,7 @@ describe("/mcp tools/list — eight free + four paid, catalogue free, nothing la
     expect(g.stdio_alternative).toMatch(MECHANISM);
     expect(g.stdio_alternative).not.toMatch(WRONG_REASON);
     const i = await (await call(rpc("initialize", { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "t", version: "0" } }))).json();
-    expect(i.result.serverInfo.version).toBe("1.4.0");
+    expect(i.result.serverInfo.version).toBe("1.4.1");
     expect(i.result.instructions).toMatch(/Eight free read-only tools/);
     expect(i.result.instructions).toMatch(/x402_trust/);
     expect(i.result.instructions).toMatch(/Four paid tools/);

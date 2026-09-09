@@ -32,7 +32,9 @@ import { createInterface } from "node:readline";
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-const VERSION = "0.2.0";
+const PACKAGE = JSON.parse(readFileSync(fileURLToPath(new URL("./package.json", import.meta.url)), "utf8"));
+const VERSION = PACKAGE.version;
+if (typeof VERSION !== "string" || !VERSION) throw new Error("package.json has no valid version");
 const ORIGIN = process.env.GSPC_ORIGIN || "https://councilof.ai";
 const FETCH_TIMEOUT_MS = 15000;
 
@@ -413,12 +415,6 @@ function buildPaidRequest(name, args) {
       u.searchParams.set("asset", str("asset"));
       if (flag("preview")) u.searchParams.set("preview", "1");
       break;
-    case "witness_hash":
-      if (!str("sha256") && !str("url")) return { error: "sha256 or url is required" };
-      if (str("sha256")) u.searchParams.set("sha256", str("sha256").toLowerCase());
-      if (str("url")) u.searchParams.set("url", str("url"));
-      if (str("label")) u.searchParams.set("label", str("label"));
-      break;
     case "receipts_batch":
       if (!str("from")) return { error: "from is required (ISO-8601)" };
       u.searchParams.set("from", str("from"));
@@ -542,7 +538,6 @@ function summaryLine(name, payload) {
     case "commission_card":
     case "art50_marking_evidence":
     case "rwa_evidence":
-    case "witness_hash":
     case "receipts_batch":
       return `${payload.status ?? "?"} — ${payload.route ?? name}${
         payload.status === "PAYMENT_REQUIRED" ? "; nothing charged" : ""

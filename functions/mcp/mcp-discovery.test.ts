@@ -30,7 +30,7 @@ describe("MCP discovery keeps implementation identities truthful", () => {
 
     expect(initialized.result.serverInfo).toEqual({
       name: "csoai-gspc-mcp",
-      version: "1.4.0",
+      version: "1.4.1",
     });
     expect(initialized.result.serverInfo.version).not.toBe(NPM_PACKAGE.version);
     expect(initialized.result.serverInfo.version).toBe(
@@ -80,7 +80,7 @@ describe("MCP discovery keeps implementation identities truthful", () => {
   });
 
   it("uses a new registry descriptor without pretending it is already published", () => {
-    expect(REGISTRY_DESCRIPTOR.version).toBe("1.4.0");
+    expect(REGISTRY_DESCRIPTOR.version).toBe("1.4.1");
     expect(REGISTRY_DESCRIPTOR.version).not.toBe(NPM_PACKAGE.version);
     expect(REGISTRY_DESCRIPTOR.description.length).toBeLessThanOrEqual(100);
     expect(REGISTRY_DESCRIPTOR.description).toMatch(/measure, never certify/i);
@@ -99,7 +99,7 @@ describe("MCP discovery keeps implementation identities truthful", () => {
       clientInfo: { name: "current-client", version: "0" },
     });
     expect(current.result.protocolVersion).toBe("2026-07-28");
-    expect(current.result.serverInfo.version).toBe("1.4.0");
+    expect(current.result.serverInfo.version).toBe("1.4.1");
     expect(current.result.instructions).toMatch(/registry server\.version identifies this pages http implementation/i);
 
     const newer = await post("initialize", {
@@ -136,7 +136,7 @@ describe("MCP discovery keeps implementation identities truthful", () => {
     const disc = await post("server/discover");
     expect(disc.result.serverInfo).toEqual({
       name: "csoai-gspc-mcp",
-      version: "1.4.0",
+      version: "1.4.1",
     });
     expect(disc.result.capabilities).toEqual({ tools: {} });
   });
