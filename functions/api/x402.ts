@@ -150,7 +150,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         id: "art50_marking_evidence",
         name: "Article 50 marking evidence (issuance)",
         resource: u("/api/art50/marking-evidence?url=<https-url>"),
-        free_preview: u("/api/art50/marking-evidence?url=<https-url>&preview=true"),
+        free_preview: u("/api/art50/marking-evidence?url=<https-url>&preview=1"),
         free_preview_note: "unsigned point-in-time detection; watermarks stay UNCHECKABLE where no public detector exists",
         deliverable: "One card-v0 leaf: is a machine-readable mark DETECTABLE in these bytes right now (C2PA store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the Art 50(2) excerpt hash and Art 99(4) ceiling. Point-in-time detection — never a conformity opinion.",
         never: ["a conformity opinion", "a certificate", "a compliance word"],

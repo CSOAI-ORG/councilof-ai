@@ -45,6 +45,11 @@ describe("/api/x402 publishes URLs a buyer can actually use", () => {
     const art50 = resources.find((t) => t.id === "art50_marking_evidence");
     expect(proof!.resource).toMatch(/\/api\/proof\?bundle=1$/);
     expect(art50!.resource).toMatch(/\/api\/art50\/marking-evidence\?url=/);
+    // marking-evidence.ts only treats searchParams.get("preview") === "1" as free
+    // (MCP maps boolean true → 1). preview=true 402s. Well-known already uses preview=1.
+    const art50Preview = new URL(art50!.free_preview!);
+    expect(art50Preview.searchParams.get("preview")).toBe("1");
+    expect(art50!.free_preview).not.toMatch(/preview=true/);
     for (const t of resources) {
       expect((t as { how_to_buy?: string }).how_to_buy, t.id).toMatch(/GET the resource unpaid/);
       expect((t as { how_to_buy?: string }).how_to_buy, t.id).toMatch(/retry with X-PAYMENT/);
