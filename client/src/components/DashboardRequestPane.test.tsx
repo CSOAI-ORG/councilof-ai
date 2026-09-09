@@ -113,6 +113,12 @@ describe("request-attestation dashboard pane", () => {
     expect(jobs.find((job) => job.id === "article50")?.href).toBe(
       "/api/evidence-bundle?obligation=article-50&bundle=1",
     );
+    expect(jobs.find((job) => job.id === "article50")?.outcome).toContain(
+      "obligation-wide",
+    );
+    expect(jobs.find((job) => job.id === "article50")?.state).toContain(
+      "DEVELOPER API",
+    );
     expect(jobs.find((job) => job.id === "provider-history")?.href).toBe(
       "/api/feeds/provider-diff?history=1",
     );
@@ -140,5 +146,18 @@ describe("request-attestation dashboard pane", () => {
         (job) => job.id,
       ),
     ).toEqual(["verify"]);
+  });
+
+  it("does not rewrite foreign catalogue URLs into apparently local jobs", () => {
+    const foreign = {
+      ...catalog,
+      free_forever: ["https://foreign.example/gspc-verify"],
+      resources: catalog.resources.map((entry) => ({
+        ...entry,
+        resource: entry.resource.replace("https://councilof.ai", "https://foreign.example"),
+      })),
+    };
+    const jobs = buildActualJobs(foreign);
+    expect(jobs.some((job) => ["verify", "article50", "provider-history"].includes(job.id))).toBe(false);
   });
 });

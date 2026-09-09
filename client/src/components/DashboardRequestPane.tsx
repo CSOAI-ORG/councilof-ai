@@ -58,6 +58,7 @@ export type ActualJob = {
 function localHref(value: string): string | null {
   try {
     const url = new URL(value, "https://councilof.ai");
+    if (url.origin !== "https://councilof.ai") return null;
     return `${url.pathname}${url.search}${url.hash}`;
   } catch {
     return null;
@@ -67,6 +68,7 @@ function localHref(value: string): string | null {
 function article50Href(value: string): string | null {
   try {
     const url = new URL(value, "https://councilof.ai");
+    if (url.origin !== "https://councilof.ai") return null;
     url.searchParams.set("obligation", "article-50");
     url.searchParams.set("bundle", "1");
     if (/[<>]/.test(url.searchParams.get("subject") || "")) {
@@ -139,10 +141,11 @@ export function buildActualJobs(catalog: unknown): ActualJob[] {
     jobs.push({
       id: "article50",
       title: "Retrieve an Article 50 pack",
-      state: "EXISTING PACK",
-      outcome: article50.deliverable,
+      state: "DEVELOPER API · EXISTING PACK",
+      outcome:
+        "An obligation-wide pack of existing Article 50 evidence. This link does not select or assess an individual model. Inspect the API challenge before authorising a purchase in your client.",
       href: article50Route,
-      action: "Open Article 50 challenge",
+      action: "Inspect Article 50 API",
       payment: paidDisclosure,
     });
   }
@@ -158,10 +161,10 @@ export function buildActualJobs(catalog: unknown): ActualJob[] {
     jobs.push({
       id: "provider-history",
       title: "Obtain provider change history",
-      state: "HISTORICAL ASSEMBLY",
+      state: "DEVELOPER API · HISTORY",
       outcome: history.deliverable,
       href: historyRoute,
-      action: "Open history challenge",
+      action: "Inspect history API",
       payment: paidDisclosure,
     });
   }
