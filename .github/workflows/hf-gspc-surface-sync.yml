@@ -1,0 +1,122 @@
+name: hf-gspc-surface-sync
+
+# One exact-byte bridge for the canonical Space shell and the signed public-root mirror.
+# It does not generate either input and it never touches the superseded gspc-live-board.
+#
+# Rollout gate: automatic events are registered but stay SKIPPED until the repository
+# variable HF_GSPC_AUTO_SYNC is set to "enabled" after a successful owner-dispatched run.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - spaces/gspc-board/README.md
+      - spaces/gspc-board/index.html
+      - spaces/gspc-board/style.css
+      - spaces/gspc-board/table.js
+  workflow_run:
+    # The producer can finish before its PR is merged or its root reaches the
+    # apex. Reconcile again after deployment so the mirror cannot remain one
+    # release behind while faithfully copying yesterday's production bytes.
+    workflows:
+      - "public-root"
+      - "Build + deploy site (prerender + fields + tour → both domains)"
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Exact-byte target"
+        type: choice
+        options: [both, shell, root]
+        default: both
+      dry_run:
+        description: "Compare and verify without publishing"
+        type: boolean
+        default: true
+
+concurrency:
+  group: hf-gspc-surface-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (vars.HF_GSPC_AUTO_SYNC == 'enabled' &&
+        (github.event_name == 'push' ||
+          (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            scripts/sync_hf_gspc.py
+            scripts/test_sync_hf_gspc.py
+            scripts/watch_public_root.py
+            .github/workflows/hf-gspc-surface-sync.yml
+            .github/workflows/deploy.yml
+            spaces/gspc-board/README.md
+            spaces/gspc-board/index.html
+            spaces/gspc-board/style.css
+            spaces/gspc-board/table.js
+            public/root.json
+            public/.well-known/did.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: dependencies
+        run: pip install --quiet "huggingface_hub>=0.25,<2"
+
+      - name: focused tests
+        run: python scripts/test_sync_hf_gspc.py
+
+      - name: choose exact-byte target
+        id: choose
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REQUESTED_TARGET: ${{ inputs.target }}
+          REQUESTED_DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          case "$EVENT_NAME" in
+            push) target=shell; dry_run=false ;;
+            workflow_run) target=root; dry_run=false ;;
+            workflow_dispatch)
+              target="${REQUESTED_TARGET:-both}"
+              dry_run="${REQUESTED_DRY_RUN:-true}"
+              ;;
+            *) echo "unsupported event: $EVENT_NAME" >&2; exit 2 ;;
+          esac
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+          echo "dry_run=$dry_run" >> "$GITHUB_OUTPUT"
+          echo "event=$EVENT_NAME target=$target dry_run=$dry_run"
+
+      - name: synchronize
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          TARGET: ${{ steps.choose.outputs.target }}
+          DRY_RUN: ${{ steps.choose.outputs.dry_run }}
+        run: |
+          set -euo pipefail
+          dry=""
+          if [ "$DRY_RUN" = "true" ]; then
+            dry="--dry-run"
+          elif [ -z "${HF_TOKEN:-}" ]; then
+            echo "HF_TOKEN is empty; refusing publish" >&2
+            exit 2
+          fi
+          if [ "$TARGET" = "shell" ] || [ "$TARGET" = "both" ]; then
+            python scripts/sync_hf_gspc.py --shell $dry
+          fi
+          if [ "$TARGET" = "root" ] || [ "$TARGET" = "both" ]; then
+            python scripts/sync_hf_gspc.py --root $dry
+          fi

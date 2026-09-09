@@ -31,6 +31,7 @@ import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "./_x402_config";
 import { USDC_BASE } from "./_skus";
 import { CSOAI_LID } from "./_x402";
 import { OFFER_RECEIPT_SPEC_SHA, X402_SIGNER_KID } from "./_x402_offer";
+import { RECEIPTS_BATCH_DESCRIPTION } from "./_x402_descriptions";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 
 export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATOR_URL?: string }> = async ({ request, env }) => {
@@ -117,11 +118,11 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
       },
       {
         id: "receipts_batch",
-        name: "Receipts batch — historical measurement leaves for a window (assembly)",
+        name: "Historical measurement-card batch (assembly)",
         resource: u("/api/receipts/batch?from=<iso>&to=<iso>"),
         free_preview: u("/api/receipts/batch?from=<iso>&to=<iso>&preview=1"),
         free_preview_note: "count, span, root count and the sha256 of the exact batch bytes — no leaves",
-        deliverable: "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly — not a conclusion.",
+        deliverable: RECEIPTS_BATCH_DESCRIPTION,
         recent_free: [u("/root.json"), u("/cards/<sha16>.json"), u("/api/proof?sha=<64-hex>"), u("/receipts/root-history.json")],
         honesty: "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
         never: ["a conclusion about any leaf", "a grade", "a certificate", "a settlement-receipt claim"],

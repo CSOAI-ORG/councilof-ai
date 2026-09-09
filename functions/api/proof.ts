@@ -13,6 +13,7 @@ import {
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
+import { PROOF_BUNDLE_DESCRIPTION } from "./_x402_descriptions";
 
 const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -34,8 +35,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
   // Payment is VERIFIED, not assumed from header presence. Only evaluated for the paid
   // (bundle) branch; the free ?sha= inclusion never needs it.
   const resourceUrl = u("/api/proof?bundle=1");
-  const description =
-    "The inclusion-proof bundle for the last published Merkle root, re-served. Not a grade.";
+  const description = PROOF_BUNDLE_DESCRIPTION;
   // The SAME accepts entry is advertised in the 402 and handed to the facilitator, so what the
   // client signed against is what gets verified and settled.
   const accepts = bundle

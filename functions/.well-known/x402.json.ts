@@ -6,6 +6,7 @@
 import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "../api/_x402_config";
 import { OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL, X402_SIGNER_KID } from "../api/_x402_offer";
 import { USDC_BASE } from "../api/_skus";
+import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION } from "../api/_x402_descriptions";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 
@@ -109,9 +110,8 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
           "Signed derivative data feed — validated measurement series, authenticated and ready to build on.",
         accepts: [req(`${origin}/api/eunomia-data?feed=1`, "Signed derivative data feed — validated measurement series, authenticated and ready to build on.")]  },
       { method: "GET", url: `${origin}/api/proof?bundle=1`, paid_for: "assembly",
-        description:
-          "Inclusion proof bundle — Merkle, Rekor and OpenTimestamps proofs for named leaves.",
-        accepts: [req(`${origin}/api/proof?bundle=1`, "Inclusion proof bundle — Merkle, Rekor and OpenTimestamps proofs for named leaves.")]  },
+        description: PROOF_BUNDLE_DESCRIPTION,
+        accepts: [req(`${origin}/api/proof?bundle=1`, PROOF_BUNDLE_DESCRIPTION)]  },
       { method: "GET", url: `${origin}/api/rwa/evidence?asset=RLUSD`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1`,
         description:
           "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.",
@@ -131,9 +131,8 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
           "Provider change record — measurable differences between two measurement rounds for a named model provider.",
         accepts: [req(`${origin}/api/feeds/provider-diff?history=1`, "Provider change record — measurable differences between two measurement rounds for a named model provider.")]  },
       { method: "GET", url: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1`,
-        description:
-          "Signed receipts batch — every settlement record in a date range, signed, with the payer's view.",
-        accepts: [req(`${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, "Signed receipts batch — every settlement record in a date range, signed, with the payer's view.")]  },
+        description: RECEIPTS_BATCH_DESCRIPTION,
+        accepts: [req(`${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, RECEIPTS_BATCH_DESCRIPTION)]  },
     ],
     mcp: {
       url: `${origin}/mcp`,

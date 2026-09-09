@@ -8,6 +8,7 @@ n<30 cards stay UNMEASURED even if signed. Empty is never 0.
 from __future__ import annotations
 
 import hashlib
+import argparse
 import json
 import sys
 from datetime import datetime, timezone
@@ -77,14 +78,27 @@ def superseded_ids() -> set[str]:
     return {str(r.get("superseded_id") or "") for r in ledger_rows() if r.get("superseded_id")}
 
 
-def main() -> int:
-    if not SRC.is_dir():
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--source-dir", type=Path, help="sign only this isolated unsigned-card directory")
+    args = parser.parse_args(argv)
+    source = args.source_dir if args.source_dir is not None else SRC
+    if not source.is_dir():
         print("UNSIGNED — no mill-cards-unsigned dir", file=sys.stderr)
-        return 0
-    files = sorted(SRC.glob("unsigned-*.json"))
+        return 2 if args.source_dir is not None else 0
+    try:
+        files = sorted(source.glob("unsigned-*.json"))
+        for fp in files:
+            if fp.is_symlink() or not fp.is_file():
+                raise OSError("unsigned source is not a regular file")
+            with fp.open("rb") as stream:
+                stream.read(1)
+    except OSError:
+        print("UNSIGNED — source directory must contain readable regular files", file=sys.stderr)
+        return 2
     if not files:
         print("UNSIGNED — no unsigned mill cards")
-        return 0
+        return 2 if args.source_dir is not None else 0
     DST.mkdir(parents=True, exist_ok=True)
     failures = 0
     signed = 0

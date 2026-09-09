@@ -18,6 +18,7 @@ import { describe, it, expect } from "vitest";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import descriptions from "./x402-descriptions.json";
 
 const ROOT = resolve(__dirname, "../..");
 const read = (p: string) => JSON.parse(readFileSync(resolve(ROOT, p), "utf8"));
@@ -99,6 +100,17 @@ describe("the paid operations are exactly the doors in /.well-known/x402.json", 
   it("free-door is the only zero-amount door", () => {
     const zero = paid().filter(({ op }) => op.responses["402"].content["application/json"].example.accepts[0].amount === "0");
     expect(zero.map(({ path }) => path)).toEqual(["/api/free-door"]);
+  });
+
+  it("describes proof and batch as the artifacts their handlers return", () => {
+    const proof = spec.paths["/api/proof"].get.description as string;
+    const batch = spec.paths["/api/receipts/batch"].get.description as string;
+
+    expect(proof).toContain(descriptions.proof_bundle);
+    expect(proof).not.toMatch(/Rekor|OpenTimestamps/);
+
+    expect(batch).toContain(descriptions.receipts_batch);
+    expect(batch).not.toMatch(/every settlement record|payer(?:'|’)s view/i);
   });
 });
 
