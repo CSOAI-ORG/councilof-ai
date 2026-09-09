@@ -30,6 +30,8 @@ describe("stale copy honesty", () => {
     expect(payDesk).toContain("https://payapi.market/mcp");
     expect(payDesk).toContain('fetch("/api/x402"');
     expect(payDesk).toContain('fetch("/api/revenue"');
+    expect(payDesk).toContain("revenue.j.one_number.all_time");
+    expect(payDesk).not.toContain("Number(revenue.j && revenue.j.one_number) > 0");
     expect(payDesk).not.toMatch(/settlement\s+(?:stays\s+)?UNCHECKABLE|No <code>\/proof<\/code> until live/i);
   });
 

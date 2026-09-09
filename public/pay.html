@@ -210,7 +210,8 @@
         var resources = Array.isArray(j.resources) ? j.resources : [];
         var rail = j.rail || {};
         box.textContent = "catalog readable · " + resources.length + " job families · rail " + (rail.mode || "state unavailable") + " · network " + (rail.network || "see challenge") + " · amount: only at each 402";
-        if (revenue.ok && Number(revenue.j && revenue.j.one_number) > 0) {
+        var outsidePayers = Number(revenue.j && revenue.j.one_number && revenue.j.one_number.all_time);
+        if (revenue.ok && Number.isFinite(outsidePayers) && outsidePayers > 0) {
           status.textContent = "The live revenue record contains at least one non-self settled purchase. The rail has crossed from test receipt to outside-buyer evidence; every new purchase must still settle independently.";
         } else if (revenue.ok) {
           status.textContent = "The settled-revenue record is readable. It does not currently report an outside settled purchase; do not treat self-tests or challenges as revenue.";
