@@ -12,6 +12,8 @@
     "guard:arena-truth": "node scripts/arena-route-truth-guard.mjs --selftest && node scripts/arena-route-truth-guard.mjs",
     "guard:root-witness": "python3 scripts/root-witness-release-gate.py --selftest && python3 scripts/root-witness-release-gate.py",
     "guard:wallet-secrets": "node scripts/wallet-credential-gate.mjs --selftest && node scripts/wallet-credential-gate.mjs",
+    "audit:x402-indexes": "python3 scripts/interop/x402-bazaar-audit.py",
+    "test:x402-index-audit": "python3 scripts/test_x402_bazaar_audit.py",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "NODE_ENV=development tsx watch server/index.ts",
     "dev:client": "vite --config client/vite.config.ts",

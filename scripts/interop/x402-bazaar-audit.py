@@ -1,218 +1,291 @@
 #!/usr/bin/env python3
-"""Audit our presence in BOTH x402 Bazaars.
+"""Audit Council presence in both public x402 Bazaar indexes.
 
-    python3 scripts/interop/x402-bazaar-audit.py            # writes docs/product/X402-BAZAAR-AUDIT.md
-    python3 scripts/interop/x402-bazaar-audit.py --json     # print the derived reading, write nothing
+    python3 scripts/interop/x402-bazaar-audit.py
+        # writes docs/product/X402-BAZAAR-AUDIT.md
+    python3 scripts/interop/x402-bazaar-audit.py --json
+        # prints the derived reading and writes nothing
 
-THERE ARE TWO INDEXES AND THEY ARE NOT THE SAME PLACE. PayAI and Coinbase CDP each run their own
-discovery index, an agent shopping for a resource reads one of them, and being in one says nothing
-about the other. Both are read here in one pass, because a document that audits one and is titled
-as if it audited "the Bazaar" is how a half-answer gets filed as a whole one.
-
-READING CDP NEEDS NO KEY. The estate has an open owner-ask for a free CDP API key, recorded as
-what blocks CDP work. It blocks WRITING — being indexed. The discovery endpoint answers 200 to an
-anonymous GET, so our absence from CDP was measurable the whole time and was being carried as
-unmeasurable.
-
-COSTS NO SELF-PROBES. Every request goes to facilitator.payai.network; the live door bytes it is
-compared against come from public/openapi.json and functions/api/*, not from fetching our own
-edge. Governor rule G5 caps this lane at 20 self-probes an hour and an audit that spent them
-could not be re-run when it mattered.
-
-READS THE WHOLE POPULATION OR REFUSES. /discovery/resources pages at 1000 and reports its own
-`pagination.total`. A single page is 1000 of 28,230, and "we appear once" computed from it would
-be a statement about the first page wearing the clothes of a statement about the Bazaar. The
-scan asserts scanned >= declared total before it will report an absence; short of that it exits 2
-UNCHECKABLE and writes nothing. (This is the estate's partial-read-totalled-as-population rule:
-a disclosure printed beside a wrong number does not repair the number.)
+PayAI and Coinbase CDP are separate indexes.  This reader walks every advertised
+offset or refuses to report absence.  It makes GET requests only; an index entry
+is evidence of distribution, never proof of settlement, revenue, demand, or a
+certification.  Exact URL host matching prevents lookalike domains from counting.
 """
-import argparse, json, re, sys, time, urllib.request, urllib.error
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
 from pathlib import Path
-from urllib.parse import urlsplit
+from typing import Any, Callable
 
 INDEXES = [
     ("PayAI", "https://facilitator.payai.network/discovery/resources"),
     ("Coinbase CDP", "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources"),
 ]
 BASE = INDEXES[0][1]
-UA = "csoai-bazaar-audit/0.1 (+https://councilof.ai/interop/)"
+UA = "csoai-bazaar-audit/0.2 (+https://councilof.ai/interop/)"
 OURS = ("councilof.ai", "csoai.org")
 OUT = Path("docs/product/X402-BAZAAR-AUDIT.md")
 DOOR_BUILDER = Path("functions/api/_x402.ts")
 X402_MANIFEST = Path("scripts/fixtures/x402scan/well_known_x402.json")
-PAGE = 1000
+PAGE = 100  # both public APIs document 100 as the maximum page size
+Fetcher = Callable[[str, int], Any]
 
 
-def door_max_timeout():
-    """What our own 402 builder puts in accepts[].maxTimeoutSeconds — read, never typed.
+def door_max_timeout() -> int | None:
+    """Read the timeout emitted by our 402 builder instead of typing it here."""
+    matches = re.findall(r"maxTimeoutSeconds:\s*(\d+)", DOOR_BUILDER.read_text())
+    values = sorted(set(int(value) for value in matches))
+    return values[0] if len(values) == 1 else None
 
-    The Bazaar entry is a SNAPSHOT taken when the resource was first indexed. Comparing it against
-    the door's current value turns "the listing looks old" into a number: if they disagree, the
-    index is serving a buyer a description of a door that no longer exists in that shape. There is
-    no way to observe this from the listing alone — `lastUpdated` tells you when the record moved,
-    not whether it is still true.
+
+def page_url(base: str, *, limit: int, offset: int) -> str:
+    parsed = urllib.parse.urlsplit(base)
+    query = dict(urllib.parse.parse_qsl(parsed.query, keep_blank_values=True))
+    query.update({"limit": str(limit), "offset": str(offset)})
+    return urllib.parse.urlunsplit(parsed._replace(query=urllib.parse.urlencode(query)))
+
+
+def fetch_json(url: str, timeout_seconds: int) -> Any:
+    request = urllib.request.Request(
+        url,
+        headers={"Accept": "application/json", "User-Agent": UA},
+        method="GET",
+    )
+    with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
+        return json.load(response)
+
+
+def scan(
+    base: str = BASE,
+    *,
+    fetcher: Fetcher = fetch_json,
+    page_size: int = PAGE,
+    timeout_seconds: int = 60,
+    retries: int = 2,
+) -> tuple[list[dict[str, Any]], int]:
+    """Return every advertised resource, or raise instead of guessing absence.
+
+    ``offset`` advances by the number of rows actually returned, not the requested
+    page size.  This matters because both services may cap a larger requested page.
+    A local ``file://`` fixture is read once and must contain the complete population.
     """
-    m = re.findall(r"maxTimeoutSeconds:\s*(\d+)", DOOR_BUILDER.read_text())
-    vals = sorted(set(int(x) for x in m))
-    return vals[0] if len(vals) == 1 else None
-
-
-def scan(base=BASE):
-    """Every resource in the Bazaar, or an exception. Never a partial page presented as the set."""
-    items, offset, total = [], 0, None
-    # Only an HTTP index paginates. A file:// source is one document, and appending
-    # ?limit=&offset= to it makes the query string part of the filename: urlopen then
-    # fails with ENOENT on a path that exists, which is how this read failed on CI while
-    # passing locally. Paginate what pages; read a local source once.
+    if not 1 <= page_size <= 100:
+        raise ValueError("page_size must be between 1 and 100")
+    items: list[dict[str, Any]] = []
+    offset = 0
+    totals_observed: list[int] = []
     paged = base.startswith(("http://", "https://"))
     while True:
-        url = f"{base}?limit={PAGE}&offset={offset}" if paged else base
-        req = urllib.request.Request(url, headers={"User-Agent": UA})
-        with urllib.request.urlopen(req, timeout=60) as r:
-            d = json.load(r)
-        page = d.get("items") or []
-        total = d.get("pagination", {}).get("total")
-        if total is None:
-            raise ValueError("the index declared no pagination.total — absence is unprovable without it")
+        url = page_url(base, limit=page_size, offset=offset) if paged else base
+        payload: Any = None
+        last_error: Exception | None = None
+        for attempt in range(retries + 1):
+            try:
+                payload = fetcher(url, timeout_seconds)
+                last_error = None
+                break
+            except Exception as exc:
+                last_error = exc
+                if attempt < retries:
+                    time.sleep(min(2**attempt, 2))
+        if last_error is not None:
+            raise last_error
+        if not isinstance(payload, dict):
+            raise ValueError("the index response is not a JSON object")
+        page = payload.get("items")
+        pagination = payload.get("pagination")
+        if not isinstance(page, list) or not isinstance(pagination, dict):
+            raise ValueError("the index response lacks items[] or pagination{}")
+        total = pagination.get("total")
+        reported_offset = pagination.get("offset", offset if not paged else None)
+        if isinstance(total, bool) or not isinstance(total, int) or total < 0:
+            raise ValueError("pagination.total is not a non-negative integer")
+        if paged and reported_offset != offset:
+            raise ValueError(f"requested offset {offset}, response reported {reported_offset!r}")
+        if not all(isinstance(item, dict) for item in page):
+            raise ValueError(f"offset {offset} contains a non-object resource")
+        totals_observed.append(total)
         items.extend(page)
+        required_total = max(totals_observed)
         if not paged:
             break
-        offset += PAGE
-        if offset >= total or not page:
+        if offset + len(page) >= required_total:
+            offset += len(page)
             break
-        time.sleep(0.2)
-    if len(items) < total:
-        raise ValueError(f"scanned {len(items)} of a declared {total}; absence would be a guess")
-    return items, total
+        if not page:
+            raise ValueError(f"empty page at offset {offset} before advertised total {required_total}")
+        offset += len(page)
+        time.sleep(0.05)
+    required_total = max(totals_observed) if totals_observed else 0
+    if len(items) < required_total:
+        raise ValueError(f"scanned {len(items)} of a declared {required_total}; absence would be a guess")
+    return items, required_total
 
 
-def ours(items):
-    return sorted((i for i in items if any(h in json.dumps(i) for h in OURS)),
-                  key=lambda x: str(x.get("resource")))
-
-
-def resource_url(value):
+def resource_url(value: Any) -> str:
     """Return a URL from either discovery index's resource representation."""
     return value.get("url", "") if isinstance(value, dict) else str(value or "")
 
 
-def route_key(value):
-    """Compare product routes without confusing example query values for new products."""
-    parsed = urlsplit(resource_url(value))
+def resource_host(item: dict[str, Any]) -> str | None:
+    resource = resource_url(item.get("resource"))
+    try:
+        return (urllib.parse.urlsplit(resource).hostname or "").lower() or None
+    except ValueError:
+        return None
+
+
+def ours(items: list[dict[str, Any]], hosts: tuple[str, ...] = OURS) -> list[dict[str, Any]]:
+    allowed = {host.lower().rstrip(".") for host in hosts}
+    return sorted((item for item in items if resource_host(item) in allowed), key=lambda item: resource_url(item.get("resource")))
+
+
+def route_key(value: Any) -> str:
+    """Compare product routes without treating example query values as products."""
+    parsed = urllib.parse.urlsplit(resource_url(value))
     return f"{parsed.scheme}://{parsed.netloc}{parsed.path}".rstrip("/")
 
 
-def manifest_routes():
-    """The product doors we claim agents can discover, read from the shipped manifest."""
+def manifest_routes() -> list[str]:
     doc = json.loads(X402_MANIFEST.read_text())
-    return [r["url"] for r in doc.get("resources", []) if r.get("url")]
+    return [row["url"] for row in doc.get("resources", []) if row.get("url")]
 
 
-def add_manifest_coverage(result, declared_routes):
-    """Show current, stale, and missing product doors instead of only counting our hits."""
+def add_manifest_coverage(result: dict[str, Any], declared_routes: list[str]) -> dict[str, Any]:
     declared = {route_key(url): url for url in declared_routes}
-    indexed = {}
+    indexed: dict[str, list[dict[str, Any]]] = {}
     for listing in result["ours"]:
         indexed.setdefault(route_key(listing["resource"]), []).append(listing)
-    current = [url for key, url in declared.items()
-               if any(not row["listing_disagrees_with_door"] for row in indexed.get(key, []))]
-    stale = [url for key, url in declared.items()
-             if indexed.get(key) and not any(not row["listing_disagrees_with_door"]
-                                             for row in indexed[key])]
-    missing = [url for key, url in declared.items() if key not in indexed]
     result["manifest_declared"] = len(declared)
-    result["manifest_indexed"] = sum(1 for key in declared if key in indexed)
-    result["manifest_current"] = current
-    result["manifest_stale"] = stale
-    result["manifest_missing"] = missing
+    result["manifest_indexed"] = sum(key in indexed for key in declared)
+    result["manifest_current"] = [
+        url for key, url in declared.items()
+        if any(row["listing_disagrees_with_door"] is False for row in indexed.get(key, []))
+    ]
+    result["manifest_stale"] = [
+        url for key, url in declared.items()
+        if indexed.get(key) and not any(row["listing_disagrees_with_door"] is False for row in indexed[key])
+    ]
+    result["manifest_missing"] = [url for key, url in declared.items() if key not in indexed]
     return result
 
 
-def reading(name, url, door_timeout):
-    """One index, fully scanned, or an exception naming why it could not be."""
+def reading(name: str, url: str, door_timeout: int | None) -> dict[str, Any]:
     items, total = scan(url)
     mine = ours(items)
+    rows = []
+    for item in mine:
+        accepts = item.get("accepts") or []
+        first = accepts[0] if accepts and isinstance(accepts[0], dict) else {}
+        observed_timeout = first.get("maxTimeoutSeconds")
+        rows.append({
+            "resource": item.get("resource"),
+            "last_updated": item.get("last_updated") or item.get("lastUpdated"),
+            "x402_version": item.get("x402Version"),
+            "service_name": item.get("serviceName"),
+            "tags": item.get("tags"),
+            "description_chars": len(item.get("description") or ""),
+            "max_timeout_seconds": observed_timeout,
+            "amount": first.get("amount"),
+            "listing_disagrees_with_door": None if door_timeout is None else observed_timeout != door_timeout,
+        })
     return {
-        "index": name, "url": url, "declared_total": total, "scanned": len(items),
+        "index": name,
+        "url": url,
+        "declared_total": total,
+        "scanned": len(items),
         "population_complete": len(items) >= total,
-        "ours": [{"resource": m.get("resource"),
-                  "last_updated": m.get("last_updated") or m.get("lastUpdated"),
-                  "x402_version": m.get("x402Version"), "service_name": m.get("serviceName"),
-                  "tags": m.get("tags"), "description_chars": len(m.get("description") or ""),
-                  "max_timeout_seconds": (m.get("accepts") or [{}])[0].get("maxTimeoutSeconds"),
-                  "amount": (m.get("accepts") or [{}])[0].get("amount"),
-                  "listing_disagrees_with_door": (
-                      None if door_timeout is None else
-                      (m.get("accepts") or [{}])[0].get("maxTimeoutSeconds") != door_timeout)}
-                 for m in mine],
+        "ours": rows,
+        "limitation": "Offset pagination is a live view, not a transactional snapshot.",
     }
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--json", action="store_true")
-    ap.add_argument("--source", help="audit ONE index at this URL instead of both")
-    a = ap.parse_args()
-    targets = [("source", a.source)] if a.source else INDEXES
-    door_timeout = door_max_timeout()
-    declared_routes = manifest_routes()
+def render_markdown(readings: list[dict[str, Any]], door_timeout: int | None) -> str:
+    lines = [
+        "# x402 Bazaars — what each index holds for us",
+        "",
+        "DERIVED by `scripts/interop/x402-bazaar-audit.py`. Never hand-edited; regenerate it.",
+        "",
+        "There are two indexes. Presence in one says nothing about the other. A listing proves",
+        "distribution only — never settlement, revenue, demand, or certification.",
+        "",
+        f"Our current 402 builder declares `maxTimeoutSeconds` as **{door_timeout if door_timeout is not None else 'multiple values — not comparable'}**.",
+        "",
+    ]
+    for result in readings:
+        lines += [
+            f"## {result['index']}",
+            "",
+            f"- `{result['url']}`",
+            f"- scanned **{result['scanned']} of {result['declared_total']}** advertised rows",
+            f"- ours: **{len(result['ours'])}** listings",
+            f"- manifest coverage: **{result['manifest_indexed']} of {result['manifest_declared']}** doors indexed; "
+            f"**{len(result['manifest_current'])}** current, **{len(result['manifest_stale'])}** stale, "
+            f"**{len(result['manifest_missing'])}** missing",
+            "- limitation: the index is a mutable offset-paginated view, not a transactional snapshot",
+            "",
+        ]
+        if result["manifest_stale"]:
+            lines += ["Stale manifest doors: " + ", ".join(f"`{route_key(url)}`" for url in result["manifest_stale"]), ""]
+        if result["manifest_missing"]:
+            lines += ["Missing manifest doors: " + ", ".join(f"`{route_key(url)}`" for url in result["manifest_missing"]), ""]
+        if result["ours"]:
+            lines += [
+                "| resource | last updated | x402 | serviceName | tags | amount | maxTimeout |",
+                "|---|---|---|---|---|---|---|",
+            ]
+            for item in result["ours"]:
+                stale = " **(stale)**" if item["listing_disagrees_with_door"] else ""
+                lines.append(
+                    f"| `{item['resource']}` | {item['last_updated']} | v{item['x402_version']} | "
+                    f"{item['service_name'] or '—'} | {item['tags'] or '—'} | {item['amount']} | "
+                    f"{item['max_timeout_seconds']}{stale} |"
+                )
+            lines.append("")
+        else:
+            lines += ["**Not listed in this complete read.**", ""]
+    return "\n".join(lines) + "\n"
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--json", action="store_true")
+    parser.add_argument("--source", help="audit one index at this URL instead of both")
+    args = parser.parse_args()
+    targets = [("source", args.source)] if args.source else INDEXES
+    timeout = door_max_timeout()
+    declared = manifest_routes()
     readings = []
     for name, url in targets:
         try:
-            readings.append(add_manifest_coverage(reading(name, url, door_timeout), declared_routes))
-        except (urllib.error.URLError, ValueError, KeyError) as e:
-            print(f"UNCHECKABLE {name} {type(e).__name__}: {e}; {OUT} left untouched", file=sys.stderr)
+            readings.append(add_manifest_coverage(reading(name, url, timeout), declared))
+        except (urllib.error.URLError, ValueError, KeyError, json.JSONDecodeError) as exc:
+            print(f"UNCHECKABLE {name} {type(exc).__name__}: {exc}; {OUT} left untouched", file=sys.stderr)
             return 2
-    doc = {
-        "kind": "csoai.x402-bazaar-audit/v0",
+    document = {
+        "kind": "csoai.x402-bazaar-audit/v1",
         "as_of": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "door_max_timeout_seconds": door_timeout,
+        "door_max_timeout_seconds": timeout,
         "door_max_timeout_source": str(DOOR_BUILDER),
         "x402_manifest_source": str(X402_MANIFEST),
         "indexes": readings,
+        "not_proof_of": ["settlement", "revenue", "demand", "certification"],
     }
-    if a.json:
-        print(json.dumps(doc, indent=2))
+    if args.json:
+        print(json.dumps(document, indent=2))
         return 0
-    lines = ["# x402 Bazaars — what each index holds for us", "",
-             "DERIVED by `scripts/interop/x402-bazaar-audit.py`. Never hand-edited; regenerate it.",
-             "",
-             "There are TWO indexes. An agent shopping for a resource reads one of them, and being in",
-             "one says nothing about the other. Reading either needs no API key — CDP answers an",
-             "anonymous GET — so an absence here is always measurable. A key is needed to be INDEXED,",
-             "never to check.", "",
-             f"Our own 402 builder (`{DOOR_BUILDER}`) sets `maxTimeoutSeconds` to "
-             f"**{door_timeout if door_timeout is not None else 'more than one value — not comparable'}**;",
-             "a listing that disagrees is serving a buyer a door that no longer has that shape.", ""]
-    for r in readings:
-        lines += [f"## {r['index']}", "",
-                  f"- `{r['url']}`",
-                  f"- scanned **{r['scanned']} of a declared {r['declared_total']}** — complete, which is",
-                  f"  what makes the finding a claim rather than a guess",
-                  f"- ours: **{len(r['ours'])}** listings",
-                  f"- manifest coverage: **{r['manifest_indexed']} of {r['manifest_declared']}** doors indexed; "
-                  f"**{len(r['manifest_current'])}** current, **{len(r['manifest_stale'])}** stale, "
-                  f"**{len(r['manifest_missing'])}** missing", ""]
-        if r["manifest_stale"]:
-            lines += ["Stale manifest doors: " + ", ".join(f"`{route_key(u)}`" for u in r["manifest_stale"]), ""]
-        if r["manifest_missing"]:
-            lines += ["Missing manifest doors: " + ", ".join(f"`{route_key(u)}`" for u in r["manifest_missing"]), ""]
-        if r["ours"]:
-            lines += ["| resource | last updated | x402 | serviceName | tags | amount | maxTimeout |",
-                      "|---|---|---|---|---|---|---|"]
-            for m in r["ours"]:
-                lines.append(f"| `{m['resource']}` | {m['last_updated']} | v{m['x402_version']} | "
-                             f"{m['service_name'] or '—'} | {m['tags'] or '—'} | {m['amount']} | "
-                             f"{m['max_timeout_seconds']}"
-                             f"{' **(stale)**' if m['listing_disagrees_with_door'] else ''} |")
-            lines.append("")
-        else:
-            lines += ["**Not listed.** No resource on councilof.ai or csoai.org appears in this index —",
-                      "and the scan above is what makes that a measurement.", ""]
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text("\n".join(lines) + "\n")
+    OUT.write_text(render_markdown(readings, timeout))
     print("wrote " + str(OUT) + ": " + "; ".join(
-        f"{r['index']} {len(r['ours'])} of {r['scanned']}/{r['declared_total']}" for r in readings))
+        f"{row['index']} {len(row['ours'])} of {row['scanned']}/{row['declared_total']}" for row in readings
+    ))
     return 0
 
 
