@@ -10,8 +10,8 @@
  * csoai.x402/0.2, mode challenge-only, payTo configured, resources on councilof.ai.
  * pack.councilof.ai still serves the old mock and is owner-gated to retire.
  * is 404. A2A agent-card is live; task service is not. npm csoai-gspc-mcp
- * 0.2.1 lists twelve tools; HTTP /mcp lists eleven because witness_hash is
- * quarantined there. Official MCP id io.github.CSOAI-ORG/gspc. Evidence pack
+ * HTTP /mcp lists twelve tools: eight free and four x402-metered; witness_hash is
+ * quarantined and is not advertised. Official MCP id io.github.CSOAI-ORG/gspc. Evidence pack
  * csoai.insurability-evidence-pack/0.1 is 200. 100 free calls/day is the
  * typed allowance. Machine-access pricing is pending a published ruling.
  */
@@ -35,9 +35,9 @@ export const EARN_WEDGE =
   "Every host that can verify is a cash register for assembly the moment settlement exists. Until then, the same assembly invoices on enquiry.";
 
 export const OPEN_SDKS = [
-  { id: "mcp-http", href: "https://councilof.ai/mcp", eats: "Seven read tools in Claude, Cursor, Kimi, Grok." },
-  { id: "npm", href: "https://www.npmjs.com/package/csoai-gspc-mcp", eats: "stdio SDK. Published 0.2.1 lists 12 tools (7 free + 5 x402); HTTP /mcp lists 11 because witness_hash is quarantined there." },
-  { id: "registry", href: "https://registry.modelcontextprotocol.io", eats: "Official id io.github.CSOAI-ORG/gspc v1.0.3." },
+  { id: "mcp-http", href: "https://councilof.ai/mcp", eats: "Eight free read tools and four x402-metered evidence tools in Claude, Cursor, Kimi, Grok." },
+  { id: "npm", href: "https://www.npmjs.com/package/csoai-gspc-mcp", eats: "stdio SDK. Verify its live package version and tool list before quoting either; the HTTP authority is POST /mcp tools/list." },
+  { id: "registry", href: "https://registry.modelcontextprotocol.io", eats: "Official id io.github.CSOAI-ORG/gspc, server 1.4.0." },
   { id: "plugin", href: "https://github.com/CSOAI-ORG/councilof-ai/tree/master/plugins/gspc", eats: "Grok / Cursor plugin. Consent first." },
   { id: "embed", href: "https://councilof.ai/embed.js", eats: "Partner pages read the live count. Never says certified." },
   { id: "badge", href: "https://councilof.ai/hf-badge.html", eats: "README board link or subject-bound signed-cell status. The global board is never a model score." },

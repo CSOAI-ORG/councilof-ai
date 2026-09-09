@@ -13,7 +13,7 @@
       "auth_required": false,
       "registry": {
         "name": "io.github.CSOAI-ORG/gspc",
-        "version": "1.3.0",
+        "version": "1.4.0",
         "url": "https://registry.modelcontextprotocol.io"
       }
     }
@@ -22,8 +22,8 @@
   "gspc_board": "https://councilof.ai/api/gspc",
   "server_card": "https://councilof.ai/.well-known/mcp/server-card.json",
   "measured": {
-    "total_tools": 11,
-    "free_tools": 7,
+    "total_tools": 12,
+    "free_tools": 8,
     "metered_tools": 4,
     "server_count": 1,
     "tools": [
@@ -34,12 +34,13 @@
       "get_root",
       "get_card",
       "verify_inclusion",
+      "x402_trust",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
-    "note": "POST /mcp tools/list: seven free readers plus four x402-metered evidence tools. mill-tool `measure` is dropped. witness_hash is quarantined on this HTTP door. Registry server 1.2.0 points here. npm stdio csoai-gspc-mcp@0.2.1 lists twelve tools: these eleven plus witness_hash; a package listing does not prove paid settlement or delivery."
+    "note": "POST /mcp tools/list: eight free readers plus four x402-metered evidence tools. mill-tool `measure` is dropped. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.0 points here. A listing does not prove paid settlement or delivery."
   },
   "planted": {
     "tools": [
@@ -50,13 +51,14 @@
       "get_root",
       "get_card",
       "verify_inclusion",
+      "x402_trust",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
     "url": "https://councilof.ai/mcp",
-    "note": "The product door: seven free readers plus four x402-metered evidence tools. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. No 23rd axis. No jail run from MCP. mill-tool `measure` dropped."
+    "note": "The product door: eight free readers plus four x402-metered evidence tools. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. No 23rd axis. No jail run from MCP. mill-tool `measure` dropped."
   },
   "provider": {
     "name": "CSOAI Ltd",

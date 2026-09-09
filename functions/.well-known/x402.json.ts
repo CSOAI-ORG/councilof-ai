@@ -6,6 +6,7 @@
 import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "../api/_x402_config";
 import { OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL, X402_SIGNER_KID } from "../api/_x402_offer";
 import { USDC_BASE } from "../api/_skus";
+import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 
 export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATOR_URL?: string }> = async ({ request, env }) => {
@@ -22,7 +23,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
     description,
     mimeType: "application/json",
     outputSchema: { type: "object" as const },
-    maxTimeoutSeconds: 60,
+    maxTimeoutSeconds: 300,
     extra: { name: "USDC", version: "2" },
   });
 
@@ -140,7 +141,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
       // Derived, never retyped: this list named witness_hash for as long as it took the SKU to be
       // quarantined and dropped from the catalogue, and nothing failed. The catalogue is the truth.
       paid_tools: PAID_TOOLS.tools.map((t) => t.name),
-      free_tools: ["board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion"],
+      free_tools: FREE_TOOLS.tools.map((t) => t.name),
       how: "tools/call without x_payment returns the route's 402 challenge as structuredContent; pay, then call again with x_payment",
     },
     // Named, not hidden: an agent that cached an older manifest learns why the route now 503s
