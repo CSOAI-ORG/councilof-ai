@@ -42,6 +42,10 @@ const HOSTS = [
   "[::1]",
 ];
 const BROWSER_ORIGINS = [...HOSTS, "chatgpt.com", "claude.ai"];
+type McpPagesContext = {
+  request: Request;
+  env?: Record<string, unknown>;
+};
 const DEFINITIONS = [...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[];
 // The SDK's no-eval adapter retains the canonical JSON Schema. No parallel catalog.
 const validator = new CfWorkerJsonSchemaValidator();
@@ -178,7 +182,10 @@ function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-export const onRequest: PagesFunction = async ({ request, env }) => {
+export const onRequest = async ({
+  request,
+  env,
+}: McpPagesContext): Promise<Response> => {
   const url = new URL(request.url);
   const hosts = [...HOSTS];
   // Only this deployment's configured preview is allowed, not all pages.dev hosts.
