@@ -1,0 +1,53 @@
+name: Publish csoai-gspc-mcp
+
+# Manual and version-confirmed by design. Authentication is npm trusted
+# publishing (GitHub OIDC), never a long-lived NPM_TOKEN.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Exact package version to publish (must match package.json)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+
+      - name: Confirm version is exact and unused
+        working-directory: mcp/gspc-server
+        env:
+          EXPECTED_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          actual="$(node -p "require('./package.json').version")"
+          test "$actual" = "$EXPECTED_VERSION"
+          if npm view "csoai-gspc-mcp@$actual" version >/dev/null 2>&1; then
+            echo "csoai-gspc-mcp@$actual already exists; refusing to overwrite an immutable release"
+            exit 1
+          fi
+
+      - name: Verify package and live contract
+        working-directory: mcp/gspc-server
+        run: |
+          npm run prepack
+          npm run test:wired
+          npm run smoke
+          npm pack --dry-run
+
+      - name: Publish through trusted OIDC with automatic provenance
+        working-directory: mcp/gspc-server
+        run: npm publish --access public
