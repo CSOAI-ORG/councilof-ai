@@ -312,7 +312,7 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
   });
 
   it.each([undefined, "1"])(
-    "bounds an oversized stream with %s Content-Length and cancels before consuming it",
+    "bounds an oversized stream with %s Content-Length even when cancel never settles",
     async (contentLength) => {
       const fetchMock = vi.fn();
       vi.stubGlobal("fetch", fetchMock);
@@ -326,6 +326,7 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
         },
         cancel(reason) {
           cancelReason = String(reason);
+          return new Promise<void>(() => undefined);
         },
       }, { highWaterMark: 0 });
       const headers: Record<string, string> = { "content-type": "application/json" };
@@ -345,7 +346,7 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
     },
   );
 
-  it("times out and cancels a request stream that never finishes", async () => {
+  it("returns the timeout even when the never-ending stream's cancel promise never settles", async () => {
     vi.useFakeTimers();
     try {
       const fetchMock = vi.fn();
@@ -354,6 +355,7 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
       const stream = new ReadableStream<Uint8Array>({
         cancel(reason) {
           cancelReason = String(reason);
+          return new Promise<void>(() => undefined);
         },
       }, { highWaterMark: 0 });
       const request = new Request("https://councilof.ai/api/a2a", {
