@@ -1,61 +1,86 @@
-# Verify signed measurement card (GitHub Action)
+# Verify a signed GSPC measurement card
 
-A stranger-verifiable, fail-closed GitHub Action that recomputes an AI-measurement card's
-`content_id` and verifies its Ed25519 signature — **offline, zero trust, no network to us**.
-It proves a card is authentic and unmodified, so a pipeline can depend on it. Measurement,
-not certification: the badge **verifies, never ranks**.
+This composite GitHub Action verifies one **local** GSPC measurement card with
+the repository's zero-dependency `gspc-card-verifier`. It recomputes the card id,
+checks Ed25519 under the pinned Council of AI profile, and returns exactly one of:
 
-> The verify logic is the same code that guards the Council of AI public board (`docs/` +
-> `scripts/verify_signed.py`). If any deployed card was tampered with, this Action fails closed.
+- `VALID` — the complete path verified under the pinned key;
+- `INVALID` — the complete check established a mismatch;
+- `UNCHECKABLE` — the check could not complete or the schema is outside the profile.
 
-## Usage (in any workflow)
+This proves integrity and issuer-key binding. It does not prove the measurement
+is correct, certify a model, or turn an unmeasured field into a result.
+
+## Usage
 
 ```yaml
-- uses: CSOAI-ORG/councilof-ai/actions/verify-card@main
-  with:
-    artifact: ./.cards/my-model-card.json   # or a https:// URL
+steps:
+  - uses: actions/checkout@v4
+  - id: card
+    uses: CSOAI-ORG/councilof-ai/actions/verify-card@<reviewed-commit>
+    with:
+      artifact: evidence/model-card.json
+  - run: printf '%s %s\n' "$VERDICT" "$CARD_ID"
+    env:
+      VERDICT: ${{ steps.card.outputs.verdict }}
+      CARD_ID: ${{ steps.card.outputs.id }}
 ```
+
+Pin a reviewed commit or release tag rather than `main` in a relying workflow.
+The runner must provide Node.js; Node 22 is recommended. The Action deliberately
+does not install or download a runtime or verifier dependency.
 
 ## Inputs
 
-| input | required | default | meaning |
-|---|---|---|---|
-| `artifact` | yes | — | path to the signed JSON card, or a URL |
-| `fail_on_mismatch` | no | `true` | exit non-zero on tamper (fail-closed) |
+| Input | Required | Default | Meaning |
+|---|---:|---:|---|
+| `artifact` | yes | — | Local regular JSON file, at most 1 MiB, relative to the caller workspace or absolute. |
+| `fail_on_mismatch` | no | `true` | Fail for both `INVALID` and `UNCHECKABLE`. `false` exposes the same non-VALID verdict without gating. |
 
-## Output
+Remote URL input was removed. Verification is intentionally offline: download
+and retain the evidence first, then pass its local path. This avoids a mutable
+network response being substituted during the verification step.
 
-`content_id` = `verified` or `unverified`.
+## Outputs and exits
 
-```yaml
-- uses: CSOAI-ORG/councilof-ai/actions/verify-card@main
-  id: vcard
-  with: { artifact: card.json }
-- run: echo "card ${{ steps.vcard.outputs.content_id }}"
+| Output | Meaning |
+|---|---|
+| `verdict` | `VALID`, `INVALID`, or `UNCHECKABLE` |
+| `id` | Verified id for `VALID`; otherwise a stated id only when it is exactly 64 hexadecimal characters |
+| `code` | Stable verifier code such as `OK`, `ID_MISMATCH`, or `OUT_OF_PROFILE_DOMAIN` |
+| `reason` | One-line explanation |
+| `content_id` | Compatibility value: `verified` only for `VALID`, otherwise `unverified` |
+
+With the default gate, exit `0` means `VALID`, exit `1` means `INVALID`, and
+exit `2` means `UNCHECKABLE` or an unreadable/configuration path. Setting
+`fail_on_mismatch: false` changes only the exit status; it never changes the
+verdict or reports `content_id=verified` for a failed or incomplete check.
+
+The verifier and pinned profile are loaded from this Action's checked-out source
+path, not from the consumer repository and not from the network.
+
+## Reusable workflow migration
+
+The matching `.github/workflows/verify-card.yml` wrapper uses this same runner.
+Its `artifact` is relative to the caller checkout; it does not inherit files from
+earlier jobs. Retain the card in that checkout or use the composite in the job
+where the card was downloaded. Both interfaces now verify supported measurement
+cards only, not arbitrary signals or leaderboard envelopes. Read `id` for the
+card identifier; `content_id` is the compatibility `verified`/`unverified` flag.
+
+The wrapper checks out the called workflow's exact repository and commit using
+[GitHub's job workflow identity](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#example-usage-of-job-context-workflow-identity),
+separately from caller data. It requests read-only repository access and does not
+run caller code. Missing or unexpected workflow identity stops the job before
+verification. Those identity properties are unavailable on GitHub Enterprise
+Server; use a reviewed SHA-pinned composite on that platform instead. Neither
+interface treats unavailable verification as valid.
+
+From a checkout containing the source and package fixtures, run the offline tests:
+
+```sh
+node --test actions/verify-card/*.test.mjs
 ```
 
-## What it proves
-
-1. The card's canonical body (sorted keys, compact separators) hashes to the published `content_id`.
-2. That `content_id` verifies as a valid Ed25519 signature under the card's embedded public key.
-
-If either fails and `fail_on_mismatch: true`, the step exits non-zero — a pipeline cannot proceed
-on a tampered card. It never asserts a score, grade, or ranking.
-
-## The card
-
-A Council of AI measurement card (`csoai.*/0.1`, `not_a_certification: true`) is a compact
-JSON object whose `content_id` is the SHA-256 of its canonical body and whose `signature` is an
-Ed25519 signature over that `content_id`. The public key is embedded in the card; the did:web
-trust root proves the issuer. Verify against `.well-known/did.json` for the full stranger check.
-
-## Badge
-
-> Add a "Measured by Council of AI" trust signal to your model card/README:
-
-```md
-[![Measured by Council of AI](https://img.shields.io/endpoint?url=<verified-card-endpoint>)](https://councilof.ai)
-```
-
-*(Replace `<verified-card-endpoint>` with a URL that returns a JSON verdict; the badge shows
-"verified" only when the signature is valid — never a score.)*
+These local tests do not establish a successful GitHub-hosted workflow run. That
+runtime check remains a release requirement for this revision.

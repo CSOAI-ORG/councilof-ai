@@ -1,67 +1,89 @@
 name: Verify signed measurement card
 
-# EXP 125/126 reference Action — verify-a-card in any workflow.
-# Offline-capable: recomputes the canonical body (sorted keys, RFC-8785-ish), derives content_id,
-# verifies the Ed25519 signature against the EMBEDDED pubkey. FAIL-CLOSED on tamper: any mismatch
-# exits non-zero. No telemetry, no score assertion — the badge verifies, never ranks.
-
+# Thin reusable wrapper: cryptography and three-state semantics live in the
+# repaired composite's runner and packages/gspc-card-verifier, not inline here.
+# GitHub.com job.workflow_* identifies the CALLED workflow's source; github.*
+# identifies the caller. Fail closed where the job identity is unavailable.
 on:
   workflow_call:
     inputs:
       artifact:
-        description: 'Path to the signed JSON artifact (card / signal / leaderboard)'
+        description: 'Local JSON card path, relative to the caller checkout or absolute; URLs are not fetched.'
         required: true
         type: string
       fail_on_mismatch:
-        description: 'Exit non-zero on a signature mismatch (fail-closed). Default true.'
+        description: 'Fail for INVALID or UNCHECKABLE. false changes only the exit status, never the verdict.'
         required: false
         default: 'true'
         type: string
     outputs:
       content_id:
-        description: 'The verified content_id (or "unverified")'
-        value: ${{ jobs.verify.outputs.cid }}
+        description: 'Compatibility value: verified only for VALID; otherwise unverified.'
+        value: ${{ jobs.verify.outputs.content_id }}
+      verdict:
+        description: 'VALID, INVALID, or UNCHECKABLE.'
+        value: ${{ jobs.verify.outputs.verdict }}
+      id:
+        description: 'Verified id for VALID; otherwise the stated id only when safely readable.'
+        value: ${{ jobs.verify.outputs.id }}
+      code:
+        description: 'Machine-readable verifier result code.'
+        value: ${{ jobs.verify.outputs.code }}
+      reason:
+        description: 'Safe one-line verification explanation.'
+        value: ${{ jobs.verify.outputs.reason }}
+
+permissions:
+  contents: read
 
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
-      cid: ${{ steps.check.outputs.cid }}
+      content_id: ${{ steps.check.outputs.content_id }}
+      verdict: ${{ steps.check.outputs.verdict }}
+      id: ${{ steps.check.outputs.id }}
+      code: ${{ steps.check.outputs.code }}
+      reason: ${{ steps.check.outputs.reason }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Validate trusted verifier source identity
+        shell: bash
+        env:
+          CSOAI_WORKFLOW_REPOSITORY: ${{ job.workflow_repository }}
+          CSOAI_WORKFLOW_FILE_PATH: ${{ job.workflow_file_path }}
+          CSOAI_WORKFLOW_SHA: ${{ job.workflow_sha }}
+        run: |
+          if [[ "$CSOAI_WORKFLOW_REPOSITORY" != 'CSOAI-ORG/councilof-ai' ]] ||
+             [[ "$CSOAI_WORKFLOW_FILE_PATH" != '.github/workflows/verify-card.yml' ]] ||
+             [[ ! "$CSOAI_WORKFLOW_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            printf '%s\n' '::error::Trusted verifier source identity is unavailable or unexpected. Use the reviewed composite action on platforms without job.workflow_* support.'
+            exit 2
+          fi
+      - name: Check out caller data without running caller code
+        uses: actions/checkout@v4
         with:
-          python-version: '3.11'
-      - name: Verify the signed artifact (recompute canonical -> content_id -> Ed25519)
+          path: caller
+          persist-credentials: false
+      - name: Check out the called workflow's exact verifier source
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .csoai-verifier-source
+          persist-credentials: false
+          sparse-checkout: |
+            actions/verify-card
+            packages/gspc-card-verifier
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify local evidence under the pinned profile
         id: check
         shell: bash
-        run: |
-          python3 - <<'PY'
-          import json, hashlib, base64, sys
-          from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
-          p = "${{ inputs.artifact }}"
-          try:
-              d = json.load(open(p))
-          except FileNotFoundError:
-              print(f"::error::artifact not found: {p}")
-              sys.exit(1)
-          body = {k: v for k, v in d.items() if k not in ("content_id", "signature", "sha256", "sig")}
-          canon = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
-          want = hashlib.sha256(canon).hexdigest()
-          sig = d.get("signature") or {}
-          if not sig.get("pubkey") or not sig.get("sig"):
-              print("::error::artifact has no signature")
-              sys.exit(1)
-          pub = Ed25519PublicKey.from_public_bytes(base64.b64decode(sig["pubkey"]))
-          pub.verify(base64.b64decode(sig["sig"]), want.encode())
-          match = want == d.get("content_id")
-          if not match:
-              print("::error::content_id MISMATCH (recomputed=", want[:16], "stated=", d.get("content_id","")[:16], ")")
-              if "${{ inputs.fail_on_mismatch }}" == "true":
-                  sys.exit(1)
-          else:
-              print(f"::set-output name=cid::{want[:24]}")
-              print(f"::notice::SIGNED and VERIFIED content_id={want[:24]}")
-          # doctrine: never assert a score; measurement evidence only.
-          print(f"::notice::register={d.get('register')} not_a_certification={d.get('not_a_certification')}")
-          PY
+        working-directory: caller
+        env:
+          CSOAI_ACTION_PATH: ${{ github.workspace }}/.csoai-verifier-source/actions/verify-card
+          CSOAI_ARTIFACT: ${{ inputs.artifact }}
+          CSOAI_FAIL_ON_MISMATCH: ${{ inputs.fail_on_mismatch }}
+        run: node "$CSOAI_ACTION_PATH/run.mjs"
