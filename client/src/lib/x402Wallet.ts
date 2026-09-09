@@ -92,7 +92,18 @@ export interface PaymentSignature {
 export function chainIdFromNetwork(network: string): number {
   const match = /^eip155:(\d+)$/.exec(network.trim());
   if (!match) throw new Error(`x402Wallet: unsupported network "${network}"`);
-  return Number(match[1]);
+  const chainId = Number(match[1]);
+  if (!Number.isSafeInteger(chainId) || chainId <= 0) {
+    throw new Error(`x402Wallet: unsafe EVM chain id in "${network}"`);
+  }
+  return chainId;
+}
+
+function requireAddress(value: string, field: string): string {
+  if (!/^0x[0-9a-fA-F]{40}$/.test(value)) {
+    throw new Error(`x402Wallet: ${field} must be a 20-byte hex address`);
+  }
+  return value;
 }
 
 /**
@@ -172,6 +183,12 @@ function acceptedTerms(challenge: X402Challenge): {
       "x402Wallet: accepted must name network, asset, payTo and amount",
     );
   }
+  chainIdFromNetwork(network);
+  requireAddress(asset, "accepted.asset");
+  requireAddress(payTo, "accepted.payTo");
+  if (!/^\d+$/.test(amount)) {
+    throw new Error("x402Wallet: accepted.amount must be an unsigned integer");
+  }
   if (!extra?.name || !extra.version) {
     throw new Error(
       "x402Wallet: accepted.extra must carry the token's EIP-712 name and version",
@@ -183,7 +200,17 @@ function acceptedTerms(challenge: X402Challenge): {
 /** Build the EIP-3009 TransferWithAuthorization typed data from accepted. */
 export function buildTypedData(challenge: X402Challenge, signer: string) {
   const terms = acceptedTerms(challenge);
-  const chainId = challenge.chainId ?? chainIdFromNetwork(terms.network);
+  const acceptedChainId = chainIdFromNetwork(terms.network);
+  if (
+    challenge.chainId !== undefined &&
+    challenge.chainId !== acceptedChainId
+  ) {
+    throw new Error(
+      "x402Wallet: challenge chainId contradicts accepted.network",
+    );
+  }
+  const chainId = acceptedChainId;
+  requireAddress(signer, "signer");
   const nonce = challenge.nonce ?? randomBytes32();
   if (!/^0x[0-9a-fA-F]{64}$/.test(nonce)) {
     throw new Error("x402Wallet: EIP-3009 nonce must be a 32-byte hex value");
@@ -192,13 +219,16 @@ export function buildTypedData(challenge: X402Challenge, signer: string) {
   const now = Math.floor(Date.now() / 1000);
   const timeout =
     terms.accepted.maxTimeoutSeconds ?? challenge.maxTimeoutSeconds ?? 300;
-  if (!Number.isFinite(timeout) || timeout <= 0) {
-    throw new Error("x402Wallet: maxTimeoutSeconds must be a positive number");
+  if (!Number.isSafeInteger(timeout) || timeout <= 0) {
+    throw new Error(
+      "x402Wallet: maxTimeoutSeconds must be a positive safe integer",
+    );
   }
   const timeoutEnd = now + Math.floor(timeout);
-  const validBefore = challenge.expires != null
-    ? Math.min(challenge.expires, timeoutEnd)
-    : timeoutEnd;
+  const validBefore =
+    challenge.expires != null
+      ? Math.min(challenge.expires, timeoutEnd)
+      : timeoutEnd;
   if (validBefore <= now)
     throw new Error("x402Wallet: the payment challenge has expired");
 
@@ -281,15 +311,29 @@ export async function signX402Challenge(
   })) as string[];
   const signer = accounts[0];
   if (!signer) throw new Error("x402Wallet: the wallet returned no account");
+  requireAddress(signer, "signer");
 
   const terms = acceptedTerms(challenge);
-  const wanted = challenge.chainId ?? chainIdFromNetwork(terms.network);
+  const acceptedChainId = chainIdFromNetwork(terms.network);
+  if (
+    challenge.chainId !== undefined &&
+    challenge.chainId !== acceptedChainId
+  ) {
+    throw new Error(
+      "x402Wallet: challenge chainId contradicts accepted.network",
+    );
+  }
+  const wanted = acceptedChainId;
   const chainHex = (await provider.request({
     method: "eth_chainId",
     params: [],
   })) as string;
   const actual = Number.parseInt(String(chainHex), 16);
-  if (!/^0x[0-9a-fA-F]+$/.test(String(chainHex)) || !Number.isInteger(actual)) {
+  if (
+    !/^0x[0-9a-fA-F]+$/.test(String(chainHex)) ||
+    !Number.isSafeInteger(actual) ||
+    actual <= 0
+  ) {
     throw new Error("x402Wallet: wallet returned a malformed chain id");
   }
   if (actual !== wanted) {

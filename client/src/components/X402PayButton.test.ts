@@ -1,8 +1,13 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { classifyPayError } from "./X402PayButton";
-import { challengeFromResult } from "./ToolRunner";
+import { claimPaymentAttempt, classifyPayError } from "./X402PayButton";
+import {
+  challengeFromResult,
+  createPaymentContext,
+  paymentCallForContext,
+  paymentContextMatches,
+} from "./ToolRunner";
 
 const buttonSource = readFileSync(
   resolve(__dirname, "X402PayButton.tsx"),
@@ -35,6 +40,12 @@ describe("buyer-visible payment states", () => {
     expect(discover).toBeGreaterThan(confirmFunction);
   });
 
+  it("synchronously blocks a duplicate confirmation before React rerenders", () => {
+    const lock = { current: false };
+    expect(claimPaymentAttempt(lock)).toBe(true);
+    expect(claimPaymentAttempt(lock)).toBe(false);
+  });
+
   it("shows exact price, recipient, network and resource in the confirmation", () => {
     expect(buttonSource).toContain("{price}");
     expect(buttonSource).toContain("challenge.accepted?.payTo");
@@ -50,22 +61,47 @@ describe("buyer-visible payment states", () => {
 
   it("distinguishes delivery from settlement evidence", () => {
     expect(buttonSource).toContain("Boolean(execution.paymentResponse)");
-    expect(buttonSource).toContain("PAYMENT-RESPONSE settlement evidence");
+    expect(buttonSource).toContain("opaque PAYMENT-RESPONSE receipt value");
+    expect(buttonSource).toContain("not been independently verified here");
     expect(buttonSource).toMatch(
-      /no PAYMENT-RESPONSE[\s\S]*Do not treat this as a confirmed settlement/,
+      /no PAYMENT-RESPONSE[\s\S]*not proof of settlement/,
     );
     expect(buttonSource).toMatch(/PAYMENT_REQUIRED again[\s\S]*not accepted/);
   });
 });
 
 describe("ToolRunner paid retry", () => {
+  it("binds replay to immutable typed arguments and rejects stale context", () => {
+    const sourceArgs = {
+      subject: "model/original",
+      metadata: { source: "first-run" },
+    };
+    const context = createPaymentContext("paid_tool", sourceArgs, 7);
+    sourceArgs.subject = "model/edited";
+    sourceArgs.metadata.source = "edited";
+
+    expect(paymentContextMatches(context, "paid_tool", 7)).toBe(true);
+    expect(paymentContextMatches(context, "paid_tool", 8)).toBe(false);
+    expect(paymentContextMatches(context, "other_tool", 7)).toBe(false);
+    expect(paymentCallForContext(context, "opaque-header")).toEqual({
+      toolName: "paid_tool",
+      args: {
+        subject: "model/original",
+        metadata: { source: "first-run" },
+        x_payment: "opaque-header",
+      },
+    });
+    expect(Object.isFrozen(context.args)).toBe(true);
+    expect(Object.isFrozen(context.args.metadata)).toBe(true);
+  });
+
   it("preserves the selected v2 accepted, resource and extensions objects", () => {
     const accepted = {
       scheme: "exact",
       network: "eip155:8453",
       amount: "20000",
-      asset: "0xasset",
-      payTo: "0xpayee",
+      asset: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      payTo: "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
       maxTimeoutSeconds: 300,
       extra: { name: "USD Coin", version: "2", decimals: 6, symbol: "USDC" },
     };
@@ -83,6 +119,7 @@ describe("ToolRunner paid retry", () => {
         status: "PAYMENT_REQUIRED",
         payment_required: {
           x402Version: 2,
+          chainId: 8453,
           accepted: null,
           resource,
           accepts: [accepted],
@@ -91,19 +128,18 @@ describe("ToolRunner paid retry", () => {
       },
     });
     expect(challenge?.accepted).toBe(accepted);
+    expect(challenge?.chainId).toBe(8453);
     expect(challenge?.resourceInfo).toBe(resource);
     expect(challenge?.extensions).toBe(extensions);
     expect(challenge?.maxTimeoutSeconds).toBe(300);
   });
 
-  it("retries the same MCP tool with original typed args plus the encoded payload", () => {
-    expect(runnerSource).toMatch(
-      /async function executePayment\(\s*paymentHeader: string/,
+  it("wires the immutable payment context into the retry", () => {
+    expect(runnerSource).toContain(
+      "paymentCallForContext(context, paymentHeader)",
     );
-    expect(runnerSource).toMatch(
-      /await callTool\(\s*active\.name,\s*\{\s*\.\.\.parsed\.args,\s*x_payment: paymentHeader,?\s*\}/,
-    );
-    expect(runnerSource).toContain("executePayment={executePayment}");
+    expect(runnerSource).toContain("executePayment={(header) =>");
+    expect(runnerSource).toContain("isContextCurrent");
   });
 
   it("renders the returned deliverable instead of putting its body in x_payment", () => {

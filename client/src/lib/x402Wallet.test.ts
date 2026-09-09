@@ -218,6 +218,33 @@ describe("typed authorization terms", () => {
       ),
     ).toThrow(/unsupported payment scheme/);
   });
+
+  it("fails closed on malformed payment terms and contradictory chain ids", () => {
+    expect(() =>
+      buildTypedData(
+        { ...LIVE, accepted: { ...ACCEPTED, amount: "-1" } },
+        SIGNER,
+      ),
+    ).toThrow(/unsigned integer/);
+    expect(() =>
+      buildTypedData(
+        { ...LIVE, accepted: { ...ACCEPTED, asset: "0xasset" } },
+        SIGNER,
+      ),
+    ).toThrow(/20-byte hex address/);
+    expect(() =>
+      buildTypedData(
+        { ...LIVE, accepted: { ...ACCEPTED, payTo: "0xpayee" } },
+        SIGNER,
+      ),
+    ).toThrow(/20-byte hex address/);
+    expect(() => buildTypedData({ ...LIVE, chainId: 1 }, SIGNER)).toThrow(
+      /contradicts accepted\.network/,
+    );
+    expect(() => buildTypedData(LIVE, "0xsigner")).toThrow(
+      /signer must be a 20-byte hex address/,
+    );
+  });
 });
 
 describe("human-readable exact amount", () => {
@@ -240,6 +267,9 @@ describe("small helpers", () => {
     expect(chainIdFromNetwork(" eip155:8453 ")).toBe(8453);
     expect(() => chainIdFromNetwork("base-mainnet")).toThrow(
       /unsupported network/,
+    );
+    expect(() => chainIdFromNetwork("eip155:999999999999999999999999")).toThrow(
+      /unsafe EVM chain id/,
     );
     expect(Array.from(hexToBytes("000102ff"))).toEqual([0, 1, 2, 255]);
     expect(() => hexToBytes("0xz1")).toThrow(/invalid hex/);
