@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import X402PayButton from "@/components/X402PayButton";
+import X402PayButton, {
+  type X402ExecutionResult,
+} from "@/components/X402PayButton";
 import type { X402Challenge } from "@/lib/x402Wallet";
 import {
   AlertTriangle,
@@ -21,13 +23,7 @@ import {
 
 export type JsonSchema = {
   type?:
-    | "object"
-    | "array"
-    | "string"
-    | "number"
-    | "integer"
-    | "boolean"
-    | "null";
+    "object" | "array" | "string" | "number" | "integer" | "boolean" | "null";
   description?: string;
   properties?: Record<string, JsonSchema>;
   required?: string[];
@@ -50,7 +46,7 @@ export type RunnerTool = Omit<SovTool, "inputSchema"> & {
   };
 };
 
-export type RunnerToolResult = ToolResult & {
+export type RunnerToolResult = Omit<ToolResult, "state"> & {
   state: "runtime_observed" | "unreachable" | "unchecked";
   structuredContent?: unknown;
 };
@@ -251,7 +247,10 @@ function resourceUrl(value: unknown): string | null {
 export function challengeFromResult(
   result: RunnerToolResult,
 ): X402Challenge | null {
-  const roots: unknown[] = [result.structuredContent, (result as { raw?: unknown }).raw];
+  const roots: unknown[] = [
+    result.structuredContent,
+    (result as { raw?: unknown }).raw,
+  ];
   const raw = (result as { raw?: Record<string, unknown> }).raw;
   const rpcResult =
     raw && typeof raw.result === "object" && raw.result
@@ -261,7 +260,10 @@ export function challengeFromResult(
   for (const root of roots) {
     if (!root || typeof root !== "object") continue;
     const bag = root as Record<string, unknown>;
-    const nested = bag.error && typeof bag.error === "object" ? (bag.error as Record<string, unknown>) : null;
+    const nested =
+      bag.error && typeof bag.error === "object"
+        ? (bag.error as Record<string, unknown>)
+        : null;
     const paymentRequired =
       bag.payment_required && typeof bag.payment_required === "object"
         ? (bag.payment_required as Record<string, unknown>)
@@ -280,13 +282,33 @@ export function challengeFromResult(
             : null;
       const resource = resourceUrl(a.resource) || resourceUrl(holder.resource);
       if (!payTo || !amount || !resource) continue;
+      const resourceInfo =
+        holder.resource &&
+        typeof holder.resource === "object" &&
+        !Array.isArray(holder.resource)
+          ? (holder.resource as { url: string; [key: string]: unknown })
+          : { url: resource };
       return {
+        x402Version:
+          typeof holder.x402Version === "number"
+            ? holder.x402Version
+            : undefined,
+        accepted: a,
+        resourceInfo,
+        extensions:
+          holder.extensions &&
+          typeof holder.extensions === "object" &&
+          !Array.isArray(holder.extensions)
+            ? (holder.extensions as Record<string, unknown>)
+            : undefined,
         network: typeof a.network === "string" ? a.network : undefined,
         asset: typeof a.asset === "string" ? a.asset : undefined,
         payTo,
         amount,
         resource,
         nonce: typeof a.nonce === "string" ? a.nonce : null,
+        maxTimeoutSeconds:
+          typeof a.maxTimeoutSeconds === "number" ? a.maxTimeoutSeconds : null,
         extra:
           a.extra && typeof a.extra === "object"
             ? (a.extra as { name?: string; version?: string })
@@ -445,6 +467,67 @@ export default function ToolRunner({
     );
     setOutput({ result, observedAt: new Date().toISOString() });
     setBusy(false);
+  }
+
+  async function executePayment(
+    paymentHeader: string,
+  ): Promise<X402ExecutionResult> {
+    if (!active || busy) {
+      return { status: "failed", detail: "The tool is not ready to retry." };
+    }
+    const parsed = coerceToolArguments(active, draft);
+    if ("errors" in parsed) {
+      setErrors(parsed.errors);
+      return {
+        status: "failed",
+        detail:
+          "The original tool inputs are no longer valid; review them before paying.",
+      };
+    }
+
+    setErrors({});
+    setBusy(true);
+    try {
+      // Retry the SAME MCP tool with its original typed arguments. The payment
+      // payload is an argument only; ToolRunner never substitutes a response
+      // body into x_payment and never reconstructs the route as a bare GET.
+      const result = normalizeToolResult(
+        await callTool(active.name, {
+          ...parsed.args,
+          x_payment: paymentHeader,
+        }),
+      );
+      setOutput({ result, observedAt: new Date().toISOString() });
+      const outcome = resultOutcome(result);
+      const structured =
+        result.structuredContent &&
+        typeof result.structuredContent === "object" &&
+        !Array.isArray(result.structuredContent)
+          ? (result.structuredContent as Record<string, unknown>)
+          : null;
+      const paymentResponse =
+        typeof structured?.payment_response_header === "string"
+          ? structured.payment_response_header
+          : null;
+      if (outcome === "DELIVERED") {
+        return { status: "delivered", paymentResponse };
+      }
+      if (outcome === "PAYMENT_REQUIRED") {
+        return {
+          status: "reissued",
+          detail:
+            "The same MCP tool returned PAYMENT_REQUIRED again. The payment was not accepted.",
+        };
+      }
+      return {
+        status: "failed",
+        detail: outcome
+          ? `The paid retry returned ${outcome}, not DELIVERED.`
+          : result.text || "The paid retry returned no delivery state.",
+      };
+    } finally {
+      setBusy(false);
+    }
   }
 
   function copyOutput() {
@@ -629,7 +712,7 @@ export default function ToolRunner({
                     receive the route’s 402 challenge and any published free
                     preview. Nothing is charged by that call. This page never
                     asks for a seed phrase or private key. Payment is signed in
-                    your own wallet and only the signature is sent.
+                    your own wallet and only the signed payment payload is sent.
                   </p>
                 </div>
               ) : null}
@@ -637,8 +720,7 @@ export default function ToolRunner({
               {payChallenge ? (
                 <X402PayButton
                   challenge={payChallenge}
-                  url={payChallenge.resource}
-                  onPaid={(body) => setField("x_payment", body)}
+                  executePayment={executePayment}
                   className="mt-5"
                 />
               ) : null}

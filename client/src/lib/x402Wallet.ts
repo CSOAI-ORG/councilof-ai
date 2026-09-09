@@ -1,125 +1,220 @@
 /**
- * x402Wallet.ts — the "Pay" button plumbing for the x402 402 challenge.
+ * Browser-side x402 v2 exact/EVM signing.
  *
- * Turns the OS ToolRunner's "paste x_payment" into a one-click signature:
- *   EIP-6963 provider discovery → eth_signTypedData_v4 over the x402 EIP-3009
- *   TransferWithAuthorization terms from the 402 challenge → PAYMENT-SIGNATURE header.
- *
- * The server already accepts the header (functions/api/_x402.ts). This module only
- * makes the client-side signature; it never stores keys and never types a secret.
- *
- * Pure encoding helpers are exported and unit-tested (no wallet required).
+ * The wallet signs the EIP-3009 authorization. The caller then retries the
+ * original MCP tool with the encoded PaymentPayload as `x_payment`, preserving
+ * the tool's original arguments and request method. Private keys never leave
+ * the wallet.
  */
 
-export interface EIP6963ProviderDetail {
-  info?: { rdns?: string; uuid?: string; name?: string };
-  providers?: unknown[];
+export interface EIP1193Provider {
+  request: (args: { method: string; params: unknown[] }) => Promise<unknown>;
 }
+
+export interface EIP6963ProviderDetail {
+  info: { rdns: string; uuid: string; name: string; icon?: string };
+  provider: EIP1193Provider;
+}
+
+export type X402Accepted = {
+  scheme?: string;
+  network?: string;
+  asset?: string;
+  payTo?: string | null;
+  amount?: string;
+  maxAmountRequired?: string;
+  maxTimeoutSeconds?: number;
+  extra?: {
+    name?: string;
+    version?: string;
+    decimals?: number;
+    symbol?: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+};
+
+export type X402Resource = {
+  url: string;
+  [key: string]: unknown;
+};
 
 export interface X402Challenge {
+  x402Version?: number;
+  /** The selected v2 PaymentRequirements object, retained field-for-field. */
+  accepted?: X402Accepted;
+  /** The v2 resource object, retained rather than rebuilt from its URL. */
+  resourceInfo?: X402Resource;
+  extensions?: Record<string, unknown>;
   chainId?: number;
-  /** CAIP-2 network from the 402, e.g. "eip155:8453". Preferred over chainId. */
   network?: string;
-  /** The TOKEN contract from accepts[0].asset. This is the EIP-712 verifyingContract. */
   asset?: string;
-  /** The payee from accepts[0].payTo. This is the `to` in the message, NOT the domain. */
   payTo: string;
-  amount: string; // atomic USDC
+  amount: string;
   resource: string;
   nonce?: string | null;
-  expires?: number | null; // unix seconds
-  /** accepts[0].extra — the token's own EIP-712 domain name and version. */
-  extra?: { name?: string; version?: string } | null;
+  expires?: number | null;
+  extra?: X402Accepted["extra"] | null;
+  maxTimeoutSeconds?: number | null;
 }
 
-/** "eip155:8453" -> 8453. Throws rather than guessing a chain to sign on. */
-export function chainIdFromNetwork(network: string): number {
-  const m = /^eip155:(\d+)$/.exec(network.trim());
-  if (!m) throw new Error(`x402Wallet: unsupported network "${network}"`);
-  return Number(m[1]);
-}
+export type X402Authorization = {
+  from: string;
+  to: string;
+  value: string;
+  validAfter: string;
+  validBefore: string;
+  nonce: string;
+};
+
+export type X402PaymentPayload = {
+  x402Version: 2;
+  /** Compatibility fields consumed by our v2-to-v1 facilitator adapter. */
+  scheme: "exact";
+  network: string;
+  resource: X402Resource;
+  accepted: X402Accepted;
+  payload: {
+    signature: string;
+    authorization: X402Authorization;
+  };
+  extensions?: Record<string, unknown>;
+};
 
 export interface PaymentSignature {
-  header: string; // PAYMENT-SIGNATURE value: base64url(r || s || v)
-  address: string; // signer
+  /** Standard-base64 JSON PaymentPayload, accepted by functions/api/_x402.ts. */
+  header: string;
+  address: string;
+  payload: X402PaymentPayload;
 }
 
-// EIP-6963: discover the injected provider (MetaMask, WalletConnect-injected, etc.)
-export function discoverEIP6963(timeoutMs = 4000): Promise<EIP6963ProviderDetail | null> {
+/** "eip155:8453" -> 8453. Throws rather than guessing a chain. */
+export function chainIdFromNetwork(network: string): number {
+  const match = /^eip155:(\d+)$/.exec(network.trim());
+  if (!match) throw new Error(`x402Wallet: unsupported network "${network}"`);
+  return Number(match[1]);
+}
+
+/**
+ * EIP-6963 discovery. The listener must exist before requestProvider is
+ * dispatched because a provider may announce synchronously in that dispatch.
+ */
+export function discoverEIP6963(
+  timeoutMs = 4000,
+): Promise<EIP6963ProviderDetail | null> {
   return new Promise((resolve) => {
+    if (typeof window === "undefined") {
+      resolve(null);
+      return;
+    }
+
     let done = false;
-    const finish = (d: EIP6963ProviderDetail | null) => {
-      if (!done) {
-        done = true;
-        if (typeof window !== "undefined") window.removeEventListener("eip6963:announceProvider", onAnnounce);
-        clearTimeout(timer);
-        resolve(d);
-      }
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const finish = (detail: EIP6963ProviderDetail | null) => {
+      if (done) return;
+      done = true;
+      window.removeEventListener("eip6963:announceProvider", onAnnounce);
+      if (timer !== undefined) clearTimeout(timer);
+      resolve(detail);
     };
-    const onAnnounce = (ev: Event) => {
-      const detail = (ev as CustomEvent<{ detail?: EIP6963ProviderDetail }>).detail;
-      if (detail?.detail?.info?.rdns || detail?.detail?.providers?.length) {
-        finish(detail.detail ?? null);
-      }
+    const onAnnounce = (event: Event) => {
+      const detail = (event as CustomEvent<EIP6963ProviderDetail>).detail;
+      if (detail?.provider && typeof detail.provider.request === "function")
+        finish(detail);
     };
+
     try {
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new Event("eip6963:requestProvider"));
-        window.addEventListener("eip6963:announceProvider", onAnnounce);
-      }
+      window.addEventListener("eip6963:announceProvider", onAnnounce);
+      timer = setTimeout(() => finish(null), timeoutMs);
+      window.dispatchEvent(new Event("eip6963:requestProvider"));
     } catch {
       finish(null);
     }
-    const timer = setTimeout(() => finish(null), timeoutMs);
   });
 }
 
-// Build the EIP-3009 TransferWithAuthorization typed-data terms from the challenge.
-/**
- * The EIP-712 payload for EIP-3009 TransferWithAuthorization.
- *
- * THE DOMAIN IS THE TOKEN'S, NOT OURS. Measured against the live 402 from
- * GET /api/free-door on 2026-09-06:
- *
- *   accepts[0].asset = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913   (USDC, Base)
- *   accepts[0].payTo = 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31   (the payee)
- *   accepts[0].extra = { name: "USD Coin", version: "2", decimals: 6 }
- *
- * This function used to hardcode `name: "x402", version: "1"` and set
- * `verifyingContract: challenge.payTo`. All three were wrong: the domain
- * separator is the token contract's, so a signature built that way is not a
- * valid EIP-3009 authorization for USDC and the facilitator cannot verify it.
- * It fails AFTER the buyer approves in their wallet, and the rejection looks
- * like the buyer's fault.
- *
- * When the 402 does not carry what the domain needs, this THROWS. Falling back
- * to a default produces a signature that looks fine and is worthless.
- */
+function randomBytes32(): string {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return `0x${Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
+}
+
+function acceptedTerms(challenge: X402Challenge): {
+  accepted: X402Accepted;
+  network: string;
+  asset: string;
+  payTo: string;
+  amount: string;
+  extra: NonNullable<X402Accepted["extra"]>;
+} {
+  if (
+    challenge.x402Version !== 2 ||
+    !challenge.accepted ||
+    !challenge.resourceInfo
+  ) {
+    throw new Error(
+      "x402Wallet: a complete x402 v2 accepted/resource challenge is required",
+    );
+  }
+  const accepted = challenge.accepted;
+  if (accepted.scheme !== "exact") {
+    throw new Error(
+      `x402Wallet: unsupported payment scheme "${String(accepted.scheme)}"`,
+    );
+  }
+  const network = accepted.network;
+  const asset = accepted.asset;
+  const payTo = accepted.payTo;
+  const amount = accepted.amount;
+  const extra = accepted.extra;
+  if (!network || !asset || !payTo || !amount) {
+    throw new Error(
+      "x402Wallet: accepted must name network, asset, payTo and amount",
+    );
+  }
+  if (!extra?.name || !extra.version) {
+    throw new Error(
+      "x402Wallet: accepted.extra must carry the token's EIP-712 name and version",
+    );
+  }
+  return { accepted, network, asset, payTo, amount, extra };
+}
+
+/** Build the EIP-3009 TransferWithAuthorization typed data from accepted. */
 export function buildTypedData(challenge: X402Challenge, signer: string) {
-  const chainId =
-    challenge.chainId ?? (challenge.network ? chainIdFromNetwork(challenge.network) : undefined);
-  if (chainId === undefined) {
-    throw new Error("x402Wallet: the 402 named no chain — refusing to guess one to sign on");
+  const terms = acceptedTerms(challenge);
+  const chainId = challenge.chainId ?? chainIdFromNetwork(terms.network);
+  const nonce = challenge.nonce ?? randomBytes32();
+  if (!/^0x[0-9a-fA-F]{64}$/.test(nonce)) {
+    throw new Error("x402Wallet: EIP-3009 nonce must be a 32-byte hex value");
   }
-  const verifyingContract = challenge.asset;
-  if (!verifyingContract) {
-    throw new Error(
-      "x402Wallet: the 402 named no asset — the EIP-712 domain is the TOKEN's, and payTo is not it",
-    );
-  }
-  const name = challenge.extra?.name;
-  const version = challenge.extra?.version;
-  if (!name || !version) {
-    throw new Error(
-      "x402Wallet: accepts[0].extra must carry the token's EIP-712 name and version",
-    );
-  }
-  const nonce = challenge.nonce ?? crypto.randomUUID();
+
   const now = Math.floor(Date.now() / 1000);
-  const validAfter = now;
-  const validBefore = challenge.expires ?? now + 3600;
-  const domain = { name, version, chainId, verifyingContract };
+  const timeout =
+    terms.accepted.maxTimeoutSeconds ?? challenge.maxTimeoutSeconds ?? 300;
+  if (!Number.isFinite(timeout) || timeout <= 0) {
+    throw new Error("x402Wallet: maxTimeoutSeconds must be a positive number");
+  }
+  const timeoutEnd = now + Math.floor(timeout);
+  const validBefore = challenge.expires != null
+    ? Math.min(challenge.expires, timeoutEnd)
+    : timeoutEnd;
+  if (validBefore <= now)
+    throw new Error("x402Wallet: the payment challenge has expired");
+
+  const domain = {
+    name: terms.extra.name,
+    version: terms.extra.version,
+    chainId,
+    verifyingContract: terms.asset,
+  };
   const types = {
+    EIP712Domain: [
+      { name: "name", type: "string" },
+      { name: "version", type: "string" },
+      { name: "chainId", type: "uint256" },
+      { name: "verifyingContract", type: "address" },
+    ],
     TransferWithAuthorization: [
       { name: "from", type: "address" },
       { name: "to", type: "address" },
@@ -129,36 +224,57 @@ export function buildTypedData(challenge: X402Challenge, signer: string) {
       { name: "nonce", type: "bytes32" },
     ],
   } as const;
-  const message = {
+  const message: X402Authorization = {
     from: signer,
-    to: challenge.payTo,
-    value: challenge.amount,
-    validAfter,
-    validBefore,
+    to: terms.payTo,
+    value: terms.amount,
+    validAfter: String(now),
+    validBefore: String(validBefore),
     nonce,
   };
-  return { domain, types, message, primaryType: "TransferWithAuthorization" as const };
+  return {
+    domain,
+    types,
+    message,
+    primaryType: "TransferWithAuthorization" as const,
+  };
 }
 
-// base64url(r(32) || s(32) || v(1)) — the wire format for the PAYMENT-SIGNATURE header.
-export function encodePaymentSignature(r: Uint8Array, s: Uint8Array, v: number): string {
-  const out = new Uint8Array(65);
-  out.set(r, 0);
-  out.set(s, 32);
-  out[64] = v;
-  let bin = "";
-  for (const b of out) bin += String.fromCharCode(b);
-  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+/** Standard-base64 encode the full JSON PaymentPayload expected by x402 v2. */
+export function encodePaymentPayload(payload: X402PaymentPayload): string {
+  const bytes = new TextEncoder().encode(JSON.stringify(payload));
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary);
 }
 
-// Sign the challenge with a discovered provider (typed-data v4, EIP-1193 request).
+/** Render the exact atomic amount without floating-point rounding. */
+export function formatPaymentAmount(challenge: X402Challenge): string {
+  const atomic = challenge.accepted?.amount ?? challenge.amount;
+  const decimals = challenge.accepted?.extra?.decimals;
+  const symbol = challenge.accepted?.extra?.symbol;
+  if (
+    !/^\d+$/.test(atomic) ||
+    !Number.isInteger(decimals) ||
+    decimals! < 0 ||
+    decimals! > 30
+  ) {
+    return `${atomic} atomic units${symbol ? ` ${symbol}` : ""}`;
+  }
+  const padded = atomic.padStart(decimals! + 1, "0");
+  const split = padded.length - decimals!;
+  const fraction = decimals ? padded.slice(split).replace(/0+$/, "") : "";
+  const display = fraction
+    ? `${padded.slice(0, split)}.${fraction}`
+    : padded.slice(0, split);
+  return `${display}${symbol ? ` ${symbol}` : ""} (${atomic} atomic units)`;
+}
+
+/** Sign one v2 exact/EVM challenge with an EIP-1193 provider. */
 export async function signX402Challenge(
-  provider: { request: (args: { method: string; params: unknown[] }) => Promise<unknown> },
+  provider: EIP1193Provider,
   challenge: X402Challenge,
 ): Promise<PaymentSignature> {
-  // eth_accounts returns [] until the user has connected, so asking for it first
-  // turned "you have not connected yet" into "no account selected" — a dead end
-  // with no way forward. eth_requestAccounts prompts, which is the actual next step.
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
     params: [],
@@ -166,32 +282,51 @@ export async function signX402Challenge(
   const signer = accounts[0];
   if (!signer) throw new Error("x402Wallet: the wallet returned no account");
 
-  // Check the chain BEFORE signing. A signature over the wrong chainId is
-  // rejected by the facilitator after the buyer has already approved it.
-  const wanted =
-    challenge.chainId ?? (challenge.network ? chainIdFromNetwork(challenge.network) : undefined);
-  const onChainHex = (await provider.request({ method: "eth_chainId", params: [] })) as string;
-  const onChain = Number.parseInt(String(onChainHex), 16);
-  if (wanted !== undefined && Number.isFinite(onChain) && onChain !== wanted) {
+  const terms = acceptedTerms(challenge);
+  const wanted = challenge.chainId ?? chainIdFromNetwork(terms.network);
+  const chainHex = (await provider.request({
+    method: "eth_chainId",
+    params: [],
+  })) as string;
+  const actual = Number.parseInt(String(chainHex), 16);
+  if (!/^0x[0-9a-fA-F]+$/.test(String(chainHex)) || !Number.isInteger(actual)) {
+    throw new Error("x402Wallet: wallet returned a malformed chain id");
+  }
+  if (actual !== wanted) {
     throw new Error(
-      `x402Wallet: wallet is on chain ${onChain}, the 402 requires ${wanted}. Switch network and try again.`,
+      `x402Wallet: wallet is on chain ${actual}, the 402 requires ${wanted}. Switch network and try again.`,
     );
   }
 
   const typedData = buildTypedData(challenge, signer);
-  const sig = (await provider.request({
+  const signature = (await provider.request({
     method: "eth_signTypedData_v4",
     params: [signer, JSON.stringify(typedData)],
   })) as string;
-  const bytes = hexToBytes(sig.replace(/^0x/, ""));
-  const r = bytes.slice(0, 32);
-  const s = bytes.slice(32, 64);
-  const v = bytes[64];
-  return { header: encodePaymentSignature(r, s, v), address: signer };
+  if (!/^0x[0-9a-fA-F]{130}$/.test(signature)) {
+    throw new Error(
+      "x402Wallet: wallet returned a malformed 65-byte signature",
+    );
+  }
+
+  const payload: X402PaymentPayload = {
+    x402Version: 2,
+    scheme: "exact",
+    network: terms.network,
+    resource: challenge.resourceInfo,
+    accepted: terms.accepted,
+    payload: { signature, authorization: typedData.message },
+    ...(challenge.extensions !== undefined
+      ? { extensions: challenge.extensions }
+      : {}),
+  };
+  return { header: encodePaymentPayload(payload), address: signer, payload };
 }
 
 export function hexToBytes(hex: string): Uint8Array {
+  if (!/^(?:[0-9a-fA-F]{2})*$/.test(hex)) throw new Error("invalid hex");
   const out = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  for (let i = 0; i < out.length; i++)
+    out[i] = Number.parseInt(hex.slice(i * 2, i * 2 + 2), 16);
   return out;
 }
