@@ -138,6 +138,8 @@ describe("/api/receipts/batch — 402 shape", () => {
     expect(b.csoai.preview.batch_sha256).toMatch(/^[0-9a-f]{64}$/);
     expect(b.csoai.rail.mode).toBe("challenge-only");
     expect(b.csoai.never.join(" ")).toMatch(/settlement or payment receipts — none are published/);
+    expect(b.csoai.deliverable).toMatch(/assembly|batch/i);
+    expect(b.csoai.catalog).toMatch(/\/api\/x402$/);
     expect(JSON.stringify(b)).not.toMatch(/"proof":\s*\[/);
     expect(JSON.stringify(b)).not.toMatch(/\bsafe\b|certified/i);
   });

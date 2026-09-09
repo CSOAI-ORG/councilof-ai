@@ -25,7 +25,7 @@ const catalogue = async () => {
 describe("/api/x402 publishes URLs a buyer can actually use", () => {
   it("gives every entry a resource and a free_preview that are URLs and nothing else", async () => {
     const { resources } = await catalogue();
-    expect(resources.length).toBeGreaterThanOrEqual(6);
+    expect(resources.length).toBeGreaterThanOrEqual(8);
     for (const t of resources) {
       for (const [field, v] of [["resource", t.resource], ["free_preview", t.free_preview]] as const) {
         if (!v) continue;
@@ -33,6 +33,22 @@ describe("/api/x402 publishes URLs a buyer can actually use", () => {
         // a URL concatenated with English prose is the defect this file's header records
         expect(v, `${t.id}.${field} carries prose`).not.toMatch(/\s—\s|\s\(the\s/);
       }
+    }
+  });
+
+  it("lists the live proof-bundle and art50 doors as first-class resources, not only nested also-keys", async () => {
+    const { resources } = await catalogue();
+    const ids = resources.map((t) => t.id);
+    expect(ids).toContain("proof_bundle");
+    expect(ids).toContain("art50_marking_evidence");
+    const proof = resources.find((t) => t.id === "proof_bundle");
+    const art50 = resources.find((t) => t.id === "art50_marking_evidence");
+    expect(proof!.resource).toMatch(/\/api\/proof\?bundle=1$/);
+    expect(art50!.resource).toMatch(/\/api\/art50\/marking-evidence\?url=/);
+    for (const t of resources) {
+      expect((t as { how_to_buy?: string }).how_to_buy, t.id).toMatch(/GET the resource unpaid/);
+      expect((t as { how_to_buy?: string }).how_to_buy, t.id).toMatch(/retry with X-PAYMENT/);
+      expect((t as { how_to_buy?: string }).how_to_buy, t.id).toMatch(/402 is not settlement/);
     }
   });
 

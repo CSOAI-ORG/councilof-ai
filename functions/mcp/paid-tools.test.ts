@@ -61,6 +61,8 @@ describe("/mcp tools/list — eight free + four paid, catalogue free, nothing la
     for (const t of (PAID as { tools: { name: string; description: string; inputSchema: { properties: Record<string, unknown> }; csoai: { paid: boolean; route: string } }[] }).tools) {
       expect(t.description, t.name).toMatch(/^PAID \(x402/);
       expect(t.description, t.name).toMatch(/[Mm]easurement, not certification|never a conformity|not a rating|never a conclusion/);
+      expect(t.description, t.name).toMatch(/402 challenge/);
+      expect(t.description, t.name).toMatch(/call again with x_payment/);
       expect(t.description, t.name).not.toMatch(/\bsafe\b|verified registry|approved/i);
       expect(t.inputSchema.properties, t.name).toHaveProperty("x_payment");
       expect(t.csoai.paid).toBe(true);
@@ -84,6 +86,9 @@ describe("/mcp tools/list — eight free + four paid, catalogue free, nothing la
     const g = await (await onRequest({ request: new Request(`${ORIGIN}/mcp`), env: {}, params: {} } as never)).json();
     expect(g.paid_tools.names).toEqual(PAID_FOUR);
     expect(g.paid_tools.doctrine).toMatch(/measurement, not certification/);
+    expect(g.paid_tools.how).toMatch(/call again with x_payment/);
+    expect(g.paid_tools.how).toMatch(/\/api\/evidence-bundle/);
+    expect(g.paid_tools.how).toMatch(/\/api\/proof\?bundle=1/);
     // stdio_alternative must not assert what another package's current version ships — that drifts on
     // its release schedule. It states the mechanism instead.
     expect(g.stdio_alternative).toMatch(MECHANISM);
@@ -93,6 +98,8 @@ describe("/mcp tools/list — eight free + four paid, catalogue free, nothing la
     expect(i.result.instructions).toMatch(/Eight free read-only tools/);
     expect(i.result.instructions).toMatch(/x402_trust/);
     expect(i.result.instructions).toMatch(/Four paid tools/);
+    expect(i.result.instructions).toMatch(/call again with x_payment/);
+    expect(i.result.instructions).toMatch(/\/api\/evidence-bundle/);
     expect(i.result.instructions).toMatch(/witness_hash SKU is quarantined/);
     expect(i.result.instructions).toMatch(/Measurement, not certification/);
     expect(i.result.instructions).toMatch(MECHANISM);

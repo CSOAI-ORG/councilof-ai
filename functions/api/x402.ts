@@ -69,6 +69,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         free_preview_note: "the 402 body carries csoai.preview: signed cards already on file",
         deliverable: "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
         never: ["a score", "a rank", "a certificate", "a MEASURED cell minted by payment"],
+        how_to_buy: "GET the resource unpaid → HTTP 402 → pay accepts[] (x402 exact, USDC on Base) → retry with X-PAYMENT. A 402 is not settlement.",
       },
       {
         id: "evidence_bundle",
@@ -83,6 +84,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         free_preview: u("/api/evidence-bundle?obligation=<dora|cra|article-50|article-53>&subject=<model-id>"),
         deliverable: "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one named obligation. Not a conformity determination.",
         never: ["a conformity determination", "satisfied/not-satisfied findings", "a certificate"],
+        how_to_buy: "GET the resource unpaid → HTTP 402 → pay accepts[] (x402 exact, USDC on Base) → retry with X-PAYMENT. A 402 is not settlement.",
       },
       {
         id: "data_feed",
@@ -92,6 +94,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         deliverable: "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.",
         never: ["scores as a product", "a ranking", "a rating"],
         also: { proof_bundle: u("/api/proof?bundle=1"), one_inclusion_free: u("/api/proof?sha=<64-hex>") },
+        how_to_buy: "GET the resource unpaid → HTTP 402 → pay accepts[] (x402 exact, USDC on Base) → retry with X-PAYMENT. A 402 is not settlement.",
       },
       {
         id: "rwa_evidence",
@@ -101,6 +104,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         free_preview_note: "unsigned state, no raw-fetch hashes; symbols at /api/xrpl",
         deliverable: "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.",
         never: ["a rating", "a guarantee", "a verdict", "a rank", "a paywall on /api/xrpl or /root.json"],
+        how_to_buy: "GET the resource unpaid → HTTP 402 → pay accepts[] (x402 exact, USDC on Base) → retry with X-PAYMENT. A 402 is not settlement.",
       },
       {
         // This entry once carried `tier: 1, tier: 4` — two keys in one object literal, the
@@ -113,6 +117,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         free_preview_note: "recent diffs + latest state per target, free; leaves in /feeds/provider-diff/leaves/",
         deliverable: "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.",
         never: ["a verdict on any change", "the content of any page (never captured)", "a grade"],
+        how_to_buy: "GET the resource unpaid → HTTP 402 → pay accepts[] (x402 exact, USDC on Base) → retry with X-PAYMENT. A 402 is not settlement.",
       },
       {
         id: "receipts_batch",
@@ -124,6 +129,32 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         recent_free: [u("/root.json"), u("/cards/<sha16>.json"), u("/api/proof?sha=<64-hex>"), u("/receipts/root-history.json")],
         honesty: "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
         never: ["a conclusion about any leaf", "a grade", "a certificate", "a settlement-receipt claim"],
+        how_to_buy: "GET the resource unpaid → HTTP 402 → pay accepts[] (x402 exact, USDC on Base) → retry with X-PAYMENT. A 402 is not settlement.",
+      },
+      {
+        // First-class row. Previously only nested under data_feed.also, so a Bazaar
+        // indexer walking resources[] never saw the live 402 at /api/proof?bundle=1
+        // even though /.well-known/x402.json already listed it.
+        id: "proof_bundle",
+        name: "Inclusion proof bundle (assembly of the last published root)",
+        resource: u("/api/proof?bundle=1"),
+        free_preview: u("/api/proof?sha=<64-hex>"),
+        free_preview_note: "one named-leaf inclusion proof is free; ?bundle=1 is assembly of the last published root",
+        deliverable: "Inclusion proof bundle for leaves in the last published Merkle root, with hashes, indexes, paths, the root and signed card count. Not a grade.",
+        never: ["a grade", "a rank", "a certificate"],
+        how_to_buy: "GET the resource unpaid → HTTP 402 → pay accepts[] (x402 exact, USDC on Base) → retry with X-PAYMENT. A 402 is not settlement.",
+      },
+      {
+        // First-class row. The MCP tool art50_marking_evidence already wraps this
+        // route; resources[] omitted it so HTTP catalog shoppers never found the door.
+        id: "art50_marking_evidence",
+        name: "Article 50 marking evidence (issuance)",
+        resource: u("/api/art50/marking-evidence?url=<https-url>"),
+        free_preview: u("/api/art50/marking-evidence?url=<https-url>&preview=true"),
+        free_preview_note: "unsigned point-in-time detection; watermarks stay UNCHECKABLE where no public detector exists",
+        deliverable: "One card-v0 leaf: is a machine-readable mark DETECTABLE in these bytes right now (C2PA store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the Art 50(2) excerpt hash and Art 99(4) ceiling. Point-in-time detection — never a conformity opinion.",
+        never: ["a conformity opinion", "a certificate", "a compliance word"],
+        how_to_buy: "GET the resource unpaid → HTTP 402 → pay accepts[] (x402 exact, USDC on Base) → retry with X-PAYMENT. MCP tool art50_marking_evidence is the same door. A 402 is not settlement.",
       },
     ],
     // ONE free_forever. There were two keys of this name in this literal — the same defect the
