@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import SignedAgentTravel from "@/components/SignedAgentTravel";
 import TwoSpeed from "@/components/TwoSpeed";
 import WatchlistPane from "@/components/WatchlistPane";
+import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { setMetaDescription } from "@/lib/utils";
 
 const MCP_URL = "https://councilof.ai/mcp";
@@ -60,7 +61,7 @@ export default function ToolsPage() {
   useEffect(() => {
     document.title = "Add gspc in your tool | councilof.ai";
     setMetaDescription(
-      "Council OS for people already in Claude, Cursor, Kimi, or Grok. Eleven tools at https://councilof.ai/mcp: seven free readers and four x402-metered evidence tools. Measurement, never certification.",
+      `Council OS for people already in Claude, Cursor, Kimi, or Grok. ${ALL_TOOL_NAMES.length} tools at https://councilof.ai/mcp: ${FREE_TOOL_NAMES.length} free readers and ${PAID_TOOL_NAMES.length} x402-metered evidence tools. Measurement, never certification.`,
     );
   }, []);
 
@@ -71,11 +72,10 @@ export default function ToolsPage() {
       </h1>
       <p className="mt-3 text-slate-600">
         Ask: board totals. Paste a card to verify. HTTP <code>https://councilof.ai/mcp</code> lists
-        eleven tools: seven free readers (board_totals · get_axis · verify_card · list_cards ·
-        get_root · get_card · verify_inclusion) and four x402-metered evidence tools. Published npm{" "}
-        <code>csoai-gspc-mcp@0.2.1</code> lists twelve: the same eleven plus <code>witness_hash</code>,
-        which is quarantined on the HTTP door. A package listing is not proof that a paid route will
-        settle or deliver. Teach the live list. No 23rd axis. <code>/plugin</code> 301s here.
+        {ALL_TOOL_NAMES.length} tools: {FREE_TOOL_NAMES.length} free readers ({FREE_TOOL_NAMES.join(" · ")})
+        and {PAID_TOOL_NAMES.length} x402-metered evidence tools. <code>witness_hash</code> is
+        quarantined and is not advertised. A package or registry listing is not proof that a paid
+        route will settle or deliver. Teach the live list. No 23rd axis. <code>/plugin</code> 301s here.
       </p>
       <p className="mt-4 font-mono text-sm text-emerald-900">{MCP_URL}</p>
       <pre className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-slate-950 p-4 text-[13px] text-emerald-100">

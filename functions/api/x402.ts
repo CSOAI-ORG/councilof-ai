@@ -31,6 +31,7 @@ import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "./_x402_config";
 import { USDC_BASE } from "./_skus";
 import { CSOAI_LID } from "./_x402";
 import { OFFER_RECEIPT_SPEC_SHA, X402_SIGNER_KID } from "./_x402_offer";
+import FREE_TOOLS from "../mcp/gspc-tools.json";
 
 export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATOR_URL?: string }> = async ({ request, env }) => {
   const origin = new URL(request.url).origin;
@@ -145,7 +146,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
     ],
     mcp: {
       url: u("/mcp"),
-      free_tools: ["board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion"],
+      free_tools: FREE_TOOLS.tools.map((t) => t.name),
       paid_tools: [
         { name: "commission_card", route: u("/api/request-attestation"), sells: "issuance" },
         { name: "art50_marking_evidence", route: u("/api/art50/marking-evidence"), sells: "issuance", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },

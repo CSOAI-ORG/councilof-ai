@@ -16,6 +16,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { onRequestGet } from "./x402.json";
+import FREE from "../mcp/gspc-tools.json";
 import PAID from "../mcp/paid-tools.json";
 
 const ORIGIN = "https://councilof.ai";
@@ -25,9 +26,9 @@ const get = async () => {
     env: {},
   });
   return (await res.json()) as {
-    resources: { url: string; method: string }[];
+    resources: { url: string; method: string; accepts?: { maxTimeoutSeconds?: number }[] }[];
     quarantined?: { url: string; buyable: boolean; lifecycle: string }[];
-    mcp: { paid_tools: string[] };
+    mcp: { free_tools: string[]; paid_tools: string[] };
   };
 };
 
@@ -67,6 +68,18 @@ describe(".well-known/x402.json — every advertised resource is one that can ac
   it("mcp.paid_tools is derived from the catalogue, not retyped beside it", async () => {
     const m = await get();
     expect(m.mcp.paid_tools).toEqual(PAID.tools.map((t) => t.name));
+  });
+
+  it("mcp.free_tools is derived from the live door definitions", async () => {
+    const m = await get();
+    expect(m.mcp.free_tools).toEqual(FREE.tools.map((t) => t.name));
+  });
+
+  it("advertises the same timeout as every live 402 challenge", async () => {
+    const m = await get();
+    for (const resource of m.resources) {
+      expect(resource.accepts?.[0]?.maxTimeoutSeconds, resource.url).toBe(300);
+    }
   });
 
   // The Bazaar indexes exactly one CSOAI resource, /api/free-door, and it was absent from this

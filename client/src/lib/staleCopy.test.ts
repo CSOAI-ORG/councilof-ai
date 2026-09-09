@@ -26,7 +26,7 @@ describe("stale copy honesty", () => {
 
   it("publishes the current HTTP and npm tool boundaries", () => {
     const j = JSON.parse(mcp);
-    const eleven = [
+    const twelve = [
       "board_totals",
       "get_axis",
       "verify_card",
@@ -34,19 +34,25 @@ describe("stale copy honesty", () => {
       "get_root",
       "get_card",
       "verify_inclusion",
+      "x402_trust",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch",
     ];
-    expect(j.planted.tools).toEqual(eleven);
-    expect(j.measured.tools).toEqual(eleven);
-    expect(j.measured.total_tools).toBe(11);
-    expect(j.measured.free_tools).toBe(7);
+    expect(j.planted.tools).toEqual(twelve);
+    expect(j.measured.tools).toEqual(twelve);
+    expect(j.measured.total_tools).toBe(12);
+    expect(j.measured.free_tools).toBe(8);
     expect(j.measured.metered_tools).toBe(4);
-    expect(j.measured.note).toMatch(/npm(?: stdio)? csoai-gspc-mcp@0\.2\.1 lists twelve/i);
-    expect(j.measured.note).toMatch(/witness_hash is quarantined/i);
-    expect(JSON.parse(mcpCard).endpoints.mcp.stdio).toBe(
+    expect(j.measured.note).toMatch(/witness_hash (?:is|remains) quarantined/i);
+    expect(j.servers[0].registry.version).toBe("1.4.0");
+    const card = JSON.parse(mcpCard);
+    expect(card.capabilities.total_tools).toBe(12);
+    expect(card.capabilities.free_tools).toBe(8);
+    expect(card.capabilities.tools).toEqual(twelve);
+    expect(card.description).toMatch(/server 1\.4\.0/);
+    expect(card.endpoints.mcp.stdio).toBe(
       "npx -y csoai-gspc-mcp@0.2.1",
     );
     // The agent card no longer lists /mcp as an A2A interface (it does not speak A2A;
@@ -58,9 +64,9 @@ describe("stale copy honesty", () => {
     expect(agentA2a.url).toBe("https://councilof.ai/api/a2a");
     expect(agentA2a.protocolVersion).toMatch(/^\d+\.\d+$/);
     expect(tools).toContain("WatchlistPane");
-    expect(tools).toMatch(
-      /board_totals · get_axis · verify_card · list_cards ·\s*get_root · get_card · verify_inclusion/,
-    );
+    expect(tools).toContain("ALL_TOOL_NAMES");
+    expect(tools).toContain("FREE_TOOL_NAMES");
+    expect(tools).toContain("PAID_TOOL_NAMES");
   });
 
   it("never derives a model score from the global board", () => {
