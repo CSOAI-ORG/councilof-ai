@@ -1,0 +1,72 @@
+name: A2A contract selftest
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/a2a-contract-selftest.yml"
+      - "functions/api/a2a.ts"
+      - "functions/api/a2a.test.ts"
+      - "functions/api/agent-card-jws.test.ts"
+      - "functions/api/_a2a_directories.test.ts"
+      - "public/.well-known/agent-card.json"
+      - "public/.well-known/agent.json"
+      - "public/interop/agent-card-jws-input.json"
+      - "public/interop/a2a-directories.json"
+      - "scripts/agent-card-extensions.mjs"
+      - "scripts/adapters/agent_card_jws.py"
+      - "scripts/test_agent_card.py"
+      - "package.json"
+      - "package-lock.json"
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/a2a-contract-selftest.yml"
+      - "functions/api/a2a.ts"
+      - "functions/api/a2a.test.ts"
+      - "functions/api/agent-card-jws.test.ts"
+      - "functions/api/_a2a_directories.test.ts"
+      - "public/.well-known/agent-card.json"
+      - "public/.well-known/agent.json"
+      - "public/interop/agent-card-jws-input.json"
+      - "public/interop/a2a-directories.json"
+      - "scripts/agent-card-extensions.mjs"
+      - "scripts/adapters/agent_card_jws.py"
+      - "scripts/test_agent_card.py"
+      - "package.json"
+      - "package-lock.json"
+
+permissions:
+  contents: read
+
+jobs:
+  a2a-contract-selftest:
+    name: a2a-contract-selftest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out without credential persistence
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Verify agent-card producer is deterministic
+        run: |
+          node scripts/agent-card-extensions.mjs
+          git diff --exit-code -- public/.well-known/agent-card.json public/.well-known/agent.json
+          python3 scripts/test_agent_card.py
+
+      - name: Run offline A2A contract tests
+        run: >-
+          npm exec -- vitest run
+          functions/api/a2a.test.ts
+          functions/api/agent-card-jws.test.ts
+          functions/api/_a2a_directories.test.ts
