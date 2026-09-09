@@ -59,16 +59,42 @@ const names = (list.result?.tools || []).map((t) => t.name);
 check(`tools/list length ${ALL.length}`, names.length === ALL.length);
 check("tools/list names", names.join(",") === ALL.join(","));
 
-const root = await rpc("tools/call", { name: "get_root", arguments: {} });
-check("get_root is not unknown tool", !root.error);
+// Every advertised free tool must have a handler. Use deliberately small
+// arguments; schema failures are valid tool results, JSON-RPC unknown-tool
+// errors are not. This closes the gap where x402_trust was listed but absent
+// from HANDLERS.
+const freeCalls = {
+  board_totals: {},
+  get_axis: { axis: "governance" },
+  verify_card: {},
+  list_cards: { limit: 0 },
+  get_root: {},
+  get_card: { sha256: "bad" },
+  verify_inclusion: { sha256: "bad" },
+  x402_trust: {},
+};
+const freeResults = new Map();
+for (const name of FREE) {
+  const r = await rpc("tools/call", { name, arguments: freeCalls[name] });
+  freeResults.set(name, r);
+  check(`${name} has a callable handler`, !r.error && Boolean(r.result?.structuredContent));
+}
+
+const root = freeResults.get("get_root");
 check("get_root VALID", root.result?.structuredContent?.state === "VALID");
+
+const trust = freeResults.get("x402_trust")?.result?.structuredContent;
+check(
+  "x402_trust delegates to the canonical measured snapshot",
+  trust?.state === "VALID" &&
+    trust?.source === `${process.env.GSPC_ORIGIN || "https://councilof.ai"}/interop/x402-trust/latest.json` &&
+    trust?.counts && typeof trust.counts === "object" &&
+    typeof trust?.headline === "string" && trust.headline.length > 0 &&
+    trust?.not_a_certification === true,
+);
 
 const unknown = await rpc("tools/call", { name: "not_a_tool", arguments: {} });
 check("unknown tool still errors", Boolean(unknown.error));
-
-const miss = await rpc("tools/call", { name: "verify_inclusion", arguments: { sha256: "0".repeat(64) } });
-const st = miss.result?.structuredContent?.state;
-check("verify_inclusion wired", !miss.error && (st === "INVALID" || st === "UNCHECKABLE"));
 
 // Every paid tool must be wired: reachable, argument-checked, and never a fabricated result.
 for (const name of PAID) {

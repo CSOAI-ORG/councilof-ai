@@ -12,10 +12,16 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   publish:
+    # workflow_dispatch allows an operator to select any ref. npm's trusted
+    # publisher binds the workflow filename, not this repository branch, so a
+    # non-master run must never start a job capable of obtaining an OIDC token.
+    if: ${{ github.ref == 'refs/heads/master' }}
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

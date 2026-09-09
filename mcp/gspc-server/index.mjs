@@ -370,6 +370,29 @@ async function verifyInclusion(args) {
   }
 }
 
+/**
+ * Mirror the HTTP MCP tool's public x402-trust contract. The snapshot is the
+ * canonical measured artefact; this package delegates to it instead of
+ * copying counts or manufacturing a trust verdict locally.
+ */
+async function x402Trust() {
+  const path = "/interop/x402-trust/latest.json";
+  try {
+    const d = await fetchJson(path);
+    return {
+      state: "VALID",
+      source: `${ORIGIN}${path}`,
+      kind: d.kind ?? null,
+      as_of: d.as_of ?? null,
+      counts: d.counts ?? null,
+      headline: d.headline ?? null,
+      not_a_certification: true,
+    };
+  } catch (e) {
+    return { ...unreachable(path, e), state: "UNREACHABLE" };
+  }
+}
+
 /* ---------------------------------------------------------------- paid tools */
 
 const PAID_DOCTRINE =
@@ -494,6 +517,7 @@ const HANDLERS = {
   get_root: getRoot,
   get_card: getCard,
   verify_inclusion: verifyInclusion,
+  x402_trust: x402Trust,
 };
 
 /* ----------------------------------------------------------------- transport */
@@ -535,6 +559,8 @@ function summaryLine(name, payload) {
       return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
     case "verify_inclusion":
       return `${payload.state ?? "?"} — inclusion against live merkle.`;
+    case "x402_trust":
+      return `${payload.state ?? "?"} — ${payload.headline || "catalog trust counts"}.`;
     case "commission_card":
     case "art50_marking_evidence":
     case "rwa_evidence":
