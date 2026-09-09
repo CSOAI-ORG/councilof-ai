@@ -224,7 +224,13 @@ export function buildTypedData(challenge: X402Challenge, signer: string) {
       "x402Wallet: maxTimeoutSeconds must be a positive safe integer",
     );
   }
-  const timeoutEnd = now + Math.floor(timeout);
+  const timeoutEnd = now + timeout;
+  if (
+    !Number.isSafeInteger(timeoutEnd) ||
+    (challenge.expires != null && !Number.isSafeInteger(challenge.expires))
+  ) {
+    throw new Error("x402Wallet: payment expiry must be a safe integer timestamp");
+  }
   const validBefore =
     challenge.expires != null
       ? Math.min(challenge.expires, timeoutEnd)

@@ -204,6 +204,20 @@ describe("typed authorization terms", () => {
     );
   });
 
+  it("rejects non-integer expiry values and overflowing timeouts", () => {
+    for (const expires of [NaN, Infinity, -Infinity, Math.floor(Date.now() / 1000) + 0.5]) {
+      expect(() => buildTypedData({ ...LIVE, expires }, SIGNER)).toThrow(
+        /safe integer timestamp/,
+      );
+    }
+    expect(() =>
+      buildTypedData({
+        ...LIVE,
+        accepted: { ...ACCEPTED, maxTimeoutSeconds: Number.MAX_SAFE_INTEGER },
+      }, SIGNER),
+    ).toThrow(/safe integer timestamp/);
+  });
+
   it("refuses incomplete, non-v2, or unsupported challenge terms", () => {
     expect(() =>
       buildTypedData({ ...LIVE, accepted: undefined }, SIGNER),
