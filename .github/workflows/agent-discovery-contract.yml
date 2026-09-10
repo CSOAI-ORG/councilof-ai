@@ -1,0 +1,35 @@
+name: agent-discovery-contract
+
+on:
+  pull_request:
+    paths:
+      - 'functions/.well-known/api-catalog*'
+      - 'public/_headers'
+      - '.github/workflows/agent-discovery-contract.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agent-discovery-contract-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install locked dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Offline public catalog contract
+        run: npx --no-install vitest run functions/.well-known/api-catalog.test.ts --maxWorkers=1 --minWorkers=1
+      - name: Strict typecheck of the isolated catalog handler
+        run: npx --no-install tsc --noEmit --strict --skipLibCheck --target es2022 --module esnext --moduleResolution bundler functions/.well-known/api-catalog.ts
