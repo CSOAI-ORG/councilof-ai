@@ -48,6 +48,7 @@
 
 import boardSigned from "../../public/signed/gspc-board.signed.json";
 import boardStatus from "../../public/signed/gspc-board.status.json";
+import regulatoryInventory from "../../public/interop/regulatory-inventory.json";
 import type { AxisScore } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
@@ -97,6 +98,7 @@ const counter = (
 // ── sources, named once ──────────────────────────────────────────────────────
 const SRC_BOARD = "public/signed/gspc-board.signed.json";
 const SRC_AXES = "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from)";
+const SRC_REGULATORY_INVENTORY = "public/interop/regulatory-inventory.json";
 
 // ── the board's own date-of-record ───────────────────────────────────────────
 // This artifact carries no ISO instant. Its honest date-of-record is the measurement
@@ -117,6 +119,9 @@ const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length
 const boardCountsAgree =
   boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
 const boardAgrees = boardCountsAgree && boardClaimState === "CURRENT";
+const regulatoryCounts = (regulatoryInventory as any).counts ?? {};
+const regulatoryAsOf: string | null = (regulatoryInventory as any).as_of ?? null;
+const frozenAt: string | null = (regulatoryInventory as any).frozen_provisions?.frozen_at ?? null;
 
 const COUNTERS: Counter[] = [
   counter(
@@ -158,6 +163,50 @@ const COUNTERS: Counter[] = [
       "not board slots and the two are never added — see counting_rule on /api/axis-register.",
   ),
   counter(
+    "frozen_provision_counter",
+    "Frozen statutory-provision counter",
+    (regulatoryInventory as any).frozen_provisions?.value ?? null,
+    "catalogued",
+    SRC_REGULATORY_INVENTORY + " → frozen_provisions.value",
+    frozenAt,
+    "frozen_provisions.frozen_at",
+    "The six instrument counts sum to 417. The public repository does not yet expose 417 " +
+      "independently addressable provision rows, so this is a verified counter with an unresolved-row " +
+      "limitation, not a claim that a complete inspectable corpus is published.",
+  ),
+  counter(
+    "regulator_authority_adapters",
+    "Regulator and authority source adapters",
+    (regulatoryInventory as any).authority_adapters?.length ?? null,
+    "catalogued",
+    SRC_REGULATORY_INVENTORY + " → authority_adapters.length",
+    regulatoryAsOf,
+    "as_of",
+    "Typed source-and-routing records: regulators, authority networks, framework owners and a treaty " +
+      "body. They are not live regulator APIs and confer no authority on Council of AI.",
+  ),
+  counter(
+    "crosswalk_assets",
+    "Crosswalk estate assets",
+    (regulatoryInventory as any).crosswalk_assets?.length ?? null,
+    "catalogued",
+    SRC_REGULATORY_INVENTORY + " → crosswalk_assets.length",
+    regulatoryAsOf,
+    "as_of",
+    "Heterogeneous path-backed assets: derived statements, mappings, a catalog, a producer, an " +
+      "example and interface views. This is not a count of equivalent signed legal crosswalks.",
+  ),
+  counter(
+    "published_crosswalk_regimes",
+    "Regimes in the published east-west crosswalk",
+    regulatoryCounts.published_crosswalk_regimes ?? null,
+    "catalogued",
+    SRC_REGULATORY_INVENTORY + " → counts.published_crosswalk_regimes; verified against public/crosswalk/east-west-v1.json",
+    regulatoryAsOf,
+    "as_of",
+    "The public mapping contains EU, UK, US-IL and CN. Do not substitute the 25-asset estate count.",
+  ),
+  counter(
     "verify_page_executions",
     "Verify-page executions (free, zero-auth)",
     null,
@@ -184,7 +233,7 @@ const COUNTERS: Counter[] = [
 
 export const onRequestGet: PagesFunction = async () => {
   const body = {
-    schema: "csoai.wave1-counters/0.2",
+    schema: "csoai.wave1-counters/0.3",
     wave: 1,
 
     contract: {

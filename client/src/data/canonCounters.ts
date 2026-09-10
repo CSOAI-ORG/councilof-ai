@@ -49,11 +49,40 @@ export const CANON = {
     measuredAt: "2026-08-01",
     note: "Live count also streams from /api/worker/anchors (D1) — static fallback must match this file.",
   },
-  /** Frozen provisions across the hive corpus (113 AI Act + 99 GDPR + 71 CRA + 64 DORA + 46 NIS2 + others). */
+  /** Frozen counter: 126 AI Act + 99 GDPR + 71 CRA + 64 DORA + 46 NIS2 + 11 CSRD. */
   FROZEN_PROVISIONS: {
     value: 417,
-    source: "globe3d HUD / SovSpace HIVE layer (production sweep counts)",
-    measuredAt: "2026-07-30",
+    source: "public/interop/regulatory-inventory.json · frozen_provisions",
+    measuredAt: "2026-08-03",
+    note: "Verified frozen counter. The public repository does not yet expose 417 addressable provision rows; do not call it a complete inspectable corpus.",
+  },
+  /** Source-and-routing records. This is not a count of live regulator APIs. */
+  REGULATOR_AUTHORITY_ADAPTERS: {
+    value: 17,
+    source: "public/interop/regulatory-inventory.json · authority_adapters.length",
+    measuredAt: "2026-09-10",
+    note: "Regulators, authority networks, framework owners and a treaty body are typed separately in the manifest.",
+  },
+  /** Heterogeneous crosswalk estate: statements, mappings, catalog, producer and views. */
+  CROSSWALK_ASSETS: {
+    value: 25,
+    source: "public/interop/regulatory-inventory.json · crosswalk_assets.length",
+    measuredAt: "2026-09-10",
+    note: "Not 25 equivalent signed legal crosswalks. See each asset_type and evidence_state in the manifest.",
+  },
+  /** The signed GSPC board derives this count from its axis array. */
+  GSPC_AXES: {
+    value: 22,
+    source: "public/signed/gspc-board.signed.json · axes.length",
+    measuredAt: "2026-08-26",
+    note: "Dated measurements, not certification or a legal compliance verdict.",
+  },
+  /** The public east-west mapping currently contains four jurisdiction rows. */
+  PUBLISHED_CROSSWALK_REGIMES: {
+    value: 4,
+    source: "public/crosswalk/east-west-v1.json · jurisdictions.length",
+    measuredAt: "2026-08-29",
+    note: "Do not replace this with the 25-asset inventory count; they measure different things.",
   },
   /** Sovereign network agent cards (csoai.org is the crown — not counted as an agent). */
   NETWORK_AGENTS: {
@@ -66,15 +95,12 @@ export const CANON = {
     source: "client/src/data/layer0Nodes.ts",
     measuredAt: "2026-08-01",
   },
-  /** Regulatory frameworks in the published crosswalk. PUBLIC LOCK = 13.
-   *  (Internal crosswalk GSPC-Crosswalk-2026-07-29 covers 30+; the verified
-   *  public claim is 13 frameworks — rendering "30" on a public page is a
-   *  locked-language breach per SOVOS-MASTER.md EU-1a F1/B2.) */
+  /** Jurisdictions/regimes in the public east-west crosswalk. */
   FRAMEWORKS_CROSSWALKED: {
-    value: 13,
-    source: "verified framework lock (EU AI Act · NIST AI RMF · ISO/IEC 42001 · DORA · NIS2 · GDPR · CRA · HIPAA · CO AI Treaty · UK AI Principles · CAI Act · Singapore MGF · Korea AI Basic Act)",
-    measuredAt: "2026-08-01",
-    note: "Internal crosswalk covers 30+ (GSPC-Crosswalk-2026-07-29); public lock = 13 verified. NEVER render 30 on a public surface."
+    value: 4,
+    source: "public/crosswalk/east-west-v1.json · jurisdictions.length",
+    measuredAt: "2026-08-29",
+    note: "EU · UK · US-IL · CN. The separate 25 count is an inventory of heterogeneous crosswalk assets, not 25 crosswalked legal regimes."
   },
   // ── camelCase entries for direct CANON.x.value access (NewHome-v2 FAQ,
   // TrustMarquee). Adding these fixed the 2026-08-01 P0: CANON.councilAgents
