@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write   # lands via branch + PR; a direct push to master is GH006 (required gates)
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,12 +40,31 @@ jobs:
           open("public/interop/art50-target-index.json", "w").write(json.dumps(out, indent=2))
           print("derived n_ok:", out["n_ok"], "art50 targets:", len(art))
           PY
-      - name: Commit + push (Actions pattern — server-side publish)
+      - name: Land via branch + PR (direct push to master is GH006 — required "gates" check)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           git config user.name "CSOAI-Bot"
           git config user.email "bot@csoai.org"
           git add public/interop/art50-target-index.json
-          if git diff --cached --quiet; then echo "no change"; else
-            git commit -m "auto(art50-index): regenerate from live provider-diff"
-            git push origin master
+          if git diff --cached --quiet; then echo "no change"; exit 0; fi
+          git commit -m "auto(art50-index): regenerate from live provider-diff"
+          # master requires the "gates" status check, and a direct push creates a commit
+          # no check has run on yet, so every push died with 'GH006: Protected branch
+          # update failed' (11 consecutive red runs). Land the way census-delta.yml and
+          # public-root.yml do: route the regenerated artifact through a pull request.
+          # ONE rolling branch, not one per hour — the index is fully regenerated each
+          # run, so only the newest is ever worth landing.
+          branch="art50-index/pending"
+          git push --force origin "HEAD:refs/heads/${branch}"
+          existing=$(gh pr list --head "${branch}" --state open --json url --jq '.[0].url' 2>/dev/null || true)
+          if [ -z "${existing:-}" ]; then
+            existing=$(gh pr create --base master --head "${branch}" \
+              --title "art50-target-index: regenerate from live provider-diff (rolling)" \
+              --body "Automated regeneration of \`public/interop/art50-target-index.json\` from the live provider-diff feed. Force-updated each run so this PR always carries the LATEST index. Opened as a PR because a direct push to master cannot satisfy the required \`gates\` check (GH006). Auto-merges when gates passes.")
+            echo "opened ${existing}"
+          else
+            echo "existing PR updated in place: ${existing}"
           fi
+          gh pr merge "${existing}" --squash --auto || echo "auto-merge unavailable; ${existing} needs a human merge"
