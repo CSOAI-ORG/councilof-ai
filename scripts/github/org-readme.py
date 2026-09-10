@@ -10,6 +10,7 @@ Nothing in the emitted markdown is typed. Every count is read at run time from:
   https://councilof.ai/badge/board.svg          same — included only if it answers
   https://councilof.ai/root.json                merkle_root, card_count, as_of, sig
   https://councilof.ai/signed/card_index.json   n_cards (the signed-card chain)
+  https://councilof.ai/api/cards                living card-store count (a separate population)
   https://councilof.ai/api/hub-cards            third-party Hub cells (measured/unmeasured)
   https://councilof.ai/api/corrections          public corrections ledger + signature_state
   https://councilof.ai/api/revenue              one_number (distinct non-self x402 payers)
@@ -67,6 +68,7 @@ URLS = {
     "gspc": "https://councilof.ai/api/gspc",
     "root": "https://councilof.ai/root.json",
     "card_index": "https://councilof.ai/signed/card_index.json",
+    "cards": "https://councilof.ai/api/cards",
     "hub": "https://councilof.ai/api/hub-cards",
     "corrections": "https://councilof.ai/api/corrections",
     "revenue": "https://councilof.ai/api/revenue",
@@ -218,10 +220,19 @@ def derive() -> dict:
     f["root"]["count_matches_list"] = (f["root"]["card_count"] == f["root"]["sha256_list_len"]) if r else None
 
     ci = raw["card_index"]
+    index_ids = [entry.get("card") for entry in (dig(ci, "cards", default=[]) or []) if isinstance(entry, dict) and entry.get("card")]
+    root_ids = dig(r, "card_sha256", default=[]) or []
     f["card_index"] = {
         "n_cards": dig(ci, "n_cards"), "n_cells": dig(ci, "n_cells"),
         "pubkey": dig(ci, "pubkey", default=UNCHECKABLE),
         "list_len": len(dig(ci, "cards", default=[]) or []),
+        "root_overlap": len(set(index_ids).intersection(root_ids)) if ci and r else None,
+    }
+
+    cards = raw["cards"]
+    f["card_store"] = {
+        "count": dig(cards, "cards", "count"),
+        "signed": dig(cards, "cards", "signed"),
     }
 
     h = raw["hub"]
@@ -437,13 +448,19 @@ def integrity_table(f: dict) -> str:
         f"| 3 · Transparency-log witness | Rekor **{w['rekor_status']}** · OpenTimestamps `{w['ots_status']}` · EAS `{w['eas_status']}` · witnessed root `{short(w['witnessed_root'], 12)}` equals live `root.json` at derive time: **{w['witnessed_equals_live_now'] if w['witnessed_equals_live_now'] is not None else UNCHECKABLE}** · pointer's own last drift check `{w['drift_recorded']}` at `{w['drift_checked_at']}` · conflict `{w['conflict']}` | [`/interop/root-witness-pointer.json`](https://councilof.ai/interop/root-witness-pointer.json) · [sidecar]({w['sidecar']}) |",
         f"| 4 · Corrections ledger | **{n_or_unc(c['count'])}** entries · latest `{c['latest_id']}` ({c['latest_date']}) · signature_state **{c['signature_state']}** · {c['license']} | [`/api/corrections`](https://councilof.ai/api/corrections) |",
         f"| Living board stamp | **{f['living_stamp_state']}** under `{f['living_stamp_signer']}` | [`/api/gspc` → `measured_on.living_stamp`](https://councilof.ai/api/gspc) |",
-        f"| Third-party Hub cells | **{n_or_unc(f['hub']['cells'])}** cells: MEASURED {n_or_unc(f['hub']['measured'])} · UNMEASURED {n_or_unc(f['hub']['unmeasured'])} · complete read: {f['hub']['complete']} | [`/api/hub-cards`](https://councilof.ai/api/hub-cards) |",
+        f"| Third-party Hub cells | **{n_or_unc(f['hub']['cells'])}** cells: MEASURED {n_or_unc(f['hub']['measured'])} · UNMEASURED {n_or_unc(f['hub']['unmeasured'])} · complete read: {f['hub']['complete']} (as_of `{f['hub']['as_of']}` — re-GET `/api/hub-cards` → `.counts`; never freeze) | [`/api/hub-cards`](https://councilof.ai/api/hub-cards) |",
         f"| Keys (DID) | `{f['did']['id']}` · {len(f['did']['keys'])} verification methods · card key x=`{short(key, 10)}` | [`/.well-known/did.json`](https://csoai.org/.well-known/did.json) |",
         f"| A2A agent card · x402 manifest | `{f['a2a']['name']}`, {f['a2a']['skills']} skills · `{f['x402']['schema']}`, network `{f['x402']['network']}`, mode `{f['x402']['mode']}`, {f['x402']['resources']} metered resources | [`/.well-known/agent.json`](https://councilof.ai/.well-known/agent.json) · [`/.well-known/x402.json`](https://councilof.ai/.well-known/x402.json) |",
     ]
-    note = ("\nThree different card numbers appear above on purpose and are never reconciled here: the **signed-card chain** "
-            f"({n_or_unc(ci['n_cards'])}), the **public-root leaf count** ({n_or_unc(r['card_count'])}) and the **Hub cells** "
-            f"({n_or_unc(f['hub']['cells'])}) are three populations with three source URLs. Quote each with its URL.")
+    overlap = ci["root_overlap"]
+    overlap_text = n_or_unc(overlap)
+    note = ("\nFour populations appear above on purpose and are never reconciled here: the **signed-card index** "
+            f"({n_or_unc(ci['n_cards'])} via `/signed/card_index.json`), the **living `/api/cards` registry** "
+            f"({n_or_unc(f['card_store']['count'])}), the **public-root leaf count** ({n_or_unc(r['card_count'])} via `/root.json`), "
+            f"and the **Hub cells** (live GET `/api/hub-cards` → `.counts`; currently "
+            f"{n_or_unc(f['hub']['cells'])}/{n_or_unc(f['hub']['measured'])}/{n_or_unc(f['hub']['unmeasured'])}). "
+            f"Quote each with its URL. Ceremony: card verify ≠ root inclusion — signed-index/root identifier overlap = {overlap_text}; "
+            f"never sell “{n_or_unc(ci['n_cards'])} in the root.”")
     return "\n".join(rows) + "\n" + note
 
 
