@@ -3,14 +3,23 @@ name: public-root-watcher
 # D1.11 — three-host fetch after a successful public-root run.
 # Reader only. Never a second writer. Logs OK or DRIFT.
 #
-# KNOWN GAP, 2026-09-03: the HF host below has NO PUBLISHER. Grep the repo for
-# `gspc-boards` — the only hit is this file, reading it. The mirror was seeded once
-# and never updated, so it sat 3 days stale while this workflow was itself dead on an
-# IndentationError and reported nothing. Both were fixed and the mirror synced by hand
-# with a local token; it will drift again on the next root, because the GHA token
-# cannot write HF main (#1102, see memory hub-queue-flip-cannot-write-hf-main).
-# Until a publisher exists, a DRIFT here most likely means "the mirror is stale",
-# not "the roots disagree" — check as_of on each copy before concluding anything.
+# PUBLISHER STATUS, 2026-09-10: RESOLVED. hf-gspc-surface-sync.yml is the publisher —
+# it runs sync_hf_gspc.py --root after every successful public-root run, and its rollout
+# gate (repo variable HF_GSPC_AUTO_SYNC=enabled) is now ON: run 34443171039 published
+# with DRY_RUN=false and reported state UNCHANGED against the live root, and a dry-run
+# dispatch (34467459009) confirmed sha256 parity across all three hosts. The DRIFT runs
+# of 2026-09-07..09 were exactly the predicted "mirror is stale" case from the gap note
+# below; they cleared the moment the publisher was enabled.
+#
+# If this watcher goes RED again, check as_of on each copy first: a stale HF copy now
+# means hf-gspc-surface-sync's last run failed or was skipped, not that a publisher is
+# missing.
+#
+# HISTORICAL GAP, 2026-09-03 (kept for context): the HF host below had NO PUBLISHER.
+# Grep the repo for `gspc-boards` — the only hit was this file, reading it. The mirror
+# was seeded once and never updated, so it sat 3 days stale while this workflow was
+# itself dead on an IndentationError and reported nothing. Both were fixed and the
+# mirror synced by hand with a local token (#1102, hub-queue-flip-cannot-write-hf-main).
 
 on:
   workflow_run:
