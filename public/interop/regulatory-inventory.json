@@ -10,7 +10,7 @@
     "published_crosswalk_regimes": 4
   },
   "truth_boundaries": [
-    "417 is a verified frozen counter in the coverage artifact, but the repository does not contain 417 independently addressable provision rows. Do not describe it as a complete inspectable corpus until those rows resolve.",
+    "417 now resolves to 417 unique provision identifiers and SHA-256 content hashes, and the aggregate corpus root recomputes. The original SQLite database and exact historical source-text bytes were not recovered, so this is a frozen hash manifest, not a complete inspectable legal corpus.",
     "The 17 adapters below are source-and-routing records. They do not confer regulator authority and they are not 17 live regulator APIs.",
     "The 25 crosswalk assets are heterogeneous: measurement-derived statements, mappings, an example, a catalog, a producer and user-interface views. They are not 25 equivalent signed legal crosswalks.",
     "The only public multi-jurisdiction crosswalk counted here maps four regimes in public/crosswalk/east-west-v1.json.",
@@ -18,10 +18,14 @@
   ],
   "frozen_provisions": {
     "value": 417,
-    "state": "COUNTER_VERIFIED_ROWS_UNRESOLVED",
-    "frozen_at": "2026-08-03T13:35:53.825432+00:00",
-    "evidence_source": "benchmark-results/coverage_crosswalk.json",
-    "evidence_sha256_prefix": "e20a6a41e2cbfabc",
+    "state": "HASH_MANIFEST_VERIFIED_SOURCE_BYTES_UNRESOLVED",
+    "frozen_at": "2026-08-12T05:22:20.629949+00:00",
+    "evidence_source": "public/interop/frozen-provision-hashes.json",
+    "evidence_sha256": "e43c9bd52adeeda96b67a3ae63700c44f0aae3a44c74a0dac46fbed5f8008788",
+    "corpus_root": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+    "root_algorithm": "sha256(concat(sorted(provision_id + provision_sha256)))",
+    "normaliser_version": "1.0.0",
+    "source_database_state": "NOT_RECOVERED",
     "instruments": {
       "GDPR": 99,
       "CSRD": 11,
@@ -30,7 +34,7 @@
       "EU AI Act": 126,
       "Cyber Resilience Act": 71
     },
-    "limitation": "The six instrument counts sum to 417, but this public repository does not yet carry a 417-row provision manifest."
+    "limitation": "The public manifest proves the 417 identifiers, their frozen hashes and their aggregate root. It does not include the exact normalized source-text bytes needed to regenerate each per-provision hash, and no authority watcher was active when it was frozen."
   },
   "authority_adapters": [
     {
