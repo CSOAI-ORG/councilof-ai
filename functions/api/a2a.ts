@@ -9,9 +9,10 @@
  * that promises what the code lacks. This file is the door, and the card now names only it.
  *
  * WHAT IT DOES
- *   SendMessage             -> a Message (never a Task). The text part carries the live board
- *                              lid VERBATIM from GET /api/gspc totals.lid; the data part carries
- *                              the derived axis rows. Fetch failure -> UNCHECKABLE, no number.
+ *   SendMessage             -> a Message (never a Task). One explicit Part.data
+ *                              {skill,input} selects one of the seven skills on the public card.
+ *                              Each skill calls a fixed same-origin, free handler. The legacy
+ *                              one-part text "board" request remains a narrow compatibility alias.
  *   GetTask / CancelTask    -> TaskNotFoundError (-32001): this agent keeps no task store.
  *   ListTasks               -> UnsupportedOperationError (-32004): nothing to list.
  *   SendStreamingMessage / SubscribeToTask -> UnsupportedOperationError (-32004), which §3.3.4
@@ -34,6 +35,10 @@ type Json = Record<string, unknown>;
 export const A2A_PROTOCOL_VERSION = "1.0";
 const CARD_PATH = "/.well-known/agent-card.json";
 const BOARD_PATH = "/api/gspc";
+const MAX_REQUEST_BYTES = 256 * 1024;
+const REQUEST_READ_TIMEOUT_MS = 5_000;
+const MAX_SOURCE_RESPONSE_BYTES = 1024 * 1024;
+const SOURCE_TIMEOUT_MS = 8_000;
 export const REGISTER =
   "Evidence of what was measured and when, by the issuer. Not a certification, endorsement, or conformity mark.";
 
@@ -52,6 +57,7 @@ export const A2A_ERROR = {
   INVALID_REQUEST: -32600,
   METHOD_NOT_FOUND: -32601,
   INVALID_PARAMS: -32602,
+  INTERNAL: -32603,
   TASK_NOT_FOUND: -32001,
   PUSH_NOTIFICATION_NOT_SUPPORTED: -32003,
   UNSUPPORTED_OPERATION: -32004,
@@ -61,7 +67,7 @@ export const A2A_ERROR = {
 // Every v1.0 method name and what this door does with it. Exposed on GET so a stranger
 // can read the contract before sending anything.
 export const METHODS: Record<string, string> = {
-  SendMessage: "answered with a Message carrying the live board lid and derived axis rows",
+  SendMessage: "answered with a Message from one explicit {skill,input} selector; seven card skills route to fixed free handlers",
   SendStreamingMessage: "UnsupportedOperationError -32004 (streaming is false on the card)",
   GetTask: "TaskNotFoundError -32001 (no task store)",
   ListTasks: "UnsupportedOperationError -32004 (no task store)",
@@ -78,6 +84,242 @@ const record = (v: unknown): Json | null =>
   v && typeof v === "object" && !Array.isArray(v) ? (v as Json) : null;
 const str = (v: unknown): string | null => (typeof v === "string" && v ? v : null);
 const numOrNull = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
+
+export const SKILL_IDS = [
+  "gspc-board",
+  "east-west-crosswalk",
+  "measured-badge",
+  "benchmark-quality-register",
+  "article50-detect",
+  "eu-ai-act-screen",
+  "x402-discovery",
+] as const;
+type SkillId = (typeof SKILL_IDS)[number];
+const SKILL_ID_SET = new Set<string>(SKILL_IDS);
+
+type SkillSelection = { skill: SkillId; input: Json };
+
+class SourceError extends Error {
+  constructor(
+    message: string,
+    readonly source: string,
+    readonly kind: "FETCH_FAILED" | "HTTP_ERROR" | "INVALID_JSON" | "RESPONSE_TOO_LARGE",
+  ) {
+    super(message);
+  }
+}
+
+class RequestBodyError extends Error {
+  constructor(readonly kind: "REQUEST_TOO_LARGE" | "REQUEST_READ_TIMEOUT") {
+    super(kind === "REQUEST_TOO_LARGE"
+      ? `request exceeds ${MAX_REQUEST_BYTES} bytes`
+      : `request body did not finish within ${REQUEST_READ_TIMEOUT_MS}ms`);
+  }
+}
+
+function cancelReaderWithoutWaiting(reader: ReadableStreamDefaultReader<Uint8Array>, reason: string): void {
+  try {
+    // A hostile underlying source may return a cancel promise that never settles. Cancellation
+    // must be initiated, but the public request deadline may not depend on that promise.
+    void reader.cancel(reason).catch(() => undefined);
+  } catch {
+    // Some custom streams throw synchronously from cancel. The bounded error still wins.
+  }
+  try {
+    reader.releaseLock();
+  } catch {
+    // A pending read can keep the lock briefly. cancel() settles it on conforming streams; a
+    // hostile stream must not keep this handler open merely so we can release its reader lock.
+  }
+}
+
+async function readBoundedRequestText(request: Request): Promise<string> {
+  const rawLength = request.headers.get("content-length");
+  const declared = rawLength === null ? null : Number(rawLength);
+  if (declared !== null && Number.isFinite(declared) && declared > MAX_REQUEST_BYTES) {
+    throw new RequestBodyError("REQUEST_TOO_LARGE");
+  }
+  if (!request.body) return "";
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<never>((_resolve, reject) => {
+    timer = setTimeout(() => reject(new RequestBodyError("REQUEST_READ_TIMEOUT")), REQUEST_READ_TIMEOUT_MS);
+  });
+  try {
+    while (true) {
+      const { done, value } = await Promise.race([reader.read(), deadline]);
+      if (done) break;
+      if (!value) continue;
+      total += value.byteLength;
+      if (total > MAX_REQUEST_BYTES) {
+        cancelReaderWithoutWaiting(reader, "request too large");
+        throw new RequestBodyError("REQUEST_TOO_LARGE");
+      }
+      chunks.push(value);
+    }
+  } catch (error) {
+    if (error instanceof RequestBodyError && error.kind === "REQUEST_READ_TIMEOUT") {
+      cancelReaderWithoutWaiting(reader, "request read timeout");
+    }
+    throw error;
+  } finally {
+    if (timer !== undefined) clearTimeout(timer);
+    try {
+      reader.releaseLock();
+    } catch {
+      // Already released after cancellation, or a hostile pending read still owns the lock.
+    }
+  }
+
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(bytes);
+}
+
+async function readBoundedText(response: Response, maxBytes: number): Promise<string> {
+  const declared = Number(response.headers.get("content-length"));
+  if (Number.isFinite(declared) && declared > maxBytes) {
+    throw new SourceError(`response exceeds ${maxBytes} bytes`, response.url, "RESPONSE_TOO_LARGE");
+  }
+  if (!response.body) return "";
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (!value) continue;
+    total += value.byteLength;
+    if (total > maxBytes) {
+      cancelReaderWithoutWaiting(reader, "response too large");
+      throw new SourceError(`response exceeds ${maxBytes} bytes`, response.url, "RESPONSE_TOO_LARGE");
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(bytes);
+}
+
+async function fetchJsonSource(
+  origin: string,
+  path: string,
+  init: { method?: "GET" | "POST"; body?: string } = {},
+): Promise<{ source: string; payload: unknown }> {
+  const source = new URL(path, origin).toString();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), SOURCE_TIMEOUT_MS);
+  try {
+    const response = await fetch(source, {
+      method: init.method ?? "GET",
+      headers: init.body
+        ? { accept: "application/json", "content-type": "application/json" }
+        : { accept: "application/json" },
+      body: init.body,
+      redirect: "error",
+      signal: controller.signal,
+    });
+    const text = await readBoundedText(response, MAX_SOURCE_RESPONSE_BYTES);
+    if (!response.ok) throw new SourceError(`HTTP ${response.status} from ${path}`, source, "HTTP_ERROR");
+    try {
+      return { source, payload: JSON.parse(text) as unknown };
+    } catch {
+      throw new SourceError(`${path} did not return JSON`, source, "INVALID_JSON");
+    }
+  } catch (error) {
+    if (error instanceof SourceError) {
+      if (controller.signal.aborted && error.kind !== "RESPONSE_TOO_LARGE") {
+        throw new SourceError(`source timed out after ${SOURCE_TIMEOUT_MS}ms`, source, "FETCH_FAILED");
+      }
+      throw error;
+    }
+    const reason = controller.signal.aborted
+      ? `source timed out after ${SOURCE_TIMEOUT_MS}ms`
+      : `source fetch failed: ${error instanceof Error ? error.message : String(error)}`;
+    throw new SourceError(reason, source, "FETCH_FAILED");
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+const exactKeys = (input: Json, required: string[], optional: string[] = []): boolean => {
+  const allowed = new Set([...required, ...optional]);
+  return required.every((key) => Object.prototype.hasOwnProperty.call(input, key))
+    && Object.keys(input).every((key) => allowed.has(key));
+};
+
+function parseSkillSelection(message: Json): SkillSelection | string {
+  const parts = Array.isArray(message.parts) ? message.parts : [];
+  if (parts.length !== 1) {
+    return "exactly one Part is required; additional semantic parts are not ignored";
+  }
+  const part = record(parts[0]);
+  if (!part) return "the single Part must be an object";
+  const semanticKeys = ["text", "data", "url", "raw"].filter((key) =>
+    Object.prototype.hasOwnProperty.call(part, key));
+  if (semanticKeys.length !== 1) {
+    return "Part content is a oneof: supply exactly one of text, data, url, or raw";
+  }
+  if (semanticKeys[0] === "text") {
+    if (str(part.text)?.trim().toLowerCase() === "board") return { skill: "gspc-board", input: {} };
+    return "structured Part.data {skill,input} is required (legacy text compatibility is only the exact word `board`)";
+  }
+  if (semanticKeys[0] !== "data") {
+    return `Part.${semanticKeys[0]} is not supported; use structured Part.data {skill,input}`;
+  }
+  const selector = record(part.data);
+  if (!selector) return "Part.data must be an object containing {skill,input}";
+  if (!exactKeys(selector, ["skill", "input"])) return "selector must contain exactly {skill,input}";
+  const skill = str(selector.skill);
+  if (!skill || !SKILL_ID_SET.has(skill)) return `unknown skill; choose one of: ${SKILL_IDS.join(", ")}`;
+  const input = record(selector.input);
+  if (!input) return "selector.input must be an object";
+  return { skill: skill as SkillId, input };
+}
+
+function validateSkillInput(selection: SkillSelection): string | null {
+  const { skill, input } = selection;
+  if (["gspc-board", "east-west-crosswalk", "benchmark-quality-register", "x402-discovery"].includes(skill)) {
+    return Object.keys(input).length === 0 ? null : `${skill} input must be an empty object`;
+  }
+  if (skill === "measured-badge") {
+    if (!exactKeys(input, ["card", "subject"])) return "measured-badge input requires exactly card and subject";
+    if (!/^[0-9a-f]{64}$/i.test(str(input.card) ?? "")) return "measured-badge card must be a 64-hex signed-card hash";
+    if (!/^[^\s/@]+\/[^\s@]+@[0-9a-f]{40}(?:[0-9a-f]{24})?$/i.test(str(input.subject) ?? "")) {
+      return "measured-badge subject must be owner/model@40-or-64-hex-immutable-revision";
+    }
+    return null;
+  }
+  if (skill === "article50-detect") {
+    if (!exactKeys(input, ["manifest"], ["asset_hash"]) || !record(input.manifest)) {
+      return "article50-detect input requires manifest (object), with optional asset_hash";
+    }
+    if (input.asset_hash !== undefined && !/^[0-9a-f]{64}$/i.test(str(input.asset_hash) ?? "")) {
+      return "article50-detect asset_hash must be 64 hex when supplied";
+    }
+    return null;
+  }
+  if (skill === "eu-ai-act-screen") {
+    if (!exactKeys(input, ["system"])) return "eu-ai-act-screen input requires exactly system";
+    const system = str(input.system);
+    if (!system || system.trim().length < 8 || system.length > 4_000) {
+      return "eu-ai-act-screen system must be 8 to 4000 characters";
+    }
+    return null;
+  }
+  return "unsupported skill";
+}
 
 function reply(id: unknown, body: Json): Response {
   const rpcId = typeof id === "string" || typeof id === "number" ? id : null;
@@ -143,44 +385,41 @@ export async function deriveBoard(origin: string): Promise<DerivedBoard> {
     verify: new URL("/gspc-verify", origin).toString(),
     root: new URL("/root.json", origin).toString(),
   };
-  let res: Response;
   try {
-    res = await fetch(source, { headers: { accept: "application/json" } });
-  } catch (e) {
-    return { ...base, reason: `fetch failed: ${e instanceof Error ? e.message : String(e)}` };
+    const result = await fetchJsonSource(origin, BOARD_PATH);
+    const board = record(result.payload);
+    if (!board) return { ...base, reason: `${BOARD_PATH} did not return a JSON object` };
+    const totals = record(board.totals);
+    const lid = str(totals?.lid);
+    const axesRaw = Array.isArray(board.axes) ? (board.axes as unknown[]) : [];
+    if (!lid || axesRaw.length === 0) {
+      return { ...base, reason: `${BOARD_PATH} answered without totals.lid or an axis array` };
+    }
+    return {
+      ...base,
+      state: "DERIVED",
+      lid,
+      public_count: str(totals?.public_count) ?? undefined,
+      axes: axesRaw.map((raw) => {
+        const a = record(raw) ?? {};
+        return {
+          axis: str(a.axis),
+          family: str(a.family),
+          kind: str(a.kind),
+          status: str(a.status),
+          n: numOrNull(a.n),
+          separation: str(a.separation),
+          leader: str(a.leader),
+          public_leader_state: str(a.public_leader_state),
+        };
+      }),
+    };
+  } catch (error) {
+    return {
+      ...base,
+      reason: error instanceof SourceError ? error.message : `fetch failed: ${error instanceof Error ? error.message : String(error)}`,
+    };
   }
-  if (!res.ok) return { ...base, reason: `HTTP ${res.status} from ${BOARD_PATH}` };
-  let board: Json | null = null;
-  try {
-    board = record(await res.json());
-  } catch {
-    return { ...base, reason: `${BOARD_PATH} did not return a JSON object` };
-  }
-  const totals = record(board?.totals);
-  const lid = str(totals?.lid);
-  const axesRaw = Array.isArray(board?.axes) ? (board!.axes as unknown[]) : [];
-  if (!lid || axesRaw.length === 0) {
-    return { ...base, reason: `${BOARD_PATH} answered without totals.lid or an axis array` };
-  }
-  return {
-    ...base,
-    state: "DERIVED",
-    lid,
-    public_count: str(totals?.public_count) ?? undefined,
-    axes: axesRaw.map((raw) => {
-      const a = record(raw) ?? {};
-      return {
-        axis: str(a.axis),
-        family: str(a.family),
-        kind: str(a.kind),
-        status: str(a.status),
-        n: numOrNull(a.n),
-        separation: str(a.separation),
-        leader: str(a.leader),
-        public_leader_state: str(a.public_leader_state),
-      };
-    }),
-  };
 }
 
 function boardText(b: DerivedBoard): string {
@@ -195,6 +434,71 @@ function boardText(b: DerivedBoard): string {
     REGISTER,
     `Derived from GET ${b.source} at ${b.as_of}; counts come from the axis array, never typed. Verify a card free at ${b.verify}; the signed Merkle root is ${b.root}.`,
   ].join("\n");
+}
+
+const sourceText = (skill: SkillId, source: string): string => [
+  `${skill}: delivered directly from GET/POST ${source}.`,
+  "The A2A router attributes this payload to that source; it does not independently verify or promote the source result.",
+  REGISTER,
+].join("\n");
+
+async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
+  text: string;
+  data: unknown;
+}> {
+  const { skill, input } = selection;
+  if (skill === "gspc-board") {
+    const board = await deriveBoard(origin);
+    return { text: boardText(board), data: { ...board, skill } };
+  }
+
+  let path: string;
+  let method: "GET" | "POST" = "GET";
+  let body: string | undefined;
+  switch (skill) {
+    case "east-west-crosswalk":
+      path = "/api/cross";
+      break;
+    case "measured-badge": {
+      const query = new URLSearchParams({
+        format: "json",
+        card: String(input.card),
+        subject: String(input.subject),
+      });
+      path = `/api/badge?${query.toString()}`;
+      break;
+    }
+    case "benchmark-quality-register":
+      path = "/api/benchmark-quality";
+      break;
+    case "article50-detect":
+      path = "/api/detect";
+      method = "POST";
+      body = JSON.stringify(input);
+      break;
+    case "eu-ai-act-screen":
+      path = "/api/assess";
+      method = "POST";
+      body = JSON.stringify({ system: input.system });
+      break;
+    case "x402-discovery":
+      path = "/api/x402";
+      break;
+  }
+  const result = await fetchJsonSource(origin, path, { method, body });
+  return {
+    text: sourceText(skill, result.source),
+    data: {
+      state: "DELIVERED_SOURCE",
+      skill,
+      source: result.source,
+      as_of: new Date().toISOString(),
+      register: REGISTER,
+      source_attribution:
+        "Direct same-origin source output. The A2A router did not independently verify or promote it.",
+      payload: result.payload,
+    },
+  };
 }
 
 async function sendMessage(id: unknown, params: unknown, origin: string): Promise<Response> {
@@ -223,7 +527,35 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
       { field: "params.message" },
     );
   }
-  const board = await deriveBoard(origin);
+  const selection = parseSkillSelection(message);
+  if (typeof selection === "string") {
+    return rpcError(id, A2A_ERROR.INVALID_PARAMS, selection, "INVALID_SKILL_SELECTOR", {
+      field: "params.message.parts",
+    });
+  }
+  const invalidInput = validateSkillInput(selection);
+  if (invalidInput) {
+    return rpcError(id, A2A_ERROR.INVALID_PARAMS, invalidInput, "INVALID_SKILL_INPUT", {
+      skill: selection.skill,
+    });
+  }
+  let outcome: { text: string; data: unknown };
+  try {
+    outcome = await invokeSkill(selection, origin);
+  } catch (error) {
+    const sourceError = error instanceof SourceError ? error : null;
+    return rpcError(
+      id,
+      A2A_ERROR.INTERNAL,
+      sourceError?.message ?? "skill source failed",
+      "SKILL_SOURCE_UNAVAILABLE",
+      {
+        skill: selection.skill,
+        source: sourceError?.source ?? "same-origin handler",
+        source_state: sourceError?.kind ?? "FETCH_FAILED",
+      },
+    );
+  }
   const contextId = str(message.contextId) ?? crypto.randomUUID();
   return reply(id, {
     result: {
@@ -232,8 +564,8 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
         contextId,
         role: "ROLE_AGENT",
         parts: [
-          { text: boardText(board), mediaType: "text/plain" },
-          { data: board, mediaType: "application/json" },
+          { text: outcome.text, mediaType: "text/plain" },
+          { data: outcome.data, mediaType: "application/json" },
         ],
       },
     },
@@ -265,7 +597,13 @@ export const onRequestGet: PagesFunction = async (context) => {
       jsonrpc: "2.0",
       id: 1,
       method: "SendMessage",
-      params: { message: { messageId: "m-1", role: "ROLE_USER", parts: [{ text: "board" }] } },
+      params: {
+        message: {
+          messageId: "m-1",
+          role: "ROLE_USER",
+          parts: [{ data: { skill: "gspc-board", input: {} }, mediaType: "application/json" }],
+        },
+      },
     },
   };
   return new Response(JSON.stringify(body, null, 2), { status: 200, headers: HEADERS });
@@ -276,8 +614,17 @@ export const onRequestPost: PagesFunction = async (context) => {
   const origin = new URL(request.url).origin;
 
   let parsed: unknown;
+  let text: string;
   try {
-    parsed = JSON.parse(await request.text());
+    text = await readBoundedRequestText(request);
+  } catch (error) {
+    if (error instanceof RequestBodyError) {
+      return rpcError(null, A2A_ERROR.INVALID_REQUEST, error.message, error.kind);
+    }
+    return rpcError(null, A2A_ERROR.INVALID_REQUEST, "request body could not be read", "REQUEST_READ_FAILED");
+  }
+  try {
+    parsed = JSON.parse(text);
   } catch {
     return rpcError(null, A2A_ERROR.PARSE, "request body is not JSON", "PARSE_ERROR");
   }

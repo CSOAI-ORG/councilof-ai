@@ -130,18 +130,24 @@ const out = EXTENSIONS.map((e) => {
   return { uri: e.uri, required: e.required, description: `${e.lead(state)} ${e.tail}`.replace(/\s+/g, " ").trim() };
 });
 
-const card = JSON.parse(readFileSync(CARD, "utf8"));
+const cardSource = readFileSync(CARD, "utf8");
+const card = JSON.parse(cardSource);
 const before = JSON.stringify(card.capabilities.extensions);
 card.capabilities.extensions = out;
 const after = JSON.stringify(out);
+const blob = JSON.stringify(card, null, 2) + "\n";
+const canonicalBlob = before === after ? cardSource : blob;
+const aliasMatches = existsSync(ALIAS) && readFileSync(ALIAS, "utf8") === canonicalBlob;
 
 console.log(`  extensions: ${out.length}   published dirs: ${published.join(", ") || "none"}`);
 for (const e of out) console.log(`    ${e.uri}\n      ${e.description.slice(0, 96)}…`);
-if (before === after) { console.log("  unchanged"); process.exit(0); }
-if (DRY) { console.log("  --dry: nothing written"); process.exit(0); }
-const blob = JSON.stringify(card, null, 2) + "\n";
-writeFileSync(CARD, blob);
+if (before === after && aliasMatches) { console.log("  unchanged"); process.exit(0); }
+if (DRY) {
+  console.log(aliasMatches ? "  --dry: extension change; nothing written" : "  --dry: alias differs; nothing written");
+  process.exit(0);
+}
+if (before !== after) writeFileSync(CARD, blob);
 // the alias must serve the SAME BYTES; a card that differs by path is two cards
-writeFileSync(ALIAS, blob);
-console.log("  wrote agent-card.json and agent.json (same bytes)");
+writeFileSync(ALIAS, canonicalBlob);
+console.log(before === after ? "  repaired agent.json alias (same bytes)" : "  wrote agent-card.json and agent.json (same bytes)");
 console.log("  NEXT: python3 scripts/adapters/agent_card_jws.py   # the signing input describes the card that is served");

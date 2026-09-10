@@ -56,7 +56,8 @@
         "verification"
       ],
       "examples": [
-        "SendMessage {\"message\": {\"messageId\": \"m-1\", \"role\": \"ROLE_USER\", \"parts\": [{\"text\": \"board\"}]}}",
+        "SendMessage with Part.data {\"skill\":\"gspc-board\",\"input\":{}}",
+        "Legacy compatibility: one text Part containing exactly \"board\"",
         "GET /api/gspc — the same board, outside A2A"
       ]
     },
@@ -71,6 +72,7 @@
         "verification"
       ],
       "examples": [
+        "SendMessage with Part.data {\"skill\":\"east-west-crosswalk\",\"input\":{}}",
         "GET /api/cross — cross-border signed card"
       ]
     },
@@ -84,6 +86,7 @@
         "verification"
       ],
       "examples": [
+        "SendMessage with Part.data {\"skill\":\"measured-badge\",\"input\":{\"card\":\"<64-hex-signed-card-sha256>\",\"subject\":\"owner/model@<40-or-64-hex-revision>\"}}",
         "GET /api/badge?card=<signed-card-sha256>&subject=<url-encoded-owner/model@commit-sha>"
       ]
     },
@@ -98,6 +101,7 @@
         "governance"
       ],
       "examples": [
+        "SendMessage with Part.data {\"skill\":\"benchmark-quality-register\",\"input\":{}}",
         "GET /api/benchmark-quality"
       ]
     },
@@ -113,7 +117,8 @@
         "c2pa"
       ],
       "examples": [
-        "POST /api/detect — multipart image or JSON manifest"
+        "SendMessage with Part.data {\"skill\":\"article50-detect\",\"input\":{\"manifest\":{\"claim\":{}}}}",
+        "POST /api/detect {\"manifest\":{...},\"asset_hash\":\"<optional-64-hex>\"}"
       ]
     },
     {
@@ -126,6 +131,7 @@
         "deterministic"
       ],
       "examples": [
+        "SendMessage with Part.data {\"skill\":\"eu-ai-act-screen\",\"input\":{\"system\":\"<what the system does and for whom>\"}}",
         "POST /api/assess {\"system\": \"<what the system does and for whom>\"}"
       ]
     },
@@ -140,6 +146,7 @@
         "measurement"
       ],
       "examples": [
+        "SendMessage with Part.data {\"skill\":\"x402-discovery\",\"input\":{}} — catalog only; it makes no payment",
         "GET https://councilof.ai/.well-known/x402.json",
         "GET https://councilof.ai/api/free-door",
         "GET https://councilof.ai/api/gspc",
