@@ -1,0 +1,217 @@
+{
+  "schema": "csoai.regulatory-inventory/0.1",
+  "as_of": "2026-09-10",
+  "title": "Council of AI regulatory evidence inventory",
+  "counts": {
+    "frozen_provision_counter": 417,
+    "regulator_authority_adapters": 17,
+    "crosswalk_assets": 25,
+    "gspc_axes": 22,
+    "published_crosswalk_regimes": 4
+  },
+  "truth_boundaries": [
+    "417 is a verified frozen counter in the coverage artifact, but the repository does not contain 417 independently addressable provision rows. Do not describe it as a complete inspectable corpus until those rows resolve.",
+    "The 17 adapters below are source-and-routing records. They do not confer regulator authority and they are not 17 live regulator APIs.",
+    "The 25 crosswalk assets are heterogeneous: measurement-derived statements, mappings, an example, a catalog, a producer and user-interface views. They are not 25 equivalent signed legal crosswalks.",
+    "The only public multi-jurisdiction crosswalk counted here maps four regimes in public/crosswalk/east-west-v1.json.",
+    "GSPC measurements are dated evidence, not certification, accreditation, legal advice or an authority's compliance decision."
+  ],
+  "frozen_provisions": {
+    "value": 417,
+    "state": "COUNTER_VERIFIED_ROWS_UNRESOLVED",
+    "frozen_at": "2026-08-03T13:35:53.825432+00:00",
+    "evidence_source": "benchmark-results/coverage_crosswalk.json",
+    "evidence_sha256_prefix": "e20a6a41e2cbfabc",
+    "instruments": {
+      "GDPR": 99,
+      "CSRD": 11,
+      "NIS2": 46,
+      "DORA": 64,
+      "EU AI Act": 126,
+      "Cyber Resilience Act": 71
+    },
+    "limitation": "The six instrument counts sum to 417, but this public repository does not yet carry a 417-row provision manifest."
+  },
+  "authority_adapters": [
+    {
+      "id": "eu-ai-act-2024-1689",
+      "jurisdiction": "EU_EEA",
+      "authority": "European Commission / national competent authorities",
+      "actor_type": "REGULATORY_NETWORK",
+      "binding_type": "BINDING_LAW",
+      "source_url": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+      "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "eu-gpai-code-2025",
+      "jurisdiction": "EU_EEA",
+      "authority": "European Commission AI Office",
+      "actor_type": "FRAMEWORK_OWNER",
+      "binding_type": "VOLUNTARY_FRAMEWORK",
+      "source_url": "https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai",
+      "output_mode": "ALIGNMENT_ONLY"
+    },
+    {
+      "id": "eu-gdpr-2016-679",
+      "jurisdiction": "EU_EEA",
+      "authority": "National data-protection authorities / EDPB",
+      "actor_type": "REGULATORY_NETWORK",
+      "binding_type": "BINDING_LAW",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+      "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "uk-data-protection",
+      "jurisdiction": "UNITED_KINGDOM",
+      "authority": "Information Commissioner's Office",
+      "actor_type": "REGULATOR",
+      "binding_type": "BINDING_LAW",
+      "source_url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/",
+      "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "uk-consumer-protection",
+      "jurisdiction": "UNITED_KINGDOM",
+      "authority": "CMA / Trading Standards / sector ombudsman",
+      "actor_type": "AUTHORITY_NETWORK",
+      "binding_type": "BINDING_LAW",
+      "source_url": "https://www.gov.uk/consumer-protection-rights",
+      "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "us-ftc-act-section-5",
+      "jurisdiction": "UNITED_STATES_FEDERAL",
+      "authority": "Federal Trade Commission",
+      "actor_type": "REGULATOR",
+      "binding_type": "BINDING_LAW",
+      "source_url": "https://www.ftc.gov/legal-library/browse/statutes/federal-trade-commission-act",
+      "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "us-nist-ai-rmf-1",
+      "jurisdiction": "UNITED_STATES_GLOBAL_USE",
+      "authority": "National Institute of Standards and Technology",
+      "actor_type": "FRAMEWORK_OWNER",
+      "binding_type": "VOLUNTARY_FRAMEWORK",
+      "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "output_mode": "ALIGNMENT_ONLY"
+    },
+    {
+      "id": "canada-pipeda",
+      "jurisdiction": "CANADA_FEDERAL",
+      "authority": "Office of the Privacy Commissioner of Canada",
+      "actor_type": "REGULATOR",
+      "binding_type": "BINDING_LAW",
+      "source_url": "https://laws-lois.justice.gc.ca/eng/acts/P-8.6/",
+      "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "brazil-lgpd",
+      "jurisdiction": "BRAZIL",
+      "authority": "Autoridade Nacional de Protecao de Dados",
+      "actor_type": "REGULATOR",
+      "binding_type": "BINDING_LAW",
+      "source_url": "https://www.gov.br/anpd/pt-br/acesso-a-informacao/institucional/competencias",
+      "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "australia-privacy-act",
+      "jurisdiction": "AUSTRALIA",
+      "authority": "Office of the Australian Information Commissioner",
+      "actor_type": "REGULATOR",
+      "binding_type": "BINDING_LAW",
+      "source_url": "https://www.oaic.gov.au/privacy/privacy-guidance-for-organisations-and-government-agencies/guidance-on-privacy-and-the-use-of-commercially-available-ai-products",
+      "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "china-generative-ai-interim-measures",
+      "jurisdiction": "CHINA",
+      "authority": "Cyberspace Administration of China and co-issuing ministries",
+      "actor_type": "REGULATOR",
+      "binding_type": "BINDING_LAW",
+      "source_url": "https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm",
+      "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "japan-ai-guidelines-business-1",
+      "jurisdiction": "JAPAN",
+      "authority": "METI / MIC",
+      "actor_type": "FRAMEWORK_OWNER",
+      "binding_type": "VOLUNTARY_FRAMEWORK",
+      "source_url": "https://www.meti.go.jp/english/press/2024/0419_002.html",
+      "output_mode": "ALIGNMENT_ONLY"
+    },
+    {
+      "id": "korea-ai-basic-act",
+      "jurisdiction": "SOUTH_KOREA",
+      "authority": "Ministry of Science and ICT",
+      "actor_type": "COMPETENT_AUTHORITY",
+      "binding_type": "BINDING_LAW",
+      "source_url": "https://www.msit.go.kr/eng/bbs/view.do?bbsSeqNo=42&mId=4&mPid=2&nttSeqNo=1071&sCode=eng",
+      "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "singapore-agentic-ai-mgf",
+      "jurisdiction": "SINGAPORE_GLOBAL_USE",
+      "authority": "Infocomm Media Development Authority",
+      "actor_type": "FRAMEWORK_OWNER",
+      "binding_type": "VOLUNTARY_FRAMEWORK",
+      "source_url": "https://www.imda.gov.sg/resources/press-releases-factsheets-and-speeches/press-releases/2026/new-model-ai-governance-framework-for-agentic-ai",
+      "output_mode": "ALIGNMENT_ONLY"
+    },
+    {
+      "id": "india-ai-governance-guidelines",
+      "jurisdiction": "INDIA",
+      "authority": "Ministry of Electronics and Information Technology",
+      "actor_type": "COMPETENT_AUTHORITY",
+      "binding_type": "REGULATORY_GUIDANCE",
+      "source_url": "https://www.meity.gov.in/ai-governance-guidelines",
+      "output_mode": "GUIDANCE_ALIGNMENT_ONLY"
+    },
+    {
+      "id": "south-africa-popia",
+      "jurisdiction": "SOUTH_AFRICA",
+      "authority": "Information Regulator",
+      "actor_type": "REGULATOR",
+      "binding_type": "BINDING_LAW",
+      "source_url": "https://www.gov.za/documents/protection-personal-information-act",
+      "output_mode": "APPLICABILITY_REVIEW_REQUIRED"
+    },
+    {
+      "id": "coe-ai-framework-convention-225",
+      "jurisdiction": "COUNCIL_OF_EUROPE_PARTIES",
+      "authority": "Council of Europe / domestic implementing authorities",
+      "actor_type": "TREATY_BODY",
+      "binding_type": "TREATY",
+      "source_url": "https://www.coe.int/en/web/artificial-intelligence/the-framework-convention-on-artificial-intelligence",
+      "output_mode": "RATIFICATION_AND_IMPLEMENTATION_REVIEW_REQUIRED"
+    }
+  ],
+  "crosswalk_assets": [
+    { "id": "intoto-affect", "path": "public/interop/crosswalk/intoto/affect-04bfac1c0dc8f6b5.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-art5-safeguard", "path": "public/interop/crosswalk/intoto/art5-safeguard-022bc5c2408f3246.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-care", "path": "public/interop/crosswalk/intoto/care-0085fce0a467d2f7.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-conformance", "path": "public/interop/crosswalk/intoto/conformance-001219d25a5fa1a9.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-continuity", "path": "public/interop/crosswalk/intoto/continuity-0412d55abcd878de.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-cross-reality", "path": "public/interop/crosswalk/intoto/cross-reality-03121c50d9d93c87.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-detector-interop", "path": "public/interop/crosswalk/intoto/detector-interop-03ecbbf4c4f5f7d6.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-governance", "path": "public/interop/crosswalk/intoto/governance-06d0514f3ed72af4.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-jail", "path": "public/interop/crosswalk/intoto/jail-37d590185313fa29.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-machinery-conformity", "path": "public/interop/crosswalk/intoto/machinery-conformity-03abb67b6b68902c.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-openness", "path": "public/interop/crosswalk/intoto/openness-01a6498dda8d94fc.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-provenance", "path": "public/interop/crosswalk/intoto/provenance-017aa69d954ecb11.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-safety", "path": "public/interop/crosswalk/intoto/safety-02444bfb68c77d04.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-swarm", "path": "public/interop/crosswalk/intoto/swarm-05dc89abb6e5038f.intoto.json", "asset_type": "DERIVED_MEASUREMENT_STATEMENT", "evidence_state": "MEASURED_SOURCE_DERIVATION" },
+    { "id": "intoto-index", "path": "public/interop/crosswalk/intoto/index.json", "asset_type": "CATALOG", "evidence_state": "DERIVED_INDEX" },
+    { "id": "oscal-door", "path": "public/.well-known/oscal-crosswalk.json", "asset_type": "DISCOVERY_DESCRIPTOR", "evidence_state": "PUBLISHED_DESCRIPTOR" },
+    { "id": "east-west-v1", "path": "public/crosswalk/east-west-v1.json", "asset_type": "MULTI_JURISDICTION_MAPPING", "evidence_state": "PUBLISHED_MAPPING" },
+    { "id": "gpai-art12-pact-iaw", "path": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json", "asset_type": "FRAMEWORK_MAPPING", "evidence_state": "INFORMATIVE_MAPPING" },
+    { "id": "nist-airmf-gspc", "path": "public/interop/nist-airmf-gspc-crosswalk.json", "asset_type": "FRAMEWORK_MAPPING", "evidence_state": "ALIGNMENT_ONLY" },
+    { "id": "white-label-sector", "path": "public/interop/white-label-sector-crosswalk.json", "asset_type": "SECTOR_MAPPING", "evidence_state": "SIGNED_MAPPING" },
+    { "id": "disclosure-example", "path": "public/signed/disclosure-crosswalk-example.json", "asset_type": "WORKED_EXAMPLE", "evidence_state": "DISCLOSURE_COVERAGE_ONLY" },
+    { "id": "regulator-axis-pointers", "path": "client/src/data/regulator-crosswalk.json", "asset_type": "INFORMATIVE_POINTER_MAP", "evidence_state": "INFORMATIVE_ONLY" },
+    { "id": "intoto-producer", "path": "scripts/crosswalk/emit_intoto.py", "asset_type": "DETERMINISTIC_PRODUCER", "evidence_state": "SOURCE_CODE" },
+    { "id": "crosswalk-public-view", "path": "client/src/pages/Crosswalk.tsx", "asset_type": "USER_INTERFACE_VIEW", "evidence_state": "VIEW_NOT_EVIDENCE" },
+    { "id": "crosswalk-library-view", "path": "client/src/pages/Crosswalks.tsx", "asset_type": "USER_INTERFACE_VIEW", "evidence_state": "VIEW_NOT_EVIDENCE" }
+  ]
+}
