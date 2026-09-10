@@ -11,6 +11,10 @@
 //
 // listTools() now distinguishes "no tools" from "could not ask", so the caller can say which.
 
+import { mcpRpc, mcpRpcEndpoints } from "./mcpHttp";
+
+export { mcpRpcEndpoints };
+
 const GW: string =
   ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) ||
   "/api";
@@ -29,42 +33,6 @@ export type ToolResult = {
   state?: "runtime_observed" | "unreachable";
 };
 
-/**
- * The JSON-RPC endpoint. NOT `${GW}/mcp` — that is the registry artifact,
- * GET-only. A Vite-only review build has no Pages Functions process behind
- * `/mcp`, so localhost may retry the public runtime after the same-origin
- * probe fails. Production never crosses origins.
- */
-export function mcpRpcEndpoints(hostname?: string): string[] {
-  const local = hostname === "localhost" || hostname === "127.0.0.1";
-  return local ? ["/mcp", "https://councilof.ai/mcp"] : ["/mcp"];
-}
-
-async function rpc(method: string, params?: any): Promise<any> {
-  const hostname =
-    typeof window === "undefined" ? undefined : window.location.hostname;
-  let lastError: unknown = new Error("the MCP runtime did not answer");
-  for (const endpoint of mcpRpcEndpoints(hostname)) {
-    try {
-      const r = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jsonrpc: "2.0", id: Date.now(), method, params }),
-      });
-      if (!r.ok) {
-        lastError = new Error(`${endpoint} returned HTTP ${r.status}`);
-        continue;
-      }
-      return await r.json();
-    } catch (error) {
-      lastError = error;
-    }
-  }
-  throw lastError instanceof Error
-    ? lastError
-    : new Error("the MCP runtime did not answer");
-}
-
 // The live, server-executed governance tools (govern, sign, verify, talk, agent-card).
 export type ToolListing =
   | { state: "ok"; tools: SovTool[] }
@@ -72,7 +40,11 @@ export type ToolListing =
 
 export async function listTools(): Promise<ToolListing> {
   try {
-    const d = await rpc("tools/list");
+    const d = await mcpRpc(
+      "tools/list",
+      {},
+      { allowPublicCatalogFallback: true },
+    );
     if (d && d.error) return { state: "unreachable", reason: String(d.error.message || "the server returned an error") };
     const tools = d && d.result && d.result.tools;
     if (!Array.isArray(tools)) return { state: "unreachable", reason: "the reply carried no tools list" };
@@ -85,11 +57,11 @@ export async function listTools(): Promise<ToolListing> {
 // Actually run a tool and get a real, governed result back.
 export async function callTool(name: string, args: Record<string, any>): Promise<ToolResult> {
   try {
-    const d = await rpc("tools/call", { name, arguments: args });
+    const d = await mcpRpc("tools/call", { name, arguments: args });
     if (d && d.error) return { ok: false, state: "unreachable", text: "The MCP runtime declined: " + (d.error.message || "unknown"), raw: d };
-    const content = (d && d.result && d.result.content) || [];
+    const content = Array.isArray(d?.result?.content) ? d.result.content : [];
     const text = content.map((c: any) => c && c.text).filter(Boolean).join("\n") || JSON.stringify(d && d.result ? d.result : d);
-    return { ok: true, state: "runtime_observed", text, raw: d };
+    return { ok: d?.result?.isError !== true, state: "runtime_observed", text, raw: d };
   } catch (e) {
     return { ok: false, state: "unreachable", text: "Couldn't reach the MCP runtime — check your connection and try again." };
   }

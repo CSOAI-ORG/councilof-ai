@@ -1,0 +1,54 @@
+name: mcp-protocol-contract
+
+on:
+  pull_request:
+    paths:
+      - 'functions/mcp/**'
+      - 'functions/api/fabric*'
+      - 'functions/_lib/cardVerify.ts'
+      - 'client/src/lib/mcpHttp*'
+      - 'client/src/lib/mcpTools*'
+      - 'client/src/lib/sovTools*'
+      - 'client/src/components/home/EstateDoors.tsx'
+      - 'client/src/components/os/OsDoors.tsx'
+      - 'client/src/components/ToolRunner*'
+      - 'scripts/capability-drift-guard*'
+      - 'scripts/hf/hf-org-card*'
+      - 'scripts/hf/test_hf_org_card_mcp.py'
+      - 'mcp/gspc-server/server.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/mcp-protocol-contract.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mcp-protocol-contract-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-protocol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Install locked dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Offline MCP protocol, client and paid-tool contracts
+        run: npx --no-install vitest run functions/mcp functions/api/fabric.test.ts scripts/capability-drift-guard.test.ts client/src/lib/mcpHttp.test.ts client/src/lib/sovTools.test.ts client/src/components/ToolRunner.test.ts --maxWorkers=1 --minWorkers=1
+      - name: Offline capability drift guard selftest
+        run: node scripts/capability-drift-guard.mjs --selftest
+      - name: Offline Hugging Face MCP count contract
+        run: python3 -B scripts/hf/test_hf_org_card_mcp.py
+      - name: Strict handler typecheck, including the SDK boundary
+        run: npx --no-install tsc --noEmit --strict --skipLibCheck --target es2022 --module esnext --moduleResolution bundler --resolveJsonModule --types @cloudflare/workers-types 'functions/mcp/[[path]].ts'
+      - name: Build the client and its generated local artifacts (no deployment)
+        run: npm run build:client
