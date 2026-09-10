@@ -32,6 +32,7 @@ concurrency:
 
 permissions:
   contents: write
+  pull-requests: write   # lands via branch + PR; a direct push to master is GH006 (required gates)
 
 jobs:
   watch:
@@ -59,6 +60,8 @@ jobs:
           python3 scripts/watch/provider_watch.py $ARGS
       - name: commit state + index + staged leaves (never signs; public-root.yml signs)
         if: github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git config user.name "csoai-provider-watch"
@@ -69,7 +72,17 @@ jobs:
             exit 0
           fi
           git commit -m "provider-watch: daily capture $(date -u +%Y-%m-%dT%H:%MZ) (hash-only; unsigned leaves staged)"
-          git push origin HEAD:master
+          # Land via branch + PR (the census-delta.yml pattern). A direct push to
+          # master is GH006: the required "gates" check applies to pushes too, and
+          # a push creates a commit no check has run on yet (red since 2026-09-06).
+          # Until the PR merges, public-root.yml sees the previous master state —
+          # the staged leaves wait on master, they are not lost.
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          BR="automation/provider-watch-${STAMP}"
+          git push origin "HEAD:$BR"
+          gh pr create --base master --head "$BR" \
+            --title "provider-watch: daily capture ${STAMP} (hash-only)" \
+            --body "Automated provider-watch capture: state + index + staged UNSIGNED leaves under \`public/feeds/provider-diff/\` (signing stays with public-root.yml). Opened as a PR because a direct push to master cannot satisfy the required \`gates\` check (GH006). Needs a human merge; until merged the provider-diff feed on master is stale."
       - name: fail closed when no target was OK
         if: steps.watch.outcome == 'failure'
         run: |
