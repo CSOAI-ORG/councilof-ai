@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: catalog-trust
@@ -22,9 +23,24 @@ jobs:
       - name: DRY round — probe the live catalog, counts only
         run: |
           python3 scripts/catalog-trust-round.py --out-dir public/interop/x402-trust
-      - name: land the artefact
+      - name: land the artefact (via PR — master is GH006-protected)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           git config user.name "csoai-catalog-trust"
           git config user.email "trust@csoai.org"
           git add public/interop/x402-trust/ docs/interop/X402-CATALOG-TRUST-*.md 2>/dev/null || true
-          git commit -m "catalog-trust round: newest snapshot (machine-produced)" && git push origin master || echo "no new snapshot (unchanged or empty) — nothing to land"
+          if git diff --cached --quiet; then
+            echo "no snapshot change — nothing to land"
+            exit 0
+          fi
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          BR="census/trust-round-${STAMP}"
+          git checkout -b "$BR"
+          git commit -m "catalog-trust round: counts-only snapshot (${STAMP})"
+          git push origin "HEAD:$BR"
+          gh pr create --base master --head "$BR" \
+            --title "catalog-trust round: counts-only snapshot (${STAMP})" \
+            --body "Machine-produced 6h round (catalog-trust-round.yml). Counts only by doctrine — host details withheld. A 402 is an invoice, not delivery; a 404 is a catalog row that does not exist. Lands via PR because master push is GH006-protected (direct-push landing silently failed since branch protection tightened on 7 Sep)."
+          echo "landed branch=$BR"

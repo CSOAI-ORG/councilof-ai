@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { mcpRpc } from "@/lib/mcpHttp";
 
 /**
  * EstateDoors — the honest doors strip (B1.2, CSOAI_FRONTEND_REACH_AGENTS).
@@ -95,17 +96,12 @@ export default function EstateDoors() {
       })
       .catch(() => !ac.signal.aborted && setXrpl({ label: "UNREACHABLE", detail: "GET /api/xrpl did not answer", tone: "warn" }));
 
-    fetch("/mcp", {
-      method: "POST",
-      signal: ac.signal,
-      headers: { "content-type": "application/json", accept: "application/json" },
-      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
-    })
-      .then(async (r) => {
-        if (!r.ok) return setMcp({ label: `HTTP ${r.status}`, detail: "tool list not readable this load", tone: "warn" });
-        if (!isJson(r)) return setMcp(HTML_ANSWERED);
-        const d = await r.json().catch(() => ({}));
-        const tools: unknown[] = Array.isArray(d?.result?.tools) ? d.result.tools : [];
+    mcpRpc("tools/list", {}, { signal: ac.signal })
+      .then((d) => {
+        if (d.error) {
+          return setMcp({ label: "MCP ERROR", detail: String(d.error.message || "tool list not readable this load"), tone: "warn" });
+        }
+        const tools: unknown[] = Array.isArray(d.result?.tools) ? d.result.tools : [];
         setMcp(
           tools.length > 0
             ? { label: `${tools.length} tools served`, detail: "counted from tools/list on this load, never typed", tone: "ok" }

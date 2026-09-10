@@ -142,4 +142,27 @@ describe("/api/x402 — URL fields are URLs, not sentences", () => {
     expect((await catalog()).rail.mode).toBe("challenge-only");
     expect((await catalog({ X402_FACILITATOR_URL: "https://f.example" })).rail.mode).toBe("live");
   });
+
+  it("reports signed offers and receipts as conditional, including the runtime prerequisites", async () => {
+    const dormant = (await catalog()).rail.offer_receipt;
+    expect(dormant).toMatchObject({
+      emission: "conditional",
+      board_signing_key_configured: false,
+      facilitator_configured: false,
+    });
+    expect(dormant.offers).toMatch(/signed only when BOARD_SIGN_KEY_PKCS8_B64/i);
+    expect(dormant.receipts).toMatch(/only after facilitator-confirmed settlement/i);
+    expect(dormant.receipts).toMatch(/payer.*BOARD_SIGN_KEY_PKCS8_B64.*receiptGap/i);
+    expect(JSON.stringify(dormant)).not.toMatch(/\bevery (?:HTTP )?402\b|\bevery settled\b/i);
+
+    const provisioned = (await catalog({
+      X402_FACILITATOR_URL: "https://f.example",
+      BOARD_SIGN_KEY_PKCS8_B64: "fixture-present",
+    })).rail.offer_receipt;
+    expect(provisioned).toMatchObject({
+      emission: "conditional",
+      board_signing_key_configured: true,
+      facilitator_configured: true,
+    });
+  });
 });

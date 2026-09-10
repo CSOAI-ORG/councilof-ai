@@ -10,6 +10,31 @@ Measurement, not certification. Anyone can re-check.
 GET https://councilof.ai/interop/x402-trust/latest.json
 Quote live `counts`. A 402 is not delivery; a 404 is a phantom. Do not freeze a pair in this file.
 
+## 1c. Paid artefacts (agents)
+
+Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a price from this file. A 402 is not delivery. A grade is never sold.
+
+- Catalog: GET https://councilof.ai/api/x402
+- Manifest: GET https://councilof.ai/.well-known/x402.json (mode live, Base eip155:8453, USDC)
+- MCP: POST https://councilof.ai/mcp — 12 tools (eight free readers plus four x402-metered). tools/call without `x_payment` returns the route's 402 as structuredContent; pay, then call again with `x_payment`. Quote `paid_tools.names` from GET https://councilof.ai/mcp; do not freeze the list here.
+- HTTP doors (GET → 402 unless `X-PAYMENT` / facilitator settlement):
+  - https://councilof.ai/api/request-attestation?subject=<id>
+  - https://councilof.ai/api/eunomia-data?feed=1
+  - https://councilof.ai/api/proof?bundle=1
+  - https://councilof.ai/api/rwa/evidence?asset=<symbol>
+  - https://councilof.ai/api/receipts/batch?from=<iso>
+  - https://councilof.ai/api/art50/marking-evidence?url=<https-url>
+  - https://councilof.ai/api/feeds/provider-diff?history=1
+  - https://councilof.ai/api/evidence-bundle?obligation=article-50&subject=<id>&bundle=1
+- Free preview: omit `bundle=1` or add `preview=1` as the 402 body documents. Verify stays free: https://councilof.ai/gspc-verify
+- PayAPI Market (discovery only — buyers pay the estate payTo, not PayAPI; no listing fee):
+  - https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed
+  - MCP search: https://payapi.market/mcp
+
+```json
+{"mcpServers":{"payapi":{"url":"https://payapi.market/mcp"}}}
+```
+
 ## 2. CURRENT BOARD SNAPSHOT
 
 ```json
@@ -568,13 +593,7 @@ have zero identifier overlap. Machine-readable state: `/interop/root-witness-lat
 
 ## 7. THE MCP DOOR
 
-`POST https://councilof.ai/mcp` with the 4 free tools:
-- `board_totals` — the 22 axis summary
-- `get_axis` — one axis row
-- `verify_card` — verify a supported card and inspect the returned result
-- `list_cards` — the signed card index
-Additional x402 tool names may be advertised by discovery. Pricing and successful
-production settlement are pending verification; a 402 challenge is not a payment receipt.
+`POST https://councilof.ai/mcp` — 12 tools: eight free readers plus four x402-metered evidence tools. Quote live `tools/list` and GET https://councilof.ai/mcp; do not freeze names here. tools/call without `x_payment` returns the route's 402 as structuredContent. A 402 is not settlement. Measurement, not certification.
 
 ## 8. THE ACCESS SURFACES
 

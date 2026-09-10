@@ -45,4 +45,4 @@ This verifies selected cards only. It does not rerun the model, prove corpus com
 node --test scripts/test_gspc_replay_kit.mjs
 ```
 
-Tests use existing package fixtures and mocked HTTP responses; no network, paid calls or private outputs are required. The older `actions/verify-card` action targets a different envelope/key model and is deliberately not substituted for this package's pinned-key measurement-card verification.
+Tests use existing package fixtures and mocked HTTP responses; no network, paid calls or private outputs are required. The repaired `actions/verify-card` Action now calls the same pinned-key package for one retained local card. Use a reviewed commit containing that repair; older Action revisions used a different envelope/key model. The Action does not replace this kit's capture manifest, file-integrity checks or tamper replay.

@@ -1,8 +1,8 @@
 /**
  * Shared MCP tool handlers for Pages /mcp.
- * Free definitions stay in ./gspc-tools.json. npm csoai-gspc-mcp@0.2.1 lists
- * seven free + five x402 tools; HTTP lists seven free + four x402 because
- * witness_hash is quarantined there.
+ * Free definitions stay in ./gspc-tools.json. HTTP exposes eight free tools
+ * plus four paid tools; witness_hash stays quarantined. npm is an independent
+ * release: ask that installed implementation for its current tools/list.
  */
 import { verifyCard, anchorsFromDid, type Anchor } from "../_lib/cardVerify";
 import GSPC_TOOLS from "./gspc-tools.json";
@@ -20,13 +20,22 @@ import {
 
 export { UPSTREAM };
 
+export type McpToolResult = {
+  content: Array<{ type: "text"; text: string }>;
+  structuredContent?: Record<string, unknown>;
+  isError: boolean;
+};
+
 /**
  * verify_card — the shared three-state verdict (VALID / INVALID+reason /
  * UNCHECKABLE), same contract as the stdio server. Runs on cardVerify, the same
  * module as the `verify` tool and /gspc-verify, so the verdict can never
  * disagree with those surfaces; the summary shape matches the stdio tool.
  */
-async function verifyCardThreeState(args: Record<string, unknown>, origin: string) {
+async function verifyCardThreeState(
+  args: Record<string, unknown>,
+  origin: string,
+) {
   const raw = args.card ?? args.record ?? args.json ?? args.url ?? args.input;
   const { card, error } = await coerceCard(raw);
   if (error) {
@@ -45,7 +54,12 @@ async function verifyCardThreeState(args: Record<string, unknown>, origin: strin
     family: v.family ?? null,
     reason: v.valid ? null : v.reasons.join(", "),
     reasons: v.reasons,
-    checks: v.checks.map((ch) => ({ check: ch.label, ok: ch.ok, code: ch.code, detail: ch.detail })),
+    checks: v.checks.map((ch) => ({
+      check: ch.label,
+      ok: ch.ok,
+      code: ch.code,
+      detail: ch.detail,
+    })),
     rule: `${origin}/signed/HOW-TO-VERIFY.md`,
     pinned_key: "did:web:csoai.org#card-attestation-1",
     not_a_certification: true,
@@ -55,7 +69,10 @@ async function verifyCardThreeState(args: Record<string, unknown>, origin: strin
   };
 }
 
-function sharedToolSummary(name: string, payload: Record<string, unknown>): string {
+function sharedToolSummary(
+  name: string,
+  payload: Record<string, unknown>,
+): string {
   const idx = payload.index as Record<string, unknown> | null;
   if (payload.state === "UNREACHABLE" || (idx && idx.state === "UNREACHABLE"))
     return "UNREACHABLE — the live source could not be fetched; no cached number is substituted.";
@@ -69,11 +86,14 @@ function sharedToolSummary(name: string, payload: Record<string, unknown>): stri
     case "verify_card":
       return `${payload.state}${payload.reason ? " — " + payload.reason : ""}${payload.state === "VALID" ? ` — ${String(payload.id).slice(0, 16)}… verifies under the published key.` : ""}`;
     case "list_cards": {
-      const store = payload.card_store_count_endpoint as Record<string, unknown> | null;
+      const store = payload.card_store_count_endpoint as Record<
+        string,
+        unknown
+      > | null;
       return `index declares ${idx?.n_cards_declared ?? "?"} card rows; the store's count endpoint reports ${store?.count ?? "?"}. Two labelled numbers, not reconciled here.`;
     }
     case "get_root":
-      return `${payload.state ?? "?"} — public-root merkle ${(String(payload.merkle_root || "")).slice(0, 16) || "none"}. Not GSPC.`;
+      return `${payload.state ?? "?"} — public-root merkle ${String(payload.merkle_root || "").slice(0, 16) || "none"}. Not GSPC.`;
     case "get_card":
       return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
     case "verify_inclusion":
@@ -89,12 +109,11 @@ export const SHARED_TOOL_NAMES = new Set(
   (GSPC_TOOLS as { tools: { name: string }[] }).tools.map((t) => t.name),
 );
 
-export async function handleSharedTool(
-  id: unknown,
+export async function sharedToolResult(
   name: string,
   args: Record<string, unknown>,
   origin: string,
-): Promise<Response> {
+): Promise<McpToolResult> {
   const payload =
     name === "board_totals"
       ? await boardTotalsTool(origin)
@@ -109,9 +128,9 @@ export async function handleSharedTool(
               : name === "verify_inclusion"
                 ? await verifyInclusionTool(origin, args)
                 : name === "x402_trust"
-                ? await x402TrustTool(origin)
-              : await verifyCardThreeState(args, origin);
-  return rpc(id, {
+                  ? await x402TrustTool(origin)
+                  : await verifyCardThreeState(args, origin);
+  return {
     content: [
       {
         type: "text",
@@ -120,7 +139,16 @@ export async function handleSharedTool(
     ],
     structuredContent: payload,
     isError: false,
-  });
+  } as McpToolResult;
+}
+
+export async function handleSharedTool(
+  id: unknown,
+  name: string,
+  args: Record<string, unknown>,
+  origin: string,
+): Promise<Response> {
+  return rpc(id, await sharedToolResult(name, args, origin));
 }
 
 export const HOP_BY_HOP = new Set([
@@ -140,51 +168,20 @@ export const CORS = {
   "access-control-allow-headers": "content-type",
 };
 
-// Wire protocol support. The door speaks exactly two versions: the base pin
-// (2024-11-05) and the current wire (2026-07-28) whose deltas we implement —
-// server/discover, _meta.protocolVersion and the resultType/ttlMs/cacheScope
-// tool-result envelope. It never echoes an intermediate version it does not
-// speak: a client offering 2025-* is answered with the base pin (unchanged
-// from the #1691 rule — the catalog date on /.well-known/mcp.json is a
-// different namespace from the JSON-RPC wire version).
-export const MCP_BASE_PROTOCOL = "2024-11-05";
-export const MCP_CURRENT_PROTOCOL = "2026-07-28";
-
-let wireVersion = MCP_BASE_PROTOCOL;
-export function setWireVersion(v: string) {
-  wireVersion = v;
-}
-export function getWireVersion() {
-  return wireVersion;
-}
-export function negotiateProtocol(offered?: string): string {
-  if (!offered) return MCP_BASE_PROTOCOL;
-  if (offered === MCP_CURRENT_PROTOCOL) return MCP_CURRENT_PROTOCOL;
-  if (offered === MCP_BASE_PROTOCOL) return MCP_BASE_PROTOCOL;
-  return MCP_BASE_PROTOCOL;
-}
-
+/** Legacy JSON-RPC wrapper. Protocol negotiation belongs to the request handler. */
 export function rpc(id: unknown, result: unknown) {
-  let r = result;
-  // 2026-07-28 tool results carry the cache envelope. Only tool results (they
-  // carry structuredContent) get it; every other result shape stays as-is.
-  if (
-    wireVersion === MCP_CURRENT_PROTOCOL &&
-    r !== null &&
-    typeof r === "object" &&
-    !Array.isArray(r) &&
-    "structuredContent" in r &&
-    !("resultType" in r)
-  ) {
-    r = { ...r, resultType: "ToolResult", ttlMs: 300_000, cacheScope: "shared" };
-  }
-  return Response.json({ jsonrpc: "2.0", id: id ?? null, result: r }, { headers: { ...CORS } });
+  return Response.json(
+    { jsonrpc: "2.0", id: id ?? null, result },
+    { headers: { ...CORS } },
+  );
 }
 
 async function loadAnchors(origin: string): Promise<Anchor[]> {
   for (const base of [origin, "https://csoai.org"]) {
     try {
-      const r = await fetch(`${base}/.well-known/did.json`, { headers: { accept: "application/json" } });
+      const r = await fetch(`${base}/.well-known/did.json`, {
+        headers: { accept: "application/json" },
+      });
       if (!r.ok) continue;
       const anchors = anchorsFromDid(await r.json());
       if (anchors.length) return anchors;
@@ -196,10 +193,15 @@ async function loadAnchors(origin: string): Promise<Anchor[]> {
 }
 
 /** Coerce whatever the caller passed into a card object, or explain why we could not. */
-async function coerceCard(raw: unknown): Promise<{ card?: unknown; error?: string }> {
+async function coerceCard(
+  raw: unknown,
+): Promise<{ card?: unknown; error?: string }> {
   if (raw && typeof raw === "object") return { card: raw };
   if (typeof raw !== "string") {
-    return { error: "pass the card as an object, a JSON string, or a councilof.ai / csoai.org URL" };
+    return {
+      error:
+        "pass the card as an object, a JSON string, or a councilof.ai / csoai.org URL",
+    };
   }
   const s = raw.trim();
   if (/^https?:\/\//i.test(s)) {
@@ -221,20 +223,30 @@ async function coerceCard(raw: unknown): Promise<{ card?: unknown; error?: strin
   try {
     return { card: JSON.parse(s) };
   } catch {
-    return { error: "the string is neither valid JSON nor a councilof.ai / csoai.org URL" };
+    return {
+      error:
+        "the string is neither valid JSON nor a councilof.ai / csoai.org URL",
+    };
   }
 }
 
-export async function handleVerify(id: unknown, args: Record<string, unknown>, origin: string) {
+export async function verifyToolResult(
+  args: Record<string, unknown>,
+  origin: string,
+): Promise<McpToolResult> {
   const raw = args.card ?? args.record ?? args.json ?? args.url ?? args.input;
   const { card, error } = await coerceCard(raw);
   if (error) {
-    const payload = { valid: false, reason: error, reasons: ["input_not_a_card"] };
-    return rpc(id, {
+    const payload = {
+      valid: false,
+      reason: error,
+      reasons: ["input_not_a_card"],
+    };
+    return {
       content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
       structuredContent: payload,
       isError: false,
-    });
+    };
   }
 
   const anchors = await loadAnchors(origin);
@@ -249,8 +261,14 @@ export async function handleVerify(id: unknown, args: Record<string, unknown>, o
     // and `untrusted_signer` (the key is not published) are never merged: conflating
     // them is what told an outside auditor a published key was missing.
     reasons: v.reasons,
-    checks: v.checks.map((c) => ({ check: c.label, ok: c.ok, code: c.code, detail: c.detail })),
-    trust_anchor: "pinned in the verifier's source (functions/_lib/cardVerify.ts PINNED_ANCHORS) — no key resolution at check time",
+    checks: v.checks.map((c) => ({
+      check: c.label,
+      ok: c.ok,
+      code: c.code,
+      detail: c.detail,
+    })),
+    trust_anchor:
+      "pinned in the verifier's source (functions/_lib/cardVerify.ts PINNED_ANCHORS) — no key resolution at check time",
     live_did_crosscheck: anchors.length
       ? anchors.map((a) => a.id)
       : "did.json unreachable — cross-check skipped; the verdict is unaffected",
@@ -262,9 +280,22 @@ export async function handleVerify(id: unknown, args: Record<string, unknown>, o
     ? `VALID — ${v.family} ${String(v.id).slice(0, 16)}… reproduces its own id and verifies under a published key.`
     : `NOT VALID — ${v.reasons.join(", ")}`;
 
-  return rpc(id, {
-    content: [{ type: "text", text: `${summary}\n\n${JSON.stringify(payload, null, 2)}` }],
+  return {
+    content: [
+      {
+        type: "text",
+        text: `${summary}\n\n${JSON.stringify(payload, null, 2)}`,
+      },
+    ],
     structuredContent: payload,
     isError: false,
-  });
+  };
+}
+
+export async function handleVerify(
+  id: unknown,
+  args: Record<string, unknown>,
+  origin: string,
+) {
+  return rpc(id, await verifyToolResult(args, origin));
 }

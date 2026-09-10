@@ -185,7 +185,7 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe(`https://councilof.ai${path}`);
     expect(init.method).toBe(method);
-    expect(init.redirect).toBe("error");
+    expect(init.redirect).toBe("manual");
     expect(init.headers).toEqual(expectedBody
       ? { accept: "application/json", "content-type": "application/json" }
       : { accept: "application/json" });
@@ -202,6 +202,16 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
     });
     expect(data.source_attribution).toMatch(/did not independently verify/i);
     expect(json.result.message.parts[0].text).not.toMatch(/certified|compliant/i);
+  });
+
+  it("refuses a 3xx source redirect instead of following it", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(null, {
+      status: 302,
+      headers: { location: "https://evil.example/exfil" },
+    })));
+    const { json } = await callSkill("x402-discovery", {});
+    expect(json.error.code).toBe(A2A_ERROR.INTERNAL);
+    expect(json.error.message).toMatch(/redirected \(302\)/i);
   });
 
   it("routes measured-badge with only an encoded immutable subject and card hash", async () => {

@@ -31,29 +31,43 @@ import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "./_x402_config";
 import { USDC_BASE } from "./_skus";
 import { CSOAI_LID } from "./_x402";
 import { OFFER_RECEIPT_SPEC_SHA, X402_SIGNER_KID } from "./_x402_offer";
-import { RECEIPTS_BATCH_DESCRIPTION } from "./_x402_descriptions";
+import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION } from "./_x402_descriptions";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 
-export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATOR_URL?: string }> = async ({ request, env }) => {
+export const onRequestGet: PagesFunction<{
+  X402_PAY_TO?: string;
+  X402_FACILITATOR_URL?: string;
+  BOARD_SIGN_KEY_PKCS8_B64?: string;
+}> = async ({ request, env }) => {
   const origin = new URL(request.url).origin;
   const u = (p: string) => `${origin}${p}`;
+  const rail = railMode(env);
+  const boardSigningKeyConfigured = Boolean((env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim());
   const body = {
     schema: "csoai.x402-catalog/0.3",
     one_line: "Verification is free forever. Agents pay per artefact: issuance, assembly, cadence — never a grade.",
     rail: {
-      ...railMode(env),
+      ...rail,
       scheme: "exact",
       network: NETWORK_CAIP2_BASE,
       asset: { symbol: USDC_BASE.symbol, contract: USDC_BASE.asset, decimals: USDC_BASE.decimals },
       pay_to: resolvePayTo(env),
       amounts: "only inside each resource's 402 challenge (accepts[].amount) — never on this catalog, never in prose",
       well_known: u("/.well-known/x402.json"),
-      // Signed offers on every 402, signed receipts on every settle — the x402 Offer & Receipt
-      // extension, JWS/EdDSA under a key in our DID document. The full declaration, with the
-      // spec commit and the reason we emit no eip712, is on /.well-known/x402.json.
+      // The x402 Offer & Receipt extension is conditionally emitted. Offers need the board key;
+      // receipts additionally need a facilitator-confirmed settlement that names a payer. The
+      // full declaration, including gap fields and the JWS-only profile, is on .well-known.
       offer_receipt: {
-        offers: "in every 402 body and PAYMENT-REQUIRED header, at extensions['offer-receipt'].info.offers[]",
-        receipts: "in every settled X-PAYMENT-RESPONSE, at extensions['offer-receipt'].info.receipt",
+        emission: "conditional",
+        board_signing_key_configured: boardSigningKeyConfigured,
+        facilitator_configured: rail.facilitator_configured,
+        offers:
+          "signed only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be " +
+          "committed; otherwise csoai.offer_receipt names the gap and no offer-receipt block is attached",
+        receipts:
+          "signed only after facilitator-confirmed settlement when the facilitator names a payer and " +
+          "BOARD_SIGN_KEY_PKCS8_B64 is provisioned; otherwise receiptGap names why no signed receipt " +
+          "was attached",
         format: "jws (EdDSA)",
         kid: X402_SIGNER_KID,
         spec_commit: OFFER_RECEIPT_SPEC_SHA,
@@ -63,6 +77,14 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
       },
     },
     resources: [
+      {
+        id: "free_door",
+        name: "Free board + public-root discovery door",
+        resource: u("/api/free-door"),
+        free_preview: u("/api/free-door"),
+        deliverable: "The live GSPC board totals and public signed root through a genuine x402 challenge whose amount is zero.",
+        never: ["a paid artefact", "a grade", "a rank", "a certificate"],
+      },
       {
         id: "issuance",
         name: "Commission a signed card (request-attestation)",
@@ -96,6 +118,15 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         also: { proof_bundle: u("/api/proof?bundle=1"), one_inclusion_free: u("/api/proof?sha=<64-hex>") },
       },
       {
+        id: "proof_bundle",
+        name: "Public-root inclusion-proof bundle",
+        resource: u("/api/proof?bundle=1"),
+        free_preview: u("/api/proof?sha=<64-hex>"),
+        free_preview_note: "one inclusion proof is free for any leaf in the current public root",
+        deliverable: PROOF_BUNDLE_DESCRIPTION,
+        never: ["a grade", "a rank", "a certificate", "a private evidence claim"],
+      },
+      {
         id: "rwa_evidence",
         name: "XRPL asset evidence card (per request)",
         resource: u("/api/rwa/evidence?asset=<symbol|issuer_address>"),
@@ -103,6 +134,15 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         free_preview_note: "unsigned state, no raw-fetch hashes; symbols at /api/xrpl",
         deliverable: "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.",
         never: ["a rating", "a guarantee", "a verdict", "a rank", "a paywall on /api/xrpl or /root.json"],
+      },
+      {
+        id: "art50_marking_evidence",
+        name: "Article 50 machine-readable marking evidence",
+        resource: u("/api/art50/marking-evidence?url=<https-output-url>"),
+        free_preview: u("/api/art50/marking-evidence?url=<https-output-url>&preview=1"),
+        free_preview_note: "the same point-in-time detection is returned unsigned before purchase",
+        deliverable: "A signed card recording whether named methods detected a machine-readable mark in one named output at one time.",
+        never: ["a conformity opinion", "a guarantee about the generator", "a certificate", "legal advice"],
       },
       {
         // This entry once carried `tier: 1, tier: 4` — two keys in one object literal, the

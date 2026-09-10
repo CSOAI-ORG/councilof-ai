@@ -21,19 +21,51 @@ import FREE from "../mcp/gspc-tools.json";
 import PAID from "../mcp/paid-tools.json";
 
 const ORIGIN = "https://councilof.ai";
-const get = async () => {
+const get = async (env: Record<string, string> = {}) => {
   const res = await (onRequestGet as unknown as (c: unknown) => Promise<Response>)({
     request: new Request(`${ORIGIN}/.well-known/x402.json`),
-    env: {},
+    env,
   });
   return (await res.json()) as {
-    resources: { url: string; method: string; description?: string; accepts?: { description?: string; maxTimeoutSeconds?: number }[] }[];
+    resources: { url: string; method: string; description?: string; free_preview?: string; accepts?: { description?: string; maxTimeoutSeconds?: number }[] }[];
     quarantined?: { url: string; buyable: boolean; lifecycle: string }[];
     mcp: { free_tools: string[]; paid_tools: string[] };
+    extensions: {
+      "offer-receipt": {
+        emission: string;
+        board_signing_key_configured: boolean;
+        facilitator_configured: boolean;
+        offers: string;
+        receipts: string;
+      };
+    };
   };
 };
 
 describe(".well-known/x402.json — every advertised resource is one that can actually be bought", () => {
+  it("describes offer and receipt emission as conditional on the runtime facts", async () => {
+    const dormant = (await get()).extensions["offer-receipt"];
+    expect(dormant).toMatchObject({
+      emission: "conditional",
+      board_signing_key_configured: false,
+      facilitator_configured: false,
+    });
+    expect(dormant.offers).toMatch(/signed only when BOARD_SIGN_KEY_PKCS8_B64/i);
+    expect(dormant.receipts).toMatch(/only after facilitator-confirmed settlement/i);
+    expect(dormant.receipts).toMatch(/payer.*BOARD_SIGN_KEY_PKCS8_B64.*receiptGap/i);
+    expect(JSON.stringify(dormant)).not.toMatch(/\bevery (?:HTTP )?402\b|\bevery settled\b/i);
+
+    const provisioned = (await get({
+      X402_FACILITATOR_URL: "https://f.example",
+      BOARD_SIGN_KEY_PKCS8_B64: "fixture-present",
+    })).extensions["offer-receipt"];
+    expect(provisioned).toMatchObject({
+      emission: "conditional",
+      board_signing_key_configured: true,
+      facilitator_configured: true,
+    });
+  });
+
   it("does not advertise the quarantined witness route as buyable", async () => {
     const m = await get();
     expect(m.resources.map((r) => r.url).filter((u) => u.includes("/api/witness"))).toEqual([]);

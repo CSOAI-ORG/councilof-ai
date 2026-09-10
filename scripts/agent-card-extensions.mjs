@@ -52,14 +52,20 @@ function stateOf(slug) {
  *   offer-and-receipt    an x402 SETTLEMENT receipt on the HTTP 402 doors. Landed in #1663.
  *
  * The second was about to be typed EMITTED, because everything that is not signed-receipts took
- * that branch unconditionally. A state nobody derives is a state nobody can falsify, which is the
- * defect this whole function exists to prevent — so it is read from the settlement path's source
- * the same way. _x402.ts must actually import the signer and the extension emitter.
+ * that branch unconditionally. It is not an unconditional capability: offers require the board
+ * key, and receipts additionally require a facilitator-confirmed settle that names a payer. A
+ * state nobody derives is a state nobody can falsify, which is the defect this whole function
+ * exists to prevent — so the conditional state is read from the settlement path's source too.
  */
 function x402ReceiptState() {
-  const imports = /import\s*\{[^}]*\bsignReceipt\b[^}]*\}\s*from\s*"\.\/_x402_receipt"/.test(x402);
-  const emits = /receiptExtension\s*\(/.test(x402);
-  return imports && emits ? "EMITTED" : "PUBLISHED-NOT-EMITTED";
+  const importsOfferEmitter = /import\s*\{[^}]*\battachOffers\b[^}]*\}\s*from\s*"\.\/_x402_offer"/.test(x402);
+  const importsReceiptSigner = /import\s*\{[^}]*\bsignReceipt\b[^}]*\}\s*from\s*"\.\/_x402_receipt"/.test(x402);
+  const offerChecksKey = /attachOffers\([^;]*BOARD_SIGN_KEY_PKCS8_B64/.test(x402);
+  const receiptChecksPayerAndKey = /if\s*\(!settlement\.payer\)[\s\S]*else if\s*\(!pkcs8\)[\s\S]*receiptGap/.test(x402);
+  const emitsReceiptExtension = /receiptExtension\s*\(/.test(x402);
+  return importsOfferEmitter && importsReceiptSigner && offerChecksKey && receiptChecksPayerAndKey && emitsReceiptExtension
+    ? "CONDITIONAL"
+    : "PUBLISHED-NOT-EMITTED";
 }
 
 const EXTENSIONS = [
@@ -105,18 +111,22 @@ const EXTENSIONS = [
     uri: "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
     required: false,
     lead: (state) =>
-      state === "EMITTED"
-        ? "x402 Offer & Receipt extension (v0.6), JWS profile."
+      state === "CONDITIONAL"
+        ? "x402 Offer & Receipt extension (v0.6), JWS profile — CONDITIONALLY EMITTED."
         : "x402 Offer & Receipt extension (v0.6), JWS profile — PUBLISHED, NOT EMITTED: the"
           + " settlement path does not currently sign, so treat the paragraph below as the"
           + " intended shape rather than what this server does today.",
     tail:
-      "Every HTTP 402 this agent's doors emit carries a server-signed offer committing to the "
-      + "terms in each accepts[] entry; every settled response carries a signed receipt. Format "
-      + "jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1, resolvable at "
+      "A signed offer is attached only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] "
+      + "entry can be committed; otherwise the 402 carries csoai.offer_receipt with the gap and no "
+      + "offer-receipt extension block. A signed receipt is attached only after facilitator-confirmed "
+      + "settlement when the facilitator names a payer and the board key is available; otherwise the "
+      + "paid artefact still delivers and receiptGap states why no signed receipt was attached. When "
+      + "emitted, the format is jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1, resolvable at "
       + "https://csoai.org/.well-known/did.json (an authorization mechanism the extension names "
-      + "in section 4.5.1). eip712 is NOT emitted: the edge holds one Ed25519 key and no secp256k1 "
-      + "signer, and a format we cannot produce is better declared missing than faked. A receipt "
+      + "in section 4.5.1). eip712 is NOT emitted: the edge has no secp256k1 signer; when the optional "
+      + "Ed25519 board key is provisioned it signs JWS. A format we cannot produce is better declared "
+      + "missing than faked. A receipt "
       + "proves this server signed those bytes; it is not by itself proof that money moved, and "
       + "the transaction field, when present, is a claim to check against the chain.",
   },

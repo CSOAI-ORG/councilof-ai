@@ -24,11 +24,10 @@ import type { Slide } from "@/components/scrollworld";
  *     durability claim already retracted in DR-0007. Its historical numeric result is unbound
  *     because the cited result artifact is absent. We do not get to re-make it with different
  *     nouns. Redundancy is described; resistance is not asserted.
- *  3. Deck slide 4 "SWHID & DOI: The Immutable Anchor" — SWHID DROPPED ENTIRELY. There
- *     is no Software Heritage identifier anywhere in this codebase; searching for it
- *     returns nothing. A pillar that does not exist is not a pillar. "Immutable" is
- *     also dropped: a Zenodo DOI is an external archival anchor we do not control,
- *     which is the useful property, and it is not the same word.
+ *  3. Deck slide 4 "SWHID & DOI: The Immutable Anchor" — "immutable" remains
+ *     dropped. The estate now publishes a dated Software Heritage snapshot record,
+ *     but that snapshot covers the archived visit, not today's release. The narrower
+ *     dated identifier is stated; permanence and current-release coverage are not.
  *  4. RETAINED because both are real and both were verified: multi-host publication
  *     (the mirrors listed above, each returning 200), and browser-side verification
  *     with no server call, which an outside auditor exercised and confirmed runs.
@@ -75,7 +74,7 @@ export const RECORD_SLIDES: Slide[] = [
       { tag: "benefit", text: "Published to Hugging Face, PyPI, GitHub and Zenodo — each checked live" },
       { tag: "benefit", text: "Verification is client-side: no account, no server call, no permission" },
       { tag: "benefit", text: "DOI 10.5281/zenodo.21991104 — an archival identifier we do not control" },
-      { tag: "usp", text: "Wikidata Q141128616 and Companies House 16939677 for the entity itself" },
+      { tag: "usp", text: "Software Heritage snapshot 7b219f85… records the repository visit dated 2 September 2026" },
     ],
   },
   {
@@ -98,7 +97,7 @@ export const RECORD_NOT_CLAIMED = [
   "We do not claim the record is indestructible. It is mirrored. Those are different words and the difference matters.",
   "We do not claim censorship resistance. Every host we publish to has terms of service, a jurisdiction and the ability to remove content, and an actor with enough legal reach could pressure more than one of them.",
   "We do not claim independent hosts give independent failure modes. We published a claim of exactly that shape once and withdrew it under DR-0007. Its historical numeric result is unbound because the cited artifact is absent; the latest published point test measured rho=1 and n_eff=1. That retraction stands and this page is bound by it.",
-  "We do not have a Software Heritage identifier. The source deck listed SWHID as one of three pillars; there is no SWHID anywhere in this codebase, so it is not on this page.",
+  "Software Heritage records snapshot swh:1:snp:7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c from a full visit dated 2 September 2026. That identifier covers the archived snapshot, not today's release, and archival is not endorsement or a measurement timestamp.",
   "We do not describe the DOI as immutable. It is an archival identifier administered by someone else, which is the useful property — not permanence we can promise on their behalf.",
   "We do not claim the mirrors are complete or continuously monitored. Each link on this page returned HTTP 200 when the page was written; that is a check, not a guarantee, and there is no uptime claim attached to it.",
 ];
@@ -108,4 +107,5 @@ export const RECORD_RELATED = [
   { href: "/honesty", label: "The honesty gate", what: "Our own errors, including the claim withdrawn in DR-0007." },
   { href: "/statute-to-predicate", label: "From statute to predicate", what: "What is inside the record before it is signed." },
   { href: "/trust-center", label: "Trust center", what: "The real hosting posture, without borrowed multi-region claims." },
+  { href: "/.well-known/software-heritage.json", label: "Software Heritage record", what: "The dated snapshot identifier and its stated limits." },
 ];

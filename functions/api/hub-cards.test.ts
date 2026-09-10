@@ -115,6 +115,63 @@ describe("/api/hub-cards", () => {
     }
   });
 
+  it.each([
+    ["malformed JSON", "{"],
+    [
+      "a string false signature",
+      JSON.stringify({
+        model: "a/three",
+        axis: "safety",
+        status: "UNMEASURED",
+        signed: "false",
+      }),
+    ],
+    [
+      "a boolean false signature",
+      JSON.stringify({
+        model: "a/three",
+        axis: "safety",
+        status: "UNMEASURED",
+        signed: false,
+      }),
+    ],
+    [
+      "a coerced model",
+      JSON.stringify({
+        model: 7,
+        axis: "safety",
+        status: "UNMEASURED",
+        signed: true,
+      }),
+    ],
+  ])(
+    "withholds totals when an index contains %s",
+    async (_label, invalidRow) => {
+      const original = FILES["INDEX-safety"];
+      FILES["INDEX-safety"] = `${row("a/valid", "safety", "UNMEASURED")}\n${invalidRow}`;
+      try {
+        installFetch([]);
+        const { body } = await invoke();
+        const counts = body.counts as unknown as Record<string, unknown>;
+
+        expect(counts.complete).toBe(false);
+        expect(counts.cells).toBeNull();
+        expect(counts.measured).toBeNull();
+        expect(counts.unmeasured).toBeNull();
+        expect(counts.indexes_unread).toEqual([
+          expect.objectContaining({
+            index: "INDEX-safety.jsonl",
+            reason: expect.stringMatching(/invalid jsonl row 2/),
+          }),
+        ]);
+        // A valid-looking row from an invalid source is not admitted piecemeal.
+        expect(counts.read_so_far).toMatchObject({ cells: 4, unmeasured: 2 });
+      } finally {
+        FILES["INDEX-safety"] = original;
+      }
+    },
+  );
+
   // A failure cached by `cacheEverything` keeps an index dark for the whole TTL.
   // One retry outside the cache is what turns a transient throttle back into data.
   it("retries a failed index once outside the cache before calling it unread", async () => {
@@ -179,7 +236,10 @@ const STALE: Record<string, string> = {
   "INDEX-empty3": "",
 };
 
-const installStale = (ledgerBody: string | null) => {
+const installStale = (
+  ledgerBody: string | null,
+  files: Record<string, string> = STALE,
+) => {
   vi.stubGlobal(
     "fetch",
     vi.fn(async (input: string | URL | Request) => {
@@ -191,14 +251,21 @@ const installStale = (ledgerBody: string | null) => {
           : new Response(ledgerBody, { status: 200 });
       }
       const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
-      return new Response(STALE[name] ?? "", { status: 200 });
+      return new Response(files[name] ?? "", { status: 200 });
     }),
   );
 };
 
 describe("/api/hub-cards — the live card, not every card ever signed", () => {
   it("drops a card the ledger has replaced and keeps its replacement's status", async () => {
-    installStale(JSON.stringify({ superseded_id: "oldsha", by_id: "newsha" }));
+    installStale(
+      JSON.stringify({
+        superseded_id: "oldsha",
+        by_id: "newsha",
+        model: "a/one",
+        axis: "safety",
+      }),
+    );
     const { body } = await invoke();
     const counts = body.counts as unknown as Record<string, unknown>;
     // Without the ledger read this is {cells: 2, measured: 1, unmeasured: 1}.
@@ -206,7 +273,101 @@ describe("/api/hub-cards — the live card, not every card ever signed", () => {
     expect(counts.measured).toBe(1);
     expect(counts.unmeasured).toBe(0);
     expect(counts.superseded_excluded).toBe(1);
+    expect(counts.supersessions_resolved).toBe(true);
+    expect(counts.supersessions_unresolved).toEqual([]);
     expect(counts.rows_served_by_indexes).toBe(2);
+  });
+
+  it("withholds totals and keeps a predecessor when by_id is absent from the indexes", async () => {
+    installStale(
+      JSON.stringify({
+        superseded_id: "oldsha",
+        by_id: "missing-newsha",
+        model: "a/one",
+        axis: "safety",
+      }),
+      {
+        INDEX: "",
+        "INDEX-safety": carded("a/one", "safety", "UNMEASURED", "oldsha"),
+        "INDEX-art5-affect": "",
+        "INDEX-empty3": "",
+      },
+    );
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+
+    expect(counts.complete).toBe(false);
+    expect(counts.cells).toBeNull();
+    expect(counts.superseded_excluded).toBe(0);
+    expect(counts.supersessions_resolved).toBe(false);
+    expect(counts.supersessions_unresolved).toEqual([
+      expect.objectContaining({
+        superseded_id: "oldsha",
+        by_id: "missing-newsha",
+        reason: "replacement is absent from observed indexes",
+      }),
+    ]);
+    expect(counts.read_so_far).toMatchObject({ cells: 1, unmeasured: 1 });
+  });
+
+  it("withholds totals when by_id exists only for a different model/axis pair", async () => {
+    installStale(
+      JSON.stringify({
+        superseded_id: "oldsha",
+        by_id: "newsha",
+        model: "a/one",
+        axis: "safety",
+      }),
+      {
+        INDEX: carded("b/two", "governance", "MEASURED", "newsha"),
+        "INDEX-safety": carded("a/one", "safety", "UNMEASURED", "oldsha"),
+        "INDEX-art5-affect": "",
+        "INDEX-empty3": "",
+      },
+    );
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+
+    expect(counts.complete).toBe(false);
+    expect(counts.cells).toBeNull();
+    expect(counts.superseded_excluded).toBe(0);
+    expect(counts.supersessions_unresolved).toEqual([
+      expect.objectContaining({ reason: "replacement pair does not match predecessor" }),
+    ]);
+    expect(counts.read_so_far).toMatchObject({ cells: 2 });
+  });
+
+  it.each([
+    ["malformed JSON", '{"superseded_id":"oldsha"'],
+    [
+      "a non-string model",
+      JSON.stringify({
+        superseded_id: "oldsha",
+        by_id: "newsha",
+        model: 7,
+        axis: "safety",
+      }),
+    ],
+    [
+      "a self-supersession",
+      JSON.stringify({
+        superseded_id: "oldsha",
+        by_id: "oldsha",
+        model: "a/one",
+        axis: "safety",
+      }),
+    ],
+  ])("treats a ledger row with %s as unreadable", async (_label, ledgerRow) => {
+    installStale(ledgerRow);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    const honesty = body.honesty as unknown as Record<string, string>;
+
+    expect(counts.complete).toBe(false);
+    expect(counts.cells).toBeNull();
+    expect(counts.superseded_ledger_read).toBe(false);
+    expect(counts.superseded_excluded).toBeNull();
+    expect(honesty.superseded_ledger).toMatch(/invalid jsonl row 1/);
   });
 
   it("collapses a duplicate pair so one (model, axis) is one cell", async () => {

@@ -95,7 +95,7 @@ function runTypeScript() {
     fail("TypeScript returned success while reporting diagnostics", output);
   }
 
-  return { count: diagnostics.length, files: sourceFiles.size };
+  return { count: diagnostics.length, files: sourceFiles.size, output };
 }
 
 const args = process.argv.slice(2);
@@ -117,6 +117,7 @@ const state = compare(current.count, baseline);
 if (state === "regression") {
   fail(
     `errors rose ${baseline} -> ${current.count} across ${current.files} files; type debt may not increase`,
+    current.output,
   );
 }
 
@@ -124,6 +125,7 @@ if (mode === "--check") {
   if (state === "improvement") {
     fail(
       `baseline is stale ${baseline} -> ${current.count}; run npm run ts-ratchet:update and commit the tightened baseline`,
+      current.output,
     );
   }
   console.log(

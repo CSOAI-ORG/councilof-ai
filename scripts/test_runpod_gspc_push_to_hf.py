@@ -5,6 +5,7 @@ from __future__ import annotations
 import contextlib
 import importlib.util
 import io
+import os
 import sys
 import tempfile
 import types
@@ -212,6 +213,47 @@ class PushTests(unittest.TestCase):
         with mock.patch.object(push, "credential_sources", return_value=[("test source", "secret")]):
             with self.assertRaisesRegex(push.IntakeError, "not private"):
                 push.connect(push.REPO, lambda **kwargs: self.hub)
+
+    def test_explicit_token_file_is_only_source_even_with_other_credentials(self) -> None:
+        token_file = self.base / "private-token"
+        token = "hf_" + "a" * 32
+        token_file.write_text(token + "\n")
+        token_file.chmod(0o600)
+        with mock.patch.dict(os.environ, {"HF_TOKEN": "account-wide-secret"}):
+            self.assertEqual(push.credential_sources(token_file), [
+                ("explicit private-intake credential file", token),
+            ])
+            calls = []
+            def rejected(*, token):
+                calls.append(token)
+                raise RuntimeError("do not expose the credential " + token)
+            with self.assertRaisesRegex(push.IntakeError, "repo access failed") as error:
+                push.connect(push.REPO, rejected, token_file)
+            self.assertEqual(calls, [token])
+            self.assertNotIn(token, str(error.exception) + self.output.getvalue())
+
+    def test_missing_or_symlink_token_never_falls_back(self) -> None:
+        missing = self.base / "missing-token"
+        with mock.patch.dict(os.environ, {"HF_TOKEN": "account-wide-secret"}):
+            with self.assertRaisesRegex(push.IntakeError, "no fallback"):
+                push.credential_sources(missing)
+            target = self.base / "target-token"
+            target.write_text("hf_" + "a" * 32)
+            target.chmod(0o600)
+            missing.symlink_to(target)
+            with self.assertRaisesRegex(push.IntakeError, "no fallback"):
+                push.credential_sources(missing)
+
+    def test_publicly_readable_empty_or_malformed_token_file_is_rejected(self) -> None:
+        token_file = self.base / "private-token"
+        for content, mode in [("hf_" + "a" * 32, 0o644), ("", 0o600),
+                              ("invalid-secret-value", 0o600), ("a" * 4097, 0o600)]:
+            token_file.write_text(content)
+            token_file.chmod(mode)
+            with self.assertRaises(push.IntakeError) as error:
+                push.credential_sources(token_file)
+            if content:
+                self.assertNotIn(content, str(error.exception))
 
     def test_connect_lists_the_pinned_revision_and_sanitizes_auth_failures(self) -> None:
         expected = self.fixture()

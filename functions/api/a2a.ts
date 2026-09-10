@@ -221,15 +221,21 @@ async function fetchJsonSource(
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), SOURCE_TIMEOUT_MS);
   try {
+    // Cloudflare Pages fetch implements only "follow" and "manual". "error" throws
+    // TypeError before the request is sent, which made every skill UNCHECKABLE.
+    // manual + refuse 3xx keeps the no-follow SSRF posture without using a mode the edge lacks.
     const response = await fetch(source, {
       method: init.method ?? "GET",
       headers: init.body
         ? { accept: "application/json", "content-type": "application/json" }
         : { accept: "application/json" },
       body: init.body,
-      redirect: "error",
+      redirect: "manual",
       signal: controller.signal,
     });
+    if (response.status >= 300 && response.status < 400) {
+      throw new SourceError(`source redirected (${response.status}) — not followed`, source, "FETCH_FAILED");
+    }
     const text = await readBoundedText(response, MAX_SOURCE_RESPONSE_BYTES);
     if (!response.ok) throw new SourceError(`HTTP ${response.status} from ${path}`, source, "HTTP_ERROR");
     try {
