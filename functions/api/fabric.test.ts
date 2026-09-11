@@ -103,7 +103,12 @@ function fixtureFetcher(
       if (url.pathname === "/signed/card-matrix.json") {
         return json({
           schema: "csoai.card-matrix/2",
-          counts: { admitted_cells: 0, quotable_cells: 0 },
+          counts: {
+            cells: 335,
+            signed_cells: 335,
+            models: 64,
+            axes: 16,
+          },
         });
       }
       if (url.pathname === "/api/agui/gspc-state") {
@@ -402,8 +407,8 @@ describe("GET /api/fabric", () => {
         (action) => action.definition.id === "csoai.gspc.board.read",
       )?.runtime,
     ).toMatchObject({
-      state: "CATALOGUED",
-      verifier_passed: false,
+      state: "RUNTIME_OBSERVED",
+      verifier_passed: true,
       execution_enabled: false,
       execution_observed: false,
     });
@@ -434,9 +439,12 @@ describe("GET /api/fabric", () => {
       summary: expect.stringContaining("12 tool declarations"),
     });
     expect(byId(manifest, "gspc-board")).toMatchObject({
-      state: "CATALOGUED",
-      summary: expect.stringContaining("0 admitted, 0 quotable"),
+      state: "RUNTIME_OBSERVED",
+      summary: expect.stringContaining("335 cells, 335 carrying outer signatures"),
     });
+    expect(byId(manifest, "gspc-board").summary).toContain(
+      "does not establish currentness, independent admission, ranking or compliance",
+    );
     expect(byId(manifest, "agui-gspc-state")).toMatchObject({
       state: "RUNTIME_OBSERVED",
       summary: expect.stringContaining("presentation transport only"),
