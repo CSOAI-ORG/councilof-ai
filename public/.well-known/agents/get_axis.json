@@ -1,0 +1,53 @@
+{
+  "name": "Council of AI \u2014 get_axis",
+  "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc: n, accuracy, interval, MEASURED or UNMEASURED status, family, and dates. An unmeasured axis is a first-class answer \u2014 a declared slot with no run behind it, published so the gap is visible \u2014 never an error and never a zero. Never a certification.",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/llms.txt",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "get_axis",
+      "name": "get_axis",
+      "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc: n, accuracy, interval, MEASURED or UNMEASURED status, family, and dates. An unmeasured axis is a first-class answer \u2014 a declared slot with no run behind it, published so the gap is visible \u2014 never an error and never a zero. Never a certification.",
+      "tags": [
+        "measurement",
+        "mcp"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"get_axis\",\"input\":{}}",
+        "POST https://councilof.ai/mcp"
+      ]
+    }
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment"
+  ],
+  "mcp_tool": "get_axis",
+  "paid": false,
+  "did": "did:web:councilof.ai:agents:get_axis"
+}
