@@ -402,12 +402,13 @@ export default function Watch() {
 
       <h2 className="mt-10 text-lg font-semibold">Alerting tier (R3)</h2>
       <div className="mt-3 rounded-xl border border-gold-400/30 bg-[#0d241b] p-5">
-        <div className="font-mono text-emerald-300">$199/mo — signed feed + alert webhooks</div>
+        <div className="font-mono text-emerald-300">signed feed + alert webhooks — priced at the 402</div>
         <p className="mt-2 text-sm text-slate-300">
           Every gap-card and specimen outcome as a signed webhook the hour it lands. The data on
           this page is free forever; what a subscription buys is the signed receipt and the push.
           Payment rides the existing x402 bundle path (<a className="underline" href="/.well-known/x402.json">/.well-known/x402.json</a>)
-          — display scaffolding only until the first subscriber settles.
+          — the price lives in the 402 challenge, never on this page. Display scaffolding only
+          until the first subscriber settles.
         </p>
       </div>
 
