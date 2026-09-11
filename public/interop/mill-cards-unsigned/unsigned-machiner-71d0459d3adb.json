@@ -1,0 +1,52 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "machinery-conformity",
+    "model": "Qwen/Qwen2.5-0.5B",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.0333,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+    "model_revision_status": "FROZEN",
+    "model_license": "apache-2.0",
+    "model_visibility": "public",
+    "model_training_use": "UNCHECKABLE",
+    "bank_revision": "93b3aa76f12b1372353e368b616a70bafe8c715f",
+    "prompt_digest_sha256": "fdbe463c3f0268600ebf9e70372db1f27ac5668b30276323e247de86adbbc51c",
+    "bank_license": "cc-by-4.0",
+    "bank_visibility": "public",
+    "bank_training_use": "UNCHECKABLE",
+    "harness_revision": "f92c01ff3918beb3be839add2a109888b814ad4c",
+    "grader": "deterministic-exact-token/0.1",
+    "uncertainty_95_wilson": [
+      0.0059,
+      0.1667
+    ],
+    "run_id": "hfjobs-2026-09-11-050011-8",
+    "measured_at": "2026-09-11T05:17:18Z",
+    "freshness": "POINT_IN_TIME",
+    "regulatory_crosswalk": {
+      "refs": [],
+      "linkage_status": "UNLINKED"
+    },
+    "raw_response_ref": "hf-bucket://csoai/jobs-artifacts/gspc-raw/hfjobs-2026-09-11-050011-8/machinery-conformity/machiner-b3a114d75991.jsonl",
+    "raw_response_digest_sha256": "3fe9bee5e445f69d280640c56104b56c6a0d1c6c5732649548e79ded1ff27f9a",
+    "signature_state": "STAGED_UNSIGNED",
+    "correction_of": null,
+    "supersedes": null,
+    "route": "hf-router",
+    "council_release_fingerprint": "sha256:4867b133b477d83036fa96aac283c25258c0af073fc3321730c790a56ec7de94"
+  },
+  "id": "71d0459d3adb5ee13cde823e3d83d71e2ea3bf66a351e29fa1f554a812947b67",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1"
+}
