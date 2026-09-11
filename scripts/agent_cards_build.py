@@ -154,9 +154,13 @@ def build_card(entry: dict, org: dict, org_skills: dict[str, dict],
 
     card = {
         "name": (
-            "Council of AI — The Council (33-seat BFT design)"
+            # De-branded per the brand gate: the withdrawn fault-tolerance claim is
+            # never asserted on a public surface — "designed ... council" only.
+            "Council of AI — The Council (designed 33-agent council, 23/33 design threshold)"
             if is_council else
-            f"Council of AI — {entry['name']} ({role} Analyst)"
+            # public_name exists for personas whose registry name is a de-branded
+            # word on public surfaces (the brand gate scans these JSON values).
+            f"Council of AI — {entry.get('public_name') or (entry['name'] + ' (' + role + ' Analyst)')}"
         ),
         "description": f"{entry['purpose']} {STATUS_LINE}",
         "version": CARD_VERSION,
@@ -191,7 +195,7 @@ def build_card(entry: dict, org: dict, org_skills: dict[str, dict],
             "status": "DESIGN_ONLY",
             "credentials": "NOT_CONFIGURED",
             "independence": "NOT_MEASURED",
-            "bft": "NOT_DEMONSTRATED",
+            "live_quorum_claim": "WITHDRAWN (n_eff 1.21 of 3; refutation ledger)",
             "registry": "scripts/badger/csoai-bft-council.py",
             "note": (
                 "33 seats are role definitions, not 33 independently operated "

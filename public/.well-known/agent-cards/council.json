@@ -1,6 +1,6 @@
 {
-  "name": "Council of AI — The Council (33-seat BFT design)",
-  "description": "The 33-seat design council: 12 Generals plus 21 expanded roles, declared in scripts/badger/csoai-bft-council.py. Design quorum 23 of 33. Status DESIGN_ONLY: no independent verifiable votes exist, BFT is NOT_DEMONSTRATED, and this card fronts the shared measured substrate like every other card here. STATUS: DESIGN_ONLY analyst persona fronting the shared measured substrate at the single interface below — there is no per-analyst isolated service and none is claimed. The measured artifacts are the signed GSPC cards at GET /api/gspc and /signed/card_index.json; this persona is a discovery surface, not a service boundary. Measurement, never certification.",
+  "name": "Council of AI — The Council (designed 33-agent council, 23/33 design threshold)",
+  "description": "The designed 33-agent council: 12 Generals plus 21 expanded roles, declared in scripts/badger/csoai-bft-council.py. Design quorum 23 of 33. Status DESIGN_ONLY: no independent verifiable votes exist and the historical live-quorum claim stands withdrawn (n_eff 1.21 of 3; refutation ledger). This card fronts the shared measured substrate like every other card here. STATUS: DESIGN_ONLY analyst persona fronting the shared measured substrate at the single interface below — there is no per-analyst isolated service and none is claimed. The measured artifacts are the signed GSPC cards at GET /api/gspc and /signed/card_index.json; this persona is a discovery surface, not a service boundary. Measurement, never certification.",
   "version": "0.1.0",
   "provider": {
     "organization": "CSOAI Ltd",
@@ -511,7 +511,7 @@
     "status": "DESIGN_ONLY",
     "credentials": "NOT_CONFIGURED",
     "independence": "NOT_MEASURED",
-    "bft": "NOT_DEMONSTRATED",
+    "live_quorum_claim": "WITHDRAWN (n_eff 1.21 of 3; refutation ledger)",
     "registry": "scripts/badger/csoai-bft-council.py",
     "note": "33 seats are role definitions, not 33 independently operated voters. No quorum observation exists; any future claim of one must carry independently produced, verifiable votes."
   }
