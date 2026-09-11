@@ -1,0 +1,46 @@
+{
+  "schema": "csoai.deep-measurements.xrpl-reader/1.0",
+  "generated_at": "2026-09-11T13:08:42.114081+00:00",
+  "generator": "TUI-2 Direct XRPL Reader",
+  "code_revision": "finance/deep-measurements-20260911",
+  "reader": "XRPL JSON-RPC via xrplcluster.com (public node)",
+  "subject": "RLUSD",
+  "chain": "xrpl",
+  "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+  "query_account_info": {
+    "method": "account_info",
+    "params": [
+      {
+        "account": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+        "ledger_index": "validated"
+      }
+    ]
+  },
+  "query_account_lines": {
+    "method": "account_lines",
+    "params": [
+      {
+        "account": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+        "ledger_index": "validated",
+        "limit": 100
+      }
+    ]
+  },
+  "finalized_ledger_index": 106913042,
+  "account_data_hash": "695eaa9f34b1aa9d8672ce098e687f9788f9c658d0a2660ddfbd0149897d3a81",
+  "account_lines_hash": "25a4b095417693e4e04559e578fe26ea51ad7d978939c0cf649a7f795624d5ee",
+  "normalized": {
+    "xrp_balance": 99.82615,
+    "sequence": 89926352,
+    "domain": "https://ripple.com/",
+    "flags": 2174353408,
+    "trust_lines_total": 100,
+    "rlusd_trust_lines": 100
+  },
+  "replay_result": "REPRODUCIBLE at the same validated ledger against any public XRPL node",
+  "terms_boundary": "Public XRPL JSON-RPC, no auth, account_info + account_lines",
+  "correction_link": "https://councilof.ai/api/corrections",
+  "measurement_state": "MEASURED",
+  "measurement_depth": "ACCOUNT_INFO_PLUS_TRUST_LINES",
+  "note": "Direct on-chain query. Supply not derivable from issuer account alone (RLUSD uses distributed model, not issuer-held). Trust lines show distribution pattern."
+}
