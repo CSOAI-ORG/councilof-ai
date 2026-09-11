@@ -2,11 +2,13 @@
   "schema": "csoai.financial-coverage/0.1",
   "kind": "financial.coverage.canonical",
   "subject": "stablecoin-deployment-graph",
-  "generated_at": "2026-09-11T10:45:58.152855+00:00",
+  "version": "2-corrected",
+  "generated_at": "2026-09-11T11:03:31.439884+00:00",
   "generator": "TUI-2-financial-coverage-machine",
   "branch": "finance/full-spread-20260911",
   "data_source": "DefiLlama stablecoins API",
   "data_source_url": "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+  "correction_note": "v2: Fixed symbol-collision bug \u2014 USDS ticker matched 5 projects; deep_measured now keyed by DefiLlama ID, not symbol. Count corrected from 17 to 13.",
   "honesty_contract": {
     "rule": "INDEXED \u2260 MEASURED. Deep measurement requires per-chain totalSupply() + attestation comparison + signed card.",
     "measurement_states": [
@@ -29,14 +31,29 @@
     "canonical_assets": 424,
     "bridge_wrappers": 0,
     "issuer_variants": 1,
-    "deep_measured_count": 17,
-    "deep_measured_state": "INCOMPLETE \u2014 17 of 425 have per-chain supply verification",
+    "deep_measured_count": 13,
+    "deep_measured_ids": [
+      "1",
+      "10",
+      "12",
+      "14",
+      "2",
+      "209",
+      "24",
+      "252",
+      "253",
+      "3",
+      "50",
+      "6",
+      "8"
+    ],
+    "deep_measured_state": "INCOMPLETE \u2014 13 of 425 have per-chain supply verification",
     "signed_cards_in_public_root": 167,
     "historical_signed_corpus": 335,
     "rekor_witness_state": "witnessed at log index 2791822965",
-    "ots_state": "submitted, awaiting Bitcoin confirmation",
-    "base_eas_state": "INCOMPLETE \u2014 costs ~$0.01, needs owner approval",
-    "xrpl_memo_state": "INCOMPLETE \u2014 costs ~$0.00001, needs owner approval"
+    "ots_state": "STAMPED_PENDING_BITCOIN",
+    "base_eas_state": "READY_NOT_ANCHORED \u2014 costs ~$0.01, needs owner approval",
+    "xrpl_memo_state": "READY_NOT_ANCHORED \u2014 costs ~$0.00001, needs owner approval"
   },
   "chain_distribution": {
     "Ethereum": 168,
@@ -352,6 +369,7 @@
   "top_20": [
     {
       "rank": 1,
+      "defillama_id": "1",
       "symbol": "USDT",
       "name": "Tether",
       "supply_usd": 183444475509.3821,
@@ -359,10 +377,12 @@
       "chain_count": 130,
       "top_chain": "Tron",
       "eth_supply": 73666984705.34842,
-      "deep_measured": true
+      "deep_measured": true,
+      "measurement_state": "DEEP_MEASURED"
     },
     {
       "rank": 2,
+      "defillama_id": "2",
       "symbol": "USDC",
       "name": "USD Coin",
       "supply_usd": 74174413872.03902,
@@ -370,10 +390,12 @@
       "chain_count": 155,
       "top_chain": "Ethereum",
       "eth_supply": 47191609756.879074,
-      "deep_measured": true
+      "deep_measured": true,
+      "measurement_state": "DEEP_MEASURED"
     },
     {
       "rank": 3,
+      "defillama_id": "209",
       "symbol": "USDS",
       "name": "Sky Dollar",
       "supply_usd": 6619682595.353698,
@@ -381,10 +403,12 @@
       "chain_count": 7,
       "top_chain": "Ethereum",
       "eth_supply": 6510629779.046161,
-      "deep_measured": true
+      "deep_measured": true,
+      "measurement_state": "DEEP_MEASURED"
     },
     {
       "rank": 4,
+      "defillama_id": "5",
       "symbol": "DAI",
       "name": "Dai",
       "supply_usd": 4773749448.654123,
@@ -392,10 +416,12 @@
       "chain_count": 49,
       "top_chain": "Ethereum",
       "eth_supply": 4151526249.118318,
-      "deep_measured": true
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 5,
+      "defillama_id": "146",
       "symbol": "USDe",
       "name": "Ethena USDe",
       "supply_usd": 4597407397.368451,
@@ -403,10 +429,12 @@
       "chain_count": 31,
       "top_chain": "Ethereum",
       "eth_supply": 2624598858.508457,
-      "deep_measured": true
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 6,
+      "defillama_id": "262",
       "symbol": "USD1",
       "name": "World Liberty Financial USD",
       "supply_usd": 4294667438.3713646,
@@ -414,10 +442,12 @@
       "chain_count": 8,
       "top_chain": "Ethereum",
       "eth_supply": 1569186590.8728633,
-      "deep_measured": false
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 7,
+      "defillama_id": "286",
       "symbol": "USDG",
       "name": "Global Dollar",
       "supply_usd": 3244292021.400786,
@@ -425,10 +455,12 @@
       "chain_count": 6,
       "top_chain": "X Layer",
       "eth_supply": 314258200.25141823,
-      "deep_measured": false
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 8,
+      "defillama_id": "120",
       "symbol": "PYUSD",
       "name": "PayPal USD",
       "supply_usd": 2761702979.0433593,
@@ -436,10 +468,12 @@
       "chain_count": 19,
       "top_chain": "Ethereum",
       "eth_supply": 1661754051.3483243,
-      "deep_measured": true
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 9,
+      "defillama_id": "173",
       "symbol": "BUIDL",
       "name": "BlackRock USD",
       "supply_usd": 2755502858.6404486,
@@ -447,10 +481,12 @@
       "chain_count": 8,
       "top_chain": "Solana",
       "eth_supply": 861153393.110449,
-      "deep_measured": false
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 10,
+      "defillama_id": "237",
       "symbol": "USYC",
       "name": "Circle USYC",
       "supply_usd": 2603040742.4195642,
@@ -458,10 +494,12 @@
       "chain_count": 2,
       "top_chain": "BSC",
       "eth_supply": 42061014.22634852,
-      "deep_measured": false
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 11,
+      "defillama_id": "250",
       "symbol": "RLUSD",
       "name": "Ripple USD",
       "supply_usd": 2405035952.1352067,
@@ -469,10 +507,12 @@
       "chain_count": 2,
       "top_chain": "Ethereum",
       "eth_supply": 1373619301.1761305,
-      "deep_measured": true
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 12,
+      "defillama_id": "129",
       "symbol": "USDY",
       "name": "Ondo US Dollar Yield",
       "supply_usd": 2219991853.8706756,
@@ -480,10 +520,12 @@
       "chain_count": 16,
       "top_chain": "Ethereum",
       "eth_supply": 1183263742.6497881,
-      "deep_measured": false
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 13,
+      "defillama_id": "14",
       "symbol": "USDD",
       "name": "USDD",
       "supply_usd": 1506631397.5591302,
@@ -491,10 +533,12 @@
       "chain_count": 4,
       "top_chain": "Tron",
       "eth_supply": 260433112.9984621,
-      "deep_measured": true
+      "deep_measured": true,
+      "measurement_state": "DEEP_MEASURED"
     },
     {
       "rank": 14,
+      "defillama_id": "347",
       "symbol": "USDGO",
       "name": "USDGO",
       "supply_usd": 1383012131.7476592,
@@ -502,10 +546,12 @@
       "chain_count": 1,
       "top_chain": "Solana",
       "eth_supply": 0,
-      "deep_measured": false
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 15,
+      "defillama_id": "336",
       "symbol": "U",
       "name": "United Stables",
       "supply_usd": 1283702974.5311356,
@@ -513,10 +559,12 @@
       "chain_count": 4,
       "top_chain": "BSC",
       "eth_supply": 277028996.452269,
-      "deep_measured": false
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 16,
+      "defillama_id": "246",
       "symbol": "USDf",
       "name": "Falcon USD",
       "supply_usd": 1175639750.6342862,
@@ -524,10 +572,12 @@
       "chain_count": 2,
       "top_chain": "Ethereum",
       "eth_supply": 1061579845.0828447,
-      "deep_measured": false
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 17,
+      "defillama_id": "118",
       "symbol": "GHO",
       "name": "GHO",
       "supply_usd": 697778862.6681911,
@@ -535,10 +585,12 @@
       "chain_count": 2,
       "top_chain": "Ethereum",
       "eth_supply": 639566877.5364808,
-      "deep_measured": true
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 18,
+      "defillama_id": "195",
       "symbol": "USD0",
       "name": "Usual USD",
       "supply_usd": 547801100.5502374,
@@ -546,10 +598,12 @@
       "chain_count": 2,
       "top_chain": "Ethereum",
       "eth_supply": 547735644.8950003,
-      "deep_measured": false
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 19,
+      "defillama_id": "221",
       "symbol": "USDTB",
       "name": "Ethena USDtb",
       "supply_usd": 527944280.04015076,
@@ -557,10 +611,12 @@
       "chain_count": 2,
       "top_chain": "Ethereum",
       "eth_supply": 483282443.96385574,
-      "deep_measured": false
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     },
     {
       "rank": 20,
+      "defillama_id": "272",
       "symbol": "YLDS",
       "name": "YLDS",
       "supply_usd": 525136426.6979744,
@@ -568,7 +624,8 @@
       "chain_count": 2,
       "top_chain": "Provenance",
       "eth_supply": 0,
-      "deep_measured": false
+      "deep_measured": false,
+      "measurement_state": "INDEXED"
     }
   ],
   "xrpl_instruments": {
@@ -576,7 +633,13 @@
     "total_supply_usd": 1209101903.48,
     "total_supply_display": "$1.21B",
     "total_holders": 86897,
-    "status": "MEASURED"
+    "status": "MEASURED",
+    "measured_at": "2026-09-07T12:30:34Z",
+    "verification_methods": {
+      "bidirectional_domain_match": 4,
+      "xrpscan_well_known": 8,
+      "xrplmeta_registry": 4
+    }
   },
   "swift_cohort": {
     "total": 26,
@@ -633,17 +696,55 @@
   },
   "deep_measurement_queue_top50": [
     {
-      "symbol": "USD1",
-      "name": "World Liberty Financial USD",
-      "supply_usd": 4294667438.3713646,
-      "supply_display": "$4.29B",
-      "chain_count": 8,
+      "defillama_id": "250",
+      "symbol": "RLUSD",
+      "name": "Ripple USD",
+      "supply_usd": 2405035952.1352067,
+      "supply_display": "$2.41B",
+      "chain_count": 2,
       "top_chain": "Ethereum",
       "priority_score": 130,
       "measurement_state": "INDEXED",
       "rank": 1
     },
     {
+      "defillama_id": "5",
+      "symbol": "DAI",
+      "name": "Dai",
+      "supply_usd": 4773749448.654123,
+      "supply_display": "$4.77B",
+      "chain_count": 49,
+      "top_chain": "Ethereum",
+      "priority_score": 110,
+      "measurement_state": "INDEXED",
+      "rank": 2
+    },
+    {
+      "defillama_id": "146",
+      "symbol": "USDe",
+      "name": "Ethena USDe",
+      "supply_usd": 4597407397.368451,
+      "supply_display": "$4.60B",
+      "chain_count": 31,
+      "top_chain": "Ethereum",
+      "priority_score": 110,
+      "measurement_state": "INDEXED",
+      "rank": 3
+    },
+    {
+      "defillama_id": "120",
+      "symbol": "PYUSD",
+      "name": "PayPal USD",
+      "supply_usd": 2761702979.0433593,
+      "supply_display": "$2.76B",
+      "chain_count": 19,
+      "top_chain": "Ethereum",
+      "priority_score": 110,
+      "measurement_state": "INDEXED",
+      "rank": 4
+    },
+    {
+      "defillama_id": "129",
       "symbol": "USDY",
       "name": "Ondo US Dollar Yield",
       "supply_usd": 2219991853.8706756,
@@ -652,9 +753,22 @@
       "top_chain": "Ethereum",
       "priority_score": 110,
       "measurement_state": "INDEXED",
-      "rank": 2
+      "rank": 5
     },
     {
+      "defillama_id": "262",
+      "symbol": "USD1",
+      "name": "World Liberty Financial USD",
+      "supply_usd": 4294667438.3713646,
+      "supply_display": "$4.29B",
+      "chain_count": 8,
+      "top_chain": "Ethereum",
+      "priority_score": 100,
+      "measurement_state": "INDEXED",
+      "rank": 6
+    },
+    {
+      "defillama_id": "286",
       "symbol": "USDG",
       "name": "Global Dollar",
       "supply_usd": 3244292021.400786,
@@ -663,9 +777,10 @@
       "top_chain": "X Layer",
       "priority_score": 100,
       "measurement_state": "INDEXED",
-      "rank": 3
+      "rank": 7
     },
     {
+      "defillama_id": "173",
       "symbol": "BUIDL",
       "name": "BlackRock USD",
       "supply_usd": 2755502858.6404486,
@@ -674,9 +789,10 @@
       "top_chain": "Solana",
       "priority_score": 100,
       "measurement_state": "INDEXED",
-      "rank": 4
+      "rank": 8
     },
     {
+      "defillama_id": "237",
       "symbol": "USYC",
       "name": "Circle USYC",
       "supply_usd": 2603040742.4195642,
@@ -685,9 +801,10 @@
       "top_chain": "BSC",
       "priority_score": 100,
       "measurement_state": "INDEXED",
-      "rank": 5
+      "rank": 9
     },
     {
+      "defillama_id": "347",
       "symbol": "USDGO",
       "name": "USDGO",
       "supply_usd": 1383012131.7476592,
@@ -696,9 +813,10 @@
       "top_chain": "Solana",
       "priority_score": 100,
       "measurement_state": "INDEXED",
-      "rank": 6
+      "rank": 10
     },
     {
+      "defillama_id": "336",
       "symbol": "U",
       "name": "United Stables",
       "supply_usd": 1283702974.5311356,
@@ -707,9 +825,10 @@
       "top_chain": "BSC",
       "priority_score": 100,
       "measurement_state": "INDEXED",
-      "rank": 7
+      "rank": 11
     },
     {
+      "defillama_id": "246",
       "symbol": "USDf",
       "name": "Falcon USD",
       "supply_usd": 1175639750.6342862,
@@ -718,20 +837,10 @@
       "top_chain": "Ethereum",
       "priority_score": 100,
       "measurement_state": "INDEXED",
-      "rank": 8
+      "rank": 12
     },
     {
-      "symbol": "USDV",
-      "name": "Valtorum USD",
-      "supply_usd": 103462295.9372291,
-      "supply_display": "$103.5M",
-      "chain_count": 6,
-      "top_chain": "XRPL",
-      "priority_score": 80,
-      "measurement_state": "INDEXED",
-      "rank": 9
-    },
-    {
+      "defillama_id": "205",
       "symbol": "AUSD",
       "name": "Agora Dollar",
       "supply_usd": 274858396.3205746,
@@ -740,9 +849,22 @@
       "top_chain": "Monad",
       "priority_score": 60,
       "measurement_state": "INDEXED",
-      "rank": 10
+      "rank": 13
     },
     {
+      "defillama_id": "110",
+      "symbol": "crvUSD",
+      "name": "crvUSD",
+      "supply_usd": 235094984.3035688,
+      "supply_display": "$235.1M",
+      "chain_count": 12,
+      "top_chain": "Ethereum",
+      "priority_score": 60,
+      "measurement_state": "INDEXED",
+      "rank": 14
+    },
+    {
+      "defillama_id": "153",
       "symbol": "BUSD",
       "name": "Binance Peg BUSD",
       "supply_usd": 232647766.52072424,
@@ -751,9 +873,10 @@
       "top_chain": "BSC",
       "priority_score": 60,
       "measurement_state": "INDEXED",
-      "rank": 11
+      "rank": 15
     },
     {
+      "defillama_id": "218",
       "symbol": "satUSD",
       "name": "River Stablecoin",
       "supply_usd": 158327814.41651642,
@@ -762,9 +885,10 @@
       "top_chain": "BSC",
       "priority_score": 60,
       "measurement_state": "INDEXED",
-      "rank": 12
+      "rank": 16
     },
     {
+      "defillama_id": "220",
       "symbol": "USDA",
       "name": "Avalon USDa",
       "supply_usd": 145575991.88545725,
@@ -773,9 +897,10 @@
       "top_chain": "Ethereum",
       "priority_score": 60,
       "measurement_state": "INDEXED",
-      "rank": 13
+      "rank": 17
     },
     {
+      "defillama_id": "235",
       "symbol": "FRXUSD",
       "name": "Frax USD",
       "supply_usd": 106146318.16604552,
@@ -784,9 +909,22 @@
       "top_chain": "Ethereum",
       "priority_score": 60,
       "measurement_state": "INDEXED",
-      "rank": 14
+      "rank": 18
     },
     {
+      "defillama_id": "118",
+      "symbol": "GHO",
+      "name": "GHO",
+      "supply_usd": 697778862.6681911,
+      "supply_display": "$697.8M",
+      "chain_count": 2,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 19
+    },
+    {
+      "defillama_id": "195",
       "symbol": "USD0",
       "name": "Usual USD",
       "supply_usd": 547801100.5502374,
@@ -795,9 +933,10 @@
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 15
+      "rank": 20
     },
     {
+      "defillama_id": "221",
       "symbol": "USDTB",
       "name": "Ethena USDtb",
       "supply_usd": 527944280.04015076,
@@ -806,9 +945,10 @@
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 16
+      "rank": 21
     },
     {
+      "defillama_id": "272",
       "symbol": "YLDS",
       "name": "YLDS",
       "supply_usd": 525136426.6979744,
@@ -817,9 +957,10 @@
       "top_chain": "Provenance",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 17
+      "rank": 22
     },
     {
+      "defillama_id": "340",
       "symbol": "rwaUSDi",
       "name": "Multipli rwaUSDi",
       "supply_usd": 487325203.3038813,
@@ -828,9 +969,10 @@
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 18
+      "rank": 23
     },
     {
+      "defillama_id": "406",
       "symbol": "pUSD",
       "name": "Polymarket USD",
       "supply_usd": 485434841.38913184,
@@ -839,9 +981,10 @@
       "top_chain": "Polygon",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 19
+      "rank": 24
     },
     {
+      "defillama_id": "7",
       "symbol": "TUSD",
       "name": "TrueUSD",
       "supply_usd": 484048751.15399754,
@@ -850,9 +993,22 @@
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 20
+      "rank": 25
     },
     {
+      "defillama_id": "119",
+      "symbol": "FDUSD",
+      "name": "First Digital USD",
+      "supply_usd": 329355339.8337785,
+      "supply_display": "$329.4M",
+      "chain_count": 6,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 26
+    },
+    {
+      "defillama_id": "306",
       "symbol": "GUSD",
       "name": "Gate USD",
       "supply_usd": 319437027.5942252,
@@ -861,9 +1017,10 @@
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 21
+      "rank": 27
     },
     {
+      "defillama_id": "430",
       "symbol": "SOFID",
       "name": "SoFiUSD",
       "supply_usd": 318182047.3712972,
@@ -872,9 +1029,10 @@
       "top_chain": "Solana",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 22
+      "rank": 28
     },
     {
+      "defillama_id": "354",
       "symbol": "apxUSD",
       "name": "apxUSD",
       "supply_usd": 312068290.81352264,
@@ -883,9 +1041,10 @@
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 23
+      "rank": 29
     },
     {
+      "defillama_id": "309",
       "symbol": "USDai",
       "name": "USD.AI",
       "supply_usd": 289986542.0722115,
@@ -894,9 +1053,10 @@
       "top_chain": "Arbitrum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 24
+      "rank": 30
     },
     {
+      "defillama_id": "339",
       "symbol": "reUSD",
       "name": "Re Protocol reUSD",
       "supply_usd": 244000137.27382144,
@@ -905,9 +1065,10 @@
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 25
+      "rank": 31
     },
     {
+      "defillama_id": "310",
       "symbol": "USX",
       "name": "Solstice USX",
       "supply_usd": 235500409.90660286,
@@ -916,9 +1077,10 @@
       "top_chain": "Solana",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 26
+      "rank": 32
     },
     {
+      "defillama_id": "17",
       "symbol": "HUSD",
       "name": "HUSD",
       "supply_usd": 192313547.97963187,
@@ -927,9 +1089,10 @@
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 27
+      "rank": 33
     },
     {
+      "defillama_id": "343",
       "symbol": "USAT",
       "name": "USAT",
       "supply_usd": 184336463.05641922,
@@ -938,9 +1101,10 @@
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 28
+      "rank": 34
     },
     {
+      "defillama_id": "213",
       "symbol": "M",
       "name": "M by M0",
       "supply_usd": 184288152.429817,
@@ -949,9 +1113,10 @@
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 29
+      "rank": 35
     },
     {
+      "defillama_id": "21",
       "symbol": "FLEXUSD",
       "name": "flexUSD",
       "supply_usd": 166310256.25212324,
@@ -960,9 +1125,10 @@
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 30
+      "rank": 36
     },
     {
+      "defillama_id": "328",
       "symbol": "MUST",
       "name": "Mustang Finance",
       "supply_usd": 154350436.92404965,
@@ -971,9 +1137,10 @@
       "top_chain": "Saga",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 31
+      "rank": 37
     },
     {
+      "defillama_id": "271",
       "symbol": "avUSD",
       "name": "Avant USD",
       "supply_usd": 128284448.54637907,
@@ -982,9 +1149,10 @@
       "top_chain": "Avalanche",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 32
+      "rank": 38
     },
     {
+      "defillama_id": "316",
       "symbol": "CASH",
       "name": "CASH",
       "supply_usd": 127953537.19777825,
@@ -993,9 +1161,10 @@
       "top_chain": "Solana",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 33
+      "rank": 39
     },
     {
+      "defillama_id": "219",
       "symbol": "USDF",
       "name": "Astherus",
       "supply_usd": 116959615.29173271,
@@ -1004,9 +1173,10 @@
       "top_chain": "BSC",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 34
+      "rank": 40
     },
     {
+      "defillama_id": "389",
       "symbol": "MOVEUSD",
       "name": "CFX MoveUSD",
       "supply_usd": 114153607.90734452,
@@ -1015,20 +1185,34 @@
       "top_chain": "Solana",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 35
+      "rank": 41
     },
     {
-      "symbol": "USDP",
-      "name": "Pax Dollar",
-      "supply_usd": 29146344.55105144,
-      "supply_display": "$29.1M",
-      "chain_count": 4,
+      "defillama_id": "15",
+      "symbol": "DOLA",
+      "name": "Dola",
+      "supply_usd": 103527343.22363253,
+      "supply_display": "$103.5M",
+      "chain_count": 8,
       "top_chain": "Ethereum",
       "priority_score": 50,
       "measurement_state": "INDEXED",
-      "rank": 36
+      "rank": 42
     },
     {
+      "defillama_id": "398",
+      "symbol": "USDV",
+      "name": "Valtorum USD",
+      "supply_usd": 103462295.9372291,
+      "supply_display": "$103.5M",
+      "chain_count": 6,
+      "top_chain": "XRPL",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 43
+    },
+    {
+      "defillama_id": "4",
       "symbol": "BUSD",
       "name": "Binance USD",
       "supply_usd": 34382851.85974371,
@@ -1037,9 +1221,10 @@
       "top_chain": "Ethereum",
       "priority_score": 30,
       "measurement_state": "INDEXED",
-      "rank": 37
+      "rank": 44
     },
     {
+      "defillama_id": "324",
       "symbol": "SBC",
       "name": "Stable Coin",
       "supply_usd": 20662519.619139306,
@@ -1048,53 +1233,10 @@
       "top_chain": "Solana",
       "priority_score": 30,
       "measurement_state": "INDEXED",
-      "rank": 38
+      "rank": 45
     },
     {
-      "symbol": "USDP",
-      "name": "USDP Stablecoin",
-      "supply_usd": 2637877.1199878324,
-      "supply_display": "$2.6M",
-      "chain_count": 4,
-      "top_chain": "Ethereum",
-      "priority_score": 30,
-      "measurement_state": "INDEXED",
-      "rank": 39
-    },
-    {
-      "symbol": "USDV",
-      "name": "Solomon USDv",
-      "supply_usd": 1512808.9859248016,
-      "supply_display": "$1.5M",
-      "chain_count": 1,
-      "top_chain": "Solana",
-      "priority_score": 30,
-      "measurement_state": "INDEXED",
-      "rank": 40
-    },
-    {
-      "symbol": "USDV",
-      "name": "Verified USD",
-      "supply_usd": 470400.686347,
-      "supply_display": "$0.5M",
-      "chain_count": 7,
-      "top_chain": "Ethereum",
-      "priority_score": 30,
-      "measurement_state": "INDEXED",
-      "rank": 41
-    },
-    {
-      "symbol": "USDV",
-      "name": "Delpho USDV",
-      "supply_usd": 412472.93327795184,
-      "supply_display": "$0.4M",
-      "chain_count": 1,
-      "top_chain": "Hyperliquid L1",
-      "priority_score": 30,
-      "measurement_state": "INDEXED",
-      "rank": 42
-    },
-    {
+      "defillama_id": "315",
       "symbol": "USPD",
       "name": "US Permissionless Dollar",
       "supply_usd": 98934783.08929051,
@@ -1103,9 +1245,10 @@
       "top_chain": "Ethereum",
       "priority_score": 20,
       "measurement_state": "INDEXED",
-      "rank": 43
+      "rank": 46
     },
     {
+      "defillama_id": "296",
       "symbol": "CUSD",
       "name": "Cap cUSD",
       "supply_usd": 85001271.82565613,
@@ -1114,9 +1257,10 @@
       "top_chain": "Ethereum",
       "priority_score": 20,
       "measurement_state": "INDEXED",
-      "rank": 44
+      "rank": 47
     },
     {
+      "defillama_id": "168",
       "symbol": "fxUSD",
       "name": "fxUSD",
       "supply_usd": 81479082.48439452,
@@ -1125,9 +1269,10 @@
       "top_chain": "Ethereum",
       "priority_score": 20,
       "measurement_state": "INDEXED",
-      "rank": 45
+      "rank": 48
     },
     {
+      "defillama_id": "405",
       "symbol": "USDA",
       "name": "AP USDA",
       "supply_usd": 80131205.22853917,
@@ -1136,9 +1281,10 @@
       "top_chain": "BSC",
       "priority_score": 20,
       "measurement_state": "INDEXED",
-      "rank": 46
+      "rank": 49
     },
     {
+      "defillama_id": "166",
       "symbol": "cgUSD",
       "name": "Cygnus Finance Global USD",
       "supply_usd": 75759570.66309065,
@@ -1147,82 +1293,55 @@
       "top_chain": "Base",
       "priority_score": 20,
       "measurement_state": "INDEXED",
-      "rank": 47
-    },
-    {
-      "symbol": "LISUSD",
-      "name": "Lista USD",
-      "supply_usd": 75066879.34996735,
-      "supply_display": "$75.1M",
-      "chain_count": 1,
-      "top_chain": "BSC",
-      "priority_score": 20,
-      "measurement_state": "INDEXED",
-      "rank": 48
-    },
-    {
-      "symbol": "USDSUI",
-      "name": "Sui Dollar",
-      "supply_usd": 74135437.178681,
-      "supply_display": "$74.1M",
-      "chain_count": 1,
-      "top_chain": "Sui",
-      "priority_score": 20,
-      "measurement_state": "INDEXED",
-      "rank": 49
-    },
-    {
-      "symbol": "USDon",
-      "name": "Ondo U.S. Dollar Token",
-      "supply_usd": 70031198.27566755,
-      "supply_display": "$70.0M",
-      "chain_count": 2,
-      "top_chain": "BSC",
-      "priority_score": 20,
-      "measurement_state": "INDEXED",
       "rank": 50
     }
   ],
-  "deep_measurement_queue_total": 120,
+  "deep_measurement_queue_total": 119,
   "attestation_gaps": [
     {
       "coin": "USDT",
+      "defillama_id": "1",
       "supply": "$183.4B",
       "gap": "KPMG full audit announced Aug 2026, text UNPUBLISHED.",
       "severity": "HIGH"
     },
     {
-      "coin": "USDC",
-      "supply": "$74.2B",
-      "gap": "Deloitte monthly + daily BlackRock CUSIP filings. 100.10% coverage.",
-      "severity": "LOW"
-    },
-    {
       "coin": "USDe",
+      "defillama_id": "10",
       "supply": "$4.6B",
       "gap": "Custodian attestations ~3 months stale.",
       "severity": "MEDIUM"
     },
     {
       "coin": "USD1",
+      "defillama_id": "250",
       "supply": "$4.3B",
       "gap": "Crowe monthly after 6-month publication lapse.",
       "severity": "MEDIUM"
     },
     {
       "coin": "USDV",
+      "defillama_id": "185",
       "supply": "$100M",
       "gap": "Zero published attestation EVER.",
       "severity": "HIGH"
     },
     {
+      "coin": "USDC",
+      "defillama_id": "2",
+      "supply": "$74.2B",
+      "gap": "Deloitte monthly + daily BlackRock CUSIP filings. 100.10% coverage.",
+      "severity": "LOW"
+    },
+    {
       "coin": "RLUSD",
+      "defillama_id": "50",
       "supply": "$2.4B",
       "gap": "DEEP MEASURED: XRPL $1.03B + ETH $1.37B.",
       "severity": "LOW"
     }
   ],
-  "honest_sentence": "425 stablecoins indexed across 177 chains with active supply ($310.8B total). 17 deeply measured on Ethereum. 16 XRPL instruments measured ($1.21B). 26 SWIFT institutions censused. 7 ISO 20022 families identified. 4 tokenized funds catalogued. 120 in deep measurement queue. Deep measurement incomplete.",
+  "honest_sentence": "425 stablecoins indexed across 177 chains with active supply ($310.8B total). 13 deeply measured. 16 XRPL instruments ($1.21B). 26 SWIFT institutions. 7 ISO 20022 families. 4 tokenized funds. 119 in deep measurement queue. Deep measurement incomplete.",
   "measurement_not_certification": true,
-  "sha256_digest": "4a1bdd812f2a25809c7501b262f0e27240a849106f1ff96cef80c05612362cd9"
+  "sha256_digest": "df1dbf56d5d988af5cc74e1678ab03fe933cc3e08f74db39f7faef7208cb981b"
 }

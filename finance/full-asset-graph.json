@@ -1,7 +1,9 @@
 {
   "schema": "csoai.financial-coverage/0.1",
   "kind": "financial.full-asset-graph",
-  "generated_at": "2026-09-11T10:45:58.152855+00:00",
+  "version": "2-corrected",
+  "generated_at": "2026-09-11T11:03:31.439884+00:00",
+  "correction_note": "v2: deep_measured keyed by DefiLlama ID, not symbol. Fixes USDS collision.",
   "total": 425,
   "assets": [
     {
@@ -157,7 +159,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "2",
@@ -337,7 +342,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "209",
@@ -369,7 +377,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "5",
@@ -435,15 +446,18 @@
       },
       "gecko_id": "dai",
       "classification": "CANONICAL",
-      "deep_measured": true,
-      "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "deep_measured": false,
+      "deep_priority": 110,
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "146",
@@ -491,15 +505,18 @@
       },
       "gecko_id": "ethena-usde",
       "classification": "CANONICAL",
-      "deep_measured": true,
-      "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "deep_measured": false,
+      "deep_priority": 110,
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "262",
@@ -525,14 +542,17 @@
       "gecko_id": "usd1-wlfi",
       "classification": "CANONICAL",
       "deep_measured": false,
-      "deep_priority": 130,
+      "deep_priority": 100,
       "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "286",
@@ -563,7 +583,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "120",
@@ -599,15 +622,18 @@
       },
       "gecko_id": "paypal-usd",
       "classification": "CANONICAL",
-      "deep_measured": true,
-      "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "deep_measured": false,
+      "deep_priority": 110,
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "173",
@@ -640,7 +666,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "237",
@@ -667,7 +696,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "250",
@@ -686,15 +718,18 @@
       },
       "gecko_id": "ripple-usd",
       "classification": "CANONICAL",
-      "deep_measured": true,
-      "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "deep_measured": false,
+      "deep_priority": 130,
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "129",
@@ -735,7 +770,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "14",
@@ -764,7 +802,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "347",
@@ -790,7 +831,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "336",
@@ -819,7 +863,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "246",
@@ -846,7 +893,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "118",
@@ -865,15 +915,18 @@
       },
       "gecko_id": "gho",
       "classification": "CANONICAL",
-      "deep_measured": true,
-      "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "deep_measured": false,
+      "deep_priority": 50,
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "195",
@@ -900,7 +953,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "221",
@@ -927,7 +983,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "272",
@@ -954,7 +1013,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "340",
@@ -986,7 +1048,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "406",
@@ -1012,7 +1077,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "7",
@@ -1047,7 +1115,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "119",
@@ -1070,15 +1141,18 @@
       },
       "gecko_id": "first-digital-usd",
       "classification": "CANONICAL",
-      "deep_measured": true,
-      "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "deep_measured": false,
+      "deep_priority": 50,
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "306",
@@ -1104,7 +1178,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "430",
@@ -1134,7 +1211,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "354",
@@ -1162,7 +1242,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "309",
@@ -1190,7 +1273,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "205",
@@ -1229,7 +1315,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "339",
@@ -1264,7 +1353,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "310",
@@ -1290,7 +1382,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "110",
@@ -1319,15 +1414,18 @@
       },
       "gecko_id": "crvusd",
       "classification": "CANONICAL",
-      "deep_measured": true,
-      "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "deep_measured": false,
+      "deep_priority": 60,
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "153",
@@ -1379,7 +1477,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "17",
@@ -1407,7 +1508,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "343",
@@ -1433,7 +1537,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "213",
@@ -1466,7 +1573,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "21",
@@ -1493,7 +1603,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "218",
@@ -1529,7 +1642,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "328",
@@ -1555,7 +1671,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "6",
@@ -1602,7 +1721,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "220",
@@ -1646,7 +1768,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "271",
@@ -1673,7 +1798,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "316",
@@ -1699,7 +1827,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "219",
@@ -1725,7 +1856,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "389",
@@ -1751,7 +1885,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "235",
@@ -1808,7 +1945,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "15",
@@ -1833,15 +1973,18 @@
       },
       "gecko_id": "dola-usd",
       "classification": "CANONICAL",
-      "deep_measured": true,
-      "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "deep_measured": false,
+      "deep_priority": 50,
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "398",
@@ -1865,14 +2008,17 @@
       "gecko_id": "valtorum-usdv",
       "classification": "CANONICAL",
       "deep_measured": false,
-      "deep_priority": 80,
+      "deep_priority": 50,
       "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "315",
@@ -1903,7 +2049,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "296",
@@ -1931,7 +2080,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "168",
@@ -1958,7 +2110,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "405",
@@ -1984,7 +2139,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "166",
@@ -2010,7 +2168,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "79",
@@ -2036,7 +2197,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "373",
@@ -2062,7 +2226,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "408",
@@ -2089,7 +2256,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "22",
@@ -2119,7 +2289,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "400",
@@ -2146,7 +2319,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "401",
@@ -2172,7 +2348,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "97",
@@ -2198,7 +2377,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "284",
@@ -2224,7 +2406,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "252",
@@ -2243,15 +2428,18 @@
       },
       "gecko_id": "standx-dusd",
       "classification": "CANONICAL",
-      "deep_measured": false,
-      "deep_priority": 20,
-      "measurement_state": "INDEXED",
+      "deep_measured": true,
+      "deep_priority": 0,
+      "measurement_state": "DEEP_MEASURED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "344",
@@ -2278,7 +2466,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "346",
@@ -2304,7 +2495,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "409",
@@ -2331,7 +2525,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "348",
@@ -2357,7 +2554,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "335",
@@ -2383,7 +2583,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "256",
@@ -2409,7 +2612,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "298",
@@ -2436,7 +2642,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "332",
@@ -2462,7 +2671,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "283",
@@ -2489,7 +2701,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "290",
@@ -2516,7 +2731,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "19",
@@ -2543,7 +2761,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "297",
@@ -2570,7 +2791,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "385",
@@ -2596,7 +2820,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "326",
@@ -2625,7 +2852,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "255",
@@ -2652,7 +2882,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "4",
@@ -2710,7 +2943,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "269",
@@ -2742,7 +2978,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "230",
@@ -2770,7 +3009,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "439",
@@ -2796,7 +3038,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "67",
@@ -2822,7 +3067,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "413",
@@ -2848,7 +3096,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "407",
@@ -2874,7 +3125,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "410",
@@ -2900,7 +3154,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "303",
@@ -2927,7 +3184,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "11",
@@ -2949,14 +3209,17 @@
       "gecko_id": "paxos-standard",
       "classification": "CANONICAL",
       "deep_measured": false,
-      "deep_priority": 50,
+      "deep_priority": 20,
       "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "225",
@@ -2985,7 +3248,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "313",
@@ -3013,7 +3279,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "8",
@@ -3040,15 +3309,18 @@
       },
       "gecko_id": "liquity-usd",
       "classification": "CANONICAL",
-      "deep_measured": false,
-      "deep_priority": 20,
-      "measurement_state": "INDEXED",
+      "deep_measured": true,
+      "deep_priority": 0,
+      "measurement_state": "DEEP_MEASURED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "185",
@@ -3075,7 +3347,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "154",
@@ -3101,7 +3376,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "106",
@@ -3129,7 +3407,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "268",
@@ -3158,7 +3439,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "263",
@@ -3186,7 +3470,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "305",
@@ -3212,7 +3499,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "44",
@@ -3246,7 +3536,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "324",
@@ -3282,7 +3575,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "85",
@@ -3309,7 +3605,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "63",
@@ -3335,7 +3634,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "353",
@@ -3364,7 +3666,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "31",
@@ -3385,15 +3690,18 @@
       },
       "gecko_id": null,
       "classification": "CANONICAL",
-      "deep_measured": true,
-      "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "deep_measured": false,
+      "deep_priority": 20,
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "302",
@@ -3419,7 +3727,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "29",
@@ -3445,7 +3756,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "342",
@@ -3472,7 +3786,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "24",
@@ -3494,15 +3811,18 @@
       },
       "gecko_id": "celo-dollar",
       "classification": "CANONICAL",
-      "deep_measured": false,
-      "deep_priority": 20,
-      "measurement_state": "INDEXED",
+      "deep_measured": true,
+      "deep_priority": 0,
+      "measurement_state": "DEEP_MEASURED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "241",
@@ -3531,7 +3851,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "327",
@@ -3557,7 +3880,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "215",
@@ -3583,7 +3909,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "417",
@@ -3611,7 +3940,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "411",
@@ -3640,7 +3972,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "386",
@@ -3666,7 +4001,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "376",
@@ -3692,7 +4030,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "312",
@@ -3718,7 +4059,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "307",
@@ -3745,7 +4089,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "13",
@@ -3771,7 +4118,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "172",
@@ -3797,7 +4147,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "115",
@@ -3824,7 +4177,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "232",
@@ -3850,7 +4206,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "308",
@@ -3876,7 +4235,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "416",
@@ -3905,7 +4267,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "42",
@@ -3931,7 +4296,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "251",
@@ -3957,7 +4325,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "20",
@@ -3986,7 +4357,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "244",
@@ -4013,7 +4387,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "415",
@@ -4041,7 +4418,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "275",
@@ -4070,7 +4450,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "321",
@@ -4096,7 +4479,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "202",
@@ -4125,7 +4511,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "103",
@@ -4152,7 +4541,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "253",
@@ -4176,15 +4568,18 @@
       },
       "gecko_id": "usbd",
       "classification": "CANONICAL",
-      "deep_measured": false,
+      "deep_measured": true,
       "deep_priority": 0,
-      "measurement_state": "INDEXED",
+      "measurement_state": "DEEP_MEASURED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "231",
@@ -4210,7 +4605,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "240",
@@ -4236,7 +4634,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "350",
@@ -4262,7 +4663,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "12",
@@ -4283,15 +4687,18 @@
       },
       "gecko_id": "neutrino",
       "classification": "CANONICAL",
-      "deep_measured": false,
+      "deep_measured": true,
       "deep_priority": 0,
-      "measurement_state": "INDEXED",
+      "measurement_state": "DEEP_MEASURED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "23",
@@ -4317,7 +4724,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "60",
@@ -4343,7 +4753,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "214",
@@ -4371,7 +4784,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "331",
@@ -4397,7 +4813,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "183",
@@ -4424,7 +4843,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "391",
@@ -4450,7 +4872,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "89",
@@ -4476,7 +4901,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "420",
@@ -4502,7 +4930,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "245",
@@ -4528,7 +4959,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "16",
@@ -4554,7 +4988,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "421",
@@ -4580,7 +5017,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "435",
@@ -4606,7 +5046,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "9",
@@ -4632,7 +5075,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "440",
@@ -4658,7 +5104,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "314",
@@ -4687,7 +5136,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "26",
@@ -4715,7 +5167,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "266",
@@ -4742,7 +5197,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "70",
@@ -4768,7 +5226,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "30",
@@ -4796,7 +5257,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "45",
@@ -4823,7 +5287,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "33",
@@ -4845,14 +5312,17 @@
       "gecko_id": null,
       "classification": "CANONICAL",
       "deep_measured": false,
-      "deep_priority": 30,
+      "deep_priority": 0,
       "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "388",
@@ -4878,7 +5348,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "404",
@@ -4904,7 +5377,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "377",
@@ -4931,7 +5407,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "418",
@@ -4957,7 +5436,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "159",
@@ -4983,7 +5465,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "18",
@@ -5021,7 +5506,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "236",
@@ -5047,7 +5535,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "242",
@@ -5073,7 +5564,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "162",
@@ -5099,7 +5593,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "282",
@@ -5125,7 +5622,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "390",
@@ -5155,7 +5655,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "397",
@@ -5181,7 +5684,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "28",
@@ -5207,7 +5713,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "291",
@@ -5256,7 +5765,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "178",
@@ -5283,7 +5795,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "160",
@@ -5309,7 +5824,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "426",
@@ -5335,7 +5853,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "425",
@@ -5361,7 +5882,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "76",
@@ -5387,7 +5911,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "10",
@@ -5418,15 +5945,18 @@
       },
       "gecko_id": "magic-internet-money",
       "classification": "CANONICAL",
-      "deep_measured": false,
-      "deep_priority": 10,
-      "measurement_state": "INDEXED",
+      "deep_measured": true,
+      "deep_priority": 0,
+      "measurement_state": "DEEP_MEASURED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "261",
@@ -5445,14 +5975,17 @@
       "gecko_id": "solomon-usdv",
       "classification": "CANONICAL",
       "deep_measured": false,
-      "deep_priority": 30,
+      "deep_priority": 0,
       "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "93",
@@ -5478,7 +6011,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "83",
@@ -5504,7 +6040,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "54",
@@ -5531,7 +6070,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "132",
@@ -5562,7 +6104,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "224",
@@ -5592,7 +6137,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "88",
@@ -5618,7 +6166,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "378",
@@ -5644,7 +6195,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "155",
@@ -5677,7 +6231,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "152",
@@ -5703,7 +6260,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "78",
@@ -5729,7 +6289,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "151",
@@ -5755,7 +6318,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "65",
@@ -5781,7 +6347,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "75",
@@ -5807,7 +6376,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "432",
@@ -5838,7 +6410,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "356",
@@ -5864,7 +6439,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "107",
@@ -5890,7 +6468,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "92",
@@ -5916,7 +6497,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "204",
@@ -5950,7 +6534,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "277",
@@ -5976,7 +6563,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "192",
@@ -6002,7 +6592,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "216",
@@ -6028,7 +6621,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "366",
@@ -6054,7 +6650,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "349",
@@ -6080,7 +6679,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "197",
@@ -6111,7 +6713,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "238",
@@ -6137,7 +6742,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "341",
@@ -6163,7 +6771,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "293",
@@ -6189,7 +6800,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "234",
@@ -6216,7 +6830,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "176",
@@ -6242,7 +6859,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "125",
@@ -6268,7 +6888,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "72",
@@ -6294,7 +6917,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "46",
@@ -6328,7 +6954,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "211",
@@ -6354,7 +6983,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "175",
@@ -6380,7 +7012,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "285",
@@ -6408,7 +7043,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "419",
@@ -6434,7 +7072,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "32",
@@ -6452,15 +7093,18 @@
       },
       "gecko_id": "sperax-usd",
       "classification": "CANONICAL",
-      "deep_measured": true,
+      "deep_measured": false,
       "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "278",
@@ -6489,7 +7133,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "27",
@@ -6518,7 +7165,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "143",
@@ -6543,14 +7193,17 @@
       "gecko_id": "verified-usd-foundation-usdv",
       "classification": "CANONICAL",
       "deep_measured": false,
-      "deep_priority": 30,
+      "deep_priority": 0,
       "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "333",
@@ -6576,7 +7229,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "58",
@@ -6602,7 +7258,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "431",
@@ -6621,14 +7280,17 @@
       "gecko_id": "delpho-usdv",
       "classification": "CANONICAL",
       "deep_measured": false,
-      "deep_priority": 30,
+      "deep_priority": 0,
       "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "229",
@@ -6654,7 +7316,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "180",
@@ -6680,7 +7345,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "171",
@@ -6706,7 +7374,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "323",
@@ -6732,7 +7403,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "198",
@@ -6758,7 +7432,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "329",
@@ -6784,7 +7461,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "181",
@@ -6810,7 +7490,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "116",
@@ -6842,7 +7525,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "64",
@@ -6868,7 +7554,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "206",
@@ -6894,7 +7583,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "174",
@@ -6920,7 +7612,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "48",
@@ -6946,7 +7641,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "191",
@@ -6972,7 +7670,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "126",
@@ -6998,7 +7699,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "112",
@@ -7026,7 +7730,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "295",
@@ -7052,7 +7759,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "217",
@@ -7094,7 +7804,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "164",
@@ -7120,7 +7833,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "135",
@@ -7147,7 +7863,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "25",
@@ -7174,7 +7893,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "227",
@@ -7205,7 +7927,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "38",
@@ -7231,7 +7956,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "73",
@@ -7257,7 +7985,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "68",
@@ -7284,7 +8015,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "130",
@@ -7310,7 +8044,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "59",
@@ -7336,7 +8073,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "248",
@@ -7362,7 +8102,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "34",
@@ -7388,7 +8131,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "337",
@@ -7414,7 +8160,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "104",
@@ -7444,7 +8193,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "434",
@@ -7470,7 +8222,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "311",
@@ -7496,7 +8251,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "43",
@@ -7526,7 +8284,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "228",
@@ -7552,7 +8313,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "322",
@@ -7578,7 +8342,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "144",
@@ -7605,7 +8372,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "124",
@@ -7632,7 +8402,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "233",
@@ -7650,15 +8423,18 @@
       },
       "gecko_id": "thestandard-usd",
       "classification": "CANONICAL",
-      "deep_measured": true,
+      "deep_measured": false,
       "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "394",
@@ -7684,7 +8460,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "109",
@@ -7710,7 +8489,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "149",
@@ -7729,15 +8511,18 @@
       },
       "gecko_id": null,
       "classification": "CANONICAL",
-      "deep_measured": true,
+      "deep_measured": false,
       "deep_priority": 0,
-      "measurement_state": "DEEP_MEASURED",
+      "measurement_state": "INDEXED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "374",
@@ -7763,7 +8548,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "184",
@@ -7789,7 +8577,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "142",
@@ -7815,7 +8606,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "82",
@@ -7841,7 +8635,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "71",
@@ -7867,7 +8664,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "99",
@@ -7893,7 +8693,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "148",
@@ -7919,7 +8722,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "188",
@@ -7945,7 +8751,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "123",
@@ -7973,7 +8782,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "304",
@@ -7999,7 +8811,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "287",
@@ -8025,7 +8840,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "438",
@@ -8051,7 +8869,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "260",
@@ -8079,7 +8900,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "117",
@@ -8105,7 +8929,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "201",
@@ -8131,7 +8958,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "264",
@@ -8157,7 +8987,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "294",
@@ -8184,7 +9017,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "357",
@@ -8210,7 +9046,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "90",
@@ -8236,7 +9075,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "57",
@@ -8262,7 +9104,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "364",
@@ -8289,7 +9134,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "96",
@@ -8317,7 +9165,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "243",
@@ -8343,7 +9194,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "74",
@@ -8369,7 +9223,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "212",
@@ -8395,7 +9252,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "433",
@@ -8421,7 +9281,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "207",
@@ -8447,7 +9310,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "37",
@@ -8473,7 +9339,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "138",
@@ -8501,7 +9370,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "94",
@@ -8527,7 +9399,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "114",
@@ -8553,7 +9428,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "100",
@@ -8581,7 +9459,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "222",
@@ -8608,7 +9489,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "84",
@@ -8638,7 +9522,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "338",
@@ -8664,7 +9551,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "288",
@@ -8691,7 +9581,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "177",
@@ -8717,7 +9610,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "111",
@@ -8745,7 +9641,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "276",
@@ -8771,7 +9670,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "169",
@@ -8797,7 +9699,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "189",
@@ -8823,7 +9728,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "163",
@@ -8849,7 +9757,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "267",
@@ -8875,7 +9786,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "196",
@@ -8902,7 +9816,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "208",
@@ -8928,7 +9845,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "190",
@@ -8956,7 +9876,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "259",
@@ -8982,7 +9905,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "102",
@@ -9008,7 +9934,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "193",
@@ -9034,7 +9963,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "62",
@@ -9060,7 +9992,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "301",
@@ -9086,7 +10021,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "128",
@@ -9113,7 +10051,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "81",
@@ -9140,7 +10081,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "223",
@@ -9166,7 +10110,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "61",
@@ -9192,7 +10139,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "87",
@@ -9218,7 +10168,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "187",
@@ -9244,7 +10197,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "273",
@@ -9270,7 +10226,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "403",
@@ -9296,7 +10255,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "265",
@@ -9322,7 +10284,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "279",
@@ -9348,7 +10313,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "396",
@@ -9384,7 +10352,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "330",
@@ -9411,7 +10382,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "402",
@@ -9437,7 +10411,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "345",
@@ -9463,7 +10440,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "150",
@@ -9489,7 +10469,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "318",
@@ -9515,7 +10498,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "121",
@@ -9541,7 +10527,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "108",
@@ -9568,7 +10557,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "134",
@@ -9594,7 +10586,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "395",
@@ -9621,7 +10616,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "203",
@@ -9647,7 +10645,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "320",
@@ -9673,7 +10674,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "375",
@@ -9699,7 +10703,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "210",
@@ -9728,7 +10735,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "3",
@@ -9762,15 +10772,18 @@
       },
       "gecko_id": "terrausd",
       "classification": "CANONICAL",
-      "deep_measured": false,
-      "deep_priority": 10,
-      "measurement_state": "INDEXED",
+      "deep_measured": true,
+      "deep_priority": 0,
+      "measurement_state": "DEEP_MEASURED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "39",
@@ -9797,7 +10810,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "40",
@@ -9829,7 +10845,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "41",
@@ -9855,7 +10874,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "49",
@@ -9882,7 +10904,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "50",
@@ -9911,15 +10936,18 @@
       },
       "gecko_id": "euro-coin",
       "classification": "CANONICAL",
-      "deep_measured": false,
-      "deep_priority": 10,
-      "measurement_state": "INDEXED",
+      "deep_measured": true,
+      "deep_priority": 0,
+      "measurement_state": "DEEP_MEASURED",
       "signature_state": "UNSIGNED",
       "root_inclusion": "NOT_IN_ROOT",
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "51",
@@ -9950,7 +10978,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "52",
@@ -9980,7 +11011,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "53",
@@ -10007,7 +11041,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "55",
@@ -10041,7 +11078,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "56",
@@ -10069,7 +11109,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "66",
@@ -10096,7 +11139,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "91",
@@ -10122,7 +11168,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "98",
@@ -10154,7 +11203,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "101",
@@ -10188,7 +11240,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "105",
@@ -10214,7 +11269,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "113",
@@ -10240,7 +11298,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "122",
@@ -10270,7 +11331,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "127",
@@ -10296,7 +11360,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "131",
@@ -10322,7 +11389,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "133",
@@ -10348,7 +11418,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "137",
@@ -10374,7 +11447,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "139",
@@ -10402,7 +11478,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "140",
@@ -10430,7 +11509,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "145",
@@ -10459,7 +11541,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "147",
@@ -10486,7 +11571,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "157",
@@ -10522,7 +11610,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "158",
@@ -10558,7 +11649,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "161",
@@ -10584,7 +11678,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "165",
@@ -10617,7 +11714,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "167",
@@ -10643,7 +11743,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "170",
@@ -10670,7 +11773,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "179",
@@ -10696,7 +11802,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "182",
@@ -10722,7 +11831,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "186",
@@ -10748,7 +11860,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "199",
@@ -10774,7 +11889,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "200",
@@ -10800,7 +11918,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "226",
@@ -10833,7 +11954,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "239",
@@ -10860,7 +11984,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "247",
@@ -10891,7 +12018,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "254",
@@ -10920,7 +12050,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "258",
@@ -10947,7 +12080,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "274",
@@ -10976,7 +12112,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "280",
@@ -11003,7 +12142,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "281",
@@ -11029,7 +12171,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "289",
@@ -11061,7 +12206,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "292",
@@ -11090,7 +12238,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "299",
@@ -11118,7 +12269,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "300",
@@ -11150,7 +12304,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "317",
@@ -11183,7 +12340,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "319",
@@ -11213,7 +12373,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "325",
@@ -11240,7 +12403,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "334",
@@ -11269,7 +12435,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "351",
@@ -11297,7 +12466,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "352",
@@ -11323,7 +12495,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "355",
@@ -11352,7 +12527,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "358",
@@ -11379,7 +12557,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "359",
@@ -11405,7 +12586,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "360",
@@ -11431,7 +12615,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "361",
@@ -11457,7 +12644,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "362",
@@ -11483,7 +12673,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "363",
@@ -11510,7 +12703,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "365",
@@ -11539,7 +12735,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "367",
@@ -11565,7 +12764,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "368",
@@ -11591,7 +12793,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "369",
@@ -11617,7 +12822,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "370",
@@ -11644,7 +12852,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "371",
@@ -11670,7 +12881,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "372",
@@ -11696,7 +12910,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "379",
@@ -11727,7 +12944,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "380",
@@ -11758,7 +12978,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "381",
@@ -11789,7 +13012,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "382",
@@ -11820,7 +13046,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "383",
@@ -11851,7 +13080,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "384",
@@ -11882,7 +13114,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "387",
@@ -11909,7 +13144,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "392",
@@ -11935,7 +13173,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "393",
@@ -11961,7 +13202,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "399",
@@ -11990,7 +13234,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "412",
@@ -12016,7 +13263,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "414",
@@ -12044,7 +13294,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "422",
@@ -12073,7 +13326,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "423",
@@ -12103,7 +13359,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "424",
@@ -12131,7 +13390,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "427",
@@ -12157,7 +13419,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "428",
@@ -12189,7 +13454,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "429",
@@ -12215,7 +13483,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "436",
@@ -12241,7 +13512,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     },
     {
       "defillama_id": "437",
@@ -12267,7 +13541,10 @@
       "rekor_state": "NOT_WITNESSED",
       "ots_state": "NOT_SUBMITTED",
       "base_eas_state": "NOT_ANCHORED",
-      "xrpl_memo_state": "NOT_ANCHORED"
+      "xrpl_memo_state": "NOT_ANCHORED",
+      "x402_availability": "NOT_EXPOSED",
+      "a2a_availability": "NOT_EXPOSED",
+      "mcp_availability": "NOT_EXPOSED"
     }
   ]
 }
