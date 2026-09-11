@@ -107,6 +107,7 @@ const MotionLab = lazy(() => import("./pages/MotionLab"));
 const RemediationPartners = lazy(() => import("./pages/RemediationPartners"));
 const Login = lazy(() => import("./pages/Login"));
 const FrameworkHive = lazy(() => import("./pages/FrameworkHive"));
+const FrameworkPresence = lazy(() => import("./pages/Frameworks"));
 const CouncilModelCard = lazy(() => import("./pages/CouncilModelCard"));
 const CouncilSystemCard = lazy(() => import("./pages/CouncilSystemCard"));
 const CouncilWhitepaper = lazy(() => import("./pages/CouncilWhitepaper"));
@@ -380,6 +381,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/east-west": "East-West — one signed measurement, every regime mapped | Council of AI",
   "/challenge": "Challenge a measurement — East-West redress | Council of AI",
   "/crosswalk": "AI governance framework crosswalk | Council of AI",
+  "/frameworks": "Frontier-safety frameworks — published presence and empty chairs | Council of AI",
   "/live-ledger": "Live Ledger | CSOAI",
   "/coliseum": "The Coliseum of AI | Council of AI",
   "/open-source": "The open-source framework | Council of AI",
@@ -793,6 +795,7 @@ function App() {
                   <Route path="/our-difference" component={WhyCSOAI} />
                   <Route path="/why" component={WhyCSOAI} />
                   <Route path="/eu-ai-act" component={EUAIActGuide} />
+                  <Route path="/frameworks" component={FrameworkPresence} />
                   <Route path="/frameworks/eu-ai-act" component={EUAIActGuide} />
                   <Route path="/nist-ai-rmf" component={NISTAIRMFGuide} />
                   <Route path="/frameworks/nist" component={NISTAIRMFGuide} />
