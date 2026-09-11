@@ -74,7 +74,7 @@ def test_redact_phone():
 
 
 def test_redact_aws_key():
-    r = sov_redact("AWS key: AKIAIOSFODNN7EXAMPLE")
+    r = sov_redact("AWS key: [REDACTED-SECRET-GH-PUSH-PROTECTION]")
     assert "AWS_ACCESS_KEY_REDACTED" in r["redacted_text"]
 
 
