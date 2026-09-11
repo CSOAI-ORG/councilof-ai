@@ -408,6 +408,7 @@ def run(cap: int, out_dir: str, rows_out: str | None) -> int:
     (out / f"{stamp}.json").write_text(text)
     (out / "latest.json").write_text(text)
 
+    diff = write_diff(snapshot, out, stamp)
     card = write_unsigned_card(snapshot, out)
     if rows_out:
         Path(rows_out).parent.mkdir(parents=True, exist_ok=True)
@@ -418,7 +419,68 @@ def run(cap: int, out_dir: str, rows_out: str | None) -> int:
     print(json.dumps(counts, indent=1))
     print(f"enumeration: {json.dumps(enum['enumeration'])}")
     print(f"elapsed {time.time() - t0:.0f}s; wrote {out / stamp}.json, latest.json, {card}")
+    if diff:
+        print(f"diff: {diff}")
     return 0
+
+
+def write_diff(snapshot: dict, out: Path, stamp: str) -> str | None:
+    """Counts-level round-to-round diff (spec §5.2), written when a previous
+    dated snapshot exists. A single observation is a snapshot; the delta is
+    the board.
+
+    Host-level movements (hosts added/dropped, bucket migrations) need the
+    per-host rows, which are retained operator-side and NEVER committed — so
+    those fields are UNCHECKABLE here, never invented. A previous snapshot
+    that cannot be parsed makes the whole diff UNCHECKABLE with the reason;
+    a partial previous round suppresses drop claims by construction (a
+    partial probe cannot say a host left). Bucket deltas are arithmetic on
+    two published count sets — derived, never typed.
+    """
+    prev_paths = sorted(p for p in out.glob("2*.json") if p.name != f"{stamp}.json")
+    if not prev_paths:
+        return None  # first round: no diff can exist yet
+    prev_path = prev_paths[-1]
+    try:
+        prev = json.loads(prev_path.read_text())
+        prev_counts = prev["counts"]
+        assert isinstance(prev_counts, dict)
+    except Exception as e:
+        diff = {
+            "kind": "csoai.mcp-trust-diff/0.1",
+            "state": "UNCHECKABLE",
+            "reason": f"previous snapshot unreadable ({type(e).__name__}) — never silently rebased",
+            "as_of": snapshot["as_of"],
+            "previous": prev_path.name,
+        }
+        (out / f"diff-{stamp}.json").write_text(json.dumps(diff, indent=2) + "\n")
+        return f"diff-{stamp}.json"
+
+    cur_counts = snapshot["counts"]
+    keys = sorted(set(cur_counts) | set(prev_counts))
+    deltas = {}
+    for k in keys:
+        a, b = cur_counts.get(k), prev_counts.get(k)
+        if isinstance(a, (int, float)) and not isinstance(a, bool) and \
+           isinstance(b, (int, float)) and not isinstance(b, bool):
+            deltas[k] = round(a - b, 4)
+    diff = {
+        "kind": "csoai.mcp-trust-diff/0.1",
+        "state": "MEASURED",
+        "as_of": snapshot["as_of"],
+        "previous": prev_path.name,
+        "previous_as_of": prev.get("as_of"),
+        "bucket_deltas": deltas,
+        "hosts_added": "UNCHECKABLE — per-host rows are retained operator-side, never published",
+        "hosts_dropped": "UNCHECKABLE — same; and a partial previous round could never say a host left",
+        "bucket_migrations": "UNCHECKABLE — row-level by definition",
+        "doctrine": DOCTRINE,
+    }
+    if prev.get("partial"):
+        diff["note"] = "previous round was PARTIAL: read deltas as slice-vs-slice, never as population change"
+    name = f"diff-{stamp}.json"
+    (out / name).write_text(json.dumps(diff, indent=2) + "\n")
+    return name
 
 
 def write_unsigned_card(snapshot: dict, out: Path) -> Path:

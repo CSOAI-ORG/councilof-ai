@@ -114,5 +114,50 @@ class UnsignedCard(unittest.TestCase):
             self.assertNotIn("a.example", json.dumps(card))
 
 
+class RoundDiff(unittest.TestCase):
+    SNAP_COUNTS = {"total": 4, "initialize_ok_tools_listed": 2, "auth_challenged_401_403": 1,
+                   "dead_404_or_unreachable": 1}
+
+    def _snap(self, as_of, counts=None, partial=False):
+        return {"as_of": as_of, "population": "mcp-internet-facing",
+                "counts": counts or dict(self.SNAP_COUNTS), "partial": partial}
+
+    def test_first_round_writes_no_diff(self):
+        with tempfile.TemporaryDirectory() as td:
+            self.assertIsNone(mtr.write_diff(self._snap("2026-09-11T00:00:00Z"), Path(td), "2026-09-11"))
+
+    def test_second_round_derives_bucket_deltas(self):
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            prev = self._snap("2026-09-04T00:00:00Z")
+            (out / "2026-09-04.json").write_text(json.dumps(prev))
+            cur_counts = dict(self.SNAP_COUNTS, total=6, initialize_ok_tools_listed=4)
+            name = mtr.write_diff(self._snap("2026-09-11T00:00:00Z", counts=cur_counts), out, "2026-09-11")
+            diff = json.loads((out / name).read_text())
+            self.assertEqual(diff["state"], "MEASURED")
+            self.assertEqual(diff["bucket_deltas"]["total"], 2)
+            self.assertEqual(diff["bucket_deltas"]["initialize_ok_tools_listed"], 2)
+            self.assertEqual(diff["bucket_deltas"]["auth_challenged_401_403"], 0)
+            self.assertIn("UNCHECKABLE", diff["hosts_added"])  # rows never published
+            self.assertNotIn("note", diff)
+
+    def test_unreadable_previous_is_uncheckable_never_rebased(self):
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            (out / "2026-09-04.json").write_text("{corrupt")
+            name = mtr.write_diff(self._snap("2026-09-11T00:00:00Z"), out, "2026-09-11")
+            diff = json.loads((out / name).read_text())
+            self.assertEqual(diff["state"], "UNCHECKABLE")
+            self.assertIn("never silently rebased", diff["reason"])
+
+    def test_partial_previous_suppresses_population_claims(self):
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            (out / "2026-09-04.json").write_text(json.dumps(self._snap("2026-09-04T00:00:00Z", partial=True)))
+            name = mtr.write_diff(self._snap("2026-09-11T00:00:00Z"), out, "2026-09-11")
+            diff = json.loads((out / name).read_text())
+            self.assertIn("PARTIAL", diff["note"])
+
+
 if __name__ == "__main__":
     unittest.main()
