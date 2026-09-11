@@ -251,3 +251,76 @@ Source: `public/interop/surface-catalog.json` (as_of 2026-09-06).
 | API endpoints | 11 | /api/gspc, /api/state, /api/agui/gspc-state, /api/a2a, /api/cards, /api/axis-register, /api/detect, /api/checkout, /api/fulfill, /api/interop-bulk, /api/methodology |
 | Interop datasets | 16+ | attestation-corpus, financial-measure-run, evm-control-facts, ai-economy-index, human-labour-index, mcp-security-scorecard, rwa-attest-index, etc. |
 | Rails | 4 | EAS off-chain, XRPL (devnet), OpenTimestamps (planned), x402/HTTP 402 (live) |
+
+---
+
+## 12. Stablecoin/Subject Discovery Metadata (425 assets, 211 chains)
+
+Source: `public/interop/stablecoin-universe-2026-09/readiness.json` + `rwa-registry.json`.
+
+The 425-asset universe is a **frozen DefiLlama snapshot** (2026-09-11T08:19:34Z). Every asset row carries per-asset discovery metadata. The system uses a **subject-parameterization pattern** over shared endpoints — NOT 425 separate servers.
+
+### Two-tier architecture
+
+**Tier 1 — Shared catalog endpoints (free, always):**
+
+| Endpoint | Per-asset? | Content |
+|----------|:---:|---------|
+| `/api/xrpl` | Yes | 16 locked XRPL assets with issuer, address, holders, supply, TOML check |
+| `/api/state` | Aggregate | 8 named RWA instruments + XRPL counts |
+| `/root.json` | No | Signed Merkle root with card_sha256 array |
+| `stablecoin-universe-2026-09/readiness.json` | Yes (425) | Per-asset discovery state flags |
+
+**Tier 2 — Per-asset parameterized endpoints (x402-metered):**
+
+| Endpoint | Parameter | Pattern |
+|----------|-----------|---------|
+| `/api/rwa/evidence?asset=<symbol\|address>` | `asset` | XRPL symbol or r-address |
+| `/api/request-attestation?subject=<id>&axis=<slug>` | `subject` | Any model/instrument/card ID (1-120 chars) |
+| `/api/evidence-bundle?obligation=<id>&subject=<id>` | `obligation` + `subject` | article-50/53/dora/cra + model ID |
+
+### Per-asset discovery states (from readiness.json)
+
+Every row in the 425-asset index carries:
+- `a2a_discovery_state`: "GENERIC_CATALOG_ONLY_NO_ASSET_SKILL"
+- `mcp_discovery_state`: "GENERIC_CATALOG_ONLY_NO_ASSET_SKILL"
+- `x402_discovery_state`: "GENERIC_CATALOG_ONLY_NO_ASSET_SKILL"
+- `measurement_depth`: "REGISTRY_METADATA_ONLY"
+
+**Only 1 asset (RLUSD) has deep independent measurement evidence.** The readiness file explicitly states: "a generic door is labeled as a generic door; it is never presented as 425 separate integrations."
+
+---
+
+## 13. x402 Bazaar (PayAI) Indexing State
+
+Source: `scripts/interop/x402-bazaar-audit.py` + `docs/product/X402-BAZAAR-AUDIT.md`.
+
+| Index | Scanned | CSOAI Listings | Current | Stale | Missing |
+|-------|---------|:---:|:---:|:---:|:---:|
+| PayAI | 28,348 | 6 | 1 | 5 | 3 |
+| Coinbase CDP | 14,567 | 0 | 0 | 0 | 9 |
+
+### PayAI listings detail
+
+| Resource | Amount (units) | maxTimeout | Status |
+|----------|---:|---:|---------|
+| `/api/free-door` | 0 | 300 | **Current** |
+| `/api/request-attestation` | 20,000 | 600 | **Stale** (timeout mismatch) |
+| `/api/eunomia-data` | 20,000 | 600 | **Stale** |
+| `/api/proof` | 20,000 | 600 | **Stale** |
+| `/api/rwa/evidence` | 20,000 | 600 | **Stale** |
+| `/api/receipts/batch` | 100,000 | 600 | **Stale** |
+
+**3 manifest doors NOT indexed:** `/api/evidence-bundle`, `/api/art50/marking-evidence`, `/api/feeds/provider-diff`. These need confirmed settlements to appear in the Bazaar.
+
+**Coinbase CDP: ABSENT.** Zero CSOAI entries across 14,567 resources. A real paid settlement (not just free-door zero-settle) may be needed for CDP indexing.
+
+### Free door proof
+
+- Price: **0 USDC** — real EIP-3009 settle on Base mainnet (proven tx `0xeb6c41bccb...`, block 50,874,723)
+- Returns: live board totals, signed root, verification link, paid catalogue pointer
+- Bazaar description: frozen at first-seed (120-char truncation); lastUpdated frozen at `2026-09-09T08:26:19.435Z`
+
+### `pack.councilof.ai` leftover risk
+
+Still serves the old mock door — could mislead discovery agents. Needs decommission or redirect.
