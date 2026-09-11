@@ -37,6 +37,8 @@ interface Deadline {
   status: string;
   penalty_exposure: string;
   client_addition?: boolean;
+  /** Optional register note (e.g. the GENIUS Act dual-trigger mechanic). */
+  note?: string;
 }
 
 const FEED = regulationFeed as unknown as {
@@ -473,6 +475,7 @@ export default function Countdown() {
                     <strong className="text-emerald-200">Penalty exposure:</strong>{" "}
                     {d.penalty_exposure}
                   </p>
+                  {d.note && <p className="text-[12px] text-emerald-100/70">{d.note}</p>}
                   {d.client_addition && (
                     <p className="text-[12px] italic text-emerald-100/60">
                       Carried client-side pending inclusion in the server register (see the mirror

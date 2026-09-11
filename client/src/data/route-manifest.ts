@@ -943,6 +943,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Harness"
  },
  {
+  "path": "/health-inventory",
+  "comp": "HealthInventory",
+  "title": "Health Inventory"
+ },
+ {
   "path": "/healthcare-ai-act",
   "comp": "SectorAct",
   "title": "Healthcare Ai Act"
@@ -1746,6 +1751,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/specimens/clarity",
   "comp": "ClaritySpecimen",
   "title": "Clarity Specimen"
+ },
+ {
+  "path": "/specimens/kokotajlo",
+  "comp": "KokotajloSpecimen",
+  "title": "Kokotajlo Specimen"
+ },
+ {
+  "path": "/specimens/rlusd",
+  "comp": "RlusdSpecimen",
+  "title": "Rlusd Specimen"
  },
  {
   "path": "/standards",

@@ -69,4 +69,21 @@ describe("client regulation.json — mirror of the server register", () => {
       expect(e.penalty_exposure.length).toBeGreaterThan(0);
     }
   });
+
+  it("carries the US GENIUS Act dual-trigger effectiveness and distribution cliff", () => {
+    const effectiveness = clientEntries.find(
+      (e) => e.date === "2027-01-18" && e.instrument.includes("GENIUS"),
+    );
+    const cliff = clientEntries.find(
+      (e) => e.date === "2028-07-18" && e.instrument.includes("GENIUS"),
+    );
+    expect(effectiveness, "Sec. 20 effectiveness entry").toBeDefined();
+    expect(cliff, "Sec. 3(b) distribution-cliff entry").toBeDefined();
+    expect(effectiveness!.what).toContain("stablecoin");
+    expect(cliff!.what).toContain("Sec. 3(b)");
+    // Client-side pending the server register — the difference is marked, never silent.
+    expect(effectiveness!.client_addition).toBe(true);
+    expect(cliff!.client_addition).toBe(true);
+    expect(effectiveness!.basis).toContain("congress.gov");
+  });
 });

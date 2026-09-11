@@ -93,8 +93,11 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
   "/tool-commons",
   "/pricing",
   "/sovereign-pricing",
-  "/countdown",
-  "/countdown/",
+  // /countdown is NOT client-only on this branch: the route resolves to the
+  // build-time-fat EP2 page (regulation register imported at build time), which
+  // prerenders to ~9.5k visible chars. The skip was added on master for the
+  // runtime-fetch CountdownPage (#1879); that lane's route sits behind the EP2
+  // page in the wouter Switch and is unreachable here.
   "/proof",
   "/proof/",
   "/status",
