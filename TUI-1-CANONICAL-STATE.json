@@ -1,0 +1,193 @@
+{
+  "schema": "csoai.canonical-state/2.0",
+  "generated_at": "2026-09-11T14:30:00Z",
+  "generator": "TUI-1 Canonical Controller (MiMoCode JEEVES)",
+  "repo": "CSOAI-ORG/councilof-ai",
+  "branch_basis": "master (b284d3cc)",
+  "verification_method": "Live HTTP probes + file-system audit of origin/master",
+  "canonical_authority": "https://councilof.ai/api/state",
+
+  "live_endpoints": {
+    "site": { "url": "https://councilof.ai", "status": 200, "verified": true },
+    "api_gspc": { "url": "https://councilof.ai/api/gspc", "status": 200, "verified": true },
+    "api_state": { "url": "https://councilof.ai/api/state", "status": 200, "verified": true, "note": "Single source of truth for all lane-quotable counts" },
+    "agent_card": { "url": "https://councilof.ai/.well-known/agent-card.json", "status": 200, "verified": true },
+    "llms_txt": { "url": "https://councilof.ai/llms.txt", "status": 200, "verified": true },
+    "x402_discovery": { "url": "https://councilof.ai/.well-known/x402.json", "status": 200, "verified": true },
+    "x402_catalog": { "url": "https://councilof.ai/api/x402", "status": 200, "verified": true },
+    "free_door": { "url": "https://councilof.ai/api/free-door", "status": 402, "verified": true, "note": "x402 challenge with amount=0 (free forever)" },
+    "feed_xml": { "url": "https://councilof.ai/feed.xml", "status": 200, "verified": true },
+    "sitemap": { "url": "https://councilof.ai/sitemap.xml", "status": 200, "verified": true },
+    "mcp": { "url": "https://councilof.ai/mcp", "declared": true, "note": "MCP endpoint declared in .mcp.json and llms.txt" },
+    "a2a": { "url": "https://councilof.ai/api/a2a", "declared": true, "note": "A2A endpoint declared in agent-card.json" },
+    "agui": { "url": "https://councilof.ai/api/agui/gspc-state", "declared": true, "note": "AG-UI SSE endpoint declared in llms.txt" }
+  },
+
+  "gspc_board": {
+    "axis_slots": 22,
+    "measured_axes": 22,
+    "unmeasured_axes": 0,
+    "public_count": "22 axis · 22 measured",
+    "by_family": {
+      "gspc": { "axes": 14, "measured": 14 },
+      "financial": { "axes": 8, "measured": 8 }
+    },
+    "public_leader_count": 3,
+    "separated_leads": 1,
+    "ties": 2,
+    "untested_separations": 11,
+    "model_fleets": 14,
+    "fact_runs": 8,
+    "state": "VERIFIED",
+    "authority": "/api/state board.* and /api/gspc totals.*",
+    "note": "Own council specialist models excluded from public leaderboard (neutral-body rule)"
+  },
+
+  "card_corpora": {
+    "signed_chain": {
+      "count": 335,
+      "location": "public/signed/chain.json",
+      "algorithm": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "state": "VERIFIED",
+      "note": "335 valid, 0 invalid per verify-card.mjs"
+    },
+    "public_root": {
+      "card_count": 167,
+      "merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+      "as_of": "2026-09-11T08:45:22Z",
+      "schema": "https://councilof.ai/schema/public-root-v1.json",
+      "kind": "csoai.public-root/v1",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "state": "VERIFIED"
+    },
+    "historical_corpus": {
+      "count": 335,
+      "location": "public/signed/card_index.json",
+      "state": "COUNTED",
+      "note": "Card index entries; each points to a signed card in public/signed/cards/"
+    },
+    "pr_1888_cards": {
+      "count": 36,
+      "commit": "df1e6d0b",
+      "location": "public/interop/mill-cards-signed/",
+      "signed": true,
+      "in_chain": false,
+      "in_public_cards": true,
+      "state": "STAGED_UNSIGNED",
+      "axes_covered": ["affect", "art5-saf", "care", "conformance", "cross-reality", "detector", "governance", "jail", "machinery", "openness", "provenance", "safety", "swarm"],
+      "note": "36 enriched GSPC receipts merged via PR #1888; outer Ed25519 wrapper valid but inner card is STAGED_UNSIGNED (not in chain or public root)"
+    },
+    "mill_cards_total": {
+      "count": 1432,
+      "location": "public/interop/mill-cards-signed/",
+      "signed_count": 1066,
+      "unsigned_count": 366,
+      "state": "COUNTED"
+    },
+    "public_cards_sha256_named": {
+      "count": 1680,
+      "location": "public/cards/",
+      "state": "INDEXED"
+    },
+    "root_history": {
+      "count": 29,
+      "location": "public/receipts/root-history.json",
+      "state": "VERIFIED"
+    }
+  },
+
+  "financial_coverage": {
+    "indexed_assets": 425,
+    "chain_deployments": 1640,
+    "distinct_chains": 211,
+    "circulating_usd_sum": 310786569942.87,
+    "deep_measurement_queue": 20,
+    "deeply_measured": 1,
+    "source": "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+    "source_sha256": "f8f3a1a2c309c570b8ae10c1f890690f9004493e2b57ab50bef9c43e9a8d1d86",
+    "as_of": "2026-09-11T08:19:34.591714+00:00",
+    "state": "INDEXED_NOT_MEASURED",
+    "note": "425 assets from DefiLlama are an INDEX, not measurement. Deep measurement requires on-chain verification per asset."
+  },
+
+  "xrpl_instruments": {
+    "count": 17,
+    "location": "public/interop/cards/xrpl/",
+    "state": "COUNTED",
+    "note": "XRPL asset-state cards prepared; not yet anchored on mainnet"
+  },
+
+  "swift_census": {
+    "location": "public/interop/swift-census-2026-09/",
+    "state": "CATALOGUED",
+    "note": "SWIFT 26-institution census prepared"
+  },
+
+  "iso_20022": {
+    "location": "public/interop/iso-20022.json",
+    "state": "CATALOGUED"
+  },
+
+  "trust_chain": {
+    "card_signature": { "state": "VERIFIED", "algorithm": "Ed25519", "positions": 335, "valid": 335, "invalid": 0 },
+    "merkle_root": { "state": "VERIFIED", "root": "78d4e019...", "entries": 1072, "source_roots": 28 },
+    "rekor_witness": { "state": "WITNESSED", "log_index": 2791822965 },
+    "ots_submission": { "state": "STAMPED_PENDING_BITCOIN", "note": "Submitted, awaiting Bitcoin confirmation" },
+    "bitcoin_confirmation": { "state": "NOT_YET", "note": "Waiting for OTS calendar" },
+    "base_eas": { "state": "INCOMPLETE", "note": "Requires owner approval for transaction" },
+    "xrpl_memo": { "state": "INCOMPLETE", "note": "Devnet dry-run prepared, mainnet pending owner approval" }
+  },
+
+  "agent_economy": {
+    "mcp_endpoint": "https://councilof.ai/mcp",
+    "mcp_registry_listed": true,
+    "a2a_agent_card": "https://councilof.ai/.well-known/agent-card.json",
+    "a2a_version": "1.1.0",
+    "x402_mode": "live",
+    "x402_network": "eip155:8453",
+    "x402_asset": "USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)",
+    "x402_payto": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "engine_cards": 12,
+    "state": "VERIFIED"
+  },
+
+  "revenue": {
+    "external_customer_revenue": "$0.00",
+    "internal_self_funded": "$0.00",
+    "zero_value_probes": 0,
+    "x402_settlements_verified": 0,
+    "classification": "ZERO",
+    "note": "No external customer has completed a settlement. Internal testing NEVER counted as revenue."
+  },
+
+  "open_prs": {
+    "total": 30,
+    "tui_prs": {
+      "1899": { "title": "TUI-1: canonical truth ledger", "state": "open" },
+      "1900": { "title": "TUI4: Agent Economy — Canonical Discovery Manifest", "state": "open", "mergeable": false },
+      "1903": { "title": "TUI-2: Financial Coverage Machine", "state": "open" },
+      "1904": { "title": "TUI-5: Signing, Roots and Anchoring", "state": "open" },
+      "1905": { "title": "TUI-6: Human Distribution and Revenue Proof", "state": "open" },
+      "1906": { "title": "TUI-3: Model and Benchmark Measurement", "state": "open" },
+      "1907": { "title": "TUI-4: Agent Economy and Protocol Discovery", "state": "open" }
+    }
+  },
+
+  "claims_corrected": [
+    { "id": "CR-001", "original": "425 stablecoins measured", "corrected": "425 INDEXED, 1 deeply measured", "state": "CORRECTED" },
+    { "id": "CR-002", "original": "Bitcoin-anchored", "corrected": "OTS STAMPED_PENDING_BITCOIN, not confirmed", "state": "CORRECTED" },
+    { "id": "CR-003", "original": "Revenue from x402", "corrected": "$0.00 external; door declared but no verified settlements", "state": "CORRECTED" },
+    { "id": "CR-004", "original": "All axes measured and scored", "corrected": "22 measured, 3 public leaders, 11 untested separations", "state": "CORRECTED" },
+    { "id": "CR-005", "original": "36 new model cards fully verified", "corrected": "36 cards STAGED_UNSIGNED (outer Ed25519 valid, inner not in chain)", "state": "CORRECTED" }
+  ],
+
+  "remaining_blockers": [
+    "Base EAS anchor requires owner wallet signature (gas cost ~$0.01-0.05)",
+    "XRPL memo anchor requires owner wallet signature (transaction cost 0.00001 XRP)",
+    "OTS Bitcoin confirmation depends on Bitcoin block inclusion timeline",
+    "Deep measurement of425 stablecoins requires compute budget",
+    "36 PR #1888 cards need to be added to the signed chain",
+    "TUI-4 PR #1900 has merge conflicts (superseded by #1907)"
+  ]
+}
