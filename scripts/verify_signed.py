@@ -49,6 +49,48 @@ def canonical(obj, compact=False):
     return json.dumps(obj, sort_keys=True).encode()
 
 
+def canonical_js_legacy(obj):
+    """Match the JavaScript signer's legacy sorted compact JSON bytes.
+
+    JSON.parse loses the distinction between ``1`` and ``1.0`` before the edge
+    signer canonicalises a payload.  Python's json.dumps preserves that
+    distinction, which made valid cards containing integral floats look edited.
+    This legacy helper mirrors that observed wire contract without changing the
+    older Python-canonical style-B format.
+    """
+    if obj is None:
+        return b"null"
+    if obj is True:
+        return b"true"
+    if obj is False:
+        return b"false"
+    if isinstance(obj, str):
+        return json.dumps(obj, ensure_ascii=False, separators=(",", ":")).encode()
+    if isinstance(obj, int):
+        return str(obj).encode()
+    if isinstance(obj, float):
+        if obj != obj or obj in (float("inf"), float("-inf")):
+            raise ValueError("legacy JS canonical form rejects non-finite numbers")
+        if obj == 0 or (obj.is_integer() and abs(obj) < 1e21):
+            return str(int(obj)).encode()
+        # The current card domain does not emit exponent-boundary floats.  Refuse
+        # ambiguous encodings rather than silently verify the wrong preimage.
+        rendered = repr(obj)
+        if "e" in rendered.lower():
+            raise ValueError("legacy JS exponent number requires a v2 JCS card")
+        return rendered.encode()
+    if isinstance(obj, list):
+        return b"[" + b",".join(canonical_js_legacy(value) for value in obj) + b"]"
+    if isinstance(obj, dict):
+        parts = []
+        for key in sorted(obj):
+            if not isinstance(key, str):
+                raise ValueError("legacy JS canonical object keys must be strings")
+            parts.append(canonical_js_legacy(key) + b":" + canonical_js_legacy(obj[key]))
+        return b"{" + b",".join(parts) + b"}"
+    raise ValueError(f"unsupported JSON type {type(obj).__name__}")
+
+
 def verify_style_a(d):
     key = Ed25519PublicKey.from_public_bytes(bytes.fromhex(d["signer"]))
     body = {k: v for k, v in d.items() if k not in SIG_FIELDS}
@@ -113,7 +155,7 @@ def verify_style_c(d, did_doc_path=None):
         raise SystemExit(f"GATE: unknown preimage_rule {rule!r} — refusing to guess.")
     if d.get("alg") != "Ed25519":
         raise SystemExit(f"GATE: unknown alg {d.get('alg')!r} — refusing to guess.")
-    body_bytes = canonical(d["body"], compact=True)
+    body_bytes = canonical_js_legacy(d["body"])
     computed = hashlib.sha256(body_bytes).hexdigest()
     assert computed == d["id"], (
         f"id mismatch: card says {d['id'][:16]}..., bytes hash to {computed[:16]}... "
@@ -153,7 +195,7 @@ def _selftest():
     def card_c(body=None, signer=None, **over):
         body = body or {"kind": "gspc.measurement-card", "axis": "affect",
                         "model": "acme/model-1", "n": 30, "status": "MEASURED"}
-        cb = canonical(body, compact=True)
+        cb = canonical_js_legacy(body)
         d = {"alg": "Ed25519", "body": body, "id": hashlib.sha256(cb).hexdigest(),
              "preimage_rule": "sha256(canonical body)",
              "signature": (signer or sk).sign(cb).hex(), "did": did_url}
@@ -179,6 +221,7 @@ def _selftest():
 
     cases = [
         ("valid style-C",                card_c(),                                   0, "VALID"),
+        ("valid style-C integral float", card_c(body={"accuracy": 1.0, "bounds": [0.0, 1.0]}), 0, "VALID"),
         ("body edited after signing",    tampered,                                   1, "INVALID"),
         ("id does not commit to body",   resigned_id,                                1, "INVALID"),
         ("signed by the wrong key",      card_c(signer=other),                       1, "INVALID"),

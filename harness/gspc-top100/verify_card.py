@@ -12,7 +12,41 @@ from typing import Any
 
 
 def canonical_body_bytes(body: dict[str, Any]) -> bytes:
+    """Historical Python compact canonical bytes used by signed card atoms."""
     return json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
+
+
+def canonical_js_body_bytes(body: dict[str, Any]) -> bytes:
+    """Match the JavaScript edge signer's sorted compact JSON bytes."""
+    def emit(value: Any) -> bytes:
+        if value is None:
+            return b"null"
+        if value is True:
+            return b"true"
+        if value is False:
+            return b"false"
+        if isinstance(value, str):
+            return json.dumps(value, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+        if isinstance(value, int):
+            return str(value).encode("ascii")
+        if isinstance(value, float):
+            if value != value or value in (float("inf"), float("-inf")):
+                raise ValueError("legacy JS canonical form rejects non-finite numbers")
+            if value == 0 or (value.is_integer() and abs(value) < 1e21):
+                return str(int(value)).encode("ascii")
+            rendered = repr(value)
+            if "e" in rendered.lower():
+                raise ValueError("legacy JS exponent number requires a v2 JCS card")
+            return rendered.encode("ascii")
+        if isinstance(value, list):
+            return b"[" + b",".join(emit(item) for item in value) + b"]"
+        if isinstance(value, dict):
+            return b"{" + b",".join(
+                emit(key) + b":" + emit(value[key]) for key in sorted(value)
+            ) + b"}"
+        raise ValueError(f"unsupported JSON type {type(value).__name__}")
+
+    return emit(body)
 
 
 def did_pubkey_bytes(did_doc: dict[str, Any], did: str = "did:web:csoai.org#card-attestation-1") -> bytes:
@@ -45,7 +79,8 @@ def verify_signed_card(blob: bytes, did_pubkey: bytes) -> tuple[str, str]:
     sig = wrap.get("signature") or wrap.get("sig_ed25519") or wrap.get("sig")
     if not isinstance(body, dict) or not cid:
         return "INVALID", "no body or id"
-    pre = canonical_body_bytes(body)
+    rule = wrap.get("preimage_rule")
+    pre = canonical_js_body_bytes(body) if rule == "sha256(canonical body)" else canonical_body_bytes(body)
     if hashlib.sha256(pre).hexdigest() != cid:
         return "INVALID", "sha256(canonical body) != id"
     if not sig:
