@@ -1,0 +1,44 @@
+{
+  "schema": "csoai.financial-coverage/0.1",
+  "kind": "financial.stellar-measurement",
+  "generator": "stellar-reader-0.1.2",
+  "generated_at": "2026-09-11T14:00:00Z",
+  "source": "Stellar Expert API (api.stellar.expert)",
+  "terms_boundary": "Stellar supply via Stellar Expert — NOT proof of reserves, NOT attestation verification",
+  "measurements": [
+    {
+      "symbol": "USDC",
+      "issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+      "chain": "Stellar",
+      "supply_raw": "3551507044734913",
+      "supply_normalized": 355150704.47,
+      "supply_display": "$355.15M",
+      "trustlines_total": 2393625,
+      "trustlines_funded": 687967,
+      "measurement_state": "DEEP_MEASURED",
+      "source": "Stellar Expert API /explorer/public/asset",
+      "measured_at": "2026-09-11T14:00:00Z",
+      "code_revision": "stellar-reader-0.1.2",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-USDC-stellar",
+      "note": "Prior issuer address was wrong. Correct issuer: GA5Z...LUSDC. Stellar Expert provides authoritative supply data."
+    },
+    {
+      "symbol": "EURC",
+      "chain": "Stellar",
+      "measurement_state": "UNMEASURED",
+      "reason": "Issuer address not verified for Stellar Expert lookup",
+      "measured_at": "2026-09-11T14:00:00Z",
+      "code_revision": "stellar-reader-0.1.2"
+    },
+    {
+      "symbol": "USBDC",
+      "chain": "Stellar",
+      "measurement_state": "UNMEASURED",
+      "reason": "Issuer account not independently identified",
+      "measured_at": "2026-09-11T14:00:00Z",
+      "code_revision": "stellar-reader-0.1.2"
+    }
+  ],
+  "total_measured": 1,
+  "total_unmeasured": 2
+}
