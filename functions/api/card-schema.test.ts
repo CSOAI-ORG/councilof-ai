@@ -21,6 +21,16 @@ describe("card-v1 is the schema 941+ signed cards already named", () => {
     for (const k of Object.keys(v0.properties)) expect(v1.properties).toHaveProperty(k);
   });
 
+  it("admits every card-v0 surface emitted by the paid evidence routes", () => {
+    const v0Surfaces = new Set<string>(v0.properties.surface.enum);
+    const v1Surfaces = new Set<string>(v1.properties.surface.enum);
+    for (const surface of ["art50.marking-evidence", "receipts.batch"]) {
+      expect(v0Surfaces.has(surface)).toBe(true);
+      expect(v1Surfaces.has(surface)).toBe(true);
+    }
+    for (const surface of v0Surfaces) expect(v1Surfaces.has(surface)).toBe(true);
+  });
+
   it("every published card carries the fields the schema it names requires", () => {
     // No ajv here on purpose. The first cut imported ajv with a catch-and-return fallback, which
     // meant that if ajv were absent the whole assertion silently did nothing and the test still
