@@ -95,6 +95,7 @@ async function measureInstrument(inst) {
     code_revision: REVISION,
     query: { method: 'account_lines', params: { account: inst.issuer, ledger_index: ledgerIndex } },
     terms_boundary: TERMS,
+    correction_link: `https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-${inst.symbol}-XRPL-ledger${ledgerIndex}&body=Issuer:${inst.issuer}%0ASupply:${supplyNormalized}`,
     note: holderCount === 0
       ? 'RLUSD XRPL trust lines exist but all show zero balance — supply may be managed through Ripple\'s internal ledger or RLUSD is not actively circulating on XRPL'
       : undefined,

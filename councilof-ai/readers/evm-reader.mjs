@@ -106,6 +106,7 @@ async function measureContract(chain, symbol, contractInfo) {
     code_revision: REVISION,
     query: { method: 'eth_call', params: [{ to: contractInfo.addr, data: TOTAL_SUPPLY_SELECTOR }, blockHex] },
     terms_boundary: TERMS,
+    correction_link: `https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-${symbol}-${chain}-block${blockNum}&body=Contract:${contractInfo.addr}%0ARaw:${rawHex.slice(0,34)}...%0AReported:${supplyHuman}`,
     replay_instructions: `node readers/evm-reader.mjs --chain ${chain} --contracts ${contractInfo.addr}`,
   };
 }

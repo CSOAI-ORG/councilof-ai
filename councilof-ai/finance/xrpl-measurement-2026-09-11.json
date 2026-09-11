@@ -2,7 +2,7 @@
   "schema": "csoai.financial-coverage/0.1",
   "kind": "financial.xrpl-measurement",
   "generator": "xrpl-reader-0.1.1",
-  "generated_at": "2026-09-11T11:34:38.360Z",
+  "generated_at": "2026-09-11T12:20:49.507Z",
   "terms_boundary": "XRPL account_lines supply — NOT proof of reserves, NOT attestation verification",
   "total_measured": 1,
   "total_no_supply": 1,
@@ -13,25 +13,26 @@
       "issuer": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
       "label": "Ripple RLUSD",
       "chain": "XRPL",
-      "ledger_index": "106911577",
-      "ledger_hash": "DB9834A40B5BCCEE3CE76BAD609C3FCBA81389208C34FB603A472C643BE520BE",
+      "ledger_index": "106912299",
+      "ledger_hash": "2ACC0FB6AF35431CC71836A77C74A11FD578B9C94ACFB3E3AAFE7EAAAD915AB5",
       "holders": 0,
       "supply_raw": "0",
       "supply_normalized": 0,
       "supply_display": "$0 (no active supply)",
       "measurement_state": "NO_ISSUED_SUPPLY",
       "source": "XRPL account_lines via https://xrplcluster.com",
-      "raw_hash": "sha256:d9a8589c9cc502afc6cb9f5f8b0a0b5e1793b85064dfa067016aa919d861b41f",
-      "measured_at": "2026-09-11T11:34:38.233Z",
+      "raw_hash": "sha256:f6f1c6de994c54a744b848dd56732d65801d67fa9d3b4511c26dc344a7dc87ea",
+      "measured_at": "2026-09-11T12:20:49.322Z",
       "code_revision": "xrpl-reader-0.1.1",
       "query": {
         "method": "account_lines",
         "params": {
           "account": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
-          "ledger_index": "106911577"
+          "ledger_index": "106912299"
         }
       },
       "terms_boundary": "XRPL account_lines supply — NOT proof of reserves, NOT attestation verification",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-RLUSD-XRPL-ledger106912299&body=Issuer:rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh%0ASupply:0",
       "note": "RLUSD XRPL trust lines exist but all show zero balance — supply may be managed through Ripple's internal ledger or RLUSD is not actively circulating on XRPL",
       "replay_instructions": "node readers/xrpl-reader.mjs"
     },
@@ -40,25 +41,26 @@
       "issuer": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
       "label": "Ripple USD gateway",
       "chain": "XRPL",
-      "ledger_index": "106911577",
-      "ledger_hash": "DB9834A40B5BCCEE3CE76BAD609C3FCBA81389208C34FB603A472C643BE520BE",
+      "ledger_index": "106912299",
+      "ledger_hash": "2ACC0FB6AF35431CC71836A77C74A11FD578B9C94ACFB3E3AAFE7EAAAD915AB5",
       "holders": 6,
       "supply_raw": "1000000801116514",
       "supply_normalized": 1000000801.116514,
       "supply_display": "$1.00B",
       "measurement_state": "DEEP_MEASURED",
       "source": "XRPL account_lines via https://xrplcluster.com",
-      "raw_hash": "sha256:4ac4a8dc6912a7e66624ff8b79ac45d29fe73d2d8761c0a49a5beb6aba68b294",
-      "measured_at": "2026-09-11T11:34:38.360Z",
+      "raw_hash": "sha256:f395c1344e582b8406ffb82a74e343b49c4ecfb5656a780230ed21a21bc12685",
+      "measured_at": "2026-09-11T12:20:49.507Z",
       "code_revision": "xrpl-reader-0.1.1",
       "query": {
         "method": "account_lines",
         "params": {
           "account": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
-          "ledger_index": "106911577"
+          "ledger_index": "106912299"
         }
       },
       "terms_boundary": "XRPL account_lines supply — NOT proof of reserves, NOT attestation verification",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-USD-XRPL-ledger106912299&body=Issuer:rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh%0ASupply:1000000801.116514",
       "replay_instructions": "node readers/xrpl-reader.mjs"
     }
   ]
