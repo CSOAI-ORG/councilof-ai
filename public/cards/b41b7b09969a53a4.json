@@ -1,0 +1,49 @@
+{
+  "card": {
+    "as_of": "2026-09-11T08:43:39Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "custody-disclosure",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "are a custodian and an auditor named and confirmable?"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b41b7b09969a53a4ad2ceac374b63e82dfd273b584110078ebc427f46a6a6c87",
+    "sig_ed25519": "3a2cf90975fbe18509c2a82410fd388a4854495686e5409eb893e0df470d7688ec60265e2aa12688aff8fc50c7b9d9bb51ab07a3e5382bb2644fa321eabbaf05",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-custody-disclosure"
+    ],
+    "subject": "GSPC custody-disclosure UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "custody-disclosure",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "7e9320851f7622f3b6d037a584d805d26d2f3b8a124fedf2d2f7f997e0d0dcb1",
+    "3394620e08a3e3702b7cff82984c0bb022d52a2e80ab02e2a44c24c372cb3ef6",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "b0929102646f0a1c3e409d1903a94d05cab60f0290640c874a2d8c2db64ca4e9",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "31f4b1b81a86ec0d58b53eefaa7be1df2dc955175eec3e92718d411a1de67cb6",
+    "1f8c18a81018ce899f5e63b552f96cdf0a7061f0e7f8a85225af2e22ac9a498c",
+    "c8f84ebf7ae2c8c4ff93c69c0c482c75b42a8db02ead87d2e343351338dcc54e"
+  ]
+}

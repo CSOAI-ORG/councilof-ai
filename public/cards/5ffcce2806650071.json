@@ -1,0 +1,46 @@
+{
+  "card": {
+    "as_of": "2026-09-11T08:39:20.724Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 15102,
+      "issuer": "GateHub",
+      "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1663582.41417333,
+      "symbol": "EUR.gh",
+      "verified_domain": null,
+      "verified_via": "XRPLMeta registry"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "5ffcce28066500718f3e5c4107217f24c2419966619e14fcbe16b720fd53f830",
+    "sig_ed25519": "5994f7c5afd82bc5d333d9812ec5d9337ce917f3675b05cd06a67d9581aeb517e2b2d8f4a2dc241b858af89ab8a528dcf827654ae6f930e7c5d91bb47922b801",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EUR.gh public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "64859d44b3650b01ab5f4fd30b282716b1ed200a6f97539d75270448442ac97c",
+    "79ea6b9c955208521388ece533db325443acb4711ce22596850fb9a72488527b",
+    "a864f7e24a600181b683288c5717396f768fce6f6e5d77300df4bd017e6e71c2",
+    "1007fe4db9f8cfe0f0f87fb8a54a8a231d78835991985c81ab4838e77a72a708",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "167edd478de446f4873b9f5708ed59b0798c9217bc15fac518673ecdfcc7bc22",
+    "1f8c18a81018ce899f5e63b552f96cdf0a7061f0e7f8a85225af2e22ac9a498c",
+    "c8f84ebf7ae2c8c4ff93c69c0c482c75b42a8db02ead87d2e343351338dcc54e"
+  ]
+}

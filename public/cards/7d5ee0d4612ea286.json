@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-11T08:19:34.591714+00:00",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-index.commitment/v1",
+      "state": "INDEXED",
+      "release_id": "stablecoin-universe-2026-09",
+      "index_sha256": "30a83f220d2e5de7cd56efdc97dad462fbae288743710063c7e9eef1014acb38",
+      "source_sha256": "f8f3a1a2c309c570b8ae10c1f890690f9004493e2b57ab50bef9c43e9a8d1d86",
+      "assets": 425,
+      "chains": 211,
+      "deployments": 1640,
+      "deep_measured_assets": 1,
+      "deep_measured_subjects": [
+        "RLUSD"
+      ],
+      "not_a_risk_score": true,
+      "not_all_deep_measured": true
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "7d5ee0d4612ea286f52258847fa77d6ae5dcc776d5328d1da4854968a77c3397",
+    "sig_ed25519": "51c70af573e2ac56ff015738f6068d2b75f485397d4c7a468d8056f68f7c6142e8e06933f74463de5a07ac7fdad86f1af04c6bb2323c857627d45751394ffe05",
+    "source_urls": [
+      "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+      "https://councilof.ai/interop/stablecoin-universe-2026-09/index.json"
+    ],
+    "subject": "stablecoin universe discovery index",
+    "surface": "public.notice",
+    "tags": [
+      "stablecoin",
+      "discovery-index",
+      "full-spread"
+    ],
+    "unmeasured": [
+      "424 asset families not independently deep-measured in this release"
+    ]
+  },
+  "proof": [
+    "0a05d206687ececa072587330ae7f694ffbe6c1f7e85a9a876b4239e078ff79b",
+    "ff802dffa8f0ca24a193b65a14b5fddf25918af2a8b595c9b81353e080026e34",
+    "762c6d64c2782140a1c26220e94e9013b619416639b612edc7cf86a925b36c96",
+    "9df17360467960557003aa7fd2f41a3f86b05e27d2ff67dcccb2cebd618ae19e",
+    "a78b6c9cf6bdc43174809a913e56b5366be0fa188759e7fb3e255f605b0127cf",
+    "b892a01169d8dddbb91f1c6755b2f84407c849757f357e71a9a0ede8695ef838",
+    "88c37c100102d89462d8b3e288b6bb8adaa3441d8f9f6f5e1b1b5645b5cb4c65",
+    "c1d077e6a9eb4f16fe405d13628ac94b697f58431baf35cf86af4214436f9ac9"
+  ]
+}
