@@ -24,7 +24,13 @@ def canonical_bytes(obj: dict) -> bytes:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
 
-def sign_via_oidc(payload: dict) -> str:
+def sign_via_oidc_attested(payload: dict) -> tuple[str, str]:
+    """Return the signature and the digest computed over the exact remote preimage.
+
+    The Pages signer parses JSON in JavaScript before canonicalising it.  Callers
+    must use its returned digest rather than independently guessing how numeric
+    values survived that boundary.
+    """
     req_url = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL") or ""
     req_tok = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN") or ""
     if not req_url or not req_tok:
@@ -56,7 +62,14 @@ def sign_via_oidc(payload: dict) -> str:
     sig = out.get("sig_ed25519")
     if not isinstance(sig, str) or len(sig) < 64:
         raise RuntimeError("no sig")
-    return sig
+    digest = out.get("payload_sha256")
+    if not isinstance(digest, str) or len(digest) != 64 or any(c not in "0123456789abcdef" for c in digest):
+        raise RuntimeError("no attested payload digest")
+    return sig, digest
+
+
+def sign_via_oidc(payload: dict) -> str:
+    return sign_via_oidc_attested(payload)[0]
 
 
 def main() -> int:

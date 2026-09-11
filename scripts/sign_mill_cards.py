@@ -7,7 +7,6 @@ n<30 cards stay UNMEASURED even if signed. Empty is never 0.
 """
 from __future__ import annotations
 
-import hashlib
 import argparse
 import json
 import sys
@@ -15,7 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from sign_financial_runs import DID, canonical_bytes, sign_via_oidc  # noqa: E402
+from sign_financial_runs import DID, canonical_bytes, sign_via_oidc_attested  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -78,27 +77,6 @@ def superseded_ids() -> set[str]:
     return {str(r.get("superseded_id") or "") for r in ledger_rows() if r.get("superseded_id")}
 
 
-def normalize_canonical_number_fields(body: dict) -> None:
-    """Freeze numeric types to the published cross-runtime canonical contract.
-
-    The browser and Node verifiers preserve ``accuracy`` as a schema float, so an
-    integral result must be signed as ``1.0``/``0.0``. Confidence-interval values
-    are ordinary array numbers in that contract, so integral endpoints must be
-    signed as ``1``/``0``. Without this boundary normalization CPython can sign a
-    preimage that cannot be reconstructed after JSON is parsed by JavaScript.
-    """
-    accuracy = body.get("accuracy")
-    if isinstance(accuracy, (int, float)) and not isinstance(accuracy, bool):
-        body["accuracy"] = float(accuracy)
-    interval = body.get("uncertainty_95_wilson")
-    if isinstance(interval, list):
-        body["uncertainty_95_wilson"] = [
-            int(value) if isinstance(value, (int, float)) and not isinstance(value, bool) and float(value).is_integer()
-            else value
-            for value in interval
-        ]
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-dir", type=Path, help="sign only this isolated unsigned-card directory")
@@ -145,14 +123,22 @@ def main(argv: list[str] | None = None) -> int:
         else:
             body["status"] = "UNMEASURED"
             body["unmeasured"] = ["n<30 unquotable"]
-        normalize_canonical_number_fields(body)
         wrap["body"] = body
         raw = canonical_bytes(body)
         if len(raw) > MAX_PAYLOAD_BYTES:
             print(f"HALT {fp.name} {len(raw)}B", file=sys.stderr)
             failures += 1
             continue
-        digest = hashlib.sha256(raw).hexdigest()
+        # The trusted signer parses the payload in JavaScript and returns the
+        # digest of the exact bytes it signed. Numeric JSON values do not retain
+        # Python's int/float distinction across that boundary, so its attested
+        # digest is the only safe content address.
+        try:
+            sig, digest = sign_via_oidc_attested(body)
+        except Exception as e:
+            print(f"UNSIGNED {fp.name} — {e}", file=sys.stderr)
+            failures += 1
+            continue
         dest = card_path(body.get("axis") or "", digest)
         if dest.is_file():
             try:
@@ -175,12 +161,6 @@ def main(argv: list[str] | None = None) -> int:
                 failures += 1
                 continue
         replaces = prior_cards(str(body.get("model") or ""), str(body.get("axis") or ""), digest)
-        try:
-            sig = sign_via_oidc(body)
-        except Exception as e:
-            print(f"UNSIGNED {fp.name} — {e}", file=sys.stderr)
-            failures += 1
-            continue
         out = {
             "alg": "Ed25519",
             "body": body,
