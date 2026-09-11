@@ -2,11 +2,11 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 0.5333,
+      "accuracy": 0.7667,
       "axis": "cross-reality",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "deepseek-ai/DeepSeek-V3.2-Exp",
+      "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
       "n": 30,
       "route": "hf-router",
       "status": "MEASURED",
@@ -14,7 +14,7 @@
     },
     "inputs": {
       "bank_sha256": null,
-      "grader": null,
+      "grader": "deterministic-exact-token/0.1",
       "items_sha256": null,
       "n": 30,
       "rerun": null
@@ -27,11 +27,11 @@
     ],
     "not_a_certification": true,
     "not_a_conformity_assessment": true,
-    "note": "cannot be recomputed from this attestation: bank_sha256, items_sha256, grader absent. The signature attests only that we published this figure at this time.",
+    "note": "cannot be recomputed from this attestation: bank_sha256, items_sha256 absent. The signature attests only that we published this figure at this time.",
     "reproducible": false,
     "source": {
       "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
-      "card_id": "03121c50d9d93c8793ff257804237c7c98c4d684109c10719deac8c74b95d4bf",
+      "card_id": "02fb6896c022d75e601982608be408827ca1e5d92736c41b0058bf20680f92ee",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -51,17 +51,16 @@
     },
     "unreproducible": [
       "bank_sha256",
-      "items_sha256",
-      "grader"
+      "items_sha256"
     ]
   },
   "predicateType": "https://councilof.ai/attestations/measurement/v1",
   "subject": [
     {
       "digest": {
-        "sha256": "03121c50d9d93c8793ff257804237c7c98c4d684109c10719deac8c74b95d4bf"
+        "sha256": "02fb6896c022d75e601982608be408827ca1e5d92736c41b0058bf20680f92ee"
       },
-      "name": "gspc-measurement-card/cross-reality/deepseek-ai/DeepSeek-V3.2-Exp"
+      "name": "gspc-measurement-card/cross-reality/TinyLlama/TinyLlama-1.1B-Chat-v1.0"
     }
   ]
 }
