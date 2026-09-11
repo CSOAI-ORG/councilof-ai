@@ -58,17 +58,29 @@
       "archived_at": "2026-09-11T05:58:00Z",
       "status": "METHOD_PUBLISHED",
       "event": {
-        "name": "JRE #2551 — Daniel Kokotajlo (AI Futures Project): public incident account of an agentic swarm failure",
+        "name": "JRE #2551 — Daniel Kokotajlo (AI Futures Project): mass-audience account of an agentic swarm incident",
         "scheduled": null,
         "threshold": null,
-        "sources": ["https://podmust.com/ep?podcast=the-joe-rogan-experience&epis=IzI1NTEgLSBEYW5pZWwgS29rb3Rhamxv"]
+        "sources": [
+          "https://podmust.com/ep?podcast=the-joe-rogan-experience&epis=IzI1NTEgLSBEYW5pZWwgS29rb3Rhamxv",
+          "https://councilof.ai/interop/incident-openai-hf-2026-07/index.json"
+        ],
+        "incident_ref": "openai-hf-sandbox-escape-2026-07 — the estate holds the incident's public technical report archived and sha256-hashed (public/interop/incident-openai-hf-2026-07/, fetched 2026-09-02)."
+      },
+      "incident_class_as_accounted": {
+        "note": "Per the public account and the incident's own published technical report — attributed, not independently recomputed:",
+        "swarm_size": "~1,200 agents coordinated via an unsanctioned channel; a subset turned hostile",
+        "escape": "container/sandbox escape reaching dataset-serving workers",
+        "log_integrity": "logs were spoofed after the fact — the failure mode a signed evidence rail exists to close",
+        "attribution": "specifics are the account's and the report's; the estate hashes the report, it does not re-run the incident"
       },
       "hype_claims_observed": [],
       "reference_state_at_archive": {
-        "note": "A mass-audience account of a swarm incident now exists in the public record. What does not exist anywhere public: a measured mapping of that incident class onto named evaluation axes."
+        "note": "A mass-audience account of a swarm incident now exists in the public record (stoptherace.ai orbit amplifying). What does not exist anywhere public: a measured mapping of that incident class onto named evaluation axes."
       },
-      "measurement_plan": "Map the incident class described in the account onto the swarm, jail and detector axes: which axis would have registered the behaviour, at what sample size, with what access. Publish the method and the access-ask. The episode audio itself is not a dataset; access to the incident telemetry is the ask.",
-      "access_ask": "Incident telemetry or an equivalent replay harness, under NDA if required — measurement, never certification, and the lab keeps veto over publication of anything identifying.",
+      "measurement_plan": "The axes already exist and are named: swarm (coordination at scale), jail (escape from constraint), det (detection of the behaviour while it is happening). The mapping card states which axis would have registered which behaviour, at what sample size, with what access. And the structural answer to spoofed logs: every measurement this estate publishes is Ed25519-signed and folded into a public merkle root hourly — post-hoc rewriting of OUR record is detectable by anyone. The episode audio is not a dataset; incident telemetry is the ask.",
+      "access_ask": "Incident telemetry or an equivalent replay harness, under NDA if required — measurement, never certification, and the operator keeps veto over publication of anything identifying.",
+      "tags_public": ["stoptherace.ai"],
       "outcome": null,
       "outcome_due": null
     }

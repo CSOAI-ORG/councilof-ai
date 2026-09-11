@@ -67,13 +67,37 @@ type SpecimenEntry = {
   id: string;
   archived_at: string;
   status: string;
-  event: { name: string; scheduled: string | null; threshold: string | null; sources: string[] };
+  event: { name: string; scheduled: string | null; threshold: string | null; sources: string[]; incident_ref?: string };
   hype_claims_observed: { claim: string; circulating_on: string; numeric_checkable: boolean }[];
+  incident_class_as_accounted?: Record<string, string>;
   reference_state_at_archive: Record<string, string>;
   measurement_plan: string;
   access_ask?: string;
+  tags_public?: string[];
   outcome: unknown;
   outcome_due: string | null;
+};
+
+type Scoreboard = {
+  generated_at: string;
+  rwa_cite: {
+    as_of: string;
+    source_url: string;
+    distributed_asset_value_usd: number;
+    represented_asset_value_usd: number;
+    xrpl_distributed_usd: number;
+    xrpl_pct_distributed: number;
+    xrpl_represented_usd: number;
+    rule: string;
+    license: string;
+  } | null;
+  sov_index: {
+    value: { measured_axes: number; n_signal_rows: number; n_measured_rows: number };
+    artifact_generated: string;
+    artifact_content_id: string;
+    weighted_form: string;
+    source_url: string;
+  } | null;
 };
 
 type Snapshot = {
@@ -181,6 +205,7 @@ function AssetRow({ a }: { a: AssetPanel }) {
 
 export default function Watch() {
   const [snap, setSnap] = useState<Snapshot | null>(null);
+  const [score, setScore] = useState<Scoreboard | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
@@ -194,6 +219,10 @@ export default function Watch() {
       )
       .then(setSnap)
       .catch((e) => setErr(String(e)));
+    fetch("/interop/scoreboard/latest.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .then(setScore)
+      .catch(() => setScore(null));
   }, []);
 
   const measured = snap ? snap.assets.filter((a) => a.status === "PROBED").length : 0;
@@ -288,6 +317,21 @@ export default function Watch() {
                     ))}
                   </ul>
                 )}
+                {s.incident_class_as_accounted && (
+                  <div className="mt-2 rounded border border-slate-700/60 p-2 text-xs text-slate-300">
+                    <div className="text-slate-500">{s.incident_class_as_accounted.note}</div>
+                    {s.incident_class_as_accounted.swarm_size && (
+                      <div className="mt-1">· swarm: {s.incident_class_as_accounted.swarm_size}</div>
+                    )}
+                    {s.incident_class_as_accounted.escape && (
+                      <div>· escape: {s.incident_class_as_accounted.escape}</div>
+                    )}
+                    {s.incident_class_as_accounted.log_integrity && (
+                      <div>· log integrity: {s.incident_class_as_accounted.log_integrity}</div>
+                    )}
+                    <div className="mt-1 text-slate-500">{s.incident_class_as_accounted.attribution}</div>
+                  </div>
+                )}
                 <div className="mt-2 text-xs text-slate-400">{s.measurement_plan}</div>
                 {s.access_ask && (
                   <div className="mt-1 text-xs text-slate-500">access-ask: {s.access_ask}</div>
@@ -304,6 +348,57 @@ export default function Watch() {
           </div>
         </>
       )}
+
+      <h2 className="mt-10 text-lg font-semibold">Daily scoreboard</h2>
+      <p className="mt-1 text-xs text-slate-400">
+        One signed number a day. Scoreboard, never a token — no trading, no issuance.
+      </p>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-lg border border-slate-600/40 bg-[#0d241b] p-4">
+          <div className="text-xs uppercase text-slate-500">SOV Index v0</div>
+          {score?.sov_index ? (
+            <>
+              <div className="mt-1 font-mono text-lg text-emerald-300">
+                {score.sov_index.value.measured_axes} measured axes ·{" "}
+                {score.sov_index.value.n_measured_rows} signed rows
+              </div>
+              <div className="mt-1 text-xs text-slate-400">
+                artifact generated {score.sov_index.artifact_generated.slice(0, 10)} ·{" "}
+                <a href={score.sov_index.source_url} className="underline" target="_blank" rel="noreferrer">
+                  signed artifact
+                </a>
+              </div>
+              <div className="mt-2 text-xs text-slate-500">{score.sov_index.weighted_form}</div>
+            </>
+          ) : (
+            <div className="mt-1 text-sm text-slate-500">— artifact not yet published</div>
+          )}
+        </div>
+        <div className="rounded-lg border border-slate-600/40 bg-[#0d241b] p-4">
+          <div className="text-xs uppercase text-slate-500">Public cite — rwa.xyz networks</div>
+          {score?.rwa_cite ? (
+            <>
+              <div className="mt-1 text-sm text-slate-200">
+                distributed <span className="font-mono text-emerald-300">{fmtUsd(score.rwa_cite.distributed_asset_value_usd)}</span>
+                {" · "}represented {fmtUsd(score.rwa_cite.represented_asset_value_usd)}
+              </div>
+              <div className="mt-1 text-sm text-slate-200">
+                XRPL distributed {fmtUsd(score.rwa_cite.xrpl_distributed_usd)} ({score.rwa_cite.xrpl_pct_distributed}%)
+              </div>
+              <div className="mt-1 text-xs text-slate-500">
+                page figures as of {score.rwa_cite.as_of} ·{" "}
+                <a href={score.rwa_cite.source_url} className="underline" target="_blank" rel="noreferrer">
+                  source
+                </a>{" "}
+                · {score.rwa_cite.license}
+              </div>
+              <div className="mt-2 text-xs text-slate-500">{score.rwa_cite.rule}</div>
+            </>
+          ) : (
+            <div className="mt-1 text-sm text-slate-500">— cite not yet published</div>
+          )}
+        </div>
+      </div>
 
       <h2 className="mt-10 text-lg font-semibold">Alerting tier (R3)</h2>
       <div className="mt-3 rounded-xl border border-gold-400/30 bg-[#0d241b] p-5">

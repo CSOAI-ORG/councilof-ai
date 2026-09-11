@@ -144,6 +144,8 @@ jobs:
           git add public/archive
           # Attestation-watch snapshot (scripts/adapters/watch_gaps.py) — the file /watch renders.
           git add public/interop/watch
+          # Daily scoreboard snapshot (scripts/adapters/daily_scoreboard.py) — RWA cite + SOV Index v0.
+          git add public/interop/scoreboard
           mapfile -d '' witness_files < <(find public/interop -maxdepth 1 -type f \
             \( -name 'root-witness-*.json' -o -name 'rekor-root-*.json' -o -name '*.ots' \) -print0)
           if [ "${#witness_files[@]}" -eq 0 ]; then
