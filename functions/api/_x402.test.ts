@@ -1,24 +1,96 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { x402Accepts, verifyX402Payment, readBazaarOutcome, buildPaymentRequiredV2, toLegacyNetwork, toV1Requirements, hasPaymentHeader } from "./_x402";
-import { ESTATE_PAY_TO, resolvePayTo, railMode, USDC_BASE_EIP712 } from "./_x402_config";
+import {
+  x402Accepts,
+  verifyX402Payment,
+  readBazaarOutcome,
+  buildPaymentRequiredV2,
+  toLegacyNetwork,
+  toV1Requirements,
+  hasPaymentHeader,
+} from "./_x402";
+import {
+  ESTATE_PAY_TO,
+  resolvePayTo,
+  railMode,
+  USDC_BASE_EIP712,
+} from "./_x402_config";
 import { USDC_BASE } from "./_skus";
 
 const RESOURCE = "https://councilof.ai/api/request-attestation";
 const receipt = (v: 1 | 2) =>
-  btoa(JSON.stringify({ x402Version: v, scheme: "exact", network: v === 2 ? "eip155:8453" : "base", payload: { signature: "0x", authorization: {} } }));
+  btoa(
+    JSON.stringify({
+      x402Version: v,
+      scheme: "exact",
+      network: v === 2 ? "eip155:8453" : "base",
+      payload: { signature: "0x", authorization: {} },
+    }),
+  );
 
 afterEach(() => vi.unstubAllGlobals());
 
 describe("x402 rail — money destination and token domain", () => {
+  it("applies the bounded launch offer only to existing-data work and exposes both terms", () => {
+    const [promo] = x402Accepts(
+      { X402_PROMO_NOW: "2026-09-20T12:00:00Z" },
+      RESOURCE,
+      {
+        skuId: "issuance",
+        tier: "reserve",
+        productId: "csoai.product.issuance",
+      },
+    );
+    expect(promo.amount).toBe("10000");
+    expect(promo.csoaiPricing).toMatchObject({
+      product_id: "csoai.product.issuance",
+      pricing_basis: "PROMO_EXISTING_DATA",
+      campaign_id: "csoai-launch-30d-20260911",
+      normal_amount_atomic: "20000",
+      offered_amount_atomic: "10000",
+      fresh_compute_excluded: true,
+    });
+
+    const [fresh] = x402Accepts(
+      { X402_PROMO_NOW: "2026-09-20T12:00:00Z" },
+      RESOURCE,
+      { skuId: "issuance", tier: "fresh_run" },
+    );
+    expect(fresh.amount).toBe("500000");
+    expect(fresh.csoaiPricing?.pricing_basis).toBe("STANDARD");
+
+    const [expired] = x402Accepts(
+      { X402_PROMO_NOW: "2026-10-11T00:00:00Z" },
+      RESOURCE,
+      { skuId: "issuance", tier: "reserve" },
+    );
+    expect(expired.amount).toBe("20000");
+    expect(expired.csoaiPricing?.campaign_id).toBeNull();
+
+    const [free] = x402Accepts(
+      { X402_PROMO_NOW: "2026-09-20T12:00:00Z", X402_AMOUNT: "0" },
+      RESOURCE,
+      { skuId: "issuance", tier: "reserve" },
+    );
+    expect(free.amount).toBe("0");
+    expect(free.csoaiPricing?.pricing_basis).toBe("STANDARD");
+  });
+
   it("advertises the estate wallet by default and lets env override it", () => {
     expect(resolvePayTo({})).toBe(ESTATE_PAY_TO);
-    expect(resolvePayTo({ X402_PAY_TO: "0x000000000000000000000000000000000000dEaD" })).toBe("0x000000000000000000000000000000000000dEaD");
+    expect(
+      resolvePayTo({
+        X402_PAY_TO: "0x000000000000000000000000000000000000dEaD",
+      }),
+    ).toBe("0x000000000000000000000000000000000000dEaD");
     // A malformed override must not silently fall back to the default (funds would go to the wrong place).
     expect(resolvePayTo({ X402_PAY_TO: "not-an-address" })).toBeNull();
   });
 
   it("accepts[] carries a complete challenge: USDC on Base, CAIP-2, EIP-712 domain of the token", () => {
-    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
+    const [a] = x402Accepts({}, RESOURCE, {
+      skuId: "request_attestation",
+      tier: "per_request",
+    });
     expect(a.payTo).toBe(ESTATE_PAY_TO);
     expect(a.asset).toBe(USDC_BASE.asset);
     expect(a.network).toBe("eip155:8453");
@@ -29,21 +101,50 @@ describe("x402 rail — money destination and token domain", () => {
   });
 
   it("v1 requirements name Base by slug so a v1 facilitator recognises the chain", () => {
-    const [a] = x402Accepts({}, RESOURCE, { skuId: "issuance", tier: "reserve" });
+    const [a] = x402Accepts({}, RESOURCE, {
+      skuId: "issuance",
+      tier: "reserve",
+    });
     expect(toLegacyNetwork(a.network)).toBe("base");
-    expect(toV1Requirements(a)).toMatchObject({ network: "base", payTo: ESTATE_PAY_TO, asset: USDC_BASE.asset, extra: { name: "USD Coin", version: "2" } });
+    expect(toV1Requirements(a)).toMatchObject({
+      network: "base",
+      payTo: ESTATE_PAY_TO,
+      asset: USDC_BASE.asset,
+      extra: { name: "USD Coin", version: "2" },
+    });
   });
 
   it("the v2 PaymentRequired body never leaks the ticker as the EIP-712 name", () => {
-    const accepts = x402Accepts({}, RESOURCE, { skuId: "evidence_bundle", tier: "bundle" });
-    const pr = buildPaymentRequiredV2({ resourceUrl: RESOURCE, description: "d", serviceName: "s", accepts, bazaar: { info: {}, schema: {} } });
-    expect((pr.accepts as { extra: { name: string } }[])[0].extra.name).toBe("USD Coin");
+    const accepts = x402Accepts({}, RESOURCE, {
+      skuId: "evidence_bundle",
+      tier: "bundle",
+    });
+    const pr = buildPaymentRequiredV2({
+      resourceUrl: RESOURCE,
+      description: "d",
+      serviceName: "s",
+      accepts,
+      bazaar: { info: {}, schema: {} },
+    });
+    expect((pr.accepts as { extra: { name: string } }[])[0].extra.name).toBe(
+      "USD Coin",
+    );
     expect(pr.x402Version).toBe(2);
   });
 
   it("v2 accepts[] still carry the v1 fields a Circle/PayAI v1 client reads (resource, description, mimeType)", () => {
-    const accepts = x402Accepts({}, RESOURCE, { skuId: "issuance", tier: "reserve", description: "a signed card" });
-    const pr = buildPaymentRequiredV2({ resourceUrl: RESOURCE, description: "a signed card", serviceName: "s", accepts, bazaar: { info: {}, schema: {} } });
+    const accepts = x402Accepts({}, RESOURCE, {
+      skuId: "issuance",
+      tier: "reserve",
+      description: "a signed card",
+    });
+    const pr = buildPaymentRequiredV2({
+      resourceUrl: RESOURCE,
+      description: "a signed card",
+      serviceName: "s",
+      accepts,
+      bazaar: { info: {}, schema: {} },
+    });
     expect((pr.accepts as Record<string, unknown>[])[0]).toMatchObject({
       resource: RESOURCE,
       description: "a signed card",
@@ -52,12 +153,22 @@ describe("x402 rail — money destination and token domain", () => {
       amount: expect.stringMatching(/^\d+$/),
     });
     expect(hasPaymentHeader(new Request(RESOURCE))).toBe(false);
-    expect(hasPaymentHeader(new Request(RESOURCE, { headers: { "x-payment": "x" } }))).toBe(true);
+    expect(
+      hasPaymentHeader(
+        new Request(RESOURCE, { headers: { "x-payment": "x" } }),
+      ),
+    ).toBe(true);
   });
 
   it("reports an honest mode: challenge-only until a facilitator is provisioned", () => {
-    expect(railMode({})).toMatchObject({ mode: "challenge-only", pay_to_configured: true, facilitator_configured: false });
-    expect(railMode({ X402_FACILITATOR_URL: "https://f.example" })).toMatchObject({ mode: "live" });
+    expect(railMode({})).toMatchObject({
+      mode: "challenge-only",
+      pay_to_configured: true,
+      facilitator_configured: false,
+    });
+    expect(
+      railMode({ X402_FACILITATOR_URL: "https://f.example" }),
+    ).toMatchObject({ mode: "live" });
   });
 
   // pay_to_configured is env-INDEPENDENT (payTo falls back to the ESTATE_PAY_TO constant), so it
@@ -66,12 +177,17 @@ describe("x402 rail — money destination and token domain", () => {
   // one that actually varies with env. Pinned here so the distinction is enforced, not just noted.
   it("pay_to_configured cannot distinguish environments; facilitator_configured is the one that can", () => {
     const noEnv = railMode({});
-    const withFacilitator = railMode({ X402_FACILITATOR_URL: "https://f.example" });
+    const withFacilitator = railMode({
+      X402_FACILITATOR_URL: "https://f.example",
+    });
     // identical on the field that looks like evidence and is not
     expect(noEnv.pay_to_configured).toBe(true);
     expect(withFacilitator.pay_to_configured).toBe(true);
     // and it stays true even when an env override is present, so "true" never implies "unset"
-    expect(railMode({ X402_PAY_TO: "0x000000000000000000000000000000000000dEaD" }).pay_to_configured).toBe(true);
+    expect(
+      railMode({ X402_PAY_TO: "0x000000000000000000000000000000000000dEaD" })
+        .pay_to_configured,
+    ).toBe(true);
     // the field that does carry the signal
     expect(noEnv.facilitator_configured).toBe(false);
     expect(withFacilitator.facilitator_configured).toBe(true);
@@ -81,11 +197,14 @@ describe("x402 rail — money destination and token domain", () => {
 });
 
 describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
-  const req = (h?: string) => new Request(RESOURCE, { headers: h ? { "x-payment": h } : {} });
+  const req = (h?: string) =>
+    new Request(RESOURCE, { headers: h ? { "x-payment": h } : {} });
 
   it("refuses without a header, with garbage, and with no facilitator", async () => {
     expect((await verifyX402Payment(req(), {}, RESOURCE)).ok).toBe(false);
-    expect((await verifyX402Payment(req("x-payment: test"), {}, RESOURCE)).ok).toBe(false);
+    expect(
+      (await verifyX402Payment(req("x-payment: test"), {}, RESOURCE)).ok,
+    ).toBe(false);
     const r = await verifyX402Payment(req(receipt(1)), {}, RESOURCE);
     expect(r.ok).toBe(false);
     expect(r.reason).toMatch(/not provisioned/);
@@ -95,14 +214,27 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
     const calls: string[] = [];
     vi.stubGlobal("fetch", async (u: string, init?: RequestInit) => {
       calls.push(String(u));
-      if (String(u).endsWith("/supported")) return new Response("{}", { status: 404 });
+      if (String(u).endsWith("/supported"))
+        return new Response("{}", { status: 404 });
       const body = JSON.parse(String(init?.body));
       expect(body.paymentRequirements.payTo).toBe(ESTATE_PAY_TO);
-      if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
-      return new Response(JSON.stringify({ success: false, errorReason: "insufficient_funds" }), { status: 200 });
+      if (String(u).endsWith("/verify"))
+        return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      return new Response(
+        JSON.stringify({ success: false, errorReason: "insufficient_funds" }),
+        { status: 200 },
+      );
     });
-    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
-    const r = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://f.example/" }, RESOURCE, a);
+    const [a] = x402Accepts({}, RESOURCE, {
+      skuId: "request_attestation",
+      tier: "per_request",
+    });
+    const r = await verifyX402Payment(
+      req(receipt(1)),
+      { X402_FACILITATOR_URL: "https://f.example/" },
+      RESOURCE,
+      a,
+    );
     expect(r.ok).toBe(false);
     expect(r.reason).toMatch(/settle failed: insufficient_funds/);
     // /supported is asked first: the facilitator's dialect decides the envelope, not the client's.
@@ -116,25 +248,58 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
   // With no usable /supported (404 here) negotiation is inconclusive and we fall back to the
   // client's dialect — the pre-negotiation behaviour, preserved deliberately.
   it("grants only after settle, echoing the facilitator's settlement facts and falling back to the client's dialect when /supported is absent", async () => {
-    const seen: { url: string; body: { x402Version: number; paymentRequirements: { network: string } } }[] = [];
+    const seen: {
+      url: string;
+      body: { x402Version: number; paymentRequirements: { network: string } };
+    }[] = [];
     vi.stubGlobal("fetch", async (u: string, init?: RequestInit) => {
-      if (String(u).endsWith("/supported")) return new Response("{}", { status: 404 });
+      if (String(u).endsWith("/supported"))
+        return new Response("{}", { status: 404 });
       seen.push({ url: String(u), body: JSON.parse(String(init?.body)) });
-      if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
-      return new Response(JSON.stringify({ success: true, transaction: "0xabc", network: "base", payer: "0xpayer" }), { status: 200 });
+      if (String(u).endsWith("/verify"))
+        return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      return new Response(
+        JSON.stringify({
+          success: true,
+          transaction: "0xabc",
+          network: "base",
+          payer: "0xpayer",
+        }),
+        { status: 200 },
+      );
     });
-    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
-    const v1 = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://f.example" }, RESOURCE, a);
+    const [a] = x402Accepts({}, RESOURCE, {
+      skuId: "request_attestation",
+      tier: "per_request",
+    });
+    const v1 = await verifyX402Payment(
+      req(receipt(1)),
+      { X402_FACILITATOR_URL: "https://f.example" },
+      RESOURCE,
+      a,
+    );
     expect(v1.ok).toBe(true);
-    expect(v1.settlement).toMatchObject({ transaction: "0xabc", network: "base", payer: "0xpayer" });
+    expect(v1.settlement).toMatchObject({
+      transaction: "0xabc",
+      network: "base",
+      payer: "0xpayer",
+    });
     // absence of the sidechannel is reported as unknown, never as indexed
     expect(v1.settlement!.bazaar!.status).toBe("UNREPORTED");
-    expect(JSON.parse(atob(v1.paymentResponse!))).toMatchObject({ success: true, transaction: "0xabc" });
+    expect(JSON.parse(atob(v1.paymentResponse!))).toMatchObject({
+      success: true,
+      transaction: "0xabc",
+    });
     expect(seen[0].body.x402Version).toBe(1);
     expect(seen[0].body.paymentRequirements.network).toBe("base");
 
     seen.length = 0;
-    const v2 = await verifyX402Payment(req(receipt(2)), { X402_FACILITATOR_URL: "https://f.example" }, RESOURCE, a);
+    const v2 = await verifyX402Payment(
+      req(receipt(2)),
+      { X402_FACILITATOR_URL: "https://f.example" },
+      RESOURCE,
+      a,
+    );
     expect(v2.ok).toBe(true);
     expect(seen[0].body.x402Version).toBe(2);
     expect(seen[0].body.paymentRequirements.network).toBe("eip155:8453");
@@ -144,37 +309,76 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
     const store = new Map<string, string>();
     const kv = {
       get: async (k: string) => store.get(k) ?? null,
-      put: async (k: string, v: string) => { store.set(k, v); },
-      list: async () => ({ keys: [...store.keys()].map((name) => ({ name })), list_complete: true, cursor: "" }),
+      put: async (k: string, v: string) => {
+        store.set(k, v);
+      },
+      list: async () => ({
+        keys: [...store.keys()].map((name) => ({ name })),
+        list_complete: true,
+        cursor: "",
+      }),
     } as unknown as KVNamespace;
     const self = "0x000000000000000000000000000000000000dEaD";
     let payer = "0xBuyer0000000000000000000000000000000001";
     vi.stubGlobal("fetch", async (u: string) => {
-      if (String(u).endsWith("/supported")) return new Response("{}", { status: 404 });
-      if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
-      return new Response(JSON.stringify({ success: true, transaction: `0xtx${payer.slice(-1)}`, network: "base", payer }), { status: 200 });
+      if (String(u).endsWith("/supported"))
+        return new Response("{}", { status: 404 });
+      if (String(u).endsWith("/verify"))
+        return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      return new Response(
+        JSON.stringify({
+          success: true,
+          transaction: `0xtx${payer.slice(-1)}`,
+          network: "base",
+          payer,
+        }),
+        { status: 200 },
+      );
     });
-    const env = { X402_FACILITATOR_URL: "https://f.example", REVENUE_KV: kv, X402_SELF_WALLETS: self };
-    const [a] = x402Accepts(env, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
+    const env = {
+      X402_FACILITATOR_URL: "https://f.example",
+      REVENUE_KV: kv,
+      X402_SELF_WALLETS: self,
+    };
+    const [a] = x402Accepts(env, RESOURCE, {
+      skuId: "request_attestation",
+      tier: "per_request",
+    });
     const amount = BigInt(a.amount || a.maxAmountRequired);
     expect(amount > 0n).toBe(true);
 
     const r1 = await verifyX402Payment(req(receipt(1)), env, RESOURCE, a);
     expect(r1.ok).toBe(true);
     const rec = JSON.parse(store.get("settled:tx:0xtx1")!);
-    expect(rec).toMatchObject({ schema: "csoai.x402.settlement/0.1", payer, self: false, resource: RESOURCE, amount_atomic: amount.toString() });
+    expect(rec).toMatchObject({
+      schema: "csoai.x402.settlement/0.1",
+      payer,
+      self: false,
+      resource: RESOURCE,
+      amount_atomic: amount.toString(),
+      settled_amount_atomic: amount.toString(),
+      product_id: "csoai.product.request_attestation",
+      funding_class: "EXTERNAL_CUSTOMER",
+    });
     expect(store.get("settled:usdc_atomic")).toBe(amount.toString());
 
     // the estate paying itself: recorded, kept apart, never revenue
     payer = self;
     const r2 = await verifyX402Payment(req(receipt(1)), env, RESOURCE, a);
     expect(r2.ok).toBe(true);
-    expect(JSON.parse(store.get("settled:tx:0xtxD")!)).toMatchObject({ self: true });
+    expect(JSON.parse(store.get("settled:tx:0xtxD")!)).toMatchObject({
+      self: true,
+    });
     expect(store.get("settled:usdc_atomic")).toBe(amount.toString());
     expect(store.get("settled:self_usdc_atomic")).toBe(amount.toString());
 
     // no store bound: the grant is unaffected and nothing is written
-    const r3 = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://f.example" }, RESOURCE, a);
+    const r3 = await verifyX402Payment(
+      req(receipt(1)),
+      { X402_FACILITATOR_URL: "https://f.example" },
+      RESOURCE,
+      a,
+    );
     expect(r3.ok).toBe(true);
   });
 
@@ -187,18 +391,29 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
     vi.stubGlobal("fetch", async (u: string, init?: RequestInit) => {
       if (String(u).endsWith("/supported")) {
         return new Response(
-          JSON.stringify({ kinds: [{ x402Version: 1, scheme: "exact", network: "base" }] }),
+          JSON.stringify({
+            kinds: [{ x402Version: 1, scheme: "exact", network: "base" }],
+          }),
           { status: 200 },
         );
       }
       seen.push({ url: String(u), body: JSON.parse(String(init?.body)) });
-      if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      if (String(u).endsWith("/verify"))
+        return new Response(JSON.stringify({ isValid: true }), { status: 200 });
       return new Response(
-        JSON.stringify({ success: true, transaction: "0xfeed", network: "base", payer: "0xp" }),
+        JSON.stringify({
+          success: true,
+          transaction: "0xfeed",
+          network: "base",
+          payer: "0xp",
+        }),
         { status: 200 },
       );
     });
-    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
+    const [a] = x402Accepts({}, RESOURCE, {
+      skuId: "request_attestation",
+      tier: "per_request",
+    });
     const r = await verifyX402Payment(
       req(receipt(2)), // the client signed a v2 receipt
       { X402_FACILITATOR_URL: "https://payai.example" },
@@ -230,23 +445,44 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
   it("retries the other dialect when the facilitator 400s the first, and settles in the one that worked", async () => {
     const seen: { url: string; version: number }[] = [];
     vi.stubGlobal("fetch", async (u: string, init?: RequestInit) => {
-      if (String(u).endsWith("/supported")) return new Response(JSON.stringify(BOTH_KINDS), { status: 200 });
+      if (String(u).endsWith("/supported"))
+        return new Response(JSON.stringify(BOTH_KINDS), { status: 200 });
       const body = JSON.parse(String(init?.body));
       seen.push({ url: String(u), version: body.x402Version });
       // PayAI's live behaviour: v2 is advertised but unusable, v1 works.
       if (body.x402Version === 2) {
-        return new Response(JSON.stringify({ isValid: false, invalidReason: "invalid_payload" }), { status: 400 });
+        return new Response(
+          JSON.stringify({ isValid: false, invalidReason: "invalid_payload" }),
+          { status: 400 },
+        );
       }
-      if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      if (String(u).endsWith("/verify"))
+        return new Response(JSON.stringify({ isValid: true }), { status: 200 });
       return new Response(
-        JSON.stringify({ success: true, transaction: "0xdead", network: "base", payer: "0xbuyer" }),
+        JSON.stringify({
+          success: true,
+          transaction: "0xdead",
+          network: "base",
+          payer: "0xbuyer",
+        }),
         { status: 200 },
       );
     });
-    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
-    const r = await verifyX402Payment(req(receipt(2)), { X402_FACILITATOR_URL: "https://payai-both.example" }, RESOURCE, a);
+    const [a] = x402Accepts({}, RESOURCE, {
+      skuId: "request_attestation",
+      tier: "per_request",
+    });
+    const r = await verifyX402Payment(
+      req(receipt(2)),
+      { X402_FACILITATOR_URL: "https://payai-both.example" },
+      RESOURCE,
+      a,
+    );
     expect(r.ok).toBe(true);
-    expect(r.settlement).toMatchObject({ transaction: "0xdead", payer: "0xbuyer" });
+    expect(r.settlement).toMatchObject({
+      transaction: "0xdead",
+      payer: "0xbuyer",
+    });
     // v1 is attempted FIRST (it is the proven one), so no 400 is incurred at all...
     expect(seen.map((c) => c.version)).toEqual([1, 1]);
     // ...and /settle must reuse the dialect /verify accepted, never rebuild a different envelope.
@@ -258,7 +494,8 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
   it("falls forward to v2 when the facilitator rejects v1", async () => {
     const attempted: number[] = [];
     vi.stubGlobal("fetch", async (u: string, init?: RequestInit) => {
-      if (String(u).endsWith("/supported")) return new Response(JSON.stringify(BOTH_KINDS), { status: 200 });
+      if (String(u).endsWith("/supported"))
+        return new Response(JSON.stringify(BOTH_KINDS), { status: 200 });
       const body = JSON.parse(String(init?.body));
       if (String(u).endsWith("/verify")) {
         attempted.push(body.x402Version);
@@ -266,10 +503,26 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
         return new Response(JSON.stringify({ isValid: true }), { status: 200 });
       }
       expect(body.x402Version).toBe(2); // settle reuses the dialect that verified
-      return new Response(JSON.stringify({ success: true, transaction: "0xbeef", network: "base", payer: "0xb" }), { status: 200 });
+      return new Response(
+        JSON.stringify({
+          success: true,
+          transaction: "0xbeef",
+          network: "base",
+          payer: "0xb",
+        }),
+        { status: 200 },
+      );
     });
-    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
-    const r = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://v2only.example" }, RESOURCE, a);
+    const [a] = x402Accepts({}, RESOURCE, {
+      skuId: "request_attestation",
+      tier: "per_request",
+    });
+    const r = await verifyX402Payment(
+      req(receipt(1)),
+      { X402_FACILITATOR_URL: "https://v2only.example" },
+      RESOURCE,
+      a,
+    );
     expect(r.ok).toBe(true);
     expect(attempted).toEqual([1, 2]); // tried the proven one, then fell forward
   });
@@ -279,15 +532,27 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
   it("does not retry a facilitator that answers 200 with isValid:false", async () => {
     let verifyCalls = 0;
     vi.stubGlobal("fetch", async (u: string) => {
-      if (String(u).endsWith("/supported")) return new Response(JSON.stringify(BOTH_KINDS), { status: 200 });
+      if (String(u).endsWith("/supported"))
+        return new Response(JSON.stringify(BOTH_KINDS), { status: 200 });
       verifyCalls++;
       return new Response(
-        JSON.stringify({ isValid: false, invalidReason: "invalid_exact_evm_insufficient_balance" }),
+        JSON.stringify({
+          isValid: false,
+          invalidReason: "invalid_exact_evm_insufficient_balance",
+        }),
         { status: 200 },
       );
     });
-    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
-    const r = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://broke.example" }, RESOURCE, a);
+    const [a] = x402Accepts({}, RESOURCE, {
+      skuId: "request_attestation",
+      tier: "per_request",
+    });
+    const r = await verifyX402Payment(
+      req(receipt(1)),
+      { X402_FACILITATOR_URL: "https://broke.example" },
+      RESOURCE,
+      a,
+    );
     expect(r.ok).toBe(false);
     expect(r.reason).toMatch(/insufficient_balance/);
     expect(verifyCalls).toBe(1); // one attempt only — the money answer is final
@@ -295,7 +560,8 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
 });
 
 describe("bazaar sidechannel — read, never inferred", () => {
-  const req = (h?: string) => new Request(RESOURCE, { headers: h ? { "x-payment": h } : {} });
+  const req = (h?: string) =>
+    new Request(RESOURCE, { headers: h ? { "x-payment": h } : {} });
   // Bazaar is the discovery layer agents search to find paid resources, and indexing needs a
   // CONFIRMED settle, so the FIRST real payment is the only chance to observe whether it
   // happened. specs/extensions/bazaar.md says a facilitator only MAY report the outcome, and
@@ -309,14 +575,18 @@ describe("bazaar sidechannel — read, never inferred", () => {
   });
 
   it("reports what the facilitator actually said", () => {
-    const hdr = btoa(JSON.stringify({ bazaar: { status: "success", resourceId: "abc" } }));
+    const hdr = btoa(
+      JSON.stringify({ bazaar: { status: "success", resourceId: "abc" } }),
+    );
     const r = readBazaarOutcome(hdr);
     expect(r.status).toBe("REPORTED");
     expect(r.detail).toEqual({ status: "success", resourceId: "abc" });
   });
 
   it("a sidechannel with no bazaar key is UNREPORTED", () => {
-    expect(readBazaarOutcome(btoa(JSON.stringify({ other: 1 }))).status).toBe("UNREPORTED");
+    expect(readBazaarOutcome(btoa(JSON.stringify({ other: 1 }))).status).toBe(
+      "UNREPORTED",
+    );
   });
 
   it("undecodable header is UNREADABLE, and still not success", () => {
@@ -330,15 +600,37 @@ describe("bazaar sidechannel — read, never inferred", () => {
   // btoa() is Latin-1 and the note contains an em dash.
   it("never leaks into the buyer-facing payment response", async () => {
     vi.stubGlobal("fetch", async (u: string) => {
-      if (String(u).endsWith("/supported")) return new Response("{}", { status: 404 });
-      if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
-      return new Response(JSON.stringify({ success: true, transaction: "0xf00d", network: "base", payer: "0xp" }), {
-        status: 200,
-        headers: { "extension-responses": btoa(JSON.stringify({ bazaar: { status: "success" } })) },
-      });
+      if (String(u).endsWith("/supported"))
+        return new Response("{}", { status: 404 });
+      if (String(u).endsWith("/verify"))
+        return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      return new Response(
+        JSON.stringify({
+          success: true,
+          transaction: "0xf00d",
+          network: "base",
+          payer: "0xp",
+        }),
+        {
+          status: 200,
+          headers: {
+            "extension-responses": btoa(
+              JSON.stringify({ bazaar: { status: "success" } }),
+            ),
+          },
+        },
+      );
     });
-    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
-    const r = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://f.example" }, RESOURCE, a);
+    const [a] = x402Accepts({}, RESOURCE, {
+      skuId: "request_attestation",
+      tier: "per_request",
+    });
+    const r = await verifyX402Payment(
+      req(receipt(1)),
+      { X402_FACILITATOR_URL: "https://f.example" },
+      RESOURCE,
+      a,
+    );
     expect(r.ok).toBe(true);
     expect(r.settlement!.bazaar!.status).toBe("REPORTED");
     expect(JSON.parse(atob(r.paymentResponse!))).not.toHaveProperty("bazaar");
