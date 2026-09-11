@@ -202,15 +202,24 @@ async function clickWhenActionable(p, selector, timeoutMs = 30000) {
   await p.close();
 }
 
-// 3) /simulate — greeting, globe, handoff prefill
+// 3) /simulate — SURFACE RETIRED. The narrated simulator (greeting, ?q= prefill, "Sovereign
+// Globe" link, "Run experiment") no longer exists as a route: public/_redirects 308s
+// /simulate → /gspc-arena, and App.tsx then gates /gspc-arena (and /simulate) behind
+// <DashboardDoor defaultTab="space" />, which lands on /dashboard?tab=space — verified live
+// 2026-09-10: https://councilof.ai/simulate?q=… ends at /dashboard?q=…&tab=space with no
+// textarea, no globe iframe and no Run experiment button (CouncilSpace is dead code behind
+// that door). The old assertions therefore measured a retired surface and could only fail.
+// What remains honestly checkable: the retired door must lead somewhere real — the Council
+// OS dashboard space tab — not a 404, a shell, or a dead redirect. The drive-command
+// capability the two /simulate spy blocks used to assert here is still covered live on
+// /brief (block 8, below).
 {
   const { p, errs } = await page();
   await go(p, BASE + "/simulate?q=a%20hiring%20AI%20in%20Germany");
   await waitForHydration(p);
-  ok("/simulate globe", await p.$('iframe[src*="globe3d"]') != null);
-  ok("/simulate greeting", await p.evaluate(() => /Governing AI|governance/i.test(document.body.innerText)));
-  ok("/simulate q-prefill", await p.evaluate(() => (document.querySelector("textarea") || {}).value?.includes("Germany")));
-  ok("/simulate globe link", await p.evaluate(() => /Sovereign Globe/i.test(document.body.innerText)));
+  const url = p.url();
+  ok("/simulate redirect contract", /\/dashboard\/?\?/.test(url) && /tab=space/.test(url), `url=${url}`);
+  ok("/simulate landing renders", await p.evaluate(() => (document.body.innerText || "").length >= 800));
   ok("/simulate console-clean", errs.length === 0, errs.slice(0, 2).join(" | "));
   await p.close();
 }
@@ -222,13 +231,16 @@ async function clickWhenActionable(p, selector, timeoutMs = 30000) {
   await waitForHydration(p);
   ok("/brief globe", await p.$('iframe[src*="globe3d"]') != null);
   ok("/brief HQ caption", await p.evaluate(() => /flown to .*HQ/i.test(document.body.innerText)));
-  ok("/brief convene btn", await p.evaluate(() => /Convene the 33-agent council/i.test(document.body.innerText)));
+  // The convene button was honestly renamed: "Convene the 33-agent council" oversold a
+  // designed layer as a live one, so AccountBrief.tsx now says "▶ Visualize the Council
+  // design over {country}". Same control, same flyAndConvene(spiral: true) wiring.
+  ok("/brief convene btn", await p.evaluate(() => /Visualize the Council design/i.test(document.body.innerText)));
   ok("/brief console-clean", errs.length === 0, errs.slice(0, 2).join(" | "));
   await p.close();
 }
 
 // 5) Sector + GEO pages
-for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-act", "critical infrastructure"], ["/pharma-ai-act", "drug-discovery"], ["/vs/vanta", "CSOAI vs Vanta"]]) {
+for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-act", "critical infrastructure"], ["/pharma-ai-act", "drug-discovery"], ["/vs/vanta", "measurement, not compliance automation"]]) {
   const { p, errs } = await page();
   try {
     await go(p, BASE + path);
@@ -273,7 +285,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     // earlier this session).
     const drove = cmds.includes("flyTo") || cmds.includes("layer0");
     if (drove) ok("/intel globe drive", true, "got: " + JSON.stringify(cmds));
-    else console.log("~ /intel globe drive — SKIPPED: /intel embeds the globe read-only (0 drive calls); drive is asserted on /brief and /simulate");
+    else console.log("~ /intel globe drive — SKIPPED: /intel embeds the globe read-only (0 drive calls); drive is asserted on /brief");
   } else {
     const allFrames = p.frames().map(f => f.url());
     const iframes = await p.$$eval("iframe", els => els.map(e => e.src));
@@ -305,7 +317,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     const cmds = await childFrame.evaluate(() => window.__spy || []);
     ok("/globe threat drives globe", cmds.includes("flyTo") || cmds.includes("neutralize"), "got: " + JSON.stringify(cmds));
   } else {
-    console.log("~ /globe threat drives globe — SKIPPED: globe is top-level here, no parent→iframe hop exists. Covered on /brief, /simulate, /intel.");
+    console.log("~ /globe threat drives globe — SKIPPED: globe is top-level here, no parent→iframe hop exists. Covered on /brief and /intel.");
   }
   await p.close();
 }
@@ -323,7 +335,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     const frame = await findGlobeFrameFromElement(p);
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
-      await clickWhenActionable(p, 'button:has-text("Convene the 33-agent council")');
+      await clickWhenActionable(p, 'button:has-text("Visualize the Council design")');
       await p.waitForTimeout(3800);
       const cmds = await frame.evaluate(() => window.__spy || []);
       // The council EFFECT (layer0, formerly bftSpiral) is the thing "drives council" tests.
@@ -335,47 +347,14 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   await p.close();
 }
 
-// 9) SPY — /simulate "Run experiment" convenes the council on the scenario's jurisdiction.
-{
-  const { p } = await page();
-  try {
-    await go(p, BASE + "/simulate?q=a%20hiring%20AI%20in%20Germany");
-    await waitForHydration(p);
-    await p
-      .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
-      .catch(() => null);
-    const frame = await findGlobeFrameFromElement(p);
-    if (frame) {
-      await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
-      await clickWhenActionable(p, 'button:has-text("Run experiment")');
-      await p.waitForTimeout(4400);
-      const cmds = await frame.evaluate(() => window.__spy || []);
-      ok("/simulate run drives council", cmds.includes("layer0") || cmds.includes("bftSpiral"), "got: " + JSON.stringify(cmds));  // council effect (layer0, formerly bftSpiral); flyTo dropped as flaky
-    } else ok("/simulate run drives council", false, "no globe frame");
-  } catch (e) { ok("/simulate run drives council", false, String(e.message).slice(0, 40)); }
-  await p.close();
-}
+// 9+10) /simulate drive-command spies — RETIRED with the surface (see block 3). There is no
+// globe iframe behind the /simulate door anymore, so these could only ever report
+// "no globe frame". The capabilities they measured are still asserted where they live:
+// council drive → block 8 on /brief; flyTo on click → block 6 on /intel; neutralize had no
+// surviving live surface as of 2026-09-10 — recorded here so the coverage gap is a visible
+// decision, not a silent deletion. If a threat surface returns, reinstate the neutralize spy.
 
-// 10) SPY — /simulate with a THREAT scenario also drives neutralize on the globe.
-{
-  const { p } = await page();
-  try {
-    await go(p, BASE + "/simulate?q=a%20rogue%20swarm%20of%20agents%20in%20London");
-    await waitForHydration(p);
-    await p
-      .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
-      .catch(() => null);
-    const frame = await findGlobeFrameFromElement(p);
-    if (frame) {
-      await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
-      await clickWhenActionable(p, 'button:has-text("Run experiment")');
-      await p.waitForTimeout(7600); // neutralize is scheduled ~6.6s after run
-      const cmds = await frame.evaluate(() => window.__spy || []);
-      ok("/simulate threat drives neutralize", cmds.includes("neutralize") || cmds.includes("layer0"), "got: " + JSON.stringify(cmds));  // neutralize/layer0 both valid post-retraction
-    } else ok("/simulate threat drives neutralize", false, "no globe frame");
-  } catch (e) { ok("/simulate threat drives neutralize", false, String(e.message).slice(0, 40)); }
-  await p.close();
-}
+
 
 await b.close();
 const pass = results.filter((r) => r.pass).length;
