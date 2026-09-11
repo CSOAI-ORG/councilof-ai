@@ -1,6 +1,6 @@
 # TUI 4 — Canonical Agent Identity & Protocol Discovery
 
-**Date:** 2026-09-11
+**Date:** 2026-09-11 (updated with live probes)
 **Branch:** `agents/discovery-consolidation-20260911`
 **Scope:** Audit, consolidate, and reconcile every MCP, A2A, x402, SDK, and directory surface.
 
@@ -16,7 +16,7 @@ One agent, one name across every surface.
 | MCP endpoint | `https://councilof.ai/mcp` | 1.4.2 | **LIVE** |
 | MCP server card | `/.well-known/mcp/server-card.json` | schema 2024-11-05 | **LIVE** (stale: says 1.4.0/0.2.1, live is 1.4.2/0.2.2) |
 | MCP .well-known | `/.well-known/mcp.json` | schema 2026-07-28 | **LIVE** (stale: says 1.4.0/0.2.1, live is 1.4.2/0.2.2) |
-| npm package | `csoai-gspc-mcp` | 0.2.2 | **PUBLISHED** |
+| npm package | `csoai-gspc-mcp` | 0.2.2 (server.json) / **0.2.1 (npm registry)** | **STALE — npm needs publish** |
 | A2A Agent Card | `/.well-known/agent-card.json` | 1.1.0 | **LIVE** |
 | A2A endpoint | `/api/a2a` | v1.0 JSON-RPC | **LIVE** |
 | x402 catalog | `/.well-known/x402.json` | csoai.x402/0.2 | **LIVE** |
@@ -32,7 +32,7 @@ One agent, one name across every surface.
 | Server name same on registry + mcp.json | **PASS** — `io.github.CSOAI-ORG/gspc` |
 | Tool count same across surfaces | **PASS** — 12 (8 free + 4 paid) on live, mcp.json, server-card |
 | Registry version matches live | **FAIL** — registry says 1.4.0, live says 1.4.2 |
-| npm version in server.json matches npm | **PASS** — 0.2.2 |
+| npm version in server.json matches npm | **FAIL** — server.json says 0.2.2, npm shows 0.2.1 |
 
 ---
 
@@ -155,6 +155,45 @@ Source: `/.well-known/x402.json` (9 resources) + `/api/x402` (9 resources).
 
 ---
 
+## 7.5. Live Probe Results (2026-09-11 14:00 UTC)
+
+Every surface was probed via HTTP from the CI terminal. Results:
+
+| Surface | Probe | Result |
+|---------|-------|--------|
+| Agent Card | `GET /.well-known/agent-card.json` | **200** — version 1.1.0, 7 skills, 3 extensions |
+| x402 Discovery | `GET /.well-known/x402.json` | **200** — csoai.x402/0.2, mode live, 9 resources |
+| Free Door | `GET /api/free-door` | **402** with amount=0 — correct behavior |
+| A2A Agents Index | `GET /.well-known/agents/index.json` | **200** — 12 agents, 8 free + 4 paid |
+| MCP Initialize | `POST /mcp` (initialize) | **200** — serverInfo: csoai-gspc-mcp v1.4.2 |
+| AG-UI SSE | `GET /api/agui/gspc-state` | **200** — SSE stream, 22 axes · 22 measured |
+| request-attestation | `GET /api/request-attestation?subject=...` | **402** with 0.01 USDC (promo), signed JWS offer receipt |
+| DID Document | `GET csoai.org/.well-known/did.json` | **200** — 5 verification methods |
+| npm Registry | `GET registry.npmjs.org/csoai-gspc-mcp` | **200** — latest: 0.2.1 (server.json says 0.2.2) |
+| Smithery (flagship) | `GET smithery.ai/server/csoai/gspc-mcp` | **308** redirect |
+| Smithery (stale) | `GET smithery.ai/server/csoai/gspc` | **308** redirect |
+| Glama | `GET glama.ai/mcp/servers?query=csoai` | **200** |
+| PayAPI Market | `GET payapi.market/api/council-of-ai-gspc-eu-evidence-feed` | **200** |
+
+### Signed Offer Receipt — CONFIRMED LIVE
+
+The x402 offer-receipt extension is **actively emitting signed JWS offers** when `BOARD_SIGN_KEY_PKCS8_B64` is provisioned. The agent-card.json extension description says "DRAFT WE PUBLISH AND DO NOT YET EMIT" for the A2A signed-receipts extension, but the x402 offer-receipt is working. This is a documentation accuracy issue:
+
+- **x402 offer-receipt:** LIVE (JWS EdDSA, kid `did:web:csoai.org#board-attestation-1`)
+- **A2A signed-receipts:** Still DRAFT (task-outcome receipts not emitted)
+
+### npm Version Drift
+
+| Surface | Version |
+|---------|---------|
+| `mcp/gspc-server/server.json` | npm `0.2.2` |
+| npm registry (`registry.npmjs.org`) | `0.2.1` |
+| `mcp/gspc-server/package.json` | `0.2.2` |
+
+**Action:** `npm publish` from `mcp/gspc-server/` to bring npm to 0.2.2.
+
+---
+
 ## 8. Claims Rejected or Corrected
 
 | Claim | Correction |
@@ -166,6 +205,8 @@ Source: `/.well-known/x402.json` (9 resources) + `/api/x402` (9 resources).
 | revenue/arms/x402.json prices | Those are aspirational SKUs; actual 402 amounts come from challenges only |
 | AP2 has local implementation | Registry entries only (`csoai-ap2-mandate-mcp`, `csoai-google-ap2-tunnel`); no local code |
 | AG-UI not implemented | IS implemented at `/api/agui/gspc-state` (SSE stream, `functions/api/agui/[[path]].ts`) |
+| npm csoai-gspc-mcp is at 0.2.2 | npm registry shows 0.2.1; server.json/package.json say 0.2.2 — needs `npm publish` |
+| x402 offer-receipt is DRAFT-only | Signed JWS offers ARE being emitted (live probe confirmed, EdDSA kid=board-attestation-1) |
 
 ---
 
@@ -181,6 +222,7 @@ Source: `/.well-known/x402.json` (9 resources) + `/api/x402` (9 resources).
 | 6 | a2aregistry.org POST | Owner action | Agent card not registered |
 | 7 | x402 0.01 USDC test | Owner approval | Needs INTERNAL_SELF_FUNDED label |
 | 8 | npm provenance | CI config | No attestation on npm package |
+| 9 | npm version publish (0.2.2) | `npm publish` | npm registry shows 0.2.1, server.json says 0.2.2 — 12-tool stdio not on npm |
 
 ---
 

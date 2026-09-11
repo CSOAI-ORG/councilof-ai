@@ -1,6 +1,6 @@
 {
   "schema": "csoai.tui4-canonical-state/0.1",
-  "date": "2026-09-11T12:00:00Z",
+  "date": "2026-09-11T14:00:00Z",
   "branch": "agents/discovery-consolidation-20260911",
   "base_commit": "fb7b32dc4",
   "subject": "TUI 4 — Agent Economy and Protocol Discovery",
@@ -36,6 +36,10 @@
       "package": "csoai-gspc-mcp",
       "version": "0.2.2",
       "state": "PUBLISHED",
+      "version_server_json": "0.2.2",
+      "version_npm_registry": "0.2.1",
+      "npm_stale": true,
+      "action": "npm publish from mcp/gspc-server/ to bring npm to 0.2.2",
       "registry": "npm"
     },
     "mcp_registry": {
@@ -190,12 +194,16 @@
     "a2a_skill_parity": "PASS — 7/7 card-declared skills implemented in a2a.ts",
     "x402_catalog_parity": "PASS — 9 resources on .well-known/x402.json and /api/x402",
     "registry_version_mismatch": "FAIL — registry says 1.4.0, live says 1.4.2",
+    "npm_version_mismatch": "FAIL — npm registry says 0.2.1, server.json/package.json say 0.2.2",
     "smithery_tool_stale": "FAIL — csoai/gspc lists 4 tools not served and misses 3 real ones",
     "glama_health": "FAIL — 40/40 connectors Unhealthy",
     "mcp_so_listing": "FAIL — zero CSOAI in 27,929 sitemap URLs",
-    "free_door_settles": "PASS — returns 402 with amount=0 (verified via webfetch returning 402)",
+    "free_door_settles": "PASS — returns 402 with amount=0 (verified via curl 2026-09-11)",
+    "signed_offer_receipt": "PASS — JWS EdDSA offer receipt emitted for request_attestation (kid did:web:csoai.org#board-attestation-1)",
     "receipts_endpoint_exists": "PASS — functions/api/receipts/ (batch.ts, index.ts, latest.ts, verify.ts)",
-    "witness_endpoint_exists": "PASS — functions/api/witness/status.ts + witness.ts"
+    "witness_endpoint_exists": "PASS — functions/api/witness/status.ts + witness.ts",
+    "agui_sse": "PASS — SSE stream returns 22 axes · 22 measured via curl (2026-09-11)",
+    "mcp_initialize": "PASS — serverInfo csoai-gspc-mcp v1.4.2 via curl (2026-09-11)"
   },
   "claims_rejected": [
     "Registry v1.4.0 is current (live is v1.4.2)",
@@ -214,6 +222,34 @@
     {"id": "B5", "desc": "mcp.so submission", "owner": "owner action", "impact": "Not listed at all"},
     {"id": "B6", "desc": "a2aregistry.org POST", "owner": "owner action", "impact": "Agent card not registered"},
     {"id": "B7", "desc": "x402 0.01 USDC test for request_attestation", "owner": "owner approval", "impact": "Needs INTERNAL_SELF_FUNDED label per TUI instructions"},
-    {"id": "B8", "desc": "npm provenance", "owner": "CI config", "impact": "No attestation on npm package"}
-  ]
+    {"id": "B8", "desc": "npm provenance", "owner": "CI config", "impact": "No attestation on npm package"},
+    {"id": "B9", "desc": "npm version publish (0.2.2)", "owner": "npm publish", "impact": "npm registry shows 0.2.1, server.json says 0.2.2 — 12-tool stdio server not on npm yet"}
+  ],
+  "live_probes": {
+    "timestamp": "2026-09-11T14:00:00Z",
+    "agent_card": {"status": 200, "version": "1.1.0", "skills": 7},
+    "x402_discovery": {"status": 200, "mode": "live", "resources": 9},
+    "free_door": {"status": 402, "amount": "0", "correct": true},
+    "a2a_agents_index": {"status": 200, "agents": 12},
+    "mcp_initialize": {"status": 200, "server_version": "1.4.2"},
+    "agui_sse": {"status": 200, "axes": 22, "measured": 22},
+    "request_attestation": {"status": 402, "amount": "10000", "promo": true, "signed_offer": true},
+    "did_document": {"status": 200, "verification_methods": 5},
+    "npm_registry": {"status": 200, "latest": "0.2.1", "stale": true},
+    "smithery_flagship": {"status": 308, "redirect": true},
+    "smithery_stale": {"status": 308, "redirect": true},
+    "glama": {"status": 200},
+    "payapi_market": {"status": 200}
+  },
+  "x402_self_test": {
+    "file": "docs/tui4/X402-SELF-TEST-2026-09-11.md",
+    "classification": "INTERNAL_SELF_FUNDED",
+    "subject": "tui4-self-test-0.01usdc",
+    "tool": "commission_card",
+    "discovery": "PASS",
+    "challenge": "PASS — 0.01 USDC (launch promo)",
+    "signed_offer": "PASS — JWS EdDSA emitted",
+    "payment": "PENDING — owner approval required",
+    "revenue_impact": "none — self-funded test excluded from buyer count"
+  }
 }
