@@ -26,7 +26,13 @@ Six TUI branches exist. All deliver verified, additive-only files with no master
 | Chain deployments | 1,640 | stablecoin-universe-2026-09/index.json | INDEXED |
 | Distinct chains | 211 | stablecoin-universe-2026-09/index.json | INDEXED |
 | Circulating (USD) | $310.79B | DefiLlama API | INDEXED |
-| Deeply measured stablecoins | 0 | — | HONEST |
+| On-chain measured stablecoins | 6 | tui2-onchain-measurements.json | MEASURED |
+| RLUSD Ethereum supply | $1,373,732,628 | block 25954285, publicnode RPC | MEASURED |
+| RLUSD Base supply | $100,278 | block 51171026, base.org RPC | MEASURED |
+| RLUSD XRPL supply | ~$920,663,999 | ledger 106912784, xrplcluster.com | MEASURED |
+| USDC Ethereum supply | $50,638,799,683 | block 25954285, publicnode RPC | MEASURED |
+| USDT Ethereum supply | $88,306,028,997 | block 25954285, publicnode RPC | MEASURED |
+| DAI Ethereum supply | $4,586,676,885 | block 25954285, publicnode RPC | MEASURED |
 | Signed chain (historical) | 335 cards | /signed/card_index.json (live) | VERIFIED |
 | Chain Ed25519 valid/invalid | 335 / 0 | verify-card.mjs | VERIFIED |
 | Public root cards | 167 | /root.json (live) | VERIFIED |
@@ -108,7 +114,14 @@ Six TUI branches exist. All deliver verified, additive-only files with no master
 - **Status:** Discovery PASS, free-door PASS, request-attestation PASS, payment BLOCKED (owner gate). npm 0.2.1 vs live 0.2.2 drift; MCP registry 1.4.0 vs live 1.4.2 drift.
 - **Consistency:** MCP endpoint at /api/mcp confirmed 200
 
-### TUI 5 — Discoverability + Trust Chain
+### TUI 5 — Discoverability + Trust Chain (UPDATED)
+- **Repo remediation executed:** 4 flagship repos got topics added via `gh repo edit`
+  - `councilof-ai`: +`ai-measurement` (now 13 topics)
+  - `gspc-board`: +`ai-measurement`, `json-snapshot`, `parquet`, `cc0` (now 18 topics)
+  - `cibola`: +`ai-governance`, `signed-receipts`, `rfc-9943`, `measurement` (was 0, now 4)
+  - `council-os`: +`axes`, `governance` (now 10 topics)
+- **12 repos flagged** with MEOK/SOVOS/SOV3 codenames in descriptions (owner review needed)
+- **16 repos** still have zero topics (mostly mirror/awesome-list repos)
 - **Branch (discoverability):** `discoverability/consolidation-20260911`
 - **PR:** #1919 (OPEN)
 - **Commits:** 9 commits, 37 files added
@@ -119,12 +132,12 @@ Six TUI branches exist. All deliver verified, additive-only files with no master
 - **Deliverables:** 7-layer trust chain map, anchor preparation JSON with halt instruction
 - **Status:** 49 repos missing topics. Kaggle unverified. Trust layers 5-7 owner-gated.
 
-### TUI 6 — Revenue and Distribution
-- **Branch:** `growth/verified-launch-20260911`
-- **PR:** #1918 (CLOSED, mergeable)
-- **Commits:** 1 commit, 1 file added
-- **Deliverables:** Revenue proof ($0.00), claims audit (7 verified, 3 retired, 6 corrected), settlement classification framework, IETF drafts (3 prepared), targeted contacts (3 prepared)
-- **Status:** Zero external revenue. Three offers declared. All owner-gated.
+### TUI 6 — Revenue and Distribution (UPDATED)
+- **Branch:** `growth/verified-launch-20260911` (doc) + `models/verified-expansion-20260911` (contacts)
+- **PR:** #1918 (OPEN)
+- **Commits:** 1 commit + contacts on TUI-3 branch
+- **Deliverables:** Revenue proof ($0.00), claims audit, 15 targeted contacts prepared (5 financial risk, 5 data/infrastructure, 5 agent infrastructure)
+- **Status:** Zero external revenue. 15 contacts prepared, 0 sent. All owner-gated.
 
 ## Coverage Denominators and Numerators
 
