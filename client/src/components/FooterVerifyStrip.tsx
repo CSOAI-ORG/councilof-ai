@@ -19,7 +19,7 @@ const BADGES: VerifyBadge[] = [
   {
     label: 'GitHub · CSOAI-ORG',
     href: 'https://github.com/CSOAI-ORG',
-    title: 'CSOAI open-source organisation on GitHub',
+    title: 'CSOAI public source estate on GitHub',
     logo: '/images/badges/verify/github.svg',
   },
   {
@@ -46,12 +46,6 @@ const BADGES: VerifyBadge[] = [
     href: 'https://pypi.org/project/proofof-ai-mcp/',
     title: 'proofof-ai-mcp package on PyPI',
     logo: '/images/badges/verify/pypi.svg',
-  },
-  {
-    label: 'Kaggle',
-    href: 'https://www.kaggle.com/nicktempleman',
-    title: 'CSOAI datasets and notebooks on Kaggle',
-    logo: '/images/badges/verify/kaggle.svg',
   },
   {
     label: 'Zenodo DOI 10.5281/zenodo.21991104',
@@ -131,7 +125,7 @@ export function FooterVerifyStrip() {
         ))}
       </ul>
       <p className="text-muted-foreground text-xs text-center mt-3">
-        Every listing above is a live, independently hosted record — follow any of them to check us.
+        Each link resolves to a public record or independently hosted verification surface.
       </p>
     </div>
   );
