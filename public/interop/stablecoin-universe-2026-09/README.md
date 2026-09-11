@@ -12,6 +12,11 @@ This release indexes the full public DefiLlama stablecoin response observed at
 `source.json` contains the frozen upstream bytes. Its SHA-256 is
 `f8f3a1a2c309c570b8ae10c1f890690f9004493e2b57ab50bef9c43e9a8d1d86`.
 `index.json` is the normalized discovery index.
+`readiness.json` is the machine-readable evidence-status view. It gives every
+asset the same status contract for source, chain deployments, measurement
+depth, freshness, signature, root inclusion, external witness state,
+correction lineage, and A2A/MCP/x402 discovery. A generic door is labeled as a
+generic door; it is never presented as 425 separate integrations.
 
 Every row is labeled `INDEXED`, `UNMEASURED`, `UNSIGNED`, `UNROOTED`, and
 `UNANCHORED`. These labels prevent registry metadata from being presented as an
@@ -27,6 +32,9 @@ python3 scripts/freeze_stablecoin_index.py \
   --output /tmp/stablecoin-index.json \
   --observed-at 2026-09-11T08:19:34.591714+00:00
 cmp /tmp/stablecoin-index.json public/interop/stablecoin-universe-2026-09/index.json
+
+python3 scripts/build_stablecoin_readiness.py
+python3 scripts/check_stablecoin_readiness.py
 ```
 
 The priority score chooses the first 20 candidates for deeper work using only

@@ -148,6 +148,10 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:council-truth
 
+      - name: Stablecoin readiness gate — indexed is never measured
+        if: steps.scope.outputs.gated == 'true'
+        run: npm run guard:stablecoin-readiness
+
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/signed-json-guard.mjs dist/client
