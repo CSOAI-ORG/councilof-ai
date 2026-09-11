@@ -516,10 +516,16 @@ const MACHINE = new Map(MACHINE_PATHS.map(([p, cf, pr]) => [p, { cf, pr }]));
 let rewritten = 0;
 let droppedRedirect = 0;
 const finalPaths = [];
+const finalSeen = new Set();
 for (const p of paths) {
   const c = canonicalise(p);
   if (c === null) { droppedRedirect++; continue; }
   if (c !== p) rewritten++;
+  // Distinct source routes can canonicalise to the same served URL. For example,
+  // the React route /benchmarks and public/benchmarks/index.html both resolve to
+  // /benchmarks/. Deduplicate after canonicalisation as well as before it.
+  if (finalSeen.has(c)) continue;
+  finalSeen.add(c);
   finalPaths.push(c);
 }
 

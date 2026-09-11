@@ -46,7 +46,7 @@ export const OPEN_SDKS = [
   { id: "ras-pack", href: "https://councilof.ai/api/evidence-pack", eats: "csoai.insurability-evidence-pack/0.1 — four-class mapping, live." },
   { id: "eunomia", href: "https://councilof.ai/eunomia-data", eats: "Data-only lane: enforcement record and deadlines. Never scores." },
   { id: "index", href: "https://councilof.ai/signals/sov-signal.signed.json", eats: "Row-count index. Licence the SLA, not a coupon." },
-  { id: "hf-record", href: "https://huggingface.co/csoai", eats: "76 listed datasets, 34 Spaces. Append Parquet. Do not spray repos." },
+  { id: "hf-record", href: "https://huggingface.co/csoai", eats: "Public Hugging Face profile and canonical Collection. Read live inventory; append evidence to the canonical dataset instead of spraying repos." },
 ] as const;
 
 export const OPENINGS: Opening[] = [
