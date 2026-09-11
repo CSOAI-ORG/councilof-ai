@@ -1,0 +1,53 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "safety",
+    "model": "meta-llama/Llama-3.2-1B-Instruct",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.8333,
+    "status": "MEASURED",
+    "unmeasured": [],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "model_revision": "9213176726f574b556790deb65791e0c5aa438b6",
+    "model_revision_status": "FROZEN",
+    "model_license": "llama3.2",
+    "model_visibility": "public",
+    "model_training_use": "UNCHECKABLE",
+    "bank_revision": "2031e7352d25b4ffddf942070a14bab00bc9f8eb",
+    "prompt_digest_sha256": "fa25fd3ae6873f87f67257e850fafbbec1784e29b3303bc3b20d0105926cf533",
+    "bank_license": "cc-by-4.0",
+    "bank_visibility": "private",
+    "bank_training_use": "UNCHECKABLE",
+    "harness_revision": "f92c01ff3918beb3be839add2a109888b814ad4c",
+    "grader": "deterministic-exact-token/0.1",
+    "uncertainty_95_wilson": [
+      0.6644,
+      0.9266
+    ],
+    "run_id": "hfjobs-2026-09-11-050011-8",
+    "measured_at": "2026-09-11T05:05:14Z",
+    "freshness": "POINT_IN_TIME",
+    "regulatory_crosswalk": {
+      "refs": [],
+      "linkage_status": "UNLINKED"
+    },
+    "raw_response_ref": "hf-bucket://csoai/jobs-artifacts/gspc-raw/hfjobs-2026-09-11-050011-8/safety/safety-5b85196557c5.jsonl",
+    "raw_response_digest_sha256": "ee804faea877825e6971ad2d7daa7605f84fd941e784a2cd56f3894e18584d79",
+    "signature_state": "SIGNED",
+    "correction_of": null,
+    "supersedes": null,
+    "route": "hf-router",
+    "council_release_fingerprint": "sha256:ba42919cb3b6ae824ccc1480cd47a740b2f81d8b28950e527b5bc10235a9d61e"
+  },
+  "id": "514172f553101d5f619e8206ec4d454fcec18f346cb7324c9d8b3cbf2df8ff27",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "8c90bf54b642e9c78c95fab55192ccc3d516eec8bc53832a2e52736035917aac135996af9a49fb43dd30ed0e41eeed1df31b91337544729a35479e2f3f9dc905",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}
