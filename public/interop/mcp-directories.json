@@ -163,8 +163,8 @@
       "url": "https://mcp.so/servers/csoai-gspc-measurement",
       "state": "LISTED",
       "evidence": "Public detail page returned 200 in the owner browser on 2026-09-11 and displays CSOAI GSPC measurement as Verified and Featured, namespace @CSOAI-ORG, repository CSOAI-ORG/councilof-ai, homepage councilof.ai, documentation /signed/HOW-TO-VERIFY.md, and npm config csoai-gspc-mcp. The authenticated submissions table records status Published Paid. The page currently says No tools detected until its Fetch tools sandbox is run; listing presence does not prove tool health or use.",
-      "probe": "GET https://mcp.so/servers/csoai-gspc-measurement -> public detail page; confirm title, @CSOAI-ORG, repository, homepage and Config. Tool health stays unmeasured until a successful live Fetch tools result.",
-      "surface": "public-detail-page"
+      "probe": "Playwright/CUA GET https://mcp.so/servers/csoai-gspc-measurement; confirm page title, @CSOAI-ORG, repository, homepage and Config. Tool health stays unmeasured until a successful live Fetch tools result.",
+      "surface": "rendered"
     },
     {
       "id": "cline",
