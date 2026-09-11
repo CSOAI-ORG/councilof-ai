@@ -184,17 +184,44 @@ Six TUI branches exist. All deliver verified, additive-only files with no master
 | B-011 | LOW | 199 signed cards are UNMEASURED (honest) | Pipeline |
 | B-012 | LOW | 1,065 unsigned cards await signing ceremony | GHA |
 
-## Open PRs (as of 2026-09-11T15:00:00Z)
+## Actual Costs
 
-| PR | Title | Branch | State |
-|----|-------|--------|-------|
-| #1914 | TUI-3: PR#1888 verification | models/verified-expansion-20260911 | OPEN |
-| #1915 | TUI-1: Canonical state | control/canonical-state-20260911 | OPEN |
-| #1916 | TUI-2: Financial coverage | finance/full-spread-20260911 | OPEN |
-| #1917 | TUI-4: Agent Economy | agents/discovery-consolidation-20260911 | CLOSED |
-| #1918 | TUI-6: Revenue proof | growth/verified-launch-20260911 | CLOSED |
-| #1919 | TUI-5: Discoverability | discoverability/consolidation-20260911 | OPEN |
-| #1913 | TUI-5: Trust chain | trust/anchor-completion-20260911 | CLOSED |
+| Item | Amount | Source |
+|------|--------|--------|
+| RunPod/HF compute (TUI 3) | £0 | Verification only, no new measurements |
+| Signing ceremony (TUI 3) | £0 | GHA OIDC, no paid transaction |
+| Base EAS gas (TUI 5) | £0 | Prepared, not executed (owner gate) |
+| XRPL memo fee (TUI 5) | £0 | Prepared, not executed (owner gate) |
+| OTS stamping (TUI 5) | £0 | Submitted, not yet confirmed |
+| npm publish (TUI 4) | £0 | Not executed (owner gate) |
+| External outreach (TUI 6) | £0 | Prepared, not sent (owner gate) |
+| **Total spend this session** | **£0** | |
+
+## Directory Status
+
+| Directory | Status | Evidence |
+|-----------|--------|----------|
+| MCP Registry | STALE (1.4.0 vs live 1.4.2) | TUI-4 audit |
+| npm (@anthropic/csoai-mcp) | STALE (0.2.1 vs live 0.2.2) | TUI-4 audit |
+| Hugging Face (csoai/gspc-board) | LIVE | Dataset verified |
+| Kaggle | UNVERIFIED | No public dataset found in API |
+| GitHub (CSOAI-ORG) | LIVE | 651 public repos, 8 followers |
+| GitHub pins | 6 MCP repos pinned; flagship not pinned | TUI-5 audit |
+| councilof.ai | LIVE | All endpoints 200/402 |
+| Glama | DECLARED | glama.json present |
+| PulseMCP | DECLARED | Referenced in llms.txt |
+
+## Open PRs (as of 2026-09-11T15:30:00Z)
+
+| PR | Title | Branch | TUI | State |
+|----|-------|--------|-----|-------|
+| #1914 | PR#1888 verification | models/verified-expansion-20260911 | TUI-3 | OPEN |
+| #1915 | Canonical state | control/canonical-state-20260911 | TUI-1 | OPEN |
+| #1916 | Financial coverage | finance/full-spread-20260911 | TUI-2 | OPEN |
+| #1918 | Revenue proof | growth/verified-launch-20260911 | TUI-6 | OPEN |
+| #1919 | Discoverability | discoverability/consolidation-20260911 | TUI-5 | OPEN |
+| #1913 | Trust chain | trust/anchor-completion-20260911 | TUI-5 | OPEN |
+| #1921 | Agent Economy | agents/discovery-consolidation-20260911 | TUI-4 | OPEN |
 
 ## Duplicate Source of Truth Check
 
