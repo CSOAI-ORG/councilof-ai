@@ -386,7 +386,7 @@ The honest combined object is not a single average. It is a signed vector.
 
   Overlays                ARC-AGI-3 citation, ERC-8004 fraction citation, Isaac pass/fail once the bank exists   Labelled overlays
 
-  Scalars allowed         coverage = 15/22 · separated = 4/14                                                    Those two only
+  Scalars allowed         coverage + separated, both live-derived from /api/gspc at render time (15/22 and 4/14 were the 2026-08-31 sitting-day values; 22/22 since 2026-09-01)   Those two only, never typed
   ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # **9. What complete greenfield actually means**

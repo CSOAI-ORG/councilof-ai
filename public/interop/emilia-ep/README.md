@@ -12,7 +12,7 @@ Cite: https://github.com/emiliaprotocol/emilia-protocol
 | Role | Digest-ore consumer / denser-root leaf — **never** a Transparency Service |
 | Artifact shape | `ep_receipt_digest` **pointers** — do not re-host full EP receipts here |
 | EP vs SCITT | **EP ≠ SCITT inclusion.** Authorization receipt ≠ transparency / inclusion receipt |
-| `/.well-known/scitt-keys` on councilof.ai | **404 by design** |
+| `/.well-known/scitt-keys` on councilof.ai | **key discovery only** (2026-09-11) — never a TS endpoint |
 | Certify / mint receipts / `POST /entries` | **Forbidden** |
 | Board | Never a GSPC axis fill; no `/api/gspc` edits; no wrangler |
 | Signatures | `sig_ed25519` is always `null` here |

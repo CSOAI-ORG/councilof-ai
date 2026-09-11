@@ -8,8 +8,7 @@ Public interop fixtures welded into the CSOAI atom path as an **unsigned**
 | Lock | Value |
 | --- | --- |
 | Role | Fixture consumer / denser-root leaf — **never** a Transparency Service |
-| `/.well-known/scitt-keys` on councilof.ai | **404 by design** (probed) |
-| `scitt-keys` in this repo | **stays absent** — do not add |
+| `/.well-known/scitt-keys` on councilof.ai | **key discovery only** (2026-09-11 ruling) — public keys, `we_operate_a_ts: false`; never a TS endpoint |
 | Certify / mint receipts / `POST /entries` | **Forbidden** |
 | Board | Never a GSPC axis fill; no `/api/gspc` edits; no wrangler |
 | Signatures | `sig_ed25519` is always `null` here |
@@ -73,7 +72,7 @@ affiliation / endorsement**.
 ## Non-goals / hard stops
 
 - Do **not** invent MEASURED / SIGNED.
-- Do **not** publish `/.well-known/scitt-keys`.
+- Do **not** extend `/.well-known/scitt-keys` beyond key discovery (no TS, no registration, no receipts).
 - Do **not** claim CSOAI operates a SCITT TS or certifies supply chains.
 - Do **not** touch `/api/gspc`, wrangler, or fake signatures.
 - Do **not** vendor TS private keys or mint receipts in-tree.

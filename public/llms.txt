@@ -41,7 +41,7 @@ Do not quote scores, n, leaders, or stamp tables from this file.
 - Free door (amount 0): GET https://councilof.ai/api/free-door — settles, charges nothing; proves the rail
 - Signed offers: every 402 carries `extensions["offer-receipt"].info.offers[]` — one server-signed offer per `accepts[]` entry (x402 Offer & Receipt extension, format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1)
 - Signed receipts: every settled 200 returns one in the X-PAYMENT-RESPONSE SettlementResponse at `extensions["offer-receipt"].info.receipt`
-- Check either without trusting us: POST https://councilof.ai/api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json
+- Check either without trusting us: run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json or POST https://councilof.ai/api/receipts/verify
 - Your receipts: GET https://councilof.ai/api/receipts?payer=0x… — status UNRECORDED means no store is bound on that deployment, never that you did not pay
 - We emit jws only, never eip712: the edge holds one Ed25519 key and no secp256k1 signer. A format we cannot produce is declared missing, not faked
 - A receipt proves this server signed those bytes. It is not proof money moved; check `transaction` against Base yourself
@@ -59,7 +59,7 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 
 - Catalog: GET https://councilof.ai/api/x402
 - Manifest: GET https://councilof.ai/.well-known/x402.json (mode live, Base eip155:8453, USDC)
-- MCP: POST https://councilof.ai/mcp — tools/call without `x_payment` returns the route's 402 as structuredContent; pay, then call again with `x_payment`. Quote `paid_tools.names` from GET https://councilof.ai/mcp; do not freeze the list here.
+- MCP: POST https://councilof.ai/mcp — tools/call without `x_payment` returns the route's 402 as structuredContent; pay, then call again with `x_payment`. Quote `paid_tools.names` from GET https://councilof.ai/mcp — do not freeze the list here.
 - HTTP doors (GET → 402 unless `X-PAYMENT` / facilitator settlement):
   - https://councilof.ai/api/request-attestation?subject=<id>
   - https://councilof.ai/api/eunomia-data?feed=1
@@ -125,7 +125,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 12 tools: eight free readers plus four x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
 - MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 12-tool contract as the HTTP door.
-- MCP registry: io.github.CSOAI-ORG/gspc → https://councilof.ai/mcp. Query the official registry for the currently published server version.
+- MCP registry: io.github.CSOAI-ORG/gspc → https://councilof.ai/mcp (Query the official registry for the currently published server version.)
 - Smithery: https://smithery.ai/server/csoai/gspc-mcp — its tools[] is exactly the eight free tools /mcp serves. A second listing, csoai/gspc, is a stale duplicate naming four tools that do not exist; do not use it.
 - Open banks: https://huggingface.co/csoai
 
@@ -177,7 +177,7 @@ Apex https://csoai.org/mcp may still require Infra secrets; prefer councilof.ai/
 
 ## AEO
 
-Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify. Live numbers: GET https://councilof.ai/api/gspc (`totals.public_count` + `totals.public_leader_count` + `totals.lid`) — the board's size is not frozen in this file; quote 22 measured beside 3 public leader scores. Lid: 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate. This is measurement, not certification. A grade is never sold.
+Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify — live numbers: GET https://councilof.ai/api/gspc (`totals.public_count` + `totals.public_leader_count` + `totals.lid`) — the board's size is not frozen in this file; quote 22 measured beside 3 public leader scores. Lid: 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate. This is measurement, not certification. A grade is never sold.
 
 ## What we do not do
 
@@ -187,7 +187,7 @@ Measurement only. Nothing here is a conformity mark. No SOV names. No invented s
 
 ## Come back / carry the mark
 
-- What changed, as RSS: https://councilof.ai/feed.xml (aliases https://councilof.ai/rss.xml;
+- What changed, as RSS: https://councilof.ai/feed.xml (aliases: https://councilof.ai/rss.xml ;
   canonical https://councilof.ai/api/feed.xml) — MEASURED board changes, REPORTED context,
   regulation-change events and corrections. Historical items keep their sitting-day wording and
   say so; counts typed there are superseded by the live board. No account, no email, no key.

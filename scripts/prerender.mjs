@@ -55,7 +55,7 @@
  */
 import { chromium } from "playwright";
 import http from "node:http";
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, unlinkSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, unlinkSync, copyFileSync } from "node:fs";
 import { join, extname, dirname } from "node:path";
 import { execFileSync } from "node:child_process";
 
@@ -93,6 +93,16 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
   "/tool-commons",
   "/pricing",
   "/sovereign-pricing",
+  "/countdown",
+  "/countdown/",
+  "/proof",
+  "/proof/",
+  "/status",
+  "/status/",
+  "/receipt",
+  "/receipt/",
+  "/health-inventory",
+  "/health-inventory/",
 ]);
 // The origin the /api/ and /signed/ PROXY reads from, which is NOT the same question as the
 // canonical host above. Until 2026-09-05 one flag answered both, and that coupling is what made
@@ -562,8 +572,19 @@ async function worker(id) {
     // They remain real client routes via the SPA shell; crawlers hydrate.
     if (CLIENT_ONLY_FUNCTION_ROUTES.has(route)) {
       rec.clientOnly = true;
+      // Skip the Chromium snapshot (Functions are absent on Vite preview) but
+      // still write the SPA shell so Pages has a file. Without this, skipped
+      // routes 404 in production (/receipt /countdown after #1874).
+      const dest = route === "/" || route === ""
+        ? join(DIST, "index.html")
+        : join(DIST, route.replace(/^\//, "").replace(/\/$/, ""), "index.html");
+      if (dest !== join(DIST, "index.html")) {
+        mkdirSync(dirname(dest), { recursive: true });
+        copyFileSync(join(DIST, "index.html"), dest);
+      }
+      rec.ok = true;
       results.push(rec);
-      console.log(`SKIP ${String(0).padStart(6)}ch  ${route}  client-only (needs Pages Functions; SPA shell)`);
+      console.log(`SKIP ${String(0).padStart(6)}ch  ${route}  client-only (SPA shell written)`);
       continue;
     }
     try {
