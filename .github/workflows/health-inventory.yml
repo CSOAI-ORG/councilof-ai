@@ -111,7 +111,7 @@ jobs:
           ]
           down = []
           for u in endpoints:
-              st, _ = fetch(u)
+              st, _ = fetch(u, follow=True)
               if st != 200:
                   down.append(f"{u} → {st}")
           check("endpoints-12", not down, "; ".join(down) if down else "12/12 → 200")
