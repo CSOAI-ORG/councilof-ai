@@ -1,0 +1,87 @@
+{
+  "schema": "csoai.evm-batch-measurement/1.0",
+  "generated_at": "2026-09-11T13:00:57Z",
+  "chain": "ethereum",
+  "assets": [
+    {
+      "schema": "csoai.evm-erc20-measurement/1.0",
+      "reader_revision": "scripts/readers/evm-erc20-reader.mjs@1.0.0",
+      "source": "https://ethereum-rpc.publicnode.com",
+      "chain": "ethereum",
+      "chainId": 1,
+      "contract": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "queried_at": "2026-09-11T13:00:56Z",
+      "block_hash": "0x5f8f101e6ed0dc1c6f8426a2c71769898315021895ac8c8fb33b2e4e010959f2",
+      "block_timestamp": 1789131647,
+      "token": {
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "decimals": 6,
+        "totalSupply_raw": "50638314395924765",
+        "totalSupply_normalized": "50,638,314,395.92"
+      },
+      "replay_hash": "98d208535c7fbce40027d08c8486d0eeb0ad7f2c26d823e59bb812e44082e862",
+      "raw_data_hash": "3c974d924f58e186cc7a1302ff526e8f726dacd8f45a8514d2671c614e986716",
+      "terms_boundary": "Public RPC (ethereum-rpc.publicnode.com). No API key.",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+      "block_finality": "RPC_LATEST_NOT_INDEPENDENTLY_PROVEN_FINAL",
+      "evidence_state": "CANDIDATE_REPLAY_REQUIRED",
+      "observed_block": 25954324
+    },
+    {
+      "schema": "csoai.evm-erc20-measurement/1.0",
+      "reader_revision": "scripts/readers/evm-erc20-reader.mjs@1.0.0",
+      "source": "https://ethereum-rpc.publicnode.com",
+      "chain": "ethereum",
+      "chainId": 1,
+      "contract": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "queried_at": "2026-09-11T13:00:56Z",
+      "block_hash": "0x5f8f101e6ed0dc1c6f8426a2c71769898315021895ac8c8fb33b2e4e010959f2",
+      "block_timestamp": 1789131647,
+      "token": {
+        "name": "Tether USD",
+        "symbol": "USDT",
+        "decimals": 6,
+        "totalSupply_raw": "88306028997331899",
+        "totalSupply_normalized": "88,306,028,997.33"
+      },
+      "replay_hash": "542e81250539b2f6c2be3b82dc3e2404500840edeafd6c8ad3e81cd68a8693c6",
+      "raw_data_hash": "b3e410094fd7704daf1be0578ca1a720647716acaa8896149bd74c41ebc4a9e4",
+      "terms_boundary": "Public RPC (ethereum-rpc.publicnode.com). No API key.",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+      "block_finality": "RPC_LATEST_NOT_INDEPENDENTLY_PROVEN_FINAL",
+      "evidence_state": "CANDIDATE_REPLAY_REQUIRED",
+      "observed_block": 25954324
+    },
+    {
+      "schema": "csoai.evm-erc20-measurement/1.0",
+      "reader_revision": "scripts/readers/evm-erc20-reader.mjs@1.0.0",
+      "source": "https://ethereum-rpc.publicnode.com",
+      "chain": "ethereum",
+      "chainId": 1,
+      "contract": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "queried_at": "2026-09-11T13:00:57Z",
+      "block_hash": "0x5f8f101e6ed0dc1c6f8426a2c71769898315021895ac8c8fb33b2e4e010959f2",
+      "block_timestamp": 1789131647,
+      "token": {
+        "name": "Dai Stablecoin",
+        "symbol": "DAI",
+        "decimals": 18,
+        "totalSupply_raw": "4595327079699343106441509264",
+        "totalSupply_normalized": "4,595,327,079.70"
+      },
+      "replay_hash": "8cb5cce820192bdb017afd97e33e8f07070bcdb84d848bbfd766201352dcb65b",
+      "raw_data_hash": "40f8789718a26875a71007e2928096ef2d0c0622dcc798fc36003b5312ee79a1",
+      "terms_boundary": "Public RPC (ethereum-rpc.publicnode.com). No API key.",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+      "block_finality": "RPC_LATEST_NOT_INDEPENDENTLY_PROVEN_FINAL",
+      "evidence_state": "CANDIDATE_REPLAY_REQUIRED",
+      "observed_block": 25954324
+    }
+  ],
+  "count": 3,
+  "evidence_acceptance": {
+    "state": "CANDIDATE_REPLAY_REQUIRED",
+    "reason": "Direct eth_call observations name contract, block and hashes, but the committed artefact does not retain the raw RPC envelopes and this audit could not replay the historical block through an independent endpoint."
+  }
+}

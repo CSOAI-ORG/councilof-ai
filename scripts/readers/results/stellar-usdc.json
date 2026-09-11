@@ -1,0 +1,36 @@
+{
+  "schema": "csoai.stellar-asset-reader/1.0",
+  "reader_revision": "scripts/readers/stellar-asset-reader.mjs@1.0.0",
+  "source": "https://horizon.stellar.org",
+  "chain": "stellar",
+  "asset_code": "USDC",
+  "asset_issuer": "GA24LJXFG73JGARIBG2GP6V5TNUUOS6BD23KOFCW3INLDY5KPKS7GACZ",
+  "queried_at": "2026-09-11T13:04:06.555Z",
+  "terms_boundary": "Public Stellar Horizon API (horizon.stellar.org). No API key. Rate limits apply.",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+  "finalized_ledger": 64378557,
+  "ledger_hash": "a9e4c958296f1c06fc3423c01681054e33ccf16b4ebd74058ffe773a24209c32",
+  "ledger_closed_at": "2026-09-11T13:03:59Z",
+  "token": {
+    "code": "USDC",
+    "issuer": null,
+    "num_accounts": null,
+    "amount": null,
+    "flags": {
+      "auth_required": false,
+      "auth_revocable": false,
+      "auth_immutable": false,
+      "auth_clawback_enabled": false
+    }
+  },
+  "price_reference": {
+    "bid_price": 2147483647,
+    "bid_amount": 909115098123.0198
+  },
+  "replay_hash": "dede09d9fe46478f6eb9266c2e6598b74fdcddbd84c92c0e419a503b927bdbe1",
+  "raw_data_hash": "e874d235584a3dca31f15ec87c3b76b16cdeb7ebf260c86a14c14f86cda8a20e",
+  "evidence_acceptance": {
+    "state": "REJECTED",
+    "reason": "The record contains null identity and supply fields while presenting flags and price data; it is not an accepted asset measurement."
+  }
+}

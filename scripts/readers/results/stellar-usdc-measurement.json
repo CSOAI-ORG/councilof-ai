@@ -1,0 +1,32 @@
+{
+  "schema": "csoai.stellar-asset-reader/1.0",
+  "reader_revision": "scripts/readers/stellar-asset-reader.mjs@1.0.0",
+  "source": "https://horizon.stellar.org",
+  "chain": "stellar",
+  "asset_code": "USDC",
+  "asset_issuer": "GA24LJXFG73JGARIBG2GP6V5TNUUOS6BD23KOFCW3INLDY5KPKS7GACZ",
+  "queried_at": "2026-09-11T13:04:20Z",
+  "finalized_ledger": 64378560,
+  "ledger_hash": "ab92f8dd29e96b5f7548c193ea5ade239f3aabb7a559e0a2320dc5da24667175",
+  "ledger_closed_at": "2026-09-11T13:04:16Z",
+  "token": {
+    "code": "USDC",
+    "issuer": "GA24LJXFG73JGARIBG2GP6V5TNUUOS6BD23KOFCW3INLDY5KPKS7GACZ",
+    "num_accounts": 28,
+    "supply_authorized": 421769351032.5425,
+    "supply_liquidity_pools": 125625707745.42827,
+    "flags": {
+      "auth_required": false,
+      "auth_revocable": false,
+      "auth_immutable": false,
+      "auth_clawback_enabled": false
+    }
+  },
+  "terms_boundary": "Public Stellar Horizon API. No API key.",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+  "replay_hash": "a58fac73d9cf457dec5a8858ca5dbbd44759fa8632bfa093d16a079db66ce93a",
+  "evidence_acceptance": {
+    "state": "REJECTED",
+    "reason": "The issuer is not established here as Circle canonical USDC and the supply fields do not match the checked-in reader output contract."
+  }
+}
