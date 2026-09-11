@@ -1,0 +1,48 @@
+{
+  "schema": "csoai.anchor-preparation/1.0",
+  "generated_at": "2026-09-11T14:30:00Z",
+  "note": "Prepared transaction data for Base EAS and XRPL memo anchors. STOP before signing — requires owner approval.",
+
+  "base_eas": {
+    "network": "Base mainnet (eip155:8453)",
+    "contract": "0x4200000000000000000000000000000000000021",
+    "root_sha256": "62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6",
+    "merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+    "card_count": 167,
+    "as_of": "2026-09-11T08:45:22Z",
+    "expected_gas": "~$0.01-0.05 USDC",
+    "required_action": "Owner wallet signature on Base mainnet",
+    "prepared_data": "public/interop/eas-base-root-2026-09/",
+    "state": "PREPARED_NOT_SUBMITTED"
+  },
+
+  "xrpl_memo": {
+    "network": "XRPL mainnet",
+    "memo_type": "csoai.public-root/v1",
+    "root_sha256": "62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6",
+    "merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+    "card_count": 167,
+    "as_of": "2026-09-11T08:45:22Z",
+    "expected_cost": "0.00001 XRP (~$0.000003)",
+    "required_action": "Owner wallet signature on XRPL mainnet",
+    "prepared_data": "public/interop/xrpl-attest-run.json",
+    "devnet_dry_run": "prepared",
+    "state": "PREPARED_NOT_SUBMITTED"
+  },
+
+  "rekor": {
+    "instance": "rekor.sigstore.dev",
+    "log_index": 2791822965,
+    "state": "WITNESSED",
+    "board_living_state": "UNANCHORED-ATTEMPTED",
+    "note": "Rekor witnessed the public root. board_living.json hit API schema drift (400)."
+  },
+
+  "ots": {
+    "files": 22,
+    "state": "STAMPED_PENDING_BITCOIN",
+    "note": "Submitted to OTS calendar. Bitcoin confirmation depends on calendar batching."
+  },
+
+  "halt_instruction": "STOP HERE. The next step requires owner wallet signatures for Base EAS and XRPL memo. These are paid transactions requiring explicit owner-time approval."
+}
