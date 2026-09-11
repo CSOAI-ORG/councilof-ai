@@ -1,0 +1,42 @@
+{
+  "schema": "csoai.stablecoin-discovery-candidates/v1",
+  "as_of": "2026-09-11",
+  "purpose": "Issuer-reported stablecoin discoveries observed after the frozen 425-asset index. Candidate status is not independent measurement.",
+  "candidates": [
+    {
+      "id": "usbdc-us-bank-stellar",
+      "name": "U.S. Bank Digital Currency",
+      "symbol": "USBDC",
+      "issuer": "U.S. Bank",
+      "reported_chain": "Stellar",
+      "discovery_state": "REPORTED_BY_ISSUER_NOT_IN_FROZEN_INDEX",
+      "measurement_state": "UNMEASURED",
+      "signature_state": "UNSIGNED_DISCOVERY_OBSERVATION",
+      "root_state": "NOT_INCLUDED",
+      "anchor_state": "NOT_ANCHORED",
+      "reported_capabilities": [
+        "mint",
+        "cross-border payment",
+        "redemption",
+        "freeze",
+        "clawback"
+      ],
+      "source": {
+        "publisher": "U.S. Bancorp",
+        "published_at": "2026-09-09",
+        "observed_at": "2026-09-11",
+        "url": "https://ir.usbank.com/news-events/news/news-details/2026/U-S--Bank-Launches-USBDC-Stablecoin/default.aspx",
+        "claim_scope": "U.S. Bank reports one live pilot transaction between its North American and European entities; no public supply, contract identity, reserve record, holder count, or independent chain reconstruction is established here."
+      },
+      "next_measurement": {
+        "state": "INPUT_REQUIRED",
+        "required": [
+          "canonical Stellar asset code and issuer account",
+          "ledger sequence or transaction hash for the reported pilot",
+          "supply and holder reconstruction method",
+          "freeze and clawback configuration observation"
+        ]
+      }
+    }
+  ]
+}

@@ -19,6 +19,7 @@ ROOT_REL = Path("public/root.json")
 WITNESS_REL = Path("public/interop/root-witness-latest.json")
 CARDS_REL = Path("public/cards")
 OUTPUT_REL = Path("public/interop/stablecoin-universe-2026-09/readiness.json")
+CANDIDATES_REL = Path("public/interop/stablecoin-universe-2026-09/discovery-candidates.json")
 
 
 def load(path: Path) -> Any:
@@ -78,6 +79,7 @@ def build(repo: Path) -> dict[str, Any]:
     index = load(index_path)
     root = load(root_path)
     witness = load(witness_path)
+    candidates = load(repo / CANDIDATES_REL)
     index_sha = sha256(index_path)
     commitment_path, commitment = find_index_commitment(repo, index_sha)
     root_hashes = set(root.get("card_sha256") or [])
@@ -192,6 +194,7 @@ def build(repo: Path) -> dict[str, Any]:
             "asset_specific_mcp_tools": 0,
             "asset_specific_x402_doors": 0,
             "asset_specific_x402_settlements_verified": 0,
+            "post_freeze_discovery_candidates": len(candidates.get("candidates") or []),
         },
         "cost": {
             "metadata_index_build_usd": 0,
@@ -227,7 +230,9 @@ def build(repo: Path) -> dict[str, Any]:
             "Root inclusion is not an external-chain anchor.",
             "An OpenTimestamps pending calendar attestation is not a Bitcoin timestamp.",
             "A generic protocol door is not an asset-specific integration or settlement.",
+            "A post-freeze issuer-reported candidate is not part of the signed 425-asset index and is not independently measured.",
         ],
+        "discovery_candidates": candidates.get("candidates") or [],
         "assets": assets,
     }
 
@@ -242,6 +247,14 @@ def validate(document: dict[str, Any]) -> None:
     measured = [row for row in assets if row["measurement"]["state"] == "MEASURED"]
     assert coverage["deeply_measured_assets"] == len(measured) == 1
     assert measured[0]["symbol"] == "RLUSD"
+    candidates = document.get("discovery_candidates") or []
+    assert coverage["post_freeze_discovery_candidates"] == len(candidates)
+    for row in candidates:
+        assert row["discovery_state"] == "REPORTED_BY_ISSUER_NOT_IN_FROZEN_INDEX"
+        assert row["measurement_state"] == "UNMEASURED"
+        assert row["signature_state"] == "UNSIGNED_DISCOVERY_OBSERVATION"
+        assert row["root_state"] == "NOT_INCLUDED"
+        assert row["anchor_state"] == "NOT_ANCHORED"
     for row in assets:
         assert row["index_state"] == "INDEXED"
         assert row["a2a_discovery_state"] == "GENERIC_CATALOG_ONLY_NO_ASSET_SKILL"
