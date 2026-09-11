@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, useSearch } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
+import MillReceiptReadinessPanel from "@/components/MillReceiptReadinessPanel";
 
 /**
  * /board/models — every model we have measured, every axis it was measured on,
@@ -413,6 +414,8 @@ export default function MeasuredModels() {
         {matrix.what_a_cell_is} Coverage is {c.cells} of {c.possible_cells} pairs — see the coverage
         map below.
       </p>
+
+      <MillReceiptReadinessPanel />
 
       {/* view switcher */}
       <div className="mt-6 flex flex-wrap items-center gap-2">
