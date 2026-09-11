@@ -26,7 +26,7 @@ from pathlib import Path
 
 BASE = "http://127.0.0.1:11434/api/chat"
 CONF = Path(__file__).parent / "oowm-router.json"
-WORKHORSE = "qwen3:8b"  # reconciled: sov33-unified dropped from pod -> use in-store governance model
+WORKHORSE = "mistral:7b"  # reconciled 2026-08-24: qwen3:8b DROPPED from pod (registry reliable:false) + sov33-unified not in store -> use confirmed reliable governance model (mistral:7b, quality 0.83)
 
 def load_policy():
     return json.loads(CONF.read_text())

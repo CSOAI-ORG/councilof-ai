@@ -3,7 +3,7 @@
 RSYNC=/opt/homebrew/bin/rsync
 KEY=~/.runpod/ssh/runpodctl-ssh-key
 DEST="root@213.173.105.83"
-PORT=33982
+PORT=17595
 SSHOPT="-e ssh -p $PORT -i $KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=15 -F /dev/null -o ServerAliveInterval=30 -o ServerAliveCountMax=2"
 
 sync_one() { # $1=src $2=dst $3=extra-excludes

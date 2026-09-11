@@ -1,26 +1,27 @@
 # 🐉 CSOAI SERIES A PITCH — v1.0 — 2026-06-23
 
 **To:** Series A investors (Index, Atomico, LocalGlobe, Notion Capital, Accel)
-**From:** Nick Templeman, Founder, MEOK AI Labs (CSOAI LTD, UK 16939677)
+**From:** Nick Templeman, Founder, CSOAI Ltd (councilof.ai, UK 16939677)
 **Status:** Pre-seed bridge → Series A target Q4 2026
 
 ---
 
 ## 1. ONE-SENTENCE PITCH
-**Sovereign AI compliance platform. Cryptographic proof. Independent UK standards body. £0 base tier. 30 frameworks. 649M-episode dose-response simulation. EU AI Act deadline is our wedge.**
+**Verifiable AI measurement — we measure, we never certify. Cryptographic proof you recompute. Independent UK measurement body. Free-forever measurement board. 30 frameworks. 649M-episode dose-response simulation. Turning compliance from "trust-us" SaaS into results you recompute (SaaS → RaaS). EU AI Act deadline is our wedge.**
 
 ## 2. THE MARKET
 - **AI governance platform spend:** $492M (2026) → $1B+ (2030) per Gartner
 - **EU AI Act enforcement:** 4 August 2026 (12 days)
 - **22,000+ EU entities** need compliance by deadline
-- **27 framework crosswalks** mapped to one Watchdog Certificate
+- **27 framework crosswalks** mapped to one signed measurement evidence pack
 
 ## 3. THE PRODUCT (5 white papers, 30 crosswalks, 1 moat)
-- **Watchdog Certificate** — Ed25519-signed attestation, public verify URL
+- **Signed measurement evidence pack** — Ed25519-signed, offline-recomputable; free public verify URL, no account (we measure, never certify)
+- **Free-forever measurement board** — 22 measures (14 model + 8 fact), 335+ signed cards; a grade is never sold
 - **BFT Council** — 60+ councils, 300+ voters, sub-5ms consensus
 - **Sovereign Substrate** — runs on M4 Mac, M2 Ollama, or any cloud
-- **Open source core** — CC0/MIT/Apache 2.0 (12 patents filed, $12.5M IP moat)
-- **Dose-Response Proof** — 649M simulated AI decisions, signed + chain-verified
+- **Open source core** — Apache-2.0 (12 patents filed, $12.5M IP moat); independently reproduced via IETF SCITT interop report
+- **Dose-Response Proof** — 649M simulated AI decisions, signed + chain-verified; method deposited as a citable DOI (Zenodo 10.5281/zenodo.21991104)
 
 ## 4. THE TRACTION (real, verified)
 - **30+ framework crosswalks** (verified on disk)
@@ -29,7 +30,7 @@
 - **5 white papers** (deployed)
 - **12 patents filed** ($12.5M IP moat)
 - **6 strategic ZIPs** of competitive research
-- **6,500+ Watchdog Certs** issued (cumulative)
+- **335+ signed measurement cards** issued (cumulative; free to verify)
 
 ## 5. THE MOAT (the honest version)
 **Dose-response curve** — 10 seeds, block_rate 0→1.0:
@@ -47,7 +48,8 @@ SAP, Siemens, Bosch, IBM, Telekom, Orange, Cera
 ## 7. THE ASK
 - **Round:** Series A
 - **Target raise:** $5M
-- **Use of funds:** (1) 5 design partners signed, (2) Series A deck + press, (3) hire 2 senior engineers, (4) EU AI Office regulatory sandbox application, (5) 1M certs/year
+- **Use of funds:** (1) 5 design partners signed, (2) Series A deck + press, (3) hire 2 senior engineers, (4) EU AI Office regulatory sandbox application, (5) scale to 1M signed evidence issuances/year
+- **Revenue model (RaaS, not SaaS):** board + verification free forever; revenue from metered evidence issuance + embedded-infrastructure licences + enterprise evidence rails ([CONFIRM PRICE] units with Nick)
 - **Milestone:** £100K MRR by end of 2026
 - **Path to £1M MRR:** Q2 2027
 

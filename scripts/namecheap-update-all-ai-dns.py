@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 """
+DEAD SCRIPT — do not run.
+
+2026-08-31: live hosting is Cloudflare Pages + Wrangler. Vercel is blocked.
+This script still CNAMEs domains to cname.vercel-dns.com and will lose the
+website if executed.
+"""
+raise SystemExit(
+    "ABORTED: namecheap-update-all-ai-dns.py points DNS at Vercel. "
+    "Live hosting is Cloudflare/Wrangler. Do not run."
+)
+
+"""
 Update DNS for ALL .ai domains in Namecheap account to point to Vercel.
 Author: JEEVES | Date: 2026-06-15
 """

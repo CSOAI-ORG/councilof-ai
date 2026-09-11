@@ -30,7 +30,16 @@ done
 date +%s > "$HOME/clawd/scripts/flywheel/.card-backup-last"
 echo "$(TS) cards → Oracle" >> "$LOG"
 
-# 3. Signed boards → pod (already synced via hf-s3-sync; verify count)
+# 3. Arena rounds → Oracle (round-store redundancy, lane NEXT-100 #12)
+for f in grok_referee_rounds reborn_rounds live-arena; do
+  SSH_AUTH_SOCK= scp -q -P 23243 -o ConnectTimeout=30 -o BatchMode=yes -o UserKnownHostsFile=/dev/null \
+    -o StrictHostKeyChecking=no -i "$HOME/.runpod/ssh/runpodctl-ssh-key" \
+    root@194.26.196.156:/workspace/arena-24x7/$f.jsonl \
+    "$ORACLE:~/sovos-estate-backup/arena/$f.jsonl" 2>/dev/null
+done
+echo "$(TS) arena rounds → Oracle" >> "$LOG"
+
+# 4. Signed boards → pod (already synced via hf-s3-sync; verify count)
 POD_BOARDS=$(ssh -o ConnectTimeout=30 -o StrictHostKeyChecking=no -i "$HOME/.runpod/ssh/runpodctl-ssh-key" -p 23243 \
   root@194.26.196.156 'ls /workspace/csoai-site-main/SOVOS/boards-signed/*.signed.json 2>/dev/null | wc -l' 2>/dev/null)
 echo "$(TS) pod boards: $POD_BOARDS (workspace is the live store)" >> "$LOG"

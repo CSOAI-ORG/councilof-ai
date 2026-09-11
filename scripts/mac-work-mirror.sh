@@ -14,7 +14,7 @@
 # Log: /tmp/mac-work-mirror.log (also appended to /tmp/mac-drain.log)
 export PATH="/opt/homebrew/bin:$PATH"
 KEY="$HOME/.runpod/ssh/runpodctl-ssh-key"
-PORT=33982
+PORT=17595
 LOG=/tmp/mac-work-mirror.log
 DEST="/workspace/RAG/mac-migrate"
 TS() { date "+%Y-%m-%dT%H:%M:%S"; }

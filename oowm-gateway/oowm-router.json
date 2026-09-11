@@ -6,7 +6,7 @@
     "knowledge": "phi4:14b",
     "governance": "mistral:7b",
     "safety": "council-oowm:latest",
-    "default": "qwen3:8b",
+    "default": "mistral:7b",
     "live_providers": [
       "runpod-a100 (fleet)",
       "oracle (free)",
@@ -56,12 +56,12 @@
     }
   },
   "reconciled_at": "2026-08-23T05:02:36Z",
-  "reconcile_note": "Reconciled to CONFIRMED pod models (mistral:7b, phi4:14b generate; qwen3:8b dropped from pod).",
+  "reconcile_note": "Reconciled to CONFIRMED pod models (mistral:7b, phi4:14b generate; qwen3:8b dropped from pod). [2026-08-24 JEEVES/ralph] All qwen3:8b routing TARGETS (router.default, task_router.governance, task_router.default) + oowm_router.WORKHORSE pointed at the reliable governance leader mistral:7b; qwen3:8b dropped/unreliable kept only as historical specialist record.",
   "task_router": {
     "knowledge": "phi4:14b",
-    "governance": "qwen3:8b",
+    "governance": "mistral:7b",
     "safety": "council-oowm:latest",
-    "default": "qwen3:8b"
+    "default": "mistral:7b"
   },
   "available_fleet": [
     "phi4:14b",

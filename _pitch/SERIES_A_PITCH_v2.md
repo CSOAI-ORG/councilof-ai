@@ -1,14 +1,14 @@
 # 🐉 CSOAI SERIES A PITCH — v2.0 — 26 JUN 2026
 
 **To:** Series A investors (Index, Atomico, LocalGlobe, Notion Capital, Accel)
-**From:** Nick Templeman, Founder, MEOK AI Labs
+**From:** Nick Templeman, Founder, CSOAI Ltd (councilof.ai)
 **Status:** Pre-seed bridge → Series A target Q4 2026
 **Round:** $5M @ $20M post-money = 25% dilution
 
 ---
 
 ## 1. ONE-SENTENCE PITCH
-**Sovereign AI governance platform. Cryptographic proof. 5 protocols. 12-layer stack. 16 entities. 4 MOOC skins. 30 framework crosswalks. 19 published MCPs. 33 hive domains. 47-agent town. Awareness v2. Absorption v3. $0 base tier. EU AI Act deadline 4 Aug 2026.**
+**Verifiable AI measurement — we measure, we never certify. Cryptographic proof you recompute (SaaS → RaaS). 5 protocols. 12-layer stack. 16 entities. 4 MOOC skins. 30 framework crosswalks. 19 published MCPs. 33 hive domains. 47-agent town. Awareness v2. Absorption v3. Free-forever measurement board. EU AI Act deadline 4 Aug 2026.**
 
 ## 2. THE MARKET
 - **AI governance platform spend:** $492M (2026) → $1B+ (2030) per Gartner
@@ -18,7 +18,7 @@
 
 ## 3. THE PRODUCT (12-layer stack)
 1. **Identity bus** — did:csoai (W3C DID v1.1)
-2. **Attestation bus** — Watchdog Cert per AI decision (Ed25519 signed)
+2. **Measurement bus** — signed measurement record per AI decision (Ed25519, offline-recomputable; we measure, never certify)
 3. **Policy bus** — PDCA runtime, 30-framework crosswalk
 4. **Payment bus** — x402 + AP2 + ACP compliance pre-checks
 5. **Audit bus** — SHA-256 hash chain + Polygon PoA anchoring
@@ -28,7 +28,7 @@
 9. **Agents** — 47-agent personalities + Awareness v2 + Absorption v3
 10. **Town** — OpenGridWorks-style UI
 11. **Sovereign substrate** — runs on M4 Mac, M2 Ollama, GCP VM
-12. **Authority** — Independent UK standards body
+12. **Authority** — Independent UK measurement body (we measure, we never certify)
 
 ## 4. THE TRACTION (real, verified 25 JUN 2026)
 - ✅ 33 apex .ai domains live
@@ -71,7 +71,8 @@ SAP, Siemens, Bosch, IBM, Deutsche Telekom, Orange, Cera — outreach queued.
 ## 8. THE ASK
 - **Round:** Series A, $5M @ $20M post-money
 - **Use of funds:** 32 weeks Awareness v2 + Absorption v3 + 7 gaps + 5 prospects + 1 design partner
-- **Milestone:** £100K MRR by end of 2026, $1M ARR by Q2 2027
+- **Revenue model (RaaS, not SaaS):** board + verification free forever; revenue from metered evidence issuance + embedded-infrastructure licences + enterprise evidence rails ([CONFIRM PRICE] units with Nick)
+- **Milestone:** £100K monthly revenue by end of 2026, $1M annual revenue by Q2 2027
 
 ## 9. THE TEAM
 - Nick Templeman, Founder — 15 years marketing-tech, 25 domains, sovereign AI architect

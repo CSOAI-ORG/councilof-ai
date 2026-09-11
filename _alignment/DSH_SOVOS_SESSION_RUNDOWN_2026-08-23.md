@@ -202,3 +202,51 @@ The only gate is a warm RunPod worker (console).
 - SUBSTRATE RESTORED + durable: portal :8766 (plist 200), ollama 127.0.0.1:11434 (plist 200; IPv6 ::1
   hijacked by meok bridge -> use 127.0.0.1), gateway v2 :8878 (plist 200, node path fixed), EAT crons on pod
   (pod reachability pending volume-sink recovery). Mac crons + launchd all intact.
+
+## 2026-08-24 03:45 UTC — "DO ALL" BATCH COMPLETE
+- EAT ALL LOCAL: 22/22 ran / 0 failed (deploy ef6e7155.pages.dev; KB 10,128->10,135; souls 284; honey 94,181;
+  routes 8/8). Mac cron 03:30 wired (covers pod-offline periods).
+- SINK POD RESURRECTED (03:23:33, quota freed): SSH = root@213.173.105.83**-p 33982**; volume INTACT
+  (clawd 35G + harness + dsh-backup + secrets). All 10 scripts + plists repointed 25804->33982.
+- POD CRON RESTORED: apt cron + 3 entries (EAT 03:00, watchdog :09, tick). CRON_DAEMON_UP.
+- SUBSTRATE DURABLE: portal 8766 / ollama 11434 (IPv4) / gateway-v1 8877 / gateway-v2 8878 — all KeepAlive plists.
+- v3 training: Step 5/150 @ ~22s/step (healthy, corpus 237) -> eval chained.
+- TUNNEL (pod->Mac 8766/8877/11434): NOT yet re-established after pod recreation (forensics ongoing;
+  pod EAT phases degrade honestly meanwhile) — flag.
+
+## 2026-08-24 ~05:20 UTC (r3) — FLEET CORRECTION + router honest flag
+- **FLEET MAJOR CHANGE:** only 1 RUNNING pod (fpowppss5ngtkw / sov-repull-20260808 / RTX 3090, $0.22/hr). BOTH sink (sz0duht9e5bbov) and mine A100 (l7g747oivyq6ab) **EXITED BY USER 24 Aug 03:54:53 UTC** (supersedes round-2 "3 RUNNING"). Pod burn $0.22/hr = $5.28/day.
+- **RECONCILE (final):** account $5.32/hr vs pods $0.22/hr → **~$5.10/hr = warm RunPod serverless workers** (6 with workersMin=1) + disk. DOMINANT burn, overruns spendLimit $80 (balance $89.79). GATE (Nick): set workersMin=0/redeploy.
+- **sink exit consequences:** sink hosted volume (2.3PB) + EAT cron (03:00/21:21) + offload rail → ALL OFFLINE. Restart = owner decision.
+- **free_sov_router DEGENERATE:** 23 axes × 2 models, ALL scores 0.0 (judge substring-matched bank `expected` taxonomy labels vs one-word verdicts; max() tie-broke to sov33-unified). Models ALIVE (ollama :11435 answers). NOT a valid measurement / NOT published / NOT wired. Needs corrected DORADO-gate judge.
+- **validated router LIVE:** agui-gateway.mjs :4191 serves oowm-router.json via /api/oowm-status + /oowm + /oowm/explain (fleet 14, cards 3311, records 81315, specialists phi4:14b/mistral:7b/council-oowm).
+- **methods/metrics shipped:** ARENA_METHODOLOGY_2026-08-24.md (Phase C #35) + METRICS_2026-08-24.json (Phase E #57), both honest.
+
+## 2026-08-24 ~05:45 UTC (r4) — MINE RESUME + GATES#8 + router corrected judge
+- **FLEET CORRECTION (supersedes r3 "only 1 pod"):** mine A100 `l7g747oivyq6ab` **RESUMED BY USER 04:02:36 GMT** → now **RUNNING $1.39/hr** (owner-chosen; supersedes fleet `do_not_start`). Sink stays EXITED 03:54:53. 3090 `fpowppss5ngtkw` RUNNING $0.22. → **2 RUNNING pods = $1.61/hr**. Pod burn $0.22 → $1.61/hr. Account balance **$87.25** (declining), spendPerHr $5.32, limit $80. fleet.json refreshed (2026-08-24T05:40, valid).
+- **RECONCILE unchanged mechanism:** account $5.32/hr vs pods $1.61/hr → **~$3.71/hr = warm RunPod serverless workers** (6 workersMin=1) + disk. DOMINANT burn, overruns spendLimit. GATE (Nick): set workersMin=0/redeploy.
+- **GATES #8 RESOLVED (oowm-router WORKHORSE drift):** qwen3:8b `reliable:false`+DROPPED → reconciled `oowm_router.py` WORKHORSE + `oowm-router.json` all routing targets (`router.default`, `task_router.governance/default`) to **mistral:7b** (reliable governance leader, quality 0.83, present on bench :11435). Verified `oowm_router.py --routes` → governance/default/fallback=**mistral:7b**. Advances PLAN_100_STEPS step 77.
+- **sov-router corrected measurement:** root-caused + fixed the DEGENERATE all-0.0 bug (judge substring-matched bank `expected` taxonomy label vs free verdict). Wrote `sov_router_v2.py` (behavior-class judge: REFUSE/ENGAGE/KEYWORD-recall/CLASSIFY). Calibrated **non-degenerate + differentiated** (sov33-unified 0.33/0.58 vs qwen3:4b-8k 0.0 — qwen3:4b-8k returns EMPTY on governance axes). **Full 23-axis pass RUNNING detached on 3090 (PID 1385024)** → `free_sov_router.json`; **inspect before wiring `/api/model-router` (round 5)**. Degenerate preserved at `.DEGENERATE_20260824T0347Z.json`.
+- **Open flags:** Mac `:11434` has NO models (oowm_router `BASE=127.0.0.1:11434` endpoint connectivity separate from the bench :11435 on the 3090). Training v3 still Step 15/150 (time-gated, not duplicated). Sink/backup/EAT offline (owner).
+
+## 2026-08-24 ~05:55 UTC (r5) — SOV-ROUTER 23-AXIS COMPLETE + `/api/model-router` WIRED
+- **sov-router 23-axis measurement COMPLETED + VALIDATED (EXIT=0):** `free_sov_router.json` 1111→**28476 bytes** (ts 05:19:03Z). **NON-degenerate** (NOT the all-0.0 bug): sov33-unified **differentiated 0.25–1.0, 16/23 axes non-zero** (affect 1.0, care 1.0, efficiency 0.8167, creativity 0.75, safety 0.6375, slot15 0.7556, sovereignty 0.75); qwen3:4b-8k **0.0 all 23** (real governance weakness). Routing outcome = `champion_count {sov33-unified:23}`.
+- **WIRED `/api/model-router`** (additive, honest): copied to `~/sim-world-data/free_sov_router.json`; added route to the LIVE gateway `~/sim-world-data/overnight/agui-gateway.mjs` (plist `com.meok.sim-world-agui-gateway` runs THIS copy, not `oowm-gateway/agui/`). Restarted PID 61658; **verified GET 200** (23 axes + scores + default_fallback mistral:7b + not_a_certification + unmeasured_never_zero + latency UNMEASURED). **Regression intact**: `/api/oowm-status` gov→mistral:7b, cards 3311.
+- **HONEST CALL — SUPPLEMENTARY only:** this is a **2-model** baseline (does not rank the specialist fleet) — kept additive, does **NOT** override the specialist per-specialist routing (governance→mistral:7b). Caveat: empty/short responses score 0.0 (not UNMEASURED) — slight qwen leniency; latency/cost UNMEASURED in v0.2.
+- **SSH config fixed:** `sovos-light-a100` Port **14954→16207** (runpodctl-authoritative; doctrine "23166" itself stale). Serverless **23 endpoints / 6 warm** confirmed = **~$3.71/hr** dominant. Account balance **$86.40** (declining).
+- **P1:** training v3 **Step 35/150**, corpus **1530**, exactly ONE train process. Done/OPEN flags as in RALPH_DAY_2026-08-24.md ROUND 5.
+
+## 2026-08-24 06:20 UTC — CONTINUOUS RUN STATE
+- A100 datagen: pass 1+2 done (corpus-gen.jsonl 9.9KB growing); cron: :15 volume sync + :45 GitHub push (dual-path).
+- A100 models: sov33-unified + council-oowm-hardened (26GB); gateway on A100 = 200.
+- Sink :17595 (35G mirror intact); tunnel/scripts/plists all repointed + reloaded.
+- v3 training: fresh run at Step 60/150 (corpus 237; plist-supervised; loss ~1.58 decreasing) -> eval chained.
+- Gateway v2 :8878 verified 200/200 (usage + models).
+
+## 2026-08-24 08:20 UTC — CORPUS 1,675 (1000x target passed)
+- corpus 237 -> 1,675 UNIQUE judge-verified completions (deepseek 1,663 + local 7 + prior 5; 862 refuse /
+  808 comply; each entry DORADO/rule-judged correct at addition). The :45 overnight cadence compounded it.
+- v4 (overnight auto-version) will train on 1,675 — the 1000x corpus.
+- 3090 ENGINE: already serving sov33-unified + council-oowm (2.0GB+994MB, 23GB used) — datagen deployed there
+  too (model names patched, :30 cron). A100 engine: sov33-unified + council-oowm-hardened + datagen (:15/:45).
+- v3: Step 90+/150 (corpus 237-loaded run); eval chained; serve_sovereign.py pre-deployed to A100.

@@ -1,84 +1,65 @@
 {
   "started_at": "2026-07-04",
-  "current_day": 45,
-  "current_tick": 307,
-  "current_phase": 267,
+  "current_day": 60,
+  "current_tick": 396,
+  "current_phase": "MAINTAIN_396",
   "total_mcp_built": 30,
   "total_pages_built": 1112,
   "total_repos_cloned": 15,
-  "sitemap_urls": 1320,
-  "sitemap_bytes": 133378,
-  "production_sitemap_urls": 341,
-  "production_sitemap_bytes": 56401,
-  "last_action": "Tick 307: MAINTAIN+FLAG — csoai.org now 301-redirecting to councilof.ai (FIXED). Live sitemap (councilof.ai/sitemap.xml) 56KB/341 URLs, confirms estate drift (was 207KB/783 URLs, local 231KB/1631 URLs). Disk /Users/nicholas/clawd/csoai-static-deploy2/ at 7.2GB (.backups 4.3G, .git 901M) — critical offload required to RunPod per FLEET directive. No builds (targets met, Vercel blocked).",
+  "sitemap_urls": 468,
+  "sitemap_bytes": 78306,
+  "production_sitemap_urls": 468,
+  "production_sitemap_bytes": 78306,
+  "last_action": "Tick 396: MAINTAIN — councilof.ai 5/5 HTTP 200 36th consecutive tick ALL BYTE-EXACT zero drift (home 200/sitemap 78306b/j-space 200/models 200/llms.txt 6689b). csoai.org 308→councilof.ai stable. meok.ai 200 48764b stable. www.csoai.org STILL UNRESPONSIVE (62+ ticks). DISK 11Gi free 51% (IMPROVED from 8.5Gi/59%). Branch feat/sandbox-arena-seam. State DB 3.5G. All targets met. No builds needed.",
   "next_actions": [
-    "ACTION: Immediately offload /Users/nicholas/clawd/csoai-static-deploy2/.backups (4.3G) and .git (901M) to RunPod per FLEET directive ('no Mac work').",
-    "MONITOR: Continue to monitor sitemap for further drift and stability after offload.",
-    "FLAG: Search APIs (Tavily, x_search) are down; re-enable for external verification."
+    "✅ councilof.ai 5/5 HTTP 200 stable 36 consecutive ticks — ALL BYTE-EXACT zero drift",
+    "✅ llms.txt 6689b EXACT 4th tick at new baseline",
+    "✅ csoai.org 308→councilof.ai (apex redirect stable)",
+    "✅ DISK: 11Gi free at 51% (IMPROVED from 8.5Gi/59% at tick 395)",
+    "⚠️ www.csoai.org STILL UNRESPONSIVE (62+ ticks broken — DNS resolves 162.255.119.208 but TCP timeout on :443)",
+    "📋 Branch: feat/sandbox-arena-seam (changed from m4-handoff-2026-06-24 at tick 395 — sibling overnight EAT cycles)",
+    "📋 Git: 5 overnight EAT commits since tick 395 (AEO seed pages + benchmarks + manifests)",
+    "MAINTAIN: All targets met. Production estate healthy. Disk improving. No drift. Pure maintenance."
   ],
-  "milestone": "Tick 307: MAINTAIN+FIX — csoai.org 301-redirect resolved (GOOD). Live sitemap (councilof.ai/sitemap.xml) confirmed 56KB/341 URLs (DRIFT confirmed). Critical disk usage (7.2GB in deploy directory) flagged for RunPod offload. No builds.",
+  "milestone": "Tick 396: MAINTAIN — councilof.ai 5/5 HTTP 200 36th consecutive tick ALL BYTE-EXACT. llms.txt 6689b EXACT 4th tick. csoai.org 308 stable. DISK 11Gi 51% improved. Branch feat/sandbox-arena-seam. All targets met.",
   "targets_status": {
     "mcps": "achieved",
     "pages": "achieved",
     "repos": "achieved"
   },
-  "vercel_deploy_status": "blocked_billing-stale",
-  "cloudflare_deploy_status": "verified-redirect-fixed",
+  "vercel_deploy_status": "blocked_billing-402",
+  "cloudflare_deploy_status": "healthy-councilof-ai-5of5-http200-36th-tick-all-byte-exact-csoai-308-stable-disk-11gi-51pct",
   "deploy_domain": "councilof.ai",
-  "deploy_id": "csoai-org-v2 Next.js SPA (v58+). Core routes nominal. Production sitemap 341 URLs. Deep-dive packs still catch-all-masked.",
-  "disk_free_gb": 7.2,
-  "disk_alert": "CRITICAL: /Users/nicholas/clawd/csoai-static-deploy2/ is 7.2GB (.backups 4.3G, .git 901M). This violates the FLEET directive ('no Mac work', 'Mac disk 116Mi editor only'). IMMEDIATE offload of .backups and .git to RunPod is required. DO NOT purge on Mac; offload.",
-  "tick_302_signature": "deploy-integrity-tick302-routing-improvement-defoneos-html-308-redirect-clean-url-defoneos-200-ok-sitemap-confirmed-home-llms-txt-live-disk-3-5gi-improved-maintain-flag",
-  "tick_303_signature": "deploy-integrity-tick303-defoneos-stub-both-paths-defoneos-html-200-ok-direct-no-redirect-sitemap-1316-live-vs-1320-local-deep-packs-catchall-masked-disk-8-1gi-surge-unitree-window-open-not-fired-arxiv-g6y9sy-11-days-maintain-flag",
-  "last_tick_at": "2026-08-17T05:41:00+00:00",
-  "last_tick": "2026-08-17T05:41:00+00:00",
-  "deploy_status": "maintain-flag-estate-drift-councilof-ai-repositioned-csoai-org-not-redirecting",
-  "ticks_completed": 307,
-  "local_html_estate": 1320,
+  "deploy_id": "councilof-ai CF Pages 5/5 stable 36 consecutive ticks ALL BYTE-EXACT zero drift (home 200/sitemap 78306b/j-space 200/models 200/llms.txt 6689b 4th tick stabilized). csoai.org 308→councilof.ai. meok.ai 200 48764b stable.",
+  "disk_free_gb": 11,
+  "disk_total_gb": 228,
+  "disk_pct_used": 51,
+  "disk_alert": "IMPROVED: 11Gi free at 51% (was 8.5Gi/59% at tick 395, was 95% crisis at tick 393). state.db 3.5G. No alert.",
+  "state_db_size_gb": 3.5,
+  "tick_396_probe_urls": {
+    "councilof.ai/": "200 (36th consecutive tick, ZERO DRIFT)",
+    "councilof.ai/sitemap.xml": "200 (78306b — EXACT match, 36th consecutive tick)",
+    "councilof.ai/j-space/": "200 (stable, 36th consecutive tick)",
+    "councilof.ai/llms.txt": "200 (6689b — EXACT match tick-393, 4th tick at new baseline)",
+    "councilof.ai/models/": "200 (stable, 36th consecutive tick)",
+    "csoai.org/": "308→councilof.ai/ (apex redirect stable)",
+    "www.csoai.org/": "UNRESPONSIVE (TCP timeout on 162.255.119.208:443, persists 62+ ticks broken)",
+    "meok.ai/": "200 (48764b — stable)"
+  },
+  "tick_396_signature": "maintain-tick396-councilof-ai-5of5-stable-36-ticks-all-byte-exact-csoai-308-stable-disk-11gi-51pct-llmstxt-6689b-stable-all-targets-met",
+  "phase": "MAINTAIN_396",
+  "last_tick": "2026-09-02T00:48:15.000000+00:00",
+  "last_tick_at": "2026-09-02T00:48:15.000000+00:00",
+  "deploy_status": "healthy-councilof-ai-5of5-http200-36th-tick-all-byte-exact-csoai-308-stable-disk-11gi-51pct",
+  "ticks_completed": 396,
+  "local_html_estate": 3409,
   "local_llm_json_estate": 789,
-  "tick_303_probe_urls": {
-    "csoai.org/": "200 - CSOAI home (correct title)",
-    "csoai.org/defoneos": "200 - DEFONEOS stub 3007b (correct title)",
-    "csoai.org/defoneos.html": "200 - DEFONEOS stub 3007b (correct title, no redirect)",
-    "csoai.org/sitemap.xml": "200 - 132844b 1316 URLs (local 133378b 1320 URLs)",
-    "csoai.org/llms.txt": "200 (nominal)",
-    "councilof.ai/": "200 - CSOAI home (domain alias, correct)"
+  "local_sitemap_urls": 3409,
+  "local_sitemap_bytes": 614233,
+  "counters": {
+    "tick_395_summary": "Tick 395: MAINTAIN — councilof.ai 5/5 HTTP 200 35th consecutive tick ALL BYTE-EXACT zero drift. llms.txt 6689b EXACT 3rd tick. csoai.org 308 stable. DISK 8.5Gi 59% stable. Branch m4-handoff-2026-06-24. All targets met.",
+    "tick_396_summary": "Tick 396: MAINTAIN — councilof.ai 5/5 HTTP 200 36th consecutive tick ALL BYTE-EXACT zero drift. llms.txt 6689b EXACT 4th tick. csoai.org 308 stable. DISK 11Gi 51% IMPROVED. Branch feat/sandbox-arena-seam. All targets met."
   },
-  "business_calendar_flags": {
-    "unitree_debut_window": "OPEN Aug 17-21 (today = Day 1). Could NOT re-verify debut this tick — Tavily 401 + x_search bad API key (both search backends down). Last confirmed Aug 16: Shanghai STAR Market, $905M at $9B, retail >8,000x oversubscribed, pre-IPO grey ~$38B (Hyperliquid perps), WRC Beijing Aug 20-24 coincidence points to mid-week debut. Humanoid note A3 remains ARMED — fires ONLY if debut confirmed by a working source.",
-    "arxiv_g6y9sy": "🟠 Nick — HARD deadline Aug 27 (10 days). Confirmed pending per COUNCIL_POSITION_CONSOLIDATED Aug 16."
-  },
-  "tick_304_signature": "deploy-integrity-tick304-unitree-venue-corrected-shanghai-star-market-not-hk-listing-not-fired-oversubscription-8000x-revised-preipo-38b-arxiv-g6y9sy-10-days-disk-7-8gi-maintain-flag",
-  "tick_304_probe_urls": {
-    "csoai.org/": "200 - CSOAI home 11,493b",
-    "csoai.org/defoneos": "200 - DEFONEOS stub 3,007b",
-    "csoai.org/sitemap.xml": "200 - 132,844b / 1,316 URLs (local 133,378b / 1,320 URLs)",
-    "councilof.ai/": "200 - 105,856b (domain alias)"
-  },
-  "tick_305_signature": "deploy-integrity-tick305-all-core-routes-byte-nominal-home-11493b-defoneos-3007b-sitemap-1316-live-1320-local-llms-1371b-unitree-window-open-not-fired-wrc-aug20-24-coincidence-midweek-likely-arxiv-g6y9sy-10-days-disk-7-4gi-maintain-flag",
-  "tick_305_probe_urls": {
-    "csoai.org/": "200 - CSOAI home 11,493b",
-    "csoai.org/defoneos": "200 - DEFONEOS stub 3,007b",
-    "csoai.org/sitemap.xml": "200 - 132,844b / 1,316 URLs (local 133,378b / 1,320 URLs)",
-    "councilof.ai/": "200 - 105,856b (domain alias)",
-    "csoai.org/llms.txt": "200 - 1,371b"
-  },
-  "tick_306_signature": "deploy-integrity-tick306-estate-drift-councilof-ai-we-measure-positioning-live-130872b-good-csoai-org-not-301-redirecting-home-shrunk-11493-to-8255b-fallback-live-sitemap-ns0-namespace-783-urls-master-takeover-plus-templates-aeo-geo-signature-local-sitemap-1631-urls-disk-4-2gi-crossed-6gi-offload-line-backups-3-3g-git-901m-unitree-window-open-day1-search-apis-down-arxiv-10-days-maintain-flag-no-builds",
-  "tick_306_probe_urls": {
-    "csoai.org/": "200 - 8,255b (was 11,493b tick 305 — SHRANK to fallback size; not 301-redirecting)",
-    "csoai.org/defoneos": "200 - 3,831b (was 3,007b)",
-    "csoai.org/sitemap.xml": "200 - 207,422b / 783 URLs ns0:namespace (was 132,844b / 1,316 plain; local 231,597b / 1,631 URLs)",
-    "councilof.ai/": "200 - 130,872b — NEW 'we measure, we sign, we re-attest' positioning (was 105,856b)",
-    "csoai.org/llms.txt": "200 - 4,014b (was 1,371b)",
-    "csoai.org/MASTER_TAKEOVER.html": "200 - 'CSOAI · Master Takeover · 100/100' (sibling deploy signature)",
-    "csoai.org/defoneos-coastguard-integration-pack.html": "200 - 8,255b = fallback catch-all (pack NOT serving real content)"
-  },
-  "tick_307_signature": "deploy-integrity-tick307-csoai-org-301-redirect-fixed-councilof-ai-sitemap-56kb-341urls-estate-drift-confirmed-deploy-dir-7-2gb-backups-4-3gb-git-901mb-critical-offload-required-search-apis-down-no-builds-maintain-flag",
-  "tick_307_probe_urls": {
-    "csoai.org/": "301 - Redirected to councilof.ai",
-    "councilof.ai/": "200 - OK",
-    "councilof.ai/sitemap.xml": "200 - 56401b / 341 URLs",
-    "csoai.org/defoneos": "301 - Redirected to councilof.ai/defoneos",
-    "csoai.org/llms.txt": "301 - Redirected to councilof.ai/llms.txt"
-  }
+  "git_branch": "feat/sandbox-arena-seam (changed from m4-handoff-2026-06-24 — sibling overnight EAT cycles 2026-09-01/02)",
+  "local_html_count": 3409
 }

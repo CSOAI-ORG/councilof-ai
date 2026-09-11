@@ -2,7 +2,7 @@
 # sovos-auto-batch — wave executor (Mac orchestrator). Wave 0: LOCK THE MOVE.
 # Follows _alignment/NEXT_100_MOVES_v2_2026-08-23.md; logs to auto-batch.log.
 LOG=~/clawd/_alignment/auto-batch.log
-SSH="ssh -F /dev/null -p 33982 -i ~/.runpod/ssh/runpodctl-ssh-key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=12"
+SSH="ssh -F /dev/null -p 17595 -i ~/.runpod/ssh/runpodctl-ssh-key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=12"
 POD=root@213.173.105.83
 
 echo "[$(date -u +%H:%M:%S)] ===== WAVE 0: LOCK THE MOVE =====" >> $LOG

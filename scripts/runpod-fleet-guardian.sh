@@ -13,7 +13,13 @@ SSH_KEY="$HOME/.runpod/ssh/runpodctl-ssh-key"
 
 # Pod registry: id|name|host|port (verified 2026-08-21 via runpodctl ssh info)
 PODS=(
-  "fpowppss5ngtkw|sov-repull|194.26.196.156|23243"
+  # AUTO_RESOLVE, not a hardcoded endpoint. This read 194.26.196.156|23243; the live port
+  # is 34051 and moves on every restart (RunPod reassigns). A stale port fails the SSH
+  # probe forever, so the guardian concluded "UNREACHABLE" every 15 minutes and issued a
+  # `pod start` against a pod that was already RUNNING and working — visible in the log
+  # as repeated "sov-repull start issued". Harmless here, but it means the guardian was
+  # blind: it could not have detected a genuine outage either.
+  "fpowppss5ngtkw|sov-repull|AUTO_RESOLVE|AUTO_RESOLVE"
 )
 
 # REMOVED 2026-09-04 — this guardian has no idle check and no cost awareness: it resumes any

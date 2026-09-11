@@ -3,7 +3,7 @@
 # monorepo git birth + GitHub push, remote EAT cron, SFT v2 training, proof EAT cycle.
 set -e
 KEY=~/.runpod/ssh/runpodctl-ssh-key
-PORT=33982
+PORT=17595
 HOST=root@213.173.105.83
 
 echo "[$(date -u +%H:%M:%S)] waiting for pod SSH to recover (30 min cap)..."

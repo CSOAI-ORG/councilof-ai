@@ -1,5 +1,7 @@
 # Council of AI / CSOAI — Action Plan & TODO List
 
+> **SUPERSEDED 2026-08-28.** This file is Era-A (certification exams, IAPP-clone membership). It is not the company. Canonical packaging: `CSOAI-SERIES-A-PACKAGING-2026-08-28.md`. Do not execute the certification / membership / exam work below.
+
 **Priority:** #2 | **Domains:** councilof.ai / csoai.org | **Current MRR:** £0 | **30-Day Target:** £295
 
 ---

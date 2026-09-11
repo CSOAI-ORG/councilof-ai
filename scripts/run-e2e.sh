@@ -2,7 +2,7 @@
 # run-e2e — FINISH THE MOVE: harness sync -> provision (git birth+push, cron, train, proof EAT) -> verify.
 set -e
 KEY=~/.runpod/ssh/runpodctl-ssh-key
-PORT=33982
+PORT=17595
 HOST=root@213.173.105.83
 R=/opt/homebrew/bin/rsync
 SSH="-e ssh -p $PORT -i $KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=15 -F /dev/null -o ServerAliveInterval=30 -o ServerAliveCountMax=2"

@@ -25,9 +25,9 @@ for f in /workspace/sov33-oowm/oowm/index/estate_mine_index.json \
 done
 
 # 2. Push to volume sink (mkdir -p first — rsync won't create nested dirs)
-ssh -o ConnectTimeout=10 -o BatchMode=yes -i "$HOME/.runpod/ssh/runpodctl-ssh-key" -p 33982 \
+ssh -o ConnectTimeout=10 -o BatchMode=yes -i "$HOME/.runpod/ssh/runpodctl-ssh-key" -p 17595 \
   root@213.173.105.83 "mkdir -p /workspace/snapshots/$TS" >> "$LOG" 2>&1
-$RSYNC -a --partial -e "ssh -o ConnectTimeout=10 -o BatchMode=yes -i $HOME/.runpod/ssh/runpodctl-ssh-key -p 33982" \
+$RSYNC -a --partial -e "ssh -o ConnectTimeout=10 -o BatchMode=yes -i $HOME/.runpod/ssh/runpodctl-ssh-key -p 17595" \
   "$STAGE/" "root@213.173.105.83:/workspace/snapshots/$TS/" >> "$LOG" 2>&1 \
   && echo "pushed to sink /workspace/snapshots/$TS" >> "$LOG" || echo "PUSH-FAIL" >> "$LOG"
 

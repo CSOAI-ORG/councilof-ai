@@ -1,5 +1,25 @@
 # CSOAI Layer-0 Protocol Scorecard — 100/100 A+++++ (2026-06-29)
 
+> **RE-MEASURED 2026-09-05 — P1 AND P6 DO NOT HOLD. DO NOT QUOTE THIS FILE'S NUMBERS.**
+>
+> | This file says | Measured 2026-09-05 |
+> |---|---|
+> | 531 MCPs | **372** repos with "mcp" in the name (private + archived included; 363 public+unarchived) |
+> | 479 deploy-ready = 277 Python + **202 TypeScript** | **344 Python + 4 TypeScript.** The entire org holds **74** TypeScript repos of any kind, so 202 exceeds its own ceiling by 2.7×. The MCP registry corroborates: 329 PyPI against 1 npm. |
+> | 97-component Ed25519-signed OSCAL | **No such file.** `layer0_protocol.oscal.json` is not an OSCAL document — top-level keys are `constitution`, `vsm`, `charters`, `temples`, `sigil`; there is no `components` array; `sigil` is a bare 32-hex string, not a signature. Real OSCAL component-definitions here hold 10, 14 and 15 components. |
+>
+> **Both verification commands in this file are broken**, which is why the errors survived:
+> `gh api /users/CSOAI-ORG/repos?q=mcp` returns byte-identical output with and without
+> `?q=mcp` — it is a list endpoint and ignores `q`. The OSCAL one-liner in §"The verification"
+> raises `KeyError: 'component-definition'` on the file it names. A check that cannot fail
+> verifies nothing.
+>
+> What IS checkable and large: **330 servers published to the official Model Context Protocol
+> registry** (`registry.modelcontextprotocol.io`, third-party attested) across **678** org repos.
+> Lead with that. See `~/_alignment/ALIGNMENT_2026-09-05.md` §9.
+
+
+
 > **The world's only open-source Layer-0 governance stack where every protocol
 > scores 100/100 A+++++.** Verified, signed, and machine-readable. The
 > first OSS stack to make this claim with cryptographic proof.

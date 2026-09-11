@@ -1,3 +1,17 @@
+> **VERIFIED STATE 2026-08-26 — read this before planning against anything below.**
+>
+> | host | state |
+> |---|---|
+> | `oracle-micro-2` (141.147.73.85) | **LIVE.** uk-london-1, Ubuntu 22.04.5, x86_64, 2 vCPU, **956 MB RAM**, 45 GB disk. Confirmed via OCI metadata as the owner's own tenancy. This is the only working Oracle host. |
+> | `oracle-micro` (145.241.232.16) | **DEAD.** Times out at SSH banner exchange. Commented out of `~/.ssh/config` on 2026-08-26 (reversible). |
+> | `sov33-owem-a1` (4 OCPU / 24 GB ARM) | **NEVER PROVISIONED.** Capacity-blocked, as this document already records below. It does not exist and must not be planned against. |
+>
+> **956 MB is the binding constraint for anything running on Oracle today.** The 3-party MPC
+> signing custody built 2026-08-26 runs on `oracle-micro-2` within that limit. An agent that
+> plans against 24 GB will lose a day discovering this — one already did.
+
+---
+
 # 🛰️ Oracle migration + Claude Science access (SSH + browser) — M4, 2026-07-11
 
 Three asks handled honestly. TL;DR: **Oracle heavy-migration is capacity-blocked (nothing to migrate

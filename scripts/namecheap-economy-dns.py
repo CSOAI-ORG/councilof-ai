@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 """
+DEAD SCRIPT — do not run.
+
+2026-08-31: live CSOAI / councilof.ai / meok.ai hosting is Cloudflare Pages
++ Wrangler. Vercel is blocked (402 / DEPLOYMENT_DISABLED). This script still
+points domains at Vercel and will lose the website if executed.
+
+Use: wrangler pages deploy  (project csoai-site / councilof-ai / meok-os)
+"""
+raise SystemExit(
+    "ABORTED: namecheap-economy-dns.py points DNS at Vercel. "
+    "Live hosting is Cloudflare/Wrangler. Do not run."
+)
+
+"""
 Use Namecheap API to set DNS A-records for all economy-wave domains.
 Also attempt to purchase wowmcp.ai if available and budget allows.
 Author: JEEVES | Date: 2026-06-15

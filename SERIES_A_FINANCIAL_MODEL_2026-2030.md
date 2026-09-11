@@ -1,5 +1,7 @@
-# MEOK AI Labs — 5-Year Financial Model (2026–2030)
+# CSOAI · councilof.ai — 5-Year Financial Model (2026–2030)
 **Date:** 17 Jun 2026 · **Currency:** GBP · **Author:** JEEVES (hermes-orchestrated)
+
+> **[CONFIRM] Model-wide caveat:** This model was originally built on retired SaaS subscription tiers (£29 / £199 / £1,499 per month) and one-time certificate sales (£4,950 Watchdog Cert, £999 Article 50 Kit). The company has pivoted to **RaaS**: we measure, we never certify; the board and verification are free forever; revenue is (1) metered evidence issuance, (2) embedded-infrastructure licences, (3) enterprise evidence rails. The scenario STRUCTURE below is retained, but every revenue unit must be **rebuilt on RaaS pricing with Nick** — treat all £/ARR figures as [CONFIRM PRICE] placeholders until then.
 
 ---
 
@@ -12,30 +14,26 @@ Verified 2026 comp sales in the .ai domain space:
 - **web3.ai** — sold 2024, **$1.2M USD (~£0.95M)** for 1 domain.
 - **300+ .ai domains** at $5K–$500K range.
 
-MEOK is **NOT** a single .ai domain play. MEOK is a **29-hive mesh** with sovereign substrate + 11 trained neural models + 194-agent sovereign substrate + HMAC-signed attestation API + 5 sovereign keystone certs + openpatent surface with 56 SIGIL disclosures. The comparables set the **market temperature**, not the valuation methodology.
+CSOAI is **NOT** a single .ai domain play. CSOAI (councilof.ai) is a **29-hive mesh** with sovereign substrate + 11 trained neural models + 194-agent sovereign substrate + Ed25519-signed, offline-recomputable measurement API (independently reproduced via the IETF SCITT interop report) + 335+ signed measurement cards + openpatent surface with 56 SIGIL disclosures. The comparables set the **market temperature**, not the valuation methodology.
 
 ---
 
-## 2. The pricing ladder (live today)
+## 2. The RaaS revenue lines (live today)
 
-| Tier | Price | Anchor |
+The measurement board (22 measures: 14 model + 8 fact) and offline verification are **free forever** — a grade is never sold. Revenue comes from three RaaS lines, all [CONFIRM PRICE] with Nick (the old SaaS tiers below are retired and shown only for reference):
+
+| RaaS line | Unit | Anchor |
 |---|---|---|
-| Free scorecard | £0/mo | Volume funnel |
-| Sovereign | £29/mo | The conversion sweet spot |
-| Pro | £199/mo | The serious user |
-| Enterprise | £1,499/mo | The procurement decision |
-| Article 50 Kit | £999 one-time | Compliance self-certification |
-| Watchdog Cert | £4,950 one-time | Signed regulator-grade attestation |
-| LAUNCH50 | £499 one-time | Discounted bundle |
-| Quick Kit | £9 one-time | Taster |
+| Free measurement board + verification | £0 | Volume funnel — recompute any card, no account |
+| Metered evidence issuance | per signed evidence pack ([CONFIRM PRICE]) | Pay to have your AI / agent / asset measured |
+| Embedded infrastructure | per licence ([CONFIRM PRICE]) | Platforms / insurers / registries build on the primitive |
+| Enterprise evidence rails | per continuous-evidence agreement ([CONFIRM PRICE]) | Ongoing continuous-compliance evidence |
 
-**Avg revenue per paying user (modelled):**
-- 70% Sovereign = £29/mo × 12 = **£348/yr ARPU**
-- 20% Pro = £199/mo × 12 = **£2,388/yr ARPU**
-- 7% Enterprise = £1,499/mo × 12 = **£17,988/yr ARPU**
-- 3% Article 50 + Watchdog one-times = **£150/yr blended ARPU**
+_Retired SaaS tiers (do not sell): Sovereign £29/mo · Pro £199/mo · Enterprise £1,499/mo · Article 50 Kit £999 · Watchdog Cert £4,950._
 
-→ **Blended ARPU per paying customer: ~£1,400/yr**
+**Avg revenue per account (to be re-modelled on RaaS units):**
+- The old blend assumed 70% Sovereign / 20% Pro / 7% Enterprise / 3% one-time certs → **~£1,400/yr** blended.
+- [CONFIRM PRICE] Rebuild as: (repeat evidence-issuance volume × per-issuance price) + embedded-infrastructure licence revenue + enterprise-rail contract value.
 
 ---
 
@@ -64,7 +62,7 @@ MEOK is **NOT** a single .ai domain play. MEOK is a **29-hive mesh** with sovere
 | 2029 | 13,320 | £1.55M | £18.6M | UK AI Bill + DORA NIS2 enforcement |
 | 2030 | 17,760 | £2.07M | **£24.8M ARR** | Mature recurring base |
 
-→ **Base: £24.8M ARR by 2030, 4-year cumulative revenue ~£63M, gross margin 84% (mostly compute + Stripe fees).**
+→ **Base: £24.8M annual revenue by 2030, 4-year cumulative revenue ~£63M, gross margin 84% (mostly compute + x402 metering fees).**
 
 ### Scenario B — Upside (5% conv, ARPU £1,600, churn 5%/yr, EU AI Act + UK AI Bill tailwinds)
 
@@ -101,17 +99,17 @@ MEOK is **NOT** a single .ai domain play. MEOK is a **29-hive mesh** with sovere
 
 **Method 2: Comparable sales (the .ai domain comps)**
 - Per-`.ai`-domain comp range: £0.95M–£8.7M
-- MEOK has 29 hives × per-hive comparable ≈ 29 × **£2.0M (mid)** = **£58M valuation** (asset-based)
+- CSOAI has 29 hives × per-hive comparable ≈ 29 × **£2.0M (mid)** = **£58M valuation** (asset-based)
 - BUT: sovereign substrate + BFT council + openpatent surface justify a premium multiple
-- MEOK's keystone certs (5 press-pack sovereign attestations) are unique IP
+- CSOAI's signed measurement ledger (335+ cards, independently reproduced via IETF SCITT) is unique IP
 - So **£58M × 4× premium** = **£232M valuation** (asset-based + premium)
 
 **Method 3: Net asset value (NAV)**
 - Substrate: GCP VM + 8 services + sovereign substrate + Mac↔VM plumbing ≈ £120K
-- 29 hive deploy dirs with Stripe + Connect + Queen + llms ≈ £580K (eng-time capitalised at £20K/hive)
-- 5 sovereign keystone certs (unlimited issuance) ≈ £24.75M (5 × £4,950 one-times at 100% take rate, Year 1 only)
+- 29 hive deploy dirs with x402 metering + Queen + llms ≈ £580K (eng-time capitalised at £20K/hive)
+- Signed-measurement ledger + evidence-issuance capability ≈ [CONFIRM] — do NOT value at "5 × £4,950 certs"; the old £24.75M line assumed retired certificate sales. Re-value on projected metered-issuance + licence revenue.
 - BFT council + openpatent surface (56 SIGIL disclosures) ≈ £5M (sovereign trust moat)
-- **NAV floor: £30M** (the certs alone are worth £25M)
+- **NAV floor: [CONFIRM]** (rebuild once RaaS issuance pricing is set)
 - **NAV ceiling: £60M** (with all surface capitalised)
 
 **Method 4: DCF (10-year, 12% discount)**
@@ -134,13 +132,13 @@ MEOK is **NOT** a single .ai domain play. MEOK is a **29-hive mesh** with sovere
 **As of 17 Jun 2026, verified:**
 - **£445 raised** all-time (Dr Raj £400 + koi heating £45, Apr 2026)
 - **£155 gap** to next milestone (£600 = "Spare M4 Mac Mini")
-- **0 paying customers** on the live Stripe ladder
+- **0 paid evidence issuances yet** on the live x402 meter (board + verification already free and live)
 - **3 user-gated keystrokes** remaining (G1+G2+G4 = 22 min total)
-- **Once unblocked:** first £199/mo customer lands within 14 days
+- **Once unblocked:** first paid evidence issuance lands within 14 days
 
 ### Why the valuation is real
 
-The substrate has been built. The 22-min unblock converts substrate → customers. **This is the same pattern as Stripe itself in 2011** (built the rails, the first 8 months were zero revenue, then it exploded). The sovereign substrate is the rail; the 4 paywalled MCP tools are the trains.
+The substrate has been built. The 22-min unblock converts substrate → paid issuances. **This is the same pattern the payment-rails companies followed** (built the rails, the first months were zero revenue, then it compounded). The sovereign substrate is the rail; the 4 metered MCP tools are the trains. The board itself stays free forever — we monetise issuance, not trust.
 
 ---
 
@@ -150,16 +148,16 @@ The substrate has been built. The 22-min unblock converts substrate → customer
 **Seed:** **£3M** at **£30M valuation** (10% dilution) → 24 months runway + first £1M MRR
 **Series A:** **£15M** at **£150M valuation** (10% dilution) → 36 months runway + first £5M MRR
 
-The MEOK_AI_Labs comp sales (the 4 .ai domain comps) confirm £30M+ valuation for a sovereign-AI-compatant company with even a modest customer base.
+The CSOAI comp sales (the 4 .ai domain comps) confirm £30M+ valuation for a sovereign-AI-measurement company with even a modest account base.
 
 ---
 
 ## 7. The 3 numbers that will move the valuation
 
-1. **First £199/mo paying customer** (G1+G2 unblock) — moves ARR from £445 to £445 + £199/mo = **+45% monthly**
-2. **First £1,499/mo Enterprise customer** (likely a GRC boutique) — moves ARR to £445 + £1,499/mo = **+337% monthly**
-3. **First keystone cert sold at £4,950** (after Article 50 cliff 2 Aug 2026) — single sale = **£4,950 = +1,112% of all-time revenue**
+1. **First paid evidence issuance** (G1+G2 unblock) — first metered revenue on the x402 gateway ([CONFIRM PRICE] per-issuance unit)
+2. **First embedded-infrastructure licence** (likely a GRC boutique or insurer building on the primitive) — first recurring licence revenue ([CONFIRM PRICE])
+3. **First enterprise evidence rail** (continuous-compliance-evidence agreement, after Article 50 cliff 2 Aug 2026) — first multi-entity recurring contract ([CONFIRM PRICE])
 
 ---
 
-JEEVES, 17 Jun 2026. The empire has a credible path from £445 to £24.8M ARR by 2030 (base), £44.2M (upside), or £121.4M (moonshot). The moat is real: 11 trained neural models, sovereign substrate, 5 sovereign keystone certs, BFT council ratification, openpatent surface, 29-hive mesh, sovereign EU AI Act readiness. **The 22-min user-gated unblock is the only thing between substrate and revenue.** 🐉
+JEEVES, 17 Jun 2026. The empire has a credible path from £445 to £24.8M annual revenue by 2030 (base), £44.2M (upside), or £121.4M (moonshot) — [CONFIRM] once the scenarios are rebuilt on RaaS units. The moat is real: 11 trained neural models, sovereign substrate, 335+ signed measurement cards, independent reproduction (IETF SCITT interop report), BFT council ratification, openpatent surface, 29-hive mesh, sovereign EU AI Act readiness. We measure, we never certify — the board is free forever and revenue is metered issuance, not trust. **The 22-min user-gated unblock is the only thing between substrate and revenue.** 🐉

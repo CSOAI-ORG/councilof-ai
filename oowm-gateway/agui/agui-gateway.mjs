@@ -154,6 +154,35 @@ const server = createServer((req, res) => {
     }))
     return
   }
+  // Free sov-router 23-axis measurement (v0.2, behavior-class judge). This is a
+  // SUPPLEMENTARY 2-model baseline — it does NOT override the specialist
+  // per-axis routing in oowm-router.json. Honest: measured per-axis champion +
+  // scores; default fallback; UNMEASURED never 0; assess not certify.
+  if (req.method === 'GET' && url.pathname === '/api/model-router') {
+    const frPath = join(homedir(), 'sim-world-data', 'free_sov_router.json')
+    if (!existsSync(frPath)) { res.writeHead(404); res.end('free_sov_router.json not yet measured'); return }
+    try {
+      const fr = JSON.parse(readFileSync(frPath, 'utf8'))
+      const axes = fr.axes || {}
+      const perAxis = {}
+      let championCount = {}
+      for (const a of Object.keys(axes)) {
+        const v = axes[a] || {}
+        perAxis[a] = { route: v.route || 'UNMEASURED', scores: v.scores || {}, n_scored: v.n_scored || {}, unmeasured: v.unmeasured || {} }
+        championCount[v.route || 'UNMEASURED'] = (championCount[v.route || 'UNMEASURED'] || 0) + 1
+      }
+      res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' })
+      res.end(JSON.stringify({
+        kind: fr.kind, ts: fr.ts, judge: fr.judge, samples_per_axis: fr.samples_per_axis, models: fr.models,
+        source: '2-model 23-axis GSPC free-verdict baseline (v0.2) — SUPPLEMENTARY, does NOT override oowm-router.json specialist routing',
+        default_fallback: 'mistral:7b (governance workhorse; sov33-unified:latest for measured sov axes)',
+        not_a_certification: true, unmeasured_never_zero: true,
+        per_axis: perAxis, champion_count: championCount, honest_caveat: fr.honest_caveat,
+        latency_cost_note: 'UNMEASURED — per-model latency/cost not captured in v0.2; weekly re-measure guard (cron) reads this endpoint.',
+      }, null, 2))
+    } catch (e) { res.writeHead(500); res.end('model-router parse error: ' + e.message) }
+    return
+  }
   // Canon: a covered query is a LOOKUP, not a generation. /lookup/<hash>
   // serves the signed card with that body hash straight from the chain-index.
   if (req.method === 'GET' && url.pathname === '/cross') {
