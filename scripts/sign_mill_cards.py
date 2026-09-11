@@ -78,6 +78,27 @@ def superseded_ids() -> set[str]:
     return {str(r.get("superseded_id") or "") for r in ledger_rows() if r.get("superseded_id")}
 
 
+def normalize_canonical_number_fields(body: dict) -> None:
+    """Freeze numeric types to the published cross-runtime canonical contract.
+
+    The browser and Node verifiers preserve ``accuracy`` as a schema float, so an
+    integral result must be signed as ``1.0``/``0.0``. Confidence-interval values
+    are ordinary array numbers in that contract, so integral endpoints must be
+    signed as ``1``/``0``. Without this boundary normalization CPython can sign a
+    preimage that cannot be reconstructed after JSON is parsed by JavaScript.
+    """
+    accuracy = body.get("accuracy")
+    if isinstance(accuracy, (int, float)) and not isinstance(accuracy, bool):
+        body["accuracy"] = float(accuracy)
+    interval = body.get("uncertainty_95_wilson")
+    if isinstance(interval, list):
+        body["uncertainty_95_wilson"] = [
+            int(value) if isinstance(value, (int, float)) and not isinstance(value, bool) and float(value).is_integer()
+            else value
+            for value in interval
+        ]
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-dir", type=Path, help="sign only this isolated unsigned-card directory")
@@ -124,6 +145,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             body["status"] = "UNMEASURED"
             body["unmeasured"] = ["n<30 unquotable"]
+        normalize_canonical_number_fields(body)
         wrap["body"] = body
         raw = canonical_bytes(body)
         if len(raw) > MAX_PAYLOAD_BYTES:

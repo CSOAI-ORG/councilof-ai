@@ -242,6 +242,17 @@ class ArtifactTests(unittest.TestCase):
         self.assertTrue(all(body["model"] != "legacy" for body in calls))
         self.assertEqual({body["n"]: body["status"] for body in calls}, {36: "MEASURED", 12: "UNMEASURED"})
 
+    def test_signer_normalizes_integral_measurement_numbers_for_browser_preimage(self):
+        body = {"accuracy": 1, "uncertainty_95_wilson": [0.8865, 1.0]}
+        signer.normalize_canonical_number_fields(body)
+        self.assertEqual(body["accuracy"], 1.0)
+        self.assertIsInstance(body["accuracy"], float)
+        self.assertEqual(body["uncertainty_95_wilson"], [0.8865, 1])
+        self.assertEqual(
+            signer.canonical_bytes(body),
+            b'{"accuracy":1.0,"uncertainty_95_wilson":[0.8865,1]}',
+        )
+
     def test_explicit_signer_source_requires_present_nonempty_directory(self):
         with mock.patch.object(signer, "sign_via_oidc") as signing, contextlib.redirect_stderr(io.StringIO()):
             self.assertEqual(signer.main(["--source-dir", str(self.root / "absent")]), 2)
