@@ -1076,7 +1076,7 @@ export default function NewHomeV2() {
             <p className="text-gray-600 mb-6">
               {/* Counts derived from GET /api/gspc (ADR-001) — this read "Thirteen measured
                   axis on a 14-slot board", typed, and went stale when the board was swept. */}
-              {board.public_count} — frozen benchmarks, open on Hugging Face and Kaggle with the scoring code,
+              {board.public_count} — frozen benchmarks with published scoring code and public evidence,
               so you can recompute any figure we publish, or disagree with any answer key. A slot with no run
               behind it is published UNMEASURED, never folded into the measured count.
             </p>

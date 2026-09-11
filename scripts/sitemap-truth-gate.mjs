@@ -96,7 +96,13 @@ function problems() {
   const fns = functionRedirects();
   const prerendered = prerenderedPaths();
   const found = [];
-  for (const url of locs()) {
+  const listed = locs();
+  const counts = new Map();
+  for (const url of listed) counts.set(url, (counts.get(url) ?? 0) + 1);
+  for (const [url, count] of counts) {
+    if (count > 1) found.push(`${url} is listed ${count} times`);
+  }
+  for (const url of listed) {
     const path = url.startsWith(ORIGIN) ? url.slice(ORIGIN.length) || "/" : url;
     if (NON_PAGE_EXT.test(path)) found.push(`${path} is an asset, not a page`);
     else if (fns.has(path)) found.push(`${path} is redirected by a Pages Function`);
@@ -123,6 +129,7 @@ if (process.argv.includes("--selftest")) {
     ["/watchdog/", functionRedirects().has("/watchdog/"), "index.ts serves the slash form too"],
     ["/gspc-scoreboard", functionRedirects().has("/gspc-scoreboard"), "Response.redirect(...) form"],
     ["prerender set", prerenderedPaths().size > 30, "must derive the built blog paths, not zero"],
+    ["duplicate predicate", new Set(["a", "a"]).size < ["a", "a"].length, "must detect repeated canonical URLs"],
   ];
   let bad = 0;
   for (const [what, ok, why] of cases) {
