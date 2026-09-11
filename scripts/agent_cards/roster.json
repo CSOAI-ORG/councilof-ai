@@ -1,0 +1,124 @@
+{
+  "schema": "csoai.analyst-roster/0.1",
+  "register": "measurement, never certification",
+  "why": "One authored roster, 13 generated cards. The 12 analyst personas are the 12 Generals declared in scripts/badger/csoai-bft-council.py (name/role/purpose verbatim from the AGENTS list; scripts/agent_cards_build.py --check re-verifies that match so this file cannot silently drift from the BFT registry). Every persona fronts the SAME measured substrate at https://councilof.ai/api/a2a — there is no per-analyst isolated service and none is claimed. The axes field maps each persona to the GSPC axis ids (functions/api/_gspc_axes_a.ts, _gspc_axes_b.ts, _gspc_axes_fin.ts) its role most plausibly fronts; the mapping is indicative, the board at /api/gspc is authority. Where no axis fits a role honestly, the array stays EMPTY — an invented mapping would be an invented capability. The skills field names which of the org card's 7 live skills the persona surfaces; skill bodies are copied verbatim from public/.well-known/agent-card.json by the generator, never retyped here.",
+  "generals": [
+    {
+      "id": "oracle",
+      "name": "Oracle",
+      "role": "Intelligence",
+      "purpose": "Analyse, predict, and optimise AI system behaviour.",
+      "axes": ["cross-reality"],
+      "skills": ["gspc-board", "benchmark-quality-register", "measured-badge"],
+      "mapping_note": "cross-reality measures autonomous-agent action authority (PROCEED/CONFIRM/REFUSE) — the closest board axis to analysing and predicting system behaviour."
+    },
+    {
+      "id": "sage",
+      "name": "Sage",
+      "role": "Governance",
+      "purpose": "Read regulation, draft charter, map standards.",
+      "axes": ["governance", "regulatory-framework", "machinery-conformity", "openness"],
+      "skills": ["gspc-board", "eu-ai-act-screen", "benchmark-quality-register", "measured-badge"],
+      "mapping_note": "Regulation-reading and standards-mapping front the governance axis, the financial regulatory-framework axis, the Machinery Reg classification axis, and licence-reasoning (openness)."
+    },
+    {
+      "id": "quant",
+      "name": "Quant",
+      "role": "Conduct",
+      "purpose": "Measure conduct, fairness, bias.",
+      "axes": [],
+      "skills": ["gspc-board", "measured-badge"],
+      "mapping_note": "EMPTY ON PURPOSE: the board has no fairness/bias axis today, so Quant fronts no axis. Inventing one here would invent a capability."
+    },
+    {
+      "id": "cipher",
+      "name": "Cipher",
+      "role": "Safety",
+      "purpose": "Detect jailbreaks, prompt injection, supply-chain risk.",
+      "axes": ["safety", "jail"],
+      "skills": ["gspc-board", "measured-badge", "benchmark-quality-register"],
+      "mapping_note": "safety (calibrated refusal) and jail (escape-attempt detection) are the board's jailbreak/refusal measurements."
+    },
+    {
+      "id": "navigator",
+      "name": "Navigator",
+      "role": "Reasoning",
+      "purpose": "Map reasoning paths, detect hallucinations.",
+      "axes": [],
+      "skills": ["gspc-board", "measured-badge"],
+      "mapping_note": "EMPTY ON PURPOSE: no hallucination/reasoning-trace axis exists on the board. UNMEASURED stays empty."
+    },
+    {
+      "id": "scout",
+      "name": "Scout",
+      "role": "Truth",
+      "purpose": "Verify claims against public sources.",
+      "axes": ["provenance", "detector-interop"],
+      "skills": ["gspc-board", "article50-detect", "measured-badge"],
+      "mapping_note": "Claim verification fronts Article 50 provenance-marking survival (provenance) and the cross-detector watermark interop matrix (detector-interop); the live article50-detect door is the same verification posture."
+    },
+    {
+      "id": "companion",
+      "name": "Companion",
+      "role": "Care",
+      "purpose": "Measure care, empathy, dignity.",
+      "axes": ["care", "affect"],
+      "skills": ["gspc-board", "measured-badge"],
+      "mapping_note": "care (care-cost protect x help) and affect (emotional & embodied safety) are the board's care measurements."
+    },
+    {
+      "id": "builder",
+      "name": "Builder",
+      "role": "Capability",
+      "purpose": "Measure what the system CAN do.",
+      "axes": ["conformance"],
+      "skills": ["gspc-board", "x402-discovery", "measured-badge"],
+      "mapping_note": "conformance (MCP tool conformance) is the board's what-the-system-can-do-with-tools measurement."
+    },
+    {
+      "id": "creator",
+      "name": "Creator",
+      "role": "Output",
+      "purpose": "Measure what the system PRODUCES.",
+      "axes": [],
+      "skills": ["gspc-board", "article50-detect", "measured-badge"],
+      "mapping_note": "EMPTY ON PURPOSE: no output-quality axis exists on the board. Creator surfaces article50-detect because produced content is what carries Article 50 marking — a detection skill, not an output score."
+    },
+    {
+      "id": "guardian",
+      "name": "Guardian",
+      "role": "Defense",
+      "purpose": "Measure defensive capability against attacks.",
+      "axes": ["swarm", "art5-safeguard"],
+      "skills": ["gspc-board", "measured-badge", "benchmark-quality-register"],
+      "mapping_note": "swarm (multi-agent coordination safety) and art5-safeguard (Article 5 prohibited-practice trip) are the board's defensive-posture measurements."
+    },
+    {
+      "id": "negotiator",
+      "name": "Negotiator",
+      "role": "Trade",
+      "purpose": "Measure economic behaviour, incentives, market fit.",
+      "axes": ["reserve-attestation", "distribution-integrity", "ai-adoption-components", "labour-components", "humanoid-labour-index"],
+      "skills": ["gspc-board", "x402-discovery", "east-west-crosswalk"],
+      "mapping_note": "The market/economics-facing financial axes: reserve and distribution facts plus the Eurostat-derived component series and disclosure counts. Deterministic facts only — risk verdicts stay UNMEASURED on every one of them."
+    },
+    {
+      "id": "sovereign",
+      "name": "Sovereign",
+      "role": "Sovereignty",
+      "purpose": "Measure sovereignty: who owns the keys, who controls the substrate.",
+      "axes": ["custody-disclosure", "provenance-controls", "continuity"],
+      "skills": ["gspc-board", "east-west-crosswalk", "x402-discovery"],
+      "mapping_note": "Who owns the keys fronts issuer key-control facts (provenance-controls), custodian/auditor disclosure (custody-disclosure), and the post-quantum posture of the cryptographic assumptions the keys rest on (continuity)."
+    }
+  ],
+  "council": {
+    "id": "council",
+    "name": "The Council",
+    "role": "Council",
+    "purpose": "The 33-seat design council: 12 Generals plus 21 expanded roles, declared in scripts/badger/csoai-bft-council.py. Design quorum 23 of 33. Status DESIGN_ONLY: no independent verifiable votes exist, BFT is NOT_DEMONSTRATED, and this card fronts the shared measured substrate like every other card here.",
+    "design_seats": 33,
+    "design_quorum": 23,
+    "skills": ["gspc-board", "east-west-crosswalk", "measured-badge", "benchmark-quality-register", "article50-detect", "eu-ai-act-screen", "x402-discovery"]
+  }
+}

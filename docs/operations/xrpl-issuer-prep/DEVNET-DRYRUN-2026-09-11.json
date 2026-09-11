@@ -1,0 +1,63 @@
+{
+  "schema": "csoai.xrpl-issuer-prep-dryrun/0.1",
+  "status": "tesSUCCESS",
+  "as_of": "2026-09-11T06:37:08Z",
+  "network": "XRPL DEVNET",
+  "network_url": "wss://s.devnet.rippletest.net:51234",
+  "label": "DEVNET pointer. An unaccepted credential authorizes nothing. This is not a mainnet claim, not a grade, not certification. The URI points at the signed measurement-card index; the credential is evidence of a pointer, not of a verdict.",
+  "credential": {
+    "transaction_type": "CredentialCreate",
+    "credential_type_ascii": "GSPC-MEASURED",
+    "credential_type_hex": "475350432D4D45415355524544",
+    "credential_type_note": "Full ASCII hex of 'GSPC-MEASURED', computed in code. The prep plan doc's 0x4753504301 is a 5-byte shorthand ('GSPC' + 0x01) that does NOT spell GSPC-MEASURED; mismatch flagged in docs/operations/XRPL-MAINNET-ISSUER-PREP-2026-09-11.md.",
+    "uri": "https://councilof.ai/signed/card_index.json",
+    "expiration": null
+  },
+  "brakes": [
+    "docs/operations/TUI4_REJECT_2026-08-29.md",
+    "docs/operations/BRAKE-LOG.md (lane xrpl-hash-labels)",
+    "client/src/lib/emptySlots.ts (never: mainnet CredentialCreate / on-chain MEASURED / invented issuer)",
+    "harness/rwa-attest/README.md (counsel/DSS sandbox gate)"
+  ],
+  "prior_devnet_poc": {
+    "credential_attach_tx": "958BA25801A068AEA1507FC1649A862C33D59A1D715924794D98D2C66254DC4B",
+    "credential_type_ascii": "CSOAI.GSPC.CARD/0.1",
+    "date": "2026-08-25",
+    "source": "~/clawd/council-os-lanes/bindings-lockfile/economy/xrpl-attest/RUN-RECORD.json"
+  },
+  "mainnet": "NOT_TOUCHED \u2014 mainnet ceremony is Nick-only; see --checklist",
+  "same_day_prior_attempts": [
+    {
+      "tx_hash": "FF2B02B4855D0377242FF361ACD9F28BDC82D97DBD856A65422E171528D4C63B",
+      "ledger_index": 5220186,
+      "transaction_result": "tesSUCCESS",
+      "note": "First run of this tool, 2026-09-11: the CredentialCreate LANDED tesSUCCESS but the run record was written FAILED because the success criterion wrongly required a submit-style engine_result that tx-style responses do not carry. Criterion fixed to judge on validated-ledger meta TransactionResult only. Recorded here so no attempt is hidden."
+    }
+  ],
+  "endpoint_attempts": [
+    {
+      "endpoint": "wss://s.devnet.rippletest.net:51234",
+      "error": "InvalidStatus: server rejected WebSocket connection: HTTP 401"
+    }
+  ],
+  "endpoint_used": "https://s.devnet.rippletest.net:51234",
+  "accounts": {
+    "issuer": {
+      "address": "rpx51M1i3mx6XVDivK4HjVVrrTNFvqjyGV",
+      "seed": "sEdVKCoW1ELUNhwZ9s6dPLtivBGudPm",
+      "label": "THROWAWAY-DEVNET \u2014 faucet wallet, holds no value, seed published only because the account is disposable"
+    },
+    "subject": {
+      "address": "rK6m2YaiT2DFCcCCN7zPVyoVj15SfFv2D2",
+      "seed": "sEdTgFV7tk7z38AezoxJdk8HsL3DPLh",
+      "label": "THROWAWAY-DEVNET \u2014 faucet wallet, holds no value, seed published only because the account is disposable"
+    }
+  },
+  "engine_result": "NOT_PRESENT_IN_RESPONSE",
+  "transaction_result": "tesSUCCESS",
+  "tx_hash": "4E8C5ECB27F67BE6BBD519541661FCFEC38702656C415BFE11FFC05FCB3106E3",
+  "ledger_index": 5220212,
+  "explorer": "https://devnet.xrpl.org/transactions/4E8C5ECB27F67BE6BBD519541661FCFEC38702656C415BFE11FFC05FCB3106E3",
+  "endpoint": "https://s.devnet.rippletest.net:51234",
+  "acceptance": "UNACCEPTED \u2014 an unaccepted credential authorizes nothing; CredentialAccept is the subject's act"
+}

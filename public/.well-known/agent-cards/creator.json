@@ -1,0 +1,113 @@
+{
+  "name": "Council of AI — Creator (Output Analyst)",
+  "description": "Measure what the system PRODUCES. STATUS: DESIGN_ONLY analyst persona fronting the shared measured substrate at the single interface below — there is no per-analyst isolated service and none is claimed. The measured artifacts are the signed GSPC cards at GET /api/gspc and /signed/card_index.json; this persona is a discovery surface, not a service boundary. Measurement, never certification.",
+  "version": "0.1.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/llms.txt",
+  "iconUrl": "https://councilof.ai/og-image.png",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false,
+    "extensions": [
+      {
+        "uri": "https://councilof.ai/a2a/extensions/signed-receipts/v1/",
+        "required": false,
+        "description": "A DRAFT WE PUBLISH AND DO NOT YET EMIT: this agent attaches no receipt to a response today. Declared because we author the specification, not because the door implements it. Ed25519-signed task-outcome receipts plus a did:web key-trust convention for AgentCard signing (A2A v1.0 §8.4). A receipt is evidence of what was claimed, not a certification, and a signature over it is an integrity claim rather than a truth claim."
+      },
+      {
+        "uri": "https://councilof.ai/.well-known/x402.json",
+        "required": false,
+        "description": "x402 discovery index for the agent pay rail (also GET /api/x402). Free door amount 0 at /api/free-door. Verification stays free. payTo is merchant not payer. Self-settle is not revenue. Settlement is PROVEN on Base mainnet: transaction hashes are published in docs/product/SETTLED-DOORS and verifiable on chain by anyone, independently of this server. Measurement credential, never a grade."
+      },
+      {
+        "uri": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+        "required": false,
+        "description": "x402 Offer & Receipt extension (v0.6), JWS profile — CONDITIONALLY EMITTED. A signed offer is attached only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise the 402 carries csoai.offer_receipt with the gap and no offer-receipt extension block. A signed receipt is attached only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise the paid artefact still delivers and receiptGap states why no signed receipt was attached. When emitted, the format is jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1, resolvable at https://csoai.org/.well-known/did.json (an authorization mechanism the extension names in section 4.5.1). eip712 is NOT emitted: the edge has no secp256k1 signer; when the optional Ed25519 board key is provisioned it signs JWS. A format we cannot produce is better declared missing than faked. A receipt proves this server signed those bytes; it is not by itself proof that money moved, and the transaction field, when present, is a claim to check against the chain."
+      }
+    ]
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "gspc-board",
+      "name": "Signed GSPC Board",
+      "description": "SendMessage answers with the live board: totals.lid verbatim from GET /api/gspc and the derived axis rows (axis, family, kind, status, n, separation, leader state). Empty cells stay empty; a withheld leader is a state, not a zero; a fetch failure is UNCHECKABLE, never a fabricated number. Live JSON, recomputable from published rows.",
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"gspc-board\",\"input\":{}}",
+        "Legacy compatibility: one text Part containing exactly \"board\"",
+        "GET /api/gspc — the same board, outside A2A"
+      ]
+    },
+    {
+      "id": "article50-detect",
+      "name": "Article 50 provenance detection (free)",
+      "description": "Verify a C2PA-style signed manifest for AI-generated content (EU AI Act Article 50) at POST https://councilof.ai/api/detect. Deterministically checks the Ed25519-signed metadata layer and the IPTC/schema.org digitalSourceType; returns AI_MARKED / NOT_AI_MARKED / UNVERIFIABLE with a signed verdict receipt (in-toto/DSSE when a board key is bound). The imperceptible-watermark layer we cannot see is declared, never claimed. Free for all; unrestricted for authorities, media, fact-checkers, researchers and civil society. Not certification.",
+      "tags": [
+        "article-50",
+        "provenance",
+        "detection",
+        "verification",
+        "c2pa"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"article50-detect\",\"input\":{\"manifest\":{\"claim\":{}}}}",
+        "POST /api/detect {\"manifest\":{...},\"asset_hash\":\"<optional-64-hex>\"}"
+      ]
+    },
+    {
+      "id": "measured-badge",
+      "name": "Measured Badge",
+      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"measured-badge\",\"input\":{\"card\":\"<64-hex-signed-card-sha256>\",\"subject\":\"owner/model@<40-or-64-hex-revision>\"}}",
+        "GET /api/badge?card=<signed-card-sha256>&subject=<url-encoded-owner/model@commit-sha>"
+      ]
+    }
+  ],
+  "catalogUrl": "https://councilof.ai/interop/surface-catalog.json",
+  "doi": "10.5281/zenodo.21991104",
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "legal-determination",
+    "enforcement"
+  ],
+  "x-csoai-analyst": {
+    "role": "Output",
+    "tier": "design",
+    "bft_registry": "scripts/badger/csoai-bft-council.py",
+    "status": "DESIGN_ONLY persona fronting the shared measured substrate — the measured artifacts are the signed GSPC cards; per-analyst isolated service is NOT_CLAIMED and NOT_MEASURED",
+    "mapping_note": "axis mapping is indicative; the board at /api/gspc is authority"
+  },
+  "sig_ed25519": null,
+  "signature_state": "UNSIGNED — signatures are attached only by the GHA publisher (one-writer law); verify any future signed copy against did:web:csoai.org#board-attestation-1"
+}
