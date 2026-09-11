@@ -8,26 +8,17 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: "Which compact set to sign: financial, ledger, mill, isolated mill run, or verified RunPod artifact"
+        description: "Which compact set to sign: financial, ledger, mill, or verified RunPod artifact"
         type: choice
         options:
           - financial
           - ledger
           - mill
-          - mill-run
           - runpod
         default: financial
       intake_run_id:
         description: "Successful RunPod intake run ID (required only for runpod)"
         type: string
-        required: false
-      mill_run_id:
-        description: "Exact body.run_id to sign (required only for mill-run)"
-        type: string
-        required: false
-      mill_expected_count:
-        description: "Exact receipt count required for mill-run"
-        type: number
         required: false
 
 concurrency:
@@ -49,7 +40,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           # mill cards batch to the dispatch branch (auto-eat-feed / mill PR), never 90s-push master
-          ref: ${{ (inputs.target == 'mill' || inputs.target == 'mill-run' || inputs.target == 'runpod') && github.sha || 'master' }}
+          ref: ${{ (inputs.target == 'mill' || inputs.target == 'runpod') && github.sha || 'master' }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -72,52 +63,6 @@ jobs:
             --run-id "$INTAKE_RUN_ID" \
             --out "$RUNNER_TEMP/runpod-signing-approved" \
             --allowlist "$GITHUB_WORKSPACE/scripts/runpod_gspc_bank_allowlist.current.json"
-      - name: Prepare only the requested mill run
-        if: inputs.target == 'mill-run'
-        env:
-          MILL_RUN_ID: ${{ inputs.mill_run_id }}
-          MILL_EXPECTED_COUNT: ${{ inputs.mill_expected_count }}
-          DISPATCH_REF: ${{ github.ref }}
-        run: |
-          set -euo pipefail
-          [[ "$DISPATCH_REF" == refs/heads/* && "$DISPATCH_REF" != refs/heads/master ]] || {
-            echo "Isolated mill signing must dispatch on a review branch"
-            exit 1
-          }
-          [[ "$MILL_RUN_ID" =~ ^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$ ]] || {
-            echo "A safe exact mill run ID is required"
-            exit 1
-          }
-          [[ "$MILL_EXPECTED_COUNT" =~ ^[1-9][0-9]*$ ]] || {
-            echo "A positive exact receipt count is required"
-            exit 1
-          }
-          mkdir -p "$RUNNER_TEMP/mill-signing-approved"
-          python3 - "$MILL_RUN_ID" "$MILL_EXPECTED_COUNT" "$RUNNER_TEMP/mill-signing-approved" <<'PY'
-          import json
-          import pathlib
-          import shutil
-          import sys
-
-          run_id, expected_text, output_text = sys.argv[1:]
-          source = pathlib.Path("public/interop/mill-cards-unsigned")
-          output = pathlib.Path(output_text)
-          selected = []
-          for path in sorted(source.glob("*.json")):
-              if path.is_symlink() or not path.is_file():
-                  raise SystemExit(f"unsafe input path: {path}")
-              card = json.loads(path.read_text(encoding="utf-8"))
-              if card.get("body", {}).get("run_id") == run_id:
-                  selected.append(path)
-          expected = int(expected_text)
-          if len(selected) != expected:
-              raise SystemExit(
-                  f"mill run {run_id!r}: selected {len(selected)} receipts; expected {expected}"
-              )
-          for path in selected:
-              shutil.copy2(path, output / path.name)
-          print(f"approved exact mill run {run_id}: {len(selected)} receipts")
-          PY
       - name: sign compact runs
         env:
           SIGN_TARGET: ${{ inputs.target || 'financial' }}
@@ -128,8 +73,6 @@ jobs:
             python3 scripts/sign_ledger_cards.py
           elif [ "$T" = "mill" ]; then
             python3 scripts/sign_mill_cards.py
-          elif [ "$T" = "mill-run" ]; then
-            python3 scripts/sign_mill_cards.py --source-dir "$RUNNER_TEMP/mill-signing-approved"
           elif [ "$T" = "runpod" ]; then
             python3 scripts/sign_mill_cards.py --source-dir "$RUNNER_TEMP/runpod-signing-approved/cards"
           else
@@ -149,7 +92,7 @@ jobs:
             git add public/interop/ledger-card-*.json
           elif [ "$T" = "mill" ]; then
             git add public/interop/mill-cards-signed public/interop/mill-cards-unsigned
-          elif [ "$T" = "mill-run" ] || [ "$T" = "runpod" ]; then
+          elif [ "$T" = "runpod" ]; then
             git add public/interop/mill-cards-signed
           else
             git add public/interop/financial-measure-card-*.json
@@ -159,7 +102,7 @@ jobs:
             exit 0
           fi
           git commit -m "${T}-measure: sign compact cards via OIDC board-sign"
-          if [ "$T" = "mill" ] || [ "$T" = "mill-run" ] || [ "$T" = "runpod" ]; then
+          if [ "$T" = "mill" ] || [ "$T" = "runpod" ]; then
             git push origin "HEAD:$DISPATCH_BRANCH"
           else
             git push origin HEAD:master
@@ -172,7 +115,7 @@ jobs:
       # Only for a push that reached master -- a mill run lands on its own branch, where the
       # census has nothing to print yet, and the flip runs after that branch's PR merges.
       - name: dispatch hub-queue-flip (a workflow-token push starts nothing)
-        if: steps.commit.outputs.pushed == 'true' && (inputs.target || 'financial') != 'mill' && inputs.target != 'mill-run' && inputs.target != 'runpod'
+        if: steps.commit.outputs.pushed == 'true' && (inputs.target || 'financial') != 'mill' && inputs.target != 'runpod'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
