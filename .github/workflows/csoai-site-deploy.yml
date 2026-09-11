@@ -84,12 +84,21 @@ jobs:
           for dname in ('cards', 'proofs'):
               pathlib.Path('_site', dname).mkdir(parents=True, exist_ok=True)
           # 2026-09-11: twin the SCITT key-discovery doc as well (public key
-          # material only — never a transparency-service claim)
+          # material only — never a transparency-service claim). Retry: this
+          # workflow races the main deploy when both fire off the same merge.
           sk = pathlib.Path('_site/.well-known')
           sk.mkdir(parents=True, exist_ok=True)
-          subprocess.check_call(['curl', '-sS', '-f', '--max-time', '25', '-A', 'csoai-site-deploy',
-                                 '-o', str(sk / 'scitt-keys'),
-                                 'https://councilof.ai/.well-known/scitt-keys'])
+          import time as _time
+          for _try in range(1, 7):
+              rc = subprocess.call(['curl', '-sS', '-f', '--max-time', '25', '-A', 'csoai-site-deploy',
+                                    '-o', str(sk / 'scitt-keys'),
+                                    'https://councilof.ai/.well-known/scitt-keys'])
+              if rc == 0:
+                  break
+              print(f'scitt-keys fetch attempt {_try} failed (rc={rc}); waiting for the main deploy')
+              _time.sleep(20)
+          else:
+              raise SystemExit('scitt-keys never became fetchable on councilof.ai')
           print('twinned scitt-keys', (sk / 'scitt-keys').stat().st_size)
           for sha in root['card_sha256']:
               s16 = sha[:16]
