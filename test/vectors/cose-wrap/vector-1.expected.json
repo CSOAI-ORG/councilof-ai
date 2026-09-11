@@ -1,0 +1,32 @@
+{
+  "schema": "https://councilof.ai/schema/cose-wrap-vector-expected-v0.json",
+  "note": "measurement, never certification — test-vector expectations, not verdicts about the world",
+  "vector_key": {
+    "test_only": true,
+    "never_a_production_identity": true,
+    "pkcs8_b64": "MC4CAQAwBQYDK2VwBCIEIBLkRBETUBtlQkIXK+G2kKKK29wz8fT1I5GDN5g3XHvg",
+    "x_b64url": "IIU8S325vfgCDQCrtvxqfmGKdG7z_m27eJWb46CcREE",
+    "kid_thumbprint": "lOEsfKHAOyLTF6uFCGjq6FWNhP9BKTK44Kl22mYAR8w"
+  },
+  "vector-1": {
+    "file": "vector-1.cose.hex",
+    "card_sha256": "509dc7aab33e2c3f8408cfb04effd96746b619554b002eaf0fffc7355c8a69f5",
+    "payload_sha256": "47170521d5140326bd0b23f90ef18312508bd4b8f1917da545bdbec058a9303b",
+    "against_production_pin_set": {
+      "verdict": "UNCHECKABLE",
+      "exit": 2,
+      "why": "the vector key is not a published did:web:csoai.org identity, so the most a pinned verifier may say is self-consistent-only; it must never be collapsed into pass or fail"
+    },
+    "with_expected_key": {
+      "verdict": "VALID",
+      "exit": 0,
+      "how": "cose_verify.py --expected-kid <kid_thumbprint> --expected-pubkey <x_b64url>"
+    }
+  },
+  "vector-2-tampered": {
+    "file": "vector-2-tampered.cose.hex",
+    "verdict": "INVALID",
+    "exit": 1,
+    "why": "one payload byte flipped; the Ed25519 signature must not verify over the reconstructed Sig_structure"
+  }
+}

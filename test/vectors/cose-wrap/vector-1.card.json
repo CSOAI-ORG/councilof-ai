@@ -1,0 +1,32 @@
+{
+  "card": {
+    "as_of": "2026-09-11T00:00:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "payload": {
+      "kind": "synthetic.test-vector/0.1",
+      "note": "Synthetic COSE-wrap test vector. No measurement was performed and no claim is made. UNMEASURED stays empty of typed numbers.",
+      "status": "UNMEASURED",
+      "task": "does a card dual-issued as COSE_Sign1 verify, and does a tampered one fail?"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "509dc7aab33e2c3f8408cfb04effd96746b619554b002eaf0fffc7355c8a69f5",
+    "sig_ed25519": null,
+    "source_urls": [
+      "https://example.invalid/synthetic-test-vector"
+    ],
+    "subject": "synthetic/example-model",
+    "surface": "public.notice",
+    "tags": [
+      "synthetic",
+      "test-vector",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "everything — synthetic fixture",
+      "sig_ed25519 (synthetic vector card; never board-signed)"
+    ]
+  },
+  "proof": []
+}

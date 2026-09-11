@@ -66,6 +66,19 @@ jobs:
           else
             python scripts/publish_public_root.py
           fi
+      # Dual-issue: every card as COSE_Sign1 (tag 18) beside its canonical JSON.
+      # Same key, same fail-closed rule (exit 3 when the key is absent — never mint
+      # unsigned-looking wraps); never print the key. Deterministic: identical card +
+      # key -> byte-identical .cose, so unchanged cards are no-ops at the commit step.
+      - name: Dual-issue COSE wraps
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        env:
+          PYTHONUNBUFFERED: "1"
+          BOARD_SIGN_KEY_PKCS8_B64: ${{ secrets.BOARD_SIGN_KEY_PKCS8_B64 }}
+        run: |
+          set -euo pipefail
+          pip install -q cbor2
+          python3 scripts/cose_wrap.py --all
       - name: witness the ONE root (Rekor rekord + OpenTimestamps; public bytes only, no key)
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         run: |
@@ -140,7 +153,7 @@ jobs:
           set -euo pipefail
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
-          git add public/root.json public/cards public/proofs public/publisher-health.json
+          git add public/root.json public/cards public/cards-cose public/proofs public/publisher-health.json
           git add public/archive
           mapfile -d '' witness_files < <(find public/interop -maxdepth 1 -type f \
             \( -name 'root-witness-*.json' -o -name 'rekor-root-*.json' -o -name '*.ots' \) -print0)

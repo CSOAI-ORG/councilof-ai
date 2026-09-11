@@ -1,0 +1,77 @@
+# cose-wrap — the dual-issue lane's gate.
+#
+# WHY THIS JOB EXISTS. The Sep-4 quarantine incident (scripts/badger/csoai-cose-wrap.py)
+# shipped envelopes that looked self-consistent but were not COSE_Sign1 — a hand-rolled
+# Sig_structure with no "Signature1" context and a card signature reused over different
+# bytes. Nothing caught it because nothing independent ever decoded the output. This
+# workflow is the thing that catches the next one: an independent decode path
+# (scripts/cose_verify.py) run against committed tampered and untampered vectors on
+# every change to the lane, plus a weekly drift check in case a dependency changes
+# under us.
+#
+# NO SECRETS. The selftest and the vectors run on ephemeral/test-only keys. The board
+# key is never present, never needed, and must never be added to this workflow.
+name: cose-wrap
+
+on:
+  push:
+    paths:
+      - "scripts/cose_wrap.py"
+      - "scripts/cose_verify.py"
+      - "scripts/cose_wrap_selftest.py"
+      - "test/vectors/cose-wrap/**"
+      - ".github/workflows/cose-wrap.yml"
+  pull_request:
+    paths:
+      - "scripts/cose_wrap.py"
+      - "scripts/cose_verify.py"
+      - "scripts/cose_wrap_selftest.py"
+      - "test/vectors/cose-wrap/**"
+      - ".github/workflows/cose-wrap.yml"
+  schedule:
+    # Weekly, Monday 06:47 UTC — off the top of the hour like the other estate crons.
+    - cron: "47 6 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cose-wrap
+  cancel-in-progress: true
+
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: deps
+        run: pip install cbor2 cryptography
+      - name: hermetic selftest
+        run: python3 scripts/cose_wrap_selftest.py
+      - name: committed vectors carry the expected three-state verdicts
+        run: |
+          set -uo pipefail
+          KID=$(python3 -c "import json;print(json.load(open('test/vectors/cose-wrap/vector-1.expected.json'))['vector_key']['kid_thumbprint'])")
+          X=$(python3 -c "import json;print(json.load(open('test/vectors/cose-wrap/vector-1.expected.json'))['vector_key']['x_b64url'])")
+
+          # vector-1 against the production pin set must be UNCHECKABLE (exit 2):
+          # the test-only vector key is not a published identity — self-consistent only.
+          python3 scripts/cose_verify.py test/vectors/cose-wrap/vector-1.cose.hex
+          rc=$?
+          if [ "$rc" -ne 2 ]; then echo "FAIL: vector-1 vs production pin set: expected exit 2 (UNCHECKABLE), got $rc"; exit 1; fi
+
+          # vector-1 pinned to its expected key must be VALID (exit 0).
+          python3 scripts/cose_verify.py test/vectors/cose-wrap/vector-1.cose.hex --expected-kid "$KID" --expected-pubkey "$X"
+          rc=$?
+          if [ "$rc" -ne 0 ]; then echo "FAIL: vector-1 with expected key: expected exit 0 (VALID), got $rc"; exit 1; fi
+
+          # vector-2 (one payload byte flipped) must be INVALID (exit 1).
+          python3 scripts/cose_verify.py test/vectors/cose-wrap/vector-2-tampered.cose.hex --expected-kid "$KID" --expected-pubkey "$X"
+          rc=$?
+          if [ "$rc" -ne 1 ]; then echo "FAIL: vector-2-tampered: expected exit 1 (INVALID), got $rc"; exit 1; fi
+          echo "vector verdicts as expected: UNCHECKABLE / VALID / INVALID"

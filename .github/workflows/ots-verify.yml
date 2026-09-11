@@ -1,0 +1,113 @@
+# ots-verify — daily read-back of every committed OpenTimestamps proof.
+#
+# WHY THIS JOB EXISTS. A stamp is not an anchor: a calendar accepts a digest instantly
+# and commits it to a Bitcoin block hours later; the local .ots must then be UPGRADED
+# or it stays pending forever. This job walks the committed proofs, attempts `ots
+# upgrade` (additive only — it attaches a BitcoinBlockHeaderAttestation a calendar has
+# since committed and removes nothing), then reports the honest state of each proof.
+#
+# WHAT FAILS THE JOB — read before editing the thresholds:
+#   * unreadable proof bytes (parse as nothing)          -> FAIL
+#   * coverage-broken: proof's message != its subject's  -> FAIL
+#     sha256 (the subject is the same path minus .ots)
+#   * pending                                            -> NEVER fails. Bitcoin commits
+#     on its own schedule; a pending proof is normal, and a gate that fails on normal
+#     gets switched off and then protects nothing.
+#   * quarantined incident evidence                      -> NEVER fails and is never
+#     counted: scripts/ots/_broken-pre-fix/ (README there: "must never be counted
+#     again") and scripts/ots/05717c8e87f117aa-*.ots (raw calendar fragments kept as
+#     the 2026-09-04 public-proof-audit incident reproducers, referenced from
+#     evidence/incidents/). The walker reports them separately, like
+#     ots_proof_inventory prunes evidence/incidents: incident history is immutable,
+#     not a proof inventory.
+#
+# No secrets. `ots upgrade` talks to public calendars; verification reads proof bytes.
+name: ots-verify
+
+on:
+  schedule:
+    # Daily 05:23 UTC — off the top of the hour like the other estate crons.
+    - cron: "23 5 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ots-verify
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: deps
+        run: pip install opentimestamps opentimestamps-client
+      - name: upgrade then read back every committed .ots proof
+        run: |
+          set -uo pipefail
+          # Best-effort upgrade of the two committed proof trees. `ots upgrade` exits
+          # non-zero when nothing improved (calendars have not committed yet) — that is
+          # NOT an error, so it can never fail the job. Upgrade writes are discarded
+          # after the run; this job is a read-back, not a writer.
+          find scripts/ots public/interop -name '*.ots' -print0 2>/dev/null \
+            | xargs -0 -r -n1 ots upgrade 2>&1 | tail -5 || true
+          python3 - <<'PY'
+          import hashlib, pathlib, sys, collections
+          sys.path.insert(0, "scripts/badger")
+          from ots_stamp import attestation_state  # the estate's one honesty function
+
+          # Immutable incident evidence, never proofs, never counted — see the header.
+          def quarantined(p: pathlib.Path) -> bool:
+              return "_broken-pre-fix" in p.parts or p.name.startswith("05717c8e87f117aa-")
+
+          counts = collections.Counter()
+          broken, unreadable = [], []
+          for base in ("scripts/ots", "public/interop"):
+              for p in sorted(pathlib.Path(base).rglob("*.ots")):
+                  if quarantined(p):
+                      counts["quarantined-incident-evidence"] += 1
+                      print(f"  {'quarantined':28s} {p}")
+                      continue
+                  data = p.read_bytes()
+                  st = attestation_state(data)
+                  state = st["state"]
+                  # coverage: the proof's message must be the sha256 of its subject
+                  # (same path minus .ots). A subject absent from the repo is noted,
+                  # not failed — some proofs cover artifacts published elsewhere.
+                  subject = p.with_suffix("") if p.suffix == ".ots" else None
+                  if state not in ("unreadable", "absent"):
+                      if subject is not None and subject.is_file():
+                          import io
+                          from opentimestamps.core.serialize import StreamDeserializationContext
+                          from opentimestamps.core.timestamp import DetachedTimestampFile
+                          d = DetachedTimestampFile.deserialize(StreamDeserializationContext(io.BytesIO(data)))
+                          if bytes(d.timestamp.msg).hex() != hashlib.sha256(subject.read_bytes()).hexdigest():
+                              broken.append(str(p))
+                              state = "coverage-broken"
+                      else:
+                          state = state + "/subject-absent"
+                  counts[state] += 1
+                  if state == "unreadable":
+                      unreadable.append(str(p))
+                  print(f"  {state:28s} {p}")
+          print()
+          print(f"  ANCHORED (Bitcoin block) : {counts['bitcoin'] + counts['bitcoin/subject-absent']}")
+          print(f"  pending (not a proof)    : {counts['pending'] + counts['pending/subject-absent']}")
+          print(f"  unreadable (not a stamp) : {counts['unreadable']}")
+          print(f"  coverage-broken          : {counts['coverage-broken']}")
+          print(f"  quarantined (incident)   : {counts['quarantined-incident-evidence']}  (evidence, never proofs)")
+          print("  Only the first number may be described as anchored.")
+          if unreadable or broken:
+              print("FAIL: unreadable or coverage-broken proofs present:", file=sys.stderr)
+              for p in unreadable + broken:
+                  print(f"  - {p}", file=sys.stderr)
+              sys.exit(1)
+          # Pending is normal and never fails CI: Bitcoin commits on its own schedule.
+          print("OK: no unreadable or coverage-broken proofs (pending is normal)")
+          PY

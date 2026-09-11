@@ -1,0 +1,37 @@
+{
+  "issuer": "did:web:csoai.org",
+  "we_operate_a_ts": false,
+  "note": "These are the attestation SIGNING keys the csoai.org estate uses for measurement cards, public-root envelopes, site releases and estate chains — measurement, never certification. Publishing them here is key discovery, not transparency-service operation: the estate anchors its signed artifacts to OTHER parties' transparency services (Rekor, OpenTimestamps/Bitcoin, EAS on Base) rather than operating one. A key appearing here proves only that artifacts signed by it can be pinned to did:web:csoai.org; it is not an endorsement, a conformity mark, or a claim that any artifact's contents are correct.",
+  "expiry_policy": "Keys are valid until superseded. Rotations are announced append-only in https://csoai.org/.well-known/did.json; superseded keys remain published (marked superseded, with reason) so historical artifacts stay verifiable forever.",
+  "as_of": "2026-09-11",
+  "keys": [
+    {
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "1MsOqhbV9Qv3Yzo2qjT-CaVeEkuTFt7Sq9sSK7nDfjg",
+      "kid": "did:web:csoai.org#card-attestation-1",
+      "use": "sig"
+    },
+    {
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "M0cuAmhx2yDNvZnnbEdTLr_PhLN6vtWyYNrjWJ31aW0",
+      "kid": "did:web:csoai.org#estate-chain-1",
+      "use": "sig"
+    },
+    {
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "03g9l-dVNGVEAVVWQrJU9aLtkYTN3uARd52P7DEq-8g",
+      "kid": "did:web:csoai.org#site-release-1",
+      "use": "sig"
+    },
+    {
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "use": "sig"
+    }
+  ]
+}
