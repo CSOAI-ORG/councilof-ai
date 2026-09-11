@@ -54,6 +54,9 @@ jobs:
       - name: Stablecoin readiness gate — indexed is never measured
         run: npm run guard:stablecoin-readiness
 
+      - name: Mill receipt readiness — crypto, lifecycle and regulation stay separate
+        run: npm run guard:mill-receipt-readiness
+
       # Sitemap truth gate. Audited live 2026-09-05: 68 of 413 listed URLs did not answer 200
       # — 67 redirects and one 410 Gone. A sitemap asks a crawler to index exactly these URLs,
       # so a redirecting entry spends crawl budget being told to look elsewhere while the real
