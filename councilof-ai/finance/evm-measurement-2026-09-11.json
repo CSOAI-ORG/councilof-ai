@@ -1,0 +1,348 @@
+{
+  "schema": "csoai.financial-coverage/0.1",
+  "kind": "financial.deep-measurement",
+  "generator": "evm-reader-0.1.1",
+  "generated_at": "2026-09-11T11:34:37.881Z",
+  "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+  "total_measured": 11,
+  "total_failed": 2,
+  "measurements": [
+    {
+      "symbol": "USDT",
+      "chain": "ethereum",
+      "contract": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "decimals": 6,
+      "block_number": 25953893,
+      "block_hex": "0x18c0665",
+      "raw_hex": "0x0000000000000000000000000000000000000000000000000139b9dd91e94bbb",
+      "raw_hash": "sha256:fcb934273a662d29f3e25b39943da596256cfa48db4c0abc3d642813300c4126",
+      "supply_raw": "88306028997331899",
+      "supply_normalized": 88306028997.33191,
+      "supply_display": "$88.31B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T11:34:36.698Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+            "data": "0x18160ddd"
+          },
+          "0x18c0665"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "ethereum",
+      "contract": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "decimals": 6,
+      "block_number": 25953893,
+      "block_hex": "0x18c0665",
+      "raw_hex": "0x00000000000000000000000000000000000000000000000000b3f59642d2b608",
+      "raw_hash": "sha256:1f5e54fbc755ffc0b5dca75ccb54d4e388c741dc49983d1631003157005d36a5",
+      "supply_raw": "50654046546212360",
+      "supply_normalized": 50654046546.21236,
+      "supply_display": "$50.65B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T11:34:36.783Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+            "data": "0x18160ddd"
+          },
+          "0x18c0665"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    },
+    {
+      "symbol": "DAI",
+      "chain": "ethereum",
+      "contract": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "decimals": 18,
+      "block_number": 25953893,
+      "block_hex": "0x18c0665",
+      "raw_hex": "0x00000000000000000000000000000000000000000ed12470b6efb8e5179c6c56",
+      "raw_hash": "sha256:84fbcc525034b18e7edea689bed645c96a324ac97556a153ffb611859b872b40",
+      "supply_raw": "4585627718208965950777879638",
+      "supply_normalized": 4585627718.208966,
+      "supply_display": "$4.59B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T11:34:36.862Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+            "data": "0x18160ddd"
+          },
+          "0x18c0665"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x6B175474E89094C44Da98b954EedeAC495271d0F"
+    },
+    {
+      "symbol": "USDS",
+      "chain": "ethereum",
+      "contract": "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+      "decimals": 18,
+      "block_number": 25953893,
+      "block_hex": "0x18c0665",
+      "raw_hex": "0x00000000000000000000000000000000000000001561d0830149146dc181daa8",
+      "raw_hash": "sha256:1c0d1fcdd8428b27bf98d0d816fed22ce05df5088ea72480ef5d31ecc3be40bc",
+      "supply_raw": "6617435679595403744290921128",
+      "supply_normalized": 6617435679.595404,
+      "supply_display": "$6.62B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T11:34:36.947Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+            "data": "0x18160ddd"
+          },
+          "0x18c0665"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0xdC035D45d973E3EC169d2276DDab16f1e407384F"
+    },
+    {
+      "symbol": "USDe",
+      "chain": "ethereum",
+      "contract": "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+      "decimals": 18,
+      "block_number": 25953893,
+      "block_hex": "0x18c0665",
+      "raw_hex": "0x00000000000000000000000000000000000000000ede76ccb3b4e7f6c87442f5",
+      "raw_hash": "sha256:8368213d3e7ddc39bc0f262f7e3e7e9c37d2eb13ca89204851313d542a6195ca",
+      "supply_raw": "4601732684783278169523503861",
+      "supply_normalized": 4601732684.783278,
+      "supply_display": "$4.60B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T11:34:37.108Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+            "data": "0x18160ddd"
+          },
+          "0x18c0665"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"
+    },
+    {
+      "symbol": "PYUSD",
+      "chain": "ethereum",
+      "contract": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+      "decimals": 6,
+      "block_number": 25953893,
+      "block_hex": "0x18c0665",
+      "raw_hex": "0x000000000000000000000000000000000000000000000000000613ad38f5df51",
+      "raw_hash": "sha256:ef0ca7d49e46d7773e4564d756ffd2861d17ab7f374830cbea8890682f223000",
+      "supply_raw": "1710484566171473",
+      "supply_normalized": 1710484566.171473,
+      "supply_display": "$1.71B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T11:34:37.191Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+            "data": "0x18160ddd"
+          },
+          "0x18c0665"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x6c3ea9036406852006290770BEdFcAbA0e23A0e8"
+    },
+    {
+      "symbol": "RLUSD",
+      "chain": "ethereum",
+      "contract": "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD",
+      "decimals": 18,
+      "block_number": 25953893,
+      "block_hex": "0x18c0665",
+      "raw_hex": "0x000000000000000000000000000000000000000004705332fa0eae6e6e819735",
+      "raw_hash": "sha256:7ff282d84c9032cdb9974a56f3a849aafc4bb8660f016cf1b4ed6767dfc946f4",
+      "supply_raw": "1373732627856031556976088885",
+      "supply_normalized": 1373732627.8560317,
+      "supply_display": "$1.37B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T11:34:37.274Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD",
+            "data": "0x18160ddd"
+          },
+          "0x18c0665"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD"
+    },
+    {
+      "symbol": "crvUSD",
+      "chain": "ethereum",
+      "contract": "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+      "decimals": 18,
+      "block_number": 25953893,
+      "block_hex": "0x18c0665",
+      "raw_hex": "0x000000000000000000000000000000000000000006cd0eafa2ac2b9dcdff1cb3",
+      "raw_hash": "sha256:3188f574c74e9c007225e8e97853ec5b18a6f1e2c24a8afa8b70d786ecf2edff",
+      "supply_raw": "2104809204981834354272443571",
+      "supply_normalized": 2104809204.9818342,
+      "supply_display": "$2.10B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T11:34:37.372Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+            "data": "0x18160ddd"
+          },
+          "0x18c0665"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E"
+    },
+    {
+      "symbol": "GHO",
+      "chain": "ethereum",
+      "contract": "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f",
+      "decimals": 18,
+      "block_number": 25953893,
+      "block_hex": "0x18c0665",
+      "raw_hex": "0x000000000000000000000000000000000000000002423301eda98cd69b000000",
+      "raw_hash": "sha256:b2779ea051608e553711321b78bf230cc0616957ec02658feab8b5d7916fc057",
+      "supply_raw": "699000000000000000000000000",
+      "supply_normalized": 699000000,
+      "supply_display": "$699.00M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T11:34:37.452Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f",
+            "data": "0x18160ddd"
+          },
+          "0x18c0665"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f"
+    },
+    {
+      "symbol": "FRAX",
+      "chain": "ethereum",
+      "contract": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+      "decimals": 18,
+      "block_number": 25953893,
+      "block_hex": "0x18c0665",
+      "raw_hex": "0x000000000000000000000000000000000000000000b56ad3829ebd9fddbc66af",
+      "raw_hash": "sha256:ba7dfbffd082eb2f243ff915cd04ed01a3af6025a709a1022cfb4fbe6555d5b6",
+      "supply_raw": "219320045872600381298337455",
+      "supply_normalized": 219320045.87260038,
+      "supply_display": "$219.32M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T11:34:37.621Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+            "data": "0x18160ddd"
+          },
+          "0x18c0665"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x853d955aCEf822Db058eb8505911ED77F175b99e"
+    },
+    {
+      "symbol": "USDD",
+      "chain": "ethereum",
+      "contract": "0x0C10bF8FcB7Bf5412187A595ab97a3609160b5c6",
+      "decimals": 18,
+      "block_number": 25953893,
+      "block_hex": "0x18c0665",
+      "raw_hex": "0x00000000000000000000000000000000000000000066b0fc84b0db8262cef29e",
+      "raw_hash": "sha256:14a090bc1bb706e85cd34f48658031568c7b1d4da266c71cc7814cbae23442dc",
+      "supply_raw": "124146228242567170142171806",
+      "supply_normalized": 124146228.24256718,
+      "supply_display": "$124.15M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T11:34:37.704Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x0C10bF8FcB7Bf5412187A595ab97a3609160b5c6",
+            "data": "0x18160ddd"
+          },
+          "0x18c0665"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x0C10bF8FcB7Bf5412187A595ab97a3609160b5c6"
+    },
+    {
+      "symbol": "FDUSD",
+      "chain": "ethereum",
+      "contract": "0xc5f0f7b66764F6ec8C8Dff7BA683ba84b2f38D68",
+      "measurement_state": "MEASUREMENT_FAILED",
+      "error": "Cannot convert 0x to a BigInt",
+      "measured_at": "2026-09-11T11:34:37.789Z",
+      "code_revision": "evm-reader-0.1.1"
+    },
+    {
+      "symbol": "DOLA",
+      "chain": "ethereum",
+      "contract": "0x865377367054516e17014CcdED1E7282bCC0571d",
+      "measurement_state": "MEASUREMENT_FAILED",
+      "error": "Cannot convert 0x to a BigInt",
+      "measured_at": "2026-09-11T11:34:37.881Z",
+      "code_revision": "evm-reader-0.1.1"
+    }
+  ]
+}

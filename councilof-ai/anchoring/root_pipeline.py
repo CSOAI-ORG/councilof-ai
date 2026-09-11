@@ -127,7 +127,7 @@ def main():
         "leaf_count": len(leaves),
         "root_hash": root_hash.hex(),
         "depth": len(layers),
-        "algorithm": "SHA-256, sorted pairs, odd-leaf duplication",
+        "algorithm": "SHA-256, positional pairs (left||right), odd-leaf self-duplication",
     }
 
     # Step 4: Compare with live root
