@@ -1,0 +1,48 @@
+{
+  "schema": "csoai.anchor.xrpl-memo-spec/0.1",
+  "kind": "xrpl.memo.anchor",
+  "prepared_at": "2026-09-11T10:59:48.325884+00:00",
+  "transaction": {
+    "TransactionType": "Payment",
+    "Destination": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+    "Amount": "1",
+    "Memos": [
+      {
+        "Memo": {
+          "MemoData": "37386434653031393131356436356436656137303735353837653363313433333762663031323039323861653563626539623662306138653065316537626235",
+          "MemoFormat": "63736f61692d7075626c69632d726f6f742d7631",
+          "MemoType": "6170706c69636174696f6e2f6a736f6e"
+        }
+      }
+    ]
+  },
+  "decoded_memo": {
+    "root_hash": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+    "format": "csoai-public-root-v1",
+    "content_type": "application/json",
+    "root_url": "https://councilof.ai/root.json"
+  },
+  "cost": {
+    "amount": "1 drop + fee",
+    "estimated_total_xrp": "~0.000012 XRP",
+    "estimated_total_usd": "~$0.00001",
+    "funding_source": "OWNER_XRPL_ACCOUNT (not automated)"
+  },
+  "network": {
+    "name": "XRP Ledger Mainnet",
+    "chain_id": "xrpl:mainnet",
+    "explorer": "https://xrpscan.com"
+  },
+  "verification": {
+    "after_submission": "Search XRPL for memo containing root hash hex",
+    "command": "xrpscan.com search: 78d4e019115d65d6..."
+  },
+  "status": "PREPARED_NOT_SUBMITTED",
+  "requires_owner_action": true,
+  "owner_action_needed": [
+    "1. Fund an XRPL account with \u22650.01 XRP",
+    "2. Sign this transaction with the account's secret key",
+    "3. Submit to XRPL mainnet",
+    "4. Record the transaction hash in interop/root-witness-latest.json"
+  ]
+}
