@@ -62,9 +62,10 @@ function fixtureFetcher(
   const rootRaw = JSON.stringify(rootDocument);
   const rootSha = createHash("sha256").update(rootRaw).digest("hex");
   const exactWitness = options.matchingWitness === true;
-  const witnessedRoot = exactWitness || options.sameMerkleDifferentBytes
-    ? currentRoot
-    : "older-root-9876543210";
+  const witnessedRoot =
+    exactWitness || options.sameMerkleDifferentBytes
+      ? currentRoot
+      : "older-root-9876543210";
   const witnessedSha = exactWitness ? rootSha : "d".repeat(64);
   const witnessedBytes = exactWitness
     ? Buffer.byteLength(rootRaw)
@@ -129,7 +130,10 @@ function fixtureFetcher(
           return json({
             jsonrpc: "2.0",
             id: "fabric-probe",
-            error: { code: -32602, message: "params.message needs messageId and parts" },
+            error: {
+              code: -32602,
+              message: "params.message needs messageId and parts",
+            },
           });
         }
         return options.a2aReachable
@@ -233,6 +237,20 @@ function fixtureFetcher(
           as_of: "2026-09-04T04:24:30Z",
         });
       }
+      if (url.pathname === "/api/revenue") {
+        return json({
+          schema: "csoai.revenue/0.1",
+          settled_usdc: { count: 20_000, status: "MEASURED" },
+          one_number: {
+            status: "MEASURED",
+            all_time: 1,
+            settlements: 1,
+            self_settlements: 5,
+            zero_value_settlements: 4,
+          },
+          provisioning: { kv_bound: true, gated: false },
+        });
+      }
       if (url.pathname === "/root.json") {
         return new Response(rootRaw, {
           headers: { "content-type": "application/json" },
@@ -313,29 +331,39 @@ describe("GET /api/fabric", () => {
         `${origin}/api/fabric`,
         async (input, init) => {
           const request = new Request(input, init);
-          if (new URL(request.url).pathname !== "/mcp") return otherRails(input, init);
+          if (new URL(request.url).pathname !== "/mcp")
+            return otherRails(input, init);
           mcpCalls += 1;
-          expect(request.headers.get("MCP-Protocol-Version")).toBe("2026-07-28");
+          expect(request.headers.get("MCP-Protocol-Version")).toBe(
+            "2026-07-28",
+          );
           expect(request.headers.get("Mcp-Method")).toBe("tools/list");
           expect(await request.clone().json()).toMatchObject({
-            jsonrpc: "2.0", id: "fabric-probe", method: "tools/list",
-            params: { _meta: {
-              "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-              "io.modelcontextprotocol/clientCapabilities": {},
-            } },
+            jsonrpc: "2.0",
+            id: "fabric-probe",
+            method: "tools/list",
+            params: {
+              _meta: {
+                "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+                "io.modelcontextprotocol/clientCapabilities": {},
+              },
+            },
           });
           const response = await onMcpRequest({ request, env: {} } as never);
           expect(response.status).toBe(200);
-          expect(response.headers.get("content-type")).toContain("application/json");
+          expect(response.headers.get("content-type")).toContain(
+            "application/json",
+          );
           expect(await response.clone().json()).toMatchObject({
-            id: "fabric-probe", result: { resultType: "complete" },
+            id: "fabric-probe",
+            result: { resultType: "complete" },
           });
           return response;
         },
         OBSERVED_AT,
       );
       expect(mcpCalls).toBe(1);
-      expect(otherRails).toHaveBeenCalledTimes(15);
+      expect(otherRails).toHaveBeenCalledTimes(16);
       expect(externalFetch).not.toHaveBeenCalled();
       expect(byId(manifest, "mcp-tools")).toMatchObject({
         state: "RUNTIME_OBSERVED",
@@ -356,8 +384,8 @@ describe("GET /api/fabric", () => {
     );
 
     expect(manifest.schema).toBe("csoai.capability-fabric/0.1");
-    expect(fetcher).toHaveBeenCalledTimes(16);
-    expect(manifest.rails.length).toBe(16);
+    expect(fetcher).toHaveBeenCalledTimes(17);
+    expect(manifest.rails.length).toBe(17);
     expect(manifest.action_contract).toMatchObject({
       schema: "csoai.capability-action-contract/0.1",
       policy: { mode: "FAIL_CLOSED", execution_enabled: false },
@@ -446,6 +474,14 @@ describe("GET /api/fabric", () => {
       writes_board: false,
       summary: expect.stringContaining("no settlement"),
     });
+    expect(byId(manifest, "x402-settlement")).toMatchObject({
+      state: "RUNTIME_OBSERVED",
+      writes_board: false,
+      summary: expect.stringContaining("1 distinct non-self payer"),
+    });
+    expect(byId(manifest, "x402-settlement").summary).toContain(
+      "5 self-funded",
+    );
     expect(byId(manifest, "public-root").state).toBe("SIGNED");
     expect(byId(manifest, "public-root").summary).toContain("Ed25519 verified");
   });
@@ -527,7 +563,9 @@ describe("GET /api/fabric", () => {
       state: "UNCHECKABLE",
       last_error: "witness corpus_scope does not bind the current root",
     });
-    expect(witness.summary).toContain("no corpus relationship or count is asserted");
+    expect(witness.summary).toContain(
+      "no corpus relationship or count is asserted",
+    );
     expect(witness.summary).not.toContain("154 root leaves");
   });
 
@@ -555,7 +593,7 @@ describe("GET /api/fabric", () => {
       OBSERVED_AT,
     );
 
-    expect(manifest.rails.length).toBe(16);
+    expect(manifest.rails.length).toBe(17);
     expect(byId(manifest, "mcp-tools")).toMatchObject({
       state: "UNREACHABLE",
       last_error: "network unavailable",
@@ -594,7 +632,7 @@ describe("GET /api/fabric", () => {
       await vi.advanceTimersByTimeAsync(3_500);
       const manifest = await pending;
 
-      expect(fetcher).toHaveBeenCalledTimes(16);
+      expect(fetcher).toHaveBeenCalledTimes(17);
       expect(byId(manifest, "mcp-tools")).toMatchObject({
         state: "UNREACHABLE",
         last_error: "probe timed out after 3500ms",
