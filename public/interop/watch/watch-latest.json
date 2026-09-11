@@ -1,6 +1,6 @@
 {
   "schema": "csoai.watch.snapshot/0.1",
-  "generated_at": "2026-09-11T06:48:24.107504Z",
+  "generated_at": "2026-09-11T07:00:28.196308Z",
   "doctrine": "Measurement, not certification. A divergence is a fact about two sourced numbers, not an accusation. claim: null is UNMEASURED and stays visible.",
   "metrics_ok": true,
   "metrics_as_of": "2026-09-11T06:45:46.638Z",
@@ -112,8 +112,16 @@
     {
       "symbol": "EURCV",
       "issuer": "Société Générale-FORGE",
-      "status": "UNMEASURED",
-      "claim": null,
+      "status": "PROBED",
+      "claim": {
+        "type": "qualitative-backing",
+        "text": "Track our reserves daily on the Societe Generale-Forge website for a fully transparent experience.",
+        "numeric_supply_usd": null,
+        "scope": "all-chains",
+        "source_url": "https://www.sgforge.com/product/coinvertible",
+        "archived_at": "2026-09-11T07:58:00Z",
+        "archive_note": "Served HTML (66,644 bytes, HTTP 200) claims DAILY published reserves but serves no numeric figure on the page itself — the transparency claim points at a number the page does not show. Numeric issuer-side claim UNMEASURED on this source."
+      },
       "external_reference": null,
       "observable": {
         "supply": 10000000,
@@ -126,12 +134,12 @@
       "xrpl_share_of_tracker_pct": null,
       "scope_note": null,
       "unmeasured": [
-        "issuer_claim: no archived claim in the registry"
+        "numeric_issuer_claim: the issuer page serves no supply figure"
       ]
     },
     {
       "symbol": "USD.bs",
-      "issuer": null,
+      "issuer": "Bitstamp",
       "status": "UNMEASURED",
       "claim": null,
       "external_reference": null,
@@ -151,7 +159,7 @@
     },
     {
       "symbol": "EUR.bs",
-      "issuer": null,
+      "issuer": "Bitstamp",
       "status": "UNMEASURED",
       "claim": null,
       "external_reference": null,

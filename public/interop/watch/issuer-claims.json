@@ -62,9 +62,23 @@
     },
     { "symbol": "USDB", "issuer": "Braza Bank", "issuer_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc", "claim": null, "external_reference": null, "registry_note": "brazabank.com/usdb served 200 but carried no machine-readable supply or reserve figure (checked 2026-09-11)." },
     { "symbol": "BBRL", "issuer": "Braza Bank", "issuer_address": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt", "claim": null, "external_reference": null, "registry_note": "brazabank.com/bbrl served 200 but carried no machine-readable supply or reserve figure (checked 2026-09-11)." },
-    { "symbol": "EURCV", "issuer": "Société Générale-FORGE", "issuer_address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL", "claim": null, "external_reference": null },
-    { "symbol": "USD.bs", "issuer": null, "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", "claim": null, "external_reference": null },
-    { "symbol": "EUR.bs", "issuer": null, "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", "claim": null, "external_reference": null },
+    {
+      "symbol": "EURCV",
+      "issuer": "Société Générale-FORGE",
+      "issuer_address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+      "claim": {
+        "type": "qualitative-backing",
+        "text": "Track our reserves daily on the Societe Generale-Forge website for a fully transparent experience.",
+        "numeric_supply_usd": null,
+        "scope": "all-chains",
+        "source_url": "https://www.sgforge.com/product/coinvertible",
+        "archived_at": "2026-09-11T07:58:00Z",
+        "archive_note": "Served HTML (66,644 bytes, HTTP 200) claims DAILY published reserves but serves no numeric figure on the page itself — the transparency claim points at a number the page does not show. Numeric issuer-side claim UNMEASURED on this source."
+      },
+      "external_reference": null
+    },
+    { "symbol": "USD.bs", "issuer": "Bitstamp", "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", "claim": null, "external_reference": null, "registry_note": "bitstamp.net serves a 212-byte redirect shell; no supply or reserve text reachable (checked 2026-09-11)." },
+    { "symbol": "EUR.bs", "issuer": "Bitstamp", "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", "claim": null, "external_reference": null, "registry_note": "bitstamp.net serves a 212-byte redirect shell; no supply or reserve text reachable (checked 2026-09-11)." },
     { "symbol": "USD.gh", "issuer": "GateHub", "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", "claim": null, "external_reference": null, "registry_note": "gatehub.net serves an 8.9KB JS shell with no supply or reserve text (checked 2026-09-11)." },
     { "symbol": "EUR.gh", "issuer": "GateHub", "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", "claim": null, "external_reference": null, "registry_note": "gatehub.net serves an 8.9KB JS shell with no supply or reserve text (checked 2026-09-11)." },
     {
