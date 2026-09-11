@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Key custody &amp; disclosure — Council of AI</title>
+<meta name="description" content="Where the Council of AI signing keys live, what signs what, rotation policy, and the mechanical guards that enforce this page. Measurement, never certification." />
+<style>
+  :root { --ink:#23282e; --muted:#5d6670; --paper:#faf8f4; --line:#e3ded4; --accent:#7a5c2e; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:17px/1.65 Georgia, 'Times New Roman', serif; }
+  main { max-width:760px; margin:0 auto; padding:56px 22px 80px; }
+  h1 { font-size:30px; line-height:1.25; margin:0 0 6px; }
+  h2 { font-size:20px; margin:38px 0 8px; border-bottom:1px solid var(--line); padding-bottom:6px; }
+  p { margin:12px 0; }
+  .sub { color:var(--muted); font-style:italic; margin-bottom:28px; }
+  table { border-collapse:collapse; width:100%; font-size:15px; margin:14px 0; }
+  th, td { text-align:left; border-bottom:1px solid var(--line); padding:7px 8px; vertical-align:top; }
+  th { color:var(--muted); font-weight:normal; font-size:13px; text-transform:uppercase; letter-spacing:.06em; }
+  code { font:13px/1.5 ui-monospace, Menlo, monospace; background:#f0ece3; padding:1px 5px; border-radius:4px; }
+  .rule { background:#f3efe6; border-left:3px solid var(--accent); padding:12px 16px; margin:16px 0; }
+  .fine { color:var(--muted); font-size:14px; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Key custody &amp; disclosure</h1>
+  <p class="sub">Published policy + the public keys. Measurement, never certification — this page certifies nothing; it discloses so drift is visible.</p>
+
+  <h2>The custody model</h2>
+  <p>Two keys sign everything this estate publishes. Both live inside CI infrastructure — <strong>never on a laptop, never in a browser wallet, never in a chat transcript</strong>:</p>
+  <div class="rule">
+    <p><strong>#board-attestation-1</strong> signs the public-root envelope (<code>root.json</code>). The PKCS8 lives as encrypted CI configuration, reached only by the single publisher workflow over OIDC. No local shell has ever held it. A card that cannot be signed inside that pipeline ships unsigned or does not ship — the <code>NO_LAPTOP_SIGN</code> tag exists so an unsigned card can never masquerade as signed.</p>
+    <p><strong>#card-attestation-1</strong> signs measurement cards. Same rule: the GHA publisher, nowhere else.</p>
+  </div>
+  <p>One writer law: only the publisher workflow writes the board, the root, or cards. Agent lanes produce <em>unsigned artifacts and pull requests</em> — signing happens nowhere else, including this page's authors.</p>
+
+  <h2>Public key disclosure</h2>
+  <table>
+    <tr><th>Key id</th><th>Algorithm</th><th>Signs</th></tr>
+    <tr><td><code>did:web:csoai.org#board-attestation-1</code></td><td>Ed25519</td><td>Public-root envelope (<a href="/root.json">/root.json</a>)</td></tr>
+    <tr><td><code>did:web:csoai.org#card-attestation-1</code></td><td>Ed25519</td><td>Measurement cards (card-v0 <code>sig_ed25519</code>; shape-A chain cards, Aug 2026)</td></tr>
+    <tr><td><code>did:web:csoai.org#site-release-1</code></td><td>Ed25519</td><td>Site release attestation</td></tr>
+    <tr><td><code>did:web:csoai.org#estate-chain-1</code></td><td>Ed25519</td><td>Estate chain links</td></tr>
+    <tr><td><code>did:web:csoai.org#gspc-board-22axis-2026</code></td><td>Ed25519 (3-party)</td><td>22-axis board configuration attestation</td></tr>
+  </table>
+  <p class="fine">Full public key material (JWK): <a href="/.well-known/did.json">/.well-known/did.json</a> · key-discovery document: <a href="/.well-known/scitt-keys">/.well-known/scitt-keys</a> (<code>we_operate_a_ts: false</code> — discovery only, never a transparency-service claim).</p>
+
+  <h2>Rotation &amp; retirement</h2>
+  <p>Keys rotate by DID-document update. Signatures name their key id, so historical artefacts stay verifiable against the key that signed them. A key id absent from <code>did.json</code> after a disclosed rotation is retired — never silently compromised. Rotation events are disclosed in the <a href="/api/corrections">public corrections ledger</a>.</p>
+
+  <h2>What enforces this page</h2>
+  <p>A custody statement nobody checks is marketing. Ours is wired to machines:</p>
+  <table>
+    <tr><th>Guard</th><th>What it does</th></tr>
+    <tr><td>Halt-on-split</td><td>The publisher refuses to publish when the committed tree and the computed tree disagree.</td></tr>
+    <tr><td>Public-root watcher</td><td>After every publish, three hosts' copies are byte-compared; drift turns the run red.</td></tr>
+    <tr><td>Health inventory</td><td>Hourly probe of root freshness, endpoint health, witness presence; failure opens a tracked issue.</td></tr>
+    <tr><td>Corrections ledger</td><td>Our own failed attestations stay visible — 58,184 failed reproduction attempts against one early signature are published, not buried.</td></tr>
+  </table>
+
+  <h2>What we do not hold</h2>
+  <p>No SOC 2 report. No third-party audit of this statement. No HSM claim. No certification of any kind attaches to this page or to anything it describes. If those ever change, this section changes — with a dated entry in the corrections ledger, not a quiet edit.</p>
+
+  <p class="fine">Council of AI (CSOAI Ltd, UK 16939677) · Verify everything free: <a href="/signed/HOW-TO-VERIFY.md">/signed/HOW-TO-VERIFY.md</a> · This page is the public evidence behind the custody-disclosure axis on the <a href="/api/gspc">GSPC board</a>.</p>
+</main>
+</body>
+</html>

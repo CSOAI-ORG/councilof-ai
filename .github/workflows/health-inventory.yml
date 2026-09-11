@@ -1,0 +1,165 @@
+name: health-inventory
+
+# J11 (2026-09-11 brief) — the estate monitors itself.
+# Hourly, read-only probes against LIVE surfaces. Never a writer: this workflow
+# touches no branch, no board, no root. On failure it opens ONE rolling GitHub
+# issue (label: health-inventory) and exits red; on recovery it closes it.
+# Results land in the job summary JSON — /status/internal renders from there.
+
+on:
+  schedule:
+    - cron: '23 * * * *'   # staggered off the top-of-hour publisher/watcher
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+
+concurrency:
+  group: health-inventory
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Probe live estate
+        id: probe
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, sys, time
+          from datetime import datetime, timezone
+
+          UA = ["-A", "csoai-health-inventory/0"]
+          def fetch(url, follow=False):
+              args = ["curl", "-sS", "--max-time", "20", *UA]
+              if follow:
+                  args.append("-L")
+              args += ["-w", "\n%{http_code}", url]
+              out = subprocess.run(args, capture_output=True, text=True)
+              body, _, code = out.stdout.rpartition("\n")
+              return int(code or 0), body
+
+          now = datetime.now(timezone.utc)
+          checks = []
+
+          def check(name, ok, detail=""):
+              checks.append({"name": name, "ok": bool(ok), "detail": str(detail)[:300]})
+              print(("PASS " if ok else "FAIL ") + name + (" — " + str(detail)[:200] if detail else ""))
+
+          # 1. Root freshness (alert beyond 48h without a new leaf)
+          st, body = fetch("https://councilof.ai/root.json")
+          root = None
+          try:
+              root = json.loads(body)
+          except Exception:
+              pass
+          if st == 200 and root:
+              as_of = datetime.fromisoformat(root["as_of"].replace("Z", "+00:00"))
+              age_h = (now - as_of).total_seconds() / 3600
+              check("root-freshness", age_h <= 48, f"as_of={root['as_of']} age={age_h:.1f}h cards={root.get('card_count')}")
+          else:
+              check("root-freshness", False, f"root.json HTTP {st}")
+
+          # 2. Twin parity (post-redirect merkle + as_of equality — the 308 IS the mechanism)
+          sta, ba = fetch("https://csoai.org/root.json", follow=True)
+          try:
+              apex = json.loads(ba)
+              same = apex.get("merkle_root") == (root or {}).get("merkle_root") and apex.get("as_of") == (root or {}).get("as_of")
+              check("twin-parity", sta == 200 and same, f"apex merkle={str(apex.get('merkle_root'))[:16]}… canon={str((root or {}).get('merkle_root'))[:16]}…")
+          except Exception as e:
+              check("twin-parity", False, f"{type(e).__name__} http={sta}")
+
+          # 3. Key endpoints (12)
+          endpoints = [
+              "https://councilof.ai/api/gspc",
+              "https://councilof.ai/api/cards",
+              "https://councilof.ai/api/swift",
+              "https://councilof.ai/api/pqc",
+              "https://councilof.ai/api/otel",
+              "https://councilof.ai/.well-known/did.json",
+              "https://councilof.ai/.well-known/x402.json",
+              "https://councilof.ai/.well-known/scitt-keys",
+              "https://councilof.ai/llms.txt",
+              "https://councilof.ai/signed/HOW-TO-VERIFY.md",
+              "https://councilof.ai/custody.html",
+              "https://csoai.org/.well-known/did.json",
+          ]
+          down = []
+          for u in endpoints:
+              st, _ = fetch(u)
+              if st != 200:
+                  down.append(f"{u} → {st}")
+          check("endpoints-12", not down, "; ".join(down) if down else "12/12 → 200")
+
+          # 4. x402 config present + live
+          st, body = fetch("https://councilof.ai/.well-known/x402.json")
+          try:
+              x = json.loads(body)
+              check("x402-config", st == 200 and x.get("mode") == "live", f"mode={x.get('mode')}")
+          except Exception:
+              check("x402-config", False, f"HTTP {st} or unparseable")
+
+          # 5. Witness sidecar present (OTS/Rekor state readable — presence, not grade)
+          st, body = fetch("https://councilof.ai/interop/root-witness-latest.json")
+          try:
+              w = json.loads(body)
+              ok = st == 200 and bool((w.get("artifact") or {}).get("sha256"))
+              check("witness-sidecar", ok, f"kind={w.get('kind')}")
+          except Exception:
+              check("witness-sidecar", False, f"HTTP {st} or unparseable")
+
+          # v0 honest scope: per-card age queue (>90d) is NOT probed here — the card
+          # corpus endpoint does not expose per-card as_of. Named, not zero-filled.
+          checks.append({"name": "card-age-90d-queue", "ok": True, "detail": "NOT_PROBED_IN_V0 — /api/cards exposes counts, not per-card dates"})
+
+          summary = {"schema": "csoai.health-inventory/0.1", "as_of": now.isoformat(), "checks": checks,
+                     "ok": all(c["ok"] for c in checks)}
+          with open("health.json", "w") as f:
+              json.dump(summary, f, indent=1)
+          print(json.dumps(summary))
+          if not summary["ok"]:
+              sys.exit(1)
+          PY
+
+      - name: Publish result (job summary + rolling issue on fail)
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          OUTCOME: ${{ steps.probe.outcome }}
+        run: |
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          cat health.json >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || echo '{"error":"probe produced no health.json"}' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          python3 - <<'PY'
+          import json, os, subprocess
+          try:
+              h = json.load(open("health.json"))
+          except Exception:
+              h = {"ok": False, "checks": [{"name": "probe-crash", "detail": "no health.json"}]}
+          repo = os.environ["GH_REPO"]
+          failed = [c for c in h.get("checks", []) if not c.get("ok")]
+          existing = subprocess.run(
+              ["gh", "issue", "list", "--repo", repo, "--label", "health-inventory",
+               "--state", "open", "--json", "number", "--limit", "1"],
+              capture_output=True, text=True).stdout
+          open_issue = json.loads(existing or "[]")
+          if failed:
+              body = ("Health inventory FAIL " + h.get("as_of", "?") + "\n\n" +
+                      "\n".join(f"- **{c['name']}** — {c.get('detail','')}" for c in failed) +
+                      "\n\nRolling issue: this closes itself when the probes go green.")
+              if open_issue:
+                  subprocess.run(["gh", "issue", "comment", str(open_issue[0]["number"]),
+                                  "--repo", repo, "--body", body], check=False)
+              else:
+                  subprocess.run(["gh", "issue", "create", "--repo", repo,
+                                  "--title", "health-inventory: estate self-probe failing",
+                                  "--label", "health-inventory", "--body", body], check=False)
+          elif open_issue:
+              subprocess.run(["gh", "issue", "close", str(open_issue[0]["number"]), "--repo", repo,
+                              "--comment", "Recovered: all probes green " + h.get("as_of", "?")], check=False)
+          PY
