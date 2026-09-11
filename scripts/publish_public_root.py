@@ -42,6 +42,7 @@ from adapters import (  # noqa: E402
     genai_mil_notices,
     hub_cite,
     provider_diff,
+    stablecoin_universe,
     staged_leaves,
     swift_notices,
     witness_queue,
@@ -527,6 +528,7 @@ def main() -> int:
     genai_mil_out = genai_mil_notices.collect()
     staged_out = staged_leaves.collect(ROOT)
     provider_diff_out = provider_diff.collect(ROOT)
+    stablecoin_universe_out = stablecoin_universe.collect(ROOT)
     hub_out = hub_cite.collect(ROOT)
     witness_out = witness_queue.collect(ROOT)
     # Signed x402 receipts (offer-receipt extension §5) from REVENUE_KV, plus disk mirrors.
@@ -562,6 +564,7 @@ def main() -> int:
     # summary) staged by scripts/watch/provider_watch.py. File reader, no
     # network, never raises. See scripts/adapters/provider_diff.py.
     leaves.extend(provider_diff_out["leaves"])
+    leaves.extend(stablecoin_universe_out["leaves"])
     leaves.extend(x402_receipts_out["leaves"])
     leaves.extend(evm_out["leaves"])
     leaves.extend(evm_events_out["leaves"])
@@ -660,6 +663,7 @@ def main() -> int:
                 "staged_leaves": {"status": "halt-before-write", **staged_out["sidecar"]},
                 "witness_queue": {"status": "halt-before-write", **witness_out["sidecar"]},
                 "provider_diff": {"status": "halt-before-write", **provider_diff_out["sidecar"]},
+                "stablecoin_universe": {"status": "halt-before-write", **stablecoin_universe_out["sidecar"]},
                 "evm_permissions": {"status": "halt-before-write", **evm_out["sidecar"]},
                 "evm_permission_events": {"status": "halt-before-write", **evm_events_out["sidecar"]},
             },
@@ -802,6 +806,7 @@ def main() -> int:
         "staged_leaves": staged_out.get("sidecar") or {},
         "witness_queue": witness_out.get("sidecar") or {},
         "provider_diff": provider_diff_out.get("sidecar") or {},
+        "stablecoin_universe": stablecoin_universe_out.get("sidecar") or {},
         "evm_permissions": evm_out.get("sidecar") or {},
         "evm_permission_events": evm_events_out.get("sidecar") or {},
         "card_count": len(shas),
