@@ -445,37 +445,39 @@ export async function buildFabricManifest(
     const totals = record(gspc.json.totals);
     const axes = array(gspc.json.axes);
     const matrixCounts = record(cardMatrix.json?.counts);
-    const admitted = number(matrixCounts?.admitted_cells);
-    const quotable = number(matrixCounts?.quotable_cells);
-    const admissionObserved =
-      cardMatrix.ok && admitted !== null && quotable !== null;
-    const hasAdmittedEvidence =
-      admissionObserved && admitted > 0 && quotable > 0;
+    const matrixCells = number(matrixCounts?.cells);
+    const signedCells = number(matrixCounts?.signed_cells);
+    const matrixModels = number(matrixCounts?.models);
+    const matrixAxes = number(matrixCounts?.axes);
+    const matrixObserved =
+      cardMatrix.ok && matrixCells !== null && signedCells !== null;
+    const hasSignedMatrix =
+      matrixObserved && matrixCells > 0 && signedCells > 0;
     rails.push(
       rail(observedAt, {
         id: "gspc-board",
         label: "GSPC board",
-        role: "published board catalogue and independent-admission gate",
+        role: "published board catalogue and signed-card matrix",
         protocol: "HTTP+JSON / Ed25519 envelope when present",
-        state: hasAdmittedEvidence
+        state: hasSignedMatrix
           ? "RUNTIME_OBSERVED"
-          : admissionObserved
+          : matrixObserved
             ? "CATALOGUED"
             : "UNCHECKABLE",
         endpoint: "/api/gspc",
-        evidence_ref: admissionObserved
+        evidence_ref: matrixObserved
           ? "/signed/card-matrix.json#counts"
           : "/api/gspc",
-        summary: admissionObserved
-          ? `${short(totals?.public_count) ?? `${axes.length} published axis`} reported by the historical board endpoint; independent gate: ${admitted} admitted, ${quotable} quotable cell${quotable === 1 ? "" : "s"}. ${hasAdmittedEvidence ? "Only admitted cells may feed current rankings." : "Legacy figures remain context and are withheld from current rankings."}`
-          : `${short(totals?.public_count) ?? `${axes.length} published axis`} reported, but the independent-admission matrix was unreadable; no current measurement claim is made.`,
+        summary: matrixObserved
+          ? `${short(totals?.public_count) ?? `${axes.length} published axis`} reported by the historical board endpoint; signed-card matrix: ${matrixCells} cells, ${signedCells} carrying outer signatures${matrixModels === null ? "" : `, ${matrixModels} models`}${matrixAxes === null ? "" : ` across ${matrixAxes} represented axes`}. This inventory does not establish currentness, independent admission, ranking or compliance.`
+          : `${short(totals?.public_count) ?? `${axes.length} published axis`} reported, but the signed-card matrix was unreadable; no current measurement claim is made.`,
         freshness_seconds: ageSeconds(
           record(gspc.json.measured_on)?.as_of,
           observedAtMs,
         ),
-        last_error: admissionObserved
+        last_error: matrixObserved
           ? null
-          : (cardMatrix.error ?? "admission counts were absent"),
+          : (cardMatrix.error ?? "signed-card matrix counts were absent"),
       }),
     );
   } else {
