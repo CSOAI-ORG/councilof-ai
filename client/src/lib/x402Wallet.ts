@@ -11,6 +11,42 @@ export interface EIP1193Provider {
   request: (args: { method: string; params: unknown[] }) => Promise<unknown>;
 }
 
+/** Ask the wallet to move to the exact chain carried by the signed challenge. */
+async function requireWalletChain(
+  provider: EIP1193Provider,
+  wanted: number,
+): Promise<void> {
+  const readChain = async () => {
+    const chainHex = (await provider.request({
+      method: "eth_chainId",
+      params: [],
+    })) as string;
+    const actual = Number.parseInt(String(chainHex), 16);
+    if (
+      !/^0x[0-9a-fA-F]+$/.test(String(chainHex)) ||
+      !Number.isSafeInteger(actual) ||
+      actual <= 0
+    ) {
+      throw new Error("x402Wallet: wallet returned a malformed chain id");
+    }
+    return actual;
+  };
+
+  let actual = await readChain();
+  if (actual === wanted) return;
+
+  await provider.request({
+    method: "wallet_switchEthereumChain",
+    params: [{ chainId: `0x${wanted.toString(16)}` }],
+  });
+  actual = await readChain();
+  if (actual !== wanted) {
+    throw new Error(
+      `x402Wallet: wallet stayed on chain ${actual}; the 402 requires ${wanted}`,
+    );
+  }
+}
+
 export interface EIP6963ProviderDetail {
   info: { rdns: string; uuid: string; name: string; icon?: string };
   provider: EIP1193Provider;
@@ -330,23 +366,7 @@ export async function signX402Challenge(
     );
   }
   const wanted = acceptedChainId;
-  const chainHex = (await provider.request({
-    method: "eth_chainId",
-    params: [],
-  })) as string;
-  const actual = Number.parseInt(String(chainHex), 16);
-  if (
-    !/^0x[0-9a-fA-F]+$/.test(String(chainHex)) ||
-    !Number.isSafeInteger(actual) ||
-    actual <= 0
-  ) {
-    throw new Error("x402Wallet: wallet returned a malformed chain id");
-  }
-  if (actual !== wanted) {
-    throw new Error(
-      `x402Wallet: wallet is on chain ${actual}, the 402 requires ${wanted}. Switch network and try again.`,
-    );
-  }
+  await requireWalletChain(provider, wanted);
 
   const typedData = buildTypedData(challenge, signer);
   const signature = (await provider.request({
