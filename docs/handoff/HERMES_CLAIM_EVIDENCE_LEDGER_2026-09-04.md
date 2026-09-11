@@ -39,3 +39,43 @@ routed UI truth pages; TUI 2 owns lifecycle and protocol contracts; Hermes owns
 this ledger; Claude Master owns integration and read-only production
 verification. No lane may send email, publish externally, spend, merge or deploy
 under these post-release job orders.
+
+## Verified delta — 11 September 2026
+
+**Resolved base:** `56a64bfc1c339ffc33ebc6a8826564de9c851535`
+
+This section reconciles the later six-TUI transcripts with merged files and
+live production. It supersedes older quantities only where the evidence below
+is explicit. Transcript-only totals such as “58 cards”, “83 cards”, “60 cards”
+or “all 425 measured” remain research claims and do not change release state.
+
+| Claim | State | Evidence reference | Observed boundary |
+| --- | --- | --- | --- |
+| Stablecoin estate coverage | `INDEXED_NOT_MEASURED` | `public/interop/stablecoin-universe-2026-09/readiness.json`; PR #1896; production SHA-256 `1eaf817698d7c48dc1ba30089fc6ab9920acad2e958da5da629c02cb8eea7983` | 425 indexed assets, 1,640 asset/chain entries and 211 reported chains; one asset has independent measurement evidence and 424 do not |
+| RLUSD coverage | `MEASURED_PARTIAL_XRPL` | stablecoin readiness record and its cited rooted card | Cross-chain coverage is not established by the current rooted evidence; do not repeat the unsupported `4,074` trustline correction or a cross-date supply-gap story |
+| Asset-specific protocol coverage | `ZERO` | stablecoin readiness record | Zero stablecoin-specific A2A skills, MCP tools, x402 doors or verified settlements; generic protocol routes are not asset coverage |
+| Mill receipt outer signatures | `VALID_36_OF_36` | `public/interop/mill-receipt-readiness.json`; PR #1897; production SHA-256 `a8824964d7e8283d7882213bf75cfc35ca51044c6c470d6fa7175e0edb03ddc2` | Outer Ed25519 validity does not upgrade the inner lifecycle declaration |
+| Mill receipt inner lifecycle | `STAGED_UNSIGNED_36_OF_36` | same readiness record | Preserve signed bytes; the inner records still declare `STAGED_UNSIGNED` |
+| Mill receipt regulation linkage | `LINKED_5_UNLINKED_31` | same readiness record | Only five receipts are regulation-score eligible; unlinked receipts have no regulation score |
+| Current public root | `SIGNED_REKOR_WITNESSED` | `public/interop/public-root-latest.json`; `public/interop/root-witness-latest.json`; deploy run 34589738751 | 167 leaves; root SHA-256 `62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6`; Merkle root `78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5`; Rekor log index 2791822965 |
+| Current root witnesses | `REKOR_WITNESSED_OTS_PENDING` | `public/interop/root-witness-latest.json` | OTS remains `STAMPED_PENDING_BITCOIN`; Base EAS and XRPL memo remain `NOT_YET` |
+| USBDC | `REPORTED_CANDIDATE_UNMEASURED` | `public/interop/stablecoin-universe-2026-09/discovery-candidates.json`; PR #1898 | Issuer launch report is verified; canonical issuer account, transactions, ledger evidence, signature, root and anchor are still absent |
+| x402 promotional door | `LIVE_UNSETTLED_TEST_PENDING` | PR #1895; live 402 challenge from `/api/request-attestation` | Bounded test is 0.01 USDC on Base for existing `llama3.2:3b` evidence; any self-purchase must be labeled `INTERNAL_SELF_FUNDED` and cannot evidence outside demand |
+| Revenue | `ONE_HISTORICAL_OUTSIDE_PAYER_NO_REPEAT_PROOF` | existing revenue evidence ledger | The pending internal settlement tests plumbing only; it cannot increase the outside-payer count |
+| Directory distribution | `PARTIAL_RECONCILIATION` | live `.well-known/agent-card.json`, `/mcp`, Glama pages and unresolved MCP.so submission state | HTTP reachability and index entries do not establish adoption; stale duplicate descriptions must not be amplified |
+| Global-now hunt | `RESEARCH_INPUT_PARTIALLY_VERIFIED` | attached hunt plus official-source checks | NIST AI Documentation Zero Draft input closes 2026-09-16; SEC Regulation Crypto Assets comments close 2026-10-20; all other volatile claims require primary-source verification before cards or copy |
+
+### Immediate gates retained
+
+1. Let the USBDC deployment complete its existing run and verify production
+   bytes; never restart it solely because observation timed out.
+2. Execute the 0.01 USDC Base settlement only after exact action-time financial
+   confirmation, then preserve transaction, facilitator and attribution
+   receipts with `INTERNAL_SELF_FUNDED` classification.
+3. Reconcile directory listings against canonical copy before any new
+   representational submission; do not create duplicates.
+4. Do not edit or send the three IETF drafts until the exact send batch has
+   action-time confirmation; preserve the requested spacing if authorised.
+5. Continue the global hunt as candidate intake: official source, frozen input,
+   reproducible reader, admission, signature and root inclusion are separate
+   gates.
