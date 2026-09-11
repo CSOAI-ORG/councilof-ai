@@ -177,6 +177,15 @@ def _specimen_leaf(entry: dict[str, Any]) -> dict[str, Any]:
     unmeasured = ["outcome"] if entry.get("outcome") is None else []
     if entry.get("access_ask"):
         payload["access_ask"] = entry["access_ask"]
+    inc = entry.get("incident_class_as_accounted")
+    if inc:
+        payload["incident_class_as_accounted"] = {
+            k: v for k, v in inc.items() if k in ("swarm_size", "escape", "log_integrity", "attribution")
+        }
+        if entry.get("event", {}).get("incident_ref"):
+            payload["incident_ref"] = entry["event"]["incident_ref"][:200]
+    if entry.get("tags_public"):
+        payload["tags_public"] = entry["tags_public"]
     return {
         "surface": "public.notice",
         "subject": f"Specimen ledger: {entry.get('event', {}).get('name', entry.get('id'))}",

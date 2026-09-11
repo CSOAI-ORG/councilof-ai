@@ -61,17 +61,59 @@
       "external_reference": null
     },
     { "symbol": "USDB", "issuer": "Braza Bank", "issuer_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc", "claim": null, "external_reference": null, "registry_note": "brazabank.com/usdb served 200 but carried no machine-readable supply or reserve figure (checked 2026-09-11)." },
-    { "symbol": "BBRL", "issuer": "Braza Bank", "issuer_address": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt", "claim": null, "external_reference": null },
+    { "symbol": "BBRL", "issuer": "Braza Bank", "issuer_address": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt", "claim": null, "external_reference": null, "registry_note": "brazabank.com/bbrl served 200 but carried no machine-readable supply or reserve figure (checked 2026-09-11)." },
     { "symbol": "EURCV", "issuer": "Société Générale-FORGE", "issuer_address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL", "claim": null, "external_reference": null },
     { "symbol": "USD.bs", "issuer": null, "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", "claim": null, "external_reference": null },
     { "symbol": "EUR.bs", "issuer": null, "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", "claim": null, "external_reference": null },
-    { "symbol": "USD.gh", "issuer": null, "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", "claim": null, "external_reference": null },
-    { "symbol": "EUR.gh", "issuer": null, "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", "claim": null, "external_reference": null },
-    { "symbol": "EURQ", "issuer": null, "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs", "claim": null, "external_reference": null },
-    { "symbol": "USDQ", "issuer": null, "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs", "claim": null, "external_reference": null },
-    { "symbol": "EURØP", "issuer": null, "issuer_address": "rMkEuRii9w9uBMQDnWV5AA43gvYZR9JxVK", "claim": null, "external_reference": null },
-    { "symbol": "XAU.gh", "issuer": null, "issuer_address": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ", "claim": null, "external_reference": null },
-    { "symbol": "GBP.gh", "issuer": null, "issuer_address": "r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g", "claim": null, "external_reference": null },
+    { "symbol": "USD.gh", "issuer": "GateHub", "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", "claim": null, "external_reference": null, "registry_note": "gatehub.net serves an 8.9KB JS shell with no supply or reserve text (checked 2026-09-11)." },
+    { "symbol": "EUR.gh", "issuer": "GateHub", "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", "claim": null, "external_reference": null, "registry_note": "gatehub.net serves an 8.9KB JS shell with no supply or reserve text (checked 2026-09-11)." },
+    {
+      "symbol": "EURQ",
+      "issuer": "Quantoz Payments",
+      "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+      "claim": {
+        "type": "qualitative-backing",
+        "text": "Reserves are held 1:1 in cash and highly liquid financial instruments with Tier 1 banks in a AAA jurisdiction.",
+        "numeric_supply_usd": null,
+        "scope": "all-chains",
+        "source_url": "https://quantoz.com",
+        "archived_at": "2026-09-11T07:45:00Z",
+        "archive_note": "Served HTML (100,700 bytes, HTTP 200) carries the 1:1 reserve sentence and Dutch Central Bank supervision claim but NO numeric supply figure. Numeric issuer-side claim UNMEASURED on this source."
+      },
+      "external_reference": null
+    },
+    {
+      "symbol": "USDQ",
+      "issuer": "Quantoz Payments",
+      "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+      "claim": {
+        "type": "qualitative-backing",
+        "text": "Reserves are held 1:1 in cash and highly liquid financial instruments with Tier 1 banks in a AAA jurisdiction.",
+        "numeric_supply_usd": null,
+        "scope": "all-chains",
+        "source_url": "https://quantoz.com",
+        "archived_at": "2026-09-11T07:45:00Z",
+        "archive_note": "Same served page as EURQ — the issuer's claim covers its stablecoin family without per-instrument numbers."
+      },
+      "external_reference": null
+    },
+    {
+      "symbol": "EURØP",
+      "issuer": "Schuman Financial",
+      "issuer_address": "rMkEuRii9w9uBMQDnWV5AA43gvYZR9JxVK",
+      "claim": {
+        "type": "qualitative-backing",
+        "text": "pegged 1:1 … fully backed",
+        "numeric_supply_usd": null,
+        "scope": "all-chains",
+        "source_url": "https://schuman.io",
+        "archived_at": "2026-09-11T07:47:00Z",
+        "archive_note": "Served HTML (408,178 bytes, HTTP 200) carries 1:1-peg and fully-backed language but NO numeric supply figure. Numeric issuer-side claim UNMEASURED on this source."
+      },
+      "external_reference": null
+    },
+    { "symbol": "XAU.gh", "issuer": "GateHub", "issuer_address": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ", "claim": null, "external_reference": null, "registry_note": "gatehub.net serves an 8.9KB JS shell with no supply or reserve text (checked 2026-09-11)." },
+    { "symbol": "GBP.gh", "issuer": "GateHub", "issuer_address": "r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g", "claim": null, "external_reference": null, "registry_note": "gatehub.net serves an 8.9KB JS shell with no supply or reserve text (checked 2026-09-11)." },
     { "symbol": "PSC", "issuer": null, "issuer_address": "rwekfW4MiS5yZjXASRBDzzPPWYKuHvKP7E", "claim": null, "external_reference": null }
   ]
 }
