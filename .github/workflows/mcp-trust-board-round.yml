@@ -1,0 +1,55 @@
+name: mcp-trust-board-round
+on:
+  schedule:
+    # Weekly (spec §7: the population is ~200x the 100-row x402 catalog; weekly
+    # keeps per-host load at one handshake per week). Monday 04:41Z — off the
+    # :07 root tick, the :17 catalog-trust round, and the HF mill clash.
+    - cron: "41 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      cap:
+        description: "max unique hosts this round (census cap)"
+        required: false
+        default: "500"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: mcp-trust-board
+  cancel-in-progress: false
+
+jobs:
+  round:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - name: DRY round — handshake census, counts only
+        run: |
+          python3 scripts/mcp-trust-round.py --cap "${{ github.event.inputs.cap || '500' }}" \
+            --out-dir public/interop/mcp-trust
+      - name: land the artefact (via PR — master is GH006-protected)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-mcp-trust"
+          git config user.email "trust@csoai.org"
+          git add public/interop/mcp-trust/*.json public/interop/mcp-trust/unsigned/*.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "no snapshot change — nothing to land"
+            exit 0
+          fi
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          BR="census/mcp-trust-round-${STAMP}"
+          git checkout -b "$BR"
+          git commit -m "mcp-trust round: counts-only handshake census (${STAMP})"
+          git push origin "HEAD:$BR"
+          gh pr create --base master --head "$BR" \
+            --title "mcp-trust round: counts-only handshake census (${STAMP})" \
+            --body "Machine-produced weekly round (mcp-trust-board-round.yml), implementing docs/product/MCP-TRUST-BOARD-SPEC.md. Counts only by doctrine — host details withheld. A 401/402 is a term sheet, not delivery; UNREACHABLE is never FAIL; the unsigned card waits for the GHA publisher (this workflow never signs). Lands via PR because master push is GH006-protected."
+          echo "landed branch=$BR"
