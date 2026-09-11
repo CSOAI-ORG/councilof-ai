@@ -51,6 +51,9 @@ jobs:
       - name: Council truth gate — no simulated BFT or phantom engine doors
         run: npm run guard:council-truth
 
+      - name: Stablecoin readiness gate — indexed is never measured
+        run: npm run guard:stablecoin-readiness
+
       # Sitemap truth gate. Audited live 2026-09-05: 68 of 413 listed URLs did not answer 200
       # — 67 redirects and one 410 Gone. A sitemap asks a crawler to index exactly these URLs,
       # so a redirecting entry spends crawl budget being told to look elsewhere while the real

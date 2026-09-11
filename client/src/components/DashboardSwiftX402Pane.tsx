@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 
 const OsPanels = lazy(() => import("@/components/OsPanels"));
+const StablecoinReadinessView = lazy(() => import("@/components/StablecoinReadinessView"));
 
 /**
  * Council OS tab — SWIFT census + x402 doors (owner stranger-walk 6 Sep 2026).
@@ -21,6 +22,9 @@ export default function DashboardSwiftX402Pane() {
       </div>
       <Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Loading panels…</div>}>
         <OsPanels />
+      </Suspense>
+      <Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Loading stablecoin readiness…</div>}>
+        <StablecoinReadinessView />
       </Suspense>
       <section className="rounded-2xl border border-slate-200 bg-white p-4" data-testid="os-x402-doors">
         <h3 className="text-sm font-semibold text-slate-800">x402 — live Base · verify free</h3>
