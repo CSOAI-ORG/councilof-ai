@@ -1,0 +1,170 @@
+{
+  "kind": "csoai.nist-airmf-evidence-pack/0.1",
+  "schema": "csoai.nist-evidence/0.1",
+  "prepared_for": "NIST AI RMF community engagement \u2014 16 September 2026 deadline",
+  "prepared_at": "2026-09-11T13:00:00Z",
+  "preparation_status": "DRAFT \u2014 not submitted without final communication gate",
+  "publisher": "CSOAI Ltd (UK 16939677)",
+  "crosswalk_source": "public/interop/nist-airmf-gspc-crosswalk.json",
+  "crosswalk_as_of": "2026-09-01T00:00:00Z",
+  "crosswalk_status": "MAPPING",
+  "not_a_legal_determination": true,
+  "not_a_certification": true,
+  "not_a_conformity_assessment": true,
+  "context": {
+    "caisi_gsa_mou": "NIST CAISI signed MOU with GSA on 18 Mar 2026 to bring AI-evaluation science into federal procurement via USAi platform",
+    "open_docket": {
+      "name": "NIST AI RMF Profile: Trustworthy AI in Critical Infrastructure - Community of Interest",
+      "url": "https://www.nist.gov/programs-projects/concept-note-ai-rmf-profile-trustworthy-ai-critical-infrastructure"
+    },
+    "closed_docket": {
+      "name": "GSA GSAR clause 552.239-7001",
+      "comments_closed": "2026-08-03",
+      "url": "https://www.federalregister.gov/documents/2026/06/17/2026-12205/"
+    }
+  },
+  "evidence_summary": {
+    "total_signed_cards_in_repo": 1432,
+    "pr1888_signed_cards": 36,
+    "pr1888_all_verified": true,
+    "models_measured": 11,
+    "axes_covered": 14,
+    "nist_functions_mapped": {
+      "GOVERN": {
+        "gspc_axes": [
+          "governance",
+          "art5-safeguard",
+          "openness"
+        ],
+        "pr1888_cards": 7,
+        "evidence_type": "Signed measurement cards testing governance awareness, Article 5 prohibited-practice recognition, and transparency"
+      },
+      "MAP": {
+        "gspc_axes": [
+          "provenance",
+          "conformance",
+          "detector-interop"
+        ],
+        "pr1888_cards": 6,
+        "evidence_type": "Signed measurement cards testing provenance, protocol conformance, and detector interoperability"
+      },
+      "MEASURE": {
+        "gspc_axes": [
+          "safety",
+          "care",
+          "jail",
+          "affect",
+          "swarm",
+          "cross-reality",
+          "machinery-conformity"
+        ],
+        "pr1888_cards": 21,
+        "evidence_type": "Signed measurement cards with deterministic grading (exact-token/0.1), n=30, Wilson 95% CI"
+      },
+      "MANAGE": {
+        "gspc_axes": [
+          "continuity"
+        ],
+        "pr1888_cards": 1,
+        "evidence_type": "Signed measurement card testing continuity and temporal consistency"
+      }
+    }
+  },
+  "per_function_detail": [
+    {
+      "nist_function": "GOVERN",
+      "outcome": "Policies, accountability, and oversight structures for AI risk are in place and enforced",
+      "gspc_axes": [
+        "governance",
+        "art5-safeguard",
+        "openness"
+      ],
+      "evidence": "36 cards across these axes test whether models recognise governance obligations, identify Article 5 prohibited practices, and demonstrate transparency. Each card is Ed25519-signed, deterministic-graded (exact-token matching), n=30, with Wilson 95% confidence intervals.",
+      "pr1888_cards_count": 7,
+      "pr1888_card_ids": [
+        "7a99ce4329a0e3207de087a65ef857b73f2e4dcd2fe0f2b9b600bf4e723d92b1",
+        "e48806d33c62b17526bffd2563899faf53fc6b8b836972620546a11f96f3b795",
+        "f5937fb2444e7000f26651d8ee7c4e7ae204f5685ed6faeb76db7408be1c8ec8",
+        "86b7771af006af31a69001312a62e22a66733905eb51a305966d3c59207c038a",
+        "d55a4a676f7fa2939b40877b116e6c822123a0a1d18b1809aacbbd72bac23944",
+        "2f70ff5d93f42fac0af6d57da154dd2cee745b06fa8eeba90b62777b65bc2737",
+        "66e58ceb2dbc7935601e5b115ddf895ca8effc2184146bc27ad4be3c8137c260"
+      ],
+      "limitation": "These measure model behaviour (whether the model correctly identifies prohibited practices), not whether a specific AI system complies with Article 5. Measurement is not compliance."
+    },
+    {
+      "nist_function": "MAP",
+      "outcome": "Context, intended use, and risks are identified and documented",
+      "gspc_axes": [
+        "provenance",
+        "conformance",
+        "detector-interop"
+      ],
+      "evidence": "Cards test whether models can identify provenance signals, conform to protocol specifications, and interoperate with detection systems.",
+      "pr1888_cards_count": 6,
+      "pr1888_card_ids": [
+        "a246bbf44e14252d0c29698892b48090712ad3c56878049a2c7ce3a415da92c0",
+        "31ed36ce58e2aa065b89778e5cdc38bb6b047c70e7712c899cc8be8a878f352a",
+        "7ab4482bcb2cbee6967a806d138cc892d64d0f4c072741b00962166cadc4a7a2",
+        "919268db78051d67751768d9816e218f2b01223f852f1eff32213ec55b93b2af",
+        "ecc8c60c6991d9e8600f672390754079bbe30e115f03053c6806ee24cb3d4004",
+        "7dee23005516d45c892fdfaa397d17a3247fcfe39c6b71a8805f92c385faf58e"
+      ],
+      "limitation": "Behavioural measurement of model capability, not a risk assessment of a deployed system."
+    },
+    {
+      "nist_function": "MEASURE",
+      "outcome": "AI risks and trustworthiness characteristics are analysed, assessed, and tracked",
+      "gspc_axes": [
+        "safety",
+        "care",
+        "jail",
+        "affect",
+        "swarm",
+        "cross-reality",
+        "machinery-conformity"
+      ],
+      "evidence": "The behavioural core. Cards measure safety awareness, care orientation, jailbreak resistance, emotional behaviour, multi-model swarm dynamics, cross-domain grounding, and machinery conformity. Grader: deterministic-exact-token/0.1. All n=30.",
+      "pr1888_cards_count": 21,
+      "pr1888_card_ids": [
+        "6bc32911631064897481377c2578bc74b01df44bd60d23a906a2b93f45944a15",
+        "85fca257687ae6ab81cfcdbee6cf7bb50044dbe5d4077dea06cecc0b29955c6c",
+        "21d911b70cd79d37fda24e64487b1b30853f1344e6376ae656adfd5758f9e1a2",
+        "9cadd5fbfdfd4e1f440723c2b35b6bb73ae3f6bcc224e0279dddab166e324eb7",
+        "fa15999eda7ab7cff8443cda1d7cf954e25e68c49b87202e7960839d6bd24204",
+        "09b060be7116b7508c81a2c394bcd64e922b17853b30366b7708b4691feef5e5",
+        "18ae9f34b41a9cf21c313c1a0abd52365502a5cf0f641927f140d4d9582dfcc3",
+        "95281acd503b5aca3b67c027fd57f0adea35accdca0ef15d80a5969ed35e121e",
+        "d2c2cdb2c057f79a2b9bba1607c6195aad21b811cf757144a76ec42e3c2ef474",
+        "103d69855ec5a63ba46f997439f729b91829c642c55e4722134978e24c9334a0",
+        "2c1cc82faa60364b001c837ce7bb81e293d469546392be8f2bbb03c4d823a85f",
+        "2c4eba3583709734ddc8ce0ee4db5395e246a8227143abd30a94b3b5c8c9396f",
+        "4a0862211589947531ac97c4eb53cee38f075325493aab8b65d76aa0fb6704f2",
+        "a0210ae6d5471588e00bc4c7bd7150a6ff2382fa03d558dfcb4689a2c104e670",
+        "c19f9ab2f7c7851730faf9b9ea9d1c1141affe38be770c36d3f7adb4ae5c07d2",
+        "59cb200063ee05f8e25d7bcbc16c97cde85fa8f1dd0f6ec8d5c395436aa5ed47",
+        "95e44987298bf0bc31fe0ab05cc567597afbbda2cb601dfc41c562b311e43b88",
+        "a68f4ae1f37ceede99fa38d40655b1f1cde84346bc122adcc7ad7a2dccf463f7",
+        "32bb6e601009cd57af245b10cd44687f984d98118e2739c0753de5acc737ddf6",
+        "7443b173d7bbdf1d8a145525fb78005f8a15036b493e8be0f17a989129bdcdee",
+        "31e9fb39baa29990625ca26c0c874b6495887b7b4f77cb1a441c523f027060bb",
+        "5ab11f152dde2e435d7259e3652d1968ccf808a1ca964430813892d3f9e6bdc9"
+      ],
+      "limitation": "These are model-behaviour snapshots, not ongoing monitoring. Freshness is POINT_IN_TIME."
+    },
+    {
+      "nist_function": "MANAGE",
+      "outcome": "Risks are prioritised, responded to, and monitored over time; incidents are handled",
+      "gspc_axes": [
+        "continuity"
+      ],
+      "evidence": "Continuity cards test whether a model's behaviour remains consistent over repeated runs, providing a temporal stability signal.",
+      "pr1888_cards_count": 1,
+      "pr1888_card_ids": [
+        "e75c90266a190764fad827c689295ac850aca3c57cfc4a0ee913bda523c0f3fa"
+      ],
+      "limitation": "Single-card coverage for this function. MANAGE requires ongoing monitoring not captured in one-shot measurement."
+    }
+  ],
+  "deliverable_note": "This evidence pack is prepared for the 16 September 2026 NIST deadline. It is DRAFT and must not be submitted without the owner's final communication gate approval. The pack demonstrates that CSOAI's measurement infrastructure produces signed, reproducible, deterministic-graded evidence across all four NIST AI RMF functions."
+}
