@@ -1,0 +1,33 @@
+{
+  "schema": "csoai.scitt-keys/0.1",
+  "issuer": "did:web:csoai.org",
+  "as_of": "2026-09-11",
+  "we_operate_a_ts": false,
+  "_purpose": "Key discovery ONLY. This document publishes the public keys that sign Council of AI measurement artefacts so verifiers can resolve them by a stable URL. It is NOT a SCITT Transparency Service declaration: there is no /entries endpoint, no registration, no inclusion receipts minted here, and no statement is ever made transparent BY us. We anchor to others' transparency services (Rekor, OTS); we never operate one. Measurement, never certification.",
+  "keys": [
+    {
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+      "use": "Board attestation — Ed25519 signature over the public Merkle root (root.json sig)",
+      "verify": "https://councilof.ai/signed/HOW-TO-VERIFY.md"
+    },
+    {
+      "kid": "did:web:csoai.org#card-attestation-1",
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "1MsOqhbV9Qv3Yzo2qjT-CaVeEkuTFt7Sq9sSK7nDfjg",
+      "use": "Measurement card signature (card-v0 sig_ed25519)",
+      "verify": "https://councilof.ai/signed/HOW-TO-VERIFY.md"
+    }
+  ],
+  "key_document": "https://csoai.org/.well-known/did.json",
+  "rotation_policy": "Keys rotate by DID document update with the retired key kept in did.json history notes; signatures name their kid, so historical artefacts stay verifiable against the key that signed them. Rotation events are disclosed in the public corrections ledger (https://councilof.ai/api/corrections).",
+  "expiry": "No fixed expiry; keys live until a disclosed rotation. Absence of a kid from did.json after a disclosed rotation means retired, never compromised-silent.",
+  "related": {
+    "scitt_profile": "https://councilof.ai/.well-known/scitt.json",
+    "public_root": "https://councilof.ai/root.json",
+    "framing_measurement": "https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/"
+  }
+}

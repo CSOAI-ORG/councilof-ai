@@ -100,3 +100,8 @@
 # directories on its own, so the exact-path line was redundant as well as harmful.
 /interop/*.py
   Content-Type: text/plain; charset=utf-8
+
+# SCITT key-discovery document (key publication only — NOT a transparency service)
+/.well-known/scitt-keys
+  Content-Type: application/json
+  Cache-Control: public, max-age=3600

@@ -1,7 +1,7 @@
 # Thin banks gold leftover — 31 Aug 2026
 
 UNSIGNED leftover. Measurement, not certification. Does not write `/api/gspc`.
-7 empty GSPC cells stay empty. No mill. No wrangler. No model-as-judge.
+Historical note (2026-09-11): the "7 empty" era ended 2026-09-01 — the live board is 22/22 measured; counts derive from `GET https://councilof.ai/api/gspc`, never typed. This bank stays frozen as published 31 Aug.
 
 Frozen gold only. Labels copied from already-published HF `items.jsonl`. No synthetic pad.
 
