@@ -1,0 +1,764 @@
+{
+  "schema": "csoai.tui3-pr1888-verification/0.1",
+  "produced_at": "2026-09-11T11:45:00Z",
+  "source": "https://councilof.ai/interop/mill-cards-signed/",
+  "pr": 1888,
+  "commit": "df1e6d0bba957940e3a75e3ec1edb3a80e21be05",
+  "commit_message": "mill: stage 36 enriched GSPC receipts and fail closed XRPL evidence",
+  "total_files": 36,
+  "sha_verified": 36,
+  "sha_failed": 0,
+  "sha_verification_method": "sha256(canonical body) with ECMAScript number normalization (integral floats \u2192 int)",
+  "signer_did": "did:web:csoai.org#board-attestation-1",
+  "axes": {
+    "affect": 2,
+    "art5-safeguard": 3,
+    "care": 3,
+    "conformance": 1,
+    "continuity": 1,
+    "cross-reality": 4,
+    "detector-interop": 4,
+    "governance": 2,
+    "jail": 6,
+    "machinery-conformity": 3,
+    "openness": 2,
+    "provenance": 1,
+    "safety": 2,
+    "swarm": 2
+  },
+  "models": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-0.5B-Instruct",
+    "Qwen/Qwen2.5-1.5B-Instruct",
+    "Qwen/Qwen2.5-3B-Instruct",
+    "Qwen/Qwen2.5-7B-Instruct",
+    "Qwen/Qwen3-1.7B-Base",
+    "Qwen/Qwen3-4B-Base",
+    "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
+    "meta-llama/Llama-3.2-1B-Instruct",
+    "meta-llama/Meta-Llama-3-8B-Instruct"
+  ],
+  "cards": [
+    {
+      "file": "signed-affect-6bc329116310.json",
+      "sha_verified": true,
+      "axis": "affect",
+      "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "accuracy": 0.2,
+      "n": 30,
+      "model_revision": "fe8a4ea1ffedaf415f4da2f062534de366a451e6",
+      "model_license": "apache-2.0",
+      "bank_revision": "6b180eb87fa7979f0f15d28e10ea6c89ec39af30",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:46:39Z",
+      "uncertainty": [
+        0.0951,
+        0.3731
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "6bc32911631064897481377c2578bc74b01df44bd60d23a906a2b93f45944a15"
+    },
+    {
+      "file": "signed-affect-85fca257687a.json",
+      "sha_verified": true,
+      "axis": "affect",
+      "model": "Qwen/Qwen2.5-0.5B",
+      "accuracy": 0.2,
+      "n": 30,
+      "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "model_license": "apache-2.0",
+      "bank_revision": "6b180eb87fa7979f0f15d28e10ea6c89ec39af30",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:47:30Z",
+      "uncertainty": [
+        0.0951,
+        0.3731
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "85fca257687ae6ab81cfcdbee6cf7bb50044dbe5d4077dea06cecc0b29955c6c"
+    },
+    {
+      "file": "signed-art5-saf-7a99ce4329a0.json",
+      "sha_verified": true,
+      "axis": "art5-safeguard",
+      "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "accuracy": 0.2333,
+      "n": 30,
+      "model_revision": "fe8a4ea1ffedaf415f4da2f062534de366a451e6",
+      "model_license": "apache-2.0",
+      "bank_revision": "683914ab80f837b0732d69294feaa88519587d5a",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:25:10Z",
+      "uncertainty": [
+        0.1179,
+        0.4093
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "7a99ce4329a0e3207de087a65ef857b73f2e4dcd2fe0f2b9b600bf4e723d92b1"
+    },
+    {
+      "file": "signed-art5-saf-e48806d33c62.json",
+      "sha_verified": true,
+      "axis": "art5-safeguard",
+      "model": "Qwen/Qwen2.5-0.5B",
+      "accuracy": 0.1,
+      "n": 30,
+      "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "model_license": "apache-2.0",
+      "bank_revision": "683914ab80f837b0732d69294feaa88519587d5a",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:26:24Z",
+      "uncertainty": [
+        0.0346,
+        0.2562
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "e48806d33c62b17526bffd2563899faf53fc6b8b836972620546a11f96f3b795"
+    },
+    {
+      "file": "signed-art5-saf-f5937fb2444e.json",
+      "sha_verified": true,
+      "axis": "art5-safeguard",
+      "model": "Qwen/Qwen3-1.7B-Base",
+      "accuracy": 0.0333,
+      "n": 30,
+      "model_revision": "ea980cb0a6c2ae4b936e82123acc929f1cec04c1",
+      "model_license": "apache-2.0",
+      "bank_revision": "683914ab80f837b0732d69294feaa88519587d5a",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:27:14Z",
+      "uncertainty": [
+        0.0059,
+        0.1667
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "f5937fb2444e7000f26651d8ee7c4e7ae204f5685ed6faeb76db7408be1c8ec8"
+    },
+    {
+      "file": "signed-care-21d911b70cd7.json",
+      "sha_verified": true,
+      "axis": "care",
+      "model": "Qwen/Qwen3-1.7B-Base",
+      "accuracy": 0.0333,
+      "n": 30,
+      "model_revision": "ea980cb0a6c2ae4b936e82123acc929f1cec04c1",
+      "model_license": "apache-2.0",
+      "bank_revision": "b31bfb23fc16a17668431231d5ec6a5b0b1b3565",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:43:13Z",
+      "uncertainty": [
+        0.0059,
+        0.1667
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "21d911b70cd79d37fda24e64487b1b30853f1344e6376ae656adfd5758f9e1a2"
+    },
+    {
+      "file": "signed-care-9cadd5fbfdfd.json",
+      "sha_verified": true,
+      "axis": "care",
+      "model": "Qwen/Qwen3-4B-Base",
+      "accuracy": 1,
+      "n": 30,
+      "model_revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539",
+      "model_license": "apache-2.0",
+      "bank_revision": "b31bfb23fc16a17668431231d5ec6a5b0b1b3565",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:44:12Z",
+      "uncertainty": [
+        0.8865,
+        1.0
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "9cadd5fbfdfd4e1f440723c2b35b6bb73ae3f6bcc224e0279dddab166e324eb7"
+    },
+    {
+      "file": "signed-care-fa15999eda7a.json",
+      "sha_verified": true,
+      "axis": "care",
+      "model": "Qwen/Qwen2.5-0.5B",
+      "accuracy": 0.4667,
+      "n": 30,
+      "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "model_license": "apache-2.0",
+      "bank_revision": "b31bfb23fc16a17668431231d5ec6a5b0b1b3565",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:42:15Z",
+      "uncertainty": [
+        0.3023,
+        0.6386
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "fa15999eda7ab7cff8443cda1d7cf954e25e68c49b87202e7960839d6bd24204"
+    },
+    {
+      "file": "signed-conforma-a246bbf44e14.json",
+      "sha_verified": true,
+      "axis": "conformance",
+      "model": "Qwen/Qwen3-4B-Base",
+      "accuracy": 1,
+      "n": 30,
+      "model_revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539",
+      "model_license": "apache-2.0",
+      "bank_revision": "d6df243562f6265225eae498e67d33daaabaa982",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:13:08Z",
+      "uncertainty": [
+        0.8865,
+        1.0
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "a246bbf44e14252d0c29698892b48090712ad3c56878049a2c7ce3a415da92c0"
+    },
+    {
+      "file": "signed-continui-e75c90266a19.json",
+      "sha_verified": true,
+      "axis": "continuity",
+      "model": "Qwen/Qwen2.5-0.5B",
+      "accuracy": 0.0667,
+      "n": 30,
+      "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "model_license": "apache-2.0",
+      "bank_revision": "7c41d9b8fab0d1ce1020171b7b41bbe959dac2b7",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:11:31Z",
+      "uncertainty": [
+        0.0185,
+        0.2132
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "e75c90266a190764fad827c689295ac850aca3c57cfc4a0ee913bda523c0f3fa"
+    },
+    {
+      "file": "signed-cross-re-09b060be7116.json",
+      "sha_verified": true,
+      "axis": "cross-reality",
+      "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "accuracy": 0.7667,
+      "n": 30,
+      "model_revision": "fe8a4ea1ffedaf415f4da2f062534de366a451e6",
+      "model_license": "apache-2.0",
+      "bank_revision": "62794914c9704d3daf0a26e623ceb21de231d15c",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:28:29Z",
+      "uncertainty": [
+        0.5907,
+        0.8821
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "09b060be7116b7508c81a2c394bcd64e922b17853b30366b7708b4691feef5e5"
+    },
+    {
+      "file": "signed-cross-re-18ae9f34b41a.json",
+      "sha_verified": true,
+      "axis": "cross-reality",
+      "model": "Qwen/Qwen2.5-0.5B",
+      "accuracy": 0.5,
+      "n": 30,
+      "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "model_license": "apache-2.0",
+      "bank_revision": "62794914c9704d3daf0a26e623ceb21de231d15c",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:29:23Z",
+      "uncertainty": [
+        0.3315,
+        0.6685
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "18ae9f34b41a9cf21c313c1a0abd52365502a5cf0f641927f140d4d9582dfcc3"
+    },
+    {
+      "file": "signed-cross-re-95281acd503b.json",
+      "sha_verified": true,
+      "axis": "cross-reality",
+      "model": "Qwen/Qwen3-1.7B-Base",
+      "accuracy": 0,
+      "n": 30,
+      "model_revision": "ea980cb0a6c2ae4b936e82123acc929f1cec04c1",
+      "model_license": "apache-2.0",
+      "bank_revision": "62794914c9704d3daf0a26e623ceb21de231d15c",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:30:17Z",
+      "uncertainty": [
+        0,
+        0.1135
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "95281acd503b5aca3b67c027fd57f0adea35accdca0ef15d80a5969ed35e121e"
+    },
+    {
+      "file": "signed-cross-re-d2c2cdb2c057.json",
+      "sha_verified": true,
+      "axis": "cross-reality",
+      "model": "Qwen/Qwen3-4B-Base",
+      "accuracy": 1,
+      "n": 30,
+      "model_revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539",
+      "model_license": "apache-2.0",
+      "bank_revision": "62794914c9704d3daf0a26e623ceb21de231d15c",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:31:40Z",
+      "uncertainty": [
+        0.8865,
+        1.0
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "d2c2cdb2c057f79a2b9bba1607c6195aad21b811cf757144a76ec42e3c2ef474"
+    },
+    {
+      "file": "signed-detector-31ed36ce58e2.json",
+      "sha_verified": true,
+      "axis": "detector-interop",
+      "model": "Qwen/Qwen3-1.7B-Base",
+      "accuracy": 0,
+      "n": 30,
+      "model_revision": "ea980cb0a6c2ae4b936e82123acc929f1cec04c1",
+      "model_license": "apache-2.0",
+      "bank_revision": "01f559b359601a23e14b88ed838e6cb6889502ba",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:23:51Z",
+      "uncertainty": [
+        0,
+        0.1135
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "31ed36ce58e2aa065b89778e5cdc38bb6b047c70e7712c899cc8be8a878f352a"
+    },
+    {
+      "file": "signed-detector-7ab4482bcb2c.json",
+      "sha_verified": true,
+      "axis": "detector-interop",
+      "model": "Qwen/Qwen2.5-0.5B",
+      "accuracy": 1,
+      "n": 30,
+      "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "model_license": "apache-2.0",
+      "bank_revision": "01f559b359601a23e14b88ed838e6cb6889502ba",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:22:07Z",
+      "uncertainty": [
+        0.8865,
+        1.0
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "7ab4482bcb2cbee6967a806d138cc892d64d0f4c072741b00962166cadc4a7a2"
+    },
+    {
+      "file": "signed-detector-919268db7805.json",
+      "sha_verified": true,
+      "axis": "detector-interop",
+      "model": "meta-llama/Meta-Llama-3-8B-Instruct",
+      "accuracy": 0.7667,
+      "n": 30,
+      "model_revision": "8afb486c1db24fe5011ec46dfbe5b5dccdb575c2",
+      "model_license": "llama3",
+      "bank_revision": "01f559b359601a23e14b88ed838e6cb6889502ba",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:22:53Z",
+      "uncertainty": [
+        0.5907,
+        0.8821
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "919268db78051d67751768d9816e218f2b01223f852f1eff32213ec55b93b2af"
+    },
+    {
+      "file": "signed-detector-ecc8c60c6991.json",
+      "sha_verified": true,
+      "axis": "detector-interop",
+      "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "accuracy": 0.3667,
+      "n": 30,
+      "model_revision": "fe8a4ea1ffedaf415f4da2f062534de366a451e6",
+      "model_license": "apache-2.0",
+      "bank_revision": "01f559b359601a23e14b88ed838e6cb6889502ba",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:21:17Z",
+      "uncertainty": [
+        0.2187,
+        0.5449
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "ecc8c60c6991d9e8600f672390754079bbe30e115f03053c6806ee24cb3d4004"
+    },
+    {
+      "file": "signed-governan-86b7771af006.json",
+      "sha_verified": true,
+      "axis": "governance",
+      "model": "Qwen/Qwen3-4B-Base",
+      "accuracy": 0.8333,
+      "n": 30,
+      "model_revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539",
+      "model_license": "apache-2.0",
+      "bank_revision": "f862f14053974ddf4e44a9259872a4a7e2f10f5b",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:02:52Z",
+      "uncertainty": [
+        0.6644,
+        0.9266
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "86b7771af006af31a69001312a62e22a66733905eb51a305966d3c59207c038a"
+    },
+    {
+      "file": "signed-governan-d55a4a676f7f.json",
+      "sha_verified": true,
+      "axis": "governance",
+      "model": "Qwen/Qwen3-1.7B-Base",
+      "accuracy": 0.0333,
+      "n": 30,
+      "model_revision": "ea980cb0a6c2ae4b936e82123acc929f1cec04c1",
+      "model_license": "apache-2.0",
+      "bank_revision": "f862f14053974ddf4e44a9259872a4a7e2f10f5b",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:01:56Z",
+      "uncertainty": [
+        0.0059,
+        0.1667
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "d55a4a676f7fa2939b40877b116e6c822123a0a1d18b1809aacbbd72bac23944"
+    },
+    {
+      "file": "signed-jail-103d69855ec5.json",
+      "sha_verified": true,
+      "axis": "jail",
+      "model": "meta-llama/Llama-3.2-1B-Instruct",
+      "accuracy": 0.6333,
+      "n": 30,
+      "model_revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "model_license": "llama3.2",
+      "bank_revision": "8edf9e1312c4983270e98a5203763c87222311de",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:36:22Z",
+      "uncertainty": [
+        0.4551,
+        0.7813
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "103d69855ec5a63ba46f997439f729b91829c642c55e4722134978e24c9334a0"
+    },
+    {
+      "file": "signed-jail-2c1cc82faa60.json",
+      "sha_verified": true,
+      "axis": "jail",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "accuracy": 1,
+      "n": 30,
+      "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "model_license": "apache-2.0",
+      "bank_revision": "8edf9e1312c4983270e98a5203763c87222311de",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:33:55Z",
+      "uncertainty": [
+        0.8865,
+        1.0
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "2c1cc82faa60364b001c837ce7bb81e293d469546392be8f2bbb03c4d823a85f"
+    },
+    {
+      "file": "signed-jail-2c4eba358370.json",
+      "sha_verified": true,
+      "axis": "jail",
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "accuracy": 1,
+      "n": 30,
+      "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "model_license": "other",
+      "bank_revision": "8edf9e1312c4983270e98a5203763c87222311de",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:34:51Z",
+      "uncertainty": [
+        0.8865,
+        1.0
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "2c4eba3583709734ddc8ce0ee4db5395e246a8227143abd30a94b3b5c8c9396f"
+    },
+    {
+      "file": "signed-jail-4a0862211589.json",
+      "sha_verified": true,
+      "axis": "jail",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "accuracy": 1,
+      "n": 30,
+      "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+      "model_license": "apache-2.0",
+      "bank_revision": "8edf9e1312c4983270e98a5203763c87222311de",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:32:58Z",
+      "uncertainty": [
+        0.8865,
+        1.0
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "4a0862211589947531ac97c4eb53cee38f075325493aab8b65d76aa0fb6704f2"
+    },
+    {
+      "file": "signed-jail-a0210ae6d547.json",
+      "sha_verified": true,
+      "axis": "jail",
+      "model": "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
+      "accuracy": 1,
+      "n": 30,
+      "model_revision": "6d425c3903997f9540be33f507ad363848b0fa06",
+      "model_license": "apache-2.0",
+      "bank_revision": "8edf9e1312c4983270e98a5203763c87222311de",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:37:31Z",
+      "uncertainty": [
+        0.8865,
+        1.0
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "a0210ae6d5471588e00bc4c7bd7150a6ff2382fa03d558dfcb4689a2c104e670"
+    },
+    {
+      "file": "signed-jail-c19f9ab2f7c7.json",
+      "sha_verified": true,
+      "axis": "jail",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "accuracy": 0.6667,
+      "n": 30,
+      "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "model_license": "apache-2.0",
+      "bank_revision": "8edf9e1312c4983270e98a5203763c87222311de",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:38:15Z",
+      "uncertainty": [
+        0.4878,
+        0.8077
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "c19f9ab2f7c7851730faf9b9ea9d1c1141affe38be770c36d3f7adb4ae5c07d2"
+    },
+    {
+      "file": "signed-machiner-59cb200063ee.json",
+      "sha_verified": true,
+      "axis": "machinery-conformity",
+      "model": "Qwen/Qwen2.5-0.5B",
+      "accuracy": 0.0333,
+      "n": 30,
+      "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "model_license": "apache-2.0",
+      "bank_revision": "93b3aa76f12b1372353e368b616a70bafe8c715f",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:17:18Z",
+      "uncertainty": [
+        0.0059,
+        0.1667
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "59cb200063ee05f8e25d7bcbc16c97cde85fa8f1dd0f6ec8d5c395436aa5ed47"
+    },
+    {
+      "file": "signed-machiner-95e44987298b.json",
+      "sha_verified": true,
+      "axis": "machinery-conformity",
+      "model": "Qwen/Qwen3-1.7B-Base",
+      "accuracy": 0,
+      "n": 30,
+      "model_revision": "ea980cb0a6c2ae4b936e82123acc929f1cec04c1",
+      "model_license": "apache-2.0",
+      "bank_revision": "93b3aa76f12b1372353e368b616a70bafe8c715f",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:18:53Z",
+      "uncertainty": [
+        0,
+        0.1135
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "95e44987298bf0bc31fe0ab05cc567597afbbda2cb601dfc41c562b311e43b88"
+    },
+    {
+      "file": "signed-machiner-a68f4ae1f37c.json",
+      "sha_verified": true,
+      "axis": "machinery-conformity",
+      "model": "Qwen/Qwen3-4B-Base",
+      "accuracy": 1,
+      "n": 30,
+      "model_revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539",
+      "model_license": "apache-2.0",
+      "bank_revision": "93b3aa76f12b1372353e368b616a70bafe8c715f",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:19:48Z",
+      "uncertainty": [
+        0.8865,
+        1.0
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "a68f4ae1f37ceede99fa38d40655b1f1cde84346bc122adcc7ad7a2dccf463f7"
+    },
+    {
+      "file": "signed-openness-2f70ff5d93f4.json",
+      "sha_verified": true,
+      "axis": "openness",
+      "model": "Qwen/Qwen3-4B-Base",
+      "accuracy": 1,
+      "n": 30,
+      "model_revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539",
+      "model_license": "apache-2.0",
+      "bank_revision": "e888c712cda9010be21d62e763407de14cdb094f",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:15:57Z",
+      "uncertainty": [
+        0.8865,
+        1.0
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "2f70ff5d93f42fac0af6d57da154dd2cee745b06fa8eeba90b62777b65bc2737"
+    },
+    {
+      "file": "signed-openness-66e58ceb2dbc.json",
+      "sha_verified": true,
+      "axis": "openness",
+      "model": "Qwen/Qwen3-1.7B-Base",
+      "accuracy": 0,
+      "n": 30,
+      "model_revision": "ea980cb0a6c2ae4b936e82123acc929f1cec04c1",
+      "model_license": "apache-2.0",
+      "bank_revision": "e888c712cda9010be21d62e763407de14cdb094f",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:14:36Z",
+      "uncertainty": [
+        0,
+        0.1135
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "66e58ceb2dbc7935601e5b115ddf895ca8effc2184146bc27ad4be3c8137c260"
+    },
+    {
+      "file": "signed-provenan-7dee23005516.json",
+      "sha_verified": true,
+      "axis": "provenance",
+      "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "accuracy": 0.9,
+      "n": 30,
+      "model_revision": "fe8a4ea1ffedaf415f4da2f062534de366a451e6",
+      "model_license": "apache-2.0",
+      "bank_revision": "8345ee27d8f3cfae880d2c450e5ee7b3b5c1998d",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:09:30Z",
+      "uncertainty": [
+        0.7438,
+        0.9654
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "7dee23005516d45c892fdfaa397d17a3247fcfe39c6b71a8805f92c385faf58e"
+    },
+    {
+      "file": "signed-safety-32bb6e601009.json",
+      "sha_verified": true,
+      "axis": "safety",
+      "model": "meta-llama/Llama-3.2-1B-Instruct",
+      "accuracy": 0.8333,
+      "n": 30,
+      "model_revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "model_license": "llama3.2",
+      "bank_revision": "2031e7352d25b4ffddf942070a14bab00bc9f8eb",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:05:14Z",
+      "uncertainty": [
+        0.6644,
+        0.9266
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "32bb6e601009cd57af245b10cd44687f984d98118e2739c0753de5acc737ddf6"
+    },
+    {
+      "file": "signed-safety-7443b173d7bb.json",
+      "sha_verified": true,
+      "axis": "safety",
+      "model": "Qwen/Qwen3-4B-Base",
+      "accuracy": 0.9667,
+      "n": 30,
+      "model_revision": "906bfd4b4dc7f14ee4320094d8b41684abff8539",
+      "model_license": "apache-2.0",
+      "bank_revision": "2031e7352d25b4ffddf942070a14bab00bc9f8eb",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:06:47Z",
+      "uncertainty": [
+        0.8333,
+        0.9941
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "7443b173d7bbdf1d8a145525fb78005f8a15036b493e8be0f17a989129bdcdee"
+    },
+    {
+      "file": "signed-swarm-31e9fb39baa2.json",
+      "sha_verified": true,
+      "axis": "swarm",
+      "model": "Qwen/Qwen2.5-0.5B",
+      "accuracy": 0.4333,
+      "n": 30,
+      "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "model_license": "apache-2.0",
+      "bank_revision": "f3812ef653546ca4bad11001ed4034d0baa3a0cc",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:39:37Z",
+      "uncertainty": [
+        0.2738,
+        0.608
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "31e9fb39baa29990625ca26c0c874b6495887b7b4f77cb1a441c523f027060bb"
+    },
+    {
+      "file": "signed-swarm-5ab11f152dde.json",
+      "sha_verified": true,
+      "axis": "swarm",
+      "model": "Qwen/Qwen3-1.7B-Base",
+      "accuracy": 0.0667,
+      "n": 30,
+      "model_revision": "ea980cb0a6c2ae4b936e82123acc929f1cec04c1",
+      "model_license": "apache-2.0",
+      "bank_revision": "f3812ef653546ca4bad11001ed4034d0baa3a0cc",
+      "grader": "deterministic-exact-token/0.1",
+      "run_id": "hfjobs-2026-09-11-050011-8",
+      "measured_at": "2026-09-11T05:40:31Z",
+      "uncertainty": [
+        0.0185,
+        0.2132
+      ],
+      "did": "did:web:csoai.org#board-attestation-1",
+      "card_id": "5ab11f152dde2e435d7259e3652d1968ccf808a1ca964430813892d3f9e6bdc9"
+    }
+  ]
+}
