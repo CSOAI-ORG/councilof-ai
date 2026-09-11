@@ -22,6 +22,13 @@ name: csoai-site deploy — full static site from csoai-static-deploy2 main
 # 2026-09-01 leftover: drop functions so #55 _redirects 308 (#57) fire 1803Z.
 # 2026-09-01: Advanced Mode ignores _redirects — inject redirect-only
 # functions/_middleware.js (keep /.well-known for did:web).
+# 2026-09-11 (TUI-1): byte-serving parity at /root.json was tried and
+# REVERTED the same day — the apex deploys daily while the root republishes
+# hourly, so static apex bytes go stale within the hour and turn the
+# public-root-watcher permanently red. The 2 Sep owner ruling stands:
+# 308 IS the parity mechanism for the hourly-moving surface; the watcher
+# follows it and compares post-redirect bytes. Only slow-moving content
+# (/.well-known/* incl. scitt-keys) is twinned as bytes.
 # this token does not have it. Merging a change to this workflow is the
 # agent-reachable path to refresh did:web:csoai.org.
 
@@ -78,6 +85,23 @@ jobs:
           print('twin as_of', root.get('as_of'), 'merkle', root.get('merkle_root'), 'n', root.get('card_count'))
           for dname in ('cards', 'proofs'):
               pathlib.Path('_site', dname).mkdir(parents=True, exist_ok=True)
+          # 2026-09-11: twin the SCITT key-discovery doc as well (public key
+          # material only — never a transparency-service claim). Retry: this
+          # workflow races the main deploy when both fire off the same merge.
+          sk = pathlib.Path('_site/.well-known')
+          sk.mkdir(parents=True, exist_ok=True)
+          import time as _time
+          for _try in range(1, 7):
+              rc = subprocess.call(['curl', '-sS', '-f', '--max-time', '25', '-A', 'csoai-site-deploy',
+                                    '-o', str(sk / 'scitt-keys'),
+                                    'https://councilof.ai/.well-known/scitt-keys'])
+              if rc == 0:
+                  break
+              print(f'scitt-keys fetch attempt {_try} failed (rc={rc}); waiting for the main deploy')
+              _time.sleep(20)
+          else:
+              raise SystemExit('scitt-keys never became fetchable on councilof.ai')
+          print('twinned scitt-keys', (sk / 'scitt-keys').stat().st_size)
           for sha in root['card_sha256']:
               s16 = sha[:16]
               for kind in ('cards', 'proofs'):
@@ -98,7 +122,12 @@ jobs:
           cat > functions/_middleware.js <<'JS'
           export async function onRequest(context) {
             const url = new URL(context.request.url);
-            if (url.pathname === '/.well-known' || url.pathname.startsWith('/.well-known/')) {
+            const p = url.pathname;
+            // 308 everything except /.well-known/* (did:web + scitt-keys key
+            // discovery — slow-moving, safe to twin as bytes). The hourly-moving
+            // trust surface (root.json, cards, proofs, schema) redirects to the
+            // canonical host; verifiers follow the 308 to identical bytes.
+            if (p === '/.well-known' || p.startsWith('/.well-known/')) {
               return context.next();
             }
             const dest = new URL(url.pathname + url.search + url.hash, 'https://councilof.ai');
@@ -155,6 +184,33 @@ jobs:
               if not ok:
                   print(f'FAIL: {host} did.json still stale after 6 attempts ({last})')
                   sys.exit(1)
+          PY
+          # 2026-09-11 (TUI-1): redirect-parity at the trust surface —
+          # csoai.org/root.json 308s to the canonical host; following the
+          # redirect must yield the identical document. scitt-keys is served
+          # as bytes on the apex (well-known exemption) and must be well-formed.
+          python3 - <<'PY'
+          import json, subprocess, sys, time
+          def fetch(url, follow=False):
+              args = ['curl', '-sS', '--max-time', '20', url, '-H', 'Cache-Control: no-cache']
+              if follow:
+                  args.insert(1, '-L')
+              return subprocess.check_output(args)
+          for i in range(1, 7):
+              try:
+                  apex = json.loads(fetch('https://csoai.org/root.json', follow=True))
+                  canon = json.loads(fetch('https://councilof.ai/root.json'))
+                  jsk = json.loads(fetch('https://csoai.org/.well-known/scitt-keys'))
+                  assert apex.get('merkle_root') == canon.get('merkle_root'), 'merkle differs after redirect'
+                  assert apex.get('as_of') == canon.get('as_of'), 'as_of differs after redirect'
+                  assert jsk.get('we_operate_a_ts') is False and jsk.get('keys'), 'scitt-keys malformed'
+                  print(f'parity OK on attempt {i}: merkle {canon["merkle_root"][:16]}… (apex 308→identical), scitt-keys kids {len(jsk["keys"])}')
+                  sys.exit(0)
+              except Exception as e:
+                  print(f'parity attempt {i}: {type(e).__name__} {e}')
+                  time.sleep(10)
+          print('FAIL: apex trust-surface parity not achieved')
+          sys.exit(1)
           PY
           # Prove OWNER one-site redirect (not twin HTML)
           code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 20 -I https://csoai.org/)
