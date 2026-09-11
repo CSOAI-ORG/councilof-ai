@@ -10,7 +10,7 @@ type ProofBody = {
   reason?: string;
 };
 
-async function sha256Hex(buf: ArrayBuffer): Promise<string> {
+async function sha256Hex(buf: BufferSource): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", buf);
   return Array.from(new Uint8Array(digest))
     .map((b) => b.toString(16).padStart(2, "0"))
@@ -24,7 +24,7 @@ export default function ProofReceipt() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  async function runHash(bytes: ArrayBuffer) {
+  async function runHash(bytes: BufferSource) {
     const h = await sha256Hex(bytes);
     setSha(h);
     setProof(null);
