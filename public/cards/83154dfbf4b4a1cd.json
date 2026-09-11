@@ -1,0 +1,90 @@
+{
+  "card": {
+    "as_of": "2026-09-11T08:43:40Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USYC:bsc",
+      "symbol": "USYC",
+      "product": "US Yield Coin",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x8d0fa28f221eb5735bc71d3a0da67ee5bc821311",
+      "block": 121232065,
+      "block_hash": "0x911fc5e144d03d425ec45610766f74c1c708218b5d274099c49d3a9f2a67b3c4",
+      "block_time": "2026-09-11T08:43:40Z",
+      "rpc": "bsc-rpc.publicnode.com",
+      "checked": {
+        "name": "US Yield Coin",
+        "symbol": "USYC",
+        "decimals": 6,
+        "totalSupply": 2252937727947452,
+        "owner": "0xcd636d955a95385ec5e2776b167b92e89ef6f70e",
+        "eip1967_implementation": "0x191fb6f3ba332f1b8789caf67abbaba56147445b"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 121232065 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "83154dfbf4b4a1cd138655ce587fc3d944b2d1cb6048dcdf6cc39fe7decdfafd",
+    "sig_ed25519": "a60a6c68466609f382fcaf9d174cedddd387c1f07d333c1812a7760cca2b35e3009be16b1acdf19aa28bcfda2a3e81e33a6218f089db42b23b892fe1a5ff1e03",
+    "source_urls": [
+      "https://bsc-rpc.publicnode.com",
+      "https://usyc.docs.hashnote.com/overview/smart-contracts"
+    ],
+    "subject": "evm:USYC:bsc permission state at block 121232065",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:USYC"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "1eb80ff5795fef303ea547e78b4c07f70ceca3048bc8b17e8658cf703de788f5",
+    "0a5c61e006b8a62431ed8bff7d843fdc56bed90548d8a518a7b1160b5d793137",
+    "b062517902742d21b0596fc73ae535976a111cf5586c2cb88830dbcbb7dbe3ba",
+    "776bf905affcdf3586a70de35238b2afa4d1df53f2e5264f02bfd6dce7e558ad",
+    "a78b6c9cf6bdc43174809a913e56b5366be0fa188759e7fb3e255f605b0127cf",
+    "b892a01169d8dddbb91f1c6755b2f84407c849757f357e71a9a0ede8695ef838",
+    "88c37c100102d89462d8b3e288b6bb8adaa3441d8f9f6f5e1b1b5645b5cb4c65",
+    "c1d077e6a9eb4f16fe405d13628ac94b697f58431baf35cf86af4214436f9ac9"
+  ]
+}
