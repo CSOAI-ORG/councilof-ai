@@ -1,0 +1,59 @@
+{
+  "schema": "csoai.financial-coverage/0.1",
+  "kind": "financial.stellar-measurement",
+  "generator": "stellar-reader-0.1.1",
+  "generated_at": "2026-09-11T11:34:40.017Z",
+  "terms_boundary": "Stellar Horizon asset data — NOT proof of reserves, NOT attestation verification",
+  "latest_ledger": 64377596,
+  "total_measured": 0,
+  "total_unmeasured": 1,
+  "total_failed": 0,
+  "measurements": [
+    {
+      "symbol": "USDC",
+      "issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3THOJXX4ER6K2MFIRPA",
+      "label": "Circle USDC",
+      "chain": "Stellar",
+      "ledger_index": 64377596,
+      "holders": 0,
+      "asset_authorized": "unknown",
+      "supply_normalized": 0,
+      "supply_display": "$0",
+      "measurement_state": "NO_HOLDERS_FOUND",
+      "source": "Stellar Horizon /accounts + /assets via https://horizon.stellar.org",
+      "raw_hash": "sha256:ea08a4f08ecb45757f05762d24bbacd67f507afdf5c539df62e2626ec3c105ca",
+      "measured_at": "2026-09-11T11:34:39.679Z",
+      "code_revision": "stellar-reader-0.1.1",
+      "terms_boundary": "Stellar Horizon asset data — NOT proof of reserves, NOT attestation verification",
+      "note": "Horizon /accounts?asset= returned no accounts — API may require different filter format or asset issuer has changed",
+      "replay_instructions": "node readers/stellar-reader.mjs"
+    },
+    {
+      "symbol": "EURC",
+      "issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3THOJXX4ER6K2MFIRPA",
+      "label": "Circle EURC",
+      "chain": "Stellar",
+      "ledger_index": 64377596,
+      "holders": 0,
+      "asset_authorized": "unknown",
+      "supply_normalized": 0,
+      "supply_display": "$0",
+      "measurement_state": "NO_HOLDERS_FOUND",
+      "source": "Stellar Horizon /accounts + /assets via https://horizon.stellar.org",
+      "raw_hash": "sha256:ac7f5fe7ca5cd4c7e875d8167cf0203965b53aa62ddf928bc62f1f5e4113d5d9",
+      "measured_at": "2026-09-11T11:34:40.017Z",
+      "code_revision": "stellar-reader-0.1.1",
+      "terms_boundary": "Stellar Horizon asset data — NOT proof of reserves, NOT attestation verification",
+      "note": "Horizon /accounts?asset= returned no accounts — API may require different filter format or asset issuer has changed",
+      "replay_instructions": "node readers/stellar-reader.mjs"
+    },
+    {
+      "symbol": "USBDC",
+      "chain": "Stellar",
+      "measurement_state": "UNMEASURED",
+      "reason": "Issuer account not independently identified",
+      "measured_at": "2026-09-11T11:34:40.017Z",
+      "code_revision": "stellar-reader-0.1.1"
+    }
+  ]
+}

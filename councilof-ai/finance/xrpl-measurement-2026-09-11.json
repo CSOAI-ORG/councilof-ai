@@ -1,0 +1,65 @@
+{
+  "schema": "csoai.financial-coverage/0.1",
+  "kind": "financial.xrpl-measurement",
+  "generator": "xrpl-reader-0.1.1",
+  "generated_at": "2026-09-11T11:34:38.360Z",
+  "terms_boundary": "XRPL account_lines supply — NOT proof of reserves, NOT attestation verification",
+  "total_measured": 1,
+  "total_no_supply": 1,
+  "total_failed": 0,
+  "measurements": [
+    {
+      "symbol": "RLUSD",
+      "issuer": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+      "label": "Ripple RLUSD",
+      "chain": "XRPL",
+      "ledger_index": "106911577",
+      "ledger_hash": "DB9834A40B5BCCEE3CE76BAD609C3FCBA81389208C34FB603A472C643BE520BE",
+      "holders": 0,
+      "supply_raw": "0",
+      "supply_normalized": 0,
+      "supply_display": "$0 (no active supply)",
+      "measurement_state": "NO_ISSUED_SUPPLY",
+      "source": "XRPL account_lines via https://xrplcluster.com",
+      "raw_hash": "sha256:d9a8589c9cc502afc6cb9f5f8b0a0b5e1793b85064dfa067016aa919d861b41f",
+      "measured_at": "2026-09-11T11:34:38.233Z",
+      "code_revision": "xrpl-reader-0.1.1",
+      "query": {
+        "method": "account_lines",
+        "params": {
+          "account": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+          "ledger_index": "106911577"
+        }
+      },
+      "terms_boundary": "XRPL account_lines supply — NOT proof of reserves, NOT attestation verification",
+      "note": "RLUSD XRPL trust lines exist but all show zero balance — supply may be managed through Ripple's internal ledger or RLUSD is not actively circulating on XRPL",
+      "replay_instructions": "node readers/xrpl-reader.mjs"
+    },
+    {
+      "symbol": "USD",
+      "issuer": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+      "label": "Ripple USD gateway",
+      "chain": "XRPL",
+      "ledger_index": "106911577",
+      "ledger_hash": "DB9834A40B5BCCEE3CE76BAD609C3FCBA81389208C34FB603A472C643BE520BE",
+      "holders": 6,
+      "supply_raw": "1000000801116514",
+      "supply_normalized": 1000000801.116514,
+      "supply_display": "$1.00B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "XRPL account_lines via https://xrplcluster.com",
+      "raw_hash": "sha256:4ac4a8dc6912a7e66624ff8b79ac45d29fe73d2d8761c0a49a5beb6aba68b294",
+      "measured_at": "2026-09-11T11:34:38.360Z",
+      "code_revision": "xrpl-reader-0.1.1",
+      "query": {
+        "method": "account_lines",
+        "params": {
+          "account": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+          "ledger_index": "106911577"
+        }
+      },
+      "terms_boundary": "XRPL account_lines supply — NOT proof of reserves, NOT attestation verification",
+      "replay_instructions": "node readers/xrpl-reader.mjs"
+    }
+  ]
+}
