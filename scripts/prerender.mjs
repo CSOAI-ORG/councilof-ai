@@ -101,6 +101,8 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
   "/status/",
   "/receipt",
   "/receipt/",
+  "/health-inventory",
+  "/health-inventory/",
 ]);
 // The origin the /api/ and /signed/ PROXY reads from, which is NOT the same question as the
 // canonical host above. Until 2026-09-05 one flag answered both, and that coupling is what made
