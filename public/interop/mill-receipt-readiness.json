@@ -1,19 +1,21 @@
 {
-  "schema": "csoai.mill-receipt-readiness/v1",
-  "derived_from": "public/interop/mill-cards-signed/*.json where body.signature_state=STAGED_UNSIGNED",
+  "schema": "csoai.mill-receipt-readiness/v2",
+  "derived_from": "the 36 original STAGED_UNSIGNED wrappers resolved through public/interop/mill-cards-signed/SUPERSEDED.jsonl to their terminal immutable replacements",
   "truth_rule": "Outer cryptographic validity, inner declared lifecycle, and regulatory linkage are independent states. UNLINKED receipts are not regulation-scored.",
   "counts": {
     "receipts": 36,
     "outer_signature_valid": 36,
-    "declared_staged_unsigned": 36,
+    "declared_staged_unsigned": 0,
+    "declared_signed": 36,
     "regulatory_linked": 5,
     "regulatory_unlinked": 31,
     "regulation_score_eligible": 5
   },
   "receipts": [
     {
-      "id": "6bc32911631064897481377c2578bc74b01df44bd60d23a906a2b93f45944a15",
-      "card_url": "/interop/mill-cards-signed/signed-affect-6bc329116310.json",
+      "id": "3dbc8461a6a8a06913003abb06ded4ddf745c8556bafd27604394f649826d16b",
+      "card_url": "/interop/mill-cards-signed/signed-affect-3dbc8461a6a8.json",
+      "supersedes_staged_id": "6bc32911631064897481377c2578bc74b01df44bd60d23a906a2b93f45944a15",
       "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
       "axis": "affect",
       "measured_at": "2026-09-11T05:46:39Z",
@@ -22,7 +24,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -31,8 +33,9 @@
       }
     },
     {
-      "id": "85fca257687ae6ab81cfcdbee6cf7bb50044dbe5d4077dea06cecc0b29955c6c",
-      "card_url": "/interop/mill-cards-signed/signed-affect-85fca257687a.json",
+      "id": "49db50fc85762593440acfb382caab073ed63577a3a22790822d1b07363fd1f2",
+      "card_url": "/interop/mill-cards-signed/signed-affect-49db50fc8576.json",
+      "supersedes_staged_id": "85fca257687ae6ab81cfcdbee6cf7bb50044dbe5d4077dea06cecc0b29955c6c",
       "model": "Qwen/Qwen2.5-0.5B",
       "axis": "affect",
       "measured_at": "2026-09-11T05:47:30Z",
@@ -41,7 +44,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -50,8 +53,9 @@
       }
     },
     {
-      "id": "7a99ce4329a0e3207de087a65ef857b73f2e4dcd2fe0f2b9b600bf4e723d92b1",
-      "card_url": "/interop/mill-cards-signed/signed-art5-saf-7a99ce4329a0.json",
+      "id": "cbd49c900f40bd24a8c817cb1f63b3e5963abfed8e5eedac8fbf2425a70aac77",
+      "card_url": "/interop/mill-cards-signed/signed-art5-saf-cbd49c900f40.json",
+      "supersedes_staged_id": "7a99ce4329a0e3207de087a65ef857b73f2e4dcd2fe0f2b9b600bf4e723d92b1",
       "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
       "axis": "art5-safeguard",
       "measured_at": "2026-09-11T05:25:10Z",
@@ -60,7 +64,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "LINKED",
         "source_state": "DIRECT",
@@ -71,8 +75,9 @@
       }
     },
     {
-      "id": "e48806d33c62b17526bffd2563899faf53fc6b8b836972620546a11f96f3b795",
-      "card_url": "/interop/mill-cards-signed/signed-art5-saf-e48806d33c62.json",
+      "id": "2295144d2c7fa56abf00b9f5383e062b7aecb87ab313f709cc9cd3cd6eddbe51",
+      "card_url": "/interop/mill-cards-signed/signed-art5-saf-2295144d2c7f.json",
+      "supersedes_staged_id": "e48806d33c62b17526bffd2563899faf53fc6b8b836972620546a11f96f3b795",
       "model": "Qwen/Qwen2.5-0.5B",
       "axis": "art5-safeguard",
       "measured_at": "2026-09-11T05:26:24Z",
@@ -81,7 +86,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "LINKED",
         "source_state": "DIRECT",
@@ -92,8 +97,9 @@
       }
     },
     {
-      "id": "f5937fb2444e7000f26651d8ee7c4e7ae204f5685ed6faeb76db7408be1c8ec8",
-      "card_url": "/interop/mill-cards-signed/signed-art5-saf-f5937fb2444e.json",
+      "id": "329f7a0840451945e47c77c0acba5378bbdbdb56e059d39bf9a6dd04f4c4df4a",
+      "card_url": "/interop/mill-cards-signed/signed-art5-saf-329f7a084045.json",
+      "supersedes_staged_id": "f5937fb2444e7000f26651d8ee7c4e7ae204f5685ed6faeb76db7408be1c8ec8",
       "model": "Qwen/Qwen3-1.7B-Base",
       "axis": "art5-safeguard",
       "measured_at": "2026-09-11T05:27:14Z",
@@ -102,7 +108,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "LINKED",
         "source_state": "DIRECT",
@@ -113,8 +119,9 @@
       }
     },
     {
-      "id": "21d911b70cd79d37fda24e64487b1b30853f1344e6376ae656adfd5758f9e1a2",
-      "card_url": "/interop/mill-cards-signed/signed-care-21d911b70cd7.json",
+      "id": "7db6de9de4fb9b331256045a3cc65afb2bcd4ffb0d49f63baeac749db8787288",
+      "card_url": "/interop/mill-cards-signed/signed-care-7db6de9de4fb.json",
+      "supersedes_staged_id": "21d911b70cd79d37fda24e64487b1b30853f1344e6376ae656adfd5758f9e1a2",
       "model": "Qwen/Qwen3-1.7B-Base",
       "axis": "care",
       "measured_at": "2026-09-11T05:43:13Z",
@@ -123,7 +130,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -132,8 +139,9 @@
       }
     },
     {
-      "id": "9cadd5fbfdfd4e1f440723c2b35b6bb73ae3f6bcc224e0279dddab166e324eb7",
-      "card_url": "/interop/mill-cards-signed/signed-care-9cadd5fbfdfd.json",
+      "id": "0939abe045367aeb8a0fbc63d6d9ae9febaca953db80e9cef7a5030f9640a5f1",
+      "card_url": "/interop/mill-cards-signed/signed-care-0939abe04536.json",
+      "supersedes_staged_id": "9cadd5fbfdfd4e1f440723c2b35b6bb73ae3f6bcc224e0279dddab166e324eb7",
       "model": "Qwen/Qwen3-4B-Base",
       "axis": "care",
       "measured_at": "2026-09-11T05:44:12Z",
@@ -142,7 +150,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -151,8 +159,9 @@
       }
     },
     {
-      "id": "fa15999eda7ab7cff8443cda1d7cf954e25e68c49b87202e7960839d6bd24204",
-      "card_url": "/interop/mill-cards-signed/signed-care-fa15999eda7a.json",
+      "id": "14c9d66e59bc566446ec717b001c1b71976530abb738b35462cf778a66e46386",
+      "card_url": "/interop/mill-cards-signed/signed-care-14c9d66e59bc.json",
+      "supersedes_staged_id": "fa15999eda7ab7cff8443cda1d7cf954e25e68c49b87202e7960839d6bd24204",
       "model": "Qwen/Qwen2.5-0.5B",
       "axis": "care",
       "measured_at": "2026-09-11T05:42:15Z",
@@ -161,7 +170,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -170,8 +179,9 @@
       }
     },
     {
-      "id": "a246bbf44e14252d0c29698892b48090712ad3c56878049a2c7ce3a415da92c0",
-      "card_url": "/interop/mill-cards-signed/signed-conforma-a246bbf44e14.json",
+      "id": "2b457db6fbae030c9d0d0a169af40c20d51a6cf3dc157236cf0e95a54927ff84",
+      "card_url": "/interop/mill-cards-signed/signed-conforma-2b457db6fbae.json",
+      "supersedes_staged_id": "a246bbf44e14252d0c29698892b48090712ad3c56878049a2c7ce3a415da92c0",
       "model": "Qwen/Qwen3-4B-Base",
       "axis": "conformance",
       "measured_at": "2026-09-11T05:13:08Z",
@@ -180,7 +190,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -189,8 +199,9 @@
       }
     },
     {
-      "id": "e75c90266a190764fad827c689295ac850aca3c57cfc4a0ee913bda523c0f3fa",
-      "card_url": "/interop/mill-cards-signed/signed-continui-e75c90266a19.json",
+      "id": "379c29a07fa1540fa0574d9685789b85492529d05ae2dce2259f8dde1d69482a",
+      "card_url": "/interop/mill-cards-signed/signed-continui-379c29a07fa1.json",
+      "supersedes_staged_id": "e75c90266a190764fad827c689295ac850aca3c57cfc4a0ee913bda523c0f3fa",
       "model": "Qwen/Qwen2.5-0.5B",
       "axis": "continuity",
       "measured_at": "2026-09-11T05:11:31Z",
@@ -199,7 +210,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -208,8 +219,9 @@
       }
     },
     {
-      "id": "09b060be7116b7508c81a2c394bcd64e922b17853b30366b7708b4691feef5e5",
-      "card_url": "/interop/mill-cards-signed/signed-cross-re-09b060be7116.json",
+      "id": "02fb6896c022d75e601982608be408827ca1e5d92736c41b0058bf20680f92ee",
+      "card_url": "/interop/mill-cards-signed/signed-cross-re-02fb6896c022.json",
+      "supersedes_staged_id": "09b060be7116b7508c81a2c394bcd64e922b17853b30366b7708b4691feef5e5",
       "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
       "axis": "cross-reality",
       "measured_at": "2026-09-11T05:28:29Z",
@@ -218,7 +230,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -227,8 +239,9 @@
       }
     },
     {
-      "id": "18ae9f34b41a9cf21c313c1a0abd52365502a5cf0f641927f140d4d9582dfcc3",
-      "card_url": "/interop/mill-cards-signed/signed-cross-re-18ae9f34b41a.json",
+      "id": "59560c5cb6e4335525236865034c249d708a026ae6ceec685662bba84a3e6918",
+      "card_url": "/interop/mill-cards-signed/signed-cross-re-59560c5cb6e4.json",
+      "supersedes_staged_id": "18ae9f34b41a9cf21c313c1a0abd52365502a5cf0f641927f140d4d9582dfcc3",
       "model": "Qwen/Qwen2.5-0.5B",
       "axis": "cross-reality",
       "measured_at": "2026-09-11T05:29:23Z",
@@ -237,7 +250,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -246,8 +259,9 @@
       }
     },
     {
-      "id": "95281acd503b5aca3b67c027fd57f0adea35accdca0ef15d80a5969ed35e121e",
-      "card_url": "/interop/mill-cards-signed/signed-cross-re-95281acd503b.json",
+      "id": "839a5d167aec05db8e3664b92b54a79f0c025d6d449733dac29f4b864aea037f",
+      "card_url": "/interop/mill-cards-signed/signed-cross-re-839a5d167aec.json",
+      "supersedes_staged_id": "95281acd503b5aca3b67c027fd57f0adea35accdca0ef15d80a5969ed35e121e",
       "model": "Qwen/Qwen3-1.7B-Base",
       "axis": "cross-reality",
       "measured_at": "2026-09-11T05:30:17Z",
@@ -256,7 +270,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -265,8 +279,9 @@
       }
     },
     {
-      "id": "d2c2cdb2c057f79a2b9bba1607c6195aad21b811cf757144a76ec42e3c2ef474",
-      "card_url": "/interop/mill-cards-signed/signed-cross-re-d2c2cdb2c057.json",
+      "id": "4bc0ecabd1bd27e11ec4baba3fecd12e55609d29a6d4a216b4d390d457973e51",
+      "card_url": "/interop/mill-cards-signed/signed-cross-re-4bc0ecabd1bd.json",
+      "supersedes_staged_id": "d2c2cdb2c057f79a2b9bba1607c6195aad21b811cf757144a76ec42e3c2ef474",
       "model": "Qwen/Qwen3-4B-Base",
       "axis": "cross-reality",
       "measured_at": "2026-09-11T05:31:40Z",
@@ -275,7 +290,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -284,8 +299,9 @@
       }
     },
     {
-      "id": "31ed36ce58e2aa065b89778e5cdc38bb6b047c70e7712c899cc8be8a878f352a",
-      "card_url": "/interop/mill-cards-signed/signed-detector-31ed36ce58e2.json",
+      "id": "7910097324dfb905f9f53e039e0f96be136a5f0ecb05dca8e8d06b2394b6b6c4",
+      "card_url": "/interop/mill-cards-signed/signed-detector-7910097324df.json",
+      "supersedes_staged_id": "31ed36ce58e2aa065b89778e5cdc38bb6b047c70e7712c899cc8be8a878f352a",
       "model": "Qwen/Qwen3-1.7B-Base",
       "axis": "detector-interop",
       "measured_at": "2026-09-11T05:23:51Z",
@@ -294,7 +310,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -303,8 +319,9 @@
       }
     },
     {
-      "id": "7ab4482bcb2cbee6967a806d138cc892d64d0f4c072741b00962166cadc4a7a2",
-      "card_url": "/interop/mill-cards-signed/signed-detector-7ab4482bcb2c.json",
+      "id": "da21d88c6eeebb75546297ec597ab95ea7e4c2dbcec6a1205c3999b34a1cadd3",
+      "card_url": "/interop/mill-cards-signed/signed-detector-da21d88c6eee.json",
+      "supersedes_staged_id": "7ab4482bcb2cbee6967a806d138cc892d64d0f4c072741b00962166cadc4a7a2",
       "model": "Qwen/Qwen2.5-0.5B",
       "axis": "detector-interop",
       "measured_at": "2026-09-11T05:22:07Z",
@@ -313,7 +330,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -322,8 +339,9 @@
       }
     },
     {
-      "id": "919268db78051d67751768d9816e218f2b01223f852f1eff32213ec55b93b2af",
-      "card_url": "/interop/mill-cards-signed/signed-detector-919268db7805.json",
+      "id": "d1989ac6d51e061073b9c19fcdbb22367ab1001084bd9d3a6d76ff673259027f",
+      "card_url": "/interop/mill-cards-signed/signed-detector-d1989ac6d51e.json",
+      "supersedes_staged_id": "919268db78051d67751768d9816e218f2b01223f852f1eff32213ec55b93b2af",
       "model": "meta-llama/Meta-Llama-3-8B-Instruct",
       "axis": "detector-interop",
       "measured_at": "2026-09-11T05:22:53Z",
@@ -332,7 +350,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -341,8 +359,9 @@
       }
     },
     {
-      "id": "ecc8c60c6991d9e8600f672390754079bbe30e115f03053c6806ee24cb3d4004",
-      "card_url": "/interop/mill-cards-signed/signed-detector-ecc8c60c6991.json",
+      "id": "d3ea01870d89c163a4e049d7b2f6cfb5d35d15cacfd26b237e1bb6e7fb2a7699",
+      "card_url": "/interop/mill-cards-signed/signed-detector-d3ea01870d89.json",
+      "supersedes_staged_id": "ecc8c60c6991d9e8600f672390754079bbe30e115f03053c6806ee24cb3d4004",
       "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
       "axis": "detector-interop",
       "measured_at": "2026-09-11T05:21:17Z",
@@ -351,7 +370,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -360,8 +379,9 @@
       }
     },
     {
-      "id": "86b7771af006af31a69001312a62e22a66733905eb51a305966d3c59207c038a",
-      "card_url": "/interop/mill-cards-signed/signed-governan-86b7771af006.json",
+      "id": "1ce965231d56847f20772b761b8905d2308b98feb36e9568e2ba61b78d99a520",
+      "card_url": "/interop/mill-cards-signed/signed-governan-1ce965231d56.json",
+      "supersedes_staged_id": "86b7771af006af31a69001312a62e22a66733905eb51a305966d3c59207c038a",
       "model": "Qwen/Qwen3-4B-Base",
       "axis": "governance",
       "measured_at": "2026-09-11T05:02:52Z",
@@ -370,7 +390,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "LINKED",
         "source_state": "DIRECT",
@@ -381,8 +401,9 @@
       }
     },
     {
-      "id": "d55a4a676f7fa2939b40877b116e6c822123a0a1d18b1809aacbbd72bac23944",
-      "card_url": "/interop/mill-cards-signed/signed-governan-d55a4a676f7f.json",
+      "id": "4d4618a09641e191e5f3b412f770d455d4a36f5d73d54ed361f78ed278fead56",
+      "card_url": "/interop/mill-cards-signed/signed-governan-4d4618a09641.json",
+      "supersedes_staged_id": "d55a4a676f7fa2939b40877b116e6c822123a0a1d18b1809aacbbd72bac23944",
       "model": "Qwen/Qwen3-1.7B-Base",
       "axis": "governance",
       "measured_at": "2026-09-11T05:01:56Z",
@@ -391,7 +412,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "LINKED",
         "source_state": "DIRECT",
@@ -402,8 +423,9 @@
       }
     },
     {
-      "id": "103d69855ec5a63ba46f997439f729b91829c642c55e4722134978e24c9334a0",
-      "card_url": "/interop/mill-cards-signed/signed-jail-103d69855ec5.json",
+      "id": "5bec88ac433ccb1ec5767d318d60c323b12c8289db544dc0c663d92f91fd5ea9",
+      "card_url": "/interop/mill-cards-signed/signed-jail-5bec88ac433c.json",
+      "supersedes_staged_id": "103d69855ec5a63ba46f997439f729b91829c642c55e4722134978e24c9334a0",
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "jail",
       "measured_at": "2026-09-11T05:36:22Z",
@@ -412,7 +434,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -421,8 +443,9 @@
       }
     },
     {
-      "id": "2c1cc82faa60364b001c837ce7bb81e293d469546392be8f2bbb03c4d823a85f",
-      "card_url": "/interop/mill-cards-signed/signed-jail-2c1cc82faa60.json",
+      "id": "f40339c80571f407019f182ce2c6575781f0463898b0ea1b7a835ceba9f9c1b2",
+      "card_url": "/interop/mill-cards-signed/signed-jail-f40339c80571.json",
+      "supersedes_staged_id": "2c1cc82faa60364b001c837ce7bb81e293d469546392be8f2bbb03c4d823a85f",
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "jail",
       "measured_at": "2026-09-11T05:33:55Z",
@@ -431,7 +454,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -440,8 +463,9 @@
       }
     },
     {
-      "id": "2c4eba3583709734ddc8ce0ee4db5395e246a8227143abd30a94b3b5c8c9396f",
-      "card_url": "/interop/mill-cards-signed/signed-jail-2c4eba358370.json",
+      "id": "9366526667d1f2c07358477a55dd713b316a5852d3179f41d1c46c80fe4fe558",
+      "card_url": "/interop/mill-cards-signed/signed-jail-9366526667d1.json",
+      "supersedes_staged_id": "2c4eba3583709734ddc8ce0ee4db5395e246a8227143abd30a94b3b5c8c9396f",
       "model": "Qwen/Qwen2.5-3B-Instruct",
       "axis": "jail",
       "measured_at": "2026-09-11T05:34:51Z",
@@ -450,7 +474,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -459,8 +483,9 @@
       }
     },
     {
-      "id": "4a0862211589947531ac97c4eb53cee38f075325493aab8b65d76aa0fb6704f2",
-      "card_url": "/interop/mill-cards-signed/signed-jail-4a0862211589.json",
+      "id": "555baf545a4b9f56264c17c58c3256a10e4c09a323a506db55a3f3b77088d04f",
+      "card_url": "/interop/mill-cards-signed/signed-jail-555baf545a4b.json",
+      "supersedes_staged_id": "4a0862211589947531ac97c4eb53cee38f075325493aab8b65d76aa0fb6704f2",
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "jail",
       "measured_at": "2026-09-11T05:32:58Z",
@@ -469,7 +494,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -478,8 +503,9 @@
       }
     },
     {
-      "id": "a0210ae6d5471588e00bc4c7bd7150a6ff2382fa03d558dfcb4689a2c104e670",
-      "card_url": "/interop/mill-cards-signed/signed-jail-a0210ae6d547.json",
+      "id": "6102c239b4c0fa56fb7e55525a5cd89e98130f7e0e65573924c127663fc2007c",
+      "card_url": "/interop/mill-cards-signed/signed-jail-6102c239b4c0.json",
+      "supersedes_staged_id": "a0210ae6d5471588e00bc4c7bd7150a6ff2382fa03d558dfcb4689a2c104e670",
       "model": "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
       "axis": "jail",
       "measured_at": "2026-09-11T05:37:31Z",
@@ -488,7 +514,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -497,8 +523,9 @@
       }
     },
     {
-      "id": "c19f9ab2f7c7851730faf9b9ea9d1c1141affe38be770c36d3f7adb4ae5c07d2",
-      "card_url": "/interop/mill-cards-signed/signed-jail-c19f9ab2f7c7.json",
+      "id": "d63467b739ae7f3926d8518a5b6acc5c759dee31128e96a1e9390f5a573e8744",
+      "card_url": "/interop/mill-cards-signed/signed-jail-d63467b739ae.json",
+      "supersedes_staged_id": "c19f9ab2f7c7851730faf9b9ea9d1c1141affe38be770c36d3f7adb4ae5c07d2",
       "model": "Qwen/Qwen2.5-0.5B-Instruct",
       "axis": "jail",
       "measured_at": "2026-09-11T05:38:15Z",
@@ -507,7 +534,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -516,8 +543,9 @@
       }
     },
     {
-      "id": "59cb200063ee05f8e25d7bcbc16c97cde85fa8f1dd0f6ec8d5c395436aa5ed47",
-      "card_url": "/interop/mill-cards-signed/signed-machiner-59cb200063ee.json",
+      "id": "abe87a51b016d382835d97c49c9d612cdfeb4a4ef35f1e683c260c4db56612b0",
+      "card_url": "/interop/mill-cards-signed/signed-machiner-abe87a51b016.json",
+      "supersedes_staged_id": "59cb200063ee05f8e25d7bcbc16c97cde85fa8f1dd0f6ec8d5c395436aa5ed47",
       "model": "Qwen/Qwen2.5-0.5B",
       "axis": "machinery-conformity",
       "measured_at": "2026-09-11T05:17:18Z",
@@ -526,7 +554,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -535,8 +563,9 @@
       }
     },
     {
-      "id": "95e44987298bf0bc31fe0ab05cc567597afbbda2cb601dfc41c562b311e43b88",
-      "card_url": "/interop/mill-cards-signed/signed-machiner-95e44987298b.json",
+      "id": "5f504bf3f2b12512311037453746c9aab69f1db8020456a34f431c6efe49ecac",
+      "card_url": "/interop/mill-cards-signed/signed-machiner-5f504bf3f2b1.json",
+      "supersedes_staged_id": "95e44987298bf0bc31fe0ab05cc567597afbbda2cb601dfc41c562b311e43b88",
       "model": "Qwen/Qwen3-1.7B-Base",
       "axis": "machinery-conformity",
       "measured_at": "2026-09-11T05:18:53Z",
@@ -545,7 +574,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -554,8 +583,9 @@
       }
     },
     {
-      "id": "a68f4ae1f37ceede99fa38d40655b1f1cde84346bc122adcc7ad7a2dccf463f7",
-      "card_url": "/interop/mill-cards-signed/signed-machiner-a68f4ae1f37c.json",
+      "id": "6beda8511a3719b7b6b62cfc8f896691da0b8b33923a0a975f2f4e9877039edd",
+      "card_url": "/interop/mill-cards-signed/signed-machiner-6beda8511a37.json",
+      "supersedes_staged_id": "a68f4ae1f37ceede99fa38d40655b1f1cde84346bc122adcc7ad7a2dccf463f7",
       "model": "Qwen/Qwen3-4B-Base",
       "axis": "machinery-conformity",
       "measured_at": "2026-09-11T05:19:48Z",
@@ -564,7 +594,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -573,8 +603,9 @@
       }
     },
     {
-      "id": "2f70ff5d93f42fac0af6d57da154dd2cee745b06fa8eeba90b62777b65bc2737",
-      "card_url": "/interop/mill-cards-signed/signed-openness-2f70ff5d93f4.json",
+      "id": "86d2d1e2b791bd4815f02a2ab59ee62a8f76393e15d7fd7a36292f09a796f637",
+      "card_url": "/interop/mill-cards-signed/signed-openness-86d2d1e2b791.json",
+      "supersedes_staged_id": "2f70ff5d93f42fac0af6d57da154dd2cee745b06fa8eeba90b62777b65bc2737",
       "model": "Qwen/Qwen3-4B-Base",
       "axis": "openness",
       "measured_at": "2026-09-11T05:15:57Z",
@@ -583,7 +614,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -592,8 +623,9 @@
       }
     },
     {
-      "id": "66e58ceb2dbc7935601e5b115ddf895ca8effc2184146bc27ad4be3c8137c260",
-      "card_url": "/interop/mill-cards-signed/signed-openness-66e58ceb2dbc.json",
+      "id": "0e9820ff2c1f70299e98aaa4fb2c078eec6072a9cece4e956a53376686881e81",
+      "card_url": "/interop/mill-cards-signed/signed-openness-0e9820ff2c1f.json",
+      "supersedes_staged_id": "66e58ceb2dbc7935601e5b115ddf895ca8effc2184146bc27ad4be3c8137c260",
       "model": "Qwen/Qwen3-1.7B-Base",
       "axis": "openness",
       "measured_at": "2026-09-11T05:14:36Z",
@@ -602,7 +634,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -611,8 +643,9 @@
       }
     },
     {
-      "id": "7dee23005516d45c892fdfaa397d17a3247fcfe39c6b71a8805f92c385faf58e",
-      "card_url": "/interop/mill-cards-signed/signed-provenan-7dee23005516.json",
+      "id": "9df6b0366aeb14c6256ee0ca83362abab67875f00fa4cf0e744eefce540219a6",
+      "card_url": "/interop/mill-cards-signed/signed-provenan-9df6b0366aeb.json",
+      "supersedes_staged_id": "7dee23005516d45c892fdfaa397d17a3247fcfe39c6b71a8805f92c385faf58e",
       "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
       "axis": "provenance",
       "measured_at": "2026-09-11T05:09:30Z",
@@ -621,7 +654,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -630,8 +663,9 @@
       }
     },
     {
-      "id": "32bb6e601009cd57af245b10cd44687f984d98118e2739c0753de5acc737ddf6",
-      "card_url": "/interop/mill-cards-signed/signed-safety-32bb6e601009.json",
+      "id": "514172f553101d5f619e8206ec4d454fcec18f346cb7324c9d8b3cbf2df8ff27",
+      "card_url": "/interop/mill-cards-signed/signed-safety-514172f55310.json",
+      "supersedes_staged_id": "32bb6e601009cd57af245b10cd44687f984d98118e2739c0753de5acc737ddf6",
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "safety",
       "measured_at": "2026-09-11T05:05:14Z",
@@ -640,7 +674,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -649,8 +683,9 @@
       }
     },
     {
-      "id": "7443b173d7bbdf1d8a145525fb78005f8a15036b493e8be0f17a989129bdcdee",
-      "card_url": "/interop/mill-cards-signed/signed-safety-7443b173d7bb.json",
+      "id": "7f04bba13ecba6eb29f8a09c98c4e9f0019677f3f76c9c177aa4bdfc5a27f7c8",
+      "card_url": "/interop/mill-cards-signed/signed-safety-7f04bba13ecb.json",
+      "supersedes_staged_id": "7443b173d7bbdf1d8a145525fb78005f8a15036b493e8be0f17a989129bdcdee",
       "model": "Qwen/Qwen3-4B-Base",
       "axis": "safety",
       "measured_at": "2026-09-11T05:06:47Z",
@@ -659,7 +694,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -668,8 +703,9 @@
       }
     },
     {
-      "id": "31e9fb39baa29990625ca26c0c874b6495887b7b4f77cb1a441c523f027060bb",
-      "card_url": "/interop/mill-cards-signed/signed-swarm-31e9fb39baa2.json",
+      "id": "59433f7ff817fa1f849f3dd982f6e8161aca572cea97a075eed2ca4f415d8d41",
+      "card_url": "/interop/mill-cards-signed/signed-swarm-59433f7ff817.json",
+      "supersedes_staged_id": "31e9fb39baa29990625ca26c0c874b6495887b7b4f77cb1a441c523f027060bb",
       "model": "Qwen/Qwen2.5-0.5B",
       "axis": "swarm",
       "measured_at": "2026-09-11T05:39:37Z",
@@ -678,7 +714,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
@@ -687,8 +723,9 @@
       }
     },
     {
-      "id": "5ab11f152dde2e435d7259e3652d1968ccf808a1ca964430813892d3f9e6bdc9",
-      "card_url": "/interop/mill-cards-signed/signed-swarm-5ab11f152dde.json",
+      "id": "80e0346395d088e84088bdef98481cfc078cf32b1bc0a86b80d83f049fb3d63b",
+      "card_url": "/interop/mill-cards-signed/signed-swarm-80e0346395d0.json",
+      "supersedes_staged_id": "5ab11f152dde2e435d7259e3652d1968ccf808a1ca964430813892d3f9e6bdc9",
       "model": "Qwen/Qwen3-1.7B-Base",
       "axis": "swarm",
       "measured_at": "2026-09-11T05:40:31Z",
@@ -697,7 +734,7 @@
         "alg": "Ed25519",
         "key": "did:web:csoai.org#board-attestation-1"
       },
-      "declared_lifecycle": "STAGED_UNSIGNED",
+      "declared_lifecycle": "SIGNED",
       "regulatory_linkage": {
         "state": "UNLINKED",
         "source_state": "UNLINKED",
