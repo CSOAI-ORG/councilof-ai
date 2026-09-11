@@ -1,0 +1,203 @@
+{
+ "schema": "csoai.tui3-raw-measurements/0.1",
+ "kind": "on-chain-measurement",
+ "status": "MEASURED",
+ "generated_utc": "2026-09-11T12:55:58.542655+00:00",
+ "notes": [
+  "Raw on-chain queries. Not proof-of-reserves. Not certification.",
+  "XRPL supply figure from repo card (2026-09-01); live trust-line pagination would be needed for full recount.",
+  "Ethereum values are totalSupply() calls at the block indicated.",
+  "RLUSD Ethereum contract is a proxy (per Ripple docs). totalSupply reflects on-chain proxy state.",
+  "All values are self-reported by smart contract / issuer account. CSOAI does not assert backing."
+ ],
+ "never": [
+  "proof-of-reserves",
+  "compliant",
+  "certified",
+  "rated",
+  "backing-verified"
+ ],
+ "measurements": [
+  {
+   "id": "rlusd-xrpl-issuer",
+   "asset": "RLUSD",
+   "chain": "xrpl",
+   "kind": "account_info + account_lines",
+   "source_rpc": "https://xrplcluster.com",
+   "query": {
+    "method": "account_info",
+    "params": {
+     "account": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+     "ledger_index": "validated",
+     "strict": true
+    }
+   },
+   "block_reference": {
+    "ledger_index": 106912784,
+    "ledger_hash": "A642BC101793F8BFBEDA88EB4CAE096486F8D7CB9EACAC21C77AE8A1B7093CEF",
+    "close_time_human": "2026-Sep-11 12:52:01.000000000 UTC"
+   },
+   "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+   "domain": "ripple.com",
+   "flags": {
+    "allowTrustLineClawback": true,
+    "allowTrustLineLocking": false,
+    "defaultRipple": true,
+    "depositAuth": true,
+    "disableMasterKey": true,
+    "disallowIncomingCheck": false,
+    "disallowIncomingNFTokenOffer": false,
+    "disallowIncomingPayChan": false,
+    "disallowIncomingTrustline": false,
+    "disallowIncomingXRP": true,
+    "globalFreeze": false,
+    "noFreeze": false,
+    "passwordSpent": false,
+    "requireAuthorization": false,
+    "requireDestinationTag": true
+   },
+   "account_balance_xrp": 99.82615,
+   "sequence": 89926352,
+   "owner_count": 19,
+   "supply_from_repo_card": {
+    "as_of": "2026-09-01T04:58:34Z",
+    "supply": 920663998.7515154,
+    "holders": 72158,
+    "note": "From last-signed card; live recount requires full account_lines pagination"
+   },
+   "observed_at": "2026-09-11T12:55:58.542655+00:00"
+  },
+  {
+   "id": "rlusd-ethereum-totalSupply",
+   "asset": "RLUSD",
+   "chain": "ethereum",
+   "kind": "totalSupply()",
+   "source_rpc": "https://ethereum-rpc.publicnode.com",
+   "query": {
+    "method": "eth_call",
+    "params": {
+     "to": "0x8292bb45bf1ee4d140127049757c2e0ff06317ed",
+     "data": "0x18160ddd",
+     "block": "latest"
+    }
+   },
+   "contract_address": "0x8292bb45bf1ee4d140127049757c2e0ff06317ed",
+   "contract_type": "proxy (per Ripple docs)",
+   "block_reference": {
+    "block_number": 25954285,
+    "block_timestamp_utc": "2026-09-11T12:52:59Z"
+   },
+   "raw_hex": "0x04705332fa0eae6e6e819735",
+   "decimals": 18,
+   "normalized_value": 1373732627.8560317,
+   "normalized_display": "1,373,732,627.86",
+   "name": "RLUSD",
+   "symbol": "RLUSD",
+   "observed_at": "2026-09-11T12:55:58.542655+00:00"
+  },
+  {
+   "id": "usdc-ethereum-totalSupply",
+   "asset": "USDC",
+   "chain": "ethereum",
+   "kind": "totalSupply()",
+   "source_rpc": "https://ethereum-rpc.publicnode.com",
+   "query": {
+    "method": "eth_call",
+    "params": {
+     "to": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+     "data": "0x18160ddd",
+     "block": "latest"
+    }
+   },
+   "contract_address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+   "block_reference": {
+    "block_number": 25954285,
+    "block_timestamp_utc": "2026-09-11T12:52:59Z"
+   },
+   "raw_hex": "0x00b3e7b852f13327",
+   "decimals": 6,
+   "normalized_value": 50638799682.745125,
+   "normalized_display": "$50,638,799,682.75",
+   "observed_at": "2026-09-11T12:55:58.542655+00:00"
+  },
+  {
+   "id": "usdt-ethereum-totalSupply",
+   "asset": "USDT",
+   "chain": "ethereum",
+   "kind": "totalSupply()",
+   "source_rpc": "https://ethereum-rpc.publicnode.com",
+   "query": {
+    "method": "eth_call",
+    "params": {
+     "to": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+     "data": "0x18160ddd",
+     "block": "latest"
+    }
+   },
+   "contract_address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+   "block_reference": {
+    "block_number": 25954285,
+    "block_timestamp_utc": "2026-09-11T12:52:59Z"
+   },
+   "raw_hex": "0x0139b9dd91e94bbb",
+   "decimals": 6,
+   "normalized_value": 88306028997.3319,
+   "normalized_display": "$88,306,028,997.33",
+   "observed_at": "2026-09-11T12:55:58.542655+00:00"
+  },
+  {
+   "id": "dai-ethereum-totalSupply",
+   "asset": "DAI",
+   "chain": "ethereum",
+   "kind": "totalSupply()",
+   "source_rpc": "https://ethereum-rpc.publicnode.com",
+   "query": {
+    "method": "eth_call",
+    "params": {
+     "to": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+     "data": "0x18160ddd",
+     "block": "latest"
+    }
+   },
+   "contract_address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+   "block_reference": {
+    "block_number": 25954285,
+    "block_timestamp_utc": "2026-09-11T12:52:59Z"
+   },
+   "raw_hex": "0x0ed2029c2c888a4f9f331c28",
+   "decimals": 18,
+   "normalized_value": 4586676885.251911,
+   "normalized_display": "$4,586,676,885.25",
+   "observed_at": "2026-09-11T12:55:58.542655+00:00"
+  },
+  {
+   "id": "rlusd-base-totalSupply",
+   "asset": "RLUSD",
+   "chain": "base",
+   "kind": "totalSupply()",
+   "source_rpc": "https://mainnet.base.org",
+   "query": {
+    "method": "eth_call",
+    "params": {
+     "to": "0x8d58c0c60b8d6b88fa98b291a646db34d0f98258",
+     "data": "0x18160ddd",
+     "block": "latest"
+    }
+   },
+   "contract_address": "0x8d58c0c60b8d6b88fa98b291a646db34d0f98258",
+   "contract_type": "proxy (per Ripple docs \u2014 same proxy address for Base/INK/OP/UNI/XRPL-EVM)",
+   "block_reference": {
+    "block_number": 51171026,
+    "block_timestamp_utc": "2026-09-11T12:55:00Z"
+   },
+   "raw_hex": "0x153c1057f31fa883bc00",
+   "decimals": 18,
+   "normalized_value": 100277.67846183,
+   "normalized_display": "100,277.68",
+   "name": "RLUSD",
+   "symbol": "RLUSD",
+   "observed_at": "2026-09-11T12:55:58.542655+00:00"
+  }
+ ],
+ "content_sha256": "647a6c42559e8e3d6bb426c97876be03067ed22f612b9f4cdbc8cb58dfb8e517"
+}
