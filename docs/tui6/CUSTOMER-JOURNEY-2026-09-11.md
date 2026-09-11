@@ -52,3 +52,23 @@ Every step above uses public endpoints with no authentication:
 - Receipt verification: public API or offline script
 
 A stranger can follow this entire journey without CSOAI credentials, accounts, or permission.
+
+## Revenue Verification (from GET /api/revenue)
+
+**Source:** `GET https://councilof.ai/api/revenue` — live endpoint reading REVENUE_KV  
+**Verified:** 2026-09-11 ~15:00Z
+
+| Metric | Value | Source |
+|--------|-------|--------|
+| settled_usdc | 20000 atomic (0.02 USDC) | REVENUE_KV |
+| distinct_nonself_payers | 1 | REVENUE_KV |
+| settlements | 1 | REVENUE_KV |
+| self_settlements | 5 | REVENUE_KV (excluded from revenue) |
+| zero_value_settlements | 4 | REVENUE_KV (excluded from revenue) |
+| records_unreadable | 0 | REVENUE_KV |
+
+**Classification:** The 1 settlement of 0.02 USDC is from a distinct non-self payer wallet. The 5 self-settlements and 4 zero-value settlements are correctly excluded per the `one_number` definition.
+
+**Externally verifiable:** The `/api/revenue` endpoint is public. Anyone can query it. The `one_number` field excludes self-payments and zero-value probes by design (the definition is published in the API response). The settlement count of 1 with `settled_usdc` of 20000 atomic units is the evidence that one external customer completed the journey.
+
+**What is NOT verifiable from this endpoint alone:** The specific transaction hash, payer wallet address, and which SKU was purchased. These would require querying the Base chain for the payTo address `0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31` transaction history.
