@@ -287,6 +287,7 @@ const Intel = lazy(() => import("./pages/Intel"));
 const AccountBrief = lazy(() => import("./pages/AccountBrief"));
 const Article50 = lazy(() => import("./pages/Article50"));
 const Countdown = lazy(() => import("./pages/Countdown"));
+const Art50Services = lazy(() => import("./pages/Art50Services"));
 const VerifyLeaderboard = lazy(() => import("./pages/VerifyLeaderboard"));
 const GovernanceLayer = lazy(() => import("./pages/GovernanceLayer"));
 const Dora = lazy(() => import("./pages/Dora"));
@@ -396,6 +397,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/learn": "Learn | CSOAI",
   "/article-50": "Article 50 | CSOAI",
   "/countdown": "The deadline machine — every verified AI-regulation date, counting down | Council of AI",
+  "/art50": "Article 50 verification services — census, bench, ledger | Council of AI",
   "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
   "/gpai-evidence": "GPAI Evidence Pack — independent evidence for the AI Office | CSOAI",
   "/cra-readiness": "CRA Readiness Kit — the 24h/72h/14-day runbook, signed | CSOAI",
@@ -1079,6 +1081,7 @@ function App() {
                   <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/countdown" component={Countdown} />
+                  <Route path="/art50" component={Art50Services} />
                   <Route path="/verify-leaderboard" component={VerifyLeaderboard} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
                   <Route path="/gpai-evidence" component={GpaiEvidencePack} />

@@ -1,9 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "wouter";
 import { AlarmClock, CalendarClock, FileText, ShieldAlert } from "lucide-react";
 import { setMetaDescription } from "@/lib/utils";
 import { useGspcBoard } from "@/components/board/useGspcBoard";
 import Art50ReadinessPanel from "@/components/board/Art50ReadinessPanel";
+import {
+  Tile,
+  urgency,
+  useTimeLeft,
+  URGENCY_LABEL,
+  URGENCY_TILE,
+} from "@/components/countdown/tiles";
 import regulationFeed from "@/data/regulation.json";
 
 /**
@@ -84,70 +91,6 @@ function fmtDate(iso: string): string {
     timeZone: "UTC",
   }).format(new Date(`${iso}T00:00:00Z`));
 }
-
-interface TimeLeft {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-  passed: boolean;
-}
-
-function computeTimeLeft(iso: string): TimeLeft {
-  const diff = new Date(`${iso}T00:00:00Z`).getTime() - Date.now();
-  if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, passed: true };
-  return {
-    days: Math.floor(diff / 86400000),
-    hours: Math.floor((diff % 86400000) / 3600000),
-    minutes: Math.floor((diff % 3600000) / 60000),
-    seconds: Math.floor((diff % 60000) / 1000),
-    passed: false,
-  };
-}
-
-/** Ticks every second; initial state is computed synchronously so the prerender is fat. */
-function useTimeLeft(iso: string): TimeLeft {
-  const [t, setT] = useState<TimeLeft>(() => computeTimeLeft(iso));
-  useEffect(() => {
-    const id = setInterval(() => setT(computeTimeLeft(iso)), 1000);
-    return () => clearInterval(id);
-  }, [iso]);
-  return t;
-}
-
-function Tile({ value, label, tone }: { value: number; label: string; tone: string }) {
-  return (
-    <div className="flex flex-col items-center">
-      <div
-        className={`min-w-[58px] rounded-lg border px-3 py-2 text-center sm:min-w-[70px] ${tone}`}
-      >
-        <span className="text-2xl font-black tabular-nums sm:text-3xl">
-          {value.toString().padStart(2, "0")}
-        </span>
-      </div>
-      <span className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-100/60">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-function urgency(days: number): "critical" | "soon" | "calm" {
-  if (days < 30) return "critical";
-  if (days < 180) return "soon";
-  return "calm";
-}
-
-const URGENCY_TILE: Record<string, string> = {
-  critical: "border-red-400/50 bg-red-500/15 text-red-200",
-  soon: "border-amber-400/50 bg-amber-500/10 text-amber-200",
-  calm: "border-emerald-400/40 bg-emerald-500/10 text-emerald-200",
-};
-const URGENCY_LABEL: Record<string, { text: string; cls: string }> = {
-  critical: { text: "under 30 days", cls: "border-red-400/50 bg-red-500/15 text-red-200" },
-  soon: { text: "under 6 months", cls: "border-amber-400/50 bg-amber-500/10 text-amber-200" },
-  calm: { text: "on the horizon", cls: "border-emerald-400/40 bg-emerald-500/10 text-emerald-200" },
-};
 
 function DeadlineCard({ d }: { d: Deadline }) {
   const t = useTimeLeft(d.date);
@@ -324,6 +267,10 @@ function Art50ReadinessLive() {
         The full axis, with its real measured figures:{" "}
         <Link href="/gspc/art5-safeguard" className="font-semibold text-emerald-200 underline">
           /gspc/art5-safeguard →
+        </Link>
+        {" · "}
+        <Link href="/art50" className="font-semibold text-emerald-200 underline">
+          Art 50 verification services →
         </Link>
       </p>
     </div>

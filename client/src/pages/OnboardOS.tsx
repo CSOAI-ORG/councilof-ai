@@ -55,6 +55,7 @@ export default function OnboardOS() {
         <div className="mt-8 rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/75">
           Council of AI is a measurement body — we measure and sign, we do not certify. Verify stays free
           and loginless. A grade is never sold. <a href="/gspc-verify" className="font-semibold text-emerald-300 underline hover:text-emerald-200">Verify a card →</a>
+          <span className="mt-2 block">Watching the EU AI Act marking deadline? <a href="/art50" className="font-semibold text-emerald-300 underline hover:text-emerald-200">Article 50 verification services →</a></span>
         </div>
       </section>
     </div>

@@ -148,6 +148,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Arena Scoreboard"
  },
  {
+  "path": "/art50",
+  "comp": "Art50Services",
+  "title": "Art50 Services"
+ },
+ {
   "path": "/article-50",
   "comp": "Article50",
   "title": "Article50"
