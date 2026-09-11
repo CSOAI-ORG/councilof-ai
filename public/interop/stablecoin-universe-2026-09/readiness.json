@@ -16121,8 +16121,46 @@
     "distinct_asset_reported_chains": 211,
     "indexed_assets": 425,
     "indexed_chain_deployments": 1640,
+    "post_freeze_discovery_candidates": 1,
     "unmeasured_assets": 424
   },
+  "discovery_candidates": [
+    {
+      "anchor_state": "NOT_ANCHORED",
+      "discovery_state": "REPORTED_BY_ISSUER_NOT_IN_FROZEN_INDEX",
+      "id": "usbdc-us-bank-stellar",
+      "issuer": "U.S. Bank",
+      "measurement_state": "UNMEASURED",
+      "name": "U.S. Bank Digital Currency",
+      "next_measurement": {
+        "required": [
+          "canonical Stellar asset code and issuer account",
+          "ledger sequence or transaction hash for the reported pilot",
+          "supply and holder reconstruction method",
+          "freeze and clawback configuration observation"
+        ],
+        "state": "INPUT_REQUIRED"
+      },
+      "reported_capabilities": [
+        "mint",
+        "cross-border payment",
+        "redemption",
+        "freeze",
+        "clawback"
+      ],
+      "reported_chain": "Stellar",
+      "root_state": "NOT_INCLUDED",
+      "signature_state": "UNSIGNED_DISCOVERY_OBSERVATION",
+      "source": {
+        "claim_scope": "U.S. Bank reports one live pilot transaction between its North American and European entities; no public supply, contract identity, reserve record, holder count, or independent chain reconstruction is established here.",
+        "observed_at": "2026-09-11",
+        "published_at": "2026-09-09",
+        "publisher": "U.S. Bancorp",
+        "url": "https://ir.usbank.com/news-events/news/news-details/2026/U-S--Bank-Launches-USBDC-Stablecoin/default.aspx"
+      },
+      "symbol": "USBDC"
+    }
+  ],
   "purpose": "One evidence-status view over the frozen stablecoin discovery index; measurement credentials, never certification.",
   "schema": "csoai.stablecoin-readiness/v1",
   "shared_discovery": {
@@ -16174,6 +16212,7 @@
     "A signed index commitment is not an asset measurement signature.",
     "Root inclusion is not an external-chain anchor.",
     "An OpenTimestamps pending calendar attestation is not a Bitcoin timestamp.",
-    "A generic protocol door is not an asset-specific integration or settlement."
+    "A generic protocol door is not an asset-specific integration or settlement.",
+    "A post-freeze issuer-reported candidate is not part of the signed 425-asset index and is not independently measured."
   ]
 }

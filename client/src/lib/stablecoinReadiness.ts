@@ -41,6 +41,7 @@ export type StablecoinReadiness = {
     asset_specific_mcp_tools: number;
     asset_specific_x402_doors: number;
     asset_specific_x402_settlements_verified: number;
+    post_freeze_discovery_candidates: number;
   };
   shared_evidence: {
     index_commitment: {
@@ -58,12 +59,23 @@ export type StablecoinReadiness = {
     x402: { endpoint: string; sku: string; fresh_compute_excluded: boolean };
   };
   assets: StablecoinReadinessAsset[];
+  discovery_candidates: Array<{
+    id: string;
+    name: string;
+    symbol: string;
+    issuer: string;
+    reported_chain: string;
+    discovery_state: "REPORTED_BY_ISSUER_NOT_IN_FROZEN_INDEX";
+    measurement_state: "UNMEASURED";
+    source: { url: string; claim_scope: string };
+  }>;
 };
 
 export function isStablecoinReadiness(value: unknown): value is StablecoinReadiness {
   if (!value || typeof value !== "object") return false;
   const data = value as Partial<StablecoinReadiness>;
   if (data.schema !== "csoai.stablecoin-readiness/v1" || !Array.isArray(data.assets)) return false;
+  if (!Array.isArray(data.discovery_candidates)) return false;
   if (!data.coverage || data.assets.length !== data.coverage.indexed_assets) return false;
   return data.assets.every((asset) =>
     asset?.index_state === "INDEXED" &&
@@ -74,6 +86,9 @@ export function isStablecoinReadiness(value: unknown): value is StablecoinReadin
     !(asset.measurement?.state === "MEASURED" && (
       asset.measurement?.depth === "NONE" || !asset.measurement?.evidence_urls?.length
     ))
+  ) && data.discovery_candidates.every((candidate) =>
+    candidate.discovery_state === "REPORTED_BY_ISSUER_NOT_IN_FROZEN_INDEX" &&
+    candidate.measurement_state === "UNMEASURED"
   );
 }
 

@@ -18,6 +18,9 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         self.assertEqual(1, self.document["coverage"]["deeply_measured_assets"])
         self.assertEqual(424, self.document["coverage"]["unmeasured_assets"])
         self.assertEqual(0, self.document["coverage"]["asset_measurements_bitcoin_anchored_via_current_root"])
+        self.assertEqual(1, self.document["coverage"]["post_freeze_discovery_candidates"])
+        self.assertEqual("USBDC", self.document["discovery_candidates"][0]["symbol"])
+        self.assertEqual("UNMEASURED", self.document["discovery_candidates"][0]["measurement_state"])
 
     def test_indexed_asset_cannot_be_relabeled_measured(self) -> None:
         changed = copy.deepcopy(self.document)
