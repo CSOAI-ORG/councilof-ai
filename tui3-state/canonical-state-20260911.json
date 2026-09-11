@@ -1,0 +1,292 @@
+{
+  "tui": 3,
+  "title": "Models and Regulation \u2014 Verified State",
+  "branch": "models/verified-expansion-20260911",
+  "generated_at": "2026-09-11T12:13:49Z",
+  "source": "CSOAI-ORG/councilof-ai master @ HEAD",
+  "verification_methodology": "Direct file inspection, SHA-256 recomputation, Ed25519 signature presence check, cross-population reconciliation",
+  "populations": {
+    "public_root": {
+      "location": "public/root.json",
+      "count": 167,
+      "as_of": "2026-09-11T08:45:22Z",
+      "format": "card_sha256[]",
+      "state": "VERIFIED",
+      "note": "167 card SHAs in the current public Merkle root. These are NOT the same cards as mill-cards-signed."
+    },
+    "historical_corpus": {
+      "location": "public/signed/card_index.json",
+      "count": 335,
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "kid": "card-attestation-1",
+      "state": "VERIFIED",
+      "axes": 16,
+      "axis_names": [
+        "arc-30",
+        "care",
+        "care-refusal-help",
+        "care-refusal-protect",
+        "gov",
+        "gsm8k-30",
+        "gspc-conformance",
+        "gspc-continuity",
+        "gspc-governance",
+        "gspc-openness",
+        "gspc-provenance",
+        "gspc-safety",
+        "jail-escape-detection",
+        "mmlu-30",
+        "swag-30",
+        "swarm-candidates"
+      ],
+      "note": "Separate signed corpus using older axis naming. 0 identifier overlap with public root or mill cards."
+    },
+    "mill_signed": {
+      "location": "public/interop/mill-cards-signed/",
+      "count": 1432,
+      "distinct_models": 155,
+      "axes": 14,
+      "axis_names": [
+        "affect",
+        "art5-safeguard",
+        "care",
+        "conformance",
+        "continuity",
+        "cross-reality",
+        "detector-interop",
+        "governance",
+        "jail",
+        "machinery-conformity",
+        "openness",
+        "provenance",
+        "safety",
+        "swarm"
+      ],
+      "measured": 1233,
+      "unmeasured": 199,
+      "state": "VERIFIED"
+    },
+    "mill_unsigned": {
+      "location": "public/interop/mill-cards-unsigned/",
+      "count": 1065,
+      "distinct_models": 125,
+      "axes": 14,
+      "state": "VERIFIED",
+      "unmeasured_reasons": {
+        "signed-pending-verify": 957,
+        "unsigned-compute-output": 70,
+        "n_lt_30_unquotable": 38
+      }
+    }
+  },
+  "pr_1888": {
+    "merge_commit": "df1e6d0bba957940e3a75e3ec1edb3a80e21be05",
+    "title": "mill: stage 36 enriched GSPC receipts and fail closed XRPL evidence",
+    "hf_job": "csoai/6aa38ac521047bf1b0374c78",
+    "signed_cards_added": 36,
+    "unsigned_cards_added": 36,
+    "verification": {
+      "outer_ed25519_wrappers": {
+        "status": "PASS",
+        "count": "36/36"
+      },
+      "id_sha256_body": {
+        "status": "PASS",
+        "count": "36/36",
+        "note": "10/36 require JS numeric canonicalization (float 1.0\u2192int 1); 26/36 pass with Python canonicalization"
+      },
+      "did": {
+        "status": "PASS",
+        "value": "did:web:csoai.org#board-attestation-1",
+        "count": "36/36"
+      },
+      "size_under_3kb": {
+        "status": "PASS",
+        "range_bytes": "1807-1890",
+        "count": "36/36"
+      },
+      "required_fields": {
+        "status": "PASS",
+        "count": "36/36"
+      },
+      "model_revision_present": {
+        "status": "PASS",
+        "count": "36/36"
+      },
+      "n_gte_30": {
+        "status": "PASS",
+        "count": "36/36"
+      },
+      "inner_signature_state": {
+        "status": "STAGED_UNSIGNED",
+        "count": "36/36",
+        "note": "Body field signature_state=STAGED_UNSIGNED; outer Ed25519 signature present on wrapper"
+      }
+    },
+    "models": {
+      "Qwen/Qwen2.5-0.5B": 8,
+      "Qwen/Qwen3-1.7B-Base": 8,
+      "Qwen/Qwen3-4B-Base": 7,
+      "TinyLlama/TinyLlama-1.1B-Chat-v1.0": 5,
+      "meta-llama/Llama-3.2-1B-Instruct": 2,
+      "meta-llama/Meta-Llama-3-8B-Instruct": 1,
+      "Qwen/Qwen2.5-1.5B-Instruct": 1,
+      "Qwen/Qwen2.5-3B-Instruct": 1,
+      "Qwen/Qwen2.5-7B-Instruct": 1,
+      "farbodtavakkoli/OTel-2.0-LLM-31B-IT": 1,
+      "Qwen/Qwen2.5-0.5B-Instruct": 1
+    },
+    "axes_covered": 14,
+    "overlap_with_public_root": 0,
+    "overlap_with_historical_corpus": 0,
+    "status": "ALL 36 SIGNED AND MEASURED; inner body still marked STAGED_UNSIGNED"
+  },
+  "regulatory_linkage": {
+    "total_signed_cards_with_regulatory_crosswalk_field": 36,
+    "direct": 5,
+    "unlinked": 31,
+    "no_field": 1396,
+    "linked_details": [
+      {
+        "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+        "axis": "art5-safeguard",
+        "refs": [
+          "Regulation (EU) 2024/1689 Article 5"
+        ],
+        "linkage_status": "DIRECT"
+      },
+      {
+        "model": "Qwen/Qwen2.5-0.5B",
+        "axis": "art5-safeguard",
+        "refs": [
+          "Regulation (EU) 2024/1689 Article 5"
+        ],
+        "linkage_status": "DIRECT"
+      },
+      {
+        "model": "Qwen/Qwen3-1.7B-Base",
+        "axis": "art5-safeguard",
+        "refs": [
+          "Regulation (EU) 2024/1689 Article 5"
+        ],
+        "linkage_status": "DIRECT"
+      },
+      {
+        "model": "Qwen/Qwen3-4B-Base",
+        "axis": "governance",
+        "refs": [
+          "Regulation (EU) 2024/1689"
+        ],
+        "linkage_status": "DIRECT"
+      },
+      {
+        "model": "Qwen/Qwen3-1.7B-Base",
+        "axis": "governance",
+        "refs": [
+          "Regulation (EU) 2024/1689"
+        ],
+        "linkage_status": "DIRECT"
+      }
+    ],
+    "note": "Only cards from PR #1888 have the regulatory_crosswalk field. 1,396 older cards have no regulation field. The 5 DIRECT linkages reference EU AI Act 2024/1689 without specifying provision-level granularity."
+  },
+  "gspc_axes": {
+    "declared": 22,
+    "measured_in_mill": 14,
+    "unmeasured_axes": [
+      "provenance-controls",
+      "reserve-attestation",
+      "regulatory-framework",
+      "distribution-integrity",
+      "custody-disclosure",
+      "ai-adoption-components",
+      "labour-components",
+      "humanoid-labour-index"
+    ],
+    "note": "8 axes exist in the GSPC board but have no mill cards. Board reports 22 measured but mill coverage is 14/22."
+  },
+  "signing_pipeline": {
+    "outer_key": "did:web:csoai.org#board-attestation-1",
+    "historical_key": "did:web:csoai.org#card-attestation-1 (pubkey d4cb0eaa...)",
+    "method": "GitHub OIDC \u2192 /api/board-sign (off-device)",
+    "canonical_bytes": "json.dumps(body, sort_keys=True, separators=(',', ':'))",
+    "numeric_canonicalization_issue": "Remote signer (JavaScript) converts float 1.0 to int 1. 10/36 PR#1888 cards affected. Older cards (pre-PR#1888) verify with Python canonicalization.",
+    "signing_script": "scripts/sign_mill_cards.py \u2192 scripts/sign_financial_runs.py"
+  },
+  "harness": {
+    "runpod_state": "UNKNOWN \u2014 no live RunPod session verified this session",
+    "huggingface_job": "csoai/6aa38ac521047bf1b0374c78 (PR #1888 source)",
+    "hf_dataset": "csoai/gspc-board",
+    "harness_revision_in_cards": "f92c01ff3918beb3be839add2a109888b814ad4c",
+    "grader": "deterministic-exact-token/0.1",
+    "route": "hf-router"
+  },
+  "blockers": [
+    {
+      "id": "B-TUI3-01",
+      "severity": "HIGH",
+      "description": "36 PR#1888 signed cards have body.signature_state=STAGED_UNSIGNED despite having outer Ed25519 signatures",
+      "impact": "Cards are signed at wrapper level but body still claims unsigned state",
+      "resolution": "Flip body.signature_state to SIGNED after confirming outer signature is the OIDC-signed one"
+    },
+    {
+      "id": "B-TUI3-02",
+      "severity": "HIGH",
+      "description": "1,396 older signed cards have no regulatory_crosswalk field",
+      "impact": "Regulation linkage covers only 36/1432 signed cards (2.5%)",
+      "resolution": "Backfill regulatory_crosswalk on older cards or accept as legacy unmapped"
+    },
+    {
+      "id": "B-TUI3-03",
+      "severity": "MEDIUM",
+      "description": "8 of 22 GSPC axes have no mill measurement cards",
+      "impact": "Board declares 22 measured but mill evidence covers 14",
+      "resolution": "Measure remaining 8 axes or relabel as board-level vs mill-level coverage"
+    },
+    {
+      "id": "B-TUI3-04",
+      "severity": "MEDIUM",
+      "description": "10/36 PR#1888 cards require JS numeric canonicalization for ID verification",
+      "impact": "Independent Python-only verifiers would see 10/36 ID mismatches",
+      "resolution": "Document JS canonicalization requirement in HOW-TO-VERIFY; or fix signer to reject float 1.0 values"
+    },
+    {
+      "id": "B-TUI3-05",
+      "severity": "MEDIUM",
+      "description": "0 of 36 PR#1888 cards overlap with public root (167) or historical corpus (335)",
+      "impact": "Three separate card populations with no cross-reference",
+      "resolution": "Reconcile populations in canonical state; document why they are separate"
+    },
+    {
+      "id": "B-TUI3-06",
+      "severity": "LOW",
+      "description": "199 signed cards are UNMEASURED status",
+      "impact": "Signed but not quotable (n<30 or other reasons)",
+      "resolution": "Accept as honest UNMEASURED; do not relabel as MEASURED"
+    },
+    {
+      "id": "B-TUI3-07",
+      "severity": "LOW",
+      "description": "1,065 unsigned cards awaiting signing ceremony",
+      "impact": "Deep measurement computed but not yet signed",
+      "resolution": "Run hf-fin-shells-measure.yml with target=mill via GHA OIDC"
+    },
+    {
+      "id": "B-TUI3-08",
+      "severity": "INFO",
+      "description": "RunPod harness state not verified this session",
+      "impact": "Cannot confirm whether RunPod measurement is active or paused",
+      "resolution": "Check RunPod dashboard or HF jobs API"
+    }
+  ],
+  "corrections": [
+    "The handoff states '36/36 inner STAGED_UNSIGNED' \u2014 CORRECT: body.signature_state=STAGED_UNSIGNED for all 36",
+    "The handoff states '5 regulation-linked, 31 unlinked' \u2014 CORRECT: 5 DIRECT, 31 UNLINKED in regulatory_crosswalk",
+    "The handoff states '167 cards are in the current public Merkle root' \u2014 CORRECT: root.json has 167 card_sha256 entries",
+    "The handoff states '335-card historical corpus' \u2014 CORRECT: card_index.json has 335 entries",
+    "The handoff states 'Rekor root witnessed at log index 2791822965' \u2014 NOT VERIFIED this session",
+    "The handoff states 'OTS submitted and awaiting Bitcoin confirmation' \u2014 NOT VERIFIED this session",
+    "README.md claims '335 cards (n_cards == n_cells: True)' \u2014 CORRECT for historical corpus",
+    "Board API declares 22 axes measured \u2014 PARTIALLY CORRECT: 14 have mill evidence, 8 are board-level only"
+  ]
+}
