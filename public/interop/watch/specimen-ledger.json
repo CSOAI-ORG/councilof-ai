@@ -1,0 +1,74 @@
+{
+  "schema": "csoai.watch.specimen-ledger/0.1",
+  "as_of": "2026-09-11",
+  "doctrine": "Public predictions, archived BEFORE their outcome date, then measured against what happened. The archive is the product: a claim with a timestamp cannot be quietly edited afterwards. Measured voice only — we record what was claimed and what occurred, never mockery, never a verdict word.",
+  "entries": [
+    {
+      "id": "specimen-2026-09-11-clarity-hype",
+      "archived_at": "2026-09-11T05:58:00Z",
+      "status": "OUTCOME_PENDING",
+      "event": {
+        "name": "US Senate cloture vote on the CLARITY Act (H.R. 3633)",
+        "scheduled": "2026-09-15T14:15:00-04:00",
+        "threshold": "60 votes to proceed to floor debate",
+        "sources": [
+          "https://crypto.news/clarity-act-september-15-vote-cloture-crypto-regulation/",
+          "https://www.ir-impact.com/2026/08/clarity-act-vote-pushed-to-september-as-expectations-build-for-secs-crypto-and-blockchain-rules-overhaul/"
+        ]
+      },
+      "hype_claims_observed": [
+        { "claim": "+40,000% price move implied around the vote", "circulating_on": "short-video social feeds, Sep 2026", "numeric_checkable": false },
+        { "claim": "$30T market unlock on passage", "circulating_on": "short-video social feeds, Sep 2026", "numeric_checkable": false },
+        { "claim": "CLARITY passage is near-certain", "circulating_on": "short-video social feeds, Sep 2026", "numeric_checkable": true }
+      ],
+      "reference_state_at_archive": {
+        "polymarket_passage_odds_2026": "~14–16% (2026-09-06), down from 82% peak in February 2026",
+        "galaxy_research_estimate": "~10%",
+        "kalshi_vote_happens_before_oct1": "~91%",
+        "note": "Prediction-market odds measure the probability of enactment in 2026, not the cloture vote itself. The hype claims conflate the two; that conflation is the specimen."
+      },
+      "measurement_plan": "On 2026-09-16 publish the outcome card: cloture result (pass/fail, vote count) against the archived hype claims and against the reference odds. The hype is measured against the record, not against the price.",
+      "outcome": null,
+      "outcome_due": "2026-09-16"
+    },
+    {
+      "id": "specimen-2026-09-11-xrp-150k-2030",
+      "archived_at": "2026-09-11T05:58:00Z",
+      "status": "OUTCOME_PENDING",
+      "event": {
+        "name": "XRP price at 2030-12-31",
+        "scheduled": "2030-12-31T23:59:59Z",
+        "threshold": "claim: $150,000 per XRP by 2030",
+        "sources": ["short-video social feeds, Sep 2026 (archived by estate observation)"]
+      },
+      "hype_claims_observed": [
+        { "claim": "$150,000 XRP by 2030", "circulating_on": "short-video social feeds, Sep 2026", "numeric_checkable": true }
+      ],
+      "reference_state_at_archive": {
+        "note": "Archived whole, dated, and left standing until the horizon. At $150,000/XRP the implied capitalisation exceeds global M2 — that arithmetic is stated here once, at archive time, not retrofitted in 2030."
+      },
+      "measurement_plan": "Annual check-in card each December; final outcome card at horizon. No silent edits: this entry's archived_at is its signature content.",
+      "outcome": null,
+      "outcome_due": "2031-01-15"
+    },
+    {
+      "id": "specimen-2026-09-11-kokotajlo-jre2551",
+      "archived_at": "2026-09-11T05:58:00Z",
+      "status": "METHOD_PUBLISHED",
+      "event": {
+        "name": "JRE #2551 — Daniel Kokotajlo (AI Futures Project): public incident account of an agentic swarm failure",
+        "scheduled": null,
+        "threshold": null,
+        "sources": ["https://podmust.com/ep?podcast=the-joe-rogan-experience&epis=IzI1NTEgLSBEYW5pZWwgS29rb3Rhamxv"]
+      },
+      "hype_claims_observed": [],
+      "reference_state_at_archive": {
+        "note": "A mass-audience account of a swarm incident now exists in the public record. What does not exist anywhere public: a measured mapping of that incident class onto named evaluation axes."
+      },
+      "measurement_plan": "Map the incident class described in the account onto the swarm, jail and detector axes: which axis would have registered the behaviour, at what sample size, with what access. Publish the method and the access-ask. The episode audio itself is not a dataset; access to the incident telemetry is the ask.",
+      "access_ask": "Incident telemetry or an equivalent replay harness, under NDA if required — measurement, never certification, and the lab keeps veto over publication of anything identifying.",
+      "outcome": null,
+      "outcome_due": null
+    }
+  ]
+}

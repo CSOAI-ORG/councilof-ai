@@ -44,6 +44,7 @@ from adapters import (  # noqa: E402
     provider_diff,
     staged_leaves,
     swift_notices,
+    watch_gaps,
     witness_queue,
     x402_receipts,
     xrpl,
@@ -539,6 +540,12 @@ def main() -> int:
     # and docs/PROVABLE-ARCHIVE-METHOD.md.
     evm_out = evm_permissions.collect()
     evm_events_out = evm_permission_events.collect(ROOT)
+    # Attestation watch (EP3): issuer claim vs observable state for the locked-16,
+    # plus the dated specimen ledger. Claims come only from the committed registry
+    # (public/interop/watch/issuer-claims.json); claim:null -> UNMEASURED, never
+    # omitted. Fetches xrpl.fi metrics; dark feed -> fewer leaves, never a halt.
+    # See scripts/adapters/watch_gaps.py.
+    watch_out = watch_gaps.collect(ROOT)
 
     leaves: list[dict] = []
     leaves.extend(xrpl_out["leaves"])
@@ -565,6 +572,7 @@ def main() -> int:
     leaves.extend(x402_receipts_out["leaves"])
     leaves.extend(evm_out["leaves"])
     leaves.extend(evm_events_out["leaves"])
+    leaves.extend(watch_out["leaves"])
 
     have_pkcs8 = key_present()
     have_key = signer_available()
@@ -662,6 +670,7 @@ def main() -> int:
                 "provider_diff": {"status": "halt-before-write", **provider_diff_out["sidecar"]},
                 "evm_permissions": {"status": "halt-before-write", **evm_out["sidecar"]},
                 "evm_permission_events": {"status": "halt-before-write", **evm_events_out["sidecar"]},
+                "watch_gaps": {"status": "halt-before-write", **watch_out["sidecar"]},
             },
         }
         if not have_key:
@@ -804,6 +813,7 @@ def main() -> int:
         "provider_diff": provider_diff_out.get("sidecar") or {},
         "evm_permissions": evm_out.get("sidecar") or {},
         "evm_permission_events": evm_events_out.get("sidecar") or {},
+        "watch_gaps": watch_out.get("sidecar") or {},
         "card_count": len(shas),
         "xrpl_asset_state_count": len(asset_cards),
         "note": (

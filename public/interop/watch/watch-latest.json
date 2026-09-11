@@ -1,0 +1,481 @@
+{
+  "schema": "csoai.watch.snapshot/0.1",
+  "generated_at": "2026-09-11T05:37:18.149142Z",
+  "doctrine": "Measurement, not certification. A divergence is a fact about two sourced numbers, not an accusation. claim: null is UNMEASURED and stays visible.",
+  "metrics_ok": true,
+  "metrics_as_of": "2026-09-11T05:28:33.246Z",
+  "assets": [
+    {
+      "symbol": "RLUSD",
+      "issuer": "Ripple",
+      "status": "PROBED",
+      "claim": {
+        "type": "qualitative-backing",
+        "text": "It’s issued one-to-one against reserves, such as cash and U.S. Treasuries.",
+        "numeric_supply_usd": null,
+        "scope": "all-chains",
+        "source_url": "https://ripple.com/solutions/stablecoin/",
+        "archived_at": "2026-09-11T05:20:00Z",
+        "archive_note": "Served HTML (267,585 bytes, HTTP 200) carries the 1:1 reserve sentence but NO numeric supply figure — the number is not on the page a stranger is served. A numeric issuer-side claim is UNMEASURED on this source."
+      },
+      "external_reference": {
+        "name": "CoinGecko ripple-usd circulating supply (all chains)",
+        "value": 2404807130.107216,
+        "unit": "RLUSD",
+        "as_of": "2026-09-11T05:14:50Z",
+        "source_url": "https://api.coingecko.com/api/v3/coins/ripple-usd",
+        "scope": "all-chains",
+        "scope_note": "Tracker figure spans every chain RLUSD rides on. The xrpl.fi observable is the XRPL slice only. Comparing across scopes is disclosed, never silently summed."
+      },
+      "observable": {
+        "supply": 1031501745.151147,
+        "holders": 41200,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": 42.89,
+      "scope_note": "external_reference is all-chains; observable is the XRPL slice. The share is arithmetic on two sourced numbers, not a claim about backing.",
+      "unmeasured": [
+        "numeric_issuer_claim: the issuer page serves no supply figure"
+      ]
+    },
+    {
+      "symbol": "OUSG",
+      "issuer": "Ondo Finance",
+      "status": "PROBED",
+      "claim": {
+        "type": "numeric-tvl",
+        "tvl_usd_total": 335913908.47,
+        "tvl_usd_xrpl": 191079831.68,
+        "tvl_usd_ethereum": 144834076.79,
+        "price_usd": 116.519237,
+        "scope": "per-chain (xrpl figure published by issuer)",
+        "source_url": "https://ondo.finance/ousg",
+        "archived_at": "2026-09-11T05:25:00Z",
+        "archive_note": "Embedded JSON in served HTML: tvlUsd:{total:335913908.47, xrpl:191079831.68, ethereum:144834076.79}, priceUsd:116.519237. The issuer publishes a per-chain split — one of the few who do."
+      },
+      "external_reference": null,
+      "observable": {
+        "supply": 1639899.441472341,
+        "holders": 50,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": 0.0,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": []
+    },
+    {
+      "symbol": "USDB",
+      "issuer": "Braza Bank",
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 28175135.47000002,
+        "holders": 60,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "BBRL",
+      "issuer": "Braza Bank",
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 98389299.90639076,
+        "holders": 40,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "EURCV",
+      "issuer": "Société Générale-FORGE",
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 10000000,
+        "holders": 120,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "USD.bs",
+      "issuer": null,
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 8013476.434497955,
+        "holders": 7314,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "EUR.bs",
+      "issuer": null,
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 4960395.479246211,
+        "holders": 430,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "USD.gh",
+      "issuer": null,
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 4937111.580630373,
+        "holders": 19800,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "USDC",
+      "issuer": "Circle",
+      "status": "PROBED",
+      "claim": {
+        "type": "numeric-total-circulation",
+        "circulation_usd_all_chains": 74300000000,
+        "text": "USDC in circulation 74.3B",
+        "numeric_supply_usd": null,
+        "scope": "all-chains",
+        "source_url": "https://www.circle.com/usdc",
+        "archived_at": "2026-09-11T05:30:00Z",
+        "archive_note": "Served HTML carries 'usdc-circulation 74.3B' — a total across ALL chains. No XRPL-slice figure on this page, so no same-scope comparison against the XRPL observable is possible from this source."
+      },
+      "external_reference": null,
+      "observable": {
+        "supply": 3693409.498900878,
+        "holders": 80,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "same_scope_divergence: claim is all-chains, observable is the XRPL slice"
+      ]
+    },
+    {
+      "symbol": "EUR.gh",
+      "issuer": null,
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 1663814.123788961,
+        "holders": 9400,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "EURQ",
+      "issuer": null,
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 1000000,
+        "holders": 2,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "USDQ",
+      "issuer": null,
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 1000000,
+        "holders": 1,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "EURØP",
+      "issuer": null,
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 340281.0973202474,
+        "holders": 310,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "XAU.gh",
+      "issuer": null,
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 4132.852267201553,
+        "holders": 5600,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "GBP.gh",
+      "issuer": null,
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 199429.1734487156,
+        "holders": 2400,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    },
+    {
+      "symbol": "PSC",
+      "issuer": null,
+      "status": "UNMEASURED",
+      "claim": null,
+      "external_reference": null,
+      "observable": {
+        "supply": 14588,
+        "holders": 90,
+        "as_of": "2026-09-11T05:28:33.246Z",
+        "source": "https://xrpl.fi/api/metrics",
+        "scope": "xrpl"
+      },
+      "divergence_pct": null,
+      "xrpl_share_of_tracker_pct": null,
+      "scope_note": null,
+      "unmeasured": [
+        "issuer_claim: no archived claim in the registry"
+      ]
+    }
+  ],
+  "calendar": [
+    {
+      "date": "2026-09-15T14:15:00-04:00",
+      "name": "US Senate cloture vote — CLARITY Act (H.R. 3633)",
+      "why_it_matters": "60 votes open floor debate on the SEC/CFTC market-structure split. Specimen ledger entry #1 measures the hype against this result.",
+      "source": "https://crypto.news/clarity-act-september-15-vote-cloture-crypto-regulation/",
+      "specimen_ref": "specimen-2026-09-11-clarity-hype"
+    },
+    {
+      "date": "2026-09-28T17:00:00-04:00",
+      "name": "Evernorth redemption window (5pm ET)",
+      "why_it_matters": "A dated redemption event for an XRPL-adjacent vehicle — the kind of moment where issuer statements and ledger state either reconcile or do not.",
+      "source": "estate brief 2026-09-11 (CSOAI_6_TUI_GOALS); primary source pending — marked DISCOVERED until archived",
+      "specimen_ref": null
+    },
+    {
+      "date": "2026-09-30",
+      "name": "XRPN Nasdaq vote",
+      "why_it_matters": "Dated governance vote watched by the same feeds that carried the CLARITY hype.",
+      "source": "estate brief 2026-09-11 (CSOAI_6_TUI_GOALS); primary source pending — marked DISCOVERED until archived",
+      "specimen_ref": null
+    },
+    {
+      "date": "2026-09-16",
+      "name": "Specimen #1 outcome card due",
+      "why_it_matters": "The ledger's own deadline: the CLARITY hype-vs-outcome card publishes the morning after the vote, whatever the result.",
+      "source": "this ledger",
+      "specimen_ref": "specimen-2026-09-11-clarity-hype"
+    }
+  ],
+  "specimen_ledger": [
+    {
+      "id": "specimen-2026-09-11-clarity-hype",
+      "archived_at": "2026-09-11T05:58:00Z",
+      "status": "OUTCOME_PENDING",
+      "event": {
+        "name": "US Senate cloture vote on the CLARITY Act (H.R. 3633)",
+        "scheduled": "2026-09-15T14:15:00-04:00",
+        "threshold": "60 votes to proceed to floor debate",
+        "sources": [
+          "https://crypto.news/clarity-act-september-15-vote-cloture-crypto-regulation/",
+          "https://www.ir-impact.com/2026/08/clarity-act-vote-pushed-to-september-as-expectations-build-for-secs-crypto-and-blockchain-rules-overhaul/"
+        ]
+      },
+      "hype_claims_observed": [
+        {
+          "claim": "+40,000% price move implied around the vote",
+          "circulating_on": "short-video social feeds, Sep 2026",
+          "numeric_checkable": false
+        },
+        {
+          "claim": "$30T market unlock on passage",
+          "circulating_on": "short-video social feeds, Sep 2026",
+          "numeric_checkable": false
+        },
+        {
+          "claim": "CLARITY passage is near-certain",
+          "circulating_on": "short-video social feeds, Sep 2026",
+          "numeric_checkable": true
+        }
+      ],
+      "reference_state_at_archive": {
+        "polymarket_passage_odds_2026": "~14–16% (2026-09-06), down from 82% peak in February 2026",
+        "galaxy_research_estimate": "~10%",
+        "kalshi_vote_happens_before_oct1": "~91%",
+        "note": "Prediction-market odds measure the probability of enactment in 2026, not the cloture vote itself. The hype claims conflate the two; that conflation is the specimen."
+      },
+      "measurement_plan": "On 2026-09-16 publish the outcome card: cloture result (pass/fail, vote count) against the archived hype claims and against the reference odds. The hype is measured against the record, not against the price.",
+      "outcome": null,
+      "outcome_due": "2026-09-16"
+    },
+    {
+      "id": "specimen-2026-09-11-xrp-150k-2030",
+      "archived_at": "2026-09-11T05:58:00Z",
+      "status": "OUTCOME_PENDING",
+      "event": {
+        "name": "XRP price at 2030-12-31",
+        "scheduled": "2030-12-31T23:59:59Z",
+        "threshold": "claim: $150,000 per XRP by 2030",
+        "sources": [
+          "short-video social feeds, Sep 2026 (archived by estate observation)"
+        ]
+      },
+      "hype_claims_observed": [
+        {
+          "claim": "$150,000 XRP by 2030",
+          "circulating_on": "short-video social feeds, Sep 2026",
+          "numeric_checkable": true
+        }
+      ],
+      "reference_state_at_archive": {
+        "note": "Archived whole, dated, and left standing until the horizon. At $150,000/XRP the implied capitalisation exceeds global M2 — that arithmetic is stated here once, at archive time, not retrofitted in 2030."
+      },
+      "measurement_plan": "Annual check-in card each December; final outcome card at horizon. No silent edits: this entry's archived_at is its signature content.",
+      "outcome": null,
+      "outcome_due": "2031-01-15"
+    },
+    {
+      "id": "specimen-2026-09-11-kokotajlo-jre2551",
+      "archived_at": "2026-09-11T05:58:00Z",
+      "status": "METHOD_PUBLISHED",
+      "event": {
+        "name": "JRE #2551 — Daniel Kokotajlo (AI Futures Project): public incident account of an agentic swarm failure",
+        "scheduled": null,
+        "threshold": null,
+        "sources": [
+          "https://podmust.com/ep?podcast=the-joe-rogan-experience&epis=IzI1NTEgLSBEYW5pZWwgS29rb3Rhamxv"
+        ]
+      },
+      "hype_claims_observed": [],
+      "reference_state_at_archive": {
+        "note": "A mass-audience account of a swarm incident now exists in the public record. What does not exist anywhere public: a measured mapping of that incident class onto named evaluation axes."
+      },
+      "measurement_plan": "Map the incident class described in the account onto the swarm, jail and detector axes: which axis would have registered the behaviour, at what sample size, with what access. Publish the method and the access-ask. The episode audio itself is not a dataset; access to the incident telemetry is the ask.",
+      "access_ask": "Incident telemetry or an equivalent replay harness, under NDA if required — measurement, never certification, and the lab keeps veto over publication of anything identifying.",
+      "outcome": null,
+      "outcome_due": null
+    }
+  ]
+}
