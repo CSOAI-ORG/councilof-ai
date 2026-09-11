@@ -30,7 +30,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           python3 - <<'PY'
-          import json, subprocess, sys, time
+          import json, os, subprocess, sys, time
           from datetime import datetime, timezone
 
           UA = ["-A", "csoai-health-inventory/0"]
@@ -50,7 +50,10 @@ jobs:
               checks.append({"name": name, "ok": bool(ok), "detail": str(detail)[:300]})
               print(("PASS " if ok else "FAIL ") + name + (" — " + str(detail)[:200] if detail else ""))
 
-          # 1. Root freshness (alert beyond 48h without a new leaf)
+          # 1. Root freshness. as_of is content-dated: it advances only when a new
+          # leaf lands, so an old as_of with a green publisher means "no news", not
+          # "publisher down". FAIL only when the root is stale AND the publisher
+          # has no green run in 26h; otherwise report the no-news fact as OK.
           st, body = fetch("https://councilof.ai/root.json")
           root = None
           try:
@@ -60,7 +63,25 @@ jobs:
           if st == 200 and root:
               as_of = datetime.fromisoformat(root["as_of"].replace("Z", "+00:00"))
               age_h = (now - as_of).total_seconds() / 3600
-              check("root-freshness", age_h <= 48, f"as_of={root['as_of']} age={age_h:.1f}h cards={root.get('card_count')}")
+              detail = f"as_of={root['as_of']} age={age_h:.1f}h cards={root.get('card_count')}"
+              if age_h <= 48:
+                  check("root-freshness", True, detail)
+              else:
+                  runs = subprocess.run(
+                      ["gh", "run", "list", "--repo", os.environ["GH_REPO"],
+                       "--workflow", "public-root.yml", "--limit", "1",
+                       "--json", "conclusion,updatedAt"],
+                      capture_output=True, text=True).stdout
+                  try:
+                      last = json.loads(runs)[0]
+                      last_ok = last["conclusion"] == "success"
+                      last_age_h = (now - datetime.fromisoformat(last["updatedAt"].replace("Z", "+00:00"))).total_seconds() / 3600
+                  except Exception:
+                      last_ok, last_age_h = False, 1e9
+                  if last_ok and last_age_h <= 26:
+                      check("root-freshness", True, detail + f" — publisher green {last_age_h:.1f}h ago; no new leaves staged (no-news, not an outage)")
+                  else:
+                      check("root-freshness", False, detail + " — AND publisher not green in 26h")
           else:
               check("root-freshness", False, f"root.json HTTP {st}")
 
