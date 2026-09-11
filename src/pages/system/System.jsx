@@ -5,7 +5,7 @@ const card = { background: 'rgba(8,13,20,0.6)', border: '1px solid rgba(16,185,1
 const PARTS = [
   { n: 'Council', d: 'A weighted multi-model council reaches a verdict; a tie-breaking judge resolves splits. Ties are flagged unattestable and never signed.' },
   { n: 'Sigil signing', d: 'Winning verdicts are Ed25519-signed at the edge — every governed decision carries a verifiable signature.' },
-  { n: 'Sovereign ledger', d: 'Signed episodes append to a Merkle ledger; the root is Bitcoin-anchored via OpenTimestamps. Tamper-evident by construction.' },
+  { n: 'Sovereign ledger', d: 'Signed episodes append to a Merkle ledger; the root carries OpenTimestamps stamps (Bitcoin-anchored for confirmed proofs, pending for queued stamps). Tamper-evident by construction.' },
   { n: 'Layer 0', d: 'Identity, policy and proof — the substrate the eight trust layers resolve to. CSOAI is Layer 0.' },
 ];
 
@@ -51,7 +51,7 @@ const System = () => (
           <a href="https://proofof-site.vercel.app/sovereign-town/anchor.json" target="_blank" rel="noopener noreferrer" style={{ ...card, textDecoration: 'none', display: 'block' }}>
             <div style={{ fontSize: '22px', marginBottom: '8px' }}>🔗</div>
             <strong style={{ color: '#e7f6ef' }}>Verify the chain</strong>
-            <p style={{ color: '#9fb3ad', fontSize: '13.5px', lineHeight: 1.5, margin: '6px 0 0' }}>The signed, Bitcoin-anchored Sovereign Town ledger.</p>
+            <p style={{ color: '#9fb3ad', fontSize: '13.5px', lineHeight: 1.5, margin: '6px 0 0' }}>The signed Sovereign Town ledger — Ed25519-signed, OTS-stamped.</p>
           </a>
         </div>
       </div>

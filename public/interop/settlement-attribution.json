@@ -1,0 +1,78 @@
+{
+  "schema": "csoai.settlement-attribution/0.1",
+  "as_of": "2026-09-12",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "purpose": "Distinct attribution IDs for each offer/channel, so settlements can be traced to the specific product that generated them.",
+  "offers": [
+    {
+      "attribution_id": "ATTR-stablecoin-corrections-feed-v1",
+      "name": "Stablecoin Change/Corrections Feed",
+      "endpoint": "/api/feeds/provider-diff?history=1",
+      "method": "GET (returns 402 without X-PAYMENT)",
+      "description": "Signed diff feed of provider document changes over a historical window. Machine-readable, x402-metered.",
+      "deliverable": "JSON diff feed with server-signed entries",
+      "price_source": "402 challenge only (never hardcoded)",
+      "status": "live"
+    },
+    {
+      "attribution_id": "ATTR-regulation-crosswalk-v1",
+      "name": "Regulation Deadline/Evidence Crosswalk",
+      "endpoint": "/api/evidence-bundle?obligation=article-50&subject=<id>&bundle=1",
+      "method": "GET (returns 402 without X-PAYMENT; ?preview=1 is free)",
+      "description": "Evidence bundle mapped to a regulatory obligation (EU AI Act Article 50/53, DORA, etc.). x402-metered.",
+      "deliverable": "Signed evidence bundle",
+      "price_source": "402 challenge only (never hardcoded)",
+      "status": "live"
+    },
+    {
+      "attribution_id": "ATTR-mcp-trust-receipt-v1",
+      "name": "MCP/A2A/x402 Trust Receipt",
+      "endpoint": "POST /mcp (paid tools: commission_card, etc.)",
+      "method": "JSON-RPC tools/call (returns 402 as structuredContent without x_payment)",
+      "description": "Commission a signed measurement card via MCP. The 402 challenge reveals the price. Settlement returns a signed receipt in X-PAYMENT-RESPONSE.",
+      "deliverable": "Signed measurement card (Ed25519, SHA-256-chained)",
+      "price_source": "402 challenge only (never hardcoded)",
+      "status": "live"
+    }
+  ],
+  "channels": [
+    {
+      "channel_id": "CHAN-mcp-http",
+      "name": "MCP HTTP (flagship)",
+      "endpoint": "POST https://councilof.ai/mcp",
+      "description": "Remote MCP server, 12 tools (8 free + 4 x402-metered)"
+    },
+    {
+      "channel_id": "CHAN-mcp-stdio",
+      "name": "MCP stdio (npm)",
+      "endpoint": "npx csoai-gspc-mcp",
+      "description": "Local MCP server, zero deps, same 12-tool contract"
+    },
+    {
+      "channel_id": "CHAN-http-doors",
+      "name": "HTTP doors",
+      "endpoint": "Various /api/* routes",
+      "description": "Direct HTTP 402 challenge/response, no MCP needed"
+    },
+    {
+      "channel_id": "CHAN-free-door",
+      "name": "Free door",
+      "endpoint": "/api/free-door",
+      "description": "Settles at 0 USDC, proves the rail works"
+    }
+  ],
+  "revenue_classification": {
+    "EXTERNAL_CUSTOMER": "A settlement from a wallet not in X402_SELF_WALLETS or payTo, carrying a non-zero amount. Counts as revenue.",
+    "INTERNAL_SELF_FUNDED": "A settlement from X402_SELF_WALLETS or payTo. Infrastructure testing. NOT revenue.",
+    "ZERO_VALUE_PROOF": "A settlement carrying zero amount or no readable amount. Proves the rail. NOT revenue.",
+    "UNKNOWN": "A settlement whose payer or amount cannot be determined. NOT counted as revenue until classified."
+  },
+  "current_state": {
+    "external_payers": 1,
+    "external_revenue_usdc": 20000,
+    "external_revenue_display": "0.02 USDC",
+    "internal_settlements": 5,
+    "zero_value_settlements": 4,
+    "classification": "Rail proven. 1 external payer at 0.02 USDC. No repeat buyer. Shape/price iteration needed."
+  }
+}

@@ -96,7 +96,7 @@ const Layer0 = () => {
               <div style={{ fontSize: '22px', marginBottom: '8px' }}>🔗</div>
               <strong style={{ color: '#e7f6ef' }}>Verify the chain</strong>
               <p style={{ color: '#9fb3ad', fontSize: '13.5px', lineHeight: 1.5, margin: '6px 0 0' }}>
-                Sovereign Town's signed ledger — Ed25519-signed, Bitcoin-anchored. Layer 0 proof you
+                Sovereign Town's signed ledger — Ed25519-signed, OTS-stamped. Layer 0 proof you
                 can check yourself.
               </p>
             </a>
