@@ -283,11 +283,22 @@ def grade_distribution(row: dict[str, Any] | None, *, reader_unreachable: bool =
         }
     kind = row.get("kind") or "distributed"
     classified = "PASS" if kind == "distributed" else "FAIL"
+    holders_method = row.get("holders_method")
+    holders_verified = holders_method == "account_lines_paginated_complete"
     return {
         "classified_distributed_on_reader": classified,
         "reader_kind": kind,
         "chain_supply": row.get("supply"),
-        "holders": row.get("holders"),
+        # Historical reader rows exposed a value labelled `holders` without a
+        # complete paginated account_lines traversal. Preserve that history in
+        # signed cards, but do not promote the value as a measured holder count.
+        "holders": row.get("holders") if holders_verified else None,
+        "holders_state": "MEASURED" if holders_verified else "UNMEASURED",
+        "holders_note": (
+            "complete paginated account_lines traversal"
+            if holders_verified
+            else "reader value withheld: complete paginated account_lines evidence is absent"
+        ),
         "represented_gt_distributed": "UNCHECKABLE",
         "represented_note": "no RWA.xyz key this run; represented supply not invented",
     }
