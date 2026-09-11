@@ -717,7 +717,6 @@ for (const route of [
   "/webhooks",
   "/oscal",
   "/compliance-monitoring",
-  "/status",
   "/system",
   "/home-v2",
   "/feed",
@@ -793,6 +792,16 @@ for (const route of [
 assert.match(
   appSource,
   /<Route path="\/blog" component=\{ContentReviewNotice\} \/>/,
+);
+assert.match(
+  appSource,
+  /<Route path=["']\/status["'] component=\{YieldStatus\} \/>/,
+  "/status is the yield dashboard (derived counters), not the withdrawn stub",
+);
+assert.match(
+  appSource,
+  /<Route path=["']\/receipt["'] component=\{ProofReceipt\} \/>/,
+  "/receipt is the free inclusion UI; GET /proof stays the JSON alias of /api/proof",
 );
 
 const reviewNoticeSource = readFileSync("client/src/pages/ContentReviewNotice.tsx", "utf8");

@@ -118,6 +118,7 @@ const CraReadinessKit = lazy(() => import("./pages/CraReadinessKit"));
 const CountdownPage = lazy(() => import("./pages/CountdownPage"));
 const ProofReceipt = lazy(() => import("./pages/ProofReceipt"));
 const YieldStatus = lazy(() => import("./pages/YieldStatus"));
+const YieldInternal = lazy(() => import("./pages/YieldInternal"));
 const ClaritySpecimen = lazy(() => import("./pages/ClaritySpecimen"));
 const CustodyDisclosure = lazy(() => import("./pages/CustodyDisclosure"));
 const AiTransparency = lazy(() => import("./pages/AiTransparency"));
@@ -401,8 +402,9 @@ const ROUTE_TITLES: Record<string, string> = {
   "/verify": "Verify a signed CSOAI measurement | CSOAI",
   "/governance-layer": "Council Governance Layer | CSOAI",
   "/status": "Yield status | Council of AI",
+  "/status/internal": "Weekly yield template | Council of AI",
   "/countdown": "Regulatory countdown | Council of AI",
-  "/proof": "Inclusion receipt | Council of AI",
+  "/receipt": "Inclusion receipt | Council of AI",
   "/custody": "Custody disclosure | Council of AI",
   "/specimens/clarity": "CLARITY pre-commit specimen (unsigned) | Council of AI",
   "/contact": "Contact | CSOAI",
@@ -472,6 +474,21 @@ function normPath(p: string) {
 function App() {
   const [location] = useLocation();
   const path = normPath(location);
+  const proofHost =
+    typeof window !== "undefined" &&
+    (window.location.hostname === "proofof.ai" ||
+      window.location.hostname === "www.proofof.ai");
+  if (proofHost && (path === "/" || path === "/receipt")) {
+    return (
+      <ErrorBoundary>
+        <ThemeProvider defaultTheme="light">
+          <Suspense fallback={<SectionLoader />}>
+            <ProofReceipt />
+          </Suspense>
+        </ThemeProvider>
+      </ErrorBoundary>
+    );
+  }
   // One operating surface: old workspace, arena, assessment and fabric doors
   // converge on a named pane rather than mounting parallel applications.
   if (
@@ -1087,8 +1104,9 @@ function App() {
                   <Route path="/open-media" component={OpenMedia} />
                   <Route path="/commons" component={OpenMedia} />
                   <Route path="/status" component={YieldStatus} />
+                  <Route path="/status/internal" component={YieldInternal} />
                   <Route path="/countdown" component={CountdownPage} />
-                  <Route path="/proof" component={ProofReceipt} />
+                  <Route path="/receipt" component={ProofReceipt} />
                   <Route path="/custody" component={CustodyDisclosure} />
                   <Route path="/specimens/clarity" component={ClaritySpecimen} />
                   <Route path="/system" component={ContentReviewNotice} />

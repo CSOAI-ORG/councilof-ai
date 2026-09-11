@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>proofof.ai — inclusion receipt</title>
+  <meta name="description" content="Hash bytes in this browser. Check inclusion on the Council of AI public root. Not a grade." />
+  <style>
+    body { font-family: ui-sans-serif, system-ui, sans-serif; background: #020617; color: #e2e8f0; margin: 0; padding: 2rem 1.25rem; }
+    main { max-width: 42rem; margin: 0 auto; }
+    h1 { font-size: 2.25rem; }
+    textarea { width: 100%; min-height: 10rem; background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 0.75rem; padding: 0.75rem; font-family: ui-monospace, monospace; }
+    button, label.btn { display: inline-block; margin: 0.5rem 0.5rem 0 0; padding: 0.6rem 1rem; border-radius: 0.75rem; background: #34d399; color: #020617; font-weight: 700; border: 0; cursor: pointer; }
+    label.btn { background: transparent; color: #e2e8f0; border: 1px solid #475569; }
+    .mono { font-family: ui-monospace, monospace; font-size: 0.75rem; word-break: break-all; color: #94a3b8; }
+    .box { margin-top: 1.25rem; padding: 1rem; border: 1px solid #334155; border-radius: 0.75rem; }
+    a { color: #6ee7b7; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="mono">proofof.ai · GET https://councilof.ai/api/proof?sha= · measurement, not certification</p>
+    <h1>Receipt</h1>
+    <p>Bytes are hashed here. Nothing is uploaded. Three states only: VALID, INVALID, UNCHECKABLE. Never a grade.</p>
+    <textarea id="t" placeholder="Paste text to hash…"></textarea>
+    <div>
+      <button type="button" id="hash">Hash text</button>
+      <label class="btn">Hash a file<input id="f" type="file" hidden /></label>
+    </div>
+    <p class="mono" id="sha"></p>
+    <div class="box" id="out" hidden></div>
+    <p class="mono">Also on the main app: <a href="https://councilof.ai/receipt">councilof.ai/receipt</a></p>
+  </main>
+  <script>
+    async function sha256Hex(buf) {
+      const d = await crypto.subtle.digest("SHA-256", buf);
+      return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+    async function run(buf) {
+      const sha = await sha256Hex(buf);
+      document.getElementById("sha").textContent = "sha256 " + sha;
+      const out = document.getElementById("out");
+      out.hidden = false;
+      out.textContent = "Checking…";
+      try {
+        const r = await fetch("https://councilof.ai/api/proof?sha=" + sha);
+        const j = await r.json();
+        const verdict = j.error ? "UNCHECKABLE" : j.included === true ? "VALID" : "INVALID";
+        out.innerHTML = "<strong>" + verdict + "</strong><pre class='mono'>" +
+          JSON.stringify(j, null, 2).replace(/[<>&]/g, s => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[s])) + "</pre>";
+      } catch (e) {
+        out.textContent = "UNCHECKABLE " + (e && e.message ? e.message : e);
+      }
+    }
+    document.getElementById("hash").onclick = () => {
+      const t = document.getElementById("t").value;
+      if (t) run(new TextEncoder().encode(t));
+    };
+    document.getElementById("f").onchange = async (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (f) run(await f.arrayBuffer());
+    };
+  </script>
+</body>
+</html>
