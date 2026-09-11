@@ -1,9 +1,9 @@
 {
   "schema": "csoai.canonical-state/1.0",
-  "generated_at": "2026-09-11T10:48:37.593982+00:00",
+  "generated_at": "2026-09-11T15:30:00.000000+00:00",
   "generator": "TUI-1 Canonical Controller (Hermes/JEEVES)",
   "repo": "CSOAI-ORG/councilof-ai",
-  "branch_basis": "master (b9e752aa)",
+  "branch_basis": "master (fb7b32dc4)",
   "live_endpoints": {
     "site": {
       "url": "https://councilof.ai",
@@ -15,15 +15,15 @@
       "status": 200,
       "verified": true
     },
-    "api_gspc_roots": {
-      "url": "https://councilof.ai/api/gspc/roots",
-      "status": 404,
-      "note": "No separate roots endpoint; root data in signed artifacts"
+    "root_json": {
+      "url": "https://councilof.ai/root.json",
+      "status": 200,
+      "verified": true
     },
-    "api_gspc_cards": {
-      "url": "https://councilof.ai/api/gspc/cards",
-      "status": 404,
-      "note": "No separate cards endpoint; cards at /signed/cards/ and /cards/"
+    "did_json": {
+      "url": "https://councilof.ai/.well-known/did.json",
+      "status": 200,
+      "verified": true
     },
     "agent_card": {
       "url": "https://councilof.ai/.well-known/agent-card.json",
@@ -35,17 +35,57 @@
       "status": 200,
       "verified": true
     },
-    "x402_challenge": {
+    "x402_discovery": {
       "url": "https://councilof.ai/.well-known/x402.json",
-      "note": "Discovery file present in repo"
+      "status": 200,
+      "verified": true,
+      "note": "Mode live, Base eip155:8453, USDC"
     },
     "mcp": {
       "url": "https://councilof.ai/mcp",
-      "note": "MCP endpoint declared in llms.txt"
+      "status": "DECLARED_LIVE",
+      "tools": 12,
+      "free_tools": 8,
+      "paid_tools": 4,
+      "note": "8 free readers + 4 x402-metered evidence tools"
     },
     "a2a": {
       "url": "https://councilof.ai/api/a2a",
-      "note": "A2A endpoint declared in agent-card.json"
+      "status": "DECLARED_LIVE",
+      "version": "1.0",
+      "skills": 7,
+      "note": "A2A v1.0, 7 skills in agent card"
+    },
+    "agui": {
+      "url": "https://councilof.ai/api/agui/gspc-state",
+      "status": "DECLARED",
+      "note": "SSE event stream, read-only"
+    },
+    "regulation": {
+      "url": "https://councilof.ai/api/regulation",
+      "status": 200,
+      "verified": true,
+      "deadlines": 20,
+      "note": "CC-BY-4.0 signed feed"
+    },
+    "corrections": {
+      "url": "https://councilof.ai/api/corrections",
+      "status": 200,
+      "verified": true,
+      "entries": 47,
+      "note": "Public corrections ledger, 47 entries"
+    },
+    "api_state": {
+      "url": "https://councilof.ai/api/state",
+      "status": 200,
+      "verified": true,
+      "note": "Canonical live state endpoint"
+    },
+    "gspc_verify": {
+      "url": "https://councilof.ai/gspc-verify",
+      "status": 200,
+      "verified": true,
+      "note": "Free card verification, browser-side"
     }
   },
   "gspc_board": {
@@ -61,76 +101,82 @@
     "ties": 2,
     "untested_separations": 11,
     "public_leader_count": 3,
+    "own_leaders_excluded": 8,
+    "uncarded_leaders_dropped": 3,
     "items": 969,
     "mean_macro_f1": 0.944,
     "mean_accuracy": 0.6398,
     "mean_fleet_mean": 0.5447,
     "license": "CC-BY-4.0",
-    "public_count": "22 axis \u00b7 22 measured",
-    "lid": "22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate.",
-    "state": "VERIFIED",
-    "source": "gspc-board.signed.json on master"
+    "public_count": "22 axis · 22 measured",
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "state": "VERIFIED_LIVE",
+    "source": "GET https://councilof.ai/api/gspc at 2026-09-11T15:30Z",
+    "golden_run_date": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+    "hf_hub_cells": 1145,
+    "hf_hub_models": 148,
+    "hf_hub_axes": 14
   },
   "card_corpora": {
-    "public_cards": {
-      "count": 1680,
-      "location": "public/cards/",
-      "state": "INDEXED",
-      "note": "SHA-256-named JSON files; each is a card artifact"
+    "corpus_relation": {
+      "relationship": "SEPARATE_CORPORA",
+      "public_root_leaves": 167,
+      "separately_indexed_signed_cards": 335,
+      "identifier_overlap": 0,
+      "ots_scope": "PUBLIC_ROOT_BYTES_ONLY",
+      "note": "Three card corpora: wrappers on disk, public root leaves, signed card index. Never add, never reconcile."
     },
     "signed_cards": {
-      "count": 337,
-      "location": "public/signed/cards/",
-      "state": "SIGNED",
-      "note": "Ed25519-signed card bodies in the chain"
-    },
-    "card_chain": {
-      "positions": 335,
-      "bodies_published": 313,
-      "bodies_withheld": 22,
-      "signed_withheld_now_on_disk": 22,
-      "manifest_signature": "VALID",
-      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
-      "state": "VERIFIED",
-      "source": "chain.json + chain-facts.json"
-    },
-    "card_index": {
-      "count": 11,
-      "location": "public/signed/card_index.json",
-      "state": "REDUCED",
-      "note": "11 entries in current index; historical dispute between 335 and 150 subsets unresolved"
-    },
-    "public_root_leaf_union": {
-      "count": 1072,
-      "merkle_root_sha256": "8ee6eefacd56cc4590e9e77314010c08c9a2db9e706178d2c4772ff393724655",
-      "source_roots": 28,
-      "as_of": "2026-09-05T06:28:01Z",
-      "state": "VERIFIED",
-      "note": "1072 entries across 28 source roots; includes stablecoin index leaf"
-    },
-    "historical_corpus": {
       "count": 335,
-      "state": "VERIFIED",
-      "note": "The 335-card signed chain; separate from the 167-card public root subset"
+      "location": "public/signed/card_index.json",
+      "state": "VERIFIED_LIVE",
+      "bodies_published": 335,
+      "bodies_verified_valid": 335,
+      "distinct_signing_keys": 1,
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "packaged_at": "2026-08-28T15:39:25.229647+00:00",
+      "source": "GET https://councilof.ai/api/state → signed_cards + card_chain"
     },
-    "public_root_current": {
+    "public_root": {
       "count": 167,
-      "state": "CLAIMED_NOT_VERIFIED",
-      "note": "The brief says 167 cards in current public Merkle root \u2014 this needs independent verification against the root-history.json (29 roots, last 2026-09-06)"
+      "merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+      "as_of": "2026-09-11T08:45:22Z",
+      "state": "VERIFIED_LIVE",
+      "sig_ed25519": "0b3edc2327eee4646d44e6b39ccfb9da81c1b24809badb956ec310c7cf9226dfd24196c872f83e2b9be4f15391daa0b2c33bb42e527f365cececbfa414f4a804",
+      "did_intended": "did:web:csoai.org#board-attestation-1",
+      "xrpl_asset_count": 16,
+      "source": "GET https://councilof.ai/root.json at 2026-09-11T15:30Z"
+    },
+    "hub_census": {
+      "listings_observed": 3032028,
+      "n_measured": 0,
+      "status_all": "UNMEASURED",
+      "note": "3M Hub listings DISCOVERED, not MEASURED. Census leftover."
+    },
+    "hf_published_cells": {
+      "count": 1145,
+      "models": 148,
+      "axes": 14,
+      "feed_observed": "2026-09-11T10:57:37.171Z",
+      "source": "GET https://councilof.ai/api/hub-cards (from homepage)"
     }
   },
   "stablecoin_index": {
     "indexed_assets": 425,
     "chain_count": 211,
     "deployment_count": 1640,
-    "circulating_usd_sum": 310786569942.87,
     "deeply_measured": 1,
+    "deeply_measured_asset": "RLUSD (XRPL)",
     "unmeasured": 424,
     "source": "DefiLlama stablecoins API",
-    "source_sha256": "f8f3a1a2c309c570b8ae10c1f890690f9004493e2b57ab50bef9c43e9a8d1d86",
     "observed_at": "2026-09-11T08:19:34.591714+00:00",
     "state": "VERIFIED",
-    "merged_pr": "#1896",
+    "merged_prs": [
+      "#1891 (discovery index)",
+      "#1892 (root leaf)",
+      "#1896 (readiness)",
+      "#1898 (USBDC delta)"
+    ],
     "readiness_truth_rules": [
       "INDEXED is not MEASURED.",
       "A signed index commitment is not an asset measurement signature.",
@@ -140,88 +186,142 @@
     ]
   },
   "trust_chain": {
-    "signature": {
+    "layer_1_card_signature": {
       "algorithm": "Ed25519",
       "state": "VERIFIED",
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "count": 335,
       "note": "335-card chain verified by public/signed/verify-card.mjs"
     },
-    "merkle_root": {
-      "sha256": "8ee6eefacd56cc4590e9e77314010c08c9a2db9e706178d2c4772ff393724655",
-      "entries": 1072,
-      "source_roots": 28,
-      "state": "VERIFIED",
-      "as_of": "2026-09-05T06:28:01Z"
+    "layer_2_merkle_root": {
+      "merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+      "leaves": 167,
+      "as_of": "2026-09-11T08:45:22Z",
+      "state": "VERIFIED_LIVE",
+      "note": "Public root envelope; 167 leaves in current root"
     },
-    "rekor": {
+    "layer_3_rekor_witness": {
       "log_index": 2791822965,
       "state": "WITNESSED",
       "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2791822965",
       "note": "Rekor log entry exists and is retrievable"
     },
-    "opentimestamps": {
+    "layer_4_ots_submission": {
       "state": "STAMPED_PENDING_BITCOIN",
       "bitcoin_blocks": [],
-      "note": "OTS submitted; awaiting Bitcoin confirmation. NOT a Bitcoin timestamp until confirmed."
+      "note": "OTS submitted; awaiting Bitcoin confirmation. NOT a Bitcoin timestamp until confirmed in a Bitcoin block."
     },
-    "base_eas": {
+    "layer_5_bitcoin_confirmation": {
+      "state": "NOT_YET",
+      "note": "Depends on OTS calendar proof upgrade to Bitcoin block inclusion"
+    },
+    "layer_6_base_eas": {
       "state": "INCOMPLETE",
-      "note": "Base EAS attestation not yet executed; requires owner approval for on-chain transaction"
+      "note": "Base EAS attestation not yet executed; requires owner approval for on-chain transaction (gas cost)"
     },
-    "xrpl_memo": {
+    "layer_7_xrpl_memo": {
       "state": "INCOMPLETE",
-      "note": "XRPL memo anchor not yet executed; devnet dry-run prepared in tui4/agent-cards-xrpl PR #1884"
+      "note": "XRPL memo anchor not yet executed; devnet dry-run prepared in PR #1884; mainnet requires owner approval"
     },
-    "index_commitment": {
-      "commitment_card_sha256": "7d5ee0d4612ea286f52258847fa77d6ae5dcc776d5328d1da4854968a77c3397",
-      "merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
-      "root_sha256": "62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6",
-      "signature": "ED25519_VERIFIED_BY_PUBLIC_ROOT_PIPELINE",
-      "state": "SIGNED_ROOT_INCLUDED",
-      "rekor_log_index": 2791822965,
-      "ots_state": "STAMPED_PENDING_BITCOIN"
+    "did_document": {
+      "url": "https://councilof.ai/.well-known/did.json",
+      "verification_methods": 5,
+      "keys": [
+        "#site-release-1",
+        "#estate-chain-1",
+        "#board-attestation-1",
+        "#card-attestation-1",
+        "#gspc-board-22axis-2026"
+      ],
+      "state": "VERIFIED_LIVE",
+      "pqc_key": "ABSENT (UNMEASURED)",
+      "note": "did:web:csoai.org; no ML-DSA public key published"
+    },
+    "board_signature": {
+      "artifact_state": "SUPERSEDED_KNOWN_CLAIM_DEFECT",
+      "signer": "did:web:csoai.org#gspc-board-22axis-2026",
+      "key_type": "3-party MPC (Coinbase cb-mpc, Ed25519 additive)",
+      "content_id": "72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10",
+      "signed_snapshot_agrees": true,
+      "note": "Live board 22/22 agrees with signed freeze"
     }
   },
   "agent_economy": {
     "mcp": {
       "endpoint": "https://councilof.ai/mcp",
-      "state": "CATALOG_DISCOVERABLE",
-      "asset_specific_tools": 0,
-      "note": "Generic MCP endpoint; no asset-specific tools"
+      "state": "LIVE",
+      "total_tools": 12,
+      "free_tools": [
+        "board_totals",
+        "get_axis",
+        "verify_card",
+        "list_cards",
+        "get_root",
+        "get_card",
+        "verify_inclusion",
+        "x402_trust"
+      ],
+      "paid_tools": [
+        "commission_card",
+        "art50_marking_evidence",
+        "rwa_evidence",
+        "receipts_batch"
+      ],
+      "registry_id": "io.github.CSOAI-ORG/gspc",
+      "stdio_npm": "csoai-gspc-mcp",
+      "note": "12 tools: 8 free readers + 4 x402-metered evidence tools"
     },
     "a2a": {
       "agent_card_url": "https://councilof.ai/.well-known/agent-card.json",
-      "state": "CATALOG_DISCOVERABLE",
+      "state": "LIVE",
       "version": "1.1.0",
-      "asset_specific_skills": 0,
+      "protocol": "A2A v1.0",
+      "skills": [
+        "gspc-board",
+        "east-west-crosswalk",
+        "measured-badge",
+        "benchmark-quality-register",
+        "article50-detect",
+        "eu-ai-act-screen",
+        "x402-discovery"
+      ],
+      "skill_count": 7,
       "a2a_cards_published": 12,
       "merged_pr": "#1883",
-      "note": "12 A2A cards for 12 MCP tools published"
+      "extensions": [
+        "signed-receipts (DRAFT, not yet emitted)",
+        "x402 discovery"
+      ],
+      "note": "7 skills; 12 A2A cards for 12 MCP tools; signed-receipts extension is draft only"
     },
     "x402": {
       "discovery_url": "https://councilof.ai/.well-known/x402.json",
-      "state": "GENERIC_EXISTING_DATA_DOOR_DECLARED",
-      "campaign_amount_usdc": "0.01",
-      "campaign_expiry": "2026-10-11",
-      "asset_specific_doors": 0,
-      "asset_specific_settlements_verified": 0,
-      "note": "0.01 USDC existing-data offer; fresh compute excluded; no verified external settlements"
+      "state": "LIVE",
+      "mode": "live",
+      "network": "eip155:8453 (Base)",
+      "asset": "USDC",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resources_count": 9,
+      "free_door": "https://councilof.ai/api/free-door (amount 0, settles and charges nothing)",
+      "offer_receipt_extension": "conditional JWS, EdDSA, kid did:web:csoai.org#board-attestation-1",
+      "external_settlements_verified": 0,
+      "note": "9 resources (1 free + 8 paid); offer-receipt conditional on board key provisioning"
     },
     "agui": {
       "endpoint": "https://councilof.ai/api/agui/gspc-state",
       "state": "DECLARED",
-      "note": "AG-UI event stream for GSPC board; read-only presentation transport"
+      "note": "SSE STATE_DELTA + TEXT_MESSAGE_CONTENT; read-only presentation transport"
     }
   },
   "revenue": {
-    "external_customer_revenue": 0.0,
-    "internal_self_funded": 0.0,
+    "external_customer_revenue_usd": 0.0,
+    "internal_self_funded_usd": 0.0,
     "zero_value_probes": 0,
     "x402_settlements_verified": 0,
-    "classification": "ZERO external customer revenue. All internal testing. x402 door declared at 0.01 USDC but no verified external settlements.",
-    "note": "Internal purchases NEVER count as customer revenue."
+    "classification": "ZERO external customer revenue. All testing internal. x402 door live at 0.01 USDC existing-data offer through 2026-10-11 but no verified external settlements.",
+    "note": "Internal purchases NEVER count as customer revenue. A self-payment proves plumbing and leaves outside revenue at zero."
   },
-  "open_prs_count": 30,
+  "open_prs_count": 50,
   "open_prs_today": 15,
   "merged_today": [
     "#1896 (stablecoin readiness)",
@@ -234,24 +334,134 @@
     "#1888 (36 enriched GSPC receipts)"
   ],
   "known_issues": {
-    "card_index_dispute": "card_index.json has 11 entries; historical dispute between 335 and 150 subsets unresolved (LANE_COORDINATION.md)",
-    "gcp_billing_disabled": "GCP project meok-498012 billing disabled \u2192 VM down \u2192 SOV3/OLM brain frozen",
-    "sovereign_wiki_dns": "sovereign.wiki DNS A\u219235.242.143.249 pending (Nick gate)",
-    "github_default_branch": "GitHub default is 'main' but production is 'master' \u2014 Nick gate to flip",
-    "vercel_split_brain": "csoai-org-v2 Worker may shadow routes on www.csoai.org",
-    "base_eas_incomplete": "Base EAS attestation not yet executed",
-    "xrpl_memo_incomplete": "XRPL memo anchor not yet executed",
-    "ots_pending_bitcoin": "OTS submitted but awaiting Bitcoin confirmation",
-    "deep_measurement_gap": "1 of 425 stablecoins deeply measured; 424 unmeasured",
-    "167_card_root_unverified": "The 167-card public root count from the brief needs independent verification"
+    "gcp_billing_disabled": "GCP project meok-498012 billing disabled → VM down → SOV3/OLM brain frozen. Oracle evac watcher armed.",
+    "base_eas_incomplete": "Base EAS attestation not yet executed; requires owner approval for on-chain transaction",
+    "xrpl_memo_incomplete": "XRPL memo anchor not yet executed; devnet dry-run prepared in PR #1884; mainnet pending owner approval",
+    "ots_pending_bitcoin": "OTS submitted but awaiting Bitcoin confirmation — STAMPED_PENDING_BITCOIN, not Bitcoin-anchored",
+    "deep_measurement_gap": "1 of 425 stablecoins deeply measured (RLUSD); 424 unmeasured",
+    "living_stamp_unverifiable": "Board living_stamp is UNVERIFIABLE (C-2026-0826-08b): signer not in did.json, two different signatures published, preimage rule incomplete",
+    "swift_cards_placeholder": "26 SWIFT rail cards had SHA256-placeholder not Ed25519 (C-2026-0905-02); rewritten as UNSIGNED",
+    "revenue_zero": "Zero external customer revenue; all x402 settlements are internal self-funded tests",
+    "no_external_buyer": "No verified external buyer or paid pilot accepted",
+    "open_prs_stale": "50+ open PRs, many from automated census/mill pipelines; need triage and close",
+    "card_index_count": "card_index.json reports 335 entries; hub census baseline reports 0 measured; both correct but different populations"
   },
   "claims_corrected": [
     "OTS is STAMPED_PENDING_BITCOIN, not Bitcoin-confirmed",
-    "425 stablecoins are INDEXED, not measured; only 1 is deeply measured",
-    "1072 entries in the public root leaf union, not 167 or 335",
-    "card_index.json has 11 entries, not 167 or 335 (historical dispute unresolved)",
-    "Revenue is $0.00 external; x402 door is declared but untested by external customers",
+    "425 stablecoins are INDEXED, not measured; only RLUSD is deeply measured on XRPL",
+    "Board living_stamp is UNVERIFIABLE — not a valid attestation until signer anchored in did.json",
+    "26 SWIFT rail cards had placeholder signatures, not Ed25519",
+    "Revenue is /bin/zsh.00 external; all x402 testing is internal self-funded",
+    "MCP measure tool returned ok:true for nonexistent subjects (C-2026-0826-11)",
+    "Verify page rejected genuine cards and reported tamper as green/intact (C-2026-0826-07)",
+    "MCP fleet was self-scoring with injected paywall (C-2026-0826-03)",
+    "Mutual recognition claims with CISA/NCSC/ANSSI/BSI were fabricated (C-2026-0826-02)",
     "A2A cards are published for 12 MCP tools, not 12 human analysts",
-    "22 axes measured but only 3 public leaders (own models excluded from 8 axes)"
-  ]
+    "22 axes measured but only 3 public leaders (8 own-model excluded + 3 uncarded)",
+    "EU AI Act high-risk did NOT take effect 2 Aug 2026 — deferred by Digital Omnibus"
+  ],
+  "merged_today_count": 30,
+  "merged_today_key": [
+    "#1902 (discovery truth + six-lane coordination)",
+    "#1901 (canonical execution reconciliation)",
+    "#1898 (USBDC discovery delta)",
+    "#1897 (receipt lifecycle + regulation states)",
+    "#1896 (stablecoin readiness, 425 assets)",
+    "#1895 (x402 launch attribution)",
+    "#1892 (stablecoin index root leaf)",
+    "#1891 (stablecoin discovery index freeze)",
+    "#1890 (edge signer numeric canonicalization)",
+    "#1888 (36 enriched GSPC receipts, PR #1888)",
+    "#1887 (health redirect follow)",
+    "#1885 (root freshness no-news vs down)",
+    "#1883 (12 A2A cards = 12 MCP tools)",
+    "#1882 (RLUSD specimens + health inventory)",
+    "#1881 (shape-A boundary + custody disclosure)",
+    "#1879 (SPA shells for /receipt and /countdown)",
+    "#1875 (scitt-keys twin fetch retry)",
+    "#1874 (countdown + proof receipt + yield status)",
+    "#1873 (twin byte-parity repair)"
+  ],
+  "regulation": {
+    "source": "GET https://councilof.ai/api/regulation",
+    "total_deadlines": 20,
+    "in_force": 8,
+    "upcoming": 11,
+    "disputed": 1,
+    "next_deadline": "2026-09-11 EU Cyber Resilience Act Art 14",
+    "key_upcoming": [
+      "2026-09-11 EU CRA Art 14 vulnerability/incident reporting",
+      "2026-12-02 EU AI Act Art 50(2) marking grace ends",
+      "2026-12-02 EU AI Act Art 5 (new) NCII/CSAM prohibitions",
+      "2027-01-01 Illinois SB 315 + NY RAISE Act + Colorado SB 26-189",
+      "2027-12-02 EU AI Act Annex III high-risk (deferred)",
+      "2028-08-02 EU AI Act Annex I product-embedded high-risk"
+    ],
+    "headline_correction": "EU AI Act high-risk obligations did NOT take effect 2 Aug 2026 — Digital Omnibus deferred to 2 Dec 2027 / 2 Aug 2028",
+    "state": "VERIFIED_LIVE",
+    "signed": true,
+    "signer": "did:web:csoai.org#board-attestation-1"
+  },
+  "corrections": {
+    "source": "GET https://councilof.ai/api/corrections",
+    "total_entries": 47,
+    "state": "VERIFIED_LIVE",
+    "policy": "Public, source-maintained corrections record. Each entry states what was wrong, how it was caught, and the fix.",
+    "key_corrections": [
+      "C-2026-0905-02: 26 SWIFT cards had SHA256-placeholder not Ed25519 signatures",
+      "C-2026-0826-12: sig_input ambiguity (ensure_ascii True vs False)",
+      "C-2026-0826-11: MCP measure tool returned ok:true for nonexistent subjects",
+      "C-2026-0826-08b: living_stamp UNVERIFIABLE (58,184 attempts, 0 verified)",
+      "C-2026-0826-07: verify page rejected genuine cards; tamper detector green on failure",
+      "C-2026-0826-03: MCP fleet self-scoring with injected paywall",
+      "C-2026-0826-02: Mutual recognition claims with named public bodies (fabricated)",
+      "C-2026-0826-01: Prerender verification could not observe failure"
+    ]
+  },
+  "did_document": {
+    "url": "https://councilof.ai/.well-known/did.json",
+    "id": "did:web:csoai.org",
+    "verification_methods": 5,
+    "keys": {
+      "site-release-1": "03g9l-dVNGVEAVVWQrJU9aLtkYTN3uARd52P7DEq-8g",
+      "estate-chain-1": "M0cuAmhx2yDNvZnnbEdTLr_PhLN6vtWyYNrjWJ31aW0",
+      "board-attestation-1": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+      "card-attestation-1": "1MsOqhbV9Qv3Yzo2qjT-CaVeEkuTFt7Sq9sSK7nDfjg",
+      "gspc-board-22axis-2026": "1XOnIZwNZFCR6fZAy1u_5xQp1DrBaFaGZaeiYNAeDSw"
+    },
+    "pqc_key": "ABSENT (UNMEASURED)",
+    "note": "5 Ed25519 keys; no ML-DSA key. PQC is roadmap, not present."
+  },
+  "open_prs_inventory": {
+    "total": 50,
+    "tui_specific": {
+      "tui1": [
+        "#1899 (canonical state, this branch)"
+      ],
+      "tui2": [
+        "#1903 (financial coverage)"
+      ],
+      "tui3": [
+        "#1906 (model + benchmark), #1877 (attestation watch)"
+      ],
+      "tui4": [
+        "#1907, #1900 (discovery consolidation), #1884 (agent-cards + XRPL), #1880 (SCITT wrap)"
+      ],
+      "tui5": [
+        "#1904 (anchor completion), #1876 (MCP trust board)"
+      ],
+      "tui6": [
+        "#1905 (verified launch), #1889 (commercial pack), #1878 (countdown/regulation)"
+      ]
+    },
+    "census_mill": [
+      "#1893 (census delta), #1872/#1870/#1869/#1865 (trust rounds), #1871/#1834/#1833/#1832/#1830/#1829/#1819/#1800 (mill landings)"
+    ],
+    "automated": [
+      "#1894 (public root rolling), #1868 (art50-target-index)"
+    ],
+    "stale_candidates": [
+      "Multiple census/mill PRs from automated pipelines; need triage"
+    ]
+  }
 }
