@@ -113,8 +113,20 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       issuer: (c.payload && c.payload.issuer) || null,
       issuer_address: (c.payload && c.payload.issuer_address) || null,
       kind: (c.payload && c.payload.kind) || "distributed",
-      holders: (c.payload && c.payload.holders) ?? null,
-      supply: (c.payload && c.payload.supply) ?? null,
+      // Numeric holder/supply fields are not publishable without a pinned method,
+      // source and observation time. Legacy cards omitted those fields; fail closed.
+      holders: c.payload?.holder_source && c.payload?.holder_method && c.payload?.holder_as_of
+        ? c.payload.holders ?? null
+        : null,
+      holders_state: c.payload?.holder_source && c.payload?.holder_method && c.payload?.holder_as_of
+        ? "REPORTED_WITH_METHOD"
+        : "UNMEASURED",
+      supply: c.payload?.supply_source && c.payload?.supply_method && c.payload?.supply_as_of
+        ? c.payload.supply ?? null
+        : null,
+      supply_state: c.payload?.supply_source && c.payload?.supply_method && c.payload?.supply_as_of
+        ? "REPORTED_WITH_METHOD"
+        : "UNMEASURED",
       verified_via: (c.payload && c.payload.verified_via) || null,
       sha256: c.sha256,
       unmeasured: c.unmeasured || [],
