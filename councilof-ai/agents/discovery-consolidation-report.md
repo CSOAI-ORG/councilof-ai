@@ -58,6 +58,21 @@ Audit and consolidate MCP, A2A, x402, AP2, AG-UI and SDK/API surfaces. Resolve d
 
 **x402 probe:** Free door returns 402 challenge with `amount: "0"`. Offer-receipt extension supported (JWS, EdDSA). EIP-712 NOT offered.
 
+**x402 0.01 USDC test (request_attestation for llama3.2:3b):**
+- Endpoint: `GET https://councilof.ai/api/request-attestation?subject=llama3.2:3b`
+- Response: HTTP 402 Payment Required
+- Amount: 10,000 atomic units (0.01 USDC)
+- Network: Base (eip155:8453)
+- Asset: USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`
+- Pay-to: `0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31`
+- Offer receipt: JWS/EdDSA signed by `did:web:csoai.org#board-attestation-1`
+- Facilitator: configured
+- Campaign: `csoai-launch-30d-20260911`
+- Offer period: 2026-09-11 to 2026-10-11
+- Classification: Would be `INTERNAL_SELF_FUNDED` (self-payment proves plumbing, revenue remains zero)
+- Payment NOT executed (no wallet with USDC on Base available in this session)
+- Challenge receipt preserved: full 402 response captured with offer-receipt JWS
+
 **AG-UI probe:** Returns live 22-axis board snapshot via SSE.
 
 **DID probe:** 3 Ed25519 keys: `site-release-1`, `estate-chain-1`, `board-attestation-1`.
