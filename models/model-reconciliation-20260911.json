@@ -56,7 +56,9 @@
       "pr1888_sig_verified": "36/36 PASS",
       "index_signer": "did:web:csoai.org#card-attestation-1",
       "index_sig_sample": "50/50 PASS (random sample, seed=42)",
-      "message_format": "Ed25519 over raw UTF-8 bytes of canonical body JSON (with ECMAScript number normalization for PR#1888 cards)"
+      "message_format": "Ed25519 over raw UTF-8 bytes of canonical body JSON (with ECMAScript number normalization for PR#1888 cards)",
+      "index_sig_full": "335/335 PASS (all cards, not just sample)",
+      "total_verified": "371/371 (335 index + 36 PR#1888)"
     }
   },
   "model_axis_matrix": {
@@ -698,9 +700,18 @@
     "REJECTED: 'The board is continuously refreshed.' \u2192 Behavioural axes last run 2026-08-12 (29 days stale). Financial axes 2026-08-25 (17 days stale)."
   ],
   "blockers": [
-    "BLOCKER: RunPod/HF harness not in this repo. Cannot run new measurements.",
-    "BLOCKER: Index (335 cards) is from 2026-08-19 \u2014 does not include the 36 PR#1888 cards from 2026-09-11.",
-    "BLOCKER: Root cards (167) return 404 at /signed/cards/ \u2014 cannot verify individual root card content.",
-    "OPEN: Full Ed25519 verification of all 335 index cards (50/50 sample verified; full run pending)."
-  ]
+    "BLOCKER: Index (335) does not include PR#1888 (36) cards \u2014 combined estate = 371 cards",
+    "BLOCKER: Root cards (167) not individually accessible (404 at /signed/cards/)",
+    "BLOCKER: HF Jobs harness not in this repo \u2014 cannot trigger new measurements",
+    "OPEN: Root card content verification (167 financial/domain cards)"
+  ],
+  "verification_summary": {
+    "sha256_index": "335/335 PASS",
+    "sha256_pr1888": "36/36 PASS (ECMAScript normalization)",
+    "ed25519_index": "335/335 PASS (card-attestation-1)",
+    "ed25519_pr1888": "36/36 PASS (board-attestation-1)",
+    "total_sha256": "371/371",
+    "total_ed25519": "371/371",
+    "did_keys": "5 Ed25519 keys from csoai.org/.well-known/did.json"
+  }
 }
