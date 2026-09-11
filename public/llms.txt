@@ -125,7 +125,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 12 tools: eight free readers plus four x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
 - MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 12-tool contract as the HTTP door.
-- MCP registry: io.github.CSOAI-ORG/gspc → https://councilof.ai/mcp — query the official registry for the currently published server version.
+- MCP registry: io.github.CSOAI-ORG/gspc → https://councilof.ai/mcp (Query the official registry for the currently published server version.)
 - Smithery: https://smithery.ai/server/csoai/gspc-mcp — its tools[] is exactly the eight free tools /mcp serves. A second listing, csoai/gspc, is a stale duplicate naming four tools that do not exist; do not use it.
 - Open banks: https://huggingface.co/csoai
 
