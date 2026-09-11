@@ -1,0 +1,63 @@
+{
+  "schema": "csoai.registry-superseded/0.1",
+  "date": "2026-09-11",
+  "description": "Broken MCP registry entries to be withdrawn or fixed. All verified with authenticated GitHub API.",
+  "action_required": "Owner token (mcp-publisher CLI) for all entries",
+
+  "repointable_11": {
+    "description": "Repo exists under CSOAI-ORG, registry has wrong/missing URL",
+    "entries": [
+      {"server": "acord-bridge-mcp", "issue": "NO_FIELD", "fix": "repoint to CSOAI-ORG/acord-bridge-mcp"},
+      {"server": "as400-bridge-mcp", "issue": "NO_FIELD", "fix": "repoint to CSOAI-ORG/as400-bridge-mcp"},
+      {"server": "cics-bridge-mcp", "issue": "NO_FIELD", "fix": "repoint to CSOAI-ORG/cics-bridge-mcp"},
+      {"server": "dlms-bridge-mcp", "issue": "NO_FIELD", "fix": "repoint to CSOAI-ORG/dlms-bridge-mcp"},
+      {"server": "edi-bridge-mcp", "issue": "TYPO_CSAO", "fix": "repoint to CSOAI-ORG/edi-bridge-mcp"},
+      {"server": "fix-bridge-mcp", "issue": "TYPO_CSAO", "fix": "repoint to CSOAI-ORG/fix-bridge-mcp"},
+      {"server": "gs1-bridge-mcp", "issue": "TYPO_CSAO", "fix": "repoint to CSOAI-ORG/gs1-bridge-mcp"},
+      {"server": "hl7-fhir-bridge-mcp", "issue": "TYPO_CSAO", "fix": "repoint to CSOAI-ORG/hl7-fhir-bridge-mcp"},
+      {"server": "iso20022-bridge-mcp", "issue": "NO_FIELD", "fix": "repoint to CSOAI-ORG/iso20022-bridge-mcp"},
+      {"server": "iso8583-bridge-mcp", "issue": "TYPO_CSAO", "fix": "repoint to CSOAI-ORG/iso8583-bridge-mcp"},
+      {"server": "ll144-bias-audit-mcp", "issue": "NO_FIELD", "fix": "repoint to CSOAI-ORG/ll144-bias-audit-mcp"}
+    ]
+  },
+
+  "withdraw_or_publish_23": {
+    "description": "No public repo under canonical name; owner decision: publish or withdraw",
+    "entries": [
+      "agent-incident-reporter-mcp", "care-home-scheduling-mcp", "cqc-compliance-mcp",
+      "dispense-record-mcp", "domiciliary-care-mcp", "gos-claim-validator-mcp",
+      "grabhire-ai-mcp", "keystone-verify-proxy-mcp", "mcp-scorecard-mcp",
+      "meok-ai-reflection-mcp", "meok-aquaponics-monitor-mcp", "meok-article-50-kit-mcp",
+      "meok-asc-rspca-crosswalk-mcp", "meok-bft-governance-mcp", "meok-dpia-edpb-template-mcp",
+      "meok-enterprise-compliance-checker", "meok-enterprise-compliance-suite",
+      "meok-koikeeper-ai-mcp", "meok-laia-aquatic-mcp", "meok-neural-health-monitor-mcp",
+      "meok-quantum-scoring-mcp", "meok-rspca-aquaculture-mcp", "meok-uk-fhi-mcp"
+    ]
+  },
+
+  "withdraw_19_bad_batch": {
+    "description": "Underscore server names, repos never created under either spelling (meek vs meok). All verified absent with authenticated token.",
+    "entries": [
+      {"server": "meek_3d-print-toolchain-mcp", "repo": "CSOAI-ORG/meek_3d-print-toolchain-mcp", "status": "ABSENT"},
+      {"server": "meek_antenna-triangle-mcp", "repo": "CSOAI-ORG/meek_antenna-triangle-mcp", "status": "ABSENT"},
+      {"server": "meek_daily-plan-mcp", "repo": "CSOAI-ORG/meek_daily-plan-mcp", "status": "ABSENT"},
+      {"server": "meok-ai-psych-vuln-audit-mcp", "repo": "meok-ai-labs/meok-ai-psych-vuln-audit-mcp", "owner": "meok-ai-labs", "status": "404_NO_SUCH_ORG"},
+      {"server": "meok-annex-iii-impact-mcp", "repo": "meok-ai-labs/meok-annex-iii-impact-mcp", "owner": "meok-ai-labs", "status": "404_NO_SUCH_ORG"},
+      {"server": "meok-compliance-passport-mcp", "repo": "meok-ai/meok-compliance-passport-mcp", "owner": "meok-ai", "status": "404_NO_SUCH_ORG"}
+    ],
+    "note": "Full list of19 in mcp/REGISTRY-WITHDRAWALS-2026-09-05.md"
+  },
+
+  "stale_gspc_entry": {
+    "server": "io.github.CSOAI-ORG/gspc",
+    "registry_version": "1.4.0",
+    "live_version": "1.4.2",
+    "registry_tool_count": "12 tools (7 free, 5 x402)",
+    "live_tool_count": "12 tools (8 free, 4 x402)",
+    "fix": "mcp-publisher publish from mcp/gspc-server/ with v1.4.2 descriptor"
+  },
+
+  "publish_command": "cd mcp/gspc-server && mcp-publisher publish  # requires owner GitHub OAuth token",
+
+  "verification": "CHECK_REGISTRY=1 node scripts/outward-claims-guard.mjs"
+}
