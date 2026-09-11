@@ -79,6 +79,7 @@ export const navigation: NavGroup[] = [
     submenu: [
       { name: 'EU AI Act — the guide', href: '/eu-ai-act', description: 'The whole Act, phased, with the Digital Omnibus amendments' },
       { name: 'Article 50 — transparency', href: '/article-50', description: 'Live since 2 Aug 2026; the marking grace period ends 2 Dec 2026' },
+      { name: 'The deadline machine', href: '/countdown', description: 'Every verified regulatory date, counting down — CRA Art 14 is live, Art 50(2) marking grace ends 2 Dec 2026' },
       { name: 'Dates and deadlines', href: '/ai-act-timeline', description: 'What applies when — Annex III deferred to 2 Dec 2027' },
       { name: 'GPAI model duties', href: '/gpai', description: 'Documentation, training-data summary, copyright policy' },
       { name: 'Readiness checklist', href: '/checklist', description: 'Work through the duties that are actually in force today' },

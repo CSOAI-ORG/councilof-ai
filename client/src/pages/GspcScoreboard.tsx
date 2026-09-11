@@ -11,6 +11,7 @@ import GspcTerminal from "@/components/board/GspcTerminal";
 import AttestationDeepDive from "@/components/board/AttestationDeepDive";
 import XrplReaderRail from "@/components/gspc/XrplReaderRail";
 import { downloadBoardCsv } from "@/lib/boardCsv";
+import Art50ReadinessPanel from "@/components/board/Art50ReadinessPanel";
 import { Activity } from "lucide-react";
 
 /**
@@ -535,6 +536,14 @@ export default function GspcScoreboard() {
               <a className="font-semibold text-emerald-700 underline" href="/api/gspc">Raw JSON (GET /api/gspc)</a>
               <Link className="font-semibold text-emerald-700 underline" href="/dashboard?tab=board">Full board</Link>
             </p>
+            {/* Article 50 readiness rows live on the art5 axis page, derived from
+                the same live payload. Absent art50_readiness fields render
+                UNMEASURED — never a substituted value. */}
+            {focused.axis === "art5-safeguard" && (
+              <div className="mt-4">
+                <Art50ReadinessPanel axis={focused} />
+              </div>
+            )}
           </div>
         )}
 

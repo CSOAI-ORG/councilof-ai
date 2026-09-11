@@ -3,6 +3,7 @@ import {
   countOf, fetchAxes, hasInterval, hasMacroF1, publicCaption, quotable, wilson,
   type Axis, type AxisStatus, type InLaneAxis,
 } from "@/lib/gspcAxes";
+import Art50ReadinessPanel from "@/components/board/Art50ReadinessPanel";
 
 /**
  * AxisPanel — every published GSPC axis, live from GET /api/gspc.
@@ -70,6 +71,15 @@ function AxisCard({ a }: { a: Axis }) {
       )}
 
       <p className="mt-2 text-[12px] leading-snug text-slate-500">{a.task}</p>
+
+      {/* Article 50 readiness rows — only on the art5-safeguard card, and only
+          ever derived from what the axis payload publishes. No art50_readiness
+          fields on the payload means every row stays UNMEASURED. */}
+      {a.axis === "art5-safeguard" && (
+        <div className="mt-3">
+          <Art50ReadinessPanel axis={a} />
+        </div>
+      )}
     </div>
   );
 }

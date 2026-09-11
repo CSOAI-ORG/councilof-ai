@@ -163,6 +163,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Readiness Assessment"
  },
  {
+  "path": "/attestation",
+  "comp": "AttestationNetwork",
+  "title": "Attestation Network"
+ },
+ {
+  "path": "/attestation-network",
+  "comp": "Redirect",
+  "title": "Attestation Network"
+ },
+ {
   "path": "/aug-2026",
   "comp": "Readiness",
   "title": "Readiness"
@@ -298,6 +308,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Eu Act Classifier"
  },
  {
+  "path": "/cobol",
+  "comp": "CobolBridge",
+  "title": "Cobol Bridge"
+ },
+ {
   "path": "/cobolbridge",
   "comp": "CobolBridge",
   "title": "Cobol Bridge"
@@ -431,6 +446,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/council-vs-agents",
   "comp": "Agents",
   "title": "Agents"
+ },
+ {
+  "path": "/countdown",
+  "comp": "Countdown",
+  "title": "Countdown"
  },
  {
   "path": "/covenant",
@@ -1384,8 +1404,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/pricing",
-  "comp": "PlansPage",
-  "title": "Plans Page"
+  "comp": "Pricing",
+  "title": "Pricing"
  },
  {
   "path": "/pricing-legacy",
@@ -1840,12 +1860,12 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/vs",
   "comp": "Compare",
-  "title": "Compare"
+  "title": "Vs"
  },
  {
   "path": "/vs-competitors",
   "comp": "Compare",
-  "title": "Compare"
+  "title": "Vs Competitors"
  },
  {
   "path": "/vulnerability-disclosure",
