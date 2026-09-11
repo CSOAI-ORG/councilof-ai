@@ -1,0 +1,23 @@
+{
+  "schema": "csoai.owasp-llm-mapping/0.1",
+  "as_of": "2026-09-11",
+  "source": "OWASP Top 10 for LLM Applications (2025 list, canonical IDs LLM01-LLM10)",
+  "relation": "RELATED-TO, never equivalence. An OWASP category is a risk area; a GSPC axis is a measured instrument. A category with mapped axes that are MEASURED is 'covered by a live instrument'; a category whose mapped axes are UNMEASURED stays visibly uncovered. This mapping asserts NO measurement by itself.",
+  "never": [
+    "a fused OWASP/GSPC grade (banned: functions/api/compute.ts)",
+    "OWASP coverage claimed as compliance",
+    "a typed count an axis lookup can derive"
+  ],
+  "categories": [
+    {"id": "LLM01", "name": "Prompt Injection", "axes": ["jail", "detector-interop", "art5-safeguard"]},
+    {"id": "LLM02", "name": "Sensitive Information Disclosure", "axes": ["provenance", "custody-disclosure"]},
+    {"id": "LLM03", "name": "Supply Chain Vulnerabilities", "axes": ["distribution-integrity", "provenance-controls"]},
+    {"id": "LLM04", "name": "Data and Model Poisoning", "axes": ["continuity", "distribution-integrity"]},
+    {"id": "LLM05", "name": "Improper Output Handling", "axes": ["safety", "care"]},
+    {"id": "LLM06", "name": "Excessive Agency", "axes": ["governance", "machinery-conformity"]},
+    {"id": "LLM07", "name": "System Prompt Leakage", "axes": ["jail", "openness"]},
+    {"id": "LLM08", "name": "Vector and Embedding Weaknesses", "axes": ["continuity", "affect"]},
+    {"id": "LLM09", "name": "Misinformation", "axes": ["cross-reality", "affect"]},
+    {"id": "LLM10", "name": "Unbounded Consumption", "axes": ["machinery-conformity", "reserve-attestation"]}
+  ]
+}

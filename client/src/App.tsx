@@ -296,6 +296,7 @@ const GovGraph = lazy(() => import("./pages/GovGraph"));
 const NetworkPage = lazy(() => import("./pages/NetworkPage"));
 const AttestationNetwork = lazy(() => import("./pages/AttestationNetwork"));
 const McpTrustBoard = lazy(() => import("./pages/McpTrustBoard"));
+const GspcVsAiluminate = lazy(() => import("./pages/GspcVsAiluminate"));
 const RegulatorAtlas = lazy(() => import("./pages/RegulatorAtlas"));
 const Competitors = lazy(() => import("./pages/Competitors"));
 const ToolCommons = lazy(() => import("./pages/ToolCommons"));
@@ -331,6 +332,8 @@ const ROUTE_TITLES: Record<string, string> = {
   "/trust-center": "Trust Center — security, compliance & Layer 0 | CSOAI",
   "/trust": "MCP Trust Board — who answers the handshake, under what terms | Council of AI",
   "/boards/mcp": "MCP Trust Board — who answers the handshake, under what terms | Council of AI",
+  "/gspc-vs-ailuminate": "GSPC vs AILuminate — AILuminate for chat, GSPC for everything else | Council of AI",
+  "/ailuminate": "GSPC vs AILuminate — AILuminate for chat, GSPC for everything else | Council of AI",
   "/certification": "Measurement credential — how CSOAI attestation works | CSOAI",
   "/courses": "AI governance courses & training | CSOAI",
   "/api-docs": "API & MCP documentation | CSOAI",
@@ -740,6 +743,8 @@ function App() {
                                       <Route path="/attestation-network">{() => <Redirect to="/attestation" />}</Route>
                   <Route path="/trust" component={McpTrustBoard} />
                   <Route path="/boards/mcp" component={McpTrustBoard} />
+                  <Route path="/gspc-vs-ailuminate" component={GspcVsAiluminate} />
+                  <Route path="/ailuminate">{() => <Redirect to="/gspc-vs-ailuminate" />}</Route>
                   <Route path="/sovereign-network">{() => <Redirect to="/network" />}</Route>
                   <Route path="/agents-network" component={NetworkPage} />
                   <Route path="/regulators" component={RegulatorAtlas} />

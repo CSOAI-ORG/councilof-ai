@@ -1,0 +1,74 @@
+/**
+ * GET /api/owasp-report — OWASP LLM Top 10 ↔ GSPC axis coverage report.
+ *
+ * The mapping is RELATED-TO, never equivalence; the report asserts NO
+ * measurement by itself. Per-category coverage is DERIVED at request time
+ * from the live board modules (AXES_A/AXES_B/AXES_FIN) — never typed:
+ *   covered   = at least one mapped axis is MEASURED on the board right now
+ *   uncovered = every mapped axis is UNMEASURED (the gap stays visible)
+ * Unknown axis slugs in the mapping file are reported as UNRESOLVABLE,
+ * never silently dropped.
+ *
+ * Not a 23rd axis. Not a fused OWASP/GSPC grade (banned: compute.ts).
+ * Not a compliance claim against the OWASP list.
+ */
+import mapping from "../../public/interop/owasp-llm-mapping.json";
+import { AXES_A } from "./_gspc_axes_a";
+import { AXES_B } from "./_gspc_axes_b";
+import { AXES_FIN } from "./_gspc_axes_fin";
+import type { AxisScore } from "./_gspc_types";
+
+const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
+
+const json = (body: unknown) =>
+  new Response(JSON.stringify(body, null, 2), {
+    status: 200,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-store",
+      "access-control-allow-origin": "*",
+    },
+  });
+
+type MappingCategory = { id: string; name: string; axes: string[] };
+
+export const onRequestGet: PagesFunction = async () => {
+  const categories = (mapping as { categories: MappingCategory[] }).categories;
+  const rows = categories.map((c) => {
+    const axisStates = c.axes.map((slug) => {
+      const a = AXES.find((x) => x.axis === slug);
+      if (!a) return { axis: slug, status: "UNRESOLVABLE" as const };
+      return {
+        axis: slug,
+        status: a.status,
+        ...(a.kind === "model-comparison" && typeof a.accuracy === "number"
+          ? { leader_accuracy: a.accuracy, n: a.n ?? null }
+          : {}),
+      };
+    });
+    const measured = axisStates.filter((s) => s.status === "MEASURED");
+    return {
+      id: c.id,
+      name: c.name,
+      axes: axisStates,
+      coverage: measured.length > 0 ? ("covered-by-live-instrument" as const) : ("uncovered" as const),
+    };
+  });
+  const covered = rows.filter((r) => r.coverage === "covered-by-live-instrument").length;
+  return json({
+    schema: "csoai.owasp-report/0.1",
+    writes_board: false,
+    as_of_mapping: (mapping as { as_of?: string }).as_of ?? null,
+    relation: (mapping as { relation?: string }).relation ?? null,
+    counts: {
+      categories: rows.length,
+      covered_by_live_instrument: covered,
+      uncovered: rows.length - covered,
+      unresolvable_axes: rows.flatMap((r) => r.axes).filter((a) => a.status === "UNRESOLVABLE").length,
+    },
+    categories: rows,
+    honesty:
+      "Coverage here means a mapped GSPC axis is MEASURED on the live board — derived from the same modules GET /api/gspc serves, at request time. The OWASP category itself is a risk area, not a test we ran. No fused grade, no compliance claim, no typed counts.",
+    verify: "GET /api/gspc for the per-axis board rows this report derives from.",
+  });
+};
