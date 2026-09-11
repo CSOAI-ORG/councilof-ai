@@ -405,7 +405,6 @@ const ROUTE_TITLES: Record<string, string> = {
   "/governance-layer": "Council Governance Layer | CSOAI",
   "/status": "Yield status | Council of AI",
   "/status/internal": "Weekly yield template | Council of AI",
-  "/countdown": "Regulatory countdown | Council of AI",
   "/receipt": "Inclusion receipt | Council of AI",
   "/custody": "Custody disclosure | Council of AI",
   "/specimens/clarity": "CLARITY pre-commit specimen (unsigned) | Council of AI",

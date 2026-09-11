@@ -493,6 +493,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Meok Law"
  },
  {
+  "path": "/custody",
+  "comp": "CustodyDisclosure",
+  "title": "Custody Disclosure"
+ },
+ {
   "path": "/dashboard",
   "comp": "Dashboard",
   "title": "Dashboard"
@@ -1488,6 +1493,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Real World Map"
  },
  {
+  "path": "/receipt",
+  "comp": "ProofReceipt",
+  "title": "Proof Receipt"
+ },
+ {
   "path": "/recommendations",
   "comp": "Recommendations",
   "title": "Recommendations"
@@ -1728,6 +1738,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Sovereign Twin"
  },
  {
+  "path": "/specimens/clarity",
+  "comp": "ClaritySpecimen",
+  "title": "Clarity Specimen"
+ },
+ {
   "path": "/standards",
   "comp": "Standards",
   "title": "Standards"
@@ -1736,6 +1751,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/start",
   "comp": "OnboardOS",
   "title": "Onboard OS"
+ },
+ {
+  "path": "/status",
+  "comp": "YieldStatus",
+  "title": "Yield Status"
+ },
+ {
+  "path": "/status/internal",
+  "comp": "YieldInternal",
+  "title": "Yield Internal"
  },
  {
   "path": "/statute-to-predicate",
