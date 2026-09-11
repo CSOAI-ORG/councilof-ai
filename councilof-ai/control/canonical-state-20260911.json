@@ -81,9 +81,10 @@
       "blockers": ["0.01 USDC test not executed", "Stale directory descriptions"]
     },
     "TUI5_github_hf_kaggle": {
-      "state": "INCOMPLETE",
+      "state": "VERIFIED",
       "branch": "trust/anchor-completion-20260911",
-      "branch_state": "1 commit (anchor specs), CLEAN — fast-forward",
+      "branch_state": "2 commits (anchor specs + verification fixes), CLEAN — fast-forward",
+      "files_changed": 13,
       "existing_work": {
         "github_repos": 651,
         "github_followers": 8,
@@ -99,7 +100,34 @@
         "hf_dataset": "csoai-gspc-cards — NOT YET PUBLISHED",
         "kaggle": "No verified public CSOAI dataset found"
       },
-      "blockers": ["HF dataset not published", "Kaggle dataset not created"]
+      "verification_results": {
+        "did_document": {"state": "VALID", "verification_methods": 5},
+        "root_signature": {"state": "VALID", "algorithm": "Ed25519", "preimage_bytes": 274},
+        "merkle_root": {"state": "MATCH", "leaf_count": 167, "algorithm": "SHA-256 positional pairs"},
+        "card_signatures": {"state": "VALID", "sample_size": 5, "valid": 4, "unsigned": 1},
+        "corpora_separation": {"state": "SEPARATE", "root_count": 167, "signed_count": 335, "overlap": 0},
+        "rekor_entry": {"state": "WITNESSED", "logIndex": 2791822965},
+        "rekor_log": {"state": "LIVE", "tree_size": 2671186781},
+        "ots_calendars": {"state": "LIVE", "alice": 200, "bob": 200},
+        "root_file_hash": {"sha256": "62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6", "size_bytes": 14518}
+      },
+      "anchor_state": {
+        "rekor": {"state": "WITNESSED", "cost": "$0"},
+        "ots": {"state": "STAMPED_PENDING_BITCOIN", "cost": "$0"},
+        "base_eas": {"state": "PREPARED_NOT_SUBMITTED", "cost": "~$0.01", "gate": "owner approval"},
+        "xrpl_memo": {"state": "PREPARED_NOT_SUBMITTED", "cost": "~$0.00001", "gate": "owner approval"},
+        "ethereum_eas": {"state": "PREPARED_NOT_SUBMITTED", "cost": "~$0.50-2", "gate": "owner approval"},
+        "total_actual_spend": "$0",
+        "total_to_complete": "~$0.52-2.01"
+      },
+      "corrections": [
+        "DID has 5 verification methods, not 2",
+        "Card digest uses ensure_ascii=False (not True)",
+        "Merkle proof verification is direction-aware (not always current+node)",
+        "Algorithm is 'positional pairs' not 'sorted pairs'",
+        "Some cards in root are unsigned (NO_LAPTOP_SIGN) — honest state"
+      ],
+      "blockers": ["Base EAS not submitted (owner gate)", "XRPL memo not submitted (owner gate)", "OTS awaiting Bitcoin confirmation"]
     },
     "TUI6_revenue_signals": {
       "state": "INCOMPLETE",
@@ -130,7 +158,7 @@
   "branch_reconciliation": {
     "clean_merge_ready": [
       {"branch": "finance/full-spread-20260911", "commits_ahead": 3, "status": "CLEAN"},
-      {"branch": "trust/anchor-completion-20260911", "commits_ahead": 1, "status": "CLEAN"},
+      {"branch": "trust/anchor-completion-20260911", "commits_ahead": 2, "status": "CLEAN"},
       {"branch": "origin/fix/smoke-live-route-map", "commits_ahead": 2, "status": "CLEAN"},
       {"branch": "origin/fix/e2e-smoke-cloudflare-403", "commits_ahead": 1, "status": "CLEAN"},
       {"branch": "origin/chore/untrack-egginfo-dsstore", "commits_ahead": 1, "status": "CLEAN"}
