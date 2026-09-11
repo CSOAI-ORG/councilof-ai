@@ -1,0 +1,18 @@
+{
+  "name": "FishKeeper husbandry (RAS hook)",
+  "description": "Discovery card for fishkeeper.co.uk. Same receipt rail as KoiKeeper. Measurement, not certification.",
+  "version": "0.1.0",
+  "provider": { "organization": "CSOAI Ltd", "url": "https://councilof.ai" },
+  "supportedInterfaces": [
+    { "url": "https://councilof.ai/api/a2a", "protocolBinding": "JSONRPC", "protocolVersion": "1.0" }
+  ],
+  "skills": [
+    {
+      "id": "husbandry-hash",
+      "name": "Hash a record and check inclusion",
+      "description": "GET https://councilof.ai/api/proof?sha= after client-side hash. Three states only.",
+      "tags": ["ras", "measurement"]
+    }
+  ],
+  "explicitly_not": ["certification", "veterinary-opinion", "token"]
+}

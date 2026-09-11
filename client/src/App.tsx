@@ -122,6 +122,7 @@ const YieldInternal = lazy(() => import("./pages/YieldInternal"));
 const ClaritySpecimen = lazy(() => import("./pages/ClaritySpecimen"));
 const CustodyDisclosure = lazy(() => import("./pages/CustodyDisclosure"));
 const HealthInventory = lazy(() => import("./pages/HealthInventory"));
+const FeedLaunch = lazy(() => import("./pages/FeedLaunch"));
 const RlusdSpecimen = lazy(() => import("./pages/RlusdSpecimen"));
 const KokotajloSpecimen = lazy(() => import("./pages/KokotajloSpecimen"));
 const AiTransparency = lazy(() => import("./pages/AiTransparency"));
@@ -1115,6 +1116,7 @@ function App() {
                   <Route path="/specimens/rlusd" component={RlusdSpecimen} />
                   <Route path="/specimens/kokotajlo" component={KokotajloSpecimen} />
                   <Route path="/health-inventory" component={HealthInventory} />
+                  <Route path="/feed-launch" component={FeedLaunch} />
                   <Route path="/system" component={ContentReviewNotice} />
                   <Route path="/graph" component={GovGraph} />
                   <Route path="/governance-graph" component={GovGraph} />
