@@ -1,0 +1,60 @@
+{
+  "schema": "csoai.x402-settlement-evidence/v1",
+  "classification": "INTERNAL_SELF_FUNDED",
+  "observed_at": "2026-09-11T13:56:00Z",
+  "purpose": "A bounded plumbing and delivery test. It is not revenue, outside demand, adoption, an independent buyer, or a model measurement.",
+  "request": {
+    "sku": "request_attestation",
+    "subject": "llama3.2:3b",
+    "resource_url": "https://councilof.ai/api/request-attestation",
+    "amount_atomic": "10000",
+    "amount_usdc": "0.01",
+    "network": "eip155:8453",
+    "asset_contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+  },
+  "settlement": {
+    "transaction": "0x60172f43ca14e5874eba92b990ce623e6503cee6d060fd89fd828993fababe7f",
+    "explorer": "https://basescan.org/tx/0x60172f43ca14e5874eba92b990ce623e6503cee6d060fd89fd828993fababe7f",
+    "status": "SUCCESS",
+    "block": 51172054,
+    "timestamp": "2026-09-11T13:30:55Z",
+    "transaction_action": "Transfer 0.01 USDC to the same controlled payTo wallet through Multicall3",
+    "from_transaction_sender": "0xB2Bd29925CBbCEA7628279c91945Ca5B98bf371B",
+    "erc20_transfer_from": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "erc20_transfer_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "transaction_fee_eth": "0.000000599771779167",
+    "transaction_fee_usd_observed": "0.001557",
+    "explorer_observation": "BaseScan transaction detail page, independently re-read after settlement"
+  },
+  "server_receipt": {
+    "format": "compact JWS",
+    "alg": "EdDSA",
+    "kid": "did:web:csoai.org#board-attestation-1",
+    "signature_state": "VALID",
+    "verified_with": "scripts/verify_receipt.py",
+    "payload": {
+      "issuedAt": 1789133453,
+      "network": "eip155:8453",
+      "payer": "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31",
+      "resourceUrl": "https://councilof.ai/api/request-attestation",
+      "transaction": "0x60172f43ca14e5874eba92b990ce623e6503cee6d060fd89fd828993fababe7f",
+      "version": 1
+    },
+    "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJpc3N1ZWRBdCI6MTc4OTEzMzQ1MywibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5ZXIiOiIweDIxMjY4NjQwNGE3ZDFlMWZkODhmMzVlZDYyMDBjM2FmN2E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uIiwidHJhbnNhY3Rpb24iOiIweDYwMTcyZjQzY2ExNGU1ODc0ZWJhOTJiOTkwY2U2MjNlNjUwM2NlZTZkMDYwZmQ4OWZkODI4OTkzZmFiYWJlN2YiLCJ2ZXJzaW9uIjoxfQ.Z7Cl7cX13h6hxeYl_7uuWbyNL9xG0JunI2NUVWD_3MDxEGn_fBsPYk1u0X-svXdoGtvYdy8ZH-d446soHN57CA"
+  },
+  "delivered_resource": {
+    "http_status": 200,
+    "bytes_observed": 1820,
+    "reserved_historical_axes": 14,
+    "fresh_run": "UNMEASURED",
+    "root_inclusion": "UNMEASURED",
+    "boundary": "The response was delivered, but its complete bytes were not retained in this evidence file. This row therefore proves delivery and the signed payment receipt, not reproducibility or root inclusion of the returned card."
+  },
+  "revenue_effect": {
+    "outside_payer_delta": 0,
+    "outside_revenue_delta_usdc": "0",
+    "self_settlement_delta": 1,
+    "statement": "The payer and payTo are controlled by the same operator. This transaction validates the payment-to-delivery path only."
+  }
+}
