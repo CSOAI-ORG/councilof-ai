@@ -96,8 +96,19 @@ class Distribution(unittest.TestCase):
         g = grade_distribution({"kind": "distributed", "supply": 12.5, "holders": 3})
         self.assertEqual(g["classified_distributed_on_reader"], "PASS")
         self.assertEqual(g["chain_supply"], 12.5)
-        self.assertEqual(g["holders"], 3)
+        self.assertIsNone(g["holders"])
+        self.assertEqual(g["holders_state"], "UNMEASURED")
         self.assertEqual(g["represented_gt_distributed"], "UNCHECKABLE")
+
+    def test_holder_count_requires_complete_paginated_evidence(self):
+        g = grade_distribution({
+            "kind": "distributed",
+            "supply": 12.5,
+            "holders": 3,
+            "holders_method": "account_lines_paginated_complete",
+        })
+        self.assertEqual(g["holders"], 3)
+        self.assertEqual(g["holders_state"], "MEASURED")
 
     def test_reader_unreachable_uncheckable_no_numbers(self):
         g = grade_distribution({"kind": "distributed", "supply": 99, "holders": 99}, reader_unreachable=True)

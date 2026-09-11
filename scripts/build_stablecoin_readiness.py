@@ -171,7 +171,12 @@ def build(repo: Path) -> dict[str, Any]:
             }
             row["measurement"]["reported_fields"] = {
                 "supply": rlusd_payload.get("supply"),
-                "holders_source_label": rlusd_payload.get("holders"),
+                "holders_source_label": None,
+                "holders_state": "WITHHELD_UNVERIFIED_SOURCE_LABEL",
+                "holders_note": (
+                    "The rooted historical card contains a reader-labelled value, but the repository "
+                    "does not contain a complete paginated account_lines traversal establishing a holder count."
+                ),
             }
         assets.append(row)
 
