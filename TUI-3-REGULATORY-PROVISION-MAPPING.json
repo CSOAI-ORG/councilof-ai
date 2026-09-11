@@ -1,0 +1,151 @@
+{
+  "schema": "csoai.regulatory-provision-mapping/1.0",
+  "generated_at": "2026-09-11T15:30:00Z",
+  "note": "Provision-level regulatory mapping for GSPC axes. NOT a compliance determination.",
+
+  "methodology": {
+    "source_axes": "public/signed/chain.json (335 cards)",
+    "crosswalk_source": "public/interop/nist-airmf-gspc-crosswalk.json",
+    "regulatory_source": "public/.well-known/eu-ai-act.json, public/regulatory-clock.json",
+    "provision_bank": "public/interop/regulatory-inventory.json (417 frozen provisions)",
+    "disclaimer": "A crosswalk maps which GSPC axis carries measurable evidence for which regulatory provision. It is NOT a legal determination, conformity assessment, or certification."
+  },
+
+  "axis_provision_mappings": [
+    {
+      "axis": "governance",
+      "gspc_family": "behavioural",
+      "nist_function": "GOVERN",
+      "eu_ai_act_articles": ["Art 9", "Art 15", "Art 17"],
+      "jurisdiction": "EU",
+      "legal_status": "EU AI Act Regulation (EU) 2024/1689",
+      "applicability_date": "2026-08-02",
+      "provision_description": "Risk management system, accuracy, robustness",
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "safety",
+      "gspc_family": "behavioural",
+      "nist_function": "MEASURE",
+      "eu_ai_act_articles": ["Art 9", "Art 15"],
+      "jurisdiction": "EU",
+      "legal_status": "EU AI Act Regulation (EU) 2024/1689",
+      "applicability_date": "2026-08-02",
+      "provision_description": "Risk management, technical documentation",
+      "measurement_method": "Model fleet answers frozen bank, graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "provenance",
+      "gspc_family": "behavioural",
+      "nist_function": "MAP",
+      "eu_ai_act_articles": ["Art 50"],
+      "jurisdiction": "EU",
+      "legal_status": "EU AI Act Regulation (EU) 2024/1689",
+      "applicability_date": "2026-08-02",
+      "provision_description": "Transparency obligations, AI content marking",
+      "measurement_method": "Model fleet answers frozen bank, graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "art5-safeguard",
+      "gspc_family": "behavioural",
+      "nist_function": "GOVERN",
+      "eu_ai_act_articles": ["Art 5"],
+      "jurisdiction": "EU",
+      "legal_status": "EU AI Act Regulation (EU) 2024/1689 — prohibited practices",
+      "applicability_date": "2025-02-02",
+      "provision_description": "Prohibited AI practices (subliminal manipulation, social scoring, etc.)",
+      "measurement_method": "Model fleet answers frozen bank, graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "care",
+      "gspc_family": "behavioural",
+      "nist_function": "MEASURE",
+      "eu_ai_act_articles": ["Art 9"],
+      "jurisdiction": "EU",
+      "legal_status": "EU AI Act Regulation (EU) 2024/1689",
+      "applicability_date": "2026-08-02",
+      "provision_description": "Risk management system",
+      "measurement_method": "Model fleet answers frozen bank, graded deterministically",
+      "status": "MEASURED"
+    }
+  ],
+
+  "financial_axis_mappings": [
+    {
+      "axis": "provenance-controls",
+      "family": "financial",
+      "measurement_method": "Deterministic fact-based measurement",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "reserve-attestation",
+      "family": "financial",
+      "measurement_method": "Deterministic fact-based measurement",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "regulatory-framework",
+      "family": "financial",
+      "measurement_method": "Deterministic fact-based measurement",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "distribution-integrity",
+      "family": "financial",
+      "measurement_method": "Deterministic fact-based measurement",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "custody-disclosure",
+      "family": "financial",
+      "measurement_method": "Deterministic fact-based measurement",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "ai-economy-index",
+      "family": "financial",
+      "measurement_method": "Index-style slot",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "human-labour-index",
+      "family": "financial",
+      "measurement_method": "Index-style slot",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "family": "financial",
+      "measurement_method": "Index-style slot",
+      "status": "MEASURED"
+    }
+  ],
+
+  "card_regulatory_state": {
+    "total_cards": 335,
+    "cards_with_provision_links": 0,
+    "cards_with_empty_crosswalk": 335,
+    "note": "No individual signed card carries a provision-level regulatory link. The crosswalk is at the AXIS level, not the card level. This is by design: a card measures a model on an axis; the axis maps to provisions."
+  },
+
+  "pr1888_regulatory_state": {
+    "total_cards": 36,
+    "cards_with_provision_links": 0,
+    "cards_with_unlinked_status": 36,
+    "note": "All 36 PR#1888 cards have regulatory_crosswalk.linkage_status=UNLINKED. Provision mapping is at axis level."
+  },
+
+  "nist_submission_readiness": {
+    "deadline": "2026-09-16",
+    "crosswalk_complete": true,
+    "function_mappings": 4,
+    "axis_mappings": 22,
+    "provision_count": 417,
+    "status": "PREPARED_NOT_SUBMITTED",
+    "gate": "Final communication gate required (owner approval)"
+  }
+}
