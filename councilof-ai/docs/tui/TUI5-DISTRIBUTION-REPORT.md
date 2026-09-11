@@ -14,14 +14,16 @@
 | Current pins | 6 MCP repositories | GitHub profile |
 | **Not pinned** | `councilof-ai`, `gspc-board` | GitHub profile |
 
-### Flagship repos:
+### Flagship repos (descriptions updated 2026-09-11):
 
-| Repo | Stars | Description | Status |
-|------|-------|-------------|--------|
-| `councilof-ai` | — | Main flagship | Active, pinned |
-| `gspc-board` | — | Board verifier | Active, NOT pinned |
-| `csoai-gspc-mcp` | — | MCP server (npm) | v0.2.1, 4 published |
-| `eu-ai-act-compliance-mcp` | — | EU AI Act provisions | PyPI v1.8.15, separate product |
+| Repo | Description | Status |
+|------|-------------|--------|
+| `councilof-ai` | "CSOAI flagship — 425 stablecoins indexed, 371 signed cards..." | Updated, NOT pinned (GraphQL mutation unavailable) |
+| `gspc-board` | "GSPC Board — 22-axis AI measurement, Ed25519-signed..." | Updated, NOT pinned |
+| `awesome-mcp-servers-csoai` | "CSOAI GSPC MCP: 12 tools (8 free, 4 paid)..." | Updated |
+| `csoai-gspc-mcp` | npm package (v0.2.1) | Not found on GitHub (npm only) |
+
+**Note:** GitHub does not expose a public GraphQL mutation for pinning repositories. The current6 pins are all MCP repos. `councilof-ai` and `gspc-board` can only be pinned via the GitHub web UI.
 
 ### Open PRs:
 
@@ -77,10 +79,13 @@
 
 | Metric | Value | State |
 |--------|-------|-------|
-| Verified public dataset | None found | **NOT PUBLISHED** |
-| Kaggle references in repo | 0 | Verified |
-
-**Action needed:** Publish one canonical reproducibility asset or leave Kaggle out of verification claims.
+| Account | nicktempleman | Authenticated |
+| Existing CSOAI datasets | 8 | Published (various dates) |
+| Canonical dataset | `csoai-canonical-20260911` | **PUBLISHED 2026-09-11** |
+| URL | kaggle.com/datasets/nicktempleman/csoai-canonical-20260911 | Public |
+| Files | 5 (EVM, XRPL, cross-chain, DefiLlama snapshot, PR#1888 verification) | ~55KB |
+| License | CC0-1.0 | Open |
+| Other datasets | `csoai-gspc-normalized` (182KB), `gspc-sim-cards`, `csoai-corpus-baselines`, 5 more | Various |
 
 ---
 
