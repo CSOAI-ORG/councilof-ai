@@ -1,0 +1,203 @@
+{
+  "schema": "csoai.canonical-state/0.1",
+  "kind": "control.canonical-state",
+  "generated_at": "2026-09-11T12:30:00Z",
+  "generator": "TUI-1-canonical-integrator",
+  "branch": "control/canonical-state-20260911",
+
+  "coverage_denominators": {
+    "stablecoins_indexed": 425,
+    "asset_chain_entries_approx": 1640,
+    "chains_reported": 211,
+    "chains_with_active_supply": 177,
+    "total_supply_usd": "310.8B",
+    "source": "DefiLlama stablecoins API, 2026-09-11"
+  },
+
+  "deep_measurement_numerators": {
+    "evm_ethereum": 11,
+    "evm_base": 1,
+    "evm_arbitrum": 2,
+    "tokenized_fund_ethereum": 1,
+    "xrpl_measured": 1,
+    "xrpl_no_supply": 1,
+    "stellar_measured": 0,
+    "total_deep_measured": 15,
+    "total_indexed_not_measured": 410,
+    "note": "INDEXED ≠ MEASURED. 15 contracts verified via totalSupply() or account_lines. 410 remain INDEXED only."
+  },
+
+  "tui_status": {
+    "TUI1_canonical_integrator": {
+      "state": "IN_PROGRESS",
+      "branch": "control/canonical-state-20260911",
+      "commit": "this file",
+      "deliverable": "canonical-state-20260911.json + TUI1-REPORT.md"
+    },
+    "TUI2_financial_measurement": {
+      "state": "VERIFIED",
+      "branch": "finance/full-spread-20260911",
+      "commits": ["2e8646357", "a9d0e493c", "73cce7d82"],
+      "files_changed": 10,
+      "deep_measured": 15,
+      "readers_built": 3,
+      "corrections": ["XRPL RLUSD $1.03B→$0", "FDUSD/DOLA contracts return 0x"],
+      "merge_status": "CLEAN — fast-forward to main"
+    },
+    "TUI3_models_regulation": {
+      "state": "INCOMPLETE",
+      "branch": "models/verified-expansion-20260911",
+      "branch_state": "EMPTY — identical to main, no commits",
+      "existing_work": {
+        "cards_total_unique": 371,
+        "cards_sha256_verified": 371,
+        "cards_ed25519_verified": 371,
+        "pr1888_cards": 36,
+        "public_root_cards": 167,
+        "historical_corpus_cards": 335,
+        "regulation_linked": 5,
+        "regulation_unlinked": 31,
+        "nist_deadline": "2026-09-16",
+        "nist_status": "DRAFTING — owner gate (Nick signature)"
+      },
+      "blockers": ["Signing key for card production", "Regulation mapping incomplete"]
+    },
+    "TUI4_mcp_a2a_x402": {
+      "state": "INCOMPLETE",
+      "branch": "agents/discovery-consolidation-20260911",
+      "branch_state": "EMPTY — identical to main, no commits",
+      "existing_work": {
+        "mcp_endpoint": "https://councilof.ai/mcp (streamable-http)",
+        "mcp_registry": "io.github.CSOAI-ORG/gspc (v1.4.0)",
+        "mcp_tools": "12 total (8 free + 4 paid)",
+        "a2a_endpoint": "https://councilof.ai/api/a2a",
+        "agent_card": "v1.1.0, 4 skills, 2 extensions",
+        "x402_scheme": "exact, Base eip155:8453, USDC",
+        "x402_resources": "9 (1 free + 8 paid)",
+        "directories_listed": 7,
+        "directories_stale": ["Glama (12 AIs→should be 19)", "awesome-mcp-servers (7 tools @0.1.1→12 @0.2.1)"],
+        "directories_missing": ["PulseMCP"]
+      },
+      "blockers": ["0.01 USDC test not executed", "Stale directory descriptions"]
+    },
+    "TUI5_github_hf_kaggle": {
+      "state": "INCOMPLETE",
+      "branch": "trust/anchor-completion-20260911",
+      "branch_state": "1 commit (anchor specs), CLEAN — fast-forward",
+      "existing_work": {
+        "github_repos": 651,
+        "github_followers": 8,
+        "github_pins": "6 MCP repos (councilof-ai and gspc-board NOT pinned)",
+        "live_endpoints": {
+          "councilof.ai": "HTTP 200",
+          "llms.txt": "HTTP 200 (44 lines, 22 axes)",
+          "agent-card.json": "HTTP 200 (v1.1.0)",
+          "feed.xml": "HTTP 200",
+          "sitemap.xml": "HTTP 200"
+        },
+        "hf_org": "csoai (6 datasets/spaces)",
+        "hf_dataset": "csoai-gspc-cards — NOT YET PUBLISHED",
+        "kaggle": "No verified public CSOAI dataset found"
+      },
+      "blockers": ["HF dataset not published", "Kaggle dataset not created"]
+    },
+    "TUI6_revenue_signals": {
+      "state": "INCOMPLETE",
+      "existing_work": {
+        "offers": [
+          {"name": "Stablecoin Change and Corrections Feed", "price": "$199/mo", "state": "DEFINED"},
+          {"name": "Regulation Deadline and Evidence Crosswalk", "price": "GBP 99/mo (SME) / GBP 999/mo (Enterprise)", "state": "DEFINED"},
+          {"name": "MCP/A2A/x402 Trust Receipt", "price": "$499/mo", "state": "DEFINED"}
+        ],
+        "revenue": {
+          "external_customer_revenue_usdc": 0.02,
+          "internal_self_funded_settlements": 5,
+          "zero_value_probes": 4,
+          "sku_issuances": 3,
+          "classification": "EXTERNAL_CUSTOMER — 0.02 USDC from 1 external payer. All self-settlements excluded."
+        },
+        "x402_offer": "0.01 USDC through 11 October 2026",
+        "free_door": "zero cost, current facts/methods/verification/RSS",
+        "ietf_drafts": {
+          "published": "draft-templeman-scitt-frimming-space-00 (91 pages, Sep 4)",
+          "planned": "A2A signed-receipts/v1 SCITT profile before IETF 127 (Nov 14-20)"
+        }
+      },
+      "blockers": ["No external buyer", "No pilot acceptances", "Revenue = 0.02 USDC (below meaningful threshold)"]
+    }
+  },
+
+  "branch_reconciliation": {
+    "clean_merge_ready": [
+      {"branch": "finance/full-spread-20260911", "commits_ahead": 3, "status": "CLEAN"},
+      {"branch": "trust/anchor-completion-20260911", "commits_ahead": 1, "status": "CLEAN"},
+      {"branch": "origin/fix/smoke-live-route-map", "commits_ahead": 2, "status": "CLEAN"},
+      {"branch": "origin/fix/e2e-smoke-cloudflare-403", "commits_ahead": 1, "status": "CLEAN"},
+      {"branch": "origin/chore/untrack-egginfo-dsstore", "commits_ahead": 1, "status": "CLEAN"}
+    ],
+    "empty_branches": [
+      {"branch": "models/verified-expansion-20260911", "state": "IDENTICAL to main"},
+      {"branch": "agents/discovery-consolidation-20260911", "state": "IDENTICAL to main"},
+      {"branch": "codex/runpod-a100-cost-guard", "state": "IDENTICAL to main"}
+    ],
+    "needs_merge_resolution": [
+      {"branch": "lane/engine-pod-pusher", "ahead": 45, "behind": 11, "conflict": "sim-matrix.yml"}
+    ],
+    "deleted_branch_with_stash": [
+      {"branch": "control/canonical-state-20260911", "stash": "stash@{4}", "state": "RECREATED this session"}
+    ]
+  },
+
+  "production_state": {
+    "councilof_ai": {"status": 200, "type": "Next.js SPA"},
+    "llms_txt": {"status": 200, "lines": 44, "axes": 22, "model_fleets": 14, "public_leaders": 3},
+    "agent_card": {"status": 200, "version": "1.1.0", "skills": 4, "extensions": 2},
+    "mcp_endpoint": {"status": "LIVE", "transport": "streamable-http", "tools": 12},
+    "a2a_endpoint": {"status": "LIVE", "methods": 11},
+    "x402": {"status": "LIVE", "resources": 9, "pay_to": "0x2126...ae31"},
+    "feed_xml": {"status": 200},
+    "sitemap_xml": {"status": 200},
+    "rekor_witness": {"state": "WITNESSED", "log_index": 2791822965},
+    "ots": {"state": "STAMPED_PENDING_BITCOIN"},
+    "base_eas": {"state": "INCOMPLETE", "cost": "~$0.01", "gate": "owner approval"},
+    "xrpl_memo": {"state": "INCOMPLETE", "cost": "~$0.00001", "gate": "owner approval"}
+  },
+
+  "claims_rejected_or_corrected": [
+    "XRPL RLUSD: prior claim $1.03B/41,200 holders → corrected to $0/0 holders (RLUSD trust lines zero; legacy USD IOUs confused with RLUSD)",
+    "Deep measurement count: prior 17 → corrected to 15 (FDUSD/DOLA contracts return 0x)",
+    "Tokenized funds: BUIDL/USDG/USD1 not measurable via standard totalSupply() — security token interfaces",
+    "Stellar USDC/EURC: Horizon API returns no holders — format change or issuer migration",
+    "USBDC: remains UNMEASURED — issuer account not independently identified",
+    "Revenue: 0.02 USDC external. Internal self-fund tests excluded. Revenue effectively zero.",
+    "models/ and agents/ TUI branches: EMPTY — no work committed"
+  ],
+
+  "unresolved_blockers": [
+    "Signing key — needed for card production (TUI 3/5)",
+    "Root ceremony — Merkle inclusion (TUI 5)",
+    "RunPod GPU — broader measurement harness (TUI 3)",
+    "Owner approval — Base EAS ($0.01) and XRPL memo ($0.00001) anchoring",
+    "OTS Bitcoin confirmation — submitted, awaiting",
+    "NIST AI 300 deadline — Sep 16 (5 days), drafting, owner gate",
+    "Stale directory listings — Glama, awesome-mcp-servers need update",
+    "PulseMCP — not yet submitted",
+    "HF dataset — not published",
+    "Kaggle — no dataset",
+    "FDUSD/DOLA — contracts return 0x, need ABI investigation",
+    "Stellar Horizon API — format change, no holders returned",
+    "XRPL RLUSD — DefiLlama $1.03B vs ledger $0 discrepancy"
+  ],
+
+  "costs": {
+    "deep_measurement_rpc": "$0 (public RPCs, no API keys)",
+    "defillama_api": "$0 (public API)",
+    "xrpl_queries": "$0 (public cluster)",
+    "stellar_queries": "$0 (public Horizon)",
+    "base_eas_anchor": "~$0.01 (NOT executed, owner gate)",
+    "xrpl_memo_anchor": "~$0.00001 (NOT executed, owner gate)",
+    "total_spend": "$0"
+  },
+
+  "funding_source": "None — all queries used free public endpoints"
+}

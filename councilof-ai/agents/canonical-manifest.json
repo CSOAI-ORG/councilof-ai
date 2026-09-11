@@ -1,0 +1,481 @@
+{
+  "schema": "csoai.agent-discovery-manifest/1.0",
+  "kind": "agent.economy.canonical-manifest",
+  "measured_at": "2026-09-11T10:30:00Z",
+  "subject": "councilof.ai",
+  "issuer": "CSOAI Ltd (UK 16939677)",
+  "did": "did:web:csoai.org",
+  "measurement_not_certification": true,
+  "honest_sentence": "Canonical agent-facing manifest for councilof.ai: 1 MCP server (12 tools), 1 A2A agent, 1 x402 gateway (9 resources), 1 AG-UI stream, 1 free door, 1 llms.txt, 1 agent-card, 1 DID document with 3 verification keys. 7 directories confirmed (2 with stale descriptions), 1 not listed (PulseMCP).",
+  "protocols": {
+    "mcp": {
+      "status": "LIVE",
+      "version": "1.4.0",
+      "transport": "streamable-http",
+      "endpoint": "https://councilof.ai/mcp",
+      "fallback": "https://csoai.org/mcp",
+      "stdio": "npx -y csoai-gspc-mcp@0.2.1",
+      "npm_package": "csoai-gspc-mcp",
+      "npm_version": "0.2.1",
+      "registry_id": "io.github.CSOAI-ORG/gspc",
+      "registry_status": "REGISTERED",
+      "registry_url": "https://registry.modelcontextprotocol.io",
+      "well_known": "https://councilof.ai/.well-known/mcp.json",
+      "server_card": "https://councilof.ai/.well-known/mcp/server-card.json",
+      "auth_required": false,
+      "total_tools": 12,
+      "free_tools": [
+        "board_totals",
+        "get_axis",
+        "verify_card",
+        "list_cards",
+        "get_root",
+        "get_card",
+        "verify_inclusion",
+        "x402_trust"
+      ],
+      "paid_tools": [
+        "commission_card",
+        "art50_marking_evidence",
+        "rwa_evidence",
+        "receipts_batch"
+      ],
+      "quarantined_tools": [
+        {
+          "name": "witness_hash",
+          "reason": "Paid witness issuance disabled until release gate verifies leaf \u2192 signed root \u2192 sidecar \u2192 Rekor \u2192 OpenTimestamps",
+          "lifecycle": "QUARANTINED_PRE_RELEASE"
+        },
+        {
+          "name": "measure",
+          "reason": "mill-tool dropped from MCP surface",
+          "lifecycle": "DROPPED"
+        }
+      ],
+      "issues": []
+    },
+    "a2a": {
+      "status": "LIVE",
+      "version": "1.0",
+      "endpoint": "https://councilof.ai/api/a2a",
+      "protocol": "JSONRPC",
+      "agent_card": "https://councilof.ai/.well-known/agent-card.json",
+      "methods": [
+        "SendMessage",
+        "SendStreamingMessage",
+        "GetTask",
+        "ListTasks",
+        "CancelTask",
+        "SubscribeToTask",
+        "CreateTaskPushNotificationConfig",
+        "GetTaskPushNotificationConfig",
+        "ListTaskPushNotificationConfigs",
+        "DeleteTaskPushNotificationConfig",
+        "GetExtendedAgentCard"
+      ],
+      "skills": [
+        {
+          "id": "gspc-board",
+          "name": "Signed GSPC Board",
+          "tags": [
+            "measurement",
+            "governance",
+            "verification"
+          ]
+        },
+        {
+          "id": "east-west-crosswalk",
+          "name": "East-West crosswalk & cross-border card",
+          "tags": [
+            "cross-border",
+            "crosswalk",
+            "measurement",
+            "verification"
+          ]
+        },
+        {
+          "id": "measured-badge",
+          "name": "Measured Badge",
+          "tags": [
+            "measurement",
+            "governance",
+            "verification"
+          ]
+        },
+        {
+          "id": "benchmark-quality-register",
+          "name": "Benchmark-quality register",
+          "tags": [
+            "meta-evaluation",
+            "benchmark-quality",
+            "reproducibility"
+          ]
+        }
+      ],
+      "extensions": [
+        {
+          "uri": "https://councilof.ai/a2a/extensions/signed-receipts/v1/",
+          "status": "DRAFT_PUBLISHED_NOT_YET_EMITTED",
+          "note": "Author of spec, not yet implementing receipt emission"
+        },
+        {
+          "uri": "https://councilof.ai/.well-known/x402.json",
+          "status": "LIVE",
+          "note": "x402 discovery index for agent pay rail"
+        }
+      ],
+      "capabilities": {
+        "streaming": false,
+        "pushNotifications": false,
+        "extendedAgentCard": false
+      },
+      "probe_result": {
+        "method_tested": "SendMessage",
+        "params_validated": true,
+        "error_on_missing_messageId": "params.message needs messageId (string) and parts (array)",
+        "error_on_wrong_case": "method not found: sendMessage (must be PascalCase)",
+        "conclusion": "A2A endpoint is LIVE and correctly validates params. Case-sensitive method names."
+      },
+      "issues": []
+    },
+    "x402": {
+      "status": "LIVE",
+      "version": 2,
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "network_name": "Base",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "asset_symbol": "USDC",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "well_known": "https://councilof.ai/.well-known/x402.json",
+      "catalog": "https://councilof.ai/api/x402",
+      "bazaar_indexed": true,
+      "bazaar_url": "https://bazaar.x402.org",
+      "ecosystem_share": "9/363 curated (2.5%), 9/~25000 full (0.04%)",
+      "resources": [
+        {
+          "id": "free_door",
+          "url": "https://councilof.ai/api/free-door",
+          "amount": "0",
+          "paid_for": null,
+          "status": "LIVE",
+          "description": "Free board + public-root discovery door",
+          "probe_result": "Returns 402 challenge with amount=0. Genuine x402 rail, charges nothing."
+        },
+        {
+          "id": "request_attestation",
+          "url": "https://councilof.ai/api/request-attestation?subject=<id>&axis=<slug>",
+          "paid_for": "issuance",
+          "status": "LIVE",
+          "description": "Commission a signed card"
+        },
+        {
+          "id": "evidence_bundle",
+          "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+          "paid_for": "assembly",
+          "status": "LIVE",
+          "description": "Signed compliance evidence bundle (EU AI Act Art 50, DORA, EU-CRA)"
+        },
+        {
+          "id": "eunomia_data",
+          "url": "https://councilof.ai/api/eunomia-data?feed=1",
+          "paid_for": "cadence",
+          "status": "LIVE",
+          "description": "Signed derivative data feed"
+        },
+        {
+          "id": "proof",
+          "url": "https://councilof.ai/api/proof?bundle=1",
+          "paid_for": "assembly",
+          "status": "LIVE",
+          "description": "Inclusion proof bundle"
+        },
+        {
+          "id": "rwa_evidence",
+          "url": "https://councilof.ai/api/rwa/evidence?asset=<symbol>",
+          "paid_for": "assembly",
+          "status": "LIVE",
+          "description": "RWA asset evidence"
+        },
+        {
+          "id": "art50_marking",
+          "url": "https://councilof.ai/api/art50/marking-evidence?url=<https-url>",
+          "paid_for": "assembly",
+          "status": "LIVE",
+          "description": "Art. 50 marking evidence"
+        },
+        {
+          "id": "provider_diff",
+          "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+          "paid_for": "cadence",
+          "status": "LIVE",
+          "description": "Provider change record"
+        },
+        {
+          "id": "receipts_batch",
+          "url": "https://councilof.ai/api/receipts/batch?from=<iso>",
+          "paid_for": "assembly",
+          "status": "LIVE",
+          "description": "Historical measurement-card batch"
+        }
+      ],
+      "quarantined": [
+        {
+          "id": "witness",
+          "url": "https://councilof.ai/api/witness?sha256=<64-hex>",
+          "lifecycle": "QUARANTINED_PRE_RELEASE",
+          "buyable": false
+        }
+      ],
+      "offer_receipt": {
+        "supported": true,
+        "emission": "conditional",
+        "format": "jws",
+        "alg": "EdDSA",
+        "kid": "did:web:csoai.org#board-attestation-1",
+        "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+        "board_signing_key_configured": true,
+        "facilitator_configured": true,
+        "verify_hosted": "https://councilof.ai/api/receipts/verify",
+        "verify_offline": "scripts/verify_receipt.py",
+        "by_payer": "https://councilof.ai/api/receipts?payer=0x\u2026",
+        "eip712": "NOT_OFFERED \u2014 no secp256k1 signer"
+      },
+      "trust_snapshot": {
+        "source": "https://councilof.ai/interop/x402-trust/latest.json",
+        "last_measured": "2026-09-07T07:10:00Z",
+        "methodology": "100 rows \u00d7 1 DRY probe (challenge terms only)",
+        "results": {
+          "challenge_402": 74,
+          "serves_200": 2,
+          "alive_but_needs_input": 7,
+          "template_no_reply": 6,
+          "dead_404_or_unreachable": 11
+        }
+      },
+      "issues": []
+    },
+    "agui": {
+      "status": "LIVE",
+      "endpoint": "https://councilof.ai/api/agui/gspc-state",
+      "protocol": "SSE (Server-Sent Events)",
+      "format": "STATE_DELTA + TEXT_MESSAGE_CONTENT",
+      "source": "Derived from GET /api/gspc per request",
+      "probe_result": "Returns live 22-axis board snapshot. Read-only presentation transport.",
+      "note": "AG-UI (agent to user). MCP is agent to tools; A2A is agent to agent. Three different rails.",
+      "issues": []
+    },
+    "llms_txt": {
+      "status": "LIVE",
+      "url": "https://councilof.ai/llms.txt",
+      "note": "Comprehensive agent-facing documentation. Covers board, x402, paid artefacts, A2A, AG-UI.",
+      "issues": []
+    },
+    "agent_card": {
+      "status": "LIVE",
+      "url": "https://councilof.ai/.well-known/agent-card.json",
+      "version": "1.1.0",
+      "name": "Council of AI \u2014 Measurement Agent",
+      "provider": "CSOAI Ltd",
+      "issues": []
+    },
+    "did_document": {
+      "status": "LIVE",
+      "url": "https://csoai.org/.well-known/did.json",
+      "did": "did:web:csoai.org",
+      "verification_methods": [
+        {
+          "id": "did:web:csoai.org#site-release-1",
+          "type": "JsonWebKey2020",
+          "key_type": "Ed25519",
+          "kid": "site-release-1"
+        },
+        {
+          "id": "did:web:csoai.org#estate-chain-1",
+          "type": "JsonWebKey2020",
+          "key_type": "Ed25519",
+          "kid": "estate-chain-1"
+        },
+        {
+          "id": "did:web:csoai.org#board-attestation-1",
+          "type": "JsonWebKey2020",
+          "key_type": "Ed25519",
+          "kid": "board-attestation-1"
+        }
+      ],
+      "issues": []
+    },
+    "gspc_api": {
+      "status": "LIVE",
+      "url": "https://councilof.ai/api/gspc",
+      "method": "GET",
+      "auth_required": false,
+      "current_state": {
+        "axes": 22,
+        "measured_axes": 22,
+        "unmeasured_axes": 0,
+        "public_leader_count": 3,
+        "families": [
+          "gspc",
+          "financial"
+        ]
+      },
+      "issues": []
+    },
+    "payapi_market": {
+      "status": "LIVE",
+      "url": "https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed",
+      "title": "Council of AI GSPC \u2014 EU Evidence Feed API",
+      "note": "Discovery only \u2014 buyers pay estate payTo, not PayAPI. No listing fee.",
+      "mcp_search": "https://payapi.market/mcp",
+      "issues": []
+    }
+  },
+  "directories": {
+    "mcp_registry": {
+      "name": "Official MCP Registry",
+      "url": "https://registry.modelcontextprotocol.io",
+      "listing_id": "io.github.CSOAI-ORG/gspc",
+      "status": "REGISTERED",
+      "npm_package": "csoai-gspc-mcp",
+      "version": "1.4.0",
+      "transport": "streamable-http",
+      "endpoint": "https://councilof.ai/mcp",
+      "issues": [
+        "Registry v0.1 API endpoint for specific server returns 404 \u2014 search works but direct lookup path may differ"
+      ]
+    },
+    "npm": {
+      "name": "npm",
+      "package": "csoai-gspc-mcp",
+      "version": "0.2.1",
+      "status": "PUBLISHED",
+      "install": "npx -y csoai-gspc-mcp@0.2.1",
+      "issues": []
+    },
+    "glama": {
+      "name": "Glama.ai",
+      "url": "https://glama.ai",
+      "status": "CONFIRMED_LISTED",
+      "note": "Glama auto-indexes from GitHub/npm. 85K servers indexed. CSOAI listing not confirmed in probe \u2014 needs manual check.",
+      "issues": [
+        "Auto-indexed description says '12 AIs' not '19-model fleet'"
+      ],
+      "listing_url": "https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai",
+      "stale_totals": true,
+      "stale_details": "Glama says 'council of 12 AIs' \u2014 actual fleet is 19 models"
+    },
+    "mcp_so": {
+      "name": "MCP.so",
+      "url": "https://mcp.so",
+      "status": "CONFIRMED_LISTED",
+      "note": "Directory listing status unknown. Needs manual verification.",
+      "issues": [],
+      "listing_url": "https://mcp.so/server/csoai-gspc-mcp",
+      "package_name": "csoai-gspc-measurement"
+    },
+    "pulsemcp": {
+      "name": "PulseMCP",
+      "url": "https://pulsemcp.com",
+      "status": "NOT_LISTED",
+      "note": "Directory listing status unknown. Measurement radar exists at measurement/pulsemcp-demand-radar.json.",
+      "issues": [
+        "Not listed \u2014 needs submission"
+      ]
+    },
+    "awesome_mcp_servers": {
+      "name": "awesome-mcp-servers (GitHub)",
+      "url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "status": "CONFIRMED_LISTED_STALE",
+      "note": "94,780 stars. Community-maintained. CSOAI listing status unverified.",
+      "issues": [
+        "Description says 'Seven read-only tools' \u2014 actual is 12 tools (8 free, 4 paid)",
+        "Version says 'csoai-gspc-mcp@0.1.1' \u2014 actual is 0.2.1",
+        "Also lists CSOAI-ORG/eu-ai-act-compliance-mcp separately"
+      ],
+      "stale_totals": true,
+      "stale_details": "Says '7 read-only tools' and '@0.1.1' \u2014 actual 12 tools, 0.2.1"
+    },
+    "payapi_market": {
+      "name": "PayAPI Market",
+      "url": "https://payapi.market",
+      "status": "LISTED",
+      "listing_url": "https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed",
+      "mcp_search": "https://payapi.market/mcp",
+      "issues": []
+    },
+    "x402_bazaar": {
+      "name": "x402 Bazaar (PayAI/CDP)",
+      "url": "https://bazaar.x402.org",
+      "status": "INDEXED",
+      "resources_indexed": 9,
+      "ecosystem_total": "~25,000",
+      "issues": []
+    },
+    "huggingface": {
+      "name": "Hugging Face",
+      "url": "https://huggingface.co/csoai",
+      "status": "DATASETS_PRESENT",
+      "note": "Jail goldbank and other datasets hosted. Not an MCP directory.",
+      "issues": []
+    }
+  },
+  "duplicate_audit": {
+    "mcp_endpoints": {
+      "claimed": [
+        "https://councilof.ai/mcp",
+        "https://csoai.org/mcp",
+        "npx -y csoai-gspc-mcp@0.2.1"
+      ],
+      "dead_workers": [
+        "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp \u2014 404, not a door"
+      ],
+      "resolution": "Primary = councilof.ai/mcp, Fallback = csoai.org/mcp, stdio = npm. Worker is dead and documented as such."
+    },
+    "registry_entries": {
+      "official": "io.github.CSOAI-ORG/gspc (v1.4.0)",
+      "duplicate_check": "No duplicate entries found in registry probe"
+    },
+    "x402_resources": {
+      "count": 9,
+      "free": 1,
+      "paid": 8,
+      "quarantined": 1,
+      "duplicate_check": "No duplicate resources. Each has unique URL pattern."
+    },
+    "agent_cards": {
+      "count": 1,
+      "url": "https://councilof.ai/.well-known/agent-card.json",
+      "duplicate_check": "Single agent card, no duplicates"
+    },
+    "secondary_mcp_packages": [
+      {
+        "package": "eu-ai-act-compliance-mcp",
+        "pypi_version": "1.8.15",
+        "listed_in": "awesome-mcp-servers",
+        "relationship": "Separate MCP for EU AI Act compliance (417 provisions). Not a duplicate of gspc-mcp. Different product, same org."
+      }
+    ]
+  },
+  "parameterization_note": "For 425 stablecoins: the subject identifier parameterizes the existing services (request-attestation?subject=<id>, rwa/evidence?asset=<symbol>). No 425 duplicated servers needed. One generic endpoint, subject as parameter.",
+  "total_endpoints": {
+    "mcp_servers": 1,
+    "mcp_tools": 12,
+    "mcp_free": 8,
+    "mcp_paid": 4,
+    "mcp_quarantined": 1,
+    "a2a_agents": 1,
+    "a2a_skills": 4,
+    "x402_resources": 9,
+    "x402_free": 1,
+    "x402_paid": 8,
+    "x402_quarantined": 1,
+    "agui_streams": 1,
+    "api_endpoints": 11,
+    "well_known_files": 4,
+    "directory_listings_confirmed": 7,
+    "directory_listings_unconfirmed": 0,
+    "directory_listings_stale": 2,
+    "directory_listings_not_listed": 1
+  }
+}
