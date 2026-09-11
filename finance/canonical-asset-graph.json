@@ -1,0 +1,1228 @@
+{
+  "schema": "csoai.financial-coverage/0.1",
+  "kind": "financial.coverage.canonical",
+  "subject": "stablecoin-deployment-graph",
+  "generated_at": "2026-09-11T10:45:58.152855+00:00",
+  "generator": "TUI-2-financial-coverage-machine",
+  "branch": "finance/full-spread-20260911",
+  "data_source": "DefiLlama stablecoins API",
+  "data_source_url": "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+  "honesty_contract": {
+    "rule": "INDEXED \u2260 MEASURED. Deep measurement requires per-chain totalSupply() + attestation comparison + signed card.",
+    "measurement_states": [
+      "INDEXED",
+      "DEEP_QUEUED",
+      "DEEP_MEASURED",
+      "SIGNED",
+      "IN_ROOT",
+      "ANCHORED"
+    ]
+  },
+  "coverage": {
+    "total_assets_indexed": 425,
+    "total_chains_with_supply": 177,
+    "total_chains_listed": 211,
+    "total_supply_usd": 310816601245.01514,
+    "total_supply_display": "$310.8B",
+    "usd_pegged": 337,
+    "non_usd_pegged": 88,
+    "canonical_assets": 424,
+    "bridge_wrappers": 0,
+    "issuer_variants": 1,
+    "deep_measured_count": 17,
+    "deep_measured_state": "INCOMPLETE \u2014 17 of 425 have per-chain supply verification",
+    "signed_cards_in_public_root": 167,
+    "historical_signed_corpus": 335,
+    "rekor_witness_state": "witnessed at log index 2791822965",
+    "ots_state": "submitted, awaiting Bitcoin confirmation",
+    "base_eas_state": "INCOMPLETE \u2014 costs ~$0.01, needs owner approval",
+    "xrpl_memo_state": "INCOMPLETE \u2014 costs ~$0.00001, needs owner approval"
+  },
+  "chain_distribution": {
+    "Ethereum": 168,
+    "Arbitrum": 68,
+    "BSC": 65,
+    "Base": 57,
+    "Solana": 51,
+    "Polygon": 43,
+    "Avalanche": 41,
+    "OP Mainnet": 38,
+    "Monad": 20,
+    "Hyperliquid L1": 19,
+    "Fantom": 16,
+    "Tron": 14,
+    "ZKsync Era": 14,
+    "Berachain": 13,
+    "Sonic": 13,
+    "Tempo": 12,
+    "Linea": 11,
+    "Sei": 11,
+    "Scroll": 11,
+    "Cardano": 10,
+    "Plasma": 10,
+    "Rootstock": 10,
+    "Plume Mainnet": 10,
+    "Ink": 9,
+    "X Layer": 9,
+    "Gnosis": 9,
+    "Osmosis": 8,
+    "Katana": 8,
+    "Sui": 8,
+    "Movement": 7,
+    "Aptos": 7,
+    "Unichain": 7,
+    "Metis": 7,
+    "Kava": 7,
+    "Aurora": 7,
+    "Hemi": 7,
+    "Mantle": 7,
+    "Near": 7,
+    "Stellar": 7,
+    "Fraxtal": 7,
+    "Manta": 6,
+    "Starknet": 6,
+    "PulseChain": 6,
+    "Kaia": 6,
+    "Boba": 6,
+    "Algorand": 5,
+    "Morph": 5,
+    "EthereumClassic": 5,
+    "Mode": 5,
+    "Harmony": 5,
+    "Astar": 5,
+    "Celo": 5,
+    "Taiko": 5,
+    "MegaETH": 5,
+    "Syscoin": 5,
+    "Robinhood Chain": 5,
+    "Blast": 5,
+    "CORE": 4,
+    "Tezos": 4,
+    "MANTRA": 4,
+    "IoTeX": 4,
+    "Waves": 4,
+    "Soneium": 4,
+    "KCC": 4,
+    "Oasis Emerald": 4,
+    "Zircuit": 4,
+    "Abstract": 4,
+    "Injective": 4,
+    "Stable": 4,
+    "Nibiru": 4,
+    "OKTChain": 4,
+    "XRPL": 4,
+    "Noble": 4,
+    "World Chain": 4,
+    "Bitlayer": 4,
+    "Shiden": 3,
+    "Immutable zkEVM": 3,
+    "XDC": 3,
+    "Somnia": 3,
+    "EDU Chain": 3,
+    "Theta": 3,
+    "Flow": 3,
+    "Citrea": 3,
+    "Stacks": 3,
+    "Viction": 3,
+    "GOAT": 3,
+    "Arbitrum Nova": 3,
+    "TON": 3,
+    "Canto": 3,
+    "Mixin": 3,
+    "Meter": 3,
+    "Etherlink": 3,
+    "Fuse": 3,
+    "Flare": 3,
+    "BOB": 3,
+    "Karura": 3,
+    "Cronos": 3,
+    "ApeChain": 2,
+    "Peaq": 2,
+    "Hedera": 2,
+    "Wanchain": 2,
+    "Reinetwork": 2,
+    "Vana": 2,
+    "Bittorrent": 2,
+    "MultiversX": 2,
+    "IOTA EVM": 2,
+    "Data Network": 2,
+    "Telos": 2,
+    "Redbelly": 2,
+    "Gravity by Galxe": 2,
+    "LightLink": 2,
+    "Conflux": 2,
+    "Rayls": 2,
+    "ICP": 2,
+    "0G": 2,
+    "Polkadot": 2,
+    "RISE": 2,
+    "BSquared": 2,
+    "Ronin": 2,
+    "Codex": 2,
+    "Pharos": 2,
+    "Elastos": 2,
+    "Saga": 2,
+    "Ergo": 2,
+    "Kusama": 1,
+    "Vaulta": 1,
+    "Statemine": 1,
+    "Omni": 1,
+    "Zora": 1,
+    "Horizen": 1,
+    "WEMIX3.0": 1,
+    "Edu_chain": 1,
+    "Camp Network": 1,
+    "Zkfair": 1,
+    "Moca": 1,
+    "Lisk": 1,
+    "GateLayer": 1,
+    "Shape": 1,
+    "edgeX L1": 1,
+    "DFK": 1,
+    "Apex Fusion": 1,
+    "Bittensor EVM": 1,
+    "Fogo": 1,
+    "Orderly Network": 1,
+    "Gensyn": 1,
+    "Doma": 1,
+    "Nero": 1,
+    "Xai": 1,
+    "Velas": 1,
+    "Abcore": 1,
+    "KiteAI": 1,
+    "Penumbra": 1,
+    "Provenance": 1,
+    "smartBCH": 1,
+    "Loopring": 1,
+    "Sophon": 1,
+    "Mezo": 1,
+    "Songbird": 1,
+    "Hydration": 1,
+    "Bifrost Network": 1,
+    "Strato": 1,
+    "Initia": 1,
+    "Fluent": 1,
+    "exSat": 1,
+    "TAC": 1,
+    "EthereumPoW": 1,
+    "VeChain": 1,
+    "Archway": 1,
+    "Icon": 1,
+    "Havah": 1,
+    "Agoric": 1,
+    "Filecoin": 1,
+    "Terra Classic": 1,
+    "Chia": 1,
+    "Voi Network": 1,
+    "Swellchain": 1,
+    "Eden": 1
+  },
+  "peg_type_breakdown": {
+    "peggedUSD": {
+      "count": 337,
+      "supply_display": "$310.82B"
+    },
+    "peggedVAR": {
+      "count": 10,
+      "supply_display": "$0.0M"
+    },
+    "peggedEUR": {
+      "count": 26,
+      "supply_display": "$0.0M"
+    },
+    "peggedJPY": {
+      "count": 5,
+      "supply_display": "$0.0M"
+    },
+    "peggedCNY": {
+      "count": 2,
+      "supply_display": "$0.0M"
+    },
+    "peggedUAH": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    },
+    "peggedARS": {
+      "count": 2,
+      "supply_display": "$0.0M"
+    },
+    "peggedGBP": {
+      "count": 5,
+      "supply_display": "$0.0M"
+    },
+    "peggedCAD": {
+      "count": 4,
+      "supply_display": "$0.0M"
+    },
+    "peggedCHF": {
+      "count": 4,
+      "supply_display": "$0.0M"
+    },
+    "peggedAUD": {
+      "count": 4,
+      "supply_display": "$0.0M"
+    },
+    "peggedREAL": {
+      "count": 4,
+      "supply_display": "$0.0M"
+    },
+    "peggedRUB": {
+      "count": 2,
+      "supply_display": "$0.0M"
+    },
+    "peggedMXN": {
+      "count": 2,
+      "supply_display": "$0.0M"
+    },
+    "peggedSGD": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    },
+    "peggedPHP": {
+      "count": 2,
+      "supply_display": "$0.0M"
+    },
+    "peggedTRY": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    },
+    "peggedCOP": {
+      "count": 2,
+      "supply_display": "$0.0M"
+    },
+    "peggedKES": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    },
+    "peggedZAR": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    },
+    "peggedNGN": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    },
+    "peggedXOF": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    },
+    "peggedGHS": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    },
+    "peggedCLP": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    },
+    "peggedPEN": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    },
+    "peggedMYR": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    },
+    "peggedKRW": {
+      "count": 2,
+      "supply_display": "$0.0M"
+    },
+    "peggedHKD": {
+      "count": 1,
+      "supply_display": "$0.0M"
+    }
+  },
+  "peg_mechanism_breakdown": {
+    "fiat-backed": {
+      "count": 145,
+      "supply_display": "$284.76B"
+    },
+    "crypto-backed": {
+      "count": 252,
+      "supply_display": "$25.79B"
+    },
+    "algorithmic": {
+      "count": 27,
+      "supply_display": "$266.1M"
+    },
+    "crytpo-backed": {
+      "count": 1,
+      "supply_display": "$2.6M"
+    }
+  },
+  "top_20": [
+    {
+      "rank": 1,
+      "symbol": "USDT",
+      "name": "Tether",
+      "supply_usd": 183444475509.3821,
+      "supply_display": "$183.44B",
+      "chain_count": 130,
+      "top_chain": "Tron",
+      "eth_supply": 73666984705.34842,
+      "deep_measured": true
+    },
+    {
+      "rank": 2,
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "supply_usd": 74174413872.03902,
+      "supply_display": "$74.17B",
+      "chain_count": 155,
+      "top_chain": "Ethereum",
+      "eth_supply": 47191609756.879074,
+      "deep_measured": true
+    },
+    {
+      "rank": 3,
+      "symbol": "USDS",
+      "name": "Sky Dollar",
+      "supply_usd": 6619682595.353698,
+      "supply_display": "$6.62B",
+      "chain_count": 7,
+      "top_chain": "Ethereum",
+      "eth_supply": 6510629779.046161,
+      "deep_measured": true
+    },
+    {
+      "rank": 4,
+      "symbol": "DAI",
+      "name": "Dai",
+      "supply_usd": 4773749448.654123,
+      "supply_display": "$4.77B",
+      "chain_count": 49,
+      "top_chain": "Ethereum",
+      "eth_supply": 4151526249.118318,
+      "deep_measured": true
+    },
+    {
+      "rank": 5,
+      "symbol": "USDe",
+      "name": "Ethena USDe",
+      "supply_usd": 4597407397.368451,
+      "supply_display": "$4.60B",
+      "chain_count": 31,
+      "top_chain": "Ethereum",
+      "eth_supply": 2624598858.508457,
+      "deep_measured": true
+    },
+    {
+      "rank": 6,
+      "symbol": "USD1",
+      "name": "World Liberty Financial USD",
+      "supply_usd": 4294667438.3713646,
+      "supply_display": "$4.29B",
+      "chain_count": 8,
+      "top_chain": "Ethereum",
+      "eth_supply": 1569186590.8728633,
+      "deep_measured": false
+    },
+    {
+      "rank": 7,
+      "symbol": "USDG",
+      "name": "Global Dollar",
+      "supply_usd": 3244292021.400786,
+      "supply_display": "$3.24B",
+      "chain_count": 6,
+      "top_chain": "X Layer",
+      "eth_supply": 314258200.25141823,
+      "deep_measured": false
+    },
+    {
+      "rank": 8,
+      "symbol": "PYUSD",
+      "name": "PayPal USD",
+      "supply_usd": 2761702979.0433593,
+      "supply_display": "$2.76B",
+      "chain_count": 19,
+      "top_chain": "Ethereum",
+      "eth_supply": 1661754051.3483243,
+      "deep_measured": true
+    },
+    {
+      "rank": 9,
+      "symbol": "BUIDL",
+      "name": "BlackRock USD",
+      "supply_usd": 2755502858.6404486,
+      "supply_display": "$2.76B",
+      "chain_count": 8,
+      "top_chain": "Solana",
+      "eth_supply": 861153393.110449,
+      "deep_measured": false
+    },
+    {
+      "rank": 10,
+      "symbol": "USYC",
+      "name": "Circle USYC",
+      "supply_usd": 2603040742.4195642,
+      "supply_display": "$2.60B",
+      "chain_count": 2,
+      "top_chain": "BSC",
+      "eth_supply": 42061014.22634852,
+      "deep_measured": false
+    },
+    {
+      "rank": 11,
+      "symbol": "RLUSD",
+      "name": "Ripple USD",
+      "supply_usd": 2405035952.1352067,
+      "supply_display": "$2.41B",
+      "chain_count": 2,
+      "top_chain": "Ethereum",
+      "eth_supply": 1373619301.1761305,
+      "deep_measured": true
+    },
+    {
+      "rank": 12,
+      "symbol": "USDY",
+      "name": "Ondo US Dollar Yield",
+      "supply_usd": 2219991853.8706756,
+      "supply_display": "$2.22B",
+      "chain_count": 16,
+      "top_chain": "Ethereum",
+      "eth_supply": 1183263742.6497881,
+      "deep_measured": false
+    },
+    {
+      "rank": 13,
+      "symbol": "USDD",
+      "name": "USDD",
+      "supply_usd": 1506631397.5591302,
+      "supply_display": "$1.51B",
+      "chain_count": 4,
+      "top_chain": "Tron",
+      "eth_supply": 260433112.9984621,
+      "deep_measured": true
+    },
+    {
+      "rank": 14,
+      "symbol": "USDGO",
+      "name": "USDGO",
+      "supply_usd": 1383012131.7476592,
+      "supply_display": "$1.38B",
+      "chain_count": 1,
+      "top_chain": "Solana",
+      "eth_supply": 0,
+      "deep_measured": false
+    },
+    {
+      "rank": 15,
+      "symbol": "U",
+      "name": "United Stables",
+      "supply_usd": 1283702974.5311356,
+      "supply_display": "$1.28B",
+      "chain_count": 4,
+      "top_chain": "BSC",
+      "eth_supply": 277028996.452269,
+      "deep_measured": false
+    },
+    {
+      "rank": 16,
+      "symbol": "USDf",
+      "name": "Falcon USD",
+      "supply_usd": 1175639750.6342862,
+      "supply_display": "$1.18B",
+      "chain_count": 2,
+      "top_chain": "Ethereum",
+      "eth_supply": 1061579845.0828447,
+      "deep_measured": false
+    },
+    {
+      "rank": 17,
+      "symbol": "GHO",
+      "name": "GHO",
+      "supply_usd": 697778862.6681911,
+      "supply_display": "$697.8M",
+      "chain_count": 2,
+      "top_chain": "Ethereum",
+      "eth_supply": 639566877.5364808,
+      "deep_measured": true
+    },
+    {
+      "rank": 18,
+      "symbol": "USD0",
+      "name": "Usual USD",
+      "supply_usd": 547801100.5502374,
+      "supply_display": "$547.8M",
+      "chain_count": 2,
+      "top_chain": "Ethereum",
+      "eth_supply": 547735644.8950003,
+      "deep_measured": false
+    },
+    {
+      "rank": 19,
+      "symbol": "USDTB",
+      "name": "Ethena USDtb",
+      "supply_usd": 527944280.04015076,
+      "supply_display": "$527.9M",
+      "chain_count": 2,
+      "top_chain": "Ethereum",
+      "eth_supply": 483282443.96385574,
+      "deep_measured": false
+    },
+    {
+      "rank": 20,
+      "symbol": "YLDS",
+      "name": "YLDS",
+      "supply_usd": 525136426.6979744,
+      "supply_display": "$525.1M",
+      "chain_count": 2,
+      "top_chain": "Provenance",
+      "eth_supply": 0,
+      "deep_measured": false
+    }
+  ],
+  "xrpl_instruments": {
+    "total": 16,
+    "total_supply_usd": 1209101903.48,
+    "total_supply_display": "$1.21B",
+    "total_holders": 86897,
+    "status": "MEASURED"
+  },
+  "swift_cohort": {
+    "total": 26,
+    "n_live": 3,
+    "n_committed": 9,
+    "n_discovered": 14,
+    "n_measured": 0,
+    "live_banks": [
+      "HSBC",
+      "Standard Chartered",
+      "UOB"
+    ],
+    "settlement_still_off_chain": true
+  },
+  "iso20022_families": {
+    "total_families": 7,
+    "total_message_types": 25,
+    "families": [
+      "pacs",
+      "pain",
+      "camt",
+      "sese",
+      "seev",
+      "reda",
+      "auth"
+    ],
+    "implemented": 0
+  },
+  "tokenized_funds": {
+    "total": 4,
+    "measured": 0,
+    "funds": [
+      {
+        "name": "Franklin Templeton BENJI",
+        "aum": "$700M+",
+        "chains": 7
+      },
+      {
+        "name": "BlackRock BUIDL",
+        "aum": "$2.76B",
+        "chains": 2
+      },
+      {
+        "name": "Circle USYC",
+        "aum": "$2.60B",
+        "chains": 2
+      },
+      {
+        "name": "Ondo USDY",
+        "aum": "$2.22B",
+        "chains": 16
+      }
+    ]
+  },
+  "deep_measurement_queue_top50": [
+    {
+      "symbol": "USD1",
+      "name": "World Liberty Financial USD",
+      "supply_usd": 4294667438.3713646,
+      "supply_display": "$4.29B",
+      "chain_count": 8,
+      "top_chain": "Ethereum",
+      "priority_score": 130,
+      "measurement_state": "INDEXED",
+      "rank": 1
+    },
+    {
+      "symbol": "USDY",
+      "name": "Ondo US Dollar Yield",
+      "supply_usd": 2219991853.8706756,
+      "supply_display": "$2.22B",
+      "chain_count": 16,
+      "top_chain": "Ethereum",
+      "priority_score": 110,
+      "measurement_state": "INDEXED",
+      "rank": 2
+    },
+    {
+      "symbol": "USDG",
+      "name": "Global Dollar",
+      "supply_usd": 3244292021.400786,
+      "supply_display": "$3.24B",
+      "chain_count": 6,
+      "top_chain": "X Layer",
+      "priority_score": 100,
+      "measurement_state": "INDEXED",
+      "rank": 3
+    },
+    {
+      "symbol": "BUIDL",
+      "name": "BlackRock USD",
+      "supply_usd": 2755502858.6404486,
+      "supply_display": "$2.76B",
+      "chain_count": 8,
+      "top_chain": "Solana",
+      "priority_score": 100,
+      "measurement_state": "INDEXED",
+      "rank": 4
+    },
+    {
+      "symbol": "USYC",
+      "name": "Circle USYC",
+      "supply_usd": 2603040742.4195642,
+      "supply_display": "$2.60B",
+      "chain_count": 2,
+      "top_chain": "BSC",
+      "priority_score": 100,
+      "measurement_state": "INDEXED",
+      "rank": 5
+    },
+    {
+      "symbol": "USDGO",
+      "name": "USDGO",
+      "supply_usd": 1383012131.7476592,
+      "supply_display": "$1.38B",
+      "chain_count": 1,
+      "top_chain": "Solana",
+      "priority_score": 100,
+      "measurement_state": "INDEXED",
+      "rank": 6
+    },
+    {
+      "symbol": "U",
+      "name": "United Stables",
+      "supply_usd": 1283702974.5311356,
+      "supply_display": "$1.28B",
+      "chain_count": 4,
+      "top_chain": "BSC",
+      "priority_score": 100,
+      "measurement_state": "INDEXED",
+      "rank": 7
+    },
+    {
+      "symbol": "USDf",
+      "name": "Falcon USD",
+      "supply_usd": 1175639750.6342862,
+      "supply_display": "$1.18B",
+      "chain_count": 2,
+      "top_chain": "Ethereum",
+      "priority_score": 100,
+      "measurement_state": "INDEXED",
+      "rank": 8
+    },
+    {
+      "symbol": "USDV",
+      "name": "Valtorum USD",
+      "supply_usd": 103462295.9372291,
+      "supply_display": "$103.5M",
+      "chain_count": 6,
+      "top_chain": "XRPL",
+      "priority_score": 80,
+      "measurement_state": "INDEXED",
+      "rank": 9
+    },
+    {
+      "symbol": "AUSD",
+      "name": "Agora Dollar",
+      "supply_usd": 274858396.3205746,
+      "supply_display": "$274.9M",
+      "chain_count": 14,
+      "top_chain": "Monad",
+      "priority_score": 60,
+      "measurement_state": "INDEXED",
+      "rank": 10
+    },
+    {
+      "symbol": "BUSD",
+      "name": "Binance Peg BUSD",
+      "supply_usd": 232647766.52072424,
+      "supply_display": "$232.6M",
+      "chain_count": 27,
+      "top_chain": "BSC",
+      "priority_score": 60,
+      "measurement_state": "INDEXED",
+      "rank": 11
+    },
+    {
+      "symbol": "satUSD",
+      "name": "River Stablecoin",
+      "supply_usd": 158327814.41651642,
+      "supply_display": "$158.3M",
+      "chain_count": 11,
+      "top_chain": "BSC",
+      "priority_score": 60,
+      "measurement_state": "INDEXED",
+      "rank": 12
+    },
+    {
+      "symbol": "USDA",
+      "name": "Avalon USDa",
+      "supply_usd": 145575991.88545725,
+      "supply_display": "$145.6M",
+      "chain_count": 19,
+      "top_chain": "Ethereum",
+      "priority_score": 60,
+      "measurement_state": "INDEXED",
+      "rank": 13
+    },
+    {
+      "symbol": "FRXUSD",
+      "name": "Frax USD",
+      "supply_usd": 106146318.16604552,
+      "supply_display": "$106.1M",
+      "chain_count": 32,
+      "top_chain": "Ethereum",
+      "priority_score": 60,
+      "measurement_state": "INDEXED",
+      "rank": 14
+    },
+    {
+      "symbol": "USD0",
+      "name": "Usual USD",
+      "supply_usd": 547801100.5502374,
+      "supply_display": "$547.8M",
+      "chain_count": 2,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 15
+    },
+    {
+      "symbol": "USDTB",
+      "name": "Ethena USDtb",
+      "supply_usd": 527944280.04015076,
+      "supply_display": "$527.9M",
+      "chain_count": 2,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 16
+    },
+    {
+      "symbol": "YLDS",
+      "name": "YLDS",
+      "supply_usd": 525136426.6979744,
+      "supply_display": "$525.1M",
+      "chain_count": 2,
+      "top_chain": "Provenance",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 17
+    },
+    {
+      "symbol": "rwaUSDi",
+      "name": "Multipli rwaUSDi",
+      "supply_usd": 487325203.3038813,
+      "supply_display": "$487.3M",
+      "chain_count": 7,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 18
+    },
+    {
+      "symbol": "pUSD",
+      "name": "Polymarket USD",
+      "supply_usd": 485434841.38913184,
+      "supply_display": "$485.4M",
+      "chain_count": 1,
+      "top_chain": "Polygon",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 19
+    },
+    {
+      "symbol": "TUSD",
+      "name": "TrueUSD",
+      "supply_usd": 484048751.15399754,
+      "supply_display": "$484.0M",
+      "chain_count": 10,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 20
+    },
+    {
+      "symbol": "GUSD",
+      "name": "Gate USD",
+      "supply_usd": 319437027.5942252,
+      "supply_display": "$319.4M",
+      "chain_count": 1,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 21
+    },
+    {
+      "symbol": "SOFID",
+      "name": "SoFiUSD",
+      "supply_usd": 318182047.3712972,
+      "supply_display": "$318.2M",
+      "chain_count": 5,
+      "top_chain": "Solana",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 22
+    },
+    {
+      "symbol": "apxUSD",
+      "name": "apxUSD",
+      "supply_usd": 312068290.81352264,
+      "supply_display": "$312.1M",
+      "chain_count": 3,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 23
+    },
+    {
+      "symbol": "USDai",
+      "name": "USD.AI",
+      "supply_usd": 289986542.0722115,
+      "supply_display": "$290.0M",
+      "chain_count": 3,
+      "top_chain": "Arbitrum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 24
+    },
+    {
+      "symbol": "reUSD",
+      "name": "Re Protocol reUSD",
+      "supply_usd": 244000137.27382144,
+      "supply_display": "$244.0M",
+      "chain_count": 10,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 25
+    },
+    {
+      "symbol": "USX",
+      "name": "Solstice USX",
+      "supply_usd": 235500409.90660286,
+      "supply_display": "$235.5M",
+      "chain_count": 1,
+      "top_chain": "Solana",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 26
+    },
+    {
+      "symbol": "HUSD",
+      "name": "HUSD",
+      "supply_usd": 192313547.97963187,
+      "supply_display": "$192.3M",
+      "chain_count": 3,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 27
+    },
+    {
+      "symbol": "USAT",
+      "name": "USAT",
+      "supply_usd": 184336463.05641922,
+      "supply_display": "$184.3M",
+      "chain_count": 1,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 28
+    },
+    {
+      "symbol": "M",
+      "name": "M by M0",
+      "supply_usd": 184288152.429817,
+      "supply_display": "$184.3M",
+      "chain_count": 8,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 29
+    },
+    {
+      "symbol": "FLEXUSD",
+      "name": "flexUSD",
+      "supply_usd": 166310256.25212324,
+      "supply_display": "$166.3M",
+      "chain_count": 2,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 30
+    },
+    {
+      "symbol": "MUST",
+      "name": "Mustang Finance",
+      "supply_usd": 154350436.92404965,
+      "supply_display": "$154.4M",
+      "chain_count": 1,
+      "top_chain": "Saga",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 31
+    },
+    {
+      "symbol": "avUSD",
+      "name": "Avant USD",
+      "supply_usd": 128284448.54637907,
+      "supply_display": "$128.3M",
+      "chain_count": 2,
+      "top_chain": "Avalanche",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 32
+    },
+    {
+      "symbol": "CASH",
+      "name": "CASH",
+      "supply_usd": 127953537.19777825,
+      "supply_display": "$128.0M",
+      "chain_count": 1,
+      "top_chain": "Solana",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 33
+    },
+    {
+      "symbol": "USDF",
+      "name": "Astherus",
+      "supply_usd": 116959615.29173271,
+      "supply_display": "$117.0M",
+      "chain_count": 1,
+      "top_chain": "BSC",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 34
+    },
+    {
+      "symbol": "MOVEUSD",
+      "name": "CFX MoveUSD",
+      "supply_usd": 114153607.90734452,
+      "supply_display": "$114.2M",
+      "chain_count": 1,
+      "top_chain": "Solana",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 35
+    },
+    {
+      "symbol": "USDP",
+      "name": "Pax Dollar",
+      "supply_usd": 29146344.55105144,
+      "supply_display": "$29.1M",
+      "chain_count": 4,
+      "top_chain": "Ethereum",
+      "priority_score": 50,
+      "measurement_state": "INDEXED",
+      "rank": 36
+    },
+    {
+      "symbol": "BUSD",
+      "name": "Binance USD",
+      "supply_usd": 34382851.85974371,
+      "supply_display": "$34.4M",
+      "chain_count": 33,
+      "top_chain": "Ethereum",
+      "priority_score": 30,
+      "measurement_state": "INDEXED",
+      "rank": 37
+    },
+    {
+      "symbol": "SBC",
+      "name": "Stable Coin",
+      "supply_usd": 20662519.619139306,
+      "supply_display": "$20.7M",
+      "chain_count": 11,
+      "top_chain": "Solana",
+      "priority_score": 30,
+      "measurement_state": "INDEXED",
+      "rank": 38
+    },
+    {
+      "symbol": "USDP",
+      "name": "USDP Stablecoin",
+      "supply_usd": 2637877.1199878324,
+      "supply_display": "$2.6M",
+      "chain_count": 4,
+      "top_chain": "Ethereum",
+      "priority_score": 30,
+      "measurement_state": "INDEXED",
+      "rank": 39
+    },
+    {
+      "symbol": "USDV",
+      "name": "Solomon USDv",
+      "supply_usd": 1512808.9859248016,
+      "supply_display": "$1.5M",
+      "chain_count": 1,
+      "top_chain": "Solana",
+      "priority_score": 30,
+      "measurement_state": "INDEXED",
+      "rank": 40
+    },
+    {
+      "symbol": "USDV",
+      "name": "Verified USD",
+      "supply_usd": 470400.686347,
+      "supply_display": "$0.5M",
+      "chain_count": 7,
+      "top_chain": "Ethereum",
+      "priority_score": 30,
+      "measurement_state": "INDEXED",
+      "rank": 41
+    },
+    {
+      "symbol": "USDV",
+      "name": "Delpho USDV",
+      "supply_usd": 412472.93327795184,
+      "supply_display": "$0.4M",
+      "chain_count": 1,
+      "top_chain": "Hyperliquid L1",
+      "priority_score": 30,
+      "measurement_state": "INDEXED",
+      "rank": 42
+    },
+    {
+      "symbol": "USPD",
+      "name": "US Permissionless Dollar",
+      "supply_usd": 98934783.08929051,
+      "supply_display": "$98.9M",
+      "chain_count": 6,
+      "top_chain": "Ethereum",
+      "priority_score": 20,
+      "measurement_state": "INDEXED",
+      "rank": 43
+    },
+    {
+      "symbol": "CUSD",
+      "name": "Cap cUSD",
+      "supply_usd": 85001271.82565613,
+      "supply_display": "$85.0M",
+      "chain_count": 3,
+      "top_chain": "Ethereum",
+      "priority_score": 20,
+      "measurement_state": "INDEXED",
+      "rank": 44
+    },
+    {
+      "symbol": "fxUSD",
+      "name": "fxUSD",
+      "supply_usd": 81479082.48439452,
+      "supply_display": "$81.5M",
+      "chain_count": 2,
+      "top_chain": "Ethereum",
+      "priority_score": 20,
+      "measurement_state": "INDEXED",
+      "rank": 45
+    },
+    {
+      "symbol": "USDA",
+      "name": "AP USDA",
+      "supply_usd": 80131205.22853917,
+      "supply_display": "$80.1M",
+      "chain_count": 1,
+      "top_chain": "BSC",
+      "priority_score": 20,
+      "measurement_state": "INDEXED",
+      "rank": 46
+    },
+    {
+      "symbol": "cgUSD",
+      "name": "Cygnus Finance Global USD",
+      "supply_usd": 75759570.66309065,
+      "supply_display": "$75.8M",
+      "chain_count": 1,
+      "top_chain": "Base",
+      "priority_score": 20,
+      "measurement_state": "INDEXED",
+      "rank": 47
+    },
+    {
+      "symbol": "LISUSD",
+      "name": "Lista USD",
+      "supply_usd": 75066879.34996735,
+      "supply_display": "$75.1M",
+      "chain_count": 1,
+      "top_chain": "BSC",
+      "priority_score": 20,
+      "measurement_state": "INDEXED",
+      "rank": 48
+    },
+    {
+      "symbol": "USDSUI",
+      "name": "Sui Dollar",
+      "supply_usd": 74135437.178681,
+      "supply_display": "$74.1M",
+      "chain_count": 1,
+      "top_chain": "Sui",
+      "priority_score": 20,
+      "measurement_state": "INDEXED",
+      "rank": 49
+    },
+    {
+      "symbol": "USDon",
+      "name": "Ondo U.S. Dollar Token",
+      "supply_usd": 70031198.27566755,
+      "supply_display": "$70.0M",
+      "chain_count": 2,
+      "top_chain": "BSC",
+      "priority_score": 20,
+      "measurement_state": "INDEXED",
+      "rank": 50
+    }
+  ],
+  "deep_measurement_queue_total": 120,
+  "attestation_gaps": [
+    {
+      "coin": "USDT",
+      "supply": "$183.4B",
+      "gap": "KPMG full audit announced Aug 2026, text UNPUBLISHED.",
+      "severity": "HIGH"
+    },
+    {
+      "coin": "USDC",
+      "supply": "$74.2B",
+      "gap": "Deloitte monthly + daily BlackRock CUSIP filings. 100.10% coverage.",
+      "severity": "LOW"
+    },
+    {
+      "coin": "USDe",
+      "supply": "$4.6B",
+      "gap": "Custodian attestations ~3 months stale.",
+      "severity": "MEDIUM"
+    },
+    {
+      "coin": "USD1",
+      "supply": "$4.3B",
+      "gap": "Crowe monthly after 6-month publication lapse.",
+      "severity": "MEDIUM"
+    },
+    {
+      "coin": "USDV",
+      "supply": "$100M",
+      "gap": "Zero published attestation EVER.",
+      "severity": "HIGH"
+    },
+    {
+      "coin": "RLUSD",
+      "supply": "$2.4B",
+      "gap": "DEEP MEASURED: XRPL $1.03B + ETH $1.37B.",
+      "severity": "LOW"
+    }
+  ],
+  "honest_sentence": "425 stablecoins indexed across 177 chains with active supply ($310.8B total). 17 deeply measured on Ethereum. 16 XRPL instruments measured ($1.21B). 26 SWIFT institutions censused. 7 ISO 20022 families identified. 4 tokenized funds catalogued. 120 in deep measurement queue. Deep measurement incomplete.",
+  "measurement_not_certification": true,
+  "sha256_digest": "4a1bdd812f2a25809c7501b262f0e27240a849106f1ff96cef80c05612362cd9"
+}
