@@ -1,0 +1,43 @@
+{
+  "schema": "csoai.anchor.base-eas-spec/0.1",
+  "kind": "eas.attestation",
+  "prepared_at": "2026-09-11T10:59:48.515136+00:00",
+  "root_hash": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+  "network": {
+    "chain_id": 8453,
+    "name": "Base",
+    "eip155": "eip155:8453",
+    "rpc": "https://mainnet.base.org",
+    "explorer": "https://basescan.org"
+  },
+  "eas": {
+    "contract": "0x4200000000000000000000000000000000000021",
+    "schema_uid": "TO_BE_REGISTERED",
+    "method": "attest",
+    "data": {
+      "recipient": "0x0000000000000000000000000000000000000000",
+      "expirationTime": 0,
+      "revocable": false,
+      "refUID": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "data": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5"
+    }
+  },
+  "cost": {
+    "gas_estimate": "~50,000 gas",
+    "gas_price": "~0.001 gwei on Base L2",
+    "estimated_usd": "~$0.01",
+    "funding_source": "OWNER_BASE_WALLET (not automated)"
+  },
+  "status": "PREPARED_NOT_SUBMITTED",
+  "requires_owner_action": true,
+  "owner_action_needed": [
+    "1. Fund a Base wallet with \u2265$0.05 USDC/ETH",
+    "2. Register schema (once): bytes32 root_hash",
+    "3. Call attest() with the root hash",
+    "4. Record attestation UID in interop/root-witness-latest.json"
+  ],
+  "x402_integration": {
+    "note": "The x402 rail already lives on Base (eip155:8453). The EAS attestation uses the same chain as the payment rail.",
+    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+  }
+}
