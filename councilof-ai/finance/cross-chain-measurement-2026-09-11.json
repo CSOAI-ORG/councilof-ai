@@ -99,7 +99,19 @@
       "note": "Ethereum only; DefiLlama $4.29B includes other chains",
       "source": "eth_call totalSupply() via ethereum-rpc.publicnode.com",
       "measured_at": "2026-09-11T13:20:00Z"
+    },
+    {
+      "symbol": "RLUSD",
+      "chain": "base",
+      "contract": "0x462f0085cb261AB49ad048A2B35Ee77135684308",
+      "supply_normalized": 1000000000,
+      "supply_display": "$1.00B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via base-rpc.publicnode.com",
+      "measured_at": "2026-09-11T13:30:00Z",
+      "note": "RLUSD Base deployment verified. Ethereum $1.37B + Base $1.00B = $2.37B (DefiLlama: $2.40B)",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-RLUSD-base"
     }
   ],
-  "total_measured": 7
+  "total_measured": 8
 }
