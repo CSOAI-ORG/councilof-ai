@@ -1,6 +1,6 @@
 # Offer — mcp-trust-board
 
-> One page. Implements docs/product/MCP-TRUST-BOARD-SPEC.md (v0.1).
+> One page. Derived from live probes produced by `scripts/mcp-trust-round.py`; implements docs/product/MCP-TRUST-BOARD-SPEC.md (v0.1).
 > Prices are quoted at the 402 door — never here. Measurement, never certification.
 
 | fact | value |
