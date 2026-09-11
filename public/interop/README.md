@@ -2,8 +2,10 @@
 
 Machine-readable coverage leaves under `public/interop/`. **Verify free.** RAS
 (risk assessment) lives at [`/assess`](https://councilof.ai/assess) — not here.
-**Never certify.** Council of AI is **not** a Transparency Service
-(`/.well-known/scitt-keys` stays absent on purpose).
+**Never certify.** Council of AI is **not** a Transparency Service.
+`/.well-known/scitt-keys` now exists (2026-09-11, owner-ruling TUI-1) as **key
+discovery only** — public attestation keys with `we_operate_a_ts: false`; it is
+not a TS declaration and no registration endpoint exists or will.
 
 Doctrine: denser root = more honest unsigned leaves on the **same** living
 root-as-index. Not a second board, second scorer, or TS.
@@ -33,7 +35,7 @@ root-as-index. Not a second board, second scorer, or TS.
 - `sig_ed25519` on unsigned examples is always `null`.
 - Do **not** invent MEASURED / SIGNED without n≥30 + 4way + keystone.
 - Do **not** touch `/api/gspc`, wrangler, or mint SCITT receipts in-tree.
-- Do **not** publish `/.well-known/scitt-keys`.
+- `/.well-known/scitt-keys` is **key discovery only** (public keys, `we_operate_a_ts: false`). Do **not** extend it into a TS endpoint, registration, or inclusion-receipt claim.
 - Do **not** endorse peers we cite (Emilia, Cedulon, Microsoft, ASG, …).
 - Verify free; product RAS is `/assess`; we measure, we never certify.
 
