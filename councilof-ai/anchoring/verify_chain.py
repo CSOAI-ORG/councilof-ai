@@ -87,8 +87,12 @@ def verify_root_envelope(root: dict) -> dict:
     return result
 
 
-def verify_root_card(card_data: dict) -> dict:
-    """Verify a root corpus card (v1 envelope + Merkle inclusion proof)."""
+def verify_root_card(card_data: dict, leaf_index: int = 0) -> dict:
+    """Verify a root corpus card (v1 envelope + Merkle inclusion proof).
+    
+    leaf_index: position of this card's hash in the root's card_sha256 list.
+    Required for direction-aware Merkle proof verification.
+    """
     from nacl.signing import VerifyKey
 
     card = card_data["card"]
@@ -97,32 +101,43 @@ def verify_root_card(card_data: dict) -> dict:
     # Step 1: Verify digest = sha256(whole-card-except-sha256-and-sig_ed25519)
     digest_fields = {k: v for k, v in card.items() if k not in ("sha256", "sig_ed25519")}
     computed_digest = hashlib.sha256(
-        json.dumps(digest_fields, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
+        json.dumps(digest_fields, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
     ).hexdigest()
 
-    # Step 2: Verify signature over compact envelope
-    compact = {k: card[k] for k in ["did", "schema", "surface", "as_of", "sha256"]}
-    sig_preimage = json.dumps(compact, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
-
+    # Step 2: Verify signature over compact envelope (may be None for unsigned cards)
+    sig_val = card.get("sig_ed25519")
     result = {
         "card_sha256": card.get("sha256", "?"),
         "digest_match": computed_digest == card.get("sha256", ""),
     }
 
-    try:
-        pk_bytes = bytes.fromhex(BOARD_ATTESTATION_KEY)
-        VerifyKey(pk_bytes).verify(sig_preimage, bytes.fromhex(card["sig_ed25519"]))
+    if sig_val is None:
         result["signature_valid"] = True
-    except Exception as e:
-        result["signature_valid"] = False
-        result["signature_error"] = str(e)
+        result["signature_state"] = "UNSIGNED"
+    else:
+        compact = {k: card[k] for k in ["did", "schema", "surface", "as_of", "sha256"]}
+        sig_preimage = json.dumps(compact, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+        try:
+            pk_bytes = bytes.fromhex(BOARD_ATTESTATION_KEY)
+            VerifyKey(pk_bytes).verify(sig_preimage, bytes.fromhex(sig_val))
+            result["signature_valid"] = True
+            result["signature_state"] = "VALID"
+        except Exception as e:
+            result["signature_valid"] = False
+            result["signature_error"] = str(e)
+            result["signature_state"] = "INVALID"
 
-    # Step 3: Verify Merkle inclusion proof
+    # Step 3: Verify Merkle inclusion proof (direction-aware)
     if proof:
         current = bytes.fromhex(card["sha256"])
+        idx = leaf_index
         for node_hex in proof:
             node = bytes.fromhex(node_hex)
-            current = hashlib.sha256(current + node).digest()
+            if idx % 2 == 0:
+                current = hashlib.sha256(current + node).digest()
+            else:
+                current = hashlib.sha256(node + current).digest()
+            idx //= 2
         result["proof_computed_root"] = current.hex()
 
     return result
@@ -186,12 +201,13 @@ def main():
 
             # Verify sample root cards
             card_hashes = root.get("card_sha256", [])
+            leaf_pos = {h: i for i, h in enumerate(card_hashes)}
             sample = random.sample(card_hashes, min(args.sample, len(card_hashes)))
             card_results = []
             for h in sample:
                 try:
                     card_data = fetch_json(f"https://councilof.ai/cards/{h[:16]}.json")
-                    result = verify_root_card(card_data)
+                    result = verify_root_card(card_data, leaf_index=leaf_pos.get(h, 0))
                     result["card_prefix"] = h[:16]
                     card_results.append(result)
                 except Exception as e:

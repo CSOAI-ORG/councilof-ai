@@ -76,7 +76,7 @@ Result: VALID
 | Rekor API | LIVE | Tree size 2,670,683,164 |
 | OTS Alice calendar | 200 OK | alice.btc.calendar.opentimestamps.org |
 | OTS Bob calendar | 200 OK | bob.btc.calendar.opentimestamps.org |
-| DID document | LIVE | 2 verification methods |
+| DID document | LIVE | 5 verification methods |
 | Root.json | LIVE | 14,518 bytes, 167 cards |
 | Signed card index | LIVE | 335 cards (separate corpus) |
 | Card store | LIVE | 336 signed cards via /api/cards |
@@ -162,7 +162,7 @@ Result: VALID
 
 - **Private keys:** NEVER in source, artifacts, logs, or browser storage
 - **Signing:** Off-device ceremony (GitHub OIDC / cold storage)
-- **DID document:** https://csoai.org/.well-known/did.json (2 verification methods)
+- **DID document:** https://csoai.org/.well-known/did.json (5 verification methods)
 - **Board key (public):** 9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170
 - **Card key (public):** d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38
 
@@ -187,6 +187,8 @@ The Merkle tree's odd-leaf self-duplication makes it collidable: appending dupli
 | "335 signed cards anchored" | 335 signed cards are a SEPARATE corpus, NOT anchored by the root |
 | "5 chains anchored" | 2 of 5 (Rekor + OTS pending BTC). 3 prepared. |
 | "Anchoring complete" | Infrastructure ready, 3 transactions need owner approval |
+| "DID has 2 verification methods" | 5 methods: site-release-1, estate-chain-1, board-attestation-1, card-attestation-1, gspc-board-22axis-2026 |
+| "Inclusion proofs: always hash(current+node)" | Direction-aware: hash(current+node) when sibling is right, hash(node+current) when left |
 
 ---
 
@@ -195,6 +197,7 @@ The Merkle tree's odd-leaf self-duplication makes it collidable: appending dupli
 | File | Purpose |
 |------|---------|
 | `anchoring/verify_chain.py` | Independent card + root + infrastructure verification |
+| `anchoring/test_chain.py` | End-to-end test suite (9 tests, exit 0/1) |
 | `anchoring/root_pipeline.py` | Deterministic Merkle root recomputation |
 | `anchoring/rekor_push.py` | Rekor state documentation + future push guide |
 | `anchoring/xrpl_memo.py` | XRPL memo transaction preparation |
@@ -243,7 +246,7 @@ The Merkle tree's odd-leaf self-duplication makes it collidable: appending dupli
 5. ✅ Merkle inclusion proof verified (8-level path, card→root)
 6. ✅ Rekor entry confirmed (logIndex 2791822965, sidecar verified)
 7. ✅ OTS calendars confirmed (alice+bob both 200 OK)
-8. ✅ DID document confirmed (2 verification methods, both keys present)
+8. ✅ DID document confirmed (5 verification methods, board + card keys present)
 9. ✅ Card count match (167 leaves == 167 declared)
 10. ✅ Corpus separation confirmed (0 overlap between 167 root + 335 index)
 

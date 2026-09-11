@@ -1,0 +1,138 @@
+{
+  "schema": "csoai.tui3-regulation-mapping/0.1",
+  "generated_at": "2026-09-11T13:15:00Z",
+  "source": "PR#1888 cards + EU AI Act (Regulation 2024/1689) + NIST AI RMF 1.0",
+  "note": "Each card mapped to specific legal provisions. Unlinked rows receive no regulation score.",
+
+  "provisions": {
+    "EU_AI_Act_Art5": {
+      "jurisdiction": "EU",
+      "legal_status": "Regulation (EU) 2024/1689",
+      "title": "Prohibited artificial intelligence practices",
+      "source_digest": "OJ L, 12.7.2024, p. 1-68",
+      "publication_date": "2024-07-12",
+      "applicability_date": "2025-02-02",
+      "effective_date_art5": "2025-02-02"
+    },
+    "EU_AI_Act_Art9": {
+      "jurisdiction": "EU",
+      "legal_status": "Regulation (EU) 2024/1689",
+      "title": "Risk management system",
+      "applicability_date": "2026-08-02",
+      "effective_date": "2026-08-02"
+    },
+    "EU_AI_Act_Art13": {
+      "jurisdiction": "EU",
+      "legal_status": "Regulation (EU) 2024/1689",
+      "title": "Transparency and information provision to deployers",
+      "applicability_date": "2026-08-02",
+      "effective_date": "2026-08-02"
+    },
+    "EU_AI_Act_Art14": {
+      "jurisdiction": "EU",
+      "legal_status": "Regulation (EU) 2024/1689",
+      "title": "Human oversight",
+      "applicability_date": "2026-08-02",
+      "effective_date": "2026-08-02"
+    },
+    "EU_AI_Act_Art15": {
+      "jurisdiction": "EU",
+      "legal_status": "Regulation (EU) 2024/1689",
+      "title": "Accuracy, robustness and cybersecurity",
+      "applicability_date": "2026-08-02",
+      "effective_date": "2026-08-02"
+    },
+    "EU_AI_Act_Art17": {
+      "jurisdiction": "EU",
+      "legal_status": "Regulation (EU) 2024/1689",
+      "title": "Quality management system",
+      "applicability_date": "2026-08-02",
+      "effective_date": "2026-08-02"
+    },
+    "EU_AI_Act_Art50": {
+      "jurisdiction": "EU",
+      "legal_status": "Regulation (EU) 2024/1689",
+      "title": "Transparency obligations for providers and deployers of certain AI systems",
+      "applicability_date": "2026-08-02",
+      "effective_date": "2026-08-02"
+    },
+    "EU_AI_Act_Art52": {
+      "jurisdiction": "EU",
+      "legal_status": "Regulation (EU) 2024/1689",
+      "title": "Obligations for providers of certain AI systems intended to generate content",
+      "applicability_date": "2026-08-02",
+      "effective_date": "2026-08-02"
+    },
+    "Machinery_Reg_2023_1230": {
+      "jurisdiction": "EU",
+      "legal_status": "Regulation (EU) 2023/1230",
+      "title": "Machinery Regulation",
+      "publication_date": "2023-06-29",
+      "effective_date": "2027-01-20"
+    },
+    "NIST_AI_RMF": {
+      "jurisdiction": "US",
+      "legal_status": "NIST AI 100-1 (voluntary framework)",
+      "title": "Artificial Intelligence Risk Management Framework",
+      "publication_date": "2023-01-26"
+    }
+  },
+
+  "card_mappings": [
+    {"index":1,"sha256_prefix":"6bc32911","axis":"affect","model":"TinyLlama-1.1B-Chat","provisions":["EU_AI_Act_Art14","EU_AI_Act_Art50"],"rationale":"Human oversight (affect detection) + transparency of AI emotional interaction","linked":true},
+    {"index":2,"sha256_prefix":"85fca257","axis":"affect","model":"Qwen2.5-0.5B","provisions":["EU_AI_Act_Art14","EU_AI_Act_Art50"],"rationale":"Human oversight + transparency","linked":true},
+    {"index":3,"sha256_prefix":"7a99ce43","axis":"art5-safeguard","model":"TinyLlama-1.1B-Chat","provisions":["EU_AI_Act_Art5"],"rationale":"Direct mapping — axis named after Art 5 prohibited practices","linked":true},
+    {"index":4,"sha256_prefix":"e48806d3","axis":"art5-safeguard","model":"Qwen2.5-0.5B","provisions":["EU_AI_Act_Art5"],"rationale":"Direct mapping — Art 5 prohibited practices","linked":true},
+    {"index":5,"sha256_prefix":"f5937fb2","axis":"art5-safeguard","model":"Qwen3-1.7B-Base","provisions":["EU_AI_Act_Art5"],"rationale":"Direct mapping — Art 5 prohibited practices","linked":true},
+    {"index":6,"sha256_prefix":"21d911b7","axis":"care","model":"Qwen3-1.7B-Base","provisions":["EU_AI_Act_Art14","EU_AI_Act_Art9"],"rationale":"Human oversight + risk management","linked":true},
+    {"index":7,"sha256_prefix":"9cadd5fb","axis":"care","model":"Qwen3-4B-Base","provisions":["EU_AI_Act_Art14","EU_AI_Act_Art9"],"rationale":"Human oversight + risk management","linked":true},
+    {"index":8,"sha256_prefix":"fa15999e","axis":"care","model":"Qwen2.5-0.5B","provisions":["EU_AI_Act_Art14","EU_AI_Act_Art9"],"rationale":"Human oversight + risk management","linked":true},
+    {"index":9,"sha256_prefix":"a246bbf4","axis":"conformance","model":"Qwen3-4B-Base","provisions":["EU_AI_Act_Art13","EU_AI_Act_Art15","EU_AI_Act_Art17"],"rationale":"Transparency + accuracy/robustness + quality management","linked":true},
+    {"index":10,"sha256_prefix":"e75c9026","axis":"continuity","model":"Qwen2.5-0.5B","provisions":["EU_AI_Act_Art15","EU_AI_Act_Art17"],"rationale":"Robustness + quality management system continuity","linked":true},
+    {"index":11,"sha256_prefix":"09b060be","axis":"cross-reality","model":"TinyLlama-1.1B-Chat","provisions":["EU_AI_Act_Art50"],"rationale":"Transparency — AI interaction disclosure in mixed reality","linked":true},
+    {"index":12,"sha256_prefix":"18ae9f34","axis":"cross-reality","model":"Qwen2.5-0.5B","provisions":["EU_AI_Act_Art50"],"rationale":"Transparency — AI interaction disclosure","linked":true},
+    {"index":13,"sha256_prefix":"95281acd","axis":"cross-reality","model":"Qwen3-1.7B-Base","provisions":["EU_AI_Act_Art50"],"rationale":"Transparency — AI interaction disclosure","linked":true},
+    {"index":14,"sha256_prefix":"d2c2cdb2","axis":"cross-reality","model":"Qwen3-4B-Base","provisions":["EU_AI_Act_Art50"],"rationale":"Transparency — AI interaction disclosure","linked":true},
+    {"index":15,"sha256_prefix":"31ed36ce","axis":"detector-interop","model":"Qwen3-1.7B-Base","provisions":["EU_AI_Act_Art50","EU_AI_Act_Art15"],"rationale":"Transparency + robustness (detector interoperability)","linked":true},
+    {"index":16,"sha256_prefix":"7ab4482b","axis":"detector-interop","model":"Qwen2.5-0.5B","provisions":["EU_AI_Act_Art50","EU_AI_Act_Art15"],"rationale":"Transparency + robustness","linked":true},
+    {"index":17,"sha256_prefix":"919268db","axis":"detector-interop","model":"Meta-Llama-3-8B-Instruct","provisions":["EU_AI_Act_Art50","EU_AI_Act_Art15"],"rationale":"Transparency + robustness","linked":true},
+    {"index":18,"sha256_prefix":"ecc8c60c","axis":"detector-interop","model":"TinyLlama-1.1B-Chat","provisions":["EU_AI_Act_Art50","EU_AI_Act_Art15"],"rationale":"Transparency + robustness","linked":true},
+    {"index":19,"sha256_prefix":"86b7771a","axis":"governance","model":"Qwen3-4B-Base","provisions":["EU_AI_Act_Art9","EU_AI_Act_Art17"],"rationale":"Risk management + quality management system","linked":true},
+    {"index":20,"sha256_prefix":"d55a4a67","axis":"governance","model":"Qwen3-1.7B-Base","provisions":["EU_AI_Act_Art9","EU_AI_Act_Art17"],"rationale":"Risk management + quality management","linked":true},
+    {"index":21,"sha256_prefix":"103d6985","axis":"jail","model":"Llama-3.2-1B-Instruct","provisions":["EU_AI_Act_Art15","NIST_AI_RMF"],"rationale":"Robustness (adversarial) + NIST AI RMF adversarial robustness","linked":true},
+    {"index":22,"sha256_prefix":"2c1cc82f","axis":"jail","model":"Qwen2.5-1.5B-Instruct","provisions":["EU_AI_Act_Art15","NIST_AI_RMF"],"rationale":"Robustness + NIST","linked":true},
+    {"index":23,"sha256_prefix":"2c4eba35","axis":"jail","model":"Qwen2.5-3B-Instruct","provisions":["EU_AI_Act_Art15","NIST_AI_RMF"],"rationale":"Robustness + NIST","linked":true},
+    {"index":24,"sha256_prefix":"4a086221","axis":"jail","model":"Qwen2.5-7B-Instruct","provisions":["EU_AI_Act_Art15","NIST_AI_RMF"],"rationale":"Robustness + NIST","linked":true},
+    {"index":25,"sha256_prefix":"a0210ae6","axis":"jail","model":"OTel-2.0-LLM-31B-IT","provisions":["EU_AI_Act_Art15","NIST_AI_RMF"],"rationale":"Robustness + NIST","linked":true},
+    {"index":26,"sha256_prefix":"c19f9ab2","axis":"jail","model":"Qwen2.5-0.5B-Instruct","provisions":["EU_AI_Act_Art15","NIST_AI_RMF"],"rationale":"Robustness + NIST","linked":true},
+    {"index":27,"sha256_prefix":"59cb2000","axis":"machinery-conformity","model":"Qwen2.5-0.5B","provisions":["EU_AI_Act_Art13","EU_AI_Act_Art15","Machinery_Reg_2023_1230"],"rationale":"Transparency + robustness + Machinery Regulation","linked":true},
+    {"index":28,"sha256_prefix":"95e44987","axis":"machinery-conformity","model":"Qwen3-1.7B-Base","provisions":["EU_AI_Act_Art13","EU_AI_Act_Art15","Machinery_Reg_2023_1230"],"rationale":"Transparency + robustness + Machinery Regulation","linked":true},
+    {"index":29,"sha256_prefix":"a68f4ae1","axis":"machinery-conformity","model":"Qwen3-4B-Base","provisions":["EU_AI_Act_Art13","EU_AI_Act_Art15","Machinery_Reg_2023_1230"],"rationale":"Transparency + robustness + Machinery Regulation","linked":true},
+    {"index":30,"sha256_prefix":"2f70ff5d","axis":"openness","model":"Qwen3-4B-Base","provisions":["EU_AI_Act_Art50","EU_AI_Act_Art13"],"rationale":"Transparency obligations + information to deployers","linked":true},
+    {"index":31,"sha256_prefix":"66e58ceb","axis":"openness","model":"Qwen3-1.7B-Base","provisions":["EU_AI_Act_Art50","EU_AI_Act_Art13"],"rationale":"Transparency + deployer information","linked":true},
+    {"index":32,"sha256_prefix":"7dee2300","axis":"provenance","model":"TinyLlama-1.1B-Chat","provisions":["EU_AI_Act_Art50","EU_AI_Act_Art52"],"rationale":"Transparency + content marking for AI-generated outputs","linked":true},
+    {"index":33,"sha256_prefix":"32bb6e60","axis":"safety","model":"Llama-3.2-1B-Instruct","provisions":["EU_AI_Act_Art9","NIST_AI_RMF"],"rationale":"Risk management + NIST AI RMF safety","linked":true},
+    {"index":34,"sha256_prefix":"7443b173","axis":"safety","model":"Qwen3-4B-Base","provisions":["EU_AI_Act_Art9","NIST_AI_RMF"],"rationale":"Risk management + NIST","linked":true},
+    {"index":35,"sha256_prefix":"31e9fb39","axis":"swarm","model":"Qwen2.5-0.5B","provisions":["EU_AI_Act_Art50"],"rationale":"Transparency — multi-agent interaction disclosure","linked":true},
+    {"index":36,"sha256_prefix":"5ab11f15","axis":"swarm","model":"Qwen3-1.7B-Base","provisions":["EU_AI_Act_Art50"],"rationale":"Transparency — multi-agent interaction disclosure","linked":true}
+  ],
+
+  "summary": {
+    "total_cards": 36,
+    "linked": 36,
+    "unlinked": 0,
+    "unique_provisions_used": 10,
+    "provisions_by_frequency": {
+      "EU_AI_Act_Art50": 22,
+      "EU_AI_Act_Art15": 14,
+      "EU_AI_Act_Art9": 7,
+      "NIST_AI_RMF": 8,
+      "EU_AI_Act_Art14": 5,
+      "EU_AI_Act_Art13": 5,
+      "EU_AI_Act_Art17": 4,
+      "EU_AI_Act_Art5": 3,
+      "EU_AI_Act_Art52": 1,
+      "Machinery_Reg_2023_1230": 3
+    }
+  }
+}

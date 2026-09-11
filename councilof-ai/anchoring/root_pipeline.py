@@ -77,7 +77,7 @@ def main():
         "schema": "csoai.anchor.root-pipeline/0.1",
         "kind": "deterministic-root-build",
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "pipeline": "fetch-index → extract-ids → sort → merkle → output",
+        "pipeline": "fetch-index → extract-ids → merkle → output",
         "deterministic": True,
         "note": "Same index input always produces the same root. No randomness, no timestamps in the tree.",
     }
@@ -127,7 +127,7 @@ def main():
         "leaf_count": len(leaves),
         "root_hash": root_hash.hex(),
         "depth": len(layers),
-        "algorithm": "SHA-256, sorted pairs, odd-leaf duplication",
+        "algorithm": "SHA-256, positional pairs (left||right), odd-leaf self-duplication",
     }
 
     # Step 4: Compare with live root
