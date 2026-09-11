@@ -1,6 +1,6 @@
 {
   "schema": "csoai.platforms-registered/0.1",
-  "as_of": "20260906T081500Z",
+  "as_of": "20260911T143400Z",
   "principle": "CSOAI is listed where a listing can be PROVEN by a URL that shows the entry. A platform's homepage is not proof of a listing.",
   "registrations": [
     {
@@ -144,7 +144,7 @@
       "status": "live",
       "proof_url": "https://smithery.ai/server/csoai/gspc-mcp",
       "proof": "csoai/gspc-mcp listed; HTTP 200 2026-09-06. Its tools[] is exactly the seven free tools POST https://councilof.ai/mcp serves: board_totals, get_axis, get_card, get_root, list_cards, verify_card, verify_inclusion. Derived by comparing the Smithery detail endpoint with a live tools/list, not read off the page.",
-      "known_defect": "A SECOND listing, csoai/gspc, is a stale duplicate and this row used to point at it. It names eight tools of which four do not exist on the server (measure, verify, jail-probe, enter-arena \u2014 tools/call answers -32601 for measure and jail-probe) and omits three that do (get_root, get_card, verify_inclusion). Its connection, https://gspc--csoai.run.tools, answers 401. Nothing in this repository produces either listing: there is no smithery.yaml here and no CSOAI-ORG/gspc repository, so both are dashboard-side records that only the account holder can change. The fix is to RETIRE csoai/gspc, not to edit a manifest \u2014 csoai/gspc-mcp is already correct. Owner ask; see OWNER-ASKS. Until then this row points at the correct listing and says the duplicate exists rather than quietly linking past it."
+      "known_defect": "A SECOND listing, csoai/gspc, is a stale duplicate and this row used to point at it. It names eight tools of which four do not exist on the server (measure, verify, jail-probe, enter-arena — tools/call answers -32601 for measure and jail-probe) and omits three that do (get_root, get_card, verify_inclusion). Its connection, https://gspc--csoai.run.tools, answers 401. Nothing in this repository produces either listing: there is no smithery.yaml here and no CSOAI-ORG/gspc repository, so both are dashboard-side records that only the account holder can change. The fix is to RETIRE csoai/gspc, not to edit a manifest — csoai/gspc-mcp is already correct. Owner ask; see OWNER-ASKS. Until then this row points at the correct listing and says the duplicate exists rather than quietly linking past it."
     },
     {
       "platform": "Glama MCP",
@@ -158,8 +158,9 @@
       "platform": "MCP.so",
       "url": "https://mcp.so",
       "manifest": null,
-      "status": "planned",
-      "status_note": "no listing proof held on 2026-09-05; the url is the platform, not evidence of a CSOAI entry"
+      "status": "live",
+      "proof_url": "https://mcp.so/servers/csoai-gspc-measurement",
+      "proof": "Public page returned 200 on 2026-09-11 and shows CSOAI GSPC measurement as Verified and Featured under @CSOAI-ORG. Authenticated submissions status is Published Paid. The page says No tools detected until its sandbox fetch runs, so this proves listing, not tool health or adoption."
     },
     {
       "platform": "MCP Market (Cursor)",
@@ -184,6 +185,6 @@
     }
   ],
   "doctrine": "Inside every AI. Every chat. Every marketplace.",
-  "manifest_rule": "manifest is the CSOAI-side file a platform reads. It is null when no such file exists \u2014 it is never a URL we intend to create. On 2026-09-06 thirteen of these twenty-five named a councilof.ai path that 404s, two of them on live rows, so the field advertised thirteen doors that were not there. Nothing read the field, which is why it rotted unnoticed; scripts/outward-claims-guard.mjs now fails if a non-null manifest does not resolve. For the three MCP directory rows the served machine surface is POST https://councilof.ai/mcp, not a per-directory file.",
+  "manifest_rule": "manifest is the CSOAI-side file a platform reads. It is null when no such file exists — it is never a URL we intend to create. On 2026-09-06 thirteen of these twenty-five named a councilof.ai path that 404s, two of them on live rows, so the field advertised thirteen doors that were not there. Nothing read the field, which is why it rotted unnoticed; scripts/outward-claims-guard.mjs now fails if a non-null manifest does not resolve. For the three MCP directory rows the served machine surface is POST https://councilof.ai/mcp, not a per-directory file.",
   "status_rule": "live = proof_url shows a CSOAI entry, verified at as_of. planned = no such proof is held. 'submitted' was retired 2026-09-05: it recorded an intention and read as a result, and 22 of 25 entries carried it with only the platform's homepage as their url."
 }
