@@ -112,6 +112,14 @@ if (SELFTEST) {
 // price we are charging. Adding a page requires writing why.
 const ALLOW = [
   {
+    pages: /^interop\/stablecoin-universe-2026-09\/(?:source|index)\.json$/,
+    why:
+      "Observed stablecoin market prices from the frozen DefiLlama source. These values describe " +
+      "the measured assets and are required to reproduce depeg observations; they are not prices " +
+      "for any CSOAI service. The exemption is exact to this versioned dataset and cannot exempt " +
+      "an x402 manifest, product page, SKU, or future directory.",
+  },
+  {
     pages: /^(prosperity|prosperity-fund)\//,
     why: "Fund sizes (the fund's own capital), not a price anyone pays us.",
   },

@@ -45,7 +45,13 @@ import {
 import { maybeMintCdpJwt, type CdpEnv } from "./_cdp_jwt";
 import { facilitatorDialect, toDialectPayload } from "./_x402_negotiate";
 import { attachOffers } from "./_x402_offer";
-import { buildReceiptRecord, receiptExtension, receiptPayload, signReceipt, storeReceipt } from "./_x402_receipt";
+import {
+  buildReceiptRecord,
+  receiptExtension,
+  receiptPayload,
+  signReceipt,
+  storeReceipt,
+} from "./_x402_receipt";
 
 // Re-exported so existing importers (and tests) keep their entry point after the converters moved
 // to _x402_config.ts to break an import cycle with _x402_negotiate.ts.
@@ -133,7 +139,11 @@ export type X402Result = {
     network: string | null;
     payer: string | null;
     // What the facilitator said about Bazaar indexing, or that it said nothing. Never inferred.
-    bazaar?: { status: "REPORTED" | "UNREPORTED" | "UNREADABLE"; detail: unknown; note: string };
+    bazaar?: {
+      status: "REPORTED" | "UNREPORTED" | "UNREADABLE";
+      detail: unknown;
+      note: string;
+    };
   };
   /**
    * The x402 offer-receipt extension's signed receipt (§5), present only when the facilitator
@@ -160,7 +170,36 @@ export type X402Accept = {
   maxTimeoutSeconds: number;
   // EIP-712 domain of the token (name/version) — what the client signs under. decimals/symbol are informational.
   extra: { name: string; version: string; decimals?: number; symbol?: string };
+  /** CSOAI commercial attribution. Omitted from facilitator requirements and carried only in the 402. */
+  csoaiPricing?: {
+    product_id: string;
+    sku_id: string;
+    tier: string;
+    pricing_basis: "STANDARD" | "PROMO_EXISTING_DATA";
+    campaign_id: string | null;
+    normal_amount_atomic: string;
+    offered_amount_atomic: string;
+    starts_at?: string;
+    ends_at?: string;
+    fresh_compute_excluded: true;
+  };
 };
+
+export const X402_LAUNCH_CAMPAIGN = {
+  id: "csoai-launch-30d-20260911",
+  starts_at: "2026-09-11T00:00:00Z",
+  ends_at: "2026-10-11T00:00:00Z",
+  amount_atomic: "10000", // 0.01 USDC
+} as const;
+
+const PROMO_EXISTING_DATA = new Set([
+  "issuance:reserve",
+  "request_attestation:per_request",
+  "receipts_batch:per_batch",
+  "art50_marking_evidence:pack",
+  "provider_diff_feed:history_batch",
+  "evidence_bundle:bundle",
+]);
 
 /**
  * x402Accepts — build the standard `accepts` challenge array for a metered resource, so any
@@ -178,15 +217,29 @@ export type X402Accept = {
 export function x402Accepts(
   env: X402Env,
   resourceUrl: string,
-  opts: { skuId: string; tier: string; description?: string },
+  opts: {
+    skuId: string;
+    tier: string;
+    description?: string;
+    productId?: string;
+  },
 ): X402Accept[] {
   const sku = SKUS[opts.skuId];
   // Prefer an explicit atomic override (X402_AMOUNT) if the owner set one; else derive the
   // atomic amount from the SKU's (env-overridable) USD price. Never free: a missing price throws.
-  const atomic =
+  const normalAtomic =
     env.X402_AMOUNT && env.X402_AMOUNT !== ""
       ? env.X402_AMOUNT
       : usdToAtomic(resolvePriceUsd(opts.skuId, opts.tier, env));
+  const now = Date.parse(env.X402_PROMO_NOW || new Date().toISOString());
+  const promoActive =
+    normalAtomic !== "0" &&
+    PROMO_EXISTING_DATA.has(`${opts.skuId}:${opts.tier}`) &&
+    now >= Date.parse(X402_LAUNCH_CAMPAIGN.starts_at) &&
+    now < Date.parse(X402_LAUNCH_CAMPAIGN.ends_at);
+  const atomic = promoActive
+    ? X402_LAUNCH_CAMPAIGN.amount_atomic
+    : normalAtomic;
   const networkRaw = env.X402_NETWORK || USDC_BASE.network;
   const description =
     opts.description ||
@@ -208,6 +261,22 @@ export function x402Accepts(
         version: USDC_BASE_EIP712.version,
         decimals: USDC_BASE.decimals,
         symbol: USDC_BASE.symbol,
+      },
+      csoaiPricing: {
+        product_id: opts.productId || `csoai.product.${opts.skuId}`,
+        sku_id: opts.skuId,
+        tier: opts.tier,
+        pricing_basis: promoActive ? "PROMO_EXISTING_DATA" : "STANDARD",
+        campaign_id: promoActive ? X402_LAUNCH_CAMPAIGN.id : null,
+        normal_amount_atomic: normalAtomic,
+        offered_amount_atomic: atomic,
+        ...(promoActive
+          ? {
+              starts_at: X402_LAUNCH_CAMPAIGN.starts_at,
+              ends_at: X402_LAUNCH_CAMPAIGN.ends_at,
+            }
+          : {}),
+        fresh_compute_excluded: true,
       },
     },
   ];
@@ -244,11 +313,15 @@ export function toV2Requirements(a: X402Accept): Record<string, unknown> {
 
 /** True when the caller presented an x402 payment envelope. Used to refuse settling an undeliverable request. */
 export function hasPaymentHeader(request: Request): boolean {
-  return !!(request.headers.get("x-payment") || request.headers.get("payment-signature"));
+  return !!(
+    request.headers.get("x-payment") || request.headers.get("payment-signature")
+  );
 }
 
 /** Wallets whose payments are the estate paying itself: payTo plus X402_SELF_WALLETS. Lowercased. */
-export function selfWallets(env: Pick<X402Env, "X402_PAY_TO" | "X402_SELF_WALLETS">): Set<string> {
+export function selfWallets(
+  env: Pick<X402Env, "X402_PAY_TO" | "X402_SELF_WALLETS">,
+): Set<string> {
   const out = new Set<string>();
   const pt = resolvePayTo(env);
   if (pt) out.add(pt.toLowerCase());
@@ -279,6 +352,16 @@ export type SettlementRecord = {
   zero_value: boolean;
   resource: string;
   amount_atomic: string | null; // what the 402 asked for; the facilitator does not echo the amount
+  product_id?: string;
+  campaign_id?: string | null;
+  pricing_basis?: "STANDARD" | "PROMO_EXISTING_DATA";
+  normal_amount_atomic?: string | null;
+  settled_amount_atomic?: string | null;
+  funding_class?:
+    | "EXTERNAL_CUSTOMER"
+    | "INTERNAL_SELF_FUNDED"
+    | "ZERO_VALUE_PROBE"
+    | "UNKNOWN";
   settled_at: string;
 };
 
@@ -306,22 +389,37 @@ export async function recordSettlement(
   rec: Omit<SettlementRecord, "schema" | "self" | "zero_value" | "settled_at">,
 ): Promise<RecordOutcome> {
   const kv = env.REVENUE_KV;
-  if (!kv) return { stored: false, reason: "no REVENUE_KV bound", record: null };
+  if (!kv)
+    return { stored: false, reason: "no REVENUE_KV bound", record: null };
   const self = !!rec.payer && selfWallets(env).has(rec.payer.toLowerCase());
-  const zero_value = !rec.amount_atomic || !/^[1-9]\d*$/.test(rec.amount_atomic);
+  const zero_value =
+    !rec.amount_atomic || !/^[1-9]\d*$/.test(rec.amount_atomic);
   const record: SettlementRecord = {
     schema: "csoai.x402.settlement/0.1",
     ...rec,
     self,
     zero_value,
+    settled_amount_atomic: rec.amount_atomic,
+    funding_class: zero_value
+      ? "ZERO_VALUE_PROBE"
+      : self
+        ? "INTERNAL_SELF_FUNDED"
+        : rec.payer
+          ? "EXTERNAL_CUSTOMER"
+          : "UNKNOWN",
     settled_at: new Date().toISOString(),
   };
   try {
     const key = `settled:tx:${record.transaction || `unknown:${Date.now()}`}`;
     if ((await kv.get(key)) == null) await kv.put(key, JSON.stringify(record));
-    const amt = record.amount_atomic && /^\d+$/.test(record.amount_atomic) ? BigInt(record.amount_atomic) : 0n;
+    const amt =
+      record.amount_atomic && /^\d+$/.test(record.amount_atomic)
+        ? BigInt(record.amount_atomic)
+        : 0n;
     if (amt > 0n) {
-      const tallyKey = self ? "settled:self_usdc_atomic" : "settled:usdc_atomic";
+      const tallyKey = self
+        ? "settled:self_usdc_atomic"
+        : "settled:usdc_atomic";
       const prev = await kv.get(tallyKey);
       const base = prev && /^\d+$/.test(prev) ? BigInt(prev) : 0n;
       await kv.put(tallyKey, (base + amt).toString());
@@ -336,7 +434,11 @@ export async function recordSettlement(
     // /api/free-door (facilitator tx 0xb7ec8a79…, payer 0x620e8d6c…) left settlements at 0 with
     // records_unreadable 0 and kv_bound true — a real payment that the one number never saw.
     // The outcome is returned now so a caller can surface the gap instead of inferring silence.
-    return { stored: false, reason: `kv write failed: ${(e as Error).message}`, record };
+    return {
+      stored: false,
+      reason: `kv write failed: ${(e as Error).message}`,
+      record,
+    };
   }
 }
 
@@ -356,18 +458,27 @@ export async function verifyX402Payment(
   accept?: X402Accept,
   opts?: { allowZeroAmount?: boolean },
 ): Promise<X402Result> {
-  const header = request.headers.get("x-payment") || request.headers.get("payment-signature");
+  const header =
+    request.headers.get("x-payment") ||
+    request.headers.get("payment-signature");
   if (!header) return { ok: false, reason: "no x-payment header" };
 
   // Decode the X-PAYMENT header (x402 sends it base64-encoded JSON). A header that does not
   // decode to a structured payload is not a receipt — reject it rather than trust its presence.
-  let payload: { x402Version?: number; scheme?: string; network?: string } & Record<string, unknown>;
+  let payload: {
+    x402Version?: number;
+    scheme?: string;
+    network?: string;
+  } & Record<string, unknown>;
   try {
     let text = header.trim();
     if (!text.startsWith("{")) text = atob(text);
     payload = JSON.parse(text);
   } catch {
-    return { ok: false, reason: "x-payment header is not a decodable x402 payload" };
+    return {
+      ok: false,
+      reason: "x-payment header is not a decodable x402 payload",
+    };
   }
   if (!payload || typeof payload !== "object") {
     return { ok: false, reason: "x-payment payload is not an object" };
@@ -398,7 +509,11 @@ export async function verifyX402Payment(
       maxTimeoutSeconds: 300,
       extra: { name: USDC_BASE_EIP712.name, version: USDC_BASE_EIP712.version },
     } as X402Accept);
-  if (!entry.payTo) return { ok: false, reason: "no payTo configured — refusing to settle to nowhere" };
+  if (!entry.payTo)
+    return {
+      ok: false,
+      reason: "no payTo configured — refusing to settle to nowhere",
+    };
   // ZERO MEANS "UNCONFIGURED" UNLESS THE CALLER SAYS IT MEANT ZERO. The default a few lines
   // above is `env.X402_AMOUNT || "0"`, so a paid door whose amount env var is missing arrives
   // here advertising 0 — settling that would hand over a paid artefact for nothing. The guard
@@ -418,12 +533,16 @@ export async function verifyX402Payment(
   // Auth is per-endpoint, not per-session: CDP binds each JWT to the exact method+host+path via
   // its `uri` claim, so /supported, /verify and /settle each need their own bearer. A non-CDP
   // facilitator falls back to the static token (or to no auth, as the public facilitators want).
-  const headersFor = async (suffix: string, method = "POST"): Promise<Record<string, string>> => {
+  const headersFor = async (
+    suffix: string,
+    method = "POST",
+  ): Promise<Record<string, string>> => {
     const h: Record<string, string> = { "content-type": "application/json" };
     const path = `${new URL(facilitator).pathname.replace(/\/$/, "")}${suffix}`;
     const jwt = await maybeMintCdpJwt(env, facilitator, method, path);
     if (jwt) h.authorization = `Bearer ${jwt}`;
-    else if (env.X402_FACILITATOR_TOKEN) h.authorization = `Bearer ${env.X402_FACILITATOR_TOKEN}`;
+    else if (env.X402_FACILITATOR_TOKEN)
+      h.authorization = `Bearer ${env.X402_FACILITATOR_TOKEN}`;
     return h;
   };
 
@@ -449,7 +568,8 @@ export async function verifyX402Payment(
   // and nothing else — whereas failing on the first attempt is how a live rail silently stopped
   // earning: PayAI added a v2 kind for Base, the old "highest version wins" rule switched to it,
   // and every real payment came back `facilitator /verify HTTP 400` after the buyer had signed.
-  const candidates: (1 | 2)[] = neg.candidates.length > 0 ? neg.candidates : [neg.version ?? clientVersion];
+  const candidates: (1 | 2)[] =
+    neg.candidates.length > 0 ? neg.candidates : [neg.version ?? clientVersion];
   const bodyFor = (v: 1 | 2): string => {
     const reqs = v === 2 ? toV2Requirements(entry) : toV1Requirements(entry);
     // v2 repeats the accepted terms INSIDE paymentPayload and adds `resource`; see the envelope
@@ -467,7 +587,11 @@ export async function verifyX402Payment(
         : undefined;
     return JSON.stringify({
       x402Version: v,
-      paymentPayload: toDialectPayload(payload as Record<string, unknown>, v, v2ctx),
+      paymentPayload: toDialectPayload(
+        payload as Record<string, unknown>,
+        v,
+        v2ctx,
+      ),
       paymentRequirements: reqs,
     });
   };
@@ -490,10 +614,17 @@ export async function verifyX402Payment(
       }
       lastStatus = r.status;
     }
-    if (!vr) return { ok: false, reason: `facilitator /verify HTTP ${lastStatus}` };
-    const vout = (await vr.json()) as { isValid?: boolean; invalidReason?: string };
+    if (!vr)
+      return { ok: false, reason: `facilitator /verify HTTP ${lastStatus}` };
+    const vout = (await vr.json()) as {
+      isValid?: boolean;
+      invalidReason?: string;
+    };
     if (!vout || vout.isValid !== true) {
-      return { ok: false, reason: `facilitator rejected receipt: ${vout?.invalidReason || "not valid"}` };
+      return {
+        ok: false,
+        reason: `facilitator rejected receipt: ${vout?.invalidReason || "not valid"}`,
+      };
     }
     // Verified ≠ settled. Settle moves the USDC; only then is the artefact paid for.
     const sr = await fetch(`${facilitator}/settle`, {
@@ -501,7 +632,8 @@ export async function verifyX402Payment(
       headers: await headersFor("/settle"),
       body,
     });
-    if (!sr.ok) return { ok: false, reason: `facilitator /settle HTTP ${sr.status}` };
+    if (!sr.ok)
+      return { ok: false, reason: `facilitator /settle HTTP ${sr.status}` };
     const sout = (await sr.json()) as {
       success?: boolean;
       errorReason?: string;
@@ -512,7 +644,10 @@ export async function verifyX402Payment(
       payer?: string;
     };
     if (!sout || sout.success !== true) {
-      return { ok: false, reason: `facilitator settle failed: ${sout?.errorReason || sout?.error || "not settled"}` };
+      return {
+        ok: false,
+        reason: `facilitator settle failed: ${sout?.errorReason || sout?.error || "not settled"}`,
+      };
     }
     const settlement = {
       transaction: sout.transaction || sout.txHash || null,
@@ -541,8 +676,11 @@ export async function verifyX402Payment(
     // it also broke the echo outright, because btoa() is Latin-1 only and the note text contains
     // an em dash — a silent "facilitator error: Invalid character" on every settled payment,
     // which is the worst possible place to learn that lesson.
-    const { bazaar: _bazaarSidechannel, recording_gap: _recordingGap, ...buyerFacing } =
-      settlement as typeof settlement & { recording_gap?: string };
+    const {
+      bazaar: _bazaarSidechannel,
+      recording_gap: _recordingGap,
+      ...buyerFacing
+    } = settlement as typeof settlement & { recording_gap?: string };
 
     // ─── the signed receipt (offer-receipt extension §5) ────────────────────
     // Issued ONLY here, after the facilitator answered success:true — "returned only on success"
@@ -557,9 +695,11 @@ export async function verifyX402Payment(
     let receiptGap: string | undefined;
     const pkcs8 = (env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim();
     if (!settlement.payer) {
-      receiptGap = "the facilitator did not name a payer, and payer is a required signed field (spec §5.2)";
+      receiptGap =
+        "the facilitator did not name a payer, and payer is a required signed field (spec §5.2)";
     } else if (!pkcs8) {
-      receiptGap = "no BOARD_SIGN_KEY_PKCS8_B64 is set in the Pages environment, so the edge holds no key to sign a receipt with";
+      receiptGap =
+        "no BOARD_SIGN_KEY_PKCS8_B64 is set in the Pages environment, so the edge holds no key to sign a receipt with";
     }
 
     const recorded = await recordSettlement(env, {
@@ -568,6 +708,10 @@ export async function verifyX402Payment(
       payer: settlement.payer,
       resource: resourceUrl,
       amount_atomic: accept?.amount || accept?.maxAmountRequired || null,
+      product_id: accept?.csoaiPricing?.product_id,
+      campaign_id: accept?.csoaiPricing?.campaign_id,
+      pricing_basis: accept?.csoaiPricing?.pricing_basis,
+      normal_amount_atomic: accept?.csoaiPricing?.normal_amount_atomic || null,
     });
 
     if (!receiptGap && settlement.payer) {
@@ -596,7 +740,8 @@ export async function verifyX402Payment(
             settlement_recorded: recorded.stored,
           }),
         );
-        if (!stored.stored) receiptGap = `receipt signed but not stored: ${stored.reason}`;
+        if (!stored.stored)
+          receiptGap = `receipt signed but not stored: ${stored.reason}`;
       } catch (e) {
         receipt = undefined;
         receiptGap = `receipt signing failed: ${(e as Error).message}`;
@@ -652,7 +797,6 @@ export type BazaarHttpGetOpts = {
   };
   outputExample?: Record<string, unknown>;
 };
-
 
 /**
  * declareBazaarHttpGet — hand-rolled equivalent of `@x402/extensions/bazaar`
@@ -729,7 +873,9 @@ export type PaymentRequiredV2Opts = {
 };
 
 /** Build an x402 v2 PaymentRequired object (body + PAYMENT-REQUIRED header payload). */
-export function buildPaymentRequiredV2(opts: PaymentRequiredV2Opts): Record<string, unknown> {
+export function buildPaymentRequiredV2(
+  opts: PaymentRequiredV2Opts,
+): Record<string, unknown> {
   const accepts = opts.accepts.map((a) => {
     const amount = a.amount || a.maxAmountRequired;
     return {
@@ -741,6 +887,7 @@ export function buildPaymentRequiredV2(opts: PaymentRequiredV2Opts): Record<stri
       payTo: a.payTo,
       maxTimeoutSeconds: a.maxTimeoutSeconds,
       extra: a.extra,
+      ...(a.csoaiPricing ? { csoai_pricing: a.csoaiPricing } : {}),
       // v1 clients read these on the accept entry; v2 also has top-level resource.url.
       resource: a.resource || opts.resourceUrl,
       description: a.description || opts.description.slice(0, 500),
@@ -789,14 +936,18 @@ export function encodePaymentRequiredHeader(paymentRequired: unknown): string {
   if (paymentRequired && typeof paymentRequired === "object") {
     const src = paymentRequired as Record<string, unknown>;
     if (src.csoai && typeof src.csoai === "object") {
-      const { preview: _preview, ...csoaiRest } = src.csoai as Record<string, unknown>;
+      const { preview: _preview, ...csoaiRest } = src.csoai as Record<
+        string,
+        unknown
+      >;
       forHeader = { ...src, csoai: csoaiRest };
     }
   }
   const json = JSON.stringify(forHeader);
   const bytes = new TextEncoder().encode(json);
   let binary = "";
-  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]!);
+  for (let i = 0; i < bytes.length; i++)
+    binary += String.fromCharCode(bytes[i]!);
   return btoa(binary);
 }
 
@@ -834,6 +985,9 @@ export async function paymentRequiredResponseSigned(
   env: X402Env,
   extraHeaders: Record<string, string> = {},
 ): Promise<Response> {
-  const signed = await attachOffers(paymentRequired, (env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim() || undefined);
+  const signed = await attachOffers(
+    paymentRequired,
+    (env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim() || undefined,
+  );
   return paymentRequiredResponse(signed, extraHeaders);
 }
