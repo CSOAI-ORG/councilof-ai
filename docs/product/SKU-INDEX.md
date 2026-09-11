@@ -32,6 +32,10 @@ because a buyer cannot act on that.
 art50-marking-evidence ✅ DELIVERABLE and advertised — free preview 200 (6128 B), paid door 402.
 Added to the source producer on 2026-09-06; it had been absent from generate-h1-product-docs.py
 entirely, which is why 8 mapped Bazaar hosts had no offer page to read.
+mcp-trust-board ✅ free surface LIVE (/trust, /interop/mcp-trust/latest.json — counts-only,
+derived by scripts/mcp-trust-round.py, weekly cadence) · per-server signed card rides the
+EXISTING commission-card door (no new payment surface, spec §8) · monitoring tier
+STAGED — no door exists; not advertised, no price typed. Doc: OFFER-mcp-trust-board.md.
 
 ## Vocabulary map — dataset `offer_sku` ↔ door ↔ doc
 

@@ -1,0 +1,47 @@
+{
+  "kind": "csoai.mcp-trust-snapshot/0.1",
+  "population": "mcp-internet-facing",
+  "as_of": "2026-09-11T05:31:47Z",
+  "enumeration": {
+    "source": "https://registry.modelcontextprotocol.io/v0/servers",
+    "pages_fetched": 22,
+    "registry_rows_seen": 2188,
+    "rows_with_remote": 1812,
+    "unique_hosts": 500,
+    "cap": 500,
+    "complete": false,
+    "stop_reason": "cap reached"
+  },
+  "partial": false,
+  "counts": {
+    "total": 500,
+    "unique_hosts_enumerated": 500,
+    "registry_rows_seen": 2188,
+    "initialize_ok_open": 20,
+    "initialize_ok_tools_listed": 239,
+    "auth_challenged_401_403": 207,
+    "x402_challenged_402": 0,
+    "alive_not_mcp": 5,
+    "listed_no_reply": 0,
+    "dead_404_or_unreachable": 20,
+    "other_error": 9,
+    "auth_scheme_bearer_or_oauth": 188,
+    "auth_scheme_other": 0,
+    "auth_scheme_unspecified": 19,
+    "rate_limited": 0,
+    "tools_listed_total": 1643,
+    "tools_median_per_answering_server": 3,
+    "servers_reporting_tools": 239
+  },
+  "headline": "259 of 500 enumerated hosts answered a correct MCP initialize; 207 answered with an auth challenge (a term sheet, not delivery); 20 were unreachable or gone (never FAIL). Counts only by doctrine.",
+  "method": "One POST initialize (protocol 2025-06-18) per host, identifiable UA 'csoai-mcp-trust/0.1 (+https://councilof.ai/trust)', 14s timeout, 12 workers; exactly one tools/list if and only if initialize answered \u2014 tools counted, never called, never named. Zero authentication attempted, zero payment, zero signing, zero side effect.",
+  "doctrine": "Measurement, never certification. A bucket is never a grade, rank or certificate. A 401/402 challenge is a term sheet \u2014 an invoice, not delivery. UNREACHABLE is never FAIL. Host details withheld by design; methodology published. Counts derived, never typed.",
+  "not": "This snapshot does not measure server quality, the safety of any tool, whether a listed tool does what its name claims, compliance with the MCP authorization specification, or any property of servers not listed in the enumeration source. The true internet-facing population is larger than the enumerable one and stays an open, unmeasured cell.",
+  "third_party_context": "A third-party study ('Exposed by Design') reportedly found ~21,000 internet-facing MCP servers, 91.8% without OAuth. That figure is cited as context only \u2014 it is NOT a CSOAI measurement and is not reproduced here.",
+  "paid_step": {
+    "href": "https://councilof.ai/api/x402",
+    "commission": "https://councilof.ai/api/request-attestation",
+    "mcp": "commission_card",
+    "note": "A named party may commission a signed card for THEIR OWN server (handshake result, auth posture observed, timestamp). A signed measurement, never a certificate. Host-level data about other parties' servers is not for sale at any price."
+  }
+}
