@@ -158,6 +158,30 @@ class RoundDiff(unittest.TestCase):
             diff = json.loads((out / name).read_text())
             self.assertIn("PARTIAL", diff["note"])
 
+    def test_cap_change_is_disclosed_never_silent(self):
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            prev = self._snap("2026-09-04T00:00:00Z")
+            prev["enumeration"] = {"cap": 500}
+            (out / "2026-09-04.json").write_text(json.dumps(prev))
+            cur = self._snap("2026-09-11T00:00:00Z")
+            cur["enumeration"] = {"cap": 20}
+            name = mtr.write_diff(cur, out, "2026-09-11")
+            diff = json.loads((out / name).read_text())
+            self.assertIn("cap changed (500 -> 20)", diff["note"])
+
+    def test_same_cap_pair_carries_no_note(self):
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            prev = self._snap("2026-09-04T00:00:00Z")
+            prev["enumeration"] = {"cap": 500}
+            (out / "2026-09-04.json").write_text(json.dumps(prev))
+            cur = self._snap("2026-09-11T00:00:00Z")
+            cur["enumeration"] = {"cap": 500}
+            name = mtr.write_diff(cur, out, "2026-09-11")
+            diff = json.loads((out / name).read_text())
+            self.assertNotIn("note", diff)
+
 
 if __name__ == "__main__":
     unittest.main()

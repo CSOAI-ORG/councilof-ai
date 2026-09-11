@@ -476,8 +476,15 @@ def write_diff(snapshot: dict, out: Path, stamp: str) -> str | None:
         "bucket_migrations": "UNCHECKABLE — row-level by definition",
         "doctrine": DOCTRINE,
     }
-    if prev.get("partial"):
-        diff["note"] = "previous round was PARTIAL: read deltas as slice-vs-slice, never as population change"
+    notes = []
+    if prev.get("partial") or snapshot.get("partial"):
+        notes.append("a PARTIAL round is in the pair: read deltas as slice-vs-slice, never as population change")
+    prev_cap = (prev.get("enumeration") or {}).get("cap")
+    cur_cap = (snapshot.get("enumeration") or {}).get("cap")
+    if prev_cap is not None and cur_cap is not None and prev_cap != cur_cap:
+        notes.append(f"cap changed ({prev_cap} -> {cur_cap}): deltas compare different slices of the population, never the whole of it")
+    if notes:
+        diff["note"] = "; ".join(notes)
     name = f"diff-{stamp}.json"
     (out / name).write_text(json.dumps(diff, indent=2) + "\n")
     return name
