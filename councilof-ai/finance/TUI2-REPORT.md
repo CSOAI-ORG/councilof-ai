@@ -197,3 +197,21 @@ Deep measurement covers a subset only. INDEXED ≠ MEASURED.
 ---
 
 *TUI 2 — Financial Measurement | Branch: finance/full-spread-20260911*
+
+## Stellar Measurement Status (Genuinely Blocked)
+
+| Test | Result | Status |
+|------|--------|--------|
+| `/accounts?asset=USDC:ISSUER` | HTTP 400 Bad Request | API incompatible |
+| `/assets/USDC/ISSUER` | HTTP 404 | Endpoint doesn't exist |
+| Stellar Expert API | Format rejected (requires `{code}-{issuer}-{type}`) | API incompatible |
+| Horizon `/assets?asset_code=USDC` | Returns 0 records | Data unavailable |
+
+**Root cause:** Stellar Horizon API version has changed. The `/accounts?asset=CODE:ISSUER` filter format used by the reader is no longer supported. This requires either:
+1. Updating to the Stellar RPC/Soroban API
+2. Using a third-party data provider
+3. Waiting for Horizon API documentation update
+
+**USBDC:** Remains UNMEASURED (issuer account not independently identified).
+
+**Stellar status:** GENUINELY BLOCKED by API incompatibility, not a code bug.
