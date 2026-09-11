@@ -2,7 +2,7 @@
   "schema": "csoai.anchor.root-pipeline/0.1",
   "kind": "deterministic-root-build",
   "generated_at": "2026-09-11T10:59:40.357415+00:00",
-  "pipeline": "fetch-index \u2192 extract-ids \u2192 sort \u2192 merkle \u2192 output",
+  "pipeline": "fetch-index \u2192 extract-ids \u2192 merkle \u2192 output",
   "deterministic": true,
   "note": "Same index input always produces the same root. No randomness, no timestamps in the tree.",
   "live_root": {
@@ -23,7 +23,7 @@
     "leaf_count": 167,
     "root_hash": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
     "depth": 9,
-    "algorithm": "SHA-256, sorted pairs, odd-leaf duplication"
+    "algorithm": "SHA-256, positional pairs (left||right), odd-leaf self-duplication"
   },
   "reconciliation": {
     "live_merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
