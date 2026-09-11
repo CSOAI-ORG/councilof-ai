@@ -1,0 +1,77 @@
+{
+  "schema": "csoai.watch.issuer-claims/0.1",
+  "as_of": "2026-09-11",
+  "maintainer": "councilof.ai attestation-watch (TUI-3 / EP3)",
+  "doctrine": "A claim enters this registry only when it was actually fetched and archived, with the timestamp and the exact served bytes' excerpt. claim: null means UNMEASURED — the slot stays visible, never omitted, never invented. Numbers are never typed here without a source_url and archived_at.",
+  "claims": [
+    {
+      "symbol": "RLUSD",
+      "issuer": "Ripple",
+      "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "claim": {
+        "type": "qualitative-backing",
+        "text": "It’s issued one-to-one against reserves, such as cash and U.S. Treasuries.",
+        "numeric_supply_usd": null,
+        "scope": "all-chains",
+        "source_url": "https://ripple.com/solutions/stablecoin/",
+        "archived_at": "2026-09-11T05:20:00Z",
+        "archive_note": "Served HTML (267,585 bytes, HTTP 200) carries the 1:1 reserve sentence but NO numeric supply figure — the number is not on the page a stranger is served. A numeric issuer-side claim is UNMEASURED on this source."
+      },
+      "external_reference": {
+        "name": "CoinGecko ripple-usd circulating supply (all chains)",
+        "value": 2404807130.107216,
+        "unit": "RLUSD",
+        "as_of": "2026-09-11T05:14:50Z",
+        "source_url": "https://api.coingecko.com/api/v3/coins/ripple-usd",
+        "scope": "all-chains",
+        "scope_note": "Tracker figure spans every chain RLUSD rides on. The xrpl.fi observable is the XRPL slice only. Comparing across scopes is disclosed, never silently summed."
+      }
+    },
+    {
+      "symbol": "OUSG",
+      "issuer": "Ondo Finance",
+      "issuer_address": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+      "claim": {
+        "type": "numeric-tvl",
+        "tvl_usd_total": 335913908.47,
+        "tvl_usd_xrpl": 191079831.68,
+        "tvl_usd_ethereum": 144834076.79,
+        "price_usd": 116.519237,
+        "scope": "per-chain (xrpl figure published by issuer)",
+        "source_url": "https://ondo.finance/ousg",
+        "archived_at": "2026-09-11T05:25:00Z",
+        "archive_note": "Embedded JSON in served HTML: tvlUsd:{total:335913908.47, xrpl:191079831.68, ethereum:144834076.79}, priceUsd:116.519237. The issuer publishes a per-chain split — one of the few who do."
+      },
+      "external_reference": null
+    },
+    {
+      "symbol": "USDC",
+      "issuer": "Circle",
+      "issuer_address": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+      "claim": {
+        "type": "numeric-total-circulation",
+        "circulation_usd_all_chains": 74300000000,
+        "text": "USDC in circulation 74.3B",
+        "numeric_supply_usd": null,
+        "scope": "all-chains",
+        "source_url": "https://www.circle.com/usdc",
+        "archived_at": "2026-09-11T05:30:00Z",
+        "archive_note": "Served HTML carries 'usdc-circulation 74.3B' — a total across ALL chains. No XRPL-slice figure on this page, so no same-scope comparison against the XRPL observable is possible from this source."
+      },
+      "external_reference": null
+    },
+    { "symbol": "USDB", "issuer": "Braza Bank", "issuer_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc", "claim": null, "external_reference": null, "registry_note": "brazabank.com/usdb served 200 but carried no machine-readable supply or reserve figure (checked 2026-09-11)." },
+    { "symbol": "BBRL", "issuer": "Braza Bank", "issuer_address": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt", "claim": null, "external_reference": null },
+    { "symbol": "EURCV", "issuer": "Société Générale-FORGE", "issuer_address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL", "claim": null, "external_reference": null },
+    { "symbol": "USD.bs", "issuer": null, "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", "claim": null, "external_reference": null },
+    { "symbol": "EUR.bs", "issuer": null, "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B", "claim": null, "external_reference": null },
+    { "symbol": "USD.gh", "issuer": null, "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", "claim": null, "external_reference": null },
+    { "symbol": "EUR.gh", "issuer": null, "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq", "claim": null, "external_reference": null },
+    { "symbol": "EURQ", "issuer": null, "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs", "claim": null, "external_reference": null },
+    { "symbol": "USDQ", "issuer": null, "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs", "claim": null, "external_reference": null },
+    { "symbol": "EURØP", "issuer": null, "issuer_address": "rMkEuRii9w9uBMQDnWV5AA43gvYZR9JxVK", "claim": null, "external_reference": null },
+    { "symbol": "XAU.gh", "issuer": null, "issuer_address": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ", "claim": null, "external_reference": null },
+    { "symbol": "GBP.gh", "issuer": null, "issuer_address": "r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g", "claim": null, "external_reference": null },
+    { "symbol": "PSC", "issuer": null, "issuer_address": "rwekfW4MiS5yZjXASRBDzzPPWYKuHvKP7E", "claim": null, "external_reference": null }
+  ]
+}

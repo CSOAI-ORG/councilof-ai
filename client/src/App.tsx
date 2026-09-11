@@ -96,6 +96,7 @@ const Standards = lazy(() => import("./pages/Standards"));
 const Resources = lazy(() => import("./pages/Resources"));
 const About = lazy(() => import("./pages/About"));
 const FirstFineWatch = lazy(() => import("./pages/FirstFineWatch"));
+const Watch = lazy(() => import("./pages/Watch"));
 const EunomiaData = lazy(() => import("./pages/EunomiaData"));
 const Eunomia = lazy(() => import("./pages/Eunomia"));
 const EunomiaCatalog = lazy(() => import("./pages/EunomiaCatalog"));
@@ -407,6 +408,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/receipt": "Inclusion receipt | Council of AI",
   "/custody": "Custody disclosure | Council of AI",
   "/specimens/clarity": "CLARITY pre-commit specimen (unsigned) | Council of AI",
+  "/watch": "Attestation Watch — issuer claims vs observable state | Council of AI",
   "/contact": "Contact | CSOAI",
   "/about": "About | CSOAI",
   "/mcp": "MCP Hub | CSOAI",
@@ -777,6 +779,7 @@ function App() {
                   <Route path="/payg" component={Payg} />
                   <Route path="/about" component={About} />
                   <Route path="/first-fine-watch" component={FirstFineWatch} />
+                  <Route path="/watch" component={Watch} />
                   <Route path="/eunomia-data" component={EunomiaData} />
                   <Route path="/eunomia" component={Eunomia} />
                   <Route path="/eunomia-catalog" component={EunomiaCatalog} />
