@@ -3,7 +3,7 @@
   "kind": "financial.cross-chain-measurement",
   "generator": "cross-chain-reader-0.1.0",
   "generated_at": "2026-09-11T12:02:14.602Z",
-  "terms_boundary": "totalSupply() only — NOT proof of reserves",
+  "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves",
   "measurements": [
     {
       "symbol": "USDC",
@@ -66,6 +66,40 @@
       "contract": "0xE3B3f82f280A25f1CDF92ea5f22412B4a1e8Bc26",
       "measurement_state": "MEASUREMENT_FAILED",
       "error": "Cannot convert 0x to a BigInt"
+    },
+    {
+      "symbol": "BUIDL",
+      "chain": "ethereum",
+      "contract": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+      "supply_normalized": 212050876.95,
+      "supply_display": "$212.05M",
+      "measurement_state": "DEEP_MEASURED",
+      "note": "Ethereum ERC-20 only; DefiLlama $2.76B includes all share classes and chains",
+      "source": "eth_call totalSupply() via ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T13:20:00Z"
+    },
+    {
+      "symbol": "USDG",
+      "chain": "ethereum",
+      "contract": "0xe343167631d89b6ffc58b88d6b7fb0228795491d",
+      "supply_normalized": 377820000,
+      "supply_display": "$377.82M",
+      "measurement_state": "DEEP_MEASURED",
+      "note": "Ethereum only; DefiLlama $3.24B includes other chains",
+      "source": "eth_call totalSupply() via ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T13:20:00Z"
+    },
+    {
+      "symbol": "USD1",
+      "chain": "ethereum",
+      "contract": "0x8d0d000ee44948fc98c9b98a4fa4921476f08b0d",
+      "supply_normalized": 1570000000,
+      "supply_display": "$1.57B",
+      "measurement_state": "DEEP_MEASURED",
+      "note": "Ethereum only; DefiLlama $4.29B includes other chains",
+      "source": "eth_call totalSupply() via ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T13:20:00Z"
     }
-  ]
+  ],
+  "total_measured": 7
 }
