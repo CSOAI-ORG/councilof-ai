@@ -12,19 +12,29 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     return Response.json({ state: "INVALID_REQUEST", error: "sha must be 64 hexadecimal characters" }, { status: 400, headers: HEADERS });
   }
 
-  const target = new URL(`/signed/cards/${sha.toLowerCase()}.json`, url.origin);
-  const response = await fetch(target, { headers: { accept: "application/json" } });
+  // 2026-09-11 (TUI-1): the living public-root tree keys cards by sha16 at
+  // /cards/<sha16>.json; /signed/cards/<full-sha>.json is the legacy store
+  // (336 files, disjoint set). Living tree first, legacy fallback, else NOT_FOUND.
+  const sha16 = sha.toLowerCase().slice(0, 16);
+  const living = new URL(`/cards/${sha16}.json`, url.origin);
+  let response = await fetch(living, { headers: { accept: "application/json" } });
+  let source = living.pathname;
+  if (!response.ok) {
+    const legacy = new URL(`/signed/cards/${sha.toLowerCase()}.json`, url.origin);
+    response = await fetch(legacy, { headers: { accept: "application/json" } });
+    source = legacy.pathname;
+  }
   if (!response.ok) {
     return Response.json({ state: response.status === 404 ? "NOT_FOUND" : "UNCHECKABLE", sha: sha.toLowerCase() }, { status: response.status === 404 ? 404 : 502, headers: HEADERS });
   }
 
   return Response.json({
-    schema: "csoai.trace/0.2",
+    schema: "csoai.trace/0.3",
     state: "FOUND",
     sha: sha.toLowerCase(),
-    source: target.pathname,
+    source,
     card: await response.json(),
-    note: "FOUND means the named file was retrieved. Use the family-aware verifier for hash and signature validity.",
+    note: "FOUND means the named card was retrieved (living /cards/<sha16> tree, legacy /signed/cards/<full-sha> fallback). Use the family-aware verifier for hash and signature validity.",
   }, { headers: HEADERS });
 };
 
