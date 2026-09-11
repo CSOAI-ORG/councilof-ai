@@ -57,21 +57,23 @@ or “all 425 measured” remain research claims and do not change release state
 | Mill receipt outer signatures | `VALID_36_OF_36` | `public/interop/mill-receipt-readiness.json`; PR #1897; production SHA-256 `a8824964d7e8283d7882213bf75cfc35ca51044c6c470d6fa7175e0edb03ddc2` | Outer Ed25519 validity does not upgrade the inner lifecycle declaration |
 | Mill receipt inner lifecycle | `STAGED_UNSIGNED_36_OF_36` | same readiness record | Preserve signed bytes; the inner records still declare `STAGED_UNSIGNED` |
 | Mill receipt regulation linkage | `LINKED_5_UNLINKED_31` | same readiness record | Only five receipts are regulation-score eligible; unlinked receipts have no regulation score |
-| Current public root | `SIGNED_REKOR_WITNESSED` | `public/interop/public-root-latest.json`; `public/interop/root-witness-latest.json`; deploy run 34589738751 | 167 leaves; root SHA-256 `62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6`; Merkle root `78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5`; Rekor log index 2791822965 |
+| Current public root | `SIGNED_REKOR_WITNESSED` | `public/interop/root-witness-latest.json` | 169 leaves; root SHA-256 `a6f79e25917fb60bbb2276f1cabe6b6e755e1558bdb9e6b44d1c84474560dca2`; Merkle root `94e99db52a67931aa38ca6b0aa4574c28a600204107b26ad3beef9b9e366e292`; Rekor log index 2793359077. This 169-leaf root and the separately indexed 335-card corpus have zero identifier overlap. |
 | Current root witnesses | `REKOR_WITNESSED_OTS_PENDING` | `public/interop/root-witness-latest.json` | OTS remains `STAMPED_PENDING_BITCOIN`; Base EAS and XRPL memo remain `NOT_YET` |
 | USBDC | `REPORTED_CANDIDATE_UNMEASURED` | `public/interop/stablecoin-universe-2026-09/discovery-candidates.json`; PR #1898 | Issuer launch report is verified; canonical issuer account, transactions, ledger evidence, signature, root and anchor are still absent |
-| x402 promotional door | `LIVE_UNSETTLED_TEST_PENDING` | PR #1895; live 402 challenge from `/api/request-attestation` | Bounded test is 0.01 USDC on Base for existing `llama3.2:3b` evidence; any self-purchase must be labeled `INTERNAL_SELF_FUNDED` and cannot evidence outside demand |
+| x402 promotional door | `SETTLED_INTERNAL_SELF_FUNDED` | `public/interop/x402-self-settlement-2026-09-11.json`; Base transaction `0x60172f43ca14e5874eba92b990ce623e6503cee6d060fd89fd828993fababe7f` | 0.01 USDC settled successfully in Base block 51,172,054 and returned a valid Ed25519 server receipt. Transfer source and destination are the same controlled payTo wallet. It proves plumbing and delivery only; outside-payer and outside-revenue deltas are zero. |
 | Revenue | `ONE_HISTORICAL_OUTSIDE_PAYER_NO_REPEAT_PROOF` | existing revenue evidence ledger | The pending internal settlement tests plumbing only; it cannot increase the outside-payer count |
-| Directory distribution | `PARTIAL_RECONCILIATION` | live `.well-known/agent-card.json`, `/mcp`, Glama pages and unresolved MCP.so submission state | HTTP reachability and index entries do not establish adoption; stale duplicate descriptions must not be amplified |
+| Directory distribution | `PARTIAL_RECONCILIATION` | `public/interop/mcp-directories.json`; live `.well-known/agent-card.json`; `/mcp` | MCP Registry, Smithery, Glama and Docker MCP are recorded listed; MCP.so and Cline are recorded not listed; PulseMCP is unknown because its public surfaces block the probe. The directory record is dated 5–6 September and must be refreshed before any new submission or current health claim. Presence is discovery, not adoption. |
+| Financial-reader harvest | `MERGED_CANDIDATE_ONLY` | PR #1926; merge `d2259f38f2e456a3c401cf2847fd472c85692d16`; `tui2-measurements/tui2-onchain-measurements.json` | Reader code now withholds XRPL figures unless pagination completes, labels EVM observations as latest rather than finalized, and rejects ambiguous captures. The harvested dataset accepts zero measurements: four EVM rows require replay and two XRPL/Stellar rows are rejected or ambiguous. All six PR checks passed. Production deployment remains a separate live gate. |
 | Global-now hunt | `RESEARCH_INPUT_PARTIALLY_VERIFIED` | attached hunt plus official-source checks | NIST AI Documentation Zero Draft input closes 2026-09-16; SEC Regulation Crypto Assets comments close 2026-10-20; all other volatile claims require primary-source verification before cards or copy |
 
 ### Immediate gates retained
 
 1. Let the USBDC deployment complete its existing run and verify production
    bytes; never restart it solely because observation timed out.
-2. Execute the 0.01 USDC Base settlement only after exact action-time financial
-   confirmation, then preserve transaction, facilitator and attribution
-   receipts with `INTERNAL_SELF_FUNDED` classification.
+2. Preserve the completed 0.01 USDC Base settlement as
+   `INTERNAL_SELF_FUNDED`; obtain complete delivered-resource bytes on any
+   future test so payment, delivery digest and root inclusion can be checked
+   independently.
 3. Reconcile directory listings against canonical copy before any new
    representational submission; do not create duplicates.
 4. Do not edit or send the three IETF drafts until the exact send batch has
