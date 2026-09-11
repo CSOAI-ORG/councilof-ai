@@ -30,7 +30,7 @@
     "note": "cannot be recomputed from this attestation: bank_sha256, items_sha256, grader absent. The signature attests only that we published this figure at this time.",
     "reproducible": false,
     "source": {
-      "canonical_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=False)",
+      "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
       "card_id": "03ecbbf4c4f5f7d6e74e692034c1ce7d2ea96d703a3e95f34620e325f17391eb",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",

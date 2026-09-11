@@ -83,6 +83,30 @@ def canonical(obj) -> bytes:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
 
+def canonical_for_card(card: dict) -> bytes:
+    """Reconstruct the canonical rule declared by a signed card.
+
+    The board signer uses sorted JavaScript JSON for `sha256(canonical body)`.
+    JSON does not preserve Python's distinction between ``1`` and ``1.0``, so
+    integral floats must be rendered as JavaScript numbers before hashing.
+    Older cards without that rule retain the estate's Python canonical form.
+    """
+    body = card["body"]
+    if card.get("preimage_rule") not in ("sha256(canonical body)", "jcs-rfc8785"):
+        return canonical(body)
+
+    def js_numbers(value):
+        if isinstance(value, float) and value.is_integer():
+            return int(value)
+        if isinstance(value, list):
+            return [js_numbers(item) for item in value]
+        if isinstance(value, dict):
+            return {key: js_numbers(item) for key, item in value.items()}
+        return value
+
+    return canonical(js_numbers(body))
+
+
 def measurement_predicate(figure: dict, inputs: dict) -> dict:
     """Port of measurementPredicate() from functions/api/intoto.ts.
 
@@ -137,7 +161,11 @@ def statement_for(card: dict) -> dict:
         "card_id": card["id"],
         "card_kind": body.get("kind"),
         "preimage_rule": card.get("preimage_rule"),
-        "canonical_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=False)",
+        "canonical_rule": (
+            "sorted JSON.stringify (ECMAScript numbers)"
+            if card.get("preimage_rule") in ("sha256(canonical body)", "jcs-rfc8785")
+            else "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=False)"
+        ),
         "signature_alg": card.get("alg"),
         "signature_present": bool(card.get("signature")),
         "signed_under_did": card.get("did"),
@@ -189,7 +217,7 @@ def load_cards() -> list[dict]:
         body = card.get("body")
         if not isinstance(body, dict):
             raise SystemExit(f"HALT {path.name}: no body")
-        digest = hashlib.sha256(canonical(body)).hexdigest()
+        digest = hashlib.sha256(canonical_for_card(card)).hexdigest()
         if digest != card.get("id"):
             raise SystemExit(
                 f"HALT {path.name}: id {str(card.get('id'))[:16]} != sha256(canonical(body)) "

@@ -91,6 +91,18 @@ def test_load_halts_on_moved_bytes(tmp: Path) -> None:
         E.SRC = real
 
 
+def test_javascript_number_preimage() -> None:
+    print("JavaScript number preimage")
+    card = {
+        "preimage_rule": "sha256(canonical body)",
+        "body": {"accuracy": 1.0, "uncertainty_95_wilson": [0.8865, 1.0]},
+    }
+    expected = b'{"accuracy":1,"uncertainty_95_wilson":[0.8865,1]}'
+    check("integral floats reproduce the Pages signer bytes", E.canonical_for_card(card) == expected)
+    legacy = {"preimage_rule": "cpython-v1", "body": card["body"]}
+    check("NEGATIVE: legacy Python canonical retains integral float spelling", E.canonical_for_card(legacy) != expected)
+
+
 # ------------------------------------------------------- reproducible / unreproducible
 def test_reproducibility_is_read_not_asserted() -> None:
     print("reproducibility")
@@ -229,7 +241,7 @@ def test_live_corpus_signatures() -> None:
     bad = []
     for card in cards:
         try:
-            key.verify(bytes.fromhex(card["signature"]), E.canonical(card["body"]))
+            key.verify(bytes.fromhex(card["signature"]), E.canonical_for_card(card))
         except Exception:
             bad.append(card["id"][:16])
     check(f"all {len(cards)} mill cards verify under did:web:csoai.org#board-attestation-1", bad == [], bad[:5])
@@ -242,6 +254,7 @@ def main() -> int:
     test_subject_digest_is_the_card_id()
     with tempfile.TemporaryDirectory() as td:
         test_load_halts_on_moved_bytes(Path(td))
+    test_javascript_number_preimage()
     test_reproducibility_is_read_not_asserted()
     test_status_is_carried_never_invented()
     test_figure_carries_only_fields_the_card_has()

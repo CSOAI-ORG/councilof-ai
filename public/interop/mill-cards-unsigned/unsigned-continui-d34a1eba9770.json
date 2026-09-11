@@ -1,0 +1,52 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "continuity",
+    "model": "Qwen/Qwen2.5-0.5B",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.0667,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+    "model_revision_status": "FROZEN",
+    "model_license": "apache-2.0",
+    "model_visibility": "public",
+    "model_training_use": "UNCHECKABLE",
+    "bank_revision": "7c41d9b8fab0d1ce1020171b7b41bbe959dac2b7",
+    "prompt_digest_sha256": "3fc926facac8f5efdf9e44cb3d53050f4c1290aa5a3f7745f7a88432d322b7d3",
+    "bank_license": "cc-by-4.0",
+    "bank_visibility": "private",
+    "bank_training_use": "UNCHECKABLE",
+    "harness_revision": "f92c01ff3918beb3be839add2a109888b814ad4c",
+    "grader": "deterministic-exact-token/0.1",
+    "uncertainty_95_wilson": [
+      0.0185,
+      0.2132
+    ],
+    "run_id": "hfjobs-2026-09-11-050011-8",
+    "measured_at": "2026-09-11T05:11:31Z",
+    "freshness": "POINT_IN_TIME",
+    "regulatory_crosswalk": {
+      "refs": [],
+      "linkage_status": "UNLINKED"
+    },
+    "raw_response_ref": "hf-bucket://csoai/jobs-artifacts/gspc-raw/hfjobs-2026-09-11-050011-8/continuity/continui-b3a114d75991.jsonl",
+    "raw_response_digest_sha256": "35db5bfff7c30d02cc82958a44e58f6af9b075cf1e062cd146d7d7a502ecff31",
+    "signature_state": "STAGED_UNSIGNED",
+    "correction_of": null,
+    "supersedes": null,
+    "route": "hf-router",
+    "council_release_fingerprint": "sha256:084934ae409e6c66f47ff387f42272b7de5930cc2041bbd086164cb4914221e6"
+  },
+  "id": "d34a1eba97706841c063cca47e24b2c50af3b3931d55bd444b7427992f5ee02c",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1"
+}

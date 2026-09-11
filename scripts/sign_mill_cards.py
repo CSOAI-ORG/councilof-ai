@@ -7,7 +7,6 @@ n<30 cards stay UNMEASURED even if signed. Empty is never 0.
 """
 from __future__ import annotations
 
-import hashlib
 import argparse
 import json
 import sys
@@ -15,7 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from sign_financial_runs import DID, canonical_bytes, sign_via_oidc  # noqa: E402
+from sign_financial_runs import DID, canonical_bytes, sign_via_oidc_attested  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -130,7 +129,16 @@ def main(argv: list[str] | None = None) -> int:
             print(f"HALT {fp.name} {len(raw)}B", file=sys.stderr)
             failures += 1
             continue
-        digest = hashlib.sha256(raw).hexdigest()
+        # The trusted signer parses the payload in JavaScript and returns the
+        # digest of the exact bytes it signed. Numeric JSON values do not retain
+        # Python's int/float distinction across that boundary, so its attested
+        # digest is the only safe content address.
+        try:
+            sig, digest = sign_via_oidc_attested(body)
+        except Exception as e:
+            print(f"UNSIGNED {fp.name} — {e}", file=sys.stderr)
+            failures += 1
+            continue
         dest = card_path(body.get("axis") or "", digest)
         if dest.is_file():
             try:
@@ -153,12 +161,6 @@ def main(argv: list[str] | None = None) -> int:
                 failures += 1
                 continue
         replaces = prior_cards(str(body.get("model") or ""), str(body.get("axis") or ""), digest)
-        try:
-            sig = sign_via_oidc(body)
-        except Exception as e:
-            print(f"UNSIGNED {fp.name} — {e}", file=sys.stderr)
-            failures += 1
-            continue
         out = {
             "alg": "Ed25519",
             "body": body,

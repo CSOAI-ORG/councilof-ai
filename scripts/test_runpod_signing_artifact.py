@@ -234,16 +234,21 @@ class ArtifactTests(unittest.TestCase):
         (legacy / "unsigned-old.json").write_text(json.dumps({"body": {"model": "legacy", "axis": "safety", "n": 99}}))
         signed = self.root / "signed"
         calls = []
+        digests = iter(["1" * 64, "2" * 64])
         with mock.patch.object(signer, "SRC", legacy), mock.patch.object(signer, "DST", signed), \
              mock.patch.object(signer, "LEDGER", signed / "SUPERSEDED.jsonl"), \
-             mock.patch.object(signer, "sign_via_oidc", side_effect=lambda body: calls.append(copy.deepcopy(body)) or "test-signature"):
+             mock.patch.object(signer, "sign_via_oidc_attested", side_effect=lambda body: (calls.append(copy.deepcopy(body)) or "test-signature", next(digests))):
             self.assertEqual(signer.main(["--source-dir", str(self.directory / "cards")]), 0)
         self.assertEqual(len(calls), 2)
         self.assertTrue(all(body["model"] != "legacy" for body in calls))
         self.assertEqual({body["n"]: body["status"] for body in calls}, {36: "MEASURED", 12: "UNMEASURED"})
 
+        first = signed / f"signed-governan-{'1' * 12}.json"
+        self.assertTrue(first.is_file())
+        self.assertEqual(json.loads(first.read_text())["id"], "1" * 64)
+
     def test_explicit_signer_source_requires_present_nonempty_directory(self):
-        with mock.patch.object(signer, "sign_via_oidc") as signing, contextlib.redirect_stderr(io.StringIO()):
+        with mock.patch.object(signer, "sign_via_oidc_attested") as signing, contextlib.redirect_stderr(io.StringIO()):
             self.assertEqual(signer.main(["--source-dir", str(self.root / "absent")]), 2)
             self.assertEqual(signer.main(["--source-dir", str(self.directory / "cards")]), 2)
         signing.assert_not_called()

@@ -1,0 +1,53 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "provenance",
+    "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.9,
+    "status": "MEASURED",
+    "unmeasured": [],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "model_revision": "fe8a4ea1ffedaf415f4da2f062534de366a451e6",
+    "model_revision_status": "FROZEN",
+    "model_license": "apache-2.0",
+    "model_visibility": "public",
+    "model_training_use": "UNCHECKABLE",
+    "bank_revision": "8345ee27d8f3cfae880d2c450e5ee7b3b5c1998d",
+    "prompt_digest_sha256": "79711366e29e237a56249f1573ae6bdb5a0f1b3ab78728232c5f25ceebb08c2e",
+    "bank_license": "cc-by-4.0",
+    "bank_visibility": "public",
+    "bank_training_use": "UNCHECKABLE",
+    "harness_revision": "f92c01ff3918beb3be839add2a109888b814ad4c",
+    "grader": "deterministic-exact-token/0.1",
+    "uncertainty_95_wilson": [
+      0.7438,
+      0.9654
+    ],
+    "run_id": "hfjobs-2026-09-11-050011-8",
+    "measured_at": "2026-09-11T05:09:30Z",
+    "freshness": "POINT_IN_TIME",
+    "regulatory_crosswalk": {
+      "refs": [],
+      "linkage_status": "UNLINKED"
+    },
+    "raw_response_ref": "hf-bucket://csoai/jobs-artifacts/gspc-raw/hfjobs-2026-09-11-050011-8/provenance/provenan-92ab9d01091f.jsonl",
+    "raw_response_digest_sha256": "f020ec03013388f4781af3f59efe5a42b2c61f863372031233b4609f0f29f02b",
+    "signature_state": "STAGED_UNSIGNED",
+    "correction_of": null,
+    "supersedes": null,
+    "route": "hf-router",
+    "council_release_fingerprint": "sha256:b20f9c3b62286a8d698bbf14f6bf878613fc1430015ce23d953f90d5da123e67"
+  },
+  "id": "7dee23005516d45c892fdfaa397d17a3247fcfe39c6b71a8805f92c385faf58e",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "0260fff71d1a99af7ad9ec59451a48ba85aef583be0f619e8aabe8e0833350246ba0275a503bf1425f161bece5d01964e32789ade4d15708a4243b0a8f6c3002",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}
