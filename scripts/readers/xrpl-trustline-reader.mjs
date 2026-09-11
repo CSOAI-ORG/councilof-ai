@@ -12,7 +12,7 @@
 
 import { createHash } from "node:crypto";
 
-const XRPL_RPC = "https://xrplcluster.com"; // Public XRPL full-history cluster
+const XRPL_RPC = process.env.XRPL_RPC || "https://xrplcluster.com"; // Public XRPL full-history cluster
 
 async function xrplCall(method, params) {
   const res = await fetch(XRPL_RPC, {
@@ -62,6 +62,8 @@ async function readXRPLTrustLines(issuer, currency) {
   let allLines = [];
   let marker = undefined;
   let page = 0;
+  let paginationComplete = false;
+  const maxPages = Number.parseInt(process.env.XRPL_MAX_PAGES || "250", 10);
   while (true) {
     const params = [{ account: issuer, ledger_index: "validated", limit: 400 }];
     if (marker) params[0].marker = marker;
@@ -70,21 +72,41 @@ async function readXRPLTrustLines(issuer, currency) {
     const lines = (res.lines || []).filter((l) => l.currency === currency);
     allLines.push(...lines);
     
-    if (!res.marker) break;
-    marker = res.marker;
     page++;
-    if (page > 20) break; // Safety limit
+    if (!res.marker) {
+      paginationComplete = true;
+      break;
+    }
+    marker = res.marker;
+    if (page >= maxPages) break;
   }
 
-  // Calculate supply (sum of all positive balances = tokens in circulation)
+  record.pagination = {
+    pages: page,
+    max_pages: maxPages,
+    complete: paginationComplete,
+    continuation_marker_present: !paginationComplete,
+  };
+
+  // account_lines is queried from the issuer's perspective. Negative balances are
+  // obligations held by counterparties; their absolute sum is circulating supply.
   let totalSupply = 0n;
   let holderCount = 0;
   const holders = [];
+
+  const toAtomic = (value, decimals = 6) => {
+    const negative = value.startsWith("-");
+    const unsigned = negative ? value.slice(1) : value;
+    const [whole = "0", fraction = ""] = unsigned.split(".");
+    const atomic = BigInt(whole || "0") * (10n ** BigInt(decimals))
+      + BigInt((fraction + "0".repeat(decimals)).slice(0, decimals));
+    return negative ? -atomic : atomic;
+  };
   
   for (const line of allLines) {
-    const balance = parseFloat(line.balance);
-    if (balance > 0) {
-      totalSupply += BigInt(Math.round(balance * 1e6)); // 6 decimal precision
+    const balance = toAtomic(String(line.balance));
+    if (balance < 0n) {
+      totalSupply += -balance;
       holderCount++;
       if (holders.length < 10) {
         holders.push({ account: line.account, balance: line.balance });
@@ -92,14 +114,25 @@ async function readXRPLTrustLines(issuer, currency) {
     }
   }
 
-  record.token = {
+  record.token = paginationComplete ? {
     currency,
     holder_count: holderCount,
     trust_line_count: allLines.length,
     totalSupply_raw_micro: totalSupply.toString(),
     totalSupply_normalized: (Number(totalSupply) / 1e6).toFixed(6),
-    top_holders: holders,
+    top_holders_from_issuer_perspective: holders,
+    holders_method: "account_lines_paginated_complete",
+  } : {
+    currency,
+    holder_count: null,
+    trust_line_count: null,
+    totalSupply_raw_micro: null,
+    totalSupply_normalized: null,
+    holders_method: "WITHHELD_INCOMPLETE_PAGINATION",
+    unmeasured: ["holder_count", "trust_line_count", "total_supply"],
   };
+
+  record.evidence_state = paginationComplete ? "OBSERVED_COMPLETE" : "UNMEASURED_INCOMPLETE_PAGINATION";
 
   // Replay hash
   record.replay_hash = createHash("sha256")

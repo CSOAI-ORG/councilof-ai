@@ -4,7 +4,7 @@
   "methodology": "Direct JSON-RPC calls to public endpoints. Each record documents the exact query, raw response hash, normalization, and replay instructions. Measurements are point-in-time snapshots, not continuous monitoring.",
   "code_revision": "4d643e089e437e51d0dc76b4f259c4a381101697",
   "terms_boundary_global": "Public JSON-RPC endpoints (no API key). Ethereum Foundation public nodes, Stellar Development Foundation Horizon. No rate limits exceeded. DefiLlama terms do not apply (direct RPC, not aggregator).",
-  "correction_link": "https://github.com/councilof/councilof-ai/issues",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
   "records": [
     {
       "id": "ethereum-usdc-totalSupply",
@@ -27,14 +27,15 @@
       "raw_hash": "8388aa6b5480a39f285090431866cdb55b221745ea4a0c71f72743766237bd48",
       "normalized_calculation": "Hex result 0x00000000000000000000000000000000000000000000000000b3f0b731d478fd converted to decimal via int(hex, 16) = 50648690436897021. Divided by 10^decimals (6) to get 50648690436.90 USDC.",
       "code_revision": "4d643e089e437e51d0dc76b4f259c4a381101697",
-      "replay_result": "YES — Run: curl -s -X POST https://ethereum-rpc.publicnode.com -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48\",\"data\":\"0x18160ddd\"},\"latest\"],\"id\":1}'. Note: result will reflect current block, not block 25954368. For exact replay, pass block number 0x18c0840 as the second param instead of \"latest\".",
+      "replay_result": "YES \u2014 Run: curl -s -X POST https://ethereum-rpc.publicnode.com -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48\",\"data\":\"0x18160ddd\"},\"latest\"],\"id\":1}'. Note: result will reflect current block, not block 25954368. For exact replay, pass block number 0x18c0840 as the second param instead of \"latest\".",
       "terms_boundary": "Ethereum Foundation public RPC (ethereum-rpc.publicnode.com). No API key required. Circle terms do not apply (direct contract read, not Circle API).",
-      "correction_link": "https://github.com/councilof/councilof-ai/issues",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
       "flags": {
         "cited_not_endorsed": true,
         "auto_measured": true,
         "point_in_time": true
-      }
+      },
+      "evidence_state": "CANDIDATE_REPLAY_REQUIRED"
     },
     {
       "id": "ethereum-usdt-totalSupply",
@@ -57,14 +58,15 @@
       "raw_hash": "816fccb7cce53f8bec78cf0914c07c3adbd578a1be1dd96930fc0ccbdbfe721d",
       "normalized_calculation": "Hex result 0x0000000000000000000000000000000000000000000000000139b9dd91e94bbb converted to decimal via int(hex, 16) = 88306028997331899. Divided by 10^decimals (6) to get 88306028997.33 USDT.",
       "code_revision": "4d643e089e437e51d0dc76b4f259c4a381101697",
-      "replay_result": "YES — Run: curl -s -X POST https://ethereum-rpc.publicnode.com -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0xdAC17F958D2ee523a2206206994597C13D831ec7\",\"data\":\"0x18160ddd\"},\"latest\"],\"id\":1}'. Note: result will reflect current block, not block 25954368. For exact replay, pass block number 0x18c0840 as the second param instead of \"latest\".",
+      "replay_result": "YES \u2014 Run: curl -s -X POST https://ethereum-rpc.publicnode.com -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0xdAC17F958D2ee523a2206206994597C13D831ec7\",\"data\":\"0x18160ddd\"},\"latest\"],\"id\":1}'. Note: result will reflect current block, not block 25954368. For exact replay, pass block number 0x18c0840 as the second param instead of \"latest\".",
       "terms_boundary": "Ethereum Foundation public RPC (ethereum-rpc.publicnode.com). No API key required. Tether terms do not apply (direct contract read, not Tether API).",
-      "correction_link": "https://github.com/councilof/councilof-ai/issues",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
       "flags": {
         "cited_not_endorsed": true,
         "auto_measured": true,
         "point_in_time": true
-      }
+      },
+      "evidence_state": "CANDIDATE_REPLAY_REQUIRED"
     },
     {
       "id": "ethereum-rlusd-totalSupply",
@@ -87,15 +89,16 @@
       "raw_hash": "7b3fcf0b81b3e90a9f3cd9b108c3ac65797eec4d9813058867679bb20c156a16",
       "normalized_calculation": "Hex result 0x000000000000000000000000000000000000000004705332fa0eae6e6e819735 converted to decimal via int(hex, 16) = 1373732627856031556976088885. Divided by 10^decimals (18) to get 1373732627.856031556976088885 RLUSD. Ethereum-only supply; CoinGecko reports ~2.4B total across Ethereum + XRPL.",
       "code_revision": "4d643e089e437e51d0dc76b4f259c4a381101697",
-      "replay_result": "YES — Run: curl -s -X POST https://ethereum-rpc.publicnode.com -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0x8292bb45bf1ee4d140127049757c2e0ff06317ed\",\"data\":\"0x18160ddd\"},\"latest\"],\"id\":1}'. For exact replay at this block, use 0x18c0840 instead of \"latest\".",
+      "replay_result": "YES \u2014 Run: curl -s -X POST https://ethereum-rpc.publicnode.com -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0x8292bb45bf1ee4d140127049757c2e0ff06317ed\",\"data\":\"0x18160ddd\"},\"latest\"],\"id\":1}'. For exact replay at this block, use 0x18c0840 instead of \"latest\".",
       "terms_boundary": "Ethereum Foundation public RPC (ethereum-rpc.publicnode.com). No API key required. Ripple terms do not apply (direct contract read, not Ripple API).",
-      "correction_link": "https://github.com/councilof/councilof-ai/issues",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
       "note": "The task specified contract 0x55C2aCeD3e83DB06D73f615A8DC885173D2a72b0 which has NO CODE on Ethereum (verified via eth_getCode). The correct Ripple RLUSD Ethereum address is 0x8292bb45bf1ee4d140127049757c2e0ff06317ed (source: CoinGecko / ripple-usd).",
       "flags": {
         "cited_not_endorsed": true,
         "auto_measured": true,
         "point_in_time": true
-      }
+      },
+      "evidence_state": "CANDIDATE_REPLAY_REQUIRED"
     },
     {
       "id": "ethereum-buidl-totalSupply",
@@ -121,21 +124,22 @@
       "raw_hash": "f538fcb0331423de8ba16850731c4baebbe7c6dd915677e0d2bdeafb822508b6",
       "normalized_calculation": "Hex result 0x0000000000000000000000000000000000000000000000000000c0dbf131e74d converted to decimal via int(hex, 16) = 212050876950349. Divided by 10^decimals (6) to get 212050876.950349 BUIDL (~$212M on Ethereum, ~$2.77B total across 9 chains per CoinGecko).",
       "code_revision": "4d643e089e437e51d0dc76b4f259c4a381101697",
-      "replay_result": "YES — Run: curl -s -X POST https://ethereum-rpc.publicnode.com -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0x7712c34205737192402172409a8f7ccef8aa2aec\",\"data\":\"0x18160ddd\"},\"latest\"],\"id\":1}'. For exact replay at this block, use 0x18c0840 instead of \"latest\".",
+      "replay_result": "YES \u2014 Run: curl -s -X POST https://ethereum-rpc.publicnode.com -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0x7712c34205737192402172409a8f7ccef8aa2aec\",\"data\":\"0x18160ddd\"},\"latest\"],\"id\":1}'. For exact replay at this block, use 0x18c0840 instead of \"latest\".",
       "terms_boundary": "Ethereum Foundation public RPC (ethereum-rpc.publicnode.com). No API key required. BlackRock/Securitize terms do not apply (direct contract read, not Securitize API).",
-      "correction_link": "https://github.com/councilof/councilof-ai/issues",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
       "flags": {
         "cited_not_endorsed": true,
         "auto_measured": true,
         "point_in_time": true,
         "tokenized_fund": true,
         "cross_chain_incomplete": true
-      }
+      },
+      "evidence_state": "CANDIDATE_REPLAY_REQUIRED"
     },
     {
       "id": "stellar-rlusd-asset-search",
       "asset": "RLUSD",
-      "issuer": "Ripple (expected) — not conclusively identified among Stellar issuers",
+      "issuer": "Ripple (expected) \u2014 not conclusively identified among Stellar issuers",
       "chain": "Stellar",
       "measurement": "asset_search",
       "status": "AMBIGUOUS",
@@ -149,9 +153,9 @@
       "raw_hash": "f86df9658d03147a224e0e671ef810fb4264c3cfff48c38bc0ddc380a22bfede",
       "normalized_calculation": "Horizon REST API response parsed as JSON. No hex conversion needed. balances.authorized field gives the authorized supply in stroops (7 decimal places on Stellar).",
       "code_revision": "4d643e089e437e51d0dc76b4f259c4a381101697",
-      "replay_result": "YES — Run: curl -s 'https://horizon.stellar.org/assets?asset_code=RLUSD&limit=10'. Result will reflect current ledger state, not ledger 64378635.",
+      "replay_result": "YES \u2014 Run: curl -s 'https://horizon.stellar.org/assets?asset_code=RLUSD&limit=10'. Result will reflect current ledger state, not ledger 64378635.",
       "terms_boundary": "Stellar Development Foundation Horizon API (horizon.stellar.org). Public, no API key. Stellar terms apply.",
-      "correction_link": "https://github.com/councilof/councilof-ai/issues",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
       "findings": {
         "total_assets_found": 10,
         "ripple_official_not_identified": true,
@@ -163,7 +167,10 @@
             "accounts_authorized": 11,
             "liquidity_pool_amount": "4,248,064.7863689",
             "toml_url": "",
-            "flags": {"auth_required": false, "auth_revocable": false},
+            "flags": {
+              "auth_required": false,
+              "auth_revocable": false
+            },
             "note": "No toml URL. Has LP activity. Could be third-party."
           },
           {
@@ -171,7 +178,10 @@
             "authorized_balance": "999,998,227.9056496",
             "accounts_authorized": 703,
             "toml_url": "https://lobstr.co/.well-known/stellar.toml",
-            "flags": {"auth_required": false, "auth_revocable": false},
+            "flags": {
+              "auth_required": false,
+              "auth_revocable": false
+            },
             "note": "LOBSTR-managed. 703 accounts. Large supply. Could be a LOBSTR wrapper or lookalike."
           }
         ],
@@ -186,12 +196,13 @@
         "auto_measured": true,
         "point_in_time": true,
         "issuer_not_confirmed": true
-      }
+      },
+      "evidence_state": "UNMEASURED_AMBIGUOUS"
     },
     {
       "id": "stellar-usdc-asset-search",
       "asset": "USDC",
-      "issuer": "Circle (expected) — not conclusively identified among Stellar issuers",
+      "issuer": "Circle (expected) \u2014 not conclusively identified among Stellar issuers",
       "chain": "Stellar",
       "measurement": "asset_search",
       "status": "AMBIGUOUS",
@@ -205,13 +216,13 @@
       "raw_hash": "144a2f9627aff9164d3ee4ae61c9f3364c4a763399ccbd9a3bc5d67c0c3bbe75",
       "normalized_calculation": "Horizon REST API response parsed as JSON. No hex conversion needed.",
       "code_revision": "4d643e089e437e51d0dc76b4f259c4a381101697",
-      "replay_result": "YES — Run: curl -s 'https://horizon.stellar.org/assets?asset_code=USDC&limit=5'. Result will reflect current ledger state.",
+      "replay_result": "YES \u2014 Run: curl -s 'https://horizon.stellar.org/assets?asset_code=USDC&limit=5'. Result will reflect current ledger state.",
       "terms_boundary": "Stellar Development Foundation Horizon API (horizon.stellar.org). Public, no API key. Stellar terms apply.",
-      "correction_link": "https://github.com/councilof/councilof-ai/issues",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
       "findings": {
         "total_assets_found": 5,
         "circle_official_not_identified": true,
-        "note": "The previously known Circle USDC issuer GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3T3HUFXMTKMYBTMHLRW returns HTTP 400 'invalid asset_issuer' from Horizon. Multiple USDC assets exist. The first result (GA24LJXFG73JGARIBG2GP6V5TNUUOS6BD23KOFCW3INLDY5KPKS7GACZ) shows 421.7B authorized balance — impossibly large for real USDC, likely a lookalike.",
+        "note": "The previously known Circle USDC issuer GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3T3HUFXMTKMYBTMHLRW returns HTTP 400 'invalid asset_issuer' from Horizon. Multiple USDC assets exist. The first result (GA24LJXFG73JGARIBG2GP6V5TNUUOS6BD23KOFCW3INLDY5KPKS7GACZ) shows 421.7B authorized balance \u2014 impossibly large for real USDC, likely a lookalike.",
         "note_2": "Circle may have deprecated their Stellar USDC issuance or migrated the issuer account. Further investigation needed."
       },
       "flags": {
@@ -220,28 +231,63 @@
         "point_in_time": true,
         "issuer_not_confirmed": true,
         "possible_deprecation": true
-      }
+      },
+      "evidence_state": "UNMEASURED_AMBIGUOUS"
     }
   ],
   "summary": {
     "total_records": 6,
     "successful_measurements": 4,
     "ambiguous_measurements": 2,
-    "chains_queried": ["Ethereum", "Stellar"],
+    "chains_queried": [
+      "Ethereum",
+      "Stellar"
+    ],
     "ethereum_block": 25954368,
     "stellar_ledger": 64378635,
     "assets_measured": {
-      "USDC_ethereum": {"supply": "50,648,690,436.90", "unit": "USDC", "decimals": 6},
-      "USDT_ethereum": {"supply": "88,306,028,997.33", "unit": "USDT", "decimals": 6},
-      "RLUSD_ethereum": {"supply": "1,373,732,627.86", "unit": "RLUSD", "decimals": 18, "note": "Ethereum-only; ~2.4B total cross-chain per CoinGecko"},
-      "BUIDL_ethereum": {"supply": "212,050,876.95", "unit": "BUIDL", "decimals": 6, "note": "Ethereum-only; ~2.77B total across 9 chains per CoinGecko"},
-      "RLUSD_stellar": {"supply": "NOT_MEASURED", "note": "10 RLUSD assets found; Ripple's official issuer not conclusively identified"},
-      "USDC_stellar": {"supply": "NOT_MEASURED", "note": "Circle's known Stellar issuer returns 400; possible deprecation"}
+      "USDC_ethereum": {
+        "supply": "50,648,690,436.90",
+        "unit": "USDC",
+        "decimals": 6
+      },
+      "USDT_ethereum": {
+        "supply": "88,306,028,997.33",
+        "unit": "USDT",
+        "decimals": 6
+      },
+      "RLUSD_ethereum": {
+        "supply": "1,373,732,627.86",
+        "unit": "RLUSD",
+        "decimals": 18,
+        "note": "Ethereum-only; ~2.4B total cross-chain per CoinGecko"
+      },
+      "BUIDL_ethereum": {
+        "supply": "212,050,876.95",
+        "unit": "BUIDL",
+        "decimals": 6,
+        "note": "Ethereum-only; ~2.77B total across 9 chains per CoinGecko"
+      },
+      "RLUSD_stellar": {
+        "supply": "NOT_MEASURED",
+        "note": "10 RLUSD assets found; Ripple's official issuer not conclusively identified"
+      },
+      "USDC_stellar": {
+        "supply": "NOT_MEASURED",
+        "note": "Circle's known Stellar issuer returns 400; possible deprecation"
+      }
     },
     "corrections_from_task_spec": {
       "RLUSD_ethereum_contract": "Task specified 0x55C2aCeD3e83DB06D73f615A8DC885173D2a72b0 (NO CODE). Correct address: 0x8292bb45bf1ee4d140127049757c2e0ff06317ed.",
       "BUIDL_ethereum_contract": "Task specified 0x7712c39BDe88010cD16460E4a56b3D5Bb8F0bD9D (NO CODE, 0 holders on Etherscan). Correct address: 0x7712c34205737192402172409a8f7ccef8aa2aec.",
       "Stellar_USDC_issuer": "Task specified GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3T3HUFXMTKMYBTMHLRW (returns HTTP 400 from Horizon). Circle may have deprecated Stellar USDC or the issuer address changed."
     }
+  },
+  "evidence_acceptance": {
+    "state": "PARTIAL_CANDIDATE_ONLY",
+    "accepted_measurements": 0,
+    "candidate_evm_records": 4,
+    "rejected_or_ambiguous_records": 2,
+    "reason": "EVM rows require independent historical-block replay before admission. Stellar rows remain explicitly unmeasured/ambiguous. Aggregator comparisons are context, not measurements."
   }
 }

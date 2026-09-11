@@ -17,8 +17,13 @@
     "note": "Negative balances from issuer = tokens in circulation. Sum of abs(negative balances) = supply.",
     "top_issuer_beneficiary": "r9c6A65SmhhZALrkMTpq.. (-50,280,805 RLUSD)"
   },
-  "deep_measurement_state": "MEASURED_XRPL",
+  "deep_measurement_state": "REJECTED_UNPROVEN_PAGINATION_AND_METHOD",
   "evidence_state": "PROBED",
   "terms_boundary": "Public XRPL full-history cluster (xrplcluster.com). No API key.",
-  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues"
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+  "evidence_acceptance": {
+    "state": "REJECTED",
+    "reason": "The recorded result does not prove complete account_lines pagination and conflicts with the corrected issuer-perspective balance-sign method. Counts and supply must not enter a public measurement or score.",
+    "superseded_by": "scripts/readers/xrpl-trustline-reader.mjs@1.1.0"
+  }
 }

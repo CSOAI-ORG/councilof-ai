@@ -64,7 +64,8 @@ async function readERC20(chain, contract) {
   // Get latest block
   const blockHex = await rpcCall(cfg.rpc, "eth_blockNumber", []);
   const blockNumber = parseInt(blockHex, 16);
-  record.finalized_block = blockNumber;
+  record.observed_block = blockNumber;
+  record.block_finality = "RPC_LATEST_NOT_INDEPENDENTLY_PROVEN_FINAL";
 
   // Get block hash for replay
   const blockData = await rpcCall(cfg.rpc, "eth_getBlockByNumber", [blockHex, false]);
