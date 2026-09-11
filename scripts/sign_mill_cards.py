@@ -123,6 +123,10 @@ def main(argv: list[str] | None = None) -> int:
         else:
             body["status"] = "UNMEASURED"
             body["unmeasured"] = ["n<30 unquotable"]
+        # This value is part of the signed body, so it must describe the state
+        # that survives the signer call. Leaving STAGED_UNSIGNED here creates a
+        # cryptographically valid wrapper around a lifecycle contradiction.
+        body["signature_state"] = "SIGNED"
         wrap["body"] = body
         raw = canonical_bytes(body)
         if len(raw) > MAX_PAYLOAD_BYTES:

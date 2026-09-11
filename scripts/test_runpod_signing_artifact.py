@@ -242,10 +242,13 @@ class ArtifactTests(unittest.TestCase):
         self.assertEqual(len(calls), 2)
         self.assertTrue(all(body["model"] != "legacy" for body in calls))
         self.assertEqual({body["n"]: body["status"] for body in calls}, {36: "MEASURED", 12: "UNMEASURED"})
+        self.assertTrue(all(body["signature_state"] == "SIGNED" for body in calls))
 
         first = signed / f"signed-governan-{'1' * 12}.json"
         self.assertTrue(first.is_file())
-        self.assertEqual(json.loads(first.read_text())["id"], "1" * 64)
+        signed_first = json.loads(first.read_text())
+        self.assertEqual(signed_first["id"], "1" * 64)
+        self.assertEqual(signed_first["body"]["signature_state"], "SIGNED")
 
     def test_explicit_signer_source_requires_present_nonempty_directory(self):
         with mock.patch.object(signer, "sign_via_oidc_attested") as signing, contextlib.redirect_stderr(io.StringIO()):
