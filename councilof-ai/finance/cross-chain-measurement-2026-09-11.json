@@ -1,0 +1,71 @@
+{
+  "schema": "csoai.financial-coverage/0.1",
+  "kind": "financial.cross-chain-measurement",
+  "generator": "cross-chain-reader-0.1.0",
+  "generated_at": "2026-09-11T12:02:14.602Z",
+  "terms_boundary": "totalSupply() only — NOT proof of reserves",
+  "measurements": [
+    {
+      "symbol": "USDC",
+      "chain": "base",
+      "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "block": 51169393,
+      "supply_raw": "4247877041591458",
+      "supply_normalized": 4247877041.591458,
+      "supply_display": "$4.25B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "https://base-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:02:13.922Z"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "arbitrum",
+      "contract": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      "block": 504043202,
+      "supply_raw": "2717606623389642",
+      "supply_normalized": 2717606623.389642,
+      "supply_display": "$2.72B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "https://arbitrum-one-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:02:14.114Z"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "arbitrum",
+      "contract": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      "block": 504043202,
+      "supply_raw": "807390380983572",
+      "supply_normalized": 807390380.983572,
+      "supply_display": "$807.39M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "https://arbitrum-one-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:02:14.200Z"
+    },
+    {
+      "symbol": "BUIDL",
+      "chain": "ethereum",
+      "contract": "0x7712c3dD84997771f2b4a4797886523E7F717e8B",
+      "measurement_state": "MEASUREMENT_FAILED",
+      "error": "Cannot convert 0x to a BigInt"
+    },
+    {
+      "symbol": "USDY",
+      "chain": "ethereum",
+      "contract": "0x96F6eF951840721AdBF46Ac996b59E0235CB985C",
+      "block": 25954032,
+      "supply_raw": "1034011525533545855950146791",
+      "supply_normalized": 1034011525.5335459,
+      "supply_display": "$1.03B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:02:14.517Z"
+    },
+    {
+      "symbol": "USDG",
+      "chain": "ethereum",
+      "contract": "0xE3B3f82f280A25f1CDF92ea5f22412B4a1e8Bc26",
+      "measurement_state": "MEASUREMENT_FAILED",
+      "error": "Cannot convert 0x to a BigInt"
+    }
+  ]
+}
