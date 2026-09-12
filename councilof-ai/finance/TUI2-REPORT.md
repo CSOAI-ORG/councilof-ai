@@ -215,3 +215,23 @@ Deep measurement covers a subset only. INDEXED ≠ MEASURED.
 **USBDC:** Remains UNMEASURED (issuer account not independently identified).
 
 **Stellar status:** GENUINELY BLOCKED by API incompatibility, not a code bug.
+
+## x402 End-to-End Evidence (from parallel session)
+
+**Status:** COMPLETE — all 6 steps passed on Base mainnet.
+**Source:** Session ses_-ffe5f7014f872ffe9qlEYphw1, commit e7f9343e8 on agents/discovery-consolidation-20260911
+
+| Step | Result | Evidence |
+|------|--------|----------|
+| Discovery | PASS | GET /.well-known/x402.json → mode=live, eip155:8453 |
+| Challenge | PASS | GET /api/free-door → HTTP 402, amount=0 |
+| Signing | PASS | EIP-3009 with throwaway wallet 0x864A4667... |
+| Settle | PASS | PayAI /verify (isValid:true) + /settle (success:true), tx 0x9e18a496... on Base mainnet |
+| Delivery | PASS | GET /api/free-door + X-PAYMENT → HTTP 200, board totals |
+| Verify | PASS | root.json: 169 cards, Ed25519 signed |
+| Signed receipt | PASS | X-PAYMENT-RESPONSE: JWS EdDSA, tx 0x80f3d96f..., kid #board-attestation-1 |
+
+**100 verified settlement transactions** on Base mainnet (1.3398 USDC total, all receipt_status 0x1).
+Source: docs/product/x402-settlement-receipts-verified-2026-09-06.json
+
+**Classification:** Free-door (amount=0) proves the entire x402 path. Revenue remains zero.
