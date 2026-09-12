@@ -13,6 +13,7 @@ on:
     types: [closed]
 
 permissions:
+  actions: read
   pull-requests: write
 
 concurrency:
@@ -66,14 +67,47 @@ jobs:
           gh pr view "$PR_NUMBER" --json title,body -q '{title: .title, body: .body}' > pr.json
           python3 - <<'PY'
           import json, os, re, subprocess
+          from urllib.parse import urljoin, urlsplit
 
           UA = ["-A", "csoai-post-merge-prover/0"]
+          ALLOWED_HOSTS = {"councilof.ai", "csoai.org", "proofof.ai"}
+
+          def allowed(url):
+              parsed = urlsplit(url)
+              try:
+                  port = parsed.port
+              except ValueError:
+                  return False
+              return (
+                  parsed.scheme == "https"
+                  and parsed.hostname in ALLOWED_HOSTS
+                  and parsed.username is None
+                  and parsed.password is None
+                  and port in (None, 443)
+              )
+
           def probe(url):
-              out = subprocess.run(
-                  ["curl", "-sS", "-L", "--max-time", "25", *UA, "-o", "/dev/null",
-                   "-w", "%{http_code}", url],
-                  capture_output=True, text=True)
-              return out.stdout.strip() or "000"
+              current = url
+              for _ in range(5):
+                  if not allowed(current):
+                      return "BLOCKED_REDIRECT"
+                  out = subprocess.run(
+                      [
+                          "curl", "-sS", "--max-time", "25",
+                          "--proto", "=https", "--proto-redir", "=https",
+                          *UA, "-o", "/dev/null",
+                          "-w", "%{http_code}\n%{redirect_url}", current,
+                      ],
+                      capture_output=True, text=True,
+                  )
+                  code, _, redirect = out.stdout.partition("\n")
+                  code = code.strip() or "000"
+                  redirect = redirect.strip()
+                  if code.startswith("3") and redirect:
+                      current = urljoin(current, redirect)
+                      continue
+                  return code
+              return "TOO_MANY_REDIRECTS"
 
           pr = json.load(open("pr.json"))
           results = []
