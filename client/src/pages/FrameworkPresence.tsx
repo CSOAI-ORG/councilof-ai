@@ -162,9 +162,9 @@ export default function FrameworkPresence() {
         <h2 className="mt-12 text-xl font-bold text-slate-100">Corrections</h2>
         <p className="mt-2 text-sm leading-6 text-slate-400">
           If a lab publishes a framework, moves a document, or we recorded a row wrongly,
-          corrections are appended, never silently edited. Rows carry their verification
-          date and HTTP status so a later, better measurement can be added next to them.
-          Report a correction through the{" "}
+          we publish a new dated snapshot through the public repository, where the change
+          remains inspectable. Rows carry their verification date and HTTP status so later
+          measurements can show what changed. Report a correction through the{" "}
           <a href="/refutation-ledger" className="text-emerald-300 underline hover:text-emerald-200">
             refutation ledger
           </a>
