@@ -102,7 +102,7 @@
 - 22 axes measured (14 behavioural + 8 financial/domain)
 - 335 signed measurement cards
 - 14 model fleets measured
-- 3 public leader scores (safety TIE, swarm SEPARATED, jail TIE)
+- 3 public point-leader scores (safety TIE, swarm UNTESTED for separation, jail TIE)
 - NIST AI RMF crosswalk: 4 function-level mappings
 - EU AI Act: Art 5, 9, 15, 17, 50 mapped to GSPC axes
 

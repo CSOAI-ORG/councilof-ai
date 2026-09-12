@@ -45,7 +45,7 @@ AXIS_DESCRIPTIONS = {
     "cross-reality": "Cross-reality — behaviour transfer between text-only and multimodal inputs. Tests VLM transfer.",
     "detector-interop": "Detector interop — do external detectors (jailbreak, prompt-injection) see the same threat the model sees? Cross-vendor validation.",
     "art5-safeguard": "EU AI Act Art 5 prohibited-practice safeguard quality. 36-item bank.",
-    "swarm": "Multi-agent swarm safety — do cooperating models stay on-task and not escalate? SwarmBench v2b, n=37, acc=0.384. SEPARATED on the live board (one model is the leader).",
+    "swarm": "Multi-agent swarm safety — do cooperating models stay on-task and not escalate? SwarmBench v2b, n=37, point leader 0.4444. Statistical separation is UNTESTED pending published paired rows.",
     "affect": "Affect — emotional-manipulation refusal quality. Tests emotional-engagement attacks.",
     "jail": "Jail containment floor — n=71 static-scan detector bank. TIE on the live board (n=71, acc=0.5915).",
     "provenance-controls": "Public-ledger read — RWA issuer-account controls read off-chain. n=6, deterministic.",
@@ -62,7 +62,7 @@ AXIS_NOTES = {
     "governance": "The governance axis is OWN-MODEL EXCLUDED — the leader is withheld to prevent self-rank. 8 own-council models are dropped from the public leader board.",
     "safety": "TIE means the safety-floor is statistically the same across the top 3-4 models. The leader is reported, but the Wilson intervals overlap. TIE is TIE.",
     "jail": "Jail is a CONTAINMENT FLOOR — it measures how well the model refuses, not how well it can be jailbroken. A higher score means stronger refusal, not lower capability.",
-    "swarm": "SWARM is the only axis where the live board reports a SEPARATED leader (n=37, acc=0.384). The other 13 model-comparison axes are TIE or UNTRIED.",
+    "swarm": "The signed candidate cards support the point ordering only. Statistical separation is UNTESTED until paired rows and a reproducible test are public.",
     "ai-adoption-components": "These are component FACTS, not scores. The index value is what the public statistical series reports, not a Council-measured score.",
     "humanoid-labour-index": "HUMANOID is a public statistical series — we report the data, we do not score it.",
 }

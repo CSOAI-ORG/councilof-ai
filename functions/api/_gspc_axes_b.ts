@@ -36,22 +36,24 @@ export const AXES_B: AxisScore[] = [
     axis: "swarm", family: "gspc", kind: "model-comparison", bench: "SwarmBench v2b", task: "multi-agent coordination safety",
     n: 37, n_note: "wave-2b bank: 37 independent items × 5-model fleet, n≥36 graded per cell. Replaces " +
       "the PROTOCOL bank (40 non-independent instances, interval withheld by our own effective-n rule) — " +
-      "the withholding retired because this bank earns its interval, not because the rule changed",
-    accuracy: 0.384, accuracy_is: "95% Wilson LOWER BOUND — a conservative floor, not the point " +
-      "estimate. The point estimate lives in the signed wave-2b board (pod commit e440591); the bound " +
-      "is quoted here because it is the number that resolves the ordering",
+      "the bank structure resolves the old effective-n defect, but compatible per-model intervals and " +
+      "paired rows are not published, so statistical separation remains UNTESTED",
+    accuracy: 0.4444, accuracy_is: "point estimate from the signed qwen2.5:7b candidate card " +
+      "b44335819f7720966b41e2ee26f5798892b0eb8d2571c71e0c9090506f1ff823",
     leader: "qwen2.5:7b (base model)",
-    separation: "SEPARATED",
-    separation_basis: "95% Wilson non-overlap: leader lower bound 0.384 clears runner-up (mistral:7b) " +
-      "upper bound 0.372. Bound non-overlap on independent items is stricter than p<0.05; the paired " +
-      "McNemar on the signed board rows follows when the pod re-signs. The top three models remain " +
-      "statistically tied among themselves — the ordering is resolved at the leader boundary only.",
+    separation: "UNTESTED",
+    separation_basis: "The signed candidate cards establish the point ordering only: qwen2.5:7b " +
+      "0.4444, qwen3:4b 0.4070 and qwen2.5:1.5b 0.4000. They do not publish paired item rows or " +
+      "compatible confidence intervals, so no public separation determination is supported. The " +
+      "earlier claim compared the leader with mistral:7b even though mistral was not the runner-up " +
+      "and is superseded here.",
     status: "MEASURED",
     dataset: "csoai/gspc-swarm", colour: "#94a3b8", hue: 215,
-    note: "UNGATED by owner ruling 2026-08-19: the first CI-resolved ordering on this axis. The old " +
-      "PROTOCOL bank stays in the record as the honesty-clause gold template (CIs that looked disjoint, " +
-      "paired p=1.0 — why McNemar-primary exists). Jail (slot 14) separation was determined 2026-08-25 " +
-      "(TIE). For the live board count, cite totals.public_count from GET /api/gspc.",
+    note: "The wave-2b candidate cards support a point leader but not a statistically separated " +
+      "leader. The retired PROTOCOL bank stays in the historical record as the honesty-clause example " +
+      "(apparently disjoint marginal intervals, paired p=1.0). A fresh paired test over published rows " +
+      "is required before this axis may be labelled SEPARATED or TIE. For the live board count, cite " +
+      "totals.public_count from GET /api/gspc.",
   },
   {
     axis: "affect", family: "gspc", kind: "model-comparison", bench: "AffectBench", task: "emotional & embodied safety (manipulation / disclosure / vulnerability)",

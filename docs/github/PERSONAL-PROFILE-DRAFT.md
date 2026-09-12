@@ -32,7 +32,7 @@ _derived 2026-09-05T14:30:46Z by [`scripts/github/org-readme.py`](https://github
 | 9 | `cross-reality` | gspc | model-comparison | 32 | **MEASURED** | UNTESTED | no — no signed card |
 | 10 | `detector-interop` | gspc | model-comparison | 33 | **MEASURED** | UNTESTED | no — no signed card |
 | 11 | `art5-safeguard` | gspc | model-comparison | 36 | **MEASURED** | UNTESTED | no — own model led, excluded |
-| 12 | `swarm` | gspc | model-comparison | 37 | **MEASURED** | SEPARATED | yes — accuracy 0.384 |
+| 12 | `swarm` | gspc | model-comparison | 37 | **MEASURED** | UNTESTED | yes — point accuracy 0.4444 |
 | 13 | `affect` | gspc | model-comparison | 41 | **MEASURED** | UNTESTED | no — own model led, excluded |
 | 14 | `jail` | gspc | model-comparison | 71 | **MEASURED** | TIE | yes — accuracy 0.5915 |
 | 15 | `provenance-controls` | financial | deterministic-facts | 6 | **MEASURED** | — | no leader by design (facts run) |

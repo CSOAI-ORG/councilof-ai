@@ -56,10 +56,10 @@ const ITEMS: FeedItem[] = [
     desc: "Paste any estate record: content_id recomputed (both envelope generations), Ed25519 checked against the published did.json keys via WebCrypto. Tested against a real card (PASS) and a tampered copy (FAIL). Unsigned records get an honest 'hash checked only' — never a fake pass.",
   },
   {
-    title: "Swarm ungated: the first CI-resolved ordering on the swarm axis",
+    title: "Correction: swarm point leader retained; separation claim withdrawn",
     link: "https://councilof.ai/api/gspc",
-    date: "Tue, 19 Aug 2026 11:30:00 GMT",
-    desc: "Owner ruling 19 Aug 2026: the wave-2b bank (37 independent items, 5-model fleet, n≥36/cell) resolves the swarm ordering — qwen2.5:7b's 95% lower bound (0.384) clears the runner-up's upper bound (0.372). Separated leads: 4 of 14. The retired PROTOCOL bank stays in the record as the honesty-clause example. Jail remains the board's only untested separation, so the public count stays 13 measured of 14.",
+    date: "Sat, 12 Sep 2026 09:00:00 GMT",
+    desc: "The signed wave-2b candidate cards support qwen2.5:7b as the point leader (0.4444), followed by qwen3:4b (0.4070). They do not publish paired rows or compatible intervals, so the earlier SEPARATED claim is withdrawn and the live axis is UNTESTED for separation. Measurement remains; unsupported statistical certainty does not.",
   },
   {
     title: "Arena feed live: 2,900+ signed AI-vs-AI rounds streaming",

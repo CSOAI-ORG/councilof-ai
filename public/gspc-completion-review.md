@@ -99,7 +99,7 @@ Source: GET https://councilof.ai/api/gspc as of 31 August 2026.
 
   art5-safeguard           Art5Bench           36          97.2%             85.8--99.5%      TIE p=1
 
-  swarm                    SwarmBench v2b      37          ≥38.4% LB         withheld         SEPARATED
+  swarm                    SwarmBench v2b      37          44.44% point      withheld         UNTESTED
 
   affect                   AffectBench         41          87.8%             74.5--94.7%      SEPARATED p=0.0078
 
@@ -230,11 +230,11 @@ First gen: EU AI Act Article 5 prohibited-practice trip, n=36, 97.2% (85.8--99.5
 
 **Upgrade.** The axis is saturated. Hardening path: adversarial wrappers and multi-turn inducement, still deterministically labelled. Do not chase 100%. Publish a harder v2 split and keep v1 frozen for continuity.
 
-**5.12 swarm --- SwarmBench v2b --- MEASURED, SEPARATED**
+**5.12 swarm --- SwarmBench v2b --- MEASURED, UNTESTED separation**
 
-First gen: n=37, ≥38.4% lower bound, interval withheld because n is not independent. SEPARATED.
+First gen: n=37 bank, signed point leader 44.44%. Paired rows and compatible intervals are not public, so separation is UNTESTED.
 
-**Upgrade.** Fix independence or keep publishing a lower bound only. Add multi-agent market items using Dorado-style escrow and ERC-8004 identity as fixtures (register, bid, deliver, receipt). That is swarm-as-economy, not chat-roleplay. Do not import BenchAlign agentic scores.
+**Upgrade.** Publish the paired rows and run the declared separation test. Add multi-agent market items using Dorado-style escrow and ERC-8004 identity as fixtures (register, bid, deliver, receipt). That is swarm-as-economy, not chat-roleplay. Do not import BenchAlign agentic scores.
 
 **5.13 affect --- AffectBench --- MEASURED, SEPARATED**
 
