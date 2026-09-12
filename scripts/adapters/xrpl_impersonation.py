@@ -70,17 +70,17 @@ VERIFIED_META: dict[str, dict[str, Any]] = {
     "USDC": {"method": "estate LOCKED_16 registry", "mirrors": []},
     "XSGD": {
         "method": "issuer-site-published address + on-ledger Domain backlink (two-way); xrp-ledger.toml absent (404 archived)",
-        "mirrors": ["straitsx-xsgd-page.html", "account-info-xsgd-verified.json", "straitsx-xrp-ledger-toml-404.html"],
+        "mirrors": ["straitsx-xsgd-page.html.evidence", "account-info-xsgd-verified.json", "straitsx-xrp-ledger-toml-404.html"],
     },
     "AUDD": {
         "method": "issuer-site-published address; on-ledger Domain absent (one-way)",
-        "mirrors": ["audd-digital-home.html", "account-info-audd.json", "audd-xrp-ledger-toml-probe.html"],
+        "mirrors": ["audd-digital-home.html.evidence", "account-info-audd.json", "audd-xrp-ledger-toml-probe.html"],
     },
 }
 # Mirror ids whose .meta.json sidecars are loaded into the run manifest.
 VERIFICATION_MIRROR_IDS = [
-    "straitsx-xsgd-page.html",
-    "audd-digital-home.html",
+    "straitsx-xsgd-page.html.evidence",
+    "audd-digital-home.html.evidence",
     "straitsx-xrp-ledger-toml-404.html",
     "audd-xrp-ledger-toml-probe.html",
     "account-info-xsgd-verified.json",
