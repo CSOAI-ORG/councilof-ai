@@ -30,6 +30,6 @@ jobs:
       - name: Install locked dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
       - name: Offline public catalog contract
-        run: npx --no-install vitest run functions/.well-known/api-catalog.test.ts --maxWorkers=1 --minWorkers=1
+        run: npx --no-install vitest run functions/.well-known/api-catalog.test.ts --maxWorkers=1
       - name: Strict typecheck of the isolated catalog handler
         run: npx --no-install tsc --noEmit --strict --skipLibCheck --target es2022 --module esnext --moduleResolution bundler functions/.well-known/api-catalog.ts

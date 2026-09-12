@@ -43,7 +43,7 @@ jobs:
       - name: Install locked dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
       - name: Offline MCP protocol, client and paid-tool contracts
-        run: npx --no-install vitest run functions/mcp functions/api/fabric.test.ts scripts/capability-drift-guard.test.ts client/src/lib/mcpHttp.test.ts client/src/lib/sovTools.test.ts client/src/components/ToolRunner.test.ts --maxWorkers=1 --minWorkers=1
+        run: npx --no-install vitest run functions/mcp functions/api/fabric.test.ts scripts/capability-drift-guard.test.ts client/src/lib/mcpHttp.test.ts client/src/lib/sovTools.test.ts client/src/components/ToolRunner.test.ts --maxWorkers=1
       - name: Offline capability drift guard selftest
         run: node scripts/capability-drift-guard.mjs --selftest
       - name: Offline Hugging Face MCP count contract
