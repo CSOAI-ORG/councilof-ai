@@ -96,7 +96,7 @@ export default function ROICalculator() {
             <h1 className="text-4xl font-bold">CSOAI ROI Calculator</h1>
           </div>
           <p className="text-xl text-slate-300 max-w-3xl">
-            Discover how much your organization can save with CSOAI's AI governance platform.
+            Discover how much your organization can save with CSOAI's AI governance measurement platform.
             Use our interactive calculator to estimate your financial impact and ROI.
           </p>
         </div>
