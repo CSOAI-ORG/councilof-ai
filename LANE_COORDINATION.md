@@ -427,3 +427,13 @@ Branch `tui2/stablecoin-lane-2026-09-12` off master c34ee387. Claiming files:
 - `TUI-2-FINANCIAL-COVERAGE.md` (figures to today's measurements; honest-not-claim section intact)
 
 Resolves CONTRAD-001 truthfully: index.json stays a frozen discovery snapshot (labeled as such); live states live in the coverage matrix. No signing, no verdict words, £0 keyless.
+
+## 2026-09-12 · TUI-2 lane day 2 — coverage + signing-intake diagnosis (append)
+
+Branch `tui2/coverage-day2`. Claiming: `tui2-measurements/tui2-cohort2-2026-09-12.json`, `public/interop/stablecoin-universe-2026-09/drift-2026-09-12T1533Z.json` + README append, singletons (`docs/tui2/DEDUPLICATED-CATALOG.json`, `public/interop/coverage-register.json`, `tui2-catalog/financial-catalog-20260912.json`), `.github/workflows/public-root.yml` (push-trigger addition, scoped to staging dirs only).
+
+**Signing-intake diagnosis:** public-root.yml has NO push trigger — intake is cron-only (`7 * * * *`) + dispatch events. The #2009 merge (15:14Z) therefore queued nothing; the 15:07 and 16:07 cron slots were delayed >2h by the GitHub scheduler (last run 34698096429 @ 14:02:13Z success; other workflows healthy). Added a scoped `push` trigger on the three staging dirs + `scripts/adapters/staged_leaves.py`; publisher output paths never match, so no self-trigger loop.
+
+**Catalog correction (appended, not silent):** entries[id=143] identity had carried Valtorum's XRPL address; removed to ethereum-only. USDV identities (143/398) never collapsed.
+
+Cohort 2: 10 asset identities / 13 chain observations, all finalized-tag EVM reads, £0 keyless.
