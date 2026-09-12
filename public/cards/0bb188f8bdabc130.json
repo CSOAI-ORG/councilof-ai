@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-12T14:01:22.699Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 1,
+      "issuer": "Société Générale-FORGE",
+      "issuer_address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 10000000,
+      "symbol": "EURCV",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "0bb188f8bdabc130a765fb7d57f6e5bcd883406ffc85028e3bf857c852533860",
+    "sig_ed25519": null,
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EURCV public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml",
+      "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
+    ]
+  },
+  "proof": [
+    "abfbfa90acab0f7887c559f1a35f93423326c41b2af5802e28f9306263f6a169",
+    "71b2a45591176795d355a22ba22845014bd14d10305d4b61e3be493eb6734a2c",
+    "e14f9772417df2ce02ebb1f48207912bf46eddcc1c227b21654abdd5d5c43d30",
+    "ab2c1cf30d45103fbebf31b05356ed124f87e19a8cffecdd4dea383347fb5cb2",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "c65ac26e3d87e6e8307d8dd7191432757f902ff480e9c687e709fa92f145f5aa",
+    "2301fad708caabedf908e895fc1106cd9135b94bcabb8c02c2504483e9ec0e3f",
+    "1a8920b8f2929b2e8c013381161d1be79675e21c751e578490443a6a3d2c9019"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "card": {
+    "as_of": "2026-09-12T14:01:22.699Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 41200,
+      "issuer": "Ripple",
+      "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1053014745.151132,
+      "symbol": "RLUSD",
+      "verified_domain": "ripple.com",
+      "verified_via": "Bidirectional domain match"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "8b9003d7bbdc7d078c55d78c532babbf3f85d80cb6f0b39704dc631e88d7907e",
+    "sig_ed25519": "3da60fa1d74effcf3e06f47871c353d7f10ea08efa68ea4408488a88e48762aa6c7fc86ce43b5d8669d1630793933e95da9d1bbbd89d82c5063ed247e8e5650f",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL RLUSD public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "38fdd1fb3d5e0e2cc400a54d5b2ddda3fbadded0fc6cb0bf3f00f51624797d14",
+    "19b09e58be5a9463a379916f5c532237888df6bc687a2ea1ab6876b2a5e897a6",
+    "487e2acd294307fcd5738d33418c7e670d6b534aae9e7b52f8abbe727db5628e",
+    "ab2c1cf30d45103fbebf31b05356ed124f87e19a8cffecdd4dea383347fb5cb2",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "c65ac26e3d87e6e8307d8dd7191432757f902ff480e9c687e709fa92f145f5aa",
+    "2301fad708caabedf908e895fc1106cd9135b94bcabb8c02c2504483e9ec0e3f",
+    "1a8920b8f2929b2e8c013381161d1be79675e21c751e578490443a6a3d2c9019"
+  ]
+}
