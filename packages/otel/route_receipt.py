@@ -10,6 +10,8 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import math
+import re
 from pathlib import Path
 from typing import Any
 
@@ -38,19 +40,42 @@ def _first_span(document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any
     return span, attrs, resource
 
 
+def _nanos(value: Any) -> int:
+    # OTLP timestamps are unsigned decimal nanoseconds. Never manufacture a time.
+    if isinstance(value, bool) or not re.fullmatch(r"[0-9]+", str(value)):
+        raise ValueError("span timestamp must be positive integer Unix nanoseconds")
+    nanos = int(value)
+    if nanos <= 0 or nanos > 2**64 - 1:
+        raise ValueError("span timestamp is outside the OTLP uint64 range")
+    return nanos
+
+
 def _iso_from_nanos(value: Any) -> str:
-    try:
-        nanos = int(value)
-    except (TypeError, ValueError):
-        return dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
-    return dt.datetime.fromtimestamp(nanos / 1_000_000_000, dt.timezone.utc).isoformat().replace("+00:00", "Z")
+    nanos = _nanos(value)
+    seconds, remainder = divmod(nanos, 1_000_000_000)
+    stamp = dt.datetime.fromtimestamp(seconds, dt.timezone.utc)
+    return stamp.strftime("%Y-%m-%dT%H:%M:%S") + f".{remainder:09d}Z"
 
 
 def _duration_ms(span: dict[str, Any]) -> int | None:
-    try:
-        return max(0, round((int(span["endTimeUnixNano"]) - int(span["startTimeUnixNano"])) / 1_000_000))
-    except (KeyError, TypeError, ValueError):
+    start, end = span.get("startTimeUnixNano"), span.get("endTimeUnixNano")
+    if start is None or end is None:
         return None
+    delta = _nanos(end) - _nanos(start)
+    if delta < 0:
+        raise ValueError("span end timestamp precedes its start")
+    return round(delta / 1_000_000)
+
+
+def _number(value: Any, *, integer: bool = False) -> int | float | None:
+    if value is None:
+        return None
+    allowed = (int,) if integer else (int, float)
+    if isinstance(value, bool) or not isinstance(value, allowed) or value < 0:
+        raise ValueError("usage and cost must be non-negative numbers; token counts must be integers")
+    if isinstance(value, float) and not math.isfinite(value):
+        raise ValueError("usage and cost must be finite")
+    return value
 
 
 def _status(span: dict[str, Any]) -> str:
@@ -68,40 +93,41 @@ def convert(document: dict[str, Any], *, request_sha256: str, response_sha256: s
             policy_sha256: str, source_urls: list[str], service_revision: str | None = None,
             frozen_bank_id: str | None = None, relationship: str = "independent_measurement",
             region_constraint: str | None = None) -> dict[str, Any]:
+    for name, digest in (("request", request_sha256), ("response", response_sha256), ("policy", policy_sha256)):
+        if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise ValueError(f"{name} SHA-256 must contain 64 lowercase hexadecimal characters")
     span, attrs, resource = _first_span(document)
     trace_id = span.get("traceId")
     span_id = span.get("spanId")
     service = str(resource.get("service.name") or attrs.get("service.name") or "unidentified-service")
     provider = attrs.get("gen_ai.provider.name") or attrs.get("gen_ai.system")
-    model = attrs.get("gen_ai.response.model") or attrs.get("gen_ai.request.model")
+    model = attrs.get("gen_ai.response.model")
     limitations = [
-        "Converted from one OTLP/JSON span; no behavioral or regulatory grade is inferred.",
+        "Converted from one caller-supplied OTLP/JSON span; provider, response model and cloud region are span-reported, not independently verified. No behavioral or regulatory grade is inferred.",
         "Prompt, response, tool arguments, and tool results were excluded; caller-supplied SHA-256 digests bind the content.",
     ]
     if not provider:
         limitations.append("Provider identity was unavailable in the span.")
     if not model:
-        limitations.append("Model identity was unavailable in the span.")
+        limitations.append("Response model identity was unavailable; a requested model is a declaration, not an observation.")
     if not trace_id:
         limitations.append("Transport trace identifier was unavailable in the span.")
 
     fallback = attrs.get("csoai.route.fallback_observed")
     if not isinstance(fallback, bool):
         fallback = None
-    cost = attrs.get("gen_ai.usage.cost")
-    if not isinstance(cost, (int, float)):
-        cost = None
+    cost = _number(attrs.get("gen_ai.usage.cost"))
 
     return {
         "schema": "csoai.route-receipt/0.1",
         "receipt_id": f"otel-{trace_id or 'unobservable'}-{span_id or 'unobservable'}",
-        "observed_at": _iso_from_nanos(span.get("endTimeUnixNano") or span.get("startTimeUnixNano")),
+        "observed_at": _iso_from_nanos(span.get("endTimeUnixNano", span.get("startTimeUnixNano"))),
         "subject": {
             "service": service,
             "service_revision": service_revision or resource.get("service.version"),
             "relationship": relationship,
             "provider_declared": attrs.get("csoai.route.provider_declared"),
-            "model_declared": attrs.get("csoai.route.model_declared"),
+            "model_declared": attrs.get("csoai.route.model_declared") or attrs.get("gen_ai.request.model"),
         },
         "request": {
             "sha256": request_sha256,
@@ -121,13 +147,13 @@ def convert(document: dict[str, Any], *, request_sha256: str, response_sha256: s
             "provider_observed": provider,
             "model_observed": model,
             "fallback_observed": fallback,
-            "region_observed": attrs.get("cloud.region") or attrs.get("server.address"),
+            "region_observed": attrs.get("cloud.region"),
             "latency_ms": _duration_ms(span),
             "cost_usd": cost,
             "usage": {
-                "input_tokens": attrs.get("gen_ai.usage.input_tokens"),
-                "output_tokens": attrs.get("gen_ai.usage.output_tokens"),
-                "orchestration_tokens": attrs.get("csoai.route.orchestration_tokens"),
+                "input_tokens": _number(attrs.get("gen_ai.usage.input_tokens"), integer=True),
+                "output_tokens": _number(attrs.get("gen_ai.usage.output_tokens"), integer=True),
+                "orchestration_tokens": _number(attrs.get("csoai.route.orchestration_tokens"), integer=True),
             },
         },
         "evidence": {
@@ -176,7 +202,7 @@ def main() -> int:
         relationship=args.relationship,
         region_constraint=args.region_constraint,
     )
-    args.output.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    args.output.write_text(json.dumps(receipt, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
     return 0
 
 
