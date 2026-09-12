@@ -413,3 +413,17 @@ Quote live GET: **22 · 15 · 7**, merkle `4a9a5036…`, envelope UNSIGNED until
 HTTP MCP `https://councilof.ai/mcp` already lists seven tools (`get_root` `get_card` `verify_inclusion` VALID against that merkle). npm `0.1.0` still four.
 
 HF `whoami`: `Nicholastempleman` + org `csoai` role **admin**. Hub writes allowed under lowercase `csoai` only. KEEP 3090 RUNNING; other pods EXITED; pods do not sign. `cobolbridge.ai` 522 — do not demo.
+
+## 2026-09-12 · TUI-2 lane — stablecoin universe refresh + priority-cohort deep measurement (append)
+
+Branch `tui2/stablecoin-lane-2026-09-12` off master c34ee387. Claiming files:
+- `public/interop/stablecoin-universe-2026-09/` (index.json, source.json, README.md — drift note appended, not silent edit)
+- `scripts/check_stablecoin_readiness.py` (honest expectation updates only if counts change)
+- `docs/tui2/rlusd-sametime-frame-2026-09-12.json` (new)
+- `tui2-measurements/tui2-cohort-2026-09-12.json` (new)
+- `docs/tui2/DEDUPLICATED-CATALOG.json`, `TUI-2-MEASUREMENT-QUEUE.json`, `public/interop/coverage-register.json`, `tui2-catalog/financial-catalog-20260912.json` (singletons refresh)
+- `public/interop/stablecoin-cohort-2026-09/` (new unsigned card-v0 staging dir)
+- `scripts/adapters/staged_leaves.py` (add staging dir to STAGED_DIRS)
+- `TUI-2-FINANCIAL-COVERAGE.md` (figures to today's measurements; honest-not-claim section intact)
+
+Resolves CONTRAD-001 truthfully: index.json stays a frozen discovery snapshot (labeled as such); live states live in the coverage matrix. No signing, no verdict words, £0 keyless.
