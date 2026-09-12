@@ -1,0 +1,55 @@
+{
+  "schema": "csoai.execution-ledger/1.0",
+  "generated_at": "2026-09-12T04:21:27.387023+00:00",
+  "generator": "Hermes Reconciler",
+  "plan": "SEVEN-TERMINAL EATING PLAN \u2014 2026-09-12",
+  "master_head": "4bb4c4446",
+  "production_health": "ALL 10 ENDPOINTS HTTP 200. CI GREEN.",
+  "shared_scoreboard": {
+    "canonical_subjects_indexed": 425,
+    "deployments_resolved": 1640,
+    "subjects_deeply_measured": 6,
+    "board_axes_accepted": 22,
+    "regulatory_provisions_linked": 5,
+    "signed_cards_verified": 335,
+    "root_leaves": 169,
+    "rekor_inclusions": 1,
+    "ots_submissions": 17,
+    "bitcoin_confirmations": 0,
+    "xrpl_memo_anchors": 0,
+    "base_eas_attestations": 0,
+    "x402_challenges_verified": 3,
+    "x402_deliveries": 0,
+    "self_settlements": 6,
+    "independent_settlements": 1,
+    "repeat_buyers": 0,
+    "dataset_downloads": 68,
+    "external_citations": 0,
+    "active_directory_listings": 6,
+    "total_spend_usd": 0.0,
+    "attributable_revenue_usdc": 0.02,
+    "unresolved_conflicts": 3
+  },
+  "open_prs_count": 10,
+  "contradictions": [
+    "root_leaves: 167\u2192169 (new mill cards via PR #1894)",
+    "merkle_root: 78d4e019\u219294e99db5 (recomputed after leaf addition)",
+    "self_settlements: 5\u21926 (new self-test)",
+    "card_index=335 vs mill-queue=36 OIDC receipts (different locations)"
+  ],
+  "next_actions": [
+    "TUI-1: Verify mill provenance binding (PR #1941)",
+    "TUI-2: Consolidate readers + measurements",
+    "TUI-4: x402 end-to-end probe",
+    "TUI-5: Council OS rail audit",
+    "TUI-6: Distribution channel consolidation",
+    "TUI-3: Verify 36 OIDC receipts lifecycle"
+  ],
+  "blockers": [
+    "x402 payment: owner wallet required (agent cannot hold funds)",
+    "Base EAS: owner funded wallet required",
+    "XRPL memo: owner funded account required",
+    "NIST submission: owner communication gate for 16 Sep deadline",
+    "PR merge: protected master requires owner review"
+  ]
+}
