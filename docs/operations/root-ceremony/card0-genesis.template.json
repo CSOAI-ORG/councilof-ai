@@ -29,5 +29,5 @@
   },
   "scope": "Anchors and attestation of operational keys only. This card is never a certification. Measurement cards (card-v1 under the public root) remain the only measured surface; nothing in this genesis tier grades, ranks, certifies, or endorses anything.",
   "sig_ed25519": null,
-  "note_sig": "Self-signed by ROOT-alpha during the ceremony. Preimage = canonical bytes (UTF-8 JSON, sorted keys, separators (',',':'), ensure_ascii=False — the estate canon in scripts/publish_public_root.py) of this card with the sig_ed25519 field REMOVED ENTIRELY (not null). Verify from root_alpha.pubkey_raw_hex alone."
+  "note_sig": "Created only by scripts/ceremony/genesis_card.py finalize after a matching independent Shamir cross-check record. The tool strips every note_* field, fills identities, canonicalizes the card with sig_ed25519 removed, signs, verifies from root_alpha.pubkey_raw_hex, fsyncs, and atomically creates the destination."
 }

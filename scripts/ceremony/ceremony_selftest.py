@@ -43,6 +43,7 @@ sys.path.insert(0, str(HERE))
 import entropy_from_dice  # noqa: E402
 import shamir_2of3  # noqa: E402
 import ed25519_from_seed  # noqa: E402
+import genesis_card  # noqa: E402
 
 TEMPLATE = ROOT / "docs" / "operations" / "root-ceremony" / "card0-genesis.template.json"
 LABEL = "TEST — NOT A CEREMONY"
@@ -120,44 +121,57 @@ def main() -> int:
         step("root_beta_test_key_derived", len(pub_b) == 32,
              pubkey_raw_hex=pub_b.hex(), jwk_thumbprint=tp_b)
 
-        # 6. fill template with test keys, self-sign card #0 (minus sig field)
-        card = json.loads(TEMPLATE.read_text(encoding="utf-8"))
-        card["created_at"] = record["as_of"]
-        card["root_alpha"]["pubkey_raw_hex"] = pub_a.hex()
-        card["root_alpha"]["jwk_thumbprint_rfc7638_sha256_b64url"] = tp_a
-        card["root_beta"]["pubkey_raw_hex"] = pub_b.hex()
-        card["root_beta"]["jwk_thumbprint_rfc7638_sha256_b64url"] = tp_b
-        card.pop("sig_ed25519")  # REMOVED ENTIRELY for the preimage
-        preimage = ed25519_from_seed.canonical_bytes(card)
-        sig = key_a.sign(preimage)
-        card["sig_ed25519"] = sig.hex()
+        # 6. Produce a SIMULATED independent-crosscheck record. The selftest
+        # deliberately uses this module for the throwaway second result; the
+        # real checklist requires a separately sourced implementation.
+        s_sha = hashlib.sha256(seed_a).hexdigest()
+        for idx, share in shares:
+            shamir_2of3._write_secret_file(
+                d / f"share-{idx}.json",
+                json.dumps(shamir_2of3.share_record(idx, share, s_sha)).encode() + b"\n",
+            )
+        independent_seed = shamir_2of3.combine_shares([shares[0], shares[2]])
+        shamir_2of3._write_secret_file(d / "independent.seed", independent_seed)
+        (d / "independent-checker.TEST").write_text("SIMULATED checker identity\n")
+        class CrossArgs:
+            share = [str(d / "share-1.json"), str(d / "share-3.json")]
+            independent_secret = str(d / "independent.seed")
+            independent_tool = str(d / "independent-checker.TEST")
+            independent_tool_name = "SIMULATED-IN-SELFTEST"
+            out_record = str(d / "shamir-crosscheck.json")
+        cross_rc = shamir_2of3.cmd_crosscheck(CrossArgs())
+        step("independent_crosscheck_gate_exercised", cross_rc == 0)
+
+        # 7. Serialize the throwaway ROOT-alpha key only inside the temp dir,
+        # then exercise atomic fill/sign/verify through the production helper.
+        key_path = d / "root-alpha.TEST.der"
+        key_path.write_bytes(key_a.private_bytes(
+            serialization.Encoding.DER,
+            serialization.PrivateFormat.PKCS8,
+            serialization.NoEncryption(),
+        ))
         card_path = d / "card0-genesis.TEST.json"
-        card_path.write_text(json.dumps(card, indent=1, ensure_ascii=False) + "\n")
-        step("card0_self_signed", len(sig) == 64,
+        class FinalizeArgs:
+            template = str(TEMPLATE)
+            root_alpha_key = str(key_path)
+            root_beta_pubkey = pub_b.hex()
+            created_at = record["as_of"]
+            shamir_crosscheck_record = str(d / "shamir-crosscheck.json")
+            out = str(card_path)
+        finalize_rc = genesis_card.cmd_finalize(FinalizeArgs())
+        step("card0_atomic_finalize", finalize_rc == 0 and card_path.is_file())
+        verify_card = json.loads(card_path.read_text(encoding="utf-8"))
+        _, preimage = genesis_card.validate_card(verify_card, require_signature=True)
+        step("card0_verified_from_pubkey_alone", True,
              preimage_sha256=hashlib.sha256(preimage).hexdigest(),
              preimage_canon="UTF-8 JSON, sorted keys, separators (',',':'), ensure_ascii=False, sig_ed25519 removed entirely")
 
-        # 7. verify from pubkey alone (fresh key object, no private material)
-        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
-        verify_card = json.loads(card_path.read_text(encoding="utf-8"))
-        sig_hex = verify_card.pop("sig_ed25519")
-        ok_verify = False
-        try:
-            Ed25519PublicKey.from_public_bytes(bytes.fromhex(verify_card["root_alpha"]["pubkey_raw_hex"])) \
-                .verify(bytes.fromhex(sig_hex), ed25519_from_seed.canonical_bytes(verify_card))
-            ok_verify = True
-        except Exception:
-            ok_verify = False
-        step("card0_verified_from_pubkey_alone", ok_verify)
-
         # negative control: a tampered card must NOT verify
         tampered = json.loads(card_path.read_text(encoding="utf-8"))
-        tampered_sig = bytes.fromhex(tampered.pop("sig_ed25519"))
         tampered["scope"] = "certifies everything"  # the thing we promise never to do
-        ok_tamper = True
         try:
-            Ed25519PublicKey.from_public_bytes(pub_a).verify(
-                tampered_sig, ed25519_from_seed.canonical_bytes(tampered))
+            genesis_card.validate_card(tampered, require_signature=True)
+            ok_tamper = True
         except Exception:
             ok_tamper = False
         step("tampered_card_rejected", not ok_tamper)

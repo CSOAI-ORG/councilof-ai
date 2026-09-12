@@ -60,6 +60,7 @@ import json
 import os
 import stat
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 SCHEME = "shamir-gf256-0x11b/v1"
@@ -141,11 +142,13 @@ def split_secret(secret: bytes, k: int = K, n: int = N,
 
 
 def combine_shares(points: list[tuple[int, bytes]]) -> bytes:
-    if len(points) < K:
-        raise ValueError(f"need at least {K} shares, got {len(points)}")
+    if len(points) != K:
+        raise ValueError(f"need exactly {K} shares, got {len(points)}")
     xs = [p[0] for p in points]
     if len(set(xs)) != len(xs):
         raise ValueError("duplicate share index — refusing to combine")
+    if any(x not in range(1, N + 1) for x in xs):
+        raise ValueError(f"share index outside 1..{N}")
     if any(len(p[1]) != SECRET_LEN for p in points):
         raise ValueError("share length mismatch")
     use = points[:K]
@@ -188,7 +191,16 @@ def load_share(path: Path) -> tuple[int, bytes, str]:
     if rec.get("scheme") != SCHEME or rec.get("k") != K or rec.get("n") != N:
         raise ValueError(f"{path}: scheme/k/n mismatch — not a {SCHEME} share")
     share = bytes.fromhex(rec["share_hex"])
-    return int(rec["index"]), share, rec["secret_sha256"]
+    index = int(rec["index"])
+    digest = rec["secret_sha256"]
+    if index not in range(1, N + 1):
+        raise ValueError(f"{path}: share index must be 1..{N}")
+    if len(share) != SECRET_LEN:
+        raise ValueError(f"{path}: share must be {SECRET_LEN} bytes")
+    if not isinstance(digest, str) or len(digest) != 64:
+        raise ValueError(f"{path}: secret_sha256 is malformed")
+    bytes.fromhex(digest)
+    return index, share, digest.lower()
 
 
 def cmd_split(args: argparse.Namespace) -> int:
@@ -216,6 +228,78 @@ def cmd_split(args: argparse.Namespace) -> int:
     print(f"secret_sha256: {s_sha}")
     for p in paths:
         print(f"wrote {p} (mode 0600) — distribute each to a DIFFERENT medium/holder")
+    return 0
+
+
+def cmd_crosscheck(args: argparse.Namespace) -> int:
+    """Bind a reconstruction from this implementation to an independent one.
+
+    The independent implementation runs separately and writes only its
+    reconstructed 32-byte seed to --independent-secret on the disposable
+    ceremony medium. This command compares both byte strings, binds the
+    independent executable by SHA-256, and writes a public, secret-free PASS
+    record. genesis_card.py refuses to finalize a real card without this
+    record matching ROOT-alpha's seed fingerprint.
+    """
+    try:
+        _fips197_selfcheck()
+        if len(args.share) != K:
+            raise ValueError(f"cross-check needs exactly {K} shares")
+        loaded = [load_share(Path(p)) for p in args.share]
+        digests = {d for _, _, d in loaded}
+        if len(digests) != 1:
+            raise ValueError("share files disagree on secret_sha256")
+        internal = combine_shares([(i, s) for i, s, _ in loaded])
+        independent = Path(args.independent_secret).read_bytes()
+        if len(independent) != SECRET_LEN:
+            raise ValueError(
+                f"independent reconstruction must be {SECRET_LEN} bytes, got {len(independent)}"
+            )
+        tool_bytes = Path(args.independent_tool).read_bytes()
+        if not tool_bytes:
+            raise ValueError("independent tool file is empty")
+    except (ValueError, OSError, json.JSONDecodeError) as exc:
+        print(f"REFUSING: {exc}", file=sys.stderr)
+        return 2
+
+    expected = digests.pop()
+    internal_sha = hashlib.sha256(internal).hexdigest()
+    independent_sha = hashlib.sha256(independent).hexdigest()
+    if internal_sha != expected or independent_sha != expected or internal != independent:
+        print(
+            "REFUSING: independent Shamir reconstruction does not match the "
+            "native reconstruction and committed secret_sha256",
+            file=sys.stderr,
+        )
+        return 2
+
+    record = {
+        "kind": "csoai.shamir-independent-crosscheck/1",
+        "status": "PASS",
+        "checked_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "scheme": SCHEME,
+        "share_indices": sorted(i for i, _, _ in loaded),
+        "secret_sha256": expected,
+        "independent_tool": {
+            "name": args.independent_tool_name,
+            "sha256": hashlib.sha256(tool_bytes).hexdigest(),
+        },
+        "scope": (
+            "The independent implementation reconstructed the same bytes from "
+            "this share pair. This record contains no secret material."
+        ),
+    }
+    out = Path(args.out_record)
+    try:
+        _write_secret_file(out, json.dumps(record, sort_keys=True, indent=1).encode() + b"\n")
+        os.chmod(out, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+    except (FileExistsError, OSError) as exc:
+        print(f"REFUSING: {exc}", file=sys.stderr)
+        return 1
+    print("independent_crosscheck: PASS")
+    print(f"secret_sha256: {expected}")
+    print(f"record_file: {out}")
+    print("DESTROY NOW: the independent reconstructed seed is seed-equivalent secret material")
     return 0
 
 
@@ -289,8 +373,8 @@ def cmd_selftest() -> int:
             if gf_mul(s_candidate, x) ^ a != y:  # f(x) with this a hits y?
                 fails.append(f"single-share silence broken at candidate {s_candidate}")
                 break
-        # 4. combine refuses < k shares and duplicate indices
-        for bad_points in ([shares[0]], [shares[0], shares[0]]):
+        # 4. combine refuses anything other than exactly k distinct shares
+        for bad_points in ([shares[0]], [shares[0], shares[0]], shares):
             try:
                 combine_shares(bad_points)
                 fails.append(f"combine accepted invalid input {len(bad_points)} shares")
@@ -306,7 +390,7 @@ def cmd_selftest() -> int:
         print("selftest: FAILED — do NOT run the real ceremony on this machine")
         return 1
     print("selftest: ok — 3/3 pairs reconstruct; corruption detected fail-closed; "
-          "single share silent on all 256 values per byte; <k and duplicate shares refused")
+          "single share silent on all 256 values per byte; wrong count and duplicate shares refused")
     return 0
 
 
@@ -320,12 +404,23 @@ def main() -> int:
     cp = sub.add_parser("combine")
     cp.add_argument("--share", action="append", required=True)
     cp.add_argument("--out", required=True)
+    xp = sub.add_parser("crosscheck")
+    xp.add_argument("--share", action="append", required=True)
+    xp.add_argument("--independent-secret", required=True,
+                    help="32-byte reconstruction emitted by a separately implemented checker")
+    xp.add_argument("--independent-tool", required=True,
+                    help="the independently sourced checker executable/source, hashed into the record")
+    xp.add_argument("--independent-tool-name", required=True,
+                    help="public name and version of the independently sourced checker")
+    xp.add_argument("--out-record", required=True)
     sub.add_parser("selftest")
     args = ap.parse_args()
     if args.cmd == "split":
         return cmd_split(args)
     if args.cmd == "combine":
         return cmd_combine(args)
+    if args.cmd == "crosscheck":
+        return cmd_crosscheck(args)
     return cmd_selftest()
 
 
