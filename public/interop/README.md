@@ -14,6 +14,7 @@ root-as-index. Not a second board, second scorer, or TS.
 
 | Bank | Path | Surface | Role |
 | --- | --- | --- | --- |
+| Route Receipt open door | [`/route-receipts`](https://councilof.ai/route-receipts) · [`route-receipt.schema.json`](./route-receipt.schema.json) · [`route-receipt.synthetic.example.json`](./route-receipt.synthetic.example.json) | `csoai.route-receipt/0.1` | Vendor-neutral declared-vs-observed orchestration evidence. The example is synthetic and unsigned; no partnership implied. |
 | OpenAI↔HF Jul 2026 incident | [`incident-openai-hf-2026-07/`](./incident-openai-hf-2026-07/) | `public.notice` | Hashed public reports only — DISCOVERED; **not** recomputed; unsigned |
 | GPAI CoP signatory cross-ref | [`gpai-signatory-2026-09/`](./gpai-signatory-2026-09/) | `public.notice` | Live EC list dated/hashed — DISCOVERED; voluntary; **not** compliance; unsigned |
 | XRPL toml gap (strict_two_way_toml) | [`xrpl-toml-gap-2026-09/`](./xrpl-toml-gap-2026-09/) | `public.notice` | 12/16 issuers still listing failed check — DISCOVERED; **not** bidirectional; unsigned |

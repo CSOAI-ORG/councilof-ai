@@ -1,0 +1,60 @@
+{
+  "schema": "csoai.route-receipt/0.1",
+  "receipt_id": "synthetic-20260912-0001",
+  "observed_at": "2026-09-12T08:15:00Z",
+  "subject": {
+    "service": "synthetic-openai-compatible-router",
+    "service_revision": "fixture-1",
+    "relationship": "independent_measurement",
+    "provider_declared": "provider-a",
+    "model_declared": "model-a"
+  },
+  "request": {
+    "sha256": "8c67ddc041f46ea0b81ca84d2024bb2894ee59ef8e574f455b20d1d1cf5fe66f",
+    "frozen_bank_id": "route-fixture-v0.1",
+    "content_retained": false
+  },
+  "route_policy": {
+    "policy_sha256": "d110cf3ca67e57a73f0257c38b98a3e38bf9c0d1474ee9c85c9c75eba91ac4d8",
+    "data_collection": "deny",
+    "zero_data_retention": "required",
+    "region_constraint": "eu",
+    "provider_allowlist": ["provider-a"],
+    "provider_blocklist": []
+  },
+  "execution": {
+    "status": "completed",
+    "provider_observed": "provider-a",
+    "model_observed": "model-a-2026-09",
+    "fallback_observed": false,
+    "region_observed": null,
+    "latency_ms": 842,
+    "cost_usd": 0.0012,
+    "usage": {
+      "input_tokens": 19,
+      "output_tokens": 7,
+      "orchestration_tokens": null
+    }
+  },
+  "evidence": {
+    "response_sha256": "99490db67806bf39afc3d4020d43a508fa09f625ca796279188e1dc74ce51d74",
+    "transport_trace_id": "synthetic-trace-0001",
+    "source_urls": ["https://councilof.ai/interop/route-receipt.schema.json"],
+    "limitations": [
+      "Synthetic fixture only; no live provider or model was measured.",
+      "Region and orchestration-token observations were unavailable."
+    ]
+  },
+  "disclosure": {
+    "route_identity": "public",
+    "request_content": "withheld_digest_only",
+    "response_content": "withheld_digest_only",
+    "independence_note": "Fixture demonstrates the record format only. It is not a provider endorsement, partnership, certification, or production measurement."
+  },
+  "integrity": {
+    "payload_sha256": null,
+    "signature": { "algorithm": "none", "kid": null, "value": null },
+    "root": { "sha256": null, "inclusion_proof_url": null, "anchor_status": "unsubmitted" },
+    "corrections_url": "https://councilof.ai/corrections"
+  }
+}

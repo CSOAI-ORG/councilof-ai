@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/interop/route-receipt.schema.json",
+  "title": "CSOAI Route Receipt",
+  "description": "A privacy-preserving, correction-aware record of one model-routing or agent-orchestration event. It records observable evidence; it is not a certification or legal conclusion.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "receipt_id",
+    "observed_at",
+    "subject",
+    "request",
+    "route_policy",
+    "execution",
+    "evidence",
+    "disclosure",
+    "integrity"
+  ],
+  "properties": {
+    "schema": { "const": "csoai.route-receipt/0.1" },
+    "receipt_id": { "type": "string", "minLength": 8, "maxLength": 160 },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["service", "service_revision", "relationship"],
+      "properties": {
+        "service": { "type": "string", "minLength": 1 },
+        "service_revision": { "type": ["string", "null"] },
+        "relationship": { "enum": ["independent_measurement", "design_partner", "first_party"] },
+        "provider_declared": { "type": ["string", "null"] },
+        "model_declared": { "type": ["string", "null"] }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256", "frozen_bank_id", "content_retained"],
+      "properties": {
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "frozen_bank_id": { "type": ["string", "null"] },
+        "content_retained": { "const": false }
+      }
+    },
+    "route_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_sha256", "data_collection", "zero_data_retention", "region_constraint"],
+      "properties": {
+        "policy_sha256": { "$ref": "#/$defs/sha256" },
+        "data_collection": { "enum": ["allow", "deny", "unspecified", "unobservable"] },
+        "zero_data_retention": { "enum": ["required", "not_required", "unobservable"] },
+        "region_constraint": { "type": ["string", "null"] },
+        "provider_allowlist": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "provider_blocklist": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "provider_observed", "model_observed", "fallback_observed", "latency_ms", "cost_usd", "usage"],
+      "properties": {
+        "status": { "enum": ["completed", "failed", "refused", "timeout", "unobservable"] },
+        "provider_observed": { "type": ["string", "null"] },
+        "model_observed": { "type": ["string", "null"] },
+        "fallback_observed": { "type": ["boolean", "null"] },
+        "region_observed": { "type": ["string", "null"] },
+        "latency_ms": { "type": ["integer", "null"], "minimum": 0 },
+        "cost_usd": { "type": ["number", "null"], "minimum": 0 },
+        "usage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["input_tokens", "output_tokens", "orchestration_tokens"],
+          "properties": {
+            "input_tokens": { "type": ["integer", "null"], "minimum": 0 },
+            "output_tokens": { "type": ["integer", "null"], "minimum": 0 },
+            "orchestration_tokens": { "type": ["integer", "null"], "minimum": 0 }
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["response_sha256", "transport_trace_id", "source_urls", "limitations"],
+      "properties": {
+        "response_sha256": { "$ref": "#/$defs/sha256" },
+        "transport_trace_id": { "type": ["string", "null"] },
+        "source_urls": { "type": "array", "items": { "type": "string", "format": "uri" }, "uniqueItems": true },
+        "limitations": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route_identity", "request_content", "response_content", "independence_note"],
+      "properties": {
+        "route_identity": { "enum": ["public", "committed", "withheld", "unobservable"] },
+        "request_content": { "enum": ["withheld_digest_only", "public"] },
+        "response_content": { "enum": ["withheld_digest_only", "public"] },
+        "independence_note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["payload_sha256", "signature", "root", "corrections_url"],
+      "properties": {
+        "payload_sha256": { "$ref": "#/$defs/nullableSha256" },
+        "signature": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "kid", "value"],
+          "properties": {
+            "algorithm": { "enum": ["Ed25519", "none"] },
+            "kid": { "type": ["string", "null"] },
+            "value": { "type": ["string", "null"] }
+          }
+        },
+        "root": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sha256", "inclusion_proof_url", "anchor_status"],
+          "properties": {
+            "sha256": { "$ref": "#/$defs/nullableSha256" },
+            "inclusion_proof_url": { "type": ["string", "null"], "format": "uri" },
+            "anchor_status": { "enum": ["unsubmitted", "pending", "anchored", "unobservable"] }
+          }
+        },
+        "corrections_url": { "type": "string", "format": "uri" }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "nullableSha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" }
+  }
+}
