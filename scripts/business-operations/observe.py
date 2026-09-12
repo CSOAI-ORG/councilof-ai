@@ -172,7 +172,26 @@ def run(state, config, mill=False, force_sources=False):
         alerts.append({'id': 'revenue:unmeasured', 'kind': 'measurement'})
     if revenue.get('records_unreadable'):
         alerts.append({'id': 'revenue:unreadable-records', 'kind': 'measurement'})
+    pipeline = None
     if mill:
+        pipeline = {'private_intake_token_provisioned': Path('/workspace/lanes/.secrets/runpod-intake-hf-token').is_file(), 'scheduler_running': False, 'last_upload': None}
+        try:
+            pid = int(Path('/workspace/lanes/state/scheduler.pid').read_text().strip())
+            command = Path('/proc', str(pid), 'cmdline').read_bytes().split(b'\0')
+            pipeline['scheduler_running'] = len(command) > 1 and command[1] == b'/workspace/lanes/loops/scheduler.sh'
+        except (OSError, ValueError):
+            pass
+        try:
+            upload = json.loads(Path('/workspace/lanes/state/runpod-upload/latest.json').read_text())
+            pipeline['last_upload'] = {key: upload.get(key) for key in ('state', 'finished_at', 'exit_code', 'counts')}
+        except (OSError, ValueError):
+            pass
+        if not pipeline['scheduler_running']:
+            alerts.append({'id': 'publication:scheduler-absent', 'kind': 'service'})
+        if not pipeline['private_intake_token_provisioned']:
+            alerts.append({'id': 'publication:intake-credential-absent', 'kind': 'service'})
+        if not pipeline['last_upload'] or pipeline['last_upload'].get('exit_code') != 0:
+            alerts.append({'id': 'publication:last-upload-unsuccessful', 'kind': 'service'})
         disk = shutil.disk_usage('/workspace')
         disk_metrics = {'total_bytes': disk.total, 'free_bytes': disk.free, 'used_percent': round(disk.used / disk.total * 100, 2)}
         if disk.free < 4 * 1024 ** 3:
@@ -225,6 +244,7 @@ def run(state, config, mill=False, force_sources=False):
                 'gspc': {'measured_on': gspc.get('measured_on'), 'totals': gspc.get('totals'), 'freshness_verified': False},
                 'hub_cards': {'totals': hub.get('totals'), 'read_so_far': hub.get('read_so_far'), 'as_of': hub.get('as_of'), 'signature_verified': False},
                 'mill_health': observations.get('mill_health', {}).get('data'),
+                'publication_pipeline': pipeline,
                 'local_model_count': len(models) if mill else None,
                 'indexes': indexes,
                 'disk': disk_metrics, 'events': events, 'alerts': alerts,
