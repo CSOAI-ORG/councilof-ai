@@ -24,7 +24,7 @@ jobs:
   prove:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_REPO: ${{ github.repository }}
@@ -46,11 +46,19 @@ jobs:
             echo "no deploy run for $MERGE_SHA (workflow-only change?) — probing anyway after grace"
             sleep 120
           else
-            for i in $(seq 1 14); do
+            for i in $(seq 1 22); do
               ST=$(gh run view "$RID" --json status,conclusion -q '.status + " " + (.conclusion // "-")')
               echo "deploy run $RID: $ST"
               case "$ST" in
                 "completed success") DEPLOY_OK="green"; break ;;
+                "completed cancelled")
+                  # 2026-09-12: cancelled = coalesced, NOT failed. deploy.yml is a serial
+                  # queue; a rapid next merge supersedes this run and THE NEXT green deploy
+                  # carries this commit's content. Follow the chain forward before judging.
+                  echo "coalesced — following the next master deploy forward"
+                  NEXT=$(gh run list --workflow deploy.yml --branch master --json databaseId,createdAt -L 5 \
+                    -q '[.[] | select(.databaseId > '"$RID"')] | .[0].databaseId // empty' || true)
+                  if [ -n "$NEXT" ]; then RID="$NEXT"; DEPLOY_OK="coalesced→run $NEXT"; else DEPLOY_OK="coalesced"; break; fi ;;
                 "completed "*) DEPLOY_OK="failed"; break ;;
               esac
               sleep 45
