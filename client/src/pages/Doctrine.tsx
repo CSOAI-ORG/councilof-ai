@@ -49,7 +49,7 @@ const REFUSALS: { title: string; body: string }[] = [
     body: "A signed measurement records the subject, method, evidence and time. It is not a conformity mark, endorsement or certificate of compliance.",
   },
   {
-    title: "We will not sell a grade.",
+    title: "We never sell a grade.",
     body: "Payment can fund a run, signature, attachment or report. It cannot alter, delay or suppress a result, and verification remains free.",
   },
   {
