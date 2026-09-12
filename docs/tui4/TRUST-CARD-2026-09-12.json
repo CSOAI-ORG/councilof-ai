@@ -1,0 +1,136 @@
+{
+  "schema": "csoai.interop-trust-card/0.1",
+  "subject": "CSOAI Agent Economy Interoperability",
+  "as_of": "2026-09-12T04:54:33.617118+00:00",
+  "issuer": "CSOAI Ltd (UK 16939677)",
+  "did": "did:web:csoai.org",
+  "protocol_surfaces": {
+    "mcp": {
+      "count": 12,
+      "free": 8,
+      "paid": 4,
+      "endpoint": "https://councilof.ai/mcp",
+      "state": "LIVE"
+    },
+    "a2a": {
+      "skills": 7,
+      "endpoint": "https://councilof.ai/api/a2a",
+      "state": "LIVE"
+    },
+    "x402": {
+      "resources": 9,
+      "network": "eip155:8453",
+      "asset": "USDC",
+      "rail": "LIVE"
+    },
+    "agui": {
+      "endpoint": "/api/agui/gspc-state",
+      "transport": "SSE",
+      "state": "LIVE"
+    },
+    "openapi": {
+      "version": "3.1.0",
+      "paths": 40,
+      "state": "LIVE"
+    },
+    "did_web": {
+      "keys": 5,
+      "state": "LIVE"
+    },
+    "sdk": {
+      "npm": "csoai-gspc-mcp@0.2.1",
+      "pypi": "csoai-gspc@0.2.20260905",
+      "state": "LIVE"
+    },
+    "llms_txt": {
+      "state": "LIVE"
+    },
+    "feeds": {
+      "count": 5,
+      "state": "LIVE"
+    },
+    "signed_artifacts": {
+      "count": 7,
+      "state": "LIVE"
+    },
+    "well_known_doors": {
+      "count": 304,
+      "state": "LIVE"
+    }
+  },
+  "verification_chain": {
+    "discovery": "GET /.well-known/x402.json \u2192 HTTP 200",
+    "challenge": "GET /api/free-door \u2192 HTTP 402, amount=0",
+    "signing": "EIP-3009 TransferWithAuthorization, EIP-712 domain: USD Coin/2",
+    "settlement": "PayAI facilitator \u2192 success on Base mainnet",
+    "delivery": "GET /api/free-door + X-PAYMENT \u2192 HTTP 200, board totals",
+    "verification": "GET /root.json \u2192 169 cards, Ed25519 signed",
+    "on_chain": "0x9e18a496e8953e6ec07bd741d524fb7644433f462fe1135688e3725c7e645461 on Base"
+  },
+  "bazaar_indexing": {
+    "payai": {
+      "listings": 6,
+      "current": 1,
+      "stale": 5,
+      "missing": 3
+    },
+    "cdp": {
+      "listings": 0,
+      "note": "Absent across 14,567 resources"
+    }
+  },
+  "directory_listings": {
+    "mcp_registry": {
+      "state": "LIVE",
+      "servers": 354,
+      "defects": 54
+    },
+    "smithery": {
+      "state": "LIVE_WITH_DEFECT",
+      "issue": "4 phantom tools"
+    },
+    "glama": {
+      "state": "LIVE_UNSTABLE",
+      "issue": "40/40 Unhealthy"
+    },
+    "a2aregistry": {
+      "state": "LIVE",
+      "id": "48e5bba6-8848-4adc-8f92-b5fa2c0744e0"
+    },
+    "mcp_so": {
+      "state": "NOT_LISTED"
+    },
+    "pulsemcp": {
+      "state": "UNKNOWN"
+    }
+  },
+  "settlement_evidence": {
+    "self_test_tx": "0x9e18a496e8953e6ec07bd741d524fb7644433f462fe1135688e3725c7e645461",
+    "network": "eip155:8453",
+    "classification": "INTERNAL_SELF_FUNFD",
+    "amount_atomic": 0,
+    "census_settlements": 100,
+    "census_total_spend": "1.3398 USDC"
+  },
+  "revenue_truth": {
+    "external_payers": 1,
+    "external_revenue_usdc": 0.02,
+    "self_settlements": 6,
+    "zero_value_probes": 4,
+    "rail_mode": "live"
+  },
+  "blockers": [
+    "MCP Registry publish v1.4.2 (owner token)",
+    "npm publish 0.2.2 (owner token)",
+    "Smithery re-scan (owner account)",
+    "Glama health fix (owner account)"
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "grade",
+    "rank"
+  ],
+  "content_sha256": "4380341541a5255fd263968ceb6d290ba93632a8421336296e3fc64bfa7fc169"
+}
