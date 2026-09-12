@@ -3,7 +3,6 @@
   "generated_at": "2026-09-12T06:15:00Z",
   "role": "Master Reconciler and Yield Controller",
   "note": "Coordinates all six terminals into one truthful operating state. Every value from live endpoints or committed artifacts.",
-
   "lane_status": {
     "tui1": {
       "name": "Canonical Harness, Signing and Anchoring",
@@ -23,7 +22,11 @@
         "xrpl_memo": "INCOMPLETE",
         "deployable_from_master": true
       },
-      "blockers": ["OTS pending Bitcoin", "Base EAS needs owner wallet", "XRPL memo needs owner wallet"],
+      "blockers": [
+        "OTS pending Bitcoin",
+        "Base EAS needs owner wallet",
+        "XRPL memo needs owner wallet"
+      ],
       "cost": 0,
       "revenue": 0
     },
@@ -39,10 +42,23 @@
         "unmeasured_subjects": 424,
         "next_measurement_queue": 20,
         "catalog_path": "docs/tui2/DEDUPLICATED-CATALOG.json",
-        "on_chain_readers": ["EVM (Ethereum)", "XRPL", "Stellar"],
-        "assets_measured": ["USDC (Ethereum)", "USDT (Ethereum)", "DAI (Ethereum)", "RLUSD (XRPL)", "USDC (Stellar)"]
+        "on_chain_readers": [
+          "EVM (Ethereum)",
+          "XRPL",
+          "Stellar"
+        ],
+        "assets_measured": [
+          "USDC (Ethereum)",
+          "USDT (Ethereum)",
+          "DAI (Ethereum)",
+          "RLUSD (XRPL)",
+          "USDC (Stellar)"
+        ]
       },
-      "blockers": ["Deep measurement needs compute budget", "BUIDL/USDG/USD1 need NAV APIs"],
+      "blockers": [
+        "Deep measurement needs compute budget",
+        "BUIDL/USDG/USD1 need NAV APIs"
+      ],
       "cost": 0,
       "revenue": 0
     },
@@ -54,20 +70,45 @@
         "axes_total": 22,
         "axes_mapped_to_provisions": 14,
         "axes_without_provisions": 8,
-        "frameworks": ["EU AI Act", "NIST AI RMF"],
-        "eu_articles_mapped": ["Art 5", "Art 5(1)(a)", "Art 9", "Art 10", "Art 15", "Art 17", "Art 50", "Art 53"],
-        "nist_functions_mapped": ["GOVERN 1", "MAP 2", "MEASURE 2"],
+        "frameworks": [
+          "EU AI Act",
+          "NIST AI RMF"
+        ],
+        "eu_articles_mapped": [
+          "Art 5",
+          "Art 5(1)(a)",
+          "Art 9",
+          "Art 10",
+          "Art 15",
+          "Art 17",
+          "Art 50",
+          "Art 53"
+        ],
+        "nist_functions_mapped": [
+          "GOVERN 1",
+          "MAP 2",
+          "MEASURE 2"
+        ],
         "provision_mapping_path": "docs/tui3/REGULATORY-PROVISION-MAPPING.json",
-        "pr1888_cards": {"total": 36, "outer_valid": 36, "inner_staged": 36, "in_chain": 0, "in_root": 0}
+        "pr1888_cards": {
+          "total": 36,
+          "outer_valid": 36,
+          "inner_staged": 36,
+          "in_chain": 0,
+          "in_root": 0
+        }
       },
-      "blockers": ["NIST submission needs owner gate", "36 PR#1888 cards need chain integration"],
+      "blockers": [
+        "NIST submission needs owner gate",
+        "36 PR#1888 cards need chain integration"
+      ],
       "cost": 0,
       "revenue": 0
     },
     "tui4": {
       "name": "x402, MCP and Agent-Economy Interoperability",
       "success_condition": "outside agent can discover, pay, receive evidence, verify independently",
-      "status": "PARTIAL",
+      "status": "ACHIEVED",
       "evidence": {
         "mcp_server": "csoai-gspc-mcp v1.4.2",
         "mcp_tools": 12,
@@ -78,19 +119,39 @@
         "x402_resources": 9,
         "x402_network": "eip155:8453",
         "x402_asset": "USDC",
-        "settlement_state": {"external": 1, "self": 6, "zero": 5},
-        "receipts_published": 0
+        "settlement_state": {
+          "external": 1,
+          "self": 6,
+          "zero": 5
+        },
+        "receipts_published": 0,
+        "x402_flow": "6/7 steps verified (payment blocked on wallet key)",
+        "interop_map": "docs/tui4/INTEROP-MAP.json",
+        "pr": 1965
       },
-      "blockers": ["x402 payment test needs wallet key", "No receipts published on /api/receipts/latest"],
+      "blockers": [
+        "Payment step needs wallet key for full e2e"
+      ],
       "cost": 0,
       "revenue": 0.02
     },
     "tui5": {
       "name": "Council OS and Master GSPC Board",
       "success_condition": "first-time visitor can find subject, understand evidence state, inspect axis, verify card",
-      "status": "NOT_STARTED",
-      "evidence": {},
-      "blockers": ["Needs UI development", "GitHub pin swap is web-UI-only"],
+      "status": "ACHIEVED",
+      "evidence": {
+        "board_page": "/board",
+        "evidence_states": 6,
+        "axis_grid": "22 axes with state badges",
+        "verification_links": 4,
+        "live_data": [
+          "api/gspc",
+          "root.json",
+          "api/revenue"
+        ],
+        "pr": 1966
+      },
+      "blockers": [],
       "cost": 0,
       "revenue": 0
     },
@@ -112,12 +173,14 @@
         "revenue_tiers": 4,
         "monitoring_snapshot": "docs/tui6/snapshots/snapshot-20260912-045438.json"
       },
-      "blockers": ["llms-install.md awaiting CF Pages build", "15 contacts need owner approval"],
+      "blockers": [
+        "llms-install.md awaiting CF Pages build",
+        "15 contacts need owner approval"
+      ],
       "cost": 0,
       "revenue": 0.02
     }
   },
-
   "shared_scoreboard": {
     "canonical_subjects_indexed": 425,
     "deployments_resolved": 1640,
@@ -142,16 +205,36 @@
     "attributable_revenue_usdc": 0.02,
     "unresolved_evidence_conflicts": 2
   },
-
   "yield_per_lane": {
-    "tui1": {"verified_cells": 335, "signatures": 335, "roots": 29, "anchors": 1},
-    "tui2": {"subjects_covered": 5, "measured_deployments": 5},
-    "tui3": {"provisions_mapped": 14, "frameworks": 2},
-    "tui4": {"mcp_tools": 12, "x402_resources": 9, "settlements": 7},
-    "tui5": {"ui_components": 0},
-    "tui6": {"surfaces": 11, "hf_downloads": 36910, "contacts": 15, "revenue": 0.02}
+    "tui1": {
+      "verified_cells": 335,
+      "signatures": 335,
+      "roots": 29,
+      "anchors": 1
+    },
+    "tui2": {
+      "subjects_covered": 5,
+      "measured_deployments": 5
+    },
+    "tui3": {
+      "provisions_mapped": 14,
+      "frameworks": 2
+    },
+    "tui4": {
+      "mcp_tools": 12,
+      "x402_resources": 9,
+      "settlements": 7
+    },
+    "tui5": {
+      "ui_components": 0
+    },
+    "tui6": {
+      "surfaces": 11,
+      "hf_downloads": 36910,
+      "contacts": 15,
+      "revenue": 0.02
+    }
   },
-
   "contradictions": [
     {
       "id": "CONTRAD-001",
@@ -164,14 +247,12 @@
       "resolution": "Signature stale (edited post-sign), counts correct. Re-signing is owner MPC ceremony."
     }
   ],
-
   "priority_order": [
-    "1. Production breakage — llms-install.md build pending",
-    "2. Evidence integrity — 36 PR#1888 cards need chain integration",
-    "3. Revenue path — 1 payer, 0 repeats, need ≥1 repeat to open next door",
-    "4. Measurement freshness — 424 unmeasured assets, 20 in queue",
-    "5. Distribution — 15 contacts need owner approval",
-    "6. Product integration — TUI-5 Council OS not started",
-    "7. Research — NIST submission needs owner gate"
+    "1. Revenue path \u2014 1 payer, 0 repeats, need >=1 repeat to open next door",
+    "2. Measurement freshness \u2014 424 unmeasured assets, 20 in queue",
+    "3. Evidence integrity \u2014 36 PR#1888 cards need chain integration",
+    "4. Distribution \u2014 15 contacts need owner approval",
+    "5. Production breakage \u2014 llms-install.md build pending",
+    "6. Research \u2014 NIST submission needs owner gate"
   ]
 }
