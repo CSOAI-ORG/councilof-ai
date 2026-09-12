@@ -116,6 +116,7 @@ const Article50Pack = lazy(() => import("./pages/Article50Pack"));
 const GpaiEvidencePack = lazy(() => import("./pages/GpaiEvidencePack"));
 const CraReadinessKit = lazy(() => import("./pages/CraReadinessKit"));
 const CountdownPage = lazy(() => import("./pages/CountdownPage"));
+const Art50 = lazy(() => import("./pages/Art50"));
 const ProofReceipt = lazy(() => import("./pages/ProofReceipt"));
 const YieldStatus = lazy(() => import("./pages/YieldStatus"));
 const YieldInternal = lazy(() => import("./pages/YieldInternal"));
@@ -410,6 +411,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/status": "Yield status | Council of AI",
   "/status/internal": "Weekly yield template | Council of AI",
   "/countdown": "Regulatory countdown | Council of AI",
+  "/art50": "Article 50 verification services | Council of AI",
   "/receipt": "Inclusion receipt | Council of AI",
   "/custody": "Custody disclosure | Council of AI",
   "/specimens/clarity": "CLARITY pre-commit specimen (unsigned) | Council of AI",
@@ -1114,6 +1116,7 @@ function App() {
                   <Route path="/status" component={YieldStatus} />
                   <Route path="/status/internal" component={YieldInternal} />
                   <Route path="/countdown" component={CountdownPage} />
+                  <Route path="/art50" component={Art50} />
                   <Route path="/receipt" component={ProofReceipt} />
                   <Route path="/custody" component={CustodyDisclosure} />
                   <Route path="/specimens/clarity" component={ClaritySpecimen} />

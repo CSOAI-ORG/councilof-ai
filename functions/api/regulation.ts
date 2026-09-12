@@ -9,7 +9,7 @@
 
 export const REGULATION_FEED = {
   schema: "csoai.regulation-deadlines/0.1",
-  verified_as_of: "2026-08-19",
+  verified_as_of: "2026-09-12",
   reverification_cadence:
     "quarterly, and on any provision-change event from the daily reg-watch detector",
   license: "CC-BY-4.0",
@@ -41,6 +41,8 @@ export const REGULATION_FEED = {
     { date: "2027-12-02", instrument: "EU AI Act", what: "Stand-alone Annex III high-risk obligations apply (deferred from 2 Aug 2026)", basis: "Digital Omnibus Reg (EU) 2026/1744", status: "UPCOMING", penalty_exposure: "up to €15,000,000 or 3% of worldwide annual turnover (EU AI Act Art 99(4))" },
     { date: "2028-01-01", instrument: "Illinois SB 315", what: "Mandatory annual independent third-party audits of frontier developers", basis: "Public Act 104-0538 §10(d)", status: "UPCOMING", penalty_exposure: "up to $1,000,000 first violation / $3,000,000 subsequent, plus $1,000/day for unfiled disclosures" },
     { date: "2028-08-02", instrument: "EU AI Act", what: "Product-embedded Annex I high-risk obligations apply", basis: "Digital Omnibus Reg (EU) 2026/1744", status: "UPCOMING", penalty_exposure: "up to €15,000,000 or 3% of worldwide annual turnover (EU AI Act Art 99(4))" },
+    { date: "2027-01-18", instrument: "US GENIUS Act (Pub. L. 119-27)", what: "Default effective date under the §20 dual trigger: the Act takes effect on the EARLIER of 18 months after enactment (signed 2025-07-18 → 2027-01-18) or 120 days after final implementing rules — the 2026-07-18 rulemaking deadline passed with no final rules published and OCC is targeting November 2026 for a final rule, so the earlier trigger may move. When in force: monthly PCAOB-examined reserve disclosures and CEO/CFO certification for permitted payment stablecoin issuers", basis: "Pub. L. 119-27 §20, signed 2025-07-18", status: "UPCOMING", penalty_exposure: "federal stablecoin regulator enforcement under Pub. L. 119-27; no fixed statutory maximum published" },
+    { date: "2028-07-18", instrument: "US GENIUS Act (Pub. L. 119-27)", what: "Distribution cliff — 3 years after enactment, digital asset service providers may not offer or sell non-permitted payment stablecoins to US persons", basis: "Pub. L. 119-27 §3(b)", status: "UPCOMING", penalty_exposure: "federal stablecoin regulator enforcement under Pub. L. 119-27; no fixed statutory maximum published" },
   ],
   disputed: [
     { item: "Council of Europe Framework Convention on AI (CETS 225) entry-into-force status", note: "sources disagree as of the verification date; stated honestly rather than guessed" },
