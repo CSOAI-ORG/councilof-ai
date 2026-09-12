@@ -195,18 +195,35 @@ class HubCensusRestartTests(unittest.TestCase):
     def test_delta_stops_at_overlapping_watermark(self) -> None:
         opener = synthetic_hub_opener(total=50, page_size=10)
         with tempfile.TemporaryDirectory() as tmp:
+            publish = Path(tmp) / "published"
             result = collect(
-                Path(tmp),
+                Path(tmp) / "run",
                 mode="delta",
                 since="2026-09-01T00:00:00Z",
                 overlap_hours=1,
                 page_size=10,
                 resume=False,
                 opener=opener,
+                publish_dir=publish,
             )
             self.assertEqual(result["state"]["complete_reason"], "delta-watermark")
             self.assertEqual(result["state"]["n_written"], 0)
             self.assertEqual(result["summary"]["status_all"], GSPC_STATE)
+            self.assertEqual(result["summary"]["mode"], "delta")
+            self.assertEqual(result["summary"]["count_semantics"], "window-delta")
+            self.assertEqual(result["summary"]["overlap_hours"], 1)
+            self.assertEqual(result["summary"]["window_start"], "2026-08-31T23:00:00Z")
+            self.assertEqual(
+                result["summary"]["source_as_of"], result["summary"]["window_end"]
+            )
+            for name in ("SUMMARY.json", "axis-sources.json", "org-register.json"):
+                document = json.loads((publish / name).read_text(encoding="utf-8"))
+                self.assertEqual(document["mode"], "delta", msg=name)
+                self.assertEqual(document["count_semantics"], "window-delta", msg=name)
+                self.assertEqual(document["overlap_hours"], 1, msg=name)
+                self.assertEqual(document["window_start"], "2026-08-31T23:00:00Z", msg=name)
+                self.assertTrue(document["window_end"], msg=name)
+                self.assertEqual(document["source_as_of"], document["window_end"], msg=name)
 
 
 class HubCensusAxisSourceTests(unittest.TestCase):
@@ -411,6 +428,14 @@ class HubCensusPublishPathTests(unittest.TestCase):
         self.assertIn("gh pr create", text)
         self.assertIn("census/delta-", text)
         self.assertIn("git push origin \"HEAD:$BR\"", text)
+        self.assertIn("actions: write", text)
+        self.assertIn("41898282+github-actions[bot]@users.noreply.github.com", text)
+        self.assertIn("gh workflow run pr-gates.yml --ref \"$BR\"", text)
+        self.assertIn("gh pr merge \"$URL\" --squash --auto", text)
+        self.assertIn("count_semantics", text)
+        self.assertIn("overlap_hours", text)
+        self.assertIn("window_start", text)
+        self.assertIn("source_as_of", text)
 
     def test_agent_facing_copy_has_the_three_urls_and_register_language(self) -> None:
         root = Path(__file__).resolve().parents[2]
