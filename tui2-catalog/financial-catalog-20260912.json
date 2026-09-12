@@ -1,6 +1,6 @@
 {
  "schema": "csoai.financial-catalog/0.1",
- "generated_at": "2026-09-12T12:20:47Z",
+ "generated_at": "2026-09-12T15:41:05Z",
  "source": "DefiLlama API + on-chain RPC measurements + public/archive/",
  "subjects": [
   {
@@ -4258,14 +4258,14 @@
   "total_indexed": 425,
   "total_deployments": 1640,
   "distinct_chains": 211,
-  "total_measured_on_chain": 13,
+  "total_measured_on_chain": 23,
   "archive_directories": 56,
-  "freshness": "2026-09-12T12:20:00Z",
+  "freshness": "2026-09-12T15:45:00Z",
   "total_subjects_with_next_measurement": 425,
-  "measured": 13,
+  "measured": 23,
   "high_priority_next": 25,
   "medium_priority_next": 32,
-  "note": "2026-09-12 cohort: 12 stablecoin registry identities across 11 symbols, 21 chain readings. Twelve unsigned asset cards are staged; RLUSD overlaps the one prior signed/rooted identity. BUIDL is a separate previously measured tokenized-fund identity. USDV ids 143 and 398 remain separate.",
+  "note": "Day 2: cohort-2 adds 10 identities (USDG, BUIDL+BUIDL-I, USYC, USDY, USDD-eth, U, USDf, GHO eth+base, USD0 eth+base, USDtb) via finalized-tag EVM reads. All unsigned/unstaged. £0 keyless.",
   "stablecoin_asset_identities_with_supply_observation": 12,
   "stablecoin_symbols_with_supply_observation": 11,
   "other_financial_asset_identities_measured": 1,
@@ -4317,11 +4317,14 @@
    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
   },
   "BUIDL": {
-   "supply": "$212M",
-   "chains": 9,
+   "supply": "$212.1M (on-chain totalSupply, 1 chain reading)",
+   "chains": [
+    "ethereum"
+   ],
    "state": "MEASURED",
+   "signature_state": "UNSIGNED_NOT_STAGED",
    "freshness": "2026-09-12",
-   "classification": "tokenized_fund"
+   "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   },
   "USDS": {
    "supply": "$6.67B (on-chain, 2 chain readings)",
@@ -4415,6 +4418,108 @@
    "symbol": "USDV",
    "registry_id": "398",
    "identity_note": "Distinct from Verified USD id 143."
+  },
+  "USDG": {
+   "supply": "$360.4M (on-chain totalSupply, 1 chain reading)",
+   "chains": [
+    "ethereum"
+   ],
+   "state": "MEASURED",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "freshness": "2026-09-12",
+   "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json"
+  },
+  "BUIDL-I": {
+   "supply": "$624.2M (on-chain totalSupply, 1 chain reading)",
+   "chains": [
+    "ethereum"
+   ],
+   "state": "MEASURED",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "freshness": "2026-09-12",
+   "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json"
+  },
+  "USYC": {
+   "supply": "$37.0M (on-chain totalSupply, 1 chain reading)",
+   "chains": [
+    "ethereum"
+   ],
+   "state": "MEASURED",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "freshness": "2026-09-12",
+   "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json"
+  },
+  "USDY": {
+   "supply": "$1.04B (on-chain totalSupply, 1 chain reading)",
+   "chains": [
+    "ethereum"
+   ],
+   "state": "MEASURED",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "freshness": "2026-09-12",
+   "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json"
+  },
+  "USDD": {
+   "supply": "$54.3M (on-chain totalSupply, 1 chain reading)",
+   "chains": [
+    "ethereum"
+   ],
+   "state": "MEASURED",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "freshness": "2026-09-12",
+   "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json"
+  },
+  "U": {
+   "supply": "$278.7M (on-chain totalSupply, 1 chain reading)",
+   "chains": [
+    "ethereum"
+   ],
+   "state": "MEASURED",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "freshness": "2026-09-12",
+   "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json"
+  },
+  "USDf": {
+   "supply": "$1.18B (on-chain totalSupply, 1 chain reading)",
+   "chains": [
+    "ethereum"
+   ],
+   "state": "MEASURED",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "freshness": "2026-09-12",
+   "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json"
+  },
+  "GHO": {
+   "supply": "$699.8M (on-chain totalSupply, 2 chain readings)",
+   "chains": [
+    "base",
+    "ethereum"
+   ],
+   "state": "MEASURED",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "freshness": "2026-09-12",
+   "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json"
+  },
+  "USD0": {
+   "supply": "$547.9M (on-chain totalSupply, 2 chain readings)",
+   "chains": [
+    "base",
+    "ethereum"
+   ],
+   "state": "MEASURED",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "freshness": "2026-09-12",
+   "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json"
+  },
+  "USDtb": {
+   "supply": "$483.9M (on-chain totalSupply, 1 chain reading)",
+   "chains": [
+    "ethereum"
+   ],
+   "state": "MEASURED",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "freshness": "2026-09-12",
+   "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   }
  },
  "top_20_indexed": [

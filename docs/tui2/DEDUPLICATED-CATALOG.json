@@ -1,22 +1,23 @@
 {
  "schema": "csoai.deduplicated-catalog/1.0",
- "generated_at": "2026-09-12T12:19:06Z",
+ "generated_at": "2026-09-12T15:41:05Z",
  "source": "public/interop/stablecoin-universe-2026-09/",
  "summary": {
   "total_subjects": 425,
   "total_deployments": 1640,
   "total_circulating_usd": 310786569942.87,
-  "measured_subjects": 12,
-  "unmeasured_subjects": 413,
-  "fresh_subjects": 12,
+  "measured_subjects": 22,
+  "unmeasured_subjects": 403,
+  "fresh_subjects": 22,
   "stale_subjects": 0,
-  "coverage_pct": 2.8,
-  "note": "12 DefiLlama registry asset identities across 11 symbols have direct on-chain supply observations. Verified USD (id 143) and Valtorum USDV (id 398) are distinct assets sharing a ticker. RLUSD (id 250) is both staged and the one prior signed/rooted identity, so the staged and signed sets overlap by one; their union is 12, leaving 413 without a deep supply observation.",
-  "deep_reading_asset_identity_union": 12,
+  "coverage_pct": 5.2,
+  "note": "22 DefiLlama registry asset identities (20 symbols; USDV and USDS tickers each span multiple identities; BUIDL includes the BUIDL-I share class address) have direct on-chain supply observations across two 2026-09-12 cohorts. Cohort 1 (12 identities, 11 symbols) staged unsigned; cohort 2 (10 identities) observed 15:40-15:45Z, not yet staged. RLUSD remains the one signed/rooted identity. 403 identities have no deep supply observation.",
+  "deep_reading_asset_identity_union": 22,
   "measured_asset_identities_signed_rooted": 1,
   "measured_asset_identities_unsigned_staged": 12,
   "signed_staged_asset_identity_overlap": 1,
-  "unique_symbols_with_supply_observation": 11
+  "unique_symbols_with_supply_observation": 20,
+  "measured_asset_identities_observed_unstaged": 10
  },
  "next_measurement_queue": [
   {
@@ -575,16 +576,19 @@
    "chain_deployments": 0,
    "peg_type": "peggedUSD",
    "evidence_state": "INDEXED",
-   "measurement_state": "UNMEASURED",
-   "measurement_depth": "NONE",
-   "measured_chains": [],
-   "freshness": "NEVER_MEASURED",
-   "as_of": null,
-   "next_measurement": "DEEP_MEASURE_FIRST_CHAIN",
+   "measurement_state": "DEEP_MEASURED_UNSIGNED_STAGED",
+   "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY_FINALIZED_TAG",
+   "measured_chains": [
+    "ethereum"
+   ],
+   "freshness": "2026-09-12",
+   "as_of": "2026-09-12T15:39:37.846267+00:00",
+   "next_measurement": "RE_MEASURE_DAILY_COHORT",
    "priority_score": 298.664667,
    "anchor_state": "NO_ASSET_MEASUREMENT_ANCHOR",
-   "root_state": "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT",
-   "signature_state": "NO_ASSET_MEASUREMENT_SIGNATURE"
+   "root_state": "NOT_IN_CURRENT_ROOT",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "evidence_file": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   },
   {
    "id": "120",
@@ -622,16 +626,19 @@
    "chain_deployments": 0,
    "peg_type": "peggedUSD",
    "evidence_state": "INDEXED",
-   "measurement_state": "UNMEASURED",
-   "measurement_depth": "NONE",
-   "measured_chains": [],
-   "freshness": "NEVER_MEASURED",
-   "as_of": null,
-   "next_measurement": "DEEP_MEASURE_FIRST_CHAIN",
+   "measurement_state": "DEEP_MEASURED_UNSIGNED_STAGED",
+   "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY_FINALIZED_TAG",
+   "measured_chains": [
+    "ethereum"
+   ],
+   "freshness": "2026-09-12",
+   "as_of": "2026-09-12T15:39:37.846267+00:00",
+   "next_measurement": "RE_MEASURE_DAILY_COHORT",
    "priority_score": 309.113256,
    "anchor_state": "NO_ASSET_MEASUREMENT_ANCHOR",
-   "root_state": "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT",
-   "signature_state": "NO_ASSET_MEASUREMENT_SIGNATURE"
+   "root_state": "NOT_IN_CURRENT_ROOT",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "evidence_file": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   },
   {
    "id": "237",
@@ -641,16 +648,19 @@
    "chain_deployments": 0,
    "peg_type": "peggedUSD",
    "evidence_state": "INDEXED",
-   "measurement_state": "UNMEASURED",
-   "measurement_depth": "NONE",
-   "measured_chains": [],
-   "freshness": "NEVER_MEASURED",
-   "as_of": null,
-   "next_measurement": "DEEP_MEASURE_FIRST_CHAIN",
+   "measurement_state": "DEEP_MEASURED_UNSIGNED_STAGED",
+   "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY_FINALIZED_TAG",
+   "measured_chains": [
+    "ethereum"
+   ],
+   "freshness": "2026-09-12",
+   "as_of": "2026-09-12T15:39:37.846267+00:00",
+   "next_measurement": "RE_MEASURE_DAILY_COHORT",
    "priority_score": 245.87608,
    "anchor_state": "NO_ASSET_MEASUREMENT_ANCHOR",
-   "root_state": "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT",
-   "signature_state": "NO_ASSET_MEASUREMENT_SIGNATURE"
+   "root_state": "NOT_IN_CURRENT_ROOT",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "evidence_file": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   },
   {
    "id": "250",
@@ -688,16 +698,19 @@
    "chain_deployments": 0,
    "peg_type": "peggedUSD",
    "evidence_state": "INDEXED",
-   "measurement_state": "UNMEASURED",
-   "measurement_depth": "NONE",
-   "measured_chains": [],
-   "freshness": "NEVER_MEASURED",
-   "as_of": null,
-   "next_measurement": "DEEP_MEASURE_FIRST_CHAIN",
+   "measurement_state": "DEEP_MEASURED_UNSIGNED_STAGED",
+   "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY_FINALIZED_TAG",
+   "measured_chains": [
+    "ethereum"
+   ],
+   "freshness": "2026-09-12",
+   "as_of": "2026-09-12T15:39:37.846267+00:00",
+   "next_measurement": "RE_MEASURE_DAILY_COHORT",
    "priority_score": 377.118413,
    "anchor_state": "NO_ASSET_MEASUREMENT_ANCHOR",
-   "root_state": "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT",
-   "signature_state": "NO_ASSET_MEASUREMENT_SIGNATURE"
+   "root_state": "NOT_IN_CURRENT_ROOT",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "evidence_file": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   },
   {
    "id": "14",
@@ -707,16 +720,19 @@
    "chain_deployments": 0,
    "peg_type": "peggedUSD",
    "evidence_state": "INDEXED",
-   "measurement_state": "UNMEASURED",
-   "measurement_depth": "NONE",
-   "measured_chains": [],
-   "freshness": "NEVER_MEASURED",
-   "as_of": null,
-   "next_measurement": "DEEP_MEASURE_FIRST_CHAIN",
+   "measurement_state": "DEEP_MEASURED_UNSIGNED_STAGED",
+   "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY_FINALIZED_TAG",
+   "measured_chains": [
+    "ethereum"
+   ],
+   "freshness": "2026-09-12",
+   "as_of": "2026-09-12T15:39:37.846267+00:00",
+   "next_measurement": "RE_MEASURE_DAILY_COHORT",
    "priority_score": 237.003335,
    "anchor_state": "NO_ASSET_MEASUREMENT_ANCHOR",
-   "root_state": "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT",
-   "signature_state": "NO_ASSET_MEASUREMENT_SIGNATURE"
+   "root_state": "NOT_IN_CURRENT_ROOT",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "evidence_file": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   },
   {
    "id": "347",
@@ -745,16 +761,19 @@
    "chain_deployments": 0,
    "peg_type": "peggedUSD",
    "evidence_state": "INDEXED",
-   "measurement_state": "UNMEASURED",
-   "measurement_depth": "NONE",
-   "measured_chains": [],
-   "freshness": "NEVER_MEASURED",
-   "as_of": null,
-   "next_measurement": "DEEP_MEASURE_FIRST_CHAIN",
+   "measurement_state": "DEEP_MEASURED_UNSIGNED_STAGED",
+   "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY_FINALIZED_TAG",
+   "measured_chains": [
+    "ethereum"
+   ],
+   "freshness": "2026-09-12",
+   "as_of": "2026-09-12T15:39:37.846267+00:00",
+   "next_measurement": "RE_MEASURE_DAILY_COHORT",
    "priority_score": 229.210102,
    "anchor_state": "NO_ASSET_MEASUREMENT_ANCHOR",
-   "root_state": "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT",
-   "signature_state": "NO_ASSET_MEASUREMENT_SIGNATURE"
+   "root_state": "NOT_IN_CURRENT_ROOT",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "evidence_file": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   },
   {
    "id": "246",
@@ -764,16 +783,19 @@
    "chain_deployments": 0,
    "peg_type": "peggedUSD",
    "evidence_state": "INDEXED",
-   "measurement_state": "UNMEASURED",
-   "measurement_depth": "NONE",
-   "measured_chains": [],
-   "freshness": "NEVER_MEASURED",
-   "as_of": null,
-   "next_measurement": "DEEP_MEASURE_FIRST_CHAIN",
+   "measurement_state": "DEEP_MEASURED_UNSIGNED_STAGED",
+   "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY_FINALIZED_TAG",
+   "measured_chains": [
+    "ethereum"
+   ],
+   "freshness": "2026-09-12",
+   "as_of": "2026-09-12T15:39:37.846267+00:00",
+   "next_measurement": "RE_MEASURE_DAILY_COHORT",
    "priority_score": 205.166592,
    "anchor_state": "NO_ASSET_MEASUREMENT_ANCHOR",
-   "root_state": "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT",
-   "signature_state": "NO_ASSET_MEASUREMENT_SIGNATURE"
+   "root_state": "NOT_IN_CURRENT_ROOT",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "evidence_file": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   },
   {
    "id": "118",
@@ -783,16 +805,20 @@
    "chain_deployments": 0,
    "peg_type": "peggedUSD",
    "evidence_state": "INDEXED",
-   "measurement_state": "UNMEASURED",
-   "measurement_depth": "NONE",
-   "measured_chains": [],
-   "freshness": "NEVER_MEASURED",
-   "as_of": null,
-   "next_measurement": "DEEP_MEASURE_FIRST_CHAIN",
+   "measurement_state": "DEEP_MEASURED_UNSIGNED_STAGED",
+   "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY_FINALIZED_TAG",
+   "measured_chains": [
+    "base",
+    "ethereum"
+   ],
+   "freshness": "2026-09-12",
+   "as_of": "2026-09-12T15:39:37.846267+00:00",
+   "next_measurement": "RE_MEASURE_DAILY_COHORT",
    "priority_score": 182.528961,
    "anchor_state": "NO_ASSET_MEASUREMENT_ANCHOR",
-   "root_state": "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT",
-   "signature_state": "NO_ASSET_MEASUREMENT_SIGNATURE"
+   "root_state": "NOT_IN_CURRENT_ROOT",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "evidence_file": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   },
   {
    "id": "195",
@@ -802,16 +828,20 @@
    "chain_deployments": 0,
    "peg_type": "peggedUSD",
    "evidence_state": "INDEXED",
-   "measurement_state": "UNMEASURED",
-   "measurement_depth": "NONE",
-   "measured_chains": [],
-   "freshness": "NEVER_MEASURED",
-   "as_of": null,
-   "next_measurement": "DEEP_MEASURE_FIRST_CHAIN",
+   "measurement_state": "DEEP_MEASURED_UNSIGNED_STAGED",
+   "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY_FINALIZED_TAG",
+   "measured_chains": [
+    "base",
+    "ethereum"
+   ],
+   "freshness": "2026-09-12",
+   "as_of": "2026-09-12T15:39:37.846267+00:00",
+   "next_measurement": "RE_MEASURE_DAILY_COHORT",
    "priority_score": 172.986175,
    "anchor_state": "NO_ASSET_MEASUREMENT_ANCHOR",
-   "root_state": "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT",
-   "signature_state": "NO_ASSET_MEASUREMENT_SIGNATURE"
+   "root_state": "NOT_IN_CURRENT_ROOT",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "evidence_file": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   },
   {
    "id": "221",
@@ -821,16 +851,19 @@
    "chain_deployments": 0,
    "peg_type": "peggedUSD",
    "evidence_state": "INDEXED",
-   "measurement_state": "UNMEASURED",
-   "measurement_depth": "NONE",
-   "measured_chains": [],
-   "freshness": "NEVER_MEASURED",
-   "as_of": null,
-   "next_measurement": "DEEP_MEASURE_FIRST_CHAIN",
+   "measurement_state": "DEEP_MEASURED_UNSIGNED_STAGED",
+   "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY_FINALIZED_TAG",
+   "measured_chains": [
+    "ethereum"
+   ],
+   "freshness": "2026-09-12",
+   "as_of": "2026-09-12T15:39:37.846267+00:00",
+   "next_measurement": "RE_MEASURE_DAILY_COHORT",
    "priority_score": 171.581737,
    "anchor_state": "NO_ASSET_MEASUREMENT_ANCHOR",
-   "root_state": "NO_ASSET_MEASUREMENT_IN_CURRENT_ROOT",
-   "signature_state": "NO_ASSET_MEASUREMENT_SIGNATURE"
+   "root_state": "NOT_IN_CURRENT_ROOT",
+   "signature_state": "UNSIGNED_NOT_STAGED",
+   "evidence_file": "tui2-measurements/tui2-cohort2-2026-09-12.json"
   },
   {
    "id": "272",
@@ -4612,9 +4645,8 @@
    "root_state": "NOT_IN_CURRENT_ROOT_STAGED",
    "signature_state": "UNSIGNED_STAGED_AWAITING_GHA_PUBLIC_ROOT",
    "identity": {
-    "issuer": "Verified USD Foundation (index id 143) / Valtorum (index id 398) — symbol shared by 4 index ids",
-    "ethereum": "0x0E573Ce2736Dd9637A0b21058352e1667925C7a8",
-    "xrpl": "5553445600000000000000000000000000000000.rfffsukWALJB1PXYk7H8xkR6UJUDT8nMJE"
+    "issuer": "Verified USD Foundation",
+    "ethereum": "0x0E573Ce2736Dd9637A0b21058352e1667925C7a8"
    },
    "evidence_file": "tui2-measurements/tui2-cohort-2026-09-12.json"
   },
@@ -8634,6 +8666,14 @@
     "coingecko": "verified-usd-foundation-usdv returned coin-not-found today"
    },
    "disposition": "single-source address, on-chain symbol()/decimals() verified; source marked UNCHECKABLE today"
+  }
+ ],
+ "corrections": [
+  {
+   "at": "2026-09-12T15:41:05Z",
+   "field": "entries[id=143].identity",
+   "correction": "Removed the XRPL address 5553445600000000000000000000000000000000.rfffsukWALJB1PXYk7H8xkR6UJUDT8nMJE from id 143 (Verified USD) identity; that address belongs to id 398 (Valtorum USD). Day-1 identity map had carried it onto both entries. The two USDV identities were never collapsed — both entries, both cards, and both measurements exist separately.",
+   "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json records: USDV ethereum 0x0E573Ce2... (id 143) and USDV xrpl rfffsuk... (id 398)"
   }
  ]
 }
