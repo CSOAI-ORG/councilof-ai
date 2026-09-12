@@ -34,7 +34,7 @@ const ERC20_SELECTORS = {
   balanceOf: "0x70a08231",
 };
 
-async function rpcCall(rpc, method, params) {
+export async function rpcCall(rpc, method, params) {
   const res = await fetch(rpc, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -45,13 +45,23 @@ async function rpcCall(rpc, method, params) {
   return json.result;
 }
 
-async function readERC20(chain, contract) {
+export function normalizeAtomicAmount(rawValue, decimals) {
+  const raw = BigInt(rawValue);
+  const divisor = 10n ** BigInt(decimals);
+  const whole = raw / divisor;
+  const fraction = raw % divisor;
+  return decimals === 0
+    ? whole.toString()
+    : `${whole}.${fraction.toString().padStart(decimals, "0")}`;
+}
+
+export async function readERC20(chain, contract) {
   const cfg = CHAINS[chain];
   if (!cfg) throw new Error(`Unknown chain: ${chain}. Supported: ${Object.keys(CHAINS).join(", ")}`);
 
   const record = {
     schema: "csoai.evm-erc20-reader/1.0",
-    reader_revision: "scripts/readers/evm-erc20-reader.mjs@1.0.0",
+    reader_revision: "scripts/readers/evm-erc20-reader.mjs@1.1.0",
     source: cfg.rpc,
     chain,
     chainId: cfg.chainId,
@@ -61,14 +71,22 @@ async function readERC20(chain, contract) {
     correction_link: "https://github.com/CSOAI-ORG/councilof-ai/issues",
   };
 
-  // Get latest block
-  const blockHex = await rpcCall(cfg.rpc, "eth_blockNumber", []);
+  // Pin reads to the RPC's finalized tag when available. Some public RPCs do not
+  // implement it; in that case fall back to latest and label the weaker state.
+  let blockHex;
+  let blockData;
+  try {
+    blockData = await rpcCall(cfg.rpc, "eth_getBlockByNumber", ["finalized", false]);
+    if (!blockData?.number || !blockData?.hash) throw new Error("missing finalized block");
+    blockHex = blockData.number;
+    record.block_finality = "RPC_FINALIZED_TAG";
+  } catch {
+    blockHex = await rpcCall(cfg.rpc, "eth_blockNumber", []);
+    blockData = await rpcCall(cfg.rpc, "eth_getBlockByNumber", [blockHex, false]);
+    record.block_finality = "RPC_LATEST_NOT_INDEPENDENTLY_PROVEN_FINAL";
+  }
   const blockNumber = parseInt(blockHex, 16);
   record.observed_block = blockNumber;
-  record.block_finality = "RPC_LATEST_NOT_INDEPENDENTLY_PROVEN_FINAL";
-
-  // Get block hash for replay
-  const blockData = await rpcCall(cfg.rpc, "eth_getBlockByNumber", [blockHex, false]);
   record.block_hash = blockData.hash;
   record.block_timestamp = parseInt(blockData.timestamp, 16);
 
@@ -106,13 +124,11 @@ async function readERC20(chain, contract) {
   };
 
   // Normalized total supply
-  if (record.token.totalSupply_raw && record.token.decimals) {
-    const raw = BigInt(record.token.totalSupply_raw);
-    const dec = record.token.decimals;
-    const divisor = BigInt(10 ** dec);
-    const whole = raw / divisor;
-    const frac = raw % divisor;
-    record.token.totalSupply_normalized = `${whole}.${frac.toString().padStart(dec, "0")}`;
+  if (record.token.totalSupply_raw !== null && Number.isInteger(record.token.decimals)) {
+    record.token.totalSupply_normalized = normalizeAtomicAmount(
+      record.token.totalSupply_raw,
+      record.token.decimals,
+    );
   }
 
   // Replay hash
@@ -126,18 +142,18 @@ async function readERC20(chain, contract) {
   return record;
 }
 
-// CLI
-const [,, chain, contract] = process.argv;
-if (!chain || !contract) {
-  console.error("Usage: node evm-erc20-reader.mjs <chain> <contract_address>");
-  console.error("Chains:", Object.keys(CHAINS).join(", "));
-  process.exit(1);
-}
-
-try {
-  const result = await readERC20(chain, contract);
-  console.log(JSON.stringify(result, null, 2));
-} catch (err) {
-  console.error("Error:", err.message);
-  process.exit(1);
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const [,, chain, contract] = process.argv;
+  if (!chain || !contract) {
+    console.error("Usage: node evm-erc20-reader.mjs <chain> <contract_address>");
+    console.error("Chains:", Object.keys(CHAINS).join(", "));
+    process.exit(1);
+  }
+  try {
+    const result = await readERC20(chain, contract);
+    console.log(JSON.stringify(result, null, 2));
+  } catch (err) {
+    console.error("Error:", err.message);
+    process.exit(1);
+  }
 }
