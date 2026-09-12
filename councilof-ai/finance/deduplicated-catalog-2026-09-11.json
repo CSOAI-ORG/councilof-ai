@@ -853,5 +853,153 @@
         }
       ]
     }
-  ]
+  ],
+  "swift_cohort": {
+    "total_institutions": 26,
+    "live": [
+      "HSBC",
+      "Standard Chartered",
+      "UOB"
+    ],
+    "committed": [
+      "JPMorgan",
+      "Deutsche Bank",
+      "Natwest",
+      "BNP Paribas",
+      "Citi",
+      "BNY Mellon",
+      "ANZ",
+      "Societe Generale",
+      "UBS"
+    ],
+    "discovered": [
+      "Barclays",
+      "Credit Suisse",
+      "Goldman Sachs",
+      "Morgan Stanley",
+      "Wells Fargo",
+      "TD Bank",
+      "RBC",
+      "Scotiabank",
+      "MUFG",
+      "Nomura",
+      "Standard Bank",
+      "DBS",
+      "OCBC",
+      "Maybank"
+    ],
+    "status": "census only, no deep measurement",
+    "settlement": "off-chain",
+    "note": "SWIFT migration deadline passed Mar 2025"
+  },
+  "iso20022": {
+    "families": {
+      "pacs": {
+        "name": "Clearing and Settlement",
+        "messages": 4,
+        "status": "IDENTIFIED"
+      },
+      "pain": {
+        "name": "Payment Initiation",
+        "messages": 4,
+        "status": "IDENTIFIED"
+      },
+      "camt": {
+        "name": "Cash Management",
+        "messages": 3,
+        "status": "IDENTIFIED"
+      },
+      "sese": {
+        "name": "Securities Settlement",
+        "messages": 3,
+        "status": "IDENTIFIED"
+      },
+      "seev": {
+        "name": "Securities Events",
+        "messages": 4,
+        "status": "IDENTIFIED"
+      },
+      "reda": {
+        "name": "Reference Data",
+        "messages": 2,
+        "status": "IDENTIFIED"
+      },
+      "auth": {
+        "name": "Authorization",
+        "messages": 2,
+        "status": "IDENTIFIED"
+      }
+    },
+    "total_messages": 25,
+    "implemented": 0,
+    "note": "Identified but not implemented"
+  },
+  "tokenized_funds": [
+    {
+      "symbol": "BUIDL",
+      "name": "BlackRock USD Institutional Digital Liquidity Fund",
+      "supply": "$212M (ETH only)",
+      "chains": 8,
+      "state": "DEEP_MEASURED on ETH",
+      "note": "Multiple share classes, DefiLlama $2.76B total"
+    },
+    {
+      "symbol": "USDY",
+      "name": "Ondo US Dollar Yield",
+      "supply": "$1.03B (ETH)",
+      "chains": 16,
+      "state": "DEEP_MEASURED on ETH"
+    },
+    {
+      "symbol": "USDG",
+      "name": "Global Dollar (Paxos)",
+      "supply": "$378M (ETH)",
+      "chains": 6,
+      "state": "DEEP_MEASURED on ETH"
+    },
+    {
+      "symbol": "USD1",
+      "name": "World Liberty Financial USD",
+      "supply": "$1.57B (ETH)",
+      "chains": 8,
+      "state": "DEEP_MEASURED on ETH"
+    },
+    {
+      "symbol": "USYC",
+      "name": "Circle USYC",
+      "supply": "$2.60B (DefiLlama)",
+      "chains": 2,
+      "state": "INDEXED"
+    },
+    {
+      "symbol": "BENJI",
+      "name": "Franklin Templeton BENJI",
+      "supply": "$700M+ (DefiLlama)",
+      "chains": 7,
+      "state": "INDEXED"
+    }
+  ],
+  "xrpl_instruments": {
+    "total": 16,
+    "measured": 1,
+    "note": "1 instrument measured (USD gateway $1.00B). RLUSD shows $0 via account_lines.",
+    "instruments": [
+      "RLUSD",
+      "BBRL",
+      "USDB",
+      "EURCV",
+      "USD.bs",
+      "EUR.bs",
+      "USD.gh",
+      "USDC",
+      "EUR.gh",
+      "EURQ",
+      "USDQ",
+      "OUSG",
+      "GBP.gh",
+      "EUROP",
+      "PSC",
+      "XAU.gh"
+    ]
+  }
 }
