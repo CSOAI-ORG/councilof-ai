@@ -1,0 +1,88 @@
+{
+  "schema": "csoai.silent-route-canary-config/0.1",
+  "label": "THIN",
+  "notes": [
+    "Fixed canary prompts are static across days so that a daily-digest change means the endpoint's output changed, not the prompt.",
+    "The brief's example weekday prompt was replaced with a fixed-token probe for exactly that reason.",
+    "Context: post-Sep-14 absorption watch, DeepSeek first. Drift = the canary output hash changed. That is the only fact asserted.",
+    "THIN doctrine: never signed, never publisher-wired, never interpreted by machine."
+  ],
+  "hash_rule": "sha256 over the exact response body text (the message content string), one hash per prompt; endpoint daily digest = sha256 of the sorted prompt-hash concatenation (hex digests sorted lexically, concatenated, no separator)",
+  "endpoints": [
+    {
+      "id": "deepseek",
+      "base_url": "https://api.deepseek.com/v1",
+      "model": "deepseek-chat",
+      "env_key": "DEEPSEEK_API_KEY",
+      "style": "openai-chat",
+      "watch": "post-2026-09-14 absorption watch — primary"
+    },
+    {
+      "id": "openai",
+      "base_url": "https://api.openai.com/v1",
+      "model": "gpt-4o-mini",
+      "env_key": "OPENAI_API_KEY",
+      "style": "openai-chat"
+    },
+    {
+      "id": "anthropic",
+      "base_url": "https://api.anthropic.com",
+      "model": "claude-haiku-4-5",
+      "env_key": "ANTHROPIC_API_KEY",
+      "style": "anthropic-messages"
+    },
+    {
+      "id": "gemini",
+      "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+      "model": "gemini-2.0-flash",
+      "env_key": "GEMINI_API_KEY",
+      "env_key_fallback": "GOOGLE_API_KEY",
+      "style": "openai-chat"
+    },
+    {
+      "id": "kimi",
+      "base_url": "https://api.moonshot.ai/v1",
+      "model": "moonshot-v1-8k",
+      "env_key": "MOONSHOT_API_KEY",
+      "env_key_fallback": "KIMI_API_KEY",
+      "style": "openai-chat"
+    },
+    {
+      "id": "openrouter",
+      "base_url": "https://openrouter.ai/api/v1",
+      "model": "meta-llama/llama-3.1-8b-instruct",
+      "env_key": "OPENROUTER_API_KEY",
+      "style": "openai-chat"
+    },
+    {
+      "id": "local-ollama",
+      "base_url": "http://localhost:11434/v1",
+      "model": "qwen3:0.6b",
+      "env_key": null,
+      "style": "openai-chat",
+      "probe_first": "http://localhost:11434/api/tags"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "p1-fixed-token",
+      "text": "Reply with exactly: CANARY draco — nothing else."
+    },
+    {
+      "id": "p2-deterministic-completion",
+      "text": "Complete with one word: the capital of France is"
+    },
+    {
+      "id": "p3-arithmetic",
+      "text": "What is 17 + 25? Reply with the number only."
+    },
+    {
+      "id": "p4-format",
+      "text": "List the first three prime numbers separated by commas, nothing else."
+    },
+    {
+      "id": "p5-style",
+      "text": "Describe the colour blue in exactly five words."
+    }
+  ]
+}

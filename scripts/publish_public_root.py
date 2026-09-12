@@ -35,6 +35,7 @@ from adapters import (  # noqa: E402
     # exist and never have (no delete in git history). Neither name was used —
     # only fin7_coverage.collect() is called. The dead names raised
     # ImportError at module load, so this publisher could not run AT ALL.
+    art50_census,
     benji,
     evm_permission_events,
     evm_permissions,
@@ -42,12 +43,15 @@ from adapters import (  # noqa: E402
     genai_mil_notices,
     hub_cite,
     provider_diff,
+    rwa_reconciliation,
+    stablecoin_deep,
     stablecoin_universe,
     staged_leaves,
     swift_notices,
     witness_queue,
     x402_receipts,
     xrpl,
+    xrpl_impersonation,
 )
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v1.json"
@@ -541,6 +545,15 @@ def main() -> int:
     # and docs/PROVABLE-ARCHIVE-METHOD.md.
     evm_out = evm_permissions.collect()
     evm_events_out = evm_permission_events.collect(ROOT)
+    # TUI-3 measurement lane (V3, 2026-09-12). XRPL impersonation scan fetches
+    # XRPSCAN token ranking live (never raises; dark network -> committed
+    # snapshot/ABSENT). The other three are pure file readers of committed,
+    # archived-source packs under public/interop/. Facts, not grades; every
+    # number carries archived bytes + sha256 + retrieval metadata.
+    xrpl_impersonation_out = xrpl_impersonation.collect(ROOT)
+    rwa_reconciliation_out = rwa_reconciliation.collect(ROOT)
+    stablecoin_deep_out = stablecoin_deep.collect(ROOT)
+    art50_census_out = art50_census.collect(ROOT)
 
     leaves: list[dict] = []
     leaves.extend(xrpl_out["leaves"])
@@ -568,6 +581,10 @@ def main() -> int:
     leaves.extend(x402_receipts_out["leaves"])
     leaves.extend(evm_out["leaves"])
     leaves.extend(evm_events_out["leaves"])
+    leaves.extend(xrpl_impersonation_out["leaves"])
+    leaves.extend(rwa_reconciliation_out["leaves"])
+    leaves.extend(stablecoin_deep_out["leaves"])
+    leaves.extend(art50_census_out["leaves"])
 
     have_pkcs8 = key_present()
     have_key = signer_available()
@@ -666,6 +683,10 @@ def main() -> int:
                 "stablecoin_universe": {"status": "halt-before-write", **stablecoin_universe_out["sidecar"]},
                 "evm_permissions": {"status": "halt-before-write", **evm_out["sidecar"]},
                 "evm_permission_events": {"status": "halt-before-write", **evm_events_out["sidecar"]},
+                "xrpl_impersonation": {"status": "halt-before-write", **xrpl_impersonation_out["sidecar"]},
+                "rwa_reconciliation": {"status": "halt-before-write", **rwa_reconciliation_out["sidecar"]},
+                "stablecoin_deep": {"status": "halt-before-write", **stablecoin_deep_out["sidecar"]},
+                "art50_census": {"status": "halt-before-write", **art50_census_out["sidecar"]},
             },
         }
         if not have_key:
@@ -809,6 +830,10 @@ def main() -> int:
         "stablecoin_universe": stablecoin_universe_out.get("sidecar") or {},
         "evm_permissions": evm_out.get("sidecar") or {},
         "evm_permission_events": evm_events_out.get("sidecar") or {},
+        "xrpl_impersonation": xrpl_impersonation_out.get("sidecar") or {},
+        "rwa_reconciliation": rwa_reconciliation_out.get("sidecar") or {},
+        "stablecoin_deep": stablecoin_deep_out.get("sidecar") or {},
+        "art50_census": art50_census_out.get("sidecar") or {},
         "card_count": len(shas),
         "xrpl_asset_state_count": len(asset_cards),
         "note": (

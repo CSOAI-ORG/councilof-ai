@@ -70,3 +70,21 @@ Host counts are the offer column's own distribution at as_of 2026-09-05T17:39:01
 ## Live truth (16:55Z)
 - /pricing-free answers **200 but is WITHDRAWN under evidence review** (estate guard: 'This legacy page is temporarily withdrawn… until each claim has a source, scope, date, and evidence state'). Its wiring test remains the estate contract; the BUYER rail is /pricing (workspace, 'A grade is never sold') and /api/x402 (metered link in the governor's master, correct).
 - /pricing-free references inside this index are therefore flagged WITHDRAWN-UNDER-REVIEW, never 'advertised'.
+
+## Measurement card families (signed via the root — not x402 doors, staged)
+Card families emitted by publisher adapters into the hourly public root. These
+are measurement cards, never doors; the free surface is the committed JSON,
+the paid surface (where listed) rides the existing PROOF door and its price
+lives only at the 402 challenge.
+
+| family | adapter | free surface | paid surface (staged) | pack |
+|---|---|---|---|---|
+| stablecoin-deep | scripts/adapters/stablecoin_deep.py | top-20 index total + staleness_days | per-chain splits + gap_bps | public/interop/stablecoin-deep-2026-09/ |
+| xrpl-impersonation | scripts/adapters/xrpl_impersonation.py | scan coverage + mismatch count | per-mismatch cards | public/interop/xrpl-impersonation-2026-09/ |
+| rwa-reconciliation | scripts/adapters/rwa_reconciliation.py | distributed-vs-represented + three-number | — | public/interop/rwa-reconciliation-2026-09/ |
+| art50-marking-census | scripts/adapters/art50_census.py | 4-boolean stack per generator | probe evidence via art50-marking-evidence door | public/interop/art50-census-2026-09/ |
+
+Proof: `python3 scripts/test_stablecoin_deep_adapter.py`,
+`python3 scripts/test_xrpl_impersonation_adapter.py`,
+`python3 scripts/test_rwa_reconciliation_adapter.py`,
+`python3 scripts/test_art50_census_adapter.py` — all green (2026-09-12).

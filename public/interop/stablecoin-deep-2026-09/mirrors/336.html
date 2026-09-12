@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Eonpay</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="icon" href="./img/icon.svg">
+    <link rel="stylesheet" href="./css/swiper-bundle.min.css">
+</head>
+<body>
+    <div id="app" @click="addbig" class="content-box" style="display: none;">
+        <div class="langToggle-phone"  @click="localencn">{{$t("国际语言")}}</div>
+        <div class="bg-box-3 bg-box-big"></div>
+        <div class="header">
+            <div class="logo" @click="goUp"><img src="./img/logo.svg" alt=""></div>
+            <div class="nva-center">
+                <span @click="goCustom('#productitc')">{{$t("产品")}}</span>
+                <span @click="goCustom('#industry')">{{$t("行业")}}</span>
+                <span @click="goCustom('#compliance')">{{$t("合规")}}</span>
+                <span @click="goCustom('#development')">{{$t("开发者")}}</span>
+                <span @click="goCustom('#ContactSales')">{{$t("联系销售")}}</span>
+            </div>
+            <div class="header-right-edit">
+                <div class="i18n" @click="localencn">
+                    <span>中文</span>
+                    <span>/</span>
+                    <span>EN</span>
+                </div>
+                <div @click="registerBtn" class="regin-btn">{{$t("注册")}}</div>
+                <div @click="lgingBtn" class="login-btn">{{$t("登录")}}</div>
+            </div>
+        </div>
+        <div class="nav-box parent-width resize-box">
+            <div class="bg-box bg-box-1"></div>
+            <div class="left-text">
+                <div class="small-text-box">
+                    <div class="point"></div>
+                    <div class="text">ENTERPRISE STABLECOIN PAYMENTS INFRASTRUCTURI</div>
+                </div>
+                <div class="big-text-box">{{$t("开启支付新纪元")}}</div>
+                <div class="btn-group">
+                    <div class="border-color-box" @click="concatService">
+                        <div class="border-text-box">{{$t('联系我们')}}</div>
+                        <div class="border-image-box"><img src="./img/arrowblack.svg" alt=""></div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-canvas">
+                <canvas id="globeCanvas"></canvas>
+                <div class="glow-ring"></div>
+            </div>
+        </div>
+        <div class="balance-box parent-width">
+            <!-- <div class="leftfilter filter"></div>
+            <div class="rightfilter filter"></div> -->
+            <div class="bg-box-2 bg-box-big"></div>
+            <div class="balance-list">
+                <!-- <div class="image"><img src="./img/bian.svg" alt=""></div> -->
+                <div class="image"><img src="./img/link.svg" alt=""></div>
+                <!-- <div class="image"><img src="./img/tether.svg" alt=""></div> -->
+                <div class="image"><img src="./img/SGB.svg" alt=""></div>
+                <!-- <div class="image"><img src="./img/safeheron.svg" alt=""></div>
+                <div class="image"><img src="./img/dtcpay.svg" alt=""></div> -->
+                <div class="image"><img src="./img/ant.svg" alt=""></div>
+                <div class="image"><img src="./img/inter.svg" alt=""></div>
+                <div class="image"><img src="./img/cantor.svg" alt=""></div>
+                <!-- <div class="image"><img src="./img/bian4.svg" alt=""></div> -->
+            </div>
+        </div>
+        <div class="bg-box-top-2"></div>
+        <div class="product parent-width head-product">
+            <div class="title">{{ $t('使用Eonpay') }}</div>
+        </div>
+        <div class="bg-box-top-2"></div>
+        <div class="product parent-width">
+            <div class="small-text-box">
+                <div class="point"></div>
+                <div class="text">FEATURED SOLUTIONS</div>
+            </div>
+            <!-- <div class="product-tit-inf">
+                <div class="title">{{$t('单独展示两大核心能力全球同名账户收款与U卡')}}</div>
+                <div class="info">{{$t('单独展示两大核心能力全球同名账户收款与U卡_info')}}</div>
+            </div> -->
+            <div class="two-box resize-box-flex">
+                <div class="two-item">
+                    <div class="two-image" style="width: 260px;"><img src="./img/Group2.svg" alt=""></div>
+                    <div class="two-title">{{$t('全球收款账户')}}</div>
+                    <div class="two-info-t">{{$t('全球收款账户_info')}}</div>
+                    <div class="two-info">
+                        <div class="image-icon"><img src="./img/checkbox.svg" alt=""></div>
+                        <div class="two-info-small">{{$t('全球收款账户_info_check')}}</div>
+                    </div>
+                    <div class="border-color-box">
+                        <div class="border-text-box">{{$t('全球收款账户_btn')}}</div>
+                        <div class="border-image-box"><img src="./img/arrowright.svg" alt=""></div>
+                    </div>
+                </div>
+                <div class="two-item">
+                    <div class="two-image" style="width: 250px;"><img src="./img/Cdrd_01.svg" alt=""></div>
+                    <div class="two-title">{{$t('企业支付基础设施')}}</div>
+                    <div class="two-info-t">{{$t('企业支付基础设施_info')}}</div>
+                    <div class="two-info">
+                        <div class="image-icon"><img src="./img/checkbox.svg" alt=""></div>
+                        <div class="two-info-small">{{$t('企业支付基础设施_info_check')}}</div>
+                    </div>
+                    <div class="border-color-box">
+                        <div class="border-text-box">{{$t('企业支付基础设施_btn')}}</div>
+                        <div class="border-image-box"><img src="./img/arrowright.svg" alt=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-box-top"></div>
+        <!-- <div class="swiper mySwiper_01 parent-width">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" v-for="(item, index) in navListBalance"><img class="swiper-img" :src="item.img" alt=""></div>
+            </div>
+            <div class="swiper-pagination_01"></div>
+        </div> -->
+        <div class="nva-banlance parent-width" id="productitc">
+            <div class="banlance-list resize-box-flex">
+                <div class="banlance-item" @click="navBalance=index"
+                    v-for="(item, index) in navListBalance"
+                    :class="navBalance==index?'active':''">
+                    <div class="banlance-title">{{$t(item.label)}}</div>
+                    <div class="banlance-title">{{$t(navListBalance[navBalance_phone].label)}}</div>
+                    <!-- <div class="banlance-remark">{{$t(item.remark)}}</div> -->
+                </div>
+            </div>
+            <div class="banlance-img-list">
+                <div :style="{transform:`translateX(${navBalance*100*-1}%)`}" class="image" 
+                    v-for="(item, index) in navListBalance">
+                    <img :src="item.img" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="parent-width">
+            <div class="swiper mySwiper_01 parent-width">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-for="(item, index) in navListBalance"><img class="swiper-img" :src="item.img" alt=""></div>
+                </div>
+                <div class="swiper-pagination_01"></div>
+            </div>
+        </div>
+        <div class="bg-box-4 bg-box-top"><div class="bg-box-big"></div></div>
+        <div class="product parent-width" id="industry">
+            <div class="small-text-box">
+                <div class="point"></div>
+                <div class="text">Operational scenarios</div>
+            </div>
+            <div class="product-tit-inf">
+                <div class="title">{{$t('Eonpay可以做什么')}}</div>
+                <div class="info">{{$t('服务哪些业务场景提供哪些真实能力_info')}}</div>
+            </div>
+            
+            <div class="flex-list-box swiper mySwiper_02">
+                <div class="swiper-wrapper">
+                    <div class="flex-item-box swiper-slide">
+                        <div class="product-title">{{$t("出海商户DTCB2B外贸")}}</div>
+                        <div class="product-info">{{$t("解决海外客户付款慢")}}</div>
+                        <div class="product-small-list">
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("提供USDEURGBP本地收款信息")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("支持USDTUSDC收款")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("自动换汇到目标结算币种")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("供应商与服务商付款")}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-item-box swiper-slide">
+                        <div class="product-title">{{$t("支付机构PSP")}}</div>
+                        <div class="product-info">{{$t("适合想增加stablecoin")}}</div>
+                        <div class="product-small-list">
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("嵌入式收款账户与钱包体系")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("商户侧收款与清算能力")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("代商户结算与资金分发")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("可品牌化API")}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-item-box swiper-slide">
+                        <div class="product-title">{{$t("数字资产OTC")}}</div>
+                        <div class="product-info">{{$t("之间的资金进出")}}</div>
+                        <div class="product-small-list">
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("稳定币收付与自动归集")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("多币种清算与换汇")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("对手方付款与资金调拨")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("地址筛查与交易监控")}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-item-box swiper-slide">
+                        <div class="product-title">{{ $t('Marketplace') }}</div>
+                        <div class="product-info">{{$t("适合面向卖家")}}</div>
+                        <div class="product-small-list">
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("户收款统一归集")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("平台抽成与自动清分")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("给卖家创作者发起")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("支持发卡消费与奖励")}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-item-box swiper-slide">
+                        <div class="product-title">{{ $t('GlobalPayroll')}}</div>
+                        <div class="product-info">{{$t("适合国际雇佣")}}</div>
+                        <div class="product-small-list">
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("批量发薪与分账")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("支持多收款")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("稳定币发放")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("付款状态与对账追踪")}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-item-box swiper-slide">
+                        <div class="product-title">{{$t("企业支出广告投放")}}</div>
+                        <div class="product-info">{{$t("将清算后的资金继续用于企业真实支出")}}</div>
+                        <div class="product-small-list">
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("卡发卡与额度管理")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("团队用卡与费用规则")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("消费明细和月度账单")}}</div>
+                            </div>
+                            <div class="product-small-item">
+                                <div class="point"></div>
+                                <div class="product-small-text">{{$t("支持资金归集和结算")}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination_02"></div>
+            </div>
+        </div>
+        <!-- <div class="parent-width bg-box-5 bg-box-top"><div class="bg-box-big"></div></div>
+        <div class="product parent-width">
+            <div class="small-text-box">
+                <div class="point"></div>
+                <div class="text">Licences & compliance</div>
+            </div>
+            <div class="product-tit-inf">
+                <div class="title">{{$t('把牌照能力直接写进业务交付能力')}}</div>
+                <div class="info">{{$t('把牌照能力直接写进业务交付能力_info')}}</div>
+            </div>
+            <div class="four-box resize-box-flex">
+                <div class="four-item">
+                    <div class="four-title">MSO</div>
+                    <div class="four-info">{{$t('MSO_info')}}</div>
+                </div>
+                <div class="four-item">
+                    <div class="four-title">VASP</div>
+                    <div class="four-info">{{$t('VASP_info')}}</div>
+                </div>
+                <div class="four-item">
+                    <div class="four-title">Trust</div>
+                    <div class="four-info">{{$t('Trust_info')}}</div>
+                </div>
+                <div class="four-item">
+                    <div class="four-title">KYC/KYB/AML</div>
+                    <div class="four-info">{{$t('KYCKYBAML_info')}}</div>
+                </div>
+            </div>
+        </div> -->
+        <div class="parent-width bg-box-6 bg-box-top">
+            <div class="bg-box-big"></div>
+            <div class="bg-box-big"></div>
+        </div>
+        <div class="product parent-width" id="compliance">
+            <div class="small-text-box">
+                <div class="point"></div>
+                <div class="text">Compliance</div>
+            </div>
+            <div class="product-tit-inf">
+                <div class="title">{{$t('让合规与风控服务于真实交')}}</div>
+                <div class="info">{{$t('让合规与风控服务于真实交_info')}}</div>
+            </div>
+            <div class="four-box four-box-three resize-box-flex mySwiper_03">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide four-item">
+                        <div class="four-title">MSO</div>
+                        <div class="four-info-t">{{$t('MSO_info_t')}}</div>
+                        <div class="four-info">{{$t('MSO_info')}}</div>
+                    </div>
+                    <div class="swiper-slide four-item">
+                        <div class="four-title">VASP</div>
+                        <div class="four-info-t">{{$t('VASP_info_t')}}</div>
+                        <div class="four-info">{{$t('VASP_info')}}</div>
+                    </div>
+                    <div class="swiper-slide four-item">
+                        <div class="four-title">Trust</div>
+                        <div class="four-info-t">{{$t('Trust_info_t')}}</div>
+                        <div class="four-info">{{$t('Trust_info')}}</div>
+                    </div>
+                    <div class="swiper-slide four-item">
+                        <div class="four-title">KYB</div>
+                        <div class="four-info-t">{{$t('KYB_info_t')}}</div>
+                        <div class="four-info">{{$t('KYB_info')}}</div>
+                    </div>
+                    <div class="swiper-slide four-item">
+                        <div class="four-title">Compliance</div>
+                        <div class="four-info-t">{{$t('AML_info_t')}}</div>
+                        <div class="four-info">{{$t('AML_info')}}</div>
+                    </div>
+                    <div class="swiper-slide four-item">
+                        <div class="four-title">Audit</div>
+                        <div class="four-info-t">{{$t('Audit_info_t')}}</div>
+                        <div class="four-info">{{$t('Audit_info')}}</div>
+                    </div>
+                </div>
+                <div class="swiper-pagination_03"></div>
+            </div>
+        </div>
+        <div class="bg-box-top bg-box-7"><div class="bg-box-big"></div></div>
+        <div class="product parent-width">
+            <div class="small-text-box">
+                <div class="point"></div>
+                <div class="text">Compliance</div>
+            </div>
+            <div class="product-tit-inf">
+                <div class="title">{{$t('面向多轨道未来的合规型基础设施')}}</div>
+                <div class="info">{{$t('面向多轨道未来的合规型基础设施_info')}}</div>
+            </div>
+            <div class="four-box four-box-three resize-box-flex mySwiper_04">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide four-item">
+                        <div class="four-title">130+</div>
+                        <div class="four-info-t">{{$t('130国家')}}</div>
+                        <div class="four-info">{{$t('130国家_info')}}</div>
+                    </div>
+                    <div class="swiper-slide four-item">
+                        <div class="four-title">24/ 7</div>
+                        <div class="four-info-t">{{$t('247稳定')}}</div>
+                        <div class="four-info">{{$t('247稳定_info')}}</div>
+                    </div>
+                    <div class="swiper-slide four-item">
+                        <div class="four-title">99.9%</div>
+                        <div class="four-info-t">{{$t('999平台')}}</div>
+                        <div class="four-info">{{$t('999平台_info')}}</div>
+                    </div>
+                </div>
+                <div class="swiper-pagination_04"></div>
+            </div>
+        </div>
+        <div class="bg-box-top  bg-box-8"><div class="bg-box-big"></div></div>
+        <div class="product parent-width resize-box-flex product-banl" id="development">
+            <div class="product-left">
+                <div class="small-text-box">
+                    <div class="point"></div>
+                    <div class="text">Developers</div>
+                </div>
+                <div class="product-tit-inf">
+                    <div class="title">{{$t('给产品技术运营和财务都能落地的一套接入方式')}}</div>
+                    <div class="info">{{$t('给产品技术运营和财务都能落地的一套接入方式_info')}}</div>
+                    <div></div>
+                </div>
+                <div class="btn-group">
+                    <div class="border-color-box">
+                        <div class="border-text-box">{{$t('申请沙盒环境')}}</div>
+                        <div class="border-image-box"><img src="./img/arrowblack.svg" alt=""></div>
+                    </div>
+                    <div class="border-color-box">
+                        <div class="border-text-box">{{$t('查看API参考')}}</div>
+                        <div class="border-image-box"><img src="./img/arrowright.svg" alt=""></div>
+                    </div>
+                </div>
+            </div>
+            <div class="product-right">
+                <div class="small-text-box" style="opacity: 0;">
+                    <div class="point"></div>
+                    <div class="text">Developers</div>
+                </div>
+                <div class="mark-box">
+                    <div class="mark-btn-group">
+                        <div class="mark-btn-one"></div>
+                        <div class="mark-btn-two"></div>
+                        <div class="mark-btn-three"></div>
+                    </div>
+                    <span class="token-keyword">POST</span><span class="token-keywdrs">/v1/payouts</span><span class="token-operator">{</span>
+                    <span class="token-property">"amount"</span><span class="token-operator">: </span><span class="token-string">"2500.00"</span>,
+                    <span class="token-property">"currency"</span><span class="token-operator">: </span><span class="token-string">"USDC"</span>,
+                    <span class="token-property">"destination"</span><span class="token-operator">: {</span>
+                    <span class="token-property">"type"</span><span class="token-operator">: </span><span class="token-string">"wallet"</span>,
+                    <span class="token-property">"network"</span><span class="token-operator">: </span><span class="token-string">"ethereum"</span>,
+                    <span class="token-property">"address"</span><span class="token-operator">: </span><span class="token-string">"0x12ab...89ef"</span>
+                    <span class="token-operator">},</span>
+                    <span class="token-property">"beneficiary"</span><span class="token-operator">: {</span>
+                    <span class="token-property">"name"</span><span class="token-operator">: </span><span class="token-string">"Global Supplier Ltd"</span>
+                    <span class="token-operator">},</span>
+                    <span class="token-property">"compliance_mode"</span><span class="token-operator">: </span><span class="token-string">"screen_and_release"</span><span class="token-operator">}</span>
+                    <span class="token-comment">→ route selected→ screening passed→ settlement initiated</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-box-top"></div>
+        <div class="parent-width"  id="ContactSales">
+            <div class="product product-bg-box">
+                <div class="small-text-box">
+                    <div class="point"></div>
+                    <div class="text">Contact sales</div>
+                </div>
+                <div class="product-tit-inf">
+                    <div class="title">{{$t('提交真实业务需求们按场景给你配置接入方案')}}</div>
+                    <div class="info">{{$t('提交真实业务需求们按场景给你配置接入方案_info')}}</div>
+                </div>
+                <div class="form">
+                    <div class="input"><input type="text" :placeholder="$t('公司名称p')" name="one"/></div>
+                    <div class="input"><input type="text" :placeholder="$t('联系姓名')" name="two"/></div>
+                    <div class="input"><input type="text" :placeholder="$t('企业邮箱')" name="three"/></div>
+                    <div class="input"><input type="text" :placeholder="$t('月交易规模服务场景')" name="thire" /></div>
+                    <div class="textarea"><textarea :placeholder="$t('textarea_info')"></textarea></div>
+                </div>
+                <div class="btn-group">
+                    <div class="border-color-box">
+                        <div class="border-text-box">{{$t('提交接入需求')}}</div>
+                        <div class="border-image-box"><img src="./img/arrowblack.svg" alt=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-box-top"></div>
+        <div class="footer parent-width">
+            <div class="footer-text">© 2026 Eonpay. All rights reserved</div>
+            <div class="footer-text">{{$t('公司名称',{name:'TRANSWORLD FINTECH LIMITED'})}}</div>
+            <div class="footer-text">{{$t('注册号码',{name:'23-06-03158'})}}</div>
+            <div class="footer-text" style="cursor: pointer;">{{$t('隐私政策')}}</div>
+            <div class="footer-text" style="cursor: pointer;">{{$t('服务条款')}}</div>
+        </div>
+    </div>
+    <script src="./js/swiper-bundle.min.js"></script>
+    <script src="./js/vue.global.js"></script>
+    <script src="./js/vue-i18n.global.js"></script>
+    <script src="./js/i18n.js"></script>
+    <!-- this.$refs -->
+    <script>
+        const { createApp } = Vue;
+        const app = createApp({
+            // data 函数返回响应式数据（修改后视图会自动更新）
+            data() {
+                return {
+                    windowWidth:0,
+                    idApp: null,
+                    localI18n: null,
+
+                    navBalance:0,
+                    navBalance_phone:0,
+                    navListBalance:[
+                        {label:'全球收款',remark:'全球收款_remark',img:'./img/GlobalCollection.png'},
+                        {label:'自动换汇',remark:'自动换汇_remark',img:'./img/currencyexchange.png'},
+                        {label:'资产管理',remark:'清分与财产_remark',img:'./img/SortingandProperty.png'},
+                        {label:'全球付款',remark:'全球付款_remark',img:'./img/payment.png'},
+                        // {label:'U卡',remark:'U卡_remark',img:'./img/UCard.png'},
+                    ],
+                }
+            },
+            watch:{
+                '$i18n.locale': function (newVal, oldVal) {
+                    if(newVal === 'cn'){
+                        document.documentElement.classList.remove('i18nClass');
+                    }else {
+                        document.documentElement.classList.add('i18nClass');
+                    }
+                }
+            },
+            mounted() {
+                this.banlanceList()
+                this.idApp = document.getElementById('app');
+                this.idApp.style.display = 'block';
+                if(localStorage.getItem('localen') === 'cn'){
+                    this.$i18n.locale = 'cn';
+                }else {
+                    this.$i18n.locale = 'en';
+                }
+                this.windowWidth = window.innerWidth;
+                // 监听窗口大小变化
+                window.addEventListener('resize', this.handleResize);
+                this.newSwiper()
+                // var swiper1 = new Swiper(".mySwipe1r", {
+                //     pagination: {
+                //         el: '.swiper-pagination',
+                //         clickable: true,
+                //     },
+                //     loop: true,
+                // });
+            },
+            beforeUnmount() {
+                // 清理事件监听器，防止内存泄漏
+                window.removeEventListener('resize', this.handleResize);
+            },
+            methods: {
+                newSwiper() {
+                    if(window.innerWidth >=1280) return
+                    let swiperList = [
+                        {selector:'.mySwiper_01',page:'.swiper-pagination_01'},
+                        {selector:'.mySwiper_02',page:'.swiper-pagination_02'},
+                        {selector:'.mySwiper_03',page:'.swiper-pagination_03'},
+                        {selector:'.mySwiper_04',page:'.swiper-pagination_04'},
+                    ]
+                    let that = this;
+                    for (let index = 0; index < swiperList.length; index++) {
+                        const element = swiperList[index];
+                        let swiper= new Swiper(element.selector, {
+                            pagination: {
+                                el: element.page,
+                                clickable: true,
+                            },
+                            loop: true,
+                            on:{
+                                slideChange(val){
+                                    if(element.selector=='.mySwiper_01'){
+                                        that.navBalance_phone = this.realIndex;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                },
+                /** 获取轮播列表 */
+                banlanceList() {
+                    let dome = document.querySelector('.balance-list'),
+                        parent = dome.parentNode;
+                    if(!dome) return;
+                    parent.append(dome.cloneNode(true));
+                },
+                handleResize() {
+                    if(window.innerWidth >=1280&&this.windowWidth < 1280){
+                        window.location.reload();
+                    }else if(window.innerWidth < 1280&&this.windowWidth >= 1280){
+                        window.location.reload();
+                    }
+                    this.windowWidth = window.innerWidth;
+                },
+                /** 登录  */
+                lgingBtn() {
+                    window.location.href = 'login';
+                },
+                /** 注册  */
+                registerBtn() {
+                    window.location.href = 'reg';
+                },
+                /** 中文切换  */
+                localencn(){
+                    this.$i18n.locale = this.$i18n.locale==="cn"?"en":'cn';
+                    this.localI18n = this.$i18n.locale;
+                    localStorage.setItem('localen', this.$i18n.locale);
+                },
+                /** 滚动到指定位置 */
+                goCustom(className = '') {
+                    console.log(document.querySelector(className).offsetTop)
+                    let up = document.querySelector(className).offsetTop-200;
+                    if(up<0) up = 0;
+                    this.goUp(document.querySelector(className).offsetTop-200)
+                },
+                /** 跳转到顶部  */
+                goUp(top = 0){
+                    this.idApp.scrollTo({
+                        top,
+                        behavior: 'smooth',
+                    })
+                },
+                /** 预约  */
+                appointment(){
+                    window.open('mailto:notify@unitedcustody.com')
+                },
+                concatService(){
+                    window.open('https://api.whatsapp.com/send/?phone=66998477646')
+                },
+                addbig(){},
+            },
+        });
+        // 禁用双指缩放 + 双击放大 + 触摸缩放
+        document.addEventListener('touchstart', function(e) {
+        // 若检测到多触点（双指），阻止默认行为
+        if (e.touches.length > 1) {
+            e.preventDefault();
+        }
+        }, { passive: false }); // 必须设为false，否则无法阻止默认行为
+
+        // 拦截iOS手势事件（gesture是iOS专属缩放/旋转手势）
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('gesturechange', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('gestureend', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        // 拦截触摸移动中的缩放行为
+        document.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // 补充：禁用双击放大（之前的需求）
+        document.addEventListener('dblclick', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        async function initAapp () {
+            const result = await initI18n()
+            app.use(result);
+            app.mount('#app');
+        }
+        initAapp()
+    </script>
+
+<script src="./js/index.js">
+
+    // Globe animation with token badges moving on fixed orbital tracks
+    let canvas = document.getElementById('globeCanvas');
+    let ctx = canvas.getContext('2d');
+    let dpr = 1, width = 0, height = 0, cx = 0, cy = 0, radius = 0;
+    let tick = 0;
+
+    const points = [];
+    const links = [];
+    const flowParticles = [];
+    /** 的 */
+    const tokenOrder = ["JPY", "USD", "CAD", "HKD", "EUR","CNY"];
+    const tokenOrderOne = ["HKD", "AUD", "KRW", "SGD", "CHF",
+     "NZD", "SEK", "NOK", "DKK", "ILS", "MXN", "ZAR", "TRY", 
+     "INR", "BRL", "RUB", "PLN", "THB", "IDR"];
+    const tokenMeta = {
+        USD:  { bg: "#2563EB", fg: "#ffffff", symbol: "./img/currency/USD.svg", type: 'img' },
+        EUR:  { bg: "#2563EB", fg: "#ffffff", symbol: "./img/currency/EUR.svg", type: 'img' },
+        GBP:  { bg: "#2563EB", fg: "#ffffff", symbol: "./img/currency/GBP.svg", type: 'img' },
+        JPY:  { bg: "#EA580C", fg: "#ffffff", symbol: "./img/currency/JPY.svg", type: 'img' },
+        CNY:  { bg: "#EA580C", fg: "#ffffff", symbol: "./img/currency/CNY.svg", type: 'img' },
+        HKD:  { bg: "#7C3AED", fg: "#ffffff", symbol: "./img/currency/HKD.svg", type: 'img' },
+        AUD:  { bg: "#16A34A", fg: "#ffffff", symbol: "./img/currency/AUD.svg", type: 'img' },
+        CAD:  { bg: "#16A34A", fg: "#ffffff", symbol: "./img/currency/CAD.svg", type: 'img' },
+        KRW:  { bg: "#2563EB", fg: "#ffffff", symbol: "./img/currency/KRW.svg", type: 'img' },
+        SGD:  { bg: "#2563EB", fg: "#ffffff", symbol: "./img/currency/SGD.svg", type: 'img' },
+        CHF:  { bg: "#EA580C", fg: "#ffffff", symbol: "./img/currency/CHF.svg", type: 'img' },
+        NZD:  { bg: "#16A34A", fg: "#ffffff", symbol: "./img/currency/NZD.svg", type: 'img' },
+        SEK:  { bg: "#2563EB", fg: "#ffffff", symbol: "./img/currency/SEK.svg", type: 'img' },
+        NOK:  { bg: "#2563EB", fg: "#ffffff", symbol: "./img/currency/NOK.svg", type: 'img' },
+        DKK:  { bg: "#2563EB", fg: "#ffffff", symbol: "./img/currency/DKK.svg", type: 'img' },
+        USDT: { bg: "#26A17B", fg: "#ffffff", symbol: "./img/currency/USDT.svg", type: 'img' },
+        USDC: { bg: "#2775CA", fg: "#ffffff", symbol: "./img/currency/USDC.svg", type: 'img' },
+        BTC:  { bg: "#F7931A", fg: "#ffffff", symbol: "./img/currency/BTC.svg", type: 'img' },
+        ETH:  { bg: "#627EEA", fg: "#ffffff", symbol: "./img/currency/ETH.svg", type: 'img' }
+    };
+    let group = [...tokenOrder, ...tokenOrderOne];
+    for (let index = 0; index < group.length; index++) {
+        const element = group[index];
+        tokenMeta[element] = {
+            bg:"#26A17B", fg:"#ffffff",
+             symbol:`./img/currency/${element}.svg`,type:'img'
+        }
+    }
+    /** 徽章移动的轨道 */
+    let tokenOrbits = [];
+
+    function rand(min, max){ return min + Math.random() * (max - min); }
+
+    function resize(){
+        const rect = canvas.getBoundingClientRect();
+        dpr = Math.max(1, window.devicePixelRatio || 1);
+        width = rect.width;
+        height = rect.height;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.setTransform(1,0,0,1,0,0);
+        ctx.scale(dpr, dpr);
+        cx = width * 0.5;
+        cy = height * 0.52;
+        radius = Math.min(width, height) * 0.36;
+        buildScene();
+        buildOrbits();
+    }
+
+    function buildScene(){
+      points.length = 0;
+      links.length = 0;
+      flowParticles.length = 0;
+
+      const total = 420;
+      for(let i = 0; i < total; i++){
+        const y = 1 - (i / (total - 1)) * 2;
+        const r = Math.sqrt(1 - y * y);
+        const theta = Math.PI * (3 - Math.sqrt(5)) * i;
+        points.push({
+          x: Math.cos(theta) * r,
+          y,
+          z: Math.sin(theta) * r,
+          size: rand(1.2, 3.5)
+        });
+      }
+
+      for(let i = 0; i < 220; i++){
+        const a = Math.floor(Math.random() * points.length);
+        let b = Math.floor(Math.random() * points.length);
+        if(a === b) b = (b + 19) % points.length;
+        const pa = points[a], pb = points[b];
+        const dx = pa.x - pb.x, dy = pa.y - pb.y, dz = pa.z - pb.z;
+        const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        if(dist < 0.92){
+          links.push({a, b, seed: Math.random() * 100});
+        }
+      }
+
+      for(let i = 0; i < 36; i++){
+        flowParticles.push({
+          linkIndex: i % Math.max(1, links.length),
+          t: Math.random(),
+          speed: rand(0.0008, 0.0022)
+        });
+      }
+    }
+    // 确定令牌和徽章的轨迹，随着页面变动更改，一般只调用一次
+    function buildOrbits(){
+        tokenOrbits = [];
+        for (let index = 0; index < tokenOrder.length; index++) {
+            const token = tokenOrder[index];
+            let i = index;
+            let speed = 0.0114 + i * 0.00008;
+            // if(index % 2 !== 0) speed = speed*-1;
+            // console.log(radius * (0.88 + (i % 3) * 0.08),radius * (0.28 + (i % 2) * 0.08))
+            const orbitRX = radius * 1.20;    // 横向扩大到球体外圈
+            const orbitRY = radius * 0.42;
+            tokenOrbits.push({
+                token,
+                phase: i * (Math.PI * 2 / tokenOrder.length),
+                speed: speed,
+                orbitRX: orbitRX,
+                orbitRY: orbitRY,
+                tilt: -0.72 + i * 0.28,
+                verticalShift: (-0.18 + i * 0.07) * radius,
+                sizeScale: 1,
+                flipState: 'idle',       // idle/transitioning 两种状态
+                flipProgress: 0,         // 0~1 翻转进度
+                currentKey: token,       // 当前显示的key
+                targetKey: randomCurrency(),// 兑换的key
+                fileScale:0,//控制翻转一次
+            })
+        }
+        // tokenOrbits = tokenOrder.map((token, i) => ({
+        //     token,
+        //     phase: i * (Math.PI * 2 / tokenOrder.length),
+        //     speed: 0.0114 + i * 0.00008,
+        //     orbitRX: radius * (0.88 + (i % 3) * 0.08),
+        //     orbitRY: radius * (0.28 + (i % 2) * 0.08),
+        //     tilt: -0.72 + i * 0.28,
+        //     verticalShift: (-0.18 + i * 0.07) * radius,
+        //     sizeScale: 1,
+        // }));
+    }
+
+    function projectPoint(p, rotY, rotX){
+      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+      const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+
+      let x = p.x * cosY - p.z * sinY;
+      let z = p.x * sinY + p.z * cosY;
+      let y = p.y;
+
+      const y2 = y * cosX - z * sinX;
+      const z2 = y * sinX + z * cosX;
+      y = y2; z = z2;
+
+      return {
+        x: cx + x * radius,
+        y: cy + y * radius,
+        z,
+        alpha: Math.max(0.08, 0.2 + (z + 1) * 0.45),
+        size: p.size * (0.84 + (z + 1) * 0.28)
+      };
+    }
+
+    function glow(x, y, r, rgb, a){
+        if(r<0) r = Math.abs(r);
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+        g.addColorStop(0, `rgba(${rgb},${a})`);
+        g.addColorStop(1, `rgba(${rgb},0)`);
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    function roundRect(x, y, w, h, r){
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function drawTokenBadge(x, y, orbit, alpha, scale=1){
+        const { flipState, flipProgress, currentKey, targetKey } = orbit;
+        let drawKey = currentKey;
+        let flipScaleY = 1;
+        if (flipState === 'transitioning') {
+        // 前半程(0~0.5)：压扁，显示旧key，scaleY从1→0
+        if (flipProgress < 0.5) {
+                flipScaleY = 1 - (flipProgress / 0.5);
+                drawKey = currentKey;
+            } 
+            // 后半程(0.5~1)：恢复，显示新key，scaleY从0→1
+            else {
+                flipScaleY = (flipProgress - 0.5) / 0.5;
+                drawKey = targetKey;
+            }
+        }
+        let meta = tokenMeta[drawKey];
+        
+        const bw = 84 * scale, bh = 30 * scale, br = 15 * scale;
+        const bx = x + 10 * scale;
+        const by = y - 26 * scale;
+        // if(meta.type === 'img') {
+        //     ctx.drawImage(meta.bg,bx + 30 * scale, by + 15.5 * scale)
+        //     return;
+        // }
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        ctx.translate(bx + bw/2, by + bh/2);
+        ctx.scale(1, flipScaleY); // 用scaleY实现上下翻转效果
+        ctx.translate(-(bx + bw/2), -(by + bh/2));
+        glow(bx + 14 * scale, by + 15 * scale, 22 * scale, "121,240,255", 0.10 * alpha);
+        roundRect(bx, by, bw, bh, br);
+        const grad = ctx.createLinearGradient(bx, by, bx + bw, by + bh);
+        grad.addColorStop(0, "rgba(6,12,22,0.94)");
+        grad.addColorStop(1, "rgba(12,20,34,0.92)");
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.14)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.beginPath();
+        if(meta.type == "text"){
+            ctx.arc(bx + 15 * scale, by + 15 * scale, 10 * scale, 0, Math.PI * 2);
+            ctx.fillStyle = meta.bg;
+            ctx.fill();
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = meta.fg;
+            ctx.font = `bold ${11 * scale}px Arial`;
+            ctx.textAlign = "center";
+            ctx.fillText(meta.symbol, bx + 15 * scale, by + 15.5 * scale);
+        }else {
+            ctx.textBaseline = "middle";
+            // ctx.fillText(meta.symbol, bx + 15 * scale, by + 15.5 * scale);
+            ctx.drawImage(meta.img,bx + 5.5 * scale, by + 5.5 * scale,20,20)
+        }
+        ctx.textAlign = "left";
+        ctx.font = `bold ${12 * scale}px Arial`;
+        ctx.fillStyle = "rgba(255,255,255,0.96)";
+        ctx.fillText(drawKey, bx + 30 * scale, by + 15.5 * scale);
+        ctx.restore();
+    }
+    // 通过令牌徽章轨迹，确定当前位置。
+    function orbitPosition(orbit, t){
+        const a = orbit.phase + t * orbit.speed;
+        const localX = Math.cos(a) * orbit.orbitRX;
+        const localY = Math.sin(a) * orbit.orbitRY;
+
+        // 绕中心旋转椭圆形成倾斜轨道
+        const cosT = Math.cos(orbit.tilt);
+        const sinT = Math.sin(orbit.tilt);
+
+        const x = localX * cosT - localY * sinT;
+        const y = localX * sinT + localY * cosT + orbit.verticalShift;
+
+        // 前/后行为的伪深度
+        const depth = Math.sin(a);
+        return {
+            x: cx + x,
+            y: cy + y,
+            depth
+        };
+    }
+
+    function draw(){
+        ctx.clearRect(0, 0, width, height);
+        const rotY = tick * 0.0018;
+        const rotX = Math.sin(tick * 0.0014) * 0.18;
+        // glow(cx, cy, radius * 1.9, "255,0,0", 0.06);
+        // glow(cx - radius * 0.25, cy + radius * 0.12, radius * 0.55, "125,140,255", 0.06);
+
+        // return
+        const projected = points.map(p => projectPoint(p, rotY, rotX));
+        // orbit rings 轨道环
+        // for(let i = 0; i < 4; i++){
+        //     ctx.save();
+        //     ctx.translate(cx, cy);
+        //     ctx.rotate(rotY * (0.18 + i*0.06) + i);
+        //     ctx.scale(1, 0.42 + i * 0.03);
+        //     ctx.strokeStyle = `rgba(121,240,255,${0.04 + i * 0.015})`;
+        //     ctx.lineWidth = 1;
+        //     ctx.beginPath();
+        //     ctx.arc(0, 0, radius * (1.20 + i * 0.10), 0, Math.PI * 2);
+        //     ctx.stroke();
+        //     ctx.restore();
+        // }
+        ctx.strokeStyle = "rgba(255,255,255,0.06)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius + 2, 0, Math.PI * 2);
+        ctx.stroke();
+        // links
+        links.forEach((ln) => {
+            const a = projected[ln.a], b = projected[ln.b];
+            const visible = (a.z + b.z) * 0.5;
+            if(visible > -0.18){
+                const midX = (a.x + b.x) / 2 + Math.sin(tick * 0.01 + ln.seed) * 12;
+                const midY = (a.y + b.y) / 2 - Math.cos(tick * 0.009 + ln.seed) * 12;
+                const grad = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+                grad.addColorStop(0, `rgba(121,240,255,${0.03 + a.alpha * 0.18})`);
+                grad.addColorStop(1, `rgba(125,140,255,${0.03 + b.alpha * 0.15})`);
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = visible > 0.15 ? 1.15 : 0.75;
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.quadraticCurveTo(midX, midY, b.x, b.y);
+                ctx.stroke();
+            }
+        });
+        // flow particles
+        flowParticles.forEach((fp, i) => {
+            const ln = links[fp.linkIndex % Math.max(1, links.length)];
+            if(!ln) return;
+            const a = projected[ln.a], b = projected[ln.b];
+            const visible = (a.z + b.z) * 0.5;
+            if(visible > 0){
+                const midX = (a.x + b.x) / 2 + Math.sin(tick * 0.01 + ln.seed) * 12;
+                const midY = (a.y + b.y) / 2 - Math.cos(tick * 0.009 + ln.seed) * 12;
+                const t = fp.t;
+                const x = (1-t)*(1-t)*a.x + 2*(1-t)*t*midX + t*t*b.x;
+                const y = (1-t)*(1-t)*a.y + 2*(1-t)*t*midY + t*t*b.y;
+
+                glow(x, y, 14, i % 5 === 0 ? "125,140,255" : "121,240,255", 0.18);
+                ctx.fillStyle = i % 5 === 0 ? "rgba(182,140,255,0.96)" : "rgba(230,252,255,0.98)";
+                ctx.beginPath();
+                ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+                ctx.fill();
+                fp.t += fp.speed;
+                if(fp.t > 1){
+                    fp.t = 0;
+                    fp.linkIndex = Math.floor(Math.random() * Math.max(1, links.length));
+                }
+            }
+        });
+        // points
+        projected.sort((a, b) => a.z - b.z);
+        /** 令牌轨道 */
+        ctx.save();
+        tokenOrbits.forEach((orbit) => {
+            ctx.beginPath();
+            for (let k = 0; k <= Math.PI * 2; k += 0.05) {
+                const localX = Math.cos(k) * orbit.orbitRX;
+                const localY = Math.sin(k) * orbit.orbitRY;
+                const cosT = Math.cos(orbit.tilt);
+                const sinT = Math.sin(orbit.tilt);
+                const x = localX * cosT - localY * sinT;
+                const y = localX * sinT + localY * cosT + orbit.verticalShift;
+
+                if (k === 0) {
+                    ctx.moveTo(cx + x, cy + y);
+                } else {
+                    ctx.lineTo(cx + x, cy + y);
+                }
+            }
+            // 深度：-1(背面) ~ 1(正面)
+            const depth = Math.sin(tick * orbit.speed + orbit.phase);
+            // 背面更淡，正面更亮
+            const alpha = 0.04 + Math.max(0, depth) * 0.12;
+            ctx.strokeStyle = `rgba(121,240,255,${alpha})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        });
+        ctx.restore();
+        /** 令牌轨道 */
+        projected.forEach((p, idx) => {//点
+            if(p.z > -0.28){
+                const twinkle = 0.8 + Math.sin(tick * 0.008 + idx) * 0.12;
+                glow(p.x, p.y, 10 + p.size * 2.8, "121,240,255", 0.03 + p.alpha * 0.07 * twinkle);
+                ctx.fillStyle = `rgba(224,251,255,${Math.min(1, p.alpha * twinkle)})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, Math.max(1.0, p.size), 0, Math.PI * 2);
+                ctx.fill();
+            }
+        });
+
+        // token badges moving slowly along fixed orbital tracks
+        // 令牌徽章沿着固定的轨道缓慢移动
+        tokenOrbits.forEach((orbit, i) => {
+            const pos = orbitPosition(orbit, tick);
+            const isFront = pos.depth > -0.08;
+            if(!isFront) return;
+            const alpha = 0.28 + Math.max(0, pos.depth) * 0.72;
+            const scale = 0.92 + Math.max(0, pos.depth) * 0.16;
+            if (alpha > 0.99 && orbit.flipState === 'idle'&& orbit.fileScale < 1) {
+                orbit.flipState = 'transitioning';
+                orbit.flipProgress = 0;
+            }
+            if( alpha < 0.9) orbit.fileScale = 0;
+            if (orbit.flipState === 'transitioning') {
+                // 调整这个值控制翻转速度：0.03=慢，0.08=快
+                orbit.flipProgress += 0.05;
+                if (orbit.flipProgress >= 1) {
+                    // 翻转完成，交换key，实现来回切换
+                    let temp = randomCurrency();
+                    tokenOrderOne.push(orbit.currentKey)
+                    orbit.currentKey = orbit.targetKey;
+                    orbit.targetKey = temp
+                    // [orbit.currentKey, orbit.targetKey] = [orbit.targetKey, orbit.currentKey];
+                    orbit.flipState = 'idle';
+                    orbit.flipProgress = 0;
+                    orbit.fileScale++;
+                }
+            }
+            drawTokenBadge(pos.x, pos.y, orbit, alpha, scale);
+        });
+        glow(cx, cy, radius * 0.25 + Math.sin(tick * 0.02) * 8, "121,240,255", 0.10);
+        glow(cx, cy, radius * 0.12 + Math.sin(tick * 0.035) * 5, "255,255,255", 0.05);
+        tick += 1;
+        requestAnimationFrame(draw);
+    }
+    function randomCurrency () {
+        let len = tokenOrderOne.length;
+        let idx = Math.floor(Math.random()*len);
+        let res = tokenOrderOne[idx];
+        tokenOrderOne.splice(idx, 1);
+        return res||'USDT';
+    }
+    async function getCanvas() { 
+        canvas = document.getElementById('globeCanvas');
+        const rect = canvas.getBoundingClientRect();
+        if(!rect.width) return window.requestAnimationFrame(getCanvas);
+        ctx = canvas.getContext('2d');
+        for (const key in tokenMeta) {
+            const element = tokenMeta[key];
+            if(element.type !== 'img') continue;
+            let res = await imgOnload(element.symbol);
+            element.img = res;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+        draw();
+    }
+    getCanvas()
+    function imgOnload(src = '') { 
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = function() {
+                resolve(img)
+            }
+            img.onerror = function () {
+                console.log('图片加载失败')
+                resolve(null)
+            }
+        })
+    }
+</script>
+<script>
+    
+                
+</script>
+<script>window.__CF$cv$params={r:'a39d192f3eba0542',t:'MTc4OTE5NzA4OQ==',u:'01a09474fb717cc391318b8ddd9f8ccd',ut:'ffHXXSgxTXVVVdtXaep5AeizGiAMZ6kjBziDjVhfZMU-1789197089-1.2.1.1-jELKw17iDPp0YoSsXzE42rwRKlU6OgOwA2PIKqmRXOLaae3xk1HD0xlvxUCAhOgtGkMSDfu98NjsU9pACak.bfUq8Tovui79hjBXut_b32o',i:60};(function(){if(!document.body)return;var s=document.createElement('script');s.src='/cdn-cgi/challenge-platform/scripts/precursor/main.js';document.head.appendChild(s);})();</script></body>
+</html>
