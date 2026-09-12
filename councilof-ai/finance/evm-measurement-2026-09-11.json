@@ -1,0 +1,359 @@
+{
+  "schema": "csoai.financial-coverage/0.1",
+  "kind": "financial.deep-measurement",
+  "generator": "evm-reader-0.1.1",
+  "generated_at": "2026-09-11T12:20:49.066Z",
+  "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+  "total_measured": 11,
+  "total_failed": 2,
+  "measurements": [
+    {
+      "symbol": "USDT",
+      "chain": "ethereum",
+      "contract": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "decimals": 6,
+      "block_number": 25954124,
+      "block_hex": "0x18c074c",
+      "raw_hex": "0x0000000000000000000000000000000000000000000000000139b9dd91e94bbb",
+      "raw_hash": "sha256:2d629b79eaddd4defe62c07c17ae110a86156c5a7ec173e8e3eb9b0c434dfea3",
+      "supply_raw": "88306028997331899",
+      "supply_normalized": 88306028997.33191,
+      "supply_display": "$88.31B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:20:47.781Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+            "data": "0x18160ddd"
+          },
+          "0x18c074c"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-USDT-ethereum-block25954124&body=Contract:0xdAC17F958D2ee523a2206206994597C13D831ec7%0ARaw:0x00000000000000000000000000000000...%0AReported:88306028997.33191",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "ethereum",
+      "contract": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "decimals": 6,
+      "block_number": 25954124,
+      "block_hex": "0x18c074c",
+      "raw_hex": "0x00000000000000000000000000000000000000000000000000b3ea33623ca688",
+      "raw_hash": "sha256:d89654ca754eb0c82fc6e27663bdb7140f27a152cdd76b78202e5dc2323da081",
+      "supply_raw": "50641527243581064",
+      "supply_normalized": 50641527243.58106,
+      "supply_display": "$50.64B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:20:47.935Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+            "data": "0x18160ddd"
+          },
+          "0x18c074c"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-USDC-ethereum-block25954124&body=Contract:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48%0ARaw:0x00000000000000000000000000000000...%0AReported:50641527243.58106",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    },
+    {
+      "symbol": "DAI",
+      "chain": "ethereum",
+      "contract": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "decimals": 18,
+      "block_number": 25954124,
+      "block_hex": "0x18c074c",
+      "raw_hex": "0x00000000000000000000000000000000000000000ed2a8b56391749cc613f852",
+      "raw_hash": "sha256:10000239d671f43aea64ad13ad812391b600299e88e7f8f6ebb8dd8af63b09ab",
+      "supply_raw": "4587461263222346428724803666",
+      "supply_normalized": 4587461263.222346,
+      "supply_display": "$4.59B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:20:48.024Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+            "data": "0x18160ddd"
+          },
+          "0x18c074c"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-DAI-ethereum-block25954124&body=Contract:0x6B175474E89094C44Da98b954EedeAC495271d0F%0ARaw:0x00000000000000000000000000000000...%0AReported:4587461263.222346",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x6B175474E89094C44Da98b954EedeAC495271d0F"
+    },
+    {
+      "symbol": "USDS",
+      "chain": "ethereum",
+      "contract": "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+      "decimals": 18,
+      "block_number": 25954124,
+      "block_hex": "0x18c074c",
+      "raw_hex": "0x0000000000000000000000000000000000000000155f51a89cf86310e837b932",
+      "raw_hash": "sha256:899c9a1a0583db4f6510ba59e5c79ba3f43bd4753af1a50882e1aacb6d091482",
+      "supply_raw": "6614418781160652427692063026",
+      "supply_normalized": 6614418781.160652,
+      "supply_display": "$6.61B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:20:48.106Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+            "data": "0x18160ddd"
+          },
+          "0x18c074c"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-USDS-ethereum-block25954124&body=Contract:0xdC035D45d973E3EC169d2276DDab16f1e407384F%0ARaw:0x00000000000000000000000000000000...%0AReported:6614418781.160652",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0xdC035D45d973E3EC169d2276DDab16f1e407384F"
+    },
+    {
+      "symbol": "USDe",
+      "chain": "ethereum",
+      "contract": "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+      "decimals": 18,
+      "block_number": 25954124,
+      "block_hex": "0x18c074c",
+      "raw_hex": "0x00000000000000000000000000000000000000000ede6c8916bb07d748ce42f5",
+      "raw_hash": "sha256:7f7843c69eb1ce090772249cddfdb0ed778f97d741c2234827bdf67a332c83d2",
+      "supply_raw": "4601684213875278169523503861",
+      "supply_normalized": 4601684213.875278,
+      "supply_display": "$4.60B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:20:48.193Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+            "data": "0x18160ddd"
+          },
+          "0x18c074c"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-USDe-ethereum-block25954124&body=Contract:0x4c9EDD5852cd905f086C759E8383e09bff1E68B3%0ARaw:0x00000000000000000000000000000000...%0AReported:4601684213.875278",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"
+    },
+    {
+      "symbol": "PYUSD",
+      "chain": "ethereum",
+      "contract": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+      "decimals": 6,
+      "block_number": 25954124,
+      "block_hex": "0x18c074c",
+      "raw_hex": "0x000000000000000000000000000000000000000000000000000612c1150171c8",
+      "raw_hash": "sha256:43d36d669addbfa71a718105435a38facb2e468b89b57e89da0926406fb4ac99",
+      "supply_raw": "1709470350668232",
+      "supply_normalized": 1709470350.668232,
+      "supply_display": "$1.71B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:20:48.289Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+            "data": "0x18160ddd"
+          },
+          "0x18c074c"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-PYUSD-ethereum-block25954124&body=Contract:0x6c3ea9036406852006290770BEdFcAbA0e23A0e8%0ARaw:0x00000000000000000000000000000000...%0AReported:1709470350.668232",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x6c3ea9036406852006290770BEdFcAbA0e23A0e8"
+    },
+    {
+      "symbol": "RLUSD",
+      "chain": "ethereum",
+      "contract": "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD",
+      "decimals": 18,
+      "block_number": 25954124,
+      "block_hex": "0x18c074c",
+      "raw_hex": "0x000000000000000000000000000000000000000004705332fa0eae6e6e819735",
+      "raw_hash": "sha256:e41213a2fcba9b08ce0e2a4ba48044050fec8cb1de5ea008a45f1d3d76d1446c",
+      "supply_raw": "1373732627856031556976088885",
+      "supply_normalized": 1373732627.8560317,
+      "supply_display": "$1.37B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:20:48.458Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD",
+            "data": "0x18160ddd"
+          },
+          "0x18c074c"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-RLUSD-ethereum-block25954124&body=Contract:0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD%0ARaw:0x00000000000000000000000000000000...%0AReported:1373732627.8560317",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD"
+    },
+    {
+      "symbol": "crvUSD",
+      "chain": "ethereum",
+      "contract": "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+      "decimals": 18,
+      "block_number": 25954124,
+      "block_hex": "0x18c074c",
+      "raw_hex": "0x000000000000000000000000000000000000000006cd0eafa2ac2b9dcdff1cb3",
+      "raw_hash": "sha256:5790b71c40356a7e3debac075c449c2379919300d71243b729cc80c6b0db7b7d",
+      "supply_raw": "2104809204981834354272443571",
+      "supply_normalized": 2104809204.9818342,
+      "supply_display": "$2.10B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:20:48.553Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+            "data": "0x18160ddd"
+          },
+          "0x18c074c"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-crvUSD-ethereum-block25954124&body=Contract:0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E%0ARaw:0x00000000000000000000000000000000...%0AReported:2104809204.9818342",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E"
+    },
+    {
+      "symbol": "GHO",
+      "chain": "ethereum",
+      "contract": "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f",
+      "decimals": 18,
+      "block_number": 25954124,
+      "block_hex": "0x18c074c",
+      "raw_hex": "0x000000000000000000000000000000000000000002423301eda98cd69b000000",
+      "raw_hash": "sha256:5ed0607fd74ef16a9424e2bdae79e50f67ca6683b515a714e6285048caa1fa8d",
+      "supply_raw": "699000000000000000000000000",
+      "supply_normalized": 699000000,
+      "supply_display": "$699.00M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:20:48.635Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f",
+            "data": "0x18160ddd"
+          },
+          "0x18c074c"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-GHO-ethereum-block25954124&body=Contract:0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f%0ARaw:0x00000000000000000000000000000000...%0AReported:699000000",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f"
+    },
+    {
+      "symbol": "FRAX",
+      "chain": "ethereum",
+      "contract": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+      "decimals": 18,
+      "block_number": 25954125,
+      "block_hex": "0x18c074d",
+      "raw_hex": "0x000000000000000000000000000000000000000000b56ad3829ebd9fddbc66af",
+      "raw_hash": "sha256:068dc773c938820e85f1f2bfc1b7e5e471951d6f166772a3c6380108774fa0b8",
+      "supply_raw": "219320045872600381298337455",
+      "supply_normalized": 219320045.87260038,
+      "supply_display": "$219.32M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:20:48.729Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+            "data": "0x18160ddd"
+          },
+          "0x18c074d"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-FRAX-ethereum-block25954125&body=Contract:0x853d955aCEf822Db058eb8505911ED77F175b99e%0ARaw:0x00000000000000000000000000000000...%0AReported:219320045.87260038",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x853d955aCEf822Db058eb8505911ED77F175b99e"
+    },
+    {
+      "symbol": "USDD",
+      "chain": "ethereum",
+      "contract": "0x0C10bF8FcB7Bf5412187A595ab97a3609160b5c6",
+      "decimals": 18,
+      "block_number": 25954125,
+      "block_hex": "0x18c074d",
+      "raw_hex": "0x00000000000000000000000000000000000000000066b0fc84b0db8262cef29e",
+      "raw_hash": "sha256:216d3264f403c201a3b1b39578bbb305f2628cd15b9c8fe8d339c4e17002f764",
+      "supply_raw": "124146228242567170142171806",
+      "supply_normalized": 124146228.24256718,
+      "supply_display": "$124.15M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:20:48.824Z",
+      "code_revision": "evm-reader-0.1.1",
+      "query": {
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x0C10bF8FcB7Bf5412187A595ab97a3609160b5c6",
+            "data": "0x18160ddd"
+          },
+          "0x18c074d"
+        ]
+      },
+      "terms_boundary": "totalSupply() only — NOT proof of reserves, NOT attestation verification, NOT cross-chain total",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-USDD-ethereum-block25954125&body=Contract:0x0C10bF8FcB7Bf5412187A595ab97a3609160b5c6%0ARaw:0x00000000000000000000000000000000...%0AReported:124146228.24256718",
+      "replay_instructions": "node readers/evm-reader.mjs --chain ethereum --contracts 0x0C10bF8FcB7Bf5412187A595ab97a3609160b5c6"
+    },
+    {
+      "symbol": "FDUSD",
+      "chain": "ethereum",
+      "contract": "0xc5f0f7b66764F6ec8C8Dff7BA683ba84b2f38D68",
+      "measurement_state": "MEASUREMENT_FAILED",
+      "error": "Cannot convert 0x to a BigInt",
+      "measured_at": "2026-09-11T12:20:48.983Z",
+      "code_revision": "evm-reader-0.1.1"
+    },
+    {
+      "symbol": "DOLA",
+      "chain": "ethereum",
+      "contract": "0x865377367054516e17014CcdED1E7282bCC0571d",
+      "measurement_state": "MEASUREMENT_FAILED",
+      "error": "Cannot convert 0x to a BigInt",
+      "measured_at": "2026-09-11T12:20:49.066Z",
+      "code_revision": "evm-reader-0.1.1"
+    }
+  ]
+}

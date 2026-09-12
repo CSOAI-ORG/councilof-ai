@@ -1,0 +1,43 @@
+{
+  "schema": "csoai.alerts/0.1",
+  "generated_at": "2026-09-11T15:30:00Z",
+  "alerts": [
+    {
+      "type": "stale_attestation",
+      "asset": "USDT",
+      "detail": "KPMG audit announced Aug 2026, text unpublished",
+      "severity": "HIGH"
+    },
+    {
+      "type": "issuer_ambiguity",
+      "asset": "USDC",
+      "detail": "Circle issues USDC natively on some chains, bridged on others",
+      "severity": "LOW"
+    },
+    {
+      "type": "concentration_risk",
+      "asset": "DAI",
+      "chain": "ethereum",
+      "pct": "89%",
+      "severity": "MEDIUM"
+    },
+    {
+      "type": "stale_attestation",
+      "asset": "USDe",
+      "detail": "Custodian attestations ~3 months stale",
+      "severity": "MEDIUM"
+    },
+    {
+      "type": "stale_attestation",
+      "asset": "USD1",
+      "detail": "Crowe monthly after 6-month publication lapse",
+      "severity": "MEDIUM"
+    },
+    {
+      "type": "stale_attestation",
+      "asset": "USDV",
+      "detail": "Zero published attestation ever",
+      "severity": "HIGH"
+    }
+  ]
+}
