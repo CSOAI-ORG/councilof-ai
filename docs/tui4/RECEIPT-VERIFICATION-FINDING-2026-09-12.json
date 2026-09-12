@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.receipt-verification-finding/0.1",
+  "date": "2026-09-12T05:36:00Z",
+  "subject": "Free door signed receipt verification",
+  "what_happened": {
+    "step1_discovery": "GET /.well-known/x402.json \u2192 rail mode=live",
+    "step2_challenge": "GET /api/free-door \u2192 HTTP 402, amount=0",
+    "step3_signing": "EIP-3009 TransferWithAuthorization for0 atomic USDC",
+    "step4_settlement": "PayAI facilitator /verify (isValid=true) + /settle (success=true)",
+    "step5_delivery": "GET /api/free-door + X-PAYMENT \u2192 HTTP 200, board totals delivered",
+    "step6_receipt": "X-PAYMENT-RESPONSE header contains JWS signed receipt",
+    "step7_verification": "POST /api/receipts/verify \u2192 verdict: INVALID (signature does not verify)"
+  },
+  "receipt_details": {
+    "format": "jws",
+    "alg": "EdDSA",
+    "kid": "did:web:csoai.org#board-attestation-1",
+    "issuedAt": 1789191269,
+    "network": "eip155:8453",
+    "resourceUrl": "https://councilof.ai/api/free-door",
+    "payer": "0xdfe130c63c0eb4970725d29f7cf85a2784b17b58",
+    "transaction": "0x80f3d96ffbdfaf9412d7e89a0aa0d9ed9ced9117000954a893564fe55b79f378"
+  },
+  "verification_result": {
+    "verdict": "INVALID",
+    "reason": "signature does not verify under the resolved key",
+    "endpoint": "POST /api/receipts/verify",
+    "kid_resolved": "did:web:csoai.org#board-attestation-1",
+    "note": "The receipt EXISTS and carries a JWS from board-attestation-1. Verification fails \u2014 possible causes: key rotation between signing and verification, or a signing-time issue with the zero-amount edge case."
+  },
+  "on_chain_evidence": {
+    "facilitator_settlement": "0x9e18a496e8953e6ec07bd741d524fb7644433f462fe1135688e3725c7e645461",
+    "receipt_transaction": "0x80f3d96ffbdfaf9412d7e89a0aa0d9ed9ced9117000954a893564fe55b79f378",
+    "note": "Two different transaction hashes \u2014 the facilitator settled one tx, the CSOAI server recorded a different one. The CSOAI server may have performed its own settlement."
+  },
+  "honesty": "The receipt is INVALID under the current verification. This is a real finding, not a claim. The end-to-end flow works (discover\u2192challenge\u2192sign\u2192settle\u2192deliver\u2192verify root), but the signed receipt step has a verification gap that needs investigation."
+}
