@@ -1,0 +1,88 @@
+{
+  "card": {
+    "as_of": "2026-09-12T13:25:39Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:BUIDL:optimism",
+      "symbol": "BUIDL",
+      "product": "BlackRock USD Institutional Digital Liquidity Fund",
+      "chain": "optimism",
+      "chain_id": 10,
+      "address": "0xa1cdab15bba75a80df4089cafba013e376957cf5",
+      "block": 156810381,
+      "block_hash": "0x280cbbc3fffeb4ca5abe23c797c9c9cc7ee232782d591275780af969d3e44b40",
+      "block_time": "2026-09-12T13:25:39Z",
+      "rpc": "optimism-rpc.publicnode.com",
+      "checked": {
+        "name": "BlackRock USD Institutional Digital Liquidity Fund",
+        "symbol": "BUIDL",
+        "decimals": 6,
+        "totalSupply": 26426718260000,
+        "isPaused": false,
+        "owner": "0xe01605f6b6dc593b7d2917f4a0940db2a625b09e",
+        "eip1967_implementation": "0xca91fa164b75da598e16b4d89fb2086b47140df3"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+      ],
+      "attests": "historical permission state at block 156810381 on optimism, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9fcef2c8ad548261cdd9aaac774e2484cae56417f36bbac33ad68784a4d6781a",
+    "sig_ed25519": "be0bd6be81abc6c41887326c0c031ae4cef061885144bf9a194beb191df44c92ea8302076e4d216f7d98dfe89cb86f2aea241f0e2edd70d0a1ffe465f1cddf0a",
+    "source_urls": [
+      "https://optimism-rpc.publicnode.com",
+      "https://optimistic.etherscan.io/token/0xa1cdab15bba75a80df4089cafba013e376957cf5"
+    ],
+    "subject": "evm:BUIDL:optimism permission state at block 156810381",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:optimism",
+      "coverage:permission-state",
+      "subject:BUIDL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+    ]
+  },
+  "proof": [
+    "c54bf0112a7e6fd774c40434fa28d7f925f4fee3c1507da06e44fc10f2177ccc",
+    "2f8621ff4bc774b047ed0e101a8ff4b367c25cd431833bc0205d45fe9ac64e79",
+    "5f9f7a2ca12fd23354d390b2b521060407de8933170d1867399f9f6daff3563e",
+    "da98e42797b282f7f802676350c1d64a7dc78c07175704911862dc4ec3b1f0c9",
+    "91d3ac2b649e94b9d7d9de71acac7847c1807567a028ace814a24426baba0149",
+    "192d6c4dc6ded3d3b89bd097cb8c88dac518c817305cf11ecda877d474bd2aba",
+    "92ae59d0b22fba13b953fc44d8eb0085a390b124f1b73e6b2b6ea0dd013907dc",
+    "9509fab5adbdfdfbb8858212ae5feca37c3d1d1a469404ead2c514331924ac87"
+  ]
+}
