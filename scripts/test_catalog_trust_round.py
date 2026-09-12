@@ -88,6 +88,36 @@ class FinancialWingV01(unittest.TestCase):
 
 
 class GrowthStamp(unittest.TestCase):
+    def test_two_rounds_on_one_day_are_both_preserved(self):
+        catalog = [{"resource": "https://example.com/a"}]
+
+        class Fake:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+            def read(self, n=-1):
+                return json.dumps(catalog).encode()
+
+        observed = [
+            ctr.datetime(2026, 9, 12, 4, 42, 56, tzinfo=ctr.timezone.utc),
+            ctr.datetime(2026, 9, 12, 15, 37, 1, tzinfo=ctr.timezone.utc),
+        ]
+        with tempfile.TemporaryDirectory() as td:
+            with mock.patch.object(ctr.urllib.request, "urlopen", return_value=Fake()):
+                with mock.patch.object(ctr, "fetch", return_value=(402, "application/json", '{"accepts":[]}')):
+                    with mock.patch.object(ctr, "utc_now", side_effect=observed):
+                        self.assertEqual(ctr.run(td, "https://example.com/catalog"), 0)
+                        self.assertEqual(ctr.run(td, "https://example.com/catalog"), 0)
+            first = json.loads(Path(td, "20260912T044256Z.json").read_text())
+            second = json.loads(Path(td, "20260912T153701Z.json").read_text())
+            latest = json.loads(Path(td, "latest.json").read_text())
+            self.assertEqual(first["as_of"], "2026-09-12T04:42:56Z")
+            self.assertEqual(second["as_of"], "2026-09-12T15:37:01Z")
+            self.assertEqual(latest, second)
+
     def test_settlement_copied_not_typed(self):
         eligible, refused = 7, 2
         pct = round(100.0 * refused / eligible, 1)
