@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import urllib.error
 import urllib.parse
@@ -24,6 +25,21 @@ def canonical_bytes(obj: dict) -> bytes:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
 
+# G1.3 THIN firewall (2026-09-12 doctrine lock: THIN never signed). Mirror of
+# functions/_lib/cardSign.ts::signLabelViolation — the Pages signer refuses too, so a
+# labeled artifact is rejected on BOTH sides of the wire. Uppercase THIN/TEMPLATE at word
+# boundaries (lowercase "thin banks" dataset prose is safe); specimen case-insensitive.
+_NEVER_SIGN_UPPER = re.compile(r"\b(THIN|TEMPLATE)\b")
+_NEVER_SIGN_SPECIMEN = re.compile(r"\bspecimen\b", re.IGNORECASE)
+
+
+def sign_label_violation(payload: dict) -> str | None:
+    """Return the offending never-sign label, or None when the payload is signable."""
+    text = canonical_bytes(payload).decode("utf-8")
+    m = _NEVER_SIGN_UPPER.search(text) or _NEVER_SIGN_SPECIMEN.search(text)
+    return m.group(0) if m else None
+
+
 def sign_via_oidc_attested(payload: dict) -> tuple[str, str]:
     """Return the signature and the digest computed over the exact remote preimage.
 
@@ -31,6 +47,11 @@ def sign_via_oidc_attested(payload: dict) -> tuple[str, str]:
     must use its returned digest rather than independently guessing how numeric
     values survived that boundary.
     """
+    violation = sign_label_violation(payload)
+    if violation:
+        raise RuntimeError(
+            f"refused: never-sign label {violation!r} in payload — THIN/TEMPLATE/specimen is never signed (G1.3)"
+        )
     req_url = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL") or ""
     req_tok = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN") or ""
     if not req_url or not req_tok:

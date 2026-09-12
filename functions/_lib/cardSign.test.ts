@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canonicalBytes, signPayload, verifyLeaf, cardV0, PAYLOAD_CAP_BYTES } from "./cardSign";
+import { canonicalBytes, signPayload, verifyLeaf, cardV0, signLabelViolation, PAYLOAD_CAP_BYTES } from "./cardSign";
 
 const td = new TextDecoder();
 
@@ -29,6 +29,22 @@ describe("cardSign — one canonical rule, honest signatures", () => {
     expect(await verifyLeaf(payload, leaf.sha256, leaf.sig_ed25519!, pubHex)).toEqual({ sha_ok: true, sig_ok: true });
     // Tamper → fails on the hash, and the signature no longer covers the bytes.
     expect(await verifyLeaf({ ...payload, subject: "other" }, leaf.sha256, leaf.sig_ed25519!, pubHex)).toEqual({ sha_ok: false, sig_ok: false });
+  });
+
+  it("G1.3 THIN firewall: a deliberate THIN canary is rejected at the gate", () => {
+    // Canary payloads — each MUST be refused (this test is the CI-log proof the gate bites):
+    expect(signLabelViolation(JSON.stringify({ kind: "THIN" }))).toBe("THIN");
+    expect(signLabelViolation(JSON.stringify({ label: "TEMPLATE", note: "draft" }))).toBe("TEMPLATE");
+    expect(signLabelViolation(JSON.stringify({ note: "unsigned specimen in the queue" }))).toBe("specimen");
+  });
+
+  it("G1.3 THIN firewall: honest lookalikes stay signable", () => {
+    // The real thin-banks dataset is lowercase prose; NOTHING/WITHIN contain no label;
+    // the plural /specimens/* routes carry no word boundary after 'specimen'.
+    expect(signLabelViolation(JSON.stringify({ dataset: "thin-banks-gold-80", tier: "free" }))).toBeNull();
+    expect(signLabelViolation(JSON.stringify({ url: "https://councilof.ai/specimens/clarity" }))).toBeNull();
+    expect(signLabelViolation(JSON.stringify({ note: "nothing within scope" }))).toBeNull();
+    expect(signLabelViolation(JSON.stringify({ template_id: "x" }))).toBeNull();
   });
 
   it("refuses a payload over the 3KB cap", async () => {
