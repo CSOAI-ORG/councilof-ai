@@ -115,6 +115,8 @@ _Pushed by `scripts/spray/gspc-spray.py` (daily, idempotent by `as_of` and finge
 
 <!-- org-readme:end -->
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/CSOAI-ORG/councilof-ai/badge)](https://scorecard.dev/viewer/?uri=github.com/CSOAI-ORG/councilof-ai)
+
 ## Hosting and deploy
 
 | Host | Cloudflare Pages project | Deploy |
