@@ -17,7 +17,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import shutil
 import sys
 from collections import Counter
 from pathlib import Path
@@ -126,7 +125,7 @@ def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str) -> dict:
             if prev.get("id") == w.get("id"):
                 skipped.append({"file": f.name, "reason": "already-landed same id"})
                 continue
-        shutil.copyfile(f, dest)
+        dest.write_text(json.dumps(w, indent=2) + "\n", encoding="utf-8")
         landed.append(
             {
                 "file": f.name,
