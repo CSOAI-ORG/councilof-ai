@@ -134,14 +134,15 @@ jobs:
               check("forced-failure-canary", False, "synthetic failure injected via workflow_dispatch input force_fail=true")
 
           # G1.1 leak killer (2026-09-12): the shape-A boundary card must STAY anchored.
-          # Its payload sha256 is fixed at authoring time (the atom is content-addressed);
-          # the hourly publisher signs + folds it, and this probe asserts it never falls out.
-          BOUNDARY_SHA = "1afa498e0fd510111346e1de93b839061cf3e205e48b871a6920621e7771cb12"
+          # root.json is public-root/v1, so card_sha256 contains the canonical WHOLE-CARD
+          # digest produced by publish_public_root.py. The staged atom's 1afa498e… value
+          # is its card-v0 payload digest and is deliberately not a v1 root leaf.
+          BOUNDARY_CARD_SHA = "6109d9dd03edf688f511bb106fb5a25ad5b2650c3c04e6116271a01c72d65111"
           if root:
-              anchored = BOUNDARY_SHA in (root.get("card_sha256") or [])
+              anchored = BOUNDARY_CARD_SHA in (root.get("card_sha256") or [])
               check("boundary-card-anchored", anchored,
-                    "shape-A boundary card present in card_sha256" if anchored
-                    else "boundary card 1afa498e… NOT in root.json — the leak declaration lost its anchor")
+                    "shape-A boundary card 6109d9dd… present in card_sha256" if anchored
+                    else "boundary card 6109d9dd… NOT in root.json — the leak declaration lost its anchor")
 
           # 4. x402 config present + live
           st, body = fetch("https://councilof.ai/.well-known/x402.json")
