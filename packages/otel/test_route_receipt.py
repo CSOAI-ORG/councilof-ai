@@ -97,6 +97,36 @@ def test_observations_do_not_upgrade_declarations():
     assert receipt["execution"]["region_observed"] == "eu-west-1"
 
 
+def test_transport_ids_are_fixed_width_nonzero_hex_or_absent():
+    for key, invalid in (
+        ("traceId", ""),
+        ("traceId", "a" * 31),
+        ("traceId", "g" * 32),
+        ("traceId", "0" * 32),
+        ("spanId", ""),
+        ("spanId", "b" * 15),
+        ("spanId", "g" * 16),
+        ("spanId", "0" * 16),
+    ):
+        document = fixture()
+        span_for(document)[key] = invalid
+        expect_rejected(document)
+    document = fixture()
+    del span_for(document)["traceId"]
+    del span_for(document)["spanId"]
+    receipt = receipt_for(document)
+    assert receipt["evidence"]["transport_trace_id"] is None
+    assert receipt["receipt_id"] == "otel-unobservable-unobservable"
+
+
+def test_resource_cloud_region_is_preserved_and_conflicts_fail_closed():
+    document = fixture()
+    document["resourceSpans"][0]["resource"]["attributes"].append(kv("cloud.region", "eu-central-1"))
+    assert receipt_for(document)["execution"]["region_observed"] == "eu-central-1"
+    span_for(document)["attributes"].append(kv("cloud.region", "us-east-1"))
+    expect_rejected(document)
+
+
 def test_timestamp_is_evidence_not_conversion_time():
     document = fixture()
     span = span_for(document)
@@ -147,4 +177,4 @@ if __name__ == "__main__":
     for name, test in list(globals().items()):
         if name.startswith("test_"):
             test()
-    print("ALL OTLP ROUTE RECEIPT TESTS PASSED (5 groups)")
+    print("ALL OTLP ROUTE RECEIPT TESTS PASSED (7 groups)")

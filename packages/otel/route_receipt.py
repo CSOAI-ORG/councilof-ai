@@ -78,6 +78,23 @@ def _number(value: Any, *, integer: bool = False) -> int | float | None:
     return value
 
 
+def _otel_id(value: Any, *, size_bytes: int, name: str) -> str | None:
+    """Validate the hex form emitted by this repository's OTLP/JSON exporter.
+
+    OTLP trace and span IDs are fixed-width byte strings.  This adapter consumes the
+    lowercase hexadecimal representation written by ``genai_spans.py``; an absent ID is
+    observable as unavailable, while an empty, malformed, or all-zero ID is invalid.
+    """
+    if value is None:
+        return None
+    width = size_bytes * 2
+    if not isinstance(value, str) or not re.fullmatch(rf"[0-9a-f]{{{width}}}", value):
+        raise ValueError(f"{name} must contain exactly {width} lowercase hexadecimal characters")
+    if int(value, 16) == 0:
+        raise ValueError(f"{name} must not be the all-zero invalid identifier")
+    return value
+
+
 def _status(span: dict[str, Any]) -> str:
     # OTLP StatusCode: UNSET=0, OK=1, ERROR=2. An error is observable; an unset
     # terminal state is not enough to claim success.
@@ -97,13 +114,18 @@ def convert(document: dict[str, Any], *, request_sha256: str, response_sha256: s
         if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
             raise ValueError(f"{name} SHA-256 must contain 64 lowercase hexadecimal characters")
     span, attrs, resource = _first_span(document)
-    trace_id = span.get("traceId")
-    span_id = span.get("spanId")
+    trace_id = _otel_id(span.get("traceId"), size_bytes=16, name="traceId")
+    span_id = _otel_id(span.get("spanId"), size_bytes=8, name="spanId")
     service = str(resource.get("service.name") or attrs.get("service.name") or "unidentified-service")
     provider = attrs.get("gen_ai.provider.name") or attrs.get("gen_ai.system")
     model = attrs.get("gen_ai.response.model")
+    span_region = attrs.get("cloud.region")
+    resource_region = resource.get("cloud.region")
+    if span_region and resource_region and span_region != resource_region:
+        raise ValueError("cloud.region conflicts between span and resource attributes")
+    observed_region = span_region or resource_region
     limitations = [
-        "Converted from one caller-supplied OTLP/JSON span; provider, response model and cloud region are span-reported, not independently verified. No behavioral or regulatory grade is inferred.",
+        "Converted from one caller-supplied OTLP/JSON span; provider, response model and cloud region are trace-reported, not independently verified. No behavioral or regulatory grade is inferred.",
         "Prompt, response, tool arguments, and tool results were excluded; caller-supplied SHA-256 digests bind the content.",
     ]
     if not provider:
@@ -147,7 +169,7 @@ def convert(document: dict[str, Any], *, request_sha256: str, response_sha256: s
             "provider_observed": provider,
             "model_observed": model,
             "fallback_observed": fallback,
-            "region_observed": attrs.get("cloud.region"),
+            "region_observed": observed_region,
             "latency_ms": _duration_ms(span),
             "cost_usd": cost,
             "usage": {
