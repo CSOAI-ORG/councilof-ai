@@ -114,5 +114,76 @@ class UnsignedCard(unittest.TestCase):
             self.assertNotIn("a.example", json.dumps(card))
 
 
+class RoundDiff(unittest.TestCase):
+    SNAP_COUNTS = {"total": 4, "initialize_ok_open": 1,
+                   "initialize_ok_tools_listed": 1, "auth_challenged_401_403": 1,
+                   "dead_404_or_unreachable": 1}
+
+    def _snap(self, as_of, counts, partial=False):
+        return {"as_of": as_of, "partial": partial,
+                "counts": counts}
+
+    def test_first_round_writes_no_diff(self):
+        with tempfile.TemporaryDirectory() as td:
+            self.assertIsNone(mtr.write_diff(self._snap("2026-09-11T00:00:00Z", self.SNAP_COUNTS), Path(td)))
+
+    def test_second_round_derives_deltas(self):
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            prev = self._snap("2026-09-04T00:00:00Z", self.SNAP_COUNTS)
+            (out / "2026-09-04.json").write_text(json.dumps(prev))
+            cur_counts = dict(self.SNAP_COUNTS, total=6, initialize_ok_open=3)
+            name = mtr.write_diff(self._snap("2026-09-11T00:00:00Z", cur_counts), out)
+            diff = json.loads((out / name).read_text())
+            self.assertEqual(diff["state"], "MEASURED")
+            self.assertEqual(diff["bucket_deltas"]["total"], 2)
+            self.assertEqual(diff["bucket_deltas"]["initialize_ok_open"], 2)
+            self.assertEqual(diff["bucket_deltas"]["auth_challenged_401_403"], 0)
+            self.assertIn("UNCHECKABLE", diff["hosts_added"])
+            self.assertNotIn("note", diff)
+
+    def test_unreadable_previous_is_uncheckable(self):
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            (out / "2026-09-04.json").write_text("{corrupt")
+            name = mtr.write_diff(self._snap("2026-09-11T00:00:00Z", self.SNAP_COUNTS), out)
+            diff = json.loads((out / name).read_text())
+            self.assertEqual(diff["state"], "UNCHECKABLE")
+            self.assertIn("never silently rebased", diff["reason"])
+
+    def test_partial_previous_self_describes(self):
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            (out / "2026-09-04.json").write_text(json.dumps(
+                self._snap("2026-09-04T00:00:00Z", self.SNAP_COUNTS, partial=True)))
+            name = mtr.write_diff(self._snap("2026-09-11T00:00:00Z", self.SNAP_COUNTS), out)
+            diff = json.loads((out / name).read_text())
+            self.assertIn("PARTIAL", diff["note"])
+
+    def test_cap_change_is_disclosed(self):
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            prev = self._snap("2026-09-04T00:00:00Z", self.SNAP_COUNTS)
+            prev["enumeration"] = {"cap": 20}
+            (out / "2026-09-04.json").write_text(json.dumps(prev))
+            cur = self._snap("2026-09-11T00:00:00Z", self.SNAP_COUNTS)
+            cur["enumeration"] = {"cap": 500}
+            name = mtr.write_diff(cur, out)
+            diff = json.loads((out / name).read_text())
+            self.assertIn("cap change 20→500", diff["note"])
+
+    def test_same_cap_pair_carries_no_note(self):
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td)
+            prev = self._snap("2026-09-04T00:00:00Z", self.SNAP_COUNTS)
+            prev["enumeration"] = {"cap": 500}
+            (out / "2026-09-04.json").write_text(json.dumps(prev))
+            cur = self._snap("2026-09-11T00:00:00Z", self.SNAP_COUNTS)
+            cur["enumeration"] = {"cap": 500}
+            name = mtr.write_diff(cur, out)
+            diff = json.loads((out / name).read_text())
+            self.assertNotIn("note", diff)
+
+
 if __name__ == "__main__":
     unittest.main()
