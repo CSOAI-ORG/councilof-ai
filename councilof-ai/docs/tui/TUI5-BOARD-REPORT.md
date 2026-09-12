@@ -13,21 +13,28 @@ The board page (32KB, 77 sections, 12 tables) is live on HF Spaces with responsi
 
 | Artifact | Status | Detail |
 |----------|--------|--------|
-| Board page | LIVE | 32KB, 77 sections, 12 tables, responsive CSS, live API data |
+| Board page | LIVE | Evidence column added, all 8 state labels visible |
+| Evidence column | DONE | Shows INDEXED/MEASURED/SIGNED per axis with color coding |
+| All 8 state labels | DONE | INDEXED, MEASURED, SIGNED, ROOTED, ANCHORED, SETTLED, REPRODUCED, UNCHECKABLE |
 | Lookup page | LIVE | Search input, axis table, state indicators, responsive CSS |
 | Verify page | LIVE | Card verification, DID key resolution, three states (VALID/INVALID/UNCHECKABLE) |
 | Evidence states documented | DONE | 8 states defined in gspc-board README + ai-catalog.json |
 | ai-catalog.json updated | DONE | v1.0.1 with state labels, board metadata, endpoints |
-| gspc-board README updated | DONE | Evidence states section added |
+| gspc-board README updated | DONE | Evidence states + evidence column documentation |
 | Dashboard (Council OS) | LIVE | 72KB React app at councilof.ai/dashboard/?tab=board |
 
-### Evidence states — now documented across all surfaces
+### Evidence states — all 8 now visible on board
 
 | State | Meaning | Visible on board |
 |-------|---------|-----------------|
-| INDEXED | Subject exists in catalog, not measured | Documented |
-| MEASURED | Completed measurement run with results | ✅ Yes (11 instances) |
-| SIGNED | Card has Ed25519 signature | ✅ Yes (6 instances) |
+| INDEXED | Subject exists in catalog, not measured | ✅ Yes (Evidence column, dim) |
+| MEASURED | Completed measurement run with results | ✅ Yes (Evidence column, slate) |
+| SIGNED | Card has Ed25519 signature | ✅ Yes (Evidence column, green) |
+| ROOTED | Card included in Merkle root | ✅ Yes (chip, green) |
+| ANCHORED | Root anchored on public chain | ✅ Yes (chip, gold) |
+| SETTLED | Payment received and verified | ✅ Yes (chip, green) |
+| REPRODUCED | Independently reproduced | ✅ Yes (chip, green) |
+| UNCHECKABLE | Verification failed or data unavailable | ✅ Yes (chip, amber) |
 | ROOTED | Card included in Merkle root | Documented |
 | ANCHORED | Root anchored on public chain | ✅ Yes (1 instance) |
 | SETTLED | Payment received and verified | Documented |
