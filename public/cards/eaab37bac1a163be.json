@@ -1,0 +1,49 @@
+{
+  "card": {
+    "as_of": "2026-09-12T10:38:51Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "ai-economy-index",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "cited components only; no composite"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "eaab37bac1a163be78a10a3e5706e5d1f680046588e101e4d6852f897efb0136",
+    "sig_ed25519": "4c4ed82eacbf1f2b96f4f409545aafc776c01f4b3e0a33b022b5abc950b5d6771cf431b190229ff48a73b082c9d229a0ba7665d676783787ffe945d1513b4707",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-ai-economy-index"
+    ],
+    "subject": "GSPC ai-economy-index UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "ai-economy-index",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "47a13153be000793122819e4de995363989d552317a23c31e6564047cb216252",
+    "92a492d581dbd45f04bab025f1e9d22d8220250921cb31dc59159ec57594ac33",
+    "d7bcb57f95309472589534d00a4f3b8b74400d27de811b130c72d9e26c12afa7",
+    "1053b545a9d5532711279f4198a8f8cd881e7d8e1763abad35cc5bf11f9cc199",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "2301fad708caabedf908e895fc1106cd9135b94bcabb8c02c2504483e9ec0e3f",
+    "03febb2e8fdd79cdbe326a343f9dfd975f2767fae1d345c0a8a07e78afb9fb3d"
+  ]
+}

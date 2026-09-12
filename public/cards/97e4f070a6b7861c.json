@@ -1,0 +1,49 @@
+{
+  "card": {
+    "as_of": "2026-09-12T10:38:51Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "regulatory-framework",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "is the governing regime declared and confirmable?"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "97e4f070a6b7861c87857af3bc249d658b5e3b6e7876da9ea7b241034a6056b4",
+    "sig_ed25519": "34f4a93d3fbab77cd93005d8ee4667f0b32a56cda1599075aecba8db7a93eb1b6f32cef9389a57c9823227d9b8acca05590adc9a6b1691ff0ba592554b4f2b08",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-regulatory-framework"
+    ],
+    "subject": "GSPC regulatory-framework UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "regulatory-framework",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "211374b2bce4c5243a31c1388cb08df29b1c206dcf958b3faf9ed943c32a0fc3",
+    "379a80291ce897808a17cfb739e2f72e9d41e29ed9f92b762d77ddc534d88591",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "ecc577eccfc447903fd9f9a8b08e2b5accf886dd2a47d9ad98cfc428d5d0bdd1",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "2301fad708caabedf908e895fc1106cd9135b94bcabb8c02c2504483e9ec0e3f",
+    "03febb2e8fdd79cdbe326a343f9dfd975f2767fae1d345c0a8a07e78afb9fb3d"
+  ]
+}
