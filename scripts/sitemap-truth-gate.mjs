@@ -18,13 +18,18 @@
  * the generator reads, so it runs offline and in CI without network. --live additionally
  * fetches every URL, which is the check that actually proved the fix.
  */
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITEMAP = join(ROOT, "public/sitemap.xml");
 const ORIGIN = "https://councilof.ai";
+const FUNCTIONS_DIR = join(ROOT, "functions");
+
+if (!existsSync(FUNCTIONS_DIR)) {
+  throw new Error("sitemap-truth-gate: functions/ is required to inspect Pages Function redirects");
+}
 
 function locs() {
   return [...readFileSync(SITEMAP, "utf8").matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
@@ -45,7 +50,7 @@ function redirectRules() {
   return map;
 }
 
-function functionRedirects(dir = join(ROOT, "functions"), prefix = "", out = new Set()) {
+function functionRedirects(dir = FUNCTIONS_DIR, prefix = "", out = new Set()) {
   let entries = [];
   try {
     entries = readdirSync(dir, { withFileTypes: true });
