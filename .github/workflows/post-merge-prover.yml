@@ -94,7 +94,7 @@ jobs:
           # 2. done-when curls from the PR body — GET-only, estate hosts only.
           #    Accepts raw URLs and `curl ... <url>` lines; anything else is ignored.
           body = pr.get("body") or ""
-          urls = re.findall(r"https?://(?:councilof\.ai|csoai\.org|proofof\.ai)[^\s)\]\"'>]*", body)
+          urls = re.findall(r"https?://(?:councilof\.ai|csoai\.org|proofof\.ai)[^\s)\]\"'>\\`]*", body)
           urls = [u.rstrip(".,;") for u in urls]
           seen, extra = set(), []
           for u in urls:
