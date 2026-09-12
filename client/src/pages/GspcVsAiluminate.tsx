@@ -2,7 +2,7 @@
  * GSPC vs AILuminate — /gspc-vs-ailuminate (alias /ailuminate)
  * Style: dark emerald (match McpTrustBoard / AttestationNetwork)
  *
- * Positioning: "AILuminate for chat. GSPC for everything else."
+ * Positioning: "AILuminate for chat. GSPC beyond chat."
  *
  * LOCKS (twoSpeed `ailuminate` pin + playbookAudit `ailuminate-bind`):
  * - AILuminate is an attachment, NEVER a 23rd axis (ADR-001: the board is 22).
@@ -73,7 +73,7 @@ const CATEGORIES: { code: string; label: string; nearest: string | null }[] = [
 
 export default function GspcVsAiluminate() {
   useEffect(() => {
-    document.title = "GSPC vs AILuminate — AILuminate for chat, GSPC for everything else | Council of AI";
+    document.title = "GSPC vs AILuminate — AILuminate for chat; GSPC beyond chat | Council of AI";
     setMetaDescription(
       "An honest breadth comparison: AILuminate measures chat-style hazard; GSPC measures 22 axes including financial, regulatory and provenance. Attachment, never a fused grade.",
     );
@@ -86,7 +86,7 @@ export default function GspcVsAiluminate() {
           Measurement, never certification
         </p>
         <h1 className="mt-3 text-4xl font-black tracking-tight text-slate-50">
-          AILuminate for chat. <span className="text-emerald-300">GSPC for everything else.</span>
+          AILuminate for chat. <span className="text-emerald-300">GSPC beyond chat.</span>
         </h1>
         <p className="mt-4 max-w-2xl text-slate-400">
           AILuminate (MLCommons AI Safety v1.1, 11 Feb 2025, arXiv 2503.05731) is the
@@ -173,7 +173,7 @@ export default function GspcVsAiluminate() {
           <div className="mt-5 flex flex-wrap gap-4">
             <a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/interop/AILUMINATE-IMPORTER-SPEC.md"
                className="text-emerald-300 underline-offset-2 hover:underline">
-              Importer spec v0.1
+              Importer spec v0.2
             </a>
             <a href="/api/gspc" className="text-emerald-300 underline-offset-2 hover:underline">
               GET /api/gspc — the living board

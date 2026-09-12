@@ -80,8 +80,8 @@ only signer):
 
 ## 5. Why this shape
 
-The playbook line is the positioning: **"AILuminate for chat. GSPC for
-everything else."** Compatibility without capture: an operator who already ran
+The playbook line is the positioning: **"AILuminate for chat. GSPC beyond
+chat."** Compatibility without capture: an operator who already ran
 AILuminate can pin that evidence next to the 22-axis board — where it is one
 honestly-labelled attachment beside instruments for provenance, continuity,
 conformance, jail, swarm, custody and the financial half that a chat-hazard
