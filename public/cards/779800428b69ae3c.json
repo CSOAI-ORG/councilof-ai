@@ -1,0 +1,84 @@
+{
+  "card": {
+    "as_of": "2026-09-12T12:20:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-cohort.reading/v1",
+      "state": "PROBED",
+      "subject_symbol": "RLUSD",
+      "chain_readings": [
+        {
+          "chain": "ethereum",
+          "contract": "0x8292bb45bf1ee4d140127049757c2e0ff06317ed",
+          "totalSupply": "1369732627.856031556976088885",
+          "block": 25961208,
+          "amount_encoding": "exact_decimal_string",
+          "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        },
+        {
+          "chain": "xrpl",
+          "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+          "obligations": "1053014745.151131",
+          "ledger": 106934514,
+          "ledger_finality": "XRPL_VALIDATED_AT_OBSERVATION",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        }
+      ],
+      "evidence": {
+        "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+        "sha256": "c6a6fd93c03bd465e3bc85c152ee366ecdd50327bb21bd7cdf8dd385701a6f15"
+      },
+      "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+      "attestation_state": "UNMEASURED",
+      "not_a_risk_score": true,
+      "not_proof_of_reserves": true,
+      "holders_state": "UNMEASURED",
+      "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts.",
+      "same_time_frame": {
+        "file": "docs/tui2/rlusd-sametime-frame-2026-09-12.json",
+        "sha256": "291bf224dfd9313539ad8749a0547f304078fd4f25d9153c9a8a9d5f21175d51"
+      },
+      "method_disagreement_note": "XRPL paged account_lines sum (60.49M) differs from gateway_balances obligations (1053.01M); both preserved in evidence file.",
+      "replay_boundary": "Commands in the evidence file rerun current state; historical replay at the recorded heights was not executed.",
+      "subject_identity": "defillama-stablecoin:250",
+      "stablecoin_registry_id": "250"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "779800428b69ae3c26f229fcbc3df0a2a5ba9ef50cbbcd4e5f1f269db10a35e9",
+    "sig_ed25519": "41d31aae2a5e71a0be1f177d8c889494332b9dad5b016aae4e9ff2cfd231cd97194f8b23945af2051778b03473aaa4942610809923467bdfa65b664ebb120001",
+    "source_urls": [
+      "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+      "https://ethereum-rpc.publicnode.com",
+      "https://xrplcluster.com"
+    ],
+    "subject": "stablecoin RLUSD — on-chain supply readings 2026-09-12 (unsigned staged)",
+    "surface": "public.notice",
+    "tags": [
+      "stablecoin",
+      "tui2-cohort",
+      "on-chain-reading"
+    ],
+    "unmeasured": [
+      "proof of reserves",
+      "attestation cadence",
+      "holder counts",
+      "peg verdict"
+    ]
+  },
+  "proof": [
+    "7c1229105e208248b182a14b9b38408c0377445a0dff9e6941028638790ba2e2",
+    "3394d047899c85381359de0bfae75631983a40ce1f9780b3b4821b62f3831a8a",
+    "e4a07fd41ce033c4d6d3d97ac672875e8946fa6a96bf6738e0b047b3de38f58e",
+    "51de61a68a4e3730844f0f411f2c0c20c21b78be7ab335a23a1e83364121828c",
+    "e39f7d637cae4c1a94d64cb04d822e4c0bcd6cf5a356ca6a2626158cb0b2889a",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "81e70f97227fb87ab116203e9f2a339c6fa87bb75a7a0cedfe2e11a122dc6bcf",
+    "59fe49ae78d02c00677782e5d51aeab8f9f5a8601b31cd132d7740cc9467f491",
+    "7a400a22a2110cd974b97734324256cc72f918b15684ace6810bb71eb0c5c9d2"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-12T12:20:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-cohort.reading/v1",
+      "state": "PROBED",
+      "subject_symbol": "USDV",
+      "chain_readings": [
+        {
+          "chain": "xrpl",
+          "issuer": "rfffsukWALJB1PXYk7H8xkR6UJUDT8nMJE",
+          "obligations": "76771000.00000016",
+          "ledger": 106934578,
+          "ledger_finality": "XRPL_VALIDATED_AT_OBSERVATION",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        }
+      ],
+      "evidence": {
+        "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+        "sha256": "c6a6fd93c03bd465e3bc85c152ee366ecdd50327bb21bd7cdf8dd385701a6f15"
+      },
+      "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+      "attestation_state": "UNMEASURED",
+      "not_a_risk_score": true,
+      "not_proof_of_reserves": true,
+      "holders_state": "UNMEASURED",
+      "note": "Valtorum USDV (DefiLlama stablecoin id 398) supply observation. This asset is not combined with the other asset using ticker USDV.",
+      "replay_boundary": "Commands in the evidence file rerun current state; historical replay at the recorded heights was not executed.",
+      "subject_identity": "defillama-stablecoin:398",
+      "stablecoin_registry_id": "398",
+      "asset_name": "Valtorum USDV"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b39ce04b11e21a83d87079dde046150eac7601ee07f6c25c9f15aacf61ca4134",
+    "sig_ed25519": "d5d757ab13c39313d93f883aca8f30b542a20aae4c10e9847ea315ac0fab2356849051bd8b66ffdf71701ae895217475044380b50a35733e873a8554a5952d05",
+    "source_urls": [
+      "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+      "https://xrplcluster.com"
+    ],
+    "subject": "stablecoin Valtorum USDV (USDV, registry id 398) — on-chain supply reading 2026-09-12 (unsigned staged)",
+    "surface": "public.notice",
+    "tags": [
+      "stablecoin",
+      "tui2-cohort",
+      "on-chain-reading",
+      "symbol-collision-separated"
+    ],
+    "unmeasured": [
+      "proof of reserves",
+      "attestation cadence",
+      "holder counts",
+      "peg verdict"
+    ]
+  },
+  "proof": [
+    "9f4f667402817e083aa1199d2e668991ba80c187b6b29e12e9c6b083b1284da2",
+    "0fcde16de60316be5838b7bc189c43917afb2b5f0301223d028ff09a79e97c60",
+    "387d2d0975fe470bf2d78f6bb89d37de02b093f8e2b057f65a7113f83e29c6af",
+    "5fb99b5cb7926f9c989d5ed2c3d12b9185c881ac08efa35d387a1bbfd13e496e",
+    "ad37a31f7d7426a60fab780aaf75e044002792041ba65f7992f81c9f323c774d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "81e70f97227fb87ab116203e9f2a339c6fa87bb75a7a0cedfe2e11a122dc6bcf",
+    "59fe49ae78d02c00677782e5d51aeab8f9f5a8601b31cd132d7740cc9467f491",
+    "7a400a22a2110cd974b97734324256cc72f918b15684ace6810bb71eb0c5c9d2"
+  ]
+}

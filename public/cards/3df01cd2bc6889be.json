@@ -1,0 +1,67 @@
+{
+  "card": {
+    "as_of": "2026-09-12T17:09:06Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.art50-marking-census/0.1",
+      "status": "PROBED",
+      "release_id": "art50-census-2026-09",
+      "generated_at": "2026-09-12T17:09:06Z",
+      "n_generators": 4,
+      "per_generator_compact": [
+        {
+          "name": "Anthropic",
+          "stack": "C2PA?/meta—/wm?/vis—"
+        },
+        {
+          "name": "OpenAI",
+          "stack": "C2PA?/meta—/wm?/vis—"
+        },
+        {
+          "name": "Google",
+          "stack": "C2PA?/meta—/wm?/vis—"
+        },
+        {
+          "name": "Midjourney",
+          "stack": "C2PA—/meta—/wm—/vis—"
+        }
+      ],
+      "midjourney_gate": true,
+      "endpoint": "/interop/art50-census-2026-09/endpoint.json",
+      "unmeasured": [
+        "all detector runs: no sample probes executed in this release",
+        "owner-gated sample generation: Midjourney"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3df01cd2bc6889bee0b5c2f7814f082f082ea99fdf936cb26f55d4b70a1379c0",
+    "sig_ed25519": "85952b9f130bde50eb2bf8d42f92569a2c509b4a633a9b71e7c4ef366224e206f7a2ef85d3765c6145ff6af3808ba7db76f15d0e883a7dfd8875df91091b7602",
+    "source_urls": [
+      "https://councilof.ai/interop/art50-census-2026-09/endpoint.json"
+    ],
+    "subject": "Art 50 generator content-marking census",
+    "surface": "public.notice",
+    "tags": [
+      "public-notice",
+      "art50",
+      "marking-census"
+    ],
+    "unmeasured": [
+      "all detector runs: no sample probes executed in this release",
+      "owner-gated sample generation: Midjourney"
+    ]
+  },
+  "proof": [
+    "3df01cd2bc6889bee0b5c2f7814f082f082ea99fdf936cb26f55d4b70a1379c0",
+    "4f30e843b8682a93ea6a6442be5d3c6e9dd102cee5ea2a7e8865a78a46da96e7",
+    "6b68450873b96fdc1f7f18724f32f95a51bc10e80c7e5256f165b7bb7586a397",
+    "c78bcd1e88b81951563498cb50c6a29ee8d13f7266e3191c7a3a1c0eb9a16e0d",
+    "7fa9b351b62665ed4dfa7f4b7e92b80a67bb9409f84c4da92dd2b0a201bb8fcf",
+    "803e0364a9aa526116a13f87afaddaeee23c3490814a8d465e1fc3dd7268ca55",
+    "457b102f9c702e1896b241e3a4cf4e10c824321d12ad87c647cee8479cd05024",
+    "5800f59efda7a0f51379919ddce04f47d4c386ad38e461e6122985efacf41761",
+    "8b64d0d49f89cc5469b07842bcd889e0cbbfde0007bcb60934ed34d5b3f7fa5f"
+  ]
+}

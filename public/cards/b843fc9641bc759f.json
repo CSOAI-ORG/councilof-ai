@@ -1,0 +1,117 @@
+{
+  "card": {
+    "as_of": "2026-09-12T19:17:43Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:bIB01:base",
+      "symbol": "bIB01",
+      "product": "Backed IB01 $ Treasury Bond 0-1yr",
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "block": 51225658,
+      "block_hash": "0x786aa8631c4313cee3ba614ca2438b71a8ebdff32019d5ccdac2c142699f4981",
+      "block_time": "2026-09-12T19:17:43Z",
+      "rpc": "base-rpc.publicnode.com",
+      "checked": {
+        "name": "Backed IB01 $ Treasury Bond 0-1yr",
+        "symbol": "bIB01",
+        "decimals": 18,
+        "totalSupply": "10000000000000000000000",
+        "isPaused": false,
+        "owner": "0xd1966bd72695789ec9c245f0bf5a8512b56c1d80",
+        "sanctionsList": "0xba0d02c2afddb571d1f54b5bea1b57fe01424587",
+        "pauser": "0x20eb617cc8e8bf3c9b53fc2cf2444cf026da704f",
+        "terms": "https://www.backedassets.fi/legal-documentation",
+        "eip1967_implementation": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+        "eip1967_admin": "0xf2057bdff8439dbffce073e14a9854945d5e5644"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "302005e41058b0cbbdfe1c4d878fb128c7d229484e7e1d79f0268f84efc72822",
+        "bytes": 10589,
+        "url": "/archive/proofs/eip1186/302005e41058b0cb.json",
+        "rpc": "mainnet.base.org",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xd269697b4279ac0c88e8e9dca3ba6baaab8990de21a857ce85cd68efaac706f4",
+          "storageHash": "0x9ebae2a4f654e76432442802742b00ddcd2ba5686b8c3b789137a580b212d598",
+          "nodes": 9
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0xf2057bdff8439dbffce073e14a9854945d5e5644",
+            "nodes": 2
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 51225658 on base, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b843fc9641bc759f2356026df79192bb224981b7b084f6af21c3ef43a6cfd0d9",
+    "sig_ed25519": "6d856b058919993412c51fcecb0636882738c7a5452aaf77fcdd9ea2ecc385f4719acb4330578014210d72ac2882a53feaa6af51d0e6c2375418618aa331910e",
+    "source_urls": [
+      "https://base-rpc.publicnode.com",
+      "https://basescan.org/token/0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "https://mainnet.base.org"
+    ],
+    "subject": "evm:bIB01:base permission state at block 51225658",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:base",
+      "coverage:permission-state",
+      "subject:bIB01"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ]
+  },
+  "proof": [
+    "9ff921fcd3d991a82a8ab242daffc2ef55d8553d4ca7c1d297bf9d207613d9bb",
+    "bd8a7d32f858b9e6bbdee195b38b854f1dc6c727461d925499d0f0d3ca6ae2ea",
+    "e1e0f2366a6f740aa6fe1b3c10a9de11e03a96333f3e7efec7f78a999d44d19b",
+    "24dc5ed6c212800b42d139afc3e47d8f65ece99e91be9b92cc2ae191de46b936",
+    "ca341e23150447c7e39c0552343d985a3c4a43ce0972cb3b31c2cc56b74cb925",
+    "fc1ca86f4eeb0b4b1a3e21dfb8501d5f44d8f4d97bb6794bc3ce60e1b7deaffe",
+    "d6e82c82e271abb8e0cb14622450999f9eb199d37d8bed21b646eece535d3cba",
+    "07991b320054c48a2d9632df681ddbbea1fe3e2ef301b1a9d44d53b506e0a3a0",
+    "7a400a22a2110cd974b97734324256cc72f918b15684ace6810bb71eb0c5c9d2"
+  ]
+}

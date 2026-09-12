@@ -1,0 +1,117 @@
+{
+  "card": {
+    "as_of": "2026-09-12T19:17:35Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:OUSG:ethereum",
+      "symbol": "OUSG",
+      "product": "Ondo Short-Term U.S. Government Bond Fund",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1b19c19393e2d034d8ff31ff34c81252fcbbee92",
+      "block": 25963373,
+      "block_hash": "0x760bd5351579d4a7d24e04937fc509f53fae0b3935bbd630c4c35d107f1671c1",
+      "block_time": "2026-09-12T19:17:35Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "Ondo Short-Term U.S. Government Bond Fund",
+        "symbol": "OUSG",
+        "decimals": 18,
+        "totalSupply": "1270736978707418522930287",
+        "paused": false,
+        "defaultAdminRoleMembers": 1,
+        "eip1967_implementation": "0x1ceb44b6e515abf009e0ccb6ddafd723886cf3ff",
+        "eip1967_admin": "0xba80aa44cc25e85cc30359150dfb1c7d041cf6d5"
+      },
+      "absent": [
+        "isPaused()",
+        "owner()",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "ddab85556119d74c5e27fb3787a159512e8331afb79d6f662fff385c219728e6",
+        "bytes": 11582,
+        "url": "/archive/proofs/eip1186/ddab85556119d74c.json",
+        "rpc": "eth.drpc.org",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xa23b20d4f9e75f4bf9bd74d8c1b7f0219547289c67a11dea65370c1810fc1387",
+          "storageHash": "0xec585a259988df586a6fdb570f3b65d3645414fdb164ff15ae86fa9438c8cbca",
+          "nodes": 9
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x1ceb44b6e515abf009e0ccb6ddafd723886cf3ff",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0xba80aa44cc25e85cc30359150dfb1c7d041cf6d5",
+            "nodes": 5
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 25963373 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "0f6a53493ae7e88609bde38b3a7bf673e4a8bdfc0b4de8871a5e148f06dead38",
+    "sig_ed25519": "9b9e1c289a5a4376178870fea57491b78d14cb88bec9e4ac0db1828be262b1f07473f495848d2b9e39ea3a612d7db7e9527820005aa2a79e1996056d5648dc09",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://etherscan.io/address/0x1b19c19393e2d034d8ff31ff34c81252fcbbee92",
+      "https://eth.drpc.org"
+    ],
+    "subject": "evm:OUSG:ethereum permission state at block 25963373",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:OUSG"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ]
+  },
+  "proof": [
+    "610c05705c7e2797c509366931c90743a5644c3874c2458ad0258e3274e23bff",
+    "c3c93d3f4473c9dec76ccd80bbf60bff26d68d00910253c59164a386ccfc29b1",
+    "1c1fc77552d884934eeb471c7de4ab4df971c6cc1efb197cc8873101ade7d4d7",
+    "6d89091bfea6231c13b89d8cdc8d4e0eecbe543783d2c1b22bb132831db2dc37",
+    "e57fbeeae9c4f42d3a28b334d59c369a079dc97ae02d976b61a81e56e09c1c06",
+    "3cef687126355a78f05dcf8f431a7cbc740bc31320abf38ada460eece96c9b86",
+    "7e38822d2464bf1b482eaad692ad3bc6e92298cfb483e636e7c5fb997da2ea60",
+    "07991b320054c48a2d9632df681ddbbea1fe3e2ef301b1a9d44d53b506e0a3a0",
+    "7a400a22a2110cd974b97734324256cc72f918b15684ace6810bb71eb0c5c9d2"
+  ]
+}
