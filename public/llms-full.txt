@@ -91,9 +91,9 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     "items": 969,
     "items_note": "items sums each axis's n. Financial-axis n values count issuer accounts, public series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
     "comparison_axes": 14,
-    "separated_leads": 1,
+    "separated_leads": 0,
     "ties": 2,
-    "untested_separations": 11,
+    "untested_separations": 12,
     "separation_scope_note": "Separation asks whether a leader's lead over a fleet is statistically real, so it applies only to the model-comparison axes. The financial axes have no fleet and no leader: they are not counted as untested, because no separation test is applicable to them.",
     "externally_led_axes": 3,
     "public_leader_count": 3,
@@ -118,7 +118,7 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     ],
     "uncarded_leader_note": "The public per-axis leader was removed on 3 of the 14 model-comparison axes (machinery-conformity, cross-reality, detector-interop) whose named leader was an external model carrying NO signed per-model card in the public card index (/signed/card_index.json). The board's promise is that every named leader links to the Ed25519 card behind it; where no such card exists, no leader or accuracy is asserted rather than invented. Each of these axes stays MEASURED — the fleet aggregate (fleet_mean) is a real measurement — so measured_axes is unchanged; only the unverifiable leader claim is dropped. public_leader_state=NO_SIGNED_CARD on each. This changes leader attribution and the separation/mean tallies (over carded, externally-led axes only), NOT the measured count.",
     "mean_macro_f1": 0.944,
-    "mean_accuracy": 0.6398,
+    "mean_accuracy": 0.66,
     "mean_fleet_mean": 0.5447,
     "mean_harm": 0.4877,
     "mean_unparsed_rate": 0.0541,
@@ -231,8 +231,8 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
       "family": "gspc",
       "kind": "model-comparison",
       "n": 37,
-      "accuracy": 0.384,
-      "separation": "SEPARATED"
+      "accuracy": 0.4444,
+      "separation": "UNTESTED"
     },
     {
       "axis": "affect",
