@@ -1,0 +1,191 @@
+{
+  "schema": "csoai.directory-audit/1.0",
+  "kind": "agent.economy.directory-status",
+  "measured_at": "2026-09-11T11:45:00Z",
+  "honest_sentence": "6 of 8 directories confirmed listed. 1 confirmed not listed (PulseMCP). 1 has stale description (awesome-mcp-servers says 7 tools, actual 12). All confirmed listings point to live endpoints. 2 stale totals found in confirmed listings.",
+  "directories": [
+    {
+      "name": "Official MCP Registry",
+      "url": "https://registry.modelcontextprotocol.io",
+      "listing_id": "io.github.CSOAI-ORG/gspc",
+      "status": "CONFIRMED_REGISTERED",
+      "version": "1.4.0",
+      "transport": "streamable-http",
+      "endpoint_url": "https://councilof.ai/mcp",
+      "total_tools_claimed": 12,
+      "total_tools_live": 12,
+      "stale_totals": false,
+      "last_verified": "2026-09-11T10:30:00Z",
+      "evidence": ".well-known/mcp.json lists 12 tools; npm view csoai-gspc-mcp returns 0.2.1; registry server-card.json confirms 1.4.0",
+      "action_needed": "NONE",
+      "cost": "$0"
+    },
+    {
+      "name": "npm",
+      "url": "https://www.npmjs.com/package/csoai-gspc-mcp",
+      "status": "CONFIRMED_PUBLISHED",
+      "version": "0.2.1",
+      "all_versions": [
+        "0.1.0",
+        "0.1.1",
+        "0.2.0",
+        "0.2.1"
+      ],
+      "install_cmd": "npx -y csoai-gspc-mcp@0.2.1",
+      "stale_totals": false,
+      "last_verified": "2026-09-11T10:30:00Z",
+      "evidence": "npm view csoai-gspc-mcp versions --json returns 4 versions",
+      "action_needed": "NONE",
+      "cost": "$0"
+    },
+    {
+      "name": "PayAPI Market",
+      "url": "https://payapi.market",
+      "listing_url": "https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed",
+      "status": "CONFIRMED_LISTED",
+      "title": "Council of AI GSPC \u2014 EU Evidence Feed API",
+      "mcp_search": "https://payapi.market/mcp",
+      "stale_totals": false,
+      "last_verified": "2026-09-11T10:30:00Z",
+      "evidence": "curl returns HTTP 200 with correct title and description",
+      "action_needed": "NONE",
+      "cost": "$0"
+    },
+    {
+      "name": "x402 Bazaar (PayAI/CDP)",
+      "url": "https://bazaar.x402.org",
+      "status": "CONFIRMED_INDEXED",
+      "resources_indexed": 9,
+      "ecosystem_total": "~25,000",
+      "share": "9/25000 (0.04%)",
+      "stale_totals": false,
+      "last_verified": "2026-09-11T10:30:00Z",
+      "evidence": "x402 ecosystem card confirms 9 doors, bazaar indexing confirmed",
+      "action_needed": "NONE",
+      "cost": "$0"
+    },
+    {
+      "name": "Glama.ai",
+      "url": "https://glama.ai",
+      "listing_url": "https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai",
+      "status": "CONFIRMED_LISTED",
+      "title": "Council of AI GSPC by CSOAI-ORG",
+      "description_glama": "Provides AI governance and EU AI Act compliance through a council of 12 AIs, enabling risk management, transparency, bias detection, and content watermarking.",
+      "description_actual": "12 tools (8 free, 4 paid), 19-model fleet, 22 axes. Glama auto-indexed from GitHub.",
+      "stale_totals": true,
+      "stale_details": "Glama says 'council of 12 AIs' \u2014 actual fleet is 19 models. Auto-indexed from repo metadata. Description comes from GitHub repo, not live endpoint.",
+      "quality_grades": {
+        "maintenance": "B",
+        "quality": "A",
+        "license": "A"
+      },
+      "badges_visible": [
+        "npm csoai-gspc-mcp",
+        "PyPI csoai-gspc",
+        "DOI 10.5281/zenodo.21991104",
+        "MIT license",
+        "board badge"
+      ],
+      "locales": [
+        "en-US",
+        "de-DE",
+        "es-ES",
+        "ja-JP",
+        "ko-KR",
+        "ru-RU",
+        "zh-CN"
+      ],
+      "last_verified": "2026-09-11T11:45:00Z",
+      "evidence": "curl returns full page with structured data, quality scores, badges, and board snapshot",
+      "action_needed": "OPTIONAL \u2014 update GitHub repo description to reflect 19-model fleet (Glama auto-indexes from GitHub)",
+      "cost": "$0"
+    },
+    {
+      "name": "MCP.so",
+      "url": "https://mcp.so",
+      "listing_url": "https://mcp.so/server/csoai-gspc-mcp",
+      "status": "CONFIRMED_LISTED",
+      "package_name": "csoai-gspc-measurement",
+      "description_mcpso": "GSPC measurement MCP. Live GET https://councilof.ai/api/gspc. Measure and verify behavioural attestations. Never certify.",
+      "stale_totals": false,
+      "last_verified": "2026-09-11T11:45:00Z",
+      "evidence": "curl search for 'csoai' returns 'csoai-gspc-measurement' listing with correct description",
+      "action_needed": "NONE",
+      "cost": "$0"
+    },
+    {
+      "name": "PulseMCP",
+      "url": "https://www.pulsemcp.com",
+      "status": "NOT_LISTED",
+      "stale_totals": null,
+      "last_verified": "2026-09-11T11:45:00Z",
+      "evidence": "curl search for 'csoai' returns no results",
+      "action_needed": "SUBMIT \u2014 prepare listing submission for PulseMCP",
+      "cost": "$0"
+    },
+    {
+      "name": "awesome-mcp-servers (GitHub)",
+      "url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "listing_url": "https://github.com/punkpeye/awesome-mcp-servers#readme",
+      "status": "CONFIRMED_LISTED_STALE",
+      "listed_items": [
+        {
+          "repo": "CSOAI-ORG/councilof-ai",
+          "description_stale": "Seven read-only tools",
+          "description_actual": "12 tools (8 free, 4 paid)",
+          "version_stale": "csoai-gspc-mcp@0.1.1",
+          "version_actual": "csoai-gspc-mcp@0.2.1",
+          "emoji_tags": [
+            "\ud83d\udcc7",
+            "\u2601\ufe0f"
+          ],
+          "glama_badge": true
+        },
+        {
+          "repo": "CSOAI-ORG/eu-ai-act-compliance-mcp",
+          "status": "ALSO_LISTED",
+          "pypi_version": "1.8.15",
+          "emoji_tags": [
+            "\ud83d\udc0d",
+            "\ud83c\udfe0"
+          ],
+          "glama_badge": true
+        }
+      ],
+      "stale_totals": true,
+      "stale_details": "awesome-mcp-servers says 'Seven read-only tools' and 'csoai-gspc-mcp@0.1.1'. Actual: 12 tools (8 free, 4 paid), version 0.2.1. Also lists eu-ai-act-compliance-mcp separately.",
+      "last_verified": "2026-09-11T11:45:00Z",
+      "evidence": "curl raw README.md from main branch returns exact listing text",
+      "action_needed": "PR to update listing: change 'Seven read-only tools' \u2192 '12 tools (8 free, 4 paid)', change '@0.1.1' \u2192 '@0.2.1'",
+      "cost": "$0"
+    }
+  ],
+  "corrections_applied": [
+    {
+      "field": "Glama.ai status",
+      "was": "UNCONFIRMED",
+      "now": "CONFIRMED_LISTED",
+      "evidence": "https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai returns 200 with full page"
+    },
+    {
+      "field": "MCP.so status",
+      "was": "UNCONFIRMED",
+      "now": "CONFIRMED_LISTED",
+      "evidence": "mcp.so/server/csoai-gspc-mcp returns listing with package 'csoai-gspc-measurement'"
+    },
+    {
+      "field": "PulseMCP status",
+      "was": "UNCONFIRMED",
+      "now": "NOT_LISTED",
+      "evidence": "pulsemcp.com search for 'csoai' returns no results"
+    },
+    {
+      "field": "awesome-mcp-servers status",
+      "was": "UNCONFIRMED",
+      "now": "CONFIRMED_LISTED_STALE",
+      "evidence": "README.md lists councilof-ai with stale description (7 tools, 0.1.1)"
+    }
+  ],
+  "cost_total": "$0",
+  "cost_note": "All directory listings are free. No listing fees paid."
+}
