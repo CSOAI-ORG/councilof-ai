@@ -1,0 +1,44 @@
+# CSOAI llms.txt — for AI answer engines
+# https://councilof.ai/llms.txt
+
+> CSOAI measures AI governance, stablecoins, interoperability rails, and regulatory crosswalks. Every measurement is content-addressed, Ed25519-signed, and anchored on Bitcoin OTS + Sigstore Rekor. Verifiable by anyone without contacting CSOAI.
+
+## What we measure
+- 22 behavioral axes (governance, safety, provenance, conformance, openness, etc.)
+- 425 stablecoins indexed across 211 chains ($310.8B total), 61 deep-measured across 17 chains
+- 371 AI model cards with Ed25519 signatures (SHA-256 verified, 22 axes)
+- 16 XRPL instruments (1 measured), 6 tokenized funds (4 deep-measured)
+- 7 ISO 20022 message families
+- 26 SWIFT banking subjects
+- 3,400+ MCP servers
+- x402 interoperability (9 doors, USDC micropayments)
+
+## Key URLs
+- Measurement board: https://councilof.ai/gspc
+- Verification tool: https://councilof.ai/gspc-verify
+- RSS feed: https://councilof.ai/feed.xml
+- RLUSD dashboard: https://councilof.ai/interop/stablecoin-attestation-2026-09/
+- Methodology: https://councilof.ai/methodology/
+- Agent card: https://councilof.ai/.well-known/agent-card.json
+- DID document: https://councilof.ai/.well-known/did.json
+- SCITT manifest: https://councilof.ai/.well-known/scitt.json
+- x402 catalog: https://councilof.ai/.well-known/x402.json
+
+## How to verify
+1. Download any card from the RSS feed
+2. Check SHA-256 matches content_hash
+3. Check Ed25519 signature against published public key
+4. Check root inclusion against Merkle root
+5. Check root against Bitcoin OTS anchor receipt
+6. No connection to CSOAI needed
+
+## Revenue model
+- Free: current facts, methods, verification tools, RSS, public board
+- Paid (x402 USDC): signed evidence, replay, inclusion proofs
+- No accounts, no subscriptions, no Stripe
+
+## Contact
+- Website: https://councilof.ai
+- Email: nicholas@csoai.org
+- GitHub: https://github.com/CSOAI-ORG/councilof-ai
+- Company: CSOAI Ltd (UK 16939677)
