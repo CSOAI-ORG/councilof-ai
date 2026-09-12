@@ -1,0 +1,33 @@
+{
+  "schema": "csoai.root-genesis/0.1",
+  "kind": "csoai.root-genesis/0.1",
+  "card_number": 0,
+  "prev": null,
+  "note_prev": "This is card #0, the genesis of the root-of-trust tier. There is no predecessor; prev is null by construction, never omitted.",
+  "created_at": null,
+  "note_created_at": "ISO-8601 UTC, set during the ceremony, e.g. 2026-09-12T14:05:00Z.",
+  "root_alpha": {
+    "pubkey_raw_hex": null,
+    "jwk_thumbprint_rfc7638_sha256_b64url": null,
+    "role": "offline root key; signs ONLY genesis card #0 and future ROOT-beta rotation attestations; never signs measurement cards",
+    "custody": {
+      "scheme": "shamir-gf256-0x11b/v1",
+      "threshold": 2,
+      "shares": 3,
+      "holders": [
+        "ROLE: ceremony principal (estate owner)",
+        "ROLE: offline backup custodian (separate physical location)",
+        "ROLE: sealed-envelope custodian (third physical location)"
+      ],
+      "note_holders": "Holders are identified by ROLE, not name. Names are written on the physical custody record kept with each share, never in this public card."
+    }
+  },
+  "root_beta": {
+    "pubkey_raw_hex": null,
+    "jwk_thumbprint_rfc7638_sha256_b64url": null,
+    "role": "operational signing key, attested by ROOT-alpha via this card; signs operational anchors after the ceremony"
+  },
+  "scope": "Anchors and attestation of operational keys only. This card is never a certification. Measurement cards (card-v1 under the public root) remain the only measured surface; nothing in this genesis tier grades, ranks, certifies, or endorses anything.",
+  "sig_ed25519": null,
+  "note_sig": "Self-signed by ROOT-alpha during the ceremony. Preimage = canonical bytes (UTF-8 JSON, sorted keys, separators (',',':'), ensure_ascii=False — the estate canon in scripts/publish_public_root.py) of this card with the sig_ed25519 field REMOVED ENTIRELY (not null). Verify from root_alpha.pubkey_raw_hex alone."
+}
