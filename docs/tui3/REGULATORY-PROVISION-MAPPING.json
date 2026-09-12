@@ -1,0 +1,376 @@
+{
+  "schema": "csoai.regulatory-provision-mapping/1.0",
+  "generated_at": "2026-09-12T06:00:00Z",
+  "disclaimer": "A crosswalk maps which GSPC axis carries measurable evidence for which regulatory provision. It is NOT a legal determination, conformity assessment, or certification.",
+
+  "frameworks_covered": [
+    "EU AI Act (Regulation (EU) 2024/1689)",
+    "NIST AI Risk Management Framework 1.0",
+    "UK AI Regulation (consultation)"
+  ],
+
+  "axis_provision_mappings": [
+    {
+      "axis": "governance",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 9",
+          "title": "Risk management system",
+          "jurisdiction": "EU",
+          "legal_status": "Regulation (EU) 2024/1689, binding",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2026-08-02",
+          "provision_summary": "Providers shall establish, implement, document and maintain a risk management system"
+        },
+        {
+          "framework": "NIST AI RMF",
+          "function": "GOVERN",
+          "subcategory": "GOVERN 1",
+          "title": "Governance policies and procedures",
+          "jurisdiction": "US (voluntary)",
+          "legal_status": "NIST AI 100-1, voluntary framework",
+          "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+          "version_date": "2023-01-26",
+          "effective_date": "N/A (voluntary)"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "safety",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 15",
+          "title": "Accuracy, robustness and cybersecurity",
+          "jurisdiction": "EU",
+          "legal_status": "Regulation (EU) 2024/1689, binding",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2026-08-02",
+          "provision_summary": "High-risk AI systems shall be designed and developed to achieve appropriate levels of accuracy, robustness and cybersecurity"
+        },
+        {
+          "framework": "NIST AI RMF",
+          "function": "MEASURE",
+          "subcategory": "MEASURE 2",
+          "title": "AI risk measurement",
+          "jurisdiction": "US (voluntary)",
+          "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+          "version_date": "2023-01-26",
+          "effective_date": "N/A (voluntary)"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "provenance",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 50",
+          "title": "Transparency obligations for providers and deployers",
+          "jurisdiction": "EU",
+          "legal_status": "Regulation (EU) 2024/1689, binding",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2026-08-02",
+          "provision_summary": "Providers shall ensure AI systems are designed and developed in such a way that natural persons are informed they are interacting with an AI system"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "art5-safeguard",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 5",
+          "title": "Prohibited artificial intelligence practices",
+          "jurisdiction": "EU",
+          "legal_status": "Regulation (EU) 2024/1689, binding",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2025-02-02",
+          "provision_summary": "Prohibits AI systems that deploy subliminal techniques, exploit vulnerabilities, perform social scoring, or use real-time biometric identification in public spaces"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "care",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 9",
+          "title": "Risk management system",
+          "jurisdiction": "EU",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2026-08-02"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "openness",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 53",
+          "title": "Obligations for providers of general-purpose AI models",
+          "jurisdiction": "EU",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2025-08-02",
+          "provision_summary": "Providers shall draw up and maintain technical documentation, provide information to downstream deployers, establish copyright compliance, publish training content summaries"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "conformance",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 17",
+          "title": "Quality management system",
+          "jurisdiction": "EU",
+          "source_url": "https://eur-lex.europa.eu/li/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2026-08-02"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "continuity",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 15",
+          "title": "Accuracy, robustness and cybersecurity",
+          "jurisdiction": "EU",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2026-08-02"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "detector-interop",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "NIST AI RMF",
+          "function": "MAP",
+          "subcategory": "MAP 2",
+          "title": "Context and AI risk are characterized",
+          "jurisdiction": "US (voluntary)",
+          "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+          "version_date": "2023-01-26"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "cross-reality",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 50",
+          "title": "Transparency obligations",
+          "jurisdiction": "EU",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2026-08-02"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "affect",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 5(1)(a)",
+          "title": "Prohibited: subliminal techniques",
+          "jurisdiction": "EU",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2025-02-02"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "jail",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 5",
+          "title": "Prohibited AI practices",
+          "jurisdiction": "EU",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2025-02-02"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "machinery-conformity",
+      "gspc_family": "behavioural",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 17",
+          "title": "Quality management system",
+          "jurisdiction": "EU",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2026-08-02"
+        }
+      ],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "swarm",
+      "gspc_family": "behavioural",
+      "provisions": [],
+      "measurement_method": "Model fleet answers frozen bank (n=30), graded deterministically",
+      "status": "MEASURED",
+      "note": "No specific regulatory provision mapped — emergent multi-agent behaviour"
+    },
+    {
+      "axis": "provenance-controls",
+      "gspc_family": "financial",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Article 10",
+          "title": "Data and data governance",
+          "jurisdiction": "EU",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12",
+          "effective_date": "2026-08-02"
+        }
+      ],
+      "measurement_method": "Deterministic fact-based measurement",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "reserve-attestation",
+      "gspc_family": "financial",
+      "provisions": [],
+      "measurement_method": "Deterministic fact-based measurement",
+      "status": "MEASURED",
+      "note": "Financial-specific, no direct regulatory provision"
+    },
+    {
+      "axis": "regulatory-framework",
+      "gspc_family": "financial",
+      "provisions": [
+        {
+          "framework": "EU AI Act",
+          "article": "Articles 5-15, 50-53",
+          "title": "Comprehensive regulatory framework mapping",
+          "jurisdiction": "EU",
+          "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "version_date": "2024-07-12"
+        }
+      ],
+      "measurement_method": "Deterministic fact-based measurement",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "distribution-integrity",
+      "gspc_family": "financial",
+      "provisions": [],
+      "measurement_method": "Deterministic fact-based measurement",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "custody-disclosure",
+      "gspc_family": "financial",
+      "provisions": [],
+      "measurement_method": "Deterministic fact-based measurement",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "ai-economy-index",
+      "gspc_family": "financial",
+      "provisions": [],
+      "measurement_method": "Index-style slot",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "human-labour-index",
+      "gspc_family": "financial",
+      "provisions": [],
+      "measurement_method": "Index-style slot",
+      "status": "MEASURED"
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "gspc_family": "financial",
+      "provisions": [],
+      "measurement_method": "Index-style slot",
+      "status": "MEASURED"
+    }
+  ],
+
+  "provision_summary": {
+    "total_axes": 22,
+    "axes_with_provisions": 14,
+    "axes_without_provisions": 8,
+    "unique_provisions": 12,
+    "frameworks": {
+      "EU AI Act": {
+        "articles_mapped": ["Art 5", "Art 5(1)(a)", "Art 9", "Art 10", "Art 15", "Art 17", "Art 50", "Art 53"],
+        "jurisdiction": "EU",
+        "legal_status": "Regulation (EU) 2024/1689, binding",
+        "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+        "publication_date": "2024-07-12",
+        "effective_dates": {
+          "prohibited_practices": "2025-02-02",
+          "gpai_obligations": "2025-08-02",
+          "high_risk_systems": "2026-08-02"
+        }
+      },
+      "NIST AI RMF": {
+        "functions_mapped": ["GOVERN 1", "MAP 2", "MEASURE 2"],
+        "jurisdiction": "US (voluntary)",
+        "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf",
+        "publication_date": "2023-01-26"
+      }
+    }
+  }
+}
