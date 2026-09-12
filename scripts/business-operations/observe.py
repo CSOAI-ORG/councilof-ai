@@ -136,10 +136,10 @@ def revenue_metrics(observation):
 
 def source_update(previous, observation):
     result = {'latest_attempt': {k: v for k, v in observation.items() if k != 'data'},
-              'last_good': previous.get('last_good') if previous else None, 'changed': False}
+              'last_good': previous.get('last_good') if previous else None, 'changed': bool(previous and previous.get('changed'))}
     if observation['status'] == 'OBSERVED':
         old = result['last_good']
-        result['changed'] = bool(old and old.get('text_sha256') != observation.get('text_sha256'))
+        result['changed'] = result['changed'] or bool(old and old.get('text_sha256') != observation.get('text_sha256'))
         result['last_good'] = {k: v for k, v in observation.items() if k != 'data'}
     return result
 
@@ -181,7 +181,7 @@ def run(state, config, mill=False, force_sources=False):
         if not models:
             alerts.append({'id': 'mill:no-local-models', 'kind': 'service'})
         health = observations['mill_health'].get('data') or {}
-        if health.get('state', health.get('status', '')).lower() not in ('ok', 'healthy', 'ready', 'idle', 'running'):
+        if health.get('state', health.get('status', '')).lower() not in ('waiting', 'idle', 'running'):
             alerts.append({'id': 'mill:degraded', 'kind': 'service', 'detail': health.get('state', health.get('status'))})
     else:
         disk_metrics = None

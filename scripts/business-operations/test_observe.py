@@ -31,6 +31,10 @@ class Observations(unittest.TestCase):
         self.assertEqual(failed['latest_attempt']['status'], 'UNAVAILABLE')
         recovered = observe.source_update(failed, dict(first, text_sha256='def'))
         self.assertTrue(recovered['changed'])
+        unchanged = observe.source_update(recovered, dict(first, text_sha256='def'))
+        self.assertTrue(unchanged['changed'])
+        failed_again = observe.source_update(unchanged, {'status': 'UNAVAILABLE'})
+        self.assertTrue(failed_again['changed'])
 
     def test_source_failure_is_not_zero_growth(self):
         with tempfile.TemporaryDirectory() as directory:
