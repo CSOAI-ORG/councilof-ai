@@ -84,9 +84,14 @@ jobs:
 
           run_id, destination = sys.argv[1], Path(sys.argv[2])
           selected = []
+          # G1.2 (2026-09-12): the intake stamps body.run_id as "gha-<run id>"
+          # (land_mill_cards.bind_run_provenance) while dispatch inputs arrive as bare
+          # digits. Accept exactly those two spellings of the SAME run — never a prefix
+          # match, never the whole inbox.
+          accepted = {run_id, f"gha-{run_id}"}
           for source in sorted(Path("public/interop/mill-cards-unsigned").glob("unsigned-*.json")):
               card = json.loads(source.read_text(encoding="utf-8"))
-              if (card.get("body") or {}).get("run_id") == run_id:
+              if str((card.get("body") or {}).get("run_id") or "") in accepted:
                   shutil.copyfile(source, destination / source.name)
                   selected.append(source.name)
           if not selected:
