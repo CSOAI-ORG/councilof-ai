@@ -17,6 +17,7 @@
 | reach-funnel | claude (agent) | /get-listed page + PRIMARY_PATHS entry + docs/OUTREACH-PACK + docs/ANCHORS-TRUTH-TABLE; committed, NOT pushed (another lane mid-flight) | COMMITTED |
 | dashboard-desktop-consolidation | codex | DashboardLayout, DashboardPane integration, dashboard workspace/account chrome, LobbyComposer tool picker, CouncilLobby dashboard suppression, dashboard consolidation register/tests | DONE |
 | council-arena-practice | codex | DashboardArenaPane + canonical home/dashboard GSPC components + useGspcBoard localhost transport fallback + focused tests; deterministic human-vs-simulated-opponent practice plus one separately labelled /api/hub-cards measured-model table shared by homepage and Council OS; verbose duplicate Hub-record homepage block retired; no instrument fusion, gameplay admission, or inferred state | RUNNING |
+| distribution-parity-20260912 | codex | guarded HF/Kaggle snapshot parity, conventional corrections-feed alias, and csoai-gspc source-version reconciliation | RUNNING |
 
 RULES (all agents): master only, no worktrees, no dev servers left running, stage-by-name,
 six gates before any dist build claim, browser-verify (green build ≠ working page),

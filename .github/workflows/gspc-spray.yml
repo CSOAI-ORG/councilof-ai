@@ -8,11 +8,10 @@ name: gspc-spray
 # already carrying this as_of / content fingerprint is left alone, so a daily run that finds no change
 # writes nothing anywhere.
 #
-# Surfaces are chosen by which secret EXISTS in this repository. A missing secret is named in the log and
-# that surface is skipped — never invented, never faked. As of 5 Sep 2026 only HF_TOKEN exists here; the
-# others must be added by the owner (Settings → Secrets → Actions) under exactly these names:
-#   HF_TOKEN            Hugging Face, write on org csoai              → --hf        (present)
-#   KAGGLE_USERNAME + KAGGLE_KEY   from ~/.kaggle/kaggle.json          → --kaggle    (missing)
+# Surfaces are chosen by which write credential EXISTS in this repository. A missing secret is named in the
+# log and that surface is skipped — never invented, never faked. Expected secret names are:
+#   HF_TOKEN            Hugging Face, write on org csoai              → --hf
+#   KAGGLE_ACCESS_TOKEN OAuth token used by Kaggle CLI 2.x             → --kaggle
 #   GSPC_BOARD_TOKEN    fine-grained PAT, contents:write on CSOAI-ORG/gspc-board → --github (missing;
 #                       the default GITHUB_TOKEN cannot push to another repository)
 #   ZENODO_TOKEN        personal token, deposit:write + deposit:actions → --zenodo    (missing)
@@ -110,7 +109,7 @@ jobs:
         id: choose
         env:
           HAS_HF: ${{ secrets.HF_TOKEN != '' }}
-          HAS_KAGGLE: ${{ secrets.KAGGLE_USERNAME != '' && secrets.KAGGLE_KEY != '' }}
+          HAS_KAGGLE: ${{ secrets.KAGGLE_ACCESS_TOKEN != '' }}
           HAS_GITHUB: ${{ secrets.GSPC_BOARD_TOKEN != '' }}
           HAS_ZENODO: ${{ secrets.ZENODO_TOKEN != '' }}
           HAS_PYPI: ${{ secrets.PYPI_API_TOKEN != '' }}
@@ -120,13 +119,14 @@ jobs:
           flags=""
           note() { echo "::notice title=gspc-spray::$1"; }
           if [ "$HAS_HF" = "true" ];     then flags="$flags --hf";     else note "HF_TOKEN missing — Hugging Face skipped"; fi
-          if [ "$HAS_KAGGLE" = "true" ]; then flags="$flags --kaggle"; else note "KAGGLE_USERNAME/KAGGLE_KEY missing — Kaggle skipped"; fi
+          if [ "$HAS_KAGGLE" = "true" ]; then flags="$flags --kaggle"; else note "KAGGLE_ACCESS_TOKEN missing — Kaggle skipped"; fi
           if [ "$HAS_GITHUB" = "true" ]; then flags="$flags --github"; else note "GSPC_BOARD_TOKEN missing — GitHub mirror skipped (GITHUB_TOKEN cannot push to CSOAI-ORG/gspc-board)"; fi
           if [ "$HAS_ZENODO" = "true" ]; then flags="$flags --zenodo"; else note "ZENODO_TOKEN missing — Zenodo skipped"; fi
           if [ "$HAS_PYPI" = "true" ];   then flags="$flags --pypi";   else note "PYPI_API_TOKEN missing — PyPI skipped"; fi
           if [ "$HAS_NPM" = "true" ];    then note "NPM_TOKEN present but npm publishing is not wired in this workflow yet — report only"; else note "NPM_TOKEN missing — npm BLOCKED (WebAuthn account needs a Bypass-2FA token)"; fi
           flags="$flags --npm"   # always reports the npm blocker in the table
           echo "flags=$flags" >> "$GITHUB_OUTPUT"
+          if [ "$HAS_HF" = "true" ] && [ "$HAS_KAGGLE" = "true" ]; then echo "parity=true" >> "$GITHUB_OUTPUT"; else echo "parity=false" >> "$GITHUB_OUTPUT"; fi
           echo "surfaces:$flags"
 
       - name: spray
@@ -161,6 +161,10 @@ jobs:
           else
             echo "## gspc-spray — no report written (the script refused or crashed before building the snapshot)" >> "$GITHUB_STEP_SUMMARY"
           fi
+
+      - name: verify exact Hugging Face/Kaggle parity
+        if: steps.choose.outputs.parity == 'true' && !inputs.dry_run
+        run: python3 scripts/spray/verify-gspc-parity.py --report "$RUNNER_TEMP/spray/parity-report.json"
 
       - uses: actions/upload-artifact@v4
         if: always()
