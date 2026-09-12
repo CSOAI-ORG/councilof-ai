@@ -1,0 +1,553 @@
+{
+  "label": "INTERNAL_SELF_FUNDED",
+  "timestamp": "2026-09-12T04:55:55.668Z",
+  "payer": "0x6ea00613c15f2463bC10c7188215c4FA6f4943C6",
+  "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+  "amount_atomic": "10000",
+  "amount_usdc": 0.01,
+  "subject": "llama3.2:3b",
+  "axis": "governance",
+  "step1_402_challenge": {
+    "x402Version": 2,
+    "error": "Payment required",
+    "resource": {
+      "url": "https://councilof.ai/api/request-attestation",
+      "description": "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
+      "mimeType": "application/json",
+      "serviceName": "CSOAI Request Attest",
+      "tags": [
+        "attestation",
+        "ras",
+        "measurement",
+        "x402"
+      ]
+    },
+    "accepts": [
+      {
+        "scheme": "exact",
+        "network": "eip155:8453",
+        "amount": "10000",
+        "maxAmountRequired": "10000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+        "maxTimeoutSeconds": 300,
+        "extra": {
+          "name": "USD Coin",
+          "version": "2",
+          "decimals": 6,
+          "symbol": "USDC"
+        },
+        "csoai_pricing": {
+          "product_id": "csoai.product.request_attestation",
+          "sku_id": "request_attestation",
+          "tier": "per_request",
+          "pricing_basis": "PROMO_EXISTING_DATA",
+          "campaign_id": "csoai-launch-30d-20260911",
+          "normal_amount_atomic": "20000",
+          "offered_amount_atomic": "10000",
+          "starts_at": "2026-09-11T00:00:00Z",
+          "ends_at": "2026-10-11T00:00:00Z",
+          "fresh_compute_excluded": true
+        },
+        "resource": "https://councilof.ai/api/request-attestation",
+        "description": "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
+        "mimeType": "application/json"
+      }
+    ],
+    "extensions": {
+      "bazaar": {
+        "info": {
+          "input": {
+            "type": "http",
+            "method": "GET",
+            "queryParams": {
+              "subject": "llama3.2:3b",
+              "axis": "governance"
+            }
+          },
+          "output": {
+            "type": "json",
+            "example": {
+              "schema": "https://councilof.ai/schema/card-v0.json",
+              "surface": "ras.commission",
+              "subject": "model-or-subject-id",
+              "payload": {
+                "status": "COMMISSIONED",
+                "reserve": [],
+                "fresh_run": "UNMEASURED"
+              },
+              "sig_ed25519": "<hex or null>",
+              "unmeasured": [
+                "root_inclusion"
+              ]
+            }
+          }
+        },
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "input": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "http"
+                },
+                "method": {
+                  "type": "string",
+                  "enum": [
+                    "GET",
+                    "HEAD",
+                    "DELETE"
+                  ]
+                },
+                "queryParams": {
+                  "type": "object",
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "description": "Subject to commission (model id, instrument id, or card sha)"
+                    },
+                    "axis": {
+                      "type": "string",
+                      "description": "Optional axis slug; omit for the subject-level commission"
+                    }
+                  },
+                  "required": [
+                    "subject"
+                  ]
+                }
+              },
+              "required": [
+                "type",
+                "method"
+              ],
+              "additionalProperties": false
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "example": {
+                  "type": "object"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            }
+          },
+          "required": [
+            "input"
+          ]
+        }
+      },
+      "offer-receipt": {
+        "info": {
+          "offers": [
+            {
+              "format": "jws",
+              "acceptIndex": 0,
+              "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzg5MTg5ODU1LCJ2ZXJzaW9uIjoxfQ.pcXdHLgbVfVQc-jt9iYehH0D21smozQdPPK5ff8qfaJ19OQFBNmCdi73e9v8LztBtHVR4mfZm3ghLLl2CFGnBw"
+            }
+          ]
+        },
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "offers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "format": {
+                    "type": "string",
+                    "const": "jws"
+                  },
+                  "acceptIndex": {
+                    "type": "integer"
+                  },
+                  "signature": {
+                    "type": "string",
+                    "description": "JWS compact serialization containing the offer payload"
+                  }
+                },
+                "required": [
+                  "format",
+                  "signature"
+                ]
+              }
+            }
+          },
+          "required": [
+            "offers"
+          ]
+        }
+      }
+    },
+    "csoai": {
+      "schema": "csoai.request-attestation/0.2",
+      "per": "request",
+      "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+      "never": [
+        "rank",
+        "certificate",
+        "grade",
+        "score-sale"
+      ],
+      "deliverable": "one card-v0 leaf, surface ras.commission, ≤3KB payload, signed when the Pages key is present",
+      "preview": {
+        "subject": "llama3.2:3b",
+        "axis": "governance",
+        "axis_known": false,
+        "signed_cards_on_file": 0,
+        "cards": [],
+        "corpus_as_of": "2026-08-19T09:24:39.174226+00:00",
+        "read_from": "https://councilof.ai/signed/card-matrix.json",
+        "free_preview": "https://councilof.ai/api/request-attestation?subject=<id>",
+        "free_verify": "https://councilof.ai/gspc-verify",
+        "free_board": "https://councilof.ai/api/gspc"
+      },
+      "rail": {
+        "mode": "live",
+        "pay_to_configured": true,
+        "facilitator_configured": true,
+        "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free."
+      },
+      "not_paid_reason": "no x-payment header",
+      "catalog": "https://councilof.ai/api/x402",
+      "explainer": "https://councilof.ai/pricing",
+      "offer_receipt": {
+        "extension": "offer-receipt",
+        "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+        "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+        "format": "jws",
+        "alg": "EdDSA",
+        "kid": "did:web:csoai.org#board-attestation-1",
+        "signed": true,
+        "reason": "1 of 1 accepts entries signed",
+        "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+      }
+    }
+  },
+  "step2_signature": {
+    "nonce": "0xa0c7030290b8e166bfdcad976aa210bd6641cf7c05d0f20dea0c00dee2b07d98",
+    "signature": "0x9a13f1dc061e839ba8c66e1fe43f11fc0c2fdde1ef39904ef573a91f2b884cac2e7d39d56f952afa581cc55de49e8d07e03d75b4f9e4cebae0a4f3a57f11736f1b",
+    "recovered": "0x6ea00613c15f2463bC10c7188215c4FA6f4943C6",
+    "valid": true,
+    "domain": {
+      "name": "USD Coin",
+      "version": "2",
+      "chainId": 8453,
+      "verifyingContract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+    },
+    "types": {
+      "TransferWithAuthorization": [
+        {
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "name": "validAfter",
+          "type": "uint256"
+        },
+        {
+          "name": "validBefore",
+          "type": "uint256"
+        },
+        {
+          "name": "nonce",
+          "type": "bytes32"
+        }
+      ]
+    },
+    "value": {
+      "from": "0x6ea00613c15f2463bC10c7188215c4FA6f4943C6",
+      "to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "value": "10000",
+      "validAfter": 1789188894,
+      "validBefore": 1789189254,
+      "nonce": "0xa0c7030290b8e166bfdcad976aa210bd6641cf7c05d0f20dea0c00dee2b07d98"
+    }
+  },
+  "step3_x_payment": {
+    "x402Version": 2,
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "payload": {
+      "signature": "0x9a13f1dc061e839ba8c66e1fe43f11fc0c2fdde1ef39904ef573a91f2b884cac2e7d39d56f952afa581cc55de49e8d07e03d75b4f9e4cebae0a4f3a57f11736f1b",
+      "authorization": {
+        "from": "0x6ea00613c15f2463bC10c7188215c4FA6f4943C6",
+        "to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+        "value": "10000",
+        "validAfter": "1789188894",
+        "validBefore": "1789189254",
+        "nonce": "0xa0c7030290b8e166bfdcad976aa210bd6641cf7c05d0f20dea0c00dee2b07d98"
+      }
+    },
+    "resource": "https://councilof.ai/api/request-attestation"
+  },
+  "step3_response": {
+    "http_status": 402,
+    "body": {
+      "x402Version": 2,
+      "error": "Payment required",
+      "resource": {
+        "url": "https://councilof.ai/api/request-attestation",
+        "description": "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
+        "mimeType": "application/json",
+        "serviceName": "CSOAI Request Attest",
+        "tags": [
+          "attestation",
+          "ras",
+          "measurement",
+          "x402"
+        ]
+      },
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "eip155:8453",
+          "amount": "10000",
+          "maxAmountRequired": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USD Coin",
+            "version": "2",
+            "decimals": 6,
+            "symbol": "USDC"
+          },
+          "csoai_pricing": {
+            "product_id": "csoai.product.request_attestation",
+            "sku_id": "request_attestation",
+            "tier": "per_request",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "campaign_id": "csoai-launch-30d-20260911",
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "starts_at": "2026-09-11T00:00:00Z",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true
+          },
+          "resource": "https://councilof.ai/api/request-attestation",
+          "description": "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
+          "mimeType": "application/json"
+        }
+      ],
+      "extensions": {
+        "bazaar": {
+          "info": {
+            "input": {
+              "type": "http",
+              "method": "GET",
+              "queryParams": {
+                "subject": "llama3.2:3b",
+                "axis": "governance"
+              }
+            },
+            "output": {
+              "type": "json",
+              "example": {
+                "schema": "https://councilof.ai/schema/card-v0.json",
+                "surface": "ras.commission",
+                "subject": "model-or-subject-id",
+                "payload": {
+                  "status": "COMMISSIONED",
+                  "reserve": [],
+                  "fresh_run": "UNMEASURED"
+                },
+                "sig_ed25519": "<hex or null>",
+                "unmeasured": [
+                  "root_inclusion"
+                ]
+              }
+            }
+          },
+          "schema": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": "object",
+            "properties": {
+              "input": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "http"
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "GET",
+                      "HEAD",
+                      "DELETE"
+                    ]
+                  },
+                  "queryParams": {
+                    "type": "object",
+                    "properties": {
+                      "subject": {
+                        "type": "string",
+                        "description": "Subject to commission (model id, instrument id, or card sha)"
+                      },
+                      "axis": {
+                        "type": "string",
+                        "description": "Optional axis slug; omit for the subject-level commission"
+                      }
+                    },
+                    "required": [
+                      "subject"
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "method"
+                ],
+                "additionalProperties": false
+              },
+              "output": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "example": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              }
+            },
+            "required": [
+              "input"
+            ]
+          }
+        },
+        "offer-receipt": {
+          "info": {
+            "offers": [
+              {
+                "format": "jws",
+                "acceptIndex": 0,
+                "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzg5MTg5ODU1LCJ2ZXJzaW9uIjoxfQ.pcXdHLgbVfVQc-jt9iYehH0D21smozQdPPK5ff8qfaJ19OQFBNmCdi73e9v8LztBtHVR4mfZm3ghLLl2CFGnBw"
+              }
+            ]
+          },
+          "schema": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": "object",
+            "properties": {
+              "offers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "format": {
+                      "type": "string",
+                      "const": "jws"
+                    },
+                    "acceptIndex": {
+                      "type": "integer"
+                    },
+                    "signature": {
+                      "type": "string",
+                      "description": "JWS compact serialization containing the offer payload"
+                    }
+                  },
+                  "required": [
+                    "format",
+                    "signature"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "offers"
+            ]
+          }
+        }
+      },
+      "csoai": {
+        "schema": "csoai.request-attestation/0.2",
+        "per": "request",
+        "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+        "never": [
+          "rank",
+          "certificate",
+          "grade",
+          "score-sale"
+        ],
+        "deliverable": "one card-v0 leaf, surface ras.commission, ≤3KB payload, signed when the Pages key is present",
+        "preview": {
+          "subject": "llama3.2:3b",
+          "axis": "governance",
+          "axis_known": false,
+          "signed_cards_on_file": 0,
+          "cards": [],
+          "corpus_as_of": "2026-08-19T09:24:39.174226+00:00",
+          "read_from": "https://councilof.ai/signed/card-matrix.json",
+          "free_preview": "https://councilof.ai/api/request-attestation?subject=<id>",
+          "free_verify": "https://councilof.ai/gspc-verify",
+          "free_board": "https://councilof.ai/api/gspc"
+        },
+        "rail": {
+          "mode": "live",
+          "pay_to_configured": true,
+          "facilitator_configured": true,
+          "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free."
+        },
+        "not_paid_reason": "facilitator rejected receipt: invalid_exact_evm_insufficient_balance",
+        "catalog": "https://councilof.ai/api/x402",
+        "explainer": "https://councilof.ai/pricing",
+        "offer_receipt": {
+          "extension": "offer-receipt",
+          "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+          "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+          "format": "jws",
+          "alg": "EdDSA",
+          "kid": "did:web:csoai.org#board-attestation-1",
+          "signed": true,
+          "reason": "1 of 1 accepts entries signed",
+          "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+        }
+      }
+    }
+  },
+  "step4_receipts": {
+    "schema": "csoai.receipts.by-payer/0.1",
+    "as_of": "2026-09-12T04:55:55.640Z",
+    "query": {
+      "payer": "0x6ea00613c15f2463bC10c7188215c4FA6f4943C6"
+    },
+    "honesty": {
+      "empty_is_not_none": "An empty list means 'this payer has no receipts'. status UNRECORDED means something different and stronger: this deployment has no receipt store bound, so nobody has a history here — including one who has paid. Read status before you read count.",
+      "what_the_signature_covers": "Each item carries `receipt`, an x402 offer-receipt JWS signed by did:web:csoai.org#board-attestation-1. The signature covers only the fields inside it (version, network, resourceUrl, payer, issuedAt, transaction) — NOT amount, asset, self or zero_value, which are this endpoint's own bookkeeping and are unsigned. Check the JWS, not this envelope: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against /.well-known/did.json without asking us anything.",
+      "what_a_receipt_is_not": "These are payment receipts. /api/receipts/batch serves card-v0 measurement leaves under the signed public root, which are a different artefact and are not evidence of payment."
+    },
+    "endpoints": {
+      "latest": "/api/receipts/latest",
+      "batch": "/api/receipts/batch",
+      "rail": "/.well-known/x402.json"
+    },
+    "status": "OK",
+    "items": [],
+    "count": 0
+  },
+  "status": "PAYMENT_FAILED"
+}
