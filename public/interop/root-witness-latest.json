@@ -1,24 +1,14 @@
 {
- "kind": "csoai.root-witness/v1",
- "as_of": "2026-09-12T10:40:19Z",
- "note": "Witnesses for the live signed public root — existence/time of these exact bytes. Not certification, not endorsement, not a rank sale. Never mint a token. ONE root anchor, never N leaves.",
+ "kind": "csoai.root-witness/v2",
+ "as_of": "2026-09-12T12:50:28Z",
+ "note": "Witnesses for the live signed public root \u2014 existence and time of these exact bytes. Every status here is derived from the artefact at run time, never remembered from when it was written. Not certification, not endorsement. ONE root anchor, never N leaves.",
  "artifact": {
   "url": "https://councilof.ai/root.json",
-  "also": "https://councilof.ai/api/root",
   "sha256": "0dd5a8d9fbeb8243d2e5c58ffe686381c04977bb658e0eca783f2f93f98035dc",
   "bytes": 16678,
   "merkle_root": "3446586f25a71eff0080617ed060727b4a79c6861367af32ee3a4e298b7cb5c3",
   "card_count": 197,
   "as_of": "2026-09-12T10:40:14Z"
- },
- "corpus_scope": {
-  "relationship": "SEPARATE_CORPORA",
-  "public_root_count": 197,
-  "public_root_sha256": "0dd5a8d9fbeb8243d2e5c58ffe686381c04977bb658e0eca783f2f93f98035dc",
-  "signed_card_count": 335,
-  "signed_card_id_overlap": 0,
-  "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
-  "note": "The 197 public-root leaves and 335 separately indexed signed cards are separate corpora with 0 identifier overlap. This root and its OTS proof do not anchor the signed-card index."
  },
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
@@ -31,10 +21,8 @@
    "card_count",
    "did_intended"
   ],
-  "preimage_canonical": "JSON sorted keys, separators (',',':'), ensure_ascii=false, UTF-8",
   "preimage_sha256": "d1c4b97aaa4bf932422327644b2ef29fdcba6d72f182ede06dfd028b62b43cdd",
-  "preimage_bytes": 274,
-  "verified_against_did_json": true
+  "preimage_bytes": 274
  },
  "witnesses": {
   "rekor": {
@@ -42,44 +30,17 @@
    "uuid": "108e9186e8c5677abb6d08cc70bce39d22291183ba748faea3075870a9999ae0e2a8a8f712e22e31",
    "logIndex": 2806476623,
    "integratedTime": 1789209617,
-   "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
-   "new": true,
-   "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2806476623",
-   "type": "rekord/x509 over the preimage bytes with the board signature",
-   "entry_file": "https://councilof.ai/interop/rekor-root-0dd5a8d9.json"
+   "inclusion_proof": true
   },
   "ots": {
+   "status": "CONFIRMED_BITCOIN",
+   "bitcoin_blocks": [
+    966664,
+    966665
+   ],
    "path": "public/interop/root-0dd5a8d9.json.ots",
-   "url": "https://councilof.ai/interop/root-0dd5a8d9.json.ots",
-   "proof_sha256": "759bd2f2a5e157a44926198a6deefe00043dbe6f61a80f24ac0302035696a126",
-   "subject_sha256": "0dd5a8d9fbeb8243d2e5c58ffe686381c04977bb658e0eca783f2f93f98035dc",
-   "bitcoin_blocks": [],
-   "observed_at": "2026-09-12T10:40:19Z",
-   "scope": "PUBLIC_ROOT_BYTES_ONLY",
-   "status": "STAMPED_PENDING_BITCOIN",
-   "note": "Status is derived from the proof bytes. Pending is not a Bitcoin timestamp."
-  },
-  "eas_base": {
-   "status": "NOT_YET",
-   "reason": "no EAS attestation in the append-only log matches this root.json sha256",
-   "log": "https://councilof.ai/interop/eas-root-attestations.json"
-  },
-  "xrpl_memo": {
-   "status": "NOT_YET",
-   "reason": "needs a funded XRPL account (owner); one memo tx carrying sha256(root.json)"
+   "note": "status re-derived from the proof's own attestations on every run"
   }
  },
- "verify_hints": [
-  "https://councilof.ai/signed/HOW-TO-VERIFY-ROOT.md"
- ],
- "conflict": {
-  "status": "NONE",
-  "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
-  "as_of": "2026-09-12T10:40:14Z",
-  "merkle_root": "3446586f25a71eff0080617ed060727b4a79c6861367af32ee3a4e298b7cb5c3",
-  "sidecars_scanned": 25,
-  "conflicts": [],
-  "byte_variants": [],
-  "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
- }
+ "boundary": "A timestamp proves these bytes existed at that time. It says nothing about whether any measurement inside them is correct."
 }
