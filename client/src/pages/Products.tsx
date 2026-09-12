@@ -158,7 +158,7 @@ export default function Products() {
           <p className="mt-1 text-xs text-emerald-200/80">{toolSummary()}</p>
           <p className="mt-1 text-[11px] text-emerald-300/60">POST /mcp</p>
         </a>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify" target="_blank" rel="noreferrer">
+        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="https://github.com/CSOAI-ORG/councilof-ai/tree/master/extensions/chrome-gspc-verify" target="_blank" rel="noreferrer">
           <p className="font-mono text-sm text-emerald-100">Browser extension source</p>
           <p className="mt-1 text-xs text-emerald-200/80">MV3 prototype — load unpacked from the public repository</p>
           <p className="mt-1 text-[11px] text-emerald-300/60">No browser-store install claimed</p>

@@ -67,10 +67,14 @@ export default function HomeVerify() {
             Empty means not measured. Not a certificate. Verification is free, no account.
             Measurement is metered; verify stays free.
           </p>
+          <p className="mt-4 max-w-2xl text-sm text-slate-600">
+            Building a router or agent? <a className="font-semibold text-emerald-800 underline underline-offset-4" href="/route-receipts">Create a route receipt from an OpenTelemetry trace</a>.
+            {" "}Start with the free schema and example. Conversion does not sign or publish your receipt.
+          </p>
           {/* Five access surfaces — the rail is reachable from every common agent + browser surface. */}
           <div className="mt-5 flex flex-wrap gap-2 max-w-3xl">
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/mcp">MCP · POST /mcp</a>
-            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify" target="_blank" rel="noreferrer">Chrome extension source</a>
+            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://github.com/CSOAI-ORG/councilof-ai/tree/master/extensions/chrome-gspc-verify" target="_blank" rel="noreferrer">Chrome extension source</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/tools">Grok plugin</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/what-is-new.html">Hermes skill</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://councilof.ai/api/gspc" target="_blank" rel="noreferrer">REST + curl</a>
