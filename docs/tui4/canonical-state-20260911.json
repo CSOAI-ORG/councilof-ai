@@ -199,19 +199,19 @@
         "name": "Official MCP Registry",
         "state": "LISTED",
         "servers": 354,
-        "issues": "19 broken repo URLs, stale gspc version"
+        "defects": 54
       },
       {
         "id": "smithery",
         "name": "Smithery",
         "state": "LISTED_WITH_DEFECT",
-        "issues": "Stale tool scan (4 phantom tools), 401 deploymentUrl, csoai/gspc stale duplicate"
+        "issue": "4 phantom tools, 401 deploymentUrl"
       },
       {
         "id": "glama",
         "name": "Glama",
         "state": "LISTED_UNSTABLE",
-        "issues": "40/40 connectors Unhealthy, 6/7 repos not installable, flagship not consistently discoverable"
+        "issue": "40/40 connectors Unhealthy"
       },
       {
         "id": "a2aregistry",
@@ -219,21 +219,22 @@
         "state": "LIVE",
         "agent_id": "48e5bba6-8848-4adc-8f92-b5fa2c0744e0",
         "version": "1.1.0",
-        "skills": 7,
-        "url": "https://councilof.ai/api/a2a"
+        "skills": 7
+      },
+      {
+        "id": "awesome-mcp",
+        "name": "awesome-mcp-servers",
+        "state": "PR_OPEN",
+        "pr": 14173
+      },
+      {
+        "id": "docker-mcp",
+        "name": "Docker Hub MCP",
+        "state": "LIVE",
+        "repo": "csoai/meok-sovereign"
       }
     ],
     "staged_awaiting_owner": [
-      {
-        "id": "a2aregistry",
-        "state": "STAGED",
-        "action": "POST agent-card well-known URI"
-      },
-      {
-        "id": "a2a-registry",
-        "state": "STAGED",
-        "action": "PR JSON agent file"
-      },
       {
         "id": "mcp-so",
         "state": "NOT_LISTED",
@@ -242,22 +243,12 @@
       {
         "id": "pulsemcp",
         "state": "UNKNOWN",
-        "action": "Re-check from unblocked network"
-      },
-      {
-        "id": "awesome-mcp",
-        "state": "STAGED",
-        "action": "Open PR (payload drafted)"
+        "action": "Re-check from unblocked network (403 block)"
       },
       {
         "id": "cursor-directory",
         "state": "STAGED",
-        "action": "Submit at cursor.directory/plugins/new"
-      },
-      {
-        "id": "docker-mcp",
-        "state": "STAGED",
-        "action": "PR to docker/mcp-registry"
+        "action": "Submit at cursor.directory/plugins/new (429 rate limited)"
       }
     ],
     "not_listed": [
@@ -302,7 +293,9 @@
     "witness_endpoint_exists": "PASS \u2014 functions/api/witness/status.ts + witness.ts",
     "agui_sse": "PASS \u2014 SSE stream returns 22 axes \u00b7 22 measured via curl (2026-09-11)",
     "mcp_initialize": "PASS \u2014 serverInfo csoai-gspc-mcp v1.4.2 via curl (2026-09-11)",
-    "a2aregistry_listing": "PASS \u2014 registered at 48e5bba6,7 skills, v1.1.0"
+    "a2aregistry_listing": "PASS \u2014 registered at 48e5bba6, 7 skills, v1.1.0",
+    "awesome_mcp_pr": "PASS \u2014 PR #14173 open",
+    "docker_hub": "PASS \u2014 csoai/meok-sovereign listed"
   },
   "claims_rejected": [
     "Registry v1.4.0 is current (live is v1.4.2)",
