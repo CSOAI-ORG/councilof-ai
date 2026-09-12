@@ -1,0 +1,173 @@
+name: post-merge-prover
+
+# G1.6 (2026-09-12 brief) — every lane's done-when curls become a post-deploy job.
+# After a PR merges: wait for the site deploy of the merge commit, then probe
+#   1. the generic trust surface on both hosts, and
+#   2. the PR body's own done-when curls — GET-only, estate hosts only, strictly
+#      extracted (a PR body can never smuggle a non-GET or off-estate call).
+# Results are commented back onto the merged PR. Read-only against production;
+# the only write is the PR comment. Not a certification — a probe report.
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  actions: read
+  pull-requests: write
+
+concurrency:
+  group: post-merge-prover-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  prove:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+    steps:
+      - name: Wait for the merge commit's site deploy
+        id: wait
+        run: |
+          set -euo pipefail
+          echo "waiting for 'Build + deploy site' on $MERGE_SHA"
+          DEPLOY_OK="skipped"
+          for i in $(seq 1 3); do
+            RID=$(gh run list --workflow deploy.yml --commit "$MERGE_SHA" --json databaseId -L 1 -q '.[0].databaseId // empty' || true)
+            [ -n "$RID" ] && break
+            sleep 60
+          done
+          if [ -z "${RID:-}" ]; then
+            echo "no deploy run for $MERGE_SHA (workflow-only change?) — probing anyway after grace"
+            sleep 120
+          else
+            for i in $(seq 1 14); do
+              ST=$(gh run view "$RID" --json status,conclusion -q '.status + " " + (.conclusion // "-")')
+              echo "deploy run $RID: $ST"
+              case "$ST" in
+                "completed success") DEPLOY_OK="green"; break ;;
+                "completed "*) DEPLOY_OK="failed"; break ;;
+              esac
+              sleep 45
+            done
+          fi
+          echo "deploy=$DEPLOY_OK" >> "$GITHUB_OUTPUT"
+
+      - name: Probe both hosts + the PR's done-when curls
+        id: probe
+        env:
+          DEPLOY: ${{ steps.wait.outputs.deploy }}
+        run: |
+          set -uo pipefail
+          gh pr view "$PR_NUMBER" --json title,body -q '{title: .title, body: .body}' > pr.json
+          python3 - <<'PY'
+          import json, os, re, subprocess
+          from urllib.parse import urljoin, urlsplit
+
+          UA = ["-A", "csoai-post-merge-prover/0"]
+          ALLOWED_HOSTS = {"councilof.ai", "csoai.org", "proofof.ai"}
+
+          def allowed(url):
+              parsed = urlsplit(url)
+              try:
+                  port = parsed.port
+              except ValueError:
+                  return False
+              return (
+                  parsed.scheme == "https"
+                  and parsed.hostname in ALLOWED_HOSTS
+                  and parsed.username is None
+                  and parsed.password is None
+                  and port in (None, 443)
+              )
+
+          def probe(url):
+              current = url
+              for _ in range(5):
+                  if not allowed(current):
+                      return "BLOCKED_REDIRECT"
+                  out = subprocess.run(
+                      [
+                          "curl", "-sS", "--max-time", "25",
+                          "--proto", "=https", "--proto-redir", "=https",
+                          *UA, "-o", "/dev/null",
+                          "-w", "%{http_code}\n%{redirect_url}", current,
+                      ],
+                      capture_output=True, text=True,
+                  )
+                  code, _, redirect = out.stdout.partition("\n")
+                  code = code.strip() or "000"
+                  redirect = redirect.strip()
+                  if code.startswith("3") and redirect:
+                      current = urljoin(current, redirect)
+                      continue
+                  return code
+              return "TOO_MANY_REDIRECTS"
+
+          pr = json.load(open("pr.json"))
+          results = []
+
+          # 1. generic trust surface — the deploy must never take these down.
+          generic = [
+              "https://councilof.ai/",
+              "https://councilof.ai/root.json",
+              "https://councilof.ai/llms.txt",
+              "https://councilof.ai/api/gspc",
+              "https://csoai.org/.well-known/did.json",
+              # apex root: 308 redirect-parity per the 2026-09-02 owner ruling — follow it.
+              "https://csoai.org/root.json",
+          ]
+          for u in generic:
+              results.append((u, probe(u)))
+
+          # 2. done-when curls from the PR body — GET-only, estate hosts only.
+          #    Accepts raw URLs and `curl ... <url>` lines; anything else is ignored.
+          body = pr.get("body") or ""
+          urls = re.findall(r"https?://(?:councilof\.ai|csoai\.org|proofof\.ai)[^\s)\]\"'>\\`]*", body)
+          urls = [u.rstrip(".,;") for u in urls]
+          seen, extra = set(), []
+          for u in urls:
+              if u not in seen:
+                  seen.add(u)
+                  extra.append(u)
+          for u in extra[:12]:
+              results.append((u, probe(u)))
+
+          fails = [(u, c) for u, c in results if c != "200"]
+          report = {
+              "schema": "csoai.post-merge-probe/0.1",
+              "pr": int(os.environ["PR_NUMBER"]),
+              "merge_sha": os.environ["MERGE_SHA"][:12],
+              "deploy": os.environ.get("DEPLOY", "?"),
+              "probed": len(results),
+              "failed": len(fails),
+              "results": [{"url": u, "http": c} for u, c in results],
+          }
+          json.dump(report, open("probe-report.json", "w"), indent=1)
+          lines = [f"| `{u}` | {c} |" for u, c in results]
+          md = [
+              f"### Post-merge probe — PR #{report['pr']} ({report['merge_sha']})",
+              "",
+              f"deploy: **{report['deploy']}** · probed {report['probed']} URLs · "
+              f"**{report['failed']} failed**",
+              "",
+              "| url | http |", "|---|---|", *lines, "",
+              "Derived live from both hosts. Done-when curls were extracted GET-only from this PR's "
+              "body (estate hosts only). A non-200 here is a measurement of the deploy, not a "
+              "certification of anything.",
+          ]
+          open("probe-comment.md", "w").write("\n".join(md))
+          print(json.dumps(report, indent=1))
+          PY
+
+      - name: Comment the probe report on the merged PR
+        if: always()
+        run: |
+          set -euo pipefail
+          gh pr comment "$PR_NUMBER" --body-file probe-comment.md
+          echo "commented on PR #$PR_NUMBER"
