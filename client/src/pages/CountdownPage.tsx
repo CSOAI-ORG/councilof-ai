@@ -142,6 +142,10 @@ export default function CountdownPage() {
                 <Link href="/cra-readiness" className="text-emerald-300 underline">
                   /cra-readiness
                 </Link>
+                . Article 50 marking verification services:{" "}
+                <Link href="/art50" className="text-emerald-300 underline">
+                  /art50
+                </Link>
                 .
               </p>
             </section>
