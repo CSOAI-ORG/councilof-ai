@@ -1,0 +1,28 @@
+{
+  "schema": "csoai.deep-measurements.evm-reader/1.0",
+  "generated_at": "2026-09-12T04:14:26.723985+00:00",
+  "code_revision": "finance/deep-measurements-20260911",
+  "measurement": {
+    "subject": "RLUSD",
+    "chain": "ethereum",
+    "contract": "0x8292bb45bf1ee4d140127049757c2e0ff06317ed",
+    "reader_type": "EVM_ERC20_TOTAL_SUPPLY",
+    "source": "https://ethereum-rpc.publicnode.com",
+    "query": "{\"method\": \"eth_call\", \"params\": [{\"to\": \"0x8292bb45bf1ee4d140127049757c2e0ff06317ed\", \"data\": \"0x18160ddd\"}, \"latest\"]}",
+    "query_method": "JSON-RPC eth_call",
+    "finalized_block": 25958868,
+    "raw_supply_hex": "0x0000000000000000000000000000000000000000046d042a8ad37ab7ea819735",
+    "raw_supply_decimal": "1369732627856031556976088885",
+    "raw_response_hash": "ba572c69a26d50e45007cd9b7429c9fcb3b00922a092b2ecc5a8590f74c8c835",
+    "normalized_supply": 1369732627.8560317,
+    "decimals": 18,
+    "code_revision": "finance/deep-measurements-20260911",
+    "observed_at": "2026-09-12T04:14:26.723985+00:00",
+    "replay_result": "REPRODUCIBLE at block 25958868 against any public Ethereum node",
+    "terms_boundary": "publicnode.com, no auth",
+    "correction_link": "https://councilof.ai/api/corrections",
+    "measurement_state": "MEASURED",
+    "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY",
+    "cross_deployment": "RLUSD measured on both XRPL (ledger 106913042) and Ethereum (block {block}) \u2014 cross-deployment verified"
+  }
+}
