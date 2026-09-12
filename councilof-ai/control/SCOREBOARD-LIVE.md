@@ -7,7 +7,7 @@
 | Counter | Value |
 |---------|-------|
 | Canonical subjects indexed | 425 |
-| Subjects deeply measured | 58 |
+| Subjects deeply measured | 61 |
 | Chains covered | 15 |
 | Signed cards verified | 371/371 |
 | Root leaves | 167 |
@@ -19,7 +19,7 @@
 | Total spend | $0 |
 | Attributable revenue | 0.02 USDC |
 
-## Deep Measurement Coverage (58 measurements, 15 chains)
+## Deep Measurement Coverage (61 measurements, 15 chains)
 
 | Chain | Count | Key Assets |
 |-------|-------|------------|
