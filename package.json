@@ -8,7 +8,7 @@
   "scripts": {
     "guard:evidence-integrity": "node scripts/evidence-integrity-gate.mjs --selftest && node scripts/evidence-integrity-gate.mjs",
     "guard:regulatory-inventory": "node scripts/regulatory-inventory-gate.mjs --selftest && node scripts/regulatory-inventory-gate.mjs",
-    "guard:sitemap-truth": "node scripts/sitemap-truth-gate.mjs --selftest && node scripts/sitemap-truth-gate.mjs",
+    "guard:sitemap-truth": "node --test scripts/sitemap-withdrawal.node-test.mjs && node scripts/sitemap-truth-gate.mjs --selftest && node scripts/sitemap-truth-gate.mjs",
     "guard:stablecoin-readiness": "PYTHONPATH=scripts python3 -m unittest scripts/test_stablecoin_readiness.py && python3 scripts/check_stablecoin_readiness.py",
     "guard:mill-receipt-readiness": "node scripts/build-mill-receipt-readiness.mjs --check",
     "guard:council-truth": "node scripts/council-runtime-truth-gate.mjs --selftest && node scripts/council-runtime-truth-gate.mjs && node scripts/arena-route-truth-guard.mjs --selftest && node scripts/arena-route-truth-guard.mjs",

@@ -436,6 +436,8 @@ let blogSkipped = 0;
 let blogUnbuilt = 0;
 for (const slug of blogSlugs) {
   const bp = `/blog/${slug}`;
+  // A prerendered withdrawal notice is not an indexable article.
+  if (reviewNoticePaths.has("/blog/:slug")) { blogSkipped++; continue; }
   // Not snapshotted → the static host 404s it → it must not be in the sitemap.
   if (!builtBlog.has(slug)) { blogUnbuilt++; continue; }
   if (redirectRules.has(bp) || redirectRules.has(bp + "/")) { blogSkipped++; continue; }
@@ -557,7 +559,7 @@ console.log(
   `[sitemap] ${finalPaths.length} URLs -> public/sitemap.xml ` +
     `(skipped ${skippedParams} :param routes, ${skippedJunk} junk/legacy, ` +
     `${droppedRedirect} redirect-to-elsewhere, ${blogUnbuilt} unbuilt blog slugs (404), ` +
-    `${blogSkipped} redirected blog slugs; ` +
+    `${blogSkipped} redirected or withdrawn blog slugs; ` +
     `${rewritten} rewritten to their trailing-slash canonical; ` +
     `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod=${today})`
 );
