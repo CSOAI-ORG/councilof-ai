@@ -22,6 +22,40 @@ export function setMetaDescription(content: string): void {
   m.content = content;
 }
 
+export function setPageMetadata({
+  title,
+  description,
+  openGraphTitle = title,
+  openGraphDescription = description,
+  openGraphType = "website",
+}: {
+  title: string;
+  description: string;
+  openGraphTitle?: string;
+  openGraphDescription?: string;
+  openGraphType?: "website" | "article";
+}): void {
+  document.title = title;
+  setMetaDescription(description);
+
+  const setMeta = (selector: string, attribute: "name" | "property", key: string, content: string) => {
+    let meta = document.querySelector(selector) as HTMLMetaElement | null;
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute(attribute, key);
+      document.head.appendChild(meta);
+    }
+    meta.content = content;
+  };
+
+  setMeta('meta[property="og:type"]', "property", "og:type", openGraphType);
+  setMeta('meta[property="og:title"]', "property", "og:title", openGraphTitle);
+  setMeta('meta[property="og:description"]', "property", "og:description", openGraphDescription);
+  setMeta('meta[name="twitter:card"]', "name", "twitter:card", "summary");
+  setMeta('meta[name="twitter:title"]', "name", "twitter:title", openGraphTitle);
+  setMeta('meta[name="twitter:description"]', "name", "twitter:description", openGraphDescription);
+}
+
 export function formatCurrency(cents: number, currency = 'USD'): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',

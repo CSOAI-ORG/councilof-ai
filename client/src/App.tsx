@@ -185,6 +185,8 @@ const Honesty = lazy(() => import("./pages/Honesty"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const Doctrine = lazy(() => import("./pages/Doctrine"));
+const PostmortemX402 = lazy(() => import("./pages/PostmortemX402"));
+const ThreeRootCeremony = lazy(() => import("./pages/ThreeRootCeremony"));
 const TransparencyCop = lazy(() => import("./pages/TransparencyCop"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
@@ -383,6 +385,8 @@ const ROUTE_TITLES: Record<string, string> = {
   "/methodology": "Methodology | CSOAI",
   "/answers": "Answers — measurement explainers | Council of AI",
   "/doctrine": "Doctrine — measurement, not certification | Council of AI",
+  "/postmortems/x402-settlement-reading": "X402 settlement postmortem — the record was not lost | Council of AI",
+  "/events/three-root-ceremony": "Three-root ceremony — public witness record | Council of AI",
   "/transparency-cop": "Transparency Code — detection/verify tool, C2PA planned | Council of AI",
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
   "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
@@ -446,6 +450,14 @@ function RouteTitle() {
   useEffect(() => {
     const t = ROUTE_TITLES[location];
     if (t) document.title = t;
+
+    // Keep the shell's single canonical record aligned after client-side navigation.
+    const routePath = location.replace(/\/+$/, "") || "/";
+    const canonical = `https://councilof.ai${routePath === "/" ? "" : routePath}`;
+    const link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (link) link.href = canonical;
+    document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", canonical);
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:url"]')?.setAttribute("content", canonical);
   }, [location]);
   return null;
 }
@@ -719,6 +731,8 @@ function App() {
                   <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/doctrine" component={Doctrine} />
+                  <Route path="/postmortems/x402-settlement-reading" component={PostmortemX402} />
+                  <Route path="/events/three-root-ceremony" component={ThreeRootCeremony} />
                   <Route path="/transparency-cop" component={TransparencyCop} />
                   <Route path="/board/models" component={MeasuredModels} />
                   <Route path="/board" component={MeasurementBoard} />

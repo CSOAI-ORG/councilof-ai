@@ -648,6 +648,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Eunomia Indices"
  },
  {
+  "path": "/events/three-root-ceremony",
+  "comp": "ThreeRootCeremony",
+  "title": "Three Root Ceremony"
+ },
+ {
   "path": "/evidence-rail",
   "comp": "EvidenceRail",
   "title": "Evidence Rail"
@@ -1381,6 +1386,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/policy-generator",
   "comp": "PolicyGenerator",
   "title": "Policy Generator"
+ },
+ {
+  "path": "/postmortems/x402-settlement-reading",
+  "comp": "PostmortemX402",
+  "title": "Postmortem X402"
  },
  {
   "path": "/pricing",
