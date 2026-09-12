@@ -27,18 +27,15 @@
   ],
   "verified_facts": {
     "public_root": {
-      "card_count": 197,
-      "merkle_root": "3446586f25a71eff0080617ed060727b4a79c6861367af32ee3a4e298b7cb5c3",
-      "sha256": "0dd5a8d9fbeb8243d2e5c58ffe686381c04977bb658e0eca783f2f93f98035dc",
-      "as_of": "2026-09-12T10:40:14Z",
+      "card_count": 228,
+      "merkle_root": "dc420b2c30c5e503",
+      "merkle_root_full": "dc420b2c30c5e503… (see live root.json)",
+      "sha256": "fcb3bea47de681bf…",
+      "as_of": "2026-09-12T13:27:43Z",
+      "ots": "STAMPED_PENDING_BITCOIN (stamped 13:27Z; confirmation expected within hours; pod cron upgrades every 8h, sidecar resync via witness_public_root.py required in same PR)",
       "signer": "did:web:csoai.org#board-attestation-1",
-      "signature_check": "VALID — Ed25519 verified over canonical preimage {kind,schema,as_of,merkle_root,card_count,did_intended}, JEEVES 2026-09-12T12:05Z",
-      "inclusion_check": "VALID — leaf 021455f6… verified against live merkle via /api/proof",
-      "rekor": "WITNESSED — logIndex 2806476623, logID c0d23d6a…, entry rekor-root-0dd5a8d9.json",
-      "ots": "STAMPED_PENDING_BITCOIN — root-0dd5a8d9.json.ots stamped 2026-09-12T10:40:19Z, bitcoin_blocks empty (expected; blocks take hours). Pod cron upgrades every 8h.",
-      "parity": "councilof.ai == councilof-ai.pages.dev byte-identical 2026-09-12T12:05Z",
-      "staleness": "as_of ~1.4h old at check time — fresh",
-      "note": "Supersedes 169-card root (94e99db5…, as_of 2026-09-11T12:45:44Z). Refresh before quoting."
+      "verified_by": "JEEVES TUI1 via live root.json + root-witness-latest.json, 2026-09-12T14:15Z",
+      "note": "Root advances multiple times daily (publisher automation). ALWAYS re-fetch before quoting. Chain: 154-leaf fe3a9e24 (CONFIRMED 4 blocks) → 197-card 0dd5a8d9 (CONFIRMED blocks 966664/966665, PRs #2006/#2016) → 228-card dc420b2c (current, pending)."
     },
     "x402_door": {
       "discovery": "https://councilof.ai/.well-known/x402.json live, x402Version 2, scheme exact, network eip155:8453, mode live",
@@ -51,7 +48,12 @@
       "evidence": "public/interop/root-fe3a9e24.json.ots upgraded 2026-09-12 (PR #1962). Independent verification: parsed proof bytes, extracted BitcoinBlockHeaderAttestations at heights 965528/965532/965548/965554, recomputed op-chain from file digest, matched each block's merkle root via blockstream.info. Live-served bytes (4,986B) verified on both domains.",
       "caveat": "NEVER present this 154-leaf root as current. Current root is 197 cards.",
       "verified_by": "JEEVES TUI1, 2026-09-12T12:05Z"
-    }
+    },
+    "doctrine_lessons_2026_09_12": [
+      "OTS upgrade PRs must resync the witness sidecar in the same PR via scripts/witness_public_root.py (not witness-root.py — its output predates the gate contract).",
+      "The root-witness release gate and stablecoin readiness gate derive truth from proof bytes; hardcoded status strings rot within hours.",
+      "Pod rootfs is ephemeral: after any pod restart run bash /workspace/pod-bootstrap.sh (on the persistent volume)."
+    ]
   },
   "lanes": {
     "TUI1": {
