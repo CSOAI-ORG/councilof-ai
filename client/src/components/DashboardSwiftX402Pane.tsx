@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 
 const OsPanels = lazy(() => import("@/components/OsPanels"));
 const StablecoinReadinessView = lazy(() => import("@/components/StablecoinReadinessView"));
+const GspcCoverageLedger = lazy(() => import("@/components/GspcCoverageLedger"));
 
 /**
  * Council OS tab — SWIFT census + x402 doors (owner stranger-walk 6 Sep 2026).
@@ -20,6 +21,9 @@ export default function DashboardSwiftX402Pane() {
           frozen run lands. Board scores stay <code>GET /api/gspc</code> only.
         </p>
       </div>
+      <Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Loading master coverage…</div>}>
+        <GspcCoverageLedger />
+      </Suspense>
       <Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Loading panels…</div>}>
         <OsPanels />
       </Suspense>
