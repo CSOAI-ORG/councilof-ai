@@ -1,0 +1,131 @@
+name: public-root-candidate-upgrade
+
+# Maintain the exact candidate banked by public-root.yml. A pending proof must be
+# upgraded in place; generating a new root would change the digest and restart the
+# Bitcoin clock. Promotion is armed only after the proof bytes themselves contain a
+# Bitcoin attestation and the full candidate release gate passes.
+on:
+  schedule:
+    - cron: "17,32,47,2 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: public-root-candidate-upgrade
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Find the one open candidate
+        id: candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          url=$(gh pr list --repo "$REPO" --head public-root/pending --base master --state open --json url --jq '.[0].url // ""')
+          if [ -z "$url" ]; then
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "No pending public-root PR."
+          else
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "url=$url" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.candidate.outputs.exists == 'true'
+        with:
+          ref: public-root/pending
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        if: steps.candidate.outputs.exists == 'true'
+        with:
+          python-version: "3.11"
+
+      - name: Install witness dependencies
+        if: steps.candidate.outputs.exists == 'true'
+        run: pip install -q cryptography opentimestamps-client
+
+      - name: Upgrade the exact candidate proof
+        if: steps.candidate.outputs.exists == 'true'
+        id: ots
+        run: |
+          set -euo pipefail
+          proof=$(python3 - <<'PY'
+          import json, re
+          from pathlib import Path
+          side = json.loads(Path("public/interop/root-witness-latest.json").read_text())
+          value = str(((side.get("witnesses") or {}).get("ots") or {}).get("path") or "")
+          if not re.fullmatch(r"public/interop/root-[0-9a-f]{8}\.json\.ots", value):
+              raise SystemExit(f"refusing unexpected candidate proof path: {value!r}")
+          print(value)
+          PY
+          )
+          if python3 scripts/ots-upgrade.py "$proof"; then
+            echo "confirmed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "confirmed=false" >> "$GITHUB_OUTPUT"
+            echo "The exact proof is still pending; candidate bytes remain untouched."
+          fi
+
+      - name: Refresh exact-root witnesses and derived views
+        if: steps.ots.outputs.confirmed == 'true'
+        run: |
+          set -euo pipefail
+          python3 scripts/witness_public_root.py
+          python3 scripts/build_stablecoin_readiness.py
+          python3 scripts/build_archive_index.py
+          python3 scripts/witness_public_root.py --recheck || true
+
+      - name: Prove the candidate is publishable
+        if: steps.ots.outputs.confirmed == 'true'
+        run: |
+          set -euo pipefail
+          python3 scripts/root-witness-release-gate.py --selftest
+          python3 scripts/root-witness-release-gate.py --phase candidate
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          side = json.loads(Path("public/interop/root-witness-latest.json").read_text())
+          ots = ((side.get("witnesses") or {}).get("ots") or {})
+          assert ots.get("status") == "CONFIRMED_BITCOIN", ots
+          assert ots.get("bitcoin_blocks"), ots
+          print("promotion state: CONFIRMED_BITCOIN", ots["bitcoin_blocks"])
+          PY
+
+      - name: Commit the upgraded proof and exact witness state
+        if: steps.ots.outputs.confirmed == 'true'
+        env:
+          BRANCH: public-root/pending
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-public-root"
+          git config user.email "board@csoai.org"
+          git add public/interop/root-*.json.ots
+          git add public/interop/root-witness-*.json public/interop/root-witness-pointer.json
+          git add public/interop/stablecoin-universe-2026-09/readiness.json public/archive/index.json
+          if ! git diff --cached --quiet; then
+            git commit -m "public-root: upgrade exact candidate to Bitcoin-confirmed"
+            git push origin "HEAD:$BRANCH"
+          fi
+
+      - name: Run hosted gates on the confirmed candidate
+        if: steps.ots.outputs.confirmed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pr-gates.yml --ref public-root/pending
+
+      - name: Arm promotion only after Bitcoin confirmation
+        if: steps.ots.outputs.confirmed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          URL: ${{ steps.candidate.outputs.url }}
+        run: gh pr merge "$URL" --squash --auto
