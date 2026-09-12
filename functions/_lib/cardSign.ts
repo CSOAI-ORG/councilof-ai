@@ -15,6 +15,33 @@
 export const BOARD_ATTESTATION_DID = "did:web:csoai.org#board-attestation-1";
 export const PAYLOAD_CAP_BYTES = 3072;
 
+/**
+ * G1.3 THIN firewall (2026-09-12 doctrine lock: THIN never signed).
+ *
+ * One rule, three enforcement points that must never disagree:
+ *   1. HERE, called by /api/board-sign (the Pages signer) — fail closed with 422.
+ *   2. scripts/sign_financial_runs.py::sign_label_violation (the GHA client) — refuses
+ *      before the OIDC dance, so a labeled artifact never even asks for a signature.
+ *   3. functions/_lib/cardSign.test.ts — the canary: a deliberately THIN payload must be
+ *      rejected, and the CI log is the proof the gate bites.
+ *
+ * Precision notes (measured, not guessed): THIN/TEMPLATE match UPPERCASE at word
+ * boundaries only, so the real thin-banks dataset ("thin banks", lowercase) and words
+ * like NOTHING/WITHIN never trip it; `specimen` matches case-insensitively but the
+ * plural /specimens/* routes carry no word boundary and stay signable-adjacent text.
+ */
+const NEVER_SIGN_UPPER = /\b(THIN|TEMPLATE)\b/;
+const NEVER_SIGN_SPECIMEN = /\bspecimen\b/i;
+
+/** Returns the offending label, or null when the canonical text is signable. */
+export function signLabelViolation(canonicalText: string): string | null {
+  const upper = canonicalText.match(NEVER_SIGN_UPPER);
+  if (upper) return upper[0];
+  const specimen = canonicalText.match(NEVER_SIGN_SPECIMEN);
+  if (specimen) return specimen[0];
+  return null;
+}
+
 /** Canonical bytes: sorted keys, compact separators, non-ASCII kept as-is (ensure_ascii=false). */
 export function canonicalBytes(obj: unknown): Uint8Array {
   const rec = (v: unknown): unknown => {
