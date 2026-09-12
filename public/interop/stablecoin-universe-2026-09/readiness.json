@@ -16111,7 +16111,7 @@
     "x402_campaign": "0.01 USDC only for eligible existing-data SKUs; fresh compute excluded"
   },
   "coverage": {
-    "asset_measurements_bitcoin_anchored_via_current_root": 0,
+    "asset_measurements_bitcoin_anchored_via_current_root": 1,
     "asset_measurements_current_root_included": 1,
     "asset_measurements_rekor_witnessed_via_root": 1,
     "asset_measurements_signed": 1,
@@ -16194,8 +16194,11 @@
       "index_sha256": "30a83f220d2e5de7cd56efdc97dad462fbae288743710063c7e9eef1014acb38",
       "merkle_root": "dc420b2c30c5e5036b86d14861f470b81b909369ff880f2958d858abd661f66a",
       "opentimestamps": {
-        "bitcoin_blocks": [],
-        "state": "STAMPED_PENDING_BITCOIN",
+        "bitcoin_blocks": [
+          966686,
+          966690
+        ],
+        "state": "CONFIRMED_BITCOIN",
         "truth_rule": "STAMPED_PENDING_BITCOIN is submission evidence, not a Bitcoin anchor"
       },
       "rekor": {
