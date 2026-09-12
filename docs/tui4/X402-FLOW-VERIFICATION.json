@@ -1,0 +1,95 @@
+{
+  "schema": "csoai.x402-flow-verification/1.0",
+  "generated_at": "2026-09-12T06:07:04.634Z",
+  "steps": [
+    {
+      "step": 1,
+      "name": "Discovery",
+      "url": "https://councilof.ai/.well-known/x402.json",
+      "status": 200,
+      "ok": true,
+      "data": {
+        "mode": "live",
+        "network": "eip155:8453",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+        "resources": 9
+      }
+    },
+    {
+      "step": 2,
+      "name": "Free Door",
+      "url": "https://councilof.ai/api/free-door",
+      "status": 402,
+      "ok": true,
+      "data": {
+        "amount": "0",
+        "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a pri"
+      }
+    },
+    {
+      "step": 3,
+      "name": "Paid Resource Challenge",
+      "url": "https://councilof.ai/api/request-attestation?subject=test&axis=governance",
+      "status": 402,
+      "ok": true,
+      "data": {
+        "amount": "10000",
+        "network": "eip155:8453",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "scheme": "exact",
+        "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      }
+    },
+    {
+      "step": 4,
+      "name": "Payment",
+      "status": "BLOCKED",
+      "ok": false,
+      "blocker": "Self-wallet private key (0x4dB7...02B7) not available in this session. Requires owner action."
+    },
+    {
+      "step": 5,
+      "name": "MCP Discovery",
+      "url": "https://councilof.ai/mcp",
+      "status": 200,
+      "ok": true,
+      "data": {
+        "server": "csoai-gspc-mcp",
+        "version": "1.4.2",
+        "protocol": "2025-03-26"
+      }
+    },
+    {
+      "step": 6,
+      "name": "Agent Card",
+      "url": "https://councilof.ai/.well-known/agent-card.json",
+      "status": 200,
+      "ok": true,
+      "data": {
+        "name": "Council of AI — Measurement Agent",
+        "version": "1.1.0",
+        "extensions": 3
+      }
+    },
+    {
+      "step": 7,
+      "name": "Revenue State",
+      "url": "https://councilof.ai/api/revenue",
+      "status": 200,
+      "ok": true,
+      "data": {
+        "settled_usdc": 20000,
+        "payers": 1,
+        "self_settlements": 6
+      }
+    }
+  ],
+  "summary": {
+    "total_steps": 7,
+    "executed": 6,
+    "blocked": 1,
+    "success_condition": "outside agent can discover, pay, receive evidence, verify independently",
+    "current_state": "6/7 steps executed, 1 blocked on wallet key"
+  }
+}
