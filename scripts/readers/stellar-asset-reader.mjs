@@ -22,10 +22,10 @@ async function stellarGet(path) {
   return res.json();
 }
 
-async function readStellarAsset(assetCode, issuer) {
+export async function readStellarAsset(assetCode, issuer) {
   const record = {
     schema: "csoai.stellar-asset-reader/1.0",
-    reader_revision: "scripts/readers/stellar-asset-reader.mjs@1.0.0",
+    reader_revision: "scripts/readers/stellar-asset-reader.mjs@1.1.0",
     source: HORIZON,
     chain: "stellar",
     asset_code: assetCode,
@@ -56,7 +56,8 @@ async function readStellarAsset(assetCode, issuer) {
     code: asset.asset_code,
     issuer: asset.asset_type === "credit_alphanum12" ? asset.asset_issuer : null,
     num_accounts: parseInt(asset.num_accounts),
-    amount: parseFloat(asset.amount),
+    amount: String(asset.amount),
+    amount_encoding: "exact_decimal_string",
     flags: asset.flags,
   };
 
@@ -67,8 +68,9 @@ async function readStellarAsset(assetCode, issuer) {
     );
     if (book.bids && book.bids.length > 0) {
       record.price_reference = {
-        bid_price: parseFloat(book.bids[0].price),
-        bid_amount: parseFloat(book.bids[0].amount),
+        bid_price: String(book.bids[0].price),
+        bid_amount: String(book.bids[0].amount),
+        encoding: "exact_decimal_string",
       };
     }
   } catch {
@@ -92,18 +94,18 @@ async function readStellarAsset(assetCode, issuer) {
   return record;
 }
 
-// CLI
-const [,, assetCode, issuer] = process.argv;
-if (!assetCode || !issuer) {
-  console.error("Usage: node stellar-asset-reader.mjs <asset_code> <issuer>");
-  console.error("Example: node stellar-asset-reader.mjs USDC GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3THOJ22IGXQIWE4BML");
-  process.exit(1);
-}
-
-try {
-  const result = await readStellarAsset(assetCode, issuer);
-  console.log(JSON.stringify(result, null, 2));
-} catch (err) {
-  console.error("Error:", err.message);
-  process.exit(1);
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const [,, assetCode, issuer] = process.argv;
+  if (!assetCode || !issuer) {
+    console.error("Usage: node stellar-asset-reader.mjs <asset_code> <issuer>");
+    console.error("Example: node stellar-asset-reader.mjs USDC GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3THOJ22IGXQIWE4BML");
+    process.exit(1);
+  }
+  try {
+    const result = await readStellarAsset(assetCode, issuer);
+    console.log(JSON.stringify(result, null, 2));
+  } catch (err) {
+    console.error("Error:", err.message);
+    process.exit(1);
+  }
 }
