@@ -66,12 +66,17 @@ describe("every directory row names the surface its state came from", () => {
     expect(bad.map((b) => b.id), "a scan of our own files says nothing about a directory").toEqual([]);
   });
 
-  it("does not rest a state on `rendered` alone where an authoritative surface was available", () => {
+  it("does not let a rendered search result assert LISTED", () => {
     // A rendered search echoes the query. On 2026-09-05 that produced a false LISTED (glama's
     // link count) and a false NOT_LISTED (smithery) on the same day.
     const rendered = doc2.directories.filter((r) => r.surface === "rendered");
     for (const r of rendered) {
-      expect(["UNKNOWN", "NOT_LISTED"], `${r.id}: rendered may not assert LISTED`).toContain(r.state);
+      if (r.state !== "LISTED") continue;
+      const full = doc.directories.find((d) => d.id === r.id)!;
+      expect(full.url, `${r.id}: rendered LISTED needs an exact detail URL`).toMatch(/\/servers?\//i);
+      expect(full.evidence, `${r.id}: rendered LISTED needs a successful detail-page response`).toMatch(/\b200\b/);
+      expect(full.evidence, `${r.id}: rendered LISTED needs the repository identity`).toMatch(/CSOAI-ORG\/councilof-ai/i);
+      expect(full.evidence, `${r.id}: rendered LISTED must preserve tool-health limits`).toMatch(/does not prove tool health|unmeasured/i);
     }
   });
 });
