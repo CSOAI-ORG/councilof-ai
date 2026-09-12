@@ -34,12 +34,13 @@ const STATIC: Record<string, unknown> = {
   "/signed/card_index.json": { cards: [{}, {}, {}] },
 };
 
-function stubStatic(facilitator?: (u: string) => Response) {
+function stubStatic(facilitator?: (u: string) => Response, overrides: Record<string, unknown> = {}) {
+  const fixtures = { ...STATIC, ...overrides };
   vi.stubGlobal("fetch", async (u: string | URL | Request) => {
     const url = new URL(String(u instanceof Request ? u.url : u));
     if (facilitator && (url.pathname.endsWith("/verify") || url.pathname.endsWith("/settle"))) return facilitator(url.pathname);
     const key = url.pathname;
-    if (key in STATIC) return new Response(JSON.stringify(STATIC[key]), { status: 200 });
+    if (key in fixtures) return new Response(JSON.stringify(fixtures[key]), { status: 200 });
     return new Response("nope", { status: 404 });
   });
 }
@@ -93,6 +94,28 @@ describe("Tier 1 — /api/request-attestation", () => {
     expect(b.card.payload).toMatchObject({ status: "COMMISSIONED", reserve_count: 2, fresh_run: "UNMEASURED" });
     expect(b.bytes).toBeLessThanOrEqual(3072);
     expect(JSON.stringify(b.card)).not.toMatch(/accuracy/);
+  });
+
+  it("paid: returns at most 24 reserve references while reporting the complete match count", async () => {
+    const cells = Array.from({ length: 30 }, (_, i) => ({
+      model: `target-model-${i}`,
+      axis: "gov",
+      card: String(i).padStart(4, "0"),
+      card_url: `/signed/cards/${i}.json`,
+      signed: true,
+    }));
+    stubStatic(
+      (p) => new Response(JSON.stringify(p.endsWith("/verify")
+        ? { isValid: true }
+        : { success: true, transaction: "0xtx", network: "base", payer: "0xp" })),
+      { "/signed/card-matrix.json": { as_of: "2026-09-12T00:00:00Z", cells } },
+    );
+    const hdr = btoa(JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }));
+    const r = await ras(ctx("/api/request-attestation?subject=target-model", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
+    expect(r.status).toBe(200);
+    const b = await r.json();
+    expect(b.card.payload.reserve).toHaveLength(24);
+    expect(b.card.payload).toMatchObject({ reserve_count: 30, reserve_returned: 24, reserve_limit: 24 });
   });
 });
 

@@ -18,7 +18,11 @@ describe("commission discovery contract", () => {
     const challenge = await response.json() as { resource: { description: string } };
     expect(challenge.resource.description).toBe(door!.description);
     expect(door!.description).toContain("commission receipt");
+    expect(door!.description).toContain("up to 24");
+    expect(door!.description).toContain("reserve_count reports the full match count");
+    expect(door!.description).toContain("signed when the Pages signing key is available");
     expect(door!.description).toContain("Payment never mints a MEASURED cell");
     expect(door!.description).not.toContain("rooted and witnessed");
+    expect(door!.description).not.toMatch(/\bevery\b/i);
   });
 });

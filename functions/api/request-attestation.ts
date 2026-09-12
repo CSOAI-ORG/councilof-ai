@@ -12,11 +12,11 @@
  *                                                        Pages key is present, else sig_ed25519:null
  *                                                        with "sig_ed25519" in unmeasured[]. ≤3KB.
  *
- * What the buyer gets: the commission receipt (their settle tx cited in source_urls), a re-serve
- * pointer to every signed measurement card that already exists for the subject/axis, and an
- * honest `fresh_run` state. A payment NEVER mints a MEASURED cell; fresh cells appear only when a
- * published run exists. Root inclusion of the receipt is the public-root workflow's job (one
- * writer) — listed in unmeasured[] until then.
+ * What the buyer gets: the commission receipt (their settle tx cited in source_urls), references
+ * to at most 24 signed measurement cards whose model field contains the requested subject text
+ * (reserve_count reports the full match count), and an honest `fresh_run` state. A payment NEVER
+ * mints a MEASURED cell; fresh cells appear only when a published run exists. Root inclusion of
+ * the receipt is the public-root workflow's job (one writer) — listed in unmeasured[] until then.
  *
  * Bazaar: declares extensions.bazaar (info + schema) — the conformant discovery block. No
  * `discoverable: true` (not in the spec; x402 #2112 / #2207).
@@ -141,7 +141,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         per: "request",
         lid: CSOAI_LID,
         never: ["rank", "certificate", "grade", "score-sale"],
-        deliverable: "one card-v0 leaf, surface ras.commission, ≤3KB payload, signed when the Pages key is present",
+        deliverable: description,
         preview,
         rail: railMode(env),
         not_paid_reason: payment.reason,
@@ -169,6 +169,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     settle: { network: payment.settlement?.network || null, transaction: tx, payer: payment.settlement?.payer || null },
     reserve: reserve.cells.slice(0, 24).map((c) => ({ axis: c.axis, card: c.card })),
     reserve_count: reserve.cells.length,
+    reserve_returned: Math.min(reserve.cells.length, 24),
+    reserve_limit: 24,
     fresh_run: "UNMEASURED",
     never: ["rank", "certificate", "grade"],
     lid: CSOAI_LID,
