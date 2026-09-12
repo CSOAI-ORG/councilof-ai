@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import unittest
 from pathlib import Path
 
@@ -17,7 +18,10 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         self.assertEqual(425, self.document["coverage"]["indexed_assets"])
         self.assertEqual(1, self.document["coverage"]["deeply_measured_assets"])
         self.assertEqual(424, self.document["coverage"]["unmeasured_assets"])
-        self.assertEqual(0, self.document["coverage"]["asset_measurements_bitcoin_anchored_via_current_root"])
+        witness = json.loads((Path(".") / "public/interop/root-witness-latest.json").read_text())
+        w_blocks = (((witness.get("witnesses") or {}).get("ots") or {}).get("bitcoin_blocks")) or []
+        expected = self.document["coverage"]["deeply_measured_assets"] if w_blocks else 0
+        self.assertEqual(expected, self.document["coverage"]["asset_measurements_bitcoin_anchored_via_current_root"])
         self.assertEqual(1, self.document["coverage"]["post_freeze_discovery_candidates"])
         self.assertEqual("USBDC", self.document["discovery_candidates"][0]["symbol"])
         self.assertEqual("UNMEASURED", self.document["discovery_candidates"][0]["measurement_state"])
