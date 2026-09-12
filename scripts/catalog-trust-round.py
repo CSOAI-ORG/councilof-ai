@@ -338,7 +338,8 @@ def run(out_dir: str, catalog_url: str):
     stamp_growth_fields(summary, out, prev=prev)
     archive = out / archive_name(deadline)
     archive.write_text(json.dumps(summary, indent=2) + "\n")
-    # The stable pointer the MCP x402_trust tool reads — always the newest round.
+    # The stable product pointer advances, while every observation remains
+    # available under its collision-free UTC archive filename.
     (out / "latest.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(counts, indent=1))
     print("wrote", archive, "and latest.json")
