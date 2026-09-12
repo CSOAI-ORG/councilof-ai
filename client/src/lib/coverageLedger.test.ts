@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCoverageLedger } from "./coverageLedger";
+import { buildCoverageLedger, isCoverageSnapshot } from "./coverageLedger";
 
 const input = {
   gspc: {
@@ -52,6 +52,22 @@ const input = {
 };
 
 describe("master GSPC coverage ledger", () => {
+  it("recognizes only the versioned machine-readable snapshot", () => {
+    expect(
+      isCoverageSnapshot({
+        schema: "csoai.master-coverage/0.1",
+        complete: true,
+        rows: [],
+      }),
+    ).toBe(true);
+    expect(
+      isCoverageSnapshot({ schema: "csoai.master-coverage/0.1", rows: [] }),
+    ).toBe(false);
+    expect(
+      isCoverageSnapshot({ schema: "wrong", complete: true, rows: [] }),
+    ).toBe(false);
+  });
+
   it("keeps indexed, measured, signed, anchored and paid as separate states", () => {
     const rows = buildCoverageLedger(input);
     const stablecoins = rows.find((row) => row.id === "stablecoins")!;

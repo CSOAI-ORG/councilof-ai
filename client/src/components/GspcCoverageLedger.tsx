@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ExternalLink, Grid3X3, RefreshCw } from "lucide-react";
 import {
   buildCoverageLedger,
+  isCoverageSnapshot,
   type CoverageCell,
   type CoverageLedgerInput,
+  type CoverageRow,
 } from "@/lib/coverageLedger";
 
 const SOURCES: Record<keyof CoverageLedgerInput, string> = {
@@ -54,27 +56,29 @@ function Cell({ cell }: { cell: CoverageCell }) {
 }
 
 export default function GspcCoverageLedger() {
-  const [input, setInput] = useState<CoverageLedgerInput | null>(null);
+  const [rows, setRows] = useState<CoverageRow[] | null>(null);
   const [reload, setReload] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
-    void Promise.all(
-      Object.entries(SOURCES).map(async ([key, url]) => [
-        key,
-        await readJson(url, controller.signal),
-      ]),
-    ).then((pairs) => {
+    void (async () => {
+      const snapshot = await readJson("/api/coverage", controller.signal);
+      if (isCoverageSnapshot(snapshot)) return snapshot.rows;
+      const pairs = await Promise.all(
+        Object.entries(SOURCES).map(async ([key, url]) => [
+          key,
+          await readJson(url, controller.signal),
+        ]),
+      );
+      return buildCoverageLedger(
+        Object.fromEntries(pairs) as CoverageLedgerInput,
+      );
+    })().then((nextRows) => {
       if (controller.signal.aborted) return;
-      setInput(Object.fromEntries(pairs) as CoverageLedgerInput);
+      setRows(nextRows);
     });
     return () => controller.abort();
   }, [reload]);
-
-  const rows = useMemo(
-    () => (input ? buildCoverageLedger(input) : []),
-    [input],
-  );
 
   return (
     <section
@@ -108,7 +112,7 @@ export default function GspcCoverageLedger() {
         <button
           type="button"
           onClick={() => {
-            setInput(null);
+            setRows(null);
             setReload((value) => value + 1);
           }}
           className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-white/20 px-3 text-xs font-semibold hover:bg-white/10"
@@ -117,7 +121,7 @@ export default function GspcCoverageLedger() {
         </button>
       </div>
 
-      {!input ? (
+      {!rows ? (
         <div className="p-6 text-sm text-slate-500">
           Reading all evidence doors…
         </div>
