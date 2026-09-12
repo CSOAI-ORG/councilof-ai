@@ -43,7 +43,9 @@ Before scaling outreach:
 1. One attributable outside buyer plus repeat intent; OR
 2. Two written pilot acceptances at stated price
 
-Neither condition is met. Revenue remains $0.00.
+Neither scale condition is met. The live revenue ledger currently records one distinct
+outside payer and one settlement totalling 0.02 USDC. That proves the rail has settled
+once; it does not establish repeat demand, retention, or product-market fit.
 
 ## Validation
 
