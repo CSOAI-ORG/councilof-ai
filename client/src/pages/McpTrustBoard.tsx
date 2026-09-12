@@ -61,8 +61,21 @@ function BucketBar({ label, value, total, tone }: { label: string; value: number
   );
 }
 
+type RoundDiff = {
+  kind?: string;
+  state?: string;
+  previous?: string;
+  previous_as_of?: string;
+  bucket_deltas?: Record<string, number>;
+  hosts_added?: string;
+  hosts_dropped?: string;
+  bucket_migrations?: string;
+  note?: string;
+};
+
 export default function McpTrustBoard() {
   const [snap, setSnap] = useState<Snapshot | null>(null);
+  const [diff, setDiff] = useState<RoundDiff | null>(null);
   const [state, setState] = useState<"loading" | "ok" | "empty">("loading");
 
   useEffect(() => {
@@ -81,6 +94,17 @@ export default function McpTrustBoard() {
         if (d?.kind === "csoai.mcp-trust-snapshot/0.1" && d.counts) {
           setSnap(d);
           setState("ok");
+          // The delta is the board: the round writer emits diff-<date>.json
+          // beside each snapshot once two rounds exist. Absent = first round.
+          const stamp = (d.as_of || "").split("T")[0];
+          if (stamp) {
+            fetch(`/interop/mcp-trust/diff-${stamp}.json`)
+              .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+              .then((dd: RoundDiff) => {
+                if (ok && dd?.kind === "csoai.mcp-trust-diff/0.1") setDiff(dd);
+              })
+              .catch(() => {});
+          }
         } else {
           setState("empty");
         }
@@ -150,6 +174,53 @@ export default function McpTrustBoard() {
               {BUCKET_ORDER.map(({ key, label, tone }) => (
                 <BucketBar key={key} label={label} value={counts[key] || 0} total={total} tone={tone} />
               ))}
+            </div>
+
+            <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-950/40 p-6">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500">
+                Round-to-round delta — a single observation is a snapshot; the delta is the board
+              </p>
+              {!diff && (
+                <p className="mt-3 text-sm text-slate-400">
+                  No published diff for this round yet — a delta needs two rounds. The cell stays
+                  empty until one exists; empty is not zero.
+                </p>
+              )}
+              {diff && diff.state === "UNCHECKABLE" && (
+                <p className="mt-3 text-sm text-amber-300/90">
+                  UNCHECKABLE — {diff.previous}: the previous round could not be read, so no delta is
+                  claimed. An unreadable history is never silently rebased.
+                </p>
+              )}
+              {diff && diff.state === "MEASURED" && diff.bucket_deltas && (
+                <>
+                  <p className="mt-3 text-xs text-slate-500">
+                    vs previous round {diff.previous} ({diff.previous_as_of}). Arithmetic on the two
+                    published count sets — derived, never typed.
+                  </p>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {Object.entries(diff.bucket_deltas)
+                      .filter(([, v]) => v !== 0)
+                      .map(([k, v]) => (
+                        <div key={k} className="flex items-baseline justify-between rounded-lg border border-slate-800 px-3 py-2 text-sm">
+                          <span className="font-mono text-xs text-slate-400">{k}</span>
+                          <span className={`font-mono font-semibold ${v > 0 ? "text-emerald-300" : "text-amber-300"}`}>
+                            {v > 0 ? `+${v}` : v}
+                          </span>
+                        </div>
+                      ))}
+                    {Object.values(diff.bucket_deltas).every((v) => v === 0) && (
+                      <p className="text-sm text-slate-400">No bucket moved between the two rounds.</p>
+                    )}
+                  </div>
+                  <p className="mt-3 text-xs text-slate-500">
+                    Hosts added / dropped / bucket migrations: UNCHECKABLE — per-host rows are
+                    retained operator-side and never published, so a counts-only diff never invents
+                    host-level claims.
+                    {diff.note ? ` Note: ${diff.note}` : ""}
+                  </p>
+                </>
+              )}
             </div>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
