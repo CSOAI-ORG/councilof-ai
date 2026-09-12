@@ -191,6 +191,11 @@ jobs:
               h = {"ok": False, "checks": [{"name": "probe-crash", "detail": "no health.json"}]}
           repo = os.environ["GH_REPO"]
           failed = [c for c in h.get("checks", []) if not c.get("ok")]
+          # The label must exist before issue create (2026-09-12: a missing label
+          # silently swallowed the alert — label create is idempotent).
+          subprocess.run(["gh", "label", "create", "health-inventory", "--repo", repo,
+                          "--description", "Rolling alert from the hourly estate self-probe",
+                          "--color", "B60205", "--force"], check=False, capture_output=True)
           existing = subprocess.run(
               ["gh", "issue", "list", "--repo", repo, "--label", "health-inventory",
                "--state", "open", "--json", "number", "--limit", "1"],
