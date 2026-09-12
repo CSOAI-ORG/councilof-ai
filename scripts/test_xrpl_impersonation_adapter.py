@@ -52,13 +52,13 @@ def main() -> None:
     check(sidecar["status"] == "PROBED", "status PROBED")
     check(sidecar["pages_ok"] == 3 and sidecar["pages_failed"] == 0, "3 pages ok, 0 failed")
     check(sidecar["n_scanned"] == 300, "n_scanned 300")
-    check(sidecar["hits"] == 3, "3 watched-code hits (RLUSD x2, AUDD x1)")
-    check(sidecar["mismatches"] == 1, "exactly 1 MISMATCH")
-    check(sidecar["verified_set_unmeasured"] == 1, "exactly 1 VERIFIED_SET_UNMEASURED (AUDD)")
+    check(sidecar["hits"] == 4, "4 watched-code hits (RLUSD x2, AUDD x1, XSGD x1)")
+    check(sidecar["mismatches"] == 2, "exactly 2 MISMATCH (RLUSD + XSGD)")
+    check(sidecar["verified_set_unmeasured"] == 0, "0 VERIFIED_SET_UNMEASURED — all four codes have archived verified issuers")
     check(sidecar["mirrors_written"] == 0, "replay writes no mirrors")
 
     print("leaf shapes:")
-    # 1 summary + 1 mismatch + 1 unmeasured
+    # 1 summary + 2 mismatches
     check(len(leaves) == 3, "3 leaves total")
     for leaf in leaves:
         check(set(leaf) == {"surface", "subject", "as_of", "source_urls", "payload", "unmeasured", "tags"},
@@ -74,8 +74,8 @@ def main() -> None:
     check(summary["status"] == "PROBED", "summary status PROBED")
     check(summary["counts"]["RLUSD"] == {"matches": 1, "mismatches": 1, "verified_set_unmeasured": 0},
           "RLUSD counts 1 match / 1 mismatch")
-    check(summary["counts"]["AUDD"]["verified_set_unmeasured"] == 1, "AUDD counted as verified-set unmeasured")
-    check("XSGD issuance inside scan window" in summary["unmeasured"], "no XSGD observed -> named unmeasured")
+    check(summary["counts"]["AUDD"]["matches"] == 1, "AUDD fixture uses the verified issuer -> MATCH")
+    check(summary["counts"]["XSGD"]["mismatches"] == 1, "XSGD 10B issuer counted as mismatch")
     check("long_tail" in summary["scan_coverage"], "long-tail caveat recorded")
 
     print("classification:")
@@ -89,9 +89,15 @@ def main() -> None:
     check(f"https://xrpscan.com/token/{mp['code']}.{mp['issuer']}" in mismatch["source_urls"],
           "xrpscan token URL in source_urls")
 
-    unmeasured_leaf = next(leaf for leaf in leaves if leaf["payload"]["kind"] == "csoai.xrpl-impersonation-unmeasured/0.1")
-    up = unmeasured_leaf["payload"]
-    check(up["code"] == "AUDD" and up["verified_set_state"] == "UNMEASURED", "AUDD reported UNMEASURED, not mismatch")
+    xsgd = next(leaf for leaf in leaves
+                if leaf["payload"]["kind"] == "csoai.xrpl-impersonation-mismatch/0.1"
+                and leaf["payload"]["code"] == "XSGD")
+    xp = xsgd["payload"]
+    check(xp["issuer"] == "rXSGdyyEPVeBV6oux4gh6W3rDVM2FyKGe", "XSGD 10B mismatch identity")
+    check(xp["verified_issuer"] == "rK67JczCpaYXVtfw3qJVmqwpSfa1bYTptw", "XSGD verified issuer carried")
+    check("entry-1" in xsgd["tags"], "XSGD mismatch tagged entry-1")
+    check("issuer-site-published" in xp["verified_method"], "verified method disclosed on the card")
+    check("UNMEASURED" in xp["wording"], "XSGD wording keeps legitimacy UNMEASURED")
 
     print("never-raises:")
     def dark_fetch(url: str) -> bytes:

@@ -50,12 +50,43 @@ WATCHED_CODES = ("RLUSD", "XSGD", "USDC", "AUDD")
 # Hard-coded verified-issuer set. None means: no verified issuer archived for
 # this code — every observed issuer is verified_set_state UNMEASURED, never a
 # mismatch, never a verdict.
+#
+# 2026-09-12 archival (see VERIFIED_META / pack mirrors): XSGD and AUDD issuers
+# are now archived from issuer-published sources. XSGD: straitsx.com/xsgd names
+# rK67Jcz… and the account's on-ledger Domain points back to straitsx.com —
+# two-way (site text + Domain field); xrp-ledger.toml is absent (404 archived).
+# AUDD: audd.digital names rUN5Zxt3… as "the official XRP Ledger address for
+# AUDD"; the account carries no Domain field — one-way, disclosed on the card.
 VERIFIED: dict[str, str | None] = {
     "RLUSD": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
     "USDC": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
-    "XSGD": None,
-    "AUDD": None,
+    "XSGD": "rK67JczCpaYXVtfw3qJVmqwpSfa1bYTptw",
+    "AUDD": "rUN5Zxt3K1AnMRJgEWywDJT8QDMMeLH5ok",
 }
+
+# Verification metadata per code: method + the pack mirrors carrying the bytes.
+VERIFIED_META: dict[str, dict[str, Any]] = {
+    "RLUSD": {"method": "estate LOCKED_16 registry", "mirrors": []},
+    "USDC": {"method": "estate LOCKED_16 registry", "mirrors": []},
+    "XSGD": {
+        "method": "issuer-site-published address + on-ledger Domain backlink (two-way); xrp-ledger.toml absent (404 archived)",
+        "mirrors": ["straitsx-xsgd-page.html", "account-info-xsgd-verified.json", "straitsx-xrp-ledger-toml-404.html"],
+    },
+    "AUDD": {
+        "method": "issuer-site-published address; on-ledger Domain absent (one-way)",
+        "mirrors": ["audd-digital-home.html", "account-info-audd.json", "audd-xrp-ledger-toml-probe.html"],
+    },
+}
+# Mirror ids whose .meta.json sidecars are loaded into the run manifest.
+VERIFICATION_MIRROR_IDS = [
+    "straitsx-xsgd-page.html",
+    "audd-digital-home.html",
+    "straitsx-xrp-ledger-toml-404.html",
+    "audd-xrp-ledger-toml-probe.html",
+    "account-info-xsgd-verified.json",
+    "account-info-xsgd-10b.json",
+    "account-info-audd.json",
+]
 
 MISMATCH_WORDING = "issuer not in the archived verified set — legitimacy UNMEASURED"
 LONG_TAIL_NOTE = "UNMEASURED — issuance below the ranking window is not enumerated"
@@ -128,7 +159,7 @@ def _classify(code: str, issuer: str) -> str:
 def _row_hit(row: dict[str, Any], window: str) -> dict[str, Any]:
     code = str(row.get("code") or "")
     issuer = str(row.get("issuer") or "")
-    return {
+    hit = {
         "code": code,
         "issuer": issuer,
         "holders": row.get("holders"),
@@ -138,9 +169,13 @@ def _row_hit(row: dict[str, Any], window: str) -> dict[str, Any]:
         "verified_issuer": VERIFIED.get(code),
         "window": window,
     }
+    meta = VERIFIED_META.get(code)
+    if meta and meta.get("method"):
+        hit["verified_method"] = meta["method"]
+    return hit
 
 
-def _mismatch_leaf(hit: dict[str, Any], as_of: str) -> dict[str, Any]:
+def _mismatch_leaf(hit: dict[str, Any], as_of: str, entry_1: bool = False) -> dict[str, Any]:
     code, issuer = hit["code"], hit["issuer"]
     payload = {
         "kind": "csoai.xrpl-impersonation-mismatch/0.1",
@@ -153,7 +188,12 @@ def _mismatch_leaf(hit: dict[str, Any], as_of: str) -> dict[str, Any]:
         "verified_issuer": hit.get("verified_issuer"),
         "wording": MISMATCH_WORDING,
     }
+    if hit.get("verified_method"):
+        payload["verified_method"] = hit["verified_method"]
     assert _canon_size(payload) <= MAX_PAYLOAD_BYTES, "mismatch payload over 3072 bytes"
+    tags = ["xrpl", "impersonation-watch", f"code:{code}", "mismatch"]
+    if entry_1:
+        tags.append("entry-1")
     return {
         "surface": "public.notice",
         "subject": f"XRPL {code} issuer {issuer} not in archived verified set",
@@ -161,7 +201,7 @@ def _mismatch_leaf(hit: dict[str, Any], as_of: str) -> dict[str, Any]:
         "source_urls": [API, f"https://xrpscan.com/token/{code}.{issuer}"],
         "payload": payload,
         "unmeasured": ["issuer_legitimacy", "long_tail_issuance_below_ranking_window"],
-        "tags": ["xrpl", "impersonation-watch", f"code:{code}", "mismatch"],
+        "tags": tags,
     }
 
 
@@ -255,7 +295,12 @@ def _leaves_from_snapshot(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
     leaves = [_summary_leaf(snapshot)]
     entry_1_done = False
     for hit in snapshot.get("mismatches", []):
-        leaves.append(_mismatch_leaf(hit, as_of))
+        # Entry #1 of the watch: the first XSGD mismatch (the 10B-supply account
+        # claiming the straitsx.com domain without being the issuer-published address).
+        entry_1 = hit.get("code") == "XSGD" and not entry_1_done
+        if entry_1:
+            entry_1_done = True
+        leaves.append(_mismatch_leaf(hit, as_of, entry_1))
     for hit in snapshot.get("unmeasured", []):
         entry_1 = hit.get("code") == "XSGD" and not entry_1_done
         if entry_1:
@@ -404,6 +449,7 @@ def collect(
                 "long_tail": LONG_TAIL_NOTE,
             },
             "verified_issuers": VERIFIED,
+            "verified_issuers_meta": VERIFIED_META,
             "hits": deduped,
             "mismatches": [h for h in deduped if h["classification"] == "MISMATCH"],
             "unmeasured": [h for h in deduped if h["classification"] == "VERIFIED_SET_UNMEASURED"],
@@ -418,11 +464,25 @@ def collect(
             except Exception:
                 pass
             try:
+                # Verification mirrors are archived deliberately (one writer);
+                # their committed .meta.json sidecars join every run's manifest.
+                all_metas = list(metas)
+                seen_ids = {m["id"] for m in all_metas}
+                for mid in VERIFICATION_MIRROR_IDS:
+                    if mid in seen_ids:
+                        continue
+                    try:
+                        meta = json.loads(
+                            (root_path / MIRRORS_REL / (mid + ".meta.json")).read_bytes()
+                        )
+                        all_metas.append(meta)
+                    except Exception:
+                        continue
                 manifest = {
                     "schema": "csoai.artefact-manifest/0.1",
                     "pack": PACK,
                     "as_of": generated_at,
-                    "artefacts": sorted(metas, key=lambda m: m["id"]),
+                    "artefacts": sorted(all_metas, key=lambda m: m["id"]),
                 }
                 _write_bytes(
                     root_path / MANIFEST_REL,
