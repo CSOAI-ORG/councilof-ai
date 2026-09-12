@@ -3,7 +3,7 @@
   "date": "2026-09-11T14:00:00Z",
   "branch": "agents/discovery-consolidation-20260911",
   "base_commit": "fb7b32dc4",
-  "subject": "TUI 4 — Agent Economy and Protocol Discovery",
+  "subject": "TUI 4 \u2014 Agent Economy and Protocol Discovery",
   "identity": {
     "canonical_name": "CSOAI GSPC Measurement Tools",
     "mcp_registry_id": "io.github.CSOAI-ORG/gspc",
@@ -25,10 +25,28 @@
         "total": 12,
         "free": 8,
         "paid": 4,
-        "free_names": ["board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion", "x402_trust"],
-        "paid_names": ["commission_card", "art50_marking_evidence", "rwa_evidence", "receipts_batch"],
-        "quarantined": ["witness_hash"],
-        "dropped": ["measure"]
+        "free_names": [
+          "board_totals",
+          "get_axis",
+          "verify_card",
+          "list_cards",
+          "get_root",
+          "get_card",
+          "verify_inclusion",
+          "x402_trust"
+        ],
+        "paid_names": [
+          "commission_card",
+          "art50_marking_evidence",
+          "rwa_evidence",
+          "receipts_batch"
+        ],
+        "quarantined": [
+          "witness_hash"
+        ],
+        "dropped": [
+          "measure"
+        ]
       },
       "source": "functions/mcp/[[path]].ts + mcp/gspc-server/gspc-tools.json + paid-tools.json"
     },
@@ -68,15 +86,39 @@
       "version": "1.1.0",
       "state": "LIVE",
       "skills_count": 7,
-      "skills": ["gspc-board", "east-west-crosswalk", "measured-badge", "benchmark-quality-register", "article50-detect", "eu-ai-act-screen", "x402-discovery"],
-      "extensions": ["signed-receipts/v1 (DRAFT, not yet emitted)", "x402.json", "offer-receipt v0.6 (conditional JWS)"],
+      "skills": [
+        "gspc-board",
+        "east-west-crosswalk",
+        "measured-badge",
+        "benchmark-quality-register",
+        "article50-detect",
+        "eu-ai-act-screen",
+        "x402-discovery"
+      ],
+      "extensions": [
+        "signed-receipts/v1 (DRAFT, not yet emitted)",
+        "x402.json",
+        "offer-receipt v0.6 (conditional JWS)"
+      ],
       "source": "public/.well-known/agent-card.json + functions/api/a2a.ts"
     },
     "a2a_endpoint": {
       "url": "https://councilof.ai/api/a2a",
       "protocol": "A2A v1.0 JSON-RPC",
       "state": "LIVE",
-      "methods_implemented": ["SendMessage", "GetTask", "CancelTask", "ListTasks", "SendStreamingMessage", "SubscribeToTask", "GetExtendedAgentCard", "CreateTaskPushNotificationConfig", "GetTaskPushNotificationConfig", "ListTaskPushNotificationConfigs", "DeleteTaskPushNotificationConfig"],
+      "methods_implemented": [
+        "SendMessage",
+        "GetTask",
+        "CancelTask",
+        "ListTasks",
+        "SendStreamingMessage",
+        "SubscribeToTask",
+        "GetExtendedAgentCard",
+        "CreateTaskPushNotificationConfig",
+        "GetTaskPushNotificationConfig",
+        "ListTaskPushNotificationConfigs",
+        "DeleteTaskPushNotificationConfig"
+      ],
       "task_store": false,
       "streaming": false,
       "source": "functions/api/a2a.ts (688 lines)"
@@ -87,11 +129,24 @@
       "schema": "csoai.x402-catalog/0.3",
       "state": "LIVE",
       "resources_count": 9,
-      "resources": ["free_door", "issuance", "evidence_bundle", "data_feed", "proof_bundle", "rwa_evidence", "art50_marking_evidence", "provider_diff_feed", "receipts_batch"],
+      "resources": [
+        "free_door",
+        "issuance",
+        "evidence_bundle",
+        "data_feed",
+        "proof_bundle",
+        "rwa_evidence",
+        "art50_marking_evidence",
+        "provider_diff_feed",
+        "receipts_batch"
+      ],
       "rail": {
         "mode": "live",
         "network": "eip155:8453",
-        "asset": {"symbol": "USDC", "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"},
+        "asset": {
+          "symbol": "USDC",
+          "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+        },
         "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
         "scheme": "exact",
         "facilitator_configured": true,
@@ -130,7 +185,10 @@
     },
     "ap2": {
       "state": "REGISTRY_ONLY",
-      "entries": ["csoai-ap2-mandate-mcp", "csoai-google-ap2-tunnel"],
+      "entries": [
+        "csoai-ap2-mandate-mcp",
+        "csoai-google-ap2-tunnel"
+      ],
       "note": "Registered in MCP registry as separate packages; no local implementation"
     }
   },
@@ -154,18 +212,58 @@
         "name": "Glama",
         "state": "LISTED_UNSTABLE",
         "issues": "40/40 connectors Unhealthy, 6/7 repos not installable, flagship not consistently discoverable"
+      },
+      {
+        "id": "a2aregistry",
+        "name": "a2aregistry.org",
+        "state": "LIVE",
+        "agent_id": "48e5bba6-8848-4adc-8f92-b5fa2c0744e0",
+        "version": "1.1.0",
+        "skills": 7,
+        "url": "https://councilof.ai/api/a2a"
       }
     ],
     "staged_awaiting_owner": [
-      {"id": "a2aregistry", "state": "STAGED", "action": "POST agent-card well-known URI"},
-      {"id": "a2a-registry", "state": "STAGED", "action": "PR JSON agent file"},
-      {"id": "mcp-so", "state": "NOT_LISTED", "action": "Submit at mcp.so/submit"},
-      {"id": "pulsemcp", "state": "UNKNOWN", "action": "Re-check from unblocked network"},
-      {"id": "awesome-mcp", "state": "STAGED", "action": "Open PR (payload drafted)"},
-      {"id": "cursor-directory", "state": "STAGED", "action": "Submit at cursor.directory/plugins/new"},
-      {"id": "docker-mcp", "state": "STAGED", "action": "PR to docker/mcp-registry"}
+      {
+        "id": "a2aregistry",
+        "state": "STAGED",
+        "action": "POST agent-card well-known URI"
+      },
+      {
+        "id": "a2a-registry",
+        "state": "STAGED",
+        "action": "PR JSON agent file"
+      },
+      {
+        "id": "mcp-so",
+        "state": "NOT_LISTED",
+        "action": "Submit at mcp.so/submit"
+      },
+      {
+        "id": "pulsemcp",
+        "state": "UNKNOWN",
+        "action": "Re-check from unblocked network"
+      },
+      {
+        "id": "awesome-mcp",
+        "state": "STAGED",
+        "action": "Open PR (payload drafted)"
+      },
+      {
+        "id": "cursor-directory",
+        "state": "STAGED",
+        "action": "Submit at cursor.directory/plugins/new"
+      },
+      {
+        "id": "docker-mcp",
+        "state": "STAGED",
+        "action": "PR to docker/mcp-registry"
+      }
     ],
-    "not_listed": ["mcp-so", "cline-marketplace"]
+    "not_listed": [
+      "mcp-so",
+      "cline-marketplace"
+    ]
   },
   "registry_integrity": {
     "total_csoai_servers": 354,
@@ -189,21 +287,22 @@
     "note": "1 external payer at 0.02 USDC. Self-payments are INTERNAL_SELF_FUNDED and excluded. Zero-value probes are plumbing tests, not revenue."
   },
   "verification_results": {
-    "identity_consistency": "PASS — provider name, URL, server name consistent across all surfaces",
-    "tool_count_parity": "PASS — 12 tools (8 free + 4 paid) on live, mcp.json, server-card, paid-tools.json",
-    "a2a_skill_parity": "PASS — 7/7 card-declared skills implemented in a2a.ts",
-    "x402_catalog_parity": "PASS — 9 resources on .well-known/x402.json and /api/x402",
-    "registry_version_mismatch": "FAIL — registry says 1.4.0, live says 1.4.2",
-    "npm_version_mismatch": "FAIL — npm registry says 0.2.1, server.json/package.json say 0.2.2",
-    "smithery_tool_stale": "FAIL — csoai/gspc lists 4 tools not served and misses 3 real ones",
-    "glama_health": "FAIL — 40/40 connectors Unhealthy",
-    "mcp_so_listing": "FAIL — zero CSOAI in 27,929 sitemap URLs",
-    "free_door_settles": "PASS — returns 402 with amount=0 (verified via curl 2026-09-11)",
-    "signed_offer_receipt": "PASS — JWS EdDSA offer receipt emitted for request_attestation (kid did:web:csoai.org#board-attestation-1)",
-    "receipts_endpoint_exists": "PASS — functions/api/receipts/ (batch.ts, index.ts, latest.ts, verify.ts)",
-    "witness_endpoint_exists": "PASS — functions/api/witness/status.ts + witness.ts",
-    "agui_sse": "PASS — SSE stream returns 22 axes · 22 measured via curl (2026-09-11)",
-    "mcp_initialize": "PASS — serverInfo csoai-gspc-mcp v1.4.2 via curl (2026-09-11)"
+    "identity_consistency": "PASS \u2014 provider name, URL, server name consistent across all surfaces",
+    "tool_count_parity": "PASS \u2014 12 tools (8 free + 4 paid) on live, mcp.json, server-card, paid-tools.json",
+    "a2a_skill_parity": "PASS \u2014 7/7 card-declared skills implemented in a2a.ts",
+    "x402_catalog_parity": "PASS \u2014 9 resources on .well-known/x402.json and /api/x402",
+    "registry_version_mismatch": "FAIL \u2014 registry says 1.4.0, live says 1.4.2",
+    "npm_version_mismatch": "FAIL \u2014 npm registry says 0.2.1, server.json/package.json say 0.2.2",
+    "smithery_tool_stale": "FAIL \u2014 csoai/gspc lists 4 tools not served and misses 3 real ones",
+    "glama_health": "FAIL \u2014 40/40 connectors Unhealthy",
+    "mcp_so_listing": "FAIL \u2014 zero CSOAI in 27,929 sitemap URLs",
+    "free_door_settles": "PASS \u2014 returns 402 with amount=0 (verified via curl 2026-09-11)",
+    "signed_offer_receipt": "PASS \u2014 JWS EdDSA offer receipt emitted for request_attestation (kid did:web:csoai.org#board-attestation-1)",
+    "receipts_endpoint_exists": "PASS \u2014 functions/api/receipts/ (batch.ts, index.ts, latest.ts, verify.ts)",
+    "witness_endpoint_exists": "PASS \u2014 functions/api/witness/status.ts + witness.ts",
+    "agui_sse": "PASS \u2014 SSE stream returns 22 axes \u00b7 22 measured via curl (2026-09-11)",
+    "mcp_initialize": "PASS \u2014 serverInfo csoai-gspc-mcp v1.4.2 via curl (2026-09-11)",
+    "a2aregistry_listing": "PASS \u2014 registered at 48e5bba6,7 skills, v1.1.0"
   },
   "claims_rejected": [
     "Registry v1.4.0 is current (live is v1.4.2)",
@@ -215,31 +314,114 @@
     "AG-UI is not implemented (it is, at /api/agui/gspc-state)"
   ],
   "blockers": [
-    {"id": "B1", "desc": "MCP Registry publish (v1.4.2)", "owner": "owner token", "impact": "Stale version and tool count visible to all MCP clients"},
-    {"id": "B2", "desc": "19 registry entries need withdraw", "owner": "owner token", "impact": "Broken repo URLs visible in official registry"},
-    {"id": "B3", "desc": "Smithery re-scan", "owner": "owner account", "impact": "4 phantom tools served to clients"},
-    {"id": "B4", "desc": "Glama health check", "owner": "owner account", "impact": "40 connectors show Unhealthy"},
-    {"id": "B5", "desc": "mcp.so submission", "owner": "owner action", "impact": "Not listed at all"},
-    {"id": "B6", "desc": "a2aregistry.org POST", "owner": "owner action", "impact": "Agent card not registered"},
-    {"id": "B7", "desc": "x402 0.01 USDC test for request_attestation", "owner": "owner approval", "impact": "Needs INTERNAL_SELF_FUNDED label per TUI instructions"},
-    {"id": "B8", "desc": "npm provenance", "owner": "CI config", "impact": "No attestation on npm package"},
-    {"id": "B9", "desc": "npm version publish (0.2.2)", "owner": "npm publish", "impact": "npm registry shows 0.2.1, server.json says 0.2.2 — 12-tool stdio server not on npm yet"}
+    {
+      "id": "B1",
+      "desc": "MCP Registry publish (v1.4.2)",
+      "owner": "owner token",
+      "impact": "Stale version and tool count visible to all MCP clients"
+    },
+    {
+      "id": "B2",
+      "desc": "19 registry entries need withdraw",
+      "owner": "owner token",
+      "impact": "Broken repo URLs visible in official registry"
+    },
+    {
+      "id": "B3",
+      "desc": "Smithery re-scan",
+      "owner": "owner account",
+      "impact": "4 phantom tools served to clients"
+    },
+    {
+      "id": "B4",
+      "desc": "Glama health check",
+      "owner": "owner account",
+      "impact": "40 connectors show Unhealthy"
+    },
+    {
+      "id": "B5",
+      "desc": "mcp.so submission",
+      "owner": "owner action",
+      "impact": "Not listed at all"
+    },
+    {
+      "id": "B7",
+      "desc": "x402 0.01 USDC test for request_attestation",
+      "owner": "owner approval",
+      "impact": "Needs INTERNAL_SELF_FUNDED label per TUI instructions"
+    },
+    {
+      "id": "B8",
+      "desc": "npm provenance",
+      "owner": "CI config",
+      "impact": "No attestation on npm package"
+    },
+    {
+      "id": "B9",
+      "desc": "npm version publish (0.2.2)",
+      "owner": "npm publish",
+      "impact": "npm registry shows 0.2.1, server.json says 0.2.2 \u2014 12-tool stdio server not on npm yet"
+    }
   ],
   "live_probes": {
     "timestamp": "2026-09-11T14:00:00Z",
-    "agent_card": {"status": 200, "version": "1.1.0", "skills": 7},
-    "x402_discovery": {"status": 200, "mode": "live", "resources": 9},
-    "free_door": {"status": 402, "amount": "0", "correct": true},
-    "a2a_agents_index": {"status": 200, "agents": 12},
-    "mcp_initialize": {"status": 200, "server_version": "1.4.2"},
-    "agui_sse": {"status": 200, "axes": 22, "measured": 22},
-    "request_attestation": {"status": 402, "amount": "10000", "promo": true, "signed_offer": true},
-    "did_document": {"status": 200, "verification_methods": 5},
-    "npm_registry": {"status": 200, "latest": "0.2.1", "stale": true},
-    "smithery_flagship": {"status": 308, "redirect": true},
-    "smithery_stale": {"status": 308, "redirect": true},
-    "glama": {"status": 200},
-    "payapi_market": {"status": 200}
+    "agent_card": {
+      "status": 200,
+      "version": "1.1.0",
+      "skills": 7
+    },
+    "x402_discovery": {
+      "status": 200,
+      "mode": "live",
+      "resources": 9
+    },
+    "free_door": {
+      "status": 402,
+      "amount": "0",
+      "correct": true
+    },
+    "a2a_agents_index": {
+      "status": 200,
+      "agents": 12
+    },
+    "mcp_initialize": {
+      "status": 200,
+      "server_version": "1.4.2"
+    },
+    "agui_sse": {
+      "status": 200,
+      "axes": 22,
+      "measured": 22
+    },
+    "request_attestation": {
+      "status": 402,
+      "amount": "10000",
+      "promo": true,
+      "signed_offer": true
+    },
+    "did_document": {
+      "status": 200,
+      "verification_methods": 5
+    },
+    "npm_registry": {
+      "status": 200,
+      "latest": "0.2.1",
+      "stale": true
+    },
+    "smithery_flagship": {
+      "status": 308,
+      "redirect": true
+    },
+    "smithery_stale": {
+      "status": 308,
+      "redirect": true
+    },
+    "glama": {
+      "status": 200
+    },
+    "payapi_market": {
+      "status": 200
+    }
   },
   "x402_self_test": {
     "file": "docs/tui4/X402-SELF-TEST-2026-09-11.md",
@@ -247,9 +429,9 @@
     "subject": "tui4-self-test-0.01usdc",
     "tool": "commission_card",
     "discovery": "PASS",
-    "challenge": "PASS — 0.01 USDC (launch promo)",
-    "signed_offer": "PASS — JWS EdDSA emitted",
-    "payment": "PENDING — owner approval required",
-    "revenue_impact": "none — self-funded test excluded from buyer count"
+    "challenge": "PASS \u2014 0.01 USDC (launch promo)",
+    "signed_offer": "PASS \u2014 JWS EdDSA emitted",
+    "payment": "PENDING \u2014 owner approval required",
+    "revenue_impact": "none \u2014 self-funded test excluded from buyer count"
   }
 }
