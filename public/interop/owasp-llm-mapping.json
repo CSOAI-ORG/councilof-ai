@@ -1,0 +1,34 @@
+{
+  "schema": "csoai.owasp-llm-mapping/0.2",
+  "as_of": "2026-09-12",
+  "source": "OWASP Top 10 for LLM Applications 2025 (https://genai.owasp.org/llm-top-10/)",
+  "relation": "RELATED-TO, never EQUIVALENT. A join is made only where a GSPC axis measures the same adversarial family; everything else stays UNMAPPED and visible.",
+  "history": "v0.1 (2026-09-11, never shipped) mapped 10/10 categories and was rejected in review (PR #1876): several joins were not defensible — e.g. LLM10 Unbounded Consumption → reserve-attestation, a financial-reserves instrument with no relation to resource exhaustion. v0.2 maps only what survives that standard: one join.",
+  "never": [
+    "a fused OWASP/GSPC grade (both sides forbid it)",
+    "OWASP coverage claimed as compliance",
+    "a join where the axis measures a different quantity — an unmapped category is a first-class answer, not a failure"
+  ],
+  "categories": [
+    {"id": "LLM01", "name": "Prompt Injection", "axes": ["jail"],
+     "relation_note": "The jail axis measures escape-attempt detection on a frozen gold bank — the same adversarial family as prompt injection (craft input so the model acts outside intent). Overlap, not equivalence: injection also covers indirect/tool-mediated payloads the bank does not contain."},
+    {"id": "LLM02", "name": "Sensitive Information Disclosure", "axes": [],
+     "unmapped_reason": "No GSPC axis measures PII/secret leakage from model output."},
+    {"id": "LLM03", "name": "Supply Chain", "axes": [],
+     "unmapped_reason": "The provenance axes measure Article 50 content-marking survival and on-chain issuer controls — neither measures component supply-chain integrity. Mapping them would repeat the v0.1 error."},
+    {"id": "LLM04", "name": "Data and Model Poisoning", "axes": [],
+     "unmapped_reason": "No GSPC axis measures training-data or model-weight poisoning."},
+    {"id": "LLM05", "name": "Improper Output Handling", "axes": [],
+     "unmapped_reason": "No GSPC axis measures downstream handling of model output (XSS/SSRF-class)."},
+    {"id": "LLM06", "name": "Excessive Agency", "axes": [],
+     "unmapped_reason": "No GSPC axis measures permission scope or autonomy limits of an agent deployment."},
+    {"id": "LLM07", "name": "System Prompt Leakage", "axes": [],
+     "unmapped_reason": "A subset of LLM02; no GSPC axis measures it."},
+    {"id": "LLM08", "name": "Vector and Embedding Weaknesses", "axes": [],
+     "unmapped_reason": "No GSPC axis measures retrieval/embedding pipelines."},
+    {"id": "LLM09", "name": "Misinformation", "axes": [],
+     "unmapped_reason": "No GSPC axis measures truthfulness. The safety axis (calibrated refusal) borders it — a model that will not decline to fabricate is a misinformation risk — but refusal calibration is not factuality, so no join."},
+    {"id": "LLM10", "name": "Unbounded Consumption", "axes": [],
+     "unmapped_reason": "No GSPC axis measures resource exhaustion or cost-of-serve attacks. reserve-attestation is a financial-reserves instrument; the v0.1 join was rejected."}
+  ]
+}

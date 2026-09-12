@@ -1,14 +1,18 @@
 """Adversarial attack-family registry (J34).
 
-ONE family is real and runnable today: jailbreak-replay. The rest are declared ROADMAP —
-named, scoped, and explicitly NOT implemented. An unimplemented family is UNCHECKABLE by
-construction: the runner can never report a pass for a family that has no code.
+TWO families are real and runnable today: jailbreak-replay (the one MEASURED
+family) and pyrit-attach (PyRIT output as jail-axis EVIDENCE — ATTACHED, never
+scored here; keyword-refusal scoring is not a GSPC card). The rest are declared
+ROADMAP — named, scoped, and explicitly NOT implemented. An unimplemented family
+is UNCHECKABLE by construction: the runner can never report a pass for a family
+that has no code.
 """
-from . import jailbreak_replay
+from . import jailbreak_replay, pyrit_attach
 
 # name -> callable returning a result dict, or None (ROADMAP, not implemented)
 REGISTRY = {
     "jailbreak-replay": jailbreak_replay.run,
+    "pyrit-attach": pyrit_attach.run,   # PyRIT evidence attachment (ATTACHED, never MEASURED)
     # ---- ROADMAP (declared, not implemented; runner returns UNCHECKABLE for these) ----
     "prompt-injection-suite": None,   # indirect/direct injection against the MCP door + tools
     "many-shot-jailbreak": None,      # long-context many-shot attack replay
