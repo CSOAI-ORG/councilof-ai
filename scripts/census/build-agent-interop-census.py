@@ -276,6 +276,27 @@ mcp_tools = sh("bash", "-lc",
     "'import json,sys;print(len(json.load(sys.stdin)[\"result\"][\"tools\"]))'")
 
 t = totals
+if reach:
+    _sampled = reach["sampled_hosts"]
+    _status = reach["status_distribution"]
+    _web_share = sum(_status.get(str(code), 0) for code in (200, 301, 302, 308)) / _sampled
+    reach_section = f"""## A measurement, kept separate from the census
+
+The rows above are an index. This reachability observation is reported separately because a
+census and a measurement are different objects.
+
+**{_sampled} distinct hosts** were sampled, one endpoint each. **{reach['hosts_answering_with_an_http_status']}**
+answered with an HTTP status ({reach['reachable_rate']:.1%}, 95% CI ±{reach['reachable_rate_ci95']:.1%});
+{reach['no_http_response']} gave no HTTP response. Status distribution: `{json.dumps(_status, sort_keys=True)}`.
+Only {_web_share:.0%} returned 2xx/3xx to a GET, but that is not an MCP health score: a correct
+POST-only JSON-RPC endpoint can return 405. This observation proves neither MCP conformance nor safety.
+"""
+else:
+    reach_section = """## Reachability measurement
+
+**Not run in this build.** `reachability_observation` is `null`; the census contains no endpoint
+liveness claim. Registry presence remains distinct from reachability and conformance.
+"""
 card = f"""---
 license: cc-by-4.0
 pretty_name: Agent Interop Census — MCP servers, HF Spaces, and open-licence repos
@@ -404,33 +425,7 @@ search results are available"*. Star-bucket slicing does not clear it: `stars:0`
 we can derive is not a population we can enumerate, and printing 27,604 rows we never saw would
 be the same defect as Smithery's 11,664.
 
-## A measurement, kept separate from the census
-
-The rows above are an index. This is the one thing here that was actually measured, and it is
-reported apart from them because a census and a measurement are different objects.
-
-**{reach['sampled_hosts']} distinct hosts**, one endpoint each, drawn at random (seed 20260905)
-from 36 alphabetical cursor positions across the registry. One GET per host, 8s timeout.
-
-**{reach['hosts_answering_with_an_http_status']} of {reach['sampled_hosts']} answered with an
-HTTP status — {reach['reachable_rate']:.1%} (95% CI ±{reach['reachable_rate_ci95']:.1%}).**
-{reach['no_http_response']} gave no HTTP response at all.
-
-| status | n | share | what it means |
-|---|---|---|---|
-| 405 | {reach['status_distribution'].get('405', 0)} | {reach['status_distribution'].get('405', 0)/reach['sampled_hosts']:.1%} | **correct.** MCP speaks JSON-RPC over POST; 405 to a GET is a live, well-behaved server |
-| 401 | {reach['status_distribution'].get('401', 0)} | {reach['status_distribution'].get('401', 0)/reach['sampled_hosts']:.1%} | live and gated |
-| 200 | {reach['status_distribution'].get('200', 0)} | {reach['status_distribution'].get('200', 0)/reach['sampled_hosts']:.1%} | answers a bare GET |
-| 404 | {reach['status_distribution'].get('404', 0)} | {reach['status_distribution'].get('404', 0)/reach['sampled_hosts']:.1%} | **the interesting one** — host is up, the declared path is gone |
-| 402 | {reach['status_distribution'].get('402', 0)} | {reach['status_distribution'].get('402', 0)/reach['sampled_hosts']:.1%} | payment required (x402) |
-| none | {reach['no_http_response']} | {reach['no_http_response']/reach['sampled_hosts']:.1%} | timeout, DNS, TLS or refused |
-
-**Do not read "2xx = working".** Only {(reach['status_distribution'].get('200',0)+reach['status_distribution'].get('302',0)+reach['status_distribution'].get('301',0)+reach['status_distribution'].get('308',0))/reach['sampled_hosts']:.0%} of hosts return 2xx/3xx to a GET, and quoting that as a
-health figure would be wrong in the unflattering direction — a third of these endpoints return
-405 precisely because they are correctly implemented POST-only JSON-RPC servers.
-
-It never proves the endpoint implements MCP correctly, is safe, or is fit for anything. It is
-liveness at one instant, not uptime and not a grade.
+{reach_section}
 
 ## Who publishes this
 
