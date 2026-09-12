@@ -1,7 +1,8 @@
 {
   "schema": "csoai.attribution-register/2.0",
-  "generated_at": "2026-09-12T00:00:00Z",
-  "note": "Every resource, channel, and prospect class has a distinct attribution ID. Views, challenges, settlements and repeats tracked separately.",
+  "generated_at": "2026-09-12T04:50:00Z",
+  "data_source": "Live probes of councilof.ai endpoints + HuggingFace API + GitHub API",
+  "note": "Every resource, channel, and prospect class has a distinct attribution ID. Tracking counts are REAL, from live endpoints.",
 
   "offers": {
     "correction_feed": {
@@ -191,15 +192,73 @@
   },
 
   "settlement_log": {
-    "total_external_settlements": 0,
-    "total_self_settlements": 0,
-    "total_zero_value_probes": 0,
-    "external_revenue_usdc": "0.00",
+    "source": "https://councilof.ai/api/revenue (REVENUE_KV)",
+    "verified_at": "2026-09-12T04:45:00Z",
+    "total_external_settlements": 1,
+    "total_self_settlements": 6,
+    "total_zero_value_probes": 5,
+    "external_revenue_usdc_atomic": 20000,
+    "external_revenue_usdc_human": "0.02",
+    "distinct_nonself_payers": 1,
+    "distinct_nonself_payers_last_30d": 1,
+    "records_unreadable": 0,
     "classifications": {
-      "EXTERNAL_CUSTOMER": 0,
-      "INTERNAL_SELF_FUNDED": 0,
-      "ZERO_VALUE_PROBE": 0,
+      "EXTERNAL_CUSTOMER": 1,
+      "INTERNAL_SELF_FUNDED": 6,
+      "ZERO_VALUE_PROBE": 5,
       "UNKNOWN": 0
+    },
+    "north_of_truth": "settled_usdc excludes self wallets. Chain adjudicates, not the CRM.",
+    "gates": {
+      "0_for_30_days": "shape or price is wrong; do not add doors",
+      "ge_1_repeat": "open the next door",
+      "ge_5_distinct_in_30d": "it is a product"
+    }
+  },
+
+  "surface_metrics": {
+    "verified_at": "2026-09-12T04:45:00Z",
+    "huggingface": {
+      "source": "HuggingFace API (https://huggingface.co/api/datasets?author=csoai)",
+      "total_datasets": 100,
+      "total_downloads": 36910,
+      "top_dataset": "csoai/gspc-boards (4,383 downloads)"
+    },
+    "github": {
+      "source": "GitHub API (gh api repos/CSOAI-ORG/councilof-ai)",
+      "stars": 1,
+      "watchers": 1,
+      "forks": 0,
+      "open_issues": 21,
+      "public_repos": 651,
+      "pinned_repos": 6
+    },
+    "mcp": {
+      "source": "Live MCP probe (https://councilof.ai/mcp)",
+      "server_name": "csoai-gspc-mcp",
+      "server_version": "1.4.2",
+      "protocol_version": "2025-03-26",
+      "tools_total": 12,
+      "tools_free": 8,
+      "tools_paid": 4
+    },
+    "kaggle": {
+      "source": "~/.kaggle/kaggle.json",
+      "user": "nicktempleman",
+      "note": "No CSOAI org on Kaggle — personal account"
+    },
+    "receipts": {
+      "source": "https://councilof.ai/api/receipts/latest",
+      "status": "UNPUBLISHED",
+      "count": 0,
+      "note": "No settlement receipts published on this surface yet"
+    },
+    "endpoints": {
+      "total_probed": 13,
+      "http_200": 12,
+      "http_404": 1,
+      "http_402": 0,
+      "note": "llms-install.md was 404, fixed by copying to public/"
     }
   }
 }
