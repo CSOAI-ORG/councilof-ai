@@ -2,7 +2,7 @@
   "schema": "csoai.interop-listing-state/0.1",
   "slug": "mcp-directories",
   "name": "MCP directory listing state",
-  "as_of": "20260905T184104Z",
+  "as_of": "20260911T143400Z",
   "principle": "Where the fleet is listed, and where it is not. Every row is a probe of the DIRECTORY, never of our own filesystem. A slug scan answers 'do we hold a note saying we are listed', which is a different question and was answering it wrongly: on 2026-09-05 six of these seven rows were produced that way and two of them (glama, docker-mcp) said NOT_LISTED while we were listed. UNKNOWN is a permitted state and is not NOT_LISTED.",
   "totals": {
     "servers_in_official_registry": 330,
@@ -160,11 +160,11 @@
     {
       "id": "mcp-so",
       "name": "mcp.so",
-      "url": "https://mcp.so",
-      "state": "NOT_LISTED",
-      "evidence": "mcp.so's OWN sitemap index — 28 sections, 27,929 URLs — contains ZERO csoai occurrences. The '2 csoai mentions' an earlier rendered search showed were the query echoed back by the page. There is no public search API (mcp.so/api/servers 404, api.mcp.so 502), so the sitemap is the authoritative surface.",
-      "probe": "curl -s https://mcp.so/sitemap.xml, follow every <loc> section, grep -ci csoai across all of them -> 0",
-      "surface": "sitemap"
+      "url": "https://mcp.so/servers/csoai-gspc-measurement",
+      "state": "LISTED",
+      "evidence": "Public detail page returned 200 in the owner browser on 2026-09-11 and displays CSOAI GSPC measurement as Verified and Featured, namespace @CSOAI-ORG, repository CSOAI-ORG/councilof-ai, homepage councilof.ai, documentation /signed/HOW-TO-VERIFY.md, and npm config csoai-gspc-mcp. The authenticated submissions table records status Published Paid. The page currently says No tools detected until its Fetch tools sandbox is run; listing presence does not prove tool health or use.",
+      "probe": "Playwright/CUA GET https://mcp.so/servers/csoai-gspc-measurement; confirm page title, @CSOAI-ORG, repository, homepage and Config. Tool health stays unmeasured until a successful live Fetch tools result.",
+      "surface": "rendered"
     },
     {
       "id": "cline",

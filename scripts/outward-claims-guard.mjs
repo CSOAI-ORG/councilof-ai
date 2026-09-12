@@ -694,8 +694,9 @@ async function checkHfCards() {
  *   Smithery      smithery.ai/server/csoai/gspc                              csoai/gspc
  *   Glama         glama.ai/mcp/servers?query=csoai                           7 servers
  *
- * mcp.so was checked and does NOT list us — its search page only echoes the query back — which
- * is exactly the kind of row "submitted" was hiding.
+ * On 2026-09-11 the paid mcp.so submission was verified on its public detail page at
+ * /servers/csoai-gspc-measurement. The page marks it Verified and Featured under @CSOAI-ORG;
+ * that proves directory presence, while its still-empty detected-tool panel does not prove health.
  *
  * Offline by default. LIVE_PLATFORMS=1 probes every proof_url.
  */
