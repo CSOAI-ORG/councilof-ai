@@ -53,6 +53,18 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         with self.assertRaises(AssertionError):
             validate(changed)
 
+    def test_public_root_refreshes_readiness_after_witnesses(self) -> None:
+        workflow = (Path(".") / ".github/workflows/public-root.yml").read_text()
+        witness_final = workflow.index("python scripts/witness_public_root.py --refresh-eas")
+        readiness = workflow.index("python scripts/build_stablecoin_readiness.py")
+        commit = workflow.index("- name: commit published tree")
+        self.assertLess(witness_final, readiness)
+        self.assertLess(readiness, commit)
+        self.assertIn(
+            "git add public/interop/stablecoin-universe-2026-09/readiness.json",
+            workflow[commit:],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
