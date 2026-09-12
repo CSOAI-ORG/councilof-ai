@@ -8,7 +8,7 @@
  *
  * Run: node scripts/generate-sitemap.mjs   (wired into `npm run build:client`)
  */
-import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -18,6 +18,14 @@ const PERSONA_TSX = join(ROOT, "client/src/pages/PersonaRouter.tsx");
 const INDUSTRIES_TS = join(ROOT, "client/src/data/industries.ts");
 const OUT = join(ROOT, "public/sitemap.xml");
 const BASE = "https://councilof.ai";
+const FUNCTIONS_DIR = join(ROOT, "functions");
+
+// Pages Functions own a number of redirect-only paths. A sparse checkout that
+// omits them cannot generate a truthful sitemap, so fail closed instead of
+// silently advertising those retired routes.
+if (!existsSync(FUNCTIONS_DIR)) {
+  throw new Error("[sitemap] functions/ is required to reconcile Pages Function redirects");
+}
 
 // --- Reconcile against _redirects (nav-integrity audit, 2026-08-26) -------------
 // A sitemap URL that answers 3xx is a defect: 42 of 423 did on the last count — 4 of
@@ -126,7 +134,7 @@ function scanFunctionRedirects(dir, urlPrefix = "") {
     }
   }
 }
-scanFunctionRedirects(join(ROOT, "functions"));
+scanFunctionRedirects(FUNCTIONS_DIR);
 
 // --- Priority tiers -------------------------------------------------------
 const P_TOP = 0.9; // flagship public surfaces

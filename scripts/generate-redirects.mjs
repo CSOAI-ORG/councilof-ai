@@ -29,6 +29,13 @@ import { dirname, join } from "node:path";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP = join(ROOT, "client/src/App.tsx");
 const OUT = join(ROOT, "public/_redirects");
+const FUNCTIONS_DIR = join(ROOT, "functions");
+
+// Function-owned routes must not receive generic bare-to-slash redirects. A
+// sparse checkout without functions/ cannot make that decision safely.
+if (!existsSync(FUNCTIONS_DIR)) {
+  throw new Error("[redirects] functions/ is required to exclude Pages Function routes");
+}
 
 const STATIC_DIRS = ["/benchmarks", "/vendor", "/assets",
                      "/.well-known", "/corpus-watch", "/flywheel", "/packs",
@@ -376,7 +383,7 @@ if (unreviewedPublicHtmlRouteCollisions.length) {
 }
 const funcOwnsPath = (p) => {
   const rel = normFrom(p).replace(/^\//, "");
-  return !!rel && existsSync(join(ROOT, "functions", rel + ".ts"));
+  return !!rel && existsSync(join(FUNCTIONS_DIR, rel + ".ts"));
 };
 const ROUTE_SLASH = routes
   .map(normFrom)
