@@ -10,8 +10,9 @@
  * Honest v0.1 scope: DETECTION only. No pass exists yet, so nothing flips to
  * EXPIRED-REGULATION-CHANGED — the event is the primitive later stages consume
  * (pass issuer → Bitstring status flip). Fingerprints prefer stable metadata
- * (Last-Modified, consolidation dates) and fall back to a content hash of the
- * fetched body; a fetch failure is reported as UNREACHABLE, never as a change.
+ * (Last-Modified, ETag) and fall back to a content hash of the fetched body.
+ * Body-only drift must repeat on two consecutive observations before it emits
+ * an event; a fetch failure is reported as UNREACHABLE, never as a change.
  *
  * Run: node scripts/reg-watch.mjs            (compare + emit)
  *      node scripts/reg-watch.mjs --init     (write initial state, no events)
@@ -20,6 +21,7 @@
 
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { assessFingerprint } from "./reg-watch-policy.mjs";
 
 // The watchlist: instrument id → { url, note }. ELI/permanent URLs only.
 const WATCH = {
@@ -90,10 +92,8 @@ for (const [id, { url, note }] of Object.entries(WATCH)) {
       console.log(INIT ? "initialised" : "first-seen (baseline recorded)");
       continue;
     }
-    const changed =
-      (prev.last_modified && fp.last_modified && prev.last_modified !== fp.last_modified) ||
-      prev.body_sha256 !== fp.body_sha256;
-    if (changed) {
+    const assessment = assessFingerprint(prev, fp, now);
+    if (assessment.changed) {
       const event = {
         schema: "csoai.provision-change-event/0.1",
         instrument: id,
@@ -102,6 +102,8 @@ for (const [id, { url, note }] of Object.entries(WATCH)) {
         detected_at: now,
         previous: { last_modified: prev.last_modified, body_sha256: prev.body_sha256, checked: prev.checked },
         current: { last_modified: fp.last_modified, body_sha256: fp.body_sha256 },
+        detection_basis: assessment.basis,
+        confirmations: assessment.confirmations,
         register:
           "A detected change in the published source of a legal instrument. Detection only — " +
           "not a legal interpretation of what changed. Later stages map the change to affected " +
@@ -109,10 +111,12 @@ for (const [id, { url, note }] of Object.entries(WATCH)) {
       };
       events.push(event);
       console.log("CHANGED");
+    } else if (assessment.basis === "body-candidate-pending-confirmation") {
+      console.log("candidate pending confirmation");
     } else {
       console.log("unchanged");
     }
-    state.instruments[id] = { url, note, ...fp, first_seen: prev.first_seen, checked: now };
+    state.instruments[id] = { url, note, ...assessment.next };
   } catch (e) {
     unreachable++;
     console.log(`UNREACHABLE (${e.message}) — state kept, not treated as a change`);
