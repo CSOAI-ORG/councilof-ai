@@ -128,6 +128,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Ai Transparency"
  },
  {
+  "path": "/ailuminate",
+  "comp": "GspcVsAiluminate",
+  "title": "Gspc Vs Ailuminate"
+ },
+ {
   "path": "/answers",
   "comp": "AnswersIndex",
   "title": "Answers Index"
@@ -148,6 +153,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Arena Scoreboard"
  },
  {
+  "path": "/art50",
+  "comp": "Art50",
+  "title": "Art50"
+ },
+ {
   "path": "/article-50",
   "comp": "Article50",
   "title": "Article50"
@@ -161,6 +171,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/assessment",
   "comp": "ReadinessAssessment",
   "title": "Readiness Assessment"
+ },
+ {
+  "path": "/attestation",
+  "comp": "AttestationNetwork",
+  "title": "Attestation Network"
+ },
+ {
+  "path": "/attestation-network",
+  "comp": "Redirect",
+  "title": "Attestation Network"
  },
  {
   "path": "/aug-2026",
@@ -216,6 +236,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/board/models",
   "comp": "MeasuredModels",
   "title": "Measured Models"
+ },
+ {
+  "path": "/boards/mcp",
+  "comp": "McpTrustBoard",
+  "title": "Mcp Trust Board"
  },
  {
   "path": "/brief",
@@ -296,6 +321,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/classifier",
   "comp": "EuActClassifier",
   "title": "Eu Act Classifier"
+ },
+ {
+  "path": "/cobol",
+  "comp": "CobolBridge",
+  "title": "Cobol Bridge"
  },
  {
   "path": "/cobolbridge",
@@ -433,6 +463,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Agents"
  },
  {
+  "path": "/countdown",
+  "comp": "CountdownPage",
+  "title": "Countdown Page"
+ },
+ {
   "path": "/covenant",
   "comp": "MaternalCovenant",
   "title": "Maternal Covenant"
@@ -471,6 +506,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/csoai-law",
   "comp": "MeokLaw",
   "title": "Meok Law"
+ },
+ {
+  "path": "/custody",
+  "comp": "CustodyDisclosure",
+  "title": "Custody Disclosure"
  },
  {
   "path": "/dashboard",
@@ -743,6 +783,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Temples"
  },
  {
+  "path": "/frameworks",
+  "comp": "FrameworkPresence",
+  "title": "Framework Presence"
+ },
+ {
   "path": "/frameworks/australia-ai",
   "comp": "AustraliaAIGovernance",
   "title": "Australia AIGovernance"
@@ -888,6 +933,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "GSPCVerify"
  },
  {
+  "path": "/gspc-vs-ailuminate",
+  "comp": "GspcVsAiluminate",
+  "title": "Gspc Vs Ailuminate"
+ },
+ {
   "path": "/gspc/jail",
   "comp": "JailFolder",
   "title": "Jail Folder"
@@ -916,6 +966,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/harness",
   "comp": "Harness",
   "title": "Harness"
+ },
+ {
+  "path": "/health-inventory",
+  "comp": "HealthInventory",
+  "title": "Health Inventory"
  },
  {
   "path": "/healthcare-ai-act",
@@ -1213,6 +1268,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Meok Law"
  },
  {
+  "path": "/merge-me",
+  "comp": "MergeMe",
+  "title": "Merge Me"
+ },
+ {
   "path": "/methodology",
   "comp": "Methodology",
   "title": "Methodology"
@@ -1328,6 +1388,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Outreach"
  },
  {
+  "path": "/owasp-agentic",
+  "comp": "OwaspAgentic",
+  "title": "Owasp Agentic"
+ },
+ {
   "path": "/packs/eu-article-50",
   "comp": "Article50Pack",
   "title": "Article50 Pack"
@@ -1394,8 +1459,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/pricing",
-  "comp": "PlansPage",
-  "title": "Plans Page"
+  "comp": "Pricing",
+  "title": "Pricing"
  },
  {
   "path": "/pricing-legacy",
@@ -1476,6 +1541,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/real-world",
   "comp": "RealWorldMap",
   "title": "Real World Map"
+ },
+ {
+  "path": "/receipt",
+  "comp": "ProofReceipt",
+  "title": "Proof Receipt"
  },
  {
   "path": "/recommendations",
@@ -1581,6 +1651,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/risk-heatmap",
   "comp": "RiskHeatmap",
   "title": "Risk Heatmap"
+ },
+ {
+  "path": "/rlusd",
+  "comp": "Rlusd",
+  "title": "Rlusd"
  },
  {
   "path": "/roi",
@@ -1718,6 +1793,21 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Sovereign Twin"
  },
  {
+  "path": "/specimens/clarity",
+  "comp": "ClaritySpecimen",
+  "title": "Clarity Specimen"
+ },
+ {
+  "path": "/specimens/kokotajlo",
+  "comp": "KokotajloSpecimen",
+  "title": "Kokotajlo Specimen"
+ },
+ {
+  "path": "/specimens/rlusd",
+  "comp": "RlusdSpecimen",
+  "title": "Rlusd Specimen"
+ },
+ {
   "path": "/standards",
   "comp": "Standards",
   "title": "Standards"
@@ -1726,6 +1816,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/start",
   "comp": "OnboardOS",
   "title": "Onboard OS"
+ },
+ {
+  "path": "/status",
+  "comp": "YieldStatus",
+  "title": "Yield Status"
+ },
+ {
+  "path": "/status/internal",
+  "comp": "YieldInternal",
+  "title": "Yield Internal"
  },
  {
   "path": "/statute-to-predicate",
@@ -1803,6 +1903,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Transparency Cop"
  },
  {
+  "path": "/trust",
+  "comp": "McpTrustBoard",
+  "title": "Mcp Trust Board"
+ },
+ {
   "path": "/try",
   "comp": "TryCouncil",
   "title": "Try Council"
@@ -1850,12 +1955,12 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/vs",
   "comp": "Compare",
-  "title": "Compare"
+  "title": "Vs"
  },
  {
   "path": "/vs-competitors",
   "comp": "Compare",
-  "title": "Compare"
+  "title": "Vs Competitors"
  },
  {
   "path": "/vulnerability-disclosure",
