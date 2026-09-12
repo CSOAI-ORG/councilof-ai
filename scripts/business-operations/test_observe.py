@@ -60,3 +60,18 @@ class CronSafety(unittest.TestCase):
         self.assertIn('# retired by CSOAI observer: 0 7', rendered)
         self.assertIn('OLLAMA_MODELS=/workspace/ollama-models /worker/watchdog.sh', rendered)
         self.assertEqual(install.render_cron(rendered, 'observer', ['/bin/bash /old/revenue.sh'], '/worker/watchdog.sh'), rendered)
+
+class IndexFailures(unittest.TestCase):
+    def test_incomplete_read_keeps_historical_result_not_current_absence(self):
+        import indexes
+        import subprocess
+        with tempfile.TemporaryDirectory() as directory:
+            state = Path(directory)
+            good = {'observed_at': '2026-09-11T00:00:00Z', 'indexes': [{'ours': ['example']}]}
+            observe.write_json(state / 'indexes.json', {'status': 'OBSERVED', 'last_good': good})
+            with patch('sys.argv', ['indexes.py', '--state', directory, '--now']), patch('indexes.subprocess.run', return_value=subprocess.CompletedProcess([], 2, '', 'incomplete population')):
+                indexes.main()
+            latest = json.loads((state / 'indexes.json').read_text())
+            self.assertEqual(latest['status'], 'UNAVAILABLE')
+            self.assertEqual(latest['last_good'], good)
+            self.assertIn('incomplete', latest['error'])

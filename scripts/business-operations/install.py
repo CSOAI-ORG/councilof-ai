@@ -10,7 +10,7 @@ import shutil
 import subprocess
 
 MARKER = '# CSOAI BUSINESS OBSERVER'
-FILES = ('observe.py', 'calendar.json', 'test_observe.py', 'install.py', 'README.md')
+FILES = ('observe.py', 'calendar.json', 'test_observe.py', 'install.py', 'README.md', 'indexes.py', 'index_reader.py')
 
 
 def crontab():
@@ -42,12 +42,17 @@ def main():
     parser.add_argument('--apply', action='store_true')
     args = parser.parse_args()
     here = Path(__file__).resolve().parent
-    hashes = {name: hashlib.sha256((here / name).read_bytes()).hexdigest() for name in FILES}
+    sources = {name: here / name for name in FILES}
+    if not sources['index_reader.py'].exists():
+        sources['index_reader.py'] = here.parent / 'interop' / 'x402-bazaar-audit.py'
+    hashes = {name: hashlib.sha256(sources[name].read_bytes()).hexdigest() for name in FILES}
     revision = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()[:16]
     release = args.base / 'releases' / revision
     command = '/usr/bin/python3 ' + shlex.quote(str(release / 'observe.py')) + ' --mill --state ' + shlex.quote(str(args.base / 'state')) + ' > /dev/null 2>&1'
     before = crontab()
     after = render_cron(before, command, args.retire_command, args.watchdog)
+    index_command = '/usr/bin/python3 ' + shlex.quote(str(release / 'indexes.py')) + ' --state ' + shlex.quote(str(args.base / 'state'))
+    after += '23 * * * * ' + index_command + ' > /dev/null 2>&1 ' + MARKER + ' INDEXES\n'
     if not args.apply:
         print(after)
         return
@@ -60,7 +65,7 @@ def main():
         if dest.exists() and hashlib.sha256(dest.read_bytes()).hexdigest() != hashes[name]:
             raise RuntimeError('Existing release has changed; refusing overwrite')
         if not dest.exists():
-            shutil.copyfile(here / name, dest)
+            shutil.copyfile(sources[name], dest)
     backup = args.base / ('crontab-before-' + datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ') + '.txt')
     backup.write_text(before)
     backup.chmod(0o600)

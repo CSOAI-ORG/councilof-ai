@@ -181,8 +181,8 @@ def run(state, config, mill=False, force_sources=False):
         if not models:
             alerts.append({'id': 'mill:no-local-models', 'kind': 'service'})
         health = observations['mill_health'].get('data') or {}
-        if health.get('status', '').lower() not in ('ok', 'healthy'):
-            alerts.append({'id': 'mill:degraded', 'kind': 'service', 'detail': health.get('status')})
+        if health.get('state', health.get('status', '')).lower() not in ('ok', 'healthy', 'ready', 'idle', 'running'):
+            alerts.append({'id': 'mill:degraded', 'kind': 'service', 'detail': health.get('state', health.get('status'))})
     else:
         disk_metrics = None
     sources_path = state / 'sources.json'
@@ -209,6 +209,12 @@ def run(state, config, mill=False, force_sources=False):
             alerts.append({'id': 'deadline:' + event['id'], 'kind': 'deadline', 'detail': event['state']})
     if now.date().isoformat() > config.get('period', {}).get('end', '9999-12-31'):
         alerts.append({'id': 'calendar:review-expired', 'kind': 'deadline'})
+    index_path = state / 'indexes.json'
+    indexes = json.loads(index_path.read_text()) if index_path.exists() else None
+    if indexes is None or indexes.get('status') != 'OBSERVED':
+        alerts.append({'id': 'indexes:unavailable', 'kind': 'distribution'})
+    elif now - datetime.fromisoformat(indexes['last_good']['observed_at'].replace('Z', '+00:00')) > timedelta(hours=26):
+        alerts.append({'id': 'indexes:stale', 'kind': 'distribution'})
     root = observations['root'].get('data') or {}
     gspc = observations['gspc'].get('data') or {}
     hub = observations['hub_cards'].get('data') or {}
@@ -220,6 +226,7 @@ def run(state, config, mill=False, force_sources=False):
                 'hub_cards': {'totals': hub.get('totals'), 'read_so_far': hub.get('read_so_far'), 'as_of': hub.get('as_of'), 'signature_verified': False},
                 'mill_health': observations.get('mill_health', {}).get('data'),
                 'local_model_count': len(models) if mill else None,
+                'indexes': indexes,
                 'disk': disk_metrics, 'events': events, 'alerts': alerts,
                 'status': 'ATTENTION_REQUIRED' if alerts else 'OBSERVED',
                 'limits': ['HTTP success is not evidence freshness or paid delivery.', 'No new GSPC scores are computed or admitted.', 'Source text changes require human classification.', 'No payment, submission, email, deployment or pod restart is performed.']}

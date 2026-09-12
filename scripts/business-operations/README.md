@@ -54,3 +54,12 @@ cron itself belongs to the container and must be reinstalled after replacement.
 No pod start command, image, GPU allocation, public endpoint, secrets or signing
 boundary is changed. Monitoring the pod from outside remains necessary to detect
 pod or scheduler downtime.
+
+`indexes.py` reuses the monorepo's `scripts/interop/x402-bazaar-audit.py` reader,
+shipped with the installed release and included in its hash manifest. It scans
+both PayAI and Coinbase CDP completely before reporting absence, comparing with
+the live x402 catalogue. An hourly cron checks whether a daily scan is due;
+failed scans retry no more than once per six hours, retain last-good results as
+historical, and have a 15-minute process timeout. No challenge, purchase, listing
+submission or upload is made. `indexes.json` records attempts and last-good
+observation separately. This does not classify index metadata as current or stale.
