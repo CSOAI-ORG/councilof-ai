@@ -1,0 +1,1005 @@
+{
+  "schema": "csoai.financial-catalog/0.1",
+  "kind": "financial.deduplicated-catalog",
+  "generated_at": "2026-09-12T04:35:03.222821+00:00",
+  "total_subjects_indexed": 425,
+  "total_deployments_resolved": 1640,
+  "subjects_deep_measured": 28,
+  "total_measurement_records": 60,
+  "chains_covered": 16,
+  "alerts": [],
+  "catalog": [
+    {
+      "symbol": "USDT",
+      "chains_measured": [
+        "arbitrum",
+        "avalanche",
+        "base",
+        "bsc",
+        "celo",
+        "ethereum",
+        "gnosis",
+        "mantle",
+        "optimism",
+        "polygon",
+        "solana",
+        "tron",
+        "zksync"
+      ],
+      "chain_count": 13,
+      "total_supply_measured": 199725164070.3155,
+      "total_supply_display": "$199.73B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:32:29.889250+00:00",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$88.31B",
+          "block": 25954124,
+          "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:20:47.781Z"
+        },
+        {
+          "chain": "arbitrum",
+          "supply": "$807.39M",
+          "block": null,
+          "source": "https://arbitrum-one-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:02:14.200Z"
+        },
+        {
+          "chain": "optimism",
+          "supply": "$232.67M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:13:40.180664+00:00"
+        },
+        {
+          "chain": "avalanche",
+          "supply": "$1.85B",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:13:40.180664+00:00"
+        },
+        {
+          "chain": "solana",
+          "supply": "$3.84B",
+          "block": null,
+          "source": "Solana getTokenSupply RPC",
+          "measured_at": "2026-09-12T04:14:55.472031+00:00"
+        },
+        {
+          "chain": "tron",
+          "supply": "$94.26B",
+          "block": null,
+          "source": "TronGrid triggerconstantcontract",
+          "measured_at": "2026-09-12T04:14:55.472031+00:00"
+        },
+        {
+          "chain": "bsc",
+          "supply": "$9.18B",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:15:58.001604+00:00"
+        },
+        {
+          "chain": "polygon",
+          "supply": "$736.71M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:21:20.538774+00:00"
+        },
+        {
+          "chain": "celo",
+          "supply": "$470.00M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:21:20.538774+00:00"
+        },
+        {
+          "chain": "zksync",
+          "supply": "$2.38M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:23:29.641058+00:00"
+        },
+        {
+          "chain": "base",
+          "supply": "$25.76M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:28:21.787408+00:00"
+        },
+        {
+          "chain": "mantle",
+          "supply": "$12.95M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:32:29.889250+00:00"
+        },
+        {
+          "chain": "gnosis",
+          "supply": "$1.17M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:32:29.889250+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "USDC",
+      "chains_measured": [
+        "arbitrum",
+        "aurora",
+        "avalanche",
+        "base",
+        "bsc",
+        "celo",
+        "ethereum",
+        "gnosis",
+        "mantle",
+        "optimism",
+        "polygon",
+        "scroll",
+        "solana",
+        "zksync"
+      ],
+      "chain_count": 14,
+      "total_supply_measured": 68722724617.56216,
+      "total_supply_display": "$68.72B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:32:29.889250+00:00",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$50.64B",
+          "block": 25954124,
+          "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:20:47.935Z"
+        },
+        {
+          "chain": "base",
+          "supply": "$4.25B",
+          "block": null,
+          "source": "https://base-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:02:13.922Z"
+        },
+        {
+          "chain": "arbitrum",
+          "supply": "$2.72B",
+          "block": null,
+          "source": "https://arbitrum-one-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:02:14.114Z"
+        },
+        {
+          "chain": "optimism",
+          "supply": "$166.01M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:13:40.180664+00:00"
+        },
+        {
+          "chain": "avalanche",
+          "supply": "$416.21M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:13:40.180664+00:00"
+        },
+        {
+          "chain": "solana",
+          "supply": "$8.07B",
+          "block": null,
+          "source": "Solana getTokenSupply RPC",
+          "measured_at": "2026-09-12T04:14:55.472031+00:00"
+        },
+        {
+          "chain": "bsc",
+          "supply": "$1.59B",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:15:58.001604+00:00"
+        },
+        {
+          "chain": "scroll",
+          "supply": "$5.13M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:15:58.001604+00:00"
+        },
+        {
+          "chain": "polygon",
+          "supply": "$803.81M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:21:20.538774+00:00"
+        },
+        {
+          "chain": "mantle",
+          "supply": "$22.24M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:21:20.538774+00:00"
+        },
+        {
+          "chain": "zksync",
+          "supply": "$10.64M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:23:29.641058+00:00"
+        },
+        {
+          "chain": "gnosis",
+          "supply": "$12.52M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:23:29.641058+00:00"
+        },
+        {
+          "chain": "aurora",
+          "supply": "$0.05M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:24:14.930793+00:00"
+        },
+        {
+          "chain": "celo",
+          "supply": "$14.69M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:32:29.889250+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "USDS",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 6614418781.160652,
+      "total_supply_display": "$6.61B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T12:20:48.106Z",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$6.61B",
+          "block": 25954124,
+          "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:20:48.106Z"
+        }
+      ]
+    },
+    {
+      "symbol": "DAI",
+      "chains_measured": [
+        "arbitrum",
+        "avalanche",
+        "base",
+        "bsc",
+        "ethereum",
+        "optimism",
+        "polygon"
+      ],
+      "chain_count": 7,
+      "total_supply_measured": 5150971263.222346,
+      "total_supply_display": "$5.15B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:30:34.121990+00:00",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$4.59B",
+          "block": 25954124,
+          "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:20:48.024Z"
+        },
+        {
+          "chain": "base",
+          "supply": "$1.77M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:28:21.787408+00:00"
+        },
+        {
+          "chain": "arbitrum",
+          "supply": "$15.24M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:29:11.169408+00:00"
+        },
+        {
+          "chain": "optimism",
+          "supply": "$13.69M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:29:11.169408+00:00"
+        },
+        {
+          "chain": "bsc",
+          "supply": "$31.10M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:30:34.121990+00:00"
+        },
+        {
+          "chain": "polygon",
+          "supply": "$491.01M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:30:34.121990+00:00"
+        },
+        {
+          "chain": "avalanche",
+          "supply": "$10.70M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:30:34.121990+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "USDe",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 4601684213.875278,
+      "total_supply_display": "$4.60B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T12:20:48.193Z",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$4.60B",
+          "block": 25954124,
+          "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:20:48.193Z"
+        }
+      ]
+    },
+    {
+      "symbol": "sUSDS",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 4140000000,
+      "total_supply_display": "$4.14B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:25:14.309598+00:00",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$4.14B",
+          "block": null,
+          "source": "eth_call via publicnode",
+          "measured_at": "2026-09-12T04:25:14.309598+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "RLUSD",
+      "chains_measured": [
+        "base",
+        "ethereum"
+      ],
+      "chain_count": 2,
+      "total_supply_measured": 2373732627.8560314,
+      "total_supply_display": "$2.37B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T13:30:00Z",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$1.37B",
+          "block": 25954124,
+          "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:20:48.458Z"
+        },
+        {
+          "chain": "base",
+          "supply": "$1.00B",
+          "block": null,
+          "source": "eth_call totalSupply() via base-rpc.publicnode.com",
+          "measured_at": "2026-09-11T13:30:00Z"
+        }
+      ]
+    },
+    {
+      "symbol": "crvUSD",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 2104809204.9818342,
+      "total_supply_display": "$2.10B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T12:20:48.553Z",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$2.10B",
+          "block": 25954124,
+          "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:20:48.553Z"
+        }
+      ]
+    },
+    {
+      "symbol": "PYUSD",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 1709470350.668232,
+      "total_supply_display": "$1.71B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T12:20:48.289Z",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$1.71B",
+          "block": 25954124,
+          "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:20:48.289Z"
+        }
+      ]
+    },
+    {
+      "symbol": "USD1",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 1570000000,
+      "total_supply_display": "$1.57B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T13:20:00Z",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$1.57B",
+          "block": null,
+          "source": "eth_call totalSupply() via ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T13:20:00Z"
+        }
+      ]
+    },
+    {
+      "symbol": "USDY",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 1034011525.5335459,
+      "total_supply_display": "$1.03B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T12:02:14.517Z",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$1.03B",
+          "block": null,
+          "source": "https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:02:14.517Z"
+        }
+      ]
+    },
+    {
+      "symbol": "USD",
+      "chains_measured": [
+        "XRPL"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 1000000801.116514,
+      "total_supply_display": "$1.00B",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T12:20:49.507Z",
+      "next_measurement": "daily",
+      "deployments": [
+        {
+          "chain": "XRPL",
+          "supply": "$1.00B",
+          "block": "106912299",
+          "source": "XRPL account_lines via https://xrplcluster.com",
+          "measured_at": "2026-09-11T12:20:49.507Z"
+        }
+      ]
+    },
+    {
+      "symbol": "GHO",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 699000000,
+      "total_supply_display": "$699.00M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T12:20:48.635Z",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$699.00M",
+          "block": 25954124,
+          "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:20:48.635Z"
+        }
+      ]
+    },
+    {
+      "symbol": "USD0",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 547890000,
+      "total_supply_display": "$547.89M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:19:33.714610+00:00",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$547.89M",
+          "block": null,
+          "source": "eth_call totalSupply() via publicnode",
+          "measured_at": "2026-09-12T04:19:33.714610+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "USDTB",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 483850000,
+      "total_supply_display": "$483.85M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:19:33.714610+00:00",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$483.85M",
+          "block": null,
+          "source": "eth_call totalSupply() via publicnode",
+          "measured_at": "2026-09-12T04:19:33.714610+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "USDG",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 377820000,
+      "total_supply_display": "$377.82M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T13:20:00Z",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$377.82M",
+          "block": null,
+          "source": "eth_call totalSupply() via ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T13:20:00Z"
+        }
+      ]
+    },
+    {
+      "symbol": "FDUSD",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 219670000,
+      "total_supply_display": "$219.67M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:20:42.599566+00:00",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$219.67M",
+          "block": null,
+          "source": "eth_call via publicnode",
+          "measured_at": "2026-09-12T04:20:42.599566+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "FRAX",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 219320045.87260038,
+      "total_supply_display": "$219.32M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T12:20:48.729Z",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$219.32M",
+          "block": 25954125,
+          "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:20:48.729Z"
+        }
+      ]
+    },
+    {
+      "symbol": "BUIDL",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 212050876.95,
+      "total_supply_display": "$212.05M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T13:20:00Z",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$212.05M",
+          "block": null,
+          "source": "eth_call totalSupply() via ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T13:20:00Z"
+        }
+      ]
+    },
+    {
+      "symbol": "MIM",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 174880000,
+      "total_supply_display": "$174.88M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:20:42.599566+00:00",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$174.88M",
+          "block": null,
+          "source": "eth_call via publicnode",
+          "measured_at": "2026-09-12T04:20:42.599566+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "USDD",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 124146228.24256718,
+      "total_supply_display": "$124.15M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-11T12:20:48.824Z",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$124.15M",
+          "block": 25954125,
+          "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com",
+          "measured_at": "2026-09-11T12:20:48.824Z"
+        }
+      ]
+    },
+    {
+      "symbol": "DOLA",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 103870000,
+      "total_supply_display": "$103.87M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:20:42.599566+00:00",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$103.87M",
+          "block": null,
+          "source": "eth_call via publicnode",
+          "measured_at": "2026-09-12T04:20:42.599566+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "FRXUSD",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 95870000,
+      "total_supply_display": "$95.87M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:25:14.309598+00:00",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$95.87M",
+          "block": null,
+          "source": "eth_call via publicnode",
+          "measured_at": "2026-09-12T04:25:14.309598+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "BRSRV",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 50190000,
+      "total_supply_display": "$50.19M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:27:33.303659+00:00",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$50.19M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:27:33.303659+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "LUSD",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 26300000,
+      "total_supply_display": "$26.30M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:20:42.599566+00:00",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$26.30M",
+          "block": null,
+          "source": "eth_call via publicnode",
+          "measured_at": "2026-09-12T04:20:42.599566+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "ALUSD",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 10380000,
+      "total_supply_display": "$10.38M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:27:33.303659+00:00",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$10.38M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:27:33.303659+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "eUSD",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 2000000,
+      "total_supply_display": "$2.00M",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:27:33.303659+00:00",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$2.00M",
+          "block": null,
+          "source": "",
+          "measured_at": "2026-09-12T04:27:33.303659+00:00"
+        }
+      ]
+    },
+    {
+      "symbol": "USDV",
+      "chains_measured": [
+        "ethereum"
+      ],
+      "chain_count": 1,
+      "total_supply_measured": 460000,
+      "total_supply_display": "$460,000",
+      "measurement_state": "DEEP_MEASURED",
+      "freshness": "2026-09-12T04:20:42.599566+00:00",
+      "next_measurement": "weekly",
+      "deployments": [
+        {
+          "chain": "ethereum",
+          "supply": "$0.46M",
+          "block": null,
+          "source": "eth_call via publicnode",
+          "measured_at": "2026-09-12T04:20:42.599566+00:00"
+        }
+      ]
+    }
+  ],
+  "swift_cohort": {
+    "total_institutions": 26,
+    "live": [
+      "HSBC",
+      "Standard Chartered",
+      "UOB"
+    ],
+    "committed": [
+      "JPMorgan",
+      "Deutsche Bank",
+      "Natwest",
+      "BNP Paribas",
+      "Citi",
+      "BNY Mellon",
+      "ANZ",
+      "Societe Generale",
+      "UBS"
+    ],
+    "discovered": [
+      "Barclays",
+      "Credit Suisse",
+      "Goldman Sachs",
+      "Morgan Stanley",
+      "Wells Fargo",
+      "TD Bank",
+      "RBC",
+      "Scotiabank",
+      "MUFG",
+      "Nomura",
+      "Standard Bank",
+      "DBS",
+      "OCBC",
+      "Maybank"
+    ],
+    "status": "census only, no deep measurement",
+    "settlement": "off-chain",
+    "note": "SWIFT migration deadline passed Mar 2025"
+  },
+  "iso20022": {
+    "families": {
+      "pacs": {
+        "name": "Clearing and Settlement",
+        "messages": 4,
+        "status": "IDENTIFIED"
+      },
+      "pain": {
+        "name": "Payment Initiation",
+        "messages": 4,
+        "status": "IDENTIFIED"
+      },
+      "camt": {
+        "name": "Cash Management",
+        "messages": 3,
+        "status": "IDENTIFIED"
+      },
+      "sese": {
+        "name": "Securities Settlement",
+        "messages": 3,
+        "status": "IDENTIFIED"
+      },
+      "seev": {
+        "name": "Securities Events",
+        "messages": 4,
+        "status": "IDENTIFIED"
+      },
+      "reda": {
+        "name": "Reference Data",
+        "messages": 2,
+        "status": "IDENTIFIED"
+      },
+      "auth": {
+        "name": "Authorization",
+        "messages": 2,
+        "status": "IDENTIFIED"
+      }
+    },
+    "total_messages": 25,
+    "implemented": 0,
+    "note": "Identified but not implemented"
+  },
+  "tokenized_funds": [
+    {
+      "symbol": "BUIDL",
+      "name": "BlackRock USD Institutional Digital Liquidity Fund",
+      "supply": "$212M (ETH only)",
+      "chains": 8,
+      "state": "DEEP_MEASURED on ETH",
+      "note": "Multiple share classes, DefiLlama $2.76B total"
+    },
+    {
+      "symbol": "USDY",
+      "name": "Ondo US Dollar Yield",
+      "supply": "$1.03B (ETH)",
+      "chains": 16,
+      "state": "DEEP_MEASURED on ETH"
+    },
+    {
+      "symbol": "USDG",
+      "name": "Global Dollar (Paxos)",
+      "supply": "$378M (ETH)",
+      "chains": 6,
+      "state": "DEEP_MEASURED on ETH"
+    },
+    {
+      "symbol": "USD1",
+      "name": "World Liberty Financial USD",
+      "supply": "$1.57B (ETH)",
+      "chains": 8,
+      "state": "DEEP_MEASURED on ETH"
+    },
+    {
+      "symbol": "USYC",
+      "name": "Circle USYC",
+      "supply": "$2.60B (DefiLlama)",
+      "chains": 2,
+      "state": "INDEXED"
+    },
+    {
+      "symbol": "BENJI",
+      "name": "Franklin Templeton BENJI",
+      "supply": "$700M+ (DefiLlama)",
+      "chains": 7,
+      "state": "INDEXED"
+    }
+  ],
+  "xrpl_instruments": {
+    "total": 16,
+    "measured": 1,
+    "note": "1 instrument measured (USD gateway $1.00B). RLUSD shows $0 via account_lines.",
+    "instruments": [
+      "RLUSD",
+      "BBRL",
+      "USDB",
+      "EURCV",
+      "USD.bs",
+      "EUR.bs",
+      "USD.gh",
+      "USDC",
+      "EUR.gh",
+      "EURQ",
+      "USDQ",
+      "OUSG",
+      "GBP.gh",
+      "EUROP",
+      "PSC",
+      "XAU.gh"
+    ]
+  }
+}

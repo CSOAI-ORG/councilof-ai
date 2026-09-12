@@ -1,0 +1,501 @@
+{
+  "schema": "csoai.financial-coverage/0.1",
+  "kind": "financial.cross-chain-measurement",
+  "generator": "cross-chain-reader-0.1.0",
+  "generated_at": "2026-09-11T12:02:14.602Z",
+  "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves",
+  "measurements": [
+    {
+      "symbol": "USDC",
+      "chain": "base",
+      "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "block": 51169393,
+      "supply_raw": "4247877041591458",
+      "supply_normalized": 4247877041.591458,
+      "supply_display": "$4.25B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "https://base-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:02:13.922Z"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "arbitrum",
+      "contract": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      "block": 504043202,
+      "supply_raw": "2717606623389642",
+      "supply_normalized": 2717606623.389642,
+      "supply_display": "$2.72B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "https://arbitrum-one-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:02:14.114Z"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "arbitrum",
+      "contract": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      "block": 504043202,
+      "supply_raw": "807390380983572",
+      "supply_normalized": 807390380.983572,
+      "supply_display": "$807.39M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "https://arbitrum-one-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:02:14.200Z"
+    },
+    {
+      "symbol": "BUIDL",
+      "chain": "ethereum",
+      "contract": "0x7712c3dD84997771f2b4a4797886523E7F717e8B",
+      "measurement_state": "MEASUREMENT_FAILED",
+      "error": "Cannot convert 0x to a BigInt"
+    },
+    {
+      "symbol": "USDY",
+      "chain": "ethereum",
+      "contract": "0x96F6eF951840721AdBF46Ac996b59E0235CB985C",
+      "block": 25954032,
+      "supply_raw": "1034011525533545855950146791",
+      "supply_normalized": 1034011525.5335459,
+      "supply_display": "$1.03B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "https://ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T12:02:14.517Z"
+    },
+    {
+      "symbol": "USDG",
+      "chain": "ethereum",
+      "contract": "0xE3B3f82f280A25f1CDF92ea5f22412B4a1e8Bc26",
+      "measurement_state": "MEASUREMENT_FAILED",
+      "error": "Cannot convert 0x to a BigInt"
+    },
+    {
+      "symbol": "BUIDL",
+      "chain": "ethereum",
+      "contract": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+      "supply_normalized": 212050876.95,
+      "supply_display": "$212.05M",
+      "measurement_state": "DEEP_MEASURED",
+      "note": "Ethereum ERC-20 only; DefiLlama $2.76B includes all share classes and chains",
+      "source": "eth_call totalSupply() via ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T13:20:00Z"
+    },
+    {
+      "symbol": "USDG",
+      "chain": "ethereum",
+      "contract": "0xe343167631d89b6ffc58b88d6b7fb0228795491d",
+      "supply_normalized": 377820000,
+      "supply_display": "$377.82M",
+      "measurement_state": "DEEP_MEASURED",
+      "note": "Ethereum only; DefiLlama $3.24B includes other chains",
+      "source": "eth_call totalSupply() via ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T13:20:00Z"
+    },
+    {
+      "symbol": "USD1",
+      "chain": "ethereum",
+      "contract": "0x8d0d000ee44948fc98c9b98a4fa4921476f08b0d",
+      "supply_normalized": 1570000000,
+      "supply_display": "$1.57B",
+      "measurement_state": "DEEP_MEASURED",
+      "note": "Ethereum only; DefiLlama $4.29B includes other chains",
+      "source": "eth_call totalSupply() via ethereum-rpc.publicnode.com",
+      "measured_at": "2026-09-11T13:20:00Z"
+    },
+    {
+      "symbol": "RLUSD",
+      "chain": "base",
+      "contract": "0x462f0085cb261AB49ad048A2B35Ee77135684308",
+      "supply_normalized": 1000000000,
+      "supply_display": "$1.00B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via base-rpc.publicnode.com",
+      "measured_at": "2026-09-11T13:30:00Z",
+      "note": "RLUSD Base deployment verified. Ethereum $1.37B + Base $1.00B = $2.37B (DefiLlama: $2.40B)",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-RLUSD-base"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "optimism",
+      "supply_normalized": 166010000,
+      "supply_display": "$166.01M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:13:40.180664+00:00"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "optimism",
+      "supply_normalized": 232670000,
+      "supply_display": "$232.67M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:13:40.180664+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "avalanche",
+      "supply_normalized": 416210000,
+      "supply_display": "$416.21M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:13:40.180664+00:00"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "avalanche",
+      "supply_normalized": 1850000000,
+      "supply_display": "$1.85B",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:13:40.180664+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "solana",
+      "supply_normalized": 8074413709,
+      "supply_display": "$8.07B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "Solana getTokenSupply RPC",
+      "measured_at": "2026-09-12T04:14:55.472031+00:00",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-USDC-solana"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "solana",
+      "supply_normalized": 3839903828,
+      "supply_display": "$3.84B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "Solana getTokenSupply RPC",
+      "measured_at": "2026-09-12T04:14:55.472031+00:00",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-USDT-solana"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "tron",
+      "supply_normalized": 94260200864,
+      "supply_display": "$94.26B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "TronGrid triggerconstantcontract",
+      "measured_at": "2026-09-12T04:14:55.472031+00:00",
+      "correction_link": "https://github.com/CSOAI-ORG/sovos-harness/issues/new?title=TUI2-correction-USDT-tron"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "bsc",
+      "supply_normalized": 9180000000,
+      "supply_display": "$9.18B",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:15:58.001604+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "bsc",
+      "supply_normalized": 1590000000,
+      "supply_display": "$1.59B",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:15:58.001604+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "scroll",
+      "supply_normalized": 5130000,
+      "supply_display": "$5.13M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:15:58.001604+00:00"
+    },
+    {
+      "symbol": "USDTB",
+      "chain": "ethereum",
+      "contract": "0xc139190f447e929f090edeb554d95abb8b18ac1c",
+      "supply_normalized": 483850000,
+      "supply_display": "$483.85M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via publicnode",
+      "measured_at": "2026-09-12T04:19:33.714610+00:00"
+    },
+    {
+      "symbol": "USD0",
+      "chain": "ethereum",
+      "contract": "0x73a15fed60bf67631dc6cd7bc5b6e8da8190acf5",
+      "supply_normalized": 547890000,
+      "supply_display": "$547.89M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call totalSupply() via publicnode",
+      "measured_at": "2026-09-12T04:19:33.714610+00:00"
+    },
+    {
+      "symbol": "FDUSD",
+      "chain": "ethereum",
+      "contract": "0xc5f0f7b66764f6ec8c8dff7ba683102295e16409",
+      "supply_normalized": 219670000,
+      "supply_display": "$219.67M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call via publicnode",
+      "measured_at": "2026-09-12T04:20:42.599566+00:00"
+    },
+    {
+      "symbol": "DOLA",
+      "chain": "ethereum",
+      "contract": "0x865377367054516e17014ccded1e7d814edc9ce4",
+      "supply_normalized": 103870000,
+      "supply_display": "$103.87M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call via publicnode",
+      "measured_at": "2026-09-12T04:20:42.599566+00:00"
+    },
+    {
+      "symbol": "LUSD",
+      "chain": "ethereum",
+      "contract": "0x5f98805a4e8be255a32880fdec7f6728c6568ba0",
+      "supply_normalized": 26300000,
+      "supply_display": "$26.30M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call via publicnode",
+      "measured_at": "2026-09-12T04:20:42.599566+00:00"
+    },
+    {
+      "symbol": "USDV",
+      "chain": "ethereum",
+      "contract": "0x05a275ed9edf4378ac54928379ee6bc6e8900e4c",
+      "supply_normalized": 460000,
+      "supply_display": "$0.46M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call via publicnode",
+      "measured_at": "2026-09-12T04:20:42.599566+00:00"
+    },
+    {
+      "symbol": "MIM",
+      "chain": "ethereum",
+      "contract": "0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3",
+      "supply_normalized": 174880000,
+      "supply_display": "$174.88M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call via publicnode",
+      "measured_at": "2026-09-12T04:20:42.599566+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "polygon",
+      "supply_normalized": 803810000,
+      "supply_display": "$803.81M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:21:20.538774+00:00"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "polygon",
+      "supply_normalized": 736710000,
+      "supply_display": "$736.71M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:21:20.538774+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "mantle",
+      "supply_normalized": 22240000,
+      "supply_display": "$22.24M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:21:20.538774+00:00"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "celo",
+      "supply_normalized": 470000000,
+      "supply_display": "$470.00M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:21:20.538774+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "zksync",
+      "supply_normalized": 10640000,
+      "supply_display": "$10.64M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:23:29.641058+00:00"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "zksync",
+      "supply_normalized": 2380000,
+      "supply_display": "$2.38M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:23:29.641058+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "gnosis",
+      "supply_normalized": 12520000,
+      "supply_display": "$12.52M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:23:29.641058+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "aurora",
+      "supply_normalized": 50000,
+      "supply_display": "$0.05M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:24:14.930793+00:00"
+    },
+    {
+      "symbol": "sUSDS",
+      "chain": "ethereum",
+      "contract": "0xa3931d71877c0e7a3148cb7eb4463524fec27fbd",
+      "supply_normalized": 4140000000,
+      "supply_display": "$4.14B",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call via publicnode",
+      "measured_at": "2026-09-12T04:25:14.309598+00:00"
+    },
+    {
+      "symbol": "FRXUSD",
+      "chain": "ethereum",
+      "contract": "0xcacd6fd266af91b8aed52accc382b4e165586e29",
+      "supply_normalized": 95870000,
+      "supply_display": "$95.87M",
+      "measurement_state": "DEEP_MEASURED",
+      "source": "eth_call via publicnode",
+      "measured_at": "2026-09-12T04:25:14.309598+00:00"
+    },
+    {
+      "symbol": "eUSD",
+      "chain": "ethereum",
+      "supply_normalized": 2000000,
+      "supply_display": "$2.00M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:27:33.303659+00:00"
+    },
+    {
+      "symbol": "ALUSD",
+      "chain": "ethereum",
+      "supply_normalized": 10380000,
+      "supply_display": "$10.38M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:27:33.303659+00:00"
+    },
+    {
+      "symbol": "BRSRV",
+      "chain": "ethereum",
+      "supply_normalized": 50190000,
+      "supply_display": "$50.19M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:27:33.303659+00:00"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "base",
+      "supply_normalized": 25760000,
+      "supply_display": "$25.76M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:28:21.787408+00:00"
+    },
+    {
+      "symbol": "DAI",
+      "chain": "base",
+      "supply_normalized": 1770000,
+      "supply_display": "$1.77M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:28:21.787408+00:00"
+    },
+    {
+      "symbol": "DAI",
+      "chain": "arbitrum",
+      "supply_normalized": 15240000,
+      "supply_display": "$15.24M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:29:11.169408+00:00"
+    },
+    {
+      "symbol": "DAI",
+      "chain": "optimism",
+      "supply_normalized": 13690000,
+      "supply_display": "$13.69M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:29:11.169408+00:00"
+    },
+    {
+      "symbol": "DAI",
+      "chain": "bsc",
+      "supply_normalized": 31100000,
+      "supply_display": "$31.10M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:30:34.121990+00:00"
+    },
+    {
+      "symbol": "DAI",
+      "chain": "polygon",
+      "supply_normalized": 491010000,
+      "supply_display": "$491.01M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:30:34.121990+00:00"
+    },
+    {
+      "symbol": "DAI",
+      "chain": "avalanche",
+      "supply_normalized": 10700000,
+      "supply_display": "$10.70M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:30:34.121990+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "celo",
+      "supply_normalized": 14690000,
+      "supply_display": "$14.69M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:32:29.889250+00:00"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "mantle",
+      "supply_normalized": 12950000,
+      "supply_display": "$12.95M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:32:29.889250+00:00"
+    },
+    {
+      "symbol": "USDT",
+      "chain": "gnosis",
+      "supply_normalized": 1170000,
+      "supply_display": "$1.17M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:32:29.889250+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "metis",
+      "supply_normalized": 4210000,
+      "supply_display": "$4.21M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T04:54:18.004472+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "sonic",
+      "supply_normalized": 136460000,
+      "supply_display": "$136.46M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T05:34:10.792369+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "linea",
+      "supply_normalized": 23370000,
+      "supply_display": "$23.37M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T05:34:10.792369+00:00"
+    },
+    {
+      "symbol": "USDB",
+      "chain": "blast",
+      "supply_normalized": 11490000,
+      "supply_display": "$11.49M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T05:34:10.792369+00:00"
+    },
+    {
+      "symbol": "USDC",
+      "chain": "zora",
+      "supply_normalized": 80000,
+      "supply_display": "$0.08M",
+      "measurement_state": "DEEP_MEASURED",
+      "measured_at": "2026-09-12T05:35:02.198888+00:00"
+    }
+  ],
+  "total_measured": 53
+}
