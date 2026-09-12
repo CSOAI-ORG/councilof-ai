@@ -247,6 +247,7 @@ const Integrations = lazy(() => import("./pages/Integrations"));
 const Crosswalks = lazy(() => import("./pages/Crosswalks"));
 const ModelRegistry = lazy(() => import("./pages/ModelRegistry"));
 const FrameworkCatalog = lazy(() => import("./pages/FrameworkCatalog"));
+const FrameworkPresence = lazy(() => import("./pages/FrameworkPresence"));
 const PolicyGenerator = lazy(() => import("./pages/PolicyGenerator"));
 const RiskHeatmap = lazy(() => import("./pages/RiskHeatmap"));
 const OsEnter = lazy(() => import("./pages/OsEnter"));
@@ -337,6 +338,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/badge": "White-label badge — Council of AI",
   "/get-listed": "You are listed. You are not graded. — Council of AI",
   "/licensing-agreement": "Measurement licence — evidence and data | Council of AI",
+  "/frameworks": "Frontier framework presence register | Council of AI",
   "/licence-manifest": "Licence manifest — request evidence, not a rank | Council of AI",
   "/council-model-card": "Council model card | Council of AI",
   "/council-system-card": "Council system card | Council of AI",
@@ -820,6 +822,10 @@ function App() {
                   <Route path="/guides/nist-ai-rmf" component={NISTAIRMFGuide} />
                   <Route path="/guides/iso-42001" component={ISO42001Guide} />
                   <Route path="/guides/tc260" component={TC260Guide} />
+                  {/* Exact /frameworks index — the frontier-safety framework presence
+                      register (G2.6). Placed before /frameworks/:slug; wouter matches
+                      paths exactly, so the :slug route still owns the guide URLs. */}
+                  <Route path="/frameworks" component={FrameworkPresence} />
                   <Route path="/frameworks/:slug" component={ContentReviewNotice} />
                   <Route path="/sectors/:slug" component={ContentReviewNotice} />
                   <Route path="/industries/:slug" component={ContentReviewNotice} />
