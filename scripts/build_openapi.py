@@ -70,6 +70,7 @@ CATALOG_FIXTURES = {
 DESCRIPTION_SOURCE = REPO / "functions" / "api" / "x402-descriptions.json"
 DESCRIPTION_PATHS = {
     "/api/proof": "proof_bundle",
+    "/api/request-attestation": "request_attestation",
     "/api/receipts/batch": "receipts_batch",
 }
 
