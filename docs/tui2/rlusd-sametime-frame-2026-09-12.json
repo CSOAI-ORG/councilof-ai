@@ -1,0 +1,103 @@
+{
+ "schema": "csoai.tui2-sametime-frame/1.0",
+ "generated_at": "2026-09-12T12:15:36.869583+00:00",
+ "code_revision": "tui2/stablecoin-lane-2026-09-12",
+ "frame_note": "Both readings taken in one session, seconds apart (XRPL 12:03:24Z, Ethereum 12:03:31Z). XRPL and Ethereum are SEPARATE DEPLOYMENTS of one issuer (Ripple); this frame is same-session, not a cross-date gap story. No claim that the two chains move together beyond these two instants.",
+ "subject": "RLUSD",
+ "issuer": "Ripple",
+ "readings": [
+  {
+   "chain": "xrpl",
+   "observed_at": "2026-09-12T12:03:24.565Z",
+   "finalized_ledger": 106934514,
+   "ledger_hash": "4177CA5DD83B80795BEF895A7018C23D677162F017DF6F042946F10EFCE978AD",
+   "method": "gateway_balances (obligations) via https://xrplcluster.com",
+   "supply_obligations": "1053014745.151131",
+   "supply_scale_figure": "gateway_balances.obligations (net outstanding issued amount)",
+   "trustline_reading": {
+    "method": "account_lines paginated (issuer perspective, negative balances)",
+    "pagination": {
+     "pages": 24,
+     "max_pages": 250,
+     "complete": true,
+     "continuation_marker_present": false
+    },
+    "trust_line_count": 9198,
+    "negative_balance_line_count": 6984,
+    "paged_line_balance_sum": "60489830.862363",
+    "scope_note": "account_lines sum = balances over paged trust lines only; may silently truncate on public clusters. Trust-line count is not a holder count and a paged line sum is not net obligations (gateway_balances).",
+    "holders_state": "UNMEASURED",
+    "holders_note": "Trust-line count is not a holder count: one account can hold several lines and custodial lines aggregate many holders. Holder count not established by this method."
+   },
+   "method_disagreement": {
+    "account_lines_sum": "60489830.862363",
+    "gateway_balances_obligations": "1053014745.151131",
+    "ratio": "account_lines sum is ~5.7% of obligations",
+    "explanation": "Public-cluster account_lines pagination silently truncates for this issuer (xrplcluster.com stopped at 24 pages; s1.ripple.com still incomplete at 80 pages with sum ~65.1M). gateway_balances obligations agreed across three independent endpoints (xrplcluster.com, s2.ripple.com:51234, xrpl.ws) at the same ledger. Both readings preserved; obligations is the supply-scale figure, the paged line sum is a trust-line-population reading.",
+    "cross_check": [
+     {
+      "endpoint": "https://xrplcluster.com",
+      "method": "gateway_balances",
+      "obligations": "1053014745.151137",
+      "ledger": 106929942
+     },
+     {
+      "endpoint": "https://s2.ripple.com:51234/",
+      "method": "gateway_balances",
+      "obligations": "1053014745.151135",
+      "ledger": 106929955
+     },
+     {
+      "endpoint": "https://xrpl.ws/",
+      "method": "gateway_balances",
+      "obligations": "1053014745.151135",
+      "ledger": 106929962
+     }
+    ]
+   },
+   "raw_record_sha256": "e652846c9a40cbed3496d935b2f85b79d7a2ba8fa44b2afb3732a753f403ab03",
+   "replay": "node scripts/readers/xrpl-trustline-reader.mjs rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De 524C555344000000000000000000000000000000",
+   "terms_boundary": "Public XRPL full-history cluster (xrplcluster.com). No API key. Rate limits apply.",
+   "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues"
+  },
+  {
+   "chain": "ethereum",
+   "observed_at": "2026-09-12T12:03:31.514Z",
+   "finalized_block": 25961208,
+   "block_hash": "0x373a06bfef2b071d4c26f3e90ff25eb84208c749b1c5f2f38a040f5b78d69201",
+   "method": "eth_call totalSupply() 0x18160ddd via https://ethereum-rpc.publicnode.com",
+   "contract": "0x8292bb45bf1ee4d140127049757c2e0ff06317ed",
+   "onchain_verification": {
+    "symbol()": "RLUSD",
+    "decimals()": 18,
+    "expected_symbol": "RLUSD",
+    "expected_decimals": 18,
+    "match": true
+   },
+   "totalSupply_raw": "1369732627856031556976088885",
+   "totalSupply_normalized": "1369732627.856031556976088885",
+   "endpoint_substitution": {
+    "default": "eth.llamarpc.com",
+    "used": "https://ethereum-rpc.publicnode.com",
+    "reason": "eth.llamarpc.com returned HTTP 525 at observation time (2026-09-12); substituted ethereum-rpc.publicnode.com (keyless public endpoint)",
+    "default_probe_at_observation": {
+     "http_status": 525,
+     "probed_at": "2026-09-12T12:03:31.806Z"
+    }
+   },
+   "raw_record_sha256": "1d0f1d14fd2ffe963797524c0cb02f34ff92e858d955c51d324af6a9efc86c26",
+   "replay": "EVM_RPC_ETHEREUM=https://ethereum-rpc.publicnode.com node scripts/readers/evm-erc20-reader.mjs ethereum 0x8292bb45bf1ee4d140127049757c2e0ff06317ed",
+   "terms_boundary": "Public RPC (llamarpc.com / base.org). No API key required. Rate limits apply.",
+   "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues"
+  }
+ ],
+ "combined_note": "XRPL obligations 1,053,014,745.151131 + Ethereum totalSupply 1,369,732,627.856032 = 2,422,747,373.007163 RLUSD across the two measured deployments at this frame. This is an arithmetic sum of two same-session readings, not a cross-date aggregate and not a proof of reserves.",
+ "not_claimed": [
+  "proof of reserves",
+  "holder counts",
+  "attestation verification",
+  "peg deviation verdict"
+ ],
+ "raw_frame_sha256": "ee57fde24acc745bec5bf08e2c3ff30cb93695db3634dd2ea45072055e254a8b",
+ "measurement_state_note": "Records use PROBED-style observation language; per-subject catalog states live in the coverage matrix, not in this frame file."
+}
