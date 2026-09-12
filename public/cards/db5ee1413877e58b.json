@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-12T09:23:19Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "google",
+      "surface": "safety_policy",
+      "url": "https://ai.google/responsibility/principles/",
+      "prev_sha256": "ac34c62389cb736832b5adbbcb3fac9d2ab0ae0494f5109adb6b3a297f5f4464",
+      "new_sha256": "2508208d6ea1a164582ca5f8b7413a4821118d1d25d786d6843f2102d43dc270",
+      "prev_bytes_sha256": "78868a2f491203dfde0438ecee3c218e8ab1d41b1531289f57538737e3430290",
+      "new_bytes_sha256": "9970a8ac752a6494684f983c4c73454e0b63ade20f355e04f78dec24175ae253",
+      "prev_fetched_at": "2026-09-05T09:06:18Z",
+      "fetched_at": "2026-09-12T09:23:19Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 170399,
+        "new": 170397
+      },
+      "etag": {
+        "prev": "\"K1JKdg\"",
+        "new": "\"h3mg6Q\""
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "db5ee1413877e58bde245b594941c92a31f3e4ebd5a2a51c1504827ee06507e8",
+    "sig_ed25519": "073f62f55625447c1dc2e74c4b56568572dab6b8268e084d0963e7e04439f897cd6b933adf1b49555a658a978e07c62affe9060a70a5edbace82d05217079e04",
+    "source_urls": [
+      "https://ai.google/responsibility/principles/"
+    ],
+    "subject": "Google — safety_policy: bytes changed 2026-09-12",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:google",
+      "surface:safety_policy",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "0c65c9e1e39c85ac58d686305ffc32bb110049280824d7a4bf3bcb66cd0dc20a",
+    "5ccaba1fb67c0ba3c9d39af604f58a0bb73932b92c91725e70474f41129bb563",
+    "934204db75cbe3a18255dca877b0a391e4c79e5996d754ff4b8840e1041d7662",
+    "8739d3d24c7d6c4ac585ab1af36613246f786d7464582b82e6c79f5613168de0",
+    "32e58dc6f1bb35fd3ce137f1f1841539751c24400c8411daa48437196ae3b84f",
+    "41974df8db576d8cf99e640e04844610c135332fa26b8e33ffc6cad5dc19fe63",
+    "89fefb471378d5e7db8b82a68e292a1d76ecc33b0caa07129ab6f56a5b79bf4d",
+    "f715de2d2f7a4daa9e2dba4bbbdf773108534176a0de9cf1a9f62f526db94208"
+  ]
+}

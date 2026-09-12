@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-12T09:23:55Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "alibaba-qwen",
+      "surface": "pricing",
+      "url": "https://www.alibabacloud.com/help/en/model-studio/billing-for-model-studio",
+      "prev_sha256": "c18b11ee47d306a8f1053acf48c561b313b69baaf8a8b0ca01885d50eff6de09",
+      "new_sha256": "d5926d149153ba1b262863d50ef1a5ebd17fb85ca364ea6cc7cccaa64b73e9a9",
+      "prev_bytes_sha256": "4493d0615026b6ee5689aaedf3bbcd2ce783d67d923ec5db69a9676cc4a6f032",
+      "new_bytes_sha256": "44ad78661e0ce2af88bb7a126a9d7ec26a9678f84b2e53025f11700f24e5f668",
+      "prev_fetched_at": "2026-09-05T09:06:18Z",
+      "fetched_at": "2026-09-12T09:23:55Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 431930,
+        "new": 430984
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "7132b3b3db4623874b31fea03ce94064556fd03a8a03e81af6a6961cf1a03f09",
+    "sig_ed25519": "af576fcda94a98f9be5a0f6f4e901f7e9d08ad560eb19836ce316f4dad686e48e11d474994b1b5712a53453fc4727316ab679b4bf284ed2c7e42eee790549e04",
+    "source_urls": [
+      "https://www.alibabacloud.com/help/en/model-studio/billing-for-model-studio"
+    ],
+    "subject": "Alibaba Cloud / Qwen — pricing: bytes changed 2026-09-12",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:alibaba-qwen",
+      "surface:pricing",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "578cf7846022146423830264e1e8f56b9b0e2ea46d1e988af7294a45127c126c",
+    "20bd65f4975876c011f0252e4845518dab3095921dc1701cf27dd416b43f270a",
+    "23ac5b3492458b5fa27d61853f0ac0f0e5258062bccf5d1a814d71ddc3d3f7d8",
+    "1aff61b37e06d17994ddf1d10c6f2507d6dffbcef70c4e09926cd677422ef78f",
+    "28fbbea4f3c1512579e40173033d022d9b778ce5722f8472368f100b0f740f96",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "98f48d02eacbff0ec10f374d39d7924b0902fc1860ea0bea55378b99e66d0e50",
+    "73a2fb931a5dc54ac705d78745d1c300607962972c7ed8493c3501e94fa37475"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-12T09:23:36Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "xai",
+      "surface": "model_cards",
+      "url": "https://docs.x.ai/docs/models",
+      "prev_sha256": "61858fcc82f656584431c8ea0cd798861710a27f3d7569afc8785f577b3284b0",
+      "new_sha256": "d19cda1ed068a7907617880a4d3cb22b103bc8b763aed7a9bc80a6a8dfef8d5d",
+      "prev_bytes_sha256": "2620aee901d02b19211f25200c2ff7b783a3498ccc33dbc74b568daa2b06b5b6",
+      "new_bytes_sha256": "b74af2e262ec71ad5254eeabfd76554700cf4325e16829ef7501b72553f460dd",
+      "prev_fetched_at": "2026-09-05T09:06:18Z",
+      "fetched_at": "2026-09-12T09:23:36Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 432027,
+        "new": 408519
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "95ca960573c98d088663ded04ac177daabdce53980b9c367cc7425356148d3d5",
+    "sig_ed25519": "39ff074682076bf85d7ce9908864a4c383bf796ad86c3554c667ca436185706b1ff8fabd29ade455a7631be66554622e5dd10f99c6865597dfa7a55b3d4cd004",
+    "source_urls": [
+      "https://docs.x.ai/docs/models"
+    ],
+    "subject": "xAI — model_cards: bytes changed 2026-09-12",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:xai",
+      "surface:model_cards",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "89e5d857360b579f74e8dabce20cd51542d41cefef2dcb96c662c013642de360",
+    "684e3ccc00d72ed0f1f943a4c9fab44d3bfbcc2a1f190c261a3e4e603555f4ba",
+    "9f4a232183c72602e9ff1ff67328e0930bc388b3a6ac8df826f432500ff2dcd0",
+    "0476467146c34e2610f25ecc77c1fb6af98b1de66008572f335e3d8e36efdb72",
+    "32e58dc6f1bb35fd3ce137f1f1841539751c24400c8411daa48437196ae3b84f",
+    "41974df8db576d8cf99e640e04844610c135332fa26b8e33ffc6cad5dc19fe63",
+    "89fefb471378d5e7db8b82a68e292a1d76ecc33b0caa07129ab6f56a5b79bf4d",
+    "f715de2d2f7a4daa9e2dba4bbbdf773108534176a0de9cf1a9f62f526db94208"
+  ]
+}

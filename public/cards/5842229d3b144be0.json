@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-12T09:23:38Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "cohere",
+      "surface": "terms",
+      "url": "https://cohere.com/terms-of-use",
+      "prev_sha256": "120da258b0bc1ea8dcb060aeba9360f8c0fc7c8fc678aa2701bb9ab4bf93b0fb",
+      "new_sha256": "7f56d728ebcec2bb6f4c14ed163b35775cbbe750907a084e40db0ae190d08e8b",
+      "prev_bytes_sha256": "9905e5943e74de5a1050ea7c1c2dca06b63fcbb222ca8db0bac61deff2e283c7",
+      "new_bytes_sha256": "51d4b2cc98a135cb4391418b846ac6bf1e032b50aa34e0b9c0b5fec886ad0850",
+      "prev_fetched_at": "2026-09-05T09:06:18Z",
+      "fetched_at": "2026-09-12T09:23:38Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 570538,
+        "new": 574480
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "5842229d3b144be09c6adae407aa3551de1c5d9903b3a75f4329d6d54405dbdf",
+    "sig_ed25519": "2f4461581014050841f4ab6afff30d9658f9801c73c44d269c4e086b7bb5ec448d90ad6d87332d38381a06158928e93cde4b177de2d97517a7014a43ad3a7308",
+    "source_urls": [
+      "https://cohere.com/terms-of-use"
+    ],
+    "subject": "Cohere — terms: bytes changed 2026-09-12",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:cohere",
+      "surface:terms",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "4aa4e593f2d9e2eecd92eed0bbd336eee7c9b002a035c4761fb791d3bf27e291",
+    "a92302bb3968668b400f1b19f730d0390228c7fafd19370635c3e6020345fbd5",
+    "34b3c629232a7ee9f7412c920d660a60baeaae111597057851714cae90d36cd9",
+    "60508b9d1a83609c6ace86f8345160344eb2d455ae07bf0fe04ef73731b150cd",
+    "bb3e438261e654dc1167f72c57946a7865be59a97c88a7c1240ad489f62a9c24",
+    "41974df8db576d8cf99e640e04844610c135332fa26b8e33ffc6cad5dc19fe63",
+    "89fefb471378d5e7db8b82a68e292a1d76ecc33b0caa07129ab6f56a5b79bf4d",
+    "f715de2d2f7a4daa9e2dba4bbbdf773108534176a0de9cf1a9f62f526db94208"
+  ]
+}
