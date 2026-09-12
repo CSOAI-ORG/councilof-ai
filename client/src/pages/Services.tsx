@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ServicePreview } from "@/components/ServicePreview";
 import { Helmet } from "react-helmet-async";
 import { buildCatalogue, type Catalogue } from "@/lib/servicesCatalogue";
 
@@ -132,12 +133,7 @@ export default function Services() {
                         <p className="mt-2 flex-1 text-sm leading-6 text-slate-300">{c.measures}</p>
                         <p className="mt-3 text-[12px] text-slate-400">{c.payLine}</p>
                         {c.freePreview ? (
-                          <a
-                            href={c.freePreview}
-                            className="mt-3 text-sm font-semibold text-emerald-300 underline underline-offset-4"
-                          >
-                            Free preview →
-                          </a>
+                          <ServicePreview template={c.freePreview} />
                         ) : (
                           <p className="mt-3 text-[12px] text-slate-500">
                             No free preview is published for this door.
