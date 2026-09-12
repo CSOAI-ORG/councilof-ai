@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Google — pricing: bytes changed 2026-09-12",
+ "as_of": "2026-09-12T09:23:18Z",
+ "source_urls": [
+  "https://ai.google.dev/gemini-api/docs/pricing"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "google",
+  "surface": "pricing",
+  "url": "https://ai.google.dev/gemini-api/docs/pricing",
+  "prev_sha256": "aefcf7243d8c452b4df3b8f411b7ab92a173061af8dd2c959a1f898f789239d8",
+  "new_sha256": "53cd5f3f70c20cf542405515eda8dc3a346d9b5fd3ffb3939ba0b90269bdd1d4",
+  "prev_bytes_sha256": "ec47b7a23fdf4194a949bc601d5fde0283ea9843f563be8750f4293d91ec1d0b",
+  "new_bytes_sha256": "aa4611d92d50f5dac19ba10618c128a46113a267d3e99896b3437aa65cddf118",
+  "prev_fetched_at": "2026-09-05T09:06:18Z",
+  "fetched_at": "2026-09-12T09:23:18Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 248203,
+   "new": 241799
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": "Fri, 04 Sep 2026 09:14:05 GMT",
+   "new": "Fri, 11 Sep 2026 15:43:12 GMT"
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "9e0efdd9bf90ab7b6d90f974333927e10aea4c5f42252d38f49677a7df6c59d3",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:google",
+  "surface:pricing",
+  "hash-only"
+ ]
+}

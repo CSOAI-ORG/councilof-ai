@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Google — usage_policy: bytes changed 2026-09-12",
+ "as_of": "2026-09-12T09:23:16Z",
+ "source_urls": [
+  "https://policies.google.com/terms/generative-ai/use-policy"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "google",
+  "surface": "usage_policy",
+  "url": "https://policies.google.com/terms/generative-ai/use-policy",
+  "prev_sha256": "da93561e4de6b2280008c65cbdf61e83e304666e65196606f65c77970fc9d84a",
+  "new_sha256": "267806a6a9760bdf90af97d6618d2a39a7167cc4f7e21b89fea857b9a0cd4833",
+  "prev_bytes_sha256": "c3da40f4cd7e8bf0b11eee9fbaff4f14874607d9ac7929b23d292e4be6502347",
+  "new_bytes_sha256": "408fa052e6bf4804bc6a829d6a0c727425f4f1df6c637be658451da48a621695",
+  "prev_fetched_at": "2026-09-05T09:06:18Z",
+  "fetched_at": "2026-09-12T09:23:16Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 563590,
+   "new": 540138
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": null,
+   "new": null
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "019a56afac03a86f2fb19983c1327d082fe859dead70b00ab2a5e74aace02020",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:google",
+  "surface:usage_policy",
+  "hash-only"
+ ]
+}
