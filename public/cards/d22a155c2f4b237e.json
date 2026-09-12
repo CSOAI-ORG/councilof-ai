@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-12T09:23:20Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "google",
+      "surface": "art50_marking",
+      "url": "https://deepmind.google/technologies/synthid/",
+      "prev_sha256": "9c4d81ad937037dcae54bb067aa9b8419ffdd40b26ad770e11c57f2674fec2b6",
+      "new_sha256": "2c8b9894d669b01659fee1c8656802361d6816e7c58d2fba821a3d64c8069412",
+      "prev_bytes_sha256": "44d7cfb2c13a34fec1cb1442390cb52542e71dd631516a17b4235150d57f025b",
+      "new_bytes_sha256": "3fdbe573c51aa0a49cea945e6dd19feacb378c6e937f63d2f6201d182eb39283",
+      "prev_fetched_at": "2026-09-05T09:06:18Z",
+      "fetched_at": "2026-09-12T09:23:20Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 143554,
+        "new": 145152
+      },
+      "etag": {
+        "prev": "\"O2a0og\"",
+        "new": "\"bCRXtg\""
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d22a155c2f4b237e3185042e216c4d149f3deb3e8d596e26494822b4559785b2",
+    "sig_ed25519": "ccde0d9136c310f0e2917f124c56cf3c934d7dfac66125d7ae386d7ec2504b2744d8be21b1b05a8e9a1d5823caf2c99f06fa32e59d37172409b88a1d8ab41b02",
+    "source_urls": [
+      "https://deepmind.google/technologies/synthid/"
+    ],
+    "subject": "Google — art50_marking: bytes changed 2026-09-12",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:google",
+      "surface:art50_marking",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "9b97b34101ed1664a63085489af40ba0785178b213f111907e6be05b0cb36298",
+    "c945b97e52fd78255616b7a49aa035916e85d96ab76dad908500a10a99b22060",
+    "d5d0f2ceed423fdceefa9c15979450da827a027b2e688a4d94170150dbf924e5",
+    "e730bea23bc663a820e4265d6d5186ba75806ba3f819b435c1b685b0b5b3c1e0",
+    "bb3e438261e654dc1167f72c57946a7865be59a97c88a7c1240ad489f62a9c24",
+    "41974df8db576d8cf99e640e04844610c135332fa26b8e33ffc6cad5dc19fe63",
+    "89fefb471378d5e7db8b82a68e292a1d76ecc33b0caa07129ab6f56a5b79bf4d",
+    "f715de2d2f7a4daa9e2dba4bbbdf773108534176a0de9cf1a9f62f526db94208"
+  ]
+}
