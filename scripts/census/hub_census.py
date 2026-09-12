@@ -160,6 +160,13 @@ def utcnow() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def utc_iso(value: datetime) -> str:
+    """Render one unambiguous UTC instant for public census metadata."""
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def parse_iso(value: str | None) -> datetime | None:
     if not value:
         return None
@@ -470,6 +477,7 @@ def write_counts_only(
     *,
     jsonl_path: Path | None = None,
     source: str | None = None,
+    run_context: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Write counts-only artifacts. Never writes listings.jsonl or weights."""
     if records is None:
@@ -482,10 +490,21 @@ def write_counts_only(
     unique_ids = [row.get("id") for row in records if row.get("id")]
     existing = load_json(out_dir / "SUMMARY.json", {})
     origin = source or existing.get("source") or "huggingface.co/api/models"
-    axis_doc = {**axis_doc, "source": origin, "n_measured": 0}
-    org_doc = {**org_doc, "source": origin, "n_measured": 0}
+    context_source = run_context or existing
+    mode = context_source.get("mode") or "baseline"
+    run_metadata = {
+        "mode": mode,
+        "count_semantics": "window-delta" if mode == "delta" else "cumulative-snapshot",
+        "overlap_hours": context_source.get("overlap_hours") if mode == "delta" else None,
+        "window_start": context_source.get("window_start"),
+        "window_end": context_source.get("window_end"),
+        "source_as_of": context_source.get("source_as_of"),
+    }
+    axis_doc = {**axis_doc, "source": origin, **run_metadata, "n_measured": 0}
+    org_doc = {**org_doc, "source": origin, **run_metadata, "n_measured": 0}
     summary = {
         "kind": KIND,
+        **run_metadata,
         "listing_state_all": LISTING_STATE,
         "status_all": GSPC_STATE,
         "n": len(unique_ids),
@@ -746,8 +765,16 @@ def write_summary(out_dir: Path, state: dict[str, Any], jsonl_path: Path) -> dic
         ),
         "bytes_jsonl": size,
         "sha256_jsonl": digest,
-        "as_of": utcnow(),
+        # Keep as_of for existing consumers, but give it source-time semantics.
+        "as_of": state.get("source_as_of"),
+        "source_as_of": state.get("source_as_of"),
         "mode": state.get("mode"),
+        "count_semantics": (
+            "window-delta" if state.get("mode") == "delta" else "cumulative-snapshot"
+        ),
+        "overlap_hours": state.get("overlap_hours") if state.get("mode") == "delta" else None,
+        "window_start": state.get("window_start"),
+        "window_end": state.get("window_end"),
         "next_url": None if state.get("complete") else state.get("next_url"),
         "last_id": state.get("last_id"),
         "last_modified": state.get("last_modified"),
@@ -815,8 +842,14 @@ def collect(
     state["n_written"] = max(int(state.get("n_written") or 0), len(seen))
     floor = None
     if mode == "delta":
-        watermark = parse_iso(since) or datetime.now(timezone.utc)
+        run_start = parse_iso(state.get("started_at")) or datetime.now(timezone.utc)
+        watermark = parse_iso(since) or run_start
         floor = watermark - timedelta(hours=overlap_hours)
+        state["overlap_hours"] = overlap_hours
+        state["window_start"] = utc_iso(floor)
+    else:
+        state["overlap_hours"] = None
+        state["window_start"] = state.get("started_at")
 
     url = state.get("next_url")
     with jsonl_path.open("a", encoding="utf-8") as handle:
@@ -883,11 +916,25 @@ def collect(
             if sleep_s:
                 time.sleep(sleep_s)
 
+    # Source time is when this collector finished observing the Hub listing API,
+    # distinct from any later publication or derivation timestamp.
+    state["window_end"] = utcnow()
+    state["source_as_of"] = state["window_end"]
     summary = write_summary(out_dir, state, jsonl_path)
     origin = source or ("synthetic-hub-opener" if opener is not None else "huggingface.co/api/models")
-    artifacts = write_counts_only(out_dir, jsonl_path=jsonl_path, source=origin)
+    artifacts = write_counts_only(
+        out_dir,
+        jsonl_path=jsonl_path,
+        source=origin,
+        run_context=state,
+    )
     if publish_dir is not None:
-        write_counts_only(publish_dir, jsonl_path=jsonl_path, source=origin)
+        write_counts_only(
+            publish_dir,
+            jsonl_path=jsonl_path,
+            source=origin,
+            run_context=state,
+        )
     atomic_json(cursor_path, state)
     return {
         "state": state,

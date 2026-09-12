@@ -62,7 +62,7 @@ export const PRIMARY_PATHS = new Set<string>([
   "/findings", "/regulator-findings",
   // Products — the family, and who it is for
   "/products", "/pricing-free", "/attestation", "/gpai-evidence", "/cra-readiness", "/financial-axes",
-  "/distribution-integrity", "/embed", "/white-label", "/badge", "/cobol", "/cobolbridge",
+  "/distribution-integrity", "/rlusd", "/embed", "/white-label", "/badge", "/cobol", "/cobolbridge",
   "/council-licensing", "/licensing-agreement",
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
   // GenAI.mil federal-AI move — static evidence surface (public/genai-mil.html).

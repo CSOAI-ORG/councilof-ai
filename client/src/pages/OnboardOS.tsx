@@ -57,6 +57,12 @@ export default function OnboardOS() {
           and loginless. A grade is never sold. <a href="/gspc-verify" className="font-semibold text-emerald-300 underline hover:text-emerald-200">Verify a card →</a>
           {" "}Preparing for EU AI Act Article 50 marking? <a href="/art50" className="font-semibold text-emerald-300 underline hover:text-emerald-200">Verification services →</a>
         </div>
+
+        <div className="mt-4 rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/75">
+          See the method on live public data: RLUSD supply on XRPL and Ethereum, read from public
+          endpoints in your browser with a labeled fallback snapshot.{" "}
+          <a href="/rlusd" className="font-semibold text-emerald-300 underline hover:text-emerald-200">RLUSD supply, measured live →</a>
+        </div>
       </section>
     </div>
   );

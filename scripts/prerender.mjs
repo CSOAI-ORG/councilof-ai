@@ -97,6 +97,8 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
   "/countdown/",
   "/art50",
   "/art50/",
+  "/rlusd",
+  "/rlusd/",
   "/proof",
   "/proof/",
   "/status",

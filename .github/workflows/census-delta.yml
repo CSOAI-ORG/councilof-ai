@@ -21,6 +21,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
+  actions: write          # explicitly dispatches the required gates for the bot commit
   contents: write
   pull-requests: write
 
@@ -76,6 +77,20 @@ jobs:
           if axis.get("n") != s.get("n") or org.get("n") != s.get("n"):
               print("HALT: register n does not equal fetch n", s.get("n"), axis.get("n"), org.get("n"), file=sys.stderr)
               sys.exit(3)
+          for name, document in (("SUMMARY", s), ("axis-sources", axis), ("org-register", org)):
+              if document.get("mode") != "delta":
+                  print("HALT:", name, "is not explicitly delta", file=sys.stderr)
+                  sys.exit(3)
+              if float(document.get("overlap_hours") or 0) != 6:
+                  print("HALT:", name, "does not declare six-hour overlap", file=sys.stderr)
+                  sys.exit(3)
+              if document.get("count_semantics") != "window-delta":
+                  print("HALT:", name, "could masquerade as a cumulative total", file=sys.stderr)
+                  sys.exit(3)
+              for field in ("window_start", "window_end", "source_as_of"):
+                  if not document.get(field):
+                      print("HALT:", name, "missing", field, file=sys.stderr)
+                      sys.exit(3)
           print(
               "n=", s.get("n"),
               "n_measured=", s.get("n_measured"),
@@ -96,8 +111,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          git config user.name "csoai-census-delta"
-          git config user.email "board@csoai.org"
+          # Use GitHub's linked bot identity so the commit is attributable to the
+          # workflow app rather than an unlinked, human-looking email address.
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/signed/hub-census-delta.json scripts/census/delta.SUMMARY.json \
             public/interop/hf-census/SUMMARY.json \
             public/interop/hf-census/axis-sources.json \
@@ -116,9 +133,14 @@ jobs:
           git checkout -b "$BR"
           git commit -m "census-delta: counts-only register, n_measured=0 (${STAMP})"
           git push origin "HEAD:$BR"
-          gh pr create --base master --head "$BR" \
+          URL=$(gh pr create --base master --head "$BR" \
             --title "census-delta: counts-only register, n_measured=0 (${STAMP})" \
-            --body "Hub API index dump (not a probe, not a mill). \`n_measured=0\`. Never \`listings.jsonl\`. 22-axis counts + org register under \`public/interop/hf-census/\`. A listing is DISCOVERED, not a grade."
+            --body "Six-hour overlapping Hub API delta (not a cumulative total, probe, or mill). \`mode=delta\`, \`overlap_hours=6\`, and the source window are explicit. \`n_measured=0\`. Never \`listings.jsonl\`. 22-axis counts + org register under \`public/interop/hf-census/\`. A listing is DISCOVERED, not a grade.")
+          # GITHUB_TOKEN pushes deliberately do not emit pull_request events. Dispatch
+          # the existing full gate on this trusted internal branch instead of bypassing
+          # branch protection or trying to manufacture an approval.
+          gh workflow run pr-gates.yml --ref "$BR"
+          gh pr merge "$URL" --squash --auto || echo "auto-merge unavailable; $URL needs a human merge"
           echo "landed=1" >> "$GITHUB_OUTPUT"
           echo "branch=$BR" >> "$GITHUB_OUTPUT"
       - name: dispatch census-tick

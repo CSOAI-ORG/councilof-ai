@@ -1,0 +1,22 @@
+{
+  "schema": "csoai.rlusd-snapshot/1.0",
+  "purpose": "Labeled FALLBACK snapshot for /rlusd. Rendered ONLY when a live reader failed in this session. Numbers here are as_of 2026-09-12, never presented as live.",
+  "as_of": "2026-09-12",
+  "taken_by": "manual curl verification 2026-09-12 (see PR for feat/rlusd-page)",
+  "note": "Measurement, not certification. Not a rating of any issuer. These are two deployment readings, not total supply across every RLUSD network. No market-cap comparison is used as chain-supply evidence.",
+  "xrpl": {
+    "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+    "currency_hex": "524C555344000000000000000000000000000000",
+    "method": "gateway_balances (obligations, validated ledger)",
+    "supply": "1053014745.151137",
+    "ledger_index": 106929485,
+    "endpoint_used": "https://xrplcluster.com"
+  },
+  "ethereum": {
+    "contract": "0x8292bb45bf1ee4d140127049757c2e0ff06317ed",
+    "method": "eth_call totalSupply() (0x18160ddd), 18 decimals",
+    "supply": "1369732627.856031556976088885",
+    "block": 25959633,
+    "endpoint_used": "https://ethereum.publicnode.com"
+  }
+}

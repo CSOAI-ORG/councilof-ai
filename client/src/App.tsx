@@ -125,6 +125,7 @@ const CustodyDisclosure = lazy(() => import("./pages/CustodyDisclosure"));
 const MergeMe = lazy(() => import("./pages/MergeMe"));
 const HealthInventory = lazy(() => import("./pages/HealthInventory"));
 const RlusdSpecimen = lazy(() => import("./pages/RlusdSpecimen"));
+const Rlusd = lazy(() => import("./pages/Rlusd"));
 const KokotajloSpecimen = lazy(() => import("./pages/KokotajloSpecimen"));
 const AiTransparency = lazy(() => import("./pages/AiTransparency"));
 const ABTesting = lazy(() => import("./pages/ABTesting"));
@@ -416,6 +417,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/status/internal": "Weekly yield template | Council of AI",
   "/countdown": "Regulatory countdown | Council of AI",
   "/art50": "Article 50 verification services | Council of AI",
+  "/rlusd": "RLUSD supply on XRPL and Ethereum | Council of AI",
   "/receipt": "Inclusion receipt | Council of AI",
   "/custody": "Custody disclosure | Council of AI",
   "/merge-me": "Merge-me — the train | Council of AI",
@@ -1129,6 +1131,7 @@ function App() {
                   <Route path="/merge-me" component={MergeMe} />
                   <Route path="/specimens/clarity" component={ClaritySpecimen} />
                   <Route path="/specimens/rlusd" component={RlusdSpecimen} />
+                  <Route path="/rlusd" component={Rlusd} />
                   <Route path="/specimens/kokotajlo" component={KokotajloSpecimen} />
                   <Route path="/health-inventory" component={HealthInventory} />
                   <Route path="/system" component={ContentReviewNotice} />
