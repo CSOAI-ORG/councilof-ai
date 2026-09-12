@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Route Receipts — observable evidence for model routers and agent orchestrators | Council of AI</title>
+  <meta name="description" content="A public, vendor-neutral format for recording declared and observed model-routing evidence without retaining prompt or response content." />
+  <style>
+    :root{color-scheme:dark;--bg:#05080f;--panel:#0c1422;--line:#21304a;--ink:#edf3fb;--muted:#9fb0c8;--gold:#d3ad68;--green:#45d39c}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0,#14233b 0,transparent 34%),var(--bg);color:var(--ink);font:16px/1.55 Inter,ui-sans-serif,system-ui,sans-serif}main{max-width:1080px;margin:auto;padding:clamp(24px,6vw,72px) 20px}.eyebrow{color:var(--gold);font:700 12px/1.2 ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase}h1{max-width:820px;font-size:clamp(40px,7vw,76px);line-height:.98;margin:18px 0 22px;letter-spacing:-.045em}p{color:var(--muted);max-width:760px}.lead{font-size:clamp(18px,2.5vw,24px);color:#cbd7e7}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:42px 0}.card{background:linear-gradient(180deg,#101a2b,#09111d);border:1px solid var(--line);border-radius:16px;padding:20px}.card h2{font-size:18px;margin:0 0 8px}.card p{font-size:14px;margin:0}.flow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:26px 0 42px}.step{border:1px solid var(--line);background:#09111d;border-radius:999px;padding:8px 12px;color:#cbd7e7;font:600 13px ui-monospace,monospace}.arrow{color:var(--green)}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px}.btn{display:inline-flex;text-decoration:none;border-radius:10px;padding:11px 15px;border:1px solid var(--line);color:var(--ink);font-weight:700}.btn.primary{background:var(--gold);border-color:var(--gold);color:#101317}.note{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}code{color:#d5e7ff}@media(max-width:760px){.grid{grid-template-columns:1fr}h1{font-size:44px}.flow{align-items:flex-start;flex-direction:column}.arrow{transform:rotate(90deg);margin-left:18px}}
+  </style>
+</head>
+<body><main>
+  <div class="eyebrow">Open measurement surface · v0.1</div>
+  <h1>Make model routing observable without exposing the prompt.</h1>
+  <p class="lead">A Route Receipt records the policy a router declared, the route facts a client could observe, and the integrity trail for one orchestration event. Request and response content can remain private as SHA-256 digests.</p>
+  <div class="flow" aria-label="Route Receipt process">
+    <span class="step">freeze policy</span><span class="arrow">→</span><span class="step">run fixture</span><span class="arrow">→</span><span class="step">record observed route</span><span class="arrow">→</span><span class="step">sign + root</span><span class="arrow">→</span><span class="step">correct publicly</span>
+  </div>
+  <div class="grid">
+    <section class="card"><h2>Comparable</h2><p>Provider, model, fallback, latency, usage, cost and retention policy use one stable envelope across compatible routing services.</p></section>
+    <section class="card"><h2>Privacy preserving</h2><p>Prompts and responses may stay undisclosed. The receipt carries their digests and states exactly which route facts were unavailable.</p></section>
+    <section class="card"><h2>Correctable</h2><p>Every production receipt points to a correction channel and may be included in a signed public root. A receipt measures; it does not certify.</p></section>
+  </div>
+  <h2>An open door for routers, gateways and agent runtimes</h2>
+  <p>Any project can implement the schema, publish a synthetic fixture, or offer an approved trace bundle. CSOAI can independently index public interfaces without implying a partnership. A design-partner relationship begins only when both sides explicitly agree and disclose it.</p>
+  <p>The free layer contains the schema, method, sample and verification. Optional x402 products pay for a fresh signature, historical assembly, monitoring cadence or private evidence pack. Payment cannot change a result or purchase board placement.</p>
+  <h2>Start without a meeting</h2>
+  <p>Open a public fixture request with an immutable URL and exact revision. We can hash and compare the declared route policy with the facts a client can observe. Keep prompts, responses, credentials, personal data and private traces out of the issue. If you prefer machine payment, the x402 door records a signed commission; payment does not guarantee admission or an outcome.</p>
+  <div class="actions">
+    <a class="btn primary" href="/interop/route-receipt.schema.json">Open JSON Schema</a>
+    <a class="btn" href="/interop/route-receipt.synthetic.example.json">Inspect synthetic example</a>
+    <a class="btn" href="/interop/design-partner-open-door.json">Machine-readable open door</a>
+    <a class="btn" href="https://github.com/CSOAI-ORG/councilof-ai/issues/new?template=open-design-partner.yml">Offer a public fixture on GitHub</a>
+    <a class="btn" href="/api/request-attestation?subject=route-receipt-design-partner">Open x402 commission</a>
+    <a class="btn" href="mailto:nicholas@csoai.org?subject=Route%20Receipt%20fixture">Offer a fixture</a>
+  </div>
+  <p class="note">Independent measurement by Council of AI (CSOAI LTD, UK company 16939677). No service named or later measured through this format is a partner, customer, sponsor or endorser unless a separate public relationship record says so.</p>
+</main></body></html>

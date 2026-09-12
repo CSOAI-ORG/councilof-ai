@@ -1,0 +1,45 @@
+{
+  "schema": "csoai.design-partner-open-door/0.1",
+  "as_of": "2026-09-12T08:15:00Z",
+  "status": "OPEN",
+  "purpose": "A vendor-neutral route from public agent or model infrastructure to independently reproducible governance measurements and signed evidence records.",
+  "eligible_inputs": [
+    "public OpenAI-compatible API",
+    "MCP or A2A endpoint",
+    "OpenTelemetry trace fixture",
+    "documented route-policy fixture",
+    "approved sandbox or replay bundle"
+  ],
+  "first_deliverable": "One privacy-preserving Route Receipt plus a declared-versus-observed gap report. No confidential request or response content is required.",
+  "start_without_permission": {
+    "public_fixture_issue": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?template=open-design-partner.yml",
+    "schema": "https://councilof.ai/interop/route-receipt.schema.json",
+    "synthetic_example": "https://councilof.ai/interop/route-receipt.synthetic.example.json",
+    "rule": "Submit only public, non-sensitive material. A public measurement request does not create a partnership."
+  },
+  "x402_commission": {
+    "status": "LIVE",
+    "resource": "https://councilof.ai/api/request-attestation?subject=route-receipt-design-partner",
+    "deliverable": "A signed commission receipt and any already-admitted signed cards on file for the named subject.",
+    "limitation": "Payment records a commission. It does not guarantee that a target will be measurable, admitted, or assigned any outcome."
+  },
+  "commercial_boundary": {
+    "free": ["schema", "synthetic fixture", "method", "correction path", "public verification"],
+    "x402_optional": ["fresh signed receipt", "historical bundle assembly", "monitoring cadence", "private evidence pack"],
+    "never_sold": ["a better measurement result", "board placement", "certification", "silence about a correction"]
+  },
+  "independence": [
+    "A public target can be independently indexed or measured without becoming a partner.",
+    "Design-partner, funding, access-credit and infrastructure relationships must be disclosed.",
+    "Measured entities receive the same correction path and cannot buy a result or veto publication."
+  ],
+  "artifacts": {
+    "schema": "https://councilof.ai/interop/route-receipt.schema.json",
+    "synthetic_example": "https://councilof.ai/interop/route-receipt.synthetic.example.json",
+    "corrections": "https://councilof.ai/api/corrections",
+    "verification": "https://councilof.ai/gspc-verify",
+    "x402_catalog": "https://councilof.ai/api/x402"
+  },
+  "contact": "nicholas@csoai.org",
+  "disclaimer": "Open invitation only. No listed or measured organization is a partner, customer, sponsor or endorser unless a separate public relationship record says so."
+}

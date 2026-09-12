@@ -1,0 +1,77 @@
+name: Open design-partner fixture
+description: Offer a public route, trace fixture, or replay bundle for independent measurement.
+title: "[Open fixture] "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a permissionless measurement request, not a partnership announcement. Do not include prompts, responses, credentials, personal data, private traces, or unpublished security findings. Public targets may be measured independently; a design-partner relationship exists only after both sides explicitly agree and disclose it.
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      options:
+        - Public OpenAI-compatible API
+        - MCP endpoint or server
+        - A2A endpoint or agent card
+        - OpenTelemetry trace fixture
+        - Model-router policy fixture
+        - Public replay bundle
+        - Other public interface
+    validations:
+      required: true
+
+  - type: input
+    id: target
+    attributes:
+      label: Public target or fixture URL
+      description: Use an immutable revision URL when one exists.
+      placeholder: https://example.org/path/to/public-fixture.json
+    validations:
+      required: true
+
+  - type: input
+    id: revision
+    attributes:
+      label: Version, revision, or commit
+      placeholder: v1.2.3 or 40-character commit SHA
+    validations:
+      required: true
+
+  - type: textarea
+    id: declared
+    attributes:
+      label: What the system declares
+      description: Link each routing, privacy, retention, region, security, or governance claim to its public source.
+    validations:
+      required: true
+
+  - type: textarea
+    id: observable
+    attributes:
+      label: What a public client can observe
+      description: Name the provider, model, fallback, region, latency, cost, usage, trace, or error fields that can be recorded without disclosing content.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Public-fixture confirmation
+      options:
+        - label: The supplied material is already public and may be cited, hashed, replayed, and included in a public measurement record.
+          required: true
+        - label: The submission contains no credentials, confidential content, personal data, or restricted trace material.
+          required: true
+        - label: I understand that payment cannot purchase a result, a certification, or board placement.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Schema: https://councilof.ai/interop/route-receipt.schema.json  
+        Synthetic example: https://councilof.ai/interop/route-receipt.synthetic.example.json  
+        Corrections: https://councilof.ai/api/corrections
