@@ -47,11 +47,23 @@ describe("/api/revenue — the One Number", () => {
       "settled:tx:0x2": rec("0x2", "0xaaaa", false, now.toISOString()), // same wallet, different case
       "settled:tx:0x3": rec("0x3", "0xBBBB", false, old),
       "settled:tx:0x4": rec("0x4", "0xSELF", true, now.toISOString()),
-      "settled:usdc_atomic": "1500000",
+      "settled:usdc_atomic": "2000000",
     });
     const body = await call({ REVENUE_KV: kv });
     expect(body.one_number).toMatchObject({ status: "MEASURED", all_time: 2, last_30d: 1, settlements: 3, self_settlements: 1 });
     expect(body.settled_usdc).toMatchObject({ count: 1500000, status: "MEASURED", excludes_self: true });
+  });
+
+  it("retroactively excludes the documented internal browser-test wallet from buyers and revenue", async () => {
+    const kv = kvFrom({
+      "settled:tx:external": rec("external", "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", false, new Date().toISOString()),
+      "settled:tx:browser-test": rec("browser-test", "0x6ea00613c15f2463bC10c7188215c4FA6f4943C6", false, new Date().toISOString()),
+      // This legacy tally includes both payments. The record-derived result must correct it.
+      "settled:usdc_atomic": "1000000",
+    });
+    const body = await call({ REVENUE_KV: kv });
+    expect(body.one_number).toMatchObject({ all_time: 1, settlements: 1, self_settlements: 1 });
+    expect(body.settled_usdc).toMatchObject({ count: 500000, status: "MEASURED" });
   });
 });
 

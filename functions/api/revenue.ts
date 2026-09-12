@@ -21,6 +21,7 @@
  */
 import countersDoc from "../../counters.json";
 import { railMode } from "./_x402_config";
+import { selfWallets } from "./_x402";
 
 type CanonCounter = {
   value: string | number | null;
@@ -39,6 +40,7 @@ type Env = {
   // Read by railMode(env) — the ONLY way this surface learns the rail state. Never typed here.
   X402_PAY_TO?: string;
   X402_FACILITATOR_URL?: string;
+  X402_SELF_WALLETS?: string;
 };
 
 // The rail clause of every SKU note is DERIVED from env, never copied from counters.json.
@@ -132,6 +134,7 @@ async function oneNumber(env: Env): Promise<Record<string, unknown>> {
     let settlements = 0;
     let selfSettlements = 0;
     let zeroValueSettlements = 0;
+    let externalSettledAtomic = 0n;
     let unreadable = 0;
     // WHETHER THE FACILITATOR SAID IT INDEXED US. _x402.ts records this on every settle
     // (readBazaarOutcome, the EXTENSION-RESPONSES sidechannel) precisely because a facilitator
@@ -150,7 +153,14 @@ async function oneNumber(env: Env): Promise<Record<string, unknown>> {
       try { r = JSON.parse(raw); } catch { unreadable++; continue; }
       const bz = r.bazaar?.status ?? "ABSENT";
       bazaarOutcomes[bz] = (bazaarOutcomes[bz] ?? 0) + 1;
-      if (r.self) { selfSettlements++; continue; }
+      const payer = (r.payer || "").toLowerCase();
+      // Re-evaluate ownership when reading. Old records preserve what the deployment knew at
+      // settlement time, but an explicitly documented internal test wallet may be identified
+      // later. Revenue must correct itself retroactively rather than freeze a known false buyer.
+      if (r.self || (!!payer && selfWallets(env).has(payer))) {
+        selfSettlements++;
+        continue;
+      }
       // A SETTLEMENT OF ZERO IS NOT A PURCHASE. Measured 2026-09-05: one zero-value settle through
       // /api/free-door, signed by an EPHEMERAL wallet created in a probe, moved all_time from 0 to
       // 1 — a wallet we created and controlled, paying nothing, counted as a distinct non-self
@@ -170,12 +180,13 @@ async function oneNumber(env: Env): Promise<Record<string, unknown>> {
         r.zero_value === true || !r.amount_atomic || !/^[1-9]\d*$/.test(String(r.amount_atomic));
       if (zeroValue) { zeroValueSettlements++; continue; }
       settlements++;
-      const payer = (r.payer || "").toLowerCase();
+      externalSettledAtomic += BigInt(String(r.amount_atomic));
       if (!payer) continue;
       all.add(payer);
       if (r.settled_at && Date.parse(r.settled_at) >= since) recent.add(payer);
     }
     return { ...base, status: "MEASURED", all_time: all.size, last_30d: recent.size, settlements, self_settlements: selfSettlements,
+      settled_usdc_atomic: Number(externalSettledAtomic),
       // Reported, never silently dropped: a reader can see that records exist and why they are
       // not buyers. settlements counts only non-self settlements that moved a non-zero amount.
       zero_value_settlements: zeroValueSettlements,
@@ -228,13 +239,22 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  const [issuances, proofs, licences, settled, one_number] = await Promise.all([
+  const [issuances, proofs, licences, settledFromTally, one_number] = await Promise.all([
     metric(env, "revenue_issuances", "count:issuances"),
     metric(env, "revenue_proofs", "count:proofs"),
     metric(env, "revenue_licences", "count:licences"),
     metric(env, "revenue_settled_usdc", "settled:usdc_atomic"),
     oneNumber(env),
   ]);
+  const settled =
+    one_number.status === "MEASURED" && typeof one_number.settled_usdc_atomic === "number"
+      ? {
+          ...settledFromTally,
+          count: one_number.settled_usdc_atomic,
+          status: "MEASURED",
+          source: "REVENUE_KV settled:tx:* records (owner-controlled and zero-value settlements excluded)",
+        }
+      : settledFromTally;
 
   return json({
     schema: "csoai.revenue/0.1",
