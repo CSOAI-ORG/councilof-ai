@@ -1,0 +1,118 @@
+{
+ "generated_at": "2026-09-12T18:20:11Z",
+ "report": {
+  "changed": [],
+  "refreshed_at": "2026-09-12T18:20:11Z",
+  "sources_failed": [],
+  "sources_ok": [
+   {
+    "bytes": 6035643,
+    "http": 200,
+    "id": "rwa-xyz-networks.html"
+   },
+   {
+    "bytes": 524894,
+    "http": 200,
+    "id": "rwa-xyz-network-xrp-ledger.html"
+   },
+   {
+    "bytes": 182510,
+    "http": 200,
+    "id": "rwa-xyz-asset-jmwh.html"
+   },
+   {
+    "bytes": 345042,
+    "http": 200,
+    "id": "rwa-xyz-asset-benji.html"
+   },
+   {
+    "bytes": 268593,
+    "http": 200,
+    "id": "rwa-xyz-platform-franklin-benji.html"
+   },
+   {
+    "bytes": 66036,
+    "http": 200,
+    "id": "franklintempleton-benji-platform.html"
+   },
+   {
+    "bytes": 66036,
+    "http": 200,
+    "id": "franklintempleton-fobxx-fund.html"
+   }
+  ],
+  "stale_kept": [
+   "benji.number_fobxx_fund_usd"
+  ]
+ },
+ "rows": [
+  {
+   "as_of": "2026-09-12",
+   "brief_figure": 458000000,
+   "current_figure": 456408587.3364483,
+   "delta_vs_brief_pct": -0.35,
+   "metric": "xrpl_distributed_usd",
+   "note": "brief figure reproduced within rounding",
+   "source": "rwa-xyz-networks.html",
+   "state": "OBSERVED"
+  },
+  {
+   "as_of": "2026-09-12",
+   "brief_figure": 3970000000,
+   "current_figure": 4059785946.089655,
+   "delta_vs_brief_pct": 2.26,
+   "metric": "xrpl_represented_usd",
+   "note": "brief figure NOT reproduced \u2014 current archived figure governs",
+   "source": "rwa-xyz-networks.html",
+   "state": "OBSERVED"
+  },
+  {
+   "as_of": "2026-09-12",
+   "brief_figure": 2200000000,
+   "current_figure": null,
+   "delta_vs_brief_pct": null,
+   "metric": "jmwh_represented_usd",
+   "note": null,
+   "source": "rwa-xyz-network-xrp-ledger.html",
+   "state": "UNMEASURED"
+  },
+  {
+   "as_of": "2026-09-12",
+   "brief_figure": 687000000,
+   "current_figure": 685918581.8646665,
+   "delta_vs_brief_pct": -0.16,
+   "metric": "benji_asset_usd",
+   "note": "brief figure reproduced within rounding",
+   "source": "rwa-xyz-asset-benji.html",
+   "state": "OBSERVED"
+  },
+  {
+   "as_of": "2026-08-31",
+   "brief_figure": 844000000,
+   "current_figure": 686635362.22,
+   "delta_vs_brief_pct": -18.65,
+   "metric": "fobxx_fund_usd",
+   "note": "brief figure NOT reproduced \u2014 current archived figure governs",
+   "source": "sec-nmfp3-2026-08-31.xml",
+   "state": "STALE"
+  },
+  {
+   "as_of": "2026-09-12",
+   "brief_figure": 2500000000,
+   "current_figure": 2471273040.7428746,
+   "delta_vs_brief_pct": -1.15,
+   "metric": "platform_usd",
+   "note": "brief figure reproduced within rounding",
+   "source": "rwa-xyz-platform-franklin-benji.html",
+   "state": "OBSERVED"
+  }
+ ],
+ "rule": "represented is not distributed \u2014 never mix scopes",
+ "schema": "csoai.rwa-reconciliation-table/0.1",
+ "state_vocabulary": [
+  "OBSERVED",
+  "STALE",
+  "UNMEASURED",
+  "UNCHECKABLE"
+ ]
+}

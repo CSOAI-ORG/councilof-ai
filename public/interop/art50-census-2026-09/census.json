@@ -1,181 +1,205 @@
 {
-  "schema": "csoai.art50-marking-census/0.1",
-  "generated_at": "2026-09-12T07:08:41Z",
-  "doctrine": "stated ≠ detectable; both recorded; UNMEASURED never zero-filled",
-  "release_id": "art50-census-2026-09",
-  "surface": "public.notice",
-  "honest_sentence": "Census of generator content-marking stacks. Stated posture from archived vendor pages; detectable UNMEASURED (no sample probe run). Measurement, not certification.",
-  "generators": [
-    {
-      "name": "Anthropic",
-      "scope": "text",
-      "marking": {
-        "c2pa_manifest": {
-          "stated": true,
-          "detectable": "UNMEASURED",
-          "source": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content"
-        },
-        "iptc_or_metadata_marking": {
-          "stated": null,
-          "detectable": "UNMEASURED",
-          "source": null,
-          "note": "IPTC digitalSourceType or equivalent not located on stated page"
-        },
-        "invisible_watermark": {
-          "stated": true,
-          "detectable": "UNMEASURED",
-          "source": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
-          "note": "text watermark stated for supported Claude outputs"
-        },
-        "visible_or_disclosure_marking": {
-          "stated": null,
-          "detectable": "UNMEASURED",
-          "source": null,
-          "note": "visible label / user-facing disclosure not located on stated page"
-        }
-      },
-      "sources": [
-        "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content"
-      ],
-      "posture_card": {
-        "path": "public/interop/art50-marking-posture-2026-09/card-anthropic-marking-posture-unsigned.json",
-        "sha256": "fd70766a8635d2967439bb4317eb64c1a2945076cce4384c18d85d7f5984e3f5",
-        "archived_at": "2026-09-02T05:51:28Z"
-      },
-      "unmeasured": [
-        "C2PA probe on samples",
-        "text watermark detector run",
-        "visible marking observation",
-        "marking survival",
-        "n>=30"
-      ]
+ "bounded_search_method": {
+  "detectable_side": "requires a real generator-output probe per stack slot; unprobed slots stay UNMEASURED",
+  "midjourney": "sample generation requires the owner's account \u2014 owner gate, recorded not filled",
+  "roster_source": "estate art50-marking-posture-2026-09 cards + art50-target-index.json; no live-web roster expansion this round",
+  "search_bounds": "51 provider-doc targets in art50-target-index.json; census covers the 3 with archived posture evidence + Midjourney gate",
+  "stated_side": "archived vendor pages only, cited with sha256 + archived_at"
+ },
+ "doctrine": "stated \u2260 detectable; both recorded; UNMEASURED never zero-filled",
+ "generated_at": "2026-09-12T17:09:06Z",
+ "generators": [
+  {
+   "marking": {
+    "c2pa_manifest": {
+     "detectable": "UNMEASURED",
+     "source": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
+     "stated": true
     },
-    {
-      "name": "OpenAI",
-      "scope": "image+audio",
-      "marking": {
-        "c2pa_manifest": {
-          "stated": true,
-          "detectable": "UNMEASURED",
-          "source": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content",
-          "note": "C2PA metadata stated for images"
-        },
-        "iptc_or_metadata_marking": {
-          "stated": null,
-          "detectable": "UNMEASURED",
-          "source": null,
-          "note": "IPTC digitalSourceType or equivalent not located on stated pages"
-        },
-        "invisible_watermark": {
-          "stated": true,
-          "detectable": "UNMEASURED",
-          "source": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content",
-          "note": "SynthID stated for images and audio"
-        },
-        "visible_or_disclosure_marking": {
-          "stated": null,
-          "detectable": "UNMEASURED",
-          "source": null,
-          "note": "verify tool stated; visible label / user-facing disclosure not located on stated pages"
-        }
-      },
-      "sources": [
-        "https://openai.com/index/advancing-content-provenance/",
-        "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content"
-      ],
-      "posture_card": {
-        "path": "public/interop/art50-marking-posture-2026-09/card-openai-marking-posture-unsigned.json",
-        "sha256": "3f60b3ab0f8a00e7c1e88d906ebb48049a4412d40874ab2f8995e7d7687f147d",
-        "archived_at": "2026-09-02T05:51:28Z"
-      },
-      "unmeasured": [
-        "C2PA probe on samples",
-        "SynthID detector run",
-        "visible marking observation",
-        "marking survival",
-        "n>=30"
-      ]
+    "invisible_watermark": {
+     "detectable": "UNMEASURED",
+     "note": "text watermark stated for supported Claude outputs",
+     "source": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
+     "stated": true
     },
-    {
-      "name": "Google",
-      "scope": "text+image+audio+video",
-      "marking": {
-        "c2pa_manifest": {
-          "stated": true,
-          "detectable": "UNMEASURED",
-          "source": "https://blog.google/innovation-and-ai/products/identifying-ai-generated-media-online/",
-          "note": "C2PA Content Credentials stated"
-        },
-        "iptc_or_metadata_marking": {
-          "stated": null,
-          "detectable": "UNMEASURED",
-          "source": null,
-          "note": "IPTC digitalSourceType or equivalent not located on stated pages"
-        },
-        "invisible_watermark": {
-          "stated": true,
-          "detectable": "UNMEASURED",
-          "source": "https://deepmind.google/technologies/synthid/",
-          "note": "SynthID stated for media; SynthID text stated as open-source technique"
-        },
-        "visible_or_disclosure_marking": {
-          "stated": null,
-          "detectable": "UNMEASURED",
-          "source": null,
-          "note": "verify surfaces stated; visible label / user-facing disclosure not located on stated pages"
-        }
-      },
-      "sources": [
-        "https://blog.google/innovation-and-ai/products/identifying-ai-generated-media-online/",
-        "https://deepmind.google/technologies/synthid/"
-      ],
-      "posture_card": {
-        "path": "public/interop/art50-marking-posture-2026-09/card-google-marking-posture-unsigned.json",
-        "sha256": "fc0abcf70fcdde502b19d40408f66b5bd7d7bf636f39fc36ef7ec685d49a4bd7",
-        "archived_at": "2026-09-02T05:51:28Z"
-      },
-      "unmeasured": [
-        "C2PA probe on samples",
-        "SynthID detector run",
-        "visible marking observation",
-        "marking survival",
-        "n>=30"
-      ]
+    "iptc_or_metadata_marking": {
+     "detectable": "UNMEASURED",
+     "note": "IPTC digitalSourceType or equivalent not located on stated page",
+     "source": null,
+     "stated": null
     },
-    {
-      "name": "Midjourney",
-      "scope": "image",
-      "marking": {
-        "c2pa_manifest": {
-          "stated": null,
-          "detectable": "UNMEASURED",
-          "source": null
-        },
-        "iptc_or_metadata_marking": {
-          "stated": null,
-          "detectable": "UNMEASURED",
-          "source": null
-        },
-        "invisible_watermark": {
-          "stated": null,
-          "detectable": "UNMEASURED",
-          "source": null
-        },
-        "visible_or_disclosure_marking": {
-          "stated": null,
-          "detectable": "UNMEASURED",
-          "source": null
-        }
-      },
-      "sources": [],
-      "gate": "sample generation requires owner account — owner gate",
-      "unmeasured": [
-        "sample generation (owner account required)",
-        "C2PA probe on samples",
-        "metadata marking probe",
-        "invisible watermark detector run",
-        "visible marking observation"
-      ]
+    "visible_or_disclosure_marking": {
+     "detectable": "UNMEASURED",
+     "note": "visible label / user-facing disclosure not located on stated page",
+     "source": null,
+     "stated": null
     }
-  ]
+   },
+   "name": "Anthropic",
+   "posture_card": {
+    "archived_at": "2026-09-02T05:51:28Z",
+    "path": "public/interop/art50-marking-posture-2026-09/card-anthropic-marking-posture-unsigned.json",
+    "sha256": "fd70766a8635d2967439bb4317eb64c1a2945076cce4384c18d85d7f5984e3f5"
+   },
+   "scope": "text",
+   "source_version": {
+    "archived_at": "2026-09-02T05:51:28Z",
+    "posture_card": "public/interop/art50-marking-posture-2026-09/card-anthropic-marking-posture-unsigned.json",
+    "sha256": "c7b9bc0d4ff578e8f0210460ddaae28771d11fb03afad349f24ed2d60a03efbd"
+   },
+   "sources": [
+    "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content"
+   ],
+   "unmeasured": [
+    "C2PA probe on samples",
+    "text watermark detector run",
+    "visible marking observation",
+    "marking survival",
+    "n>=30"
+   ]
+  },
+  {
+   "marking": {
+    "c2pa_manifest": {
+     "detectable": "UNMEASURED",
+     "note": "C2PA metadata stated for images",
+     "source": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content",
+     "stated": true
+    },
+    "invisible_watermark": {
+     "detectable": "UNMEASURED",
+     "note": "SynthID stated for images and audio",
+     "source": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content",
+     "stated": true
+    },
+    "iptc_or_metadata_marking": {
+     "detectable": "UNMEASURED",
+     "note": "IPTC digitalSourceType or equivalent not located on stated pages",
+     "source": null,
+     "stated": null
+    },
+    "visible_or_disclosure_marking": {
+     "detectable": "UNMEASURED",
+     "note": "verify tool stated; visible label / user-facing disclosure not located on stated pages",
+     "source": null,
+     "stated": null
+    }
+   },
+   "name": "OpenAI",
+   "posture_card": {
+    "archived_at": "2026-09-02T05:51:28Z",
+    "path": "public/interop/art50-marking-posture-2026-09/card-openai-marking-posture-unsigned.json",
+    "sha256": "3f60b3ab0f8a00e7c1e88d906ebb48049a4412d40874ab2f8995e7d7687f147d"
+   },
+   "scope": "image+audio",
+   "source_version": {
+    "archived_at": "2026-09-02T05:51:28Z",
+    "posture_card": "public/interop/art50-marking-posture-2026-09/card-openai-marking-posture-unsigned.json",
+    "sha256": "6955f9078126f17a935d14a8d3162e709c1e4e06837820ca8f7a9d2503ff0988"
+   },
+   "sources": [
+    "https://openai.com/index/advancing-content-provenance/",
+    "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content"
+   ],
+   "unmeasured": [
+    "C2PA probe on samples",
+    "SynthID detector run",
+    "visible marking observation",
+    "marking survival",
+    "n>=30"
+   ]
+  },
+  {
+   "marking": {
+    "c2pa_manifest": {
+     "detectable": "UNMEASURED",
+     "note": "C2PA Content Credentials stated",
+     "source": "https://blog.google/innovation-and-ai/products/identifying-ai-generated-media-online/",
+     "stated": true
+    },
+    "invisible_watermark": {
+     "detectable": "UNMEASURED",
+     "note": "SynthID stated for media; SynthID text stated as open-source technique",
+     "source": "https://deepmind.google/technologies/synthid/",
+     "stated": true
+    },
+    "iptc_or_metadata_marking": {
+     "detectable": "UNMEASURED",
+     "note": "IPTC digitalSourceType or equivalent not located on stated pages",
+     "source": null,
+     "stated": null
+    },
+    "visible_or_disclosure_marking": {
+     "detectable": "UNMEASURED",
+     "note": "verify surfaces stated; visible label / user-facing disclosure not located on stated pages",
+     "source": null,
+     "stated": null
+    }
+   },
+   "name": "Google",
+   "posture_card": {
+    "archived_at": "2026-09-02T05:51:28Z",
+    "path": "public/interop/art50-marking-posture-2026-09/card-google-marking-posture-unsigned.json",
+    "sha256": "fc0abcf70fcdde502b19d40408f66b5bd7d7bf636f39fc36ef7ec685d49a4bd7"
+   },
+   "scope": "text+image+audio+video",
+   "source_version": {
+    "archived_at": "2026-09-02T05:51:28Z",
+    "posture_card": "public/interop/art50-marking-posture-2026-09/card-google-marking-posture-unsigned.json",
+    "sha256": "0b0ddd785c8bede6bb9cc4c7d21f03e748b4927d90a45f464c8eba6d14b00b5e"
+   },
+   "sources": [
+    "https://blog.google/innovation-and-ai/products/identifying-ai-generated-media-online/",
+    "https://deepmind.google/technologies/synthid/"
+   ],
+   "unmeasured": [
+    "C2PA probe on samples",
+    "SynthID detector run",
+    "visible marking observation",
+    "marking survival",
+    "n>=30"
+   ]
+  },
+  {
+   "gate": "sample generation requires owner account \u2014 owner gate",
+   "marking": {
+    "c2pa_manifest": {
+     "detectable": "UNMEASURED",
+     "source": null,
+     "stated": null
+    },
+    "invisible_watermark": {
+     "detectable": "UNMEASURED",
+     "source": null,
+     "stated": null
+    },
+    "iptc_or_metadata_marking": {
+     "detectable": "UNMEASURED",
+     "source": null,
+     "stated": null
+    },
+    "visible_or_disclosure_marking": {
+     "detectable": "UNMEASURED",
+     "source": null,
+     "stated": null
+    }
+   },
+   "name": "Midjourney",
+   "scope": "image",
+   "source_version": null,
+   "sources": [],
+   "unmeasured": [
+    "sample generation (owner account required)",
+    "C2PA probe on samples",
+    "metadata marking probe",
+    "invisible watermark detector run",
+    "visible marking observation"
+   ]
+  }
+ ],
+ "honest_sentence": "Census of generator content-marking stacks. Stated posture from archived vendor pages; detectable UNMEASURED (no sample probe run). Measurement, not certification.",
+ "ledger_role": "missing-data ledger: the census's product is the visible gap, not the filled cell",
+ "release_id": "art50-census-2026-09",
+ "schema": "csoai.art50-marking-census/0.2",
+ "surface": "public.notice"
 }
