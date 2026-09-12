@@ -1,0 +1,101 @@
+{
+  "schema": "framework-presence/v1",
+  "verified_as_of": "2026-09-12",
+  "method": "Bounded method, executed 2026-09-12: for each lab, the official domain(s) were fetched directly and the HTTP status of every checked URL recorded; the site robots.txt/sitemap.xml were enumerated where served; and a bounded site-restricted web search (site:<domain>) was run for frontier-safety / preparedness / responsible-scaling framework documents. A lab appears under PUBLISHED only when an official framework document URL returned HTTP 200 and the document content was inspected. A lab appears under EMPTY CHAIRS only when the checks listed in its row found no such document. Version and date fields are recorded only where printed on the official page or document itself. Absence is a presence measurement, not a safety finding.",
+  "published": [
+    {
+      "lab": "OpenAI",
+      "framework": "Preparedness Framework",
+      "official_url": "https://cdn.openai.com/pdf/18a02b5d-6b67-4cec-ab64-68cdfbddebcd/preparedness-framework-v2.pdf",
+      "http_status": 200,
+      "verified_via": "curl",
+      "as_of": "2026-09-12",
+      "version": "Version 2",
+      "date": "15 April 2025",
+      "source_note": "Version and date read from the document cover ('Preparedness Framework Version 2. Last updated: 15th April, 2025'). The announcement page https://openai.com/index/updating-our-preparedness-framework/ (dated April 15, 2025 on the page itself) links this PDF. openai.com HTML pages answer non-browser agents with an HTTP 403 bot challenge; the document URL above returned HTTP 200 to curl."
+    },
+    {
+      "lab": "Anthropic",
+      "framework": "Responsible Scaling Policy",
+      "official_url": "https://www.anthropic.com/responsible-scaling-policy",
+      "http_status": 200,
+      "verified_via": "curl",
+      "as_of": "2026-09-12",
+      "version": "Version 3.4",
+      "date": "effective 8 July 2026",
+      "source_note": "Current version and effective date read from the version history printed on the page ('Version 3.4 ... (effective July 8, 2026)'). The linked Version 3.4 PDF at https://cdn.sanity.io/files/4zrzovbb/website/0bacdc8440ea96e62a8766d99ebe1d4eea6d5f3a.pdf also returned HTTP 200."
+    },
+    {
+      "lab": "Google DeepMind",
+      "framework": "Frontier Safety Framework",
+      "official_url": "https://deepmind.google/frontier-safety/",
+      "http_status": 200,
+      "verified_via": "curl",
+      "as_of": "2026-09-12",
+      "version": "Version 3.1",
+      "date": "17 April 2026",
+      "source_note": "The official frontier-safety page prints the version list: 'Version 1.0 (17 May 2024)', 'Version 2.0 (4 Feb 2025)', 'Version 3.0 (22 Sep 2025)', 'Version 3.1 (17 Apr 2026)' — 3.1 is the latest listed."
+    },
+    {
+      "lab": "Meta",
+      "framework": "Advanced AI Scaling Framework (previously Frontier AI Framework)",
+      "official_url": "https://ai.meta.com/static-resource/Meta_Advanced-AI-Scaling-Framework-v2",
+      "http_status": 200,
+      "verified_via": "browser",
+      "as_of": "2026-09-12",
+      "version": "Version 2",
+      "date": "8 April 2026",
+      "source_note": "The PDF cover reads 'Advanced AI Scaling Framework — Version 2' and states the framework was previously titled the Frontier AI Framework. The announcement post https://ai.meta.com/blog/scaling-how-we-build-test-advanced-ai/ is dated April 8, 2026 on the page and links this PDF. The former /blog/frontier-ai-framework/ URL now returns 404. ai.meta.com blocks non-browser requests (HTTP 400/500 to curl); the PDF returned HTTP 200 (application/pdf) in a real browser session."
+    },
+    {
+      "lab": "xAI",
+      "framework": "Frontier Artificial Intelligence Framework",
+      "official_url": "https://media.x.ai/v1/website/xai-frontier-artificial-intelligence-framework-30-june-2026-99c40684.pdf",
+      "http_status": 200,
+      "verified_via": "curl",
+      "as_of": "2026-09-12",
+      "date": "effective 30 June 2026",
+      "source_note": "The document cover reads 'xAI Frontier Artificial Intelligence Framework — Effective Date: 30 June 2026'. The PDF is linked from https://x.ai/safety; x.ai HTML pages answer non-browser agents with an HTTP 403 bot challenge, so the linking page was loaded in a real browser session while the document URL returned HTTP 200 to curl."
+    }
+  ],
+  "empty_chairs": [
+    {
+      "lab": "DeepSeek",
+      "statement": "no published frontier-safety framework document found",
+      "as_of": "2026-09-12",
+      "checked_urls": [
+        { "url": "https://www.deepseek.com/", "http_status": 200, "note": "homepage" },
+        { "url": "https://www.deepseek.com/robots.txt", "http_status": 200, "note": "robots file" },
+        { "url": "https://www.deepseek.com/sitemap.xml", "http_status": 200, "note": "44 URLs enumerated — homepage, /transparency/, /harness/ product pages and news posts; no framework document URL" },
+        { "url": "https://www.deepseek.com/transparency/", "http_status": 200, "note": "transparency centre lists model cards and technical reports for published models; no frontier-safety framework document" }
+      ],
+      "site_search": "Google site-restricted search — \"frontier safety\" OR \"preparedness framework\" OR \"responsible scaling\" site:deepseek.com — returned 'did not match any documents' (2026-09-12)."
+    },
+    {
+      "lab": "Mistral AI",
+      "statement": "no published frontier-safety framework document found",
+      "as_of": "2026-09-12",
+      "checked_urls": [
+        { "url": "https://mistral.ai/", "http_status": 200, "note": "homepage" },
+        { "url": "https://mistral.ai/robots.txt", "http_status": 200, "note": "robots file" },
+        { "url": "https://mistral.ai/sitemap.xml", "http_status": 200, "note": "sitemap index → sitemap-0.xml" },
+        { "url": "https://mistral.ai/sitemap-0.xml", "http_status": 200, "note": "483 URLs scanned for safety / framework / preparedness / scaling / policy / risk / responsible / trust keywords; no framework document page" }
+      ],
+      "site_search": "Google site-restricted search — \"frontier safety framework\" OR \"responsible scaling policy\" OR \"preparedness framework\" site:mistral.ai — returned 'did not match any documents' (2026-09-12)."
+    },
+    {
+      "lab": "Moonshot AI",
+      "statement": "no published frontier-safety framework document found",
+      "as_of": "2026-09-12",
+      "checked_urls": [
+        { "url": "https://moonshot.ai/", "http_status": 200, "note": "homepage content inspected — product, research and careers sections; no framework document" },
+        { "url": "https://www.moonshot.cn/", "http_status": 200, "note": "Chinese-language homepage content inspected — no framework document" },
+        { "url": "https://moonshot.ai/robots.txt", "http_status": 200, "note": "serves the SPA shell, not a robots file — no crawl map available" },
+        { "url": "https://moonshot.ai/sitemap.xml", "http_status": 200, "note": "serves the SPA shell, not an XML sitemap" },
+        { "url": "https://www.moonshot.cn/robots.txt", "http_status": 404, "note": "no robots file" },
+        { "url": "https://www.moonshot.cn/sitemap.xml", "http_status": 404, "note": "no sitemap" }
+      ],
+      "site_search": "Google site-restricted search — \"frontier safety\" OR \"preparedness framework\" OR \"responsible scaling\" site:moonshot.ai OR site:moonshot.cn — returned 'did not match any documents' (2026-09-12)."
+    }
+  ]
+}

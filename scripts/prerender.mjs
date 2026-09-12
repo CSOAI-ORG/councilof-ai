@@ -279,6 +279,10 @@ function discover() {
     // `path="/regulator-atlas"` attribute, which heuristic discovery does not
     // match, so it had no snapshot at all and cold-loaded as a 404.
     "/regulators", "/regulator-atlas",
+    // G2.6: exact /frameworks index (frontier framework presence register). The
+    // /frameworks/:slug catch-all serves ContentReviewNotice; without an explicit
+    // snapshot the index cold-loads as the SPA shell on the static host.
+    "/frameworks",
   ];
   for (const p of MUST) found.add(p);
 
