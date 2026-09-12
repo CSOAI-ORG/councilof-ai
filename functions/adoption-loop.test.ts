@@ -13,6 +13,8 @@
 import { describe, expect, it } from "vitest";
 import { onRequestGet as canonicalFeed } from "./api/feed.xml";
 import { onRequestGet as aliasFeed } from "./feed.xml";
+import { onRequestGet as canonicalCorrections } from "./feeds/corrections.xml";
+import { onRequestGet as aliasCorrections } from "./corrections.xml";
 import { onRequestGet as aliasRss } from "./rss.xml";
 import { onRequestGet as badgeMd } from "./badge.md";
 
@@ -39,6 +41,18 @@ describe("/feed.xml and /rss.xml — aliases, not a second engine", () => {
   it("serves an RSS content type", async () => {
     const res = await aliasFeed(ctx);
     expect(res.headers.get("content-type") ?? "").toMatch(/xml/i);
+  });
+});
+
+describe("/corrections.xml — conventional alias of the derived corrections feed", () => {
+  it("returns byte-identical XML and headers", async () => {
+    const [canonical, alias] = await Promise.all([
+      canonicalCorrections({} as never),
+      aliasCorrections({} as never),
+    ]);
+    expect(alias.status).toBe(canonical.status);
+    expect(alias.headers.get("content-type")).toBe(canonical.headers.get("content-type"));
+    expect(await alias.text()).toBe(await canonical.text());
   });
 });
 
