@@ -13,7 +13,7 @@ import {
 import snapshot from "../data/rlusd-snapshot.json";
 
 /**
- * /rlusd — RLUSD supply on XRPL and Ethereum, read LIVE from public
+ * /rlusd — RLUSD supply on two deployments (XRPL and Ethereum), read LIVE from public
  * keyless endpoints in the visitor's browser, with a labeled fallback
  * snapshot when a chain cannot be reached.
  *
@@ -154,24 +154,20 @@ export default function Rlusd() {
     };
   }, []);
 
-  const supplies: string[] = [];
-  if (xrpl.status === "live") supplies.push(xrpl.reading.supply);
-  if (xrpl.status === "fallback") supplies.push(xrpl.supply);
-  if (eth.status === "live") supplies.push(eth.reading.supply);
-  if (eth.status === "fallback") supplies.push(eth.supply);
-  const anyFallback = xrpl.status === "fallback" || eth.status === "fallback";
+  // A mixed-date live+snapshot sum is not a measurement. Only show the
+  // non-atomic two-deployment sum when both reads succeeded in this session.
   const combined =
-    supplies.length === 2
-      ? (Number(supplies[0]) + Number(supplies[1])).toLocaleString("en-US", { maximumFractionDigits: 2 })
+    xrpl.status === "live" && eth.status === "live"
+      ? (Number(xrpl.reading.supply) + Number(eth.reading.supply)).toLocaleString("en-US", { maximumFractionDigits: 2 })
       : null;
 
   return (
     <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
-        <title>RLUSD supply, measured live on both chains | Council of AI</title>
+        <title>RLUSD supply on XRPL and Ethereum | Council of AI</title>
         <meta
           name="description"
-          content="RLUSD supply on XRPL and Ethereum, read live from public keyless endpoints with a labeled fallback snapshot. Measurement, not certification — not a rating of any issuer."
+          content="RLUSD supply on XRPL and Ethereum, read live from public keyless endpoints with a labeled fallback snapshot. This is scoped measurement, not total supply across every RLUSD deployment."
         />
       </Helmet>
 
@@ -180,13 +176,25 @@ export default function Rlusd() {
           Live on-chain measurement · data free, proofs paid
         </p>
         <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-          RLUSD supply, read live on both chains.
+          RLUSD supply, read live on XRPL and Ethereum.
         </h1>
         <p className="mt-4 leading-7 text-slate-300">
           This page queries public, keyless endpoints from your browser and shows exactly what
           answered — endpoint, ledger or block, and all. If a chain cannot be reached, you see a
           clearly labeled snapshot instead, never a live-looking number. Measurement, not
           certification — this is not a rating of any issuer.
+        </p>
+        <p className="mt-3 text-sm leading-6 text-slate-400">
+          Scope: these two deployments only. Ripple currently documents RLUSD on additional
+          networks, so this page does not claim total supply across every RLUSD deployment. See the{" "}
+          <a
+            href="https://docs.ripple.com/products/stablecoin/overview/token-addresses"
+            className="text-emerald-300 underline hover:text-emerald-200"
+            rel="noreferrer"
+            target="_blank"
+          >
+            issuer&apos;s token-address registry
+          </a>.
         </p>
 
         <div className="mt-8 grid gap-5">
@@ -208,8 +216,7 @@ export default function Rlusd() {
 
         {combined !== null && (
           <p className="mt-6 rounded-2xl border border-slate-700/60 bg-slate-900/60 p-5 font-mono text-sm text-slate-200">
-            Combined across both chains: <span className="font-black text-emerald-200">{combined} RLUSD</span>
-            {anyFallback && <span className="text-amber-300"> (includes FALLBACK snapshot value(s) as_of {snapshot.as_of})</span>}
+            Non-atomic sum of the two live reads shown: <span className="font-black text-emerald-200">{combined} RLUSD</span>
           </p>
         )}
 

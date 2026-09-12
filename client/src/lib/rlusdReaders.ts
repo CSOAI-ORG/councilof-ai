@@ -9,13 +9,9 @@
  * Measurement, not certification. These are re-checkable on-chain reads,
  * not a rating of any issuer.
  *
- * Verified live 2026-09-12:
- *   XRPL  gateway_balances obligations["524C555344…"] — xrplcluster.com and
- *         s1.ripple.com:51234 answered; s2 (Clio) is kept as last resort.
- *   ETH   eth_call 0x18160ddd (totalSupply, 18 decimals) on
- *         0x8292bb45bf1ee4d140127049757c2e0ff06317ed — ethereum.publicnode.com
- *         and eth.drpc.org answered; llamarpc / cloudflare-eth kept as tail
- *         fallbacks (both were unreachable from the verifying network).
+ * Source identities were rechecked against Ripple's public token-address
+ * registry on 2026-09-12. Endpoint CORS and response shape are runtime facts:
+ * each response must pass the checks below in the visitor's own session.
  */
 
 export const RLUSD_XRPL_ISSUER = "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De";
@@ -50,12 +46,31 @@ export interface ChainReading {
 type FetchLike = typeof fetch;
 
 const JSON_HEADERS = { "content-type": "application/json" };
+const ENDPOINT_TIMEOUT_MS = 8_000;
 
 interface GatewayBalancesResult {
   result?: {
+    account?: string;
     ledger_index?: number;
     obligations?: Record<string, string>;
+    status?: string;
+    validated?: boolean;
   };
+}
+
+async function postJson(fetchFn: FetchLike, endpoint: string, body: string): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ENDPOINT_TIMEOUT_MS);
+  try {
+    return await fetchFn(endpoint, {
+      method: "POST",
+      headers: JSON_HEADERS,
+      body,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 /** Read RLUSD obligations on XRPL. Tries each endpoint in order; null if none answer. */
@@ -69,12 +84,20 @@ export async function readXrplRlusdSupply(
   });
   for (const endpoint of endpoints) {
     try {
-      const res = await fetchFn(endpoint, { method: "POST", headers: JSON_HEADERS, body });
+      const res = await postJson(fetchFn, endpoint, body);
       if (!res.ok) continue;
       const json = (await res.json()) as GatewayBalancesResult;
-      const obligations = json?.result?.obligations;
+      const result = json?.result;
+      // `validated: true` binds the value to a consensus ledger. A 200 from an
+      // unvalidated/current ledger is not accepted as a measurement.
+      if (
+        result?.validated !== true ||
+        result.status !== "success" ||
+        result.account !== RLUSD_XRPL_ISSUER
+      ) continue;
+      const obligations = result.obligations;
       const supply = obligations?.[RLUSD_XRPL_CURRENCY_HEX];
-      const ledger = json?.result?.ledger_index;
+      const ledger = result.ledger_index;
       // A 200 with no obligations for this currency is not a zero — it is no answer.
       if (typeof supply !== "string" || supply === "" || typeof ledger !== "number") continue;
       if (!/^\d+(\.\d+)?$/.test(supply)) continue;
@@ -100,11 +123,11 @@ export function formatRawWithDecimals(raw: bigint, decimals: number): string {
 }
 
 async function ethRpc(fetchFn: FetchLike, endpoint: string, method: string, params: unknown[]): Promise<string | null> {
-  const res = await fetchFn(endpoint, {
-    method: "POST",
-    headers: JSON_HEADERS,
-    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
-  });
+  const res = await postJson(
+    fetchFn,
+    endpoint,
+    JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+  );
   if (!res.ok) return null;
   const json = (await res.json()) as EthRpcResult;
   if (json.error || typeof json.result !== "string") return null;
@@ -118,21 +141,23 @@ export async function readEthRlusdSupply(
 ): Promise<ChainReading | null> {
   for (const endpoint of endpoints) {
     try {
+      // Pin totalSupply to the exact block we display. Reading `latest` and
+      // fetching a block number afterwards could label one state with another
+      // block when a new block lands between the calls.
+      const blockHex = await ethRpc(fetchFn, endpoint, "eth_blockNumber", []);
+      if (blockHex === null || !/^0x[0-9a-fA-F]+$/.test(blockHex)) continue;
       const hex = await ethRpc(fetchFn, endpoint, "eth_call", [
         { to: RLUSD_ETH_CONTRACT, data: "0x18160ddd" },
-        "latest",
+        blockHex,
       ]);
       if (hex === null || !/^0x[0-9a-fA-F]+$/.test(hex)) continue;
       const raw = BigInt(hex);
-      const blockHex = await ethRpc(fetchFn, endpoint, "eth_blockNumber", []);
-      // Block ref is nice-to-have context; the supply read itself is the measurement.
-      const refValue = blockHex !== null && /^0x[0-9a-fA-F]+$/.test(blockHex) ? Number(BigInt(blockHex)) : null;
       return {
         chain: "ethereum",
         supply: formatRawWithDecimals(raw, RLUSD_ETH_DECIMALS),
         endpoint,
         refKind: "block",
-        refValue,
+        refValue: Number(BigInt(blockHex)),
       };
     } catch {
       continue;

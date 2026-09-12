@@ -19,8 +19,11 @@ function jsonResponse(body: unknown, ok = true, status = 200): Response {
 
 const XRPL_OK = {
   result: {
+    account: RLUSD_XRPL_ISSUER,
     ledger_index: 106929485,
     obligations: { [RLUSD_XRPL_CURRENCY_HEX]: "1053014745.151137" },
+    status: "success",
+    validated: true,
   },
 };
 
@@ -50,8 +53,19 @@ describe("readXrplRlusdSupply", () => {
 
   it("treats a 200 without obligations for the currency as no answer, never a zero", async () => {
     const fetchFn = () =>
-      Promise.resolve(jsonResponse({ result: { ledger_index: 1, obligations: { OTHER: "5" } } }));
+      Promise.resolve(jsonResponse({ result: { ...XRPL_OK.result, obligations: { OTHER: "5" } } }));
     const reading = await readXrplRlusdSupply(fetchFn as typeof fetch, ["https://a.example"]);
+    expect(reading).toBeNull();
+  });
+
+  it("rejects unvalidated or wrong-account responses", async () => {
+    const responses = [
+      { result: { ...XRPL_OK.result, validated: false } },
+      { result: { ...XRPL_OK.result, account: "rWrong" } },
+    ];
+    let call = 0;
+    const fetchFn = () => Promise.resolve(jsonResponse(responses[call++]));
+    const reading = await readXrplRlusdSupply(fetchFn as typeof fetch, ["https://a.example", "https://b.example"]);
     expect(reading).toBeNull();
   });
 
@@ -73,13 +87,14 @@ describe("readEthRlusdSupply", () => {
   it("decodes totalSupply hex at 18 decimals without floats", async () => {
     const fetchFn = (url: string, init?: RequestInit) => {
       const body = JSON.parse(String(init?.body)) as { method: string; params: unknown[] };
-      if (body.method === "eth_call") {
-        const call = body.params[0] as { to: string; data: string };
-        expect(call.to).toBe(RLUSD_ETH_CONTRACT);
-        expect(call.data).toBe("0x18160ddd");
-        return Promise.resolve(jsonResponse({ result: RAW }));
+      if (body.method === "eth_blockNumber") {
+        return Promise.resolve(jsonResponse({ result: "0x18c1cd1" }));
       }
-      return Promise.resolve(jsonResponse({ result: "0x18c1cd1" }));
+      const call = body.params[0] as { to: string; data: string };
+      expect(call.to).toBe(RLUSD_ETH_CONTRACT);
+      expect(call.data).toBe("0x18160ddd");
+      expect(body.params[1]).toBe("0x18c1cd1");
+      return Promise.resolve(jsonResponse({ result: RAW }));
     };
     const reading = await readEthRlusdSupply(fetchFn as typeof fetch, ["https://eth.example"]);
     expect(reading).not.toBeNull();
@@ -90,11 +105,12 @@ describe("readEthRlusdSupply", () => {
   });
 
   it("falls through to the next endpoint on RPC error responses", async () => {
-    let n = 0;
-    const fetchFn = () => {
-      n += 1;
-      if (n <= 1) return Promise.resolve(jsonResponse({ error: { code: -32603, message: "Internal error" } }));
-      return Promise.resolve(jsonResponse({ result: n === 2 ? RAW : "0x18c1cd1" }));
+    const fetchFn = (url: string, init?: RequestInit) => {
+      const body = JSON.parse(String(init?.body)) as { method: string };
+      if (url === "https://bad.example") {
+        return Promise.resolve(jsonResponse({ error: { code: -32603, message: "Internal error" } }));
+      }
+      return Promise.resolve(jsonResponse({ result: body.method === "eth_blockNumber" ? "0x18c1cd1" : RAW }));
     };
     const reading = await readEthRlusdSupply(fetchFn as typeof fetch, ["https://bad.example", "https://good.example"]);
     expect(reading).not.toBeNull();
@@ -105,6 +121,18 @@ describe("readEthRlusdSupply", () => {
     const fetchFn = () => Promise.resolve(jsonResponse({ error: { code: -32046 } }, false, 500));
     const reading = await readEthRlusdSupply(fetchFn as typeof fetch, ["https://a.example"]);
     expect(reading).toBeNull();
+  });
+
+  it("does not accept a supply result unless the exact displayed block was read first", async () => {
+    const methods: string[] = [];
+    const fetchFn = (_url: string, init?: RequestInit) => {
+      const body = JSON.parse(String(init?.body)) as { method: string };
+      methods.push(body.method);
+      return Promise.resolve(jsonResponse({ result: body.method === "eth_blockNumber" ? "bad-block" : RAW }));
+    };
+    const reading = await readEthRlusdSupply(fetchFn as typeof fetch, ["https://eth.example"]);
+    expect(reading).toBeNull();
+    expect(methods).toEqual(["eth_blockNumber"]);
   });
 });
 

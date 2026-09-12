@@ -414,7 +414,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/status/internal": "Weekly yield template | Council of AI",
   "/countdown": "Regulatory countdown | Council of AI",
   "/art50": "Article 50 verification services | Council of AI",
-  "/rlusd": "RLUSD supply, measured live on both chains | Council of AI",
+  "/rlusd": "RLUSD supply on XRPL and Ethereum | Council of AI",
   "/receipt": "Inclusion receipt | Council of AI",
   "/custody": "Custody disclosure | Council of AI",
   "/merge-me": "Merge-me — the train | Council of AI",
