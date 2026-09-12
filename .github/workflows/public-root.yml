@@ -10,6 +10,19 @@ name: public-root
 on:
   schedule:
     - cron: "7 * * * *"
+  # Intake on merge: staged unsigned atoms land via PR merge; without a push
+  # trigger the signer only sees them at the next cron tick (observed 2026-09-12:
+  # merge 15:14Z, cron slots 15:07/16:07 delayed >2h by the GitHub scheduler).
+  # Scoped to the staged-leaves inputs ONLY — the publisher's own commits
+  # (root.json, public/cards, public/proofs, readiness.json, root-witness-*)
+  # never match these paths, so this cannot self-trigger.
+  push:
+    branches: [master]
+    paths:
+      - "public/interop/xrpl-swift-eater-2026-09/**"
+      - "public/interop/estate-boundary-2026-09/**"
+      - "public/interop/stablecoin-cohort-2026-09/**"
+      - "scripts/adapters/staged_leaves.py"
   repository_dispatch:
     types: [xrpl-tick, notice-tick, census-tick, heal]
   workflow_dispatch:
