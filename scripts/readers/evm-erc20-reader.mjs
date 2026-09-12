@@ -59,10 +59,22 @@ export async function readERC20(chain, contract) {
   const cfg = CHAINS[chain];
   if (!cfg) throw new Error(`Unknown chain: ${chain}. Supported: ${Object.keys(CHAINS).join(", ")}`);
 
+  // Endpoint substitution: EVM_RPC_<CHAIN> env overrides the compiled-in default.
+  // The record states both so a substitution is never silent.
+  const envKey = `EVM_RPC_${chain.toUpperCase()}`;
+  const rpcUsed = process.env[envKey] || cfg.rpc;
+  const substituted = rpcUsed !== cfg.rpc;
+
   const record = {
     schema: "csoai.evm-erc20-reader/1.0",
     reader_revision: "scripts/readers/evm-erc20-reader.mjs@1.1.0",
-    source: cfg.rpc,
+    source: rpcUsed,
+    endpoint_default: cfg.rpc,
+    endpoint_used: rpcUsed,
+    endpoint_substituted: substituted,
+    endpoint_substitution_reason: substituted
+      ? (process.env.EVM_RPC_SUBSTITUTION_REASON || "default endpoint unreachable at observation time")
+      : null,
     chain,
     chainId: cfg.chainId,
     contract,
@@ -76,26 +88,42 @@ export async function readERC20(chain, contract) {
   let blockHex;
   let blockData;
   try {
-    blockData = await rpcCall(cfg.rpc, "eth_getBlockByNumber", ["finalized", false]);
+    blockData = await rpcCall(rpcUsed, "eth_getBlockByNumber", ["finalized", false]);
     if (!blockData?.number || !blockData?.hash) throw new Error("missing finalized block");
     blockHex = blockData.number;
     record.block_finality = "RPC_FINALIZED_TAG";
   } catch {
-    blockHex = await rpcCall(cfg.rpc, "eth_blockNumber", []);
-    blockData = await rpcCall(cfg.rpc, "eth_getBlockByNumber", [blockHex, false]);
+    blockHex = await rpcCall(rpcUsed, "eth_blockNumber", []);
+    blockData = await rpcCall(rpcUsed, "eth_getBlockByNumber", [blockHex, false]);
     record.block_finality = "RPC_LATEST_NOT_INDEPENDENTLY_PROVEN_FINAL";
   }
   const blockNumber = parseInt(blockHex, 16);
   record.observed_block = blockNumber;
+
+  // When substituted, probe the default endpoint once and record its live status honestly.
+  if (substituted) {
+    try {
+      const probe = await fetch(cfg.rpc, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_blockNumber", params: [] }),
+        signal: AbortSignal.timeout(15000),
+      });
+      record.endpoint_default_probe = { http_status: probe.status, probed_at: new Date().toISOString() };
+    } catch (e) {
+      record.endpoint_default_probe = { error: String(e && e.message || e), probed_at: new Date().toISOString() };
+    }
+  }
+
   record.block_hash = blockData.hash;
   record.block_timestamp = parseInt(blockData.timestamp, 16);
 
   // Read ERC-20 metadata
   const [nameHex, symbolHex, decimalsHex, totalSupplyHex] = await Promise.all([
-    rpcCall(cfg.rpc, "eth_call", [{ to: contract, data: ERC20_SELECTORS.name }, blockHex]),
-    rpcCall(cfg.rpc, "eth_call", [{ to: contract, data: ERC20_SELECTORS.symbol }, blockHex]),
-    rpcCall(cfg.rpc, "eth_call", [{ to: contract, data: ERC20_SELECTORS.decimals }, blockHex]),
-    rpcCall(cfg.rpc, "eth_call", [{ to: contract, data: ERC20_SELECTORS.totalSupply }, blockHex]),
+    rpcCall(rpcUsed, "eth_call", [{ to: contract, data: ERC20_SELECTORS.name }, blockHex]),
+    rpcCall(rpcUsed, "eth_call", [{ to: contract, data: ERC20_SELECTORS.symbol }, blockHex]),
+    rpcCall(rpcUsed, "eth_call", [{ to: contract, data: ERC20_SELECTORS.decimals }, blockHex]),
+    rpcCall(rpcUsed, "eth_call", [{ to: contract, data: ERC20_SELECTORS.totalSupply }, blockHex]),
   ]);
 
   // Decode responses

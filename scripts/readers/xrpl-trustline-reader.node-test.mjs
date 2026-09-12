@@ -17,6 +17,8 @@ async function runReader({ maxPages = "250" } = {}) {
         result = { ledger_index: 7, ledger: { ledger_hash: "ABC", close_time: 1 } };
       } else if (call.method === "account_info") {
         result = { account_data: { Sequence: 1, Balance: "0", OwnerCount: 2 } };
+      } else if (call.method === "gateway_balances") {
+        result = { ledger_index: 7, ledger_hash: "ABC", obligations: { RLUSD: "3.750001" } };
       } else {
         accountLinesCalls += 1;
         result = accountLinesCalls === 1

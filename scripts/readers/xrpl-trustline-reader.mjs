@@ -58,6 +58,23 @@ async function readXRPLTrustLines(issuer, currency) {
     record.issuer_account = { error: err.message };
   }
 
+  // gateway_balances reports the issuer's obligations (net outstanding issued amount) directly.
+  // account_lines paginates individual trust lines; the two methods answer different questions
+  // (trust-line population vs net obligations) and are recorded side by side, never conflated.
+  try {
+    const gw = await xrplCall("gateway_balances", [
+      { account: issuer, ledger_index: "validated" },
+    ]);
+    record.gateway_balances = {
+      ledger_index: gw.ledger_index ?? gw.ledger_current_index ?? null,
+      ledger_hash: gw.ledger_hash ?? null,
+      obligations: (gw.obligations || {})[currency] ?? null,
+      obligations_all_currencies_n: Object.keys(gw.obligations || {}).length,
+    };
+  } catch (err) {
+    record.gateway_balances = { error: err.message };
+  }
+
   // Get trust lines for the issuer (token holders)
   let allLines = [];
   let marker = undefined;
@@ -95,8 +112,27 @@ async function readXRPLTrustLines(issuer, currency) {
   const holders = [];
 
   const toAtomic = (value, decimals = 6) => {
-    const negative = value.startsWith("-");
-    const unsigned = negative ? value.slice(1) : value;
+    let negative = value.startsWith("-");
+    let unsigned = negative ? value.slice(1) : value;
+    // XRPL may serialize issued-currency amounts in exponent form (e.g. "8000000000000000e-27").
+    // Expand to plain decimal before splitting; precision beyond 16 significant digits
+    // does not occur in XRPL amount serialization.
+    if (/[eE]/.test(unsigned)) {
+      const m = unsigned.match(/^(\d+)(?:\.(\d+))?[eE]([+-]?\d+)$/);
+      if (!m) throw new Error(`Unparseable XRPL amount: ${value}`);
+      const intPart = m[1];
+      const fracPart = m[2] || "";
+      const exp = Number.parseInt(m[3], 10);
+      const digits = intPart + fracPart;
+      const point = intPart.length + exp;
+      if (point <= 0) {
+        unsigned = "0." + "0".repeat(-point) + digits;
+      } else if (point >= digits.length) {
+        unsigned = digits + "0".repeat(point - digits.length);
+      } else {
+        unsigned = digits.slice(0, point) + "." + digits.slice(point);
+      }
+    }
     const [whole = "0", fraction = ""] = unsigned.split(".");
     const atomic = BigInt(whole || "0") * (10n ** BigInt(decimals))
       + BigInt((fraction + "0".repeat(decimals)).slice(0, decimals));
@@ -133,6 +169,14 @@ async function readXRPLTrustLines(issuer, currency) {
   };
 
   record.evidence_state = paginationComplete ? "OBSERVED_COMPLETE" : "UNMEASURED_INCOMPLETE_PAGINATION";
+
+  // account_lines sums the balances of trust lines the node chose to page through.
+  // On some public clusters pagination can silently truncate before all lines are served,
+  // so a paginated account_lines sum is a trust-line-population reading, NOT a supply figure.
+  // The supply-scale figure for an issued currency is gateway_balances obligations, recorded above.
+  record.account_lines_scope_note =
+    "account_lines sum = balances over paged trust lines only; may silently truncate on public clusters. " +
+    "Trust-line count is not a holder count and a paged line sum is not net obligations (gateway_balances).";
 
   // Replay hash
   record.replay_hash = createHash("sha256")
