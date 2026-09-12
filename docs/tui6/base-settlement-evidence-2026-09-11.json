@@ -1,0 +1,24 @@
+{
+  "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+  "chain": "base",
+  "chain_id": 8453,
+  "rpc": "https://base-rpc.publicnode.com",
+  "current_block": 51198580,
+  "usdc_balance": 0.0,
+  "usdc_balance_at_block": 51198580,
+  "revenue_api_evidence": {
+    "settled_usdc": 20000,
+    "settled_usdc_human": 0.02,
+    "distinct_nonself_payers": 1,
+    "settlements": 1,
+    "source": "GET https://councilof.ai/api/revenue (public endpoint)"
+  },
+  "transaction_hash": "NOT_EXTRACTABLE \u2014 Basescan V1 deprecated, Blockscout 422. Owner to provide TX hash from facilitator dashboard.",
+  "query_time": "2026-09-12T04:15:07.561685+00:00",
+  "verifiable_via": [
+    "GET https://councilof.ai/api/revenue \u2014 public, shows settled_usdc and distinct_nonself_payers",
+    "Base block explorer for payTo address 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "Owner facilitator dashboard for specific transaction hash"
+  ],
+  "note": "Revenue is verified via the public /api/revenue endpoint. The specific transaction hash requires either (a) Basescan API V2 key or (b) owner's facilitator dashboard. Both Basescan V1 and Blockscout returned errors."
+}
