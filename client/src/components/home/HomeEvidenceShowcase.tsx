@@ -68,7 +68,7 @@ const PUBLIC_RECORDS = [
     name: "Open infrastructure",
     status: "Source and datasets public",
     detail: "Inspect the code on GitHub and the published measurement surfaces on Hugging Face.",
-    href: "https://github.com/CSOAI-ORG/council-of-ai",
+    href: "https://github.com/CSOAI-ORG/councilof-ai",
   },
 ] as const;
 
