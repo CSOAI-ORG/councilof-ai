@@ -163,6 +163,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Readiness Assessment"
  },
  {
+  "path": "/attestation",
+  "comp": "AttestationNetwork",
+  "title": "Attestation Network"
+ },
+ {
+  "path": "/attestation-network",
+  "comp": "Redirect",
+  "title": "Attestation Network"
+ },
+ {
   "path": "/aug-2026",
   "comp": "Readiness",
   "title": "Readiness"
@@ -216,6 +226,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/board/models",
   "comp": "MeasuredModels",
   "title": "Measured Models"
+ },
+ {
+  "path": "/boards/mcp",
+  "comp": "McpTrustBoard",
+  "title": "Mcp Trust Board"
  },
  {
   "path": "/brief",
@@ -296,6 +311,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/classifier",
   "comp": "EuActClassifier",
   "title": "Eu Act Classifier"
+ },
+ {
+  "path": "/cobol",
+  "comp": "CobolBridge",
+  "title": "Cobol Bridge"
  },
  {
   "path": "/cobolbridge",
@@ -433,6 +453,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Agents"
  },
  {
+  "path": "/countdown",
+  "comp": "CountdownPage",
+  "title": "Countdown Page"
+ },
+ {
   "path": "/covenant",
   "comp": "MaternalCovenant",
   "title": "Maternal Covenant"
@@ -471,6 +496,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/csoai-law",
   "comp": "MeokLaw",
   "title": "Meok Law"
+ },
+ {
+  "path": "/custody",
+  "comp": "CustodyDisclosure",
+  "title": "Custody Disclosure"
  },
  {
   "path": "/dashboard",
@@ -646,6 +676,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/eunomia-indices",
   "comp": "EunomiaIndices",
   "title": "Eunomia Indices"
+ },
+ {
+  "path": "/events/three-root-ceremony",
+  "comp": "ThreeRootCeremony",
+  "title": "Three Root Ceremony"
  },
  {
   "path": "/evidence-rail",
@@ -911,6 +946,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/harness",
   "comp": "Harness",
   "title": "Harness"
+ },
+ {
+  "path": "/health-inventory",
+  "comp": "HealthInventory",
+  "title": "Health Inventory"
  },
  {
   "path": "/healthcare-ai-act",
@@ -1383,9 +1423,14 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Policy Generator"
  },
  {
+  "path": "/postmortems/x402-settlement-reading",
+  "comp": "PostmortemX402",
+  "title": "Postmortem X402"
+ },
+ {
   "path": "/pricing",
-  "comp": "PlansPage",
-  "title": "Plans Page"
+  "comp": "Pricing",
+  "title": "Pricing"
  },
  {
   "path": "/pricing-legacy",
@@ -1466,6 +1511,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/real-world",
   "comp": "RealWorldMap",
   "title": "Real World Map"
+ },
+ {
+  "path": "/receipt",
+  "comp": "ProofReceipt",
+  "title": "Proof Receipt"
  },
  {
   "path": "/recommendations",
@@ -1708,6 +1758,21 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Sovereign Twin"
  },
  {
+  "path": "/specimens/clarity",
+  "comp": "ClaritySpecimen",
+  "title": "Clarity Specimen"
+ },
+ {
+  "path": "/specimens/kokotajlo",
+  "comp": "KokotajloSpecimen",
+  "title": "Kokotajlo Specimen"
+ },
+ {
+  "path": "/specimens/rlusd",
+  "comp": "RlusdSpecimen",
+  "title": "Rlusd Specimen"
+ },
+ {
   "path": "/standards",
   "comp": "Standards",
   "title": "Standards"
@@ -1716,6 +1781,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/start",
   "comp": "OnboardOS",
   "title": "Onboard OS"
+ },
+ {
+  "path": "/status",
+  "comp": "YieldStatus",
+  "title": "Yield Status"
+ },
+ {
+  "path": "/status/internal",
+  "comp": "YieldInternal",
+  "title": "Yield Internal"
  },
  {
   "path": "/statute-to-predicate",
@@ -1793,6 +1868,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Transparency Cop"
  },
  {
+  "path": "/trust",
+  "comp": "McpTrustBoard",
+  "title": "Mcp Trust Board"
+ },
+ {
   "path": "/try",
   "comp": "TryCouncil",
   "title": "Try Council"
@@ -1840,12 +1920,12 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/vs",
   "comp": "Compare",
-  "title": "Compare"
+  "title": "Vs"
  },
  {
   "path": "/vs-competitors",
   "comp": "Compare",
-  "title": "Compare"
+  "title": "Vs Competitors"
  },
  {
   "path": "/vulnerability-disclosure",

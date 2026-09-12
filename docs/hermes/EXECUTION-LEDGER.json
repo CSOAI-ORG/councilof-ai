@@ -2,8 +2,29 @@
   "schema": "csoai.execution-ledger/0.1",
   "purpose": "Cross-lane coordination for the eight-TUI goal mode (owner brief 2026-09-12). Claim files before editing; earlier owner keeps a contested file; later lanes supply patches.",
   "issued": "2026-09-12",
-  "states": ["DISCOVERED","INDEXED","MEASURED","SIGNED","ROOTED","WITNESSED_REKOR","STAMPED_PENDING_BITCOIN","CONFIRMED_BITCOIN","SETTLED","REPRODUCED","UNCHECKABLE"],
-  "merge_order": ["TUI1","TUI2","TUI3","TUI4","TUI5","TUI6","TUI7","TUI8"],
+  "states": [
+    "DISCOVERED",
+    "INDEXED",
+    "MEASURED",
+    "SIGNED",
+    "ROOTED",
+    "WITNESSED_REKOR",
+    "STAMPED_PENDING_BITCOIN",
+    "CONFIRMED_BITCOIN",
+    "SETTLED",
+    "REPRODUCED",
+    "UNCHECKABLE"
+  ],
+  "merge_order": [
+    "TUI1",
+    "TUI2",
+    "TUI3",
+    "TUI4",
+    "TUI5",
+    "TUI6",
+    "TUI7",
+    "TUI8"
+  ],
   "verified_facts": {
     "public_root": {
       "card_count": 169,
@@ -20,14 +41,63 @@
     }
   },
   "lanes": {
-    "TUI1": {"objective": "release controller, truth ledger, roots and anchors", "claims": [], "status": "ACTIVE"},
-    "TUI2": {"objective": "stablecoin and tokenized-asset measurement", "claims": [], "status": "ACTIVE"},
-    "TUI3": {"objective": "models, benchmarks, HF, Kaggle, 3090 harness", "claims": [], "status": "ACTIVE"},
-    "TUI4": {"objective": "MCP, A2A, x402 and agent-economy interoperability", "claims": [], "status": "ACTIVE"},
-    "TUI5": {"objective": "financial rails, institutions, ISO 20022, XRPL, legacy", "claims": [], "status": "ACTIVE"},
-    "TUI6": {"objective": "regulation, standards and live crosswalks", "claims": [], "status": "ACTIVE"},
-    "TUI7": {"objective": "master GSPC board, Council OS, mobile, public product", "claims": [], "status": "ACTIVE"},
-    "TUI8": {"objective": "distribution, earned attention, revenue, buyer proof", "claims": [], "status": "ACTIVE"}
+    "TUI1": {
+      "objective": "release controller, truth ledger, roots and anchors",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI2": {
+      "objective": "stablecoin and tokenized-asset measurement",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI3": {
+      "objective": "models, benchmarks, HF, Kaggle, 3090 harness",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI4": {
+      "objective": "MCP, A2A, x402 and agent-economy interoperability",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI5": {
+      "objective": "financial rails, institutions, ISO 20022, XRPL, legacy",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI6": {
+      "objective": "regulation, standards and live crosswalks",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI7": {
+      "objective": "master GSPC board, Council OS, mobile, public product",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI8": {
+      "objective": "distribution, earned attention, revenue, buyer proof",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "JEEVES-mac": {
+      "objective": "owner-directed weekend tranche from CSOAI_100_VIRAL_MOVES_2026-09-12: doctrine refusals (#100), x402 postmortem (#34), three-root ceremony page (#17)",
+      "claims": [
+        {
+          "lane": "JEEVES-mac",
+          "files": [
+            "client/src/pages/Doctrine.tsx",
+            "client/src/pages/PostmortemX402.tsx",
+            "client/src/pages/ThreeRootCeremony.tsx",
+            "client/src/App.tsx"
+          ],
+          "since": "2026-09-12T08:00Z",
+          "note": "branch jeeves/weekend-tranche-20260912; content pages only, no engine doors, no counts typed"
+        }
+      ],
+      "status": "ACTIVE"
+    }
   },
   "rules": [
     "Append claims as {lane, files[], since, note}; never rewrite another lane's claim.",

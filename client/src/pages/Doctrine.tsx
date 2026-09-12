@@ -51,6 +51,55 @@ const POINTS: { title: string; body: string }[] = [
   },
 ];
 
+/**
+ * REFUSALS — the red lines, published 2026-09-12, before the event that makes
+ * them quotable. A refusal stated in advance is a commitment device: if one of
+ * these ever changes, the change is recorded in /api/corrections, not edited
+ * away. Keep each line short enough to quote verbatim.
+ */
+const REFUSALS: { title: string; body: string }[] = [
+  {
+    title: "We will not certify.",
+    body:
+      "No conformity mark, no seal-as-grade, no certificate of compliance. A signed card records what was measured and when. Nothing more is ever for sale.",
+  },
+  {
+    title: "We will not sell a grade.",
+    body:
+      "Payment buys runs, signatures, attachments and reports. It never reaches the signing path, and it cannot change, delay or suppress a measurement.",
+  },
+  {
+    title: "We will not take money from the measured to influence the measurement.",
+    body:
+      "No measured lab, vendor or issuer holds equity, a board seat, or veto here. A measurement body funded to adjust its readings has no asset left.",
+  },
+  {
+    title: "We will not rank our own models.",
+    body:
+      "Our own council-specialist models are excluded from the public per-axis leaders on the board. A neutral body does not place itself on its own podium.",
+  },
+  {
+    title: "We will not rewrite history.",
+    body:
+      "Corrections are appended and the original bytes stay. The public ledger is GET /api/corrections — including the entries about our own verification tooling.",
+  },
+  {
+    title: "We will not call UNCHECKABLE fine.",
+    body:
+      "A missing stamp, an unreachable endpoint, an unverifiable signature: all fail closed. 'Could not check' is reported as itself, never upgraded to a pass.",
+  },
+  {
+    title: "We will not move the keys to a conflicted owner.",
+    body:
+      "The signing keys and the measurement instruments stay with the measurement body. Neutrality is the asset; an owner with a stake in the readings destroys it.",
+  },
+  {
+    title: "We will not manufacture attention.",
+    body:
+      "No astroturfing, no purchased coverage presented as earned, no mass unsolicited email. We publish numbers, clocks and corrections on dates — attention is a side effect or it does not happen.",
+  },
+];
+
 export default function Doctrine() {
   const board = useBoardCount();
 
@@ -106,6 +155,32 @@ export default function Doctrine() {
             {board.count_grammar} Financial empty cells stay empty.
           </p>
         )}
+
+        <div className="mt-14">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">
+            Refusals — published 2026-09-12
+          </p>
+          <h2 className="mt-3 text-2xl font-black leading-tight text-gray-900">
+            The red lines, on the record before they are tested.
+          </h2>
+          <p className="mt-3 text-[15px] leading-relaxed text-gray-600">
+            A refusal stated in advance is a commitment device: the stance exists before the
+            event that makes it quotable. If any of these ever changes, the change is recorded
+            in{" "}
+            <a className="text-emerald-700 underline" href="/api/corrections">
+              /api/corrections
+            </a>
+            , not edited away.
+          </p>
+          <div className="mt-6 space-y-5">
+            {REFUSALS.map((r) => (
+              <section key={r.title} className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                <h3 className="text-base font-extrabold text-gray-900">{r.title}</h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{r.body}</p>
+              </section>
+            ))}
+          </div>
+        </div>
 
         <p className="mt-8 text-sm text-gray-500">
           Also:{" "}

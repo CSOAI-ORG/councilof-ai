@@ -182,6 +182,8 @@ const Honesty = lazy(() => import("./pages/Honesty"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const Doctrine = lazy(() => import("./pages/Doctrine"));
+const PostmortemX402 = lazy(() => import("./pages/PostmortemX402"));
+const ThreeRootCeremony = lazy(() => import("./pages/ThreeRootCeremony"));
 const TransparencyCop = lazy(() => import("./pages/TransparencyCop"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
@@ -375,6 +377,8 @@ const ROUTE_TITLES: Record<string, string> = {
   "/methodology": "Methodology | CSOAI",
   "/answers": "Answers — measurement explainers | Council of AI",
   "/doctrine": "Doctrine — measurement, not certification | Council of AI",
+  "/postmortems/x402-settlement-reading": "Postmortem — the x402 settlement that was never lost | Council of AI",
+  "/events/three-root-ceremony": "The three-root ceremony — 2026-09-13 | Council of AI",
   "/transparency-cop": "Transparency Code — detection/verify tool, C2PA planned | Council of AI",
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
   "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
@@ -708,6 +712,8 @@ function App() {
                   <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/doctrine" component={Doctrine} />
+                  <Route path="/postmortems/x402-settlement-reading" component={PostmortemX402} />
+                  <Route path="/events/three-root-ceremony" component={ThreeRootCeremony} />
                   <Route path="/transparency-cop" component={TransparencyCop} />
                   <Route path="/board/models" component={MeasuredModels} />
                   <Route path="/board" component={MeasurementBoard} />
