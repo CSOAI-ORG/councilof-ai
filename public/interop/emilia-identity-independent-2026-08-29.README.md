@@ -26,7 +26,21 @@ EMILIA.
 - No Transparency Service registration is claimed.
 - EP receipt cases are **UNCHECKABLE**: `vectors.reference.json` carries no EP
   receipt payload, and we did not invent one.
-- Checkable cases: 11 of 11 passed. That is the whole result.
+- The report marks **nine computed-check records** as passed and carries
+  **two declared scope boundaries**. The EP receipt case is **UNCHECKABLE**.
+  This is not eleven computed test passes. The two boundary records are
+  `P256-PAIR-IS-NOT-EP-PROFILE` and
+  `ENTRY-DIGEST-CANNOT-SUBSTITUTE-FOR-AUTHORIZATION`; their observations state
+  limits on what the fixture can establish.
+
+## Reading the historical summary
+
+The unchanged JSON summary says `checkable_passed: 11` and
+`checkable_total: 11`. Those counters include the two scope declarations above.
+Quote the nine-check / two-boundary / EP-uncheckable breakdown instead of
+promoting the aggregate to eleven independently computed tests. The report's
+digest remains the value printed above; this clarification does not rerun the
+experiment or modify its historical bytes.
 
 ## The file carries no `as_of`
 
