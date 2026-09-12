@@ -1,0 +1,124 @@
+{
+  "kind": "csoai.benchmarker-trust-evidence/0.1",
+  "as_of": "2026-09-12T18:10:00Z",
+  "lane": "TUI-5 benchmark-the-benchmarkers (nine-TUI brief 2026-09-12)",
+  "trust_round": {
+    "manifest": "public/interop/mcp-trust/2026-09-12.json (500 hosts, registry cursor pagination, 23 pages, 2213 rows, cap 500)",
+    "diff": "public/interop/mcp-trust/diff-2026-09-12.json \u2014 state MEASURED, per-bucket deltas vs 2026-09-11",
+    "headline": "259 of 500 enumerated hosts answered a correct MCP initialize; 207 answered with an auth challenge (a term sheet, not delivery); 19 were unreachable or gone (never FAIL). Counts only by doctrine.",
+    "cohort_honesty": "The brief asked for a FROZEN cohort. Round-1 per-host rows were lost with the 2026-09-12 dsh-tmp evacuation (recorded failure state). The round-2 cohort is re-derived by the same deterministic registry cursor order \u2014 bucket deltas remain counts-level by doctrine; hosts_added/dropped are UNCHECKABLE by construction and stay so.",
+    "added_removed_changed": "UNCHECKABLE at host level for this round (see cohort_honesty). From round 3 onward, rows are retained operator-side via --rows-out and this cell can be answered."
+  },
+  "mappings": {
+    "owasp_llm_top10_2025": {
+      "artifact": "public/interop/owasp-llm-mapping.json v0.2",
+      "accepted_joins": [
+        {
+          "join": "LLM01 Prompt Injection -> jail",
+          "source": [
+            "OWASP LLM01 definition (genai.owasp.org/llm-top-10/)",
+            "functions/api/_gspc_axes_b.ts: jail = escape-attempt detection, GoldBank-Detector, 71-cell frozen bank"
+          ],
+          "rule": "A join is drawn only where the GSPC instrument measures the same adversarial family; overlap, never equivalence (indirect/tool-mediated payloads are outside the bank)."
+        }
+      ],
+      "unmapped": {
+        "count": 9,
+        "rule": "No GSPC axis measures the category's quantity; each category carries its unmapped_reason verbatim in the mapping artifact.",
+        "evidence": "functions/api/owasp-report.test.ts pins the 9-unmapped shape so the mapping cannot silently re-grow"
+      },
+      "pinned_by_test": true
+    },
+    "ailuminate_v1_1": {
+      "artifact": "docs/interop/AILUMINATE-IMPORTER-SPEC.md v0.2 + client/src/pages/GspcVsAiluminate.tsx crosswalk",
+      "accepted_joins": [
+        {
+          "join": "8 of 14 hazard codes (vcr ncr src cse ssh iwp hte sxc_prn) -> safety",
+          "source": [
+            "MLCommons AI Safety v1.1 hazard taxonomy (arXiv:2503.05731)",
+            "functions/api/_gspc_axes_a.ts: safety = calibrated refusal on paired requests, DefBench"
+          ],
+          "rule": "Join only refusal-family hazards to the calibrated-refusal instrument; refusal calibration is not a per-hazard verdict (caveat carried on the page)."
+        }
+      ],
+      "no_join": {
+        "codes": [
+          "ipv",
+          "dfm",
+          "prv",
+          "spc_ele",
+          "spc_fin",
+          "spc_hlt"
+        ],
+        "rule": "IP regurgitation, defamation, privacy leakage and advice quality are not refusal calibration; no GSPC axis measures them, so the page shows 'no GSPC axis'."
+      },
+      "nevers": [
+        "never MEASURED on import",
+        "never a 23rd axis (ADR-001)",
+        "never a fused grade (floating baseline is not comparable across time)"
+      ]
+    },
+    "pyrit": {
+      "artifact": "harness/redteam/families/pyrit_attach.py",
+      "rule": "PyRIT output attaches to the jail instrument as content-hashed evidence (ATTACHED, never MEASURED); keyword-refusal scoring is deliberately not implemented (playbookAudit pyrit bind).",
+      "state_when_absent": "UNCHECKABLE with reason",
+      "tests": "harness/redteam/test_redteam.py 6/6"
+    }
+  },
+  "live_parity": [
+    {
+      "surface": "https://councilof.ai/api/owasp-report",
+      "expected": "mapping v0.2: 10 categories, 1 join (LLM01\u2192jail), 9 unmapped, 0 unresolvable",
+      "observed": {
+        "categories": 10,
+        "covered_by_live_instrument": 1,
+        "mapped_unmeasured": 0,
+        "unmapped": 9,
+        "unresolvable_axes": 0
+      },
+      "parity": true
+    },
+    {
+      "surface": "https://councilof.ai/interop/mcp-trust/latest.json",
+      "expected": "deployed = round 1 (2026-09-11) until this lane's PR merges + deploys; then round 2 (2026-09-12)",
+      "observed": {
+        "live_as_of": "2026-09-11T05:31:47Z",
+        "committed_as_of": "2026-09-12T17:09:11Z"
+      },
+      "parity": true,
+      "state": "STALE-UNTIL-DEPLOY, not drift \u2014 deploy pending on this PR"
+    },
+    {
+      "surface": "https://councilof.ai/trust/",
+      "expected": "200 + SPA shell carrying 'MCP Trust Board'",
+      "observed": "200",
+      "parity": true
+    },
+    {
+      "surface": "https://councilof.ai/gspc-vs-ailuminate/",
+      "expected": "200 + SPA shell carrying 'AILuminate'",
+      "observed": "200",
+      "parity": true
+    }
+  ],
+  "test_evidence": {
+    "scripts/test_mcp_trust_round.py": "17/17",
+    "scripts/mcp-trust-round.py --selftest": "OK",
+    "harness/redteam/test_redteam.py": "6/6",
+    "functions/api/owasp-report.test.ts": "6/6"
+  },
+  "credential_blockers_recorded": [
+    "npm deprecations: ~/.npmrc token dead (E401), owner 2FA gate",
+    "Smithery csgaglobal namespace: API key does not own it (Forbidden)",
+    "MCP.so: no account credentials",
+    "PyPI republish batch: owner declined the approval prompt \u2014 stays owner-gated"
+  ],
+  "not": [
+    "no certification claim",
+    "no compliance claim",
+    "no safety claim",
+    "no partnership claim",
+    "host names withheld by doctrine",
+    "UNREACHABLE is never FAIL"
+  ]
+}

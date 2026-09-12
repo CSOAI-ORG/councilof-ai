@@ -1,0 +1,56 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "csoai.benchmarker-trust-card/0.1",
+    "issuer": "CSOAI Ltd",
+    "surface": "benchmark-the-benchmarkers",
+    "as_of": "2026-09-12T18:10:00Z",
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-cells \u2014 the TUI never signs; the GHA publisher is the only signer (TUI-1 intake)"
+    ],
+    "coverage": {
+      "mcp_trust": {
+        "rounds": 2,
+        "hosts_per_round": 500,
+        "answered_initialize_round2": 259,
+        "auth_challenged_round2": 207,
+        "unreachable_round2": 19,
+        "diff_state": "MEASURED"
+      },
+      "owasp_llm_2025": {
+        "categories": 10,
+        "joined": 1,
+        "unmapped_visible": 9
+      },
+      "ailuminate_v1_1": {
+        "codes": 14,
+        "joined": 8,
+        "no_join_visible": 6
+      },
+      "pyrit": {
+        "state": "adapter-live-attachment-only"
+      }
+    },
+    "gaps": [
+      "host-level added/removed UNCHECKABLE this round (round-1 rows lost in evacuation; rows retained from round 2 onward)",
+      "9 OWASP categories carry no defensible join",
+      "6 AILuminate codes carry no GSPC axis"
+    ],
+    "evidence_artifact": "https://councilof.ai/interop/benchmarker-trust/evidence-2026-09-12.json",
+    "doctrine": [
+      "Measurement, never certification.",
+      "A join is drawn only where the instrument measures the same quantity.",
+      "The gap is the report."
+    ],
+    "not_a_grade": true,
+    "not_certification": true,
+    "writes_board": false,
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "id": "febd1e8e81bb260493c42de1e13b3279627ea841e0d2197e4c7e09c821b74071",
+  "preimage_rule": "sha256(canonical-json(body, sort_keys, no-whitespace))",
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1",
+  "note": "UNSIGNED \u2014 staged for the TUI-1 publisher intake; this lane never signs."
+}
