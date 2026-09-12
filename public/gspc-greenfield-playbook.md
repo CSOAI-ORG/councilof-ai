@@ -120,7 +120,7 @@ Why this is stricter than Hugging Face capability boards: public capability boar
 
   art5-safeguard           Art5Bench           36         97.2%                85.8--99.5%   TIE p=1 ceiling          MEASURED
 
-  swarm                    SwarmBench v2b      37         \>=38.4% LB          withheld      SEPARATED                MEASURED
+  swarm                    SwarmBench v2b      37         44.44% point         withheld      UNTESTED                 MEASURED
 
   affect                   AffectBench         41         87.8%                74.5--94.7%   SEPARATED p=0.0078       MEASURED
 
@@ -261,9 +261,9 @@ Upgrade. Axis is saturated. Hardening path: adversarial wrappers and multi-turn 
 
 ## **5.12 swarm --- SwarmBench v2b --- MEASURED**
 
-First gen: n=37, leader/facts \>=38.4% LB, CI withheld, SEPARATED. Home csoai/gspc-swarm. Kind model-comparison.
+First gen: n=37 bank, signed point leader 44.44%, paired rows and compatible CIs unpublished, separation UNTESTED. Home csoai/gspc-swarm. Kind model-comparison.
 
-Upgrade. Fix independence or keep publishing a lower bound only. Add multi-agent market items using Dorado-style escrow and ERC-8004 identity as fixtures. Do not import BenchAlign agentic scores.
+Upgrade. Publish the paired item rows and run the declared separation test. Add multi-agent market items using Dorado-style escrow and ERC-8004 identity as fixtures. Do not import BenchAlign agentic scores.
 
 *n-target. independence fix or LB grammar forever Forbidden. Fake Wilson interval · hidorado ranks · BenchAlign import*
 

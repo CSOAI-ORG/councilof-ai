@@ -34,6 +34,17 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0912-01",
+      date: "2026-09-12",
+      what_was_wrong:
+        "The live SwarmBench v2b row claimed a statistically separated qwen2.5:7b leader by comparing a stated 0.384 lower bound with a 0.372 upper bound for mistral:7b. The signed candidate cards show qwen3:4b at 0.4070 and qwen2.5:1.5b at 0.4000, both ahead of mistral:7b at 0.1481, so mistral was not the runner-up. The same sentence then said the top three remained statistically tied, contradicting its own separated-leader label. A standing limitation also described the active row as the retired 3-prompt PROTOCOL bank rather than the 37-item wave-2b bank.",
+      how_caught:
+        "Public-site inspection before a proposed orchestration-system design-partner approach. The audit followed the swarm row into /signed/card_index.json and compared all seven signed swarm-candidate cards instead of accepting the board summary.",
+      fix:
+        "The live serving layer now keeps the signed qwen2.5:7b point estimate and leader identity but marks statistical separation UNTESTED. Its basis states the actual point ordering and the missing evidence: no published paired item rows or compatible confidence intervals support a separation determination. The limitation now distinguishes the active 37-item wave-2b bank from the retired PROTOCOL result. Historical signed bytes remain unchanged and are explicitly superseded by this correction rather than silently rewritten.",
+      status: "CORRECTED IN SOURCE AND RECORDED; VERIFY THE CURRENT LIVE ENDPOINT",
+    },
+    {
       id: "C-2026-0905-02",
       date: "2026-09-05",
       what_was_wrong:
