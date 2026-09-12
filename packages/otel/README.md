@@ -61,3 +61,13 @@ python3 packages/otel/route_receipt.py trace.otlp.json \
 
 `python3 packages/otel/test_route_receipt.py` proves metadata mapping, latency/usage handling,
 truthful unsigned state, and that sensitive GenAI content fields never enter the receipt.
+
+The adapter preserves source observation time and rejects missing or invalid timestamps,
+reversed durations, malformed digests, invalid trace/span IDs, conflicting cloud regions,
+and invalid cost/token values. Missing optional
+usage remains null; measured zero remains zero. The requested model is a declaration;
+only `gen_ai.response.model` supplies the span-reported observed model. A server hostname
+is never treated as a cloud region; `cloud.region` may come from the span or its resource,
+but conflicting values are rejected. These labels are supplied by the trace producer and
+are not independently verified identities. SHA-256 digests are not anonymization and
+can expose guessable content; decide whether content is suitable for public commitment.

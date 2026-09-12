@@ -1,0 +1,29 @@
+name: OTLP route receipt observations
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'packages/otel/**'
+      - '.github/workflows/otel-route-receipts.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'packages/otel/**'
+      - '.github/workflows/otel-route-receipts.yml'
+permissions:
+  contents: read
+jobs:
+  observations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: packages/otel
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source observations, privacy exclusions, and existing tracing
+        run: |
+          python3 packages/otel/test_route_receipt.py
+          python3 packages/otel/test_genai_spans.py
