@@ -7,6 +7,10 @@ import {
   type StablecoinReadiness,
   type StablecoinReadinessAsset,
 } from "@/lib/stablecoinReadiness";
+import {
+  loadStablecoinPromotionQueue,
+  type StablecoinPromotionQueue,
+} from "@/lib/stablecoinPromotionQueue";
 
 type Filter = "ALL" | "MEASURED" | "UNMEASURED" | "REVIEW";
 
@@ -52,6 +56,7 @@ function AssetDetail({ asset, data }: { asset: StablecoinReadinessAsset; data: S
 
 export default function StablecoinReadinessView() {
   const [data, setData] = useState<StablecoinReadiness | null>(null);
+  const [queue, setQueue] = useState<StablecoinPromotionQueue | null>(null);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("ALL");
@@ -59,6 +64,7 @@ export default function StablecoinReadinessView() {
   useEffect(() => {
     const controller = new AbortController();
     loadStablecoinReadiness(controller.signal).then((value) => { setData(value); setSelectedId(value.assets.find((asset) => asset.measurement.state === "MEASURED")?.id || value.assets[0]?.id || null); }).catch((reason: Error) => { if (reason.name !== "AbortError") setError(reason.message); });
+    loadStablecoinPromotionQueue(controller.signal).then(setQueue).catch(() => { /* readiness remains usable if the operational queue is unavailable */ });
     return () => controller.abort();
   }, []);
   const shown = useMemo(() => filterStablecoinReadiness(data?.assets || [], query, filter), [data, query, filter]);
@@ -70,7 +76,7 @@ export default function StablecoinReadinessView() {
     <section id="stablecoins" className="space-y-4" data-testid="stablecoin-readiness-view">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Stablecoin evidence readiness</p><h3 className="mt-1 text-2xl font-bold text-slate-950">One catalog. Every gap visible.</h3><p className="mt-1 max-w-3xl text-sm text-slate-600">{data.purpose}</p></div>
-        <a href="/interop/stablecoin-universe-2026-09/readiness.json" className="text-xs font-semibold text-emerald-800 underline">Machine-readable JSON</a>
+        <div className="flex flex-wrap gap-3 text-xs font-semibold text-emerald-800"><a href="/interop/stablecoin-universe-2026-09/readiness.json" className="underline">Evidence ledger JSON</a><a href="/interop/stablecoin-universe-2026-09/promotion-queue.json" className="underline">425-row execution queue</a></div>
       </div>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
         {[
@@ -79,6 +85,7 @@ export default function StablecoinReadinessView() {
         ].map(([label, value]) => <div key={String(label)} className="rounded-xl border border-slate-200 bg-white p-3"><div className="text-xl font-black text-slate-950">{value}</div><div className="text-[11px] text-slate-500">{label}</div></div>)}
       </div>
       <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-950"><b>{c.unmeasured_assets} assets remain independently unmeasured.</b> All rows are discoverable metadata, but the generic A2A, MCP and x402 routes do not mean each asset has its own integration or paid settlement.</div>
+      {queue && <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs leading-relaxed text-emerald-950" data-testid="stablecoin-promotion-queue-summary"><b>The promotion queue covers all {queue.population} assets.</b> {queue.counts.primary_source_registered} have a registered primary source, {queue.counts.deep_probed} have fresh or archived deep-probe evidence, and {queue.next_action_counts.REGISTER_PRIMARY_SOURCES || 0} currently require source registration before deeper work. The daily round produces evidence; it never upgrades a row from a payment or catalog listing.</div>}
       {data.discovery_candidates.length > 0 && <div className="rounded-xl border border-sky-200 bg-sky-50 p-3 text-xs leading-relaxed text-sky-950"><b>{data.discovery_candidates.length} post-freeze discovery candidate.</b> {data.discovery_candidates.map((candidate) => <span key={candidate.id}> <a className="font-semibold underline" href={candidate.source.url}>{candidate.symbol}</a> is issuer-reported on {candidate.reported_chain}, but remains outside the signed 425-asset index and independently unmeasured.</span>)}</div>}
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.75fr)]">
         <div className="min-w-0 rounded-2xl border border-slate-200 bg-white">
