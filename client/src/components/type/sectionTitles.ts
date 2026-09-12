@@ -25,7 +25,7 @@ export const SECTION_TITLES: Record<string, RotatingTitle> = {
   },
   board: {
     before: "The open board",
-    words: ["regulators read", "insurers price on", "engineers debug with", "citizens can check"],
+    words: ["anyone can inspect", "engineers can query", "researchers can compare", "citizens can check"],
     after: "— live, and recomputable.",
   },
   arena: {
@@ -39,8 +39,8 @@ export const SECTION_TITLES: Record<string, RotatingTitle> = {
     after: "— not against a vibe.",
   },
   independence: {
-    before: "Nobody we measure pays us —",
-    words: ["not vendors", "not labs", "not sponsors"],
+    before: "Payment never buys",
+    words: ["a rank", "a score", "a passing result"],
     after: "and verification is free forever.",
   },
   boundary: {
