@@ -128,3 +128,26 @@
 3. XRPL memo anchor: funded account required
 4. NIST submission: communication gate for 16 Sep
 5. PR merge: protected master requires review
+
+## Update — 2026-09-12T06:00Z
+
+### Card Corpora (verified)
+
+| Corpus | Count | Location | State |
+|--------|-------|----------|-------|
+| Signed chain cards | 335 | public/signed/cards/ | VERIFIED (card_index.json) |
+| Public root leaves | 169 | root.json | SIGNED_ENVELOPE |
+| Mill queue signed | 1,493 | public/interop/mill-cards-signed/ | OIDC_SIGNED |
+| In-toto receipts | 1 | public/interop/crosswalk/intoto/ | CROSSWALK |
+
+The mill queue (1,493 cards) and the main chain (335 cards) are separate corpora. Mill cards are OIDC-signed via the board-sign path. Promotion into the main chain requires the signing ceremony.
+
+### Council OS
+- Homepage claims "30 panes"
+- Rail registry not independently verified from code
+
+### Distribution Channels Verified
+- Sitemap: current (2026-09-12)
+- RSS/feed.xml: live
+- llms.txt: live, matches /api/state claims
+- MCP.so: recently listed (PR #1931)
