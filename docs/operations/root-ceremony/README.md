@@ -4,7 +4,7 @@ G4.1 of the TUI-4 "ROOTS & IDENTITY" V3 brief. This directory plus
 `scripts/ceremony/` is everything Nick needs to run a 90-minute offline
 ceremony that establishes the estate's root-of-trust tier:
 
-- **ROOT-α** — offline root key. Seed from ≥99 physical d6 rolls, custody via
+- **ROOT-α** — offline root key. Seed from ≥100 physical d6 rolls, custody via
   Shamir 2-of-3 across three separate media/holders (holders named by ROLE on
   the public card, by name only on the paper custody record).
 - **ROOT-β** — operational signing key, attested by ROOT-α inside **card #0**
@@ -20,11 +20,14 @@ only measured surface. Nothing here touches the board key
 
 | Path | Role |
 |---|---|
-| `scripts/ceremony/entropy_from_dice.py` | d6 rolls → 32-byte seed. Fail-closed below 99 rolls (`--allow-weak` for tests, labelled WEAK). Never prints the seed. |
+| `scripts/ceremony/entropy_from_dice.py` | d6 rolls → 32-byte seed. Fixed fail-closed floor of 100 rolls; the CLI cannot weaken it. Never prints the seed. |
 | `scripts/ceremony/shamir_2of3.py` | Shamir 2-of-3 over GF(2^8)/0x11B. `split` / `combine` / `selftest`. Share files carry `secret_sha256`; combine fails closed on mismatch. |
 | `scripts/ceremony/ed25519_from_seed.py` | seed → Ed25519 (RFC 8032). `derive` / `sign-file` / `verify`. Prints pubkey hex + RFC 7638 thumbprint only. |
 | `scripts/ceremony/ceremony_selftest.py` | End-to-end dry run on SIMULATED material. Must pass 3× before the real run. |
+| `scripts/ceremony/genesis_card.py` | Requires the independent Shamir record, fills, signs, verifies, and atomically creates card #0. No manual signature paste. |
+| `scripts/ceremony/verify_offline_bundle.py` | Fails closed unless the exact pinned wheelhouse and installed dependency versions match. |
 | `card0-genesis.template.json` | Genesis card #0 template. Null placeholders; self-signed by ROOT-α over the canonical card minus `sig_ed25519`. |
+| `requirements-macos-arm64-py39.lock` + `wheelhouse-macos-arm64-py39.SHA256` | Exact dependency versions and wheel hashes for the designated macOS arm64/Python 3.9 ceremony host. |
 | `ROOT-CEREMONY-CHECKLIST-2026-09-12.md` | The 90-minute runbook: phases, abort conditions, NEVER list, verification gates. |
 
 Canonical payload rule (the estate canon, identical to
@@ -34,22 +37,26 @@ with `sig_ed25519` **removed entirely**, not null.
 
 ## Honest limits
 
-- **The Shamir implementation is fresh, single-implementation, and
-  unaudited.** Its selftest pins the GF(2^8) field to the FIPS-197 §4.2
-  worked examples and proves reconstruction from all three pairs, corruption
-  detection, and single-share silence — but one implementation's selftest is
-  not an audit. The checklist requires the selftest to pass **3×** on the
-  ceremony machine before the real run, and we recommend cross-checking
-  reconstruction with an **independent** Shamir implementation (e.g. a
-  second, separately-written GF(2^8) tool, fed the same share files and
-  checked against `secret_sha256`) before trusting real keys to it.
+- **The native Shamir implementation is fresh and unaudited.** Its selftest is
+  necessary but insufficient. A separately sourced implementation must
+  reconstruct the same share pair, and `shamir_2of3.py crosscheck` must emit a
+  matching PASS record. `genesis_card.py` refuses to finalize card #0 without
+  that record. This is a mandatory gate, not a recommendation.
 - **The ceremony's security rests on Nick's physical/airgap procedure, not
   on these scripts.** The scripts can only fail closed and keep secrets off
   stdout. Dice fairness, room privacy, media custody, and secure erase are
   human and physical.
-- The dice floor of 99 rolls carries 255.91 bits of entropy — honestly a
-  hair under 256 (strict 256 needs 100 rolls). The scripts print the exact
-  figure every run; the floor is policy, not a rounding-up.
+- The fixed floor of 100 fair d6 rolls carries about 258.50 input bits before
+  SHA-256 produces the 256-bit seed. The production CLI has no lower-floor or
+  weak-output option.
+- The roll transcript and physical roll sheet are **seed-equivalent secrets**.
+  They are never custody records and must be destroyed after the independent
+  cross-check. Retaining either defeats the intended 2-of-3 custody boundary.
+- APFS, SSDs, and flash media cannot promise per-file secure erasure because of
+  copy-on-write and wear levelling. Secret files must never touch the internal
+  disk. Use the approved disposable encrypted ceremony medium and physically
+  destroy it after handoff, or an approved RAM-backed environment with swap
+  disabled and a full power-off afterward.
 - Byte-wise Shamir shares are information-theoretically silent individually,
   but the scheme is malleable if k−1 colluding shares are tampered with and
   the digest check is skipped — `combine` never skips it.
@@ -58,9 +65,13 @@ with `sig_ed25519` **removed entirely**, not null.
 
 ## Verify-before-trust checklist (short form)
 
-1. `python3 scripts/ceremony/shamir_2of3.py selftest` — 3× PASS.
-2. `uv run --with cryptography python3 scripts/ceremony/ceremony_selftest.py` — 3× exit 0.
-3. (Recommended) Independent Shamir implementation reconstructs from the
-   share files to the same `secret_sha256`.
-4. After the real run: card #0 verifies from `root_alpha.pubkey_raw_hex`
+1. Install the exact wheelhouse with the committed hash lock; run
+   `verify_offline_bundle.py` — VERIFIED.
+2. `python3 scripts/ceremony/shamir_2of3.py selftest` and
+   `python3 scripts/ceremony/ceremony_selftest.py` — each 3× PASS offline.
+3. **Mandatory:** independent Shamir implementation reconstructs from a share
+   pair; `shamir_2of3.py crosscheck` writes a PASS record bound to its binary
+   hash and the same `secret_sha256`.
+4. `genesis_card.py finalize` accepts that PASS record and atomically emits the
+   signed card; `genesis_card.py verify` validates it from the embedded pubkey
    alone.
