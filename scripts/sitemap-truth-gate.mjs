@@ -95,6 +95,8 @@ function problems() {
   const rules = redirectRules();
   const fns = functionRedirects();
   const prerendered = prerenderedPaths();
+  const app = readFileSync(join(ROOT, "client/src/App.tsx"), "utf8");
+  const blogWithdrawn = /<Route\b[^>]*\bpath="\/blog\/:slug"[^>]*\bcomponent=\{ContentReviewNotice\}/.test(app);
   const found = [];
   const listed = locs();
   const counts = new Map();
@@ -104,7 +106,8 @@ function problems() {
   }
   for (const url of listed) {
     const path = url.startsWith(ORIGIN) ? url.slice(ORIGIN.length) || "/" : url;
-    if (NON_PAGE_EXT.test(path)) found.push(`${path} is an asset, not a page`);
+    if (blogWithdrawn && /^\/blog\/[^/]+\/?$/.test(path)) found.push(`${path} is a withdrawn article, not indexable content`);
+    else if (NON_PAGE_EXT.test(path)) found.push(`${path} is an asset, not a page`);
     else if (fns.has(path)) found.push(`${path} is redirected by a Pages Function`);
     else if (rules.has(path)) found.push(`${path} has a _redirects rule -> ${rules.get(path)}`);
     else if (prerendered.has(path) && !path.endsWith("/")) {
