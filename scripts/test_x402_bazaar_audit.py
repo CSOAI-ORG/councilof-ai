@@ -62,6 +62,27 @@ def test_partial_read_refuses_absence():
         raise AssertionError("partial index read was accepted")
 
 
+def test_changed_total_refuses_absence():
+    fetch = paged_fetch({
+        0: page(0, 3, [{"resource": "https://other.example/a"}, {"resource": "https://other.example/b"}]),
+        2: page(2, 4, [{"resource": "https://other.example/c"}, {"resource": "https://other.example/d"}]),
+    })
+    try:
+        MODULE.scan("https://index.example/resources", fetcher=fetch, page_size=2, retries=0)
+    except ValueError as exc:
+        assert "total changed" in str(exc)
+        assert "absence would be a guess" in str(exc)
+    else:
+        raise AssertionError("moving index total was accepted as a complete population")
+
+
+def test_multi_page_read_does_not_claim_absence():
+    result = {"ours": [], "absence_determinate": False}
+    MODULE.add_manifest_coverage(result, ["https://councilof.ai/api/a"])
+    assert result["manifest_missing"] is None
+    assert result["manifest_unseen_in_read"] == ["https://councilof.ai/api/a"]
+
+
 def test_malformed_total_fails_closed():
     try:
         MODULE.scan(
@@ -77,6 +98,7 @@ def test_malformed_total_fails_closed():
 
 def test_manifest_coverage_separates_current_stale_and_missing():
     result = {
+        "absence_determinate": True,
         "ours": [
             {"resource": "https://councilof.ai/api/a?x=1", "listing_disagrees_with_door": False},
             {"resource": "https://councilof.ai/api/b", "listing_disagrees_with_door": True},

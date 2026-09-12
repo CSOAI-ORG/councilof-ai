@@ -14,8 +14,9 @@ candidates only; dynamic page text can produce false positives.
 
 Missing observations remain null. Failed source requests retain a dated last-good
 hash, explicitly separate from the failed current attempt. Revenue uses the endpoint's
-non-self, nonzero aggregates and exact six-decimal USDC unit. Repeat payers, ARR,
-retention and margin remain unmeasured. Snapshots retain at most 1,440 observations;
+non-listed-wallet, nonzero aggregates and exact six-decimal USDC unit. A wallet absent
+from the configured self-wallet list is not proof of an independent organic customer.
+Repeat payers, ARR, retention and margin remain unmeasured. Snapshots retain at most 1,440 observations;
 raw responses keep only the latest attempt and are capped at 4 MiB per endpoint.
 
 ## Run and validate
@@ -56,9 +57,10 @@ boundary is changed. Monitoring the pod from outside remains necessary to detect
 pod or scheduler downtime.
 
 `indexes.py` reuses the monorepo's `scripts/interop/x402-bazaar-audit.py` reader,
-shipped with the installed release and included in its hash manifest. It scans
-both PayAI and Coinbase CDP completely before reporting absence, comparing with
-the live x402 catalogue. An hourly cron checks whether a daily scan is due;
+shipped with the installed release and included in its hash manifest. It walks
+both PayAI and Coinbase CDP through their advertised totals, comparing observed
+entries with the live x402 catalogue. Multi-page offset reads are mutable and do
+not prove absence; unseen routes stay indeterminate. An hourly cron checks whether a daily scan is due;
 failed scans retry no more than once per six hours, retain last-good results as
 historical, and have a 15-minute process timeout. No challenge, purchase, listing
 submission or upload is made. `indexes.json` records attempts and last-good

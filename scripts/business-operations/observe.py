@@ -117,20 +117,22 @@ def revenue_metrics(observation):
     amount = nonnegative_int(settled.get('count')) if settled.get('status') == 'MEASURED' and settled.get('excludes_self') is True and settled.get('unit') == 'USDC atomic (6dp) on Base' else None
     distinct = nonnegative_int(one.get('last_30d')) if measured else None
     return {
-        'distinct_nonself_payers_all_time': nonnegative_int(one.get('all_time')) if measured else None,
-        'distinct_nonself_payers_30d': distinct,
-        'nonself_nonzero_settlements': nonnegative_int(one.get('settlements')) if measured else None,
+        'distinct_nonlisted_payer_wallets_all_time': nonnegative_int(one.get('all_time')) if measured else None,
+        'distinct_nonlisted_payer_wallets_30d': distinct,
+        'nonlisted_nonzero_settlements': nonnegative_int(one.get('settlements')) if measured else None,
         'settled_usdc_atomic': amount,
         'settled_usdc': str(Decimal(amount) / Decimal(1000000)) if amount is not None else None,
         'self_settlements_excluded': one.get('self_settlements'),
         'zero_value_settlements_excluded': one.get('zero_value_settlements'),
         'records_unreadable': one.get('records_unreadable'),
-        'product_gate_5_distinct_30d': distinct >= 5 if distinct is not None else None,
+        'five_nonlisted_wallets_30d_observed': distinct >= 5 if distinct is not None else None,
+        'organic_customer_independence': 'UNVERIFIED' if distinct is not None else None,
+        'organic_customer_note': 'A wallet absent from the configured self-wallet list is not proof that its controller is independent, organic, or a customer.',
         'repeat_payers': None,
         'repeat_payers_note': 'Aggregate totals cannot prove which wallet repeated.',
         'arr': None, 'gross_margin': None, 'customer_retention': None,
         'source': ENDPOINTS['revenue'],
-        'basis': 'Reported settlement aggregates; this observer does not independently verify the chain.',
+        'basis': 'Reported settlement aggregates; nonlisted means absent from the configured self-wallet list. This observer does not independently verify the chain or wallet control.',
     }
 
 
@@ -168,7 +170,7 @@ def run(state, config, mill=False, force_sources=False):
         if observation['status'] != 'OBSERVED':
             alerts.append({'id': 'unavailable:' + name, 'detail': observation.get('error'), 'kind': 'service'})
     revenue = revenue_metrics(observations['revenue'])
-    if revenue['settled_usdc_atomic'] is None or revenue['distinct_nonself_payers_30d'] is None:
+    if revenue['settled_usdc_atomic'] is None or revenue['distinct_nonlisted_payer_wallets_30d'] is None:
         alerts.append({'id': 'revenue:unmeasured', 'kind': 'measurement'})
     if revenue.get('records_unreadable'):
         alerts.append({'id': 'revenue:unreadable-records', 'kind': 'measurement'})
@@ -263,7 +265,8 @@ def run(state, config, mill=False, force_sources=False):
     lines = ['# CSOAI business observations', '', 'Observed: ' + snapshot['observed_at'], '',
              'Status: ' + snapshot['status'], '',
              'Settled USDC: ' + str(revenue['settled_usdc']),
-             'Distinct non-self payers, 30 days: ' + str(revenue['distinct_nonself_payers_30d']),
+             'Distinct non-listed payer wallets, 30 days: ' + str(revenue['distinct_nonlisted_payer_wallets_30d']),
+             'Organic customer independence: ' + str(revenue['organic_customer_independence']),
              'Repeat buyers, ARR, retention and gross margin: unmeasured.', '',
              '## Requires attention', '']
     lines += ['- ' + item['id'] + ': ' + str(item.get('detail', 'inspect latest.json and raw observations')) for item in alerts]

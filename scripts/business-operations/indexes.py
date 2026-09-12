@@ -26,11 +26,17 @@ def collect(reader_path):
     for name, url in reader.INDEXES:
         result = reader.reading(name, url, None)
         indexed = {reader.route_key(row['resource']) for row in result['ours']}
-        result.update(manifest_declared=len(declared), manifest_indexed=len(declared & indexed), manifest_missing=sorted(declared - indexed))
+        unseen = sorted(declared - indexed)
+        result.update(
+            manifest_declared=len(declared),
+            manifest_indexed=len(declared & indexed),
+            manifest_missing=unseen if result.get('absence_determinate') else None,
+            manifest_unseen_in_read=unseen if not result.get('absence_determinate') else [],
+        )
         # No stale/current classification: this job has not probed live paid challenges.
         results.append(result)
     return {'observed_at': stamp(), 'status': 'OBSERVED', 'indexes': results,
-            'limitation': 'Mutable offset pagination, not a transactional snapshot. Presence is not revenue or a purchase. Metadata freshness is not classified.',
+            'limitation': 'Mutable offset pagination is not a transactional snapshot. Presence can be observed; absence remains indeterminate for multi-page reads. Presence is not revenue or a purchase. Metadata freshness is not classified.',
             'manifest_sha256': manifest['sha256']}
 
 

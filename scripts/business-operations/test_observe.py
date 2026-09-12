@@ -10,13 +10,16 @@ class Observations(unittest.TestCase):
     def test_missing_revenue_is_unknown(self):
         result = observe.revenue_metrics({'status': 'UNAVAILABLE', 'data': None})
         self.assertIsNone(result['settled_usdc_atomic'])
-        self.assertIsNone(result['distinct_nonself_payers_30d'])
-        self.assertIsNone(result['product_gate_5_distinct_30d'])
+        self.assertIsNone(result['distinct_nonlisted_payer_wallets_30d'])
+        self.assertIsNone(result['five_nonlisted_wallets_30d_observed'])
+        self.assertIsNone(result['organic_customer_independence'])
 
     def test_money_units_and_no_inferred_retention(self):
         row = {'status': 'OBSERVED', 'data': {'one_number': {'status': 'MEASURED', 'last_30d': 1, 'settlements': 8}, 'settled_usdc': {'status': 'MEASURED', 'count': 20000, 'excludes_self': True, 'unit': 'USDC atomic (6dp) on Base'}}}
         self.assertEqual(observe.revenue_metrics(row)['settled_usdc'], '0.02')
         self.assertIsNone(observe.revenue_metrics(row)['repeat_payers'])
+        self.assertEqual(observe.revenue_metrics(row)['organic_customer_independence'], 'UNVERIFIED')
+        self.assertIn('not proof', observe.revenue_metrics(row)['organic_customer_note'])
         row['data']['settled_usdc']['count'] = True
         self.assertIsNone(observe.revenue_metrics(row)['settled_usdc'])
         row['data']['settled_usdc']['count'] = 20000
