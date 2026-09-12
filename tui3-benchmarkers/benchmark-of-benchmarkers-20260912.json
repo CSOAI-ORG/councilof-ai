@@ -1,0 +1,52 @@
+{
+  "schema": "csoai.benchmark-of-benchmarkers/0.1",
+  "generated_at": "2026-09-12T04:29:58Z",
+  "benchmarkers": [
+    {
+      "name": "CSOAI GSPC",
+      "axes": 22,
+      "models": 155,
+      "signed": 1493,
+      "provenance": "Ed25519+OIDC+Rekor",
+      "reproducibility": "Frozen prompts, deterministic grader",
+      "regulatory": "EU AI Act, NIST, UK DRCF, CA SB 942, DORA"
+    },
+    {
+      "name": "LMSYS Chatbot Arena",
+      "axes": 1,
+      "models": 100,
+      "signed": 0,
+      "provenance": "Human votes",
+      "reproducibility": "Non-reproducible",
+      "regulatory": "None"
+    },
+    {
+      "name": "HF Open LLM Leaderboard",
+      "axes": 6,
+      "models": 5000,
+      "signed": 0,
+      "provenance": "Automated",
+      "reproducibility": "Public benchmarks",
+      "regulatory": "None"
+    },
+    {
+      "name": "Stanford HELM",
+      "axes": 42,
+      "models": 50,
+      "signed": 0,
+      "provenance": "Academic",
+      "reproducibility": "Public scenarios",
+      "regulatory": "None"
+    },
+    {
+      "name": "Artificial Analysis",
+      "axes": 8,
+      "models": 200,
+      "signed": 0,
+      "provenance": "Speed+quality",
+      "reproducibility": "Partial",
+      "regulatory": "None"
+    }
+  ],
+  "csaoi_unique": "Only benchmark with signed cards, Merkle root, Rekor witness, regulatory crosswalk, and x402 paid evidence"
+}

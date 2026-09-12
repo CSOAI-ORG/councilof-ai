@@ -1,0 +1,315 @@
+{
+  "schema": "csoai.regulatory-crosswalk/0.2",
+  "generated_at": "2026-09-12T04:27:16Z",
+  "disclaimer": "A crosswalk maps measurement axes to regulatory provisions. It is not a legal determination, conformity assessment, or certification.",
+  "frameworks": [
+    {
+      "instrument": "Regulation (EU) 2024/1689",
+      "short_name": "EU AI Act",
+      "jurisdiction": "EU/EEA",
+      "legal_status": "BINDING_LAW",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+      "publication_date": "2024-07-12",
+      "entry_into_force": "2024-08-01",
+      "provisions": [
+        {
+          "id": "Art.5",
+          "title": "Prohibited AI practices",
+          "effective": "2025-02-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "art5-safeguard"
+          ]
+        },
+        {
+          "id": "Art.9",
+          "title": "Risk management system",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "governance",
+            "safety"
+          ]
+        },
+        {
+          "id": "Art.10",
+          "title": "Data and data governance",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "governance",
+            "provenance"
+          ]
+        },
+        {
+          "id": "Art.11",
+          "title": "Technical documentation",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "openness",
+            "provenance"
+          ]
+        },
+        {
+          "id": "Art.13",
+          "title": "Transparency",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "openness",
+            "care"
+          ]
+        },
+        {
+          "id": "Art.14",
+          "title": "Human oversight",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "governance",
+            "care"
+          ]
+        },
+        {
+          "id": "Art.15",
+          "title": "Accuracy, robustness, cybersecurity",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "safety",
+            "continuity"
+          ]
+        },
+        {
+          "id": "Art.50",
+          "title": "Transparency for GPAI",
+          "effective": "2025-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "openness",
+            "provenance"
+          ]
+        },
+        {
+          "id": "Art.52",
+          "title": "AI literacy",
+          "effective": "2025-02-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "governance"
+          ]
+        }
+      ],
+      "cards_linked": 5,
+      "cards_unlinked": 31,
+      "coverage_note": "5 PR#1888 cards mapped to Art.5 and Art.9-15. 31 unlinked cards have NO_REGULATION_SCORE."
+    },
+    {
+      "instrument": "UK Digital Regulation Cooperation Forum AI Principles",
+      "short_name": "UK DRCF",
+      "jurisdiction": "UNITED_KINGDOM",
+      "legal_status": "VOLUNTARY_FRAMEWORK",
+      "source_url": "https://www.gov.uk/government/publications/ai-regulation-a-pro-innovation-approach",
+      "publication_date": "2023-03-29",
+      "provisions": [
+        {
+          "id": "DRCF-1",
+          "title": "Safety & security",
+          "gspc_axes": [
+            "safety",
+            "continuity"
+          ]
+        },
+        {
+          "id": "DRCF-2",
+          "title": "Transparency & explainability",
+          "gspc_axes": [
+            "openness",
+            "provenance"
+          ]
+        },
+        {
+          "id": "DRCF-3",
+          "title": "Fairness",
+          "gspc_axes": [
+            "care",
+            "affect"
+          ]
+        },
+        {
+          "id": "DRCF-4",
+          "title": "Accountability & governance",
+          "gspc_axes": [
+            "governance"
+          ]
+        },
+        {
+          "id": "DRCF-5",
+          "title": "Contestability & redress",
+          "gspc_axes": [
+            "governance",
+            "care"
+          ]
+        }
+      ],
+      "cards_linked": 0,
+      "coverage_note": "UK DRCF principles mapped to GSPC axes. No cards currently linked to UK provisions."
+    },
+    {
+      "instrument": "NIST AI Risk Management Framework 1.0",
+      "short_name": "NIST AI RMF",
+      "jurisdiction": "UNITED_STATES",
+      "legal_status": "VOLUNTARY_FRAMEWORK",
+      "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "publication_date": "2023-01-26",
+      "provisions": [
+        {
+          "id": "GOVERN",
+          "title": "Govern \u2014 policies, accountability, oversight",
+          "gspc_axes": [
+            "governance",
+            "art5-safeguard",
+            "openness"
+          ]
+        },
+        {
+          "id": "MAP",
+          "title": "Map \u2014 context, intended use, risks",
+          "gspc_axes": [
+            "provenance",
+            "conformance",
+            "detector-interop"
+          ]
+        },
+        {
+          "id": "MEASURE",
+          "title": "Measure \u2014 risks analysed, assessed, tracked",
+          "gspc_axes": [
+            "safety",
+            "care",
+            "jail",
+            "affect",
+            "swarm",
+            "cross-reality",
+            "machinery-conformity"
+          ]
+        },
+        {
+          "id": "MANAGE",
+          "title": "Manage \u2014 risks prioritised, responded, monitored",
+          "gspc_axes": [
+            "continuity",
+            "safety",
+            "detector-interop"
+          ]
+        }
+      ],
+      "cards_linked": 36,
+      "coverage_note": "36 PR#1888 cards mapped to all 4 NIST functions via nist-airmf-gspc-crosswalk.json. DRAFT status \u2014 not submitted."
+    },
+    {
+      "instrument": "California SB 942 \u2014 California AI Transparency Act",
+      "short_name": "CA SB 942",
+      "jurisdiction": "US_CALIFORNIA",
+      "legal_status": "BINDING_LAW",
+      "source_url": "https://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=202320240SB942",
+      "publication_date": "2024-09-19",
+      "effective_date": "2026-01-01",
+      "provisions": [
+        {
+          "id": "SB942-1",
+          "title": "AI detection tools \u2014 providers must make available",
+          "gspc_axes": [
+            "detector-interop",
+            "openness"
+          ]
+        },
+        {
+          "id": "SB942-2",
+          "title": "Watermarking \u2014 AI-generated content must be watermarked",
+          "gspc_axes": [
+            "provenance",
+            "openness"
+          ]
+        },
+        {
+          "id": "SB942-3",
+          "title": "Disclosure \u2014 AI systems must disclose they are AI",
+          "gspc_axes": [
+            "openness",
+            "care"
+          ]
+        }
+      ],
+      "cards_linked": 0,
+      "coverage_note": "California provisions mapped to GSPC axes. No cards currently linked."
+    },
+    {
+      "instrument": "DORA \u2014 Digital Operational Resilience Act (EU 2022/2554)",
+      "short_name": "DORA",
+      "jurisdiction": "EU/EEA",
+      "legal_status": "BINDING_LAW",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2022/2554/oj",
+      "publication_date": "2022-12-14",
+      "effective_date": "2025-01-17",
+      "provisions": [
+        {
+          "id": "Art.6",
+          "title": "ICT risk management framework",
+          "gspc_axes": [
+            "governance",
+            "continuity"
+          ]
+        },
+        {
+          "id": "Art.9",
+          "title": "Protection and prevention",
+          "gspc_axes": [
+            "safety",
+            "machinery-conformity"
+          ]
+        },
+        {
+          "id": "Art.10",
+          "title": "Detection",
+          "gspc_axes": [
+            "detector-interop",
+            "safety"
+          ]
+        },
+        {
+          "id": "Art.11",
+          "title": "Response and recovery",
+          "gspc_axes": [
+            "continuity",
+            "safety"
+          ]
+        },
+        {
+          "id": "Art.28",
+          "title": "ICT third-party risk",
+          "gspc_axes": [
+            "provenance",
+            "governance"
+          ]
+        }
+      ],
+      "cards_linked": 0,
+      "coverage_note": "DORA provisions mapped to GSPC axes. Financial-sector specific. 417 frozen provisions in regulatory-inventory.json."
+    }
+  ],
+  "summary": {
+    "frameworks_covered": 5,
+    "jurisdictions": [
+      "EU/EEA",
+      "United Kingdom",
+      "United States (federal)",
+      "United States (California)",
+      "EU/EEA (financial)"
+    ],
+    "total_provisions_mapped": 26,
+    "total_cards_linked": 41,
+    "cards_unlinked": 31
+  }
+}

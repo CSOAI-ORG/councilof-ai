@@ -1,0 +1,303 @@
+{
+  "schema": "csoai.x402/0.2",
+  "one_line": "agents pay per artefact — issuance, assembly, cadence; the board and verification stay free",
+  "x402Version": 2,
+  "scheme": "exact",
+  "network": "eip155:8453",
+  "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+  "mode": "live",
+  "mode_note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+  "extensions": {
+    "offer-receipt": {
+      "supported": true,
+      "emission": "conditional",
+      "board_signing_key_configured": true,
+      "facilitator_configured": true,
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "format": "jws",
+      "alg": "EdDSA",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "did_document": "https://csoai.org/.well-known/did.json",
+      "offers": "signed only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise the 402 omits the offer-receipt block and csoai.offer_receipt names the gap",
+      "receipts": "signed only after facilitator-confirmed settlement when the facilitator names a payer and BOARD_SIGN_KEY_PKCS8_B64 is provisioned; otherwise receiptGap names why no signed receipt was attached",
+      "eip712": "NOT offered. The extension admits eip712 and jws; when a board key is provisioned the edge can emit jws but has no secp256k1 signer. A client that requires eip712 should treat this rail as unsigned rather than expect a format we cannot produce.",
+      "verify": {
+        "hosted": "https://councilof.ai/api/receipts/verify",
+        "offline": "scripts/verify_receipt.py in github.com/CSOAI-ORG/councilof-ai — reads did.json, asks us nothing"
+      },
+      "receipts_by_payer": "https://councilof.ai/api/receipts?payer=0x…"
+    }
+  },
+  "resources": [
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/free-door",
+      "paid_for": null,
+      "amount": "0",
+      "description": "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/free-door",
+          "description": "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.",
+          "mimeType": "application/json",
+          "outputSchema": {
+            "type": "object"
+          },
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          }
+        }
+      ],
+      "note": "Payable and priced at zero — it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
+      "indexed_in": "x402 Bazaar (PayAI)"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+      "paid_for": "issuance",
+      "description": "Signed measurement card — one model × one axis sealed under the board-attestation key, rooted and witnessed.",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+          "description": "Signed measurement card — one model × one axis sealed under the board-attestation key, rooted and witnessed.",
+          "mimeType": "application/json",
+          "outputSchema": {
+            "type": "object"
+          },
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          }
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+      "paid_for": "assembly",
+      "description": "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+          "description": "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.",
+          "mimeType": "application/json",
+          "outputSchema": {
+            "type": "object"
+          },
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          }
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/eunomia-data?feed=1",
+      "paid_for": "assembly",
+      "description": "Signed derivative data feed — validated measurement series, authenticated and ready to build on.",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/eunomia-data?feed=1",
+          "description": "Signed derivative data feed — validated measurement series, authenticated and ready to build on.",
+          "mimeType": "application/json",
+          "outputSchema": {
+            "type": "object"
+          },
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          }
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/proof?bundle=1",
+      "paid_for": "assembly",
+      "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/proof?bundle=1",
+          "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+          "mimeType": "application/json",
+          "outputSchema": {
+            "type": "object"
+          },
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          }
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+      "paid_for": "issuance",
+      "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1",
+      "description": "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+          "description": "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.",
+          "mimeType": "application/json",
+          "outputSchema": {
+            "type": "object"
+          },
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          }
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+      "paid_for": "assembly",
+      "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1",
+      "description": "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+          "description": "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.",
+          "mimeType": "application/json",
+          "outputSchema": {
+            "type": "object"
+          },
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          }
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "paid_for": "assembly",
+      "description": "Provider change record — measurable differences between two measurement rounds for a named model provider.",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/feeds/provider-diff?history=1",
+          "description": "Provider change record — measurable differences between two measurement rounds for a named model provider.",
+          "mimeType": "application/json",
+          "outputSchema": {
+            "type": "object"
+          },
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          }
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+      "paid_for": "assembly",
+      "free_preview": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1",
+      "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+          "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
+          "mimeType": "application/json",
+          "outputSchema": {
+            "type": "object"
+          },
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          }
+        }
+      ]
+    }
+  ],
+  "mcp": {
+    "url": "https://councilof.ai/mcp",
+    "transport": "streamable-http",
+    "paid_tools": [
+      "commission_card",
+      "art50_marking_evidence",
+      "rwa_evidence",
+      "receipts_batch"
+    ],
+    "free_tools": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion",
+      "x402_trust"
+    ],
+    "how": "tools/call without x_payment returns the route's 402 challenge as structuredContent; pay, then call again with x_payment"
+  },
+  "quarantined": [
+    {
+      "url": "https://councilof.ai/api/witness?sha256=<64-hex>",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "buyable": false,
+      "reason": "paid witness issuance is disabled until a release gate verifies leaf → signed root → sidecar → Rekor → OpenTimestamps",
+      "free_status": "https://councilof.ai/api/witness/status?sha256=<64-hex>"
+    }
+  ],
+  "not": [
+    "score",
+    "certificate",
+    "filled-cells",
+    "pay-to-pass",
+    "rank"
+  ],
+  "catalog": "https://councilof.ai/api/x402",
+  "board": "https://councilof.ai/api/gspc",
+  "verify": "https://councilof.ai/gspc-verify",
+  "explainer": "https://councilof.ai/pricing",
+  "agent_paths": [
+    "@x402/fetch",
+    "x402-fetch (v1)",
+    "curl -i <resource> → read accepts[]"
+  ]
+}
