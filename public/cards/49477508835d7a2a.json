@@ -1,0 +1,78 @@
+{
+  "card": {
+    "as_of": "2026-09-12T17:03:04Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-impersonation-scan/0.1",
+      "status": "PROBED",
+      "as_of": "2026-09-12T17:03:04Z",
+      "counts": {
+        "RLUSD": {
+          "matches": 1,
+          "mismatches": 4,
+          "verified_set_unmeasured": 0
+        },
+        "XSGD": {
+          "matches": 0,
+          "mismatches": 0,
+          "verified_set_unmeasured": 0
+        },
+        "USDC": {
+          "matches": 1,
+          "mismatches": 2,
+          "verified_set_unmeasured": 0
+        },
+        "AUDD": {
+          "matches": 1,
+          "mismatches": 0,
+          "verified_set_unmeasured": 0
+        }
+      },
+      "scan_coverage": {
+        "source": "api.xrpscan.com/api/v1/tokens",
+        "window": "top-3000 by holders ranking",
+        "n_scanned": 3000,
+        "pages_ok": 30,
+        "pages_failed": 0,
+        "long_tail": "UNMEASURED — issuance below the ranking window is not enumerated"
+      },
+      "unmeasured": [
+        "UNMEASURED — issuance below the ranking window is not enumerated",
+        "XSGD issuance inside scan window"
+      ],
+      "not_a_verdict": true,
+      "wording": "issuer not in the archived verified set — legitimacy UNMEASURED"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "49477508835d7a2adabdc885efd6b1ac6c7a947ff62cae5636f9407785fe1c10",
+    "sig_ed25519": "30a4582894fdae1489dcdb37730046c6c7a700fa811de18a7b61ce14754aaf33259e0f473130243d2951f1e5fb144adafb899f4073e106c7c68f0af3db1cb00c",
+    "source_urls": [
+      "https://api.xrpscan.com/api/v1/tokens",
+      "https://councilof.ai/interop/xrpl-impersonation-2026-09/latest.json"
+    ],
+    "subject": "XRPL stablecoin-code impersonation watch — daily scan",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "impersonation-watch",
+      "daily-scan",
+      "xrpl-impersonation-2026-09"
+    ],
+    "unmeasured": [
+      "UNMEASURED — issuance below the ranking window is not enumerated",
+      "XSGD issuance inside scan window"
+    ]
+  },
+  "proof": [
+    "d15ceedc2fec13c9df10105977641749787fe0d3899273010f1eeffcac2a5d97",
+    "92bf715d062a677da6bf1eb46566a7845fac428fb4b2eb18dc4b8cdaf0964bd6",
+    "39b182ff1256a4646141279803a75f6c67d52bfd6eb2ec8f16403ca866b66e96",
+    "52895cfadd5453ab5db28270b45ae30a383fd82c0de84b6089e576ffdd6b17c2",
+    "42da8cd41e11bc8be2be914d0567a31a45358f80952ea6106fc8c35cdef3d0ba",
+    "2132732b338610344926d47c567f422952b886340dd7d6e36c62ad6413c96961",
+    "7bec4260a214a35e898b13b7dd836b7eaf15968fedae6325c4cc20acd314722e",
+    "ec92f7d9519717570a61a58a52ef36bcdc47d431e595bb2af2d43c173afaa6ff"
+  ]
+}

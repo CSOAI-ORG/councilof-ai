@@ -1,6 +1,6 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-09-12T13:27:43Z",
+  "as_of": "2026-09-12T17:03:48Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
@@ -327,9 +327,10 @@
   "staged_leaves": {
     "dirs": [
       "xrpl-swift-eater-2026-09",
-      "estate-boundary-2026-09"
+      "estate-boundary-2026-09",
+      "stablecoin-cohort-2026-09"
     ],
-    "n_leaves": 53,
+    "n_leaves": 66,
     "n_skipped": 0,
     "skipped": [],
     "note": "Staged unsigned atoms read from disk; no network. Signed only by the public-root writer in GHA. PROBED/DISCOVERED/UNMEASURED stay on the payload under the signature. Never MEASURED. Not a grade."
@@ -359,7 +360,7 @@
   "evm_permissions": {
     "schema": "csoai.evm.permission-state/0.1",
     "n_leaves": 32,
-    "n_proofs": 27,
+    "n_proofs": 29,
     "n_roster": 32,
     "n_unverified": 33,
     "aum_source": "https://app.rwa.xyz/treasuries",
@@ -367,58 +368,54 @@
     "chains": {
       "arbitrum": {
         "rpc": "arbitrum-one-rpc.publicnode.com",
-        "block": 504407679,
-        "block_hash": "0x78749157aa527f1c848e63ac79986710a0699c52ec78d6cdabb244afe0a555ad",
-        "block_time": "2026-09-12T13:25:38Z"
+        "block": 504459379,
+        "block_hash": "0x43908f5e05e064d75c12e2f422194025c42826724c161a8d5cd8f23a9727d269",
+        "block_time": "2026-09-12T17:01:52Z"
       },
       "avalanche": {
         "rpc": "api.avax.network",
-        "block": 95102138,
-        "block_hash": "0x24f4ea9512479321c5506c847c0ac6af6826c34266b8d9329a9532612d8c0251",
-        "block_time": "2026-09-12T13:25:38Z"
+        "block": 95114209,
+        "block_hash": "0x305c37258f659bda25631c78de577b7a1071fe92fcd8b00f082df7a52a63a7a4",
+        "block_time": "2026-09-12T17:01:50Z"
       },
       "base": {
         "rpc": "base-rpc.publicnode.com",
-        "block": 51215096,
-        "block_hash": "0x838777ebcc4a5cd083b7b11b0049b6fa9dbca42482845a879c959722408687f3",
-        "block_time": "2026-09-12T13:25:39Z"
+        "block": 51221583,
+        "block_hash": "0x60e5b8546a7b33d629c4e685e6400f841d330f98d428635c423f078c997d17d2",
+        "block_time": "2026-09-12T17:01:53Z"
       },
       "bsc": {
         "rpc": "bsc-rpc.publicnode.com",
-        "block": 121461504,
-        "block_hash": "0x42115f6a29acd269a73e7a3cedf5b3846d2444dd155321abc6fe6aff9da85c89",
-        "block_time": "2026-09-12T13:25:39Z"
+        "block": 121490323,
+        "block_hash": "0xa5d4840302422c04fc9bbe95eb8778f349e28d57626a62d9c84bd8060d030d1a",
+        "block_time": "2026-09-12T17:01:52Z"
       },
       "ethereum": {
         "rpc": "ethereum-rpc.publicnode.com",
-        "block": 25961619,
-        "block_hash": "0x068be4e6c4333084c233d9437f49beeda60c0ae1dc9a06773553a58915473119",
-        "block_time": "2026-09-12T13:25:35Z"
+        "block": 25962697,
+        "block_hash": "0xe3b8856528e72eed3b0ebd2fa1d1224a27c9bece22f28002e04f38ed87a4af40",
+        "block_time": "2026-09-12T17:01:47Z"
       },
       "mantle": {
         "rpc": "mantle-rpc.publicnode.com",
-        "block": 100544614,
-        "block_hash": "0xfafe51f78164460b6f10962018a0d9e1af026c106cc7d6558ea07cffa51d3b5c",
-        "block_time": "2026-09-12T13:25:40Z"
+        "block": 100551100,
+        "block_hash": "0xb5f71cafe8c824cd6f824f4c2f4b23d50c46b86f458e6f5ae1afa26a097c4bb3",
+        "block_time": "2026-09-12T17:01:52Z"
       },
       "optimism": {
         "rpc": "optimism-rpc.publicnode.com",
-        "block": 156810381,
-        "block_hash": "0x280cbbc3fffeb4ca5abe23c797c9c9cc7ee232782d591275780af969d3e44b40",
-        "block_time": "2026-09-12T13:25:39Z"
+        "block": 156816868,
+        "block_hash": "0xb597c3997ee8ac580e067e5faed755b95f09981dd22a25c0eac62962c19eec54",
+        "block_time": "2026-09-12T17:01:53Z"
       },
       "polygon": {
         "rpc": "polygon-bor-rpc.publicnode.com",
-        "block": 93676338,
-        "block_hash": "0x8eb07a474cb2dcca574253596b1c9dd670572a23591d069e53507c925aa3620d",
-        "block_time": "2026-09-12T13:25:40Z"
+        "block": 93684987,
+        "block_hash": "0x7b1d453bbfa94088b0fe8118053079bcfa40adca0814cbb38891ccebb6d25aaa",
+        "block_time": "2026-09-12T17:01:54Z"
       }
     },
     "failures": [
-      {
-        "subject": "evm:BUIDL:optimism",
-        "reason": "no endpoint answered eth_getProof"
-      },
       {
         "subject": "evm:USYC:bsc",
         "reason": "no endpoint answered eth_getProof"
@@ -429,10 +426,6 @@
       },
       {
         "subject": "evm:VBILL:bsc",
-        "reason": "no endpoint answered eth_getProof"
-      },
-      {
-        "subject": "evm:bIB01:base",
         "reason": "no endpoint answered eth_getProof"
       }
     ],
@@ -446,35 +439,35 @@
     "requests_used": 80,
     "chains": {
       "arbitrum": {
-        "block": 504407812,
+        "block": 504459529,
         "rpc": "arbitrum-one-rpc.publicnode.com"
       },
       "avalanche": {
-        "block": 95102172,
+        "block": 95114243,
         "rpc": "api.avax.network"
       },
       "base": {
-        "block": 51215113,
+        "block": 51221602,
         "rpc": "base-rpc.publicnode.com"
       },
       "bsc": {
-        "block": 121461579,
+        "block": 121490410,
         "rpc": "bsc-rpc.publicnode.com"
       },
       "ethereum": {
-        "block": 25961622,
+        "block": 25962700,
         "rpc": "ethereum-rpc.publicnode.com"
       },
       "mantle": {
-        "block": 100544631,
+        "block": 100551120,
         "rpc": "mantle-rpc.publicnode.com"
       },
       "optimism": {
-        "block": 156810398,
+        "block": 156816888,
         "rpc": "optimism-rpc.publicnode.com"
       },
       "polygon": {
-        "block": 93676361,
+        "block": 93685013,
         "rpc": "polygon-bor-rpc.publicnode.com"
       }
     },
@@ -606,7 +599,7 @@
     "n_generators": 4,
     "payload_bytes": 601
   },
-  "card_count": 228,
+  "card_count": 241,
   "xrpl_asset_state_count": 16,
   "note": "hub.census.digest and gspc.board.cite live here, not on card-v0. Never MEASURED. Never certify. Never partnered with SWIFT. Never 17-banks-on-our-feed."
 }

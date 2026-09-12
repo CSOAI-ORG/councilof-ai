@@ -1,0 +1,79 @@
+{
+  "card": {
+    "as_of": "2026-09-12T12:20:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-cohort.reading/v1",
+      "state": "PROBED",
+      "subject_symbol": "USDS",
+      "chain_readings": [
+        {
+          "chain": "ethereum",
+          "contract": "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+          "totalSupply": "6671571131.263178077565919734",
+          "block": 25961213,
+          "amount_encoding": "exact_decimal_string",
+          "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        },
+        {
+          "chain": "base",
+          "contract": "0x820C137fa70C8691f0e44Dc420a5e53c168921Dc",
+          "totalSupply": "2644564.066650368453157670",
+          "block": 51212701,
+          "amount_encoding": "exact_decimal_string",
+          "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        }
+      ],
+      "evidence": {
+        "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+        "sha256": "c6a6fd93c03bd465e3bc85c152ee366ecdd50327bb21bd7cdf8dd385701a6f15"
+      },
+      "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+      "attestation_state": "UNMEASURED",
+      "not_a_risk_score": true,
+      "not_proof_of_reserves": true,
+      "holders_state": "UNMEASURED",
+      "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts.",
+      "replay_boundary": "Commands in the evidence file rerun current state; historical replay at the recorded heights was not executed.",
+      "subject_identity": "defillama-stablecoin:209",
+      "stablecoin_registry_id": "209"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "39150c8772b23cb429c4b1898b8fb47e947b5d5c414a0403dcf25581094e941c",
+    "sig_ed25519": "faf7e79a6132aad53bea27688b33215a869bb08b88f408841887706e1f4317ee97f9611fb8052aab66813caf90c32629516c444b9626646471addd7e16291404",
+    "source_urls": [
+      "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+      "https://ethereum-rpc.publicnode.com",
+      "https://mainnet.base.org"
+    ],
+    "subject": "stablecoin USDS — on-chain supply readings 2026-09-12 (unsigned staged)",
+    "surface": "public.notice",
+    "tags": [
+      "stablecoin",
+      "tui2-cohort",
+      "on-chain-reading"
+    ],
+    "unmeasured": [
+      "proof of reserves",
+      "attestation cadence",
+      "holder counts",
+      "peg verdict"
+    ]
+  },
+  "proof": [
+    "5a59abc8f724b84068f8e09015b8a09dbdf20fd6d12be22e57569164418d43ad",
+    "d32f10fb7e5406e60c1e820c82df7d6677d44761dff1894f2931a3fbadd0bc38",
+    "387d2d0975fe470bf2d78f6bb89d37de02b093f8e2b057f65a7113f83e29c6af",
+    "5fb99b5cb7926f9c989d5ed2c3d12b9185c881ac08efa35d387a1bbfd13e496e",
+    "ad37a31f7d7426a60fab780aaf75e044002792041ba65f7992f81c9f323c774d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "9e39df3132b59f2438327123399dcda151444c357e2682130163e6019fdff9e6",
+    "0528c540f239aebebaccb4b1fb26dad1496e3caa54920ee73f42f44c204b9511"
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "card": {
+    "as_of": "2026-09-12T12:20:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-cohort.reading/v1",
+      "state": "PROBED",
+      "subject_symbol": "USDC",
+      "chain_readings": [
+        {
+          "chain": "ethereum",
+          "contract": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+          "totalSupply": "50409552504.833744",
+          "block": 25961213,
+          "amount_encoding": "exact_decimal_string",
+          "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        },
+        {
+          "chain": "base",
+          "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "totalSupply": "4274546563.039871",
+          "block": 51212670,
+          "amount_encoding": "exact_decimal_string",
+          "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        },
+        {
+          "chain": "xrpl",
+          "issuer": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+          "obligations": "4394436.348900763",
+          "ledger": 106934560,
+          "ledger_finality": "XRPL_VALIDATED_AT_OBSERVATION",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        },
+        {
+          "chain": "stellar",
+          "issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+          "balances_authorized": "309692310.1047549",
+          "ledger": 64393517,
+          "amount_encoding": "decimal_string_preserving_published_snapshot_precision",
+          "ledger_finality": "HORIZON_REPORTED_LATEST_CLOSED_LEDGER",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        }
+      ],
+      "evidence": {
+        "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+        "sha256": "c6a6fd93c03bd465e3bc85c152ee366ecdd50327bb21bd7cdf8dd385701a6f15"
+      },
+      "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+      "attestation_state": "UNMEASURED",
+      "not_a_risk_score": true,
+      "not_proof_of_reserves": true,
+      "holders_state": "UNMEASURED",
+      "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts.",
+      "replay_boundary": "Commands in the evidence file rerun current state; historical replay at the recorded heights was not executed.",
+      "subject_identity": "defillama-stablecoin:2",
+      "stablecoin_registry_id": "2"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9c8eeded283758c85770dc7dc40cc54e28b581b74c9c0b43135a3452ca59eefa",
+    "sig_ed25519": "d8cbbcb7a9db5b442703427563bab1d59c0fbe15f5689946ee0105150f28d800a94e30093f2a0a4df6576f64109e7e0e907b6f81612634b980dce7ba6beb8901",
+    "source_urls": [
+      "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+      "https://ethereum-rpc.publicnode.com",
+      "https://mainnet.base.org",
+      "https://xrplcluster.com",
+      "https://horizon.stellar.org"
+    ],
+    "subject": "stablecoin USDC — on-chain supply readings 2026-09-12 (unsigned staged)",
+    "surface": "public.notice",
+    "tags": [
+      "stablecoin",
+      "tui2-cohort",
+      "on-chain-reading"
+    ],
+    "unmeasured": [
+      "proof of reserves",
+      "attestation cadence",
+      "holder counts",
+      "peg verdict"
+    ]
+  },
+  "proof": [
+    "54d03e530f26cc5eaa019a088af647fc832877d779d296aa78705b39bb35839e",
+    "d30da98a9bbbbaab050035922e11aff113eb1cf2fd3cd56a2c935e455c31069a",
+    "e4a07fd41ce033c4d6d3d97ac672875e8946fa6a96bf6738e0b047b3de38f58e",
+    "51de61a68a4e3730844f0f411f2c0c20c21b78be7ab335a23a1e83364121828c",
+    "e39f7d637cae4c1a94d64cb04d822e4c0bcd6cf5a356ca6a2626158cb0b2889a",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "9e39df3132b59f2438327123399dcda151444c357e2682130163e6019fdff9e6",
+    "0528c540f239aebebaccb4b1fb26dad1496e3caa54920ee73f42f44c204b9511"
+  ]
+}

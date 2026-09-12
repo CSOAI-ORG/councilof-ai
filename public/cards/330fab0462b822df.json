@@ -1,0 +1,89 @@
+{
+  "card": {
+    "as_of": "2026-09-12T12:20:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-cohort.reading/v1",
+      "state": "PROBED",
+      "subject_symbol": "EURCV",
+      "chain_readings": [
+        {
+          "chain": "ethereum",
+          "contract": "0x5F7827FDeb7c20b443265Fc2F40845B715385Ff2",
+          "totalSupply": "137618715.410000000000000000",
+          "block": 25961214,
+          "amount_encoding": "exact_decimal_string",
+          "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        },
+        {
+          "chain": "xrpl",
+          "issuer": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+          "obligations": "10000000",
+          "ledger": 106934560,
+          "ledger_finality": "XRPL_VALIDATED_AT_OBSERVATION",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        },
+        {
+          "chain": "stellar",
+          "issuer": "GCEYGIVOLAVBF2TG2RUSGTUJCIN75KEX3NGLMY4VPL4GFE5L355AXW3G",
+          "balances_authorized": "15030600",
+          "ledger": 64393517,
+          "amount_encoding": "decimal_string_preserving_published_snapshot_precision",
+          "ledger_finality": "HORIZON_REPORTED_LATEST_CLOSED_LEDGER",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        }
+      ],
+      "evidence": {
+        "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+        "sha256": "c6a6fd93c03bd465e3bc85c152ee366ecdd50327bb21bd7cdf8dd385701a6f15"
+      },
+      "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+      "attestation_state": "UNMEASURED",
+      "not_a_risk_score": true,
+      "not_proof_of_reserves": true,
+      "holders_state": "UNMEASURED",
+      "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts.",
+      "replay_boundary": "Commands in the evidence file rerun current state; historical replay at the recorded heights was not executed.",
+      "subject_identity": "defillama-stablecoin:254",
+      "stablecoin_registry_id": "254"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "330fab0462b822dfe2a3bbccfffe9fbe64732f8caf5d42c3eb594c6e08576715",
+    "sig_ed25519": "fc9d6b504018e86531a25783166219e13ea291aef60a5f341e0ccdf176af1c4f67fa8d9d55c16be201d56a93ad61c805b7dc86e485d23356a1dc470702e1f60c",
+    "source_urls": [
+      "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+      "https://ethereum-rpc.publicnode.com",
+      "https://xrplcluster.com",
+      "https://horizon.stellar.org"
+    ],
+    "subject": "stablecoin EURCV — on-chain supply readings 2026-09-12 (unsigned staged)",
+    "surface": "public.notice",
+    "tags": [
+      "stablecoin",
+      "tui2-cohort",
+      "on-chain-reading"
+    ],
+    "unmeasured": [
+      "proof of reserves",
+      "attestation cadence",
+      "holder counts",
+      "peg verdict"
+    ]
+  },
+  "proof": [
+    "c4c745f9503f39d7bef48e0ee22cb0862140329edcbe27a1fec8a767e7ec98a2",
+    "b9eb26707dc5c04452c660edc0946c6fcbcae20cdbea94585c23e2d6f32589a9",
+    "c3b321f13b4c750cd771c88701217e59a0d84587c80f2a50f5810488a36846e8",
+    "51de61a68a4e3730844f0f411f2c0c20c21b78be7ab335a23a1e83364121828c",
+    "e39f7d637cae4c1a94d64cb04d822e4c0bcd6cf5a356ca6a2626158cb0b2889a",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "9e39df3132b59f2438327123399dcda151444c357e2682130163e6019fdff9e6",
+    "0528c540f239aebebaccb4b1fb26dad1496e3caa54920ee73f42f44c204b9511"
+  ]
+}
