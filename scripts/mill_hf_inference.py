@@ -139,6 +139,12 @@ def chat(tok: str, model: str, prompt: str) -> tuple[str, str]:
         return "UNCHECKABLE", f"{type(e).__name__}"
     ch = (d.get("choices") or [{}])[0]
     txt = ((ch.get("message") or {}).get("content") or ch.get("text") or "").strip()
+    # A transport-level 200 with no answer is reachability failure, not a
+    # completed probe.  Treat it like any other uncheckable provider response
+    # so the caller can try the next mapped provider and so the lock cannot
+    # count an empty completion as practice evidence.
+    if not txt:
+        return "UNCHECKABLE", "HTTP 200 empty completion"
     return "OK", txt
 
 
@@ -466,6 +472,8 @@ def main() -> int:
         "offset": offset,
         "n_window": len(window),
         "n_ok": n_ok,
+        "n_practice_probed": n_ok,
+        "n_measured": 0,
         "n_uncheckable": n_fail,
         "window": window,
     }

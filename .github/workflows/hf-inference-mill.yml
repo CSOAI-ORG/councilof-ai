@@ -99,7 +99,15 @@ jobs:
               # 6 Sep 17:01 cron: json.loads Extra data col 316 skipped mill
               # while the job stayed green. First object is the verdict.
               d, _ = json.JSONDecoder().raw_decode(raw.decode("utf-8", "replace").lstrip())
-              txt = ((d.get("choices") or [{}])[0].get("message") or {}).get("content")
+              txt = (((d.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+              if not txt:
+                  out["status"] = "INFERENCE_FAIL"
+                  out["http"] = 200
+                  out["body"] = "empty completion"
+                  open("mill-out/probe.json", "w", encoding="utf-8").write(json.dumps(out, indent=2) + "\n")
+                  note("INFERENCE_FAIL HTTP 200 empty completion")
+                  emit("0")
+                  sys.exit(0)
               out["status"] = "INFERENCE_OK"
               out["http"] = 200
               out["probe"] = repr(txt)[:80]
@@ -199,7 +207,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: patch HF2200.lock.json from shard mill-out (n_measured is counted)
+      - name: patch HF2200.lock.json from shard mill-out (probes are not measurements)
         run: |
           set -euo pipefail
           cp public/fleet/HF2200.lock.json /tmp/HF2200.original.json
@@ -216,11 +224,12 @@ jobs:
           import json
           lock = json.load(open("public/fleet/HF2200.lock.json"))
           n = lock["n_measured"]
-          print(f"lock n_measured={n} n_locked={lock['n_locked']}")
+          probed = lock.get("n_practice_probed", 0)
+          print(f"lock n_measured={n} n_practice_probed={probed} n_locked={lock['n_locked']}")
           if lock["n_locked"] != 2200:
               print("MEMBERSHIP_DRIFT n_locked", lock["n_locked"], "refusing upload of a substituted fleet")
               raise SystemExit(1)
-          open("n_measured.json", "w").write(json.dumps({"n_measured": n, "n_locked": lock["n_locked"]}, indent=2) + "\n")
+          open("n_measured.json", "w").write(json.dumps({"n_measured": n, "n_practice_probed": probed, "n_locked": lock["n_locked"]}, indent=2) + "\n")
           PY
       - name: upload patched lock (not a board rewrite)
         uses: actions/upload-artifact@v4
@@ -237,7 +246,7 @@ jobs:
           from huggingface_hub import HfApi
           tok = (os.environ.get("HF_TOKEN") or "").strip()
           lock = json.load(open("public/fleet/HF2200.lock.json"))
-          print("uploading n_measured", lock["n_measured"])
+          print("uploading n_measured", lock["n_measured"], "n_practice_probed", lock.get("n_practice_probed", 0))
           if not tok:
               print("HF_TOKEN empty — lock stays in the artifact only")
               print("HUB_LOCK_NOT_PUBLISHED")
@@ -247,8 +256,11 @@ jobs:
               path_in_repo="locks/HF2200.lock.json",
               repo_id="csoai/hub-queue",
               repo_type="dataset",
-              commit_message=f"mill land n_measured={lock['n_measured']} (not a board rewrite)",
+              commit_message=(
+                  f"mill land n_measured={lock['n_measured']} "
+                  f"n_practice_probed={lock.get('n_practice_probed', 0)} "
+                  "(not a board rewrite)"
+              ),
           )
           PY
-
 
