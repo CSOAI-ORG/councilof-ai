@@ -73,7 +73,29 @@ def reject_reason(wrap: dict) -> str | None:
     return None
 
 
-def land(staged: Path, inbox: Path, signed_dir: Path) -> dict:
+def bind_run_provenance(wrap: dict, run_id: str) -> dict:
+    """Bind an unsigned card to the Actions run that produced its artifact.
+
+    Older mill artifacts do not carry a run id.  The landing workflow does know
+    the immutable GitHub Actions run id, so bind it before the content address is
+    checked and before the card enters the signer inbox.
+    """
+    if not run_id.isdigit() or int(run_id) <= 0:
+        raise ValueError("a positive GitHub Actions run id is required")
+    body = wrap.get("body")
+    if not isinstance(body, dict):
+        return wrap
+    expected = f"gha-{run_id}"
+    present = body.get("run_id")
+    if present not in (None, "", expected):
+        raise ValueError(f"card run_id {present!r} conflicts with {expected!r}")
+    body["run_id"] = expected
+    wrap["body"] = body
+    wrap["id"] = hashlib.sha256(canonical_body_bytes(body)).hexdigest()
+    return wrap
+
+
+def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str) -> dict:
     files = sorted(staged.rglob("unsigned-*.json"))
     have = signed_cells(signed_dir)
     landed: list[dict] = []
@@ -81,6 +103,7 @@ def land(staged: Path, inbox: Path, signed_dir: Path) -> dict:
     for f in files:
         try:
             w = json.loads(f.read_text(encoding="utf-8"))
+            w = bind_run_provenance(w, run_id)
         except Exception as e:
             skipped.append({"file": f.name, "reason": f"json {type(e).__name__}"})
             continue
@@ -94,7 +117,7 @@ def land(staged: Path, inbox: Path, signed_dir: Path) -> dict:
             skipped.append({"file": f.name, "reason": f"already-signed {have[key]}"})
             continue
         inbox.mkdir(parents=True, exist_ok=True)
-        dest = inbox / f.name
+        dest = inbox / f"unsigned-{str(b['axis'])[:8]}-{str(w['id'])[:12]}.json"
         if dest.is_file():
             try:
                 prev = json.loads(dest.read_text(encoding="utf-8"))
@@ -171,7 +194,7 @@ def main() -> int:
     ap.add_argument("--github-output", default="", help="append landed=/axis= lines here")
     args = ap.parse_args()
     staged = Path(args.staged)
-    rep = land(staged, Path(args.inbox), Path(args.signed))
+    rep = land(staged, Path(args.inbox), Path(args.signed), args.run_id)
     mill_report = None
     mr = next(iter(staged.rglob("mill-report.json")), None)
     if mr is not None:
