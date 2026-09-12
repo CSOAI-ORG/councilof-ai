@@ -33,5 +33,14 @@
     "receipt_transaction": "0x80f3d96ffbdfaf9412d7e89a0aa0d9ed9ced9117000954a893564fe55b79f378",
     "note": "Two different transaction hashes \u2014 the facilitator settled one tx, the CSOAI server recorded a different one. The CSOAI server may have performed its own settlement."
   },
-  "honesty": "The receipt is INVALID under the current verification. This is a real finding, not a claim. The end-to-end flow works (discover\u2192challenge\u2192sign\u2192settle\u2192deliver\u2192verify root), but the signed receipt step has a verification gap that needs investigation."
+  "honesty": "The receipt is INVALID under the current verification. This is a real finding, not a claim. The end-to-end flow works (discover\u2192challenge\u2192sign\u2192settle\u2192deliver\u2192verify root), but the signed receipt step has a verification gap that needs investigation.",
+  "deep_analysis": {
+    "jcs_canonicalization": "MATCH \u2014 payload and header bytes are already in JCS form",
+    "base64_encoding": "MATCH \u2014 JWS parts match JCS-encoded bytes exactly",
+    "signing_input": "CORRECT \u2014 header_b64.payload_b64 (ASCII)",
+    "signature_check": "FAIL \u2014 Ed25519(signature, signing_input) does not verify against current board-attestation-1 key",
+    "offline_verifier": "verify_receipt.py confirms INVALID: \"The bytes moved after they were signed.\"",
+    "conclusion": "The receipt was likely signed with a PREVIOUS version of the board-attestation-1 private key (key rotation in Cloudflare env var). The DID document still names board-attestation-1 but the private key backing it may have changed.",
+    "fix": "Re-issue the receipt with the current key, or investigate key rotation history in Cloudflare Pages env vars."
+  }
 }
