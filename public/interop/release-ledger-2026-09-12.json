@@ -1,0 +1,780 @@
+{
+ "schema": "csoai.release-ledger/0.1",
+ "as_of": "2026-09-12T17:08:49+00:00",
+ "window": "2026-09-11T18:00:00Z \u2192 2026-09-12T17:00Z",
+ "verifier": "TUI-1 estate integrity lane",
+ "method": "gh api check-runs on PR head sha; actions/runs?head_sha=<full merge sha> filtered to deploy.yml; live probes by curl. Deploy semantics: serial queue (cancel-in-progress=false); rapid merges coalesce \u2014 a cancelled run's content ships in the next green deploy.",
+ "root_at_snapshot": {
+  "url": "https://councilof.ai/root.json",
+  "card_count": 228,
+  "merkle_root": "dc420b2c30c5e5036b86d14861f470b81b909369ff880f2958d858abd661f66a",
+  "root_sha256": "fcb3bea47de681bf9560e1da355806b1ffca78a2c0c1f7cf11ea4673ae75090d",
+  "as_of": "2026-09-12T13:27:43Z",
+  "signature": "VALID \u2014 independently re-verified under did:web:csoai.org#board-attestation-1 (Ed25519 over canonical {kind,schema,as_of,merkle_root,card_count,did_intended})",
+  "rekor": {
+   "status": "WITNESSED",
+   "logIndex": 2808054194,
+   "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
+   "entry_http": 200
+  },
+  "ots": {
+   "status_at_probe": "STAMPED_PENDING_BITCOIN",
+   "proof_sha256": "13eb73fde8bee7c84d2c6178f91059a5f2c587eabf8d2380eb3ce59aa5bd83eb",
+   "note": "PR #2040 merged upgrades to CONFIRMED_BITCOIN; live flip follows its queued deploy"
+  },
+  "byte_parity": "councilof.ai == csoai.org post-308: identical sha256, 18910 bytes",
+  "conflict_scan": "NONE across 26 witnessed sidecars",
+  "corpus_scope": "228 root leaves vs 335 shape-A signed cards, 0 overlap; boundary card anchored (6109d9dd03edf688\u2026)"
+ },
+ "deploy_failures_in_window": [
+  {
+   "class": "sitemap truth gate",
+   "runs": [
+    "91b3aee3 (#2020)",
+    "991ab60f (ots upgrade)"
+   ],
+   "resolution": "#2032 regenerated sitemap; deploy green 15:44Z"
+  },
+  {
+   "class": "public root + witness integrity (fail-closed during root republish propagation)",
+   "runs": [
+    "ccdc127c (#2004)",
+    "0fac4262 (#2008)",
+    "9947961b (#2016)",
+    "731af43d (#2013)",
+    "ec54bf2a (#2018)",
+    "f0206805 (#2017)"
+   ],
+   "resolution": "self-heals on the next deploy once Pages serves the new root bytes"
+  },
+  {
+   "class": "_redirects >100 dynamic rules (Pages limit)",
+   "runs": [
+    "272c23c2 (#1986)"
+   ],
+   "resolution": "superseded by later green deploy"
+  },
+  {
+   "class": "brand gate forbidden display string",
+   "runs": [
+    "a4aa91d5"
+   ],
+   "resolution": "#2039 wording fix; deploys resumed"
+  }
+ ],
+ "head_check_anomalies": [
+  {
+   "pr": 1953,
+   "note": "2 failing check-runs on head = pre-fix mill signer dispatches (G1.2); healed 07:03Z, cards signed"
+  },
+  {
+   "pr": 1963,
+   "note": "same class"
+  },
+  {
+   "pr": 1950,
+   "note": "1 failing check-run on census-round head; later rounds green"
+  }
+ ],
+ "claim_evidence_disagreements": [
+  {
+   "claim": "V3 brief G2.5: merge #1877 \u2192 /watch",
+   "evidence": "PR #1877 CLOSED unmerged; /watch 404",
+   "owner": "TUI-2 surface \u2014 recorded, not rebuilt here"
+  },
+  {
+   "claim": "brief: Ember PRs #2026\u20132029 open",
+   "evidence": "all four MERGED 15:32\u201315:34Z"
+  },
+  {
+   "claim": "brief: TUI-4 works from open PR #2020",
+   "evidence": "#2020 MERGED 15:38Z as 91b3aee3"
+  }
+ ],
+ "merges": [
+  {
+   "pr": 1931,
+   "merged": "2026-09-12T03:41",
+   "head": "9c257822",
+   "merge": "afe36508",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "fix(distribution): record live MCP.so listin"
+  },
+  {
+   "pr": 1941,
+   "merged": "2026-09-12T04:07",
+   "head": "e8224db8",
+   "merge": "4bb4c444",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "fix: bind exact mill run provenance before s"
+  },
+  {
+   "pr": 1922,
+   "merged": "2026-09-12T04:31",
+   "head": "ad637248",
+   "merge": "74b7a59e",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "TUI-2 gap: Deep measurements for 5 top stabl"
+  },
+  {
+   "pr": 1948,
+   "merged": "2026-09-12T04:34",
+   "head": "ad9af6ea",
+   "merge": "e7f01d60",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "TUI-6: outreach plan \u2014 distribution channels"
+  },
+  {
+   "pr": 1949,
+   "merged": "2026-09-12T04:37",
+   "head": "1bd620ed",
+   "merge": "6a44fb95",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "TUI-6: outreach log \u2014 3 offers executing acr"
+  },
+  {
+   "pr": 1951,
+   "merged": "2026-09-12T04:56",
+   "head": "533d627d",
+   "merge": "ee6ad924",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "Actions 2+3: 13 deep measurements + registry"
+  },
+  {
+   "pr": 1952,
+   "merged": "2026-09-12T05:19",
+   "head": "468d998f",
+   "merge": "8e7b6e0e",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "Harden Hugging Face and Kaggle scale produce"
+  },
+  {
+   "pr": 1947,
+   "merged": "2026-09-12T05:35",
+   "head": "ab8a035a",
+   "merge": "d0ced3f4",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "TUI-6: Distribution, Revenue and Human Aware"
+  },
+  {
+   "pr": 1954,
+   "merged": "2026-09-12T05:36",
+   "head": "da3f5984",
+   "merge": "def353df",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "Action 2: registry fix \u2014 A2A already listed,"
+  },
+  {
+   "pr": 1955,
+   "merged": "2026-09-12T05:42",
+   "head": "c3e6dc1e",
+   "merge": "863361d4",
+   "checks": "7p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "Land 56 verified RunPod measurement cards"
+  },
+  {
+   "pr": 1956,
+   "merged": "2026-09-12T05:47",
+   "head": "3af87e67",
+   "merge": "8c3ef57e",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "Correct CLARITY event and revenue claims"
+  },
+  {
+   "pr": 1960,
+   "merged": "2026-09-12T05:59",
+   "head": "aaad0613",
+   "merge": "be974acd",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "Hermes: Master Reconciliation Ledger"
+  },
+  {
+   "pr": 1959,
+   "merged": "2026-09-12T05:59",
+   "head": "2d7373fd",
+   "merge": "35247046",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "TUI-3: Regulatory Provision Mapping"
+  },
+  {
+   "pr": 1958,
+   "merged": "2026-09-12T05:59",
+   "head": "0e8e4e9a",
+   "merge": "2ba2641a",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "TUI-2: Deduplicated Financial Catalog"
+  },
+  {
+   "pr": 1961,
+   "merged": "2026-09-12T06:08",
+   "head": "574261f3",
+   "merge": "c9446b33",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "Show verified participation and nine researc"
+  },
+  {
+   "pr": 1962,
+   "merged": "2026-09-12T06:10",
+   "head": "42f1752e",
+   "merge": "a2259799",
+   "checks": "7p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "ots: anchor 16 pending proofs in Bitcoin (in"
+  },
+  {
+   "pr": 1964,
+   "merged": "2026-09-12T06:11",
+   "head": "8fef6239",
+   "merge": "e88d9cd8",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "Registry fix: A2A live, mcp.so live, npm/MCP"
+  },
+  {
+   "pr": 1966,
+   "merged": "2026-09-12T06:13",
+   "head": "3a109474",
+   "merge": "7a2d878d",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "TUI-5: Board Page \u2014 Consolidated GSPC Eviden"
+  },
+  {
+   "pr": 1965,
+   "merged": "2026-09-12T06:13",
+   "head": "889612f4",
+   "merge": "369a74ac",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "TUI-4: x402 Flow Verification + Layer 0 Inte"
+  },
+  {
+   "pr": 1946,
+   "merged": "2026-09-12T06:16",
+   "head": "35270f24",
+   "merge": "3138acce",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "HERMES: seven-terminal execution ledger \u2014 al"
+  },
+  {
+   "pr": 1967,
+   "merged": "2026-09-12T06:18",
+   "head": "4c334b62",
+   "merge": "c34ee387",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "Hermes: Updated Reconciliation \u2014 All 6 TUIs "
+  },
+  {
+   "pr": 1968,
+   "merged": "2026-09-12T06:44",
+   "head": "9617e6ff",
+   "merge": "a7d35be3",
+   "checks": "7p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "Correct owner-funded x402 revenue classifica"
+  },
+  {
+   "pr": 1953,
+   "merged": "2026-09-12T06:51",
+   "head": "09e5a623",
+   "merge": "f45e061d",
+   "checks": "1p/0pend/2f",
+   "deploy": "cancelled",
+   "title": "mill: 3 governance cards from run 3467492332"
+  },
+  {
+   "pr": 1963,
+   "merged": "2026-09-12T06:51",
+   "head": "9a742761",
+   "merge": "95bcb6db",
+   "checks": "1p/0pend/2f",
+   "deploy": "cancelled",
+   "title": "mill: 6 continuity cards from run 3467637588"
+  },
+  {
+   "pr": 1943,
+   "merged": "2026-09-12T06:51",
+   "head": "260eb299",
+   "merge": "21f55100",
+   "checks": "14p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "TUI-1 final: canonical integrator \u2014 all 6 TU"
+  },
+  {
+   "pr": 1972,
+   "merged": "2026-09-12T06:52",
+   "head": "39c26299",
+   "merge": "ac606f69",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "Publish aggregate x402 receipt activity"
+  },
+  {
+   "pr": 1938,
+   "merged": "2026-09-12T06:52",
+   "head": "5f6d3b22",
+   "merge": "a2bbc374",
+   "checks": "none",
+   "deploy": "cancelled",
+   "title": "catalog-trust round: counts-only snapshot (2"
+  },
+  {
+   "pr": 1973,
+   "merged": "2026-09-12T06:55",
+   "head": "044d6aa8",
+   "merge": "fba15e5f",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "TUI1: bootstrap EXECUTION-LEDGER.json (eight"
+  },
+  {
+   "pr": 1950,
+   "merged": "2026-09-12T06:59",
+   "head": "5f3ea383",
+   "merge": "853da91d",
+   "checks": "10p/0pend/1f",
+   "deploy": "cancelled",
+   "title": "catalog-trust round: counts-only snapshot (2"
+  },
+  {
+   "pr": 1976,
+   "merged": "2026-09-12T07:05",
+   "head": "468938c5",
+   "merge": "8d91f255",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "G1.2 mill rescue: signer dispatch carries mi"
+  },
+  {
+   "pr": 1974,
+   "merged": "2026-09-12T07:05",
+   "head": "332f5ade",
+   "merge": "33b30423",
+   "checks": "8p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "TUI-1 v3: /merge-me train dashboard + THIN s"
+  },
+  {
+   "pr": 1978,
+   "merged": "2026-09-12T07:06",
+   "head": "94968d51",
+   "merge": "42d81378",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "ci: OpenSSF Scorecard action + badge (baseli"
+  },
+  {
+   "pr": 1969,
+   "merged": "2026-09-12T07:21",
+   "head": "3d2f5960",
+   "merge": "e5efd269",
+   "checks": "7p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "mcp-trust: restore round-to-round diff write"
+  },
+  {
+   "pr": 1971,
+   "merged": "2026-09-12T07:21",
+   "head": "29f2aac6",
+   "merge": "ae2313b7",
+   "checks": "8p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "anchors: self-locating ots-upgrade-loop (bas"
+  },
+  {
+   "pr": 1977,
+   "merged": "2026-09-12T07:25",
+   "head": "a63415ac",
+   "merge": "23158126",
+   "checks": "8p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "feat(regulation+art50): GENIUS Act entries i"
+  },
+  {
+   "pr": 1975,
+   "merged": "2026-09-12T07:25",
+   "head": "8f6d3a6a",
+   "merge": "7bee30f1",
+   "checks": "7p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "J10 rework: OWASP report + PyRIT attachment "
+  },
+  {
+   "pr": 1970,
+   "merged": "2026-09-12T07:35",
+   "head": "deb330f8",
+   "merge": "14f87dea",
+   "checks": "7p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "mill: 3 continuity cards from run 3467813522"
+  },
+  {
+   "pr": 1984,
+   "merged": "2026-09-12T07:42",
+   "head": "57085bc7",
+   "merge": "448dfdca",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "fix(finance): preserve precision and block f"
+  },
+  {
+   "pr": 1985,
+   "merged": "2026-09-12T08:07",
+   "head": "a48181d8",
+   "merge": "c26e4abf",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "Fix unsupported SwarmBench separation claim"
+  },
+  {
+   "pr": 1986,
+   "merged": "2026-09-12T08:38",
+   "head": "ae7c1647",
+   "merge": "272c23c2",
+   "checks": "7p/0pend/0f",
+   "deploy": "failure",
+   "title": "Publish open Route Receipt format"
+  },
+  {
+   "pr": 1988,
+   "merged": "2026-09-12T08:55",
+   "head": "05f4c19c",
+   "merge": "f2afd864",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "Add privacy-preserving OTLP to Route Receipt"
+  },
+  {
+   "pr": 1981,
+   "merged": "2026-09-12T09:13",
+   "head": "287ccf94",
+   "merge": "cb2a8d4f",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "G1.1 leak killer: boundary card anchors itse"
+  },
+  {
+   "pr": 1980,
+   "merged": "2026-09-12T09:20",
+   "head": "c4e3bcd9",
+   "merge": "3cc6e7d4",
+   "checks": "8p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "G1.6 post-merge prover: done-when curls beco"
+  },
+  {
+   "pr": 1982,
+   "merged": "2026-09-12T09:21",
+   "head": "0b74a962",
+   "merge": "99b3d8c6",
+   "checks": "9p/0pend/0f",
+   "deploy": "success",
+   "title": "J8 rework: GSPC vs AILuminate page + importe"
+  },
+  {
+   "pr": 1979,
+   "merged": "2026-09-12T09:30",
+   "head": "aa61db68",
+   "merge": "9e948595",
+   "checks": "9p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "feat(rlusd): /rlusd live dual-chain supply p"
+  },
+  {
+   "pr": 1932,
+   "merged": "2026-09-12T09:45",
+   "head": "20c2c735",
+   "merge": "fe06d15b",
+   "checks": "7p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "public-root: publish the signed tree (rollin"
+  },
+  {
+   "pr": 1990,
+   "merged": "2026-09-12T09:54",
+   "head": "09470f6e",
+   "merge": "2b46de07",
+   "checks": "7p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "public-root: publish the signed tree (rollin"
+  },
+  {
+   "pr": 1991,
+   "merged": "2026-09-12T09:56",
+   "head": "9a38a894",
+   "merge": "faae0793",
+   "checks": "8p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "Fix rolling census source-time semantics and"
+  },
+  {
+   "pr": 1992,
+   "merged": "2026-09-12T10:01",
+   "head": "aa1892e9",
+   "merge": "51f5fcc7",
+   "checks": "10p/0pend/0f",
+   "deploy": "success",
+   "title": "census-delta: counts-only register, n_measur"
+  },
+  {
+   "pr": 1989,
+   "merged": "2026-09-12T10:13",
+   "head": "5d6f9ee2",
+   "merge": "a984383a",
+   "checks": "8p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "provider-watch: daily capture 2026-09-12T092"
+  },
+  {
+   "pr": 1993,
+   "merged": "2026-09-12T10:26",
+   "head": "06a7cf75",
+   "merge": "039ea9fa",
+   "checks": "7p/0pend/0f",
+   "deploy": "success",
+   "title": "public-root: publish the signed tree (rollin"
+  },
+  {
+   "pr": 1994,
+   "merged": "2026-09-12T10:49",
+   "head": "f055a2fa",
+   "merge": "3ca37c7e",
+   "checks": "7p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "public-root: publish the signed tree (rollin"
+  },
+  {
+   "pr": 1996,
+   "merged": "2026-09-12T11:14",
+   "head": "7edaa8af",
+   "merge": "6473c1a2",
+   "checks": "9p/0pend/0f",
+   "deploy": "success",
+   "title": "art50-target-index: regenerate from live pro"
+  },
+  {
+   "pr": 2001,
+   "merged": "2026-09-12T11:57",
+   "head": "55fca06f",
+   "merge": "2e4b4619",
+   "checks": "8p/0pend/0f",
+   "deploy": "success",
+   "title": "fix(reg-watch): distinguish legal revisions "
+  },
+  {
+   "pr": 2002,
+   "merged": "2026-09-12T12:04",
+   "head": "726a569b",
+   "merge": "c617c207",
+   "checks": "8p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "tui1: execution-ledger refresh \u2014 root verifi"
+  },
+  {
+   "pr": 2003,
+   "merged": "2026-09-12T12:10",
+   "head": "b844562b",
+   "merge": "a0039004",
+   "checks": "8p/0pend/0f",
+   "deploy": "success",
+   "title": "fix(roi): legacy 'AI governance platform' fr"
+  },
+  {
+   "pr": 2005,
+   "merged": "2026-09-12T12:12",
+   "head": "de83094a",
+   "merge": "5e9b0ee1",
+   "checks": "8p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "scanner: boundary-card check keyed on whole-"
+  },
+  {
+   "pr": 2006,
+   "merged": "2026-09-12T12:13",
+   "head": "a4dcd76b",
+   "merge": "0d3c14f2",
+   "checks": "8p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "ots: current public root confirmed in Bitcoi"
+  },
+  {
+   "pr": 2004,
+   "merged": "2026-09-12T12:22",
+   "head": "8a3a76da",
+   "merge": "ccdc127c",
+   "checks": "9p/0pend/0f",
+   "deploy": "failure",
+   "title": "feat(frameworks): framework presence registe"
+  },
+  {
+   "pr": 2008,
+   "merged": "2026-09-12T12:51",
+   "head": "0ea6e38e",
+   "merge": "0fac4262",
+   "checks": "8p/0pend/0f",
+   "deploy": "failure",
+   "title": "Add evidence-bounded stablecoin, XRPL, RWA a"
+  },
+  {
+   "pr": 2016,
+   "merged": "2026-09-12T12:59",
+   "head": "142d346a",
+   "merge": "9947961b",
+   "checks": "8p/0pend/0f",
+   "deploy": "failure",
+   "title": "tui1: witness sidecar resync \u2014 CONFIRMED_BIT"
+  },
+  {
+   "pr": 2013,
+   "merged": "2026-09-12T13:09",
+   "head": "d4530a68",
+   "merge": "731af43d",
+   "checks": "11p/0pend/0f",
+   "deploy": "failure",
+   "title": "Reduce dependency security findings without "
+  },
+  {
+   "pr": 2018,
+   "merged": "2026-09-12T13:24",
+   "head": "a18e54d9",
+   "merge": "ec54bf2a",
+   "checks": "8p/0pend/0f",
+   "deploy": "failure",
+   "title": "Regenerate stablecoin readiness after exact-"
+  },
+  {
+   "pr": 2017,
+   "merged": "2026-09-12T13:36",
+   "head": "d6def373",
+   "merge": "f0206805",
+   "checks": "3p/0pend/0f",
+   "deploy": "failure",
+   "title": "public-root: publish the signed tree (rollin"
+  },
+  {
+   "pr": 2019,
+   "merged": "2026-09-12T13:41",
+   "head": "348da90b",
+   "merge": "6fcf637b",
+   "checks": "8p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "tui1: price-gate exemption for XRPL mirror e"
+  },
+  {
+   "pr": 2021,
+   "merged": "2026-09-12T13:57",
+   "head": "af103d88",
+   "merge": "235a91f3",
+   "checks": "8p/0pend/0f",
+   "deploy": "success",
+   "title": "Fix price gate for frozen market evidence"
+  },
+  {
+   "pr": 2023,
+   "merged": "2026-09-12T14:14",
+   "head": "f8eaa7e5",
+   "merge": "3903887c",
+   "checks": "8p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "tui1: ledger refresh \u2014 228-card root, anchor"
+  },
+  {
+   "pr": 2011,
+   "merged": "2026-09-12T14:16",
+   "head": "15432145",
+   "merge": "037aeb85",
+   "checks": "8p/0pend/0f",
+   "deploy": "success",
+   "title": "fix(web): repair source navigation and bound"
+  },
+  {
+   "pr": 2010,
+   "merged": "2026-09-12T14:25",
+   "head": "bfc7bb86",
+   "merge": "52a0193c",
+   "checks": "9p/0pend/0f",
+   "deploy": "skipped-no-run",
+   "title": "fix(otel): preserve observation boundaries i"
+  },
+  {
+   "pr": 2012,
+   "merged": "2026-09-12T14:40",
+   "head": "a55c1ef1",
+   "merge": "f5eb3e75",
+   "checks": "8p/0pend/0f",
+   "deploy": "success",
+   "title": "fix(x402): align discovery with commission r"
+  },
+  {
+   "pr": 2015,
+   "merged": "2026-09-12T14:44",
+   "head": "d08194dd",
+   "merge": "93a89613",
+   "checks": "9p/0pend/0f",
+   "deploy": "success",
+   "title": "Replace misleading business snapshots with o"
+  },
+  {
+   "pr": 2009,
+   "merged": "2026-09-12T15:14",
+   "head": "82bc9954",
+   "merge": "4db85f0e",
+   "checks": "8p/0pend/0f",
+   "deploy": "success",
+   "title": "tui2: stablecoin universe refresh + priority"
+  },
+  {
+   "pr": 2028,
+   "merged": "2026-09-12T15:32",
+   "head": "361e4c74",
+   "merge": "05b7e88c",
+   "checks": "8p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "Correct operator access requirements in API "
+  },
+  {
+   "pr": 2026,
+   "merged": "2026-09-12T15:33",
+   "head": "63f0acfd",
+   "merge": "23c4298c",
+   "checks": "10p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "Exclude withdrawn articles from sitemap disc"
+  },
+  {
+   "pr": 2029,
+   "merged": "2026-09-12T15:33",
+   "head": "9420d0ba",
+   "merge": "05eae498",
+   "checks": "8p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "Distinguish computed checks from EMILIA scop"
+  },
+  {
+   "pr": 2027,
+   "merged": "2026-09-12T15:34",
+   "head": "f7b9a94b",
+   "merge": "5b24767e",
+   "checks": "8p/0pend/0f",
+   "deploy": "cancelled",
+   "title": "Require asset input before opening RWA free "
+  }
+ ]
+}
