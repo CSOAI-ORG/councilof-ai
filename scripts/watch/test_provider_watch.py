@@ -229,6 +229,27 @@ def test_three_runs_state_and_leaves() -> None:
         assert not VERDICT_RE.search(json.dumps(idx))
 
 
+def test_implicit_run_clock_records_each_capture_time() -> None:
+    """Production runs use per-target capture times; run_at remains the batch marker."""
+    original_now = pw.now_iso
+    times = iter(("2026-09-12T09:23:07Z", "2026-09-12T09:23:10Z", "2026-09-12T09:23:12Z"))
+    pw.now_iso = lambda: next(times)
+    try:
+        state = {"schema": pw.STATE_SCHEMA, "normaliser": pw.NORMALISER, "created_at": "x", "updated_at": "x", "targets": {}, "runs": []}
+        fetch = fake_fetcher({
+            "https://acme.example/robots.txt": ROBOTS_ALLOW,
+            T_A["url"]: html_res("page_a.html", url=T_A["url"]),
+            T_B["url"]: html_res("page_a_changed.html", url=T_B["url"]),
+        })
+        run = pw.run_once([T_A, T_B], state, fetch, UA, None, pause=0)
+    finally:
+        pw.now_iso = original_now
+    assert run["run_at"] == "2026-09-12T09:23:07Z"
+    assert state["targets"][T_A["id"]]["latest"]["fetched_at"] == "2026-09-12T09:23:10Z"
+    assert state["targets"][T_B["id"]]["latest"]["fetched_at"] == "2026-09-12T09:23:12Z"
+    assert state["updated_at"] == "2026-09-12T09:23:12Z"
+
+
 def test_daily_leaf_fits_cap_with_many_ids() -> None:
     run = {"run_at": "2026-09-03T05:20:00Z", "n_targets": 400, "ok": 0, "unchanged": 0, "changed": 0, "bytes_only": 0, "first": 0,
            "uncheckable": 200, "unknown": 200, "changed_ids": [], "uncheckable_ids": [f"prov{i}/surface_long_name" for i in range(200)],

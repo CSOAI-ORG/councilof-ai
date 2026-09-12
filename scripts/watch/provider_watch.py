@@ -517,6 +517,10 @@ def run_once(
     log: Callable[[str], None] = lambda s: None,
 ) -> dict[str, Any]:
     """Capture every target, mutate `state` (append-only history), write leaves. Returns the run row."""
+    # A caller-supplied run_at is a deterministic fixture clock. Production callers
+    # omit it, so each capture records its own request-start time rather than copying
+    # the run-start marker across a potentially minute-long batch.
+    fixed_capture_time = run_at is not None
     run_at = run_at or now_iso()
     robots = RobotsCache(fetch, ua)
     run = {
@@ -529,7 +533,7 @@ def run_once(
         if pause and last_host == host:
             time.sleep(pause)
         last_host = host
-        cap = capture(t, fetch, robots, fetched_at=run_at)
+        cap = capture(t, fetch, robots, fetched_at=run_at if fixed_capture_time else None)
         entry = state["targets"].setdefault(
             t["id"], {"provider": t["provider"], "surface": t["surface"], "url": t["url"], "latest": None, "last_ok": None, "history": [], "n_runs": 0, "n_changed": 0},
         )
@@ -585,7 +589,12 @@ def run_once(
             (leaves_dir / name).write_text(json.dumps(card, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
             run["leaves"].append(name)
     state["runs"].append(run)
-    state["updated_at"] = run_at
+    capture_times = [
+        (entry.get("latest") or {}).get("fetched_at")
+        for entry in state["targets"].values()
+        if (entry.get("latest") or {}).get("fetched_at")
+    ]
+    state["updated_at"] = max(capture_times, default=run_at)
     return run
 
 
