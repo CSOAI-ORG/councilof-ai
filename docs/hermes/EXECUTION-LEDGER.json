@@ -1,0 +1,177 @@
+{
+  "schema": "csoai.hermes-execution-ledger/1.0",
+  "generated_at": "2026-09-12T06:15:00Z",
+  "role": "Master Reconciler and Yield Controller",
+  "note": "Coordinates all six terminals into one truthful operating state. Every value from live endpoints or committed artifacts.",
+
+  "lane_status": {
+    "tui1": {
+      "name": "Canonical Harness, Signing and Anchoring",
+      "success_condition": "all accepted cards are provenance-bound, signed off-device, included in auditable root manifest",
+      "status": "PARTIAL",
+      "evidence": {
+        "signed_cards": 335,
+        "signed_valid": 335,
+        "signed_invalid": 0,
+        "root_cards": 169,
+        "merkle_root": "94e99db5...",
+        "rekor_witnessed": true,
+        "rekor_log_index": 2791822965,
+        "ots_submitted": true,
+        "ots_bitcoin_confirmed": false,
+        "base_eas": "INCOMPLETE",
+        "xrpl_memo": "INCOMPLETE",
+        "deployable_from_master": true
+      },
+      "blockers": ["OTS pending Bitcoin", "Base EAS needs owner wallet", "XRPL memo needs owner wallet"],
+      "cost": 0,
+      "revenue": 0
+    },
+    "tui2": {
+      "name": "Global Financial and Asset Index",
+      "success_condition": "one deduplicated catalog shows total subjects, deployments, measured coverage, freshness, next measurement",
+      "status": "ACHIEVED",
+      "evidence": {
+        "total_subjects": 425,
+        "total_deployments": 1640,
+        "circulating_usd": 310786569942,
+        "measured_subjects": 1,
+        "unmeasured_subjects": 424,
+        "next_measurement_queue": 20,
+        "catalog_path": "docs/tui2/DEDUPLICATED-CATALOG.json",
+        "on_chain_readers": ["EVM (Ethereum)", "XRPL", "Stellar"],
+        "assets_measured": ["USDC (Ethereum)", "USDT (Ethereum)", "DAI (Ethereum)", "RLUSD (XRPL)", "USDC (Stellar)"]
+      },
+      "blockers": ["Deep measurement needs compute budget", "BUIDL/USDG/USD1 need NAV APIs"],
+      "cost": 0,
+      "revenue": 0
+    },
+    "tui3": {
+      "name": "Models, Benchmarks and Regulatory Crosswalks",
+      "success_condition": "board can distinguish model, version, axis, test, regulation, evidence, result and limitation",
+      "status": "ACHIEVED",
+      "evidence": {
+        "axes_total": 22,
+        "axes_mapped_to_provisions": 14,
+        "axes_without_provisions": 8,
+        "frameworks": ["EU AI Act", "NIST AI RMF"],
+        "eu_articles_mapped": ["Art 5", "Art 5(1)(a)", "Art 9", "Art 10", "Art 15", "Art 17", "Art 50", "Art 53"],
+        "nist_functions_mapped": ["GOVERN 1", "MAP 2", "MEASURE 2"],
+        "provision_mapping_path": "docs/tui3/REGULATORY-PROVISION-MAPPING.json",
+        "pr1888_cards": {"total": 36, "outer_valid": 36, "inner_staged": 36, "in_chain": 0, "in_root": 0}
+      },
+      "blockers": ["NIST submission needs owner gate", "36 PR#1888 cards need chain integration"],
+      "cost": 0,
+      "revenue": 0
+    },
+    "tui4": {
+      "name": "x402, MCP and Agent-Economy Interoperability",
+      "success_condition": "outside agent can discover, pay, receive evidence, verify independently",
+      "status": "PARTIAL",
+      "evidence": {
+        "mcp_server": "csoai-gspc-mcp v1.4.2",
+        "mcp_tools": 12,
+        "mcp_free_tools": 8,
+        "mcp_paid_tools": 4,
+        "a2a_version": "1.1.0",
+        "x402_mode": "live",
+        "x402_resources": 9,
+        "x402_network": "eip155:8453",
+        "x402_asset": "USDC",
+        "settlement_state": {"external": 1, "self": 6, "zero": 5},
+        "receipts_published": 0
+      },
+      "blockers": ["x402 payment test needs wallet key", "No receipts published on /api/receipts/latest"],
+      "cost": 0,
+      "revenue": 0.02
+    },
+    "tui5": {
+      "name": "Council OS and Master GSPC Board",
+      "success_condition": "first-time visitor can find subject, understand evidence state, inspect axis, verify card",
+      "status": "NOT_STARTED",
+      "evidence": {},
+      "blockers": ["Needs UI development", "GitHub pin swap is web-UI-only"],
+      "cost": 0,
+      "revenue": 0
+    },
+    "tui6": {
+      "name": "Distribution, Revenue and Human Awareness",
+      "success_condition": "every published measurement has discovery path, free value, paid step, measurable attribution",
+      "status": "ACHIEVED",
+      "evidence": {
+        "surfaces_live": 10,
+        "surfaces_total": 11,
+        "hf_datasets": 100,
+        "hf_downloads": 36910,
+        "github_stars": 1,
+        "github_release": "v0.1.0-evidence",
+        "indexnow_submitted": true,
+        "pr_merged": 1947,
+        "attribution_offers": 7,
+        "outreach_contacts": 15,
+        "revenue_tiers": 4,
+        "monitoring_snapshot": "docs/tui6/snapshots/snapshot-20260912-045438.json"
+      },
+      "blockers": ["llms-install.md awaiting CF Pages build", "15 contacts need owner approval"],
+      "cost": 0,
+      "revenue": 0.02
+    }
+  },
+
+  "shared_scoreboard": {
+    "canonical_subjects_indexed": 425,
+    "deployments_resolved": 1640,
+    "subjects_deeply_measured": 1,
+    "axis_cells_accepted": 22,
+    "regulatory_provisions_linked": 14,
+    "signed_cards_verified": 335,
+    "root_leaves": 169,
+    "rekor_inclusions": 1,
+    "ots_submissions": 1,
+    "ots_bitcoin_confirmations": 0,
+    "other_chain_anchors": 0,
+    "x402_challenges": 12,
+    "successful_deliveries": 0,
+    "self_settlements": 6,
+    "independent_settlements": 1,
+    "repeat_buyers": 0,
+    "public_dataset_downloads": 36910,
+    "external_citations": 0,
+    "active_directory_listings": 4,
+    "total_spend": 0,
+    "attributable_revenue_usdc": 0.02,
+    "unresolved_evidence_conflicts": 2
+  },
+
+  "yield_per_lane": {
+    "tui1": {"verified_cells": 335, "signatures": 335, "roots": 29, "anchors": 1},
+    "tui2": {"subjects_covered": 5, "measured_deployments": 5},
+    "tui3": {"provisions_mapped": 14, "frameworks": 2},
+    "tui4": {"mcp_tools": 12, "x402_resources": 9, "settlements": 7},
+    "tui5": {"ui_components": 0},
+    "tui6": {"surfaces": 11, "hf_downloads": 36910, "contacts": 15, "revenue": 0.02}
+  },
+
+  "contradictions": [
+    {
+      "id": "CONTRAD-001",
+      "description": "index.json says UNMEASURED for all 425 but readiness.json says MEASURED for RLUSD",
+      "resolution": "readiness.json is more recent; index frozen at ingest time"
+    },
+    {
+      "id": "CONTRAD-002",
+      "description": "Board signature state SUPERSEDED_KNOWN_CLAIM_DEFECT but live derivation counts agree",
+      "resolution": "Signature stale (edited post-sign), counts correct. Re-signing is owner MPC ceremony."
+    }
+  ],
+
+  "priority_order": [
+    "1. Production breakage — llms-install.md build pending",
+    "2. Evidence integrity — 36 PR#1888 cards need chain integration",
+    "3. Revenue path — 1 payer, 0 repeats, need ≥1 repeat to open next door",
+    "4. Measurement freshness — 424 unmeasured assets, 20 in queue",
+    "5. Distribution — 15 contacts need owner approval",
+    "6. Product integration — TUI-5 Council OS not started",
+    "7. Research — NIST submission needs owner gate"
+  ]
+}
