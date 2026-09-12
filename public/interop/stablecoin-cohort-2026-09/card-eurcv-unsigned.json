@@ -1,0 +1,59 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "stablecoin EURCV — on-chain supply readings 2026-09-12 (unsigned staged)",
+ "as_of": "2026-09-12T12:20:00Z",
+ "source_urls": [
+  "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+  "https://ethereum-rpc.publicnode.com",
+  "https://xrplcluster.com",
+  "https://horizon.stellar.org"
+ ],
+ "payload": {
+  "kind": "csoai.stablecoin-cohort.reading/v1",
+  "state": "PROBED",
+  "subject_symbol": "EURCV",
+  "chain_readings": [
+   {
+    "chain": "ethereum",
+    "contract": "0x5F7827FDeb7c20b443265Fc2F40845B715385Ff2",
+    "totalSupply": 137618715.41,
+    "block": 25961214
+   },
+   {
+    "chain": "xrpl",
+    "issuer": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+    "obligations": "10000000",
+    "ledger": 106934560
+   },
+   {
+    "chain": "stellar",
+    "issuer": "GCEYGIVOLAVBF2TG2RUSGTUJCIN75KEX3NGLMY4VPL4GFE5L355AXW3G",
+    "balances_authorized": 15030600,
+    "ledger": 64393517
+   }
+  ],
+  "evidence": {
+   "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+   "sha256": "6ce5e1e9889dcc813bafc184bfa2dc278aca5372900768dd14c238231e4e0431"
+  },
+  "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+  "attestation_state": "UNMEASURED",
+  "not_a_risk_score": true,
+  "not_proof_of_reserves": true,
+  "holders_state": "UNMEASURED",
+  "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts."
+ },
+ "sha256": "f322a6325ec6510de3753d5e8bfddb80c56842cb97fc9ba3a3a235651ba3aa31",
+ "unmeasured": [
+  "proof of reserves",
+  "attestation cadence",
+  "holder counts",
+  "peg verdict"
+ ],
+ "tags": [
+  "stablecoin",
+  "tui2-cohort",
+  "on-chain-reading"
+ ]
+}

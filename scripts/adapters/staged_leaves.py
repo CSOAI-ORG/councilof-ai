@@ -23,7 +23,11 @@ import re
 from pathlib import Path
 from typing import Any
 
-STAGED_DIRS = ("xrpl-swift-eater-2026-09", "estate-boundary-2026-09")
+STAGED_DIRS = (
+    "xrpl-swift-eater-2026-09",
+    "estate-boundary-2026-09",
+    "stablecoin-cohort-2026-09",
+)
 SURFACE = "public.notice"
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"
 CAP = 3072

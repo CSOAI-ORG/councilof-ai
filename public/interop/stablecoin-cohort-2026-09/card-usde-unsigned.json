@@ -1,0 +1,52 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "stablecoin USDe — on-chain supply readings 2026-09-12 (unsigned staged)",
+ "as_of": "2026-09-12T12:20:00Z",
+ "source_urls": [
+  "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+  "https://ethereum-rpc.publicnode.com",
+  "https://mainnet.base.org"
+ ],
+ "payload": {
+  "kind": "csoai.stablecoin-cohort.reading/v1",
+  "state": "PROBED",
+  "subject_symbol": "USDe",
+  "chain_readings": [
+   {
+    "chain": "ethereum",
+    "contract": "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+    "totalSupply": 4601019096.379698,
+    "block": 25961213
+   },
+   {
+    "chain": "base",
+    "contract": "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+    "totalSupply": 352210381.027083,
+    "block": 51212709
+   }
+  ],
+  "evidence": {
+   "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+   "sha256": "6ce5e1e9889dcc813bafc184bfa2dc278aca5372900768dd14c238231e4e0431"
+  },
+  "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+  "attestation_state": "UNMEASURED",
+  "not_a_risk_score": true,
+  "not_proof_of_reserves": true,
+  "holders_state": "UNMEASURED",
+  "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts."
+ },
+ "sha256": "82234f3502da0126c60e0f14ec7f63b39e97ddb350720009162db559ce07715b",
+ "unmeasured": [
+  "proof of reserves",
+  "attestation cadence",
+  "holder counts",
+  "peg verdict"
+ ],
+ "tags": [
+  "stablecoin",
+  "tui2-cohort",
+  "on-chain-reading"
+ ]
+}

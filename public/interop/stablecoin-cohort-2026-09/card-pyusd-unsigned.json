@@ -1,0 +1,52 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "stablecoin PYUSD — on-chain supply readings 2026-09-12 (unsigned staged)",
+ "as_of": "2026-09-12T12:20:00Z",
+ "source_urls": [
+  "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+  "https://ethereum-rpc.publicnode.com",
+  "https://horizon.stellar.org"
+ ],
+ "payload": {
+  "kind": "csoai.stablecoin-cohort.reading/v1",
+  "state": "PROBED",
+  "subject_symbol": "PYUSD",
+  "chain_readings": [
+   {
+    "chain": "ethereum",
+    "contract": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+    "totalSupply": 1722317126.706842,
+    "block": 25961214
+   },
+   {
+    "chain": "stellar",
+    "issuer": "GDQE7IXJ4HUHV6RQHIUPRJSEZE4DRS5WY577O2FY6YQ5LVWZ7JZTU2V5",
+    "balances_authorized": 3148554.5719218,
+    "ledger": 64393517
+   }
+  ],
+  "evidence": {
+   "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+   "sha256": "6ce5e1e9889dcc813bafc184bfa2dc278aca5372900768dd14c238231e4e0431"
+  },
+  "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+  "attestation_state": "UNMEASURED",
+  "not_a_risk_score": true,
+  "not_proof_of_reserves": true,
+  "holders_state": "UNMEASURED",
+  "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts."
+ },
+ "sha256": "2215c2de0afa3205723d9274b7874d932b744c8a6dd930356bbbf83dedd7eb9b",
+ "unmeasured": [
+  "proof of reserves",
+  "attestation cadence",
+  "holder counts",
+  "peg verdict"
+ ],
+ "tags": [
+  "stablecoin",
+  "tui2-cohort",
+  "on-chain-reading"
+ ]
+}

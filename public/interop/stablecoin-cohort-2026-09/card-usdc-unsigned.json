@@ -1,0 +1,66 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "stablecoin USDC — on-chain supply readings 2026-09-12 (unsigned staged)",
+ "as_of": "2026-09-12T12:20:00Z",
+ "source_urls": [
+  "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+  "https://ethereum-rpc.publicnode.com",
+  "https://mainnet.base.org",
+  "https://xrplcluster.com",
+  "https://horizon.stellar.org"
+ ],
+ "payload": {
+  "kind": "csoai.stablecoin-cohort.reading/v1",
+  "state": "PROBED",
+  "subject_symbol": "USDC",
+  "chain_readings": [
+   {
+    "chain": "ethereum",
+    "contract": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "totalSupply": 50409552504.83374,
+    "block": 25961213
+   },
+   {
+    "chain": "base",
+    "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "totalSupply": 4274546563.039871,
+    "block": 51212670
+   },
+   {
+    "chain": "xrpl",
+    "issuer": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+    "obligations": "4394436.348900763",
+    "ledger": 106934560
+   },
+   {
+    "chain": "stellar",
+    "issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+    "balances_authorized": 309692310.1047549,
+    "ledger": 64393517
+   }
+  ],
+  "evidence": {
+   "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+   "sha256": "6ce5e1e9889dcc813bafc184bfa2dc278aca5372900768dd14c238231e4e0431"
+  },
+  "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+  "attestation_state": "UNMEASURED",
+  "not_a_risk_score": true,
+  "not_proof_of_reserves": true,
+  "holders_state": "UNMEASURED",
+  "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts."
+ },
+ "sha256": "1d27961a3a5c0e8e705c6b42980b6bedd40fa01fcd1f55aea5c1012f7d080ee8",
+ "unmeasured": [
+  "proof of reserves",
+  "attestation cadence",
+  "holder counts",
+  "peg verdict"
+ ],
+ "tags": [
+  "stablecoin",
+  "tui2-cohort",
+  "on-chain-reading"
+ ]
+}

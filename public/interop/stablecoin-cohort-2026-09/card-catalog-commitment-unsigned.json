@@ -1,0 +1,34 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "stablecoin deduplicated catalog commitment 2026-09-12 (unsigned staged)",
+ "as_of": "2026-09-12T12:20:00Z",
+ "source_urls": [
+  "https://councilof.ai/interop/stablecoin-universe-2026-09/index.json",
+  "https://stablecoins.llama.fi/stablecoins?includePrices=true"
+ ],
+ "payload": {
+  "kind": "csoai.deduplicated-catalog.commitment/v1",
+  "state": "PROBED",
+  "catalog_file": "docs/tui2/DEDUPLICATED-CATALOG.json",
+  "catalog_sha256": "767f555bef81b4b2a43e1f1b7248e31c09a3364180fcd3c8c811b82288b07d96",
+  "total_subjects": 425,
+  "deep_reading_subjects_unsigned_staged": 11,
+  "signed_rooted_subjects": 1,
+  "symbol_collision_rule": "measurements bind to issuer+contract+chain identities, never bare symbols",
+  "frozen_index": {
+   "file": "public/interop/stablecoin-universe-2026-09/index.json",
+   "note": "2026-09-11 snapshot; drift note drift-2026-09-12.json shows counts unchanged"
+  },
+  "not_a_risk_score": true,
+  "note": "Commits to the deduplicated catalog bytes as of this staging; live per-subject states live in public/interop/coverage-register.json."
+ },
+ "sha256": "b0fffb1225162fbcd6d48ed163b695a49d0c27db600a60dc83d64241c416fcad",
+ "unmeasured": [
+  "413 subjects without deep on-chain readings"
+ ],
+ "tags": [
+  "stablecoin",
+  "catalog-commitment"
+ ]
+}
