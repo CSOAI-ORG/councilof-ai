@@ -1,0 +1,107 @@
+name: TUI-6 Distribution Monitoring
+
+on:
+  schedule:
+    # Run daily at 07:00 UTC
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Collect monitoring snapshot
+        run: |
+          DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          OUT="docs/tui6/snapshots/snapshot-$(date -u +%Y%m%d-%H%M%S).json"
+          mkdir -p docs/tui6/snapshots
+
+          # Revenue
+          REVENUE=$(curl -sf https://councilof.ai/api/revenue || echo '{}')
+
+          # GSPC board
+          GSPC=$(curl -sf https://councilof.ai/api/gspc | python3 -c "
+          import sys,json
+          d=json.load(sys.stdin)
+          t=d.get('totals',{})
+          print(json.dumps({'axes':t.get('axes'),'measured':t.get('measured_axes'),'leaders':t.get('public_leader_count')}))
+          " 2>/dev/null || echo '{}')
+
+          # Root
+          ROOT=$(curl -sf https://councilof.ai/root.json | python3 -c "
+          import sys,json
+          d=json.load(sys.stdin)
+          print(json.dumps({'card_count':d.get('card_count'),'as_of':d.get('as_of')}))
+          " 2>/dev/null || echo '{}')
+
+          # HuggingFace
+          HF=$(curl -sf 'https://huggingface.co/api/datasets?author=csoai&limit=100' | python3 -c "
+          import sys,json
+          d=json.load(sys.stdin)
+          total = sum(ds.get('downloads',0) or 0 for ds in d)
+          print(json.dumps({'datasets':len(d),'downloads':total}))
+          " 2>/dev/null || echo '{}')
+
+          # Endpoint health
+          HEALTH=0
+          TOTAL=0
+          for url in \
+            "https://councilof.ai" \
+            "https://councilof.ai/api/gspc" \
+            "https://councilof.ai/api/state" \
+            "https://councilof.ai/api/revenue" \
+            "https://councilof.ai/feed.xml" \
+            "https://councilof.ai/llms.txt" \
+            "https://councilof.ai/root.json"; do
+            TOTAL=$((TOTAL+1))
+            code=$(curl -sf -o /dev/null -w "%{http_code}" --max-time 8 "$url" || echo "000")
+            if [ "$code" = "200" ]; then
+              HEALTH=$((HEALTH+1))
+            fi
+          done
+
+          python3 -c "
+          import json
+          r = json.loads('''$REVENUE''')
+          g = json.loads('''$GSPC''')
+          rt = json.loads('''$ROOT''')
+          hf = json.loads('''$HF''')
+          snap = {
+              'schema': 'csoai.tui6-snapshot/1.0',
+              'generated_at': '$DATE',
+              'revenue': {
+                  'settled_usdc': r.get('settled_usdc',{}).get('count'),
+                  'payers': r.get('one_number',{}).get('all_time'),
+                  'self': r.get('one_number',{}).get('self_settlements'),
+              },
+              'board': g,
+              'root': rt,
+              'huggingface': hf,
+              'endpoints': {'total': $TOTAL, 'healthy': $HEALTH},
+          }
+          with open('$OUT','w') as f:
+              json.dump(snap, f, indent=2)
+          print(json.dumps(snap, indent=2))
+          "
+
+      - name: Commit snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/tui6/snapshots/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "TUI-6: automated monitoring snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            git push
+          fi
