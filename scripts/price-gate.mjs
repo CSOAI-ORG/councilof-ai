@@ -112,6 +112,14 @@ if (SELFTEST) {
 // price we are charging. Adding a page requires writing why.
 const ALLOW = [
   {
+    pages: /^interop\/(?:rwa-reconciliation|stablecoin-deep)-2026-09\/mirrors\//,
+    why:
+      "Byte-faithful captures of third-party RWA and stablecoin evidence. Currency amounts and " +
+      "price fields are observations quoted by the archived sources and are required to reproduce " +
+      "the measurements; they price no CSOAI service. The exemption is exact to the two versioned " +
+      "evidence directories and cannot exempt an x402 manifest, product page, SKU, or future capture.",
+  },
+  {
     pages: /^interop\/xrpl-impersonation-2026-09\/mirrors\//,
     why:
       "Byte-faithful captures of third-party xrpscan API responses, preserved as impersonation " +
