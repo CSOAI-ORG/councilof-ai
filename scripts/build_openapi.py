@@ -70,6 +70,7 @@ CATALOG_FIXTURES = {
 DESCRIPTION_SOURCE = REPO / "functions" / "api" / "x402-descriptions.json"
 DESCRIPTION_PATHS = {
     "/api/proof": "proof_bundle",
+    "/api/request-attestation": "request_attestation",
     "/api/receipts/batch": "receipts_batch",
 }
 
@@ -472,9 +473,10 @@ def compose(fix: Path = FIX) -> dict:
         f"pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. "
         f"Free previews are named per door under x-csoai.free_preview. Catalog: {rail['well_known']} and {cat['explainer'].rsplit('/', 1)[0]}/api/x402. "
         f"Verify is free: {wk['verify']}. "
-        f"Every 402 carries a server-signed offer and every settled 200 a signed receipt, per the x402 "
-        f"Offer & Receipt extension (JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at "
-        f"https://csoai.org/.well-known/did.json). Check either without trusting this document: POST it to "
+        f"Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; "
+        f"a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. "
+        f"The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at "
+        f"https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to "
         f"/api/receipts/verify, or run scripts/verify_receipt.py, which reads did.json and contacts nobody. {lid}"
     )
     spec = {
