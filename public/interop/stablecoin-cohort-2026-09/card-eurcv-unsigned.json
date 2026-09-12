@@ -1,0 +1,73 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "stablecoin EURCV — on-chain supply readings 2026-09-12 (unsigned staged)",
+ "as_of": "2026-09-12T12:20:00Z",
+ "source_urls": [
+  "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+  "https://ethereum-rpc.publicnode.com",
+  "https://xrplcluster.com",
+  "https://horizon.stellar.org"
+ ],
+ "payload": {
+  "kind": "csoai.stablecoin-cohort.reading/v1",
+  "state": "PROBED",
+  "subject_symbol": "EURCV",
+  "chain_readings": [
+   {
+    "chain": "ethereum",
+    "contract": "0x5F7827FDeb7c20b443265Fc2F40845B715385Ff2",
+    "totalSupply": "137618715.410000000000000000",
+    "block": 25961214,
+    "amount_encoding": "exact_decimal_string",
+    "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+    "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+    "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+   },
+   {
+    "chain": "xrpl",
+    "issuer": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+    "obligations": "10000000",
+    "ledger": 106934560,
+    "ledger_finality": "XRPL_VALIDATED_AT_OBSERVATION",
+    "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+    "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+   },
+   {
+    "chain": "stellar",
+    "issuer": "GCEYGIVOLAVBF2TG2RUSGTUJCIN75KEX3NGLMY4VPL4GFE5L355AXW3G",
+    "balances_authorized": "15030600",
+    "ledger": 64393517,
+    "amount_encoding": "decimal_string_preserving_published_snapshot_precision",
+    "ledger_finality": "HORIZON_REPORTED_LATEST_CLOSED_LEDGER",
+    "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+    "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+   }
+  ],
+  "evidence": {
+   "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+   "sha256": "c6a6fd93c03bd465e3bc85c152ee366ecdd50327bb21bd7cdf8dd385701a6f15"
+  },
+  "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+  "attestation_state": "UNMEASURED",
+  "not_a_risk_score": true,
+  "not_proof_of_reserves": true,
+  "holders_state": "UNMEASURED",
+  "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts.",
+  "replay_boundary": "Commands in the evidence file rerun current state; historical replay at the recorded heights was not executed.",
+  "subject_identity": "defillama-stablecoin:254",
+  "stablecoin_registry_id": "254"
+ },
+ "sha256": "e8919bc9c2b2af5426b96c7c583b443435c6a9748d0fe6516e2718885d06bc2c",
+ "unmeasured": [
+  "proof of reserves",
+  "attestation cadence",
+  "holder counts",
+  "peg verdict"
+ ],
+ "tags": [
+  "stablecoin",
+  "tui2-cohort",
+  "on-chain-reading"
+ ]
+}

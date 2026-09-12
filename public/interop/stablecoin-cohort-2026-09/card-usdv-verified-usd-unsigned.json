@@ -1,0 +1,54 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "stablecoin Verified USD (USDV, registry id 143) — on-chain supply reading 2026-09-12 (unsigned staged)",
+ "as_of": "2026-09-12T12:20:00Z",
+ "source_urls": [
+  "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+  "https://ethereum-rpc.publicnode.com"
+ ],
+ "payload": {
+  "kind": "csoai.stablecoin-cohort.reading/v1",
+  "state": "PROBED",
+  "subject_symbol": "USDV",
+  "chain_readings": [
+   {
+    "chain": "ethereum",
+    "contract": "0x0E573Ce2736Dd9637A0b21058352e1667925C7a8",
+    "totalSupply": "153080.264124",
+    "block": 25961214,
+    "amount_encoding": "exact_decimal_string",
+    "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+    "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+    "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+   }
+  ],
+  "evidence": {
+   "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+   "sha256": "c6a6fd93c03bd465e3bc85c152ee366ecdd50327bb21bd7cdf8dd385701a6f15"
+  },
+  "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+  "attestation_state": "UNMEASURED",
+  "not_a_risk_score": true,
+  "not_proof_of_reserves": true,
+  "holders_state": "UNMEASURED",
+  "note": "Verified USD (DefiLlama stablecoin id 143) supply observation. This asset is not combined with the other asset using ticker USDV.",
+  "replay_boundary": "Commands in the evidence file rerun current state; historical replay at the recorded heights was not executed.",
+  "subject_identity": "defillama-stablecoin:143",
+  "stablecoin_registry_id": "143",
+  "asset_name": "Verified USD"
+ },
+ "sha256": "beea90a4808660f2ea361775f187d8173c6369ce8240d852e223902d0bcb4515",
+ "unmeasured": [
+  "proof of reserves",
+  "attestation cadence",
+  "holder counts",
+  "peg verdict"
+ ],
+ "tags": [
+  "stablecoin",
+  "tui2-cohort",
+  "on-chain-reading",
+  "symbol-collision-separated"
+ ]
+}

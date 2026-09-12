@@ -5,18 +5,27 @@ import test from "node:test";
 
 const reader = new URL("./xrpl-trustline-reader.mjs", import.meta.url);
 
-async function runReader({ maxPages = "250" } = {}) {
+async function runReader({ maxPages = "250", resultErrorMethod = null } = {}) {
   let accountLinesCalls = 0;
   const server = createServer((request, response) => {
     let body = "";
     request.on("data", (chunk) => { body += chunk; });
     request.on("end", () => {
       const call = JSON.parse(body);
+      if (call.method === resultErrorMethod) {
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end(JSON.stringify({
+          result: { error: "invalidParams", error_message: "test nested result error" },
+        }));
+        return;
+      }
       let result;
       if (call.method === "ledger") {
         result = { ledger_index: 7, ledger: { ledger_hash: "ABC", close_time: 1 } };
       } else if (call.method === "account_info") {
         result = { account_data: { Sequence: 1, Balance: "0", OwnerCount: 2 } };
+      } else if (call.method === "gateway_balances") {
+        result = { ledger_index: 7, ledger_hash: "ABC", obligations: { RLUSD: "3.750001" } };
       } else {
         accountLinesCalls += 1;
         result = accountLinesCalls === 1
@@ -65,4 +74,11 @@ test("a pagination safety stop withholds counts and supply", async () => {
   assert.equal(result.evidence_state, "UNMEASURED_INCOMPLETE_PAGINATION");
   assert.equal(result.token.holder_count, null);
   assert.equal(result.token.totalSupply_normalized, null);
+});
+
+test("nested XRPL result errors fail closed", async () => {
+  await assert.rejects(
+    () => runReader({ resultErrorMethod: "ledger" }),
+    /XRPL error: invalidParams: test nested result error/,
+  );
 });

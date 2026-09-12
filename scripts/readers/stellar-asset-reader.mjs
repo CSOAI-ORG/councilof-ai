@@ -12,7 +12,7 @@
 
 import { createHash } from "node:crypto";
 
-const HORIZON = "https://horizon.stellar.org";
+const HORIZON = process.env.STELLAR_HORIZON || "https://horizon.stellar.org";
 
 async function stellarGet(path) {
   const res = await fetch(`${HORIZON}${path}`, {
@@ -52,12 +52,22 @@ export async function readStellarAsset(assetCode, issuer) {
     return record;
   }
 
+  // Horizon removed the legacy top-level num_accounts/amount fields; current API
+  // returns accounts{authorized,...} and balances{authorized,...}. Read both shapes.
+  const numAccounts =
+    asset.num_accounts != null ? parseInt(asset.num_accounts)
+    : asset.accounts && asset.accounts.authorized != null ? parseInt(asset.accounts.authorized)
+    : null;
+  const amount = asset.amount ?? asset.balances?.authorized ?? null;
+
   record.token = {
     code: asset.asset_code,
-    issuer: asset.asset_type === "credit_alphanum12" ? asset.asset_issuer : null,
-    num_accounts: parseInt(asset.num_accounts),
-    amount: String(asset.amount),
+    issuer: asset.asset_issuer ?? null,
+    num_accounts: numAccounts,
+    amount: amount == null ? null : String(amount),
     amount_encoding: "exact_decimal_string",
+    accounts_detail: asset.accounts ?? null,
+    balances_detail: asset.balances ?? null,
     flags: asset.flags,
   };
 

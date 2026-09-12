@@ -40,3 +40,21 @@ python3 scripts/check_stablecoin_readiness.py
 The priority score chooses the first 20 candidates for deeper work using only
 reported circulating value and chain count. It is scheduling metadata, not a
 risk, quality, safety, compliance, or investment score.
+
+## Drift note — 2026-09-12 (appended, not an edit of the frozen release)
+
+A live refresh was pulled at `2026-09-12T06:59:33.800851+00:00`
+(`drift-2026-09-12.json`). Counts are unchanged: 425 assets / 211 chains /
+1,640 deployments / 337 USD-pegged. No added or removed assets, no chain-set
+changes, top-20 membership and the 20-id deep-measurement queue are unchanged.
+Summed upstream `circulating.peggedUSD` moved $310,786,569,942.87 →
+$311,197,443,510.14 (+$410.9M). Largest movers: USDC +$243.5M, USDe +$59.2M,
+USDT +$52.3M, USDS +$50.8M, USD1 +$23.4M.
+
+`index.json` and `source.json` stay byte-frozen: the signed index commitment
+card binds their SHA-256, and only the GHA public-root writer can sign a new
+commitment. `index.json` is therefore a frozen discovery snapshot; live
+per-subject measurement states live in `public/interop/coverage-register.json`.
+This resolves ledger CONTRAD-001: the index says UNMEASURED for all 425 because
+it froze at discovery time; readiness/catalog mark RLUSD as the deeply-measured
+exception; the coverage matrix is the live state view.

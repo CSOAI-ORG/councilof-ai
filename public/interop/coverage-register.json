@@ -1,22 +1,352 @@
 {
-  "schema": "csoai.coverage-register/0.1",
-  "as_of": "2026-08-26",
-  "audit": "Counts from the in-repo record (attestation-corpus.json, harness/rwa-attest TARGETS, interop runs). Nothing invented; unverified claims marked.",
-  "ruling_ref": "BOARD-RULING.md (2026-08-26, corrected): card index frozen at the verifiable floor 150 until the 185 candidate hashes verify against the real card store; judged UNMEASURED before measured.",
-  "chains": {
-    "xrpl": {
-      "instruments_in_coverage_index": 16,
-      "located_issuers_with_measured_control_facts": 6,
-      "declared_not_located": 10,
-      "note": "16 XRPL entries in the coverage corpus (6 measured control facts via financial-measure-run-v2; 10 declared UNMEASURED/not-located, incl. Aviva/DCP/EURCV/JMWH pending public address location)."
-    },
-    "evm_eas": {
-      "contracts_with_measured_facts": 3,
-      "instruments_in_coverage_index": 2,
-      "rails": "EAS off-chain attestation support; contract-level facts measured for BUIDL/BENJI/ACRED",
-      "note": "'100 ETH instruments' is NOT in the record — aspirational (UNMEASURED); pipeline exists, coverage grows per located contract. Never counted as present."
-    }
+ "schema": "csoai.coverage-register/0.1",
+ "as_of": "2026-08-26",
+ "audit": "Counts from the in-repo record (attestation-corpus.json, harness/rwa-attest TARGETS, interop runs). Nothing invented; unverified claims marked.",
+ "ruling_ref": "BOARD-RULING.md (2026-08-26, corrected): card index frozen at the verifiable floor 150 until the 185 candidate hashes verify against the real card store; judged UNMEASURED before measured.",
+ "chains": {
+  "xrpl": {
+   "instruments_in_coverage_index": 16,
+   "located_issuers_with_measured_control_facts": 6,
+   "declared_not_located": 10,
+   "note": "16 XRPL entries in the coverage corpus (6 measured control facts via financial-measure-run-v2; 10 declared UNMEASURED/not-located, incl. Aviva/DCP/EURCV/JMWH pending public address location)."
   },
-  "grammar": "The board's size is not frozen here: cite live totals.public_count on GET /api/gspc, or totals.count_grammar for the long form. Two numbers travel together — totals.axes counts SLOTS, totals.measured_axes counts slots with a real run behind them, totals.unmeasured_axes is published so the gap is visible. Quoting the slot count alone claims measurements that do not exist; quote both, or quote the smaller.",
-  "grammar_correction_2026-08-26": "This field previously read 'Public quotable board = 14 axes ... Never publish 22 axes as the board.' That was accurate while the 8 financial/domain axes were ruled in (2026-08-24) but absent from the signed board payload — a guardrail against typing a number the artifact could not back, not a repeal of the ruling. The 2026-08-26 sweep wired them into the signed data and re-signed it, so the endpoint now backs the larger count. The retired guardrail is recorded rather than quietly overwritten. See council-os/ADR-001-axis-count.md."
+  "evm_eas": {
+   "contracts_with_measured_facts": 3,
+   "instruments_in_coverage_index": 2,
+   "rails": "EAS off-chain attestation support; contract-level facts measured for BUIDL/BENJI/ACRED",
+   "note": "'100 ETH instruments' is NOT in the record — aspirational (UNMEASURED); pipeline exists, coverage grows per located contract. Never counted as present."
+  }
+ },
+ "grammar": "The board's size is not frozen here: cite live totals.public_count on GET /api/gspc, or totals.count_grammar for the long form. Two numbers travel together — totals.axes counts SLOTS, totals.measured_axes counts slots with a real run behind them, totals.unmeasured_axes is published so the gap is visible. Quoting the slot count alone claims measurements that do not exist; quote both, or quote the smaller.",
+ "grammar_correction_2026-08-26": "This field previously read 'Public quotable board = 14 axes ... Never publish 22 axes as the board.' That was accurate while the 8 financial/domain axes were ruled in (2026-08-24) but absent from the signed board payload — a guardrail against typing a number the artifact could not back, not a repeal of the ruling. The 2026-08-26 sweep wired them into the signed data and re-signed it, so the endpoint now backs the larger count. The retired guardrail is recorded rather than quietly overwritten. See council-os/ADR-001-axis-count.md.",
+ "stablecoin_universe_2026_09": {
+  "as_of": "2026-09-12T12:20:47Z",
+  "derived_from": [
+   "public/interop/stablecoin-universe-2026-09/index.json (frozen 2026-09-11, signed-committed)",
+   "public/interop/stablecoin-universe-2026-09/drift-2026-09-12.json",
+   "tui2-measurements/tui2-cohort-2026-09-12.json",
+   "docs/tui2/rlusd-sametime-frame-2026-09-12.json"
+  ],
+  "derivation_rule": "States derived from the files above; never typed aspirationally. Live per-subject states live HERE (the coverage matrix), not in the frozen index — this resolves ledger CONTRAD-001.",
+  "indexed_subjects": 425,
+  "signed_subjects": 1,
+  "stale_subjects": 0,
+  "uncheckable_sources": [
+   {
+    "item": "coingecko valtorum-usdv detail_platforms",
+    "state": "UNCHECKABLE",
+    "reason": "HTTP 429 rate limit persisted across retries today"
+   },
+   {
+    "item": "coingecko verified-usd-foundation-usdv",
+    "state": "UNCHECKABLE",
+    "reason": "API returned coin-not-found today"
+   }
+  ],
+  "not_located": [
+   {
+    "subject": "USDV",
+    "chain": "base",
+    "state": "NOT-LOCATED",
+    "note": "Valtorum USDV (index id 398) lists Base per DefiLlama chainCirculating, but no Base contract address was found in DefiLlama chainConfig or CoinGecko (valtorum-usdv detail fetch rate-limited HTTP 429 today). Not guessed."
+   }
+  ],
+  "per_subject": {
+   "DAI": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "EURCV": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "stellar",
+     "xrpl"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "FDUSD": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "PYUSD": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "stellar"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "RLUSD": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": true,
+    "root_included": true,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "xrpl"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USD1": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USDC": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum",
+     "stellar",
+     "xrpl"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USDS": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USDT": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USDV": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [
+     "coingecko verified-usd-foundation-usdv (coin-not-found)",
+     "coingecko valtorum-usdv (HTTP 429)"
+    ],
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "xrpl"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USDe": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   }
+  },
+  "count_note": "12 registry asset identities across 11 ticker symbols have supply observations. The prior signed/rooted RLUSD identity overlaps the 12 staged identities, so the union remains 12 and 413 indexed identities lack a deep supply observation.",
+  "deep_measured_asset_identities_unsigned_staged": 12,
+  "deep_measured_asset_identities_signed_rooted": 1,
+  "signed_staged_asset_identity_overlap": 1,
+  "deep_measured_asset_identity_union": 12,
+  "symbols_with_supply_observation": 11,
+  "unmeasured_asset_identities": 413,
+  "identity_register": {
+   "defillama-stablecoin:1": {
+    "registry_id": "1",
+    "symbol": "USDT",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:119": {
+    "registry_id": "119",
+    "symbol": "FDUSD",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:120": {
+    "registry_id": "120",
+    "symbol": "PYUSD",
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "stellar"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:143": {
+    "registry_id": "143",
+    "symbol": "USDV",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:146": {
+    "registry_id": "146",
+    "symbol": "USDe",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:2": {
+    "registry_id": "2",
+    "symbol": "USDC",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum",
+     "stellar",
+     "xrpl"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:209": {
+    "registry_id": "209",
+    "symbol": "USDS",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:250": {
+    "registry_id": "250",
+    "symbol": "RLUSD",
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "xrpl"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": true,
+    "root_included": true
+   },
+   "defillama-stablecoin:254": {
+    "registry_id": "254",
+    "symbol": "EURCV",
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "stellar",
+     "xrpl"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:262": {
+    "registry_id": "262",
+    "symbol": "USD1",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:398": {
+    "registry_id": "398",
+    "symbol": "USDV",
+    "chains_with_2026_09_12_reading": [
+     "xrpl"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:5": {
+    "registry_id": "5",
+    "symbol": "DAI",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   }
+  }
+ }
 }
