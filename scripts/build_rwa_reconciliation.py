@@ -34,8 +34,8 @@ NEXT_DATA = re.compile(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', re.S)
 SOURCES = {
     "rwa-xyz-networks.html": "https://app.rwa.xyz/networks",
     "rwa-xyz-network-xrp-ledger.html": "https://app.rwa.xyz/networks/xrp-ledger",
-    "rwa-xyz-asset-jmwh.html": "https://app.rwa.xyz/assets/jmwh",
-    "rwa-xyz-asset-benji.html": "https://app.rwa.xyz/assets/benji",
+    "rwa-xyz-asset-jmwh.html": "https://app.rwa.xyz/assets/JMWH",
+    "rwa-xyz-asset-benji.html": "https://app.rwa.xyz/assets/BENJI",
     "rwa-xyz-platform-franklin-benji.html": "https://app.rwa.xyz/platforms/franklin-templeton-benji-investments",
     "franklintempleton-benji-platform.html": "https://www.franklintempleton.com/investments/options/money-market-funds/products/29386/SINGLCLASS/franklin-onchain-u-s-government-money-fund/FOBXX",
     "franklintempleton-fobxx-fund.html": "https://www.franklintempleton.com/investments/options/money-market-funds/products/29386/SINGLCLASS/franklin-onchain-u-s-government-money-fund/FOBXX",
@@ -82,7 +82,12 @@ def next_data(body: bytes) -> dict | None:
 
 def xrpl_row(nd: dict, tab: str, scope: str) -> float | None:
     try:
-        rows = nd["props"]["pageProps"][tab][scope][0]["data"]["rows"]
+        tables = nd["props"]["pageProps"][tab][scope]
+        network_table = next(
+            item for item in tables
+            if isinstance(item, dict) and item.get("key") == "parent_networks"
+        )
+        rows = network_table["data"]["rows"]
         for r in rows:
             if isinstance(r, dict) and (r.get("group") or {}).get("name") == "XRP Ledger":
                 return r.get("value")
@@ -117,11 +122,14 @@ def main() -> int:
     nds: dict[str, dict | None] = {}
     for mid, url in SOURCES.items():
         body, http, err = fetch(url)
-        if body is None:
+        if body is None or http is None or not 200 <= http < 300:
             report["sources_failed"].append({"id": mid, "url": url, "error": err, "http": http})
+            # Never overwrite the last good mirror with an HTTP error body.
+            # The report carries the failure status and the prior cell stays STALE.
             continue
         report["sources_ok"].append({"id": mid, "http": http, "bytes": len(body)})
-        manifest_meta.append(archive(mid, "primary-source", url, body, http, ts))
+        role = "aggregator-source" if mid.startswith("rwa-xyz-") else "issuer-source"
+        manifest_meta.append(archive(mid, role, url, body, http, ts))
         bodies[mid] = body
         nds[mid] = next_data(body) if mid.endswith(".html") else None
 
@@ -171,9 +179,17 @@ def main() -> int:
     nd_jmwh = nds.get("rwa-xyz-asset-jmwh.html")
     justoken = issuer_row(nd_xrpl, "justoken") if nd_xrpl else None
     jmwh_asset_val = None
+    jmwh_address = None
     if nd_jmwh:
         try:
-            jmwh_asset_val = nd_jmwh["props"]["pageProps"]["asset"]["tokens"][0]["total_asset_value_dollar"]["val"]
+            tokens = nd_jmwh["props"]["pageProps"]["asset"]["tokens"]
+            xrpl_token = next(
+                token for token in tokens
+                if isinstance(token, dict)
+                and ((token.get("network") or {}).get("name") == "XRP Ledger")
+            )
+            jmwh_asset_val = xrpl_token["total_asset_value_dollar"]["val"]
+            jmwh_address = xrpl_token.get("address")
         except Exception:
             jmwh_asset_val = None
     rep_total = (fig["jmwh"].get("xrpl_represented_usd") or {}).get("value")
@@ -183,19 +199,27 @@ def main() -> int:
     chosen = justoken_val or jmwh_asset_val
     if chosen is not None:
         share = round(chosen / rep_total * 100, 2) if rep_total else None
-        fig["jmwh"]["largest_single_asset"] = cell(
-            chosen, "largest single asset on the XRPL represented side (Justoken platform / JMWH token page)",
-            "rwa-xyz-network-xrp-ledger.html" if justoken_val else "rwa-xyz-asset-jmwh.html", ts[:10],
-            id_or_name="JMWH", platform="Justoken", share_pct=share,
-            crosscheck=("network issuer_stats row and asset page agree"
-                        if justoken_val and jmwh_asset_val and abs(justoken_val - jmwh_asset_val) < 1 else None))
+        fig["jmwh"]["largest_single_asset"] = {
+            # Keep the established adapter contract. This is intentionally
+            # represented_usd, not the generic value key used by scalar cells.
+            "id_or_name": "JMWH",
+            "represented_usd": chosen,
+            "share_pct": share,
+            "as_of": ts[:10],
+            "source": "rwa-xyz-network-xrp-ledger.html" if justoken_val else "rwa-xyz-asset-jmwh.html",
+            "platform": "Justoken",
+            "crosscheck": ("network issuer_stats row and asset page agree"
+                           if justoken_val and jmwh_asset_val and abs(justoken_val - jmwh_asset_val) < 1 else None),
+        }
+        if jmwh_address:
+            fig["jmwh"]["largest_single_asset"]["xrpl_address"] = jmwh_address
     else:
         fig["jmwh"]["largest_single_asset"] = keep_prior(["jmwh", "largest_single_asset"], "JMWH paths not found")
 
     nd_benji = nds.get("rwa-xyz-asset-benji.html")
     if nd_benji:
         try:
-            v = nd_benji["props"]["pageProps"]["asset"]["raw_supply"]["val"]
+            v = nd_benji["props"]["pageProps"]["asset"]["circulating_asset_value_dollar"]["val"]
             fig["benji"]["number_benji_asset_usd"] = cell(
                 v, "rwa.xyz circulating asset value of the BENJI token, aggregate across the public chains listed",
                 "rwa-xyz-asset-benji.html", ts[:10],
@@ -214,7 +238,9 @@ def main() -> int:
     nd_plat = nds.get("rwa-xyz-platform-franklin-benji.html")
     if nd_plat:
         try:
-            v = nd_plat["props"]["pageProps"]["platform"]["asset_class_stats"][0]["circulating_asset_value_dollar"]["val"]
+            # Platform total is a named root field. Do not take the first
+            # asset-class row: that would turn ordering into evidence.
+            v = nd_plat["props"]["pageProps"]["platform"]["circulating_asset_value_dollar"]["val"]
             fig["benji"]["number_platform_usd"] = cell(
                 v, "rwa.xyz platform total for Franklin Templeton Benji Investments across all listed platform assets",
                 "rwa-xyz-platform-franklin-benji.html", ts[:10])

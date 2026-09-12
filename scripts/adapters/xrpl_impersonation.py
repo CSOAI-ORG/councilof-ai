@@ -16,9 +16,10 @@ Honesty spine (do not soften):
     fake/fraudulent/a scam. Measurement, not certification.
   * Issuance below the ranking window is not enumerated: the long tail is
     UNMEASURED and stays listed, never zero-filled.
-  * Every live page is archived as raw bytes + sha256 + retrieval metadata
-    (owner ruling 2026-09-12). Mirrors are written only on live runs, never
-    under replay, and mirror-writing is best-effort.
+  * Every live page is digest-pinned. Pages containing watched-code hits are
+    also archived as raw bytes + sha256 + retrieval metadata. Absence claims
+    on digest-only pages are publisher observations, not independently
+    replayable from this repository.
   * collect() NEVER raises. Network dark -> leaves rebuilt from the committed
     last-scan snapshot if present, else an ABSENT sidecar with no leaves.
 
@@ -262,6 +263,7 @@ def _summary_leaf(snapshot: dict[str, Any]) -> dict[str, Any]:
             "pages_uncheckable": cov.get("pages_uncheckable"),
             "uncheckable_offsets": cov.get("uncheckable_offsets"),
             "page_digest_count": len(cov.get("page_digests") or []),
+            "verification_limit": cov.get("verification_limit"),
             "long_tail": LONG_TAIL_NOTE,
         },
         "unmeasured": unmeasured,
@@ -327,6 +329,7 @@ def collect(
 
     try:
         pages_ok = 0
+        rows_scanned = 0
         page_digests: list[dict[str, Any]] = []
         uncheckable_pages: list[int] = []
         hits: list[dict[str, Any]] = []
@@ -348,13 +351,20 @@ def collect(
                 uncheckable_pages.append(offset)
                 continue
             pages_ok += 1
-            page_digests.append(
-                {"offset": offset, "sha256": hashlib.sha256(body).hexdigest(), "bytes": len(body)}
-            )
+            rows_scanned += len(rows)
             page_hits = [
                 row for row in rows
                 if isinstance(row, dict) and row.get("code") in WATCHED_CODES
             ]
+            page_digests.append(
+                {
+                    "offset": offset,
+                    "sha256": hashlib.sha256(body).hexdigest(),
+                    "bytes": len(body),
+                    "rows": len(rows),
+                    "raw_archive": f"mirrors/xrpscan-tokens-{offset}.json" if page_hits and live else None,
+                }
+            )
             if page_hits:
                 if live:
                     meta = _archive_mirror(
@@ -407,11 +417,15 @@ def collect(
             "scan_coverage": {
                 "source": "api.xrpscan.com/api/v1/tokens",
                 "window": f"ranking offsets 0..{scan_limit - PAGE_LIMIT} (pages of {PAGE_LIMIT}, stops early at first empty page)",
-                "n_scanned": sum(1 for _ in page_digests) * PAGE_LIMIT,
+                "n_scanned": rows_scanned,
                 "pages_ok": pages_ok,
                 "pages_uncheckable": len(uncheckable_pages),
                 "uncheckable_offsets": uncheckable_pages,
                 "page_digests": page_digests,
+                "verification_limit": (
+                    "pages with watched-code hits have raw archives; no-hit pages are digest-only, "
+                    "so their absence observations are not independently replayable from this repository"
+                ),
                 "long_tail": LONG_TAIL_NOTE,
             },
             "verified_issuers": VERIFIED,

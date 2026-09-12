@@ -14,8 +14,10 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -25,6 +27,11 @@ ROOT = Path(__file__).resolve().parent.parent
 CARDS = ROOT / "public" / "cards"
 ROOT_JSON = "https://councilof.ai/root.json"
 PROOF_API = "https://councilof.ai/api/proof?sha="
+BOARD_DID = "did:web:csoai.org#board-attestation-1"
+DID_PATH = ROOT / "public" / ".well-known" / "did.json"
+HEX64 = re.compile(r"[0-9a-f]{64}")
+HEX128 = re.compile(r"[0-9a-f]{128}")
+CARD_ENVELOPE_KEYS = ("did", "schema", "surface", "as_of", "sha256")
 
 FAMILY_PREFIXES = (
     "csoai.xrpl-impersonation",
@@ -35,7 +42,42 @@ FAMILY_PREFIXES = (
 )
 
 
-def find_family_cards() -> dict[str, list[dict]]:
+def canonical_bytes(value: object) -> bytes:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+
+
+def board_public_key() -> bytes:
+    did = json.loads(DID_PATH.read_bytes())
+    methods = did.get("verificationMethod") if isinstance(did.get("verificationMethod"), list) else []
+    method = next(item for item in methods if isinstance(item, dict) and item.get("id") == BOARD_DID)
+    key_x = method["publicKeyJwk"]["x"]
+    return base64.urlsafe_b64decode(key_x + "=" * (-len(key_x) % 4))
+
+
+def signature_state(card: dict, public_key: bytes) -> str:
+    """Verify the whole-card digest and its compact Ed25519 envelope."""
+    try:
+        declared = card.get("sha256")
+        signature = card.get("sig_ed25519")
+        if not isinstance(declared, str) or not HEX64.fullmatch(declared):
+            return "INVALID"
+        if not isinstance(signature, str) or not HEX128.fullmatch(signature):
+            return "INVALID"
+        if card.get("did") != BOARD_DID:
+            return "INVALID"
+        body = {key: value for key, value in card.items() if key not in {"sha256", "sig_ed25519"}}
+        if hashlib.sha256(canonical_bytes(body)).hexdigest() != declared:
+            return "INVALID"
+        envelope = {key: card[key] for key in CARD_ENVELOPE_KEYS}
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+
+        Ed25519PublicKey.from_public_bytes(public_key).verify(bytes.fromhex(signature), canonical_bytes(envelope))
+        return "VALID"
+    except Exception:
+        return "INVALID"
+
+
+def find_family_cards(public_key: bytes) -> dict[str, list[dict]]:
     out: dict[str, list[dict]] = {}
     for f in sorted(CARDS.glob("*.json")):
         try:
@@ -48,7 +90,7 @@ def find_family_cards() -> dict[str, list[dict]]:
             if kind.startswith(prefix):
                 out.setdefault(prefix, []).append(
                     {"sha256": card.get("sha256"), "subject": card.get("subject", ""),
-                     "signed": bool(card.get("sig_ed25519")), "file": f.name})
+                     "signature_state": signature_state(card, public_key), "file": f.name})
                 break
     return out
 
@@ -85,10 +127,19 @@ def proof_state(sha: str, live_merkle: str | None) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--local", action="store_true", help="disk-only: presence + signature, no live proof")
+    ap.add_argument("--local", action="store_true", help="disk-only: digest + Ed25519 signature, no live proof")
+    ap.add_argument(
+        "--allow-uncheckable", action="store_true",
+        help="allow a live proof outage after local digest and signature verification",
+    )
     args = ap.parse_args()
 
-    families = find_family_cards()
+    try:
+        public_key = board_public_key()
+    except Exception as exc:
+        print(f"board verification key INVALID: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return 1
+    families = find_family_cards(public_key)
     live_merkle = None
     if not args.local:
         root = fetch_json(ROOT_JSON)
@@ -97,13 +148,13 @@ def main() -> int:
             print(f"live root merkle: {live_merkle[:16]}… (as_of {(root or {}).get('as_of')})")
         else:
             print("live root UNCHECKABLE — all live checks will report UNCHECKABLE")
-    total = invalid = uncheckable = unsigned = valid = 0
+    total = invalid = uncheckable = bad_signatures = valid = 0
     for prefix in FAMILY_PREFIXES:
         cards = families.get(prefix, [])
         for c in cards:
             total += 1
-            if not c["signed"]:
-                unsigned += 1
+            if c["signature_state"] != "VALID":
+                bad_signatures += 1
             state = "LOCAL" if args.local else proof_state(c["sha256"] or "", live_merkle)
             if state == "VALID":
                 valid += 1
@@ -111,11 +162,11 @@ def main() -> int:
                 invalid += 1
             elif state == "UNCHECKABLE":
                 uncheckable += 1
-            if state != "VALID" or not c["signed"]:
-                print(f"  {state:11s} {'signed' if c['signed'] else 'UNSIGNED'} {c['sha256'][:16] if c['sha256'] else '?'}  {c['subject'][:70]}")
+            if state != "VALID" or c["signature_state"] != "VALID":
+                print(f"  {state:11s} signature={c['signature_state']:7s} {c['sha256'][:16] if c['sha256'] else '?'}  {c['subject'][:70]}")
         print(f"{prefix}: {len(cards)} cards")
-    print(f"\ntotal {total} cards · VALID {valid} · INVALID {invalid} · UNCHECKABLE {uncheckable} · unsigned {unsigned}")
-    if invalid or unsigned:
+    print(f"\ntotal {total} cards · VALID {valid} · INVALID {invalid} · UNCHECKABLE {uncheckable} · bad signatures {bad_signatures}")
+    if total == 0 or invalid or bad_signatures or (uncheckable and not args.allow_uncheckable):
         return 1
     return 0
 

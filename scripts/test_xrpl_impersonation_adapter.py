@@ -50,7 +50,7 @@ def main() -> None:
     print("sidecar:")
     check(sidecar["status"] == "PROBED", "status PROBED")
     check(sidecar["pages_ok"] == 3 and sidecar["pages_uncheckable"] == 0, "3 pages ok, 0 uncheckable")
-    check(sidecar["n_scanned"] == 300, "n_scanned 300")
+    check(sidecar["n_scanned"] == 9, "n_scanned is the 9 fixture rows, not the 300-row request capacity")
     check(sidecar["hits"] == 4, "4 watched-code hits (RLUSD x2, AUDD x1, XSGD x1)")
     check(sidecar["not_in_verified_set"] == 2, "exactly 2 NOT_IN_VERIFIED_SET (RLUSD + XSGD)")
     check(sidecar["unmeasured"] == 0, "0 UNMEASURED — all four codes have archived verified issuers")
@@ -90,6 +90,15 @@ def main() -> None:
     cov = flaky["leaves"][0]["payload"]["scan_coverage"]
     check(cov["uncheckable_offsets"] == [100], "uncheckable offset named")
     check(cov["page_digest_count"] == 2, "only fetched pages digest-pinned")
+
+    print("exact row accounting:")
+    def partial_fetch(url: str) -> bytes:
+        offset = int(url.split("offset=")[1])
+        if offset == 0:
+            return json.dumps([{"code": "OTHER", "issuer": "rFixture"}]).encode()
+        return b"[]"
+    partial = xi.collect(root=REPO, fetch=partial_fetch, scan_limit=200)
+    check(partial["sidecar"]["n_scanned"] == 1, "partial final page counts actual rows, not page capacity")
 
     print("classification:")
     mismatch = next(leaf for leaf in leaves if leaf["payload"]["kind"] == "csoai.xrpl-impersonation-mismatch/0.1")

@@ -72,6 +72,19 @@ class RwaReconciliationAdapterTest(unittest.TestCase):
             out = rwa_reconciliation.collect(path)  # file as root: never raises
             self.assertEqual(out["leaves"], [])
 
+    def test_shipped_builder_output_preserves_jmwh_contract(self):
+        """Regression: the refresh builder must not erase the $2.229B cell."""
+        shipped = Path(__file__).resolve().parents[1] / rwa_reconciliation.REL
+        if not shipped.is_file():
+            self.skipTest("RWA pack not present in this worktree")
+        out = rwa_reconciliation.collect(Path(__file__).resolve().parents[1])
+        self.assertEqual(out["sidecar"]["status"], "PROBED")
+        largest = out["leaves"][0]["payload"]["largest_single_asset"]
+        self.assertIsNotNone(largest)
+        self.assertEqual(largest["id_or_name"], "JMWH")
+        self.assertEqual(largest["represented_usd"], 2229136800)
+        self.assertEqual(largest["share_pct"], 54.91)
+
 
 if __name__ == "__main__":
     unittest.main()

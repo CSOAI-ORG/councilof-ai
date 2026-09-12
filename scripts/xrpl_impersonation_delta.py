@@ -12,6 +12,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -33,9 +34,11 @@ def main() -> int:
     ap.add_argument("prior")
     ap.add_argument("new")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--generated-at", default=None, help="fixed UTC timestamp for reproducible publication")
     args = ap.parse_args()
 
-    prior, new = _load(Path(args.prior)), _load(Path(args.new))
+    prior_path, new_path = Path(args.prior), Path(args.new)
+    prior, new = _load(prior_path), _load(new_path)
     p_hits = {_key(h): h for h in prior.get("hits", [])}
     n_hits = {_key(h): h for h in new.get("hits", [])}
 
@@ -53,7 +56,11 @@ def main() -> int:
 
     delta = {
         "schema": "csoai.xrpl-impersonation-delta/0.1",
-        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": args.generated_at or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "inputs": {
+            "prior": {"path": str(prior_path), "sha256": hashlib.sha256(prior_path.read_bytes()).hexdigest()},
+            "new": {"path": str(new_path), "sha256": hashlib.sha256(new_path.read_bytes()).hexdigest()},
+        },
         "prior": {"generated_at": prior.get("generated_at"), "window": prior.get("scan_coverage", {}).get("window"),
                   "n_scanned": prior.get("scan_coverage", {}).get("n_scanned")},
         "new": {"generated_at": new.get("generated_at"), "window": new.get("scan_coverage", {}).get("window"),
