@@ -31,6 +31,12 @@ export type CoverageLedgerInput = {
   revenue: unknown;
 };
 
+export type CoverageSnapshot = {
+  schema: "csoai.master-coverage/0.1";
+  complete: boolean;
+  rows: CoverageRow[];
+};
+
 const record = (value: unknown): Record<string, unknown> | null =>
   value !== null && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)
@@ -67,6 +73,15 @@ function countWhere(
 
 function bool(value: unknown): boolean | null {
   return typeof value === "boolean" ? value : null;
+}
+
+export function isCoverageSnapshot(value: unknown): value is CoverageSnapshot {
+  const snapshot = record(value);
+  return (
+    snapshot?.schema === "csoai.master-coverage/0.1" &&
+    typeof snapshot.complete === "boolean" &&
+    Array.isArray(snapshot.rows)
+  );
 }
 
 /**
