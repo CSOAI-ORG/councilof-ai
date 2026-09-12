@@ -318,7 +318,18 @@ export function hasPaymentHeader(request: Request): boolean {
   );
 }
 
-/** Wallets whose payments are the estate paying itself: payTo plus X402_SELF_WALLETS. Lowercased. */
+/**
+ * Publicly documented wallets used by the estate for end-to-end settlement tests.
+ *
+ * This is evidence classification, not secret material. Keeping known test payers in code makes
+ * historical records classify correctly even when a deployment omits X402_SELF_WALLETS. Add an
+ * address only when a committed test artifact explicitly identifies it as estate-controlled.
+ */
+export const KNOWN_INTERNAL_X402_WALLETS = [
+  "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
+] as const;
+
+/** Wallets whose payments are the estate paying itself: payTo, known test wallets, plus X402_SELF_WALLETS. Lowercased. */
 export function selfWallets(
   env: Pick<X402Env, "X402_PAY_TO" | "X402_SELF_WALLETS">,
 ): Set<string> {
@@ -326,6 +337,7 @@ export function selfWallets(
   const pt = resolvePayTo(env);
   if (pt) out.add(pt.toLowerCase());
   out.add(ESTATE_PAY_TO.toLowerCase());
+  for (const w of KNOWN_INTERNAL_X402_WALLETS) out.add(w);
   for (const w of (env.X402_SELF_WALLETS || "").split(","))
     if (/^0x[0-9a-fA-F]{40}$/.test(w.trim())) out.add(w.trim().toLowerCase());
   return out;
