@@ -6,3 +6,5 @@ import descriptions from "./x402-descriptions.json";
 
 export const PROOF_BUNDLE_DESCRIPTION = descriptions.proof_bundle;
 export const RECEIPTS_BATCH_DESCRIPTION = descriptions.receipts_batch;
+
+export const REQUEST_ATTESTATION_DESCRIPTION = descriptions.request_attestation;

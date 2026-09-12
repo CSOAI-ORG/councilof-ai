@@ -6,7 +6,7 @@
 import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "../api/_x402_config";
 import { OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL, X402_SIGNER_KID } from "../api/_x402_offer";
 import { USDC_BASE } from "../api/_skus";
-import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION } from "../api/_x402_descriptions";
+import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION, REQUEST_ATTESTATION_DESCRIPTION } from "../api/_x402_descriptions";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 
@@ -105,8 +105,8 @@ export const onRequestGet: PagesFunction<{
       },
       { method: "GET", url: `${origin}/api/request-attestation?subject=model-or-subject-id`, paid_for: "issuance",
         description:
-          "Signed measurement card — one model × one axis sealed under the board-attestation key, rooted and witnessed.",
-        accepts: [req(`${origin}/api/request-attestation?subject=model-or-subject-id`, "Signed measurement card — one model × one axis sealed under the board-attestation key, rooted and witnessed.")]  },
+          REQUEST_ATTESTATION_DESCRIPTION,
+        accepts: [req(`${origin}/api/request-attestation?subject=model-or-subject-id`, REQUEST_ATTESTATION_DESCRIPTION)]  },
       // `<id>` meant a MODEL id two lines above and an OBLIGATION id here, so a buyer reading
       // this file tries the obvious thing and gets 404 unknown_obligation. Probed 2026-09-05:
       // obligation=gpt-4o -> 404, obligation=dora|eu-cra|article-50|article-53 -> 402. The
