@@ -71,6 +71,13 @@ class LatestIsV01Snapshot(unittest.TestCase):
             self.assertIn(url, text, rel)
             self.assertNotIn("74/100", text, rel)
 
+    def test_edge_does_not_rewrite_latest_to_an_old_round(self):
+        root = os.path.dirname(_HERE)
+        redirects = os.path.join(root, "public", "_redirects")
+        with open(redirects, encoding="utf-8") as f:
+            rules = [line.strip() for line in f if line.strip() and not line.lstrip().startswith("#")]
+        self.assertFalse(any(rule.startswith("/interop/x402-trust/latest.json ") for rule in rules))
+
 
 if __name__ == "__main__":
     unittest.main()

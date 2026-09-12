@@ -79,10 +79,6 @@ const EXISTING = [
   // canonical apex doc rather than leaving a soft miss.
   "/public/openapi.json   /openapi.json   308",
   "/public/openapi.json/  /openapi.json   308",
-  // Catalog trust pointer: /interop/x402-trust/latest.json must serve the v0.1
-  // dated snapshot (2026-09-07.json), never a v0.2 round. 200 rewrite so a
-  // missing static latest.json still answers; the static file is the same bytes.
-  "/interop/x402-trust/latest.json  /interop/x402-trust/2026-09-07.json  200",
   "/arena                 /dashboard?tab=play  308",
   "/arena/                /dashboard?tab=play  308",
   "/arena.html            /dashboard?tab=play  308",
