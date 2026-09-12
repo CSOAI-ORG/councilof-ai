@@ -62,14 +62,14 @@ def fetch_json(url: str, timeout_seconds: int) -> Any:
         return json.load(response)
 
 
-def scan(
+def scan_with_meta(
     base: str = BASE,
     *,
     fetcher: Fetcher = fetch_json,
     page_size: int = PAGE,
     timeout_seconds: int = 60,
     retries: int = 2,
-) -> tuple[list[dict[str, Any]], int]:
+) -> tuple[list[dict[str, Any]], int, dict[str, Any]]:
     """Return every advertised resource, or raise instead of guessing absence.
 
     ``offset`` advances by the number of rows actually returned, not the requested
@@ -126,9 +126,37 @@ def scan(
         offset += len(page)
         time.sleep(0.05)
     required_total = max(totals_observed) if totals_observed else 0
+    if len(set(totals_observed)) > 1:
+        raise ValueError(
+            f"pagination.total changed during scan ({totals_observed}); absence would be a guess"
+        )
     if len(items) < required_total:
         raise ValueError(f"scanned {len(items)} of a declared {required_total}; absence would be a guess")
-    return items, required_total
+    meta = {
+        "pages": len(totals_observed),
+        "totals_observed": totals_observed,
+        "absence_determinate": not paged or len(totals_observed) <= 1,
+    }
+    return items, required_total, meta
+
+
+def scan(
+    base: str = BASE,
+    *,
+    fetcher: Fetcher = fetch_json,
+    page_size: int = PAGE,
+    timeout_seconds: int = 60,
+    retries: int = 2,
+) -> tuple[list[dict[str, Any]], int]:
+    """Compatibility wrapper returning rows and total; use reading() for absence semantics."""
+    items, total, _meta = scan_with_meta(
+        base,
+        fetcher=fetcher,
+        page_size=page_size,
+        timeout_seconds=timeout_seconds,
+        retries=retries,
+    )
+    return items, total
 
 
 def resource_url(value: Any) -> str:
@@ -175,12 +203,14 @@ def add_manifest_coverage(result: dict[str, Any], declared_routes: list[str]) ->
         url for key, url in declared.items()
         if indexed.get(key) and not any(row["listing_disagrees_with_door"] is False for row in indexed[key])
     ]
-    result["manifest_missing"] = [url for key, url in declared.items() if key not in indexed]
+    unseen = [url for key, url in declared.items() if key not in indexed]
+    result["manifest_missing"] = unseen if result.get("absence_determinate") else None
+    result["manifest_unseen_in_read"] = unseen if not result.get("absence_determinate") else []
     return result
 
 
 def reading(name: str, url: str, door_timeout: int | None) -> dict[str, Any]:
-    items, total = scan(url)
+    items, total, scan_meta = scan_with_meta(url)
     mine = ours(items)
     rows = []
     for item in mine:
@@ -204,8 +234,11 @@ def reading(name: str, url: str, door_timeout: int | None) -> dict[str, Any]:
         "declared_total": total,
         "scanned": len(items),
         "population_complete": len(items) >= total,
+        "pages": scan_meta["pages"],
+        "totals_observed": scan_meta["totals_observed"],
+        "absence_determinate": scan_meta["absence_determinate"],
         "ours": rows,
-        "limitation": "Offset pagination is a live view, not a transactional snapshot.",
+        "limitation": "Offset pagination is a live view, not a transactional snapshot. Multi-page reads can establish observed presence but not definitive absence.",
     }
 
 
@@ -230,14 +263,17 @@ def render_markdown(readings: list[dict[str, Any]], door_timeout: int | None) ->
             f"- ours: **{len(result['ours'])}** listings",
             f"- manifest coverage: **{result['manifest_indexed']} of {result['manifest_declared']}** doors indexed; "
             f"**{len(result['manifest_current'])}** current, **{len(result['manifest_stale'])}** stale, "
-            f"**{len(result['manifest_missing'])}** missing",
-            "- limitation: the index is a mutable offset-paginated view, not a transactional snapshot",
+            + (f"**{len(result['manifest_missing'])}** missing" if result["manifest_missing"] is not None
+               else f"**{len(result['manifest_unseen_in_read'])}** unseen (absence indeterminate)"),
+            "- limitation: the index is a mutable offset-paginated view, not a transactional snapshot; multi-page reads cannot prove absence",
             "",
         ]
         if result["manifest_stale"]:
             lines += ["Stale manifest doors: " + ", ".join(f"`{route_key(url)}`" for url in result["manifest_stale"]), ""]
         if result["manifest_missing"]:
             lines += ["Missing manifest doors: " + ", ".join(f"`{route_key(url)}`" for url in result["manifest_missing"]), ""]
+        if result["manifest_unseen_in_read"]:
+            lines += ["Unseen in this mutable read (not proof of absence): " + ", ".join(f"`{route_key(url)}`" for url in result["manifest_unseen_in_read"]), ""]
         if result["ours"]:
             lines += [
                 "| resource | last updated | x402 | serviceName | tags | amount | maxTimeout |",
@@ -252,7 +288,7 @@ def render_markdown(readings: list[dict[str, Any]], door_timeout: int | None) ->
                 )
             lines.append("")
         else:
-            lines += ["**Not listed in this complete read.**", ""]
+            lines += ["**No matching listing appeared in this read.** For multi-page offset reads, absence is indeterminate.", ""]
     return "\n".join(lines) + "\n"
 
 
