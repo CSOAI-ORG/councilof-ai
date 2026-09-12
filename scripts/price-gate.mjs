@@ -112,6 +112,14 @@ if (SELFTEST) {
 // price we are charging. Adding a page requires writing why.
 const ALLOW = [
   {
+    pages: /^interop\/xrpl-impersonation-2026-09\/mirrors\//,
+    why:
+      "Byte-faithful captures of third-party xrpscan API responses, preserved as impersonation " +
+      "evidence. The price fields are observed XRPL DEX token prices quoted BY the mirrored source " +
+      "— stripping them would falsify the evidence. They price no CSOAI service. The exemption is " +
+      "exact to this evidence directory and cannot exempt an x402 manifest, product page, or SKU.",
+  },
+  {
     pages: /^interop\/stablecoin-universe-2026-09\/(?:source|index)\.json$/,
     why:
       "Observed stablecoin market prices from the frozen DefiLlama source. These values describe " +
