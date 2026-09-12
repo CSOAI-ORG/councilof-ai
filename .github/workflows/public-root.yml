@@ -30,7 +30,43 @@ permissions:
   pull-requests: write   # publisher opens its own PR; a direct push cannot satisfy the required gates check
 
 jobs:
+  # A pending candidate owns its exact OTS proof. Regenerating a fresh root on the
+  # same rolling branch before that proof matures destroys the only upgrade path and
+  # can leave every hourly candidate permanently pending. Preserve the open candidate;
+  # the dedicated maintainer below upgrades it and promotes it once Bitcoin confirms.
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      pending: ${{ steps.pending.outputs.pending }}
+    steps:
+      - name: Is a public-root candidate already waiting?
+        id: pending
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          n=$(gh pr list --repo "$REPO" --head public-root/pending --base master --state open --json number --jq 'length')
+          if [ "$n" = "0" ]; then
+            echo "pending=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "pending=true" >> "$GITHUB_OUTPUT"
+            echo "An exact candidate is already waiting; preserve its bytes and proof."
+          fi
+
+  maintain-pending:
+    needs: preflight
+    if: needs.preflight.outputs.pending == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask the candidate maintainer to upgrade, verify and promote
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run public-root-candidate-upgrade.yml --ref master
+
   publish:
+    needs: preflight
+    if: needs.preflight.outputs.pending != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -177,27 +213,42 @@ jobs:
             exit 0
           fi
           git commit -m "public-root: adapters → cards → merkle ($(date -u +%Y-%m-%dT%H:%MZ))"
+          # A pending OTS stamp is honest evidence of calendar submission, but it is
+          # weaker than the Bitcoin-confirmed root already live. Never attempt a direct
+          # master push for a pending candidate and never arm auto-merge for it.
+          candidate_ots=$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          side = json.loads(Path("public/interop/root-witness-latest.json").read_text())
+          print(str(((side.get("witnesses") or {}).get("ots") or {}).get("status") or "UNKNOWN"))
+          PY
+          )
+          echo "candidate OTS state: ${candidate_ots}"
           # Rebase-and-retry. Building + signing the tree takes ~3 minutes, and other
           # lanes push to master more often than that, so a bare push loses the race
           # every time: on 2026-09-03 two consecutive runs signed a complete tree and
           # then threw it away on "failed to push some refs". The publisher only ever
           # adds its own generated paths, so replaying them onto whatever landed
           # meanwhile is safe — and losing a signed tree to a race is not.
-          for attempt in 1 2 3 4 5; do
-            if git push origin HEAD:master; then
-              echo "pushed on attempt $attempt"
-              echo "pushed=true" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            echo "push race on attempt $attempt — rebasing onto origin/master"
-            git fetch origin master
-            # --autostash: the run leaves other generated files dirty (adapter
-            # sidecars, health variants) and plain `git rebase` refuses with
-            # "cannot rebase: You have unstaged changes", which is exactly how
-            # attempt 1 died the first time this retry loop ran.
-            git rebase --autostash origin/master || { git rebase --abort || true; exit 1; }
-            sleep $((attempt * 5))
-          done
+          if [ "$candidate_ots" = "CONFIRMED_BITCOIN" ]; then
+            for attempt in 1 2 3 4 5; do
+              if git push origin HEAD:master; then
+                echo "pushed on attempt $attempt"
+                echo "pushed=true" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              echo "push race on attempt $attempt — rebasing onto origin/master"
+              git fetch origin master
+              # --autostash: the run leaves other generated files dirty (adapter
+              # sidecars, health variants) and plain `git rebase` refuses with
+              # "cannot rebase: You have unstaged changes", which is exactly how
+              # attempt 1 died the first time this retry loop ran.
+              git rebase --autostash origin/master || { git rebase --abort || true; exit 1; }
+              sleep $((attempt * 5))
+            done
+          else
+            echo "candidate is not Bitcoin-confirmed — banking it without a master push"
+          fi
           # Branch protection makes a direct push unwinnable, not merely raced.
           # Requiring the `gates` status check on master applies to direct pushes too,
           # and a push creates a commit no check has run on yet, so the remote answers
@@ -224,12 +275,15 @@ jobs:
           existing=$(gh pr list --head "${branch}" --state open --json url --jq '.[0].url' 2>/dev/null || true)
           if [ -n "${existing:-}" ]; then
             echo "existing publish PR updated in place: ${existing}"
+            if [ "$candidate_ots" != "CONFIRMED_BITCOIN" ]; then
+              gh pr merge "${existing}" --disable-auto 2>/dev/null || true
+            fi
             echo "pushed=pr" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           url=$(gh pr create --base master --head "${branch}" \
-            --title "public-root: publish the signed tree (rolling)" \
-            --body "Automated publication of the signed tree, force-updated each run so this PR always carries the LATEST root. Opened as a PR because a direct push to master cannot satisfy the required \`gates\` check — a push creates a commit no check has run on yet. Auto-merges when \`gates\` passes." \
+            --title "public-root: Bitcoin-pending signed candidate" \
+            --body "Automated signed candidate. Its exact bytes and OTS proof are preserved while Bitcoin confirmation matures. It must not replace the live confirmed root while pending. The candidate maintainer upgrades the proof, runs the release gate, triggers hosted checks and only then enables auto-merge." \
             2>&1 | tail -1) || {
               # Stay RED. The tree is safe on the branch, but it is NOT on master and the
               # root is therefore NOT published. A green tick here would say "published"
@@ -238,9 +292,13 @@ jobs:
               echo "HALT: tree banked on ${branch} but NOT published — gh pr create needs 'pull-requests: write'" >&2
               echo "pushed=branch" >> "$GITHUB_OUTPUT"
               exit 1
-            }
+          }
           echo "opened ${url}"
-          gh pr merge "${url}" --squash --auto || echo "auto-merge unavailable; ${url} needs a human merge"
+          if [ "$candidate_ots" = "CONFIRMED_BITCOIN" ]; then
+            gh pr merge "${url}" --squash --auto || echo "auto-merge unavailable; ${url} needs a human merge"
+          else
+            echo "candidate remains open with auto-merge disabled until Bitcoin confirmation"
+          fi
           echo "pushed=pr" >> "$GITHUB_OUTPUT"
           exit 0
       # A push made with GITHUB_TOKEN does NOT trigger other workflows — GitHub's
