@@ -9,7 +9,7 @@ describe("GET /api/regulation", () => {
     expect(response.status).toBe(200);
     expect(body.schema).toBe("csoai.regulation-deadlines/0.1");
     expect(body.scope_note).toContain("not a determination");
-    expect(body.deadlines).toHaveLength(20);
+    expect(body.deadlines).toHaveLength(22);
     expect(body).not.toHaveProperty("received");
     expect(body).not.toHaveProperty("signature");
     expect(REGULATION_FEED.deadlines.every((item) => item.basis)).toBe(true);

@@ -10,10 +10,10 @@ import runner  # noqa: E402
 from families import IMPLEMENTED, ROADMAP  # noqa: E402
 
 
-def test_one_real_family_rest_roadmap():
-    assert IMPLEMENTED == ["jailbreak-replay"], IMPLEMENTED
+def test_real_families_rest_roadmap():
+    assert IMPLEMENTED == ["jailbreak-replay", "pyrit-attach"], IMPLEMENTED
     assert len(ROADMAP) >= 5, "roadmap families must be declared, not silently absent"
-    print(f"ok: 1 real family, {len(ROADMAP)} roadmap families declared")
+    print(f"ok: {len(IMPLEMENTED)} real families, {len(ROADMAP)} roadmap families declared")
 
 
 def test_jailbreak_replay_measures_and_is_consistent():
@@ -32,6 +32,35 @@ def test_roadmap_family_is_uncheckable_never_pass():
     print("ok: a roadmap family is UNCHECKABLE, structurally cannot pass")
 
 
+def test_pyrit_attach_uncheckable_without_input():
+    r = runner.run_family("pyrit-attach")
+    # no results export in a clean checkout -> UNCHECKABLE, never a zero, never a pass
+    assert r["state"] == "UNCHECKABLE", r
+    print("ok: pyrit-attach without input is UNCHECKABLE")
+
+
+def test_pyrit_attach_attaches_hashes_never_scores(tmp: Path | None = None):
+    import tempfile
+    from families import pyrit_attach
+    convos = [{"conversation_id": f"c{i}", "turns": [{"role": "user", "content": "x"},
+                                                  {"role": "assistant", "content": "y"}]}
+              for i in range(3)]
+    with tempfile.TemporaryDirectory() as td:
+        p = Path(td) / "pyrit.json"
+        p.write_text(json.dumps({"conversations": convos}))
+        r = pyrit_attach.run(str(p))
+    assert r["state"] == "ATTACHED", r
+    assert r["conversations_attached"] == 3
+    assert all(len(h) == 16 for h in r["conversation_hashes"])
+    assert r["scoring"].startswith("none"), "keyword-refusal scoring is not a GSPC card"
+    assert "refusal" not in json.dumps(r).lower().replace("keyword-refusal", ""), \
+        "no refusal verdict may appear in an attachment"
+    card = runner.to_card(r)
+    assert card["sig_ed25519"] is None
+    assert len((json.dumps(card, indent=1, ensure_ascii=False) + "\n").encode()) <= 3072
+    print("ok: pyrit-attach ATTACHED evidence, hashed not scored, card queued <=3KB")
+
+
 def test_card_is_queued_unsigned():
     card = runner.to_card(runner.run_family("jailbreak-replay"))
     assert card["surface"] == "redteam.evidence"
@@ -43,8 +72,10 @@ def test_card_is_queued_unsigned():
 
 
 if __name__ == "__main__":
-    test_one_real_family_rest_roadmap()
+    test_real_families_rest_roadmap()
     test_jailbreak_replay_measures_and_is_consistent()
     test_roadmap_family_is_uncheckable_never_pass()
+    test_pyrit_attach_uncheckable_without_input()
+    test_pyrit_attach_attaches_hashes_never_scores()
     test_card_is_queued_unsigned()
     print("ALL REDTEAM TESTS PASSED")

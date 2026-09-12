@@ -9,7 +9,12 @@ name: health-inventory
 on:
   schedule:
     - cron: '23 * * * *'   # staggered off the top-of-hour publisher/watcher
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      force_fail:
+        description: "Inject a synthetic failing probe (proves the rolling-issue path opens)"
+        type: boolean
+        default: false
 
 permissions:
   issues: write
@@ -28,6 +33,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
+          FORCE_FAIL: ${{ github.event.inputs.force_fail || 'false' }}
         run: |
           python3 - <<'PY'
           import json, os, subprocess, sys, time
@@ -107,14 +113,25 @@ jobs:
               "https://councilof.ai/llms.txt",
               "https://councilof.ai/signed/HOW-TO-VERIFY.md",
               "https://councilof.ai/custody",
+              "https://councilof.ai/merge-me",
               "https://csoai.org/.well-known/did.json",
+              # G1.4 (2026-09-12): proofof.ai watch — apex + receipt + the root.json
+              # 301-chain. Healthy = each follows through to a 200 on the canonical host.
+              "https://proofof.ai/",
+              "https://proofof.ai/receipt",
+              "https://proofof.ai/root.json",
           ]
           down = []
           for u in endpoints:
               st, _ = fetch(u, follow=True)
               if st != 200:
                   down.append(f"{u} → {st}")
-          check("endpoints-12", not down, "; ".join(down) if down else "12/12 → 200")
+          n_ep = len(endpoints)
+          check(f"endpoints-{n_ep}", not down, "; ".join(down) if down else f"{n_ep}/{n_ep} → 200")
+
+          # G1.4 canary: a forced failure proves the rolling-issue path opens (dispatch input).
+          if os.environ.get("FORCE_FAIL", "false").lower() == "true":
+              check("forced-failure-canary", False, "synthetic failure injected via workflow_dispatch input force_fail=true")
 
           # 4. x402 config present + live
           st, body = fetch("https://councilof.ai/.well-known/x402.json")

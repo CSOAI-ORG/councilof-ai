@@ -1,0 +1,72 @@
+{
+  "schema": "csoai.deployment-reconciliation/1.0",
+  "generated_at": "2026-09-11T15:00:00Z",
+  "note": "Deployment runs, production hashes, CI status for TUI-1 canonical controller.",
+
+  "ci_runs_latest": {
+    "commit": "956806a8",
+    "runs": [
+      { "name": "eval-ci", "status": "completed", "conclusion": "success" },
+      { "name": "crawler-view-gate", "status": "completed", "conclusion": "success" },
+      { "name": "lane-guard", "status": "completed", "conclusion": "success" },
+      { "name": "conflict-guard", "status": "completed", "conclusion": "success" },
+      { "name": "Build + deploy site", "status": "pending", "conclusion": null }
+    ]
+  },
+
+  "production_deployments": {
+    "latest": {
+      "id": 5567149851,
+      "sha": "9bb11553",
+      "environment": "Production – csoai-v2-app",
+      "created_at": "2026-07-23T04:57:28Z"
+    },
+    "note": "Latest production deployment is from 2026-07-23. Cloudflare Pages auto-deploys on master push."
+  },
+
+  "production_hashes": {
+    "board_signature": {
+      "artifact_state": "SUPERSEDED_KNOWN_CLAIM_DEFECT",
+      "content_id": "72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10",
+      "live_derivation_agrees": true,
+      "note": "Board signature is superseded but live derivation counts agree"
+    },
+    "public_root": {
+      "sha256": "62a1931b4fdfd7351b3baa14354ccef068a9996592b199d2a862149a7dfaedc6",
+      "merkle_root": "78d4e019115d65d6ea7075587e3c14337bf0120928ae5cbe9b6b0a8e0e1e7bb5",
+      "as_of": "2026-09-11T08:45:22Z",
+      "card_count": 167
+    },
+    "rekor": {
+      "log_index": 2791822965,
+      "state": "WITNESSED"
+    }
+  },
+
+  "merge_shas": {
+    "master": "3d9da9ae",
+    "control/canonical-state-20260911": "8c43dd9a",
+    "finance/full-spread-20260911": "84925882",
+    "models/verified-expansion-20260911": "2df85ccf",
+    "agents/discovery-consolidation-20260911": "2c8b2638",
+    "trust/anchor-completion-20260911": "633edd8a",
+    "growth/verified-launch-20260911": "3e22ab63"
+  },
+
+  "contradictions": [
+    {
+      "id": "CONTRAD-001",
+      "description": "Stablecoin index says UNMEASURED for all 425 assets, but RLUSD readiness says MEASURED (partial, XRPL only)",
+      "source_a": "public/interop/stablecoin-universe-2026-09/index.json",
+      "source_b": "public/interop/stablecoin-universe-2026-09/readiness.json",
+      "resolution": "readiness.json is more recent; index.json was frozen at DefiLlama ingest time"
+    },
+    {
+      "id": "CONTRAD-002",
+      "description": "Board signature state is SUPERSEDED_KNOWN_CLAIM_DEFECT but live derivation counts agree",
+      "source_a": "public/signed/gspc-board.status.json",
+      "source_b": "/api/state board.live_derivation_crosscheck",
+      "resolution": "Signature is stale (edited post-sign), counts are correct. Re-signing is an owner MPC ceremony."
+    }
+  ]
+}

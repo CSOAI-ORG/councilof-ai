@@ -2281,6 +2281,21 @@
         "summary": "* GET /api/otel \u2014 collector presence.\n * LIVE only if a collector answers. Else UNCHECKABLE. Not a 23rd axis."
       }
     },
+    "/api/owasp-report": {
+      "get": {
+        "operationId": "get__api_owasp-report",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "* GET /api/owasp-report \u2014 OWASP LLM Top 10 \u2194 GSPC axis coverage report.\n *\n * The mapping (public/interop/owasp-llm-mapping.json v0.2) is RELATED-TO,\n * never equivalence; the report asserts NO measur"
+      }
+    },
     "/api/pqc": {
       "get": {
         "operationId": "get__api_pqc",
@@ -3761,7 +3776,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 90,
+    "public_operations": 91,
     "quarantined": [
       {
         "buyable": false,

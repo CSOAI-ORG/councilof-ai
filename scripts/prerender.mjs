@@ -95,6 +95,8 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
   "/sovereign-pricing",
   "/countdown",
   "/countdown/",
+  "/art50",
+  "/art50/",
   "/proof",
   "/proof/",
   "/status",

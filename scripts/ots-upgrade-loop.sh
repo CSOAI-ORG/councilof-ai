@@ -16,13 +16,19 @@
 # than a pending one: it reads as settled.
 set -uo pipefail
 export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
-cd "$HOME/clawd/councilof-ai" || exit 1
+# Self-locating: this script lives in <repo>/scripts/, so the repo root is one level up.
+# Never hardcode a checkout path — the last hardcoding ($HOME/clawd/councilof-ai) made the
+# launchd job exit 127 for weeks when that checkout lost the scripts.
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$REPO" || exit 1
 LOG="$HOME/clawd/_evacuation/logs/ots-upgrade-loop.log"
 mkdir -p "$(dirname "$LOG")"
 TS() { date -u +%Y-%m-%dT%H:%M:%SZ; }
 
 BEFORE=$(python3 scripts/ots-coverage-audit.py --served 2>/dev/null | grep -c "COVERS" || echo 0)
-mapfile -t PROOFS < <(find public -name "*.ots" 2>/dev/null)
+# bash-3.2 portable (macOS ships bash 3.2; `mapfile` is bash-4 and silently killed the job).
+PROOFS=()
+while IFS= read -r _p; do PROOFS+=("$_p"); done < <(find public -name "*.ots" 2>/dev/null)
 [ ${#PROOFS[@]} -eq 0 ] && { echo "$(TS) no proofs in public/" >> "$LOG"; exit 0; }
 
 python3 scripts/ots-upgrade.py "${PROOFS[@]}" > /tmp/ots-upgrade.out 2>&1

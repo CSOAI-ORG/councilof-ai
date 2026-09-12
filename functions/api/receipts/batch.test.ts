@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequestGet as batch, assembleBatch, BATCH_CAP, parseIso } from "./batch";
-import { onRequestGet as latest } from "./latest";
+import { onRequestGet as latest, handle as latestHandle } from "./latest";
 import { onRequestGet as ras } from "../request-attestation";
 import { onRequestGet as bundleRoute } from "../evidence-bundle";
 import { onRequestGet as feed } from "../eunomia-data";
@@ -224,13 +224,33 @@ describe("/api/receipts/batch — assembly is deterministic and capped", () => {
   });
 });
 
-describe("/api/receipts/latest stays free and unchanged", () => {
-  it("still answers 200 UNPUBLISHED with zero items and no payment header", async () => {
+describe("/api/receipts/latest stays free and aggregate-only", () => {
+  it("answers UNRECORDED rather than inventing zero when KV is absent", async () => {
     const r = await latest(ctx("/api/receipts/latest"));
     expect(r.status).toBe(200);
     const b = await r.json();
-    expect(b).toMatchObject({ schema: "csoai.receipts.latest/0.1", status: "UNPUBLISHED", count: 0, items: [] });
+    expect(b).toMatchObject({ schema: "csoai.receipts.latest/0.2", status: "UNRECORDED", count: null });
     expect(r.headers.get("PAYMENT-REQUIRED")).toBeNull();
+  });
+
+  it("publishes only classified counts and never receipt payloads", async () => {
+    const internal = "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6";
+    const external = "0x0000000000000000000000000000000000000007";
+    const rows = [
+      { payload: { payer: internal }, self: false, zero_value: false },
+      { payload: { payer: external }, self: false, zero_value: false },
+      { payload: { payer: external }, self: false, zero_value: true },
+    ];
+    const kv = {
+      list: async () => ({ keys: rows.map((_, i) => ({ name: `receipt:tx:${i}` })), list_complete: true }),
+      get: async (key: string) => JSON.stringify(rows[Number(key.split(":").pop())]),
+      put: async () => undefined,
+    };
+    const b = await (await latestHandle({ REVENUE_KV: kv as never })).json();
+    expect(b).toMatchObject({ status: "PUBLISHED", count: 3, demand_eligible_count: 1, internal_count: 1, zero_value_count: 1 });
+    expect(b).not.toHaveProperty("items");
+    expect(JSON.stringify(b)).not.toContain(internal);
+    expect(JSON.stringify(b)).not.toContain(external);
   });
 });
 

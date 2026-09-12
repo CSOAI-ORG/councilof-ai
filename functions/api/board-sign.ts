@@ -3,7 +3,7 @@
  * Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64.
  * The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.
  */
-import { canonicalBytes } from "../_lib/cardSign";
+import { canonicalBytes, signLabelViolation } from "../_lib/cardSign";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -86,6 +86,19 @@ export const onRequestPost: PagesFunction<{ BOARD_SIGN_KEY_PKCS8_B64: string }> 
   const bytes = canonical(body.payload);
   if (bytes.byteLength > 3072) {
     return json({ error: "bad_request", reason: "payload exceeds 3KB cap" }, 400);
+  }
+  // G1.3 THIN firewall (2026-09-12): fail closed. A labeled artifact never gets a
+  // signature from this endpoint, however it arrived. Mirror: scripts/sign_financial_runs.py.
+  const violation = signLabelViolation(new TextDecoder().decode(bytes));
+  if (violation) {
+    return json(
+      {
+        error: "refused",
+        reason: `payload carries never-sign label ${violation} — THIN/TEMPLATE/specimen is never signed (doctrine lock)`,
+        label: violation,
+      },
+      422,
+    );
   }
 
   try {

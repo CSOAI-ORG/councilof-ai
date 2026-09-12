@@ -408,6 +408,7 @@ def run(cap: int, out_dir: str, rows_out: str | None) -> int:
     (out / f"{stamp}.json").write_text(text)
     (out / "latest.json").write_text(text)
 
+    diff = write_diff(snapshot, out)
     card = write_unsigned_card(snapshot, out)
     if rows_out:
         Path(rows_out).parent.mkdir(parents=True, exist_ok=True)
@@ -418,7 +419,75 @@ def run(cap: int, out_dir: str, rows_out: str | None) -> int:
     print(json.dumps(counts, indent=1))
     print(f"enumeration: {json.dumps(enum['enumeration'])}")
     print(f"elapsed {time.time() - t0:.0f}s; wrote {out / stamp}.json, latest.json, {card}")
+    if diff:
+        print(f"diff: {diff}")
     return 0
+
+
+def write_diff(snapshot: dict, out: Path) -> str | None:
+    """Counts-level round-to-round diff (spec §5.2) — emitted when a previous
+    dated snapshot exists. A single observation is a snapshot; the delta is
+    the board.
+
+    Host-level movements (hosts_added / hosts_dropped / bucket_migrations)
+    require per-host rows, which are retained operator-side and never
+    committed — so those fields are UNCHECKABLE by construction. A previous
+    snapshot that cannot be parsed makes the whole diff UNCHECKABLE, and a
+    partial previous round (or a changed cap) is disclosed, because a
+    partial probe cannot say a population changed. Deltas are arithmetic on
+    two published count sets — derived, never typed.
+    """
+    stamp = snapshot["as_of"].split("T")[0]
+    prev_paths = sorted(p for p in out.glob("2*.json") if p.stem != stamp)
+    if not prev_paths:
+        return None  # first round: there is no delta yet
+    prev_path = prev_paths[-1]
+    try:
+        prev = json.loads(prev_path.read_text())
+        prev_counts = prev["counts"]
+        assert isinstance(prev_counts, dict)
+    except Exception as e:
+        diff = {
+            "kind": "csoai.mcp-trust-diff/0.1",
+            "state": "UNCHECKABLE",
+            "reason": f"previous snapshot unreadable ({type(e).__name__}) — never silently rebased",
+            "as_of": snapshot["as_of"],
+            "previous": prev_path.name,
+        }
+        (out / f"diff-{stamp}.json").write_text(json.dumps(diff, indent=2) + "\n")
+        return f"diff-{stamp}.json"
+
+    cur_counts = snapshot["counts"]
+    keys = sorted(set(cur_counts) | set(prev_counts))
+    deltas = {}
+    for k in keys:
+        a, b = cur_counts.get(k), prev_counts.get(k)
+        if isinstance(a, (int, float)) and isinstance(b, (int, float)):
+            deltas[k] = round(a - b, 4)
+    diff = {
+        "kind": "csoai.mcp-trust-diff/0.1",
+        "state": "MEASURED",
+        "as_of": snapshot["as_of"],
+        "previous": prev_path.name,
+        "previous_as_of": prev.get("as_of"),
+        "bucket_deltas": deltas,
+        "hosts_added": "UNCHECKABLE — per-host rows are operator-side, never published",
+        "hosts_dropped": "UNCHECKABLE — per-host rows are operator-side, never published",
+        "bucket_migrations": "UNCHECKABLE — counts-only diff cannot track a host across buckets",
+        "doctrine": DOCTRINE,
+    }
+    notes = []
+    if prev.get("partial") or snapshot.get("partial"):
+        notes.append("a PARTIAL round is a slice: slice-vs-slice deltas never show population change")
+    prev_cap = (prev.get("enumeration") or {}).get("cap")
+    cur_cap = (snapshot.get("enumeration") or {}).get("cap")
+    if prev_cap is not None and cur_cap is not None and prev_cap != cur_cap:
+        notes.append(f"cap change {prev_cap}→{cur_cap}: deltas compare different slices, never the population")
+    if notes:
+        diff["note"] = "; ".join(notes)
+    name = f"diff-{stamp}.json"
+    (out / name).write_text(json.dumps(diff, indent=2) + "\n")
+    return name
 
 
 def write_unsigned_card(snapshot: dict, out: Path) -> Path:
