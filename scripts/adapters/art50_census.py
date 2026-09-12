@@ -57,7 +57,7 @@ def collect(repo_root: Path) -> dict[str, Any]:
             return {"leaves": [], "sidecar": {"status": "ABSENT", "path": str(REL)}}
         census = json.loads(path.read_bytes())
         generators = census.get("generators")
-        if census.get("schema") != "csoai.art50-marking-census/0.1" or not isinstance(generators, list):
+        if not str(census.get("schema", "")).startswith("csoai.art50-marking-census/") or not isinstance(generators, list):
             return {"leaves": [], "sidecar": {"status": "INVALID", "reason": "census contract"}}
 
         compact = []
