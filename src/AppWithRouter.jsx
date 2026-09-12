@@ -24,6 +24,7 @@ import SoaiPdca from './pages/soai-pdca/SoaiPdca';
 import McpFleet from './pages/mcp/McpFleet';
 import Ledger from './pages/ledger/Ledger';
 import Mythology from './pages/mythology/Mythology';
+import BoardPage from './pages/board/BoardPage';
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -90,6 +91,7 @@ const Footer = () => {
             <Link to="/blog">Blog</Link>
             <Link to="/opengridworks">Reg Map</Link>
             <Link to="/mcp">MCP Fleet</Link>
+            <Link to="/board">Board</Link>
             <Link to="/system">System</Link>
           </div>
 
@@ -151,6 +153,7 @@ const AppWithRouter = () => {
             <Route path="/sovereign-town" element={<SovereignTown />} />
             <Route path="/ledger" element={<Ledger />} />
             <Route path="/mythology" element={<Mythology />} />
+            <Route path="/board" element={<BoardPage />} />
           </Routes>
         </main>
 
