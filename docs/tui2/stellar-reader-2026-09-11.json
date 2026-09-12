@@ -1,0 +1,40 @@
+{
+  "schema": "csoai.deep-measurements.stellar-reader/1.0",
+  "generated_at": "2026-09-11T13:27:19.365284+00:00",
+  "generator": "TUI-2 Direct Stellar Reader",
+  "code_revision": "finance/deep-measurements-20260911",
+  "reader": "Stellar Horizon API (horizon.stellar.org)",
+  "measurement": {
+    "subject": "USDC",
+    "chain": "stellar",
+    "issuer": "GA3WU6UPBON23ZLI6WW4IFMJVOE2TLVHNPRCAJ43MVZI5DVO5KU7MLHH",
+    "reader_type": "STELLAR_HORIZON_ASSET",
+    "source": "https://horizon.stellar.org/assets",
+    "query": "https://horizon.stellar.org/assets?asset_code=USDC&limit=10",
+    "query_method": "HTTP GET",
+    "finalized_ledger": 64378806,
+    "ledger_hash": "7fd944e394cf4bb71c249c45941d44803f32ebc8c5845b0c36257c0876f36486",
+    "ledger_closed_at": "2026-09-11T13:27:15Z",
+    "raw_response_hash": "8f2157e1bcd38202eb7d5484228e72950b8023669e9374eefa864f3cfd823f15",
+    "normalized": {
+      "amount": 0.0,
+      "accounts_authorized": 449,
+      "num_accounts": 0,
+      "flags": {
+        "auth_required": false,
+        "auth_revocable": false,
+        "auth_immutable": false,
+        "auth_clawback_enabled": false
+      }
+    },
+    "code_revision": "finance/deep-measurements-20260911",
+    "observed_at": "2026-09-11T13:27:19.365284+00:00",
+    "replay_result": "REPRODUCIBLE at ledger 64378806 against horizon.stellar.org",
+    "terms_boundary": "Stellar Horizon public API, no auth, rate-limited",
+    "correction_link": "https://councilof.ai/api/corrections",
+    "measurement_state": "MEASURED",
+    "measurement_depth": "HORIZON_ASSET_ISSUER"
+  },
+  "usbdc_status": "UNMEASURABLE \u2014 Stellar issuer account not independently identified (condition specifies this)",
+  "note": "Full per-record Stellar measurement. USBDC remains unmeasured per condition."
+}

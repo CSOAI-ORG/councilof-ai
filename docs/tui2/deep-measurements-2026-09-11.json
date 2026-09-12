@@ -1,0 +1,129 @@
+{
+  "schema": "csoai.deep-measurements/2.0",
+  "generated_at": "2026-09-11T13:28:11.216373+00:00",
+  "code_revision": "finance/deep-measurements-20260911",
+  "generator": "TUI-2 Direct On-Chain Readers (EVM + XRPL + Stellar)",
+  "assets_measured": 5,
+  "readers_used": [
+    "EVM eth_call via ethereum-rpc.publicnode.com",
+    "XRPL account_info via xrplcluster.com",
+    "Stellar Horizon API via horizon.stellar.org"
+  ],
+  "truth_rules": [
+    "All measurements from direct on-chain readers, NOT aggregators",
+    "Block/ledger numbers are finalized at query time",
+    "NOT proof of reserves \u2014 totalSupply/account_info only",
+    "Each record retains source, query, raw hash, block/ledger, code revision, replay, terms, correction link"
+  ],
+  "measurements": [
+    {
+      "subject": "USDT",
+      "chain": "ethereum",
+      "contract": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "reader_type": "EVM_ERC20_TOTAL_SUPPLY",
+      "source": "https://ethereum-rpc.publicnode.com",
+      "query_method": "JSON-RPC eth_call",
+      "finalized_block": 25954459,
+      "raw_supply": "88306028997331899",
+      "raw_response_hash": "3f5bd352317839a94738c2bad48d7690a473f6b3c150b1508ae20dd6dfecd8b1",
+      "normalized_supply": 88306028997.33191,
+      "decimals": 6,
+      "code_revision": "finance/deep-measurements-20260911",
+      "observed_at": "2026-09-11T13:28:11.216373+00:00",
+      "replay_result": "REPRODUCIBLE at block 25954459",
+      "terms_boundary": "publicnode.com, no auth",
+      "correction_link": "https://councilof.ai/api/corrections",
+      "measurement_state": "MEASURED",
+      "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY",
+      "note": "Ethereum mainnet only"
+    },
+    {
+      "subject": "USDC",
+      "chain": "ethereum",
+      "contract": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "reader_type": "EVM_ERC20_TOTAL_SUPPLY",
+      "source": "https://ethereum-rpc.publicnode.com",
+      "query_method": "JSON-RPC eth_call",
+      "finalized_block": 25954459,
+      "raw_supply": "50620277136326212",
+      "raw_response_hash": "448d29bd5d08aba4c59ad31aadfdb1128f494ce580e3e1fd0fd8561c4c6537eb",
+      "normalized_supply": 50620277136.32621,
+      "decimals": 6,
+      "code_revision": "finance/deep-measurements-20260911",
+      "observed_at": "2026-09-11T13:28:11.216373+00:00",
+      "replay_result": "REPRODUCIBLE at block 25954459",
+      "terms_boundary": "publicnode.com, no auth",
+      "correction_link": "https://councilof.ai/api/corrections",
+      "measurement_state": "MEASURED",
+      "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY",
+      "note": "Ethereum mainnet only"
+    },
+    {
+      "subject": "DAI",
+      "chain": "ethereum",
+      "contract": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "reader_type": "EVM_ERC20_TOTAL_SUPPLY",
+      "source": "https://ethereum-rpc.publicnode.com",
+      "query_method": "JSON-RPC eth_call",
+      "finalized_block": 25954459,
+      "raw_supply": "4581402237732543261238124941",
+      "raw_response_hash": "4053f4dc81fc3671af0ebf95b358f8dc0dacd3d348acbd64f9e9bbc97b992d61",
+      "normalized_supply": 4581402237.732543,
+      "decimals": 18,
+      "code_revision": "finance/deep-measurements-20260911",
+      "observed_at": "2026-09-11T13:28:11.216373+00:00",
+      "replay_result": "REPRODUCIBLE at block 25954459",
+      "terms_boundary": "publicnode.com, no auth",
+      "correction_link": "https://councilof.ai/api/corrections",
+      "measurement_state": "MEASURED",
+      "measurement_depth": "ON_CHAIN_TOTAL_SUPPLY",
+      "note": "Ethereum mainnet only"
+    },
+    {
+      "subject": "RLUSD",
+      "chain": "xrpl",
+      "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "reader_type": "XRPL_ACCOUNT_INFO",
+      "source": "https://xrplcluster.com",
+      "query_method": "JSON-RPC account_info",
+      "finalized_ledger": 106913042,
+      "raw_response_hash": "see docs/tui2/rusd-xrpl-reader-2026-09-11.json",
+      "normalized": {
+        "trust_lines": 100,
+        "domain": "ripple.com",
+        "xrp_balance": 99.83
+      },
+      "code_revision": "finance/deep-measurements-20260911",
+      "observed_at": "2026-09-11T13:28:11.216373+00:00",
+      "replay_result": "REPRODUCIBLE at ledger 106913042",
+      "terms_boundary": "public XRPL node, no auth",
+      "correction_link": "https://councilof.ai/api/corrections",
+      "measurement_state": "MEASURED",
+      "measurement_depth": "ACCOUNT_INFO_VALIDATED_LEDGER"
+    },
+    {
+      "subject": "USDC",
+      "chain": "stellar",
+      "issuer": "GA3WU6UPBON23ZLI6WW4IFMJVOE2TLVHNPRCAJ43MVZI5DVO5KU7MLHH",
+      "reader_type": "STELLAR_HORIZON_ASSET",
+      "source": "https://horizon.stellar.org/assets",
+      "query_method": "HTTP GET",
+      "finalized_ledger": 64378806,
+      "ledger_hash": "7fd944e394cf4bb71c249c45941d44803f32ebc8c5845b0c36257c0876f36486",
+      "raw_response_hash": "see docs/tui2/stellar-reader-2026-09-11.json",
+      "normalized": {
+        "accounts_authorized": 449,
+        "flags": {
+          "auth_required": false
+        }
+      },
+      "code_revision": "finance/deep-measurements-20260911",
+      "observed_at": "2026-09-11T13:28:11.216373+00:00",
+      "replay_result": "REPRODUCIBLE at ledger 64378806",
+      "terms_boundary": "Stellar Horizon public API, no auth",
+      "correction_link": "https://councilof.ai/api/corrections",
+      "measurement_state": "MEASURED",
+      "measurement_depth": "HORIZON_ASSET_ISSUER"
+    }
+  ]
+}
