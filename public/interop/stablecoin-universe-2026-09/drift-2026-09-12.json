@@ -1,0 +1,108 @@
+{
+ "schema": "csoai.stablecoin-index-drift/1.0",
+ "generated_at": "2026-09-12T12:17:28.217437+00:00",
+ "frozen_observed_at": "2026-09-11T08:19:34.591714+00:00",
+ "refresh_observed_at": "2026-09-12T06:59:33.800851+00:00",
+ "frozen_index_sha256": "30a83f220d2e5de7cd56efdc97dad462fbae288743710063c7e9eef1014acb38",
+ "refresh_index_sha256": "8af489ca8dd562021888ea4b804106ce3f2865cd663473d3dfe2bf2909a4b9c3",
+ "refresh_source_sha256": "abda4b6eb217675a861dd398d908a60be80c1dcb6d97bb08c21e6ff91268ee57",
+ "refresh_source_raw_sha256": "abda4b6eb217675a861dd398d908a60be80c1dcb6d97bb08c21e6ff91268ee57",
+ "source": "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+ "counts": {
+  "asset_count": {
+   "frozen": 425,
+   "refresh": 425,
+   "changed": false
+  },
+  "chain_count": {
+   "frozen": 211,
+   "refresh": 211,
+   "changed": false
+  },
+  "deployment_count": {
+   "frozen": 1640,
+   "refresh": 1640,
+   "changed": false
+  },
+  "usd_pegged_assets": {
+   "frozen": 337,
+   "refresh": 337,
+   "changed": false
+  },
+  "circulating_usd_sum_available": {
+   "frozen": 310786569942.86865,
+   "refresh": 311197443510.1449,
+   "delta": 410873567.2762451
+  }
+ },
+ "added_assets": [],
+ "removed_assets": [],
+ "chain_set_changes": [],
+ "top20_membership_changed": false,
+ "deep_measurement_queue_changed": false,
+ "biggest_circulating_movers": [
+  {
+   "symbol": "USDC",
+   "frozen_usd": 74160770591.10562,
+   "refresh_usd": 74404320309.83704,
+   "delta_usd": 243549718.7314148
+  },
+  {
+   "symbol": "USDe",
+   "frozen_usd": 4545139510.573029,
+   "refresh_usd": 4604319981.389585,
+   "delta_usd": 59180470.81655598
+  },
+  {
+   "symbol": "USDT",
+   "frozen_usd": 183462393911.93112,
+   "refresh_usd": 183514729057.64304,
+   "delta_usd": 52335145.71191406
+  },
+  {
+   "symbol": "USDS",
+   "frozen_usd": 6614731307.790907,
+   "refresh_usd": 6665537597.21317,
+   "delta_usd": 50806289.422263145
+  },
+  {
+   "symbol": "USD1",
+   "frozen_usd": 4294497916.4255037,
+   "refresh_usd": 4317894306.990713,
+   "delta_usd": 23396390.56520939
+  },
+  {
+   "symbol": "BUIDL",
+   "frozen_usd": 2755502858.6404486,
+   "refresh_usd": 2733764076.660449,
+   "delta_usd": -21738781.979999542
+  },
+  {
+   "symbol": "RLUSD",
+   "frozen_usd": 2405307819.109906,
+   "refresh_usd": 2422640486.1177087,
+   "delta_usd": 17332667.007802486
+  },
+  {
+   "symbol": "DAI",
+   "frozen_usd": 4773752453.216293,
+   "refresh_usd": 4784459810.234102,
+   "delta_usd": 10707357.017808914
+  },
+  {
+   "symbol": "pmUSD",
+   "frozen_usd": 42320122.87398139,
+   "refresh_usd": 51555012.16945051,
+   "delta_usd": 9234889.29546912
+  },
+  {
+   "symbol": "SBC",
+   "frozen_usd": 20541174.968348272,
+   "refresh_usd": 12685527.309255615,
+   "delta_usd": -7855647.659092657
+  }
+ ],
+ "disposition": "index.json remains the FROZEN, signature-committed discovery snapshot (signed index commitment card 7d5ee0d4612ea286 binds its SHA-256; refreshing those bytes in place would orphan the signed commitment \u2014 only the GHA public-root writer can sign a new one). This file is the appended drift note. Live per-subject states live in the coverage matrix (public/interop/coverage-register.json), not in this frozen release.",
+ "replay": "python3 scripts/freeze_stablecoin_index.py --raw /tmp/raw.json --output /tmp/index.json && compare against refresh_index_sha256",
+ "cost_usd": 0
+}
