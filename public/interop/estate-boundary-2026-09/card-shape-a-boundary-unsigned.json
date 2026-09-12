@@ -1,0 +1,31 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "shape-A corpus boundary (335 signed historical cards are not root leaves, by ruling)",
+ "as_of": "2026-09-12",
+ "source_urls": [
+  "https://councilof.ai/signed/cards/README.md",
+  "https://councilof.ai/signed/HOW-TO-VERIFY.md"
+ ],
+ "payload": {
+  "state": "PROBED",
+  "statement": "Boundary declaration. The 335 cards under /signed/cards/ are the August-2026 shape-A corpus (gspc.measurement-card, body+id envelope, prev-chained). They verify standalone under did:web:csoai.org#card-attestation-1 via their preimage_rule. They are not leaves of public-root/v1 and never will be: docs/CARD_V0_EVIDENCE_GRAMMAR_2026-09-01.md rules the two corpora do not mix. This card closes the count question by being itself a leaf of the living root: from this leaf onward, every card the estate signs under the current grammar is anchored in the hour it is signed.",
+  "cohort": {
+   "shape_a_cards": 335,
+   "shape_a_path": "/signed/cards/",
+   "living_root_leaves_at_writing": 169,
+   "living_root_path": "/root.json + /cards/<sha16>.json"
+  },
+  "counts_as_of": "2026-09-12",
+  "ruling": "docs/CARD_V0_EVIDENCE_GRAMMAR_2026-09-01.md (do-not-mix)",
+  "declaration_at_path": "/signed/cards/README.md"
+ },
+ "sha256": "1afa498e0fd510111346e1de93b839061cf3e205e48b871a6920621e7771cb12",
+ "sig_ed25519": null,
+ "unmeasured": [],
+ "tags": [
+  "boundary",
+  "shape-a",
+  "public-root"
+ ]
+}
