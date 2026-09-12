@@ -1,0 +1,78 @@
+{
+  "schema": "csoai.rwa-reconciliation/0.1",
+  "generated_at": "2026-09-12T07:14:27Z",
+  "jmwh": {
+    "xrpl_distributed_usd": {
+      "value": 456408587.34,
+      "as_of": "2026-09-12",
+      "source": "rwa-xyz-networks.html",
+      "note": "rwa.xyz networks league table, distributed scope, stablecoins excluded (publisher variant 'without stablecoins'); stablecoin-inclusive variant reads 1550035428.20"
+    },
+    "xrpl_distributed_incl_stablecoins_usd": {
+      "value": 1550035428.2,
+      "as_of": "2026-09-12",
+      "source": "rwa-xyz-networks.html",
+      "note": "same league table, stablecoin-inclusive variant"
+    },
+    "xrpl_represented_usd": {
+      "value": 4059785946.09,
+      "as_of": "2026-09-12",
+      "source": "rwa-xyz-networks.html",
+      "note": "rwa.xyz networks league table, represented scope, 364 assets"
+    },
+    "largest_single_asset": {
+      "id_or_name": "JMWH",
+      "xrpl_address": "JMWH.r976xbKc6om7WYTFwZHByvxnYFi1y5hJXH",
+      "platform": "Justoken",
+      "represented_usd": 2229136800.0,
+      "share_pct": 54.91,
+      "as_of": "2026-09-12",
+      "source": "rwa-xyz-asset-jmwh.html",
+      "crosscheck": "rwa-xyz-network-xrp-ledger.html represented/platforms row 'Justoken' = 2229136800, page-stated share 0.5490774217165517"
+    }
+  },
+  "benji": {
+    "number_benji_asset_usd": {
+      "value": 685918581.86,
+      "definition": "rwa.xyz circulating asset value of the BENJI token, aggregate across the 8 public chains listed (Stellar, Base, Ethereum, Arbitrum, Avalanche C-Chain, Polygon, Aptos, Solana)",
+      "as_of": "2026-09-12",
+      "source": "rwa-xyz-asset-benji.html",
+      "crosscheck": "prior pack benji-onchain-supply-2026-09 (2026-09-02): 8-chain on-chain totalSupply sum 689530516.8 BENJI units; rwa.xyz same-day figure 689461584.36; 1 BENJI = 1 FOBXX share per issuer"
+    },
+    "number_fobxx_fund_usd": {
+      "value": 686635362.22,
+      "definition": "SEC Form N-MFP3 netAssetOfSeries for Franklin OnChain U.S. Government Money Fund (series S000067043, single class C000215714), report date 2026-08-31, filed 2026-09-04, accession 0002071691-26-021281",
+      "as_of": "2026-08-31",
+      "source": "sec-nmfp3-2026-08-31.xml",
+      "finding": "issuer fund page franklintempleton.com/FOBXX served no numeric figure in HTML (JS-rendered shell, 65675 bytes archived)"
+    },
+    "number_platform_usd": {
+      "value": 2471273040.74,
+      "definition": "rwa.xyz platform 'Franklin Templeton Benji Investments' circulating asset value across ALL listed platform assets (includes iBENJI and other funds; not FOBXX alone)",
+      "as_of": "2026-09-12",
+      "source": "rwa-xyz-platform-franklin-benji.html",
+      "finding": "issuer platform page digitalassets.franklintempleton.com/benji/ served no dollar figure in HTML (184991 bytes archived)"
+    }
+  },
+  "sources": [
+    "artefact-manifest.json"
+  ],
+  "brief_reference": {
+    "label": "11-Sep-2026 brief figures (cited for comparison, not asserted)",
+    "g33_xrpl_distributed_usd": 458000000,
+    "g33_xrpl_represented_usd": 3970000000,
+    "g33_jmwh_represented_usd": 2200000000,
+    "g33_jmwh_share_pct": 60,
+    "g33_xrpl_represented_usd_alt_unverified": 3720000000,
+    "g34_benji_asset_usd": 687000000,
+    "g34_fobxx_fund_usd": 844000000,
+    "g34_platform_usd": 2500000000
+  },
+  "unmeasured": [
+    "xrpl_represented_usd_3720000000_brief_citation (citation-unverified in brief; no archived source carries this figure; current archived figure is 4059785946.09)",
+    "fobxx_fund_usd_844000000_brief_citation (no archived source carries this figure; SEC N-MFP3 filed figure is 686635362.22 as of 2026-08-31)",
+    "jmwh_offchain_legal_identity (rwa.xyz asset page gives no prospectus-level identity for JMWH)",
+    "bnb_chain_benji_supply (prior pack: issuer lists iBENJI on BNB, a different token; UNCHECKABLE there, unchanged)",
+    "primary_register_reconciliation (transfer-agent books vs on-chain supply not reconcilable from outside, per prior pack)"
+  ]
+}

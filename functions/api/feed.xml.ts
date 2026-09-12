@@ -14,6 +14,30 @@ interface FeedItem {
 
 const ITEMS: FeedItem[] = [
   {
+    title: "XRPL impersonation watch: 22 issuers of verified codes are not the verified issuer",
+    link: "https://councilof.ai/interop/xrpl-impersonation-2026-09/latest.json",
+    date: "Sat, 12 Sep 2026 13:30:00 GMT",
+    desc: "Daily scan of 12,000 ranked XRPL tokens for RLUSD/XSGD/USDC/AUDD issuers against the archived verified set. 22 issuer accounts observed issuing those codes without being the verified issuer, including a 10,000,000,000-supply XSGD account whose on-ledger Domain claims straitsx.com while StraitsX's own site publishes a different address. A mismatch is a fact about the set, never a verdict: legitimacy stays UNMEASURED. Verified issuers for XSGD and AUDD are archived from issuer-published pages with digests.",
+  },
+  {
+    title: "Stablecoin top-20 deep-probe: 19 attestation pages located, 3 auditors named, staleness mostly UNMEASURED",
+    link: "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+    date: "Sat, 12 Sep 2026 13:30:00 GMT",
+    desc: "The 425-asset index's top 20 deep-probed on attestation dimensions (page, auditor, cadence, staleness). Most issuers serve no report date in their page bytes, so staleness stays UNMEASURED rather than guessed. Every figure comes from archived bytes with sha256 and retrieval metadata. Free surface: index total + staleness_days; per-chain splits ride the PROOF door.",
+  },
+  {
+    title: "XRPL RWA reconciliation: distributed $456.4M is not represented $4.06B",
+    link: "https://councilof.ai/interop/rwa-reconciliation-2026-09/figures.json",
+    date: "Sat, 12 Sep 2026 13:30:00 GMT",
+    desc: "Two scopes, never mixed: XRPL distributed asset value $456.4M vs represented $4.06B, with one asset (JMWH, $2.23B) holding 54.91% of the represented side, crosschecked across two league tables archived today. Also reconciled: BENJI's three published numbers (asset $685.9M / FOBXX fund / platform $2.5B) — three definitions, not a discrepancy.",
+  },
+  {
+    title: "C2PA marking census: stated posture is not detectable marking",
+    link: "https://councilof.ai/interop/art50-census-2026-09/endpoint.json",
+    date: "Sat, 12 Sep 2026 13:30:00 GMT",
+    desc: "Four-generator census of the 4-boolean marking stack (C2PA manifest, metadata marking, invisible watermark, visible marking). Anthropic, OpenAI and Google carry stated postures from archived pages; detectable fields stay UNMEASURED until sample probes run. Midjourney is owner-gated. JSON endpoint feeds the art50 panel.",
+  },
+  {
     title: "Mill receipts: signature, lifecycle and regulation states separated",
     link: "https://councilof.ai/interop/mill-receipt-readiness.json",
     date: "Fri, 11 Sep 2026 10:50:00 GMT",

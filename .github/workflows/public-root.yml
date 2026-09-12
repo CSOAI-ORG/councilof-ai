@@ -150,6 +150,10 @@ jobs:
           fi
           git add -- "${witness_files[@]}"
           git add -- public/interop/root-witness-pointer.json
+          # XRPL impersonation scan snapshot + mirrors (adapter refreshes them each run)
+          if [ -d public/interop/xrpl-impersonation-2026-09 ]; then
+            git add -- public/interop/xrpl-impersonation-2026-09
+          fi
           if [ -f public/interop/eas-root-attestations.json ]; then
             git add -- public/interop/eas-root-attestations.json
           fi
