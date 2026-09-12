@@ -1,0 +1,102 @@
+{
+  "schema": "csoai.layer0-interop-map/1.0",
+  "generated_at": "2026-09-12T06:30:00Z",
+  "note": "One Layer 0 interoperability map covering APIs, SDKs, MCP servers, agent interfaces, payment doors and receipt formats.",
+
+  "identity": {
+    "did": "did:web:csoai.org",
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "verification_method": "did:web:csoai.org#card-attestation-1",
+    "algorithm": "Ed25519",
+    "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+  },
+
+  "protocols": {
+    "mcp": {
+      "endpoint": "https://councilof.ai/mcp",
+      "server_name": "csoai-gspc-mcp",
+      "server_version": "1.4.2",
+      "protocol_version": "2025-03-26",
+      "transport": "Streamable HTTP (SSE)",
+      "tools_total": 12,
+      "tools_free": 8,
+      "tools_paid": 4,
+      "registry_listed": true,
+      "state": "LIVE"
+    },
+    "a2a": {
+      "endpoint": "https://councilof.ai/api/a2a",
+      "agent_card": "https://councilof.ai/.well-known/agent-card.json",
+      "card_version": "1.1.0",
+      "protocol": "A2A v1.0, JSON-RPC 1.0",
+      "extensions": ["signed-receipts/v1 (DRAFT)", "x402", "offer-receipt"],
+      "state": "LIVE"
+    },
+    "x402": {
+      "discovery": "https://councilof.ai/.well-known/x402.json",
+      "catalog": "https://councilof.ai/api/x402",
+      "mode": "live",
+      "network": "eip155:8453 (Base)",
+      "asset": "USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resources": 9,
+      "free_door": {"amount": 0, "url": "/api/free-door"},
+      "offer_receipt": {"format": "jws", "alg": "EdDSA", "emission": "conditional"},
+      "state": "LIVE"
+    },
+    "agui": {
+      "endpoint": "https://councilof.ai/api/agui/gspc-state",
+      "transport": "SSE",
+      "state": "DECLARED"
+    }
+  },
+
+  "surfaces": {
+    "api": {
+      "gspc": {"url": "https://councilof.ai/api/gspc", "state": "LIVE"},
+      "state": {"url": "https://councilof.ai/api/state", "state": "LIVE"},
+      "revenue": {"url": "https://councilof.ai/api/revenue", "state": "LIVE"},
+      "root": {"url": "https://councilof.ai/root.json", "state": "LIVE"},
+      "verify": {"url": "https://councilof.ai/gspc-verify", "state": "LIVE"}
+    },
+    "well_known": {
+      "agent_card": {"url": "https://councilof.ai/.well-known/agent-card.json", "state": "LIVE"},
+      "x402": {"url": "https://councilof.ai/.well-known/x402.json", "state": "LIVE"},
+      "did": {"url": "https://csoai.org/.well-known/did.json", "state": "LIVE"}
+    },
+    "feeds": {
+      "rss": {"url": "https://councilof.ai/feed.xml", "state": "LIVE"},
+      "corrections": {"url": "https://councilof.ai/feeds/corrections.xml", "state": "DECLARED"},
+      "cards": {"url": "https://councilof.ai/feeds/cards.xml", "state": "DECLARED"}
+    }
+  },
+
+  "resources": {
+    "free_door": {"id": "free_door", "name": "Free board + public-root", "amount": 0, "state": "LIVE"},
+    "issuance": {"id": "issuance", "name": "Commission a signed card", "state": "LIVE"},
+    "evidence_bundle": {"id": "evidence_bundle", "name": "Evidence bundle", "state": "LIVE"},
+    "data_feed": {"id": "data_feed", "name": "Signed data feed", "state": "LIVE"},
+    "proof_bundle": {"id": "proof_bundle", "name": "Public-root inclusion-proof", "state": "LIVE"},
+    "trust_receipt": {"id": "trust_receipt", "name": "MCP/A2A/x402 trust receipt", "state": "LIVE"},
+    "regulation_deadline": {"id": "regulation_deadline", "name": "Regulation deadline crosswalk", "state": "LIVE"},
+    "correction_feed": {"id": "correction_feed", "name": "Stablecoin corrections feed", "state": "LIVE"},
+    "rwa_evidence": {"id": "rwa_evidence", "name": "RWA evidence card", "state": "LIVE"}
+  },
+
+  "directories": {
+    "mcp_registry": {"state": "LISTED", "count": 330},
+    "smithery": {"state": "LISTED"},
+    "glama": {"state": "LISTED"},
+    "docker_mcp": {"state": "LISTED"},
+    "mcp_so": {"state": "NOT_LISTED"}
+  },
+
+  "settlement_state": {
+    "external_payers": 1,
+    "external_revenue_usdc": 0.02,
+    "self_settlements": 6,
+    "zero_value_probes": 5,
+    "receipts_published": 0,
+    "x402_flow_status": "6/7 steps verified (payment blocked on wallet key)"
+  }
+}
