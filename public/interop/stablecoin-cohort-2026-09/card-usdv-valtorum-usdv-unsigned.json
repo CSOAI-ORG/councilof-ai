@@ -1,11 +1,10 @@
 {
  "schema": "https://councilof.ai/schema/card-v0.json",
  "surface": "public.notice",
- "subject": "stablecoin USDV — on-chain supply readings 2026-09-12 (unsigned staged)",
+ "subject": "stablecoin Valtorum USDV (USDV, registry id 398) — on-chain supply reading 2026-09-12 (unsigned staged)",
  "as_of": "2026-09-12T12:20:00Z",
  "source_urls": [
   "https://stablecoins.llama.fi/stablecoins?includePrices=true",
-  "https://ethereum-rpc.publicnode.com",
   "https://xrplcluster.com"
  ],
  "payload": {
@@ -14,30 +13,31 @@
   "subject_symbol": "USDV",
   "chain_readings": [
    {
-    "chain": "ethereum",
-    "contract": "0x0E573Ce2736Dd9637A0b21058352e1667925C7a8",
-    "totalSupply": 153080.264124,
-    "block": 25961214
-   },
-   {
     "chain": "xrpl",
     "issuer": "rfffsukWALJB1PXYk7H8xkR6UJUDT8nMJE",
     "obligations": "76771000.00000016",
-    "ledger": 106934578
+    "ledger": 106934578,
+    "ledger_finality": "XRPL_VALIDATED_AT_OBSERVATION",
+    "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+    "replay_scope": "CURRENT_STATE_RERUN_ONLY"
    }
   ],
   "evidence": {
    "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
-   "sha256": "6ce5e1e9889dcc813bafc184bfa2dc278aca5372900768dd14c238231e4e0431"
+   "sha256": "c6a6fd93c03bd465e3bc85c152ee366ecdd50327bb21bd7cdf8dd385701a6f15"
   },
   "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
   "attestation_state": "UNMEASURED",
   "not_a_risk_score": true,
   "not_proof_of_reserves": true,
   "holders_state": "UNMEASURED",
-  "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts."
+  "note": "Valtorum USDV (DefiLlama stablecoin id 398) supply observation. This asset is not combined with the other asset using ticker USDV.",
+  "replay_boundary": "Commands in the evidence file rerun current state; historical replay at the recorded heights was not executed.",
+  "subject_identity": "defillama-stablecoin:398",
+  "stablecoin_registry_id": "398",
+  "asset_name": "Valtorum USDV"
  },
- "sha256": "f0aa645876b5f1b81f6556f19f9e214f333355cffd540865727be5e8763f488b",
+ "sha256": "1d85d4b2c6fc94d522a3d8653bc702d7ab0882fc0c9b48350f9743f37653713a",
  "unmeasured": [
   "proof of reserves",
   "attestation cadence",
@@ -47,6 +47,7 @@
  "tags": [
   "stablecoin",
   "tui2-cohort",
-  "on-chain-reading"
+  "on-chain-reading",
+  "symbol-collision-separated"
  ]
 }

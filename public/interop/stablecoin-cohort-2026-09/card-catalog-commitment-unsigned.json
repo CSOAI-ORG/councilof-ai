@@ -11,21 +11,25 @@
   "kind": "csoai.deduplicated-catalog.commitment/v1",
   "state": "PROBED",
   "catalog_file": "docs/tui2/DEDUPLICATED-CATALOG.json",
-  "catalog_sha256": "767f555bef81b4b2a43e1f1b7248e31c09a3364180fcd3c8c811b82288b07d96",
+  "catalog_sha256": "157074faaecb46e5c440b24666d863a299cee663fd747ae18085b228f6cd9c0e",
   "total_subjects": 425,
-  "deep_reading_subjects_unsigned_staged": 11,
-  "signed_rooted_subjects": 1,
   "symbol_collision_rule": "measurements bind to issuer+contract+chain identities, never bare symbols",
   "frozen_index": {
    "file": "public/interop/stablecoin-universe-2026-09/index.json",
    "note": "2026-09-11 snapshot; drift note drift-2026-09-12.json shows counts unchanged"
   },
   "not_a_risk_score": true,
-  "note": "Commits to the deduplicated catalog bytes as of this staging; live per-subject states live in public/interop/coverage-register.json."
+  "note": "Commits to the deduplicated catalog bytes as of this staging; live per-subject states live in public/interop/coverage-register.json.",
+  "deep_reading_asset_identities_unsigned_staged": 12,
+  "signed_rooted_asset_identities": 1,
+  "signed_staged_asset_identity_overlap": 1,
+  "deep_reading_asset_identity_union": 12,
+  "unique_symbols_with_supply_observation": 11,
+  "unmeasured_asset_identities": 413
  },
- "sha256": "b0fffb1225162fbcd6d48ed163b695a49d0c27db600a60dc83d64241c416fcad",
+ "sha256": "6d18d8aa4b3244b58a8b8b9cee5f19a39af860dd0f47a92d4ca43ce49d706ad2",
  "unmeasured": [
-  "413 subjects without deep on-chain readings"
+  "413 indexed asset identities without a deep on-chain supply observation"
  ],
  "tags": [
   "stablecoin",

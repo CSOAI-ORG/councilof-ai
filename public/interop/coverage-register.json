@@ -29,8 +29,6 @@
   ],
   "derivation_rule": "States derived from the files above; never typed aspirationally. Live per-subject states live HERE (the coverage matrix), not in the frozen index — this resolves ledger CONTRAD-001.",
   "indexed_subjects": 425,
-  "deep_measured_subjects_unsigned_staged": 11,
-  "deep_measured_subjects_signed_rooted": 1,
   "signed_subjects": 1,
   "stale_subjects": 0,
   "uncheckable_sources": [
@@ -198,6 +196,156 @@
      "ethereum"
     ],
     "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   }
+  },
+  "count_note": "12 registry asset identities across 11 ticker symbols have supply observations. The prior signed/rooted RLUSD identity overlaps the 12 staged identities, so the union remains 12 and 413 indexed identities lack a deep supply observation.",
+  "deep_measured_asset_identities_unsigned_staged": 12,
+  "deep_measured_asset_identities_signed_rooted": 1,
+  "signed_staged_asset_identity_overlap": 1,
+  "deep_measured_asset_identity_union": 12,
+  "symbols_with_supply_observation": 11,
+  "unmeasured_asset_identities": 413,
+  "identity_register": {
+   "defillama-stablecoin:1": {
+    "registry_id": "1",
+    "symbol": "USDT",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:119": {
+    "registry_id": "119",
+    "symbol": "FDUSD",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:120": {
+    "registry_id": "120",
+    "symbol": "PYUSD",
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "stellar"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:143": {
+    "registry_id": "143",
+    "symbol": "USDV",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:146": {
+    "registry_id": "146",
+    "symbol": "USDe",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:2": {
+    "registry_id": "2",
+    "symbol": "USDC",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum",
+     "stellar",
+     "xrpl"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:209": {
+    "registry_id": "209",
+    "symbol": "USDS",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:250": {
+    "registry_id": "250",
+    "symbol": "RLUSD",
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "xrpl"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": true,
+    "root_included": true
+   },
+   "defillama-stablecoin:254": {
+    "registry_id": "254",
+    "symbol": "EURCV",
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "stellar",
+     "xrpl"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:262": {
+    "registry_id": "262",
+    "symbol": "USD1",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:398": {
+    "registry_id": "398",
+    "symbol": "USDV",
+    "chains_with_2026_09_12_reading": [
+     "xrpl"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:5": {
+    "registry_id": "5",
+    "symbol": "DAI",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": true,
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
+    "signed": false,
+    "root_included": false
    }
   }
  }

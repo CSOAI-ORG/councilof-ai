@@ -16,28 +16,39 @@
    {
     "chain": "ethereum",
     "contract": "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
-    "totalSupply": 6671571131.263178,
-    "block": 25961213
+    "totalSupply": "6671571131.263178077565919734",
+    "block": 25961213,
+    "amount_encoding": "exact_decimal_string",
+    "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+    "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+    "replay_scope": "CURRENT_STATE_RERUN_ONLY"
    },
    {
     "chain": "base",
     "contract": "0x820C137fa70C8691f0e44Dc420a5e53c168921Dc",
-    "totalSupply": 2644564.0666503683,
-    "block": 51212701
+    "totalSupply": "2644564.066650368453157670",
+    "block": 51212701,
+    "amount_encoding": "exact_decimal_string",
+    "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+    "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+    "replay_scope": "CURRENT_STATE_RERUN_ONLY"
    }
   ],
   "evidence": {
    "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
-   "sha256": "6ce5e1e9889dcc813bafc184bfa2dc278aca5372900768dd14c238231e4e0431"
+   "sha256": "c6a6fd93c03bd465e3bc85c152ee366ecdd50327bb21bd7cdf8dd385701a6f15"
   },
   "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
   "attestation_state": "UNMEASURED",
   "not_a_risk_score": true,
   "not_proof_of_reserves": true,
   "holders_state": "UNMEASURED",
-  "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts."
+  "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts.",
+  "replay_boundary": "Commands in the evidence file rerun current state; historical replay at the recorded heights was not executed.",
+  "subject_identity": "defillama-stablecoin:209",
+  "stablecoin_registry_id": "209"
  },
- "sha256": "05ac5b71188071a5724eec6aef4da990959d77390f71c8d49ffd8befad8d279f",
+ "sha256": "d8aee32e1f4a35053335a29b0cf28f436ed1d11bbff493a1af1da1da841229bd",
  "unmeasured": [
   "proof of reserves",
   "attestation cadence",

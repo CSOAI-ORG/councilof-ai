@@ -19,7 +19,7 @@
 | Circulating USD | $310.79B | index.json | VERIFIED |
 | Deep measurement queue | 20 | readiness.json | VERIFIED |
 | Deeply measured (signed+rooted) | 1 (RLUSD) | readiness.json / public root | VERIFIED |
-| Deep readings 2026-09-12 (unsigned, staged) | 11 subjects / 21 chain readings | tui2-measurements/tui2-cohort-2026-09-12.json | VERIFIED |
+| Deep readings 2026-09-12 (unsigned, staged) | 12 asset identities / 11 symbols / 21 chain readings | tui2-measurements/tui2-cohort-2026-09-12.json | VERIFIED |
 | Evidence state | INDEXED (all 425) | index.json | VERIFIED |
 | Measurement state | UNMEASURED (all 425) | index.json | HONEST |
 | Anchor state | UNANCHORED (all 425) | index.json | HONEST |
@@ -55,11 +55,11 @@
 |-------|-------|---|
 | INDEXED | 425 | 100% |
 | UNMEASURED (frozen index rows) | 425 | 100% |
-| Deep reading 2026-09-12, unsigned staged | 11 | 2.6% |
+| Deep reading 2026-09-12, unsigned staged | 12 asset identities | 2.8% |
 | Signed + in current root | 1 (RLUSD) | 0.2% |
 | UNANCHORED (asset measurements) | 425 | 100% |
 
-**Honest statement:** All 425 assets are INDEXED from DefiLlama; the frozen 2026-09-11 index rows all say UNMEASURED because the index froze at discovery time (CONTRAD-001 resolved: live per-subject states live in `public/interop/coverage-register.json`). On 2026-09-12 the priority cohort (RLUSD, USDT, USDC, USDS, DAI, USDe, USD1, EURCV, USDV, PYUSD, FDUSD) received direct on-chain supply readings — 21 subject×chain records, EVM `symbol()`/`decimals()` verified, XRPL `gateway_balances`, Stellar Horizon — staged as unsigned card-v0 atoms in `public/interop/stablecoin-cohort-2026-09/`. Signed stays 1 until GHA signs post-merge.
+**Honest statement:** All 425 asset identities are INDEXED from DefiLlama; the frozen 2026-09-11 index rows all say UNMEASURED because the index froze at discovery time (CONTRAD-001 resolved: live states live in `public/interop/coverage-register.json`). On 2026-09-12 the priority cohort received 21 direct on-chain supply readings covering 12 registry identities across 11 symbols. Verified USD (DefiLlama id 143) and Valtorum USDV (id 398) are separate assets that share a ticker. The cohort is staged as 12 unsigned asset cards plus one catalog commitment. RLUSD is also the one previously signed/rooted identity, so the signed and staged sets overlap by one.
 
 ## 2026-09-12 Cohort Readings (keyless, £0)
 
@@ -90,6 +90,8 @@
 RLUSD same-session frame (both chains seconds apart, 12:03Z): `docs/tui2/rlusd-sametime-frame-2026-09-12.json`. The XRPL paged `account_lines` sum (60.49M) disagrees with `gateway_balances` obligations (1,053.01M, three endpoints agree) — public-cluster pagination silently truncates; both readings are preserved in the frame file.
 
 Endpoint honesty: `eth.llamarpc.com` (the EVM reader's compiled-in default) returned HTTP 525 at observation time; Ethereum readings used `ethereum-rpc.publicnode.com` via the reader's new `EVM_RPC_ETHEREUM` override, with the substitution and the 525 probe recorded inside each record.
+
+Replay and finality boundary: the EVM observations came from the RPC's then-current block and are not independently proven finalized. XRPL records used a validated ledger; Stellar records used Horizon's latest closed ledger. The recorded commands rerun current state and were not executed against the preserved historical heights.
 
 ## Deep Measurement Prioritization (supply × chain risk × attestation gaps)
 
@@ -135,7 +137,7 @@ Priority is computed from: circulating USD, chain deployment count, evidence sta
 
 ## What This Does NOT Claim
 
-1. **NOT "425 measured"** — 425 INDEXED, 12 with deep on-chain readings (1 signed+rooted, 11 unsigned-staged), 413 UNMEASURED
+1. **NOT "425 measured"** — 425 INDEXED, 12 asset identities with deep supply observations across 11 symbols, 413 without one. Twelve asset cards are unsigned-staged; RLUSD overlaps the one prior signed+rooted identity.
 2. **NOT "fully cross-chain verified"** — Chain deployments are listed, not independently verified
 3. **NOT "proof of reserves"** — No asset has a verified proof-of-reserves attestation
 4. **NOT "compliant"** — Regulatory references are informational, not compliance certifications
@@ -143,7 +145,7 @@ Priority is computed from: circulating USD, chain deployment count, evidence sta
 ## Remaining Blockers
 
 1. Deep measurement requires on-chain RPC access for each asset/chain pair
-2. RLUSD (XRPL) needs XRPL node access for trust-line verification
-3. USDC/USDT need attestation API integration
-4. Compute budget for 425 assets × 211 chains = ~89,675 verification calls
-5. All assets remain UNANCHORED (no Base EAS or XRPL memo anchors)
+2. Historical replay needs reader height arguments and archival endpoints; current commands rerun current state only
+3. USDC/USDT need issuer-attestation integration before any reserve claim
+4. The universe contains 1,640 reported asset/chain entries; exact verification-call and cost totals are not yet measured and must not use a 425×211 Cartesian product
+5. All asset-specific measurements remain UNANCHORED (no Base EAS or XRPL memo anchors)

@@ -1,9 +1,8 @@
 """Staged UNSIGNED card-v0 atoms -> public-root leaves (file reader, no network).
 
-Reads public/interop/xrpl-swift-eater-2026-09/card-*-unsigned.json — the
-directory the XRPL/SWIFT eater (harness/rwa-attest/xrpl_swift_eater.py) stages
-into — and hands each valid atom to publish_public_root.py as a public.notice
-leaf. The writer signs it (GHA public-root.yml, BOARD_SIGN_KEY_PKCS8_B64 under
+Reads the explicitly enumerated staging directories in ``STAGED_DIRS`` and
+hands each valid atom to publish_public_root.py as a public.notice leaf. The
+writer signs it (GHA public-root.yml, BOARD_SIGN_KEY_PKCS8_B64 under
 did:web:csoai.org#board-attestation-1), folds it into public/root.json, and
 witness_public_root.py anchors the ONE root. That is the only path from
 "staged unsigned" to "signed": nothing here signs, and nothing here can.

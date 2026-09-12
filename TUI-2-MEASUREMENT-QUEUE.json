@@ -4,7 +4,7 @@
  "total_assets": 425,
  "queue_size": 25,
  "all_unmeasured": true,
- "note": "Priority score from the frozen 2026-09-11 DefiLlama index (drift-2026-09-12 shows counts unchanged). The 11 priority-cohort subjects with 2026-09-12 on-chain readings are excluded from this UNMEASURED queue; they move to the daily re-measurement schedule below.",
+ "note": "Priority score from the frozen 2026-09-11 DefiLlama index (drift-2026-09-12 shows counts unchanged). Twelve registry asset identities across 11 ticker symbols have 2026-09-12 supply observations and are excluded from this UNMEASURED queue; Verified USD id 143 and Valtorum USDV id 398 are separate identities sharing a ticker.",
  "queue": [
   {
    "rank": 1,
@@ -382,7 +382,7 @@
    "price": null
   }
  ],
- "measured_today_excluded": [
+  "measured_today_excluded": [
   "DAI",
   "EURCV",
   "FDUSD",
@@ -395,6 +395,20 @@
   "USDV",
   "USDe"
  ],
+ "measured_asset_identities_excluded": [
+  "defillama-stablecoin:1",
+  "defillama-stablecoin:2",
+  "defillama-stablecoin:5",
+  "defillama-stablecoin:119",
+  "defillama-stablecoin:120",
+  "defillama-stablecoin:143",
+  "defillama-stablecoin:146",
+  "defillama-stablecoin:209",
+  "defillama-stablecoin:250",
+  "defillama-stablecoin:254",
+  "defillama-stablecoin:262",
+  "defillama-stablecoin:398"
+ ],
  "trigger_schedule": {
   "cost": "£0 — public keyless endpoints only (DefiLlama, ethereum-rpc.publicnode.com, mainnet.base.org, xrplcluster.com, horizon.stellar.org)",
   "rate_limit_notes": [
@@ -406,7 +420,7 @@
   "daily_cohort_remeasurement": {
    "cadence": "daily",
    "commands": [
-    "EVM_RPC_ETHEREUM=https://ethereum-rpc.publicnode.com node scripts/readers/evm-erc20-reader.mjs ethereum <contract>  # per cohort contract (see tui2-measurements/tui2-cohort-2026-09-12.json replay_command fields)",
+    "EVM_RPC_ETHEREUM=https://ethereum-rpc.publicnode.com node scripts/readers/evm-erc20-reader.mjs ethereum <contract>  # current-state rerun; not historical replay",
     "node scripts/readers/evm-erc20-reader.mjs base <contract>  # USDC/USDS/USDe Base deployments",
     "node scripts/readers/xrpl-trustline-reader.mjs <issuer> <currency_hex>  # RLUSD/EURCV/USDC/USDV XRPL",
     "node scripts/readers/stellar-asset-reader.mjs <CODE> <issuer>  # USDC/EURCV/PYUSD Stellar"

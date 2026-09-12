@@ -15,22 +15,29 @@
    {
     "chain": "ethereum",
     "contract": "0xc5f0f7b66764F6ec8C8Dff7BA683102295E16409",
-    "totalSupply": 219667267.1,
-    "block": 25961214
+    "totalSupply": "219667267.100000000000000000",
+    "block": 25961214,
+    "amount_encoding": "exact_decimal_string",
+    "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+    "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+    "replay_scope": "CURRENT_STATE_RERUN_ONLY"
    }
   ],
   "evidence": {
    "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
-   "sha256": "6ce5e1e9889dcc813bafc184bfa2dc278aca5372900768dd14c238231e4e0431"
+   "sha256": "c6a6fd93c03bd465e3bc85c152ee366ecdd50327bb21bd7cdf8dd385701a6f15"
   },
   "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
   "attestation_state": "UNMEASURED",
   "not_a_risk_score": true,
   "not_proof_of_reserves": true,
   "holders_state": "UNMEASURED",
-  "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts."
+  "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts.",
+  "replay_boundary": "Commands in the evidence file rerun current state; historical replay at the recorded heights was not executed.",
+  "subject_identity": "defillama-stablecoin:119",
+  "stablecoin_registry_id": "119"
  },
- "sha256": "f449b5153163c2f6379ce61cc44eebfbe62ad6bc5acadf4f1c537815aaf56bfe",
+ "sha256": "b04d13b090179c20d35b95bb69831741d73d68d9637995ea5fdeb3c559e4a78d",
  "unmeasured": [
   "proof of reserves",
   "attestation cadence",

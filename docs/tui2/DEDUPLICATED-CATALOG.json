@@ -7,13 +7,16 @@
   "total_deployments": 1640,
   "total_circulating_usd": 310786569942.87,
   "measured_subjects": 12,
-  "measured_subjects_signed_rooted": 1,
-  "measured_subjects_unsigned_staged": 11,
   "unmeasured_subjects": 413,
   "fresh_subjects": 12,
   "stale_subjects": 0,
   "coverage_pct": 2.8,
-  "note": "Measured = deep on-chain supply reading exists (tui2-measurements/tui2-cohort-2026-09-12.json + prior RLUSD signed card). 11 staged unsigned await GHA public-root signing; signed stays 1 (RLUSD XRPL) until post-merge. Frozen index remains the 2026-09-11 snapshot; see drift-2026-09-12.json."
+  "note": "12 DefiLlama registry asset identities across 11 symbols have direct on-chain supply observations. Verified USD (id 143) and Valtorum USDV (id 398) are distinct assets sharing a ticker. RLUSD (id 250) is both staged and the one prior signed/rooted identity, so the staged and signed sets overlap by one; their union is 12, leaving 413 without a deep supply observation.",
+  "deep_reading_asset_identity_union": 12,
+  "measured_asset_identities_signed_rooted": 1,
+  "measured_asset_identities_unsigned_staged": 12,
+  "signed_staged_asset_identity_overlap": 1,
+  "unique_symbols_with_supply_observation": 11
  },
  "next_measurement_queue": [
   {

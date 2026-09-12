@@ -9,7 +9,6 @@
   {
    "chain": "xrpl",
    "observed_at": "2026-09-12T12:03:24.565Z",
-   "finalized_ledger": 106934514,
    "ledger_hash": "4177CA5DD83B80795BEF895A7018C23D677162F017DF6F042946F10EFCE978AD",
    "method": "gateway_balances (obligations) via https://xrplcluster.com",
    "supply_obligations": "1053014745.151131",
@@ -58,12 +57,15 @@
    "raw_record_sha256": "e652846c9a40cbed3496d935b2f85b79d7a2ba8fa44b2afb3732a753f403ab03",
    "replay": "node scripts/readers/xrpl-trustline-reader.mjs rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De 524C555344000000000000000000000000000000",
    "terms_boundary": "Public XRPL full-history cluster (xrplcluster.com). No API key. Rate limits apply.",
-   "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues"
+   "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+   "observed_ledger": 106934514,
+   "ledger_finality": "XRPL_VALIDATED_AT_OBSERVATION",
+   "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+   "replay_scope": "COMMAND_RERUNS_CURRENT_STATE"
   },
   {
    "chain": "ethereum",
    "observed_at": "2026-09-12T12:03:31.514Z",
-   "finalized_block": 25961208,
    "block_hash": "0x373a06bfef2b071d4c26f3e90ff25eb84208c749b1c5f2f38a040f5b78d69201",
    "method": "eth_call totalSupply() 0x18160ddd via https://ethereum-rpc.publicnode.com",
    "contract": "0x8292bb45bf1ee4d140127049757c2e0ff06317ed",
@@ -88,7 +90,11 @@
    "raw_record_sha256": "1d0f1d14fd2ffe963797524c0cb02f34ff92e858d955c51d324af6a9efc86c26",
    "replay": "EVM_RPC_ETHEREUM=https://ethereum-rpc.publicnode.com node scripts/readers/evm-erc20-reader.mjs ethereum 0x8292bb45bf1ee4d140127049757c2e0ff06317ed",
    "terms_boundary": "Public RPC (llamarpc.com / base.org). No API key required. Rate limits apply.",
-   "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues"
+   "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+   "observed_block": 25961208,
+   "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+   "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+   "replay_scope": "COMMAND_RERUNS_CURRENT_STATE"
   }
  ],
  "combined_note": "XRPL obligations 1,053,014,745.151131 + Ethereum totalSupply 1,369,732,627.856032 = 2,422,747,373.007163 RLUSD across the two measured deployments at this frame. This is an arithmetic sum of two same-session readings, not a cross-date aggregate and not a proof of reserves.",
@@ -98,6 +104,6 @@
   "attestation verification",
   "peg deviation verdict"
  ],
- "raw_frame_sha256": "ee57fde24acc745bec5bf08e2c3ff30cb93695db3634dd2ea45072055e254a8b",
- "measurement_state_note": "Records use PROBED-style observation language; per-subject catalog states live in the coverage matrix, not in this frame file."
+ "measurement_state_note": "Records use PROBED-style observation language; per-subject catalog states live in the coverage matrix, not in this frame file.",
+ "readings_sha256": "8c4cb8bf062fbfe48232fc47a65d0cf448ae9406aa830297bd437e79637d64c6"
 }

@@ -22,6 +22,9 @@ async function xrplCall(method, params) {
   });
   const json = await res.json();
   if (json.error) throw new Error(`XRPL error: ${json.error}: ${json.error_message || ""}`);
+  if (json.result?.error) {
+    throw new Error(`XRPL error: ${json.result.error}: ${json.result.error_message || ""}`);
+  }
   return json.result;
 }
 
