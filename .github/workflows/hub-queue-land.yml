@@ -92,7 +92,10 @@ jobs:
           gh pr create --base master --head "$BR" \
             --title "mill: ${{ steps.land.outputs.landed }} ${AXIS} cards from run ${RUN_ID} — OIDC sign pending, nothing MEASURED" \
             --body-file staged/PR-BODY.md
-          gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=mill
+          # G1.2 (2026-09-12): the #1941 provenance gate REFUSES a missing mill_run_id
+          # ("refusing the whole legacy inbox") — the dispatch must name the exact run it
+          # landed. RUN_ID is already in scope (it is in the branch name and commit).
+          gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=mill -f mill_run_id="${RUN_ID}"
       - name: wait for the signer, then verify VALID under the live DID (verification only — no key here)
         if: steps.land.outputs.landed != '0'
         run: |
