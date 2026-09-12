@@ -68,3 +68,36 @@ This material is PREPARED for the NIST AI RMF evidence submission deadline of 16
 - Each axis maps to NIST categories based on task similarity, not regulatory equivalence
 - The 8 financial/deterministic-fact axes map to GOVERN and MANAGE (organizational risk), not MAP/MEASURE (model evaluation)
 - Unmapped NIST subcategories exist — this crosswalk covers the axes we have, not every subcategory
+
+## Submission Package Contents
+
+### Required Artifacts for NIST AI RMF Submission
+
+1. **Organizational Profile** — CSOAI Ltd (UK 16939677), independent AI measurement body
+2. **AI System Description** — GSPC measurement system: frozen test banks + deterministic grading + Ed25519 signing
+3. **Risk Assessment Evidence** — Per-axis measurement results with Wilson intervals and McNemar separation tests
+4. **Governance Documentation** — Board-ruling documents, corrections ledger (47 entries), claims register (20 claims)
+5. **Measurement Artifacts** — 335 signed measurement cards,22-axis board, public Merkle root
+6. **Verification Infrastructure** — Public verify endpoint (/gspc-verify), DID document, offline verification scripts
+7. **Regulatory Crosswalk** — EU AI Act (20 deadlines), CRA, US state laws, Korea AI Basic Act
+8. **Evidence of Independence** — Own-model exclusion policy (8 axes), neutral body statement
+
+### Data Extracts Available
+
+| Extract | Location | Format |
+|---------|----------|--------|
+| GSPC Board (22 axes) | GET /api/gspc | JSON, signed |
+| Measurement Cards (335) | /signed/card_index.json | JSON, Ed25519 |
+| Public Root (167 leaves) | /root.json | JSON, Merkle, signed |
+| Corrections Ledger (47) | /api/corrections | JSON |
+| Regulation Feed (20) | /api/regulation | JSON, signed |
+| Claims Register (20) | /claims-register.json | JSON |
+| Deep Measurements (5) | docs/tui2/DEEP-MEASUREMENTS-2026-09-11.json | JSON, on-chain |
+| Financial Coverage (425) | public/interop/financial-coverage-graph-2026-09-11.json | JSON |
+
+### Formatting Notes
+
+- NIST AI RMF 1.0 categories: GOVERN, MAP, MEASURE, MANAGE
+- Evidence is machine-readable JSON with cryptographic signatures
+- All artifacts independently verifiable without CSOAI credentials
+- Submission requires owner approval (communication gate)
