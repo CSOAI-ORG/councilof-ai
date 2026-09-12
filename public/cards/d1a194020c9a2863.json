@@ -1,0 +1,68 @@
+{
+  "card": {
+    "as_of": "2026-09-12",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.rwa-concentration/0.1",
+      "status": "PROBED",
+      "xrpl_distributed_usd": {
+        "value": 456408587.34,
+        "as_of": "2026-09-12",
+        "source": "rwa-xyz-networks.html",
+        "note": "rwa.xyz networks league table, distributed scope, stablecoins excluded (publisher variant 'without stablecoins'); stablecoin-inclusive variant reads 1550035428.20"
+      },
+      "xrpl_represented_usd": {
+        "value": 4059785946.09,
+        "as_of": "2026-09-12",
+        "source": "rwa-xyz-networks.html",
+        "note": "rwa.xyz networks league table, represented scope, 364 assets"
+      },
+      "largest_single_asset": {
+        "id_or_name": "JMWH",
+        "represented_usd": 2229136800.0,
+        "share_pct": 54.91,
+        "as_of": "2026-09-12",
+        "source": "rwa-xyz-asset-jmwh.html",
+        "platform": "Justoken"
+      },
+      "rule": "represented is not distributed — never mix scopes",
+      "scope": "rwa.xyz league tables; distributed scope excludes stablecoins per publisher variant",
+      "unmeasured": [
+        "xrpl_represented_usd_3720000000_brief_citation",
+        "jmwh_offchain_legal_identity"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d1a194020c9a286334c2569a577b59779449b672e047d4aad1c84fee2a86a3e3",
+    "sig_ed25519": "1b8474f79ff063ef4bc73ee92560536fb166459655af7cefb24eec2023826db9b4c2f1c9fb74fc87f939cf70060d6091dad913737a415d04e10fc7b0d940d803",
+    "source_urls": [
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/figures.json",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-asset-jmwh.html",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-networks.html"
+    ],
+    "subject": "XRPL RWA: distributed vs represented, single-asset concentration",
+    "surface": "public.notice",
+    "tags": [
+      "subject:xrpl-rwa",
+      "scope:distributed-vs-represented",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "xrpl_represented_usd_3720000000_brief_citation",
+      "jmwh_offchain_legal_identity"
+    ]
+  },
+  "proof": [
+    "6aeadb975438a6d0d62a1ad6af2a5b21b69df6969135d6219b290e676dbb524b",
+    "45f2fc85fc74131a9132a19d15e512a57d73347fc8d26eb6b46f01634d67435d",
+    "5bc4e401ffdfc2175c213680cbaa8b1b224dc7965231bb0f5d30cc3fcdcc09da",
+    "6d45c8109e2e57cfe419c7c90f2af3f3b06716d26174d0e45497e425e431e8f2",
+    "8a65216f5e424441412635d49b8022fcf186f0630185dc35744a71566d94419e",
+    "0397999d3d0c4f9050f5ec83c3828cda410c747b1ae0900fb870606fdff964c7",
+    "9750d0d45a4fbf90c65374ec270fce6133956b3a3c6c7211a0e799fb3baff382",
+    "9509fab5adbdfdfbb8858212ae5feca37c3d1d1a469404ead2c514331924ac87"
+  ]
+}

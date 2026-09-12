@@ -1,0 +1,57 @@
+{
+  "card": {
+    "as_of": "2026-09-12T07:14:51Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "272",
+      "symbol": "YLDS",
+      "attestation_page": "https://ylds.com/",
+      "auditor": null,
+      "cadence_claimed": "daily",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "9ab4da09ba29fe9b971843ebdf417af27febd2ab08a05c7400fc5cb2ecb6c571",
+      "excerpt": "100 YLDS = $1.00 NAV) How it works Audited reserves. Registered structure. NAV calculated daily. 1 Mint Total AUM 2 Accrue ~ % accrues daily (variable) 3 Use Tr",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e92fe55fb8372d52ec47033c515e676c9b9e629462adcedc72733bbd8fe78b94",
+    "sig_ed25519": "c7b16685949288acba1413f1787957ac3eb3293990ae40845e5f58b73188cda83d6c279b727ef92a08444c6c3245dbd61a78f112c463932fdf0da67b65277d02",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://ylds.com/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: YLDS",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "staleness"
+    ]
+  },
+  "proof": [
+    "882251bc07c936271cd06eb5ca63a87a110bdfd408889dd86c80efa9cddd0f0e",
+    "4de8b95dbc7cd31ae542d0076466481069803a34ead9ff84fb9c1bb09cbf38ea",
+    "8fe455f44b898a08d83cf8c7b55c022b62937c931d8c8cad494c4408197891bb",
+    "4276fe5abd7a5015cc6dc117e754e2dcee1af4e02c197d5cd92ef17a8555090f",
+    "3c681a4674d078fef4895456270ca7f4f0a892301aa8fc3546ed11bbeac04cea",
+    "9fcb260a8932440469c84c80d83c27ef33124ee869a9ffc4ffacf16037979056",
+    "9750d0d45a4fbf90c65374ec270fce6133956b3a3c6c7211a0e799fb3baff382",
+    "9509fab5adbdfdfbb8858212ae5feca37c3d1d1a469404ead2c514331924ac87"
+  ]
+}

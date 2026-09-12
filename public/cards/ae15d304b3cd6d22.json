@@ -1,0 +1,57 @@
+{
+  "card": {
+    "as_of": "2026-09-12T07:14:51Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "1",
+      "symbol": "USDT",
+      "attestation_page": "https://tether.to/en/transparency/",
+      "auditor": null,
+      "cadence_claimed": "daily",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "87959d68fa1121ee5b40e81449182f76386f8d005376832397924fb3b6f555c3",
+      "excerpt": "Tether’s Reserves. Information about Tether Tokens in circulation is typically published daily. 1 The Tether Issuer's 2 assets exceed its liabilities. Tether To",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ae15d304b3cd6d22975be400eab89ee5eb04ceafc7815e18a3328146eebf5efe",
+    "sig_ed25519": "b269bedcab6ecb2ea1116a94a3cc4294eb31e3402bd00b07da1ed5e9de30a056ede4895c0dba0cc6ac355c95725aa51da1185819d3795393ff737d32f45bcf01",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://tether.to/en/transparency/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDT",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "staleness"
+    ]
+  },
+  "proof": [
+    "b1e573b96de60d13d7db7839203f2bd0948b3fbf155e0aaca6d2e568a5d6baf0",
+    "0c34b03aa13b8c0f60f6250a32eef123208dbaa692213811bda690569b87eea8",
+    "5bc4e401ffdfc2175c213680cbaa8b1b224dc7965231bb0f5d30cc3fcdcc09da",
+    "6d45c8109e2e57cfe419c7c90f2af3f3b06716d26174d0e45497e425e431e8f2",
+    "8a65216f5e424441412635d49b8022fcf186f0630185dc35744a71566d94419e",
+    "0397999d3d0c4f9050f5ec83c3828cda410c747b1ae0900fb870606fdff964c7",
+    "9750d0d45a4fbf90c65374ec270fce6133956b3a3c6c7211a0e799fb3baff382",
+    "9509fab5adbdfdfbb8858212ae5feca37c3d1d1a469404ead2c514331924ac87"
+  ]
+}
