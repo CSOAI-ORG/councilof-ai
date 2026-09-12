@@ -18,8 +18,9 @@ LAND = Path("/Users/nicholas/dsh-tmp/coai-shallow/scripts")
 HARNESS = Path("/Users/nicholas/dsh-tmp/coai-shallow/harness/gspc-top100")
 # councilof-ai checkout (GHA / worktree)
 if not (LAND / "land_mill_cards.py").is_file():
-    LAND = HERE.parents[2] / "scripts"
-    HARNESS = HERE.parents[2] / "harness" / "gspc-top100"
+    REPO = HERE.parents[1]
+    LAND = REPO / "scripts"
+    HARNESS = REPO / "harness" / "gspc-top100"
 
 
 def test_canonical_matches_landed_sample() -> None:
@@ -96,11 +97,20 @@ def test_kernel_is_self_contained() -> None:
 
 
 def test_inventory_counts_unique_refs() -> None:
-    from kaggle_community_cells import inventory_community_datasets
+    import kaggle_community_cells as cells
 
-    inv = inventory_community_datasets()
+    original = cells._get_json
+    cells._get_json = lambda _url: [
+        {"ref": "csoai/one", "title": "one"},
+        {"ref": "csoai/two", "title": "two"},
+        {"ref": "csoai/one", "title": "duplicate"},
+    ]
+    try:
+        inv = cells.inventory_community_datasets(("first", "second"))
+    finally:
+        cells._get_json = original
     assert inv["n"] == len(inv["refs"])
-    assert inv["n"] > 0
+    assert inv["n"] == 2
     assert "not a grade" in inv["note"]
 
 
