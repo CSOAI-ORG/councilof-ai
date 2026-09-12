@@ -266,6 +266,20 @@ def fetch_live_from_hub(slug: str, token: str) -> list[str]:
 
 
 def main() -> int:
+    if len(sys.argv) >= 2 and sys.argv[1] == "--refresh-counts":
+        lock_path = Path(sys.argv[2])
+        lock = json.loads(lock_path.read_text())
+        refresh_counts(lock)
+        lock_path.write_text(json.dumps(lock, indent=2) + "\n")
+        print(
+            "n_measured",
+            lock["n_measured"],
+            "n_practice_probed",
+            lock["n_practice_probed"],
+            "n_locked",
+            lock["n_locked"],
+        )
+        return 0
     if len(sys.argv) >= 2 and sys.argv[1] == "--stamp-zero":
         import os
         from datetime import datetime, timezone

@@ -190,6 +190,72 @@ jobs:
           path: mill-out
           if-no-files-found: warn
 
+  # A failed transport probe must not leave old practice probes advertised as
+  # measurements. This job performs a semantic count migration only; it does
+  # not call inference providers, alter membership, or write the GSPC board.
+  truth-lock:
+    needs: probe
+    if: always() && needs.probe.outputs.ok != '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN || secrets.HUGGINGFACE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: download and correct Hub lock counters
+        id: truth
+        run: |
+          set -euo pipefail
+          if ! curl -fsSL -H "Authorization: Bearer ${HF_TOKEN}" \
+            -o /tmp/HF2200.lock.json \
+            "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/locks/HF2200.lock.json"; then
+            echo "HUB_LOCK_MISS refusing a synthetic replacement"
+            exit 1
+          fi
+          cp /tmp/HF2200.lock.json /tmp/HF2200.before.json
+          python3 scripts/mill_lock_update.py --refresh-counts /tmp/HF2200.lock.json
+          if cmp -s /tmp/HF2200.before.json /tmp/HF2200.lock.json; then
+            echo "changed=0" >> "$GITHUB_OUTPUT"
+            echo "HUB_LOCK_TRUTH_ALREADY_CURRENT"
+          else
+            echo "changed=1" >> "$GITHUB_OUTPUT"
+            echo "HUB_LOCK_TRUTH_CORRECTED"
+          fi
+      - name: retain corrected lock as evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf2200-lock-truth-migration
+          path: /tmp/HF2200.lock.json
+      - name: publish corrected counters to hub-queue
+        if: steps.truth.outputs.changed == '1'
+        run: |
+          pip install --quiet "huggingface_hub>=0.25"
+          python3 - <<'PY'
+          import json, os
+          from huggingface_hub import HfApi
+
+          token = (os.environ.get("HF_TOKEN") or "").strip()
+          if not token:
+              raise SystemExit("HF_TOKEN empty — corrected lock remains in artifact")
+          lock = json.load(open("/tmp/HF2200.lock.json"))
+          HfApi(token=token).upload_file(
+              path_or_fileobj="/tmp/HF2200.lock.json",
+              path_in_repo="locks/HF2200.lock.json",
+              repo_id="csoai/hub-queue",
+              repo_type="dataset",
+              commit_message=(
+                  f"truth migration n_measured={lock['n_measured']} "
+                  f"n_practice_probed={lock['n_practice_probed']} "
+                  "(no inference; not a board rewrite)"
+              ),
+          )
+          PY
+
   land-lock:
     needs: [probe, mill]
     if: always() && needs.probe.outputs.ok == '1'
@@ -263,4 +329,3 @@ jobs:
               ),
           )
           PY
-
