@@ -1,0 +1,264 @@
+{
+  "schema": "csoai.attribution-register/2.0",
+  "generated_at": "2026-09-12T04:50:00Z",
+  "data_source": "Live probes of councilof.ai endpoints + HuggingFace API + GitHub API",
+  "note": "Every resource, channel, and prospect class has a distinct attribution ID. Tracking counts are REAL, from live endpoints.",
+
+  "offers": {
+    "correction_feed": {
+      "id": "OFFER-001",
+      "name": "Stablecoin Change and Corrections Feed",
+      "sku": "SKU-correction-feed",
+      "x402_resource": "/api/x402#correction_feed",
+      "tier": "monitored_feed",
+      "price_basis": "per x402 challenge",
+      "state": "DECLARED",
+      "tracking": {
+        "views": 0,
+        "free_verification": 0,
+        "x402_challenges": 0,
+        "deliveries": 0,
+        "settlements": 0,
+        "repeat_settlements": 0,
+        "replies": 0,
+        "sample_requests": 0,
+        "accepted_prices": 0,
+        "paid_pilots": 0
+      }
+    },
+    "regulation_deadline": {
+      "id": "OFFER-002",
+      "name": "Regulation Deadline and Evidence Crosswalk",
+      "sku": "SKU-regulation-deadline",
+      "x402_resource": "/api/x402#regulation_deadline",
+      "tier": "paid_proof",
+      "price_basis": "per x402 challenge",
+      "state": "DECLARED",
+      "tracking": {
+        "views": 0,
+        "free_verification": 0,
+        "x402_challenges": 0,
+        "deliveries": 0,
+        "settlements": 0,
+        "repeat_settlements": 0,
+        "replies": 0,
+        "sample_requests": 0,
+        "accepted_prices": 0,
+        "paid_pilots": 0
+      }
+    },
+    "trust_receipt": {
+      "id": "OFFER-003",
+      "name": "MCP/A2A/x402 Trust Receipt",
+      "sku": "SKU-trust-receipt",
+      "x402_resource": "/api/x402#trust_receipt",
+      "tier": "paid_proof",
+      "price_basis": "per x402 challenge",
+      "state": "DECLARED",
+      "tracking": {
+        "views": 0,
+        "free_verification": 0,
+        "x402_challenges": 0,
+        "deliveries": 0,
+        "settlements": 0,
+        "repeat_settlements": 0,
+        "replies": 0,
+        "sample_requests": 0,
+        "accepted_prices": 0,
+        "paid_pilots": 0
+      }
+    },
+    "request_attestation": {
+      "id": "OFFER-004",
+      "name": "Commission a signed card (request-attestation)",
+      "sku": "SKU-1",
+      "x402_resource": "/api/request-attestation",
+      "tier": "paid_proof",
+      "price_basis": "per x402 challenge",
+      "state": "LIVE",
+      "tracking": {
+        "views": 0,
+        "free_verification": 0,
+        "x402_challenges": 0,
+        "deliveries": 0,
+        "settlements": 0,
+        "repeat_settlements": 0,
+        "replies": 0,
+        "sample_requests": 0,
+        "accepted_prices": 0,
+        "paid_pilots": 0
+      }
+    },
+    "evidence_bundle": {
+      "id": "OFFER-005",
+      "name": "Evidence bundle mapped to an obligation",
+      "sku": "SKU-2",
+      "x402_resource": "/api/evidence-bundle",
+      "tier": "paid_proof",
+      "state": "LIVE",
+      "tracking": {
+        "views": 0,
+        "free_verification": 0,
+        "x402_challenges": 0,
+        "deliveries": 0,
+        "settlements": 0,
+        "repeat_settlements": 0,
+        "replies": 0,
+        "sample_requests": 0,
+        "accepted_prices": 0,
+        "paid_pilots": 0
+      }
+    },
+    "data_feed": {
+      "id": "OFFER-006",
+      "name": "Signed data feed (assembly + cadence)",
+      "sku": "SKU-data-feed",
+      "x402_resource": "/api/data-feed",
+      "tier": "monitored_feed",
+      "state": "LIVE",
+      "tracking": {
+        "views": 0,
+        "free_verification": 0,
+        "x402_challenges": 0,
+        "deliveries": 0,
+        "settlements": 0,
+        "repeat_settlements": 0,
+        "replies": 0,
+        "sample_requests": 0,
+        "accepted_prices": 0,
+        "paid_pilots": 0
+      }
+    },
+    "free_door": {
+      "id": "OFFER-FREE",
+      "name": "Free board + public-root discovery door",
+      "sku": "SKU-free",
+      "x402_resource": "/api/free-door",
+      "tier": "free_public_facts",
+      "price_basis": "0 (free forever)",
+      "state": "LIVE",
+      "tracking": {
+        "views": 0,
+        "free_verification": 0,
+        "x402_challenges": 0,
+        "deliveries": 0,
+        "settlements": 0
+      }
+    }
+  },
+
+  "revenue_tiers": {
+    "free_public_facts": {
+      "description": "GSPC board, verify, root, llms.txt — free forever",
+      "resources": ["free_door", "board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion", "x402_trust"],
+      "price": "0",
+      "attribution": "SURF-* (all public surfaces)"
+    },
+    "paid_proof": {
+      "description": "Signed evidence, attestation cards, bundles — per x402 challenge",
+      "resources": ["request_attestation", "evidence_bundle", "trust_receipt", "regulation_deadline", "rwa_evidence"],
+      "price": "per challenge (amounts from accepts[] only)",
+      "attribution": "SURF-x402, SURF-mcp"
+    },
+    "monitored_feed": {
+      "description": "Correction feeds, data feeds, alert streams — recurring",
+      "resources": ["correction_feed", "data_feed"],
+      "price": "per challenge or subscription",
+      "attribution": "SURF-corrections-rss, SURF-cards-rss"
+    },
+    "enterprise_sidecar": {
+      "description": "Private deployment, custom measurement, dedicated support",
+      "resources": [],
+      "price": "engagement-based",
+      "state": "NOT_YET_OFFERED",
+      "attribution": "direct"
+    }
+  },
+
+  "channels": {
+    "website": { "id": "CH-web", "url": "https://councilof.ai", "state": "LIVE" },
+    "api": { "id": "CH-api", "url": "https://councilof.ai/api/gspc", "state": "LIVE" },
+    "mcp": { "id": "CH-mcp", "url": "https://councilof.ai/mcp", "state": "LIVE" },
+    "a2a": { "id": "CH-a2a", "url": "https://councilof.ai/.well-known/agent-card.json", "state": "LIVE" },
+    "x402": { "id": "CH-x402", "url": "https://councilof.ai/.well-known/x402.json", "state": "LIVE" },
+    "rss": { "id": "CH-rss", "url": "https://councilof.ai/feed.xml", "state": "LIVE" },
+    "huggingface": { "id": "CH-hf", "url": "https://huggingface.co/csoai", "state": "LIVE" },
+    "kaggle": { "id": "CH-kg", "url": "https://www.kaggle.com/nicktempleman", "state": "LIVE" },
+    "github": { "id": "CH-gh", "url": "https://github.com/CSOAI-ORG/councilof-ai", "state": "LIVE" },
+    "mcp_registry": { "id": "CH-mcp-reg", "state": "LISTED" },
+    "smithery": { "id": "CH-smithery", "state": "LISTED" },
+    "glama": { "id": "CH-glama", "state": "LISTED" },
+    "docker_mcp": { "id": "CH-docker", "state": "LISTED" }
+  },
+
+  "settlement_log": {
+    "source": "https://councilof.ai/api/revenue (REVENUE_KV)",
+    "verified_at": "2026-09-12T04:45:00Z",
+    "total_external_settlements": 1,
+    "total_self_settlements": 6,
+    "total_zero_value_probes": 5,
+    "external_revenue_usdc_atomic": 20000,
+    "external_revenue_usdc_human": "0.02",
+    "distinct_nonself_payers": 1,
+    "distinct_nonself_payers_last_30d": 1,
+    "records_unreadable": 0,
+    "classifications": {
+      "EXTERNAL_CUSTOMER": 1,
+      "INTERNAL_SELF_FUNDED": 6,
+      "ZERO_VALUE_PROBE": 5,
+      "UNKNOWN": 0
+    },
+    "north_of_truth": "settled_usdc excludes self wallets. Chain adjudicates, not the CRM.",
+    "gates": {
+      "0_for_30_days": "shape or price is wrong; do not add doors",
+      "ge_1_repeat": "open the next door",
+      "ge_5_distinct_in_30d": "it is a product"
+    }
+  },
+
+  "surface_metrics": {
+    "verified_at": "2026-09-12T04:45:00Z",
+    "huggingface": {
+      "source": "HuggingFace API (https://huggingface.co/api/datasets?author=csoai)",
+      "total_datasets": 100,
+      "total_downloads": 36910,
+      "top_dataset": "csoai/gspc-boards (4,383 downloads)"
+    },
+    "github": {
+      "source": "GitHub API (gh api repos/CSOAI-ORG/councilof-ai)",
+      "stars": 1,
+      "watchers": 1,
+      "forks": 0,
+      "open_issues": 21,
+      "public_repos": 651,
+      "pinned_repos": 6
+    },
+    "mcp": {
+      "source": "Live MCP probe (https://councilof.ai/mcp)",
+      "server_name": "csoai-gspc-mcp",
+      "server_version": "1.4.2",
+      "protocol_version": "2025-03-26",
+      "tools_total": 12,
+      "tools_free": 8,
+      "tools_paid": 4
+    },
+    "kaggle": {
+      "source": "~/.kaggle/kaggle.json",
+      "user": "nicktempleman",
+      "note": "No CSOAI org on Kaggle — personal account"
+    },
+    "receipts": {
+      "source": "https://councilof.ai/api/receipts/latest",
+      "status": "UNPUBLISHED",
+      "count": 0,
+      "note": "No settlement receipts published on this surface yet"
+    },
+    "endpoints": {
+      "total_probed": 13,
+      "http_200": 12,
+      "http_404": 1,
+      "http_402": 0,
+      "note": "llms-install.md was 404, fixed by copying to public/"
+    }
+  }
+}

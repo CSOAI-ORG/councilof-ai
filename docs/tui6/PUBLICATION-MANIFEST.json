@@ -1,0 +1,159 @@
+{
+  "schema": "csoai.publication-manifest/1.0",
+  "generated_at": "2026-09-12T00:00:00Z",
+  "canonical_source": "CSOAI-ORG/councilof-ai master branch",
+  "note": "Every surface publishes from one canonical evidence stream. State: LIVE, PREPARED, or MISSING.",
+
+  "surfaces": {
+    "website": {
+      "url": "https://councilof.ai",
+      "status": 200,
+      "state": "LIVE",
+      "content": ["homepage", "board", "verify", "layer0", "dashboard", "blog", "ecosystem", "use-cases"],
+      "attribution_id": "SURF-web"
+    },
+    "api_gspc": {
+      "url": "https://councilof.ai/api/gspc",
+      "status": 200,
+      "state": "LIVE",
+      "content": "22-axis GSPC board with totals, axis rows, leader scores",
+      "attribution_id": "SURF-api-gspc"
+    },
+    "api_state": {
+      "url": "https://councilof.ai/api/state",
+      "status": 200,
+      "state": "LIVE",
+      "content": "Single source of truth for all lane-quotable counts",
+      "attribution_id": "SURF-api-state"
+    },
+    "api_revenue": {
+      "url": "https://councilof.ai/api/revenue",
+      "status": 200,
+      "state": "LIVE",
+      "content": "SKU counts and settled USDC from counters.json + REVENUE_KV",
+      "attribution_id": "SURF-api-revenue"
+    },
+    "rss_feed": {
+      "url": "https://councilof.ai/feed.xml",
+      "status": 200,
+      "state": "LIVE",
+      "content": "State changes feed",
+      "attribution_id": "SURF-rss"
+    },
+    "corrections_feed": {
+      "url": "https://councilof.ai/feeds/corrections.xml",
+      "state": "DECLARED",
+      "content": "Corrections ledger feed",
+      "attribution_id": "SURF-corrections-rss"
+    },
+    "cards_feed": {
+      "url": "https://councilof.ai/feeds/cards.xml",
+      "state": "DECLARED",
+      "content": "Newly signed measurement cards",
+      "attribution_id": "SURF-cards-rss"
+    },
+    "roots_feed": {
+      "url": "https://councilof.ai/feeds/roots.xml",
+      "state": "DECLARED",
+      "content": "Public root updates",
+      "attribution_id": "SURF-roots-rss"
+    },
+    "sitemap": {
+      "url": "https://councilof.ai/sitemap.xml",
+      "status": 200,
+      "state": "LIVE",
+      "attribution_id": "SURF-sitemap"
+    },
+    "llms_txt": {
+      "url": "https://councilof.ai/llms.txt",
+      "status": 200,
+      "state": "LIVE",
+      "content": "Machine-readable agent discovery file",
+      "attribution_id": "SURF-llms-txt"
+    },
+    "agent_card": {
+      "url": "https://councilof.ai/.well-known/agent-card.json",
+      "status": 200,
+      "state": "LIVE",
+      "content": "A2A Agent Card v1.1.0 with 3 extensions",
+      "attribution_id": "SURF-agent-card"
+    },
+    "x402_discovery": {
+      "url": "https://councilof.ai/.well-known/x402.json",
+      "status": 200,
+      "state": "LIVE",
+      "content": "x402 discovery with 9 resources, Base mainnet USDC",
+      "attribution_id": "SURF-x402"
+    },
+    "mcp_endpoint": {
+      "url": "https://councilof.ai/mcp",
+      "state": "LIVE",
+      "content": "MCP server v1.4.2, 12 tools (8 free, 4 paid)",
+      "attribution_id": "SURF-mcp"
+    },
+    "root_json": {
+      "url": "https://councilof.ai/root.json",
+      "status": 200,
+      "state": "LIVE",
+      "content": "167-card Merkle root, Rekor-witnessed",
+      "attribution_id": "SURF-root"
+    },
+    "did_document": {
+      "url": "https://csoai.org/.well-known/did.json",
+      "state": "LIVE",
+      "content": "DID document with verification methods",
+      "attribution_id": "SURF-did"
+    },
+    "huggingface": {
+      "url": "https://huggingface.co/csoai",
+      "state": "LIVE",
+      "content": "100 datasets, 42 spaces, 2 models, 6 collections, ~25K downloads",
+      "attribution_id": "SURF-hf"
+    },
+    "kaggle": {
+      "url": "https://www.kaggle.com/nicktempleman",
+      "state": "LIVE",
+      "content": "19 CSOAI-related datasets, ~419 downloads, personal account",
+      "attribution_id": "SURF-kaggle"
+    },
+    "github": {
+      "url": "https://github.com/CSOAI-ORG/councilof-ai",
+      "state": "LIVE",
+      "content": "651 public repos, flagship not pinned, no releases",
+      "attribution_id": "SURF-github"
+    },
+    "mcp_registry": {
+      "state": "LISTED",
+      "content": "Official MCP Registry (330 servers listed)",
+      "attribution_id": "SURF-mcp-reg"
+    },
+    "smithery": {
+      "state": "LISTED",
+      "attribution_id": "SURF-smithery"
+    },
+    "glama": {
+      "state": "LISTED",
+      "attribution_id": "SURF-glama"
+    },
+    "docker_mcp": {
+      "state": "LISTED",
+      "attribution_id": "SURF-docker-mcp"
+    }
+  },
+
+  "missing_surfaces": {
+    "llms_install": {
+      "url": "https://councilof.ai/llms-install.md",
+      "status": 404,
+      "action": "Create llms-install.md with MCP install instructions"
+    },
+    "github_release": {
+      "action": "Create first GitHub release on councilof-ai",
+      "note": "No releases exist despite 335+ signed cards"
+    },
+    "indexnow": {
+      "action": "Submit IndexNow key for Bing/Yandex indexing",
+      "state": "NOT_IMPLEMENTED"
+    }
+  }
+}
