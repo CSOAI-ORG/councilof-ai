@@ -2,32 +2,102 @@
   "schema": "csoai.execution-ledger/0.1",
   "purpose": "Cross-lane coordination for the eight-TUI goal mode (owner brief 2026-09-12). Claim files before editing; earlier owner keeps a contested file; later lanes supply patches.",
   "issued": "2026-09-12",
-  "states": ["DISCOVERED","INDEXED","MEASURED","SIGNED","ROOTED","WITNESSED_REKOR","STAMPED_PENDING_BITCOIN","CONFIRMED_BITCOIN","SETTLED","REPRODUCED","UNCHECKABLE"],
-  "merge_order": ["TUI1","TUI2","TUI3","TUI4","TUI5","TUI6","TUI7","TUI8"],
+  "states": [
+    "DISCOVERED",
+    "INDEXED",
+    "MEASURED",
+    "SIGNED",
+    "ROOTED",
+    "WITNESSED_REKOR",
+    "STAMPED_PENDING_BITCOIN",
+    "CONFIRMED_BITCOIN",
+    "SETTLED",
+    "REPRODUCED",
+    "UNCHECKABLE"
+  ],
+  "merge_order": [
+    "TUI1",
+    "TUI2",
+    "TUI3",
+    "TUI4",
+    "TUI5",
+    "TUI6",
+    "TUI7",
+    "TUI8"
+  ],
   "verified_facts": {
     "public_root": {
-      "card_count": 169,
-      "merkle_root": "94e99db52a67931aa38ca6b0aa4574c28a600204107b26ad3beef9b9e366e292",
-      "as_of": "2026-09-11T12:45:44Z",
+      "card_count": 197,
+      "merkle_root": "3446586f25a71eff0080617ed060727b4a79c6861367af32ee3a4e298b7cb5c3",
+      "sha256": "0dd5a8d9fbeb8243d2e5c58ffe686381c04977bb658e0eca783f2f93f98035dc",
+      "as_of": "2026-09-12T10:40:14Z",
       "signer": "did:web:csoai.org#board-attestation-1",
-      "verified_by": "JEEVES via GET https://councilof.ai/root.json, 2026-09-12T06:00Z",
-      "note": "Supersedes checkpoint a6f79e25... Refresh before quoting."
+      "signature_check": "VALID — Ed25519 verified over canonical preimage {kind,schema,as_of,merkle_root,card_count,did_intended}, JEEVES 2026-09-12T12:05Z",
+      "inclusion_check": "VALID — leaf 021455f6… verified against live merkle via /api/proof",
+      "rekor": "WITNESSED — logIndex 2806476623, logID c0d23d6a…, entry rekor-root-0dd5a8d9.json",
+      "ots": "STAMPED_PENDING_BITCOIN — root-0dd5a8d9.json.ots stamped 2026-09-12T10:40:19Z, bitcoin_blocks empty (expected; blocks take hours). Pod cron upgrades every 8h.",
+      "parity": "councilof.ai == councilof-ai.pages.dev byte-identical 2026-09-12T12:05Z",
+      "staleness": "as_of ~1.4h old at check time — fresh",
+      "note": "Supersedes 169-card root (94e99db5…, as_of 2026-09-11T12:45:44Z). Refresh before quoting."
     },
     "x402_door": {
       "discovery": "https://councilof.ai/.well-known/x402.json live, x402Version 2, scheme exact, network eip155:8453, mode live",
       "challenge": "POST /api/request-attestation returns HTTP 402 (verified 2026-09-12T06:00Z)",
       "settlement": "UNTESTED this session - payment requires explicit owner authorization"
+    },
+    "historical_root_fe3a9e24": {
+      "card_count": 154,
+      "status": "CONFIRMED_BITCOIN",
+      "evidence": "public/interop/root-fe3a9e24.json.ots upgraded 2026-09-12 (PR #1962). Independent verification: parsed proof bytes, extracted BitcoinBlockHeaderAttestations at heights 965528/965532/965548/965554, recomputed op-chain from file digest, matched each block's merkle root via blockstream.info. Live-served bytes (4,986B) verified on both domains.",
+      "caveat": "NEVER present this 154-leaf root as current. Current root is 197 cards.",
+      "verified_by": "JEEVES TUI1, 2026-09-12T12:05Z"
     }
   },
   "lanes": {
-    "TUI1": {"objective": "release controller, truth ledger, roots and anchors", "claims": [], "status": "ACTIVE"},
-    "TUI2": {"objective": "stablecoin and tokenized-asset measurement", "claims": [], "status": "ACTIVE"},
-    "TUI3": {"objective": "models, benchmarks, HF, Kaggle, 3090 harness", "claims": [], "status": "ACTIVE"},
-    "TUI4": {"objective": "MCP, A2A, x402 and agent-economy interoperability", "claims": [], "status": "ACTIVE"},
-    "TUI5": {"objective": "financial rails, institutions, ISO 20022, XRPL, legacy", "claims": [], "status": "ACTIVE"},
-    "TUI6": {"objective": "regulation, standards and live crosswalks", "claims": [], "status": "ACTIVE"},
-    "TUI7": {"objective": "master GSPC board, Council OS, mobile, public product", "claims": [], "status": "ACTIVE"},
-    "TUI8": {"objective": "distribution, earned attention, revenue, buyer proof", "claims": [], "status": "ACTIVE"}
+    "TUI1": {
+      "objective": "release controller, truth ledger, roots and anchors",
+      "claims": [
+        "docs/hermes/EXECUTION-LEDGER.json",
+        "public/interop/*.ots (upgrade passes)",
+        "root.json / root-witness facts"
+      ],
+      "status": "ACTIVE — root checks green; card intake queue awaiting lanes 2–6 unsigned cards"
+    },
+    "TUI2": {
+      "objective": "stablecoin and tokenized-asset measurement",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI3": {
+      "objective": "models, benchmarks, HF, Kaggle, 3090 harness",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI4": {
+      "objective": "MCP, A2A, x402 and agent-economy interoperability",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI5": {
+      "objective": "financial rails, institutions, ISO 20022, XRPL, legacy",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI6": {
+      "objective": "regulation, standards and live crosswalks",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI7": {
+      "objective": "master GSPC board, Council OS, mobile, public product",
+      "claims": [],
+      "status": "ACTIVE"
+    },
+    "TUI8": {
+      "objective": "distribution, earned attention, revenue, buyer proof",
+      "claims": [],
+      "status": "ACTIVE"
+    }
   },
   "rules": [
     "Append claims as {lane, files[], since, note}; never rewrite another lane's claim.",
