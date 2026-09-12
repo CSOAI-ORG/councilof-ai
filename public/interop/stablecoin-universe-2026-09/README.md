@@ -58,3 +58,12 @@ per-subject measurement states live in `public/interop/coverage-register.json`.
 This resolves ledger CONTRAD-001: the index says UNMEASURED for all 425 because
 it froze at discovery time; readiness/catalog mark RLUSD as the deeply-measured
 exception; the coverage matrix is the live state view.
+
+## Drift note 2 — 2026-09-12 15:33Z (appended)
+
+A second live refresh the same day (`drift-2026-09-12T1533Z.json`, observed
+`refresh_observed_at` in that file): counts still unchanged (425 / 211 / 1,640
+/ 337 USD-pegged), no added/removed assets, no chain-set changes. Summed
+upstream `circulating.peggedUSD` $310.79B → $312.31B (+$1.52B vs the frozen
+snapshot). Largest movers: USDX +$677.4M, USDN +$402.5M, USDC +$247.7M,
+USDT +$84.7M. Frozen bytes and the signing situation are unchanged.
