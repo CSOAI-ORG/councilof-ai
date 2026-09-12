@@ -1,8 +1,8 @@
 {
  "schema": "https://councilof.ai/schema/card-v0.json",
  "surface": "autoeat.mcp.registry",
- "subject": "auto-eat mcp-server: 1 LIVE of 1 probed (read-only, ungraded)",
- "as_of": "2026-09-01T12:21:38Z",
+ "subject": "auto-eat mcp-server: 135 LIVE of 139 probed (read-only, ungraded)",
+ "as_of": "2026-09-12T06:49:50Z",
  "source_urls": [
   "https://registry.modelcontextprotocol.io/v0/servers"
  ],
@@ -18,20 +18,25 @@
   },
   "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 1,
-   "live": 1,
-   "placeholder": 0,
+   "n_probed": 139,
+   "live": 135,
+   "placeholder": 3,
    "held": 0,
-   "dead": 0,
+   "dead": 1,
    "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
+   "live_fraction_of_probed": 0.9712,
    "live_examples": [
-    "ai.avasis/quant-research (405)"
+    "agency.ottobot/business-contact-finder (405)",
+    "agency.ottobot/contractor-license-changes (405)",
+    "ai.atako/mcp (401)",
+    "ai.akkrudata/akkrudata (401)",
+    "ai.balancos/mcp (401)",
+    "ai.cnpj/mcp (401)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T12:21:38Z",
+  "as_of": "2026-09-12T06:49:50Z",
   "unmeasured": [
    "tool_behavior",
    "capability_claims",
