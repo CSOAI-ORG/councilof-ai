@@ -10,7 +10,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import mill_hf_inference
-from mill_lock_update import apply_mill, restore_original_membership
+from mill_lock_update import apply_mill, refresh_counts, restore_original_membership
 
 
 class _Response:
@@ -74,6 +74,22 @@ class MillTruthTests(unittest.TestCase):
         self.assertEqual(result["models"][0]["status"], "MEASURED")
         self.assertEqual(result["n_practice_probed"], 0)
         self.assertEqual(result["n_measured"], 1)
+
+    def test_refresh_counts_repairs_legacy_asserted_total(self):
+        lock = {
+            "n_locked": 2200,
+            "n_measured": 405,
+            "models": [
+                {"slug": "probe", "status": "practice-mill"},
+                {"slug": "miss", "status": "UNCHECKABLE"},
+            ],
+        }
+
+        refresh_counts(lock)
+
+        self.assertEqual(lock["n_locked"], 2)
+        self.assertEqual(lock["n_measured"], 0)
+        self.assertEqual(lock["n_practice_probed"], 1)
 
 
 if __name__ == "__main__":
