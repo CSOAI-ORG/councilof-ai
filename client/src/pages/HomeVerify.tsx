@@ -13,6 +13,7 @@ import HomeFilms from "@/components/home/HomeFilms";
 import HomeCinematicWorlds from "@/components/home/HomeCinematicWorlds";
 import HomeGspcTable from "@/components/home/HomeGspcTable";
 import HomeUnderstand from "@/components/home/HomeUnderstand";
+import HomeEvidenceShowcase from "@/components/home/HomeEvidenceShowcase";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
 
@@ -133,6 +134,8 @@ export default function HomeVerify() {
           </p>
           <HomeComposer onAskAxis={setAxis} />
         </section>
+
+        <HomeEvidenceShowcase />
       </main>
 
       <ToolStack />
