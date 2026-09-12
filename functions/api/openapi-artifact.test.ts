@@ -115,13 +115,34 @@ describe("the paid operations are exactly the doors in /.well-known/x402.json", 
 });
 
 describe("the free surface is declared, not probed", () => {
-  it("every operation whose only response is 200 declares security: []", () => {
+  it("does not override explicit access contracts with a generic public classification", () => {
     for (const { path, method, op } of ops()) {
       if (op["x-payment-info"]) continue;
       const codes = Object.keys(op.responses);
       if (codes.length === 1 && codes[0] === "200") expect(op.security, `${method} ${path}`).toEqual([]);
-      else expect(op.security, `${method} ${path} (${codes.join("/")}) must stay unclassified`).toBeUndefined();
+      else if (!codes.includes("401")) expect(op.security, `${method} ${path} (${codes.join("/")}) must stay unclassified`).toBeUndefined();
     }
+  });
+
+  it("keeps operator-only operations out of unauthenticated discovery", () => {
+    for (const [path, method, scheme] of [
+      ["/api/board-sign", "post", "githubOidc"],
+      ["/api/provider-canary", "post", "operatorBearer"],
+      ["/api/action-jobs", "post", "operatorBearer"],
+      ["/api/action-jobs", "patch", "operatorBearer"],
+    ]) {
+      const op = spec.paths[path][method];
+      expect(op.security, `${method} ${path}`).toEqual([{ [scheme]: [] }]);
+      expect(op.responses["401"]).toBeDefined();
+      expect(spec.components.securitySchemes[scheme]).toMatchObject({ type: "http", scheme: "bearer" });
+    }
+  });
+
+  it("distinguishes public job contract metadata from authenticated record reads", () => {
+    const op = spec.paths["/api/action-jobs"].get;
+    expect(op.security).toEqual([{}, { operatorBearer: [] }]);
+    expect(op.description).toContain("job_id require writer bearer authorization");
+    expect(spec.paths["/api/provider-canary"].get.security).toEqual([]);
   });
 
   it("keeps the quarantined and not-implemented markers the other tests read", () => {
