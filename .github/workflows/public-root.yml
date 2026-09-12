@@ -92,6 +92,14 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/witness_public_root.py --refresh-eas
+
+      # readiness.json is a derived view over root.json + root-witness-latest.json.
+      # Rebuilding it before the witness steps made a newly stamped root inherit the
+      # previous root's Bitcoin-confirmed state. Recompute only after all exact-root
+      # witness metadata is final so the public readiness state and the gate agree.
+      - name: Refresh witness-derived stablecoin readiness
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: python scripts/build_stablecoin_readiness.py
       - name: mark witnessed digests (KV entries in this root → witnessed; public mirrors; idempotent, never fails the publish)
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         env:
@@ -141,6 +149,7 @@ jobs:
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
           git add public/root.json public/cards public/proofs public/publisher-health.json
+          git add public/interop/stablecoin-universe-2026-09/readiness.json
           git add public/archive
           mapfile -d '' witness_files < <(find public/interop -maxdepth 1 -type f \
             \( -name 'root-witness-*.json' -o -name 'rekor-root-*.json' -o -name '*.ots' \) -print0)
