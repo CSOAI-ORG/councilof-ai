@@ -1,0 +1,86 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.revenue.projection",
+  "subject": "revenue-projection-model",
+  "measured_at": "2026-09-13T04:39:00.750771+00:00",
+  "metrics": {
+    "conservative": {
+      "month1": {
+        "mrr": "$500",
+        "customers": 1,
+        "source": "stablecoin issuer"
+      },
+      "month3": {
+        "mrr": "$5K",
+        "customers": 10,
+        "source": "stablecoins + exchanges"
+      },
+      "month6": {
+        "mrr": "$25K",
+        "customers": 50,
+        "source": "stablecoins + exchanges + DeFi"
+      },
+      "month12": {
+        "mrr": "$100K",
+        "customers": 200,
+        "source": "all segments"
+      },
+      "arr_year1": "$600K-1.2M"
+    },
+    "moderate": {
+      "month1": {
+        "mrr": "$1K",
+        "customers": 2,
+        "source": "stablecoin + insurance"
+      },
+      "month3": {
+        "mrr": "$10K",
+        "customers": 20,
+        "source": "stablecoins + exchanges + DeFi"
+      },
+      "month6": {
+        "mrr": "$50K",
+        "customers": 100,
+        "source": "all segments"
+      },
+      "month12": {
+        "mrr": "$250K",
+        "customers": 500,
+        "source": "all segments + enterprise"
+      },
+      "arr_year1": "$1.5M-3M"
+    },
+    "aggressive": {
+      "month1": {
+        "mrr": "$5K",
+        "customers": 5,
+        "source": "early adopters"
+      },
+      "month3": {
+        "mrr": "$50K",
+        "customers": 50,
+        "source": "all segments"
+      },
+      "month6": {
+        "mrr": "$250K",
+        "customers": 250,
+        "source": "all segments + enterprise"
+      },
+      "month12": {
+        "mrr": "$1M",
+        "customers": 1000,
+        "source": "all segments + enterprise + insurance"
+      },
+      "arr_year1": "$6M-12M"
+    },
+    "drivers": [
+      "EU AI Act Art50 (Dec2) \u2014 compliance deadline",
+      "CLARITY Act + GENIUS Act \u2014 US crypto regulation",
+      "Agent economy explosion \u2014 x402 native",
+      "Insurance risk scoring \u2014 $9B+ TAM",
+      "COBOLBridge \u2014 $10B+ TAM"
+    ]
+  },
+  "honest_sentence": "Revenue projection: conservative ($600K-1.2M ARR year1), moderate ($1.5M-3M ARR year1), aggressive ($6M-12M ARR year1). Drivers: EU AI Act (Dec2), CLARITY/GENIUS Act, agent economy, insurance scoring, COBOLBridge. First revenue target: this month.",
+  "measurement_not_certification": true
+}
