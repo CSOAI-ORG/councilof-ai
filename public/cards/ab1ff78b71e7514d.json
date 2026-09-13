@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-13T16:01:23.828Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 9400,
+      "issuer": "GateHub",
+      "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1663452.535343226,
+      "symbol": "EUR.gh",
+      "verified_domain": null,
+      "verified_via": "XRPLMeta registry"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ab1ff78b71e7514da274dc9c859636f26a731c0fba4969de18b243783d03d161",
+    "sig_ed25519": "683e8342390ff6f6d1de007d24a1166e2b8907e3eb4b7e14373b2e49f38033a0d136286bc570e1f68c8dcc930f778b2cd1ab9ca436c324c3828e026575c4a40d",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EUR.gh public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "1ab6c943d7b860cd0789d2bd3b1d9530e4c9fc5a62d07118c21dce392bd15b2f",
+    "60a36f0f9d668e55cb857259cbe90775c6b796d5b5a9cac5e8f867e7a26a741c",
+    "8b0fb277b9628b2c1f5478419705816960570278a7efe970e9696d4e652ee4c0",
+    "e625242b0d6048b81539a0f717b0dd746aeb73a762258e903d13ade24745d82a",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "8b88ea07caa4ac71b329b9e655077a7e6fa7362a7342c2582956765563db9872",
+    "4d3a7ff54df8ebd45d1bfcc211392631d628eedca865a57dcda93ffeae0f9073",
+    "943536306e1ec9650757f6f49cd201ce43cac8296ac010c782e6ba11c208cf72",
+    "35cee2466829d30bfdd055b131ee24667585e2dd133111c1e977fa921d28882e"
+  ]
+}

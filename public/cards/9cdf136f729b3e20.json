@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-13T16:01:23.828Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 120,
+      "issuer": "Société Générale-FORGE",
+      "issuer_address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 10000000,
+      "symbol": "EURCV",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9cdf136f729b3e200ebadcc5428307ddbea7c0b40b9d78af91f27a2eac621c85",
+    "sig_ed25519": "5ce07705748e1b1faade66c65da6187ee32c2aa3f1b4216ca7fc933bf7f6b27357702da28fe29d9a64fe7cb5eb684a3962e9216c4f0ae7110955bbf889695406",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EURCV public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "2723c87f9c79bc2c70cd7d3cab310a838de506f55713ca084ab4381b72411586",
+    "4ecb79dce8a7d8c53a957e4e41cdd0d5cdbf95647de54720efb0036da73c8c7a",
+    "252cb8109da8a5cd61f59d734a5ece00b2703c0ab103b814b895c5ac39e5bc3c",
+    "c7970b1b66f23e7039de2eeb30de69422efbef771921bf377826a4f5de18e982",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "8b88ea07caa4ac71b329b9e655077a7e6fa7362a7342c2582956765563db9872",
+    "4d3a7ff54df8ebd45d1bfcc211392631d628eedca865a57dcda93ffeae0f9073",
+    "943536306e1ec9650757f6f49cd201ce43cac8296ac010c782e6ba11c208cf72",
+    "35cee2466829d30bfdd055b131ee24667585e2dd133111c1e977fa921d28882e"
+  ]
+}

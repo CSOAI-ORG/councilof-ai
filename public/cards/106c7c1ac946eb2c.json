@@ -1,0 +1,89 @@
+{
+  "card": {
+    "as_of": "2026-09-13T16:10:53Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:bIB01:arbitrum",
+      "symbol": "bIB01",
+      "product": "Backed IB01 $ Treasury Bond 0-1yr",
+      "chain": "arbitrum",
+      "chain_id": 42161,
+      "address": "0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "block": 504787626,
+      "block_hash": "0x2bed9eb5b11bf06f2aef7a120663196f35030b271a7a453b0a272d971d96e560",
+      "block_time": "2026-09-13T16:10:53Z",
+      "rpc": "arb1.arbitrum.io",
+      "checked": {
+        "name": "Backed IB01 $ Treasury Bond 0-1yr",
+        "symbol": "bIB01",
+        "decimals": 18,
+        "totalSupply": "60000000000000000000000",
+        "isPaused": false,
+        "owner": "0x49754062e35f7591b93cc4f9915965be89643a65",
+        "sanctionsList": "0x40c57923924b5c5c5455c48d93317139addac8fb",
+        "pauser": "0x8768cda7a463dae1baa6b2500efb025ebd7ffc50",
+        "terms": "https://www.backedassets.fi/legal-documentation",
+        "eip1967_implementation": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+        "eip1967_admin": "0xf2057bdff8439dbffce073e14a9854945d5e5644"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+      ],
+      "attests": "historical permission state at block 504787626 on arbitrum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "106c7c1ac946eb2c73c63b3b35dd2b88a94b55c7e1a83c00c1d3db9d350403f6",
+    "sig_ed25519": "389db4a2ed54187450a170fe3720deab88c19e18d910e9e61cf113452ec819e979c45e5896288a2627affad396e913e6b745ee80cde0f77ad5a017c340bd9806",
+    "source_urls": [
+      "https://arb1.arbitrum.io/rpc",
+      "https://arbiscan.io/token/0xca30c93b02514f86d5c86a6e375e3a330b435fb5"
+    ],
+    "subject": "evm:bIB01:arbitrum permission state at block 504787626",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:arbitrum",
+      "coverage:permission-state",
+      "subject:bIB01"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+    ]
+  },
+  "proof": [
+    "bca7f3f5b366e505bed24d5bc86c8d6251976e17444769c64410692281d9cad0",
+    "9bad7caf400d0321cb9e1261f7397da48a9af8ae7525b8548aa35c1d288d9602",
+    "0abaa7364dff10422ee6ec72c51edac54d91d9a6420cf9cca40c24c0056a2ad9",
+    "3d56f6ec6056c8cbba982f8c18e9e988f89fa015f5666e01484f61744046798c",
+    "53f6d8a5ad98fa6582f0f7114d22ac3f24e22f7248dda9cbbf1659b2d4688778",
+    "5aa9a5e33df1b00cbc239b94dee5f83d7b613e6e2f6a35ecd851ed19c60ea716",
+    "de8458de8a9650e64b9d364f10fdff1d5d2b17ed679fb22c972884def7f189ca",
+    "9b7c347ddaf0920904417f3df61785d5fe3903aa62f41b24e7aab62895b25bf7",
+    "35cee2466829d30bfdd055b131ee24667585e2dd133111c1e977fa921d28882e"
+  ]
+}

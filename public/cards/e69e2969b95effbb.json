@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-13T10:18:39Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms.daily/0.1",
+      "state": "PROBED",
+      "run_at": "2026-09-13T10:18:39Z",
+      "normaliser": "csoai-norm-v1",
+      "n_targets": 51,
+      "n_ok": 45,
+      "n_unchanged": 16,
+      "n_changed": 4,
+      "n_bytes_only": 25,
+      "n_first_capture": 0,
+      "n_uncheckable": 6,
+      "n_unknown": 0,
+      "changed": [
+        "xai/terms",
+        "xai/model_cards",
+        "deepseek/model_cards",
+        "alibaba-qwen/model_cards"
+      ],
+      "uncheckable": [
+        "openai/terms",
+        "openai/usage_policy",
+        "openai/model_cards",
+        "openai/pricing",
+        "openai/safety_policy",
+        "openai/art50_marking"
+      ],
+      "unknown": [],
+      "attests": "for each target listed as unchanged, the normalised sha256 of this capture equals the previous OK capture — an observation of two captures, nothing about the document between them",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e69e2969b95effbbffbcd8cef49163a2ac6eeadceebce5b7afe6f207fafcafb8",
+    "sig_ed25519": "0c80257023cda3a3cf210df5a0dd234ca91b94108ba11c05a4144b4787414c4d3889fb26c6d525eab7e9793e34df25356183ea74d91594b61d2ee373e2ec5507",
+    "source_urls": [
+      "https://councilof.ai/feeds/provider-diff/index.json"
+    ],
+    "subject": "provider-diff daily capture 2026-09-13: 4 changed, 6 uncheckable, 0 unknown of 51",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "daily",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "targets listed as uncheckable/unknown (nothing observed; never 'unchanged')",
+      "what changed on any changed target",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "a709ffa30cb77dd14727a783ed7529cc3c317555ebcb8c481ea3e210e31cd90f",
+    "003de610191ba11ec2640f9c7666fdfa1213f4c8001936755d7cd1d6510c4b0e",
+    "3afed72fd04f72c2d1e053dd7ddd70bddec20f0ee91fc992d95fc83ef254ff83",
+    "52dc905a227e628fc36ce4d544a5fa9fa1f3e12422d02506116004db6cc46992",
+    "f4196805b7c26445cb3dc6b67fe507f341bdc723a80a13297b8bcdb986bf3dcc",
+    "8ba42f86badbea71522cd467f817d17ea200b703275ddb679c26cce95aa802dc",
+    "ff5def982ab1d689e435d68ee17387d3e361ccf21922299f9983b69ef5c54ef8",
+    "9b7c347ddaf0920904417f3df61785d5fe3903aa62f41b24e7aab62895b25bf7",
+    "35cee2466829d30bfdd055b131ee24667585e2dd133111c1e977fa921d28882e"
+  ]
+}

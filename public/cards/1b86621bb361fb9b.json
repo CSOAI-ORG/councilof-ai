@@ -1,0 +1,81 @@
+{
+  "card": {
+    "as_of": "2026-09-13T15:56:17.092Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "wbtc:ethereum",
+      "backing_model": "custodial",
+      "wrapped": {
+        "chain": "ethereum",
+        "symbol": "WBTC",
+        "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+        "chainId": 1,
+        "block": 25969460,
+        "block_hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+        "block_time": 1789313879
+      },
+      "canonical": {
+        "chain": "bitcoin",
+        "symbol": "BTC",
+        "address": "custodian-held (BitGo et al.); not an EVM contract",
+        "chainId": null,
+        "block": null,
+        "block_hash": null
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "BTC reserve held by custodians and self-published (wbtc.network / Chainlink PoR fed by the custodian). Nothing independent is readable from here; INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000000000000000a8fe9bff7f8",
+          "raw_sha256": "da84a3819c0b755a09aaccd086f79d6b04067c24488307a42b949919f5228bdf",
+          "atomic": "11613218273272",
+          "normalized": "116132.18273272",
+          "decimals": 8
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "INDEXED_CUSTODIAL",
+      "state": "DISCOVERED",
+      "error": null,
+      "fetched_at": "2026-09-13T15:56:17.092Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+      "unmeasured": [
+        "reserve (custodian-held off this chain; not readable here)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "1b86621bb361fb9bdb64ff9b00756319f7726099744280de701ea5d1fbb730a3",
+    "sig_ed25519": "5c8076f47e195276b45948e88289c55887b99b4121e7b41c0e80091ee528966c4c26858980769c334bab518c3d9bf6eb3e52f0f66f8588f7c79cc229101f4406",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped WBTC on ethereum vs native issuance — INDEXED_CUSTODIAL",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:custodial",
+      "state:INDEXED_CUSTODIAL"
+    ],
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ]
+  },
+  "proof": [
+    "f58c70bcba5073d4b3198f887474d70fd8491eba0c852c9331cb37b9b36b8f91",
+    "1eaaa3b5cf27d7a4cd141829789a3312c7fa190f43edf6cfc9fa21352d7fa8de",
+    "cac285bdf6464670192d386d0d1bcbe23572d2f3b69475db77dad340738a2e2f",
+    "f4089ae084917d834f90e1d3157ed28d5a3006a0f80c39a641014c36fa531e90",
+    "5c210fd1f205dbbff89f58d50bf5ea8788c9ae1dc594d8658ade0998bdf8765f",
+    "3349a04fb93338d4e03546ddb6196bcb49b3aeb00c67ed691ff7ab6f413f447a",
+    "ff5def982ab1d689e435d68ee17387d3e361ccf21922299f9983b69ef5c54ef8",
+    "9b7c347ddaf0920904417f3df61785d5fe3903aa62f41b24e7aab62895b25bf7",
+    "35cee2466829d30bfdd055b131ee24667585e2dd133111c1e977fa921d28882e"
+  ]
+}

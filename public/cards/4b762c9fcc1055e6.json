@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-13T16:01:23.828Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 281,
+      "issuer": "GateHub",
+      "issuer_address": "r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 199429.1697527687,
+      "symbol": "GBP.gh",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "4b762c9fcc1055e6f66f0ca9a4ffb1295d41662bc4e29b932cd2af23af92bc0b",
+    "sig_ed25519": "3e60d7b45781eb0c5f52d4cc4b69b270c291413a8cb9f1f06d40d86726f534c9561064f75fe086fcaac1743ebe98dba5e9dba08489050cd308ecbab29de95b03",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL GBP.gh public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "a7ce00411ec27b310b27d6d55ad4dd6eae39896d1cf7fff8037a88fd0569c8fd",
+    "53a576ca07e9df172a98ff537393afe3d3d00dc167c0947327a859707888cbde",
+    "7ec7f9761fa28c99bc30e4b4c60af00e31b52f0fa07ab9562f2fe33f2edb651a",
+    "e625242b0d6048b81539a0f717b0dd746aeb73a762258e903d13ade24745d82a",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "8b88ea07caa4ac71b329b9e655077a7e6fa7362a7342c2582956765563db9872",
+    "4d3a7ff54df8ebd45d1bfcc211392631d628eedca865a57dcda93ffeae0f9073",
+    "943536306e1ec9650757f6f49cd201ce43cac8296ac010c782e6ba11c208cf72",
+    "35cee2466829d30bfdd055b131ee24667585e2dd133111c1e977fa921d28882e"
+  ]
+}

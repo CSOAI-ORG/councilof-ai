@@ -1,0 +1,54 @@
+{
+  "card": {
+    "as_of": "2026-09-13T12:59:05Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.mcp-liveness/0.1",
+      "not_a_grade": true,
+      "probed": 100,
+      "report": "https://councilof.ai/interop/mcp-liveness-2026-09/report.json",
+      "sample_n": 100,
+      "selection": "deterministic sha256(id) sample",
+      "state": "PROBED",
+      "state_counts": {
+        "AUTH_REQUIRED": 17,
+        "LIVE": 65,
+        "NON_CONFORMANT": 9,
+        "SSE_ONLY": 2,
+        "UNREACHABLE": 7
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6921d9c1d749f7db4b69854de9667c6000e5dd5b7dc68ce777666c0284c71ba4",
+    "sig_ed25519": "9f60adc979d7156a27ae58ea41b6421e1cb1fc1698da8c796e20ef95ceb15c02688ea5dae1cfbe83193e57793c6219191926612b17b92b2408a8c2eb721d9e01",
+    "source_urls": [
+      "https://registry.modelcontextprotocol.io/v0/servers?limit=100",
+      "https://councilof.ai/interop/mcp-liveness-2026-09/report.json"
+    ],
+    "subject": "MCP remote-endpoint liveness sample (n=100)",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "liveness",
+      "probe",
+      "mcp-liveness-2026-09"
+    ],
+    "unmeasured": [
+      "capability behavior",
+      "the unsampled population"
+    ]
+  },
+  "proof": [
+    "8e0c6a57e858c70c059a8cad0ec17c7706daf000cc8aff9e950d196abf694420",
+    "27b9b96d502a2536151f70bc3eb1e631e569aace9c32d4dacefa2e3005fe0af1",
+    "eb35374dce7c757acc43cebef212338971aaa83404d74f524213156328208980",
+    "e750384b509f5edea2e13c1eeb2d4c9cbae04e712a2587ccaaa99e2b1256e5c2",
+    "92b3ee0f7c353b5b05c85a1f1196d982182e2e402c96980c733f86ac634ba16d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "8287516179a846570ca9ac531b54b6d275e53a6897cd5468c74bfc06d785ebee",
+    "943536306e1ec9650757f6f49cd201ce43cac8296ac010c782e6ba11c208cf72",
+    "35cee2466829d30bfdd055b131ee24667585e2dd133111c1e977fa921d28882e"
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "card": {
+    "as_of": "2026-09-13T15:56:17.092Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "dai:polygon",
+      "backing_model": "escrow",
+      "wrapped": {
+        "chain": "polygon",
+        "symbol": "DAI",
+        "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+        "chainId": 137,
+        "block": 93739947,
+        "block_hash": "0xbdd1fe8ac71a33bcf5b35efb1cfe77dd05c85020909a673278e4bc9d048eecdb",
+        "block_time": 1789314954
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "DAI",
+        "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "chainId": 1,
+        "block": 25969460,
+        "block_hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a"
+      },
+      "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+      "escrow_name": "Polygon PoS bridge ERC20Predicate",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000195a7d2b65ea88c4ea9adec",
+          "raw_sha256": "55a1e5b7b90a42b22e246ac9835409f60c6e0034c534fb9d7f6196209a2fc821",
+          "atomic": "490407479103945608794844652",
+          "normalized": "490407479.103945608794844652",
+          "decimals": 18
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf)",
+          "raw": "0x00000000000000000000000000000000000000000198d267819ed6794f795a13",
+          "raw_sha256": "ad5dea6a1a89ed347cb90e47fa1e10676741ae6abff2bab45ec7d3c05f3b86da",
+          "atomic": "494235340718949414584539667",
+          "normalized": "494235340.718949414584539667",
+          "decimals": 18
+        }
+      },
+      "escrow_over_wrapped": "1.007805",
+      "parity_state": "ESCROW_PARITY_READ",
+      "state": "PROBED",
+      "error": null,
+      "fetched_at": "2026-09-13T15:56:17.092Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+      "unmeasured": []
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "7766ce43e85efe7da3c69b67a908ae5b226f34a1a8ee2204231d810301ee3902",
+    "sig_ed25519": "df3407503d3d2bc9ac3847881b9a4e79c5112b4243ec2226d10de810d220186a6f88b1354532be8df9154e59abca9c44161ddf9c06ab0af2323d2a8fbfa6b804",
+    "source_urls": [
+      "https://polygon-bor-rpc.publicnode.com",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped DAI on polygon vs Polygon PoS bridge ERC20Predicate — ESCROW_PARITY_READ",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:escrow",
+      "state:ESCROW_PARITY_READ"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "d3e61d015211dbc8a2a783a9def84320b4f90291e02ff11c2b0b02c6ecd66409",
+    "8f1721a41ba7d84633d3b5126bae81236e6e7f4a2c7b3952c14dbbc99bce6df0",
+    "7f19ab07491af8a6fac9ba5dd17ac9f7072e53ce0eb42d29be6c4d45e1ecbc5a",
+    "b102318a302e321293699542c5f1e02c13d01be8f91818a1475c28dd3e078081",
+    "92b3ee0f7c353b5b05c85a1f1196d982182e2e402c96980c733f86ac634ba16d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "8287516179a846570ca9ac531b54b6d275e53a6897cd5468c74bfc06d785ebee",
+    "943536306e1ec9650757f6f49cd201ce43cac8296ac010c782e6ba11c208cf72",
+    "35cee2466829d30bfdd055b131ee24667585e2dd133111c1e977fa921d28882e"
+  ]
+}

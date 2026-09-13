@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-13T16:01:23.828Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 80,
+      "issuer": "Circle",
+      "issuer_address": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 4394436.348900759,
+      "symbol": "USDC",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "1ab6c943d7b860cd0789d2bd3b1d9530e4c9fc5a62d07118c21dce392bd15b2f",
+    "sig_ed25519": "12cc3b1d73d79ed017a9985d74952315b796da4ac4ae606beb23d0d606e30888b7833a812b7048e565384e69a0915109ae33b7b5aae6fdfe314d2845c969dc0a",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL USDC public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "ab1ff78b71e7514da274dc9c859636f26a731c0fba4969de18b243783d03d161",
+    "60a36f0f9d668e55cb857259cbe90775c6b796d5b5a9cac5e8f867e7a26a741c",
+    "8b0fb277b9628b2c1f5478419705816960570278a7efe970e9696d4e652ee4c0",
+    "e625242b0d6048b81539a0f717b0dd746aeb73a762258e903d13ade24745d82a",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "8b88ea07caa4ac71b329b9e655077a7e6fa7362a7342c2582956765563db9872",
+    "4d3a7ff54df8ebd45d1bfcc211392631d628eedca865a57dcda93ffeae0f9073",
+    "943536306e1ec9650757f6f49cd201ce43cac8296ac010c782e6ba11c208cf72",
+    "35cee2466829d30bfdd055b131ee24667585e2dd133111c1e977fa921d28882e"
+  ]
+}
