@@ -13,6 +13,8 @@ const productsFill = readFileSync(resolve(__dirname, "./productFill.ts"), "utf8"
 const sov = readFileSync(resolve(__dirname, "./sovExternalAudit.ts"), "utf8");
 const playbook = readFileSync(resolve(__dirname, "./playbookAudit.ts"), "utf8");
 const payDesk = readFileSync(resolve(__dirname, "../../../public/pay.html"), "utf8");
+const pressroom = readFileSync(resolve(__dirname, "../pages/Pressroom.tsx"), "utf8");
+const accessibility = readFileSync(resolve(__dirname, "../pages/Accessibility.tsx"), "utf8");
 
 describe("stale copy honesty", () => {
   it("the public pay desk reaches the real wallet-enabled MCP jobs and reads live settlement state", () => {
@@ -33,6 +35,15 @@ describe("stale copy honesty", () => {
     expect(payDesk).toContain("revenue.j.one_number.all_time");
     expect(payDesk).not.toContain("Number(revenue.j && revenue.j.one_number) > 0");
     expect(payDesk).not.toMatch(/settlement\s+(?:stays\s+)?UNCHECKABLE|No <code>\/proof<\/code> until live/i);
+  });
+
+  it("press and accessibility claims fail closed instead of freezing unsupported claims", () => {
+    expect(pressroom).toContain('fetch("/api/revenue"');
+    expect(pressroom).toMatch(/UNCHECKABLE:[\s\S]*no previous count is reused/);
+    expect(pressroom).not.toMatch(/first settlement.*NOT HAPPENED/i);
+    expect(accessibility).toMatch(/working toward WCAG 2\.2 Level AA/);
+    expect(accessibility).not.toMatch(/WCAG 2\.1 Level AA compliance|Haptic feedback support|Closed captioning for videos/);
+    expect(accessibility).toContain("councilof.ai");
   });
 
   it("RAS pack cites the living board, not a 13-axis product", () => {

@@ -107,6 +107,12 @@
 /interop/*.py
   Content-Type: text/plain; charset=utf-8
 
+# OpenTimestamps proofs are binary. Generic MIME databases can otherwise treat
+# the .ots extension as an OpenDocument spreadsheet template.
+/interop/*.ots
+  Content-Type: application/octet-stream
+  Content-Disposition: attachment
+
 # SCITT key-discovery document (key publication only — NOT a transparency service)
 /.well-known/scitt-keys
   Content-Type: application/json

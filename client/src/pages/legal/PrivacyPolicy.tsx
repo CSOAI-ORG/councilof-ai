@@ -13,7 +13,7 @@ const fadeInUp = {
 
 const dataUsePurposes = [
   { purpose: "Provide membership services", basis: "Contract performance" },
-  { purpose: "Process certifications", basis: "Contract performance" },
+  { purpose: "Deliver measurements and evidence services", basis: "Contract performance" },
   { purpose: "Send service communications", basis: "Legitimate interest" },
   { purpose: "Improve our services", basis: "Legitimate interest" },
   { purpose: "Comply with legal obligations", basis: "Legal obligation" },
@@ -23,7 +23,7 @@ const dataUsePurposes = [
 
 const retentionPeriods = [
   { type: "Membership records", period: "Duration + 7 years" },
-  { type: "Certification records", period: "10 years after expiry" },
+  { type: "Measurement and evidence records", period: "As stated in the applicable service terms" },
   { type: "Financial records", period: "7 years (legal)" },
   { type: "Communications", period: "3 years" },
   { type: "Website analytics", period: "26 months" },
@@ -63,9 +63,9 @@ export default function PrivacyPolicy() {
               Council Safety of Artificial Intelligence (CSOAI)
             </p>
             <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
-              <span>Version 1.0</span>
+              <span>Version 1.1</span>
               <Separator orientation="vertical" className="h-4" />
-              <span>Last Updated: January 2026</span>
+              <span>Last Updated: 13 September 2026</span>
             </div>
           </motion.div>
         </div>
@@ -85,15 +85,15 @@ export default function PrivacyPolicy() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
-                  Council Safety of Artificial Intelligence ("CSOAI," "we," "us," or "our") is committed to protecting your privacy.
+                  CSOAI Ltd ("CSOAI," "we," "us," or "our") is committed to protecting your privacy.
                   This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website
-                  (csoai.org), use our services, or interact with us.
+                  (councilof.ai), use our services, or interact with us.
                 </p>
                 <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
                   <h4 className="font-semibold mb-2">Data Controller</h4>
                   <p className="text-sm text-muted-foreground">
-                    Council Safety of Artificial Intelligence<br />
-                    United Kingdom<br />
+                    CSOAI Ltd, Companies House 16939677<br />
+                    3rd Floor, 86–90 Paul Street, London EC2A 4NE, United Kingdom<br />
                     Email: <a href="mailto:privacy@csoai.org" className="text-primary hover:underline">privacy@csoai.org</a>
                   </p>
                 </div>
@@ -475,7 +475,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <div className="space-y-2">
                   <p className="font-medium">Nicholas Templeman</p>
-                  <p className="text-muted-foreground">Council Safety of Artificial Intelligence</p>
+                  <p className="text-muted-foreground">CSOAI Ltd</p>
                   <p>
                     <a href="mailto:privacy@csoai.org" className="text-primary hover:underline">
                       privacy@csoai.org
@@ -497,13 +497,15 @@ export default function PrivacyPolicy() {
                   <div className="p-4 rounded-lg bg-muted">
                     <h4 className="font-semibold mb-2">UK GDPR</h4>
                     <p className="text-sm text-muted-foreground">
-                      This policy complies with UK GDPR (retained EU law).
+                      This notice is written for the UK GDPR and Data Protection Act 2018. Contact us
+                      if the processing described here does not match your interaction with the service.
                     </p>
                   </div>
                   <div className="p-4 rounded-lg bg-muted">
                     <h4 className="font-semibold mb-2">EU GDPR</h4>
                     <p className="text-sm text-muted-foreground">
-                      For EU residents, your data controller is CSOAI, operating under UK adequacy arrangements.
+                      For people in the EEA, the controller remains CSOAI Ltd. International transfers
+                      depend on the safeguards applicable to the service provider and transfer in question.
                     </p>
                   </div>
                   <div className="p-4 rounded-lg bg-muted">

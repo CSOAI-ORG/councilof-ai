@@ -55,9 +55,9 @@ export default function TermsOfService() {
               Council Safety of Artificial Intelligence (CSOAI)
             </p>
             <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
-              <span>Version 1.0</span>
+              <span>Version 1.1</span>
               <Separator orientation="vertical" className="h-4" />
-              <span>Last Updated: January 2026</span>
+              <span>Last Updated: 13 September 2026</span>
             </div>
           </motion.div>
         </div>
@@ -77,7 +77,7 @@ export default function TermsOfService() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  By accessing or using the CSOAI website (csoai.org), platform, services, or resources,
+                  By accessing or using the CSOAI website (councilof.ai), platform, services, or resources,
                   you agree to be bound by these Terms of Service ("Terms").
                   <strong> If you do not agree, do not use our services.</strong>
                 </p>
@@ -96,15 +96,15 @@ export default function TermsOfService() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
-                  Council Safety of Artificial Intelligence (CSOAI) is an independent, not-for-profit AI measurement body
-                  dedicated to AI safety governance. It measures and attests what systems do against dated law; it does
+                  CSOAI Ltd (Companies House 16939677) operates Council of AI as an independent AI measurement body.
+                  It measures and attests what systems do against dated instruments; it does
                   not, and cannot, declare conformity — a conformity certificate requires an accreditation chain CSOAI
                   does not hold.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   {[
-                    { title: "Certification", desc: "AI safety certification and licensing" },
-                    { title: "Frameworks", desc: "Compliance frameworks and tools" },
+                    { title: "Measurement", desc: "Dated, scoped AI and agent measurements" },
+                    { title: "Frameworks", desc: "Published crosswalks and measurement tools" },
                     { title: "Training", desc: "Training and education resources" },
                     { title: "Infrastructure", desc: "Governance infrastructure for responsible AI" }
                   ].map((item, index) => (
@@ -215,11 +215,11 @@ export default function TermsOfService() {
               <CardContent className="space-y-4">
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="p-4 rounded-lg bg-muted">
-                    <h4 className="font-semibold mb-2">Certification Services</h4>
+                    <h4 className="font-semibold mb-2">Measurement & evidence services</h4>
                     <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Subject to Membership & Licensing Agreement</li>
-                      <li>• Assessment results confidential</li>
-                      <li>• May be revoked for non-compliance</li>
+                      <li>• Results are limited to the named subject, method, version and date</li>
+                      <li>• A signed record proves authorship and integrity, not correctness or compliance</li>
+                      <li>• Corrections and retractions remain visible in the public ledger</li>
                     </ul>
                   </div>
 
@@ -546,14 +546,15 @@ export default function TermsOfService() {
                 <Mail className="h-12 w-12 text-primary mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-4">Contact Us</h3>
                 <p className="text-muted-foreground mb-4">
-                  Council Safety of Artificial Intelligence
+                  CSOAI Ltd<br />
+                  3rd Floor, 86–90 Paul Street, London EC2A 4NE
                 </p>
                 <div className="space-y-2">
                   <p>
                     Email: <a href="mailto:legal@csoai.org" className="text-primary hover:underline">legal@csoai.org</a>
                   </p>
                   <p>
-                    Website: <a href="https://csoai.org" className="text-primary hover:underline">csoai.org</a>
+                    Website: <a href="https://councilof.ai" className="text-primary hover:underline">councilof.ai</a>
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center mt-6">
@@ -574,7 +575,7 @@ export default function TermsOfService() {
 
           {/* Footer */}
           <div className="text-center text-sm text-muted-foreground pt-8 border-t">
-            <p>© 2026 Council Safety of Artificial Intelligence. All Rights Reserved.</p>
+            <p>© 2026 CSOAI Ltd. Registered in England & Wales No. 16939677.</p>
           </div>
         </div>
       </div>

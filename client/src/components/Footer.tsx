@@ -258,7 +258,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-xs">
-            © {currentYear} CSOAI Ltd · UK Companies House 16939677 · London · contact@csoai.org
+            © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · contact@csoai.org
           </p>
           <p className="text-muted-foreground text-xs text-center md:text-right max-w-md">
             Independent. No financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor.
