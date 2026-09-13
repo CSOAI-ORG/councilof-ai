@@ -430,7 +430,7 @@ function ruleCapabilityTense(facts, file, text, add) {
       if (scope && scope.files.test(file) && !scope.unless.test(window)) continue;
 
       // Exonerate: the copy already labels the honest status.
-      if (/\bunmeasured\b|\bdevnet\b|\bplanned\b|\bnot yet\b|\bwill\b|\bwould\b|\bonce\b|\bcoming\b|\brefuses? to mint\b|\bnot attested\b|\bnot located\b/i.test(window)) {
+      if (/\bunmeasured\b|\bdevnet\b|\bplanned\b|\bnot yet\b|\bwill\b|\bwould\b|\bonce\b|\bonly when\b|\bcoming\b|\brefuses? to mint\b|\bnot attested\b|\bnot located\b/i.test(window)) {
         continue;
       }
       // devnet rail: only "mainnet/production" framing is a violation.
@@ -589,6 +589,7 @@ const SELFTEST_CASES = [
   ["VIOLATION: press releases asserted anchored", "<p>Every press release is signed and anchored on Bitcoin today.</p>", true],
   ["honest pending label", "<p>Stamped, not yet anchored: the calendar has not committed this digest to Bitcoin.</p>", false],
   ["honest future tense for atom anchoring", "<p>Each atom will be anchored to Bitcoin once a calendar commits it.</p>", false],
+  ["honest conditional verification rule", "<p>Treat OTS as Bitcoin-anchored only when the sidecar derives CONFIRMED_BITCOIN from the proof bytes.</p>", false],
   // ── anchor-count concept rule (2026-09-03) ───────────────────────────────────
   // Each of these survived a hand-grep pass. The noun form carries no verb the
   // tense rule can see; the JSON-LD one was live on proofs.councilof.ai.
