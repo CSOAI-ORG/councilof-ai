@@ -1,12 +1,33 @@
 #!/usr/bin/env python3
-"""Merge mill-out rows into HF2200.lock.json. n_measured is counted from models[].status."""
+"""Merge practice-mill rows into HF2200.lock.json without minting measurements."""
 from __future__ import annotations
 
 import json
 import sys
 from pathlib import Path
 
-MEASURED_STATUSES = frozenset({"practice-mill", "MEASURED"})
+MEASURED_STATUSES = frozenset({"MEASURED"})
+PRACTICE_STATUSES = frozenset({"practice-mill"})
+ATTEMPTED_STATUSES = MEASURED_STATUSES | PRACTICE_STATUSES
+
+
+def refresh_counts(lock: dict) -> dict:
+    """Keep transport probes separate from reproducible GSPC measurements."""
+    models = lock.get("models") or []
+    lock["n_locked"] = len(models)
+    lock["n_measured"] = sum(
+        1 for model in models if (model.get("status") or "UNMEASURED") in MEASURED_STATUSES
+    )
+    lock["n_practice_probed"] = sum(
+        1 for model in models if (model.get("status") or "UNMEASURED") in PRACTICE_STATUSES
+    )
+    return lock
+
+
+def evidence_rank(status: str) -> int:
+    return {"UNMEASURED": 0, "UNCHECKABLE": 1, "practice-mill": 2, "MEASURED": 3}.get(
+        status or "UNMEASURED", 0
+    )
 
 PREFERRED_TAGS = frozenset(
     {
@@ -39,10 +60,10 @@ def apply_mill(lock: dict, mill: dict) -> dict:
             continue
         cur = m.get("status") or "UNMEASURED"
         st = row.get("status")
-        if cur in MEASURED_STATUSES:
+        if cur == "MEASURED" or evidence_rank(st) <= evidence_rank(cur):
             continue
-        if st == "practice-mill":
-            m["status"] = "practice-mill"
+        if st in ATTEMPTED_STATUSES:
+            m["status"] = st
             m["last_mill"] = as_of
             if row.get("n") is not None:
                 m["n"] = row["n"]
@@ -67,13 +88,7 @@ def apply_mill(lock: dict, mill: dict) -> dict:
                 m["pipeline_tag"] = row["pipeline_tag"]
             if "providers_live" in row:
                 m["providers_live"] = list(row.get("providers_live") or [])
-    lock["n_locked"] = len(lock.get("models") or [])
-    lock["n_measured"] = sum(
-        1
-        for m in (lock.get("models") or [])
-        if (m.get("status") or "UNMEASURED") in MEASURED_STATUSES
-    )
-    return lock
+    return refresh_counts(lock)
 
 
 def restore_original_membership(original: dict, overlays: list[dict]) -> dict:
@@ -92,9 +107,9 @@ def restore_original_membership(original: dict, overlays: list[dict]) -> dict:
                 continue
             st = m.get("status") or "UNMEASURED"
             prev = by.get(slug)
-            if prev and (prev.get("status") or "") in MEASURED_STATUSES:
+            if prev and evidence_rank(prev.get("status") or "") >= evidence_rank(st):
                 continue
-            if st in MEASURED_STATUSES or st == "UNCHECKABLE":
+            if st in ATTEMPTED_STATUSES or st == "UNCHECKABLE":
                 by[slug] = m
     models: list[dict] = []
     for m in original.get("models") or []:
@@ -103,7 +118,7 @@ def restore_original_membership(original: dict, overlays: list[dict]) -> dict:
         ov = by.get(slug) if slug else None
         if ov:
             st = ov.get("status") or "UNMEASURED"
-            if st in MEASURED_STATUSES:
+            if st in ATTEMPTED_STATUSES:
                 row["status"] = st
                 if ov.get("last_mill"):
                     row["last_mill"] = ov["last_mill"]
@@ -132,15 +147,10 @@ def restore_original_membership(original: dict, overlays: list[dict]) -> dict:
     out["models"] = models
     out["n_locked"] = len(models)
     out["n_target"] = original.get("n_target") or len(models)
-    out["n_measured"] = sum(
-        1
-        for m in models
-        if (m.get("status") or "UNMEASURED") in MEASURED_STATUSES
-    )
     out["membership"] = "hf2200-download-ranked"
     out["writes_board"] = original.get("writes_board", False)
     out["enters_board_means"] = original.get("enters_board_means", False)
-    return out
+    return refresh_counts(out)
 
 
 def rebuild_provider_hosted_lock(lock: dict, candidates: list[dict], n: int = 2200) -> dict:
@@ -149,7 +159,7 @@ def rebuild_provider_hosted_lock(lock: dict, candidates: list[dict], n: int = 22
     keep = [
         dict(m)
         for m in (lock.get("models") or [])
-        if (m.get("status") or "") in MEASURED_STATUSES and m.get("slug")
+        if (m.get("status") or "") in ATTEMPTED_STATUSES and m.get("slug")
     ]
     have = {m["slug"] for m in keep}
     pref: list[dict] = []
@@ -180,15 +190,14 @@ def rebuild_provider_hosted_lock(lock: dict, candidates: list[dict], n: int = 22
     out["models"] = models
     out["n_locked"] = len(models)
     out["n_target"] = n
-    out["n_measured"] = sum(
-        1 for m in models if (m.get("status") or "") in MEASURED_STATUSES
-    )
+    refresh_counts(out)
     out["queue_subset"] = "inference-providers-hosted"
     out["note"] = (
         "HF2200 keeps already-measured practice-mill rows and fills to n with "
         "Hub models that list a live Inference Provider. Rows with empty mapping "
         "were UNCHECKABLE on the mixed-download lock and could not 200. "
-        "n_measured is counted from practice-mill. writes_board false."
+        "n_practice_probed counts transport probes; n_measured counts only "
+        "reproducible MEASURED rows. writes_board false."
     )
     return out
 
@@ -219,12 +228,7 @@ def stamp_zero_providers(lock: dict, fetch_live, as_of: str) -> dict:
     lock["n_unmeasured_zero_provider"] = n_zero
     lock["n_unmeasured_with_live_provider"] = n_live
     lock["zero_provider_scan_as_of"] = as_of
-    lock["n_measured"] = sum(
-        1
-        for m in (lock.get("models") or [])
-        if (m.get("status") or "UNMEASURED") in MEASURED_STATUSES
-    )
-    return lock
+    return refresh_counts(lock)
 
 
 def apply_dir(lock: dict, root: Path) -> dict:
@@ -262,6 +266,20 @@ def fetch_live_from_hub(slug: str, token: str) -> list[str]:
 
 
 def main() -> int:
+    if len(sys.argv) >= 2 and sys.argv[1] == "--refresh-counts":
+        lock_path = Path(sys.argv[2])
+        lock = json.loads(lock_path.read_text())
+        refresh_counts(lock)
+        lock_path.write_text(json.dumps(lock, indent=2) + "\n")
+        print(
+            "n_measured",
+            lock["n_measured"],
+            "n_practice_probed",
+            lock["n_practice_probed"],
+            "n_locked",
+            lock["n_locked"],
+        )
+        return 0
     if len(sys.argv) >= 2 and sys.argv[1] == "--stamp-zero":
         import os
         from datetime import datetime, timezone

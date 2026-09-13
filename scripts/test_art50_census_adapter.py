@@ -168,6 +168,24 @@ def test_shipped_census_file_collects_and_stays_clean() -> None:
     assert _forbidden_in(out) == [], _forbidden_in(out)
 
 
+def test_source_version_digest_fails_closed() -> None:
+    census = _fixture_census()
+    census["schema"] = "csoai.art50-marking-census/0.2"
+    census["generators"][0]["source_version"] = {
+        "posture_card": "evidence/card.json",
+        "sha256": "0" * 64,
+    }
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        evidence = root / "evidence/card.json"
+        evidence.parent.mkdir(parents=True)
+        evidence.write_text("{}")
+        _write_fixture(root, census)
+        out = art50_census.collect(root)
+        assert out["leaves"] == []
+        assert out["sidecar"] == {"status": "INVALID", "reason": "source_version digest mismatch"}
+
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for fn in tests:

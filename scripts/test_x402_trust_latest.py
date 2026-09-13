@@ -1,31 +1,34 @@
 #!/usr/bin/env python3
-"""latest.json is the v0.1 catalog snapshot, not the v0.2 61-count round."""
+"""latest.json is the newest archived v0.1 catalog snapshot, never v0.2."""
 from __future__ import annotations
 
 import json
 import os
 import unittest
+from datetime import datetime
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _TRUST = os.path.join(os.path.dirname(_HERE), "public", "interop", "x402-trust")
 
 
 class LatestIsV01Snapshot(unittest.TestCase):
-    def test_latest_json_equals_dated_v01_file(self):
+    def test_latest_json_equals_immutable_timestamped_v01_file(self):
         with open(os.path.join(_TRUST, "latest.json"), encoding="utf-8") as f:
             latest = json.load(f)
-        with open(os.path.join(_TRUST, "2026-09-07.json"), encoding="utf-8") as f:
-            dated = json.load(f)
-        self.assertEqual(latest, dated)
+        stamp = datetime.strptime(latest["as_of"], "%Y-%m-%dT%H:%M:%SZ").strftime("%Y%m%dT%H%M%SZ.json")
+        with open(os.path.join(_TRUST, stamp), encoding="utf-8") as f:
+            archived = json.load(f)
+        self.assertEqual(latest, archived)
         self.assertEqual(latest["kind"], "csoai.x402-catalog-trust-snapshot/0.1")
         counts = latest["counts"]
         self.assertEqual(
             counts["total"],
             counts["challenge_402"]
             + counts["serves_200"]
-            + counts["alive_but_needs_input"]
+            + counts.get("alive_needs_input", counts.get("alive_but_needs_input", 0))
             + counts["template_no_reply"]
-            + counts["dead_404_or_unreachable"],
+            + counts["dead_404_or_unreachable"]
+            + counts.get("other_error", 0),
         )
         self.assertNotIn("rounds", latest)
         # 8-axis financial wing lives IN counts (MCP x402_trust reads this file).
@@ -67,6 +70,13 @@ class LatestIsV01Snapshot(unittest.TestCase):
                 text = f.read()
             self.assertIn(url, text, rel)
             self.assertNotIn("74/100", text, rel)
+
+    def test_edge_does_not_rewrite_latest_to_an_old_round(self):
+        root = os.path.dirname(_HERE)
+        redirects = os.path.join(root, "public", "_redirects")
+        with open(redirects, encoding="utf-8") as f:
+            rules = [line.strip() for line in f if line.strip() and not line.lstrip().startswith("#")]
+        self.assertFalse(any(rule.startswith("/interop/x402-trust/latest.json ") for rule in rules))
 
 
 if __name__ == "__main__":
