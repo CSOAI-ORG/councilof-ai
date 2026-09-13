@@ -50,6 +50,22 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Reconcile the rolling candidate with current master
+        if: steps.candidate.outputs.exists == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-public-root"
+          git config user.email "board@csoai.org"
+          git fetch origin master
+          before=$(git rev-parse HEAD)
+          # A real content conflict fails the workflow closed. Never choose a
+          # side automatically for root, proof, or witness bytes.
+          git merge --no-edit origin/master
+          after=$(git rev-parse HEAD)
+          if [ "$before" != "$after" ]; then
+            git push origin "HEAD:public-root/pending"
+          fi
+
       - name: Install witness dependencies
         if: steps.candidate.outputs.exists == 'true'
         run: pip install -q cryptography opentimestamps-client

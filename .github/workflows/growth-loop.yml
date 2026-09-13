@@ -2,10 +2,11 @@ name: growth-loop
 
 on:
   schedule:
-    - cron: "0 6 * * 1" # weekly, Monday 06:00 UTC — closes the money loop each week
+    - cron: "8 6 * * 1" # weekly, Monday 06:08 UTC — staggered from top-of-hour collectors
   workflow_dispatch: {}
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -33,9 +34,18 @@ jobs:
           git commit -q -m "growth: revenue loop $DATE (producer output)"
           git push origin HEAD:growth-loop/weekly-$DATE
       - name: Open the loop PR
-        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           DATE=$(date -u +%F)
-          gh pr create --repo CSOAI-ORG/councilof-ai --head growth-loop/weekly-$DATE \
-            --base master --title "growth: revenue loop $DATE" \
-            --body "Weekly revenue-loop run. Numbers: one_number as measured, funnel per door (as recorded), gate state verbatim, ≤5 next moves each with a PROOF, retro line. Read docs/growth/$DATE/loop.md; the governor reviews; nothing here is a forecast."
+          BR="growth-loop/weekly-$DATE"
+          URL=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BR" --base master --state open --json url --jq '.[0].url // ""')
+          if [ -z "$URL" ]; then
+            URL=$(gh pr create --repo "$GITHUB_REPOSITORY" --head "$BR" \
+              --base master --title "growth: revenue loop $DATE" \
+              --body "Weekly revenue-loop run. Numbers: one_number as measured, funnel per door (as recorded), gate state verbatim, ≤5 next moves each with a PROOF, retro line. Read docs/growth/$DATE/loop.md; the governor reviews; nothing here is a forecast.")
+          fi
+          gh workflow run pr-gates.yml --repo "$GITHUB_REPOSITORY" --ref "$BR"
+          gh pr merge "$URL" --repo "$GITHUB_REPOSITORY" --squash --auto
+          echo "growth-loop PR: $URL"
