@@ -8,7 +8,7 @@ We built an independent AI measurement board at councilof.ai. It measures AI mod
 
 Key facts:
 - 22 axes measured, 14 model-comparison + 8 deterministic-facts
-- 337 signed measurement cards (Ed25519, off-device OIDC ceremony)
+- 335 signed measurement cards (Ed25519, off-device OIDC ceremony)
 - 264-card public Merkle root, Rekor-witnessed
 - 1,301-card measurement root (provenance-enriched)
 - 425 stablecoins indexed across 211 chains ($310.79B circulating)
