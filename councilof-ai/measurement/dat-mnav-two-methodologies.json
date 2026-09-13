@@ -1,0 +1,19 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.dat.mnav_methodology",
+  "subject": "dat-mnav-two-methodologies",
+  "measured_at": "2026-09-13T05:26:30.798091+00:00",
+  "metrics": {
+    "name": "DAT (Digital Asset Treasury) mNAV methodology",
+    "sector_size": "~$96B",
+    "the_problem": "Strategy switched headline metric (equity mNAV \u2192 enterprise mNAV) mid-drawdown June 2026. Other DATs using different definitions. Sector pricing off inconsistent methodology.",
+    "definition_a": "Equity mNAV = (crypto holdings at spot) / (share count \u00d7 price). Simpler, common in 2024.",
+    "definition_b": "Enterprise mNAV = (crypto holdings + cash - liabilities) / (share count \u00d7 price). Includes balance sheet. Strategy's June 2026 change.",
+    "the_gap": "When crypto is up, definitions A and B are similar. When crypto is down, debt service and operating runway matter \u2014 and only B captures that.",
+    "csoai_card": "Published 'Two mNAVs' methodology note + dual-definition premium/discount table for top 20 DATs",
+    "use_case": "Institutional analyst comparing DATs, regulator assessing sector health, journalist writing the recap",
+    "doctrine": "Signed methodology note \u2014 measurement of what each firm reports, not opinion on which is right"
+  },
+  "honest_sentence": "DAT mNAV methodology: ~$96B sector, Strategy switched headline metric (equity\u2192enterprise mNAV) mid-drawdown June 2026. Two-mNAV methodology note + dual-definition premium/discount table for top 20 DATs. Measurement of what each reports, not opinion.",
+  "measurement_not_certification": true
+}

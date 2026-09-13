@@ -1,0 +1,32 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.perp_dex.methodology",
+  "subject": "perp-dex-integrity-sector-methodology",
+  "measured_at": "2026-09-13T05:26:30.798091+00:00",
+  "metrics": {
+    "scope": "6 venues \u00d7 5 integrity axes",
+    "venues": [
+      "hyperliquid",
+      "dydx-v4",
+      "gmx-v2",
+      "apex",
+      "vertex",
+      "drift"
+    ],
+    "axes": [
+      "funding_integrity",
+      "oracle_freshness",
+      "ADL_transparency",
+      "OI_concentration",
+      "incident_disclosure"
+    ],
+    "data_sources": "Public APIs only (Hyperliquid validator stake, dYdX Cosmos RPC, GMX GlpManager contract, etc.)",
+    "signed_methodology_note": true,
+    "valve_safe": true,
+    "no_venue_cooperation": true,
+    "why_first": "DefiLlama volume delisting of Aster (Oct 2025) is the only integrity enforcement on record \u2014 opaque editorial act, not standard. This card stakes the first measurement-defined methodology.",
+    "why_now": "CLARITY Act Section 604 makes perp DEXes the live evidentiary test if cloture passes. If cloture fails, ~$1.8T/quarter sector persists under SEC/CFTC patchwork unmeasured. Either branch: demand intact."
+  },
+  "honest_sentence": "Perp-DEX integrity sector methodology: 6 venues \u00d7 5 integrity axes, public APIs only, signed methodology note. INDEX-only, valve-safe. First measurement-defined methodology for the sector \u2014 DefiLlama delisting (opaque editorial) is the only prior enforcement.",
+  "measurement_not_certification": true
+}
