@@ -1,11 +1,12 @@
 {
   "schema": "csoai.wrapped-asset-parity/0.1",
   "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
-  "as_of": "2026-09-13T15:40:33.576Z",
+  "as_of": "2026-09-13T15:56:17.092Z",
   "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
   "states": {
     "ESCROW_PARITY_READ": "both reads succeeded at the pinned blocks; a read, not a measurement (the card doctrine reserves MEASURED for graded banks and refuses it on point-in-time cards)",
     "UNCHECKABLE_NATIVE_ISSUANCE": "natively issued on the destination chain; no escrow exists; supply read, no ratio claimed",
+    "INDEXED_CUSTODIAL": "reserve held by a custodian off-chain or on another ledger; supply read; no reserve readable from here; no ratio claimed",
     "UNMEASURED": "a read failed; error recorded; nothing inferred"
   },
   "terms_boundary": "Public RPC endpoints, no API key. Endpoint substitutions are recorded per read.",
@@ -13,44 +14,45 @@
   "license": "CC-BY-4.0 (Council of AI, CSOAI Ltd 16939677, councilof.ai)",
   "pins": {
     "arbitrum": {
-      "number": 504776566,
-      "hex": "0x1e164776",
-      "hash": "0xfdb10a8f3ac6787d4865c37083f98e952370f43f1afefca4834fbee25fd80cfb",
-      "timestamp": 1789313061,
+      "number": 504779572,
+      "hex": "0x1e165334",
+      "hash": "0xc4263f9aae3b7fbfc46b9d4920ded09d5fc83c59f0a702c2c6e3293ebe559be3",
+      "timestamp": 1789313818,
       "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
     },
     "ethereum": {
-      "number": 25969396,
-      "hex": "0x18c42f4",
-      "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-      "timestamp": 1789313111,
+      "number": 25969460,
+      "hex": "0x18c4334",
+      "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+      "timestamp": 1789313879,
       "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
     },
     "optimism": {
-      "number": 156857154,
-      "hex": "0x9597342",
-      "hash": "0xc820fa22c5ee17425f8c40b19abebc0f98bf48c625878bf647696adf239fb355",
-      "timestamp": 1789313085,
+      "number": 156857510,
+      "hex": "0x95974a6",
+      "hash": "0x817b9780b052fd6af439cc012a53460d725a61e55fb328c595b8f6db202f6322",
+      "timestamp": 1789313797,
       "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
     },
     "base": {
-      "number": 51261854,
-      "hex": "0x30e319e",
-      "hash": "0x5b88ab6b7e273cd6a30bd0f89455b70faf8614b674aa1fe9a56a4d9ac9dc1cfa",
-      "timestamp": 1789313055,
+      "number": 51262221,
+      "hex": "0x30e330d",
+      "hash": "0x5a405aebede66cbafb581160b1c045d70184c312e059c6f3582fb451eb288167",
+      "timestamp": 1789313789,
       "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
     },
     "polygon": {
-      "number": 93739324,
-      "hex": "0x596593c",
-      "hash": "0xe18b38a7046253ffb5815bf4f0eaac1b8a110d9b8ba8c577e7f49936e1f2a2f4",
-      "timestamp": 1789314019,
+      "number": 93739947,
+      "hex": "0x5965bab",
+      "hash": "0xbdd1fe8ac71a33bcf5b35efb1cfe77dd05c85020909a673278e4bc9d048eecdb",
+      "timestamp": 1789314954,
       "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
     }
   },
   "counts": {
     "ESCROW_PARITY_READ": 8,
-    "UNCHECKABLE_NATIVE_ISSUANCE": 4
+    "UNCHECKABLE_NATIVE_ISSUANCE": 4,
+    "INDEXED_CUSTODIAL": 5
   },
   "records": [
     {
@@ -63,10 +65,10 @@
         "endpoint": "https://arb1.arbitrum.io/rpc",
         "endpoint_substituted": false,
         "block": {
-          "number": 504776566,
-          "hex": "0x1e164776",
-          "hash": "0xfdb10a8f3ac6787d4865c37083f98e952370f43f1afefca4834fbee25fd80cfb",
-          "timestamp": 1789313061,
+          "number": 504779572,
+          "hex": "0x1e165334",
+          "hash": "0xc4263f9aae3b7fbfc46b9d4920ded09d5fc83c59f0a702c2c6e3293ebe559be3",
+          "timestamp": 1789313818,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -78,10 +80,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -100,16 +102,16 @@
         },
         "escrow_balance": {
           "query": "balanceOf(0xcEe284F754E854890e311e3280b767F80797180d)",
-          "raw": "0x00000000000000000000000000000000000000000000000000002f7f030847ea",
-          "raw_sha256": "dab96c6b6baa11605e264501c2e39fd957d1b1caec4b794d2fba35abd7a51f35",
-          "atomic": "52222558226410",
-          "normalized": "52222558.226410",
+          "raw": "0x00000000000000000000000000000000000000000000000000002f7f2d1c1585",
+          "raw_sha256": "4bd4ead4f2da2ce3affdac7ea9c33dba41055c43d93a8cec944c56e070c51f61",
+          "atomic": "52223264167301",
+          "normalized": "52223264.167301",
           "decimals": 6
         }
       },
       "state": "ESCROW_PARITY_READ",
       "error": null,
-      "escrow_over_wrapped": "1.076719"
+      "escrow_over_wrapped": "1.076734"
     },
     {
       "id": "usdt:arbitrum",
@@ -121,10 +123,10 @@
         "endpoint": "https://arb1.arbitrum.io/rpc",
         "endpoint_substituted": false,
         "block": {
-          "number": 504776566,
-          "hex": "0x1e164776",
-          "hash": "0xfdb10a8f3ac6787d4865c37083f98e952370f43f1afefca4834fbee25fd80cfb",
-          "timestamp": 1789313061,
+          "number": 504779572,
+          "hex": "0x1e165334",
+          "hash": "0xc4263f9aae3b7fbfc46b9d4920ded09d5fc83c59f0a702c2c6e3293ebe559be3",
+          "timestamp": 1789313818,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -136,10 +138,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -150,10 +152,10 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x0000000000000000000000000000000000000000000000000002e337322eb7e6",
-          "raw_sha256": "c185225537833493fe2648d2e8cbd1662aa80c731a1771a8704b20c0d3686d76",
-          "atomic": "812776158050278",
-          "normalized": "812776158.050278",
+          "raw": "0x0000000000000000000000000000000000000000000000000002e3388e0d476d",
+          "raw_sha256": "0463a07f46a67f08a6f25244e9610e4035b94603cbe8eebaa25cd76f5f65b081",
+          "atomic": "812781994329965",
+          "normalized": "812781994.329965",
           "decimals": 6
         }
       },
@@ -171,10 +173,10 @@
         "endpoint": "https://mainnet.optimism.io",
         "endpoint_substituted": false,
         "block": {
-          "number": 156857154,
-          "hex": "0x9597342",
-          "hash": "0xc820fa22c5ee17425f8c40b19abebc0f98bf48c625878bf647696adf239fb355",
-          "timestamp": 1789313085,
+          "number": 156857510,
+          "hex": "0x95974a6",
+          "hash": "0x817b9780b052fd6af439cc012a53460d725a61e55fb328c595b8f6db202f6322",
+          "timestamp": 1789313797,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -186,10 +188,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -229,10 +231,10 @@
         "endpoint": "https://mainnet.optimism.io",
         "endpoint_substituted": false,
         "block": {
-          "number": 156857154,
-          "hex": "0x9597342",
-          "hash": "0xc820fa22c5ee17425f8c40b19abebc0f98bf48c625878bf647696adf239fb355",
-          "timestamp": 1789313085,
+          "number": 156857510,
+          "hex": "0x95974a6",
+          "hash": "0x817b9780b052fd6af439cc012a53460d725a61e55fb328c595b8f6db202f6322",
+          "timestamp": 1789313797,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -244,10 +246,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -258,18 +260,18 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x0000000000000000000000000000000000000000000000000000d5196f56aedc",
-          "raw_sha256": "6e95d85f4ddf2a408b48f3fd474b2d333d4662c268c4254825f71f83425665fc",
-          "atomic": "234305218850524",
-          "normalized": "234305218.850524",
+          "raw": "0x0000000000000000000000000000000000000000000000000000d51ad69bd239",
+          "raw_sha256": "39269e30f73916699882a064b9079cddc82aff8b338915f4a021e3e6f5c92496",
+          "atomic": "234311246402105",
+          "normalized": "234311246.402105",
           "decimals": 6
         },
         "escrow_balance": {
           "query": "balanceOf(0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1)",
-          "raw": "0x0000000000000000000000000000000000000000000000000000d56a316e9ea2",
-          "raw_sha256": "bd839d7011d2332b050208c35ce014ae4e09c9998210c900061fef14edc5b84e",
-          "atomic": "234652072582818",
-          "normalized": "234652072.582818",
+          "raw": "0x0000000000000000000000000000000000000000000000000000d56b98b3c1ff",
+          "raw_sha256": "fc0ca4b42615dbb3463bc4931781078dec9997d4219b1a66dbaa3a75395aa497",
+          "atomic": "234658100134399",
+          "normalized": "234658100.134399",
           "decimals": 6
         }
       },
@@ -287,10 +289,10 @@
         "endpoint": "https://mainnet.optimism.io",
         "endpoint_substituted": false,
         "block": {
-          "number": 156857154,
-          "hex": "0x9597342",
-          "hash": "0xc820fa22c5ee17425f8c40b19abebc0f98bf48c625878bf647696adf239fb355",
-          "timestamp": 1789313085,
+          "number": 156857510,
+          "hex": "0x95974a6",
+          "hash": "0x817b9780b052fd6af439cc012a53460d725a61e55fb328c595b8f6db202f6322",
+          "timestamp": 1789313797,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -302,10 +304,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -345,10 +347,10 @@
         "endpoint": "https://mainnet.base.org",
         "endpoint_substituted": false,
         "block": {
-          "number": 51261854,
-          "hex": "0x30e319e",
-          "hash": "0x5b88ab6b7e273cd6a30bd0f89455b70faf8614b674aa1fe9a56a4d9ac9dc1cfa",
-          "timestamp": 1789313055,
+          "number": 51262221,
+          "hex": "0x30e330d",
+          "hash": "0x5a405aebede66cbafb581160b1c045d70184c312e059c6f3582fb451eb288167",
+          "timestamp": 1789313789,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -360,10 +362,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -403,10 +405,10 @@
         "endpoint": "https://mainnet.base.org",
         "endpoint_substituted": false,
         "block": {
-          "number": 51261854,
-          "hex": "0x30e319e",
-          "hash": "0x5b88ab6b7e273cd6a30bd0f89455b70faf8614b674aa1fe9a56a4d9ac9dc1cfa",
-          "timestamp": 1789313055,
+          "number": 51262221,
+          "hex": "0x30e330d",
+          "hash": "0x5a405aebede66cbafb581160b1c045d70184c312e059c6f3582fb451eb288167",
+          "timestamp": 1789313789,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -418,10 +420,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -461,10 +463,10 @@
         "endpoint": "https://mainnet.base.org",
         "endpoint_substituted": false,
         "block": {
-          "number": 51261854,
-          "hex": "0x30e319e",
-          "hash": "0x5b88ab6b7e273cd6a30bd0f89455b70faf8614b674aa1fe9a56a4d9ac9dc1cfa",
-          "timestamp": 1789313055,
+          "number": 51262221,
+          "hex": "0x30e330d",
+          "hash": "0x5a405aebede66cbafb581160b1c045d70184c312e059c6f3582fb451eb288167",
+          "timestamp": 1789313789,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -476,10 +478,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -490,10 +492,10 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x000000000000000000000000000000000000000000000000000f29b6e8cd255e",
-          "raw_sha256": "c7cb966976241b2154be22631a41cbc64867ea6cf8a87504dfc1d5d7bc5067e2",
-          "atomic": "4267990217205086",
-          "normalized": "4267990217.205086",
+          "raw": "0x000000000000000000000000000000000000000000000000000f29c3b9c3c76e",
+          "raw_sha256": "dfb87571ff0114b9be35d8067bc69bfb6afe9bc2403c91882855bcdefc076df4",
+          "atomic": "4268045262636910",
+          "normalized": "4268045262.636910",
           "decimals": 6
         }
       },
@@ -511,10 +513,10 @@
         "endpoint": "https://arb1.arbitrum.io/rpc",
         "endpoint_substituted": false,
         "block": {
-          "number": 504776566,
-          "hex": "0x1e164776",
-          "hash": "0xfdb10a8f3ac6787d4865c37083f98e952370f43f1afefca4834fbee25fd80cfb",
-          "timestamp": 1789313061,
+          "number": 504779572,
+          "hex": "0x1e165334",
+          "hash": "0xc4263f9aae3b7fbfc46b9d4920ded09d5fc83c59f0a702c2c6e3293ebe559be3",
+          "timestamp": 1789313818,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -526,10 +528,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -540,10 +542,10 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x0000000000000000000000000000000000000000000000000009ae2a182460cf",
-          "raw_sha256": "e5f75341026d5e11a1c9d470388a4eff107d282e1e67abe5d3dbf0f476b144c1",
-          "atomic": "2724770607292623",
-          "normalized": "2724770607.292623",
+          "raw": "0x0000000000000000000000000000000000000000000000000009adedf484b464",
+          "raw_sha256": "d96e3c29dffa6374454d922b3cc9e2d73d1b68e0814500fb0cf12ca929616f31",
+          "atomic": "2724512311587940",
+          "normalized": "2724512311.587940",
           "decimals": 6
         }
       },
@@ -561,10 +563,10 @@
         "endpoint": "https://polygon-bor-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 93739324,
-          "hex": "0x596593c",
-          "hash": "0xe18b38a7046253ffb5815bf4f0eaac1b8a110d9b8ba8c577e7f49936e1f2a2f4",
-          "timestamp": 1789314019,
+          "number": 93739947,
+          "hex": "0x5965bab",
+          "hash": "0xbdd1fe8ac71a33bcf5b35efb1cfe77dd05c85020909a673278e4bc9d048eecdb",
+          "timestamp": 1789314954,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -576,10 +578,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -619,10 +621,10 @@
         "endpoint": "https://polygon-bor-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 93739324,
-          "hex": "0x596593c",
-          "hash": "0xe18b38a7046253ffb5815bf4f0eaac1b8a110d9b8ba8c577e7f49936e1f2a2f4",
-          "timestamp": 1789314019,
+          "number": 93739947,
+          "hex": "0x5965bab",
+          "hash": "0xbdd1fe8ac71a33bcf5b35efb1cfe77dd05c85020909a673278e4bc9d048eecdb",
+          "timestamp": 1789314954,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -634,10 +636,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -648,10 +650,10 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x00000000000000000000000000000000000000000000000000029ebbc01c6d04",
-          "raw_sha256": "b8b800f49ee7523b999c198702d7a1ee4db676c413765e600668d0b3328a80cd",
-          "atomic": "737479172582660",
-          "normalized": "737479172.582660",
+          "raw": "0x00000000000000000000000000000000000000000000000000029f35feda10bb",
+          "raw_sha256": "7bf692c9e456b68e7291be13f3be2617ebd198caecc71765fc636443bb44411f",
+          "atomic": "738004211208379",
+          "normalized": "738004211.208379",
           "decimals": 6
         }
       },
@@ -669,10 +671,10 @@
         "endpoint": "https://polygon-bor-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 93739324,
-          "hex": "0x596593c",
-          "hash": "0xe18b38a7046253ffb5815bf4f0eaac1b8a110d9b8ba8c577e7f49936e1f2a2f4",
-          "timestamp": 1789314019,
+          "number": 93739947,
+          "hex": "0x5965bab",
+          "hash": "0xbdd1fe8ac71a33bcf5b35efb1cfe77dd05c85020909a673278e4bc9d048eecdb",
+          "timestamp": 1789314954,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -684,10 +686,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25969396,
-          "hex": "0x18c42f4",
-          "hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174",
-          "timestamp": 1789313111,
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -716,6 +718,226 @@
       "state": "ESCROW_PARITY_READ",
       "error": null,
       "escrow_over_wrapped": "1.007805"
+    },
+    {
+      "id": "wbtc:ethereum",
+      "wrapped": {
+        "chain": "ethereum",
+        "symbol": "WBTC",
+        "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "bitcoin",
+        "symbol": "BTC",
+        "address": "custodian-held (BitGo et al.); not an EVM contract",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "BTC reserve held by custodians and self-published (wbtc.network / Chainlink PoR fed by the custodian). Nothing independent is readable from here; INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000000000000000a8fe9bff7f8",
+          "raw_sha256": "da84a3819c0b755a09aaccd086f79d6b04067c24488307a42b949919f5228bdf",
+          "atomic": "11613218273272",
+          "normalized": "116132.18273272",
+          "decimals": 8
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "cbbtc:base",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "cbBTC",
+        "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+        "chainId": 8453,
+        "endpoint": "https://mainnet.base.org",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 51262221,
+          "hex": "0x30e330d",
+          "hash": "0x5a405aebede66cbafb581160b1c045d70184c312e059c6f3582fb451eb288167",
+          "timestamp": 1789313789,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "bitcoin",
+        "symbol": "BTC",
+        "address": "Coinbase custody; not an EVM contract",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000042a334ef699",
+          "raw_sha256": "843fb88fcc2526f888acdf48fdf83db5a1c496cf375aa0806cb28f3461f98e36",
+          "atomic": "4579295950489",
+          "normalized": "45792.95950489",
+          "decimals": 8
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "cbbtc:ethereum",
+      "wrapped": {
+        "chain": "ethereum",
+        "symbol": "cbBTC",
+        "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "bitcoin",
+        "symbol": "BTC",
+        "address": "Coinbase custody; not an EVM contract",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000049065014227",
+          "raw_sha256": "851a4ce4a55e1caf562a464c41ff3e117325532f671a90c0a70fdff2e5bcbe9a",
+          "atomic": "5018216383015",
+          "normalized": "50182.16383015",
+          "decimals": 8
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "wxrp:ethereum",
+      "wrapped": {
+        "chain": "ethereum",
+        "symbol": "wXRP",
+        "address": "0x39fBBABf11738317a448031930706cd3e612e1B9",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "xrpl",
+        "symbol": "XRP",
+        "address": "custodian-held XRPL account (Wrapped.com); readable on XRPL, not from here",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "XRP reserve held on the XRP Ledger by the wrapper's custodian; a future XRPL-side read can pair with this supply. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000ed88b20f9392362e24000",
+          "raw_sha256": "3b642f245c5076bd8e421ca8c70929c3376adfc6aa651f343d82234d92e54cd0",
+          "atomic": "17947559108324000000000000",
+          "normalized": "17947559.108324000000000000",
+          "decimals": 18
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "buidl:ethereum",
+      "wrapped": {
+        "chain": "ethereum",
+        "symbol": "BUIDL",
+        "address": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "offchain",
+        "symbol": "fund shares",
+        "address": "transfer agent (Securitize); not on any chain",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "Tokenised fund shares; the reserve is the fund's assets held off-chain, reported by the transfer agent. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000c0e03e051f2d",
+          "raw_sha256": "dfe95b9dff923992a1276caea51636072507ad8fca0c682b9d39575cb29f4ee5",
+          "atomic": "212069345730349",
+          "normalized": "212069345.730349",
+          "decimals": 6
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null
     }
   ]
 }
