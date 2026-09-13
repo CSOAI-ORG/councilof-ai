@@ -56,3 +56,12 @@ If PrivateEmail creds cannot be restored, the SendGrid route via EMAIL_FROM=nore
 - Current SendGrid key is `placeholder` — needs provisioning
 - From-address would be `noreply@csoai.platform`, not `nicholas@csoai.org`
 - Owner direction needed on whether to switch senders or fix PrivateEmail
+
+## Form submission path (alternative to email)
+
+For contacts with no published email (Armilla, Enzai, Drata, Credo AI), contact-form submission is the only direct channel. Playwright Python is available at `/opt/homebrew/bin/playwright`.
+
+**Tested:** Enzai contact form successfully filled (first_name, last_name, business_email, message) with playwright. Screenshot at `/tmp/form-submissions/enzai-filled.png`.
+
+**Action deferred to owner:** submitting contact forms is irreversible (no recall) and should be done by owner or with explicit owner sign-off per session. Forms prepared but NOT submitted.
+
