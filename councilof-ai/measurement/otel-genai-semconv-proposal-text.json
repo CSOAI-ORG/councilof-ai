@@ -1,0 +1,25 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "action.otel.semconv.proposal_text",
+  "subject": "otel-genai-semconv-proposal-text",
+  "measured_at": "2026-09-13T05:28:07.673346+00:00",
+  "metrics": {
+    "repo": "open-telemetry/semantic-conventions",
+    "issue": "Add to #171 (GenAI) or open new",
+    "proposal": "gen_ai.eval.* semantic convention attributes for signed/attested eval events",
+    "attributes": [
+      "gen_ai.eval.card_id \u2014 sha256 of signed measurement card",
+      "gen_ai.eval.issuer_did \u2014 DID of issuer (e.g. did:web:csoai.org#board-attestation-1)",
+      "gen_ai.eval.merkle_root \u2014 root the card is included in",
+      "gen_ai.eval.timestamp_authority \u2014 ots/rekor/none",
+      "gen_ai.eval.signature \u2014 Ed25519 hex",
+      "gen_ai.eval.corrections_count \u2014 number of published corrections for this card",
+      "gen_ai.eval.verification_url \u2014 URL where stranger can verify"
+    ],
+    "rationale": "No current OTel convention covers signed/attested eval events. CSOAI 22-axis instrument operates at scale (335+ signed cards, 257-leaf Merkle root). Observability vendors (Honeycomb, Datadog, Grafana) watch this repo.",
+    "use_case": "AI eval platform emits signed measurement card \u2192 OTel collector captures gen_ai.eval.* attributes \u2192 downstream tools (Datadog, Honeycomb) display verified measurements, not raw eval scores.",
+    "reference": "csoai.measurement-card/0.1 schema at councilof.ai/schema/measurement-card.json"
+  },
+  "honest_sentence": "OTel GenAI semconv proposal: add 7 new gen_ai.eval.* attributes (card_id, issuer_did, merkle_root, timestamp_authority, signature, corrections_count, verification_url). No current convention covers signed/attested eval events. Observability vendors watch this repo.",
+  "measurement_not_certification": true
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "action.defillama.xrpl.adapter_full",
+  "subject": "defillama-xrpl-adapter-full",
+  "measured_at": "2026-09-13T05:28:07.673346+00:00",
+  "metrics": {
+    "file_path": "projects/xrpl/index.js",
+    "structure": {
+      "fetch": "Query XRPL JSON-RPC for AMM pools (XLS-30), Permissioned Domains (XLS-80), DID reserves (XLS-40), Credential attestations (XLS-70)",
+      "tvl_calculation": "Sum balances across known protocols (Cassa, Sologenic, GateHub, etc.)",
+      "methodology_note": "Published as projects/xrpl/README.md \u2014 what we measure, what we don't, edge cases"
+    },
+    "test_file": "projects/xrpl/test.js with green-checked fixture data",
+    "pr_steps": [
+      "1. Fork DefiLlama/DefiLlama-Adapters",
+      "2. Add projects/xrpl/ directory",
+      "3. Implement index.js with TVL aggregation",
+      "4. Add test.js with fixture data",
+      "5. Add README.md with methodology",
+      "6. Run node test.js \u2014 must be green",
+      "7. Open PR with template answered",
+      "8. Wait for DefiLlama review (days to weeks)"
+    ],
+    "impact": "First XRPL TVL data in DefiLlama. Listing = industry-wide discovery for any XRPL DeFi project. XRPL mainnet has live AMM (XLS-30), Permissioned Domains (XLS-80), DID (XLS-40), Credentials (XLS-70) \u2014 currently unindexed.",
+    "owner_gate": "PR submission requires Nick's GitHub account"
+  },
+  "honest_sentence": "DefiLlama XRPL adapter full spec: projects/xrpl/index.js fetches AMM (XLS-30), Permissioned Domains (XLS-80), DID (XLS-40), Credentials (XLS-70). First XRPL TVL in DefiLlama. PR submission, owner-gated.",
+  "measurement_not_certification": true
+}

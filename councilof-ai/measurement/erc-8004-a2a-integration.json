@@ -1,0 +1,28 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "action.erc8004.a2a_integration",
+  "subject": "erc-8004-a2a-integration",
+  "measured_at": "2026-09-13T05:28:07.673346+00:00",
+  "metrics": {
+    "name": "ERC-8004 + A2A integration",
+    "components": [
+      "ERC-8004 (Base Identity singleton, mainnet since Jan 29)",
+      "A2A v1.0 (JWS-signed agent cards)",
+      "agent0 SDK",
+      "CSOAI 22-axis signed measurement instrument"
+    ],
+    "integration_plan": [
+      "1. Generate agent wallet (or use existing)",
+      "2. Mint ERC-721 identity on Base Identity singleton via agent0 SDK",
+      "3. Set agentURI to signed A2A agent card (JWS)",
+      "4. Include CSOAI measurement evidence in agent card metadata",
+      "5. Verify on 8004scan/agentscan",
+      "6. Cross-link agent card to councilof.ai/agents/csoai-measurement"
+    ],
+    "cost": "Cents of USDC gas on Base",
+    "owner_gate": "Nick's wallet signature for the transaction",
+    "value": "First signed measurement agent on ERC-8004. Cross-referenced via A2A agent card. Discoverable on agent registries."
+  },
+  "honest_sentence": "ERC-8004 + A2A integration: mint ERC-721 identity on Base via agent0 SDK, link to JWS-signed A2A agent card with CSOAI measurement metadata. First signed measurement agent on ERC-8004. Cents of gas, owner-gated.",
+  "measurement_not_certification": true
+}
