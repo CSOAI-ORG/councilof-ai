@@ -81,6 +81,27 @@ jobs:
               if r.returncode == 0:
                   dispatched.append(n)
                   print(f"dispatched pr-gates for #{n} ({branch} @ {sha[:8]})")
+                  # MEASURED TRUTH (2026-09-13, PR #2134): a workflow_dispatch gates run IS
+                  # green evidence on the head sha, but GitHub does NOT count it toward the
+                  # PR's required check — mergeable_state stays "blocked". Credentials cannot
+                  # safely trigger pull_request for a bot-opened PR, so per the operating
+                  # contract the PR is banked with ONE explicit operator action.
+                  comments = gh(["pr", "view", str(n), "--repo", REPO,
+                                 "--json", "comments", "-q", "[.comments[].body] | join('\n')"]).stdout
+                  if "bot-checks-sweeper: operator action" not in comments:
+                      body = (
+                          "bot-checks-sweeper: operator action required.\n\n"
+                          f"This PR was opened by automation, so no pull_request checks fired. "
+                          f"The REAL gates suite has been dispatched on `{branch}` — its result "
+                          f"attaches to head {sha[:8]} (Actions tab → pr-gates → this branch).\n\n"
+                          "**Operator action:** when that dispatched run is green, merge with "
+                          "admin rights (`gh pr merge "
+                          f"{n} --squash --admin`). Branch protection counts only pull_request-event "
+                          "checks; the dispatched green run is the evidence, the admin merge is the "
+                          "human act. Posted once; nothing was auto-merged and no check was fabricated."
+                      )
+                      gh(["pr", "comment", str(n), "--repo", REPO, "--body", body])
+                      print(f"banked operator-action comment on #{n}")
               else:
                   # Branch predates dispatchable pr-gates (or ref vanished): bank the PR with
                   # ONE explicit operator action — never claim automation worked.
