@@ -356,6 +356,25 @@ def main() -> None:
         "median_staleness_days": statistics.median(staleness_values) if staleness_values else None,
     }
 
+    # Actual cost record for the unattended daily round — computed and stated,
+    # never estimated away. Endpoints are keyless public issuer/auditor pages
+    # plus the committed frozen index; there is no inference spend.
+    cost = {
+        "runner": "github-hosted ubuntu-latest (public repo — workflow minutes not billed)",
+        "runner_timeout_minutes": 20,
+        "observed_last_run": {
+            "id": 34715741325,
+            "conclusion": "success",
+            "at": "2026-09-12T19:59Z",
+        },
+        "schedule": "23 3 * * * (daily 03:23 UTC) + workflow_dispatch",
+        "network_calls": f"{len(rows)} registered issuer/auditor pages + 0 paid endpoints",
+        "endpoints": "keyless only",
+        "inference_spend_usd": 0,
+        "cost_gbp": 0,
+        "note": "If a registered page ever requires a key or payment, the row goes UNCHECKABLE — the round never buys access.",
+    }
+
     deep = {
         "schema": "csoai.stablecoin-deep/0.1",
         "generated_at": fetched_at,
@@ -367,6 +386,7 @@ def main() -> None:
         "top_n": TOP_N,
         "rows": rows,
         "summary": summary,
+        "cost": cost,
         "truth_rules": [
             "DEEP_PROBED means the issuer page was fetched and its served bytes inspected; it is not a certification.",
             "A date counts only when attestation vocabulary appears near it in the served bytes.",

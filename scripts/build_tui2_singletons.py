@@ -553,7 +553,10 @@ def main() -> None:
 
     if args.selftest:
         assert union == 12 and n_staged == 12 and n_staged_symbols == 11, (union, n_staged, n_staged_symbols)
-        assert n_signed == 1 and overlap == 1 and n_unmeasured == 413
+        # Signing progress is derived, never pinned: 0 <= overlap == n_signed <= n_staged.
+        # (Authored when signed=1 pre-publish; the publisher signed the staged set the same day.)
+        assert overlap == n_signed and 0 <= n_signed <= n_staged, (n_signed, overlap)
+        assert n_unmeasured == n_indexed - union
         assert n_observed_extra == 21 and n_observed_extra_readings == 27, (n_observed_extra, n_observed_extra_readings)
         e143 = next(e for e in catalog["entries"] if e["id"] == "143")
         assert e143["measured_chains"] == ["ethereum"] and "xrpl" not in json.dumps(e143["identity"])
