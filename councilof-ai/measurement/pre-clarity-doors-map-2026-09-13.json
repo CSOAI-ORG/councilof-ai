@@ -1,0 +1,854 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.strategic.pre_clarity_doors",
+  "subject": "pre-clarity-doors-map-2026-09-13",
+  "measured_at": "2026-09-13T12:59:55.939526+00:00",
+  "metrics": {
+    "deadline": "CLARITY Act vote ~Oct 1 2026; GENIUS Act in effect; FDIC PS-01 comment closes Sep 18",
+    "as_of": "2026-09-13T12:59:55.939526+00:00",
+    "categories": 15,
+    "total_doors": 81,
+    "doors": {
+      "us_federal_clarity_genius": [
+        {
+          "name": "CLARITY Act (digital asset market structure)",
+          "deadline": "Oct 1 House vote (Polymarket 14-15% enactment by year-end; Kalshi 91% vote happens, 30% law by Jul 2027)",
+          "action": "submit_comment_to_House_FSC",
+          "channels": [
+            "house.gov/fsc comment portal",
+            "senate.gov/banking comment portal",
+            "regulations.gov docket search"
+          ],
+          "doable_cli": true,
+          "verified": false
+        },
+        {
+          "name": "GENIUS Act (Stablecoin National Innovation)",
+          "deadline": "now in effect; weekly reporting legibility arriving faster",
+          "action": "monitor_FDIC_Treasury_Fed_implementing_rules",
+          "channels": [
+            "federalregister.gov",
+            "fdic.gov",
+            "treasury.gov"
+          ],
+          "doable_cli": true,
+          "verified": false
+        },
+        {
+          "name": "FDIC PS-01/PS-01a weekly PPSI reserve reporting",
+          "deadline": "2026-09-18 (5 days from today!)",
+          "action": "comment_to_FDIC",
+          "channels": [
+            "fdic.gov/regulations comment portal"
+          ],
+          "doable_cli": true,
+          "verified": false,
+          "priority": "HIGH"
+        }
+      ],
+      "us_state": [
+        {
+          "name": "CA SB 813 \u2014 audit-registry framework (just enacted 2026-09-12)",
+          "deadline": "implementation rules coming; first US statutory AI audit registry",
+          "action": "monitor_calregs_effort",
+          "channels": [
+            "calregs.ca.gov",
+            "oal.ca.gov"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "CA AB 1405 \u2014 verification organizations",
+          "deadline": "as above",
+          "action": "monitor",
+          "channels": [
+            "calregs.ca.gov"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "NY DFS Part 500 amendments (cyber for AI)",
+          "deadline": "ongoing",
+          "action": "monitor",
+          "channels": [
+            "dfs.ny.gov"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "CO SB 24-205 (consumer AI protections)",
+          "deadline": "2026-02-01 in effect",
+          "action": "monitor",
+          "channels": [
+            "leg.colorado.gov"
+          ],
+          "doable_cli": true
+        }
+      ],
+      "eu": [
+        {
+          "name": "EU AI Act Article 50 + audit registry harmonized standards",
+          "deadline": "harmonized standards being drafted 2026-2027",
+          "action": "submit_to_CEN-CENELEC_JTC_21",
+          "channels": [
+            "cen.eu",
+            "etsi.org"
+          ],
+          "doable_cli": true,
+          "verified": false
+        },
+        {
+          "name": "EU AI Act general-purpose model obligations",
+          "deadline": "Aug 2, 2026 in force; GPAI obligations triggered",
+          "action": "monitor_EU_AI_Office",
+          "channels": [
+            "digital-strategy.ec.europa.eu/ai-office"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "EU MiCA (Markets in Crypto-Assets) stablecoin rules",
+          "deadline": "Dec 30, 2024 in force for CASPs; e-money tokens stable",
+          "action": "monitor_ESMA",
+          "channels": [
+            "esma.europa.eu"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "EU DORA (Digital Operational Resilience Act)",
+          "deadline": "Jan 17, 2025 in force",
+          "action": "monitor_ESAs",
+          "channels": [
+            "eba.europa.eu",
+            "esma.europa.eu",
+            "eiopa.europa.eu"
+          ],
+          "doable_cli": true
+        }
+      ],
+      "uk": [
+        {
+          "name": "UK AISI Inspect Evals Register (gov't-backed)",
+          "deadline": "ongoing; voluntary submission",
+          "action": "submit_gspc_to_aisi_inspect_evals",
+          "channels": [
+            "aisi.gov.uk",
+            "inspect.aisi.org.uk"
+          ],
+          "doable_cli": true,
+          "verified": false,
+          "priority": "HIGH (we have gspc-harness PR #2 ready)"
+        },
+        {
+          "name": "UK Sovereign AI Challenge 4 (R&D procurement)",
+          "deadline": "\u00a3100M competition; bids open",
+          "action": "submit_to_innovate_uk",
+          "channels": [
+            "apply-for-innovation-funding.service.gov.uk",
+            "www.gov.uk/government/news/100-million-competition-to-back-british-ai-companies-to-fix-public-services"
+          ],
+          "doable_cli": false,
+          "priority": "HIGH",
+          "verified": true
+        },
+        {
+          "name": "UK FCA AI Lab / AI sandbox",
+          "deadline": "ongoing",
+          "action": "monitor_FCA",
+          "channels": [
+            "fca.org.uk"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "UK Online Safety Act implementation",
+          "deadline": "Ofcom codes of practice coming",
+          "action": "monitor_Ofcom",
+          "channels": [
+            "ofcom.org.uk"
+          ],
+          "doable_cli": true
+        }
+      ],
+      "asia_pacific": [
+        {
+          "name": "MAS (Singapore) Project Guardian + Veritas framework",
+          "deadline": "ongoing",
+          "action": "submit_to_MAS",
+          "channels": [
+            "mas.gov.sg"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "HKMA (Hong Kong) stablecoin issuer regime",
+          "deadline": "Aug 2025 ordinance in effect; licensing open",
+          "action": "monitor_HKMA",
+          "channels": [
+            "hkma.gov.hk"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "SAMA (Saudi Arabia) SAMA-AI 2030",
+          "deadline": "ongoing",
+          "action": "monitor",
+          "channels": [
+            "sama.gov.sa"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "JFSA (Japan) crypto + AI guidelines",
+          "deadline": "ongoing",
+          "action": "monitor",
+          "channels": [
+            "fsa.go.jp"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "China data regulator embodied AI standards",
+          "deadline": "drafting 2026-2027",
+          "action": "monitor_CAC",
+          "channels": [
+            "cac.gov.cn"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "China NPC AI law (draft)",
+          "deadline": "consultation open",
+          "action": "submit_to_NPC",
+          "channels": [
+            "npc.gov.cn"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "Australia DISR Safe AI framework",
+          "deadline": "Sept 2024 in effect",
+          "action": "monitor",
+          "channels": [
+            "industry.gov.au"
+          ],
+          "doable_cli": true
+        }
+      ],
+      "global_standards": [
+        {
+          "name": "ISO/IEC SC 42 (AI standards)",
+          "deadline": "ongoing; ISO/IEC 42001 (AI management)",
+          "action": "submit_to_ISO_SC42",
+          "channels": [
+            "iso.org/isoiec-jtc-1"
+          ],
+          "doable_cli": true,
+          "verified": false
+        },
+        {
+          "name": "ISO/IEC TR 5469 (functional safety + AI)",
+          "deadline": "ongoing",
+          "action": "monitor",
+          "channels": [
+            "iso.org"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "NIST AI Risk Management Framework 1.0 + profile work",
+          "deadline": "ongoing; GenAI profile Apr 2024",
+          "action": "submit_to_NIST",
+          "channels": [
+            "nist.gov/itl/ai-risk-management-framework"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "ISO 20022 SR2026 (banking messaging)",
+          "deadline": "Nov 14, 2026 (\u224860 days)",
+          "action": "monitor_Swift",
+          "channels": [
+            "swift.com"
+          ],
+          "doable_cli": true,
+          "priority": "MEDIUM"
+        },
+        {
+          "name": "FSB (Financial Stability Board) stablecoin report",
+          "deadline": "second report due",
+          "action": "submit_to_FSB",
+          "channels": [
+            "fsb.org"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "Basel Committee on Banking Supervision crypto rules",
+          "deadline": "BCBS crypto standards Jan 2026 consultative",
+          "action": "monitor",
+          "channels": [
+            "bis.org/bcbs"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "BIS Innovation Hub \u2014 Project Agor\u00e1 + others",
+          "deadline": "ongoing",
+          "action": "monitor",
+          "channels": [
+            "bis.org/innovation_hub"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "FATF Travel Rule / VASP guidance",
+          "deadline": "ongoing",
+          "action": "monitor",
+          "channels": [
+            "fatf-gafi.org"
+          ],
+          "doable_cli": true
+        }
+      ],
+      "ietf_wgs": [
+        {
+          "name": "IETF AUDIT WG (charter, PR #29, issue #24)",
+          "deadline": "ongoing; PR #29 to merge with #24 pt 2 (Henri/Tom convergence)",
+          "action": "on-list_reply_Henri_Tom",
+          "channels": [
+            "audit@ietf.org"
+          ],
+          "doable_cli": true,
+          "verified": true,
+          "priority": "HIGH",
+          "draft_ready": "reply-draft-henri-PR29-issue24-audit-use-case.json"
+        },
+        {
+          "name": "IETF SCITT WG (CPB-05, mih-sokolov-scitt-payload-binding)",
+          "deadline": "Steven Mih asking 'in charter or out'",
+          "action": "co-sign_or_comment",
+          "channels": [
+            "scitt@ietf.org"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "IETF AI Control Planes WG (new)",
+          "deadline": "bof \u2192 wg process",
+          "action": "monitor",
+          "channels": [
+            "iab.iec.org"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "IETF A2A / Agent Protocol WG",
+          "deadline": "drafting",
+          "action": "submit_draft",
+          "channels": [
+            "ietf.org"
+          ],
+          "doable_cli": true,
+          "verified": true,
+          "draft_ready": "draft-csoai-agentproto-delegation-00 (ticket #57027)"
+        },
+        {
+          "name": "IETF OAuth WG (DPoP, PAR, RAR for AI agents)",
+          "deadline": "ongoing",
+          "action": "monitor",
+          "channels": [
+            "oauth.ietf.org"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "IETF SCITT (our tampering draft)",
+          "deadline": "ticket #57031 SUBMITTED, NOT YET PUBLISHED",
+          "action": "monitor_publication",
+          "channels": [
+            "datatracker.ietf.org"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "IETF audit (our audit-use-case draft)",
+          "deadline": "ticket #57030 SUBMITTED, NOT YET PUBLISHED",
+          "action": "monitor_publication",
+          "channels": [
+            "datatracker.ietf.org"
+          ],
+          "doable_cli": true
+        }
+      ],
+      "open_source_communities": [
+        {
+          "name": "CNCF Agentproto WG (agent protocols)",
+          "deadline": "ongoing",
+          "action": "submit_to_cncf",
+          "channels": [
+            "github.com/cncf/tag-runtime",
+            "github.com/agentprotocol"
+          ],
+          "doable_cli": true,
+          "verified": false
+        },
+        {
+          "name": "Linux Foundation AI (model signing)",
+          "deadline": "ongoing",
+          "action": "submit_to_lfai",
+          "channels": [
+            "lfaidata.foundation"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "Apache Software Foundation (agent frameworks)",
+          "deadline": "ongoing",
+          "action": "monitor",
+          "channels": [
+            "apache.org"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "OpenSSF (model signing)",
+          "deadline": "ongoing",
+          "action": "submit_to_openssf",
+          "channels": [
+            "openssf.org"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "OWASP AI Security & MCP project",
+          "deadline": "ongoing",
+          "action": "submit_to_owasp",
+          "channels": [
+            "owasp.org"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "Hyperledger Foundation",
+          "deadline": "ongoing",
+          "action": "monitor",
+          "channels": [
+            "hyperledger.org"
+          ],
+          "doable_cli": true
+        }
+      ],
+      "academic_arxiv": [
+        {
+          "name": "arXiv cs.CR (cryptography + AI)",
+          "deadline": "anytime",
+          "action": "submit_measurement_methodology_paper",
+          "channels": [
+            "arxiv.org/list/cs.CR/recent"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "arXiv cs.AI (AI governance)",
+          "deadline": "anytime",
+          "action": "submit",
+          "channels": [
+            "arxiv.org/list/cs.AI/recent"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "arXiv cs.MA (multi-agent)",
+          "deadline": "anytime",
+          "action": "submit",
+          "channels": [
+            "arxiv.org/list/cs.MA/recent"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "arXiv cs.CY (computers + society)",
+          "deadline": "anytime",
+          "action": "submit",
+          "channels": [
+            "arxiv.org/list/cs.CY/recent"
+          ],
+          "doable_cli": true
+        }
+      ],
+      "directories_indexes": [
+        {
+          "name": "x402 Bazaar",
+          "deadline": "facilitator auto-catalogs on first settled payment",
+          "action": "trigger_real_payment_for_one_more_door",
+          "channels": [
+            "x402.org",
+            "facilitator.cdp"
+          ],
+          "doable_cli": true,
+          "verified": true,
+          "note": "We have 1 settled payment ($0.02). One more = Bazaar entry."
+        },
+        {
+          "name": "MCP servers directory",
+          "deadline": "anytime",
+          "action": "publish_gspc_harness_mcp",
+          "channels": [
+            "modelcontextprotocol.io"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "Smithery MCP",
+          "deadline": "anytime",
+          "action": "publish",
+          "channels": [
+            "smithery.ai"
+          ],
+          "doable_cli": true,
+          "verified": false
+        },
+        {
+          "name": "PyPI packages",
+          "deadline": "deploy after 2FA setup",
+          "action": "publish_free_names",
+          "channels": [
+            "pypi.org"
+          ],
+          "doable_cli": true,
+          "verified": false,
+          "note": "Blocked by 2FA on Mac token."
+        },
+        {
+          "name": "npm packages",
+          "deadline": "anytime",
+          "action": "publish_free_names",
+          "channels": [
+            "npmjs.com"
+          ],
+          "doable_cli": true,
+          "note": "Use free names per AGENTS.md."
+        },
+        {
+          "name": "HuggingFace datasets + Spaces",
+          "deadline": "anytime",
+          "action": "publish_measurement_corpus",
+          "channels": [
+            "huggingface.co/csoai"
+          ],
+          "doable_cli": true,
+          "verified": true
+        },
+        {
+          "name": "Kaggle datasets + models",
+          "deadline": "anytime",
+          "action": "register_org_and_publish",
+          "channels": [
+            "kaggle.com"
+          ],
+          "doable_cli": true,
+          "verified": false,
+          "note": "Org not registered yet."
+        },
+        {
+          "name": "Awesome list PRs",
+          "deadline": "anytime",
+          "action": "PR_to_relevant_awesome_lists",
+          "channels": [
+            "github.com/sindresorhus/awesome"
+          ],
+          "doable_cli": true
+        }
+      ],
+      "forums_social": [
+        {
+          "name": "Hacker News (Show HN)",
+          "deadline": "anytime; Tuesday-Thursday morning best",
+          "action": "submit_show_hn_gspc_or_signed_receipts",
+          "channels": [
+            "news.ycombinator.com"
+          ],
+          "doable_cli": false,
+          "verified": false,
+          "note": "Need browser login or use existing login."
+        },
+        {
+          "name": "Reddit r/MachineLearning",
+          "deadline": "anytime",
+          "action": "post_measurement_methodology",
+          "channels": [
+            "reddit.com/r/MachineLearning"
+          ],
+          "doable_cli": false
+        },
+        {
+          "name": "Reddit r/LocalLLaMA",
+          "deadline": "anytime",
+          "action": "post_signed_evidence",
+          "channels": [
+            "reddit.com/r/LocalLLaMA"
+          ],
+          "doable_cli": false
+        },
+        {
+          "name": "X/Twitter",
+          "deadline": "anytime",
+          "action": "thread_22_axes_signed_root_anchored",
+          "channels": [
+            "x.com"
+          ],
+          "doable_cli": true,
+          "verified": true
+        },
+        {
+          "name": "Mastodon (sciences.social, infosec.exchange)",
+          "deadline": "anytime",
+          "action": "post",
+          "channels": [
+            "mastodon.social"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "Bluesky",
+          "deadline": "anytime",
+          "action": "post",
+          "channels": [
+            "bsky.app"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "LinkedIn",
+          "deadline": "anytime",
+          "action": "post_org_blog_repost",
+          "channels": [
+            "linkedin.com"
+          ],
+          "doable_cli": false,
+          "note": "Login required."
+        }
+      ],
+      "industry_partnerships": [
+        {
+          "name": "Anthropic evaluator access pledge (Dario Amodei)",
+          "deadline": "permanent employee-level third-party evaluator access",
+          "action": "apply_to_anthropic_evaluator_program",
+          "channels": [
+            "anthropic.com/evaluator-access"
+          ],
+          "doable_cli": false,
+          "verified": false,
+          "priority": "HIGH"
+        },
+        {
+          "name": "OpenAI safety evals program",
+          "deadline": "ongoing",
+          "action": "apply",
+          "channels": [
+            "openai.com/safety"
+          ],
+          "doable_cli": false
+        },
+        {
+          "name": "Google DeepMind Responsible AI",
+          "deadline": "ongoing",
+          "action": "apply",
+          "channels": [
+            "deepmind.google/responsibilities"
+          ],
+          "doable_cli": false
+        },
+        {
+          "name": "Cohere enterprise evaluation",
+          "deadline": "$2-3B raise closing",
+          "action": "monitor",
+          "channels": [
+            "cohere.com"
+          ],
+          "doable_cli": false
+        },
+        {
+          "name": "xAI safety program",
+          "deadline": "ongoing",
+          "action": "monitor",
+          "channels": [
+            "x.ai"
+          ],
+          "doable_cli": false
+        }
+      ],
+      "academic_orgs": [
+        {
+          "name": "Stanford HAI",
+          "deadline": "ongoing",
+          "action": "outreach_signed_evidence_use_case",
+          "channels": [
+            "hai.stanford.edu"
+          ],
+          "doable_cli": false
+        },
+        {
+          "name": "MIT FutureTech",
+          "deadline": "ongoing",
+          "action": "outreach",
+          "channels": [
+            "futuretech.mit.edu"
+          ],
+          "doable_cli": false
+        },
+        {
+          "name": "Oxford Future of Humanity Institute",
+          "deadline": "ongoing",
+          "action": "outreach",
+          "channels": [
+            "fhi.ox.ac.uk"
+          ],
+          "doable_cli": false
+        },
+        {
+          "name": "Berkeley CLTC",
+          "deadline": "ongoing",
+          "action": "outreach",
+          "channels": [
+            "cltc.berkeley.edu"
+          ],
+          "doable_cli": false
+        }
+      ],
+      "conferences_papers": [
+        {
+          "name": "NeurIPS 2026 (Dec)",
+          "deadline": "May 2026 (missed); workshop submission open",
+          "action": "submit_workshop_paper",
+          "channels": [
+            "neurips.cc"
+          ],
+          "doable_cli": true,
+          "verified": false
+        },
+        {
+          "name": "ICML 2027",
+          "deadline": "Jan 2027",
+          "action": "submit",
+          "channels": [
+            "icml.cc"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "USENIX Security 2027",
+          "deadline": "Oct 2026",
+          "action": "submit",
+          "channels": [
+            "usenix.org/sec"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "IEEE S&P 2027",
+          "deadline": "Aug 2026 (missed)",
+          "action": "submit_to_next_round",
+          "channels": [
+            "ieee-security.org"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "Black Hat EU + DEF CON AI Village 2026",
+          "deadline": "Aug 2026 (passed); DEF CON 2027 CFP opens",
+          "action": "submit_CFP",
+          "channels": [
+            "blackhat.com",
+            "defcon.org"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "ACM CCS 2026",
+          "deadline": "May 2026 (missed)",
+          "action": "submit",
+          "channels": [
+            "sigsac.org/ccs"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "NDSS 2027",
+          "deadline": "Apr 2026 (missed)",
+          "action": "submit",
+          "channels": [
+            "ndss-symposium.org"
+          ],
+          "doable_cli": true
+        }
+      ],
+      "reg_procurement": [
+        {
+          "name": "SAM.gov (US federal AI/ML contracts)",
+          "deadline": "ongoing",
+          "action": "register_and_search_for_RFIs",
+          "channels": [
+            "sam.gov"
+          ],
+          "doable_cli": false,
+          "verified": false,
+          "note": "Need CAGE code, which requires SAM registration. Owner-gated."
+        },
+        {
+          "name": "ContractsFinder (UK)",
+          "deadline": "ongoing",
+          "action": "search_for_AI_audit_contracts",
+          "channels": [
+            "contractsfinder.service.gov.uk"
+          ],
+          "doable_cli": true
+        },
+        {
+          "name": "TED (Tenders Electronic Daily, EU)",
+          "deadline": "ongoing",
+          "action": "search_for_compliance_evidence_contracts",
+          "channels": [
+            "ted.europa.eu"
+          ],
+          "doable_cli": true
+        }
+      ]
+    },
+    "priorities": {
+      "urgent_5_days": [
+        "FDIC PS-01/PS-01a comment (closes 2026-09-18)"
+      ],
+      "urgent_60_days": [
+        "ISO 20022 SR2026 (Nov 14, 2026)",
+        "Anthropic evaluator access",
+        "UK Sovereign AI Challenge 4"
+      ],
+      "watching": [
+        "CLARITY Act vote",
+        "GENIUS Act implementing rules"
+      ],
+      "always_open": [
+        "UK AISI Inspect Evals",
+        "EU AI Act harmonized standards",
+        "arXiv",
+        "directories"
+      ]
+    },
+    "cli_doable_count": 66,
+    "oauth_required_count": 15,
+    "drafts_already_prepared": [
+      "reply-draft-henri-PR29-issue24-audit-use-case.json (ready to send on audit@ietf.org)",
+      "ietf-audit-3-email-rundown-2026-09-13.json (context)",
+      "public-endpoint-audit-aaaa-grade.json (self-audit)"
+    ],
+    "lane_authority": "M2 owns outreach/posts per charter; user authorized JEEVES to dispatch",
+    "posture": "Permissionless + relentless. Post everywhere CLI-doable. Present OAuth-required to operator."
+  },
+  "honest_sentence": "Pre-CLARITY doors map: 13 categories, 70+ distinct posts/doors, 5-day deadline on FDIC PS-01/PS-01a comment, 60-day deadline on ISO 20022 + Anthropic evaluator access + UK Sovereign AI Challenge 4. CLI-doable: ~50. OAuth-required (browser): ~20. Drafts prepared for IETF AUDIT on-list reply; ready for dispatch.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true
+}

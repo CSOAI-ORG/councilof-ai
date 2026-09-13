@@ -1,0 +1,97 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.regulation.crosswalks",
+  "subject": "crosswalks-20260913T1258",
+  "measured_at": "2026-09-13T12:58:24.157873Z",
+  "metrics": {
+    "crosswalk_count": 7,
+    "crosswalks": [
+      {
+        "regulation": "California SB 813",
+        "jurisdiction": "US-CA",
+        "effective_date": "2026-09-12",
+        "axes": [
+          "audit-registry",
+          "verification",
+          "third-party"
+        ],
+        "door_state": "OPEN",
+        "official_url": "https://leginfo.legislature.ca.gov"
+      },
+      {
+        "regulation": "California AB 1405",
+        "jurisdiction": "US-CA",
+        "effective_date": "2026-09-12",
+        "axes": [
+          "audit-registry",
+          "verification"
+        ],
+        "door_state": "OPEN",
+        "official_url": "https://leginfo.legislature.ca.gov"
+      },
+      {
+        "regulation": "EU AI Act",
+        "jurisdiction": "EU",
+        "effective_date": "2026-08-02",
+        "axes": [
+          "high-risk",
+          "transparency",
+          "human-oversight"
+        ],
+        "door_state": "OPEN",
+        "official_url": "https://artificialintelligenceact.eu"
+      },
+      {
+        "regulation": "UK AISI Inspect Evals",
+        "jurisdiction": "UK",
+        "effective_date": "2026-01-01",
+        "axes": [
+          "safety-evals",
+          "red-team",
+          "interpretability"
+        ],
+        "door_state": "OPEN",
+        "official_url": "https://www.aisi.gov.uk"
+      },
+      {
+        "regulation": "GENIUS Act",
+        "jurisdiction": "US-Federal",
+        "effective_date": "2026-09-13",
+        "axes": [
+          "stablecoin",
+          "federal-supervision"
+        ],
+        "door_state": "OPEN",
+        "official_url": "https://www.congress.gov"
+      },
+      {
+        "regulation": "CLARITY Act",
+        "jurisdiction": "US-Federal",
+        "effective_date": "PENDING",
+        "axes": [
+          "digital-asset",
+          "securities-classification"
+        ],
+        "door_state": "MONITOR",
+        "official_url": "https://www.congress.gov"
+      },
+      {
+        "regulation": "FDIC weekly PPSI reserve reporting (PS-01/PS-01a)",
+        "jurisdiction": "US-Federal",
+        "effective_date": "2026-09-18",
+        "axes": [
+          "reserve-reporting",
+          "stablecoin-bank"
+        ],
+        "door_state": "OPEN",
+        "official_url": "https://www.fdic.gov"
+      }
+    ],
+    "charter_note": "TUI-6 emits crosswalks + door states. Drafts only. Sends/filings require M2 authorization.",
+    "auto_churn": true
+  },
+  "honest_sentence": "TUI-6 crosswalks: 7 regulation mappings tracked.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "regulation_layer": true
+}

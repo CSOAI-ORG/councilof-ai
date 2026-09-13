@@ -1,0 +1,48 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.financial.bls",
+  "subject": "employment-20260913T1258",
+  "measured_at": "2026-09-13T12:58:08.358039Z",
+  "metrics": {
+    "series_count": 5,
+    "series_data": {
+      "Total Nonfarm Employment": {
+        "series_id": "CES0000000001",
+        "latest_value": "159075",
+        "latest_period": "2026-M08",
+        "year_ago_value": "158472"
+      },
+      "Information Sector Employment": {
+        "series_id": "CES0500000001",
+        "latest_value": "135752",
+        "latest_period": "2026-M08",
+        "year_ago_value": "134937"
+      },
+      "Information: AI/Software Employment": {
+        "series_id": "CES5000000001",
+        "latest_value": "2745",
+        "latest_period": "2026-M08",
+        "year_ago_value": "2860"
+      },
+      "Unemployment Rate": {
+        "series_id": "LNS14000000",
+        "latest_value": "4.1",
+        "latest_period": "2026-M08",
+        "year_ago_value": "4.3"
+      },
+      "CPI All Items": {
+        "series_id": "CUUR0000SA0",
+        "latest_value": "334.980",
+        "latest_period": "2026-M08",
+        "year_ago_value": "323.976"
+      }
+    },
+    "data_source": "BLS Public Data API v2",
+    "auto_churn": true,
+    "miner_version": "bls-tracker-1"
+  },
+  "honest_sentence": "BLS tracker: 5 series tracked.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true
+}

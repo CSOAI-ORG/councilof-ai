@@ -1,0 +1,33 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.draft.arxiv_paper",
+  "subject": "draft-arxiv-signed-receipts-methodology",
+  "measured_at": "2026-09-13T13:00Z",
+  "metrics": {
+    "venue": "arXiv cs.CR (Cryptography and Security) or cs.AI",
+    "deadline": "anytime",
+    "title": "Cryptographic Receipts for AI Governance Audit Trails: A Public-Evidence Operating System",
+    "authors": "Nicholas Templeman (CSOAI Ltd, UK 16939677)",
+    "abstract": "AI governance requires auditable evidence of model behaviour across safety, transparency, fairness, and regulatory compliance axes. Existing approaches lack cryptographic binding between measurement run and published result, independent verifiability without trusting the measurement provider, and reproducible provenance from source run to published record. We describe a public-evidence operating system that addresses all three through four primitives: (1) Ed25519-signed measurement cards over canonicalized JSON bodies, with signing keys attested via a published DID document; (2) deterministic Merkle inclusion with per-leaf SHA-256 identifiers; (3) transparency-log witnessing via Sigstore Rekor and OpenTimestamps Bitcoin calendar anchoring; and (4) x402 payment-gated evidence delivery on Base mainnet. We report on the live deployment at councilof.ai: 22 measurement axes (14 behavioural, 8 deterministic financial), 264-card public Merkle root, 335-card separately indexed signed card catalogue (with zero identifier overlap between the two corpora), Bitcoin-confirmed OTS proofs in blocks 966712 and 966764, and one settled outside payer at 0.02 USDC. We argue that the recorded-vs-occurrence distinction matters for audit data models, that decline records require their own shape, and that public evidentiary infrastructure complements rather than substitutes for regulator-defined attestations.",
+    "doable_cli": true,
+    "command_ready": "tar czvf paper.tar.gz paper/ && curl -T paper.tar.gz https://arxiv.org/submit/ --form",
+    "authorization": "DRAFT READY \u2014 needs conversion to .tex format for arXiv submission",
+    "related_work_cited": [
+      "draft-csoai-audit-use-case-00 (IETF, ticket #57030)",
+      "draft-sirkkavaara-vaara-receipt-10 (Henri's vaara-receipt envelope)",
+      "draft-kuehlewind-audit-architecture-01 (K\u00fchlewind audit architecture)",
+      "draft-mih-sokolov-scitt-payload-binding (SCITT CPB-05)",
+      "RFC 9943 (SCITT)"
+    ],
+    "research_questions": [
+      "How do the recorded-action and declined-action shapes interoperate in a single evidence corpus?",
+      "What minimum disclosure threshold makes a public evidence card substitutable for an attached attestation report?",
+      "Can refusal-record envelopes (Henri's vaara-receipt) be expressed as back-link chains on top of the signed-card format?"
+    ]
+  },
+  "honest_sentence": "arXiv paper draft prepared as evidence artifact. Methodology + deployment + research questions distilled from the IETF audit-use-case draft and 6-day cycle of measurement corpus. Not yet submitted; needs operator authorization + .tex conversion + author affiliation block.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true,
+  "lane": "M4 (drafted), M2 (submits)"
+}

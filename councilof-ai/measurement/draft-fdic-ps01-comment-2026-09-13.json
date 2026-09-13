@@ -1,0 +1,23 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.draft.fdic_ps01_comment",
+  "subject": "draft-fdic-ps01-comment-2026-09-13",
+  "measured_at": "2026-09-13T13:00Z",
+  "metrics": {
+    "target": "Federal Deposit Insurance Corporation (FDIC)",
+    "docket": "FDIC PS-01 / PS-01a weekly PPSI reserve reporting",
+    "deadline": "2026-09-18",
+    "as_of_deadline_days": 5,
+    "subject_line": "Re: PS-01/PS-01a weekly PPSI reserve reporting \u2014 CSOAI measurement cards as a portable public-evidence primitive",
+    "draft_text": "To the FDIC and Office of the Comptroller of the Currency:\n\nCSOAI Ltd (UK Companies House 16939677) submits the following comments on the proposed weekly Public PPSI Reserve Reporting form (PS-01/PS-01a).\n\nWe are the operator of an independent, signed, public-evidence operating system at https://councilof.ai serving AI governance audit trails. Our position is that the PS-01 form's evidentiary purpose \u2014 demonstrating that an issuer holds reserves commensurate with outstanding stablecoin \u2014 can be materially strengthened by a portable, cryptographically verifiable evidence primitive.\n\nWe propose that PS-01 reserve-attestation rows reference a public evidence card that meets four properties:\n\n1. Cryptographic binding between the measurement run and the published result, so a regulator or counterparty can verify that the attesting entity produced exactly the rows it claims.\n2. Independent verifiability without trusting the measurement provider. Our Ed25519 signatures over canonicalized JSON bodies are independently verifiable against a published DID document.\n3. Reproducible provenance from the source run to the published card, recorded as a Merkle inclusion proof against a published root.\n4. Public witnessed timestamp, anchored in a transparency log and a Bitcoin calendar via OpenTimestamps.\n\nWe currently operate these primitives at councilof.ai/.well-known/x402.json (paid delivery), /interop/root-witness-latest.json (latest root witness), and /api/revenue (settled receipts). One external payer has settled a paid evidence delivery for 0.02 USDC on Base mainnet. This proves the rail, not the scale.\n\nIf PS-01/PS-01a permitted an optional public-evidence-card reference in lieu of (or in addition to) the proprietary form fields, issuers could offer a public trail for counterparties and supervisors to verify independently, reducing the supervisory burden of re-running the attestor's own work.\n\nWe do not propose to replace the FDIC's forms or supervisory discretion. We propose only that the form accept, alongside the existing entries, a structured reference to a public evidence card whose format satisfies the four properties above, and that the FDIC publish guidance on the minimum disclosure threshold under which such a reference would be acceptable in lieu of an attached attestation report.\n\nOur draft-csoai-audit-use-case-00 (IETF, ticket rt5.ietf.org #57030) describes the card format and verification pipeline in detail and is being submitted for review. We will provide the FDIC with the finalised card specification once the IETF review completes.\n\nCSOAI is available for technical consultation on the proposed addition. Our contact: hello@councilof.ai.\n\nNicholas Templeman\nCSOAI Ltd\nUK Companies House 16939677\n",
+    "doable_cli": true,
+    "command_ready": "Submit via https://www.fdic.gov/regulations/federal-register-public-comments/ (form) OR email comments@fdic.gov",
+    "authorization": "DRAFT READY \u2014 needs docket number + email confirmation before sending",
+    "verified": false
+  },
+  "honest_sentence": "FDIC PS-01 comment draft prepared as evidence artifact. Proposes optional public-evidence-card reference alongside existing PS-01 fields. Not yet submitted; awaiting operator confirmation of docket number and authorized submission channel.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true,
+  "lane": "M4 (drafted), M2 (files)"
+}
