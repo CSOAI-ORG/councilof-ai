@@ -82,6 +82,23 @@ $(grep -iE 'bitcoin|upgraded' /tmp/ots-upgrade.out | head -6)" 2>/dev/null
     || echo "$(TS) upgrades committed locally; push deferred (remote moved) — next run retries" >> "$LOG"
 fi
 
+# Flush stranded commits even on quiet runs. A deferred push otherwise waits for the
+# next run that happens to have NEW upgrades (measured 2026-09-13: one commit stranded
+# 8 behind until flushed by hand). Unstaged upgrade leftovers are stashed around the
+# rebase so it cannot refuse on a dirty tree.
+if [ "$(git rev-list --count origin/master..master 2>/dev/null || echo 0)" != "0" ]; then
+  git stash -q 2>/dev/null
+  git fetch -q origin master 2>/dev/null
+  if git rebase -q origin/master 2>/dev/null; then
+    git push -q origin master 2>/dev/null && echo "$(TS) flushed stranded upgrade commit(s)" >> "$LOG" \
+      || echo "$(TS) stranded commit(s) still local; push deferred — next run retries" >> "$LOG"
+  else
+    git rebase --abort 2>/dev/null
+    echo "$(TS) stranded commit(s) could not rebase cleanly — left local, needs an operator" >> "$LOG"
+  fi
+  git stash pop -q 2>/dev/null
+fi
+
 AFTER=$(grep -oE "[0-9]+  COVERS" /tmp/ots-cov.out | head -1 | awk '{print $1}')
 echo "$(TS) walked ${#PROOFS[@]} proofs; covers=${AFTER:-?}; upgrade output lines=$UPGRADED" >> "$LOG"
 tail -300 "$LOG" > "$LOG.tmp" && mv "$LOG.tmp" "$LOG"
