@@ -9,7 +9,7 @@ name: public-root
 
 on:
   schedule:
-    - cron: "7 * * * *"
+    - cron: "7 * * * *"  # re-enabled 2026-09-13: schedule was auto-disabled after consecutive failures pre-#2071
   # Intake on merge: staged unsigned atoms land via PR merge; without a push
   # trigger the signer only sees them at the next cron tick (observed 2026-09-12:
   # merge 15:14Z, cron slots 15:07/16:07 delayed >2h by the GitHub scheduler).
