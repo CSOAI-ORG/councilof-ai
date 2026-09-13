@@ -7,7 +7,9 @@ queue.jsonl + queue.parquet + SUMMARY.json (csoai/hub-queue), mill-cards/INDEX.j
 VALID cards (csoai/gspc-hub-cards), and flip-report.json.
 
 Rules: a cell flips only for a VALID card with n>=30 (n<30 is unquotable even when signed).
-Top-level `status` / `card_id` are never touched here. Never signs. Never writes GET /api/gspc.
+Top-level `status` / `card_id` are never touched here. `coverage_state` is derived so a
+row carrying verified cells is not presented as wholly UNMEASURED. Never signs. Never
+writes GET /api/gspc.
 The upload is the workflow's job with the GHA HF token — this script only writes files.
 """
 from __future__ import annotations
@@ -100,15 +102,47 @@ def measured_cells(rows: list[dict]) -> int:
     return n
 
 
+def row_measured_cells(row: dict) -> int:
+    return sum(
+        1
+        for cell in (row.get("measured_axes") or {}).values()
+        if isinstance(cell, dict)
+        and str(cell.get("status") or "").upper() == "MEASURED"
+        and cell.get("card_id")
+    )
+
+
+def coverage_state(row: dict) -> str:
+    """Exclusive public coverage state without changing the legacy subject-card fields."""
+    if str(row.get("status") or "").upper() == "MEASURED" and row.get("card_id"):
+        return "MEASURED"
+    if row_measured_cells(row):
+        return "PARTIALLY_MEASURED"
+    return "UNMEASURED"
+
+
+def derive_coverage_states(rows: list[dict]) -> None:
+    for row in rows:
+        row["coverage_state"] = coverage_state(row)
+
+
 def summary(rows: list[dict], flipped_new: int) -> dict:
     n = len(rows)
     n_meas = sum(1 for r in rows if str(r.get("status") or "").upper() == "MEASURED" and r.get("card_id"))
     cells = measured_cells(rows)
+    coverage = {state: sum(coverage_state(r) == state for r in rows) for state in (
+        "MEASURED", "PARTIALLY_MEASURED", "UNMEASURED"
+    )}
     return {
-        "kind": "csoai.hub-queue/0.2",
+        "kind": "csoai.hub-queue/0.3",
         "n": n,
+        # Backward-compatible subject-card counters. `n_unmeasured` means no
+        # top-level subject card; use coverage_counts for mutually exclusive reach.
         "n_measured": n_meas,
         "n_unmeasured": n - n_meas,
+        "subject_card_counts": {"MEASURED": n_meas, "UNMEASURED": n - n_meas},
+        "coverage_counts": coverage,
+        "n_models_with_measured_axes": sum(row_measured_cells(r) > 0 for r in rows),
         "n_measured_axes": cells,
         "as_of": now_iso(),
         "org": "csoai",
@@ -123,10 +157,11 @@ def summary(rows: list[dict], flipped_new: int) -> dict:
         "produced_by": "scripts/flip_hub_queue.py (.github/workflows/hub-queue-flip.yml)",
         "rewritten_when": "hub-queue-flip runs: on push to master touching public/interop/mill-cards-signed/**, or by dispatch",
         "board_truth": "GET https://councilof.ai/api/gspc",
-        "columns": ["rank", "id", "downloads", "pipeline_tag", "status", "card_id", "as_of", "measured_axes"],
+        "columns": ["rank", "id", "downloads", "pipeline_tag", "status", "coverage_state", "card_id", "as_of", "measured_axes"],
         "flipped_this_run": flipped_new,
         "note": (
-            f"Listed {n}. Top-level MEASURED {n_meas} (untouched by the mill). {cells} (id,axis) cells MEASURED "
+            f"Listed {n}. Subject-card MEASURED {n_meas}; PARTIALLY_MEASURED {coverage['PARTIALLY_MEASURED']}; "
+            f"UNMEASURED with no admitted cells {coverage['UNMEASURED']}. {cells} (id,axis) cells MEASURED "
             f"after VALID verify with n>={QUOTABLE_N}. Not {n} measured. Not a certificate."
         ),
     }
@@ -157,6 +192,7 @@ def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path, prev_index:
     before_blob = serialize_queue(rows)
     wraps, verdicts = verify_cards(cards_dir, did_doc)
     flipped = apply_valid_flips(rows, wraps)
+    derive_coverage_states(rows)
     after = measured_cells(rows)
     after_blob = serialize_queue(rows)
     out.mkdir(parents=True, exist_ok=True)
