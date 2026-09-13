@@ -1,0 +1,34 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "continuity",
+    "model": "tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.5",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.2667,
+    "status": "MEASURED",
+    "unmeasured": [],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router",
+    "evidence": {
+      "bank_sha256": "a3ff4e3158a538a90ce7c26c2a402af6d078d66334bf48a93607e26fea689850",
+      "bank_dataset": "csoai/gspc-asi",
+      "model_hf_revision": "b1f8317099a97e790ec872c1225ca155979b4816",
+      "schema": "csoai.mill-item-evidence/0.1",
+      "items_file": "items-continui-e30e4b863cbd.jsonl",
+      "items_sha256": "e30e4b863cbda3aa52f548344a3ed2b52e6fdefe96fae505677318df0d773a6c"
+    },
+    "run_id": "gha-34755329512",
+    "signature_state": "SIGNED"
+  },
+  "id": "6029094bba94084cb391c09b083f8e9665222cdbb3199bb957581a3ab6570718",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "b1478dbec8edf71d81b4d9be897536b8167b01cd152659bb915b1f65fc0a662fcc8c0a53d0346e5dff395825d21a83100708e836e5e9917794ded5d5f43b9e0a",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}
