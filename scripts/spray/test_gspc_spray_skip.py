@@ -40,3 +40,15 @@ def test_built_files_reads_the_snapshot_dir(tmp_path):
     (sub / "ignored.json").write_bytes(b"no")
     built = spray.built_files(tmp_path)
     assert built == {"x.json": b"xx", "y.json": b"yy"}
+
+
+def test_hf_snapshot_bytes_match_compares_bytes_not_as_of(monkeypatch):
+    built = {"SNAPSHOT.json": b'{"as_of":"X","read_at":"10:26"}'}
+    monkeypatch.setattr(spray, "fetch_ok", lambda url, timeout=60: built["SNAPSHOT.json"])
+    assert spray._hf_snapshot_bytes_match("https://huggingface.co/datasets/x/y", built) is True
+    monkeypatch.setattr(spray, "fetch_ok", lambda url, timeout=60: b'{"as_of":"X","read_at":"08:15"}')
+    assert spray._hf_snapshot_bytes_match("https://huggingface.co/datasets/x/y", built) is False
+    def boom(url, timeout=60):
+        raise RuntimeError("net down")
+    monkeypatch.setattr(spray, "fetch_ok", boom)
+    assert spray._hf_snapshot_bytes_match("https://huggingface.co/datasets/x/y", built) is False
