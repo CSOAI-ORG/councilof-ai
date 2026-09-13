@@ -18,7 +18,7 @@
  * Not a rate, not a grade, not a reserve attestation, not a certificate. The escrow
  * addresses are the bridges' own published contracts; a reader can verify each one.
  *
- * Usage: node scripts/readers/wrapped-asset-parity-reader.mjs [--json] [--out <file>]
+ * Usage: node scripts/readers/wrapped-asset-parity-reader.mjs [--json] [--out <file>] [--stage <dir>]
  * Env:   EVM_RPC_<CHAIN> overrides a default endpoint (recorded, never silent), same as
  *        evm-erc20-reader.mjs. eth.llamarpc.com answered HTTP 525 on 2026-09-13, so the
  *        Ethereum default here is publicnode.
@@ -190,12 +190,76 @@ export async function readAll(roster = ROSTER) {
   };
 }
 
+
+/**
+ * Stage one unsigned card-v0 atom per record for the board signer (scripts/adapters/
+ * staged_leaves.py → public-root.yml). The adapter admits only PROBED / DISCOVERED / UNMEASURED,
+ * so the read state lives in payload.parity_state and `state` says what happened: a public RPC
+ * was probed (PROBED) or a read failed (UNMEASURED). Nothing here signs; the atom carries
+ * sha256(canonical payload) and sig_ed25519:null, and the adapter refuses anything else.
+ */
+export async function stageAtoms(doc, dir) {
+  const { mkdirSync, writeFileSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  mkdirSync(dir, { recursive: true });
+  const out = [];
+  for (const r of doc.records) {
+    const payload = {
+      kind: "csoai.wrapper.parity/0.1",
+      attests: doc.attests,
+      id: r.id,
+      backing_model: r.backing_model,
+      wrapped: { chain: r.wrapped.chain, symbol: r.wrapped.symbol, address: r.wrapped.address, chainId: r.wrapped.chainId, block: r.wrapped.block?.number ?? null, block_hash: r.wrapped.block?.hash ?? null, block_time: r.wrapped.block?.timestamp ?? null },
+      canonical: { chain: r.canonical.chain, symbol: r.canonical.symbol, address: r.canonical.address, chainId: r.canonical.chainId, block: r.canonical.block?.number ?? null, block_hash: r.canonical.block?.hash ?? null },
+      escrow: r.escrow, escrow_name: r.escrow_name, note: r.note,
+      reads: r.reads,
+      escrow_over_wrapped: r.escrow_over_wrapped ?? null,
+      parity_state: r.state,
+      state: r.state === "UNMEASURED" ? "UNMEASURED" : "PROBED",
+      error: r.error ?? null,
+      fetched_at: doc.as_of,
+      reader_revision: doc.reader_revision,
+      unmeasured: r.state === "UNCHECKABLE_NATIVE_ISSUANCE" ? ["escrow_balance (natively issued; no escrow exists)"] : r.state === "UNMEASURED" ? ["chain reads (rpc failed; nothing inferred)"] : [],
+    };
+    const raw = canonicalBytes(payload);
+    const card = {
+      schema: "https://councilof.ai/schema/card-v0.json",
+      surface: "public.notice",
+      subject: `wrapped ${r.wrapped.symbol} on ${r.wrapped.chain} vs ${r.escrow_name || "native issuance"} — ${r.state}`,
+      as_of: doc.as_of,
+      source_urls: [r.wrapped.endpoint, r.canonical.endpoint].filter((u, i, a) => u && u.startsWith("https://") && a.indexOf(u) === i),
+      payload,
+      tags: ["eater:wrapper-parity", "axis:distribution-integrity", `backing:${r.backing_model}`, `state:${r.state}`],
+      unmeasured: payload.unmeasured,
+      did_intended: "did:web:csoai.org#board-attestation-1",
+      sha256: sha256(raw),
+      sig_ed25519: null,
+    };
+    const bytes = canonicalBytes(card);
+    if (bytes.length > 3072) { out.push({ id: r.id, staged: false, reason: `card ${bytes.length}B > 3072B` }); continue; }
+    const fn = join(dir, `card-${r.id.replace(/[^a-z0-9]+/g, "-")}-unsigned.json`);
+    writeFileSync(fn, JSON.stringify(card, null, 2) + "\n");
+    out.push({ id: r.id, staged: true, file: fn, bytes: bytes.length });
+  }
+  return out;
+}
+
+/** Canonical bytes exactly as scripts/adapters/staged_leaves.py computes them: sorted keys, no spaces. */
+export function canonicalBytes(obj) {
+  const sortKeys = (v) => Array.isArray(v) ? v.map(sortKeys) : (v && typeof v === "object") ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, sortKeys(v[k])])) : v;
+  return Buffer.from(JSON.stringify(sortKeys(obj)), "utf8");
+}
+
 const isMain = process.argv[1] && import.meta.url.endsWith(process.argv[1].split("/").pop());
 if (isMain) {
   const out = process.argv.includes("--out") ? process.argv[process.argv.indexOf("--out") + 1] : null;
   const doc = await readAll();
   const text = JSON.stringify(doc, null, 2);
   if (out) { writeFileSync(out, text); console.error(`wrote ${out}`); }
+  if (process.argv.includes("--stage")) {
+    const res = await stageAtoms(doc, process.argv[process.argv.indexOf("--stage") + 1]);
+    for (const r of res) console.error(`  stage ${r.id.padEnd(18)} ${r.staged ? `${r.bytes}B → ${r.file}` : `SKIPPED ${r.reason}`}`);
+  }
   if (process.argv.includes("--json") || !out) console.log(text);
   else for (const r of doc.records) console.error(`${r.id.padEnd(18)} ${r.state.padEnd(28)} wrapped=${r.reads?.wrapped_total_supply?.normalized ?? "-"} escrow=${r.reads?.escrow_balance?.normalized ?? "-"} ratio=${r.escrow_over_wrapped ?? "-"}`);
 }
