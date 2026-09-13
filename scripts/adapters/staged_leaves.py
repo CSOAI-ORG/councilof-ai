@@ -30,6 +30,7 @@ STAGED_DIRS = (
     # Two directory names added under PR review; admission/signing unchanged.
     "x402-door-conformance-2026-09",
     "agent-interop-canonical-2026-09",
+    "mcp-liveness-2026-09",
 )
 SURFACE = "public.notice"
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"

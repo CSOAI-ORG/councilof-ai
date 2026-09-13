@@ -1,0 +1,952 @@
+{
+ "generated_at": "2026-09-13T12:59:05Z",
+ "limitations": [
+  "one initialize handshake per endpoint \u2014 liveness, never capability grading",
+  "PROBED is not MEASURED; a LIVE endpoint proves reachability and handshake only",
+  "sample is deterministic by id hash \u2014 population claims need the full census, not this sample"
+ ],
+ "probed": 100,
+ "results": [
+  {
+   "http": 200,
+   "id": "io.github.ahmedEid1/atlas-research",
+   "protocolVersion": "2025-06-18",
+   "server": "mock-mcp-server",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://atlas-sooty-delta.vercel.app/api/mcp/mcp",
+   "version": "0.7.0"
+  },
+  {
+   "http": 400,
+   "id": "io.github.pcaiano/toolscout",
+   "state": "NON_CONFORMANT",
+   "transport": "streamable-http",
+   "url": "https://trytoolscout.org/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.pipeworx-io/useragent",
+   "protocolVersion": "2025-06-18",
+   "server": "pipeworx-gateway",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://gateway.pipeworx.io/useragent/mcp",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "com.agentcheckoutapi/agent-checkout",
+   "protocolVersion": "2025-06-18",
+   "server": "Agent Checkout Network",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://agentcheckoutapi.com/mcp",
+   "version": "0.2.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.shibley/mymcptools",
+   "protocolVersion": "2025-06-18",
+   "server": "mymcptools",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://mymcptools.com/api/mcp",
+   "version": "0.1.1"
+  },
+  {
+   "http": 200,
+   "id": "io.github.nicglazkov/commutescout",
+   "protocolVersion": "2025-06-18",
+   "server": "CommuteScout",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://mcp.commutescout.com/mcp",
+   "version": "2.24.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.mcp-dir/transparencia_indicadores_pj-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "mcp-ai",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.mcp.ai/p_transparencia_indicadores_pj",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.lexbritten/probe",
+   "protocolVersion": "2025-06-18",
+   "server": "Probe",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://probe-evidence.probe-lab.workers.dev/mcp",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "app.evlek/mcp-server",
+   "protocolVersion": "2025-06-18",
+   "server": "evlek-mcp",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://evlek.app/api/mcp",
+   "version": "2.1.0"
+  },
+  {
+   "http": 200,
+   "id": "uk.co.siteinvestigationcost/site",
+   "protocolVersion": "2025-06-18",
+   "server": "Site Investigation Cost (siteinvestigationcost.co.uk)",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://siteinvestigationcost.co.uk/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.sadri-dridi/tz-pacific-guadalcanal",
+   "protocolVersion": "2025-03-26",
+   "server": "Pacific/Guadalcanal clock",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://agent-observatory-sensor.nolimit-observatory.workers.dev/s/tz-pacific-guadalcanal/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 404,
+   "id": "io.github.AnkitPat/todo-mcp",
+   "state": "NON_CONFORMANT",
+   "transport": "streamable-http",
+   "url": "https://343e-2405-201-303a-4980-a1c1-6538-33c0-a7d8.ngrok-free.app/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 401,
+   "id": "io.github.rendleyhq/rendley-mcp",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://mcp.rendley.com/mcp",
+   "version": "1.0.1"
+  },
+  {
+   "http": 401,
+   "id": "io.github.SunFlash12/forge-cascade-mcp",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://forgecascade.org/mcp",
+   "version": "0.1.7"
+  },
+  {
+   "http": 200,
+   "id": "kr.pe.trading/community",
+   "protocolVersion": "2025-06-18",
+   "server": "kr.pe.trading/community",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://trading.pe.kr/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.mcp-dir/veiculo_historico-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "mcp-ai",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.mcp.ai/p_veiculo_historico",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "com.ablakunio/nyilaszaro-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "ablakunio-mcp",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://www.ablakunio.com/api/mcp",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "com.siftivo/siftivo",
+   "protocolVersion": "2025-06-18",
+   "server": "siftivo",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.siftivo.com/mcp",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "io.sunaivacore/gate",
+   "protocolVersion": "2025-06-18",
+   "server": "sunaiva-gate",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://mcp.sunaivacore.io",
+   "version": "2.0.4"
+  },
+  {
+   "id": "dev.uptimepage/uptimepage",
+   "note": "JSONDecodeError",
+   "state": "UNREACHABLE",
+   "transport": "streamable-http",
+   "url": "https://mcp.uptimepage.dev/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 401,
+   "id": "io.github.shulex-voc/smart-crawler",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://smartcrawler.io/mcp/",
+   "version": "0.2.1"
+  },
+  {
+   "http": 200,
+   "id": "io.github.sadri-dridi/puppet-ok",
+   "protocolVersion": "2025-03-26",
+   "server": "Puppet class count, body discarded",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://agent-observatory-sensor.nolimit-observatory.workers.dev/s/puppet-ok/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "im.peoplesearch/email-finder",
+   "protocolVersion": "2025-06-18",
+   "server": "peoplesearch.im",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://peoplesearch.im/api/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.mcp-dir/ibama_regularidade-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "mcp-ai",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.mcp.ai/p_ibama_regularidade",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "global.rootz.cars/marketplace",
+   "protocolVersion": "2024-11-05",
+   "server": "cars-rootz",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://cars.rootz.global/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 404,
+   "id": "live.alpic.staging.python-email-mcp-f5c8e0a7/python-email-mcp",
+   "state": "NON_CONFORMANT",
+   "transport": "streamable-http",
+   "url": "https://python-email-mcp-f5c8e0a7.staging.alpic.live",
+   "version": "0.0.3"
+  },
+  {
+   "http": 200,
+   "id": "in.sambodh-ias/upsc-prep",
+   "protocolVersion": "2025-06-18",
+   "server": "Sambodh IAS",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.sambodh-ias.in/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "com.roam2go/esim-catalog",
+   "protocolVersion": "2025-06-18",
+   "server": "roam2go-catalog",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://roam2go.com/wp-json/r2g-mcp/v1/mcp",
+   "version": "1.3.1"
+  },
+  {
+   "http": 200,
+   "id": "com.metalroofcostcalculator/site",
+   "protocolVersion": "2025-06-18",
+   "server": "Metal Roof Cost Calculator (metalroofcostcalculator.com)",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://metalroofcostcalculator.com/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.pipeworx-io/inspire-hep",
+   "protocolVersion": "2025-06-18",
+   "server": "pipeworx-gateway",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://gateway.pipeworx.io/inspire-hep/mcp",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "com.supplyslate/sourcing",
+   "protocolVersion": "2025-06-18",
+   "server": "SupplySlate",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://mcp.supplyslate.com/mcp",
+   "version": "2.0.0"
+  },
+  {
+   "http": 200,
+   "id": "ai.blast-radius/blast-radius",
+   "protocolVersion": "2025-06-18",
+   "server": "blast-radius",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://blast-radius.ai/mcp",
+   "version": "0.1.0"
+  },
+  {
+   "id": "io.github.Wxt-ai/delivery-update-ledger",
+   "note": "URLError",
+   "state": "UNREACHABLE",
+   "transport": "streamable-http",
+   "url": "https://openings-vote-drilling-initially.trycloudflare.com/mcp/delivery-update-ledger",
+   "version": "1.0.7"
+  },
+  {
+   "http": 200,
+   "id": "com.x402supply/chess-eval",
+   "protocolVersion": "2025-06-18",
+   "server": "chess-eval",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://chess-eval.x402supply.com/mcp",
+   "version": "1.0.1"
+  },
+  {
+   "http": 200,
+   "id": "io.github.pipeworx-io/gnews",
+   "protocolVersion": "2025-06-18",
+   "server": "pipeworx-gateway",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://gateway.pipeworx.io/gnews/mcp",
+   "version": "0.1.1"
+  },
+  {
+   "http": 401,
+   "id": "ai.authoryze/authoryze",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://authoryze.ai/api/mcp",
+   "version": "1.0.1"
+  },
+  {
+   "http": 307,
+   "id": "ai.newzai.api/news-mcp",
+   "state": "NON_CONFORMANT",
+   "transport": "streamable-http",
+   "url": "https://api.newzai.ai/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.sadri-dridi/util-113",
+   "protocolVersion": "2025-03-26",
+   "server": "Utility 113",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://agent-observatory-sensor.nolimit-observatory.workers.dev/s/util-113/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.srotzin/hive-mcp-trade",
+   "protocolVersion": "2024-11-05",
+   "server": "hive-mcp-trade",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://hive-mcp-gateway.onrender.com/trade/mcp",
+   "version": "1.1.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.pipeworx-io/ban-fr",
+   "protocolVersion": "2025-06-18",
+   "server": "pipeworx-gateway",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://gateway.pipeworx.io/ban-fr/mcp",
+   "version": "0.1.0"
+  },
+  {
+   "id": "io.github.Wxt-ai/project-code-notes-identifier",
+   "note": "URLError",
+   "state": "UNREACHABLE",
+   "transport": "streamable-http",
+   "url": "https://antibody-package-occasional-floppy.trycloudflare.com/mcp/project-code-notes/upstream",
+   "version": "1.0.4"
+  },
+  {
+   "http": 401,
+   "id": "io.github.paulovitorti/google-maps-leads-locales",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://mcp.apify.com?tools=paulovitor18/google-maps-leads-locales",
+   "version": "1.0.0"
+  },
+  {
+   "http": 404,
+   "id": "ai.smithery/sebastianall1977-gmail-mcp",
+   "state": "NON_CONFORMANT",
+   "transport": "streamable-http",
+   "url": "https://server.smithery.ai/@sebastianall1977/gmail-mcp/mcp",
+   "version": "1.7.4"
+  },
+  {
+   "http": 200,
+   "id": "com.skingrind/skingrind",
+   "protocolVersion": "2025-06-18",
+   "server": "SkinGrind",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://cloud.skingrind.com/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "com.whichmadvisor/site",
+   "protocolVersion": "2025-06-18",
+   "server": "Which M&A Advisor (whichmadvisor.com)",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://whichmadvisor.com/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.anthonywlicausi/agentic-ai",
+   "protocolVersion": "2025-06-18",
+   "server": "agentic-ai",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://agentic-ai-production-e711.up.railway.app/mcp",
+   "version": "0.1.0"
+  },
+  {
+   "http": 401,
+   "id": "pro.nomos/nomos-mcp",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://mcp.nomos.pro/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "com.yesmcp/connector",
+   "protocolVersion": "2025-06-18",
+   "server": "yesmcp",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://mcp.yesmcp.com/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 401,
+   "id": "io.github.lgpoliveira/bugiadata-mcp",
+   "state": "AUTH_REQUIRED",
+   "transport": "sse",
+   "url": "https://mcp.bugiadata.com/sse",
+   "version": "1.0.0"
+  },
+  {
+   "http": 404,
+   "id": "io.mailmcp/mailmcp",
+   "state": "NON_CONFORMANT",
+   "transport": "streamable-http",
+   "url": "https://mailmcp.io/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 401,
+   "id": "app.desktopcommander/remote-desktop-commander",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://mcp.desktopcommander.app/mcp",
+   "version": "1.0.3"
+  },
+  {
+   "http": 401,
+   "id": "io.github.hassanahashish-design/agent-signals-mcp",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://mcp.apify.com/?actors=oblanceolate_mandola%2Fcompany-hiring-signals%2Coblanceolate_mandola%2Fsec-edgar-filings%2Coblanceolate_mandola%2Fresearch-paper-search%2Coblanceolate_mandola%2Fgithub-repo-search%2Coblanceolate_mandola%2Fhacker-news-monitor%2Coblanceolate_mandola%2Ffederal-register-monitor%2Coblanceolate_mandola%2Fclinical-trials-search%2Coblanceolate_mandola%2Fstackoverflow-search%2Coblanceolate_mandola%2Fgdelt-news-monitor%2Coblanceolate_mandola%2Fcourt-opinions-search",
+   "version": "1.0.2"
+  },
+  {
+   "http": 200,
+   "id": "com.trimtabist/us-tariff-ledger",
+   "protocolVersion": "2025-06-18",
+   "server": "trimtab-tariffs-trade",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://trimtabist.com/mcp",
+   "version": "0.3.1"
+  },
+  {
+   "http": 200,
+   "id": "io.github.sadri-dridi/st-wa",
+   "protocolVersion": "2025-03-26",
+   "server": "US state WA",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://agent-observatory-sensor.nolimit-observatory.workers.dev/s/st-wa/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.sadri-dridi/fx-nok",
+   "protocolVersion": "2025-03-26",
+   "server": "Currency NOK",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://agent-observatory-sensor.nolimit-observatory.workers.dev/s/fx-nok/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.mcp-dir/sefaz_mg_parcelamento-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "mcp-ai",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.mcp.ai/p_sefaz_mg_parcelamento",
+   "version": "0.1.0"
+  },
+  {
+   "http": 401,
+   "id": "com.see-geo/seegeo",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://see-geo.com/mcp",
+   "version": "1.0.1"
+  },
+  {
+   "http": 530,
+   "id": "io.github.Ninjabeam20/sportiq-mcp",
+   "state": "UNREACHABLE",
+   "transport": "streamable-http",
+   "url": "https://sportiq.utkarshgupta.org/mcp",
+   "version": "0.3.2"
+  },
+  {
+   "http": 200,
+   "id": "uk.exatoshi/autosearch",
+   "protocolVersion": "2024-11-05",
+   "server": "AutoSearch",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://exatoshi.uk/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.snowsignals/snowsignals",
+   "protocolVersion": "2025-06-18",
+   "server": "SnowSignals",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://snowsignals.io/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 401,
+   "id": "com.axiomatic-ai/prover",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://prover.axiomatic-ai.com/mcp/",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.Evozim/data-poisoning-detector-mcp",
+   "note": "GET stream check",
+   "state": "SSE_ONLY",
+   "transport": "sse",
+   "url": "https://api.m2mcent.com/data-poisoning-detector-mcp/sse",
+   "version": "2.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.Whitemarmot/copyright01",
+   "protocolVersion": "2024-11-05",
+   "server": "Copyright01",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://www.copyright01.com/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.sadri-dridi/cc-hk",
+   "protocolVersion": "2025-03-26",
+   "server": "ISO country HK",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://agent-observatory-sensor.nolimit-observatory.workers.dev/s/cc-hk/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 402,
+   "id": "io.github.Evozim/defi-sentinel",
+   "state": "NON_CONFORMANT",
+   "transport": "sse",
+   "url": "https://defi-sentinel-mcp.vercel.app/api/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "uk.co.employmentcontractgenerator/site",
+   "protocolVersion": "2025-06-18",
+   "server": "Employment Contract Generator (employmentcontractgenerator.co.uk)",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://employmentcontractgenerator.co.uk/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "md.install/try",
+   "protocolVersion": "2025-06-18",
+   "server": "install.md-anonymous",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://install.md/mcp/try",
+   "version": "0.1.1"
+  },
+  {
+   "http": 200,
+   "id": "uk.co.shipmycar/quote",
+   "protocolVersion": "2025-06-18",
+   "server": "ShipMyCar Public Quote Connector",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://www.shipmycar.co.uk/mcp",
+   "version": "2.0.0"
+  },
+  {
+   "id": "com.exploit-intel/eip-mcp",
+   "note": "URLError",
+   "state": "UNREACHABLE",
+   "transport": "streamable-http",
+   "url": "https://mcp.exploit-intel.com/mcp",
+   "version": "0.3.9"
+  },
+  {
+   "http": 200,
+   "id": "ai.trendsapi/wikipedia",
+   "protocolVersion": "2025-03-26",
+   "server": "trendsmcp",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://wikipedia.api.trendsapi.ai/mcp",
+   "version": "1.0.1"
+  },
+  {
+   "http": 401,
+   "id": "ai.searcheros/searcher-os",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://searcheros.ai/api/mcp/mcp",
+   "version": "1.0.1"
+  },
+  {
+   "http": 200,
+   "id": "io.github.eltociear/skill-audit-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "skill-audit",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://eltociear-skill-audit.hf.space/mcp",
+   "version": "1.1.0"
+  },
+  {
+   "http": 401,
+   "id": "com.dimensionkit/scorecards",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://app.dimensionkit.com/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "id": "com.clauxel.fastmcpruntime/fastmcpruntime-mcp",
+   "note": "URLError",
+   "state": "UNREACHABLE",
+   "transport": "streamable-http",
+   "url": "https://fastmcpruntime.clauxel.com/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 401,
+   "id": "com.danubeai/danube",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://mcp.danubeai.com/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.mcp-dir/mpt_ms_cnf-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "mcp-ai",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.mcp.ai/p_mpt_ms_cnf",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.sadri-dridi/json-bytes",
+   "protocolVersion": "2025-03-26",
+   "server": "JSON byte count, body discarded",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://agent-observatory-sensor.nolimit-observatory.workers.dev/s/json-bytes/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "com.signatureforever/email-signatures",
+   "protocolVersion": "2025-06-18",
+   "server": "signatureforever",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://signatureforever.com/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 404,
+   "id": "live.alpic.staging/node-email-mcp-59eeb419",
+   "state": "NON_CONFORMANT",
+   "transport": "streamable-http",
+   "url": "https://node-email-mcp-59eeb419.staging.alpic.live",
+   "version": "0.0.56"
+  },
+  {
+   "http": 200,
+   "id": "com.gumballtools/iso-week",
+   "protocolVersion": "2025-06-18",
+   "server": "iso-week",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://iso-week.gumballtools.com/api/mcp",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.Evozim/damaged-text-inpainter-mcp",
+   "note": "GET stream check",
+   "state": "SSE_ONLY",
+   "transport": "sse",
+   "url": "https://api.m2mcent.com/damaged-text-inpainter-mcp/sse",
+   "version": "2.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.sadri-dridi/ca-postcode",
+   "protocolVersion": "2025-03-26",
+   "server": "Canadian postal code shape, value discarded",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://agent-observatory-sensor.nolimit-observatory.workers.dev/s/ca-postcode/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "com.mux/mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "mux",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://mcp.mux.com",
+   "version": "12.8.0"
+  },
+  {
+   "http": 200,
+   "id": "io.usefulapi/youcanbookme",
+   "protocolVersion": "2025-06-18",
+   "server": "youcanbookme-mcp",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://youcanbookme.usefulapi.io/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.lazymac2x/citation-verifier",
+   "protocolVersion": "2024-11-05",
+   "server": "citation-verifier",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.lazy-mac.com/citation-verifier/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.reefapi/reefapi-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "reefapi",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.reefapi.com/mcp",
+   "version": "1.27.2"
+  },
+  {
+   "http": 200,
+   "id": "com.hovercode/mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "hovercode",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://hovercode.com/mcp/",
+   "version": "1.0.0"
+  },
+  {
+   "id": "ai.dinglebear/rtailscale",
+   "note": "TimeoutError",
+   "state": "UNREACHABLE",
+   "transport": "streamable-http",
+   "url": "https://ts.dinglebear.ai/mcp",
+   "version": "0.1.4"
+  },
+  {
+   "http": 401,
+   "id": "io.github.1powergrey/sios-gano-connector",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://sios-gano-connector.vercel.app/mcp",
+   "version": "1.5.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.mcp-dir/sintegra-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "mcp-ai",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.mcp.ai/p_sintegra",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "dev.filetopdf/filetopdf-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "filetopdf",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.filetopdf.dev/mcp",
+   "version": "0.1.1"
+  },
+  {
+   "http": 400,
+   "id": "com.averray/mcp",
+   "state": "NON_CONFORMANT",
+   "transport": "streamable-http",
+   "url": "https://api.averray.com/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 401,
+   "id": "com.octoparse/octoparse-mcp",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://mcp.octoparse.com",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.mcp-dir/pref_rs_montenegro_cnd-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "mcp-ai",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.mcp.ai/p_pref_rs_montenegro_cnd",
+   "version": "0.1.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.sadri-dridi/cc-sy",
+   "protocolVersion": "2025-03-26",
+   "server": "ISO country SY",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://agent-observatory-sensor.nolimit-observatory.workers.dev/s/cc-sy/mcp",
+   "version": "1.0.0"
+  },
+  {
+   "http": 200,
+   "id": "com.oklahomaautoquotes/quote-exchange",
+   "protocolVersion": "2025-06-18",
+   "server": "Oklahoma Insurance",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://oklahomaautoquotes.com/",
+   "version": "0.5.0"
+  },
+  {
+   "http": 200,
+   "id": "com.knowjudges/knowjudges",
+   "protocolVersion": "2025-06-18",
+   "server": "KnowJudges",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://mcp.knowjudges.com/mcp",
+   "version": "0.10.15"
+  },
+  {
+   "http": 200,
+   "id": "com.nevadaautoquotes/quote-exchange",
+   "protocolVersion": "2025-06-18",
+   "server": "Nevada Insurance",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://nevadaautoquotes.com/",
+   "version": "0.5.0"
+  },
+  {
+   "http": 200,
+   "id": "io.github.mcp-dir/tribunal_tjsp_pedido_criminal-mcp",
+   "protocolVersion": "2025-06-18",
+   "server": "mcp-ai",
+   "state": "LIVE",
+   "transport": "streamable-http",
+   "url": "https://api.mcp.ai/p_tribunal_tjsp_pedido_criminal",
+   "version": "0.1.0"
+  },
+  {
+   "http": 401,
+   "id": "io.github.omniologynow-rgb/scout-intel-mcp",
+   "state": "AUTH_REQUIRED",
+   "transport": "streamable-http",
+   "url": "https://scout-intel.mcpize.run",
+   "version": "1.0.3"
+  }
+ ],
+ "sample_n": 100,
+ "schema": "csoai.mcp-liveness/0.1",
+ "state_counts": {
+  "AUTH_REQUIRED": 17,
+  "LIVE": 65,
+  "NON_CONFORMANT": 9,
+  "SSE_ONLY": 2,
+  "UNREACHABLE": 7
+ }
+}

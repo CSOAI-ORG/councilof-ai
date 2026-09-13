@@ -1,0 +1,37 @@
+{
+ "as_of": "2026-09-13T12:59:05Z",
+ "payload": {
+  "kind": "csoai.mcp-liveness/0.1",
+  "not_a_grade": true,
+  "probed": 100,
+  "report": "https://councilof.ai/interop/mcp-liveness-2026-09/report.json",
+  "sample_n": 100,
+  "selection": "deterministic sha256(id) sample",
+  "state": "PROBED",
+  "state_counts": {
+   "AUTH_REQUIRED": 17,
+   "LIVE": 65,
+   "NON_CONFORMANT": 9,
+   "SSE_ONLY": 2,
+   "UNREACHABLE": 7
+  }
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "c55547f2ce041767981bb83b1c0186aba873c2ae3bec06898caed63e34121cc8",
+ "source_urls": [
+  "https://registry.modelcontextprotocol.io/v0/servers?limit=100",
+  "https://councilof.ai/interop/mcp-liveness-2026-09/report.json"
+ ],
+ "subject": "MCP remote-endpoint liveness sample (n=100)",
+ "surface": "public.notice",
+ "tags": [
+  "mcp",
+  "liveness",
+  "probe",
+  "mcp-liveness-2026-09"
+ ],
+ "unmeasured": [
+  "capability behavior",
+  "the unsampled population"
+ ]
+}
