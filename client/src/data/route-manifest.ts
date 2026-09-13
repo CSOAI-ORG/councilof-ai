@@ -1813,6 +1813,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Rlusd Specimen"
  },
  {
+  "path": "/stablecoins",
+  "comp": "Stablecoins",
+  "title": "Stablecoins"
+ },
+ {
   "path": "/standards",
   "comp": "Standards",
   "title": "Standards"

@@ -36,6 +36,7 @@ export const navigation: NavGroup[] = [
       { name: 'The GSPC instrument', href: '/instrument', description: 'Four deterministic lenses over frozen provisions. No model sits in the verdict path' },
       { name: 'Published tools', href: '/tools', description: 'MCP servers you can run yourself — not a marketplace' },
       { section: 'Specialist boards', name: 'Financial axis', href: '/financial-axes', description: 'The declared financial slots — measured where measured, UNMEASURED and honest where not' },
+      { name: 'Stablecoin readiness', href: '/stablecoins', description: 'A frozen discovery index with measurement, signature, root, witness and settlement state kept separate' },
       { name: 'EUNOMIA board', href: '/eunomia', description: 'Financial-verification axis, signed, across a two-tier fleet' },
       { name: 'Signed registers', href: '/registers', description: 'The financial-axis register — a stranger can re-derive every row' },
       { name: 'First-Fine Watch', href: '/first-fine-watch', description: 'Signed enforcement record: EU AI Act fines and the deadlines behind them' },
