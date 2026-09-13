@@ -372,7 +372,7 @@
       </div>
       <div class="pillar">
         <h3>Ed25519 + Rekor witness</h3>
-        <p>The current exact <code>root.json</code> is Ed25519-signed and Rekor-witnessed (SHA-256 <code>9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd</code>, Rekor log index <code>2714574265</code>). Its OTS state is <strong>STAMPED_PENDING_BITCOIN</strong>, with no Bitcoin confirmation. It covers its 154 listed leaves only.</p>
+        <p>Read the current exact <code>root.json</code> and <a href="/interop/root-witness-latest.json">root witness</a> together. At this checkpoint, the 257-leaf root with SHA-256 <code>222538d5f9fa72281d2696ee9839837b498cf93b117233a8ac9e26622f9fa51d</code> is Ed25519-verified, Rekor-witnessed and <strong>CONFIRMED_BITCOIN</strong> at block 966712. The Bitcoin proof covers those exact 20,998 root bytes only.</p>
       </div>
       <div class="pillar">
         <h3>MCP server</h3>
@@ -384,7 +384,7 @@
       </div>
       <div class="pillar">
         <h3>x402 + SWIFT + XRPL</h3>
-        <p>XRPL and SWIFT readers provide scoped public-data inputs. x402 pricing and end-to-end settlement are pending verification; no paid receipt or automatically signed output is claimed here.</p>
+        <p>XRPL and SWIFT readers provide scoped public-data inputs. The x402 door has one facilitator-confirmed outside settlement and delivery worth 0.02 USDC; internal self-tests and unattributed transfers are excluded from revenue.</p>
       </div>
     </div>
   </section>
@@ -555,7 +555,7 @@ GSPC_ORIGIN=https://councilof.ai npx csoai-gspc-mcp</code></pre>
       </a>
       <p style="font-size: 14px; line-height: 1.6;">
         Independent AI-governance measurement body.<br>
-        The current exact root is Ed25519-signed and Rekor-witnessed; its OTS stamp is pending Bitcoin confirmation. See /api/state.
+        Verify the current root, signature and witness states from /api/state and /interop/root-witness-latest.json.
       </p>
       <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
         22 axes · 22 measured
