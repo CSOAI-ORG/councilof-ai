@@ -52,3 +52,18 @@ def test_hf_snapshot_bytes_match_compares_bytes_not_as_of(monkeypatch):
         raise RuntimeError("net down")
     monkeypatch.setattr(spray, "fetch_ok", boom)
     assert spray._hf_snapshot_bytes_match("https://huggingface.co/datasets/x/y", built) is False
+
+
+def test_adopt_remote_read_at_reproduces_published_bytes_for_an_unchanged_root():
+    tr = {"fingerprint": "f" * 64, "as_of": "2026-09-13T06:03:55Z", "read_at": "2026-09-13T15:00:00Z"}
+    remote = {"fingerprint": "f" * 64, "as_of": "2026-09-13T06:03:55Z", "read_at": "2026-09-13T06:05:10Z"}
+    assert spray.adopt_remote_read_at(tr, remote) is True
+    assert tr["read_at"] == "2026-09-13T06:05:10Z"
+
+
+def test_adopt_remote_read_at_keeps_a_fresh_clock_when_the_root_changed_or_remote_is_absent():
+    tr = {"fingerprint": "f" * 64, "as_of": "2026-09-13T06:03:55Z", "read_at": "2026-09-13T15:00:00Z"}
+    assert spray.adopt_remote_read_at(tr, {"fingerprint": "e" * 64, "as_of": "2026-09-13T06:03:55Z", "read_at": "x"}) is False
+    assert spray.adopt_remote_read_at(tr, {"fingerprint": "f" * 64, "as_of": "2026-09-12T19:21:56Z", "read_at": "x"}) is False
+    assert spray.adopt_remote_read_at(tr, None if False else {}) is False
+    assert tr["read_at"] == "2026-09-13T15:00:00Z"

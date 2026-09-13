@@ -645,6 +645,30 @@ def refuse_newer_remote(chosen: list[str], tr: dict) -> None:
             raise Refused(f"{surface} carries newer as_of {seen}; captured canonical root is {tr['as_of']}")
 
 
+def adopt_remote_read_at(tr: dict, remote: dict | None = None) -> bool:
+    """Byte-identical builds for an unchanged root.
+
+    Every build stamps read_at = now, and README.md/SNAPSHOT.json/manifest.jsonl carry it, so
+    two builds of the SAME root never match byte-for-byte. The byte-strict parity gate then
+    republishes every surface on every run (seen live 2026-09-13: three runs, three
+    "bytes differ: ['README.md', 'SNAPSHOT.json', 'manifest.jsonl']" republishes of one root).
+    When the Hugging Face dataset already carries this exact fingerprint at this as_of, its
+    read_at is the honest first read of this root; adopting it makes the build reproduce the
+    published bytes, parity holds, and nothing is re-pushed. A changed board or root changes
+    the fingerprint and read_at is stamped fresh. Returns True when adopted."""
+    if remote is None:
+        remote = remote_snapshot(f"https://huggingface.co/datasets/{HF_DATASET}/resolve/main/{HF_PATH_IN_REPO}/SNAPSHOT.json")
+    if not remote:
+        return False
+    if (remote.get("fingerprint") == tr["fingerprint"] and remote.get("as_of") == tr["as_of"]
+            and isinstance(remote.get("read_at"), str) and remote["read_at"]):
+        log(f"[truth] the dataset already carries fingerprint {tr['fingerprint'][:16]}… at as_of {tr['as_of']} — "
+            f"adopting its read_at {remote['read_at']} so this build is byte-identical (no churn)")
+        tr["read_at"] = remote["read_at"]
+        return True
+    return False
+
+
 def unchanged(remote: dict | None, tr: dict, force: bool) -> str | None:
     """Return a reason string when the surface already carries this snapshot."""
     if not remote:
@@ -1122,6 +1146,7 @@ def main(argv: list[str] | None = None) -> int:
         ap.error("choose surfaces (--hf --kaggle --github --zenodo --pypi --npm), --all, or --build-only")
 
     tr = read_live_truth()
+    adopt_remote_read_at(tr)
     out = Path(args.out) if args.out else Path(tempfile.mkdtemp(prefix="gspc-spray-", dir=os.environ.get("RUNNER_TEMP")))
     snap = build_snapshot(tr, out)
     results: list[dict] = []
