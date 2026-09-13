@@ -1,0 +1,88 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.ietf.audit_thread_summary",
+  "subject": "ietf-audit-3-email-rundown-2026-09-13",
+  "measured_at": "2026-09-13T12:48:05.613370+00:00",
+  "metrics": {
+    "thread_name": "[Audit] AUDIT charter use case scope + PR #29 + draft-csoai-audit-use-case-00",
+    "ticket_id": "rt5.ietf.org #57030",
+    "draft": "draft-csoai-audit-use-case-00",
+    "draft_status": "submitted (auto-confirmed 2026-09-13)",
+    "expires": "2026-03-16",
+    "emails_in_thread": 3,
+    "actors": [
+      {
+        "name": "Henri Sirkkavaara",
+        "org": "Vaara (Helsinki, Finland)",
+        "role": "responder + PR #29 advocate"
+      },
+      {
+        "name": "Parisa Foroughi",
+        "org": "Nokia",
+        "role": "raised charter scope question"
+      },
+      {
+        "name": "CSOAI Ltd (UK 16939677)",
+        "role": "draft author"
+      },
+      {
+        "name": "IETF Support via RT",
+        "role": "ticket system"
+      },
+      {
+        "name": "Mirja, Henk (audit chairs)",
+        "role": "PR #29 recipients"
+      },
+      {
+        "name": "Steven Mih",
+        "org": "Cisco",
+        "role": "filed issue #24 (July Vienna)"
+      },
+      {
+        "name": "Sumit Ahuja",
+        "role": "raised same property 8 + 11 Sep"
+      }
+    ],
+    "core_debate": "Post-hoc accountability vs enforcement/admission accountability \u2014 Henri's view is BOTH in scope, but refusal/decline records are a different shape that needs explicit acknowledgement. Without it, audit data models can't separate 'stopped at boundary' from 'no record exists'.",
+    "henri_position": "Audit data models must include records of non-events (refusals, timeouts, no-response). PR #29 alone is incomplete without issue #24 point 2 carried alongside. Counter-based streams need time anchors; deployed deployments split authorization + execution into two boundary identities.",
+    "parisa_position": "Likely post-hoc accountability is primary scope; she asked the WG to clarify. Notes enforcement/admission requires defining action boundaries for non-deterministic agents and admission unit lifecycle management.",
+    "our_position_implication": "CSOAI's existing audit-use-case draft covers the 'something happened' shape. It does NOT yet cover the 'something was declined' shape. Henri's correction strengthens the WG if adopted \u2014 and our draft benefits by referencing that property.",
+    "drafts_under_same_charter": {
+      "draft-csoai-audit-use-case-00": "US (our draft, ticket #57030)",
+      "draft-csoai-tampering-agent-logs-00": "ticket #57031 (separate draft)",
+      "draft-csoai-agentproto-delegation-00": "ticket #57027 (separate draft)",
+      "draft-sirkkavaara-vaara-receipt-10": "Henri's draft referenced for counter-based receipts"
+    },
+    "our_draft_summary": {
+      "title": "Cryptographic Receipts for AI Governance Audit Trails",
+      "format": "card-v0: subject + axis + accuracy (Wilson 95% CI) + n>=30 + run_id + harness_version + prompt_digest + raw_digest + reg_crosswalk",
+      "signing": "Ed25519 over canonicalized JSON body via GitHub OIDC off-device",
+      "verification_3_stage": "1) Ed25519 against did:web:csoai.org  2) Merkle inclusion via /api/proof  3) Rekor witness + OTS Bitcoin anchor",
+      "current_deployment_claimed": "22 GSPC axes (14 behavioural + 8 financial) \u00b7 155 models measured \u00b7 1,493 signed cards \u00b7 425 stablecoins \u00d7 211 chains \u00b7 169-card public Merkle root \u00b7 x402 Base mainnet"
+    },
+    "deltas_to_track": [
+      "Henri's request may add a 4th shape: refusal/decline receipt",
+      "Time-anchor requirement for counter-based streams may need an addition",
+      "Our draft's 'Current Deployment' numbers will go stale \u2014 keep synchronized with measurement corpus"
+    ],
+    "ietf_links": {
+      "draft_csoai_audit_use_case": "https://datatracker.ietf.org/doc/draft-csoai-audit-use-case/",
+      "audit_wg_list": "audit@ietf.org",
+      "audit_charter_pr29": "PR #29 (verifiable without trusting agent or operator)",
+      "audit_charter_issue24": "issue #24 point 2 (refusals / non-events)",
+      "vaara_receipt_draft": "draft-sirkkavaara-vaara-receipt-10"
+    },
+    "decision_for_us": "Reply on-list with support for Henri's amendment (PR #29 + #24 pt 2 carried together). Propose adding 'decision-time decline record' to our audit-use-case draft as a 4th shape. Do NOT delay the existing draft \u2014 these are separable.",
+    "action_list": [
+      "1. Reply to Henri + audit@ietf.org supporting PR #29 + #24 pt 2 together (TUI-6 / M2 lane)",
+      "2. Add \u00a7X to draft-csoai-audit-use-case-00 covering decision-time decline records (M4 \u2014 TUI-4 boundary preserves integrity)",
+      "3. Update 'Current Deployment' numbers from live state at next draft revision",
+      "4. Cross-link to draft-sirkkavaara-vaara-receipt-10 in our Informational References"
+    ]
+  },
+  "honest_sentence": "Three IETF audit emails, 2026-09-13: Henri (Vaara) advocates PR #29 + issue #24 pt 2 together so audit data models can represent refusals/non-events, not just occurrences. Our draft-csoai-audit-use-case-00 was submitted and auto-confirmed (rt #57030). Action: reply on-list supporting the combined merge; add decline-record shape as \u00a7X in our draft; keep deployment numbers in sync.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true,
+  "lane": "TUI-6"
+}
