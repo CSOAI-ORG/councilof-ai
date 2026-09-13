@@ -1,12 +1,26 @@
 {
   "schema": "csoai.settlement-classification/0.1",
-  "generated_at": "2026-09-13T13:25:16Z",
+  "generated_at": "2026-09-13T15:25:00Z",
   "method": "Read-only classification of existing settlement evidence. No new payments.",
   "classifications": {
     "EXTERNAL_CUSTOMER": {
-      "count": 0,
+      "count": 1,
       "definition": "An independent buyer paid and received evidence without CSOAI funding",
-      "evidence": "None found in settlement ledger or receipts"
+      "evidence": "One settlement (0xc16ecc85\u2026, 2026-09-08) from an external wallet; see settlements.",
+      "settlements": [
+        {
+          "transaction": "0xc16ecc8552445df2a9110d7646c8d68e5e0a4515f325675b80d03ec7bbd96092",
+          "block": 51034356,
+          "settled_at": "2026-09-08T09:00:58Z",
+          "amount_usdc": "0.02",
+          "sku": "request_attestation",
+          "resource": "https://councilof.ai/api/request-attestation",
+          "payer": "0x7e6b6556322c4e26c567a867964ac793f5ee2b1c",
+          "classification": "EXTERNAL_CUSTOMER",
+          "evidence": "Payer nonce 0 (relayed), 0 ETH, USDC balance 3,089,078 atomic at 2026-09-13; no inbound USDC in the 36 days before; paid five distinct recipients within blocks 51034355\u201351034361 (12 s), 0.01/0.02/0.003/0.01/0.03 USDC. Not in any estate wallet list, not created by any estate script found. Behaves like an automated buyer sweeping listed services. Counted as the estate's single distinct non-self payer; it is not evidence of demand beyond one settlement. PayAI discovery cross-check (2026-09-13, 28,598 resources): one of the five recipients in that burst, 0x5a9d3c8e\u2026, is the payTo of a PayAI-listed service (earn-tools-backend web-extract) whose listed price is exactly the 3000 atomic it received; our payTo is listed for /api/free-door. The wallet was paying PayAI-listed sellers at their listed prices \u2014 an agent or index probe sweeping the bazaar, external to the estate.",
+          "evidence_note": "First pass (13:25Z) examined only the two 0.01 settlements and missed this record."
+        }
+      ]
     },
     "INTERNAL_SELF_FUNDED": {
       "count": 2,
@@ -18,17 +32,17 @@
           "subject": "llama3.2:3b",
           "sku": "request_attestation",
           "classification": "INTERNAL_SELF_FUNDED",
-          "evidence": "Self-payment via Multicall3, same controlled wallet",
+          "evidence": "Payer 0x212686404a\u2026 is the estate payTo itself (transfer to self through Multicall3). tx.from 0xb2bd2992\u2026 is a facilitator relayer (nonce 4,019,913), not an estate wallet.",
           "observed_at": "2026-09-11T13:56:00Z"
         },
         {
           "transaction": "0xeaaafb8a8e087cf5148f5fa59cfe7b773689bf686e2e99be8f7c4a7c393e8807",
-          "block": "unknown (pending verify)",
+          "block": 51202203,
           "amount_usdc": "0.01",
           "subject": "llama3.2:3b",
           "sku": "request_attestation",
           "classification": "INTERNAL_SELF_FUNDED",
-          "evidence": "Burner wallet funded via MetaMask, x402 EIP-3009 payment",
+          "evidence": "Payer (EIP-3009 authorizer) 0x6ea00613\u2026 is the estate's own test wallet (KNOWN_INTERNAL_X402_WALLETS). tx.from 0xc6699d2a\u2026 is a facilitator relayer (nonce 4,463,020), not an estate wallet; the earlier 'burner wallet funded via MetaMask' wording was unsourced and is withdrawn.",
           "observed_at": "2026-09-12T06:15:53Z"
         }
       ]
@@ -41,5 +55,5 @@
       "count": 0
     }
   },
-  "revenue": "$0.00 external"
+  "revenue": "$0.02 external \u2014 one settlement, one distinct non-self payer (0x7e6b6556\u2026, 2026-09-08)"
 }
