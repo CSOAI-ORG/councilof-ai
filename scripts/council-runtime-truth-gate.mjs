@@ -720,8 +720,6 @@ for (const route of [
   "/system",
   "/home-v2",
   "/feed",
-  "/press",
-  "/pressroom",
   "/government-links",
   "/regulatory-compliance",
   "/compliance/eu-ai-act",
@@ -743,9 +741,6 @@ for (const route of [
   "/sla",
   "/service-level-agreement",
   "/legal/sla",
-  "/privacy-policy",
-  "/privacy",
-  "/legal/privacy",
   "/trust-center",
   "/security",
   "/founding-members",
@@ -789,6 +784,40 @@ for (const route of [
     new RegExp(`<Route path=["']${escapeRegExp(route)}["'] component=\\{ContentReviewNotice\\} \\/>`),
   );
 }
+assert.match(
+  appSource,
+  /<Route path=["']\/press["'] component=\{PublicPress\} \/>/,
+  "/press must use the reviewed public press page",
+);
+assert.match(
+  appSource,
+  /<Route path=["']\/pressroom["'] component=\{PublicPress\} \/>/,
+  "/pressroom must use the same reviewed public press page",
+);
+for (const route of ["/privacy-policy", "/privacy", "/legal/privacy"]) {
+  assert.match(
+    appSource,
+    new RegExp(`<Route path=["']${escapeRegExp(route)}["'] component=\\{PublicPrivacy\\} \\/>`),
+    `${route} must use the operative privacy notice`,
+  );
+}
+
+const publicPressSource = readFileSync("client/src/pages/PublicPress.tsx", "utf8");
+assert.match(publicPressSource, /fetch\(["']\/api\/revenue["']/);
+assert.match(publicPressSource, /cache:\s*["']no-store["']/);
+assert.match(publicPressSource, /UNCHECKABLE:/);
+assert.match(publicPressSource, /no previous count is reused/i);
+assert.match(publicPressSource, /Measurement, not certification/i);
+assert.doesNotMatch(publicPressSource, /NOT HAPPENED/i);
+
+const publicPrivacySource = readFileSync("client/src/pages/legal/PublicPrivacy.tsx", "utf8");
+assert.match(publicPrivacySource, /CSOAI Ltd/);
+assert.match(publicPrivacySource, /16939677/);
+assert.match(publicPrivacySource, /86(?:–|-)90 Paul Street/);
+assert.match(publicPrivacySource, /privacy@csoai\.org/);
+assert.match(publicPrivacySource, /Information Commissioner's Office/);
+assert.match(publicPrivacySource, /Public evidence is a separate boundary/);
+assert.doesNotMatch(publicPrivacySource, /fully compliant|complies with all|guarantee(?:d)? compliance/i);
 assert.match(
   appSource,
   /<Route path="\/blog" component=\{ContentReviewNotice\} \/>/,

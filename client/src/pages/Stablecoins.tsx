@@ -97,6 +97,7 @@ export default function Stablecoins() {
           <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-400">
             The figures below are read from the published evidence files when this page loads. If the
             ledger cannot be read, the page reports that failure and shows no fallback totals.
+            This is measurement evidence, not investment advice, a rating or an endorsement.
           </p>
           <div className="mt-6 flex flex-wrap gap-3 text-sm font-semibold">
             <a className="rounded-lg bg-emerald-400 px-4 py-2.5 text-slate-950 hover:bg-emerald-300" href="#stablecoins">

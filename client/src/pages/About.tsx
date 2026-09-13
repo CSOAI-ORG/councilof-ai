@@ -177,7 +177,7 @@ export default function About() {
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-red-50 text-red-600 border-red-200">The Problem</Badge>
-            <h2 className="text-4xl font-bold mb-6">AI is Taking Jobs. We're Creating Them.</h2>
+            <h2 className="text-4xl font-bold mb-6">Making AI behaviour checkable</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
               AI displacement forecasts vary enormously and we have measured none of them, so we
               will not put a number here. What is not a forecast: the EU AI Act already requires
@@ -576,9 +576,10 @@ export default function About() {
         <div className="container max-w-4xl">
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-blue-50 text-blue-600 border-blue-200">Trust & Protection</Badge>
-            <h2 className="text-4xl font-bold mb-6">Professionally Insured & Regulated</h2>
+            <h2 className="text-4xl font-bold mb-6">Professional indemnity insurance</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
-              Professional indemnity cover for CSOAI LTD is not stated here until the policy document is on file; the corrections ledger (C-2026-0902-06) records the open item.
+              The policy details below identify CSOAI LTD's professional indemnity cover and the
+              broker that arranged it. They do not state or imply that CSOAI LTD is regulated by the FCA.
             </p>
           </div>
 
@@ -611,7 +612,7 @@ export default function About() {
                     <p className="font-semibold">Simply Business (Xbridge Limited)</p>
                   </div>
                   <div>
-                    <p className="text-gray-500">FCA Registration</p>
+                    <p className="text-gray-500">Broker FCA registration</p>
                     <p className="font-semibold">No: 313348</p>
                   </div>
                 </div>
@@ -622,8 +623,8 @@ export default function About() {
           <div className="mt-8 grid sm:grid-cols-3 gap-4">
             <Card className="p-6 text-center bg-gradient-to-br from-emerald-50 to-white border-emerald-200 hover:shadow-lg transition-shadow">
               <Shield className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
-              <h4 className="font-bold mb-2">Client Protection</h4>
-              <p className="text-sm text-gray-600">Full coverage for professional services and advice</p>
+              <h4 className="font-bold mb-2">Policy schedule</h4>
+              <p className="text-sm text-gray-600">Scope and exclusions are governed by the policy documents</p>
             </Card>
             <Card className="p-6 text-center bg-gradient-to-br from-blue-50 to-white border-blue-200 hover:shadow-lg transition-shadow">
               <Building2 className="h-8 w-8 text-blue-600 mx-auto mb-3" />
@@ -633,8 +634,8 @@ export default function About() {
             </Card>
             <Card className="p-6 text-center bg-gradient-to-br from-purple-50 to-white border-purple-200 hover:shadow-lg transition-shadow">
               <Globe className="h-8 w-8 text-purple-600 mx-auto mb-3" />
-              <h4 className="font-bold mb-2">Global Coverage</h4>
-              <p className="text-sm text-gray-600">Insurance coverage extends worldwide</p>
+              <h4 className="font-bold mb-2">No regulatory claim</h4>
+              <p className="text-sm text-gray-600">Insurance and broker details do not make CSOAI Ltd FCA regulated</p>
             </Card>
           </div>
         </div>
