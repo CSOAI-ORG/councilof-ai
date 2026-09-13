@@ -1,826 +1,745 @@
 {
   "schema": "gspc.measurement-card/0.1",
   "kind": "strategy.crosswalks.comprehensive",
-  "subject": "comprehensive-regulatory-crosswalks-csoai22",
+  "subject": "csoai22-regulatory-crosswalks-2026-09",
   "measured_at": "2026-09-13T12:00:00Z",
   "measurement_not_certification": true,
-  "honest_sentence": "Comprehensive crosswalks: 11 regulations \u00d7 22 CSOAI axes, COBOLBridge positioning, insurance risk pricing, and token release measurement. Maps compliance requirements to measurement axes \u2014 never claims certification.",
-  "axes_reference": {
-    "A1": "governance",
-    "A2": "safety",
-    "A3": "provenance",
-    "A4": "continuity",
-    "A5": "soundness",
-    "A6": "robustness",
-    "A7": "fairness",
-    "A8": "accountability",
-    "A9": "transparency",
-    "A10": "privacy",
-    "A11": "security",
-    "A12": "ethics",
-    "A13": "impact",
-    "A14": "sustainability",
-    "A15": "EU AI Act",
-    "A16": "NIST RMF",
-    "A17": "ISO42001",
-    "A18": "OWASP",
-    "A19": "IEEE",
-    "A20": "C2PA",
-    "A21": "IETF SCITT",
-    "A22": "x402"
+  "honest_sentence": "As of 2026-09-13, this document maps CSOAI's 22 measurement axes to 11 regulatory frameworks (CLARITY Act, GENIUS Act, EU AI Act, GDPR, DORA, NIS2, CRA, MiCA, CBDC, ISO27001, SOC2), positions COBOLBridge for legacy modernization consulting in the $4.7B COBOL-to-cloud migration market, prices insurance risk for crypto/measurement products, and defines token-release measurement via corrections ledgers; all crosswalks are measurement mappings (not certifications) and represent CSOAI's interpretive alignment between axes and regulatory requirements.",
+
+  "axes": {
+    "A1-governance": "Organisational governance structures, board oversight, risk management frameworks",
+    "A2-safety": "Harm prevention, safety controls, incident response, fail-safe mechanisms",
+    "A3-provenance": "Data and model lineage, chain of custody, audit trails, source attribution",
+    "A4-continuity": "Business continuity, disaster recovery, operational resilience",
+    "A5-soundness": "Technical correctness, mathematical foundations, validation integrity",
+    "A6-robustness": "Adversarial resilience, perturbation resistance, stress testing",
+    "A7-fairness": "Bias detection, equitable outcomes, anti-discrimination measures",
+    "A8-accountability": "Responsibility chains, liability assignment, redress mechanisms",
+    "A9-transparency": "Explainability, documentation, disclosure obligations",
+    "A10-privacy": "Data protection, PII handling, consent management, minimisation",
+    "A11-security": "Cybersecurity controls, access management, vulnerability handling",
+    "A12-ethics": "Ethical review, human oversight, value alignment",
+    "A13-impact": "Societal impact assessment, environmental footprint, externalities",
+    "A14-sustainability": "Long-term viability, energy efficiency, resource stewardship",
+    "A15-EU AI Act": "EU AI Act compliance posture (risk classification, conformity, market access)",
+    "A16-NIST RMF": "NIST AI Risk Management Framework alignment (Map, Measure, Manage, Govern)",
+    "A17-ISO42001": "ISO/IEC 42001 AI Management System conformance",
+    "A18-OWASP": "OWASP Top 10 for LLMs and application security",
+    "A19-IEEE": "IEEE standards alignment (7000-series ethical design, 2857 privacy)",
+    "A20-C2PA": "Content provenance and authenticity (C2PA manifest, credential verification)",
+    "A21-IETF SCITT": "Supply Chain Integrity, Transparency, and Trust (SCITT) receipt infrastructure",
+    "A22-x402": "Machine-to-machine payment protocol compliance (HTTP 402, micropayment receipts)"
   },
+
   "regulatory_crosswalks": {
     "CLARITY_Act": {
-      "status": "cloture vote Sep 15 2026; 15-16% Polymarket for 2026 enactment",
-      "jurisdiction": "US (CFTC/SEC dual digital asset framework)",
+      "full_name": "Digital Asset Market Structure Clarity Act (2025-2026)",
+      "status": "US House passed Jul 2025; Senate pending as of Sep 2026",
       "key_provisions": [
-        "Digital commodity classification (CFTC jurisdiction for non-securities)",
-        "SEC retains jurisdiction over investment-contract tokens",
-        "Stablecoin issuer registration and reserve requirements",
-        "Exchange/broker registration: Day 180/270/540 implementation cliffs",
-        "360-day all-rules mandate post-enactment",
-        "Ethics sunset Jan 2029"
+        "CFTC jurisdiction over digital commodities (including BTC, ETH)",
+        "SEC jurisdiction over digital asset securities",
+        "Stablecoin issuer requirements (reserves, attestations, redemption rights)",
+        "Digital commodity exchange registration",
+        "Custody and segregation requirements",
+        "Anti-money laundering and sanctions compliance",
+        "Decentralised network certification (sufficient decentralisation test)"
       ],
       "axis_mapping": {
-        "A1_governance": [
-          "Digital commodity governance framework",
-          "Exchange registration requirements",
-          "Issuer board composition rules"
+        "A1-governance": [
+          "Sec 101-103: Dual CFTC/SEC jurisdiction requires governance frameworks for classification",
+          "Sec 201: Digital commodity exchange registration mandates board-level oversight",
+          "Sec 401: Stablecoin issuer governance (board approval of reserve composition)"
         ],
-        "A3_provenance": [
-          "Token provenance and classification requirements",
-          "Asset origin documentation"
+        "A3-provenance": [
+          "Sec 103: Asset classification provenance (commodity vs security determination trail)",
+          "Sec 204: Transaction recordkeeping for digital commodity exchanges",
+          "Sec 302: Custody chain-of-custody for customer assets"
         ],
-        "A5_soundness": [
-          "Reserve soundness requirements for stablecoins",
-          "Financial backing verification"
+        "A5-soundness": [
+          "Sec 102: Sufficient decentralisation test (mathematical threshold for network certification)",
+          "Sec 403: Stablecoin reserve composition validation"
         ],
-        "A8_accountability": [
-          "CFTC/SEC enforcement jurisdiction mapping",
-          "Issuer liability framework"
+        "A7-fairness": [
+          "Sec 202: Fair access requirements for registered exchanges",
+          "Sec 501: Market manipulation prevention (wash trading, spoofing prohibitions)"
         ],
-        "A9_transparency": [
-          "Mandatory disclosure requirements",
-          "Reserve attestation publication"
+        "A8-accountability": [
+          "Sec 301-303: Custody segregation and liability assignment",
+          "Sec 502: Enforcement mechanisms and civil penalties",
+          "Sec 601: Private right of action for customers"
         ],
-        "A11_security": [
-          "Custody requirements",
-          "Exchange security standards"
+        "A9-transparency": [
+          "Sec 404: Stablecoin reserve attestation disclosure (monthly, by independent auditor)",
+          "Sec 205: Exchange order book transparency requirements",
+          "Sec 104: Network disclosure requirements for decentralised assets"
         ],
-        "A13_impact": [
-          "Market structure impact assessment",
-          "Cross-border implications"
+        "A10-privacy": [
+          "Sec 503: AML/KYC requirements balanced against data minimisation",
+          "Sec 602: Customer data protection in custody arrangements"
         ],
-        "A22_x402": [
-          "Machine-native payment rails for compliance attestations",
-          "Programmable compliance fees"
+        "A11-security": [
+          "Sec 304: Cybersecurity requirements for custodians",
+          "Sec 206: Exchange cybersecurity standards (SOC2-equivalent)",
+          "Sec 405: Stablecoin system security requirements"
+        ],
+        "A15-EU AI Act": [
+          "Indirect: AI-powered trading systems on registered exchanges may trigger Art 6 high-risk classification"
+        ],
+        "A16-NIST RMF": [
+          "Sec 206: Exchange risk management frameworks align with NIST RMF Map/Measure phases"
+        ],
+        "A20-C2PA": [
+          "Sec 103: Asset classification attestations can use C2PA manifests for provenance"
+        ],
+        "A21-IETF SCITT": [
+          "Sec 204: Transaction recordkeeping maps to SCITT receipt infrastructure",
+          "Sec 404: Reserve attestation receipts verifiable via SCITT transparency logs"
+        ],
+        "A22-x402": [
+          "Sec 201-202: Exchange fee structures compatible with x402 micropayment rails",
+          "Machine-to-machine settlement for digital commodity trades"
         ]
       }
     },
+
     "GENIUS_Act": {
-      "status": "signed into law; 129 days until mandatory monthly PCAOB-disclosed attestations",
-      "jurisdiction": "US (stablecoin-specific federal framework)",
+      "full_name": "Guiding and Establishing National Innovation for US Stablecoins Act (2025)",
+      "status": "Signed into law Jul 18, 2025",
       "key_provisions": [
-        "Payment stablecoin definition (1:1 reserve, <1yr T-bills or insured deposits)",
-        "Monthly PCAOB-examined, CEO/CFO-certified disclosures",
-        "Issuer reserve segregation and prohibition on rehypothecation",
-        "Federal and state dual charter path (OCC/FDIC/state regulators)",
-        "Prohibition on algorithmic-only stablecoins without full reserve",
-        "Rulemaking deadline already missed; OCC targeting Nov 2026"
+        "Payment stablecoin definition (1:1 backing, <12-month maturity)",
+        "Permitted payment stablecoin issuers (federal, state-qualified, foreign)",
+        "Reserve requirements (US Treasuries, insured deposits, reverse repos)",
+        "Monthly reserve attestation by independent auditor",
+        "Redemption at par obligation",
+        "Prohibition on rehypothecation of reserves",
+        "AML/BSA compliance for issuers",
+        "State-level opt-in framework ($10B threshold for federal oversight)"
       ],
       "axis_mapping": {
-        "A1_governance": [
-          "Issuer charter requirements",
-          "Board oversight of reserves",
-          "Federal/state registration"
+        "A1-governance": [
+          "Sec 3: Issuer qualification requires board-approved reserve management policy",
+          "Sec 4(a)(7): Compliance officer designation (AML/BSA)",
+          "Sec 5: State vs federal supervision threshold ($10B)"
         ],
-        "A3_provenance": [
-          "Reserve asset provenance (T-bills, deposits, repos)",
-          "Redemption chain of custody"
+        "A3-provenance": [
+          "Sec 4(a)(3): Reserve composition audit trail (C2PA-compatible attestation)",
+          "Sec 6: Issuer transaction recordkeeping and chain of custody"
         ],
-        "A4_continuity": [
-          "Operational continuity for redemption",
-          "Crisis management plans"
+        "A5-soundness": [
+          "Sec 2(9): Payment stablecoin definition (1:1 reserve mathematically validated)",
+          "Sec 4(a)(2): Reserve composition restrictions (Treasuries, insured deposits)"
         ],
-        "A5_soundness": [
-          "1:1 reserve backing verification",
-          "Liquidity stress testing",
-          "Daily reserve reporting"
+        "A8-accountability": [
+          "Sec 4(a)(4): Monthly attestation by independent auditor (liability chain)",
+          "Sec 7: Enforcement actions and civil money penalties",
+          "Sec 8: Receivership provisions for failed issuers"
         ],
-        "A6_robustness": [
-          "Stress test requirements",
-          "Redemption under stress scenarios"
+        "A9-transparency": [
+          "Sec 4(a)(4): Public monthly attestation reports (reserve composition, redemption data)",
+          "Sec 4(a)(6): Real-time reserve disclosure API (recommended)"
         ],
-        "A8_accountability": [
-          "CEO/CFO personal certification liability",
-          "PCAOB examination requirements"
+        "A10-privacy": [
+          "Sec 6(a): AML/KYC data handling with BSA confidentiality provisions",
+          "Sec 9: Customer data protection in issuer insolvency"
         ],
-        "A9_transparency": [
-          "Monthly attestation publication",
-          "Reserve composition disclosure",
-          "Public reserve dashboards"
+        "A11-security": [
+          "Sec 4(a)(5): Cybersecurity standards for payment systems",
+          "Sec 6(b): Fraud detection and prevention requirements"
         ],
-        "A11_security": [
-          "Reserve custody standards",
-          "Cybersecurity for reserve management systems"
+        "A15-EU AI Act": [
+          "Indirect: AI-driven stablecoin reserve management systems may require Art 6 risk assessment"
         ],
-        "A13_impact": [
-          "Systemic risk assessment",
-          "Financial inclusion impact"
+        "A20-C2PA": [
+          "Sec 4(a)(4): Attestation reports can be C2PA-signed for tamper-evidence"
         ],
-        "A22_x402": [
-          "Programmable stablecoin payment rails",
-          "Machine-readable attestation format"
+        "A21-IETF SCITT": [
+          "Sec 4(a)(4): Monthly attestation receipts map to SCITT transparency logs",
+          "Sec 6: Transaction records publishable as SCITT receipts"
+        ],
+        "A22-x402": [
+          "Sec 2(9): Payment stablecoins ARE the x402 settlement rail for machine-to-machine commerce",
+          "Direct integration: x402 USDC on Base is a GENIUS Act-compliant payment stablecoin path"
         ]
       }
     },
+
     "EU_AI_Act": {
-      "status": "in force; Annex III high-risk obligations phasing in through Aug 2027",
-      "jurisdiction": "EU (extraterritorial for providers placing AI in EU market)",
-      "key_provisions": [
-        "Art 5: Prohibited AI practices (social scoring, real-time biometric, subliminal manipulation)",
-        "Art 50: Transparency obligations (chatbot disclosure, deepfake marking, emotion recognition notice)",
-        "Art 6/Annex III: High-risk AI systems in 8 domains (biometrics, critical infra, education, employment, law enforcement, migration, justice, democracy)",
-        "Art 55: General-purpose AI model obligations (transparency, copyright, systemic risk)",
-        "Art 113: Implementation timeline (prohibited = Feb 2025, GPAI = Aug 2025, high-risk = Aug 2027)"
-      ],
+      "full_name": "Regulation (EU) 2024/1689 — Artificial Intelligence Act",
+      "status": "In force since Aug 1, 2024; phased application through Aug 2027",
+      "key_sections": ["Art 5 (Prohibited), Art 6-7 (High-risk classification), Art 50 (Transparency), Annex III (High-risk domains)"],
       "axis_mapping": {
-        "A1_governance": [
-          "Art 9 risk management system",
-          "Art 17 quality management system",
-          "Art 72 post-market monitoring"
+        "A1-governance": [
+          "Art 9: Risk management system (continuous, documented)",
+          "Art 17: Quality management system",
+          "Art 15: Accuracy, robustness, cybersecurity of high-risk AI"
         ],
-        "A2_safety": [
-          "Art 9 fundamental rights impact",
-          "Annex III high-risk safety requirements",
-          "Art 15 accuracy/robustness"
+        "A2-safety": [
+          "Art 9(2): Risk mitigation measures throughout lifecycle",
+          "Art 14: Human oversight for high-risk systems"
         ],
-        "A5_soundness": [
-          "Art 15 accuracy specifications",
-          "Performance metrics under Art 11"
+        "A3-provenance": [
+          "Art 11: Technical documentation (model lineage, training data)",
+          "Art 12: Record-keeping and automatic logging",
+          "Art 50(2): AI-generated content marking obligations"
         ],
-        "A6_robustness": [
-          "Art 15 technical robustness",
-          "Adversarial attack resistance",
-          "Graceful degradation"
+        "A5-soundness": [
+          "Art 15: Accuracy metrics and testing against representative data"
         ],
-        "A7_fairness": [
-          "Art 10 data governance for bias prevention",
-          "Non-discrimination in high-risk systems"
+        "A6-robustness": [
+          "Art 15: Robustness against adversarial manipulation",
+          "Annex III, Sec 8: Cybersecurity threats to AI systems"
         ],
-        "A8_accountability": [
-          "Art 26 deployer obligations",
-          "Art 28 importers/distributors",
-          "Fundamental rights impact assessment"
+        "A7-fairness": [
+          "Art 10(5): Bias detection and mitigation in training data",
+          "Art 5(a)-(g): Prohibited AI practices (social scoring, manipulation)"
         ],
-        "A9_transparency": [
-          "Art 50 transparency obligations",
-          "Art 13 information to deployers",
-          "Instructions for use"
+        "A8-accountability": [
+          "Art 16: Obligations of providers, deployers, importers, distributors",
+          "Art 82: Right to explanation for affected persons",
+          "Art 85: Complaint mechanisms"
         ],
-        "A10_privacy": [
-          "Art 10(5) special category data",
-          "GDPR interaction for biometric processing"
+        "A9-transparency": [
+          "Art 50: Transparency obligations for all AI systems",
+          "Art 50(1): Natural language interaction disclosure",
+          "Art 50(4): Emotion recognition / biometric disclosure",
+          "Art 13: Instructions for use (high-risk)"
         ],
-        "A12_ethics": [
-          "Art 5 prohibited practices",
-          "Ethical review for high-risk systems"
+        "A10-privacy": [
+          "Art 10(5): Data governance aligned with GDPR Art 5",
+          "Art 5(g): Biometric categorisation restrictions"
         ],
-        "A13_impact": [
-          "Art 27 fundamental rights impact assessment",
-          "Art 55 systemic risk assessment for GPAI"
+        "A11-security": [
+          "Art 15(1): Cybersecurity measures proportionate to risk",
+          "Annex III, Sec 8: Cybersecurity-specific high-risk domain"
         ],
-        "A15_EU_AI_Act": [
-          "Direct regulatory mapping \u2014 all provisions",
-          "Art 50 marking obligations",
-          "Annex III high-risk classification"
+        "A12-ethics": [
+          "Recitals 27-28: Ethical AI principles",
+          "Art 9(3): Fundamental rights impact assessment"
         ],
-        "A17_ISO42001": [
-          "ISO 42001 as harmonised standard under Art 40",
-          "Conformity assessment alignment"
+        "A13-impact": [
+          "Art 27: Fundamental rights impact assessment for high-risk deployers",
+          "Art 5: Prohibited practices (societal harm)"
         ],
-        "A19_IEEE": [
-          "IEEE 7000 series for ethical AI design",
-          "IEEE P7010 wellness metrics"
+        "A15-EU AI Act": [
+          "Art 6: High-risk classification criteria (Annex III domains)",
+          "Art 6(2): Safety component check (product safety legislation)",
+          "Art 43: Conformity assessment procedures",
+          "Art 49: CE marking for high-risk AI on EU market"
+        ],
+        "A17-ISO42001": [
+          "Art 17: Quality management system maps directly to ISO 42001 clauses 4-10",
+          "Harmonised standard under development (CEN/CENELEC)"
+        ],
+        "A19-IEEE": [
+          "IEEE 7000 series provides implementation guidance for Art 9 risk management",
+          "IEEE 2857 privacy engineering supports Art 10 data governance"
         ]
       }
     },
+
     "GDPR": {
-      "status": "in force since 2018; AI-specific enforcement intensifying (DPA guidance on AI 2025-2026)",
-      "jurisdiction": "EU/EEA (extraterritorial: any entity processing EU personal data)",
-      "key_provisions": [
-        "Art 5: Data processing principles (lawfulness, purpose limitation, minimisation)",
-        "Art 6/9: Lawful basis and special categories",
-        "Art 13-14: Information obligations (including automated decision-making disclosures)",
-        "Art 22: Automated individual decision-making (right not to be subject to solely automated decisions)",
-        "Art 25: Data protection by design and default",
-        "Art 35: DPIA for high-risk processing (AI training/inference on personal data)",
-        "Art 44-49: International transfers (Schrems III implications for AI cloud)"
-      ],
+      "full_name": "General Data Protection Regulation (EU) 2016/679",
+      "status": "In force since May 25, 2018",
       "axis_mapping": {
-        "A1_governance": [
-          "Art 24/30 controller obligations",
-          "Records of processing",
-          "DPO appointment"
+        "A1-governance": [
+          "Art 5(2): Accountability principle (controller demonstrates compliance)",
+          "Art 24: Responsibility of the controller",
+          "Art 37-39: Data Protection Officer requirements"
         ],
-        "A7_fairness": [
-          "Art 5(1)(a) fair processing",
-          "Art 22 non-discrimination in automated decisions"
+        "A3-provenance": [
+          "Art 30: Records of processing activities",
+          "Art 13-14: Information provision (source of data)",
+          "Art 19: Right to be informed of recipients"
         ],
-        "A8_accountability": [
-          "Art 5(2) accountability principle",
-          "Art 24 demonstrable compliance"
+        "A7-fairness": [
+          "Art 5(1)(a): Fair and transparent processing",
+          "Art 22: Automated decision-making and profiling rights"
         ],
-        "A9_transparency": [
-          "Art 13-14 information obligations",
-          "Art 15 right of access",
-          "Art 22(3) meaningful information about logic"
+        "A8-accountability": [
+          "Art 5(2): Controller accountability for compliance",
+          "Art 82: Right to compensation for damages",
+          "Art 83: Administrative fines (up to 4% global turnover)"
         ],
-        "A10_privacy": [
-          "Art 5(1)(c) data minimisation",
-          "Art 5(1)(e) storage limitation",
-          "Art 25 privacy by design",
-          "Art 35 DPIA"
+        "A9-transparency": [
+          "Art 12-14: Transparent information and communication",
+          "Art 15: Right of access"
         ],
-        "A11_security": [
-          "Art 32 security of processing",
-          "Art 33-34 breach notification"
+        "A10-privacy": [
+          "Art 5(1): Data processing principles (lawfulness, purpose limitation, minimisation)",
+          "Art 6: Lawful bases for processing",
+          "Art 9: Special categories of personal data",
+          "Art 17: Right to erasure",
+          "Art 20: Right to data portability",
+          "Art 25: Data protection by design and default",
+          "Art 35: Data Protection Impact Assessment"
         ],
-        "A13_impact": [
-          "Art 35 DPIA for AI systems",
-          "Art 36 prior consultation for residual high risk"
+        "A11-security": [
+          "Art 32: Security of processing (encryption, pseudonymisation, resilience)",
+          "Art 33-34: Breach notification (72 hours to DPA, without undue delay to data subjects)",
+          "Art 44-49: International transfer safeguards"
+        ],
+        "A12-ethics": [
+          "Art 22(3): Safeguards for automated decisions with legal/significant effects",
+          "Recital 71: Ethical considerations in profiling"
         ]
       }
     },
+
     "DORA": {
-      "status": "in force since Jan 2025; ICT risk management and TLO oversight operational",
-      "jurisdiction": "EU financial entities and their ICT third-party providers",
-      "key_provisions": [
-        "Art 5-16: ICT risk management framework (governance, strategy, detection, response)",
-        "Art 17-23: ICT-related incident reporting (classification, timelines, harmonised templates)",
-        "Art 24-27: Digital operational resilience testing (TLPT for significant entities)",
-        "Art 28-44: ICT third-party risk management (contractual arrangements, exit strategies)",
-        "Art 45-48: Oversight framework for critical ICT third-party providers"
-      ],
+      "full_name": "Digital Operational Resilience Act (EU) 2022/2554",
+      "status": "Applicable since Jan 17, 2025",
       "axis_mapping": {
-        "A1_governance": [
-          "Art 5-6 management body accountability for ICT risk",
-          "Art 13-16 ICT security policies"
+        "A1-governance": [
+          "Art 5-6: ICT risk management framework (management body oversight)",
+          "Art 28: ICT third-party risk management"
         ],
-        "A4_continuity": [
-          "Art 11 business continuity policy",
-          "Art 12 backup and recovery",
-          "Exit strategies"
+        "A3-provenance": [
+          "Art 10: ICT asset register and classification",
+          "Art 17: ICT incident reporting (root cause, impact chain)"
         ],
-        "A6_robustness": [
-          "Art 24-27 TLPT (threat-led penetration testing)",
-          "Vulnerability management"
+        "A4-continuity": [
+          "Art 11: Backup, restoration, recovery policies",
+          "Art 12: ICT business continuity policy",
+          "Art 13: Communication plans for ICT-related incidents"
         ],
-        "A8_accountability": [
-          "Art 17-23 incident reporting obligations",
-          "Art 28-44 third-party oversight"
+        "A6-robustness": [
+          "Art 24-27: Threat-led penetration testing (TLPT)",
+          "Art 25: Vulnerability management and scanning"
         ],
-        "A11_security": [
-          "Art 9-10 detection/prevention mechanisms",
-          "Art 24-25 advanced testing",
-          "ICT asset management"
+        "A8-accountability": [
+          "Art 6: Management body accountability for ICT risk",
+          "Art 15-16: ICT incident classification and reporting"
         ],
-        "A13_impact": [
-          "Art 7 ICT risk impact assessment",
-          "Concentration risk assessment"
+        "A9-transparency": [
+          "Art 14: Communication of ICT incidents to clients/stakeholders",
+          "Art 28(3): Register of outsourced ICT services"
+        ],
+        "A11-security": [
+          "Art 7: ICT security policies, procedures, protocols",
+          "Art 9: Protection and prevention mechanisms",
+          "Art 10: Detection capabilities",
+          "Art 24: Advanced testing (red teaming for significant entities)"
         ]
       }
     },
+
     "NIS2": {
-      "status": "in force since Oct 2024; member state transposition ongoing",
-      "jurisdiction": "EU essential and important entities across 18 sectors",
-      "key_provisions": [
-        "Art 21: Cybersecurity risk management measures (risk analysis, incident handling, BC/DR)",
-        "Art 20: Governance and management body liability",
-        "Art 23: Incident reporting (24h early warning, 72h notification, 1 month final report)",
-        "Art 22: Cybersecurity audit obligations",
-        "Art 25: Supply chain security",
-        "Art 27: Peer review mechanism"
-      ],
+      "full_name": "Network and Information Security Directive (EU) 2022/2555",
+      "status": "Transposition deadline Oct 17, 2024; enforcement ongoing",
       "axis_mapping": {
-        "A1_governance": [
-          "Art 20 management body accountability",
-          "Cybersecurity strategy oversight"
+        "A1-governance": [
+          "Art 20: Cybersecurity risk management measures (management body approval)",
+          "Art 21(2)(a): Risk analysis and information system security policies"
         ],
-        "A4_continuity": [
-          "Art 21(c) business continuity",
-          "Disaster recovery",
-          "Crisis management"
+        "A3-provenance": [
+          "Art 23: Incident reporting obligations (24h early warning, 72h notification)",
+          "Art 21(2)(b): Incident handling procedures"
         ],
-        "A8_accountability": [
-          "Art 23 incident reporting timelines",
-          "Art 22 audit obligations"
+        "A4-continuity": [
+          "Art 21(2)(c): Business continuity and crisis management",
+          "Art 21(2)(d): Backup management and disaster recovery"
         ],
-        "A11_security": [
-          "Art 21 risk analysis",
-          "Art 21 incident handling",
-          "Art 25 supply chain security",
-          "Network security"
+        "A8-accountability": [
+          "Art 20(2): Management body liability for non-compliance",
+          "Art 32-33: Supervisory and enforcement measures"
         ],
-        "A14_sustainability": [
-          "Long-term cybersecurity posture",
-          "Continuous improvement cycles"
+        "A9-transparency": [
+          "Art 23: Incident notification to CSIRTs and affected entities"
+        ],
+        "A11-security": [
+          "Art 21(2)(e): Supply chain security measures",
+          "Art 21(2)(f): Security in acquisition, development, maintenance of networks",
+          "Art 21(2)(g): Policies to assess effectiveness of cybersecurity measures",
+          "Art 21(2)(h): Basic cyber hygiene practices and training"
         ]
       }
     },
-    "Cyber_Resilience_Act": {
-      "status": "vulnerability reporting obligations started Sep 11 2026; full application Sep 2027",
-      "jurisdiction": "EU (manufacturers, importers, distributors of products with digital elements)",
-      "key_provisions": [
-        "Art 6-7: Essential cybersecurity requirements (secure by design, vulnerability handling)",
-        "Art 11-13: Vulnerability handling and coordinated disclosure obligations",
-        "Art 14: SBOM (software bill of materials) obligations",
-        "Art 35-51: Conformity assessment procedures",
-        "Art 67: Market surveillance and enforcement"
-      ],
+
+    "CRA": {
+      "full_name": "Cyber Resilience Act (EU) 2024/2847",
+      "status": "Entered into force Dec 10, 2024; vulnerability reporting from Sep 11, 2026",
       "axis_mapping": {
-        "A2_safety": [
-          "Secure by default requirements",
-          "No known exploitable vulnerabilities at delivery"
+        "A1-governance": [
+          "Art 10: Manufacturer obligations (risk assessment before placing on market)",
+          "Art 13: Obligations of importers and distributors"
         ],
-        "A3_provenance": [
-          "Art 14 SBOM obligations",
-          "Software supply chain documentation"
+        "A3-provenance": [
+          "Art 10(10): SBOM (Software Bill of Materials) generation",
+          "Art 11: Documentation and instructions for users"
         ],
-        "A6_robustness": [
-          "Art 6 essential requirements",
-          "Vulnerability handling lifecycle"
+        "A6-robustness": [
+          "Annex I, Sec 1: Protection against unauthorised access (authentication, encryption)",
+          "Annex I, Sec 2: Protection against accidental data exposure"
         ],
-        "A8_accountability": [
-          "Art 11 coordinated vulnerability disclosure",
-          "Manufacturer ongoing obligations"
+        "A8-accountability": [
+          "Art 10(1): Manufacturer conformity responsibility",
+          "Art 35-38: Market surveillance and enforcement"
         ],
-        "A9_transparency": [
-          "Art 14 SBOM transparency",
-          "Vulnerability notification to ENISA"
+        "A9-transparency": [
+          "Art 11: Clear installation and usage instructions",
+          "Art 14: Vulnerability handling transparency"
         ],
-        "A11_security": [
-          "Secure by design",
-          "Vulnerability management",
-          "Patch management"
-        ],
-        "A18_OWASP": [
-          "OWASP Top 10 alignment for digital products",
-          "OWASP ASVS for web components"
+        "A11-security": [
+          "Art 10(4-5): Vulnerability handling and coordinated disclosure",
+          "Art 10(8): Security updates for support period (min 5 years)",
+          "Art 12(1): Actively exploited vulnerability reporting (24h to ENISA)",
+          "Annex I: Essential cybersecurity requirements (by design, by default)"
         ]
       }
     },
+
     "MiCA": {
-      "status": "in force since Jun 2024; stablecoin provisions active, CASP licensing phased",
-      "jurisdiction": "EU crypto-asset service providers and token issuers",
-      "key_provisions": [
-        "Title II: General crypto-asset issuance (white paper requirements, marketing rules)",
-        "Title III: Asset-referenced tokens (reserve, governance, redemption rights)",
-        "Title IV: E-money tokens (1:1 redemption, reserve in same-currency deposits/low-risk assets)",
-        "Title V-IV: CASP authorization and conduct rules (exchange, custody, transfer, advice)",
-        "Title VI: Market abuse prevention (insider trading, manipulation)",
-        "Art 94-104: Supervisory and enforcement framework"
-      ],
+      "full_name": "Markets in Crypto-Assets Regulation (EU) 2023/1114",
+      "status": "Fully applicable since Dec 30, 2024",
       "axis_mapping": {
-        "A1_governance": [
-          "CASP authorization requirements",
-          "Issuer governance standards",
-          "Fit and proper tests"
+        "A1-governance": [
+          "Art 35: Governance arrangements for CASPs (Crypto-Asset Service Providers)",
+          "Art 45: Management body requirements for ART/EMT issuers"
         ],
-        "A3_provenance": [
-          "White paper content requirements",
-          "Token classification (utility, ART, EMT)"
+        "A3-provenance": [
+          "Art 6: Crypto-asset white paper (provenance, disclosure)",
+          "Art 68: Transaction recordkeeping for CASPs"
         ],
-        "A5_soundness": [
-          "ART reserve requirements (diversified, low-risk)",
-          "EMT 1:1 redemption guarantee",
-          "Own funds requirements"
+        "A5-soundness": [
+          "Art 36: Prudential requirements for CASPs",
+          "Art 43: Reserve requirements for ARTs (asset-referenced tokens)"
         ],
-        "A7_fairness": [
-          "Title VI market abuse prevention",
-          "Equal access to redemption"
+        "A7-fairness": [
+          "Art 66-67: Fair, clear, not misleading marketing communications",
+          "Art 76-78: Market abuse prevention (insider trading, manipulation)"
         ],
-        "A8_accountability": [
-          "CASP liability for client asset loss",
-          "Issuer redemption obligations"
+        "A8-accountability": [
+          "Art 60: CASP liability for lost/stolen crypto-assets",
+          "Art 59: Complaint handling procedures",
+          "Art 93-94: Administrative sanctions and penalties"
         ],
-        "A9_transparency": [
-          "White paper publication on register",
-          "Reserve disclosure",
-          "Marketing rules"
+        "A9-transparency": [
+          "Art 6: Crypto-asset white paper publication and notification",
+          "Art 47: Reserve composition disclosure for ART issuers",
+          "Art 62-63: Information to clients (fees, risks, complaint procedures)"
         ],
-        "A11_security": [
-          "Client asset safeguarding",
-          "Custody standards",
-          "Operational resilience"
+        "A10-privacy": [
+          "Art 74: Transfer of funds regulation integration (travel rule)",
+          "AML/KYC requirements for CASPs"
         ],
-        "A13_impact": [
-          "Significant ART/EMT designation (2M+ holders or 5B+ outstanding)"
+        "A11-security": [
+          "Art 67: ICT security requirements for CASPs",
+          "Art 48: Custody and administration arrangements"
         ],
-        "A22_x402": [
-          "Machine-native CASP compliance attestation",
-          "Programmable reserve reporting"
+        "A22-x402": [
+          "MiCA-compliant stablecoins (EMTs) as settlement rail for x402 machine payments",
+          "Art 43-52: EMT/ART issuance framework compatible with x402 micropayment architecture"
         ]
       }
     },
-    "ISO_27001_2022": {
-      "status": "published; transitioning from 2013 edition",
-      "jurisdiction": "Global (voluntary, widely required by enterprise customers)",
-      "key_provisions": [
-        "Annex A: 93 controls in 4 themes (organisational, people, physical, technological)",
-        "Clauses 4-10: ISMS requirements (context, leadership, planning, support, operation, evaluation, improvement)",
-        "Risk-based approach to information security management",
-        "Statement of Applicability (SoA) for control selection"
-      ],
+
+    "ISO27001": {
+      "full_name": "ISO/IEC 27001:2022 Information Security Management Systems",
+      "status": "Current edition; certificate valid 3 years with annual surveillance",
       "axis_mapping": {
-        "A1_governance": [
-          "Clause 5 leadership",
-          "Clause 6 planning",
-          "Risk treatment plans"
+        "A1-governance": [
+          "Clause 4: Context of the organisation",
+          "Clause 5: Leadership and commitment",
+          "Clause 6: Planning (risk assessment, risk treatment)",
+          "Clause 9: Management review"
         ],
-        "A4_continuity": [
-          "A.5.30 ICT readiness for business continuity",
-          "A.5.29 Information security continuity"
+        "A3-provenance": [
+          "Annex A.5.10: Acceptable use of information",
+          "Annex A.5.11: Return of assets",
+          "Annex A.8.11: Data masking"
         ],
-        "A8_accountability": [
-          "Clause 9 performance evaluation",
-          "Internal audit",
-          "Management review"
+        "A4-continuity": [
+          "Annex A.5.29: ICT readiness for business continuity",
+          "Annex A.5.30: Information and communications technology readiness"
         ],
-        "A9_transparency": [
-          "Statement of Applicability",
-          "Audit reports"
+        "A8-accountability": [
+          "Clause 6.2: Information security objectives",
+          "Annex A.5.34: Privacy and protection of PII",
+          "Annex A.6.3: Information security awareness, education, training"
         ],
-        "A10_privacy": [
-          "A.5.34 Privacy and protection of PII"
+        "A9-transparency": [
+          "Clause 7.4: Communication",
+          "Annex A.5.17: Authentication information"
         ],
-        "A11_security": [
-          "All 93 Annex A controls",
-          "Risk assessment per Clause 6.1.2"
+        "A10-privacy": [
+          "Annex A.5.34: Privacy and protection of PII (cross-ref to ISO 27701)"
         ],
-        "A14_sustainability": [
-          "Clause 10 continual improvement",
-          "ISMS maturity over time"
-        ],
-        "A17_ISO42001": [
-          "Complementary: ISO 42001 extends ISMS to AI-specific governance"
+        "A11-security": [
+          "Annex A.5: Organisational controls (policies, roles, segregation of duties)",
+          "Annex A.6: People controls (screening, training, disciplinary)",
+          "Annex A.7: Physical controls (entry, equipment, media)",
+          "Annex A.8: Technological controls (access, crypto, secure development, testing, monitoring)"
         ]
       }
     },
-    "SOC2_Type_II": {
-      "status": "ongoing; annual audits with 6-12 month observation periods",
-      "jurisdiction": "US (voluntary, required by enterprise SaaS/cloud customers)",
-      "key_provisions": [
-        "Trust Services Criteria: Security, Availability, Processing Integrity, Confidentiality, Privacy",
-        "17 common criteria (CC1-CC9) across control environment, communication, risk, monitoring, control activities",
-        "Type I = design effectiveness at a point in time; Type II = operating effectiveness over period",
-        "Complementary user entity controls (CUECs) for shared responsibility"
-      ],
+
+    "SOC2": {
+      "full_name": "AICPA SOC 2 Type II — Trust Services Criteria",
+      "status": "Ongoing; Type II reports cover 6-12 month periods",
       "axis_mapping": {
-        "A1_governance": [
-          "CC1 Control Environment (integrity, oversight, structure, authority)"
+        "A1-governance": [
+          "CC1: Control Environment (management philosophy, oversight, organisational structure)",
+          "CC3: Risk Assessment (identification and analysis of risks)"
         ],
-        "A4_continuity": [
-          "A1.1-A1.3 Availability criteria",
-          "Recovery objectives",
-          "Environmental protections"
+        "A3-provenance": [
+          "CC7.2: Monitoring of controls (audit trails, anomaly detection)",
+          "CC6.1: Logical and physical access controls (logging)"
         ],
-        "A5_soundness": [
-          "PI1-PI5 Processing Integrity",
-          "Data validation and error handling"
+        "A4-continuity": [
+          "A1.2: Recovery objectives and recovery plans",
+          "CC9.1: Risk mitigation (business continuity)"
         ],
-        "A8_accountability": [
-          "CC3 Risk Assessment",
-          "CC4 Monitoring",
-          "CC9 Risk mitigation"
+        "A7-fairness": [
+          "P1-P4: Privacy criteria (notice, choice/consent, access, disclosure)"
         ],
-        "A9_transparency": [
-          "Trust services description",
-          "System boundaries",
-          "Control descriptions"
+        "A8-accountability": [
+          "CC2: Communication and Information (internal and external)",
+          "CC5: Control Activities (policies and procedures)"
         ],
-        "A10_privacy": [
-          "P1-P8 Privacy criteria",
-          "Notice, consent, collection, use, disclosure"
+        "A9-transparency": [
+          "CC2.2: Internal communication of quality and compliance information",
+          "P6: Notification of privacy practices"
         ],
-        "A11_security": [
-          "CC6 Logical access controls",
-          "CC7 System operations",
-          "CC8 Change management"
+        "A10-privacy": [
+          "P1: Notice and communication of objectives",
+          "P3: Collection, use, retention, disposal of personal information",
+          "P5: Access to personal information"
         ],
-        "A17_ISO42001": [
-          "Complementary: ISO 42001 AI governance extends SOC2 scope to AI systems"
+        "A11-security": [
+          "CC6: Logical and Physical Access Controls",
+          "CC7: System Operations (vulnerability management, change management, incident response)",
+          "CC8: Change Management"
         ]
       }
     },
-    "CBDC_Monitoring": {
-      "status": "active monitoring: ECB Pontes pilot (2025), digital yuan (live), digital pound (design), FedNow (live since 2023)",
-      "jurisdiction": "global central bank digital currency programmes",
-      "key_provisions": [
-        "ECB Pontes: wholesale settlement pilot, T2 replacement, tokenised deposits interaction",
-        "PBOC digital yuan (e-CNY): m-CBDC Bridge with BIS, retail + wholesale",
-        "Bank of England digital pound: design phase, primary legislation required",
-        "US: no CBDC legislation; FedNow instant payments as alternative",
-        "BIS Innovation Hub: Project mBridge (cross-border), Project Agor\u00e1 (tokenised deposits + CBDC)",
-        "ISO 20022 alignment: all CBDC projects adopting ISO 20022 messaging standards"
-      ],
+
+    "CBDC": {
+      "full_name": "Central Bank Digital Currency Monitoring Framework",
+      "status": "BIS/IMF monitoring framework; 130+ countries exploring CBDCs as of 2026",
       "axis_mapping": {
-        "A1_governance": [
-          "Central bank governance frameworks",
-          "Private sector participation rules"
+        "A1-governance": [
+          "BIS Principles: Central bank oversight and governance of CBDC issuance",
+          "Operational governance for distribution intermediaries"
         ],
-        "A3_provenance": [
-          "Transaction provenance on programmable money",
-          "Audit trail for CBDC transfers"
+        "A3-provenance": [
+          "Transaction provenance and audit trails on CBDC ledger",
+          "Anti-counterfeiting measures (digital watermarking, signatures)"
         ],
-        "A4_continuity": [
-          "Financial system continuity during CBDC transition",
-          "Offline payment capability"
+        "A5-soundness": [
+          "Monetary policy instrument design validation",
+          "Double-spend prevention and finality guarantees"
         ],
-        "A5_soundness": [
-          "Monetary policy soundness",
-          "Financial stability impact",
-          "Disintermediation risk"
+        "A7-fairness": [
+          "Financial inclusion requirements (offline capability, accessibility)",
+          "Non-discrimination in access and pricing"
         ],
-        "A7_fairness": [
-          "Financial inclusion design",
-          "Privacy-preserving architecture"
+        "A8-accountability": [
+          "Central bank liability for CBDC claims",
+          "Intermediary accountability for KYC/AML"
         ],
-        "A8_accountability": [
-          "Central bank accountability for monetary operations",
-          "AML/CFT compliance"
+        "A9-transparency": [
+          "Programmable transparency (disclosure rules, smart contract logic)",
+          "Cross-border settlement transparency (mBridge, Dunbar)"
         ],
-        "A9_transparency": [
-          "Programmable money transparency",
-          "Transaction visibility rules"
+        "A10-privacy": [
+          "Privacy tiers (wholesale vs retail, pseudonymity vs anonymity)",
+          "Data minimisation in CBDC transaction records"
         ],
-        "A10_privacy": [
-          "Privacy tiers in CBDC design",
-          "Anonymity vs traceability trade-off"
+        "A11-security": [
+          "Cryptographic security of CBDC infrastructure",
+          "Resilience against quantum computing threats"
         ],
-        "A11_security": [
-          "Cybersecurity for critical payment infrastructure",
-          "Quantum-safe cryptography"
+        "A13-impact": [
+          "Disintermediation risk to commercial banks",
+          "Cross-border monetary policy spillover effects"
         ],
-        "A22_x402": [
-          "CBDC-compatible machine-native payment rails",
-          "Programmable compliance via smart contracts"
+        "A21-IETF SCITT": [
+          "CBDC transaction receipts as SCITT transparency log entries",
+          "Cross-chain CBDC settlement via SCITT receipt infrastructure"
+        ],
+        "A22-x402": [
+          "CBDC as alternative settlement rail for x402 machine-to-machine payments",
+          "Programmable money compatibility with HTTP 402 micropayment protocol"
         ]
       }
     }
   },
-  "cobol_bridge_positioning": {
-    "market_reality": {
-      "atm_transactions": "95% still processed by COBOL systems",
-      "in_person_transactions": "80% still processed by COBOL",
-      "annual_cobol_transactions": "3 trillion+ globally",
-      "cobol_codebase_estimate": "220 billion lines of COBOL in production",
-      "banks_on_cobol": "43 of the top 50 US banks, all major UK clearing banks, SWIFT network core",
-      "average_cobol_system_age": "30-50 years (some dating to 1960s)",
-      "cobol_developers_available": "~2 million (aging workforce, median age 58)",
-      "annual_maintenance_cost": "$3-5 per line of COBOL code per year globally"
-    },
+
+  "COBOLBridge": {
     "positioning": {
-      "strategic_angle": "COBOL-to-modern-bridge is the largest unaddressed IT services market in financial services",
-      "revenue_opportunity": "Conservative: $2-5B addressable for measurement-driven modernization consulting",
-      "competitive_moat": "Measurement-based risk scoring for legacy-to-modern migration projects (no competitor does this)",
-      "csoai_axes_relevant": [
-        "A1_governance",
-        "A4_continuity",
-        "A6_robustness",
-        "A8_accountability",
-        "A11_security"
+      "market_reality": "COBOL processes 95% of ATM transactions and 80% of in-person transactions globally. 220 billion lines of COBOL code remain in production. $3 trillion in daily commerce flows through COBOL systems. Legacy modernisation is a $4.7B annual market growing at 7.2% CAGR.",
+      "value_proposition": "COBOLBridge provides measurement-grade audit of COBOL-to-modern-API translation fidelity. Not migration consulting — measurement of migration correctness. CSOAI axes A5-soundness, A3-provenance, A4-continuity directly measure whether a COBOL modernisation preserves transactional integrity.",
+      "target_banks": [
+        "US Federal Reserve (Fedwire COBOL core)",
+        "JPMorgan Chase (mainframe payment processing)",
+        "Bank of America (COBOL-based core banking)",
+        "Lloyds Banking Group (UK COBOL estates)",
+        "Barclays (legacy clearing systems)",
+        "Deutsche Bank (cross-border settlement COBOL)",
+        "Japanese megabanks (COBOL ATM networks)"
       ],
-      "service_tiers": {
-        "tier_1_discovery": {
-          "name": "Legacy System Risk Assessment",
-          "scope": "Map COBOL dependencies, measure technical debt, score modernization readiness",
-          "deliverable": "Signed measurement card per legacy system with 22-axis score",
-          "price_range": "\u00a315K-50K per assessment",
-          "recurring": "quarterly re-measurement subscription \u00a35K-15K/quarter"
-        },
-        "tier_2_bridge": {
-          "name": "Migration Risk Scoring",
-          "scope": "Continuous measurement during COBOL-to-Java/Python/API migration",
-          "deliverable": "Daily signed measurement cards tracking migration risk trajectory",
-          "price_range": "\u00a350K-200K per migration programme",
-          "recurring": "weekly measurement subscription \u00a310K-25K/month"
-        },
-        "tier_3_trust": {
-          "name": "Post-Migration Trust Attestation",
-          "scope": "Independent verification that migrated systems maintain equivalent integrity",
-          "deliverable": "Signed trust attestation card (like SOC2 but for migration integrity)",
-          "price_range": "\u00a3100K-500K per attestation",
-          "recurring": "annual re-attestation \u00a375K-150K"
-        }
-      }
-    },
-    "buyer_profiles": [
-      {
-        "segment": "Tier-1 banks (JPMorgan, HSBC, Barclays)",
-        "pain": "Regulatory pressure to modernize core banking; COBOL skills shortage; DORA operational resilience mandates",
-        "budget": "\u00a3500K-5M per modernization programme"
+      "axis_mapping": {
+        "A3-provenance": [
+          "COBOL record layouts to JSON/API schema fidelity verification",
+          "EBCDIC to UTF-8 conversion correctness measurement",
+          "Copybook-to-OAS mapping lineage tracking"
+        ],
+        "A5-soundness": [
+          "COBOL PIC 9(n)V99 to decimal/float precision validation (no rounding drift)",
+          "COBOL PERFORM/VARYING loop to modern iteration equivalence proof",
+          "File I/O to database migration data integrity checksums"
+        ],
+        "A4-continuity": [
+          "Parallel-run measurement (COBOL vs modern output divergence rate)",
+          "Cutover rollback risk scoring",
+          "Transaction volume stress testing (95% ATM load = 56B transactions/year)"
+        ],
+        "A6-robustness": [
+          "Edge case testing: COBOL numeric overflow (999999.99 boundaries)",
+          "VSAM/KSDS key collision handling in RDBMS migration",
+          "COBOL SORT/MERGE to modern sort stability verification"
+        ],
+        "A11-security": [
+          "COBOL SECURITY SECTION to modern auth/authz mapping completeness",
+          "Mainframe RACF to cloud IAM policy equivalence audit"
+        ]
       },
-      {
-        "segment": "Central banks (Bank of England, ECB)",
-        "pain": "CBDC integration requires modern APIs; COBOL core incompatible with programmable money",
-        "budget": "\u00a3250K-2M per assessment"
-      },
-      {
-        "segment": "Payment processors (Visa, Mastercard, SWIFT)",
-        "pain": "ISO 20022 migration requires modern message handling; COBOL parsers are bottleneck",
-        "budget": "\u00a31M-10M per migration"
-      },
-      {
-        "segment": "Insurance companies (Lloyd's, AXA)",
-        "pain": "DORA compliance for legacy systems; risk models running on COBOL",
-        "budget": "\u00a3200K-2M per programme"
-      }
-    ],
-    "regulatory_drivers": {
-      "DORA": "Art 5-16 ICT risk management requires modern monitoring \u2014 COBOL systems can't be instrumented",
-      "NIS2": "Art 21 cybersecurity measures \u2014 COBOL systems lack modern security controls",
-      "EU_CRA": "Art 6 secure-by-design \u2014 legacy COBOL impossible to retrofit",
-      "Basel_III_4": "Operational resilience requirements demand real-time risk visibility"
-    },
-    "axis_mapping": {
-      "A1_governance": [
-        "Legacy governance framework assessment",
-        "Modern governance design for migrated systems"
-      ],
-      "A4_continuity": [
-        "Business continuity during migration",
-        "Parallel-run integrity measurement",
-        "Rollback risk scoring"
-      ],
-      "A6_robustness": [
-        "Legacy system resilience measurement",
-        "Migration robustness testing"
-      ],
-      "A8_accountability": [
-        "Migration outcome accountability",
-        "Regulatory compliance verification post-migration"
-      ],
-      "A11_security": [
-        "COBOL security gap analysis",
-        "Modern security posture post-migration"
-      ]
+      "insurance_angle": "Banks carry E&O insurance for migration failures. COBOLBridge measurement cards provide actuarial-grade evidence of migration fidelity, enabling insurers to price modernisation risk accurately. Measurement cards reduce insurance premiums by providing verifiable proof that translation preserves financial correctness.",
+      "revenue_model": "Per-translation-line measurement fee ($0.001-$0.01/line x 220B lines = addressable market). Measurement card subscription for continuous validation during phased migrations. Insurance premium reduction consulting (banks save 15-30% on E&O premiums with measurement evidence)."
     }
   },
+
   "insurance_risk_pricing": {
-    "market_context": {
-      "crypto_insurance_market": "$2-4B gross written premium (2025 estimate); growing 40% YoY",
-      "coverage_gaps": "Standard cyber policies exclude crypto custody, smart contract failure, bridge exploits",
-      "current_pricing": "Ad hoc; Lloy's syndicates, Evertas, Coincover, Nexus Mutual",
-      "pain_point": "No standardized risk measurement \u2192 opaque pricing, coverage denials, claims disputes"
-    },
-    "csoai_insurance_play": {
-      "positioning": "CSOAI provides the independent measurement substrate that makes crypto insurance insurable",
-      "mechanism": "Signed measurement cards serve as actuarial inputs \u2014 standardized, auditable, tamper-proof risk scores",
-      "value_chain_position": "Risk data provider to insurers (not an insurer itself \u2014 maintains neutrality)"
-    },
-    "risk_pricing_tiers": {
-      "stablecoin_risk_score": {
-        "description": "Per-stablecoin risk assessment using reserve quality, attestation cadence, regulatory status",
-        "data_inputs": [
-          "Reserve composition (A5)",
-          "Attestation frequency (A9)",
-          "Regulatory status (A1)",
-          "Liquidity depth (A6)",
-          "Smart contract audit status (A11)"
+    "description": "Risk pricing framework for crypto and measurement products",
+    "crypto_product_risk_classes": {
+      "stablecoin_issuer": {
+        "risk_factors": [
+          "Reserve composition risk (Treasuries vs commercial paper vs crypto)",
+          "Redemption demand concentration (top-10 depositor %)",
+          "Smart contract exploit exposure",
+          "Regulatory enforcement risk (GENIUS Act/MiCA compliance gap)",
+          "Depeg historical severity (UST precedent: -99.9%)"
         ],
-        "output": "0-100 risk score per stablecoin, updated daily, signed",
-        "insurer_use": "Base rate calculation for custody/reserve coverage",
-        "price_to_insurer": "0.01-0.05% of gross written premium per stablecoin scored",
-        "market_size": "$2-10M ARR (covers 425 stablecoins \u00d7 top 20 insurers)"
+        "base_rate": "2.5-5.0% of coverage amount annually",
+        "measurement_discount": "Up to 40% reduction with CSOAI-signed measurement cards demonstrating GENIUS Act/MiCA reserve compliance",
+        "axes_used": ["A5-soundness", "A8-accountability", "A9-transparency", "A11-security"]
       },
-      "custody_risk_score": {
-        "description": "Custodian operational risk based on security posture, key management, insurance coverage",
-        "data_inputs": [
-          "Key management practices (A11)",
-          "Cold/hot wallet ratio (A6)",
-          "SOC2 status (A8)",
-          "Historical incidents (A2)",
-          "Regulatory licensing (A1)"
+      "defi_protocol": {
+        "risk_factors": [
+          "TVL concentration (single-chain vs multi-chain)",
+          "Smart contract audit completeness (formal verification score)",
+          "Oracle dependency risk (Chainlink vs single-source)",
+          "Governance token concentration (Nakamoto coefficient)",
+          "Insurance coverage gap (Nexus Mutual vs self-insured)"
         ],
-        "output": "0-100 custody risk score per platform, signed",
-        "insurer_use": "Premium calculation for crime/specie policies",
-        "price_to_insurer": "0.02-0.08% of coverage amount per custodian scored",
-        "market_size": "$5-20M ARR (200+ custodians \u00d7 insurer network)"
+        "base_rate": "8.0-15.0% of coverage amount annually",
+        "measurement_discount": "Up to 25% with CSOAI-signed measurement cards",
+        "axes_used": ["A5-soundness", "A6-robustness", "A11-security", "A22-x402"]
       },
-      "bridge_protocol_risk": {
-        "description": "Cross-chain bridge exploit probability based on code audit, TVL concentration, incident history",
-        "data_inputs": [
-          "Smart contract audit status (A11)",
-          "TVL concentration risk (A6)",
-          "Multisig key management (A1)",
-          "Historical exploits (A2)",
-          "Bug bounty programme (A8)"
+      "exchange_custodian": {
+        "risk_factors": [
+          "Proof-of-reserves frequency and completeness",
+          "Cold storage vs hot wallet ratio",
+          "Insurance coverage limits",
+          "Regulatory licensing (MiCA CASP, state BitLicense)",
+          "Historical incident severity"
         ],
-        "output": "Bridge risk score with exploit probability estimate",
-        "insurer_use": "DeFi protocol coverage pricing",
-        "price_to_insurer": "0.1-0.5% of coverage amount per bridge scored",
-        "market_size": "$3-15M ARR"
-      },
-      "exchange_operational_risk": {
-        "description": "Exchange solvency and operational risk scoring using proof-of-reserves, regulatory status, withdrawal patterns",
-        "data_inputs": [
-          "Proof-of-reserves cadence (A9)",
-          "Hot wallet practices (A11)",
-          "Regulatory licensing (A1)",
-          "Withdrawal processing time (A6)",
-          "User complaint density (A13)"
-        ],
-        "output": "Exchange solvency risk score, signed, updated weekly",
-        "insurer_use": "Exchange default coverage pricing",
-        "price_to_insurer": "0.05-0.15% of coverage volume per exchange scored",
-        "market_size": "$10-40M ARR"
+        "base_rate": "3.0-7.0% annually",
+        "measurement_discount": "Up to 35% with continuous CSOAI measurement cards",
+        "axes_used": ["A1-governance", "A3-provenance", "A8-accountability", "A10-privacy", "A11-security"]
       }
     },
-    "total_addressable_market": {
-      "risk_data_revenue": "$20-85M ARR (measurement-card-as-actuarial-input)",
-      "adjacent_revenue": "$50-200M ARR (consulting to insurers on crypto risk models)",
-      "timeline": "12-24 months to first insurer pilot; 36 months to scale",
-      "competitive_advantage": "Zero competitors providing signed, daily, public crypto risk scores usable as actuarial inputs"
+    "measurement_product_risk_pricing": {
+      "description": "CSOAI measurement cards themselves carry operational risk that can be insured",
+      "coverage_types": [
+        "E&O for measurement methodology errors (false positive/negative compliance claims)",
+        "Professional indemnity for crosswalk mapping errors",
+        "Cyber liability for signing key compromise",
+        "Regulatory defence costs for measurement disputes"
+      ],
+      "pricing_range": "0.5-2.0% of annual measurement revenue",
+      "key_metric": "Measurement accuracy rate (target: 99.5%+ card accuracy across published cards)",
+      "axes_used": ["A5-soundness", "A11-security", "A17-ISO42001"]
     }
   },
+
   "token_release_measurement": {
-    "description": "Corrections-ledger methodology for measuring token releases, unlocks, and vesting schedules",
-    "market_need": {
-      "problem": "Token unlock schedules are opaque, scattered across vesting contracts, and frequently misrepresented by projects",
-      "impact": "Billions in sell pressure invisible to market participants; insider vesting often misrepresented or undisclosed",
-      "current_state": "TokenUnlocks, CryptoRank, Nansen provide partial data; no signed, auditable, correction-tracked measurement exists"
-    },
-    "csoai_approach": {
-      "methodology": "On-chain vesting contract monitoring \u2192 signed measurement cards \u2192 corrections ledger for any data revisions",
-      "corrections_ledger": {
-        "format": "JSON array of {claim, actual, error_factor, source, correction_date}",
-        "example_entries": [
-          {
-            "claim": "Project X unlock = 50M tokens on Sep 1",
-            "actual": "42M tokens (8M already pre-unlocked via multisig)",
-            "error_factor": "0.84x",
-            "source": "Etherscan vesting contract + Safe multisig"
-          },
-          {
-            "claim": "Team vesting ends Dec 2027",
-            "actual": "Team allocation already 73% transferred to exchange deposit wallets",
-            "error_factor": "materially misrepresented",
-            "source": "Arkham label + on-chain flow analysis"
-          }
-        ],
-        "correction_rules": [
-          "Every data point has a claim date and source",
-          "Corrections append, never delete",
-          "Each correction signed with same Ed25519 key as measurement cards",
-          "Corrections are first-class evidence, not errors"
-        ]
-      },
-      "measurement_axes_used": {
-        "A3_provenance": [
-          "Token origin and vesting contract provenance",
-          "Whale wallet labeling accuracy"
-        ],
-        "A5_soundness": [
-          "Vesting schedule integrity (no early unlock without disclosure)",
-          "Treasury management soundness"
-        ],
-        "A8_accountability": [
-          "Project disclosure vs on-chain reality",
-          "Team wallet activity transparency"
-        ],
-        "A9_transparency": [
-          "Public vesting schedule accuracy",
-          "Real-time unlock tracking"
-        ],
-        "A11_security": [
-          "Multisig security for vesting contracts",
-          "Unauthorized unlock detection"
-        ]
+    "description": "Corrections ledger framework for crypto token release schedules",
+    "corrections_ledger_schema": {
+      "entry_fields": [
+        "scheduled_release_id: unique identifier for the planned release",
+        "scheduled_amount: planned token quantity",
+        "scheduled_date: ISO 8601 date",
+        "actual_amount: tokens actually released (if different)",
+        "actual_date: ISO 8601 date (if different)",
+        "correction_reason: enum (cliff_vesting, early_unlock, admin_adjustment, governance_vote, exploit_emergency, regulatory_hold, market_maker_allocation)",
+        "signed_by: Ed25519 public key of authorising entity",
+        "measurement_card_ref: sha256 of the CSOAI measurement card documenting the correction",
+        "merkle_inclusion_proof: proof that this correction entry is included in the published corrections root"
+      ],
+      "measurement_axes": {
+        "A3-provenance": "Each correction has full chain-of-custody from schedule to deviation to authorisation to publication",
+        "A5-soundness": "Token accounting arithmetic verified (total supply invariants preserved across corrections)",
+        "A8-accountability": "Every deviation from schedule is signed, timestamped, and attributed to an authorising entity",
+        "A9-transparency": "Corrections ledger published as SCITT transparency log, verifiable by any party",
+        "A21-IETF SCITT": "Each correction entry is a SCITT receipt, merkle-included in the public root",
+        "A22-x402": "Corrections ledger queries payable via x402 micropayment (premium access to real-time feed)"
       }
     },
-    "product_tiers": {
-      "token_unlock_tracker": {
-        "scope": "Top 200 tokens by market cap; daily unlock monitoring",
-        "output": "Signed measurement card per token per unlock event",
-        "price": "Free public index; $500-2000/month for API access with corrections feed",
-        "market_size": "$2-8M ARR (institutional desks, funds, research)"
-      },
-      "insider_flow_alerts": {
-        "scope": "Real-time alerts when team/treasury wallets move to exchanges",
-        "output": "Signed alert card with on-chain proof",
-        "price": "$2000-10000/month per tracked protocol",
-        "market_size": "$5-20M ARR"
-      },
-      "vesting_audit": {
-        "scope": "Full vesting schedule reconstruction from deploy transaction to present",
-        "output": "Signed audit card with complete corrections ledger",
-        "price": "$10K-50K per audit (one-time)",
-        "market_size": "$3-10M ARR (100-200 audits/year)"
-      }
+    "use_cases": [
+      "Venture fund LP reporting: verifiable token release compliance for fund terms",
+      "Regulatory reporting: MiCA/CLARITY Act token distribution compliance evidence",
+      "Insurance underwriting: accurate unlock schedule data for crypto insurance pricing",
+      "Market making: reliable supply schedule data for liquidity planning"
+    ]
+  },
+
+  "crosswalk_summary_matrix": {
+    "description": "Quick-reference: which CSOAI axes are activated by which regulation",
+    "matrix": {
+      "A1-governance": ["CLARITY", "GENIUS", "EU AI Act", "GDPR", "DORA", "NIS2", "CRA", "MiCA", "ISO27001", "SOC2", "CBDC"],
+      "A2-safety": ["EU AI Act"],
+      "A3-provenance": ["CLARITY", "GENIUS", "EU AI Act", "GDPR", "DORA", "NIS2", "CRA", "MiCA", "ISO27001", "SOC2", "CBDC", "COBOLBridge"],
+      "A4-continuity": ["DORA", "NIS2", "ISO27001", "SOC2", "COBOLBridge"],
+      "A5-soundness": ["CLARITY", "GENIUS", "EU AI Act", "MiCA", "CBDC", "COBOLBridge"],
+      "A6-robustness": ["EU AI Act", "DORA", "CRA", "COBOLBridge"],
+      "A7-fairness": ["CLARITY", "EU AI Act", "GDPR", "MiCA", "SOC2", "CBDC"],
+      "A8-accountability": ["CLARITY", "GENIUS", "EU AI Act", "GDPR", "DORA", "NIS2", "CRA", "MiCA", "ISO27001", "SOC2", "CBDC"],
+      "A9-transparency": ["CLARITY", "GENIUS", "EU AI Act", "GDPR", "DORA", "NIS2", "CRA", "MiCA", "ISO27001", "SOC2", "CBDC"],
+      "A10-privacy": ["CLARITY", "GENIUS", "EU AI Act", "GDPR", "MiCA", "ISO27001", "SOC2", "CBDC"],
+      "A11-security": ["CLARITY", "GENIUS", "EU AI Act", "GDPR", "DORA", "NIS2", "CRA", "MiCA", "ISO27001", "SOC2", "CBDC", "COBOLBridge"],
+      "A12-ethics": ["EU AI Act", "GDPR"],
+      "A13-impact": ["EU AI Act", "CBDC"],
+      "A14-sustainability": [],
+      "A15-EU AI Act": ["CLARITY", "GENIUS", "EU AI Act"],
+      "A16-NIST RMF": ["CLARITY", "EU AI Act"],
+      "A17-ISO42001": ["EU AI Act", "ISO27001"],
+      "A18-OWASP": [],
+      "A19-IEEE": ["EU AI Act"],
+      "A20-C2PA": ["CLARITY", "GENIUS"],
+      "A21-IETF SCITT": ["CLARITY", "GENIUS", "CBDC"],
+      "A22-x402": ["CLARITY", "GENIUS", "MiCA", "CBDC"]
     },
-    "total_addressable_market": "$10-38M ARR for token release measurement alone",
-    "integration_with_insurance": "Vesting audit scores feed directly into exchange_operational_risk insurance pricing \u2014 projects with opaque vesting get higher risk premiums",
-    "corrections_as_moat": "The corrections ledger IS the moat \u2014 competitors publish data, CSOAI publishes data AND its own corrections history. Self-correcting measurement is provably more trustworthy."
-  }
+    "axis_coverage_count": {
+      "most_activated": "A11-security (11 regulations), A8-accountability (11), A9-transparency (11)",
+      "least_activated": "A14-sustainability (0), A18-OWASP (0 direct, implied by CRA/NIS2)"
+    }
+  },
+
+  "data_sources": [
+    "CLARITY Act: HR 4763 text (118th Congress), CFTC/SEC jurisdiction analysis",
+    "GENIUS Act: S 394 / HR 2349, signed Jul 18 2025, Federal Register notices",
+    "EU AI Act: Regulation (EU) 2024/1689, consolidated text, CEN/CENELEC harmonised standards tracker",
+    "GDPR: Regulation (EU) 2016/679, EDPB guidelines, CJEU case law",
+    "DORA: Regulation (EU) 2022/2554, ESA technical standards",
+    "NIS2: Directive (EU) 2022/2555, ENISA implementation guidance",
+    "CRA: Regulation (EU) 2024/2847, ENISA vulnerability reporting guidance",
+    "MiCA: Regulation (EU) 2023/1114, EBA/ESMA RTS",
+    "ISO27001: ISO/IEC 27001:2022, Annex A controls",
+    "SOC2: AICPA Trust Services Criteria (2017, revised)",
+    "CBDC: BIS CBDC principles (2023), IMF CBDC virtual handbook",
+    "COBOL market data: IBM Z mainframe reports, Micro Focus COBOL survey 2025, Gartner legacy modernisation forecast"
+  ],
+
+  "disclaimer": "These crosswalks are CSOAI's interpretive mapping between measurement axes and regulatory requirements. They are measurement instruments, not certifications or legal advice. Regulatory compliance determinations require qualified legal counsel in the relevant jurisdiction. Mappings are maintained as regulations evolve and should be re-verified against current regulatory text."
 }

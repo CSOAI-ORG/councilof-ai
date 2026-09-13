@@ -1,0 +1,40 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "automation.improvement.plan",
+  "subject": "automation-improvement-plan",
+  "measured_at": "2026-09-13T04:35:39.533016+00:00",
+  "metrics": {
+    "current_automation": {
+      "cron_jobs": "32 on VM",
+      "firehose": "GDELT, deps.dev, OSV.dev, GH Archive",
+      "card_gen": "manual + SOV3 brain",
+      "rss_rebuild": "manual",
+      "sitemap_rebuild": "manual",
+      "indexnow": "key generated, not submitted"
+    },
+    "immediate_improvements": {
+      "auto_rss_rebuild": "cron every hour: rebuild RSS from measurement cards",
+      "auto_sitemap_rebuild": "cron every hour: rebuild sitemap from measurement cards",
+      "auto_indexnow_submit": "cron every hour: submit new URLs to Bing IndexNow",
+      "auto_quality_gate": "cron every hour: check all cards have honest_sentence/kind/subject",
+      "auto_stablecoin_monitor": "cron every6h: fetch stablecoin data, generate cards",
+      "auto_regulatory_monitor": "cron every12h: check open comment windows, generate cards"
+    },
+    "medium_term_improvements": {
+      "asi_evolve_research": "ASI-Evolve as autonomous research engine",
+      "auto_crosswalk_update": "when regulation changes \u2192 auto-update crosswalk cards",
+      "auto_feed_distribution": "Telegram bot, Mastodon bot, Bluesky bot",
+      "auto_dune_dashboard": "Dune Analytics dashboard for stablecoin measurements",
+      "auto_insurance_pricing": "measurement \u2192 risk score \u2192 premium calculation"
+    },
+    "long_term_improvements": {
+      "fully_autonomous": "firehose \u2192 card \u2192 quality \u2192 RSS \u2192 sitemap \u2192 IndexNow \u2192 feed \u2192 distribution",
+      "self_healing": "auto-fix broken cards, auto-update stale data",
+      "self_expanding": "auto-discover new stablecoins, regulators, standards",
+      "self_monetizing": "auto-generate x402 paid endpoints from new cards"
+    },
+    "significance": "From manual cards to fully autonomous24/7 measurement machine"
+  },
+  "honest_sentence": "Automation plan: current32 cron jobs, manual RSS/sitemap. Immediate: auto-rebuild RSS/sitemap hourly, auto-IndexNow, auto-quality gate, auto-stablecoin/regulatory monitor. Medium: ASI-Evolve, auto-crosswalk updates, feed distribution, Dune dashboard. Long: fully autonomous self-healing self-expanding self-monetizing.",
+  "measurement_not_certification": true
+}
