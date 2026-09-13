@@ -1,0 +1,29 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.uk.aisi_inspect_spec",
+  "subject": "uk-aisi-inspect-gspc-spec",
+  "measured_at": "2026-09-13T05:01:33.316955+00:00",
+  "metrics": {
+    "package_name": "inspect-gspc",
+    "pip_install": "pip install inspect-gspc",
+    "usage": "inspect eval inspect-gspc/gspc --model anthropic/claude",
+    "what_it_does": "Runs CSOAI's 22-axis GSPC measurement on any Inspect-compatible model, emits signed Ed25519 receipt",
+    "architecture": {
+      "solver": "GSPCSolver \u2014 calls GSPC check endpoints for each axis",
+      "scorer": "GSPCScorer \u2014 grades pass/warn/fail per axis, computes composite score",
+      "tool": "GSPCTool \u2014 exposes GSPC verify/anchor as Inspect tools for model self-evaluation",
+      "output": "Signed JSON receipt with 22 axis scores, merkle root, Ed25519 signature"
+    },
+    "extension_api": "Inspect has first-class extension APIs at inspect.aisi.org.uk/extensions.html",
+    "contribution_policy": "Issue-first: open issue \u2192 wait for 'accepted' label \u2192 submit PR referencing issue",
+    "estimated_build_time": "3-5 days for prototype, 7-10 days for polished extension",
+    "prerequisites": [
+      "Clone UKGovernmentBEIS/inspect_ai",
+      "Install with pip install -e '.[dev]'",
+      "Study existing solvers/scorers in src/inspect_ai/solver/ and src/inspect_ai/scorer/",
+      "Study examples/ for evaluation patterns"
+    ]
+  },
+  "honest_sentence": "inspect-gspc: pip install inspect-gspc \u2192 inspect eval inspect-gspc/gspc --model X \u2192 22-axis signed receipt. Uses Inspect's first-class extension APIs. Issue-first PR policy \u2014 open issue, wait for accepted, submit code.",
+  "measurement_not_certification": true
+}
