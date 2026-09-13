@@ -1,0 +1,93 @@
+Internet-Draft                                               CSOAI Ltd
+Intended status: Informational                          13 September 2026
+Expires: 16 March 2027
+
+
+     "Cryptographic Receipts for AI Governance Audit Trails"
+                   draft-csoai-audit-use-case-00
+
+Abstract
+
+   This document describes the use of cryptographic measurement receipts
+   and Ed25519-signed evidence cards for AI governance audit trails.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six
+   months and may be updated, replaced, or obsoleted by other documents
+   at any time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 16 March 2027.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.  This document is subject to
+   BCP 78 and the IETF Trust's Legal Provisions Relating to IETF
+   Documents (https://trustee.ietf.org/license-info) in effect on the
+   date of publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Measurement Card Format
+   3.  Verification Pipeline
+   4.  Current Deployment
+   5.  Security Considerations
+   6.  IANA Considerations
+   7.  References
+   Authors' Addresses
+
+1.  Introduction
+
+   Organizations deploying AI systems need auditable evidence of model
+   behaviour across governance axes including safety, transparency,
+   fairness, and regulatory compliance.
+
+2.  Measurement Card Format
+
+   Each measurement card contains a subject identifier, axis, accuracy
+   with Wilson 95 percent confidence interval, sample size, run
+   identifier, and harness version.
+
+3.  Verification Pipeline
+
+   Cards are verified via Ed25519 signature, Merkle root inclusion,
+   and transparency log witness (Sigstore Rekor).
+
+4.  Current Deployment
+
+   The CSOAI infrastructure at councilof.ai serves 22 GSPC axes,
+   155 models measured, 1,493 signed cards, and 425 stablecoins
+   indexed across 211 chains.
+
+5.  Security Considerations
+
+   Private signing keys are never placed in source code or artifacts.
+
+6.  IANA Considerations
+
+   This document has no IANA actions.
+
+7.  References
+
+   [Informative references would be added in a future revision.]
+
+Authors' Addresses
+
+   Nicholas Templeman
+   CSOAI Ltd
+   UK Companies House 16939677
+   Email: nicholas@csoai.org
+   URI: https://councilof.ai

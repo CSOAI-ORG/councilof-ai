@@ -1,0 +1,49 @@
+{
+  "tx_hash": "0xeaaafb8a8e087cf5148f5fa59cfe7b773689bf686e2e99be8f7c4a7c393e8807",
+  "chain": "Base Mainnet",
+  "chain_id": 8453,
+  "block_number": 51202203,
+  "block_timestamp_utc": "2026-09-12T06:15:53Z",
+  "status": "success",
+  "from": "0xc6699d2aada6c36dfea5c248dd70f9cb0235cb63",
+  "to": "0xca11bde05977b3631167028862be2a173976ca11",
+  "to_label": "Multicall3",
+  "usdc_contract": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+  "usdc_amount_transferred": 0.01,
+  "usdc_amount_raw": "10000",
+  "usdc_decimals": 6,
+  "transfer_events": [
+    {
+      "event": "AuthorizationUsed",
+      "topic0": "0x98de503528ee59b575ef0c0a2576a82497bfc029a5685b209e9ec333479b10a5",
+      "log_index": 310,
+      "authorizer": "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
+      "nonce": "0x9da1e7720b7f279eb7c6eb1bfbc4375d926a1b289b055ae0f58503d8180718e9",
+      "description": "EIP-3009 transferWithAuthorization nonce consumed (x402 payment authorization)"
+    },
+    {
+      "event": "Transfer",
+      "topic0": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+      "log_index": 311,
+      "from": "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
+      "to": "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31",
+      "value": "10000",
+      "value_human": "0.01 USDC",
+      "description": "ERC-20 Transfer of 0.01 USDC"
+    }
+  ],
+  "gas_used": 109456,
+  "effective_gas_price_wei": 7000000,
+  "gas_cost_eth": "0.000000766192",
+  "verification_timestamp": "2026-09-13T05:03:15.244681+00:00",
+  "verification_method": "eth_getTransactionReceipt + eth_getTransactionByHash on mainnet.base.org",
+  "x402_protocol": {
+    "pattern": "EIP-3009 transferWithAuthorization via Multicall3",
+    "payer": "0xc6699d2aada6c36dfea5c248dd70f9cb0235cb63",
+    "payee": "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31",
+    "amount_usdc": 0.01,
+    "authorization_valid": true,
+    "authorization_nonce_consumed": true
+  },
+  "explorer_url": "https://basescan.org/tx/0xeaaafb8a8e087cf5148f5fa59cfe7b773689bf686e2e99be8f7c4a7c393e8807"
+}
