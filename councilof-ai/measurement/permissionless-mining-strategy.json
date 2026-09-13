@@ -1,0 +1,36 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.permissionless.mining",
+  "subject": "permissionless-mining-strategy",
+  "measured_at": "2026-09-13T04:26:23.061538+00:00",
+  "metrics": {
+    "principle": "measure everything permissionlessly, publish signed cards, let verification be the product",
+    "what_we_mine_permissionlessly": {
+      "stablecoins": "attestation gaps, reserve staleness, buffer changes \u2014 no permission needed",
+      "xrpl_amendments": "on-chain voting, amendment status, compliance scores \u2014 public blockchain",
+      "regulatory_filings": "public comment submissions, published regulations \u2014 public record",
+      "model_releases": "HuggingFace cards, model specs, license changes \u2014 public repos",
+      "supply_chain": "deps.dev, OSV.dev, npm, PyPI \u2014 public registries",
+      "market_data": "DefiLlama, CoinGecko, CoinMarketCap \u2014 public APIs",
+      "government_data": "UK OGL, US public domain, EU open data \u2014 open licenses"
+    },
+    "what_requires_owner_gate": {
+      "NIST_comment": "need Nick to sign/submit",
+      "W3C_join": "need Nick to apply",
+      "BSI_seat": "need Nick to pay/apply",
+      "production_signing": "need HSM/secure key management",
+      "Stripe": "need Nick to configure",
+      "npm_2FA": "need Nick to enable"
+    },
+    "automation_pipeline": {
+      "firehose": "GDELT, deps.dev, OSV.dev, GH Archive, government data \u2192 auto-ingest",
+      "card_gen": "SOV3 autonomous brain \u2192 auto-generate measurement cards",
+      "quality_gate": "honest_sentence + kind + subject validation",
+      "publish": "RSS + sitemap + IndexNow + feed distribution",
+      "cron": "32 autonomous cron jobs on VM"
+    },
+    "significance": "Permissionless mining = moat. Nobody else measures with signed, anchored, verifiable cards."
+  },
+  "honest_sentence": "Permissionless mining: measure stablecoins, XRPL, regulations, models, supply chain, market data, government data \u2014 all public, no permission needed. Owner gates: NIST/W3C/BSI/production-signing/Stripe/npm. Automation: firehose \u2192 card \u2192 quality \u2192 RSS \u2192 IndexNow.32 cron jobs. Nobody else does this.",
+  "measurement_not_certification": true
+}

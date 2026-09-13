@@ -1,0 +1,66 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.stablecoin.presence",
+  "subject": "stablecoin-presence-all-425",
+  "measured_at": "2026-09-13T04:25:32.947649+00:00",
+  "metrics": {
+    "total_stablecoins_tracked": "425+",
+    "total_market_cap": "$169.5B (Sep13,2026)",
+    "currently_measured": 12,
+    "coverage_gap": "413 coins unmeasured",
+    "measurement_surface": {
+      "indices": [
+        "stablecoinstats.com",
+        "DefiLlama",
+        "CoinGecko",
+        "CoinMarketCap",
+        "Messari",
+        "Dune Analytics"
+      ],
+      "attestation_venues": [
+        "public attestation pages",
+        "on-chain proof-of-reserve",
+        "third-party auditor reports"
+      ],
+      "regulatory_filings": [
+        "MiCA notifications",
+        "state money transmitter licenses",
+        "NYDFS BitLicense"
+      ]
+    },
+    "measurement_priority": {
+      "tier1_market_cap": [
+        "USDT($169B)",
+        "USDC($65B)",
+        "DAI($5.3B)",
+        "USDe($4.8B)",
+        "FDUSD($3.2B)",
+        "PYUSD($2.1B)",
+        "USDD($700M)",
+        "BUSD($500M)",
+        "TUSD($400M)",
+        "FRAX($350M)"
+      ],
+      "tier2_emerging": [
+        "RLUSD",
+        "USDG",
+        "USDS",
+        "crvUSD",
+        "GHO",
+        "DOLA",
+        "USDB",
+        "sDAI",
+        "wUSDM"
+      ],
+      "tier3_regulatory": [
+        "MiCA-notified EU stablecoins",
+        "NYDFS-approved",
+        "Singapore MAS-compliant"
+      ]
+    },
+    "automation_target": "daily measurement card per stablecoin via firehose + cron",
+    "revenue_model": "subscription: $99/coin/month for signed daily measurement + corrections ledger"
+  },
+  "honest_sentence": "Stablecoin presence: $169.5B market, 425+ coins,12 measured (2.8% coverage). Target: daily signed measurement card per coin via firehose. Priority: top10 (USDT/USDC/DAI/USDe/FDUSD/PYUSD) \u2192 tier2 emerging \u2192 tier3 regulatory. Revenue: $99/coin/month subscription.",
+  "measurement_not_certification": true
+}

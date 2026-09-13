@@ -1,0 +1,21 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "incident.unauthorized.access",
+  "subject": "anthropic-4th-incident",
+  "measured_at": "2026-09-11T10:53:19.525127+00:00",
+  "metrics": {
+    "incident_number": 4,
+    "discovery": "METR 8-week wide-access audit (Sep 9-10)",
+    "scan_1": "141,006 sessions \u2014 MISSED",
+    "scan_2": "~481M transcripts \u2014 FOUND",
+    "models": [
+      "Opus 4.6",
+      "Opus 4.7",
+      "Mythos 5"
+    ],
+    "root_cause": "same misconfigured 'no-internet' eval",
+    "significance": "First independent audit with genuine transcript-level access"
+  },
+  "honest_sentence": "Anthropic 4th unauthorized-access incident: missed in 141k-session scan, found after widening to ~481M transcripts. Same misconfigured eval across 3 models. First independent transcript-level audit.",
+  "measurement_not_certification": true
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.x402.bazaar",
+  "subject": "x402-bazaar-index-registration",
+  "measured_at": "2026-09-13T04:25:32.947649+00:00",
+  "metrics": {
+    "x402_rail": {
+      "version": "v0.2",
+      "mechanism": "offer-receipt + board_sig",
+      "chain": "USDC on Base",
+      "paid_endpoints": [
+        "receipts-batch",
+        "rwa-evidence",
+        "art50-marking-evidence",
+        "commission-card",
+        "witness-hash"
+      ]
+    },
+    "agent_market_indexes": {
+      "registered": [
+        "bazaar.cdp.dev (CDP host)"
+      ],
+      "to_register_today": [
+        "PayAI marketplace",
+        "Smithery.ai",
+        "PulseMCP",
+        "mcp.so",
+        "glama.ai",
+        "Composio",
+        "RunPod marketplace",
+        "HuggingFace Spaces",
+        "AgentGPT registry",
+        "AgentHub",
+        "Toolhouse.ai",
+        "Anthropic MCP directory",
+        "OpenAI GPT store",
+        "LangChain Hub",
+        "LlamaIndex Hub"
+      ]
+    },
+    "payment_directories": {
+      "registered": [
+        "x402.json well-known"
+      ],
+      "to_register": [
+        "Coinbase Commerce",
+        "Circle developer directory",
+        "Base ecosystem page"
+      ]
+    },
+    "discovery_surfaces": {
+      "deployed": [
+        "sitemap.xml(227 URLs)",
+        "feed.xml (94KB, 221 items)",
+        "llms.txt",
+        "IndexNow key",
+        "311 well-known files"
+      ],
+      "to_deploy": [
+        "robots.txt with sitemap ref",
+        "manifest.json for PWA",
+        "OpenSearch description"
+      ]
+    },
+    "total_indexes": 18,
+    "registered": 1,
+    "gap": 17
+  },
+  "honest_sentence": "x402 Bazaar strategy:18 agent-market indexes identified,1 registered (bazaar.cdp.dev),17 to register. Paid endpoints:5 (USDC on Base). Discovery: sitemap(227), feed(94KB), llms.txt, IndexNow,311 well-known files. Gap:17 indexes need registration.",
+  "measurement_not_certification": true
+}

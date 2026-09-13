@@ -1,0 +1,95 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "stablecoin.ecosystem.scope",
+  "subject": "stablecoin-measurement-expansion",
+  "measured_at": "2026-09-11T06:19:03.698481Z",
+  "source": "DefiLlama stablecoins API",
+  "xrpl_stablecoins": {
+    "total_on_xrpl": 9,
+    "currently_measured": 6,
+    "missing": [
+      "USDV (Valtorum USD)",
+      "AUDD (Australian Digital Dollar)",
+      "XSGD (Singapore Dollar)"
+    ],
+    "note": "Our XRPL reader already captures 6 of 9. Adding 3 more = 100% XRPL stablecoin coverage."
+  },
+  "top_stablecoins_globally": [
+    {
+      "rank": 1,
+      "name": "Tether USDT",
+      "supply": "$183.46B",
+      "chains": "multi-chain"
+    },
+    {
+      "rank": 2,
+      "name": "USD Coin USDC",
+      "supply": "$74.22B",
+      "chains": "multi-chain"
+    },
+    {
+      "rank": 3,
+      "name": "Sky Dollar USDS",
+      "supply": "$6.61B",
+      "chains": "Ethereum, OP, Avalanche"
+    },
+    {
+      "rank": 4,
+      "name": "Dai DAI",
+      "supply": "$4.78B",
+      "chains": "Ethereum, OP"
+    },
+    {
+      "rank": 5,
+      "name": "Ethena USDe",
+      "supply": "$4.53B",
+      "chains": "Ethereum, OP"
+    },
+    {
+      "rank": 6,
+      "name": "World Liberty USD1",
+      "supply": "$4.29B",
+      "chains": "BSC, Ethereum"
+    },
+    {
+      "rank": 7,
+      "name": "Global Dollar USDG",
+      "supply": "$3.24B",
+      "chains": "Hyperliquid, Ethereum"
+    },
+    {
+      "rank": 8,
+      "name": "PayPal PYUSD",
+      "supply": "$2.78B",
+      "chains": "Ethereum, Solana"
+    },
+    {
+      "rank": 9,
+      "name": "BlackRock BUIDL",
+      "supply": "$2.76B",
+      "chains": "Ethereum, BSC"
+    },
+    {
+      "rank": 10,
+      "name": "Circle USYC",
+      "supply": "$2.60B",
+      "chains": "Ethereum, BSC"
+    },
+    {
+      "rank": 11,
+      "name": "Ripple RLUSD",
+      "supply": "$2.41B",
+      "chains": "XRPL, Ethereum"
+    }
+  ],
+  "measurement_opportunities": [
+    "Expand XRPL reader to cover all 9 XRPL stablecoins (add USDV, AUDD, XSGD)",
+    "Add USDT attestation tracking (Tether publishes quarterly reports)",
+    "Add USDC attestation tracking (Circle publishes monthly reports)",
+    "Add BUIDL tracking (BlackRock's tokenized fund \u2014 RWA frontier)",
+    "Add PYUSD tracking (PayPal's stablecoin \u2014 regulatory significance)",
+    "Stablecoin attestation gap series: repeat RLUSD pattern for top 10"
+  ],
+  "honest_sentence": "425 stablecoins tracked by DefiLlama. We measure RLUSD across 2 chains ($2.41B). 9 stablecoins exist on XRPL \u2014 we cover 6. The top 10 globally represent $289B in supply. Attestation-gap measurement for each is a product.",
+  "measurement_not_certification": true
+}

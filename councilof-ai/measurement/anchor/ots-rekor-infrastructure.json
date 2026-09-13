@@ -1,0 +1,35 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "infrastructure.anchor.status",
+  "subject": "ots-rekor-infrastructure",
+  "measured_at": "2026-09-11T06:49:41.949159Z",
+  "open_timestamps": {
+    "alice_calendar": {
+      "url": "https://alice.btc.calendar.opentimestamps.org",
+      "status": "200 OK",
+      "verified": true
+    },
+    "bob_calendar": {
+      "url": "https://bob.btc.calendar.opentimestamps.org",
+      "status": "200 OK",
+      "verified": true
+    },
+    "note": "Both OTS calendars reachable. Submit root hash to complete Bitcoin anchoring."
+  },
+  "rekor": {
+    "url": "https://rekor.sigstore.dev/api/v1/log",
+    "tree_size": 2669192056,
+    "status": "LIVE",
+    "verified": true,
+    "note": "2.67B entries. Push card hashes here for Sigstore transparency log inclusion."
+  },
+  "whiteboard_chain": {
+    "MEASURE": "DONE (22 axes, 168 cards)",
+    "SIGN": "DONE (Ed25519, did:web:csoai.org)",
+    "ANCHOR_BITCOIN": "INFRASTRUCTURE READY (OTS calendars live, not yet submitted)",
+    "ANCHOR_SIGSTORE": "INFRASTRUCTURE READY (Rekor live, not yet pushed)",
+    "DOI": "Zenodo DOI exists (10.5281/zenodo.21991104), per-root-epoch DOI not yet done"
+  },
+  "honest_sentence": "OTS Bitcoin anchoring and Rekor Sigstore inclusion are infrastructure-ready. Both calendars and the Rekor log are live and verified. The anchoring submissions have not been made yet \u2014 that's the next step.",
+  "measurement_not_certification": true
+}

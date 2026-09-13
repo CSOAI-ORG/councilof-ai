@@ -1,0 +1,248 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "stablecoin.full.index",
+  "subject": "stablecoin-universe",
+  "measured_at": "2026-09-11T08:17:50.605360+00:00",
+  "source": "DefiLlama stablecoins API",
+  "summary": {
+    "total_stablecoins": 425,
+    "usd_pegged": 337,
+    "total_supply": 310819178962.03015,
+    "total_supply_display": "$310.8B",
+    "chains_with_stablecoins": 211
+  },
+  "top_20": [
+    {
+      "rank": 1,
+      "symbol": "USDT",
+      "name": "Tether",
+      "supply": "$183.44B",
+      "chains": 130,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 2,
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "supply": "$74.17B",
+      "chains": 155,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 3,
+      "symbol": "USDS",
+      "name": "Sky Dollar",
+      "supply": "$6.61B",
+      "chains": 7,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 4,
+      "symbol": "DAI",
+      "name": "Dai",
+      "supply": "$4.77B",
+      "chains": 49,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 5,
+      "symbol": "USDe",
+      "name": "Ethena USDe",
+      "supply": "$4.60B",
+      "chains": 31,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 6,
+      "symbol": "USD1",
+      "name": "World Liberty Financial USD",
+      "supply": "$4.29B",
+      "chains": 8,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 7,
+      "symbol": "USDG",
+      "name": "Global Dollar",
+      "supply": "$3.24B",
+      "chains": 6,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 8,
+      "symbol": "PYUSD",
+      "name": "PayPal USD",
+      "supply": "$2.77B",
+      "chains": 19,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 9,
+      "symbol": "BUIDL",
+      "name": "BlackRock USD",
+      "supply": "$2.76B",
+      "chains": 8,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 10,
+      "symbol": "USYC",
+      "name": "Circle USYC",
+      "supply": "$2.60B",
+      "chains": 2,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 11,
+      "symbol": "RLUSD",
+      "name": "Ripple USD",
+      "supply": "$2.41B",
+      "chains": 2,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 12,
+      "symbol": "USDY",
+      "name": "Ondo US Dollar Yield",
+      "supply": "$2.22B",
+      "chains": 16,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 13,
+      "symbol": "USDD",
+      "name": "USDD",
+      "supply": "$1.51B",
+      "chains": 4,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 14,
+      "symbol": "USDGO",
+      "name": "USDGO",
+      "supply": "$1.38B",
+      "chains": 1,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 15,
+      "symbol": "U",
+      "name": "United Stables",
+      "supply": "$1.28B",
+      "chains": 4,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 16,
+      "symbol": "USDf",
+      "name": "Falcon USD",
+      "supply": "$1.18B",
+      "chains": 2,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 17,
+      "symbol": "GHO",
+      "name": "GHO",
+      "supply": "$697.8M",
+      "chains": 2,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 18,
+      "symbol": "USD0",
+      "name": "Usual USD",
+      "supply": "$547.8M",
+      "chains": 2,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 19,
+      "symbol": "USDTB",
+      "name": "Ethena USDtb",
+      "supply": "$527.9M",
+      "chains": 2,
+      "state": "INDEXED"
+    },
+    {
+      "rank": 20,
+      "symbol": "YLDS",
+      "name": "YLDS",
+      "supply": "$525.1M",
+      "chains": 2,
+      "state": "INDEXED"
+    }
+  ],
+  "measurement_pipeline": {
+    "step_1": "INDEXED \u2014 existence + metadata from DefiLlama (done for all 425)",
+    "step_2": "DEEP \u2014 per-chain totalSupply() + attestation comparison (top 20)",
+    "step_3": "MEASURED \u2014 signed card with evidence hash (RLUSD done)",
+    "step_4": "ANCHORED \u2014 OTS + Rekor + chain memo (pending ceremony)"
+  },
+  "chain_distribution": {
+    "Ethereum": 234,
+    "Polygon": 85,
+    "BSC": 84,
+    "Arbitrum": 84,
+    "Base": 81,
+    "Solana": 71,
+    "Avalanche": 54,
+    "OP Mainnet": 51,
+    "Monad": 26,
+    "Celo": 24
+  },
+  "attestation_gaps_identified": [
+    {
+      "coin": "USDT",
+      "supply": "$183.4B",
+      "gap": "KPMG full audit announced Aug 2026, text UNPUBLISHED. Buffer halved $8.23B\u2192$4.11B."
+    },
+    {
+      "coin": "USDC",
+      "supply": "$74.2B",
+      "gap": "Best-in-class: Deloitte monthly + daily BlackRock CUSIP filings. 100.10% coverage."
+    },
+    {
+      "coin": "USDe",
+      "supply": "$4.6B",
+      "gap": "Custodian attestations ~3 months stale (May 2026 latest)."
+    },
+    {
+      "coin": "USD1",
+      "supply": "$4.3B",
+      "gap": "Crowe monthly after 6-month publication lapse (Jul 2025\u2192Jan 2026)."
+    },
+    {
+      "coin": "USDV",
+      "supply": "$100M",
+      "gap": "Attestation page says 'pending'. Zero published attestation EVER."
+    },
+    {
+      "coin": "RLUSD",
+      "supply": "$2.4B",
+      "gap": "DEEP MEASURED: XRPL $1.03B + ETH $1.37B. First cross-chain measurement."
+    }
+  ],
+  "automation": {
+    "reader": "DefiLlama API (keyless) + per-chain RPC totalSupply()",
+    "cadence": "daily for top 20, weekly for all 425",
+    "card_size": "\u22644KB per coin",
+    "product_block": {
+      "free_fields": [
+        "total_supply",
+        "chain_count",
+        "staleness_days"
+      ],
+      "paid_fields": [
+        "per_chain_splits",
+        "attestation_gap_bps",
+        "evidence_hash",
+        "alerts"
+      ],
+      "price": "$0.05-0.25 per proof",
+      "feed": "$199/mo firehose"
+    }
+  },
+  "honest_sentence": "425 stablecoins indexed across 211 chains. $310.8B total supply. RLUSD is the one deeply measured cross-chain. Top 20 get daily deep measurement. All get weekly index. Attestation gaps identified for 6 major coins.",
+  "measurement_not_certification": true
+}

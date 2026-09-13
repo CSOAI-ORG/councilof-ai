@@ -1,0 +1,15 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "continuity.quantum.safe.audit",
+  "subject": "ai-evidence-chain-quantum-safety",
+  "measured_at": "2026-09-11T10:22:58.951055+00:00",
+  "source": "NIST IR 8547 + liboqs + CSOAI self-audit",
+  "metrics": {
+    "nist_ir8547": "RSA/ECDSA/EdDSA deprecated 2030, disallowed 2035",
+    "csoai_signing": "Ed25519 (deprecated per IR 8547)",
+    "csoai_anchoring": "Bitcoin OTS (SHA-256) + Sigstore Rekor",
+    "news_pegs": "FIPS 206 (FN-DSA) finalization late 2026/early 2027; HQC draft ~2026; CNSA 2.0 mandate Jan 2027"
+  },
+  "honest_sentence": "Is AI's own evidence chain quantum-safe? Self-audit: CSOAI uses Ed25519 (deprecated 2030 per NIST IR 8547) + Bitcoin OTS (SHA-256). Measuring major provenance & eval-logging stacks against IR 8547 timelines.",
+  "measurement_not_certification": true
+}

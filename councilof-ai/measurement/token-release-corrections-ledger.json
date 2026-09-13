@@ -1,0 +1,28 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.token.corrections",
+  "subject": "token-release-corrections-ledger",
+  "measured_at": "2026-09-13T04:28:34.257031+00:00",
+  "metrics": {
+    "what": "Deterministic corrections ledger for token/cryptocurrency releases",
+    "mechanism": {
+      "measurement": "signed card captures current state (attestation, reserves, unlock schedule)",
+      "correction": "when reality diverges from claim \u2192 new card with correction note",
+      "ledger": "append-only chain of measurement + correction cards",
+      "verification": "anyone can verify: current card + correction history = full truth"
+    },
+    "existing_corrections": {
+      "rlusd_500m_gap": "$500M attestation gap captured (22 days stale)",
+      "usd1_attestation_lapse": "USD1 attestation lapse documented",
+      "tether_buffer_halved": "Tether stability buffer halved",
+      "bitquery_shutdown": "Bitquery Explorer shutting down",
+      "xls70_clawback": "XLS-70 Clawback spec status (not yet enabled)",
+      "esma_count_correction": "ESMA5\u21922 corrected (OTC venues vs exchanges)",
+      "xrp_not_security": "DOJ argument \u2260 legal determination (nuanced)"
+    },
+    "revenue_model": "corrections ledger subscription: $199/month per tracked asset",
+    "significance": "First deterministic, signed, append-only corrections ledger for crypto"
+  },
+  "honest_sentence": "Token release corrections ledger: signed measurement \u2192 correction \u2192 append-only chain \u2192 verification.7 corrections already captured (RLUSD$500M gap, USD1 lapse, Tether buffer, Bitquery, XLS-70, ESMA, XRP). Revenue: $199/month per tracked asset. First deterministic crypto corrections ledger.",
+  "measurement_not_certification": true
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "distribution.dune.dashboard",
+  "subject": "dune-rlusd-dashboard-spec",
+  "measured_at": "2026-09-11T12:00:00Z",
+  "spec": {
+    "platform": "Dune Analytics",
+    "data": "RLUSD on Ethereum (contract 0x...)",
+    "charts": [
+      "Total supply over time",
+      "Holder count over time",
+      "Transfer volume (daily)",
+      "Cross-chain distribution (ETH vs XRPL)",
+      "Attestation gap (live vs attested)"
+    ],
+    "embed_url": "https://dune.com/csoai/rlusd",
+    "note": "Dune dashboards are embeddable — analysts/journalists embed these",
+    "effort": "2h (SQL queries + dashboard setup)",
+    "caveat": "Dune covers Ethereum side only; XRPL needs separate reader"
+  },
+  "honest_sentence": "Dune RLUSD dashboard: Ethereum-side supply, holders, transfers, cross-chain distribution. Embeddable by analysts/journalists.",
+  "measurement_not_certification": true
+}

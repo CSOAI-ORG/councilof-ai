@@ -1,0 +1,212 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "automation.revenue.machine",
+  "subject": "csoai-automated-machine",
+  "measured_at": "2026-09-11T08:14:42.247293+00:00",
+  "the_machine": {
+    "one_sentence": "Every reader produces \u22644KB signed cards \u2192 every card carries a product block \u2192 all cards flow into one feed \u2192 one x402 gateway meters the paid fields \u2192 one attribution layer tells us which surface pays.",
+    "chain": "READERS \u2192 CARDS \u2192 SIGN \u2192 ANCHOR \u2192 PUBLISH \u2192 FEED \u2192 x402 GATEWAY \u2192 REVENUE"
+  },
+  "phase_1_now": {
+    "name": "READERS (what runs on cron)",
+    "what": "17 readers, all permissionless, all free data sources",
+    "readers": [
+      {
+        "name": "rlusd_crosschain",
+        "source": "XRPL gateway_balances + ETH totalSupply()",
+        "cadence": "daily",
+        "status": "BUILT"
+      },
+      {
+        "name": "stablecoin_top10",
+        "source": "DefiLlama API + per-chain totalSupply()",
+        "cadence": "daily",
+        "status": "BUILT"
+      },
+      {
+        "name": "xrpl_16",
+        "source": "XRPL mainnet JSON-RPC",
+        "cadence": "daily",
+        "status": "BUILT"
+      },
+      {
+        "name": "mcp_census",
+        "source": "registry.modelcontextprotocol.io",
+        "cadence": "weekly",
+        "status": "BUILT"
+      },
+      {
+        "name": "x402_ecosystem",
+        "source": "x402scan + on-chain",
+        "cadence": "daily",
+        "status": "BUILT"
+      },
+      {
+        "name": "swift_census",
+        "source": "SWIFT PRs + notices",
+        "cadence": "weekly",
+        "status": "BUILT"
+      },
+      {
+        "name": "lab_diffs",
+        "source": "5 lab framework URLs",
+        "cadence": "weekly",
+        "status": "BUILT"
+      },
+      {
+        "name": "ct_watch",
+        "source": "crt.sh JSON",
+        "cadence": "every 6h",
+        "status": "BUILT"
+      },
+      {
+        "name": "edgar_ai",
+        "source": "SEC EFTS API",
+        "cadence": "daily",
+        "status": "BUILT"
+      },
+      {
+        "name": "erc8004_census",
+        "source": "eth_getLogs",
+        "cadence": "weekly",
+        "status": "SPEC"
+      },
+      {
+        "name": "xrpl_impersonation",
+        "source": "XRPL account_objects",
+        "cadence": "daily",
+        "status": "SPEC"
+      },
+      {
+        "name": "bridge_risk",
+        "source": "on-chain bridge contracts",
+        "cadence": "weekly",
+        "status": "SPEC"
+      },
+      {
+        "name": "gold_cadence",
+        "source": "Tether/Circle/Paxos transparency",
+        "cadence": "monthly",
+        "status": "SPEC"
+      },
+      {
+        "name": "oracle_fidelity",
+        "source": "Chainlink/Pyth feeds + DEX spot",
+        "cadence": "daily",
+        "status": "SPEC"
+      },
+      {
+        "name": "velocity",
+        "source": "XRPL transfer logs + ETH Transfer events",
+        "cadence": "daily",
+        "status": "SPEC"
+      },
+      {
+        "name": "amm_liquidity",
+        "source": "XRPL amm_info + book_offers",
+        "cadence": "daily",
+        "status": "SPEC"
+      },
+      {
+        "name": "litigation",
+        "source": "CourtListener API + AIAAIC",
+        "cadence": "weekly",
+        "status": "SPEC"
+      }
+    ],
+    "total_readers": 17,
+    "built": 10,
+    "spec": 7
+  },
+  "phase_2_cards": {
+    "name": "CARDS (\u22644KB, product block)",
+    "schema": {
+      "product": {
+        "sku": "stablewatch/rlusd/daily",
+        "tier": "free|proof|feed",
+        "free_fields": [
+          "total_supply",
+          "as_of"
+        ],
+        "paid_fields": [
+          "xrpl_supply",
+          "eth_supply",
+          "attestation_gap_usd",
+          "evidence_hash"
+        ],
+        "price_usdc": "0.05",
+        "feed": "stablecoin-attestation-watch",
+        "anchors": {
+          "ots": "...",
+          "rekor": "...",
+          "xrpl_tx": "..."
+        }
+      }
+    },
+    "rule": "free_fields always enough to quote and cite (distribution). paid_fields are the resolution people pay for (proofs). Data free, proofs paid \u2014 schema-enforced."
+  },
+  "phase_3_sign_anchor": {
+    "name": "SIGN \u2192 ANCHOR (the trust chain)",
+    "sign": "ROOT-\u03b2 (Ed25519, did:web:csoai.org, GHA OIDC)",
+    "anchor_ots": "\u2705 SUBMITTED (alice+bob calendars, waiting for Bitcoin block)",
+    "anchor_rekor": "\u23f3 BLOCKED (signing key \u2014 ceremony needed)",
+    "anchor_xrpl": "\ud83d\udfe1 READY ($0.00001 memo)",
+    "anchor_eth": "\ud83d\udfe1 READY ($0.50-2 EAS)",
+    "anchor_base": "\ud83d\udfe1 READY ($0.01)",
+    "when_all_anchored": "The card says: 'this existed at this time and no one \u2014 including CSOAI \u2014 can backdate it.' That's the premium tier."
+  },
+  "phase_4_publish": {
+    "name": "PUBLISH (one stream, three doors)",
+    "free": {
+      "what": "Every card's free_fields, daily, RSS + JSON + pages",
+      "price": "\u00a30",
+      "buyers": "journalists, indexes, agents \u2192 distribution",
+      "endpoint": "councilof.ai/feed (+ /feed/{family})"
+    },
+    "proof": {
+      "what": "Any single card's paid_fields, on demand",
+      "price": "$0.01-0.25 via x402",
+      "buyers": "agents, auditors, one-off verifiers",
+      "endpoint": "councilof.ai/api/proof?sha=<hash>"
+    },
+    "feed": {
+      "what": "Full firehose: all fields, all families, history, alerts",
+      "price": "$199/mo",
+      "buyers": "funds, auditors, regulators, insurers",
+      "endpoint": "councilof.ai/feed (paid subscription)"
+    }
+  },
+  "phase_5_gateway": {
+    "name": "x402 GATEWAY (the till)",
+    "how": "9 doors collapse into one gateway that reads the card's product block and meters accordingly",
+    "attribution": "referrer tag per surface (MCP_REGISTRY, AWESOME_MCP, GLAMA, DIRECT, PROMOTION)",
+    "settlement": "USDC on Base, facilitator-verified, receipt issued",
+    "dashboard": "yield per family per week. Kill what doesn't yield, double what does."
+  },
+  "phase_6_425_stablecoins": {
+    "name": "THE 425-STABLECOIN EXPANSION",
+    "current": "RLUSD deeply measured cross-chain ($2.41B)",
+    "expansion": "Index all 425 cheaply (DefiLlama API, free). Deep-measure top 20 (per-chain totalSupply(), attestation comparison). Cards for all.",
+    "automation": "DefiLlama API \u2192 normalize \u2192 claim-vs-reality diff \u2192 silence_days / gap_bps / staleness \u2192 card \u2192 sign \u2192 anchor \u2192 publish",
+    "revenue": "Free: total supply + staleness. Paid: per-chain splits, gap bps, alerts. Feed: $199/mo firehose.",
+    "timeline": "Week 1: top 20 deep. Week 2: all 425 indexed. Week 3: alerts on depegs/staleness."
+  },
+  "what_happens_when_root_anchored": {
+    "ots": "Root hash appears in Bitcoin block. Verifiable by anyone with the .ots proof file. 'This measurement existed at Bitcoin block N.'",
+    "rekor": "Root hash in Sigstore transparency log (2.67B entries). Software supply chain world trusts this. 'Our measurements are in the same log as npm/pip/Go packages.'",
+    "xrpl_memo": "Root hash on XRPL ledger. $0.00001 cost. 'This measurement was published on XRPL ledger N.'",
+    "combined": "Triple-anchored: Bitcoin + Sigstore + XRPL. No one \u2014 including CSOAI \u2014 can backdate. That's the premium tier regulators and courts care about.",
+    "revenue_impact": "Anchored proofs sell at premium ($0.50-8 vs $0.01-0.25 unanchored). The anchor IS the product upgrade."
+  },
+  "the_flywheel": {
+    "step_1": "Free cards build authority (distribution)",
+    "step_2": "Authority drives API/feed usage",
+    "step_3": "Usage generates attribution data",
+    "step_4": "Attribution shows which surfaces pay",
+    "step_5": "Double down on paying surfaces",
+    "step_6": "More measurement = more cards = more authority",
+    "compound": "Every receipt anchors to the log. Every customer deepens the moat. Every new stablecoin/asset/rail = new section in the feed, not a new product."
+  },
+  "honest_sentence": "The machine: 17 readers on cron \u2192 \u22644KB signed cards \u2192 one feed \u2192 one x402 gateway \u2192 one attribution layer. Free distribution, paid proofs, $199/mo firehose. When the root is triple-anchored (OTS+Rekor+XRPL), the premium tier opens. 425 stablecoins indexed cheaply, top 20 deep-measured. Every new measurement = new SKU = zero new infrastructure.",
+  "measurement_not_certification": true
+}

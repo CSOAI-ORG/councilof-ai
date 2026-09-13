@@ -1,0 +1,35 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "exchange.por.cadence.tracker",
+  "subject": "cross-exchange-por",
+  "measured_at": "2026-09-11T10:50:10.569732+00:00",
+  "exchanges": [
+    {
+      "name": "Deribit",
+      "por_status": "REMOVED (Sep 1)",
+      "previous_cadence": "daily",
+      "new_cadence": "SEC filings only",
+      "staleness": "\u221e"
+    },
+    {
+      "name": "Kraken",
+      "por_status": "active",
+      "next_snapshot": "~end Sep 2026",
+      "staleness": "monthly"
+    },
+    {
+      "name": "Binance",
+      "por_status": "active",
+      "cadence": "daily/weekly",
+      "staleness": "1-7 days"
+    },
+    {
+      "name": "Coinbase",
+      "por_status": "SEC filings",
+      "cadence": "quarterly",
+      "staleness": "~90 days"
+    }
+  ],
+  "honest_sentence": "Cross-exchange PoR cadence: Deribit removed daily PoR Sep 1 (staleness \u2192 \u221e). Kraken snapshot due ~end-Sep. Tracking staleness across major exchanges.",
+  "measurement_not_certification": true
+}

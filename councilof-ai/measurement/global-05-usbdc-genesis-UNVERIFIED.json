@@ -1,0 +1,27 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "stablecoin.genesis.watch",
+  "subject": "usbdc-us-bank-stellar",
+  "measured_at": "2026-09-11T10:47:38.318140+00:00",
+  "verification_status": "UNVERIFIED_ON_CHAIN",
+  "claim": {
+    "source": "Global Now Hunt report (Sep 11)",
+    "claim": "U.S. Bank launched USBDC on Stellar Sep 9 2026",
+    "features": [
+      "mint",
+      "redeem",
+      "freeze",
+      "clawback"
+    ],
+    "corridor": "NA-Europe cross-border"
+  },
+  "on_chain_findings": {
+    "stellar_expert_search": "1 result for 'USBDC' \u2014 domain usdccoins.online, zero trustlines, zero trades. NOT U.S. Bank.",
+    "stellar_bank_search": "Impersonation tokens only (BNYMELLON on bnymellon.com.co, JPM on wstellar.github.io)",
+    "coingecko": "0 results",
+    "verdict": "Cannot verify on-chain as of Sep 11 10:30 UTC. May be too new for indexing, on a different chain, or the claim needs re-verification."
+  },
+  "honest_sentence": "USBDC (U.S. Bank on Stellar): reported Sep 9 launch. Cannot verify on-chain \u2014 Stellar.expert shows only a spam token. Re-verification needed before it prints on a signed card.",
+  "measurement_not_certification": true,
+  "doctrine_note": "Per hard-truth rules: \u26a0\ufe0f single-source/reported \u2014 re-verify before it prints on a signed card."
+}

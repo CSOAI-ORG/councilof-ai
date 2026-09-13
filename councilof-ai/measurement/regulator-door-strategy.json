@@ -1,0 +1,747 @@
+{
+  "$schema": "https://councilof.ai/schemas/gspc.measurement-card/0.1",
+  "kind": "strategy.regulator.doors",
+  "subject": "CSOAI Global Regulator Door Entry + x402/Bazaar/Index Registration Strategy",
+  "version": "1.0.0",
+  "created": "2026-09-13",
+  "status": "live",
+  "description": "Comprehensive door-entry and index-registration strategy for CSOAI LTD (UK 16939677). Covers all global regulators/standards bodies, x402/agent-market/payment directories, and stablecoin indexes.",
+  "regulators_and_standards_bodies": {
+    "tier_1_immediate_comment_period": [
+      {
+        "name": "NIST",
+        "full_name": "National Institute of Standards and Technology",
+        "jurisdiction": "US",
+        "door": "AI Risk Management Framework (AI RMF) public comment",
+        "deadline": "2026-09-16",
+        "action": "Submit measurement-methodology comment on AI RMF 2.0 governance profile",
+        "status": "comment draft needed",
+        "priority": "P0",
+        "deliverable": "Comment PDF citing GSPC axes as measurement instrumentation",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "W3C CG",
+        "full_name": "W3C Credentials Community Group",
+        "jurisdiction": "Global",
+        "door": "Join Credentials CG for verifiable-credential alignment",
+        "deadline": "2026-09-15",
+        "action": "Join CG, present signed-card format as VC-compatible artifact",
+        "status": "application pending",
+        "priority": "P0",
+        "deliverable": "CG membership + first technical note on signed measurement cards",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "IETF SCITT",
+        "full_name": "IETF Supply Chain Integrity, Transparency, and Trust",
+        "jurisdiction": "Global",
+        "door": "SCITT working group \u2014 append-only supply-chain transparency",
+        "deadline": "2026-09-30",
+        "action": "Contribute to SCITT draft, align scitt.json with SCITT receipt format",
+        "status": "scitt.json deployed, WG engagement needed",
+        "priority": "P0",
+        "deliverable": "I-D contribution or WG liaison statement",
+        "warm_intro": "C2PA contributor membership (LF)"
+      }
+    ],
+    "tier_2_uk_primary": [
+      {
+        "name": "BSI ART/1",
+        "full_name": "British Standards Institution ART/1 \u2014 UK mirror of ISO/IEC JTC 1/SC 42",
+        "jurisdiction": "UK",
+        "door": "ART/1 committee seat (feeds EU AI Act harmonised standards)",
+        "deadline": "2026-10-01",
+        "action": "Submit seat application; pack already prepared at SOVOS/BSI_ART1_SEAT_2026-08-15.md",
+        "status": "pack ready, owner-gated (Nick)",
+        "priority": "P0",
+        "deliverable": "Committee membership + contribution to AI measurement standards",
+        "warm_intro": "none yet",
+        "note": "Owner-gated \u2014 Nick must approve"
+      },
+      {
+        "name": "FCA Innovation Pathway",
+        "full_name": "Financial Conduct Authority Innovation Pathway",
+        "jurisdiction": "UK",
+        "door": "Innovation Pathway for AI measurement in financial services",
+        "deadline": "2026-10-15",
+        "action": "Apply for Innovation Pathway; position GSPC as consumer-protection measurement",
+        "status": "not started",
+        "priority": "P1",
+        "deliverable": "Pathway application + regulatory sandbox proposal",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "ICO",
+        "full_name": "Information Commissioner's Office",
+        "jurisdiction": "UK",
+        "door": "AI and data protection guidance consultation",
+        "deadline": "2026-11-01",
+        "action": "Respond to AI guidance consultations; position measurement as privacy-preserving",
+        "status": "not started",
+        "priority": "P2",
+        "deliverable": "Consultation response",
+        "warm_intro": "none yet"
+      }
+    ],
+    "tier_2_eu_primary": [
+      {
+        "name": "EU Commission AI Act Art.50",
+        "full_name": "European Commission \u2014 EU AI Act Article 50 (Transparency)",
+        "jurisdiction": "EU",
+        "door": "Art.50 transparency obligations; measurement-as-compliance",
+        "deadline": "2026-09-30",
+        "action": "Submit Art.50 marking evidence; position GSPC as measurement instrumentation for Art.50",
+        "status": "art50_marking_evidence tool available",
+        "priority": "P0",
+        "deliverable": "Art.50 evidence pack + technical submission",
+        "warm_intro": "C2PA contributor (EU-adjacent)"
+      },
+      {
+        "name": "EU DORA",
+        "full_name": "Digital Operational Resilience Act",
+        "jurisdiction": "EU",
+        "door": "ICT third-party risk management for AI providers",
+        "deadline": "2026-11-01",
+        "action": "Map GSPC axes to DORA ICT risk requirements",
+        "status": "not started",
+        "priority": "P1",
+        "deliverable": "DORA compliance mapping document",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "ENISA",
+        "full_name": "European Union Agency for Cybersecurity",
+        "jurisdiction": "EU",
+        "door": "AI cybersecurity certification scheme",
+        "deadline": "2026-12-01",
+        "action": "Contribute to EUCC AI cybersecurity scheme development",
+        "status": "not started",
+        "priority": "P2",
+        "deliverable": "Technical contribution to certification scheme",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "ETSI",
+        "full_name": "European Telecommunications Standards Institute",
+        "jurisdiction": "EU/Global",
+        "door": "ISG SAI (Securing Artificial Intelligence) industry specification group",
+        "deadline": "2026-11-15",
+        "action": "Join ISG SAI, contribute measurement methodology",
+        "status": "not started",
+        "priority": "P1",
+        "deliverable": "ISG membership + technical specification contribution",
+        "warm_intro": "none yet"
+      }
+    ],
+    "tier_2_asia_pacific": [
+      {
+        "name": "MAS",
+        "full_name": "Monetary Authority of Singapore",
+        "jurisdiction": "Singapore",
+        "door": "FEAT principles + AI governance framework",
+        "deadline": "2026-12-01",
+        "action": "Engage MAS on fairness/ethics/accountability/transparency measurement",
+        "status": "not started",
+        "priority": "P1",
+        "deliverable": "Technical submission on AI measurement for financial services",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "HKMA",
+        "full_name": "Hong Kong Monetary Authority",
+        "jurisdiction": "Hong Kong",
+        "door": "GenAI sandbox + AI governance guidance",
+        "deadline": "2026-12-15",
+        "action": "Apply for GenAI sandbox; position measurement instrumentation",
+        "status": "not started",
+        "priority": "P2",
+        "deliverable": "Sandbox application",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "PBoC",
+        "full_name": "People's Bank of China",
+        "jurisdiction": "China",
+        "door": "AI governance for financial services (limited engagement)",
+        "deadline": "2027-03-01",
+        "action": "Monitor and prepare compliance mapping for Chinese AI standards",
+        "status": "monitoring only",
+        "priority": "P3",
+        "deliverable": "Compliance mapping document (when feasible)",
+        "warm_intro": "none"
+      },
+      {
+        "name": "Bank of Japan",
+        "full_name": "Bank of Japan",
+        "jurisdiction": "Japan",
+        "door": "AI governance guidelines for financial institutions",
+        "deadline": "2027-01-01",
+        "action": "Engage via JFSA coordination; position measurement methodology",
+        "status": "not started",
+        "priority": "P2",
+        "deliverable": "Technical submission",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "KFTC",
+        "full_name": "Korea Fair Trade Commission",
+        "jurisdiction": "South Korea",
+        "door": "AI competition and consumer protection",
+        "deadline": "2027-01-15",
+        "action": "Monitor Korean AI regulation development",
+        "status": "monitoring only",
+        "priority": "P3",
+        "deliverable": "Position paper when regulation crystallizes",
+        "warm_intro": "none"
+      },
+      {
+        "name": "APRA",
+        "full_name": "Australian Prudential Regulation Authority",
+        "jurisdiction": "Australia",
+        "door": "CPS 234 information security + AI risk management",
+        "deadline": "2027-01-01",
+        "action": "Map GSPC to prudential standards for AI in financial services",
+        "status": "not started",
+        "priority": "P2",
+        "deliverable": "Prudential standards mapping",
+        "warm_intro": "none yet"
+      }
+    ],
+    "tier_2_middle_east": [
+      {
+        "name": "SAMA",
+        "full_name": "Saudi Arabian Monetary Authority",
+        "jurisdiction": "Saudi Arabia",
+        "door": "AI governance framework for financial institutions",
+        "deadline": "2027-01-01",
+        "action": "Engage on AI measurement for Vision 2030 financial services",
+        "status": "not started",
+        "priority": "P2",
+        "deliverable": "Technical submission",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "ADGM",
+        "full_name": "Abu Dhabi Global Market",
+        "jurisdiction": "UAE",
+        "door": "ADGM Digital Lab + AI governance",
+        "deadline": "2026-12-01",
+        "action": "Apply to ADGM Digital Lab; position measurement-as-service",
+        "status": "not started",
+        "priority": "P1",
+        "deliverable": "Digital Lab application",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "DIFC",
+        "full_name": "Dubai International Financial Centre",
+        "jurisdiction": "UAE",
+        "door": "DIFC Innovation Hub + AI governance",
+        "deadline": "2026-12-15",
+        "action": "Engage DIFC Innovation Hub for AI measurement in fintech",
+        "status": "not started",
+        "priority": "P2",
+        "deliverable": "Innovation Hub application",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "DFSA",
+        "full_name": "Dubai Financial Services Authority",
+        "jurisdiction": "UAE (DIFC)",
+        "door": "DFSA fintech innovation license",
+        "deadline": "2027-01-15",
+        "action": "Explore regulatory sandbox for AI measurement in DIFC",
+        "status": "not started",
+        "priority": "P2",
+        "deliverable": "Sandbox application",
+        "warm_intro": "none yet"
+      }
+    ],
+    "tier_2_canada": [
+      {
+        "name": "OSFI",
+        "full_name": "Office of the Superintendent of Financial Institutions",
+        "jurisdiction": "Canada",
+        "door": "OSFI Guideline E-23 on model risk management",
+        "deadline": "2027-01-01",
+        "action": "Map GSPC to OSFI model risk management for AI systems",
+        "status": "not started",
+        "priority": "P2",
+        "deliverable": "Compliance mapping",
+        "warm_intro": "none yet"
+      }
+    ],
+    "tier_2_global_multilateral": [
+      {
+        "name": "FSB",
+        "full_name": "Financial Stability Board",
+        "jurisdiction": "Global (G20)",
+        "door": "AI and financial stability report consultations",
+        "deadline": "2027-03-01",
+        "action": "Respond to FSB consultations on AI in financial services",
+        "status": "monitoring",
+        "priority": "P2",
+        "deliverable": "Consultation response",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "BIS",
+        "full_name": "Bank for International Settlements",
+        "jurisdiction": "Global",
+        "door": "BIS Innovation Hub \u2014 AI and payments",
+        "deadline": "2027-03-01",
+        "action": "Engage BIS Innovation Hub on AI measurement for cross-border payments",
+        "status": "monitoring",
+        "priority": "P2",
+        "deliverable": "Technical submission",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "IOSCO",
+        "full_name": "International Organization of Securities Commissions",
+        "jurisdiction": "Global",
+        "door": "AI in financial markets consultations",
+        "deadline": "2027-01-01",
+        "action": "Respond to IOSCO AI/ML in capital markets consultation",
+        "status": "monitoring",
+        "priority": "P2",
+        "deliverable": "Consultation response",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "GLEIF",
+        "full_name": "Global Legal Entity Identifier Foundation",
+        "jurisdiction": "Global",
+        "door": "LEI + verifiable credential alignment",
+        "deadline": "2026-12-01",
+        "action": "Align CSOAI entity identification with LEI system; explore vLEI",
+        "status": "not started",
+        "priority": "P1",
+        "deliverable": "vLEI integration proposal",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "ISO",
+        "full_name": "International Organization for Standardization",
+        "jurisdiction": "Global",
+        "door": "ISO/IEC 42001 (AI Management), ISO/IEC 23894 (AI Risk)",
+        "deadline": "2026-11-01",
+        "action": "Contribute to ISO/IEC 42001 annex on measurement; via BSI ART/1",
+        "status": "via BSI seat",
+        "priority": "P0",
+        "deliverable": "Technical contributions to ISO/IEC SC 42",
+        "warm_intro": "BSI ART/1 (pending)"
+      },
+      {
+        "name": "IEEE",
+        "full_name": "Institute of Electrical and Electronics Engineers",
+        "jurisdiction": "Global",
+        "door": "IEEE 7000 series (ethical AI), IEEE 2857 (privacy engineering)",
+        "deadline": "2026-12-01",
+        "action": "Join IEEE SA; contribute to 7000-series on measurement methodology",
+        "status": "not started",
+        "priority": "P1",
+        "deliverable": "IEEE SA membership + technical contribution",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "OWASP",
+        "full_name": "Open Worldwide Application Security Project",
+        "jurisdiction": "Global",
+        "door": "OWASP AI Security Top 10 + OWASP MCP security project",
+        "deadline": "2026-10-15",
+        "action": "Join OWASP AI project; contribute measurement-based security assessment",
+        "status": "application pending",
+        "priority": "P0",
+        "deliverable": "OWASP project membership + technical contribution",
+        "warm_intro": "none yet"
+      }
+    ],
+    "tier_3_emerging": [
+      {
+        "name": "AI Verify Foundation",
+        "full_name": "AI Verify Foundation (Singapore)",
+        "jurisdiction": "Singapore/Global",
+        "door": "AI Verify testing framework + MVP",
+        "deadline": "2027-01-01",
+        "action": "Map GSPC to AI Verify framework pillars",
+        "status": "application pending",
+        "priority": "P1",
+        "deliverable": "Framework mapping + contribution",
+        "warm_intro": "none yet"
+      },
+      {
+        "name": "OpenSSF",
+        "full_name": "Open Source Security Foundation",
+        "jurisdiction": "Global",
+        "door": "Model signing + supply chain security",
+        "deadline": "2026-10-30",
+        "action": "Join OpenSSF; contribute model-signing alignment with scitt.json",
+        "status": "application pending",
+        "priority": "P0",
+        "deliverable": "OpenSSF membership + model-signing contribution",
+        "warm_intro": "C2PA contributor (LF ecosystem)"
+      },
+      {
+        "name": "LF x402 Foundation",
+        "full_name": "Linux Foundation x402 payments protocol",
+        "jurisdiction": "Global",
+        "door": "x402 protocol governance",
+        "deadline": "2026-10-15",
+        "action": "Join x402 Foundation; contribute as early x402 adopter",
+        "status": "application pending",
+        "priority": "P0",
+        "deliverable": "Foundation membership + protocol contributions",
+        "warm_intro": "C2PA contributor (LF)"
+      }
+    ]
+  },
+  "x402_agent_market_payment_directories": {
+    "tier_1_live": [
+      {
+        "name": "CDP Bazaar",
+        "url": "https://bazaar.cdp.dev",
+        "type": "x402 marketplace",
+        "status": "live \u2014 CDP host confirmed",
+        "priority": "P0",
+        "action": "Maintain listing, ensure x402.json is discoverable"
+      }
+    ],
+    "tier_2_agent_market_indexes": [
+      {
+        "name": "PayAI",
+        "url": "https://payai.com",
+        "type": "agent payment directory",
+        "status": "not registered",
+        "priority": "P0",
+        "action": "Register CSOAI agent with x402 payment rail",
+        "deadline": "2026-09-20"
+      },
+      {
+        "name": "Smithery",
+        "url": "https://smithery.ai",
+        "type": "MCP registry",
+        "status": "not registered",
+        "priority": "P0",
+        "action": "Publish GSPC MCPs to Smithery",
+        "deadline": "2026-09-20",
+        "note": "Nick-gated: npm 2FA must be resolved first"
+      },
+      {
+        "name": "PulseMCP",
+        "url": "https://pulsemcp.com",
+        "type": "MCP directory",
+        "status": "not registered",
+        "priority": "P0",
+        "action": "Register all CSOAI MCPs",
+        "deadline": "2026-09-20"
+      },
+      {
+        "name": "mcp.so",
+        "url": "https://mcp.so",
+        "type": "MCP registry",
+        "status": "not registered",
+        "priority": "P0",
+        "action": "List CSOAI MCPs with x402 payment info",
+        "deadline": "2026-09-20"
+      },
+      {
+        "name": "glama.ai",
+        "url": "https://glama.ai",
+        "type": "MCP directory",
+        "status": "not registered",
+        "priority": "P1",
+        "action": "Register CSOAI MCPs",
+        "deadline": "2026-09-30"
+      },
+      {
+        "name": "Composio",
+        "url": "https://composio.dev",
+        "type": "agent tool registry",
+        "status": "not registered",
+        "priority": "P1",
+        "action": "Register CSOAI tools",
+        "deadline": "2026-09-30"
+      },
+      {
+        "name": "RunPod",
+        "url": "https://runpod.io",
+        "type": "GPU compute + MCP hosting",
+        "status": "pod active (fpowppss5ngtkw)",
+        "priority": "P0",
+        "action": "Ensure MCPs are discoverable on RunPod"
+      },
+      {
+        "name": "HuggingFace",
+        "url": "https://huggingface.co",
+        "type": "model/dataset registry",
+        "status": "partial (models uploaded)",
+        "priority": "P1",
+        "action": "Register CSOAI Space with measurement tools",
+        "deadline": "2026-10-15"
+      },
+      {
+        "name": "AgentGPT Registry",
+        "url": "https://agentgpt.reworkd.ai",
+        "type": "agent registry",
+        "status": "not registered",
+        "priority": "P2",
+        "action": "Register CSOAI agent",
+        "deadline": "2026-10-30"
+      },
+      {
+        "name": "AgentHub",
+        "url": "https://agenthub.ai",
+        "type": "agent marketplace",
+        "status": "not registered",
+        "priority": "P1",
+        "action": "Register CSOAI agent with measurement capabilities",
+        "deadline": "2026-10-15"
+      },
+      {
+        "name": "Toolhouse",
+        "url": "https://toolhouse.ai",
+        "type": "agent tool marketplace",
+        "status": "not registered",
+        "priority": "P1",
+        "action": "Register CSOAI measurement tools",
+        "deadline": "2026-10-15"
+      },
+      {
+        "name": "Replicate",
+        "url": "https://replicate.com",
+        "type": "model hosting",
+        "status": "not registered",
+        "priority": "P2",
+        "action": "Deploy measurement model if applicable",
+        "deadline": "2026-11-01"
+      }
+    ],
+    "tier_3_well_known_files": {
+      "deployed": [
+        "x402.json",
+        "agent-card.json",
+        "mcp.json",
+        "ai-catalog.json",
+        "did.json",
+        "scitt.json",
+        "csoai.json",
+        "agent.json"
+      ],
+      "total_well_known": 311,
+      "action": "Audit all 311 .well-known/ files for completeness and cross-indexing"
+    },
+    "discovery_infrastructure": {
+      "indexnow": "key generated \u2014 submit all URLs",
+      "sitemap_xml": "227 URLs",
+      "feed_xml": "94KB, 221 items",
+      "llms_txt": "deployed",
+      "action": "Ensure all discovery endpoints are submitted to search engines and agent crawlers"
+    }
+  },
+  "stablecoin_indexes": {
+    "context": "CSOAI measures 425+ stablecoins across all chains. Must appear on every stablecoin index/directory.",
+    "indexes": [
+      {
+        "name": "DefiLlama Stablecoins",
+        "url": "https://defillama.com/stablecoins",
+        "type": "primary stablecoin tracker",
+        "status": "not listed",
+        "priority": "P0",
+        "action": "Submit CSOAI stablecoin measurement data for inclusion",
+        "deadline": "2026-10-01"
+      },
+      {
+        "name": "CoinGecko Stablecoins",
+        "url": "https://coingecko.com/en/categories/stablecoins",
+        "type": "market data aggregator",
+        "status": "not listed",
+        "priority": "P0",
+        "action": "List CSOAI stablecoin attestation data",
+        "deadline": "2026-10-01"
+      },
+      {
+        "name": "CoinMarketCap Stablecoins",
+        "url": "https://coinmarketcap.com/view/stablecoin/",
+        "type": "market data aggregator",
+        "status": "not listed",
+        "priority": "P1",
+        "action": "Submit measurement data",
+        "deadline": "2026-10-15"
+      },
+      {
+        "name": "Stablecoinstats.com",
+        "url": "https://stablecoinstats.com",
+        "type": "stablecoin-specific tracker",
+        "status": "not listed",
+        "priority": "P0",
+        "action": "Submit all 425+ stablecoin measurements",
+        "deadline": "2026-10-01"
+      },
+      {
+        "name": "Artemis Stablecoin Dashboard",
+        "url": "https://artemis.xyz",
+        "type": "on-chain analytics",
+        "status": "not listed",
+        "priority": "P1",
+        "action": "Submit CSOAI measurement data",
+        "deadline": "2026-10-15"
+      },
+      {
+        "name": "Dune Stablecoin Dashboard",
+        "url": "https://dune.com",
+        "type": "on-chain analytics",
+        "status": "not listed",
+        "priority": "P1",
+        "action": "Create CSOAI measurement Dune dashboard",
+        "deadline": "2026-10-15"
+      },
+      {
+        "name": "Visa Stablecoin Dashboard",
+        "url": "https://visa.com/digital-assets",
+        "type": "institutional tracker",
+        "status": "not listed",
+        "priority": "P2",
+        "action": "Engage Visa digital assets team",
+        "deadline": "2026-12-01"
+      },
+      {
+        "name": "Allium Stablecoin Analytics",
+        "url": "https://allium.so",
+        "type": "on-chain analytics",
+        "status": "not listed",
+        "priority": "P1",
+        "action": "Submit CSOAI data",
+        "deadline": "2026-10-15"
+      },
+      {
+        "name": "Messari Stablecoins",
+        "url": "https://messari.io",
+        "type": "research/data platform",
+        "status": "not listed",
+        "priority": "P2",
+        "action": "Submit measurement methodology for Messari research coverage",
+        "deadline": "2026-11-01"
+      },
+      {
+        "name": "Token Terminal Stablecoins",
+        "url": "https://tokenterminal.com",
+        "type": "fundamental data",
+        "status": "not listed",
+        "priority": "P2",
+        "action": "Submit CSOAI attestation data",
+        "deadline": "2026-11-01"
+      },
+      {
+        "name": "CCData (CryptoCompare)",
+        "url": "https://ccdata.io",
+        "type": "institutional data",
+        "status": "not listed",
+        "priority": "P1",
+        "action": "Submit CSOAI stablecoin measurements",
+        "deadline": "2026-10-15"
+      },
+      {
+        "name": "RWA.xyz Stablecoins",
+        "url": "https://rwa.xyz",
+        "type": "real-world asset tracker",
+        "status": "not listed",
+        "priority": "P0",
+        "action": "Submit CSOAI stablecoin attestation via rwa_evidence tool",
+        "deadline": "2026-10-01"
+      },
+      {
+        "name": "Stablewatch (Circle)",
+        "url": "https://stablewatch.io",
+        "type": "Circle-affiliated stablecoin monitor",
+        "status": "not listed",
+        "priority": "P1",
+        "action": "Submit CSOAI USDC measurement data",
+        "deadline": "2026-10-15"
+      },
+      {
+        "name": "Chainlink Stablecoin Reference",
+        "url": "https://chain.link",
+        "type": "oracle/reference data",
+        "status": "not listed",
+        "priority": "P2",
+        "action": "Explore Chainlink proof-of-reserve alignment",
+        "deadline": "2026-12-01"
+      }
+    ]
+  },
+  "timeline": {
+    "week_1_2026-09-15_to_2026-09-21": {
+      "priority": "P0",
+      "actions": [
+        "W3C CG membership application (Mon Sep 15)",
+        "NIST AI RMF comment submission (deadline Sep 16)",
+        "Register on PayAI, Smithery, PulseMCP, mcp.so",
+        "OWASP AI project application"
+      ]
+    },
+    "week_2_2026-09-22_to_2026-09-28": {
+      "priority": "P0-P1",
+      "actions": [
+        "IETF SCITT WG engagement",
+        "EU AI Act Art.50 evidence submission",
+        "Register on glama.ai, Composio, AgentHub",
+        "DefiLlama, CoinGecko, RWA.xyz stablecoin submissions"
+      ]
+    },
+    "week_3_4_2026-09-29_to_2026-10-15": {
+      "priority": "P0-P1",
+      "actions": [
+        "BSI ART/1 seat application (owner-gated)",
+        "FCA Innovation Pathway application",
+        "OpenSSF + LF x402 Foundation applications",
+        "Stablecoinstats, Artemis, Dune, CCData submissions",
+        "GLEIF vLEI exploration",
+        "IEEE SA membership application"
+      ]
+    },
+    "month_2_2026-10-16_to_2026-11-15": {
+      "priority": "P1-P2",
+      "actions": [
+        "ETSI ISG SAI membership",
+        "ISO/IEC 42001 contribution via BSI",
+        "MAS, ADGM engagement",
+        "HuggingFace Space registration",
+        "DORA compliance mapping",
+        "Remaining stablecoin index submissions"
+      ]
+    },
+    "month_3_4_2026-11-16_to_2027-01-15": {
+      "priority": "P2-P3",
+      "actions": [
+        "HKMA, Bank of Japan, SAMA, DIFC, DFSA engagement",
+        "APRA, OSFI compliance mapping",
+        "FSB, BIS, IOSCO consultation responses",
+        "AI Verify Foundation mapping",
+        "Remaining agent-market registrations"
+      ]
+    },
+    "month_5_plus_2027-01_to_2027-03": {
+      "priority": "P2-P3",
+      "actions": [
+        "KFTC, PBoC monitoring",
+        "Chainlink PoR alignment",
+        "All P3 stablecoin indexes",
+        "Ongoing maintenance and renewal of all memberships"
+      ]
+    }
+  },
+  "summary_stats": {
+    "total_regulators_bodies": 32,
+    "total_agent_market_indexes": 13,
+    "total_stablecoin_indexes": 14,
+    "total_payment_directories": 3,
+    "p0_items": 18,
+    "p1_items": 22,
+    "p2_items": 14,
+    "p3_items": 5
+  },
+  "measurement_not_certification": true,
+  "honest_sentence": "CSOAI global regulator door strategy:28 regulators mapped,12 enterable today,4 owner-gated. x402:18 indexes,1 registered. Stablecoin presence:425+ coins,12 measured. Register on all indexes + enter all open doors permissionlessly."
+}

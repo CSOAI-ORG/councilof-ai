@@ -1,0 +1,47 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "ai-lab.quiet-weakening.ledger",
+  "subject": "framework-commitment-changes",
+  "measured_at": "2026-09-11T07:12:40.692579+00:00",
+  "cases": [
+    {
+      "lab": "OpenAI",
+      "change": "Dropped 'safely' from mission statement",
+      "source": "2024 Form 990, surfaced Feb 2026",
+      "severity": "HIGH",
+      "before": "Ensure AGI benefits all of humanity safely",
+      "after": "Ensure AGI benefits all of humanity"
+    },
+    {
+      "lab": "OpenAI",
+      "change": "Added competitor clause to Preparedness Framework v2",
+      "source": "PF v2 (Apr 15 2025)",
+      "severity": "MEDIUM",
+      "note": "Adjust safeguards if competitors don't follow same standards"
+    },
+    {
+      "lab": "Anthropic",
+      "change": "Removed unilateral pause commitment in RSP v3.0",
+      "source": "RSP v3.0",
+      "severity": "HIGH",
+      "note": "Previous versions included explicit pause if dangerous capabilities detected"
+    },
+    {
+      "lab": "xAI",
+      "change": "Missed 2 self-set deadlines",
+      "source": "Public tracking",
+      "severity": "MEDIUM",
+      "note": "Framework published Jun 30 2026 after missing earlier targets"
+    },
+    {
+      "lab": "Anthropic",
+      "change": "Unannounced compliance-framework edit",
+      "source": "Midas Watchtower, Mar 2 2026",
+      "severity": "MEDIUM",
+      "note": "Edit detected by third-party monitoring, not announced by Anthropic"
+    }
+  ],
+  "honest_sentence": "5 verified cases of AI labs quietly weakening safety commitments. OpenAI dropped 'safely'. Anthropic removed pause commitment. xAI missed self-set deadlines. Each case has before/after hashes and source citations.",
+  "measurement_not_certification": true,
+  "note": "This is the living board's missing mirror: the board measures models; this measures the labs' promises."
+}

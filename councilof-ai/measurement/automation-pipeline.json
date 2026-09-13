@@ -1,0 +1,22 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "automation.pipeline",
+  "subject": "sovereign-automation-pipeline",
+  "measured_at": "2026-09-13T04:22:43.655709+00:00",
+  "metrics": {
+    "current": "Manual card generation, RSS rebuild, sitemap rebuild",
+    "target": "Fully autonomous: firehose \u2192 measurement card \u2192 RSS \u2192 sitemap \u2192 IndexNow \u2192 feed distribution",
+    "components": [
+      "Firehose ingestion (GDELT, deps.dev, OSV.dev, GH Archive, etc.)",
+      "Card generation (ASI-Evolve or SOV3 autonomous brain)",
+      "Quality gate (honest_sentence, kind, subject validation)",
+      "RSS/sitemap rebuild (cron every hour)",
+      "IndexNow submission (auto-POST to Bing)",
+      "Feed distribution (Telegram bot, Mastodon bot, Bluesky bot, Dune dashboard)"
+    ],
+    "cron_jobs": "32 autonomous cron jobs already running on VM",
+    "significance": "From manual cards to autonomous24/7 measurement machine"
+  },
+  "honest_sentence": "Automation pipeline: firehose \u2192 card \u2192 RSS \u2192 sitemap \u2192 IndexNow \u2192 feed distribution.32 cron jobs running. Target: fully autonomous24/7 measurement machine. Current: manual. Next: ASI-Evolve + SOV3 autonomous brain.",
+  "measurement_not_certification": true
+}

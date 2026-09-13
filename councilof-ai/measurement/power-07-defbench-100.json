@@ -1,0 +1,19 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "safety.defbench.100",
+  "subject": "defbench-100-agentharm",
+  "measured_at": "2026-09-11T10:17:47.308212+00:00",
+  "source": "AgentHarm (UK AISI inspect_evals) + XSTest + OR-Bench",
+  "keyless": true,
+  "metrics": {
+    "agentharm_tasks": 176,
+    "xstest_items": "over-refusal counterweight",
+    "or_bench_items": "over-refusal counterweight",
+    "total_task_instances": "~1,300",
+    "grader": "garak 0.15.0 ModernBERT detector (deterministic)",
+    "test": "McNemar",
+    "n_target": ">=100"
+  },
+  "honest_sentence": "DefBench-100: AgentHarm (176 agentic tool-use tasks) + XSTest/OR-Bench over-refusal counterweight. Deterministic refusal grader (garak ModernBERT), n\u22481,300. First agentic-refusal board that is n\u2265100, judge-free, McNemar-powered.",
+  "measurement_not_certification": true
+}

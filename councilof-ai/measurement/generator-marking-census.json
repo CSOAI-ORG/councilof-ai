@@ -1,0 +1,72 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "c2pa.generator.marking.census",
+  "subject": "ai-generator-marking-stack",
+  "measured_at": "2026-09-11T07:18:09.437127+00:00",
+  "generators": [
+    {
+      "generator": "OpenAI (DALL-E, GPT image gen)",
+      "c2pa_manifest": true,
+      "invisible_watermark": true,
+      "iptc_tag": false,
+      "visible_label": true,
+      "source": "https://openai.com/index/image-generation-system-card/",
+      "note": "Conformant generator (May 2026) + SynthID watermark. No IPTC documented."
+    },
+    {
+      "generator": "Google (Imagen, Gemini)",
+      "c2pa_manifest": true,
+      "invisible_watermark": true,
+      "iptc_tag": false,
+      "visible_label": true,
+      "source": "https://deepmind.google/technologies/synthid/",
+      "note": ">20B images with SynthID dual-layer watermarking. No IPTC confirmed."
+    },
+    {
+      "generator": "Adobe (Firefly)",
+      "c2pa_manifest": true,
+      "invisible_watermark": true,
+      "iptc_tag": true,
+      "visible_label": true,
+      "source": "https://www.adobe.com/products/firefly.html",
+      "note": "Native C2PA (co-founded CAI) + watermark + IPTC \u2014 strongest full stack."
+    },
+    {
+      "generator": "Meta (AI image gen)",
+      "c2pa_manifest": false,
+      "invisible_watermark": true,
+      "iptc_tag": false,
+      "visible_label": true,
+      "source": "https://ai.meta.com/responsible-ai/",
+      "note": "Reads C2PA but does NOT write it. Adds 'Imagined with AI' visible label."
+    },
+    {
+      "generator": "Midjourney",
+      "c2pa_manifest": false,
+      "invisible_watermark": false,
+      "iptc_tag": false,
+      "visible_label": true,
+      "source": "https://docs.midjourney.com/",
+      "note": "Conflicting reports on C2PA support. Visible label only confirmed. Resolve: generate a sample, parse the file."
+    },
+    {
+      "generator": "Stability AI (Stable Diffusion)",
+      "c2pa_manifest": true,
+      "invisible_watermark": true,
+      "iptc_tag": false,
+      "visible_label": false,
+      "source": "https://stability.ai/",
+      "note": "C2PA \u2713 + Stable Signature watermark \u2713 (hosted API). Open-source model has no built-in marking."
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "c2pa_support": 4,
+    "watermark_support": 5,
+    "iptc_support": 1,
+    "visible_label": 5
+  },
+  "art50_relevance": "EU AI Act Art 50 requires machine-readable marking for AI-generated content. This census shows who actually marks and how.",
+  "honest_sentence": "6 generators measured: 4/6 have C2PA, 5/6 have invisible watermarks, 5/6 have visible labels. Adobe has the strongest full stack. Stability AI marks via hosted API only.",
+  "measurement_not_certification": true
+}

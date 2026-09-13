@@ -1,0 +1,49 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "rwa.tokenized-funds",
+  "subject": "benji-tokenized-funds",
+  "measured_at": "2026-09-11T08:04:08.664628+00:00",
+  "benji": {
+    "name": "BENJI (Franklin Templeton OnChain US Government Money Fund)",
+    "status": "LIVE",
+    "chain": "Stellar, Polygon, Ethereum, Base, Avalanche, Arbitrum, Optimism",
+    "aum": "$700M+ (approximate)",
+    "note": "First SEC-registered tokenized money fund. Shares are tokens. NAV updates on-chain.",
+    "c2pa": false,
+    "attestation": "Daily NAV publication",
+    "measurable": true
+  },
+  "other_tokenized_funds": [
+    {
+      "name": "BlackRock BUIDL",
+      "chain": "Ethereum, Solana",
+      "aum": "$2.76B",
+      "status": "LIVE",
+      "note": "Tokenized US Treasury fund"
+    },
+    {
+      "name": "Circle USYC",
+      "chain": "Ethereum",
+      "aum": "$2.60B",
+      "status": "LIVE",
+      "note": "Hashnote US Yield Coin"
+    },
+    {
+      "name": "Ondo USDY",
+      "chain": "Ethereum, Solana, Sui",
+      "aum": "$2.22B",
+      "status": "LIVE",
+      "note": "US Dollar Yield"
+    },
+    {
+      "name": "Ethena sUSDe",
+      "chain": "Ethereum",
+      "aum": "variable",
+      "status": "LIVE",
+      "note": "Staked USDe yield"
+    }
+  ],
+  "measurement_opportunity": "Each tokenized fund has: issuer, custodian, auditor, NAV frequency, chain deployment, reserve composition. All measurable. Nobody publishes signed cross-fund comparison cards.",
+  "honest_sentence": "BENJI ($700M+) is the original tokenized fund. BlackRock BUIDL ($2.76B), Circle USYC ($2.60B), Ondo USDY ($2.22B) follow the same pattern. All have on-chain attestable state. Nobody measures them side-by-side.",
+  "measurement_not_certification": true
+}

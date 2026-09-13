@@ -1,0 +1,33 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "distribution.seo.spec",
+  "subject": "programmatic-seo-pages",
+  "measured_at": "2026-09-11T09:51:16.121961+00:00",
+  "pages": {
+    "cards": 43,
+    "stablecoins": 425,
+    "models": 36,
+    "total": 504,
+    "note": "Each page = one card/coin/model with: title, measurement data, verification link, methodology, last-updated timestamp"
+  },
+  "sitemap": {
+    "format": "XML sitemap index with shards (\u226450k URLs/file)",
+    "cadence": "regenerate on every card publish"
+  },
+  "dataset_markup": {
+    "format": "JSON-LD schema.org/Dataset",
+    "note": "The ONLY route into Google Dataset Search + citation by AI answer engines (Perplexity/AIO/Bing)"
+  },
+  "indexnow": {
+    "endpoint": "api.indexnow.org",
+    "note": "Key file at root, POST to submit \u2014 Bing crawls within hours",
+    "effort": "15 min"
+  },
+  "rss_autodiscovery": {
+    "format": "RSS 2.0 + Atom",
+    "note": "Unlocks dev.to auto-import, Telegram bot, Mastodon bot, Bluesky bot",
+    "effort": "30 min"
+  },
+  "honest_sentence": "504 programmatic pages (43 cards + 425 stablecoins + 36 models). Each page = one measurement with Dataset JSON-LD markup. Sitemap + IndexNow + RSS autodiscovery = search engines find them within hours.",
+  "measurement_not_certification": true
+}

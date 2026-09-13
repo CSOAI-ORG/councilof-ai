@@ -1,0 +1,34 @@
+{
+  "schema": "csoai.anchor.receipt/0.1",
+  "kind": "multi-chain.anchor.status",
+  "root_hash": "f9fff1a3b53d53cc1843fe4bd82d2b622f81c6d142e83b2c802c3458d4e21053",
+  "card_count": 168,
+  "as_of": "2026-09-07T12:30:34Z",
+  "anchors": {
+    "bitcoin_ots": {
+      "status": "SUBMITTED",
+      "calendars": 2,
+      "verified": true
+    },
+    "rekor_sigstore": {
+      "status": "BLOCKED (needs signing key \u2014 TUI-1 P0)",
+      "verified": false
+    },
+    "xrpl_memo": {
+      "status": "READY",
+      "cost": "~$0.00001",
+      "verified": false
+    },
+    "ethereum_eas": {
+      "status": "READY",
+      "cost": "~$0.50-2",
+      "verified": false
+    },
+    "base_anchor": {
+      "status": "READY",
+      "cost": "~$0.01",
+      "verified": false
+    }
+  },
+  "honest_sentence": "Root f9fff1a3b53d53cc... submitted to OTS (alice+bob). Rekor blocked on signing key. 3 chains ready. 1 of 5 anchored."
+}

@@ -1,0 +1,106 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "x402.ecosystem.state",
+  "subject": "x402-ecosystem",
+  "measured_at": "2026-09-11T05:18:24.944796Z",
+  "mode": "live",
+  "x402_version": 2,
+  "total_resources": 9,
+  "free_resources": 1,
+  "paid_resources": 8,
+  "mcp_url": "https://councilof.ai/mcp",
+  "mcp_transport": "streamable-http",
+  "paid_tools": [
+    "commission_card",
+    "art50_marking_evidence",
+    "rwa_evidence",
+    "receipts_batch"
+  ],
+  "free_tools": [
+    "board_totals",
+    "get_axis",
+    "verify_card",
+    "list_cards",
+    "get_root",
+    "get_card",
+    "verify_inclusion",
+    "x402_trust"
+  ],
+  "extensions": [
+    "offer-receipt"
+  ],
+  "offer_receipt_supported": true,
+  "facilitator_configured": true,
+  "board_signing_key_configured": true,
+  "quarantined": [
+    {
+      "url": "https://councilof.ai/api/witness?sha256=<64-hex>",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "buyable": false,
+      "reason": "paid witness issuance is disabled until a release gate verifies leaf \u2192 signed root \u2192 sidecar \u2192 Rekor \u2192 OpenTimestamps",
+      "free_status": "https://councilof.ai/api/witness/status?sha256=<64-hex>"
+    }
+  ],
+  "resources_detail": [
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/free-door",
+      "amount": "0",
+      "description": "Live board totals and the signed public root \u2014 free: the GSPC board and Merkle r"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+      "amount": null,
+      "description": "Signed measurement card \u2014 one model \u00d7 one axis sealed under the board-attestatio"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+      "amount": null,
+      "description": "Signed compliance evidence bundle \u2014 per-obligation EU AI Act Article 50, DORA, E"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/eunomia-data?feed=1",
+      "amount": null,
+      "description": "Signed derivative data feed \u2014 validated measurement series, authenticated and re"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/proof?bundle=1",
+      "amount": null,
+      "description": "Inclusion proof bundle for leaves available in the last published Merkle root, w"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+      "amount": null,
+      "description": "RWA asset evidence \u2014 signed evidence for an XRPL token (issuer, funding stage, c"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-imag",
+      "amount": null,
+      "description": "Art. 50 marking evidence \u2014 EU AI Act Article 50 watermark/marking verification f"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "amount": null,
+      "description": "Provider change record \u2014 measurable differences between two measurement rounds f"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+      "amount": null,
+      "description": "Historical measurement-card batch from published roots for a requested time wind"
+    }
+  ],
+  "x402scan_resources_note": "363 = curated Top Sellers from x402scan homepage. Full ecosystem: ~25,000 resources (CDP Bazaar 25,411 / ForgeMesh ~25,000). Base-dominated (25,163 of 25,411 on Base).",
+  "x402scan_resources_curated": 363,
+  "x402scan_resources_estimated_full": 25000,
+  "x402scan_txns_note": "186M plausible cumulative; 30.47M rolling window from x402scan. Base-dominated.",
+  "base_dominated": true,
+  "honest_sentence": "We measured 363 curated x402scan sellers. The full ecosystem is ~25,000 resources, Base-dominated."
+}

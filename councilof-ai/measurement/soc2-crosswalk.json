@@ -1,0 +1,28 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "crosswalk.soc2",
+  "subject": "soc2-csoai-crosswalk",
+  "measured_at": "2026-09-13T04:27:09.885919+00:00",
+  "metrics": {
+    "framework": "AICPA SOC2 Type II",
+    "scope": "service organizations handling customer data",
+    "trust_criteria": [
+      "security",
+      "availability",
+      "processing integrity",
+      "confidentiality",
+      "privacy"
+    ],
+    "csoai_axes": {
+      "A1_governance": "security governance controls",
+      "A4_continuity": "availability criteria",
+      "A5_soundness": "processing integrity criteria",
+      "A10_privacy": "confidentiality + privacy criteria",
+      "A11_security": "security criteria (CC1-CC9)"
+    },
+    "measurement_opportunity": "SOC2 annual audit \u2260 CSOAI continuous measurement",
+    "revenue_opportunity": "SOC2 continuous monitoring: $499/org/month"
+  },
+  "honest_sentence": "SOC2 crosswalk:5 trust criteria (security, availability, processing integrity, confidentiality, privacy). CSOAI axes: A1\u2192governance, A4\u2192availability, A5\u2192processing integrity, A10\u2192privacy, A11\u2192security. Annual audit \u2260 continuous measurement. Revenue: $499/org/month.",
+  "measurement_not_certification": true
+}

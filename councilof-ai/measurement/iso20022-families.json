@@ -1,0 +1,92 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "payment.iso20022.families",
+  "subject": "iso20022-message-families",
+  "measured_at": "2026-09-11T08:04:08.664628+00:00",
+  "families": [
+    {
+      "id": "pacs",
+      "name": "Payment Clearing and Settlement",
+      "messages": [
+        "pacs.008",
+        "pacs.009",
+        "pacs.002",
+        "pacs.004"
+      ],
+      "status": "identified",
+      "relevance": "Core payment messages \u2014 every bank-to-bank transfer uses these"
+    },
+    {
+      "id": "pain",
+      "name": "Payment Initiation",
+      "messages": [
+        "pain.001",
+        "pain.002",
+        "pain.008",
+        "pain.013"
+      ],
+      "status": "identified",
+      "relevance": "Customer-initiated payments \u2014 the front door"
+    },
+    {
+      "id": "camt",
+      "name": "Cash Management",
+      "messages": [
+        "camt.052",
+        "camt.053",
+        "camt.054"
+      ],
+      "status": "identified",
+      "relevance": "Account statements and balances \u2014 reconciliation layer"
+    },
+    {
+      "id": "sese",
+      "name": "Securities Settlement",
+      "messages": [
+        "sese.023",
+        "sese.024",
+        "sese.025"
+      ],
+      "status": "identified",
+      "relevance": "Tokenized securities settlement \u2014 BENJI/T-REX/ERC-3643 bridge"
+    },
+    {
+      "id": "seev",
+      "name": "Securities Events",
+      "messages": [
+        "seev.031",
+        "seev.032",
+        "seev.033",
+        "seev.034"
+      ],
+      "status": "identified",
+      "relevance": "Corporate actions \u2014 dividends, splits, redemptions"
+    },
+    {
+      "id": "reda",
+      "name": "Reference Data",
+      "messages": [
+        "reda.004",
+        "reda.008"
+      ],
+      "status": "identified",
+      "relevance": "Instrument/party reference data \u2014 the naming layer"
+    },
+    {
+      "id": "auth",
+      "name": "Authorization",
+      "messages": [
+        "auth.030",
+        "auth.031"
+      ],
+      "status": "identified",
+      "relevance": "Pre-authorization of payment instructions \u2014 the guard layer"
+    }
+  ],
+  "total_families": 7,
+  "total_message_types": 25,
+  "implemented": 0,
+  "approach": "Measure what's publicly available. SWIFT publishes message specifications. Banks publish adoption stats. We sign the measurement.",
+  "honest_sentence": "7 ISO 20022 message families identified (25 message types). Zero implemented yet. SWIFT migration deadline already passed (Mar 2025) \u2014 compliance is the product.",
+  "measurement_not_certification": true
+}

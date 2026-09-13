@@ -1,0 +1,101 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "ai-lab.framework.empty-chair",
+  "subject": "frontier-safety-framework-coverage",
+  "measured_at": "2026-09-11T06:33:00.865706Z",
+  "source": "FLI Index Summer 2026 + public verification",
+  "labs_with_frameworks": [
+    {
+      "lab": "OpenAI",
+      "framework": "Preparedness Framework v2 (Apr 15 2025)",
+      "status": "published",
+      "note": "No public redlines; competitor clause added"
+    },
+    {
+      "lab": "Anthropic",
+      "framework": "Responsible Scaling Policy v3.4 (Jul 8 2026)",
+      "status": "published",
+      "note": "Redlines public; v3.0 removed unilateral pause commitment"
+    },
+    {
+      "lab": "Google DeepMind",
+      "framework": "Frontier Safety Framework v3.1 (Apr 17 2026)",
+      "status": "published",
+      "note": ""
+    },
+    {
+      "lab": "Meta",
+      "framework": "AI Safety & Security Framework v2.0 (Apr 2026)",
+      "status": "published",
+      "note": "Date discrepancy: Apr 7 vs Apr 8"
+    },
+    {
+      "lab": "xAI",
+      "framework": "Frontier AI Internal Framework (Jun 30 2026)",
+      "status": "published",
+      "note": "Missed 2 self-set deadlines"
+    }
+  ],
+  "labs_without_frameworks": [
+    {
+      "lab": "DeepSeek",
+      "framework": "NONE",
+      "status": "empty",
+      "note": "552B MoE model (V4.1 Flash, Sep 10), MIT license, no safety framework published"
+    },
+    {
+      "lab": "Mistral",
+      "framework": "NONE",
+      "status": "empty",
+      "note": "119B model (Small 4), Apache 2.0, no frontier safety framework"
+    },
+    {
+      "lab": "Moonshot (Kimi)",
+      "framework": "NONE",
+      "status": "empty",
+      "note": "K3 model, no frontier safety framework"
+    },
+    {
+      "lab": "01.AI (Yi)",
+      "framework": "NONE",
+      "status": "empty",
+      "note": "Yi-34B, no frontier safety framework"
+    },
+    {
+      "lab": "InternLM",
+      "framework": "NONE",
+      "status": "empty",
+      "note": "InternLM 2.5, no frontier safety framework"
+    }
+  ],
+  "quiet_weakening_cases": [
+    {
+      "lab": "OpenAI",
+      "change": "Dropped 'safely' from mission statement",
+      "source": "2024 Form 990, surfaced Feb 2026"
+    },
+    {
+      "lab": "OpenAI",
+      "change": "Added competitor clause to PF v2",
+      "source": "PF v2 (Apr 15 2025)"
+    },
+    {
+      "lab": "Anthropic",
+      "change": "Removed unilateral pause commitment in v3.0",
+      "source": "RSP v3.0"
+    },
+    {
+      "lab": "xAI",
+      "change": "Missed 2 self-set deadlines",
+      "source": "Public tracking"
+    },
+    {
+      "lab": "Anthropic",
+      "change": "Unannounced compliance-framework edit",
+      "source": "Midas Watchtower, Mar 2 2026"
+    }
+  ],
+  "honest_sentence": "5 of the largest AI labs publish no frontier safety framework (DeepSeek, Mistral, Moonshot, 01.AI, InternLM). 5 labs have published frameworks but 3 have quietly weakened commitments. Nobody else publishes this list.",
+  "measurement_not_certification": true,
+  "note": "FLI Index Summer 2026 confirms the empty-chair status. All facts from public sources \u2014 not partnerships."
+}

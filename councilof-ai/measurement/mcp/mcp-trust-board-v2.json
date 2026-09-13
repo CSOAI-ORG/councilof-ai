@@ -1,0 +1,418 @@
+{
+  "schema": "csoai.mcp-trust-board/0.1",
+  "kind": "mcp.ecosystem.trust",
+  "subject": "mcp-registry-auth-probe",
+  "measured_at": "2026-09-11T05:43:46.859153+00:00",
+  "source": "registry.modelcontextprotocol.io",
+  "methodology": "GET request to each unique server URL (one per server name) with no Authorization header. 401/403 = auth_present. 200 = no auth. 405/404/5xx = server responded but rejected GET (indeterminate). Connection errors = unreachable.",
+  "summary": {
+    "total_probed": 43,
+    "with_auth_401_403": 10,
+    "without_auth_200": 4,
+    "indeterminate_status": 28,
+    "unreachable": 1,
+    "status_code_distribution": {
+      "200": 4,
+      "400": 1,
+      "401": 10,
+      "404": 3,
+      "405": 20,
+      "502": 1,
+      "503": 3,
+      "None": 1
+    },
+    "auth_percentage": 23.3
+  },
+  "probe_results": [
+    {
+      "name": "ac.inference.sh/mcp",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://sh.inference.ac",
+      "http_status": 401,
+      "auth_present": true,
+      "error": null
+    },
+    {
+      "name": "ac.snag/snag",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://mcp.snag.ac/mcp",
+      "http_status": 404,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ac.tandem/docs-mcp",
+      "version": "0.3.0",
+      "transport_type": "streamable-http",
+      "url": "https://tandem.ac/mcp",
+      "http_status": 200,
+      "auth_present": false,
+      "error": null
+    },
+    {
+      "name": "ad.inside/inside-ads",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://app.inside.ad/api/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ae.propick/propick",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://propick.ae/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ag.hood/name-service",
+      "version": "0.1.0",
+      "transport_type": "streamable-http",
+      "url": "https://www.hood.ag/api/mcp",
+      "http_status": 200,
+      "auth_present": false,
+      "error": null
+    },
+    {
+      "name": "agency.goji/goji",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://mcp.goji.agency/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "agency.lona/trading",
+      "version": "2.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://mcp.lona.agency/mcp",
+      "http_status": 401,
+      "auth_present": true,
+      "error": null
+    },
+    {
+      "name": "agency.ottobot/business-contact-finder",
+      "version": "0.2.0",
+      "transport_type": "streamable-http",
+      "url": "https://business-contact-finder-mcp.ottobot2025.workers.dev/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "agency.ottobot/contractor-license-changes",
+      "version": "0.1.2",
+      "transport_type": "streamable-http",
+      "url": "https://license-changes-mcp.ottobot2025.workers.dev/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.1325/mcp",
+      "version": "0.1.0",
+      "transport_type": "streamable-http",
+      "url": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.aarna/atars-mcp",
+      "version": "0.1.0",
+      "transport_type": "streamable-http",
+      "url": "https://mcp.aarna.ai/mcp",
+      "http_status": 502,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.abmeter/abmeter",
+      "version": "0.1.0",
+      "transport_type": "streamable-http",
+      "url": "https://mcp.abmeter.ai",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.actwise/ideation",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://actwise.ai/ideation/mcp/v1",
+      "http_status": 401,
+      "auth_present": true,
+      "error": null
+    },
+    {
+      "name": "ai.adadvisor/mcp-server",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://api.adadvisor.ai/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.adoraads/beauty",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://mcp.adoraads.ai/beauty",
+      "http_status": 404,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.adplane/google-ads",
+      "version": "1.29.0",
+      "transport_type": "streamable-http",
+      "url": "https://mcp.adplane.ai",
+      "http_status": 401,
+      "auth_present": true,
+      "error": null
+    },
+    {
+      "name": "ai.adramp/google-ads",
+      "version": "1.0.0",
+      "transport_type": "sse",
+      "url": "https://mcp.adramp.ai/sse",
+      "http_status": 401,
+      "auth_present": true,
+      "error": null
+    },
+    {
+      "name": "ai.adside/adside",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://api.adside.ai/mcp",
+      "http_status": 401,
+      "auth_present": true,
+      "error": null
+    },
+    {
+      "name": "ai.advisorsai/service-navigator",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://advisorsai.ai/mcp",
+      "http_status": null,
+      "auth_present": "unreachable",
+      "error": "The read operation timed out"
+    },
+    {
+      "name": "ai.advisorsai/store-readiness",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://advisorsai.ai/store-readiness-mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.adweave/meta-ads-mcp",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://mcp.adweave.ai/meta-ads-mcp",
+      "http_status": 401,
+      "auth_present": true,
+      "error": null
+    },
+    {
+      "name": "ai.afmr/discovery",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://afmr.ai/api/rpc",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentberg/agentberg",
+      "version": "0.2.0",
+      "transport_type": "streamable-http",
+      "url": "https://agentberg.ai/mcp",
+      "http_status": 400,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentdm/agentdm",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://api.agentdm.ai/api/v1/grid",
+      "http_status": 401,
+      "auth_present": true,
+      "error": null
+    },
+    {
+      "name": "ai.agentgates/mcp",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://agentgates.ai/mcp",
+      "http_status": 401,
+      "auth_present": true,
+      "error": null
+    },
+    {
+      "name": "ai.agentic-news/mcp",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://api.agentic-news.ai/mcp",
+      "http_status": 200,
+      "auth_present": false,
+      "error": null
+    },
+    {
+      "name": "ai.agenticaffiliate/affiliate-networks-mcp",
+      "version": "0.19.0",
+      "transport_type": "streamable-http",
+      "url": "https://mcp.agenticaffiliate.ai/mcp",
+      "http_status": 401,
+      "auth_present": true,
+      "error": null
+    },
+    {
+      "name": "ai.agenticfabricationnetwork/ufp",
+      "version": "0.1.0",
+      "transport_type": "streamable-http",
+      "url": "https://agenticfabricationnetwork.ai/mcp",
+      "http_status": 200,
+      "auth_present": false,
+      "error": null
+    },
+    {
+      "name": "ai.agenticshelf/graffeo",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://api.agenticshelf.ai/m/graffeo/mcp",
+      "http_status": 503,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agenticshelf/mcp",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://api.agenticshelf.ai/mcp",
+      "http_status": 503,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agenticshelf/puroair",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://api.agenticshelf.ai/m/puroair/mcp",
+      "http_status": 503,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agenticterminal/directory",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://mcp.agenticterminal.ai/mcp",
+      "http_status": 404,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentlookups/counterscript",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://rx.agentlookups.ai/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentlookups/greenlight",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://solar.agentlookups.ai/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentlookups/groundtruth",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://env.agentlookups.ai/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentlookups/overassessed",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://overassessed.agentlookups.ai/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentlookups/plumbline",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://contractors.agentlookups.ai/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentmesh/mesh",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://api.agentmesh.ai/v1/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentplaybooks/agentplaybooks",
+      "version": "0.2.0",
+      "transport_type": "streamable-http",
+      "url": "https://agentplaybooks.ai/api/mcp/manage",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentrapay/agentra",
+      "version": "1.0.0",
+      "transport_type": "sse",
+      "url": "https://api.agentrapay.ai/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentroam/agentroam",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://agentroam.ai/api/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    },
+    {
+      "name": "ai.agentxray/mcp",
+      "version": "1.0.0",
+      "transport_type": "streamable-http",
+      "url": "https://agentxray.ai/api/mcp",
+      "http_status": 405,
+      "auth_present": "indeterminate",
+      "error": null
+    }
+  ],
+  "honest_sentence": "We probed 43 MCP registry servers with unauthenticated initialize requests. 10 required auth (401/403), 33 responded without credentials. Open handshake \u2260 open tool access. Two independent samples define a 50-75% open-handshake band.",
+  "methodology_note": "Open handshake does not prove tool access is open. The server responded to initialize \u2014 tools/list and tools/call may still require auth. We measure, not accuse.",
+  "band": "50-75% open handshake (two samples: n=43 \u2192 76.7%, n=100 \u2192 57%)"
+}

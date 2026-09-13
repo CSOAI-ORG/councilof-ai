@@ -1,0 +1,18 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "distribution.bluesky.bot",
+  "subject": "bluesky-rss-bot-spec",
+  "measured_at": "2026-09-11T12:00:00Z",
+  "spec": {
+    "platform": "Bluesky (AT Protocol)",
+    "method": "RSS-to-Bluesky bot (~30 lines)",
+    "trigger": "New item in https://councilof.ai/feed.xml",
+    "post_format": "{title} — {honest_sentence} {link}",
+    "cadence": "Real-time (on new card publish)",
+    "effort": "30 lines of Python",
+    "account": "csoai.bsky.social (needs creation)",
+    "note": "Bluesky has no RSS import — must use AT Protocol API directly"
+  },
+  "honest_sentence": "Bluesky RSS bot: 30 lines Python, posts new cards to Bluesky via AT Protocol API. Account needs creation.",
+  "measurement_not_certification": true
+}

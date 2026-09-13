@@ -1,0 +1,70 @@
+{
+  "schema": "csoai.cron.config/0.1",
+  "kind": "measurement.pipeline.schedule",
+  "subject": "daily-measurement-cron",
+  "measured_at": "2026-09-11T07:03:04.672487+00:00",
+  "jobs": [
+    {
+      "name": "rlusd_crosschain",
+      "cadence": "daily 06:00 UTC",
+      "reader": "rlusd_eth_reader.py + rlusd_xrpl_reader.py",
+      "output": "signed card + /api/xrpl update"
+    },
+    {
+      "name": "stablecoin_top10",
+      "cadence": "daily 06:30 UTC",
+      "reader": "defi_llama_api + totalSupply()",
+      "output": "attestation-gap cards for top 10"
+    },
+    {
+      "name": "mcp_census",
+      "cadence": "weekly Monday 08:00 UTC",
+      "reader": "mcp_trust_census.py",
+      "output": "MCP Trust Board update"
+    },
+    {
+      "name": "ct_brand_watch",
+      "cadence": "every 6h",
+      "reader": "crt.sh queries",
+      "output": "lookalike cert alerts"
+    },
+    {
+      "name": "lab_framework_hash",
+      "cadence": "weekly Wednesday 08:00 UTC",
+      "reader": "hash fetcher",
+      "output": "lab-artifact diff cards"
+    },
+    {
+      "name": "ots_anchor",
+      "cadence": "weekly Sunday 12:00 UTC",
+      "reader": "OTS calendar submission",
+      "output": "Bitcoin anchoring receipt"
+    },
+    {
+      "name": "rekor_push",
+      "cadence": "weekly Sunday 12:00 UTC",
+      "reader": "Rekor API",
+      "output": "Sigstore inclusion receipt"
+    },
+    {
+      "name": "edgar_ai_scan",
+      "cadence": "daily 09:00 UTC",
+      "reader": "SEC EFTS API",
+      "output": "new AI disclosure filings"
+    },
+    {
+      "name": "x402_liveness",
+      "cadence": "daily 07:00 UTC",
+      "reader": "x402scan probe",
+      "output": "merchant liveness cards"
+    },
+    {
+      "name": "erc8004_census",
+      "cadence": "weekly Friday 10:00 UTC",
+      "reader": "eth_getLogs on Registered events",
+      "output": "agent registration count"
+    }
+  ],
+  "honest_sentence": "10 cron jobs covering stablecoins, MCP, brand defense, lab frameworks, anchoring, EDGAR, x402, and ERC-8004. All public-source, no API keys needed for v0.",
+  "measurement_not_certification": true
+}

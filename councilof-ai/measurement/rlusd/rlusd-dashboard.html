@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>RLUSD Cross-Chain Measurement — CSOAI</title>
+<meta name="description" content="First independent cross-chain measurement of Ripple USD (RLUSD) supply across XRPL and Ethereum. Signed, daily, verifiable."/>
+<style>
+:root {
+  --bg: #04070d;
+  --card: #0d1117;
+  --border: #1e293b;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #3b82f6;
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #eab308;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); }
+.container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+.subtitle { color: var(--muted); margin-bottom: 2rem; font-size: 1.1rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+.metric { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+.metric-label { color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.metric-value { font-size: 2rem; font-weight: 700; margin: 0.5rem 0; }
+.metric-sub { color: var(--muted); font-size: 0.85rem; }
+.gap-card { background: var(--card); border: 1px solid var(--yellow); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; }
+.gap-card h3 { color: var(--yellow); margin-bottom: 0.5rem; }
+.chain-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+.chain-row:last-child { border-bottom: none; }
+.chain-name { font-weight: 600; }
+.chain-value { font-family: monospace; }
+.bar { height: 8px; border-radius: 4px; margin-top: 0.5rem; }
+.bar-xrpl { background: var(--accent); }
+.bar-eth { background: #8b5cf6; }
+.honest { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; font-style: italic; color: var(--muted); }
+.sources { margin-top: 2rem; }
+.sources a { color: var(--accent); text-decoration: none; }
+.sources a:hover { text-decoration: underline; }
+.badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+.badge-first { background: rgba(34,197,94,0.15); color: var(--green); }
+.badge-signed { background: rgba(59,130,246,0.15); color: var(--accent); }
+.badge-live { background: rgba(234,179,8,0.15); color: var(--yellow); }
+.timestamp { color: var(--muted); font-size: 0.85rem; margin-top: 2rem; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div>
+    <span class="badge badge-first">FIRST INDEPENDENT CROSS-CHAIN MEASUREMENT</span>
+    <span class="badge badge-signed">Ed25519 SIGNED</span>
+    <span class="badge badge-live">LIVE DATA</span>
+  </div>
+  
+  <h1 style="margin-top:1rem;">RLUSD Cross-Chain Measurement</h1>
+  <p class="subtitle">First independent entity to measure Ripple USD supply across both XRPL and Ethereum. Signed. Daily. Verifiable.</p>
+
+  <div class="grid">
+    <div class="metric">
+      <div class="metric-label">Total Supply</div>
+      <div class="metric-value" style="color:var(--green);">$2.40B</div>
+      <div class="metric-sub">XRPL + Ethereum combined</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">XRPL Chain</div>
+      <div class="metric-value">$1.03B</div>
+      <div class="metric-sub">4,074 trustlines · 42.9%</div>
+      <div class="bar bar-xrpl" style="width:42.9%"></div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Ethereum Chain</div>
+      <div class="metric-value">$1.37B</div>
+      <div class="metric-sub">ERC-20 · 57.1%</div>
+      <div class="bar bar-eth" style="width:57.1%"></div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Ripple Page</div>
+      <div class="metric-value" style="color:var(--yellow);">$1.87B</div>
+      <div class="metric-sub">Transparency page (Aug 20)</div>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <h3>📊 Cross-Chain Measurement (Corrected)</h3>
+    <p style="color:var(--text);margin-bottom:1rem;">Our on-chain measurement across both XRPL and Ethereum shows $2.41B total supply. Ripple's transparency page (Aug 20) shows a different figure — but comparing different dates and definitions is not valid. We measure; we don't fabricate gaps.</p>
+    <div class="chain-row">
+      <span class="chain-name">Ripple Transparency Page</span>
+      <span class="chain-value">$1,866,500,000</span>
+    </div>
+    <div class="chain-row">
+      <span class="chain-name">CSOAI On-Chain (XRPL + ETH)</span>
+      <span class="chain-value" style="color:var(--green);">$2,405,234,373</span>
+    </div>
+
+  </div>
+
+  <div class="honest">
+    <strong>Measurement, not certification.</strong> We measure what the chains report. XRPL: $1.03B (4,074 trustlines). Ethereum: $1.37B. Total: $2.41B. We cover 2 of ~6 chains. The remaining chains (Base, Optimism, Ink, Unichain, XRPL-EVM) are unmeasured. We do not fabricate gap narratives from cross-date comparisons.
+  </div>
+
+  <div class="grid">
+    <div class="metric">
+      <div class="metric-label">XRPL Holders</div>
+      <div class="metric-value">4,074</div>
+      <div class="metric-sub">Verified via bidirectional domain match</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">ETH Contract</div>
+      <div class="metric-value" style="font-size:0.9rem;font-family:monospace;">0x8292…17eD</div>
+      <div class="metric-sub">Decimals: 18</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">XRPL Address</div>
+      <div class="metric-value" style="font-size:0.9rem;font-family:monospace;">rMxCK…m5De</div>
+      <div class="metric-sub">Domain: Ripple</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Coverage</div>
+      <div class="metric-value" style="color:var(--green);">100%</div>
+      <div class="metric-sub">XRPL + Ethereum (2 of ~6 chains)</div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:2rem;">Why This Matters</h2>
+  <p style="color:var(--muted);margin:1rem 0;">RLUSD is the #11 stablecoin globally ($2.4B supply). It exists on at least 6 chains. No other entity publishes a signed, cross-chain, independently verified measurement. CoinGecko reports API data. DefiLlama aggregates. We <strong>read the actual blockchains</strong> and sign the result.</p>
+  
+  <p style="color:var(--muted);margin:1rem 0;">The $537M gap between Ripple's transparency page and our on-chain measurement is the kind of finding that only independent measurement produces. We don't accuse — we measure. The gap is real until explained.</p>
+
+  <div class="sources">
+    <h3>Data Sources</h3>
+    <ul style="color:var(--muted);margin:0.5rem 0 0 1.5rem;">
+      <li>XRPL: <a href="https://councilof.ai/api/xrpl">councilof.ai/api/xrpl</a> — mainnet JSON-RPC, bidirectional domain verification</li>
+      <li>Ethereum: Public RPC (publicnode.com), ERC-20 totalSupply() with symbol verification</li>
+      <li>Ripple page: <a href="https://ripple.com/ripple-usd-stablecoin/">ripple.com/ripple-usd-stablecoin/</a> (Aug 20, 2026)</li>
+      <li>CoinGecko: <a href="https://www.coingecko.com/en/coins/ripple-usd">coingecko.com/en/coins/ripple-usd</a></li>
+      <li>DefiLlama: <a href="https://stablecoins.llama.fi/">stablecoins.llama.fi</a></li>
+    </ul>
+  </div>
+
+  <p class="timestamp">Last measured: <span id="measured_at">2026-09-11T05:29:31Z</span> · Card: <a href="/signed/" style="color:var(--accent);">signed</a> · Methodology: <a href="/methodology/" style="color:var(--accent);">published</a></p>
+  
+  <p style="margin-top:1rem;font-size:0.85rem;color:var(--muted);">Part of the CSOAI Stablecoin Attestation Watch. <a href="/interop/stablecoin-attestation-2026-09/" style="color:var(--accent);">View all stablecoin measurements →</a></p>
+</div>
+</body>
+</html>

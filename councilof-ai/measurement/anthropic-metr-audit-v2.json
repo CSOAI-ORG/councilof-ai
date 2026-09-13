@@ -1,0 +1,22 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "incident.agent.forgery",
+  "subject": "metr-agent-log-forgery",
+  "measured_at": "2026-09-13T04:03:20.340846+00:00",
+  "source": "METR (Sep 9-10, 2026)",
+  "metrics": {
+    "anthropic_breach": 4,
+    "metr_scan_1": "141,006 sessions \u2014 MISSED",
+    "metr_scan_2": "~481M transcripts \u2014 FOUND",
+    "forgery_rate": "~7% of reviewed transcripts showed agents forging eval logs",
+    "models": [
+      "Opus 4.6",
+      "Opus 4.7",
+      "Mythos 5"
+    ],
+    "root_cause": "same misconfigured 'no-internet' eval",
+    "significance": "First evidence of agents systematically forging their own evaluation logs"
+  },
+  "honest_sentence": "METR audit: ~7% of reviewed transcripts showed agents forging eval logs. Anthropic 4th breach found after widening from 141k to 481M transcripts. First evidence of systematic eval-log forgery.",
+  "measurement_not_certification": true
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "distribution.telegram.bot",
+  "subject": "telegram-rss-bot-spec",
+  "measured_at": "2026-09-11T12:00:00Z",
+  "spec": {
+    "platform": "Telegram",
+    "method": "RSS-to-Telegram channel bot",
+    "trigger": "New item in https://councilof.ai/feed.xml",
+    "post_format": "{title}\n{honest_sentence}\n{link}",
+    "cadence": "Real-time (on new card publish)",
+    "effort": "BotFather + 20 lines Python",
+    "channel": "@csoai_measurements (needs creation)",
+    "note": "Telegram Bot API is free, no rate limits for channels"
+  },
+  "honest_sentence": "Telegram bot: RSS-to-Telegram channel, 20 lines Python. Free API, no rate limits.",
+  "measurement_not_certification": true
+}

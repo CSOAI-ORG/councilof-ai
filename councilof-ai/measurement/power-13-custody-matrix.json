@@ -1,0 +1,49 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "custody.disclosure.matrix",
+  "subject": "custody-matrix-top20",
+  "measured_at": "2026-09-11T10:20:42.148724+00:00",
+  "source": "SEC EDGAR EFTS + OCC/FDIC charter lists + GLEIF LEI",
+  "keyless": true,
+  "assets": [
+    {
+      "name": "FOBXX/BENJI",
+      "custodian": "JPM",
+      "auditor": "PwC",
+      "transfer_agent": "FTIS"
+    },
+    {
+      "name": "BUIDL",
+      "custodian": "BNY Mellon",
+      "auditor": "?",
+      "transfer_agent": "?"
+    },
+    {
+      "name": "BSTBL",
+      "custodian": "BNY",
+      "auditor": "?",
+      "transfer_agent": "Securitize"
+    },
+    {
+      "name": "BRSRV",
+      "custodian": "?",
+      "auditor": "?",
+      "transfer_agent": "Securitize"
+    },
+    {
+      "name": "USD1",
+      "custodian": "BitGo Bank & Trust N.A.",
+      "auditor": "?",
+      "charter": "OCC Dec 13 2025"
+    },
+    {
+      "name": "RLUSD",
+      "custodian": "BNY (non-cash)",
+      "auditor": "?",
+      "transfer_agent": "?"
+    }
+  ],
+  "concentration": "BNY + JPM + State Street + BitGo",
+  "honest_sentence": "Custody matrix: custodian \u00d7 attestor \u00d7 charter for top-20 tokenized assets. Concentration in BNY + JPM + State Street + BitGo is an under-measured systemic number.",
+  "measurement_not_certification": true
+}

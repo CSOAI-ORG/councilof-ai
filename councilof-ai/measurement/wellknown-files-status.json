@@ -1,0 +1,29 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "estate.wellknown.status",
+  "subject": "wellknown-files-status",
+  "measured_at": "2026-09-13T04:10:58.086253+00:00",
+  "metrics": {
+    "live": {
+      "llms.txt": "https://councilof.ai/llms.txt",
+      "gspc_cards": "https://councilof.ai/gspc/cards",
+      "root.json": "https://councilof.ai/root.json",
+      "feed.xml": "https://councilof.ai/feed.xml",
+      "sitemap.xml": "https://councilof.ai/sitemap.xml",
+      "methodology": "https://councilof.ai/methodology/",
+      "gspc_verify": "https://councilof.ai/gspc-verify"
+    },
+    "pending": {
+      "well-known/agent-card.json": "HTTP 200 \u2014 live",
+      "well-known/mcp.json": "HTTP 200 \u2014 live",
+      "well-known/ai-catalog.json": "NOT DEPLOYED (built, not pushed)",
+      "well-known/x402.json": "HTTP 200 \u2014 live",
+      "well-known/did.json": "HTTP 200 \u2014 live",
+      "well-known/scitt.json": "HTTP 404",
+      "well-known/csoai.json": "HTTP 200 \u2014 live",
+      "well-known/agent.json": "HTTP 200 \u2014 live"
+    }
+  },
+  "honest_sentence": "Well-known status:7 live (llms.txt, gspc_cards, root.json, feed.xml, sitemap.xml, methodology, gspc_verify). Pending: ai-catalog.json (not deployed), scitt.json (404).",
+  "measurement_not_certification": true
+}

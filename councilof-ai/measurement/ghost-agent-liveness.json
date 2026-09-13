@@ -1,0 +1,121 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "agent.liveness.ghost",
+  "subject": "agent-endpoint-liveness",
+  "measured_at": "2026-09-11T07:12:40.692579+00:00",
+  "methodology": "Presence \u2260 function. AgentRolodex found 31 public A2A cards, only ~4 respond to message/send. We re-fetch cards + probe declared endpoints.",
+  "census_results": [
+    {
+      "domain": "councilof.ai",
+      "llms_txt": "200",
+      "agent_card": "200",
+      "llms_serves": true,
+      "agent_serves": true
+    },
+    {
+      "domain": "csoai.org",
+      "llms_txt": "308",
+      "agent_card": "200",
+      "llms_serves": false,
+      "agent_serves": true
+    },
+    {
+      "domain": "koikeeper.co.uk",
+      "llms_txt": "404",
+      "agent_card": "404",
+      "llms_serves": false,
+      "agent_serves": false
+    },
+    {
+      "domain": "fishkeeper.co.uk",
+      "llms_txt": "301",
+      "agent_card": "301",
+      "llms_serves": true,
+      "agent_serves": true
+    },
+    {
+      "domain": "cobolbridge.ai",
+      "llms_txt": "200",
+      "agent_card": "200",
+      "llms_serves": true,
+      "agent_serves": true
+    },
+    {
+      "domain": "openai.com",
+      "llms_txt": "403",
+      "agent_card": "404",
+      "llms_serves": false,
+      "agent_serves": false
+    },
+    {
+      "domain": "anthropic.com",
+      "llms_txt": "301",
+      "agent_card": "301",
+      "llms_serves": true,
+      "agent_serves": true
+    },
+    {
+      "domain": "google.com",
+      "llms_txt": "404",
+      "agent_card": "404",
+      "llms_serves": false,
+      "agent_serves": false
+    },
+    {
+      "domain": "huggingface.co",
+      "llms_txt": "404",
+      "agent_card": "401",
+      "llms_serves": false,
+      "agent_serves": false
+    },
+    {
+      "domain": "github.com",
+      "llms_txt": "200",
+      "agent_card": "404",
+      "llms_serves": true,
+      "agent_serves": false
+    },
+    {
+      "domain": "meta.com",
+      "llms_txt": "301",
+      "agent_card": "301",
+      "llms_serves": true,
+      "agent_serves": true
+    },
+    {
+      "domain": "microsoft.com",
+      "llms_txt": "301",
+      "agent_card": "301",
+      "llms_serves": true,
+      "agent_serves": true
+    },
+    {
+      "domain": "deepseek.com",
+      "llms_txt": "404",
+      "agent_card": "404",
+      "llms_serves": false,
+      "agent_serves": false
+    },
+    {
+      "domain": "mistral.ai",
+      "llms_txt": "200",
+      "agent_card": "404",
+      "llms_serves": true,
+      "agent_serves": false
+    },
+    {
+      "domain": "x.ai",
+      "llms_txt": "404",
+      "agent_card": "404",
+      "llms_serves": false,
+      "agent_serves": false
+    }
+  ],
+  "summary": {
+    "domains_probed": 15,
+    "serve_both": 6,
+    "serve_neither": 6
+  },
+  "honest_sentence": "How much of the agent web is a cardboard cutout? 6/15 domains serve both llms.txt and agent-card.json. The rest are either partial or absent.",
+  "measurement_not_certification": true
+}

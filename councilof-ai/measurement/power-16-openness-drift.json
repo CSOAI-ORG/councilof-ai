@@ -1,0 +1,36 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "openness.drift.feed",
+  "subject": "license-drift-detection",
+  "measured_at": "2026-09-11T10:22:58.951055+00:00",
+  "source": "HF Hub API (keyless) + OSI OSAID 1.0",
+  "keyless": true,
+  "recent_flips": [
+    {
+      "model": "Gemma 4",
+      "from": "Gemma license",
+      "to": "Apache 2.0",
+      "date": "2026-04"
+    },
+    {
+      "model": "Qwen3.8-Max",
+      "from": "open",
+      "to": "bespoke license",
+      "date": "2026-08-12"
+    },
+    {
+      "model": "Kimi K3",
+      "from": "?",
+      "to": "custom + $20M MaaS threshold",
+      "date": "2026"
+    },
+    {
+      "model": "GLM-5.3",
+      "from": "?",
+      "to": "custom",
+      "date": "2026"
+    }
+  ],
+  "honest_sentence": "Openness Drift feed: weekly HF crawl \u2192 license/AUP diff cards \u2192 Merkle-logged. Gemma\u2192Apache, Qwen3.8\u2192bespoke, Kimi K3\u2192custom. EU hook: Art 53(2) open-source GPAI exemption.",
+  "measurement_not_certification": true
+}

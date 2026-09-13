@@ -1,0 +1,19 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "distribution.mastodon.bot",
+  "subject": "mastodon-rss-bot-spec",
+  "measured_at": "2026-09-11T12:00:00Z",
+  "spec": {
+    "platform": "Mastodon (Fediverse)",
+    "method": "RSS-to-Mastodon bot",
+    "trigger": "New item in https://councilof.ai/feed.xml",
+    "post_format": "{title} — {honest_sentence} {link}",
+    "cadence": "Real-time (on new card publish)",
+    "effort": "30 lines Python",
+    "instance": "botsin.space is DEAD — use bot-friendly instance",
+    "account": "csoai@mastodon.social (needs creation)",
+    "note": "Mastodon API is free, OAuth-based"
+  },
+  "honest_sentence": "Mastodon bot: RSS-to-Mastodon, 30 lines Python. botsin.space is dead — use bot-friendly instance.",
+  "measurement_not_certification": true
+}

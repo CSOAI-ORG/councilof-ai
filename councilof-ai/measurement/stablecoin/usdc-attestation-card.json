@@ -1,0 +1,25 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "stablecoin.attestation.usdc",
+  "subject": "USDC",
+  "measured_at": "2026-09-11T07:03:04.672487+00:00",
+  "source": "DefiLlama + Circle transparency",
+  "supply": {
+    "defi_llama": "$74.22B",
+    "chains": "multi-chain (Ethereum, Solana, Base, etc.)"
+  },
+  "attestation": {
+    "issuer": "Circle",
+    "auditor": "Deloitte",
+    "cadence": "monthly",
+    "reserves": "BlackRock USDXX fund \u2014 CUSIP-level holdings published DAILY",
+    "latest_reserves": "$75.96B",
+    "latest_circulation": "$75.89B",
+    "coverage_ratio": "100.10%",
+    "report_lag_days": 31,
+    "note": "ONLY stablecoin with near-real-time verifiable reserves. Daily composition-hash = change detection on $76B."
+  },
+  "measurement_opportunity": "Daily composition-hash card. If Circle's reserve composition changes, we detect it before the market. This is the premium attestation-watch product.",
+  "honest_sentence": "USDC: $74.22B supply, 100.10% reserve coverage, Deloitte-audited, daily CUSIP-level transparency. The most transparent major stablecoin. Our measurement adds: daily signed change-detection cards.",
+  "measurement_not_certification": true
+}

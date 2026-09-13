@@ -1,0 +1,20 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.token.release",
+  "subject": "token-release-corrections-ledger",
+  "measured_at": "2026-09-13T04:22:43.655709+00:00",
+  "metrics": {
+    "what": "Measure token release schedules, vesting, and corrections against claims",
+    "mechanism": "signed measurement cards tracking: (1) announced vs actual unlock dates, (2) announced vs actual token amounts, (3) corrections to previously-claimed data",
+    "use_cases": [
+      "Stablecoin attestation (Tether buffer halved, USD1 lapse fixed)",
+      "Token vesting schedules (measured vs claimed unlock dates)",
+      "Reserve attestation gaps (RLUSD $500M gap / 22 days stale)",
+      "Exchange proof-of-reserves (measured cadence vs claimed)"
+    ],
+    "existing_evidence": "7 corrections ledger entries already in measurement cards",
+    "significance": "First deterministic token release audit trail"
+  },
+  "honest_sentence": "Token release measurement: signed cards tracking announced vs actual unlock dates, amounts, and corrections.7 corrections ledger entries already built. First deterministic token release audit trail. Covers: stablecoin attestation, vesting schedules, reserve gaps, exchange PoR.",
+  "measurement_not_certification": true
+}

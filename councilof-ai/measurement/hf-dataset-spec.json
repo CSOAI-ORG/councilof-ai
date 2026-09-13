@@ -1,0 +1,20 @@
+{
+  "name": "csoai-gspc-cards",
+  "description": "Signed measurement cards from the CSOAI GSPC board \u2014 22 axes, 36 models, 425 stablecoins, 16 XRPL instruments. Each card is content-addressed, Ed25519-signed, and independently verifiable.",
+  "tags": [
+    "governance",
+    "ai-safety",
+    "measurement",
+    "stablecoin",
+    "x402"
+  ],
+  "license": "cc-by-4.0",
+  "format": "JSON",
+  "load_script": "from datasets import load_dataset; ds = load_dataset('csoai/gspc-cards')",
+  "note": "One-liner = ML-practitioner reach. HuggingFace is where AI researchers look.",
+  "effort": "1h (create repo, upload cards, add dataset card)",
+  "honest_sentence": "HuggingFace dataset spec: CSOAI measurement dataset card specification for HF Hub.",
+  "measurement_not_certification": true,
+  "kind": "data.hf.dataset.spec",
+  "subject": "hf-dataset-card-spec"
+}

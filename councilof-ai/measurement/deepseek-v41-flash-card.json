@@ -1,0 +1,148 @@
+{
+  "model_name": "DeepSeek-V4.1-Flash",
+  "provider": "DeepSeek AI",
+  "huggingface_id": "deepseek-ai/DeepSeek-V4.1-Flash",
+  "parameters": {
+    "backbone": "552B",
+    "activated_prefill": "8B",
+    "activated_decode": "16B",
+    "total_safetensors": "763B (mixed precision: BF16 1.98B + F32 42M + F8_E4M3 204B + I8 557B)",
+    "total_on_disk": "763B (552B backbone + 196B Engram conditional memory + ~14B spec-decode weights)",
+    "note": "552B backbone active. ~763B total parameters on disk (FP8 ~510GB). 8B active prefill / 16B active decode."
+  },
+  "architecture": {
+    "type": "Causal Encoder-Decoder (CED) MoE",
+    "model_class": "DeepseekV41ForCausalLM",
+    "layers": 40,
+    "encoder_layers": 20,
+    "decoder_layers": 20,
+    "hidden_size": 5120,
+    "attention_heads": 64,
+    "kv_heads": 1,
+    "head_dim": 512,
+    "max_position_embeddings": 1048576,
+    "n_routed_experts": 384,
+    "n_shared_experts": 1,
+    "num_experts_per_tok": 6,
+    "attention": "Compressed Sparse Attention 2 (CSA2)",
+    "kv_cache_bytes_per_token": 890,
+    "speculative_decoding": "DSpark",
+    "vision_encoder": "DeepSeek-ViT (32 layers, 1024 hidden, 14x14 patches)",
+    "multimodal": true,
+    "engram_memory": "196B parameters, sparsely accessed"
+  },
+  "license": "MIT",
+  "release_date": "2026-09-10",
+  "training_data": {
+    "corpus_size": "45T tokens",
+    "type": "multimodal (text + images)",
+    "sparse_attention_length": "64K",
+    "context_extended_at": "34T tokens",
+    "max_context": "1M tokens"
+  },
+  "post_training": "SFT \u2192 RL \u2192 on-policy distillation (OPD), large-scale automated agent task synthesis",
+  "reasoning_effort": "continuously controllable (integer 1\u2013100)",
+  "reported_benchmarks": {
+    "base_model": {
+      "AGIEval_EM_3to5shot": 83.4,
+      "MMLU_Pro_EM_5shot": 74.1,
+      "C_Eval_EM_5shot": 92.1,
+      "MultiLoKo_5shot": 45.5,
+      "SimpleQA_Verified_25shot": 42.3,
+      "SuperGPQA_EM_5shot": 53.1,
+      "BBH_EM_3shot": 86.1,
+      "BBEH_EM_1shot": 27.2,
+      "DROP_F1_1shot": 87.9,
+      "HellaSwag_EM_0shot": 87.2,
+      "BigCodeBench_Pass1_3shot": 60.6,
+      "HumanEval_Pass1_0shot": 79.4,
+      "GSM8K_EM_8shot": 93.0,
+      "MATH_EM_4shot": 61.1,
+      "MGSM_EM_8shot": 80.2,
+      "LongBench_V2_EM_1shot": 45.2,
+      "MMMU_Pro_EM_4shot": 56.5,
+      "CVBench_EM_4shot": 77.9,
+      "DocVQA_4shot": 95.6,
+      "RefCOCO_avg_0shot": 86.0
+    },
+    "instruct_model_max_effort": {
+      "GPQA_Diamond_Pass1": 90.9,
+      "HLE_Pass1": 36.8,
+      "Codeforces_Rating": 3471,
+      "MathArena_Apex_Pass1": 65.6,
+      "TerminalBench_2_1_Pass1": 90.6,
+      "TerminalBench_3_0_Pass1": 30.0,
+      "TerminalBench_4_0_Pass1": 31.2,
+      "DeepSWE_v1_1_Resolved": 74.2,
+      "ProgramBench_Almost1": 20.3,
+      "NL2Repo_Bench_Score": 64.0,
+      "CyberGym_Pass1": 88.1,
+      "SEC_Bench_Pro_Pass1": 62.8,
+      "ExploitGym_Pass1": 15.3,
+      "HLE_w_tools_Pass1": 63.9,
+      "AutomationBench_Pass1": 54.8,
+      "Agents_Last_Exam_Pass1": 31.8,
+      "Chartography_w_tools_Pass1": 78.9,
+      "BabyVision_w_tools_Pass1": 89.6,
+      "ZeroBench_main_w_tools_Pass5": 49.0
+    }
+  },
+  "safety_metrics": null,
+  "measurable_axes": {
+    "from_card": [
+      {
+        "axis": "openness",
+        "confidence": "high",
+        "evidence": "MIT license, full weights released (48 safetensor shards), reference inference code, encoding spec, evaluation harness all published openly on HuggingFace"
+      },
+      {
+        "axis": "provenance",
+        "confidence": "partial",
+        "evidence": "Clear authorship (DeepSeek-AI), training corpus described (45T tokens multimodal), tech report PDF included. Training data provenance details (sources, filtering, consent) not disclosed in card."
+      },
+      {
+        "axis": "conformance",
+        "confidence": "partial",
+        "evidence": "Full config.json published, architecture documented, HF transformers compatible (library_name: transformers), quantization config (FP8/FP4) specified. No formal standards conformance claimed."
+      },
+      {
+        "axis": "machinery-conformity",
+        "confidence": "partial",
+        "evidence": "MoE architecture fully specified (384 routed + 1 shared, 6 active per token). CED architecture novel \u2014 no external standard to conform to. FP4 expert dtype specified."
+      }
+    ],
+    "not_measurable_from_card": [
+      "governance \u2014 no governance framework or policy disclosed",
+      "safety \u2014 no safety benchmarks, red-teaming results, or harm metrics reported",
+      "continuity \u2014 no versioning, checkpointing, or model lifecycle policy",
+      "care \u2014 no user wellbeing or harm mitigation evidence",
+      "cross-reality \u2014 no physical-world interaction benchmarks",
+      "detector-interop \u2014 no watermarking or detection compatibility",
+      "art5-safeguard \u2014 no EU AI Act Article 5 compliance evidence",
+      "swarm \u2014 no multi-agent coordination benchmarks",
+      "affect \u2014 no emotional/psychological impact assessment",
+      "jail \u2014 no jailbreak resistance benchmarks",
+      "provenance-controls \u2014 no C2PA or content credentials",
+      "reserve-attestation \u2014 no financial reserve evidence (N/A for model)",
+      "regulatory-framework \u2014 no regulatory compliance claims",
+      "distribution-integrity \u2014 no supply chain integrity evidence",
+      "custody-disclosure \u2014 no custody/ownership chain",
+      "ai-adoption-components \u2014 no adoption metrics",
+      "labour-components \u2014 no labour impact data",
+      "humanoid-labour-index \u2014 no robotics/labour displacement data"
+    ],
+    "total_measurable": 4
+  },
+  "honest_sentence": "DeepSeek-V4.1-Flash: 552B backbone (~763B total on disk), MIT, multimodal, 1M context. 4 axes measurable from card. Vendor benchmarks only \u2014 no independent measurement yet.",
+  "measured_at": "2026-09-11T05:53:53.043350+00:00",
+  "measurement_card_version": "v0.1",
+  "is_certification": false,
+  "notes": "This is a measurement card, not a certification. We measure what the card declares. The absence of safety/governance/compliance data is itself a finding.",
+  "pricing": {
+    "off_peak": "$0.15/$0.60 per M tokens",
+    "note": "Retires V4 Flash; takes over V4 Pro Sep 14"
+  },
+  "model_swap_watch": "Sep 14: deepseek-v4-pro starts serving V4.1 Flash \u2014 silent model-swap event",
+  "kind": "model.card",
+  "subject": "deepseek-v41-flash"
+}

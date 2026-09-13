@@ -1,0 +1,37 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "stablecoin.cross-chain.measurement",
+  "subject": "RLUSD",
+  "measured_at": "2026-09-11T06:59:46.851390+00:00",
+  "version": "v2-corrected",
+  "correction_note": "v1 claimed 41,200 holders \u2014 unsupported. Independent XRPL reconstruction found 4,074 non-zero trustlines. v1 claimed $537M divergence \u2014 invalid cross-date comparison. Measurement itself ($2.4B cross-chain) verified.",
+  "xrpl": {
+    "supply": 1031501745.15,
+    "supply_display": "$1.03B",
+    "holders_verified": 4074,
+    "holders_note": "Non-zero trustlines (independently verified). Not '41,200 holders'.",
+    "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+    "verified_via": "Bidirectional domain match"
+  },
+  "ethereum": {
+    "supply": 1373732628,
+    "supply_display": "$1.37B",
+    "contract": "0x8292bb45bf1ee4d140127049757c2e0ff06317ed",
+    "decimals": 18,
+    "verified_via": "totalSupply() with symbol verification + 4-RPC failover"
+  },
+  "total_crosschain": {
+    "supply": 2405234373,
+    "supply_display": "$2.41B",
+    "coverage": "XRPL + Ethereum (2 of ~6 chains)",
+    "coverage_pct": "100% of measured chains"
+  },
+  "ripple_transparency": {
+    "note": "Ripple's page (Aug 20) shows $1,866.5M. Different date + possible multi-chain vs XRPL-only reporting. NOT a valid cross-date comparison.",
+    "do_not_claim_divergence": true
+  },
+  "defi_llama_rank": 11,
+  "total_stablecoins_globally": 425,
+  "honest_sentence": "RLUSD measured across XRPL ($1.03B, 4,074 trustlines) and Ethereum ($1.37B). Total: $2.41B. First independent cross-chain measurement. No fabricated gap narrative \u2014 different dates and definitions are not comparable.",
+  "measurement_not_certification": true
+}

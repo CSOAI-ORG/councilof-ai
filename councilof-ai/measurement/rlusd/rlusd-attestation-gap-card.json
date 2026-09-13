@@ -1,0 +1,50 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "stablecoin.attestation.gap",
+  "subject": "RLUSD",
+  "measured_at": "2026-09-11T05:38:36.108830Z",
+  "issuer": "Ripple",
+  "measurement": {
+    "total_supply_coingecko": {
+      "value": 2405335190,
+      "currency": "USD",
+      "source": "CoinGecko API",
+      "market_cap": 2404833363,
+      "circulating": 2404807130,
+      "price": 0.999979,
+      "24h_volume": 165252954,
+      "as_of": "2026-09-11T05:38:36.108830Z"
+    },
+    "xrpl_chain": {
+      "value": 1028940439,
+      "currency": "USD",
+      "source": "councilof.ai/api/xrpl (XRPL mainnet reader)",
+      "holders": 41200,
+      "verified_via": "Bidirectional domain match",
+      "as_of": "2026-09-07T12:30:34Z"
+    },
+    "ethereum_chain": {
+      "value": 1376394751,
+      "currency": "USD",
+      "source": "Derived: CoinGecko total minus XRPL on-chain",
+      "contract": "0x8292bb45bf1ee4d140...",
+      "note": "NOT YET MEASURED DIRECTLY \u2014 derived from CoinGecko minus our XRPL reader"
+    },
+    "ripple_transparency_page": {
+      "value_approx": 1510000000,
+      "currency": "USD",
+      "source": "ripple.com/ripple-usd-stablecoin/",
+      "note": "Approximate \u2014 may report XRPL-only or combined"
+    }
+  },
+  "gap_analysis": {
+    "finding": "RLUSD exists on XRPL ($1.03B) AND Ethereum ($1.38B). Our reader only measures XRPL. CoinGecko reports combined $2.4B.",
+    "our_coverage": "XRPL only \u2014 we are blind to 57% of RLUSD supply on Ethereum",
+    "ripple_page_discrepancy": "Ripple page shows ~$1.51B vs CoinGecko $2.4B \u2014 gap may be XRPL-only reporting vs combined, or attestation lag",
+    "action": "Add Ethereum-side RLUSD reader to close the measurement gap. Until then, declare coverage: XRPL-only."
+  },
+  "honest_sentence": "We measure RLUSD on XRPL ($1.03B, 41.2K holders). The total supply across XRPL + Ethereum is ~$2.4B. We cover 43% of supply. The Ethereum side is unread.",
+  "measurement_not_certification": true,
+  "coverage_pct": 42.8,
+  "next": "Add Ethereum RPC reader for RLUSD contract 0x8292bb45bf1ee4d140..."
+}

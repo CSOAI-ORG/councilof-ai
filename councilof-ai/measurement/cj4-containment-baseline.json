@@ -1,0 +1,27 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "security.containment.baseline",
+  "subject": "cj4-containment-asisecurity",
+  "measured_at": "2026-09-13T04:02:59.867637+00:00",
+  "source": "asisecurity.ai + local hive tests",
+  "metrics": {
+    "escape_detector": "PASS (local)",
+    "jail_bank": "60 usable cases + 1 canary",
+    "rainbow_policy": "2/2 passed",
+    "decision_ledger": "9/9 passed",
+    "drift_gate": "PASS",
+    "merkle_inclusion": "PASS",
+    "root_release": "PASS",
+    "production_containment": "NOT YET PROVEN",
+    "needs": [
+      "default-deny runtime egress",
+      "independent event capture",
+      "model identity pinning",
+      "SBOM admission",
+      "silent-swap detection",
+      "extraction signals"
+    ]
+  },
+  "honest_sentence": "ASISecurity.ai containment baseline: escape detector PASS, jail bank 60 cases, rainbow 2/2, decision ledger 9/9. Production containment NOT YET PROVEN \u2014 needs egress deny, event capture, identity pinning.",
+  "measurement_not_certification": true
+}

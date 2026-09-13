@@ -1,0 +1,44 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "x402.wash.adjusted",
+  "subject": "x402-wash-analytics",
+  "measured_at": "2026-09-11T08:16:32+00:00",
+  "axes": {
+    "total_txns": "~150M",
+    "cumulative_volume": "$40M",
+    "daily_volume": "$28-69K",
+    "wash_share": "36-93%",
+    "coinbase_share": "92.9%",
+    "bazaar_resources": "~25,560"
+  },
+  "honest_sentence": "x402 has ~150M txns but wash share 36-93%. Only Visa-funded Artemis + one explorer do wash-adjusted analytics. We would be the second.",
+  "measurement_not_certification": true,
+  "sources": [
+    {
+      "name": "Artemis (Visa-funded)",
+      "url": "https://app.artemis.xyz/protocol/x402",
+      "note": "Wash-adjusted volume methodology; primary external source"
+    },
+    {
+      "name": "x402 Bazaar",
+      "url": "https://bazaar.x402.org",
+      "note": "~25,560 resources listed"
+    },
+    {
+      "name": "Coinbase x402 Facilitator",
+      "note": "92.9% of x402 transactions routed through Coinbase facilitator"
+    }
+  ],
+  "methodology_notes": {
+    "wash_share_range": "36-93% varies by methodology (address clustering, circular flow detection, volume-weighted vs count-weighted)",
+    "volume_discrepancy": "~150M txns but only ~$40M cumulative volume = tiny avg transaction size (~$0.27), consistent with wash patterns",
+    "daily_volume_spread": "$28-69K daily reflects measurement uncertainty across explorers",
+    "competitive_landscape": "Only Artemis (Visa-backed) and one independent explorer provide wash-adjusted metrics. CSOAI GSPC would be the second independent instrument."
+  },
+  "research_status": {
+    "web_search": "blocked \u2014 no FIRECRAWL_API_KEY configured",
+    "x_search": "blocked \u2014 no xAI API key configured",
+    "browser": "blocked \u2014 chrome profile unavailable",
+    "data_source": "task context values (pre-verified by parent agent)"
+  }
+}

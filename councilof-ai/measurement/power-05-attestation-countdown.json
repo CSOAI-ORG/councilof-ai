@@ -1,0 +1,40 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "reserve.attestation.countdown",
+  "subject": "attestation-staleness",
+  "measured_at": "2026-09-11T10:16:25.658427+00:00",
+  "issuers": [
+    {
+      "name": "Tether (USDT)",
+      "last_attestation": "Q2 2026",
+      "days_outstanding": 78,
+      "next_expected": "2026-10-31",
+      "auditor": "BDO",
+      "buffer_status": "halved $8.23B\u2192$4.11B",
+      "kpmg_full_audit": "unpublished"
+    },
+    {
+      "name": "Circle (USDC)",
+      "last_attestation": "Aug 2026",
+      "days_outstanding": 10,
+      "next_expected": "~2026-10-10",
+      "auditor": "Deloitte",
+      "cadence": "monthly"
+    },
+    {
+      "name": "BlackRock BRSRV/BSTBL",
+      "launched": "2026-08-03",
+      "aum": "$50M",
+      "sp_rating": "AAAm",
+      "first_monthly_cycle": "pending"
+    },
+    {
+      "name": "World Liberty Financial USD1",
+      "attestation_index": "published",
+      "lapse_fixed": "Jan-Jul 2026 all published",
+      "custodian": "BitGo Bank & Trust N.A."
+    }
+  ],
+  "honest_sentence": "Attestation staleness: Tether 78 days outstanding (Q3 BDO attestation due Oct 31, KPMG full audit still unpublished). Circle ~10 days. BlackRock BRSRV/BSTBL first monthly cycle pending.",
+  "measurement_not_certification": true
+}

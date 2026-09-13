@@ -1,0 +1,23 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "ai.vuln.watch",
+  "subject": "ai-package-vulns",
+  "measured_at": "2026-09-11T10:04:54.647536+00:00",
+  "source": "OSV.dev (keyless)",
+  "keyless": true,
+  "packages": [
+    {
+      "name": "transformers",
+      "ecosystem": "PyPI",
+      "vulns": 54,
+      "categories": [
+        "RCE",
+        "deserialization",
+        "ReDoS",
+        "insecure temp files"
+      ]
+    }
+  ],
+  "honest_sentence": "transformers (HuggingFace): 54 known vulnerabilities in OSV.dev. Includes RCE, deserialization, ReDoS. Measured, not certified.",
+  "measurement_not_certification": true
+}

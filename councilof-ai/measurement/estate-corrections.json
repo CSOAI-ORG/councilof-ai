@@ -1,0 +1,52 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "estate.corrections",
+  "subject": "measurement-corrections-2026-09-11",
+  "measured_at": "2026-09-11T08:11:18.771522+00:00",
+  "corrections": [
+    {
+      "my_claim": "9 unique MCP servers in registry",
+      "actual": "306 unique server names / 1,200 version entries under io.github.CSOAI-ORG/*",
+      "error_factor": "34\u00d7 undercount",
+      "source": "registry.modelcontextprotocol.io search+pagination"
+    },
+    {
+      "my_claim": "100 public repos",
+      "actual": "651 public repos (CSOAI-ORG is a User account, not an org)",
+      "error_factor": "6.5\u00d7 undercount",
+      "source": "GitHub API"
+    },
+    {
+      "my_claim": "Glama indexed, needs claim",
+      "actual": "Both rated A, already claimed by maintainer",
+      "error_factor": "already done",
+      "source": "glama.ai badge SVGs"
+    },
+    {
+      "my_claim": "9 stablecoins on XRPL, missing USDV/AUDD/XSGD",
+      "actual": "USDV real ($76.77M). AUDD+XSGD NOT missing \u2014 DefiLlama adapters broken ($0 shown vs on-ledger reality)",
+      "error_factor": "half right",
+      "source": "DefiLlama API + XRPL gateway_balances"
+    },
+    {
+      "my_claim": "425 stablecoins",
+      "actual": "Exactly 425 (337 USD-pegged, $310.8B total)",
+      "error_factor": "correct",
+      "source": "stablecoins.llama.fi"
+    }
+  ],
+  "new_findings": [
+    "FractalAI built conformance suite on CSOAI A2A signed-receipts/v1 \u2014 FIRST third-party standards adoption",
+    "15+ directories silently grading CSOAI (agenstry 420 entries, PulseMCP analytics, mcpindex scores, etc.)",
+    "forgeregistry.com has unclaimed claim page (trust grade B 60/100)",
+    "PulseMCP demand radar: governance-crosswalk 173 visitors, agent-commerce-payments 122, fishkeeper 45 (15/wk)",
+    "Docker Hub csoai/meok-sovereign: 10K+ pulls \u2014 biggest usage number in estate",
+    "XRPL IMPERSONATION HAZARD: fake XSGD (10B obligations) + fake RLUSD (783T) on ledger",
+    "USDV $76.77M supply, attestation 'pending' \u2014 zero published",
+    "Human discovery = ZERO: 0 citations, 0 Reddit/X/blog mentions, 0 XRPL-community references",
+    "FDUSD collapsed to #24 ($329M), USDP to #87 ($29M) \u2014 top-10 changed",
+    "Tether KPMG full audit announced Aug 2026, text UNPUBLISHED"
+  ],
+  "honest_sentence": "My earlier report undercounted CSOAI's MCP registry presence by 34\u00d7 (306 servers, not 9) and GitHub repos by 6.5\u00d7 (651, not 100). Glama already rated A. The machine funnel works; the human funnel is empty.",
+  "measurement_not_certification": true
+}

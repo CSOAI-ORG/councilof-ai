@@ -1,0 +1,44 @@
+{
+  "schema": "csoai.attribution.pipeline/0.1",
+  "kind": "x402.attribution.spec",
+  "subject": "settlement-attribution",
+  "measured_at": "2026-09-11T07:03:04.672487+00:00",
+  "flow": {
+    "step_1": "Agent discovers CSOAI via MCP Registry / awesome-mcp-servers / Glama",
+    "step_2": "Agent calls councilof.ai/mcp \u2192 free tools (verify_card, get_axis, etc.)",
+    "step_3": "Agent needs paid proof \u2192 x402 challenge returned (402 + accepts[] header)",
+    "step_4": "Agent pays USDC on Base \u2192 facilitator verifies \u2192 receipt issued",
+    "step_5": "Attribution: source= MCP_REGISTRY | AWESOME_MCP | GLAMA | DIRECT | PROMOTION",
+    "step_6": "Receipt includes: payer_address, amount, source, timestamp, proof_sha256"
+  },
+  "attribution_sources": [
+    {
+      "source": "MCP_REGISTRY",
+      "how": "Agent came from registry.modelcontextprotocol.io",
+      "detection": "Referer header or session tag"
+    },
+    {
+      "source": "AWESOME_MCP",
+      "how": "Agent came from awesome-mcp-servers list",
+      "detection": "Referer or user-agent pattern"
+    },
+    {
+      "source": "GLAMA",
+      "how": "Agent came from glama.ai",
+      "detection": "Referer header"
+    },
+    {
+      "source": "DIRECT",
+      "how": "Agent called councilof.ai/mcp directly",
+      "detection": "No referer"
+    },
+    {
+      "source": "PROMOTION",
+      "how": "Agent used promotion seed (0.08 USDC)",
+      "detection": "Payer address matches known promotion wallet"
+    }
+  ],
+  "measurement": "Each settlement produces a signed receipt with attribution. We measure which distribution surfaces produce paying agents. This IS the product \u2014 we measure our own revenue pipeline.",
+  "honest_sentence": "Attribution tracks where paying agents come from. We measure our own distribution funnel. The 8 promotion seeds (0.08 USDC) prove the rail works; real customer demand is measured separately.",
+  "measurement_not_certification": true
+}

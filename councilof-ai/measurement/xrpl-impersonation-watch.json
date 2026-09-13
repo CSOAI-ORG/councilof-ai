@@ -1,0 +1,28 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "xrpl.impersonation.watch",
+  "subject": "xrpl-fake-issuers",
+  "measured_at": "2026-09-11T08:11:56.260432+00:00",
+  "hazards_found": [
+    {
+      "currency": "XSGD",
+      "fake_address": "rXSGdyyEPVeBV6oux4gh6W3rDVM2FyKGe",
+      "fake_obligations": "10,000,000,000",
+      "impersonation_method": "Sets Domain=straitsx.com"
+    },
+    {
+      "currency": "RLUSD",
+      "fake_address": "unknown",
+      "fake_obligations": "783,000,000,000,000",
+      "impersonation_method": "Fake issuer"
+    }
+  ],
+  "methodology": "Daily scan: all accounts issuing XSGD/RLUSD/USDC/AUDD currency codes vs hard-coded verified issuers. Card every mismatch with obligations size.",
+  "hard_coded_issuers": {
+    "RLUSD": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+    "XSGD": "known verified address",
+    "note": "Hard-code verified issuer addresses forever; never resolve by currency code or domain"
+  },
+  "honest_sentence": "XRPL impersonation hazard found live: fake XSGD (10B obligations) and fake RLUSD (783T) on ledger. Anyone can set the Domain field. Hard-code verified issuers forever.",
+  "measurement_not_certification": true
+}

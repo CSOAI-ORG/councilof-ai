@@ -1,0 +1,181 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.triggers.catalog",
+  "subject": "csoai-measurement-triggers",
+  "measured_at": "2026-09-11T06:59:22.531513+00:00",
+  "total_triggers": 23,
+  "domains": [
+    "model",
+    "brand",
+    "stablecoin",
+    "regulatory",
+    "mcp",
+    "erc8004",
+    "x402"
+  ],
+  "triggers": [
+    {
+      "id": "SC-001",
+      "domain": "stablecoin",
+      "trigger": "RLUSD supply change >1%",
+      "cadence": "daily",
+      "chain": "XRPL+ETH"
+    },
+    {
+      "id": "SC-002",
+      "domain": "stablecoin",
+      "trigger": "USDC reserve composition change",
+      "cadence": "daily",
+      "chain": "Ethereum"
+    },
+    {
+      "id": "SC-003",
+      "domain": "stablecoin",
+      "trigger": "USDT attestation lag >90 days",
+      "cadence": "daily",
+      "chain": "multi"
+    },
+    {
+      "id": "SC-004",
+      "domain": "stablecoin",
+      "trigger": "Any top-10 stablecoin depeg >2%",
+      "cadence": "hourly",
+      "chain": "multi"
+    },
+    {
+      "id": "SC-005",
+      "domain": "stablecoin",
+      "trigger": "GENIUS Act rulemaking update",
+      "cadence": "weekly",
+      "chain": "N/A"
+    },
+    {
+      "id": "X4-001",
+      "domain": "x402",
+      "trigger": "New merchant/door registered",
+      "cadence": "daily",
+      "chain": "Base"
+    },
+    {
+      "id": "X4-002",
+      "domain": "x402",
+      "trigger": "Settlement volume spike >20%",
+      "cadence": "hourly",
+      "chain": "Base"
+    },
+    {
+      "id": "X4-003",
+      "domain": "x402",
+      "trigger": "x402 Foundation announcement",
+      "cadence": "daily",
+      "chain": "N/A"
+    },
+    {
+      "id": "MC-001",
+      "domain": "mcp",
+      "trigger": "New MCP server >1000 stars",
+      "cadence": "daily",
+      "chain": "N/A"
+    },
+    {
+      "id": "MC-002",
+      "domain": "mcp",
+      "trigger": "MCP spec update",
+      "cadence": "weekly",
+      "chain": "N/A"
+    },
+    {
+      "id": "MC-003",
+      "domain": "mcp",
+      "trigger": "Auth probe regression (more open)",
+      "cadence": "weekly",
+      "chain": "N/A"
+    },
+    {
+      "id": "AI-001",
+      "domain": "model",
+      "trigger": "New frontier model release (>100B)",
+      "cadence": "daily",
+      "chain": "N/A"
+    },
+    {
+      "id": "AI-002",
+      "domain": "model",
+      "trigger": "DeepSeek model swap (Sep 14)",
+      "cadence": "event",
+      "chain": "N/A"
+    },
+    {
+      "id": "AI-003",
+      "domain": "model",
+      "trigger": "Safety framework change (5 labs)",
+      "cadence": "weekly",
+      "chain": "N/A"
+    },
+    {
+      "id": "AI-004",
+      "domain": "model",
+      "trigger": "New benchmark published",
+      "cadence": "weekly",
+      "chain": "N/A"
+    },
+    {
+      "id": "RG-001",
+      "domain": "regulatory",
+      "trigger": "EU AI Act Art 50 deadline (Dec 2)",
+      "cadence": "daily",
+      "chain": "N/A"
+    },
+    {
+      "id": "RG-002",
+      "domain": "regulatory",
+      "trigger": "CLARITY Act vote (Sep 15)",
+      "cadence": "event",
+      "chain": "N/A"
+    },
+    {
+      "id": "RG-003",
+      "domain": "regulatory",
+      "trigger": "XRPN merger vote (Sep 30)",
+      "cadence": "event",
+      "chain": "XRPL"
+    },
+    {
+      "id": "RG-004",
+      "domain": "regulatory",
+      "trigger": "Evernorth redemption (Sep 28)",
+      "cadence": "event",
+      "chain": "XRPL"
+    },
+    {
+      "id": "ER-001",
+      "domain": "erc8004",
+      "trigger": "Validation registry ships",
+      "cadence": "daily",
+      "chain": "Ethereum+Base"
+    },
+    {
+      "id": "ER-002",
+      "domain": "erc8004",
+      "trigger": "New agent registered >10K/day",
+      "cadence": "daily",
+      "chain": "multi"
+    },
+    {
+      "id": "BR-001",
+      "domain": "brand",
+      "trigger": "CT log lookalike cert",
+      "cadence": "6h",
+      "chain": "N/A"
+    },
+    {
+      "id": "BR-002",
+      "domain": "brand",
+      "trigger": "Domain registration similarity",
+      "cadence": "daily",
+      "chain": "N/A"
+    }
+  ],
+  "honest_sentence": "23 high-priority measurement triggers identified across stablecoin, x402, MCP, AI model, regulatory, ERC-8004, and brand domains.",
+  "measurement_not_certification": true
+}

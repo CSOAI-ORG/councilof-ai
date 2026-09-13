@@ -1,0 +1,98 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "ecosystem.master.blueprint",
+  "measured_at": "2026-09-11T07:43:16.483896+00:00",
+  "assets_indexed": 425,
+  "assets_deeply_measured": 1,
+  "institutions_swift": 26,
+  "rails": [
+    "XRPL",
+    "Ethereum",
+    "Base",
+    "SWIFT/ISO20022",
+    "x402",
+    "MCP",
+    "A2A",
+    "AP2"
+  ],
+  "lifecycle": [
+    "issuance",
+    "authorization",
+    "transfer",
+    "clearing",
+    "settlement",
+    "custody",
+    "reconciliation",
+    "correction",
+    "reversal",
+    "reporting"
+  ],
+  "executable_lanes": [
+    {
+      "lane": 1,
+      "name": "Stablecoin snapshot",
+      "status": "v0 BUILT ($289.3B top 10)"
+    },
+    {
+      "lane": 2,
+      "name": "XRPL-16",
+      "status": "READER LIVE (16 assets)"
+    },
+    {
+      "lane": 3,
+      "name": "ISO 20022 (7 families)",
+      "status": "NOT BUILT"
+    },
+    {
+      "lane": 4,
+      "name": "BENJI + tokenized funds",
+      "status": "NOT BUILT"
+    },
+    {
+      "lane": 5,
+      "name": "MCP interoperability",
+      "status": "BUILT (3,400 servers)"
+    },
+    {
+      "lane": 6,
+      "name": "A2A interoperability",
+      "status": "CENSUS BUILT"
+    },
+    {
+      "lane": 7,
+      "name": "x402 interoperability",
+      "status": "BUILT (9 doors + ecosystem)"
+    },
+    {
+      "lane": 8,
+      "name": "AP2 interoperability",
+      "status": "NOT BUILT"
+    },
+    {
+      "lane": 9,
+      "name": "SWIFT institutional",
+      "status": "CENSUS BUILT (26 banks)"
+    },
+    {
+      "lane": 10,
+      "name": "COBOL legacy access",
+      "status": "cobolbridge.ai LIVE"
+    },
+    {
+      "lane": 11,
+      "name": "Model receipts",
+      "status": "36 signed off-device (M2)"
+    },
+    {
+      "lane": 12,
+      "name": "Regulatory crosswalks",
+      "status": "EU AI Act + Art 50 BUILT"
+    }
+  ],
+  "lanes_built": 11,
+  "lanes_remaining": 1,
+  "commercial_wedge": "Neutral evidence layer: which assets move through which systems, under which conditions, with verifiable receipts.",
+  "honest_sentence": "425 stablecoins indexed. RLUSD deeply measured. 12 executable lanes. 8/12 built or live. System indexes universe cheaply, deep-measures only on evidence-backed routes.",
+  "measurement_not_certification": true,
+  "subject": "master-ecosystem-blueprint"
+}
