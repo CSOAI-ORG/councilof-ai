@@ -15,7 +15,24 @@ name: bot-checks-sweeper
 
 on:
   schedule:
-    - cron: "9,29,49 * * * *"
+    - cron: "9,29,49 * * * *"   # backstop only — GitHub cron drops under load (observed 2026-09-13: 4.5h silent)
+  # Primary signal: any PR-creating automation completing IS the event. Idempotent
+  # sweep makes extra triggers free.
+  workflow_run:
+    workflows:
+      - hub-queue-land
+      - art50-target-index
+      - catalog-trust-round
+      - census-delta
+      - growth-loop
+      - mcp-trust-board-round
+      - "provider-watch — hash-only provider document change watcher"
+      - public-root
+      - "Reg-watch — regulation-change detector (living loop)"
+      - stablecoin-evidence-round
+      - "TUI-6 Distribution Monitoring"
+      - "x402 door conformance (daily, DRY)"
+    types: [completed]
   workflow_dispatch: {}
 
 permissions:
