@@ -9,6 +9,10 @@ const payloads: Record<string, unknown> = {
   "/interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json": {
     registry_totals: { registered_all_indexer: 137046 },
   },
+  "/interop/wrapped-asset-parity-latest.json": {
+    counts: { ESCROW_PARITY_READ: 8, UNCHECKABLE_NATIVE_ISSUANCE: 4, INDEXED_CUSTODIAL: 5 },
+    records: Array.from({ length: 17 }, (_, i) => ({ id: `pair-${i}` })),
+  },
   "/api/gspc": {
     totals: {
       axes: 22,
@@ -75,6 +79,7 @@ describe("GET /api/coverage", () => {
       "mcp",
       "a2a",
       "erc8004",
+      "wrappers",
     ]);
     expect(body.rows.find((row: any) => row.id === "stablecoins").indexed.value).toBe(425);
     expect(body.rows.find((row: any) => row.id === "xrpl").measured.value).toBe(0);
@@ -83,6 +88,9 @@ describe("GET /api/coverage", () => {
     expect(body.rows.find((row: any) => row.id === "a2a").indexed.value).toBe(7);
     expect(body.rows.find((row: any) => row.id === "erc8004").indexed.value).toBe(137046);
     expect(body.rows.find((row: any) => row.id === "erc8004").signed.value).toBeNull();
+    expect(body.rows.find((row: any) => row.id === "wrappers").indexed.value).toBe(17);
+    expect(body.rows.find((row: any) => row.id === "wrappers").measured.value).toBeNull();
+    expect(body.rows.find((row: any) => row.id === "wrappers").note).toMatch(/escrow-parity reads: 8/);
   });
 
   it("keeps a failed source visible and renders its lifecycle cells unavailable", async () => {

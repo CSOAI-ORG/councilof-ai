@@ -7,11 +7,11 @@ import { CENSUS_SITES, EMPTY_SLOT_RULING, EMPTY_SLOTS } from "./emptySlots";
 const products = readFileSync(resolve(__dirname, "../pages/Products.tsx"), "utf8");
 
 describe("domination playbook audit", () => {
-  it("keeps demand and empty-slot names, refuses week-to-MEASURED", () => {
+  it("keeps demand; empty-names stale vs 22·22·0; refuses week-to-MEASURED", () => {
     expect(PLAYBOOK_RULING).toMatch(/Refuse/);
     expect(PLAYBOOK_PITCH).toMatch(/AILuminate for chat/);
     expect(playbookByVerdict("keep").some((c) => c.id === "eu-demand")).toBe(true);
-    expect(playbookByVerdict("keep").some((c) => c.id === "empty-names")).toBe(true);
+    expect(playbookByVerdict("stale").some((c) => c.id === "empty-names")).toBe(true);
     expect(playbookByVerdict("keep").some((c) => c.id === "ailuminate-bind")).toBe(true);
     expect(playbookByVerdict("forbidden").some((c) => c.id === "forbid-week-fill")).toBe(true);
     expect(playbookByVerdict("forbidden").some((c) => c.id === "forbid-auto-email")).toBe(true);

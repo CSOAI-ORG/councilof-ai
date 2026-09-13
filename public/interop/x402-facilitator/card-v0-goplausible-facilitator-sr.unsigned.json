@@ -1,0 +1,89 @@
+{
+  "schema": "csoai.card-v0/unsigned",
+  "surface": "x402.facilitator.sr",
+  "subject": "GoPlausible facilitator \u2014 UNSIGNED SR dry expand",
+  "as_of": "2026-09-13T17:35:36.298798+00:00",
+  "payload": {
+    "surface": "x402.facilitator.sr",
+    "subject": "facilitator.goplausible.xyz",
+    "status": "UNSIGNED",
+    "sr_results": [
+      {
+        "sr": "SR1",
+        "status": "PASS",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "tamper-requirements-binding",
+        "note": "{\"isValid\": false, \"invalidReason\": \"invalid_exact_evm_recipient_mismatch\", \"payer\": \"0x4f6bf7606e5B1452F754F7d1F9a7b4Bf1bBB6e1D\"}"
+      },
+      {
+        "sr": "SR2",
+        "status": "PASS",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "tamper-signature",
+        "note": "{\"isValid\": false, \"invalidReason\": \"invalid_exact_evm_signature\", \"payer\": \"0x4f6bf7606e5B1452F754F7d1F9a7b4Bf1bBB6e1D\"}"
+      },
+      {
+        "sr": "SR3",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR4",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR5",
+        "status": "FAIL",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "zero-amount-reject",
+        "note": "{\"isValid\": true, \"payer\": \"0x4f6bf7606e5B1452F754F7d1F9a7b4Bf1bBB6e1D\"}"
+      },
+      {
+        "sr": "SR6",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR7",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR8",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      }
+    ],
+    "denominators": {
+      "n_sr": 8,
+      "n_pass": 2,
+      "n_fail": 1,
+      "n_uncheckable": 5
+    },
+    "settle_called": false,
+    "writes_board": false,
+    "separate_from": "catalog.x402.trust.74of100",
+    "board_cite": "22\u00b722\u00b70"
+  },
+  "sha256": "b0536c18951014b9934abedd61c56ec7fbb6061e75619db19797f5f5df6d1a72",
+  "sig_ed25519": null
+}

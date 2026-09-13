@@ -1,0 +1,116 @@
+{
+  "as_of": "2026-09-13T17:33:50.199653+00:00",
+  "subjects": {
+    "goplausible": {
+      "base": "https://facilitator.goplausible.xyz",
+      "paths": {
+        "/supported": {
+          "http": 200,
+          "bytes": 1028,
+          "sha256": "8a1ed5057b857df4a8ad95d0c9d6b77c6d91cfebfc9f5ae0c927d23b373d8b30",
+          "ct": "application/json",
+          "body_snip": "{\"kinds\":[{\"x402Version\":2,\"scheme\":\"exact\",\"network\":\"eip155:8453\"},{\"x402Version\":2,\"scheme\":\"exact\",\"network\":\"eip155:84532\"},{\"x402Version\":2,\"scheme\":\"exact\",\"network\":\"solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp\",\"extra\":{\"feePayer\":\"8a8fFNfk2AGS7rgVv1BoqPUWnzQuoCrShJV8tSE6RAYi\"}},{\"x402Version\":2"
+        },
+        "/verify": {
+          "http": 404,
+          "bytes": 13,
+          "sha256": "7d04f7431bbfa41a04bcc7e6b98b9de0d919756c4c671c5785c99fff45f16402",
+          "body_snip": "404 Not Found"
+        },
+        "/settle": {
+          "http": 404,
+          "bytes": 13,
+          "sha256": "7d04f7431bbfa41a04bcc7e6b98b9de0d919756c4c671c5785c99fff45f16402",
+          "body_snip": "404 Not Found"
+        },
+        "/health": {
+          "http": 200,
+          "bytes": 505,
+          "sha256": "7dc8d200317e882579b9bf40bd830873bea02ca1076c2f1f07274b8cf4070a04",
+          "ct": "application/json",
+          "body_snip": "{\"status\":\"healthy\",\"version\":\"2.0.0\",\"timestamp\":\"2026-09-13T17:33:18.280Z\",\"networks\":{\"eip155:8453\":{\"status\":\"up\",\"latency\":42},\"eip155:84532\":{\"status\":\"up\",\"latency\":38},\"solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp\":{\"status\":\"up\",\"latency\":49},\"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1\":{\"status\":\""
+        },
+        "/discovery/resources?limit=1": {
+          "http": 200,
+          "bytes": 1274,
+          "sha256": "f169f8016c13773197f10db34a38fe4274bd8c8dc2dc57a6ef3d24afaa16bc24",
+          "ct": "application/json",
+          "body_snip": "{\"x402Version\":2,\"items\":[{\"id\":\"UE9TVDpodHRwczovL2hlbGl4Ym94LW1hbmFnZXIub25yZW5kZXIuY29tL3YyL3g0MDIvY2xpL2hvdXI\",\"resourceUrl\":\"https://helixbox-manager.onrender.com/v2/x402/cli/hour\",\"method\":\"POST\",\"description\":\"One hour of HelixBox agent session access.\",\"mimeType\":\"application/json\",\"merchantI"
+        }
+      }
+    },
+    "openx402": {
+      "base": "https://facilitator.openx402.ai",
+      "paths": {
+        "/supported": {
+          "http": 200,
+          "bytes": 946,
+          "sha256": "87badf9c1eecb5cef4449c3612a5dc5b40b962e0040e1e5e9d02445c85cb8951",
+          "ct": "application/json",
+          "body_snip": "{\"kinds\":[{\"x402Version\":2,\"scheme\":\"exact\",\"network\":\"eip155:8453\",\"extra\":{\"name\":\"USD Coin\",\"version\":\"2\",\"asset\":\"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\",\"assetTransferMethod\":\"eip3009\"}},{\"x402Version\":2,\"scheme\":\"exact\",\"network\":\"eip155:84532\",\"extra\":{\"name\":\"USD Coin\",\"version\":\"2\",\"ass"
+        },
+        "/verify": {
+          "http": 404,
+          "bytes": 13,
+          "sha256": "7d04f7431bbfa41a04bcc7e6b98b9de0d919756c4c671c5785c99fff45f16402",
+          "body_snip": "404 Not Found"
+        },
+        "/settle": {
+          "http": 404,
+          "bytes": 13,
+          "sha256": "7d04f7431bbfa41a04bcc7e6b98b9de0d919756c4c671c5785c99fff45f16402",
+          "body_snip": "404 Not Found"
+        },
+        "/health": {
+          "http": 404,
+          "bytes": 13,
+          "sha256": "7d04f7431bbfa41a04bcc7e6b98b9de0d919756c4c671c5785c99fff45f16402",
+          "body_snip": "404 Not Found"
+        },
+        "/discovery/resources?limit=1": {
+          "http": 200,
+          "bytes": 671,
+          "sha256": "522ba0d5f36d3be0ffad038cacfe79881f3fa6022991f6ff2d92a1ae5cb0d7bd",
+          "ct": "application/json",
+          "body_snip": "{\"x402Version\":2,\"items\":[{\"accepts\":[{\"scheme\":\"exact\",\"network\":\"eip155:84532\",\"asset\":\"0x036CbD53842c5426634e7929541eC2318f3dCF7e\",\"amount\":\"1000\",\"payTo\":\"0x4F568Bf0cE8537CBE7a0DAF1A43C955e0a648db9\",\"maxTimeoutSeconds\":300,\"extra\":{\"name\":\"USDC\",\"version\":\"2\"}},{\"scheme\":\"exact\",\"network\":\"eip15"
+        }
+      }
+    },
+    "dexter": {
+      "base": "https://api.dexter.cash",
+      "paths": {
+        "/supported": {
+          "http": 404,
+          "bytes": 515,
+          "sha256": "a4638642513c9393dc9bf25bb7034041f6a2eb262fcda7af44469bb8d11cf709",
+          "body_snip": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /supported</pre>\n<script type=\"module\" src=\"https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495\" integrity=\"sha512-iIg7k2xntmwu6/uSb5tpc/h"
+        },
+        "/verify": {
+          "http": 404,
+          "bytes": 512,
+          "sha256": "cf529b7ac8b9d39b6b2ec60d874f4a269a5a6e456cb0581e5d7332c459f09e31",
+          "body_snip": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /verify</pre>\n<script type=\"module\" src=\"https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495\" integrity=\"sha512-iIg7k2xntmwu6/uSb5tpc/hySg"
+        },
+        "/settle": {
+          "http": 404,
+          "bytes": 512,
+          "sha256": "1623113df8ca397d36648239ce61ec82f7a4f74c688625bc139fffd4b295ea9a",
+          "body_snip": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /settle</pre>\n<script type=\"module\" src=\"https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495\" integrity=\"sha512-iIg7k2xntmwu6/uSb5tpc/hySg"
+        },
+        "/health": {
+          "http": 200,
+          "bytes": 1044,
+          "sha256": "2c46aea4872a1b2b92ed1dd5560252279376efb53aa787dfee60d172848cf54b",
+          "ct": "application/json; charset=utf-8",
+          "body_snip": "{\"ok\":true,\"service\":\"dexter-api\",\"mcp\":\"https://mcp.dexter.cash/mcp\",\"release\":{\"mode\":\"immutable-release\",\"releaseId\":\"de0c866f8b55-3fc4740914707aaa-8b05534c8a71\",\"sourceCommit\":\"de0c866f8b5552396a56a268810f2b3f3c569807\",\"sourceTree\":\"83c8a554ec6df4c26546d66dbd5ba51ef936b7d4\",\"toolingCommit\":\"de0c"
+        },
+        "/discovery/resources?limit=1": {
+          "http": 404,
+          "bytes": 543,
+          "sha256": "a900a32c7ad6377d6ef64b641984935f54a459c6531abfaefd78b841d995affa",
+          "body_snip": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/facilitator/marketplace/resources</pre>\n<script type=\"module\" src=\"https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495\" integrity=\"sh"
+        }
+      }
+    }
+  }
+}
