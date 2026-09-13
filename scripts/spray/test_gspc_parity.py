@@ -18,8 +18,8 @@ spray = importlib.util.module_from_spec(SPRAY_SPEC)
 SPRAY_SPEC.loader.exec_module(spray)
 
 
-def fixture() -> dict[str, bytes]:
-    root = {"as_of": "2026-09-12T13:27:43Z", "card_count": 2,
+def fixture(as_of: str = "2026-09-12T13:27:43Z") -> dict[str, bytes]:
+    root = {"as_of": as_of, "card_count": 2,
             "card_sha256": ["00" * 32, "11" * 32], "merkle_root": "22" * 32}
     root_bytes = (json.dumps(root) + "\n").encode()
     snapshot = {"as_of": root["as_of"], "card_count": 2, "merkle_root": root["merkle_root"],
@@ -57,3 +57,26 @@ def test_preflight_refuses_a_newer_hugging_face_snapshot(monkeypatch):
     monkeypatch.setattr(spray, "fetch_ok", lambda *_args, **_kwargs: remote)
     with pytest.raises(spray.Refused, match="newer as_of"):
         spray.refuse_newer_remote(["hf"], {"as_of": "2026-09-12T13:27:43Z"})
+
+
+def test_verify_waits_for_a_kaggle_archive_that_is_behind_then_passes(monkeypatch):
+    fresh = fixture(as_of="2026-09-13T08:40:49Z")
+    stale = fixture(as_of="2026-09-13T06:03:55Z")
+    reads = [stale, stale, fresh]
+    monkeypatch.setattr(parity, "read_hf", lambda: fresh)
+    monkeypatch.setattr(parity, "read_kaggle", lambda: reads.pop(0))
+    slept = []
+    result = parity.verify(require_live=False, kaggle_wait_seconds=120, poll_seconds=30, sleep=slept.append)
+    assert result["state"] == "EXTERNALLY_VERIFIED"
+    assert slept == [30, 30]
+
+
+def test_verify_does_not_wait_on_an_equal_as_of_byte_mismatch(monkeypatch):
+    fresh = fixture()
+    other = dict(fresh); other["README.md"] = fresh["README.md"] + b"\nedited"
+    monkeypatch.setattr(parity, "read_hf", lambda: fresh)
+    monkeypatch.setattr(parity, "read_kaggle", lambda: other)
+    slept = []
+    with pytest.raises(ValueError, match="byte mismatches"):
+        parity.verify(require_live=False, kaggle_wait_seconds=600, poll_seconds=30, sleep=slept.append)
+    assert slept == []
