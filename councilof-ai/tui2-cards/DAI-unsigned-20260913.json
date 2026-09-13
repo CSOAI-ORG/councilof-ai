@@ -1,0 +1,100 @@
+{
+  "schema": "csoai.card/0.1",
+  "kind": "financial.stablecoin-measurement",
+  "subject": "DAI",
+  "subject_version": "on-chain-live",
+  "measurement_state": "DEEP_MEASURED",
+  "generated_at": "2026-09-13T04:04:54.219305+00:00",
+  "code_revision": "tui2-reader-0.1.1",
+  "source": "eth_call totalSupply() + Solana getTokenSupply + Tron triggerconstantcontract",
+  "total_supply_usd": 5203998357.222346,
+  "chains_measured": [
+    "bsc",
+    "ethereum",
+    "polygon",
+    "gnosis",
+    "optimism",
+    "avalanche",
+    "base",
+    "arbitrum"
+  ],
+  "chain_count": 8,
+  "deployments": [
+    {
+      "chain": "ethereum",
+      "contract": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "supply_normalized": 4587461263.222346,
+      "supply_display": "$4.59B",
+      "block": 25954124,
+      "measured_at": "2026-09-11T12:20:48.024Z",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com"
+    },
+    {
+      "chain": "base",
+      "contract": "",
+      "supply_normalized": 1770000,
+      "supply_display": "$1.77M",
+      "block": null,
+      "measured_at": "2026-09-12T04:28:21.787408+00:00",
+      "source": ""
+    },
+    {
+      "chain": "arbitrum",
+      "contract": "",
+      "supply_normalized": 15240000,
+      "supply_display": "$15.24M",
+      "block": null,
+      "measured_at": "2026-09-12T04:29:11.169408+00:00",
+      "source": ""
+    },
+    {
+      "chain": "optimism",
+      "contract": "",
+      "supply_normalized": 13690000,
+      "supply_display": "$13.69M",
+      "block": null,
+      "measured_at": "2026-09-12T04:29:11.169408+00:00",
+      "source": ""
+    },
+    {
+      "chain": "bsc",
+      "contract": "",
+      "supply_normalized": 31100000,
+      "supply_display": "$31.10M",
+      "block": null,
+      "measured_at": "2026-09-12T04:30:34.121990+00:00",
+      "source": ""
+    },
+    {
+      "chain": "polygon",
+      "contract": "",
+      "supply_normalized": 491010000,
+      "supply_display": "$491.01M",
+      "block": null,
+      "measured_at": "2026-09-12T04:30:34.121990+00:00",
+      "source": ""
+    },
+    {
+      "chain": "avalanche",
+      "contract": "",
+      "supply_normalized": 10700000,
+      "supply_display": "$10.70M",
+      "block": null,
+      "measured_at": "2026-09-12T04:30:34.121990+00:00",
+      "source": ""
+    },
+    {
+      "chain": "gnosis",
+      "contract": "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d",
+      "supply_normalized": 53027094,
+      "supply_display": "$53.03M",
+      "block": null,
+      "measured_at": "2026-09-12T06:06:11.257782+00:00",
+      "source": ""
+    }
+  ],
+  "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves, NOT attestation verification",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction-DAI",
+  "signature_state": "UNSIGNED",
+  "content_sha256": "b5aed32dce5e7037dde852723fc9e622f958d495592eb64d3083e336089995f0"
+}

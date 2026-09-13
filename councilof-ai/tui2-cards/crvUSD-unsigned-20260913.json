@@ -1,0 +1,30 @@
+{
+  "schema": "csoai.card/0.1",
+  "kind": "financial.stablecoin-measurement",
+  "subject": "crvUSD",
+  "subject_version": "on-chain-live",
+  "measurement_state": "DEEP_MEASURED",
+  "generated_at": "2026-09-13T04:04:54.219305+00:00",
+  "code_revision": "tui2-reader-0.1.1",
+  "source": "eth_call totalSupply() + Solana getTokenSupply + Tron triggerconstantcontract",
+  "total_supply_usd": 2104809204.9818342,
+  "chains_measured": [
+    "ethereum"
+  ],
+  "chain_count": 1,
+  "deployments": [
+    {
+      "chain": "ethereum",
+      "contract": "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+      "supply_normalized": 2104809204.9818342,
+      "supply_display": "$2.10B",
+      "block": 25954124,
+      "measured_at": "2026-09-11T12:20:48.553Z",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com"
+    }
+  ],
+  "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves, NOT attestation verification",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction-crvUSD",
+  "signature_state": "UNSIGNED",
+  "content_sha256": "8928b8736d8eec47639fe1669f4697ab6d53928317805ca39127953f512d1dfa"
+}

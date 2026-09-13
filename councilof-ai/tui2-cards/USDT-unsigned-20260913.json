@@ -1,0 +1,150 @@
+{
+  "schema": "csoai.card/0.1",
+  "kind": "financial.stablecoin-measurement",
+  "subject": "USDT",
+  "subject_version": "on-chain-live",
+  "measurement_state": "DEEP_MEASURED",
+  "generated_at": "2026-09-13T04:04:54.219305+00:00",
+  "code_revision": "tui2-reader-0.1.1",
+  "source": "eth_call totalSupply() + Solana getTokenSupply + Tron triggerconstantcontract",
+  "total_supply_usd": 199725164070.3155,
+  "chains_measured": [
+    "mantle",
+    "bsc",
+    "ethereum",
+    "solana",
+    "zksync",
+    "celo",
+    "polygon",
+    "gnosis",
+    "optimism",
+    "avalanche",
+    "base",
+    "arbitrum",
+    "tron"
+  ],
+  "chain_count": 13,
+  "deployments": [
+    {
+      "chain": "ethereum",
+      "contract": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "supply_normalized": 88306028997.33191,
+      "supply_display": "$88.31B",
+      "block": 25954124,
+      "measured_at": "2026-09-11T12:20:47.781Z",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com"
+    },
+    {
+      "chain": "arbitrum",
+      "contract": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      "supply_normalized": 807390380.983572,
+      "supply_display": "$807.39M",
+      "block": null,
+      "measured_at": "2026-09-11T12:02:14.200Z",
+      "source": "https://arbitrum-one-rpc.publicnode.com"
+    },
+    {
+      "chain": "optimism",
+      "contract": "",
+      "supply_normalized": 232670000,
+      "supply_display": "$232.67M",
+      "block": null,
+      "measured_at": "2026-09-12T04:13:40.180664+00:00",
+      "source": ""
+    },
+    {
+      "chain": "avalanche",
+      "contract": "",
+      "supply_normalized": 1850000000,
+      "supply_display": "$1.85B",
+      "block": null,
+      "measured_at": "2026-09-12T04:13:40.180664+00:00",
+      "source": ""
+    },
+    {
+      "chain": "solana",
+      "contract": "",
+      "supply_normalized": 3839903828,
+      "supply_display": "$3.84B",
+      "block": null,
+      "measured_at": "2026-09-12T04:14:55.472031+00:00",
+      "source": "Solana getTokenSupply RPC"
+    },
+    {
+      "chain": "tron",
+      "contract": "",
+      "supply_normalized": 94260200864,
+      "supply_display": "$94.26B",
+      "block": null,
+      "measured_at": "2026-09-12T04:14:55.472031+00:00",
+      "source": "TronGrid triggerconstantcontract"
+    },
+    {
+      "chain": "bsc",
+      "contract": "",
+      "supply_normalized": 9180000000,
+      "supply_display": "$9.18B",
+      "block": null,
+      "measured_at": "2026-09-12T04:15:58.001604+00:00",
+      "source": ""
+    },
+    {
+      "chain": "polygon",
+      "contract": "",
+      "supply_normalized": 736710000,
+      "supply_display": "$736.71M",
+      "block": null,
+      "measured_at": "2026-09-12T04:21:20.538774+00:00",
+      "source": ""
+    },
+    {
+      "chain": "celo",
+      "contract": "",
+      "supply_normalized": 470000000,
+      "supply_display": "$470.00M",
+      "block": null,
+      "measured_at": "2026-09-12T04:21:20.538774+00:00",
+      "source": ""
+    },
+    {
+      "chain": "zksync",
+      "contract": "",
+      "supply_normalized": 2380000,
+      "supply_display": "$2.38M",
+      "block": null,
+      "measured_at": "2026-09-12T04:23:29.641058+00:00",
+      "source": ""
+    },
+    {
+      "chain": "base",
+      "contract": "",
+      "supply_normalized": 25760000,
+      "supply_display": "$25.76M",
+      "block": null,
+      "measured_at": "2026-09-12T04:28:21.787408+00:00",
+      "source": ""
+    },
+    {
+      "chain": "mantle",
+      "contract": "",
+      "supply_normalized": 12950000,
+      "supply_display": "$12.95M",
+      "block": null,
+      "measured_at": "2026-09-12T04:32:29.889250+00:00",
+      "source": ""
+    },
+    {
+      "chain": "gnosis",
+      "contract": "",
+      "supply_normalized": 1170000,
+      "supply_display": "$1.17M",
+      "block": null,
+      "measured_at": "2026-09-12T04:32:29.889250+00:00",
+      "source": ""
+    }
+  ],
+  "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves, NOT attestation verification",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction-USDT",
+  "signature_state": "UNSIGNED",
+  "content_sha256": "ae32bf2855f38ff15d6be650a1f29c0a7a7861e732db64e39b07fefc8bdd3596"
+}

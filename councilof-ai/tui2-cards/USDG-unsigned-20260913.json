@@ -1,0 +1,30 @@
+{
+  "schema": "csoai.card/0.1",
+  "kind": "financial.stablecoin-measurement",
+  "subject": "USDG",
+  "subject_version": "on-chain-live",
+  "measurement_state": "DEEP_MEASURED",
+  "generated_at": "2026-09-13T04:04:54.219305+00:00",
+  "code_revision": "tui2-reader-0.1.1",
+  "source": "eth_call totalSupply() + Solana getTokenSupply + Tron triggerconstantcontract",
+  "total_supply_usd": 377820000,
+  "chains_measured": [
+    "ethereum"
+  ],
+  "chain_count": 1,
+  "deployments": [
+    {
+      "chain": "ethereum",
+      "contract": "0xe343167631d89b6ffc58b88d6b7fb0228795491d",
+      "supply_normalized": 377820000,
+      "supply_display": "$377.82M",
+      "block": null,
+      "measured_at": "2026-09-11T13:20:00Z",
+      "source": "eth_call totalSupply() via ethereum-rpc.publicnode.com"
+    }
+  ],
+  "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves, NOT attestation verification",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction-USDG",
+  "signature_state": "UNSIGNED",
+  "content_sha256": "e65395b1a9ccafe8c64e3d5d31959158f4a4661a99513380dab1e93ba1460ec2"
+}

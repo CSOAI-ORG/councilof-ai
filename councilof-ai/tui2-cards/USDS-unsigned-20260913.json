@@ -1,0 +1,30 @@
+{
+  "schema": "csoai.card/0.1",
+  "kind": "financial.stablecoin-measurement",
+  "subject": "USDS",
+  "subject_version": "on-chain-live",
+  "measurement_state": "DEEP_MEASURED",
+  "generated_at": "2026-09-13T04:04:54.219305+00:00",
+  "code_revision": "tui2-reader-0.1.1",
+  "source": "eth_call totalSupply() + Solana getTokenSupply + Tron triggerconstantcontract",
+  "total_supply_usd": 6614418781.160652,
+  "chains_measured": [
+    "ethereum"
+  ],
+  "chain_count": 1,
+  "deployments": [
+    {
+      "chain": "ethereum",
+      "contract": "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+      "supply_normalized": 6614418781.160652,
+      "supply_display": "$6.61B",
+      "block": 25954124,
+      "measured_at": "2026-09-11T12:20:48.106Z",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com"
+    }
+  ],
+  "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves, NOT attestation verification",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction-USDS",
+  "signature_state": "UNSIGNED",
+  "content_sha256": "632c952c17f138b830298deb7c61c8b581249b4e665c55b337807e12d626b076"
+}

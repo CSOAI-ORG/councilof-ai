@@ -1,0 +1,30 @@
+{
+  "schema": "csoai.card/0.1",
+  "kind": "financial.stablecoin-measurement",
+  "subject": "USDB",
+  "subject_version": "on-chain-live",
+  "measurement_state": "DEEP_MEASURED",
+  "generated_at": "2026-09-13T04:04:54.219305+00:00",
+  "code_revision": "tui2-reader-0.1.1",
+  "source": "eth_call totalSupply() + Solana getTokenSupply + Tron triggerconstantcontract",
+  "total_supply_usd": 11490000,
+  "chains_measured": [
+    "blast"
+  ],
+  "chain_count": 1,
+  "deployments": [
+    {
+      "chain": "blast",
+      "contract": "",
+      "supply_normalized": 11490000,
+      "supply_display": "$11.49M",
+      "block": null,
+      "measured_at": "2026-09-12T05:34:10.792369+00:00",
+      "source": ""
+    }
+  ],
+  "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves, NOT attestation verification",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction-USDB",
+  "signature_state": "UNSIGNED",
+  "content_sha256": "1c4c30b6cf7968b28f802d6ad024cc2c31e8219ee75f4c268e31b9466573f815"
+}

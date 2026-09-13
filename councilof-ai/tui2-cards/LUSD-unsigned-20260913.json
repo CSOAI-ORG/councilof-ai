@@ -1,0 +1,30 @@
+{
+  "schema": "csoai.card/0.1",
+  "kind": "financial.stablecoin-measurement",
+  "subject": "LUSD",
+  "subject_version": "on-chain-live",
+  "measurement_state": "DEEP_MEASURED",
+  "generated_at": "2026-09-13T04:04:54.219305+00:00",
+  "code_revision": "tui2-reader-0.1.1",
+  "source": "eth_call totalSupply() + Solana getTokenSupply + Tron triggerconstantcontract",
+  "total_supply_usd": 26300000,
+  "chains_measured": [
+    "ethereum"
+  ],
+  "chain_count": 1,
+  "deployments": [
+    {
+      "chain": "ethereum",
+      "contract": "0x5f98805a4e8be255a32880fdec7f6728c6568ba0",
+      "supply_normalized": 26300000,
+      "supply_display": "$26.30M",
+      "block": null,
+      "measured_at": "2026-09-12T04:20:42.599566+00:00",
+      "source": "eth_call via publicnode"
+    }
+  ],
+  "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves, NOT attestation verification",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction-LUSD",
+  "signature_state": "UNSIGNED",
+  "content_sha256": "c1fbab59fcad4875fd0ef0799094fd0709736669e8fe244c8e44d53ae2f43581"
+}

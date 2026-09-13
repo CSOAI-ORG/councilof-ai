@@ -1,0 +1,200 @@
+{
+  "schema": "csoai.card/0.1",
+  "kind": "financial.stablecoin-measurement",
+  "subject": "USDC",
+  "subject_version": "on-chain-live",
+  "measurement_state": "DEEP_MEASURED",
+  "generated_at": "2026-09-13T04:04:54.219305+00:00",
+  "code_revision": "tui2-reader-0.1.1",
+  "source": "eth_call totalSupply() + Solana getTokenSupply + Tron triggerconstantcontract",
+  "total_supply_usd": 68886844617.56216,
+  "chains_measured": [
+    "linea",
+    "mantle",
+    "bsc",
+    "ethereum",
+    "solana",
+    "zksync",
+    "sonic",
+    "celo",
+    "polygon",
+    "scroll",
+    "gnosis",
+    "optimism",
+    "avalanche",
+    "base",
+    "zora",
+    "arbitrum",
+    "metis",
+    "aurora"
+  ],
+  "chain_count": 18,
+  "deployments": [
+    {
+      "chain": "ethereum",
+      "contract": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "supply_normalized": 50641527243.58106,
+      "supply_display": "$50.64B",
+      "block": 25954124,
+      "measured_at": "2026-09-11T12:20:47.935Z",
+      "source": "eth_call totalSupply() via https://ethereum-rpc.publicnode.com"
+    },
+    {
+      "chain": "base",
+      "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "supply_normalized": 4247877041.591458,
+      "supply_display": "$4.25B",
+      "block": null,
+      "measured_at": "2026-09-11T12:02:13.922Z",
+      "source": "https://base-rpc.publicnode.com"
+    },
+    {
+      "chain": "arbitrum",
+      "contract": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      "supply_normalized": 2717606623.389642,
+      "supply_display": "$2.72B",
+      "block": null,
+      "measured_at": "2026-09-11T12:02:14.114Z",
+      "source": "https://arbitrum-one-rpc.publicnode.com"
+    },
+    {
+      "chain": "optimism",
+      "contract": "",
+      "supply_normalized": 166010000,
+      "supply_display": "$166.01M",
+      "block": null,
+      "measured_at": "2026-09-12T04:13:40.180664+00:00",
+      "source": ""
+    },
+    {
+      "chain": "avalanche",
+      "contract": "",
+      "supply_normalized": 416210000,
+      "supply_display": "$416.21M",
+      "block": null,
+      "measured_at": "2026-09-12T04:13:40.180664+00:00",
+      "source": ""
+    },
+    {
+      "chain": "solana",
+      "contract": "",
+      "supply_normalized": 8074413709,
+      "supply_display": "$8.07B",
+      "block": null,
+      "measured_at": "2026-09-12T04:14:55.472031+00:00",
+      "source": "Solana getTokenSupply RPC"
+    },
+    {
+      "chain": "bsc",
+      "contract": "",
+      "supply_normalized": 1590000000,
+      "supply_display": "$1.59B",
+      "block": null,
+      "measured_at": "2026-09-12T04:15:58.001604+00:00",
+      "source": ""
+    },
+    {
+      "chain": "scroll",
+      "contract": "",
+      "supply_normalized": 5130000,
+      "supply_display": "$5.13M",
+      "block": null,
+      "measured_at": "2026-09-12T04:15:58.001604+00:00",
+      "source": ""
+    },
+    {
+      "chain": "polygon",
+      "contract": "",
+      "supply_normalized": 803810000,
+      "supply_display": "$803.81M",
+      "block": null,
+      "measured_at": "2026-09-12T04:21:20.538774+00:00",
+      "source": ""
+    },
+    {
+      "chain": "mantle",
+      "contract": "",
+      "supply_normalized": 22240000,
+      "supply_display": "$22.24M",
+      "block": null,
+      "measured_at": "2026-09-12T04:21:20.538774+00:00",
+      "source": ""
+    },
+    {
+      "chain": "zksync",
+      "contract": "",
+      "supply_normalized": 10640000,
+      "supply_display": "$10.64M",
+      "block": null,
+      "measured_at": "2026-09-12T04:23:29.641058+00:00",
+      "source": ""
+    },
+    {
+      "chain": "gnosis",
+      "contract": "",
+      "supply_normalized": 12520000,
+      "supply_display": "$12.52M",
+      "block": null,
+      "measured_at": "2026-09-12T04:23:29.641058+00:00",
+      "source": ""
+    },
+    {
+      "chain": "aurora",
+      "contract": "",
+      "supply_normalized": 50000,
+      "supply_display": "$0.05M",
+      "block": null,
+      "measured_at": "2026-09-12T04:24:14.930793+00:00",
+      "source": ""
+    },
+    {
+      "chain": "celo",
+      "contract": "",
+      "supply_normalized": 14690000,
+      "supply_display": "$14.69M",
+      "block": null,
+      "measured_at": "2026-09-12T04:32:29.889250+00:00",
+      "source": ""
+    },
+    {
+      "chain": "metis",
+      "contract": "",
+      "supply_normalized": 4210000,
+      "supply_display": "$4.21M",
+      "block": null,
+      "measured_at": "2026-09-12T04:54:18.004472+00:00",
+      "source": ""
+    },
+    {
+      "chain": "sonic",
+      "contract": "",
+      "supply_normalized": 136460000,
+      "supply_display": "$136.46M",
+      "block": null,
+      "measured_at": "2026-09-12T05:34:10.792369+00:00",
+      "source": ""
+    },
+    {
+      "chain": "linea",
+      "contract": "",
+      "supply_normalized": 23370000,
+      "supply_display": "$23.37M",
+      "block": null,
+      "measured_at": "2026-09-12T05:34:10.792369+00:00",
+      "source": ""
+    },
+    {
+      "chain": "zora",
+      "contract": "",
+      "supply_normalized": 80000,
+      "supply_display": "$0.08M",
+      "block": null,
+      "measured_at": "2026-09-12T05:35:02.198888+00:00",
+      "source": ""
+    }
+  ],
+  "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves, NOT attestation verification",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction-USDC",
+  "signature_state": "UNSIGNED",
+  "content_sha256": "a5666b7733f9426842c45190278f99cd3a70bf7ce953c366b40139519de526e9"
+}
