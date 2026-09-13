@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>x402 Buyer Guide — Council of AI</title>
+<meta name="description" content="How to pay for Council of AI evidence artefacts using x402 (USDC on Base). For agent developers and platform integrators." />
+<link rel="canonical" href="https://councilof.ai/x402-buyer-guide" />
+<meta property="og:title" content="x402 Buyer Guide — Council of AI" />
+<meta property="og:description" content="How to pay for Council of AI evidence artefacts using x402." />
+<style>
+:root{--bg:#0a0e17;--surface:#11161f;--surface-2:#161d28;--border:#1f2937;--text:#f8fafc;--muted:#94a3b8;--dim:#64748b;--gold:#c8a05c;--gold-bright:#e4be7c;--teal:#0fa98c;--emerald:#10b981;--red:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+h1,h2,h3{font-family:'Space Grotesk',Inter,sans-serif;letter-spacing:-0.02em}
+.container{max-width:880px;margin:0 auto;padding:0 2rem}
+nav{position:sticky;top:0;background:rgba(10,14,23,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:50}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;max-width:1200px;margin:0 auto}
+.nav-brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text)}
+.nav-brand span{color:var(--gold)}
+.nav-links{display:flex;gap:1.5rem;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.hero{padding:5rem 0 3rem}
+.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{font-size:1.1rem;color:var(--muted);max-width:620px}
+h2{font-size:1.5rem;margin:2.5rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+h2:first-of-type{border-top:none;padding-top:0}
+pre{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;overflow-x:auto;font-size:0.85rem;line-height:1.5;margin:1rem 0;font-family:'JetBrains Mono','SF Mono',monospace}
+code{background:var(--surface-2);padding:0.15rem 0.45rem;border-radius:6px;font-size:0.88em;color:var(--gold);font-family:'JetBrains Mono',monospace}
+pre code{background:none;padding:0;color:var(--text);font-size:inherit}
+.tier-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.92rem}
+.tier-table th,.tier-table td{text-align:left;padding:0.7rem 1rem;border-bottom:1px solid var(--border)}
+.tier-table th{color:var(--muted);font-weight:500;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em}
+.tier-table .amount{color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:0.85rem}
+.tier-table code{font-size:0.82rem}
+.cta{background:var(--surface);border:1px solid var(--gold);border-radius:16px;padding:2rem;text-align:center;margin:3rem 0}
+.cta h2{border:none;margin:0 0 1rem}
+.cta-btn{display:inline-block;background:var(--gold);color:#0a0e17;padding:0.85rem 2rem;border-radius:100px;font-weight:600;text-decoration:none;margin:0.5rem}
+.cta-btn-secondary{display:inline-block;border:1px solid var(--border);color:var(--text);padding:0.85rem 2rem;border-radius:100px;font-weight:500;text-decoration:none;margin:0.5rem}
+.never-list{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.never-list strong{color:var(--red);display:block;margin-bottom:0.5rem}
+.never-list ul{margin:0.5rem 0 0 1.2rem;color:var(--muted)}
+footer{border-top:1px solid var(--border);margin-top:4rem;padding:2rem 0;text-align:center;color:var(--dim);font-size:0.85rem}
+footer a{color:var(--gold);text-decoration:none}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="nav-inner">
+<div class="nav-brand">Council<span>.</span>AI</div>
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/pricing">Pricing</a>
+<a href="/.well-known/x402.json">x402</a>
+<a href="/api/gspc">Board</a>
+<a href="/docs">Docs</a>
+</div>
+</div>
+</nav>
+
+<div class="container">
+
+<section class="hero">
+<h1>x402 <em>Buyer Guide</em></h1>
+<p>How to pay for Council of AI evidence artefacts using x402 (USDC on Base). For agent developers and platform integrators.</p>
+</section>
+
+<h2>The 30-second version</h2>
+<pre><code># 1. GET a paid resource → 402 with payment challenge
+curl -i https://councilof.ai/api/request-attestation?subject=USDC
+
+# → HTTP/1.1 402 Payment Required
+# → X-Payment-Address: 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31
+# → X-Payment-Network: eip155:8453
+# → X-Payment-Amount: 10000 (USDC, 6 decimals = $0.01)
+# → X-Payment-Asset: 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
+
+# 2. Pay the challenge (USDC on Base)
+
+# 3. Retry with X-Payment-Signature header
+curl -H "X-Payment-Signature: &lt;signed-payment&gt;" \
+     https://councilof.ai/api/request-attestation?subject=USDC
+
+# → HTTP/1.1 200 OK
+# → Signed receipt + paid artefact</code></pre>
+
+<h2>The catalog</h2>
+<p>9 resources: 1 free + 8 paid. Full discovery at <code>https://councilof.ai/.well-known/x402.json</code> and human-readable at <code>https://councilof.ai/api/x402</code>.</p>
+
+<table class="tier-table">
+<thead>
+<tr><th>Resource</th><th>Endpoint</th><th>Amount</th><th>Free preview</th></tr>
+</thead>
+<tbody>
+<tr><td>Free door</td><td><code>/api/free-door</code></td><td class="amount">$0.00</td><td>always</td></tr>
+<tr><td>Issuance</td><td><code>/api/request-attestation?subject=&lt;id&gt;</code></td><td class="amount">$0.01</td><td>yes</td></tr>
+<tr><td>Evidence bundle</td><td><code>/api/evidence-bundle?obligation=&lt;...&gt;</code></td><td class="amount">$0.10</td><td>yes</td></tr>
+<tr><td>Proof bundle</td><td><code>/api/proof?bundle=1</code></td><td class="amount">$0.02</td><td>1 leaf free</td></tr>
+<tr><td>RWA evidence</td><td><code>/api/rwa/evidence?asset=&lt;symbol&gt;</code></td><td class="amount">$0.05</td><td>yes</td></tr>
+<tr><td>Art. 50 marking</td><td><code>/api/art50/marking-evidence?url=&lt;...&gt;</code></td><td class="amount">$0.10</td><td>yes</td></tr>
+<tr><td>Provider diff</td><td><code>/api/feeds/provider-diff?history=1</code></td><td class="amount">$0.05</td><td>yes</td></tr>
+<tr><td>Receipts batch</td><td><code>/api/receipts/batch?from=&lt;date&gt;</code></td><td class="amount">$0.25</td><td>yes</td></tr>
+<tr><td>Data feed</td><td><code>/api/eunomia-data?feed=1</code></td><td class="amount">$0.50</td><td>yes</td></tr>
+</tbody>
+</table>
+
+<h2>Verification — always free</h2>
+<pre><code># Get a card
+curl https://councilof.ai/api/card?sha=&lt;64-hex&gt;
+
+# Verify the Ed25519 signature offline
+python3 scripts/verify_receipt.py &lt;receipt.jws&gt;
+
+# Or online
+curl https://councilof.ai/api/receipts/verify -d '&lt;receipt.jws&gt;'</code></pre>
+<p>Verification never requires payment. We never gate sign-off checks.</p>
+
+<h2>Common patterns</h2>
+
+<h3>"I want to know if USDC was measured"</h3>
+<pre><code># Free: see if any card exists for USDC
+curl https://councilof.ai/api/free-door
+curl "https://councilof.ai/api/card?subject=USDC"</code></pre>
+
+<h3>"I want a signed receipt for my compliance dossier"</h3>
+<pre><code># Paid: get a signed card-v0 receipt ($0.01 USDC)
+curl https://councilof.ai/api/request-attestation?subject=USDC
+# Pay the 402 challenge, retry with X-Payment-Signature</code></pre>
+
+<h3>"I need an EU AI Act Article 50 evidence bundle"</h3>
+<pre><code># Paid: $0.10 for a full OSCAL 1.1.0 bundle
+curl https://councilof.ai/api/evidence-bundle?obligation=article-50&amp;subject=model-id&amp;bundle=1</code></pre>
+
+<h3>"I want to prove this card is in your canonical Merkle root"</h3>
+<pre><code># One leaf: free
+curl "https://councilof.ai/api/proof?sha=&lt;64-hex&gt;"
+# Multiple leaves: paid batch ($0.02)
+curl "https://councilof.ai/api/proof?bundle=1"</code></pre>
+
+<h2>MCP integration</h2>
+<p>Same paid artefacts are exposed through the Council of AI MCP server:</p>
+<pre><code>{
+  "servers": {
+    "csoai-gspc-mcp": {
+      "url": "https://councilof.ai/mcp",
+      "stdio": "npx -y csoai-gspc-mcp@0.2.1"
+    }
+  }
+}</code></pre>
+<p>12 tools, 8 free + 4 metered. Same x402 rail.</p>
+
+<div class="never-list">
+<strong>What we never sell:</strong>
+<ul>
+<li>A score, rank, or grade</li>
+<li>A certificate of compliance</li>
+<li>A MEASURED cell (payment mints no new measurement)</li>
+<li>A conformity determination</li>
+<li>Private data (every payment uses already-public cards)</li>
+</ul>
+</div>
+
+<div class="cta">
+<h2>Volume pricing</h2>
+<p>If you're settling more than $100/month, contact us for a bundle deal.</p>
+<a class="cta-btn" href="mailto:nicholas@csoai.org">nicholas@csoai.org</a>
+<a class="cta-btn-secondary" href="/pricing">View pricing</a>
+</div>
+
+</div>
+
+<footer>
+<p>Council of AI · CSOAI LTD (UK Companies House 16939677) · <a href="https://csoai.org">csoai.org</a></p>
+<p style="margin-top:0.5rem">Measurement, not certification.</p>
+</footer>
+
+</body>
+</html>
