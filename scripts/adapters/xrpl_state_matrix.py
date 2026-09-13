@@ -1,13 +1,15 @@
 """XRPL 16-identity per-field state matrix (TUI-3, 2026-09-13 brief).
 
 One honest row per locked identity, fields kept SEPARATE (the brief's core rule):
-identity, on-ledger Domain, toml two-way state, supply, holders, transfer-control
-flags, chain deployment. Field states: OBSERVED / STALE / UNMEASURED / UNCHECKABLE.
+identity tuple, issuer account, on-ledger Domain, source-reported market fields,
+transfer-control flags, and chain deployment. Field states: OBSERVED / STALE /
+UNMEASURED / UNCHECKABLE.
 
 Primary evidence: account_info JSON-RPC against a public XRPL server at the
-validated ledger (ledger_index recorded — the observation is frozen and
-reproducible at that ledger). Market-side fields come from xrpl.fi/api/metrics
-(the same source the xrpl.asset.state cards use).
+validated ledger. The first successful response fixes a numeric ledger index for
+all remaining account reads. Market-side values from xrpl.fi/api/metrics remain
+explicitly source-reported observations; they are not promoted to independently
+measured supply or holder counts.
 
 Delta discipline: the adapter compares the freshly built matrix against the
 committed one. No change -> zero leaves (sidecar UNCHANGED). Changed identities
@@ -80,14 +82,28 @@ def _decode_flags(flags: int) -> dict[str, bool]:
     return {name: bool(flags & bit) for bit, name in FLAGS.items()}
 
 
+def _source_observation_state(source_as_of: str | None, observed_at: str) -> str:
+    if not source_as_of:
+        return "UNCHECKABLE"
+    try:
+        src = datetime.fromisoformat(source_as_of.replace("Z", "+00:00"))
+        obs = datetime.fromisoformat(observed_at.replace("Z", "+00:00"))
+        return "STALE" if (obs - src).total_seconds() > 48 * 3600 else "OBSERVED"
+    except Exception:
+        return "UNCHECKABLE"
+
+
 def _identity_row(symbol: str, addr: str, acct: dict[str, Any] | None,
-                  metric: dict[str, Any] | None, metrics_as_of: str | None) -> dict[str, Any]:
+                  metric: dict[str, Any] | None, metrics_as_of: str | None,
+                  observed_at: str) -> dict[str, Any]:
     states: dict[str, str] = {}
     row: dict[str, Any] = {"symbol": symbol, "issuer_address": addr, "field_states": states}
 
     if acct and isinstance(acct.get("result"), dict) and "account_data" in acct["result"]:
         data = acct["result"]["account_data"]
         states["identity"] = "OBSERVED"
+        states["issuer_account"] = "OBSERVED"
+        row["identity_basis"] = "locked registry tuple; not an issuer endorsement"
         row["ledger_index"] = acct["result"].get("ledger_index")
         dom_hex = data.get("Domain") or ""
         try:
@@ -104,27 +120,46 @@ def _identity_row(symbol: str, addr: str, acct: dict[str, Any] | None,
             states["domain_on_ledger"] = "OBSERVED"  # absence is an observed fact
     else:
         states["identity"] = "UNCHECKABLE"
+        states["issuer_account"] = "UNCHECKABLE"
         states["transfer_controls"] = "UNCHECKABLE"
         states["domain_on_ledger"] = "UNCHECKABLE"
         row["ledger_index"] = None
 
     if metric:
-        row["supply"] = metric.get("supply")
-        row["holders"] = metric.get("holders")
+        reported_state = _source_observation_state(metrics_as_of, observed_at)
+        row["supply"] = None
+        row["holders"] = None
+        row["source_reported_supply"] = metric.get("supply")
+        row["source_reported_holders"] = metric.get("holders")
         row["metrics_as_of"] = metrics_as_of
-        states["supply"] = "OBSERVED" if row["supply"] is not None else "UNMEASURED"
-        states["holders"] = "OBSERVED" if row["holders"] is not None else "UNMEASURED"
+        states["supply"] = "UNMEASURED"
+        states["holders"] = "UNMEASURED"
+        states["source_reported_supply"] = reported_state if row["source_reported_supply"] is not None else "UNMEASURED"
+        states["source_reported_holders"] = reported_state if row["source_reported_holders"] is not None else "UNMEASURED"
         via = metric.get("verifiedVia")
-        row["toml_state"] = via or None
-        states["toml_two_way"] = "OBSERVED" if via else "UNMEASURED"
+        row["source_reported_toml_state"] = via or None
+        states["source_reported_toml_state"] = reported_state if via else "UNMEASURED"
     else:
-        row.update({"supply": None, "holders": None, "metrics_as_of": None, "toml_state": None})
-        states["supply"] = states["holders"] = states["toml_two_way"] = "UNMEASURED"
+        row.update({
+            "supply": None,
+            "holders": None,
+            "source_reported_supply": None,
+            "source_reported_holders": None,
+            "metrics_as_of": None,
+            "source_reported_toml_state": None,
+        })
+        states["supply"] = states["holders"] = "UNMEASURED"
+        states["source_reported_supply"] = states["source_reported_holders"] = "UNMEASURED"
+        states["source_reported_toml_state"] = "UNMEASURED"
 
     # Chain deployment: this registry is XRPL-mainnet scoped; other chains are
     # the issuer's own claim, not measured here.
-    states["chain_deployment"] = "OBSERVED"
-    row["chain_deployment"] = ["xrpl-mainnet"]
+    states["chain_deployment"] = "UNMEASURED"
+    row["chain_deployment"] = None
+    row["source_reported_chain_deployment"] = ["xrpl-mainnet"] if metric else []
+    states["source_reported_chain_deployment"] = (
+        _source_observation_state(metrics_as_of, observed_at) if metric else "UNMEASURED"
+    )
     row["cross_chain_deployments"] = "UNMEASURED — issuer-claimed deployments are not verified in this pack"
     # Reserve claim / attestation: separate field, sourced from the attestation
     # packs where the asset is covered; otherwise UNMEASURED. Never inferred.
@@ -144,7 +179,10 @@ def _diff(prior: dict[str, Any], new: dict[str, Any]) -> list[dict[str, Any]]:
             changes.append({"symbol": sym, "kind": "added", "fields": []})
             continue
         field_changes = []
-        for field in ("supply", "holders", "domain_on_ledger", "toml_state"):
+        for field in (
+            "source_reported_supply", "source_reported_holders",
+            "domain_on_ledger", "source_reported_toml_state",
+        ):
             if old.get(field) != row.get(field):
                 field_changes.append({"field": field, "from": old.get(field), "to": row.get(field)})
         if old.get("transfer_controls") != row.get("transfer_controls"):
@@ -171,7 +209,7 @@ def _summary_leaf(matrix: dict[str, Any], changes: list[dict[str, Any]]) -> dict
         "field_state_counts": state_counts,
         "ledger_index": matrix.get("ledger_index"),
         "observed_at": matrix.get("observed_at"),
-        "rule": "identity, authorization, supply, holders, deployment, reserve claim, attestation and transfer controls are separate fields — never collapsed",
+        "rule": "issuer-account facts, source-reported market values, independently derived supply/holder results, deployment, reserve claim, attestation and controls stay separate",
         "matrix_url": f"https://councilof.ai/interop/{PACK}/matrix.json",
     }
     assert len(_canon(payload)) <= MAX_PAYLOAD_BYTES
@@ -181,7 +219,7 @@ def _summary_leaf(matrix: dict[str, Any], changes: list[dict[str, Any]]) -> dict
         "as_of": matrix.get("observed_at"),
         "source_urls": [RPC, METRICS_URL, f"https://councilof.ai/interop/{PACK}/matrix.json"],
         "payload": payload,
-        "unmeasured": ["reserve_claim", "attestation", "cross_chain_deployments"],
+        "unmeasured": ["supply", "holders", "chain_deployment", "reserve_claim", "attestation", "cross_chain_deployments"],
         "tags": ["xrpl", "identity-state-matrix", PACK],
     }
 
@@ -246,21 +284,25 @@ def collect(root: Any = None, *, fetch_rpc: Callable[[str, dict], bytes] | None 
         observed_at = _now()
         ledger_index = None
         rpc_dark = 0
+        rpc_uncheckable = 0
         for locked in LOCKED_16:
             sym, addr = locked["symbol"], locked["issuer_address"]
             acct = None
             raw = None
             try:
                 raw = rpc(RPC, {"method": "account_info",
-                                "params": [{"account": addr, "ledger_index": "validated"}]})
+                                "params": [{"account": addr, "ledger_index": ledger_index or "validated"}]})
                 acct = json.loads(raw)
             except Exception:
                 rpc_dark += 1
             if acct and ledger_index is None:
                 ledger_index = (acct.get("result") or {}).get("ledger_index")
-            metric = by_key.get((sym, addr)) or next(
-                (a for a in m.get("assets") or [] if (a.get("symbol") or a.get("currency")) == sym), None)
-            rows.append(_identity_row(sym, addr, acct, metric, metrics_as_of))
+            if not (acct and isinstance(acct.get("result"), dict) and "account_data" in acct["result"]):
+                rpc_uncheckable += 1
+            # Never fall back to symbol-only matching: duplicate currency codes
+            # on XRPL can belong to unrelated issuers.
+            metric = by_key.get((sym, addr))
+            rows.append(_identity_row(sym, addr, acct, metric, metrics_as_of, observed_at))
             if live and raw:
                 try:
                     mid = f"account-info-{sym}.json"
@@ -291,6 +333,10 @@ def collect(root: Any = None, *, fetch_rpc: Callable[[str, dict], bytes] | None 
             "ledger_index": ledger_index,
             "field_vocabulary": ["OBSERVED", "STALE", "UNMEASURED", "UNCHECKABLE"],
             "sources": {"account_info": RPC, "metrics": METRICS_URL},
+            "source_limitations": {
+                "metrics": "xrpl.fi values are source-reported and may be stale; holders must not be read as an independently enumerated holder or trust-line count",
+                "account_info": "AccountRoot flags are issuer-account facts; applicability to a particular issued currency remains a separate question",
+            },
             "identities": rows,
         }
         matrix["matrix_sha256"] = hashlib.sha256(_canon({k: v for k, v in matrix.items() if k != "matrix_sha256"})).hexdigest()
@@ -332,12 +378,14 @@ def collect(root: Any = None, *, fetch_rpc: Callable[[str, dict], bytes] | None 
             return {"leaves": [], "sidecar": {"status": "UNCHANGED", "pack": PACK,
                                               "matrix_sha256": matrix["matrix_sha256"],
                                               "ledger_index": ledger_index}}
-        leaves = [_summary_leaf(matrix, changes)] + [_delta_leaf(c, matrix) for c in changes[:8]]
+        leaves = [_summary_leaf(matrix, changes)] + [_delta_leaf(c, matrix) for c in changes]
         return {"leaves": leaves, "sidecar": {"status": "CHANGED", "pack": PACK,
                                               "matrix_sha256": matrix["matrix_sha256"],
                                               "ledger_index": ledger_index,
                                               "n_changed": len(changes),
-                                              "rpc_dark": rpc_dark, "metrics_ok": metrics_ok}}
+                                              "rpc_dark": rpc_dark,
+                                              "rpc_uncheckable": rpc_uncheckable,
+                                              "metrics_ok": metrics_ok}}
     except Exception as exc:
         return {"leaves": [], "sidecar": {"status": "ERROR", "pack": PACK, "reason": type(exc).__name__}}
 

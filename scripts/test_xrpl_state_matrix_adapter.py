@@ -44,6 +44,7 @@ class StateMatrixTest(unittest.TestCase):
             out = sm.collect(tmp, fetch_rpc=fixture_rpc, metrics=METRICS)
             self.assertEqual(out["sidecar"]["status"], "CHANGED")  # first run: all added
             self.assertEqual(out["sidecar"]["n_changed"], 16)
+            self.assertEqual(len(out["leaves"]), 17)
             summary = out["leaves"][0]
             self.assertEqual(summary["payload"]["kind"], "csoai.xrpl-identity-state-matrix/0.1")
             self.assertEqual(summary["payload"]["n_identities"], 16)
@@ -57,11 +58,17 @@ class StateMatrixTest(unittest.TestCase):
             matrix = json.loads((Path(tmp) / sm.MATRIX_REL).read_text())
             rlusd = next(r for r in matrix["identities"] if r["symbol"] == "RLUSD")
             self.assertEqual(rlusd["field_states"]["identity"], "OBSERVED")
+            self.assertEqual(rlusd["field_states"]["issuer_account"], "OBSERVED")
             self.assertEqual(rlusd["field_states"]["transfer_controls"], "OBSERVED")
             self.assertEqual(rlusd["field_states"]["reserve_claim"], "UNMEASURED")
+            self.assertEqual(rlusd["field_states"]["supply"], "UNMEASURED")
+            self.assertEqual(rlusd["field_states"]["holders"], "UNMEASURED")
             self.assertIn("allow_trustline_clawback", rlusd["transfer_controls"])
-            self.assertEqual(rlusd["supply"], 1053014745.15)
-            self.assertEqual(rlusd["toml_state"], "Bidirectional domain match")
+            self.assertIsNone(rlusd["supply"])
+            self.assertIsNone(rlusd["holders"])
+            self.assertEqual(rlusd["source_reported_supply"], 1053014745.15)
+            self.assertEqual(rlusd["source_reported_holders"], 67245)
+            self.assertEqual(rlusd["source_reported_toml_state"], "Bidirectional domain match")
 
     def test_unchanged_matrix_emits_no_leaves(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -81,7 +88,7 @@ class StateMatrixTest(unittest.TestCase):
             self.assertIn("csoai.xrpl-identity-delta/0.1", kinds)
             delta = out["leaves"][1]["payload"]
             self.assertEqual(delta["symbol"], "RLUSD")
-            self.assertEqual(delta["changed_fields"][0]["field"], "holders")
+            self.assertEqual(delta["changed_fields"][0]["field"], "source_reported_holders")
             self.assertEqual(delta["changed_fields"][0]["from"], 67245)
             self.assertEqual(delta["changed_fields"][0]["to"], 70000)
 
