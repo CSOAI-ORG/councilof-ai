@@ -2,7 +2,7 @@
   "agent_paths": [
     "@x402/fetch",
     "x402-fetch (v1)",
-    "curl -i <resource> → read accepts[]"
+    "curl -i <resource> \u2192 read accepts[]"
   ],
   "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   "board": "https://councilof.ai/api/gspc",
@@ -38,14 +38,14 @@
     "pay-to-pass",
     "rank"
   ],
-  "one_line": "agents pay per artefact — issuance, assembly, cadence; the board and verification stay free",
+  "one_line": "agents pay per artefact \u2014 issuance, assembly, cadence; the board and verification stay free",
   "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
   "quarantined": [
     {
       "buyable": false,
       "free_status": "https://councilof.ai/api/witness/status?sha256=<64-hex>",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
-      "reason": "paid witness issuance is disabled until a release gate verifies leaf → signed root → sidecar → Rekor → OpenTimestamps",
+      "reason": "paid witness issuance is disabled until a release gate verifies leaf \u2192 signed root \u2192 sidecar \u2192 Rekor \u2192 OpenTimestamps",
       "url": "https://councilof.ai/api/witness?sha256=<64-hex>"
     }
   ],
@@ -54,7 +54,7 @@
       "amount": "0",
       "indexed_in": "x402 Bazaar (PayAI)",
       "method": "GET",
-      "note": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion — a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
+      "note": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
       "paid_for": null,
       "url": "https://councilof.ai/api/free-door"
     },
@@ -100,6 +100,31 @@
       "method": "GET",
       "paid_for": "assembly",
       "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+      "paid_for": "issuance",
+      "free_preview": "https://councilof.ai/api/wrapper?id=<wrapped-symbol:chain>&preview=1",
+      "description": "Wrapped-asset parity evidence \u2014 signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+          "description": "Wrapped-asset parity evidence \u2014 signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.",
+          "mimeType": "application/json",
+          "outputSchema": {
+            "type": "object"
+          },
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          }
+        }
+      ]
     }
   ],
   "schema": "csoai.x402/0.2",
