@@ -32,7 +32,7 @@ type CanonCounter = {
   note?: string;
 };
 
-type Env = {
+export type RevenueEnv = {
   // Optional KV store holding live tallies + the settled-receipt replay set. Absent ⇒ canon-only.
   REVENUE_KV?: KVNamespace;
   // Optional gate. When set, the caller must present ?key= or an x-revenue-key header that matches.
@@ -49,7 +49,7 @@ type Env = {
 // facilitator was provisioned (2026-09-03) this endpoint said "live" in one field and "mock" in
 // another, on the same payload, about money. Same defect, second field. A note about the rail
 // reads itself off railMode(env); counters.json keeps the doctrine and nothing about the env.
-function withRailState(env: Env, canonNote: string | undefined): string {
+function withRailState(env: RevenueEnv, canonNote: string | undefined): string {
   const r = railMode(env);
   const rail = r.facilitator_configured
     ? `x402 rail: ${r.mode} — a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles.`
@@ -61,7 +61,7 @@ const canon = (countersDoc as { counters: Record<string, CanonCounter> }).counte
 
 // Pull one revenue metric: prefer a live KV tally if bound, else the canon value (null).
 async function metric(
-  env: Env,
+  env: RevenueEnv,
   canonKey: string,
   kvKey: string,
 ): Promise<{ id: string; count: number | null; status: string; source: string; owner: string; note: string }> {
@@ -107,7 +107,7 @@ async function metric(
  * a record names the payer, the tally does not. Null, never 0, when no store is bound. Zero is a
  * real zero only when the store is bound and holds no non-self record.
  */
-async function oneNumber(env: Env): Promise<Record<string, unknown>> {
+async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
   const kv = env.REVENUE_KV;
   const base = {
     id: "distinct_nonself_payers",
@@ -221,24 +221,7 @@ const json = (body: unknown, status = 200) =>
     },
   });
 
-export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
-  // Soft gate: only enforced when the owner has set REVENUE_KEY. No key configured ⇒ the surface
-  // carries nothing sensitive (all counts null, no prices), so it serves the canon read-through.
-  if (env.REVENUE_KEY) {
-    const url = new URL(request.url);
-    const presented = url.searchParams.get("key") || request.headers.get("x-revenue-key") || "";
-    if (presented !== env.REVENUE_KEY) {
-      return json(
-        {
-          schema: "csoai.revenue/0.1",
-          error: "unauthorized",
-          reason: "This surface is gated (REVENUE_KEY set). Present ?key= or x-revenue-key.",
-        },
-        401,
-      );
-    }
-  }
-
+export async function buildRevenue(env: RevenueEnv) {
   const [issuances, proofs, licences, settledFromTally, one_number] = await Promise.all([
     metric(env, "revenue_issuances", "count:issuances"),
     metric(env, "revenue_proofs", "count:proofs"),
@@ -256,18 +239,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         }
       : settledFromTally;
 
-  return json({
+  return {
     schema: "csoai.revenue/0.1",
     contract: {
       derivation:
         "Counts read from counters.json (the counter canon) and, where bound, the REVENUE_KV " +
         "tallies. Nothing is fetched over HTTP and no count is typed by hand.",
-      // DERIVED, never asserted. This sentence used to hardcode "x402 fail-closed, manifest
-      // mode:mock". The facilitator was provisioned on 2026-09-03 and /.well-known/x402.json
-      // began reporting mode:live from railMode(env) — while this endpoint went on telling the
-      // public the rail was mock. Two neighbouring surfaces contradicting each other, and the
-      // stale one was the surface about money. The counts stay null either way; only the reason
-      // was wrong, which is exactly the kind of claim that has to read itself off the env.
       null_rule:
         `A count is null, never 0, when there is no source. The x402 rail is currently ` +
         `${railMode(env).mode}` +
@@ -298,5 +275,26 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       ],
     },
     note: "Aggregate-only. NO telemetry, NO per-user data, NO fabricated counts. Measurement, never certification.",
-  });
+  };
+}
+
+export const onRequestGet: PagesFunction<RevenueEnv> = async ({ request, env }) => {
+  // Soft gate: only enforced when the owner has set REVENUE_KEY. No key configured ⇒ the surface
+  // carries nothing sensitive (all counts null, no prices), so it serves the canon read-through.
+  if (env.REVENUE_KEY) {
+    const url = new URL(request.url);
+    const presented = url.searchParams.get("key") || request.headers.get("x-revenue-key") || "";
+    if (presented !== env.REVENUE_KEY) {
+      return json(
+        {
+          schema: "csoai.revenue/0.1",
+          error: "unauthorized",
+          reason: "This surface is gated (REVENUE_KEY set). Present ?key= or x-revenue-key.",
+        },
+        401,
+      );
+    }
+  }
+
+  return json(await buildRevenue(env));
 };

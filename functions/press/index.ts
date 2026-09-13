@@ -10,12 +10,13 @@
  * humans is how a page and its API come to disagree.
  */
 import { build } from "../api/press.json";
+import type { RevenueEnv } from "../api/revenue";
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const pre = (s: string) => `<pre class="p"><code>${esc(s)}</code></pre>`;
 
-export const onRequestGet: PagesFunction = async () => {
-  const d = build();
+export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
+  const d = await build(env);
   const c = d.corrections_this_window;
   const r = d.public_root;
   const s = d.signed_cards;
@@ -88,12 +89,15 @@ ${pre(s.verify_one)}
 <h2>Distribution surfaces</h2>
 <p>${esc(d.distribution_surfaces.note)}</p>${pre(d.distribution_surfaces.proof)}
 
+<h2>Commercial evidence</h2>
+<p>${esc(d.commercial_evidence.note)}</p>${pre(d.commercial_evidence.proof)}
+
 <h2>Questions we are actually asked</h2>
 <p class="n">The questions are ours. Every answer is computed from the ledger, the board or the root at request time, so an answer cannot be edited into something the artifacts do not support.</p>
 ${faqHtml}
 
-<h2>What we are NOT announcing</h2>
-<p class="n">A press page that silently drops the things that did not happen is marketing. These are named with the command that shows their state.</p>
+<h2>Claims we refuse to overstate</h2>
+<p class="n">Measured gaps and unavailable sources remain visible. Each item includes the command that checks its state.</p>
 ${notAnnounced}
 
 <footer>
