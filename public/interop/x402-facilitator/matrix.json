@@ -1,0 +1,124 @@
+{
+  "as_of": "2026-09-13T17:35:36.298798+00:00",
+  "board": "https://councilof.ai/api/gspc",
+  "board_lock": "22\u00b722\u00b70",
+  "settle_called": false,
+  "unsigned_4axis_hold": "financial-4axis-unsigned.json UNSIGNED \u2014 no stamp",
+  "results": {
+    "goplausible": {
+      "base": "https://facilitator.goplausible.xyz",
+      "verify_present": true,
+      "ephemeral_payer": "0x4f6bf7606e5B1452F754F7d1F9a7b4Bf1bBB6e1D",
+      "matrix": {
+        "SR2": {
+          "status": "PASS",
+          "method": "tamper-signature",
+          "http": 200,
+          "body": {
+            "isValid": false,
+            "invalidReason": "invalid_exact_evm_signature",
+            "payer": "0x4f6bf7606e5B1452F754F7d1F9a7b4Bf1bBB6e1D"
+          },
+          "sha": "3ce42a01b83737762b13dc69874a7719756db3533ec02ffee081e4f1542f55cb"
+        },
+        "SR1": {
+          "status": "PASS",
+          "method": "tamper-requirements-binding",
+          "http": 200,
+          "body": {
+            "isValid": false,
+            "invalidReason": "invalid_exact_evm_recipient_mismatch",
+            "payer": "0x4f6bf7606e5B1452F754F7d1F9a7b4Bf1bBB6e1D"
+          },
+          "sha": "768c82c7fda47fd51d6c8dd2f00538277a36b3c2d615494bad1f110e30a0838d"
+        },
+        "SR5": {
+          "status": "FAIL",
+          "method": "zero-amount-reject",
+          "http": 200,
+          "body": {
+            "isValid": true,
+            "payer": "0x4f6bf7606e5B1452F754F7d1F9a7b4Bf1bBB6e1D"
+          },
+          "sha": "faecbac4c66329dd3692cf8102e08dcac2e9d6a37ab81779620f6ef62f26df67"
+        }
+      },
+      "settle_called": false,
+      "network": "base-sepolia"
+    },
+    "openx402": {
+      "base": "https://facilitator.openx402.ai",
+      "verify_present": true,
+      "ephemeral_payer": "0x4f6bf7606e5B1452F754F7d1F9a7b4Bf1bBB6e1D",
+      "matrix": {
+        "SR2": {
+          "status": "UNCHECKABLE",
+          "method": "tamper-signature",
+          "http": 200,
+          "body": {
+            "isValid": false,
+            "invalidReason": "address_not_registered",
+            "invalidMessage": "Address 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 is not registered. Register at https://openx402.ai/register",
+            "registerUrl": "https://openx402.ai/register"
+          },
+          "sha": "03d404bbdf500669ee2fa3e5a4319ffd15db5cb1b76867befe923440a5ce314f",
+          "note": "invalidReason=address_not_registered confounds method oracle \u2014 not SR-specific reject"
+        },
+        "SR1": {
+          "status": "UNCHECKABLE",
+          "method": "tamper-requirements-binding",
+          "http": 200,
+          "body": {
+            "isValid": false,
+            "invalidReason": "address_not_registered",
+            "invalidMessage": "Address 0x00000000000000000000000000000000000000AA is not registered. Register at https://openx402.ai/register",
+            "registerUrl": "https://openx402.ai/register"
+          },
+          "sha": "a41081b950149702e358497ce071871864db6ca6cd837849eeca124cd1060207",
+          "note": "invalidReason=address_not_registered confounds method oracle \u2014 not SR-specific reject"
+        },
+        "SR5": {
+          "status": "UNCHECKABLE",
+          "method": "zero-amount-reject",
+          "http": 200,
+          "body": {
+            "isValid": false,
+            "invalidReason": "address_not_registered",
+            "invalidMessage": "Address 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 is not registered. Register at https://openx402.ai/register",
+            "registerUrl": "https://openx402.ai/register"
+          },
+          "sha": "03d404bbdf500669ee2fa3e5a4319ffd15db5cb1b76867befe923440a5ce314f",
+          "note": "invalidReason=address_not_registered confounds method oracle \u2014 not SR-specific reject"
+        }
+      },
+      "settle_called": false,
+      "network": "base-sepolia"
+    },
+    "dexter": {
+      "base": "https://api.dexter.cash",
+      "verify_present": false,
+      "matrix": {
+        "SR1": {
+          "status": "UNCHECKABLE",
+          "method": "tamper-requirements-binding",
+          "note": "verify endpoint absent/404",
+          "http": 404
+        },
+        "SR2": {
+          "status": "UNCHECKABLE",
+          "method": "tamper-signature",
+          "note": "verify endpoint absent/404",
+          "http": 404
+        },
+        "SR5": {
+          "status": "UNCHECKABLE",
+          "method": "zero-amount-reject",
+          "note": "verify endpoint absent/404",
+          "http": 404
+        }
+      },
+      "settle_called": false
+    }
+  },
+  "honesty_note": "OpenX402 registration gate \u2192 SR1/2/5 UNCHECKABLE (not invent PASS). GoPlausible matches PayAI pattern: SR1+SR2 PASS, SR5 FAIL zero-amount. Dexter verify absent."
+}
