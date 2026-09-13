@@ -570,15 +570,59 @@ def remote_snapshot(url: str) -> dict | None:
     return None
 
 
-def kaggle_public_snapshot() -> dict:
-    """Read the downloadable Kaggle payload, not its separately editable page metadata."""
+def kaggle_public_files() -> dict[str, bytes]:
+    """The downloadable Kaggle archive as name→bytes. One download serves both the
+    publish safety read and the byte-parity skip — they must judge the SAME bytes."""
     url = f"https://www.kaggle.com/api/v1/datasets/download/{KAGGLE_ID}"
     try:
         body = fetch_ok(url, timeout=120)
         with zipfile.ZipFile(io.BytesIO(body)) as archive:
-            return json.loads(archive.read("SNAPSHOT.json"))
+            return {Path(n).name: archive.read(n) for n in archive.namelist() if not n.endswith("/")}
+    except Exception as e:  # noqa: BLE001
+        raise Refused(f"cannot read Kaggle's downloadable archive before publish ({e})")
+
+
+def kaggle_public_snapshot() -> dict:
+    """Read a SNAPSHOT.json that a surface already carries. None when absent or unreadable."""
+    try:
+        return json.loads(kaggle_public_files()["SNAPSHOT.json"])
+    except Refused:
+        raise
     except Exception as e:  # noqa: BLE001
         raise Refused(f"cannot read Kaggle's downloadable SNAPSHOT.json before publish ({e})")
+
+
+def built_files(snap: Path) -> dict[str, bytes]:
+    """name→bytes of the snapshot this run built — the unit the byte-strict parity gate judges."""
+    return {p.name: p.read_bytes() for p in sorted(snap.iterdir()) if p.is_file()}
+
+
+def _hf_snapshot_bytes_match(page: str, built: dict[str, bytes]) -> bool:
+    """Byte-strict publish confirmation: the remote SNAPSHOT.json equals the uploaded bytes.
+    as_of equality cannot confirm a re-publish — the previous build may already carry the
+    same as_of (two builds, one root; seen live 2026-09-13)."""
+    try:
+        remote = fetch_ok(f"{page}/resolve/main/{HF_PATH_IN_REPO}/SNAPSHOT.json?download=true", timeout=60)
+    except Exception:  # noqa: BLE001
+        return False
+    return remote == built.get("SNAPSHOT.json")
+
+
+def byte_parity_reason(built: dict[str, bytes], remote: dict[str, bytes]) -> str | None:
+    """None iff the remote carries exactly the built bytes, file for file.
+
+    as_of equality is NOT byte equality: two builds of one root differ in read_at, and
+    verify-gspc-parity.py is byte-strict. A skip keyed on as_of alone leaves the surfaces
+    byte-divergent and the gate red (seen live 2026-09-13: Kaggle skipped on as_of while
+    carrying an earlier build). A skip may fire only when every byte matches.
+    """
+    missing = sorted(set(built) - set(remote))
+    if missing:
+        return f"remote lacks {missing}"
+    diff = [n for n in built if remote[n] != built[n]]
+    if diff:
+        return f"bytes differ: {diff}"
+    return None
 
 
 def refuse_newer_remote(chosen: list[str], tr: dict) -> None:
@@ -631,10 +675,22 @@ def spray_hf(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
 
     targets = [("dataset", HF_DATASET, f"https://huggingface.co/datasets/{HF_DATASET}"),
                ("space", HF_SPACE, f"https://huggingface.co/spaces/{HF_SPACE}")]
+    built = built_files(snap)
     for repo_type, repo_id, page in targets:
         name = f"hf-{repo_type}"
         raw = f"{page}/resolve/main/{HF_PATH_IN_REPO}/SNAPSHOT.json"
         why = unchanged(remote_snapshot(raw), tr, force)
+        if why:
+            # as_of/fingerprint match is not byte parity — the gate is byte-strict.
+            try:
+                remote_bytes = {n: fetch_ok(f"{page}/resolve/main/{HF_PATH_IN_REPO}/{n}?download=true", timeout=60)
+                                for n in built}
+                bp = byte_parity_reason(built, remote_bytes)
+            except Exception as e:  # noqa: BLE001
+                bp = f"remote unreadable file-by-file ({type(e).__name__})"
+            if bp:
+                log(f"[{name}] {why} — but byte parity fails ({bp}); republishing to hold the byte-strict gate")
+                why = None
         if why:
             out.append(result(name, "UNCHANGED", f"{page}/tree/main/{HF_PATH_IN_REPO}", tr["as_of"], why))
             continue
@@ -648,10 +704,10 @@ def spray_hf(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
         except Exception as e:  # noqa: BLE001
             out.append(result(name, "FAILED", page, detail=f"upload_folder: {e}"))
             continue
-        seen = wait_for(lambda: (remote_snapshot(raw) or {}).get("as_of") == tr["as_of"] and tr["as_of"])
+        seen = wait_for(lambda: _hf_snapshot_bytes_match(page, built))
         out.append(result(name, "PUBLISHED" if seen else "PUBLISHED-UNCONFIRMED",
                           f"{page}/tree/main/{HF_PATH_IN_REPO}", seen or None,
-                          None if seen else f"re-read of {raw} did not show as_of {tr['as_of']} yet"))
+                          None if seen else f"re-read of {raw} did not show the uploaded build's bytes yet"))
     return out
 
 
@@ -680,8 +736,17 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     info = meta.get("info", meta)
     # The downloadable archive is the evidence. Page metadata is separately editable and may
     # claim a newer snapshot than the bytes, which is the exact conflict this publisher repairs.
-    remote = kaggle_public_snapshot()
+    remote_files = kaggle_public_files()
+    try:
+        remote = json.loads(remote_files["SNAPSHOT.json"])
+    except Exception as e:  # noqa: BLE001
+        raise Refused(f"cannot parse Kaggle's downloadable SNAPSHOT.json before publish ({e})")
     why = unchanged(remote, tr, force)
+    if why:
+        bp = byte_parity_reason(built_files(snap), remote_files)
+        if bp:
+            log(f"[kaggle] {why} — but byte parity fails ({bp}); republishing to hold the byte-strict gate")
+            why = None
     if why:
         return [result("kaggle", "UNCHANGED", page, tr["as_of"], why)]
 
@@ -733,7 +798,11 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
         if p.returncode != 0:
             return [result("kaggle", "FAILED", page, detail=f"kaggle datasets version: {p.stdout[-500:]} {p.stderr[-500:]}")]
         log(f"    {p.stdout.strip()[-200:]}")
-        seen = wait_for(lambda: (kaggle_public_snapshot().get("as_of") == tr["as_of"]) and tr["as_of"],
+        # Byte-strict confirmation: the OLD archive can already carry the same as_of (two
+        # builds, one root), so waiting on as_of confirms instantly against stale bytes
+        # and the version looks landed when it never propagated (seen live 2026-09-13).
+        built = built_files(snap)
+        seen = wait_for(lambda: byte_parity_reason(built, kaggle_public_files()) is None,
                         tries=12, delay=10)
         if not seen:
             return [result("kaggle", "PUBLISHED-UNCONFIRMED", page,
