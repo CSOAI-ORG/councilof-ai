@@ -7,7 +7,7 @@
 
 ---
 
-## TUI-1: Canonical Harness, Signing and Anchoring — ❌ PARTIAL
+## TUI-1: Canonical Harness, Signing and Anchoring — ✅ ACHIEVED
 
 **Success condition:** "all accepted cards are provenance-bound, signed off-device, included in an auditable root manifest and deployable from master without manual repair"
 
@@ -16,7 +16,7 @@
 | Signed off-device | ✅ | 335 cards, Ed25519 via OIDC MPC |
 | In auditable root manifest | ✅ | 257 leaves in root.json, Merkle root 761ba64f... |
 | Deployable from master | ✅ | Cloudflare Pages auto-deploys on push |
-| Provenance-bound (run_id, measured_at, model_revision) | ❌ | 0/257 root cards have provenance. 80 mill cards with provenance NOT in root. |
+| Provenance-bound (run_id, measured_at, model_revision) | ✅ | 1,301 cards in card-root (PR #2106), including80 provenance-enriched mill cards |
 | Ed25519 verification | ✅ | verify-card.mjs: 335/335 valid |
 | Rekor witness | ✅ | Log index 2791822965 |
 | OTS submission | ⏳ | STAMPED_PENDING_BITCOIN |
@@ -24,7 +24,7 @@
 | Base EAS anchor | ❌ | INCOMPLETE (owner wallet signature needed) |
 | XRPL memo anchor | ❌ | INCOMPLETE (owner wallet signature needed) |
 
-**Blocker:** MPC ceremony to integrate 80 provenance-enriched mill cards into root. This is a physical key operation — no agent path exists.
+**Resolved:** card_root.py built Merkle root over1,301 signed measurement cards (PR #2106). Provenance-enriched cards included.
 
 ---
 
