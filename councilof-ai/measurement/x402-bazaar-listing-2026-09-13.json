@@ -1,0 +1,58 @@
+{
+  "name": "CSOAI GSPC Measurement API",
+  "description": "AI governance measurement via x402 micropayments. 2,383 signed cards, 22 axes, 425 stablecoins. Pay per query with USDC on Base.",
+  "endpoint": "https://councilof.ai/api/gspc",
+  "pricing": "$0.01-$0.10 USDC per query",
+  "payment_method": "x402 USDC on Base",
+  "tools": [
+    {
+      "name": "gspc_get_card",
+      "description": "Get one signed measurement card by sha256",
+      "price": "$0.01"
+    },
+    {
+      "name": "gspc_verify_card",
+      "description": "Verify a signed card's Ed25519 signature",
+      "price": "$0.01"
+    },
+    {
+      "name": "gspc_get_axis",
+      "description": "Get one axis row from the live GSPC board",
+      "price": "$0.01"
+    },
+    {
+      "name": "gspc_list_cards",
+      "description": "List all published signed-card index",
+      "price": "$0.05"
+    },
+    {
+      "name": "gspc_verify_inclusion",
+      "description": "Check sha256 against merkle root",
+      "price": "$0.01"
+    },
+    {
+      "name": "gspc_get_root",
+      "description": "Get the permissionless public-root",
+      "price": "$0.01"
+    },
+    {
+      "name": "gspc_board_totals",
+      "description": "Live GSPC board totals",
+      "price": "$0.01"
+    },
+    {
+      "name": "gspc_commission_card",
+      "description": "Commission a new measurement card",
+      "price": "$0.10"
+    },
+    {
+      "name": "gspc_receipts_batch",
+      "description": "Batch receipt verification",
+      "price": "$0.05"
+    }
+  ],
+  "well_known_url": "https://councilof.ai/.well-known/x402.json",
+  "agent_card_url": "https://councilof.ai/.well-known/agent-card.json",
+  "status": "LIVE \u2014 1 stranger payer, 0.02 USDC received",
+  "created": "2026-09-13T13:48:46Z"
+}
