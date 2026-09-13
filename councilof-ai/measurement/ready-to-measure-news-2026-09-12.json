@@ -1,0 +1,128 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.daily.news_measurement_plan",
+  "subject": "ready-to-measure-news-2026-09-12",
+  "measured_at": "2026-09-13T07:07:46.002796+00:00",
+  "metrics": {
+    "news_window": "24h ending 2026-09-12",
+    "items_total": 11,
+    "by_kind": {
+      "policy": 3,
+      "regulation": 1,
+      "research": 2,
+      "model": 3,
+      "funding": 2
+    },
+    "ready_to_measure": [
+      {
+        "item": "OpenAI GPT-Live-1",
+        "type": "model",
+        "axes": [
+          "capability",
+          "agent-behavior"
+        ],
+        "open_or_closed": "closed",
+        "evidence_status": "needs_measurement"
+      },
+      {
+        "item": "DeepSeek V4.1-Flash",
+        "type": "model",
+        "axes": [
+          "capability",
+          "cost-latency"
+        ],
+        "open_or_closed": "open-weight",
+        "evidence_status": "needs_measurement"
+      },
+      {
+        "item": "NVIDIA Nemotron 3 Ultra (IMO gold)",
+        "type": "research",
+        "axes": [
+          "capability",
+          "reasoning",
+          "math"
+        ],
+        "open_or_closed": "open",
+        "evidence_status": "needs_measurement"
+      },
+      {
+        "item": "NASA + IBM open lunar foundation model",
+        "type": "research",
+        "axes": [
+          "scientific",
+          "datasets"
+        ],
+        "open_or_closed": "open",
+        "evidence_status": "needs_measurement"
+      },
+      {
+        "item": "California SB 813 + AB 1405",
+        "type": "regulation",
+        "axes": [
+          "audit-registry",
+          "verification"
+        ],
+        "open_or_closed": "law",
+        "evidence_status": "needs_crosswalk"
+      },
+      {
+        "item": "China embodied AI dataset standards",
+        "type": "regulation",
+        "axes": [
+          "datasets",
+          "embodied"
+        ],
+        "open_or_closed": "draft",
+        "evidence_status": "pending_publication"
+      }
+    ],
+    "policy_announcements": [
+      "Anthropic + OpenAI + xAI: third-party evaluator access (employee-level)",
+      "OpenAI \u2192 Congress: mandatory capability-based national safety rules",
+      "Altman: no OpenAI IPO 2026 (preserve pause training option)"
+    ],
+    "funding_round": [
+      {
+        "name": "Cohere",
+        "amount": "$2-3B",
+        "valuation": "~$20B",
+        "stage": "advanced-talks"
+      },
+      {
+        "name": "Positron AI",
+        "amount": "$875M",
+        "stage": "Series C",
+        "focus": "inference hardware"
+      }
+    ],
+    "open_or_closed_summary": {
+      "open_models": [
+        "DeepSeek V4.1-Flash",
+        "Nemotron 3 Ultra (IMO)",
+        "NASA + IBM lunar"
+      ],
+      "closed_models": [
+        "OpenAI GPT-Live-1"
+      ],
+      "open_laws": [
+        "CA SB 813 + AB 1405"
+      ],
+      "policy_commitments": [
+        "third-party evaluator access (3 labs)"
+      ]
+    },
+    "our_fitness": {
+      "GPT-Live-1 measureable": true,
+      "DeepSeek measurable": true,
+      "Nemotron measurable": true,
+      "CA audit registry measurable": true,
+      "third-party evaluator access measurable": true,
+      "embodied AI datasets measurable": false
+    }
+  },
+  "honest_sentence": "News digest 2026-09-12 to 2026-09-13: 11 items in 24h (3 policy, 1 regulation, 2 research, 3 model, 2 funding). 6 ready to measure via CSOAI evidence pipeline \u2014 DeepSeek V4.1-Flash, Nemotron IMO, NASA+IBM lunar, GPT-Live-1 (interactable through API), CA SB 813/AB 1405 audit registry, third-party evaluator commitments. Positron AI ($875M) and Cohere ($2-3B) tracked for funding landscape. Open-model ratio 3/4 = 75%.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true,
+  "miner_version": "news-miner-1"
+}
