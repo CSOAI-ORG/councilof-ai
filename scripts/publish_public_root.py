@@ -500,6 +500,34 @@ def write_halt_health(
     write_pretty(ROOT / "public" / "publisher-health.json", health)
 
 
+
+def kinds_index(cards: list[dict], *, as_of: str, merkle_root: str) -> dict:
+    """Per-kind (and per-kind-per-state) leaf counts for ONE root — derived from the cards the
+    root commits to, never typed. Lets a surface such as /api/coverage say "17 signed" for a kind
+    without scanning 2,000 card files or hand-keeping a number. Counts sum to card_count by
+    construction; a kind is whatever the card's payload names (`?` when it names none)."""
+    by_kind: dict[str, int] = {}
+    by_kind_state: dict[str, int] = {}
+    for card in cards:
+        payload = card.get("payload") or {}
+        kind = str(payload.get("kind") or card.get("kind") or "?")
+        state = str(payload.get("state") or "?")
+        by_kind[kind] = by_kind.get(kind, 0) + 1
+        key = f"{kind}|{state}"
+        by_kind_state[key] = by_kind_state.get(key, 0) + 1
+    return {
+        "kind": "csoai.public-root-kinds/v0",
+        "as_of": as_of,
+        "merkle_root": merkle_root,
+        "card_count": len(cards),
+        "by_kind": dict(sorted(by_kind.items())),
+        "by_kind_state": dict(sorted(by_kind_state.items())),
+        "note": (
+            "Derived from the cards this root commits to; regenerated with every root; never typed. "
+            "A count here is 'leaves of this kind under the ONE root' — not MEASURED, not a grade."
+        ),
+    }
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="One writer for csoai.public-root/v1")
     ap.add_argument("--dry-run", action="store_true", help="run adapters + halts; do not write")
@@ -886,6 +914,7 @@ def main() -> int:
         write_pretty(proofs_dir / f"{sha[:16]}.json", pr)
     write_pretty(ROOT / "public" / "root.json", root_body)
     write_pretty(ROOT / "public" / "publisher-health.json", health)
+    write_pretty(ROOT / "public" / "interop" / "root-kinds.json", kinds_index(cards, as_of=as_of, merkle_root=root_merkle))
     # Provable-archive bytes that travel with this root: the full EIP-1186 proofs
     # the leaves point at (content-addressed) and the event-indexer cursor, which
     # advances ONLY once the root carrying its leaves is on disk.
