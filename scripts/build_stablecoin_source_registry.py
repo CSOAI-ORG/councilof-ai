@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Full-universe primary-source registry for the stablecoin index.
+"""Full-universe source-lead registry for the stablecoin index.
 
 Extends public/interop/stablecoin-deep-2026-09/sources.json from the top-20
 attestation registry to ALL 425 frozen-index identities. For every identity:
@@ -10,8 +10,8 @@ attestation registry to ALL 425 frozen-index identities. For every identity:
     from https://stablecoins.llama.fi/stablecoin/<id> (the list endpoint used
     for the frozen index does NOT carry url — that gap is recorded, not hidden).
   - registration_state:
-      ATTESTATION_PAGE_REGISTERED — auditor/attestation page known (top-20)
-      ISSUER_SITE_REGISTERED      — issuer site lead registered from the detail endpoint
+      ATTESTATION_PAGE_REGISTERED — manually registered disclosure/attestation lead (top-20)
+      ISSUER_SITE_REGISTERED      — third-party directory supplied issuer-site lead
       NO_SOURCE_LOCATED           — neither discoverable keyless; method note attached
   - provenance: source_id + retrieved_at for each lead.
 
@@ -95,7 +95,18 @@ def main() -> None:
             "attestation_page": attestation_page,
             "auditor": existing.get("auditor"),
             "cadence_claimed": existing.get("cadence_claimed"),
-            "source_of_truth": existing.get("source_of_truth") if attestation_page else ("issuer-site" if issuer_site else None),
+            # A URL supplied by a directory is a discovery lead. It becomes a
+            # primary source only after the page and its publisher are checked.
+            "source_of_truth": existing.get("source_of_truth") if attestation_page else None,
+            "source_role": (
+                "disclosure-or-attestation-lead" if attestation_page else
+                "issuer-site-lead" if issuer_site else None
+            ),
+            "verification_state": (
+                "MANUALLY_REGISTERED_UNVERIFIED" if attestation_page else
+                "DIRECTORY_LEAD_UNVERIFIED" if issuer_site else
+                "NO_LEAD_LOCATED"
+            ),
             "issuer_site": issuer_site,
             "registration_state": state,
             "source_id": "defillama-stablecoin-detail" if detail.get("url") else None,
@@ -116,10 +127,11 @@ def main() -> None:
         "schema": prior.get("schema"),
         "pack": prior.get("pack"),
         "note": (
-            "Primary-source registry for the full 425-identity frozen index. attestation_page rows are "
-            "hand-registered (top-20) and never inferred; issuer_site leads come from the keyless DefiLlama "
-            "detail endpoint with per-row retrieval provenance. NO_SOURCE_LOCATED is an explicit state, "
-            "never a silent blank. Rebuilt by scripts/build_stablecoin_source_registry.py."
+            "Source-lead registry for the full 425-identity frozen index. Registered URLs are discovery "
+            "leads, not verified primary evidence. attestation_page rows are manually registered (top-20) "
+            "and never inferred; issuer_site leads come from the keyless DefiLlama detail endpoint with "
+            "per-row retrieval provenance. NO_SOURCE_LOCATED is explicit, never a silent blank. Rebuilt by "
+            "scripts/build_stablecoin_source_registry.py."
         ),
         "registry_coverage": counts,
         "sources": rows,

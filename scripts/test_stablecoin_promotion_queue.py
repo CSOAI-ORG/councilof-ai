@@ -48,6 +48,7 @@ class StablecoinPromotionQueueTest(unittest.TestCase):
                 self.assertTrue(reg["issuer_site"] and reg["issuer_site"].startswith("https://"))
                 self.assertEqual("defillama-stablecoin-detail", reg["source_id"])
                 self.assertTrue(reg["source_retrieved_at"])
+                self.assertEqual("DIRECTORY_LEAD_UNVERIFIED", reg["verification_state"])
 
     def test_registration_counts_reconcile_to_425(self) -> None:
         counts = self.document["counts"]

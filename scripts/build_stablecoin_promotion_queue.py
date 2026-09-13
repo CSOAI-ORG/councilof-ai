@@ -118,6 +118,8 @@ def build(repo: Path) -> dict[str, Any]:
                 "state": registration_state,
                 "attestation_page": source.get("attestation_page"),
                 "issuer_site": issuer_site,
+                "source_role": source.get("source_role"),
+                "verification_state": source.get("verification_state"),
                 "source_id": source.get("source_id"),
                 "source_retrieved_at": source.get("source_retrieved_at"),
                 "method_note": source.get("method_note"),
@@ -240,6 +242,10 @@ def validate(document: dict[str, Any]) -> None:
         assert reg["state"] in ("ATTESTATION_PAGE_REGISTERED", "ISSUER_SITE_REGISTERED", "NO_SOURCE_LOCATED")
         if reg["state"] == "NO_SOURCE_LOCATED":
             assert reg["method_note"], "missing-source rows must carry a method note, never a silent blank"
+        else:
+            assert reg["verification_state"] in (
+                "MANUALLY_REGISTERED_UNVERIFIED", "DIRECTORY_LEAD_UNVERIFIED"
+            )
         assert "certif" not in json.dumps(row).lower()
 
 
