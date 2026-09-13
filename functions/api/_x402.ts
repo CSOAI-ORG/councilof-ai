@@ -327,6 +327,15 @@ export function hasPaymentHeader(request: Request): boolean {
  */
 export const KNOWN_INTERNAL_X402_WALLETS = [
   "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
+  // Identified as estate-controlled by the committed artifact
+  // audit-settlement-classification.json (csoai.settlement-classification/0.1, 2026-09-13),
+  // which classifies both settlements below INTERNAL_SELF_FUNDED. Senders resolved from the
+  // chain (Base, eth_getTransactionByHash); both paid /api/request-attestation via Multicall3.
+  //   0x60172f43…fababe7f  block 51172054  "Self-payment via Multicall3, same controlled wallet"
+  "0xb2bd29925cbbcea7628279c91945ca5b98bf371b",
+  //   0xeaaafb8a…3e8807    block 51202203  "Burner wallet funded via MetaMask"
+  // This one was being counted as the estate's first distinct non-self payer. It is not one.
+  "0xc6699d2aada6c36dfea5c248dd70f9cb0235cb63",
 ] as const;
 
 /** Wallets whose payments are the estate paying itself: payTo, known test wallets, plus X402_SELF_WALLETS. Lowercased. */
