@@ -46,6 +46,7 @@ describe("/api/wrapper — arithmetic and doctrine", () => {
     expect(new Set(ROSTER.map((e) => e.id)).size).toBe(ROSTER.length);
     expect(findEntry("usdc.e:arbitrum")?.backing_model).toBe("escrow");
     expect(findEntry("usdc:base")?.backing_model).toBe("native");
+    expect(findEntry("wbtc:ethereum")?.backing_model).toBe("custodial");
   });
 
   it("never carries a verdict word or MEASURED — a read is not a measurement", () => {
@@ -111,6 +112,17 @@ describe("/api/wrapper — doors", () => {
     expect(dead.payload.state).toBe("UNMEASURED");
     expect(String(dead.payload.error)).toMatch(/RPC/);
     expect((dead.payload.unmeasured as string[]).join(" ")).toMatch(/nothing inferred/);
+  });
+
+  it("a custodial wrapper reads its supply and stays INDEXED — no reserve read, no ratio, no 'unbacked'", async () => {
+    stubChain();
+    const b = await (await wrapper(ctx("/api/wrapper?id=wbtc:ethereum&preview=1"))).json();
+    expect(b.card.payload.state).toBe("INDEXED_CUSTODIAL");
+    expect(b.card.payload.escrow_over_wrapped).toBeNull();
+    expect(b.card.payload.reads.escrow_balance).toBeUndefined();
+    expect(b.card.payload.reads.wrapped_total_supply).toBeTruthy();
+    expect(b.card.unmeasured.join(" ")).toMatch(/custodian-held/);
+    expect(JSON.stringify(b)).not.toMatch(/unbacked/);
   });
 
   it("preview strips exactly the metered fields and nothing else", () => {
