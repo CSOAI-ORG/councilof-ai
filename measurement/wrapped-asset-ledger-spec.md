@@ -20,7 +20,7 @@ For each wrapper pair in the roster (`scripts/readers/wrapped-asset-parity-reade
 Every raw hex result is sha256'd and kept; endpoint substitutions are recorded, never silent.
 
 ## States (never collapsed)
-- `MEASURED_ESCROW_PARITY` — both reads succeeded; the ratio is what the two chains said at the pinned heights.
+- `ESCROW_PARITY_READ` — both reads succeeded; the ratio is what the two chains said at the pinned heights.
 - `UNCHECKABLE_NATIVE_ISSUANCE` — the issuer mints natively on the destination chain (Circle CCTP, Tether native). There is no escrow to read. The supply is read; **no parity is claimed and none is implied** — native issuance is not "unbacked".
 - `UNMEASURED` — a read failed; the error is in the record; nothing is inferred.
 
