@@ -4,7 +4,7 @@
   "as_of": "2026-09-13T15:09:00.351Z",
   "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
   "states": {
-    "MEASURED_ESCROW_PARITY": "both reads succeeded at the pinned blocks",
+    "ESCROW_PARITY_READ": "both reads succeeded at the pinned blocks; a read, not a measurement",
     "UNCHECKABLE_NATIVE_ISSUANCE": "natively issued on the destination chain; no escrow exists; supply read, no ratio claimed",
     "UNMEASURED": "a read failed; error recorded; nothing inferred"
   },
@@ -42,7 +42,7 @@
     }
   },
   "counts": {
-    "MEASURED_ESCROW_PARITY": 6,
+    "ESCROW_PARITY_READ": 6,
     "UNCHECKABLE_NATIVE_ISSUANCE": 3
   },
   "records": [
@@ -100,7 +100,7 @@
           "decimals": 6
         }
       },
-      "state": "MEASURED_ESCROW_PARITY",
+      "state": "ESCROW_PARITY_READ",
       "error": null,
       "escrow_over_wrapped": "1.076719"
     },
@@ -208,7 +208,7 @@
           "decimals": 6
         }
       },
-      "state": "MEASURED_ESCROW_PARITY",
+      "state": "ESCROW_PARITY_READ",
       "error": null,
       "escrow_over_wrapped": "1.238837"
     },
@@ -266,7 +266,7 @@
           "decimals": 6
         }
       },
-      "state": "MEASURED_ESCROW_PARITY",
+      "state": "ESCROW_PARITY_READ",
       "error": null,
       "escrow_over_wrapped": "1.001480"
     },
@@ -324,7 +324,7 @@
           "decimals": 18
         }
       },
-      "state": "MEASURED_ESCROW_PARITY",
+      "state": "ESCROW_PARITY_READ",
       "error": null,
       "escrow_over_wrapped": "1.505694"
     },
@@ -382,7 +382,7 @@
           "decimals": 6
         }
       },
-      "state": "MEASURED_ESCROW_PARITY",
+      "state": "ESCROW_PARITY_READ",
       "error": null,
       "escrow_over_wrapped": "1.034557"
     },
@@ -440,7 +440,7 @@
           "decimals": 18
         }
       },
-      "state": "MEASURED_ESCROW_PARITY",
+      "state": "ESCROW_PARITY_READ",
       "error": null,
       "escrow_over_wrapped": "1.002426"
     },
