@@ -1,0 +1,89 @@
+name: bot-checks-sweeper
+
+# 2026-09-13 (TUI-1): bot-created PRs never receive protected pull_request checks.
+# GitHub rule: events produced by GITHUB_TOKEN do not trigger further workflows, so a
+# PR opened by hub-queue-land / census / trust-round automation has NO `gates` context
+# and can never satisfy branch protection without a human re-opening it.
+#
+# Least-privilege repair (no PAT, no GitHub App, no protection weakening, no fabricated
+# checks): this sweeper finds open PRs whose head has no `gates` check-run and dispatches
+# the REAL pr-gates suite against the PR branch (check-runs attach to the head sha, so
+# they surface on the PR like any pull_request run). If the branch is too old to carry
+# the dispatchable workflow, the PR is banked with ONE explicit operator action comment.
+#
+# Never comments twice on the same PR (marker search). Never merges. Never skips tests.
+
+on:
+  schedule:
+    - cron: "9,29,49 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  actions: write        # dispatch pr-gates on the PR branch
+  pull-requests: write  # one banked operator-action comment when dispatch is impossible
+
+concurrency:
+  group: bot-checks-sweeper
+  cancel-in-progress: false
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Find check-less open PRs and dispatch the real gates
+        run: |
+          set -uo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess
+
+          REPO = os.environ["REPO"]
+
+          def gh(args):
+              return subprocess.run(["gh"] + args, capture_output=True, text=True)
+
+          prs = json.loads(gh(["pr", "list", "--repo", REPO,
+                               "--state", "open", "--limit", "100",
+                               "--json", "number,headRefName,headRefOid,title,isCrossRepository"]).stdout)
+          swept, dispatched, banked = [], [], []
+          for pr in prs:
+              n, branch, sha = pr["number"], pr["headRefName"], pr["headRefOid"]
+              if pr.get("isCrossRepository"):
+                  continue  # forks are out of scope for token dispatch
+              cr = json.loads(gh(["api", f"repos/{REPO}/commits/{sha}/check-runs?per_page=100"]).stdout)
+              gates = [r for r in (cr.get("check_runs") or []) if r.get("name") == "gates"]
+              if gates:
+                  continue  # already has the protected context on the current head
+              swept.append(n)
+              r = gh(["workflow", "run", "pr-gates.yml", "--repo", REPO,
+                      "--ref", branch, "-f", f"pr={n}"])
+              if r.returncode == 0:
+                  dispatched.append(n)
+                  print(f"dispatched pr-gates for #{n} ({branch} @ {sha[:8]})")
+              else:
+                  # Branch predates dispatchable pr-gates (or ref vanished): bank the PR with
+                  # ONE explicit operator action — never claim automation worked.
+                  comments = gh(["pr", "view", str(n), "--repo", REPO,
+                                 "--json", "comments", "-q", "[.comments[].body] | join('\n')"]).stdout
+                  if "bot-checks-sweeper: operator action" not in comments:
+                      body = (
+                          "bot-checks-sweeper: operator action required.\n\n"
+                          f"This PR was opened by automation (GITHUB_TOKEN), so the protected "
+                          f"`gates` check never fired, and the branch `{branch}` predates the "
+                          "dispatchable pr-gates workflow, so the sweeper cannot run it for you.\n\n"
+                          "**Operator action (one of):** close and re-open this PR from the web UI "
+                          "(a human-triggered event fires pull_request checks), or merge current "
+                          "`master` into the branch with a human credential.\n\n"
+                          "Posted once by bot-checks-sweeper; no checks were fabricated."
+                      )
+                      gh(["pr", "comment", str(n), "--repo", REPO, "--body", body])
+                      banked.append(n)
+                      print(f"banked #{n} with operator action")
+                  else:
+                      banked.append(n)
+          print(json.dumps({"swept_missing_gates": swept, "dispatched": dispatched, "banked": banked}))
+          PY
