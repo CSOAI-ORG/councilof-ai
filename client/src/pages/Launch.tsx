@@ -32,7 +32,7 @@ const VERIFICATION_LINKS = [
   {
     label: "Public root (signed Merkle tree)",
     url: "/root.json",
-    desc: "Every measurement card hashed, pairwise Merkle-rooted, Ed25519-signed.",
+    desc: "Measurement cards are hashed, pairwise Merkle-rooted, Ed25519-signed.",
   },
   {
     label: "Measurement board (22 axes)",
