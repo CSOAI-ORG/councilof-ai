@@ -127,6 +127,10 @@ export const onRequestGet: PagesFunction<{
         description:
           "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.",
         accepts: [req(`${origin}/api/rwa/evidence?asset=RLUSD`, "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.")]  },
+      { method: "GET", url: `${origin}/api/wrapper?id=usdc.e:arbitrum`, paid_for: "issuance", free_preview: `${origin}/api/wrapper?id=<wrapped-symbol:chain>&preview=1`,
+        description:
+          "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.",
+        accepts: [req(`${origin}/api/wrapper?id=usdc.e:arbitrum`, "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.")]  },
       // PARAMETER NAME, CHECKED AGAINST THE HANDLER, NOT ASSUMED. This advertised `vendor=<slug>`
       // and the endpoint reads only `url=` (marking-evidence.ts: searchParams.get("url")); the
       // string "vendor" appears nowhere in it. A buyer following this document got
