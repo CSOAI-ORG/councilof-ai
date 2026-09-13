@@ -265,6 +265,11 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         working-directory: packages/gspc-card-verifier
         run: node --test test/*.test.mjs
+      # Reader tests were never invoked by any gate (evm-erc20-reader.node-test.mjs sat unrun
+      # since it landed; a test nobody runs is a comment). Every scripts/readers/*.node-test.mjs
+      # now runs here, so a reader that changes its arithmetic or roster shape fails the PR.
+      - name: Reader tests (scripts/readers/*.node-test.mjs)
+        run: npm run test:readers
 
       # public/verifier/gspc-verify.mjs is PUBLISHED — it serves at
       # https://councilof.ai/verifier/gspc-verify.mjs and is the copy a stranger downloads to check
