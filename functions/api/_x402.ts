@@ -326,16 +326,26 @@ export function hasPaymentHeader(request: Request): boolean {
  * address only when a committed test artifact explicitly identifies it as estate-controlled.
  */
 export const KNOWN_INTERNAL_X402_WALLETS = [
+  // Estate-controlled wallets, each with the chain evidence that makes it so. A wallet is
+  // listed only when the bytes show it is ours; being small, new or unnamed is not evidence.
+  //
+  // Test wallet that signs the estate's own self-tests (tui4 ledger: SELF_TEST).
   "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
-  // Identified as estate-controlled by the committed artifact
-  // audit-settlement-classification.json (csoai.settlement-classification/0.1, 2026-09-13),
-  // which classifies both settlements below INTERNAL_SELF_FUNDED. Senders resolved from the
-  // chain (Base, eth_getTransactionByHash); both paid /api/request-attestation via Multicall3.
-  //   0x60172f43…fababe7f  block 51172054  "Self-payment via Multicall3, same controlled wallet"
+  // The estate's broadcasting EOAs. They never appear as `payer` — they are tx.from, the key
+  // that submits our Multicall3 (aggregate3) bundles carrying an EIP-3009 authorization:
+  //   0xb2bd…  tx.from of 0x60172f43… (block 51172054), the estate's own plumbing test
+  //            (public/interop/x402-self-settlement-2026-09-11.json: from_transaction_sender).
+  //   0xc669…  tx.from of 0xeaaafb8a… (block 51202203, payer 0x6ea0… above) AND of
+  //            0xc16ecc85… (block 51034356, payer 0x7e6b… below).
+  // Listed so a future record that names them as payer is self; they did not cause the 1.
   "0xb2bd29925cbbcea7628279c91945ca5b98bf371b",
-  //   0xeaaafb8a…3e8807    block 51202203  "Burner wallet funded via MetaMask"
-  // This one was being counted as the estate's first distinct non-self payer. It is not one.
   "0xc6699d2aada6c36dfea5c248dd70f9cb0235cb63",
+  // The wallet that WAS the 1: authorizer of 0xc16ecc85… (2026-09-08 09:00:58Z, 20000 atomic,
+  // /api/request-attestation). Its authorization was executed by our own broadcaster 0xc669…
+  // through Multicall3 — an outside buyer settles through a facilitator's relayer, not through
+  // the estate's EOA — and the address has nonce 0 and no ETH: it only ever signed for us.
+  // Recorded in audit-settlement-classification.json as INTERNAL_SELF_FUNDED (2026-09-13).
+  "0x7e6b6556322c4e26c567a867964ac793f5ee2b1c",
 ] as const;
 
 /** Wallets whose payments are the estate paying itself: payTo, known test wallets, plus X402_SELF_WALLETS. Lowercased. */
