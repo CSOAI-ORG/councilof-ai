@@ -4,18 +4,18 @@
     "art50_marking_evidence": {
       "fixture": "challenges/art50_marking_evidence.json",
       "http_status": 402,
-      "payment_required_header_bytes": 7552,
-      "response_headers_bytes": 8167,
+      "payment_required_header_bytes": 6924,
+      "response_headers_bytes": 7566,
       "sampled_query": {
         "url": "https://councilof.ai/og-image.png"
       },
-      "url": "https://councilof.ai/api/art50/marking-evidence"
+      "url": "https://councilof.ai/api/art50/marking-evidence?url=https%3A%2F%2Fcouncilof.ai%2Fog-image.png"
     },
     "eunomia_data": {
       "fixture": "challenges/eunomia_data.json",
       "http_status": 402,
-      "payment_required_header_bytes": 3832,
-      "response_headers_bytes": 4443,
+      "payment_required_header_bytes": 6924,
+      "response_headers_bytes": 7559,
       "sampled_query": {
         "feed": "1"
       },
@@ -24,8 +24,8 @@
     "evidence_bundle": {
       "fixture": "challenges/evidence_bundle.json",
       "http_status": 402,
-      "payment_required_header_bytes": 6120,
-      "response_headers_bytes": 6750,
+      "payment_required_header_bytes": 6912,
+      "response_headers_bytes": 7540,
       "sampled_query": {
         "bundle": "1",
         "obligation": "article-50"
@@ -35,18 +35,26 @@
     "feeds_provider_diff": {
       "fixture": "challenges/feeds_provider_diff.json",
       "http_status": 402,
-      "payment_required_header_bytes": 3416,
-      "response_headers_bytes": 4031,
+      "payment_required_header_bytes": 6388,
+      "response_headers_bytes": 7017,
       "sampled_query": {
         "history": "1"
       },
       "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
     },
+    "free_door": {
+      "fixture": "challenges/free_door.json",
+      "http_status": 402,
+      "payment_required_header_bytes": 5380,
+      "response_headers_bytes": 6005,
+      "sampled_query": {},
+      "url": "https://councilof.ai/api/free-door"
+    },
     "proof": {
       "fixture": "challenges/proof.json",
       "http_status": 402,
-      "payment_required_header_bytes": 3112,
-      "response_headers_bytes": 3719,
+      "payment_required_header_bytes": 6416,
+      "response_headers_bytes": 7039,
       "sampled_query": {
         "bundle": "1"
       },
@@ -55,13 +63,43 @@
     "receipts_batch": {
       "fixture": "challenges/receipts_batch.json",
       "http_status": 402,
-      "payment_required_header_bytes": 5624,
-      "response_headers_bytes": 6239,
+      "payment_required_header_bytes": 7192,
+      "response_headers_bytes": 7819,
       "sampled_query": {
         "from": "2026-01-01T00:00:00Z",
-        "to": "2026-09-06T08:22:25Z"
+        "to": "2026-09-13T15:44:39Z"
       },
-      "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-06T08%3A22%3A25Z"
+      "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z"
+    },
+    "request_attestation": {
+      "fixture": "challenges/request_attestation.json",
+      "http_status": 402,
+      "payment_required_header_bytes": 7064,
+      "response_headers_bytes": 7689,
+      "sampled_query": {
+        "subject": "model-or-subject-id"
+      },
+      "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id"
+    },
+    "rwa_evidence": {
+      "fixture": "challenges/rwa_evidence.json",
+      "http_status": 402,
+      "payment_required_header_bytes": 6736,
+      "response_headers_bytes": 7365,
+      "sampled_query": {
+        "asset": "RLUSD"
+      },
+      "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD"
+    },
+    "wrapper": {
+      "fixture": "challenges/wrapper.json",
+      "http_status": 402,
+      "payment_required_header_bytes": 7100,
+      "response_headers_bytes": 7723,
+      "sampled_query": {
+        "id": "usdc.e:arbitrum"
+      },
+      "url": "https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum"
     }
   }
 }
