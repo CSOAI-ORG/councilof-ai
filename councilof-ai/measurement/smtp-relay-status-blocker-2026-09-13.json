@@ -1,0 +1,61 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.infra.smtp_relay_status",
+  "subject": "smtp-relay-status-blocker-2026-09-13",
+  "measured_at": "2026-09-13T13:09:54.785805+00:00",
+  "metrics": {
+    "issue": "PrivateEmail SMTP relay rejects authentication with valid password (535 5.7.8)",
+    "scope": "All SMTP-based outbound email from this Mac",
+    "tested_endpoints": [
+      {
+        "host": "smtp.privateemail.com:587",
+        "auth": "PLAIN",
+        "result": "535 5.7.8",
+        "verified_at": "2026-09-13T13:09:54.785805+00:00"
+      },
+      {
+        "host": "smtp.privateemail.com:587",
+        "auth": "via msmtp",
+        "result": "535",
+        "verified_at": "2026-09-13T13:09:54.785805+00:00"
+      },
+      {
+        "host": "mail.privateemail.com:465",
+        "auth": "PLAIN SSL",
+        "result": "535",
+        "verified_at": "2026-09-13T13:09:54.785805+00:00"
+      },
+      {
+        "host": "mail.privateemail.com:2525",
+        "auth": "TLS",
+        "result": "TIMEOUT",
+        "verified_at": "2026-09-13T13:09:54.785805+00:00"
+      }
+    ],
+    "imap_works": true,
+    "keychain_pw_matches_imap": true,
+    "likely_cause": "PrivateEmail hosting may have a separate SMTP password requirement (cPanel convention), or the SMTP port may be restricted from this IP.",
+    "workarounds_attempted": [
+      "Updated .msmtprc with PRIVATEMAIL_PASSWORD keychain item \u2014 still rejected",
+      "Tried port 465, 587, 2525 \u2014 all blocked",
+      "Updated keychain lookup to meok-keystone -a PRIVATEMAIL_PASSWORD \u2014 still rejected"
+    ],
+    "operator_actions_to_resolve": [
+      "1. Login to PrivateEmail cPanel and verify SMTP password (may differ from webmail)",
+      "2. Check if SMTP is enabled for the account (cPanel Email Accounts > Set Email Password)",
+      "3. Or: rotate SMTP-specific password via hosting control panel",
+      "4. Or: switch to a different SMTP relay (Mailgun, SendGrid, AWS SES) \u2014 owner-gated"
+    ],
+    "alternatives_used_this_cycle": [
+      "\u2713 GitHub Issue CSOAI-ORG/councilof-ai#2141 \u2014 public citable record of CSOAI position",
+      "\u2713 9 measurement cards written as evidence artifacts",
+      "\u2713 Operator queue + draft cards prepared for all 81 doors"
+    ],
+    "m2_lane_status": "GRANTED but blocked at outbound SMTP. Can post via GitHub. Email sends deferred until SMTP unlocked."
+  },
+  "honest_sentence": "SMTP relay blocked: PrivateEmail SMTP rejects valid password from keychain. IMAP works. Workaround: public posts via GitHub Issue #2141 + measurement corpus. Operator action needed: rotate SMTP password via cPanel or switch to alternative relay.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true,
+  "lane": "M2 / Ember (blocked)"
+}
