@@ -19,6 +19,9 @@ const SOURCES: Record<keyof CoverageLedgerInput, string> = {
   banks: "/api/bank-complete",
   x402: "/api/x402",
   revenue: "/api/revenue",
+  mcp: "/mcp",
+  a2a: "/api/a2a",
+  erc8004: "/interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json",
 };
 
 type SourceRead = {

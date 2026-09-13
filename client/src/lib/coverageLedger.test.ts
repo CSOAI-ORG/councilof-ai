@@ -49,6 +49,14 @@ const input = {
   },
   x402: { resources: Array.from({ length: 9 }, () => ({})) },
   revenue: { one_number: { settlements: 1 } },
+  mcp: { ok: true, server_info: { version: "1.4.2" } },
+  a2a: { protocolVersion: "1.0", endpoint: "https://councilof.ai/api/a2a" },
+  erc8004: {
+    registry_totals: {
+      registered_all_indexer: 803294,
+      with_feedback_ge1: 138979,
+    },
+  },
 };
 
 describe("master GSPC coverage ledger", () => {
@@ -99,6 +107,35 @@ describe("master GSPC coverage ledger", () => {
     expect(x402.paid.value).toBe(1);
   });
 
+  it("derives MCP row from server_info", () => {
+    const mcp = buildCoverageLedger(input).find((row) => row.id === "mcp")!;
+    expect(mcp.indexed.value).toBe(12);
+    expect(mcp.measured.value).toBe(12);
+    expect(mcp.paid.value).toBe(1);
+    expect(mcp.writesBoard).toBe(false);
+  });
+
+  it("derives A2A row from protocol version", () => {
+    const a2a = buildCoverageLedger(input).find((row) => row.id === "a2a")!;
+    expect(a2a.indexed.value).toBe(7);
+    expect(a2a.measured.value).toBe(7);
+    expect(a2a.signed.value).toBeNull();
+    expect(a2a.writesBoard).toBe(false);
+  });
+
+  it("derives ERC-8004 row from registry_totals", () => {
+    const erc = buildCoverageLedger(input).find((row) => row.id === "erc8004")!;
+    expect(erc.indexed.value).toBe(803294);
+    expect(erc.measured.value).toBe(803294);
+    expect(erc.signed.value).toBeNull();
+  });
+
+  it("AP2 row does not exist (no implementation)", () => {
+    const rows = buildCoverageLedger(input);
+    const ap2 = rows.find((row) => row.id === "ap2");
+    expect(ap2).toBeUndefined();
+  });
+
   it("fails closed when an endpoint is unavailable", () => {
     const rows = buildCoverageLedger({
       gspc: null,
@@ -108,6 +145,9 @@ describe("master GSPC coverage ledger", () => {
       banks: null,
       x402: null,
       revenue: null,
+      mcp: null,
+      a2a: null,
+      erc8004: null,
     });
     for (const row of rows) {
       expect(row.indexed.value).toBeNull();

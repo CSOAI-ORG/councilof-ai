@@ -2,6 +2,13 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequestGet } from "./coverage";
 
 const payloads: Record<string, unknown> = {
+  // The three agent-economy sources added with the mcp/a2a/erc8004 rows; every
+  // owning source must answer or `complete` is false by design.
+  "/mcp": { ok: true, server_info: { version: "1.4.2" } },
+  "/api/a2a": { protocolVersion: "1.0" },
+  "/interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json": {
+    registry_totals: { registered_all_indexer: 137046 },
+  },
   "/api/gspc": {
     totals: {
       axes: 22,
@@ -65,10 +72,17 @@ describe("GET /api/coverage", () => {
       "swift",
       "banks",
       "x402",
+      "mcp",
+      "a2a",
+      "erc8004",
     ]);
     expect(body.rows.find((row: any) => row.id === "stablecoins").indexed.value).toBe(425);
     expect(body.rows.find((row: any) => row.id === "xrpl").measured.value).toBe(0);
     expect(body.rows.find((row: any) => row.id === "x402").paid.value).toBe(1);
+    expect(body.rows.find((row: any) => row.id === "mcp").indexed.value).toBe(12);
+    expect(body.rows.find((row: any) => row.id === "a2a").indexed.value).toBe(7);
+    expect(body.rows.find((row: any) => row.id === "erc8004").indexed.value).toBe(137046);
+    expect(body.rows.find((row: any) => row.id === "erc8004").signed.value).toBeNull();
   });
 
   it("keeps a failed source visible and renders its lifecycle cells unavailable", async () => {
