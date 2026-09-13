@@ -82,6 +82,9 @@ TRANSFER_TOPIC = "ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3
 #                 this is the wallet /api/revenue had been counting as the first
 #                 distinct non-self payer. Senders resolved on-chain (Base).
 KNOWN_INTERNAL = {
+    # 0x7e6b…: authorizer of 0xc16ecc85… (8 Sep, 20000 atomic) executed by the estate's own
+    # broadcaster 0xc669… via Multicall3; nonce 0, no ETH — classified INTERNAL_SELF_FUNDED.
+    "0x7e6b6556322c4e26c567a867964ac793f5ee2b1c",
     PAY_TO.lower(),
     "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
     "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
