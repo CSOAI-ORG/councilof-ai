@@ -2,27 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Connect AsiSecurity via MCP</title>
-  <meta name="description" content="Connect AsiSecurity.ai to your IDE or agent via MCP (Model Context Protocol).">
+  <title>Connect ASISecurity evidence via MCP</title>
+  <meta name="description" content="Use Council of AI's live GSPC MCP runtime to inspect ASISecurity evidence and verification surfaces.">
   <link rel="canonical" href="https://asisecurity.ai/connect/mcp">
   <style>body{font-family:sans-serif;background:#070b14;color:#f5f5f5;margin:0;padding:40px}pre{background:#0f172a;border:1px solid #26263a;border-radius:8px;padding:16px;overflow-x:auto}code{font-family:Menlo,monospace;font-size:.9rem;color:#c9a84c}h1{color:#c9a84c}a{color:#c9a84c}</style>
 </head>
 <body>
-  <h1>Connect AsiSecurity via MCP</h1>
-  <p>Wire AsiSecurity.ai into your agent in 30 seconds. Pro and Enterprise tiers include MCP access.</p>
-  <h2>Endpoint</h2>
-  <pre><code>https://asisecurity.ai/mcp</code></pre>
-  <h2>Tools (3)</h2>
-  <ul><li><code>cybersecurity-ai-mcp</code></li><li><code>owasp-agentic-mcp</code></li><li><code>security-scanner-ai-mcp</code></li></ul>
-  <h2>Headers</h2>
-  <pre><code>Authorization: Bearer $MEOK_MASTER_API_KEY
-Content-Type: application/json
-Accept: application/json, text/event-stream</code></pre>
-  <h2>Example</h2>
-  <pre><code>curl -X POST https://asisecurity.ai/mcp \
-  -H "Authorization: Bearer $MEOK_MASTER_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'</code></pre>
-  <p><a href="/pricing/">Start at £29/mo</a> or <a href="/signup/?plan=free">get a free scorecard</a>.</p>
+  <h1>Connect ASISecurity evidence via MCP</h1>
+  <p>ASISecurity uses the live Council of AI GSPC MCP runtime for public measurement and verification. Security-specific catalog entries are not presented here as live tools until their runtime endpoints pass independent probes.</p>
+  <h2>Verified public endpoint</h2>
+  <pre><code>https://councilof.ai/mcp</code></pre>
+  <p>Add that URL as a Streamable HTTP MCP server. A browser GET returns discovery metadata; MCP clients initialize and then call <code>tools/list</code> and <code>tools/call</code>.</p>
+  <h2>Public evidence</h2>
+  <ul>
+    <li><a href="/.well-known/mcp.json">MCP catalog</a></li>
+    <li><a href="/.well-known/agent-card.json">Agent card</a></li>
+    <li><a href="https://councilof.ai/api/gspc">GSPC board data</a></li>
+    <li><a href="https://councilof.ai/signed/HOW-TO-VERIFY.md">Verification guide</a></li>
+  </ul>
+  <p>Measurement, not certification. A listed capability is not evidence that its runtime executed.</p>
 </body>
 </html>

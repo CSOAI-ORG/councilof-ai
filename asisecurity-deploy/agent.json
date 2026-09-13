@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "name": "ASISecurity Agent",
+  "description": "Pre-deployment security evidence for frontier AI: red-team results, threat models and hardening evidence packaged as measured, signed attestation packs. Reports measured results and signed attestations only — never certifications or accreditations.",
+  "url": "https://asisecurity.ai",
+  "provider": {
+    "organization": "MEOK AI Labs — CSOAI Ltd (UK 16939677)",
+    "url": "https://meok.ai"
+  },
+  "capabilities": {
+    "streaming": false,
+    "mcp": true,
+    "a2a": false
+  },
+  "skills": [
+    {
+      "id": "report",
+      "name": "ai-incident-reporting-mcp.report",
+      "description": "Catalog identity for AI incident reporting; this card does not claim a live ASISecurity runtime endpoint."
+    },
+    {
+      "id": "redteam",
+      "name": "asisecurity-mcp.redteam",
+      "description": "Catalog identity for automated red-team probes; this card does not claim a live ASISecurity runtime endpoint."
+    },
+    {
+      "id": "sign",
+      "name": "sovereign-sign",
+      "description": "Free Ed25519 sign/verify API at os.meok.ai — no account needed. POST {message} to /api/sign, verify with {message, signature, publicKey} at /api/verify. Roundtrip verified live 2026-08-02."
+    }
+  ],
+  "endpoints": {
+    "sign": "https://os.meok.ai/api/sign",
+    "verify": "https://os.meok.ai/api/verify",
+    "health": "https://os.meok.ai/api/health",
+    "mcp_catalog": "https://asisecurity.ai/.well-known/mcp.json",
+    "llms_txt": "https://asisecurity.ai/llms.txt",
+    "mcp_runtime": "https://councilof.ai/mcp"
+  },
+  "safety_surface_family": [
+    "https://asisecurity.ai",
+    "https://safetyof.pages.dev",
+    "https://agisafe.pages.dev",
+    "https://proofof.ai"
+  ],
+  "sector": "governance",
+  "last_verified": "2026-09-13"
+}
