@@ -1,15 +1,19 @@
-Internet-Draft                                               CSOAI Ltd
-Intended status: Informational                          13 September 2026
-Expires: 16 March 2027
 
 
-     "Cryptographic Receipts for AI Governance Audit Trails"
-                   draft-csoai-audit-use-case-00
+
+
+                                                            N. Templeman
+                                                               CSOAI Ltd
+                                                       13 September 2026
+
+
+                       AI Governance Audit Trails
+                     draft-csoai-audit-use-case-00
 
 Abstract
 
-   This document describes the use of cryptographic measurement receipts
-   and Ed25519-signed evidence cards for AI governance audit trails.
+   This document is part of the CSOAI evidence infrastructure
+   documentation.
 
 Status of This Memo
 
@@ -21,12 +25,10 @@ Status of This Memo
    working documents as Internet-Drafts.  The list of current Internet-
    Drafts is at https://datatracker.ietf.org/drafts/current/.
 
-   Internet-Drafts are draft documents valid for a maximum of six
-   months and may be updated, replaced, or obsoleted by other documents
-   at any time.  It is inappropriate to use Internet-Drafts as reference
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
-
-   This Internet-Draft will expire on 16 March 2027.
 
 Copyright Notice
 
@@ -40,54 +42,71 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Introduction
-   2.  Measurement Card Format
-   3.  Verification Pipeline
-   4.  Current Deployment
-   5.  Security Considerations
-   6.  IANA Considerations
-   7.  References
-   Authors' Addresses
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Evidence Model  . . . . . . . . . . . . . . . . . . . . . . .   2
+   3.  Verification  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   2
+   5.  Informative References  . . . . . . . . . . . . . . . . . . .   2
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   2
+
+
+
+
+
+Templeman                     Informational                     [Page 1]
+
+                          CSOAI audit-use-case            September 2026
+
 
 1.  Introduction
 
-   Organizations deploying AI systems need auditable evidence of model
-   behaviour across governance axes including safety, transparency,
-   fairness, and regulatory compliance.
+   This document describes CSOAI's measurement and evidence
+   infrastructure as it relates to the IETF community.  CSOAI Ltd (UK
+   Companies House 16939677) maintains signed measurement cards for AI
+   governance evidence at councilof.ai.
 
-2.  Measurement Card Format
+2.  Evidence Model
 
    Each measurement card contains a subject identifier, axis, accuracy
    with Wilson 95 percent confidence interval, sample size, run
-   identifier, and harness version.
+   identifier, harness and grader version, and cryptographic signature
+   (Ed25519 with DID-bound keys).
 
-3.  Verification Pipeline
+3.  Verification
 
-   Cards are verified via Ed25519 signature, Merkle root inclusion,
-   and transparency log witness (Sigstore Rekor).
+   Cards are verified via Ed25519 signature, Merkle root inclusion, and
+   Rekor transparency-log witness.  The root is published at
+   https://councilof.ai/root.json with per-card SHA-256 leaves and
+   inclusion proofs available via /api/proof.
 
-4.  Current Deployment
+4.  Security Considerations
 
-   The CSOAI infrastructure at councilof.ai serves 22 GSPC axes,
-   155 models measured, 1,493 signed cards, and 425 stablecoins
-   indexed across 211 chains.
+   Private signing keys are never placed in source code, artifacts,
+   logs, or browser storage.  The signing ceremony uses GitHub OIDC with
+   off-device key custody per did:web:csoai.org.  Failures fail closed
+   and preserve UNCHECKABLE rather than substituting defaults.
 
-5.  Security Considerations
+5.  Informative References
 
-   Private signing keys are never placed in source code or artifacts.
-
-6.  IANA Considerations
-
-   This document has no IANA actions.
-
-7.  References
-
-   [Informative references would be added in a future revision.]
-
-Authors' Addresses
+Author's Address
 
    Nicholas Templeman
    CSOAI Ltd
    UK Companies House 16939677
    Email: nicholas@csoai.org
-   URI: https://councilof.ai
+   URI:   https://councilof.ai
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Templeman                     Informational                     [Page 2]

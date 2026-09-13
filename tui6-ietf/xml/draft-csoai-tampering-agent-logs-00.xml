@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?rfc toc="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc compact="yes"?>
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" version="3" submissionType="independent" category="info" ipr="none" docName="draft-csoai-tampering-agent-logs-00">
+  <front>
+    <title abbrev="CSOAI tampering-agent-logs">Tampering Risks in AI Agent Logs</title>
+    <seriesInfo name="Internet-Draft" value="draft-csoai-tampering-agent-logs-00" />
+    <author fullname="Nicholas Templeman">
+      <organization>CSOAI Ltd</organization>
+      <address>
+        <postal><street>UK Companies House 16939677</street></postal>
+        <email>nicholas@csoai.org</email>
+        <uri>https://councilof.ai</uri>
+      </address>
+    </author>
+    <date year="2026" month="September" day="13"/>
+    <abstract>
+      <t>This document is part of the CSOAI evidence infrastructure documentation.</t>
+    </abstract>
+    <note title="Status of This Memo">
+      <t>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</t>
+      <t>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF). Note that other groups may also distribute working documents as Internet-Drafts. The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</t>
+      <t>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time. It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</t>
+    </note>
+    <note title="Copyright Notice">
+      <t>Copyright (c) 2026 IETF Trust and the persons identified as the document authors. All rights reserved. This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document. Please review these documents carefully, as they describe your rights and restrictions with respect to this document.</t>
+    </note>
+  </front>
+  <middle>
+    <section title="Introduction"><t>This document describes CSOAI's measurement and evidence infrastructure as it relates to the IETF community. CSOAI Ltd (UK Companies House 16939677) maintains signed measurement cards for AI governance evidence at councilof.ai.</t></section>
+    <section title="Evidence Model"><t>Each measurement card contains a subject identifier, axis, accuracy with Wilson 95 percent confidence interval, sample size, run identifier, harness and grader version, and cryptographic signature (Ed25519 with DID-bound keys).</t></section>
+    <section title="Verification"><t>Cards are verified via Ed25519 signature, Merkle root inclusion, and Rekor transparency-log witness. The root is published at https://councilof.ai/root.json with per-card SHA-256 leaves and inclusion proofs available via /api/proof.</t></section>
+    <section title="Security Considerations"><t>Private signing keys are never placed in source code, artifacts, logs, or browser storage. The signing ceremony uses GitHub OIDC with off-device key custody per did:web:csoai.org. Failures fail closed and preserve UNCHECKABLE rather than substituting defaults.</t></section>
+  </middle>
+  <back>
+    <references title="Informative References"/>
+  </back>
+</rfc>
