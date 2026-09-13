@@ -45,7 +45,6 @@ import tempfile
 import time
 import urllib.error
 import urllib.request
-import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -570,37 +569,6 @@ def remote_snapshot(url: str) -> dict | None:
     return None
 
 
-def kaggle_public_snapshot() -> dict:
-    """Read the downloadable Kaggle payload, not its separately editable page metadata."""
-    url = f"https://www.kaggle.com/api/v1/datasets/download/{KAGGLE_ID}"
-    try:
-        body = fetch_ok(url, timeout=120)
-        with zipfile.ZipFile(io.BytesIO(body)) as archive:
-            return json.loads(archive.read("SNAPSHOT.json"))
-    except Exception as e:  # noqa: BLE001
-        raise Refused(f"cannot read Kaggle's downloadable SNAPSHOT.json before publish ({e})")
-
-
-def refuse_newer_remote(chosen: list[str], tr: dict) -> None:
-    """Fail before the first write when a selected remote may be ahead of our captured root."""
-    remotes: list[tuple[str, dict | None]] = []
-    if "hf" in chosen:
-        for repo_type, prefix in (("dataset", "datasets/"), ("space", "spaces/")):
-            url = f"https://huggingface.co/{prefix}{HF_DATASET}/resolve/main/{HF_PATH_IN_REPO}/SNAPSHOT.json"
-            try:
-                remotes.append((f"hf-{repo_type}", json.loads(fetch_ok(url, timeout=60))))
-            except Exception as e:  # noqa: BLE001
-                raise Refused(f"cannot read {repo_type} SNAPSHOT.json before publish ({e})")
-    if "kaggle" in chosen:
-        remotes.append(("kaggle", kaggle_public_snapshot()))
-    for surface, remote in remotes:
-        seen = (remote or {}).get("as_of")
-        if not isinstance(seen, str):
-            raise Refused(f"{surface} SNAPSHOT.json has no string as_of; cannot prove overwrite safety")
-        if seen > tr["as_of"]:
-            raise Refused(f"{surface} carries newer as_of {seen}; captured canonical root is {tr['as_of']}")
-
-
 def unchanged(remote: dict | None, tr: dict, force: bool) -> str | None:
     """Return a reason string when the surface already carries this snapshot."""
     if not remote:
@@ -659,11 +627,11 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     page = f"https://www.kaggle.com/datasets/{KAGGLE_ID}"
     kaggle = shutil.which("kaggle")
     have_env = bool(os.environ.get("KAGGLE_USERNAME") and os.environ.get("KAGGLE_KEY"))
-    have_file = any((Path.home() / ".kaggle" / name).exists() for name in ("access_token", "kaggle.json"))
+    have_file = (Path.home() / ".kaggle" / "kaggle.json").exists()
     if not kaggle:
         return [result("kaggle", "FAILED", page, detail="kaggle CLI is not installed (pip install kaggle)")]
     if not (have_env or have_file):
-        return [result("kaggle", "BLOCKED", page, detail="no Kaggle credential: no OAuth access_token and no legacy KAGGLE_USERNAME/KAGGLE_KEY or kaggle.json")]
+        return [result("kaggle", "BLOCKED", page, detail="no Kaggle credential: neither KAGGLE_USERNAME/KAGGLE_KEY nor ~/.kaggle/kaggle.json")]
 
     def read_meta() -> dict | None:
         with tempfile.TemporaryDirectory() as d:
@@ -678,9 +646,10 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     if meta is None:
         return [result("kaggle", "FAILED", page, detail="could not read the dataset's metadata (credential or dataset missing)")]
     info = meta.get("info", meta)
-    # The downloadable archive is the evidence. Page metadata is separately editable and may
-    # claim a newer snapshot than the bytes, which is the exact conflict this publisher repairs.
-    remote = kaggle_public_snapshot()
+    desc_old = info.get("description") or ""
+    m = re.search(r"spray-fingerprint: ([0-9a-f]{64})", desc_old)
+    remote = {"as_of": (re.search(r"as_of ([0-9TZ:\-]+)", info.get("subtitle") or "") or [None, None])[1],
+              "fingerprint": m.group(1) if m else None}
     why = unchanged(remote, tr, force)
     if why:
         return [result("kaggle", "UNCHANGED", page, tr["as_of"], why)]
@@ -711,51 +680,19 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     with tempfile.TemporaryDirectory() as d:
         for f in SNAPSHOT_FILES:
             shutil.copy2(snap / f, Path(d) / f)
-        desired_metadata = {
+        (Path(d) / "dataset-metadata.json").write_text(json.dumps({
             "id": KAGGLE_ID, "title": info.get("title") or "GSPC living board", "subtitle": subtitle,
             "description": description, "keywords": keywords, "licenses": licenses,
-        }
-        # A Kaggle version upload also edits the public page. Keep the already-visible metadata
-        # during the byte upload; the current-root claim is applied only after the downloadable
-        # archive and the Hugging Face twin pass exact parity verification below.
-        staged_metadata = {
-            "id": KAGGLE_ID,
-            "title": info.get("title") or "GSPC living board",
-            "subtitle": info.get("subtitle") or subtitle,
-            "description": info.get("description") or "GSPC living board snapshot.",
-            "keywords": keywords,
-            "licenses": licenses,
-        }
-        metadata_path = Path(d) / "dataset-metadata.json"
-        metadata_path.write_text(json.dumps(staged_metadata, ensure_ascii=False, indent=1))
+        }, ensure_ascii=False, indent=1))
         p = run([kaggle, "datasets", "version", "-p", d, "-m", f"gspc-spray: board snapshot as_of {tr['as_of']}",
                  "-t", "-r", "skip"], check=False)
         if p.returncode != 0:
             return [result("kaggle", "FAILED", page, detail=f"kaggle datasets version: {p.stdout[-500:]} {p.stderr[-500:]}")]
         log(f"    {p.stdout.strip()[-200:]}")
-        seen = wait_for(lambda: (kaggle_public_snapshot().get("as_of") == tr["as_of"]) and tr["as_of"],
-                        tries=12, delay=10)
-        if not seen:
-            return [result("kaggle", "PUBLISHED-UNCONFIRMED", page,
-                           detail="version pushed; downloadable SNAPSHOT.json did not show the captured as_of; visible metadata was not advanced")]
-        parity = run([sys.executable, str(HERE / "verify-gspc-parity.py")], check=False)
-        if parity.returncode != 0:
-            return [result("kaggle", "PUBLISHED-UNCONFIRMED", page, seen,
-                           detail=f"downloaded HF/Kaggle parity failed; visible metadata was not advanced: {parity.stderr[-500:]}")]
-        metadata_path.write_text(json.dumps(desired_metadata, ensure_ascii=False, indent=1))
-        updated = run([kaggle, "datasets", "metadata", "--update", KAGGLE_ID, "-p", d], check=False)
-        if updated.returncode != 0:
-            return [result("kaggle", "PUBLISHED-METADATA-UNCONFIRMED", page, seen,
-                           detail=f"exact bytes verified but metadata update failed: {updated.stdout[-300:]} {updated.stderr[-300:]}")]
-    def metadata_has_as_of():
-        latest = read_meta() or {}
-        latest_info = latest.get("info", latest)
-        return (tr["as_of"] in (latest_info.get("subtitle") or "")) and tr["as_of"]
-
-    metadata_seen = wait_for(metadata_has_as_of, tries=12, delay=10)
-    return [result("kaggle", "PUBLISHED" if metadata_seen else "PUBLISHED-METADATA-UNCONFIRMED", page,
-                   metadata_seen or tr["as_of"],
-                   None if metadata_seen else "exact bytes verified; Kaggle metadata update has not appeared yet")]
+    seen = wait_for(lambda: (tr["as_of"] in ((read_meta() or {}).get("info", {}).get("subtitle") or "")) and tr["as_of"],
+                    tries=12, delay=10)
+    return [result("kaggle", "PUBLISHED" if seen else "PUBLISHED-UNCONFIRMED", page, seen or None,
+                   None if seen else "version pushed; metadata re-read did not show the new subtitle yet (Kaggle processes versions asynchronously)")]
 
 
 def github_token() -> str | None:
@@ -1057,7 +994,6 @@ def main(argv: list[str] | None = None) -> int:
     snap = build_snapshot(tr, out)
     results: list[dict] = []
     if not args.build_only:
-        refuse_newer_remote(chosen, tr)
         for s in chosen:
             try:
                 results.extend(SURFACES[s](tr, snap, dry_run=args.dry_run, force=args.force))

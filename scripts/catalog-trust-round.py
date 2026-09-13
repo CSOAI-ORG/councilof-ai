@@ -277,17 +277,6 @@ def probe_row(row: dict, idx: int):
     return {"idx": idx, "url": url, "probed": probed, "code": code, "bucket": bucket, "snippet": body}
 
 
-def utc_now() -> datetime:
-    """Clock seam for deterministic cadence tests."""
-    return datetime.now(timezone.utc)
-
-
-def archive_name(observed_at: str) -> str:
-    """Return a collision-free UTC filename for one observation round."""
-    parsed = datetime.strptime(observed_at, "%Y-%m-%dT%H:%M:%SZ")
-    return parsed.strftime("%Y%m%dT%H%M%SZ.json")
-
-
 def run(out_dir: str, catalog_url: str):
     req = urllib.request.Request(catalog_url, headers={"User-Agent": SUBMIT_UA})
     with urllib.request.urlopen(req, timeout=30) as r:
@@ -302,7 +291,7 @@ def run(out_dir: str, catalog_url: str):
             time.sleep(0.05)
 
     b = Counter(r["bucket"] for r in results)
-    deadline = utc_now().strftime("%Y-%m-%dT%H:%M:%SZ")
+    deadline = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     counts = {
         "challenge_402": b.get("challenge", 0),
         "serves_200": b.get("serves_200", 0),
@@ -336,13 +325,12 @@ def run(out_dir: str, catalog_url: str):
         except Exception:
             prev = {}
     stamp_growth_fields(summary, out, prev=prev)
-    archive = out / archive_name(deadline)
-    archive.write_text(json.dumps(summary, indent=2) + "\n")
-    # The stable product pointer advances, while every observation remains
-    # available under its collision-free UTC archive filename.
+    stamp = deadline.split("T")[0]
+    (out / f"{stamp}.json").write_text(json.dumps(summary, indent=2) + "\n")
+    # The stable pointer the MCP x402_trust tool reads — always the newest round.
     (out / "latest.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(counts, indent=1))
-    print("wrote", archive, "and latest.json")
+    print("wrote", out / f"{stamp}.json", "and latest.json")
     return 0
 
 

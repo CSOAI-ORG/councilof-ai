@@ -50,14 +50,7 @@ BitcoinBlockHeaderAttestation a calendar has now committed, and removes nothing.
 Coverage re-audited after the upgrade and still holds; the commit is refused otherwise.
 
 $(grep -iE 'bitcoin|upgraded' /tmp/ots-upgrade.out | head -6)" 2>/dev/null
-  # Busy-master race (measured 2026-09-12): master moves dozens of commits a day,
-  # so a blind push rejects and the upgrades stay stranded locally (backfilled via
-  # PR #2072). Rebase onto the fetched remote first; if even that fails, leave the
-  # commit local — the next hourly run retries, and nothing is lost or hidden.
-  git fetch -q origin master 2>/dev/null
-  git rebase -q origin/master 2>/dev/null
-  git push -q origin master 2>/dev/null && echo "$(TS) pushed upgrades" >> "$LOG" \
-    || echo "$(TS) upgrades committed locally; push deferred (remote moved) — next run retries" >> "$LOG"
+  git push -q origin master 2>/dev/null && echo "$(TS) pushed upgrades" >> "$LOG"
 fi
 
 AFTER=$(grep -oE "[0-9]+  COVERS" /tmp/ots-cov.out | head -1 | awk '{print $1}')

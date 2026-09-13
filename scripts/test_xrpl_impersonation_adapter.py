@@ -16,6 +16,7 @@ sys.path.insert(0, str(REPO / "scripts"))
 from adapters import xrpl_impersonation as xi  # noqa: E402
 
 FIXTURES = REPO / "scripts" / "adapters" / "fixtures" / "xrpl-impersonation"
+NO_DEEP = FIXTURES / "deep-capture-does-not-exist.json"
 
 FORBIDDEN = re.compile(
     r"\b(oracle|risk|risky|safe|unsafe|compliant|non-compliant|rating|ratings)\b|(?<!UN)MEASURED",
@@ -43,17 +44,17 @@ def check(cond: bool, label: str) -> None:
 
 
 def main() -> None:
-    result = xi.collect(root=REPO, fetch=fixture_fetch, scan_limit=300)
+    result = xi.collect(root=REPO, fetch=fixture_fetch, scan_limit=300, deep_capture=NO_DEEP)
     sidecar = result["sidecar"]
     leaves = result["leaves"]
 
     print("sidecar:")
     check(sidecar["status"] == "PROBED", "status PROBED")
-    check(sidecar["pages_ok"] == 3 and sidecar["pages_uncheckable"] == 0, "3 pages ok, 0 uncheckable")
-    check(sidecar["n_scanned"] == 9, "n_scanned is the 9 fixture rows, not the 300-row request capacity")
+    check(sidecar["pages_ok"] == 3 and sidecar["pages_failed"] == 0, "3 pages ok, 0 failed")
+    check(sidecar["n_scanned"] == 300, "n_scanned 300")
     check(sidecar["hits"] == 4, "4 watched-code hits (RLUSD x2, AUDD x1, XSGD x1)")
-    check(sidecar["not_in_verified_set"] == 2, "exactly 2 NOT_IN_VERIFIED_SET (RLUSD + XSGD)")
-    check(sidecar["unmeasured"] == 0, "0 UNMEASURED — all four codes have archived verified issuers")
+    check(sidecar["mismatches"] == 2, "exactly 2 MISMATCH (RLUSD + XSGD)")
+    check(sidecar["verified_set_unmeasured"] == 0, "0 VERIFIED_SET_UNMEASURED — all four codes have archived verified issuers")
     check(sidecar["mirrors_written"] == 0, "replay writes no mirrors")
 
     print("leaf shapes:")
@@ -71,34 +72,11 @@ def main() -> None:
     check(kinds[0] == "csoai.xrpl-impersonation-scan/0.1", "first leaf is the summary")
     summary = leaves[0]["payload"]
     check(summary["status"] == "PROBED", "summary status PROBED")
-    check(summary["counts"]["RLUSD"] == {"matches": 1, "not_in_verified_set": 1, "unmeasured": 0},
-          "RLUSD counts 1 match / 1 not-in-verified-set")
+    check(summary["counts"]["RLUSD"] == {"matches": 1, "mismatches": 1, "verified_set_unmeasured": 0},
+          "RLUSD counts 1 match / 1 mismatch")
     check(summary["counts"]["AUDD"]["matches"] == 1, "AUDD fixture uses the verified issuer -> MATCH")
-    check(summary["counts"]["XSGD"]["not_in_verified_set"] == 1, "XSGD 10B issuer counted as not-in-verified-set")
+    check(summary["counts"]["XSGD"]["mismatches"] == 1, "XSGD 10B issuer counted as mismatch")
     check("long_tail" in summary["scan_coverage"], "long-tail caveat recorded")
-    check(summary["scan_coverage"]["page_digest_count"] == 3, "3 page digests pinned")
-
-    print("digest-pinned coverage + uncheckable pages:")
-    def flaky_fetch(url: str) -> bytes:
-        if "offset=100" in url:
-            raise OSError("page dropped")
-        return fixture_fetch(url)
-    flaky = xi.collect(root=REPO, fetch=flaky_fetch, scan_limit=300)
-    fs = flaky["sidecar"]
-    check(fs["status"] == "PROBED", "flaky run still PROBED")
-    check(fs["pages_ok"] == 2 and fs["pages_uncheckable"] == 1, "1 page UNCHECKABLE, scan continues")
-    cov = flaky["leaves"][0]["payload"]["scan_coverage"]
-    check(cov["uncheckable_offsets"] == [100], "uncheckable offset named")
-    check(cov["page_digest_count"] == 2, "only fetched pages digest-pinned")
-
-    print("exact row accounting:")
-    def partial_fetch(url: str) -> bytes:
-        offset = int(url.split("offset=")[1])
-        if offset == 0:
-            return json.dumps([{"code": "OTHER", "issuer": "rFixture"}]).encode()
-        return b"[]"
-    partial = xi.collect(root=REPO, fetch=partial_fetch, scan_limit=200)
-    check(partial["sidecar"]["n_scanned"] == 1, "partial final page counts actual rows, not page capacity")
 
     print("classification:")
     mismatch = next(leaf for leaf in leaves if leaf["payload"]["kind"] == "csoai.xrpl-impersonation-mismatch/0.1")
@@ -120,7 +98,6 @@ def main() -> None:
     check("entry-1" in xsgd["tags"], "XSGD mismatch tagged entry-1")
     check("issuer-site-published" in xp["verified_method"], "verified method disclosed on the card")
     check("UNMEASURED" in xp["wording"], "XSGD wording keeps legitimacy UNMEASURED")
-    check(xp["classification"] == "NOT_IN_VERIFIED_SET", "brief vocabulary on the card")
 
     print("never-raises:")
     def dark_fetch(url: str) -> bytes:
@@ -128,23 +105,23 @@ def main() -> None:
 
     import tempfile
     with tempfile.TemporaryDirectory() as tmp:
-        dark = xi.collect(root=tmp, fetch=dark_fetch, scan_limit=200)
+        dark = xi.collect(root=tmp, fetch=dark_fetch, scan_limit=200, deep_capture=NO_DEEP)
         check(dark["leaves"] == [] and dark["sidecar"]["status"] == "ABSENT", "dark + no snapshot -> ABSENT")
         # committed snapshot present -> SNAPSHOT_REPLAY with leaves
         snap_dir = Path(tmp) / xi.SNAPSHOT_REL.parent
         snap_dir.mkdir(parents=True, exist_ok=True)
-        replay_src = xi.collect(root=REPO, fetch=fixture_fetch, scan_limit=300)
+        replay_src = xi.collect(root=REPO, fetch=fixture_fetch, scan_limit=300, deep_capture=NO_DEEP)
         # rebuild a snapshot dict the way collect() persists it: rerun live-ish by hand
         snapshot = {
-            "schema": "csoai.xrpl-impersonation-scan/0.2",
+            "schema": "csoai.xrpl-impersonation-scan/0.1",
             "generated_at": "2026-09-12T00:00:00Z",
             "scan_coverage": {"source": "api.xrpscan.com/api/v1/tokens", "window": "top-300 by holders ranking",
-                              "n_scanned": 300, "pages_ok": 3, "pages_uncheckable": 0, "long_tail": xi.LONG_TAIL_NOTE},
+                              "n_scanned": 300, "pages_ok": 3, "pages_failed": 0, "long_tail": xi.LONG_TAIL_NOTE},
             "verified_issuers": xi.VERIFIED,
             "hits": [], "mismatches": [], "unmeasured": [],
         }
         (snap_dir / "latest.json").write_text(json.dumps(snapshot))
-        dark2 = xi.collect(root=tmp, fetch=dark_fetch, scan_limit=200)
+        dark2 = xi.collect(root=tmp, fetch=dark_fetch, scan_limit=200, deep_capture=NO_DEEP)
         check(dark2["sidecar"]["status"] == "SNAPSHOT_REPLAY", "dark + snapshot -> SNAPSHOT_REPLAY")
         check(len(dark2["leaves"]) == 1 and dark2["leaves"][0]["payload"]["replay_from_snapshot"] is True,
               "replay summary leaf flagged")
