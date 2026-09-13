@@ -1,0 +1,32 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "detector-interop",
+    "model": "mistralai/Mistral-7B-Instruct-v0.1",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.7667,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router",
+    "evidence": {
+      "bank_sha256": "73a30d6d32f4012b11a7ba2138abe8017f74f06faf40ac3f32e0094fe87ba36c",
+      "bank_dataset": "csoai/gspc-det",
+      "model_hf_revision": "ec5deb64f2c6e6fa90c1abf74a91d5c93a9669ca",
+      "schema": "csoai.mill-item-evidence/0.1",
+      "items_file": "items-detector-0c7b1de8faa9.jsonl",
+      "items_sha256": "0c7b1de8faa9d997c2847226e7a01b412c75906cbe3b7d6c8c613506f2077277"
+    },
+    "run_id": "gha-34782721355"
+  },
+  "id": "e6f769db8104906b871100c38b369fb1901977e7f18e91c39339e222a8e60890",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1"
+}
