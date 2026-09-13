@@ -33,6 +33,7 @@ export type CoverageLedgerInput = {
   a2a: unknown;
   erc8004: unknown;
   wrappers: unknown;
+  root_kinds: unknown;
 };
 
 export type CoverageSnapshot = {
@@ -113,6 +114,9 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
   const a2a = record(input.a2a);
   const erc8004 = record(input.erc8004);
   const wrappers = record(input.wrappers);
+  const rootKinds = record(input.root_kinds);
+  const kindCounts = record(rootKinds?.by_kind) ?? {};
+  const wrapperSigned = typeof kindCounts["csoai.wrapper.parity/0.1"] === "number" ? (kindCounts["csoai.wrapper.parity/0.1"] as number) : null;
   const wrapperCounts = record(wrappers?.counts) ?? {};
   const wrapperRecords = Array.isArray(wrappers?.records) ? (wrappers!.records as unknown[]) : null;
 
@@ -128,6 +132,7 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
   const a2aSource = "GET /api/a2a";
   const erc8004Source = "GET /api/erc8004 (census scripts/x402/erc8004_census.py)";
   const wrappersSource = "GET /interop/wrapped-asset-parity-latest.json (scripts/readers/wrapped-asset-parity-reader.mjs)";
+  const rootKindsSource = "GET /interop/root-kinds.json (scripts/publish_public_root.py kinds_index — per-kind leaves under the ONE root, regenerated every root)";
 
   return [
     {
@@ -367,8 +372,10 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
       indexed: field(wrapperRecords ? wrapperRecords.length : null, wrappersSource, "records.length"),
       // A parity read is not a measurement: the card doctrine reserves MEASURED for graded banks.
       measured: absent(wrappersSource, "measured_pairs (a read is not a measurement; no pair is graded)"),
-      signed: absent(wrappersSource, "signed_pairs (atoms are signed into the public root; the per-kind signed count is not published on this surface yet)"),
-      rooted: absent(wrappersSource, "rooted_pairs"),
+      // Leaves of kind csoai.wrapper.parity/0.1 under the current root: signed AND rooted by
+      // construction (a leaf enters root.json only after the board signer signed it).
+      signed: field(wrapperSigned, rootKindsSource, 'by_kind["csoai.wrapper.parity/0.1"]'),
+      rooted: field(wrapperSigned, rootKindsSource, 'by_kind["csoai.wrapper.parity/0.1"] (every leaf of the root is rooted)'),
       witnessed: absent(wrappersSource, "witnessed_pairs"),
       anchored: absent(wrappersSource, "anchored_pairs"),
       paid: absent(wrappersSource, "paid_pairs (door /api/wrapper is live; settlements are counted by /api/revenue, never here)"),
