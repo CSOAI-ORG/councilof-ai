@@ -120,6 +120,17 @@ def main() -> int:
         except Exception:
             loop["signals"]["pypi_downloads"][pkg] = None
 
+    # Compare the current payer count with the last committed run. A non-zero
+    # cumulative count is not movement by itself; only a real increase opens
+    # the next door.
+    prior_runs = sorted(p for p in OUT.glob("20*/loop.json")) if OUT.exists() else []
+    previous_one = None
+    if prior_runs:
+        try:
+            previous_one = (json.loads(prior_runs[-1].read_text()).get("one_number") or {}).get("value")
+        except Exception:
+            previous_one = None
+
     # ── next moves: fixed rule set, ranked by signal ÷ cost, each with PROOF ──
     moves = []
     onv = one.get("all_time")
@@ -132,9 +143,12 @@ def main() -> int:
                       "proof": f"settles={issued}; one_number={onv}", "owner": False})
         moves.append({"rank": 2, "move": "index listing state probe (mcp_so/pulsemcp/glama/arcade = codes above) → row for any non-200",
                       "proof": json.dumps(loop["signals"]["index_probes"]), "owner": False})
-    else:
+    elif isinstance(previous_one, (int, float)) and onv > previous_one:
         moves.append({"rank": 1, "move": "one_number moved → per gate '≥1 repeat → open the next door'",
-                      "proof": f"one_number={onv}", "owner": False})
+                      "proof": f"one_number {previous_one} → {onv}", "owner": False})
+    else:
+        moves.append({"rank": 1, "move": "outside payer count is non-zero but has not increased — improve discovery and seek a repeat before opening another door",
+                      "proof": f"previous_one_number={previous_one!r}; current_one_number={onv}", "owner": False})
     if one.get("self_settlements"):
         moves.append({"rank": 3, "move": "self-settlements recorded — shown as self, never growth",
                       "proof": f"self={one.get('self_settlements')}", "owner": False})
@@ -148,9 +162,8 @@ def main() -> int:
     loop["next_moves"] = moves[:5]
 
     # ── retro: compare against the previous run's moves (evolve half) ─────────
-    prev_dirs = sorted(p for p in OUT.glob("20*/loop.json")) if OUT.exists() else []
-    if len(prev_dirs) >= 2:
-        prev = json.loads(prev_dirs[-2].read_text())
+    if prior_runs:
+        prev = json.loads(prior_runs[-1].read_text())
         cur_onv = onv
         prev_onv = (prev.get("one_number") or {}).get("value")
         loop["retro"].append({

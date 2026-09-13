@@ -1,10 +1,11 @@
 name: catalog-trust-round
 on:
   schedule:
-    - cron: "17 */6 * * *"   # every 6h, off the :07 root tick and the :17 HF mill clash
+    - cron: "29 */6 * * *"   # every 6h, staggered away from the :07 root tick and :17 HF mill
   workflow_dispatch: {}
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -40,7 +41,9 @@ jobs:
           git checkout -b "$BR"
           git commit -m "catalog-trust round: counts-only snapshot (${STAMP})"
           git push origin "HEAD:$BR"
-          gh pr create --base master --head "$BR" \
+          URL=$(gh pr create --base master --head "$BR" \
             --title "catalog-trust round: counts-only snapshot (${STAMP})" \
-            --body "Machine-produced 6h round (catalog-trust-round.yml). Counts only by doctrine — host details withheld. A 402 is an invoice, not delivery; a 404 is a catalog row that does not exist. Lands via PR because master push is GH006-protected (direct-push landing silently failed since branch protection tightened on 7 Sep)."
+            --body "Machine-produced 6h round (catalog-trust-round.yml). Counts only by doctrine — host details withheld. A 402 is an invoice, not delivery; a 404 is a catalog row that does not exist. Lands via PR because master push is GH006-protected (direct-push landing silently failed since branch protection tightened on 7 Sep).")
+          gh workflow run pr-gates.yml --repo "$GITHUB_REPOSITORY" --ref "$BR"
+          gh pr merge "$URL" --repo "$GITHUB_REPOSITORY" --squash --auto
           echo "landed branch=$BR"

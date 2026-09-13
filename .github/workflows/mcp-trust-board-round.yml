@@ -13,6 +13,7 @@ on:
         default: "500"
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -49,7 +50,9 @@ jobs:
           git checkout -b "$BR"
           git commit -m "mcp-trust round: counts-only handshake census (${STAMP})"
           git push origin "HEAD:$BR"
-          gh pr create --base master --head "$BR" \
+          URL=$(gh pr create --base master --head "$BR" \
             --title "mcp-trust round: counts-only handshake census (${STAMP})" \
-            --body "Machine-produced weekly round (mcp-trust-board-round.yml), implementing docs/product/MCP-TRUST-BOARD-SPEC.md. Counts only by doctrine — host details withheld. A 401/402 is a term sheet, not delivery; UNREACHABLE is never FAIL; the unsigned card waits for the GHA publisher (this workflow never signs). Lands via PR because master push is GH006-protected."
+            --body "Machine-produced weekly round (mcp-trust-board-round.yml), implementing docs/product/MCP-TRUST-BOARD-SPEC.md. Counts only by doctrine — host details withheld. A 401/402 is a term sheet, not delivery; UNREACHABLE is never FAIL; the unsigned card waits for the GHA publisher (this workflow never signs). Lands via PR because master push is GH006-protected.")
+          gh workflow run pr-gates.yml --repo "$GITHUB_REPOSITORY" --ref "$BR"
+          gh pr merge "$URL" --repo "$GITHUB_REPOSITORY" --squash --auto
           echo "landed branch=$BR"
