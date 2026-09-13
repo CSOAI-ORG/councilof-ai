@@ -8,6 +8,7 @@ const CORRECTIONS = "https://councilof.ai/api/corrections";
 const QUEUE = "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/SUMMARY.json";
 const CATALOG = "https://huggingface.co/datasets/csoai/living-catalog/resolve/main/catalog.json";
 const CENSUS_WALK = "./census-manifest.json";
+const MARKET = "https://councilof.ai/interop/market-universe-2026-09/index.json";
 const VERIFY = "https://councilof.ai/gspc-verify";
 const SITE = "https://councilof.ai";
 const LOOKUP_KEY = "csoai.gspc.desk.lookup.v1";
@@ -671,6 +672,36 @@ function renderHonesty() {
     "Compact cards check and do not yet bind a subject or weight-manifest digest. The Hub listing walk finished; none of those listings is a grade.";
 }
 
+function marketCoverageText(row) {
+  const skip = new Set(["state", "evidence", "ledger_index"]);
+  return Object.entries(row)
+    .filter(([key, value]) => !skip.has(key) && value != null)
+    .map(([key, value]) => `${key.replace(/_/g, " ")}: ${value}`)
+    .join(" · ") || "No numeric coverage published";
+}
+
+async function renderMarketCoverage() {
+  const body = document.querySelector("#market-table tbody");
+  const note = document.getElementById("market-note");
+  try {
+    const data = await loadJson(MARKET);
+    const current = Object.entries(data.current_csoai_coverage || {})
+      .map(([family, row]) => ({ family, ...row }));
+    const missing = (data.missing_measurement_families || [])
+      .map((row) => ({ ...row, evidence: null }));
+    body.innerHTML = [...current, ...missing].map((row) => {
+      const evidence = row.evidence
+        ? `<a href="https://councilof.ai/${esc(row.evidence.split("#")[0])}" target="_blank" rel="noreferrer">open evidence</a>`
+        : "minimum evidence defined";
+      return `<tr><td>${esc(row.family.replace(/_/g, " "))}</td><td>${esc(row.state || "UNMEASURED")}</td><td>${esc(marketCoverageText(row))}</td><td>${evidence}</td></tr>`;
+    }).join("");
+    note.textContent = `Observed ${data.observed_at || "at an unreported time"}. Promotion order: DISCOVERED → INDEXED → OBSERVED → MEASURED → SIGNED → ROOTED → ANCHORED.`;
+  } catch (error) {
+    body.innerHTML = `<tr><td colspan="4">Coverage manifest unavailable — nothing fabricated.</td></tr>`;
+    note.textContent = String(error);
+  }
+}
+
 function loadLookup() {
   try { return JSON.parse(localStorage.getItem(LOOKUP_KEY) || "[]"); } catch { return []; }
 }
@@ -768,6 +799,7 @@ async function boot() {
     renderHubCells();
   }
   renderQueue();
+  renderMarketCoverage();
 }
 
 boot();
