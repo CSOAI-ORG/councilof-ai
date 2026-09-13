@@ -198,7 +198,7 @@ export default function DashboardWorkspace({
         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
           {activePane ? (
             <div
-              className="min-h-0 flex-1 overflow-y-auto bg-background"
+              className="min-h-0 flex-1 overflow-y-auto bg-background pt-14 xl:pt-0"
               data-testid="dashboard-tool-canvas"
             >
               {activePane}

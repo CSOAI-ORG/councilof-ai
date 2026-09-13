@@ -17,6 +17,7 @@ import cardIndex from "../../public/signed/card_index.json";
 import root from "../../public/root.json";
 import spray from "../../scripts/badger/_spray-log-v2.json";
 import doi from "../../docs/DOI_AXIS_CARDS_2026-08-24.json";
+import { buildRevenue, type RevenueEnv } from "./revenue";
 
 interface Correction { id: string; date: string; what_was_wrong: string; how_caught: string; fix: string; status?: string }
 interface Card { card: string; axis?: string; ts?: string }
@@ -25,7 +26,7 @@ interface Spray { lane?: string; status?: string; target?: string }
 const day = (s: string) => String(s).slice(0, 10);
 const P = "https://councilof.ai";
 
-export function build() {
+export async function build(env: RevenueEnv = {}) {
   const corrections = ((LEDGER as unknown as { corrections: Correction[] }).corrections || []).slice();
   const cards = ((cardIndex as unknown as { cards?: Card[] }).cards || []).filter((c) => c.ts);
   const r = root as unknown as { merkle_root?: string; card_count?: number; as_of?: string; sig_ed25519?: string | null };
@@ -45,6 +46,42 @@ export function build() {
     const k = String(x.status || "unknown"); a[k] = (a[k] || 0) + 1; return a;
   }, {});
   const live = sprayCounts.live || sprayCounts.published || 0;
+  const revenue = await buildRevenue(env);
+  const one = revenue.one_number as {
+    status?: string;
+    all_time?: number | null;
+    settlements?: number | null;
+    settled_usdc_atomic?: number | null;
+    self_settlements?: number | null;
+    source?: string;
+  };
+  const settlementLedgerMeasured = one.status === "MEASURED";
+  const outsideSettlementMeasured =
+    settlementLedgerMeasured &&
+    typeof one.settlements === "number" &&
+    one.settlements > 0 &&
+    typeof one.settled_usdc_atomic === "number" &&
+    one.settled_usdc_atomic > 0;
+  const revenueAnswer = outsideSettlementMeasured
+    ? `Revenue: the live settlement ledger records ${one.settlements} outside settlement${one.settlements === 1 ? "" : "s"} from ${one.all_time ?? "an uncounted number of"} distinct non-self payer${one.all_time === 1 ? "" : "s"}, totalling ${one.settled_usdc_atomic} USDC atomic units. Owner-controlled and zero-value settlements are excluded.`
+    : settlementLedgerMeasured
+      ? "Revenue: the bound settlement ledger measures zero outside settlements that moved a non-zero amount. Self-settlements and zero-value probes remain audit records and are not buyers."
+      : "Revenue: this request could not read a bound settlement ledger, so settlement status is UNCHECKABLE here—never silently converted to zero or to a claim that no payment happened.";
+  const firstSettlementClaim = outsideSettlementMeasured
+    ? null
+    : settlementLedgerMeasured
+      ? {
+          subject: "first outside settlement",
+          state: "NOT HAPPENED",
+          why: "The bound settlement ledger measures zero non-self settlements that moved a non-zero amount. Self-payments and zero-value probes do not satisfy this claim.",
+          proof: "curl -s https://councilof.ai/api/revenue | jq '{settled_usdc,one_number}'",
+        }
+      : {
+          subject: "first outside settlement status",
+          state: "UNCHECKABLE",
+          why: "The settlement ledger was unavailable to this request. Absence of a readable source is not evidence that no settlement happened.",
+          proof: "curl -s https://councilof.ai/api/revenue | jq '{settled_usdc,one_number,provisioning}'",
+        };
 
   return {
     schema: "csoai.press/0.1",
@@ -98,6 +135,16 @@ export function build() {
         : "NO surface is confirmed live. The spray log records drafted and queued rows only, every one owner-gated. A drafted row is not a published surface, and this field stays null rather than 0 so the gap is legible rather than counted as an achievement.",
       proof: "jq '[.[].status]|group_by(.)|map({(.[0]):length})|add' scripts/badger/_spray-log-v2.json",
     },
+    commercial_evidence: {
+      state: outsideSettlementMeasured ? "MEASURED" : settlementLedgerMeasured ? "MEASURED_ZERO" : "UNCHECKABLE",
+      outside_payers: settlementLedgerMeasured ? (one.all_time ?? 0) : null,
+      outside_settlements: settlementLedgerMeasured ? (one.settlements ?? 0) : null,
+      settled_usdc_atomic: settlementLedgerMeasured ? (one.settled_usdc_atomic ?? 0) : null,
+      self_settlements: settlementLedgerMeasured ? (one.self_settlements ?? 0) : null,
+      note: revenueAnswer,
+      source: one.source ?? "settlement ledger unavailable",
+      proof: "curl -s https://councilof.ai/api/revenue | jq '{settled_usdc,one_number}'",
+    },
     // The FAQ, ANSWERED FROM THE ARTIFACTS. The questions are ours — a question is a choice
     // about what a reader wants to know, and nothing derives that. Every ANSWER is computed
     // here from the ledger, the board or the root, so the FAQ cannot drift from the estate it
@@ -122,7 +169,7 @@ export function build() {
       },
       {
         q: "What have you NOT measured?",
-        a: `Revenue: /api/revenue holds every count null until a receipt settles — a count is null, never 0, when there is no source. Distribution: ${live ? `${live} surfaces are confirmed live` : "no surface is confirmed live; the spray log holds drafted and queued rows only, so the count is published as null rather than 0"}. The board publishes its own unmeasured slots rather than hiding them: quote totals.unmeasured_axes from /api/gspc.`,
+        a: `${revenueAnswer} Distribution: ${live ? `${live} surfaces are confirmed live` : "no surface is confirmed live in the committed spray log; drafted and queued rows are not counted as placements"}. The board publishes its own unmeasured slots rather than hiding them: quote totals.unmeasured_axes from /api/gspc.`,
       },
       {
         q: "Can I verify one of your measurements myself, without an account?",
@@ -134,12 +181,7 @@ export function build() {
       },
     ],
     not_announced: [
-      {
-        subject: "first settlement",
-        state: "NOT HAPPENED",
-        why: "/api/revenue holds every count at null until a receipt settles: 'a count is null, never 0, when there is no source'. There is nothing to announce and a draft written now would be a press release about a future.",
-        proof: "curl -s https://councilof.ai/api/revenue | jq .",
-      },
+      ...(firstSettlementClaim ? [firstSettlementClaim] : []),
       {
         subject: "N sites live",
         state: "NOT HAPPENED",
@@ -150,7 +192,7 @@ export function build() {
   };
 }
 
-export const onRequestGet: PagesFunction = async () =>
-  new Response(JSON.stringify(build(), null, 2), {
+export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) =>
+  new Response(JSON.stringify(await build(env), null, 2), {
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
   });

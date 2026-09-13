@@ -43,4 +43,11 @@ describe("App.tsx is intact", () => {
     // a truncated file ends mid-token; a real one closes its last statement
     expect(src.trimEnd()).toMatch(/[});]$/);
   });
+
+  it("keeps public trust routes on their operative pages", () => {
+    expect(src).toContain('<Route path="/press" component={PublicPress} />');
+    expect(src).toContain('<Route path="/privacy-policy" component={PublicPrivacy} />');
+    expect(src).toMatch(/<Route path="\/lookup">\s*\{\(\) => <Redirect to="\/gspc-verify" \/>\}\s*<\/Route>/);
+    expect(src).toMatch(/<Route path="\/ceremony">\s*\{\(\) => <Redirect to="\/events\/three-root-ceremony" \/>\}\s*<\/Route>/);
+  });
 });

@@ -189,6 +189,7 @@ const Launch = lazy(() => import("./pages/Launch"));
 const OwaspAgentic = lazy(() => import("./pages/OwaspAgentic"));
 const PostmortemX402 = lazy(() => import("./pages/PostmortemX402"));
 const ThreeRootCeremony = lazy(() => import("./pages/ThreeRootCeremony"));
+const PublicPress = lazy(() => import("./pages/PublicPress"));
 const TransparencyCop = lazy(() => import("./pages/TransparencyCop"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
@@ -237,6 +238,7 @@ const FoundingCouncilAgreement = lazy(() => import("./pages/legal/FoundingCounci
 const LicensingAgreement = lazy(() => import("./pages/legal/LicensingAgreement"));
 const LicenceManifest = lazy(() => import("./pages/LicenceManifest"));
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
+const PublicPrivacy = lazy(() => import("./pages/legal/PublicPrivacy"));
 const Disclaimers = lazy(() => import("./pages/legal/Disclaimers"));
 const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
 const Council = lazy(() => import("./pages/Council"));
@@ -740,6 +742,7 @@ function App() {
                   <Route path="/owasp-agentic" component={OwaspAgentic} />
                   <Route path="/postmortems/x402-settlement-reading" component={PostmortemX402} />
                   <Route path="/events/three-root-ceremony" component={ThreeRootCeremony} />
+                  <Route path="/ceremony">{() => <Redirect to="/events/three-root-ceremony" />}</Route>
                   <Route path="/transparency-cop" component={TransparencyCop} />
                   <Route path="/board/models" component={MeasuredModels} />
                   <Route path="/board" component={MeasurementBoard} />
@@ -769,6 +772,7 @@ function App() {
                   <Route path="/claims-register" component={ClaimsRegister} />
                   <Route path="/distribution-integrity" component={DistributionIntegrity} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
+                  <Route path="/lookup">{() => <Redirect to="/gspc-verify" />}</Route>
                   <Route path="/embed" component={EmbedPage} />
                   <Route path="/white-label" component={EmbedPage} />
                   <Route path="/badge" component={BadgeKit} />
@@ -968,8 +972,8 @@ function App() {
                   <Route path="/oscal-readiness" component={Fedramp} />
                   <Route path="/readiness" component={Readiness} />
                   <Route path="/agents" component={Agents} />
-                  <Route path="/press" component={ContentReviewNotice} />
-                  <Route path="/pressroom" component={ContentReviewNotice} />
+                  <Route path="/press" component={PublicPress} />
+                  <Route path="/pressroom" component={PublicPress} />
                   <Route path="/sector-atlas" component={SectorsAtlas} />
                   <Route path="/learn" component={Academy} />
                   <Route path="/tracks" component={Academy} />
@@ -1072,9 +1076,9 @@ function App() {
                   <Route path="/licensing-agreement" component={LicensingAgreement} />
                   <Route path="/legal/licensing" component={LicensingAgreement} />
                   <Route path="/licence-manifest" component={LicenceManifest} />
-                  <Route path="/privacy-policy" component={ContentReviewNotice} />
-                  <Route path="/privacy" component={ContentReviewNotice} />
-                  <Route path="/legal/privacy" component={ContentReviewNotice} />
+                  <Route path="/privacy-policy" component={PublicPrivacy} />
+                  <Route path="/privacy" component={PublicPrivacy} />
+                  <Route path="/legal/privacy" component={PublicPrivacy} />
                   <Route path="/terms-of-service" component={TermsOfService} />
                   <Route path="/terms" component={TermsOfService} />
                   <Route path="/legal/terms" component={TermsOfService} />
