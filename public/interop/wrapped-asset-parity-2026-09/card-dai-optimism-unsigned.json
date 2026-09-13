@@ -1,0 +1,71 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "wrapped DAI on optimism vs OP Mainnet DAI bridge escrow (L1Escrow) — ESCROW_PARITY_READ",
+  "as_of": "2026-09-13T15:35:34.024Z",
+  "source_urls": [
+    "https://mainnet.optimism.io",
+    "https://ethereum-rpc.publicnode.com"
+  ],
+  "payload": {
+    "kind": "csoai.wrapper.parity/0.1",
+    "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+    "id": "dai:optimism",
+    "backing_model": "escrow",
+    "wrapped": {
+      "chain": "optimism",
+      "symbol": "DAI",
+      "address": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+      "chainId": 10,
+      "block": 156856954,
+      "block_hash": "0x2d26bf7b25be698cbf9fe4066c5693aa6088b504612d2e581ace56677c3ec233",
+      "block_time": 1789312685
+    },
+    "canonical": {
+      "chain": "ethereum",
+      "symbol": "DAI",
+      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "chainId": 1,
+      "block": 25969364,
+      "block_hash": "0x160d3696c4904ba7474d2d450554a844f70431af2961f22c0aa489be80867b22"
+    },
+    "escrow": "0x467194771dAe2967Aef3ECbEDD3Bf9a310C76C65",
+    "escrow_name": "OP Mainnet DAI bridge escrow (L1Escrow)",
+    "note": null,
+    "reads": {
+      "wrapped_total_supply": {
+        "query": "totalSupply()",
+        "raw": "0x0000000000000000000000000000000000000000000b53135452d2e5aea12b1f",
+        "raw_sha256": "b888a975b9dcf0bcf783e4767ff4014465c92f42fcf6d9ea2ec886e0e6e78800",
+        "atomic": "13690496998127233151347487",
+        "normalized": "13690496.998127233151347487",
+        "decimals": 18
+      },
+      "escrow_balance": {
+        "query": "balanceOf(0x467194771dAe2967Aef3ECbEDD3Bf9a310C76C65)",
+        "raw": "0x000000000000000000000000000000000000000000110d1f258bd144c479bde8",
+        "raw_sha256": "99299ed7a69ca3d5d88048dc1887f829d11d4d3300a0d4d2c3cc8ebe8f7f5a17",
+        "atomic": "20613704252278380804292072",
+        "normalized": "20613704.252278380804292072",
+        "decimals": 18
+      }
+    },
+    "escrow_over_wrapped": "1.505694",
+    "parity_state": "ESCROW_PARITY_READ",
+    "state": "PROBED",
+    "error": null,
+    "fetched_at": "2026-09-13T15:35:34.024Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "unmeasured": []
+  },
+  "tags": [
+    "eater:wrapper-parity",
+    "axis:distribution-integrity",
+    "backing:escrow",
+    "state:ESCROW_PARITY_READ"
+  ],
+  "unmeasured": [],
+  "did_intended": "did:web:csoai.org#board-attestation-1",
+  "sha256": "5ce370883c2e79977bed2609234e906b7d30bba9f61924aadb16e1fd537858f9",
+  "sig_ed25519": null
+}
