@@ -186,6 +186,7 @@ jobs:
             jail) DS=jail-goldbank ;;
             *) DS="$AXIS" ;;
           esac
+          echo "DS=$DS" >> "$GITHUB_ENV"  # the mill step's --bank-dataset reads this across the step boundary
           if curl -fsSL "https://huggingface.co/datasets/csoai/gspc-${DS}/resolve/main/items.jsonl" -o "mill-in/banks/${AXIS}.jsonl"; then
             echo "bank csoai/gspc-${DS} → banks/${AXIS}.jsonl ($(wc -l < mill-in/banks/${AXIS}.jsonl) items)"; echo "inputs=1" >> "$GITHUB_OUTPUT"
           else
