@@ -1,0 +1,78 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.model.hf.asi",
+  "subject": "model-stabilityai-stable-diffusion-xl-base-1-0",
+  "measured_at": "2026-09-13T06:14:21.160657Z",
+  "metrics": {
+    "repo": "stabilityai/stable-diffusion-xl-base-1.0",
+    "owner": "Stability AI",
+    "name": "SDXL 1.0",
+    "timestamp": "2026-09-13T06:14:20.976172Z",
+    "kind": "model",
+    "downloads": 2313797,
+    "likes": 8140,
+    "tags": [
+      "diffusers",
+      "onnx",
+      "safetensors",
+      "text-to-image",
+      "stable-diffusion",
+      "arxiv:2307.01952",
+      "arxiv:2211.01324",
+      "arxiv:2108.01073",
+      "arxiv:2112.10752",
+      "license:openrail++"
+    ],
+    "pipeline_tag": "text-to-image",
+    "liveness": "live",
+    "provenance": "hf_repo",
+    "files": [
+      ".gitattributes",
+      "01.png",
+      "LICENSE.md",
+      "README.md",
+      "comparison.png",
+      "model_index.json",
+      "pipeline.png",
+      "scheduler/scheduler_config.json",
+      "sd_xl_base_1.0.safetensors",
+      "sd_xl_base_1.0_0.9vae.safetensors"
+    ],
+    "safetensors": true,
+    "x402_compatibility": "unknown"
+  },
+  "honest_sentence": "ASI-Evolve v2 continuous measurement: measurement.model.hf.asi for model-stabilityai-stable-diffusion-xl-base-1-0. 13 axes.",
+  "measurement_not_certification": true,
+  "layer_0": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "pubkey": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+    "schema": "csoai.layer-0/0.1",
+    "content_id_method": "sha256(canonical_json)",
+    "evidence_states": [
+      "UNMEASURED",
+      "PENDING",
+      "MEASURED",
+      "REJECTED",
+      "SUPERSEDED"
+    ],
+    "verification_rules": {
+      "alg": "Ed25519",
+      "canonicalization": "JSON with sorted keys, no whitespace, ensure_ascii=False",
+      "signing_payload": "sha256(canonical body)",
+      "transport": "JSON over HTTPS",
+      "ots_upgrade": "OpenTimestamps \u2192 Bitcoin",
+      "rekor_transparency": "logIndex published"
+    },
+    "protocols": [
+      "MCP 1.4.2",
+      "A2A v1.0",
+      "AG-UI SSE",
+      "x402 v2",
+      "SCITT/COSE",
+      "IETF A2A"
+    ]
+  },
+  "permissionless": true,
+  "auto_churn": true,
+  "miner_version": "asi-evolve-2"
+}
