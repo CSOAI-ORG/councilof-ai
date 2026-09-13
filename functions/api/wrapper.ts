@@ -63,6 +63,7 @@ export const CHAINS: Record<string, { rpc: string; chainId: number }> = {
   base: { rpc: "https://mainnet.base.org", chainId: 8453 },
   optimism: { rpc: "https://mainnet.optimism.io", chainId: 10 },
   arbitrum: { rpc: "https://arb1.arbitrum.io/rpc", chainId: 42161 },
+  polygon: { rpc: "https://polygon-bor-rpc.publicnode.com", chainId: 137 },
 };
 const SEL = { totalSupply: "0x18160ddd", balanceOf: "0x70a08231", decimals: "0x313ce567" };
 const UA = "csoai-wrapper-parity/0.1 (+https://councilof.ai; nicholas@csoai.org)";
