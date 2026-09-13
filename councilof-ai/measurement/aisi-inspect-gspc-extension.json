@@ -1,0 +1,35 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "action.aisi.inspect.extension",
+  "subject": "aisi-inspect-gspc-extension",
+  "measured_at": "2026-09-13T05:17:06.237578+00:00",
+  "metrics": {
+    "package_name": "gspc-inspect-evals",
+    "path": "Forked from UKGovernmentBEIS/inspect_ai extension API",
+    "register_repo": "UKGovernmentBEIS/inspect_evals",
+    "register_format": "register/gspc-governance/eval.yaml with full_title, common_title, description, arxiv, tasks, source (repository_url + commit_sha)",
+    "package_structure": {
+      "pyproject.toml": "[project] + inspect_ai dependency + [project.entry-points.inspect_ai] gspc_evals = 'gspc_evals._registry'",
+      "gspc_evals/__init__.py": "Package init",
+      "gspc_evals/_registry.py": "Entry point mapping 22 axes \u2192 @task-decorated functions",
+      "gspc_evals/tasks/governance.py": "@task function wrapping CSOAI governance axis as Inspect task",
+      "gspc_evals/tasks/safety.py": "@task function wrapping safety axis",
+      "gspc_evals/scorers/gspc_scorer.py": "Scorer that grades model outputs against GSPC criteria",
+      "gspc_evals/datasets/gspc_*.jsonl": "Frozen measurement items per axis",
+      "register/gspc-governance/eval.yaml": "Register YAML for inspect_evals"
+    },
+    "what_each_task_does": "1. Load GSPC measurement items for the axis \u00b7 2. Solicit model response \u00b7 3. Score against CSOAI criteria \u00b7 4. Emit signed card with model output, score, signature",
+    "submission_steps": [
+      "1. Build gspc-inspect-evals package with @task decorators for all 22 axes",
+      "2. Test locally: `inspect eval gspc_evals/governance --model anthropic/claude`",
+      "3. Pin commit SHA (40 chars)",
+      "4. Open 'Register Eval Submission' issue on UKGovernmentBEIS/inspect_evals",
+      "5. Upload two model run logs",
+      "6. Wait for maintainer verification"
+    ],
+    "arxiv_required": "CSOAI 22-axis methodology paper (would need to write \u2014 see NIST comment draft first)",
+    "owner_gates": "Final PR submission requires Nick's GitHub account sign-off"
+  },
+  "honest_sentence": "AISI Inspect extension: gspc-inspect-evals package with @task-decorated functions for all 22 axes. Submit via UKGovernmentBEIS/inspect_evals Register. arXiv paper + commit SHA + 2 model logs required.",
+  "measurement_not_certification": true
+}

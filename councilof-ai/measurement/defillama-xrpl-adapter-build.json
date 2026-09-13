@@ -1,0 +1,23 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "action.defillama.xrpl.adapter",
+  "subject": "defillama-xrpl-adapter-build",
+  "measured_at": "2026-09-13T05:17:06.237578+00:00",
+  "metrics": {
+    "repo_to_fork": "https://github.com/DefiLlama/DefiLlama-Adapters",
+    "adapter_path": "projects/xrpl/index.js",
+    "what_to_add": [
+      "XRPL TVL aggregation across known vault/lending protocols",
+      "Read AMM pools (XLS-30 live on mainnet)",
+      "Read permissioned lending domains (XLS-80 live Feb 2026)",
+      "Read DID-attested reserves (XLS-40 live Oct 2024)",
+      "Read credentials-backed KYC claims (XLS-70 live Sep 2025)"
+    ],
+    "test_file": "test.js with green-checked fixture data",
+    "pr_template": "DefiLlama project.js standard + README.md + methodology note",
+    "impact": "First XRPL data source in DefiLlama. Listing = industry-wide discovery for any XRPL DeFi project.",
+    "owner_gate": "GitHub PR submission requires Nick's account"
+  },
+  "honest_sentence": "DefiLlama XRPL adapter: add projects/xrpl/index.js to DefiLlama/DefiLlama-Adapters. Cover AMM (XLS-30), Permissioned Domains (XLS-80), DID (XLS-40), Credentials (XLS-70). First XRPL TVL data source in DefiLlama.",
+  "measurement_not_certification": true
+}

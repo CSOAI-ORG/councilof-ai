@@ -1,0 +1,23 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "action.w3c.acb_cg.reply",
+  "subject": "w3c-acb-cg-reply",
+  "measured_at": "2026-09-13T05:17:06.237578+00:00",
+  "metrics": {
+    "group": "W3C Agent Conformance Community Group (ACB-CG)",
+    "formed": "September 1, 2026",
+    "thread": "Guigui Wang's September 2 thread on reporting format",
+    "join_url": "https://www.w3.org/community/agent-conformance/",
+    "w3c_account_required": "Free W3C account",
+    "reply_content": {
+      "acknowledge": "We agree a reporting format needs MUST-FAIL test vectors.",
+      "proposed_vector": "MUST-FAIL #1: Valid Merkle proof included in card, but anchor timestamp is LATER than claimed measurement time \u2192 verification MUST FAIL. (Prevents retroactive anchoring of pre-existing measurements.)",
+      "rationale": "CSOAI operates 22-axis signed measurement with Ed25519 cards, Merkle root, Bitcoin-anchored via OpenTimestamps. We've observed the failure mode in practice \u2014 a valid card with a valid Merkle proof, but the Bitcoin block timestamp is after the claimed measurement timestamp \u2192 the measurement wasn't actually known at the time claimed. The reporting format must catch this.",
+      "additional_proposal": "We also propose MUST-FAIL #2: card_id matches but signature key is different from issuer_did \u2192 MUST FAIL. Catches card cloning and signature substitution attacks.",
+      "third_proposal": "MUST-FAIL #3: card lists n_measurements but items.jsonl has fewer rows \u2192 MUST FAIL. Catches n-count inflation."
+    },
+    "asset_provided": "Three CC0 (public domain) MUST-FAIL vectors with reference test data from our 22-axis instrument, freely available at councilof.ai/w3c-must-fail/"
+  },
+  "honest_sentence": "W3C ACB-CG reply: three CC0 MUST-FAIL vectors (retroactive anchoring, signature substitution, n-count inflation). Reference data from CSOAI's 22-axis instrument. Free to use, attribution appreciated.",
+  "measurement_not_certification": true
+}

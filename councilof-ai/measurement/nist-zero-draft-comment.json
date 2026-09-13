@@ -1,21 +1,23 @@
 {
   "schema": "gspc.measurement-card/0.1",
-  "kind": "standards.nist.comment",
-  "subject": "nist-ai300-1-zero-draft",
-  "measured_at": "2026-09-13T04:02:59.867637+00:00",
-  "deadline": "2026-09-16",
-  "days_remaining": 3,
+  "kind": "action.nist.zero_draft.comment",
+  "subject": "nist-zero-draft-comment",
+  "measured_at": "2026-09-13T05:17:06.237578+00:00",
   "metrics": {
-    "standard": "NIST AI 300-1 (AI Documentation)",
-    "email": "ai-standards+doczd@nist.gov",
-    "submission": "\u22644KB card schema as reference implementation",
-    "ammunition": [
-      "BIS WP1374",
-      "Anthropic 'lawful and verifiable' quote",
-      "22-axis board"
+    "draft_closes": "September 16, 2026",
+    "days_to_close": 3,
+    "draft_topic": "NIST AI Risk Management Framework: GenAI Profile (Zero Draft)",
+    "comment_themes": [
+      "Signed measurement as evidence primitive \u2014 every axis score should carry Ed25519 signature + Merkle inclusion proof",
+      "Anchored proof of when measurement was known \u2014 OpenTimestamps/Rekor as mandatory in high-risk profiles",
+      "Corrections ledger as structural requirement \u2014 published retraction history is the honesty primitive",
+      "Cross-organisational measurement verification \u2014 anyone can verify any signed card",
+      "Independence statement \u2014 measurement body must disclose all funding sources",
+      "Three-state verdicts (MEASURED / UNMEASURED / PENDING) instead of binary"
     ],
-    "impact": "Permanent federal docket citation"
+    "owner_action": "Final review before submission. Comment is free, public, can be filed by anyone.",
+    "delivery": "Wednesday Sep 16, same day as Arc genesis measurement"
   },
-  "honest_sentence": "NIST AI 300-1 Zero Draft: closes Sep 16 (3 days). Submit card schema as reference implementation. Armed with BIS WP1374 + Anthropic quote. Permanent federal citation.",
+  "honest_sentence": "NIST Zero Draft (GenAI Profile) closes Sep 16 (3 days). Comment themes ready: signed evidence primitive, anchored proof of when known, corrections ledger requirement, three-state verdicts, independence disclosure. Owner review needed before submission.",
   "measurement_not_certification": true
 }
