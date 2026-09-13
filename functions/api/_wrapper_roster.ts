@@ -150,5 +150,54 @@ export const WRAPPER_ROSTER = [
     "escrow": null,
     "escrow_name": null,
     "note": "Circle mints USDC natively on Arbitrum One (CCTP). No escrow exists to read; the wrapped supply is read, no parity is claimed."
+  },
+  {
+    "id": "usdc.e:polygon",
+    "wrapped": {
+      "chain": "polygon",
+      "symbol": "USDC.e",
+      "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
+    },
+    "canonical": {
+      "chain": "ethereum",
+      "symbol": "USDC",
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    },
+    "backing_model": "escrow",
+    "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+    "escrow_name": "Polygon PoS bridge ERC20Predicate"
+  },
+  {
+    "id": "usdt:polygon",
+    "wrapped": {
+      "chain": "polygon",
+      "symbol": "USDT",
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
+    },
+    "canonical": {
+      "chain": "ethereum",
+      "symbol": "USDT",
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    },
+    "backing_model": "native",
+    "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+    "escrow_name": "Polygon PoS bridge ERC20Predicate (legacy bridged remainder only)",
+    "note": "Tether issues USDT natively on Polygon; the PoS predicate backs only the legacy bridged remainder (escrow ≈1% of supply on 2026-09-13). The wrapped supply is read; no parity is claimed."
+  },
+  {
+    "id": "dai:polygon",
+    "wrapped": {
+      "chain": "polygon",
+      "symbol": "DAI",
+      "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"
+    },
+    "canonical": {
+      "chain": "ethereum",
+      "symbol": "DAI",
+      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F"
+    },
+    "backing_model": "escrow",
+    "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+    "escrow_name": "Polygon PoS bridge ERC20Predicate"
   }
 ] as const;

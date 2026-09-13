@@ -2,7 +2,7 @@
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
   "subject": "wrapped USDC on arbitrum vs native issuance — UNCHECKABLE_NATIVE_ISSUANCE",
-  "as_of": "2026-09-13T15:35:34.024Z",
+  "as_of": "2026-09-13T15:40:33.576Z",
   "source_urls": [
     "https://arb1.arbitrum.io/rpc",
     "https://ethereum-rpc.publicnode.com"
@@ -17,17 +17,17 @@
       "symbol": "USDC",
       "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
       "chainId": 42161,
-      "block": 504774830,
-      "block_hash": "0x810b56f5efc8eda2c67f9d9701373c0d05f4f8e96ffe52813e5f6287d64f50f1",
-      "block_time": 1789312624
+      "block": 504776566,
+      "block_hash": "0xfdb10a8f3ac6787d4865c37083f98e952370f43f1afefca4834fbee25fd80cfb",
+      "block_time": 1789313061
     },
     "canonical": {
       "chain": "ethereum",
       "symbol": "USDC",
       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       "chainId": 1,
-      "block": 25969364,
-      "block_hash": "0x160d3696c4904ba7474d2d450554a844f70431af2961f22c0aa489be80867b22"
+      "block": 25969396,
+      "block_hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174"
     },
     "escrow": null,
     "escrow_name": null,
@@ -35,10 +35,10 @@
     "reads": {
       "wrapped_total_supply": {
         "query": "totalSupply()",
-        "raw": "0x0000000000000000000000000000000000000000000000000009ae36ad98a5a9",
-        "raw_sha256": "e27e55dd42df9b3dfc16dc1563cad5b6615b71f8a60ef5d1de8599d7920c6b94",
-        "atomic": "2724824654325161",
-        "normalized": "2724824654.325161",
+        "raw": "0x0000000000000000000000000000000000000000000000000009ae2a182460cf",
+        "raw_sha256": "e5f75341026d5e11a1c9d470388a4eff107d282e1e67abe5d3dbf0f476b144c1",
+        "atomic": "2724770607292623",
+        "normalized": "2724770607.292623",
         "decimals": 6
       }
     },
@@ -46,7 +46,7 @@
     "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
     "state": "PROBED",
     "error": null,
-    "fetched_at": "2026-09-13T15:35:34.024Z",
+    "fetched_at": "2026-09-13T15:40:33.576Z",
     "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
     "unmeasured": [
       "escrow_balance (natively issued; no escrow exists)"
@@ -62,6 +62,6 @@
     "escrow_balance (natively issued; no escrow exists)"
   ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "e6de369e3a7d0cb6c5ba02498d9840881dc6c49a3fce1be98ef9811d7289ecf6",
+  "sha256": "2815acdb645ae3a12e921f47db0f651934a4d0ed10efdaa684baf4bcacf74dbc",
   "sig_ed25519": null
 }

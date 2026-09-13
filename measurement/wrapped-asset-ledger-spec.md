@@ -31,11 +31,10 @@ below 1 at an `escrow`-model pair is a finding to publish, not a verdict to pron
 two chains are never simultaneous; each record names both blocks and both timestamps.
 
 ## First output
-`public/interop/wrapped-asset-parity-2026-09-13.json` — 9 pairs: 6 measured, 3 uncheckable-native,
-0 unmeasured on the first run (a paced retry absorbed one public-RPC rate limit; a second failure would have been recorded as UNMEASURED). Unsigned: state `INDEXED`. The
-signing path is the board signer under OIDC (public-root.yml); a signed batch is the next step, then
-an x402 door `GET /api/wrapper/{id}` built on the `/api/rwa/evidence` pattern (free `?preview=1`,
-402 challenge, signed card on payment).
+`public/interop/wrapped-asset-parity-2026-09-13.json` — 12 pairs (Arbitrum, Optimism, Base, Polygon PoS): 8 read, 4 uncheckable-native,
+0 unmeasured (calls are paced 200 ms; a failed read is recorded as UNMEASURED, never inferred). Unsigned: state `INDEXED`. The
+signing path is the board signer under OIDC (public-root.yml); a signed batch is the next step, and the x402 door `GET /api/wrapper?id=<pair>` is live (free `?preview=1`, 402 challenge with v2 + bazaar,
+signed card on payment); staged atoms sit in `public/interop/wrapped-asset-parity-2026-09/` for the signer.
 
 ## Where value comes from (doctrine-consistent)
 - x402-metered per-asset reads (`asset_specific_x402_doors` is 0 today on the stablecoin readiness

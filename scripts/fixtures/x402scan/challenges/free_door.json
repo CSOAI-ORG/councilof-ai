@@ -1,51 +1,38 @@
 {
   "accepts": [
     {
-      "amount": "10000",
+      "amount": "0",
       "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
       "csoai_pricing": {
-        "campaign_id": "csoai-launch-30d-20260911",
-        "ends_at": "2026-10-11T00:00:00Z",
+        "campaign_id": null,
         "fresh_compute_excluded": true,
-        "normal_amount_atomic": "20000",
-        "offered_amount_atomic": "10000",
-        "pricing_basis": "PROMO_EXISTING_DATA",
-        "product_id": "csoai.product.issuance",
-        "sku_id": "issuance",
-        "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "reserve"
+        "normal_amount_atomic": "0",
+        "offered_amount_atomic": "0",
+        "pricing_basis": "STANDARD",
+        "product_id": "csoai.product.request_attestation",
+        "sku_id": "request_attestation",
+        "tier": "per_request"
       },
-      "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+      "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion — a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
       "extra": {
         "decimals": 6,
         "name": "USD Coin",
         "symbol": "USDC",
         "version": "2"
       },
-      "maxAmountRequired": "10000",
+      "maxAmountRequired": "0",
       "maxTimeoutSeconds": 300,
       "mimeType": "application/json",
       "network": "eip155:8453",
       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-      "resource": "https://councilof.ai/api/proof?bundle=1",
+      "resource": "https://councilof.ai/api/free-door",
       "scheme": "exact"
     }
   ],
+  "catalog": "https://councilof.ai/api/x402",
   "csoai": {
-    "bazaar_note": "Listing is free; CDP indexes after first settled payment. Live catalog status is UNCHECKABLE until a facilitator settle exists (and CDP EXTENSION-RESPONSES / #2112).",
-    "catalog": "https://councilof.ai/api/x402",
-    "deliverable": "one inclusion proof for the given leaf against the signed public root, with the root and the path — verification of it stays free forever",
-    "free": {
-      "one_inclusion": "/api/proof?sha=<64-hex>"
-    },
-    "free_preview": "/api/proof?sha=<64-hex>",
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
-    "never": [
-      "grade",
-      "rank",
-      "certificate"
-    ],
-    "not_paid_reason": "no x-payment header",
+    "deliverable": "the Bazaar door itself: this resource is free and settles for zero. It exists so an index can discover the rail; it sells nothing and a settlement here buys nothing.",
+    "free_preview": "https://councilof.ai/api/free-door",
     "offer_receipt": {
       "alg": "EdDSA",
       "extension": "offer-receipt",
@@ -56,11 +43,7 @@
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
       "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
-    },
-    "per": "proof-bundle",
-    "schema": "csoai.public-root-proof/0.1",
-    "settle_mcp": "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
-    "verification": "x402 facilitator /verify (fail-closed; unverified receipts are refused)"
+    }
   },
   "error": "Payment required",
   "extensions": {
@@ -68,19 +51,15 @@
       "info": {
         "input": {
           "method": "GET",
-          "queryParams": {
-            "bundle": "1"
-          },
           "type": "http"
         },
         "output": {
           "example": {
-            "kind": "bundle",
-            "merkle_root": "<hex>",
-            "n": 0,
-            "note": "Paid bundle of inclusion proofs. Not a grade.",
-            "proofs": [],
-            "schema": "csoai.public-root-proof/0.1"
+            "board": "https://councilof.ai/api/gspc",
+            "price_usdc": 0,
+            "root": "https://councilof.ai/root.json",
+            "schema": "csoai.free-door/0.1",
+            "verify": "https://councilof.ai/gspc-verify"
           },
           "type": "json"
         }
@@ -93,24 +72,9 @@
             "properties": {
               "method": {
                 "enum": [
-                  "GET",
-                  "HEAD",
-                  "DELETE"
+                  "GET"
                 ],
                 "type": "string"
-              },
-              "queryParams": {
-                "properties": {
-                  "bundle": {
-                    "const": "1",
-                    "description": "Must be 1 to request the paid proof bundle",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "bundle"
-                ],
-                "type": "object"
               },
               "type": {
                 "const": "http",
@@ -125,9 +89,6 @@
           },
           "output": {
             "properties": {
-              "example": {
-                "type": "object"
-              },
               "type": {
                 "type": "string"
               }
@@ -150,7 +111,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wcm9vZiIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc4OTMxNTE3OCwidmVyc2lvbiI6MX0.QSUbgKFAV5ThdBPFtm6gUG2SP8nVIem_IW79EllNBH0VdyqJqCdhNY6iKCiX80Wp0gT1JN8sKkKHr2Un6V0OCQ"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIwIiwiYXNzZXQiOiIweDgzMzU4OWZDRDZlRGI2RTA4ZjRjN0MzMkQ0ZjcxYjU0YmRBMDI5MTMiLCJuZXR3b3JrIjoiZWlwMTU1Ojg0NTMiLCJwYXlUbyI6IjB4MjEyNjg2NDA0QTdEMUUxZkQ4OEYzNWVENjIwMGMzYUY3QTc4YWUzMSIsInJlc291cmNlVXJsIjoiaHR0cHM6Ly9jb3VuY2lsb2YuYWkvYXBpL2ZyZWUtZG9vciIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc4OTMxNTE3NywidmVyc2lvbiI6MX0.lW-HS7lvIRiLxgPjAxxF7sRm-N__mBM-ZwJpwhd3jainz_LP-xj4UaVi47S4tMQc5cnqCsaOr6IWIEOP2YbOCw"
           }
         ]
       },
@@ -189,16 +150,10 @@
     }
   },
   "resource": {
-    "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+    "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion — a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
     "mimeType": "application/json",
-    "serviceName": "CSOAI Proof Bundle",
-    "tags": [
-      "proof",
-      "merkle",
-      "measurement",
-      "attestation"
-    ],
-    "url": "https://councilof.ai/api/proof?bundle=1"
+    "serviceName": "CSOAI Free Door",
+    "url": "https://councilof.ai/api/free-door"
   },
   "x402Version": 2
 }

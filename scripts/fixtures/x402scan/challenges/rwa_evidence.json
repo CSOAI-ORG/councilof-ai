@@ -7,15 +7,15 @@
         "campaign_id": "csoai-launch-30d-20260911",
         "ends_at": "2026-10-11T00:00:00Z",
         "fresh_compute_excluded": true,
-        "normal_amount_atomic": "25000000",
+        "normal_amount_atomic": "20000",
         "offered_amount_atomic": "10000",
         "pricing_basis": "PROMO_EXISTING_DATA",
-        "product_id": "csoai.product.provider_diff_feed",
-        "sku_id": "provider_diff_feed",
+        "product_id": "csoai.product.request_attestation",
+        "sku_id": "request_attestation",
         "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "history_batch"
+        "tier": "per_request"
       },
-      "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.",
+      "description": "A signed XRPL evidence card for RLUSD: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.",
       "extra": {
         "decimals": 6,
         "name": "USD Coin",
@@ -27,21 +27,22 @@
       "mimeType": "application/json",
       "network": "eip155:8453",
       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-      "resource": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "resource": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
       "scheme": "exact"
     }
   ],
   "csoai": {
     "catalog": "https://councilof.ai/api/x402",
-    "deliverable": "every provider-terms diff leaf to date, assembled, with its inclusion proof to the signed public root",
-    "free_preview": "https://councilof.ai/api/feeds/provider-diff",
-    "invoice_alternative": "https://councilof.ai/api/feeds/provider-diff?invoice=gbp&commissioned_by=<org>",
+    "deliverable": "one card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1) — the same schema as the free public-root leaf — canonical ≤3072 bytes, signed when the Pages key is present",
+    "free_preview": "https://councilof.ai/api/rwa/evidence?asset=RLUSD&preview=1",
+    "free_reader": "https://councilof.ai/api/xrpl",
     "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
     "never": [
-      "a grade",
-      "a verdict on any change",
-      "the content of any page",
-      "a place on the board"
+      "rating",
+      "guarantee",
+      "verdict",
+      "rank",
+      "certificate"
     ],
     "not_paid_reason": "no x-payment header",
     "offer_receipt": {
@@ -55,20 +56,14 @@
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
       "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
     },
-    "per": "history-batch",
-    "preview": {
-      "as_of": "2026-09-13T10:19:40Z",
-      "n_diffs_total": 57,
-      "n_targets": 51,
-      "recent_free": "https://councilof.ai/api/feeds/provider-diff"
-    },
+    "per": "asset-request",
     "rail": {
       "facilitator_configured": true,
       "mode": "live",
       "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
       "pay_to_configured": true
     },
-    "schema": "csoai.feeds.provider-diff/0.1"
+    "schema": "csoai.rwa-evidence/0.1"
   },
   "error": "Payment required",
   "extensions": {
@@ -77,17 +72,27 @@
         "input": {
           "method": "GET",
           "queryParams": {
-            "history": "1"
+            "asset": "RLUSD"
           },
           "type": "http"
         },
         "output": {
           "example": {
-            "diffs": [],
-            "kind": "history",
-            "leaves": {},
-            "root": {},
-            "schema": "csoai.feeds.provider-diff/0.1"
+            "payload": {
+              "account_root": {
+                "flags_decoded": {}
+              },
+              "inputs_sha256": "<hex>",
+              "kind": "csoai.eater.xrpl-issuer/0.1",
+              "onchain_obligation": {},
+              "state": "PROBED"
+            },
+            "schema": "https://councilof.ai/schema/card-v0.json",
+            "sha256": "<hex>",
+            "sig_ed25519": "<hex or null>",
+            "subject": "XRPL <SYMBOL> (<issuer>) two-way domain <PASS|FAIL|UNCHECKABLE> + on-chain obligation",
+            "surface": "public.notice",
+            "unmeasured": []
           },
           "type": "json"
         }
@@ -108,17 +113,13 @@
               },
               "queryParams": {
                 "properties": {
-                  "history": {
-                    "const": "1",
-                    "type": "string"
-                  },
-                  "since": {
-                    "description": "ISO-8601 instant; return only diffs newer than this",
+                  "asset": {
+                    "description": "XRPL issued-asset symbol (see /api/xrpl) or issuer r-address",
                     "type": "string"
                   }
                 },
                 "required": [
-                  "history"
+                  "asset"
                 ],
                 "type": "object"
               },
@@ -160,7 +161,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9mZWVkcy9wcm92aWRlci1kaWZmIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzg5MzE1MTc4LCJ2ZXJzaW9uIjoxfQ.71LjmG10AJNho_I6LtCfr7ucJDvmdObUU_FxF1n5vW4MIIUFyD_KLt15LKszbBmawvG-A8IT4a7gO7JhE36sAg"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yd2EvZXZpZGVuY2UiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3ODkzMTUxNzgsInZlcnNpb24iOjF9.D69jVlO8tHeoilx9Ek6YULEV_pcFjV85i8J5C3KSWl4yfW-n8efmu-10TSSxsPD3CBpA74yDk_GreoIHzvxbCg"
           }
         ]
       },
@@ -199,17 +200,17 @@
     }
   },
   "resource": {
-    "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.",
+    "description": "A signed XRPL evidence card for RLUSD: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.",
     "mimeType": "application/json",
-    "serviceName": "CSOAI Provider Diff Feed",
+    "serviceName": "CSOAI RWA Evidence",
     "tags": [
-      "diff",
-      "terms",
-      "model-card",
-      "article-50",
+      "rwa",
+      "xrpl",
+      "evidence",
+      "attestation",
       "x402"
     ],
-    "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
+    "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD"
   },
   "x402Version": 2
 }

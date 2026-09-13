@@ -7,15 +7,15 @@
         "campaign_id": "csoai-launch-30d-20260911",
         "ends_at": "2026-10-11T00:00:00Z",
         "fresh_compute_excluded": true,
-        "normal_amount_atomic": "25000000",
+        "normal_amount_atomic": "20000",
         "offered_amount_atomic": "10000",
         "pricing_basis": "PROMO_EXISTING_DATA",
-        "product_id": "csoai.product.provider_diff_feed",
-        "sku_id": "provider_diff_feed",
+        "product_id": "csoai.product.request_attestation",
+        "sku_id": "request_attestation",
         "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "history_batch"
+        "tier": "per_request"
       },
-      "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.",
+      "description": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.",
       "extra": {
         "decimals": 6,
         "name": "USD Coin",
@@ -27,21 +27,20 @@
       "mimeType": "application/json",
       "network": "eip155:8453",
       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-      "resource": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "resource": "https://councilof.ai/api/request-attestation",
       "scheme": "exact"
     }
   ],
   "csoai": {
     "catalog": "https://councilof.ai/api/x402",
-    "deliverable": "every provider-terms diff leaf to date, assembled, with its inclusion proof to the signed public root",
-    "free_preview": "https://councilof.ai/api/feeds/provider-diff",
-    "invoice_alternative": "https://councilof.ai/api/feeds/provider-diff?invoice=gbp&commissioned_by=<org>",
+    "deliverable": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+    "explainer": "https://councilof.ai/pricing",
     "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
     "never": [
-      "a grade",
-      "a verdict on any change",
-      "the content of any page",
-      "a place on the board"
+      "rank",
+      "certificate",
+      "grade",
+      "score-sale"
     ],
     "not_paid_reason": "no x-payment header",
     "offer_receipt": {
@@ -55,12 +54,18 @@
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
       "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
     },
-    "per": "history-batch",
+    "per": "request",
     "preview": {
-      "as_of": "2026-09-13T10:19:40Z",
-      "n_diffs_total": 57,
-      "n_targets": 51,
-      "recent_free": "https://councilof.ai/api/feeds/provider-diff"
+      "axis": null,
+      "axis_known": null,
+      "cards": [],
+      "corpus_as_of": "2026-08-19T09:24:39.174226+00:00",
+      "free_board": "https://councilof.ai/api/gspc",
+      "free_preview": "https://councilof.ai/api/request-attestation?subject=<id>",
+      "free_verify": "https://councilof.ai/gspc-verify",
+      "read_from": "https://councilof.ai/signed/card-matrix.json",
+      "signed_cards_on_file": 0,
+      "subject": "model-or-subject-id"
     },
     "rail": {
       "facilitator_configured": true,
@@ -68,7 +73,7 @@
       "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
       "pay_to_configured": true
     },
-    "schema": "csoai.feeds.provider-diff/0.1"
+    "schema": "csoai.request-attestation/0.2"
   },
   "error": "Payment required",
   "extensions": {
@@ -77,17 +82,24 @@
         "input": {
           "method": "GET",
           "queryParams": {
-            "history": "1"
+            "subject": "model-or-subject-id"
           },
           "type": "http"
         },
         "output": {
           "example": {
-            "diffs": [],
-            "kind": "history",
-            "leaves": {},
-            "root": {},
-            "schema": "csoai.feeds.provider-diff/0.1"
+            "payload": {
+              "fresh_run": "UNMEASURED",
+              "reserve": [],
+              "status": "COMMISSIONED"
+            },
+            "schema": "https://councilof.ai/schema/card-v0.json",
+            "sig_ed25519": "<hex or null>",
+            "subject": "model-or-subject-id",
+            "surface": "ras.commission",
+            "unmeasured": [
+              "root_inclusion"
+            ]
           },
           "type": "json"
         }
@@ -108,17 +120,17 @@
               },
               "queryParams": {
                 "properties": {
-                  "history": {
-                    "const": "1",
+                  "axis": {
+                    "description": "Optional axis slug; omit for the subject-level commission",
                     "type": "string"
                   },
-                  "since": {
-                    "description": "ISO-8601 instant; return only diffs newer than this",
+                  "subject": {
+                    "description": "Subject to commission (model id, instrument id, or card sha)",
                     "type": "string"
                   }
                 },
                 "required": [
-                  "history"
+                  "subject"
                 ],
                 "type": "object"
               },
@@ -160,7 +172,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9mZWVkcy9wcm92aWRlci1kaWZmIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzg5MzE1MTc4LCJ2ZXJzaW9uIjoxfQ.71LjmG10AJNho_I6LtCfr7ucJDvmdObUU_FxF1n5vW4MIIUFyD_KLt15LKszbBmawvG-A8IT4a7gO7JhE36sAg"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzg5MzE1MTc3LCJ2ZXJzaW9uIjoxfQ.DtunHm4mvTVLpUH9Kb0tiV8cClXdHxJcw9jRklSGmPFKMv2E6_5pbtTf_Ct355hshvsySCaAin5cOjrTLtZ0BA"
           }
         ]
       },
@@ -199,17 +211,16 @@
     }
   },
   "resource": {
-    "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.",
+    "description": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.",
     "mimeType": "application/json",
-    "serviceName": "CSOAI Provider Diff Feed",
+    "serviceName": "CSOAI Request Attest",
     "tags": [
-      "diff",
-      "terms",
-      "model-card",
-      "article-50",
+      "attestation",
+      "ras",
+      "measurement",
       "x402"
     ],
-    "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
+    "url": "https://councilof.ai/api/request-attestation"
   },
   "x402Version": 2
 }

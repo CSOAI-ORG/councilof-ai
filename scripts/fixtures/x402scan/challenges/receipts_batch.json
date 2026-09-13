@@ -1,18 +1,33 @@
 {
   "accepts": [
     {
-      "amount": "100000",
+      "amount": "10000",
       "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "csoai_pricing": {
+        "campaign_id": "csoai-launch-30d-20260911",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true,
+        "normal_amount_atomic": "100000",
+        "offered_amount_atomic": "10000",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "product_id": "csoai.product.receipts_batch",
+        "sku_id": "receipts_batch",
+        "starts_at": "2026-09-11T00:00:00Z",
+        "tier": "per_batch"
+      },
+      "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
       "extra": {
         "decimals": 6,
         "name": "USD Coin",
         "symbol": "USDC",
         "version": "2"
       },
-      "maxAmountRequired": "100000",
+      "maxAmountRequired": "10000",
       "maxTimeoutSeconds": 300,
+      "mimeType": "application/json",
       "network": "eip155:8453",
       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resource": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-13T15%3A44%3A39Z",
       "scheme": "exact"
     }
   ],
@@ -20,7 +35,7 @@
     "catalog": "https://councilof.ai/api/x402",
     "deliverable": "the canonical batch (hashes to preview.batch_sha256) + one signed manifest card-v0 (surface receipts.batch)",
     "explainer": "https://councilof.ai/pricing",
-    "free_preview": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-06T08%3A22%3A25Z&preview=1",
+    "free_preview": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-13T15%3A44%3A39Z&preview=1",
     "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "settlement or payment receipts — none are published (/api/receipts/latest is UNPUBLISHED)",
@@ -28,16 +43,27 @@
       "a grade, a rank, a certificate"
     ],
     "not_paid_reason": "no x-payment header",
+    "offer_receipt": {
+      "alg": "EdDSA",
+      "extension": "offer-receipt",
+      "format": "jws",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "reason": "1 of 1 accepts entries signed",
+      "signed": true,
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    },
     "per": "batch",
     "preview": {
-      "batch_bytes": 530521,
-      "batch_sha256": "4a5570f6a5e2daa0d9e2b3163ae1579d68f7a401cfd9296d2491af2fa97738cc",
+      "batch_bytes": 542400,
+      "batch_sha256": "3a64058fb9de691a2f5186734898ae0d663cf2267ae53b0e058c708cb1ea3118",
       "cap": 200,
       "count": 200,
-      "matched": 1382,
+      "matched": 2265,
       "next_from": "2026-09-02T07:56:40Z",
-      "roots_in_window": 29,
-      "roots_indexed_total": 29,
+      "roots_in_window": 30,
+      "roots_indexed_total": 30,
       "sources": {
         "current_root": "https://councilof.ai/root.json",
         "leaves": "https://councilof.ai/cards-bundle.json",
@@ -57,7 +83,7 @@
       ],
       "window": {
         "from": "2026-01-01T00:00:00Z",
-        "to": "2026-09-06T08:22:25Z"
+        "to": "2026-09-13T15:44:39Z"
       }
     },
     "rail": {
@@ -76,7 +102,7 @@
           "method": "GET",
           "queryParams": {
             "from": "2026-01-01T00:00:00Z",
-            "to": "2026-09-06T08:22:25Z"
+            "to": "2026-09-13T15:44:39Z"
           },
           "type": "http"
         },
@@ -171,10 +197,53 @@
         ],
         "type": "object"
       }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "acceptIndex": 0,
+            "format": "jws",
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZWNlaXB0cy9iYXRjaCIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc4OTMxNTE3OSwidmVyc2lvbiI6MX0.6yF463Z2mGZP3jfMAMkiLG3-r5GmW19hWW-E37uWPDPSZzAa0fUO5vOkvUlDB2S_BGCtDFv5jGawrjUcFWT4Cw"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "offers": {
+            "items": {
+              "properties": {
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "format": {
+                  "const": "jws",
+                  "type": "string"
+                },
+                "signature": {
+                  "description": "JWS compact serialization containing the offer payload",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "offers"
+        ],
+        "type": "object"
+      }
     }
   },
   "resource": {
-    "description": "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly — not a conclusion.",
+    "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
     "mimeType": "application/json",
     "serviceName": "CSOAI Receipts Batch",
     "tags": [
@@ -184,7 +253,7 @@
       "attestation",
       "x402"
     ],
-    "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-06T08%3A22%3A25Z"
+    "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-13T15%3A44%3A39Z"
   },
   "x402Version": 2
 }

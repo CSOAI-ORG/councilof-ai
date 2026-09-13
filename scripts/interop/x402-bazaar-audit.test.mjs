@@ -87,11 +87,11 @@ describe("the Bazaar audit refuses to turn a partial read into a population", ()
     expect(i.ours).toHaveLength(1);
     expect(i.ours[0].resource).toBe("https://councilof.ai/api/free-door");
     expect(i.ours[0].description_chars).toBe(120);
-    expect(i.manifest_declared).toBe(9);
+    expect(i.manifest_declared).toBe(10); // 10 doors since /api/wrapper (2026-09-13)
     expect(i.manifest_indexed).toBe(1);
     expect(i.manifest_current).toEqual([]);
     expect(i.manifest_stale).toEqual(["https://councilof.ai/api/free-door"]);
-    expect(i.manifest_missing).toHaveLength(8);
+    expect(i.manifest_missing).toHaveLength(9); // 10 declared − 1 indexed (free-door) in this fixture
   });
 
   it("an empty result is a claim only because the scan was complete", () => {

@@ -213,6 +213,7 @@ describe("catalog + discovery", () => {
       "data_feed",
       "proof_bundle",
       "rwa_evidence",
+      "wrapper_parity",
       "art50_marking_evidence",
       "provider_diff_feed",
       "receipts_batch",

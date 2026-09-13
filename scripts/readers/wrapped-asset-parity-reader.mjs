@@ -36,6 +36,8 @@ export const CHAINS = {
   base: { rpc: "https://mainnet.base.org", chainId: 8453 },
   optimism: { rpc: "https://mainnet.optimism.io", chainId: 10 },
   arbitrum: { rpc: "https://arb1.arbitrum.io/rpc", chainId: 42161 },
+  // polygon-rpc.com answers 401 without a key since 2026-09; publicnode is keyless.
+  polygon: { rpc: "https://polygon-bor-rpc.publicnode.com", chainId: 137 },
 };
 
 const SEL = { totalSupply: "0x18160ddd", balanceOf: "0x70a08231", decimals: "0x313ce567" };
@@ -50,6 +52,7 @@ const ESCROW = {
   optimism_l1_standard_bridge: "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
   optimism_dai_escrow: "0x467194771dAe2967Aef3ECbEDD3Bf9a310C76C65",
   base_l1_standard_bridge: "0x3154Cf16ccdb4C6d922629664174b904d80F2C35",
+  polygon_pos_erc20_predicate: "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
 };
 
 /**
@@ -80,6 +83,13 @@ export const ROSTER = [
   { id: "usdc:arbitrum", wrapped: { chain: "arbitrum", symbol: "USDC", address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831" },
     canonical: { chain: "ethereum", symbol: "USDC", address: USDC_ETH }, backing_model: "native", escrow: null, escrow_name: null,
     note: "Circle mints USDC natively on Arbitrum One (CCTP). No escrow exists to read; the wrapped supply is read, no parity is claimed." },
+  { id: "usdc.e:polygon", wrapped: { chain: "polygon", symbol: "USDC.e", address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174" },
+    canonical: { chain: "ethereum", symbol: "USDC", address: USDC_ETH }, backing_model: "escrow", escrow: ESCROW.polygon_pos_erc20_predicate, escrow_name: "Polygon PoS bridge ERC20Predicate" },
+  { id: "usdt:polygon", wrapped: { chain: "polygon", symbol: "USDT", address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F" },
+    canonical: { chain: "ethereum", symbol: "USDT", address: USDT_ETH }, backing_model: "native", escrow: ESCROW.polygon_pos_erc20_predicate, escrow_name: "Polygon PoS bridge ERC20Predicate (legacy bridged remainder only)",
+    note: "Tether issues USDT natively on Polygon; the PoS predicate backs only the legacy bridged remainder (escrow ≈1% of supply on 2026-09-13). The wrapped supply is read; no parity is claimed." },
+  { id: "dai:polygon", wrapped: { chain: "polygon", symbol: "DAI", address: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063" },
+    canonical: { chain: "ethereum", symbol: "DAI", address: DAI_ETH }, backing_model: "escrow", escrow: ESCROW.polygon_pos_erc20_predicate, escrow_name: "Polygon PoS bridge ERC20Predicate" },
 ];
 
 const sha256 = (s) => createHash("sha256").update(s).digest("hex");
@@ -111,6 +121,9 @@ async function call(rpc, to, data, blockHex) {
     catch (e) { if (attempt === 1 || !/rate limit|429/i.test(String(e))) throw e; await new Promise((r) => setTimeout(r, 1500)); }
   }
   if (!raw || raw === "0x") throw new Error(`empty eth_call result from ${to}`);
+  // Pace public endpoints: a burst of pins + reads across twelve pairs trips mainnet.base.org's
+  // limiter (seen 2026-09-13, usdc:base UNMEASURED); 200 ms between calls keeps it honest.
+  await new Promise((r) => setTimeout(r, 200));
   return { raw, value: BigInt(raw), raw_sha256: sha256(raw) };
 }
 
