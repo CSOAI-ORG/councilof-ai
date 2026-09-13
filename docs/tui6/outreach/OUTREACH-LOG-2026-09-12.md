@@ -66,3 +66,5 @@
 | #74 Dune dashboard | — | — | NOT DONE (build, not a send) | 120-min build item, queued |
 
 Double-check catches (recorded honestly): TUI-6's planned DefiLlama target "DefiLlama/serverless-sdk" does not exist — rerouted to DefiLlama/peggedassets-server (the actual stablecoin data home). The outreach plan's "47 corrections" was stale — 48 at send time. All claims in every message re-verified against live endpoints within the hour before sending.
+
+Post-send correction (2026-09-13): issue #913 originally described all six table rows as signed, replayable supply measurements. That overstated the evidence lifecycle. The issue was edited in place to separate the signed 425-asset index commitment, the one promoted asset-specific measurement, and unpromoted research observations. The XRPL value `100` is now explicitly identified as the request-limited first `account_lines` page — not a total trust-line count, holder count, or supply figure — and the current XRPL identity reader is accurately stated as 16 instruments / 14 signed identity rows / 0 current holder-or-supply rows measured.
