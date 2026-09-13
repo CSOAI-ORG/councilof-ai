@@ -1,0 +1,32 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "cross-reality",
+    "model": "MiniMaxAI/MiniMax-M2.7",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.3667,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router",
+    "evidence": {
+      "bank_sha256": "9877a2b2f9752f37e00bcc400732ade99ec9f4f8d4f9b066907c588f142fc446",
+      "bank_dataset": "csoai/gspc-xr",
+      "model_hf_revision": "d494266a4affc0d2995ba1fa35c8481cbd84294b",
+      "schema": "csoai.mill-item-evidence/0.1",
+      "items_file": "items-cross-re-b8406e586203.jsonl",
+      "items_sha256": "b8406e5862034dc471e4a6bb33530800f754cf6196302bee44936eaf651ad492"
+    },
+    "run_id": "gha-34764840334"
+  },
+  "id": "b6951be75babb78b0e6d1d7c422213d6b9719069df616b542e8aed9600f9cf42",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1"
+}
