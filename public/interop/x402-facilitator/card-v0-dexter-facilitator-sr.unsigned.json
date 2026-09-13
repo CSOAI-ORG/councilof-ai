@@ -1,0 +1,89 @@
+{
+  "schema": "csoai.card-v0/unsigned",
+  "surface": "x402.facilitator.sr",
+  "subject": "Dexter facilitator \u2014 UNSIGNED SR dry expand",
+  "as_of": "2026-09-13T17:35:36.298798+00:00",
+  "payload": {
+    "surface": "x402.facilitator.sr",
+    "subject": "api.dexter.cash",
+    "status": "UNSIGNED",
+    "sr_results": [
+      {
+        "sr": "SR1",
+        "status": "UNCHECKABLE",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "tamper-requirements-binding",
+        "note": "verify endpoint absent/404"
+      },
+      {
+        "sr": "SR2",
+        "status": "UNCHECKABLE",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "tamper-signature",
+        "note": "verify endpoint absent/404"
+      },
+      {
+        "sr": "SR3",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR4",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR5",
+        "status": "UNCHECKABLE",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "zero-amount-reject",
+        "note": "verify endpoint absent/404"
+      },
+      {
+        "sr": "SR6",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR7",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR8",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      }
+    ],
+    "denominators": {
+      "n_sr": 8,
+      "n_pass": 0,
+      "n_fail": 0,
+      "n_uncheckable": 8
+    },
+    "settle_called": false,
+    "writes_board": false,
+    "separate_from": "catalog.x402.trust.74of100",
+    "board_cite": "22\u00b722\u00b70"
+  },
+  "sha256": "a8909a3d9af2d83b1fe1b58cf01b76cb4b7c21b68ca1a7591176ff3919dee996",
+  "sig_ed25519": null
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "csoai.card-v0/unsigned",
+  "surface": "x402.facilitator.sr",
+  "subject": "OpenX402 facilitator \u2014 UNSIGNED SR dry expand",
+  "as_of": "2026-09-13T17:35:36.298798+00:00",
+  "payload": {
+    "surface": "x402.facilitator.sr",
+    "subject": "facilitator.openx402.ai",
+    "status": "UNSIGNED",
+    "sr_results": [
+      {
+        "sr": "SR1",
+        "status": "UNCHECKABLE",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "tamper-requirements-binding",
+        "note": "invalidReason=address_not_registered confounds method oracle \u2014 not SR-specific reject"
+      },
+      {
+        "sr": "SR2",
+        "status": "UNCHECKABLE",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "tamper-signature",
+        "note": "invalidReason=address_not_registered confounds method oracle \u2014 not SR-specific reject"
+      },
+      {
+        "sr": "SR3",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR4",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR5",
+        "status": "UNCHECKABLE",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "zero-amount-reject",
+        "note": "invalidReason=address_not_registered confounds method oracle \u2014 not SR-specific reject"
+      },
+      {
+        "sr": "SR6",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR7",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      },
+      {
+        "sr": "SR8",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "not-in-named-scope",
+        "note": "out of expand dry scope"
+      }
+    ],
+    "denominators": {
+      "n_sr": 8,
+      "n_pass": 0,
+      "n_fail": 0,
+      "n_uncheckable": 8
+    },
+    "settle_called": false,
+    "writes_board": false,
+    "separate_from": "catalog.x402.trust.74of100",
+    "board_cite": "22\u00b722\u00b70"
+  },
+  "sha256": "c797c1817805824b0c4741fad154b813c9666ddfeeb6207e519973545cc1c6d0",
+  "sig_ed25519": null
+}
