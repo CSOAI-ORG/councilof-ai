@@ -1,0 +1,46 @@
+{
+ "kind": "csoai.corrections-latency/0.1",
+ "as_of": "2026-09-13T08:31:27Z",
+ "source": "https://councilof.ai/api/corrections",
+ "entries": 48,
+ "cadence": {
+  "first_record": "2026-08-19",
+  "latest_record": "2026-09-12",
+  "entries_per_week": {
+   "2026-W34": 15,
+   "2026-W35": 15,
+   "2026-W36": 17,
+   "2026-W37": 1
+  }
+ },
+ "status_classes": {
+  "CORRECTED*": 13,
+  "RECORDED*": 2,
+  "OTHER": 33
+ },
+ "status_field_absent": 1,
+ "evidence_bearing_entries": 1,
+ "consistency": {
+  "duplicate_ids": "none",
+  "non_iso_dates": 0,
+  "entries_newer_than_previous_row (ledger is newest-first; >0 = order violation)": 3,
+  "entries_missing_required_fields": [
+   {
+    "id": "C-2026-0819-13",
+    "missing": [
+     "status"
+    ]
+   }
+  ]
+ },
+ "correction_latency": {
+  "state": "UNMEASURED",
+  "reason": "one date per entry (the record date). error_introduced_at and corrected_at do not exist in the schema, so introduction->correction latency cannot be computed without inventing values, which this lane never does.",
+  "minimal_schema_extension": {
+   "first_observed_at": "nullable ISO-8601 — when the error was first seen, where known",
+   "corrected_at": "nullable ISO-8601 — when the fix landed, where evidenced",
+   "rule": "absent means unknown; never backfill by guessing"
+  }
+ },
+ "scope": "cadence and completeness measurement of the corrections ledger; never a certification"
+}
