@@ -1,0 +1,54 @@
+{
+  "schema": "csoai.interop.x402-facilitator/0.1",
+  "as_of": "2026-09-13T17:37:04Z",
+  "status": "UNSIGNED",
+  "board_cite": "https://councilof.ai/api/gspc",
+  "board_lock": "22 axis \u00b7 22 measured",
+  "writes_board": false,
+  "never_certify": true,
+  "separate_from": "catalog.x402.trust.74of100",
+  "settle_called": false,
+  "subjects": [
+    {
+      "id": "payai",
+      "host": "https://facilitator.payai.network",
+      "card": null,
+      "note": "prior dry under ceo/facilitator-scorecard-2026-09-07 \u2014 not re-landed this PR"
+    },
+    {
+      "id": "goplausible",
+      "host": "https://facilitator.goplausible.xyz",
+      "card": "card-v0-goplausible-facilitator-sr.unsigned.json",
+      "sr1": "PASS",
+      "sr2": "PASS",
+      "sr5": "FAIL"
+    },
+    {
+      "id": "openx402",
+      "host": "https://facilitator.openx402.ai",
+      "card": "card-v0-openx402-facilitator-sr.unsigned.json",
+      "sr1": "UNCHECKABLE",
+      "sr2": "UNCHECKABLE",
+      "sr5": "UNCHECKABLE",
+      "note": "address_not_registered confounds \u2014 never invent PASS"
+    },
+    {
+      "id": "dexter",
+      "host": "https://api.dexter.cash",
+      "card": "card-v0-dexter-facilitator-sr.unsigned.json",
+      "sr1": "UNCHECKABLE",
+      "sr2": "UNCHECKABLE",
+      "sr5": "UNCHECKABLE",
+      "note": "Cannot POST /verify"
+    }
+  ],
+  "files": [
+    "index.json",
+    "README.md",
+    "matrix.json",
+    "capability-probe.json",
+    "card-v0-goplausible-facilitator-sr.unsigned.json",
+    "card-v0-openx402-facilitator-sr.unsigned.json",
+    "card-v0-dexter-facilitator-sr.unsigned.json"
+  ]
+}
