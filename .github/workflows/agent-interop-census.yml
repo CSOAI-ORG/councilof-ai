@@ -7,8 +7,9 @@
 # publish while that shell could not. A producer that depends on a login one
 # machine happens to be holding is not a producer.
 #
-# MANUAL ONLY. workflow_dispatch, no schedule: enabling a schedule is the owner's
-# gate, and this job writes to a public dataset.
+# Daily schedule authorised by the owner on 2026-09-13. Scheduled runs publish
+# the ungraded census to the canonical public dataset; manual runs remain dry by
+# default unless `publish` is explicitly selected.
 #
 # It fails closed. If a source cannot be enumerated the build says so in
 # totals.json rather than publishing a smaller number as if it were the whole
@@ -17,6 +18,8 @@
 name: agent-interop-census
 
 on:
+  schedule:
+    - cron: "13 5 * * *"
   workflow_dispatch:
     inputs:
       publish:
@@ -81,8 +84,16 @@ jobs:
               print("NOTE: registry enumeration incomplete — totals carry the flag and the card says so.")
           PY
 
+      - name: Retain the derived census and totals
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-interop-census-${{ github.run_id }}
+          path: /tmp/census-ds
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Publish
-        if: ${{ inputs.publish }}
+        if: ${{ github.event_name == 'schedule' || inputs.publish }}
         run: |
           hf auth whoami
           hf upload csoai/agent-interop-census /tmp/census-ds . --repo-type dataset \
