@@ -25,7 +25,7 @@ def load(path: Path) -> Any:
     return json.loads(path.read_text())
 
 
-def _next_action(*, measured: bool, anchored: bool, source_registered: bool, deep_state: str) -> str:
+def _next_action(*, measured: bool, anchored: bool, source_registered: bool, deep_state: str, issuer_site: bool) -> str:
     if measured and anchored:
         return "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS"
     if measured:
@@ -34,7 +34,22 @@ def _next_action(*, measured: bool, anchored: bool, source_registered: bool, dee
         return "BUILD_REPRODUCIBLE_CHAIN_MEASUREMENT"
     if source_registered:
         return "RUN_PRIMARY_SOURCE_DEEP_PROBE"
+    if issuer_site:
+        return "REVIEW_ISSUER_SITE_FOR_ATTESTATION"
     return "REGISTER_PRIMARY_SOURCES"
+
+
+# Cadence windows (days) after which a deep-probed attestation report counts as
+# stale. Derived from the issuer's own claimed cadence; unknown cadence is never
+# judged stale.
+CADENCE_STALE_AFTER_DAYS = {
+    "real-time": 2,
+    "daily": 3,
+    "weekly": 10,
+    "monthly": 45,
+    "quarterly": 120,
+    "annual": 400,
+}
 
 
 def build(repo: Path) -> dict[str, Any]:
@@ -61,6 +76,13 @@ def build(repo: Path) -> dict[str, Any]:
         deep_row = deep_rows.get(asset_id) or {}
         source = sources.get(asset_id) or {}
         source_registered = bool(source.get("attestation_page"))
+        issuer_site = source.get("issuer_site")
+        issuer_site_registered = bool(issuer_site)
+        registration_state = str(source.get("registration_state") or (
+            "ATTESTATION_PAGE_REGISTERED" if source_registered else
+            "ISSUER_SITE_REGISTERED" if issuer_site_registered else
+            "NO_SOURCE_LOCATED"
+        ))
         deep_state = str(deep_row.get("measurement_state") or "NOT_SCHEDULED")
         measured = (ready.get("measurement") or {}).get("state") == "MEASURED"
         signed = ready.get("signature_state") == "ASSET_MEASUREMENT_SIGNED_ED25519"
@@ -82,6 +104,7 @@ def build(repo: Path) -> dict[str, Any]:
             "states": {
                 "indexed": True,
                 "primary_source_registered": source_registered,
+                "issuer_site_registered": issuer_site_registered,
                 "deep_probe": deep_state,
                 "measured": measured,
                 "signed": signed,
@@ -91,6 +114,14 @@ def build(repo: Path) -> dict[str, Any]:
                 "asset_specific_x402_settled": settled,
             },
             "primary_source": source.get("attestation_page"),
+            "source_registration": {
+                "state": registration_state,
+                "attestation_page": source.get("attestation_page"),
+                "issuer_site": issuer_site,
+                "source_id": source.get("source_id"),
+                "source_retrieved_at": source.get("source_retrieved_at"),
+                "method_note": source.get("method_note"),
+            },
             "deep_probe_evidence": (
                 f"https://councilof.ai/interop/stablecoin-deep-2026-09/{deep_row.get('mirror')}"
                 if deep_row.get("mirror") else None
@@ -100,6 +131,7 @@ def build(repo: Path) -> dict[str, Any]:
                 anchored=anchored,
                 source_registered=source_registered,
                 deep_state=deep_state,
+                issuer_site=issuer_site_registered,
             ),
             "measurement_contract": {
                 "supply": "one reproducible reader per reported chain at an exact block or ledger",
@@ -114,6 +146,8 @@ def build(repo: Path) -> dict[str, Any]:
     counts = {
         "indexed": len(rows),
         "primary_source_registered": sum(row["states"]["primary_source_registered"] for row in rows),
+        "issuer_site_registered": sum(row["states"]["issuer_site_registered"] for row in rows),
+        "no_source_located": sum(row["source_registration"]["state"] == "NO_SOURCE_LOCATED" for row in rows),
         "deep_probed": sum(row["states"]["deep_probe"] == "DEEP_PROBED" for row in rows),
         "measured": sum(row["states"]["measured"] for row in rows),
         "signed": sum(row["states"]["signed"] for row in rows),
@@ -121,6 +155,29 @@ def build(repo: Path) -> dict[str, Any]:
         "witnessed": sum(row["states"]["witnessed"] for row in rows),
         "anchored": sum(row["states"]["anchored"] for row in rows),
         "asset_specific_x402_settled": sum(row["states"]["asset_specific_x402_settled"] for row in rows),
+    }
+    # Stale/missing-source signals, derived once here from the deep pack.
+    stale = missing_date = missing_auditor = 0
+    for deep_row in deep_rows.values():
+        days = deep_row.get("staleness_days")
+        cadence = deep_row.get("cadence_claimed")
+        if days is not None and cadence in CADENCE_STALE_AFTER_DAYS and days > CADENCE_STALE_AFTER_DAYS[cadence]:
+            stale += 1
+        if deep_row.get("measurement_state") == "DEEP_PROBED":
+            if deep_row.get("latest_report_date") is None:
+                missing_date += 1
+            if deep_row.get("auditor") is None:
+                missing_auditor += 1
+    signals = {
+        "stale_attestation_reports": stale,
+        "staleness_rule": "staleness_days exceeds the issuer's own claimed cadence window (CADENCE_STALE_AFTER_DAYS); unknown cadence is never judged stale",
+        "deep_probed_missing_report_date": missing_date,
+        "deep_probed_missing_auditor": missing_auditor,
+        "no_source_located": counts["no_source_located"],
+        "issuer_site_only_pending_review": sum(
+            row["next_action"] == "REVIEW_ISSUER_SITE_FOR_ATTESTATION" for row in rows
+        ),
+        "note": "Signals are computed from committed artifacts by this builder; they are not hand-typed.",
     }
     action_counts: dict[str, int] = {}
     for row in rows:
@@ -137,6 +194,7 @@ def build(repo: Path) -> dict[str, Any]:
         "writes_board": False,
         "population": len(rows),
         "counts": counts,
+        "signals": signals,
         "next_action_counts": action_counts,
         "rows": rows,
         "truth_rules": [
@@ -176,7 +234,12 @@ def validate(document: dict[str, Any]) -> None:
         if states["anchored"]:
             assert states["measured"] and states["signed"] and states["rooted"] and states["witnessed"]
         if not states["primary_source_registered"]:
-            assert row["next_action"] == "REGISTER_PRIMARY_SOURCES"
+            assert row["next_action"] in ("REGISTER_PRIMARY_SOURCES", "REVIEW_ISSUER_SITE_FOR_ATTESTATION")
+            assert row["next_action"] == "REVIEW_ISSUER_SITE_FOR_ATTESTATION" or not states["issuer_site_registered"]
+        reg = row["source_registration"]
+        assert reg["state"] in ("ATTESTATION_PAGE_REGISTERED", "ISSUER_SITE_REGISTERED", "NO_SOURCE_LOCATED")
+        if reg["state"] == "NO_SOURCE_LOCATED":
+            assert reg["method_note"], "missing-source rows must carry a method note, never a silent blank"
         assert "certif" not in json.dumps(row).lower()
 
 
