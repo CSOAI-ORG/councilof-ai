@@ -8,12 +8,15 @@ We built an independent AI measurement board at councilof.ai. It measures AI mod
 
 Key facts:
 - 22 axes measured, 14 model-comparison + 8 deterministic-facts
-- 335 signed measurement cards (Ed25519, off-device MPC ceremony)
-- 257-card public Merkle root, Rekor-witnessed
-- 425 stablecoins indexed across 211 chains
+- 337 signed measurement cards (Ed25519, off-device OIDC ceremony)
+- 264-card public Merkle root, Rekor-witnessed
+- 1,301-card measurement root (provenance-enriched)
+- 425 stablecoins indexed across 211 chains ($310.79B circulating)
+- 49 public corrections (we fix mistakes publicly)
 - Free verification at councilof.ai/gspc-verify — no account needed
 - MCP server at councilof.ai/mcp (12 tools, 8 free)
-- x402 payment on Base mainnet for paid evidence
+- x402 payment on Base mainnet for paid evidence ($0.02 from 1 external payer)
+- OTS Bitcoin attestations on 6 roots (blocks 965595-966806)
 
 What we don't do:
 - We don't certify, accredit, or issue conformity assessments
