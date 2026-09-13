@@ -146,6 +146,7 @@ FREE_TIER_OP_NOTE: dict[str, str] = {
     "/api/rwa/evidence": "preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
     "/api/art50/marking-evidence": "preview=1 is free unsigned. Paid signed card requires url (HTTP 402).",
     "/api/receipts/batch": "preview=1 is free digest. Paid leaves require from (HTTP 402).",
+    "/api/wrapper": "preview=1 is free unsigned. Paid signed card requires id (HTTP 402).",
 }
 
 
