@@ -597,6 +597,17 @@ def built_files(snap: Path) -> dict[str, bytes]:
     return {p.name: p.read_bytes() for p in sorted(snap.iterdir()) if p.is_file()}
 
 
+def _hf_snapshot_bytes_match(page: str, built: dict[str, bytes]) -> bool:
+    """Byte-strict publish confirmation: the remote SNAPSHOT.json equals the uploaded bytes.
+    as_of equality cannot confirm a re-publish — the previous build may already carry the
+    same as_of (two builds, one root; seen live 2026-09-13)."""
+    try:
+        remote = fetch_ok(f"{page}/resolve/main/{HF_PATH_IN_REPO}/SNAPSHOT.json?download=true", timeout=60)
+    except Exception:  # noqa: BLE001
+        return False
+    return remote == built.get("SNAPSHOT.json")
+
+
 def byte_parity_reason(built: dict[str, bytes], remote: dict[str, bytes]) -> str | None:
     """None iff the remote carries exactly the built bytes, file for file.
 
@@ -693,10 +704,10 @@ def spray_hf(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
         except Exception as e:  # noqa: BLE001
             out.append(result(name, "FAILED", page, detail=f"upload_folder: {e}"))
             continue
-        seen = wait_for(lambda: (remote_snapshot(raw) or {}).get("as_of") == tr["as_of"] and tr["as_of"])
+        seen = wait_for(lambda: _hf_snapshot_bytes_match(page, built))
         out.append(result(name, "PUBLISHED" if seen else "PUBLISHED-UNCONFIRMED",
                           f"{page}/tree/main/{HF_PATH_IN_REPO}", seen or None,
-                          None if seen else f"re-read of {raw} did not show as_of {tr['as_of']} yet"))
+                          None if seen else f"re-read of {raw} did not show the uploaded build's bytes yet"))
     return out
 
 
@@ -787,7 +798,11 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
         if p.returncode != 0:
             return [result("kaggle", "FAILED", page, detail=f"kaggle datasets version: {p.stdout[-500:]} {p.stderr[-500:]}")]
         log(f"    {p.stdout.strip()[-200:]}")
-        seen = wait_for(lambda: (kaggle_public_snapshot().get("as_of") == tr["as_of"]) and tr["as_of"],
+        # Byte-strict confirmation: the OLD archive can already carry the same as_of (two
+        # builds, one root), so waiting on as_of confirms instantly against stale bytes
+        # and the version looks landed when it never propagated (seen live 2026-09-13).
+        built = built_files(snap)
+        seen = wait_for(lambda: byte_parity_reason(built, kaggle_public_files()) is None,
                         tries=12, delay=10)
         if not seen:
             return [result("kaggle", "PUBLISHED-UNCONFIRMED", page,
