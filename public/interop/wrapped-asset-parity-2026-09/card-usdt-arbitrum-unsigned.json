@@ -1,0 +1,67 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "wrapped USDT on arbitrum vs Arbitrum One ERC-20 gateway escrow (legacy bridged remainder only) — UNCHECKABLE_NATIVE_ISSUANCE",
+  "as_of": "2026-09-13T15:35:34.024Z",
+  "source_urls": [
+    "https://arb1.arbitrum.io/rpc",
+    "https://ethereum-rpc.publicnode.com"
+  ],
+  "payload": {
+    "kind": "csoai.wrapper.parity/0.1",
+    "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+    "id": "usdt:arbitrum",
+    "backing_model": "native",
+    "wrapped": {
+      "chain": "arbitrum",
+      "symbol": "USDT",
+      "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      "chainId": 42161,
+      "block": 504774830,
+      "block_hash": "0x810b56f5efc8eda2c67f9d9701373c0d05f4f8e96ffe52813e5f6287d64f50f1",
+      "block_time": 1789312624
+    },
+    "canonical": {
+      "chain": "ethereum",
+      "symbol": "USDT",
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "chainId": 1,
+      "block": 25969364,
+      "block_hash": "0x160d3696c4904ba7474d2d450554a844f70431af2961f22c0aa489be80867b22"
+    },
+    "escrow": "0xcEe284F754E854890e311e3280b767F80797180d",
+    "escrow_name": "Arbitrum One ERC-20 gateway escrow (legacy bridged remainder only)",
+    "note": "Tether issues USDT natively on Arbitrum since 2025; the gateway escrow backs only the legacy bridged remainder. The wrapped supply is read; no parity is claimed.",
+    "reads": {
+      "wrapped_total_supply": {
+        "query": "totalSupply()",
+        "raw": "0x0000000000000000000000000000000000000000000000000002e3376dc674a6",
+        "raw_sha256": "9dd0d4acd05900d0c00cdca9a62eef9365cbb2486ad482e43b3b7ff8538dfdc6",
+        "atomic": "812777157850278",
+        "normalized": "812777157.850278",
+        "decimals": 6
+      }
+    },
+    "escrow_over_wrapped": null,
+    "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
+    "state": "PROBED",
+    "error": null,
+    "fetched_at": "2026-09-13T15:35:34.024Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "unmeasured": [
+      "escrow_balance (natively issued; no escrow exists)"
+    ]
+  },
+  "tags": [
+    "eater:wrapper-parity",
+    "axis:distribution-integrity",
+    "backing:native",
+    "state:UNCHECKABLE_NATIVE_ISSUANCE"
+  ],
+  "unmeasured": [
+    "escrow_balance (natively issued; no escrow exists)"
+  ],
+  "did_intended": "did:web:csoai.org#board-attestation-1",
+  "sha256": "fffe54e8336f2873b0dcf9184d1d77863b80d1d55c1593c7f390dcd03a23e5ae",
+  "sig_ed25519": null
+}
