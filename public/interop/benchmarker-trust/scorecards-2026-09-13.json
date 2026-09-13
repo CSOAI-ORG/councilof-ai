@@ -1,0 +1,63 @@
+{
+  "kind": "csoai.benchmarker-scorecards/0.1",
+  "as_of": "2026-09-13T09:30:00Z",
+  "lane": "TUI-5 — benchmark the benchmarkers (provenance grades)",
+  "doctrine": [
+    "A grade here is a provenance grade about the benchmark, never a safety verdict about a model.",
+    "Every claim below is sourced and checkable; where evidence is absent the cell says so.",
+    "We grade ourselves on the same grid — the GSPC row carries its own known gaps."
+  ],
+  "dimensions": ["freshness", "reproducibility", "provenance", "contamination_disclosure", "model_version_specificity", "correction_behavior", "signature_availability"],
+  "scorecards": [
+    {
+      "benchmark": "MLCommons AILuminate v1.1",
+      "type": "chat-hazard benchmark",
+      "freshness": "v1.1 released 2025-02 (arXiv:2503.05731); versioned releases",
+      "reproducibility": "Practice prompt set public; official set uses rotating reserve prompts — full official run not byte-reproducible by design, and AILuminate says so",
+      "provenance": "STRONG — MLCommons AI Safety working group, published methodology",
+      "contamination_disclosure": "YES — practice/official split with reserve rotation is the published mitigation",
+      "model_version_specificity": "System-under-test identified per run; reference model is a floating baseline, so grades are not comparable across time",
+      "correction_behavior": "Versioned releases (v1.0 → v1.1); errata via MLCommons channels",
+      "signature_availability": "NONE — reports are unsigned; no content addressing",
+      "related_gspc_evidence": "docs/interop/AILUMINATE-IMPORTER-SPEC.md v0.2 — import as ATTACHED evidence, never MEASURED"
+    },
+    {
+      "benchmark": "OWASP Top 10 for LLM Applications 2025",
+      "type": "risk taxonomy — NOT a benchmark",
+      "freshness": "2025 list current (genai.owasp.org)",
+      "reproducibility": "N/A by construction — no denominator, no scorer, no frozen set; anyone presenting it as a measured grade is overclaiming",
+      "provenance": "STRONG — OWASP project governance, documented 2023→2025 revision",
+      "contamination_disclosure": "N/A — no prompt set",
+      "model_version_specificity": "N/A — category-level risk areas",
+      "correction_behavior": "Versioned list revisions with published rationale",
+      "signature_availability": "NONE",
+      "related_gspc_evidence": "public/interop/owasp-llm-mapping.json v0.2 — 1 defensible join (LLM01→jail), 9 UNMAPPED, pinned by test"
+    },
+    {
+      "benchmark": "GSPC 22-axis board (self-scorecard)",
+      "type": "measurement board (this estate)",
+      "freshness": "Live board, 22/22 axes MEASURED at 2026-09-13 (GET /api/gspc, totals derived not typed)",
+      "reproducibility": "Frozen banks public on HF with byte pins; KNOWN GAP (measured 2026-09-06): 0 of 14 allowlisted bank digests reproduced from the published HF bytes — pod graded against rebuilt-from-per-item reconstructions (same substance on 12/14, different bytes). Recorded in docs/operations/BANK-PIN-STRANGER-RECOMPUTABILITY.md; fix is re-deriving pins from published bytes",
+      "provenance": "Signed cards Ed25519, public-root Merkle, Rekor witness, OTS Bitcoin anchor — independently verifiable (verify pages free)",
+      "contamination_disclosure": "Held-back splits exist (e.g. GovBench 237 public + 102 held back); split salt is public by design (stability, not secrecy)",
+      "model_version_specificity": "Weights-join doctrine: subject is model@revision (Hub commit or Ollama manifest digest); 'a name is not a model'. Strengthened 2026-09-13: mill cards now bind model_hf_revision and bank_sha256 (PR #2123)",
+      "correction_behavior": "Append-only corrections ledger; supersession never deletes published cards",
+      "signature_availability": "YES — every card signed, inclusion-provable against the public root",
+      "related_gspc_evidence": "self — the grid is the product"
+    },
+    {
+      "benchmark": "Hosted inference substrates (HF Inference Providers / OpenRouter) used as measurement rails",
+      "type": "measurement substrate, not a benchmark",
+      "freshness": "Continuous; provider availability drifts intraday",
+      "reproducibility": "Provider-side model serving can change quantization/runtime without notice; our cards record route and (from 2026-09-13) model_hf_revision",
+      "provenance": "Provider-attributed per cell (route field on every card)",
+      "contamination_disclosure": "N/A",
+      "model_version_specificity": "Hub commit pinned when resolvable; absent is stated, never invented",
+      "correction_behavior": "Provider-side corrections are not observable; treated as UNCHECKABLE when they matter",
+      "signature_availability": "NONE on the provider side; ours attaches at intake",
+      "related_gspc_evidence": "2026-09-13 canary: openai/gpt-oss-20b continuity cell UNCHECKABLE (groq empty, OpenRouter 402 credits) — provider exhaustion is recorded as a measurement state, not retried into a fake pass"
+    }
+  ],
+  "not": ["a model ranking", "a safety claim", "a certification", "a partnership claim with any listed body"],
+  "verify": "Sources cited inline; GSPC rows verify at https://councilof.ai/gspc-verify"
+}
