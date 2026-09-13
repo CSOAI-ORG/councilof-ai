@@ -1,0 +1,43 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.hf_scanner_gap",
+  "subject": "hf-scanner-gap-analysis",
+  "measured_at": "2026-09-13T05:03:57.346967+00:00",
+  "metrics": {
+    "existing_hf_scanners": [
+      {
+        "name": "safetensors validator",
+        "coverage": "Format safety only (no arbitrary code execution from pickle)"
+      },
+      {
+        "name": "malware scanning",
+        "coverage": "Binary safety only \u2014 embedded malware/payloads"
+      },
+      {
+        "name": "license compliance",
+        "coverage": "Legal compliance only"
+      },
+      {
+        "name": "model card analysis",
+        "coverage": "Documentation quality only"
+      }
+    ],
+    "gap": "NO existing HF scanner assesses AI SAFETY CAPABILITIES (cyber-offense, autonomous replication, persuasion, bias, governance compliance). CSOAI scanner slots in here.",
+    "csoai_scanner": {
+      "format": "HuggingFace Space (Gradio) \u2014 free, visible, composable",
+      "auto_trigger": "Runs automatically on model uploads",
+      "output": "CSOAI Safety Score + signed measurement card as HF model tag/metadata",
+      "user_experience": "Uploader sees: 'CSOAI Safety Score: 18/22 axes. Cyber-offense: 0.7 (HIGH). Governance: 0.9 (GOOD). Full card: [link]'",
+      "distribution": [
+        "HF Space",
+        "Official HF evaluation",
+        "CSOAI badge for model cards",
+        "Methodology paper"
+      ]
+    },
+    "revenue": "Free tier = basic score. Paid tier = full signed card with provenance, historical tracking, compliance mapping.",
+    "first_mover": "No other HF-integrated safety scanner covers governance/compliance axes. First-mover advantage."
+  },
+  "honest_sentence": "HF scanner gap confirmed: existing scanners cover format/binary/legal/documentation only. No safety capability scanning. CSOAI scanner = first-mover Gradio Space + evaluation + badge + paper. 1500+ repos already measured.",
+  "measurement_not_certification": true
+}

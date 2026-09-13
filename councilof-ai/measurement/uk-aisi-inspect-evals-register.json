@@ -1,0 +1,50 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.uk.aisi_inspect_evals_register",
+  "subject": "uk-aisi-inspect-evals-register",
+  "measured_at": "2026-09-13T05:03:57.346967+00:00",
+  "metrics": {
+    "primary_repo": "UKGovernmentBEIS/inspect_ai (2756 stars, MIT)",
+    "register_repo": "UKGovernmentBEIS/inspect_evals (669 stars)",
+    "model_change": "May 8, 2026: Inspect Evals moved from central submissions to DISTRIBUTED REGISTER model",
+    "new_path": "Host eval in external repo \u2192 register via YAML in inspect_evals/register/<eval_name>/eval.yaml",
+    "yaml_required_fields": [
+      "full_title",
+      "common_title",
+      "description",
+      "arxiv",
+      "tasks (name + task_path)",
+      "source (repository_url + repository_commit)"
+    ],
+    "yaml_optional": [
+      "evaluation_report",
+      "metadata",
+      "tags",
+      "contributors"
+    ],
+    "submission_process": [
+      "1. Create Python package with @task-decorated functions (gspc-inspect-evals)",
+      "2. Add pyproject.toml with inspect_ai dependency + [project.entry-points.inspect_ai]",
+      "3. Host on GitHub, commit, pin SHA",
+      "4. Open 'Register Eval Submission' issue on UKGovernmentBEIS/inspect_evals",
+      "5. Bot validates, opens PR, derive metadata from arXiv paper",
+      "6. Upload log files of two model eval runs",
+      "7. Maintainer verifies before merge"
+    ],
+    "automated_checks": [
+      "Size \u226410 per PR",
+      "Repository public",
+      "Commit pinned (40-char SHA)",
+      "Duplicate check",
+      "Task function exists",
+      "Runnability",
+      "Description accuracy",
+      "Security scan"
+    ],
+    "contribution_policy": "Issue-first: need accepted issue before PR. Qualified contributors can PR directly.",
+    "extension_alternative": "Standalone package + one-line PR to extensions listing at inspect.aisi.org.uk/extensions.html",
+    "csoai_implementation": "Create gspc-inspect-evals package with @task wrappers for all 22 GSPC axes. Publish on GitHub. Register in inspect_evals."
+  },
+  "honest_sentence": "CORRECTED PATH: Since May 2026, AISI Inspect uses a DISTRIBUTED REGISTER model. Build gspc-inspect-evals package with @task functions, register via YAML in UKGovernmentBEIS/inspect_evals. Need arXiv paper + 2 model run logs.",
+  "measurement_not_certification": true
+}

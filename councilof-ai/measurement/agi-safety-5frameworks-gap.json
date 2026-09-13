@@ -1,0 +1,52 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.agi_safety.frameworks_gap",
+  "subject": "agi-safety-5frameworks-gap",
+  "measured_at": "2026-09-13T05:03:57.346967+00:00",
+  "metrics": {
+    "frameworks_analyzed": 5,
+    "common_flaw": "The AI builder also assesses its own safety. No independent, neutral, measurement plane with signed audit artifacts that multiple frameworks can consume.",
+    "frameworks": {
+      "anthropic_rsp": {
+        "name": "Anthropic Responsible Scaling Policy",
+        "status": "Active",
+        "mechanism": "AI Safety Levels (ASL-1 through ASL-4) with capability thresholds",
+        "flaw": "Self-assessed by Anthropic. No independent third-party measurement plane.",
+        "csoai_gap_filled": "Independent measurement of ASL levels \u2014 signed cards showing whether thresholds truly met"
+      },
+      "google_deepmind_fsf": {
+        "name": "Google DeepMind Frontier Safety Framework",
+        "status": "Active (late 2024)",
+        "mechanism": "Critical Capability Levels for autonomous replication, cyber-offense, bioweapon risk",
+        "flaw": "No public audit protocol. Internal-only assessment.",
+        "csoai_gap_filled": "Public, verifiable measurement of CCLs \u2014 anyone can check Google's claims"
+      },
+      "openai_preparedness": {
+        "name": "OpenAI Preparedness Framework",
+        "status": "Active (updated 2024)",
+        "mechanism": "Risk scores: cyber, CBRN, persuasion, model autonomy. Low/Med/High/Critical.",
+        "flaw": "Preparedness team reports to CEO. Not structurally independent. Score methodology partially proprietary.",
+        "csoai_gap_filled": "Independent reproduction of OpenAI's risk scores with public methodology"
+      },
+      "uk_aisi": {
+        "name": "UK AI Safety Institute",
+        "status": "Active (since Nov 2023)",
+        "mechanism": "Government-backed pre-deployment testing of frontier models",
+        "flaw": "Limited to frontier model evaluations (not continuous monitoring). No open measurement standard. Government-funded, not neutral-private.",
+        "csoai_gap_filled": "Private-sector neutral complement \u2014 continuous monitoring + open standard + non-government"
+      },
+      "nist_ai_rmf": {
+        "name": "NIST AI Risk Management Framework 1.0",
+        "status": "Active (Jan 2023, supplementary 2025)",
+        "mechanism": "4 functions: Govern, Map, Measure, Manage. Voluntary. Cross-sector taxonomy.",
+        "flaw": "Framework/taxonomy only. No automated measurement, no signed outputs, no threshold enforcement.",
+        "csoai_gap_filled": "Maps CSOAI's 22 axes onto NIST's Govern-Map-Measure-Manage \u2014 automatic, signed, verifiable"
+      }
+    },
+    "market_gap": "CSOAI fills the gap: independent, neutral, signed measurement plane that all 5 frameworks can consume",
+    "competitive_moat": "1500+ HuggingFace repos measured, 22 axes, signed cards, Bitcoin-anchored merkle root, GSPC board at councilof.ai. No one else has this.",
+    "positioning": "CSOAI is NOT competing with Anthropic/DeepMind/OpenAI \u2014 CSOAI is the INDEPENDENT MEASUREMENT LAYER they all need but none will build (because it must be neutral)"
+  },
+  "honest_sentence": "All 5 AGI safety frameworks (Anthropic RSP, DeepMind FSF, OpenAI Preparedness, UK AISI, NIST AI RMF) share the same flaw: AI builder assesses own safety. CSOAI's independent measurement plane fills this gap \u2014 the scale-ai-of-AI-safety (but neutral, never conflicted).",
+  "measurement_not_certification": true
+}
