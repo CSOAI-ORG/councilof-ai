@@ -51,7 +51,7 @@
       "verified_by": "live proof verification, 2026-09-12T12:05Z"
     },
     "doctrine_lessons_2026_09_12": [
-      "OTS upgrade PRs must resync the witness sidecar in the same PR via scripts/witness_public_root.py (not witness-root.py — its output predates the gate contract).",
+      "OTS upgrade PRs must resync the witness sidecar in the same PR via scripts/witness_public_root.py (not witness-root.py \u2014 its output predates the gate contract).",
       "The root-witness release gate and stablecoin readiness gate derive truth from proof bytes; hardcoded status strings rot within hours.",
       "Pod rootfs is ephemeral: after any pod restart run bash /workspace/pod-bootstrap.sh (on the persistent volume)."
     ]
@@ -64,7 +64,16 @@
         "public/interop/*.ots (upgrade passes)",
         "root.json / root-witness facts"
       ],
-      "status": "ACTIVE — 257-leaf confirmed root live; later 257-leaf candidate remains Bitcoin-pending and must not replace it"
+      "status": "ACTIVE \u2014 257-leaf confirmed root live; later 257-leaf candidate remains Bitcoin-pending and must not replace it",
+      "card_root": {
+        "leaves": 1301,
+        "skipped": 251,
+        "merkle_root": "569fd89494194be9183e1532e722988a5f31e35193715e5e6295786bbe66301f",
+        "as_of": "2026-09-13T04:58:49Z",
+        "pr": 2106,
+        "note": "Includes80 provenance-enriched mill cards from PR #1888"
+      },
+      "provenance_status": "ACHIEVED \u2014 card root includes provenance-enriched cards"
     },
     "TUI2": {
       "objective": "425-stablecoin canonical evidence and promotion",
