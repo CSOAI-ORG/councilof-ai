@@ -11,6 +11,17 @@ no bytecode there. Any mixed/error state is ``UNCHECKABLE``.
 
 The output measures registry events only. Registration is not evidence of an
 agent's quality, safety, ownership, activity, or endorsement.
+
+EMPTY RESULT IS NOT ABSENCE — measured incident 2026-09-12: rpc.flashbots.net
+passed chain-id, finality-pin, getCode, and every log-shape check while
+silently returning 8 events for a range that a receipt-verified, archive-
+complete endpoint (Tenderly public gateway) proves contains 50,783. A node
+with a partially pruned log index answers `[]` without error. The counter
+against this class is the KNOWN-EVENT INTEGRITY ANCHOR below: a
+receipt-verified (block, tx) pair per chain; before an endpoint's scan is
+trusted it must return that exact event in that exact block when the block
+is inside the scan range. flashbots fails the anchor on full-history scans
+and is demoted, not deleted — the incident is documented in its comment.
 """
 from __future__ import annotations
 
@@ -27,17 +38,41 @@ IDENTITY_REGISTRY = "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
 
 CHAINS = [
     {"chain": "ethereum", "chain_id": 1,
-     "rpcs": ["https://rpc.flashbots.net", "https://eth.drpc.org"],
+     # Tenderly public gateway: proven archive-complete (returned the anchor event
+     # flashbots missed; 50,783 events full-history, 2026-09-12). 1k-block chunks.
+     # flashbots: SILENTLY INCOMPLETE historical log index — measured 2026-09-12
+     # (8 of 50,783 events; receipt-verified anchor event absent from its answers).
+     # Retained only for windows where the integrity anchor can check it.
+     "rpcs": ["https://gateway.tenderly.co/public/mainnet", "https://rpc.flashbots.net"],
      "floor_block": 24_339_000, "baseline": 25_000},
     {"chain": "base", "chain_id": 8453,
-     "rpcs": ["https://mainnet.base.org", "https://base.gateway.tenderly.co"],
+     "rpcs": ["https://base.gateway.tenderly.co", "https://mainnet.base.org"],
      "floor_block": 41_663_700, "baseline": 17_000},
     {"chain": "bsc", "chain_id": 56,
+     # 48.club serves only the last ~984k blocks (pruning boundary measured
+     # 2026-09-12); deep history returns "header not found". BSC full history
+     # remains UNCHECKABLE permissionlessly: publicnode 403s getLogs, the
+     # dataseed family refuses even 500-block ranges. Path: BscScan-family key
+     # or an own archive node (owner decision).
      "rpcs": ["https://rpc-bsc.48.club", "https://bsc-rpc.publicnode.com"],
      "floor_block": 79_027_200, "baseline": 5_000},
 ]
 
 REGISTERED_TOPIC = "ca52e62c367d81bb2e328eb795f7c7ba24afb478408a26c0e201d155c449bc4a"
+
+# Known-event integrity anchors: receipt-verified (block, tx) pairs, one per
+# chain, each confirmed via eth_getTransactionReceipt 2026-09-12 (status=1, a
+# Registered log at the registry address in that exact block). An endpoint
+# that cannot return the anchor event when its block is inside the scan range
+# has a silently-incomplete index and is never trusted for that scan.
+KNOWN_EVENTS = {
+    "ethereum": {"block": 25_883_771,
+                 "tx": "0x335580236be755ca8a81d4f2b475ff92a13d5e847324af844fff86b3fbf1f88b"},
+    "base": {"block": 51_210_127,
+             "tx": "0xb691ea1d0d9896484bd22bbb4d6deb4f60a1024a772792cc5e259e76d4f6f0db"},
+    "bsc": {"block": 121_474_133,
+            "tx": "0xf6b252be793676c3e1b2210f4a25ad0b654c10fd38b43ad246f96b08ca58ebb3"},
+}
 
 
 def registered_topic() -> str:
@@ -138,6 +173,30 @@ def _validated_logs(logs, topic0: str, start: int, end: int) -> int:
     return len(logs)
 
 
+def _integrity_anchor_check(rpc: str, chain_name: str, topic0: str,
+                            start: int, stop: int) -> Optional[str]:
+    """Known-event anchor: if the anchor block is inside [start, stop], the
+    endpoint MUST return that exact event in that exact block. Returns None on
+    pass, or a refusal reason. If the anchor is outside the scan range the
+    check cannot run — that is reported by the caller, not hidden."""
+    anchor = KNOWN_EVENTS.get(chain_name)
+    if anchor is None:
+        return None  # no anchor defined for this chain
+    blk = anchor["block"]
+    if not (start <= blk <= stop):
+        return None
+    logs = rpc_call(rpc, "eth_getLogs", [{
+        "address": IDENTITY_REGISTRY, "topics": ["0x" + topic0],
+        "fromBlock": hex(blk), "toBlock": hex(blk),
+    }], timeout=45)
+    for event in logs:
+        if (event.get("transactionHash") or "").lower() == anchor["tx"].lower():
+            return None
+    return (f"integrity anchor failed: endpoint returned {len(logs)} Registered "
+            f"events for known-event block {blk} but not receipt-verified tx "
+            f"{anchor['tx'][:18]}… — index silently incomplete for this range")
+
+
 def census_chain(chain: dict, topic0: str, as_of: str, delay: float = 0.05,
                  recent_blocks: Optional[int] = None) -> dict:
     row = {
@@ -206,6 +265,20 @@ def census_chain(chain: dict, topic0: str, as_of: str, delay: float = 0.05,
         except Exception as exc:
             failures.append(f"{rpc}: identity/pin refusal: {type(exc).__name__} {str(exc)[:100]}")
             continue
+        try:
+            refusal = _integrity_anchor_check(rpc, chain["chain"], topic0,
+                                              start, pinned["number"])
+        except Exception as exc:
+            refusal = f"anchor check error: {type(exc).__name__} {str(exc)[:80]}"
+        if refusal:
+            failures.append(f"{rpc}: {refusal}")
+            continue
+        anchor = KNOWN_EVENTS.get(chain["chain"])
+        if anchor and not (start <= anchor["block"] <= pinned["number"]):
+            row["anchor_note"] = (
+                "known-event anchor block is outside this scan range; endpoint "
+                "completeness for this scan is UNVERIFIED (no silent-[] trap check)"
+            )
         chunk = 10_000
         retries = 0
         segment_start = cursor
@@ -312,3 +385,166 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+# ---------------------------------------------------------------------------
+# CORRECTED LIVE MEASUREMENT (2026-09-12, tool v0.2 + integrity anchors).
+# $ uv run python3 scripts/erc8004_census.py --delay 0.1
+# ---------------------------------------------------------------------------
+# {
+#  "kind": "csoai.erc8004-census/0.2",
+#  "as_of": "2026-09-12T16:31:57Z",
+#  "registered_topic0": "0xca52e62c367d81bb2e328eb795f7c7ba24afb478408a26c0e201d155c449bc4a",
+#  "scope": "public Registered-event counts only; never an agent verdict or certification",
+#  "rows": [
+#   {
+#    "chain": "ethereum",
+#    "chain_id": 1,
+#    "contract": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+#    "from_block": 24339000,
+#    "to_block": 25962471,
+#    "to_block_hash": "0x4734c823202e78ab404af6131fa3aa3f89b839ae1a456f6553f31356a4b66ca6",
+#    "finality_tag": "finalized",
+#    "registrations": 50783,
+#    "as_of": "2026-09-12T16:31:57Z",
+#    "method": "eth_chainId; eth_getBlockByNumber(finalized then safe); block hash pin; eth_getCode at pinned block; chunked eth_getLogs over Registered topic0",
+#    "endpoint_probes": [
+#     {
+#      "rpc": "https://gateway.tenderly.co/public/mainnet",
+#      "chain_id": 1,
+#      "finality": {
+#       "tag": "finalized",
+#       "number": 25962471,
+#       "hash": "0x4734c823202e78ab404af6131fa3aa3f89b839ae1a456f6553f31356a4b66ca6"
+#      },
+#      "code_present": true
+#     },
+#     {
+#      "rpc": "https://rpc.flashbots.net",
+#      "chain_id": 1,
+#      "finality": {
+#       "tag": "finalized",
+#       "number": 25962471,
+#       "hash": "0x4734c823202e78ab404af6131fa3aa3f89b839ae1a456f6553f31356a4b66ca6"
+#      },
+#      "code_present": true
+#     }
+#    ],
+#    "rpc_segments": [
+#     {
+#      "rpc": "https://gateway.tenderly.co/public/mainnet",
+#      "from_block": 24339000,
+#      "to_block": 25962471
+#     }
+#    ],
+#    "status": "MEASURED",
+#    "baseline_delta": {
+#     "baseline_2026_09_11_brief_approx": 25000,
+#     "observed_minus_baseline": 25783,
+#     "note": "baseline is approximate prior context, not a measurement by this tool"
+#    }
+#   },
+#   {
+#    "chain": "base",
+#    "chain_id": 8453,
+#    "contract": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+#    "from_block": 41663700,
+#    "to_block": 51220190,
+#    "to_block_hash": "0xbf7aa7e572251d1212da0c49a43a5f743e98d09b74c80de0b07fa36c8cc0df67",
+#    "finality_tag": "finalized",
+#    "registrations": 86263,
+#    "as_of": "2026-09-12T16:31:57Z",
+#    "method": "eth_chainId; eth_getBlockByNumber(finalized then safe); block hash pin; eth_getCode at pinned block; chunked eth_getLogs over Registered topic0",
+#    "endpoint_probes": [
+#     {
+#      "rpc": "https://base.gateway.tenderly.co",
+#      "chain_id": 8453,
+#      "finality": {
+#       "tag": "finalized",
+#       "number": 51220190,
+#       "hash": "0xbf7aa7e572251d1212da0c49a43a5f743e98d09b74c80de0b07fa36c8cc0df67"
+#      },
+#      "code_present": true
+#     },
+#     {
+#      "rpc": "https://mainnet.base.org",
+#      "chain_id": 8453,
+#      "finality": {
+#       "tag": "finalized",
+#       "number": 51220190,
+#       "hash": "0xbf7aa7e572251d1212da0c49a43a5f743e98d09b74c80de0b07fa36c8cc0df67"
+#      },
+#      "code_present": true
+#     }
+#    ],
+#    "rpc_segments": [
+#     {
+#      "rpc": "https://base.gateway.tenderly.co",
+#      "from_block": 41663700,
+#      "to_block": 51220190
+#     }
+#    ],
+#    "status": "MEASURED",
+#    "baseline_delta": {
+#     "baseline_2026_09_11_brief_approx": 17000,
+#     "observed_minus_baseline": 69263,
+#     "note": "baseline is approximate prior context, not a measurement by this tool"
+#    }
+#   },
+#   {
+#    "chain": "bsc",
+#    "chain_id": 56,
+#    "contract": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+#    "from_block": 79027200,
+#    "to_block": 121500166,
+#    "to_block_hash": "0x08441cbc69f0e12e666860ef6a3b28c582590e3b89cf70519d105bb12dfba7a4",
+#    "finality_tag": "finalized",
+#    "registrations": null,
+#    "as_of": "2026-09-12T16:31:57Z",
+#    "method": "eth_chainId; eth_getBlockByNumber(finalized then safe); block hash pin; eth_getCode at pinned block; chunked eth_getLogs over Registered topic0",
+#    "endpoint_probes": [
+#     {
+#      "rpc": "https://rpc-bsc.48.club",
+#      "chain_id": 56,
+#      "finality": {
+#       "tag": "finalized",
+#       "number": 121500166,
+#       "hash": "0x08441cbc69f0e12e666860ef6a3b28c582590e3b89cf70519d105bb12dfba7a4"
+#      },
+#      "code_present": true
+#     },
+#     {
+#      "rpc": "https://bsc-rpc.publicnode.com",
+#      "chain_id": 56,
+#      "finality": {
+#       "tag": "finalized",
+#       "number": 121500167,
+#       "hash": "0x628a986028d075e770c52a1c4bca0e0f19487cd4d7c705af0377eb245b552e65"
+#      },
+#      "code_present": true
+#     }
+#    ],
+#    "rpc_segments": [],
+#    "status": "UNCHECKABLE",
+#    "reason": "all identity-checked endpoints exhausted at block 79027199 of pinned 121500166: https://rpc-bsc.48.club: scan stopped before 79027200: RuntimeError eth_getLogs RPC error -32000: header not found | https://bsc-rpc.publicnode.com: anchor check error: HTTPError HTTP Error 403: Forbidden",
+#    "baseline_delta": {
+#     "baseline_2026_09_11_brief_approx": 5000,
+#     "observed_minus_baseline": null,
+#     "note": "withheld because the row is a window, absence, or uncheckable"
+#    }
+#   }
+#  ]
+# }
+#
+# Provenance reconciliation (registry singleton 0x8004A169...9a432):
+#   - Etherscan: ERC1967Proxy, contract creation at ETH block 24,339,871.
+#   - First Registered event measured at ETH block 24,339,925 — 54 blocks after
+#     creation; the singleton's history is continuous from deployment.
+#   - ETH 50,783 vs the 2026-09-11 brief's ~25k baseline: baseline is stale or
+#     refers to earlier/non-singleton registries; the count above is the
+#     canonical singleton, anchor-checked.
+#   - Base: 86,263 (Tenderly, anchor-checked) reproduces 86,149 measured six
+#     hours earlier via mainnet.base.org — two independent providers agree.
+#   - BSC: full history UNCHECKABLE permissionlessly (see CHAINS comment);
+#     recent-window mode measured 175 registrations in 50k blocks (48.club).
+#   - Anchor txs (public receipts): ETH 0x335580236be7…f1f88b @ 25,883,771;
+#     Base 0xb691ea1d0d98…d4f6f0db @ 51,210,127; BSC 0xf6b252be7936…a58ebb3 @ 121,474,133.
