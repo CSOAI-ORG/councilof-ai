@@ -1,0 +1,105 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.github.workflow_health",
+  "subject": "wf-health-20260913T0656",
+  "measured_at": "2026-09-13T06:56:16.364198Z",
+  "metrics": {
+    "total_workflows": 31,
+    "flappy_workflows": 1,
+    "broken_workflows": 5,
+    "healthy_workflows": 24,
+    "broken": [
+      {
+        "workflow": "MEOK OS \u2014 E2E matrix",
+        "success": 0,
+        "failure": 10,
+        "cancelled": 0,
+        "success_rate_pct": 0.0,
+        "last_runs": [
+          "failure",
+          "failure",
+          "failure",
+          "failure",
+          "failure"
+        ]
+      },
+      {
+        "workflow": "sovereign-town-sim-matrix",
+        "success": 0,
+        "failure": 10,
+        "cancelled": 0,
+        "success_rate_pct": 0.0,
+        "last_runs": [
+          "failure",
+          "failure",
+          "failure",
+          "failure",
+          "failure"
+        ]
+      },
+      {
+        "workflow": "CodeQL + dependency review",
+        "success": 0,
+        "failure": 7,
+        "cancelled": 0,
+        "success_rate_pct": 0.0,
+        "last_runs": [
+          "failure",
+          "failure",
+          "failure",
+          "failure",
+          "failure"
+        ]
+      },
+      {
+        "workflow": "Conventional commits",
+        "success": 1,
+        "failure": 3,
+        "cancelled": 0,
+        "success_rate_pct": 25.0,
+        "last_runs": [
+          "success",
+          "failure",
+          "failure",
+          "failure"
+        ]
+      },
+      {
+        "workflow": "Deploy to Vercel",
+        "success": 3,
+        "failure": 7,
+        "cancelled": 0,
+        "success_rate_pct": 30.0,
+        "last_runs": [
+          "failure",
+          "failure",
+          "failure",
+          "failure",
+          "failure"
+        ]
+      }
+    ],
+    "flappy": [
+      {
+        "workflow": "ci",
+        "success": 7,
+        "failure": 0,
+        "cancelled": 3,
+        "success_rate_pct": 70.0,
+        "last_runs": [
+          "success",
+          "success",
+          "success",
+          "success",
+          "cancelled"
+        ]
+      }
+    ],
+    "auto_churn": true,
+    "miner_version": "workflow-health-1"
+  },
+  "honest_sentence": "Workflow health: 31 workflows, 1 flappy.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true
+}
