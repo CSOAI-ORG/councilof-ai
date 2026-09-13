@@ -35,7 +35,13 @@ name: pr-gates
 on:
   pull_request:
     branches: [master]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "PR number to scope against (bot-checks-sweeper). Empty = run everything."
+        type: string
+        required: false
+        default: "" 
 
 # Supersede a lane's own older run; never cancel another lane's.
 concurrency:
@@ -79,7 +85,7 @@ jobs:
         id: scope
         env:
           GH_TOKEN: ${{ github.token }}
-          PR: ${{ github.event.pull_request.number }}
+          PR: ${{ github.event.pull_request.number || github.event.inputs.pr }}
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
