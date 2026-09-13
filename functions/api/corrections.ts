@@ -550,16 +550,38 @@ async function sha256Hex(s: string): Promise<string> {
 }
 
 export const onRequestGet: PagesFunction = async () => {
+  // TUI-4 (2026-09-13): correction latency, honestly bounded. Entries MAY now carry an
+  // optional `detected_at` ISO date; latency = date − detected_at. Legacy entries predate
+  // the field and count as UNMEASURED — never inferred from entry prose. Computed at
+  // request time in the UNSIGNED wrapper (alongside signature_state), so the signed
+  // object and its canonical id are untouched.
+  const entries = LEDGER.corrections as Array<{ date?: unknown; detected_at?: unknown }>;
+  const pairs = entries
+    .filter((c) => typeof c.date === "string" && typeof (c as { detected_at?: unknown }).detected_at === "string")
+    .map((c) =>
+      (Date.parse(c.date as string) - Date.parse((c as { detected_at?: string }).detected_at as string)) / 86400000,
+    )
+    .filter((n) => Number.isFinite(n) && n >= 0)
+    .sort((a, b) => a - b);
+  const correctionLatency = {
+    computable: pairs.length,
+    unmeasured: entries.length - pairs.length,
+    ...(pairs.length ? { median_days: pairs[Math.floor(pairs.length / 2)] } : {}),
+    field: "detected_at (optional per entry, added 2026-09-13)",
+    note: "Measured only where both dates are explicit fields; never inferred from prose.",
+  };
+
   const body = { ...LEDGER } as Record<string, unknown>;
   delete body.signature;
   const canonical = canonJson(body);
   const cid = await sha256Hex(canonical);
   const embeddedId = (LEDGER.signature as { id?: string } | undefined)?.id ?? null;
   const signatureState = embeddedId && cid === embeddedId ? "VALID" : "STALE";
-  const out = signatureState === "VALID"
-    ? LEDGER
-    : {
-        ...LEDGER,
+  const out0 =
+    signatureState === "VALID"
+      ? LEDGER
+      : {
+          ...LEDGER,
         signature_state: "STALE",
         note:
           "Signature is stale because the ledger was appended after signing. A stale signature is a " +
@@ -572,6 +594,7 @@ export const onRequestGet: PagesFunction = async () => {
           "owner-supervised re-sign.",
         fix_requires: "estate signing key (not in repo)",
       };
+  const out = { ...out0, correction_latency: correctionLatency };
   return new Response(JSON.stringify(out, null, 2), {
     headers: {
       "content-type": "application/json",
