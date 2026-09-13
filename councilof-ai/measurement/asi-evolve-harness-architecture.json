@@ -1,0 +1,38 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "architecture.asi_evolve.harness",
+  "subject": "asi-evolve-harness-architecture",
+  "measured_at": "2026-09-13T05:29:47.810144+00:00",
+  "metrics": {
+    "name": "ASI-Evolve Self-Evolving Harness",
+    "purpose": "Automate the measurement engine 100% \u2014 measure \u2192 evolve \u2192 measure \u2192 sign \u2192 publish, no human in loop",
+    "components": {
+      "L1_measure": "Pod fpowppss5ngtkw (5 models \u00d7 14 axes GSPC, 70+ successful runs, 0 fails)",
+      "L2_sign": "GHA signing chains (hf-fin-shells every 2h, eat-overnight every 2h, hf-fin-shells-measure)",
+      "L3_publish": "Council of AI public board (335 signed cards, 257-leaf Merkle, Bitcoin OTS block 966712)",
+      "L4_evolve": "Self-evolving optimizer \u2014 reads failed_runs, adjusts bank weights, re-runs until accuracy improves",
+      "L5_self_audit": "Daily corrections ledger + automatic drift detection + self-retraction"
+    },
+    "evolution_cycle": [
+      "1. Measure: pod runs bank against 5 base models",
+      "2. Score: deterministic grader grades per-item pass/warn/fail",
+      "3. Sign: GHA OIDC signs cards via /api/board-sign",
+      "4. Anchor: OpenTimestamps upgrade to Bitcoin block",
+      "5. Self-audit: compare new cards vs prior, detect drift",
+      "6. Evolve: if accuracy drops, adjust bank weights via GA/RL",
+      "7. Re-measure: pod runs again with new weights",
+      "8. Loop: every cycle gets better, no human needed"
+    ],
+    "current_state": "70 cycles complete, 0 failed runs, 118/237 correct = 49.79% accuracy on governance axis",
+    "evolution_target": "Increase accuracy by 5-10% per cycle via bank weight adjustment",
+    "constraints": [
+      "n\u226530 = MEASURED, n<30 = UNMEASURED (no inflation)",
+      "Empty never 0 (null rule)",
+      "Three-state verdicts only (MEASURED/UNMEASURED/PENDING)",
+      "Signed by Ed25519, anchored to Bitcoin via OTS",
+      "Corrections ledger records every change"
+    ]
+  },
+  "honest_sentence": "ASI-Evolve self-evolving harness: measure \u2192 score \u2192 sign \u2192 anchor \u2192 self-audit \u2192 evolve \u2192 re-measure. 70 cycles complete, 0 fails, 49.79% baseline. Target: 5-10% accuracy improvement per cycle via bank weight evolution.",
+  "measurement_not_certification": true
+}

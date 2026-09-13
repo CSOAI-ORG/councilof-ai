@@ -1,0 +1,31 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "architecture.asi_evolve.auto_publish",
+  "subject": "auto-publish-pipeline",
+  "measured_at": "2026-09-13T05:29:47.810144+00:00",
+  "metrics": {
+    "name": "Auto-publish pipeline",
+    "publish_targets": [
+      "Council of AI public board (councilof.ai)",
+      "RSS feed (councilof.ai/feed.xml)",
+      "Sitemap (councilof.ai/sitemap.xml)",
+      "GitHub Pages (CSOAI-ORG/councilof-ai)",
+      "HuggingFace datasets (csoai/runpod-gspc-intake)",
+      "PyPI packages (570+ published)",
+      "x402 catalog (councilof.ai/.well-known/x402.json)",
+      "MCP server tools/list (12 tools)"
+    ],
+    "automation": [
+      "Every new signed card \u2192 auto-publish to all 8 targets",
+      "Every root upgrade \u2192 new Merkle root + OTS proof",
+      "Every correction \u2192 corrections ledger + auto-archive superseded"
+    ],
+    "verification": [
+      "After publish, re-fetch from each target and verify card hash matches",
+      "If mismatch, rollback + alert",
+      "Every publish produces a publish_receipt card"
+    ]
+  },
+  "honest_sentence": "Auto-publish pipeline: every signed card \u2192 8 targets (board, RSS, sitemap, GitHub Pages, HF, PyPI, x402, MCP). Re-fetch + verify hash matches. Rollback + alert on mismatch. Publish_receipt card for every publish.",
+  "measurement_not_certification": true
+}

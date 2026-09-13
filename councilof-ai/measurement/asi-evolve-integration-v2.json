@@ -1,0 +1,38 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "architecture.asi_evolve.integration",
+  "subject": "asi-evolve-integration-v2",
+  "measured_at": "2026-09-13T05:29:47.810144+00:00",
+  "metrics": {
+    "name": "ASI-Evolve integration \u2014 full automation",
+    "existing_asi_evolve_repos": [
+      "CSOAI-ORG/a-evolve \u2014 mirror of upstream",
+      "csoai-asi-evolve (csoai-asi-evolve) \u2014 package",
+      "sov33_asi_evolve.py \u2014 Kaggle kernel",
+      "asi_evolve_overnight.py \u2014 pipeline",
+      "overnight-asi-evolve.json \u2014 benchmark results"
+    ],
+    "new_components_to_add": [
+      "card_miner.py \u2014 auto-discover new subjects",
+      "evolve_banks.py \u2014 GA/RL bank weight optimizer",
+      "self_correct.py \u2014 auto-correction engine",
+      "auto_publish.py \u2014 8-target auto-publish",
+      "watchdog_asi.py \u2014 full pipeline monitor"
+    ],
+    "integration_plan": [
+      "1. Add 5 new scripts to ~/clawd/councilof-ai-work/harness/mine/",
+      "2. Wire into existing pod-worker cron",
+      "3. Wire into permissionless-fire-mill (already running hourly)",
+      "4. Test end-to-end: measure \u2192 evolve \u2192 measure \u2192 sign \u2192 publish",
+      "5. Production rollout: target 100% automation by Sep 20 2026"
+    ],
+    "expected_impact": {
+      "current_throughput": "~70 cycles per day (5 models \u00d7 14 axes)",
+      "target_throughput": "200+ cycles per day with auto-mining + evolution",
+      "accuracy_improvement": "5-10% per cycle via GA/RL",
+      "coverage": "Expand from 22 axes to 50+ axes by Q4 2026"
+    }
+  },
+  "honest_sentence": "ASI-Evolve integration: add 5 scripts (card_miner, evolve_banks, self_correct, auto_publish, watchdog_asi) to harness/mine/. Target: 200+ cycles/day, 5-10% accuracy improvement per cycle, 50+ axes by Q4 2026. Rollout: Sep 20 2026.",
+  "measurement_not_certification": true
+}

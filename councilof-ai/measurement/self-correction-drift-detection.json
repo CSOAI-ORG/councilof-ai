@@ -1,0 +1,26 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "architecture.asi_evolve.self_correction",
+  "subject": "self-correction-drift-detection",
+  "measured_at": "2026-09-13T05:29:47.810144+00:00",
+  "metrics": {
+    "name": "Self-correction and drift detection",
+    "corrections_ledger": 48,
+    "retraction_count": 1,
+    "retraction_id": "DR-0007",
+    "drift_detection_methods": [
+      "Per-cycle: compare new accuracy vs prior (alert if >2\u03c3 drop)",
+      "Per-axis: compare per-axis score vs prior (alert if >10% drop)",
+      "Per-model: compare leader identity vs prior (alert if leader changes unexpectedly)",
+      "Cross-bank: compare related axes (e.g. governance vs fairness) for consistency"
+    ],
+    "auto_correction_triggers": [
+      "If accuracy drops >2\u03c3 \u2192 revert to last known-good bank weight + post correction",
+      "If leader changes unexpectedly \u2192 pause + flag for owner review",
+      "If cross-bank consistency breaks \u2192 publish correction card"
+    ],
+    "doctrine": "Self-correction is structural, not optional. 48 corrections to date = body that publishes when it's wrong"
+  },
+  "honest_sentence": "Self-correction + drift detection: per-cycle accuracy alert >2\u03c3, per-axis >10% drop, leader change, cross-bank consistency. Auto-revert + post correction if triggered. 48 corrections + 1 retraction (DR-0007) \u2014 structural, not optional.",
+  "measurement_not_certification": true
+}

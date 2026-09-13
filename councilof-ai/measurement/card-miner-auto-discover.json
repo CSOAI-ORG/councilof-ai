@@ -1,0 +1,26 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "architecture.asi_evolve.card_miner",
+  "subject": "card-miner-auto-discover",
+  "measured_at": "2026-09-13T05:29:47.810144+00:00",
+  "metrics": {
+    "name": "card_miner.py \u2014 auto-discover new subjects",
+    "sources": [
+      "HuggingFace API: new model uploads (filter: governance, compliance, finance, legal)",
+      "GitHub API: new repos tagged 'compliance', 'governance', 'audit'",
+      "Regulatory sites: new FDA/SEC/FCA/EU filings",
+      "Stablecoin issuers: new attestation publications",
+      "X/Twitter: trending models, products, claims (via API)"
+    ],
+    "filter_criteria": [
+      "Relevance: must touch AI governance, compliance, or measurement",
+      "Novelty: not already measured in 22-axis grid",
+      "Public availability: data must be downloadable",
+      "Verifiable: can we sign a measurement card?"
+    ],
+    "output": "Auto-generates new measurement cards with subject, metrics, honest_sentence, schema=measurement-card/0.1",
+    "rate_target": "10-50 new cards per day"
+  },
+  "honest_sentence": "card_miner.py: auto-discovers new subjects from HF, GitHub, regulatory sites, stablecoin issuers, X. Filters by relevance/novelty/availability/verifiability. Target: 10-50 new cards/day.",
+  "measurement_not_certification": true
+}

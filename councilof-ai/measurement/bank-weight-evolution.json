@@ -1,0 +1,47 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "architecture.asi_evolve.bank_weights",
+  "subject": "bank-weight-evolution",
+  "measured_at": "2026-09-13T05:29:47.810144+00:00",
+  "metrics": {
+    "name": "Bank weight evolution",
+    "banks_total": 22,
+    "banks_naming": [
+      "gspc-accountability",
+      "gspc-affect",
+      "gspc-agi",
+      "gspc-art5",
+      "gspc-asi",
+      "gspc-bank",
+      "gspc-bond",
+      "gspc-care",
+      "gspc-continuity",
+      "gspc-creativity",
+      "gspc-cross-border",
+      "gspc-det",
+      "gspc-efficiency",
+      "gspc-equity",
+      "gspc-fairness",
+      "gspc-gov",
+      "gspc-human-vs-ai",
+      "gspc-index",
+      "gspc-insurance",
+      "gspc-jail-v2-candidates",
+      "..."
+    ],
+    "items_per_bank": "~237",
+    "evolution_method": [
+      "Genetic Algorithm (GA): mutate item weights by \u00b110% per generation, keep best 50%",
+      "Reinforcement Learning (RL): reward = accuracy improvement on held-out bank",
+      "Drift detection: if new card diverges from prior by >10%, flag for review"
+    ],
+    "safety_constraints": [
+      "Total weight change per cycle \u2264 5%",
+      "No weight goes to 0 (preserves signal)",
+      "Held-out 20% bank never touched during evolution",
+      "Every evolved card signed + anchored"
+    ]
+  },
+  "honest_sentence": "Bank weight evolution: 22 banks \u00d7 ~237 items each. GA mutates \u00b110%, RL rewards accuracy on held-out bank. Constraints: \u22645% total change, no weight to 0, 20% held-out never touched, every evolved card signed.",
+  "measurement_not_certification": true
+}

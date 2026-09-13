@@ -1,0 +1,27 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "architecture.asi_evolve.self_correct",
+  "subject": "self-correct-engine",
+  "measured_at": "2026-09-13T05:29:47.810144+00:00",
+  "metrics": {
+    "name": "self_correct.py \u2014 auto-correction engine",
+    "triggers": [
+      "Accuracy drops >2\u03c3 vs prior cycle",
+      "Leader changes unexpectedly",
+      "Cross-bank consistency breaks",
+      "Bank SHA256 changes mid-cycle (corruption)",
+      "Multiple failed runs in same axis"
+    ],
+    "actions": [
+      "Auto-revert to last known-good bank weight",
+      "Post correction card to corrections ledger",
+      "Re-run failed axes",
+      "If 3 reverts in 24h \u2192 escalate to owner",
+      "Publish incident card"
+    ],
+    "doctrine": "Corrections are structural, not shameful. 48 corrections to date = body that publishes when it's wrong.",
+    "owner_gate": "If 3 reverts in 24h, owner reviews. Otherwise fully autonomous."
+  },
+  "honest_sentence": "self_correct.py: triggers on accuracy drop, leader change, corruption, multiple fails. Auto-revert + post correction + re-run. 3 reverts/24h \u2192 owner review. Fully autonomous otherwise.",
+  "measurement_not_certification": true
+}

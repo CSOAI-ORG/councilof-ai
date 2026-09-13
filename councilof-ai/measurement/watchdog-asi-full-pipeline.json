@@ -1,0 +1,28 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "architecture.asi_evolve.watchdog",
+  "subject": "watchdog-asi-full-pipeline",
+  "measured_at": "2026-09-13T05:29:47.810144+00:00",
+  "metrics": {
+    "name": "Watchdog ASI \u2014 full pipeline monitor",
+    "monitors": [
+      "Pod worker alive (pid, cycles, last_success_at)",
+      "Ollama alive (responding to :11434)",
+      "GHA signing chains alive (last run <4h ago)",
+      "Disk usage <90%",
+      "Public root reachable (councilof.ai/root.json returns 200)",
+      "All 22 axes have signed cards",
+      "Latest OTS proof <24h old",
+      "No accuracy regression >2\u03c3",
+      "No leader change without warning"
+    ],
+    "actions_on_failure": [
+      "Restart failed component",
+      "Post alert to /tmp/watchdog.log",
+      "If unfixable \u2192 create incident card + escalate to owner"
+    ],
+    "cadence": "Every 2 minutes (matches pod-watchdog cron)"
+  },
+  "honest_sentence": "Watchdog ASI: monitors pod worker, ollama, GHA chains, disk, public root, axes, OTS proof, accuracy, leader. Auto-restart on failure, alert + escalate on unfixable. Every 2 min.",
+  "measurement_not_certification": true
+}

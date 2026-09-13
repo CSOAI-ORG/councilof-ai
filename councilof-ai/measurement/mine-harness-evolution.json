@@ -1,0 +1,28 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "architecture.asi_evolve.mine_harness",
+  "subject": "mine-harness-evolution",
+  "measured_at": "2026-09-13T05:29:47.810144+00:00",
+  "metrics": {
+    "name": "Mine Harness \u2014 automated card mining",
+    "current_files": [
+      "auto_sweep.py",
+      "carder.py",
+      "carder-feed.json",
+      "tsr_status.py",
+      "mine_ci.sh",
+      "e2e_test.py"
+    ],
+    "evolution_plan": [
+      "1. Add card_miner.py \u2014 auto-discovers new subjects (models, claims, regulations) from public APIs",
+      "2. Add evolve_banks.py \u2014 uses GA/RL to evolve bank weights based on accuracy deltas",
+      "3. Add self_correct.py \u2014 auto-fills corrections ledger when drift detected",
+      "4. Add auto_publish.py \u2014 pushes signed cards to public root + GitHub Pages + RSS",
+      "5. Add watchdog_asi.py \u2014 monitors full pipeline, restarts on stall, escalates on failure"
+    ],
+    "automation_target": "100% automated \u2014 no human in loop. Cron fires every 2h. Pod runs continuously.",
+    "human_role": "Only owner gates: wallet signatures, regulatory submissions, social posts"
+  },
+  "honest_sentence": "Mine harness evolution: add card_miner + evolve_banks + self_correct + auto_publish + watchdog_asi. Target 100% automation \u2014 cron every 2h, pod continuous, no human in measurement loop.",
+  "measurement_not_certification": true
+}
