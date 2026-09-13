@@ -96,6 +96,17 @@ jobs:
           # ("refusing the whole legacy inbox") — the dispatch must name the exact run it
           # landed. RUN_ID is already in scope (it is in the branch name and commit).
           gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=mill -f mill_run_id="${RUN_ID}"
+          # TUI-1 (2026-09-13): GITHUB_TOKEN-created PRs never fire pull_request checks, so
+          # mill landing PRs carried zero protected checks (e.g. #2025 closed after manual
+          # evidence review with "no checks reported"). Least-privilege fix with the existing
+          # mechanism: pr-gates.yml already accepts workflow_dispatch — dispatch it at this
+          # branch so required checks attach to the PR head. Branch protection untouched.
+          # If dispatch is not permitted, bank the PR and print the exact operator action —
+          # never fake a green check.
+          if ! gh workflow run pr-gates.yml --ref "$BR" 2>/dev/null; then
+            echo "OPERATOR ACTION REQUIRED: PR $BR created but protected checks could not be dispatched." >&2
+            echo "Run: gh workflow run pr-gates.yml --ref $BR" >&2
+          fi
       - name: wait for the signer, then verify VALID under the live DID (verification only — no key here)
         if: steps.land.outputs.landed != '0'
         run: |

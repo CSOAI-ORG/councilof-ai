@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-12",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.benji-reconciliation/0.1",
+      "status": "PROBED",
+      "number_benji_asset_usd": {
+        "value": 685918581.8646665,
+        "as_of": "2026-09-12",
+        "source": "rwa-xyz-asset-benji.html",
+        "definition": "rwa.xyz circulating asset value of the BENJI token, aggregate across the public chains listed"
+      },
+      "number_fobxx_fund_usd": {
+        "value": 686635362.22,
+        "as_of": "2026-08-31",
+        "source": "sec-nmfp3-2026-08-31.xml",
+        "definition": "SEC Form N-MFP3 netAssetOfSeries for Franklin OnChain U.S. Government Money Fund (series S000067043, single class C000215714), report date 2026-08-31, filed 2026-09-04, accession 0002071691-26-021281"
+      },
+      "number_platform_usd": {
+        "value": 2471273040.7428746,
+        "as_of": "2026-09-12",
+        "source": "rwa-xyz-platform-franklin-benji.html",
+        "definition": "rwa.xyz platform total for Franklin Templeton Benji Investments across all listed platform assets"
+      },
+      "why_they_diverge": "Three publishers, three scopes: token-level circulating value on public chains; fund-level net assets filed with the SEC (transfer-agent books, report date lag); platform-level total across all issuer products including other funds and iBENJI. Different definitions, not a discrepancy.",
+      "daily_tracking": "reconciled each publisher run from figures.json",
+      "unmeasured": [
+        "fobxx_fund_usd_844000000_brief_citation",
+        "bnb_chain_benji_supply",
+        "primary_register_reconciliation"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "4c9a37a472308b9ec82dd22578fd96a90e16a971afe550ec5659e0e545473a8a",
+    "sig_ed25519": "2ec28f2255eae0beb5d921611eec41dcc5bbff155b6b9acd1e9b826f197f40753c756cb7a4d73d0b3d9eae978276b17924704a3fb046602942bfe59478fd8109",
+    "source_urls": [
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/figures.json",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-asset-benji.html",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-platform-franklin-benji.html",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/mirrors/sec-nmfp3-2026-08-31.xml"
+    ],
+    "subject": "BENJI: three published numbers, three definitions",
+    "surface": "public.notice",
+    "tags": [
+      "subject:benji-fobxx",
+      "scope:three-definitions",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "fobxx_fund_usd_844000000_brief_citation",
+      "bnb_chain_benji_supply",
+      "primary_register_reconciliation"
+    ]
+  },
+  "proof": [
+    "b1e573b96de60d13d7db7839203f2bd0948b3fbf155e0aaca6d2e568a5d6baf0",
+    "3bc9c956f89c33fc84f9aac4828940915c0d986e07dcceb8c8024b3adda3c4f7",
+    "d7fc5b3b94b5622fb3af97cc53516af2f5cf7d14814ec6a99e9c893e9ccd20bf",
+    "7a76a345edc17936c700aa66de89a729a2bf5e91bfe931c4fe42876376c3a204",
+    "909201372c4dbdc7472beaedacdb28bf28c7abe81061a351ed0210ce8930c399",
+    "bb5dc0d445fa52814e61b7ec1f992f9df24a778d16db5ef064245fe36151e495",
+    "d6e82c82e271abb8e0cb14622450999f9eb199d37d8bed21b646eece535d3cba",
+    "07991b320054c48a2d9632df681ddbbea1fe3e2ef301b1a9d44d53b506e0a3a0",
+    "7a400a22a2110cd974b97734324256cc72f918b15684ace6810bb71eb0c5c9d2"
+  ]
+}
