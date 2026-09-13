@@ -1,0 +1,72 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.perf.timings",
+  "subject": "perf-20260913T0619",
+  "measured_at": "2026-09-13T06:19:54.741463Z",
+  "metrics": {
+    "harnesses_tested": 13,
+    "slow_count": 0,
+    "slow_harnesses": [],
+    "timings": {
+      "card_miner_asi.py": {
+        "elapsed_seconds": 5.75,
+        "status": "ok"
+      },
+      "evolve_banks_asi.py": {
+        "elapsed_seconds": 0.04,
+        "status": "error:1"
+      },
+      "self_correct_asi.py": {
+        "elapsed_seconds": 0.02,
+        "status": "error:1"
+      },
+      "watchdog_asi_v2.py": {
+        "elapsed_seconds": 4.94,
+        "status": "error:1"
+      },
+      "meta_improve.py": {
+        "elapsed_seconds": 0.02,
+        "status": "ok"
+      },
+      "a2a_mcp_harness_asi.py": {
+        "elapsed_seconds": 8.71,
+        "status": "ok"
+      },
+      "eth_x402_harness_asi.py": {
+        "elapsed_seconds": 13.21,
+        "status": "ok"
+      },
+      "skill_installer.py": {
+        "elapsed_seconds": 2.38,
+        "status": "ok"
+      },
+      "discovery_learner.py": {
+        "elapsed_seconds": 0.39,
+        "status": "ok"
+      },
+      "signing_queue.py": {
+        "elapsed_seconds": 0.07,
+        "status": "ok"
+      },
+      "corrections_engine.py": {
+        "elapsed_seconds": 0.02,
+        "status": "ok"
+      },
+      "auto_publish_asi.py": {
+        "elapsed_seconds": 1.45,
+        "status": "ok"
+      },
+      "cost_controller.py": {
+        "elapsed_seconds": 1.15,
+        "status": "ok"
+      }
+    },
+    "threshold_seconds": 30,
+    "miner_version": "asi-evolve-2",
+    "note": "Harness execution time tracking. Slow = >30s. ASI-Evolve self-monitors."
+  },
+  "honest_sentence": "ASI-Evolve perf monitor: 13 harnesses tested, 0 slow.",
+  "measurement_not_certification": true,
+  "permissionless": true,
+  "auto_churn": true
+}
