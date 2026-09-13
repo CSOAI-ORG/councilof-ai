@@ -41,7 +41,9 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 /** Every route a Pages Function claims, as a leading-slash path. */
 export function functionRoutes(fnDir) {
   const out = new Set();
-  if (!existsSync(fnDir)) return out;
+  if (!existsSync(fnDir)) {
+    throw new Error("redirects-shadow-guard: functions/ is required to detect shadowed redirects");
+  }
   const walk = (dir, prefix) => {
     for (const entry of readdirSync(dir)) {
       const full = join(dir, entry);

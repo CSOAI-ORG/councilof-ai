@@ -6,7 +6,14 @@ import hashlib
 import json
 from pathlib import Path
 
-from build_stablecoin_readiness import INDEX_REL, OUTPUT_REL, WITNESS_REL, validate
+from build_stablecoin_readiness import (
+    INDEX_REL,
+    OUTPUT_REL,
+    WITNESS_REL,
+    index_commitment_state,
+    measured_asset_anchor_state,
+    validate,
+)
 
 
 if __name__ == "__main__":
@@ -26,6 +33,21 @@ if __name__ == "__main__":
     )
     assert proof["opentimestamps"]["state"] == w_ots.get("status", "UNKNOWN"), (
         "documented OTS state must equal the witness-derived state"
+    )
+    expected_index_state = index_commitment_state(
+        ((witness.get("witnesses") or {}).get("rekor") or {}).get("status"),
+        w_ots.get("status"),
+    )
+    assert all(row["index_commitment_state"] == expected_index_state for row in document["assets"]), (
+        "every indexed row must derive its index commitment state from the current root witness"
+    )
+    measured_rows = [row for row in document["assets"] if row["measurement"]["state"] == "MEASURED"]
+    expected_anchor_state = measured_asset_anchor_state(
+        ((witness.get("witnesses") or {}).get("rekor") or {}).get("status"),
+        w_ots.get("status"),
+    )
+    assert all(row["anchor_state"] == expected_anchor_state for row in measured_rows), (
+        "measured asset root-anchor state must derive from the current root witness"
     )
     assert document["shared_discovery"]["x402"]["fresh_compute_excluded"] is True
     print("stablecoin readiness truth gate: PASS — 425 indexed, 1 measured, 424 unmeasured")
