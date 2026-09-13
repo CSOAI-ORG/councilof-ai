@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-13T16:01:23.828Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 430,
+      "issuer": "Bitstamp",
+      "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 4960395.219823551,
+      "symbol": "EUR.bs",
+      "verified_domain": null,
+      "verified_via": "XRPLMeta registry"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "baa4a9d84535c499abc37edfd8ec0881fd22b96f4bab94fb5b83d6b2ca774bba",
+    "sig_ed25519": "b2b42590d2c659097d72365fdcf735d2b32e0d28c3b77b2011bcd057027b489fe5f8d71436e3d84690b370dfc616af746fd1ec8642f9e529330021e898bdee0b",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EUR.bs public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "5974ebcf3b99496adea98d84110b1cad4a9491378b3b1e0794bd61ef362be77a",
+    "5412967f6e6367a12fcc01985e85e3275b9a8c32ddb54adcafe7b61131017192",
+    "252cb8109da8a5cd61f59d734a5ece00b2703c0ab103b814b895c5ac39e5bc3c",
+    "c7970b1b66f23e7039de2eeb30de69422efbef771921bf377826a4f5de18e982",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "8b88ea07caa4ac71b329b9e655077a7e6fa7362a7342c2582956765563db9872",
+    "4d3a7ff54df8ebd45d1bfcc211392631d628eedca865a57dcda93ffeae0f9073",
+    "943536306e1ec9650757f6f49cd201ce43cac8296ac010c782e6ba11c208cf72",
+    "35cee2466829d30bfdd055b131ee24667585e2dd133111c1e977fa921d28882e"
+  ]
+}

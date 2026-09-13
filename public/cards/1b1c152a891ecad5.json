@@ -1,0 +1,71 @@
+{
+  "card": {
+    "as_of": "2026-09-13T10:19:32Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "alibaba-qwen",
+      "surface": "model_cards",
+      "url": "https://huggingface.co/Qwen",
+      "prev_sha256": "a6f7b12410de3898cbc0419eee77048811c3e3ebb5cd26ebe40b1408a05b2915",
+      "new_sha256": "cf6bd44fc475879270644b33126544369ebecd01bc917181771d93e60cadbddd",
+      "prev_bytes_sha256": "e003fcafdc395e8172ae5954256f8e21cef9021441f1c0f88cb8667a763a4fa7",
+      "new_bytes_sha256": "474a99a88db4d2e4fb448de09aa394fe7d36c7a5bcc287ce2865a72accf16c89",
+      "prev_fetched_at": "2026-09-12T09:23:53Z",
+      "fetched_at": "2026-09-13T10:19:32Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 640464,
+        "new": 640477
+      },
+      "etag": {
+        "prev": "W/\"9c5d0-Sx94Vik33u5LebpwGgw087cszOk\"",
+        "new": "W/\"9c5dd-90S8LWD8HozjfFiQI6tsG5tRU+E\""
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "1b1c152a891ecad53164c627cf57d294f7505a2eacff520172cef859e39d7d30",
+    "sig_ed25519": "4cb294c992995b2951f79300171a2a4387be9f2ccd6d57af03ac41a1f721bb05e7d67720bbe5341492b885311de9b08f2580593e2731eea266c34356f054290a",
+    "source_urls": [
+      "https://huggingface.co/Qwen"
+    ],
+    "subject": "Alibaba Cloud / Qwen — model_cards: bytes changed 2026-09-13",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:alibaba-qwen",
+      "surface:model_cards",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "1b94d09b6b6a772f1f9d13d3f6bd19a8b56c91ae3aa0885e6a41905f59fb166a",
+    "3b6856331d939da69be4496f3ae7511dcc201b966b02bce671de6e52dcc904dd",
+    "4d83a5af1cc68aad32489de5d18329c604be2c2d0c584f8a47fa7479f43978fc",
+    "c07b87f0c142d07773e2563e3e5e41a8a00152d6035fe0a3e40927b84a57cf28",
+    "5c210fd1f205dbbff89f58d50bf5ea8788c9ae1dc594d8658ade0998bdf8765f",
+    "3349a04fb93338d4e03546ddb6196bcb49b3aeb00c67ed691ff7ab6f413f447a",
+    "ff5def982ab1d689e435d68ee17387d3e361ccf21922299f9983b69ef5c54ef8",
+    "9b7c347ddaf0920904417f3df61785d5fe3903aa62f41b24e7aab62895b25bf7",
+    "35cee2466829d30bfdd055b131ee24667585e2dd133111c1e977fa921d28882e"
+  ]
+}
