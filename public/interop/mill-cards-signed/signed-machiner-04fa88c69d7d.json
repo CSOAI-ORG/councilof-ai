@@ -1,0 +1,36 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "machinery-conformity",
+    "model": "Qwen/Qwen3-235B-A22B",
+    "issuer": "CSOAI Ltd",
+    "n": 29,
+    "accuracy": 0.4138,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "n<30 unquotable"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router",
+    "evidence": {
+      "bank_sha256": "fdbe463c3f0268600ebf9e70372db1f27ac5668b30276323e247de86adbbc51c",
+      "bank_dataset": "csoai/gspc-mach",
+      "model_hf_revision": "8efa61729e24bd65b1d152b5ab5409052aa80e65",
+      "schema": "csoai.mill-item-evidence/0.1",
+      "items_file": "items-machiner-20faacc37380.jsonl",
+      "items_sha256": "20faacc373800a870a46a34ec1b6dc8af5a5a25061886ba4061aee901073bea1"
+    },
+    "run_id": "gha-34770371951",
+    "signature_state": "SIGNED"
+  },
+  "id": "04fa88c69d7da31e5e3f26c35ba4ad517236d1f6146dde85d37b673164565b43",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "4958662620e0fa737a5925e61768828f37e0cbf390d4323da7566eeb9ddc25e3248f6662ceddb916a218303a8e66afa217400867a84a3530c0629d1b6c8b8903",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 29,
+  "quotable": false,
+  "not_a_certificate": true
+}
