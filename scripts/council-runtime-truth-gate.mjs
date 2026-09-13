@@ -810,6 +810,21 @@ assert.match(publicPressSource, /no previous count is reused/i);
 assert.match(publicPressSource, /Measurement, not certification/i);
 assert.doesNotMatch(publicPressSource, /NOT HAPPENED/i);
 
+// The edge-rendered /press/ route wins over the React route in production. It must read the
+// same REVENUE_KV-derived object as /api/revenue; otherwise the human press page can say no
+// settlement while the machine-readable revenue endpoint records one.
+const pressApiSource = readFileSync("functions/api/press.json.ts", "utf8");
+const pressEdgeSource = readFileSync("functions/press/index.ts", "utf8");
+const revenueApiSource = readFileSync("functions/api/revenue.ts", "utf8");
+assert.match(revenueApiSource, /export async function buildRevenue/);
+assert.match(pressApiSource, /await buildRevenue\(env\)/);
+assert.match(pressApiSource, /PagesFunction<RevenueEnv>/);
+assert.match(pressApiSource, /settlement status is UNCHECKABLE/);
+assert.match(pressApiSource, /Owner-controlled and zero-value settlements are excluded/);
+assert.doesNotMatch(pressApiSource, /subject:\s*["']first settlement["'][\s\S]{0,300}state:\s*["']NOT HAPPENED["']/);
+assert.match(pressEdgeSource, /const d = await build\(env\)/);
+assert.match(pressEdgeSource, /Commercial evidence/);
+
 const publicPrivacySource = readFileSync("client/src/pages/legal/PublicPrivacy.tsx", "utf8");
 assert.match(publicPrivacySource, /CSOAI Ltd/);
 assert.match(publicPrivacySource, /16939677/);
