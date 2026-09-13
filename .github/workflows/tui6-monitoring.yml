@@ -7,7 +7,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  actions: write
+  contents: write
+  pull-requests: write
 
 jobs:
   snapshot:
@@ -80,7 +82,12 @@ jobs:
               'schema': 'csoai.tui6-snapshot/1.0',
               'generated_at': '$DATE',
               'revenue': {
-                  'settled_usdc': r.get('settled_usdc',{}).get('count'),
+                  'settled_usdc_atomic': r.get('settled_usdc',{}).get('count'),
+                  'settled_usdc': (
+                      r.get('settled_usdc',{}).get('count') / 1_000_000
+                      if isinstance(r.get('settled_usdc',{}).get('count'), (int, float))
+                      else None
+                  ),
                   'payers': r.get('one_number',{}).get('all_time'),
                   'self': r.get('one_number',{}).get('self_settlements'),
               },
@@ -95,7 +102,10 @@ jobs:
           "
 
       - name: Commit snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/tui6/snapshots/
@@ -103,5 +113,13 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "TUI-6: automated monitoring snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-            git push
+            STAMP=$(date -u +%Y-%m-%dT%H%M%SZ)
+            BR="automation/tui6-snapshot-${STAMP}"
+            git push origin "HEAD:$BR"
+            URL=$(gh pr create --repo "$GITHUB_REPOSITORY" --base master --head "$BR" \
+              --title "TUI-6: distribution snapshot ${STAMP}" \
+              --body "Machine-generated distribution snapshot. Counts remain observations; payments and self-tests do not imply outside revenue. Opened through a PR because protected master rejects direct workflow pushes.")
+            gh workflow run pr-gates.yml --repo "$GITHUB_REPOSITORY" --ref "$BR"
+            gh pr merge "$URL" --repo "$GITHUB_REPOSITORY" --squash --auto
+            echo "snapshot PR: $URL"
           fi

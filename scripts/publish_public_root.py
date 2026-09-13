@@ -52,6 +52,7 @@ from adapters import (  # noqa: E402
     x402_receipts,
     xrpl,
     xrpl_impersonation,
+    xrpl_state_matrix,
 )
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v1.json"
@@ -551,6 +552,10 @@ def main() -> int:
     # archived-source packs under public/interop/. Facts, not grades; every
     # number carries archived bytes + sha256 + retrieval metadata.
     xrpl_impersonation_out = xrpl_impersonation.collect(ROOT)
+    # XRPL 16-identity per-field state matrix (TUI-3, 2026-09-13): primary
+    # account_info evidence at the validated ledger + xrpl.fi metrics; emits
+    # leaves ONLY on change vs the committed matrix (signed deltas, no churn).
+    xrpl_state_matrix_out = xrpl_state_matrix.collect(ROOT)
     rwa_reconciliation_out = rwa_reconciliation.collect(ROOT)
     stablecoin_deep_out = stablecoin_deep.collect(ROOT)
     art50_census_out = art50_census.collect(ROOT)
@@ -582,6 +587,7 @@ def main() -> int:
     leaves.extend(evm_out["leaves"])
     leaves.extend(evm_events_out["leaves"])
     leaves.extend(xrpl_impersonation_out["leaves"])
+    leaves.extend(xrpl_state_matrix_out["leaves"])
     leaves.extend(rwa_reconciliation_out["leaves"])
     leaves.extend(stablecoin_deep_out["leaves"])
     leaves.extend(art50_census_out["leaves"])
@@ -684,6 +690,7 @@ def main() -> int:
                 "evm_permissions": {"status": "halt-before-write", **evm_out["sidecar"]},
                 "evm_permission_events": {"status": "halt-before-write", **evm_events_out["sidecar"]},
                 "xrpl_impersonation": {"status": "halt-before-write", **xrpl_impersonation_out["sidecar"]},
+                "xrpl_state_matrix": {"status": "halt-before-write", **xrpl_state_matrix_out["sidecar"]},
                 "rwa_reconciliation": {"status": "halt-before-write", **rwa_reconciliation_out["sidecar"]},
                 "stablecoin_deep": {"status": "halt-before-write", **stablecoin_deep_out["sidecar"]},
                 "art50_census": {"status": "halt-before-write", **art50_census_out["sidecar"]},
@@ -831,6 +838,7 @@ def main() -> int:
         "evm_permissions": evm_out.get("sidecar") or {},
         "evm_permission_events": evm_events_out.get("sidecar") or {},
         "xrpl_impersonation": xrpl_impersonation_out.get("sidecar") or {},
+        "xrpl_state_matrix": xrpl_state_matrix_out.get("sidecar") or {},
         "rwa_reconciliation": rwa_reconciliation_out.get("sidecar") or {},
         "stablecoin_deep": stablecoin_deep_out.get("sidecar") or {},
         "art50_census": art50_census_out.get("sidecar") or {},

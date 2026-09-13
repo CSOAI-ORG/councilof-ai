@@ -14,5 +14,14 @@
     "express": "^4.21.2",
     "express-rate-limit": "^7.4.1",
     "helmet": "^8.0.0"
+  },
+  "overrides": {
+    "express": {
+      "body-parser": "1.20.6",
+      "qs": "6.16.0"
+    },
+    "body-parser": {
+      "qs": "6.16.0"
+    }
   }
 }

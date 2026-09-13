@@ -67,6 +67,7 @@ def load_atoms(repo_root: Path) -> list[dict]:
             {
                 "file": path.name,
                 "subject": str(atom["subject"]),
+                "kind": (atom.get("payload") or {}).get("kind"),
                 "payload_sha256": hashlib.sha256(publisher.canonical_bytes(atom["payload"])).hexdigest(),
                 "derived_digest": card["sha256"],
             }
@@ -113,7 +114,33 @@ def fetch_json(url: str, timeout: int = 20):
         return None, None
 
 
-def verdict_for(atom: dict, live_root: dict | None, proof: dict | None, health: dict | None) -> tuple[str, str]:
+def earlier_signed_revision(atom: dict, repo_root: Path) -> str | None:
+    """If the publisher already signed an EARLIER revision of this atom (same
+    subject + payload kind, different payload bytes), the exact current source
+    set was never consumed — absence is pending, not a contradiction.
+    Returns the signed card's sha16, else None. Local committed cards are the
+    public record of what was signed."""
+    kind = atom.get("kind")
+    subject = atom.get("subject")
+    cards_dir = repo_root / "public" / "cards"
+    if not cards_dir.is_dir():
+        return None
+    for path in sorted(cards_dir.glob("*.json")):
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        inner = doc.get("card", doc)
+        if not isinstance(inner, dict):
+            continue
+        payload = inner.get("payload") or {}
+        if inner.get("subject") == subject and payload.get("kind") == kind and inner.get("sig_ed25519"):
+            if hashlib.sha256(publisher.canonical_bytes(payload)).hexdigest() != atom["payload_sha256"]:
+                return str(inner.get("sha256") or path.stem)[:16]
+    return None
+
+
+def verdict_for(atom: dict, live_root: dict | None, proof: dict | None, health: dict | None, prior_revision: str | None = None) -> tuple[str, str]:
     """Returns (verdict, detail). VALID only on a locally folded path."""
     if live_root is None:
         return "UNCHECKABLE", "live root unreachable"
@@ -124,9 +151,13 @@ def verdict_for(atom: dict, live_root: dict | None, proof: dict | None, health: 
     if count != len(leaves):
         return "UNCHECKABLE", f"root count/bind mismatch (card_count={count}, leaves={len(leaves)})"
     if digest not in leaves:
-        # Absence. Contradiction only if the publisher provably consumed the
-        # staged source set: a successful non-dry-run publish at this root's
-        # as_of, after the atoms were on master, with no halt.
+        # Absence. Pending (never a contradiction) when an earlier revision of
+        # the same atom was signed — the exact current bytes were not consumed.
+        if prior_revision:
+            return "UNCHECKABLE", f"earlier revision signed ({prior_revision}); current revision awaiting publish"
+        # Contradiction only if the publisher provably consumed the staged
+        # source set: a successful non-dry-run publish at this root's as_of,
+        # after the atoms were on master, with no halt.
         if (
             health
             and health.get("dry_run") is False
@@ -167,7 +198,7 @@ def run_live(repo_root: Path) -> int:
     print(f"sha16             subject                                           verdict       detail  (live root {count} cards, as_of {as_of})")
     for a in atoms:
         _, proof = fetch_json(PROOF_URL + a["derived_digest"])
-        v, detail = verdict_for(a, live_root, proof, health)
+        v, detail = verdict_for(a, live_root, proof, health, earlier_signed_revision(a, repo_root))
         n_invalid += v == "INVALID"
         n_valid += v == "VALID"
         print(f"{a['derived_digest'][:16]}  {a['subject'][:52]:52}  {v:11}  {detail}")
@@ -228,6 +259,9 @@ def selftest() -> int:
     absent_post = dict(absent_live, as_of="2026-09-12T18:30:00Z")
     health_post = {"dry_run": False, "halt": {"unsigned_new_leaves": 0}, "as_of": "2026-09-12T18:30:00Z"}
     assert verdict_for(a, absent_post, None, health_post)[0] == "INVALID"     # consumed + absent: contradiction
+    # ...but when an earlier revision of the same atom was signed, the exact
+    # current bytes were never consumed: pending, not contradiction.
+    assert verdict_for(a, absent_post, None, health_post, prior_revision="4dff6e71463551fb")[0] == "UNCHECKABLE"
     # 4) On-disk atoms load (count read from the dir, never hardcoded).
     atoms = load_atoms(Path(".").resolve())
     assert len(atoms) == 13, f"expected 13 staged atoms on master, found {len(atoms)}"

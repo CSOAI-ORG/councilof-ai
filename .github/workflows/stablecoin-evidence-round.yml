@@ -14,7 +14,7 @@ name: stablecoin-evidence-round
 
 on:
   schedule:
-    - cron: "23 3 * * *"
+    - cron: "31 3 * * *" # staggered away from the hourly health inventory at :23
   workflow_dispatch: {}
 
 concurrency:
@@ -22,6 +22,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -37,6 +38,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Refresh the full-universe source registry (weekly, keyless)
+        # Sundays only (or manual dispatch): re-fetches the keyless DefiLlama
+        # per-asset detail `url` for all 425 identities and re-registers issuer
+        # sites. Daily rounds reuse the committed registry and never refetch it.
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$(date -u +%u)" = "7" ]; then
+            python3 scripts/build_stablecoin_source_registry.py
+          else
+            python3 scripts/build_stablecoin_source_registry.py --offline
+          fi
       - name: Fetch and archive registered primary evidence
         run: python3 scripts/build_stablecoin_deep.py
       - name: Rebuild the executable 425-asset promotion queue
@@ -58,6 +69,8 @@ jobs:
             public/interop/stablecoin-deep-2026-09/deep.json \
             public/interop/stablecoin-deep-2026-09/artefact-manifest.json \
             public/interop/stablecoin-deep-2026-09/mirrors \
+            public/interop/stablecoin-deep-2026-09/sources.json \
+            public/interop/stablecoin-deep-2026-09/source-detail-cache.json \
             public/interop/stablecoin-universe-2026-09/promotion-queue.json
           if git diff --cached --quiet; then
             echo "no evidence change — nothing to land"
@@ -74,5 +87,6 @@ jobs:
               --title "stablecoins: daily primary-evidence round" \
               --body "Machine-generated daily round. Archives registered issuer/auditor bytes and hashes, refreshes the top-20 deep probe, and rebuilds the complete 425-row evidence-promotion queue. No inference spend. DEEP_PROBED is not MEASURED; payments never promote evidence state.")
           fi
-          gh pr merge "$url" --squash --auto || echo "auto-merge unavailable; exact generated PR remains open for review: $url"
+          gh workflow run pr-gates.yml --repo "$GITHUB_REPOSITORY" --ref "$branch"
+          gh pr merge "$url" --repo "$GITHUB_REPOSITORY" --squash --auto || echo "auto-merge unavailable; exact generated PR remains open for review: $url"
           echo "rolling evidence PR: $url"

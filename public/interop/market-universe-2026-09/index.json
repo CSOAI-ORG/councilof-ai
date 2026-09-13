@@ -1,0 +1,409 @@
+{
+  "candidate_readers": [
+    {
+      "access": "PUBLIC_OPEN_SOURCE",
+      "families": [
+        "defi_protocols",
+        "dexs",
+        "lending",
+        "yield_pools",
+        "perpetuals",
+        "options",
+        "bridges"
+      ],
+      "reader": "defillama_open_adapters",
+      "role": "DISCOVERY_AND_REPLAY_LEADS",
+      "source": "https://github.com/DefiLlama/dimension-adapters"
+    },
+    {
+      "access": "PUBLIC_API",
+      "families": [
+        "perpetuals",
+        "dexs",
+        "liquidations",
+        "oracles"
+      ],
+      "reader": "hyperliquid_public_api",
+      "role": "DIRECT_PROTOCOL_OBSERVATION",
+      "source": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint"
+    },
+    {
+      "access": "API_KEY_REQUIRED",
+      "families": [
+        "nfts"
+      ],
+      "reader": "reservoir_nft_api",
+      "role": "AGGREGATED_DISCOVERY_BEFORE_CHAIN_REPLAY",
+      "source": "https://nft.reservoir.tools/reference/overview"
+    },
+    {
+      "access": "PUBLIC_WEB_AND_OPEN_SOURCE",
+      "families": [
+        "bridges",
+        "chain_l2_da",
+        "smart_contract_controls"
+      ],
+      "reader": "l2beat_public_research",
+      "role": "RISK_AND_IDENTITY_LEADS_BEFORE_CHAIN_REPLAY",
+      "source": "https://l2beat.com/bridges"
+    },
+    {
+      "access": "PUBLIC_DOCS_APIS_SDK_AND_CHAIN_STATE",
+      "families": [
+        "bridges",
+        "oracles",
+        "cross_chain_asset_identity"
+      ],
+      "reader": "chainlink_ccip_and_feeds",
+      "role": "DIRECTORY_AND_ONCHAIN_OBSERVATION",
+      "source": "https://docs.chain.link/"
+    },
+    {
+      "access": "PUBLIC_BULK_DATA",
+      "families": [
+        "payments_remittance",
+        "fast_payment_systems"
+      ],
+      "reader": "bis_cpmi_bulk_data",
+      "role": "OFFICIAL_STATISTICAL_OBSERVATION",
+      "source": "https://data.bis.org/bulkdownload"
+    },
+    {
+      "access": "PUBLIC_API",
+      "families": [
+        "payments_remittance",
+        "fast_payment_systems",
+        "cross_chain_asset_identity"
+      ],
+      "reader": "ecb_sdmx_api",
+      "role": "OFFICIAL_STATISTICAL_OBSERVATION",
+      "source": "https://data.ecb.europa.eu/help/api/overview"
+    },
+    {
+      "access": "PUBLIC_RELEASE_DOCUMENTS",
+      "families": [
+        "payments_remittance",
+        "fast_payment_systems"
+      ],
+      "reader": "swift_standards_release",
+      "role": "RULE_VERSION_AND_CLAIM_OBSERVATION",
+      "source": "https://www.swift.com/standards/standards-releases"
+    }
+  ],
+  "current_csoai_coverage": {
+    "stablecoins": {
+      "deep_measured_union": 12,
+      "evidence": "public/interop/coverage-register.json#stablecoin_universe_2026_09",
+      "indexed": 425,
+      "signed_rooted": 1,
+      "state": "PARTIAL_MEASUREMENT"
+    },
+    "swift_institutions": {
+      "evidence": "public/interop/swift-census-2026-09/index.json",
+      "indexed": 26,
+      "measured": 0,
+      "state": "INDEXED_PUBLIC_NOTICES"
+    },
+    "tokenized_rwa": {
+      "evidence": "public/interop/rwa-reconciliation-2026-09/reconciliation.json",
+      "signed": 0,
+      "staged_unsigned": 35,
+      "state": "PARTIAL_OBSERVATION"
+    },
+    "x402_resources": {
+      "evidence": "public/interop/x402-trust/latest.json",
+      "probed": 100,
+      "state": "PARTIAL_MEASUREMENT",
+      "valid_challenge_402": 52
+    },
+    "xrpl_issued_assets": {
+      "evidence": "public/interop/xrpl-16-state-matrix/matrix.json",
+      "identities": 16,
+      "independently_measured_holders": 0,
+      "independently_measured_supply": 0,
+      "ledger_index": 106949073,
+      "state": "OBSERVED_IDENTITY_STATE"
+    }
+  },
+  "doctrine": {
+    "directory_metadata_is_measurement": false,
+    "indexing_is_signing": false,
+    "payment_is_measurement": false,
+    "promotion_ladder": [
+      "DISCOVERED",
+      "INDEXED",
+      "OBSERVED",
+      "MEASURED",
+      "SIGNED",
+      "ROOTED",
+      "ANCHORED"
+    ]
+  },
+  "missing_measurement_families": [
+    {
+      "family": "defi_protocols",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "protocol identity, chain deployments, TVL source lineage",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "dexs",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "volume, liquidity, fee and wash-resistance observations",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "lending",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "supply, borrow, utilization, collateral and liquidation state",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "yield_pools",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "APY components, capacity, reward emissions and oracle lineage",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "liquid_staking_restaking",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "backing, validator concentration, exits and slashing exposure",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "perpetuals",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "volume, open interest, funding, liquidations and oracle divergence",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "options",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "notional, premium, open interest, expiry and settlement evidence",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "centralized_exchanges",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "reserve, liability, custody and withdrawal-liveness evidence",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "bridges",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "locked value, flow, finality, validator/admin and incident state",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "nfts",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "collection identity, provenance, ownership, sales and wash-risk evidence",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "oracles",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "feed coverage, heartbeat, deviation, signer and incident state",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "payments_remittance",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "corridor cost, speed, availability, rejection and finality",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "fast_payment_systems",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "jurisdiction, participation, volume, availability and rules",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "tokenized_funds_bonds",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "issuer, instrument identity, supply, custody, transfer restrictions and redemption",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "dao_treasuries",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "treasury composition, signer threshold, delegation and proposal execution",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "prediction_markets",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "market identity, oracle, resolution, liquidity and dispute state",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "insurance",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "capital, cover, claim, payout and exclusions evidence",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "smart_contract_controls",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "upgrade, pause, mint, freeze, denylist and ownership state",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "chain_l2_da",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "finality, sequencer, proof, data availability, bridge and escape-hatch state",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "incidents_exploits",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "loss, affected contracts, cause, recovery and disclosure cadence",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "sanctions_aml",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "list version, screening coverage, false-positive and correction lineage",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "wallet_key_management",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "custody model, recovery, permission surface and signing policy",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "mev_market_integrity",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "ordering, sandwiching, censorship and builder concentration",
+      "state": "UNMEASURED"
+    },
+    {
+      "family": "cross_chain_asset_identity",
+      "first_cost": "ZERO_OR_PUBLIC_DATA",
+      "minimum_evidence": "canonical issuer, contract aliases, wrapped supply and reconciliation",
+      "state": "UNMEASURED"
+    }
+  ],
+  "observed_at": "2026-09-13T03:51:28Z",
+  "priority_waves": [
+    {
+      "families": [
+        "defi_protocols",
+        "dexs",
+        "lending",
+        "yield_pools",
+        "perpetuals",
+        "bridges"
+      ],
+      "reason": "largest reusable public-data surface and strongest daily drift",
+      "wave": 1
+    },
+    {
+      "families": [
+        "centralized_exchanges",
+        "oracles",
+        "smart_contract_controls",
+        "chain_l2_da",
+        "incidents_exploits"
+      ],
+      "reason": "trust and operational-risk evidence buyers can act on",
+      "wave": 2
+    },
+    {
+      "families": [
+        "nfts",
+        "tokenized_funds_bonds",
+        "payments_remittance",
+        "fast_payment_systems",
+        "cross_chain_asset_identity"
+      ],
+      "reason": "provenance and transfer integrity across physical and digital assets",
+      "wave": 3
+    }
+  ],
+  "schema": "csoai.market-universe-gap-map/0.1",
+  "snapshot_sha256": "6a5f8fc9ad6a7bf49abca4701239ee51bc7852ee576cce232d6636a16858ec38",
+  "sources": {
+    "chains": {
+      "response_sha256": "48e0cea7230e39f1d072d7d11f081e271980543c3d00c2565d0d89c5bd4ee6dd",
+      "source_role": "DIRECTORY_METADATA",
+      "url": "https://api.llama.fi/v2/chains",
+      "verification_state": "INDEXED_NOT_INDEPENDENTLY_MEASURED"
+    },
+    "dexs": {
+      "response_sha256": "2588fb032a160167042556393f9ec45fb79fc09956702ac32a25755297fbff32",
+      "source_role": "DIRECTORY_METADATA",
+      "url": "https://api.llama.fi/overview/dexs?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true",
+      "verification_state": "INDEXED_NOT_INDEPENDENTLY_MEASURED"
+    },
+    "fees": {
+      "response_sha256": "0ffcf2f09af56dbdb8adecdbd58fe5e934dd569aea7ccfbfed6f7a5314c129c4",
+      "source_role": "DIRECTORY_METADATA",
+      "url": "https://api.llama.fi/overview/fees?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true",
+      "verification_state": "INDEXED_NOT_INDEPENDENTLY_MEASURED"
+    },
+    "options": {
+      "response_sha256": "e2375ea83ece8d0875529d2ddad8d6ccba2c94f17c7785b2fc489fd918ec88ce",
+      "source_role": "DIRECTORY_METADATA",
+      "url": "https://api.llama.fi/overview/options?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true",
+      "verification_state": "INDEXED_NOT_INDEPENDENTLY_MEASURED"
+    },
+    "protocols": {
+      "response_sha256": "40eb4dedac7be5ce391dcb4b627ae826ac44242d20f5171fd046d05e9b9a9de0",
+      "source_role": "DIRECTORY_METADATA",
+      "url": "https://api.llama.fi/protocols",
+      "verification_state": "INDEXED_NOT_INDEPENDENTLY_MEASURED"
+    },
+    "stablecoins": {
+      "response_sha256": "02f4cb493681b13c0d83c14ae2f29faf90529ffb5f2e0e99278bf698d505ff0a",
+      "source_role": "DIRECTORY_METADATA",
+      "url": "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+      "verification_state": "INDEXED_NOT_INDEPENDENTLY_MEASURED"
+    },
+    "yield_pools": {
+      "response_sha256": "213808cb9575b8be64a9bb94ab63070ce8612e1dcb22e848499d97e5cefd32a5",
+      "source_role": "DIRECTORY_METADATA",
+      "url": "https://yields.llama.fi/pools",
+      "verification_state": "INDEXED_NOT_INDEPENDENTLY_MEASURED"
+    }
+  },
+  "upstream_directory_snapshot": {
+    "chains": 467,
+    "dex_chains": 291,
+    "dex_protocols": 1355,
+    "fees_dataset_chains": 359,
+    "fees_dataset_protocols": 2684,
+    "options_chains": 19,
+    "options_protocols": 30,
+    "protocol_categories": 102,
+    "protocols": 8243,
+    "selected_protocol_categories": {
+      "bridges": 170,
+      "cdps": 231,
+      "centralized_exchanges": 80,
+      "cross_chain_bridges": 43,
+      "dao_services": 8,
+      "depin": 9,
+      "derivatives": 446,
+      "indexes": 83,
+      "insurance": 31,
+      "lending": 646,
+      "liquid_staking": 290,
+      "nft_lending": 32,
+      "nft_marketplaces": 69,
+      "oracles": 14,
+      "payments": 39,
+      "prediction_markets": 122,
+      "restaking": 14,
+      "rwa": 176,
+      "synthetics": 43,
+      "treasury_managers": 6,
+      "wallets": 10,
+      "yield_aggregators": 230
+    },
+    "stablecoin_chains": 208,
+    "stablecoins": 425,
+    "yield_pools": 17059
+  }
+}

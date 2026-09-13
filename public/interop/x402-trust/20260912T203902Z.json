@@ -1,0 +1,40 @@
+{
+  "kind": "csoai.x402-catalog-trust-snapshot/0.1",
+  "population": "https://facilitator.payai.network/discovery/resources",
+  "as_of": "2026-09-12T20:39:02Z",
+  "counts": {
+    "challenge_402": 52,
+    "serves_200": 3,
+    "alive_needs_input": 9,
+    "template_no_reply": 27,
+    "dead_404_or_unreachable": 9,
+    "other_error": 0,
+    "total": 100,
+    "financial_probed": 16,
+    "financial_ok": 15,
+    "financial_unreachable": 1,
+    "financial_challenge_402": 0,
+    "financial_axes": 8,
+    "financial_total": 16
+  },
+  "headline": "52 of 100 rows answer a correct 402 challenge; 9 rows are phantom or unreachable. Counts only by doctrine.",
+  "doctrine": "A 402 is NOT delivery; a 404 is a catalog row that does not exist. Host details withheld by design; methodology published. Measurement, never certification.",
+  "method": "One GET per row (template params substituted), UA csoai-catalog-trust/0.1, 15s timeout, 12 workers, zero payment, zero signing, zero side effect.",
+  "financial_as_of": "2026-09-07T13:08:42Z",
+  "paid_step": {
+    "href": "https://councilof.ai/api/x402",
+    "feed": "https://councilof.ai/api/eunomia-data?feed=1",
+    "commission": "https://councilof.ai/api/request-attestation",
+    "seller": "https://councilof.ai/api/x402-trust-seller",
+    "mcp": "commission_card"
+  },
+  "settlement_census": {
+    "source": "docs/product/x402-settlement-census-2026-09-06.summary.json",
+    "as_of": "2026-09-06T06:48:44Z",
+    "eligible_probed": 316,
+    "delivered": 100,
+    "refused": 213,
+    "take_and_refuse": 13,
+    "take_and_refuse_pct": 4.1
+  }
+}

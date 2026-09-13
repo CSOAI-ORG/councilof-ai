@@ -14,6 +14,8 @@ root-as-index. Not a second board, second scorer, or TS.
 
 | Bank | Path | Surface | Role |
 | --- | --- | --- | --- |
+| Regulatory open doors | [`regulatory-open-doors-2026-09/`](./regulatory-open-doors-2026-09/) | `public.notice` | Official-source registry of consultations, application windows and open-source contribution routes. Presence is not participation, endorsement or approval; every route is rechecked before submission. |
+| Financial market universe gap map | [`market-universe-2026-09/`](./market-universe-2026-09/) | (discovery index) | Public directory counts + explicit CSOAI gaps across DeFi, DEXs, lending, yields, derivatives, bridges, NFTs, exchanges, payments and controls. `INDEXED` is not `MEASURED`. |
 | Route Receipt open door | [`/route-receipts`](https://councilof.ai/route-receipts) · [`route-receipt.schema.json`](./route-receipt.schema.json) · [`route-receipt.synthetic.example.json`](./route-receipt.synthetic.example.json) | `csoai.route-receipt/0.1` | Vendor-neutral declared-vs-observed orchestration evidence. The example is synthetic and unsigned; no partnership implied. |
 | OpenAI↔HF Jul 2026 incident | [`incident-openai-hf-2026-07/`](./incident-openai-hf-2026-07/) | `public.notice` | Hashed public reports only — DISCOVERED; **not** recomputed; unsigned |
 | GPAI CoP signatory cross-ref | [`gpai-signatory-2026-09/`](./gpai-signatory-2026-09/) | `public.notice` | Live EC list dated/hashed — DISCOVERED; voluntary; **not** compliance; unsigned |

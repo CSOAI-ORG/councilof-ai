@@ -1143,6 +1143,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Landscape"
  },
  {
+  "path": "/launch",
+  "comp": "Launch",
+  "title": "Launch"
+ },
+ {
   "path": "/law",
   "comp": "MeokLaw",
   "title": "Meok Law"

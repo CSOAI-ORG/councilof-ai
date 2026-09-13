@@ -1,0 +1,66 @@
+{
+ "schema": "csoai.release-ledger/0.1",
+ "as_of": "2026-09-13T03:20:00Z",
+ "window": "2026-09-12T17:00Z \u2192 2026-09-13T03:20Z",
+ "verifier": "TUI-1 estate integrity lane",
+ "root_battery": {
+  "live_root": {
+   "url": "https://councilof.ai/root.json",
+   "card_count": 257,
+   "len_card_sha256": 257,
+   "as_of": "2026-09-12T19:21:56Z",
+   "merkle_root": "761ba64f4106ebaa6fad9d8e4ff29cfd2a75d6cc42a1d3ab1246e74c02aca357",
+   "root_sha256": "222538d5f9fa72281d2696ee9839837b498cf93b117233a8ac9e26622f9fa51d",
+   "note": "matches the brief's #2059 baseline values, verified on the wire, not transcribed"
+  },
+  "signature": "VALID \u2014 Ed25519 over canonical 6-field preimage, re-verified under did:web:csoai.org#board-attestation-1",
+  "merkle_inclusion": "VALID \u2014 recomputed path for leaf 2a2ca5bd7e70 (index 249) lands on the live merkle root; proof-declared root matches",
+  "witness_sidecar": {
+   "rekor": "WITNESSED logIndex 2810720876",
+   "conflict_scan": "NONE",
+   "proof_sha256_matches_served_bytes": true
+  },
+  "ots": {
+   "status": "CONFIRMED_BITCOIN",
+   "blocks": [
+    966712
+   ],
+   "digest_binding": "proof attests exactly root sha256 222538d5\u2026",
+   "bitcoin_header_agreement": "proof merkle path recomputed locally == mempool.space merkle_root for block 966712 (AGREE)",
+   "file": "https://councilof.ai/interop/root-222538d5.json.ots"
+  },
+  "hosted_parity": "councilof.ai == csoai.org (post-308): identical bytes",
+  "unsigned_boundary": "5-leaf random sample, 0 unsigned; THIN/specimen gate merged (#1974) at both choke points",
+  "corrections": "https://councilof.ai/api/corrections serves csoai.corrections/0.1",
+  "prior_root_retirement": "228-leaf root fcb3bea4\u2026 retired honestly; its CONFIRMED_BITCOIN blocks 966686/966690 also re-verified AGREE against mempool.space before retirement"
+ },
+ "coverage_api_reconcile": {
+  "gspc": "22 indexed / 22 measured (brief baseline matches)",
+  "stablecoins": "425 indexed / 1 measured / 1 signed / 1 anchored / 0 paid",
+  "xrpl": "16 indexed / 0 measured / 14 signed (signed identity observations precede MEASURED state \u2014 grammar intact, no collapse)",
+  "swift": "26 indexed / 0 measured",
+  "banks": "26 indexed / 0 measured",
+  "x402": "9 indexed / 1 paid (the outside settlement)",
+  "source": "https://councilof.ai/api/coverage (csoai.master-coverage/0.1, writes_board=false)"
+ },
+ "merge_train_classification": {
+  "ots_dedupe": "#2072 (stranded .ots artifact backfill) + #2073 (loop rebase-before-push mechanism) are COMPLEMENTARY, not duplicates \u2014 both merged (02:45Z, 02:35Z); upgraded proofs now serve (live file ab566b3f\u2026 contains BitcoinBlockHeaderAttestation 966690+966692)",
+  "mill_prs": "#2053\u2013#2069 CLOSED by CSOAI-ORG owner automation after sign-back landed (G1.2 repair holding: signer runs green 23:45Z/01:42Z); not merged merely to clear queue",
+  "census_2064": "rolling counts-only round; gates green at audit time; left for its automation",
+  "2071_schedule_fix": "maintain-pending 'not a git repository' class \u2014 post-fix dispatch SUCCESS 02:31Z, post-fix push SUCCESS 02:55Z; first post-fix scheduled run pending GitHub cron lag at report time"
+ },
+ "automation_gap_repair": {
+  "gap": "bot-created PRs (GITHUB_TOKEN) never fire pull_request checks; required context 'gates' absent",
+  "fixes": [
+   "#2078 (point fix: hub-queue-land dispatches pr-gates at creation) merged 02:51Z",
+   "#2076 (sweeper: 3\u00d7/hour, dispatches real pr-gates for ANY check-less open PR; banks undispatchable branches with ONE operator-action comment; no PAT/app/protection change/fabrication) merged 02:5xZ"
+  ],
+  "coexistence": "compatible \u2014 pr-gates per-branch concurrency supersedes duplicate dispatches",
+  "evidence": "sweeper first run success (run 34734253285); mill branches' signer runs carry checks"
+ },
+ "failures": [
+  "my first OTS byte-scan used a wrong attestation tag and briefly suggested missing Bitcoin attestations \u2014 corrected by deserializing with the opentimestamps library; final verdict AGREE on all three blocks (966686/966690 retired root, 966712 live root)"
+ ],
+ "spend": "\u00a30 \u2014 all probes free (GitHub API, mempool.space, rekor.sigstore.dev, estate endpoints)",
+ "known_cosmetic": "post-merge-prover's 'prove' job appears pending on some open PRs via sha-attached check-runs; non-required, self-resolving"
+}

@@ -40,12 +40,12 @@ is unavailable, report the gate; never guess, copy or fabricate it.
 
 These values identify one exact checkpoint and must be re-read before later use.
 
-- Public root: **154 coverage leaves**; `root.json` SHA-256
-  `9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd`;
+- Public root: **257 coverage leaves**; `root.json` SHA-256
+  `222538d5f9fa72281d2696ee9839837b498cf93b117233a8ac9e26622f9fa51d`;
   Merkle root
-  `2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745`.
-- Ed25519 and Rekor verify. OTS is `STAMPED_PENDING_BITCOIN`, not confirmed
-  Bitcoin. PQC is planned.
+  `761ba64f4106ebaa6fad9d8e4ff29cfd2a75d6cc42a1d3ab1246e74c02aca357`.
+- Ed25519 and Rekor verify. OTS is `CONFIRMED_BITCOIN` at block 966712 for
+  those exact 20,998 root bytes only. PQC is planned.
 - The **335-card signed-card catalogue is separate** from that root.
 - Historical root union: **25 roots / 937 entries**—**904** individually signed
   wrappers and **33** unsigned wrappers.

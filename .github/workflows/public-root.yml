@@ -9,7 +9,7 @@ name: public-root
 
 on:
   schedule:
-    - cron: "7 * * * *"
+    - cron: "7 * * * *"  # re-enabled 2026-09-13: schedule was auto-disabled after consecutive failures pre-#2071
   # Intake on merge: staged unsigned atoms land via PR merge; without a push
   # trigger the signer only sees them at the next cron tick (observed 2026-09-12:
   # merge 15:14Z, cron slots 15:07/16:07 delayed >2h by the GitHub scheduler).
@@ -213,6 +213,10 @@ jobs:
           # XRPL impersonation scan snapshot + mirrors (adapter refreshes them each run)
           if [ -d public/interop/xrpl-impersonation-2026-09 ]; then
             git add -- public/interop/xrpl-impersonation-2026-09
+          fi
+          # XRPL 16-identity state matrix + mirrors (adapter refreshes on change)
+          if [ -d public/interop/xrpl-16-state-matrix ]; then
+            git add -- public/interop/xrpl-16-state-matrix
           fi
           if [ -f public/interop/eas-root-attestations.json ]; then
             git add -- public/interop/eas-root-attestations.json
