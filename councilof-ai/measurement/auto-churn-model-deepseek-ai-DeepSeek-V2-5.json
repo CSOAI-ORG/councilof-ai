@@ -1,0 +1,77 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.model.hf",
+  "subject": "model-deepseek-ai-DeepSeek-V2-5",
+  "measured_at": "2026-09-13T05:59:44.570081Z",
+  "metrics": {
+    "repo": "deepseek-ai/DeepSeek-V2.5",
+    "owner": "DeepSeek",
+    "name": "DeepSeek V2.5",
+    "timestamp": "2026-09-13T05:59:44.397830Z",
+    "kind": "model",
+    "downloads": 5781,
+    "likes": 734,
+    "tags": [
+      "transformers",
+      "safetensors",
+      "deepseek_v2",
+      "text-generation",
+      "conversational",
+      "custom_code",
+      "arxiv:2405.04434",
+      "license:other",
+      "eval-results",
+      "text-generation-inference"
+    ],
+    "pipeline_tag": "text-generation",
+    "library_name": "transformers",
+    "liveness": "live",
+    "provenance": "hf_repo",
+    "files": [
+      ".gitattributes",
+      "LICENSE",
+      "README.md",
+      "config.json",
+      "configuration_deepseek.py",
+      "generation_config.json",
+      "model-00001-of-000055.safetensors",
+      "model-00002-of-000055.safetensors",
+      "model-00003-of-000055.safetensors",
+      "model-00004-of-000055.safetensors"
+    ],
+    "safetensors": true,
+    "x402_compatibility": "unknown"
+  },
+  "honest_sentence": "Continuous measurement: measurement.model.hf for model-deepseek-ai-DeepSeek-V2-5. 15 axes measured. Layer 0 evidence: UNMEASURED, PENDING, MEASURED, REJECTED, SUPERSEDED.",
+  "measurement_not_certification": true,
+  "layer_0": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "pubkey": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+    "schema": "csoai.layer-0/0.1",
+    "content_id_method": "sha256(canonical_json)",
+    "evidence_states": [
+      "UNMEASURED",
+      "PENDING",
+      "MEASURED",
+      "REJECTED",
+      "SUPERSEDED"
+    ],
+    "verification_rules": {
+      "alg": "Ed25519",
+      "canonicalization": "JSON with sorted keys, no whitespace, ensure_ascii=False",
+      "signing_payload": "sha256(canonical body)",
+      "transport": "JSON over HTTPS",
+      "ots_upgrade": "OpenTimestamps \u2192 Bitcoin",
+      "rekor_transparency": "logIndex published"
+    },
+    "protocols": [
+      "MCP 1.4.2",
+      "A2A v1.0",
+      "AG-UI SSE",
+      "x402 v2",
+      "SCITT/COSE",
+      "IETF A2A"
+    ]
+  },
+  "auto_churn": true
+}

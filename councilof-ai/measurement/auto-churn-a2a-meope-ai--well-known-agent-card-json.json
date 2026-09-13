@@ -1,0 +1,44 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.a2a.agent_card",
+  "subject": "a2a-meope-ai--well-known-agent-card-json",
+  "measured_at": "2026-09-13T05:59:31.844018Z",
+  "metrics": {
+    "url": "https://meope.ai/.well-known/agent-card.json",
+    "timestamp": "2026-09-13T05:59:31.840775Z",
+    "liveness": "error",
+    "error_behavior": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+  },
+  "honest_sentence": "Continuous measurement: measurement.a2a.agent_card for a2a-meope-ai--well-known-agent-card-json. 4 axes measured. Layer 0 evidence: UNMEASURED, PENDING, MEASURED, REJECTED, SUPERSEDED.",
+  "measurement_not_certification": true,
+  "layer_0": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "pubkey": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+    "schema": "csoai.layer-0/0.1",
+    "content_id_method": "sha256(canonical_json)",
+    "evidence_states": [
+      "UNMEASURED",
+      "PENDING",
+      "MEASURED",
+      "REJECTED",
+      "SUPERSEDED"
+    ],
+    "verification_rules": {
+      "alg": "Ed25519",
+      "canonicalization": "JSON with sorted keys, no whitespace, ensure_ascii=False",
+      "signing_payload": "sha256(canonical body)",
+      "transport": "JSON over HTTPS",
+      "ots_upgrade": "OpenTimestamps \u2192 Bitcoin",
+      "rekor_transparency": "logIndex published"
+    },
+    "protocols": [
+      "MCP 1.4.2",
+      "A2A v1.0",
+      "AG-UI SSE",
+      "x402 v2",
+      "SCITT/COSE",
+      "IETF A2A"
+    ]
+  },
+  "auto_churn": true
+}

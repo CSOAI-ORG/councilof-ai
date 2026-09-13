@@ -1,0 +1,76 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.model.hf",
+  "subject": "model-mistralai-Mistral-7B-Instruct-v0-3",
+  "measured_at": "2026-09-13T05:59:43.180303Z",
+  "metrics": {
+    "repo": "mistralai/Mistral-7B-Instruct-v0.3",
+    "owner": "Mistral",
+    "name": "Mistral 7B",
+    "timestamp": "2026-09-13T05:59:42.980840Z",
+    "kind": "model",
+    "downloads": 2389563,
+    "likes": 2847,
+    "tags": [
+      "vllm",
+      "safetensors",
+      "mistral",
+      "mistral-common",
+      "base_model:mistralai/Mistral-7B-v0.3",
+      "base_model:finetune:mistralai/Mistral-7B-v0.3",
+      "license:apache-2.0",
+      "deploy:sagemaker",
+      "region:us"
+    ],
+    "pipeline_tag": "",
+    "library_name": "vllm",
+    "liveness": "live",
+    "provenance": "hf_repo",
+    "files": [
+      ".gitattributes",
+      "README.md",
+      "config.json",
+      "consolidated.safetensors",
+      "generation_config.json",
+      "model-00001-of-00003.safetensors",
+      "model-00002-of-00003.safetensors",
+      "model-00003-of-00003.safetensors",
+      "model.safetensors.index.json",
+      "params.json"
+    ],
+    "safetensors": true,
+    "x402_compatibility": "unknown"
+  },
+  "honest_sentence": "Continuous measurement: measurement.model.hf for model-mistralai-Mistral-7B-Instruct-v0-3. 15 axes measured. Layer 0 evidence: UNMEASURED, PENDING, MEASURED, REJECTED, SUPERSEDED.",
+  "measurement_not_certification": true,
+  "layer_0": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "pubkey": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+    "schema": "csoai.layer-0/0.1",
+    "content_id_method": "sha256(canonical_json)",
+    "evidence_states": [
+      "UNMEASURED",
+      "PENDING",
+      "MEASURED",
+      "REJECTED",
+      "SUPERSEDED"
+    ],
+    "verification_rules": {
+      "alg": "Ed25519",
+      "canonicalization": "JSON with sorted keys, no whitespace, ensure_ascii=False",
+      "signing_payload": "sha256(canonical body)",
+      "transport": "JSON over HTTPS",
+      "ots_upgrade": "OpenTimestamps \u2192 Bitcoin",
+      "rekor_transparency": "logIndex published"
+    },
+    "protocols": [
+      "MCP 1.4.2",
+      "A2A v1.0",
+      "AG-UI SSE",
+      "x402 v2",
+      "SCITT/COSE",
+      "IETF A2A"
+    ]
+  },
+  "auto_churn": true
+}

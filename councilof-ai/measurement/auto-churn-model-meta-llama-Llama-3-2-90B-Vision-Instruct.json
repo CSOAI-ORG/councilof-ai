@@ -1,0 +1,77 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.model.hf",
+  "subject": "model-meta-llama-Llama-3-2-90B-Vision-Instruct",
+  "measured_at": "2026-09-13T05:59:42.792067Z",
+  "metrics": {
+    "repo": "meta-llama/Llama-3.2-90B-Vision-Instruct",
+    "owner": "Meta",
+    "name": "Llama 3.2 Vision",
+    "timestamp": "2026-09-13T05:59:42.529941Z",
+    "kind": "model",
+    "downloads": 150218,
+    "likes": 360,
+    "tags": [
+      "transformers",
+      "safetensors",
+      "mllama",
+      "image-text-to-text",
+      "facebook",
+      "meta",
+      "pytorch",
+      "llama",
+      "llama-3",
+      "conversational"
+    ],
+    "pipeline_tag": "image-text-to-text",
+    "library_name": "transformers",
+    "liveness": "live",
+    "provenance": "hf_repo",
+    "files": [
+      ".gitattributes",
+      "LICENSE.txt",
+      "README.md",
+      "USE_POLICY.md",
+      "chat_template.json",
+      "config.json",
+      "generation_config.json",
+      "model-00001-of-00037.safetensors",
+      "model-00002-of-00037.safetensors",
+      "model-00003-of-00037.safetensors"
+    ],
+    "safetensors": true,
+    "x402_compatibility": "unknown"
+  },
+  "honest_sentence": "Continuous measurement: measurement.model.hf for model-meta-llama-Llama-3-2-90B-Vision-Instruct. 15 axes measured. Layer 0 evidence: UNMEASURED, PENDING, MEASURED, REJECTED, SUPERSEDED.",
+  "measurement_not_certification": true,
+  "layer_0": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "pubkey": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+    "schema": "csoai.layer-0/0.1",
+    "content_id_method": "sha256(canonical_json)",
+    "evidence_states": [
+      "UNMEASURED",
+      "PENDING",
+      "MEASURED",
+      "REJECTED",
+      "SUPERSEDED"
+    ],
+    "verification_rules": {
+      "alg": "Ed25519",
+      "canonicalization": "JSON with sorted keys, no whitespace, ensure_ascii=False",
+      "signing_payload": "sha256(canonical body)",
+      "transport": "JSON over HTTPS",
+      "ots_upgrade": "OpenTimestamps \u2192 Bitcoin",
+      "rekor_transparency": "logIndex published"
+    },
+    "protocols": [
+      "MCP 1.4.2",
+      "A2A v1.0",
+      "AG-UI SSE",
+      "x402 v2",
+      "SCITT/COSE",
+      "IETF A2A"
+    ]
+  },
+  "auto_churn": true
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.mcp.server",
+  "subject": "mcp-csoai-gspc-mcp-nicholastempleman-workers",
+  "measured_at": "2026-09-13T05:59:36.619509Z",
+  "metrics": {
+    "url": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
+    "timestamp": "2026-09-13T05:59:36.569688Z",
+    "kind": "mcp_server",
+    "transport": "live",
+    "handshake": "ok",
+    "protocol_version": "1.4.2",
+    "server_info": {
+      "name": "csoai-gspc-mcp",
+      "version": "1.0.0"
+    },
+    "capabilities": {
+      "tools": {}
+    }
+  },
+  "honest_sentence": "Continuous measurement: measurement.mcp.server for mcp-csoai-gspc-mcp-nicholastempleman-workers. 8 axes measured. Layer 0 evidence: UNMEASURED, PENDING, MEASURED, REJECTED, SUPERSEDED.",
+  "measurement_not_certification": true,
+  "layer_0": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "pubkey": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+    "schema": "csoai.layer-0/0.1",
+    "content_id_method": "sha256(canonical_json)",
+    "evidence_states": [
+      "UNMEASURED",
+      "PENDING",
+      "MEASURED",
+      "REJECTED",
+      "SUPERSEDED"
+    ],
+    "verification_rules": {
+      "alg": "Ed25519",
+      "canonicalization": "JSON with sorted keys, no whitespace, ensure_ascii=False",
+      "signing_payload": "sha256(canonical body)",
+      "transport": "JSON over HTTPS",
+      "ots_upgrade": "OpenTimestamps \u2192 Bitcoin",
+      "rekor_transparency": "logIndex published"
+    },
+    "protocols": [
+      "MCP 1.4.2",
+      "A2A v1.0",
+      "AG-UI SSE",
+      "x402 v2",
+      "SCITT/COSE",
+      "IETF A2A"
+    ]
+  },
+  "auto_churn": true
+}
