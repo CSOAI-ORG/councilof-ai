@@ -1,0 +1,56 @@
+{
+  "card": {
+    "as_of": "2026-09-13T03:33:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "286",
+      "symbol": "USDG",
+      "attestation_page": "https://paxos.com/usdg-transparency/",
+      "auditor": "KPMG",
+      "cadence_claimed": "monthly",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "218551830383ad63fc81ec404f1afd00e23c92f203140e4f6cfefab9411a7ae9",
+      "excerpt": "th. Attestations * Attestation reports posted on or after February 27, 2026 are issued by KPMG LLP, an independent third-party accounting firm. KPMG LLP’s exami",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e62987489e0fe5879be8a4168e4253a604b369b2f07a83c92a3f59d53446cffe",
+    "sig_ed25519": "37b7e2759bdb904b0b290cdf0195d21babc02c3ac3196938e540361c66e59e7c2fa8e5d8e09b48951b4591c28b75c60aac5e962c3268fadbd08f469638d7bf07",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://paxos.com/usdg-transparency/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDG",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "staleness"
+    ]
+  },
+  "proof": [
+    "3f53b14cad39f12bb867fb236b9ac2e2e1e3a9acf0a179949ba66438f94a6ebe",
+    "b46911dd17b286ef77e6e9cc2aee8157646fb714b167333af50af57e9937d57a",
+    "c7693d09f5bbb38cc0f9f07dd9a6db53771dbf0580e00f07dcf44478e1fa2f9b",
+    "e0ab22490a2241a21842451dbfc26ced4f7ccbbd57e52ee91b20fe95b876f1db",
+    "61e010aac690ce29467988833fb404e93e321285a5ffe3610a87f82e7c25cc9e",
+    "8cbadbef3b75ffb63a7dfef26fd69ce7aa2b10f9268dcf25d4ed9c3da32a6941",
+    "a8cf917f05fac5274b5fbb1eacd12b8e4c38c8e8fe00ea1ebe3c926507fbd366",
+    "941f093740656514917bdb3ff270fd764b7534f6c90f152842602112269886f3",
+    "d2c03694c328f4b51cdfbc1b5610e49a863eea409abe8f1c63310955cb3e3110"
+  ]
+}

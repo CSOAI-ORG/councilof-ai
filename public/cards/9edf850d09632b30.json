@@ -1,0 +1,57 @@
+{
+  "card": {
+    "as_of": "2026-09-13T06:03:11Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-state-matrix/0.1",
+      "status": "PROBED",
+      "matrix_sha256": "df404fba5d96924312095e1589a566cdafd8e968fb670335f6c12ad0bc94ee7d",
+      "n_identities": 16,
+      "n_changed": 6,
+      "field_state_counts": {
+        "OBSERVED": 121,
+        "UNMEASURED": 80
+      },
+      "ledger_index": 106951372,
+      "observed_at": "2026-09-13T06:03:11Z",
+      "rule": "issuer-account facts, source-reported market values, independently derived supply/holder results, deployment, reserve claim, attestation and controls stay separate",
+      "matrix_url": "https://councilof.ai/interop/xrpl-16-state-matrix/matrix.json"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9edf850d09632b3046c8e90a0ed745f3f978e90b1ce32be5be73e037dc3ea7c2",
+    "sig_ed25519": "0ad41c17121b5f3031ec4e73b72f8d88adc74339b27438db0fc0b755e463cf5fe1509cff5ef0a1c221fb38d648c74c673a05c6439644ff7639e6de828866ad0c",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics",
+      "https://councilof.ai/interop/xrpl-16-state-matrix/matrix.json"
+    ],
+    "subject": "XRPL 16-identity state matrix refresh",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-state-matrix",
+      "xrpl-16-state-matrix"
+    ],
+    "unmeasured": [
+      "supply",
+      "holders",
+      "chain_deployment",
+      "reserve_claim",
+      "attestation",
+      "cross_chain_deployments"
+    ]
+  },
+  "proof": [
+    "93dd3df2d1c2d09f19a0978e8712226de08d1cdb997a707ce64277c09c13adf3",
+    "0f35a85e8b6ad8453381d9d4afd67b94bf49592f9cba9ab8e6f4714d0ed6ce0d",
+    "bdcd5098776d0d3dc79d9cb9ee696bbf8c4856ac449457b346484d2f279b5ef2",
+    "bd7742af28404d43259ef0f17857dbb368ce9c79ad44be1527e859956d8a5c2e",
+    "9923c624ffc0e735d903bf30da6e19c0ca3f7c8709854dd6d9f1e10c762e62ac",
+    "8cbadbef3b75ffb63a7dfef26fd69ce7aa2b10f9268dcf25d4ed9c3da32a6941",
+    "a8cf917f05fac5274b5fbb1eacd12b8e4c38c8e8fe00ea1ebe3c926507fbd366",
+    "941f093740656514917bdb3ff270fd764b7534f6c90f152842602112269886f3",
+    "d2c03694c328f4b51cdfbc1b5610e49a863eea409abe8f1c63310955cb3e3110"
+  ]
+}

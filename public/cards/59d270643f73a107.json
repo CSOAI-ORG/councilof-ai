@@ -1,0 +1,50 @@
+{
+  "card": {
+    "as_of": "2026-09-13T06:00:29Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "distribution-integrity",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "represented vs distributed never mixed"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "59d270643f73a107389ef498e05e314b9f8a6c3ff62a01fbee7c4b1c8d429303",
+    "sig_ed25519": "fee456a1d2cb372631433f2709e4223b6ba039f1ef605aae1cc807b8ea120eab7c5953f75a62d0067b4981f77f1c2da5abf150e977f34c22370084ff778d5d0b",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-distribution-integrity"
+    ],
+    "subject": "GSPC distribution-integrity UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "distribution-integrity",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "44d7556f00d73c2b2a2d42bc2e9aaad0462321d6a4d07e0fefb715914c590f00",
+    "737f508e58333a3cb49a4f0c10068fd41cccaedf05ca2ca0281f20333309e6af",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "0c3e9cf9498b3cb8888536cb0750f859489ce6aeffc2d34ee5bbe5f9de8847a0",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "ff85b5efd7e58189962591e3be807a6745f052fddab720b6ff079eb1a0595837",
+    "ce5518cecdd499ab07268252b2ba8fe49e69d7be08d65f38aacfd343df86d18f",
+    "d2c03694c328f4b51cdfbc1b5610e49a863eea409abe8f1c63310955cb3e3110"
+  ]
+}

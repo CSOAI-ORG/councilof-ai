@@ -1,0 +1,56 @@
+{
+  "card": {
+    "as_of": "2026-09-13T03:33:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "2",
+      "symbol": "USDC",
+      "attestation_page": "https://www.circle.com/en/transparency",
+      "auditor": "Deloitte",
+      "cadence_claimed": "daily",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "ff94e5b90f6186ed82801547b75e00cdabe02a6bf3571edd8f6a62a9586857f2",
+      "excerpt": "on and redemption of our stablecoins, and to ensure USDC stability. Independently audited Deloitte & Touche LLP is Circle’s independent auditor and has audited ",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6e98cd2b1e0c01f74905b6aec02bf82b8f47c91f262db5ab80f702e36c6353ff",
+    "sig_ed25519": "ab9523d7a2f86717beef0ea3c9703e7836ce9be0bf6b93d7d2f31834f3ed25e179f22cb3f34b90e5330ab0e8934d14333a5926fc5ffaa5cd4ac4217acd6fd103",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://www.circle.com/en/transparency"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDC",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "staleness"
+    ]
+  },
+  "proof": [
+    "4506a72579d66f421aac22d8a8dfe028565ee6743dbde25c09bf3362f69368ef",
+    "968cd3a36d28244d4b23ed07d49db98d8fcb19c7d1350be680ce234c7a45023f",
+    "3def3a2f9826bb9ff5f6eb9c9de8f17063f0d97bfd4dc0204b04fde1ffea6a6f",
+    "00186038db9337df9f0edd4a9a95a060014596f6d2ca89cdfbb26a1198d23a0c",
+    "61e010aac690ce29467988833fb404e93e321285a5ffe3610a87f82e7c25cc9e",
+    "8cbadbef3b75ffb63a7dfef26fd69ce7aa2b10f9268dcf25d4ed9c3da32a6941",
+    "a8cf917f05fac5274b5fbb1eacd12b8e4c38c8e8fe00ea1ebe3c926507fbd366",
+    "941f093740656514917bdb3ff270fd764b7534f6c90f152842602112269886f3",
+    "d2c03694c328f4b51cdfbc1b5610e49a863eea409abe8f1c63310955cb3e3110"
+  ]
+}

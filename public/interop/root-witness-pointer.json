@@ -1,45 +1,45 @@
 {
  "kind": "csoai.root-witness-pointer/v0",
- "as_of": "2026-09-13T05:35:00Z",
+ "as_of": "2026-09-13T07:52:16Z",
  "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
  "live_root": {
   "url": "https://councilof.ai/root.json",
   "also": "https://councilof.ai/api/root",
-  "sha256": "06e4da3defe4e54daa2bdc3d6acaa5f442187ea9913d16870947b4fa08f85059",
-  "bytes": 20998,
-  "merkle_root": "2e8ddfc957062c0b71ad6e1e5c06cde435e31e9ec7bf53fbf917f05ec038c427",
-  "card_count": 257,
-  "as_of": "2026-09-13T03:01:13Z"
+  "sha256": "f6c7d82651b30007c6c7c33d8ada7d0943610a11824e0893f4906b854fdb3e90",
+  "bytes": 21502,
+  "merkle_root": "03d0ea31b374df4c3a7826ad4e6347a0c0baf75cad65d85a6f515427d504ea32",
+  "card_count": 264,
+  "as_of": "2026-09-13T06:03:55Z"
  },
  "corpus_scope": {
   "relationship": "SEPARATE_CORPORA",
-  "public_root_count": 257,
-  "public_root_sha256": "06e4da3defe4e54daa2bdc3d6acaa5f442187ea9913d16870947b4fa08f85059",
+  "public_root_count": 264,
+  "public_root_sha256": "f6c7d82651b30007c6c7c33d8ada7d0943610a11824e0893f4906b854fdb3e90",
   "signed_card_count": 335,
   "signed_card_id_overlap": 0,
   "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
-  "note": "The 257 public-root leaves and 335 separately indexed signed cards are separate corpora with 0 identifier overlap. This root and its OTS proof do not anchor the signed-card index."
+  "note": "The 264 public-root leaves and 335 separately indexed signed cards are separate corpora with 0 identifier overlap. This root and its OTS proof do not anchor the signed-card index."
  },
  "witness_sidecar": {
   "url": "https://councilof.ai/interop/root-witness-latest.json",
   "path": "public/interop/root-witness-latest.json",
   "status": "PUBLISHED",
-  "dated_copy": "public/interop/root-witness-2026-09-13-06e4da3d.json"
+  "dated_copy": "public/interop/root-witness-2026-09-13-f6c7d826.json"
  },
  "drift": {
-  "status": "MATCH",
-  "checked_at": "2026-09-13T06:25:39Z",
+  "status": "DRIFTED",
+  "checked_at": "2026-09-13T07:52:17Z",
   "checked_against": "https://councilof.ai/root.json",
-  "witness_artifact_sha256": "06e4da3defe4e54daa2bdc3d6acaa5f442187ea9913d16870947b4fa08f85059",
+  "witness_artifact_sha256": "f6c7d82651b30007c6c7c33d8ada7d0943610a11824e0893f4906b854fdb3e90",
   "live_root_sha256": "06e4da3defe4e54daa2bdc3d6acaa5f442187ea9913d16870947b4fa08f85059",
-  "witness_artifact_merkle_root": "2e8ddfc957062c0b71ad6e1e5c06cde435e31e9ec7bf53fbf917f05ec038c427",
+  "witness_artifact_merkle_root": "03d0ea31b374df4c3a7826ad4e6347a0c0baf75cad65d85a6f515427d504ea32",
   "live_root_merkle_root": "2e8ddfc957062c0b71ad6e1e5c06cde435e31e9ec7bf53fbf917f05ec038c427",
   "live_root_bytes": 20998,
-  "match_sha256": true,
-  "match_merkle_root": true,
-  "reason": "the live root a reader fetches is byte-identical to the witnessed bytes"
+  "match_sha256": false,
+  "match_merkle_root": false,
+  "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
  },
- "witness_status_observed_at": "2026-09-13T05:34:59Z",
+ "witness_status_observed_at": "2026-09-13T07:52:15Z",
  "witnesses": {
   "rekor": "WITNESSED",
   "ots": "CONFIRMED_BITCOIN",
@@ -55,9 +55,9 @@
  "conflict": {
   "status": "NONE",
   "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
-  "as_of": "2026-09-13T03:01:13Z",
-  "merkle_root": "2e8ddfc957062c0b71ad6e1e5c06cde435e31e9ec7bf53fbf917f05ec038c427",
-  "sidecars_scanned": 30,
+  "as_of": "2026-09-13T06:03:55Z",
+  "merkle_root": "03d0ea31b374df4c3a7826ad4e6347a0c0baf75cad65d85a6f515427d504ea32",
+  "sidecars_scanned": 31,
   "conflicts": [],
   "byte_variants": [],
   "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
