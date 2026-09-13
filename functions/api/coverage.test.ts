@@ -9,6 +9,7 @@ const payloads: Record<string, unknown> = {
   "/interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json": {
     registry_totals: { registered_all_indexer: 137046 },
   },
+  "/interop/root-kinds.json": { by_kind: { "csoai.wrapper.parity/0.1": 17, "csoai.eater.xrpl-issuer/0.1": 16 }, card_count: 294 },
   "/interop/wrapped-asset-parity-latest.json": {
     counts: { ESCROW_PARITY_READ: 8, UNCHECKABLE_NATIVE_ISSUANCE: 4, INDEXED_CUSTODIAL: 5 },
     records: Array.from({ length: 17 }, (_, i) => ({ id: `pair-${i}` })),
@@ -90,6 +91,8 @@ describe("GET /api/coverage", () => {
     expect(body.rows.find((row: any) => row.id === "erc8004").signed.value).toBeNull();
     expect(body.rows.find((row: any) => row.id === "wrappers").indexed.value).toBe(17);
     expect(body.rows.find((row: any) => row.id === "wrappers").measured.value).toBeNull();
+    expect(body.rows.find((row: any) => row.id === "wrappers").signed.value).toBe(17);
+    expect(body.rows.find((row: any) => row.id === "wrappers").rooted.value).toBe(17);
     expect(body.rows.find((row: any) => row.id === "wrappers").note).toMatch(/escrow-parity reads: 8/);
   });
 

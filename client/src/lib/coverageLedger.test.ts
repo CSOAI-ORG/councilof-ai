@@ -61,6 +61,7 @@ const input = {
     counts: { ESCROW_PARITY_READ: 8, UNCHECKABLE_NATIVE_ISSUANCE: 4, INDEXED_CUSTODIAL: 5 },
     records: Array.from({ length: 17 }, (_, i) => ({ id: `pair-${i}` })),
   },
+  root_kinds: { by_kind: { "csoai.wrapper.parity/0.1": 17 }, card_count: 294 },
 };
 
 describe("master GSPC coverage ledger", () => {
@@ -153,6 +154,7 @@ describe("master GSPC coverage ledger", () => {
       a2a: null,
       erc8004: null,
       wrappers: null,
+      root_kinds: null,
     });
     for (const row of rows) {
       expect(row.indexed.value).toBeNull();

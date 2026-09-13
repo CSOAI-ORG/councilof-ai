@@ -203,3 +203,24 @@ def test_count_check_can_actually_fail() -> None:
     forged = leaves + leaves[-colliding[0] :]
     assert mroot(forged) == base                    # the forgery is real
     assert root["card_count"] != len(forged)        # and the count is what catches it
+
+
+def test_kinds_index_counts_every_leaf_and_types_nothing() -> None:
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("pub", ROOT / "scripts" / "publish_public_root.py")
+    pub = importlib.util.module_from_spec(spec)
+    assert spec and spec.loader
+    spec.loader.exec_module(pub)
+    cards = [
+        {"payload": {"kind": "csoai.wrapper.parity/0.1", "state": "PROBED"}},
+        {"payload": {"kind": "csoai.wrapper.parity/0.1", "state": "DISCOVERED"}},
+        {"payload": {"kind": "csoai.eater.xrpl-issuer/0.1", "state": "PROBED"}},
+        {"payload": {}},
+    ]
+    idx = pub.kinds_index(cards, as_of="2026-09-13T16:15:20Z", merkle_root="51cc")
+    assert idx["card_count"] == 4
+    assert sum(idx["by_kind"].values()) == 4
+    assert idx["by_kind"]["csoai.wrapper.parity/0.1"] == 2
+    assert idx["by_kind"]["?"] == 1
+    assert idx["by_kind_state"]["csoai.wrapper.parity/0.1|PROBED"] == 1
+    assert "MEASURED" not in json.dumps(idx["by_kind"])
