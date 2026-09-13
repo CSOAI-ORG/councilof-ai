@@ -31,8 +31,8 @@ The GSPC (Governance · Safety · Provenance · Continuity) measurement system:
 - **22 measurement axes**: 14 behavioural (model comparison) + 8 financial/deterministic-facts
 - **Frozen test banks**: Publicly hosted on HuggingFace, versioned, SHA-256 fingerprinted
 - **Deterministic grading**: No model judges another model; scoring code is public
-- **Ed25519 signing**: Every measurement card signed off-device via OIDC MPC ceremony
-- **Merkle root**: Public root with 264 leaves, Rekor-witnessed (log index 2791822965)
+- **Ed25519 signing**: Every measurement card signed under one Ed25519 key resolved from did:web:csoai.org, the signing step run in GitHub Actions under OIDC (a single key — no threshold or MPC scheme)
+- **Merkle root**: Public root with 264 leaves, Rekor-witnessed (current witness entry published at https://councilof.ai/interop/root-witness-latest.json — log index 2814494675 at the time of writing; it advances with every root cycle, so read the file rather than this number)
 - **Card root**: 1,301 measurement cards in dedicated Merkle root (including provenance-enriched cards)
 - **Corrections ledger**: Public, machine-readable, 49 entries
 
@@ -83,7 +83,7 @@ The GSPC (Governance · Safety · Provenance · Continuity) measurement system:
 | Artifact | URL | Verification |
 |----------|-----|-------------|
 | GSPC Board | https://councilof.ai/api/gspc | 22 axes, living, signed |
-| Signed Cards | https://councilof.ai/signed/card_index.json | 337 cards, Ed25519 |
+| Signed Cards | https://councilof.ai/signed/card_index.json | 335 cards, Ed25519 |
 | Public Root | https://councilof.ai/root.json | 264 leaves, Merkle, Rekor |
 | Card Root | https://councilof.ai/interop/card-root-2026-09-13.json | 1,301 leaves, dedicated measurement root |
 | Corrections | https://councilof.ai/api/corrections | 49 entries, public |
@@ -102,7 +102,7 @@ The GSPC (Governance · Safety · Provenance · Continuity) measurement system:
 
 - Own-model exclusion: CSOAI's own fine-tuned models are excluded from public leadership on 8 axes
 - Neutral body: CSOAI does not certify, accredit, or issue conformity assessments
-- Revenue: $0.02 USDC from 1 external payer (chain-adjudicated)
+- Revenue: no external revenue to date. Every x402 settlement received so far is classified estate-controlled in the public audit (audit-settlement-classification.json), and the live counter at https://councilof.ai/api/revenue reports 0 distinct non-self payers
 - All artifacts independently verifiable without CSOAI credentials
 
 ## What we are NOT asking for
