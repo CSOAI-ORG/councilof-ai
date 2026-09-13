@@ -258,6 +258,77 @@ def refresh_eas_metadata(public_dir: Path = PUB) -> int:
     return 0
 
 
+def refresh_ots_metadata(public_dir: Path = PUB) -> int:
+    """Refresh OTS facts after an additive proof upgrade, without re-witnessing.
+
+    The hourly OTS upgrader can add Bitcoin attestations to an existing proof.
+    Those changed proof bytes must be published atomically with the sidecar and
+    pointer that describe them, otherwise the release gate correctly refuses the
+    deploy.  This path touches only OTS-derived metadata; it does not upload a
+    Rekor entry, submit a new stamp, or alter the signed root.
+    """
+    root_path = public_dir / "root.json"
+    interop_dir = public_dir / "interop"
+    latest_path = interop_dir / "root-witness-latest.json"
+    pointer_path = interop_dir / "root-witness-pointer.json"
+    repo_root = public_dir.parent
+    try:
+        raw = root_path.read_bytes()
+        root_sha = hashlib.sha256(raw).hexdigest()
+        side = json.loads(latest_path.read_text())
+        pointer = json.loads(pointer_path.read_text())
+    except Exception as exc:
+        print(f"OTS metadata refresh refused: witness files unreadable: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return 2
+
+    artifact = side.get("artifact") if isinstance(side.get("artifact"), dict) else {}
+    live_root = pointer.get("live_root") if isinstance(pointer.get("live_root"), dict) else {}
+    if artifact.get("sha256") != root_sha or live_root.get("sha256") != root_sha:
+        print("OTS metadata refresh refused: sidecar/pointer do not bind the current root bytes", file=sys.stderr)
+        return 2
+
+    prior_ots = ((side.get("witnesses") or {}).get("ots") or {})
+    proof_value = prior_ots.get("path")
+    if not isinstance(proof_value, str) or not proof_value.startswith("public/interop/"):
+        print("OTS metadata refresh refused: current witness has no repository-local proof path", file=sys.stderr)
+        return 2
+    proof_path = repo_root / proof_value
+    if not proof_path.is_file():
+        print(f"OTS metadata refresh refused: proof is missing: {proof_value}", file=sys.stderr)
+        return 2
+
+    try:
+        status = ots_status_from_proof(
+            root_path,
+            proof_path,
+            root_dir=repo_root,
+            public_dir=public_dir,
+        )
+    except Exception as exc:
+        print(f"OTS metadata refresh refused: proof verification failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return 2
+
+    observed_at = status.get("observed_at") or now()
+    side.setdefault("witnesses", {})["ots"] = status
+    side["as_of"] = observed_at
+    pointer.setdefault("witnesses", {})["ots"] = status.get("status", "UNCHECKABLE")
+    pointer["witness_status_observed_at"] = observed_at
+    pointer["as_of"] = observed_at
+
+    dated_value = (pointer.get("witness_sidecar") or {}).get("dated_copy")
+    dated_path = repo_root / dated_value if isinstance(dated_value, str) and dated_value.startswith("public/") else None
+    side_bytes = json.dumps(side, indent=1, ensure_ascii=False) + "\n"
+    latest_path.write_text(side_bytes)
+    if dated_path is not None and dated_path.is_file():
+        dated_path.write_text(side_bytes)
+    pointer_path.write_text(json.dumps(pointer, indent=1, ensure_ascii=False) + "\n")
+    print(
+        f"refreshed OTS witness metadata for {root_sha[:16]}: "
+        f"{status.get('status')} blocks={status.get('bitcoin_blocks', [])}"
+    )
+    return 0
+
+
 def find_root_conflicts(interop_dir: Path, as_of: str | None, merkle_root: str | None, sha256: str | None) -> dict:
     """Two witnessed roots for the same issuer and epoch (equal as_of, unequal merkle_root) = CONFLICT.
 
@@ -528,6 +599,7 @@ def main() -> int:
     parser.add_argument("--selftest", action="store_true")
     parser.add_argument("--recheck", action="store_true")
     parser.add_argument("--refresh-eas", action="store_true")
+    parser.add_argument("--refresh-ots", action="store_true")
     parser.add_argument("--public-dir", type=Path, default=PUB)
     parser.add_argument("--check-only", action="store_true")
     parser.add_argument("--output", type=Path)
@@ -540,6 +612,8 @@ def main() -> int:
         return selftest()
     if args.refresh_eas:
         return refresh_eas_metadata(args.public_dir)
+    if args.refresh_ots:
+        return refresh_ots_metadata(args.public_dir)
     if args.attempts < 1 or args.attempts > 20:
         parser.error("--attempts must be between 1 and 20")
     if args.retry_delay_seconds < 0 or args.retry_delay_seconds > 300:

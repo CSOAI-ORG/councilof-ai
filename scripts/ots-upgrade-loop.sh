@@ -41,8 +41,30 @@ if ! python3 scripts/ots-coverage-audit.py --served > /tmp/ots-cov.out 2>&1; the
   exit 1
 fi
 
+# The current public root has a strict witness sidecar.  An OTS upgrade changes
+# the proof bytes (and can add Bitcoin block heights), so publish those proof
+# facts atomically with the proof itself.  The old loop committed only the .ots
+# file; the next deploy then failed closed because the sidecar still described
+# the previous bytes.  Refresh just the OTS-derived fields and run the candidate
+# gate before any commit.
+ROOT_SHA=$(shasum -a 256 public/root.json 2>/dev/null | awk '{print $1}')
+CURRENT_PROOF="public/interop/root-${ROOT_SHA:0:8}.json.ots"
+if [ -n "$ROOT_SHA" ] && [ -f "$CURRENT_PROOF" ] && ! git diff --quiet -- "$CURRENT_PROOF" 2>/dev/null; then
+  if ! python3 scripts/witness_public_root.py --refresh-ots >> "$LOG" 2>&1; then
+    echo "$(TS) REFUSING TO COMMIT — current-root OTS metadata refresh failed" >> "$LOG"
+    exit 1
+  fi
+  if ! python3 scripts/root-witness-release-gate.py --phase candidate >> "$LOG" 2>&1; then
+    echo "$(TS) REFUSING TO COMMIT — root witness candidate gate failed after OTS refresh" >> "$LOG"
+    exit 1
+  fi
+fi
+
 if ! git diff --quiet -- public 2>/dev/null; then
   git add public/**/*.ots public/*.ots 2>/dev/null
+  git add public/interop/root-witness-latest.json \
+    public/interop/root-witness-pointer.json \
+    public/interop/root-witness-????-??-??-*.json 2>/dev/null
   git commit -q -m "ots: upgrade pending stamps to Bitcoin attestations
 
 Automated by scripts/ots-upgrade-loop.sh. Upgrading is additive — it attaches the
