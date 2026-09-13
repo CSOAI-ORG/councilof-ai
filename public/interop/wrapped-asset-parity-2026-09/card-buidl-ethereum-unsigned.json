@@ -1,0 +1,66 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "wrapped BUIDL on ethereum vs native issuance — INDEXED_CUSTODIAL",
+  "as_of": "2026-09-13T15:56:17.092Z",
+  "source_urls": [
+    "https://ethereum-rpc.publicnode.com"
+  ],
+  "payload": {
+    "kind": "csoai.wrapper.parity/0.1",
+    "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+    "id": "buidl:ethereum",
+    "backing_model": "custodial",
+    "wrapped": {
+      "chain": "ethereum",
+      "symbol": "BUIDL",
+      "address": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+      "chainId": 1,
+      "block": 25969460,
+      "block_hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+      "block_time": 1789313879
+    },
+    "canonical": {
+      "chain": "offchain",
+      "symbol": "fund shares",
+      "address": "transfer agent (Securitize); not on any chain",
+      "chainId": null,
+      "block": null,
+      "block_hash": null
+    },
+    "escrow": null,
+    "escrow_name": null,
+    "note": "Tokenised fund shares; the reserve is the fund's assets held off-chain, reported by the transfer agent. INDEXED, no parity claimed.",
+    "reads": {
+      "wrapped_total_supply": {
+        "query": "totalSupply()",
+        "raw": "0x0000000000000000000000000000000000000000000000000000c0e03e051f2d",
+        "raw_sha256": "dfe95b9dff923992a1276caea51636072507ad8fca0c682b9d39575cb29f4ee5",
+        "atomic": "212069345730349",
+        "normalized": "212069345.730349",
+        "decimals": 6
+      }
+    },
+    "escrow_over_wrapped": null,
+    "parity_state": "INDEXED_CUSTODIAL",
+    "state": "DISCOVERED",
+    "error": null,
+    "fetched_at": "2026-09-13T15:56:17.092Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ]
+  },
+  "tags": [
+    "eater:wrapper-parity",
+    "axis:distribution-integrity",
+    "backing:custodial",
+    "state:INDEXED_CUSTODIAL"
+  ],
+  "unmeasured": [
+    "reserve (custodian-held off this chain; not readable here)"
+  ],
+  "did_intended": "did:web:csoai.org#board-attestation-1",
+  "sha256": "2d8c54266c66a8918cd83df60fca065422e12b529d9e69aa0b78c7c913b1cf7f",
+  "sig_ed25519": null
+}

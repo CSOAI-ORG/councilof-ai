@@ -1,0 +1,66 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "wrapped WBTC on ethereum vs native issuance — INDEXED_CUSTODIAL",
+  "as_of": "2026-09-13T15:56:17.092Z",
+  "source_urls": [
+    "https://ethereum-rpc.publicnode.com"
+  ],
+  "payload": {
+    "kind": "csoai.wrapper.parity/0.1",
+    "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+    "id": "wbtc:ethereum",
+    "backing_model": "custodial",
+    "wrapped": {
+      "chain": "ethereum",
+      "symbol": "WBTC",
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "chainId": 1,
+      "block": 25969460,
+      "block_hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+      "block_time": 1789313879
+    },
+    "canonical": {
+      "chain": "bitcoin",
+      "symbol": "BTC",
+      "address": "custodian-held (BitGo et al.); not an EVM contract",
+      "chainId": null,
+      "block": null,
+      "block_hash": null
+    },
+    "escrow": null,
+    "escrow_name": null,
+    "note": "BTC reserve held by custodians and self-published (wbtc.network / Chainlink PoR fed by the custodian). Nothing independent is readable from here; INDEXED, no parity claimed.",
+    "reads": {
+      "wrapped_total_supply": {
+        "query": "totalSupply()",
+        "raw": "0x00000000000000000000000000000000000000000000000000000a8fe9bff7f8",
+        "raw_sha256": "da84a3819c0b755a09aaccd086f79d6b04067c24488307a42b949919f5228bdf",
+        "atomic": "11613218273272",
+        "normalized": "116132.18273272",
+        "decimals": 8
+      }
+    },
+    "escrow_over_wrapped": null,
+    "parity_state": "INDEXED_CUSTODIAL",
+    "state": "DISCOVERED",
+    "error": null,
+    "fetched_at": "2026-09-13T15:56:17.092Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ]
+  },
+  "tags": [
+    "eater:wrapper-parity",
+    "axis:distribution-integrity",
+    "backing:custodial",
+    "state:INDEXED_CUSTODIAL"
+  ],
+  "unmeasured": [
+    "reserve (custodian-held off this chain; not readable here)"
+  ],
+  "did_intended": "did:web:csoai.org#board-attestation-1",
+  "sha256": "40ae5b5aed55c11ae4f4e655b781004c44d2eb5444249192348d1c19829a58f3",
+  "sig_ed25519": null
+}

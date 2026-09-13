@@ -1,0 +1,66 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "wrapped cbBTC on base vs native issuance — INDEXED_CUSTODIAL",
+  "as_of": "2026-09-13T15:56:17.092Z",
+  "source_urls": [
+    "https://mainnet.base.org"
+  ],
+  "payload": {
+    "kind": "csoai.wrapper.parity/0.1",
+    "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+    "id": "cbbtc:base",
+    "backing_model": "custodial",
+    "wrapped": {
+      "chain": "base",
+      "symbol": "cbBTC",
+      "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+      "chainId": 8453,
+      "block": 51262221,
+      "block_hash": "0x5a405aebede66cbafb581160b1c045d70184c312e059c6f3582fb451eb288167",
+      "block_time": 1789313789
+    },
+    "canonical": {
+      "chain": "bitcoin",
+      "symbol": "BTC",
+      "address": "Coinbase custody; not an EVM contract",
+      "chainId": null,
+      "block": null,
+      "block_hash": null
+    },
+    "escrow": null,
+    "escrow_name": null,
+    "note": "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
+    "reads": {
+      "wrapped_total_supply": {
+        "query": "totalSupply()",
+        "raw": "0x0000000000000000000000000000000000000000000000000000042a334ef699",
+        "raw_sha256": "843fb88fcc2526f888acdf48fdf83db5a1c496cf375aa0806cb28f3461f98e36",
+        "atomic": "4579295950489",
+        "normalized": "45792.95950489",
+        "decimals": 8
+      }
+    },
+    "escrow_over_wrapped": null,
+    "parity_state": "INDEXED_CUSTODIAL",
+    "state": "DISCOVERED",
+    "error": null,
+    "fetched_at": "2026-09-13T15:56:17.092Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ]
+  },
+  "tags": [
+    "eater:wrapper-parity",
+    "axis:distribution-integrity",
+    "backing:custodial",
+    "state:INDEXED_CUSTODIAL"
+  ],
+  "unmeasured": [
+    "reserve (custodian-held off this chain; not readable here)"
+  ],
+  "did_intended": "did:web:csoai.org#board-attestation-1",
+  "sha256": "5e3972197e976b49ab1682a04fb9f74f2d06b9f8d9041be1aa6f3fc762171eab",
+  "sig_ed25519": null
+}

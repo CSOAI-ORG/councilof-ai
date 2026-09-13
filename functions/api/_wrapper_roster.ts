@@ -1,7 +1,7 @@
 /**
  * Wrapped-asset roster — the SAME pairs scripts/readers/wrapped-asset-parity-reader.mjs reads.
  * functions/api/wrapper.test.ts pins the two rosters equal; edit the reader first, then mirror here.
- * A pair joins only with wrapped + canonical contracts and a named escrow, or a `native` note.
+ * A pair joins only with wrapped + canonical contracts and a named escrow, or a `native`/`custodial` note.
  */
 export const WRAPPER_ROSTER = [
   {
@@ -199,5 +199,90 @@ export const WRAPPER_ROSTER = [
     "backing_model": "escrow",
     "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
     "escrow_name": "Polygon PoS bridge ERC20Predicate"
+  },
+  {
+    "id": "wbtc:ethereum",
+    "wrapped": {
+      "chain": "ethereum",
+      "symbol": "WBTC",
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+    },
+    "canonical": {
+      "chain": "bitcoin",
+      "symbol": "BTC",
+      "address": "custodian-held (BitGo et al.); not an EVM contract"
+    },
+    "backing_model": "custodial",
+    "escrow": null,
+    "escrow_name": null,
+    "note": "BTC reserve held by custodians and self-published (wbtc.network / Chainlink PoR fed by the custodian). Nothing independent is readable from here; INDEXED, no parity claimed."
+  },
+  {
+    "id": "cbbtc:base",
+    "wrapped": {
+      "chain": "base",
+      "symbol": "cbBTC",
+      "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf"
+    },
+    "canonical": {
+      "chain": "bitcoin",
+      "symbol": "BTC",
+      "address": "Coinbase custody; not an EVM contract"
+    },
+    "backing_model": "custodial",
+    "escrow": null,
+    "escrow_name": null,
+    "note": "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed."
+  },
+  {
+    "id": "cbbtc:ethereum",
+    "wrapped": {
+      "chain": "ethereum",
+      "symbol": "cbBTC",
+      "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf"
+    },
+    "canonical": {
+      "chain": "bitcoin",
+      "symbol": "BTC",
+      "address": "Coinbase custody; not an EVM contract"
+    },
+    "backing_model": "custodial",
+    "escrow": null,
+    "escrow_name": null,
+    "note": "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed."
+  },
+  {
+    "id": "wxrp:ethereum",
+    "wrapped": {
+      "chain": "ethereum",
+      "symbol": "wXRP",
+      "address": "0x39fBBABf11738317a448031930706cd3e612e1B9"
+    },
+    "canonical": {
+      "chain": "xrpl",
+      "symbol": "XRP",
+      "address": "custodian-held XRPL account (Wrapped.com); readable on XRPL, not from here"
+    },
+    "backing_model": "custodial",
+    "escrow": null,
+    "escrow_name": null,
+    "note": "XRP reserve held on the XRP Ledger by the wrapper's custodian; a future XRPL-side read can pair with this supply. INDEXED, no parity claimed."
+  },
+  {
+    "id": "buidl:ethereum",
+    "wrapped": {
+      "chain": "ethereum",
+      "symbol": "BUIDL",
+      "address": "0x7712c34205737192402172409a8F7ccef8aA2AEc"
+    },
+    "canonical": {
+      "chain": "offchain",
+      "symbol": "fund shares",
+      "address": "transfer agent (Securitize); not on any chain"
+    },
+    "backing_model": "custodial",
+    "escrow": null,
+    "escrow_name": null,
+    "note": "Tokenised fund shares; the reserve is the fund's assets held off-chain, reported by the transfer agent. INDEXED, no parity claimed."
   }
 ] as const;

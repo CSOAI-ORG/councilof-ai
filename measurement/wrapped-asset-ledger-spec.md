@@ -22,6 +22,7 @@ Every raw hex result is sha256'd and kept; endpoint substitutions are recorded, 
 ## States (never collapsed)
 - `ESCROW_PARITY_READ` — both reads succeeded; the ratio is what the two chains said at the pinned heights.
 - `UNCHECKABLE_NATIVE_ISSUANCE` — the issuer mints natively on the destination chain (Circle CCTP, Tether native). There is no escrow to read. The supply is read; **no parity is claimed and none is implied** — native issuance is not "unbacked".
+- `INDEXED_CUSTODIAL` — the reserve sits with a custodian off-chain or on another ledger (BTC, XRP, fund shares). Only the wrapped supply is readable from here; the pair stays INDEXED — never "unbacked" — until a reserve read exists (an XRPL-side read for wXRP is the first candidate).
 - `UNMEASURED` — a read failed; the error is in the record; nothing is inferred.
 
 ## What it is not
@@ -31,7 +32,7 @@ below 1 at an `escrow`-model pair is a finding to publish, not a verdict to pron
 two chains are never simultaneous; each record names both blocks and both timestamps.
 
 ## First output
-`public/interop/wrapped-asset-parity-2026-09-13.json` — 12 pairs (Arbitrum, Optimism, Base, Polygon PoS): 8 read, 4 uncheckable-native,
+`public/interop/wrapped-asset-parity-2026-09-13.json` — 17 pairs (Arbitrum, Optimism, Base, Polygon PoS bridged stablecoins + wBTC, cbBTC, wXRP, BUIDL): 8 read, 4 uncheckable-native, 5 indexed-custodial,
 0 unmeasured (calls are paced 200 ms; a failed read is recorded as UNMEASURED, never inferred). Unsigned: state `INDEXED`. The
 signing path is the board signer under OIDC (public-root.yml); a signed batch is the next step, and the x402 door `GET /api/wrapper?id=<pair>` is live (free `?preview=1`, 402 challenge with v2 + bazaar,
 signed card on payment); staged atoms sit in `public/interop/wrapped-asset-parity-2026-09/` for the signer.
