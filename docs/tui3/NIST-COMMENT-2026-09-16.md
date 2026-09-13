@@ -1,16 +1,28 @@
-# NIST AI Risk Management Framework — Evidence Submission
+# NIST AI RMF Profile: Trustworthy AI in Critical Infrastructure — Evidence Submission
 ## CSOAI Ltd (UK Companies House 16939677)
 
 **Date:** 2026-09-16
-**Submission type:** Proactive evidence-led crosswalk
-**Framework:** NIST AI Risk Management Framework 1.0 (AI 100-1)
-**Contact:** CSOAI Ltd, contact@councilof.ai
+**Target:** NIST Trustworthy AI in Critical Infrastructure Profile — Community of Interest
+**Landing:** https://www.nist.gov/programs-projects/concept-note-ai-rmf-profile-trustworthy-ai-critical-infrastructure
+**Submission type:** Proactive evidence-led crosswalk + position note
+**Contact:** CSOAI Ltd, nicholas@csoai.org
 
 ---
 
 ## Organizational Profile
 
 CSOAI Ltd is an independent AI measurement body registered in England and Wales (UK Companies House 16939677). We measure AI systems on governance, safety, and provenance axes using frozen test banks and deterministic grading. We do not certify, accredit, or issue conformity assessments.
+
+## Position
+
+The Profile frames *risk*; FedRAMP authorises the *security wrapper*; vendor system cards report *self-tested* behaviour. None of these produces an independent, reproducible, cryptographically signed record of how a given model *behaves* on the governance-and-safety dimensions a critical-infrastructure operator must reason about. We suggest the Profile explicitly recognise **independent behavioural measurement** — deterministic-grader, per-axis, per-model, signed and third-party-verifiable — as a distinct evidence class under the MEASURE function, alongside self-attestation and security authorisation.
+
+### Concrete suggestions
+
+1. **Name a MEASURE evidence taxonomy** that distinguishes (a) vendor self-report, (b) security/authorisation controls (e.g. FedRAMP), and (c) independent reproducible behavioural measurement.
+2. **Reproducibility as a first-class property.** Where a behavioural claim is made, the Profile should encourage a published, re-runnable method and a verifiable signature over the result.
+3. **UNMEASURED / UNCHECKABLE as valid, recorded states.** For sealed or classified deployments, "not independently measurable" is an honest, useful answer.
+4. **A framework crosswalk anchor.** We maintain a public NIST AI RMF → behavioural-axes crosswalk as a worked example.
 
 ## AI System Description
 
@@ -92,3 +104,17 @@ The GSPC (Governance · Safety · Provenance · Continuity) measurement system:
 - Neutral body: CSOAI does not certify, accredit, or issue conformity assessments
 - Revenue: $0.02 USDC from 1 external payer (chain-adjudicated)
 - All artifacts independently verifiable without CSOAI credentials
+
+## What we are NOT asking for
+
+- No endorsement, certification, accreditation, or conformity mark for CSOAI or any vendor
+- No legal determination. This is a measurement-method contribution.
+- No disclosure of any non-public/classified system. We measure public models only.
+
+## Submission Checklist
+
+- [ ] Join the COI (mailing list + community channel) via the NIST landing page
+- [ ] Confirm current submission channel/format the COI is using (RFI, position paper, working-session)
+- [ ] Send from nicholas@csoai.org under CSOAI Ltd
+- [ ] Attach crosswalk: https://councilof.ai/interop/nist-airmf-gspc-crosswalk.json
+- [ ] Attach verification surface: https://councilof.ai/gspc-verify
