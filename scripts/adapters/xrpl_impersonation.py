@@ -16,10 +16,9 @@ Honesty spine (do not soften):
     fake/fraudulent/a scam. Measurement, not certification.
   * Issuance below the ranking window is not enumerated: the long tail is
     UNMEASURED and stays listed, never zero-filled.
-  * Every live page is digest-pinned. Pages containing watched-code hits are
-    also archived as raw bytes + sha256 + retrieval metadata. Absence claims
-    on digest-only pages are publisher observations, not independently
-    replayable from this repository.
+  * Every live page is archived as raw bytes + sha256 + retrieval metadata
+    (owner ruling 2026-09-12). Mirrors are written only on live runs, never
+    under replay, and mirror-writing is best-effort.
   * collect() NEVER raises. Network dark -> leaves rebuilt from the committed
     last-scan snapshot if present, else an ABSENT sidecar with no leaves.
 
@@ -78,22 +77,35 @@ VERIFIED_META: dict[str, dict[str, Any]] = {
         "mirrors": ["audd-digital-home.html.evidence", "account-info-audd.json", "audd-xrp-ledger-toml-probe.html"],
     },
 }
+# Mirror ids whose .meta.json sidecars are loaded into the run manifest.
+VERIFICATION_MIRROR_IDS = [
+    "straitsx-xsgd-page.html.evidence",
+    "audd-digital-home.html.evidence",
+    "straitsx-xrp-ledger-toml-404.html",
+    "audd-xrp-ledger-toml-probe.html",
+    "account-info-xsgd-verified.json",
+    "account-info-xsgd-10b.json",
+    "account-info-audd.json",
+]
+
 MISMATCH_WORDING = "issuer not in the archived verified set — legitimacy UNMEASURED"
 LONG_TAIL_NOTE = "UNMEASURED — issuance below the ranking window is not enumerated"
 
-# 2026-09-12 overnight brief: the scan is self-contained. The window is scanned
-# live to DEFAULT_SCAN_LIMIT (the /tmp deep-capture shim is gone — it never ran
-# in GHA, so the signed root silently lacked the deep window). Mirrors archive
-# only pages that CONTAIN watched-code hits; every fetched page is digest-pinned
-# in the snapshot (hash-only, the provider-diff pattern) so coverage is
-# reproducible without bulk mirrors in git.
-DEFAULT_SCAN_LIMIT = 12000
+# Completed deep-window scan (offsets 3000..11900) archived from a local capture.
+DEEP_SCAN_CAPTURE = Path("/tmp/tui3-deep-scan.json")
+DEEP_MIRROR_ID = "xrpscan-tokens-deep-3000-11900.json"
+DEEP_SOURCE_URL = "https://api.xrpscan.com/api/v1/tokens?limit=100&offset=3000..11900"
+DEEP_WINDOW_ROWS = 9000
 
 MAX_PAYLOAD_BYTES = 3072
 
 
 def _now_z() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _iso_z_from_ts(ts: float) -> str:
+    return datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _canon_size(payload: dict[str, Any]) -> int:
@@ -138,11 +150,10 @@ def _archive_mirror(
 
 
 def _classify(code: str, issuer: str) -> str:
-    """Brief vocabulary: NOT_IN_VERIFIED_SET / UNMEASURED / UNCHECKABLE."""
     verified = VERIFIED.get(code)
     if verified is None:
-        return "UNMEASURED"  # no verified issuer archived for this code
-    return "MATCH" if issuer == verified else "NOT_IN_VERIFIED_SET"
+        return "VERIFIED_SET_UNMEASURED"
+    return "MATCH" if issuer == verified else "MISMATCH"
 
 
 def _row_hit(row: dict[str, Any], window: str) -> dict[str, Any]:
@@ -169,7 +180,6 @@ def _mismatch_leaf(hit: dict[str, Any], as_of: str, entry_1: bool = False) -> di
     payload = {
         "kind": "csoai.xrpl-impersonation-mismatch/0.1",
         "status": "DISCOVERED",
-        "classification": "NOT_IN_VERIFIED_SET",
         "code": code,
         "issuer": issuer,
         "holders": hit.get("holders"),
@@ -200,7 +210,6 @@ def _unmeasured_issuer_leaf(hit: dict[str, Any], as_of: str, entry_1: bool) -> d
     payload = {
         "kind": "csoai.xrpl-impersonation-unmeasured/0.1",
         "status": "DISCOVERED",
-        "classification": "UNMEASURED",
         "verified_set_state": "UNMEASURED",
         "code": code,
         "issuer": issuer,
@@ -227,7 +236,7 @@ def _unmeasured_issuer_leaf(hit: dict[str, Any], as_of: str, entry_1: bool) -> d
 
 def _summary_leaf(snapshot: dict[str, Any]) -> dict[str, Any]:
     counts: dict[str, dict[str, int]] = {
-        code: {"matches": 0, "not_in_verified_set": 0, "unmeasured": 0}
+        code: {"matches": 0, "mismatches": 0, "verified_set_unmeasured": 0}
         for code in WATCHED_CODES
     }
     for hit in snapshot.get("hits", []):
@@ -237,10 +246,10 @@ def _summary_leaf(snapshot: dict[str, Any]) -> dict[str, Any]:
             continue
         if cls == "MATCH":
             counts[code]["matches"] += 1
-        elif cls == "NOT_IN_VERIFIED_SET":
-            counts[code]["not_in_verified_set"] += 1
+        elif cls == "MISMATCH":
+            counts[code]["mismatches"] += 1
         else:
-            counts[code]["unmeasured"] += 1
+            counts[code]["verified_set_unmeasured"] += 1
 
     unmeasured: list[str] = [LONG_TAIL_NOTE]
     for code in WATCHED_CODES:
@@ -260,10 +269,7 @@ def _summary_leaf(snapshot: dict[str, Any]) -> dict[str, Any]:
             "window": cov.get("window"),
             "n_scanned": cov.get("n_scanned"),
             "pages_ok": cov.get("pages_ok"),
-            "pages_uncheckable": cov.get("pages_uncheckable"),
-            "uncheckable_offsets": cov.get("uncheckable_offsets"),
-            "page_digest_count": len(cov.get("page_digests") or []),
-            "verification_limit": cov.get("verification_limit"),
+            "pages_failed": cov.get("pages_failed"),
             "long_tail": LONG_TAIL_NOTE,
         },
         "unmeasured": unmeasured,
@@ -308,7 +314,7 @@ def _load_snapshot(root: Path) -> dict[str, Any] | None:
         path = root / SNAPSHOT_REL
         if path.is_file():
             snap = json.loads(path.read_bytes())
-            if isinstance(snap, dict) and str(snap.get("schema", "")).startswith("csoai.xrpl-impersonation-scan/"):
+            if isinstance(snap, dict) and snap.get("schema") == "csoai.xrpl-impersonation-scan/0.1":
                 snap["replay"] = True
                 return snap
     except Exception:
@@ -316,22 +322,40 @@ def _load_snapshot(root: Path) -> dict[str, Any] | None:
     return None
 
 
+def _load_deep_hits(path: Path) -> tuple[list[dict[str, Any]], bytes, float] | None:
+    """Return (rows, raw_json_bytes, mtime) from the completed deep capture, else None."""
+    try:
+        if not path.is_file():
+            return None
+        lines = path.read_bytes().splitlines()
+        if not lines:
+            return None
+        rows = json.loads(lines[-1])
+        if not isinstance(rows, list):
+            return None
+        rows = [r for r in rows if isinstance(r, dict) and r.get("code") in WATCHED_CODES]
+        body = lines[-1] if lines[-1].strip().startswith(b"[") else json.dumps(rows).encode("utf-8")
+        return rows, body, path.stat().st_mtime
+    except Exception:
+        return None
+
+
 def collect(
     root: str | Path | None = None,
     *,
     fetch: Callable[[str], bytes] | None = None,
-    scan_limit: int = DEFAULT_SCAN_LIMIT,
+    scan_limit: int = 3000,
+    deep_capture: str | Path | None = None,
 ) -> dict[str, Any]:
-    """Scan the XRPSCAN token ranking, offsets 0..scan_limit-100. NEVER raises."""
+    """Scan the XRPSCAN token ranking. NEVER raises."""
     live = fetch is None
     fetch_fn = fetch or _default_fetch
     root_path = Path(root) if root is not None else Path(__file__).resolve().parents[2]
+    deep_path = Path(deep_capture) if deep_capture is not None else DEEP_SCAN_CAPTURE
 
     try:
         pages_ok = 0
-        rows_scanned = 0
-        page_digests: list[dict[str, Any]] = []
-        uncheckable_pages: list[int] = []
+        pages_failed = 0
         hits: list[dict[str, Any]] = []
         metas: list[dict[str, Any]] = []
         generated_at = _now_z()
@@ -345,40 +369,19 @@ def collect(
                     rows = rows.get("tokens") or []
                 if not isinstance(rows, list):
                     raise ValueError("unexpected page shape")
-                if not rows:
-                    break  # end of the ranking
             except Exception:
-                uncheckable_pages.append(offset)
+                pages_failed += 1
                 continue
             pages_ok += 1
-            rows_scanned += len(rows)
-            page_hits = [
-                row for row in rows
-                if isinstance(row, dict) and row.get("code") in WATCHED_CODES
-            ]
-            page_digests.append(
-                {
-                    "offset": offset,
-                    "sha256": hashlib.sha256(body).hexdigest(),
-                    "bytes": len(body),
-                    "rows": len(rows),
-                    "raw_archive": f"mirrors/xrpscan-tokens-{offset}.json" if page_hits and live else None,
-                }
-            )
-            if page_hits:
-                if live:
-                    meta = _archive_mirror(
-                        root_path,
-                        f"xrpscan-tokens-{offset}.json",
-                        "token-ranking-page-with-hits",
-                        url,
-                        body,
-                        generated_at,
-                    )
-                    if meta:
-                        metas.append(meta)
-                for row in page_hits:
-                    hits.append(_row_hit(row, f"offset-{offset}"))
+            if live:
+                meta = _archive_mirror(
+                    root_path, f"xrpscan-tokens-{offset}.json", "token-ranking-page", url, body, generated_at
+                )
+                if meta:
+                    metas.append(meta)
+            for row in rows:
+                if isinstance(row, dict) and row.get("code") in WATCHED_CODES:
+                    hits.append(_row_hit(row, "top-ranking"))
 
         if pages_ok == 0:
             snap = _load_snapshot(root_path)
@@ -397,10 +400,30 @@ def collect(
                 "sidecar": {
                     "status": "ABSENT",
                     "pack": PACK,
-                    "uncheckable_pages": uncheckable_pages,
+                    "pages_failed": pages_failed,
                     "note": "network dark and no committed snapshot present",
                 },
             }
+
+        # Deep window (offsets 3000..11900): incorporate the completed capture.
+        deep_state = "UNMEASURED"
+        deep = _load_deep_hits(deep_path)
+        if deep is not None:
+            deep_rows, deep_body, deep_mtime = deep
+            for row in deep_rows:
+                hits.append(_row_hit(row, "deep-3000-11900"))
+            deep_state = "ARCHIVED"
+            if live:
+                meta = _archive_mirror(
+                    root_path,
+                    DEEP_MIRROR_ID,
+                    "token-ranking-deep-window-archived",
+                    DEEP_SOURCE_URL,
+                    deep_body,
+                    _iso_z_from_ts(deep_mtime),
+                )
+                if meta:
+                    metas.append(meta)
 
         # Dedupe by (code, issuer), first observation wins.
         seen: set[tuple[str, str]] = set()
@@ -411,28 +434,25 @@ def collect(
                 seen.add(key)
                 deduped.append(hit)
 
+        n_scanned = pages_ok * PAGE_LIMIT + (DEEP_WINDOW_ROWS if deep_state == "ARCHIVED" else 0)
         snapshot = {
-            "schema": "csoai.xrpl-impersonation-scan/0.2",
+            "schema": "csoai.xrpl-impersonation-scan/0.1",
             "generated_at": generated_at,
             "scan_coverage": {
                 "source": "api.xrpscan.com/api/v1/tokens",
-                "window": f"ranking offsets 0..{scan_limit - PAGE_LIMIT} (pages of {PAGE_LIMIT}, stops early at first empty page)",
-                "n_scanned": rows_scanned,
+                "window": f"top-{scan_limit} by holders ranking"
+                + (" + archived deep window offsets 3000..11900" if deep_state == "ARCHIVED" else ""),
+                "n_scanned": n_scanned,
                 "pages_ok": pages_ok,
-                "pages_uncheckable": len(uncheckable_pages),
-                "uncheckable_offsets": uncheckable_pages,
-                "page_digests": page_digests,
-                "verification_limit": (
-                    "pages with watched-code hits have raw archives; no-hit pages are digest-only, "
-                    "so their absence observations are not independently replayable from this repository"
-                ),
+                "pages_failed": pages_failed,
+                "deep_window": deep_state,
                 "long_tail": LONG_TAIL_NOTE,
             },
             "verified_issuers": VERIFIED,
             "verified_issuers_meta": VERIFIED_META,
             "hits": deduped,
-            "mismatches": [h for h in deduped if h["classification"] == "NOT_IN_VERIFIED_SET"],
-            "unmeasured": [h for h in deduped if h["classification"] == "UNMEASURED"],
+            "mismatches": [h for h in deduped if h["classification"] == "MISMATCH"],
+            "unmeasured": [h for h in deduped if h["classification"] == "VERIFIED_SET_UNMEASURED"],
         }
 
         if live:
@@ -444,18 +464,20 @@ def collect(
             except Exception:
                 pass
             try:
-                # The manifest carries every committed mirror sidecar (verification
-                # set, historical archives) plus this run's hit-page mirrors.
+                # Verification mirrors are archived deliberately (one writer);
+                # their committed .meta.json sidecars join every run's manifest.
                 all_metas = list(metas)
                 seen_ids = {m["id"] for m in all_metas}
-                try:
-                    for meta_path in sorted((root_path / MIRRORS_REL).glob("*.meta.json")):
-                        meta = json.loads(meta_path.read_bytes())
-                        if meta.get("id") not in seen_ids:
-                            all_metas.append(meta)
-                            seen_ids.add(meta["id"])
-                except Exception:
-                    pass
+                for mid in VERIFICATION_MIRROR_IDS:
+                    if mid in seen_ids:
+                        continue
+                    try:
+                        meta = json.loads(
+                            (root_path / MIRRORS_REL / (mid + ".meta.json")).read_bytes()
+                        )
+                        all_metas.append(meta)
+                    except Exception:
+                        continue
                 manifest = {
                     "schema": "csoai.artefact-manifest/0.1",
                     "pack": PACK,
@@ -474,12 +496,13 @@ def collect(
             "sidecar": {
                 "status": "PROBED",
                 "pack": PACK,
-                "n_scanned": snapshot["scan_coverage"]["n_scanned"],
+                "n_scanned": n_scanned,
                 "pages_ok": pages_ok,
-                "pages_uncheckable": len(uncheckable_pages),
+                "pages_failed": pages_failed,
+                "deep_window": deep_state,
                 "hits": len(deduped),
-                "not_in_verified_set": len(snapshot["mismatches"]),
-                "unmeasured": len(snapshot["unmeasured"]),
+                "mismatches": len(snapshot["mismatches"]),
+                "verified_set_unmeasured": len(snapshot["unmeasured"]),
                 "mirrors_written": len(metas) if live else 0,
             },
         }

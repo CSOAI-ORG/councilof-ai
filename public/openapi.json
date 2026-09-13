@@ -150,17 +150,6 @@
         "in": "header",
         "name": "X-CSOAI-Signed-Card",
         "type": "apiKey"
-      },
-      "githubOidc": {
-        "bearerFormat": "JWT",
-        "description": "GitHub Actions OIDC token satisfying the handler's issuer, audience, repository and workflow checks.",
-        "scheme": "bearer",
-        "type": "http"
-      },
-      "operatorBearer": {
-        "description": "Operation-specific configured operator or writer credential. Not interchangeable across operations.",
-        "scheme": "bearer",
-        "type": "http"
       }
     }
   },
@@ -211,7 +200,6 @@
     },
     "/api/action-jobs": {
       "get": {
-        "description": "Bare GET returns public contract metadata. Requests with job_id require writer bearer authorization; origin restrictions still apply. ",
         "operationId": "get__api_action-jobs",
         "responses": {
           "200": {
@@ -219,21 +207,12 @@
               "application/json": {}
             },
             "description": "OK"
-          },
-          "401": {
-            "description": "A job_id read requires an authorized writer bearer."
           }
         },
-        "security": [
-          {},
-          {
-            "operatorBearer": []
-          }
-        ],
+        "security": [],
         "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
       },
       "patch": {
-        "description": "Configured writer bearer and exact same-origin Origin header required. ",
         "operationId": "patch__api_action-jobs",
         "responses": {
           "200": {
@@ -241,20 +220,12 @@
               "application/json": {}
             },
             "description": "OK"
-          },
-          "401": {
-            "description": "Required bearer credential missing or rejected."
           }
         },
-        "security": [
-          {
-            "operatorBearer": []
-          }
-        ],
+        "security": [],
         "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
       },
       "post": {
-        "description": "Configured writer bearer and exact same-origin Origin header required. ",
         "operationId": "post__api_action-jobs",
         "responses": {
           "200": {
@@ -262,16 +233,9 @@
               "application/json": {}
             },
             "description": "OK"
-          },
-          "401": {
-            "description": "Required bearer credential missing or rejected."
           }
         },
-        "security": [
-          {
-            "operatorBearer": []
-          }
-        ],
+        "security": [],
         "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
       }
     },
@@ -660,7 +624,6 @@
     },
     "/api/board-sign": {
       "post": {
-        "description": "GitHub OIDC bearer required; token claims are validated by the handler. ",
         "operationId": "post__api_board-sign",
         "responses": {
           "200": {
@@ -668,16 +631,9 @@
               "application/json": {}
             },
             "description": "OK"
-          },
-          "401": {
-            "description": "Required bearer credential missing or rejected."
           }
         },
-        "security": [
-          {
-            "githubOidc": []
-          }
-        ],
+        "security": [],
         "summary": "* POST /api/board-sign \u2014 GitHub OIDC only.\n * Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64.\n * The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade."
       }
     },
@@ -2612,7 +2568,6 @@
         "summary": "* GET  /api/provider-canary -- public configuration status; never probes.\n * POST /api/provider-canary -- authenticated, fixed one-token capability canary.\n *\n * This route is deliberately not user in"
       },
       "post": {
-        "description": "Configured operator bearer and same-origin request required. ",
         "operationId": "post__api_provider-canary",
         "responses": {
           "200": {
@@ -2620,16 +2575,9 @@
               "application/json": {}
             },
             "description": "OK"
-          },
-          "401": {
-            "description": "Required bearer credential missing or rejected."
           }
         },
-        "security": [
-          {
-            "operatorBearer": []
-          }
-        ],
+        "security": [],
         "summary": "* GET  /api/provider-canary -- public configuration status; never probes.\n * POST /api/provider-canary -- authenticated, fixed one-token capability canary.\n *\n * This route is deliberately not user in"
       }
     },
@@ -3843,7 +3791,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 87,
+    "public_operations": 92,
     "quarantined": [
       {
         "buyable": false,

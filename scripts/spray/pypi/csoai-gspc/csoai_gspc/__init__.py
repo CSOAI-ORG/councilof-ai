@@ -22,7 +22,7 @@ from .card import (
     preimage, card_id, verify_card, fetch_card, verify_card_id,
 )
 
-__version__ = "0.2.20260912"
+__version__ = "0.1.0"
 __all__ = [
     "BOARD_URL", "ROOT_URL", "DID_URL", "PINNED_KEY_ID",
     "fetch_board", "totals", "axes", "get_axis", "check_totals", "fetch_root", "pinned_key",

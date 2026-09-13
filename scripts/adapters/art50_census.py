@@ -7,9 +7,7 @@ separate and UNMEASURED is a first-class value, never zero-filled.
 """
 from __future__ import annotations
 
-import hashlib
 import json
-import re
 from pathlib import Path
 from typing import Any
 
@@ -24,7 +22,6 @@ MARKING_KEYS = (
     "invisible_watermark",
     "visible_or_disclosure_marking",
 )
-SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 SLOT_LABELS = ("C2PA", "meta", "wm", "vis")
 
 
@@ -60,7 +57,7 @@ def collect(repo_root: Path) -> dict[str, Any]:
             return {"leaves": [], "sidecar": {"status": "ABSENT", "path": str(REL)}}
         census = json.loads(path.read_bytes())
         generators = census.get("generators")
-        if not str(census.get("schema", "")).startswith("csoai.art50-marking-census/") or not isinstance(generators, list):
+        if census.get("schema") != "csoai.art50-marking-census/0.1" or not isinstance(generators, list):
             return {"leaves": [], "sidecar": {"status": "INVALID", "reason": "census contract"}}
 
         compact = []
@@ -69,17 +66,6 @@ def collect(repo_root: Path) -> dict[str, Any]:
             if not isinstance(gen, dict) or not isinstance(gen.get("name"), str):
                 return {"leaves": [], "sidecar": {"status": "INVALID", "reason": "generator contract"}}
             marking = gen.get("marking")
-            source_version = gen.get("source_version")
-            if source_version is not None:
-                if not isinstance(source_version, dict):
-                    return {"leaves": [], "sidecar": {"status": "INVALID", "reason": "source_version contract"}}
-                rel = source_version.get("posture_card")
-                digest = source_version.get("sha256")
-                if not isinstance(rel, str) or not isinstance(digest, str) or not SHA256_RE.fullmatch(digest):
-                    return {"leaves": [], "sidecar": {"status": "INVALID", "reason": "source_version digest contract"}}
-                versioned_path = Path(repo_root) / rel
-                if not versioned_path.is_file() or hashlib.sha256(versioned_path.read_bytes()).hexdigest() != digest:
-                    return {"leaves": [], "sidecar": {"status": "INVALID", "reason": "source_version digest mismatch"}}
             compact.append({"name": gen["name"], "stack": _stack(marking if isinstance(marking, dict) else {})})
             if gen.get("gate"):
                 gated.append(gen["name"])

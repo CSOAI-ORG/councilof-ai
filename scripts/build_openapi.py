@@ -5,7 +5,7 @@ WHAT IT DERIVES, AND FROM WHERE (nothing in the artefact is typed here):
   free read surface   scripts/badger/csoai-openapi-gen.py (the existing walker over functions/api/*.ts,
                       reused as a library — never a second walker). Every operation whose only
                       declared response is 200 gets `security: []`: OpenAPI's way of saying "no
-                      authentication", except for the explicitly reviewed bearer/conditional contracts below. This is what x402scan (@agentcash/discovery) reads as
+                      authentication", which is what x402scan (@agentcash/discovery) reads as
                       "public, do not probe". 405/501/503 facades stay unclassified and keep their
                       x-csoai-lifecycle marker — they are not public reads and must not be sold as such.
   x402 doors          scripts/fixtures/x402scan/well_known_x402.json  (/.well-known/x402.json resources[])
@@ -294,32 +294,6 @@ def compose(fix: Path = FIX) -> dict:
                 op["security"] = []  # explicitly public — x402scan lists, never probes
                 public_ops += 1
         paths[p] = item
-
-    # Reviewed access contracts: a generic 200 response is not proof of public access.
-    # Metadata only; access enforcement remains in the existing handlers.
-    restricted = {
-        ("/api/board-sign", "post"): ("githubOidc", "GitHub OIDC bearer required; token claims are validated by the handler."),
-        ("/api/provider-canary", "post"): ("operatorBearer", "Configured operator bearer and same-origin request required."),
-        ("/api/action-jobs", "post"): ("operatorBearer", "Configured writer bearer and exact same-origin Origin header required."),
-        ("/api/action-jobs", "patch"): ("operatorBearer", "Configured writer bearer and exact same-origin Origin header required."),
-    }
-    base["components"]["securitySchemes"].update({
-        "githubOidc": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT", "description": "GitHub Actions OIDC token satisfying the handler's issuer, audience, repository and workflow checks."},
-        "operatorBearer": {"type": "http", "scheme": "bearer", "description": "Operation-specific configured operator or writer credential. Not interchangeable across operations."},
-    })
-    for (path, method), (scheme, note) in restricted.items():
-        op = paths[path][method]
-        if op.get("security") == []:
-            public_ops -= 1
-        op["security"] = [{scheme: []}]
-        op["description"] = note + " " + op.get("description", "")
-        op["responses"]["401"] = {"description": "Required bearer credential missing or rejected."}
-    # The bare GET publishes a contract, while job_id requests are authenticated reads.
-    op = paths["/api/action-jobs"]["get"]
-    op["security"] = [{}, {"operatorBearer": []}]
-    public_ops -= 1
-    op["description"] = "Bare GET returns public contract metadata. Requests with job_id require writer bearer authorization; origin restrictions still apply. " + op.get("description", "")
-    op["responses"]["401"] = {"description": "A job_id read requires an authorized writer bearer."}
 
     # 2. the doors
     shape_donor = None  # the smallest captured challenge lends accepts[0]'s constant fields to uncaptured doors

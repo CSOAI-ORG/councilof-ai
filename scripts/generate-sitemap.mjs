@@ -8,7 +8,7 @@
  *
  * Run: node scripts/generate-sitemap.mjs   (wired into `npm run build:client`)
  */
-import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -18,14 +18,6 @@ const PERSONA_TSX = join(ROOT, "client/src/pages/PersonaRouter.tsx");
 const INDUSTRIES_TS = join(ROOT, "client/src/data/industries.ts");
 const OUT = join(ROOT, "public/sitemap.xml");
 const BASE = "https://councilof.ai";
-const FUNCTIONS_DIR = join(ROOT, "functions");
-
-// Pages Functions own a number of redirect-only paths. A sparse checkout that
-// omits them cannot generate a truthful sitemap, so fail closed instead of
-// silently advertising those retired routes.
-if (!existsSync(FUNCTIONS_DIR)) {
-  throw new Error("[sitemap] functions/ is required to reconcile Pages Function redirects");
-}
 
 // --- Reconcile against _redirects (nav-integrity audit, 2026-08-26) -------------
 // A sitemap URL that answers 3xx is a defect: 42 of 423 did on the last count — 4 of
@@ -134,7 +126,7 @@ function scanFunctionRedirects(dir, urlPrefix = "") {
     }
   }
 }
-scanFunctionRedirects(FUNCTIONS_DIR);
+scanFunctionRedirects(join(ROOT, "functions"));
 
 // --- Priority tiers -------------------------------------------------------
 const P_TOP = 0.9; // flagship public surfaces
@@ -444,8 +436,6 @@ let blogSkipped = 0;
 let blogUnbuilt = 0;
 for (const slug of blogSlugs) {
   const bp = `/blog/${slug}`;
-  // A prerendered withdrawal notice is not an indexable article.
-  if (reviewNoticePaths.has("/blog/:slug")) { blogSkipped++; continue; }
   // Not snapshotted → the static host 404s it → it must not be in the sitemap.
   if (!builtBlog.has(slug)) { blogUnbuilt++; continue; }
   if (redirectRules.has(bp) || redirectRules.has(bp + "/")) { blogSkipped++; continue; }
@@ -567,7 +557,7 @@ console.log(
   `[sitemap] ${finalPaths.length} URLs -> public/sitemap.xml ` +
     `(skipped ${skippedParams} :param routes, ${skippedJunk} junk/legacy, ` +
     `${droppedRedirect} redirect-to-elsewhere, ${blogUnbuilt} unbuilt blog slugs (404), ` +
-    `${blogSkipped} redirected or withdrawn blog slugs; ` +
+    `${blogSkipped} redirected blog slugs; ` +
     `${rewritten} rewritten to their trailing-slash canonical; ` +
     `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod=${today})`
 );

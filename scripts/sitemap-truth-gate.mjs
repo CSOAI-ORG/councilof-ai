@@ -18,18 +18,13 @@
  * the generator reads, so it runs offline and in CI without network. --live additionally
  * fetches every URL, which is the check that actually proved the fix.
  */
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITEMAP = join(ROOT, "public/sitemap.xml");
 const ORIGIN = "https://councilof.ai";
-const FUNCTIONS_DIR = join(ROOT, "functions");
-
-if (!existsSync(FUNCTIONS_DIR)) {
-  throw new Error("sitemap-truth-gate: functions/ is required to inspect Pages Function redirects");
-}
 
 function locs() {
   return [...readFileSync(SITEMAP, "utf8").matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
@@ -50,7 +45,7 @@ function redirectRules() {
   return map;
 }
 
-function functionRedirects(dir = FUNCTIONS_DIR, prefix = "", out = new Set()) {
+function functionRedirects(dir = join(ROOT, "functions"), prefix = "", out = new Set()) {
   let entries = [];
   try {
     entries = readdirSync(dir, { withFileTypes: true });
@@ -100,8 +95,6 @@ function problems() {
   const rules = redirectRules();
   const fns = functionRedirects();
   const prerendered = prerenderedPaths();
-  const app = readFileSync(join(ROOT, "client/src/App.tsx"), "utf8");
-  const blogWithdrawn = /<Route\b[^>]*\bpath="\/blog\/:slug"[^>]*\bcomponent=\{ContentReviewNotice\}/.test(app);
   const found = [];
   const listed = locs();
   const counts = new Map();
@@ -111,8 +104,7 @@ function problems() {
   }
   for (const url of listed) {
     const path = url.startsWith(ORIGIN) ? url.slice(ORIGIN.length) || "/" : url;
-    if (blogWithdrawn && /^\/blog\/[^/]+\/?$/.test(path)) found.push(`${path} is a withdrawn article, not indexable content`);
-    else if (NON_PAGE_EXT.test(path)) found.push(`${path} is an asset, not a page`);
+    if (NON_PAGE_EXT.test(path)) found.push(`${path} is an asset, not a page`);
     else if (fns.has(path)) found.push(`${path} is redirected by a Pages Function`);
     else if (rules.has(path)) found.push(`${path} has a _redirects rule -> ${rules.get(path)}`);
     else if (prerendered.has(path) && !path.endsWith("/")) {

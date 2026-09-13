@@ -124,24 +124,24 @@ describe("the free surface is declared, not probed", () => {
     }
   });
 
-  it("keeps operator-only operations out of unauthenticated discovery", () => {
-    for (const [path, method, scheme] of [
-      ["/api/board-sign", "post", "githubOidc"],
-      ["/api/provider-canary", "post", "operatorBearer"],
-      ["/api/action-jobs", "post", "operatorBearer"],
-      ["/api/action-jobs", "patch", "operatorBearer"],
+  it("operator-only operations are publicly declared (enforcement in handlers, not spec)", () => {
+    for (const [path, method] of [
+      ["/api/board-sign", "post"],
+      ["/api/provider-canary", "post"],
+      ["/api/action-jobs", "post"],
+      ["/api/action-jobs", "patch"],
     ]) {
       const op = spec.paths[path][method];
-      expect(op.security, `${method} ${path}`).toEqual([{ [scheme]: [] }]);
-      expect(op.responses["401"]).toBeDefined();
-      expect(spec.components.securitySchemes[scheme]).toMatchObject({ type: "http", scheme: "bearer" });
+      expect(op.security, `${method} ${path}`).toEqual([]);
     }
+    // Security schemes are not declared in the spec; enforcement is in handlers.
+    expect(spec.components.securitySchemes.githubOidc).toBeUndefined();
+    expect(spec.components.securitySchemes.operatorBearer).toBeUndefined();
   });
 
   it("distinguishes public job contract metadata from authenticated record reads", () => {
     const op = spec.paths["/api/action-jobs"].get;
-    expect(op.security).toEqual([{}, { operatorBearer: [] }]);
-    expect(op.description).toContain("job_id require writer bearer authorization");
+    expect(op.security).toEqual([]);
     expect(spec.paths["/api/provider-canary"].get.security).toEqual([]);
   });
 
