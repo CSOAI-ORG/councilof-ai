@@ -62,7 +62,9 @@ jobs:
       - name: Ask the candidate maintainer to upgrade, verify and promote
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run public-root-candidate-upgrade.yml --ref master
+        # --repo is required: this job has no checkout, and `gh` infers the
+        # repository from the local git dir (fatal: not a git repository).
+        run: gh workflow run public-root-candidate-upgrade.yml --repo ${{ github.repository }} --ref master
 
   publish:
     needs: preflight
