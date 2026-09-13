@@ -1,0 +1,29 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "application.draft.compute_efficiency",
+  "subject": "application-compute-efficiency-draft",
+  "measured_at": "2026-09-13T05:40:42.634510+00:00",
+  "metrics": {
+    "name": "Sovereign AI R&D Procurement \u2014 Compute Efficiency Challenge (Application Draft)",
+    "applicant": "CSOAI Ltd (UK Companies House 16939677)",
+    "departments": "DBST + ARIA Scaling Inference Lab",
+    "proposed_demonstrator": "Measurement-driven compute optimization \u2014 instrument the inference layer and prove efficiency gains",
+    "value_proposition": "CSOAI pod fpowppss5ngtkw already measures compute efficiency at scale (70+ GSPC cycles, $0.22/hr RunPod 3090, 0 fails). Demonstrator: extend measurement to inference layer (ARIA Scaling Inference Lab scope), produce signed efficiency receipts, prove cost reduction",
+    "alignment_with_aria_scaling_inference_lab": "ARIA's lab focuses on inference efficiency at scale. CSOAI measures inference correctness + cost = directly aligned. Could demonstrator: signed inference efficiency receipts (correctness per watt/per dollar).",
+    "alignment_with_uk_compute_ambition": "Direct: 'improve efficiency of AI computing infrastructure, help expand UK public AI compute while reducing costs' \u2014 CSOAI's measurement infrastructure already runs at $0.22/hr (3090 pod)",
+    "evidence_assets": [
+      "Pod fpowppss5ngtkw RUNNING at $0.22/hr (3090)",
+      "70+ GSPC cycles completed, 0 failures",
+      "237 bank items processed per cycle",
+      "GA + RL bank weight optimizer (evolve_banks.py)",
+      "Auto-correction engine (self_correct.py)",
+      "Auto-publish to 8 targets (auto_publish.py)",
+      "Full pipeline monitor (watchdog_asi.py) \u2014 5 checks green",
+      "x402 payment rails for measurement endpoints"
+    ],
+    "ip_retention": "All IP retained",
+    "owner_gate": "Application submission requires Nicholas Templeman (CEO) sign-off"
+  },
+  "honest_sentence": "Application draft: \u00a3100M Sovereign AI R&D \u2014 Compute Efficiency (DBST + ARIA Scaling Inference Lab). Measurement-driven compute optimization. Pod already at $0.22/hr, 70+ cycles, GA+RL optimizer. Could demonstrator: signed inference efficiency receipts.",
+  "measurement_not_certification": true
+}
