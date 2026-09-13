@@ -55,3 +55,14 @@
 - [x] No repeated directory submissions
 - [x] No promotional bot replies
 - [x] No invented adoption claims
+
+### JEEVES (Mac) — #73–76 ingestion batch EXECUTED 2026-09-12 ~19:45Z (owner: "double check then send")
+
+| Move | Channel | Target | Status | Evidence |
+|------|---------|--------|--------|----------|
+| #75 rwa.xyz data offer | Email from nicholas@csoai.org (PrivateEmail) | team@rwa.xyz | SENT (compose closed, Sent toast) | Signed XRPL reader (16 identity-verified assets), reserve-attestation tally 3/4/9 honestly quoted, 22 deadlines, 48 corrections. Ref ATTR-stablecoin-corrections-feed-v1 |
+| #76 Bluechip Externals-pillar offer | Email from nicholas@csoai.org | contact@bluechip.org | SENT | Externals-pillar framing off the Hacken/USDT D→C precedent (verified 2026-09-07 announcement). Same verified numbers |
+| #73 DefiLlama | GitHub issue | DefiLlama/peggedassets-server#913 | SUBMITTED | All 6 deep measurements re-verified against docs/tui2/deep-measurements-2026-09-11.json + rusd-ethereum-reader-2026-09-11.json before submission; 425 assets / 211 chains verified against public/interop/stablecoin-universe-2026-09/readiness.json |
+| #74 Dune dashboard | — | — | NOT DONE (build, not a send) | 120-min build item, queued |
+
+Double-check catches (recorded honestly): TUI-6's planned DefiLlama target "DefiLlama/serverless-sdk" does not exist — rerouted to DefiLlama/peggedassets-server (the actual stablecoin data home). The outreach plan's "47 corrections" was stale — 48 at send time. All claims in every message re-verified against live endpoints within the hour before sending.
