@@ -1,0 +1,36 @@
+{
+  "regulation": "ISO 20022 SR2026 \u2014 Structured Address Cutoff",
+  "status": "deadline_2026_11_14",
+  "gspc_axes_mapped": [
+    {
+      "axis": 14,
+      "name": "Payment Message Format",
+      "gspc_coverage": "40%",
+      "notes": "Partial via stablecoin payment rails"
+    },
+    {
+      "axis": 15,
+      "name": "Structured Address",
+      "gspc_coverage": "30%",
+      "notes": "Needs dedicated mapping"
+    },
+    {
+      "axis": 16,
+      "name": "Cross-border Interop",
+      "gspc_coverage": "75%",
+      "notes": "Multi-jurisdictional coverage"
+    }
+  ],
+  "compliance_score": "48/100",
+  "gaps": [
+    "Structured address format",
+    "CBPR+ requirements"
+  ],
+  "recommendations": [
+    "Build ISO 20022 message validator",
+    "Map stablecoin rails to SR2026"
+  ],
+  "deadline": "2026-11-14",
+  "days_remaining": 62,
+  "created": "2026-09-13T13:35:00Z"
+}
