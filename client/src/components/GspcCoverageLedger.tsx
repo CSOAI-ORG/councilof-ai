@@ -21,6 +21,7 @@ const SOURCES: Record<keyof CoverageLedgerInput, string> = {
   mcp: "/mcp",
   a2a: "/api/a2a",
   erc8004: "/interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json",
+  wrappers: "/interop/wrapped-asset-parity-latest.json",
 };
 
 async function readJson(url: string, signal: AbortSignal): Promise<unknown> {

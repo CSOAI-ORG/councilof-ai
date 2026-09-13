@@ -6,7 +6,7 @@ export type CoverageCell = {
 };
 
 export type CoverageRow = {
-  id: "gspc" | "stablecoins" | "xrpl" | "swift" | "banks" | "x402" | "mcp" | "a2a" | "erc8004" | "ap2";
+  id: "gspc" | "stablecoins" | "xrpl" | "swift" | "banks" | "x402" | "mcp" | "a2a" | "erc8004" | "ap2" | "wrappers";
   label: string;
   href: string;
   unit: string;
@@ -32,6 +32,7 @@ export type CoverageLedgerInput = {
   mcp: unknown;
   a2a: unknown;
   erc8004: unknown;
+  wrappers: unknown;
 };
 
 export type CoverageSnapshot = {
@@ -111,6 +112,9 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
   const mcpServerInfo = record(mcp?.server_info);
   const a2a = record(input.a2a);
   const erc8004 = record(input.erc8004);
+  const wrappers = record(input.wrappers);
+  const wrapperCounts = record(wrappers?.counts) ?? {};
+  const wrapperRecords = Array.isArray(wrappers?.records) ? (wrappers!.records as unknown[]) : null;
 
   const gspcSource = "GET /api/gspc";
   const stablecoinSource =
@@ -123,6 +127,7 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
   const mcpSource = "GET /mcp";
   const a2aSource = "GET /api/a2a";
   const erc8004Source = "GET /api/erc8004 (census scripts/x402/erc8004_census.py)";
+  const wrappersSource = "GET /interop/wrapped-asset-parity-latest.json (scripts/readers/wrapped-asset-parity-reader.mjs)";
 
   return [
     {
@@ -353,6 +358,22 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
       paid: absent(erc8004Source, "paid_registrations"),
       writesBoard: false,
       note: "ERC-8004 Trustless Agents identity registry. Singleton at 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432. Corrected census: ETH 50,783 (full history via Tenderly, anchor-checked), Base 86,263 (full history), BSC UNCHECKABLE full-history (48.club ~984k blocks). Reputation registry at 0x8004BAa1...9b63: ETH 3,445, Base 16,518, BSC 0 (window).",
+    },
+    {
+      id: "wrappers",
+      label: "Wrapped assets",
+      href: "/interop/wrapped-asset-parity-latest.json",
+      unit: "pairs",
+      indexed: field(wrapperRecords ? wrapperRecords.length : null, wrappersSource, "records.length"),
+      // A parity read is not a measurement: the card doctrine reserves MEASURED for graded banks.
+      measured: absent(wrappersSource, "measured_pairs (a read is not a measurement; no pair is graded)"),
+      signed: absent(wrappersSource, "signed_pairs (atoms are signed into the public root; the per-kind signed count is not published on this surface yet)"),
+      rooted: absent(wrappersSource, "rooted_pairs"),
+      witnessed: absent(wrappersSource, "witnessed_pairs"),
+      anchored: absent(wrappersSource, "anchored_pairs"),
+      paid: absent(wrappersSource, "paid_pairs (door /api/wrapper is live; settlements are counted by /api/revenue, never here)"),
+      writesBoard: false,
+      note: `Bridged and custodial stablecoin/asset wrappers read from public RPC at pinned finalized blocks. States never collapsed — escrow-parity reads: ${Number(wrapperCounts.ESCROW_PARITY_READ ?? 0)}, native issuance (uncheckable): ${Number(wrapperCounts.UNCHECKABLE_NATIVE_ISSUANCE ?? 0)}, custodial (indexed only): ${Number(wrapperCounts.INDEXED_CUSTODIAL ?? 0)}, unmeasured: ${Number(wrapperCounts.UNMEASURED ?? 0)}. A ratio, not a rate, not a reserve attestation; nothing is ever "unbacked". Door: GET /api/wrapper?id=<pair>.`,
     },
   ];
 }

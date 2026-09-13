@@ -293,7 +293,12 @@ if (isMain) {
   const out = process.argv.includes("--out") ? process.argv[process.argv.indexOf("--out") + 1] : null;
   const doc = await readAll();
   const text = JSON.stringify(doc, null, 2);
-  if (out) { writeFileSync(out, text); console.error(`wrote ${out}`); }
+  if (out) {
+    writeFileSync(out, text); console.error(`wrote ${out}`);
+    // A dated file is the record; `-latest.json` beside it is what live readers (the coverage
+    // board) point at, so the dated name never has to be edited into a surface by hand.
+    if (/-\d{4}-\d{2}-\d{2}\.json$/.test(out)) { const latest = out.replace(/-\d{4}-\d{2}-\d{2}\.json$/, "-latest.json"); writeFileSync(latest, text); console.error(`wrote ${latest}`); }
+  }
   if (process.argv.includes("--stage")) {
     const res = await stageAtoms(doc, process.argv[process.argv.indexOf("--stage") + 1]);
     for (const r of res) console.error(`  stage ${r.id.padEnd(18)} ${r.staged ? `${r.bytes}B → ${r.file}` : `SKIPPED ${r.reason}`}`);
