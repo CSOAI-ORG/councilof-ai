@@ -153,3 +153,25 @@ PR #1639: https://github.com/modelcontextprotocol/registry/pull/1639
 - B-06: OTS Bitcoin confirmation — still pending
 - B-07: GitHub pin swap — DONE (6 flagships)
 - B-08: IETF drafts — drafts ready, not on datatracker
+
+=== IETF DRAFTS: XML READY ===
+3 IETF drafts converted to proper xml2rfc v3 XML format:
+- draft-csoai-audit-use-case-00.xml + rendered .txt
+- draft-csoai-tampering-agent-logs-00.xml + rendered .txt
+- draft-csoai-agentproto-delegation-00.xml + rendered .txt
+
+All render cleanly via xml2rfc --text (112 lines each).
+Status: READY for datatracker upload (needs browser session).
+
+=== ANCHOR STATUS (13 Sep 2026, late session) ===
+Base EAS anchor: Prepared (hash: fc435d7b...269 cards as_of 2026-09-13T08:40:49Z)
+  - Burner wallet has 0.0001 ETH on Base (insufficient for ~0.0002 ETH gas)
+  - Cannot execute without MetaMask approval for ETH transfer
+XRPL memo anchor: Prepared
+  - Cannot execute without XRPL signing key
+OTS Bitcoin confirmation: Awaiting Bitcoin calendar inclusion
+IETF drafts on datatracker: XML ready, awaiting upload
+
+=== ALL BROWSER GATES ===
+WebBridge daemon v1.11.6 vs extension v2.0.9 - version mismatch causing hangs
+Need: kimi-webbridge upgrade v2.0.9 to fix
