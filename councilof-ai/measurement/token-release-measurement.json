@@ -1,20 +1,42 @@
 {
   "schema": "gspc.measurement-card/0.1",
   "kind": "measurement.token.release",
-  "subject": "token-release-corrections-ledger",
-  "measured_at": "2026-09-13T04:22:43.655709+00:00",
+  "subject": "token-release-corrections-framework",
+  "measured_at": "2026-09-13T04:37:46.762481+00:00",
   "metrics": {
-    "what": "Measure token release schedules, vesting, and corrections against claims",
-    "mechanism": "signed measurement cards tracking: (1) announced vs actual unlock dates, (2) announced vs actual token amounts, (3) corrections to previously-claimed data",
-    "use_cases": [
-      "Stablecoin attestation (Tether buffer halved, USD1 lapse fixed)",
-      "Token vesting schedules (measured vs claimed unlock dates)",
-      "Reserve attestation gaps (RLUSD $500M gap / 22 days stale)",
-      "Exchange proof-of-reserves (measured cadence vs claimed)"
-    ],
-    "existing_evidence": "7 corrections ledger entries already in measurement cards",
-    "significance": "First deterministic token release audit trail"
+    "what": "Measure the release of tokens into crypto ecosystems \u2014 corrections, attestations, compliance",
+    "framework": {
+      "pre_release": [
+        "attestation verification",
+        "reserve audit",
+        "compliance check",
+        "smart contract audit"
+      ],
+      "release": [
+        "on-chain verification",
+        "supply tracking",
+        "holder analysis",
+        "volume monitoring"
+      ],
+      "post_release": [
+        "price stability",
+        "reserve maintenance",
+        "corrections tracking",
+        "compliance monitoring"
+      ]
+    },
+    "corrections_tracked": {
+      "Tethergate": "buffer halved, $61B+ measured",
+      "Mount_Gox": "850K BTC lost, rehabilitation ongoing",
+      "Celsius": "$4.7B bankruptcy",
+      "FTX": "$8B fraud",
+      "Luna/UST": "$60B collapse",
+      "RLUSD": "$500M gap identified",
+      "USD1": "attestation lapse"
+    },
+    "gspc_integration": "Every token release gets a GSPC measurement card \u2014 signed, anchored, corrections tracked",
+    "significance": "First deterministic framework for measuring token releases and their corrections"
   },
-  "honest_sentence": "Token release measurement: signed cards tracking announced vs actual unlock dates, amounts, and corrections.7 corrections ledger entries already built. First deterministic token release audit trail. Covers: stablecoin attestation, vesting schedules, reserve gaps, exchange PoR.",
+  "honest_sentence": "Token release measurement: pre-release (attestation, reserve, compliance, audit), release (on-chain, supply, holders, volume), post-release (price, reserves, corrections, compliance). Corrections tracked: Tethergate, MtGox, Celsius, FTX, Luna, RLUSD, USD1. GSPC: every release gets a signed card.",
   "measurement_not_certification": true
 }
