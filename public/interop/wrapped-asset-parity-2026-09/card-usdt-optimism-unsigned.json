@@ -2,7 +2,7 @@
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
   "subject": "wrapped USDT on optimism vs OP Mainnet L1StandardBridge — ESCROW_PARITY_READ",
-  "as_of": "2026-09-13T15:40:33.576Z",
+  "as_of": "2026-09-13T15:56:17.092Z",
   "source_urls": [
     "https://mainnet.optimism.io",
     "https://ethereum-rpc.publicnode.com"
@@ -17,17 +17,17 @@
       "symbol": "USDT",
       "address": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
       "chainId": 10,
-      "block": 156857154,
-      "block_hash": "0xc820fa22c5ee17425f8c40b19abebc0f98bf48c625878bf647696adf239fb355",
-      "block_time": 1789313085
+      "block": 156857510,
+      "block_hash": "0x817b9780b052fd6af439cc012a53460d725a61e55fb328c595b8f6db202f6322",
+      "block_time": 1789313797
     },
     "canonical": {
       "chain": "ethereum",
       "symbol": "USDT",
       "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
       "chainId": 1,
-      "block": 25969396,
-      "block_hash": "0x8c5039a0f990bda3ca35caa1ee26d36781f3cee15112ff678e5e2915accd6174"
+      "block": 25969460,
+      "block_hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a"
     },
     "escrow": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
     "escrow_name": "OP Mainnet L1StandardBridge",
@@ -35,18 +35,18 @@
     "reads": {
       "wrapped_total_supply": {
         "query": "totalSupply()",
-        "raw": "0x0000000000000000000000000000000000000000000000000000d5196f56aedc",
-        "raw_sha256": "6e95d85f4ddf2a408b48f3fd474b2d333d4662c268c4254825f71f83425665fc",
-        "atomic": "234305218850524",
-        "normalized": "234305218.850524",
+        "raw": "0x0000000000000000000000000000000000000000000000000000d51ad69bd239",
+        "raw_sha256": "39269e30f73916699882a064b9079cddc82aff8b338915f4a021e3e6f5c92496",
+        "atomic": "234311246402105",
+        "normalized": "234311246.402105",
         "decimals": 6
       },
       "escrow_balance": {
         "query": "balanceOf(0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1)",
-        "raw": "0x0000000000000000000000000000000000000000000000000000d56a316e9ea2",
-        "raw_sha256": "bd839d7011d2332b050208c35ce014ae4e09c9998210c900061fef14edc5b84e",
-        "atomic": "234652072582818",
-        "normalized": "234652072.582818",
+        "raw": "0x0000000000000000000000000000000000000000000000000000d56b98b3c1ff",
+        "raw_sha256": "fc0ca4b42615dbb3463bc4931781078dec9997d4219b1a66dbaa3a75395aa497",
+        "atomic": "234658100134399",
+        "normalized": "234658100.134399",
         "decimals": 6
       }
     },
@@ -54,7 +54,7 @@
     "parity_state": "ESCROW_PARITY_READ",
     "state": "PROBED",
     "error": null,
-    "fetched_at": "2026-09-13T15:40:33.576Z",
+    "fetched_at": "2026-09-13T15:56:17.092Z",
     "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
     "unmeasured": []
   },
@@ -66,6 +66,6 @@
   ],
   "unmeasured": [],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "5766ed49766458e5cfc0677b94f96170f9ba3de368589283bc1b37045c67cbca",
+  "sha256": "6ab4bd8fed4ce68f689c49a1cc4913bf055672b743d217847b2b0bdb51c46fb4",
   "sig_ed25519": null
 }
