@@ -20,27 +20,43 @@
  "grammar": "The board's size is not frozen here: cite live totals.public_count on GET /api/gspc, or totals.count_grammar for the long form. Two numbers travel together — totals.axes counts SLOTS, totals.measured_axes counts slots with a real run behind them, totals.unmeasured_axes is published so the gap is visible. Quoting the slot count alone claims measurements that do not exist; quote both, or quote the smaller.",
  "grammar_correction_2026-08-26": "This field previously read 'Public quotable board = 14 axes ... Never publish 22 axes as the board.' That was accurate while the 8 financial/domain axes were ruled in (2026-08-24) but absent from the signed board payload — a guardrail against typing a number the artifact could not back, not a repeal of the ruling. The 2026-08-26 sweep wired them into the signed data and re-signed it, so the endpoint now backs the larger count. The retired guardrail is recorded rather than quietly overwritten. See council-os/ADR-001-axis-count.md.",
  "stablecoin_universe_2026_09": {
-  "as_of": "2026-09-12T12:20:47Z",
+  "as_of": "2026-09-12T19:30:00Z",
   "derived_from": [
    "public/interop/stablecoin-universe-2026-09/index.json (frozen 2026-09-11, signed-committed)",
-   "public/interop/stablecoin-universe-2026-09/drift-2026-09-12.json",
    "tui2-measurements/tui2-cohort-2026-09-12.json",
-   "docs/tui2/rlusd-sametime-frame-2026-09-12.json"
+   "tui2-measurements/tui2-cohort2-2026-09-12.json (observed, unstaged)",
+   "tui2-measurements/tui2-cohort3-2026-09-12.json (observed, unstaged)",
+   "public/root.json (signed/rooted state)",
+   "built by scripts/build_tui2_singletons.py — one builder, no hand-typed counts"
   ],
   "derivation_rule": "States derived from the files above; never typed aspirationally. Live per-subject states live HERE (the coverage matrix), not in the frozen index — this resolves ledger CONTRAD-001.",
+  "count_note": "12 registry asset identities across 11 ticker symbols have staged supply observations. The prior signed/rooted RLUSD identity overlaps the staged identities, so the union remains 12 and 413 indexed identities lack a staged deep supply observation. Cohorts 2-3 observed 21 further identities (27 chain readings) that are NOT staged.",
   "indexed_subjects": 425,
+  "deep_measured_asset_identities_unsigned_staged": 12,
+  "deep_measured_asset_identities_signed_rooted": 1,
+  "signed_staged_asset_identity_overlap": 1,
+  "deep_measured_asset_identity_union": 12,
+  "unmeasured_asset_identities": 413,
+  "symbols_with_supply_observation": 11,
   "signed_subjects": 1,
   "stale_subjects": 0,
+  "observed_unstaged_asset_identities": 21,
+  "observed_unstaged_chain_readings": 27,
   "uncheckable_sources": [
    {
     "item": "coingecko valtorum-usdv detail_platforms",
     "state": "UNCHECKABLE",
-    "reason": "HTTP 429 rate limit persisted across retries today"
+    "reason": "HTTP 429 rate limit persisted across retries on 2026-09-12"
    },
    {
     "item": "coingecko verified-usd-foundation-usdv",
     "state": "UNCHECKABLE",
-    "reason": "API returned coin-not-found today"
+    "reason": "API returned coin-not-found on 2026-09-12"
+   },
+   {
+    "item": "eth.llamarpc.com (EVM reader default)",
+    "state": "UNCHECKABLE",
+    "reason": "HTTP 525 at 2026-09-12 observations; substitution recorded in-record"
    }
   ],
   "not_located": [
@@ -49,162 +65,55 @@
     "chain": "base",
     "state": "NOT-LOCATED",
     "note": "Valtorum USDV (index id 398) lists Base per DefiLlama chainCirculating, but no Base contract address was found in DefiLlama chainConfig or CoinGecko (valtorum-usdv detail fetch rate-limited HTTP 429 today). Not guessed."
+   },
+   {
+    "subject": "USDGO",
+    "index_id": "347",
+    "state": "NOT-LOCATED",
+    "note": "DefiLlama exposes only a Solana address (72puLt71...); no Solana reader exists in scripts/readers — skipped honestly, not guessed"
+   },
+   {
+    "subject": "YLDS",
+    "index_id": "272",
+    "state": "NOT-LOCATED",
+    "note": "DefiLlama exposes only a Provenance address (uylds.fcc); no Provenance reader exists — skipped honestly"
+   },
+   {
+    "subject": "USDD",
+    "index_id": "14",
+    "chain": "tron",
+    "state": "NOT-LOCATED",
+    "note": "Tron deployment (TXDk8mbt...) has no keyless reader in this repo; only the Ethereum deployment was observed (single-source address, on-chain verified)"
+   },
+   {
+    "subject": "YLDS",
+    "index_id": "272",
+    "state": "NOT-LOCATED",
+    "note": "Provenance-only address (carried forward from cohort-2 skip; still no Provenance reader — none built this round per scope)"
+   },
+   {
+    "subject": "pUSD",
+    "index_id": "406",
+    "state": "NOT-LOCATED",
+    "note": "Polygon-only address (0xc011a7e1...); the EVM reader supports ethereum+base only and no new readers were built this round"
+   },
+   {
+    "subject": "USX",
+    "index_id": "310",
+    "state": "NOT-LOCATED",
+    "note": "Index lists 1 chain (not Ethereum/Base); no EVM address exposed by DefiLlama detail"
+   },
+   {
+    "subject": "BUSD",
+    "index_id": "153",
+    "state": "NOT-LOCATED",
+    "note": "Binance-Peg BUSD spans 27 chains, none Ethereum/Base per the frozen index; BSC has no reader in this repo"
    }
   ],
-  "per_subject": {
-   "DAI": {
-    "indexed": true,
-    "deep_measured_unsigned_staged": true,
-    "signed": false,
-    "root_included": false,
-    "stale": false,
-    "uncheckable": [],
-    "chains_with_2026_09_12_reading": [
-     "ethereum"
-    ],
-    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
-   },
-   "EURCV": {
-    "indexed": true,
-    "deep_measured_unsigned_staged": true,
-    "signed": false,
-    "root_included": false,
-    "stale": false,
-    "uncheckable": [],
-    "chains_with_2026_09_12_reading": [
-     "ethereum",
-     "stellar",
-     "xrpl"
-    ],
-    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
-   },
-   "FDUSD": {
-    "indexed": true,
-    "deep_measured_unsigned_staged": true,
-    "signed": false,
-    "root_included": false,
-    "stale": false,
-    "uncheckable": [],
-    "chains_with_2026_09_12_reading": [
-     "ethereum"
-    ],
-    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
-   },
-   "PYUSD": {
-    "indexed": true,
-    "deep_measured_unsigned_staged": true,
-    "signed": false,
-    "root_included": false,
-    "stale": false,
-    "uncheckable": [],
-    "chains_with_2026_09_12_reading": [
-     "ethereum",
-     "stellar"
-    ],
-    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
-   },
-   "RLUSD": {
-    "indexed": true,
-    "deep_measured_unsigned_staged": true,
-    "signed": true,
-    "root_included": true,
-    "stale": false,
-    "uncheckable": [],
-    "chains_with_2026_09_12_reading": [
-     "ethereum",
-     "xrpl"
-    ],
-    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
-   },
-   "USD1": {
-    "indexed": true,
-    "deep_measured_unsigned_staged": true,
-    "signed": false,
-    "root_included": false,
-    "stale": false,
-    "uncheckable": [],
-    "chains_with_2026_09_12_reading": [
-     "ethereum"
-    ],
-    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
-   },
-   "USDC": {
-    "indexed": true,
-    "deep_measured_unsigned_staged": true,
-    "signed": false,
-    "root_included": false,
-    "stale": false,
-    "uncheckable": [],
-    "chains_with_2026_09_12_reading": [
-     "base",
-     "ethereum",
-     "stellar",
-     "xrpl"
-    ],
-    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
-   },
-   "USDS": {
-    "indexed": true,
-    "deep_measured_unsigned_staged": true,
-    "signed": false,
-    "root_included": false,
-    "stale": false,
-    "uncheckable": [],
-    "chains_with_2026_09_12_reading": [
-     "base",
-     "ethereum"
-    ],
-    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
-   },
-   "USDT": {
-    "indexed": true,
-    "deep_measured_unsigned_staged": true,
-    "signed": false,
-    "root_included": false,
-    "stale": false,
-    "uncheckable": [],
-    "chains_with_2026_09_12_reading": [
-     "ethereum"
-    ],
-    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
-   },
-   "USDV": {
-    "indexed": true,
-    "deep_measured_unsigned_staged": true,
-    "signed": false,
-    "root_included": false,
-    "stale": false,
-    "uncheckable": [
-     "coingecko verified-usd-foundation-usdv (coin-not-found)",
-     "coingecko valtorum-usdv (HTTP 429)"
-    ],
-    "chains_with_2026_09_12_reading": [
-     "ethereum",
-     "xrpl"
-    ],
-    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
-   },
-   "USDe": {
-    "indexed": true,
-    "deep_measured_unsigned_staged": true,
-    "signed": false,
-    "root_included": false,
-    "stale": false,
-    "uncheckable": [],
-    "chains_with_2026_09_12_reading": [
-     "base",
-     "ethereum"
-    ],
-    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
-   }
-  },
-  "count_note": "12 registry asset identities across 11 ticker symbols have supply observations. The prior signed/rooted RLUSD identity overlaps the 12 staged identities, so the union remains 12 and 413 indexed identities lack a deep supply observation.",
-  "deep_measured_asset_identities_unsigned_staged": 12,
-  "deep_measured_asset_identities_signed_rooted": 1,
-  "signed_staged_asset_identity_overlap": 1,
-  "deep_measured_asset_identity_union": 12,
-  "symbols_with_supply_observation": 11,
-  "unmeasured_asset_identities": 413,
+  "staleness_observations": [
+   "cohort-1 readings observed 12:03-12:14Z; cohort-2 15:40-15:45Z; cohort-3 17:30-17:45Z; frozen index 2026-09-11T08:19:34Z (two drift notes since, counts unchanged)",
+   "staged atoms unsigned as of this build — publisher rolling root (#2042 lineage) is TUI-1's rebuild"
+  ],
   "identity_register": {
    "defillama-stablecoin:1": {
     "registry_id": "1",
@@ -346,6 +255,423 @@
     "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json",
     "signed": false,
     "root_included": false
+   },
+   "defillama-stablecoin:110": {
+    "registry_id": "110",
+    "symbol": "crvUSD",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:118": {
+    "registry_id": "118",
+    "symbol": "GHO",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:129": {
+    "registry_id": "129",
+    "symbol": "USDY",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:14": {
+    "registry_id": "14",
+    "symbol": "USDD",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:17": {
+    "registry_id": "17",
+    "symbol": "HUSD",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:173": {
+    "registry_id": "173",
+    "symbol": "BUIDL",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:173#0x6a9DA2D710BB9B700acde7Cb81F10F1fF8C89041": {
+    "registry_id": "173",
+    "symbol": "BUIDL-I (share class of index id 173)",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:195": {
+    "registry_id": "195",
+    "symbol": "USD0",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:205": {
+    "registry_id": "205",
+    "symbol": "AUSD",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:221": {
+    "registry_id": "221",
+    "symbol": "USDtb (index symbol USDTB)",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:237": {
+    "registry_id": "237",
+    "symbol": "USYC",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:246": {
+    "registry_id": "246",
+    "symbol": "USDf",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:286": {
+    "registry_id": "286",
+    "symbol": "USDG",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:306": {
+    "registry_id": "306",
+    "symbol": "GUSD",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:309": {
+    "registry_id": "309",
+    "symbol": "USDai",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:336": {
+    "registry_id": "336",
+    "symbol": "U",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:339": {
+    "registry_id": "339",
+    "symbol": "reUSD",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:340": {
+    "registry_id": "340",
+    "symbol": "rwaUSDi",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:354": {
+    "registry_id": "354",
+    "symbol": "apxUSD",
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:430": {
+    "registry_id": "430",
+    "symbol": "SOFID",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   },
+   "defillama-stablecoin:7": {
+    "registry_id": "7",
+    "symbol": "TUSD",
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "unsigned_staged": false,
+    "observed_unstaged": true,
+    "evidence": "tui2-measurements/tui2-cohort2-2026-09-12.json + tui2-cohort3-2026-09-12.json",
+    "signed": false,
+    "root_included": false
+   }
+  },
+  "per_subject": {
+   "USDT": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "FDUSD": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "PYUSD": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "stellar"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USDV": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [
+     "coingecko verified-usd-foundation-usdv (coin-not-found)"
+    ],
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USDe": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USDC": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum",
+     "stellar",
+     "xrpl"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USDS": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "base",
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "RLUSD": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": true,
+    "root_included": true,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "xrpl"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "EURCV": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum",
+     "stellar",
+     "xrpl"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USD1": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "USDV (defillama-stablecoin:398)": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [
+     "coingecko valtorum-usdv (HTTP 429)"
+    ],
+    "chains_with_2026_09_12_reading": [
+     "xrpl"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
+   },
+   "DAI": {
+    "indexed": true,
+    "deep_measured_unsigned_staged": true,
+    "signed": false,
+    "root_included": false,
+    "stale": false,
+    "uncheckable": [],
+    "chains_with_2026_09_12_reading": [
+     "ethereum"
+    ],
+    "evidence": "tui2-measurements/tui2-cohort-2026-09-12.json"
    }
   }
  }

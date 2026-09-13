@@ -1,0 +1,114 @@
+{
+ "schema": "csoai.stablecoin-index-drift/1.0",
+ "generated_at": "2026-09-12T19:35:00Z",
+ "frozen_observed_at": "2026-09-11T08:19:34.591714+00:00",
+ "refresh_observed_at": "2026-09-12T15:33:05.223888+00:00",
+ "frozen_index_sha256": "30a83f220d2e5de7cd56efdc97dad462fbae288743710063c7e9eef1014acb38",
+ "refresh_index_sha256": "f20e61f7a9d80eb6320e1204a7de9be4ca1c21dd4e51aa250b06acd8da53a81f",
+ "refresh_source_sha256": "db85c7814dc161954dffdf035d5b5415c22090608d8ac05526951e80c00ff3e2",
+ "raw_capture": {
+  "file": "raw/defillama-stablecoins-2026-09-12T1533Z.json",
+  "sha256": "db85c7814dc161954dffdf035d5b5415c22090608d8ac05526951e80c00ff3e2",
+  "bytes": 552329,
+  "note": "Raw upstream response bytes archived in-repo so these historical totals are independently reconstructible (audit #2045 bullet: archived+hashed captures). sha256 equals refresh_source_sha256 because the freeze script hashes exactly these bytes."
+ },
+ "source": "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+ "counts": {
+  "asset_count": {
+   "frozen": 425,
+   "refresh": 425,
+   "changed": false
+  },
+  "chain_count": {
+   "frozen": 211,
+   "refresh": 211,
+   "changed": false
+  },
+  "deployment_count": {
+   "frozen": 1640,
+   "refresh": 1640,
+   "changed": false
+  },
+  "usd_pegged_assets": {
+   "frozen": 337,
+   "refresh": 337,
+   "changed": false
+  },
+  "circulating_usd_sum_available": {
+   "frozen": 310786569942.86865,
+   "refresh": 312306776708.12946,
+   "delta": 1520206765.2608032
+  }
+ },
+ "added_assets": [],
+ "removed_assets": [],
+ "chain_set_changes": [],
+ "top20_membership_changed": true,
+ "deep_measurement_queue_changed": true,
+ "biggest_circulating_movers": [
+  {
+   "symbol": "USDX",
+   "frozen_usd": 6042945.474426401,
+   "refresh_usd": 683442223.6265625,
+   "delta_usd": 677399278.1521361
+  },
+  {
+   "symbol": "USDN",
+   "frozen_usd": 6436865.615301713,
+   "refresh_usd": 408891137.096548,
+   "delta_usd": 402454271.4812463
+  },
+  {
+   "symbol": "USDC",
+   "frozen_usd": 74160770591.10562,
+   "refresh_usd": 74408458039.20403,
+   "delta_usd": 247687448.09840393
+  },
+  {
+   "symbol": "USDT",
+   "frozen_usd": 183462393911.93112,
+   "refresh_usd": 183547072419.6748,
+   "delta_usd": 84678507.74368286
+  },
+  {
+   "symbol": "USDe",
+   "frozen_usd": 4545139510.573029,
+   "refresh_usd": 4605365895.408289,
+   "delta_usd": 60226384.83526039
+  },
+  {
+   "symbol": "USDS",
+   "frozen_usd": 6614731307.790907,
+   "refresh_usd": 6669024866.9499035,
+   "delta_usd": 54293559.15899658
+  },
+  {
+   "symbol": "USD1",
+   "frozen_usd": 4294497916.4255037,
+   "refresh_usd": 4317763325.068141,
+   "delta_usd": 23265408.642637253
+  },
+  {
+   "symbol": "BUIDL",
+   "frozen_usd": 2755502858.6404486,
+   "refresh_usd": 2733764076.660449,
+   "delta_usd": -21738781.979999542
+  },
+  {
+   "symbol": "pUSD",
+   "frozen_usd": 487034684.6606721,
+   "refresh_usd": 468335244.75103855,
+   "delta_usd": -18699439.909633577
+  },
+  {
+   "symbol": "RLUSD",
+   "frozen_usd": 2405307819.109906,
+   "refresh_usd": 2422672418.5067744,
+   "delta_usd": 17364599.39686823
+  }
+ ],
+ "previous_drift_note": "public/interop/stablecoin-universe-2026-09/drift-2026-09-12.json (06:59Z refresh; raw archived at raw/defillama-stablecoins-2026-09-12T065933Z.json, sha256 abda4b6e\u2026, 552,502 bytes)",
+ "disposition": "Second same-day refresh (recovered from closed PR #2045 and rebuilt with the raw archive). index.json remains the FROZEN, signature-committed discovery snapshot. Live per-subject states live in public/interop/coverage-register.json.",
+ "replay": "python3 scripts/freeze_stablecoin_index.py --offline --raw raw/defillama-stablecoins-2026-09-12T1533Z.json --output /tmp/x.json --observed-at '2026-09-12T15:33:05.223888+00:00'  # then compare sha256 of /tmp/x.json to refresh_index_sha256 (verified 2026-09-12: match)",
+ "cost_usd": 0
+}

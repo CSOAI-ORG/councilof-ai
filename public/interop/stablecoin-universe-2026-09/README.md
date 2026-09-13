@@ -58,3 +58,19 @@ per-subject measurement states live in `public/interop/coverage-register.json`.
 This resolves ledger CONTRAD-001: the index says UNMEASURED for all 425 because
 it froze at discovery time; readiness/catalog mark RLUSD as the deeply-measured
 exception; the coverage matrix is the live state view.
+
+## Raw capture archives — 2026-09-12 (appended)
+
+Both same-day refreshes now have their raw upstream bytes archived in-repo so
+the historical totals are independently reconstructible:
+
+- `raw/defillama-stablecoins-2026-09-12T065933Z.json` — 552,502 bytes, sha256
+  `abda4b6eb217675a861dd398d908a60be80c1dcb6d97bb08c21e6ff91268ee57` (matches
+  `refresh_source_raw_sha256` in `drift-2026-09-12.json`)
+- `raw/defillama-stablecoins-2026-09-12T1533Z.json` — 552,329 bytes, sha256
+  `db85c7814dc161954dffdf035d5b5415c22090608d8ac05526951e80c00ff3e2` (matches
+  `raw_capture.sha256` in `drift-2026-09-12T1533Z.json`)
+
+Rebuild either refresh offline:
+`python3 scripts/freeze_stablecoin_index.py --offline --raw <archived raw> --output /tmp/x.json --observed-at <refresh_observed_at>`
+and compare `/tmp/x.json`'s sha256 to the note's `refresh_index_sha256`.
