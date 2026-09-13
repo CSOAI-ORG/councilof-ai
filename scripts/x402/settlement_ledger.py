@@ -9,7 +9,8 @@ Reads:
 
 Classifies each transfer:
   - SELF_TEST: from a known internal wallet
-  - EXTERNAL_CUSTOMER: from an unknown wallet, amount matches a SKU price
+  - EXTERNAL_CUSTOMER: transaction already attributed by the revenue ledger
+  - UNATTRIBUTED_SKU_MATCH: unknown wallet and amount matches a price, but no purchase receipt proves purpose
   - UNKNOWN_PURPOSE: from an unknown wallet, amount doesn't match any SKU
   - ZERO_VALUE: dust/zero transfers
 
@@ -44,6 +45,12 @@ SKU_PRICES = {
     20000: "request_attestation (standard 0.02)",
     100000: "receipts_batch (0.10)",
     0: "free_door (0.00)",
+}
+
+# Transactions already tied to a fulfilled outside purchase in the public
+# revenue evidence. An amount match alone never proves customer intent.
+KNOWN_EXTERNAL_TRANSACTIONS = {
+    "0xc16ecc8552445df2a9110d7646c8d68e5e0a4515f325675b80d03ec7bbd96092",
 }
 
 TENDERLY_ETH = "https://gateway.tenderly.co/public/mainnet"
@@ -100,14 +107,16 @@ def get_logs(rpc_url: str, from_block: int, to_block: int, address: str, topics:
     return resp.get("result", [])
 
 
-def classify_transfer(from_addr: str, amount: int) -> str:
+def classify_transfer(from_addr: str, amount: int, tx_hash: str) -> str:
     """Classify a USDC transfer by sender and amount."""
     if from_addr.lower() in KNOWN_INTERNAL:
         return "SELF_TEST"
     if amount == 0:
         return "ZERO_VALUE"
-    if amount in SKU_PRICES:
+    if tx_hash.lower() in KNOWN_EXTERNAL_TRANSACTIONS:
         return "EXTERNAL_CUSTOMER"
+    if amount in SKU_PRICES:
+        return "UNATTRIBUTED_SKU_MATCH"
     return "UNKNOWN_PURPOSE"
 
 
@@ -168,7 +177,7 @@ def main():
         amount = int(log.get("data", "0x0"), 16)
         tx_hash = log.get("transactionHash", "")
         block = int(log.get("blockNumber", "0x0"), 16)
-        classification = classify_transfer(from_addr, amount)
+        classification = classify_transfer(from_addr, amount, tx_hash)
 
         transfers.append({
             "block": block,

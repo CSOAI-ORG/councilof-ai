@@ -1,12 +1,12 @@
 {
   "schema": "csoai.settlement-ledger/v1",
-  "as_of": "2026-09-13T04:16:39.350977+00:00",
+  "as_of": "2026-09-13T04:26:36.953349+00:00",
   "chain": "base",
   "chain_id": 8453,
   "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
   "scan_range": {
-    "from_block": 50941826,
-    "to_block": 51241826
+    "from_block": 50942125,
+    "to_block": 51242125
   },
   "integrity_anchor": {
     "block": 51172054,
@@ -24,18 +24,22 @@
       "total_usdc": "0.210000"
     },
     "EXTERNAL_CUSTOMER": {
-      "count": 2,
-      "total_usdc": "0.030000"
+      "count": 1,
+      "total_usdc": "0.020000"
     },
     "ZERO_VALUE": {
       "count": 4,
       "total_usdc": "0.000000"
+    },
+    "UNATTRIBUTED_SKU_MATCH": {
+      "count": 1,
+      "total_usdc": "0.010000"
     }
   },
   "reconciliation": {
     "server_external_payers": 1,
-    "chain_external_transfers": 2,
-    "match": false,
+    "chain_external_transfers": 1,
+    "match": true,
     "server_source": "/api/revenue \u2192 one_number.all_time",
     "chain_source": "USDC Transfer events to 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 on Base"
   },
@@ -172,7 +176,7 @@
       "from": "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
       "amount_atomic": 10000,
       "amount_usdc": "0.010000",
-      "classification": "EXTERNAL_CUSTOMER",
+      "classification": "UNATTRIBUTED_SKU_MATCH",
       "sku_match": "request_attestation (promo 0.01)"
     }
   ],
