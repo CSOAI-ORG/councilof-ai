@@ -1,0 +1,32 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "architecture.layer.enforce",
+  "subject": "architecture-layer3-asisecurity-enforce",
+  "measured_at": "2026-09-13T04:58:01.667735+00:00",
+  "metrics": {
+    "layer": 3,
+    "name": "ASISecurity.ai \u2014 The Enforce Layer",
+    "role": "Enforces AGISafe decisions \u2014 sandboxing, permissions, approvals, revocation",
+    "inputs": [
+      "AGISafe policy decisions",
+      "CSOAI measurement receipts"
+    ],
+    "enforcement_capabilities": [
+      "Sandbox enforcement \u2014 restrict model execution environments",
+      "Permission gating \u2014 approve/revoke API access, model deployment",
+      "Approval workflows \u2014 human-in-the-loop for high-risk decisions",
+      "Revocation \u2014 pull deployed models, terminate agent sessions",
+      "Incident response \u2014 Article 73 broadcaster (EU AI Act, DORA, NIS2, GDPR)"
+    ],
+    "existing_infrastructure": [
+      "CSOAI-ORG/asisecurity-hive \u2014 hive wiring",
+      "CSOAI-ORG/asisecurity-portal \u2014 domain source",
+      "CSOAI-ORG/agent-policy-enforcement-mcp \u2014 per-agent IAM",
+      "CSOAI-ORG/agent-prompt-injection-firewall-mcp \u2014 OWASP LLM Top 10",
+      "CSOAI-ORG/agent-incident-relay-mcp \u2014 Article 73 broadcaster"
+    ],
+    "hf_integration": "Hugging Face scanner: CSOAI measures \u2192 AGISafe decides green/amber/red \u2192 ASISecurity enforces deployment gates on open models"
+  },
+  "honest_sentence": "ASISecurity.ai is the enforce layer: sandboxing, permissions, approvals, revocation. Enforcement always backed by AGISafe decisions backed by CSOAI measurements \u2014 the full accountability chain.",
+  "measurement_not_certification": true
+}

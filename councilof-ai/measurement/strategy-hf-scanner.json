@@ -1,0 +1,27 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.hf_scanner",
+  "subject": "strategy-hf-scanner",
+  "measured_at": "2026-09-13T04:58:01.667735+00:00",
+  "metrics": {
+    "what": "CSOAI scanner for Hugging Face \u2014 produces signed receipts + GSPC axes + policy crosswalks for any model",
+    "existing_hf_security": [
+      "HuggingFace security scanners",
+      "Model cards with safety metadata",
+      "SafeTensors format",
+      "AI Safety badges"
+    ],
+    "csoai_addition": "Signed measurement receipt per model \u2014 22 axes, deterministic, reproducible, Bitcoin-anchored",
+    "deployment_states": {
+      "GREEN": "All 22 axes measured, no critical failures, signed receipt valid",
+      "AMBER": "Partial measurement or warnings \u2014 requires human review before deployment",
+      "RED": "Critical axis failures or known safety issues \u2014 deployment blocked",
+      "UNMEASURED": "No CSOAI receipt exists \u2014 cannot verify safety"
+    },
+    "integration_path": "1) Build HF Space that runs GSPC on any model. 2) Submit as HF community scanner. 3) AGISafe uses receipts for deployment decisions. 4) ASISecurity enforces gates.",
+    "scope": "Not claiming to stop all bad use \u2014 adding a risk and evidence layer. HF already has security partners. CSOAI adds signed measurement evidence.",
+    "models_measured": "1500+ repos already catalogued (councilof-ai/measurement/)"
+  },
+  "honest_sentence": "HF scanner: CSOAI measures any HF model \u2192 signed receipt + 22 axes + policy crosswalks. AGISafe assigns green/amber/red. ASISecurity enforces gates. Not stopping all bad use \u2014 adding evidence.",
+  "measurement_not_certification": true
+}

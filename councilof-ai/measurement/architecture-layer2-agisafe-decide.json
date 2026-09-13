@@ -1,0 +1,30 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "architecture.layer.decide",
+  "subject": "architecture-layer2-agisafe-decide",
+  "measured_at": "2026-09-13T04:58:01.667735+00:00",
+  "metrics": {
+    "layer": 2,
+    "name": "AGISafe.ai \u2014 The Decide Layer",
+    "role": "Takes measurement + safety canons \u2192 outputs policy decisions",
+    "inputs": [
+      "CSOAI measurement receipts",
+      "Maternal Covenant / safety canons",
+      "Regulatory crosswalks",
+      "Risk scores"
+    ],
+    "outputs": [
+      "ALLOW",
+      "RESTRICT",
+      "REQUIRE HUMAN APPROVAL",
+      "STOP"
+    ],
+    "decision_framework": "Covenant > Policy > Threat > Measurement > Decision",
+    "implementation": "Rule engine + LLM-assisted policy interpretation, always backed by signed measurement evidence",
+    "sakana_inspiration": "Symbiosis of best available models per task \u2014 but never above the measurement plane. CSOAI stays independent.",
+    "meope_ai_positioning": "meope.ai = the intelligence/symbiosis layer \u2014 routes, plans, checks safety, executes, measures, verifies, learns. Not a new foundation model, but the orchestration intelligence.",
+    "repo": "CSOAI-ORG/agisafe-hive"
+  },
+  "honest_sentence": "AGISafe.ai is the decide layer: takes CSOAI measurement + safety canons \u2192 outputs allow/restrict/require-human/stop. Decision always backed by signed measurement evidence.",
+  "measurement_not_certification": true
+}

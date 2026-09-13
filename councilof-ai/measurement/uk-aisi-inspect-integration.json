@@ -1,0 +1,20 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.uk.aisi_inspect",
+  "subject": "uk-aisi-inspect-integration",
+  "measured_at": "2026-09-13T04:58:01.667735+00:00",
+  "metrics": {
+    "repo": "UKGovernmentBEIS/inspect_ai",
+    "stars": 2756,
+    "license": "MIT",
+    "extension_model": "First-class extension APIs \u2014 publish own package, listed at inspect.aisi.org.uk/extensions.html",
+    "contribution_policy": "Issue-first: must get issue labeled 'accepted' before PR. PRs without accepted issue auto-closed.",
+    "approach": "Submit GSPC as an Inspect extension (pip installable) that runs 22-axis measurement on any model, emits signed CSOAI receipt",
+    "integration_path": "inspect-gspc-eval: pip install inspect-gspc \u2192 inspect eval inspect-gspc/gspc --model anthropic/claude \u2192 signed receipt",
+    "prerequisite": "Open issue describing GSPC as evaluation extension. Wait for 'accepted' label. Then submit code.",
+    "timeline": "Sep 15: Open issue. Sep 16-20: Build extension. Sep 21-25: Submit PR. Sep 27: Demo at AI Growth Lab.",
+    "why_this_works": "AISI explicitly designed Inspect for external evaluations. Extensions are first-class. CSOAI doesn't need permission \u2014 just build an extension that interoperates."
+  },
+  "honest_sentence": "AISI Inspect (MIT, 2756 stars) has first-class extension APIs and an issue-first PR policy. CSOAI can submit a GSPC evaluation extension that runs 22-axis measurement and emits signed receipts \u2014 interoperability by doing, not branding.",
+  "measurement_not_certification": true
+}
