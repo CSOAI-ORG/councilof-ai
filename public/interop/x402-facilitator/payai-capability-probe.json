@@ -1,0 +1,56 @@
+{
+  "/": {
+    "code": 200,
+    "ctype": null,
+    "len": 137635,
+    "head": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <!-- Google Tag Manager -->\n    <script>\n      (function () {\n        var isProd = window.location && window.location.hostname === 'facilitator.payai.netw"
+  },
+  "/supported": {
+    "code": 200,
+    "ctype": null,
+    "len": 3115,
+    "head": "{\"kinds\":[{\"x402Version\":1,\"scheme\":\"exact\",\"network\":\"base-sepolia\"},{\"x402Version\":1,\"scheme\":\"exact\",\"network\":\"base\"},{\"x402Version\":1,\"scheme\":\"exact\",\"network\":\"avalanche-fuji\"},{\"x402Version\":1"
+  },
+  "/verify": {
+    "code": 200,
+    "ctype": null,
+    "len": 154,
+    "head": "{\"endpoint\":\"/verify\",\"description\":\"POST to verify x402 payments\",\"body\":{\"paymentPayload\":\"PaymentPayload\",\"paymentRequirements\":\"PaymentRequirements\"}}"
+  },
+  "/settle": {
+    "code": 200,
+    "ctype": null,
+    "len": 154,
+    "head": "{\"endpoint\":\"/settle\",\"description\":\"POST to settle x402 payments\",\"body\":{\"paymentPayload\":\"PaymentPayload\",\"paymentRequirements\":\"PaymentRequirements\"}}"
+  },
+  "/discovery/resources?limit=1": {
+    "code": 200,
+    "ctype": null,
+    "len": 1960,
+    "head": "{\"items\":[{\"accepts\":[{\"asset\":\"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\",\"extra\":{\"feePayer\":\"CjNFTjvBhbJJd2B5ePPMHRLx1ELZpa8dwQgGL727eKww\",\"mimeType\":\"application/json\",\"description\":\"Direct a s"
+  },
+  "/.well-known/x402": {
+    "code": 404,
+    "ctype": null,
+    "len": 1052,
+    "head": "# 404 Not Found\n\nNo resource is served at `GET /.well-known/x402` on this origin.\n\nThis is the PayAI x402 facilitator API. Its endpoints are `/verify`, `/settle`, `/supported`, `/health`, and `/discov"
+  },
+  "/health": {
+    "code": 200,
+    "ctype": null,
+    "len": 2,
+    "head": "OK"
+  },
+  "/v1/supported": {
+    "code": 404,
+    "ctype": null,
+    "len": 1048,
+    "head": "# 404 Not Found\n\nNo resource is served at `GET /v1/supported` on this origin.\n\nThis is the PayAI x402 facilitator API. Its endpoints are `/verify`, `/settle`, `/supported`, `/health`, and `/discovery/"
+  },
+  "/api/supported": {
+    "code": 404,
+    "ctype": null,
+    "len": 1049,
+    "head": "# 404 Not Found\n\nNo resource is served at `GET /api/supported` on this origin.\n\nThis is the PayAI x402 facilitator API. Its endpoints are `/verify`, `/settle`, `/supported`, `/health`, and `/discovery"
+  }
+}

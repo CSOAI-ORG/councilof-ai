@@ -1,0 +1,220 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "x402.facilitator.sr",
+  "subject": "PayAI facilitator \u2014 UNSIGNED SR dry (SR1/SR2/SR5 executed)",
+  "as_of": "2026-09-07T08:15:57Z",
+  "source_urls": [
+    "https://facilitator.payai.network/supported",
+    "https://facilitator.payai.network/verify",
+    "https://facilitator.payai.network/settle",
+    "https://arxiv.org/abs/2607.19545"
+  ],
+  "payload": {
+    "kind": "x402-facilitator-sr",
+    "not_a_certification": true,
+    "not_a_score": true,
+    "not_remediation": true,
+    "subject": {
+      "host": "https://facilitator.payai.network",
+      "role": "measured-subject",
+      "not_rival_clone": true
+    },
+    "paper_cite": {
+      "arxiv": "2607.19545",
+      "note": "Wang et al. SR1\u2013SR8 framework cite only \u2014 not our measure"
+    },
+    "capability_discovery": {
+      "method": "payai-facilitator-capability-v0",
+      "as_of": "2026-09-07T08:15:57Z",
+      "endpoints": [
+        {
+          "endpoint": "/supported",
+          "status": "PASS",
+          "code": 200,
+          "sha256": "0488e0acea429aededc7c30b91af1e222bb8efdc0714af3a70da3a325e285ac1"
+        },
+        {
+          "endpoint": "/verify",
+          "status": "PASS",
+          "code": 200,
+          "sha256": "5f639db2522f7c62fb1653794e0cca5f07f78bebb5ed4aa79800a98631121d1a",
+          "note": "GET schema only \u2014 not a verify PASS"
+        },
+        {
+          "endpoint": "/settle",
+          "status": "PASS",
+          "code": 200,
+          "sha256": "3ead9d5b3f9cf925e29450df200fb3aa6cbf496d0fa809b65fe682a51b9c11e2",
+          "note": "GET schema only \u2014 not a settle PASS"
+        },
+        {
+          "endpoint": "/health",
+          "status": "PASS",
+          "code": 200
+        }
+      ],
+      "supported_kinds_n": 32,
+      "networks": [
+        "arbitrum",
+        "arbitrum-sepolia",
+        "avalanche",
+        "avalanche-fuji",
+        "base",
+        "base-sepolia",
+        "eip155:1187947933",
+        "eip155:1329",
+        "eip155:137",
+        "eip155:1952",
+        "eip155:196",
+        "eip155:324705682",
+        "eip155:42161",
+        "eip155:421614",
+        "eip155:43113",
+        "eip155:43114",
+        "eip155:713715",
+        "eip155:80002",
+        "eip155:8453",
+        "eip155:84532",
+        "polygon",
+        "polygon-amoy",
+        "sei",
+        "sei-testnet",
+        "skale-base",
+        "skale-base-sepolia",
+        "solana",
+        "solana-devnet",
+        "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+        "xlayer",
+        "xlayer-testnet"
+      ],
+      "supported_sha256": "0488e0acea429aededc7c30b91af1e222bb8efdc0714af3a70da3a325e285ac1"
+    },
+    "sr_results": [
+      {
+        "sr": "SR1",
+        "status": "PASS",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "tamper-requirements-binding",
+        "note": "{\"isValid\": false, \"invalidReason\": \"invalid_exact_evm_recipient_mismatch\", \"payer\": \"0xb383C997C708A60905D418E5C58CEFfD04879F1A\"}",
+        "evidence": {
+          "http": 200,
+          "raw_sha256": "378333d24ee21a8f876260ce9a229d883fcd14e0df230378888de548f4d028a3",
+          "network": "base-sepolia",
+          "settle_called": false,
+          "artifact": "payai-sr1-sr2-sr5-dry.json"
+        }
+      },
+      {
+        "sr": "SR2",
+        "status": "PASS",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "tamper-signature",
+        "note": "{\"isValid\": false, \"invalidReason\": \"invalid_exact_evm_signature\", \"payer\": \"0xb383C997C708A60905D418E5C58CEFfD04879F1A\"}",
+        "evidence": {
+          "http": 200,
+          "raw_sha256": "70eca5d662bb64315cceb83b288573fcb2e92dbe8df0283c349922a8e281f0d1",
+          "network": "base-sepolia",
+          "settle_called": false,
+          "artifact": "payai-sr1-sr2-sr5-dry.json"
+        }
+      },
+      {
+        "sr": "SR3",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "payai-facilitator-dry-v0",
+        "note": "Replay resistance \u2014 needs dual-submit fixture; ethical hold until testnet wallet named",
+        "evidence": {
+          "probe": "none"
+        }
+      },
+      {
+        "sr": "SR4",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "payai-facilitator-dry-v0",
+        "note": "Facilitator 2-atomicity \u2014 needs verify\u2192settle observation; not run this pass",
+        "evidence": {
+          "probe": "none"
+        }
+      },
+      {
+        "sr": "SR5",
+        "status": "FAIL",
+        "n": 1,
+        "n_unit": "checks",
+        "method": "zero-amount-reject",
+        "note": "{\"isValid\": true, \"payer\": \"0xb383C997C708A60905D418E5C58CEFfD04879F1A\"}",
+        "evidence": {
+          "http": 200,
+          "raw_sha256": "aefd0234d846c31fdef3264fb1bb463d89b681bc7e993da5c94892aaa83a903e",
+          "network": "base-sepolia",
+          "settle_called": false,
+          "artifact": "payai-sr1-sr2-sr5-dry.json"
+        }
+      },
+      {
+        "sr": "SR6",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "payai-facilitator-dry-v0",
+        "note": "Cache / intermediary leakage \u2014 needs proxy fixture; not run this pass",
+        "evidence": {
+          "probe": "none"
+        }
+      },
+      {
+        "sr": "SR7",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "payai-facilitator-dry-v0",
+        "note": "ERC-1271/6492 contract-sig path \u2014 UNCHECKABLE until baseline wallets",
+        "evidence": {
+          "probe": "none"
+        }
+      },
+      {
+        "sr": "SR8",
+        "status": "UNCHECKABLE",
+        "n": 0,
+        "n_unit": "checks",
+        "method": "payai-facilitator-dry-v0",
+        "note": "Discovery honesty / catalog integrity \u2014 separate from 74/100; capability GET only this pass",
+        "evidence": {
+          "probe": "/discovery/resources?limit=1",
+          "code": 200
+        }
+      }
+    ],
+    "denominators": {
+      "n_sr": 8,
+      "n_pass": 2,
+      "n_fail": 1,
+      "n_uncheckable": 5
+    },
+    "honesty": {
+      "board_authority": "GET https://councilof.ai/api/gspc \u2014 22\u00b722\u00b70",
+      "separate_from": "74/100 catalog leaf",
+      "ethical_black_box": true,
+      "no_post_verify_settle_this_pass": true,
+      "language": "PASS/FAIL/UNCHECKABLE only \u2014 never score/certify/remediate",
+      "dry_sr_pass": "SR1+SR2 PASS \u00b7 SR5 FAIL (zero-amount verify returned isValid:true) \u00b7 SR3/4/6/7/8 UNCHECKABLE"
+    }
+  },
+  "sha256": "55848fc052adf82c9f2386ddc43808056325338693447398ed379ea4f40e5502",
+  "unmeasured": [
+    "SR3 not executed this pass",
+    "SR4 not executed this pass",
+    "SR6 not executed this pass",
+    "SR7 not executed this pass",
+    "SR8 not executed this pass"
+  ],
+  "sig_ed25519": null
+}

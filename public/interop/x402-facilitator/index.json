@@ -1,0 +1,78 @@
+{
+  "schema": "csoai.x402-facilitator-index/0.1",
+  "pack": "x402-facilitator",
+  "as_of": "2026-09-07T08:15:57Z",
+  "status": "UNSIGNED",
+  "writes_board": false,
+  "never_certify": true,
+  "never_invent_measured": true,
+  "honest_sentence": "Free forever counts + methodology. Attestation never certification. UNSIGNED PayAI dry only. Separate from catalog 74/100 and x402-challenge DRY leaf. Never invent MEASURED.",
+  "board_cite": {
+    "url": "https://councilof.ai/api/gspc",
+    "rule": "re-GET only — do not freeze Hub",
+    "live_at_write": "22·22·0"
+  },
+  "paper_cite": {
+    "label": "Wang et al. arXiv:2607.19545 SR1–SR8 — paper stamp not our measure",
+    "arxiv": "2607.19545",
+    "url": "https://arxiv.org/abs/2607.19545"
+  },
+  "separate_from": [
+    "catalog.x402.trust.74of100",
+    "x402-challenge"
+  ],
+  "subjects": [
+    {
+      "id": "payai",
+      "host": "https://facilitator.payai.network",
+      "role": "measured-subject",
+      "first": true,
+      "card": "card-v0-payai-facilitator-sr.unsigned.json",
+      "probe": "payai-capability-probe.json",
+      "sig_ed25519": null,
+      "sr_results": {
+        "SR1": "PASS",
+        "SR2": "PASS",
+        "SR3": "UNCHECKABLE",
+        "SR4": "UNCHECKABLE",
+        "SR5": "FAIL",
+        "SR6": "UNCHECKABLE",
+        "SR7": "UNCHECKABLE",
+        "SR8": "UNCHECKABLE"
+      },
+      "denominators": {
+        "n_sr": 8,
+        "n_pass": 2,
+        "n_fail": 1,
+        "n_uncheckable": 5
+      }
+    }
+  ],
+  "naming_policy": {
+    "facilitator_hosts": "may be named — public payment infrastructure",
+    "seller_merchant_dump": false
+  },
+  "files": [
+    {
+      "path": "index.html",
+      "role": "pages_index"
+    },
+    {
+      "path": "README.md",
+      "role": "readme"
+    },
+    {
+      "path": "index.json",
+      "role": "machine_index"
+    },
+    {
+      "path": "card-v0-payai-facilitator-sr.unsigned.json",
+      "role": "unsigned_card",
+      "sig_ed25519": null
+    },
+    {
+      "path": "payai-capability-probe.json",
+      "role": "capability_probe"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>x402 facilitator SR scorecard · Council of AI</title>
+<style>body{font-family:-apple-system,system-ui,sans-serif;background:#04070d;color:#e2e8f0;margin:0;padding:2rem;line-height:1.55;max-width:52rem}a{color:#C8A05C}h1{font-size:1.5rem;margin:0 0 .5rem}h2{font-size:1.05rem;margin:1.75rem 0 .5rem;color:#cbd5e1}p,li{color:#cbd5e1}.meta{color:#94a3b8;font-size:.9rem}ul.cards{list-style:none;padding:0;margin:.5rem 0 0}ul.cards li{margin:.15rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}table{border-collapse:collapse;width:100%;margin:.5rem 0 0;font-size:.9rem}th,td{text-align:left;padding:.35rem .5rem;border-bottom:1px solid #1e293b}th{color:#94a3b8;font-weight:600}</style>
+</head>
+<body>
+<h1>x402 facilitator SR scorecard</h1>
+<p class="meta"><code>x402-facilitator</code> · free forever counts + methodology · attestation never certification · <code>writes_board=false</code> · never invent MEASURED</p>
+<p>Referee instrument for x402 <strong>facilitator hosts</strong> (public payment infrastructure). First subject: <strong>PayAI</strong> (<code>facilitator.payai.network</code>). Other facilitator hosts may be named later. No seller / merchant dump.</p>
+<p>This leaf is a <strong>separate instrument</strong> from the catalog trust snapshot <a href="/interop/x402-trust/">74/100</a> and from the <a href="/interop/x402-challenge/">x402-challenge</a> DRY 402 leaf. Do not fuse counts, cards, or surfaces.</p>
+<p><a href="./README.md">README.md</a> · <a href="./index.json">index.json</a></p>
+
+<h2>Board cite</h2>
+<p>Re-GET only: <a href="https://councilof.ai/api/gspc"><code>https://councilof.ai/api/gspc</code></a>. Live this write: <strong>22 · 22 · 0</strong> (<code>totals.public_count</code> = 22 axis · 22 measured). Do not freeze Hub cells here.</p>
+
+<h2>Paper cite (stamp, not our measure)</h2>
+<p>Wang et al., <em>When HTTP 402 Meets the Blockchain</em> — arXiv:<a href="https://arxiv.org/abs/2607.19545">2607.19545</a> SR1–SR8. Paper stamp only. Not a CSOAI score, not a certification.</p>
+
+<h2>UNSIGNED PayAI dry (as recorded)</h2>
+<p>Capability discovery endpoints recorded on the subject (<code>/supported</code> · <code>/verify</code> · <code>/settle</code> · <code>/health</code> GET). SR outcomes are <strong>PASS / FAIL / UNCHECKABLE</strong> only as in the unsigned card — no new SR results invented on this page. Card <code>sig_ed25519</code> is <code>null</code>.</p>
+<table>
+  <thead><tr><th>SR</th><th>Status</th><th>Method</th></tr></thead>
+  <tbody>
+    <tr><td>SR1</td><td>PASS</td><td><code>tamper-requirements-binding</code></td></tr>
+    <tr><td>SR2</td><td>PASS</td><td><code>tamper-signature</code></td></tr>
+    <tr><td>SR3</td><td>UNCHECKABLE</td><td>not executed this pass</td></tr>
+    <tr><td>SR4</td><td>UNCHECKABLE</td><td>not executed this pass</td></tr>
+    <tr><td>SR5</td><td>FAIL</td><td><code>zero-amount-reject</code></td></tr>
+    <tr><td>SR6</td><td>UNCHECKABLE</td><td>not executed this pass</td></tr>
+    <tr><td>SR7</td><td>UNCHECKABLE</td><td>not executed this pass</td></tr>
+    <tr><td>SR8</td><td>UNCHECKABLE</td><td>not executed this pass</td></tr>
+  </tbody>
+</table>
+<p class="meta">Denominators on the unsigned card: n_sr=8 · n_pass=2 · n_fail=1 · n_uncheckable=5. Settle never called. Not a score. Not a certification.</p>
+
+<h2>Artefacts</h2>
+<ul class="cards">
+  <li><a href="./README.md">README.md</a> — short doctrine</li>
+  <li><a href="./index.json">index.json</a> — machine index</li>
+  <li><a href="./card-v0-payai-facilitator-sr.unsigned.json">card-v0-payai-facilitator-sr.unsigned.json</a> — UNSIGNED card-v0 (<code>sig_ed25519: null</code>)</li>
+  <li><a href="./payai-capability-probe.json">payai-capability-probe.json</a> — capability discovery GETs</li>
+</ul>
+<p class="meta">Pages needs this index.html so the bare folder URL is 200. Free counts + methodology only — does not write the GSPC board.</p>
+<p><a href="../">← /interop</a></p>
+</body>
+</html>
