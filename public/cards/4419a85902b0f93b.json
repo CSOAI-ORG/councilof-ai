@@ -1,0 +1,59 @@
+{
+  "card": {
+    "as_of": "2026-09-12T19:59:40Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "246",
+      "symbol": "USDf",
+      "attestation_page": "https://falcon.finance/",
+      "auditor": null,
+      "cadence_claimed": null,
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "90b072484091dcfaee7a7961b112486e548fb37d0d9cc49926a6b6e663d0b4c4",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "cadence_claimed",
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "4419a85902b0f93bea59f24518fd5529927358bbbe20bf306ccc85dea03a38a4",
+    "sig_ed25519": "35af6cb355bc17270d6dafb2d24e49a7e1f88c57117004d91ad72a60cee201e51707b82314b5abd9cc6fa9af700f59c9b9b09c9cd80df67416f36de492f2c70d",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://falcon.finance/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDf",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "cadence_claimed",
+      "staleness"
+    ]
+  },
+  "proof": [
+    "7311d56f729010307669aecd540d63278bd1ae11cd9aab1e8795ba157fee6c09",
+    "c18e2b8aa3ae6dc2b09049b59b021a2bc2b670b818482b0205f2a7469f31958c",
+    "881779abce3d5e18a65009fb8c4b4c07cafbb95cbbad999ff46aaa11a5e19ec6",
+    "dd6c735cef9860fcf5dd7c0d8ad34a29c30939aeba1597b3897b173db0bd9a6d",
+    "e0d7fb5c6b7ed8f065b4262c62a3ec9543f874b2600bf00d82eb5503f9067a98",
+    "0f8e1b5026bf81008277b6e7bbb103952531e6d35d54ed69de69573577e3e9bc",
+    "f995b9543723def330db200ec9763b76b5274a698a0cc469ab81e5306c1fdd25",
+    "37017b94570f4f0e2ee19ad6b96fa75b0aa07a5571a402952045ba37c67ee7d4",
+    "7a400a22a2110cd974b97734324256cc72f918b15684ace6810bb71eb0c5c9d2"
+  ]
+}
