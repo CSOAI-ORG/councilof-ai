@@ -249,8 +249,11 @@ def build(observed_at: str) -> dict[str, Any]:
         "stablecoin_chains": len(stablecoins.get("chains") or []),
         "dex_protocols": len(dexs.get("protocols") or []),
         "dex_chains": len(dexs.get("allChains") or []),
-        "fee_revenue_protocols": len(fees.get("protocols") or []),
-        "fee_revenue_chains": len(fees.get("allChains") or []),
+        # These are row counts returned by DefiLlama's fees dataset, not money,
+        # revenue earned by CSOAI, or a price. Keep the key names explicit so the
+        # public price gate cannot mistake a directory count for a product fee.
+        "fees_dataset_protocols": len(fees.get("protocols") or []),
+        "fees_dataset_chains": len(fees.get("allChains") or []),
         "options_protocols": len(options.get("protocols") or []),
         "options_chains": len(options.get("allChains") or []),
         "selected_protocol_categories": {
