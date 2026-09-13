@@ -1,6 +1,6 @@
 {
   "schema": "csoai.stablecoin-deep/0.1",
-  "generated_at": "2026-09-12T19:59:40Z",
+  "generated_at": "2026-09-13T03:08:28Z",
   "release_id": "stablecoin-deep-2026-09",
   "index_ref": {
     "path": "public/interop/stablecoin-universe-2026-09/index.json",
@@ -251,7 +251,7 @@
       "auditor": null,
       "cadence_claimed": "daily",
       "latest_report_date": "2026-09-10",
-      "staleness_days": 2,
+      "staleness_days": 3,
       "excerpt": "TVL $ 2.22B TVL 1W 1M 1Y ALL Chart values as of 8:00:00pm EDT . Portfolio Overview As of September 10, 2026 7:59:59pm EDT Value of USDY Outstanding 3 $ 2.14B Value of Underlying Assets 4 $ 2.23B Co",
       "mirror": "mirrors/129.html",
       "mirror_sha256": "5a7eadf0b94a03d4bdc3e5e87d37ec588cfdc08ef76bdad72ea5147da94f6ed6",
@@ -438,7 +438,22 @@
     "n_with_attestation_page": 19,
     "n_with_auditor": 3,
     "n_with_staleness": 1,
-    "median_staleness_days": 2
+    "median_staleness_days": 3
+  },
+  "cost": {
+    "runner": "github-hosted ubuntu-latest (public repo \u2014 workflow minutes not billed)",
+    "runner_timeout_minutes": 20,
+    "observed_last_run": {
+      "id": 34715741325,
+      "conclusion": "success",
+      "at": "2026-09-12T19:59Z"
+    },
+    "schedule": "23 3 * * * (daily 03:23 UTC) + workflow_dispatch",
+    "network_calls": "20 registered issuer/auditor pages + 0 paid endpoints",
+    "endpoints": "keyless only",
+    "inference_spend_usd": 0,
+    "cost_gbp": 0,
+    "note": "If a registered page ever requires a key or payment, the row goes UNCHECKABLE \u2014 the round never buys access."
   },
   "truth_rules": [
     "DEEP_PROBED means the issuer page was fetched and its served bytes inspected; it is not a certification.",
