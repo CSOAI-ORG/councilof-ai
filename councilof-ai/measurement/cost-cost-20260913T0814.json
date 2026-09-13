@@ -1,0 +1,30 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.cost.state",
+  "subject": "cost-20260913T0814",
+  "measured_at": "2026-09-13T08:14:57.723264Z",
+  "metrics": {
+    "uptime_hours": 0,
+    "daily_spend": 0.5,
+    "monthly_spend": 3.0,
+    "limits": {
+      "daily_runpod_usd": 7.0,
+      "daily_total_usd": 10.0,
+      "monthly_runpod_usd": 200.0,
+      "warning_threshold_pct": 80
+    },
+    "alerts": [],
+    "rates": {
+      "runpod_3090": 0.28,
+      "x402_settlement": 1e-05,
+      "gh_actions_minutes": 0.008,
+      "internet_egress_gb": 0.09
+    },
+    "miner_version": "asi-evolve-2",
+    "note": "Cost controller. Pod uptime \u2192 daily spend. Alerts at 80% of limit."
+  },
+  "honest_sentence": "ASI-Evolve cost controller: pod uptime 0.0h, daily spend $0.50, limits OK.",
+  "measurement_not_certification": true,
+  "permissionless": true,
+  "auto_churn": true
+}

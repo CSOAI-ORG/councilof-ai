@@ -1,0 +1,35 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.skill.install_state",
+  "subject": "skill-check-20260913T0813",
+  "measured_at": "2026-09-13T08:13:01.896278Z",
+  "metrics": {
+    "installed": [
+      "huggingface_hub",
+      "requests",
+      "cryptography",
+      "pyjwt",
+      "httpx",
+      "aiohttp",
+      "pydantic",
+      "jsonschema"
+    ],
+    "missing": [
+      "web3",
+      "xrpl-py",
+      "etherscan-python",
+      "feedgen",
+      "opentimestamps",
+      "cbor2"
+    ],
+    "installed_count": 8,
+    "missing_count": 6,
+    "environment": "mac",
+    "miner_version": "asi-evolve-2",
+    "note": "Engine skill audit. Auto-detects environment (pod/mac/linux)."
+  },
+  "honest_sentence": "ASI-Evolve skill install v2: 8 installed, 6 missing in mac.",
+  "measurement_not_certification": true,
+  "permissionless": true,
+  "auto_churn": true
+}

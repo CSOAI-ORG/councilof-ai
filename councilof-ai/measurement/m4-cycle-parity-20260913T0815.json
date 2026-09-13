@@ -1,0 +1,52 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.m4.parity_cycle",
+  "subject": "m4-cycle-parity-20260913T0815",
+  "measured_at": "2026-09-13T08:15:11.661552+00:00",
+  "metrics": {
+    "checked_at": "2026-09-13T08:15:11.661552+00:00",
+    "checks": {
+      "council_api": {
+        "status": 200,
+        "ok": true
+      },
+      "council_root": {
+        "status": 200,
+        "ok": true,
+        "bytes": 255408
+      },
+      "x402_catalog": {
+        "status": 200,
+        "ok": true,
+        "bytes": 12734
+      },
+      "revenue_api": {
+        "status": 200,
+        "ok": true,
+        "settled_usdc": {
+          "id": "revenue_settled_usdc",
+          "count": 20000,
+          "status": "MEASURED",
+          "source": "REVENUE_KV settled:tx:* records (owner-controlled and zero-value settlements excluded)",
+          "owner": "Revenue",
+          "note": "The north-of-truth revenue number: bytes/chain adjudicate, not the CRM. Null until X402_PAY_TO + a facilitator are provisioned and a receipt settles. Fail-closed by design. x402 rail: live \u2014 a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles.",
+          "unit": "USDC atomic (6dp) on Base",
+          "excludes_self": true
+        }
+      },
+      "root_witness": {
+        "status": 200,
+        "ok": true,
+        "bytes": 4555
+      },
+      "rss_feed": {
+        "status": 200,
+        "ok": true,
+        "bytes": 11238
+      }
+    }
+  },
+  "honest_sentence": "M4 cycle parity: 6/6 public endpoints OK at 2026-09-13T08:15:11.661552+00:00.",
+  "measurement_not_certification": true,
+  "auto_churn": true
+}
