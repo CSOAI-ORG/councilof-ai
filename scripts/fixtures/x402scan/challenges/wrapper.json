@@ -1,0 +1,218 @@
+{
+  "accepts": [
+    {
+      "amount": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "csoai_pricing": {
+        "campaign_id": "csoai-launch-30d-20260911",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true,
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "10000",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "product_id": "csoai.product.request_attestation",
+        "sku_id": "request_attestation",
+        "starts_at": "2026-09-11T00:00:00Z",
+        "tier": "per_request"
+      },
+      "description": "A signed wrapped-asset parity card for usdc.e:arbitrum: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain, both at pinned finalized blocks, raw reads sha256'd. A ratio — not a rate, a grade or a reserve attestation.",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "10000",
+      "maxTimeoutSeconds": 300,
+      "mimeType": "application/json",
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resource": "https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "catalog": "https://councilof.ai/api/x402",
+    "deliverable": "one card-v0 leaf (public.notice / csoai.wrapper.parity/0.1), canonical ≤3072 bytes, signed when the Pages key is present",
+    "free_ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-13.json",
+    "free_preview": "https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum&preview=1",
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "rating",
+      "guarantee",
+      "verdict",
+      "rank",
+      "certificate",
+      "reserve attestation"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "offer_receipt": {
+      "alg": "EdDSA",
+      "extension": "offer-receipt",
+      "format": "jws",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "reason": "1 of 1 accepts entries signed",
+      "signed": true,
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    },
+    "per": "pair-request",
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.wrapper-parity/0.1"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "queryParams": {
+            "id": "usdc.e:arbitrum"
+          },
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "payload": {
+              "escrow_over_wrapped": "<decimal>",
+              "inputs_sha256": "<hex>",
+              "kind": "csoai.wrapper.parity/0.1",
+              "reads": {
+                "escrow_balance": {},
+                "wrapped_total_supply": {}
+              },
+              "state": "ESCROW_PARITY_READ"
+            },
+            "schema": "https://councilof.ai/schema/card-v0.json",
+            "sha256": "<hex>",
+            "sig_ed25519": "<hex or null>",
+            "subject": "wrapped <SYMBOL> on <chain> vs <escrow> — ESCROW_PARITY_READ",
+            "surface": "public.notice",
+            "unmeasured": []
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "queryParams": {
+                "properties": {
+                  "id": {
+                    "description": "roster id <wrapped-symbol>:<chain>, e.g. usdc.e:arbitrum (free ledger lists them)",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "type": "object"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "acceptIndex": 0,
+            "format": "jws",
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS93cmFwcGVyIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzg5MzE1MDQ1LCJ2ZXJzaW9uIjoxfQ.Ue2LEH4KPh9IZE5znlPFiUZTvzvqLSZYHsCgXpqv5fbAd_WMfW_8CH5PNZ27dxuDRQg27vRL6LgfVr4q3lLyAQ"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "offers": {
+            "items": {
+              "properties": {
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "format": {
+                  "const": "jws",
+                  "type": "string"
+                },
+                "signature": {
+                  "description": "JWS compact serialization containing the offer payload",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "offers"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "A signed wrapped-asset parity card for usdc.e:arbitrum: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain, both at pinned finalized blocks, raw reads sha256'd. A ratio — not a rate, a grade or a reserve attestation.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Wrapped-Asset Parity",
+    "tags": [
+      "stablecoin",
+      "bridge",
+      "wrapped",
+      "parity",
+      "evidence"
+    ],
+    "url": "https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum"
+  },
+  "x402Version": 2
+}
