@@ -1,0 +1,264 @@
+{
+  "schema": "csoai.settlement-ledger/v1",
+  "as_of": "2026-09-13T04:16:39.350977+00:00",
+  "chain": "base",
+  "chain_id": 8453,
+  "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+  "scan_range": {
+    "from_block": 50941826,
+    "to_block": 51241826
+  },
+  "integrity_anchor": {
+    "block": 51172054,
+    "tx": "0x60172f43ca14e5874eba92b990ce623e6503cee6d060fd89fd828993fababe7f",
+    "passed": true
+  },
+  "total_transfers": 15,
+  "by_classification": {
+    "UNKNOWN_PURPOSE": {
+      "count": 2,
+      "total_usdc": "249.975962"
+    },
+    "SELF_TEST": {
+      "count": 7,
+      "total_usdc": "0.210000"
+    },
+    "EXTERNAL_CUSTOMER": {
+      "count": 2,
+      "total_usdc": "0.030000"
+    },
+    "ZERO_VALUE": {
+      "count": 4,
+      "total_usdc": "0.000000"
+    }
+  },
+  "reconciliation": {
+    "server_external_payers": 1,
+    "chain_external_transfers": 2,
+    "match": false,
+    "server_source": "/api/revenue \u2192 one_number.all_time",
+    "chain_source": "USDC Transfer events to 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 on Base"
+  },
+  "all_transfers": [
+    {
+      "block": 50942204,
+      "tx": "0xbb60b04b338bc2ea560dccc81c62033ba2d4a62dfc7271c3cf778816830b7b4a",
+      "from": "0xfd03abcadaf3f930fa4e37eb2f6ea3a44a41b7f0",
+      "amount_atomic": 5995962,
+      "amount_usdc": "5.995962",
+      "classification": "UNKNOWN_PURPOSE",
+      "sku_match": null
+    },
+    {
+      "block": 50942514,
+      "tx": "0xac49241b1e65ab5942e5a84ff48daf52b8de2dd99d3ac23103d18578821b1c91",
+      "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+      "amount_atomic": 20000,
+      "amount_usdc": "0.020000",
+      "classification": "SELF_TEST",
+      "sku_match": "request_attestation (standard 0.02)"
+    },
+    {
+      "block": 50946169,
+      "tx": "0xeec6b0532d058194d810b52574928fdd5e1e6e3a4fd48ab0304ba2807589b8dd",
+      "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+      "amount_atomic": 20000,
+      "amount_usdc": "0.020000",
+      "classification": "SELF_TEST",
+      "sku_match": "request_attestation (standard 0.02)"
+    },
+    {
+      "block": 50946256,
+      "tx": "0x444155d966fcf140cb93531ec0e804e2da2c17224631ae531d19183e7fa9c46c",
+      "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+      "amount_atomic": 20000,
+      "amount_usdc": "0.020000",
+      "classification": "SELF_TEST",
+      "sku_match": "request_attestation (standard 0.02)"
+    },
+    {
+      "block": 50946257,
+      "tx": "0x0207386dd0549c6f952e2e271cd65a8a8d6c417c9bffa1fb6ede7ae6279164f7",
+      "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+      "amount_atomic": 20000,
+      "amount_usdc": "0.020000",
+      "classification": "SELF_TEST",
+      "sku_match": "request_attestation (standard 0.02)"
+    },
+    {
+      "block": 50946258,
+      "tx": "0x8b6472885cad7b5f5e88b150bad10d7122da28a06470077cf6988cb509b47c9a",
+      "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+      "amount_atomic": 20000,
+      "amount_usdc": "0.020000",
+      "classification": "SELF_TEST",
+      "sku_match": "request_attestation (standard 0.02)"
+    },
+    {
+      "block": 50946295,
+      "tx": "0x835109e14f2d1ca2573e87a84b14b63e779fb2c6a11af0d3e62402c0de7e197a",
+      "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+      "amount_atomic": 100000,
+      "amount_usdc": "0.100000",
+      "classification": "SELF_TEST",
+      "sku_match": "receipts_batch (0.10)"
+    },
+    {
+      "block": 51034356,
+      "tx": "0xc16ecc8552445df2a9110d7646c8d68e5e0a4515f325675b80d03ec7bbd96092",
+      "from": "0x7e6b6556322c4e26c567a867964ac793f5ee2b1c",
+      "amount_atomic": 20000,
+      "amount_usdc": "0.020000",
+      "classification": "EXTERNAL_CUSTOMER",
+      "sku_match": "request_attestation (standard 0.02)"
+    },
+    {
+      "block": 51076517,
+      "tx": "0xedc87052b7ce05db984190aed2671d690fcd1cccc2c9f4e0700d97c7328d1eef",
+      "from": "0x62fc0fa5197b316cff196e765464900101111095",
+      "amount_atomic": 0,
+      "amount_usdc": "0.000000",
+      "classification": "ZERO_VALUE",
+      "sku_match": "free_door (0.00)"
+    },
+    {
+      "block": 51172054,
+      "tx": "0x60172f43ca14e5874eba92b990ce623e6503cee6d060fd89fd828993fababe7f",
+      "from": "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31",
+      "amount_atomic": 10000,
+      "amount_usdc": "0.010000",
+      "classification": "SELF_TEST",
+      "sku_match": "request_attestation (promo 0.01)"
+    },
+    {
+      "block": 51175131,
+      "tx": "0xb9757964f753370a8f9a43dfb32e6251a3bc9788069222232bde2a9aee6a6292",
+      "from": "0xd527b2a35bb6f015ad063174704c974a1218eee3",
+      "amount_atomic": 243980000,
+      "amount_usdc": "243.980000",
+      "classification": "UNKNOWN_PURPOSE",
+      "sku_match": null
+    },
+    {
+      "block": 51199063,
+      "tx": "0x9e18a496e8953e6ec07bd741d524fb7644433f462fe1135688e3725c7e645461",
+      "from": "0x864a466771b2b16191a72fff3c2e33c775f8896a",
+      "amount_atomic": 0,
+      "amount_usdc": "0.000000",
+      "classification": "ZERO_VALUE",
+      "sku_match": "free_door (0.00)"
+    },
+    {
+      "block": 51199127,
+      "tx": "0xda2b23ed44cabccc1e061e9ec8503f301057f95db41b64050b3d447e91463541",
+      "from": "0x70e3c9a8ecd0bbaa84dd19c6f8673b39d013bb14",
+      "amount_atomic": 0,
+      "amount_usdc": "0.000000",
+      "classification": "ZERO_VALUE",
+      "sku_match": "free_door (0.00)"
+    },
+    {
+      "block": 51200962,
+      "tx": "0x80f3d96ffbdfaf9412d7e89a0aa0d9ed9ced9117000954a893564fe55b79f378",
+      "from": "0xdfe130c63c0eb4970725d29f7cf85a2784b17b58",
+      "amount_atomic": 0,
+      "amount_usdc": "0.000000",
+      "classification": "ZERO_VALUE",
+      "sku_match": "free_door (0.00)"
+    },
+    {
+      "block": 51202203,
+      "tx": "0xeaaafb8a8e087cf5148f5fa59cfe7b773689bf686e2e99be8f7c4a7c393e8807",
+      "from": "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
+      "amount_atomic": 10000,
+      "amount_usdc": "0.010000",
+      "classification": "EXTERNAL_CUSTOMER",
+      "sku_match": "request_attestation (promo 0.01)"
+    }
+  ],
+  "revenue_api_snapshot": {
+    "schema": "csoai.revenue/0.1",
+    "contract": {
+      "derivation": "Counts read from counters.json (the counter canon) and, where bound, the REVENUE_KV tallies. Nothing is fetched over HTTP and no count is typed by hand.",
+      "null_rule": "A count is null, never 0, when there is no source. The x402 rail is currently live \u2014 a facilitator is provisioned, so a settled receipt can be counted; every count stays null until one settles.",
+      "north_of_truth": "settled_usdc is the honest revenue number: USDC that cleared to the estate pay_to on Base, single-use. Chain adjudicates, not the CRM.",
+      "no_prices": "This surface never publishes a price. Metered amounts appear only in an x402 402 challenge (the accepts array), never here and never on the free board.",
+      "not_a_grade": "Revenue is earned on issuance, assembly, and a durable signature \u2014 never a grade."
+    },
+    "skus": {
+      "issuance": {
+        "sku": "SKU-1",
+        "id": "revenue_issuances",
+        "count": 5,
+        "status": "MEASURED",
+        "source": "REVENUE_KV",
+        "owner": "Revenue",
+        "note": "SKU-1. value is null, never 0 \u2014 0 would assert a measured count. The rail state is NOT typed here: functions/api/revenue.ts derives it from railMode(env) and appends it when it serves this note. Source of truth is settled receipts on-chain, not intent. x402 rail: live \u2014 a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles."
+      },
+      "proofs": {
+        "sku": "SKU-2",
+        "id": "revenue_proofs",
+        "count": null,
+        "status": "UNMEASURED",
+        "source": "counters.json",
+        "owner": "Revenue",
+        "note": "SKU-2. Split new vs quarterly-recompute. Null until a bundle is actually delivered and settled; never inferred from a quote. x402 rail: live \u2014 a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles."
+      },
+      "licences": {
+        "sku": "SKU-3",
+        "id": "revenue_licences",
+        "count": null,
+        "status": "UNMEASURED",
+        "source": "counters.json",
+        "owner": "Revenue",
+        "note": "SKU-3. Meter on issuances/bundles, never seats. Null until a rail is licensed. x402 rail: live \u2014 a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles."
+      }
+    },
+    "settled_usdc": {
+      "id": "revenue_settled_usdc",
+      "count": 20000,
+      "status": "MEASURED",
+      "source": "REVENUE_KV settled:tx:* records (owner-controlled and zero-value settlements excluded)",
+      "owner": "Revenue",
+      "note": "The north-of-truth revenue number: bytes/chain adjudicate, not the CRM. Null until X402_PAY_TO + a facilitator are provisioned and a receipt settles. Fail-closed by design. x402 rail: live \u2014 a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles.",
+      "unit": "USDC atomic (6dp) on Base",
+      "excludes_self": true
+    },
+    "one_number": {
+      "id": "distinct_nonself_payers",
+      "definition": "Count of distinct payer wallets, excluding payTo and X402_SELF_WALLETS, across facilitator-confirmed settlements THAT MOVED A NON-ZERO AMOUNT. A wallet we control paying us is recorded but is neither revenue nor a buyer, and neither is a wallet that paid nothing: a settlement of zero is not a purchase.",
+      "status": "MEASURED",
+      "all_time": 1,
+      "last_30d": 1,
+      "settlements": 1,
+      "self_settlements": 7,
+      "settled_usdc_atomic": 20000,
+      "zero_value_settlements": 6,
+      "zero_value_note": "Non-self settlements that moved 0, or carried no readable amount. Recorded for audit, never counted as a payer \u2014 paying nothing does not make a buyer. Seeds and probes land here.",
+      "records_unreadable": 0,
+      "source": "REVENUE_KV settled:tx:* records",
+      "indexing": {
+        "facilitator_bazaar_outcomes": {
+          "ABSENT": 14
+        },
+        "note": "Per settlement record, what the facilitator reported on the EXTENSION-RESPONSES sidechannel at settle time. REPORTED means it said something; UNREPORTED means it said nothing, which is NOT the same as not being indexed and is NOT evidence that we are. ABSENT means the record predates the field. Nothing here is a claim about any index \u2014 read the index itself: scripts/interop/x402-bazaar-audit.py walks PayAI and Coinbase CDP to completion and is the only thing that can say whether we are in one."
+      },
+      "gates": {
+        "0 for 30 days": "shape or price is wrong; do not add doors",
+        "\u22651 repeat": "open the next door",
+        "\u22655 distinct in 30d": "it is a product"
+      }
+    },
+    "provisioning": {
+      "kv_bound": true,
+      "gated": false,
+      "owner_switches": [
+        "bind REVENUE_KV (replay + tally store)",
+        "set X402_PAY_TO + choose facilitator (turns the rail live; see functions/api/_x402.ts)"
+      ]
+    },
+    "note": "Aggregate-only. NO telemetry, NO per-user data, NO fabricated counts. Measurement, never certification."
+  },
+  "spend": "$0 (read-only scan)",
+  "keys_touched": false
+}
