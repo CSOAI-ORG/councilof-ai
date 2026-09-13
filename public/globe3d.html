@@ -18,6 +18,14 @@
 <meta name="twitter:description" content="CSOAI — globe3d on the AI measurement board. Measurement, not certification." />
 <meta name="twitter:image" content="https://councilof.ai/og-default.png" />
 <meta name="theme-color" content="#16a34a" />
+<!-- Cesium engine tags, restored 2026-09-10. Commit 5da542c0 ("unified template", 2026-09-03)
+     dropped these three lines when applying the site template, which left `new Cesium.Viewer(...)`
+     below throwing ReferenceError into a silent catch — the page rendered its fallback text while
+     the 3D globe never mounted. Both live E2E suites caught it ("globe — no canvas" /
+     "/globe 3d renders"). The library must load BEFORE the inline script in <body>. -->
+<script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/';</script>
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Cesium.js"></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

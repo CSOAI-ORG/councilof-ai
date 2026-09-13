@@ -1,0 +1,127 @@
+{
+  "schema": "csoai.attribution-register/1.0",
+  "generated_at": "2026-09-11T15:00:00Z",
+  "note": "Attribution IDs for the three offers. Every resource, channel, and prospect class has a distinct ID.",
+
+  "offers": {
+    "correction_feed": {
+      "id": "OFFER-001",
+      "name": "Stablecoin Change and Corrections Feed",
+      "sku": "SKU-correction-feed",
+      "resource_id": "correction_feed",
+      "x402_resource": "https://councilof.ai/api/x402#correction_feed",
+      "price_basis": "per x402 challenge (amounts from challenge only)",
+      "state": "DECLARED",
+      "attribution": {
+        "views": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "free_verification": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "x402_challenges": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "settlements": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "repeat_settlements": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "replies": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "sample_requests": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "accepted_prices": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "paid_pilots": { "count": 0, "source": "not yet tracked", "as_of": null }
+      }
+    },
+    "regulation_deadline": {
+      "id": "OFFER-002",
+      "name": "Regulation Deadline and Evidence Crosswalk",
+      "sku": "SKU-regulation-deadline",
+      "resource_id": "regulation_deadline",
+      "x402_resource": "https://councilof.ai/api/x402#regulation_deadline",
+      "price_basis": "per x402 challenge (amounts from challenge only)",
+      "state": "DECLARED",
+      "attribution": {
+        "views": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "free_verification": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "x402_challenges": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "settlements": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "repeat_settlements": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "replies": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "sample_requests": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "accepted_prices": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "paid_pilots": { "count": 0, "source": "not yet tracked", "as_of": null }
+      }
+    },
+    "trust_receipt": {
+      "id": "OFFER-003",
+      "name": "MCP/A2A/x402 Trust Receipt",
+      "sku": "SKU-trust-receipt",
+      "resource_id": "trust_receipt",
+      "x402_resource": "https://councilof.ai/api/x402#trust_receipt",
+      "price_basis": "per x402 challenge (amounts from challenge only)",
+      "state": "DECLARED",
+      "attribution": {
+        "views": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "free_verification": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "x402_challenges": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "settlements": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "repeat_settlements": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "replies": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "sample_requests": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "accepted_prices": { "count": 0, "source": "not yet tracked", "as_of": null },
+        "paid_pilots": { "count": 0, "source": "not yet tracked", "as_of": null }
+      }
+    }
+  },
+
+  "channels": {
+    "website": { "id": "CH-web", "url": "https://councilof.ai", "state": "LIVE" },
+    "github": { "id": "CH-gh", "url": "https://github.com/CSOAI-ORG/councilof-ai", "state": "LIVE" },
+    "huggingface": { "id": "CH-hf", "url": "https://huggingface.co/csoai", "state": "LIVE" },
+    "kaggle": { "id": "CH-kg", "url": "https://www.kaggle.com/nicktempleman", "state": "LIVE" },
+    "mcp_registry": { "id": "CH-mcp-reg", "state": "LISTED" },
+    "smithery": { "id": "CH-smithery", "state": "LISTED" },
+    "glama": { "id": "CH-glama", "state": "LISTED" },
+    "rss": { "id": "CH-rss", "url": "https://councilof.ai/feed.xml", "state": "LIVE" }
+  },
+
+  "prospect_classes": {
+    "financial_risk": { "id": "PC-fin-risk", "description": "Stablecoin risk teams, compliance officers" },
+    "financial_data": { "id": "PC-fin-data", "description": "Data vendors, market data providers" },
+    "agent_infrastructure": { "id": "PC-agent-infra", "description": "MCP platforms, A2A implementations, x402 facilitators" }
+  },
+
+  "contacts_prepared": [
+    {
+      "id": "CONTACT-001",
+      "class": "PC-fin-risk",
+      "sector": "Financial risk",
+      "description": "Stablecoin risk team at major exchange or custodian",
+      "attribution": "OFFER-001 + OFFER-002",
+      "state": "PREPARED_NOT_SENT",
+      "requires": "Owner approval before sending"
+    },
+    {
+      "id": "CONTACT-002",
+      "class": "PC-fin-data",
+      "sector": "Financial data",
+      "description": "Market data vendor interested in signed evidence feed",
+      "attribution": "OFFER-001",
+      "state": "PREPARED_NOT_SENT",
+      "requires": "Owner approval before sending"
+    },
+    {
+      "id": "CONTACT-003",
+      "class": "PC-agent-infra",
+      "sector": "Agent infrastructure",
+      "description": "MCP platform or registry operator",
+      "attribution": "OFFER-003",
+      "state": "PREPARED_NOT_SENT",
+      "requires": "Owner approval before sending"
+    }
+  ],
+
+  "revenue_summary": {
+    "external_customer_revenue": "$0.00",
+    "internal_self_funded": "$0.00",
+    "settlement_classifications": {
+      "EXTERNAL_CUSTOMER": 0,
+      "INTERNAL_SELF_FUNDED": 0,
+      "ZERO_VALUE_PROBE": 0,
+      "UNKNOWN": 0
+    },
+    "scale_gate": "One attributable outside buyer + repeat intent, OR two written pilot acceptances at stated price. Neither met."
+  }
+}

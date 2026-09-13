@@ -3,7 +3,13 @@
 **Document class:** product/engineering specification. **No implementation
 code.** The probe machinery already exists in this repo; this spec defines
 how it is extended to a new population.
-**Status:** draft for review · **Date:** 2026-09-10.
+**Status:** IMPLEMENTED 2026-09-11 (census #1: 500 hosts) · **Date:** 2026-09-10.
+Implementation: `scripts/mcp-trust-round.py` (+ `--selftest`), cadence
+`.github/workflows/mcp-trust-board-round.yml`, artefacts `public/interop/mcp-trust/`,
+board page `/trust` (alias `/boards/mcp`), offer `docs/product/OFFER-mcp-trust-board.md`.
+One deviation from §3: the probe UA names `+https://councilof.ai/trust` (the board
+itself) rather than the x402-trust path, so an operator reading their logs lands on
+the methodology of the thing that probed them.
 
 ---
 

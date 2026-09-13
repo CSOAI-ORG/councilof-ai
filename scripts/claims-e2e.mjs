@@ -152,10 +152,19 @@ async function interactive(b) {
     /review|not (?:currently )?(?:live|implemented)|withdrawn/i.test(body) && !/Submit \+ seal/i.test(body)
       ? pass('CLAIM "incident submission is unavailable"', "withdrawn surface fails closed")
       : fail("report", "unavailable intake was presented as live"); await p.close(); } catch (e) { fail("report", e.message.slice(0, 45)); }
-  // Workbench
-  try { const p = await open(b, "/workbench"); await p.waitForSelector("input", { timeout: 12000 });
-    await p.locator("input").first().fill("Classify an EU AI Act risk tier for a credit model"); await p.getByText(/Run \+ seal/).first().click(); await p.waitForTimeout(7000);
-    const body = await p.innerText("body"); /seal|Ed25519|Layer 0|council/i.test(body) ? pass('CLAIM "signed artifacts"', "sealed artifact produced") : fail("workbench", "no artifact"); await p.close(); } catch (e) { fail("workbench", e.message.slice(0, 45)); }
+  // Workbench — AUTH-GATED since RequireAuth wrapped the route (App.tsx: `<Route path="/workbench">
+  // <RequireAuth>…`), and its action button was honestly renamed "Run + seal" → "Run + record"
+  // (Workbench.tsx — council review is a designed layer, DR-0007, so "seal" oversold it). An
+  // anonymous E2E cannot exercise the sealed-artifact flow, and pretending it can produced a
+  // 30s locator.click timeout that said nothing. What CAN be verified without credentials is the
+  // boundary itself: an anonymous session must fail closed onto /login, never into the workbench.
+  // Same fail-closed pattern as the /report check above. To re-enable the full flow, the suite
+  // needs CI credentials — that is a deliberate gap, not an oversight.
+  try { const p = await open(b, "/workbench"); await p.waitForTimeout(1200);
+    const url = p.url(); const body = await p.innerText("body");
+    (/\/login/.test(url) || /log\s*in|sign\s*in/i.test(body)) && !/Run \+ record|Evidence:/i.test(body)
+      ? pass('CLAIM "workbench is not anonymously writable"', "anonymous session fails closed to " + url.replace(SITE, ""))
+      : fail("workbench", "anonymous session reached the workbench UI — the auth gate is open"); await p.close(); } catch (e) { fail("workbench", e.message.slice(0, 45)); }
   // Council design — the page must not present the proposed 33 seats as live BFT.
   try { const p = await open(b, "/council"); await p.waitForTimeout(1200);
     const body = await p.innerText("body"); /DESIGN.{0,20}not a live system/is.test(body) && /n_eff\s*=\s*1/i.test(body)

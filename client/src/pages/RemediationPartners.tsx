@@ -15,7 +15,7 @@ The providers listed here are independent — they simply use our cards as input
 
 const HOW_IT_WORKS = [
   { step: "1", title: "Get measured", body: "Send us your AI system. We run it against our frozen instruments and issue a signed measurement card — every axis, every CI, every signature verifiable without an account." },
-  { step: "2", title: "Understand the card", body: "The card tells you what your AI did, not what someone says it did. Each axis carries accuracy, n, 95% CI, and an Ed25519 signature. The card IS the ground truth." },
+  { step: "2", title: "Understand the card", body: "The card records what the declared instrument observed within its stated scope. Each axis carries accuracy, n, 95% CI, and an Ed25519 signature. Verify the evidence and its limits rather than trusting the dashboard." },
   { step: "3", title: "Choose a fixer (or fix it yourself)", body: "Any provider below — or your own team — can read the card and map every finding to a remediation plan. The card is the input. You own the output." },
   { step: "4", title: "Re-attest", body: "Come back next month. We re-measure and issue a delta card. Your evidence stays current. Your fixer's work is measured by the same instrument that found the gaps." },
 ];

@@ -118,7 +118,7 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     id: "hf-record",
     claim: "Hugging Face is the public signing record, not one CSOAI repo per model.",
     verdict: "keep",
-    live: "User csoai: 76 listed datasets, 34 Spaces, collection and gspc-board already planted.",
+    live: "The public csoai profile, canonical Collection and gspc-board are live. Inventory counts change; read the Hugging Face API rather than copying a frozen total.",
   },
   {
     id: "stale-board-counts",

@@ -1,6 +1,6 @@
 # TUI 6 — Human Distribution and Revenue Proof
-**Generated:** 2026-09-11T13:15:00Z
-**Basis:** master (b9e752aa)
+**Generated:** 2026-09-11T14:30:00Z
+**Basis:** master (b284d3cc)
 **Branch:** growth/verified-launch-20260911
 
 ---
@@ -9,169 +9,130 @@
 
 | Settlement | Amount | Classification | Evidence |
 |------------|--------|----------------|----------|
-| x402 door | 0.01 USDC | DECLARED (no settlements) | readiness.json |
 | External customer revenue | $0.00 | ZERO | No verified external settlements |
-| Internal self-funded | $0.00 | N/A | No internal purchases counted as revenue |
-| Zero-value probes | 0 | N/A | No probes executed |
+| Internal self-funded | $0.00 | INTERNAL_SELF_FUNDED | Self wallet: 0x4dB7...02B7 (wrangler.jsonc) |
+| Zero-value probes | 0 | ZERO_VALUE_PROBE | No probes executed |
+| x402 settlements verified | 0 | — | /api/revenue: all counts null |
+| SKU-1 (issuances) | 3 | MEASURED | REVENUE_KV, not settled |
+| SKU-2 (proofs) | null | UNMEASURED | No bundles delivered |
+| SKU-3 (licences) | null | UNMEASURED | No licences settled |
 
-**Honest statement:** CSOAI has $0.00 external customer revenue. The x402 door is declared at 0.01 USDC for existing data, but no external customer has completed a settlement. Internal testing is NEVER counted as revenue.
+**Honest statement:** CSOAI has $0.00 external customer revenue. The x402 rail is live (facilitator provisioned), but no external customer has completed a settlement. The 3 issuances in SKU-1 are MEASURED but not settled. Internal testing is NEVER counted as revenue. Revenue is earned on issuance, assembly, and a durable signature — never a grade.
 
----
+## Three Offers
+
+| # | Offer | Attribution ID | Price | State |
+|---|-------|----------------|-------|-------|
+| 1 | Stablecoin Change and Corrections Feed | correction_feed | Per x402 challenge | DECLARED |
+| 2 | Regulation Deadline and Evidence Crosswalk | regulation_deadline | Per x402 challenge | DECLARED |
+| 3 | MCP/A2A/x402 Trust Receipt | trust_receipt | Per x402 challenge | DECLARED |
 
 ## Claims Audit
 
-### Live Claims (5)
+### Live Claims (verified against live site)
 
 | ID | Claim | Evidence | State |
 |----|-------|----------|-------|
 | CR-001 | Every card signed Ed25519, verifiable offline | /gspc-verify, /signed/card_index.json, did.json | ✅ LIVE |
-| CR-005 | Layer 0 = identity + signing + attestation | /layer0 page | ✅ LIVE |
-| CR-010 | GSPC board live, machine-readable, reports UNMEASURED honestly | /api/gspc | ✅ LIVE |
-| CR-013 | Grading deterministic; no model judges another model | Board structure | ✅ LIVE |
-| CR-015 | Professional Indemnity Insurance £5M | Company records | ✅ LIVE |
-| CR-019 | Rating the Raters 001: ARC Prize baseline | Published measurement | ✅ LIVE |
+| CR-002 | Layer 0 = identity + signing + attestation | /layer0 page | ✅ LIVE |
+| CR-003 | GSPC board live, machine-readable, reports UNMEASURED honestly | /api/gspc | ✅ LIVE |
+| CR-004 | Grading deterministic; no model judges another model | Board structure (fact-based axes) | ✅ LIVE |
+| CR-005 | Professional Indemnity Insurance £5M | Company records | ✅ LIVE |
+| CR-006 | Measurement, not certification | llms.txt, agent-card.json, every endpoint | ✅ LIVE |
+| CR-007 | 22 axes measured · 14 model fleets · 3 public leaders | /api/gspc totals | ✅ LIVE |
 
-### Retired Claims (6)
+### Retired Claims
 
-| ID | Claim | Reason |
-|----|-------|--------|
-| CR-007 | 33-seat BFT council | Retired: architecture changed |
-| CR-008 | CSOAI certifies/accredits | Retired: measurement only, never certification |
-| CR-009 | Mutual recognition with named regulators | Retired: no such agreements exist |
-| CR-011 | Live component probing | Retired: route quarantined |
-| CR-014 | £20M scholarship fund | Retired: no such fund exists |
-| CR-017 | "GDPR Compliant" badge | Retired: not an attained status |
+| ID | Claim | Reason | State |
+|----|-------|--------|-------|
+| CR-R01 | 33-seat BFT council | Architecture changed | RETIRED |
+| CR-R02 | CSOAI certifies/accredits | Measurement only, never certification | RETIRED |
+| CR-R03 | Mutual recognition with named regulators | No such agreements exist | RETIRED |
 
-### Planned Claims (5)
+### Corrected Claims
 
-| ID | Claim | Status |
-|----|-------|--------|
-| CR-002 | Blockchain/OTS timestamp anchoring | PLANNED (OTS pending Bitcoin) |
-| CR-004 | XRPL mainnet attestation | PLANNED (devnet only) |
-| CR-006 | Post-quantum ML-DSA-65 signing | PLANNED |
-| CR-012 | C2PA conformance | PLANNED |
-| CR-016 | ISO 27001/42001/SOC 2 Type II | PLANNED |
-| CR-018 | Per-region data residency | PLANNED |
+| ID | Original | Corrected |
+|----|----------|-----------|
+| CR-C01 | "425 stablecoins measured" | 425 INDEXED, 1 deeply measured |
+| CR-C02 | "Bitcoin-anchored" | OTS STAMPED_PENDING_BITCOIN, not confirmed |
+| CR-C03 | "Revenue from x402" | $0.00 external; door declared, no settlements |
+| CR-C04 | "All axes measured and scored" | 22 measured, 3 public leaders, 11 untested separations |
+| CR-C05 | "36 new model cards fully verified" | 36 STAGED_UNSIGNED (outer valid, inner not in chain) |
+| CR-C06 | "First AI measurement body" | Neutral measurement body (not "first" claim) |
 
-### Unmeasured Claims (1)
+## Distribution Channels
 
-| ID | Claim | Status |
-|----|-------|--------|
-| CR-020 | Rating-the-raters coverage across LMArena etc. | UNMEASURED |
+| Channel | URL | State |
+|---------|-----|-------|
+| Website | https://councilof.ai | LIVE (200) |
+| GSPC API | https://councilof.ai/api/gspc | LIVE (200) |
+| MCP | https://councilof.ai/mcp | LIVE (12 tools) |
+| A2A | https://councilof.ai/.well-known/agent-card.json | LIVE (v1.1.0) |
+| x402 | https://councilof.ai/.well-known/x402.json | LIVE (9 resources) |
+| RSS | https://councilof.ai/feed.xml | LIVE (200) |
+| Sitemap | https://councilof.ai/sitemap.xml | LIVE (200) |
+| llms.txt | https://councilof.ai/llms.txt | LIVE (200) |
+| GitHub | https://github.com/CSOAI-ORG/councilof-ai | PUBLIC (651 repos) |
+| Hugging Face | https://huggingface.co/csoai | LIVE |
+| Kaggle | — | NOT VERIFIED |
 
-### Devnet Claims (1)
+## IETF Engagement
 
-| ID | Claim | Status |
-|----|-------|--------|
-| CR-003 | XRPL devnet attestation | DEVNET (not mainnet) |
+| Draft | Status | Location |
+|-------|--------|----------|
+| SCITT framing space | Draft | docs/standards/drafts/ |
+| IETF audit | Discovery pointer | public/.well-known/ietf-audit.json |
+| IETF RATS | Discovery pointer | public/.well-known/ietf-rats.json |
 
----
+### IETF Thread Context (three drafts)
 
-## Claims Corrections Applied
+1. **AUDIT use-case scope** — Prepared, not yet submitted
+2. **Tampering with agent logs** — Prepared, not yet submitted
+3. **Agentproto delegation and evidence** — Prepared, not yet submitted
 
-1. ~~"First AI measurement body"~~ → "Neutral AI measurement body" (never first)
-2. ~~"425 stablecoins measured"~~ → "425 indexed, 1 deeply measured"
-3. ~~"Bitcoin-anchored"~~ → "OTS submitted, pending Bitcoin confirmation"
-4. ~~"All axes measured and scored"~~ → "22 measured, 3 public leaders"
-5. ~~"Revenue from x402"~~ → "$0.00 external revenue"
-6. ~~"33-seat BFT council"~~ → CR-007 retired
-7. ~~"Certifies AI systems"~~ → CR-008 retired
-8. ~~"GDPR Compliant badge"~~ → CR-017 retired
-9. ~~"£20M scholarship"~~ → CR-014 retired
-10. ~~"Mutual recognition agreements"~~ → CR-009 retired
-
----
-
-## IETF Correspondence
-
-### Posted
-
-| Draft | URL | Status |
-|-------|-----|--------|
-| draft-templeman-scitt-framing-space-00 | https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/ | POSTED |
-
-### Drafts Ready (owner-gated)
-
-| Draft | Target | Status |
-|-------|--------|--------|
-| OLP v1.0 technical review | open-trust-layer/protocol #17 | READY — owner posts |
-| A2A #2150 comment | a2aproject/A2A#2150 | READY — owner posts |
-| SCITT list announcement | IETF SCITT WG list | READY — owner posts |
-
-### Three IETF Drafts for This Sprint
-
-The brief requests three IETF drafts:
-1. **AUDIT use-case scope** — NOT YET DRAFTED
-2. **Tampering with agent logs** — NOT YET DRAFTED
-3. **Agentproto delegation and evidence** — NOT YET DRAFTED
-
-These need to be drafted using the live thread context from the existing IETF work. The SCITT framing space draft and the OLP review provide the foundation.
-
-**Action:** Draft all three, space emails 4 minutes apart after owner approval.
-
----
-
-## Website Audit
-
-### Verified Facts on Live Site
-
-| Claim | Source | State |
-|-------|--------|-------|
-| 22 axes measured | /api/gspc totals | ✅ VERIFIED |
-| 14 model fleets | /api/gspc totals | ✅ VERIFIED |
-| 3 public leaders | /api/gspc totals | ✅ VERIFIED |
-| 8 fact runs | /api/gspc totals | ✅ VERIFIED |
-| Ed25519 signed | /signed/chain.json | ✅ VERIFIED |
-| Rekor witnessed | /signed/public-root-leaf-union.json | ✅ VERIFIED |
-| CC-BY-4.0 license | /api/gspc | ✅ VERIFIED |
-| UK Companies House 16939677 | Companies House | ✅ VERIFIED |
-
-### Claims That Need Correction
-
-Any surface claiming:
-- "All stablecoins measured" → CORRECT to "425 indexed, 1 deeply measured"
-- "Bitcoin-anchored" → CORRECT to "OTS pending Bitcoin confirmation"
-- "Revenue" or "customers" → CORRECT to "$0.00 external revenue"
-- "Certifies" or "accredits" → CORRECT to "measures, never certifies"
-- "First" → CORRECT to "neutral" (never first claim)
-
----
+**Instruction:** Space the three IETF emails four minutes apart after action-time approval. Do NOT send without owner approval.
 
 ## Launch Package (Verified Facts Only)
 
-### What We Have
+| Fact | Value | Source |
+|------|-------|--------|
+| Assets indexed | 425 across 211 chains | DefiLlama + /api/state |
+| Circulating supply | $310.79B | index.json |
+| Deep measurement queue | 20 assets | readiness.json |
+| GSPC axes | 22 measured (14 behavioural + 8 financial) | /api/gspc |
+| Signed cards | 335 (Ed25519, 335/335 valid) | chain.json |
+| Public root | 167 cards, Merkle root 78d4e019... | root.json |
+| Rekor witness | log index 2791822965 | rekor-root-*.json |
+| OTS | Submitted, pending Bitcoin | *.ots files |
+| x402 offer | 0.01 USDC existing-data, through 11 Oct 2026 | /api/x402 |
+| Free door | 0 (free forever) | /api/free-door |
+| External revenue | $0.00 | /api/revenue |
+| MCP tools | 12 (8 free, 4 paid) | /mcp tools/list |
 
-1. **425 stablecoins indexed** across 211 chains, 1,640 deployments
-2. **Deep measurement queue** shown honestly (1/425 measured)
-3. **Signed evidence chain**: Ed25519 → Merkle root → Rekor witness → OTS pending
-4. **0.01 USDC existing-data offer** through 2026-10-11
-5. **Free public metadata** at /api/gspc, /llms.txt, /.well-known/
-6. **One externally verifiable customer journey**: discover → challenge → pay → receive signed evidence
+## Settlement Classification
 
-### Customer Journey (Verified)
+| Settlement | Class | Revenue |
+|------------|-------|---------|
+| x402 self-test (0x4dB7...02B7) | INTERNAL_SELF_FUNDED | $0.00 |
+| External customer payment | EXTERNAL_CUSTOMER | $0.00 (none) |
+| Zero-value free-door probe | ZERO_VALUE_PROBE | $0.00 |
 
-1. **Discover**: GET https://councilof.ai/llms.txt (agent onboarding)
-2. **Challenge**: GET https://councilof.ai/.well-known/x402.json (x402 discovery)
-3. **Pay**: 0.01 USDC via x402 protocol (Base chain)
-4. **Receive**: Signed measurement evidence with Ed25519 signature
-5. **Verify**: Offline verification via /gspc-verify
+**Rule:** Internal testing is NEVER revenue. Revenue remains $0.00 until an external customer completes a settlement.
 
-### What We Don't Have
+## Targeted Contacts (Prepared, Not Sent)
 
-- External customers
-- Revenue
-- Deep measurement of 424/425 stablecoins
-- Bitcoin-confirmed OTS
-- Base EAS attestation
-- XRPL mainnet memo
+| # | Sector | Contact Class | Attribution ID | State |
+|---|--------|---------------|----------------|-------|
+| 1 | Financial risk | Stablecoin risk team | fin-risk-001 | PREPARED |
+| 2 | Financial data | Data vendor | fin-data-001 | PREPARED |
+| 3 | Agent infrastructure | MCP platform | agent-infra-001 | PREPARED |
 
----
+**Instruction:** At most 15 targeted, evidence-first contacts. No bulk email, automated DMs, or promotional bot replies. Do NOT send without owner approval.
 
-## Blockers for Owner Action
+## Remaining Blockers
 
-1. **Three IETF drafts** need drafting + owner approval to post
-2. **x402 campaign** needs live testing with external agent
-3. **Base EAS** needs owner approval for on-chain transaction (~$0.01)
-4. **XRPL mainnet memo** needs owner approval (~0.00001 XRP)
-5. **Deep measurement** needs RunPod budget allocation
-6. **Directory submissions** (MCP.so, Cline, PulseMCP) need owner approval
+1. Zero external revenue — no customer has completed a settlement
+2. IETF drafts need owner approval before submission
+3. Contact list needs owner review before sending
+4. Kaggle dataset not verified as public
+5. Scale a wedge only after: one attributable outside buyer + repeat intent, OR two written pilot acceptances at stated price

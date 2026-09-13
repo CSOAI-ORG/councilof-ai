@@ -13,6 +13,7 @@ on:
 permissions:
   contents: write
   issues: write
+  pull-requests: write   # lands via branch + PR; a direct push to master is GH006 (required gates)
 
 jobs:
   reg-watch:
@@ -27,12 +28,27 @@ jobs:
         continue-on-error: true
         run: node scripts/reg-watch.mjs
       - name: Commit updated state (and any events)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           git config user.name "reg-watch"
           git config user.email "nicholas@csoai.org"
           git add reg-watch-state.json reg-watch-events/ 2>/dev/null || true
-          git diff --cached --quiet || git commit -m "reg-watch: state update $(date -u +%F)"
-          git push
+          if git diff --cached --quiet; then
+            echo "no state change"
+            exit 0
+          fi
+          git commit -m "reg-watch: state update $(date -u +%F)"
+          # Land via branch + PR (the census-delta.yml pattern). A direct push to
+          # master is GH006: the required "gates" check applies to pushes too, and
+          # a push creates a commit no check has run on yet (red since 2026-09-06).
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          BR="automation/reg-watch-${STAMP}"
+          git push origin "HEAD:$BR"
+          gh pr create --base master --head "$BR" \
+            --title "reg-watch: state update ${STAMP}" \
+            --body "Automated reg-watch state update (and any provision-change events under \`reg-watch-events/\`). Opened as a PR because a direct push to master cannot satisfy the required \`gates\` check (GH006). Needs a human merge; until merged the reg-watch state on master is stale."
       - name: Raise the alarm on a provision change
         if: steps.watch.outcome == 'failure'
         env:

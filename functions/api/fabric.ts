@@ -374,6 +374,7 @@ export async function buildFabricManifest(
     oracle,
     regulation,
     xrpl,
+    revenue,
     root,
     did,
     witness,
@@ -397,6 +398,7 @@ export async function buildFabricManifest(
     boundedProbe(origin, "/api/oracle-fleet", fetcher),
     boundedProbe(origin, "/api/regulation", fetcher),
     boundedProbe(origin, "/api/xrpl", fetcher),
+    boundedProbe(origin, "/api/revenue", fetcher),
     boundedProbe(origin, "/root.json", fetcher),
     boundedProbe(origin, "/.well-known/did.json", fetcher),
     boundedProbe(origin, "/interop/root-witness-latest.json", fetcher),
@@ -556,11 +558,16 @@ export async function buildFabricManifest(
   // came back. What makes this rail RUNTIME_OBSERVED is a `result` carrying a message with
   // parts — i.e. the door actually routed and answered. An `error` member, or a `result` in a
   // shape we did not ask for, is reported as the error it is and never as a working runtime.
-  const a2aRpcError = a2aRuntime.json?.error as { code?: unknown; message?: unknown } | undefined;
-  const a2aMessage = (a2aRuntime.json?.result as { message?: { parts?: unknown } } | undefined)
-    ?.message;
+  const a2aRpcError = a2aRuntime.json?.error as
+    { code?: unknown; message?: unknown } | undefined;
+  const a2aMessage = (
+    a2aRuntime.json?.result as { message?: { parts?: unknown } } | undefined
+  )?.message;
   const a2aAnswered =
-    a2aRuntime.ok && !a2aRpcError && Array.isArray(a2aMessage?.parts) && a2aMessage.parts.length > 0;
+    a2aRuntime.ok &&
+    !a2aRpcError &&
+    Array.isArray(a2aMessage?.parts) &&
+    a2aMessage.parts.length > 0;
 
   if (a2aAnswered) {
     rails.push(
@@ -893,6 +900,61 @@ export async function buildFabricManifest(
     );
   }
 
+  if (revenue.ok && revenue.json) {
+    const provisioning = record(revenue.json.provisioning);
+    const oneNumber = record(revenue.json.one_number);
+    const settledUsdc = record(revenue.json.settled_usdc);
+    const distinctPayers = number(oneNumber?.all_time);
+    const settlements = number(oneNumber?.settlements);
+    const selfSettlements = number(oneNumber?.self_settlements);
+    const zeroValueSettlements = number(oneNumber?.zero_value_settlements);
+    const settledAtomic = number(settledUsdc?.count);
+    const kvBound = provisioning?.kv_bound === true;
+    const measured =
+      text(oneNumber?.status) === "MEASURED" &&
+      distinctPayers !== null &&
+      settlements !== null &&
+      selfSettlements !== null &&
+      zeroValueSettlements !== null &&
+      settledAtomic !== null;
+    rails.push(
+      rail(observedAt, {
+        id: "x402-settlement",
+        label: "x402 settlement",
+        role: "paid proof settlement and demand evidence",
+        protocol: "x402 / Base USDC",
+        state: kvBound && measured ? "RUNTIME_OBSERVED" : "UNCHECKABLE",
+        endpoint: "/api/revenue",
+        evidence_ref: "/api/revenue#one_number",
+        summary: measured
+          ? `${distinctPayers} distinct non-self payer${distinctPayers === 1 ? "" : "s"}, ${settlements} counted settlement${settlements === 1 ? "" : "s"}, and ${settledAtomic} atomic USDC settled. ${selfSettlements} self-funded and ${zeroValueSettlements} zero-value settlement${zeroValueSettlements === 1 ? "" : "s"} remain audit records and are excluded from demand.`
+          : "The revenue endpoint answered without a complete measured settlement tally; external demand is not inferred.",
+        freshness_seconds: null,
+        last_error:
+          kvBound && measured
+            ? null
+            : kvBound
+              ? "settlement tally is incomplete or unmeasured"
+              : "REVENUE_KV is not bound",
+      }),
+    );
+  } else {
+    rails.push(
+      unavailable(observedAt, {
+        id: "x402-settlement",
+        label: "x402 settlement",
+        role: "paid proof settlement and demand evidence",
+        protocol: "x402 / Base USDC",
+        endpoint: "/api/revenue",
+        evidence_ref: "/api/revenue#one_number",
+        probe: revenue,
+        state: "UNCHECKABLE",
+        summary:
+          "No readable settlement evidence was observed; no revenue or demand claim is made.",
+      }),
+    );
+  }
+
   if (root.ok && root.json) {
     const merkleRoot = text(root.json.merkle_root);
     const signature = text(root.json.sig_ed25519);
@@ -1017,7 +1079,9 @@ export async function buildFabricManifest(
             ? null
             : exactMatch && !scopeMatchesRoot
               ? "witness corpus_scope does not bind the current root"
-              : (root.error ?? witnessPointer.error ?? "missing exact-root binding fields"),
+              : (root.error ??
+                witnessPointer.error ??
+                "missing exact-root binding fields"),
       }),
     );
   } else {

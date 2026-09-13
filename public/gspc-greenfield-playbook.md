@@ -145,7 +145,7 @@ Why this is stricter than Hugging Face capability boards: public capability boar
 
 # **4. Hugging Face and the parallel record**
 
-The Hub is the signed-record surface. It is not a second board. Current CSOAI org inventory as of this playbook: 76 datasets, 35 Spaces, 0 public models. Canonical banks live under csoai/gspc-\*. Hub-queue holds discovered model IDs; all of them are UNMEASURED until a frozen mill run. Eating the Hub today means pointer + queue + digest + language + eval.yaml. It does not mean grades.
+The Hub is the signed-record surface. It is not a second board. The inventory changes continuously; read the live Hugging Face API instead of quoting a frozen total. Canonical banks live under csoai/gspc-\*. Hub-queue holds discovered model IDs; all of them are UNMEASURED until a frozen mill run. Eating the Hub today means pointer + queue + digest + language + eval.yaml. It does not mean grades.
 
   ----------------------------------------------------------------------------------------------------------------------------
   **Object**                               **Role**                                      **Halt**

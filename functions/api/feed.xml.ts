@@ -14,6 +14,18 @@ interface FeedItem {
 
 const ITEMS: FeedItem[] = [
   {
+    title: "Mill receipts: signature, lifecycle and regulation states separated",
+    link: "https://councilof.ai/interop/mill-receipt-readiness.json",
+    date: "Fri, 11 Sep 2026 10:50:00 GMT",
+    desc: "Production readback verifies 36 of 36 outer Ed25519 signatures. All 36 inner records still declare STAGED_UNSIGNED. Five carry direct regulation links and 31 are unlinked; unlinked records have no regulation score. These are independent states, not one pass label.",
+  },
+  {
+    title: "Stablecoin estate: 425 indexed is not 425 measured",
+    link: "https://councilof.ai/interop/stablecoin-universe-2026-09/readiness.json",
+    date: "Fri, 11 Sep 2026 09:45:00 GMT",
+    desc: "The frozen index contains 425 assets, 1,640 asset-chain entries and 211 reported chains. One asset has independent measurement evidence and 424 do not. Asset-specific A2A, MCP, x402 and settlement coverage remain zero; generic protocol doors are reported separately.",
+  },
+  {
     title: "GSPC board: 22 axis · 22 measured — living lock (after #1077)",
     link: "https://councilof.ai/api/gspc",
     date: "Tue, 01 Sep 2026 17:21:00 GMT",

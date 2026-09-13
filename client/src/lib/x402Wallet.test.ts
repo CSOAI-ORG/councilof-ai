@@ -167,6 +167,35 @@ describe("x402 v2 payload conformance", () => {
     });
     expect(downgraded.payload).toEqual(parsed.payload);
   });
+
+  it("asks the wallet to switch to the challenge chain before signing", async () => {
+    const calls: string[] = [];
+    let chain = "0x1";
+    const provider: EIP1193Provider = {
+      async request({ method, params }) {
+        calls.push(method);
+        if (method === "eth_requestAccounts") return [SIGNER];
+        if (method === "eth_chainId") return chain;
+        if (method === "wallet_switchEthereumChain") {
+          expect(params).toEqual([{ chainId: "0x2105" }]);
+          chain = "0x2105";
+          return null;
+        }
+        if (method === "eth_signTypedData_v4")
+          return `0x${"ab".repeat(64)}1b`;
+        throw new Error(`unexpected method ${method}`);
+      },
+    };
+
+    await signX402Challenge(provider, LIVE);
+    expect(calls).toEqual([
+      "eth_requestAccounts",
+      "eth_chainId",
+      "wallet_switchEthereumChain",
+      "eth_chainId",
+      "eth_signTypedData_v4",
+    ]);
+  });
 });
 
 describe("typed authorization terms", () => {

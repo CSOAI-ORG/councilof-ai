@@ -45,6 +45,11 @@ const PROTOCOLS = [
     use: "Allowlisted declarative native UI",
     href: "https://a2ui.org/",
   },
+  {
+    name: "x402",
+    use: "Machine-paid proof settlement on Base",
+    href: "https://www.x402.org/",
+  },
 ] as const;
 
 function StateChip({ state }: { state: FabricState }) {
