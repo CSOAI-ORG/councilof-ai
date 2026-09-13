@@ -102,7 +102,7 @@ The GSPC (Governance · Safety · Provenance · Continuity) measurement system:
 
 - Own-model exclusion: CSOAI's own fine-tuned models are excluded from public leadership on 8 axes
 - Neutral body: CSOAI does not certify, accredit, or issue conformity assessments
-- Revenue: no external revenue to date. Every x402 settlement received so far is classified estate-controlled in the public audit (audit-settlement-classification.json), and the live counter at https://councilof.ai/api/revenue reports 0 distinct non-self payers
+- Revenue: USD 0.02 in USDC from one external wallet in one settlement (2026-09-08), as adjudicated on-chain; every other settlement to date is the estate paying itself and is excluded (https://councilof.ai/api/revenue, audit-settlement-classification.json)
 - All artifacts independently verifiable without CSOAI credentials
 
 ## What we are NOT asking for
