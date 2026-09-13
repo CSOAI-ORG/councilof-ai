@@ -1,3 +1,25 @@
+<<<<<<< HEAD
+
+---
+
+## New entries (Sep 13, do-all-else pass)
+
+| # | CON ID | Contact | Org | Email / Channel | Sent | Response | FU1 Date | FU2 Date | Next Action |
+|---|--------|---------|-----|-----------------|------|----------|----------|----------|-------------|
+| 14 | CON-005 | AI team | Relm Insurance | nicholas@csoai.org → email | BLOCKED_SMTP | — | — | — | Reset PrivateEmail pwd, then send |
+| 15 | CON-010 | Standard lead | AIUC (AIUC-1) | nicholas@csoai.org → email | BLOCKED_SMTP | — | — | — | Reset PrivateEmail pwd, then send |
+| 16 | CON-005/010 | Partner team | Vanta (integration) | nicholas@csoai.org → email | BLOCKED_SMTP | — | — | — | Reset PrivateEmail pwd, then send |
+| 17 | CON-010 | Benchmarking team | Epoch AI | nicholas@csoai.org → email | BLOCKED_SMTP | — | — | — | Reset PrivateEmail pwd, then send |
+
+**Blocker:** `SMTP_PASSWORD` env rejected by PrivateEmail (535 5.7.8). Previous Sep 12 batch must have used a working pwd that has rotated. SendGrid route (`EMAIL_FROM=noreply@csoai.platform`) is `placeholder`, not provisioned.
+
+**5 drafts awaiting owner browser action (no email available):**
+- 01-armilla.md (Become a Partner form)
+- 03-munich-re-aisure.md (form only, page 403'd)
+- 05-enzai.md (form only)
+- 07-drata.md (partner portal only)
+- 08-credo-ai.md (Become a Partner form)
+=======
 # Outreach Tracker
 
 **Created:** 2026-09-13
@@ -66,23 +88,23 @@
 ## Status Definitions
 
 | Status | Meaning |
-|--------|---------|
-| PREPARED | Draft ready, not yet sent |
-| EMAIL_SENT | Outbound sent, awaiting response |
-| NO_RESPONSE | No reply after send date |
-| BOUNCED | Delivery failure |
-| REPLIED | Got a reply (see notes for intent) |
-| INTERESTED | Reply indicates purchase/pilot interest |
-| NOT_INTERESTED | Declined or no fit |
-| CLOSED | Processed, no further action |
 
 ---
 
-## Update Protocol
+## New entries (Sep 13, do-all-else pass)
 
-1. **Check replies daily** (PrivateEmail inbox + GitHub notifications + HF messages)
-2. **Update this table** within 1 hour of receiving any response
-3. **Log all responses** in `OUTREACH-LOG-2026-09-12.md` with exact quotes
-4. **Route INTERESTED** responses to Nick immediately (do not reply autonomously)
-5. **Never send follow-up** if status is not NO_RESPONSE
-6. **Archive contacts** after FU2 with no reply → mark CLOSED
+| # | CON ID | Contact | Org | Email / Channel | Sent | Response | FU1 Date | FU2 Date | Next Action |
+|---|--------|---------|-----|-----------------|------|----------|----------|----------|-------------|
+| 14 | CON-005 | AI team | Relm Insurance | nicholas@csoai.org → email | BLOCKED_SMTP | — | — | — | Reset PrivateEmail pwd, then send |
+| 15 | CON-010 | Standard lead | AIUC (AIUC-1) | nicholas@csoai.org → email | BLOCKED_SMTP | — | — | — | Reset PrivateEmail pwd, then send |
+| 16 | CON-005/010 | Partner team | Vanta (integration) | nicholas@csoai.org → email | BLOCKED_SMTP | — | — | — | Reset PrivateEmail pwd, then send |
+| 17 | CON-010 | Benchmarking team | Epoch AI | nicholas@csoai.org → email | BLOCKED_SMTP | — | — | — | Reset PrivateEmail pwd, then send |
+
+**Blocker:** `SMTP_PASSWORD` env rejected by PrivateEmail (535 5.7.8). Previous Sep 12 batch must have used a working pwd that has rotated. SendGrid route (`EMAIL_FROM=noreply@csoai.platform`) is `placeholder`, not provisioned.
+
+**5 drafts awaiting owner browser action (no email available):**
+- 01-armilla.md (Become a Partner form)
+- 03-munich-re-aisure.md (form only, page 403'd)
+- 05-enzai.md (form only — playwright-tested, not submitted)
+- 07-drata.md (partner portal only)
+- 08-credo-ai.md (Become a Partner form)
