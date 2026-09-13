@@ -11,10 +11,12 @@ import { describe, expect, it } from "vitest";
  * so the removal cannot be undone by a re-push: no top-level public/*.html may type a USD amount.
  */
 const PUBLIC = join(process.cwd(), "public");
-const TYPED_USD = /\$\s?\d+(?:\.\d+)?|\b\d+(?:\.\d+)?\s?USDC\b/;
+// A "$0.10" is a price. "0.02 USDC" on its own can be a fact (what-is-new reports lifetime
+// revenue that way and must keep doing so); it is a price only when it is offered "per" something.
+const TYPED_USD = /\$\s?\d+(?:\.\d+)?|\b\d+(?:\.\d+)?\s?USDC\s+(?:per|each|for)\b/i;
 
 describe("static public HTML types no prices (revenue contract: amounts live only in a 402)", () => {
-  it("no top-level public/*.html carries a typed USD/USDC amount", () => {
+  it("no top-level public/*.html carries a typed USD amount or a USDC-per-thing offer", () => {
     const offenders: string[] = [];
     for (const name of readdirSync(PUBLIC)) {
       if (!name.endsWith(".html")) continue;
