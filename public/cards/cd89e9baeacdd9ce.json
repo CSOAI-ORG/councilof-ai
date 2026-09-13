@@ -1,0 +1,59 @@
+{
+  "card": {
+    "as_of": "2026-09-12T19:59:40Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "173",
+      "symbol": "BUIDL",
+      "attestation_page": "https://securitize.io/",
+      "auditor": null,
+      "cadence_claimed": null,
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "a10fd5fa92999f1fdd90df5d32de045e5a7b46de16f872b190b3e56d1f2908d6",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "cadence_claimed",
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "cd89e9baeacdd9ce672943dd05de0e4e341813c61c69dc98f6146d39ad7056aa",
+    "sig_ed25519": "12f65c0d4fdf947bbaeb8baf80a24546d70302621948d12772588116cdf6f11860ca35ca546fef261c02203667fe0ac6e3d7ab63e74114595492e4af5b6a4807",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://securitize.io/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: BUIDL",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "cadence_claimed",
+      "staleness"
+    ]
+  },
+  "proof": [
+    "e3a43fb5d601bf5eaecfa535c425632973612e113ee64eb58fb3ccfca2022a86",
+    "5e2f2475c3cab32530814cd0e35f0e27cd9b76eadfbcd852b5788d5b5e876495",
+    "3a329b731b0817d3d8dbb53476ea19ba5fa3cfa03ee0d926f00ae27e290db769",
+    "5d1b48c11e04e4dab0d2462fc3648c18116b88d3970d6421db1fdafda066c6c5",
+    "e0d7fb5c6b7ed8f065b4262c62a3ec9543f874b2600bf00d82eb5503f9067a98",
+    "0f8e1b5026bf81008277b6e7bbb103952531e6d35d54ed69de69573577e3e9bc",
+    "f995b9543723def330db200ec9763b76b5274a698a0cc469ab81e5306c1fdd25",
+    "37017b94570f4f0e2ee19ad6b96fa75b0aa07a5571a402952045ba37c67ee7d4",
+    "7a400a22a2110cd974b97734324256cc72f918b15684ace6810bb71eb0c5c9d2"
+  ]
+}
