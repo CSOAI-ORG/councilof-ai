@@ -1,0 +1,34 @@
+{
+  "schema": "csoai.tui4-settlement-reconciliation/0.1",
+  "date": "2026-09-13",
+  "reconciliation": {
+    "server_external_payers": 1,
+    "chain_external_transfers": 1,
+    "match": true,
+    "external_payer": {
+      "from": "0x7e6b6556322c4e26c567a867964ac793f5ee2b1c",
+      "amount_atomic": 20000,
+      "amount_usdc": "0.020000",
+      "block": 51034356,
+      "tx": "0xc16ecc8552445df2a9110d7646c8d68e5e0a4515f325675b80d03ec7bbd96092",
+      "sku": "request_attestation (standard 0.02)",
+      "explorer": "https://basescan.org/tx/0xc16ecc8552445df2a9110d7646c8d68e5e0a4515f325675b80d03ec7bbd96092"
+    }
+  },
+  "classified_wallets": {
+    "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6": "SELF_TEST (burner wallet, in _x402.ts X402_SELF_WALLETS)",
+    "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7": "SELF_TEST (census wallet)",
+    "0x6ea00613e3c54b9a4c25e4e09243cfe8f76e43c6": "SELF_TEST (burner wallet old)",
+    "0xb2bd29925cbbcea7628279c91945ca5b98bf371b": "SELF_TEST (self-settlement sender)",
+    "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31": "SELF_TEST (payTo self-transfer)",
+    "0x7e6b6556322c4e26c567a867964ac793f5ee2b1c": "EXTERNAL_CUSTOMER (0.02 USDC, request_attestation)"
+  },
+  "blockers_status": {
+    "wallet_classification": "RESOLVED",
+    "npm_publish": "FAILED (E404 \u2014 trusted OIDC not configured on npm)",
+    "mcp_registry_publish": "BLOCKED (owner token)",
+    "smithery_rescan": "BLOCKED (no public API)",
+    "glama_fix": "BLOCKED (no public API)",
+    "mcp_so_submit": "BLOCKED (no public API)"
+  }
+}
