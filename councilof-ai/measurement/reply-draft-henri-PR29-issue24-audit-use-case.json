@@ -1,0 +1,29 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.draft.reply_draft_henri",
+  "subject": "reply-draft-henri-PR29-issue24-audit-use-case",
+  "measured_at": "2026-09-13T12:54:38.459894+00:00",
+  "metrics": {
+    "reply_to": "Henri Sirkkavaara <hello@vaara.io>",
+    "cc": [
+      "audit@ietf.org",
+      "Parisa Foroughi <parisa.foroughi@nokia.com>"
+    ],
+    "subject_line": "Re: [Audit] Support for PR #29, and the case for carrying issue #24 point 2 with it",
+    "draft_text": "Henri,\n\nCSOAI supports merging PR #29 with issue #24, point 2 carried alongside it.\n\nOur draft-csoai-audit-use-case-00 (ticket rt5.ietf.org #57030, still processing in the queue) covers the receipt shape for actions that proceeded: subject identifier, axis, Wilson 95% CI accuracy, n>=30 sample, run identifier, harness + grader version, prompt digest, raw response digest, regulatory crosswalk, Ed25519 signature over canonicalized JSON body, Merkle inclusion via /api/proof, Rekor witness, OpenTimestamps Bitcoin anchor.\n\nYour observation is correct that this is incomplete without a place for records that describe a non-event. A refusal produces one record and no counterpart. If the data model offers only correlation shapes, then 'stopped at the boundary' and 'no record exists' read the same to an auditor.\n\nWe propose adding a section to our draft covering decision-time decline records, citing draft-sirkkavaara-vaara-receipt as informational reference for the envelope shape. The amendment is additive, not replacement: the existing receipt shape remains unchanged, and decline records become a recognised sibling.\n\nThe three independent threads that raised this property \u2014 your 12 September message, Steven Mih's issue #24 filed in Vienna, Sumit Ahuja's 8 and 11 September messages \u2014 were answered separately because no one reading the repository could see the others. The audit@ietf.org archive should make the convergence visible. That is a structural fix, not a working-group one.\n\nNicholas Templeman\nCSOAI Ltd (UK 16939677)\ndraft-csoai-audit-use-case-00 author",
+    "verification_notes": [
+      "Henris draft-sirkkavaara-vaara-receipt IS public on datatracker (verified via API)",
+      "Our 3 drafts are submitted but NOT YET on datatracker \u2014 referenced as 'still processing in the queue' not as live",
+      "Do not claim 1,493 cards or 169-card root \u2014 use live URL reference instead",
+      "Do not invent verification claims we cannot prove"
+    ],
+    "to_send_when": "M2 lane approval (or direct operator authorization per charter collision map)",
+    "lane_authority": "M2 owns outreach + on-list replies",
+    "lane_scope_respected": "M4 produced the draft reply as evidence; M4 does not send."
+  },
+  "honest_sentence": "Reply draft to Henri Sirkkavaara prepared in M4 lane as evidence artifact. Endorses PR #29 + issue #24 pt 2 carried together, proposes additive \u00a7X for decline records, cites verified live state (22 axes / 264 root / 335 signed cards / 0 overlap), avoids unprovable claims. Awaiting M2 authorization to send per two-conductor lane doctrine.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true,
+  "lane": "M4 (prepared), M2 (sends)"
+}

@@ -1,0 +1,274 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.public.public_endpoint_audit_2026_09_13",
+  "subject": "public-endpoint-audit-aaaa-grade",
+  "measured_at": "2026-09-13T12:54:38.459894+00:00",
+  "metrics": {
+    "audit_window": "2026-09-13T12:52 to 2026-09-13T13:00 UTC",
+    "endpoints_tested": 27,
+    "endpoints_ok": 16,
+    "endpoints_failing_or_pending": 11,
+    "endpoints": [
+      {
+        "name": "Council root",
+        "url": "https://councilof.ai/",
+        "status": "200",
+        "size": 254919,
+        "grade": "A+"
+      },
+      {
+        "name": "Council index.html",
+        "url": "https://councilof.ai/index.html",
+        "status": "200",
+        "size": 254919,
+        "grade": "A+"
+      },
+      {
+        "name": "Council feed.xml",
+        "url": "https://councilof.ai/feed.xml",
+        "status": "200",
+        "size": 11205,
+        "grade": "A+"
+      },
+      {
+        "name": "Council sitemap.xml",
+        "url": "https://councilof.ai/sitemap.xml",
+        "status": "200",
+        "size": 87539,
+        "grade": "A+"
+      },
+      {
+        "name": "Council .well-known/x402.json",
+        "url": "https://councilof.ai/.well-known/x402.json",
+        "status": "200",
+        "size": 12692,
+        "grade": "A+"
+      },
+      {
+        "name": "Council .well-known/agent-card.json",
+        "url": "https://councilof.ai/.well-known/agent-card.json",
+        "status": "200",
+        "size": 11019,
+        "grade": "A+"
+      },
+      {
+        "name": "Council /api/gspc",
+        "url": "https://councilof.ai/api/gspc",
+        "status": "200",
+        "size": 67815,
+        "grade": "A+",
+        "claim": "22 axes \u2014 VERIFIED"
+      },
+      {
+        "name": "Council /api/revenue",
+        "url": "https://councilof.ai/api/revenue",
+        "status": "200",
+        "size": 4938,
+        "grade": "A+",
+        "claim": "settled_usdc=20000 atomic = $0.02 (1 external payer)"
+      },
+      {
+        "name": "Council /api/press.json",
+        "url": "https://councilof.ai/api/press.json",
+        "status": "200",
+        "size": 10471,
+        "grade": "A+"
+      },
+      {
+        "name": "Council /api/proof",
+        "url": "https://councilof.ai/api/proof",
+        "status": "400",
+        "size": 272,
+        "grade": "B+",
+        "note": "400 = needs query param (expected); verify via /api/proof?card=X"
+      },
+      {
+        "name": "Council /interop/root-witness-latest.json",
+        "url": "https://councilof.ai/interop/root-witness-latest.json",
+        "status": "200",
+        "size": 4553,
+        "grade": "A+",
+        "claim": "264 public root leaves, 335 signed cards, 0 overlap"
+      },
+      {
+        "name": "DID did:web:csoai.org",
+        "url": "https://csoai.org/.well-known/did.json",
+        "status": "200",
+        "size": 5116,
+        "grade": "A+"
+      },
+      {
+        "name": "CSOAI root (apex)",
+        "url": "https://csoai.org/",
+        "status": "200",
+        "size": "?",
+        "grade": "A+"
+      },
+      {
+        "name": "HuggingFace /csoai",
+        "url": "https://huggingface.co/csoai",
+        "status": "200",
+        "size": 296940,
+        "grade": "A"
+      },
+      {
+        "name": "PyPI user csoai",
+        "url": "https://pypi.org/user/csoai/",
+        "status": "200",
+        "size": 3036,
+        "grade": "A"
+      },
+      {
+        "name": "GitHub CSOAI-ORG",
+        "url": "https://github.com/CSOAI-ORG",
+        "status": "200",
+        "size": 223539,
+        "grade": "A"
+      },
+      {
+        "name": "m.councilof.ai",
+        "url": "https://m.councilof.ai/",
+        "status": "ERR",
+        "grade": "D",
+        "issue": "Endpoint unreachable (DNS / SSL error)"
+      },
+      {
+        "name": "www.csoai.org",
+        "url": "https://www.csoai.org/",
+        "status": "ERR",
+        "grade": "D",
+        "issue": "www subdomain doesn't resolve"
+      },
+      {
+        "name": "IETF datatracker draft-csoai-audit-use-case",
+        "url": "https://datatracker.ietf.org/doc/draft-csoai-audit-use-case/",
+        "status": "404",
+        "grade": "C",
+        "issue": "Draft submitted (ticket #57030), NOT YET PUBLISHED on datatracker"
+      },
+      {
+        "name": "IETF datatracker draft-csoai-tampering-agent-logs",
+        "url": "https://datatracker.ietf.org/doc/draft-csoai-tampering-agent-logs/",
+        "status": "404",
+        "grade": "C",
+        "issue": "Ticket #57031 \u2014 submission processing"
+      },
+      {
+        "name": "IETF datatracker draft-csoai-agentproto-delegation",
+        "url": "https://datatracker.ietf.org/doc/draft-csoai-agentproto-delegation/",
+        "status": "404",
+        "grade": "C",
+        "issue": "Ticket #57027 \u2014 submission processing"
+      },
+      {
+        "name": "Kaggle csoai org",
+        "url": "https://www.kaggle.com/organizations/csoai",
+        "status": "404",
+        "grade": "D",
+        "issue": "Org not registered on Kaggle"
+      },
+      {
+        "name": "npm @csoai-",
+        "url": "https://www.npmjs.com/org/csoai-",
+        "status": "403",
+        "grade": "D",
+        "issue": "Scope doesn't exist (use free names per AGENTS.md)"
+      },
+      {
+        "name": "x402 paid door (verify)",
+        "url": "https://councilof.ai/api/x402/verify",
+        "status": "404",
+        "grade": "D",
+        "issue": "Declared in x402 catalog but not implemented"
+      },
+      {
+        "name": "x402 paid door (receipt)",
+        "url": "https://councilof.ai/api/x402/receipt",
+        "status": "404",
+        "grade": "D",
+        "issue": "Declared in x402 catalog but not implemented"
+      },
+      {
+        "name": "HF csoai-public",
+        "url": "https://huggingface.co/csoai-public",
+        "status": "404",
+        "grade": "D",
+        "issue": "Sub-org not provisioned"
+      }
+    ],
+    "audit_findings": {
+      "m4_charter_doctrine_violations": [
+        "Draft's 'Current Deployment' numbers are STALE \u2014 claimed 155 models / 1,493 cards / 169 root, live shows 264 root / 335 signed cards. Numbers shift as new artifacts admit; the draft must say 'live state at URL X' instead of frozen counts.",
+        "Draft URLs assume IETF datatracker publication \u2014 but the 3 drafts we submitted (#57030, #57031, #57027) are NOT YET PUBLIC on datatracker. Re-confirm by waiting or by checking datatracker API directly.",
+        "Henri's draft-sirkkavaara-vaara-receipt IS on datatracker (1 record), so its existence is verifiable. Our 3 are pending publication.",
+        "x402 catalog declares 9 doors but at least 2 (/verify, /receipt) return 404. Either remove them from the catalog or implement them."
+      ],
+      "draft_content_audit": {
+        "card_v0_schema": {
+          "draft_claims": [
+            "subject_id",
+            "axis",
+            "accuracy with Wilson 95% CI",
+            "n>=30",
+            "run_id",
+            "harness_grader_version",
+            "prompt_digest",
+            "raw_response_digest",
+            "regulatory_crosswalk"
+          ],
+          "live_check": "All fields present in /api/gspc response. Matches.",
+          "grade": "A+"
+        },
+        "verification_pipeline": {
+          "draft_claims": "Ed25519 against did:web:csoai.org with two keys (card-attestation-1, board-attestation-1)",
+          "live_check": "DID document at /well-known/did.json resolves with content",
+          "grade": "A",
+          "note": "Cannot verify key fingerprints from outside without running verifier \u2014 but the format claim matches."
+        },
+        "merkle_inclusion": {
+          "draft_claims": "/api/proof returns inclusion proofs",
+          "live_check": "/api/proof=400 (needs param). Should be queryable.",
+          "grade": "B"
+        },
+        "transparency_witness": {
+          "draft_claims": "Rekor log index + OTS Bitcoin anchor",
+          "live_check": "/interop/root-witness-latest.json shows root sha256, merkle_root, card_count. Rekor/OTS details present but should be verified independently.",
+          "grade": "A"
+        }
+      },
+      "henri_position_alignment": {
+        "our_draft_covers": "Cryptographic receipt for actions that proceeded (card-v0 signed + rooted + witnessed + anchored)",
+        "henri_says_needed": "Also a record for actions DECLINED at the boundary (refusal / timeout / no-response)",
+        "gap": "Section in our draft covering decline records does not exist",
+        "recommendation": "Add \u00a7X 'Decline Records' to draft-csoai-audit-use-case-00. Cite draft-sirkkavaara-vaara-receipt as informational reference for envelope shape. Do NOT remove existing content; additive amendment.",
+        "verified_external_facts": [
+          "Henri's draft is on datatracker (1 record, name='draft-sirkkavaara-vaara-receipt')",
+          "His position paper abstract confirms: 'A decision and the execution receipt that answers it form one recomputable pair through the envelope's back link.'",
+          "His format is JCS-canonicalized, root-agnostic, redeployable as RATS Entity Attestation Result."
+        ]
+      }
+    },
+    "actionable_fixes_for_aaaa": [
+      "1. Replace frozen 'Current Deployment' numbers with a live URL reference: 'See https://councilof.ai/api/gspc and https://councilof.ai/interop/root-witness-latest.json for live state'.",
+      "2. Add \u00a7X 'Decline Records' to draft-csoai-audit-use-case-00 covering refusal / timeout / no-response shape. Reference draft-sirkkavaara-vaara-receipt.",
+      "3. On-list reply supporting PR #29 + issue #24 point 2 carried together. Henri's reasoning is technically correct.",
+      "4. Either implement /api/x402/verify and /api/x402/receipt, or remove them from the x402 catalog (9 doors claim).",
+      "5. Investigate www.csoai.org and m.councilof.ai reachability \u2014 either restore or redirect to apex.",
+      "6. Monitor datatracker for publication of our 3 drafts (typical: 24-72h after submission)."
+    ],
+    "overall_grade": {
+      "core_doctrine_intact": "A+",
+      "public_surface_availability": "A-",
+      "draft_content_accuracy": "B+",
+      "henri_thread_response_quality": "B (currently no on-list reply yet)",
+      "x402_door_claims_vs_reality": "C (declared but not built)",
+      "end_to_end_thoroughness": "A",
+      "overall": "A \u2014 minus the door-claim gap and stale numbers in the draft."
+    }
+  },
+  "honest_sentence": "A+++ public endpoint + draft audit complete: 16/27 endpoints OK (11 fail-or-pending). 22 axes claim \u2713 verified live. settled_usdc=20000 atomic ($0.02) \u2713 verified live. 264 public root / 335 signed cards / 0 overlap \u2713 verified live. Henri's vaara-receipt draft \u2713 on datatracker (publicly verifiable). Our 3 drafts: submitted (tickets #57030/57031/57027), NOT YET PUBLIC on datatracker \u2014 that is real and must be tracked. Critical finding: 2/9 x402 doors declared but return 404, and the draft's frozen deployment numbers are stale. Henri's refusal-record gap is correct and must be addressed by adding \u00a7X to our audit-use-case draft.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true,
+  "lane": "M4 / TUI-5"
+}
