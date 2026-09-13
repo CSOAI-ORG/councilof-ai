@@ -1,7 +1,7 @@
 # IETF: Agent Protocol Delegation and Evidence (DRAFT — not submitted)
 
-**Status:** DRAFT prepared for review. Not submitted without owner approval.
-**Date:** 2026-09-12
+**Status:** Submitted to the IETF Independent Submission queue 2026-09-12; not yet published on datatracker (verified 2026-09-13). This text is the review copy.
+**Date:** 2026-09-13 (v2 — stale counts replaced with live references)
 
 ## Abstract
 
@@ -26,9 +26,9 @@ Agent A discovers tool via MCP → invokes tool → receives result
 
 ## CSOAI Implementation
 
-- 12 MCP tools (8 free, 4 paid via x402)
-- A2A Agent Card v1.1.0 with 7 skills
-- x402 catalog on Base mainnet (USDC)
+- MCP tool surface: live manifest at https://councilof.ai/mcp (free read tools; paid issuance/evidence tools via x402)
+- A2A Agent Card: https://councilof.ai/.well-known/agent-card.json (live, versioned)
+- x402 catalog on Base mainnet (USDC): https://councilof.ai/.well-known/x402.json — one verified outside non-zero settlement as of 2026-09-13 (self-tests are labelled SELF_TEST and never counted as demand)
 - Signed receipts with DID-bound Ed25519 keys
 - Public Merkle root with inclusion proofs
 
