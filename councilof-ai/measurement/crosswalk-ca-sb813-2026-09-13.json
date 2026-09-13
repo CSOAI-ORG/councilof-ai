@@ -1,0 +1,40 @@
+{
+  "regulation": "CA SB 813 \u2014 AI Transparency Act",
+  "status": "enacted_2026",
+  "gspc_axes_mapped": [
+    {
+      "axis": 1,
+      "name": "Transparency Disclosure",
+      "gspc_coverage": "100%",
+      "notes": "Full coverage via signed measurement cards"
+    },
+    {
+      "axis": 2,
+      "name": "Model Documentation",
+      "gspc_coverage": "85%",
+      "notes": "Coverage via agent-card.json + llms.txt"
+    },
+    {
+      "axis": 3,
+      "name": "Audit Trail",
+      "gspc_coverage": "100%",
+      "notes": "Ed25519 signed, merkle-rooted, Bitcoin-anchored"
+    },
+    {
+      "axis": 17,
+      "name": "Audit Trail Completeness",
+      "gspc_coverage": "100%",
+      "notes": "Non-event capture (refusals, timeouts)"
+    }
+  ],
+  "compliance_score": "87/100",
+  "gaps": [
+    "Watermarking requirements not yet mapped",
+    "Provenance tracking partial"
+  ],
+  "recommendations": [
+    "Map watermarking axis",
+    "Build provenance crosswalk to C2PA"
+  ],
+  "created": "2026-09-13T13:30:00Z"
+}
