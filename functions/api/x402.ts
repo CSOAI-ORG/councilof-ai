@@ -136,6 +136,15 @@ export const onRequestGet: PagesFunction<{
         never: ["a rating", "a guarantee", "a verdict", "a rank", "a paywall on /api/xrpl or /root.json"],
       },
       {
+        id: "wrapper_parity",
+        name: "Wrapped-asset parity card (per pair)",
+        resource: u("/api/wrapper?id=<wrapped-symbol:chain>"),
+        free_preview: u("/api/wrapper?id=<wrapped-symbol:chain>&preview=1"),
+        free_preview_note: "unsigned state, no raw-read hashes; pair ids in /interop/wrapped-asset-parity-2026-09-13.json",
+        deliverable: "A signed wrapped-asset parity card: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain at pinned finalized blocks, raw reads sha256'd, BigInt ratio. A read — not a rate, a grade or a reserve attestation.",
+        never: ["a rating", "a guarantee", "a verdict", "a rank", "a reserve attestation", "a paywall on the free ledger or /root.json"],
+      },
+      {
         id: "art50_marking_evidence",
         name: "Article 50 machine-readable marking evidence",
         resource: u("/api/art50/marking-evidence?url=<https-output-url>"),
