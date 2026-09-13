@@ -16,7 +16,7 @@ Tried sending 4 prepared emails at 2026-09-13 ~14:20Z. All 4 failed:
 535, b'5.7.8 Error: authentication failed: (reason unavailable)'
 ```
 
-Current env `SMTP_PASSWORD=Lolpsplolen101!!` is rejected by PrivateEmail. The previous sends (Sep 12) must have used a working password that has since rotated or been revoked.
+Current env `SMTP_PASSWORD=<REDACTED — a mailbox password was committed here in error on 2026-09-13; it has been rotated> is rejected by PrivateEmail. The previous sends (Sep 12) must have used a working password that has since rotated or been revoked.
 
 SendGrid config in `~/.env.local` shows `SENDGRID_API_KEY=placeholder` — not actually provisioned.
 
