@@ -13,7 +13,7 @@ const productsFill = readFileSync(resolve(__dirname, "./productFill.ts"), "utf8"
 const sov = readFileSync(resolve(__dirname, "./sovExternalAudit.ts"), "utf8");
 const playbook = readFileSync(resolve(__dirname, "./playbookAudit.ts"), "utf8");
 const payDesk = readFileSync(resolve(__dirname, "../../../public/pay.html"), "utf8");
-const pressroom = readFileSync(resolve(__dirname, "../pages/Pressroom.tsx"), "utf8");
+const pressroom = readFileSync(resolve(__dirname, "../pages/PublicPress.tsx"), "utf8");
 const accessibility = readFileSync(resolve(__dirname, "../pages/Accessibility.tsx"), "utf8");
 
 describe("stale copy honesty", () => {

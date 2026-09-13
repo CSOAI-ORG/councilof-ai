@@ -189,7 +189,7 @@ const Launch = lazy(() => import("./pages/Launch"));
 const OwaspAgentic = lazy(() => import("./pages/OwaspAgentic"));
 const PostmortemX402 = lazy(() => import("./pages/PostmortemX402"));
 const ThreeRootCeremony = lazy(() => import("./pages/ThreeRootCeremony"));
-const Pressroom = lazy(() => import("./pages/Pressroom"));
+const PublicPress = lazy(() => import("./pages/PublicPress"));
 const TransparencyCop = lazy(() => import("./pages/TransparencyCop"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
@@ -238,7 +238,7 @@ const FoundingCouncilAgreement = lazy(() => import("./pages/legal/FoundingCounci
 const LicensingAgreement = lazy(() => import("./pages/legal/LicensingAgreement"));
 const LicenceManifest = lazy(() => import("./pages/LicenceManifest"));
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
-const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
+const PublicPrivacy = lazy(() => import("./pages/legal/PublicPrivacy"));
 const Disclaimers = lazy(() => import("./pages/legal/Disclaimers"));
 const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
 const Council = lazy(() => import("./pages/Council"));
@@ -972,8 +972,8 @@ function App() {
                   <Route path="/oscal-readiness" component={Fedramp} />
                   <Route path="/readiness" component={Readiness} />
                   <Route path="/agents" component={Agents} />
-                  <Route path="/press" component={Pressroom} />
-                  <Route path="/pressroom" component={Pressroom} />
+                  <Route path="/press" component={PublicPress} />
+                  <Route path="/pressroom" component={PublicPress} />
                   <Route path="/sector-atlas" component={SectorsAtlas} />
                   <Route path="/learn" component={Academy} />
                   <Route path="/tracks" component={Academy} />
@@ -1076,9 +1076,9 @@ function App() {
                   <Route path="/licensing-agreement" component={LicensingAgreement} />
                   <Route path="/legal/licensing" component={LicensingAgreement} />
                   <Route path="/licence-manifest" component={LicenceManifest} />
-                  <Route path="/privacy-policy" component={PrivacyPolicy} />
-                  <Route path="/privacy" component={PrivacyPolicy} />
-                  <Route path="/legal/privacy" component={PrivacyPolicy} />
+                  <Route path="/privacy-policy" component={PublicPrivacy} />
+                  <Route path="/privacy" component={PublicPrivacy} />
+                  <Route path="/legal/privacy" component={PublicPrivacy} />
                   <Route path="/terms-of-service" component={TermsOfService} />
                   <Route path="/terms" component={TermsOfService} />
                   <Route path="/legal/terms" component={TermsOfService} />
