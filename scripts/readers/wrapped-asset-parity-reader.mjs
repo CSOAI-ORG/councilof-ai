@@ -9,7 +9,7 @@
  * provider-reported finalized block per chain and every raw hex result is sha256'd.
  *
  * States are never collapsed:
- *   MEASURED_ESCROW_PARITY      both reads succeeded; ratio is what the chain said
+ *   ESCROW_PARITY_READ      both reads succeeded; ratio is what the chain said
  *   UNCHECKABLE_NATIVE_ISSUANCE the token is natively issued on the destination chain
  *                               (no escrow backs it); the wrapped supply is read, the ratio
  *                               is NOT computed — a native issuance is not "unbacked"
@@ -146,7 +146,7 @@ export async function readPair(entry, pins) {
       const eb = await call(c.used, entry.canonical.address, SEL.balanceOf + pad32(entry.escrow), pins[entry.canonical.chain].hex);
       rec.reads.escrow_balance = { query: `balanceOf(${entry.escrow})`, raw: eb.raw, raw_sha256: eb.raw_sha256, atomic: eb.value.toString(), normalized: normalizeAtomicAmount(eb.value.toString(), decimals), decimals };
       rec.escrow_over_wrapped = ratioString(eb.value, ts.value);
-      rec.state = "MEASURED_ESCROW_PARITY";
+      rec.state = "ESCROW_PARITY_READ";
     } else {
       rec.escrow_over_wrapped = null;
       rec.state = "UNCHECKABLE_NATIVE_ISSUANCE";
@@ -180,7 +180,7 @@ export async function readAll(roster = ROSTER) {
     reader_revision: READER_REVISION,
     as_of: new Date().toISOString(),
     attests: "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
-    states: { MEASURED_ESCROW_PARITY: "both reads succeeded at the pinned blocks", UNCHECKABLE_NATIVE_ISSUANCE: "natively issued on the destination chain; no escrow exists; supply read, no ratio claimed", UNMEASURED: "a read failed; error recorded; nothing inferred" },
+    states: { ESCROW_PARITY_READ: "both reads succeeded at the pinned blocks; a read, not a measurement (the card doctrine reserves MEASURED for graded banks and refuses it on point-in-time cards)", UNCHECKABLE_NATIVE_ISSUANCE: "natively issued on the destination chain; no escrow exists; supply read, no ratio claimed", UNMEASURED: "a read failed; error recorded; nothing inferred" },
     terms_boundary: "Public RPC endpoints, no API key. Endpoint substitutions are recorded per read.",
     correction_link: "https://github.com/CSOAI-ORG/councilof-ai/issues",
     license: "CC-BY-4.0 (Council of AI, CSOAI Ltd 16939677, councilof.ai)",
