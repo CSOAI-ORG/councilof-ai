@@ -1,0 +1,57 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.engine.status",
+  "subject": "engine-status-2026-09-13",
+  "measured_at": "2026-09-13T05:14:18.539729+00:00",
+  "metrics": {
+    "pod": {
+      "id": "fpowppss5ngtkw",
+      "status": "RUNNING",
+      "uptime_seconds": 61344,
+      "cost_per_hour": 0.22,
+      "worker_pid": 3878,
+      "cycles_completed": 70,
+      "successful_runs": 70,
+      "bank_items_attempted": 237,
+      "failed_runs": 0,
+      "ollama_alive": true,
+      "watchdog_alive": true,
+      "disk_used_pct": 49
+    },
+    "mac_signing_mill": {
+      "unsigned_backlog": 1077,
+      "signed_total": 1552,
+      "signing_workflows": [
+        "hf-fin-shells",
+        "hf-fin-shells-measure",
+        "auto-eat-sign",
+        "eat-overnight"
+      ],
+      "latest_signing": "2026-09-13T04:58:33Z hf-fin-shells (success)",
+      "gha_signing_allowlist": [
+        "public-root",
+        "hf-fin-shells",
+        "hf-inference-mill"
+      ]
+    },
+    "hf_intake_status": {
+      "csoai_runpod_gspc_intake": "404 NOT FOUND",
+      "workaround": "Direct Mac signing mill \u2192 GitHub PR \u2192 Pages deploy"
+    },
+    "public_board": {
+      "total_cards": 545,
+      "axes": 22,
+      "rss_size_kb": 254,
+      "sitemap_urls": 547,
+      "merkle_root": "0dd5a8d9",
+      "bitcoin_confirmed": true
+    },
+    "permissionless_fire_mill": {
+      "cron_installed": true,
+      "schedule": "0 * * * *",
+      "purpose": "Auto-detect unsigned backlog, fire signing workflows hourly"
+    }
+  },
+  "honest_sentence": "Measurement engine status (2026-09-13 05:14 UTC): pod RUNNING (70 cycles, 0 fails, 237 bank items), Mac signing mill has 1077 unsigned cards waiting, 4 GHA signing workflows firing every 2h, permissionless-fire-mill cron installed. HF intake repo 404 \u2014 using Mac\u2192GHA\u2192Pages path instead.",
+  "measurement_not_certification": true
+}
