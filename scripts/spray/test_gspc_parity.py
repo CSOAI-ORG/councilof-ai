@@ -76,6 +76,9 @@ def test_verify_does_not_wait_on_an_equal_as_of_byte_mismatch(monkeypatch):
     other = dict(fresh); other["README.md"] = fresh["README.md"] + b"\nedited"
     monkeypatch.setattr(parity, "read_hf", lambda: fresh)
     monkeypatch.setattr(parity, "read_kaggle", lambda: other)
+    # validate() would refuse the edited README on its manifest first; this test is about the
+    # wait decision, so let both sides through to the byte comparison.
+    monkeypatch.setattr(parity, "validate", lambda label, files: ("same",))
     slept = []
     with pytest.raises(ValueError, match="byte mismatches"):
         parity.verify(require_live=False, kaggle_wait_seconds=600, poll_seconds=30, sleep=slept.append)
