@@ -1,0 +1,104 @@
+{
+  "receipt_id": "eat-mode-receipt-2026-09-13T1336Z",
+  "generated": "2026-09-13T13:36:08Z",
+  "operator": "Nicholas Templeman",
+  "agent": "JEEVES (Hermes/Mimo)",
+  "session_summary": "Full EAT mode execution \u2014 13 categories, 74 doors, all CLI-doable doors fired",
+  "cli_executed": [
+    "\u2705 Rebuilt well-known/x402.json (9 resources, Base USDC)",
+    "\u2705 Rebuilt well-known/agent-card.json (MCP+A2A+x402+SCITT)",
+    "\u2705 Rebuilt feed.xml (2,383 items, 1.12MB)",
+    "\u2705 Rebuilt sitemap.xml (2,385 URLs)",
+    "\u2705 GitHub Issue #2141 posted (AUDIT WG non-event receipts)",
+    "\u2705 3 IETF drafts tracked (#57027, #57030, #57031)",
+    "\u2705 10 directory probes fired (mcp.so, smithery, glama, pulse, mcp.run, opentools)",
+    "\u2705 awesome-mcp-servers PR #14316 created (5 CSOAI repos)",
+    "\u2705 CA SB 813 crosswalk built (87/100)",
+    "\u2705 CA AB 1405 crosswalk built (82/100)",
+    "\u2705 MiCA crosswalk built (88/100)",
+    "\u2705 DORA crosswalk built (72/100)",
+    "\u2705 ISO 20022 SR2026 crosswalk built (48/100)",
+    "\u2705 74 doors mapped across 13 categories",
+    "\u2705 3 owner-stageable drafts prepared (Henri reply, FDIC PS-01, arXiv)",
+    "\u2705 Operator action queue built (6 urgent, 5 this-week)",
+    "\u2705 All commits pushed to sovos-harness main"
+  ],
+  "owner_stageable_drafts": [
+    {
+      "name": "Henri reply (PR #29/#24)",
+      "file": "measurement/reply-draft-henri-2026-09-13.json",
+      "method": "himalaya send"
+    },
+    {
+      "name": "FDIC PS-01 comment",
+      "file": "measurement/draft-fdic-ps01-comment-2026-09-13.json",
+      "method": "regulations.gov",
+      "deadline": "2026-09-18"
+    },
+    {
+      "name": "arXiv paper (signed receipts)",
+      "file": "measurement/draft-arxiv-signed-receipts-2026-09-13.json",
+      "method": "arxiv.org/submit"
+    }
+  ],
+  "metrics": {
+    "measurement_cards": 2383,
+    "axes_measured": 22,
+    "stablecoins_indexed": 425,
+    "pypi_packages": 122,
+    "github_repos": 20,
+    "ietf_tickets": 3,
+    "awesome_list_prs": 1,
+    "crosswalks_built": 5,
+    "doors_mapped": 74,
+    "cli_doable": 33,
+    "owner_gated": 41,
+    "drafts_ready": 5,
+    "active_inflight": 6
+  },
+  "urgent_actions": [
+    {
+      "priority": "P0",
+      "action": "Submit FDIC PS-01 comment",
+      "deadline": "2026-09-18",
+      "days": 5
+    },
+    {
+      "priority": "P0",
+      "action": "Reply to Henri",
+      "deadline": "2026-09-14",
+      "days": 1
+    },
+    {
+      "priority": "P1",
+      "action": "Submit arXiv paper",
+      "deadline": "2026-09-20",
+      "days": 7
+    },
+    {
+      "priority": "P1",
+      "action": "Create npm token",
+      "deadline": "2026-09-15",
+      "days": 2
+    },
+    {
+      "priority": "P1",
+      "action": "Create HF token",
+      "deadline": "2026-09-15",
+      "days": 2
+    },
+    {
+      "priority": "P1",
+      "action": "Apply Anthropic evaluator",
+      "deadline": "2026-09-20",
+      "days": 7
+    }
+  ],
+  "commits_pushed": [
+    "6137c15ff \u2014 EAT: 74 doors mapped, 3 drafts ready, well-known rebuilt",
+    "254405c86 \u2014 EAT: force-add doors map, drafts, well-known, RSS",
+    "977df1761 \u2014 EAT: operator action queue",
+    "998ea872b \u2014 EAT: CA SB 813 + AB 1405 crosswalks",
+    "f4a9dac7b \u2014 EAT: MiCA, DORA, ISO 20022 SR2026 crosswalks"
+  ]
+}
