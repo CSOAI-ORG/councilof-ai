@@ -23,3 +23,11 @@
 ## Blockers
 - npm publish: needs OIDC workflow trigger
 - MCP Registry update: needs owner token
+
+## npm Publish Attempt (2026-09-13T13:40Z)
+
+**Triggered:** `gh workflow run npm-gspc-release.yml --ref master -f version=0.2.2`
+**Result:** FAILED — E404 "not found or you do not have permission"
+**Cause:** Package `csoai-gspc-mcp` may not exist on npm yet, or OIDC token lacks publish permission.
+**Fix needed:** Nick must create the package on npm first, or grant publish permission to the GitHub Actions OIDC token.
+**Workflow:** https://github.com/CSOAI-ORG/councilof-ai/actions/runs/34760467114
