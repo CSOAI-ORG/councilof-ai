@@ -1,0 +1,65 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.meta.improvement",
+  "subject": "meta-improvement-20260913T0710",
+  "measured_at": "2026-09-13T07:10:13.514496Z",
+  "metrics": {
+    "proposal_count": 8,
+    "proposals": [
+      {
+        "target": "card_miner",
+        "proposal": "Ensure card_miner log file is being written. Check cron redirection.",
+        "priority": "P1",
+        "auto_apply": false
+      },
+      {
+        "target": "evolve_banks",
+        "proposal": "Ensure evolve_banks log file is being written. Check cron redirection.",
+        "priority": "P1",
+        "auto_apply": false
+      },
+      {
+        "target": "self_correct",
+        "proposal": "Ensure self_correct log file is being written. Check cron redirection.",
+        "priority": "P1",
+        "auto_apply": false
+      },
+      {
+        "target": "auto_publish",
+        "proposal": "Ensure auto_publish log file is being written. Check cron redirection.",
+        "priority": "P1",
+        "auto_apply": false
+      },
+      {
+        "target": "a2a_mcp_harness",
+        "proposal": "Ensure a2a_mcp_harness log file is being written. Check cron redirection.",
+        "priority": "P1",
+        "auto_apply": false
+      },
+      {
+        "target": "eth_x402_harness",
+        "proposal": "Ensure eth_x402_harness log file is being written. Check cron redirection.",
+        "priority": "P1",
+        "auto_apply": false
+      },
+      {
+        "target": "watchdog_asi",
+        "proposal": "Recurring error 'FAIL' appeared 12 times. Consider: (a) adding retry with backoff, (b) investigating root cause, (c) updating error handling.",
+        "priority": "P2",
+        "auto_apply": false
+      },
+      {
+        "target": "watchdog_asi",
+        "proposal": "Failure rate 12/41 = 29.3% exceeds 10% threshold. Investigate.",
+        "priority": "P2",
+        "auto_apply": false
+      }
+    ],
+    "miner_version": "meta-improve-1",
+    "note": "ASI-Evolve meta-improvement: engine proposes specific improvements based on log analysis. NOT auto-applied (M4 lane scope: operational, not redesign)."
+  },
+  "honest_sentence": "ASI-Evolve meta-improvement: 8 specific improvement proposals based on log analysis. Auto-applied: NO (M4 lane scope).",
+  "measurement_not_certification": true,
+  "permissionless": true,
+  "auto_churn": true
+}

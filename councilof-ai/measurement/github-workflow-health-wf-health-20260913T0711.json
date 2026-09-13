@@ -1,0 +1,90 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.github.workflow_health",
+  "subject": "wf-health-20260913T0711",
+  "measured_at": "2026-09-13T07:11:24.399059Z",
+  "metrics": {
+    "total_workflows": 29,
+    "flappy_workflows": 0,
+    "broken_workflows": 5,
+    "healthy_workflows": 24,
+    "broken": [
+      {
+        "workflow": "MEOK OS \u2014 E2E matrix",
+        "success": 0,
+        "failure": 10,
+        "cancelled": 0,
+        "success_rate_pct": 0.0,
+        "last_runs": [
+          "failure",
+          "failure",
+          "failure",
+          "failure",
+          "failure"
+        ]
+      },
+      {
+        "workflow": "sovereign-town-sim-matrix",
+        "success": 0,
+        "failure": 10,
+        "cancelled": 0,
+        "success_rate_pct": 0.0,
+        "last_runs": [
+          "failure",
+          "failure",
+          "failure",
+          "failure",
+          "failure"
+        ]
+      },
+      {
+        "workflow": "CodeQL + dependency review",
+        "success": 0,
+        "failure": 7,
+        "cancelled": 0,
+        "success_rate_pct": 0.0,
+        "last_runs": [
+          "failure",
+          "failure",
+          "failure",
+          "failure",
+          "failure"
+        ]
+      },
+      {
+        "workflow": "Conventional commits",
+        "success": 1,
+        "failure": 3,
+        "cancelled": 0,
+        "success_rate_pct": 25.0,
+        "last_runs": [
+          "success",
+          "failure",
+          "failure",
+          "failure"
+        ]
+      },
+      {
+        "workflow": "Deploy to Vercel",
+        "success": 3,
+        "failure": 7,
+        "cancelled": 0,
+        "success_rate_pct": 30.0,
+        "last_runs": [
+          "failure",
+          "failure",
+          "failure",
+          "failure",
+          "failure"
+        ]
+      }
+    ],
+    "flappy": [],
+    "auto_churn": true,
+    "miner_version": "workflow-health-1"
+  },
+  "honest_sentence": "Workflow health: 29 workflows, 0 flappy.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true
+}
