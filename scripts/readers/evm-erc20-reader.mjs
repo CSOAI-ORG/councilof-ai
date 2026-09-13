@@ -55,7 +55,7 @@ export function normalizeAtomicAmount(rawValue, decimals) {
     : `${whole}.${fraction.toString().padStart(decimals, "0")}`;
 }
 
-export async function readERC20(chain, contract) {
+export async function readERC20(chain, contract, blockTag = null) {
   const cfg = CHAINS[chain];
   if (!cfg) throw new Error(`Unknown chain: ${chain}. Supported: ${Object.keys(CHAINS).join(", ")}`);
 
@@ -83,19 +83,28 @@ export async function readERC20(chain, contract) {
     correction_link: "https://github.com/CSOAI-ORG/councilof-ai/issues",
   };
 
-  // Pin reads to the RPC's finalized tag when available. Some public RPCs do not
-  // implement it; in that case fall back to latest and label the weaker state.
+  // Block selection: an explicit hex block tag pins the read to that height
+  // (replay of a recorded observation); otherwise pin to the provider-reported
+  // finalized tag when available, falling back to latest with the weaker label.
+  // All of these labels are provider-reported unless independently proven.
   let blockHex;
   let blockData;
-  try {
-    blockData = await rpcCall(rpcUsed, "eth_getBlockByNumber", ["finalized", false]);
-    if (!blockData?.number || !blockData?.hash) throw new Error("missing finalized block");
-    blockHex = blockData.number;
-    record.block_finality = "RPC_FINALIZED_TAG";
-  } catch {
-    blockHex = await rpcCall(rpcUsed, "eth_blockNumber", []);
+  if (blockTag) {
+    blockHex = blockTag;
     blockData = await rpcCall(rpcUsed, "eth_getBlockByNumber", [blockHex, false]);
-    record.block_finality = "RPC_LATEST_NOT_INDEPENDENTLY_PROVEN_FINAL";
+    if (!blockData?.number || !blockData?.hash) throw new Error(`unknown pinned block ${blockTag}`);
+    record.block_finality = "PINNED_BLOCK_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL";
+  } else {
+    try {
+      blockData = await rpcCall(rpcUsed, "eth_getBlockByNumber", ["finalized", false]);
+      if (!blockData?.number || !blockData?.hash) throw new Error("missing finalized block");
+      blockHex = blockData.number;
+      record.block_finality = "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL";
+    } catch {
+      blockHex = await rpcCall(rpcUsed, "eth_blockNumber", []);
+      blockData = await rpcCall(rpcUsed, "eth_getBlockByNumber", [blockHex, false]);
+      record.block_finality = "RPC_LATEST_NOT_INDEPENDENTLY_PROVEN_FINAL";
+    }
   }
   const blockNumber = parseInt(blockHex, 16);
   record.observed_block = blockNumber;
@@ -171,14 +180,15 @@ export async function readERC20(chain, contract) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const [,, chain, contract] = process.argv;
+  const [,, chain, contract, blockTag] = process.argv;
   if (!chain || !contract) {
-    console.error("Usage: node evm-erc20-reader.mjs <chain> <contract_address>");
+    console.error("Usage: node evm-erc20-reader.mjs <chain> <contract_address> [block_hex]");
     console.error("Chains:", Object.keys(CHAINS).join(", "));
+    console.error("Optional block_hex pins the read to that exact height (replay).");
     process.exit(1);
   }
   try {
-    const result = await readERC20(chain, contract);
+    const result = await readERC20(chain, contract, blockTag || null);
     console.log(JSON.stringify(result, null, 2));
   } catch (err) {
     console.error("Error:", err.message);
