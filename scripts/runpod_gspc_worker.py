@@ -1549,9 +1549,16 @@ def run_playlist(
                 failed_runs=failed_runs,
                 jobs_degraded=len(failed_jobs) + invalid,
             )
-            next_due[entry.fingerprint] = (
-                time.monotonic() + entry.config.interval_seconds
+            # Failure backoff (TUI 7, 2026-09-13): a failed job must NOT wait a full
+            # interval (86400s = a lost measurement day for one transient error,
+            # evidenced 2026-09-12 when an ollama boot race deferred all 70 jobs 24h).
+            # Success keeps the configured cadence; failure retries in <=30 min.
+            retry_delay = (
+                entry.config.interval_seconds
+                if outcome.exit_code == 0
+                else min(entry.config.interval_seconds, 1800)
             )
+            next_due[entry.fingerprint] = time.monotonic() + retry_delay
             if outcome.exit_code in {75, 130}:
                 return outcome.exit_code
 
