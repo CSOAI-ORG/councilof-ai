@@ -13,6 +13,9 @@
  *   UNCHECKABLE_NATIVE_ISSUANCE the token is natively issued on the destination chain
  *                               (no escrow backs it); the wrapped supply is read, the ratio
  *                               is NOT computed — a native issuance is not "unbacked"
+ *   INDEXED_CUSTODIAL           reserves sit with a custodian off-chain or on another ledger
+ *                               (wBTC, cbBTC, wXRP, BUIDL); the wrapped supply is read, no
+ *                               reserve is readable from here — INDEXED, not "unbacked"
  *   UNMEASURED                  a read failed; the error is recorded, nothing is inferred
  *
  * Not a rate, not a grade, not a reserve attestation, not a certificate. The escrow
@@ -60,6 +63,9 @@ const ESCROW = {
  *   "escrow"  the wrapped supply is minted against tokens locked in a named L1 escrow
  *   "native"  the issuer mints natively on the destination chain (Circle CCTP / Tether native);
  *             an escrow read would be meaningless, so none is attempted
+ *   "custodial" a custodian holds the reserve off-chain or on another ledger (BTC, XRP, fund
+ *             shares); nothing on this chain can be read as the reserve, so only the wrapped
+ *             supply is read and the pair stays INDEXED until a reserve read exists
  */
 export const ROSTER = [
   { id: "usdc.e:arbitrum", wrapped: { chain: "arbitrum", symbol: "USDC.e", address: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8" },
@@ -90,6 +96,22 @@ export const ROSTER = [
     note: "Tether issues USDT natively on Polygon; the PoS predicate backs only the legacy bridged remainder (escrow ≈1% of supply on 2026-09-13). The wrapped supply is read; no parity is claimed." },
   { id: "dai:polygon", wrapped: { chain: "polygon", symbol: "DAI", address: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063" },
     canonical: { chain: "ethereum", symbol: "DAI", address: DAI_ETH }, backing_model: "escrow", escrow: ESCROW.polygon_pos_erc20_predicate, escrow_name: "Polygon PoS bridge ERC20Predicate" },
+  // Custodial wrappers — the reserve is not on an EVM chain we can read. Supply only; INDEXED.
+  { id: "wbtc:ethereum", wrapped: { chain: "ethereum", symbol: "WBTC", address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599" },
+    canonical: { chain: "bitcoin", symbol: "BTC", address: "custodian-held (BitGo et al.); not an EVM contract" }, backing_model: "custodial", escrow: null, escrow_name: null,
+    note: "BTC reserve held by custodians and self-published (wbtc.network / Chainlink PoR fed by the custodian). Nothing independent is readable from here; INDEXED, no parity claimed." },
+  { id: "cbbtc:base", wrapped: { chain: "base", symbol: "cbBTC", address: "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf" },
+    canonical: { chain: "bitcoin", symbol: "BTC", address: "Coinbase custody; not an EVM contract" }, backing_model: "custodial", escrow: null, escrow_name: null,
+    note: "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed." },
+  { id: "cbbtc:ethereum", wrapped: { chain: "ethereum", symbol: "cbBTC", address: "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf" },
+    canonical: { chain: "bitcoin", symbol: "BTC", address: "Coinbase custody; not an EVM contract" }, backing_model: "custodial", escrow: null, escrow_name: null,
+    note: "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed." },
+  { id: "wxrp:ethereum", wrapped: { chain: "ethereum", symbol: "wXRP", address: "0x39fBBABf11738317a448031930706cd3e612e1B9" },
+    canonical: { chain: "xrpl", symbol: "XRP", address: "custodian-held XRPL account (Wrapped.com); readable on XRPL, not from here" }, backing_model: "custodial", escrow: null, escrow_name: null,
+    note: "XRP reserve held on the XRP Ledger by the wrapper's custodian; a future XRPL-side read can pair with this supply. INDEXED, no parity claimed." },
+  { id: "buidl:ethereum", wrapped: { chain: "ethereum", symbol: "BUIDL", address: "0x7712c34205737192402172409a8F7ccef8aA2AEc" },
+    canonical: { chain: "offchain", symbol: "fund shares", address: "transfer agent (Securitize); not on any chain" }, backing_model: "custodial", escrow: null, escrow_name: null,
+    note: "Tokenised fund shares; the reserve is the fund's assets held off-chain, reported by the transfer agent. INDEXED, no parity claimed." },
 ];
 
 const sha256 = (s) => createHash("sha256").update(s).digest("hex");
@@ -116,9 +138,9 @@ async function call(rpc, to, data, blockHex) {
   // Public endpoints rate-limit bursts; one paced retry is allowed, then the read is
   // UNMEASURED with the error recorded. A retry never changes what the chain answers.
   let raw;
-  for (let attempt = 0; attempt < 2; attempt++) {
+  for (let attempt = 0; attempt < 3; attempt++) {
     try { raw = await rpcCall(rpc, "eth_call", [{ to, data }, blockHex]); break; }
-    catch (e) { if (attempt === 1 || !/rate limit|429/i.test(String(e))) throw e; await new Promise((r) => setTimeout(r, 1500)); }
+    catch (e) { if (attempt === 2 || !/rate limit|429/i.test(String(e))) throw e; await new Promise((r) => setTimeout(r, 2000 * (attempt + 1))); }
   }
   if (!raw || raw === "0x") throw new Error(`empty eth_call result from ${to}`);
   // Pace public endpoints: a burst of pins + reads across twelve pairs trips mainnet.base.org's
@@ -138,11 +160,11 @@ export function ratioString(numerator, denominator) {
 
 export async function readPair(entry, pins) {
   const w = endpoint(entry.wrapped.chain);
-  const c = endpoint(entry.canonical.chain);
+  const c = CHAINS[entry.canonical.chain] ? endpoint(entry.canonical.chain) : null;
   const rec = {
     id: entry.id,
     wrapped: { ...entry.wrapped, chainId: w.chainId, endpoint: w.used, endpoint_substituted: w.substituted, block: pins[entry.wrapped.chain] },
-    canonical: { ...entry.canonical, chainId: c.chainId, endpoint: c.used, endpoint_substituted: c.substituted, block: pins[entry.canonical.chain] },
+    canonical: c ? { ...entry.canonical, chainId: c.chainId, endpoint: c.used, endpoint_substituted: c.substituted, block: pins[entry.canonical.chain] } : { ...entry.canonical, chainId: null, endpoint: null, endpoint_substituted: false, block: null },
     backing_model: entry.backing_model,
     escrow: entry.escrow, escrow_name: entry.escrow_name,
     note: entry.note || null,
@@ -160,9 +182,12 @@ export async function readPair(entry, pins) {
       rec.reads.escrow_balance = { query: `balanceOf(${entry.escrow})`, raw: eb.raw, raw_sha256: eb.raw_sha256, atomic: eb.value.toString(), normalized: normalizeAtomicAmount(eb.value.toString(), decimals), decimals };
       rec.escrow_over_wrapped = ratioString(eb.value, ts.value);
       rec.state = "ESCROW_PARITY_READ";
-    } else {
+    } else if (entry.backing_model === "native") {
       rec.escrow_over_wrapped = null;
       rec.state = "UNCHECKABLE_NATIVE_ISSUANCE";
+    } else {
+      rec.escrow_over_wrapped = null;
+      rec.state = "INDEXED_CUSTODIAL";
     }
   } catch (e) {
     rec.error = String((e && e.message) || e);
@@ -172,7 +197,7 @@ export async function readPair(entry, pins) {
 }
 
 export async function readAll(roster = ROSTER) {
-  const chains = [...new Set(roster.flatMap((r) => [r.wrapped.chain, r.canonical.chain]))];
+  const chains = [...new Set(roster.flatMap((r) => [r.wrapped.chain, r.canonical.chain]))].filter((ch) => CHAINS[ch]);
   const pins = {};
   for (const ch of chains) {
     try { pins[ch] = await pinBlock(endpoint(ch).used); }
@@ -180,7 +205,7 @@ export async function readAll(roster = ROSTER) {
   }
   const records = [];
   for (const entry of roster) {
-    if (pins[entry.wrapped.chain]?.error || pins[entry.canonical.chain]?.error) {
+    if (pins[entry.wrapped.chain]?.error || (CHAINS[entry.canonical.chain] && pins[entry.canonical.chain]?.error)) {
       records.push({ id: entry.id, backing_model: entry.backing_model, state: "UNMEASURED", error: "block pin failed", wrapped: entry.wrapped, canonical: entry.canonical });
       continue;
     }
@@ -193,7 +218,7 @@ export async function readAll(roster = ROSTER) {
     reader_revision: READER_REVISION,
     as_of: new Date().toISOString(),
     attests: "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
-    states: { ESCROW_PARITY_READ: "both reads succeeded at the pinned blocks; a read, not a measurement (the card doctrine reserves MEASURED for graded banks and refuses it on point-in-time cards)", UNCHECKABLE_NATIVE_ISSUANCE: "natively issued on the destination chain; no escrow exists; supply read, no ratio claimed", UNMEASURED: "a read failed; error recorded; nothing inferred" },
+    states: { ESCROW_PARITY_READ: "both reads succeeded at the pinned blocks; a read, not a measurement (the card doctrine reserves MEASURED for graded banks and refuses it on point-in-time cards)", UNCHECKABLE_NATIVE_ISSUANCE: "natively issued on the destination chain; no escrow exists; supply read, no ratio claimed", INDEXED_CUSTODIAL: "reserve held by a custodian off-chain or on another ledger; supply read; no reserve readable from here; no ratio claimed", UNMEASURED: "a read failed; error recorded; nothing inferred" },
     terms_boundary: "Public RPC endpoints, no API key. Endpoint substitutions are recorded per read.",
     correction_link: "https://github.com/CSOAI-ORG/councilof-ai/issues",
     license: "CC-BY-4.0 (Council of AI, CSOAI Ltd 16939677, councilof.ai)",
@@ -228,11 +253,11 @@ export async function stageAtoms(doc, dir) {
       reads: r.reads,
       escrow_over_wrapped: r.escrow_over_wrapped ?? null,
       parity_state: r.state,
-      state: r.state === "UNMEASURED" ? "UNMEASURED" : "PROBED",
+      state: r.state === "UNMEASURED" ? "UNMEASURED" : r.state === "INDEXED_CUSTODIAL" ? "DISCOVERED" : "PROBED",
       error: r.error ?? null,
       fetched_at: doc.as_of,
       reader_revision: doc.reader_revision,
-      unmeasured: r.state === "UNCHECKABLE_NATIVE_ISSUANCE" ? ["escrow_balance (natively issued; no escrow exists)"] : r.state === "UNMEASURED" ? ["chain reads (rpc failed; nothing inferred)"] : [],
+      unmeasured: r.state === "UNCHECKABLE_NATIVE_ISSUANCE" ? ["escrow_balance (natively issued; no escrow exists)"] : r.state === "INDEXED_CUSTODIAL" ? ["reserve (custodian-held off this chain; not readable here)"] : r.state === "UNMEASURED" ? ["chain reads (rpc failed; nothing inferred)"] : [],
     };
     const raw = canonicalBytes(payload);
     const card = {
@@ -240,7 +265,7 @@ export async function stageAtoms(doc, dir) {
       surface: "public.notice",
       subject: `wrapped ${r.wrapped.symbol} on ${r.wrapped.chain} vs ${r.escrow_name || "native issuance"} — ${r.state}`,
       as_of: doc.as_of,
-      source_urls: [r.wrapped.endpoint, r.canonical.endpoint].filter((u, i, a) => u && u.startsWith("https://") && a.indexOf(u) === i),
+      source_urls: [r.wrapped.endpoint, r.canonical?.endpoint].filter((u, i, a) => u && u.startsWith("https://") && a.indexOf(u) === i),
       payload,
       tags: ["eater:wrapper-parity", "axis:distribution-integrity", `backing:${r.backing_model}`, `state:${r.state}`],
       unmeasured: payload.unmeasured,
