@@ -1,0 +1,943 @@
+{
+  "schema": "csoai.wrapped-asset-parity/0.1",
+  "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+  "as_of": "2026-09-13T15:56:17.092Z",
+  "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+  "states": {
+    "ESCROW_PARITY_READ": "both reads succeeded at the pinned blocks; a read, not a measurement (the card doctrine reserves MEASURED for graded banks and refuses it on point-in-time cards)",
+    "UNCHECKABLE_NATIVE_ISSUANCE": "natively issued on the destination chain; no escrow exists; supply read, no ratio claimed",
+    "INDEXED_CUSTODIAL": "reserve held by a custodian off-chain or on another ledger; supply read; no reserve readable from here; no ratio claimed",
+    "UNMEASURED": "a read failed; error recorded; nothing inferred"
+  },
+  "terms_boundary": "Public RPC endpoints, no API key. Endpoint substitutions are recorded per read.",
+  "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+  "license": "CC-BY-4.0 (Council of AI, CSOAI Ltd 16939677, councilof.ai)",
+  "pins": {
+    "arbitrum": {
+      "number": 504779572,
+      "hex": "0x1e165334",
+      "hash": "0xc4263f9aae3b7fbfc46b9d4920ded09d5fc83c59f0a702c2c6e3293ebe559be3",
+      "timestamp": 1789313818,
+      "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+    },
+    "ethereum": {
+      "number": 25969460,
+      "hex": "0x18c4334",
+      "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+      "timestamp": 1789313879,
+      "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+    },
+    "optimism": {
+      "number": 156857510,
+      "hex": "0x95974a6",
+      "hash": "0x817b9780b052fd6af439cc012a53460d725a61e55fb328c595b8f6db202f6322",
+      "timestamp": 1789313797,
+      "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+    },
+    "base": {
+      "number": 51262221,
+      "hex": "0x30e330d",
+      "hash": "0x5a405aebede66cbafb581160b1c045d70184c312e059c6f3582fb451eb288167",
+      "timestamp": 1789313789,
+      "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+    },
+    "polygon": {
+      "number": 93739947,
+      "hex": "0x5965bab",
+      "hash": "0xbdd1fe8ac71a33bcf5b35efb1cfe77dd05c85020909a673278e4bc9d048eecdb",
+      "timestamp": 1789314954,
+      "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+    }
+  },
+  "counts": {
+    "ESCROW_PARITY_READ": 8,
+    "UNCHECKABLE_NATIVE_ISSUANCE": 4,
+    "INDEXED_CUSTODIAL": 5
+  },
+  "records": [
+    {
+      "id": "usdc.e:arbitrum",
+      "wrapped": {
+        "chain": "arbitrum",
+        "symbol": "USDC.e",
+        "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+        "chainId": 42161,
+        "endpoint": "https://arb1.arbitrum.io/rpc",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 504779572,
+          "hex": "0x1e165334",
+          "hash": "0xc4263f9aae3b7fbfc46b9d4920ded09d5fc83c59f0a702c2c6e3293ebe559be3",
+          "timestamp": 1789313818,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "escrow",
+      "escrow": "0xcEe284F754E854890e311e3280b767F80797180d",
+      "escrow_name": "Arbitrum One ERC-20 gateway escrow",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000000000000002c1ca44ce58d",
+          "raw_sha256": "875318f879642f9f071c7a3afaab890d07bf30553c0e53a83dbce4b687837378",
+          "atomic": "48501527209357",
+          "normalized": "48501527.209357",
+          "decimals": 6
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0xcEe284F754E854890e311e3280b767F80797180d)",
+          "raw": "0x00000000000000000000000000000000000000000000000000002f7f2d1c1585",
+          "raw_sha256": "4bd4ead4f2da2ce3affdac7ea9c33dba41055c43d93a8cec944c56e070c51f61",
+          "atomic": "52223264167301",
+          "normalized": "52223264.167301",
+          "decimals": 6
+        }
+      },
+      "state": "ESCROW_PARITY_READ",
+      "error": null,
+      "escrow_over_wrapped": "1.076734"
+    },
+    {
+      "id": "usdt:arbitrum",
+      "wrapped": {
+        "chain": "arbitrum",
+        "symbol": "USDT",
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        "chainId": 42161,
+        "endpoint": "https://arb1.arbitrum.io/rpc",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 504779572,
+          "hex": "0x1e165334",
+          "hash": "0xc4263f9aae3b7fbfc46b9d4920ded09d5fc83c59f0a702c2c6e3293ebe559be3",
+          "timestamp": 1789313818,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDT",
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "native",
+      "escrow": "0xcEe284F754E854890e311e3280b767F80797180d",
+      "escrow_name": "Arbitrum One ERC-20 gateway escrow (legacy bridged remainder only)",
+      "note": "Tether issues USDT natively on Arbitrum since 2025; the gateway escrow backs only the legacy bridged remainder. The wrapped supply is read; no parity is claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000002e3388e0d476d",
+          "raw_sha256": "0463a07f46a67f08a6f25244e9610e4035b94603cbe8eebaa25cd76f5f65b081",
+          "atomic": "812781994329965",
+          "normalized": "812781994.329965",
+          "decimals": 6
+        }
+      },
+      "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "usdc.e:optimism",
+      "wrapped": {
+        "chain": "optimism",
+        "symbol": "USDC.e",
+        "address": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
+        "chainId": 10,
+        "endpoint": "https://mainnet.optimism.io",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 156857510,
+          "hex": "0x95974a6",
+          "hash": "0x817b9780b052fd6af439cc012a53460d725a61e55fb328c595b8f6db202f6322",
+          "timestamp": 1789313797,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "escrow",
+      "escrow": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
+      "escrow_name": "OP Mainnet L1StandardBridge",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x000000000000000000000000000000000000000000000000000011f3d4976ead",
+          "raw_sha256": "28468690803154bf415150228171bccfd02038e968ff995c2f33fa5e5b8db185",
+          "atomic": "19738941419181",
+          "normalized": "19738941.419181",
+          "decimals": 6
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1)",
+          "raw": "0x0000000000000000000000000000000000000000000000000000163d7cb2d82b",
+          "raw_sha256": "14924fecc396cf2b8db7e3fa950baa55fb32645eecd952ab82bb12391f4f55d6",
+          "atomic": "24453340911659",
+          "normalized": "24453340.911659",
+          "decimals": 6
+        }
+      },
+      "state": "ESCROW_PARITY_READ",
+      "error": null,
+      "escrow_over_wrapped": "1.238837"
+    },
+    {
+      "id": "usdt:optimism",
+      "wrapped": {
+        "chain": "optimism",
+        "symbol": "USDT",
+        "address": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+        "chainId": 10,
+        "endpoint": "https://mainnet.optimism.io",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 156857510,
+          "hex": "0x95974a6",
+          "hash": "0x817b9780b052fd6af439cc012a53460d725a61e55fb328c595b8f6db202f6322",
+          "timestamp": 1789313797,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDT",
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "escrow",
+      "escrow": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
+      "escrow_name": "OP Mainnet L1StandardBridge",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000d51ad69bd239",
+          "raw_sha256": "39269e30f73916699882a064b9079cddc82aff8b338915f4a021e3e6f5c92496",
+          "atomic": "234311246402105",
+          "normalized": "234311246.402105",
+          "decimals": 6
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1)",
+          "raw": "0x0000000000000000000000000000000000000000000000000000d56b98b3c1ff",
+          "raw_sha256": "fc0ca4b42615dbb3463bc4931781078dec9997d4219b1a66dbaa3a75395aa497",
+          "atomic": "234658100134399",
+          "normalized": "234658100.134399",
+          "decimals": 6
+        }
+      },
+      "state": "ESCROW_PARITY_READ",
+      "error": null,
+      "escrow_over_wrapped": "1.001480"
+    },
+    {
+      "id": "dai:optimism",
+      "wrapped": {
+        "chain": "optimism",
+        "symbol": "DAI",
+        "address": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+        "chainId": 10,
+        "endpoint": "https://mainnet.optimism.io",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 156857510,
+          "hex": "0x95974a6",
+          "hash": "0x817b9780b052fd6af439cc012a53460d725a61e55fb328c595b8f6db202f6322",
+          "timestamp": 1789313797,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "DAI",
+        "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "escrow",
+      "escrow": "0x467194771dAe2967Aef3ECbEDD3Bf9a310C76C65",
+      "escrow_name": "OP Mainnet DAI bridge escrow (L1Escrow)",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000b53135452d2e5aea12b1f",
+          "raw_sha256": "b888a975b9dcf0bcf783e4767ff4014465c92f42fcf6d9ea2ec886e0e6e78800",
+          "atomic": "13690496998127233151347487",
+          "normalized": "13690496.998127233151347487",
+          "decimals": 18
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0x467194771dAe2967Aef3ECbEDD3Bf9a310C76C65)",
+          "raw": "0x000000000000000000000000000000000000000000110d1f258bd144c479bde8",
+          "raw_sha256": "99299ed7a69ca3d5d88048dc1887f829d11d4d3300a0d4d2c3cc8ebe8f7f5a17",
+          "atomic": "20613704252278380804292072",
+          "normalized": "20613704.252278380804292072",
+          "decimals": 18
+        }
+      },
+      "state": "ESCROW_PARITY_READ",
+      "error": null,
+      "escrow_over_wrapped": "1.505694"
+    },
+    {
+      "id": "usdbc:base",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "USDbC",
+        "address": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+        "chainId": 8453,
+        "endpoint": "https://mainnet.base.org",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 51262221,
+          "hex": "0x30e330d",
+          "hash": "0x5a405aebede66cbafb581160b1c045d70184c312e059c6f3582fb451eb288167",
+          "timestamp": 1789313789,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "escrow",
+      "escrow": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35",
+      "escrow_name": "Base L1StandardBridge",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000053c34c511cd",
+          "raw_sha256": "84d2001836b8056dc5ea5c0b2a0de42157cccbe9b1d5f0c0ecc7df04a80a9a64",
+          "atomic": "5756141507021",
+          "normalized": "5756141.507021",
+          "decimals": 6
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0x3154Cf16ccdb4C6d922629664174b904d80F2C35)",
+          "raw": "0x0000000000000000000000000000000000000000000000000000056a855e4fdc",
+          "raw_sha256": "64f0b3459caf89f2461f87d7f2fd46bf05fc321e8703ed491f6719215944b687",
+          "atomic": "5955062222812",
+          "normalized": "5955062.222812",
+          "decimals": 6
+        }
+      },
+      "state": "ESCROW_PARITY_READ",
+      "error": null,
+      "escrow_over_wrapped": "1.034557"
+    },
+    {
+      "id": "dai:base",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "DAI",
+        "address": "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
+        "chainId": 8453,
+        "endpoint": "https://mainnet.base.org",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 51262221,
+          "hex": "0x30e330d",
+          "hash": "0x5a405aebede66cbafb581160b1c045d70184c312e059c6f3582fb451eb288167",
+          "timestamp": 1789313789,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "DAI",
+        "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "escrow",
+      "escrow": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35",
+      "escrow_name": "Base L1StandardBridge",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x000000000000000000000000000000000000000000017fc91c036ada617215ce",
+          "raw_sha256": "85479bebc1b9732b3e191bea4f890b01160b97422089641bfa5f7eaed2641045",
+          "atomic": "1812376177072433899115982",
+          "normalized": "1812376.177072433899115982",
+          "decimals": 18
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0x3154Cf16ccdb4C6d922629664174b904d80F2C35)",
+          "raw": "0x0000000000000000000000000000000000000000000180b78a9391c0882d2cfc",
+          "raw_sha256": "9a30e3f295aac0153e271384a104f0d1c68bb2a5014d4be5acb41697a4a3c68b",
+          "atomic": "1816774469072487524936956",
+          "normalized": "1816774.469072487524936956",
+          "decimals": 18
+        }
+      },
+      "state": "ESCROW_PARITY_READ",
+      "error": null,
+      "escrow_over_wrapped": "1.002426"
+    },
+    {
+      "id": "usdc:base",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "USDC",
+        "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "chainId": 8453,
+        "endpoint": "https://mainnet.base.org",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 51262221,
+          "hex": "0x30e330d",
+          "hash": "0x5a405aebede66cbafb581160b1c045d70184c312e059c6f3582fb451eb288167",
+          "timestamp": 1789313789,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "native",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "Circle mints USDC natively on Base (CCTP burn-and-mint). No escrow exists to read; the wrapped supply is read, no parity is claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x000000000000000000000000000000000000000000000000000f29c3b9c3c76e",
+          "raw_sha256": "dfb87571ff0114b9be35d8067bc69bfb6afe9bc2403c91882855bcdefc076df4",
+          "atomic": "4268045262636910",
+          "normalized": "4268045262.636910",
+          "decimals": 6
+        }
+      },
+      "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "usdc:arbitrum",
+      "wrapped": {
+        "chain": "arbitrum",
+        "symbol": "USDC",
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "chainId": 42161,
+        "endpoint": "https://arb1.arbitrum.io/rpc",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 504779572,
+          "hex": "0x1e165334",
+          "hash": "0xc4263f9aae3b7fbfc46b9d4920ded09d5fc83c59f0a702c2c6e3293ebe559be3",
+          "timestamp": 1789313818,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "native",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "Circle mints USDC natively on Arbitrum One (CCTP). No escrow exists to read; the wrapped supply is read, no parity is claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000009adedf484b464",
+          "raw_sha256": "d96e3c29dffa6374454d922b3cc9e2d73d1b68e0814500fb0cf12ca929616f31",
+          "atomic": "2724512311587940",
+          "normalized": "2724512311.587940",
+          "decimals": 6
+        }
+      },
+      "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "usdc.e:polygon",
+      "wrapped": {
+        "chain": "polygon",
+        "symbol": "USDC.e",
+        "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+        "chainId": 137,
+        "endpoint": "https://polygon-bor-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 93739947,
+          "hex": "0x5965bab",
+          "hash": "0xbdd1fe8ac71a33bcf5b35efb1cfe77dd05c85020909a673278e4bc9d048eecdb",
+          "timestamp": 1789314954,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "escrow",
+      "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+      "escrow_name": "Polygon PoS bridge ERC20Predicate",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000003a8c556a3d850",
+          "raw_sha256": "986333ea259dd12799ffe2524cde001164c259ad26685ff5fd81db0b175b6af7",
+          "atomic": "1029990445733968",
+          "normalized": "1029990445.733968",
+          "decimals": 6
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf)",
+          "raw": "0x0000000000000000000000000000000000000000000000000003b14fcf9ceddc",
+          "raw_sha256": "34cfd25a8c402617a105cd10dbeea8c027c9ed1960b3d6d9e7f08600ed55db5d",
+          "atomic": "1039381273832924",
+          "normalized": "1039381273.832924",
+          "decimals": 6
+        }
+      },
+      "state": "ESCROW_PARITY_READ",
+      "error": null,
+      "escrow_over_wrapped": "1.009117"
+    },
+    {
+      "id": "usdt:polygon",
+      "wrapped": {
+        "chain": "polygon",
+        "symbol": "USDT",
+        "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+        "chainId": 137,
+        "endpoint": "https://polygon-bor-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 93739947,
+          "hex": "0x5965bab",
+          "hash": "0xbdd1fe8ac71a33bcf5b35efb1cfe77dd05c85020909a673278e4bc9d048eecdb",
+          "timestamp": 1789314954,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDT",
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "native",
+      "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+      "escrow_name": "Polygon PoS bridge ERC20Predicate (legacy bridged remainder only)",
+      "note": "Tether issues USDT natively on Polygon; the PoS predicate backs only the legacy bridged remainder (escrow ≈1% of supply on 2026-09-13). The wrapped supply is read; no parity is claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000000000000029f35feda10bb",
+          "raw_sha256": "7bf692c9e456b68e7291be13f3be2617ebd198caecc71765fc636443bb44411f",
+          "atomic": "738004211208379",
+          "normalized": "738004211.208379",
+          "decimals": 6
+        }
+      },
+      "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "dai:polygon",
+      "wrapped": {
+        "chain": "polygon",
+        "symbol": "DAI",
+        "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+        "chainId": 137,
+        "endpoint": "https://polygon-bor-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 93739947,
+          "hex": "0x5965bab",
+          "hash": "0xbdd1fe8ac71a33bcf5b35efb1cfe77dd05c85020909a673278e4bc9d048eecdb",
+          "timestamp": 1789314954,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "DAI",
+        "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "backing_model": "escrow",
+      "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+      "escrow_name": "Polygon PoS bridge ERC20Predicate",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000195a7d2b65ea88c4ea9adec",
+          "raw_sha256": "55a1e5b7b90a42b22e246ac9835409f60c6e0034c534fb9d7f6196209a2fc821",
+          "atomic": "490407479103945608794844652",
+          "normalized": "490407479.103945608794844652",
+          "decimals": 18
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf)",
+          "raw": "0x00000000000000000000000000000000000000000198d267819ed6794f795a13",
+          "raw_sha256": "ad5dea6a1a89ed347cb90e47fa1e10676741ae6abff2bab45ec7d3c05f3b86da",
+          "atomic": "494235340718949414584539667",
+          "normalized": "494235340.718949414584539667",
+          "decimals": 18
+        }
+      },
+      "state": "ESCROW_PARITY_READ",
+      "error": null,
+      "escrow_over_wrapped": "1.007805"
+    },
+    {
+      "id": "wbtc:ethereum",
+      "wrapped": {
+        "chain": "ethereum",
+        "symbol": "WBTC",
+        "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "bitcoin",
+        "symbol": "BTC",
+        "address": "custodian-held (BitGo et al.); not an EVM contract",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "BTC reserve held by custodians and self-published (wbtc.network / Chainlink PoR fed by the custodian). Nothing independent is readable from here; INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000000000000000a8fe9bff7f8",
+          "raw_sha256": "da84a3819c0b755a09aaccd086f79d6b04067c24488307a42b949919f5228bdf",
+          "atomic": "11613218273272",
+          "normalized": "116132.18273272",
+          "decimals": 8
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "cbbtc:base",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "cbBTC",
+        "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+        "chainId": 8453,
+        "endpoint": "https://mainnet.base.org",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 51262221,
+          "hex": "0x30e330d",
+          "hash": "0x5a405aebede66cbafb581160b1c045d70184c312e059c6f3582fb451eb288167",
+          "timestamp": 1789313789,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "bitcoin",
+        "symbol": "BTC",
+        "address": "Coinbase custody; not an EVM contract",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000042a334ef699",
+          "raw_sha256": "843fb88fcc2526f888acdf48fdf83db5a1c496cf375aa0806cb28f3461f98e36",
+          "atomic": "4579295950489",
+          "normalized": "45792.95950489",
+          "decimals": 8
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "cbbtc:ethereum",
+      "wrapped": {
+        "chain": "ethereum",
+        "symbol": "cbBTC",
+        "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "bitcoin",
+        "symbol": "BTC",
+        "address": "Coinbase custody; not an EVM contract",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000049065014227",
+          "raw_sha256": "851a4ce4a55e1caf562a464c41ff3e117325532f671a90c0a70fdff2e5bcbe9a",
+          "atomic": "5018216383015",
+          "normalized": "50182.16383015",
+          "decimals": 8
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "wxrp:ethereum",
+      "wrapped": {
+        "chain": "ethereum",
+        "symbol": "wXRP",
+        "address": "0x39fBBABf11738317a448031930706cd3e612e1B9",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "xrpl",
+        "symbol": "XRP",
+        "address": "custodian-held XRPL account (Wrapped.com); readable on XRPL, not from here",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "XRP reserve held on the XRP Ledger by the wrapper's custodian; a future XRPL-side read can pair with this supply. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000ed88b20f9392362e24000",
+          "raw_sha256": "3b642f245c5076bd8e421ca8c70929c3376adfc6aa651f343d82234d92e54cd0",
+          "atomic": "17947559108324000000000000",
+          "normalized": "17947559.108324000000000000",
+          "decimals": 18
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null
+    },
+    {
+      "id": "buidl:ethereum",
+      "wrapped": {
+        "chain": "ethereum",
+        "symbol": "BUIDL",
+        "address": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+        "chainId": 1,
+        "endpoint": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 25969460,
+          "hex": "0x18c4334",
+          "hash": "0x0653c8b72fe69b724203d6e92a635a052b87d7fd3ce7d17f6f770cb6ffa4892a",
+          "timestamp": 1789313879,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "offchain",
+        "symbol": "fund shares",
+        "address": "transfer agent (Securitize); not on any chain",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "Tokenised fund shares; the reserve is the fund's assets held off-chain, reported by the transfer agent. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000c0e03e051f2d",
+          "raw_sha256": "dfe95b9dff923992a1276caea51636072507ad8fca0c682b9d39575cb29f4ee5",
+          "atomic": "212069345730349",
+          "normalized": "212069345.730349",
+          "decimals": 6
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null
+    }
+  ]
+}
