@@ -1,0 +1,44 @@
+{
+ "census_pin": {
+  "local_file": "/Users/nicholas/dsh-tmp/agent-interop-census.jsonl",
+  "sha256": "a973a7f481662185f4fc3809a9b26768bce0119efec6602e96eddbcb94c206be"
+ },
+ "collision_examples": [
+  {
+   "id": "ai.aetherwealth/mcp",
+   "n_versions": 8,
+   "source": "modelcontextprotocol-registry"
+  },
+  {
+   "id": "ai.analyticslegends/sap-analytics",
+   "n_versions": 7,
+   "source": "modelcontextprotocol-registry"
+  },
+  {
+   "id": "ai.ankimcp/anki-mcp-server",
+   "n_versions": 20,
+   "source": "modelcontextprotocol-registry"
+  }
+ ],
+ "counts": {
+  "canonical_identities": 39073,
+  "census_rows": 109604,
+  "cross_source_links": 578,
+  "multi_version_identities": 11741,
+  "repo_url_groups": 27783
+ },
+ "generated_at": "2026-09-13T08:29:46Z",
+ "register": {
+  "bytes": 11389351,
+  "path": "canonical-register.jsonl",
+  "sha256": "06cafe9d6ecd6669ced2abd3066795e53f3f64759a0b2056f5bdfc1bc9b6c59d",
+  "url": "https://councilof.ai/interop/agent-interop-canonical-2026-09/canonical-register.jsonl"
+ },
+ "reproduce": "python3 scripts/census/dedupe-agent-interop.py  (fetches the pinned census)",
+ "rules": [
+  "canonical identity = (source, kind, id); all observed versions preserved, latest_observed from is_latest flag else max version",
+  "cross-source linkage via exact repo_url only \u2014 name similarity is never merged",
+  "a census row is DISCOVERED (index entry); dedupe does not grade"
+ ],
+ "schema": "csoai.agent-interop-canonical/0.1"
+}

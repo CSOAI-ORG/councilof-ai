@@ -26,6 +26,10 @@ STAGED_DIRS = (
     "xrpl-swift-eater-2026-09",
     "estate-boundary-2026-09",
     "stablecoin-cohort-2026-09",
+    # TUI-3 agent-economy lane (2026-09-13): conformance + census-dedupe atoms.
+    # Two directory names added under PR review; admission/signing unchanged.
+    "x402-door-conformance-2026-09",
+    "agent-interop-canonical-2026-09",
 )
 SURFACE = "public.notice"
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"

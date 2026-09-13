@@ -1,0 +1,204 @@
+{
+  "x402Version": 2,
+  "error": "Payment required",
+  "resource": {
+    "url": "https://councilof.ai/api/proof?bundle=1",
+    "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Proof Bundle",
+    "tags": [
+      "proof",
+      "merkle",
+      "measurement",
+      "attestation"
+    ]
+  },
+  "accepts": [
+    {
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "amount": "10000",
+      "maxAmountRequired": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "maxTimeoutSeconds": 300,
+      "extra": {
+        "name": "USD Coin",
+        "version": "2",
+        "decimals": 6,
+        "symbol": "USDC"
+      },
+      "csoai_pricing": {
+        "product_id": "csoai.product.issuance",
+        "sku_id": "issuance",
+        "tier": "reserve",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "campaign_id": "csoai-launch-30d-20260911",
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "10000",
+        "starts_at": "2026-09-11T00:00:00Z",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true
+      },
+      "resource": "https://councilof.ai/api/proof?bundle=1",
+      "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+      "mimeType": "application/json"
+    }
+  ],
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "type": "http",
+          "method": "GET",
+          "queryParams": {
+            "bundle": "1"
+          }
+        },
+        "output": {
+          "type": "json",
+          "example": {
+            "schema": "csoai.public-root-proof/0.1",
+            "kind": "bundle",
+            "merkle_root": "<hex>",
+            "n": 0,
+            "proofs": [],
+            "note": "Paid bundle of inclusion proofs. Not a grade."
+          }
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "http"
+              },
+              "method": {
+                "type": "string",
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ]
+              },
+              "queryParams": {
+                "type": "object",
+                "properties": {
+                  "bundle": {
+                    "type": "string",
+                    "const": "1",
+                    "description": "Must be 1 to request the paid proof bundle"
+                  }
+                },
+                "required": [
+                  "bundle"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "additionalProperties": false
+          },
+          "output": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "example": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "input"
+        ]
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "format": "jws",
+            "acceptIndex": 0,
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wcm9vZiIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc4OTI4ODgwMSwidmVyc2lvbiI6MX0.6lhBRrgqASegxwPi6xC8V79nnGMUiBYoqw8lxUcZMTSaMKUzHow_6h7lwe8PlzDZxvmIqBHn4p_tlYLw6sqzAg"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "offers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "format": {
+                  "type": "string",
+                  "const": "jws"
+                },
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "signature": {
+                  "type": "string",
+                  "description": "JWS compact serialization containing the offer payload"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ]
+            }
+          }
+        },
+        "required": [
+          "offers"
+        ]
+      }
+    }
+  },
+  "csoai": {
+    "schema": "csoai.public-root-proof/0.1",
+    "per": "proof-bundle",
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "grade",
+      "rank",
+      "certificate"
+    ],
+    "free": {
+      "one_inclusion": "/api/proof?sha=<64-hex>"
+    },
+    "free_preview": "/api/proof?sha=<64-hex>",
+    "deliverable": "one inclusion proof for the given leaf against the signed public root, with the root and the path — verification of it stays free forever",
+    "settle_mcp": "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
+    "verification": "x402 facilitator /verify (fail-closed; unverified receipts are refused)",
+    "not_paid_reason": "no x-payment header",
+    "bazaar_note": "Listing is free; CDP indexes after first settled payment. Live catalog status is UNCHECKABLE until a facilitator settle exists (and CDP EXTENSION-RESPONSES / #2112).",
+    "catalog": "https://councilof.ai/api/x402",
+    "offer_receipt": {
+      "extension": "offer-receipt",
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "format": "jws",
+      "alg": "EdDSA",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "signed": true,
+      "reason": "1 of 1 accepts entries signed",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    }
+  }
+}

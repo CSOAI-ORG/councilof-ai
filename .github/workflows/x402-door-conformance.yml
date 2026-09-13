@@ -1,0 +1,66 @@
+# Daily first-party x402 door conformance probe (TUI-3 agent-economy lane).
+#
+# WHY A CRON. A door that opened a correct 402 yesterday can silently rot today
+# (bad accepts[], wrong payTo, missing challenge). One probe cannot tell drift
+# from design — only the daily diff can. THIS JOB NEVER SPENDS: it reads 402
+# challenges only. Fulfillment stays UNMEASURED until an authorized settlement
+# runs elsewhere.
+#
+# Landing pattern follows census-delta.yml: branch -> PR -> dispatch pr-gates on
+# the branch -> auto-merge. No direct push to master, no gate weakening.
+name: x402 door conformance (daily, DRY)
+
+on:
+  schedule:
+    - cron: "41 6 * * *"  # daily, off the top of the hour
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write  # dispatch pr-gates on the branch — see census-delta.yml comment
+
+concurrency:
+  group: x402-door-conformance
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Probe the nine doors (read-only)
+        run: python3 scripts/probes/x402_door_conformance.py
+
+      - name: Never-spent guard
+        run: |
+          set -euo pipefail
+          if grep -rq '"settle_tx"\|"X-PAYMENT"' public/interop/x402-door-conformance-2026-09/; then
+            echo "FAIL: a spend artifact appears in a read-only probe pack" >&2; exit 1
+          fi
+          echo "read-only held"
+
+      - name: Land the pack (branch -> PR -> gates -> auto-merge)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-x402-conformance"
+          git config user.email "board@csoai.org"
+          git add public/interop/x402-door-conformance-2026-09
+          if git diff --cached --quiet; then
+            echo "NO_CHANGE"
+            exit 0
+          fi
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          BR="x402-door-conformance/${STAMP}"
+          git checkout -b "$BR"
+          git commit -m "x402-door-conformance: daily probe (${STAMP})"
+          git push origin "HEAD:$BR"
+          URL=$(gh pr create --base master --head "$BR" \
+            --title "x402-door-conformance: daily probe (${STAMP})" \
+            --body "Read-only 402 challenge conformance round for the nine first-party doors. Never spends. Atoms staged for the publisher intake; fulfillment stays UNMEASURED. See public/interop/x402-door-conformance-2026-09/report.json.")
+          gh workflow run pr-gates.yml --ref "$BR"
+          gh pr merge "$URL" --squash --auto || echo "auto-merge unavailable; $URL needs a human merge"

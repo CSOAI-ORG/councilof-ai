@@ -1,0 +1,216 @@
+{
+  "x402Version": 2,
+  "error": "Payment required",
+  "resource": {
+    "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+    "description": "A signed XRPL evidence card for RLUSD: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI RWA Evidence",
+    "tags": [
+      "rwa",
+      "xrpl",
+      "evidence",
+      "attestation",
+      "x402"
+    ]
+  },
+  "accepts": [
+    {
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "amount": "10000",
+      "maxAmountRequired": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "maxTimeoutSeconds": 300,
+      "extra": {
+        "name": "USD Coin",
+        "version": "2",
+        "decimals": 6,
+        "symbol": "USDC"
+      },
+      "csoai_pricing": {
+        "product_id": "csoai.product.request_attestation",
+        "sku_id": "request_attestation",
+        "tier": "per_request",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "campaign_id": "csoai-launch-30d-20260911",
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "10000",
+        "starts_at": "2026-09-11T00:00:00Z",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true
+      },
+      "resource": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+      "description": "A signed XRPL evidence card for RLUSD: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.",
+      "mimeType": "application/json"
+    }
+  ],
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "type": "http",
+          "method": "GET",
+          "queryParams": {
+            "asset": "RLUSD"
+          }
+        },
+        "output": {
+          "type": "json",
+          "example": {
+            "schema": "https://councilof.ai/schema/card-v0.json",
+            "surface": "public.notice",
+            "subject": "XRPL <SYMBOL> (<issuer>) two-way domain <PASS|FAIL|UNCHECKABLE> + on-chain obligation",
+            "payload": {
+              "kind": "csoai.eater.xrpl-issuer/0.1",
+              "state": "PROBED",
+              "account_root": {
+                "flags_decoded": {}
+              },
+              "onchain_obligation": {},
+              "inputs_sha256": "<hex>"
+            },
+            "sha256": "<hex>",
+            "sig_ed25519": "<hex or null>",
+            "unmeasured": []
+          }
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "http"
+              },
+              "method": {
+                "type": "string",
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ]
+              },
+              "queryParams": {
+                "type": "object",
+                "properties": {
+                  "asset": {
+                    "type": "string",
+                    "description": "XRPL issued-asset symbol (see /api/xrpl) or issuer r-address"
+                  }
+                },
+                "required": [
+                  "asset"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "additionalProperties": false
+          },
+          "output": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "example": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "input"
+        ]
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "format": "jws",
+            "acceptIndex": 0,
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yd2EvZXZpZGVuY2UiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3ODkyODg4MDEsInZlcnNpb24iOjF9.2PyC7tBuaE9cKsLeDB_isxMEakqodHkcOEFQqyJpz_YzYC2NNCJCvsa3GuW6XylmDJiPoyP6Kzh0ZfjqojxDBQ"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "offers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "format": {
+                  "type": "string",
+                  "const": "jws"
+                },
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "signature": {
+                  "type": "string",
+                  "description": "JWS compact serialization containing the offer payload"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ]
+            }
+          }
+        },
+        "required": [
+          "offers"
+        ]
+      }
+    }
+  },
+  "csoai": {
+    "schema": "csoai.rwa-evidence/0.1",
+    "per": "asset-request",
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "rating",
+      "guarantee",
+      "verdict",
+      "rank",
+      "certificate"
+    ],
+    "deliverable": "one card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1) — the same schema as the free public-root leaf — canonical ≤3072 bytes, signed when the Pages key is present",
+    "free_preview": "https://councilof.ai/api/rwa/evidence?asset=RLUSD&preview=1",
+    "free_reader": "https://councilof.ai/api/xrpl",
+    "rail": {
+      "mode": "live",
+      "pay_to_configured": true,
+      "facilitator_configured": true,
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free."
+    },
+    "not_paid_reason": "no x-payment header",
+    "catalog": "https://councilof.ai/api/x402",
+    "offer_receipt": {
+      "extension": "offer-receipt",
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "format": "jws",
+      "alg": "EdDSA",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "signed": true,
+      "reason": "1 of 1 accepts entries signed",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    }
+  }
+}

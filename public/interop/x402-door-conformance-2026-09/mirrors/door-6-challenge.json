@@ -1,0 +1,302 @@
+{
+  "x402Version": 2,
+  "error": "Payment required",
+  "resource": {
+    "url": "https://councilof.ai/api/art50/marking-evidence",
+    "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Article 50 marking evidenc",
+    "tags": [
+      "article-50",
+      "c2pa",
+      "marking",
+      "measurement",
+      "x402"
+    ]
+  },
+  "accepts": [
+    {
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "amount": "10000",
+      "maxAmountRequired": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "maxTimeoutSeconds": 300,
+      "extra": {
+        "name": "USD Coin",
+        "version": "2",
+        "decimals": 6,
+        "symbol": "USDC"
+      },
+      "csoai_pricing": {
+        "product_id": "csoai.product.art50_marking_evidence",
+        "sku_id": "art50_marking_evidence",
+        "tier": "pack",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "campaign_id": "csoai-launch-30d-20260911",
+        "normal_amount_atomic": "25000000",
+        "offered_amount_atomic": "10000",
+        "starts_at": "2026-09-11T00:00:00Z",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true
+      },
+      "resource": "https://councilof.ai/api/art50/marking-evidence",
+      "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.",
+      "mimeType": "application/json"
+    }
+  ],
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "type": "http",
+          "method": "GET",
+          "queryParams": {
+            "url": "https://councilof.ai/og-image.png"
+          }
+        },
+        "output": {
+          "type": "json",
+          "example": {
+            "schema": "https://councilof.ai/schema/card-v0.json",
+            "surface": "art50.marking-evidence",
+            "payload": {
+              "kind": "csoai.art50.marking-evidence/0.1",
+              "checked": [
+                {
+                  "method": "c2pa.manifest-store",
+                  "result": "NOT_DETECTED"
+                }
+              ],
+              "statements": [
+                "marking not detected by method c2pa.manifest-store"
+              ]
+            },
+            "sig_ed25519": "<hex or null>",
+            "unmeasured": [
+              "root_inclusion",
+              "watermark.synthid"
+            ]
+          }
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "http"
+              },
+              "method": {
+                "type": "string",
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ]
+              },
+              "queryParams": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "Public URL of the generative output to measure (≤ 20 MiB); or POST the bytes"
+                  },
+                  "preview": {
+                    "type": "string",
+                    "description": "1 = free unsigned measurement"
+                  }
+                },
+                "required": [
+                  "url"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "additionalProperties": false
+          },
+          "output": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "example": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "input"
+        ]
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "format": "jws",
+            "acceptIndex": 0,
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9hcnQ1MC9tYXJraW5nLWV2aWRlbmNlIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzg5Mjg4ODAxLCJ2ZXJzaW9uIjoxfQ.VGapivPuk4c33lzXHUH7A7CSQyQCBv3BIt7rHhU05oqjdSGO3AkJ4ncErXhimj5Ql7mMjkozvOk311i6vqEsBg"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "offers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "format": {
+                  "type": "string",
+                  "const": "jws"
+                },
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "signature": {
+                  "type": "string",
+                  "description": "JWS compact serialization containing the offer payload"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ]
+            }
+          }
+        },
+        "required": [
+          "offers"
+        ]
+      }
+    }
+  },
+  "csoai": {
+    "schema": "csoai.art50.marking-evidence/0.1",
+    "per": "pack (1 output × 1 point in time)",
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "conformity opinion",
+      "guarantee",
+      "certificate",
+      "grade"
+    ],
+    "deliverable": "one card-v0 leaf, surface art50.marking-evidence, ≤3KB payload, Ed25519-signed when the Pages key is present",
+    "preview": {
+      "subject": {
+        "sha256": "9af9804269512c472dca2392c84055844f68470a56bc5959422c91493af92c32",
+        "bytes": 47635,
+        "container": "png",
+        "source": "url",
+        "url": "https://councilof.ai/og-image.png"
+      },
+      "checked": [
+        {
+          "method": "c2pa.manifest-store",
+          "result": "NOT_DETECTED"
+        },
+        {
+          "method": "iptc.digitalSourceType",
+          "result": "NOT_DETECTED"
+        }
+      ],
+      "unmeasured": [
+        "c2pa.chain-trust",
+        "watermark.synthid",
+        "watermark.keyed",
+        "watermark.dwtdct",
+        "text.watermark"
+      ],
+      "gaps": {
+        "c2pa.chain-trust": "no C2PA trust list bundled; the leaf verifies its own signature only (anchor with c2patool --trust separately)",
+        "watermark.synthid": "no public key-free detector: SynthID text detection needs the deployer's watermark keys (github.com/google-deepmind/synthid-text); image/audio/video detection is Google-hosted, not public",
+        "watermark.keyed": "detectors published (Meta Stable Signature / Video Seal, github.com/facebookresearch/videoseal) but keyed to the deployer's private key; Digimarc/IMATAG proprietary",
+        "watermark.dwtdct": "public detector exists (ShieldMnt/invisible-watermark, the Stable Diffusion 'SDV2' DWT-DCT mark) but is not implemented in this Function",
+        "text.watermark": "no public detector for statistical text watermarks without the deployer's keys"
+      },
+      "statements": [
+        "marking not detected by method c2pa.manifest-store",
+        "marking not detected by method iptc.digitalSourceType",
+        "watermarks UNCHECKABLE by this Function (see gaps): a mark not detected here may still exist, and a mark detected here can be forged — detection at a time, not a guarantee"
+      ],
+      "detail": {
+        "container": "png",
+        "manifest_store_present": false,
+        "manifest_store_bytes": null,
+        "manifest_store_sha256": null,
+        "manifest_count": 0,
+        "active_manifest_label": null,
+        "claim": null,
+        "assertion_hashes": {
+          "status": "UNCHECKABLE",
+          "checked": 0,
+          "failed": [],
+          "reason": "no manifest store"
+        },
+        "data_hash": {
+          "status": "UNCHECKABLE",
+          "binding": null,
+          "alg": null,
+          "exclusions": 0,
+          "exclusions_cover_manifest": null,
+          "reason": "no manifest store"
+        },
+        "signature": {
+          "status": "UNCHECKABLE",
+          "cose_alg": null,
+          "leaf_cn": null,
+          "leaf_not_before": null,
+          "leaf_not_after": null,
+          "chain_length": null,
+          "timestamp": null,
+          "reason": "no manifest store"
+        },
+        "chain_trust": {
+          "status": "UNCHECKABLE",
+          "reason": "no C2PA trust list is bundled in this Function; the leaf certificate verifies its own signature only. Anchoring to a trust list (e.g. c2patool --trust) is a separate step."
+        },
+        "xmp_digital_source_type": null,
+        "notes": [
+          "no C2PA manifest store located in this container; metadata is strippable, so a manifest not being detected says nothing about the generator"
+        ]
+      }
+    },
+    "free_preview": "https://councilof.ai/api/art50/marking-evidence?preview=1&url=…",
+    "invoice_gbp": "https://councilof.ai/api/art50/marking-evidence?commissioned_by=<organisation>&invoice=gbp",
+    "rail": {
+      "mode": "live",
+      "pay_to_configured": true,
+      "facilitator_configured": true,
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free."
+    },
+    "not_paid_reason": "no x-payment header",
+    "catalog": "https://councilof.ai/api/x402",
+    "offer_receipt": {
+      "extension": "offer-receipt",
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "format": "jws",
+      "alg": "EdDSA",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "signed": true,
+      "reason": "1 of 1 accepts entries signed",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    }
+  }
+}

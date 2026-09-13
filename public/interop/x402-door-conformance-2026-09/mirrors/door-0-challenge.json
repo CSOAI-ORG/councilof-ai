@@ -1,0 +1,159 @@
+{
+  "x402Version": 2,
+  "error": "Payment required",
+  "resource": {
+    "url": "https://councilof.ai/api/free-door",
+    "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion — a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Free Door"
+  },
+  "accepts": [
+    {
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "amount": "0",
+      "maxAmountRequired": "0",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "maxTimeoutSeconds": 300,
+      "extra": {
+        "name": "USD Coin",
+        "version": "2",
+        "decimals": 6,
+        "symbol": "USDC"
+      },
+      "csoai_pricing": {
+        "product_id": "csoai.product.request_attestation",
+        "sku_id": "request_attestation",
+        "tier": "per_request",
+        "pricing_basis": "STANDARD",
+        "campaign_id": null,
+        "normal_amount_atomic": "0",
+        "offered_amount_atomic": "0",
+        "fresh_compute_excluded": true
+      },
+      "resource": "https://councilof.ai/api/free-door",
+      "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion — a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
+      "mimeType": "application/json"
+    }
+  ],
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "type": "http",
+          "method": "GET"
+        },
+        "output": {
+          "type": "json",
+          "example": {
+            "schema": "csoai.free-door/0.1",
+            "price_usdc": 0,
+            "board": "https://councilof.ai/api/gspc",
+            "root": "https://councilof.ai/root.json",
+            "verify": "https://councilof.ai/gspc-verify"
+          }
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "http"
+              },
+              "method": {
+                "type": "string",
+                "enum": [
+                  "GET"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "additionalProperties": false
+          },
+          "output": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "input"
+        ]
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "format": "jws",
+            "acceptIndex": 0,
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIwIiwiYXNzZXQiOiIweDgzMzU4OWZDRDZlRGI2RTA4ZjRjN0MzMkQ0ZjcxYjU0YmRBMDI5MTMiLCJuZXR3b3JrIjoiZWlwMTU1Ojg0NTMiLCJwYXlUbyI6IjB4MjEyNjg2NDA0QTdEMUUxZkQ4OEYzNWVENjIwMGMzYUY3QTc4YWUzMSIsInJlc291cmNlVXJsIjoiaHR0cHM6Ly9jb3VuY2lsb2YuYWkvYXBpL2ZyZWUtZG9vciIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc4OTI4ODgwMSwidmVyc2lvbiI6MX0.DAhvRg2OH158nmT7mhwXbvtQNjYwyE9R1kL7fnsEB3E_TuhbdWfMAn5o868QiFvW9b3cl8Nr0Frk6z2HQvnZAg"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "offers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "format": {
+                  "type": "string",
+                  "const": "jws"
+                },
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "signature": {
+                  "type": "string",
+                  "description": "JWS compact serialization containing the offer payload"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ]
+            }
+          }
+        },
+        "required": [
+          "offers"
+        ]
+      }
+    }
+  },
+  "catalog": "https://councilof.ai/api/x402",
+  "csoai": {
+    "free_preview": "https://councilof.ai/api/free-door",
+    "deliverable": "the Bazaar door itself: this resource is free and settles for zero. It exists so an index can discover the rail; it sells nothing and a settlement here buys nothing.",
+    "offer_receipt": {
+      "extension": "offer-receipt",
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "format": "jws",
+      "alg": "EdDSA",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "signed": true,
+      "reason": "1 of 1 accepts entries signed",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    }
+  }
+}
