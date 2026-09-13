@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-13T19:25:19Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "BBRL",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_supply",
+          "from": 73430073.42639077,
+          "to": 73440573.42639077
+        }
+      ],
+      "ledger_index": 106963899,
+      "observed_at": "2026-09-13T19:25:19Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9529a213055583dd74c0ba3036f5e9d1b8e50cef1a00b4c2354edb97d3b2c5ab",
+    "sig_ed25519": "aa31114c976b8615f4f823394b347d6ca46e51f7e0075b2dd2bb15687654df3bc75896ed3782edff487b32ec2c6fffee6cc06d38a42f034a1a747afe6ca9a10d",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: BBRL changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:BBRL"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "d86c550f0177dab87816e14a13dd9b48bacf241c1ae7432825be18134ffae438",
+    "d8b4d9adb6394219d627d2ee3efca63a64763e97a7bbc2e0fe78408b17a9d4e8",
+    "35e5ffe7884aad6b7628548c41b720e42a0a06fabedebde67a8b19a8c0edee72",
+    "c274b421d7d3cb2a2619787eaaf512baee0863976e52be40cdd6519a7a020f3b",
+    "156c1e37b932a1ab7dd6e6e1d4af60a3525ba67319b9ae34edd76ed4f5e88df4",
+    "daf38bbbf9eba9762b1fc01c4a2a8b3e5aad4619f4ec76023c56631330d4cf75",
+    "0838cc9f2f32d22666788e462cffb16793557e71feab7f4380b0e240e324ce24",
+    "94c329ea2d100f3c9b10aa5496460f3464edefc596ddb05a69bf9a8cda3d1bf8",
+    "ef83a48aa7136cfdccbd23c87d912a05080095e25cb0cfdcc8f26585729e046b"
+  ]
+}
