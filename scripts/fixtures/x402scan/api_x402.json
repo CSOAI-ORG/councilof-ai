@@ -1,5 +1,121 @@
 {
-  "explainer": "https://councilof.ai/pricing",
+  "schema": "csoai.x402-catalog/0.2",
+  "one_line": "Verification is free forever. Agents pay per artefact: issuance, assembly, cadence — never a grade.",
+  "rail": {
+    "mode": "live",
+    "pay_to_configured": true,
+    "facilitator_configured": true,
+    "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "asset": {
+      "symbol": "USDC",
+      "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "decimals": 6
+    },
+    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "amounts": "only inside each resource's 402 challenge (accepts[].amount) — never on this catalog, never in prose",
+    "well_known": "https://councilof.ai/.well-known/x402.json"
+  },
+  "tiers": [
+    {
+      "tier": 1,
+      "id": "issuance",
+      "name": "Commission a signed card (request-attestation)",
+      "resource": "https://councilof.ai/api/request-attestation?subject=<id>&axis=<slug>",
+      "free_preview": "https://councilof.ai/api/request-attestation?subject=<id>",
+      "free_preview_note": "the 402 body carries csoai.preview: signed cards already on file",
+      "deliverable": "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
+      "never": [
+        "a score",
+        "a rank",
+        "a certificate",
+        "a MEASURED cell minted by payment"
+      ]
+    },
+    {
+      "tier": 2,
+      "id": "evidence_bundle",
+      "name": "Evidence bundle mapped to an obligation",
+      "resource": "https://councilof.ai/api/evidence-bundle?obligation=article-50|article-53|dora|cra&subject=<model-id>&bundle=1",
+      "free_preview": "https://councilof.ai/api/evidence-bundle?obligation=<dora|cra|article-50|article-53>&subject=<model-id>",
+      "deliverable": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one named obligation. Not a conformity determination.",
+      "never": [
+        "a conformity determination",
+        "satisfied/not-satisfied findings",
+        "a certificate"
+      ]
+    },
+    {
+      "tier": 3,
+      "id": "data_feed",
+      "name": "Signed data feed (assembly + cadence)",
+      "resource": "https://councilof.ai/api/eunomia-data?feed=1",
+      "free_preview": "https://councilof.ai/api/eunomia-data",
+      "deliverable": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.",
+      "never": [
+        "scores as a product",
+        "a ranking",
+        "a rating"
+      ],
+      "also": {
+        "proof_bundle": "https://councilof.ai/api/proof?bundle=1",
+        "one_inclusion_free": "https://councilof.ai/api/proof?sha=<64-hex>"
+      }
+    },
+    {
+      "tier": 1,
+      "id": "rwa_evidence",
+      "name": "XRPL asset evidence card (per request)",
+      "resource": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>",
+      "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>&preview=1",
+      "free_preview_note": "unsigned state, no raw-fetch hashes; symbols at /api/xrpl",
+      "deliverable": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.",
+      "never": [
+        "a rating",
+        "a guarantee",
+        "a verdict",
+        "a rank",
+        "a paywall on /api/xrpl or /root.json"
+      ]
+    },
+    {
+      "tier": 4,
+      "id": "provider_diff_feed",
+      "name": "Provider document diff feed (signed historical batch / bespoke partner feed)",
+      "resource": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "free_preview": "https://councilof.ai/api/feeds/provider-diff",
+      "free_preview_note": "recent diffs + latest state per target, free; leaves in /feeds/provider-diff/leaves/",
+      "deliverable": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.",
+      "never": [
+        "a verdict on any change",
+        "the content of any page (never captured)",
+        "a grade"
+      ]
+    },
+    {
+      "tier": 3,
+      "id": "receipts_batch",
+      "name": "Receipts batch — historical measurement leaves for a window (assembly)",
+      "resource": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>",
+      "free_preview": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>&preview=1",
+      "free_preview_note": "count, span, root count and the sha256 of the exact batch bytes — no leaves",
+      "deliverable": "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly — not a conclusion.",
+      "recent_free": [
+        "https://councilof.ai/root.json",
+        "https://councilof.ai/cards/<sha16>.json",
+        "https://councilof.ai/api/proof?sha=<64-hex>",
+        "https://councilof.ai/receipts/root-history.json"
+      ],
+      "honesty": "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
+      "never": [
+        "a conclusion about any leaf",
+        "a grade",
+        "a certificate",
+        "a settlement-receipt claim"
+      ]
+    }
+  ],
   "free_forever": [
     "https://councilof.ai/gspc-verify",
     "https://councilof.ai/api/gspc",
@@ -11,15 +127,8 @@
     "https://councilof.ai/receipts/root-history.json",
     "https://councilof.ai/methodology"
   ],
-  "invariants": {
-    "financial_firewall": "No token, credit, or cash-settled index. Attestation is not tokenisation and confers no ownership.",
-    "measurement_not_certification": "CSOAI LTD (UK 16939677) is an independent measurement body. It issues measurements and signed attestations, never certificates of conformity.",
-    "never_a_grade": "No resource sells a grade, a score, a pass/fail verdict, or a place on the board.",
-    "no_public_price": "Amounts appear only in a 402 challenge.",
-    "recomputable_for_free": "Every artefact is independently recomputable; a buyer pays for issuance, assembly and a durable independent signature — not for the answer."
-  },
-  "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
   "mcp": {
+    "url": "https://councilof.ai/mcp",
     "free_tools": [
       "board_totals",
       "get_axis",
@@ -27,10 +136,8 @@
       "list_cards",
       "get_root",
       "get_card",
-      "verify_inclusion",
-      "x402_trust"
+      "verify_inclusion"
     ],
-    "how": "tools/call without x_payment → the route's 402 challenge as structuredContent (accepts[], PAYMENT-REQUIRED); pay from your wallet; call again with x_payment. Payment travels as the x_payment ARGUMENT and this door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Every paid tool is measurement, not certification — no tool carries or awards a trust label of any kind. The catalogue (tools/list) is free.",
     "paid_tools": [
       {
         "name": "commission_card",
@@ -39,15 +146,15 @@
       },
       {
         "name": "art50_marking_evidence",
-        "note": "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s",
         "route": "https://councilof.ai/api/art50/marking-evidence",
-        "sells": "issuance"
+        "sells": "issuance",
+        "note": "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s"
       },
       {
         "name": "rwa_evidence",
-        "note": "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s",
         "route": "https://councilof.ai/api/rwa/evidence",
-        "sells": "issuance"
+        "sells": "issuance",
+        "note": "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s"
       },
       {
         "name": "receipts_batch",
@@ -55,172 +162,16 @@
         "sells": "assembly"
       }
     ],
-    "url": "https://councilof.ai/mcp"
+    "how": "tools/call without x_payment → the route's 402 challenge as structuredContent (accepts[], PAYMENT-REQUIRED); pay from your wallet; call again with x_payment. Payment travels as the x_payment ARGUMENT and this door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Every paid tool is measurement, not certification — no tool carries or awards a trust label of any kind. The catalogue (tools/list) is free."
   },
-  "one_line": "Verification is free forever. Agents pay per artefact: issuance, assembly, cadence — never a grade.",
-  "rail": {
-    "amounts": "only inside each resource's 402 challenge (accepts[].amount) — never on this catalog, never in prose",
-    "asset": {
-      "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-      "decimals": 6,
-      "symbol": "USDC"
-    },
-    "facilitator_configured": true,
-    "mode": "live",
-    "network": "eip155:8453",
-    "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
-    "offer_receipt": {
-      "board_signing_key_configured": true,
-      "by_payer": "https://councilof.ai/api/receipts?payer=0x…",
-      "emission": "conditional",
-      "facilitator_configured": true,
-      "format": "jws (EdDSA)",
-      "kid": "did:web:csoai.org#board-attestation-1",
-      "offers": "signed only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise csoai.offer_receipt names the gap and no offer-receipt block is attached",
-      "receipts": "signed only after facilitator-confirmed settlement when the facilitator names a payer and BOARD_SIGN_KEY_PKCS8_B64 is provisioned; otherwise receiptGap names why no signed receipt was attached",
-      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify_free": "https://councilof.ai/api/receipts/verify",
-      "verify_without_us": "scripts/verify_receipt.py — reads /.well-known/did.json and nothing else"
-    },
-    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "pay_to_configured": true,
-    "scheme": "exact",
-    "well_known": "https://councilof.ai/.well-known/x402.json"
+  "invariants": {
+    "measurement_not_certification": "CSOAI LTD (UK 16939677) is an independent measurement body. It issues measurements and signed attestations, never certificates of conformity.",
+    "never_a_grade": "No tier sells a grade, a score, a pass/fail verdict, or a place on the board.",
+    "recomputable_for_free": "Every artefact is independently recomputable; a buyer pays for issuance, assembly and a durable independent signature — not for the answer.",
+    "no_public_price": "Amounts appear only in a 402 challenge.",
+    "financial_firewall": "No token, credit, or cash-settled index. Attestation is not tokenisation and confers no ownership."
   },
-  "resources": [
-    {
-      "deliverable": "The live GSPC board totals and public signed root through a genuine x402 challenge whose amount is zero.",
-      "free_preview": "https://councilof.ai/api/free-door",
-      "id": "free_door",
-      "name": "Free board + public-root discovery door",
-      "never": [
-        "a paid artefact",
-        "a grade",
-        "a rank",
-        "a certificate"
-      ],
-      "resource": "https://councilof.ai/api/free-door"
-    },
-    {
-      "deliverable": "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
-      "free_preview": "https://councilof.ai/api/request-attestation?subject=<id>",
-      "free_preview_note": "the 402 body carries csoai.preview: signed cards already on file",
-      "id": "issuance",
-      "name": "Commission a signed card (request-attestation)",
-      "never": [
-        "a score",
-        "a rank",
-        "a certificate",
-        "a MEASURED cell minted by payment"
-      ],
-      "resource": "https://councilof.ai/api/request-attestation?subject=<id>&axis=<slug>"
-    },
-    {
-      "deliverable": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one named obligation. Not a conformity determination.",
-      "free_preview": "https://councilof.ai/api/evidence-bundle?obligation=<dora|cra|article-50|article-53>&subject=<model-id>",
-      "id": "evidence_bundle",
-      "name": "Evidence bundle mapped to an obligation",
-      "never": [
-        "a conformity determination",
-        "satisfied/not-satisfied findings",
-        "a certificate"
-      ],
-      "resource": "https://councilof.ai/api/evidence-bundle?obligation=article-50|article-53|dora|cra&subject=<model-id>&bundle=1"
-    },
-    {
-      "also": {
-        "one_inclusion_free": "https://councilof.ai/api/proof?sha=<64-hex>",
-        "proof_bundle": "https://councilof.ai/api/proof?bundle=1"
-      },
-      "deliverable": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.",
-      "free_preview": "https://councilof.ai/api/eunomia-data",
-      "id": "data_feed",
-      "name": "Signed data feed (assembly + cadence)",
-      "never": [
-        "scores as a product",
-        "a ranking",
-        "a rating"
-      ],
-      "resource": "https://councilof.ai/api/eunomia-data?feed=1"
-    },
-    {
-      "deliverable": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
-      "free_preview": "https://councilof.ai/api/proof?sha=<64-hex>",
-      "free_preview_note": "one inclusion proof is free for any leaf in the current public root",
-      "id": "proof_bundle",
-      "name": "Public-root inclusion-proof bundle",
-      "never": [
-        "a grade",
-        "a rank",
-        "a certificate",
-        "a private evidence claim"
-      ],
-      "resource": "https://councilof.ai/api/proof?bundle=1"
-    },
-    {
-      "deliverable": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.",
-      "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1",
-      "free_preview_note": "unsigned state, no raw-fetch hashes; symbols at /api/xrpl",
-      "id": "rwa_evidence",
-      "name": "XRPL asset evidence card (per request)",
-      "never": [
-        "a rating",
-        "a guarantee",
-        "a verdict",
-        "a rank",
-        "a paywall on /api/xrpl or /root.json"
-      ],
-      "resource": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>"
-    },
-    {
-      "deliverable": "A signed card recording whether named methods detected a machine-readable mark in one named output at one time.",
-      "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=<https-output-url>&preview=1",
-      "free_preview_note": "the same point-in-time detection is returned unsigned before purchase",
-      "id": "art50_marking_evidence",
-      "name": "Article 50 machine-readable marking evidence",
-      "never": [
-        "a conformity opinion",
-        "a guarantee about the generator",
-        "a certificate",
-        "legal advice"
-      ],
-      "resource": "https://councilof.ai/api/art50/marking-evidence?url=<https-output-url>"
-    },
-    {
-      "deliverable": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.",
-      "free_preview": "https://councilof.ai/api/feeds/provider-diff",
-      "free_preview_note": "recent diffs + latest state per target, free; leaves in /feeds/provider-diff/leaves/",
-      "id": "provider_diff_feed",
-      "name": "Provider document diff feed (signed historical batch / bespoke partner feed)",
-      "never": [
-        "a verdict on any change",
-        "the content of any page (never captured)",
-        "a grade"
-      ],
-      "resource": "https://councilof.ai/api/feeds/provider-diff?history=1"
-    },
-    {
-      "deliverable": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
-      "free_preview": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>&preview=1",
-      "free_preview_note": "count, span, root count and the sha256 of the exact batch bytes — no leaves",
-      "honesty": "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
-      "id": "receipts_batch",
-      "name": "Historical measurement-card batch (assembly)",
-      "never": [
-        "a conclusion about any leaf",
-        "a grade",
-        "a certificate",
-        "a settlement-receipt claim"
-      ],
-      "recent_free": [
-        "https://councilof.ai/root.json",
-        "https://councilof.ai/cards/<sha16>.json",
-        "https://councilof.ai/api/proof?sha=<64-hex>",
-        "https://councilof.ai/receipts/root-history.json"
-      ],
-      "resource": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>"
-    }
-  ],
-  "revenue_truth": "https://councilof.ai/api/revenue",
-  "schema": "csoai.x402-catalog/0.3"
+  "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+  "explainer": "https://councilof.ai/pricing",
+  "revenue_truth": "https://councilof.ai/api/revenue"
 }
