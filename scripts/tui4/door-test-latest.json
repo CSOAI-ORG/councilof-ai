@@ -1,0 +1,449 @@
+{
+ "kind": "csoai.tui4-door-test/0.1",
+ "as_of": "2026-09-13T08:14:41Z",
+ "base_url": "https://councilof.ai",
+ "scope": "Discovery → probe → challenge → free fulfillment where offered → receipt verification. NO PAYMENTS: the paid path ends at a verified 402 challenge. Measurement, never certification; UNCHECKABLE is reported, never coerced.",
+ "totals": {
+  "PASS": 26,
+  "FAIL": 0,
+  "UNCHECKABLE": 1
+ },
+ "checks": [
+  {
+   "id": "x402-discovery",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/.well-known/x402.json",
+   "http_status": 200,
+   "evidence_sha256": "198203a2005c86c1e393432c38e70972616fced856b2b2a50f42da8d7451e20b",
+   "details": {
+    "schema": "csoai.x402/0.2",
+    "network": "eip155:8453",
+    "x402Version": 2,
+    "resources": 9
+   }
+  },
+  {
+   "id": "x402-catalog",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/x402",
+   "http_status": 200,
+   "evidence_sha256": "b4dd343d8e3661358becbfc2e45f49bca6146c6b535d6035989d97088da26a51",
+   "details": {
+    "schema": "csoai.x402-catalog/0.3",
+    "resources": 9
+   }
+  },
+  {
+   "id": "door:/api/free-door",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/free-door",
+   "http_status": 402,
+   "evidence_sha256": "4e4a4c66da2b6d543e3949a36fd45793ecca2d3672f14afba5d5088a77d1f57b",
+   "details": {
+    "expected": "200 (priced-at-zero door)",
+    "note": "answered 402 with amounts ['0']"
+   }
+  },
+  {
+   "id": "door:/api/request-attestation?subject=model-or-subject-id",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+   "http_status": 402,
+   "evidence_sha256": "325d88f47922e561ab90ae34c0396f42a18ab73dc3a7f1eb265c2ea939a3dc56",
+   "details": {
+    "expected": "402 with accepts[] matching discovery",
+    "accepts_check": "accepts[] entry matches discovery (network=eip155:8453)"
+   }
+  },
+  {
+   "id": "door:/api/evidence-bundle?obligation=article-50&bundle=1",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+   "http_status": 402,
+   "evidence_sha256": "760e5cec2755c3700e02c483ce7c69d775ffdabb9544b72a0b76693e7f9dae36",
+   "details": {
+    "expected": "402 with accepts[] matching discovery",
+    "accepts_check": "accepts[] entry matches discovery (network=eip155:8453)"
+   }
+  },
+  {
+   "id": "door:/api/eunomia-data?feed=1",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/eunomia-data?feed=1",
+   "http_status": 402,
+   "evidence_sha256": "d95ef84f94c1cf40aa1234d0047c02e9679ee1a190d5b6d94b886bb13fd0ab05",
+   "details": {
+    "expected": "402 with accepts[] matching discovery",
+    "accepts_check": "accepts[] entry matches discovery (network=eip155:8453)"
+   }
+  },
+  {
+   "id": "door:/api/proof?bundle=1",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/proof?bundle=1",
+   "http_status": 402,
+   "evidence_sha256": "0d34664f390994dcdd1b79239cf9aefe2ab4db5a56025c99c19fb2bee1748504",
+   "details": {
+    "expected": "402 with accepts[] matching discovery",
+    "accepts_check": "accepts[] entry matches discovery (network=eip155:8453)"
+   }
+  },
+  {
+   "id": "door:/api/rwa/evidence?asset=RLUSD",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+   "http_status": 402,
+   "evidence_sha256": "a0f3fe6b4f2db39a9d9c5cc123f5909e6bd49501d1236c58e2146fa5f632deac",
+   "details": {
+    "expected": "402 with accepts[] matching discovery",
+    "accepts_check": "accepts[] entry matches discovery (network=eip155:8453)"
+   }
+  },
+  {
+   "id": "door:/api/art50/marking-evidence?url=/og-image.png",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+   "http_status": 402,
+   "evidence_sha256": "b01570901a0e33ad81014483ff9d9d31bf8749ac7285d9952ec0dad808694c09",
+   "details": {
+    "expected": "402 with accepts[] matching discovery",
+    "accepts_check": "accepts[] entry matches discovery (network=eip155:8453)"
+   }
+  },
+  {
+   "id": "door:/api/feeds/provider-diff?history=1",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+   "http_status": 402,
+   "evidence_sha256": "5c69d5187a27b7e60a43e34656005e91c3f3d77e5c459a88553440701c7d9dd2",
+   "details": {
+    "expected": "402 with accepts[] matching discovery",
+    "accepts_check": "accepts[] entry matches discovery (network=eip155:8453)"
+   }
+  },
+  {
+   "id": "door:/api/receipts/batch?from=2026-01-01T00:00:00Z",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+   "http_status": 402,
+   "evidence_sha256": "451fc692dd93c4a64b21fdd8a38da0eb10fc9b7f5ba2098ec57e32418daacc8d",
+   "details": {
+    "expected": "402 with accepts[] matching discovery",
+    "accepts_check": "accepts[] entry matches discovery (network=eip155:8453)"
+   }
+  },
+  {
+   "id": "door:/api/witness-quarantined",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/witness?sha256=0000000000000000000000000000000000000000000000000000000000000000",
+   "http_status": 503,
+   "evidence_sha256": "2b46de7842baae707a22f61573930451751d6cefe71245a2b5ea4f4e763fcb5e",
+   "details": {
+    "expected": "503 — QUARANTINED_PRE_RELEASE must fail closed before payment",
+    "note": "any 2xx/402 here means the quarantine failed open"
+   }
+  },
+  {
+   "id": "preview:rwa_evidence_preview",
+   "verdict": "UNCHECKABLE",
+   "method": "GET",
+   "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD&preview=1",
+   "http_status": null,
+   "evidence_sha256": null,
+   "details": {
+    "error": "TimeoutError: The read operation timed out"
+   }
+  },
+  {
+   "id": "preview:art50_marking_preview",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1",
+   "http_status": 200,
+   "evidence_sha256": "69f9c6574ec3ef07b37917fee95eba5537c223737576c1b9bac82c66337d5d8f",
+   "details": {
+    "expected": "200 free preview",
+    "content_shape_top_level_keys": [
+     "fetched_at",
+     "how_to_commission",
+     "law",
+     "measurement",
+     "mode",
+     "note",
+     "schema",
+     "signed"
+    ]
+   }
+  },
+  {
+   "id": "preview:receipts_batch_preview",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1",
+   "http_status": 200,
+   "evidence_sha256": "ff089714e821e0b6e427e8e433b85a07f92b80ffff858e9a35e893dc70199d7e",
+   "details": {
+    "expected": "200 free preview",
+    "content_shape_top_level_keys": [
+     "batch_bytes",
+     "batch_sha256",
+     "buy",
+     "cap",
+     "count",
+     "kind",
+     "lid",
+     "matched",
+     "next_from",
+     "rail",
+     "roots_in_window",
+     "roots_indexed_total"
+    ]
+   }
+  },
+  {
+   "id": "preview:eunomia_data_preview",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/api/eunomia-data",
+   "http_status": 200,
+   "evidence_sha256": "81a5696396fe6d1c64e135f63263a1ee10f9969bd2263a82223145e1d49aa70d",
+   "details": {
+    "expected": "200 free preview",
+    "content_shape_top_level_keys": [
+     "buy",
+     "data_only",
+     "free_for",
+     "kind",
+     "lane",
+     "never",
+     "rail",
+     "schema",
+     "sold",
+     "streams"
+    ]
+   }
+  },
+  {
+   "id": "mcp:initialize",
+   "verdict": "PASS",
+   "method": "POST",
+   "url": "https://councilof.ai/mcp",
+   "http_status": 200,
+   "evidence_sha256": "93201a80831f28b1e7093eb0e51823a34bfd4f259696d2836016cc4f5d226a6e",
+   "details": {
+    "serverInfo": {
+     "name": "csoai-gspc-mcp",
+     "version": "1.4.2"
+    }
+   }
+  },
+  {
+   "id": "mcp:tools-list",
+   "verdict": "PASS",
+   "method": "POST",
+   "url": "https://councilof.ai/mcp",
+   "http_status": 200,
+   "evidence_sha256": "84daa0c56e2d91f81b03cf539f6f05e2c63048f889c11828676f04c516d25d41",
+   "details": {
+    "tools": [
+     "art50_marking_evidence",
+     "board_totals",
+     "commission_card",
+     "get_axis",
+     "get_card",
+     "get_root",
+     "list_cards",
+     "receipts_batch",
+     "rwa_evidence",
+     "verify_card",
+     "verify_inclusion",
+     "x402_trust"
+    ],
+    "count": 12,
+    "manifest_free": [
+     "board_totals",
+     "get_axis",
+     "get_card",
+     "get_root",
+     "list_cards",
+     "verify_card",
+     "verify_inclusion",
+     "x402_trust"
+    ],
+    "manifest_paid": [
+     "art50_marking_evidence",
+     "commission_card",
+     "receipts_batch",
+     "rwa_evidence"
+    ],
+    "split": "8 free + 4 paid, asserted equal to the committed manifests"
+   }
+  },
+  {
+   "id": "mcp:call-board_totals-free",
+   "verdict": "PASS",
+   "method": "POST",
+   "url": "https://councilof.ai/mcp",
+   "http_status": 200,
+   "evidence_sha256": "a0778b89e26c31b23a6fbfd720245406c605a7c7f807c66f74179b3c81e572dd",
+   "details": {
+    "isError": false
+   }
+  },
+  {
+   "id": "mcp:call-commission_card-unpaid",
+   "verdict": "PASS",
+   "method": "POST",
+   "url": "https://councilof.ai/mcp",
+   "http_status": 200,
+   "evidence_sha256": "fccbeeaede9d2458bcd6ffb7a743f2b993496626c7cc442b26566f547594cb37",
+   "details": {
+    "expected": "402 challenge as structuredContent (the correct unpaid path — never paid)",
+    "structuredContent_keys": [
+     "delivery_state",
+     "doctrine",
+     "how_to_pay",
+     "http_status",
+     "not_a_certification",
+     "nothing_charged",
+     "payment_presented",
+     "payment_required",
+     "payment_required_header",
+     "rail",
+     "route",
+     "settlement_state"
+    ],
+    "isError": false
+   }
+  },
+  {
+   "id": "a2a:agent-card",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/.well-known/agent-card.json",
+   "http_status": 200,
+   "evidence_sha256": "7016fb9282860e67d32fb629f85b0f3762f8c00aaf889df4fa65009b4b0af90e",
+   "details": {
+    "content_type": "application/a2a+json",
+    "skills": [
+     "gspc-board",
+     "east-west-crosswalk",
+     "measured-badge",
+     "benchmark-quality-register",
+     "article50-detect",
+     "eu-ai-act-screen",
+     "x402-discovery"
+    ]
+   }
+  },
+  {
+   "id": "a2a:agents-index",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/.well-known/agents/index.json",
+   "http_status": 200,
+   "evidence_sha256": "63d2f07a4ed637ca348e8f773b4d9b54b3181f7329b007d50f2f30a760c8ff99",
+   "details": {
+    "count": 12,
+    "agents": 12
+   }
+  },
+  {
+   "id": "a2a:per-tool-card",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "https://councilof.ai/.well-known/agents/board_totals.json",
+   "http_status": 200,
+   "evidence_sha256": "034365f33c24bfe7dbdec05d0935ca8717962f62cb63ca23fc6a9af12606b845"
+  },
+  {
+   "id": "a2a:sendmessage-gspc-board",
+   "verdict": "PASS",
+   "method": "POST",
+   "url": "https://councilof.ai/api/a2a",
+   "http_status": 200,
+   "evidence_sha256": "a8f8666078517dbdae322125e89138d603e0d80599309dbade59b37b65d01bc3",
+   "details": {
+    "expected": "a Message result from the free gspc-board skill",
+    "jsonrpc_error": null
+   }
+  },
+  {
+   "id": "erc8004:census-recent-window",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "subprocess:scripts/erc8004_census.py --recent-blocks 20000",
+   "http_status": 0,
+   "evidence_sha256": "7b94481685d30273f7ca6b72b2a7788a89f6bb516cef032796119bf324921c50",
+   "details": {
+    "as_of": "2026-09-13T08:15:14Z",
+    "rows": [
+     {
+      "chain": "ethereum",
+      "status": "MEASURED",
+      "registrations": 15,
+      "from_block": 25947161,
+      "to_block": 25967160,
+      "window": "RECENT-WINDOW",
+      "reason": null
+     },
+     {
+      "chain": "base",
+      "status": "MEASURED",
+      "registrations": 202,
+      "from_block": 51228434,
+      "to_block": 51248433,
+      "window": "RECENT-WINDOW",
+      "reason": null
+     },
+     {
+      "chain": "bsc",
+      "status": "MEASURED",
+      "registrations": 112,
+      "from_block": 121592111,
+      "to_block": 121612110,
+      "window": "RECENT-WINDOW",
+      "reason": null
+     }
+    ],
+    "note": "RECENT-WINDOW mode — bounded counts, not full history; the full-history counts (ETH 50,783 / Base 86,263, as_of 2026-09-12) live in the census script footer as a committed measurement"
+   }
+  },
+  {
+   "id": "receipt:verifier-help",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "subprocess:scripts/verify_receipt.py --help",
+   "http_status": 0,
+   "evidence_sha256": "15f51539eb341cf6cd9b8f7662a42aae0dc56ade156ada57028f6b6f6459e60a"
+  },
+  {
+   "id": "receipt:committed-self-settlement",
+   "verdict": "PASS",
+   "method": "GET",
+   "url": "subprocess:verify_receipt.py --jws <public/interop/x402-self-settlement-2026-09-11.json> --check-chain",
+   "http_status": 0,
+   "evidence_sha256": "2ea46833aa99978d8c20580fbcfd7ad5a06e412fc1d20f42b07f5cd36ccf35bb",
+   "details": {
+    "note": "a REAL committed receipt verified offline against the DID document; this harness fabricates nothing",
+    "tail": [
+     "Downloading cryptography (3.8MiB)",
+     " Downloaded cryptography",
+     "Installed 3 packages in 11ms"
+    ]
+   }
+  }
+ ]
+}

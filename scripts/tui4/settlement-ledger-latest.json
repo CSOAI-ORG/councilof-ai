@@ -1,0 +1,238 @@
+{
+ "kind": "csoai.tui4-settlement-ledger/0.1",
+ "as_of": "2026-09-13T08:15:57Z",
+ "scope": "read-only reconciliation of raw USDC Transfers to the estate payTo against /api/revenue KV settlements; no keys, no transactions; SELF_TEST is never revenue; disagreement is reported, never reconciled",
+ "onchain": {
+  "chain": "base",
+  "chain_id": 8453,
+  "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+  "from_block": 50900000,
+  "to_block": 51248433,
+  "to_block_hash": "0xe66ba46edcf7d653842783dc77be4c5fcd756b868222d946ca89474bcaeb095c",
+  "finality_tag": "finalized",
+  "as_of": "2026-09-13T08:15:57Z",
+  "window_note": "bounded scan from block 50900000 (below the first documented settlement at 50,942,514 with margin). Blocks below the floor are UNSCANNED; no claim is made about them.",
+  "anchor": {
+   "tx": "0x60172f43ca14e5874eba92b990ce623e6503cee6d060fd89fd828993fababe7f",
+   "block": 51172054,
+   "source": "public/interop/x402-self-settlement-2026-09-11.json"
+  },
+  "endpoint_probes": [
+   {
+    "rpc": "https://base.gateway.tenderly.co",
+    "finality": {
+     "tag": "finalized",
+     "number": 51248433,
+     "hash": "0xe66ba46edcf7d653842783dc77be4c5fcd756b868222d946ca89474bcaeb095c"
+    },
+    "anchor": "PASS"
+   }
+  ],
+  "status": "MEASURED",
+  "totals": {
+   "self_atomic": 220000,
+   "outside_atomic": 249995962,
+   "outside_distinct_payers": 3,
+   "zero_value_transfers": 9,
+   "total_events": 20
+  }
+ },
+ "rows": [
+  {
+   "tx": "0x371a80a6d3498b931f1376d7f00b4b350d11b7be3197323942b086f270fecbee",
+   "block": 50901243,
+   "from": "0x50623426220dad289ce10bc1e520d86c087753ec",
+   "amount_atomic": "0",
+   "class": "ZERO_VALUE"
+  },
+  {
+   "tx": "0xb7ec8a79e51300c2ea2b9e7a85159f238c2868daa24378c609fc44d68954e45f",
+   "block": 50910519,
+   "from": "0x620e8d6cca8202533960831631073db701e49fec",
+   "amount_atomic": "0",
+   "class": "ZERO_VALUE"
+  },
+  {
+   "tx": "0x5a68078385a72ba7fa06a5c4b23d417b0d3bfd64ed5dc454dcf5f9e2446da894",
+   "block": 50920117,
+   "from": "0x1d626890ee442514f692ac537621595961cf9d8d",
+   "amount_atomic": "0",
+   "class": "ZERO_VALUE"
+  },
+  {
+   "tx": "0xa1eedf29b22a9a898727dd856c7154b9c555f51c58db70417fbbe64318f03f05",
+   "block": 50920145,
+   "from": "0x40fd2c24fd3a3df9ec4efc86e2aa4d4bfa004831",
+   "amount_atomic": "0",
+   "class": "ZERO_VALUE"
+  },
+  {
+   "tx": "0xc34e7c9af59e3dd1ae1a0f9317534d52db0d990b09eee5831ff4c54a9f9c7f50",
+   "block": 50920148,
+   "from": "0x44405250b8ea804f2bcccd944fb661cf2bed7b79",
+   "amount_atomic": "0",
+   "class": "ZERO_VALUE"
+  },
+  {
+   "tx": "0xbb60b04b338bc2ea560dccc81c62033ba2d4a62dfc7271c3cf778816830b7b4a",
+   "block": 50942204,
+   "from": "0xfd03abcadaf3f930fa4e37eb2f6ea3a44a41b7f0",
+   "amount_atomic": "5995962",
+   "class": "OUTSIDE_CANDIDATE"
+  },
+  {
+   "tx": "0xac49241b1e65ab5942e5a84ff48daf52b8de2dd99d3ac23103d18578821b1c91",
+   "block": 50942514,
+   "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+   "amount_atomic": "20000",
+   "class": "SELF_TEST"
+  },
+  {
+   "tx": "0xeec6b0532d058194d810b52574928fdd5e1e6e3a4fd48ab0304ba2807589b8dd",
+   "block": 50946169,
+   "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+   "amount_atomic": "20000",
+   "class": "SELF_TEST"
+  },
+  {
+   "tx": "0x444155d966fcf140cb93531ec0e804e2da2c17224631ae531d19183e7fa9c46c",
+   "block": 50946256,
+   "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+   "amount_atomic": "20000",
+   "class": "SELF_TEST"
+  },
+  {
+   "tx": "0x0207386dd0549c6f952e2e271cd65a8a8d6c417c9bffa1fb6ede7ae6279164f7",
+   "block": 50946257,
+   "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+   "amount_atomic": "20000",
+   "class": "SELF_TEST"
+  },
+  {
+   "tx": "0x8b6472885cad7b5f5e88b150bad10d7122da28a06470077cf6988cb509b47c9a",
+   "block": 50946258,
+   "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+   "amount_atomic": "20000",
+   "class": "SELF_TEST"
+  },
+  {
+   "tx": "0x835109e14f2d1ca2573e87a84b14b63e779fb2c6a11af0d3e62402c0de7e197a",
+   "block": 50946295,
+   "from": "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
+   "amount_atomic": "100000",
+   "class": "SELF_TEST"
+  },
+  {
+   "tx": "0xc16ecc8552445df2a9110d7646c8d68e5e0a4515f325675b80d03ec7bbd96092",
+   "block": 51034356,
+   "from": "0x7e6b6556322c4e26c567a867964ac793f5ee2b1c",
+   "amount_atomic": "20000",
+   "class": "OUTSIDE_CANDIDATE"
+  },
+  {
+   "tx": "0xedc87052b7ce05db984190aed2671d690fcd1cccc2c9f4e0700d97c7328d1eef",
+   "block": 51076517,
+   "from": "0x62fc0fa5197b316cff196e765464900101111095",
+   "amount_atomic": "0",
+   "class": "ZERO_VALUE"
+  },
+  {
+   "tx": "0x60172f43ca14e5874eba92b990ce623e6503cee6d060fd89fd828993fababe7f",
+   "block": 51172054,
+   "from": "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31",
+   "amount_atomic": "10000",
+   "class": "SELF_TEST"
+  },
+  {
+   "tx": "0xb9757964f753370a8f9a43dfb32e6251a3bc9788069222232bde2a9aee6a6292",
+   "block": 51175131,
+   "from": "0xd527b2a35bb6f015ad063174704c974a1218eee3",
+   "amount_atomic": "243980000",
+   "class": "OUTSIDE_CANDIDATE"
+  },
+  {
+   "tx": "0x9e18a496e8953e6ec07bd741d524fb7644433f462fe1135688e3725c7e645461",
+   "block": 51199063,
+   "from": "0x864a466771b2b16191a72fff3c2e33c775f8896a",
+   "amount_atomic": "0",
+   "class": "ZERO_VALUE"
+  },
+  {
+   "tx": "0xda2b23ed44cabccc1e061e9ec8503f301057f95db41b64050b3d447e91463541",
+   "block": 51199127,
+   "from": "0x70e3c9a8ecd0bbaa84dd19c6f8673b39d013bb14",
+   "amount_atomic": "0",
+   "class": "ZERO_VALUE"
+  },
+  {
+   "tx": "0x80f3d96ffbdfaf9412d7e89a0aa0d9ed9ced9117000954a893564fe55b79f378",
+   "block": 51200962,
+   "from": "0xdfe130c63c0eb4970725d29f7cf85a2784b17b58",
+   "amount_atomic": "0",
+   "class": "ZERO_VALUE"
+  },
+  {
+   "tx": "0xeaaafb8a8e087cf5148f5fa59cfe7b773689bf686e2e99be8f7c4a7c393e8807",
+   "block": 51202203,
+   "from": "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
+   "amount_atomic": "10000",
+   "class": "SELF_TEST"
+  }
+ ],
+ "offchain_revenue": {
+  "status": "OK",
+  "url": "https://councilof.ai/api/revenue",
+  "payload_sha256": "267bb018ad07bafcf3bcb417f135debf858f483773c07a35235a1c57bdc4dddb",
+  "one_number": {
+   "status": "MEASURED",
+   "all_time": 1,
+   "last_30d": 1,
+   "settlements": 1,
+   "self_settlements": 7,
+   "settled_usdc_atomic": 20000,
+   "zero_value_settlements": 6
+  },
+  "settled_usdc_count": 20000
+ },
+ "reconciliation": {
+  "settled_usdc_atomic": {
+   "field": "settled_usdc_atomic",
+   "verdict": "DISAGREE",
+   "chain_value": 249995962,
+   "api_value": 20000,
+   "why": "raw Transfer events and facilitator-settled KV rows can legitimately differ (fulfilment failure after settle, or a transfer not via the gateway); reported, never reconciled silently"
+  },
+  "distinct_nonself_payers": {
+   "field": "distinct_nonself_payers",
+   "verdict": "DISAGREE",
+   "chain_value": 3,
+   "api_value": 1,
+   "why": "raw Transfer events and facilitator-settled KV rows can legitimately differ (fulfilment failure after settle, or a transfer not via the gateway); reported, never reconciled silently"
+  }
+ },
+ "tui6_gap_resolution": {
+  "gap_file": "docs/tui6/base-settlement-evidence-2026-09-11.json",
+  "recorded_as": "NOT_EXTRACTABLE — Basescan V1 deprecated, Blockscout 422",
+  "extracted_transactions": [
+   {
+    "tx": "0xbb60b04b338bc2ea560dccc81c62033ba2d4a62dfc7271c3cf778816830b7b4a",
+    "block": 50942204,
+    "from": "0xfd03abcadaf3f930fa4e37eb2f6ea3a44a41b7f0",
+    "amount_atomic": "5995962"
+   },
+   {
+    "tx": "0xc16ecc8552445df2a9110d7646c8d68e5e0a4515f325675b80d03ec7bbd96092",
+    "block": 51034356,
+    "from": "0x7e6b6556322c4e26c567a867964ac793f5ee2b1c",
+    "amount_atomic": "20000"
+   },
+   {
+    "tx": "0xb9757964f753370a8f9a43dfb32e6251a3bc9788069222232bde2a9aee6a6292",
+    "block": 51175131,
+    "from": "0xd527b2a35bb6f015ad063174704c974a1218eee3",
+    "amount_atomic": "243980000"
+   }
+  ]
+ }
+}
