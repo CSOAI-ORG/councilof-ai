@@ -53,7 +53,23 @@
       "OTS upgrade PRs must resync the witness sidecar in the same PR via scripts/witness_public_root.py (not witness-root.py — its output predates the gate contract).",
       "The root-witness release gate and stablecoin readiness gate derive truth from proof bytes; hardcoded status strings rot within hours.",
       "Pod rootfs is ephemeral: after any pod restart run bash /workspace/pod-bootstrap.sh (on the persistent volume)."
-    ]
+    ],
+    "tui1_2026_09_13": {
+      "merge_train": {
+        "2072": "MERGED — NOT a duplicate of #2073: #2073 fixed the loop (rebase-before-push); #2072 backfilled the two stranded upgrade commits, completing the anchor sets (fcb3bea4 now 3 blocks: 966686/966690/966692; 0dd5a8d9 4 calendars). Proof bytes independently parsed before merge.",
+        "2073": "MERGED (02:35Z) — ots-loop rebase-before-push fix",
+        "mill_prs_2053_2069": "8 CLOSED unmerged — aggregate-only cards, no item-level evidence (same defect class as #2025). Tracking issue #2075 filed for TUI-5 (attach run-bundle digests at source).",
+        "2078": "MERGED — bot-created PRs now get protected checks via pr-gates workflow_dispatch; operator action printed if dispatch refused",
+        "2071_verification": "dispatch path proven (run 34733246053 success 02:31Z post-merge); schedule path pending next hourly run (watcher active)"
+      },
+      "root_states": {
+        "live": "228 cards, fcb3bea4, CONFIRMED_BITCOIN [966686,966690,966692 via #2072], as_of 2026-09-12T13:27:43Z",
+        "pending_deploy": "257 cards, 222538d5, CONFIRMED_BITCOIN [966712], Rekor 2810720876 — #2059 baseline claims verified TRUE against repo witness; deploy run 34733831913 in progress",
+        "battery": "signature/inclusion/OTS/parity verified on live 228 root 2026-09-12; battery will re-run on 257 when deploy lands"
+      },
+      "guards": "drift-guard PASS, assert-prerender-live PASS on live 2026-09-13T03:50Z",
+      "spend_gbp": 0
+    }
   },
   "lanes": {
     "TUI1": {
