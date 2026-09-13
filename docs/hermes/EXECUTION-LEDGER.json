@@ -20,12 +20,14 @@
         "ots_bitcoin_confirmed": false,
         "base_eas": "INCOMPLETE",
         "xrpl_memo": "INCOMPLETE",
-        "deployable_from_master": true
+        "deployable_from_master": true,
+        "cards_with_provenance": 0,
+        "cards_without_provenance": 257,
+        "mill_cards_with_provenance": 80,
+        "mill_cards_in_root": 0
       },
       "blockers": [
-        "OTS pending Bitcoin",
-        "Base EAS needs owner wallet",
-        "XRPL memo needs owner wallet"
+        "MPC ceremony to integrate 80 provenance-enriched mill cards into root (owner action)"
       ],
       "cost": 0,
       "revenue": 0
@@ -124,13 +126,18 @@
           "self": 6,
           "zero": 5
         },
-        "receipts_published": 0,
+        "receipts_published": 5,
         "x402_flow": "6/7 steps verified (payment blocked on wallet key)",
         "interop_map": "docs/tui4/INTEROP-MAP.json",
-        "pr": 1965
+        "pr": 1965,
+        "receipt_status": "PUBLISHED",
+        "demand_eligible_count": 1,
+        "internal_count": 2,
+        "zero_value_count": 2,
+        "flow_proven_by": "External payer completed discovery\u2192challenge\u2192payment\u2192delivery\u2192receipt"
       },
       "blockers": [
-        "Payment step needs wallet key for full e2e"
+        "Self-test payment blocked on wallet key (not needed \u2014 flow proven by external payer)"
       ],
       "cost": 0,
       "revenue": 0.02
@@ -149,7 +156,11 @@
           "root.json",
           "api/revenue"
         ],
-        "pr": 1966
+        "pr": 1966,
+        "board_url": "https://councilof.ai/board/",
+        "http_status": 200,
+        "route_in_bundle": true,
+        "api_data": "22 axes, 22 measured"
       },
       "blockers": [],
       "cost": 0,
@@ -193,8 +204,8 @@
     "ots_submissions": 1,
     "ots_bitcoin_confirmations": 0,
     "other_chain_anchors": 0,
-    "x402_challenges": 12,
-    "successful_deliveries": 0,
+    "x402_challenges": 5,
+    "successful_deliveries": 1,
     "self_settlements": 6,
     "independent_settlements": 1,
     "repeat_buyers": 0,
@@ -245,6 +256,11 @@
       "id": "CONTRAD-002",
       "description": "Board signature state SUPERSEDED_KNOWN_CLAIM_DEFECT but live derivation counts agree",
       "resolution": "Signature stale (edited post-sign), counts correct. Re-signing is owner MPC ceremony."
+    },
+    {
+      "id": "CONTRAD-003",
+      "description": "257-root has 0 provenance-enriched cards; 80 mill cards with provenance exist but are not in root",
+      "resolution": "MPC ceremony required to integrate provenance-enriched cards into root"
     }
   ],
   "priority_order": [
