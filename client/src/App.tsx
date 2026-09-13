@@ -194,6 +194,7 @@ const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
 const MeasuredModels = lazy(() => import("./pages/MeasuredModels"));
 const FinancialAxes = lazy(() => import("./pages/FinancialAxes"));
+const Stablecoins = lazy(() => import("./pages/Stablecoins"));
 const Insurers = lazy(() => import("./pages/Insurers"));
 const Coliseum = lazy(() => import("./pages/Coliseum"));
 const OpenSourceFramework = lazy(() => import("./pages/OpenSourceFramework"));
@@ -744,6 +745,7 @@ function App() {
                   <Route path="/board" component={MeasurementBoard} />
                   <Route path="/gspc-scoreboard">{() => <Redirect to="/dashboard?tab=board" />}</Route>
                   <Route path="/financial-axes" component={FinancialAxes} />
+                  <Route path="/stablecoins" component={Stablecoins} />
                   <Route path="/gspc/jail" component={JailFolder} />
                   <Route path="/gspc/:axis" component={GspcScoreboard} />
                   <Route path="/insurers" component={Insurers} />
