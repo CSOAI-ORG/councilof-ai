@@ -19,7 +19,7 @@
 
 | Chain | Assets | Total Supply | State |
 |-------|--------|-------------|-------|
-| Ethereum | 14 (USDT, USDC, DAI, USDS, USDe, PYUSD, RLUSD, crvUSD, GHO, FRAX, USDD, BUIDL, USDY, USDG, USD1, USDTB, USD0, sUSDS, FRXUSD, FDUSD, DOLA, LUSD, MIM, eUSD, ALUSD, BRSRV, TUSD, GUSD, U, BENJI, OUSG, USYC) | ~$166B | DEEP_MEASURED |
+| Ethereum | 32 (USDT, USDC, DAI, USDS, USDe, PYUSD, RLUSD, crvUSD, GHO, FRAX, USDD, BUIDL, USDY, USDG, USD1, USDTB, USD0, sUSDS, FRXUSD, FDUSD, DOLA, LUSD, MIM, eUSD, ALUSD, BRSRV, TUSD, GUSD, U, BENJI, OUSG, USYC) | $170.68B | DEEP_MEASURED |
 | Tron | 1 (USDT) | $94.26B | DEEP_MEASURED |
 | Solana | 2 (USDC, USDT) | $11.91B | DEEP_MEASURED |
 | BSC | 3 (USDT, USDC, DAI) | $10.80B | DEEP_MEASURED |
@@ -41,7 +41,7 @@
 | Blast | 1 (USDB) | $11M | DEEP_MEASURED |
 | XRPL | 1 (USD gateway) | $1.00B | DEEP_MEASURED |
 | Stellar | 1 (USDC) | $355M | DEEP_MEASURED |
-| **Total** | **22 chains, 75+ records** | **$300B+** | **DEEP_MEASURED** |
+| **Total** | **22 chains, 75+ records** | **$310B+** | **DEEP_MEASURED** |
 
 ## Tokenized Funds (7 measured)
 
