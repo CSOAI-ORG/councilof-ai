@@ -82,12 +82,11 @@ TRANSFER_TOPIC = "ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3
 #                 this is the wallet /api/revenue had been counting as the first
 #                 distinct non-self payer. Senders resolved on-chain (Base).
 KNOWN_INTERNAL = {
+    # 0xb2bd…/0xc669… (tx.from of our settlements) are facilitator relayers, not ours — never list them.
     PAY_TO.lower(),
     "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
     "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",
     "0xdf6144dbb0b7f5b52279b8ba781cfc1bd3ec3910",
-    "0xb2bd29925cbbcea7628279c91945ca5b98bf371b",
-    "0xc6699d2aada6c36dfea5c248dd70f9cb0235cb63",
 }
 
 
