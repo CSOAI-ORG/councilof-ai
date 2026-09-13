@@ -164,7 +164,9 @@ jobs:
 
       - name: verify exact Hugging Face/Kaggle parity
         if: steps.choose.outputs.parity == 'true' && !inputs.dry_run
-        run: python3 scripts/spray/verify-gspc-parity.py --report "$RUNNER_TEMP/spray/parity-report.json"
+        # Kaggle creates a version at once but its public download serves the previous archive for
+        # minutes; a bounded wait (only while Kaggle is BEHIND) turns that lag into a wait, not a red.
+        run: python3 scripts/spray/verify-gspc-parity.py --kaggle-wait-seconds 900 --report "$RUNNER_TEMP/spray/parity-report.json"
 
       - uses: actions/upload-artifact@v4
         if: always()
