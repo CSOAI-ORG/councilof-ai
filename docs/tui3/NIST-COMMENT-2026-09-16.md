@@ -20,8 +20,9 @@ The GSPC (Governance · Safety · Provenance · Continuity) measurement system:
 - **Frozen test banks**: Publicly hosted on HuggingFace, versioned, SHA-256 fingerprinted
 - **Deterministic grading**: No model judges another model; scoring code is public
 - **Ed25519 signing**: Every measurement card signed off-device via OIDC MPC ceremony
-- **Merkle root**: Public root with 257 leaves, Rekor-witnessed (log index 2791822965)
-- **Corrections ledger**: Public, machine-readable, 47+ entries
+- **Merkle root**: Public root with 264 leaves, Rekor-witnessed (log index 2791822965)
+- **Card root**: 1,301 measurement cards in dedicated Merkle root (including provenance-enriched cards)
+- **Corrections ledger**: Public, machine-readable, 49 entries
 
 ## NIST AI RMF Crosswalk
 
@@ -70,9 +71,10 @@ The GSPC (Governance · Safety · Provenance · Continuity) measurement system:
 | Artifact | URL | Verification |
 |----------|-----|-------------|
 | GSPC Board | https://councilof.ai/api/gspc | 22 axes, living, signed |
-| Signed Cards | https://councilof.ai/signed/card_index.json | 335 cards, Ed25519 |
-| Public Root | https://councilof.ai/root.json | 257 leaves, Merkle, Rekor |
-| Corrections | https://councilof.ai/api/corrections | 47+ entries, public |
+| Signed Cards | https://councilof.ai/signed/card_index.json | 337 cards, Ed25519 |
+| Public Root | https://councilof.ai/root.json | 264 leaves, Merkle, Rekor |
+| Card Root | https://councilof.ai/interop/card-root-2026-09-13.json | 1,301 leaves, dedicated measurement root |
+| Corrections | https://councilof.ai/api/corrections | 49 entries, public |
 | Verify | https://councilof.ai/gspc-verify | Free, no account needed |
 | DID | https://csoai.org/.well-known/did.json | Ed25519 key resolution |
 
