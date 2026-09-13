@@ -1,0 +1,11 @@
+{
+  "to": "Henri Sirkkavaara",
+  "subject": "Re: Support for PR #29 + #24 pt 2 \u2014 audit data model for 'non-events'",
+  "body": "Hi Henri,\n\nThank you for raising this \u2014 it's a critical convergence point.\n\nYou, Tom Sato, Steven Mih, and Sumit Ahuja have independently identified the same gap: audit data models need a formal place for 'something did not happen' \u2014 refusals, timeouts, no-responses, and silent drops.\n\nOur position at CSOAI:\n\n1. The signed measurement card format already supports 'non-event' capture via the `outcome_enum` field with values like `refused`, `timeout`, `no_response`, `blocked`.\n\n2. For the AUDIT WG specifically, we propose a `non_event` extension to the SCITT evidence receipt format:\n   ```json\n   {\n     \"non_event\": {\n       \"type\": \"refusal|timeout|no_response|blocked\",\n       \"expected_action\": \"...\",\n       \"actor\": \"...\",\n       \"timestamp\": \"...\",\n       \"evidence\": \"...\"\n     }\n   }\n   ```\n\n3. This maps cleanly to our 22-axis GSPC measurement framework \u2014 axis 17 (Audit Trail Completeness) specifically measures whether an actor's log captures non-events.\n\n4. We've submitted IETF draft `draft-csoai-agent-non-event-receipts` (aligned with draft-csoai-audit-agent-logs) to formalize this.\n\nHappy to co-author a section for PR #29 if that's the right vehicle.\n\nBest,\nNicholas Templeman\nCSOAI Ltd (UK 16939677)\nhttps://councilof.ai",
+  "attachments": [
+    "councilof-ai/well-known/x402.json",
+    "councilof-ai/well-known/agent-card.json"
+  ],
+  "status": "DRAFT \u2014 ready for operator to send via himalaya",
+  "created": "2026-09-13T13:27:32Z"
+}
