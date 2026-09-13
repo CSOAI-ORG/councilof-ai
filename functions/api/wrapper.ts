@@ -18,7 +18,9 @@
  * note saying why no escrow exists (Circle CCTP, Tether native). Native issuance is read but
  * NO parity is claimed: it is UNCHECKABLE, not "unbacked".
  *
- * States on the card: ESCROW_PARITY_READ / UNCHECKABLE_NATIVE_ISSUANCE / UNMEASURED. A read is
+ * States on the card: ESCROW_PARITY_READ / UNCHECKABLE_NATIVE_ISSUANCE / INDEXED_CUSTODIAL /
+ * UNMEASURED. A custodial wrapper (wBTC, cbBTC, wXRP, BUIDL) has no reserve readable from an
+ * EVM chain: its supply is read and it stays INDEXED — never "unbacked". A read is
  * not a measurement; the card never carries MEASURED, a rate, a grade, a reserve attestation or
  * a certificate (VERDICT_RE refuses the card rather than softening it).
  *
@@ -51,7 +53,7 @@ export type RosterEntry = {
   id: string;
   wrapped: Side;
   canonical: Side;
-  backing_model: "escrow" | "native";
+  backing_model: "escrow" | "native" | "custodial";
   escrow: string | null;
   escrow_name: string | null;
   note?: string | null;
@@ -123,7 +125,7 @@ export function normalize(atomic: bigint, decimals: number): string {
 /** The whole payload: what was read, where, at which block, and what state that leaves the pair in. */
 export async function buildPayload(entry: RosterEntry) {
   const w = CHAINS[entry.wrapped.chain];
-  const c = CHAINS[entry.canonical.chain];
+  const c = CHAINS[entry.canonical.chain] ?? null; // custodial rows name a ledger we cannot read from here
   const fetched_at = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
   const unmeasured: string[] = [];
   const payload: Record<string, unknown> = {
@@ -132,7 +134,7 @@ export async function buildPayload(entry: RosterEntry) {
     id: entry.id,
     backing_model: entry.backing_model,
     wrapped: { ...entry.wrapped, chainId: w.chainId, rpc: w.rpc },
-    canonical: { ...entry.canonical, chainId: c.chainId, rpc: c.rpc },
+    canonical: c ? { ...entry.canonical, chainId: c.chainId, rpc: c.rpc } : { ...entry.canonical, chainId: null, rpc: null },
     escrow: entry.escrow,
     escrow_name: entry.escrow_name,
     note: entry.note || null,
@@ -148,7 +150,7 @@ export async function buildPayload(entry: RosterEntry) {
     const decimals = Number(dec.value);
     const ts = await call(w.rpc, entry.wrapped.address, SEL.totalSupply, wp.hex);
     (payload.reads as Record<string, unknown>).wrapped_total_supply = { query: "totalSupply()", raw_sha256: ts.raw_sha256, atomic: ts.value.toString(), normalized: normalize(ts.value, decimals), decimals };
-    if (entry.backing_model === "escrow" && entry.escrow) {
+    if (entry.backing_model === "escrow" && entry.escrow && c) {
       source_urls.push(c.rpc);
       const cp = await pin(c.rpc);
       (payload.canonical as Record<string, unknown>).block = cp;
@@ -156,10 +158,14 @@ export async function buildPayload(entry: RosterEntry) {
       (payload.reads as Record<string, unknown>).escrow_balance = { query: `balanceOf(${entry.escrow})`, raw_sha256: eb.raw_sha256, atomic: eb.value.toString(), normalized: normalize(eb.value, decimals), decimals };
       payload.escrow_over_wrapped = ratioString(eb.value, ts.value);
       payload.state = "ESCROW_PARITY_READ";
-    } else {
+    } else if (entry.backing_model === "native") {
       payload.escrow_over_wrapped = null;
       payload.state = "UNCHECKABLE_NATIVE_ISSUANCE";
       unmeasured.push("escrow_balance (natively issued on the destination chain; no escrow exists)");
+    } else {
+      payload.escrow_over_wrapped = null;
+      payload.state = "INDEXED_CUSTODIAL";
+      unmeasured.push("reserve (custodian-held off this chain; not readable here)");
     }
   } catch (e) {
     payload.state = "UNMEASURED";
