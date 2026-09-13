@@ -959,3 +959,70 @@ def test_superseded_card_still_resolves_but_is_not_counted(tmp_path: Path | None
     ids = {w.get("id") for w in wraps}
     assert old["id"] not in ids
     assert new["id"] in ids
+
+
+def test_stage_unsigned_carries_evidence_binding() -> None:
+    """The 2026-09-13 evidence ruling: cards bind an item-level bundle by content address."""
+    ev = {
+        "schema": "csoai.mill-item-evidence/0.1",
+        "items_file": "items-governan-0123456789ab.jsonl",
+        "items_sha256": "ab" * 32,
+        "bank_sha256": "cd" * 32,
+        "bank_dataset": "csoai/gspc-gov",
+        "model_hf_revision": "e" * 40,
+    }
+    wrap = stage_unsigned("unit/model", "governance", hits=24, n=30, reason="signed-pending-verify", evidence=ev)
+    assert wrap["body"]["evidence"]["items_sha256"] == "ab" * 32
+    raw = canonical_body_bytes(wrap["body"])
+    assert len(raw) <= 3072, "evidence binding must fit the 3KB envelope"
+    import hashlib
+
+    assert hashlib.sha256(raw).hexdigest() == wrap["id"]
+    no_ev = stage_unsigned("unit/model", "governance", hits=24, n=30, reason="signed-pending-verify")
+    assert "evidence" not in no_ev["body"], "legacy callers stay byte-stable"
+
+
+def test_mill_grading_writes_item_evidence_bundle(tmp_path: Path | None = None) -> None:
+    """A non-dry mill run writes the per-item bundle and the card binds it by sha256."""
+    import hashlib
+    import shutil
+    import tempfile
+    import unittest.mock as mock
+
+    root = tmp_path or Path(tempfile.mkdtemp())
+    banks = root / "banks"
+    banks.mkdir(parents=True, exist_ok=True)
+    items = [{"prompt": f"Q{i}", "expected": "YES" if i % 2 == 0 else "NO"} for i in range(30)]
+    (banks / "governance.jsonl").write_text("".join(json.dumps(r) + "\n" for r in items))
+    q = root / "queue.jsonl"
+    q.write_text(
+        json.dumps({"rank": 1, "id": "org/m", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"})
+        + "\n"
+    )
+    out = root / "out"
+
+    def fake_infer(mid, prompt):
+        return "OK", "Answer: YES"
+
+    with mock.patch("mill_hub_queue.infer_hub", side_effect=fake_infer):
+        rep = mill(
+            q, out, pick_n=1, grade_n=1, axis="governance", banks_dir=banks, items_cap=30,
+            bank_dataset="csoai/gspc-gov", revision_fetch=lambda m: "f" * 40,
+        )
+    assert len(rep["staged_unsigned"]) == 1, rep["skips"]
+    card = json.loads(next(out.glob("unsigned-*.json")).read_text())
+    ev = card["body"]["evidence"]
+    bundle = out / ev["items_file"]
+    assert bundle.is_file()
+    assert hashlib.sha256(bundle.read_bytes()).hexdigest() == ev["items_sha256"]
+    assert ev["bank_sha256"] == hashlib.sha256((banks / "governance.jsonl").read_bytes()).hexdigest()
+    assert ev["bank_dataset"] == "csoai/gspc-gov"
+    assert ev["model_hf_revision"] == "f" * 40
+    assert ev["schema"] == "csoai.mill-item-evidence/0.1"
+    rows = [json.loads(l) for l in bundle.read_text().splitlines()]
+    assert len(rows) == 30, "every graded item leaves a row, even ones that left the denominator"
+    assert all(r["observed"] == "YES" for r in rows)
+    assert sum(1 for r in rows if r["ok"]) == 15
+    assert card["body"]["n"] == 30 and card["body"]["accuracy"] == 0.5
+    if tmp_path is None:
+        shutil.rmtree(root, ignore_errors=True)

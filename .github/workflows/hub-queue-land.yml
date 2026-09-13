@@ -67,7 +67,7 @@ jobs:
         id: land
         run: |
           set -euo pipefail
-          python3 scripts/land_mill_cards.py --staged staged --run-id "$RUN_ID" --pr-body staged/PR-BODY.md --github-output "$GITHUB_OUTPUT"
+          python3 scripts/land_mill_cards.py --staged staged --run-id "$RUN_ID" --require-evidence --pr-body staged/PR-BODY.md --github-output "$GITHUB_OUTPUT"
       - name: branch, push, PR, dispatch the OIDC signer on the branch
         id: pr
         if: steps.land.outputs.landed != '0'
@@ -86,7 +86,7 @@ jobs:
           if [ -f staged/harness/gspc-top100/dead_slugs.jsonl ]; then
             echo "dead slugs in artifact $(wc -l < staged/harness/gspc-top100/dead_slugs.jsonl) — not copied onto mill-card PR"
           fi
-          git add public/interop/mill-cards-unsigned
+          git add public/interop/mill-cards-unsigned public/interop/mill-evidence
           git commit -m "mill: land ${{ steps.land.outputs.landed }} UNSIGNED ${AXIS} cards from hub-queue-mill run ${RUN_ID} (sign pending; nothing MEASURED)"
           git push origin "HEAD:$BR"
           gh pr create --base master --head "$BR" \

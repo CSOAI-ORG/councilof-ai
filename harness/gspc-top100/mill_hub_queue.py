@@ -786,7 +786,8 @@ def js_safe_number(x):
     return x
 
 
-def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str, route: str | None = None) -> dict:
+def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str, route: str | None = None,
+                   evidence: dict | None = None) -> dict:
     acc = round(hits / n, 4) if n else None
     body = {
         "kind": "gspc.measurement-card",
@@ -806,6 +807,12 @@ def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str, rou
     }
     if route:
         body["route"] = route
+    if evidence:
+        # Item-level evidence binding (TUI-1 evidence ruling 2026-09-13): an aggregate-only
+        # card is never quotable. The card carries content addresses, never the items
+        # themselves — the 3KB envelope is load-bearing. The bundle lands next to the card
+        # at public/interop/mill-evidence/ via land_mill_cards.py.
+        body["evidence"] = evidence
     raw = canonical_body_bytes(body)
     wrap = {
         "alg": "Ed25519",
@@ -816,6 +823,39 @@ def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str, rou
         "did_intended": DID,
     }
     return wrap
+
+
+ITEM_EVIDENCE_SCHEMA = "csoai.mill-item-evidence/0.1"
+
+
+def write_item_evidence(out_dir: Path, axis: str, rows: list[dict]) -> tuple[str, str]:
+    """Write the per-item evidence bundle for one card; return (filename, sha256).
+
+    One JSONL row per graded item: index, sha256 of the exact prompt bytes sent (the bank
+    bytes are public, so the prompt is recomputable — the card and bundle carry hashes, not
+    text), expected label, observed label (null when no parseable label — that item left the
+    denominator and stays visible, never silently dropped), and ok. The file is content-
+    addressed: the name carries the sha256 of its own bytes, so a card id can embed it
+    without a naming cycle."""
+    text = "".join(json.dumps(r, sort_keys=True, separators=(",", ":")) + "\n" for r in rows)
+    digest = hashlib.sha256(text.encode()).hexdigest()
+    name = f"items-{axis[:8]}-{digest[:12]}.jsonl"
+    (out_dir / name).write_text(text, encoding="utf-8")
+    return name, digest
+
+
+def hf_model_revision(model_id: str, timeout: int = 6) -> str | None:
+    """Best-effort immutable Hub commit for the model id. Absent, never guessed, on failure."""
+    try:
+        req = urllib.request.Request(
+            f"https://huggingface.co/api/models/{model_id}",
+            headers={"User-Agent": "csoai-hub-queue-mill/1.0"},
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            sha = json.load(r).get("sha")
+            return str(sha) if sha else None
+    except Exception:
+        return None
 
 
 def mill(
@@ -838,6 +878,8 @@ def mill(
     probe_first: bool = False,
     probe_fetch=None,
     inflight_path: Path | None = None,
+    bank_dataset: str | None = None,
+    revision_fetch=None,
 ) -> dict:
     rows = load_queue(queue_path)
     ax = axis if axis in MODEL_AXES else "governance"
@@ -890,6 +932,12 @@ def mill(
                 live[mid] = True
     bank_path = banks_dir / f"{ax}.jsonl"
     bank = load_bank(bank_path)
+    bank_sha256 = None
+    if bank:
+        try:
+            bank_sha256 = hashlib.sha256(bank_path.read_bytes()).hexdigest()
+        except OSError:
+            bank_sha256 = None
     if not bank:
         for r in to_grade:
             mid = str(r.get("id") or "")
@@ -910,12 +958,20 @@ def mill(
             continue
         hits = 0
         unparsed = 0
-        for prompt, expected in items:
+        ev_rows: list[dict] = []
+        for i, (prompt, expected) in enumerate(items):
             st, txt = infer_hub(mid, axis_prompt(ax, prompt, labels))
             if st != "OK":
                 skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE {txt}"})
                 break
             got = read_label(txt, labels)
+            ev_rows.append({
+                "i": i,
+                "prompt_sha256": hashlib.sha256(str(prompt).encode()).hexdigest(),
+                "expected": str(expected).strip().upper(),
+                "observed": got,
+                "ok": (got == str(expected).strip().upper()) if got is not None else None,
+            })
             if got is None:
                 # Not an answer, and NOT a wrong answer. Counting it against the model
                 # is what put 0.0000 on the board for reasoning models that spend the
@@ -929,7 +985,25 @@ def mill(
             reason = "n<30 unquotable" if n < 30 else "signed-pending-verify"
             if unparsed:
                 reason = f"{reason}; {unparsed} of {len(items)} items returned no parseable label"
-            wrap = stage_unsigned(mid, ax, hits, n, reason, route=_ROUTE.get(mid))
+            revision = None
+            if not dry:
+                rf = revision_fetch or hf_model_revision
+                try:
+                    revision = rf(mid)
+                except Exception:
+                    revision = None
+            evidence = {}
+            if bank_sha256:
+                evidence["bank_sha256"] = bank_sha256
+            if bank_dataset:
+                evidence["bank_dataset"] = bank_dataset
+            if revision:
+                evidence["model_hf_revision"] = revision
+            evidence["schema"] = ITEM_EVIDENCE_SCHEMA
+            items_name, items_sha = write_item_evidence(out_dir, ax, ev_rows)
+            evidence["items_file"] = items_name
+            evidence["items_sha256"] = items_sha
+            wrap = stage_unsigned(mid, ax, hits, n, reason, route=_ROUTE.get(mid), evidence=evidence)
             blob = json.dumps(wrap, separators=(",", ":"), ensure_ascii=True).encode()
             if len(blob) > MAX_PAYLOAD:
                 skips.append({"id": mid, "axis": ax, "reason": f"HALT {len(blob)}B>3KB"})
@@ -940,7 +1014,8 @@ def mill(
             fp = out_dir / f"unsigned-{ax[:8]}-{wrap['id'][:12]}.json"
             fp.write_text(json.dumps(wrap, indent=2) + "\n")
             staged.append({"id": mid, "axis": ax, "card": fp.name, "bytes": len(blob), "n": n,
-                           "items": len(items), "hits": hits, "unparsed": unparsed, "route": _ROUTE.get(mid)})
+                           "items": len(items), "hits": hits, "unparsed": unparsed, "route": _ROUTE.get(mid),
+                           "evidence_file": items_name})
     as_of = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     dead_new = dead_rows_from_skips(skips, as_of)
     (out_dir / "dead_slugs.jsonl").write_text("".join(json.dumps(r) + "\n" for r in dead_new))
@@ -989,6 +1064,7 @@ def main() -> int:
     ap.add_argument("--shard", type=int, default=0, help="which shard this run grades, 0..shards-1")
     ap.add_argument("--probe-first", action="store_true", help="ask the Hub inferenceProviderMapping before spending a grade")
     ap.add_argument("--inflight", default="", help="jsonl of {id, axis} cells already staged in open landing PRs (see inflight_cells.py); never re-picked")
+    ap.add_argument("--bank-dataset", default="", help="public HF dataset the frozen bank came from (e.g. csoai/gspc-gov); recorded on the card's evidence, never guessed")
     args = ap.parse_args()
     only = load_only_ids(Path(args.only)) if args.only else None
     rep = mill(
@@ -1007,6 +1083,7 @@ def main() -> int:
         shards=args.shards,
         probe_first=args.probe_first,
         inflight_path=Path(args.inflight) if args.inflight else None,
+        bank_dataset=args.bank_dataset or None,
     )
     print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips", "dead_known", "dead_new", "dead_appended", "inflight_known", "inflight_skipped_this_axis", "probe_first") if k in rep}, default=str))
     print("skips", len(rep["skips"]))
