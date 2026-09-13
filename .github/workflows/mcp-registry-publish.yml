@@ -56,9 +56,10 @@ jobs:
       - name: Publish server.json to MCP Registry
         working-directory: mcp/gspc-server
         run: |
+          set +e
           # GET current server version to check if already published
           CURRENT=$(curl -sS "https://registry.modelcontextprotocol.io/v0/servers/io.github.CSOAI-ORG%2Fgspc/versions" \
-            | jq -r '.versions[] | select(.version == "'"${{ inputs.version }}'") | .version' || echo "")
+            | jq -r '.versions[] | select(.version == "'"${{ inputs.version }}'") | .version' 2>/dev/null)
           if [ -n "$CURRENT" ]; then
             echo "Version ${{ inputs.version }} already published — skipping"
             exit 0
@@ -68,7 +69,14 @@ jobs:
             https://registry.modelcontextprotocol.io/v0/publish \
             -H "Authorization: Bearer ${{ steps.jwt.outputs.registry_token }}" \
             -H "Content-Type: application/json" \
-            -d @server.json)
-          echo "Response: $RESP" | head -c 500
+            -d @server.json 2>&1)
+          echo "Response (first 500 chars):"
+          printf '%s' "$RESP" | head -c 500
           echo ""
-          echo "$RESP" | jq -e '.message // .server.name // .status' > /dev/null && echo "PUBLISH OK" || echo "PUBLISH FAILED"
+          echo ""
+          if printf '%s' "$RESP" | jq -e '.server.name // .message // .status' > /dev/null 2>&1; then
+            echo "PUBLISH OK"
+          else
+            echo "PUBLISH FAILED (see response above)"
+            exit 1
+          fi
