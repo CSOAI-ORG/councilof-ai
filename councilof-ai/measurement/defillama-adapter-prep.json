@@ -1,0 +1,16 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.defillama.adapter",
+  "subject": "defillama-adapter-prep",
+  "measured_at": "2026-09-13T05:16:34.984178+00:00",
+  "metrics": {
+    "target_repo": "DefiLlama/DefiLlama-Adapters",
+    "adapter_to_add": "XRPL vault/lending TVL adapter",
+    "why_xrpl": "XRPL ledger features exist (XLS-40 DID, XLS-70 Credentials, XLS-80 Permissioned Domains live on mainnet), currently unindexed by DefiLlama",
+    "pr_template": "DefiLlama has a template for new adapters (project.js + test.js)",
+    "review_lag": "Days to weeks",
+    "impact": "DefiLlama UI + free API consumed industry-wide. Listing = discovery for any XRPL DeFi project"
+  },
+  "honest_sentence": "DefiLlama adapter PR: add XRPL vault/lending TVL adapter (ledger features exist, currently unindexed). Fork DefiLlama/DefiLlama-Adapters, add adapter, test green, PR with template.",
+  "measurement_not_certification": true
+}

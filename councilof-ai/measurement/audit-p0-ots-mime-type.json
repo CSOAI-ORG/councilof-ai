@@ -1,0 +1,14 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "audit.p0.defect.ots-mime-type",
+  "subject": "audit-p0-ots-mime-type",
+  "measured_at": "2026-09-13T05:16:15.165435+00:00",
+  "metrics": {
+    "defect": ".ots served as spreadsheet MIME",
+    "evidence": "Downloadable Bitcoin proof linked from ceremony page mis-opens (application/vnd.oasis.opendocument.spreadsheet-template).",
+    "fix": "Map .ots \u2192 application/octet-stream in host MIME table.",
+    "severity": "P0"
+  },
+  "honest_sentence": "AUDIT P0 DEFECT: .ots served as spreadsheet MIME. Evidence: Downloadable Bitcoin proof linked from ceremony page mis-opens (application/vnd.oasis.opendocument.spreadsheet-template).. Fix: Map .ots \u2192 application/octet-stream in host MIME table..",
+  "measurement_not_certification": true
+}

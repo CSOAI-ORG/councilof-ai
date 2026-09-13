@@ -1,0 +1,14 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "audit.p0.defect.asisecurity-agent-card-html",
+  "subject": "audit-p0-asisecurity-agent-card-html",
+  "measured_at": "2026-09-13T05:16:15.165435+00:00",
+  "metrics": {
+    "defect": "asisecurity.ai /.well-known/agent-card.json returns homepage HTML",
+    "evidence": "Working card at /agent.json but well-known path dead.",
+    "fix": "Serve agent-card.json content at well-known path.",
+    "severity": "P0"
+  },
+  "honest_sentence": "AUDIT P0 DEFECT: asisecurity.ai /.well-known/agent-card.json returns homepage HTML. Evidence: Working card at /agent.json but well-known path dead.. Fix: Serve agent-card.json content at well-known path..",
+  "measurement_not_certification": true
+}

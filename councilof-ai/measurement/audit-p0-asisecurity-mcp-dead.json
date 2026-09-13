@@ -1,0 +1,14 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "audit.p0.defect.asisecurity-mcp-dead",
+  "subject": "audit-p0-asisecurity-mcp-dead",
+  "measured_at": "2026-09-13T05:16:15.165435+00:00",
+  "metrics": {
+    "defect": "asisecurity.ai/mcp: POST \u2192 405",
+    "evidence": "Site's own /connect/mcp documents this as PAID integration path. Revenue-adjacent break.",
+    "fix": "Implement POST handler for /mcp endpoint.",
+    "severity": "P0"
+  },
+  "honest_sentence": "AUDIT P0 DEFECT: asisecurity.ai/mcp: POST \u2192 405. Evidence: Site's own /connect/mcp documents this as PAID integration path. Revenue-adjacent break.. Fix: Implement POST handler for /mcp endpoint..",
+  "measurement_not_certification": true
+}

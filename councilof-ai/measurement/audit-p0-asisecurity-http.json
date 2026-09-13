@@ -1,0 +1,14 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "audit.p0.defect.asisecurity-http",
+  "subject": "audit-p0-asisecurity-http",
+  "measured_at": "2026-09-13T05:16:15.165435+00:00",
+  "metrics": {
+    "defect": "asisecurity.ai serves full site over plain HTTP",
+    "evidence": "No 301, no HSTS, no X-Frame-Options.",
+    "fix": "Force HTTPS, add security headers.",
+    "severity": "P0"
+  },
+  "honest_sentence": "AUDIT P0 DEFECT: asisecurity.ai serves full site over plain HTTP. Evidence: No 301, no HSTS, no X-Frame-Options.. Fix: Force HTTPS, add security headers..",
+  "measurement_not_certification": true
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "audit.p0.defect.homepage-jsonld-split",
+  "subject": "audit-p0-homepage-jsonld-split",
+  "measured_at": "2026-09-13T05:16:15.165435+00:00",
+  "metrics": {
+    "defect": "Homepage JSON-LD conflates card path with root witness",
+    "evidence": "JSON-LD says 'OpenTimestamps not yet wired' while same page shows CONFIRMED_BITCOIN block 966712.",
+    "fix": "State split: cards have timestamp_authority=none; root.json carries OTS witness confirmed at block 966712.",
+    "severity": "P0"
+  },
+  "honest_sentence": "AUDIT P0 DEFECT: Homepage JSON-LD conflates card path with root witness. Evidence: JSON-LD says 'OpenTimestamps not yet wired' while same page shows CONFIRMED_BITCOIN block 966712.. Fix: State split: cards have timestamp_authority=none; root.json carries OTS witness confirmed at block 966712..",
+  "measurement_not_certification": true
+}

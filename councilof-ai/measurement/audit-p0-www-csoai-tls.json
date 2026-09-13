@@ -1,0 +1,14 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "audit.p0.defect.www-csoai-tls",
+  "subject": "audit-p0-www-csoai-tls",
+  "measured_at": "2026-09-13T05:16:15.165435+00:00",
+  "metrics": {
+    "defect": "www.csoai.org TLS timeout",
+    "evidence": "TLS/listener missing on www variant; apex 308 chain intact.",
+    "fix": "Edge rule + cert mirroring apex.",
+    "severity": "P0"
+  },
+  "honest_sentence": "AUDIT P0 DEFECT: www.csoai.org TLS timeout. Evidence: TLS/listener missing on www variant; apex 308 chain intact.. Fix: Edge rule + cert mirroring apex..",
+  "measurement_not_certification": true
+}

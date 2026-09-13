@@ -1,0 +1,23 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.otel.semconv.proposal",
+  "subject": "otel-semconv-proposal",
+  "measured_at": "2026-09-13T05:16:34.984178+00:00",
+  "metrics": {
+    "repo": "open-telemetry/semantic-conventions",
+    "issue": "#171 (GenAI)",
+    "proposal": "Add gen_ai.eval.* provenance attributes with signed measurement card as reference artifact",
+    "attributes_proposed": [
+      "gen_ai.eval.card_id (sha256 of signed card)",
+      "gen_ai.eval.issuer_did (DID of issuer, e.g. did:web:csoai.org#board-attestation-1)",
+      "gen_ai.eval.merkle_root (root the card is included in)",
+      "gen_ai.eval.timestamp_authority (ots/rekor/none)",
+      "gen_ai.eval.signature (Ed25519 hex)",
+      "gen_ai.eval.corrections_count (number of published corrections)"
+    ],
+    "rationale": "No current OTel convention covers signed/attested eval events. Observability vendors (Honeycomb, Datadog, Grafana) watch this repo.",
+    "action": "Comment on semantic-conventions-genai #171, or open issue if closed"
+  },
+  "honest_sentence": "OTel semconv proposal: add gen_ai.eval.* attributes for signed measurement card provenance (card_id, issuer_did, merkle_root, timestamp_authority, signature, corrections_count). First convention for signed/attested eval events.",
+  "measurement_not_certification": true
+}

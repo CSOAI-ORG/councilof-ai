@@ -1,0 +1,14 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "audit.p0.defect.ceremony-bitcoin-copy",
+  "subject": "audit-p0-ceremony-bitcoin-copy",
+  "measured_at": "2026-09-13T05:16:15.165435+00:00",
+  "metrics": {
+    "defect": "Ceremony Bitcoin copy contradiction",
+    "evidence": "Chip reads CONFIRMED_BITCOIN blocks 966712 while body copy says 'pending until upgraded proof names block'. Must agree.",
+    "fix": "Replace 'pending' sentence with confirmed-copy naming block 966712.",
+    "severity": "P0"
+  },
+  "honest_sentence": "AUDIT P0 DEFECT: Ceremony Bitcoin copy contradiction. Evidence: Chip reads CONFIRMED_BITCOIN blocks 966712 while body copy says 'pending until upgraded proof names block'. Must agree.. Fix: Replace 'pending' sentence with confirmed-copy naming block 966712..",
+  "measurement_not_certification": true
+}

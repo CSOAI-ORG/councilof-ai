@@ -1,0 +1,28 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.erc8004.prep",
+  "subject": "erc-8004-registration-prep",
+  "measured_at": "2026-09-13T05:16:34.984178+00:00",
+  "metrics": {
+    "mainnet_since": "January 29, 2026",
+    "cost": "Cents of gas",
+    "permissionless": true,
+    "owner_gate": "Requires Nick's wallet signature for the transaction",
+    "sdk": "agent0 SDK",
+    "target_chain": "Base Identity singleton",
+    "steps": [
+      "1. Generate agent wallet (or use existing)",
+      "2. Call IdentityRegistry.register(agentURI, metadata) with CSOAI's agent-card.json URI",
+      "3. Link ERC-721 identity to agent-card.json via metadata field",
+      "4. Verify registration at 8004scan/agentscan",
+      "5. Sign agent card per A2A v1.0 JWS"
+    ],
+    "explorers": [
+      "8004scan.com",
+      "agentscan.io"
+    ],
+    "value": "First signed measurement agent on ERC-8004. Agents can find CSOAI agent via identity singleton."
+  },
+  "honest_sentence": "ERC-8004 prep: register CSOAI measurement agent on Base Identity singleton via agent0 SDK, link ERC-721 to agent-card.json. Cents of gas, owner-gated (Nick's wallet signature).",
+  "measurement_not_certification": true
+}

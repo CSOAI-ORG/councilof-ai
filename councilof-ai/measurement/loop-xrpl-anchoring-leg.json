@@ -1,0 +1,15 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.permissionless.loop.xrpl-anchoring-leg",
+  "subject": "loop-xrpl-anchoring-leg",
+  "measured_at": "2026-09-13T05:16:15.165435+00:00",
+  "metrics": {
+    "name": "XRPL anchoring leg goes live",
+    "action": "One self-payment with Memos[0]=hex(daily Merkle root). Retire the last NOT_YET on ceremony page.",
+    "when": "today",
+    "gate": "owner_gate",
+    "differentiation": "Signer identity + independence statement per measurement \u00b7 hash-chained corrections history \u00b7 anchored proof of when number was known \u00b7 attestation-lag series for issuers"
+  },
+  "honest_sentence": "PERMISSIONLESS LOOP: XRPL anchoring leg goes live. Action: One self-payment with Memos[0]=hex(daily Merkle root). Retire the last NOT_YET on ceremony page.. When: today. Gate: owner_gate. No competitor ships all four differentiators.",
+  "measurement_not_certification": true
+}
