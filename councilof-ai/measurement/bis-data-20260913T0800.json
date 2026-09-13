@@ -1,0 +1,23 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "measurement.financial.bis",
+  "subject": "data-20260913T0800",
+  "measured_at": "2026-09-13T08:00:14.824420Z",
+  "metrics": {
+    "csv_lines": 6,
+    "sample": [
+      "<?xml version=\"1.0\" ?>",
+      "<message:Error xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:message=\"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message\" xmlns:com=\"http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common\">",
+      "  <message:ErrorMessage code=\"100\">",
+      "    <com:Text>No Dataflow exists for query : Target: Dataflow - Agency Id: BIS - Maintainable Id: WS_CBPOL_D - Version: 1.0</com:Text>",
+      "  </message:ErrorMessage>"
+    ],
+    "data_source": "BIS Statistics public SDMX (CSV)",
+    "auto_churn": true,
+    "miner_version": "bis-2"
+  },
+  "honest_sentence": "BIS tracker: 6 CSV lines from public SDMX.",
+  "measurement_not_certification": true,
+  "auto_churn": true,
+  "permissionless": true
+}
