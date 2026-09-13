@@ -46,9 +46,8 @@ published as scoped evidence mappings, not legal determinations.
 - The public verification route currently requires no login; check the current response and published terms.
 
 ## Current exact-root state
-- root.json SHA-256: 9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd
-- Scope: 154 listed leaves; it does not cover the separate 335-card index.
-- Ed25519: verified under did:web:csoai.org#board-attestation-1.
-- Rekor: witnessed at log index 2714574265.
-- OpenTimestamps: STAMPED_PENDING_BITCOIN; no Bitcoin block confirmation.
-- Machine state: https://councilof.ai/interop/root-witness-latest.json
+- Fetch the current root bytes from https://councilof.ai/root.json.
+- Fetch the matching witness from https://councilof.ai/interop/root-witness-latest.json.
+- Treat the witness as exact only when its SHA-256, Merkle root, card count and `as_of` all match the fetched root.
+- Read Ed25519, Rekor and OpenTimestamps states from that exact witness; `CONFIRMED_BITCOIN` requires proof-derived Bitcoin block attestations.
+- Root leaves, the signed-card index and the living card API are separate populations. Never substitute one count for another.

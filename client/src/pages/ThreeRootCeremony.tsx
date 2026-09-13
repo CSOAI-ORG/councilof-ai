@@ -154,7 +154,7 @@ export default function ThreeRootCeremony() {
     description:
       "A live, fail-closed view of the Council of AI public root, its signature, Rekor witness and OpenTimestamps state.",
     datePublished: "2026-09-12",
-    dateModified: "2026-09-12",
+    dateModified: "2026-09-13",
     url: CANONICAL,
     isPartOf: {
       "@type": "WebSite",
@@ -359,9 +359,9 @@ export default function ThreeRootCeremony() {
                 />
               </div>
               <p className="mt-3 text-sm leading-6 text-slate-300">
-                A calendar stamp is pending until an upgraded proof names one or
-                more Bitcoin blocks. Pending proves submission, not Bitcoin
-                inclusion.
+                {exact && bitcoinBlocks.length > 0
+                  ? `The upgraded proof names Bitcoin block${bitcoinBlocks.length === 1 ? "" : "s"} ${bitcoinBlocks.join(", ")}, confirming that these exact root bytes existed no later than the attested block time.`
+                  : "A calendar stamp is pending until an upgraded proof names one or more Bitcoin blocks. Pending proves submission, not Bitcoin inclusion."}
               </p>
               {exact && bitcoinBlocks.length > 0 ? (
                 <p className="mt-3 break-words font-mono text-xs text-emerald-300">
