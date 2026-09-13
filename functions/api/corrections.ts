@@ -34,6 +34,24 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0913-01",
+      date: "2026-09-13",
+      // First entry carrying the latency fields proposed by scripts/corrections_latency.py.
+      // Values below are evidenced, never estimated: introduction = the PR merge that
+      // published the wrong number; observation = the recount log; correction = the
+      // fixing PR's merge.
+      first_observed_at: "2026-09-12T16:35Z",
+      error_introduced_at: "2026-09-12T15:38Z",
+      corrected_at: "2026-09-13T02:29Z",
+      what_was_wrong:
+        "scripts/erc8004_census.py (merged in #2020, 2026-09-12T15:38Z) reported 8 ERC-8004 Identity Registry registrations on Ethereum. The true count at the same floor-to-head range is 50,783. Cause: rpc.flashbots.net serves a silently incomplete historical log index — it returned well-formed empty results for ranges containing receipt-verified events, with no error. The tool's then-current checks (chain id, finality pin, getCode, log shape) all pass against such an endpoint; empty result is not absence.",
+      how_caught:
+        "Claim/evidence disagreement during the TUI-4 root-and-registry watch: Etherscan showed 19,138 transactions to the registry while the tool reported 8 events. The on-chain receipt of one Etherscan-visible Register transaction (0x335580236be7…f1f88b, block 25,883,771) proved a Registered log existed that flashbots' getLogs never returned. The tenderly public gateway returned the event for the same query, isolating the provider.",
+      fix:
+        "#2070 (merged 2026-09-13T02:29Z): known-event integrity anchors — one receipt-verified (block, tx) pair per chain; an endpoint's scan is trusted only if it returns the anchor event when the anchor block is in range (negative test: flashbots is refused on the ETH full-history range). Corrected counts: Ethereum 50,783; Base 86,263 (reproduced by two independent providers); BSC full history UNCHECKABLE permissionlessly. The wrong '8' is superseded here, not rewritten away.",
+      status: "CORRECTED IN SOURCE AND RECORDED; VERIFY WITH scripts/erc8004_census.py",
+    },
+    {
       id: "C-2026-0912-01",
       date: "2026-09-12",
       what_was_wrong:
