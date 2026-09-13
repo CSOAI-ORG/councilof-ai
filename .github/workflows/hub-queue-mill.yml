@@ -233,6 +233,7 @@ jobs:
             --axis "$AXIS" --grade "$GRADE" --pick 1000 --banks mill-in/banks --items 30 \
             --probe-first --dead harness/gspc-top100/dead_slugs.jsonl \
             --dead-max-age-days 14 \
+            --bank-dataset "csoai/gspc-${DS}" \
             --inflight mill-in/inflight.jsonl 2>&1 | tail -40
       - name: upload staged cards (not a board rewrite)
         if: always()

@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -27,6 +28,7 @@ from verify_card import canonical_body_bytes  # noqa: E402
 
 INBOX = ROOT / "public" / "interop" / "mill-cards-unsigned"
 SIGNED = ROOT / "public" / "interop" / "mill-cards-signed"
+EVIDENCE = ROOT / "public" / "interop" / "mill-evidence"
 MAX_PAYLOAD_BYTES = 3072
 
 
@@ -94,7 +96,37 @@ def bind_run_provenance(wrap: dict, run_id: str) -> dict:
     return wrap
 
 
-def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str) -> dict:
+def land_evidence(wrap: dict, staged: Path, evidence_dir: Path) -> str | None:
+    """Land the item-level evidence bundle a card binds to. Returns a reject reason or None.
+
+    TUI-1 evidence ruling (2026-09-13): an aggregate-only card is never quotable. A card
+    carrying body.evidence must find its bundle inside the same artifact and the bytes must
+    hash to body.evidence.items_sha256 — a bound-but-absent or bound-but-different bundle
+    fails closed. The bundle lands at public/interop/mill-evidence/ next to the inbox.
+    """
+    body = wrap.get("body") or {}
+    ev = body.get("evidence")
+    if not isinstance(ev, dict):
+        return None  # legacy aggregate-only card; --require-evidence decides its fate
+    name = str(ev.get("items_file") or "")
+    want = str(ev.get("items_sha256") or "").lower()
+    if not name or len(want) != 64:
+        return "evidence field present but items_file/items_sha256 missing"
+    if not re.fullmatch(r"items-[a-z0-9-]{1,12}-[0-9a-f]{12}\.jsonl", name):
+        return f"evidence items_file {name!r} outside the naming rule"
+    src = next(iter(staged.rglob(name)), None)
+    if src is None or not src.is_file():
+        return f"evidence bundle {name} absent from the artifact"
+    got = hashlib.sha256(src.read_bytes()).hexdigest()
+    if got != want:
+        return f"evidence bundle sha256 mismatch ({got[:12]}… != {want[:12]}…)"
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    (evidence_dir / name).write_bytes(src.read_bytes())
+    return None
+
+
+def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str,
+         evidence_dir: Path | None = None, require_evidence: bool = False) -> dict:
     files = sorted(staged.rglob("unsigned-*.json"))
     have = signed_cells(signed_dir)
     landed: list[dict] = []
@@ -111,6 +143,13 @@ def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str) -> dict:
             skipped.append({"file": f.name, "reason": why})
             continue
         b = w["body"]
+        if require_evidence and not isinstance(b.get("evidence"), dict):
+            skipped.append({"file": f.name, "reason": "no evidence bundle — aggregate-only cards stopped landing after the 2026-09-13 evidence ruling"})
+            continue
+        ev_why = land_evidence(w, staged, evidence_dir or EVIDENCE)
+        if ev_why:
+            skipped.append({"file": f.name, "reason": ev_why})
+            continue
         key = (str(b["model"]), str(b["axis"]))
         if key in have:
             skipped.append({"file": f.name, "reason": f"already-signed {have[key]}"})
@@ -191,9 +230,13 @@ def main() -> int:
     ap.add_argument("--run-id", default="")
     ap.add_argument("--pr-body", default="", help="write the PR body markdown here")
     ap.add_argument("--github-output", default="", help="append landed=/axis= lines here")
+    ap.add_argument("--evidence", default=str(EVIDENCE), help="where item-evidence bundles land")
+    ap.add_argument("--require-evidence", action="store_true",
+                    help="fail closed on aggregate-only cards (post-2026-09-13 evidence ruling)")
     args = ap.parse_args()
     staged = Path(args.staged)
-    rep = land(staged, Path(args.inbox), Path(args.signed), args.run_id)
+    rep = land(staged, Path(args.inbox), Path(args.signed), args.run_id,
+               evidence_dir=Path(args.evidence), require_evidence=args.require_evidence)
     mill_report = None
     mr = next(iter(staged.rglob("mill-report.json")), None)
     if mr is not None:
