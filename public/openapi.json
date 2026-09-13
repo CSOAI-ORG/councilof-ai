@@ -176,7 +176,7 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.2+312679f986d6",
+    "version": "0.2+c264113ea7f7",
     "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or run scripts/verify_receipt.py, which reads did.json and contacts nobody. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
@@ -347,18 +347,33 @@
                 "example": {
                   "accepts": [
                     {
-                      "amount": "25000000",
+                      "amount": "10000",
                       "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "csoai_pricing": {
+                        "campaign_id": "csoai-launch-30d-20260911",
+                        "ends_at": "2026-10-11T00:00:00Z",
+                        "fresh_compute_excluded": true,
+                        "normal_amount_atomic": "25000000",
+                        "offered_amount_atomic": "10000",
+                        "pricing_basis": "PROMO_EXISTING_DATA",
+                        "product_id": "csoai.product.art50_marking_evidence",
+                        "sku_id": "art50_marking_evidence",
+                        "starts_at": "2026-09-11T00:00:00Z",
+                        "tier": "pack"
+                      },
+                      "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.",
                       "extra": {
                         "decimals": 6,
                         "name": "USD Coin",
                         "symbol": "USDC",
                         "version": "2"
                       },
-                      "maxAmountRequired": "25000000",
+                      "maxAmountRequired": "10000",
                       "maxTimeoutSeconds": 300,
+                      "mimeType": "application/json",
                       "network": "eip155:8453",
                       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "resource": "https://councilof.ai/api/art50/marking-evidence",
                       "scheme": "exact"
                     }
                   ],
@@ -456,6 +471,49 @@
                         },
                         "required": [
                           "input"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "offer-receipt": {
+                      "info": {
+                        "offers": [
+                          {
+                            "acceptIndex": 0,
+                            "format": "jws",
+                            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9hcnQ1MC9tYXJraW5nLWV2aWRlbmNlIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzg5MzE1MDQ2LCJ2ZXJzaW9uIjoxfQ.BITSYMv2IRe4IfGyjJr9bmX3irT8kdlw8L2gfcdkhOnhggl7hLjgmvXjtQOYmXS9Hnp4ocVwcPV7U4MwpmWWCA"
+                          }
+                        ]
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "offers": {
+                            "items": {
+                              "properties": {
+                                "acceptIndex": {
+                                  "type": "integer"
+                                },
+                                "format": {
+                                  "const": "jws",
+                                  "type": "string"
+                                },
+                                "signature": {
+                                  "description": "JWS compact serialization containing the offer payload",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "format",
+                                "signature"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "offers"
                         ],
                         "type": "object"
                       }
@@ -1128,18 +1186,33 @@
                 "example": {
                   "accepts": [
                     {
-                      "amount": "20000",
+                      "amount": "10000",
                       "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "csoai_pricing": {
+                        "campaign_id": "csoai-launch-30d-20260911",
+                        "ends_at": "2026-10-11T00:00:00Z",
+                        "fresh_compute_excluded": true,
+                        "normal_amount_atomic": "20000",
+                        "offered_amount_atomic": "10000",
+                        "pricing_basis": "PROMO_EXISTING_DATA",
+                        "product_id": "csoai.product.issuance",
+                        "sku_id": "issuance",
+                        "starts_at": "2026-09-11T00:00:00Z",
+                        "tier": "reserve"
+                      },
+                      "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
                       "extra": {
                         "decimals": 6,
                         "name": "USD Coin",
                         "symbol": "USDC",
                         "version": "2"
                       },
-                      "maxAmountRequired": "20000",
+                      "maxAmountRequired": "10000",
                       "maxTimeoutSeconds": 300,
+                      "mimeType": "application/json",
                       "network": "eip155:8453",
                       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "resource": "https://councilof.ai/api/eunomia-data?feed=1",
                       "scheme": "exact"
                     }
                   ],
@@ -1186,7 +1259,6 @@
                                 "properties": {
                                   "feed": {
                                     "const": "1",
-                                    "description": "Paid-tier gate. Must be the string 1 to request the signed feed (HTTP 402). Omit for free preview on the bare path (HTTP 200).",
                                     "type": "string"
                                   }
                                 },
@@ -1223,6 +1295,49 @@
                         },
                         "required": [
                           "input"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "offer-receipt": {
+                      "info": {
+                        "offers": [
+                          {
+                            "acceptIndex": 0,
+                            "format": "jws",
+                            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9ldW5vbWlhLWRhdGEiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3ODkzMTUwNDUsInZlcnNpb24iOjF9.dFWVJXPPJxnGnb7OwuAD607hOTmdfs2ZGN1fkqgrZZwZdKWs1PuwlC8brB8Z1YV_vwWgt1BRFz_8usGtcGjXBg"
+                          }
+                        ]
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "offers": {
+                            "items": {
+                              "properties": {
+                                "acceptIndex": {
+                                  "type": "integer"
+                                },
+                                "format": {
+                                  "const": "jws",
+                                  "type": "string"
+                                },
+                                "signature": {
+                                  "description": "JWS compact serialization containing the offer payload",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "format",
+                                "signature"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "offers"
                         ],
                         "type": "object"
                       }
@@ -1348,18 +1463,33 @@
                 "example": {
                   "accepts": [
                     {
-                      "amount": "250000000",
+                      "amount": "10000",
                       "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "csoai_pricing": {
+                        "campaign_id": "csoai-launch-30d-20260911",
+                        "ends_at": "2026-10-11T00:00:00Z",
+                        "fresh_compute_excluded": true,
+                        "normal_amount_atomic": "250000000",
+                        "offered_amount_atomic": "10000",
+                        "pricing_basis": "PROMO_EXISTING_DATA",
+                        "product_id": "csoai.product.evidence_bundle",
+                        "sku_id": "evidence_bundle",
+                        "starts_at": "2026-09-11T00:00:00Z",
+                        "tier": "bundle"
+                      },
+                      "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to EU-AI-ACT-50. Not a conformity determination.",
                       "extra": {
                         "decimals": 6,
                         "name": "USD Coin",
                         "symbol": "USDC",
                         "version": "2"
                       },
-                      "maxAmountRequired": "250000000",
+                      "maxAmountRequired": "10000",
                       "maxTimeoutSeconds": 300,
+                      "mimeType": "application/json",
                       "network": "eip155:8453",
                       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "resource": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
                       "scheme": "exact"
                     }
                   ],
@@ -1468,7 +1598,7 @@
                           {
                             "acceptIndex": 0,
                             "format": "jws",
-                            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIyNTAwMDAwMDAiLCJhc3NldCI6IjB4ODMzNTg5ZkNENmVEYjZFMDhmNGM3QzMyRDRmNzFiNTRiZEEwMjkxMyIsIm5ldHdvcmsiOiJlaXAxNTU6ODQ1MyIsInBheVRvIjoiMHgyMTI2ODY0MDRBN0QxRTFmRDg4RjM1ZUQ2MjAwYzNhRjdBNzhhZTMxIiwicmVzb3VyY2VVcmwiOiJodHRwczovL2NvdW5jaWxvZi5haS9hcGkvZXZpZGVuY2UtYnVuZGxlIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzg4NzQ3NDk3LCJ2ZXJzaW9uIjoxfQ.mww_LO75YFuzSEEqeXVp74W4gzsE7u9lzh-R5Uihr1Jr138ntIKbv9_fuCBVMhUT8AJYh5a0r0vugLKiH4wtBg"
+                            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9ldmlkZW5jZS1idW5kbGUiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3ODkzMTUwNDUsInZlcnNpb24iOjF9.1OPdF3Y3xiQU9_hSBZrvMjYrunV9hc7elSZ36GOpDDQ25phmpS8mIjVrhyOlyviUpnpz0s7PnfBCe2XDX6GJBA"
                           }
                         ]
                       },
@@ -1631,7 +1761,7 @@
         "operationId": "x402_feeds_provider_diff",
         "parameters": [
           {
-            "description": "Paid-tier gate. Must be the string 1 to request the signed historical batch (HTTP 402). Omit for free recent diffs on the bare path (HTTP 200).",
+            "description": "Paid-tier gate. Must be the string 1 to request the signed historical batch (HTTP 402). Omit for free recent diffs on the bare path (HTTP 200). Optional since narrows the window.",
             "example": "1",
             "in": "query",
             "name": "history",
@@ -1669,18 +1799,33 @@
                 "example": {
                   "accepts": [
                     {
-                      "amount": "25000000",
+                      "amount": "10000",
                       "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "csoai_pricing": {
+                        "campaign_id": "csoai-launch-30d-20260911",
+                        "ends_at": "2026-10-11T00:00:00Z",
+                        "fresh_compute_excluded": true,
+                        "normal_amount_atomic": "25000000",
+                        "offered_amount_atomic": "10000",
+                        "pricing_basis": "PROMO_EXISTING_DATA",
+                        "product_id": "csoai.product.provider_diff_feed",
+                        "sku_id": "provider_diff_feed",
+                        "starts_at": "2026-09-11T00:00:00Z",
+                        "tier": "history_batch"
+                      },
+                      "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only \u2014 no page content, no verdict.",
                       "extra": {
                         "decimals": 6,
                         "name": "USD Coin",
                         "symbol": "USDC",
                         "version": "2"
                       },
-                      "maxAmountRequired": "25000000",
+                      "maxAmountRequired": "10000",
                       "maxTimeoutSeconds": 300,
+                      "mimeType": "application/json",
                       "network": "eip155:8453",
                       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "resource": "https://councilof.ai/api/feeds/provider-diff?history=1",
                       "scheme": "exact"
                     }
                   ],
@@ -1724,7 +1869,6 @@
                                 "properties": {
                                   "history": {
                                     "const": "1",
-                                    "description": "Paid-tier gate. Must be the string 1 to request the signed historical batch (HTTP 402). Omit for free recent diffs on the bare path (HTTP 200).",
                                     "type": "string"
                                   },
                                   "since": {
@@ -1765,6 +1909,49 @@
                         },
                         "required": [
                           "input"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "offer-receipt": {
+                      "info": {
+                        "offers": [
+                          {
+                            "acceptIndex": 0,
+                            "format": "jws",
+                            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9mZWVkcy9wcm92aWRlci1kaWZmIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzg5MzE1MDQ2LCJ2ZXJzaW9uIjoxfQ.0_hm0_fDNif5EaxYFZjCE4Oh8LwLA5zbuaaJozL2z4tJ-rxFePY4T3YWNF75aNPpzMINntC_-cSXfCfxpn_tAw"
+                          }
+                        ]
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "offers": {
+                            "items": {
+                              "properties": {
+                                "acceptIndex": {
+                                  "type": "integer"
+                                },
+                                "format": {
+                                  "const": "jws",
+                                  "type": "string"
+                                },
+                                "signature": {
+                                  "description": "JWS compact serialization containing the offer payload",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "format",
+                                "signature"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "offers"
                         ],
                         "type": "object"
                       }
@@ -1889,7 +2076,7 @@
     },
     "/api/free-door": {
       "get": {
-        "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
+        "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
         "operationId": "x402_free_door",
         "parameters": [],
         "responses": {
@@ -1897,12 +2084,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
+                  "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
                   "type": "object"
                 }
               }
             },
-            "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification."
+            "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one."
           },
           "402": {
             "content": {
@@ -1937,7 +2124,7 @@
                     }
                   },
                   "resource": {
-                    "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
+                    "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
                     "mimeType": "application/json",
                     "url": "https://councilof.ai/api/free-door"
                   },
@@ -2445,18 +2632,33 @@
                 "example": {
                   "accepts": [
                     {
-                      "amount": "20000",
+                      "amount": "10000",
                       "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "csoai_pricing": {
+                        "campaign_id": "csoai-launch-30d-20260911",
+                        "ends_at": "2026-10-11T00:00:00Z",
+                        "fresh_compute_excluded": true,
+                        "normal_amount_atomic": "20000",
+                        "offered_amount_atomic": "10000",
+                        "pricing_basis": "PROMO_EXISTING_DATA",
+                        "product_id": "csoai.product.issuance",
+                        "sku_id": "issuance",
+                        "starts_at": "2026-09-11T00:00:00Z",
+                        "tier": "reserve"
+                      },
+                      "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
                       "extra": {
                         "decimals": 6,
                         "name": "USD Coin",
                         "symbol": "USDC",
                         "version": "2"
                       },
-                      "maxAmountRequired": "20000",
+                      "maxAmountRequired": "10000",
                       "maxTimeoutSeconds": 300,
+                      "mimeType": "application/json",
                       "network": "eip155:8453",
                       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "resource": "https://councilof.ai/api/proof?bundle=1",
                       "scheme": "exact"
                     }
                   ],
@@ -2538,6 +2740,49 @@
                         },
                         "required": [
                           "input"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "offer-receipt": {
+                      "info": {
+                        "offers": [
+                          {
+                            "acceptIndex": 0,
+                            "format": "jws",
+                            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wcm9vZiIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc4OTMxNTA0NSwidmVyc2lvbiI6MX0.JFoKGLH5sVRjPfRt9fSV71aIYJxdpBms9ro_1s0c2mfIxZNO_woU-ryA6kVHy71OJ2zlivqkTzUfTPA8uasDCw"
+                          }
+                        ]
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "offers": {
+                            "items": {
+                              "properties": {
+                                "acceptIndex": {
+                                  "type": "integer"
+                                },
+                                "format": {
+                                  "const": "jws",
+                                  "type": "string"
+                                },
+                                "signature": {
+                                  "description": "JWS compact serialization containing the offer payload",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "format",
+                                "signature"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "offers"
                         ],
                         "type": "object"
                       }
@@ -3276,7 +3521,7 @@
             "captured": false
           },
           "door": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
-          "free_preview": "https://councilof.ai/api/rwa/evidence?asset=RLUSD&preview=1",
+          "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1",
           "never": [
             "a rating",
             "a guarantee",
@@ -3722,7 +3967,7 @@
     },
     "/api/wrapper": {
       "get": {
-        "description": "",
+        "description": "preview=1 is free unsigned. Paid signed card requires id (HTTP 402).",
         "operationId": "x402_wrapper",
         "parameters": [
           {
@@ -3794,7 +4039,7 @@
                     }
                   },
                   "resource": {
-                    "description": "",
+                    "description": "preview=1 is free unsigned. Paid signed card requires id (HTTP 402).",
                     "mimeType": "application/json",
                     "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
                   },
@@ -3921,10 +4166,10 @@
       "/api/eunomia-data",
       "/api/proof",
       "/api/rwa/evidence",
+      "/api/wrapper",
       "/api/art50/marking-evidence",
       "/api/feeds/provider-diff",
-      "/api/receipts/batch",
-      "/api/wrapper"
+      "/api/receipts/batch"
     ],
     "facilitator": {
       "configured": true,
