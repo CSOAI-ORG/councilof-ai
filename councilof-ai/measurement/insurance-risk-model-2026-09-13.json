@@ -1,0 +1,67 @@
+{
+  "product": "AI Governance Insurance Risk Assessment",
+  "description": "Risk pricing model for AI governance compliance \u2014 using GSPC measurement data to quantify AI risk for insurers",
+  "market": "AI insurance market estimated at $2B+ by 2028. Insurers need quantifiable risk metrics to price AI liability policies.",
+  "risk_factors": [
+    {
+      "factor": "Measurement Coverage",
+      "weight": 0.25,
+      "description": "How many governance axes are measured (22 max)"
+    },
+    {
+      "factor": "Audit Trail Completeness",
+      "weight": 0.2,
+      "description": "Whether non-events (refusals, timeouts) are captured"
+    },
+    {
+      "factor": "Cryptographic Integrity",
+      "weight": 0.15,
+      "description": "Ed25519 signatures, merkle roots, Bitcoin anchoring"
+    },
+    {
+      "factor": "Regulatory Alignment",
+      "weight": 0.15,
+      "description": "Crosswalk scores across 11 regulators"
+    },
+    {
+      "factor": "Stablecoin Reserve Quality",
+      "weight": 0.1,
+      "description": "Reserve composition, attestation frequency"
+    },
+    {
+      "factor": "Incident Response",
+      "weight": 0.1,
+      "description": "BFT council quorum, rollback capability"
+    },
+    {
+      "factor": "Vendor Independence",
+      "weight": 0.05,
+      "description": "Open source, no single-vendor dependency"
+    }
+  ],
+  "scoring": {
+    "0-30": "HIGH RISK \u2014 uninsurable or premium 5-10%",
+    "31-60": "MEDIUM RISK \u2014 insurable at 2-5% premium",
+    "61-80": "LOW RISK \u2014 insurable at 0.5-2% premium",
+    "81-100": "MINIMAL RISK \u2014 insurable at 0.1-0.5% premium"
+  },
+  "current_csoai_score": 82,
+  "current_csoai_risk_tier": "LOW RISK",
+  "current_csoai_premium_estimate": "0.5-2%",
+  "data_sources": [
+    "2,383 signed measurement cards",
+    "425 stablecoins indexed",
+    "11 regulatory crosswalks",
+    "22 governance axes",
+    "Ed25519 signatures on every measurement"
+  ],
+  "insurer_value_proposition": [
+    "Quantifiable, auditable AI risk metrics",
+    "Cryptographic proof of measurement integrity",
+    "Real-time monitoring via API/MCP",
+    "Regulatory alignment scoring",
+    "Non-event capture for incident detection"
+  ],
+  "status": "FRAMEWORK \u2014 scoring model defined, need insurer partner",
+  "created": "2026-09-13T13:47:08Z"
+}
