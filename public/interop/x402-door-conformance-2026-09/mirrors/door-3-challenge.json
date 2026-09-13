@@ -1,0 +1,238 @@
+{
+  "x402Version": 2,
+  "error": "Payment required",
+  "resource": {
+    "url": "https://councilof.ai/api/eunomia-data?feed=1",
+    "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Data Feed",
+    "tags": [
+      "data",
+      "feed",
+      "enforcement",
+      "signed",
+      "x402"
+    ]
+  },
+  "accepts": [
+    {
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "amount": "10000",
+      "maxAmountRequired": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "maxTimeoutSeconds": 300,
+      "extra": {
+        "name": "USD Coin",
+        "version": "2",
+        "decimals": 6,
+        "symbol": "USDC"
+      },
+      "csoai_pricing": {
+        "product_id": "csoai.product.issuance",
+        "sku_id": "issuance",
+        "tier": "reserve",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "campaign_id": "csoai-launch-30d-20260911",
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "10000",
+        "starts_at": "2026-09-11T00:00:00Z",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true
+      },
+      "resource": "https://councilof.ai/api/eunomia-data?feed=1",
+      "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.",
+      "mimeType": "application/json"
+    }
+  ],
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "type": "http",
+          "method": "GET",
+          "queryParams": {
+            "feed": "1"
+          }
+        },
+        "output": {
+          "type": "json",
+          "example": {
+            "schema": "csoai.eunomia-data/0.2",
+            "kind": "feed",
+            "blocks": {
+              "signals": {},
+              "first_fine_watch": {},
+              "root": {},
+              "card_index": {}
+            }
+          }
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "http"
+              },
+              "method": {
+                "type": "string",
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ]
+              },
+              "queryParams": {
+                "type": "object",
+                "properties": {
+                  "feed": {
+                    "type": "string",
+                    "const": "1"
+                  }
+                },
+                "required": [
+                  "feed"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "additionalProperties": false
+          },
+          "output": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "example": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "input"
+        ]
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "format": "jws",
+            "acceptIndex": 0,
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9ldW5vbWlhLWRhdGEiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3ODkyODg4MDEsInZlcnNpb24iOjF9.XDp94Go_ksxIvos3a0zHAKtF-9AkwdYDVUXblPpI_bqVM3V5Zvn_wpx9J0Bbz9_JQFP2cWlbRnDqtGu9upOdAg"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "offers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "format": {
+                  "type": "string",
+                  "const": "jws"
+                },
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "signature": {
+                  "type": "string",
+                  "description": "JWS compact serialization containing the offer payload"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ]
+            }
+          }
+        },
+        "required": [
+          "offers"
+        ]
+      }
+    }
+  },
+  "csoai": {
+    "schema": "csoai.eunomia-data/0.2",
+    "per": "feed-pull",
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "lane": "commercial-data",
+    "data_only": true,
+    "streams": {
+      "signals": {
+        "rows": 13,
+        "schema": "csoai.signals-index/0.1",
+        "href": "https://councilof.ai/signals/_index.json",
+        "each": "https://councilof.ai/signals/<axis>.signed.json"
+      },
+      "first_fine_watch": {
+        "signed": true,
+        "kid": null,
+        "href": "https://councilof.ai/api/fines"
+      },
+      "root": {
+        "as_of": "2026-09-13T06:03:55Z",
+        "card_count": 264,
+        "merkle_root": "03d0ea31b374df4c3a7826ad4e6347a0c0baf75cad65d85a6f515427d504ea32",
+        "href": "https://councilof.ai/root.json"
+      },
+      "card_index": {
+        "rows": 335,
+        "href": "https://councilof.ai/signed/card_index.json"
+      }
+    },
+    "free_for": [
+      "regulators",
+      "the public",
+      "anyone verifying"
+    ],
+    "sold": "assembly + cadence of the feed (one document, every block carrying its published signature) — never the facts, which stay free",
+    "never": [
+      "scores as a product",
+      "ranking",
+      "rating",
+      "certificate"
+    ],
+    "free_preview": "https://councilof.ai/api/eunomia-data",
+    "deliverable": "the assembled signed data feed for this lane — data only, never a score and never a rank",
+    "rail": {
+      "mode": "live",
+      "pay_to_configured": true,
+      "facilitator_configured": true,
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free."
+    },
+    "not_paid_reason": "no x-payment header",
+    "catalog": "https://councilof.ai/api/x402",
+    "offer_receipt": {
+      "extension": "offer-receipt",
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "format": "jws",
+      "alg": "EdDSA",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "signed": true,
+      "reason": "1 of 1 accepts entries signed",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    }
+  }
+}
