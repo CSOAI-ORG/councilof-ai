@@ -2,6 +2,7 @@
 ## Independently checkable state of all six TUIs plus Hermes
 
 **Generated:** 2026-09-13T04:30 UTC
+**Corrected:** 2026-09-13T04:36 UTC — replaced the stale OTS-pending snapshot with the exact-root witness state already committed in `public/interop/root-witness-latest.json`
 **Source:** Live probes of councilof.ai + CSOAI-ORG/councilof-ai master + committed artifacts
 **Rule:** Every claim below traces to a verifiable artifact. States never blended.
 
@@ -19,8 +20,8 @@
 | Provenance-bound (run_id, measured_at, model_revision) | ❌ | 0/257 root cards have provenance. 80 mill cards with provenance NOT in root. |
 | Ed25519 verification | ✅ | verify-card.mjs: 335/335 valid |
 | Rekor witness | ✅ | Log index 2791822965 |
-| OTS submission | ⏳ | STAMPED_PENDING_BITCOIN |
-| OTS Bitcoin confirmation | ❌ | NOT_YET (depends on Bitcoin block inclusion) |
+| OTS submission | ✅ | Exact-root proof published at `public/interop/root-222538d5.json.ots` |
+| OTS Bitcoin confirmation | ✅ | `CONFIRMED_BITCOIN`, block 966712; proof scope is the exact 20,998-byte public root only |
 | Base EAS anchor | ❌ | INCOMPLETE (owner wallet signature needed) |
 | XRPL memo anchor | ❌ | INCOMPLETE (owner wallet signature needed) |
 
@@ -139,8 +140,8 @@
 | Signed cards verified | 335/335 | verify-card.mjs |
 | Root leaves | 257 | /root.json |
 | Rekor inclusions | 1 | log index 2791822965 |
-| OTS submissions | 1 | STAMPED_PENDING_BITCOIN |
-| OTS Bitcoin confirmations | 0 | NOT_YET |
+| OTS submissions | 1 | Exact-root proof published |
+| OTS Bitcoin confirmations | 1 | `CONFIRMED_BITCOIN`, block 966712 |
 | Other chain anchors | 0 | INCOMPLETE (owner wallets) |
 | x402 challenges | 5 | /api/receipts/latest |
 | Successful deliveries | 1 | demand_eligible_count=1 |
@@ -159,11 +160,10 @@
 ## What's genuinely owner-gated (no agent path)
 
 1. **MPC ceremony** to integrate 80 provenance-enriched mill cards into root (TUI-1)
-2. **OTS Bitcoin confirmation** — depends on Bitcoin block inclusion timeline
-3. **Base EAS anchor** — needs owner wallet signature (~$0.01-0.05 gas)
-4. **XRPL memo anchor** — needs owner wallet signature (0.00001 XRP)
-5. **HF token** for push from this Mac (sibling uses S3 path)
-6. **mcp.so listing verification** — submission queued, review pending
+2. **Base EAS anchor** — needs owner wallet signature (~$0.01-0.05 gas)
+3. **XRPL memo anchor** — needs owner wallet signature (0.00001 XRP)
+4. **HF token** for push from this Mac (sibling uses S3 path)
+5. **mcp.so listing verification** — submission queued, review pending
 
 ## What's genuinely achieved (6/7)
 

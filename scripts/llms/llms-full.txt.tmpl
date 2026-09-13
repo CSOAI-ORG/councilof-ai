@@ -292,15 +292,13 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 
 ## 6. CURRENT EXACT-ROOT WITNESS STATE
 
-The root shipped with this file is scoped to its own exact bytes and 154 listed leaves:
-- root SHA-256: `9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd`
-- Merkle root: `2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745`
-- Ed25519: VERIFIED under `did:web:csoai.org#board-attestation-1`
-- Rekor: WITNESSED at log index `2714574265`
-- OTS proof SHA-256: `91dae23c5e4d8c4914fbfca77e8274e1ddfd71b00baadd8f58e43f3633bdfc99`
-- OTS state: `STAMPED_PENDING_BITCOIN` — no Bitcoin block confirmation
+The current exact-root state is machine-readable and may advance independently of
+this generated file. Read `/root.json` and `/interop/root-witness-latest.json`
+together. The witness must identify the same root SHA-256, byte length, Merkle root,
+card count and `as_of`. Treat OTS as Bitcoin-anchored only when the sidecar derives
+`CONFIRMED_BITCOIN` from proof bytes and names independently checked block headers.
 
-This exact-root witness does not bind the separate 335-card index, an entire
+An exact-root witness does not bind the separate signed-card index, an entire
 measurement history, Hugging Face, or the corrections ledger. The two card corpora
 have zero identifier overlap. Machine-readable state: `/interop/root-witness-latest.json`.
 
