@@ -33,9 +33,13 @@ TRANSFER_TOPIC0 = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df52
 CHAIN_ID = 8453
 
 # Known internal wallets (self-test / census wallets)
+# Source: functions/api/_x402.ts X402_SELF_WALLETS + tui4-x402-test/evidence-executed.json
 KNOWN_INTERNAL = {
     "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",  # census wallet
-    "0x6ea00613e3c54b9a4c25e4e09243cfe8f76e43c6",  # burner wallet
+    "0x6ea00613e3c54b9a4c25e4e09243cfe8f76e43c6",  # burner wallet (old)
+    "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",  # burner wallet (tui4-x402-test, in _x402.ts)
+    "0xb2bd29925cbbcea7628279c91945ca5b98bf371b",  # self-settlement sender
+    "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31",  # self-settlement via Multicall3
     PAY_TO.lower(),  # self-transfer
 }
 
