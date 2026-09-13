@@ -17,7 +17,7 @@
           "resource": "https://councilof.ai/api/request-attestation",
           "payer": "0x7e6b6556322c4e26c567a867964ac793f5ee2b1c",
           "classification": "EXTERNAL_CUSTOMER",
-          "evidence": "Payer nonce 0 (relayed), 0 ETH, USDC balance 3,089,078 atomic at 2026-09-13; no inbound USDC in the 36 days before; paid five distinct recipients within blocks 51034355\u201351034361 (12 s), 0.01/0.02/0.003/0.01/0.03 USDC. Not in any estate wallet list, not created by any estate script found. Behaves like an automated buyer sweeping listed services. Counted as the estate's single distinct non-self payer; it is not evidence of demand beyond one settlement.",
+          "evidence": "Payer nonce 0 (relayed), 0 ETH, USDC balance 3,089,078 atomic at 2026-09-13; no inbound USDC in the 36 days before; paid five distinct recipients within blocks 51034355\u201351034361 (12 s), 0.01/0.02/0.003/0.01/0.03 USDC. Not in any estate wallet list, not created by any estate script found. Behaves like an automated buyer sweeping listed services. Counted as the estate's single distinct non-self payer; it is not evidence of demand beyond one settlement. PayAI discovery cross-check (2026-09-13, 28,598 resources): one of the five recipients in that burst, 0x5a9d3c8e\u2026, is the payTo of a PayAI-listed service (earn-tools-backend web-extract) whose listed price is exactly the 3000 atomic it received; our payTo is listed for /api/free-door. The wallet was paying PayAI-listed sellers at their listed prices \u2014 an agent or index probe sweeping the bazaar, external to the estate.",
           "evidence_note": "First pass (13:25Z) examined only the two 0.01 settlements and missed this record."
         }
       ]
