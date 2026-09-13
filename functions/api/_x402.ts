@@ -326,16 +326,17 @@ export function hasPaymentHeader(request: Request): boolean {
  * address only when a committed test artifact explicitly identifies it as estate-controlled.
  */
 export const KNOWN_INTERNAL_X402_WALLETS = [
+  // Estate test wallet that signs our own self-tests (tui4 ledger: SELF_TEST). Listed on chain
+  // evidence, not on a name. A wallet is added here only when the bytes show it is ours.
+  //
+  // NOT listed, on purpose (2026-09-13): 0xb2bd29925c… and 0xc6699d2aad…, the tx.from of our
+  // settlements. They are facilitator relayer EOAs (nonces 4,019,913 and 4,463,020 on Base)
+  // that submit Multicall3 bundles for every x402 buyer; they never appear as `payer`. A
+  // prior revision listed them as "estate-controlled / burner funded via MetaMask" — that
+  // was an unsourced attribution and false. The single non-self payer counted today,
+  // 0x7e6b6556… (0xc16ecc85…, 2026-09-08, 20000 atomic), is an external wallet: nonce 0,
+  // relayed, holding ~3.09 USDC, paying five services in twelve seconds. It stays counted.
   "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
-  // Identified as estate-controlled by the committed artifact
-  // audit-settlement-classification.json (csoai.settlement-classification/0.1, 2026-09-13),
-  // which classifies both settlements below INTERNAL_SELF_FUNDED. Senders resolved from the
-  // chain (Base, eth_getTransactionByHash); both paid /api/request-attestation via Multicall3.
-  //   0x60172f43…fababe7f  block 51172054  "Self-payment via Multicall3, same controlled wallet"
-  "0xb2bd29925cbbcea7628279c91945ca5b98bf371b",
-  //   0xeaaafb8a…3e8807    block 51202203  "Burner wallet funded via MetaMask"
-  // This one was being counted as the estate's first distinct non-self payer. It is not one.
-  "0xc6699d2aada6c36dfea5c248dd70f9cb0235cb63",
 ] as const;
 
 /** Wallets whose payments are the estate paying itself: payTo, known test wallets, plus X402_SELF_WALLETS. Lowercased. */
