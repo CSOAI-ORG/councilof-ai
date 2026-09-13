@@ -1,0 +1,74 @@
+name: Publish MCP Registry (v1.4.2)
+
+# Publishes the gspc MCP server to the official MCP Registry.
+# Auth: GitHub Actions OIDC → exchange for Registry JWT → POST /v0/publish.
+# No long-lived NPM_TOKEN or secrets — uses GitHub's OIDC trust.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "MCP server version to publish (must match server.json)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate version matches server.json
+        working-directory: mcp/gspc-server
+        run: |
+          set -euo pipefail
+          actual="$(node -p "require('./server.json').version")"
+          test "$actual" = "${{ inputs.version }}"
+          echo "server.json version: $actual"
+
+      - name: Get GitHub OIDC id_token
+        id: oidc
+        run: |
+          ID_TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=registry.modelcontextprotocol.io" | jq -r .value)
+          echo "ID_TOKEN_LENGTH=${#ID_TOKEN}"
+          echo "id_token=$ID_TOKEN" >> "$GITHUB_OUTPUT"
+
+      - name: Exchange OIDC for Registry JWT
+        id: jwt
+        run: |
+          REGISTRY_JWT=$(curl -sS -X POST \
+            https://registry.modelcontextprotocol.io/v0/auth/github-oidc \
+            -H "Content-Type: application/json" \
+            -d "$(jq -nc --arg t "${{ steps.oidc.outputs.id_token }}" '{oidc_token: $t}')" \
+            | jq -r '.registry_token')
+          echo "REGISTRY_JWT_LENGTH=${#REGISTRY_JWT}"
+          echo "registry_token=$REGISTRY_JWT" >> "$GITHUB_OUTPUT"
+
+      - name: Publish server.json to MCP Registry
+        working-directory: mcp/gspc-server
+        run: |
+          # GET current server version to check if already published
+          CURRENT=$(curl -sS "https://registry.modelcontextprotocol.io/v0/servers/io.github.CSOAI-ORG%2Fgspc/versions" \
+            | jq -r '.versions[] | select(.version == "'"${{ inputs.version }}'") | .version' || echo "")
+          if [ -n "$CURRENT" ]; then
+            echo "Version ${{ inputs.version }} already published — skipping"
+            exit 0
+          fi
+          # Publish via registry API
+          RESP=$(curl -sS -X POST \
+            https://registry.modelcontextprotocol.io/v0/publish \
+            -H "Authorization: Bearer ${{ steps.jwt.outputs.registry_token }}" \
+            -H "Content-Type: application/json" \
+            -d @server.json)
+          echo "Response: $RESP" | head -c 500
+          echo ""
+          echo "$RESP" | jq -e '.message // .server.name // .status' > /dev/null && echo "PUBLISH OK" || echo "PUBLISH FAILED"
