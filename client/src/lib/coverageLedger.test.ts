@@ -57,6 +57,10 @@ const input = {
       with_feedback_ge1: 138979,
     },
   },
+  wrappers: {
+    counts: { ESCROW_PARITY_READ: 8, UNCHECKABLE_NATIVE_ISSUANCE: 4, INDEXED_CUSTODIAL: 5 },
+    records: Array.from({ length: 17 }, (_, i) => ({ id: `pair-${i}` })),
+  },
 };
 
 describe("master GSPC coverage ledger", () => {
@@ -148,6 +152,7 @@ describe("master GSPC coverage ledger", () => {
       mcp: null,
       a2a: null,
       erc8004: null,
+      wrappers: null,
     });
     for (const row of rows) {
       expect(row.indexed.value).toBeNull();
