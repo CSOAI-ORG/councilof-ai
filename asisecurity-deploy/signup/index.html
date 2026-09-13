@@ -100,7 +100,7 @@
       <p class="mt-4 text-center text-slate-400">Enter your details and we will set up your trial or enterprise demo.</p>
       <div class="mt-10 bg-slate-900 border border-slate-800 rounded-2xl p-8">
         
-    <form action="#" method="post" enctype="text/plain" class="space-y-5" onsubmit="this.action='mailto:hello@meok.ai?subject='+encodeURIComponent('New Create account submission from '+this.email.value)+'&body='+encodeURIComponent(Array.from(new FormData(this)).map(([k,v])=>k+': '+v).join('\n')); return true;">
+    <p class="mb-4 text-slate-400">This form opens your email application to send an enquiry. It does not create an account or start a paid service. Do not include passwords, API keys or sensitive incident data.</p><form action="#" method="post" enctype="text/plain" class="space-y-5" onsubmit="this.action='mailto:hello@meok.ai?subject='+encodeURIComponent('New Request access submission from '+this.email.value)+'&body='+encodeURIComponent(Array.from(new FormData(this)).map(([k,v])=>k+': '+v).join('\n')); return true;">
       <label class="block text-sm font-medium text-slate-300">Full name
               <input type="text" name="name" placeholder="Your name" class="mt-1 block w-full rounded-lg bg-slate-950 border border-slate-700 px-4 py-3 focus:border-gold focus:ring-gold" required>
             </label><label class="block text-sm font-medium text-slate-300">Work email
@@ -114,7 +114,7 @@
                 <option>Starter / Day rate</option><option>Pro / Site team</option><option>Enterprise</option>
               </select>
             </label>
-      <button type="submit" class="w-full bg-gold text-slate-950 px-6 py-3 rounded-xl font-bold hover:bg-gold-dark transition">Create account</button>
+      <button type="submit" class="w-full bg-gold text-slate-950 px-6 py-3 rounded-xl font-bold hover:bg-gold-dark transition">Request access</button>
       <p class="text-xs text-slate-500">We will reply within one business day. No spam, no real charges until the flow is tested.</p>
     </form>
     
@@ -149,12 +149,12 @@
         <a href="https://landlaw.ai" class="hover:text-gold">landlaw</a>
       </div>
       <div class="max-w-6xl mx-auto px-6 pb-8 text-xs text-slate-500 flex flex-wrap gap-4">
-        <a href="https://meok.ai/privacy" class="hover:text-gold">Privacy</a>
-        <a href="https://meok.ai/terms" class="hover:text-gold">Terms</a>
-        <a href="https://meok.ai/cookies" class="hover:text-gold">Cookies</a>
+        <a href="/privacy/" class="hover:text-gold">Privacy</a>
+        <a href="/terms/" class="hover:text-gold">Terms</a>
+        <a href="/cookies/" class="hover:text-gold">Cookies</a>
         <span>© 2026 ASISecurity.ai</span>
       </div>
-    </footer>
+    <p style="max-width:72rem;margin:1.5rem auto;padding:0 1.5rem;font-size:.875rem">CSOAI Ltd, registered in England &amp; Wales No. 16939677. Registered office: 3rd Floor, 86–90 Paul Street, London EC2A 4NE.</p></footer>
   </div>
   <script>
     document.documentElement.classList.add('has-js');
