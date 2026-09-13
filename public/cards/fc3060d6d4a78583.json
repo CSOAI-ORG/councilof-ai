@@ -1,0 +1,59 @@
+{
+  "card": {
+    "as_of": "2026-09-12T19:59:40Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "5",
+      "symbol": "DAI",
+      "attestation_page": "https://makerdao.com/en/",
+      "auditor": null,
+      "cadence_claimed": null,
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "352cd9714f26ece4ee34f783f1345884a5e2510a806ff1582eab6c7f043921c8",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "cadence_claimed",
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "fc3060d6d4a78583f3d6be79bb4b39b99afbf7cf83f05ad2d84e5c823d6c3856",
+    "sig_ed25519": "8726de980140a9714ac1da0ed9e9767d785f3b16076ef62c5edbe74133ba124e2545193354efd772df1bad8789873b8ca9ce31c8c5b8fbd767ab5ebdeb9e960d",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://makerdao.com/en/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: DAI",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "cadence_claimed",
+      "staleness"
+    ]
+  },
+  "proof": [
+    "0522ef445a56df2bc1f88a4ca1ac1fe5bf87f91bf36df65e2a882f8b6568ad75",
+    "88d2b3ebf52b18dff3ba751f777a32dd866bc563527a9ecd72dbd66df6ec3f6f",
+    "57fac7a816a03ac1ac344c6b568f2c9eea6d3eab98a2f7c32279a9c84cde6f70",
+    "199f02b5112fa125331dfb1ee128fde31d09428d18258721d1e21b546bd82d56",
+    "d3080bb867cb87e54db53f5ece79c958f76a0442db4453fd2ea67e40b957ec5e",
+    "0f8e1b5026bf81008277b6e7bbb103952531e6d35d54ed69de69573577e3e9bc",
+    "f995b9543723def330db200ec9763b76b5274a698a0cc469ab81e5306c1fdd25",
+    "37017b94570f4f0e2ee19ad6b96fa75b0aa07a5571a402952045ba37c67ee7d4",
+    "7a400a22a2110cd974b97734324256cc72f918b15684ace6810bb71eb0c5c9d2"
+  ]
+}

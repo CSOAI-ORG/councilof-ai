@@ -1,0 +1,56 @@
+{
+  "card": {
+    "as_of": "2026-09-12T19:59:40Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-summary/0.1",
+      "status": "PROBED",
+      "release_id": "stablecoin-deep-2026-09",
+      "top_n": 20,
+      "n_rows": 20,
+      "n_deep_probed": 19,
+      "n_unmeasured_rows": 1,
+      "n_with_attestation_page": 19,
+      "n_with_auditor": 3,
+      "n_with_staleness": 1,
+      "median_staleness_days": 2,
+      "free_surface": "index total + staleness_days",
+      "paid_surface": "per-chain splits + gap basis points (PROOF door; price lives at the 402 challenge)",
+      "not_a_certification": true,
+      "truth_rules": [
+        "DEEP_PROBED means the issuer page was fetched and its served bytes inspected; it is not a certification.",
+        "A date counts only when attestation vocabulary appears near it in the served bytes.",
+        "JS-rendered figures not present in served bytes are UNMEASURED, never guessed."
+      ],
+      "unmeasured": []
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "80487afc601ffeeec9796f4a5ee36f6bf0296ea3c80f0da6db4d67d036937f0f",
+    "sig_ed25519": "1283e48e7e0246a64f0aacf356f0b69242b541915a96e08f4c8f512e3c4c06c33cd9096512265088c0c4d319d3ec3dbd5622395349c944fc0aabd6544aa35a03",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json"
+    ],
+    "subject": "Stablecoin top-20 attestation deep-measurement: summary",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "4c9a37a472308b9ec82dd22578fd96a90e16a971afe550ec5659e0e545473a8a",
+    "4d99dad0b804bb020442419638f2ce12facb28774d3d8d215e2e9db8e571538b",
+    "58ee676dd29943cae93856d00a3722dbff9a4a1798d9f0034d8d47e758801193",
+    "199f02b5112fa125331dfb1ee128fde31d09428d18258721d1e21b546bd82d56",
+    "d3080bb867cb87e54db53f5ece79c958f76a0442db4453fd2ea67e40b957ec5e",
+    "0f8e1b5026bf81008277b6e7bbb103952531e6d35d54ed69de69573577e3e9bc",
+    "f995b9543723def330db200ec9763b76b5274a698a0cc469ab81e5306c1fdd25",
+    "37017b94570f4f0e2ee19ad6b96fa75b0aa07a5571a402952045ba37c67ee7d4",
+    "7a400a22a2110cd974b97734324256cc72f918b15684ace6810bb71eb0c5c9d2"
+  ]
+}
