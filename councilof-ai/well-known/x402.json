@@ -1,0 +1,110 @@
+{
+  "schema": "x402.catalog/0.1",
+  "name": "CSOAI Payment Protocol Catalog",
+  "description": "x402 payment-gated AI governance measurement resources. Pay with USDC on Base to access verified measurements, receipts, and compliance evidence.",
+  "version": "1.0.0",
+  "publisher": {
+    "name": "CSOAI Ltd",
+    "url": "https://councilof.ai",
+    "did": "did:csoai:nicholas-001",
+    "wallet": "0xD595cz6iQaEaYOjwwgLmMdoz1mtm1pzKBb9yhQ28"
+  },
+  "resources": [
+    {
+      "id": "gspc-board-totals",
+      "url": "https://councilof.ai/api/gspc",
+      "method": "GET",
+      "price": "0",
+      "description": "Live GSPC board totals \u2014 22 axes, all measured",
+      "x402_required": false
+    },
+    {
+      "id": "gspc-card-verify",
+      "url": "https://councilof.ai/api/gspc/verify",
+      "method": "POST",
+      "price": "0",
+      "description": "Verify a signed gspc.measurement-card offline",
+      "x402_required": false
+    },
+    {
+      "id": "gspc-root",
+      "url": "https://councilof.ai/api/gspc/root",
+      "method": "GET",
+      "price": "0",
+      "description": "Current public-root merkle checkpoint",
+      "x402_required": false
+    },
+    {
+      "id": "gspc-card",
+      "url": "https://councilof.ai/api/gspc/card/{sha256}",
+      "method": "GET",
+      "price": "0",
+      "description": "Get one public-root card-v0 leaf by sha256",
+      "x402_required": false
+    },
+    {
+      "id": "gspc-receipts-batch",
+      "url": "https://councilof.ai/api/gspc/receipts",
+      "method": "POST",
+      "price": "0.01",
+      "currency": "USDC",
+      "chain": "base",
+      "description": "Batch receipts for N measurement cards",
+      "x402_required": true
+    },
+    {
+      "id": "gspc-art50-evidence",
+      "url": "https://councilof.ai/api/gspc/art50",
+      "method": "POST",
+      "price": "0.01",
+      "currency": "USDC",
+      "chain": "base",
+      "description": "EU AI Act Article 50 marking evidence pack",
+      "x402_required": true
+    },
+    {
+      "id": "gspc-commission-card",
+      "url": "https://councilof.ai/api/gspc/commission",
+      "method": "POST",
+      "price": "0.05",
+      "currency": "USDC",
+      "chain": "base",
+      "description": "Commission a new measurement card for any subject",
+      "x402_required": true
+    },
+    {
+      "id": "gspc-rwa-evidence",
+      "url": "https://councilof.ai/api/gspc/rwa",
+      "method": "POST",
+      "price": "0.01",
+      "currency": "USDC",
+      "chain": "base",
+      "description": "Real-world asset evidence pack with crosswalks",
+      "x402_required": true
+    },
+    {
+      "id": "root-witness-latest",
+      "url": "https://councilof.ai/api/root-witness-latest",
+      "method": "GET",
+      "price": "0",
+      "description": "Latest root witness (Rekor + OTS + Bitcoin anchor)",
+      "x402_required": false
+    }
+  ],
+  "settlement": {
+    "chain": "base",
+    "currency": "USDC",
+    "wallet": "0xD595cz6iQaEaYOjwwgLmMdoz1mtm1pzKBb9yhQ28",
+    "protocol": "x402"
+  },
+  "doors_registered": {
+    "bazaar": "https://bazaar.org",
+    "mcp_servers": "mcp.so",
+    "smithery": "smithery.ai",
+    "pypi": "pypi.org/user/meok-ai",
+    "npm": "npmjs.com/~nicholas-templeman",
+    "huggingface": "huggingface.co/councilofai",
+    "kaggle": "kaggle.com/councilofai"
+  },
+  "updated": "2026-09-13T13:15:36Z"
+}

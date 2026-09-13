@@ -1,0 +1,48 @@
+{
+  "schema": "agent-card/0.1",
+  "name": "CSOAI Measurement Agent",
+  "description": "AI governance measurement agent \u2014 discovers, measures, signs, roots, witnesses, and publishes evidence cards for AI models, agents, stablecoins, and regulatory compliance.",
+  "version": "1.0.0",
+  "publisher": {
+    "name": "CSOAI Ltd",
+    "url": "https://councilof.ai",
+    "did": "did:csoai:nicholas-001"
+  },
+  "capabilities": [
+    "measurement",
+    "signing",
+    "merkle-rooting",
+    "bitcoin-anchoring",
+    "transparency-log-witnessing",
+    "regulatory-crosswalk",
+    "x402-payment-gating",
+    "mcp-server",
+    "a2a-agent"
+  ],
+  "protocols": {
+    "mcp": {
+      "endpoint": "https://councilof.ai/mcp",
+      "transport": "http",
+      "tools_count": 48
+    },
+    "a2a": {
+      "endpoint": "https://councilof.ai/.well-known/agent.json",
+      "transport": "http"
+    },
+    "x402": {
+      "endpoint": "https://councilof.ai/.well-known/x402.json",
+      "settlement": "base:USDC"
+    },
+    "scitt": {
+      "endpoint": "https://councilof.ai/.well-known/scitt.json",
+      "transparency_log": "rekor"
+    }
+  },
+  "did": "did:csoai:nicholas-001",
+  "measurement_axes": 22,
+  "measurement_cards": 2383,
+  "public_root_leaves": 257,
+  "rekor_index": "2813640448",
+  "bitcoin_block": 966764,
+  "updated": "2026-09-13T13:15:36Z"
+}
