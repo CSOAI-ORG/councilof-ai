@@ -1,0 +1,80 @@
+{
+  "card": {
+    "as_of": "2026-09-13T06:02:39Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-impersonation-scan/0.1",
+      "status": "PROBED",
+      "as_of": "2026-09-13T06:02:39Z",
+      "counts": {
+        "RLUSD": {
+          "matches": 1,
+          "not_in_verified_set": 18,
+          "unmeasured": 0
+        },
+        "XSGD": {
+          "matches": 1,
+          "not_in_verified_set": 1,
+          "unmeasured": 0
+        },
+        "USDC": {
+          "matches": 1,
+          "not_in_verified_set": 3,
+          "unmeasured": 0
+        },
+        "AUDD": {
+          "matches": 1,
+          "not_in_verified_set": 0,
+          "unmeasured": 0
+        }
+      },
+      "scan_coverage": {
+        "source": "api.xrpscan.com/api/v1/tokens",
+        "window": "ranking offsets 0..11900 (pages of 100, stops early at first empty page)",
+        "n_scanned": 12000,
+        "pages_ok": 120,
+        "pages_uncheckable": 0,
+        "uncheckable_offsets": [],
+        "page_digest_count": 120,
+        "verification_limit": "pages with watched-code hits have raw archives; no-hit pages are digest-only, so their absence observations are not independently replayable from this repository",
+        "long_tail": "UNMEASURED — issuance below the ranking window is not enumerated"
+      },
+      "unmeasured": [
+        "UNMEASURED — issuance below the ranking window is not enumerated"
+      ],
+      "not_a_verdict": true,
+      "wording": "issuer not in the archived verified set — legitimacy UNMEASURED"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "99a612333952e8caf93a41043c56d4cc1a98b4e0930b1aeb7e63bce358337d25",
+    "sig_ed25519": "9edfc181c0c78a85d8967d4d56cfbc77fdd1628d1e871e3f9c7d58dfb7c63e7380b212090ae12faa6c7030c75f9d11b6df01c60eac6acd2fe2e500e08ced2c07",
+    "source_urls": [
+      "https://api.xrpscan.com/api/v1/tokens",
+      "https://councilof.ai/interop/xrpl-impersonation-2026-09/latest.json"
+    ],
+    "subject": "XRPL stablecoin-code impersonation watch — daily scan",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "impersonation-watch",
+      "daily-scan",
+      "xrpl-impersonation-2026-09"
+    ],
+    "unmeasured": [
+      "UNMEASURED — issuance below the ranking window is not enumerated"
+    ]
+  },
+  "proof": [
+    "e4b5097be62697c95c854100fe854d75e1fdf81860db935a88dc65de82d9a48b",
+    "fae7d773bb41ae68de5323d8a29096e23b1b48c76180112069a983250ff3a375",
+    "dd46c421fa21d4ab784779e03f797eb8f5487ff5c900f428c890cd52b27a2270",
+    "a82bbb2294e67f86f9406d071744016dbf5d889883364339ec0e1a0aaa2536aa",
+    "35c558faa3652105ce3ec480a75418b362c12d4c87f42f5d9ba9935c90fa5666",
+    "e7222ce4f2665ee3451f13ee03d5e7607b1ebb21a964230845b511ecefa9b5ea",
+    "a8cf917f05fac5274b5fbb1eacd12b8e4c38c8e8fe00ea1ebe3c926507fbd366",
+    "941f093740656514917bdb3ff270fd764b7534f6c90f152842602112269886f3",
+    "d2c03694c328f4b51cdfbc1b5610e49a863eea409abe8f1c63310955cb3e3110"
+  ]
+}

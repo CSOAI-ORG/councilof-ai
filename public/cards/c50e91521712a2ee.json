@@ -1,0 +1,58 @@
+{
+  "card": {
+    "as_of": "2026-09-13T03:33:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "250",
+      "symbol": "RLUSD",
+      "attestation_page": "https://ripple.com/stablecoin/",
+      "auditor": null,
+      "cadence_claimed": "monthly",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "c7db5e0621098f57af58dbb03c82059a89ef3dd6399c17ab44afa140c1b14b65",
+      "excerpt": "s Ripple provide for RLUSD? Ripple provides transparency measures for RLUSD by publishing monthly third-party attestations of RLUSD's reserve assets. These repo",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c50e91521712a2eec4eb329c7c0975283116824994783177efb7db8d6b383a23",
+    "sig_ed25519": "4fa5edb4aa50b490217a15ee6f9f84c833812f8dc8dc0bd747d8ce3f699a6cffd3bd8694f6f439d07cdb173244d16ec7769c60ed402f80ed6338a7596333f30e",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://ripple.com/stablecoin/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: RLUSD",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "staleness"
+    ]
+  },
+  "proof": [
+    "2a722b93f8f8419acd923243e02a14ec99e2d295ce3a652704969d8c11543485",
+    "581a039e7f3a0af4271d0403293a8c0d84ce301adf903e6cac161e5a4e0ecdb8",
+    "0307e023653f17ad34ac47d69b2912905df674da0d667edc5caeca612623be8b",
+    "e0ab22490a2241a21842451dbfc26ced4f7ccbbd57e52ee91b20fe95b876f1db",
+    "61e010aac690ce29467988833fb404e93e321285a5ffe3610a87f82e7c25cc9e",
+    "8cbadbef3b75ffb63a7dfef26fd69ce7aa2b10f9268dcf25d4ed9c3da32a6941",
+    "a8cf917f05fac5274b5fbb1eacd12b8e4c38c8e8fe00ea1ebe3c926507fbd366",
+    "941f093740656514917bdb3ff270fd764b7534f6c90f152842602112269886f3",
+    "d2c03694c328f4b51cdfbc1b5610e49a863eea409abe8f1c63310955cb3e3110"
+  ]
+}

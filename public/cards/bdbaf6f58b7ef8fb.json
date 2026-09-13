@@ -1,0 +1,59 @@
+{
+  "card": {
+    "as_of": "2026-09-13T03:33:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "336",
+      "symbol": "U",
+      "attestation_page": "https://www.unitedstables.com/",
+      "auditor": null,
+      "cadence_claimed": null,
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "b14b38cf0f5106544aa835f7db15c139e87d97f1945790d4759319db3ba15a04",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "cadence_claimed",
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "bdbaf6f58b7ef8fb90739c359fb84399a22b3546b68a1d61eca4ea723dcaa8c8",
+    "sig_ed25519": "169af8e8d4e722e46d136c4791a80c956ffdc91ce2a115b3c60c0e9907fdd4c5e53d3dd14531ca51724bef4e14ee32d872d1e9be0695eef80f0bf658c405d305",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://www.unitedstables.com/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: U",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "cadence_claimed",
+      "staleness"
+    ]
+  },
+  "proof": [
+    "23a1ad75e4a2426fa09ccd993f256cbf5c2c45a2f4b1da3af9665de10fd7418e",
+    "fb1e8dc82a507c4ebe6ff32a9edb31a60d084fc03710aefc0d265e1fbe43c241",
+    "7a6996cd692027dff34051c7f80e442f07b2fbf69ed905a9fabcae183947fb33",
+    "272d1d39138709346da90e734f42d4610ebbf284dfcc87f6935880721e4c4609",
+    "ab0c8a88aa11b1620361c87c9cc2dff0c702f095658320d43612f356de421114",
+    "cb8bf66913e85d5b80f630d09e2df03746b26032af7c9ac456d4983a2979e7fc",
+    "4faf4bf63b891492f5229faaf14d902d5e9a6bb1b5b696c6c5670560f4bbc64e",
+    "8c19ec2090e22ed3df029fadaa6aedf5f4edf5f4b768d7efd56ef0efa1e392df",
+    "f23d4dda01e2506c5846961db88f96980f4cbfe90deb9d3cfa0e121ead4b9159"
+  ]
+}

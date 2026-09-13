@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-13T06:03:11Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "USDB",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_holders",
+          "from": 28,
+          "to": 60
+        }
+      ],
+      "ledger_index": 106951372,
+      "observed_at": "2026-09-13T06:03:11Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e1c3c7a59fb540dab7ef5fe40bbaac3c70c1a6bfb03170e266c061dbbdd6c452",
+    "sig_ed25519": "e85cd3f9ece06321cb8710c298081dcb181036d26f84d650092a330d731ba4942de1260605b11f29b7d7036e8fe84a384bd6878d24ffdf5283e3966f26f2f200",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: USDB changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:USDB"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "338bc172c21ef6491832b7463e2ee3966e6a2e91ec0e01ce3f200261e1c05bef",
+    "cb0c4cab80891e24ed85bd2c7bd5eee17ad0a223154dd25588050fabc1270018",
+    "bdcd5098776d0d3dc79d9cb9ee696bbf8c4856ac449457b346484d2f279b5ef2",
+    "bd7742af28404d43259ef0f17857dbb368ce9c79ad44be1527e859956d8a5c2e",
+    "9923c624ffc0e735d903bf30da6e19c0ca3f7c8709854dd6d9f1e10c762e62ac",
+    "8cbadbef3b75ffb63a7dfef26fd69ce7aa2b10f9268dcf25d4ed9c3da32a6941",
+    "a8cf917f05fac5274b5fbb1eacd12b8e4c38c8e8fe00ea1ebe3c926507fbd366",
+    "941f093740656514917bdb3ff270fd764b7534f6c90f152842602112269886f3",
+    "d2c03694c328f4b51cdfbc1b5610e49a863eea409abe8f1c63310955cb3e3110"
+  ]
+}

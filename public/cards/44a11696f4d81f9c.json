@@ -1,0 +1,53 @@
+{
+  "card": {
+    "as_of": "2026-09-13T03:33:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "129",
+      "symbol": "USDY",
+      "attestation_page": "https://ondo.finance/usdy",
+      "auditor": null,
+      "cadence_claimed": "daily",
+      "latest_report_date": "2026-09-10",
+      "staleness_days": 3,
+      "mirror_sha256": "09dd5c696add5fbf44f58db8fc83a4b5e0324e68608ca597b6cb78caff55f10e",
+      "excerpt": "TVL $ 2.23B TVL 1W 1M 1Y ALL Chart values as of 8:00:00pm EDT . Portfolio Overview As of September 10, 2026 7:59:59pm EDT Value of USDY Outstanding 3 $ 2.14B Va",
+      "unmeasured": [
+        "auditor"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "44a11696f4d81f9c16d6b31079a9de703031fc51a2bb001803423f4b19476ebb",
+    "sig_ed25519": "a0d6b26edd8a05e1048f865e9d95980a99a26fb2cecc037ac622510fcd695bd2dcae8241385b33e569bd6ad86202f60a537432f6d9d2da8cbb2924f2743e6b08",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://ondo.finance/usdy"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDY",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor"
+    ]
+  },
+  "proof": [
+    "70f9e87057085104450c9a70b6f4a8497cb1050fb7424f92a23a33bfadcb2a2d",
+    "a94289a1e1c00677f02dc3a93fcf835787700e884d811203fc55ae8a1f6226ae",
+    "0307e023653f17ad34ac47d69b2912905df674da0d667edc5caeca612623be8b",
+    "e0ab22490a2241a21842451dbfc26ced4f7ccbbd57e52ee91b20fe95b876f1db",
+    "61e010aac690ce29467988833fb404e93e321285a5ffe3610a87f82e7c25cc9e",
+    "8cbadbef3b75ffb63a7dfef26fd69ce7aa2b10f9268dcf25d4ed9c3da32a6941",
+    "a8cf917f05fac5274b5fbb1eacd12b8e4c38c8e8fe00ea1ebe3c926507fbd366",
+    "941f093740656514917bdb3ff270fd764b7534f6c90f152842602112269886f3",
+    "d2c03694c328f4b51cdfbc1b5610e49a863eea409abe8f1c63310955cb3e3110"
+  ]
+}

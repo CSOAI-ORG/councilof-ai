@@ -1,0 +1,59 @@
+{
+  "card": {
+    "as_of": "2026-09-13T03:33:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "173",
+      "symbol": "BUIDL",
+      "attestation_page": "https://securitize.io/",
+      "auditor": null,
+      "cadence_claimed": null,
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "a10fd5fa92999f1fdd90df5d32de045e5a7b46de16f872b190b3e56d1f2908d6",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "cadence_claimed",
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e8579c317e64b525c2d946ba4dd193fb4d5e729b747d3e896ffa4c70908935dd",
+    "sig_ed25519": "1a9470d4db28a36f1528df8d30791c7f3b366bea2647e1e8a63d784564edcb4ed3e9006cc07558c6be0e8d02273b49e59ca986c2347c52a1461f8059c80c0b09",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://securitize.io/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: BUIDL",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "cadence_claimed",
+      "staleness"
+    ]
+  },
+  "proof": [
+    "9fea476d16a8b3f244b4927cc394a819c9f68fcf9f6c9af612787ff7f3746bda",
+    "d72a6d6a687116910b9c0bd6909a1e0ee9919be58918e7586e776cf3ca25ee8b",
+    "c7693d09f5bbb38cc0f9f07dd9a6db53771dbf0580e00f07dcf44478e1fa2f9b",
+    "e0ab22490a2241a21842451dbfc26ced4f7ccbbd57e52ee91b20fe95b876f1db",
+    "61e010aac690ce29467988833fb404e93e321285a5ffe3610a87f82e7c25cc9e",
+    "8cbadbef3b75ffb63a7dfef26fd69ce7aa2b10f9268dcf25d4ed9c3da32a6941",
+    "a8cf917f05fac5274b5fbb1eacd12b8e4c38c8e8fe00ea1ebe3c926507fbd366",
+    "941f093740656514917bdb3ff270fd764b7534f6c90f152842602112269886f3",
+    "d2c03694c328f4b51cdfbc1b5610e49a863eea409abe8f1c63310955cb3e3110"
+  ]
+}

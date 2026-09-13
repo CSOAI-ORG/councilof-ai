@@ -1,0 +1,59 @@
+{
+  "card": {
+    "as_of": "2026-09-13T03:33:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "146",
+      "symbol": "USDe",
+      "attestation_page": "https://app.ethena.fi/dashboards/transparency",
+      "auditor": null,
+      "cadence_claimed": null,
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "4508d7fdfdf3c62b7dcc35bc37e8e0990897506382a45f4c3112312323edb47e",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "cadence_claimed",
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f1c64e6fb82930364a257d71d2e4ed4c2722794c576941a09222025835971e4e",
+    "sig_ed25519": "087dcba69d033495cb04cb9e89b84216d8e6f05aa8fcb325e31b58cc2219be50628371093863873a68d4980cbb5a80a5d2d87e7563da086fc19c7d9963e28104",
+    "source_urls": [
+      "https://app.ethena.fi/dashboards/transparency",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDe",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "cadence_claimed",
+      "staleness"
+    ]
+  },
+  "proof": [
+    "06d7a234c34cf963099f94e710e5939da65d9e7d64014093782505d5825ab864",
+    "03ae0ee7b1787cb553f5118aaf84505331b1cf65053f82c493f96ae6086c8cca",
+    "3def3a2f9826bb9ff5f6eb9c9de8f17063f0d97bfd4dc0204b04fde1ffea6a6f",
+    "00186038db9337df9f0edd4a9a95a060014596f6d2ca89cdfbb26a1198d23a0c",
+    "61e010aac690ce29467988833fb404e93e321285a5ffe3610a87f82e7c25cc9e",
+    "8cbadbef3b75ffb63a7dfef26fd69ce7aa2b10f9268dcf25d4ed9c3da32a6941",
+    "a8cf917f05fac5274b5fbb1eacd12b8e4c38c8e8fe00ea1ebe3c926507fbd366",
+    "941f093740656514917bdb3ff270fd764b7534f6c90f152842602112269886f3",
+    "d2c03694c328f4b51cdfbc1b5610e49a863eea409abe8f1c63310955cb3e3110"
+  ]
+}

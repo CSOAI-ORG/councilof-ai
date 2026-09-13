@@ -1,0 +1,58 @@
+{
+  "card": {
+    "as_of": "2026-09-13T03:33:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "221",
+      "symbol": "USDTB",
+      "attestation_page": "https://usdtb.money/",
+      "auditor": null,
+      "cadence_claimed": "monthly",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "ca17e42582fd34aa4fd497b9d09355d9a544261d6cc85f9b5ea7ed6daa639ccd",
+      "excerpt": "Our smart contracts have undergone numerous rigorous audits by top firms and we provide monthly attestations and live dashboards of reserves. USDtb Digital Doll",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "dc4831a1bc969807d721d9d5b9fbb317a1acb4c2133ea0ee21699ac899f6121f",
+    "sig_ed25519": "09de11bd317afd6227bf69af719f11aa3584a955a8898471b4b2a0c700b0d1dfdaf61125a198e9b3935ee92ee4dbb176432050226e95ee1ec94e6391eeda4c0e",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://usdtb.money/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDTB",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "staleness"
+    ]
+  },
+  "proof": [
+    "baa1805ba30016bf9737de5d00f03838a790249bd38df5f34552e2a1410cfd79",
+    "6f06839f1878c4fe2406f616d0c825fa726d6211d2140b572dedf757a62c76a0",
+    "eea9b31833c43d7d88890417e7b3fde2da56a708494e8b51319c028a5a3ea9ec",
+    "272d1d39138709346da90e734f42d4610ebbf284dfcc87f6935880721e4c4609",
+    "ab0c8a88aa11b1620361c87c9cc2dff0c702f095658320d43612f356de421114",
+    "cb8bf66913e85d5b80f630d09e2df03746b26032af7c9ac456d4983a2979e7fc",
+    "4faf4bf63b891492f5229faaf14d902d5e9a6bb1b5b696c6c5670560f4bbc64e",
+    "8c19ec2090e22ed3df029fadaa6aedf5f4edf5f4b768d7efd56ef0efa1e392df",
+    "f23d4dda01e2506c5846961db88f96980f4cbfe90deb9d3cfa0e121ead4b9159"
+  ]
+}
