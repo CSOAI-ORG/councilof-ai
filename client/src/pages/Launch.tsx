@@ -30,9 +30,9 @@ interface CorrectionCount {
 
 const VERIFICATION_LINKS = [
   {
-    label: "Public root (signed Merkle tree)",
+    label: "Signed public-root manifest",
     url: "/root.json",
-    desc: "Measurement cards are hashed, pairwise Merkle-rooted, Ed25519-signed.",
+    desc: "The exact listed leaf hashes, count and Merkle root. Its scope is separate from the signed-card catalogue.",
   },
   {
     label: "Measurement board (22 axes)",
@@ -81,7 +81,7 @@ export default function Launch() {
   useEffect(() => {
     document.title = "The launch story — Council of AI";
     setMetaDescription(
-      "An independent measurement body publishes signed, replayable measurements of AI systems and issued assets. Every number is verifiable. Every correction is public.",
+      "An independent measurement body publishes scoped, replayable evidence about AI systems and issued assets. Every number is traceable. Every correction is public.",
     );
 
     fetch("/root.json")
@@ -99,9 +99,11 @@ export default function Launch() {
     fetch("/api/gspc")
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((d) => {
-        const axes = d?.axes?.length ?? d?.axis_count;
-        const measured = d?.measured ?? d?.measured_count;
-        const unmeasured = d?.unmeasured ?? d?.unmeasured_count;
+        const axes = d?.totals?.axes ?? d?.axes?.length ?? d?.axis_count;
+        const measured =
+          d?.totals?.measured_axes ?? d?.measured ?? d?.measured_count;
+        const unmeasured =
+          d?.totals?.unmeasured_axes ?? d?.unmeasured ?? d?.unmeasured_count;
         setBoard({
           state: "live",
           axes: typeof axes === "number" ? axes : undefined,
@@ -114,7 +116,11 @@ export default function Launch() {
     fetch("/api/corrections")
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((d) => {
-        const count = Array.isArray(d) ? d.length : d?.count;
+        const count = Array.isArray(d)
+          ? d.length
+          : Array.isArray(d?.corrections)
+            ? d.corrections.length
+            : d?.count;
         setCorrections({
           state: "live",
           count: typeof count === "number" ? count : undefined,
@@ -132,7 +138,7 @@ export default function Launch() {
         </p>
 
         <h1 className="mt-3 text-4xl font-bold tracking-tight text-gray-900">
-          {root.state === "live" ? root.card_count : "…"} signed measurements.
+          {root.state === "live" ? root.card_count : "…"} public-root leaves.
           <br />
           {board.state === "live" ? board.axes : "…"} axes.{" "}
           {corrections.state === "live" ? corrections.count : "…"} public
@@ -140,8 +146,8 @@ export default function Launch() {
         </h1>
 
         <p className="mt-4 text-lg text-gray-600">
-          An independent measurement body publishes signed, replayable
-          measurements of AI systems and issued assets. Every number below is
+          An independent measurement body publishes scoped, replayable
+          evidence about AI systems and issued assets. Every number below is
           fetched live from a named endpoint. Every correction is public and
           append-only. No grade is for sale.
         </p>
@@ -153,7 +159,7 @@ export default function Launch() {
           </h2>
           <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
-              <dt className="text-sm text-emerald-700">Signed cards</dt>
+              <dt className="text-sm text-emerald-700">Public-root leaves</dt>
               <dd className="text-3xl font-bold text-emerald-900">
                 {root.state === "loading"
                   ? "…"
@@ -161,7 +167,7 @@ export default function Launch() {
                     ? "unreachable"
                     : root.card_count ?? "—"}
               </dd>
-              <dd className="text-xs text-emerald-600">in the Merkle tree</dd>
+              <dd className="text-xs text-emerald-600">listed by the signed root</dd>
             </div>
             <div>
               <dt className="text-sm text-emerald-700">Board axes</dt>
@@ -213,11 +219,13 @@ export default function Launch() {
             never the outcome.
           </p>
           <p className="text-[15px] text-gray-600">
-            The public root is a Merkle tree of every measurement card we've
-            published. Each card is Ed25519-signed under{" "}
-            <code className="text-xs">did:web:csoai.org#board-attestation-1</code>
-            . The root is witnessed to Sigstore Rekor. The corrections ledger
-            records every error — including errors in our own tooling.
+            The public root is an Ed25519-signed Merkle manifest of exactly the
+            leaf hashes it lists, under{" "}
+            <code className="text-xs">did:web:csoai.org#board-attestation-1</code>.
+            Its witness sidecar records Rekor and OpenTimestamps state for those
+            exact root bytes. The separately indexed signed-card catalogue is a
+            different corpus and is not covered by that root. The corrections
+            ledger records errors — including errors in our own tooling.
           </p>
           <p className="text-[15px] text-gray-600">
             When we were wrong — a merged commit claimed a settlement was lost
