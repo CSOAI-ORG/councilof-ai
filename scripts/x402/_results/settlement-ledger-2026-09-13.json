@@ -1,12 +1,12 @@
 {
   "schema": "csoai.settlement-ledger/v1",
-  "as_of": "2026-09-13T04:26:36.953349+00:00",
+  "as_of": "2026-09-13T04:28:30.553441+00:00",
   "chain": "base",
   "chain_id": 8453,
   "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
   "scan_range": {
-    "from_block": 50942125,
-    "to_block": 51242125
+    "from_block": 50942181,
+    "to_block": 51242181
   },
   "integrity_anchor": {
     "block": 51172054,
@@ -20,8 +20,8 @@
       "total_usdc": "249.975962"
     },
     "SELF_TEST": {
-      "count": 7,
-      "total_usdc": "0.210000"
+      "count": 8,
+      "total_usdc": "0.220000"
     },
     "EXTERNAL_CUSTOMER": {
       "count": 1,
@@ -30,10 +30,6 @@
     "ZERO_VALUE": {
       "count": 4,
       "total_usdc": "0.000000"
-    },
-    "UNATTRIBUTED_SKU_MATCH": {
-      "count": 1,
-      "total_usdc": "0.010000"
     }
   },
   "reconciliation": {
@@ -176,7 +172,7 @@
       "from": "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
       "amount_atomic": 10000,
       "amount_usdc": "0.010000",
-      "classification": "UNATTRIBUTED_SKU_MATCH",
+      "classification": "SELF_TEST",
       "sku_match": "request_attestation (promo 0.01)"
     }
   ],
