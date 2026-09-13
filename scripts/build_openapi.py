@@ -278,7 +278,10 @@ def compose(fix: Path = FIX) -> dict:
     index = load(fix / "challenge_index.json")["doors"] if (fix / "challenge_index.json").exists() else {}
     samples = load(fix / "probe_samples.json")["samples"] if (fix / "probe_samples.json").exists() else {}
     proofs_doc = load(fix / "ownership_proofs.json") if (fix / "ownership_proofs.json").exists() else None
-    tiers_by_path = {split_template(t["resource"])[0]: t for t in cat["tiers"]}
+    # The live /api/x402 renamed `tiers` → `resources` on 2026-09-09 (6dadd89a); the fixture kept
+    # the old key, so `--fetch` produced a catalog this producer could not read (KeyError: 'tiers',
+    # seen 2026-09-13). Read whichever the catalog carries — same rows, same fields.
+    tiers_by_path = {split_template(t["resource"])[0]: t for t in (cat.get("resources") or cat.get("tiers") or [])}
     free_forever = cat.get("free_forever", [])
     defaults = sku_default_usd()
     decimals = int(rail["asset"]["decimals"])
