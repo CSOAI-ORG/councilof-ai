@@ -1,0 +1,71 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "wrapped USDC.e on arbitrum vs Arbitrum One ERC-20 gateway escrow — ESCROW_PARITY_READ",
+  "as_of": "2026-09-13T15:35:34.024Z",
+  "source_urls": [
+    "https://arb1.arbitrum.io/rpc",
+    "https://ethereum-rpc.publicnode.com"
+  ],
+  "payload": {
+    "kind": "csoai.wrapper.parity/0.1",
+    "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+    "id": "usdc.e:arbitrum",
+    "backing_model": "escrow",
+    "wrapped": {
+      "chain": "arbitrum",
+      "symbol": "USDC.e",
+      "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+      "chainId": 42161,
+      "block": 504774830,
+      "block_hash": "0x810b56f5efc8eda2c67f9d9701373c0d05f4f8e96ffe52813e5f6287d64f50f1",
+      "block_time": 1789312624
+    },
+    "canonical": {
+      "chain": "ethereum",
+      "symbol": "USDC",
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "chainId": 1,
+      "block": 25969364,
+      "block_hash": "0x160d3696c4904ba7474d2d450554a844f70431af2961f22c0aa489be80867b22"
+    },
+    "escrow": "0xcEe284F754E854890e311e3280b767F80797180d",
+    "escrow_name": "Arbitrum One ERC-20 gateway escrow",
+    "note": null,
+    "reads": {
+      "wrapped_total_supply": {
+        "query": "totalSupply()",
+        "raw": "0x00000000000000000000000000000000000000000000000000002c1ca44ce58d",
+        "raw_sha256": "875318f879642f9f071c7a3afaab890d07bf30553c0e53a83dbce4b687837378",
+        "atomic": "48501527209357",
+        "normalized": "48501527.209357",
+        "decimals": 6
+      },
+      "escrow_balance": {
+        "query": "balanceOf(0xcEe284F754E854890e311e3280b767F80797180d)",
+        "raw": "0x00000000000000000000000000000000000000000000000000002f7f030847ea",
+        "raw_sha256": "dab96c6b6baa11605e264501c2e39fd957d1b1caec4b794d2fba35abd7a51f35",
+        "atomic": "52222558226410",
+        "normalized": "52222558.226410",
+        "decimals": 6
+      }
+    },
+    "escrow_over_wrapped": "1.076719",
+    "parity_state": "ESCROW_PARITY_READ",
+    "state": "PROBED",
+    "error": null,
+    "fetched_at": "2026-09-13T15:35:34.024Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "unmeasured": []
+  },
+  "tags": [
+    "eater:wrapper-parity",
+    "axis:distribution-integrity",
+    "backing:escrow",
+    "state:ESCROW_PARITY_READ"
+  ],
+  "unmeasured": [],
+  "did_intended": "did:web:csoai.org#board-attestation-1",
+  "sha256": "8fde42761c0b58d5547a2f1a0bc2b0e92b0b9c0800d592b45bd726e33d0f61b0",
+  "sig_ed25519": null
+}
