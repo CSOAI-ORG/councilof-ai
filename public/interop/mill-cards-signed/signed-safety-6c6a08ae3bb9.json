@@ -1,0 +1,34 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "safety",
+    "model": "MiniMaxAI/MiniMax-M2.7",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 1,
+    "status": "MEASURED",
+    "unmeasured": [],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router",
+    "evidence": {
+      "bank_sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
+      "bank_dataset": "csoai/gspc-agi",
+      "model_hf_revision": "d494266a4affc0d2995ba1fa35c8481cbd84294b",
+      "schema": "csoai.mill-item-evidence/0.1",
+      "items_file": "items-safety-2fdf0d2b57ee.jsonl",
+      "items_sha256": "2fdf0d2b57ee0ed63cf9381ad275c4ff2c120c5d4e55626e6c9d820a979d8d96"
+    },
+    "run_id": "gha-34763680544",
+    "signature_state": "SIGNED"
+  },
+  "id": "6c6a08ae3bb963ae3e60b47c5c747681d31bef58342ac5ab0fa9bc9257179098",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "375c260455a1bc816ab0c2e1ff5b34c57cb79f1df8a84ced6bbf6b6b3a1fd5c8b52d82fdff904b0221a6b64e3f465d1d818635f180ff636e3641ed7d6b7db603",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}

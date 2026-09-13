@@ -30,6 +30,11 @@ STAGED_DIRS = (
     # Two directory names added under PR review; admission/signing unchanged.
     "x402-door-conformance-2026-09",
     "agent-interop-canonical-2026-09",
+    "mcp-liveness-2026-09",
+    # Wrapper-economy lane (2026-09-13): wrapped-asset parity atoms from
+    # scripts/readers/wrapped-asset-parity-reader.mjs --stage. PROBED / UNMEASURED only;
+    # the read state lives in payload.parity_state. Admission/signing unchanged.
+    "wrapped-asset-parity-2026-09",
 )
 SURFACE = "public.notice"
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"

@@ -23,6 +23,16 @@ const CHAINS = {
     explorer: "https://api.basescan.org/api",
     chainId: 8453,
   },
+  optimism: {
+    rpc: "https://mainnet.optimism.io",
+    explorer: "https://api-optimistic.etherscan.io/api",
+    chainId: 10,
+  },
+  arbitrum: {
+    rpc: "https://arb1.arbitrum.io/rpc",
+    explorer: "https://api.arbiscan.io/api",
+    chainId: 42161,
+  },
 };
 
 // ERC-20 ABI fragments (minimal)

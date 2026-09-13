@@ -75,7 +75,14 @@ TRANSFER_TOPIC = "ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3
 #   0xdf61…3910 — the payer wallet for the owner-gated live-settlement test
 #                 (holds 0 USDC; funding is an owner decision)
 #   payTo itself — the 2026-09-11 anchor was payTo → payTo (self-settlement)
+#   0xb2bd…371b — audit-settlement-classification.json (2026-09-13): sender of
+#                 0x60172f43…fababe7f, INTERNAL_SELF_FUNDED "same controlled wallet"
+#   0xc669…cb63 — audit-settlement-classification.json (2026-09-13): sender of
+#                 0xeaaafb8a…3e8807, INTERNAL_SELF_FUNDED "burner funded via MetaMask";
+#                 this is the wallet /api/revenue had been counting as the first
+#                 distinct non-self payer. Senders resolved on-chain (Base).
 KNOWN_INTERNAL = {
+    # 0xb2bd…/0xc669… (tx.from of our settlements) are facilitator relayers, not ours — never list them.
     PAY_TO.lower(),
     "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6",
     "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7",

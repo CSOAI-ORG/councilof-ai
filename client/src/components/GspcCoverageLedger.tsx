@@ -16,6 +16,11 @@ const SOURCES: Record<keyof CoverageLedgerInput, string> = {
   banks: "/api/bank-complete",
   x402: "/api/x402",
   revenue: "/api/revenue",
+  // Same three sources functions/api/coverage.ts reads server-side; the client
+  // fallback must fetch every CoverageLedgerInput key or the row reads "—".
+  mcp: "/mcp",
+  a2a: "/api/a2a",
+  erc8004: "/interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json",
 };
 
 async function readJson(url: string, signal: AbortSignal): Promise<unknown> {

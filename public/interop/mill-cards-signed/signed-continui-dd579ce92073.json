@@ -1,0 +1,34 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "continuity",
+    "model": "moonshotai/Kimi-K2-Instruct",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.6,
+    "status": "MEASURED",
+    "unmeasured": [],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router",
+    "evidence": {
+      "bank_sha256": "a3ff4e3158a538a90ce7c26c2a402af6d078d66334bf48a93607e26fea689850",
+      "bank_dataset": "csoai/gspc-asi",
+      "model_hf_revision": "fd1984e2b7a3350dbf7305fe73a4ede25c14de50",
+      "schema": "csoai.mill-item-evidence/0.1",
+      "items_file": "items-continui-3f7770ebb2cc.jsonl",
+      "items_sha256": "3f7770ebb2ccddeb7524afeafeacc5f19b07d4962deaf2cc7ad49ed98a735973"
+    },
+    "run_id": "gha-34758152472",
+    "signature_state": "SIGNED"
+  },
+  "id": "dd579ce920731647c6c35460967ba3b93318ef08ff6c93c14b78e3ad25472ce8",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "b9e84e76606b2e848252d543d1be30a70f021f692cb0a6e6712e6c270071269ffcc212c82f8ab9b87721475b559265b771bd464da9e7d10dc5183e6d4854630c",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}

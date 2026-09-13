@@ -1,7 +1,7 @@
 # IETF: Tampering with Agent Logs (DRAFT — not submitted)
 
-**Status:** DRAFT prepared for review. Not submitted without owner approval.
-**Date:** 2026-09-12
+**Status:** Submitted to the IETF Independent Submission queue 2026-09-12; not yet published on datatracker (verified 2026-09-13). This text is the review copy.
+**Date:** 2026-09-13 (v2 — stale counts replaced with live references)
 
 ## Abstract
 
@@ -30,8 +30,9 @@ Tampering risks include:
 
 ## CSOAI Evidence
 
-- Ed25519 signatures with DID-bound keys
-- Merkle root with 169 leaves
-- Rekor inclusion at log index 2791822965
-- OTS submission pending Bitcoin confirmation
+- Ed25519 signatures with DID-bound keys (did:web:csoai.org)
+- Public Merkle root: current leaf count and root at https://councilof.ai/root.json (264 leaves as of 2026-09-13; re-fetch before citing)
+- Rekor inclusion on every published root (latest index in https://councilof.ai/interop/root-witness-latest.json)
+- OpenTimestamps: current and prior roots carry CONFIRMED Bitcoin block attestations (verified 2026-09-13) — pending stamps are auto-upgraded on a schedule and the witness sidecar is regenerated from proof bytes, never typed
 - Superseded card ledger preserving historical cards
+- Decline records: refused/unmeasurable subjects are logged as first-class entries (see companion draft-csoai-audit-use-case §6)

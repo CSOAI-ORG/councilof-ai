@@ -1,0 +1,124 @@
+{
+  "schema": "csoai.estate-audit/0.1",
+  "generated_at": "2026-09-13T13:27:23Z",
+  "basis": "origin/master a75829aa4",
+  "operator": "MiMoCode (taking over from Kimi K3 session)",
+  "live_state": {
+    "gspc_axes": 22,
+    "gspc_measured": 22,
+    "model_fleets": 14,
+    "public_leaders": 3,
+    "root_cards": 264,
+    "root_as_of": "2026-09-13T06:03:55Z",
+    "card_index": 335,
+    "mill_signed": 1556,
+    "mill_unsigned": 1081,
+    "mcp_endpoint": "LIVE (csoai-gspc-mcp, 12 tools)",
+    "mcp_registry": "NOT LISTED (0 matches for csoai/councilof)",
+    "revenue": "$0.00 external",
+    "settlements": {
+      "external_customer": 0,
+      "internal_self_funded": 2,
+      "zero_value_probe": 0,
+      "unknown": 0
+    }
+  },
+  "k3_left_off": {
+    "1_mcp_registry": {
+      "status": "RESOLVED",
+      "finding": "Main MCP server (councilof.ai/mcp) is NOT in the MCP registry. 30 io.github.CSOAI-ORG/* entries exist (our fleet). The main server needs registry publishing (owner-gated).",
+      "blocker": "Owner must publish to registry.modelcontextprotocol.io"
+    },
+    "2_settlement_classification": {
+      "status": "RESOLVED",
+      "finding": "2 INTERNAL_SELF_FUNDED settlements, 0 EXTERNAL_CUSTOMER. Revenue $0.00.",
+      "evidence": "audit-settlement-classification.json"
+    },
+    "3_red_line_registry_entry": {
+      "status": "FLAGGED",
+      "finding": "MCP registry entry 'councilof_mcp' contains 'UK MOD + AUKUS Pillar 2 procur...' \u2014 DEFONEOS compartment violation (no AUKUS claims without signed letter)",
+      "action": "Owner must update registry description or remove entry"
+    },
+    "4_pr_2127": {
+      "status": "CHECK",
+      "finding": "PR #2127 not found in open PRs \u2014 likely merged or closed. Need to verify."
+    }
+  },
+  "merged_since_k3": {
+    "count": "284 commits since execution/seven-terminal-20260912",
+    "highlights": [
+      "IETF draft v2 with live references (#2140)",
+      "MCP liveness sampler (#2139)",
+      "OTS loop flush (#2138)",
+      "OTS Bitcoin attestation upgrades",
+      "Spray byte-parity fix (#2132, #2130)",
+      "Benchmarker scorecards (#2129)",
+      "Mill evidence bundle (#2123)",
+      "Protocol layer door test harness (#2121)",
+      "TUI-9 launch story page (#2097)",
+      "Hermes estate report (#2096)"
+    ]
+  },
+  "remaining_blockers": [
+    {
+      "id": "B-01",
+      "severity": "HIGH",
+      "desc": "MCP server not in MCP registry",
+      "gate": "Owner publish"
+    },
+    {
+      "id": "B-02",
+      "severity": "HIGH",
+      "desc": "MCP registry entry has AUKUS/MOD language",
+      "gate": "Owner fix"
+    },
+    {
+      "id": "B-03",
+      "severity": "HIGH",
+      "desc": "npm OIDC trusted publisher not configured",
+      "gate": "Owner npmjs.com"
+    },
+    {
+      "id": "B-04",
+      "severity": "HIGH",
+      "desc": "Base EAS anchor incomplete",
+      "gate": "Owner wallet"
+    },
+    {
+      "id": "B-05",
+      "severity": "HIGH",
+      "desc": "XRPL memo anchor incomplete",
+      "gate": "Owner wallet"
+    },
+    {
+      "id": "B-06",
+      "severity": "MEDIUM",
+      "desc": "OTS Bitcoin confirmation pending",
+      "gate": "Blockchain"
+    },
+    {
+      "id": "B-07",
+      "severity": "MEDIUM",
+      "desc": "GitHub pin swap (6 pins)",
+      "gate": "Web UI"
+    },
+    {
+      "id": "B-08",
+      "severity": "MEDIUM",
+      "desc": "IETF drafts not on datatracker",
+      "gate": "Format fix + resubmit"
+    },
+    {
+      "id": "B-09",
+      "severity": "LOW",
+      "desc": "1,081 unsigned cards await signing",
+      "gate": "GHA pipeline"
+    },
+    {
+      "id": "B-10",
+      "severity": "LOW",
+      "desc": "1556 cards only 80 with run_id provenance",
+      "gate": "Pipeline"
+    }
+  ]
+}
