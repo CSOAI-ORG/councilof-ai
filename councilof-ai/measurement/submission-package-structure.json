@@ -1,0 +1,47 @@
+{
+  "schema": "gspc.measurement-card/0.1",
+  "kind": "strategy.sovereign_ai.submission_package",
+  "subject": "submission-package-structure",
+  "measured_at": "2026-09-13T05:42:50.142406+00:00",
+  "metrics": {
+    "submission_package_structure": {
+      "1_application_form": "Standard Sovereign AI application form (TBD)",
+      "2_company_overview": "CSOAI Ltd profile, board, IP portfolio",
+      "3_demonstrator_spec": "Detailed demonstrator specification",
+      "4_evidence_assets": "Links to all 1011+ signed cards, 693 repos, 570+ PyPI packages",
+      "5_alignment_statement": "Mapping to scheme priorities + UK AI principles",
+      "6_team_credentials": "CEO + technical team credentials",
+      "7_budget_estimate": "Cost breakdown for demonstrator build",
+      "8_timeline": "Milestones + deliverables",
+      "9_risk_register": "Identified risks + mitigations",
+      "10_ip_strategy": "IP retention strategy + exploitation plan"
+    },
+    "common_to_all_4": [
+      "2_company_overview",
+      "4_evidence_assets",
+      "6_team_credentials",
+      "10_ip_strategy"
+    ],
+    "competition_specific": {
+      "nhs_productivity": [
+        "3_demonstrator_spec = 22-axis for NHS AI",
+        "5_alignment = NHS 10 Year Plan + 5 UK AI principles"
+      ],
+      "compute_efficiency": [
+        "3_demonstrator_spec = measurement-driven compute optimization on pod",
+        "5_alignment = ARIA Scaling Inference Lab + UK compute expansion"
+      ],
+      "defence_mission": [
+        "3_demonstrator_spec = DEFONEOS compartment",
+        "5_alignment = DEFONEOS doctrine + hard stops",
+        "9_risk_register = DEFONEOS hard stops"
+      ],
+      "agent_security": [
+        "3_demonstrator_spec = three-layer agent security architecture",
+        "5_alignment = NCSC AI threats + OWASP LLM Top 10"
+      ]
+    }
+  },
+  "honest_sentence": "Submission package structure: 10 sections per application. Common to all 4: company overview, evidence assets, team credentials, IP strategy. Competition-specific: demonstrator spec + alignment statement + risk register. Ready to fill in once criteria publish.",
+  "measurement_not_certification": true
+}
