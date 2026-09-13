@@ -1,0 +1,50 @@
+{
+  "card": {
+    "as_of": "2026-09-13T19:22:50Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "custody-disclosure",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "are a custodian and an auditor named and confirmable?"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9e7bcced007293b86fcbfda9448a29f3b9eee5a4b4a628675f6d57acf4bbeab8",
+    "sig_ed25519": "52f19e94c5a2a7686d71e015369a9a33410b84b7479700866eb7b072e20fae932cbd76a945c3212782fb06d73ea7928eb895b54104c7d85dcc05bdb6040d0a06",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-custody-disclosure"
+    ],
+    "subject": "GSPC custody-disclosure UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "custody-disclosure",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "10cb6142d572ad5822eb44024cd9fbe95fb8040f490602d7f80401a67992f3fd",
+    "68a2fea32cb972af1880c40268c93c24d27dc8d3f6a4aad1f15e0c992fea73c3",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "fe705826ea18b5752ba5e5c2ebd562d19124ef5aa9d27083c676b83b5da83ace",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "4d3a7ff54df8ebd45d1bfcc211392631d628eedca865a57dcda93ffeae0f9073",
+    "4f2f0798f9363714eff98d3418ee85a3fdde052da67110669751bd3c2b69621b",
+    "d07fafc536491feef09280b5194e2825fb4b8244b89879fddaa7247df8db5b20"
+  ]
+}
