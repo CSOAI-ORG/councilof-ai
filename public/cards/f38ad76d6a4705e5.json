@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-14T01:01:13Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "OUSG",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_holders",
+          "from": 50,
+          "to": 4
+        }
+      ],
+      "ledger_index": 106969133,
+      "observed_at": "2026-09-14T01:01:13Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f38ad76d6a4705e5c5f80096309dac09db7db8bd12fda2baaeb6dc0dbb125b41",
+    "sig_ed25519": "8dbf2a1dad009fe21fd2e02e8e2982535bd2dfa51bfa06862fc5148df881b5b3b21990474fdd26fd3a5d333aca2670b10029def480cd93601c31d98b69b5c208",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: OUSG changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:OUSG"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "85f710926fddffe5b48dc853236df4890f8744f941e85e0de9fdf626330361bf",
+    "ac66d851382eaf1d968271d5b8c81ec1237b2502940e2785d5a90eb5ee016014",
+    "69611de44228797805d9e74ff228dfcdea10c4ee19013378ed463da4df97da4f",
+    "911b3e5ed1f9ae9e3155b30f4ae1e581a8c5760b4db9f2ea924d85eb12095f3b",
+    "d2f3dbd14bb2154db9981e84a83992e7098426e0e25790226d6004aeaf267e58",
+    "0c8370e743f73643200038a1f8ac0dcfd48255600369eda4a4b0d2eda2f58326",
+    "fa57b173e280a899f219ca7143795437f74731184c1cd6b9219ce56421ca1e67",
+    "3148864d67c40e0761a92c642153f9b2053d74b843b637cc607a5f8cb3d07479",
+    "b3b7362dcacc955f616bfc6cb7b9a257a15cf2524c3cb2fb2bf1a2455834fb05"
+  ]
+}
