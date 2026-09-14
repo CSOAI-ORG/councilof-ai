@@ -40,10 +40,13 @@ describe("llms.txt derives the tool counts it publishes", () => {
     expect(Number(m![1]), `door serves ${free}+${paid}`).toBe(free + paid);
   });
 
-  it("the free-tool count in the Smithery line matches too", () => {
+  it("the Smithery line names the complete derived tool contract", () => {
     const out = R("public/llms.txt");
     const words = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"];
-    expect(out).toMatch(new RegExp(`exactly the ${words[free]} free tools`));
+    expect(out).toMatch(new RegExp(
+      `tools\\[\\] mirrors all ${free + paid} tools served[^\\n]+` +
+      `exactly the ${words[free]} free tools plus ${words[paid]} x402-metered evidence tools`,
+    ));
   });
 
   it("points at the live catalog-trust snapshot and does not freeze its counts", () => {
