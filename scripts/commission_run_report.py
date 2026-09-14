@@ -8,7 +8,9 @@ from pathlib import Path
 def feed_available(feed):
     return (
         isinstance(feed, dict)
-        and feed.get('schema') == 'csoai.commissions/0.1'
+        # /api/commissions is csoai.commissions/0.2 since #2252 (typed fields) and #2278
+        # (cards[]/delivery). The report reads only subject/axis/receipt_sha, present in both.
+        and feed.get('schema') in ('csoai.commissions/0.1', 'csoai.commissions/0.2')
         and feed.get('status') == 'MEASURED'
         and feed.get('records_unreadable') == 0
         and isinstance(feed.get('commissions'), list)
