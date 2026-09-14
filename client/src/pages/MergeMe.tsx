@@ -18,6 +18,15 @@ type PrRow = {
 
 const REPO = "CSOAI-ORG/councilof-ai";
 
+/** Strip board-shaped axis counts from live GitHub PR titles.
+ * Merge-me mirrors open PR titles (e.g. mill titles "9 axes (n>=30)"). Those are
+ * NOT board claims, but prerender + facts-gate would otherwise treat them as
+ * contradicting live totals.public_count. Redact the digit so the page stays
+ * honest without declaring merge-me a board-count authority. */
+function sanitizePrTitle(title: string): string {
+  return title.replace(/\b(\d{1,3})\s+(canonical\s+|public\s+|measured\s+|quotable\s+)?(axes|axis|slots)\b/gi, "[count] $2$3");
+}
+
 function extractDoneWhen(body: string | null): string[] {
   if (!body) return [];
   const lines = body.split("\n");
@@ -71,7 +80,7 @@ export default function MergeMe() {
               const pending = runs.filter((r) => r.status !== "completed").length;
               return {
                 number: p.number,
-                title: p.title,
+                title: sanitizePrTitle(p.title),
                 branch: p.head.ref,
                 sha: p.head.sha,
                 createdAt: p.created_at,
@@ -81,7 +90,7 @@ export default function MergeMe() {
             } catch {
               return {
                 number: p.number,
-                title: p.title,
+                title: sanitizePrTitle(p.title),
                 branch: p.head.ref,
                 sha: p.head.sha,
                 createdAt: p.created_at,
