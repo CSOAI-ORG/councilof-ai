@@ -2,15 +2,15 @@
   "x402Version": 2,
   "error": "Payment required",
   "resource": {
-    "url": "https://councilof.ai/api/eunomia-data?feed=1",
-    "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.",
+    "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-14T01%3A50%3A52Z",
+    "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
     "mimeType": "application/json",
-    "serviceName": "CSOAI Data Feed",
+    "serviceName": "CSOAI Receipts Batch",
     "tags": [
-      "data",
-      "feed",
-      "enforcement",
-      "signed",
+      "receipts",
+      "merkle",
+      "history",
+      "attestation",
       "x402"
     ]
   },
@@ -30,19 +30,19 @@
         "symbol": "USDC"
       },
       "csoai_pricing": {
-        "product_id": "csoai.product.issuance",
-        "sku_id": "issuance",
-        "tier": "reserve",
+        "product_id": "csoai.product.receipts_batch",
+        "sku_id": "receipts_batch",
+        "tier": "per_batch",
         "pricing_basis": "PROMO_EXISTING_DATA",
         "campaign_id": "csoai-launch-30d-20260911",
-        "normal_amount_atomic": "20000",
+        "normal_amount_atomic": "100000",
         "offered_amount_atomic": "10000",
         "starts_at": "2026-09-11T00:00:00Z",
         "ends_at": "2026-10-11T00:00:00Z",
         "fresh_compute_excluded": true
       },
-      "resource": "https://councilof.ai/api/eunomia-data?feed=1",
-      "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.",
+      "resource": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-14T01%3A50%3A52Z",
+      "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
       "mimeType": "application/json"
     }
   ],
@@ -53,19 +53,29 @@
           "type": "http",
           "method": "GET",
           "queryParams": {
-            "feed": "1"
+            "from": "2026-01-01T00:00:00Z",
+            "to": "2026-09-14T01:50:52Z"
           }
         },
         "output": {
           "type": "json",
           "example": {
-            "schema": "csoai.eunomia-data/0.2",
-            "kind": "feed",
-            "blocks": {
-              "signals": {},
-              "first_fine_watch": {},
-              "root": {},
-              "card_index": {}
+            "schema": "csoai.receipts.batch/0.1",
+            "kind": "batch",
+            "batch": {
+              "window": {
+                "from": "<iso>",
+                "to": "<iso>"
+              },
+              "count": 0,
+              "cap": 200,
+              "roots": [],
+              "items": []
+            },
+            "batch_sha256": "<64-hex>",
+            "manifest_card": {
+              "surface": "receipts.batch",
+              "sig_ed25519": "<hex or null>"
             }
           }
         }
@@ -92,13 +102,24 @@
               "queryParams": {
                 "type": "object",
                 "properties": {
-                  "feed": {
+                  "from": {
                     "type": "string",
-                    "const": "1"
+                    "format": "date-time",
+                    "description": "Window start (ISO-8601). Required."
+                  },
+                  "to": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Window end (ISO-8601). Defaults to now."
+                  },
+                  "preview": {
+                    "type": "string",
+                    "const": "1",
+                    "description": "Free: count, span and the sha256 of the batch bytes, without the leaves"
                   }
                 },
                 "required": [
-                  "feed"
+                  "from"
                 ]
               }
             },
@@ -134,7 +155,7 @@
           {
             "format": "jws",
             "acceptIndex": 0,
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9ldW5vbWlhLWRhdGEiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3ODkzNTE1NTEsInZlcnNpb24iOjF9.DRzMR2qrOSMlgOHrSqAVLALkwdyWUzuWx8jNeAss2umv8b9-YHYjHn5u3QWT_SrtlqWplemSh5QPp8o1CXCdDg"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZWNlaXB0cy9iYXRjaCIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc4OTM1MTU1MiwidmVyc2lvbiI6MX0.1atfLAWH0x5OQIbml9M-fEF1-UX54nB2Vk8ueIudvBiHvhKF1zF6JVqEEeoXZDbuUjXM85bQPj21xnOB0455CQ"
           }
         ]
       },
@@ -173,48 +194,47 @@
     }
   },
   "csoai": {
-    "schema": "csoai.eunomia-data/0.2",
-    "per": "feed-pull",
+    "schema": "csoai.receipts.batch/0.1",
+    "per": "batch",
     "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
-    "lane": "commercial-data",
-    "data_only": true,
-    "streams": {
-      "signals": {
-        "rows": 13,
-        "schema": "csoai.signals-index/0.1",
-        "href": "https://councilof.ai/signals/_index.json",
-        "each": "https://councilof.ai/signals/<axis>.signed.json"
-      },
-      "first_fine_watch": {
-        "signed": true,
-        "kid": null,
-        "href": "https://councilof.ai/api/fines"
-      },
-      "root": {
-        "as_of": "2026-09-13T19:27:08Z",
-        "card_count": 291,
-        "merkle_root": "93a244741200be98934a66484baa43381864e1b30a3509200308308adff51316",
-        "href": "https://councilof.ai/root.json"
-      },
-      "card_index": {
-        "rows": 335,
-        "href": "https://councilof.ai/signed/card_index.json"
-      }
-    },
-    "free_for": [
-      "regulators",
-      "the public",
-      "anyone verifying"
-    ],
-    "sold": "assembly + cadence of the feed (one document, every block carrying its published signature) — never the facts, which stay free",
     "never": [
-      "scores as a product",
-      "ranking",
-      "rating",
-      "certificate"
+      "settlement or payment receipts — none are published (/api/receipts/latest is UNPUBLISHED)",
+      "a conclusion about any leaf, subject or asset",
+      "a grade, a rank, a certificate"
     ],
-    "free_preview": "https://councilof.ai/api/eunomia-data",
-    "deliverable": "the assembled signed data feed for this lane — data only, never a score and never a rank",
+    "deliverable": "the canonical batch (hashes to preview.batch_sha256) + one signed manifest card-v0 (surface receipts.batch)",
+    "preview": {
+      "window": {
+        "from": "2026-01-01T00:00:00Z",
+        "to": "2026-09-14T01:50:52Z"
+      },
+      "count": 200,
+      "matched": 2535,
+      "cap": 200,
+      "truncated": true,
+      "next_from": "2026-09-02T07:56:40Z",
+      "span": {
+        "first_as_of": "2026-08-28T09:06:28.399Z",
+        "last_as_of": "2026-09-02T07:56:40Z"
+      },
+      "roots_in_window": 30,
+      "roots_indexed_total": 30,
+      "batch_sha256": "34590f9960fbb63688486fe5d0ba9bfa12395c2186e8b983e0a98e8d8f36b392",
+      "batch_bytes": 542400,
+      "sources": {
+        "leaves": "https://councilof.ai/cards-bundle.json",
+        "roots": "https://councilof.ai/receipts/root-history.json",
+        "current_root": "https://councilof.ai/root.json",
+        "settlement_receipts": "NONE published — /api/receipts/latest is UNPUBLISHED; this is a batch of measurement leaves, not payment receipts"
+      },
+      "what_this_is": "card-v0 measurement leaves published under signed public roots, assembled for a time window with their inclusion paths and carrying roots",
+      "what_this_is_not": [
+        "settlement or payment receipts — none are published (/api/receipts/latest is UNPUBLISHED)",
+        "a conclusion about any leaf, subject or asset",
+        "a grade, a rank, a certificate"
+      ]
+    },
+    "free_preview": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-14T01%3A50%3A52Z&preview=1",
     "rail": {
       "mode": "live",
       "pay_to_configured": true,
@@ -223,6 +243,7 @@
     },
     "not_paid_reason": "no x-payment header",
     "catalog": "https://councilof.ai/api/x402",
+    "explainer": "https://councilof.ai/pricing",
     "offer_receipt": {
       "extension": "offer-receipt",
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
