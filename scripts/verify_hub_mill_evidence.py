@@ -117,7 +117,9 @@ def validate_bundle(body: dict, directory: Path) -> dict:
         require(row["raw_output_sha256"] == sha(row["raw_output"].encode()), "raw output digest mismatch")
         require(isinstance(row["provider_route"], str) and (
             row["provider_route"].startswith("hf-router:") or
-            row["provider_route"].startswith("openrouter:")
+            row["provider_route"].startswith("openrouter:") or
+            # Kaggle kernel: local inference at model_hf_revision on the named device.
+            re.fullmatch(r"kaggle-community:[a-z0-9-]+", row["provider_route"]) is not None
         ), "exact provider route missing")
         require(isinstance(row["elapsed_ms"], int) and not isinstance(row["elapsed_ms"], bool) and row["elapsed_ms"] >= 0,
                 "elapsed time missing")
