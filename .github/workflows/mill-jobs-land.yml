@@ -81,7 +81,10 @@ jobs:
       - name: land (dedupe per (model, axis), bind run provenance, require the evidence bundle)
         id: land
         env:
-          RUN_ID: hfjobs-${{ github.run_id }}
+          # land_mill_cards.bind_run_provenance requires a positive GitHub Actions run id and stamps
+          # the card's run_id as "gha-<id>"; the signer accepts exactly that id (bare or gha-).
+          # A non-numeric id ("hfjobs-…", run 34800722734) made every card skip as "json ValueError".
+          RUN_ID: ${{ github.run_id }}
         run: |
           set -euo pipefail
           pip install -q cryptography
