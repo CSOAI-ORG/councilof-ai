@@ -1020,6 +1020,63 @@ def run_selftest() -> int:
         validate_rekor_set(rekor_lie_errors, rekor_lie)
         assert any("does not authenticate" in issue for issue in rekor_lie_errors), rekor_lie_errors
 
+    # Witness freshness failing controls (#030). The release gate must refuse a witness
+    # that belongs to an OLDER root standing in for the current one. Control first: the
+    # committed sidecar binds the committed root. Then two substitutions must fail:
+    #   (a) a previous root's sidecar as root-witness-latest.json (synthetic, and real
+    #       dated bytes when the tree holds any);
+    #   (b) the current sidecar re-pointed at a previous root's Rekor entry.
+    import shutil
+    import tempfile as _stale_tempfile
+
+    current_raw = (DEFAULT_PUBLIC / "root.json").read_bytes()
+    current_root_sha = sha256(current_raw)
+    current_signed = preimage(current_root)
+
+    def _witness_errors(sidecar_doc: dict[str, Any], extra_files: list[Path]) -> list[str]:
+        with _stale_tempfile.TemporaryDirectory() as stale_dir:
+            stale_public = Path(stale_dir) / "public"
+            (stale_public / "interop").mkdir(parents=True)
+            (stale_public / "interop" / "root-witness-latest.json").write_text(json.dumps(sidecar_doc))
+            shutil.copyfile(DEFAULT_PUBLIC / "interop" / "root-witness-pointer.json", stale_public / "interop" / "root-witness-pointer.json")
+            for extra in extra_files:
+                shutil.copyfile(extra, stale_public / "interop" / extra.name)
+            configure_public_dir(stale_public)
+            try:
+                found: list[str] = []
+                validate_current_witness(found, current_root, current_raw, current_root_sha, current_signed, require_observation=False)
+                return found
+            finally:
+                configure_public_dir(DEFAULT_PUBLIC)
+
+    current_entry_files = [current_rekor_path] if current_rekor_path is not None and current_rekor_path.is_file() else []
+    control_errors = _witness_errors(current_sidecar, current_entry_files)
+    assert not [e for e in control_errors if "bind" in e or "Rekor" in e], control_errors
+
+    synthetic_stale = json.loads(json.dumps(current_sidecar))
+    synthetic_stale["artifact"]["sha256"] = "00" * 32
+    stale_errors = _witness_errors(synthetic_stale, current_entry_files)
+    assert any("sidecar sha256 does not bind current root" in e for e in stale_errors), stale_errors
+
+    older_sidecars = sorted(
+        path
+        for path in (DEFAULT_PUBLIC / "interop").glob("root-witness-20*.json")
+        if ((load_json(path).get("artifact") or {}).get("sha256")) not in (None, current_root_sha)
+    )
+    if older_sidecars:
+        older = load_json(older_sidecars[-1])
+        real_stale_errors = _witness_errors(older, [])
+        assert any("sidecar sha256 does not bind current root" in e for e in real_stale_errors), real_stale_errors
+        older_rekor = ((older.get("witnesses") or {}).get("rekor") or {})
+        older_rekor_path = local_entry_path(older_rekor.get("entry_file"))
+        if current_entry_files and older_rekor_path is not None and older_rekor_path.is_file():
+            repointed = json.loads(json.dumps(current_sidecar))
+            for field in ("entry_file", "uuid", "logIndex", "logID", "integratedTime"):
+                if field in older_rekor:
+                    repointed["witnesses"]["rekor"][field] = older_rekor[field]
+            repoint_errors = _witness_errors(repointed, [older_rekor_path])
+            assert any("does not bind the signed envelope preimage hash" in e for e in repoint_errors), repoint_errors
+
     # A newly submitted, parseable calendar proof is a normal release state.
     # It must pass as STAMPED_PENDING_BITCOIN without fabricating a Bitcoin
     # header.  This fixture exercises the writer and gate together: before this
