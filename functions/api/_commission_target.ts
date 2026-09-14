@@ -59,8 +59,8 @@ export function classifyCommissionTarget(subject: string): CommissionTarget {
       reason: "hub-shaped model id",
     };
   }
-  // Bare short id — treat as ollama candidate only if looks like a model name (has digit or known pattern)
-  if (/^[a-zA-Z0-9._-]+$/.test(s) && s.length <= 64 && /[0-9]/.test(s)) {
+  // Bare id — ollama candidate when model-shaped (digit, hyphen, or dot). Plain words stay ambiguous.
+  if (/^[a-zA-Z0-9._-]+$/.test(s) && s.length <= 64 && (/[0-9]/.test(s) || /[-.]/.test(s))) {
     return {
       subject_kind: "ollama_model",
       model: s,
