@@ -1,14 +1,28 @@
 #!/usr/bin/env node
 // Publishes the gspc MCP server to the MCP Registry.
 // Inputs: VER (version string), TOKEN (Registry JWT).
-// Output: logs progress. Exits 1 on actual API failure.
+// Fail-closed: exit 1 if TOKEN/VER missing or null-like. Do not publish without a real JWT.
+// CommonJS (.cjs) — root package.json has "type":"module".
 
 const fs = require('fs');
 const https = require('https');
 
 const VER = process.env.VER;
 const TOKEN = process.env.TOKEN;
-const server = JSON.parse(fs.readFileSync('server.json'));
+
+function bad(msg) {
+  console.error('FAIL-CLOSED:', msg);
+  process.exit(1);
+}
+
+if (!VER || String(VER).trim() === '' || String(VER) === 'null' || String(VER) === 'undefined') {
+  bad('VER missing or null-like');
+}
+if (!TOKEN || String(TOKEN).trim() === '' || String(TOKEN) === 'null' || String(TOKEN) === 'undefined') {
+  bad('TOKEN missing or null-like (OIDC→Registry JWT exchange failed or empty)');
+}
+
+const server = JSON.parse(fs.readFileSync('server.json', 'utf8'));
 
 function get(path) {
   return new Promise((resolve, reject) => {
@@ -43,7 +57,6 @@ function post(path, body, headers) {
 }
 
 (async () => {
-  // Check if version already published
   const existing = await get('/v0/servers/io.github.CSOAI-ORG%2Fgspc/versions');
   if (existing.status === 200) {
     const d = JSON.parse(existing.body);
@@ -53,7 +66,6 @@ function post(path, body, headers) {
     }
   }
 
-  // Publish
   const resp = await post('/v0/publish', server, { Authorization: 'Bearer ' + TOKEN });
   console.log('Response status:', resp.status);
   console.log('Response body (first 1000 chars):');
