@@ -33,6 +33,8 @@ GitHub-reviewed main is authority. RunPod is compute, Oracle is a light worker/w
 - RunPod worker is LIVE/RUNNING on reviewed revision `a3bb5144647797ceed0a8f10397e26f8c6d4dd9a`; the process reported 39 successful runs and 0 failed runs at `2026-09-14T12:57Z` after its refresh.
 - Public `/api/worker` exposes a non-null sanitized `commission_dispatch` record. Its first observed dispatch admitted 0 and refused 1 because the only remaining queued model was unavailable.
 - The typed commission dispatcher and sanitized public observability are merged in PRs #2388 and #2393. PR #2409 removes already-retrievable subjects from the active commission queue; deployment `34844060346` passed and the live queue now contains only the unavailable subject.
+- PR #2413 adds the reviewed RunPod update/dispatch control path: dry-run by default, canonical `origin/master` only, dirty/moving/concurrent refusal, shared dispatch lock, no restart, sanitized counts.
+- PR #2415 adds the deterministic `csoai.mirror-connector-envelope/1.0` and makes Kaggle verify the reviewed stream plus referenced artifact bytes before unsigned probing.
 - Canonical no-duplicate outward ledger and waves are merged in #2395, #2396, #2400 and #2402.
 - AI Agents Listing is submitted and awaiting editorial review. The detail URL resolves, but visual inspection shows a private-preview banner saying the entry is not yet published. The CSOAI logo and canonical endpoints are present in the preview; promotional updates were disabled. Do not submit a duplicate or call it live until the banner clears.
 - Discussions are live: #2397 verification, #2398 integration, #2399 discrepancy reporting.
@@ -50,7 +52,7 @@ Proof required:
 - Preserve only sanitized queue schema, source revision, last run, admitted/refused/created/already-present counts.
 - Record runtime transitions on issue #2391.
 
-Do not invent credentials. Use the reviewed control path once merged; M2 still has no direct RunPod credentials.
+Do not invent credentials. Use the reviewed control path from PR #2413; M2 still has no direct RunPod credentials.
 
 ### 2. Verify the post-merge publication from PR #2394
 
@@ -70,9 +72,9 @@ The active queue now contains only `clan-csoai-plain:latest`. `llama3.2:3b` was 
 
 Proof required: one genuinely new commissioned subject enters the queue, is admitted by the correct worker, produces a signed card, passes intake, merges, enters the next root, updates public board/mirrors, and is retrievable by the requester.
 
-### 5. Make mirrors deterministic
+### 5. Maintain deterministic mirrors
 
-Hugging Face publication is automated and green. Kaggle ingestion into the same typed intake remains a gap. Implement one connector envelope with source, subject, measurement kind, artifact hash, timestamp, license/provenance, lifecycle state, and error state. Mirrors must consume the reviewed public stream; they must not become competing databases.
+PR #2415 closes the common-envelope gap. Hugging Face, Kaggle and GitHub mirror ingestion now share a deterministic envelope with source, subject, measurement kind, artifact hash and length, timestamp, license/provenance, lifecycle and typed error state. Kaggle verifies the reviewed stream and its referenced artifact bytes before unsigned probing. Mirrors consume reviewed public truth and cannot become signing or measurement authorities.
 
 ## Host allocation
 
@@ -167,12 +169,11 @@ Maintain the single execution ledger, dependency graph, owner asks, host status 
 ## Immediate 24-hour sequence
 
 1. Prove one genuinely new runnable commission through queue → mill → sign → merge → root → delivery.
-2. Land and document the reviewed RunPod control path so future refreshes do not depend on undocumented operator access.
-3. Monitor AI Agents Listing until the private-preview banner clears; then record LIVE. Do not duplicate the listing.
-4. Monitor every open external PR; respond only to maintainer feedback and record merges.
-5. Implement the Kaggle/common connector envelope.
-6. Re-run public stranger journeys and mobile checks after deployment.
-7. Publish one evidence-led update only when a new verified event exists: signed-card merge, root confirmation, independent citation, external registry merge, or outside paid delivery.
+2. Monitor AI Agents Listing until the private-preview banner clears; then record LIVE. Do not duplicate the listing.
+3. Monitor every open external PR; respond only to maintainer feedback and record merges.
+4. Verify the next scheduled Hugging Face/Kaggle mirror run consumes the new reviewed envelope.
+5. Re-run public stranger journeys and mobile checks after deployment.
+6. Publish one evidence-led update only when a new verified event exists: signed-card merge, root confirmation, independent citation, external registry merge, or outside paid delivery.
 
 ## Reporting template
 
