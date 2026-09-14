@@ -18,6 +18,14 @@ describe("traction public-truth contract", () => {
     expect(source).not.toMatch(/Published corrections" value="\d/);
   });
 
+  it("headlines outside commissions only, never the raw receipt count", () => {
+    expect(source).toContain("commissions.value?.by_origin");
+    expect(source).toContain('label="Outside commissions"');
+    expect(source).toContain("value={live.commissions?.outside}");
+    expect(source).not.toContain('label="Open commissions"');
+    expect(source).not.toMatch(/value=\{live\.commissions\?\.count\}/);
+  });
+
   it("separates standards participation and discovery from endorsement and customers", () => {
     expect(source).toContain("Founder Nicholas Templeman participates in the W3C Agent Conformance and Benchmarking Community Group");
     expect(source).toContain("does not imply W3C endorsement, certification or conformance");
