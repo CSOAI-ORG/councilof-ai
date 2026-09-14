@@ -537,12 +537,13 @@ export const onRequestGet: PagesFunction = async () => {
       // published indexes, and duplicating them here would create a sixth number that
       // goes stale. This states the ARITHMETIC and where each term is served.
       cell_arithmetic: {
-        rule: "cells = rows_served_by_indexes − duplicates_collapsed − superseded_excluded",
+        rule: "cells = rows_served_by_indexes − superseded_excluded − withdrawn_excluded − duplicates_collapsed",
         served_by: "/api/hub-cards → counts",
         terms: {
           rows_served_by_indexes: "every row across the published indexes, before any collapse",
           duplicates_collapsed: "rows dropped so a (model, axis) pair contributes ONE cell, not one per index it appears in",
           superseded_excluded: "cells whose card SUPERSEDED.jsonl has retired; the file still resolves, the cell is not counted twice",
+          withdrawn_excluded: "rows whose card WITHDRAWN.jsonl has withdrawn with no replacement (C-2026-0914-01); listed under /api/hub-cards → withdrawn_cells, never counted",
           cells: "distinct (model, axis) pairs left, which is the only figure that may be called a cell count",
           measured: "of those cells, the ones whose signed card body says MEASURED — passed through, never upgraded here",
         },

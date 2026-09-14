@@ -76,9 +76,23 @@ interface Supersession {
 
 type UnresolvedSupersession = Supersession & { reason: string };
 
-type LedgerRead =
-  | { ok: true; entries: Supersession[] }
-  | { ok: false; reason: string };
+/**
+ * A card withdrawn without a replacement (WITHDRAWN.jsonl). C-2026-0914-01: 44 swarm
+ * cards were graded by a prompt whose only answer option was the expected one, so
+ * accuracy 1 measured format compliance. No sound instrument has measured those cells,
+ * so there is nothing to supersede them WITH; they are withdrawn instead.
+ */
+interface Withdrawal {
+  withdrawn_id: string;
+  model: string;
+  axis: string;
+  correction: string;
+}
+
+type UnresolvedWithdrawal = Withdrawal & { reason: string };
+
+type Read<E> = { ok: true; entries: E[] } | { ok: false; reason: string };
+type LedgerRead = Read<Supersession>;
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -289,8 +303,45 @@ function parseSupersessions(text: string): LedgerRead {
   return { ok: true, entries };
 }
 
-async function readSupersessions(origin: string): Promise<LedgerRead> {
-  const url = `${origin}/interop/mill-cards-signed/SUPERSEDED.jsonl`;
+function parseWithdrawals(text: string): Read<Withdrawal> {
+  const entries: Withdrawal[] = [];
+  for (const [offset, line] of text.split("\n").entries()) {
+    const t = line.trim();
+    if (!t) continue;
+    let value: unknown;
+    try {
+      value = JSON.parse(t) as unknown;
+    } catch {
+      return { ok: false, reason: `invalid jsonl row ${offset + 1}: malformed JSON` };
+    }
+    if (!isRecord(value)) {
+      return { ok: false, reason: `invalid jsonl row ${offset + 1}: row is not an object` };
+    }
+    for (const field of ["withdrawn_id", "model", "axis", "correction"] as const) {
+      if (typeof value[field] !== "string" || !value[field].trim()) {
+        return {
+          ok: false,
+          reason: `invalid jsonl row ${offset + 1}: ${field} must be a non-empty string`,
+        };
+      }
+    }
+    entries.push({
+      withdrawn_id: value.withdrawn_id as string,
+      model: value.model as string,
+      axis: value.axis as string,
+      correction: value.correction as string,
+    });
+  }
+  return { ok: true, entries };
+}
+
+const readSupersessions = (origin: string): Promise<LedgerRead> =>
+  readLedger(`${origin}/interop/mill-cards-signed/SUPERSEDED.jsonl`, parseSupersessions);
+
+const readWithdrawals = (origin: string): Promise<Read<Withdrawal>> =>
+  readLedger(`${origin}/interop/mill-cards-signed/WITHDRAWN.jsonl`, parseWithdrawals);
+
+async function readLedger<E>(url: string, parse: (text: string) => Read<E>): Promise<Read<E>> {
   let reason = "unreadable";
   for (const cached of [true, false]) {
     const init: RequestInit = { headers: { Accept: "application/jsonl, text/plain" } };
@@ -303,9 +354,9 @@ async function readSupersessions(origin: string): Promise<LedgerRead> {
         reason = `http ${r.status}`;
         continue;
       }
-      const parsed = parseSupersessions(await r.text());
+      const parsed = parse(await r.text());
       if (parsed.ok) return parsed;
-      reason = parsed.reason;
+      reason = (parsed as Extract<Read<E>, { ok: false }>).reason;
     } catch (e) {
       reason = `fetch failed: ${(e as Error)?.message ?? "unknown"}`;
     }
@@ -330,9 +381,10 @@ export const onRequestGet: PagesFunction = async (ctx) => {
   }
   const discovered = await discoverIndexes();
   const indexes = discovered ?? KNOWN_INDEXES;
-  const [reads, ledger] = await Promise.all([
+  const [reads, ledger, withdrawals] = await Promise.all([
     Promise.all(indexes.map(readIndex)),
     readSupersessions(origin),
+    readWithdrawals(origin),
   ]);
   const rawCells = reads.flatMap((r) => (r.ok ? r.cells : []));
 
@@ -383,13 +435,48 @@ export const onRequestGet: PagesFunction = async (ctx) => {
     ? rawCells.filter((cell) => !(cell.card_sha256 && excludableIds.has(cell.card_sha256)))
     : rawCells;
   const supersededExcluded = ledger.ok ? rawCells.length - afterLedger.length : null;
+
+  // Withdrawal runs AFTER supersession, so a predecessor retired in favour of a card
+  // that was later withdrawn stays retired: the pair then has no live card, which is
+  // the truth. A withdrawn row is not deleted from view -- it moves to withdrawn_cells
+  // with its correction id and its status exactly as published. Like a supersession, a
+  // withdrawal only applies when the observed row names the same pair.
+  const withdrawnById = new Map<string, Withdrawal>();
+  const unresolvedWithdrawals: UnresolvedWithdrawal[] = [];
+  if (withdrawals.ok) {
+    for (const entry of withdrawals.entries) {
+      const observed = cellsById.get(entry.withdrawn_id) ?? [];
+      if (!observed.length) continue;
+      const expectedPair = `${entry.model}\u0000${entry.axis}`;
+      if (observed.every((cell) => `${cell.model}\u0000${cell.axis}` === expectedPair)) {
+        withdrawnById.set(entry.withdrawn_id, entry);
+      } else {
+        unresolvedWithdrawals.push({ ...entry, reason: "observed row pair does not match withdrawal ledger" });
+      }
+    }
+  }
+  const isWithdrawn = (cell: Cell) => Boolean(cell.card_sha256 && withdrawnById.has(cell.card_sha256));
+  const afterWithdrawal = withdrawals.ok ? afterLedger.filter((cell) => !isWithdrawn(cell)) : afterLedger;
+  const withdrawnExcluded = withdrawals.ok ? afterLedger.length - afterWithdrawal.length : null;
+  const withdrawnCells = afterLedger.filter(isWithdrawn).map((cell) => ({
+    model: cell.model,
+    axis: cell.axis,
+    card_sha256: cell.card_sha256,
+    card_url: cell.card_url,
+    status_as_published: cell.status,
+    accuracy_as_published: cell.accuracy,
+    n: cell.n,
+    index: cell.index,
+    correction: withdrawnById.get(cell.card_sha256 as string)!.correction,
+  }));
+
   const byPair = new Map<string, Cell>();
-  for (const c of afterLedger) {
+  for (const c of afterWithdrawal) {
     const key = `${c.model}\u0000${c.axis}`;
     if (!byPair.has(key)) byPair.set(key, c);
   }
   const cells = [...byPair.values()];
-  const duplicatesCollapsed = afterLedger.length - cells.length;
+  const duplicatesCollapsed = afterWithdrawal.length - cells.length;
   const unread = reads.filter((r): r is Extract<IndexRead, { ok: false }> => !r.ok);
   const reached = reads.length - unread.length;
   // A known-index subtotal is not a discovered population; an unread supersession
@@ -397,7 +484,8 @@ export const onRequestGet: PagesFunction = async (ctx) => {
   // withhold population totals until all three checks succeeded.
   const allIndexesRead = unread.length === 0;
   const supersessionsResolved = ledger.ok && unresolvedSupersessions.length === 0;
-  const complete = discovered !== null && allIndexesRead && supersessionsResolved;
+  const withdrawalsResolved = withdrawals.ok && unresolvedWithdrawals.length === 0;
+  const complete = discovered !== null && allIndexesRead && supersessionsResolved && withdrawalsResolved;
 
   const seen = { measured: 0, unmeasured: 0, other: 0, cells: cells.length };
   for (const c of cells) {
@@ -436,13 +524,22 @@ export const onRequestGet: PagesFunction = async (ctx) => {
           ? `Read, but ${unresolvedSupersessions.length} observed predecessor row(s) lacked an observed same-pair replacement. No unresolved predecessor was dropped and population totals are withheld.`
           : `Read. ${supersededExcluded} served row(s) referenced a card whose exact same-pair replacement was observed and were dropped.`
         : `UNREADABLE (${ledger.reason}). Staleness could not be checked, so no row was dropped and these counts are an UPPER BOUND on the live population, not the population.`,
+      withdrawn_ledger: withdrawals.ok
+        ? unresolvedWithdrawals.length
+          ? `Read, but ${unresolvedWithdrawals.length} withdrawal(s) named a different (model, axis) than the observed row. Those rows were kept and population totals are withheld.`
+          : `Read. ${withdrawnExcluded} served row(s) cited a card WITHDRAWN.jsonl withdraws; they are listed under withdrawn_cells and are not in cells or counts.`
+        : `UNREADABLE (${(withdrawals as Extract<Read<Withdrawal>, { ok: false }>).reason}). Withdrawn cards could not be excluded, so population totals are withheld.`,
+      withdrawn_is_not_downgraded:
+        "A withdrawn card has no replacement: the instrument that produced it could not measure the cell (C-2026-0914-01, a one-option answer menu). Its signed bytes are not edited and its published status is not rewritten -- it is shown under withdrawn_cells as published, with the correction id, and is never a quotable result. The pair has no live measurement until a sound instrument produces one.",
       // LP07/08. Five numbers here describe the same population and nothing said how
       // they relate, so a reader met 1232, 376, 0, 856 and 856 with no way to check any
       // of them against the others. Stated once, with the live values, so the arithmetic
       // is visible rather than reconstructable.
       cell_arithmetic:
-        `rows_served_by_indexes ${rawCells.length} − duplicates_collapsed ${duplicatesCollapsed}` +
+        `rows_served_by_indexes ${rawCells.length}` +
         (ledger.ok ? ` − superseded_excluded ${supersededExcluded}` : " − superseded_excluded UNCHECKABLE") +
+        (withdrawals.ok ? ` − withdrawn_excluded ${withdrawnExcluded}` : " − withdrawn_excluded UNCHECKABLE") +
+        ` − duplicates_collapsed ${duplicatesCollapsed}` +
         ` = read_so_far.cells ${cells.length}. Of those retrieved cells, read_so_far.measured ${seen.measured} carry a signed body reading MEASURED. ` +
         (complete
           ? "All completeness gates passed, so the count fields expose these as population totals. "
@@ -451,8 +548,8 @@ export const onRequestGet: PagesFunction = async (ctx) => {
         "n_measured on /api/state → hub_census counts a DIFFERENT population (the 3M-listing " +
         "census walk) and is not this number.",
       partial_read_has_no_total: complete
-        ? "Discovery, every index and the supersession ledger answered, and every observed predecessor had its exact same-pair replacement; counts therefore describe the observed published population."
-        : "Discovery, an index, the supersession ledger, or an observed replacement could not be checked, so population totals are null. counts.read_so_far describes retrieved rows only: it may omit unread rows or include unresolved predecessors, and is neither a guaranteed floor nor a complete live population.",
+        ? "Discovery, every index, the supersession ledger and the withdrawal ledger answered, every observed predecessor had its exact same-pair replacement, and every withdrawal matched its row; counts therefore describe the observed published population."
+        : "Discovery, an index, the supersession or withdrawal ledger, an observed replacement, or a withdrawal's pair could not be checked, so population totals are null. counts.read_so_far describes retrieved rows only: it may omit unread rows or include unresolved predecessors, and is neither a guaranteed floor nor a complete live population.",
     },
     counts: {
       complete,
@@ -473,9 +570,15 @@ export const onRequestGet: PagesFunction = async (ctx) => {
       superseded_ledger_read: ledger.ok,
       supersessions_resolved: supersessionsResolved,
       supersessions_unresolved: unresolvedSupersessions,
+      // null means the withdrawal ledger did not answer — NOT that nothing was withdrawn.
+      withdrawn_excluded: withdrawnExcluded,
+      withdrawn_ledger_read: withdrawals.ok,
+      withdrawals_resolved: withdrawalsResolved,
+      withdrawals_unresolved: unresolvedWithdrawals,
       indexes_unread: unreadList,
     },
     cells,
+    withdrawn_cells: withdrawnCells,
   };
 
   return new Response(JSON.stringify(body, null, 1), {

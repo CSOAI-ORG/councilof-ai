@@ -276,10 +276,14 @@ jobs:
       - name: Python tests (spray parity + skip rules, publisher kinds index)
         if: steps.scope.outputs.gated == 'true'
         run: |
-          python3 -m pip install -q pytest
+          python3 -m pip install -q pytest cryptography
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
+          # C-2026-0914-01: a one-option exact-label menu is refused, and every signed card
+          # graded by one is in WITHDRAWN.jsonl (derived from the bound bank bytes).
+          python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
+          python3 scripts/withdraw_one_option_cards.py
           python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
 
       # TUI-1 (2026-09-14): 14 test files outside client/src, functions, scripts were never
