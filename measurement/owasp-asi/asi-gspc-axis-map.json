@@ -1,0 +1,354 @@
+{
+ "schema": "csoai.owasp-asi-gspc-axis-map/0.1",
+ "generated_at": "2026-09-14T10:53:07Z",
+ "generator": "scripts/owasp_asi_axis_map.py",
+ "source": {
+  "title": "OWASP Top 10 for Agentic Applications for 2026",
+  "publisher": "OWASP GenAI Security Project — Agentic Security Initiative",
+  "resource_url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+  "announcement_url": "https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/",
+  "licence_note": "Titles quoted for identification. Cite OWASP. No OWASP endorsement, partnership or review of this mapping is claimed.",
+  "announcement_datePublished": "2025-12-10T07:55:07+00:00",
+  "resource_datePublished": "2025-12-10T07:55:54+00:00",
+  "titles_found_verbatim_in_announcement": {
+   "ASI01": true,
+   "ASI02": true,
+   "ASI03": true,
+   "ASI04": true,
+   "ASI05": true,
+   "ASI06": true,
+   "ASI07": true,
+   "ASI08": true,
+   "ASI09": true,
+   "ASI10": true
+  },
+  "retrieved_at": "2026-09-14T10:53:07Z"
+ },
+ "board": {
+  "url": "https://councilof.ai/api/gspc",
+  "retrieved_at": "2026-09-14T10:53:07Z",
+  "public_count": "22 axis · 22 measured",
+  "axes_on_board": 22
+ },
+ "relation_vocabulary": {
+  "related": "the axis measures a behaviour that bears on the ASI risk; it does not cover, test for, mitigate, or show resistance to it"
+ },
+ "asi_entries": [
+  {
+   "id": "ASI01",
+   "title": "Agent Goal Hijack",
+   "related_axes": [],
+   "state": "UNCOVERED",
+   "note": "No board axis injects instructions through content, tools or retrieved data. Refusal calibration (safety) is not goal-hijack resistance."
+  },
+  {
+   "id": "ASI02",
+   "title": "Tool Misuse",
+   "related_axes": [
+    "conformance",
+    "cross-reality"
+   ],
+   "state": "RELATED_AXES_PRESENT",
+   "title_note": "Title as it appears in the announcement text ('ASI02 – Tool Misuse'). docs/owasp-agentic-crosswalk.md uses 'Tool Misuse & Exploitation'; the longer form was not checked against the published document here."
+  },
+  {
+   "id": "ASI03",
+   "title": "Identity & Privilege Abuse",
+   "related_axes": [
+    "cross-reality"
+   ],
+   "state": "RELATED_AXES_PRESENT"
+  },
+  {
+   "id": "ASI04",
+   "title": "Agentic Supply Chain Vulnerabilities",
+   "related_axes": [
+    "conformance"
+   ],
+   "state": "RELATED_AXES_PRESENT"
+  },
+  {
+   "id": "ASI05",
+   "title": "Unexpected Code Execution",
+   "related_axes": [
+    "jail"
+   ],
+   "state": "RELATED_AXES_PRESENT"
+  },
+  {
+   "id": "ASI06",
+   "title": "Memory & Context Poisoning",
+   "related_axes": [],
+   "state": "UNCOVERED",
+   "note": "No board axis poisons memory or context. A separate repository (CSOAI-ORG/memory-poisoning-axis) exists but is not a board axis and is not counted here."
+  },
+  {
+   "id": "ASI07",
+   "title": "Insecure Inter-Agent Communication",
+   "related_axes": [
+    "swarm"
+   ],
+   "state": "RELATED_AXES_PRESENT"
+  },
+  {
+   "id": "ASI08",
+   "title": "Cascading Failures",
+   "related_axes": [
+    "swarm"
+   ],
+   "state": "RELATED_AXES_PRESENT"
+  },
+  {
+   "id": "ASI09",
+   "title": "Human-Agent Trust Exploitation",
+   "related_axes": [
+    "affect",
+    "art5-safeguard"
+   ],
+   "state": "RELATED_AXES_PRESENT"
+  },
+  {
+   "id": "ASI10",
+   "title": "Rogue Agents",
+   "related_axes": [
+    "jail"
+   ],
+   "state": "RELATED_AXES_PRESENT"
+  }
+ ],
+ "mapping": [
+  {
+   "axis": "conformance",
+   "axis_status": "MEASURED",
+   "bench": "MCPBench",
+   "task": "MCP tool conformance",
+   "asi": "ASI02",
+   "asi_title": "Tool Misuse",
+   "relation": "related",
+   "coverage": "NOT_ESTABLISHED",
+   "why_related": "MCPBench scores whether a model calls MCP tools within their declared contract; using a legitimate tool outside its intent is the ASI02 risk.",
+   "not_established": "Conformance on a frozen bank is not resistance to adversarial tool misuse or exploitation."
+  },
+  {
+   "axis": "conformance",
+   "axis_status": "MEASURED",
+   "bench": "MCPBench",
+   "task": "MCP tool conformance",
+   "asi": "ASI04",
+   "asi_title": "Agentic Supply Chain Vulnerabilities",
+   "relation": "related",
+   "coverage": "NOT_ESTABLISHED",
+   "why_related": "MCP servers and tool schemas are agentic supply-chain components, and the axis exercises a model against them.",
+   "not_established": "It measures model conformance to tool contracts, not the integrity or provenance of the components."
+  },
+  {
+   "axis": "cross-reality",
+   "axis_status": "MEASURED",
+   "bench": "XRAIV",
+   "task": "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
+   "asi": "ASI02",
+   "asi_title": "Tool Misuse",
+   "relation": "related",
+   "coverage": "NOT_ESTABLISHED",
+   "why_related": "XRAIV asks whether an autonomous agent should PROCEED, CONFIRM or REFUSE before acting — the decision point where tools get used beyond intent.",
+   "not_established": "Action-authority judgement on a bank is not observed tool behaviour in a deployed agent."
+  },
+  {
+   "axis": "cross-reality",
+   "axis_status": "MEASURED",
+   "bench": "XRAIV",
+   "task": "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
+   "asi": "ASI03",
+   "asi_title": "Identity & Privilege Abuse",
+   "relation": "related",
+   "coverage": "NOT_ESTABLISHED",
+   "why_related": "Acting beyond granted authority is the privilege half of ASI03.",
+   "not_established": "No credential, identity, delegation or token handling is tested."
+  },
+  {
+   "axis": "swarm",
+   "axis_status": "MEASURED",
+   "bench": "SwarmBench v2b",
+   "task": "multi-agent coordination safety",
+   "asi": "ASI07",
+   "asi_title": "Insecure Inter-Agent Communication",
+   "relation": "related",
+   "coverage": "NOT_ESTABLISHED",
+   "why_related": "SwarmBench v2b measures safety of multi-agent coordination, which runs over inter-agent messages.",
+   "not_established": "Message authentication, spoofing and channel security are not tested."
+  },
+  {
+   "axis": "swarm",
+   "axis_status": "MEASURED",
+   "bench": "SwarmBench v2b",
+   "task": "multi-agent coordination safety",
+   "asi": "ASI08",
+   "asi_title": "Cascading Failures",
+   "relation": "related",
+   "coverage": "NOT_ESTABLISHED",
+   "why_related": "Coordination failures between agents are one route by which a fault propagates across a system.",
+   "not_established": "No end-to-end cascade across real pipelines is measured."
+  },
+  {
+   "axis": "jail",
+   "axis_status": "MEASURED",
+   "bench": "GoldBank-Detector",
+   "task": "escape-attempt detection on 71-cell gold bank (38 ESCAPE / 33 BENIGN) — layer 2 of 2",
+   "asi": "ASI05",
+   "asi_title": "Unexpected Code Execution",
+   "relation": "related",
+   "coverage": "NOT_ESTABLISHED",
+   "why_related": "GoldBank-Detector measures detection of escape attempts from containment — a detection layer next to unexpected execution.",
+   "not_established": "It is not a sandbox or code-execution test, and detection is not prevention."
+  },
+  {
+   "axis": "jail",
+   "axis_status": "MEASURED",
+   "bench": "GoldBank-Detector",
+   "task": "escape-attempt detection on 71-cell gold bank (38 ESCAPE / 33 BENIGN) — layer 2 of 2",
+   "asi": "ASI10",
+   "asi_title": "Rogue Agents",
+   "relation": "related",
+   "coverage": "NOT_ESTABLISHED",
+   "why_related": "Escape attempts are one observable of an agent acting outside its sanctioned scope.",
+   "not_established": "Misalignment, deception or persistence of a rogue agent are not measured."
+  },
+  {
+   "axis": "affect",
+   "axis_status": "MEASURED",
+   "bench": "AffectBench",
+   "task": "emotional & embodied safety (manipulation / disclosure / vulnerability)",
+   "asi": "ASI09",
+   "asi_title": "Human-Agent Trust Exploitation",
+   "relation": "related",
+   "coverage": "NOT_ESTABLISHED",
+   "why_related": "AffectBench measures manipulation, disclosure and vulnerability handling — the behaviours through which an agent can exploit a human's trust.",
+   "not_established": "Responses on a frozen bank, not deployed agent-human interaction or operator approval flows."
+  },
+  {
+   "axis": "art5-safeguard",
+   "axis_status": "MEASURED",
+   "bench": "Art5Bench",
+   "task": "EU AI Act Article 5 prohibited-practice trip",
+   "asi": "ASI09",
+   "asi_title": "Human-Agent Trust Exploitation",
+   "relation": "related",
+   "coverage": "NOT_ESTABLISHED",
+   "why_related": "Article 5 prohibited practices include manipulative and exploitative techniques; the axis measures whether a model trips on them.",
+   "not_established": "A legal-category trip test, not a measure of trust exploitation in agent workflows."
+  }
+ ],
+ "unmapped_axes": [
+  {
+   "axis": "governance",
+   "axis_status": "MEASURED",
+   "family": "gspc",
+   "reason": "EU AI Act risk-tier classification is a regulatory-reasoning task with no agentic threat surface."
+  },
+  {
+   "axis": "safety",
+   "axis_status": "MEASURED",
+   "family": "gspc",
+   "reason": "Calibrated refusal on paired direct requests; no injected or indirect instruction is present, so it does not bear on goal hijack (ASI01)."
+  },
+  {
+   "axis": "provenance",
+   "axis_status": "MEASURED",
+   "family": "gspc",
+   "reason": "Article 50 marking survival concerns synthetic-content labelling, not an ASI risk; a link to ASI09 would be too weak to state."
+  },
+  {
+   "axis": "continuity",
+   "axis_status": "MEASURED",
+   "family": "gspc",
+   "reason": "Post-quantum status of cryptographic assumptions; not an agentic application risk."
+  },
+  {
+   "axis": "openness",
+   "axis_status": "MEASURED",
+   "family": "gspc",
+   "reason": "Licence reasoning against intended use; licence terms are not a supply-chain security property."
+  },
+  {
+   "axis": "machinery-conformity",
+   "axis_status": "MEASURED",
+   "family": "gspc",
+   "reason": "Machinery Regulation safety-function classification; not an agentic application risk."
+  },
+  {
+   "axis": "care",
+   "axis_status": "MEASURED",
+   "family": "gspc",
+   "reason": "Care-cost (protect x help) in paired conduct scenarios; no ASI entry names this behaviour."
+  },
+  {
+   "axis": "detector-interop",
+   "axis_status": "MEASURED",
+   "family": "gspc",
+   "reason": "Cross-detector watermark interoperability; not an agentic application risk."
+  },
+  {
+   "axis": "provenance-controls",
+   "axis_status": "MEASURED",
+   "family": "financial",
+   "reason": "Deterministic on-chain issuer facts; not a model or agent behaviour."
+  },
+  {
+   "axis": "reserve-attestation",
+   "axis_status": "MEASURED",
+   "family": "financial",
+   "reason": "Deterministic issuer-disclosure facts; not a model or agent behaviour."
+  },
+  {
+   "axis": "regulatory-framework",
+   "axis_status": "MEASURED",
+   "family": "financial",
+   "reason": "Deterministic regime-declaration facts; not a model or agent behaviour."
+  },
+  {
+   "axis": "distribution-integrity",
+   "axis_status": "MEASURED",
+   "family": "financial",
+   "reason": "Deterministic chain-supply facts; not a model or agent behaviour."
+  },
+  {
+   "axis": "custody-disclosure",
+   "axis_status": "MEASURED",
+   "family": "financial",
+   "reason": "Deterministic custodian/auditor facts; not a model or agent behaviour."
+  },
+  {
+   "axis": "ai-adoption-components",
+   "axis_status": "MEASURED",
+   "family": "financial",
+   "reason": "Cited public statistical series; not a model or agent behaviour."
+  },
+  {
+   "axis": "labour-components",
+   "axis_status": "MEASURED",
+   "family": "financial",
+   "reason": "Cited public statistical series; not a model or agent behaviour."
+  },
+  {
+   "axis": "humanoid-labour-index",
+   "axis_status": "MEASURED",
+   "family": "financial",
+   "reason": "Vendor disclosure facts; not a model or agent behaviour."
+  }
+ ],
+ "counts": {
+  "asi_entries": 10,
+  "asi_with_related_axes": 8,
+  "asi_uncovered": 2,
+  "axes_on_board": 22,
+  "axes_related": 6,
+  "axes_unmapped": 16,
+  "mapping_rows": 10
+ },
+ "not_claimed": [
+  "Not an OWASP product, review, endorsement or partnership.",
+  "A related axis is not coverage of an ASI risk and not evidence of resistance to it.",
+  "Not a certification or compliance statement. Measurement, not certification.",
+  "Board status is read live; re-GET /api/gspc rather than trusting the snapshot in this file."
+ ]
+}

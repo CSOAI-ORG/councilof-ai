@@ -1,12 +1,14 @@
 # OWASP Agentic Top 10 ↔ GSPC controls /halts
 
 **Status:** informative crosswalk only. **Cite OWASP. Do not claim endorsement, partnership, certification, or notified-body status.**  
-**Board lock (re-GET, never freeze):** `GET https://councilof.ai/api/gspc` = **22 · 15 · 7**. Empty stays empty. Never MEASURED-from-listing. Never certify. No 23/22.
+**Board lock (re-GET, never freeze):** read `totals.public_count` from `GET https://councilof.ai/api/gspc` at the time you cite. (This line previously froze **22 · 15 · 7**; the live board no longer reports that — which is why it is not frozen here.) Empty stays empty. Never MEASURED-from-listing. Never certify. No 23/22.
 
 **Source (cite OWASP):** [OWASP Top 10 for Agentic Applications for 2026](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/) (ASI01–ASI10; announced 9 Dec 2025, OWASP GenAI Security Project / Agentic Security Initiative).  
 Announcement naming ASI01–ASI10: https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/
 
 This document maps those risks to **existing** Council of AI / GSPC controls and halts. It is **not** an OWASP product and is **not** endorsed by OWASP. Mapping a risk to a control does not mean the control fully covers the risk.
+
+**Axis-level map:** the 22 live board axes ↔ ASI01–ASI10, with unmapped axes and uncovered ASI entries stated, is `docs/owasp-asi-gspc-axis-map.md` (machine copy `measurement/owasp-asi/asi-gspc-axis-map.json`, producer `scripts/owasp_asi_axis_map.py`).
 
 **card-v0 surface:** `owasp.control` — evidence leaf only, never a badge.
 
