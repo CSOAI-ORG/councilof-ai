@@ -269,8 +269,11 @@ def pick_emptiest(
     only_ids: set[str] | None = None,
     dead: set[str] | None = None,
     inflight: set[tuple[str, str]] | None = None,
+    priority_ids: set[str] | None = None,
 ) -> list[dict]:
-    """Emptiest (id, axis) cells by rank. generative_only keeps SERVABLE_TAGS only (no fallback to
+    """Emptiest (id, axis) cells by rank. priority_ids (2026-09-14: commissioned subjects from
+    GET /api/commissions) are picked FIRST, in rank order among themselves, then the rest by rank —
+    a paid request drives the mill instead of waiting for its rank; every other guard still applies. generative_only keeps SERVABLE_TAGS only (no fallback to
     non-generative repos); dead ids are never picked; only_ids is an allowlist; inflight (id, axis)
     cells are already staged in an open landing PR and are skipped until that PR merges or closes."""
 
@@ -291,7 +294,8 @@ def pick_emptiest(
         empty = [r for r in empty if str(r.get("id") or "") in only_ids]
     if generative_only:
         empty = [r for r in empty if r.get("pipeline_tag") in SERVABLE_TAGS]
-    empty.sort(key=lambda r: int(r.get("rank") or 10**9))
+    pri = priority_ids or set()
+    empty.sort(key=lambda r: (0 if str(r.get("id") or "") in pri else 1, int(r.get("rank") or 10**9)))
     return empty[:n]
 
 
@@ -871,6 +875,7 @@ def mill(
     items_cap: int = 30,
     generative_only: bool = True,
     only_ids: set[str] | None = None,
+    priority_ids: set[str] | None = None,
     dead_path: Path | None = None,
     dead_max_age_days: int | None = None,
     shard: int = 0,
@@ -885,7 +890,7 @@ def mill(
     ax = axis if axis in MODEL_AXES else "governance"
     dead = load_dead_slugs(dead_path, dead_max_age_days)
     inflight = load_inflight_cells(inflight_path)
-    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead, inflight=inflight)
+    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead, inflight=inflight, priority_ids=priority_ids)
     if shards > 1:
         # Shard membership is a function of the MODEL ID ONLY -- never of position in
         # `picked`. Stride-slicing would be disjoint for one snapshot and overlapping the
@@ -1058,6 +1063,7 @@ def main() -> int:
     ap.add_argument("--banks", default="", help="dir of {axis}.jsonl published banks")
     ap.add_argument("--items", type=int, default=30, help="items per (model,axis); n<30 unquotable")
     ap.add_argument("--only", default="", help="file of provider-live hub slugs (one id per line); skip rank-dead 400s")
+    ap.add_argument("--priority", default="", help="file of commissioned hub slugs (one id per line, from GET /api/commissions); picked first, every other guard still applies")
     ap.add_argument("--dead", default="", help="persistent dead-slug jsonl (honoured on pick; appended from this run's no-endpoint skips)")
     ap.add_argument("--dead-max-age-days", type=int, default=None, help="re-probe a dead slug older than this (default: never expire). An undated row counts as expired.")
     ap.add_argument("--shards", type=int, default=1, help="split the picked rows across N parallel runs (hash of model id, not position)")
@@ -1067,6 +1073,7 @@ def main() -> int:
     ap.add_argument("--bank-dataset", default="", help="public HF dataset the frozen bank came from (e.g. csoai/gspc-gov); recorded on the card's evidence, never guessed")
     args = ap.parse_args()
     only = load_only_ids(Path(args.only)) if args.only else None
+    priority = load_only_ids(Path(args.priority)) if args.priority else set()
     rep = mill(
         Path(args.queue),
         Path(args.out),
@@ -1077,6 +1084,7 @@ def main() -> int:
         banks_dir=Path(args.banks) if args.banks else None,
         items_cap=args.items,
         only_ids=only,
+        priority_ids=priority,
         dead_path=Path(args.dead) if args.dead else None,
         dead_max_age_days=args.dead_max_age_days,
         shard=args.shard,

@@ -192,6 +192,7 @@ export const onRequestGet: PagesFunction<{
       u("/api/witness/status?sha256=<64-hex>"),
       u("/api/receipts/batch?from=<iso>&preview=1"),
       u("/receipts/root-history.json"),
+      u("/api/commissions"),
       u("/methodology"),
     ],
     mcp: {
