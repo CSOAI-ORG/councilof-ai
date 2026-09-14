@@ -571,15 +571,14 @@ export default function About() {
         </div>
       </div>
 
-      {/* Professional Insurance & Compliance */}
+      {/* Insurance evidence status */}
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-blue-50 text-blue-600 border-blue-200">Trust & Protection</Badge>
-            <h2 className="text-4xl font-bold mb-6">Professional indemnity insurance</h2>
+            <h2 className="text-4xl font-bold mb-6">Insurance evidence</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
-              The policy details below identify CSOAI LTD's professional indemnity cover and the
-              broker that arranged it. They do not state or imply that CSOAI LTD is regulated by the FCA.
+              CSOAI LTD does not state professional indemnity cover until the policy document is on file.
             </p>
           </div>
 
@@ -589,33 +588,14 @@ export default function About() {
                 <FileCheck className="h-12 w-12 text-blue-600" />
               </div>
               <div className="flex-1">
-                <h3 className="text-2xl font-bold mb-2">Professional Indemnity Insurance</h3>
-                <div className="grid sm:grid-cols-2 gap-4 mt-4 text-sm">
-                  <div>
-                    <p className="text-gray-500">Company</p>
-                    <p className="font-semibold">CSOAI LTD</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500">Coverage</p>
-                    <p className="font-semibold text-emerald-600">Up to £5,000,000</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500">Policy Number</p>
-                    <p className="font-semibold">CHPR5355800XB</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500">Valid Until</p>
-                    <p className="font-semibold">13 January 2027</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500">Insurer</p>
-                    <p className="font-semibold">Simply Business (Xbridge Limited)</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500">Broker FCA registration</p>
-                    <p className="font-semibold">No: 313348</p>
-                  </div>
-                </div>
+                <h3 className="text-2xl font-bold mb-2">No policy document on file</h3>
+                <p className="mt-4 text-gray-600 leading-relaxed">
+                  No coverage, policy number, insurer, broker, or term is claimed on this page. If evidence is
+                  filed, the public statement and corrections record will be updated together.
+                </p>
+                <a href="/api/corrections" className="inline-block mt-4 text-blue-700 underline">
+                  Corrections ledger C-2026-0902-06
+                </a>
               </div>
             </div>
           </Card>
@@ -623,8 +603,8 @@ export default function About() {
           <div className="mt-8 grid sm:grid-cols-3 gap-4">
             <Card className="p-6 text-center bg-gradient-to-br from-emerald-50 to-white border-emerald-200 hover:shadow-lg transition-shadow">
               <Shield className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
-              <h4 className="font-bold mb-2">Policy schedule</h4>
-              <p className="text-sm text-gray-600">Scope and exclusions are governed by the policy documents</p>
+              <h4 className="font-bold mb-2">Evidence status</h4>
+              <p className="text-sm text-gray-600">No professional indemnity policy document is currently on file</p>
             </Card>
             <Card className="p-6 text-center bg-gradient-to-br from-blue-50 to-white border-blue-200 hover:shadow-lg transition-shadow">
               <Building2 className="h-8 w-8 text-blue-600 mx-auto mb-3" />
@@ -634,8 +614,8 @@ export default function About() {
             </Card>
             <Card className="p-6 text-center bg-gradient-to-br from-purple-50 to-white border-purple-200 hover:shadow-lg transition-shadow">
               <Globe className="h-8 w-8 text-purple-600 mx-auto mb-3" />
-              <h4 className="font-bold mb-2">No regulatory claim</h4>
-              <p className="text-sm text-gray-600">Insurance and broker details do not make CSOAI Ltd FCA regulated</p>
+              <h4 className="font-bold mb-2">Public correction</h4>
+              <p className="text-sm text-gray-600">The withdrawn claim remains recorded in the corrections ledger</p>
             </Card>
           </div>
         </div>
