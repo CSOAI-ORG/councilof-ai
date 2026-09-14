@@ -686,8 +686,51 @@ export const blogdata: BlogDataEntry[] = [
       "{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"BlogPosting\",\n  \"headline\": \"AI Governance Benchmarking Is Broken. Here Is the Signed, Reproducible Fix.\",\n  \"description\": \"In 2026 three independent sources validated the thesis: AI governance benchmarks are fragmented, non-reproducible, and unsigned. Here is the signed, CI-bounded, reproducible fix...\",\n  \"url\": \"https://councilof.ai/blog/governance-benchmarking-is-broken-signed-fix\",\n  \"datePublished\": \"2026-08-25\",\n  \"dateModified\": \"2026-08-25\",\n  \"author\": {\n    \"@type\": \"Organization\",\n    \"name\": \"CSOAI\"\n  },\n  \"publisher\": {\n    \"@type\": \"Organization\",\n    \"name\": \"CSOAI\",\n    \"logo\": {\n      \"@type\": \"ImageObject\",\n      \"url\": \"https://councilof.ai/og-image.png\"\n    }\n  }\n}",
       "{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"FAQPage\",\n  \"mainEntity\": [\n    {\n      \"@type\": \"Question\",\n      \"name\": \"Why is AI governance benchmarking broken, and what is the fix?\",\n      \"acceptedAnswer\": {\n        \"@type\": \"Answer\",\n        \"text\": \"As reported by the Stanford HAI AI Index 2026, a 2026 survey of roughly 195 AI governance benchmarks, and the Future of Life Institute AI Safety Index, governance benchmarks are fragmented, non-reproducible, and unsigned, and leaderboards rank models whose differences are statistically indistinguishable. The fix is a signed, reproducible measurement card: every proportion carries a Wilson 95 percent confidence interval, overlapping results record a TIE rather than a ranking, UNMEASURED is a first-class status, each card is Ed25519-signed, and every number is recomputable from published rows.\"\n      }\n    }\n  ]\n}"
     ]
+  },
+  {
+    "slug": "free-verify-signed-cards",
+    "title": "Free verify for signed measurement cards | Council of AI",
+    "description": "Anyone can recompute our Ed25519 measurement cards with no login. Measurement, not certification.",
+    "ogTitle": "Free verify for signed measurement cards",
+    "ogDescription": "Anyone can recompute our Ed25519 measurement cards with no login. Measurement, not certification.",
+    "ogImage": "https://councilof.ai/og-default.png",
+    "canonical": "https://councilof.ai/blog/free-verify-signed-cards",
+    "css": "",
+    "content": "<article class=\"prose mx-auto max-w-3xl px-6 py-12\"><p class=\"text-sm text-gray-500\">14 September 2026 \u00b7 ~2 min read</p><h1>Free verify for signed measurement cards</h1><p>Council of AI publishes signed behavioural measurement cards. Verification stays free and loginless.</p><p>Start here: <a href=\"https://councilof.ai/gspc-verify/\">https://councilof.ai/gspc-verify/</a></p><p>Living board (re-GET before you cite): <a href=\"https://councilof.ai/api/gspc\">https://councilof.ai/api/gspc</a> \u2014 currently <strong>22 axis \u00b7 22 measured</strong>. TIE is TIE. Not a certificate.</p><p>We measure and sign. We do not certify.</p></article>",
+    "ldJson": [
+      "{\"@context\":\"https://schema.org\",\"@type\":\"BlogPosting\",\"headline\":\"Free verify for signed measurement cards\",\"datePublished\":\"2026-09-14\",\"author\":{\"@type\":\"Organization\",\"name\":\"Council of AI\"},\"url\":\"https://councilof.ai/blog/free-verify-signed-cards\"}"
+    ]
+  },
+  {
+    "slug": "living-board-get-22-22-0",
+    "title": "The living board is a GET, not a frozen table | Council of AI",
+    "description": "Cite GET /api/gspc for the live board lid. Never paste rotting score tables. Measurement, not certification.",
+    "ogTitle": "The living board is a GET, not a frozen table",
+    "ogDescription": "Cite GET /api/gspc for the live board lid. Never paste rotting score tables.",
+    "ogImage": "https://councilof.ai/og-default.png",
+    "canonical": "https://councilof.ai/blog/living-board-get-22-22-0",
+    "css": "",
+    "content": "<article class=\"prose mx-auto max-w-3xl px-6 py-12\"><p class=\"text-sm text-gray-500\">14 September 2026 \u00b7 ~2 min read</p><h1>The living board is a GET, not a frozen table</h1><p>Public printers must pull the live board. A pasted score table drifts.</p><p>Authority: <a href=\"https://councilof.ai/api/gspc\">GET https://councilof.ai/api/gspc</a> \u2192 <strong>22 axis \u00b7 22 measured</strong> (re-GET before cite).</p><p>Third-party Hub census is a different population: <a href=\"https://councilof.ai/api/hub-cards\">GET /api/hub-cards</a> \u2014 re-GET <code>counts.*</code>; never freeze a Hub triple.</p><p>Measurement, never certification.</p></article>",
+    "ldJson": [
+      "{\"@context\":\"https://schema.org\",\"@type\":\"BlogPosting\",\"headline\":\"The living board is a GET, not a frozen table\",\"datePublished\":\"2026-09-14\",\"author\":{\"@type\":\"Organization\",\"name\":\"Council of AI\"},\"url\":\"https://councilof.ai/blog/living-board-get-22-22-0\"}"
+    ]
+  },
+  {
+    "slug": "x402-free-discovery-honest-settle-002-usdc",
+    "title": "x402 free discovery and an honest settle figure | Council of AI",
+    "description": "Agents can discover metered doors free. Settled revenue is 0.02 USDC from one non-self payer \u2014 not adoption theatre.",
+    "ogTitle": "x402 free discovery and an honest settle figure",
+    "ogDescription": "Agents can discover metered doors free. Settled revenue is 0.02 USDC from one non-self payer.",
+    "ogImage": "https://councilof.ai/og-default.png",
+    "canonical": "https://councilof.ai/blog/x402-free-discovery-honest-settle-002-usdc",
+    "css": "",
+    "content": "<article class=\"prose mx-auto max-w-3xl px-6 py-12\"><p class=\"text-sm text-gray-500\">14 September 2026 \u00b7 ~2 min read</p><h1>x402 free discovery and an honest settle figure</h1><p>Discovery stays free. A 402 challenge is not a settlement. Self-payments are excluded from the honest revenue count.</p><ul><li>Discovery: <a href=\"https://councilof.ai/.well-known/x402.json\">/.well-known/x402.json</a></li><li>Free door: <a href=\"https://councilof.ai/api/free-door\">/api/free-door</a></li><li>Revenue: <a href=\"https://councilof.ai/api/revenue\">/api/revenue</a> \u2014 settled <strong>0.02 USDC</strong> (20000 atomic), one distinct non-self payer, <code>excludes_self=true</code></li></ul><p>We sell delivery, freshness, and monitoring of independent measurements \u2014 never grades.</p></article>",
+    "ldJson": [
+      "{\"@context\":\"https://schema.org\",\"@type\":\"BlogPosting\",\"headline\":\"x402 free discovery and an honest settle figure\",\"datePublished\":\"2026-09-14\",\"author\":{\"@type\":\"Organization\",\"name\":\"Council of AI\"},\"url\":\"https://councilof.ai/blog/x402-free-discovery-honest-settle-002-usdc\"}"
+    ]
   }
 ];
+
 
 export function getBlogDataEntry(slug: string): BlogDataEntry | undefined {
   return blogdata.find((e) => e.slug === slug);

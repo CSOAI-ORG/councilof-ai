@@ -87,6 +87,9 @@ const WatchdogLeaderboard = lazy(() => import("./pages/WatchdogLeaderboard"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
 const ContentReviewNotice = lazy(() => import("./pages/ContentReviewNotice"));
+const Blog = lazy(() => import("./pages/Blog"));
+const ContentPage = lazy(() => import("./pages/ContentPage"));
+const BlogSlug = lazy(() => import("./pages/BlogSlug"));
 const AnswersIndex = lazy(() => import("./pages/Answers"));
 const AnswerPage = lazy(() => import("./pages/Answers").then((m) => ({ default: m.AnswerPage })));
 const EvidenceNotesIndex = lazy(() => import("./pages/EvidenceNotes"));
@@ -872,7 +875,7 @@ function App() {
                   <Route path="/frameworks/:slug" component={ContentReviewNotice} />
                   <Route path="/sectors/:slug" component={ContentReviewNotice} />
                   <Route path="/industries/:slug" component={ContentReviewNotice} />
-                  <Route path="/blog/:slug" component={ContentReviewNotice} />
+                  <Route path="/blog/:slug" component={BlogSlug} />
                   <Route path="/models" component={ModelRegistry} />
                   <Route path="/framework-catalog" component={FrameworkCatalog} />
                   <Route path="/command-center" component={ContentReviewNotice} />
@@ -1077,7 +1080,7 @@ function App() {
                   <Route path="/pricing-legacy" component={Pricing} />
                   <Route path="/leaderboard">{() => <Redirect to="/dashboard?tab=leaderboard" />}</Route>
                   <Route path="/regulator" component={RegulatorDashboard} />
-                  <Route path="/blog" component={ContentReviewNotice} />
+                  <Route path="/blog" component={Blog} />
                   <Route path="/recommendations" component={Recommendations} />
                   <Route path="/accreditation" component={Accreditation} />
                   <Route path="/soai-pdca" component={SOAIPDCAFramework} />
