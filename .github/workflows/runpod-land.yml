@@ -56,37 +56,11 @@ jobs:
             echo "runpod-signing artifact download failed for $RUN_ID — this is not proof of an empty intake" >&2
             exit 1
           fi
-          manifest=$(find staged -name manifest.json -type f -print -quit)
-          if [ -z "$manifest" ]; then
-            echo "outcome=MANIFEST_MISSING" >> "$GITHUB_OUTPUT"
-            echo "download completed but no manifest.json was present — refusing to call the intake empty" >&2
-            exit 1
-          fi
-          n=$(find staged -path '*/cards/*.json' -type f | wc -l | tr -d ' ')
-          outcome=ARTIFACT_READY
-          [ "$n" -eq 0 ] && outcome=NO_WORK_CONFIRMED
-          echo "cards in artifact: $n"
-          echo "cards=$n" >> "$GITHUB_OUTPUT"
-          echo "outcome=$outcome" >> "$GITHUB_OUTPUT"
-          python3 - "$manifest" "$n" <<'PY'
-          import json, sys
-          m = json.load(open(sys.argv[1]))
-          card_count = int(sys.argv[2])
-          files = m.get("files")
-          if not isinstance(files, list):
-              raise SystemExit("manifest.files must be a list")
-          paths = [
-              f if isinstance(f, str) else f.get("path") if isinstance(f, dict) else None
-              for f in files
-          ]
-          manifest_cards = [
-              p for p in paths
-              if isinstance(p, str) and (p.startswith("cards/") or "/cards/" in p) and p.endswith(".json")
-          ]
-          if len(manifest_cards) != card_count:
-              raise SystemExit(f"manifest/filesystem card mismatch: manifest={len(manifest_cards)} filesystem={card_count}")
-          print({k: m.get(k) for k in ("schema", "run_id", "run_attempt", "intake_revision", "head_sha")}, "files:", len(m.get("files") or []))
-          PY
+          # Classification is a tested script (scripts/runpod_land_classify.py):
+          # MANIFEST_MISSING / MANIFEST_INVALID / MANIFEST_FS_MISMATCH exit 1;
+          # NO_WORK_CONFIRMED / ARTIFACT_READY exit 0. Fixtures: scripts/test_runpod_land_classify.py
+          python3 -m unittest -q discover -s scripts -p test_runpod_land_classify.py
+          python3 scripts/runpod_land_classify.py --staged staged --github-output "$GITHUB_OUTPUT"
 
       - name: review branch (idempotent) + dispatch the OIDC signer on it
         id: br
