@@ -49,6 +49,28 @@ jobs:
           gh pr create --base master --head "$BR" \
             --title "reg-watch: state update ${STAMP}" \
             --body "Automated reg-watch state update (and any provision-change events under \`reg-watch-events/\`). Opened as a PR because a direct push to master cannot satisfy the required \`gates\` check (GH006). Needs a human merge; until merged the reg-watch state on master is stale."
+      # Regulator calendar: T-7 / T-2 / T-0 alerts for VERIFIED doors in
+      # measurement/calendar/regulator-doors.json (no new cron — rides this daily run).
+      - name: Regulator calendar selftest (offline — proves the alerts can fire and the rules can fail)
+        run: node scripts/regulator-calendar.mjs --selftest
+      - name: Regulator calendar — compute T-7/T-2/T-0 alerts
+        id: calendar
+        run: node scripts/regulator-calendar.mjs --out "$RUNNER_TEMP/regulator-alerts.json"
+      - name: Regulator calendar — open one issue per alert (deduplicated by title)
+        if: steps.calendar.outputs.alerts != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          n=$(jq length "$RUNNER_TEMP/regulator-alerts.json")
+          for i in $(seq 0 $((n - 1))); do
+            title=$(jq -r ".[$i].title" "$RUNNER_TEMP/regulator-alerts.json")
+            body=$(jq -r ".[$i].body" "$RUNNER_TEMP/regulator-alerts.json")
+            existing=$(gh issue list --state all --search "in:title \"$title\"" --json title --jq "[.[] | select(.title == \"$title\")] | length")
+            if [ "$existing" != "0" ]; then echo "exists: $title"; continue; fi
+            gh issue create --title "$title" --body "$body" --label "regulator-calendar" 2>/dev/null \
+              || gh issue create --title "$title" --body "$body"
+          done
       - name: Raise the alarm on a provision change
         if: steps.watch.outcome == 'failure'
         env:
