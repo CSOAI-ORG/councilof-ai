@@ -34,7 +34,7 @@ export default function PlaybookAudit({ tone = "dark" }: { tone?: "dark" | "ligh
         </h2>
         <p className={`mt-3 text-sm ${title}`}>{PLAYBOOK_PITCH}</p>
         <p className={`mt-2 text-sm ${body}`}>
-          {PLAYBOOK_SOURCE.title}. {PLAYBOOK_SOURCE.role}
+          {PLAYBOOK_SOURCE.title}. {PLAYBOOK_SOURCE.role} Living board cite: GET /api/gspc (22·22·0). Hub cells: GET /api/hub-cards (1191+).
         </p>
       </div>
       {GROUPS.map((group) => {
@@ -43,12 +43,24 @@ export default function PlaybookAudit({ tone = "dark" }: { tone?: "dark" | "ligh
           <div key={group.verdict} data-testid={`playbook-${group.verdict}`}>
             <h3 className={`text-sm font-bold ${title}`}>{group.label}</h3>
             <ul className="mt-3 grid gap-3 sm:grid-cols-2">
-              {rows.map((row) => (
-                <li key={row.id} className={panel} data-testid={`playbook-claim-${row.id}`}>
-                  <p className={`text-sm ${title}`}>{row.claim}</p>
-                  <p className={`mt-2 text-[12px] ${muted}`}>Live: {row.live}</p>
-                </li>
-              ))}
+              {rows.map((row) => {
+                const leadLive = row.verdict !== "keep";
+                return (
+                  <li key={row.id} className={panel} data-testid={`playbook-claim-${row.id}`}>
+                    {leadLive ? (
+                      <>
+                        <p className={`text-sm font-semibold ${title}`}>Live: {row.live}</p>
+                        <p className={`mt-2 text-[12px] ${body}`}>Brief said: {row.claim}</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className={`text-sm ${title}`}>{row.claim}</p>
+                        <p className={`mt-2 text-[12px] ${muted}`}>Live: {row.live}</p>
+                      </>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         );
