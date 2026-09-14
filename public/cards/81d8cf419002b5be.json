@@ -1,0 +1,50 @@
+{
+  "card": {
+    "as_of": "2026-09-14T03:08:22Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "distribution-integrity",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "represented vs distributed never mixed"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "81d8cf419002b5be80907a80dc87795d6ef1ab9e3245a8e9fb7eb9aca8a55fd6",
+    "sig_ed25519": "9f4f3a269b772f0aae16052eabe27335b79f2f3fddb70f6817315060d13b8ebce37e6f6613dfb53dbdcb5633bd42840596684f50bc39bcc9f2a05e7f17c0fe0c",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-distribution-integrity"
+    ],
+    "subject": "GSPC distribution-integrity UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "distribution-integrity",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "3cc9a054ea6b7c5e12e32a1e7b6b42f5d8f9c9f29bc5fb6beb653352ce941cb8",
+    "8600802610b27e7ddd1d84335b18b1d5f7a2152e318d8325512bbe9c05c5e70b",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "44bdc5ea5d330a22edd3da800c0e6dfcb7f824c3fea07b0946135b96dcbb162d",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "4d3a7ff54df8ebd45d1bfcc211392631d628eedca865a57dcda93ffeae0f9073",
+    "08d6433632ae58ba26dd6106a949e4dc3f798dc93ce8fe4231bf93f8b2bb2551",
+    "be3c31baf797e3346ba149577033434672be08083c6c24e46e02da0e65308c42"
+  ]
+}
