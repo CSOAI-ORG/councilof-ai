@@ -124,7 +124,9 @@ export default function GSPCVerify() {
             Paste a signed card. Recompute it here.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            Two modes. Estate cards recompute Ed25519 against did:web:csoai.org#card-attestation-1.
+            Two modes. Cards recompute Ed25519 against the key the card names: estate cards use
+            did:web:csoai.org#card-attestation-1, and mill and pod measurement cards use
+            did:web:csoai.org#board-attestation-1.
             Public-root mode loads GET /root.json, verifies its Ed25519 envelope against the pinned
             board key, and binds inclusion proofs to that root. Root membership does not individually
             sign a leaf. This is not a certificate, and it is not a training record.
