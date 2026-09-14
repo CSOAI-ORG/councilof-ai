@@ -71,7 +71,7 @@ def select_commissions(payload: dict, axis: str) -> list[str]:
     """Legacy /api/commissions: prefer model when present; skip UNFULFILLABLE / SKU wrappers."""
     if (
         not isinstance(payload, dict)
-        or payload.get("schema") != "csoai.commissions/0.1"
+        or payload.get("schema") not in ("csoai.commissions/0.1", "csoai.commissions/0.2")
         or payload.get("status") != "MEASURED"
         or payload.get("records_unreadable") != 0
     ):
