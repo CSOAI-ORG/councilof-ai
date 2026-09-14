@@ -34,6 +34,18 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0914-03",
+      date: "2026-09-14",
+      first_observed_at: "2026-09-14T10:54Z",
+      what_was_wrong:
+        "The wrapper-parity roster pointed usdt0:arbitrum and usdt0:optimism at 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627 and usdt0:ethereum at 0x48C04ed50508680b93561a5800E97e24C05e639F. None of these is a USDT0 token contract. Three public.notice cards signed under did:web:csoai.org#board-attestation-1 and included in the public root record those reads: public/cards/385d7cd72fee80b4.json (usdt0:arbitrum), public/cards/a911bc077ebb9b1f.json (usdt0:optimism) and public/cards/293cd51070159fa3.json (usdt0:ethereum). Each honestly states UNMEASURED with an empty eth_call result from that address, but the subject label USDT0 was wrong for the address read. No parity number was published for USDT0.",
+      how_caught:
+        "Re-verifying roster addresses against the issuer's published deployments page (docs.usdt0.to) while adding sourced wrapper rows; the two affected addresses returned no token on either chain.",
+      fix:
+        "The roster now uses the addresses on docs.usdt0.to (Arbitrum 0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9, Optimism 0x01bFF41798a0BcF287b996046Ca68b395DbC1071). The staged atoms were re-staged from the corrected roster and read UNCHECKABLE_NATIVE_ISSUANCE. The usdt0:ethereum atom had no roster row and was removed from staging. The three signed cards are not edited; this record supersedes their subject label.",
+      status: "CORRECTED IN SOURCE AND RECORDED; VERIFY THE NEXT PUBLIC ROOT",
+    },
+    {
       id: "C-2026-0913-01",
       date: "2026-09-13",
       // First entry carrying the latency fields proposed by scripts/corrections_latency.py.
