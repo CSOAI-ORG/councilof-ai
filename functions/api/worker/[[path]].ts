@@ -4,12 +4,14 @@
  * versioned ledger without the user hitting csoai-gspc-api directly.
  *
  * The Pages directory `functions/api/worker/` swallows GET /api/worker
- * itself, so worker.ts never runs. Empty rest serves the read-only
- * public pod-health artifact (no secrets) — Maple M2 / LOOP-CONNECT.
+ * itself, so worker.ts never runs on its own. The bare route therefore
+ * DELEGATES to buildWorker (../worker.ts): the pod's own /health, LIVE or
+ * OFFLINE, never a stale file (governor, 2026-09-14 — #2257 was shadowed by
+ * this catch-all for an hour and the site showed a 03:55Z artifact as "LIVE").
  */
+import { buildWorker } from "../worker";
 
 const WORKER_URL = "https://csoai-gspc-api.nicholastempleman.workers.dev";
-const POD_HEALTH_PATH = "/interop/pod-health.json";
 
 /** Null means the worker root — serve pod-health, do not proxy. */
 export function workerProxyPath(pathname: string): string | null {
@@ -32,59 +34,14 @@ function stripSecrets(data: Record<string, unknown>): Record<string, unknown> {
   return out;
 }
 
-async function podHealth(origin: string): Promise<Response> {
-  try {
-    const upstream = await fetch(new URL(POD_HEALTH_PATH, origin).toString(), {
-      headers: { Accept: "application/json" },
-      cf: { cacheTtl: 30, cacheEverything: false },
-    });
-    if (!upstream.ok) {
-      return Response.json(
-        {
-          schema: "csoai.pod-health/0.1",
-          endpoint: "/api/worker",
-          status: "UNAVAILABLE",
-          writes_board: false,
-          never_secrets: true,
-          note: `pod-health artifact HTTP ${upstream.status} — null fields, never fabricated queue`,
-          source: POD_HEALTH_PATH,
-        },
-        { status: 200, headers: { "cache-control": "no-store", "access-control-allow-origin": "*" } },
-      );
-    }
-    const raw = (await upstream.json()) as Record<string, unknown>;
-    const body = {
-      ...stripSecrets(raw),
-      endpoint: "/api/worker",
-      served_from: POD_HEALTH_PATH,
-      never_secrets: true,
-      writes_board: false,
-    };
-    return Response.json(body, {
-      status: 200,
-      headers: { "cache-control": "public, max-age=30", "access-control-allow-origin": "*" },
-    });
-  } catch (e: any) {
-    return Response.json(
-      {
-        schema: "csoai.pod-health/0.1",
-        endpoint: "/api/worker",
-        status: "UNAVAILABLE",
-        writes_board: false,
-        never_secrets: true,
-        note: `pod-health fetch failed (${e?.message ?? "unknown"}) — null, never fabricated`,
-        source: POD_HEALTH_PATH,
-      },
-      { status: 200, headers: { "cache-control": "no-store", "access-control-allow-origin": "*" } },
-    );
-  }
-}
-
 export const onRequest: PagesFunction = async (ctx) => {
   const url = new URL(ctx.request.url);
   const path = workerProxyPath(url.pathname);
   if (path == null) {
-    return podHealth(url.origin);
+    return Response.json(await buildWorker(ctx.env as Parameters<typeof buildWorker>[0]), {
+      status: 200,
+      headers: { "cache-control": "public, max-age=30", "access-control-allow-origin": "*" },
+    });
   }
   const target = `${WORKER_URL}${path}${url.search}`;
 
