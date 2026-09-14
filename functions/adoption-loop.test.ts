@@ -16,6 +16,8 @@ import { onRequestGet as aliasFeed } from "./feed.xml";
 import { onRequestGet as canonicalCorrections } from "./feeds/corrections.xml";
 import { onRequestGet as aliasCorrections } from "./corrections.xml";
 import { onRequestGet as aliasRss } from "./rss.xml";
+import { onRequestGet as aliasAtom } from "./atom.xml";
+import { onRequestGet as canonicalAtom } from "./feeds/corrections.atom";
 import { onRequestGet as badgeMd } from "./badge.md";
 
 const ctx = {} as never;
@@ -53,6 +55,27 @@ describe("/corrections.xml — conventional alias of the derived corrections fee
     expect(alias.status).toBe(canonical.status);
     expect(alias.headers.get("content-type")).toBe(canonical.headers.get("content-type"));
     expect(await alias.text()).toBe(await canonical.text());
+  });
+});
+
+
+describe("/atom.xml — conventional apex alias of the derived corrections Atom", () => {
+  it("is the very same handler as /feeds/corrections.atom", () => {
+    expect(aliasAtom).toBe(canonicalAtom);
+  });
+
+  it("returns byte-identical Atom and headers", async () => {
+    const [canonical, alias] = await Promise.all([
+      canonicalAtom({} as never),
+      aliasAtom({} as never),
+    ]);
+    expect(alias.status).toBe(canonical.status);
+    expect(alias.headers.get("content-type")).toBe(canonical.headers.get("content-type"));
+    const body = await alias.text();
+    expect(body).toBe(await canonical.text());
+    expect(body).toMatch(/^<\?xml version="1\.0"/);
+    expect(body).toContain("<feed");
+    expect(body).toContain("http://www.w3.org/2005/Atom");
   });
 });
 
