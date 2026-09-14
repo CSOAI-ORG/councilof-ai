@@ -1,0 +1,73 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:58:07.494Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "weth:arbitrum",
+      "backing_model": "custodial",
+      "wrapped": {
+        "chain": "arbitrum",
+        "symbol": "WETH",
+        "address": "0x82aF49448D82B08cD7C12Be3B9395C0e72f16154",
+        "chainId": 42161,
+        "block": 505049608,
+        "block_hash": "0x1ffe7b01f0f81c5855d9f86f0ef649be25e75d21a46f18b4963fd5c2330c02df",
+        "block_time": 1789382462
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "ETH",
+        "address": "native ETH (not an ERC-20 contract)",
+        "chainId": 1,
+        "block": 25975174,
+        "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392"
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "WETH on Arbitrum at 0x82aF... is a WETH9 wrapper (deposit ETH, get WETH). totalSupply() returns empty on Arbiscan RPC (contract may be a minimal proxy with non-standard storage). ETH backing is the deposit mechanism. INDEXED, no parity claimed from here.",
+      "reads": {},
+      "escrow_over_wrapped": null,
+      "parity_state": "UNMEASURED",
+      "state": "UNMEASURED",
+      "error": "empty eth_call result from 0x82aF49448D82B08cD7C12Be3B9395C0e72f16154",
+      "fetched_at": "2026-09-14T10:58:07.494Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "chain reads (rpc failed; nothing inferred)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "5035514e1579ebf68769843313fadd72505eab3fe1a1e911844136e67225d93f",
+    "sig_ed25519": "cfd0326f0573eaf100c3c86bcdc01d2e65eb51ff33c2c17ac205856ccb1c95a34ff6060f5bbdb8a230b0be285e5fbc1bca872821fbf686a74cb89c1cbea47d07",
+    "source_urls": [
+      "https://arb1.arbitrum.io/rpc",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped WETH on arbitrum vs native issuance — UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:custodial",
+      "state:UNMEASURED"
+    ],
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ]
+  },
+  "proof": [
+    "efc09121818233fd4c82166a39abb39577ecbfbe8b68aa33914cf67be7feb9ba",
+    "30b9bb787db093be4d5fefde01a8b9c176eb3f3808c23b059390d6ff8160d8c0",
+    "06b43a0a7fed4788cb9f26f7662ea90033aa50555622fb520fba8f81ed0ef341",
+    "ba67e86fea75038540a21764d5c732dc73801a592b824bb559ed9584f8a4347d",
+    "ae7733df51ca8dbd1a346b5f4d4891e270168425a818d5754430fa0c25952eff",
+    "d1970dd0cac8843999549d0791976f72e8d1e1ebf7f879925d735b4cdf0a5b8e",
+    "09b28cd35145741c0837988152fdaced5f59bb0d0be32407eaef902ec8b78206",
+    "dd41cfabfde3ef62c995dabf9534dae738f0bf1c9f9634dada38cd21932336bb",
+    "0a690e153ab6c9e1aa7f6781d3f6e0dfd10cfae2697482f694ad8de44aeee888"
+  ]
+}

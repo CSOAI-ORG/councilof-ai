@@ -1,0 +1,81 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:58:07.494Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "buidl:ethereum",
+      "backing_model": "custodial",
+      "wrapped": {
+        "chain": "ethereum",
+        "symbol": "BUIDL",
+        "address": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+        "chainId": 1,
+        "block": 25975174,
+        "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392",
+        "block_time": 1789382615
+      },
+      "canonical": {
+        "chain": "offchain",
+        "symbol": "fund shares",
+        "address": "transfer agent (Securitize); not on any chain",
+        "chainId": null,
+        "block": null,
+        "block_hash": null
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "Tokenised fund shares; the reserve is the fund's assets held off-chain, reported by the transfer agent. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000c0e03e051f2d",
+          "raw_sha256": "dfe95b9dff923992a1276caea51636072507ad8fca0c682b9d39575cb29f4ee5",
+          "atomic": "212069345730349",
+          "normalized": "212069345.730349",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "INDEXED_CUSTODIAL",
+      "state": "DISCOVERED",
+      "error": null,
+      "fetched_at": "2026-09-14T10:58:07.494Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "reserve (custodian-held off this chain; not readable here)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e8343aa6be71918654f49703ba66aef90d984a1a898e4ec13d00a3ed3039d0e0",
+    "sig_ed25519": "eeb5f9c44605d856324bcbf7961cb0d8823edb9eb8a5b0f0ae7185d07647c017deb33313875b5ee469c136e86142d78639240d29a5fb231fc2fbf9ad169b9502",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped BUIDL on ethereum vs native issuance — INDEXED_CUSTODIAL",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:custodial",
+      "state:INDEXED_CUSTODIAL"
+    ],
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ]
+  },
+  "proof": [
+    "6921d9c1d749f7db4b69854de9667c6000e5dd5b7dc68ce777666c0284c71ba4",
+    "90e9264937f3b875c79b0b9dc6cea114ce33cd2232caf89ead50f6772c0a6cdc",
+    "eb35374dce7c757acc43cebef212338971aaa83404d74f524213156328208980",
+    "dab0b874c9b725d55d6c5e22c2909ff1bc7a13517a6eccb995804834427ffa86",
+    "92b3ee0f7c353b5b05c85a1f1196d982182e2e402c96980c733f86ac634ba16d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "d9d52240a8436cad529074028a832592dba271f2d01687e6bf3e37989dfbca33",
+    "ddb6d92ea8c4ce44cba9a3aa109f456cc19b2b444e3dd02f0a8f2b5cd67dd0ea",
+    "0a690e153ab6c9e1aa7f6781d3f6e0dfd10cfae2697482f694ad8de44aeee888"
+  ]
+}
