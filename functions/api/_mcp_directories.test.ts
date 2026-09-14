@@ -81,6 +81,27 @@ describe("every directory row names the surface its state came from", () => {
   });
 });
 
+describe("a directory cannot remain public reach after its proof is withdrawn", () => {
+  const J = (rel: string) => JSON.parse(readFileSync(new URL(rel, import.meta.url), "utf8"));
+  const platform = J("../../public/interop/platforms-registered.json").registrations.find(
+    (r: { platform: string }) => r.platform === "MCP.so",
+  );
+  const directory = J("../../public/interop/mcp-directories.json").directories.find(
+    (r: { id: string }) => r.id === "mcp-so",
+  );
+  const reach = J("../../public/interop/reach-signal-ledger.json");
+  const distribution = readFileSync(new URL("../../client/src/pages/Distribution.tsx", import.meta.url), "utf8");
+
+  it("keeps every repo-controlled surface aligned with the public proof state", () => {
+    if (platform.status !== "live") {
+      expect(platform.proof_url).toBeUndefined();
+      expect(directory.state).not.toBe("LISTED");
+      expect(reach.have.some((r: { id: string }) => r.id === "mcp-so")).toBe(false);
+      expect(distribution).not.toMatch(/mcp\.so \/ mcpize[^\n]+reach: "listed"/i);
+    }
+  });
+});
+
 // ---------------------------------------------------------------------------
 // WHY THIS EXISTS. The mandate on directory listings is "we are listed, the
 // listing resolves, and the tool count is TRUE". The third clause is the one
