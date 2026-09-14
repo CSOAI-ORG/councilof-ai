@@ -1,0 +1,52 @@
+# Example: verify a Council of AI receipt in your own repository's CI.
+# Copy to .github/workflows/verify-receipt.yml in YOUR repo. Replace <reviewed-commit> with a
+# full commit SHA of CSOAI-ORG/councilof-ai you have reviewed — never a moving branch.
+#
+# What a green run means: the card's bytes were signed by the key csoai.org publishes, and
+# (with require_inclusion) a published Merkle root commits to them. It does not mean the
+# measurement is correct, and it is not a certification of anything.
+name: verify-receipt
+
+on:
+  pull_request:
+    paths: ["evidence/**"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      # Offline, signature only, pinned profile — no network during verification.
+      - id: offline
+        uses: CSOAI-ORG/councilof-ai/actions/verify-card@<reviewed-commit>
+        with:
+          artifact: evidence/measurement-card.json
+
+      # Online: key from the DID document, plus root inclusion and OTS proof presence.
+      - id: online
+        uses: CSOAI-ORG/councilof-ai/actions/csoai-verify@<reviewed-commit>
+        with:
+          card: evidence/measurement-card.json
+          require_inclusion: "false"   # set "true" for cards published under a card root
+
+      - name: Record the verdicts
+        env:
+          OFFLINE: ${{ steps.offline.outputs.verdict }}
+          SIGNATURE: ${{ steps.online.outputs.signature }}
+          INCLUSION: ${{ steps.online.outputs.inclusion }}
+          OTS: ${{ steps.online.outputs.ots }}
+        run: |
+          {
+            echo "### Receipt verification"
+            echo "- offline signature: $OFFLINE"
+            echo "- DID signature: $SIGNATURE"
+            echo "- root inclusion: $INCLUSION"
+            echo "- OTS proof file: $OTS (presence only)"
+            echo "Measured against the GSPC method; not a certification."
+          } >> "$GITHUB_STEP_SUMMARY"
