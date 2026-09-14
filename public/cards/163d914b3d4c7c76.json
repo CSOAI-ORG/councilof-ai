@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-14T18:01:16.397Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Commodities",
+      "holders": 5600,
+      "issuer": "GateHub",
+      "issuer_address": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 4132.852267201553,
+      "symbol": "XAU.gh",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "163d914b3d4c7c7628c846f2a4850bb0546212329cc4a705e182f4443ff7dfa4",
+    "sig_ed25519": "cdcc3293a06d5827ba93ce6226707e4c656a9071a234df296e93c0f55237346e82b7b356219ed052409cda7aca5d7d3a7643fb5d8d5c972aee8fb523f82d5f0c",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL XAU.gh public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "3bfeab6fe39b8d77a267e2fe0f2171846b9317bc58f9e0c1a4f5cead671feb77",
+    "ed8da0558bfe5a48bbd5bf69a9277d65b2d3ec72bfdd10d69b6262eba9dc0ea4",
+    "0f43a8e55d820c7da2b97b0b27ee201fa8bc410eb0597e3caf4c3d46a23f6d77",
+    "63467ff0300726915a42d3de614630dd9ed8b6c3c356c51f597a512b06c94937",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "7c5a8a42340f357780564d0693935725e9fe7f4f61edbc18c569e7367810a64b",
+    "9862bffffcd607adad768be1963d711775ed351f7f25dc95d433fa118da702f4",
+    "d8b668d9598e55c2be79b5e69358ee31de48752a91fbdcc7c82c52168622c0fe",
+    "aab3af0cacf4f93566fd7159e834b520f8f1a454dee8d68c7b9f7c499cf14328"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "card": {
+    "as_of": "2026-09-14T18:01:16.397Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 60,
+      "issuer": "Braza Bank",
+      "issuer_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 28804757.74000001,
+      "symbol": "USDB",
+      "verified_domain": "tokens.brazacripto.com.br",
+      "verified_via": "Bidirectional domain match"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b5e28a2d28965af4c33b431eb7a0ef508425f568793fbdb507f9c88de29da173",
+    "sig_ed25519": "5ee272cf16079fd8bfecf00f41c27195f1b49314bbbc2f7480bf1fdfcb8c62e61b6455584d3df2a430620d9123bedd1e307f1511ebd1aeb581e331d820e4030d",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL USDB public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "9d4416c1cd086124361df64412d768e3118f71d9556b0e35a334d3b908556db4",
+    "9bdbda03c84e28ef7b87acb01de53618e62eab44629a5277ff107f4cea40bb03",
+    "6d84e1e65b92df5229e7f77ee9becce291b125116aae829c9558b2f290490ea3",
+    "1a9052ac4965fda208c36e40cb808818aebfcd3638a4b2c0bb9fbd66b15596d7",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "7c5a8a42340f357780564d0693935725e9fe7f4f61edbc18c569e7367810a64b",
+    "9862bffffcd607adad768be1963d711775ed351f7f25dc95d433fa118da702f4",
+    "d8b668d9598e55c2be79b5e69358ee31de48752a91fbdcc7c82c52168622c0fe",
+    "aab3af0cacf4f93566fd7159e834b520f8f1a454dee8d68c7b9f7c499cf14328"
+  ]
+}

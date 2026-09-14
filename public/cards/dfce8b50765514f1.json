@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-14T18:15:33Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-impersonation-mismatch/0.1",
+      "status": "DISCOVERED",
+      "classification": "NOT_IN_VERIFIED_SET",
+      "code": "RLUSD",
+      "issuer": "rJVf1KPqfGmApL957GgxjEwyZvcc4C9SVa",
+      "holders": 30,
+      "supply": 568702719.87913,
+      "first_seen_in_window": "2025-01-09T10:29:28.124Z",
+      "verified_issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "wording": "issuer not in the archived verified set — legitimacy UNMEASURED",
+      "verified_method": "estate LOCKED_16 registry"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "dfce8b50765514f10d30c79ae850c18d80043a6c3beb8dae5b936d3264a34693",
+    "sig_ed25519": "4d7cf9924fae65ae340e811cddd39499546563117f28dbc6a1f1f9f759f387da24f0ecfec490df3d636bc80c7d91518d822a43e261cb37bd5a5127310c8d0e0d",
+    "source_urls": [
+      "https://api.xrpscan.com/api/v1/tokens",
+      "https://xrpscan.com/token/RLUSD.rJVf1KPqfGmApL957GgxjEwyZvcc4C9SVa"
+    ],
+    "subject": "XRPL RLUSD issuer rJVf1KPqfGmApL957GgxjEwyZvcc4C9SVa not in archived verified set",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "impersonation-watch",
+      "code:RLUSD",
+      "mismatch"
+    ],
+    "unmeasured": [
+      "issuer_legitimacy",
+      "long_tail_issuance_below_ranking_window"
+    ]
+  },
+  "proof": [
+    "9b669559a83d76b9ddf7f48db9915efdaec16835afb00516fb427a53dea415a7",
+    "52f2e1945970252bdfe6d3c33d673113708c923bbe8829de730e894a231ef129",
+    "fcbea98d71ab1928bfd96bbe0fb4cfbb4db4f5dd63c04e52488d759d75be2289",
+    "6d47f4a94b5fdbb0c8cfbd469840613c042dc47ecf0b33c0df820d0436a80816",
+    "9980604f0c9d5e1a91117d04eb6fd520ad41730fe5be2c5360184ce37b2be1c7",
+    "0d7d83a040c9d1334671597b971c3535b925f2d951cd6430309bb1bd6817b241",
+    "258f66c2db833f61fb182299eea21b7aae8fd8aa32161ea85e72625099530e14",
+    "d078af898fa625235973d3638ed5ea27551d9101d676166035ba2b450555b9ef",
+    "aab3af0cacf4f93566fd7159e834b520f8f1a454dee8d68c7b9f7c499cf14328"
+  ]
+}

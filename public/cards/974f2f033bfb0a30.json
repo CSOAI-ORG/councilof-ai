@@ -1,0 +1,48 @@
+{
+  "card": {
+    "as_of": "2026-09-14T18:01:16.397Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 2,
+      "issuer": "Quantoz",
+      "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1000000,
+      "symbol": "EURQ",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "974f2f033bfb0a30085378875fa67dc0f0c47569d310c9069ab723a4d755ef4e",
+    "sig_ed25519": null,
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EURQ public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml",
+      "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
+    ]
+  },
+  "proof": [
+    "5cd54a93da5d496c713232a57a1a891a5df863f2f351f1892edc118bd238398e",
+    "d162518afc3d265d8ff2501c420d3a69c31ef8e2028a908d85ec3c67de5d0bda",
+    "91a3bacc389de59380c60070557724eeb64bf49d04720a0baaae05d705bd7211",
+    "63467ff0300726915a42d3de614630dd9ed8b6c3c356c51f597a512b06c94937",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "7c5a8a42340f357780564d0693935725e9fe7f4f61edbc18c569e7367810a64b",
+    "9862bffffcd607adad768be1963d711775ed351f7f25dc95d433fa118da702f4",
+    "d8b668d9598e55c2be79b5e69358ee31de48752a91fbdcc7c82c52168622c0fe",
+    "aab3af0cacf4f93566fd7159e834b520f8f1a454dee8d68c7b9f7c499cf14328"
+  ]
+}

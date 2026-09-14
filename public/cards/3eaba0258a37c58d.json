@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-14T18:01:16.397Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 7314,
+      "issuer": "Bitstamp",
+      "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 7992148.138099772,
+      "symbol": "USD.bs",
+      "verified_domain": null,
+      "verified_via": "XRPLMeta registry"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3eaba0258a37c58de94944914c42455ae480909269d18c05d827653f6a53909e",
+    "sig_ed25519": "db6ff7aa7af5b4a4ad8b244bd4f3f58a4f1d90a2d304a872b6c55487a56990016f1c22b841205849b94b83a58e1e613049454d18b776ca9ccb8357ffd6366d04",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL USD.bs public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "434214720568f4b1673d5b5612e09333af7b83151e486fb095565321f0dd5824",
+    "5960f9922653e5094df029a242d49c5c033e783c32dbca6f35be5c02d3862675",
+    "fedea41a9df8e4a9aa0d6e22460c9402d12617ce4f89d3e02ba27a0ff38920a8",
+    "1a9052ac4965fda208c36e40cb808818aebfcd3638a4b2c0bb9fbd66b15596d7",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "7c5a8a42340f357780564d0693935725e9fe7f4f61edbc18c569e7367810a64b",
+    "9862bffffcd607adad768be1963d711775ed351f7f25dc95d433fa118da702f4",
+    "d8b668d9598e55c2be79b5e69358ee31de48752a91fbdcc7c82c52168622c0fe",
+    "aab3af0cacf4f93566fd7159e834b520f8f1a454dee8d68c7b9f7c499cf14328"
+  ]
+}
