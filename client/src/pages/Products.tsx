@@ -65,7 +65,7 @@ const ENGINE = [
 
 const FREE_RAIL = [
   { name: "Verify a card", href: "/gspc-verify", what: "Check any signed verdict offline. Free forever, for anyone." },
-  { name: "The live board", href: "/gspc-scoreboard", what: "Every quotable axis, measured or honestly UNMEASURED." },
+  { name: "The live board", href: "/gspc-scoreboard", what: "Living board GET /api/gspc — 22·22·0 today; UNMEASURED only if a future slot has no run." },
   { name: "The API", href: "/api/gspc", what: "The same board, machine-readable. Agents welcome.", external: true },
   { name: "The method", href: "/methodology", what: "The frozen rules every number above is computed under." },
   { name: "Choose an actual job", href: "/dashboard?task=pricing-overview&tab=measured", what: "Free verification, existing RWA or Article 50 evidence, provider history, or a scoped commission. Paid routes disclose the exact amount only in their live 402 challenge." },
@@ -102,7 +102,7 @@ const MODULES = [
     name: "Distribution integrity",
     href: "/distribution-integrity",
     tag: "Financial axis",
-    what: "Represented is not distributed. Coverage layer over tokenized real-world assets — UNMEASURED stated first, never a credit rating.",
+    what: "Represented is not distributed. Coverage layer over tokenized real-world assets — board financial axes are MEASURED (GET /api/gspc 22·22·0); this module is not a credit rating.",
   },
   {
     name: "Legacy on-ramp",

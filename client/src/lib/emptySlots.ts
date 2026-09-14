@@ -1,10 +1,10 @@
 /**
  * Axis honesty for /products — empty-as-finding only when unmeasured_axes > 0.
  *
- * Live board is GET /api/gspc → totals 22·22·0 (unmeasured_axes=0). Financial /
- * domain axes that once sat as "seven empty slots" are MEASURED (unsigned fact
- * runs still count as MEASURED, not empty). Do not paint Seven empty / false
- * "Live: Matches GET /api/gspc" when the endpoint says 0 unmeasured.
+ * Live board is GET /api/gspc → totals 22·22·0 (unmeasured_axes=0). Do not paint
+ * Seven empty / empty-slot chrome as if current UNMEASURED. Live financial ids:
+ * ai-adoption-components, labour-components (not retired ai-economy-index /
+ * human-labour-index labels).
  */
 
 export type SlotFill = {
@@ -22,57 +22,57 @@ export const BOARD_LIVE_RULING =
 export const EMPTY_SLOT_RULING = BOARD_LIVE_RULING;
 
 /**
- * Historical axis names that used to be sold as empty. Kept as instrument notes
- * (honest next / never), not as a claim that they are UNMEASURED today.
+ * Instrument notes for financial/domain axes that once sat as empty placeholders.
+ * Ids match live GET /api/gspc axis names. Not a claim they are UNMEASURED today.
  */
 export const EMPTY_SLOTS: SlotFill[] = [
   {
     id: "reserve-attestation",
     axis: "reserve-attestation",
     honest_next:
-      "MEASURED on the live board when a signed cell exists. /xrpl-attest is a public-root reader, not a mill. We attest; we do not issue.",
+      "MEASURED on the live board (deterministic-facts). /xrpl-attest is a public-root reader, not a mill. We attest; we do not issue.",
     never: "Mainnet CredentialCreate this week. On-chain MEASURED. Invented issuer account.",
   },
   {
     id: "regulatory-framework",
     axis: "regulatory-framework",
     honest_next:
-      "Provision text is watched (GET /api/regulation, corrections). A frozen bank and n keep the cell honest — not an LLM map of 417 articles.",
+      "MEASURED on the live board. Provision text is watched (GET /api/regulation, corrections). A frozen bank and n keep the cell honest — not an LLM map of 417 articles.",
     never: "Auto-scrape → MEASURED. A living-law blog post as a grade.",
   },
   {
     id: "distribution-integrity",
     axis: "distribution-integrity",
     honest_next:
-      "SCITT / signed-SBOM as attachments on a cell. Represented is not distributed.",
+      "MEASURED on the live board. SCITT / signed-SBOM as attachments on a cell. Represented is not distributed.",
     never: "Generate statements for 14 banks and call the axis MEASURED.",
   },
   {
     id: "custody-disclosure",
     axis: "custody-disclosure",
     honest_next:
-      "did:web:csoai.org is planted. MEASURED is a disclosure instrument on a subject, not a ceremony write-up.",
+      "MEASURED on the live board. did:web:csoai.org is planted. MEASURED is a disclosure instrument on a subject, not a ceremony write-up.",
     never: "SOC 2-style blog as a GSPC cell. This VM inventing a signer.",
   },
   {
-    id: "ai-economy-index",
-    axis: "ai-economy-index",
+    id: "ai-adoption-components",
+    axis: "ai-adoption-components",
     honest_next:
-      "Dated aggregates may be REPORTED with attribution. They never blend into MEASURED without a frozen bank.",
-    never: "Crunchbase scrape as a GSPC grade. An investable index.",
+      "MEASURED on the live board as component facts (not the retired ai-economy-index / MEASURED-INDEX-v0.1 sticker). Dated aggregates may be REPORTED with attribution.",
+    never: "Crunchbase scrape as a GSPC grade. An investable index. Restore MEASURED-INDEX-v0.1.",
   },
   {
-    id: "human-labour-index",
-    axis: "human-labour-index",
+    id: "labour-components",
+    axis: "labour-components",
     honest_next:
-      "Eurostat / ONS series can be cited as REPORTED. Displacement is not a Council diagnosis.",
+      "MEASURED on the live board as component facts (not the retired human-labour-index label). Eurostat / ONS series can be cited as REPORTED. Displacement is not a Council diagnosis.",
     never: "LinkedIn scrape as MEASURED. A prognosis of the labour market.",
   },
   {
     id: "humanoid-labour-index",
     axis: "humanoid-labour-index",
     honest_next:
-      "Need an input bank first. Until an instrument runs, do not invent a robot-workforce score.",
+      "MEASURED on the live board as a deterministic-facts run. Do not invent a separate robot-workforce score beyond the signed cell.",
     never: "Tesla / Figure scrape as MEASURED. A robot-workforce score.",
   },
 ];
@@ -109,4 +109,3 @@ export const CENSUS_SITES = [
     does: "Discovery of declared weights. Listing is not a run.",
   },
 ] as const;
-
