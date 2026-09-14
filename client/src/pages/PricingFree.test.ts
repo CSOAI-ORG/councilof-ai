@@ -37,7 +37,7 @@ describe("/pricing-free — the explainer names no price and sells no grade", ()
     expect(app).not.toMatch(/const PlansPage = lazy/);
     expect(app).toMatch(/path="\/pricing-free" component=\{ContentReviewNotice\}/);
     expect(prerender).toMatch(/"\/pricing-free"/);
-    expect(ia).toMatch(/"\/pricing-free"/);
+    expect(ia).not.toMatch(/"\/pricing-free"/);
     expect(products).toMatch(/href: "\/dashboard\?task=pricing-overview&tab=measured"/);
     expect(products).toMatch(/Paid routes disclose the exact amount only in their live 402 challenge/);
     expect(attestation).not.toMatch(/href="\/pricing-free"/);

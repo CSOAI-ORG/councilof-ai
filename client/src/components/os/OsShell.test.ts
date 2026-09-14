@@ -18,7 +18,8 @@ describe("OsShell is not the homepage or /os directory", () => {
   it("homepage is verify; /os is a directory of real pages", () => {
     expect(app).toContain("HomeVerify");
     expect(app).toContain("ToolsPage");
-    expect(app).toContain('<Redirect to="/os" />');
+    expect(app).toContain('path="/os" component={OsRoute}');
+    expect(app).toContain('<Redirect to="/tools" />');
     expect(launcher).toContain('data-testid="os-directory"');
     expect(launcher).toContain("/gspc-verify");
     expect(launcher).toContain("/assess");
