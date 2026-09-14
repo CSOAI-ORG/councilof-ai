@@ -1,10 +1,10 @@
-import { useRoute } from "wouter";
 import ContentPage from "./ContentPage";
 import { blogdata } from "@/data/blog-content";
 
-/** /blog/:slug — data-driven from blog-content.ts */
-export default function BlogSlug() {
-  const [, params] = useRoute("/blog/:slug");
-  const slug = params?.slug || "";
-  return <ContentPage dataset={blogdata} slug={slug} />;
+/**
+ * /blog/:slug — data-driven from blog-content.ts.
+ * Receives `params` from wouter <Route component={...} /> (no useRoute null).
+ */
+export default function BlogSlug({ params }: { params: { slug: string } }) {
+  return <ContentPage dataset={blogdata} slug={params.slug} />;
 }
