@@ -1,0 +1,86 @@
+{
+  "card": {
+    "as_of": "2026-09-14T02:01:29.387Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdt:optimism",
+      "backing_model": "escrow",
+      "wrapped": {
+        "chain": "optimism",
+        "symbol": "USDT",
+        "address": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+        "chainId": 10,
+        "block": 156875715,
+        "block_hash": "0x4f8e07e8f3cd666968c09df04949aa7bdf34e8db61b474f70d03889695c83274",
+        "block_time": 1789350207
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDT",
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "chainId": 1,
+        "block": 25972488,
+        "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+      },
+      "escrow": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
+      "escrow_name": "OP Mainnet L1StandardBridge",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000d56222ceade3",
+          "raw_sha256": "1eb72cafe7c05522eae2b137d15bd58d0d3fc8708a5798098d52cd8d5430a242",
+          "atomic": "234617467481571",
+          "normalized": "234617467.481571",
+          "decimals": 6
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1)",
+          "raw": "0x0000000000000000000000000000000000000000000000000000d5b2e4e69da9",
+          "raw_sha256": "adce24322cfdc6deb05507dc62521b112c928b6b401ed869f52b5483f1fadb20",
+          "atomic": "234964321213865",
+          "normalized": "234964321.213865",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": "1.001478",
+      "parity_state": "ESCROW_PARITY_READ",
+      "state": "PROBED",
+      "error": null,
+      "fetched_at": "2026-09-14T02:01:29.387Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+      "unmeasured": []
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "58cd5cf130a75a02230220bcae0498071723141a263378cb65d0e65c27e59784",
+    "sig_ed25519": "2a0fe7b15430a8fddf634972cd45bbae418ce7c94c69e2b0b21d0ca1cf33970fbfe75cd048caca761eb8c3b628ea0d65d4d2786b5eb9f83c69ff42a12c9f7a09",
+    "source_urls": [
+      "https://mainnet.optimism.io",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDT on optimism vs OP Mainnet L1StandardBridge — ESCROW_PARITY_READ",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:escrow",
+      "state:ESCROW_PARITY_READ"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "3649a2cf160275760226245f4b587a17bd93dd7cbb16b8474f2828d64a45778b",
+    "ed94e288435e6a6e77e810e59a92d83a1fcef29b8b2c31303abb7abbf5690d30",
+    "614a084aaaa6a3e74d71aff9455c7e167ff7f2ca65583b9896e85a1465febac4",
+    "11aedce758e9879b7cf408d0718d7f43666d210fdee6ef2218080c1dc475daa4",
+    "2a666d79bbf03ccd93b6aa7a46c9df4acaeb803c4d24a4130928ffc617701b71",
+    "d5cb9108dae554b7acb9519fea57bcfce9244f10baa75a7706d8bead1cbdb3fb",
+    "8e1bffac6a28700b491539ee7973647e7511bcbf446554dbf83bd729b42f2a0e",
+    "e78ec6d5e549886708a8ff912e19deaef1ab6505e8c84c12f665870e7c68cf66",
+    "2b49bd86adb61ecb6457a74d4e7dba4a993d8f28593042fb211d88c522932a00"
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "card": {
+    "as_of": "2026-09-14T02:01:29.387Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "dai:base",
+      "backing_model": "escrow",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "DAI",
+        "address": "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
+        "chainId": 8453,
+        "block": 51280471,
+        "block_hash": "0x129ca1bacdc3ba75609c71c688fb2f7869c61f71b84dd874cae6e113c3f97293",
+        "block_time": 1789350289
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "DAI",
+        "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "chainId": 1,
+        "block": 25972488,
+        "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+      },
+      "escrow": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35",
+      "escrow_name": "Base L1StandardBridge",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x000000000000000000000000000000000000000000017fc91c036ada617215ce",
+          "raw_sha256": "85479bebc1b9732b3e191bea4f890b01160b97422089641bfa5f7eaed2641045",
+          "atomic": "1812376177072433899115982",
+          "normalized": "1812376.177072433899115982",
+          "decimals": 18
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0x3154Cf16ccdb4C6d922629664174b904d80F2C35)",
+          "raw": "0x0000000000000000000000000000000000000000000180b78a9391c0882d2cfc",
+          "raw_sha256": "9a30e3f295aac0153e271384a104f0d1c68bb2a5014d4be5acb41697a4a3c68b",
+          "atomic": "1816774469072487524936956",
+          "normalized": "1816774.469072487524936956",
+          "decimals": 18
+        }
+      },
+      "escrow_over_wrapped": "1.002426",
+      "parity_state": "ESCROW_PARITY_READ",
+      "state": "PROBED",
+      "error": null,
+      "fetched_at": "2026-09-14T02:01:29.387Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+      "unmeasured": []
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "8f19cdd6933d433e7040a323998225ced5a1df8c727141d8539acb7f38223ade",
+    "sig_ed25519": "d6adf765ba0bf461b8ed08d9b33cc2c5f1a92d4ab3b009ec813cebac7be1c39614963ac54cb764804be921eb845afcdfa69c76acf57295c31fe4d82fe3374500",
+    "source_urls": [
+      "https://mainnet.base.org",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped DAI on base vs Base L1StandardBridge — ESCROW_PARITY_READ",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:escrow",
+      "state:ESCROW_PARITY_READ"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "9d41e1fcf9459691cca204edd10a5ebb267ac0f1852cb2338378ce8cb2b8d91a",
+    "b2c7ac087aa8290d07a692564271295db31a31a261b3f94cd21955411ca0216f",
+    "2adad7d6e7ca6225c644be11e52629b77d71e5ce3907ac0a2bf220eb6402f469",
+    "1176473d2d8111c2ccf48b9a952e6ad7e016a8fc83411816a9c81f1b4c9ed3e1",
+    "92b3ee0f7c353b5b05c85a1f1196d982182e2e402c96980c733f86ac634ba16d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "eb778b8f9ea82c017652b33faf835800491a02fbff877de26348018efcdedab3",
+    "e689e9bad5d68589eec43d0151350d5277a0bee2f41e2418ae4dedc2d93edbb4",
+    "2b49bd86adb61ecb6457a74d4e7dba4a993d8f28593042fb211d88c522932a00"
+  ]
+}

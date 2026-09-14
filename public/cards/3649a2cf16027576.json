@@ -1,0 +1,82 @@
+{
+  "card": {
+    "as_of": "2026-09-14T02:01:29.387Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdt:arbitrum",
+      "backing_model": "native",
+      "wrapped": {
+        "chain": "arbitrum",
+        "symbol": "USDT",
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        "chainId": 42161,
+        "block": 504923416,
+        "block_hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
+        "block_time": 1789350332
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDT",
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "chainId": 1,
+        "block": 25972488,
+        "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+      },
+      "escrow": "0xcEe284F754E854890e311e3280b767F80797180d",
+      "escrow_name": "Arbitrum One ERC-20 gateway escrow (legacy bridged remainder only)",
+      "note": "Tether issues USDT natively on Arbitrum since 2025; the gateway escrow backs only the legacy bridged remainder. The wrapped supply is read; no parity is claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000002e3848f15d4d0",
+          "raw_sha256": "739702cf67dc24d08a41f3008b898662fc8e87ee781f6b8239f3d850d98c47af",
+          "atomic": "813108429182160",
+          "normalized": "813108429.182160",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "state": "PROBED",
+      "error": null,
+      "fetched_at": "2026-09-14T02:01:29.387Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+      "unmeasured": [
+        "escrow_balance (natively issued; no escrow exists)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3649a2cf160275760226245f4b587a17bd93dd7cbb16b8474f2828d64a45778b",
+    "sig_ed25519": "4d4e526b04769d7778e32437eaa9a0a04b89a9b25f94800ad524fb0f55351e39073d827a1bd9977323696d5e6d6122521c0718aac268396fdf091cacedd09101",
+    "source_urls": [
+      "https://arb1.arbitrum.io/rpc",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDT on arbitrum vs Arbitrum One ERC-20 gateway escrow (legacy bridged remainder only) — UNCHECKABLE_NATIVE_ISSUANCE",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:native",
+      "state:UNCHECKABLE_NATIVE_ISSUANCE"
+    ],
+    "unmeasured": [
+      "escrow_balance (natively issued; no escrow exists)"
+    ]
+  },
+  "proof": [
+    "58cd5cf130a75a02230220bcae0498071723141a263378cb65d0e65c27e59784",
+    "ed94e288435e6a6e77e810e59a92d83a1fcef29b8b2c31303abb7abbf5690d30",
+    "614a084aaaa6a3e74d71aff9455c7e167ff7f2ca65583b9896e85a1465febac4",
+    "11aedce758e9879b7cf408d0718d7f43666d210fdee6ef2218080c1dc475daa4",
+    "2a666d79bbf03ccd93b6aa7a46c9df4acaeb803c4d24a4130928ffc617701b71",
+    "d5cb9108dae554b7acb9519fea57bcfce9244f10baa75a7706d8bead1cbdb3fb",
+    "8e1bffac6a28700b491539ee7973647e7511bcbf446554dbf83bd729b42f2a0e",
+    "e78ec6d5e549886708a8ff912e19deaef1ab6505e8c84c12f665870e7c68cf66",
+    "2b49bd86adb61ecb6457a74d4e7dba4a993d8f28593042fb211d88c522932a00"
+  ]
+}

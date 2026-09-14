@@ -1,0 +1,73 @@
+{
+  "card": {
+    "as_of": "2026-09-14T02:01:29.387Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdc:zksync-era",
+      "backing_model": "escrow",
+      "wrapped": {
+        "chain": "zksync-era",
+        "symbol": "USDC",
+        "address": "0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E",
+        "chainId": 324,
+        "block": 71955917,
+        "block_hash": "0x81bf8ce158a3c1b17cbebb57b816de7846bc14c2707dad9aa370a4264bee6035",
+        "block_time": 1789338022
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "block": 25972488,
+        "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+      },
+      "escrow": "0x5797EA1b374f2A4F1E8BcE5156c3962b78E1C46a",
+      "escrow_name": "zkSync Era L1 USDC Bridge (native bridge)",
+      "note": null,
+      "reads": {},
+      "escrow_over_wrapped": null,
+      "parity_state": "UNMEASURED",
+      "state": "UNMEASURED",
+      "error": "empty eth_call result from 0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E",
+      "fetched_at": "2026-09-14T02:01:29.387Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+      "unmeasured": [
+        "chain reads (rpc failed; nothing inferred)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "0ed5978a6e50aeda331e2c5201a6a23321afce23ebbcc6d44e92561a368bec2f",
+    "sig_ed25519": "e3336426e1fe29cd17b93476a2ca8df80aecd78ba694766a7597417da78e22134fad241eae5b4dcb5251584e757f1ec6721a9d535d633079764909a36c016605",
+    "source_urls": [
+      "https://mainnet.era.zksync.io",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDC on zksync-era vs zkSync Era L1 USDC Bridge (native bridge) — UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:escrow",
+      "state:UNMEASURED"
+    ],
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ]
+  },
+  "proof": [
+    "bd9c098d34c21c2797778e5aa21c0d8377b6a0df220118f5253910cbc710e311",
+    "23892df0fb9340101e642852ebb2d6473b75b007805c83905b07deb677c0c630",
+    "f157feb6d4300400ef55703fcd32d2318bb3967f444be24561e240057195829a",
+    "11aedce758e9879b7cf408d0718d7f43666d210fdee6ef2218080c1dc475daa4",
+    "2a666d79bbf03ccd93b6aa7a46c9df4acaeb803c4d24a4130928ffc617701b71",
+    "d5cb9108dae554b7acb9519fea57bcfce9244f10baa75a7706d8bead1cbdb3fb",
+    "8e1bffac6a28700b491539ee7973647e7511bcbf446554dbf83bd729b42f2a0e",
+    "e78ec6d5e549886708a8ff912e19deaef1ab6505e8c84c12f665870e7c68cf66",
+    "2b49bd86adb61ecb6457a74d4e7dba4a993d8f28593042fb211d88c522932a00"
+  ]
+}

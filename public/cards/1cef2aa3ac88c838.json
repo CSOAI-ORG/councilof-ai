@@ -1,0 +1,52 @@
+{
+  "card": {
+    "as_of": "2026-09-14T06:02:16Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-impersonation-mismatch/0.1",
+      "status": "DISCOVERED",
+      "classification": "NOT_IN_VERIFIED_SET",
+      "code": "XSGD",
+      "issuer": "rXSGdyyEPVeBV6oux4gh6W3rDVM2FyKGe",
+      "holders": 14,
+      "supply": 10000000000,
+      "first_seen_in_window": "2025-05-20T00:38:13.063Z",
+      "verified_issuer": "rK67JczCpaYXVtfw3qJVmqwpSfa1bYTptw",
+      "wording": "issuer not in the archived verified set — legitimacy UNMEASURED",
+      "verified_method": "issuer-site-published address + on-ledger Domain backlink (two-way); xrp-ledger.toml absent (404 archived)"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "1cef2aa3ac88c83830c421e50098512b1f9d41f723835369f024509d7569377f",
+    "sig_ed25519": "f4bc13acf43c1f7bd7581b206a50326afded1bfa5c9236a40691df2956c607771c014f6fb16bd50b7669f05b75994574263420b814b3082509fbbd15dedaad07",
+    "source_urls": [
+      "https://api.xrpscan.com/api/v1/tokens",
+      "https://xrpscan.com/token/XSGD.rXSGdyyEPVeBV6oux4gh6W3rDVM2FyKGe"
+    ],
+    "subject": "XRPL XSGD issuer rXSGdyyEPVeBV6oux4gh6W3rDVM2FyKGe not in archived verified set",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "impersonation-watch",
+      "code:XSGD",
+      "mismatch",
+      "entry-1"
+    ],
+    "unmeasured": [
+      "issuer_legitimacy",
+      "long_tail_issuance_below_ranking_window"
+    ]
+  },
+  "proof": [
+    "a1715b605bc22dbabef9c55e32c0971fe63af4f64c8e5b57849097b10a9c19ae",
+    "a84c6eb9e4d749545fcca815727baff741a0e32e59b32b3c89e74e8e4a553c1f",
+    "8b1a28c32e95427c1d4e426f1331f109121bb279164a9ca724d70ce1197af674",
+    "1998fe2c87b7f30bcc774e072b6d0d3a445ce52fa6be1c2e4d894034becb42c8",
+    "0ab2bebf0fc8b0a4a7b566dddbf4cbc54e7de0755a2d1e16550fbd94757cf470",
+    "97497f9a5e06dc664c45606b4d61d62e99f8dcf0cd3fb1b65587ec3b9ae55046",
+    "a24a6af5a9e31ccfb4fcb0c2da42d3efe8e996e6ec81f444840a3bffc686833c",
+    "42ab1b46608be905a5da098b85b28e9cdc9179e2d0cb55dad04f1e1aec700a40",
+    "1997b978e2a19aa3d8c00678edfaa72dda99b6f6a8171444ec8112c55de01287"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "card": {
+    "as_of": "2026-09-14T02:01:29.387Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdc:base",
+      "backing_model": "native",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "USDC",
+        "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "chainId": 8453,
+        "block": 51280471,
+        "block_hash": "0x129ca1bacdc3ba75609c71c688fb2f7869c61f71b84dd874cae6e113c3f97293",
+        "block_time": 1789350289
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "block": 25972488,
+        "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "Circle mints USDC natively on Base (CCTP burn-and-mint). No escrow exists to read; the wrapped supply is read, no parity is claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x000000000000000000000000000000000000000000000000000f22cd4b31b8d1",
+          "raw_sha256": "2375133e75cf1ea5c2003f97f7ca4194e32b2ae402dbb93d177ce2efadd8c8e4",
+          "atomic": "4260389775849681",
+          "normalized": "4260389775.849681",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "state": "PROBED",
+      "error": null,
+      "fetched_at": "2026-09-14T02:01:29.387Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+      "unmeasured": [
+        "escrow_balance (natively issued; no escrow exists)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3f301f46f71aeca504c026555a2418c35c84d92a03627fa5a6e167bf01061b4f",
+    "sig_ed25519": "7ac25c93643d87703ff452e000ba5476ebfed2b26f9585e8e19879013cbc913d32866580cdeac7d63127d20dcfce3c3cb2a2ca579d8fc728edc55aedd8f78703",
+    "source_urls": [
+      "https://mainnet.base.org",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDC on base vs native issuance — UNCHECKABLE_NATIVE_ISSUANCE",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:native",
+      "state:UNCHECKABLE_NATIVE_ISSUANCE"
+    ],
+    "unmeasured": [
+      "escrow_balance (natively issued; no escrow exists)"
+    ]
+  },
+  "proof": [
+    "4f305d24d1ce4fd16a7c4fef9f7937984da11a0dbdfea414da8c530c77cab7c4",
+    "4238bf0271c0373c1f5fb73784fc73f5778bc25fb33592bcedb66efc4dfe62f1",
+    "bc9f5dd1678f65d723ee9e7f288f16f97a0cdd37416e7a01e6287d9f45b1410c",
+    "1176473d2d8111c2ccf48b9a952e6ad7e016a8fc83411816a9c81f1b4c9ed3e1",
+    "92b3ee0f7c353b5b05c85a1f1196d982182e2e402c96980c733f86ac634ba16d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "eb778b8f9ea82c017652b33faf835800491a02fbff877de26348018efcdedab3",
+    "e689e9bad5d68589eec43d0151350d5277a0bee2f41e2418ae4dedc2d93edbb4",
+    "2b49bd86adb61ecb6457a74d4e7dba4a993d8f28593042fb211d88c522932a00"
+  ]
+}
