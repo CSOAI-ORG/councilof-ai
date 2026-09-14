@@ -1,0 +1,58 @@
+{
+  "schema": "csoai.model-identity-probe/0.1",
+  "provider": "deepseek",
+  "probed_at": "2026-09-14T09:27:01Z",
+  "event_under_observation": "DeepSeek: V4-Pro API traffic rerouted to V4.1-Flash from 2026-09-14T04:00:00Z (provider announcement)",
+  "attests": "the API model catalogue and response outcome for each requested model id at probed_at \u2014 served-model identity only when a call responds and reports it",
+  "prompt_sha256": "b09ba2887de05738a0eeb7877fe39d9b582d68fb23e368e5ff01d32898f4233e",
+  "models_listed": {
+    "http": 200,
+    "ids": [
+      "deepseek-flash",
+      "deepseek-v4-pro"
+    ]
+  },
+  "probes": [
+    {
+      "requested_model": "deepseek-v4-pro",
+      "http": 402,
+      "latency_ms": 586,
+      "state": "REFUSED_BALANCE",
+      "error": "Insufficient Balance"
+    },
+    {
+      "requested_model": "deepseek-flash",
+      "http": 402,
+      "latency_ms": 590,
+      "state": "REFUSED_BALANCE",
+      "error": "Insufficient Balance"
+    },
+    {
+      "requested_model": "deepseek-chat",
+      "http": 402,
+      "latency_ms": 586,
+      "state": "REFUSED_BALANCE",
+      "error": "Insufficient Balance"
+    },
+    {
+      "requested_model": "deepseek-reasoner",
+      "http": 402,
+      "latency_ms": 586,
+      "state": "REFUSED_BALANCE",
+      "error": "Insufficient Balance"
+    }
+  ],
+  "announcement_source": {
+    "url": "https://www.deepseek.com/en/news/deepseek-v4-1-flash/",
+    "publisher": "DeepSeek",
+    "published_date": "2026-09-10",
+    "claim": "Starting at 04:00 UTC on Sept 14, 2026, deepseek-v4-pro requests route to V4.1-Flash until V4.1-Pro launches.",
+    "scope": "Provider announcement. Probe results independently record only API outcomes; a refused call does not establish served-model identity."
+  },
+  "identity_observation": {
+    "responded": 0,
+    "refused_or_unreachable": 4,
+    "served_identity_observed": false,
+    "honest_sentence": "0 of 4 requests returned a response from which served-model identity could be recorded."
+  }
+}
