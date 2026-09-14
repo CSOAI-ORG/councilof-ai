@@ -6,7 +6,7 @@ export type CoverageCell = {
 };
 
 export type CoverageRow = {
-  id: "gspc" | "stablecoins" | "xrpl" | "swift" | "banks" | "x402" | "mcp" | "a2a" | "erc8004" | "ap2" | "wrappers";
+  id: "gspc" | "stablecoins" | "xrpl" | "swift" | "banks" | "x402" | "mcp" | "a2a" | "erc8004" | "ap2" | "wrappers" | "bazaar";
   label: string;
   href: string;
   unit: string;
@@ -34,6 +34,7 @@ export type CoverageLedgerInput = {
   erc8004: unknown;
   wrappers: unknown;
   root_kinds: unknown;
+  bazaar: unknown;
 };
 
 export type CoverageSnapshot = {
@@ -132,6 +133,13 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
   const a2aSource = "GET /api/a2a";
   const erc8004Source = "GET /api/erc8004 (census scripts/x402/erc8004_census.py)";
   const wrappersSource = "GET /interop/wrapped-asset-parity-latest.json (scripts/readers/wrapped-asset-parity-reader.mjs)";
+
+  const bazaarSource = "https://huggingface.co/datasets/csoai/x402-bazaar-conformance/resolve/main/summary-latest.json";
+  const bazaar = (input.bazaar && typeof input.bazaar === "object" ? (input.bazaar as Record<string, unknown>) : null);
+  const bzHosts = bazaar && typeof bazaar.hosts_distinct === "number" ? (bazaar.hosts_distinct as number) : null;
+  const bzHead = bazaar && bazaar.headline && typeof bazaar.headline === "object" ? (bazaar.headline as Record<string, unknown>) : null;
+  const bzIdx = bazaar && bazaar.indexes && typeof bazaar.indexes === "object" ? (bazaar.indexes as Record<string, Record<string, unknown>>) : null;
+  const bzNum = (v: unknown) => (typeof v === "number" ? v : null);
   const rootKindsSource = "GET /interop/root-kinds.json (scripts/publish_public_root.py kinds_index — per-kind leaves under the ONE root, regenerated every root)";
 
   return [
@@ -381,6 +389,28 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
       paid: absent(wrappersSource, "paid_pairs (door /api/wrapper is live; settlements are counted by /api/revenue, never here)"),
       writesBoard: false,
       note: `Bridged and custodial stablecoin/asset wrappers read from public RPC at pinned finalized blocks. States never collapsed — escrow-parity reads: ${Number(wrapperCounts.ESCROW_PARITY_READ ?? 0)}, native issuance (uncheckable): ${Number(wrapperCounts.UNCHECKABLE_NATIVE_ISSUANCE ?? 0)}, custodial (indexed only): ${Number(wrapperCounts.INDEXED_CUSTODIAL ?? 0)}, unmeasured: ${Number(wrapperCounts.UNMEASURED ?? 0)}. A ratio, not a rate, not a reserve attestation; nothing is ever "unbacked". Door: GET /api/wrapper?id=<pair>.`,
+    },
+    {
+      id: "bazaar",
+      label: "x402 Bazaars (strangers' doors)",
+      href: bazaarSource,
+      unit: "hosts",
+      // Distinct hosts listed in either public Bazaar (Coinbase CDP + PayAI), enumerated to
+      // completion by the pod's daily census — an INDEX of other people's doors, never ours.
+      indexed: field(bzHosts, bazaarSource, "hosts_distinct"),
+      // One GET per host and a check for 402 + PAYMENT-REQUIRED + x402Version 2 + extensions.bazaar
+      // is a PROBE of conformance, not a graded measurement: the doctrine reserves MEASURED for
+      // banks with n and a scorer. The conformant count lives in the note, derived, never typed.
+      measured: absent(bazaarSource, "measured_hosts (a conformance probe is not a graded measurement)"),
+      signed: absent(bazaarSource, "signed_hosts (the census is published, not signed; nothing about strangers' doors is a card)"),
+      rooted: absent(bazaarSource, "rooted_hosts"),
+      witnessed: absent(bazaarSource, "witnessed_hosts"),
+      anchored: absent(bazaarSource, "anchored_hosts"),
+      paid: absent(bazaarSource, "paid_hosts (the census pays nothing and settles nothing)"),
+      writesBoard: false,
+      note: bazaar
+        ? `Daily census from the pod: ${bzNum(bazaar.hosts_probed) ?? "?"} distinct hosts probed across CDP (${bzNum(bzIdx?.cdp?.resources) ?? "?"} resources) and PayAI (${bzNum(bzIdx?.payai?.resources) ?? "?"}); ${bzNum(bzHead?.conformant) ?? "?"} answered a conformant v2 402 with a bazaar block (${bzNum(bzHead?.conformant_pct) ?? "?"}%), ${bzNum(bzHead?.unreachable) ?? "?"} unreachable; as_of ${String(bazaar.as_of ?? "?")}. Third-party doors only — our own 10 doors are the x402 row. Nothing paid, nothing signed.`
+        : "Daily census from the pod (csoai/x402-bazaar-conformance on Hugging Face): unavailable at this read — the row is null, not zero.",
     },
   ];
 }
