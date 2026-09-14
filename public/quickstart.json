@@ -3,7 +3,7 @@
   "human": "https://councilof.ai/quickstart/",
   "one_line": "discover, request, read the 402, settle from your own wallet, receive a signed card, verify it offline",
   "amounts": "No amount is written here. The only authority on an amount is accepts[] in the 402 you receive.",
-  "self_payments": "Payments from the operator's own wallets are recorded as self-tests and never counted as revenue.",
+  "self_payments": "Payments from the operator's own wallets are recorded as self-tests and never counted as buyers or revenue. Authoritative flag: settled_usdc.excludes_self=true on /api/revenue.",
   "revenue_contract": "https://councilof.ai/api/revenue",
   "worked_example_door": "https://councilof.ai/api/request-attestation?subject=<id>",
   "all_doors": "https://councilof.ai/.well-known/x402.json",
@@ -50,7 +50,11 @@
       "endpoint": "https://councilof.ai/api/request-attestation?subject=<id>",
       "observed": false,
       "source": "functions/api/request-attestation.ts",
-      "expect": "200 JSON {card, verify, signed, unsigned_reason, bytes, note}; card is a card-v0 with surface ras.commission and payload.settle {network, transaction, payer}; header x-payment-response carries the settlement response, with a signed receipt when the facilitator names a payer and the signing key is present"
+      "expect": "200 JSON {card, verify, signed, unsigned_reason, bytes, note}; card is a card-v0 with surface ras.commission and payload.settle {network, transaction, payer}; header x-payment-response carries the settlement response, with a signed receipt when the facilitator names a payer and the signing key is present",
+      "also": [
+        "GET https://councilof.ai/api/commissions"
+      ],
+      "fulfillment_index": "https://councilof.ai/api/commissions"
     },
     {
       "step": 6,
@@ -64,5 +68,8 @@
       ],
       "expect": "VALID (exit 0), INVALID (exit 1) or UNCHECKABLE (exit 2)"
     }
-  ]
+  ],
+  "excludes_self": true,
+  "excludes_self_path": "https://councilof.ai/api/revenue \u2192 settled_usdc.excludes_self",
+  "commissions_index": "https://councilof.ai/api/commissions"
 }

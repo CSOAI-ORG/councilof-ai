@@ -33,7 +33,7 @@ const PAGE_LD = {
     { "@type": "HowToStep", name: "See what changed", text: "GET /api/feed.xml — follow published measurement, correction and regulation-change events." },
     { "@type": "HowToStep", name: "Verify evidence", text: "Verify the Ed25519 signature offline and the card's inclusion in the public Merkle root." },
     { "@type": "HowToStep", name: "Access supported feeds", text: "Read /.well-known/x402.json for supported doors and use the canonical MCP endpoint for tool discovery." },
-    { "@type": "HowToStep", name: "Commission an output", text: "Optionally: discover a door, request it, read its 402 challenge, settle from your own wallet through an x402 client, receive the signed card-v0, and verify it offline against https://csoai.org/.well-known/did.json." },
+    { "@type": "HowToStep", name: "Commission an output", text: "Optionally: discover → request → 402 → settle (non-self wallet) → receive → verify. Self-settlements and zero-value settlements are recorded but never counted as buyers (/api/revenue settled_usdc.excludes_self)." },
     { "@type": "HowToStep", name: "Correct", text: "If a read is wrong, the correction path is public and the correction is published beside the record." },
   ],
 };
@@ -225,9 +225,13 @@ curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/e
           receive is the only authority on an amount. A settlement of zero is not a purchase.
         </p>
         <p className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-950">
-          Payments from the operator's own wallets are recorded as self-tests and never counted as revenue. The count of
-          outside payers, with self-settlements listed separately, is at{" "}
-          <a href="/api/revenue" className="underline decoration-emerald-600 underline-offset-4">/api/revenue</a>.
+          Payments from the operator's own wallets are recorded as self-tests and never counted as revenue
+          (<code className="font-mono">settled_usdc.excludes_self=true</code> on{" "}
+          <a href="/api/revenue" className="underline decoration-emerald-600 underline-offset-4">/api/revenue</a>
+          ). The count of outside payers, with self-settlements listed separately, is on that same contract.
+          After settle, fulfillment state is also listed at{" "}
+          <a href="/api/commissions" className="underline decoration-emerald-600 underline-offset-4">/api/commissions</a>
+          {" "}(<code className="font-mono">RETRIEVABLE</code> + <code className="font-mono">CARDS_PUBLISHED</code>).
           Machine-readable version of these steps:{" "}
           <a href="/quickstart.json" className="underline decoration-emerald-600 underline-offset-4">/quickstart.json</a>.
         </p>
@@ -343,8 +347,14 @@ WALLET_KEY=0x… node pay.mjs`}</Code>
           observed paid call. The <code className="font-mono">x-payment-response</code> header carries the settlement response;
           it includes a signed receipt at <code className="font-mono">extensions["offer-receipt"].info.receipt</code> only when the
           facilitator names a payer and the signing key is present. A commission receipt is not a grade and never adds a
-          measured cell.
+          measured cell. Published commission subjects and card URLs are also listed at{" "}
+          <a href="/api/commissions" className="underline decoration-emerald-600 underline-offset-4">/api/commissions</a>
+          {" "}(no wallet needed to read).
         </p>
+        <Code>{`# after settle: list retrievable subjects and card URLs (no wallet needed to read)
+curl -s https://councilof.ai/api/commissions \
+  | jq '{count, retrievable, queued, unfulfillable,
+         subjects: [.commissions[] | {subject, fulfillment, delivery, card0: .cards[0].url}]}'`}</Code>
         <Code>{`# from source, not observed
 HTTP 200
 x-payment-response: <base64 settlement response>
