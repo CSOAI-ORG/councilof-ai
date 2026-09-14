@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-14T22:19:46Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "PSC",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_holders",
+          "from": 90,
+          "to": 91
+        }
+      ],
+      "ledger_index": 106988943,
+      "observed_at": "2026-09-14T22:19:46Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "106e9f699f2646351171a6f71f60a04af5c781e519e2e90dbc4f1e28bc7214cb",
+    "sig_ed25519": "896e0a1ea4fe8ee751a7167c1bf6cab9d0534fabb370a87e2173a30833a0a0c0d64c19c0caae1dc4cbf1e217c7fa3dd46bad37d81b4c6f8e0d12ed9662c59405",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: PSC changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:PSC"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "29a6e6ec12cd9c241452df773766c8575bf63f55f54175a8a035b48e9a593262",
+    "b4d92050246d267ffe713f86377aaff19436b0fd46748c5470dbc4a372e104a4",
+    "f0935e1405160cbf3f0e0736965a14c31dcd91fb6aa573f532aa6d6b0c3f42a4",
+    "9e61da5bb7a553cf574450b0e935967b2c66e391339582472e9935ad0520cc74",
+    "d77b602a7109db51573a71fda25ead43046ccf0644e97478eb9c4af40a2feb74",
+    "f04d9ecc17d3a4dd2b5e1c50c2b1fccbf1ea009420ed5cbd93a1e0f1f6ff9ee8",
+    "d4fb02a97bc79e3f08f4518b87a22bb1b1a08b016e7edc99594b7331030aa39d",
+    "4ba6f34818c61b36586f3c42154cc966461b56b4b300b9e171d883cc5b510cec",
+    "b49234ec1e2253572c45d1003568955472a1ddba0ef434c229e2d0cee5064f10"
+  ]
+}
