@@ -23,7 +23,7 @@ This ledger reconciles public listings, GitHub history and open submissions. A d
 | GitHub profile pins | DONE | GitHub GraphQL shows `councilof-ai` and `gspc-board` as the first two pinned repositories. | No pin change needed. |
 | GitHub releases | DONE | Two public releases were published on 12 September. | Do not create a nominal “first release.” |
 | Sitemap fix | PENDING REVIEW | PR #2344 is open with commit `104a58305a01f43ae2257f4ed226fe360784e75b`; generated-route truth checks pass. | Let CI and review finish; do not open another PR. |
-| AI Agents Listing | SUBMITTED / REVIEW PENDING | Submission completed at `https://aiagentslisting.com/submit/council-of-ai-measurement-agent/success`; the intended detail URL is `https://aiagentslisting.com/agent/council-of-ai-measurement-agent`. | CSOAI logo uploaded; contact address supplied; promotional updates off. Do not call live until the public detail URL resolves without authentication. |
+| AI Agents Listing | LIVE | The public detail URL `https://aiagentslisting.com/agent/council-of-ai-measurement-agent` returned HTTP 200 without authentication on 14 September 2026 and names the Council of AI Measurement Agent. | CSOAI logo and canonical endpoints published. Do not submit a duplicate. |
 
 ## Single highest-impact net-new public action — submitted
 
@@ -37,7 +37,7 @@ The canonical Council of AI Measurement Agent was submitted to **AI Agents Listi
 
 Why this was the next action: every larger protocol-native directory checked was already live, duplicated or pending. AI Agents Listing spans both A2A agents and MCP servers and had no verified CSOAI presence before submission. One canonical entry adds a new discovery graph instead of another copy in an existing graph.
 
-Proof threshold after action: `https://aiagentslisting.com/agent/council-of-ai-measurement-agent` must resolve without login and name Council of AI. The success URL proves submission only, so the state remains `SUBMITTED / REVIEW PENDING`.
+Proof threshold met: `https://aiagentslisting.com/agent/council-of-ai-measurement-agent` resolves without login and names the Council of AI Measurement Agent. The placement is live.
 
 Safe one-line description:
 
