@@ -30,10 +30,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Verify dry comparison contract
+        run: python3 -m unittest discover -s scripts -p test_x402_dry_census_diff.py
+
       - name: Census, DRY — read every eligible host's challenge, send nothing
         run: |
           set -euo pipefail
           OUT="docs/product/x402-settlement-census-dry-$(date -u +%Y-%m-%d).jsonl"
+          # The collector appends; start a fresh snapshot on same-day retries.
+          : > "$OUT"
+          echo "OUT=$OUT" >> "$GITHUB_ENV"
           python3 scripts/grants/x402-settlement-census.py --max-hosts 400 --out "$OUT"
           echo "OUT=$OUT" >> "$GITHUB_ENV"
           test -s "$OUT"
@@ -56,10 +62,11 @@ jobs:
             echo "no previous census on disk — nothing to diff, which is the honest state in week one"
             exit 0
           fi
-          node scripts/conformance-census-diff.mjs --from "$PREV" --to "$OUT" \
+          python3 scripts/x402_dry_census_diff.py --from "$PREV" --to "$OUT" \
             --out "docs/product/x402-census-diff-$(date -u +%Y-%m-%d).json"
 
       - name: Upload, do not commit
+        if: always()
         # The job reads; a human lands it. A cron that writes to master turns a measurement into an
         # unreviewed publication.
         uses: actions/upload-artifact@v4
