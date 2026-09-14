@@ -58,4 +58,4 @@ jobs:
         env:
           TOKEN: ${{ steps.jwt.outputs.registry_token }}
           VER: ${{ inputs.version }}
-        run: node ../../../scripts/mcp-registry-publish.js
+        run: node ../../scripts/mcp-registry-publish.js
