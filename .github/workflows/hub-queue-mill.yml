@@ -225,22 +225,28 @@ jobs:
           python3 -m unittest discover -s scripts -p test_commission_priority.py
           curl -fsS -m 30 https://councilof.ai/api/commissions -o mill-in/commissions.json || true
           ok=0
+          source=""
           if curl -fsS -m 30 https://councilof.ai/api/commission-queue -o mill-in/commission-queue.json &&
              python3 scripts/commission_priority.py --input mill-in/commission-queue.json \
                --axis "$AXIS" --output mill-in/priority.txt; then
-            ok=1
+            ok=1; source="commission-queue"
           elif [ -f mill-in/commissions.json ] &&
              python3 scripts/commission_priority.py --input mill-in/commissions.json \
                --axis "$AXIS" --output mill-in/priority.txt; then
-            ok=1
+            ok=1; source="commissions"
           fi
           if [ "$ok" = 1 ]; then
-            jq -n --arg axis "$AXIS" --argjson count "$(wc -l < mill-in/priority.txt | tr -d ' ')" \
-              '{status:"AVAILABLE",axis:$axis,subject_count:$count,source:"commission-queue-or-commissions"}' > mill-in/commission-health.json
+            priority_status="AVAILABLE"
+            subject_count="$(wc -l < mill-in/priority.txt | tr -d ' ')"
           else
+            priority_status="UNAVAILABLE"
+            subject_count=""
             echo '::warning::Commission queue unavailable or invalid; paid-request priority was NOT verified. Background measurements continue.'
-            printf '%s\n' '{"status":"UNAVAILABLE","subject_count":null}' > mill-in/commission-health.json
           fi
+          health_args=(--feed mill-in/commissions.json --health-out mill-in/commission-health.json \
+            --axis "$AXIS" --priority-status "$priority_status" --priority-source "$source")
+          if [ -n "$subject_count" ]; then health_args+=(--subject-count "$subject_count"); fi
+          python3 scripts/commission_run_report.py "${health_args[@]}"
           cat mill-in/commission-health.json >> "$GITHUB_STEP_SUMMARY"
       - name: mill (stage unsigned cards; MEASURED only after OIDC sign + VALID)
         if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
@@ -273,8 +279,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m unittest discover -s scripts -p test_commission_run_report.py
-          if [ -f mill-out/mill-report.json ] && [ -f mill-in/commission-health.json ] &&
-             jq -e '.status == "AVAILABLE"' mill-in/commission-health.json >/dev/null; then
+          if [ -f mill-out/mill-report.json ]; then
             python3 scripts/commission_run_report.py --feed mill-in/commissions.json --mill mill-out
           else
             echo '::warning::Commission result linkage unavailable for this run; no fulfillment asserted.'
