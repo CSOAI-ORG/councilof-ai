@@ -326,7 +326,6 @@ const OpenMedia = lazy(() => import("./pages/OpenMedia"));
 const DistributionIntegrity = lazy(() => import("./pages/DistributionIntegrity"));
 const Gone = lazy(() => import("./pages/Gone"));
 const ArenaScoreboard = lazy(() => import("./pages/ArenaScoreboard"));
-const ChallengeDoor = lazy(() => import("./pages/ChallengeDoor"));
 const FindingsExplorer = lazy(() => import("./pages/FindingsExplorer"));
 const ModelFindings = lazy(() => import("./pages/ModelFindings"));
 import { AnalyticsProvider } from "./components/Analytics";
@@ -785,7 +784,6 @@ function App() {
                   <Route path="/get-listed" component={GetListed} />
                   <Route path="/badges">{() => <Redirect to="/badge" />}</Route>
                   <Route path="/verify-certificate">{() => <Redirect to="/gspc-verify" />}</Route>
-                  <Route path="/challenge" component={ChallengeDoor} />
                   <Route path="/regulator-findings" component={ContentReviewNotice} />
                   <Route path="/findings" component={FindingsExplorer} />
                   <Route path="/model/:id" component={ModelFindings} />
