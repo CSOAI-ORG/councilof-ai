@@ -125,3 +125,18 @@ The proof threshold remains strict: `SUBMITTED`, `REGISTERED`, `INDEX PENDING`, 
 |---|---|---|---|
 | Awesome ML Model Governance | ALREADY SUBMITTED / REVIEW PENDING | [PR #13](https://github.com/visenger/Awesome-ML-Model-Governance/pull/13), opened 26 August 2026 | Do not submit again. Review or refresh the existing wording only if the upstream maintainer requests it. |
 | Awesome AI Safety | ALREADY SUBMITTED / REVIEW PENDING | [PR #10](https://github.com/AbdelStark/awesome-ai-safety/pull/10), opened 7 September 2026 | Do not submit again. The existing pull request is open and mergeable. |
+
+### Seventh GitHub editorial wave
+
+| Surface | State | Proof | Exact scope |
+|---|---|---|---|
+| Awesome AI Testing | SUBMITTED / REVIEW PENDING | [PR #138](https://github.com/tugkanboz/awesome-ai-testing/pull/138) | Adds one free, open-source GSPC entry under LLM and AI System Testing. The catalogue's requested star action was completed; the pull request discloses the maintainer relationship and is open and mergeable. |
+| Awesome MLSecOps | SUBMITTED / REVIEW PENDING | [PR #85](https://github.com/RiccardoBiosas/awesome-MLSecOps/pull/85) | Adds one GSPC row under Model Testing, Monitoring, and Evaluation, limited to signed model and agent safety measurements, public roots and offline verification. The required affiliation disclosure is present; the pull request is open and mergeable. |
+| Awesome AI + GRC | SUBMITTED / REVIEW PENDING | [PR #21](https://github.com/ethanolivertroy/awesome-grc-ai/pull/21) | Adds one objective GSPC entry under Model Governance, pointing to the canonical MIT-licensed repository and its signed evidence, public roots and offline verification. The pull request is open and mergeable; automated review is pending. |
+
+### Closed historical submissions found during reconciliation
+
+| Surface | State | Proof | Action |
+|---|---|---|---|
+| GenAI Gurus Awesome EU AI Act | PREVIOUS SUBMISSIONS CLOSED | [PR #7](https://github.com/GenAI-Gurus/awesome-eu-ai-act/pull/7), [#33](https://github.com/GenAI-Gurus/awesome-eu-ai-act/pull/33), [#43](https://github.com/GenAI-Gurus/awesome-eu-ai-act/pull/43), [#45](https://github.com/GenAI-Gurus/awesome-eu-ai-act/pull/45) | Do not resubmit without an explicit invitation or a materially different, curator-requested resource. |
+| Morgan RCU Awesome EU AI Act | PREVIOUS SUBMISSIONS CLOSED | [PR #19](https://github.com/morganrcu/awesome-eu-ai-act/pull/19), [#20](https://github.com/morganrcu/awesome-eu-ai-act/pull/20), [#43](https://github.com/morganrcu/awesome-eu-ai-act/pull/43) | Do not resubmit without an explicit invitation or a materially different, curator-requested resource. |
