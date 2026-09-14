@@ -5,7 +5,9 @@
  * Requester retrieval (2026-09-14): each QUEUED commission is joined to the signed pod cards
  * master carries for its subject (from /interop/pod-cards-index.json, a build-time index of
  * the signed bytes) as `cards[]` + `delivery`. Index unreadable → cards null, UNCHECKABLE.
- * Publication of a card never rewrites `fulfillment` and is never a certificate.
+ * When signed cards are published for a QUEUED model target, fulfillment becomes
+ * RETRIEVABLE (requester can resolve card URLs). A card is never a certificate /
+ * MEASURED invent — only the retrieval state moves.
  *
  * Typed contract (Stage68): every row exposes subject_kind / model / bank / fulfillment.
  * Legacy ras:* records without fields are classified on read (never invented MEASURED).
@@ -45,13 +47,13 @@ const json = (body: unknown, status = 200) =>
 function typedFields(subject: string, r: Record<string, unknown>) {
   const classified = classifyCommissionTarget(subject);
   const subject_kind = (typeof r.subject_kind === "string" ? r.subject_kind : classified.subject_kind) as SubjectKind;
-  const fulfillment = (r.fulfillment === "QUEUED" || r.fulfillment === "UNFULFILLABLE"
+  const fulfillment = (r.fulfillment === "QUEUED" || r.fulfillment === "UNFULFILLABLE" || r.fulfillment === "RETRIEVABLE"
     ? r.fulfillment
     : classified.fulfillment) as Fulfillment;
   const model =
     typeof r.model === "string" && r.model
       ? r.model
-      : fulfillment === "QUEUED"
+      : (fulfillment === "QUEUED" || fulfillment === "RETRIEVABLE")
         ? classified.model
         : null;
   const bank = typeof r.bank === "string" && r.bank ? r.bank : classified.bank;
@@ -126,9 +128,23 @@ async function readCardsIndex(env: Env, origin: string, path: string, schema: st
   }
 }
 
+/** Promote QUEUED → RETRIEVABLE once signed (DID-keyed) cards are published for the model. */
+export function fulfillmentAfterDelivery(
+  fulfillment: Fulfillment,
+  delivery: Delivery,
+): Fulfillment {
+  if (fulfillment === "UNFULFILLABLE") return fulfillment;
+  if (fulfillment === "RETRIEVABLE") return fulfillment;
+  if (delivery.state === "CARDS_PUBLISHED" && (delivery.count ?? 0) > 0) return "RETRIEVABLE";
+  return fulfillment;
+}
+
 function joinDelivery(c: Omit<Commission, "cards" | "delivery">, pod: Map<string, PodCard[]> | null,
                       hub: Map<string, PodCard[]> | null): Pick<Commission, "cards" | "delivery"> {
-  if (c.fulfillment !== "QUEUED" || !c.model) return { cards: null, delivery: { state: "NONE", count: 0, note: "not a millable model target" } };
+  // QUEUED (awaiting mill) and RETRIEVABLE (cards already published) both join the index.
+  if ((c.fulfillment !== "QUEUED" && c.fulfillment !== "RETRIEVABLE") || !c.model) {
+    return { cards: null, delivery: { state: "NONE", count: 0, note: "not a millable model target" } };
+  }
   const index = c.subject_kind === "hub_model" ? hub : pod;
   const path = c.subject_kind === "hub_model" ? HUB_CARDS_INDEX : POD_CARDS_INDEX;
   if (index === null) return { cards: null, delivery: { state: "UNCHECKABLE", count: null, note: `${path} unreadable — null, never substituted` } };
@@ -141,7 +157,7 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
   const base = {
     schema: "csoai.commissions/0.2",
     endpoint: "/api/commissions",
-    what: "Subjects that a paid request-attestation commissioned. Typed: subject_kind/model/bank/fulfillment. Mill grades QUEUED model/hub targets only; UNFULFILLABLE (e.g. payai-wrapper) is receipt-only. Never a score.",
+    what: "Subjects that a paid request-attestation commissioned. Typed: subject_kind/model/bank/fulfillment (QUEUED|RETRIEVABLE|UNFULFILLABLE). Mill grades QUEUED model/hub targets; RETRIEVABLE means signed cards are published for retrieve; UNFULFILLABLE (e.g. payai-wrapper) is receipt-only. Never a score.",
     source: "REVENUE_KV ras:* records (written by /api/request-attestation on a facilitator-settled request)",
   };
   if (!env.REVENUE_KV) {
@@ -149,11 +165,16 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
   }
   try {
     const { commissions: bare, unreadable } = await listCommissions(env.REVENUE_KV);
-    const needsPod = bare.some((c) => c.fulfillment === "QUEUED" && c.subject_kind !== "hub_model");
-    const needsHub = bare.some((c) => c.fulfillment === "QUEUED" && c.subject_kind === "hub_model");
+    const joinable = (c: { fulfillment: Fulfillment }) => c.fulfillment === "QUEUED" || c.fulfillment === "RETRIEVABLE";
+    const needsPod = bare.some((c) => joinable(c) && c.subject_kind !== "hub_model");
+    const needsHub = bare.some((c) => joinable(c) && c.subject_kind === "hub_model");
     const pod = needsPod ? await readPodCardsIndex(env, origin, fetcher) : new Map<string, PodCard[]>();
     const hub = needsHub ? await readHubCardsIndex(env, origin, fetcher) : new Map<string, PodCard[]>();
-    const commissions: Commission[] = bare.map((c) => ({ ...c, ...joinDelivery(c, pod, hub) }));
+    const commissions: Commission[] = bare.map((c) => {
+      const joined = joinDelivery(c, pod, hub);
+      // Writer: DID-signed cards in the published index → RETRIEVABLE (never invents MEASURED/scores).
+      return { ...c, ...joined, fulfillment: fulfillmentAfterDelivery(c.fulfillment, joined.delivery) };
+    });
     const subjects = [...new Set(commissions.map((c) => c.subject))];
     return {
       ...base,
@@ -162,12 +183,13 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
       count: commissions.length,
       subjects,
       queued: commissions.filter((c) => c.fulfillment === "QUEUED").length,
+      retrievable: commissions.filter((c) => c.fulfillment === "RETRIEVABLE").length,
       delivered: (pod === null || hub === null) ? null : commissions.filter((c) => c.delivery.state === "CARDS_PUBLISHED").length,
       retrieval: {
         index: POD_CARDS_INDEX,
         hub_index: HUB_CARDS_INDEX,
         state: (pod === null || hub === null) ? "UNCHECKABLE" : "READ",
-        how: "each `cards[].url` is a signed card; verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json. Publication of a card is not a certificate and does not change `fulfillment`.",
+        how: "each `cards[].url` is a signed card; verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json. When CARDS_PUBLISHED, fulfillment becomes RETRIEVABLE — publication is not a certificate and invents no MEASURED score.",
       },
       unfulfillable: commissions.filter((c) => c.fulfillment === "UNFULFILLABLE").length,
       commissions,

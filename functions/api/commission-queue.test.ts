@@ -77,4 +77,42 @@ describe("listCommissionQueue", () => {
     expect(rows[0].source).toBe("mill:commission");
     expect(rows[0].receipt_sha).toBe("new");
   });
+
+  it("excludes RETRIEVABLE mill and ras rows from mill-visible queue", async () => {
+    const store = new Map<string, string>([
+      [
+        "ras:done",
+        JSON.stringify({
+          subject: "llama3.2:3b",
+          model: "llama3.2:3b",
+          fulfillment: "RETRIEVABLE",
+          as_of: "2026-09-14T00:00:00Z",
+        }),
+      ],
+      [
+        "mill:commission:llama3.2:3b",
+        JSON.stringify({
+          subject: "llama3.2:3b",
+          model: "llama3.2:3b",
+          subject_kind: "ollama_model",
+          fulfillment: "RETRIEVABLE",
+          as_of: "2026-09-14T12:00:00Z",
+          receipt_sha: "done",
+        }),
+      ],
+      [
+        "ras:still",
+        JSON.stringify({
+          subject: "qwen3:4b",
+          model: "qwen3:4b",
+          fulfillment: "QUEUED",
+          as_of: "2026-09-14T01:00:00Z",
+        }),
+      ],
+    ]);
+    const { rows } = await listCommissionQueue(fakeKv(store));
+    expect(rows.map((r) => r.subject)).toEqual(["qwen3:4b"]);
+    expect(rows[0].fulfillment).toBe("QUEUED");
+  });
+
 });
