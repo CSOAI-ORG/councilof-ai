@@ -24,7 +24,7 @@ SCHEMA = "csoai.runpod-commission-dispatch/0.1"
 
 def _commission_cells(feed: dict[str, Any]) -> tuple[list[dict[str, str]], list[dict[str, Any]]]:
     if (
-        feed.get("schema") != "csoai.commissions/0.1"
+        feed.get("schema") not in {"csoai.commissions/0.1", "csoai.commissions/0.2"}
         or feed.get("status") != "MEASURED"
         or feed.get("records_unreadable") != 0
         or not isinstance(feed.get("commissions"), list)
@@ -38,21 +38,31 @@ def _commission_cells(feed: dict[str, Any]) -> tuple[list[dict[str, str]], list[
         if not isinstance(record, dict):
             raise playlist.GenerationError("invalid commission record")
         subject = record.get("subject")
+        model = record.get("model")
+        fulfillment = record.get("fulfillment")
         receipt = record.get("receipt_sha")
         axis = record.get("axis")
         if not isinstance(subject, str) or not subject.strip() or "\n" in subject or "\r" in subject:
             raise playlist.GenerationError("invalid commission subject")
         if not isinstance(receipt, str) or len(receipt) != 64 or any(c not in "0123456789abcdef" for c in receipt):
             raise playlist.GenerationError("invalid commission receipt sha")
+        if fulfillment == "UNFULFILLABLE":
+            refused.append({"receipt_sha": receipt, "subject": subject, "axis": axis, "reason": "UNFULFILLABLE"})
+            continue
+        if fulfillment not in (None, "QUEUED"):
+            raise playlist.GenerationError("invalid commission fulfillment")
+        mill_subject = model.strip() if isinstance(model, str) and model.strip() else subject.strip()
+        if "\n" in mill_subject or "\r" in mill_subject:
+            raise playlist.GenerationError("invalid commission model")
         if axis is not None and axis not in known_axes:
             refused.append({"receipt_sha": receipt, "subject": subject, "axis": axis, "reason": "UNSUPPORTED_AXIS"})
             continue
         requested_axes = [axis] if axis else sorted(known_axes)
         for requested_axis in requested_axes:
-            key = (subject, requested_axis)
+            key = (mill_subject, requested_axis)
             cells.setdefault(
                 key,
-                {"subject": subject, "axis": requested_axis, "first_receipt_sha": receipt},
+                {"subject": mill_subject, "axis": requested_axis, "first_receipt_sha": receipt},
             )
     return [cells[key] for key in sorted(cells)], refused
 

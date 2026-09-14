@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { SKUS } from "./Products";
 
-describe("Series A SKU lock", () => {
+describe("product SKU lock", () => {
   it("exposes exactly four public lines", () => {
     expect(SKUS).toHaveLength(4);
     expect(SKUS.map((s) => s.id)).toEqual(["verify", "run", "ledger", "data"]);

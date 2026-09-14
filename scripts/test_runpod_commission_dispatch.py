@@ -50,8 +50,8 @@ class DispatchTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.temp.cleanup()
 
-    def feed(self, records: list[dict]) -> dict:
-        return {"schema": "csoai.commissions/0.1", "status": "MEASURED", "records_unreadable": 0, "commissions": records}
+    def feed(self, records: list[dict], schema: str = "csoai.commissions/0.2") -> dict:
+        return {"schema": schema, "status": "MEASURED", "records_unreadable": 0, "commissions": records}
 
     def receipt(self, char: str) -> str:
         return char * 64
@@ -76,6 +76,21 @@ class DispatchTests(unittest.TestCase):
         writes, report = dispatch.build_dispatch(feed, self.args, {self.model: self.digest})
         self.assertEqual(len(writes), len(playlist.AXES))
         self.assertEqual(len(report["admitted"]), len(playlist.AXES))
+
+    def test_v02_uses_typed_model_and_refuses_unfulfillable_sku(self) -> None:
+        feed = self.feed([
+            {"subject": "friendly-display-label", "model": self.model, "fulfillment": "QUEUED", "axis": "governance", "receipt_sha": self.receipt("a")},
+            {"subject": "payai-wrapper-0.01", "model": None, "fulfillment": "UNFULFILLABLE", "axis": None, "receipt_sha": self.receipt("b")},
+        ])
+        writes, report = dispatch.build_dispatch(feed, self.args, {self.model: self.digest})
+        self.assertEqual(len(writes), 1)
+        self.assertEqual(report["admitted"][0]["subject"], self.model)
+        self.assertEqual(report["refused"][0]["reason"], "UNFULFILLABLE")
+
+    def test_v01_remains_compatible(self) -> None:
+        feed = self.feed([{"subject": self.model, "axis": "governance", "receipt_sha": self.receipt("a")}], schema="csoai.commissions/0.1")
+        writes, _ = dispatch.build_dispatch(feed, self.args, {self.model: self.digest})
+        self.assertEqual(len(writes), 1)
 
     def test_uninstalled_model_and_unsupported_axis_are_explicitly_refused(self) -> None:
         feed = self.feed([

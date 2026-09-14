@@ -14,7 +14,7 @@ import { useBoardCount } from "@/lib/boardCount";
  * /products — four SKUs, one workspace (Council OS).
  *
  * Eats the 2026-08-26 product-family page (engine, free rail, boundary) and
- * the 2026-08-28 Series A packaging canon. Does not add a fifth commercial
+ * the 2026-08-28 product packaging canon. Does not add a fifth commercial
  * door. GPAI / CRA / financial / academy remain modules under Ledger or OS.
  *
  * Public prices stay off this page (owner ruling 2026-08-26). Machine jobs
