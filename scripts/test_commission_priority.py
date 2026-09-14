@@ -115,5 +115,15 @@ class HubRoutableTests(unittest.TestCase):
         self.assertTrue(hub_routable({}, "meta-llama/Llama-3.1-8B"))
         self.assertFalse(hub_routable({"subject_kind": "ambiguous"}, "org/name"))
 
+
+class LegacyFeed02Tests(unittest.TestCase):
+    def test_legacy_fallback_accepts_live_0_2_feed(self):
+        from commission_priority import select_commissions
+        feed={"schema":"csoai.commissions/0.2","status":"MEASURED","records_unreadable":0,"commissions":[
+            {"subject":"Qwen/Qwen2-0.5B","model":"Qwen/Qwen2-0.5B","subject_kind":"hub_model","fulfillment":"QUEUED","axis":None,"receipt_sha":"a","cards":[],"delivery":{"state":"NONE","count":0}},
+            {"subject":"llama3.2:3b","model":"llama3.2:3b","subject_kind":"ollama_model","fulfillment":"QUEUED","axis":None,"receipt_sha":"b"}]}
+        self.assertEqual(select_commissions(feed,"safety"),["Qwen/Qwen2-0.5B"])
+        with self.assertRaises(ValueError): select_commissions(dict(feed,schema="csoai.commissions/0.3"),"safety")
+
 if __name__ == "__main__":
     unittest.main()
