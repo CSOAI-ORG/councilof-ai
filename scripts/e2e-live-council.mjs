@@ -27,6 +27,8 @@ const ALIASES = [
   ["/ag-ui", "/dashboard?tab=home"],
   ["/agui", "/dashboard?tab=home"],
   ["/chat", "/dashboard?tab=home"],
+  ["/card_index.json", "/signed/card_index.json"],
+  ["/cards/card_index.json", "/signed/card_index.json"],
 ];
 // Aliases that MUST resolve for a stranger (308 or a real 200 page — never the
 // honest-404 catch-all). /gspc and /console 404'd on production 2026-08-22.
