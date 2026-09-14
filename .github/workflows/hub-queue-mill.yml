@@ -217,14 +217,12 @@ jobs:
           set -euo pipefail
           # Keep background measurement moving, but never label an unavailable queue empty.
           : > mill-in/priority.txt
+          python3 -m unittest discover -s scripts -p test_commission_priority.py
           if curl -fsS -m 30 https://councilof.ai/api/commissions -o mill-in/commissions.json &&
-             jq -e '.schema == "csoai.commissions/0.1" and .status == "MEASURED" and
-               .records_unreadable == 0 and (.subjects | type == "array") and
-               (.subjects | all(.[]; type == "string" and length > 0 and (test("[\r\n]") | not)))' \
-               mill-in/commissions.json >/dev/null; then
-            jq -r '.subjects[]' mill-in/commissions.json > mill-in/priority.txt
-            jq -n --argjson count "$(jq '.subjects | length' mill-in/commissions.json)" \
-              '{status:"AVAILABLE",subject_count:$count}' > mill-in/commission-health.json
+             python3 scripts/commission_priority.py --input mill-in/commissions.json \
+               --axis "$AXIS" --output mill-in/priority.txt; then
+            jq -n --arg axis "$AXIS" --argjson count "$(wc -l < mill-in/priority.txt | tr -d ' ')" \
+              '{status:"AVAILABLE",axis:$axis,subject_count:$count}' > mill-in/commission-health.json
           else
             echo '::warning::Commission queue unavailable or invalid; paid-request priority was NOT verified. Background measurements continue.'
             printf '%s\n' '{"status":"UNAVAILABLE","subject_count":null}' > mill-in/commission-health.json
