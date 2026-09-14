@@ -27,17 +27,17 @@
   "dated_copy": "public/interop/root-witness-2026-09-14-14ed12e5.json"
  },
  "drift": {
-  "status": "DRIFTED",
-  "checked_at": "2026-09-14T04:13:41Z",
+  "status": "MATCH",
+  "checked_at": "2026-09-14T07:12:04Z",
   "checked_against": "https://councilof.ai/root.json",
   "witness_artifact_sha256": "14ed12e5aacf20a372e5dea64b622bbe19470c343a42b257e1644c61f7384dcd",
-  "live_root_sha256": "25133909b8d6462ced22f7ba9c5c12aa2192df1320590e67ce127ad8f19d7aa3",
+  "live_root_sha256": "14ed12e5aacf20a372e5dea64b622bbe19470c343a42b257e1644c61f7384dcd",
   "witness_artifact_merkle_root": "8a121be5c52aeab4e9b1f4de824ecb397c671c0259f678cb75bc564b2eeb1446",
-  "live_root_merkle_root": "2d29b18cd6bc66789bf5f4cddbb1b94729ad1724a04fab641a925ac92bc340d7",
-  "live_root_bytes": 23878,
-  "match_sha256": false,
-  "match_merkle_root": false,
-  "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
+  "live_root_merkle_root": "8a121be5c52aeab4e9b1f4de824ecb397c671c0259f678cb75bc564b2eeb1446",
+  "live_root_bytes": 23950,
+  "match_sha256": true,
+  "match_merkle_root": true,
+  "reason": "the live root a reader fetches is byte-identical to the witnessed bytes"
  },
  "witness_status_observed_at": "2026-09-14T04:13:38Z",
  "witnesses": {
