@@ -385,23 +385,45 @@ async function checkPublishedToolCounts() {
 }
 
 /**
- * 6. SMITHERY — where the prose is right and the machine surface is wrong.
+ * 6. SMITHERY — compare the canonical listing, the canonical door and the external door.
  *
- * csoai/gspc is listed, and its DESCRIPTION is accurate: "Remote HTTP (7 tools, no auth)",
- * naming exactly the seven tools the live server serves free (11 total, 4 x402-paid). Measured
- * 2026-09-05, everything a machine reads is not:
+ * Smithery has two records. csoai/gspc-mcp is the canonical listing and currently mirrors all
+ * 12 tools served by councilof.ai/mcp. csoai/gspc is an old duplicate with phantom and missing
+ * tools; public/interop/platforms-registered.json names it as a defect instead of presenting it
+ * as the connection clients should use.
  *
- *   connections[0].deploymentUrl  https://gspc--csoai.run.tools  -> 401
- *   tools[]                       measure, verify, jail-probe, enter-arena  <- none of these exist
- *                                 and get_root, get_card, verify_inclusion  <- these are missing
- *
- * A human reading the listing gets the truth; a client reading the connection gets a locked door
- * and four tools that are not there. That asymmetry is exactly what an outward-claims guard is
- * for: our tests check what we do, and this checks what a third party says we do.
- *
- * The fix is on Smithery's side and needs the account, so this reports rather than repairs.
+ * Smithery controls connections[].deploymentUrl in its dashboard. The canonical listing's
+ * Smithery-managed URL currently answers 401, while councilof.ai/mcp answers tools/list with no
+ * CSOAI account. A third-party failure is not ours to silently turn green. It is a bounded SKIP
+ * only while the exact URL, status, owner gate and working canonical alternative are published
+ * in structured metadata. A changed status, missing disclosure or broken canonical door fails.
  */
-const SMITHERY = "https://registry.smithery.ai/servers/csoai/gspc";
+const SMITHERY = "https://registry.smithery.ai/servers/csoai/gspc-mcp";
+const PLATFORM_FILE = "public/interop/platforms-registered.json";
+
+function smitheryToolDiff(listed, served) {
+  const listedSet = new Set(listed);
+  const servedSet = new Set(served);
+  return {
+    phantom: [...listedSet].filter((name) => !servedSet.has(name)),
+    missing: [...servedSet].filter((name) => !listedSet.has(name)),
+    duplicates: listed.filter((name, i) => listed.indexOf(name) !== i),
+  };
+}
+
+function smitheryDeploymentVerdict({ deploymentUrl, deploymentStatus, canonicalUrl,
+  canonicalStatus, disclosure }) {
+  if (deploymentStatus >= 200 && deploymentStatus < 400) return "OK";
+  if (!disclosure ||
+      disclosure.state !== "OWNER_ACTION_REQUIRED" ||
+      disclosure.registry_url !== SMITHERY ||
+      disclosure.deployment_url !== deploymentUrl ||
+      disclosure.observed_http !== deploymentStatus ||
+      disclosure.canonical_url !== canonicalUrl ||
+      disclosure.canonical_http !== canonicalStatus ||
+      !(canonicalStatus >= 200 && canonicalStatus < 400)) return "FAIL";
+  return "DISCLOSED_EXTERNAL_STALE";
+}
 
 async function checkSmithery() {
   if (!process.env.CHECK_REGISTRY) {
@@ -410,7 +432,8 @@ async function checkSmithery() {
   const r = await j(SMITHERY);
   if (!r.body) return skip("smithery listing", `not JSON (HTTP ${r.status}) — third-party surface`);
 
-  // The live free set is the thing both surfaces claim to describe. Derive it; never type it.
+  // The current listing publishes all tools, free and metered. Compare exact sets derived from
+  // both live surfaces; an extra, missing or duplicate name is a disagreement.
   const init = { method: "POST",
     headers: { "content-type": "application/json", accept: "application/json, text/event-stream" },
     body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }) };
@@ -422,19 +445,17 @@ async function checkSmithery() {
   }
   const tools = payload?.result?.tools;
   if (!Array.isArray(tools)) return skip("smithery listing", "live tools/list unavailable to compare against");
-  const paid = new Set(tools.filter((x) => JSON.stringify(x.inputSchema || {}).includes("x_payment")).map((x) => x.name));
-  const free = tools.map((x) => x.name).filter((n) => !paid.has(n));
-
   const listed = (r.body.tools || []).map((x) => x.name).filter(Boolean);
-  const phantom = listed.filter((n) => !tools.some((x) => x.name === n));
-  const missing = free.filter((n) => !listed.includes(n));
-  if (phantom.length || missing.length) {
+  const served = tools.map((x) => x.name).filter(Boolean);
+  const { phantom, missing, duplicates } = smitheryToolDiff(listed, served);
+  if (phantom.length || missing.length || duplicates.length) {
     bad("smithery tools[]",
       `lists ${phantom.length} tool(s) the server does not serve (${phantom.join(", ") || "none"}) ` +
-      `and omits ${missing.length} it does (${missing.join(", ") || "none"}). A client reading the ` +
+      `and omits ${missing.length} it does (${missing.join(", ") || "none"})` +
+      `${duplicates.length ? ` and repeats ${[...new Set(duplicates)].join(", ")}` : ""}. A client reading the ` +
       `listing calls tools that are not there.`);
   } else {
-    ok("smithery tools[]", `${listed.length} listed, all served`);
+    ok("smithery tools[]", `${listed.length} listed, exact match with live tools/list`);
   }
 
   const dep = (r.body.connections || [])[0]?.deploymentUrl || r.body.deploymentUrl;
@@ -442,10 +463,34 @@ async function checkSmithery() {
     skip("smithery deploymentUrl", "the listing declares no connection URL to check");
   } else {
     const probe = await j(dep, init);
-    if (probe.status >= 200 && probe.status < 400) ok("smithery deploymentUrl", `${dep} answers ${probe.status}`);
-    else bad("smithery deploymentUrl",
-      `${dep} answers ${probe.status}; the description points clients at ${SITE}/mcp, which works. ` +
-      `The machine-readable connection is a door a client cannot open.`);
+    const { readFileSync, existsSync } = await import("node:fs");
+    let disclosure = null;
+    if (existsSync(PLATFORM_FILE)) {
+      try {
+        const platforms = JSON.parse(readFileSync(PLATFORM_FILE, "utf8"));
+        disclosure = (platforms.registrations || []).find((x) => x.platform === "Smithery MCP")
+          ?.third_party_connection_defect ?? null;
+      } catch { /* malformed metadata is handled as a missing disclosure below */ }
+    }
+    const canonicalUrl = `${SITE}/mcp`;
+    const verdict = smitheryDeploymentVerdict({
+      deploymentUrl: dep,
+      deploymentStatus: probe.status,
+      canonicalUrl,
+      canonicalStatus: live.status,
+      disclosure,
+    });
+    if (verdict === "OK") {
+      ok("smithery deploymentUrl", `${dep} answers ${probe.status}`);
+    } else if (verdict === "DISCLOSED_EXTERNAL_STALE") {
+      skip("smithery deploymentUrl",
+        `${dep} answers ${probe.status}; Smithery dashboard owner action is required and ` +
+        `${PLATFORM_FILE} records that exact defect. Canonical ${canonicalUrl} answers ${live.status}.`);
+    } else {
+      bad("smithery deploymentUrl",
+        `${dep} answers ${probe.status}; canonical ${canonicalUrl} answers ${live.status}, but ` +
+        `${PLATFORM_FILE} does not exactly disclose this external URL/status and working alternative.`);
+    }
   }
 }
 
@@ -1045,7 +1090,46 @@ async function main() {
       if (got !== c.want) { console.error(`selftest FAIL: lock ${c.name} -> ${got}, wanted ${c.want}`); bad++; }
     }
 
-    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 25 decision cases, all correct");
+    // Smithery tools[] is an exact contract, including metered tools. Comparing only the free
+    // subset let the listing omit real served tools without failing.
+    const smitheryToolCases = [
+      { name: "exact tools", listed: ["a", "b"], served: ["b", "a"], want: [0, 0, 0] },
+      { name: "phantom tool", listed: ["a", "ghost"], served: ["a"], want: [1, 0, 0] },
+      { name: "missing metered tool", listed: ["a"], served: ["a", "paid"], want: [0, 1, 0] },
+      { name: "duplicate tool", listed: ["a", "a"], served: ["a"], want: [0, 0, 1] },
+    ];
+    for (const c of smitheryToolCases) {
+      const d = smitheryToolDiff(c.listed, c.served);
+      const got = [d.phantom.length, d.missing.length, d.duplicates.length];
+      if (got.join() !== c.want.join()) {
+        console.error(`selftest FAIL: Smithery ${c.name} -> ${got}, wanted ${c.want}`); bad++;
+      }
+    }
+
+    // A locked third-party URL may only stop the outward guard when the public metadata names
+    // that exact observation and the canonical endpoint works. Any drift closes the allowance.
+    const dep = "https://managed.example/mcp";
+    const canon = "https://councilof.ai/mcp";
+    const disclosed = {
+      state: "OWNER_ACTION_REQUIRED", registry_url: SMITHERY, deployment_url: dep,
+      observed_http: 401, canonical_url: canon, canonical_http: 200,
+    };
+    const smitheryDeploymentCases = [
+      { name: "managed door works", status: 200, canonicalStatus: 200, disclosure: null, want: "OK" },
+      { name: "exact external defect disclosed", status: 401, canonicalStatus: 200, disclosure: disclosed, want: "DISCLOSED_EXTERNAL_STALE" },
+      { name: "missing disclosure", status: 401, canonicalStatus: 200, disclosure: null, want: "FAIL" },
+      { name: "status drift", status: 403, canonicalStatus: 200, disclosure: disclosed, want: "FAIL" },
+      { name: "canonical door broken", status: 401, canonicalStatus: 500, disclosure: disclosed, want: "FAIL" },
+    ];
+    for (const c of smitheryDeploymentCases) {
+      const got = smitheryDeploymentVerdict({ deploymentUrl: dep, deploymentStatus: c.status,
+        canonicalUrl: canon, canonicalStatus: c.canonicalStatus, disclosure: c.disclosure });
+      if (got !== c.want) {
+        console.error(`selftest FAIL: Smithery ${c.name} -> ${got}, wanted ${c.want}`); bad++;
+      }
+    }
+
+    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 34 decision cases, all correct");
     process.exit(bad ? 1 : 0);
   }
   await checkManifest();

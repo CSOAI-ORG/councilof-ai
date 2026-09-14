@@ -1,21 +1,16 @@
 {
   "recorded": "2026-09-06",
   "what": "io.github.CSOAI-ORG/* entries in registry.modelcontextprotocol.io whose advertised repository a stranger cannot follow. Latest version per server name, walk taken to cursor exhaustion (14 pages, 354 distinct servers, 326 declaring a repository).",
-  "rule": "This list may only SHRINK. scripts/outward-claims-guard.mjs fails on any unfollowable entry NOT named here, so a new bad publish cannot hide inside an old allowance; it also fails when an entry here has closed and has not been removed, so a fix cannot go unrecorded. NAMES, not a count: on 2026-09-06 the count fell 37 -> 19 while all 19 were NEW, and a count baseline reported that as an improvement.",
+  "rule": "This list may only SHRINK. scripts/outward-claims-guard.mjs fails on any unfollowable entry NOT named here, so a new bad publish cannot hide inside an old allowance; it also fails when an entry here has closed and has not been removed, so a fix cannot go unrecorded. NAMES, not a count: on 2026-09-06 the count fell 37 -> 19 while all 19 were NEW, and a count baseline reported that as an improvement. On 2026-09-14 io.github.CSOAI-ORG/csoai_defoneos_mcp became followable and was removed.",
   "why_a_file": "This was an environment variable, REGISTRY_BASELINE, defaulting to 0. A run without it failed with 'up from 0' on a healthy registry, and any run could pass REGISTRY_BASELINE=999 and go quiet. A baseline you can set from the command line is not a baseline. The estate's other two (scripts/link-gate-baseline.json, scripts/recomputability-baseline.json) are files; so is this one now.",
-  "verified_absent_not_private": "A GitHub 404 also means private, so each was re-checked with an authenticated token that provably sees private repositories (43 visible via /user/repos?visibility=private). All 19 are genuinely absent. Repointing was tested and refuted: the 'meok-' spelling of the 14 'meek_*' names does not exist either, and the owners meok-ai and meok-ai-labs are not GitHub accounts at all.",
+  "verified_absent_not_private": "A GitHub 404 also means private, so each was re-checked with an authenticated token that provably sees private repositories (43 visible via /user/repos?visibility=private). All 18 remaining entries are genuinely absent. Repointing was tested and refuted: the 'meok-' spelling of the 14 'meek_*' names does not exist either, and the owners meok-ai and meok-ai-labs are not GitHub accounts at all.",
   "not_repointable": true,
-  "count": 19,
+  "count": 18,
   "entries": [
     {
       "server": "io.github.CSOAI-ORG/councilof_mcp",
       "version": "1.0.1",
       "repository": "https://github.com/CSOAI-ORG/councilof-mcp"
-    },
-    {
-      "server": "io.github.CSOAI-ORG/csoai_defoneos_mcp",
-      "version": "1.0.1",
-      "repository": "https://github.com/CSOAI-ORG/csoai-defoneos-mcp"
     },
     {
       "server": "io.github.CSOAI-ORG/meek_3_and_sov3_connection_mcp",
