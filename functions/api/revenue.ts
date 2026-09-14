@@ -117,7 +117,7 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
       "revenue nor a buyer, and neither is a wallet that paid nothing: a settlement of zero is not a purchase.",
   };
   if (!kv) {
-    return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null,
+    return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null, distinct_payers_by_door: null,
       source: "no REVENUE_KV bound — nothing is recorded, so nothing is counted" };
   }
   try {
@@ -131,6 +131,7 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
     const since = Date.now() - 30 * 24 * 3600 * 1000;
     const all = new Set<string>();
     const recent = new Set<string>();
+    const byDoor: Record<string, Set<string>> = {};
     let settlements = 0;
     let selfSettlements = 0;
     let zeroValueSettlements = 0;
@@ -149,7 +150,7 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
       const raw = await kv.get(name);
       if (!raw) { unreadable++; continue; }
       let r: { payer?: string | null; self?: boolean; settled_at?: string; zero_value?: boolean;
-               amount_atomic?: string | null; bazaar?: { status?: string } | null };
+               amount_atomic?: string | null; bazaar?: { status?: string } | null; resource?: string | null };
       try { r = JSON.parse(raw); } catch { unreadable++; continue; }
       const bz = r.bazaar?.status ?? "ABSENT";
       bazaarOutcomes[bz] = (bazaarOutcomes[bz] ?? 0) + 1;
@@ -184,9 +185,20 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
       if (!payer) continue;
       all.add(payer);
       if (r.settled_at && Date.parse(r.settled_at) >= since) recent.add(payer);
+      // Per door, the same definition as all_time: distinct non-self wallets that moved a
+      // non-zero amount. A record that names no resource is grouped under UNKNOWN_RESOURCE
+      // rather than dropped, so the per-door counts always sum to at least all_time.
+      const door = (r.resource || "").trim() || "UNKNOWN_RESOURCE";
+      (byDoor[door] ??= new Set<string>()).add(payer);
     }
+    const distinct_payers_by_door = Object.fromEntries(
+      Object.keys(byDoor).sort().map((d) => [d, byDoor[d].size]),
+    );
     return { ...base, status: "MEASURED", all_time: all.size, last_30d: recent.size, settlements, self_settlements: selfSettlements,
       settled_usdc_atomic: Number(externalSettledAtomic),
+      // Which doors the non-self wallets actually paid — the only per-door demand signal that is
+      // not a listing. Absent (null) when no store is bound; {} when records exist but none count.
+      distinct_payers_by_door,
       // Reported, never silently dropped: a reader can see that records exist and why they are
       // not buyers. settlements counts only non-self settlements that moved a non-zero amount.
       zero_value_settlements: zeroValueSettlements,
@@ -206,7 +218,7 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
       },
       gates: { "0 for 30 days": "shape or price is wrong; do not add doors", "≥1 repeat": "open the next door", "≥5 distinct in 30d": "it is a product" } };
   } catch (e) {
-    return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null,
+    return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null, distinct_payers_by_door: null,
       source: `REVENUE_KV read failed (${(e as Error).message}) — count stays null, never substituted` };
   }
 }

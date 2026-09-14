@@ -30,13 +30,13 @@ const call = async (env: Record<string, unknown>) => {
   };
 };
 
-const rec = (tx: string, payer: string, self: boolean, at: string) =>
-  JSON.stringify({ schema: "csoai.x402.settlement/0.1", transaction: tx, network: "base", payer, self, resource: "r", amount_atomic: "500000", settled_at: at });
+const rec = (tx: string, payer: string, self: boolean, at: string, resource = "r") =>
+  JSON.stringify({ schema: "csoai.x402.settlement/0.1", transaction: tx, network: "base", payer, self, resource, amount_atomic: "500000", settled_at: at });
 
 describe("/api/revenue — the One Number", () => {
   it("is null, never 0, without a store", async () => {
     const body = await call({});
-    expect(body.one_number).toMatchObject({ status: "UNMEASURED", all_time: null, last_30d: null });
+    expect(body.one_number).toMatchObject({ status: "UNMEASURED", all_time: null, last_30d: null, distinct_payers_by_door: null });
   });
 
   it("counts distinct non-self payers from records, keeps self apart, and windows 30 days", async () => {
@@ -52,6 +52,20 @@ describe("/api/revenue — the One Number", () => {
     const body = await call({ REVENUE_KV: kv });
     expect(body.one_number).toMatchObject({ status: "MEASURED", all_time: 2, last_30d: 1, settlements: 3, self_settlements: 1 });
     expect(body.settled_usdc).toMatchObject({ count: 1500000, status: "MEASURED", excludes_self: true });
+  });
+
+  it("counts distinct non-self payers per door under the same rule as all_time; nameless records group, never vanish", async () => {
+    const now = new Date().toISOString();
+    const body = await call({ REVENUE_KV: kvFrom({
+      "settled:tx:a1": rec("a1", "0xAAAA", false, now, "/api/wrapper"),
+      "settled:tx:a2": rec("a2", "0xaaaa", false, now, "/api/wrapper"), // same wallet, same door
+      "settled:tx:b1": rec("b1", "0xBBBB", false, now, "/api/request-attestation"),
+      "settled:tx:s1": rec("s1", "0xSELF", true, now, "/api/wrapper"),  // self: never a payer anywhere
+      "settled:tx:n1": JSON.stringify({ schema: "csoai.x402.settlement/0.1", transaction: "n1", network: "base", payer: "0xCCCC", self: false, amount_atomic: "500000", settled_at: now }),
+    }) });
+    expect(body.one_number).toMatchObject({ all_time: 3, distinct_payers_by_door: { "/api/wrapper": 1, "/api/request-attestation": 1, UNKNOWN_RESOURCE: 1 } });
+    const empty = await call({ REVENUE_KV: kvFrom({}) });
+    expect(empty.one_number).toMatchObject({ status: "MEASURED", all_time: 0, distinct_payers_by_door: {} });
   });
 
   it("retroactively excludes the documented internal browser-test wallet from buyers and revenue", async () => {
