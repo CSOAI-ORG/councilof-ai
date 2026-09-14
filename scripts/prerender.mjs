@@ -287,6 +287,7 @@ function discover() {
     // /frameworks/:slug catch-all serves ContentReviewNotice; without an explicit
     // snapshot the index cold-loads as the SPA shell on the static host.
     "/frameworks",
+      "/wrappers",
   ];
   for (const p of MUST) found.add(p);
 
