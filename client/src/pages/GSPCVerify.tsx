@@ -102,7 +102,7 @@ export default function GSPCVerify() {
             Verify · nothing sent · no account
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
-            Paste a signed card.
+            Paste a signed card. Recompute it here.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             Two modes. Estate cards recompute Ed25519 against did:web:csoai.org#card-attestation-1.
