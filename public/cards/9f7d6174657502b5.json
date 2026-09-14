@@ -1,0 +1,118 @@
+{
+  "card": {
+    "as_of": "2026-09-14T03:08:22Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:TBILL:arbitrum",
+      "symbol": "TBILL",
+      "product": "OpenEden T-Bills",
+      "chain": "arbitrum",
+      "chain_id": 42161,
+      "address": "0xf84d28a8d28292842dd73d1c5f99476a80b6666a",
+      "block": 504942891,
+      "block_hash": "0xa10179e8c97406dcb8cf38692021ea2ee8fa64522acac53bb2b4819cffa76ac5",
+      "block_time": "2026-09-14T03:08:22Z",
+      "rpc": "arb1.arbitrum.io",
+      "checked": {
+        "name": "OpenEden T-Bills",
+        "symbol": "TBILL",
+        "decimals": 6,
+        "totalSupply": 11006202164,
+        "owner": "0xca7f64e77bc422b1913afb0065bfc0d8b3561bf3",
+        "kycManager": "0x0d7690baa1008c8d3c5dae9d5033ff846738bafb",
+        "eip1967_implementation": "0x78365404fc5edabef6eca2f6b2f1ba1471727a07"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "dd90ca6f424efc328d165d416c18ff1ad1b3caca4f6501b4104a28b6d4c15e51",
+        "bytes": 10367,
+        "url": "/archive/proofs/eip1186/dd90ca6f424efc32.json",
+        "rpc": "arb1.arbitrum.io",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0x932cddc50793da935ccf915651ad67f6b746e9936fcc5614f0ff492563782c75",
+          "storageHash": "0xd68c381a46802a7fb61675d2360d5fe49e4c7b421f92f60a01c241d8db37fc67",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x78365404fc5edabef6eca2f6b2f1ba1471727a07",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 2
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 504942891 on arbitrum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9f7d6174657502b563f2005b4ff77d69d007158497731e4c68b147f5d8eb1131",
+    "sig_ed25519": "9894a72c87663fd410f5d096db9e7cd595bac7ddc6a2baa343d5f868938ca62d7578863fa769d2a6b53d3a753feb701a538bbddc0399110d4a60734fe0e65d02",
+    "source_urls": [
+      "https://arb1.arbitrum.io/rpc",
+      "https://docs.openeden.com/tbill/smart-contract-addresses"
+    ],
+    "subject": "evm:TBILL:arbitrum permission state at block 504942891",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:arbitrum",
+      "coverage:permission-state",
+      "subject:TBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "294e6449446a139b401327ed78d2e2462b1d7521801c8231e2f4ca55c715b85f",
+    "b5ddc73088e3bb417e4e3745f014b0ea4bcf18f4f38ecae3892976f360b506f8",
+    "afe63f53d14d66bd245ff360b73c0fc9d18f69d490edb45b9861509911fdff91",
+    "4affd1bccbc688ee0e28fb935a647c63031a3a4a3c93ef8aff1a587928584044",
+    "9458fcb32fd378853a5ad5589740ee6ff292b853107691934c076b32b331d13e",
+    "d0908fefb90e8a412a8acd60fd95ecd26e984458256defed9cd7ceae5467d9fc",
+    "7b9cd70f68d4079fd871ea615c2cf402f558b72c8553293601f79457106fa585",
+    "0feb7070eccf3eb24d43a205d00e1e9bcbb52d32a2ce68fa5d74a5dfb48db51a",
+    "be3c31baf797e3346ba149577033434672be08083c6c24e46e02da0e65308c42"
+  ]
+}

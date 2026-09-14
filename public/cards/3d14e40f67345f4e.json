@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-14T03:10:46Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "EURØP",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_holders",
+          "from": 285,
+          "to": 310
+        }
+      ],
+      "ledger_index": 106971147,
+      "observed_at": "2026-09-14T03:10:46Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3d14e40f67345f4ea4ae93817cf9fe2d43c88aef035f5852bce669175278c0ed",
+    "sig_ed25519": "49617c8190fdc89547f965bc33281c39d44f1a178f286c7cbb72fdf5fddd27747dfb72174ee00da9c7d26eaebe37eec98ac85326e81e6d448865f0f090678803",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: EURØP changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:EURØP"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "b0740ff76dc47200eaf095a8a2c3bfafed213078d5f1d3b04fec0093626d446c",
+    "0ac9d71f2d1480a83cfe5b0e7b2f7d24edd61b5adc8df8cf0af5f30ff6e7a2b3",
+    "4edaf834d9840ddea5367793171373bfff4bc4dec2af89e28af7e0e5b0c0dad4",
+    "b4ed8e659721e9fdee1d466b9cae644f23d9d5f64395941c807ed03d2dba6227",
+    "4ce1a635d1b1c517d75fa551de28361d98a71eb640ab77c52bea55936bb98891",
+    "c53db0d3a4c32d6b17714d2148273f0bc759498dc501601a5c3c7915c40b94be",
+    "67182eb7b74bfe8297af73a3d35f5e501e1b328d760b288f5e015961dd9a9d04",
+    "1868b52c1d6b3fc4045ab23dbdcd3ece471a7b4d921c62fa79250c79637dc3f4",
+    "0a2c7a3021f9c1d23e8d98ead5014c30c5721f6031468a0dbcabd2ac7f4cd1bf"
+  ]
+}
