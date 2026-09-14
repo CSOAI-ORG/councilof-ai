@@ -21,6 +21,7 @@ import generate_runpod_gspc_playlist as playlist
 
 
 SCHEMA = "csoai.runpod-commission-dispatch/0.1"
+WORKER_SCHEMA = "csoai.runpod-gspc-worker/0.1"
 
 
 def utc_now() -> str:
@@ -125,6 +126,62 @@ def build_dispatch(
     return writes, report
 
 
+def _pid_running(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def resolve_jobs_dir(worker_state_dir: Path | None, fallback: Path | None) -> tuple[str, Path]:
+    """The directory the running --forever worker actually scans.
+
+    First choice is the worker's own private state (health.json config_dir), accepted
+    only while the pid it recorded is alive and still holds worker.lock. The explicit
+    fallback is used only when that does not resolve. Neither resolving is a HALT:
+    a job written anywhere else is a job no worker reads (2026-09-14: the loop
+    defaulted to jobs-21ff8f50 while the worker scanned jobs-091a616a).
+    """
+    reasons: list[str] = []
+    if worker_state_dir is not None:
+        state: Any = None
+        try:
+            state = json.loads((worker_state_dir / "health.json").read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            reasons.append("worker state unreadable")
+        if state is not None:
+            config_dir = state.get("config_dir") if isinstance(state, dict) else None
+            pid = state.get("pid") if isinstance(state, dict) else None
+            lock_pid: int | None = None
+            try:
+                lock_pid = int((worker_state_dir / "worker.lock").read_text(encoding="utf-8").strip())
+            except (OSError, UnicodeDecodeError, ValueError):
+                lock_pid = None
+            if not isinstance(state, dict) or state.get("schema") != WORKER_SCHEMA:
+                reasons.append("worker state has an unexpected schema")
+            elif not isinstance(config_dir, str) or not config_dir:
+                reasons.append("worker state records no config_dir (worker predates it or runs --config)")
+            elif isinstance(pid, bool) or not isinstance(pid, int) or pid <= 0 or not _pid_running(pid):
+                reasons.append("worker state pid is not running")
+            elif lock_pid != pid:
+                reasons.append("worker.lock is held by a different pid than the state records")
+            else:
+                candidate = Path(config_dir)
+                if candidate.is_absolute() and not candidate.is_symlink() and candidate.is_dir():
+                    return "worker-state", candidate
+                reasons.append("worker config_dir is not an existing directory")
+    if fallback is not None:
+        if fallback.is_absolute() and not fallback.is_symlink() and fallback.is_dir():
+            return "explicit", fallback
+        reasons.append("explicit jobs dir is not an existing absolute directory")
+    if not reasons:
+        reasons.append("no worker state dir and no explicit jobs dir")
+    raise playlist.GenerationError("worker jobs directory unresolved: " + "; ".join(reasons))
+
+
 def materialize(writes: list[tuple[Path, bytes]]) -> tuple[int, int]:
     created = existing = 0
     for path, payload in writes:
@@ -145,12 +202,26 @@ def materialize(writes: list[tuple[Path, bytes]]) -> tuple[int, int]:
 
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
-    result.add_argument("--input", type=Path, required=True)
-    result.add_argument("--bank-dir", type=Path, required=True)
+    result.add_argument("--input", type=Path)
+    result.add_argument("--bank-dir", type=Path)
     result.add_argument("--workspace-root", type=Path, default=Path("/workspace"))
-    result.add_argument("--model-manifest-root", type=Path, required=True)
-    result.add_argument("--jobs-dir", type=Path, required=True)
-    result.add_argument("--output-root", type=Path, required=True)
+    result.add_argument("--model-manifest-root", type=Path)
+    result.add_argument(
+        "--worker-state-dir",
+        type=Path,
+        help="the running worker's --state-dir; its config_dir is the jobs directory",
+    )
+    result.add_argument(
+        "--jobs-dir",
+        type=Path,
+        help="explicit jobs directory; with --worker-state-dir it is only the fallback",
+    )
+    result.add_argument(
+        "--resolve-jobs-dir",
+        action="store_true",
+        help="print '<source>\\t<jobs dir>' and exit; HALT (rc 2) when unresolved",
+    )
+    result.add_argument("--output-root", type=Path)
     result.add_argument("--ollama-url", default="http://127.0.0.1:11434")
     result.add_argument("--interval-seconds", type=int, default=86_400)
     result.add_argument("--disk-low-water-bytes", type=int, default=4 * 1024**3)
@@ -163,8 +234,33 @@ def parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = parser().parse_args(argv)
+    cli = parser()
+    args = cli.parse_args(argv)
+    if args.resolve_jobs_dir:
+        try:
+            source, jobs_dir = resolve_jobs_dir(args.worker_state_dir, args.jobs_dir)
+        except playlist.GenerationError as error:
+            print(f"HALT: {error}")
+            return 2
+        print(f"{source}\t{jobs_dir}")
+        return 0
+    missing = [
+        flag
+        for flag, value in (
+            ("--input", args.input),
+            ("--bank-dir", args.bank_dir),
+            ("--model-manifest-root", args.model_manifest_root),
+            ("--output-root", args.output_root),
+        )
+        if value is None
+    ]
+    if args.worker_state_dir is None and args.jobs_dir is None:
+        missing.append("--jobs-dir or --worker-state-dir")
+    if missing:
+        cli.error("the following arguments are required: " + ", ".join(missing))
     try:
+        if args.worker_state_dir is not None:
+            _source, args.jobs_dir = resolve_jobs_dir(args.worker_state_dir, args.jobs_dir)
         revision = None
         if args.source_revision:
             revision = args.source_revision.strip().lower()

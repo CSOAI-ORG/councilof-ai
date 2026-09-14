@@ -1507,6 +1507,114 @@ def discover_playlist(
     return entries, invalid
 
 
+# A job that failed retries sooner than its configured cadence (TUI 7, 2026-09-13).
+FAILURE_RETRY_CAP_SECONDS = 1800
+# run.json detail codes that run_once reports with exit code 0. Every other code
+# (DISK_LOW_WATER, STOP_REQUESTED, MODEL_DIGEST_CHANGED_DURING_RUN, TRANSPORT_ERRORS)
+# is a failed run and takes the failure backoff.
+SUCCESS_RUN_DETAIL_CODES = frozenset({"COMPLETE_UNSIGNED", "ALL_UNPARSED"})
+CANDIDATE_FILES = frozenset({"card-unsigned.json", "card-incomplete.json"})
+
+
+def retry_delay_seconds(interval_seconds: int, succeeded: bool) -> int:
+    """One cadence rule for both an in-process run and a run found on disk."""
+    return (
+        interval_seconds
+        if succeeded
+        else min(interval_seconds, FAILURE_RETRY_CAP_SECONDS)
+    )
+
+
+def _parse_utc(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not value.endswith("Z"):
+        return None
+    try:
+        parsed = datetime.fromisoformat(value[:-1] + "+00:00")
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo is not None else None
+
+
+def last_completed_run(config: WorkerConfig) -> tuple[datetime, dict[str, Any]] | None:
+    """Newest finished run on disk for this job's exact pinned identity.
+
+    Identity is (model manifest digest, axis, bank sha256, instrument sha256), all
+    derived from the job's own pins, so no Ollama call or bank read is needed. A run
+    counts only when its immutable run.json names a candidate file
+    (card-unsigned.json or card-incomplete.json) that is present: run_once writes the
+    candidate last, so a run directory without one was interrupted and is not a run.
+    """
+    digest = config.expected_model_manifest_digest
+    bank_sha256 = config.expected_bank_sha256
+    instrument_sha256 = sha256_bytes(
+        canonical_json_bytes(config.instrument_descriptor(bank_sha256, digest))
+    )
+    wanted = (config.axis, bank_sha256, digest, instrument_sha256)
+    runs = config.output_dir / "runs"
+    try:
+        children = list(runs.iterdir())
+    except OSError:
+        return None
+    newest: tuple[datetime, dict[str, Any]] | None = None
+    for run_dir in children:
+        if run_dir.is_symlink() or not run_dir.is_dir():
+            continue
+        manifest_path = run_dir / "run.json"
+        if manifest_path.is_symlink():
+            continue
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            continue
+        if not isinstance(manifest, dict) or manifest.get("schema") != RUN_SCHEMA:
+            continue
+        found = (
+            manifest.get("axis"),
+            manifest.get("bank_sha256"),
+            manifest.get("model_manifest_digest"),
+            manifest.get("instrument_sha256"),
+        )
+        if found != wanted:
+            continue
+        candidate = manifest.get("candidate_file")
+        if candidate not in CANDIDATE_FILES:
+            continue
+        candidate_path = run_dir / candidate
+        if candidate_path.is_symlink() or not candidate_path.is_file():
+            continue
+        finished = _parse_utc(manifest.get("finished_at"))
+        if finished is None:
+            continue
+        if newest is None or finished > newest[0]:
+            newest = (finished, manifest)
+    return newest
+
+
+def restored_next_due(
+    config: WorkerConfig, *, monotonic_now: float, wall_now: datetime
+) -> float | None:
+    """When a job first seen by this process is next due, given runs already on disk.
+
+    Returns None when no matching completed run exists or its cadence has elapsed
+    (run now). A restart then behaves as if the process had never stopped: success
+    waits interval_seconds from the run's finished_at, failure the capped backoff.
+    """
+    found = last_completed_run(config)
+    if found is None:
+        return None
+    finished, manifest = found
+    delay = retry_delay_seconds(
+        config.interval_seconds,
+        manifest.get("detail_code") in SUCCESS_RUN_DETAIL_CODES,
+    )
+    # A finished_at in the future (clock step) counts as just finished, never as
+    # permission to run early.
+    elapsed = max(0.0, (wall_now - finished).total_seconds())
+    if elapsed >= delay:
+        return None
+    return monotonic_now + (delay - elapsed)
+
+
 def _aggregate_exit_code(current: int, candidate: int) -> int:
     if candidate in {75, 130}:
         return candidate
@@ -1528,8 +1636,15 @@ def run_playlist(
     stop_event: threading.Event,
     client_factory: Callable[[WorkerConfig], InferenceClient] | None = None,
     disk_usage: Callable[[Path], Any] = shutil.disk_usage,
+    wall_clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
 ) -> int:
-    """Run due jobs one at a time; never overlap access to the single GPU."""
+    """Run due jobs one at a time; never overlap access to the single GPU.
+
+    Due times live in memory, so each job is seeded from its own immutable run
+    directories the first time this process sees it. Without that, a restart re-ran
+    every completed job at once (2026-09-14: the llama3.2:3b commission jobs,
+    including a swarm bank, re-ran 9.5 hours into an 86400-second interval).
+    """
     factory = client_factory or (lambda config: OllamaClient(config.ollama_url))
     next_due: dict[str, float] = {}
     failed_jobs: dict[str, str] = {}
@@ -1557,6 +1672,15 @@ def run_playlist(
             continue
 
         now = time.monotonic()
+        wall_now: datetime | None = None
+        for entry in entries:
+            if entry.fingerprint in next_due:
+                continue
+            wall_now = wall_now or wall_clock()
+            restored = restored_next_due(
+                entry.config, monotonic_now=now, wall_now=wall_now
+            )
+            next_due[entry.fingerprint] = 0.0 if restored is None else restored
         due = [entry for entry in entries if next_due.get(entry.fingerprint, 0) <= now]
         if not due:
             wait_seconds = min(
@@ -1572,6 +1696,9 @@ def run_playlist(
                 detail_code="PLAYLIST_ERRORS" if degraded else "NEXT_PLAYLIST_JOB",
                 jobs_degraded=len(failed_jobs) + invalid,
             )
+            if not forever:
+                # A single pass whose jobs all ran recently has nothing to do.
+                return aggregate
             stop_event.wait(wait_seconds)
             continue
 
@@ -1608,10 +1735,8 @@ def run_playlist(
             # interval (86400s = a lost measurement day for one transient error,
             # evidenced 2026-09-12 when an ollama boot race deferred all 70 jobs 24h).
             # Success keeps the configured cadence; failure retries in <=30 min.
-            retry_delay = (
-                entry.config.interval_seconds
-                if outcome.exit_code == 0
-                else min(entry.config.interval_seconds, 1800)
+            retry_delay = retry_delay_seconds(
+                entry.config.interval_seconds, outcome.exit_code == 0
             )
             next_due[entry.fingerprint] = time.monotonic() + retry_delay
             if outcome.exit_code in {75, 130}:
@@ -1701,7 +1826,16 @@ def main(argv: list[str] | None = None) -> int:
     health_server: ReadOnlyHealthServer | None = None
     try:
         with single_instance(state_dir / "worker.lock"):
-            health.update(state="STARTING", started_at=utc_now(), detail_code="BOOT")
+            # config_dir and pid are PRIVATE state for pod-local readers (the
+            # commission dispatcher resolves the job directory from them). Neither is
+            # in PUBLIC_HEALTH_KEYS, so GET /health stays path-free.
+            health.update(
+                state="STARTING",
+                started_at=utc_now(),
+                detail_code="BOOT",
+                config_dir=str(config_dir) if args.config_dir is not None else None,
+                pid=os.getpid(),
+            )
             if args.health_port:
                 try:
                     health_server = ReadOnlyHealthServer(

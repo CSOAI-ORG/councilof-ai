@@ -114,6 +114,65 @@ def test_inventory_counts_unique_refs() -> None:
     assert "not a grade" in inv["note"]
 
 
+def test_reviewed_stream_is_consumed_without_authority_transfer() -> None:
+    import hashlib
+    from kaggle_community_cells import CANONICAL_AUTHORITY, CONNECTOR_SCHEMA, validate_reviewed_stream
+
+    core = {
+        "schema": CONNECTOR_SCHEMA,
+        "source": {"platform": "councilofai", "uri": "https://councilof.ai/root.json", "revision": "sha256:" + "a" * 64},
+        "subject": {"kind": "measurement-root", "id": "gspc-root"},
+        "measurement_kind": "gspc.root-manifest",
+        "artifact": {"uri": "https://councilof.ai/root.json", "sha256": "a" * 64, "bytes": 1, "media_type": "application/json"},
+        "timestamp": "2026-09-14T10:56:05Z",
+        "license_provenance": {"license": "MIT", "provenance_uri": "https://councilof.ai/root.json"},
+        "lifecycle": {"state": "published"},
+        "error": None,
+        "authority": CANONICAL_AUTHORITY,
+        "mirror_role": "consumer",
+    }
+    row = dict(core)
+    row["envelope_id"] = hashlib.sha256(
+        json.dumps(core, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
+    ).hexdigest()
+    payload = (json.dumps(row) + "\n").encode()
+    assert validate_reviewed_stream(payload) == [row]
+
+    row["authority"] = {"uri": "https://kaggle.com", "role": "canonical-review-authority"}
+    bad = (json.dumps(row) + "\n").encode()
+    try:
+        validate_reviewed_stream(bad)
+    except ValueError as e:
+        assert "replace authority" in str(e)
+    else:
+        raise AssertionError("Kaggle authority transfer must fail closed")
+
+
+def test_reviewed_artifacts_are_hash_verified() -> None:
+    import kaggle_community_cells as cells
+    payload = b"x"
+    row = {
+        "artifact": {
+            "uri": "https://councilof.ai/root.json",
+            "sha256": __import__("hashlib").sha256(payload).hexdigest(),
+            "bytes": len(payload),
+        }
+    }
+    original = cells._get_bytes
+    try:
+        cells._get_bytes = lambda _url: payload
+        cells.verify_reviewed_artifacts([row])
+        cells._get_bytes = lambda _url: b"changed"
+        try:
+            cells.verify_reviewed_artifacts([row])
+        except ValueError as e:
+            assert "changed" in str(e)
+        else:
+            raise AssertionError("changed reviewed artifact must fail closed")
+    finally:
+        cells._get_bytes = original
+
+
 if __name__ == "__main__":
     test_canonical_matches_landed_sample()
     test_builder_accepted_by_land_mill_cards()
@@ -122,4 +181,6 @@ if __name__ == "__main__":
     test_run_jail_slice_fake_model()
     test_kernel_is_self_contained()
     test_inventory_counts_unique_refs()
+    test_reviewed_stream_is_consumed_without_authority_transfer()
+    test_reviewed_artifacts_are_hash_verified()
     print("PASS test_mill_card")
