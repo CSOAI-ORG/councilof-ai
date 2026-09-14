@@ -863,6 +863,22 @@
         "summary": ""
       }
     },
+    "/api/commission-queue": {
+      "get": {
+        "description": "GET /api/commission-queue \u2014 mill-visible QUEUED intents written by /api/request-attestation after settle (`mill:commission:<subject>` in REVENUE_KV).",
+        "operationId": "get__api_commission-queue",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/commission-queue \u2014 mill-visible QUEUED intents written by /api/request-attestation after settle (`mill:commission:<subject>` in REVENUE_KV)."
+      }
+    },
     "/api/commissions": {
       "get": {
         "description": "GET /api/commissions \u2014 the open commission queue, read from the same store that holds the settlements (REVENUE_KV, `ras:<receipt sha>` records written by /api/request-attestation).",
@@ -4954,7 +4970,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 90,
+    "public_operations": 91,
     "quarantined": [
       {
         "buyable": false,
