@@ -24,9 +24,11 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "harness" / "gspc-top100"))
 from mill_hub_queue import apply_valid_flips, load_queue, mill_index_row  # noqa: E402
 from verify_card import verify_signed_card_with_did_doc  # noqa: E402
+from verify_hub_mill_evidence import EvidenceError, validate_signed_admission  # noqa: E402
 
 CARD_URL = "https://councilof.ai/interop/mill-cards-signed/"
 QUOTABLE_N = 30
+EVIDENCE = ROOT / "public" / "interop" / "mill-evidence"
 
 # Axis scope of each satellite index, derived from what those files actually held on
 # 2026-09-05 rather than assumed. They are views of INDEX.jsonl; they add no cell of
@@ -63,7 +65,7 @@ def load_superseded(cards_dir: Path) -> set[str]:
     return out
 
 
-def verify_cards(cards_dir: Path, did_doc: dict) -> tuple[list[dict], list[dict]]:
+def verify_cards(cards_dir: Path, did_doc: dict, evidence_dir: Path = EVIDENCE) -> tuple[list[dict], list[dict]]:
     """Every live signed-*.json → wrap with _verdict/_reason/_file. Superseded cards are
     skipped, so a re-signed (model, axis) contributes one cell, not two. Returns
     (wraps, verdict rows)."""
@@ -83,6 +85,11 @@ def verify_cards(cards_dir: Path, did_doc: dict) -> tuple[list[dict], list[dict]
         except Exception:
             w = {}
         body = w.get("body") if isinstance(w.get("body"), dict) else {}
+        if verdict == "VALID" and not str(body.get("model") or "").startswith("ollama:"):
+            try:
+                validate_signed_admission(w, evidence_dir)
+            except (EvidenceError, OSError, ValueError) as error:
+                verdict, reason = "UNCHECKABLE", f"non-reproducible mill evidence: {error}"
         n = int(body.get("n") or 0)
         quotable = n >= QUOTABLE_N
         w["_verdict"] = verdict if quotable else ("UNQUOTABLE" if verdict == "VALID" else verdict)
@@ -91,6 +98,32 @@ def verify_cards(cards_dir: Path, did_doc: dict) -> tuple[list[dict], list[dict]
         wraps.append(w)
         rows.append({"file": f.name, "model": body.get("model"), "axis": body.get("axis"), "n": n, "verdict": w["_verdict"], "reason": w["_reason"]})
     return wraps, rows
+
+
+def retire_unreproducible_cells(rows: list[dict], wraps: list[dict]) -> int:
+    """Remove positive census claims backed only by legacy/aggregate hub cards."""
+    retired = 0
+    for wrap in wraps:
+        if wrap.get("_verdict") == "VALID":
+            continue
+        body = wrap.get("body") if isinstance(wrap.get("body"), dict) else {}
+        model, axis, card_id = body.get("model"), body.get("axis"), wrap.get("id")
+        if not model or not axis or str(model).startswith("ollama:"):
+            continue
+        for row in rows:
+            if row.get("id") != model:
+                continue
+            cell = (row.get("measured_axes") or {}).get(axis)
+            if not isinstance(cell, dict) or cell.get("card_id") != card_id:
+                continue
+            row["measured_axes"][axis] = {
+                "status": "UNMEASURED",
+                "card_id": None,
+                "historical_card_id": card_id,
+                "unmeasured": [wrap.get("_reason") or "current evidence admission unavailable"],
+            }
+            retired += 1
+    return retired
 
 
 def measured_cells(rows: list[dict]) -> int:
@@ -182,7 +215,8 @@ def serialize_queue(rows: list[dict]) -> str:
     return "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows)
 
 
-def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path, prev_index: Path | None = None) -> dict:
+def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path,
+        prev_index: Path | None = None, evidence_dir: Path = EVIDENCE) -> dict:
     rows = load_queue(queue_path)
     before = measured_cells(rows)
     # `changed` is about the census BYTES, not the MEASURED count. Now that a cell
@@ -190,7 +224,8 @@ def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path, prev_index:
     # the Hub must receive — while the MEASURED count stays flat. Deriving `changed`
     # from that count would silently skip the upload for exactly those runs.
     before_blob = serialize_queue(rows)
-    wraps, verdicts = verify_cards(cards_dir, did_doc)
+    wraps, verdicts = verify_cards(cards_dir, did_doc, evidence_dir)
+    retired = retire_unreproducible_cells(rows, wraps)
     flipped = apply_valid_flips(rows, wraps)
     derive_coverage_states(rows)
     after = measured_cells(rows)
@@ -199,6 +234,7 @@ def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path, prev_index:
     (out / "queue.jsonl").write_text(after_blob, encoding="utf-8")
     parquet_ok = write_parquet(rows, out / "queue.parquet")
     summ = summary(rows, after - before)
+    summ["legacy_cells_retired"] = retired
     (out / "SUMMARY.json").write_text(json.dumps(summ, indent=2) + "\n", encoding="utf-8")
     cards_out = out / "mill-cards"
     cards_out.mkdir(parents=True, exist_ok=True)
@@ -284,6 +320,7 @@ def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path, prev_index:
         "satellite_rows": satellite_counts,
         "parquet_written": parquet_ok,
         "cells_written": flipped,
+        "legacy_cells_retired": retired,
         "queue_changed": after_blob != before_blob,
         "index_changed": index_changed,
         "prev_index_seen": prev_blob is not None,
@@ -306,10 +343,12 @@ def main() -> int:
     ap.add_argument("--queue", required=True, help="queue.jsonl fetched from csoai/hub-queue")
     ap.add_argument("--did", required=True, help="did.json fetched from https://councilof.ai/.well-known/did.json")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--evidence", default=str(EVIDENCE), help="current evidence bundles and admission receipts")
     ap.add_argument("--prev-index", default=None, help="the currently PUBLISHED mill-cards/INDEX.jsonl; absent means UNKNOWN, which uploads")
     args = ap.parse_args()
     did_doc = json.loads(Path(args.did).read_text(encoding="utf-8"))
-    rep = run(Path(args.cards), Path(args.queue), did_doc, Path(args.out), Path(args.prev_index) if args.prev_index else None)
+    rep = run(Path(args.cards), Path(args.queue), did_doc, Path(args.out),
+              Path(args.prev_index) if args.prev_index else None, Path(args.evidence))
     print(json.dumps({k: rep[k] for k in ("cards", "verdicts", "cells_before", "cells_after", "flipped_this_run", "index_rows", "parquet_written", "queue_changed", "index_changed", "prev_index_seen", "changed")}))
     if not rep["parquet_written"]:
         print("HALT parquet missing — the Hub viewer reads parquet only; not publishable", file=sys.stderr)
