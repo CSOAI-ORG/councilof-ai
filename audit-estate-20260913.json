@@ -175,3 +175,14 @@ IETF drafts on datatracker: XML ready, awaiting upload
 === ALL BROWSER GATES ===
 WebBridge daemon v1.11.6 vs extension v2.0.9 - version mismatch causing hangs
 Need: kimi-webbridge upgrade v2.0.9 to fix
+
+=== BASE EAS ANCHOR: BLOCKED (12 Sep 2026) ===
+- Burner 0x6ea00613c15f2463bC10c7188215c4FA6f4943C6 funded with 0.005 ETH
+- EAS SchemaRegistry.register() tx succeeded (0xd0f00f2...) 
+- But subsequent attest() tx reverts
+- EAS contract at 0x420...0020 on Base is a 4112-byte STUB
+  - Same codehash as Optimism stub: 0x1f958654ab06a152993e7a0ae7b6dbb0d4b19265cc9337b8789fe1353bd9dc35
+  - Real EAS SchemaRegistry is ~24KB
+  - The Base deployment is incomplete/broken
+- EAS team needs to properly initialize the contracts on Base
+- This is an UNFIXABLE blocker without the EAS team's intervention
