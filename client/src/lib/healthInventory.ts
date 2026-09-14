@@ -5,7 +5,7 @@
  * verifies, whether evidence fetches, whether a rerun exists, whether
  * a correction touches the digest, and the census eligibility. That is
  * how healthy the RECORD is. It is not how healthy the model is, not a
- * fused SOV grade, and not an investable index.
+ * fused Council Space grade, and not an investable index.
  *
  * SNAPSHOT, not a live read. Taken 2026-09-02 from GET /api/gspc
  * (22 axis · 22 measured · 0 empty · 969 items) and GET /api/corrections (39).
@@ -95,7 +95,7 @@ export const HEALTH_FACTS: HealthFact[] = [
   {
     id: "index-rows",
     title: "Signed index rows",
-    access: "csoai.sov-signal-index/1 total_signed_rows",
+    access: "signed coverage index · total_signed_rows",
     href: "https://councilof.ai/signals/sov-signal.signed.json",
     state: "present",
     means: "The coverage index counts rows. It never predicts.",

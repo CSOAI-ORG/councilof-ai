@@ -1,10 +1,11 @@
 /**
- * External SOV / revenue / XRPL / T-REX form — audit against live truth.
+ * External revenue / XRPL / T-REX form — audit against live truth.
  *
  * An outside brief (2026-08-30) mapped three commercial arms onto Council.
  * Keep the map. Do not keep its stale board counts, public seat prices,
  * fused investable index, Council-minted bonds, or “300+ MCP servers are
  * this product.” Living board: GET /api/gspc — 22 axis · 22 measured.
+ * Public names only: Council of AI, Council Space, GSPC — never SOVOS/sov-*.
  */
 
 export type AuditVerdict = "keep" | "stale" | "false" | "forbidden";
@@ -20,7 +21,7 @@ export const SOV_AUDIT_RULING =
   "Use the external form as a map of arms. The living board, the four SKUs and the fill path decide what is true.";
 
 export const SOV_AUDIT_SOURCE = {
-  title: "SOV unified architecture — revenue, XRPL, T-REX",
+  title: "External architecture brief — revenue, XRPL, T-REX",
   dated: "2026-08-30",
   role: "External brief. Not a signed card. Not GET /api/gspc.",
 } as const;
@@ -34,6 +35,7 @@ export const LIVE_PIN = {
   corrections: 39,
   as_at: "2 September 2026",
   index_schema: "csoai.sov-signal-index/1",
+  index_public_label: "signed coverage index",
   index_rows: 15,
   index_not_certification: true,
   issuer: "CSOAI Ltd UK 16939677",
@@ -97,10 +99,10 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     live: "Planned later role is partner attester of a digest we already signed. Never issuer.",
   },
   {
-    id: "no-sov-token",
-    claim: "There is no tradable SOV index token and no release-bond product.",
+    id: "no-index-token",
+    claim: "There is no tradable Council Space index token and no release-bond product.",
     verdict: "keep",
-    live: "csoai.sov-signal-index/1 counts 15 signed rows. not_a_certification: true.",
+    live: "Signed coverage index counts 15 signed rows. not_a_certification: true. Machine schema remains the published row-count leaf.",
   },
   {
     id: "x402-assembly",
@@ -125,12 +127,6 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     claim: "13 measured axes, 14-slot instrument, 818 items, 7-model fleet.",
     verdict: "stale",
     live: "GET /api/gspc is the living board — 22 axis · 22 measured. Quote the endpoint, not a number copied out of it.",
-  },
-  {
-    id: "six-axis",
-    claim: "Six-axis benchmarks are the published GSPC product.",
-    verdict: "stale",
-    live: "22 measured instruments. Jail is the MEASURED floor, not a sixth-axis brand.",
   },
   {
     id: "no-hf-org",
@@ -163,8 +159,8 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     live: "A rank is never sold. Verify is free. Paid SKUs stay on enquiry.",
   },
   {
-    id: "fused-sov-token",
-    claim: "Average GSPC scores, compliance rates and discovery into a tradable SOV token.",
+    id: "fused-index-token",
+    claim: "Average GSPC scores, compliance rates and discovery into a tradable fused index token.",
     verdict: "forbidden",
     live: "The coverage index counts rows. It never predicts, never coupons, never fuses a grade.",
   },

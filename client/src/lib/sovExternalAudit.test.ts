@@ -12,7 +12,7 @@ import {
 
 const products = readFileSync(resolve(__dirname, "../pages/Products.tsx"), "utf8");
 
-describe("External SOV / XRPL / T-REX form", () => {
+describe("External XRPL / T-REX form", () => {
   it("keeps the three-arm map and the living board pin", () => {
     expect(SOV_AUDIT_RULING).toMatch(/living board/);
     expect(keepCount()).toBeGreaterThanOrEqual(10);
@@ -27,7 +27,10 @@ describe("External SOV / XRPL / T-REX form", () => {
     expect(KEEP_ARMS).toHaveLength(3);
     expect(KEEP_ARMS[2].maps).toMatch(/reader|attester/i);
     expect(claimsByVerdict("stale").some((c) => c.id === "xrpl-devnet")).toBe(true);
-    expect(claimsByVerdict("keep").some((c) => c.id === "no-sov-token")).toBe(true);
+    expect(claimsByVerdict("stale").some((c) => c.id === "six-axis")).toBe(false);
+    expect(LIVE_PIN.index_public_label).toBe("signed coverage index");
+    expect(JSON.stringify(SOV_AUDIT_CLAIMS)).not.toMatch(/Six-axis benchmarks|sov-claim-six-axis/i);
+    expect(claimsByVerdict("keep").some((c) => c.id === "no-index-token")).toBe(true);
     expect(claimsByVerdict("keep").some((c) => c.id === "four-skus")).toBe(true);
   });
 
@@ -35,7 +38,7 @@ describe("External SOV / XRPL / T-REX form", () => {
     expect(claimsByVerdict("stale").some((c) => c.id === "stale-board-counts")).toBe(true);
     expect(claimsByVerdict("false").some((c) => c.id === "no-hf-org")).toBe(true);
     expect(claimsByVerdict("false").some((c) => c.id === "mcp-three-hundred")).toBe(true);
-    expect(claimsByVerdict("forbidden").some((c) => c.id === "fused-sov-token")).toBe(true);
+    expect(claimsByVerdict("forbidden").some((c) => c.id === "fused-index-token")).toBe(true);
     expect(claimsByVerdict("forbidden").some((c) => c.id === "release-bond-oracle")).toBe(true);
     expect(claimsByVerdict("forbidden").some((c) => c.id === "onchain-measured")).toBe(true);
     expect(claimsByVerdict("forbidden").some((c) => c.id === "seat-prices")).toBe(true);

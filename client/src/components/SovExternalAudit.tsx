@@ -41,17 +41,17 @@ export default function SovExternalAudit({ tone = "dark" }: { tone?: "dark" | "l
   const head = dark ? "text-emerald-300" : "text-slate-900";
 
   return (
-    <section className="mt-12 space-y-8" data-testid="sov-external-audit" aria-labelledby="sov-audit-h">
+    <section className="mt-12 space-y-8" data-testid="council-space-audit" aria-labelledby="council-space-audit-h">
       <div>
         <p className={`font-mono text-[11px] uppercase tracking-[0.18em] ${muted}`}>
           External form · Kimi brief · {SOV_AUDIT_SOURCE.dated}
         </p>
-        <h2 id="sov-audit-h" className={`mt-2 text-xl font-bold ${head}`}>
+        <h2 id="council-space-audit-h" className={`mt-2 text-xl font-bold ${head}`}>
           {SOV_AUDIT_RULING}
         </h2>
         <p className={`mt-3 text-sm ${body}`}>
           {SOV_AUDIT_SOURCE.title}. {SOV_AUDIT_SOURCE.role} Pinned as at {LIVE_PIN.as_at}:{" "}
-          {LIVE_PIN.public_count}, index {LIVE_PIN.index_schema}. Issuer {LIVE_PIN.issuer}.
+          {LIVE_PIN.public_count}, {LIVE_PIN.index_public_label}. Issuer {LIVE_PIN.issuer}.
           Corrections and items move, so this brief no longer restates the corrections count —
           the health inventory below reads it live. The living board is{" "}
           <a className="underline" href="/api/gspc">GET /api/gspc</a>; the living corrections
@@ -62,7 +62,7 @@ export default function SovExternalAudit({ tone = "dark" }: { tone?: "dark" | "l
 
       <div className="grid gap-3 md:grid-cols-3">
         {KEEP_ARMS.map((arm) => (
-          <div key={arm.id} className={panel} data-testid={`sov-arm-${arm.id}`}>
+          <div key={arm.id} className={panel} data-testid={`council-arm-${arm.id}`}>
             <h3 className={`font-semibold ${title}`}>{arm.title}</h3>
             <p className={`mt-2 text-sm ${body}`}>{arm.maps}</p>
           </div>
@@ -81,12 +81,12 @@ export default function SovExternalAudit({ tone = "dark" }: { tone?: "dark" | "l
       {GROUPS.map((group) => {
         const rows = SOV_AUDIT_CLAIMS.filter((c) => c.verdict === group.verdict);
         return (
-          <div key={group.verdict} data-testid={`sov-audit-${group.verdict}`}>
+          <div key={group.verdict} data-testid={`gspc-audit-${group.verdict}`}>
             <h3 className={`text-sm font-bold ${title}`}>{group.label}</h3>
             <p className={`mt-1 text-[13px] ${muted}`}>{group.hint}</p>
             <ul className="mt-3 grid gap-3 sm:grid-cols-2">
               {rows.map((row) => (
-                <li key={row.id} className={panel} data-testid={`sov-claim-${row.id}`}>
+                <li key={row.id} className={panel} data-testid={`gspc-claim-${row.id}`}>
                   <p className={`text-sm ${title}`}>{row.claim}</p>
                   <p className={`mt-2 text-[12px] ${muted}`}>Live: {row.live}</p>
                 </li>
