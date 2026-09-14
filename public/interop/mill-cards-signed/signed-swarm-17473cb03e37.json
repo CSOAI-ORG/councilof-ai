@@ -1,0 +1,42 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "swarm",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 1,
+    "status": "MEASURED",
+    "unmeasured": [],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router:nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16:featherless-ai",
+    "evidence": {
+      "schema": "csoai.mill-item-evidence/0.2",
+      "bank_sha256": "ab318986d684ebf8a46682a5b82ad7594b1bbd01f7acb25a50e94a3d868076a1",
+      "bank_file": "bank-swarm-ab318986d684.jsonl",
+      "bank_dataset": "csoai/gspc-swarm",
+      "bank_revision": "e8a4ec1e61c9a04f253dd3e61c7af61bd64250b2",
+      "model_hf_revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+      "instrument_sha256": "86216fbb18db98165e7b2feda74f90d89d05fcd8a0208aed82fee37956d8a659",
+      "items_file": "items-swarm-95ce1e7118b5.jsonl",
+      "items_sha256": "95ce1e7118b5cf1cba0b586779ba3dfd75f1c4a19453da16605a5a571f16a07c"
+    },
+    "run_id": "gha-34824895140",
+    "signature_state": "SIGNED",
+    "admission": {
+      "schema": "csoai.mill-evidence-admission/0.2",
+      "file": "admission-ce6a581ae18a.json",
+      "sha256": "ce6a581ae18ae497702056b5d049c091fa1708421bda6e79f9c6bbc19d050c57"
+    }
+  },
+  "id": "17473cb03e37a2ef51a0ae583e34a3b46316bdae2855cd093aeabbad6fb72f87",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "eb3ddf7980db9c3f0688d288639b279f98dd4ca4b12e63de807640d531586ef8c61524f8e7b6fea7f2c252083ad156576d9f929ed811e3ba2e3f6f05c1ce2f04",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}
