@@ -94,8 +94,11 @@ describe("GET /api/coverage", () => {
     expect(body.rows.find((row: any) => row.id === "xrpl").measured.value).toBe(0);
     expect(body.rows.find((row: any) => row.id === "x402").paid.value).toBe(1);
     expect(body.rows.find((row: any) => row.id === "mcp").indexed.value).toBe(12);
+    expect(body.rows.find((row: any) => row.id === "mcp").measured.value).toBeNull();
     expect(body.rows.find((row: any) => row.id === "a2a").indexed.value).toBe(7);
+    expect(body.rows.find((row: any) => row.id === "a2a").measured.value).toBeNull();
     expect(body.rows.find((row: any) => row.id === "erc8004").indexed.value).toBe(137046);
+    expect(body.rows.find((row: any) => row.id === "erc8004").measured.value).toBeNull();
     expect(body.rows.find((row: any) => row.id === "erc8004").signed.value).toBeNull();
     expect(body.rows.find((row: any) => row.id === "wrappers").indexed.value).toBe(17);
     expect(body.rows.find((row: any) => row.id === "wrappers").measured.value).toBeNull();

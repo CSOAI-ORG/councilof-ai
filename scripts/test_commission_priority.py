@@ -78,7 +78,9 @@ class CommissionPriorityTests(unittest.TestCase):
                 "fulfillment": "QUEUED",
             },  # null model — skip
         ]
-        self.assertEqual(select(self.queue_feed(rows), "governance"), ["llama3.2:3b"])
+        # llama3.2:3b is an Ollama tag: QUEUED and honoured, but on the RunPod rail — the Hub
+        # mill never receives it as a priority id (see hub_routable).
+        self.assertEqual(select(self.queue_feed(rows), "governance"), [])
         self.assertEqual(select(self.queue_feed(rows), "safety"), ["org/model"])
 
     def test_legacy_sku_and_unfulfillable_skipped(self):
@@ -95,6 +97,33 @@ class CommissionPriorityTests(unittest.TestCase):
         ]
         self.assertEqual(select(self.feed(rows), "governance"), ["hub/ok"])
 
+
+
+class HubRoutableTests(unittest.TestCase):
+    def test_hub_mill_priority_excludes_ollama_subjects(self):
+        from commission_priority import select_queue, hub_routable
+        payload = {"schema": "csoai.commission-queue/0.1", "status": "MEASURED", "rows": [
+            {"subject": "llama3.2:3b", "model": "llama3.2:3b", "subject_kind": "ollama_model", "fulfillment": "QUEUED", "axis": None},
+            {"subject": "clan-csoai-plain:latest", "model": "clan-csoai-plain:latest", "subject_kind": "ollama_model", "fulfillment": "QUEUED", "axis": None},
+            {"subject": "Qwen/Qwen2-0.5B", "model": "Qwen/Qwen2-0.5B", "subject_kind": "hub_model", "fulfillment": "QUEUED", "axis": None},
+            {"subject": "org/untyped-slug", "model": "org/untyped-slug", "fulfillment": "QUEUED", "axis": "safety"},
+            {"subject": "payai-wrapper-x", "model": None, "subject_kind": "sku_wrapper", "fulfillment": "UNFULFILLABLE", "axis": None},
+        ]}
+        self.assertEqual(select_queue(payload, "safety"), ["Qwen/Qwen2-0.5B", "org/untyped-slug"])
+        self.assertFalse(hub_routable({"subject_kind": "ollama_model"}, "llama3.2:3b"))
+        self.assertFalse(hub_routable({}, "llama3.2:3b"))          # untyped name:tag is not a hub slug
+        self.assertTrue(hub_routable({}, "meta-llama/Llama-3.1-8B"))
+        self.assertFalse(hub_routable({"subject_kind": "ambiguous"}, "org/name"))
+
+
+class LegacyFeed02Tests(unittest.TestCase):
+    def test_legacy_fallback_accepts_live_0_2_feed(self):
+        from commission_priority import select_commissions
+        feed={"schema":"csoai.commissions/0.2","status":"MEASURED","records_unreadable":0,"commissions":[
+            {"subject":"Qwen/Qwen2-0.5B","model":"Qwen/Qwen2-0.5B","subject_kind":"hub_model","fulfillment":"QUEUED","axis":None,"receipt_sha":"a","cards":[],"delivery":{"state":"NONE","count":0}},
+            {"subject":"llama3.2:3b","model":"llama3.2:3b","subject_kind":"ollama_model","fulfillment":"QUEUED","axis":None,"receipt_sha":"b"}]}
+        self.assertEqual(select_commissions(feed,"safety"),["Qwen/Qwen2-0.5B"])
+        with self.assertRaises(ValueError): select_commissions(dict(feed,schema="csoai.commissions/0.3"),"safety")
 
 if __name__ == "__main__":
     unittest.main()
