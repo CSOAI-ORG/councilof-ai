@@ -161,6 +161,7 @@ PATH from the live artifact instead:
 - Public-root Merkle leaves, kind "catalogued": https://councilof.ai/root.json -> card_count
   (read merkle_root and as_of from that same fetch, and say which host you fetched)
 - Signed card index, kind "catalogued": https://councilof.ai/signed/card_index.json -> n_cards,
+  Canon only — do not treat GET /api/card_index (404 path-miss) as missing index; stranger curl signed/card_index.json.
   which MUST equal n_cells and cards[].length; if they disagree, neither number is quotable
 - ...of those, VERIFIED: https://councilof.ai/api/state -> card_chain.bodies_verified_valid,
   kind "measured" -- the only one of the three behind which a check was actually run
