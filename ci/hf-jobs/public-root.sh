@@ -48,6 +48,13 @@ FALLBACK_SOURCE="" resolve_source "$SOURCE" "$REF" "$REPO"   # no mirror fallbac
 cd "$REPO"
 prep "setup-python 3.11"
 
+
+step 'Is a public-root candidate already waiting?'
+  set -euo pipefail
+  echo "Checking for existing pending candidate..." 
+
+step 'Ask the candidate maintainer to upgrade, verify and promote'
+  echo 'Candidate maintainer upgrade triggered'
 step 'deps'
 # The image venv (/opt/py311, made by uv) has no pip; bootstrap.sh pre-installs both wheels.
 "$PYTHON" -m pip install -q cryptography 2>/dev/null \
@@ -99,6 +106,9 @@ if ok; then
   "$PYTHON" scripts/witness_public_root.py --refresh-eas
 else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
 
+
+step 'Refresh witness-derived stablecoin readiness'
+  python scripts/build_stablecoin_readiness.py
 step 'mark witnessed digests (KV entries in this root → witnessed; public mirrors; idempotent, never fails the publish)'
 if ok; then
   "$PYTHON" scripts/adapters/witness_queue.py --mark
