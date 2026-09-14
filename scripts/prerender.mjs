@@ -288,6 +288,7 @@ function discover() {
     // snapshot the index cold-loads as the SPA shell on the static host.
     "/frameworks",
       "/wrappers",
+      "/quickstart",
   ];
   for (const p of MUST) found.add(p);
 
