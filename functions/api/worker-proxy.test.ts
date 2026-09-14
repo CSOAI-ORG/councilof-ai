@@ -23,16 +23,11 @@ describe("GET /api/worker", () => {
     vi.unstubAllGlobals();
   });
 
-  it("answers 200 pod-health from public artifact, not 501", async () => {
+  it("delegates the bare route to the live pod proxy (worker-state schema, only known fields)", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () =>
-        Response.json({
-          schema: "csoai.pod-health/0.1",
-          status: "STALE",
-          pod: { id: "fpowppss5ngtkw" },
-          secret_token: "must-strip",
-        }),
+        Response.json({ state: "RUNNING", jobs_total: 182, cycle: 127, axis: "safety", secret_token: "must-strip" }),
       ),
     );
     const res = await (onRequest as unknown as (c: unknown) => Promise<Response>)({
@@ -40,10 +35,22 @@ describe("GET /api/worker", () => {
       env: {},
     });
     expect(res.status).toBe(200);
-    const body = (await res.json()) as Record<string, unknown>;
+    const body = (await res.json()) as Record<string, any>;
+    expect(body.schema).toBe("csoai.worker-state/0.1");
     expect(body.endpoint).toBe("/api/worker");
-    expect(body.never_secrets).toBe(true);
-    expect(body.secret_token).toBeUndefined();
-    expect(body.schema).toBe("csoai.pod-health/0.1");
+    expect(body.status).toBe("LIVE");
+    expect(body.worker.jobs_total).toBe(182);
+    expect(JSON.stringify(body)).not.toContain("must-strip");
+  });
+
+  it("is OFFLINE, never a stale artifact, when the pod does not answer", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("fetch failed"); }));
+    const res = await (onRequest as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request("https://councilof.ai/api/worker"),
+      env: {},
+    });
+    const body = (await res.json()) as Record<string, any>;
+    expect(body.status).toBe("OFFLINE");
+    expect(body.worker).toBeNull();
   });
 });
