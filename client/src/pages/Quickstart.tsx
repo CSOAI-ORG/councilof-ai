@@ -225,7 +225,7 @@ curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/e
           receive is the only authority on an amount. A settlement of zero is not a purchase.
         </p>
         <p className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-950">
-          Payments from the operator&apos;s own wallets are recorded as self-tests and never counted as revenue
+          Payments from the operator's own wallets are recorded as self-tests and never counted as revenue
           (<code className="font-mono">settled_usdc.excludes_self=true</code> on{" "}
           <a href="/api/revenue" className="underline decoration-emerald-600 underline-offset-4">/api/revenue</a>
           ). The count of outside payers, with self-settlements listed separately, is on that same contract.
