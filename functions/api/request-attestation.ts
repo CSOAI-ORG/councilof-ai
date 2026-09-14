@@ -35,34 +35,12 @@ import { railMode } from "./_x402_config";
 import { REQUEST_ATTESTATION_DESCRIPTION } from "./_x402_descriptions";
 import { AXES } from "./_axis_register";
 import { signPayload, cardV0 } from "../_lib/cardSign";
+import { classifyCommissionTarget } from "./_commission_target";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
 type Cell = { model: string; axis: string; card: string; card_url: string; signed: boolean; created?: string };
 
-
-/** Classify commission subject for mill fulfillability. SKU wrappers are UNFULFILLABLE. */
-function classifyCommissionTarget(subject: string): {
-  model: string | null;
-  bank: string | null;
-  fulfillment: "QUEUED" | "UNFULFILLABLE";
-} {
-  const s = subject.trim();
-  if (!s) return { model: null, bank: null, fulfillment: "UNFULFILLABLE" };
-  // PayAI / SKU-shaped subjects are not Ollama or hub model ids
-  if (/^payai-wrapper/i.test(s) || /^sku:/i.test(s) || /wrapper-\d/i.test(s)) {
-    return { model: null, bank: null, fulfillment: "UNFULFILLABLE" };
-  }
-  // Ollama-shaped tags (name:tag) or HF-style org/model → fulfillable model id
-  if (/^[a-zA-Z0-9._-]+:[a-zA-Z0-9._-]+$/.test(s) || /^[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+/.test(s)) {
-    return { model: s, bank: null, fulfillment: "QUEUED" };
-  }
-  // Bare short model names still QUEUED for KEEP/Ollama rails
-  if (/^[a-zA-Z0-9._-]+$/.test(s) && s.length <= 64) {
-    return { model: s, bank: null, fulfillment: "QUEUED" };
-  }
-  return { model: null, bank: null, fulfillment: "UNFULFILLABLE" };
-}
 
 
 const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
@@ -115,6 +93,21 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.request-attestation/0.2", error: "bad_request", reason: "pass subject=<id> (and optional axis=) before presenting payment", lid: CSOAI_LID }, 400);
   }
   const knownAxis = axis ? AXES.some((a) => a.axis === axis) : null;
+  // Typed contract: classify before admit. Ambiguous subjects never reach /verify|/settle.
+  const targetEarly = subject ? classifyCommissionTarget(subject) : null;
+  if (hasPaymentHeader(request) && targetEarly && !targetEarly.admit) {
+    return json({
+      schema: "csoai.request-attestation/0.2",
+      error: "bad_request",
+      reason: targetEarly.reason,
+      subject,
+      subject_kind: targetEarly.subject_kind,
+      fulfillment: targetEarly.fulfillment,
+      model: targetEarly.model,
+      bank: targetEarly.bank,
+      lid: CSOAI_LID,
+    }, 400);
+  }
 
   const description = REQUEST_ATTESTATION_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
@@ -186,11 +179,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     ...(tx ? [`https://basescan.org/tx/${tx}`] : []),
     reserve.source.startsWith("http") ? reserve.source : `${origin}/signed/card-matrix.json`,
   ];
-  const target = classifyCommissionTarget(subject);
+  const target = targetEarly ?? classifyCommissionTarget(subject);
   const queue_ref = `${origin}/api/commission-queue`;
   const payload: Record<string, unknown> = {
     status: "COMMISSIONED",
     subject,
+    subject_kind: target.subject_kind,
     model: target.model,
     bank: target.bank,
     fulfillment: target.fulfillment,
@@ -240,6 +234,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
           as_of,
           enqueued: true,
           queue: "commission",
+          subject_kind: target.subject_kind,
           model: target.model,
           bank: target.bank,
           fulfillment: target.fulfillment,
@@ -249,6 +244,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         `mill:commission:${subject}`,
         JSON.stringify({
           subject,
+          subject_kind: target.subject_kind,
           model: target.model,
           bank: target.bank,
           axis: axis || null,

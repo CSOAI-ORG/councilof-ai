@@ -9,6 +9,7 @@ type Env = { REVENUE_KV?: KVNamespace };
 
 type QueueRow = {
   subject: string;
+  subject_kind: string | null;
   model: string | null;
   bank: string | null;
   axis: string | null;
@@ -52,6 +53,7 @@ export async function listCommissionQueue(kv: KVNamespace): Promise<{ rows: Queu
         const fulfillment = r.fulfillment === "UNFULFILLABLE" ? "UNFULFILLABLE" : "QUEUED";
         rows.push({
           subject,
+          subject_kind: typeof r.subject_kind === "string" ? r.subject_kind : null,
           model: typeof r.model === "string" && r.model ? r.model : null,
           bank: typeof r.bank === "string" && r.bank ? r.bank : null,
           axis: typeof r.axis === "string" && r.axis ? r.axis : null,
