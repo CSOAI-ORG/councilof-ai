@@ -255,6 +255,17 @@ jobs:
             --dead-max-age-days 14 \
             --bank-dataset "csoai/gspc-${DS}" \
             --inflight mill-in/inflight.jsonl --priority mill-in/priority.txt 2>&1 | tail -40
+      - name: Link commissions to this run's observed results
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s scripts -p test_commission_run_report.py
+          if [ -f mill-out/mill-report.json ] && [ -f mill-in/commission-health.json ] &&
+             jq -e '.status == "AVAILABLE"' mill-in/commission-health.json >/dev/null; then
+            python3 scripts/commission_run_report.py --feed mill-in/commissions.json --mill mill-out
+          else
+            echo '::warning::Commission result linkage unavailable for this run; no fulfillment asserted.'
+          fi
       - name: upload staged cards (not a board rewrite)
         if: always()
         uses: actions/upload-artifact@v4
