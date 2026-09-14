@@ -33,6 +33,14 @@
 }
 </script>
 <style>
+  /* static-shell brand-v1: same mark, wordmark and links as client/src/components/Header.tsx */
+  .site-header { border-bottom: 1px solid var(--border, #e5e7eb); position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.95); backdrop-filter: blur(8px); }
+  .site-header-inner { max-width: 1100px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .logo-word { color: #047857; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; white-space: nowrap; }
+  .nav { display: flex; gap: 2px; flex-wrap: wrap; }
+  .nav a { color: var(--muted, #6b7280); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 6px; }
+  .nav a:hover { color: var(--fg, #1f2937); background: var(--card, #f9fafb); }
   :root {
     --accent: #16a34a;
     --accent-hover: #15803d;
@@ -62,58 +70,8 @@
     -webkit-font-smoothing: antialiased;
   }
   /* Header */
-  .site-header {
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(8px);
-    background: rgba(255,255,255,0.95);
-  }
-  .site-header-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--fg);
-    font-weight: 900;
-    font-size: 18px;
-    letter-spacing: -0.02em;
-  }
-  .logo-mark {
-    width: 32px;
-    height: 32px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: grid;
-    place-items: center;
-    color: white;
-    font-weight: 900;
-    font-size: 18px;
-  }
   .logo-text { color: var(--fg); }
   .logo-text strong { color: var(--accent); }
-  .nav { display: flex; gap: 4px; align-items: center; }
-  .nav a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 6px;
-    transition: background 0.15s, color 0.15s;
-  }
-  .nav a:hover { color: var(--fg); background: var(--card); }
   .nav .nav-cta {
     background: var(--accent);
     color: white;
@@ -279,7 +237,6 @@
   }
   @media (max-width: 768px) {
     .footer-inner { grid-template-columns: 1fr; }
-    .site-header-inner { flex-direction: column; align-items: flex-start; }
     h1 { font-size: 36px; }
     main { padding: 32px 16px 64px; }
   }
@@ -338,18 +295,15 @@
 </style>
 </head>
 <body>
-<header class="site-header">
+<header class="site-header" data-static-shell="brand-v1">
   <div class="site-header-inner">
-    <a href="/" class="logo">
-      <span class="logo-mark">C</span>
-      <span class="logo-text">CS<strong>O</strong>AI</span>
-    </a>
-    <nav class="nav">
-      <a href="/api/gspc">Board</a>
-      <a href="/.well-known/">Discover</a>
+    <a class="logo" href="/" aria-label="Council of AI — home"><svg viewBox="0 0 100 100" width="34" height="34" role="img" aria-label="Council of AI" xmlns="http://www.w3.org/2000/svg"><path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/><path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/><rect x="26" y="66" width="48" height="6" fill="#04624a"/><rect x="30" y="61" width="40" height="4" fill="#04624a"/><rect x="33" y="38" width="6" height="22" fill="#04624a"/><rect x="44" y="38" width="6" height="22" fill="#04624a"/><rect x="55" y="38" width="6" height="22" fill="#04624a"/><rect x="66" y="38" width="6" height="22" fill="#04624a"/><rect x="28" y="33" width="44" height="5" fill="#04624a"/><path d="M50 20 L75 32 H25 Z" fill="#04624a"/></svg><span class="logo-word">Council of AI</span></a>
+    <nav class="nav" aria-label="Main navigation">
       <a href="/gspc-verify">Verify</a>
-      <a href="/pay">Pay</a>
-      <a href="/pay" class="nav-cta">Use the board</a>
+      <a href="/services">Services</a>
+      <a href="/dashboard?tab=board">Board</a>
+      <a href="/dashboard">Council OS</a>
+      <a href="/tools">Tools</a>
     </nav>
   </div>
 </header>
@@ -372,10 +326,7 @@
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-col">
-      <a href="/" class="logo" style="margin-bottom: 16px;">
-        <span class="logo-mark">C</span>
-        <span class="logo-text">CS<strong>O</strong>AI</span>
-      </a>
+      <a href="/" class="logo" style="margin-bottom: 16px;" aria-label="Council of AI — home"><svg viewBox="0 0 100 100" width="34" height="34" role="img" aria-label="Council of AI" xmlns="http://www.w3.org/2000/svg"><path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/><path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/><rect x="26" y="66" width="48" height="6" fill="#04624a"/><rect x="30" y="61" width="40" height="4" fill="#04624a"/><rect x="33" y="38" width="6" height="22" fill="#04624a"/><rect x="44" y="38" width="6" height="22" fill="#04624a"/><rect x="55" y="38" width="6" height="22" fill="#04624a"/><rect x="66" y="38" width="6" height="22" fill="#04624a"/><rect x="28" y="33" width="44" height="5" fill="#04624a"/><path d="M50 20 L75 32 H25 Z" fill="#04624a"/></svg><span class="logo-word">Council of AI</span></a>
       <p style="font-size: 14px; line-height: 1.6;">
         Independent AI-governance measurement body.<br>
         Published measurement cards are Ed25519-signed. See /api/state for the current exact-root witness state.
