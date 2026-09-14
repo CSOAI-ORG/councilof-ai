@@ -1,0 +1,121 @@
+name: card-root-ots-upgrade
+
+# Poll fixed OTS calendars for pending card-root proofs. Work happens against
+# master and every open card-root candidate branch. Only a transition to a
+# Bitcoin attestation tag is staged; chain verification is deliberately absent.
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: card-root-ots-upgrade
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  candidates:
+    runs-on: ubuntu-latest
+    outputs:
+      refs: ${{ steps.refs.outputs.refs }}
+    steps:
+      - name: Find master and open card-root candidates
+        id: refs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          prs=$(gh pr list --repo "$REPO" --state open --limit 100 \
+            --json headRefName,isCrossRepository \
+            --jq '[.[] | select(.isCrossRepository == false) | .headRefName | select(startswith("card-root/pending-"))]')
+          refs=$(jq -cn --argjson prs "$prs" '$prs + ["master"] | unique')
+          echo "refs=$refs" >> "$GITHUB_OUTPUT"
+
+  upgrade:
+    needs: candidates
+    strategy:
+      fail-fast: false
+      matrix:
+        ref: ${{ fromJSON(needs.candidates.outputs.refs) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.ref }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install the official OTS client
+        run: pip install -q opentimestamps-client==0.7.2
+      - name: Offline immutability, binding, and state regressions
+        run: python3 -m unittest scripts/test_card_root_automation.py scripts/test_ots_maintenance.py -v
+      - name: Stage exact-root proof candidates
+        id: stage
+        run: |
+          set -euo pipefail
+          find public/interop -maxdepth 1 -type f -name 'card-root-*.json' -print0 \
+            | sort -z | xargs -0 shasum -a 256 > /tmp/card-roots-before.sha256
+          python3 scripts/maintain_card_root_ots.py \
+            --output-dir /tmp/card-root-ots-review --max-requests 8 --timeout 10
+          cat /tmp/card-root-ots-review/report.json >> "$GITHUB_STEP_SUMMARY"
+          changed=$(python3 -c 'import json; print(json.load(open("/tmp/card-root-ots-review/report.json"))["proofs_changed"])')
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          if [ "$changed" = "0" ]; then
+            echo "All observed proofs are absent, already carry a Bitcoin attestation tag, or remain pending."
+            exit 0
+          fi
+          cp /tmp/card-root-ots-review/candidates/*.ots public/interop/
+          find public/interop -maxdepth 1 -type f -name 'card-root-*.json' -print0 \
+            | sort -z | xargs -0 shasum -a 256 > /tmp/card-roots-after.sha256
+          cmp /tmp/card-roots-before.sha256 /tmp/card-roots-after.sha256
+          python3 - <<'PY'
+          import re, subprocess
+          rows = subprocess.check_output(
+              ["git", "status", "--porcelain", "--", "public/interop/card-root-*"],
+              text=True,
+          ).splitlines()
+          if not rows or any(not re.fullmatch(
+              r" M public/interop/card-root-[0-9]{4}-[0-9]{2}-[0-9]{2}(?:-[a-f0-9]{12})?\.json\.ots",
+              row,
+          ) for row in rows):
+              raise SystemExit(f"refusing unexpected upgrade diff: {rows}")
+          PY
+      - name: Recheck every changed exact root and sidecar
+        if: steps.stage.outputs.changed != '0'
+        run: |
+          set -euo pipefail
+          for proof in /tmp/card-root-ots-review/candidates/*.ots; do
+            root="public/interop/$(basename "${proof%.ots}")"
+            python3 scripts/card_root.py --verify --root "$root"
+          done
+      - name: Update the review branch or open one
+        if: steps.stage.outputs.changed != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_REF: ${{ matrix.ref }}
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-card-root"
+          git config user.email "board@csoai.org"
+          if [ "$SOURCE_REF" = "master" ]; then
+            branch="card-root/ots-upgrade-${GITHUB_RUN_ID}"
+            git checkout -b "$branch"
+          else
+            branch="$SOURCE_REF"
+          fi
+          git add public/interop/card-root-*.json.ots
+          git commit -m "card-root: stage OTS Bitcoin-attestation upgrade (chain unverified)"
+          git push origin "HEAD:$branch"
+          if [ "$SOURCE_REF" = "master" ]; then
+            gh pr create --base master --head "$branch" \
+              --title "card-root: review OTS Bitcoin-attestation upgrades" \
+              --body "The scheduled bounded maintainer obtained OTS proof bytes carrying Bitcoin attestation tags for exact existing card-root files. Root and signed-card bytes are byte-identical. This workflow has no Bitcoin node: chain_verified remains false, and this PR makes no Bitcoin-confirmation or anchored claim. Review and merge are human decisions."
+          fi
+          gh workflow run pr-gates.yml --ref "$branch"
