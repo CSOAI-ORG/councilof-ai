@@ -59,7 +59,7 @@ jobs:
           # Classification is a tested script (scripts/runpod_land_classify.py):
           # MANIFEST_MISSING / MANIFEST_INVALID / MANIFEST_FS_MISMATCH exit 1;
           # NO_WORK_CONFIRMED / ARTIFACT_READY exit 0. Fixtures: scripts/test_runpod_land_classify.py
-          python3 -m unittest -q discover -s scripts -p test_runpod_land_classify.py
+          python3 -m unittest discover -q -s scripts -p test_runpod_land_classify.py
           python3 scripts/runpod_land_classify.py --staged staged --github-output "$GITHUB_OUTPUT"
 
       - name: review branch (idempotent) + dispatch the OIDC signer on it
