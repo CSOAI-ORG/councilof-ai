@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DeepSeek model-identity probe — a receipt of what the API says it served, when.
+"""DeepSeek model-identity probe — a receipt of API catalogue and request outcomes.
 
 Why: on 2026-09-14 04:00 UTC DeepSeek reroutes V4-Pro API traffic to V4.1-Flash. Every
 longitudinal evaluation that calls "the same model" across that hour silently changes model.
@@ -34,6 +34,13 @@ UA = "csoai-identity-probe/0.1 (+https://councilof.ai; nicholas@csoai.org)"
 # (or sampling does; temperature 0 and a short deterministic task keep that small).
 PROMPT = "List the first five prime numbers separated by commas, then the word END."
 REQUESTED = ["deepseek-v4-pro", "deepseek-flash", "deepseek-chat", "deepseek-reasoner"]
+ANNOUNCEMENT = {
+    "url": "https://www.deepseek.com/en/news/deepseek-v4-1-flash/",
+    "publisher": "DeepSeek",
+    "published_date": "2026-09-10",
+    "claim": "Starting at 04:00 UTC on Sept 14, 2026, deepseek-v4-pro requests route to V4.1-Flash until V4.1-Pro launches.",
+    "scope": "Provider announcement. Probe results independently record only API outcomes; a refused call does not establish served-model identity.",
+}
 
 
 def call(path: str, body: dict | None, key: str) -> tuple[int, dict]:
@@ -68,10 +75,11 @@ def main() -> int:
         "provider": "deepseek",
         "probed_at": now.isoformat().replace("+00:00", "Z"),
         "event_under_observation": "DeepSeek: V4-Pro API traffic rerouted to V4.1-Flash from 2026-09-14T04:00:00Z (provider announcement)",
-        "attests": "what the API reported it served for each requested model id at probed_at — a receipt, not a grade, not a ranking, not a quality claim",
+        "attests": "the API model catalogue and response outcome for each requested model id at probed_at — served-model identity only when a call responds and reports it",
         "prompt_sha256": hashlib.sha256(PROMPT.encode()).hexdigest(),
         "models_listed": None,
         "probes": [],
+        "announcement_source": ANNOUNCEMENT,
     }
     status, models = call("/models", None, key)
     doc["models_listed"] = {"http": status, "ids": [m.get("id") for m in models.get("data", [])] if isinstance(models, dict) else None}
@@ -96,6 +104,15 @@ def main() -> int:
         else:
             rec.update({"state": "UNREACHABLE", "error": err.get("message") or f"http {status}"})
         doc["probes"].append(rec)
+    responded = sum(p["state"] == "RESPONDED" for p in doc["probes"])
+    doc["identity_observation"] = {
+        "responded": responded,
+        "refused_or_unreachable": len(doc["probes"]) - responded,
+        "served_identity_observed": responded > 0,
+        "honest_sentence": (
+            f"{responded} of {len(doc['probes'])} requests returned a response from which served-model identity could be recorded."
+        ),
+    }
     fn = out_dir / f"deepseek-identity-{now.strftime('%Y%m%dT%H%M%SZ')}.json"
     fn.write_text(json.dumps(doc, indent=2) + "\n")
     print(f"wrote {fn}")
