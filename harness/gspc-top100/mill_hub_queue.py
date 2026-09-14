@@ -261,6 +261,43 @@ def provider_mapping_live(slug: str, fetch=None) -> tuple[bool, str]:
     return False, "no live inference provider"
 
 
+
+def inject_commissioned_subjects(
+    rows: list[dict],
+    priority_ids: set[str] | None,
+    *,
+    axis: str | None = None,
+) -> list[dict]:
+    """Upsert commissioned subjects missing from hub-queue census as UNMEASURED mill rows.
+
+    Payment never MEASURED. These rows exist so pick_emptiest can prefer paid subjects
+    that are not yet in the census. Unsigned mill OK; SIGNED still n≥30+4way+keystone.
+    """
+    pri = {str(x) for x in (priority_ids or set()) if str(x).strip()}
+    if not pri:
+        return rows
+    present = {str(r.get("id") or "") for r in rows}
+    out = list(rows)
+    for subject in sorted(pri):
+        if subject in present:
+            continue
+        out.append(
+            {
+                "id": subject,
+                "rank": 0,
+                "status": "UNMEASURED",
+                "coverage_state": "UNMEASURED",
+                "pipeline_tag": "text-generation",
+                "commissioned": True,
+                "card_id": None,
+                "measured_axes": {},
+                "unmeasured": ["commissioned_subject_not_in_hub_queue_census"],
+            }
+        )
+        present.add(subject)
+    return out
+
+
 def pick_emptiest(
     rows: list[dict],
     n: int,
@@ -890,6 +927,7 @@ def mill(
     ax = axis if axis in MODEL_AXES else "governance"
     dead = load_dead_slugs(dead_path, dead_max_age_days)
     inflight = load_inflight_cells(inflight_path)
+    rows = inject_commissioned_subjects(rows, priority_ids, axis=ax)
     picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead, inflight=inflight, priority_ids=priority_ids)
     if shards > 1:
         # Shard membership is a function of the MODEL ID ONLY -- never of position in
@@ -914,7 +952,12 @@ def mill(
                 rest.append(r)
                 continue
             mid = str(r.get("id") or "")
-            live_ok, detail = provider_mapping_live(mid, fetch=probe_fetch)
+            # Commissioned subjects may be Ollama tags / not yet on hub-queue census — still
+            # attempt a grade (unsigned). Payment never MEASURED; probe miss must not erase the request.
+            if priority_ids and mid in priority_ids:
+                live_ok, detail = True, "commissioned_priority_bypass_probe"
+            else:
+                live_ok, detail = provider_mapping_live(mid, fetch=probe_fetch)
             if live_ok:
                 to_grade.append(r)
             else:
