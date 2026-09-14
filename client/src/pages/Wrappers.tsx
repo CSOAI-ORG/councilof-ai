@@ -98,7 +98,6 @@ export default function Wrappers() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
       <Helmet>
-        <title>Wrapped-asset parity ledger | Council of AI</title>
         <meta name="description" content={PAGE_DESCRIPTION} />
         <meta name="robots" content="index,follow" />
         <link rel="canonical" href={CANONICAL} />
