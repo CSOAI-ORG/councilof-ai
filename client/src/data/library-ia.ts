@@ -114,7 +114,7 @@ export const PRIMARY_PATHS = new Set<string>([
   "/academy", "/courses", "/training", "/verify-certificate", "/accreditation",
   // Company
   "/about", "/library", "/blog", "/trust-center", "/contact", "/disclaimers",
-  "/faq",
+  "/faq", "/traction",
   // Who it is for — the six /for/:persona audience pages (PersonaRouter).
   // These are DYNAMIC routes, so they never appear in ROUTE_MANIFEST and cannot be
   // registered by the manifest sweep; they have to be listed by hand or every one of
