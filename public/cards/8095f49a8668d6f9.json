@@ -1,0 +1,118 @@
+{
+  "card": {
+    "as_of": "2026-09-14T19:18:07Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:BENJI:arbitrum",
+      "symbol": "BENJI",
+      "product": "Franklin OnChain U.S. Government Money Fund",
+      "chain": "arbitrum",
+      "chain_id": 42161,
+      "address": "0xb9e4765bce2609bc1949592059b17ea72fee6c6a",
+      "block": 505173607,
+      "block_hash": "0x2ab8e92b6fe60b8df90879672c3aa9111c61e19f2b65d4ac40454ece7e8641d3",
+      "block_time": "2026-09-14T19:18:07Z",
+      "rpc": "arbitrum-one-rpc.publicnode.com",
+      "checked": {
+        "name": "Franklin OnChain U.S. Government Money Fund",
+        "symbol": "BENJI",
+        "decimals": 18,
+        "totalSupply": "47898002287371540472665896",
+        "eip1967_implementation": "0x956a399818c7cbabbd0b868a60f61ec9027136cd"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "owner()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "9c43a0ea684f0d7d29a7fdc9c5f31672506cb9002adf577ee92846370681c9bd",
+        "bytes": 10014,
+        "url": "/archive/proofs/eip1186/9c43a0ea684f0d7d.json",
+        "rpc": "arbitrum-one-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0x932cddc50793da935ccf915651ad67f6b746e9936fcc5614f0ff492563782c75",
+          "storageHash": "0xf55b63ffedee705c9509fe584c48d8e4a42ce8488aeef4fed43b921d2489ff81",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x956a399818c7cbabbd0b868a60f61ec9027136cd",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 3
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 505173607 on arbitrum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "8095f49a8668d6f98790ac2affe9ead21052a5e0878018204fe6c1e42a56f508",
+    "sig_ed25519": "af76ab5f1884f174532f4afec15310c8fcab0633e5713b41549ebceca439f5893a14fe826d32ae1e500fb9e58b214287a25f88a956e45df69635dde73bb50005",
+    "source_urls": [
+      "https://arbitrum-one-rpc.publicnode.com",
+      "https://arbiscan.io/token/0xB9e4765BCE2609bC1949592059B17Ea72fEe6C6A"
+    ],
+    "subject": "evm:BENJI:arbitrum permission state at block 505173607",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:arbitrum",
+      "coverage:permission-state",
+      "subject:BENJI"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "cf28b32cd9bfdd7a29fc15cbcbadaa2812e461824d679b89db5e4575e1991c2c",
+    "553bcb415f89e8ead4dcead84c0450cc2885b09573604487915a520db12cd2fe",
+    "d0e2a2eba879137031b6b6a7a55dcad4a608ea88cccf7185d9facae98ba42b3a",
+    "e7e36a179cf1c9aa6e3bd3e848ac53a0cf32e7b657b254ea6435d14d53f7d3ab",
+    "a5c2fb1db8efc7bafb6f77218445309f35d43c505b9ee1bc55148eea85e27e73",
+    "e3286ee01493675cf1505f53f5d5b8aed4c42a62e3014b577a7e1c7ca353c9be",
+    "aea1725e77b41c47a7d68192077e9246180b5070dc18e97b7c7c676b734a7691",
+    "a1b9e8af72d45fbfb228ca80921ccd7215009b18e4edd4e272df837a8466f82e",
+    "be89da7033850447e19288882a0887f682c4f07d9ea28ea390884cfb3516a699"
+  ]
+}

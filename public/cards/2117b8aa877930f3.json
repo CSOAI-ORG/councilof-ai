@@ -1,0 +1,91 @@
+{
+  "card": {
+    "as_of": "2026-09-14T19:18:08Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USYC:bsc",
+      "symbol": "USYC",
+      "product": "US Yield Coin",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x8d0fa28f221eb5735bc71d3a0da67ee5bc821311",
+      "block": 121892329,
+      "block_hash": "0x68cea59d3c7ad43ea77ca6b1544b54b3ab4a90d0f2acff4c996df9a9a644f1e5",
+      "block_time": "2026-09-14T19:18:08Z",
+      "rpc": "bsc-rpc.publicnode.com",
+      "checked": {
+        "name": "US Yield Coin",
+        "symbol": "USYC",
+        "decimals": 6,
+        "totalSupply": 2252937727947452,
+        "owner": "0xcd636d955a95385ec5e2776b167b92e89ef6f70e",
+        "eip1967_implementation": "0x191fb6f3ba332f1b8789caf67abbaba56147445b"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 121892329 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "2117b8aa877930f33d8902c18c99721e5d90c0464f420cbf9db674706c65ee1b",
+    "sig_ed25519": "a081bf8253f8c602ff1cb1d1037447a2eb85efff46193ba9ce6da1d2c76b587295d39be2826a15ae44dddbc3fca692b67a0d18d8ddddc7b750e84546a7a81605",
+    "source_urls": [
+      "https://bsc-rpc.publicnode.com",
+      "https://usyc.docs.hashnote.com/overview/smart-contracts"
+    ],
+    "subject": "evm:USYC:bsc permission state at block 121892329",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:USYC"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "05630f5fc03ad1c3b6232dc754c51e32e3e28ca36306d519f072a93e48d2f35f",
+    "e3f066f767951f334c825d49a9f22e57d7b784ad2d3c5c79c3507e20a5bfd332",
+    "0ce55a8d82310f772bd8a67398efc5c0207b6562e77b52d193615227111602fb",
+    "9fe285934d22848a19d821e10d90d77fafc1991e3b3e9deeffd81aa37b6b58b3",
+    "a5c2fb1db8efc7bafb6f77218445309f35d43c505b9ee1bc55148eea85e27e73",
+    "e3286ee01493675cf1505f53f5d5b8aed4c42a62e3014b577a7e1c7ca353c9be",
+    "aea1725e77b41c47a7d68192077e9246180b5070dc18e97b7c7c676b734a7691",
+    "a1b9e8af72d45fbfb228ca80921ccd7215009b18e4edd4e272df837a8466f82e",
+    "be89da7033850447e19288882a0887f682c4f07d9ea28ea390884cfb3516a699"
+  ]
+}
