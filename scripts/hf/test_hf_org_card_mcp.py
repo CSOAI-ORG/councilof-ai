@@ -130,5 +130,50 @@ class ToolCountContract(unittest.TestCase):
                 self.assertIn("JSONDecodeError", reason)
 
 
+class TypedDoorCountDrift(unittest.TestCase):
+    """A typed count of our own door must agree with the live door, or the card is not 100/100."""
+
+    LIVE = {"mcp_tools": 12, "openapi_paths": 103, "openapi_version": "0.2+8c1863112960"}
+    STALE_MCP_ROW = ("| MCP endpoint — **11 HTTP tools** (7 free + 4 x402; "
+                     "`verified live tools/list 2026-09-07T05:57Z`) | `POST https://councilof.ai/mcp` |")
+    STALE_OPENAPI = "OpenAPI (canonical): GET https://councilof.ai/openapi.json  → version 0.2+6c709613dc31 · 97 paths"
+
+    # The live cards' real neighbours. Each carries a negation word ("No version is pinned", "NOT:")
+    # and sits one bare "\n" from the stale row, which is how the first cut of this check exempted
+    # every live stale card while a fixture without neighbours stayed green.
+    NEIGHBOURS_BEFORE = "| Methodology DOI | <https://doi.org/10.5281/zenodo.21991104> |\n"
+    NEIGHBOURS_AFTER = ("\n| MCP Registry | `io.github.CSOAI-ORG/gspc` — version not pinned here; the registry is the authority |"
+                        "\n| npm — MCP server | [`csoai-gspc-mcp`](https://www.npmjs.com/package/csoai-gspc-mcp) — "
+                        "`npx -y csoai-gspc-mcp`. No version is pinned here: ask the registry for the current one. |\n")
+    OPENAPI_BLOCK_AFTER = "\nNOT: https://councilof.ai/public/openapi.json  (404 — tip 308 not LIVE; cite apex only)\n"
+
+    def test_the_2026_09_14_rows_are_caught_beside_their_real_negated_neighbours(self) -> None:
+        body = (self.NEIGHBOURS_BEFORE + self.STALE_MCP_ROW + self.NEIGHBOURS_AFTER
+                + self.STALE_OPENAPI + self.OPENAPI_BLOCK_AFTER)
+        hits = subject.typed_count_drift(body, self.LIVE)
+        self.assertIn("typed MCP tools 11 != live 12", hits)
+        self.assertIn("typed OpenAPI paths 97 != live 103", hits)
+        self.assertIn("typed OpenAPI version 0.2+6c709613dc31 != live 0.2+8c1863112960", hits)
+
+    def test_rows_that_agree_with_the_live_door_pass(self) -> None:
+        body = ("| MCP endpoint — 12 tools, verified 2026-09-14T10:00:00Z | `POST https://councilof.ai/mcp` |\n"
+                "OpenAPI: GET https://councilof.ai/openapi.json → version 0.2+8c1863112960 · 103 paths")
+        self.assertEqual(subject.typed_count_drift(body, self.LIVE), [])
+
+    def test_historical_sentences_are_exempt(self) -> None:
+        self.assertEqual(subject.typed_count_drift("The door was 11 HTTP tools on 7 Sep.", self.LIVE), [])
+
+    def test_an_unreadable_door_skips_its_check_instead_of_failing(self) -> None:
+        unknown = {"mcp_tools": None, "openapi_paths": None, "openapi_version": None}
+        self.assertEqual(subject.typed_count_drift(self.STALE_MCP_ROW + "\n" + self.STALE_OPENAPI, unknown), [])
+
+    def test_score_card_fails_the_stale_strings_point_on_a_typed_drift(self) -> None:
+        text = "---\nlicense: cc-by-4.0\n---\n" + self.STALE_MCP_ROW + "\n"
+        _, _, fails = subject.score_card("space", text, [], None, live=self.LIVE)
+        self.assertIn("no stale strings", fails)
+        _, _, fails_without_live = subject.score_card("space", text, [], None)
+        self.assertNotIn("no stale strings", fails_without_live)
+
+
 if __name__ == "__main__":
     unittest.main()
