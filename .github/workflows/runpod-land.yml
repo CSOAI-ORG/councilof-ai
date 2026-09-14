@@ -1,0 +1,160 @@
+name: runpod-land
+
+# The consumer runpod-intake lacked. The intake verifies pod runs and publishes a
+# `runpod-signing-<run>-<attempt>` artifact "for review"; until this workflow a human had to
+# create a review branch, dispatch the OIDC signer (hf-fin-shells-measure.yml, target=runpod),
+# and open the PR by hand — which happened exactly once (2026-09-14, run 34799520296, 56 cards;
+# 624 pod runs had sat in the private intake unsigned). This does those steps on every
+# successful intake: review branch, signer dispatch, wait, verify VALID under the live DID,
+# PR. Human merge is the only gate. Never signs here. Never stamps MEASURED.
+
+on:
+  workflow_run:
+    workflows: ["RunPod GSPC intake — pull, verify, stage"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      intake_run_id:
+        description: "runpod-intake run id whose runpod-signing artifact to land"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: runpod-land
+  cancel-in-progress: false
+
+jobs:
+  land:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RUN_ID: ${{ github.event.inputs.intake_run_id || github.event.workflow_run.id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: deps
+        run: pip install -q cryptography
+
+      - name: the intake artifact (runpod-signing-<run>-<attempt>) — count the cards
+        id: art
+        run: |
+          set -euo pipefail
+          mkdir -p staged
+          if ! gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" -p "runpod-signing-*" -D staged 2>/dev/null; then
+            echo "no runpod-signing artifact on $RUN_ID — nothing to land"; echo "cards=0" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          n=$(find staged -path '*/cards/*.json' -type f | wc -l | tr -d ' ')
+          echo "cards in artifact: $n"; echo "cards=$n" >> "$GITHUB_OUTPUT"
+          [ -f "$(find staged -name manifest.json | head -1)" ] && python3 - "$(find staged -name manifest.json | head -1)" <<'PY'
+          import json, sys
+          m = json.load(open(sys.argv[1]))
+          print({k: m.get(k) for k in ("schema", "run_id", "run_attempt", "intake_revision", "head_sha")}, "files:", len(m.get("files") or []))
+          PY
+
+      - name: review branch (idempotent) + dispatch the OIDC signer on it
+        id: br
+        if: steps.art.outputs.cards != '0'
+        run: |
+          set -euo pipefail
+          BR="runpod/land-${RUN_ID}"
+          echo "branch=$BR" >> "$GITHUB_OUTPUT"
+          git config user.name "csoai-runpod-land"
+          git config user.email "board@csoai.org"
+          if git ls-remote --exit-code --heads origin "$BR" >/dev/null 2>&1; then
+            echo "branch $BR already exists — reusing it (a second signer run finds no card change)"
+          else
+            git checkout -b "$BR"
+            git commit --allow-empty -m "runpod: landing branch for intake run ${RUN_ID} (${{ steps.art.outputs.cards }} verified unsigned pod cards) — OIDC sign pending, nothing MEASURED"
+            git push origin "HEAD:$BR"
+          fi
+          # The signer refuses master and requires the numeric intake run id (its own guards).
+          gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=runpod -f intake_run_id="${RUN_ID}"
+          echo "dispatched hf-fin-shells-measure target=runpod intake_run_id=${RUN_ID} on $BR"
+
+      - name: wait for the signer
+        id: wait
+        if: steps.art.outputs.cards != '0'
+        run: |
+          set -euo pipefail
+          BR="${{ steps.br.outputs.branch }}"
+          sleep 30
+          CO=""
+          for i in $(seq 1 60); do
+            read -r RID ST CO <<< "$(gh run list --workflow hf-fin-shells-measure.yml --branch "$BR" --json databaseId,status,conclusion -L 1 -q '.[0]|"\(.databaseId) \(.status) \(.conclusion)"' || echo "")"
+            echo "signer run=${RID:-?} status=${ST:-?} conclusion=${CO:-?}"
+            [ "${ST:-}" = "completed" ] && break
+            sleep 20
+          done
+          echo "conclusion=${CO:-unknown}" >> "$GITHUB_OUTPUT"
+          [ "${CO:-}" = "success" ] || { echo "signer did not succeed (${CO:-unknown}) — no PR; the branch stays for inspection"; exit 1; }
+
+      - name: verify VALID under the live DID (verification only — no key here), then PR
+        if: steps.art.outputs.cards != '0' && steps.wait.outputs.conclusion == 'success'
+        run: |
+          set -euo pipefail
+          BR="${{ steps.br.outputs.branch }}"
+          git fetch origin "$BR"
+          NEW=$(git diff --name-only "origin/master...origin/$BR" -- public/interop/mill-cards-signed | grep 'signed-' || true)
+          n=$(printf '%s\n' "$NEW" | grep -c . || true)
+          echo "signed cards on $BR not on master: $n"
+          [ "$n" -gt 0 ] || { echo "signer pushed no new signed card (already upstream?) — no PR"; exit 0; }
+          git checkout -q "origin/$BR" -- public/interop/mill-cards-signed
+          curl -fsSL -A "Mozilla/5.0 csoai-runpod-land" https://councilof.ai/.well-known/did.json -o did.json
+          printf '%s\n' "$NEW" > new-signed.txt
+          python3 - <<'PY' | tee verify.md
+          import json, sys
+          from collections import Counter
+          from pathlib import Path
+          sys.path.insert(0, "harness/gspc-top100")
+          from verify_card import verify_signed_card_with_did_doc
+          did = json.loads(Path("did.json").read_text())
+          files = [l.strip() for l in Path("new-signed.txt").read_text().splitlines() if l.strip()]
+          rows = []
+          st = Counter()
+          for f in files:
+              raw = Path(f).read_bytes()
+              v, why = verify_signed_card_with_did_doc(raw, did)
+              try:
+                  b = (json.loads(raw).get("body") or {})
+              except Exception:
+                  b = {}
+              st[str(b.get("status"))] += 1
+              rows.append((Path(f).name, v, why, b.get("model"), b.get("axis"), b.get("n")))
+          c = Counter(v for _, v, *_ in rows)
+          print(f"## runpod-land — intake run {sys.argv[1] if len(sys.argv) > 1 else ''}\n")
+          print(f"Signer result on this branch: **{dict(c)}** under the live DID key; card status: {dict(st)} (MEASURED is the signer's call from n; nothing here decides it). Human merge is the only gate; the public root includes them on its next tick.\n")
+          print("| card | verdict | model | axis | n | detail |\n|---|---|---|---|---|---|")
+          for n_, v, w, m, a, n in rows:
+              print(f"| `{n_}` | {v} | {m} | {a} | {n} | {w} |")
+          bad = [r for r in rows if r[1] != "VALID"]
+          if bad:
+              print(f"\n**{len(bad)} card(s) did not verify — do not merge.**")
+              sys.exit(2)
+          PY
+          gh pr create --base master --head "$BR" \
+            --title "runpod: $n signed pod cards from intake run ${RUN_ID} — VALID under the live DID, human merge" \
+            --body-file verify.md
+          # GITHUB_TOKEN-created PRs fire no pull_request checks; dispatch pr-gates at the branch
+          # so required checks attach (same mechanism as hub-queue-land). Never fake a green check.
+          if ! gh workflow run pr-gates.yml --ref "$BR" 2>/dev/null; then
+            echo "OPERATOR ACTION REQUIRED: run: gh workflow run pr-gates.yml --ref $BR" >&2
+          fi
+
+      - name: summary
+        if: always()
+        run: |
+          {
+            echo "## runpod-land"
+            echo "- intake run: $RUN_ID · cards in artifact: ${{ steps.art.outputs.cards || '0' }} · signer: ${{ steps.wait.outputs.conclusion || 'not dispatched' }} · branch: ${{ steps.br.outputs.branch || '-' }}"
+          } >> "$GITHUB_STEP_SUMMARY"
