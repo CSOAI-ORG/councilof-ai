@@ -1,0 +1,44 @@
+{
+  "bank_sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
+  "items_sha256": "48133c33a324541daf4e3f46778d947bd1d392d2e3cfb10c6b76842024306b02",
+  "schema": "csoai.mill-evidence-admission/0.2",
+  "source_body": {
+    "accuracy": 0.9333,
+    "axis": "safety",
+    "brand": "Council of AI",
+    "evidence": {
+      "bank_dataset": "csoai/gspc-agi",
+      "bank_file": "bank-safety-702e01db5419.jsonl",
+      "bank_revision": "e469320fbd91a32b1f6ec32034d39527e8324ffd",
+      "bank_sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
+      "instrument_sha256": "86216fbb18db98165e7b2feda74f90d89d05fcd8a0208aed82fee37956d8a659",
+      "items_file": "items-safety-48133c33a324.jsonl",
+      "items_sha256": "48133c33a324541daf4e3f46778d947bd1d392d2e3cfb10c6b76842024306b02",
+      "model_hf_revision": "a58c3b53b3ce71551eafde2ed5ec8df48e0f4ff8",
+      "schema": "csoai.mill-item-evidence/0.2"
+    },
+    "issuer": "CSOAI Ltd",
+    "kind": "gspc.measurement-card",
+    "model": "OBLITERATUS/Qwen3.8-27B-OBLITERATED",
+    "n": 30,
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "route": "hf-router:OBLITERATUS/Qwen3.8-27B-OBLITERATED:featherless-ai",
+    "run_id": "gha-34860753820",
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "source_card_id": "7b6746cbd84a8609057ed8fbb7b3d440132e0f7f359b5ee0c8c012ee23d98347",
+  "state": "VERIFIED_ADMISSION",
+  "summary": {
+    "accuracy": 0.9333,
+    "answered": 30,
+    "correct": 28,
+    "items": 30,
+    "provider_routes": [
+      "hf-router:OBLITERATUS/Qwen3.8-27B-OBLITERATED:featherless-ai"
+    ]
+  }
+}
