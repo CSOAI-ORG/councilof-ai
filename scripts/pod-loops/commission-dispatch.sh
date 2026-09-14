@@ -7,9 +7,20 @@ set -u
 . "$(dirname "$0")/lib.sh"
 [ "${1:-}" = "--now" ] || stamp commission-dispatch 10min || exit 0
 
+# Serialize dispatch with the reviewed-control checkout refresh. The refresh
+# holds this lock across its own explicit dispatch and sets the marker below;
+# ordinary scheduler invocations refuse rather than read a half-updated tree.
+if [ "${CSOAI_REVIEWED_CONTROL_HELD:-}" != "1" ]; then
+  exec 9>"$STATE/runpod-reviewed-control.lock"
+  if ! flock -n 9; then
+    log commission-dispatch "HALT reviewed control update active"
+    exit 75
+  fi
+fi
+
 WORKER_REL=${WORKER_REL:-21ff8f50}
 WORKER_JOBS=/workspace/gspc-worker/jobs-$WORKER_REL
-CONTROL_REPO=/workspace/council-of-ai
+CONTROL_REPO=${CONTROL_REPO:-/workspace/council-of-ai}
 FEED="$STATE/commission-feed.json"
 REPORT="$OUT/commission-dispatch-latest.json"
 
