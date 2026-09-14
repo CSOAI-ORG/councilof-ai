@@ -23,6 +23,47 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      # A confirmed candidate lands by auto-merge, and a merge made on behalf of GITHUB_TOKEN
+      # triggers no push workflow, so deploy.yml never runs for it. Measured 2026-09-14:
+      # #2443 merged at 18:12Z (it changes public/root.json) with zero deploy runs, and the
+      # 3-hourly deploy cron skipped its 15:20 and 18:20 slots, so a verified, Bitcoin-
+      # anchored root sat unpublished. public-root.yml already dispatches deploy.yml for its
+      # direct-push path (2026-09-03); this covers the pull-request path. It runs before the
+      # candidate lookup because after a merge there is no open candidate and every later
+      # step is skipped. workflow_dispatch is GitHub's documented exception to GITHUB_TOKEN
+      # loop-prevention; deploy.yml serialises (cancel-in-progress: false).
+      - name: Publish a merged root that production is not serving
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          master_sha=$(gh api "repos/$REPO/contents/public/root.json?ref=master" -H 'Accept: application/vnd.github.raw' | sha256sum | cut -d' ' -f1)
+          if ! live_raw=$(curl -fsS --max-time 30 https://councilof.ai/root.json); then
+            echo "LIVE_UNREADABLE: could not fetch production root.json; an outage is not a publish lag, not dispatching."
+            exit 0
+          fi
+          live_sha=$(printf '%s' "$live_raw" | sha256sum | cut -d' ' -f1)
+          echo "master root.json sha256: $master_sha"
+          echo "live   root.json sha256: $live_sha"
+          if [ "$master_sha" = "$live_sha" ]; then
+            echo "PUBLISHED: production serves master's root.json."
+            exit 0
+          fi
+          runs=$(gh run list --repo "$REPO" --workflow deploy.yml --branch master --limit 20 --json status,conclusion,createdAt)
+          active=$(printf '%s' "$runs" | jq '[.[] | select(.status != "completed")] | length')
+          if [ "$active" != "0" ]; then
+            echo "LAG_DEPLOY_ALREADY_RUNNING: $active deploy run(s) queued or in progress; not dispatching another."
+            exit 0
+          fi
+          recent_failure=$(printf '%s' "$runs" | jq --arg since "$(date -u -d '45 minutes ago' +%Y-%m-%dT%H:%M:%SZ)" '[.[] | select(.conclusion == "failure" and .createdAt >= $since)] | length')
+          if [ "$recent_failure" != "0" ]; then
+            echo "LAG_DEPLOY_RECENTLY_FAILED: a deploy failed in the last 45 minutes; not re-dispatching into a red pipeline."
+            exit 0
+          fi
+          echo "LAG_DISPATCHED: production root.json differs from master; dispatching deploy.yml."
+          gh workflow run deploy.yml --repo "$REPO" --ref master
+
       - name: Find the one open candidate
         id: candidate
         env:
