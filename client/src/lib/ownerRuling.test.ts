@@ -38,7 +38,6 @@ const ALLOW_PRICE: Allow[] = [
   { file: "pages/RegulatoryAuthority.tsx", why: "third-party revenue statistic" },
   { file: "pages/CaseStudies.tsx", why: "a customer's reported saving, not our price" },
   { file: "pages/ProsperityFund.tsx", why: "fund mechanics illustrated with worked examples" },
-  { file: "pages/About.tsx", why: "regulatory exposure figure" },
   { file: "pages/legal/TermsOfService.tsx", why: "liability cap — a legal necessity" },
   { file: "pages/AiActBenchmark.tsx", why: "cost of a published run, stated as $0" },
   { file: "pages/NewHome.tsx", why: "third-party earnings figure" },
