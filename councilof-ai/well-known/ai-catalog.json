@@ -1,0 +1,74 @@
+{
+  "schema": "csoai.ai-catalog/0.1",
+  "name": "CSOAI AI Measurement Catalog",
+  "description": "Public catalog of CSOAI's AI measurement capabilities, axes, and services",
+  "version": "1.0.1",
+  "publisher": "CSOAI Ltd (UK 16939677)",
+  "url": "https://councilof.ai",
+  "capabilities": {
+    "measurement_axes": 22,
+    "behavioral_axes": 14,
+    "financial_axes": 8,
+    "models_measured": 36,
+    "stablecoins_indexed": 425,
+    "chains_covered": 211,
+    "mcp_servers_tracked": 3400
+  },
+  "state_labels": {
+    "INDEXED": "Subject exists in the catalog but has not been measured",
+    "MEASURED": "Subject has a completed measurement run with results",
+    "SIGNED": "Measurement card has an Ed25519 signature",
+    "ROOTED": "Card is included in the Merkle root (root.json)",
+    "ANCHORED": "Root is anchored on a public chain (Rekor, OTS, XRPL, Base, Ethereum)",
+    "SETTLED": "Payment has been received and verified",
+    "REPRODUCED": "Measurement has been independently reproduced",
+    "UNCHECKABLE": "Verification failed or data unavailable"
+  },
+  "board": {
+    "url": "https://councilof.ai/gspc",
+    "hf_space": "https://csoai-gspc-board.static.hf.space",
+    "api": "https://councilof.ai/api/gspc",
+    "axes": 22,
+    "measured_axes": 22,
+    "model_fleets": 14,
+    "fact_runs": 8,
+    "last_updated": "2026-09-11T12:45:44Z"
+  },
+  "services": {
+    "free": [
+      "GSPC board (public)",
+      "Verification tool",
+      "Lookup tool",
+      "RSS feed",
+      "Methodology documentation",
+      "Root.json Merkle proof"
+    ],
+    "paid_x402": [
+      "Signed evidence packs",
+      "Replay proofs",
+      "Inclusion proofs",
+      "Historical bundles",
+      "Change feeds"
+    ]
+  },
+  "endpoints": {
+    "board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify",
+    "lookup": "https://councilof.ai/gspc-lookup",
+    "feed": "https://councilof.ai/feed.xml",
+    "root": "https://councilof.ai/root.json",
+    "mcp": "https://councilof.ai/mcp",
+    "a2a": "https://councilof.ai/api/a2a",
+    "x402": "https://councilof.ai/.well-known/x402.json"
+  },
+  "standards": {
+    "signing": "Ed25519",
+    "anchoring": ["Bitcoin OTS", "Sigstore Rekor", "XRPL memo"],
+    "protocols": ["MCP", "A2A", "x402", "SCITT"],
+    "data_format": "gspc.measurement-card/0.1"
+  },
+  "contact": {
+    "email": "nicholas@csoai.org",
+    "github": "https://github.com/CSOAI-ORG/councilof-ai"
+  }
+}

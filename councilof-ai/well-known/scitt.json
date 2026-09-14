@@ -1,0 +1,45 @@
+{
+  "schema": "csoai.scitt/0.1",
+  "name": "CSOAI SCITT Transparency Service",
+  "description": "IETF SCITT-compliant transparency log for AI measurement artifacts",
+  "version": "1.0.0",
+  "service_type": "transparency",
+  "specification": "https://datatracker.ietf.org/doc/draft-ietf-scitt-architecture/",
+  "endpoints": {
+    "register": "https://councilof.ai/api/proof",
+    "verify": "https://councilof.ai/gspc-verify",
+    "inclusion_proof": "https://councilof.ai/api/proof?sha={sha256}",
+    "transparency_log": "https://councilof.ai/root.json"
+  },
+  "algorithms": {
+    "signature": "Ed25519",
+    "hash": "SHA-256",
+    "merkle": "RFC 6962"
+  },
+  "did": "did:web:csoai.org",
+  "keys": [
+    {
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "algorithm": "Ed25519",
+      "purpose": "Root envelope + card compact envelope signing",
+      "x_coordinate": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA"
+    }
+  ],
+  "artifacts": {
+    "measurement_cards": 214,
+    "root_merkle": "761ba64f4106ebaa6fad...",
+    "last_anchor": "Bitcoin (block 966664/966665)"
+  },
+  "compliance": {
+    "ietf_scitt": true,
+    "w3c_vc": true,
+    "did_web": true,
+    "ots_anchor": true
+  },
+  "links": {
+    "specification": "https://datatracker.ietf.org/doc/draft-ietf-scitt-architecture/",
+    "registry": "https://councilof.ai/gspc",
+    "verification": "https://councilof.ai/gspc-verify",
+    "did_document": "https://councilof.ai/.well-known/did.json"
+  }
+}
