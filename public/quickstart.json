@@ -1,0 +1,68 @@
+{
+  "schema": "csoai.agent-quickstart/0.1",
+  "human": "https://councilof.ai/quickstart/",
+  "one_line": "discover, request, read the 402, settle from your own wallet, receive a signed card, verify it offline",
+  "amounts": "No amount is written here. The only authority on an amount is accepts[] in the 402 you receive.",
+  "self_payments": "Payments from the operator's own wallets are recorded as self-tests and never counted as revenue.",
+  "revenue_contract": "https://councilof.ai/api/revenue",
+  "worked_example_door": "https://councilof.ai/api/request-attestation?subject=<id>",
+  "all_doors": "https://councilof.ai/.well-known/x402.json",
+  "steps": [
+    {
+      "step": 1,
+      "name": "discover",
+      "method": "GET",
+      "endpoint": "https://councilof.ai/.well-known/x402.json",
+      "also": [
+        "POST https://councilof.ai/mcp (JSON-RPC tools/list)",
+        "GET https://councilof.ai/.well-known/agent-card.json",
+        "GET https://councilof.ai/llms.txt"
+      ],
+      "expect": "200 JSON: x402Version, scheme, network, asset, payTo, resources[] of {method, url}"
+    },
+    {
+      "step": 2,
+      "name": "request",
+      "method": "GET",
+      "endpoint": "https://councilof.ai/api/request-attestation?subject=<id>",
+      "expect": "402 JSON; csoai.preview lists the signed cards already on file for the subject, free"
+    },
+    {
+      "step": 3,
+      "name": "402",
+      "method": "GET",
+      "endpoint": "https://councilof.ai/api/request-attestation?subject=<id>",
+      "expect": "HTTP 402 with a PAYMENT-REQUIRED header and a JSON body: x402Version, accepts[] of {scheme, network, asset, payTo, amount, maxAmountRequired, maxTimeoutSeconds}, extensions.offer-receipt.info.offers[] (JWS, verifiable offline)"
+    },
+    {
+      "step": 4,
+      "name": "settle",
+      "method": "GET",
+      "endpoint": "https://councilof.ai/api/request-attestation?subject=<id>",
+      "client": "@x402/fetch wrapFetchWithPaymentFromConfig + @x402/evm ExactEvmScheme",
+      "who_pays": "the caller, from the caller's own wallet; this site holds no key for you and never settles on your behalf",
+      "expect": "the client signs an authorisation for the accepts[] entry and retries the same URL with the payment header"
+    },
+    {
+      "step": 5,
+      "name": "receive",
+      "method": "GET",
+      "endpoint": "https://councilof.ai/api/request-attestation?subject=<id>",
+      "observed": false,
+      "source": "functions/api/request-attestation.ts",
+      "expect": "200 JSON {card, verify, signed, unsigned_reason, bytes, note}; card is a card-v0 with surface ras.commission and payload.settle {network, transaction, payer}; header x-payment-response carries the settlement response, with a signed receipt when the facilitator names a payer and the signing key is present"
+    },
+    {
+      "step": 6,
+      "name": "verify",
+      "method": "offline",
+      "endpoint": "https://councilof.ai/verifier/card-v0-verify.mjs",
+      "key_document": "https://csoai.org/.well-known/did.json",
+      "also": [
+        "https://councilof.ai/verifier/gspc-verify.mjs for the measurement cards the receipt references",
+        "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/scripts/verify_receipt.py for the signed offer and receipt"
+      ],
+      "expect": "VALID (exit 0), INVALID (exit 1) or UNCHECKABLE (exit 2)"
+    }
+  ]
+}
