@@ -293,6 +293,18 @@ jobs:
           node --test council-os/embed-escape.node-test.mjs council-os/planned-ready.lock.test.mjs docs/incidents/register.test.mjs packages/gspc-cli/test/check.test.mjs
           npx vitest run council-os/compose.lock.test.ts ci/hf-jobs/steps-drift.test.mjs public/no-auto-stubs.test.mjs harness/x402-census/build_cards.test.ts
 
+      # TUI-1 (2026-09-14): 14 test files outside client/src, functions, scripts were never
+      # run by any gate. These test council-os compose locks, chrome extension verify vectors,
+      # incident register, HF job steps drift, x402 census cards, CLI check, and no-auto-stubs.
+      # They're cheap (no network, no signing). If a new test lands in these dirs, this step catches it.
+      # TUI-1 (2026-09-14): truly orphaned tests — not in blanket vitest dirs, not in deploy.yml
+      # gates, not in any other gate step. If any of these fail, it reveals real issues.
+      # extensions/chrome-gspc-verify/ (6 files) excluded — needs Playwright browser env.
+      - name: Orphan coverage — tests outside blanket vitest + deploy gates
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          npx vitest run council-os docs/incidents ci/hf-jobs packages/gspc-cli public/no-auto-stubs.test.mjs
+
       # public/verifier/gspc-verify.mjs is PUBLISHED — it serves at
       # https://councilof.ai/verifier/gspc-verify.mjs and is the copy a stranger downloads to check
       # our cards. Nothing rebuilt or compared it. It was current on 2026-09-06 (a fresh build was
