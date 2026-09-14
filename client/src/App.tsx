@@ -88,7 +88,6 @@ const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
 const ContentReviewNotice = lazy(() => import("./pages/ContentReviewNotice"));
 const Blog = lazy(() => import("./pages/Blog"));
-const ContentPage = lazy(() => import("./pages/ContentPage"));
 const BlogSlug = lazy(() => import("./pages/BlogSlug"));
 const AnswersIndex = lazy(() => import("./pages/Answers"));
 const AnswerPage = lazy(() => import("./pages/Answers").then((m) => ({ default: m.AnswerPage })));
