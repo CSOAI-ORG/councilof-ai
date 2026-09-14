@@ -1,6 +1,9 @@
+import { lazy, Suspense } from "react";
 import { FOCUS, MEASURE, SP, TYPE } from "./glass";
 import { PaneHead } from "./paneKit";
 import { factCount, kindTally, useEstateState, type Fact, type FactKind } from "./stateWire";
+
+const GspcCoverageLedger = lazy(() => import("@/components/GspcCoverageLedger"));
 
 /**
  * LobbyStatePane — "Estate state", NATIVE in Council OS.
@@ -215,6 +218,22 @@ export default function LobbyStatePane({
             </section>
           )}
 
+          <section className="mt-8">
+            <h3 className="text-[15px] font-semibold tracking-tight text-slate-900">
+              Coverage lifecycle
+            </h3>
+            <p className={`mt-1 ${MEASURE} ${TYPE.fine}`}>
+              Every domain the estate publishes, with its lifecycle stage: INDEXED, MEASURED,
+              SIGNED, ROOTED, WITNESSED, ANCHORED, PAID. A dash means that stage is not published
+              for that domain — it is never zero. From <code className="font-mono text-[11px]">GET /api/coverage</code>.
+            </p>
+            <Suspense fallback={<div className="mt-3 py-4 text-center text-sm text-slate-500">Loading coverage…</div>}>
+              <div className="mt-3">
+                <GspcCoverageLedger />
+              </div>
+            </Suspense>
+          </section>
+
           <div className="mt-6 flex flex-wrap gap-2.5">
             <a
               href="/api/state"
@@ -223,6 +242,14 @@ export default function LobbyStatePane({
               className={`rounded-xl border border-slate-900/12 bg-white px-3.5 py-2 text-[12.5px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
             >
               The raw payload ↗
+            </a>
+            <a
+              href="/api/coverage"
+              target="_blank"
+              rel="noreferrer"
+              className={`rounded-xl border border-slate-900/12 bg-white px-3.5 py-2 text-[12.5px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
+            >
+              Coverage JSON ↗
             </a>
             <button
               type="button"

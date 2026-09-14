@@ -1,0 +1,104 @@
+name: hf-coverage-probe
+
+# Which Hub models can the mill actually reach? scripts/hf/hf-coverage.py sends one max_tokens=1
+# chat request per (model, provider) through the HF router and writes public/interop/hf-coverage.json;
+# scripts/hf/hf-queue-expand.py appends every reachable model that is not yet in csoai/hub-queue.
+# The last honest run was 2026-09-05 (55-minute budget, 5,458 models "not probed"). A run on the
+# pod on 2026-09-14 probed all 6,133 in ten minutes — and read every one as "provider needs billing
+# (402)", because the pod's token is not the inference-billing token. That result was NOT pushed.
+#
+# This runs weekly with the billing token (HF_INFERENCE_TOKEN — the same the hourly mill uses) and
+# fails closed: if the probe reports 0 reachable models the run stops before touching the queue,
+# because a token/billing artifact must never mark the whole Hub dead.
+
+on:
+  schedule:
+    - cron: "20 5 * * 0"
+  workflow_dispatch:
+    inputs:
+      budget_minutes:
+        description: "stop sending router probes after this long (0 = no cap)"
+        required: false
+        default: "200"
+      push:
+        description: "commit reachable, not-yet-queued rows to csoai/hub-queue"
+        required: false
+        default: "true"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency: { group: hf-coverage-probe, cancel-in-progress: false }
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/hf
+            harness/gspc-top100
+            public/interop
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: deps
+        run: python3 -m pip install -q -U huggingface_hub pyarrow
+
+      - name: probe the router with the billing token
+        id: probe
+        env:
+          # hf-coverage.py reads HF_TOKEN first; the router bills the token's account, so the
+          # inference token goes in as HF_TOKEN here. Never the plain HF_TOKEN (no billing → 402 on everything).
+          HF_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+          BUDGET: ${{ inputs.budget_minutes || '200' }}
+        run: |
+          set -euo pipefail
+          [ -n "${HF_TOKEN:-}" ] || { echo "HF_INFERENCE_TOKEN absent — refusing to probe with a non-billing token"; exit 1; }
+          python3 scripts/hf/hf-coverage.py --out public/interop/hf-coverage.json --probe-router --hub-list --probe-budget-minutes "$BUDGET" 2>&1 | tail -20
+          python3 - <<'PY'
+          import json, os, sys
+          d = json.load(open("public/interop/hf-coverage.json"))
+          c = d.get("counts") or {}
+          reach = int(c.get("reachable_models") or 0)
+          by = c.get("by_status") or {}
+          print(json.dumps({"as_of": d.get("as_of"), "reachable_models": reach, "by_status": by}, indent=1))
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              fh.write(f"reachable={reach}\n")
+          if reach == 0:
+              print("FAIL-CLOSED: 0 reachable models — a token/billing artifact, not a coverage fact; nothing is pushed, nothing is committed.")
+              sys.exit(2)
+          PY
+
+      - name: expand the hub-queue lock with reachable, not-yet-queued rows
+        if: steps.probe.outputs.reachable != '0' && (inputs.push || 'true') == 'true'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 scripts/hf/hf-queue-expand.py --coverage public/interop/hf-coverage.json --out expand-out --push 2>&1 | tail -5
+          [ -f expand-out/expand-report.json ] && python3 -c "import json; r=json.load(open('expand-out/expand-report.json')); print({k:r.get(k) for k in ('queue_rows_before','queue_rows_after','added','pushed')})"
+
+      - name: commit the coverage table on a branch and open the PR (human merge)
+        if: steps.probe.outputs.reachable != '0'
+        run: |
+          set -euo pipefail
+          BR="hf/coverage-$(date -u +%Y%m%dT%H%M)"
+          git config user.name "csoai-hf-coverage-probe"
+          git config user.email "board@csoai.org"
+          git checkout -b "$BR"
+          git add public/interop/hf-coverage.json
+          if git diff --cached --quiet; then echo "coverage table unchanged"; exit 0; fi
+          git commit -m "hf-coverage: router reachability $(date -u +%Y-%m-%dT%H:%MZ) — ${{ steps.probe.outputs.reachable }} reachable (billing token; fail-closed on 0)"
+          git push origin "HEAD:$BR"
+          gh pr create --base master --head "$BR" --title "hf-coverage: router reachability $(date -u +%Y-%m-%d) — ${{ steps.probe.outputs.reachable }} reachable models" --body "Weekly router probe with the inference-billing token (hf-coverage-probe.yml). reachable_models = ${{ steps.probe.outputs.reachable }}; the queue lock was expanded in the same run (see the run log for added rows). A 0-reachable result fails closed and never reaches this PR."
+
+      - name: summary
+        if: always()
+        run: |
+          { echo "## hf-coverage-probe"; echo "- reachable models: ${{ steps.probe.outputs.reachable || 'n/a (probe failed or refused)' }}"; } >> "$GITHUB_STEP_SUMMARY"

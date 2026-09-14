@@ -23,7 +23,7 @@ Live API axis names (order may update on the API; do not treat this list as a sc
 
 Behavioural (`family: gspc`): governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail.
 
-Financial/domain (`family: financial`): provenance-controls, reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-economy-index, human-labour-index, humanoid-labour-index. Whether each is MEASURED or a declared slot is on GET /api/gspc — never frozen here. Index-style slots stay UNMEASURED when the API says so (C-2026-0826-05).
+Financial/domain (`family: financial`): provenance-controls, reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-adoption-components, labour-components, humanoid-labour-index. Whether each is MEASURED or a declared slot is on GET /api/gspc — never frozen here. Index-style slots stay UNMEASURED when the API says so (C-2026-0826-05).
 
 Jail is a measured containment floor on the behavioural half of the board — not a certification.
 Affect is MEASURED when the API says so; counsel-pending labels stay honest when present.
@@ -126,7 +126,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
 - MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 12-tool contract as the HTTP door.
 - MCP registry: io.github.CSOAI-ORG/gspc → https://councilof.ai/mcp (Query the official registry for the currently published server version.)
-- Smithery: https://smithery.ai/server/csoai/gspc-mcp — its tools[] is exactly the {{MCP_FREE_WORD}} free tools /mcp serves. A second listing, csoai/gspc, is a stale duplicate naming four tools that do not exist; do not use it.
+- Smithery: https://smithery.ai/server/csoai/gspc-mcp — its tools[] mirrors all 12 tools served by POST https://councilof.ai/mcp: exactly the eight free tools plus four x402-metered evidence tools. Prefer the live POST /mcp tools/list over any stale duplicate listing (csoai/gspc).
 - Open banks: https://huggingface.co/csoai
 
 - Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard

@@ -1,0 +1,58 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "wrapped USDC on zksync-era vs zkSync Era L1 USDC Bridge (native bridge) — UNMEASURED",
+  "as_of": "2026-09-14T02:01:29.387Z",
+  "source_urls": [
+    "https://mainnet.era.zksync.io",
+    "https://ethereum-rpc.publicnode.com"
+  ],
+  "payload": {
+    "kind": "csoai.wrapper.parity/0.1",
+    "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+    "id": "usdc:zksync-era",
+    "backing_model": "escrow",
+    "wrapped": {
+      "chain": "zksync-era",
+      "symbol": "USDC",
+      "address": "0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E",
+      "chainId": 324,
+      "block": 71955917,
+      "block_hash": "0x81bf8ce158a3c1b17cbebb57b816de7846bc14c2707dad9aa370a4264bee6035",
+      "block_time": 1789338022
+    },
+    "canonical": {
+      "chain": "ethereum",
+      "symbol": "USDC",
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "chainId": 1,
+      "block": 25972488,
+      "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+    },
+    "escrow": "0x5797EA1b374f2A4F1E8BcE5156c3962b78E1C46a",
+    "escrow_name": "zkSync Era L1 USDC Bridge (native bridge)",
+    "note": null,
+    "reads": {},
+    "escrow_over_wrapped": null,
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "empty eth_call result from 0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E",
+    "fetched_at": "2026-09-14T02:01:29.387Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ]
+  },
+  "tags": [
+    "eater:wrapper-parity",
+    "axis:distribution-integrity",
+    "backing:escrow",
+    "state:UNMEASURED"
+  ],
+  "unmeasured": [
+    "chain reads (rpc failed; nothing inferred)"
+  ],
+  "did_intended": "did:web:csoai.org#board-attestation-1",
+  "sha256": "4b5b416b4fbed7d68b234e240be19f4fb40784b439bd1a65be75e70e8ba642ca",
+  "sig_ed25519": null
+}

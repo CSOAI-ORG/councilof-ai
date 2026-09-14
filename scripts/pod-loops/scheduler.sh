@@ -4,6 +4,7 @@
 # even if the scheduler is restarted mid-slot. Start via `loops/start.sh`.
 #
 #   every 10 min   watchdog.sh              logs/watchdog.log
+#   every 10 min   commission-dispatch.sh   logs/commission-dispatch.log
 #   hourly  :05    root-check.sh            logs/root-check.log
 #   every 6 hours runpod upload heartbeat  state/runpod-upload/latest.json
 #   03:00Z         bazaar-conformance.sh    logs/bazaar-conformance.log
@@ -25,6 +26,7 @@ while true; do
   # Repository shell files are intentionally safe to install as 0644. Invoke
   # each owned shell explicitly through bash instead of depending on mode bits.
   bash "$LOOPS/watchdog.sh" 8>&- >/dev/null 2>&1
+  bash "$LOOPS/commission-dispatch.sh" 8>&- >/dev/null 2>&1
   [ "$M" -ge 5 ] && bash "$LOOPS/root-check.sh" 8>&- >/dev/null 2>&1
   # The one-shot helper owns its durable six-hour due time and upload lock.
   # Close the scheduler lease in children so a long upload cannot block recovery.

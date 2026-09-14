@@ -1,0 +1,43 @@
+name: hf-card-link-repair
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Verify the exact repair without publishing"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/hf/fix-card-link.py
+            scripts/hf/test_fix_card_link.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet "huggingface_hub>=0.25,<2"
+      - name: focused test
+        run: python -B scripts/hf/test_fix_card_link.py
+      - name: verify and optionally publish
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ "$DRY_RUN" = "true" ]; then
+            python scripts/hf/fix-card-link.py
+          else
+            [ -n "${HF_TOKEN:-}" ] || { echo "HF_TOKEN is empty; refusing publish" >&2; exit 2; }
+            python scripts/hf/fix-card-link.py --push
+          fi

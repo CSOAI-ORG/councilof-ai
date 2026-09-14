@@ -37,7 +37,7 @@
 | CR-002 | Layer 0 = identity + signing + attestation | /layer0 page | ✅ LIVE |
 | CR-003 | GSPC board live, machine-readable, reports UNMEASURED honestly | /api/gspc | ✅ LIVE |
 | CR-004 | Grading deterministic; no model judges another model | Board structure (fact-based axes) | ✅ LIVE |
-| CR-005 | Professional Indemnity Insurance £5M | Company records | ✅ LIVE |
+| CR-005 | Professional Indemnity Insurance £5M | No policy document on file; see C-2026-0902-06 | WITHDRAWN |
 | CR-006 | Measurement, not certification | llms.txt, agent-card.json, every endpoint | ✅ LIVE |
 | CR-007 | 22 axes measured · 14 model fleets · 3 public leaders | /api/gspc totals | ✅ LIVE |
 

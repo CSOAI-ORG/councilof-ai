@@ -1,17 +1,19 @@
 name: HF-Jobs mill — land the staged cards
-
 # scripts/hf/hf_jobs_mill.py runs the mill on HF Jobs, the door outside GitHub Actions'
-# 45-minute timeout, and uploads staged UNSIGNED cards to csoai/mill-jobs-staging.
-# Until this workflow nothing read that dataset, so the job's output was durable and
-# invisible -- the same shape the pod intake had before runpod-intake.yml existed.
+# 45-minute timeout, and uploads staged UNSIGNED cards + their item-evidence bundles to
+# csoai/mill-jobs-staging. Until 2026-09-14 this workflow only pulled the cards (dropping the
+# evidence) and uploaded an artifact "for a human" — so HF Jobs output never reached the signer
+# (the 4-job round of 02:14Z staged 69 cards + 26 evidence bundles that nobody could sign).
 #
-# It does NOT sign, does not decide MEASURED, and deletes nothing from the dataset.
-# Signing stays with sign_mill_cards.py, which sets status from n (>=30 MEASURED, else
-# UNMEASURED). Two places deciding that is issue #1155.
+# Now, exactly like hub-queue-land: pull the whole staging tree, land with
+# scripts/land_mill_cards.py (dedupe per (model, axis), bind run provenance, REQUIRE the evidence
+# bundle — aggregate-only cards stopped landing after the 2026-09-13 ruling), push a branch,
+# open the PR, dispatch the existing OIDC signer for exactly that run id, wait, verify VALID under
+# the live DID plus the current v0.2 admission receipt, and comment the verdict table. Human merge
+# is the only gate.
 #
-# A card already present in public/interop/mill-cards-unsigned/ is left alone: the
-# inbox is append-only here, because re-writing a staged card after it has been signed
-# is how a measurement changes underneath its own signature.
+# It does NOT sign, does not decide MEASURED (sign_mill_cards.py sets status from n), does not
+# touch the pod, deletes nothing from the dataset, and never writes master.
 
 on:
   schedule:
@@ -21,12 +23,18 @@ on:
 concurrency: { group: mill-jobs-land, cancel-in-progress: false }
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
+  actions: write
 
 jobs:
   land:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
+    env:
+      # gh (pr create, workflow run, pr comment) needs the token in the job env — hub-queue-land
+      # sets it the same way; without it run 34800987085 pushed the branch and died at gh (exit 4).
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -59,45 +67,126 @@ jobs:
                   raise SystemExit(0)
               raise
           dst = pathlib.Path("staged"); dst.mkdir(exist_ok=True)
-          n = 0
-          for f in pathlib.Path(p).rglob("unsigned-*.json"):
-              shutil.copy(f, dst / f.name); n += 1
-          print(f"pulled {n} staged card(s) from csoai/mill-jobs-staging")
+          n = e = 0
+          # The whole tree, paths preserved: the item-evidence bundles (items-<axis>-<hash>.jsonl)
+          # sit beside the cards and land_mill_cards.py binds each card to its bundle by sha256.
+          # Pulling only the cards (what this step did until 2026-09-14) made every card
+          # aggregate-only and therefore unsignable under the 2026-09-13 evidence ruling.
+          for f in pathlib.Path(p).rglob("*"):
+              if not f.is_file() or ".git" in f.parts or f.name == ".gitattributes":
+                  continue
+              rel = f.relative_to(p)
+              (dst / rel).parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy(f, dst / rel)
+              if f.name.startswith("unsigned-"): n += 1
+              if f.name.startswith("items-"): e += 1
+          print(f"pulled {n} staged card(s) and {e} evidence bundle(s) from csoai/mill-jobs-staging")
           PY
 
-      - name: Land only cards the inbox does not already hold
+      - name: land (dedupe per (model, axis), bind run provenance, require the evidence bundle)
         id: land
+        env:
+          # land_mill_cards.bind_run_provenance requires a positive GitHub Actions run id and stamps
+          # the card's run_id as "gha-<id>"; the signer accepts exactly that id (bare or gha-).
+          # A non-numeric id ("hfjobs-…", run 34800722734) made every card skip as "json ValueError".
+          RUN_ID: ${{ github.run_id }}
         run: |
           set -euo pipefail
-          python3 - <<'PY' | tee land-report.txt
-          import json, pathlib, shutil
-          inbox = pathlib.Path("public/interop/mill-cards-unsigned")
-          inbox.mkdir(parents=True, exist_ok=True)
-          new = same = bad = 0
-          for f in sorted(pathlib.Path("staged").glob("unsigned-*.json")):
-              try:
-                  body = json.loads(f.read_text(encoding="utf-8")).get("body")
-              except Exception:
-                  # A card that will not parse is never landed: an unreadable card in the
-                  # sign inbox becomes a signature over bytes nobody checked.
-                  print(f"REJECT unparseable {f.name}"); bad += 1; continue
-              if not isinstance(body, dict) or not isinstance(body.get("n"), int):
-                  print(f"REJECT no body/n {f.name}"); bad += 1; continue
-              dest = inbox / f.name
-              if dest.is_file():
-                  same += 1; continue
-              shutil.copy(f, dest); new += 1
-          print(f"landed {new} · already present {same} · rejected {bad}")
-          PY
-          echo "new=$(grep -oE 'landed [0-9]+' land-report.txt | head -1 | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+          pip install -q cryptography
+          # Same landing as hub-queue-land: the card's run_id becomes "gha-<RUN_ID>" and the signer
+          # is dispatched for exactly that id — never the whole legacy inbox (#1941 provenance gate).
+          python3 scripts/land_mill_cards.py --staged staged --run-id "$RUN_ID" --require-evidence --pr-body staged/PR-BODY.md --github-output "$GITHUB_OUTPUT"
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
 
-      - name: Upload what would be landed (a human merges, this never pushes)
+      - name: branch, push, PR, dispatch the OIDC signer on the branch
+        id: pr
+        if: steps.land.outputs.landed != '0'
+        env:
+          RUN_ID: ${{ steps.land.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          BR="mill/land-hfjobs-${{ github.run_id }}"
+          echo "branch=$BR" >> "$GITHUB_OUTPUT"
+          git config user.name "csoai-mill-jobs-land"
+          git config user.email "board@csoai.org"
+          git checkout -b "$BR"
+          git add public/interop/mill-cards-unsigned public/interop/mill-evidence
+          git commit -m "mill: land ${{ steps.land.outputs.landed }} UNSIGNED cards from HF Jobs (mill-jobs-land run ${{ github.run_id }}) — sign pending; nothing MEASURED"
+          git push origin "HEAD:$BR"
+          gh pr create --base master --head "$BR" \
+            --title "mill: ${{ steps.land.outputs.landed }} cards from HF Jobs (run ${{ github.run_id }}) — OIDC sign pending, nothing MEASURED" \
+            --body-file staged/PR-BODY.md
+          gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=mill -f mill_run_id="${RUN_ID}"
+          if ! gh workflow run pr-gates.yml --ref "$BR" 2>/dev/null; then
+            echo "OPERATOR ACTION REQUIRED: run: gh workflow run pr-gates.yml --ref $BR" >&2
+          fi
+
+      - name: wait for signer, then verify DID signature and current admission (no key here)
+        if: steps.land.outputs.landed != '0'
+        run: |
+          set -euo pipefail
+          BR="${{ steps.pr.outputs.branch }}"
+          sleep 20
+          for i in $(seq 1 40); do
+            ST=$(gh run list --workflow hf-fin-shells-measure.yml --branch "$BR" --json status -L 1 -q '.[0].status' || true)
+            echo "signer status=${ST:-?}"
+            [ "$ST" = "completed" ] && break
+            sleep 15
+          done
+          git fetch origin "$BR"
+          git checkout -q FETCH_HEAD -- public/interop/mill-cards-signed || true
+          curl -fsSL -A "Mozilla/5.0 csoai-mill-jobs-land" https://councilof.ai/.well-known/did.json -o did.json
+          python3 - <<'PY' | tee verify.md
+          import json, sys
+          from collections import Counter
+          from pathlib import Path
+          sys.path.insert(0, "harness/gspc-top100")
+          sys.path.insert(0, "scripts")
+          from verify_card import verify_signed_card_with_did_doc
+          from verify_hub_mill_evidence import validate_signed_admission
+          did = json.loads(Path("did.json").read_text())
+          landed = json.loads(Path("staged/land-report.json").read_text())["landed"]
+          signed_dir = Path("public/interop/mill-cards-signed")
+          superseded = set()
+          ledger = signed_dir / "SUPERSEDED.jsonl"
+          if ledger.is_file():
+              for line in ledger.read_text(encoding="utf-8").splitlines():
+                  try: superseded.add(str(json.loads(line).get("superseded_id") or ""))
+                  except Exception: pass
+          def live_card(model, axis):
+              for f in sorted(signed_dir.glob("signed-*.json")):
+                  try: w = json.loads(f.read_text(encoding="utf-8"))
+                  except Exception: continue
+                  b = w.get("body") if isinstance(w.get("body"), dict) else {}
+                  if b.get("model") == model and b.get("axis") == axis and w.get("signature") and str(w.get("id") or "") not in superseded:
+                      return f
+              return None
+          rows = []
+          for r in landed:
+              f = live_card(str(r.get("model") or ""), str(r.get("axis") or "")) if signed_dir.is_dir() else None
+              if f is None:
+                  rows.append((r["file"], "UNSIGNED", "no live signed card for this (model, axis)")); continue
+              v, why = verify_signed_card_with_did_doc(f.read_bytes(), did)
+              if v == "VALID":
+                  try:
+                      validate_signed_admission(json.loads(f.read_text(encoding="utf-8")), Path("public/interop/mill-evidence"))
+                  except Exception as error:
+                      v, why = "UNCHECKABLE", f"current evidence admission failed: {error}"
+              rows.append((f.name, v, why))
+          c = Counter(v for _, v, _ in rows)
+          print(f"Signer result on this branch: {dict(c)} (VALID under the live DID; nothing MEASURED until merge + hub-queue-flip)\n")
+          print("| card | verdict | detail |\n|---|---|---|")
+          for n, v, w in rows: print(f"| `{n}` | {v} | {w} |")
+          PY
+          gh pr comment "$BR" --body-file verify.md
+
+      - name: upload the land report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: mill-jobs-landed-${{ github.run_id }}
           path: |
-            public/interop/mill-cards-unsigned
-            land-report.txt
-          if-no-files-found: warn
+            staged/land-report.json
+            staged/PR-BODY.md
+          if-no-files-found: ignore
           retention-days: 14

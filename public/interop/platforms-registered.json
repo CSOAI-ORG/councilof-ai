@@ -1,6 +1,6 @@
 {
   "schema": "csoai.platforms-registered/0.1",
-  "as_of": "20260911T143400Z",
+  "as_of": "20260914T073000Z",
   "principle": "CSOAI is listed where a listing can be PROVEN by a URL that shows the entry. A platform's homepage is not proof of a listing.",
   "registrations": [
     {
@@ -143,8 +143,26 @@
       "manifest": null,
       "status": "live",
       "proof_url": "https://smithery.ai/server/csoai/gspc-mcp",
-      "proof": "csoai/gspc-mcp listed; HTTP 200 2026-09-06. Its tools[] is exactly the seven free tools POST https://councilof.ai/mcp serves: board_totals, get_axis, get_card, get_root, list_cards, verify_card, verify_inclusion. Derived by comparing the Smithery detail endpoint with a live tools/list, not read off the page.",
-      "known_defect": "A SECOND listing, csoai/gspc, is a stale duplicate and this row used to point at it. It names eight tools of which four do not exist on the server (measure, verify, jail-probe, enter-arena — tools/call answers -32601 for measure and jail-probe) and omits three that do (get_root, get_card, verify_inclusion). Its connection, https://gspc--csoai.run.tools, answers 401. Nothing in this repository produces either listing: there is no smithery.yaml here and no CSOAI-ORG/gspc repository, so both are dashboard-side records that only the account holder can change. The fix is to RETIRE csoai/gspc, not to edit a manifest — csoai/gspc-mcp is already correct. Owner ask; see OWNER-ASKS. Until then this row points at the correct listing and says the duplicate exists rather than quietly linking past it."
+      "proof": "csoai/gspc-mcp listed; registry detail HTTP 200 on 2026-09-14. Its tools[] exactly matches all 12 tools returned by POST https://councilof.ai/mcp: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion, x402_trust, commission_card, art50_marking_evidence, rwa_evidence, receipts_batch. Derived by comparing the Smithery registry detail endpoint with a live tools/list.",
+      "connection": {
+        "canonical_url": "https://councilof.ai/mcp",
+        "transport": "streamable-http",
+        "method": "POST",
+        "auth": "none",
+        "observed_http": 200,
+        "observed_at": "2026-09-14T05:42:00Z"
+      },
+      "third_party_connection_defect": {
+        "state": "OWNER_ACTION_REQUIRED",
+        "registry_url": "https://registry.smithery.ai/servers/csoai/gspc-mcp",
+        "deployment_url": "https://gspc-mcp--csoai.run.tools",
+        "observed_http": 401,
+        "observed_at": "2026-09-14T05:42:00Z",
+        "canonical_url": "https://councilof.ai/mcp",
+        "canonical_http": 200,
+        "owner_action": "Replace or remove the Smithery-managed deployment URL in the Smithery dashboard."
+      },
+      "known_defect": "The canonical csoai/gspc-mcp listing's Smithery-managed deployment URL answers 401, while the canonical CSOAI endpoint https://councilof.ai/mcp answers 200 without a CSOAI account. Smithery connection metadata is dashboard-side and requires the account holder; clients should use the canonical endpoint recorded above. A SECOND listing, csoai/gspc, is a stale duplicate: it names four tools that do not exist (measure, verify, jail-probe, enter-arena), omits four that do (get_root, get_card, verify_inclusion, x402_trust), and its https://gspc--csoai.run.tools connection also answers 401. Nothing in this repository produces either listing: there is no smithery.yaml here and no CSOAI-ORG/gspc repository. Owner ask; see OWNER-ASKS."
     },
     {
       "platform": "Glama MCP",
@@ -158,9 +176,8 @@
       "platform": "MCP.so",
       "url": "https://mcp.so",
       "manifest": null,
-      "status": "live",
-      "proof_url": "https://mcp.so/servers/csoai-gspc-measurement",
-      "proof": "Public page returned 200 on 2026-09-11 and shows CSOAI GSPC measurement as Verified and Featured under @CSOAI-ORG. Authenticated submissions status is Published Paid. The page says No tools detected until its sandbox fetch runs, so this proves listing, not tool health or adoption."
+      "status": "planned",
+      "status_note": "The previously verified public detail URL https://mcp.so/servers/csoai-gspc-measurement returned HTTP 500 on 2026-09-14. Authenticated submission state is not public listing proof; restore live only after a public detail URL shows the CSOAI entry."
     },
     {
       "platform": "MCP Market (Cursor)",

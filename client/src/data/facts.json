@@ -181,6 +181,12 @@
         "no_per_axis_breakdown": "The artifact declares its axis count in its own `axes` field and publishes NO per-axis rows. /board therefore draws its published MODEL rows and says so, rather than manufacturing a breakdown that was never measured.",
         "observed": "16 axes in the fresh-benchmark engine set",
         "status": "live"
+      },
+      "merge_me_train": {
+        "name": "merge-me train (live GitHub PR titles)",
+        "surfaces": ["/merge-me"],
+        "note": "noindex conductor page. Counts mirrored from open PR / mill titles are not board claims. Exonerated so a mill title like 9 axes (n>=30) cannot block unrelated tip deploys.",
+        "why_scoped": "Derived from api.github.com PR titles; prerender may snapshot them. Not an authority for totals.public_count."
       }
     },
     "live_anchors": {

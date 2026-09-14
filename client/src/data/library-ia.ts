@@ -59,9 +59,9 @@ export const PRIMARY_PATHS = new Set<string>([
   // Regulation findings — the signed (model × axis) findings joined to regulator + fine tier.
   // /findings is the hub; /model/:id and /regulator/:id detail views are covered by
   // PRIMARY_PREFIXES below (a param path can never be an exact-Set member).
-  "/findings", "/regulator-findings",
+  "/findings",
   // Products — the family, and who it is for
-  "/products", "/pricing-free", "/attestation", "/gpai-evidence", "/cra-readiness", "/financial-axes", "/stablecoins", "/wrappers",
+  "/products", "/attestation", "/gpai-evidence", "/cra-readiness", "/financial-axes", "/stablecoins", "/wrappers", "/quickstart",
   "/distribution-integrity", "/rlusd", "/embed", "/white-label", "/badge", "/cobol", "/cobolbridge",
   "/council-licensing", "/licensing-agreement",
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
@@ -100,7 +100,7 @@ export const PRIMARY_PATHS = new Set<string>([
   // path and every LOBBY_ROUTES path, so the next tab someone adds cannot reintroduce
   // the trap silently.
   "/readiness-assessment", "/dashboard", "/layer0", "/network", "/hive", "/intel",
-  "/benchmark-quality", "/mcp-fleet", "/mcps", "/feed",
+  "/benchmark-quality", "/mcps",
   // Promoted to a first-class Council OS read-only Watchdog destination.
   "/watchdog-hub",
   // Evidence
@@ -109,12 +109,12 @@ export const PRIMARY_PATHS = new Set<string>([
   // entry here it renders under the "Reference / archive" banner — a nav item
   // leading to a page that calls itself archived.
   "/services",
-  "/system-card", "/xrpl-attest", "/claims-register",
+  "/xrpl-attest", "/claims-register",
   // Academy (folded into Company in the nav; the pages are still current)
-  "/academy", "/courses", "/training", "/verify-certificate", "/accreditation",
+  "/academy", "/verify-certificate", "/accreditation",
   // Company
-  "/about", "/library", "/blog", "/trust-center", "/contact", "/disclaimers",
-  "/faq",
+  "/about", "/library", "/contact", "/disclaimers",
+  "/faq", "/traction",
   // Who it is for — the six /for/:persona audience pages (PersonaRouter).
   // These are DYNAMIC routes, so they never appear in ROUTE_MANIFEST and cannot be
   // registered by the manifest sweep; they have to be listed by hand or every one of
@@ -128,12 +128,12 @@ export const PRIMARY_PATHS = new Set<string>([
 
 /**
  * Dynamic PRIMARY families. PRIMARY_PATHS is a Set of exact strings, so a
- * parameterised route (/for/:persona, /industries/:slug, /vs/:slug) could never
+ * parameterised route (/for/:persona, /vs/:slug) could never
  * be registered in it and every one of those pages rendered the archive banner.
  * A prefix here means "this whole family is primary" — it is the same decision
  * PRIMARY_PATHS records, expressed for a route that has no single path.
  */
-export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/industries/", "/vs/", "/model/", "/regulator/"];
+export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/vs/", "/model/"];
 
 export function isPrimaryPath(p: string): boolean {
   return PRIMARY_PATHS.has(p) || PRIMARY_PREFIXES.some((pre) => p.startsWith(pre));

@@ -42,3 +42,6 @@ TRADE-SECRETS.md
 # outputs assembled from already-signed cards; regenerate rather than commit.
 evidence-packs/
 .payer.key
+
+# derived at build time from the signed bytes (scripts/surface/build-pod-cards-index.mjs); never commit a stale copy
+public/interop/pod-cards-index.json

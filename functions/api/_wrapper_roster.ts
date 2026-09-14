@@ -284,5 +284,40 @@ export const WRAPPER_ROSTER = [
     "escrow": null,
     "escrow_name": null,
     "note": "Tokenised fund shares; the reserve is the fund's assets held off-chain, reported by the transfer agent. INDEXED, no parity claimed."
+  },
+  {
+    "id": "weth:arbitrum",
+    "wrapped": { "chain": "arbitrum", "symbol": "WETH", "address": "0x82aF49448D82B08cD7C12Be3B9395C0e72f16154" },
+    "canonical": { "chain": "ethereum", "symbol": "ETH", "address": "native ETH (not an ERC-20 contract)" },
+    "backing_model": "custodial",
+    "escrow": null,
+    "escrow_name": null,
+    "note": "WETH on Arbitrum at 0x82aF... is a WETH9 wrapper (deposit ETH, get WETH). totalSupply() returns empty on Arbiscan RPC (contract may be a minimal proxy with non-standard storage). ETH backing is the deposit mechanism. INDEXED, no parity claimed from here."
+  },
+  {
+    "id": "usdc:zksync-era",
+    "wrapped": { "chain": "zksync-era", "symbol": "USDC", "address": "0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E" },
+    "canonical": { "chain": "ethereum", "symbol": "USDC", "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" },
+    "backing_model": "escrow",
+    "escrow": "0x5797EA1b374f2A4F1E8BcE5156c3962b78E1C46a",
+    "escrow_name": "zkSync Era L1 USDC Bridge (native bridge)"
+  },
+  {
+    "id": "usdt0:optimism",
+    "wrapped": { "chain": "optimism", "symbol": "USDT0", "address": "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
+    "canonical": { "chain": "ethereum", "symbol": "USDT", "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7" },
+    "backing_model": "native",
+    "escrow": null,
+    "escrow_name": null,
+    "note": "USDT0 on Optimism via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed."
+  },
+  {
+    "id": "usdt0:arbitrum",
+    "wrapped": { "chain": "arbitrum", "symbol": "USDT0", "address": "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
+    "canonical": { "chain": "ethereum", "symbol": "USDT", "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7" },
+    "backing_model": "native",
+    "escrow": null,
+    "escrow_name": null,
+    "note": "USDT0 on Arbitrum via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed."
   }
 ] as const;

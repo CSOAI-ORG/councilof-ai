@@ -35,6 +35,7 @@ export const navigation: NavGroup[] = [
       { section: 'How it works', name: 'Methodology', href: '/methodology', description: 'Gold labels, n≥30, McNemar separation — and how to recompute every number yourself' },
       { name: 'The GSPC instrument', href: '/instrument', description: 'Four deterministic lenses over frozen provisions. No model sits in the verdict path' },
       { name: 'Published tools', href: '/tools', description: 'MCP servers you can run yourself — not a marketplace' },
+      { name: 'Agent quickstart', href: '/quickstart', description: 'Explore measurements, follow the change record, verify evidence, then connect to the supported feeds; commissioning is optional' },
       { section: 'Specialist boards', name: 'Financial axis', href: '/financial-axes', description: 'The declared financial slots — measured where measured, UNMEASURED and honest where not' },
       { name: 'Stablecoin readiness', href: '/stablecoins', description: 'A frozen discovery index with measurement, signature, root, witness and settlement state kept separate' },
       { name: 'Wrapper parity', href: '/wrappers', description: 'Wrapped supply against the escrow that backs it, at named blocks — read, not rated; native and custodial wrappers stay indexed' },

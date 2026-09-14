@@ -62,6 +62,13 @@ const input = {
     records: Array.from({ length: 17 }, (_, i) => ({ id: `pair-${i}` })),
   },
   root_kinds: { by_kind: { "csoai.wrapper.parity/0.1": 17 }, card_count: 294 },
+  bazaar: {
+    as_of: "2026-09-14T02:29:40Z",
+    hosts_distinct: 2990,
+    hosts_probed: 2990,
+    indexes: { cdp: { resources: 15403 }, payai: { resources: 28619 } },
+    headline: { conformant: 414, conformant_pct: 13.85, unreachable: 284 },
+  },
 };
 
 describe("master GSPC coverage ledger", () => {
@@ -115,7 +122,9 @@ describe("master GSPC coverage ledger", () => {
   it("derives MCP row from server_info", () => {
     const mcp = buildCoverageLedger(input).find((row) => row.id === "mcp")!;
     expect(mcp.indexed.value).toBe(12);
-    expect(mcp.measured.value).toBe(12);
+    expect(mcp.measured.value).toBeNull();
+    expect(mcp.measured.field).toMatch(/implemented tool count is not a measurement/);
+    expect(mcp.measured.unavailable).toBeTruthy();
     expect(mcp.paid.value).toBe(1);
     expect(mcp.writesBoard).toBe(false);
   });
@@ -123,7 +132,9 @@ describe("master GSPC coverage ledger", () => {
   it("derives A2A row from protocol version", () => {
     const a2a = buildCoverageLedger(input).find((row) => row.id === "a2a")!;
     expect(a2a.indexed.value).toBe(7);
-    expect(a2a.measured.value).toBe(7);
+    expect(a2a.measured.value).toBeNull();
+    expect(a2a.measured.field).toMatch(/implemented skill count is not a measurement/);
+    expect(a2a.measured.unavailable).toBeTruthy();
     expect(a2a.signed.value).toBeNull();
     expect(a2a.writesBoard).toBe(false);
   });
@@ -131,7 +142,9 @@ describe("master GSPC coverage ledger", () => {
   it("derives ERC-8004 row from registry_totals", () => {
     const erc = buildCoverageLedger(input).find((row) => row.id === "erc8004")!;
     expect(erc.indexed.value).toBe(803294);
-    expect(erc.measured.value).toBe(803294);
+    expect(erc.measured.value).toBeNull();
+    expect(erc.measured.field).toMatch(/indexer census is not a measurement/);
+    expect(erc.measured.unavailable).toBeTruthy();
     expect(erc.signed.value).toBeNull();
   });
 
@@ -155,6 +168,7 @@ describe("master GSPC coverage ledger", () => {
       erc8004: null,
       wrappers: null,
       root_kinds: null,
+      bazaar: null,
     });
     for (const row of rows) {
       expect(row.indexed.value).toBeNull();

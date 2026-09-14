@@ -145,6 +145,15 @@ export const onRequestGet: PagesFunction<{
         never: ["a rating", "a guarantee", "a verdict", "a rank", "a reserve attestation", "a paywall on the free ledger or /root.json"],
       },
       {
+        id: "wrapper_changes",
+        name: "Wrapped-asset change feed (per pair)",
+        resource: u("/api/wrapper/changes?id=<wrapped-symbol:chain>"),
+        free_preview: u("/api/wrapper/changes?id=<wrapped-symbol:chain>&preview=1"),
+        free_preview_note: "delta of wrapped supply and escrow since the previous ledger snapshot; pair ids in /interop/wrapped-asset-parity-*.json",
+        deliverable: "Delta of wrapped supply and escrow between two ledger snapshots. A diff — not a rate, a grade or a reserve attestation.",
+        never: ["a rating", "a guarantee", "a verdict", "a rank", "a reserve attestation", "a paywall on the free ledger or /root.json"],
+      },
+      {
         id: "art50_marking_evidence",
         name: "Article 50 machine-readable marking evidence",
         resource: u("/api/art50/marking-evidence?url=<https-output-url>"),
@@ -192,6 +201,7 @@ export const onRequestGet: PagesFunction<{
       u("/api/witness/status?sha256=<64-hex>"),
       u("/api/receipts/batch?from=<iso>&preview=1"),
       u("/receipts/root-history.json"),
+      u("/api/commissions"),
       u("/methodology"),
     ],
     mcp: {

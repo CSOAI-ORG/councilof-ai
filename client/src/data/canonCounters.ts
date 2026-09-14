@@ -34,7 +34,7 @@ export const CANON = {
   /** Public repos on GitHub CSOAI-ORG (the "369" underclaim is dead; 570 verified). */
   PUBLIC_REPOS: {
     value: 570,
-    source: "GitHub API, user CSOAI-ORG (Series A readiness addendum)",
+    source: "GitHub API, user CSOAI-ORG (public-estate readiness addendum)",
     measuredAt: "2026-07-31",
   },
   /** Anchor nodes in the anchors data file (globe3d falls back to these). */

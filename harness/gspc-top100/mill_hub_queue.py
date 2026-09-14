@@ -28,7 +28,7 @@ HF_ROUTER = "https://router.huggingface.co/v1/chat/completions"
 EAT_NEXT = "llama-3.3-70b-versatile"
 EAT_NEXT_OR = "meta-llama/llama-3.3-70b-instruct"
 NIM_MODEL = "meta/llama-3.3-70b-instruct"
-HF_PROVIDER_SUFFIX = ("", ":featherless-ai", ":hf-inference", ":together", ":fireworks-ai", ":groq")
+HF_PROVIDER_SUFFIX = (":featherless-ai", ":hf-inference", ":together", ":fireworks-ai", ":groq")
 GEN_TAGS = frozenset(
     {"text-generation", "image-text-to-text", "conversational", "text2text-generation"}
 )
@@ -117,6 +117,19 @@ def load_only_ids(path: Path | None) -> set[str] | None:
     if not p.is_file():
         return set()
     return {ln.strip() for ln in p.read_text(encoding="utf-8").splitlines() if ln.strip() and not ln.startswith("#")}
+
+
+def load_revision_pins(path: Path | None) -> dict[str, str] | None:
+    """Exact model revisions resolved by a controlled-run preflight."""
+    if path is None:
+        return None
+    value = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(value, dict) or not value:
+        raise ValueError("revision pins must be a non-empty object")
+    pins = {str(model): str(revision) for model, revision in value.items()}
+    if any(not re.fullmatch(r"[0-9a-f]{40,64}", revision) for revision in pins.values()):
+        raise ValueError("revision pin is not immutable")
+    return pins
 
 
 def load_dead_slugs(path: Path | None, max_age_days: int | None = None) -> set[str]:
@@ -261,6 +274,44 @@ def provider_mapping_live(slug: str, fetch=None) -> tuple[bool, str]:
     return False, "no live inference provider"
 
 
+
+def inject_commissioned_subjects(
+    rows: list[dict],
+    priority_ids: set[str] | None,
+    *,
+    axis: str | None = None,
+) -> list[dict]:
+    """Upsert commissioned mill targets missing from hub-queue census as UNMEASURED rows.
+
+    priority_ids must be fulfillable model ids (GET /api/commission-queue fulfillment=QUEUED
+    with non-null model) — never UNFULFILLABLE SKU subjects. Payment never MEASURED.
+    Unsigned mill OK; SIGNED still n≥30+4way+keystone.
+    """
+    pri = {str(x) for x in (priority_ids or set()) if str(x).strip()}
+    if not pri:
+        return rows
+    present = {str(r.get("id") or "") for r in rows}
+    out = list(rows)
+    for subject in sorted(pri):
+        if subject in present:
+            continue
+        out.append(
+            {
+                "id": subject,
+                "rank": 0,
+                "status": "UNMEASURED",
+                "coverage_state": "UNMEASURED",
+                "pipeline_tag": "text-generation",
+                "commissioned": True,
+                "card_id": None,
+                "measured_axes": {},
+                "unmeasured": ["commissioned_subject_not_in_hub_queue_census"],
+            }
+        )
+        present.add(subject)
+    return out
+
+
 def pick_emptiest(
     rows: list[dict],
     n: int,
@@ -269,8 +320,11 @@ def pick_emptiest(
     only_ids: set[str] | None = None,
     dead: set[str] | None = None,
     inflight: set[tuple[str, str]] | None = None,
+    priority_ids: set[str] | None = None,
 ) -> list[dict]:
-    """Emptiest (id, axis) cells by rank. generative_only keeps SERVABLE_TAGS only (no fallback to
+    """Emptiest (id, axis) cells by rank. priority_ids (2026-09-14: QUEUED model ids from
+    GET /api/commission-queue, fallback /api/commissions) are picked FIRST, in rank order among themselves, then the rest by rank —
+    a paid request drives the mill instead of waiting for its rank; every other guard still applies. generative_only keeps SERVABLE_TAGS only (no fallback to
     non-generative repos); dead ids are never picked; only_ids is an allowlist; inflight (id, axis)
     cells are already staged in an open landing PR and are skipped until that PR merges or closes."""
 
@@ -291,7 +345,8 @@ def pick_emptiest(
         empty = [r for r in empty if str(r.get("id") or "") in only_ids]
     if generative_only:
         empty = [r for r in empty if r.get("pipeline_tag") in SERVABLE_TAGS]
-    empty.sort(key=lambda r: int(r.get("rank") or 10**9))
+    pri = priority_ids or set()
+    empty.sort(key=lambda r: (0 if str(r.get("id") or "") in pri else 1, int(r.get("rank") or 10**9)))
     return empty[:n]
 
 
@@ -541,6 +596,29 @@ def _hf_router(prompt: str, slug: str | None = None) -> tuple[str, str]:
 OPENROUTER_ORG_MAP = {"deepseek-ai": "deepseek"}
 # slug → route that produced the last OK answer ("hf-router" | "openrouter:<id>"); written onto the card body.
 _ROUTE: dict[str, str] = {}
+# slug → providers the Hub API reported LIVE for chat at probe time (provider_mapping_live detail).
+# infer_hub tries these first: the static HF_PROVIDER_SUFFIX list never contained nscale/deepinfra/
+# novita, so Qwen/Qwen3-14B (live on nscale+featherless+deepinfra) burned run 34813568… on groq 400.
+_LIVE_PROVIDERS: dict[str, list[str]] = {}
+
+
+def note_live_providers(slug: str, detail: str) -> list[str]:
+    """Record the probe's live provider names for a slug. Non-provider details are ignored."""
+    if not detail or detail.startswith(("probe-unavailable", "commissioned_", "no live", "HTTP")):
+        return []
+    names = [x.strip() for x in detail.split(",") if x.strip() and " " not in x.strip()]
+    if names:
+        _LIVE_PROVIDERS[slug] = names
+    return names
+
+
+def provider_suffixes(slug: str) -> tuple[str, ...]:
+    """Live providers for this slug first (Hub order), then the static fallbacks, no duplicates."""
+    order: list[str] = [f":{n}" for n in _LIVE_PROVIDERS.get(slug, [])]
+    for suf in HF_PROVIDER_SUFFIX:
+        if suf not in order:
+            order.append(suf)
+    return tuple(order)
 
 
 def openrouter_id(slug: str) -> str:
@@ -583,14 +661,14 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
     last = "no-endpoint hf"
     unsupported = 0
     tried = 0
-    for suf in HF_PROVIDER_SUFFIX:
+    for suf in provider_suffixes(slug):
         name = f"{slug}{suf}"
         if name in _DEAD:
             continue
         tried += 1
         st, txt = _chat(HF_ROUTER, tok, name, prompt)
         if st == "OK":
-            _ROUTE[slug] = "hf-router"
+            _ROUTE[slug] = f"hf-router:{name}"
             return st, txt
         last = f"hf:{name}:{txt}"
         if "401" in txt:
@@ -607,7 +685,7 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
                 time.sleep(_wait)
                 st, txt = _chat(HF_ROUTER, tok, name, prompt)
                 if st == "OK":
-                    _ROUTE[slug] = "hf-router"
+                    _ROUTE[slug] = f"hf-router:{name}"
                     return st, txt
                 if "429" not in txt:
                     break
@@ -621,7 +699,7 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
             # The parameter was refused, not the model. Ask again without it.
             st, txt = _chat(HF_ROUTER, tok, name, prompt, _thinking_kwarg=False)
             if st == "OK":
-                _ROUTE[slug] = "hf-router"
+                _ROUTE[slug] = f"hf-router:{name}"
                 return st, txt
             last = f"hf:{name}:{txt}"
         if "400" in txt or "404" in txt or "not supported" in txt.lower() or "not a chat" in txt.lower():
@@ -825,7 +903,13 @@ def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str, rou
     return wrap
 
 
-ITEM_EVIDENCE_SCHEMA = "csoai.mill-item-evidence/0.1"
+ITEM_EVIDENCE_SCHEMA = "csoai.mill-item-evidence/0.2"
+MILL_INSTRUMENT = {
+    "prompt_adapter": "frozen-axis-prompt-v1",
+    "grader": "exact-label-after-outer-whitespace-v1",
+    "temperature": 0,
+    "max_tokens": 32,
+}
 
 
 def write_item_evidence(out_dir: Path, axis: str, rows: list[dict]) -> tuple[str, str]:
@@ -871,6 +955,7 @@ def mill(
     items_cap: int = 30,
     generative_only: bool = True,
     only_ids: set[str] | None = None,
+    priority_ids: set[str] | None = None,
     dead_path: Path | None = None,
     dead_max_age_days: int | None = None,
     shard: int = 0,
@@ -879,13 +964,15 @@ def mill(
     probe_fetch=None,
     inflight_path: Path | None = None,
     bank_dataset: str | None = None,
+    bank_revision: str | None = None,
     revision_fetch=None,
 ) -> dict:
     rows = load_queue(queue_path)
     ax = axis if axis in MODEL_AXES else "governance"
     dead = load_dead_slugs(dead_path, dead_max_age_days)
     inflight = load_inflight_cells(inflight_path)
-    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead, inflight=inflight)
+    rows = inject_commissioned_subjects(rows, priority_ids, axis=ax)
+    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead, inflight=inflight, priority_ids=priority_ids)
     if shards > 1:
         # Shard membership is a function of the MODEL ID ONLY -- never of position in
         # `picked`. Stride-slicing would be disjoint for one snapshot and overlapping the
@@ -909,7 +996,14 @@ def mill(
                 rest.append(r)
                 continue
             mid = str(r.get("id") or "")
-            live_ok, detail = provider_mapping_live(mid, fetch=probe_fetch)
+            # Commissioned subjects may be Ollama tags / not yet on hub-queue census — still
+            # attempt a grade (unsigned). Payment never MEASURED; probe miss must not erase the request.
+            if priority_ids and mid in priority_ids:
+                live_ok, detail = True, "commissioned_priority_bypass_probe"
+            else:
+                live_ok, detail = provider_mapping_live(mid, fetch=probe_fetch)
+                if live_ok:
+                    note_live_providers(mid, detail)
             if live_ok:
                 to_grade.append(r)
             else:
@@ -938,14 +1032,18 @@ def mill(
             bank_sha256 = hashlib.sha256(bank_path.read_bytes()).hexdigest()
         except OSError:
             bank_sha256 = None
-    if not bank:
+    if not bank or not bank_dataset or not bank_revision:
         for r in to_grade:
             mid = str(r.get("id") or "")
             if live.get(mid, True):
-                skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE no frozen bank"})
+                skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE no immutable frozen bank pin"})
         items: list[tuple[str, str]] = []
     else:
         items = bank[: max(1, items_cap)]
+        bank_raw = bank_path.read_bytes()
+        bank_digest = hashlib.sha256(bank_raw).hexdigest()
+        bank_name = f"bank-{ax[:8]}-{bank_digest[:12]}.jsonl"
+        (out_dir / bank_name).write_bytes(bank_raw)
     labels = [exp for _, exp in items]
     for r in to_grade:
         mid = str(r.get("id") or "")
@@ -956,21 +1054,43 @@ def mill(
             continue
         if not items:
             continue
+        try:
+            revision = (revision_fetch or hf_model_revision)(mid)
+        except Exception:
+            revision = None
+        if not revision or not re.fullmatch(r"[0-9a-f]{40,64}", str(revision)):
+            skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE exact model revision unavailable"})
+            continue
         hits = 0
         unparsed = 0
         ev_rows: list[dict] = []
         for i, (prompt, expected) in enumerate(items):
-            st, txt = infer_hub(mid, axis_prompt(ax, prompt, labels))
+            sent_prompt = axis_prompt(ax, prompt, labels)
+            started = time.monotonic_ns()
+            st, txt = infer_hub(mid, sent_prompt)
+            elapsed_ms = max(0, (time.monotonic_ns() - started) // 1_000_000)
             if st != "OK":
                 skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE {txt}"})
                 break
             got = read_label(txt, labels)
             ev_rows.append({
+                "schema": ITEM_EVIDENCE_SCHEMA,
                 "i": i,
-                "prompt_sha256": hashlib.sha256(str(prompt).encode()).hexdigest(),
+                "axis": ax,
+                "model": mid,
+                "model_hf_revision": revision,
+                "bank_sha256": bank_sha256,
+                "bank_dataset": bank_dataset,
+                "bank_revision": bank_revision,
+                "provider_route": _ROUTE.get(mid),
+                "prompt": sent_prompt,
+                "prompt_sha256": hashlib.sha256(sent_prompt.encode()).hexdigest(),
                 "expected": str(expected).strip().upper(),
+                "raw_output": txt,
+                "raw_output_sha256": hashlib.sha256(txt.encode()).hexdigest(),
                 "observed": got,
                 "ok": (got == str(expected).strip().upper()) if got is not None else None,
+                "elapsed_ms": elapsed_ms,
             })
             if got is None:
                 # Not an answer, and NOT a wrong answer. Counting it against the model
@@ -985,21 +1105,15 @@ def mill(
             reason = "n<30 unquotable" if n < 30 else "signed-pending-verify"
             if unparsed:
                 reason = f"{reason}; {unparsed} of {len(items)} items returned no parseable label"
-            revision = None
-            if not dry:
-                rf = revision_fetch or hf_model_revision
-                try:
-                    revision = rf(mid)
-                except Exception:
-                    revision = None
-            evidence = {}
-            if bank_sha256:
-                evidence["bank_sha256"] = bank_sha256
-            if bank_dataset:
-                evidence["bank_dataset"] = bank_dataset
-            if revision:
-                evidence["model_hf_revision"] = revision
-            evidence["schema"] = ITEM_EVIDENCE_SCHEMA
+            evidence = {
+                "schema": ITEM_EVIDENCE_SCHEMA,
+                "bank_sha256": bank_sha256,
+                "bank_file": bank_name,
+                "bank_dataset": bank_dataset,
+                "bank_revision": bank_revision,
+                "model_hf_revision": revision,
+                "instrument_sha256": hashlib.sha256(canonical_body_bytes(MILL_INSTRUMENT)).hexdigest(),
+            }
             items_name, items_sha = write_item_evidence(out_dir, ax, ev_rows)
             evidence["items_file"] = items_name
             evidence["items_sha256"] = items_sha
@@ -1058,6 +1172,7 @@ def main() -> int:
     ap.add_argument("--banks", default="", help="dir of {axis}.jsonl published banks")
     ap.add_argument("--items", type=int, default=30, help="items per (model,axis); n<30 unquotable")
     ap.add_argument("--only", default="", help="file of provider-live hub slugs (one id per line); skip rank-dead 400s")
+    ap.add_argument("--priority", default="", help="file of QUEUED commission model ids (one id per line, from GET /api/commission-queue); picked first; UNFULFILLABLE never listed; every other guard still applies")
     ap.add_argument("--dead", default="", help="persistent dead-slug jsonl (honoured on pick; appended from this run's no-endpoint skips)")
     ap.add_argument("--dead-max-age-days", type=int, default=None, help="re-probe a dead slug older than this (default: never expire). An undated row counts as expired.")
     ap.add_argument("--shards", type=int, default=1, help="split the picked rows across N parallel runs (hash of model id, not position)")
@@ -1065,8 +1180,12 @@ def main() -> int:
     ap.add_argument("--probe-first", action="store_true", help="ask the Hub inferenceProviderMapping before spending a grade")
     ap.add_argument("--inflight", default="", help="jsonl of {id, axis} cells already staged in open landing PRs (see inflight_cells.py); never re-picked")
     ap.add_argument("--bank-dataset", default="", help="public HF dataset the frozen bank came from (e.g. csoai/gspc-gov); recorded on the card's evidence, never guessed")
+    ap.add_argument("--bank-revision", default="", help="immutable commit of --bank-dataset; required for a quotable staged card")
+    ap.add_argument("--revision-pins", default="", help="JSON object of model id to immutable revision; controlled runs never re-resolve it")
     args = ap.parse_args()
     only = load_only_ids(Path(args.only)) if args.only else None
+    priority = load_only_ids(Path(args.priority)) if args.priority else set()
+    revision_pins = load_revision_pins(Path(args.revision_pins)) if args.revision_pins else None
     rep = mill(
         Path(args.queue),
         Path(args.out),
@@ -1077,6 +1196,7 @@ def main() -> int:
         banks_dir=Path(args.banks) if args.banks else None,
         items_cap=args.items,
         only_ids=only,
+        priority_ids=priority,
         dead_path=Path(args.dead) if args.dead else None,
         dead_max_age_days=args.dead_max_age_days,
         shard=args.shard,
@@ -1084,6 +1204,8 @@ def main() -> int:
         probe_first=args.probe_first,
         inflight_path=Path(args.inflight) if args.inflight else None,
         bank_dataset=args.bank_dataset or None,
+        bank_revision=args.bank_revision or None,
+        revision_fetch=(lambda model: revision_pins.get(model)) if revision_pins is not None else None,
     )
     print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips", "dead_known", "dead_new", "dead_appended", "inflight_known", "inflight_skipped_this_axis", "probe_first") if k in rep}, default=str))
     print("skips", len(rep["skips"]))

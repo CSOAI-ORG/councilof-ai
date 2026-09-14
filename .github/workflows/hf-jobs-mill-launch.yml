@@ -1,0 +1,204 @@
+name: hf-jobs-mill-launch
+
+# Launches the hub-queue mill on Hugging Face Jobs — the door outside GitHub Actions'
+# 45-minute ceiling (scripts/hf/hf_jobs_mill.py, written 2026-09-05 and never scheduled:
+# only the landing side, mill-jobs-land.yml, ever ran). Each job grades one axis, one shard,
+# for up to 6 h on the team plan, and uploads UNSIGNED ≤3KB cards to the private staging
+# dataset csoai/mill-jobs-staging; mill-jobs-land.yml (4×/day) lands them; the OIDC signer
+# and the human landing merge are unchanged. Nothing here signs, scores or writes the board.
+#
+# Cost basis (owner-visible, never hidden): cpu-basic minutes billed to the csoai team plan;
+# the mill spends its time on provider HTTP calls, not CPU. Default 2 axes × 2 shards per
+# round, 4 rounds/day, 6 h cap each. Change ROUND_AXES / shards by dispatch input, not by
+# editing numbers into a page.
+#
+# Idempotency: skips a round when jobs are still running in the namespace (no pile-up) and
+# never launches when no provider key is present (the launcher refuses; see its docstring).
+
+on:
+  schedule:
+    - cron: "29 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      axes:
+        description: "comma list of axes (default: the two with the fewest measured cells this hour)"
+        required: false
+        default: ""
+      grade:
+        description: "gradings per shard"
+        required: false
+        default: "36"
+      shards:
+        description: "shards per axis"
+        required: false
+        default: "2"
+      flavor:
+        description: "HF Jobs flavor"
+        required: false
+        default: "cpu-basic"
+      timeout:
+        description: "per-job cap"
+        required: false
+        default: "6h"
+      dry_run:
+        description: "print the launch plan, submit nothing"
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+
+concurrency: { group: hf-jobs-mill-launch, cancel-in-progress: false }
+
+jobs:
+  launch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/hf
+            harness/gspc-top100
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: hf CLI
+        run: |
+          python3 -m pip install -q -U huggingface_hub
+          hf --version
+          hf jobs run --help >/dev/null
+
+      - name: keys present? (fail closed, never launch a mill that can reach nothing)
+        id: keys
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          SAMBANOVA_API_KEY: ${{ secrets.SAMBANOVA_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          n=0; for k in HF_INFERENCE_TOKEN GROQ_API_KEY GEMINI_API_KEY NVIDIA_API_KEY CEREBRAS_API_KEY TOGETHER_API_KEY MISTRAL_API_KEY SAMBANOVA_API_KEY OPENROUTER_API_KEY; do [ -n "${!k:-}" ] && n=$((n+1)); done
+          [ -n "${HF_TOKEN:-}" ] || { echo "HF_TOKEN absent — cannot submit jobs"; echo "ok=0" >> "$GITHUB_OUTPUT"; exit 0; }
+          echo "provider keys present: $n"; echo "ok=$([ $n -gt 0 ] && echo 1 || echo 0)" >> "$GITHUB_OUTPUT"
+
+      - name: no pile-up — skip the round while jobs from the last one still run
+        id: busy
+        if: steps.keys.outputs.ok == '1'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+          running=$(python3 - <<'PY'
+          import os
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          n = 0
+          try:
+              for j in api.list_jobs(namespace="csoai"):
+                  st = str(getattr(getattr(j, "status", None), "stage", "") or getattr(j, "status", "")).upper()
+                  if "RUNNING" in st or "PENDING" in st:
+                      n += 1
+          except Exception as e:
+              print(f"list_jobs unavailable ({type(e).__name__}) — treating as 0 running", flush=True)
+          print(n)
+          PY
+          )
+          running=$(printf '%s' "$running" | tail -1)
+          echo "running or pending jobs in csoai: $running"
+          echo "running=$running" >> "$GITHUB_OUTPUT"
+
+      - name: choose axes (fewest measured cells first; dispatch input overrides)
+        id: axes
+        if: steps.keys.outputs.ok == '1' && steps.busy.outputs.running == '0'
+        env:
+          AXES_INPUT: ${{ inputs.axes }}
+        run: |
+          set -euo pipefail
+          ROTATION=(governance safety provenance continuity conformance openness machinery-conformity care cross-reality detector-interop art5-safeguard swarm affect)
+          if [ -n "${AXES_INPUT:-}" ]; then
+            AXES="$AXES_INPUT"; WHY="dispatch input"
+          else
+            # Read the live board's per-axis measured counts; pick the two lowest. Clock fallback
+            # when the board is unreachable — a cold start still rotates instead of stalling.
+            AXES=$(curl -sS -m 30 https://councilof.ai/api/gspc | python3 -c '
+          import json, sys
+          rot = sys.argv[1].split()
+          try:
+              d = json.load(sys.stdin)
+              axes = d.get("axes") or []
+              counts = {}
+              for a in axes:
+                  slug = a.get("slug") or a.get("id") or a.get("axis") or ""
+                  counts[slug] = int((a.get("measured_models") or a.get("n_models") or a.get("models_measured") or 0))
+              ranked = sorted(rot, key=lambda s: counts.get(s, 0))
+              print(",".join(ranked[:2]))
+          except Exception:
+              print("")
+          ' "${ROTATION[*]}" || true)
+            WHY="fewest measured models on /api/gspc"
+            if [ -z "$AXES" ]; then
+              H=$(date -u +%H); H=$((10#$H)); i=$((H % ${#ROTATION[@]})); j=$(((H + 7) % ${#ROTATION[@]}))
+              AXES="${ROTATION[$i]},${ROTATION[$j]}"; WHY="board unreachable — clock fallback"
+            fi
+          fi
+          echo "axes=$AXES ($WHY)"; echo "axes=$AXES" >> "$GITHUB_OUTPUT"
+
+      - name: launch (one HF Job per axis × shard; names only in the log)
+        if: steps.keys.outputs.ok == '1' && steps.busy.outputs.running == '0'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          SAMBANOVA_API_KEY: ${{ secrets.SAMBANOVA_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          AXES: ${{ steps.axes.outputs.axes }}
+          GRADE: ${{ inputs.grade || '36' }}
+          SHARDS: ${{ inputs.shards || '2' }}
+          FLAVOR: ${{ inputs.flavor || 'cpu-basic' }}
+          TIMEOUT: ${{ inputs.timeout || '6h' }}
+          DRY: ${{ inputs.dry_run || 'false' }}
+        run: |
+          set -euo pipefail
+          launched=0; failed=0
+          IFS=',' read -ra LIST <<< "$AXES"
+          for AXIS in "${LIST[@]}"; do
+            case "$AXIS" in
+              governance) DS=gov ;; safety) DS=agi ;; provenance) DS=prv ;; continuity) DS=asi ;;
+              conformance) DS=mcp ;; openness) DS=oss ;; machinery-conformity) DS=mach ;; care) DS=care ;;
+              cross-reality) DS=xr ;; detector-interop) DS=det ;; art5-safeguard) DS=art5 ;; swarm) DS=swarm ;;
+              affect) DS=affect ;; jail) echo "jail: no prompt-bank reader — skipped"; continue ;; *) DS="$AXIS" ;;
+            esac
+            for s in $(seq 0 $((SHARDS - 1))); do
+              extra=""; [ "$DRY" = "true" ] && extra="--dry-run"
+              if python3 scripts/hf/hf_jobs_mill.py --axis "$AXIS" --bank-dataset "csoai/gspc-$DS" --grade "$GRADE" \
+                   --shard "$s" --shards "$SHARDS" --flavor "$FLAVOR" --timeout "$TIMEOUT" --namespace csoai $extra; then
+                launched=$((launched+1))
+              else
+                failed=$((failed+1)); echo "launch failed: axis=$AXIS shard=$s (see above)"
+              fi
+            done
+          done
+          {
+            echo "## hf-jobs-mill-launch"
+            echo "- axes: \`$AXES\` · shards/axis: $SHARDS · grade: $GRADE · flavor: $FLAVOR · cap: $TIMEOUT · dry_run: $DRY"
+            echo "- submitted: $launched · failed to submit: $failed"
+            echo "- cards land via mill-jobs-land.yml from csoai/mill-jobs-staging; signing + human merge unchanged"
+          } >> "$GITHUB_STEP_SUMMARY"
+          [ "$failed" -eq 0 ] || exit 1
+
+      - name: nothing launched (why)
+        if: steps.keys.outputs.ok != '1' || steps.busy.outputs.running != '0'
+        run: |
+          echo "## hf-jobs-mill-launch — skipped" >> "$GITHUB_STEP_SUMMARY"
+          echo "- provider keys ok: ${{ steps.keys.outputs.ok }} · jobs still running: ${{ steps.busy.outputs.running }}" >> "$GITHUB_STEP_SUMMARY"

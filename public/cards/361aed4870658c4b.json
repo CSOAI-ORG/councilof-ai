@@ -1,0 +1,56 @@
+{
+  "card": {
+    "as_of": "2026-09-14T03:10:46Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "BBRL",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_supply",
+          "from": 73453273.42639077,
+          "to": 73488471.42639077
+        },
+        {
+          "field": "source_reported_holders",
+          "from": 133,
+          "to": 40
+        }
+      ],
+      "ledger_index": 106971147,
+      "observed_at": "2026-09-14T03:10:46Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "361aed4870658c4bd427ca6eaf655bf8936625ece6f06bfe5c478342afaa8dcf",
+    "sig_ed25519": "4e42ad5a51652fa18918871f60d0e2a6e545ee34e0caec38200e325a661768df2c6e6a01252cf94995ff20b83b569bf1ce943a43859a9e2d93d0904afd94ae0c",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: BBRL changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:BBRL"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "aa69f5d470f96b043c422698e6d6cd5628ea6f89840d24767927e833a1ae6eaf",
+    "92c13d32c66237c3fc8048521e5bad70cf56f70b37f9ab4baa48adc4b4570b60",
+    "d83197f06e38e0ba9d07a8b3a0916292c10f7a14ca3405ce845f78e6df09ba55",
+    "ccc46d96a447838567cfbcad5ac5a94046e983166e8cefcd67f54175117d3ac4",
+    "4ce1a635d1b1c517d75fa551de28361d98a71eb640ab77c52bea55936bb98891",
+    "c53db0d3a4c32d6b17714d2148273f0bc759498dc501601a5c3c7915c40b94be",
+    "67182eb7b74bfe8297af73a3d35f5e501e1b328d760b288f5e015961dd9a9d04",
+    "1868b52c1d6b3fc4045ab23dbdcd3ece471a7b4d921c62fa79250c79637dc3f4",
+    "0a2c7a3021f9c1d23e8d98ead5014c30c5721f6031468a0dbcabd2ac7f4cd1bf"
+  ]
+}

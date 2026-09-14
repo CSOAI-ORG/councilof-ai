@@ -52,6 +52,7 @@ export const SHELL_CSS =
   `  .logo-word { color: #047857; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; white-space: nowrap; }\n` +
   `  .nav { display: flex; gap: 2px; flex-wrap: wrap; }\n` +
   `  .nav a { color: var(--muted, #6b7280); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 6px; }\n` +
+  `  @media (max-width: 520px) { .site-header-inner { flex-direction: column; align-items: flex-start; padding: 10px 16px; gap: 4px; } .nav { gap: 0; } .nav a { font-size: 13px; padding: 6px 8px; } }\n` +
   `  .nav a:hover { color: var(--fg, #1f2937); background: var(--card, #f9fafb); }\n`;
 
 const HEADER_RE = /<header class="site-header"[^>]*>[\s\S]*?<\/header>/;

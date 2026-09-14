@@ -59,19 +59,18 @@ npm run guard:evidence-integrity
 step 'Council truth gate — no simulated BFT or phantom engine doors'
 npm run guard:council-truth
 
-
-
 step 'Stablecoin readiness gate — indexed is never measured'
-  npm run guard:stablecoin-readiness
+npm run guard:stablecoin-readiness
 
 step 'Mill receipt readiness — crypto, lifecycle and regulation stay separate'
-  npm run guard:mill-receipt-readiness
+npm run guard:mill-receipt-readiness
 
 step 'Sitemap truth gate — every listed URL is one the edge serves'
-  npm run guard:sitemap-truth
+npm run guard:sitemap-truth
 
 step 'x402 index auditor — offline pagination and fail-closed contract'
-  npm run test:x402-index-audit
+npm run test:x402-index-audit
+
 step 'Redirects guard — selftest, then the real file'
 node scripts/redirects-guard.mjs --selftest
 node scripts/redirects-guard.mjs public/_redirects
@@ -122,15 +121,14 @@ bash scripts/prerender-run.sh --dist dist/client --wait 900 --min 350
 step 'Check prerender report against the filesystem'
 node scripts/check-prerender.mjs dist/client
 
-
-
 step 'Structured data — Organization + Dataset on /, FAQPage reported on /honesty/'
-  node scripts/structured-data-gate.mjs --selftest
-  node scripts/structured-data-gate.mjs dist/client
+node scripts/structured-data-gate.mjs --selftest
+node scripts/structured-data-gate.mjs dist/client
 
 step 'Link gate — on the tree that actually ships'
-  node scripts/link-gate.mjs --selftest
-  node scripts/link-gate.mjs dist/client
+node scripts/link-gate.mjs --selftest
+node scripts/link-gate.mjs dist/client
+
 step 'Copy corrected field pages from source into dist (vite skips public/*.html)'
 rm -f dist/client/gspc-scoreboard.html
 node scripts/place-end-user-aliases.mjs dist/client
@@ -154,10 +152,9 @@ node scripts/brand-gate.mjs dist/client
 step 'Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy'
 node scripts/signed-json-guard.mjs dist/client
 
-
-
 step 'Well-known index gate — the index must describe the directory'
-  node scripts/wellknown-index-gen.mjs --check
+node scripts/wellknown-index-gen.mjs --check
+
 step 'Price gate — no published price, no unevidenced popularity claim'
 node scripts/price-gate.mjs dist/client
 
@@ -248,17 +245,8 @@ with_timeout 120 python3 scripts/root-witness-release-gate.py \
   --public-dir dist/client \
   --live-timeout-seconds 30
 
-
 step 'Outward-claims guard (live)'
-  set +e
-  node scripts/outward-claims-guard.mjs > outward.txt 2>&1
-  RC=$?
-  cat outward.txt
-  N=$(grep -oE '[0-9]+ FAIL' outward.txt | tail -1 | grep -oE '[0-9]+')
-  if [ -z "$N" ]; then
-    echo "::warning::outward-claims guard printed no tally (exit $RC)"
-  fi
+CHECK_REGISTRY="${CHECK_REGISTRY:-}" node scripts/outward-claims-guard.mjs
 
 step 'Open or refresh the one outward-claims issue'
-  set -euo pipefail
-  echo "Outward-claims: ${N:-unknown} disagreements" 
+skipped 'issue mutation is GitHub-Actions-only; HF runner has no github.token'

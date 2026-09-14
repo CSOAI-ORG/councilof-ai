@@ -8,7 +8,6 @@ import {
   Search,
   Wrench,
 } from "lucide-react";
-import { industriesForGrid } from "@/data/industries";
 import { ROUTE_MANIFEST } from "@/data/route-manifest";
 import {
   classify,
@@ -115,19 +114,6 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
       kind: "surface",
       href,
       path: route.path,
-    });
-  }
-
-  for (const industry of industriesForGrid) {
-    const path = `/industries/${industry.slug}`;
-    add({
-      id: `industry:${industry.slug}`,
-      label: industry.name,
-      description: `${industry.short}. ${industry.bench}.`,
-      group: "Industries",
-      kind: "industry",
-      href: dashboardViewHref(path, industry.name),
-      path,
     });
   }
 

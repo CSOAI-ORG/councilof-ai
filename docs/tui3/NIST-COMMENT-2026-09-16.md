@@ -32,7 +32,7 @@ The GSPC (Governance · Safety · Provenance · Continuity) measurement system:
 - **Frozen test banks**: Publicly hosted on HuggingFace, versioned, SHA-256 fingerprinted
 - **Deterministic grading**: No model judges another model; scoring code is public
 - **Ed25519 signing**: Every measurement card signed under one Ed25519 key resolved from did:web:csoai.org, the signing step run in GitHub Actions under OIDC (a single key — no threshold or MPC scheme)
-- **Merkle root**: Public root with 264 leaves, Rekor-witnessed (current witness entry published at https://councilof.ai/interop/root-witness-latest.json — log index 2814494675 at the time of writing; it advances with every root cycle, so read the file rather than this number)
+- **Merkle root**: Public root with 298 leaves, Rekor-witnessed (current witness entry published at https://councilof.ai/interop/root-witness-latest.json — log index 2814494675 at the time of writing; it advances with every root cycle, so read the file rather than this number)
 - **Card root**: 1,301 measurement cards in dedicated Merkle root (including provenance-enriched cards)
 - **Corrections ledger**: Public, machine-readable, 49 entries
 
@@ -84,7 +84,7 @@ The GSPC (Governance · Safety · Provenance · Continuity) measurement system:
 |----------|-----|-------------|
 | GSPC Board | https://councilof.ai/api/gspc | 22 axes, living, signed |
 | Signed Cards | https://councilof.ai/signed/card_index.json | 335 cards, Ed25519 |
-| Public Root | https://councilof.ai/root.json | 264 leaves, Merkle, Rekor |
+| Public Root | https://councilof.ai/root.json | 298 leaves, Merkle, Rekor |
 | Card Root | https://councilof.ai/interop/card-root-2026-09-13.json | 1,301 leaves, dedicated measurement root |
 | Corrections | https://councilof.ai/api/corrections | 49 entries, public |
 | Verify | https://councilof.ai/gspc-verify | Free, no account needed |

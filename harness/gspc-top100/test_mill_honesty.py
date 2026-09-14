@@ -683,13 +683,13 @@ def test_land_mill_cards_dedupes_and_rejects_signed(tmp_path: Path | None = None
     (staged / "unsigned-governan-cccccccccccc.json").write_text(json.dumps(tampered))
     presigned = dict(stage_unsigned("org/pre", "governance", hits=15, n=30, reason="x"), signature="ab" * 32)
     (staged / "unsigned-governan-dddddddddddd.json").write_text(json.dumps(presigned))
-    rep = lm.land(staged, inbox, signed_dir)
+    rep = lm.land(staged, inbox, signed_dir, "123")
     assert [r["model"] for r in rep["landed"]] == ["org/new"]
     reasons = {s["file"]: s["reason"] for s in rep["skipped"]}
     assert reasons["unsigned-governan-bbbbbbbbbbbb.json"].startswith("already-signed")
     assert "sha256" in reasons["unsigned-governan-cccccccccccc.json"]
     assert "signature" in reasons["unsigned-governan-dddddddddddd.json"]
-    rep2 = lm.land(staged, inbox, signed_dir)
+    rep2 = lm.land(staged, inbox, signed_dir, "123")
     assert rep2["landed"] == []
     assert any(s["reason"] == "already-landed same id" for s in rep2["skipped"])
     assert rep["signed_here"] is False and rep["writes_board"] is False
@@ -964,7 +964,7 @@ def test_superseded_card_still_resolves_but_is_not_counted(tmp_path: Path | None
 def test_stage_unsigned_carries_evidence_binding() -> None:
     """The 2026-09-13 evidence ruling: cards bind an item-level bundle by content address."""
     ev = {
-        "schema": "csoai.mill-item-evidence/0.1",
+        "schema": "csoai.mill-item-evidence/0.2",
         "items_file": "items-governan-0123456789ab.jsonl",
         "items_sha256": "ab" * 32,
         "bank_sha256": "cd" * 32,
@@ -1002,12 +1002,14 @@ def test_mill_grading_writes_item_evidence_bundle(tmp_path: Path | None = None) 
     out = root / "out"
 
     def fake_infer(mid, prompt):
+        _ROUTE[mid] = "hf-router:org/m:featherless-ai"
         return "OK", "Answer: YES"
 
     with mock.patch("mill_hub_queue.infer_hub", side_effect=fake_infer):
         rep = mill(
             q, out, pick_n=1, grade_n=1, axis="governance", banks_dir=banks, items_cap=30,
-            bank_dataset="csoai/gspc-gov", revision_fetch=lambda m: "f" * 40,
+            bank_dataset="csoai/gspc-gov", bank_revision="e" * 40,
+            revision_fetch=lambda m: "f" * 40,
         )
     assert len(rep["staged_unsigned"]) == 1, rep["skips"]
     card = json.loads(next(out.glob("unsigned-*.json")).read_text())
@@ -1018,11 +1020,37 @@ def test_mill_grading_writes_item_evidence_bundle(tmp_path: Path | None = None) 
     assert ev["bank_sha256"] == hashlib.sha256((banks / "governance.jsonl").read_bytes()).hexdigest()
     assert ev["bank_dataset"] == "csoai/gspc-gov"
     assert ev["model_hf_revision"] == "f" * 40
-    assert ev["schema"] == "csoai.mill-item-evidence/0.1"
+    assert ev["schema"] == "csoai.mill-item-evidence/0.2"
+    assert ev["bank_revision"] == "e" * 40
+    assert (out / ev["bank_file"]).read_bytes() == (banks / "governance.jsonl").read_bytes()
     rows = [json.loads(l) for l in bundle.read_text().splitlines()]
     assert len(rows) == 30, "every graded item leaves a row, even ones that left the denominator"
+    assert all(r["prompt"].startswith("You are scoring one frozen governance item.") for r in rows)
+    assert all(r["raw_output"] == "Answer: YES" and r["elapsed_ms"] >= 0 for r in rows)
+    assert all(r["provider_route"] == "hf-router:org/m:featherless-ai" for r in rows)
     assert all(r["observed"] == "YES" for r in rows)
     assert sum(1 for r in rows if r["ok"]) == 15
     assert card["body"]["n"] == 30 and card["body"]["accuracy"] == 0.5
     if tmp_path is None:
         shutil.rmtree(root, ignore_errors=True)
+
+def test_inject_commissioned_subjects_upserts_unmeasured_not_measured() -> None:
+    import mill_hub_queue as m
+    rows = [{"id": "already/in-queue", "rank": 9, "status": "UNMEASURED", "pipeline_tag": "text-generation"}]
+    out = m.inject_commissioned_subjects(rows, {"paid/subject", "already/in-queue"})
+    ids = [r["id"] for r in out]
+    assert "paid/subject" in ids and ids.count("already/in-queue") == 1
+    paid = next(r for r in out if r["id"] == "paid/subject")
+    assert paid["status"] == "UNMEASURED"
+    assert paid.get("commissioned") is True
+    assert paid.get("card_id") in (None, "")
+
+
+def test_pick_emptiest_prefers_commissioned_priority_ids() -> None:
+    import mill_hub_queue as m
+    rows = [
+        {"id": "zzz/low", "rank": 1, "status": "UNMEASURED", "pipeline_tag": "text-generation"},
+        {"id": "paid/subject", "rank": 99, "status": "UNMEASURED", "pipeline_tag": "text-generation", "commissioned": True},
+    ]
+    picked = m.pick_emptiest(rows, 1, priority_ids={"paid/subject"})
+    assert picked and picked[0]["id"] == "paid/subject"

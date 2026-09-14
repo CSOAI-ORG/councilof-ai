@@ -20,6 +20,8 @@ council-governed** — the missing governance floor under an AI workbench.
 No API key required for the public governance surface. Override the backend with
 `CSOAI_GATEWAY` (default `https://os.meok.ai/api`).
 
+> **Gateway state (verified 2026-09-14 01:25 UTC):** the default gateway answers every path (`/`, `/catalog`, `/sign`, `/verify`, `/health`) with `200 text/html` — a web page, not a JSON API — so all four tools return an explicit error. This package does not fake a seal. Until a JSON gateway is live, run your own and set `CSOAI_GATEWAY`; the GSPC MCP at `https://councilof.ai/mcp` (12 tools) is the one that works today.
+
 ## Install
 
 Published on npm — **one command, no clone, no build:**

@@ -35,10 +35,13 @@ import { railMode } from "./_x402_config";
 import { REQUEST_ATTESTATION_DESCRIPTION } from "./_x402_descriptions";
 import { AXES } from "./_axis_register";
 import { signPayload, cardV0 } from "../_lib/cardSign";
+import { classifyCommissionTarget } from "./_commission_target";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
 type Cell = { model: string; axis: string; card: string; card_url: string; signed: boolean; created?: string };
+
+
 
 const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -90,6 +93,21 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.request-attestation/0.2", error: "bad_request", reason: "pass subject=<id> (and optional axis=) before presenting payment", lid: CSOAI_LID }, 400);
   }
   const knownAxis = axis ? AXES.some((a) => a.axis === axis) : null;
+  // Typed contract: classify before admit. Ambiguous subjects never reach /verify|/settle.
+  const targetEarly = subject ? classifyCommissionTarget(subject) : null;
+  if (hasPaymentHeader(request) && targetEarly && !targetEarly.admit) {
+    return json({
+      schema: "csoai.request-attestation/0.2",
+      error: "bad_request",
+      reason: targetEarly.reason,
+      subject,
+      subject_kind: targetEarly.subject_kind,
+      fulfillment: targetEarly.fulfillment,
+      model: targetEarly.model,
+      bank: targetEarly.bank,
+      lid: CSOAI_LID,
+    }, 400);
+  }
 
   const description = REQUEST_ATTESTATION_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
@@ -161,9 +179,18 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     ...(tx ? [`https://basescan.org/tx/${tx}`] : []),
     reserve.source.startsWith("http") ? reserve.source : `${origin}/signed/card-matrix.json`,
   ];
+  const target = targetEarly ?? classifyCommissionTarget(subject);
+  const queue_ref = `${origin}/api/commission-queue`;
   const payload: Record<string, unknown> = {
     status: "COMMISSIONED",
     subject,
+    subject_kind: target.subject_kind,
+    model: target.model,
+    bank: target.bank,
+    fulfillment: target.fulfillment,
+    enqueued: true,
+    queue: "commission",
+    queue_ref,
     axis: axis || null,
     axis_known: knownAxis,
     settle: { network: payment.settlement?.network || null, transaction: tx, payer: payment.settlement?.payer || null },
@@ -192,14 +219,45 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     unmeasured: ["fresh_run_schedule"],
   });
 
-  // Tally + queue when a store is bound. Absent store ⇒ nothing counted (null, never 0).
+  // Tally + mill-visible enqueue when a store is bound. Absent store ⇒ nothing counted (null, never 0).
+  // Enqueue writes mill:commission:<subject> for GET /api/commission-queue. Failure never blocks receipt.
   if (env.REVENUE_KV) {
     try {
       const n = Number((await env.REVENUE_KV.get("count:issuances")) || "0") + 1;
       await env.REVENUE_KV.put("count:issuances", String(n));
-      await env.REVENUE_KV.put(`ras:${leaf.sha256}`, JSON.stringify({ subject, axis: axis || null, tx, as_of }));
+      await env.REVENUE_KV.put(
+        `ras:${leaf.sha256}`,
+        JSON.stringify({
+          subject,
+          axis: axis || null,
+          tx,
+          as_of,
+          enqueued: true,
+          queue: "commission",
+          subject_kind: target.subject_kind,
+          model: target.model,
+          bank: target.bank,
+          fulfillment: target.fulfillment,
+        }),
+      );
+      await env.REVENUE_KV.put(
+        `mill:commission:${subject}`,
+        JSON.stringify({
+          subject,
+          subject_kind: target.subject_kind,
+          model: target.model,
+          bank: target.bank,
+          axis: axis || null,
+          tx,
+          as_of,
+          receipt_sha: leaf.sha256,
+          card_sha: leaf.sha256,
+          status: "QUEUED",
+          fulfillment: target.fulfillment,
+        }),
+      );
     } catch {
-      /* a tally failure never blocks a paid deliverable */
+      /* a tally/enqueue failure never blocks a paid deliverable */
     }
   }
 

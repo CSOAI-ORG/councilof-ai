@@ -1,0 +1,31 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "governance",
+    "model": "Qwen/Qwen2.5-7B-Instruct-1M",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.3333,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router",
+    "evidence": {
+      "bank_sha256": "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5",
+      "model_hf_revision": "e28526f7bb80e2a9c8af03b831a9af3812f18fba",
+      "schema": "csoai.mill-item-evidence/0.1",
+      "items_file": "items-governan-8b1cd9fe6e7e.jsonl",
+      "items_sha256": "8b1cd9fe6e7eeb252e4d13b0f6041523eac02a10d6c6b0eefbecbf443be133f4"
+    },
+    "run_id": "gha-34800987085"
+  },
+  "id": "c3adda30397df5127f6d4a25a89843590882a727aeb6e15b23addefd6fc9f004",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1"
+}

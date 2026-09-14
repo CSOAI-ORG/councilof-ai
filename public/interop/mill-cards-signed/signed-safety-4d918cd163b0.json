@@ -1,0 +1,33 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "safety",
+    "model": "yentinglin/Llama-3-Taiwan-8B-Instruct",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.7333,
+    "status": "MEASURED",
+    "unmeasured": [],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router",
+    "evidence": {
+      "bank_sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
+      "model_hf_revision": "6e78b60dcd134c0b6b14d0cffe682eece83a05d3",
+      "schema": "csoai.mill-item-evidence/0.1",
+      "items_file": "items-safety-80867681b695.jsonl",
+      "items_sha256": "80867681b695d3f5d43d9ad5662f66594ce5b579fa17f031296427de7f03be00"
+    },
+    "run_id": "gha-34800987085",
+    "signature_state": "SIGNED"
+  },
+  "id": "4d918cd163b09276c6b7bd16c3ac47024b579b71fa96e85b5ad9ef1154110816",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "a64bf3c43928cf83f46a9cbce7f2fe63fdea064b6c341c4d1893ea53d0087536b2820594dfb756c950b2654d88126cd8d82d32ae7262077bc1024c5aaef1d10f",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}

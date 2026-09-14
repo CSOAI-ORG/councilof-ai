@@ -39,6 +39,8 @@ describe("stale copy honesty", () => {
 
   it("press and accessibility claims fail closed instead of freezing unsupported claims", () => {
     expect(pressroom).toContain('fetch("/api/revenue"');
+    expect(pressroom).toContain('fetch("/api/coverage"');
+    expect(pressroom).toMatch(/not a grade, endorsement, customer count, signed measurement, or payment/i);
     expect(pressroom).toMatch(/UNCHECKABLE:[\s\S]*no previous count is reused/);
     expect(pressroom).not.toMatch(/first settlement.*NOT HAPPENED/i);
     expect(accessibility).toMatch(/working toward WCAG 2\.2 Level AA/);

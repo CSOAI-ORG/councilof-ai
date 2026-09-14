@@ -35,6 +35,9 @@ STAGED_DIRS = (
     # scripts/readers/wrapped-asset-parity-reader.mjs --stage. PROBED / UNMEASURED only;
     # the read state lives in payload.parity_state. Admission/signing unchanged.
     "wrapped-asset-parity-2026-09",
+    # Layer 0 liveness (2026-09-14): one PROBED atom per public-root run about the trust floor
+    # itself (DID key, root, Rekor/OTS, release gate) from scripts/readers/layer0_liveness_reader.py.
+    "layer0-liveness-2026-09",
 )
 SURFACE = "public.notice"
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"

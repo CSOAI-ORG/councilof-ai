@@ -1,5 +1,24 @@
 import { useEffect, useState } from "react";
 
+type BazaarFinding =
+  | { state: "loading" }
+  | { state: "uncheckable" }
+  | {
+      state: "probed";
+      hosts: number;
+      conformant: number;
+      pct: number;
+      source: string;
+      asOf: string;
+    };
+
+function readNumber(text: string, pattern: RegExp): number | null {
+  const match = text.match(pattern);
+  if (!match) return null;
+  const value = Number(match[1]);
+  return Number.isFinite(value) && value >= 0 ? value : null;
+}
+
 // Pressroom - press one-pager + boilerplate for distribution. Quotable facts, the story,
 // and a single CTA. Built for journalists, partners, and demo sharing.
 const FACTS = [
@@ -41,6 +60,7 @@ export default function Pressroom() {
         usdcAtomic: number;
       }
   >({ state: "loading" });
+  const [bazaar, setBazaar] = useState<BazaarFinding>({ state: "loading" });
 
   useEffect(() => {
     document.title = "Pressroom — Council of AI (CSOAI)";
@@ -76,6 +96,37 @@ export default function Pressroom() {
       .catch((error: unknown) => {
         if (!(error instanceof DOMException && error.name === "AbortError")) {
           setRevenue({ state: "uncheckable" });
+        }
+      });
+    fetch("/api/coverage", {
+      signal: controller.signal,
+      cache: "no-store",
+      headers: { accept: "application/json" },
+    })
+      .then((response) =>
+        response.ok
+          ? response.json()
+          : Promise.reject(new Error(`HTTP ${response.status}`)),
+      )
+      .then((body) => {
+        const row = Array.isArray(body?.rows)
+          ? body.rows.find((candidate: { id?: unknown }) => candidate?.id === "bazaar")
+          : null;
+        const note = typeof row?.note === "string" ? row.note : "";
+        const hosts = Number.isSafeInteger(row?.indexed?.value) ? row.indexed.value : null;
+        const conformant = readNumber(note, /;\s*([0-9]+) answered a conformant v2 402/);
+        const pct = readNumber(note, /\(([0-9]+(?:\.[0-9]+)?)%\)/);
+        const asOf = note.match(/; as_of ([^.]*)\./)?.[1] ?? null;
+        const source = typeof row?.indexed?.source === "string" ? row.indexed.source : null;
+        if (hosts !== null && conformant !== null && pct !== null && asOf && source) {
+          setBazaar({ state: "probed", hosts, conformant, pct, source, asOf });
+        } else {
+          setBazaar({ state: "uncheckable" });
+        }
+      })
+      .catch((error: unknown) => {
+        if (!(error instanceof DOMException && error.name === "AbortError")) {
+          setBazaar({ state: "uncheckable" });
         }
       });
     return () => controller.abort();
@@ -147,6 +198,31 @@ export default function Pressroom() {
           >
             Inspect GET /api/revenue
           </a>
+        </div>
+        <h2 className="mt-12 text-xl font-bold text-gray-900">Latest public finding</h2>
+        <div className="mt-4 rounded-2xl border border-sky-200 bg-sky-50 p-5">
+          <div className="text-xs font-bold uppercase tracking-wide text-sky-800">
+            x402 Bazaar conformance census
+          </div>
+          {bazaar.state === "probed" ? (
+            <>
+              <p className="mt-2 text-lg font-bold text-sky-950">
+                {bazaar.conformant.toLocaleString()} of {bazaar.hosts.toLocaleString()} public hosts answered a strict x402 v2 conformance probe ({bazaar.pct.toFixed(2)}%).
+              </p>
+              <p className="mt-2 text-sm leading-6 text-sky-950">
+                This is a daily, read-only probe of third-party doors. It is not a grade, endorsement, customer count, signed measurement, or payment. Snapshot: {bazaar.asOf}.
+              </p>
+              <a className="mt-3 inline-block font-mono text-xs font-semibold text-sky-800 underline underline-offset-4" href={bazaar.source}>
+                Inspect the public dataset
+              </a>
+            </>
+          ) : bazaar.state === "loading" ? (
+            <p className="mt-2 text-sm text-sky-950">Reading the live coverage ledger…</p>
+          ) : (
+            <p className="mt-2 text-sm text-sky-950">
+              <strong>UNCHECKABLE:</strong> the live census could not be read; no previous snapshot is reused.
+            </p>
+          )}
         </div>
         <h2 className="mt-12 text-xl font-bold text-gray-900">Quotable</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">

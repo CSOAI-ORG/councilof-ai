@@ -3,13 +3,9 @@ name: hub-queue-mill
 # (keys as GHA secrets, by name). Stages UNSIGNED ≤3KB cards only; MEASURED happens
 # only after GHA OIDC sign + verify VALID (existing sign path). writes_board=false.
 on:
-  schedule:
-    # Two chances an hour, not one. The hourly line alone EXECUTED 7 times on 2026-09-04 and
-    # 3 times by 12:30Z on 2026-09-05 (`gh run list --workflow=hub-queue-mill.yml`): GitHub
-    # delays and drops schedule events in a repo that runs ~350 workflow runs a day, so the
-    # cron is a ceiling, not a rate. The concurrency group below still serialises runs.
-    - cron: "41 * * * *"
-    - cron: "11 * * * *"
+  # Schedule DISABLED 2026-09-14 until issue #2075 v0.2 admission
+  # (aggregate-only staging). Re-enable cron only after producer+
+  # verifier+signer+promotion gate green. workflow_dispatch retained.
   workflow_dispatch:
     inputs:
       # Empty means "let the selector choose the emptiest axis", the same thing the
@@ -30,10 +26,12 @@ on:
       # executed runs, ≈ 340/day. 48 h therefore covers ≈ 340-680 cells, not 5,490 — that
       # ceiling is GitHub's schedule starvation and one sequential door, not the grade count.
       grade: { description: "how many probe-live models to grade", type: string, default: "36" }
+      model: { description: "optional exact HF repo for one controlled proof (owner/name)", type: string, default: "" }
   workflow_call:
     inputs:
       axis: { type: string, default: "" }
       grade: { type: string, default: "36" }
+      model: { type: string, default: "" }
 # Per-axis group so mill-spray can run up to N axes at once. A blank axis
 # (schedule / emptiest) still serialises with other emptiest runs. Each mill
 # stays sequential inside the job — featherless 403s on a burst from ONE
@@ -67,6 +65,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       AXIS_INPUT: ${{ inputs.axis || github.event.inputs.axis }}
       GRADE: ${{ inputs.grade || github.event.inputs.grade || '36' }}
+      MODEL_INPUT: ${{ inputs.model || github.event.inputs.model }}
     steps:
       - uses: actions/checkout@v4
         with: { ref: master }
@@ -186,8 +185,10 @@ jobs:
             jail) DS=jail-goldbank ;;
             *) DS="$AXIS" ;;
           esac
-          echo "DS=$DS" >> "$GITHUB_ENV"  # the mill step's --bank-dataset reads this across the step boundary
-          if curl -fsSL "https://huggingface.co/datasets/csoai/gspc-${DS}/resolve/main/items.jsonl" -o "mill-in/banks/${AXIS}.jsonl"; then
+          echo "DS=$DS" >> "$GITHUB_ENV"
+          BANK_REVISION=$(curl -fsSL "https://huggingface.co/api/datasets/csoai/gspc-${DS}" | jq -er '.sha')
+          echo "BANK_REVISION=$BANK_REVISION" >> "$GITHUB_ENV"
+          if curl -fsSL "https://huggingface.co/datasets/csoai/gspc-${DS}/resolve/${BANK_REVISION}/items.jsonl" -o "mill-in/banks/${AXIS}.jsonl"; then
             echo "bank csoai/gspc-${DS} → banks/${AXIS}.jsonl ($(wc -l < mill-in/banks/${AXIS}.jsonl) items)"; echo "inputs=1" >> "$GITHUB_OUTPUT"
           else
             echo "no public frozen bank for ${AXIS} (tried csoai/gspc-${DS}) — stays UNMEASURED"; echo "inputs=0" >> "$GITHUB_OUTPUT"
@@ -211,10 +212,61 @@ jobs:
           # picker their (id, axis) cells to skip. Empty when nothing is waiting — that is fine.
           BRS=$(gh pr list --state open --limit 100 --json headRefName --jq '.[].headRefName|select(startswith("mill/land-"))' || true)
           python3 harness/gspc-top100/inflight_cells.py --out mill-in/inflight.jsonl $BRS
+      - name: commissioned subjects first (GET /api/commission-queue QUEUED models → mill-in/priority.txt)
+        if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
+        run: |
+          set -euo pipefail
+          # Prefer mill-visible /api/commission-queue (QUEUED + non-null model only).
+          # UNFULFILLABLE SKUs stay receipt-only — never enter priority.txt.
+          # Fall back to /api/commissions when queue endpoint is not yet tip-live.
+          # Keep mill-in/commissions.json for commission_run_report (legacy feed).
+          : > mill-in/priority.txt
+          python3 -m unittest discover -s scripts -p test_commission_priority.py
+          curl -fsS -m 30 https://councilof.ai/api/commissions -o mill-in/commissions.json || true
+          ok=0
+          source=""
+          if curl -fsS -m 30 https://councilof.ai/api/commission-queue -o mill-in/commission-queue.json &&
+             python3 scripts/commission_priority.py --input mill-in/commission-queue.json \
+               --axis "$AXIS" --output mill-in/priority.txt; then
+            ok=1; source="commission-queue"
+          elif [ -f mill-in/commissions.json ] &&
+             python3 scripts/commission_priority.py --input mill-in/commissions.json \
+               --axis "$AXIS" --output mill-in/priority.txt; then
+            ok=1; source="commissions"
+          fi
+          if [ "$ok" = 1 ]; then
+            priority_status="AVAILABLE"
+            subject_count="$(wc -l < mill-in/priority.txt | tr -d ' ')"
+          else
+            priority_status="UNAVAILABLE"
+            subject_count=""
+            echo '::warning::Commission queue unavailable or invalid; paid-request priority was NOT verified. Background measurements continue.'
+          fi
+          health_args=(--feed mill-in/commissions.json --health-out mill-in/commission-health.json \
+            --axis "$AXIS" --priority-status "$priority_status" --priority-source "$source")
+          if [ -n "$subject_count" ]; then health_args+=(--subject-count "$subject_count"); fi
+          python3 scripts/commission_run_report.py "${health_args[@]}"
+          cat mill-in/commission-health.json >> "$GITHUB_STEP_SUMMARY"
+      - name: validate an exact one-shot proof target and freeze its revision
+        if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
+        run: |
+          set -euo pipefail
+          if [ -n "${MODEL_INPUT:-}" ]; then
+            python3 -m unittest discover -s scripts -p test_validate_mill_proof_target.py
+            python3 scripts/validate_mill_proof_target.py \
+              --model "$MODEL_INPUT" --axis "$AXIS" --queue mill-in/queue.jsonl \
+              --dead harness/gspc-top100/dead_slugs.jsonl --inflight mill-in/inflight.jsonl \
+              --only-out mill-in/proof-only.txt --revision-pins-out mill-in/proof-revisions.json \
+              --receipt-out mill-out/proof-target.json
+          fi
       - name: mill (stage unsigned cards; MEASURED only after OIDC sign + VALID)
         if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
         run: |
           set -euo pipefail
+          proof_args=()
+          if [ -n "${MODEL_INPUT:-}" ]; then
+            proof_args=(--only mill-in/proof-only.txt --revision-pins mill-in/proof-revisions.json)
+          fi
           # --probe-first asks the Hub which slugs a provider actually serves BEFORE spending
           # a grade. Without it a run picks the 100 emptiest by rank, grades the first 8, and
           # 7 of those 8 are gpt2/opt-125m/GGUF/tiny-test repos that nothing serves — one card
@@ -235,7 +287,19 @@ jobs:
             --probe-first --dead harness/gspc-top100/dead_slugs.jsonl \
             --dead-max-age-days 14 \
             --bank-dataset "csoai/gspc-${DS}" \
-            --inflight mill-in/inflight.jsonl 2>&1 | tail -40
+            --bank-revision "$BANK_REVISION" \
+            --inflight mill-in/inflight.jsonl --priority mill-in/priority.txt \
+            "${proof_args[@]}" 2>&1 | tail -40
+      - name: Link commissions to this run's observed results
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s scripts -p test_commission_run_report.py
+          if [ -f mill-out/mill-report.json ]; then
+            python3 scripts/commission_run_report.py --feed mill-in/commissions.json --mill mill-out
+          else
+            echo '::warning::Commission result linkage unavailable for this run; no fulfillment asserted.'
+          fi
       - name: upload staged cards (not a board rewrite)
         if: always()
         uses: actions/upload-artifact@v4
@@ -251,5 +315,6 @@ jobs:
           # landing PR so it lands through the human gate like everything else.
           path: |
             mill-out
+            mill-in/commission-health.json
             harness/gspc-top100/dead_slugs.jsonl
           if-no-files-found: warn

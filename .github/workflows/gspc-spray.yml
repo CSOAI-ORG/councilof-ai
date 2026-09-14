@@ -4,7 +4,8 @@ name: gspc-spray
 #
 # One snapshot is built from LIVE truth (GET /api/gspc, root.json, the frozen banks on the Hub) by
 # scripts/spray/gspc-spray.py and pushed, unchanged, to each surface. Every number is derived at run time;
-# if /api/gspc cannot be read the script refuses (exit 2) and nothing is published. Idempotent: a surface
+# if /api/gspc cannot be read or root.json does not verify under the live DID, the script refuses (exit 2)
+# and nothing is published. Idempotent: a surface
 # already carrying this as_of / content fingerprint is left alone, so a daily run that finds no change
 # writes nothing anywhere.
 #
@@ -12,10 +13,10 @@ name: gspc-spray
 # log and that surface is skipped — never invented, never faked. Expected secret names are:
 #   HF_TOKEN            Hugging Face, write on org csoai              → --hf
 #   KAGGLE_ACCESS_TOKEN OAuth token used by Kaggle CLI 2.x             → --kaggle
-#   GSPC_BOARD_TOKEN    fine-grained PAT, contents:write on CSOAI-ORG/gspc-board → --github (missing;
-#                       the default GITHUB_TOKEN cannot push to another repository)
-#   ZENODO_TOKEN        personal token, deposit:write + deposit:actions → --zenodo    (missing)
-#   PYPI_API_TOKEN      project-scoped token for csoai-gspc            → --pypi      (missing)
+#   GSPC_BOARD_TOKEN    fine-grained PAT, contents:write on CSOAI-ORG/gspc-board → --github
+#                       (the default GITHUB_TOKEN cannot push to another repository)
+#   ZENODO_TOKEN        personal token, deposit:write + deposit:actions → --zenodo
+#   PYPI_API_TOKEN      project-scoped token for csoai-gspc            → --pypi
 #   NPM_TOKEN           granular token WITH "Bypass 2FA"               → (npm stays BLOCKED until then;
 #                       the account is WebAuthn, so --otp can never work)
 #
@@ -67,7 +68,7 @@ jobs:
         # The same probe with the OAuth access_token as a Bearer returns HTTP 200 — which is
         # exactly why the Mac, holding a cached access_token, publishes fine. So: unpin, and
         # give the runner the token rather than the key.
-        run: pip install --quiet huggingface_hub kaggle build twine
+        run: pip install --quiet cryptography huggingface_hub kaggle build twine
 
       # The kaggle CLI in the runner does not read KAGGLE_USERNAME/KAGGLE_KEY from the
       # environment (run 33971286898: it asked for `kaggle auth login` and the push FAILED
@@ -164,9 +165,10 @@ jobs:
 
       - name: verify exact Hugging Face/Kaggle parity
         if: steps.choose.outputs.parity == 'true' && !inputs.dry_run
-        # Kaggle creates a version at once but its public download serves the previous archive for
-        # minutes; a bounded wait (only while Kaggle is BEHIND) turns that lag into a wait, not a red.
-        run: python3 scripts/spray/verify-gspc-parity.py --kaggle-wait-seconds 900 --report "$RUNNER_TEMP/spray/parity-report.json"
+        # Resolve Kaggle's highest Ready version explicitly: its unversioned download pointer can
+        # remain stale after a version is Ready. Wait only when that newest Ready archive is behind.
+        # Keep the wait below the 30-minute job ceiling so the report artifact is still uploaded on failure.
+        run: python3 scripts/spray/verify-gspc-parity.py --kaggle-wait-seconds 900 --allow-stale-live-root --report "$RUNNER_TEMP/spray/parity-report.json"
 
       - uses: actions/upload-artifact@v4
         if: always()

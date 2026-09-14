@@ -1,228 +1,96 @@
 import { useEffect, useState } from "react";
-/**
- * Traction — single canonical page where every public number lives.
- *
- * Every figure on this page is recomputable from a third-party source on the
- * date shown. No typed-by-hand numbers. The audit at
- * /_alignment/TRACTION_AUDIT_2026-08-10.md is the source of truth.
- *
- * The page intentionally shows numbers as "being pulled" rather than "users"
- * — PyPI downloads are mostly CI/mirrors/scrapers, and that's the honest framing.
- * The headline number is the live leaderboard + recomputable benchmark, not installs.
- */
+import { Helmet } from "react-helmet-async";
+import { Link } from "wouter";
 
-interface PullRow {
-  pkg: string
-  monthly: number | "?"
-  total: number | "?"
-  pepy: string
+type State = {
+  root: { cards: number; asOf: string } | null;
+  revenue: { payers: number; settlements: number; atomic: number } | null;
+  commissions: { count: number; queued: number; unfulfillable: number } | null;
+  coverage: number | null;
+  worker: string | null;
+  failed: string[];
+};
+const EMPTY: State = { root: null, revenue: null, commissions: null, coverage: null, worker: null, failed: [] };
+
+async function json(path: string, signal: AbortSignal) {
+  const response = await fetch(path, { signal, cache: "no-store", headers: { accept: "application/json" } });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
 }
-
-const PYPI_PULLS: PullRow[] = [
-  { pkg: "ai-bom-mcp",                    monthly: 2632, total: 15574, pepy: "ai-bom-mcp" },
-  { pkg: "eu-ai-act-compliance-mcp",       monthly: 2164, total: 21091, pepy: "eu-ai-act-compliance-mcp" },
-  { pkg: "dora-compliance-mcp",            monthly: 2025, total: 18524, pepy: "dora-compliance-mcp" },
-  { pkg: "bias-detection-mcp",             monthly: 1970, total: 13767, pepy: "bias-detection-mcp" },
-  { pkg: "csoai-governance-crosswalk-mcp", monthly: 1651, total: 10333, pepy: "csoai-governance-crosswalk-mcp" },
-  { pkg: "meok-watermark-attest-mcp",      monthly: 1411, total: 12218, pepy: "meok-watermark-attest-mcp" },
-  { pkg: "meok-governance-engine-mcp",     monthly: 1329, total: 11156, pepy: "meok-governance-engine-mcp" },
-  { pkg: "canada-aida-ai-mcp",             monthly: 1305, total:  9651, pepy: "canada-aida-ai-mcp" },
-  { pkg: "aml-ai-mcp",                     monthly: 1280, total:  6482, pepy: "aml-ai-mcp" },
-  { pkg: "meok-mcp-injection-scan-mcp",    monthly: 1155, total:  8876, pepy: "meok-mcp-injection-scan-mcp" },
-  { pkg: "education-ai-mcp",               monthly:  935, total:  7019, pepy: "education-ai-mcp" },
-  { pkg: "proofof-ai-mcp",                 monthly:  802, total:  6020, pepy: "proofof-ai-mcp" },
-  { pkg: "sbom-cyclonedx-mcp",             monthly:  520, total:  2677, pepy: "sbom-cyclonedx-mcp" },
-  { pkg: "yaml-ai-mcp",                    monthly:  510, total:  4531, pepy: "yaml-ai-mcp" },
-  { pkg: "csoai-defoneos-isr-mcp",         monthly:  481, total:   481, pepy: "csoai-defoneos-isr-mcp" },
-  { pkg: "csoai-defoneos-mcp",             monthly:  477, total:   477, pepy: "csoai-defoneos-mcp" },
-  { pkg: "meok-compliance-gateway",        monthly:  103, total:   492, pepy: "meok-compliance-gateway" },
-  { pkg: "meok-attestation-api",           monthly:   94, total:   593, pepy: "meok-attestation-api" },
-  { pkg: "dlms-bridge-mcp",                monthly:  192, total:   703, pepy: "dlms-bridge-mcp" },
-];
-
-const HF_TOP_DATASETS = [
-  { name: "gspc-care",                    downloads: 78 },
-  { name: "coai-bench",                   downloads: 80 },
-  { name: "aiact-frozen-split-harness",   downloads: 63 },
-  { name: "arena-matrices",               downloads: 34 },
-  { name: "compbench",                    downloads: 27 },
-];
-
-const SOVEREIGN_SERVERS = [
-  { id: "csoai-assess",   name: "CSOAI Assess",   tools: 6, desc: "EU AI Act / GDPR / SOC2 / HIPAA / ISO 42001 / NIST AI RMF risk checks. Ed25519-signed passport reports." },
-  { id: "csoai-anchors",  name: "CSOAI Anchors",  tools: 3, desc: "Live statute and standard watchers — UK legislation, EU AI Act, C2PA, NIST IR 8547, RFC 9964." },
-  { id: "csoai-ledger",   name: "CSOAI Ledger",   tools: 4, desc: "Refutation ledger — read the signed refutations and contested decision records." },
-  { id: "csoai-watchdog", name: "CSOAI Watchdog", tools: 5, desc: "Detection and alert — never intervention. Signed alerts only, no kill switch." },
-  { id: "csoai-spectrum", name: "CSOAI Spectrum", tools: 8, desc: "8 lenses over 5 predicates — red/blue/purple/yellow/orange/green/black/white. No composite score." },
-  { id: "csoai-drift",    name: "CSOAI Drift",    tools: 4, desc: "Drift product — when the law changes, every anchored evidence pack's corpus_hash tells you which of your packs is stale." },
-];
-
-function badge(pkg: string, label: string) {
-  const url = `https://pepy.tech/badge/${pkg}/month`;
-  return <a href={`https://pepy.tech/project/${pkg}`} target="_blank" rel="noopener noreferrer"><img src={url} alt={`${label} monthly downloads`} className="h-5 inline-block" /></a>;
-}
+const integer = (value: unknown) => Number.isSafeInteger(value) && Number(value) >= 0 ? Number(value) : null;
 
 export default function Traction() {
-  useEffect(() => { document.title = "Traction — being pulled, not just users | CSOAI"; }, []);
+  const [live, setLive] = useState<State>(EMPTY);
+  useEffect(() => {
+    const controller = new AbortController();
+    const paths = ["/root.json", "/api/revenue", "/api/commissions", "/api/coverage", "/api/worker"];
+    Promise.allSettled(paths.map((path) => json(path, controller.signal))).then(([root, revenue, commissions, coverage, worker]) => {
+      if (controller.signal.aborted) return;
+      const next: State = { ...EMPTY, failed: [] };
+      if (root.status === "fulfilled") {
+        const cards = integer(root.value?.card_count);
+        const asOf = typeof root.value?.as_of === "string" ? root.value.as_of : null;
+        if (cards !== null && asOf) next.root = { cards, asOf }; else next.failed.push("root");
+      } else next.failed.push("root");
+      if (revenue.status === "fulfilled") {
+        const one = revenue.value?.one_number;
+        const payers = integer(one?.all_time), settlements = integer(one?.settlements);
+        const atomic = integer(revenue.value?.settled_usdc?.count ?? one?.settled_usdc_atomic);
+        if (one?.status === "MEASURED" && payers !== null && settlements !== null && atomic !== null) next.revenue = { payers, settlements, atomic };
+        else next.failed.push("revenue");
+      } else next.failed.push("revenue");
+      if (commissions.status === "fulfilled") {
+        const count = integer(commissions.value?.count), queued = integer(commissions.value?.queued), unfulfillable = integer(commissions.value?.unfulfillable);
+        if (count !== null && queued !== null && unfulfillable !== null) next.commissions = { count, queued, unfulfillable };
+        else next.failed.push("commissions");
+      } else next.failed.push("commissions");
+      if (coverage.status === "fulfilled" && Array.isArray(coverage.value?.rows)) next.coverage = coverage.value.rows.length;
+      else next.failed.push("coverage");
+      if (worker.status === "fulfilled" && typeof worker.value?.status === "string") next.worker = worker.value.status;
+      else next.failed.push("worker");
+      setLive(next);
+    });
+    return () => controller.abort();
+  }, []);
+  const usdc = live.revenue ? `$${(live.revenue.atomic / 1_000_000).toFixed(2)}` : undefined;
 
-  const monthlyTotal = PYPI_PULLS.reduce((s, r) => s + (typeof r.monthly === "number" ? r.monthly : 0), 0);
-  const lifetimeTotal = PYPI_PULLS.reduce((s, r) => s + (typeof r.total === "number" ? r.total : 0), 0);
-  const hfDlTotal = HF_TOP_DATASETS.reduce((s, r) => s + r.downloads, 0);
-  const soverTotal = SOVEREIGN_SERVERS.reduce((s, r) => s + r.tools, 0);
+  return <main className="min-h-screen bg-slate-950 text-slate-100">
+    <Helmet><title>Evidence, adoption and commercial proof | Council of AI</title><meta name="description" content="Live, source-linked evidence of CSOAI measurement coverage, signed records, commissioned work, independent discovery and commercial proof." /></Helmet>
+    <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,.18),transparent_36%)]">
+      <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
+        <p className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-300">Live evidence · no vanity inflation</p>
+        <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight sm:text-6xl">Proof of operation, in public.</h1>
+        <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">CSOAI measures AI systems, agents and digital rails, signs admitted results and publishes corrections. Technical reach, independent discovery and actual paid demand are separated so every claim can survive diligence.</p>
+        <div className="mt-8 flex flex-wrap gap-3"><Link href="/start" className="rounded-full bg-emerald-400 px-5 py-3 font-bold text-slate-950">Commission a measurement</Link><Link href="/gspc-verify" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Verify evidence</Link><a href="/api/revenue" className="rounded-full border border-slate-600 px-5 py-3 font-bold">Inspect revenue JSON</a></div>
+      </div>
+    </section>
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
-      {/* Hero */}
-      <section className="container py-16 md:py-20">
-        <div className="text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-full text-sm font-medium mb-6">
-            <span className="font-mono">last audit: 2026-08-10</span>
-            <span aria-hidden>·</span>
-            <span>third-party-recomputable</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-            Published. Installable. <span className="text-slate-500">Being pulled.</span>
-          </h1>
-          <p className="text-xl text-slate-600 leading-relaxed max-w-3xl mx-auto">
-            Every number on this page is reproducible from the cited endpoint on the audit date.
-            PyPI downloads are mostly CI / mirrors / scrapers — we state them as "being pulled,"
-            never as "users." The headline is the <strong>237 scored benchmark items against 417 statutory provisions</strong>,
-            with a live leaderboard and signed attestation. <em>Recompute it yourself.</em>
-          </p>
-        </div>
-      </section>
+    <section className="mx-auto max-w-6xl px-5 py-12">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <LiveCard label="Admitted cards in current root" value={live.root?.cards} source="/root.json" detail={live.root ? `as of ${live.root.asOf}` : "UNCHECKABLE"} />
+        <LiveCard label="Distinct non-self payers" value={live.revenue?.payers} source="/api/revenue" detail={live.revenue ? `${live.revenue.settlements} outside settlement${live.revenue.settlements === 1 ? "" : "s"}` : "UNCHECKABLE"} />
+        <LiveCard label="Settled outside value" value={usdc} source="/api/revenue" detail="USDC · self and zero-value tests excluded" />
+        <LiveCard label="Open commissions" value={live.commissions?.count} source="/api/commissions" detail={live.commissions ? `${live.commissions.queued} queued · ${live.commissions.unfulfillable} unfulfillable` : "UNCHECKABLE"} />
+      </div>
+      {live.failed.length ? <p className="mt-4 rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-3 font-mono text-xs text-amber-200">UNCHECKABLE now: {live.failed.join(", ")}. No cached number substituted.</p> : null}
+    </section>
 
-      {/* Headline metric */}
-      <section className="container pb-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-          <Stat n={monthlyTotal.toLocaleString()} label="PyPI pulls / month" sub="19 measured packages · pepy.tech" />
-          <Stat n="237" label="scored items" sub="vs 417 statutory provisions" />
-          <Stat n="291" label="governed MCP servers" sub="registry-backed" />
-          <Stat n="579" label="public repos" sub="CSOAI-ORG · gh CLI" />
-        </div>
-      </section>
+    <section className="mx-auto grid max-w-6xl gap-6 px-5 pb-14 lg:grid-cols-3">
+      <Authority eyebrow="Independent discovery" title="Glama Quality A" href="https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai">The flagship GSPC MCP is independently indexed with twelve discoverable tools. Directory quality is distribution evidence, not a customer count or endorsement.</Authority>
+      <Authority eyebrow="Open standards participation" title="W3C Community Group" href="https://www.w3.org/community/agent-conformance/">Founder Nicholas Templeman participates in the W3C Agent Conformance and Benchmarking Community Group. Participation does not imply W3C endorsement, certification or conformance.</Authority>
+      <Authority eyebrow="Machine-commerce discovery" title="x402 public listing" href="https://www.x402scan.com/server/9b8bcb34-6c9f-45d6-b881-9a6afe7bf6b5">The explorer exposes Council resources to agents. Explorer activity uses different definitions; only the strict ledger above counts verified non-self payers.</Authority>
+    </section>
 
-      {/* PyPI */}
-      <section className="container py-12">
-        <h2 className="text-3xl font-bold mb-2">PyPI — being pulled</h2>
-        <p className="text-slate-600 mb-6 max-w-3xl">
-          {monthlyTotal.toLocaleString()} installs across 19 measured governance MCPs in the last 30 days.
-          Source: <a className="underline" href="https://pepy.tech/" target="_blank" rel="noopener noreferrer">pepy.tech</a> (third-party-hosted, recomputable).
-          The remaining ~7 published packages are below the audit's nightly pull threshold and need a separate run.
-        </p>
-        <div className="overflow-x-auto border border-slate-200 rounded-xl">
-          <table className="min-w-full text-sm">
-            <thead className="bg-slate-50 text-slate-700">
-              <tr>
-                <th className="text-left px-4 py-2">Package</th>
-                <th className="text-right px-4 py-2">Last 30d</th>
-                <th className="text-right px-4 py-2">All-time</th>
-                <th className="text-left px-4 py-2">Badge</th>
-              </tr>
-            </thead>
-            <tbody>
-              {PYPI_PULLS.map(r => (
-                <tr key={r.pkg} className="border-t border-slate-100">
-                  <td className="px-4 py-2 font-mono">{r.pkg}</td>
-                  <td className="px-4 py-2 text-right tabular-nums">{typeof r.monthly === "number" ? r.monthly.toLocaleString() : "—"}</td>
-                  <td className="px-4 py-2 text-right tabular-nums text-slate-500">{typeof r.total === "number" ? r.total.toLocaleString() : "—"}</td>
-                  <td className="px-4 py-2">{badge(r.pepy, r.pkg)}</td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr className="border-t-2 border-slate-300 bg-slate-50 font-semibold">
-                <td className="px-4 py-2">Total (19 of 26 published)</td>
-                <td className="px-4 py-2 text-right tabular-nums">{monthlyTotal.toLocaleString()}</td>
-                <td className="px-4 py-2 text-right tabular-nums">{lifetimeTotal.toLocaleString()}</td>
-                <td />
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        <p className="text-xs text-slate-500 mt-3">
-          The retired "16,300 installs/month" claim is permanently gone. Use pepy.tech or the live PyPI
-          stats API as the source of truth. The audit ledger at
-          <code className="mx-1">_alignment/TRACTION_AUDIT_2026-08-10.md</code> lists every figure with its recompute endpoint.
-        </p>
-      </section>
+    <section className="border-y border-white/10 bg-slate-900/70"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-2">
+      <div><p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">Operating evidence</p><h2 className="mt-3 text-2xl font-black">A public instrument, commercially early</h2><p className="mt-4 leading-7 text-slate-300">The product and distribution rails operate. Repeat demand, retained feeds and broader outside payment remain the next commercial proof. Indexed resources, downloads, repositories and founder-funded tests are never presented as customers.</p></div>
+      <dl className="grid gap-3 sm:grid-cols-2"><Datum label="Coverage families" value={live.coverage === null ? "UNCHECKABLE" : String(live.coverage)} href="/api/coverage" /><Datum label="Worker state" value={live.worker ?? "UNCHECKABLE"} href="/api/worker" /><Datum label="Corrections" value="Public ledger" href="/refutation-ledger" /><Datum label="Methods" value="Reproducible" href="/methodology" /></dl>
+    </div></section>
 
-      {/* HuggingFace */}
-      <section className="container py-12">
-        <h2 className="text-3xl font-bold mb-2">HuggingFace — open weights, open datasets</h2>
-        <p className="text-slate-600 mb-6 max-w-3xl">
-          6 models and 39 datasets under <code className="bg-slate-100 px-1 rounded">csoai/</code>.
-          Top 5 datasets below (live API: <code>GET /api/datasets?author=csoai</code>).
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl">
-          {HF_TOP_DATASETS.map(d => (
-            <a key={d.name} href={`https://huggingface.co/datasets/csoai/${d.name}`} target="_blank" rel="noopener noreferrer"
-               className="block p-4 border border-slate-200 rounded-lg hover:border-slate-400">
-              <div className="flex justify-between items-baseline">
-                <div className="font-mono text-slate-800">csoai/{d.name}</div>
-                <div className="text-slate-500 text-sm tabular-nums">{d.downloads.toLocaleString()} pulls</div>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      {/* Sovereign MCP / Layer 0 */}
-      <section className="container py-12">
-        <h2 className="text-3xl font-bold mb-2">Council MCP — live on councilof.ai</h2>
-        <p className="text-slate-600 mb-6 max-w-3xl">
-          6 servers and {soverTotal} tools under the canonical <code className="bg-slate-100 px-1 rounded">/api/mcp</code>.
-          Deterministic predicates, not LLM-as-judge. Verify a signed card only when the response links that published artifact. Broader estate: MCP servers (count from the live registry, never typed here) (registry-backed, separate metric — not interchangeable with council count).
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {SOVEREIGN_SERVERS.map(s => (
-            <div key={s.id} className="p-4 border border-slate-200 rounded-lg">
-              <div className="flex justify-between items-baseline mb-1">
-                <div className="font-semibold text-slate-800">{s.name}</div>
-                <div className="text-slate-500 text-sm tabular-nums">{s.tools} tools</div>
-              </div>
-              <p className="text-sm text-slate-600">{s.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* GitHub + Kaggle */}
-      <section className="container py-12">
-        <h2 className="text-3xl font-bold mb-2">Other surfaces</h2>
-        <ul className="list-disc pl-6 space-y-1 text-slate-700">
-          <li><strong>GitHub CSOAI-ORG:</strong> 611 repos (579 public, 32 private, 14 archived, 21 forks). Top 5 starred: iso-27001-ai-mcp (2★), contract-review-ai-mcp (2★), pet-care-ai-mcp (2★), music-production-ai-mcp (2★), proofof-ai-mcp (1★). Live: <code>gh repo list CSOAI-ORG --limit 1000</code>.</li>
-          <li><strong>Kaggle (nicktempleman):</strong> 20 GSPC benchmark datasets (15 live, 5 deprecated redirects to consolidated names). Total live downloads: 217.</li>
-          <li><strong>npm (live registry):</strong> 21 packages across 4 namespaces — csoai-*, @csgaglobal/* (13), @meok-labs/*, meok-* (5). Last-month downloads on top packages: csoai-governance-mcp (79), meok-sdk-ts (29), @csgaglobal/ai-economy-infrastructure (13).</li>
-          <li><strong>Smithery / mcpmarket:</strong> search "csoai" returned 0 hits at audit time. Backlog — register <code>csoai-mcp-dist</code> on both aggregators.</li>
-        </ul>
-      </section>
-
-      {/* Honesty footer */}
-      <section className="container py-12">
-        <div className="bg-slate-100 border border-slate-200 rounded-xl p-6 max-w-3xl">
-          <h3 className="font-semibold text-slate-800 mb-2">What this page doesn't claim</h3>
-          <ul className="list-disc pl-6 space-y-1 text-sm text-slate-700">
-            <li>PyPI downloads = "being pulled" (CI + mirrors + scrapers), not "users."</li>
-            <li>HF model downloads total 43. Don't lead with downloads; lead with the benchmark.</li>
-            <li>The retired "16,300 installs/month" figure is permanently gone — no surface should resurrect it.</li>
-            <li>Smithery / mcpmarket are blank. That's a backlog, not a flag.</li>
-          </ul>
-        </div>
-        <p className="text-xs text-slate-500 mt-4">
-          Audit ledger: <code>_alignment/TRACTION_AUDIT_2026-08-10.md</code> · last refresh 2026-08-10T10:34Z
-        </p>
-      </section>
-    </div>
-  );
+    <section className="mx-auto max-w-6xl px-5 py-14"><h2 className="text-2xl font-black">The diligence path</h2><div className="mt-5 grid gap-4 md:grid-cols-3"><Step n="01" title="Inspect" body="Read the current root, coverage ledger and methodology." href="/root.json" /><Step n="02" title="Verify" body="Check a signed card and inspect corrections before trusting a claim." href="/gspc-verify" /><Step n="03" title="Commission" body="Move a real subject through queue, mill, signature and publication." href="/start" /></div></section>
+  </main>;
 }
 
-function Stat({ n, label, sub }: { n: string; label: string; sub?: string }) {
-  return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center">
-      <div className="text-3xl md:text-4xl font-bold text-slate-900 mb-1 tabular-nums">{n}</div>
-      <div className="text-sm text-slate-700">{label}</div>
-      {sub && <div className="text-xs text-slate-500 mt-1">{sub}</div>}
-    </div>
-  );
-}
+function LiveCard({ label, value, source, detail }: { label: string; value?: string | number; source: string; detail: string }) { return <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5"><div className="text-3xl font-black tabular-nums">{value ?? "—"}</div><div className="mt-2 text-sm font-semibold">{label}</div><div className="mt-1 text-xs text-slate-400">{detail}</div><a href={source} className="mt-3 inline-block font-mono text-[11px] text-emerald-300 underline">{source}</a></div>; }
+function Authority({ eyebrow, title, href, children }: { eyebrow: string; title: string; href: string; children: React.ReactNode }) { return <a href={href} target="_blank" rel="noopener noreferrer" className="rounded-2xl border border-slate-700 bg-slate-900 p-6 hover:border-emerald-400/60"><div className="font-mono text-[11px] uppercase tracking-[.18em] text-emerald-300">{eyebrow}</div><h2 className="mt-3 text-xl font-black">{title}</h2><p className="mt-3 text-sm leading-6 text-slate-300">{children}</p><span className="mt-5 inline-block text-sm font-bold text-emerald-300">Inspect source →</span></a>; }
+function Datum({ label, value, href }: { label: string; value: string; href: string }) { return <div className="rounded-xl border border-slate-700 bg-slate-950/60 p-4"><dt className="text-xs uppercase tracking-wide text-slate-500">{label}</dt><dd className="mt-1 font-mono text-sm text-emerald-200">{value}</dd><a href={href} className="mt-2 inline-block text-xs text-slate-400 underline">Inspect</a></div>; }
+function Step({ n, title, body, href }: { n: string; title: string; body: string; href: string }) { return <Link href={href} className="rounded-2xl border border-slate-700 p-5 hover:border-emerald-400/60"><span className="font-mono text-xs text-emerald-300">{n}</span><h3 className="mt-2 text-lg font-bold">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-400">{body}</p></Link>; }

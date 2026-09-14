@@ -44,6 +44,7 @@ import sys
 import tempfile
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 import zipfile
 from datetime import datetime, timezone
@@ -73,6 +74,7 @@ HF_DATASET = "csoai/gspc-board"
 HF_SPACE = "csoai/gspc-board"          # the ONE living Space
 HF_PATH_IN_REPO = "snapshot"
 KAGGLE_ID = "nicktempleman/csoai-gspc-living-board"
+KAGGLE_API = "https://www.kaggle.com/api/v1/datasets"
 GITHUB_REPO = "CSOAI-ORG/gspc-board"
 ZENODO_CONCEPT = 22293340               # concept DOI 10.5281/zenodo.22293340 — board snapshots
 ZENODO_METHODOLOGY_DOI = "10.5281/zenodo.21991104"   # referenced (isDerivedFrom) — NEVER modified
@@ -83,6 +85,10 @@ BANNED = re.compile(r"\b(certified|bft|sovereign)\b", re.IGNORECASE)
 USER_AGENT = "csoai-gspc-spray/1 (+https://github.com/CSOAI-ORG/councilof-ai)"
 
 GENERATOR = "scripts/spray/gspc-spray.py (CSOAI-ORG/councilof-ai)"
+ROOT_PREIMAGE_KEYS = ("kind", "schema", "as_of", "merkle_root", "card_count", "did_intended")
+ROOT_DID = "did:web:csoai.org#board-attestation-1"
+ROOT_KIND = "csoai.public-root/v1"
+ROOT_SCHEMA = "https://councilof.ai/schema/public-root-v1.json"
 
 
 # ----------------------------------------------------------------------------------------------- helpers
@@ -151,8 +157,70 @@ class Refused(SystemExit):
         super().__init__(f"REFUSED — will not publish: {why}")
 
 
+def merkle_root(leaf_hexes: list[str]) -> str:
+    """Recompute the public-root v1 tree (raw digest nodes, duplicate an odd tail)."""
+    try:
+        level = [bytes.fromhex(value) for value in leaf_hexes]
+    except (TypeError, ValueError) as e:
+        raise ValueError(f"card_sha256 contains a non-hex digest ({e})") from e
+    if any(len(value) != 32 for value in level):
+        raise ValueError("card_sha256 contains a digest that is not 32 bytes")
+    if not level:
+        return sha256_hex(b"")
+    while len(level) > 1:
+        level = [hashlib.sha256(level[i] + (level[i + 1] if i + 1 < len(level) else level[i])).digest()
+                 for i in range(0, len(level), 2)]
+    return level[0].hex()
+
+
+def verify_public_root(root: dict, did: dict) -> None:
+    """Fail unless root.json is internally bound and signed by its declared live DID key."""
+    missing = [key for key in (*ROOT_PREIMAGE_KEYS, "card_sha256", "sig_ed25519") if key not in root]
+    if missing:
+        raise ValueError("root.json lacks " + ", ".join(missing))
+    leaves = root["card_sha256"]
+    if not isinstance(leaves, list) or type(root["card_count"]) is not int:
+        raise ValueError("root card_sha256/card_count types are invalid")
+    if not all(isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) for value in leaves):
+        raise ValueError("card_sha256 contains a digest that is not 64 lowercase hex")
+    if len(leaves) != root["card_count"]:
+        raise ValueError(f"card_count={root['card_count']} but len(card_sha256)={len(leaves)}")
+    if len(set(leaves)) != len(leaves):
+        raise ValueError("card_sha256 contains duplicate leaves")
+    if merkle_root(leaves) != root["merkle_root"]:
+        raise ValueError("merkle_root does not bind card_sha256")
+
+    intended = root["did_intended"]
+    if root["kind"] != ROOT_KIND or root["schema"] != ROOT_SCHEMA or intended != ROOT_DID:
+        raise ValueError("root kind, schema, or intended signer is not the pinned public-root v1 contract")
+    if not isinstance(did, dict) or did.get("id") != "did:web:csoai.org":
+        raise ValueError("live did.json does not identify did:web:csoai.org")
+    methods = did.get("verificationMethod") if isinstance(did, dict) else None
+    method = next((row for row in (methods or []) if isinstance(row, dict) and row.get("id") == intended), None)
+    jwk = (method or {}).get("publicKeyJwk") or {}
+    if jwk.get("kty") != "OKP" or jwk.get("crv") != "Ed25519" or not isinstance(jwk.get("x"), str):
+        raise ValueError(f"declared signer {intended!r} has no Ed25519 public key in live did.json")
+    try:
+        import base64
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+
+        key_x = jwk["x"]
+        public_key = base64.urlsafe_b64decode(key_x + "=" * (-len(key_x) % 4))
+        signature_hex = root["sig_ed25519"]
+        if not isinstance(signature_hex, str) or not re.fullmatch(r"[0-9a-f]{128}", signature_hex):
+            raise ValueError("sig_ed25519 is not a 64-byte lowercase-hex signature")
+        signature = bytes.fromhex(signature_hex)
+        Ed25519PublicKey.from_public_bytes(public_key).verify(
+            signature, canonical({key: root[key] for key in ROOT_PREIMAGE_KEYS})
+        )
+    except ImportError as e:
+        raise ValueError("cryptography is unavailable; cannot verify root signature") from e
+    except Exception as e:  # noqa: BLE001 — every parse/verification failure is fail-closed
+        raise ValueError(f"Ed25519 signature does not verify under {intended} ({type(e).__name__})") from e
+
+
 def read_live_truth() -> dict:
-    """Read the board, the root, the DID document and the frozen banks. Refuse if the board or root is unreadable."""
+    """Read live inputs; refuse before bank reads or publishing unless the root signature verifies."""
     log(f"[truth] GET {BOARD_URL}")
     try:
         board_bytes = fetch_ok(BOARD_URL)
@@ -171,22 +239,15 @@ def read_live_truth() -> dict:
         root = json.loads(root_bytes)
     except Exception as e:  # noqa: BLE001
         raise Refused(f"{ROOT_URL} unreadable ({e}). A snapshot cannot say how to check inclusion without it.")
-    for k in ("as_of", "card_count", "card_sha256", "merkle_root"):
-        if k not in root:
-            raise Refused(f"root.json lacks {k}")
-    if len(root["card_sha256"]) != root["card_count"]:
-        raise Refused(f"root.json card_count={root['card_count']} but len(card_sha256)={len(root['card_sha256'])} — "
-                      "the root's own rule says reject this")
-
     log(f"[truth] GET {DID_URL}")
-    did_keys: list[dict] | None
     try:
         did = json.loads(fetch_ok(DID_URL))
+        verify_public_root(root, did)
         did_keys = [{"id": vm.get("id"), "x": (vm.get("publicKeyJwk") or {}).get("x")}
                     for vm in did.get("verificationMethod", [])]
     except Exception as e:  # noqa: BLE001
-        log(f"    did.json UNCHECKABLE: {e}")
-        did_keys = None
+        raise Refused(f"live public root signature is not valid under live did.json ({e})")
+    log(f"    VALID Ed25519 signature under {root['did_intended']}")
 
     banks = read_banks(board["axes"])
 
@@ -388,12 +449,12 @@ def render_readme(tr: dict, counts: dict, rows: list[dict]) -> str:
                  f"<{VERIFY_URL}> (free, no account) or follow <{HOWTO_URL}> and check by hand. From Python: "
                  f"`pip install \"csoai-gspc[verify]\"` then `csoai-gspc verify <card_id>` — three states only: "
                  "VALID, INVALID, UNCHECKABLE.")
-    lines.append(f"3. **Root inclusion.** `root.json` lists `card_sha256[]` for every published card and commits to them "
+    lines.append(f"3. **Root inclusion.** `root.json` lists `card_sha256[]` for its specific public-root corpus and commits to those leaves "
                  f"in `merkle_root`. `./check-board.sh` recomputes that root from the list using the rule the root "
                  f"states for itself — leaf: {json.dumps(root.get('leaf_definition'))}; node: "
                  f"{json.dumps(root.get('node_definition'))}. A verifier MUST reject any presentation where "
                  "`len(card_sha256) != card_count`, and any inclusion proof with `index >= card_count`. A card is "
-                 "included when its sha256 appears in the list and the recomputed root matches.")
+                 "included only when its leaf digest, computed under the stated leaf rule, appears in that list and the recomputed root matches. Other catalogues and board measurements are not automatically covered by this root.")
     lines.append(f"4. **Keys.** Signatures resolve through `did:web:csoai.org` → <{DID_URL}>. The board's "
                  f"`site_attestation.signer` is `{(board.get('site_attestation') or {}).get('signer', 'ABSENT')}`; the root's "
                  f"`did_intended` is `{root.get('did_intended')}`; cards sign under the card-attestation key in the same "
@@ -570,11 +631,23 @@ def remote_snapshot(url: str) -> dict | None:
     return None
 
 
+def newest_ready_kaggle_version(metadata: dict) -> int:
+    """Return the highest Ready version; Kaggle's top-level currentVersionNumber can lag it."""
+    ready = [row.get("versionNumber") for row in metadata.get("versions", [])
+             if isinstance(row, dict) and row.get("status") == "Ready"
+             and type(row.get("versionNumber")) is int]
+    if not ready:
+        raise ValueError("Kaggle metadata has no Ready dataset version")
+    return max(ready)
+
+
 def kaggle_public_files() -> dict[str, bytes]:
-    """The downloadable Kaggle archive as name→bytes. One download serves both the
-    publish safety read and the byte-parity skip — they must judge the SAME bytes."""
-    url = f"https://www.kaggle.com/api/v1/datasets/download/{KAGGLE_ID}"
+    """Newest Ready Kaggle archive as name→bytes, even while the default download lags."""
     try:
+        metadata = json.loads(fetch_ok(f"{KAGGLE_API}/view/{KAGGLE_ID}", timeout=60))
+        version = newest_ready_kaggle_version(metadata)
+        query = urllib.parse.urlencode({"datasetVersionNumber": version})
+        url = f"{KAGGLE_API}/download/{KAGGLE_ID}?{query}"
         body = fetch_ok(url, timeout=120)
         with zipfile.ZipFile(io.BytesIO(body)) as archive:
             return {Path(n).name: archive.read(n) for n in archive.namelist() if not n.endswith("/")}

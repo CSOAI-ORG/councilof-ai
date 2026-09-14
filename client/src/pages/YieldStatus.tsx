@@ -12,59 +12,69 @@ export default function YieldStatus() {
     let cancelled = false;
     async function load() {
       const next: Row[] = [];
-      try {
-        const [gspc, root, rev, reg] = await Promise.all([
-          fetch("/api/gspc").then((r) => ({ ok: r.ok, status: r.status, json: r.ok ? r.json() : Promise.resolve(null) })),
-          fetch("/root.json").then((r) => ({ ok: r.ok, status: r.status, json: r.ok ? r.json() : Promise.resolve(null) })),
-          fetch("/api/revenue").then((r) => ({ ok: r.ok, status: r.status, json: r.ok ? r.json() : Promise.resolve(null) })),
-          fetch("/api/regulation").then((r) => ({ ok: r.ok, status: r.status, json: r.ok ? r.json() : Promise.resolve(null) })),
-        ]);
-        const g = (await gspc.json) as { totals?: { public_count?: number; lid?: string } } | null;
-        const rt = (await root.json) as { card_count?: number; as_of?: string } | null;
-        const rv = (await rev.json) as {
-          one_number?: { all_time?: number; settlements?: number; self_settlements?: number };
-        } | null;
-        const rg = (await reg.json) as { verified_as_of?: string; deadlines?: unknown[] } | null;
+      const read = async (path: string) => {
+        const response = await fetch(path, { cache: "no-store", headers: { accept: "application/json" } });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      };
+      const paths = ["/api/gspc", "/root.json", "/api/revenue", "/api/regulation", "/api/xrpl"];
+      const [gspc, root, rev, reg, xrpl] = await Promise.allSettled(paths.map(read));
+      const result = (entry: PromiseSettledResult<any>, path: string) => entry.status === "fulfilled"
+        ? { ok: true as const, body: entry.value }
+        : { ok: false as const, body: null, error: `${path} ${entry.reason instanceof Error ? entry.reason.message : "unreachable"}` };
+      const gspcResult = result(gspc, paths[0]);
+      const rootResult = result(root, paths[1]);
+      const revResult = result(rev, paths[2]);
+      const regResult = result(reg, paths[3]);
+      const xrplResult = result(xrpl, paths[4]);
+      const g = gspcResult.body as { totals?: { public_count?: number } } | null;
+      const rt = rootResult.body as { card_count?: number; as_of?: string } | null;
+      const rv = revResult.body as { one_number?: { all_time?: number; settlements?: number } } | null;
+      const rg = regResult.body as { verified_as_of?: string; deadlines?: unknown[] } | null;
+      const xr = xrplResult.body as { assets?: Array<{ sig_ed25519?: string | null }> } | null;
 
         next.push({
           label: "GSPC board",
-          value: gspc.ok
+          value: gspcResult.ok
             ? `HTTP 200 · public_count ${g?.totals?.public_count ?? "UNCHECKABLE"}`
-            : `UNCHECKABLE HTTP ${gspc.status}`,
+            : `UNCHECKABLE · ${gspcResult.error}`,
           href: "/dashboard?tab=board",
         });
         next.push({
           label: "Public root cards",
-          value: root.ok
+          value: rootResult.ok
             ? `${rt?.card_count ?? "UNCHECKABLE"} as_of ${rt?.as_of ?? "UNCHECKABLE"}`
-            : `UNCHECKABLE HTTP ${root.status}`,
+            : `UNCHECKABLE · ${rootResult.error}`,
           href: "/root.json",
         });
         const payers = rv?.one_number?.all_time;
         const settles = rv?.one_number?.settlements;
         next.push({
           label: "Settled non-self payers (derived /api/revenue)",
-          value: rev.ok
-            ? payers
+          value: revResult.ok
+            ? typeof payers === "number"
               ? `${payers} payer(s) · ${settles ?? "UNCHECKABLE"} settlement(s)`
-              : "—"
-            : `UNCHECKABLE HTTP ${rev.status}`,
+              : "UNCHECKABLE · malformed revenue response"
+            : `UNCHECKABLE · ${revResult.error}`,
           href: "/api/revenue",
         });
         next.push({
           label: "Regulation feed",
-          value: reg.ok
+          value: regResult.ok
             ? `verified_as_of ${rg?.verified_as_of ?? "UNCHECKABLE"} · ${Array.isArray(rg?.deadlines) ? rg!.deadlines!.length : 0} deadlines`
-            : `UNCHECKABLE HTTP ${reg.status}`,
+            : `UNCHECKABLE · ${regResult.error}`,
           href: "/countdown",
         });
         next.push({
-          label: "XRPL credentials",
-          value: "0 (EP5 not landed — honest zero)",
+          label: "Signed XRPL asset leaves",
+          value: xrplResult.ok && Array.isArray(xr?.assets)
+            ? `${xr.assets.filter((asset) => typeof asset.sig_ed25519 === "string" && asset.sig_ed25519.length > 0).length} of ${xr.assets.length}`
+            : `UNCHECKABLE · ${xrplResult.ok ? "malformed XRPL response" : xrplResult.error}`,
+          href: "/api/xrpl",
         });
-        if (!cancelled) setRows(next);
-      } catch (e) {
-        if (!cancelled) setErr((e as Error).message || "UNCHECKABLE");
+      if (!cancelled) {
+        setRows(next);
+        setErr(null);
       }
     }
     void load();

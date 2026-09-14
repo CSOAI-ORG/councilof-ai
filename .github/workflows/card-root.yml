@@ -1,0 +1,119 @@
+name: card-root
+
+# A signed-card merge changes the exact input set. Build one create-only Merkle
+# commitment, submit that file digest to OTS, and route both new files through a
+# PR. A calendar submission is PENDING and is never described as an anchor.
+on:
+  pull_request:
+    paths:
+      - "scripts/card_root.py"
+      - "scripts/maintain_card_root_ots.py"
+      - "scripts/test_card_root_automation.py"
+      - ".github/workflows/card-root*.yml"
+  push:
+    branches: [master]
+    paths:
+      - "public/interop/mill-cards-signed/**"
+  workflow_dispatch: {}
+
+concurrency:
+  group: card-root-build
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -q opentimestamps-client==0.7.2
+      - name: Offline immutability, binding, and state regressions
+        run: PYTHONPATH=scripts python3 -m unittest scripts/test_card_root_automation.py scripts/test_ots_maintenance.py -v
+
+  build:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install the official OTS client
+        run: pip install -q opentimestamps-client==0.7.2
+      - name: Build and stamp without replacing same-day evidence
+        id: root
+        run: |
+          set -euo pipefail
+          python3 scripts/card_root.py --stamp | tee /tmp/card-root-build.txt
+          python3 - <<'PY'
+          import os, re, subprocess
+          from pathlib import Path
+          rows = subprocess.check_output(
+              ["git", "status", "--porcelain", "--", "public/interop/card-root-*"],
+              text=True,
+          ).splitlines()
+          if not rows:
+              print("Current exact commitment and proof already exist; nothing to publish.")
+              with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+                  out.write("changed=false\n")
+              raise SystemExit(0)
+          if any(not row.startswith("?? ") for row in rows):
+              raise SystemExit("refusing to modify an existing card root or OTS proof")
+          names = sorted(row[3:] for row in rows)
+          roots = [name for name in names if name.endswith(".json")]
+          proofs = [name for name in names if name.endswith(".json.ots")]
+          if len(roots) != 1 or proofs != [roots[0] + ".ots"]:
+              raise SystemExit(f"expected one new exact root/proof pair, got {names}")
+          if not re.fullmatch(
+              r"public/interop/card-root-[0-9]{4}-[0-9]{2}-[0-9]{2}(?:-[a-f0-9]{12})?\.json",
+              roots[0],
+          ):
+              raise SystemExit(f"unexpected root path: {roots[0]}")
+          import hashlib, json, sys
+          sys.path.insert(0, "scripts")
+          from maintain_card_ots import parse, proof_state
+          root_raw = Path(roots[0]).read_bytes()
+          subject = hashlib.sha256(root_raw).hexdigest()
+          status = proof_state(parse(Path(proofs[0]).read_bytes(), subject))["state"]
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write("changed=true\n")
+              out.write(f"root={roots[0]}\n")
+              out.write(f"proof={proofs[0]}\n")
+              out.write(f"slug={Path(roots[0]).stem}\n")
+              out.write(f"subject={subject}\n")
+              out.write(f"status={status}\n")
+          PY
+      - name: Recompute the exact candidate offline
+        if: steps.root.outputs.changed == 'true'
+        run: python3 scripts/card_root.py --verify --root "${{ steps.root.outputs.root }}"
+      - name: Open a review-only pending-proof PR
+        if: steps.root.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ROOT: ${{ steps.root.outputs.root }}
+          PROOF: ${{ steps.root.outputs.proof }}
+          SLUG: ${{ steps.root.outputs.slug }}
+          SUBJECT: ${{ steps.root.outputs.subject }}
+          STATUS: ${{ steps.root.outputs.status }}
+        run: |
+          set -euo pipefail
+          branch="card-root/pending-${SLUG#card-root-}"
+          git config user.name "csoai-card-root"
+          git config user.email "board@csoai.org"
+          git checkout -b "$branch"
+          git add -- "$ROOT" "$PROOF"
+          git commit -m "card-root: current signed-card commitment ($STATUS)"
+          git push origin "HEAD:$branch"
+          gh pr create --base master --head "$branch" \
+            --title "card-root: current signed-card commitment ($STATUS)" \
+            --body "Automated create-only card-root candidate triggered by signed mill-card bytes landing. Exact root subject SHA-256: $SUBJECT. Recorded OTS status: $STATUS; chain_verified=false. The root commits the deduplicated current signed-card set and the sidecar binds these exact root-file bytes. No existing card, root, or proof bytes were replaced. Review and merge remain human decisions; the scheduled maintainer may later add a Bitcoin attestation tag to this same PR, still without claiming chain verification."
+          gh workflow run pr-gates.yml --ref "$branch"

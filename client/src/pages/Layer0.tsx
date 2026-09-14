@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LAYER0_DISAMBIGUATION } from "../data/anchoringClaim";
 import { Link } from "wouter";
 import { LAYER0_NODES, COUNTS, type Layer0Node, type NodeStatus } from "@/data/layer0Nodes";
@@ -78,6 +78,100 @@ const L0_LEVELS = [
   { id: "L0-3", name: "Signed", body: "Published Ed25519-signed cards can be verified offline. Ordinary tool calls are not automatically signed." },
 ];
 
+// The floor, read every root tick (2026-09-14): scripts/readers/layer0_liveness_reader.py stages one
+// PROBED atom per public-root run — DID key, root, pointer match, Rekor/OTS states, the release-gate
+// verdict when known — and the publisher signs it into the root. This panel reads the latest staged
+// atom and the per-kind leaf count from the root's own index. A read, not a rating.
+const LIVENESS_ATOM = "/interop/layer0-liveness-2026-09/card-layer0-liveness-unsigned.json";
+const ROOT_KINDS = "/interop/root-kinds.json";
+const LIVENESS_KIND = "csoai.layer0.liveness/0.1";
+type LivenessPayload = {
+  state?: string; release_gate?: string; did_json_http?: number; did_key_present?: boolean; root_http?: number;
+  root_card_count?: number | null; root_as_of?: string | null; root_merkle_prefix?: string | null;
+  pointer_match?: boolean | null; rekor_state?: string; ots_state?: string;
+};
+type LivenessAtom = { as_of?: string; sha256?: string; payload?: LivenessPayload };
+
+async function readJson(url: string, signal: AbortSignal): Promise<unknown | null> {
+  try {
+    const r = await fetch(url, { signal, headers: { accept: "application/json" } });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch {
+    return null;
+  }
+}
+
+function LiveFloor() {
+  const [atom, setAtom] = useState<LivenessAtom | null | undefined>(undefined);
+  const [rooted, setRooted] = useState<number | null>(null);
+  useEffect(() => {
+    const c = new AbortController();
+    void (async () => {
+      const a = (await readJson(LIVENESS_ATOM, c.signal)) as LivenessAtom | null;
+      setAtom(a && a.payload ? a : null);
+      const k = (await readJson(ROOT_KINDS, c.signal)) as { by_kind?: Record<string, number> } | null;
+      setRooted(k && typeof k.by_kind?.[LIVENESS_KIND] === "number" ? k.by_kind[LIVENESS_KIND] : null);
+    })();
+    return () => c.abort();
+  }, []);
+  const p = atom?.payload;
+  const rows: [string, string][] = p
+    ? [
+        ["DID document", `HTTP ${p.did_json_http ?? "?"} · key ${p.did_key_present ? "present" : "absent"}`],
+        ["Public root", `HTTP ${p.root_http ?? "?"} · ${p.root_card_count ?? "?"} leaves · as_of ${p.root_as_of ?? "?"} · ${p.root_merkle_prefix ?? "?"}…`],
+        ["Pointer", p.pointer_match === true ? "matches root.json" : p.pointer_match === false ? "does not match root.json" : "unreadable"],
+        ["Rekor", String(p.rekor_state ?? "UNKNOWN")],
+        ["OpenTimestamps", String(p.ots_state ?? "UNKNOWN")],
+        ["Release gate (this run)", String(p.release_gate ?? "UNRUN")],
+      ]
+    : [];
+  return (
+    <section>
+      <h2 className="text-2xl font-bold text-emerald-50">The floor, read every root tick</h2>
+      <p className="mt-1 text-[13px] text-emerald-100/60">
+        One PROBED atom per public-root run records what the floor looked like at that instant — the DID key,
+        the served root, the pointer, the Rekor and OpenTimestamps states — and the publisher signs it into the
+        root it is building. This is the latest staged atom; the count beside it is how many such atoms the
+        current root commits to, from the root&apos;s own index. A read, not a rating: nothing here says the
+        floor is secure.
+      </p>
+      <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
+        {atom === undefined && <p className="text-[13px] text-emerald-100/60">Reading the latest atom…</p>}
+        {atom === null && (
+          <p className="text-[13px] text-amber-200/80">
+            The atom did not load in this browser — the file is at{" "}
+            <a href={LIVENESS_ATOM} className="underline underline-offset-2">{LIVENESS_ATOM}</a>. Null, not zero.
+          </p>
+        )}
+        {p && (
+          <>
+            <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-[12px] text-emerald-100/60">
+              <span className="font-mono text-emerald-300">{String(p.state ?? "PROBED")}</span>
+              <span>as_of {atom?.as_of ?? "?"}</span>
+              <span>payload sha256 {atom?.sha256?.slice(0, 12) ?? "?"}…</span>
+              <span>rooted atoms of this kind: {rooted === null ? "unreadable" : rooted}</span>
+            </div>
+            <dl className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-[13px]">
+              {rows.map(([k, v]) => (
+                <div key={k} className="flex flex-col">
+                  <dt className="text-emerald-100/50">{k}</dt>
+                  <dd className="font-mono text-emerald-50">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </>
+        )}
+        <p className="mt-3 text-[12px] text-emerald-100/50">
+          Source: <a href={LIVENESS_ATOM} className="underline underline-offset-2">the staged atom</a> ·{" "}
+          <a href={ROOT_KINDS} className="underline underline-offset-2">root-kinds.json</a> · reader{" "}
+          <span className="font-mono">scripts/readers/layer0_liveness_reader.py</span>.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 export default function Layer0() {
   useEffect(() => {
     document.title = "Layer 0 — the trust floor, benched | CSOAI";
@@ -146,6 +240,9 @@ export default function Layer0() {
             ))}
           </div>
         </section>
+
+        {/* THE FLOOR, READ EVERY ROOT TICK */}
+        <LiveFloor />
 
         {/* AUDITED NODE REGISTRY */}
         <section>

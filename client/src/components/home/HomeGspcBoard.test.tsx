@@ -151,6 +151,7 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("rendered directly here; Hugging Face is a distribution mirror");
     expect(html).not.toContain("This page embeds it and does not redraw it");
     expect(html).not.toContain("gspc-governance-leaderboard");
+    expect(html.match(/href="\/api\/gspc"/g)).toHaveLength(1);
   });
 
   it("shows 9 axes and a Load more derived from the array; expanded shows every axis", () => {

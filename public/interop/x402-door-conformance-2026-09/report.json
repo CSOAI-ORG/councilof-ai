@@ -2,7 +2,7 @@
  "discovery": {
   "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   "http": 200,
-  "n_resources": 9,
+  "n_resources": 10,
   "network": "eip155:8453",
   "notes": [],
   "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
@@ -183,9 +183,9 @@
    "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
    "http": 402,
    "i": 6,
-   "paid_for": "assembly",
+   "paid_for": "issuance",
    "state": "PROBED",
-   "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png"
+   "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
   },
   {
    "catalog_amount": null,
@@ -210,7 +210,7 @@
    "i": 7,
    "paid_for": "assembly",
    "state": "PROBED",
-   "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
+   "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png"
   },
   {
    "catalog_amount": null,
@@ -235,10 +235,35 @@
    "i": 8,
    "paid_for": "assembly",
    "state": "PROBED",
+   "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
+  },
+  {
+   "catalog_amount": null,
+   "challenge": {
+    "amount": "10000",
+    "checks": {
+     "amount_present": true,
+     "asset_usdc": true,
+     "network_base": true,
+     "payto_matches": true,
+     "resource_named": true,
+     "scheme_exact": true
+    },
+    "conformant": true,
+    "facilitator_seen": true,
+    "n_accepts": 1,
+    "notes": [],
+    "x402Version": 2
+   },
+   "fulfillment": "UNMEASURED \u2014 payment not exercised by this probe",
+   "http": 402,
+   "i": 9,
+   "paid_for": "assembly",
+   "state": "PROBED",
    "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z"
   }
  ],
- "generated_at": "2026-09-13T08:25:01Z",
+ "generated_at": "2026-09-14T01:50:50Z",
  "limitations": [
   "402 challenge shape only \u2014 fulfillment bytes and settlement are not exercised without an authorized payment",
   "challenge conformance is not a delivery guarantee",
@@ -247,8 +272,8 @@
  "schema": "csoai.x402-door-conformance/0.1",
  "summary": {
   "discovered_mismatch": 0,
-  "n_doors": 9,
-  "probed_conformant": 9,
+  "n_doors": 10,
+  "probed_conformant": 10,
   "uncheckable": 0
  }
 }

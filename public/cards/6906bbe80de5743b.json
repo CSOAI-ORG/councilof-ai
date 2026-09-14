@@ -1,0 +1,55 @@
+{
+  "card": {
+    "as_of": "2026-09-14T03:08:18Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "did_json_http": 200,
+      "did_key_present": true,
+      "kind": "csoai.layer0.liveness/0.1",
+      "not_a_grade": true,
+      "ots_state": "STAMPED_PENDING_BITCOIN",
+      "pointer_http": 200,
+      "pointer_match": true,
+      "rekor_state": "WITNESSED",
+      "release_gate": "UNRUN",
+      "root_as_of": "2026-09-14T01:03:07Z",
+      "root_card_count": 297,
+      "root_http": 200,
+      "root_merkle_prefix": "2d29b18cd6bc6678",
+      "state": "PROBED"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6906bbe80de5743bd8f0ffc130583802378aaa7f4ade081bd6e631f1b58b18fd",
+    "sig_ed25519": "4c306b1b2d5c7afd0f3c2f8b7942448a7f0c0b5799b9a51c0850803782f61c1f4e3b112241ed261288a0f01108a2ca324dd560c91eb83dbd13f8dec1c8d04004",
+    "source_urls": [
+      "https://councilof.ai/.well-known/did.json",
+      "https://councilof.ai/root.json",
+      "https://councilof.ai/interop/root-witness-pointer.json"
+    ],
+    "subject": "Layer 0 liveness — DID key, signed public root, Rekor + OTS witnesses, at one instant",
+    "surface": "public.notice",
+    "tags": [
+      "layer0",
+      "liveness",
+      "probe",
+      "layer0-liveness-2026-09"
+    ],
+    "unmeasured": [
+      "fault tolerance and independent review (the 33-seat council is a design, not a live property)",
+      "anything about the correctness of the cards the root commits to"
+    ]
+  },
+  "proof": [
+    "a4e86f51ab2f3129522752a02761807336a1685727d0d638c373104c53cbf7a8",
+    "20bd65f4975876c011f0252e4845518dab3095921dc1701cf27dd416b43f270a",
+    "c4d361f356e233d0fb1ef1a62337a0ea5f7a47078735115e3b095dbdfb5cd930",
+    "c07b87f0c142d07773e2563e3e5e41a8a00152d6035fe0a3e40927b84a57cf28",
+    "9903feea26c83e2c23971ecdc1f9cd8350734a4d857468bf6f24d5cd863283d2",
+    "ad41b8c703291b4452b2dc41231793b61edb88f7d7d4b5d311b956de16622e66",
+    "99bada803b0b1efde1efd7f67a40393b6227e0c5e7174d69bbfa145b41de04a5",
+    "0feb7070eccf3eb24d43a205d00e1e9bcbb52d32a2ce68fa5d74a5dfb48db51a",
+    "be3c31baf797e3346ba149577033434672be08083c6c24e46e02da0e65308c42"
+  ]
+}
