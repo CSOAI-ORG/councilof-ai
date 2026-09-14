@@ -15,6 +15,14 @@ class RunReportTests(unittest.TestCase):
             self.assertEqual(len(rows[0]['artifacts'][0]['sha256']),64)
             (root/'unsigned-test.json').unlink()
             with self.assertRaises(ValueError):build(feed,report,root)
+    def test_accepts_live_0_2_feed_and_rejects_unknown_schema(self):
+        report={'kind':'csoai.hub-queue-mill/0.1','axis':'governance','staged_unsigned':[],'skips':[]}
+        feed={'schema':'csoai.commissions/0.2','status':'MEASURED','records_unreadable':0,'as_of':'x','count':1,
+              'commissions':[{'subject':'llama3.2:3b','subject_kind':'ollama_model','model':'llama3.2:3b','bank':None,'fulfillment':'QUEUED','axis':None,'tx':'0x6','as_of':'2026-09-11T13:30:53Z','receipt_sha':'dd27ad1b','cards':[],'delivery':{'state':'NONE','count':0}}]}
+        rows=build(feed,report,Path('.'))['commissions']
+        self.assertEqual(rows[0]['status'],'NOT_OBSERVED_IN_RUN')
+        with self.assertRaises(ValueError):build(dict(feed,schema='csoai.commissions/0.3'),report,Path('.'))
+        with self.assertRaises(ValueError):build(dict(feed,records_unreadable=1),report,Path('.'))
     def test_unavailable_is_not_empty(self):
         with self.assertRaises(ValueError):build({'error':'not_found'},{},Path('.'))
     def test_unavailable_feed_warns_without_asserting_or_failing_the_run(self):
