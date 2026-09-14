@@ -110,3 +110,18 @@ The proof threshold remains strict: `SUBMITTED`, `REGISTERED`, `INDEX PENDING`, 
 | Awesome AI Evaluations Tools | SUBMITTED / REVIEW PENDING | [PR #29](https://github.com/danielrosehill/Awesome-AI-Evaluations-Tools/pull/29) | Adds GSPC once under evaluation platforms, describing public model and agent measurements, signed cards, content-addressed roots and offline verification. The pull request is open and mergeable. |
 | Awesome LLM Security | SUBMITTED / REVIEW PENDING | [PR #339](https://github.com/corca-ai/awesome-llm-security/pull/339) | Adds GSPC once under Tools with restrained signed-evidence and offline-verifier wording, explicitly saying measurement, not certification. The pull request is open and mergeable. |
 | Awesome Agent Cortex | SUBMITTED / REVIEW PENDING | [PR #87](https://github.com/0xNyk/awesome-agent-cortex/pull/87) | Adds GSPC once under Agent Harnessing and Evaluation. The entry follows the repository's one-entry and alphabetical-order rules; the maintainer relationship and rubric score are disclosed in the pull request. The pull request is open and mergeable. |
+
+### Sixth GitHub editorial wave
+
+| Surface | State | Proof | Exact scope |
+|---|---|---|---|
+| Awesome AI Eval | SUBMITTED / REVIEW PENDING | [PR #34](https://github.com/Vvkmnn/awesome-ai-eval/pull/34) | Adds one badge-formatted GSPC entry under Application and Agent Harnesses. The description stays below the catalogue's length limit and names signed measurements, public roots and offline verification. The pull request is open and mergeable. |
+| Awesome LLM Eval | SUBMITTED / REVIEW PENDING | [PR #93](https://github.com/onejune2018/Awesome-LLM-Eval/pull/93) | Adds one GSPC row to the evaluation Tools table, limited to public model and agent measurement, signed cards, content-addressed roots and offline verification. The pull request is open and mergeable. |
+| Awesome AgentOps Landscape | SUBMITTED / REVIEW PENDING | [PR #29](https://github.com/dyronrh/awesome-agentops-landscape/pull/29) | Adds one open-source record to the catalogue's structured `data/tools.json` source. JSON validation and whitespace checks pass; the pull request is open and mergeable. |
+
+### Historical submissions found during reconciliation
+
+| Surface | State | Proof | Action |
+|---|---|---|---|
+| Awesome ML Model Governance | ALREADY SUBMITTED / REVIEW PENDING | [PR #13](https://github.com/visenger/Awesome-ML-Model-Governance/pull/13), opened 26 August 2026 | Do not submit again. Review or refresh the existing wording only if the upstream maintainer requests it. |
+| Awesome AI Safety | ALREADY SUBMITTED / REVIEW PENDING | [PR #10](https://github.com/AbdelStark/awesome-ai-safety/pull/10), opened 7 September 2026 | Do not submit again. The existing pull request is open and mergeable. |
