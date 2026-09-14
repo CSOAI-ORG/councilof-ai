@@ -1,0 +1,46 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "csoai.mcp-trust-snapshot-card/0.1",
+    "issuer": "CSOAI Ltd",
+    "surface": "mcp-trust-board",
+    "as_of": "2026-09-14T10:06:40Z",
+    "population": "mcp-internet-facing",
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-publisher",
+      "non-enumerable-population"
+    ],
+    "counts": {
+      "total": 500,
+      "unique_hosts_enumerated": 500,
+      "registry_rows_seen": 2244,
+      "initialize_ok_open": 19,
+      "initialize_ok_tools_listed": 238,
+      "auth_challenged_401_403": 207,
+      "x402_challenged_402": 0,
+      "alive_not_mcp": 6,
+      "listed_no_reply": 0,
+      "dead_404_or_unreachable": 18,
+      "other_error": 12,
+      "auth_scheme_bearer_or_oauth": 188,
+      "auth_scheme_other": 0,
+      "auth_scheme_unspecified": 19,
+      "rate_limited": 0,
+      "tools_listed_total": 1657,
+      "tools_median_per_answering_server": 3.0,
+      "servers_reporting_tools": 238
+    },
+    "doctrine": "Measurement, never certification. A bucket is never a grade, rank or certificate. A 401/402 challenge is a term sheet \u2014 an invoice, not delivery. UNREACHABLE is never FAIL. Host details withheld by design; methodology published. Counts derived, never typed.",
+    "not_a_grade": true,
+    "not_certification": true,
+    "writes_board": false,
+    "verify": "https://councilof.ai/gspc-verify",
+    "source_artifact": "https://councilof.ai/interop/mcp-trust/2026-09-14.json"
+  },
+  "id": "2aa7980b3f11d19fea72ee7f25ffad9dd0127271f454dde48747d934a9f46e40",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1",
+  "note": "UNSIGNED card-v0-family. SIGNED needs the GHA publisher. Never MEASURED."
+}
