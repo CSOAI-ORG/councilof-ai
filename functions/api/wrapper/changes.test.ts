@@ -100,4 +100,30 @@ describe("/api/wrapper/changes", () => {
     expect(body.current_as_of).toBe("2026-09-14T00:00:00Z");
     expect(body.previous_as_of).toBe("2026-09-13T00:00:00Z");
   });
+
+  it("computes delta from the canonical records + nested reads schema", async () => {
+    vi.stubGlobal("fetch", async (u: string | URL | Request) => {
+      const url = String(u instanceof Request ? u.url : u);
+      const record = (supply: string, escrow: string) => ({
+        id: "usdc.e:arbitrum",
+        reads: {
+          wrapped_total_supply: { normalized: supply },
+          escrow_balance: { normalized: escrow },
+        },
+        state: "ESCROW_PARITY_READ",
+      });
+      if (url.includes("wrapped-asset-parity-latest")) {
+        return new Response(JSON.stringify({ as_of: "2026-09-14T00:00:00Z", records: [record("110.25", "105.5")] }));
+      }
+      if (url.includes("wrapped-asset-parity-2026-09-13")) {
+        return new Response(JSON.stringify({ as_of: "2026-09-13T00:00:00Z", records: [record("100", "100")] }));
+      }
+      return new Response("{}", { status: 404 });
+    });
+    const res = await changes(ctx("/api/wrapper/changes?id=usdc.e:arbitrum&preview=1"));
+    const body = await res.json();
+    expect(body.state).toBe("DELTA_READ");
+    expect(body.wrapped_supply_delta).toBe(10.25);
+    expect(body.escrow_delta).toBe(5.5);
+  });
 });

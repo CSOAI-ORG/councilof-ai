@@ -82,15 +82,23 @@ async function fetchLatestSnapshots(): Promise<[Record<string, unknown> | null, 
  * Extract the relevant supply/escrow fields from a snapshot for a specific pair.
  */
 function extractPairData(snap: Record<string, unknown>, pairId: string): Record<string, unknown> | null {
-  // The snapshot may have a 'pairs' array or be structured differently
-  // Try to find the pair data in the snapshot
-  const pairs = snap.pairs as Array<Record<string, unknown>> | undefined;
-  if (pairs) {
-    return pairs.find((p) => p.id === pairId) || null;
+  // The canonical reader emits `records`; retain `pairs` for older fixtures/clients.
+  const records = (snap.records || snap.pairs) as Array<Record<string, unknown>> | undefined;
+  if (records) {
+    return records.find((p) => String(p.id || "").toLowerCase() === pairId) || null;
   }
   // If no pairs array, the snapshot might be the raw payload
   if (snap.id === pairId) return snap;
   return null;
+}
+
+function normalizedRead(record: Record<string, unknown>, name: "wrapped_total_supply" | "escrow_balance"): number | null {
+  const reads = record.reads as Record<string, unknown> | undefined;
+  const read = reads?.[name] as Record<string, unknown> | undefined;
+  const value = read?.normalized ?? record[name];
+  if (value === null || value === undefined || value === "") return null;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : null;
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
@@ -201,10 +209,23 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   // Compute deltas
-  const currentSupply = Number(currentData.wrapped_total_supply || currentData.supply || 0);
-  const previousSupply = Number(previousData.wrapped_total_supply || previousData.supply || 0);
-  const currentEscrow = Number(currentData.escrow_balance || currentData.escrow || 0);
-  const previousEscrow = Number(previousData.escrow_balance || previousData.escrow || 0);
+  const currentSupply = normalizedRead(currentData, "wrapped_total_supply");
+  const previousSupply = normalizedRead(previousData, "wrapped_total_supply");
+  const currentEscrow = normalizedRead(currentData, "escrow_balance");
+  const previousEscrow = normalizedRead(previousData, "escrow_balance");
+
+  if ([currentSupply, previousSupply, currentEscrow, previousEscrow].some((value) => value === null)) {
+    return json({
+      schema: "csoai.wrapper.changes/0.1",
+      id,
+      state: "UNCHECKABLE",
+      reason: "One or more normalized supply or escrow reads are absent",
+      current_as_of: currentAsOf,
+      previous_as_of: previousAsOf,
+      wrapped_supply_delta: null,
+      escrow_delta: null,
+    });
+  }
 
   const result = {
     schema: "csoai.wrapper.changes/0.1",
@@ -212,8 +233,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     state: "DELTA_READ",
     current_as_of: currentAsOf,
     previous_as_of: previousAsOf,
-    wrapped_supply_delta: currentSupply - previousSupply,
-    escrow_delta: currentEscrow - previousEscrow,
+    wrapped_supply_delta: currentSupply! - previousSupply!,
+    escrow_delta: currentEscrow! - previousEscrow!,
     current_state: currentData.state || null,
     previous_state: previousData.state || null,
     note: "Deltas are arithmetic differences between two point-in-time snapshots. Not a rate, not a grade, not a reserve attestation.",
