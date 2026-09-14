@@ -91,7 +91,14 @@ jobs:
           accepted = {run_id, f"gha-{run_id}"}
           for source in sorted(Path("public/interop/mill-cards-unsigned").glob("unsigned-*.json")):
               card = json.loads(source.read_text(encoding="utf-8"))
-              if str((card.get("body") or {}).get("run_id") or "") in accepted:
+              body = card.get("body") or {}
+              # KEEP commission cards nest run_id under compute_evidence (body.run_id unset).
+              rid = str(body.get("run_id") or (body.get("compute_evidence") or {}).get("run_id") or "")
+              # Selection is by RUN provenance only. A card must never be selectable by
+              # its own id: that would let any inbox card be signed with no run behind
+              # it (governor, 2026-09-14; the clause landed in #2260 and was redundant
+              # for the KEEP case, which compute_evidence.run_id already covers).
+              if rid in accepted:
                   shutil.copyfile(source, destination / source.name)
                   selected.append(source.name)
           if not selected:
