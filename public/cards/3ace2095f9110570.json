@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-14T07:46:39.751Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 80,
+      "issuer": "Circle",
+      "issuer_address": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 4394436.348900768,
+      "symbol": "USDC",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3ace2095f91105700d4762941134fed52e5730143e58ed11325310321e4e2379",
+    "sig_ed25519": "3939d73efad947a39f46ecd9cb7a39041b41adac320155b8a9d62a5244f1fcde111240bf64a86600727f904cb8391ece354e2802e6e6562acf32fd90f00c340d",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL USDC public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "764e1078a4064cc9eb8189abcd0aa328688afa2037c0e10601270b0a502222cf",
+    "286696a1e517ccf3ce4784041e857684ff843d359c0795482f500a8e6f86523c",
+    "da3cfbb7731a2be4b77a557772684fc0a18d811abcde9644d1c548a47c3c5d22",
+    "0559f08d362340870505e585101a820d319735d9162a591b2dbe62e3f3dc72cd",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "16b90c8cb958907bc665a6a97c972e95f66a1ecb210e8c9dd4aee6ace3ac5a89",
+    "8e21412c1749df02fb02a7e521d6c2d17ceeb99bd303d274d483239ccc051092",
+    "bd8f04bf4c7dc00b8f4e73383fda790a8889d4ce23dd47d6cefbe2183fa5eb1b",
+    "164fb3eb98d8f27b981dd18053c17d12ed7382267f77282877f2ac171e572163"
+  ]
+}

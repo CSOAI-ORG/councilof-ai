@@ -1,0 +1,89 @@
+{
+  "card": {
+    "as_of": "2026-09-14T07:51:43Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:bIB01:base",
+      "symbol": "bIB01",
+      "product": "Backed IB01 $ Treasury Bond 0-1yr",
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "block": 51291478,
+      "block_hash": "0xa7e33d32497230590664ee3d86e0da3a0424aee30e9b59e16a50ce5b56cd09d0",
+      "block_time": "2026-09-14T07:51:43Z",
+      "rpc": "base-rpc.publicnode.com",
+      "checked": {
+        "name": "Backed IB01 $ Treasury Bond 0-1yr",
+        "symbol": "bIB01",
+        "decimals": 18,
+        "totalSupply": "10000000000000000000000",
+        "isPaused": false,
+        "owner": "0xd1966bd72695789ec9c245f0bf5a8512b56c1d80",
+        "sanctionsList": "0xba0d02c2afddb571d1f54b5bea1b57fe01424587",
+        "pauser": "0x20eb617cc8e8bf3c9b53fc2cf2444cf026da704f",
+        "terms": "https://www.backedassets.fi/legal-documentation",
+        "eip1967_implementation": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+        "eip1967_admin": "0xf2057bdff8439dbffce073e14a9854945d5e5644"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+      ],
+      "attests": "historical permission state at block 51291478 on base, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "5df5127a7fce85cd10236d9b586cc883c9a52c62cf7a5110317c8c2e7bdd0116",
+    "sig_ed25519": "817cf545a14532d41c8091a6514c8fe4a9f359c7c42f3732ed4f96ed1360d224a82a6583ac143dcef188fb8aef5b16de93d013484fa33ab58389b83061595c0d",
+    "source_urls": [
+      "https://base-rpc.publicnode.com",
+      "https://basescan.org/token/0xca30c93b02514f86d5c86a6e375e3a330b435fb5"
+    ],
+    "subject": "evm:bIB01:base permission state at block 51291478",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:base",
+      "coverage:permission-state",
+      "subject:bIB01"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+    ]
+  },
+  "proof": [
+    "94286834ce697f0f93f2b711a9d1ff7cf604bae16501e141213b519b9395e749",
+    "847042ea34a4507b550c77d24062666da80bb11d4fffa77c8d3462ba40d9cd75",
+    "93921215f36fcfbfba9b37a131fdb3580b9bd23456aeabb6555db238bfe6ac0d",
+    "fe50bd131d89f788e605bc2be47dd44c7a725cd0d41267545728a0c23c0296c6",
+    "a36e0eaaedb735502384bf0b3ce4664a10d0fcd6d9de16acb48ab6fc237a5f66",
+    "d05c1f7ceb5cdb432bab862d1795e8d99fd87653605a84570ef99aca37f4892b",
+    "c7a85a4cd63e48e95dd69decdf8e1aa02a6dc3a04bacc991c911192f21ae900d",
+    "54a2654ad883ae1425a131d1e2fc3330c6c5852d118f95a8376404fc6f65e214",
+    "164fb3eb98d8f27b981dd18053c17d12ed7382267f77282877f2ac171e572163"
+  ]
+}

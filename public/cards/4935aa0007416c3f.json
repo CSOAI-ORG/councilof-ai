@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-14T07:46:39.751Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Commodities",
+      "holders": 5600,
+      "issuer": "GateHub",
+      "issuer_address": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 4132.852267201553,
+      "symbol": "XAU.gh",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "4935aa0007416c3f9c683c68d688f7eb147dc0450c3270375f21844201341edf",
+    "sig_ed25519": "a1826b1c2a0080a38342ff85c7ad92ffd8528f07a6045cdc0e696b3ec5a840d6e2eb22e2696712cc37f5107ec72acc665a13342e2c5e07d2ce4cfe4ae182aa00",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL XAU.gh public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "29dca82c981a1b7aed79176bd87702d5b0dd1e028771b5149210e35692f962dc",
+    "7f1d1083565bc74869786ded4f14f40fd6b79980eabd094607f2a78f26a92b84",
+    "570fc4ce2f656125d63d8dd1fe8fadef8b5e5fc860afba5f3e0fed089d196e22",
+    "0559f08d362340870505e585101a820d319735d9162a591b2dbe62e3f3dc72cd",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "16b90c8cb958907bc665a6a97c972e95f66a1ecb210e8c9dd4aee6ace3ac5a89",
+    "8e21412c1749df02fb02a7e521d6c2d17ceeb99bd303d274d483239ccc051092",
+    "bd8f04bf4c7dc00b8f4e73383fda790a8889d4ce23dd47d6cefbe2183fa5eb1b",
+    "164fb3eb98d8f27b981dd18053c17d12ed7382267f77282877f2ac171e572163"
+  ]
+}

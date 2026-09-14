@@ -1,0 +1,81 @@
+{
+  "card": {
+    "as_of": "2026-09-14T02:01:29.387Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "cbbtc:base",
+      "backing_model": "custodial",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "cbBTC",
+        "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+        "chainId": 8453,
+        "block": 51280471,
+        "block_hash": "0x129ca1bacdc3ba75609c71c688fb2f7869c61f71b84dd874cae6e113c3f97293",
+        "block_time": 1789350289
+      },
+      "canonical": {
+        "chain": "bitcoin",
+        "symbol": "BTC",
+        "address": "Coinbase custody; not an EVM contract",
+        "chainId": null,
+        "block": null,
+        "block_hash": null
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000042b3a3db1ee",
+          "raw_sha256": "00583db17dfffee34e4213e5ff58d441c86b8427124c5ffddd34183804eae80c",
+          "atomic": "4583707226606",
+          "normalized": "45837.07226606",
+          "decimals": 8
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "INDEXED_CUSTODIAL",
+      "state": "DISCOVERED",
+      "error": null,
+      "fetched_at": "2026-09-14T02:01:29.387Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+      "unmeasured": [
+        "reserve (custodian-held off this chain; not readable here)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "7b8080ffebc024f9b4416bfd0d2e296b240da72dc3bf5cd0ab50ddd33fcf0ee8",
+    "sig_ed25519": "49216c50eb66bf9447d4df0159bcff4fa3cc83fa82eeeee2701b32cdb33b990c5bc3b000baea364d4471eaec3911a45fe36af4979617a415cd9952705c67f30f",
+    "source_urls": [
+      "https://mainnet.base.org"
+    ],
+    "subject": "wrapped cbBTC on base vs native issuance — INDEXED_CUSTODIAL",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:custodial",
+      "state:INDEXED_CUSTODIAL"
+    ],
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ]
+  },
+  "proof": [
+    "715f3df20929360ba68d90e47fe9df76c1f71ce9a65629937e37eb302927e97a",
+    "72bc9b6a9681a859bc5c373ee7667d8908a41aeba754cc900ff01e1a7864eb58",
+    "2adad7d6e7ca6225c644be11e52629b77d71e5ce3907ac0a2bf220eb6402f469",
+    "1176473d2d8111c2ccf48b9a952e6ad7e016a8fc83411816a9c81f1b4c9ed3e1",
+    "92b3ee0f7c353b5b05c85a1f1196d982182e2e402c96980c733f86ac634ba16d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "1789972222381b6cf87b85b05186e1dce71ae17223a5e66e6387de3d4b97dcef",
+    "bd8f04bf4c7dc00b8f4e73383fda790a8889d4ce23dd47d6cefbe2183fa5eb1b",
+    "164fb3eb98d8f27b981dd18053c17d12ed7382267f77282877f2ac171e572163"
+  ]
+}

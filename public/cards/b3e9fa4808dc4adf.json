@@ -1,0 +1,55 @@
+{
+  "card": {
+    "as_of": "2026-09-14T07:51:41Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "did_json_http": 200,
+      "did_key_present": true,
+      "kind": "csoai.layer0.liveness/0.1",
+      "not_a_grade": true,
+      "ots_state": "CONFIRMED_BITCOIN",
+      "pointer_http": 200,
+      "pointer_match": true,
+      "rekor_state": "WITNESSED",
+      "release_gate": "UNRUN",
+      "root_as_of": "2026-09-14T03:12:56Z",
+      "root_card_count": 298,
+      "root_http": 200,
+      "root_merkle_prefix": "8a121be5c52aeab4",
+      "state": "PROBED"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b3e9fa4808dc4adfb0399b83130a70351fc525112a3249df3d2e2cc90651948a",
+    "sig_ed25519": "c909f5153b64709f486f1d3657392e75c89448768fcd59100ca86b1a34fe4817171702a74f410714cf51f8a7bea836bc164ed83487ce07e0edbd7eb5ae66e309",
+    "source_urls": [
+      "https://councilof.ai/.well-known/did.json",
+      "https://councilof.ai/root.json",
+      "https://councilof.ai/interop/root-witness-pointer.json"
+    ],
+    "subject": "Layer 0 liveness — DID key, signed public root, Rekor + OTS witnesses, at one instant",
+    "surface": "public.notice",
+    "tags": [
+      "layer0",
+      "liveness",
+      "probe",
+      "layer0-liveness-2026-09"
+    ],
+    "unmeasured": [
+      "fault tolerance and independent review (the 33-seat council is a design, not a live property)",
+      "anything about the correctness of the cards the root commits to"
+    ]
+  },
+  "proof": [
+    "232a95df90469b1c9efc618eba8965113c4f0eacf5e1eb8f4cf971fd24669a67",
+    "3b6856331d939da69be4496f3ae7511dcc201b966b02bce671de6e52dcc904dd",
+    "e895bf66583c678765e78022c7061608697fae78f8db7111444d56f3b9eddfc9",
+    "e5929dca811d0fe9d56c08053150a1e1bc0a0fd0bbc605dab8dc4d508cae838a",
+    "2a666d79bbf03ccd93b6aa7a46c9df4acaeb803c4d24a4130928ffc617701b71",
+    "d5cb9108dae554b7acb9519fea57bcfce9244f10baa75a7706d8bead1cbdb3fb",
+    "1290e6e8a150fcd8467598af8a2d533ae118174e2569fd76354aab23e822dc42",
+    "54a2654ad883ae1425a131d1e2fc3330c6c5852d118f95a8376404fc6f65e214",
+    "164fb3eb98d8f27b981dd18053c17d12ed7382267f77282877f2ac171e572163"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-14T07:46:39.751Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 19800,
+      "issuer": "GateHub",
+      "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 4937070.035636779,
+      "symbol": "USD.gh",
+      "verified_domain": null,
+      "verified_via": "XRPLMeta registry"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "54123b13b284c261919b0d735a7ab984a343cb2899d0986a897a86d357bb9cb0",
+    "sig_ed25519": "a187e8af878d8f33566d105bb7cc4d3821c95a2c57e7e72d2c6d088b4e167b04ad82275c8ba5c674ded6150f1d013c036153713a769b0e61c33c3220c53d7907",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL USD.gh public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "e796ce3ce520172dfb9022dde9ab3b57844c0055fbd9fd4bc1b6de8f1b6fdbe5",
+    "56e7ff019300ee6aa52021bc16d497c5e22b6bda5180bd81b78e8dfc3c368023",
+    "a638160cc78cf8079cbb6b862045d985e80e8d1b9d043e4994fdddd67e8c75ec",
+    "1780685721cdbcaee79035e4a9e6ec30a27e152372e0233b9728fb7006d03574",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "16b90c8cb958907bc665a6a97c972e95f66a1ecb210e8c9dd4aee6ace3ac5a89",
+    "8e21412c1749df02fb02a7e521d6c2d17ceeb99bd303d274d483239ccc051092",
+    "bd8f04bf4c7dc00b8f4e73383fda790a8889d4ce23dd47d6cefbe2183fa5eb1b",
+    "164fb3eb98d8f27b981dd18053c17d12ed7382267f77282877f2ac171e572163"
+  ]
+}

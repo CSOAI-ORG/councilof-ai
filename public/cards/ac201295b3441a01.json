@@ -1,0 +1,64 @@
+{
+  "card": {
+    "as_of": "2026-09-14T07:52:25Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:optimism",
+      "chain": "optimism",
+      "chain_id": 10,
+      "head": {
+        "block": 156886784,
+        "block_hash": "0x6092e669e514b6a9d5a1a3d05a5f5f96825aacb6bbd0e8d1d244c8e068b96eb9",
+        "block_time": "2026-09-14T07:52:25Z"
+      },
+      "n_contracts": 1,
+      "coverage": [
+        {
+          "subject": "evm-events:BUIDL:optimism",
+          "from": 156758970,
+          "to": 156770969,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 156365618,
+          "rpc": "mainnet.optimism.io"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on optimism that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ac201295b3441a018599d9d06f2d9b361ccb8f37a3a3362c2dbfe040cd3aa77f",
+    "sig_ed25519": "4f07eac085311d13a83505abc8d07d309521c14c1c7d7a533a84b3c206419ddf8cd4ff684e6cee63b05c42a4f7af92ec3af2f9ffa6c7585a6e60cbf5a389da0a",
+    "source_urls": [
+      "https://mainnet.optimism.io"
+    ],
+    "subject": "evm-events:scan:optimism coverage at block 156886784",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:optimism",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ]
+  },
+  "proof": [
+    "5863cd6b2add104a29cf2b9fd3ad966b9a03f3efee04de8c7f0ea7f8204b10db",
+    "cca99a2d0f34cbab85ac83ca8fa873772825460b6b0e110060122866ff3bf4c6",
+    "13ddfbb6a9e53260405e9058d0a9f68e18de67b86675c6191b0f80bd14e1149c",
+    "cd27431fd6cebe820cdd49bb3f8340d7fa5326d3ee1d1edd29ba4da79b72a3b9",
+    "42db68ca9fca883e129d70235db3a0c229579772d63e66cd05ec41bdc540286c",
+    "d05c1f7ceb5cdb432bab862d1795e8d99fd87653605a84570ef99aca37f4892b",
+    "c7a85a4cd63e48e95dd69decdf8e1aa02a6dc3a04bacc991c911192f21ae900d",
+    "54a2654ad883ae1425a131d1e2fc3330c6c5852d118f95a8376404fc6f65e214",
+    "164fb3eb98d8f27b981dd18053c17d12ed7382267f77282877f2ac171e572163"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "card": {
+    "as_of": "2026-09-14T02:01:29.387Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdt0:arbitrum",
+      "backing_model": "native",
+      "wrapped": {
+        "chain": "arbitrum",
+        "symbol": "USDT0",
+        "address": "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627",
+        "chainId": 42161,
+        "block": 504923416,
+        "block_hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
+        "block_time": 1789350332
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDT",
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "chainId": 1,
+        "block": 25972488,
+        "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "USDT0 on Arbitrum via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed.",
+      "reads": {},
+      "escrow_over_wrapped": null,
+      "parity_state": "UNMEASURED",
+      "state": "UNMEASURED",
+      "error": "empty eth_call result from 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627",
+      "fetched_at": "2026-09-14T02:01:29.387Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+      "unmeasured": [
+        "chain reads (rpc failed; nothing inferred)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "385d7cd72fee80b48cd468738b1ccc39d375a40e44b7fa7a2e932f4f2af29d30",
+    "sig_ed25519": "c8a51138eac89ac3675d3881406feca3c17813abcd19eff1631f3da38de90e8178143995f7f57ae88ddb08e553b67444f0ce6d0111fc2fac47f8b6f8a7674b07",
+    "source_urls": [
+      "https://arb1.arbitrum.io/rpc",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDT0 on arbitrum vs native issuance — UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:native",
+      "state:UNMEASURED"
+    ],
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ]
+  },
+  "proof": [
+    "5af6c6c47ff066a71be90c237bb4525c05c34fc20d20341b121bae37a8fe139f",
+    "3f97a12d8f35b00b11ff4bb75dfd5c5ef0efca71dae369f59c093b9bf3e470f9",
+    "614a084aaaa6a3e74d71aff9455c7e167ff7f2ca65583b9896e85a1465febac4",
+    "26a5ff04e33c35d8e401cf393768922e2dd196152c49b061698d947a963fef08",
+    "2a666d79bbf03ccd93b6aa7a46c9df4acaeb803c4d24a4130928ffc617701b71",
+    "d5cb9108dae554b7acb9519fea57bcfce9244f10baa75a7706d8bead1cbdb3fb",
+    "1290e6e8a150fcd8467598af8a2d533ae118174e2569fd76354aab23e822dc42",
+    "54a2654ad883ae1425a131d1e2fc3330c6c5852d118f95a8376404fc6f65e214",
+    "164fb3eb98d8f27b981dd18053c17d12ed7382267f77282877f2ac171e572163"
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "card": {
+    "as_of": "2026-09-14T02:01:29.387Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdc.e:arbitrum",
+      "backing_model": "escrow",
+      "wrapped": {
+        "chain": "arbitrum",
+        "symbol": "USDC.e",
+        "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+        "chainId": 42161,
+        "block": 504923416,
+        "block_hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
+        "block_time": 1789350332
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "block": 25972488,
+        "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+      },
+      "escrow": "0xcEe284F754E854890e311e3280b767F80797180d",
+      "escrow_name": "Arbitrum One ERC-20 gateway escrow",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000000000000002bf181fc2d58",
+          "raw_sha256": "81d6b08f792010b756b46f2d0f43879570e4483c09833582227326fcc96e0e61",
+          "atomic": "48316267900248",
+          "normalized": "48316267.900248",
+          "decimals": 6
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0xcEe284F754E854890e311e3280b767F80797180d)",
+          "raw": "0x00000000000000000000000000000000000000000000000000002f7f4ad667b5",
+          "raw_sha256": "48eed2135bf9c3d8b1a227a1e674582209052f49f99b6c55ae1ecbaed317716b",
+          "atomic": "52223762917301",
+          "normalized": "52223762.917301",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": "1.080873",
+      "parity_state": "ESCROW_PARITY_READ",
+      "state": "PROBED",
+      "error": null,
+      "fetched_at": "2026-09-14T02:01:29.387Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+      "unmeasured": []
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "36eb902aa92d5d8acb6e09c98271e36841491773b118534a2cce4603ca734a86",
+    "sig_ed25519": "c4b6bf7a63b478c4ba65ee1abbdff6954631f79f69f41f0a471668e697e847780f6c3003a9e8f4025792921ba9a14776df5e7e135fb64506632ec70963b4c30e",
+    "source_urls": [
+      "https://arb1.arbitrum.io/rpc",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDC.e on arbitrum vs Arbitrum One ERC-20 gateway escrow — ESCROW_PARITY_READ",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:escrow",
+      "state:ESCROW_PARITY_READ"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "0a4e8e7a13313649d13e993e398cfa5801a431d5aa99c53db26c34c0d6ebd29a",
+    "74b179a73f0c73c09ff61cab38c56d4596a7533ab67562000fbdc82deb2d454f",
+    "f157feb6d4300400ef55703fcd32d2318bb3967f444be24561e240057195829a",
+    "26a5ff04e33c35d8e401cf393768922e2dd196152c49b061698d947a963fef08",
+    "2a666d79bbf03ccd93b6aa7a46c9df4acaeb803c4d24a4130928ffc617701b71",
+    "d5cb9108dae554b7acb9519fea57bcfce9244f10baa75a7706d8bead1cbdb3fb",
+    "1290e6e8a150fcd8467598af8a2d533ae118174e2569fd76354aab23e822dc42",
+    "54a2654ad883ae1425a131d1e2fc3330c6c5852d118f95a8376404fc6f65e214",
+    "164fb3eb98d8f27b981dd18053c17d12ed7382267f77282877f2ac171e572163"
+  ]
+}

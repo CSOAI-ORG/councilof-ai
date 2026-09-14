@@ -1,0 +1,48 @@
+{
+  "card": {
+    "as_of": "2026-09-14T01:50:50Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "discovered_mismatch": 0,
+      "discovery_state": "PROBED",
+      "kind": "csoai.x402-door-conformance/0.1",
+      "n_doors": 10,
+      "not_delivery_proof": true,
+      "probed_conformant": 10,
+      "report": "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json",
+      "state": "PROBED",
+      "uncheckable": 0
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "502b3a4f0e5d814e17361b95f02d942df741e187b30a7f3ec2ec9574d661e6d1",
+    "sig_ed25519": "bb909c3f5cbe0fd26e0f630acec4fa64ba43084f98c628af5c64e30ea5b39dc977ed7e44b1d6fb04d20c4983a2bdc775a513a59ac7a5c06dab97f217db366b05",
+    "source_urls": [
+      "https://councilof.ai/.well-known/x402.json",
+      "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json"
+    ],
+    "subject": "x402 door conformance round — 9 doors, challenge shape",
+    "surface": "public.notice",
+    "tags": [
+      "x402",
+      "conformance",
+      "x402-door-conformance-2026-09"
+    ],
+    "unmeasured": [
+      "fulfillment_bytes",
+      "settlement_classification_from_this_probe"
+    ]
+  },
+  "proof": [
+    "aabafb0f6a4de31511e20418b49568174c6353a31c73402d29923365d71055d3",
+    "87001a8a858be4714d245240bb74b3a6fa18bef1169fba88485ad8b302e51032",
+    "eb35374dce7c757acc43cebef212338971aaa83404d74f524213156328208980",
+    "9c0c6d25f6ad344a3b88a2ba5c728b49227c3fec3810b531195a9066850db0b3",
+    "92b3ee0f7c353b5b05c85a1f1196d982182e2e402c96980c733f86ac634ba16d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "1789972222381b6cf87b85b05186e1dce71ae17223a5e66e6387de3d4b97dcef",
+    "bd8f04bf4c7dc00b8f4e73383fda790a8889d4ce23dd47d6cefbe2183fa5eb1b",
+    "164fb3eb98d8f27b981dd18053c17d12ed7382267f77282877f2ac171e572163"
+  ]
+}

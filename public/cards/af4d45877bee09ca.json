@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-14T07:46:39.751Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 90,
+      "issuer": "Republic of Palau",
+      "issuer_address": "rwekfW4MiS5yZjXASRBDzzPPWYKuHvKP7E",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 14588,
+      "symbol": "PSC",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "af4d45877bee09cae3513ef9af71106e7d858d24b3d427fd27357f34c8f6998c",
+    "sig_ed25519": "e4677459c8cfce3df2fc4033425e2aff1e5aabb47c875875d06f753cc15d2fbc1e8e39d31d1d4cfc3d0ba0150ec598b9f021389424e85cb13b46e112cc791005",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL PSC public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "5167c49ea943990d966efc3186abea1df757a58d024ab6ae450883b2f0b4cbbf",
+    "f338797f1ff17fd8e4bbe02cfad09f0d566b36fcb3fb1db85f539e30529e7e3b",
+    "570fc4ce2f656125d63d8dd1fe8fadef8b5e5fc860afba5f3e0fed089d196e22",
+    "0559f08d362340870505e585101a820d319735d9162a591b2dbe62e3f3dc72cd",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "16b90c8cb958907bc665a6a97c972e95f66a1ecb210e8c9dd4aee6ace3ac5a89",
+    "8e21412c1749df02fb02a7e521d6c2d17ceeb99bd303d274d483239ccc051092",
+    "bd8f04bf4c7dc00b8f4e73383fda790a8889d4ce23dd47d6cefbe2183fa5eb1b",
+    "164fb3eb98d8f27b981dd18053c17d12ed7382267f77282877f2ac171e572163"
+  ]
+}
