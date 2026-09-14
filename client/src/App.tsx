@@ -316,6 +316,7 @@ const GovGraph = lazy(() => import("./pages/GovGraph"));
 const NetworkPage = lazy(() => import("./pages/NetworkPage"));
 const AttestationNetwork = lazy(() => import("./pages/AttestationNetwork"));
 const McpTrustBoard = lazy(() => import("./pages/McpTrustBoard"));
+const X402Leaderboard = lazy(() => import("./pages/X402Leaderboard"));
 const GspcVsAiluminate = lazy(() => import("./pages/GspcVsAiluminate"));
 const RegulatorAtlas = lazy(() => import("./pages/RegulatorAtlas"));
 const Competitors = lazy(() => import("./pages/Competitors"));
@@ -356,6 +357,8 @@ const ROUTE_TITLES: Record<string, string> = {
   "/gspc-vs-ailuminate": "GSPC vs AILuminate — an honest breadth comparison | Council of AI",
   "/ailuminate": "GSPC vs AILuminate — an honest breadth comparison | Council of AI",
   "/boards/mcp": "MCP Trust Board — who answers the handshake, under what terms | Council of AI",
+  "/x402-leaderboard": "x402 Bazaar leaderboard — every door returns 402, price in the 402 only | CSOAI",
+  "/x402-board": "x402 Bazaar leaderboard — every door returns 402, price in the 402 only | CSOAI",
   "/certification": "Measurement credential — how CSOAI attestation works | CSOAI",
   "/courses": "AI governance courses & training | CSOAI",
   "/api-docs": "API & MCP documentation | CSOAI",
@@ -807,6 +810,8 @@ function App() {
                                       <Route path="/attestation" component={AttestationNetwork} />
                                       <Route path="/attestation-network">{() => <Redirect to="/attestation" />}</Route>
                   <Route path="/trust" component={McpTrustBoard} />
+                  <Route path="/x402-leaderboard" component={X402Leaderboard} />
+                  <Route path="/x402-board" component={X402Leaderboard} />
                   <Route path="/gspc-vs-ailuminate" component={GspcVsAiluminate} />
                   <Route path="/ailuminate" component={GspcVsAiluminate} />
                   <Route path="/boards/mcp" component={McpTrustBoard} />

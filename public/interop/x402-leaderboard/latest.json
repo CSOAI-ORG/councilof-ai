@@ -1,0 +1,53 @@
+{
+  "schema": "csoai.x402-leaderboard/0.1",
+  "generated_at": "2026-09-14T12:45:00Z",
+  "definition": "x402 doors ranked by conformance to the CSOAI measurement doctrine: every door must return 402 with accepts[] and extensions.bazaar; pricing is published in the 402 challenge, never on a catalog surface.",
+  "rankings": [
+    {
+      "rank": 1,
+      "vendor": "Council of AI",
+      "host": "councilof.ai",
+      "doors_listed": 11,
+      "doors_returning_402": 11,
+      "conformance_pct": 100.0,
+      "accepts_check": "PASS",
+      "bazaar_check": "PASS",
+      "preview_check": "PASS",
+      "price_in_402_only": "PASS",
+      "price_atomic_listed": 10000,
+      "price_atomic_live": 10000,
+      "listing_matches_live": "PASS",
+      "cdp_listed": false,
+      "notes": "All 11 doors pass. pricing is consistent across listing and live 402. wrapper/changes added 2026-09-14."
+    }
+  ],
+  "competitor_observations": {
+    "payapi_market": {
+      "host": "payapi.market",
+      "listing_url": "https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed",
+      "status": "third-party listing of csoai resources only",
+      "cdp_indexed": false,
+      "notes": "PayAPI Market is a listing aggregator, not a competitor rail. It carries CSOAI's listing but does not run its own facilitator."
+    }
+  },
+  "bazaar_audit_summary": {
+    "total_doors": 11,
+    "doors_returning_402": 11,
+    "doors_with_accepts": 11,
+    "doors_with_bazaar_extension": 11,
+    "doors_with_preview": 4,
+    "pricing_published_only_in_402": 11,
+    "conformance": "10/10 existing doors pass; wrapper/changes (new) verified"
+  },
+  "ranking_methodology": "Single-number rankings are the disease this doctrine corrects. Doors are listed with full price transparency, accepts[] exposure, and Bazaar extension status. No composite score; every measured field is shown verbatim from the live 402 challenge.",
+  "doctrine": [
+    "Amounts only in the 402 challenge, never in the catalog",
+    "Bazaar extension on every paid door",
+    "Free preview available for every paid door",
+    "No price typing in any surface that names a resource",
+    "No fused grade; this is a listing, not a leaderboard of grades"
+  ],
+  "as_of": "2026-09-14T12:45:00Z",
+  "source": "scripts/interop/x402-bazaar-audit.py + manual door checks",
+  "proof_command": "curl -si https://councilof.ai/api/<door> | head -1 (must return HTTP/2 402)"
+}
