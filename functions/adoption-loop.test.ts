@@ -16,23 +16,27 @@ import { onRequestGet as aliasFeed } from "./feed.xml";
 import { onRequestGet as canonicalCorrections } from "./feeds/corrections.xml";
 import { onRequestGet as aliasCorrections } from "./corrections.xml";
 import { onRequestGet as aliasRss } from "./rss.xml";
+import { onRequestGet as aliasAtom } from "./atom.xml";
 import { onRequestGet as badgeMd } from "./badge.md";
 
 const ctx = {} as never;
 
-describe("/feed.xml and /rss.xml — aliases, not a second engine", () => {
-  it("both aliases are the very same handler as the canonical feed", () => {
+describe("/feed.xml, /rss.xml, and /atom.xml — aliases, not a second engine", () => {
+  it("all conventional aliases are the very same handler as the canonical feed", () => {
     // Identity, not equality: a copied implementation could pass a content check and still drift.
     expect(aliasFeed).toBe(canonicalFeed);
     expect(aliasRss).toBe(canonicalFeed);
+    expect(aliasAtom).toBe(canonicalFeed);
   });
 
-  it("the alias serves byte-identical RSS to the canonical route", async () => {
-    const [a, b] = await Promise.all([
+  it("the aliases serve byte-identical RSS to the canonical route", async () => {
+    const [a, b, c] = await Promise.all([
       (await aliasFeed(ctx)).text(),
       (await canonicalFeed(ctx)).text(),
+      (await aliasAtom(ctx)).text(),
     ]);
     expect(a).toBe(b);
+    expect(c).toBe(b);
     expect(a).toMatch(/^<\?xml version="1\.0"/);
     expect(a).toContain("<rss");
     expect(a).toContain("<item>");

@@ -59,7 +59,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
     return new Response(JSON.stringify({
       schema: "csoai.feeds-index/0.1",
       derived_feeds: rows.map(({ path, type, title, n, newest }) => ({ path, type, title, entries: n, newest })),
-      legacy_feed: { path: d.transport?.path ?? "/api/feed.xml", aliases: ["/feed.xml", "/rss.xml"],
+      legacy_feed: { path: d.transport?.path ?? "/api/feed.xml", aliases: ["/feed.xml", "/rss.xml", "/atom.xml"],
         note: "Hand-maintained item list. Its historical titles freeze counts the live board has moved past — quote the board, not a feed title." },
       descriptor: descriptor,
       descriptor_note: "public/interop/feed.json is produced by scripts/badger/csoai-monorepo-fill.py and describes only the legacy handler. It is rendered here unchanged; it does not yet describe the derived feeds.",
@@ -99,7 +99,7 @@ ${cards_}
 
 <h2>The older feed, kept for its subscribers</h2>
 <article><h3><a href="${esc(d.transport?.path ?? "/api/feed.xml")}">${esc(d.name ?? "State-change RSS feed")}</a></h3>
-<p class="mut"><code>${esc(d.transport?.path ?? "/api/feed.xml")}</code> · aliases <code>/feed.xml</code>, <code>/rss.xml</code> · state ${esc(d.state ?? "unknown")} · as_of ${esc(d.as_of ?? "unstated")}</p>
+<p class="mut"><code>${esc(d.transport?.path ?? "/api/feed.xml")}</code> · aliases <code>/feed.xml</code>, <code>/rss.xml</code>, <code>/atom.xml</code> · state ${esc(d.state ?? "unknown")} · as_of ${esc(d.as_of ?? "unstated")}</p>
 <p>${esc(d.description ?? "")}</p>
 <p class="mut">It is a hand-maintained item list: its historical titles freeze counts the live board has moved past. Quote the board, not a feed title.</p></article>
 
