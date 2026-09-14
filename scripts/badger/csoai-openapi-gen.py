@@ -47,6 +47,33 @@ def curl(url: str, *, timeout: int = 30) -> tuple[int, str]:
         return 0, ""
 
 
+def public_description(text: str) -> str:
+    """Use the introductory paragraph, with JSDoc decoration removed.
+
+    Keep the whole paragraph so scope qualifiers are not chopped mid-sentence.
+    Later implementation history and annotations are not customer copy.
+    """
+    match = re.search(r"/\*\*(.+?)\*/", text, re.DOTALL)
+    if not match:
+        return ""
+    lines = [re.sub(r"^\s*\* ?", "", line).strip()
+             for line in match.group(1).splitlines()]
+    paragraph = []
+    for line in lines:
+        if not line or line.startswith("@"):
+            if paragraph:
+                break
+            continue
+        paragraph.append(line)
+    return " ".join(paragraph)
+
+
+def public_summary(description: str) -> str:
+    if len(description) <= 200:
+        return description
+    return description[:197].rsplit(" ", 1)[0].rstrip(".,;:") + "…"
+
+
 def discover_endpoints() -> list[dict]:
     """Walk functions/api/ to discover every endpoint. Each .ts file is
     parsed for the onRequestGet/Post/Put/Delete signature, the path is
@@ -77,8 +104,7 @@ def discover_endpoints() -> list[dict]:
         if not methods:
             continue
         # Extract the first comment block as a description
-        m = re.search(r"/\*\*(.+?)\*/", text, re.DOTALL)
-        description = m.group(1).strip()[:300] if m else ""
+        description = public_description(text)
         endpoints.append({
             "path": path,
             "methods": methods,
@@ -168,7 +194,8 @@ def build_openapi(endpoints: list[dict]) -> dict:
                 response_status = "200"
                 response_description = "OK"
             op: dict = {
-                "summary": ep.get("description", "")[:200],
+                "summary": public_summary(ep.get("description", "")),
+                "description": ep.get("description", ""),
                 "operationId": f"{verb.lower()}_{path.replace('/', '_').replace('{', '').replace('}', '')}",
                 "responses": {
                     response_status: {
