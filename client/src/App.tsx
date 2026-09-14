@@ -44,7 +44,6 @@ import { Footer } from "./components/Footer";
 import { SkipNavigation } from "./components/SkipNavigation";
 const Landing = lazy(() => import("./pages/Landing"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
-const AgUiBridge = lazy(() => import("./pages/AgUiBridge"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
 const Penalties = lazy(() => import("./pages/Penalties"));
@@ -224,7 +223,6 @@ const Accreditation = lazy(() => import("./pages/Accreditation"));
 const SOAIPDCAFramework = lazy(() => import("./pages/SOAIPDCAFramework"));
 const PDCASimulator = lazy(() => import("./pages/PDCASimulator"));
 const EnterpriseDashboard = lazy(() => import("./pages/EnterpriseDashboard"));
-const Enterprise = lazy(() => import("./pages/Enterprise"));
 const ProsperityFund = lazy(() => import("./pages/ProsperityFund"));
 const Charter = lazy(() => import("./pages/Charter"));
 const PublicWatchdog = lazy(() => import("./pages/PublicWatchdog"));
@@ -249,8 +247,6 @@ const FaqPage = lazy(() => import("./pages/FaqPage"));
 const Glossary = lazy(() => import("./pages/Glossary"));
 const ReadinessAssessment = lazy(() => import("./pages/ReadinessAssessment"));
 const IndustrySolutions = lazy(() => import("./pages/IndustrySolutions"));
-const IndustryTemplate = lazy(() => import("./pages/IndustryTemplate"));
-const RegulatorFindingsDetail = lazy(() => import("./pages/RegulatorFindingsDetail"));
 const Traction = lazy(() => import("./pages/Traction"));
 const ComparisonPage = lazy(() => import("./pages/ComparisonPage"));
 const ROICalculator = lazy(() => import("./pages/ROICalculator"));
@@ -789,7 +785,7 @@ function App() {
                   <Route path="/regulator-findings" component={ContentReviewNotice} />
                   <Route path="/findings" component={FindingsExplorer} />
                   <Route path="/model/:id" component={ModelFindings} />
-                  <Route path="/regulator/:id" component={RegulatorFindingsDetail} />
+                  <Route path="/regulator/:id" component={ContentReviewNotice} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
                   <Route path="/ag-ui">{() => <Redirect to="/dashboard?tab=home" />}</Route>
                   <Route path="/chat">{() => <Redirect to="/dashboard?tab=home" />}</Route>
@@ -860,7 +856,7 @@ function App() {
                   <Route path="/frameworks" component={FrameworkPresence} />
                   <Route path="/frameworks/:slug" component={ContentReviewNotice} />
                   <Route path="/sectors/:slug" component={ContentReviewNotice} />
-                  <Route path="/industries/:slug">{(p: any) => <IndustryTemplate slug={p.slug} />}</Route>
+                  <Route path="/industries/:slug" component={ContentReviewNotice} />
                   <Route path="/blog/:slug" component={ContentReviewNotice} />
                   <Route path="/models" component={ModelRegistry} />
                   <Route path="/framework-catalog" component={FrameworkCatalog} />

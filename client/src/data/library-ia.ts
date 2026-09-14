@@ -128,12 +128,12 @@ export const PRIMARY_PATHS = new Set<string>([
 
 /**
  * Dynamic PRIMARY families. PRIMARY_PATHS is a Set of exact strings, so a
- * parameterised route (/for/:persona, /industries/:slug, /vs/:slug) could never
+ * parameterised route (/for/:persona, /vs/:slug) could never
  * be registered in it and every one of those pages rendered the archive banner.
  * A prefix here means "this whole family is primary" — it is the same decision
  * PRIMARY_PATHS records, expressed for a route that has no single path.
  */
-export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/industries/", "/vs/", "/model/", "/regulator/"];
+export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/vs/", "/model/"];
 
 export function isPrimaryPath(p: string): boolean {
   return PRIMARY_PATHS.has(p) || PRIMARY_PREFIXES.some((pre) => p.startsWith(pre));
