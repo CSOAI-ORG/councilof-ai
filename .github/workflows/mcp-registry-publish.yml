@@ -37,6 +37,7 @@ jobs:
       - name: Get GitHub OIDC id_token
         id: oidc
         run: |
+          set -euo pipefail
           ID_TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=registry.modelcontextprotocol.io" | jq -r .value)
           echo "ID_TOKEN_LENGTH=${#ID_TOKEN}"
@@ -45,11 +46,13 @@ jobs:
       - name: Exchange OIDC for Registry JWT
         id: jwt
         run: |
-          REGISTRY_JWT=$(curl -sS -X POST \
+          set -euo pipefail
+          RESP=$(curl -sS -X POST \
             https://registry.modelcontextprotocol.io/v0/auth/github-oidc \
             -H "Content-Type: application/json" \
-            -d "$(jq -nc --arg t "${{ steps.oidc.outputs.id_token }}" '{oidc_token: $t}')" \
-            | jq -r '.registry_token')
+            -d "$(jq -nc --arg t "${{ steps.oidc.outputs.id_token }}" '{oidc_token: $t}')")
+          echo "Exchange response: $RESP"
+          REGISTRY_JWT=$(echo "$RESP" | jq -r '.registry_token')
           echo "REGISTRY_JWT_LENGTH=${#REGISTRY_JWT}"
           echo "registry_token=$REGISTRY_JWT" >> "$GITHUB_OUTPUT"
 
@@ -58,4 +61,4 @@ jobs:
         env:
           TOKEN: ${{ steps.jwt.outputs.registry_token }}
           VER: ${{ inputs.version }}
-        run: node ../../scripts/mcp-registry-publish.js
+        run: node ../../scripts/mcp-registry-publish.mjs
