@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import evidenceNotes from "@/data/evidence-notes.json";
 
 type BazaarFinding =
   | { state: "loading" }
@@ -223,6 +224,39 @@ export default function Pressroom() {
               <strong>UNCHECKABLE:</strong> the live census could not be read; no previous snapshot is reused.
             </p>
           )}
+        </div>
+        <h2 className="mt-12 text-xl font-bold text-gray-900">Evidence notes</h2>
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-gray-700">
+          Short notes dated {evidenceNotes.date}. Each one names the signed cards, receipts, ledgers or
+          endpoints behind it, and a reader can fetch every one. Measurement, not certification: a gap
+          without a separation test is not a ranking, and an UNMEASURED card has no quotable accuracy.
+        </p>
+        <div className="mt-4 space-y-3">
+          {evidenceNotes.notes.map((note) => (
+            <details
+              key={note.id}
+              id={`note-${note.id}`}
+              className="rounded-2xl border border-gray-200 p-4"
+            >
+              <summary className="cursor-pointer">
+                <span className="text-sm font-bold text-gray-900">{note.title}</span>
+                <span className="mt-1 block text-sm text-gray-600">{note.summary}</span>
+              </summary>
+              <p className="mt-3 break-words text-sm leading-6 text-gray-800">{note.body}</p>
+              <ul className="mt-3 space-y-1">
+                {note.artifacts.map((artifact) => (
+                  <li key={artifact.url} className="text-xs">
+                    <a
+                      href={artifact.url}
+                      className="break-all font-mono font-semibold text-emerald-800 underline underline-offset-4"
+                    >
+                      {artifact.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ))}
         </div>
         <h2 className="mt-12 text-xl font-bold text-gray-900">Quotable</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
