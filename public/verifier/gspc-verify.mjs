@@ -369,7 +369,7 @@ async function verifyCard(card, profile) {
           ? profile.pinnedPubkeyHex
           : null;
     if (!known)
-      return uncheckable("KEY_NOT_PINNED", `card is signed under ${card.did}, which this profile does not pin; supply a profile that pins it, or --did with that key document`);
+      return uncheckable("KEY_NOT_PINNED", `card is signed under ${card.did}, which this profile does not pin; supply a profile that pins it, or run with --did-document <did.json> --key-id ${card.did}`);
     if (!HEX64.test(known))
       return uncheckable("MALFORMED_PROFILE", `the profile pins ${card.did} to something that is not 64 lowercase hex characters`);
     pinnedHex = known;
