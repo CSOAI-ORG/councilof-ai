@@ -43,6 +43,26 @@ describe("GET /api/worker", () => {
     expect(JSON.stringify(body)).not.toContain("must-strip");
   });
 
+  it("includes sanitized live commission-dispatch status", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.endsWith("/commission-dispatch")) return Response.json({
+        schema: "csoai.runpod-commission-dispatch-status/0.1", status: "OBSERVED",
+        queue_schema: "csoai.commission-queue/0.1", source_revision: "a".repeat(40),
+        last_run: "2026-09-14T11:30:00Z", admitted: 28, refused: 0, created: 0,
+        already_present: 28, secret_token: "must-strip",
+      });
+      return Response.json({ state: "WAITING", jobs_total: 182 });
+    }));
+    const res = await (onRequest as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request("https://councilof.ai/api/worker"), env: {},
+    });
+    const body = (await res.json()) as Record<string, any>;
+    expect(body.commission_dispatch.queue_schema).toBe("csoai.commission-queue/0.1");
+    expect(body.commission_dispatch.admitted).toBe(28);
+    expect(JSON.stringify(body)).not.toContain("must-strip");
+  });
+
   it("is OFFLINE, never a stale artifact, when the pod does not answer", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("fetch failed"); }));
     const res = await (onRequest as unknown as (c: unknown) => Promise<Response>)({

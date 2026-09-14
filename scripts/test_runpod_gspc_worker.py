@@ -491,6 +491,37 @@ class WorkerTests(unittest.TestCase):
         finally:
             server.close()
 
+    def test_commission_dispatch_endpoint_exposes_only_counts_and_revision(self) -> None:
+        output = self.root / "dispatch-health"
+        output.mkdir()
+        report = output / "commission.json"
+        report.write_text(json.dumps({
+            "schema": "csoai.runpod-commission-dispatch/0.1",
+            "queue_schema": "csoai.commission-queue/0.1",
+            "last_run": "2026-09-14T11:30:00Z",
+            "source_revision": "a" * 40,
+            "admitted": [{"subject": "private-model-name", "receipt_sha": "b" * 64}],
+            "refused": [{"subject": "another-private-name"}],
+            "created": 1,
+            "already_present": 27,
+            "secret_token": "must-not-leak",
+        }))
+        sink = worker.HealthSink(output / "health.json")
+        sink.update(state="IDLE")
+        server = worker.ReadOnlyHealthServer(sink, "127.0.0.1", 0, report)
+        server.start()
+        try:
+            with urllib.request.urlopen(f"http://127.0.0.1:{server.port}/commission-dispatch", timeout=2) as response:
+                payload = json.loads(response.read())
+            self.assertEqual(payload["status"], "OBSERVED")
+            self.assertEqual(payload["queue_schema"], "csoai.commission-queue/0.1")
+            self.assertEqual(payload["admitted"], 1)
+            self.assertEqual(payload["already_present"], 27)
+            self.assertNotIn("private-model-name", json.dumps(payload))
+            self.assertNotIn("must-not-leak", json.dumps(payload))
+        finally:
+            server.close()
+
     def test_lock_rejects_second_instance(self) -> None:
         lock = self.root / "worker.lock"
         with worker.single_instance(lock):
