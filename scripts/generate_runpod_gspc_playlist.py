@@ -225,7 +225,9 @@ def slug(value: str) -> str:
     return re.sub(r"[^a-zA-Z0-9_.-]+", "-", value).strip("-.")
 
 
-def build_configs(args: argparse.Namespace) -> list[tuple[Path, dict[str, Any]]]:
+def build_configs(
+    args: argparse.Namespace, tags: dict[str, str] | None = None
+) -> list[tuple[Path, dict[str, Any]]]:
     workspace_root = args.workspace_root.resolve()
     for label, candidate in (
         ("bank_dir", args.bank_dir),
@@ -237,7 +239,7 @@ def build_configs(args: argparse.Namespace) -> list[tuple[Path, dict[str, Any]]]
             candidate.resolve().relative_to(workspace_root)
         except ValueError as error:
             raise GenerationError(f"{label} must stay below workspace_root") from error
-    tags = ollama_digests(args.ollama_url)
+    tags = tags if tags is not None else ollama_digests(args.ollama_url)
     jobs: list[tuple[Path, dict[str, Any]]] = []
     ordinal = 0
     for model_index, model in enumerate(args.models):
