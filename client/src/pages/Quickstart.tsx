@@ -25,7 +25,7 @@ const PAGE_LD = {
     { "@type": "HowToStep", name: "See what changed", text: "GET /api/feed.xml — follow published measurement, correction and regulation-change events." },
     { "@type": "HowToStep", name: "Verify evidence", text: "Verify the Ed25519 signature offline and the card's inclusion in the public Merkle root." },
     { "@type": "HowToStep", name: "Access supported feeds", text: "Read /.well-known/x402.json for supported doors and use the canonical MCP endpoint for tool discovery." },
-    { "@type": "HowToStep", name: "Commission an output", text: "Optionally call a paid door, read its 402 challenge, and settle through an x402 client." },
+    { "@type": "HowToStep", name: "Commission an output", text: "Optional path: discover a door → request without payment → read the 402 → settle with a non-self wallet → receive the deliverable → verify signature/inclusion. Self-settlements and zero-value settlements are recorded but never counted as buyers (/api/revenue excludes_self)." },
     { "@type": "HowToStep", name: "Correct", text: "If a read is wrong, the correction path is public and the correction is published beside the record." },
   ],
 };
@@ -194,11 +194,33 @@ curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/e
       <section aria-labelledby="s5" className="mx-auto max-w-4xl px-5 py-10">
         <h2 id="s5" className="text-2xl font-bold">5 · Optional: commission an output</h2>
         <p className="mt-3 leading-7 text-slate-700">
-          After reading and verifying the public evidence, call a supported door with no payment to read its 402 contract. The
-          <code className="font-mono"> accepts[]</code> entry names scheme, network, asset, payee and amount. Settle that entry with any x402 client; retry with the payment header for the deliverable. A settlement of zero is not a purchase, and our own wallets are never counted as buyers.
+          After reading and verifying the public evidence, the paid path is copy-pasteable end-to-end:
+          <strong> discover → request → 402 → settle → receive → verify</strong>. Amounts live only in the door&apos;s
+          <code className="font-mono"> accepts[]</code> challenge — never typed here. A settlement of zero is not a purchase.
+          Estate/self wallets paying the estate are recorded as self-settlements and are never counted as buyers
+          (<code className="font-mono">excludes_self=true</code> on{" "}
+          <a href="/api/revenue" className="underline decoration-emerald-600 underline-offset-4">/api/revenue</a>.
         </p>
+        <p className="mt-3 text-sm font-semibold text-slate-800">Discover (manifest already loaded above) → request without payment → read the 402</p>
+        <Code>{`# concrete door example — substitute any resource.url from the manifest
+curl -si 'https://councilof.ai/api/request-attestation?subject=llama3.2:3b' \
+  | sed -n '1p;/^{/,$p' \
+  | jq '{http_hint: "expect 402", accepts0: .accepts[0] | {scheme, network, asset, payTo, maxAmountRequired}}'`}</Code>
+        <Code>{`# same shape for whichever door the manifest named first
+curl -si 'https://councilof.ai${doorPath}' | sed -n '1p;/^{/,$p' | jq '.accepts[0] | {scheme, network, asset, payTo, maxAmountRequired}'`}</Code>
+        <p className="mt-3 text-sm font-semibold text-slate-800">Settle → receive → verify</p>
+        <p className="mt-2 leading-7 text-slate-700">
+          Settle the challenge with any x402 client from a <em>non-self</em> wallet, retry with the payment header, then
+          read what was published. For commission subjects, fulfillment and card URLs are listed at{" "}
+          <a href="/api/commissions" className="underline decoration-emerald-600 underline-offset-4">/api/commissions</a>
+          {" "}(<code className="font-mono">RETRIEVABLE</code> + <code className="font-mono">CARDS_PUBLISHED</code>).
+          Verify each <code className="font-mono">cards[].url</code> offline (signature + optional root inclusion) — publication is not a certificate.
+        </p>
+        <Code>{`# after settle: list retrievable subjects and card URLs (no wallet needed to read)
+curl -s https://councilof.ai/api/commissions \
+  | jq '{count, retrievable, queued, unfulfillable,
+         subjects: [.commissions[] | {subject, fulfillment, delivery, card0: .cards[0].url}]}'`}</Code>
         <Code>{`curl -s 'https://councilof.ai${doorPath}${doorPath.includes("?") ? "&" : "?"}preview=1' | jq '.card.payload'`}</Code>
-        <Code>{`curl -si 'https://councilof.ai${doorPath}' | sed -n '1p;/^{/,$p' | jq '.accepts[0] | {scheme, network, asset, payTo, maxAmountRequired}'`}</Code>
       </section>
 
       <section aria-labelledby="s6" className="mx-auto max-w-4xl px-5 pb-16 pt-10">
