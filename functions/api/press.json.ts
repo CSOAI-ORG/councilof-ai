@@ -62,8 +62,12 @@ export async function build(env: RevenueEnv = {}) {
     one.settlements > 0 &&
     typeof one.settled_usdc_atomic === "number" &&
     one.settled_usdc_atomic > 0;
+  // USDC has 6 decimals. Render the exact decimal (20000 atomic -> "0.02") beside the atomic count;
+  // never round, so the two can always be checked against each other.
+  const usdcDecimal = (atomic: number): string =>
+    (atomic / 1_000_000).toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
   const revenueAnswer = outsideSettlementMeasured
-    ? `Revenue: the live settlement ledger records ${one.settlements} outside settlement${one.settlements === 1 ? "" : "s"} from ${one.all_time ?? "an uncounted number of"} distinct non-self payer${one.all_time === 1 ? "" : "s"}, totalling ${one.settled_usdc_atomic} USDC atomic units. Owner-controlled and zero-value settlements are excluded.`
+    ? `Revenue: the live settlement ledger records ${one.settlements} outside settlement${one.settlements === 1 ? "" : "s"} from ${one.all_time ?? "an uncounted number of"} distinct non-self payer${one.all_time === 1 ? "" : "s"}, totalling ${usdcDecimal(one.settled_usdc_atomic)} USDC (${one.settled_usdc_atomic} atomic units, 6 dp, on Base). This is a project-reported ledger: every record names its settlement transaction, so the chain is the check. Owner-controlled and zero-value settlements are excluded.`
     : settlementLedgerMeasured
       ? "Revenue: the bound settlement ledger measures zero outside settlements that moved a non-zero amount. Self-settlements and zero-value probes remain audit records and are not buyers."
       : "Revenue: this request could not read a bound settlement ledger, so settlement status is UNCHECKABLE here—never silently converted to zero or to a claim that no payment happened.";
