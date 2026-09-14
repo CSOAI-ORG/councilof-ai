@@ -139,6 +139,13 @@ def ollama_digests(base_url: str) -> dict[str, str]:
     return result
 
 
+# A keyword bank asks an open question and grades the whole answer, so the budget has to
+# let the answer finish. Measured 2026-09-14 on the pod (#2436), six swarm items, two
+# models: at 64 and 256 tokens 0 of 12 answers ended "stop"; at 512, 6 of 12; at 1024,
+# 12 of 12, the longest taking 675 tokens. The label budget (--max-tokens) is unchanged.
+KEYWORD_MAX_TOKENS = 1024
+
+
 def bank_labels(path: Path) -> tuple[str, ...]:
     """The exact labels a bank grades against, which is NOT every value of `expected`.
 
@@ -274,7 +281,11 @@ def build_configs(
                 "interval_seconds": args.interval_seconds,
                 "disk_low_water_bytes": args.disk_low_water_bytes,
                 "request_timeout_seconds": args.request_timeout_seconds,
-                "max_tokens": args.max_tokens,
+                "max_tokens": (
+                    getattr(args, "keyword_max_tokens", KEYWORD_MAX_TOKENS)
+                    if not labels
+                    else args.max_tokens
+                ),
                 "seed": 0,
                 "temperature": 0,
             }
@@ -317,6 +328,7 @@ def parser() -> argparse.ArgumentParser:
     # `decode` is pinned in every card, so runs at 16 and at 64 stay distinguishable
     # and are not silently pooled.
     result.add_argument("--max-tokens", type=int, default=64)
+    result.add_argument("--keyword-max-tokens", type=int, default=KEYWORD_MAX_TOKENS)
     return result
 
 
@@ -327,6 +339,7 @@ def main(argv: list[str] | None = None) -> int:
         "disk_low_water_bytes",
         "request_timeout_seconds",
         "max_tokens",
+        "keyword_max_tokens",
     ):
         if getattr(args, name) < 1:
             raise SystemExit(f"HALT: {name} must be positive")

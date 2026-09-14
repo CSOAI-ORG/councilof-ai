@@ -206,6 +206,98 @@ class WorkerTests(unittest.TestCase):
         self.assertNotIn("KEYWORD_MATCH", fake.prompts[0])
         self.assertEqual(outcome.correct, 1)
 
+    def test_keyword_answer_cut_off_by_budget_leaves_n(self) -> None:
+        """#2436: a keyword answer that ended on the token budget was not answered."""
+        rows = [
+            {
+                "id": f"k{i}",
+                "prompt": f"Explain control gap {i}.",
+                "expected": "KEYWORD_MATCH",
+                "must_inc": ["human oversight"],
+            }
+            for i in (1, 2)
+        ]
+        config, output = self.write_config(rows)
+        fake = FakeClient(
+            [
+                worker.InferenceResult(
+                    True,
+                    "Human oversight is",
+                    "3" * 64,
+                    None,
+                    response_model="unit/model:1",
+                    done_reason="length",
+                ),
+                worker.InferenceResult(
+                    True,
+                    "Human oversight closes it.",
+                    "4" * 64,
+                    None,
+                    response_model="unit/model:1",
+                    done_reason="stop",
+                ),
+            ]
+        )
+        outcome = worker.run_once(
+            config,
+            worker.HealthSink(output / "health.json"),
+            client=fake,
+            disk_usage=lambda _path: DiskUsage(10_000),
+        )
+        self.assertEqual(outcome.exit_code, 0)
+        run_dir = next((output / "runs").iterdir())
+        card = json.loads((run_dir / "card-unsigned.json").read_text())
+        self.assertEqual(card["body"]["n"], 1)
+        self.assertEqual(card["body"]["accuracy"], 1)
+        self.assertEqual(card["body"]["compute_evidence"]["parse_errors_excluded"], 1)
+        run = json.loads((run_dir / "run.json").read_text())
+        self.assertEqual(run["counts"]["graded_n"], 1)
+        self.assertEqual(
+            run["instrument"]["graders"]["keyword_match"],
+            "all-nfkc-casefold-whitespace-normalized-substrings-v2-length-unanswered",
+        )
+        items = [
+            json.loads(line)
+            for line in (run_dir / "items.jsonl").read_text().splitlines()
+        ]
+        # Even though the cut-off text contains the keyword, it is not a pass.
+        self.assertFalse(items[0]["grade"])
+
+    def test_all_keyword_answers_cut_off_is_not_landable(self) -> None:
+        config, output = self.write_config(
+            [
+                {
+                    "id": "k1",
+                    "prompt": "Explain the control gap.",
+                    "expected": "KEYWORD_MATCH",
+                    "must_inc": ["human oversight"],
+                }
+            ]
+        )
+        fake = FakeClient(
+            [
+                worker.InferenceResult(
+                    True,
+                    "The control gap is",
+                    "5" * 64,
+                    None,
+                    response_model="unit/model:1",
+                    done_reason="length",
+                )
+            ]
+        )
+        worker.run_once(
+            config,
+            worker.HealthSink(output / "health.json"),
+            client=fake,
+            disk_usage=lambda _path: DiskUsage(10_000),
+        )
+        run_dir = next((output / "runs").iterdir())
+        self.assertFalse((run_dir / "card-unsigned.json").exists())
+        run = json.loads((run_dir / "run.json").read_text())
+        self.assertEqual(run["detail_code"], "ALL_UNPARSED")
+        self.assertFalse(run["landable_candidate"])
+
     def test_model_digest_mismatch_halts_before_inference(self) -> None:
         config, output = self.write_config(
             [{"id": "a", "prompt": "Pick.", "expected": "YES"}], labels=["YES", "NO"]
