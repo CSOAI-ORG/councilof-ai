@@ -18,6 +18,9 @@ import BoardAttestation from "@/components/board/BoardAttestation";
 
 type PublishedRef = { id: string; url: string };
 
+/** Live Series A governance retrieve — free preview only; not a certificate. */
+const SERIES_A_GOVERNAN_RETRIEVE = "/interop/mill-cards-signed/signed-governan-e9bc92b7b39b.json";
+
 async function pickPublishedCard(signal?: AbortSignal): Promise<PublishedRef> {
   // Prefer the signed chain links with a published body; fall back to card_index.
   // Never invent a body — only URLs the estate actually lists.
@@ -65,6 +68,22 @@ export default function GSPCVerify() {
       const ref = await pickPublishedCard();
       const r = await fetch(ref.url, { headers: { accept: "application/json" } });
       if (!r.ok) throw new Error(`GET ${ref.url} → HTTP ${r.status}`);
+      const raw = await r.text();
+      setSeed(raw);
+      setSeedNonce((n) => n + 1);
+    } catch (e: any) {
+      setTryErr(String(e?.message ?? e));
+    } finally {
+      setTryBusy(false);
+    }
+  }, []);
+
+  const trySeriesAGovernan = useCallback(async () => {
+    setTryBusy(true);
+    setTryErr(null);
+    try {
+      const r = await fetch(SERIES_A_GOVERNAN_RETRIEVE, { headers: { accept: "application/json" } });
+      if (!r.ok) throw new Error(`GET ${SERIES_A_GOVERNAN_RETRIEVE} → HTTP ${r.status}`);
       const raw = await r.text();
       setSeed(raw);
       setSeedNonce((n) => n + 1);
@@ -169,6 +188,53 @@ export default function GSPCVerify() {
             against the published keys. Share a permalink and the recipient&apos;s browser re-runs
             the same check on the same bytes.
           </p>
+          <div
+            className="mt-4 rounded-2xl border border-emerald-400/35 bg-emerald-500/[0.08] p-4 space-y-3"
+            data-testid="series-a-retrieve-raas"
+          >
+            <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">
+              RaaS · free preview → paid proof
+            </p>
+            <p className="text-[13px] text-emerald-100/80 leading-relaxed">
+              Stranger path for the LIVE Series A governance retrieve. Free preview loads the published
+              bytes into the verifier below — measurement credential only, never a certificate. Paid
+              proof, commission, or feed stays on the commission door after you have seen the preview.
+            </p>
+            <p className="font-mono text-[12px] text-emerald-200/90 break-all">
+              <a
+                href="/interop/mill-cards-signed/signed-governan-e9bc92b7b39b.json"
+                className="underline underline-offset-2 hover:text-emerald-50"
+                data-testid="series-a-retrieve-url"
+              >
+                /interop/mill-cards-signed/signed-governan-e9bc92b7b39b.json
+              </a>
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => void trySeriesAGovernan()}
+                disabled={tryBusy}
+                data-testid="try-series-a-governan"
+                className="min-h-[44px] rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-[#03110b] hover:bg-emerald-400 disabled:opacity-40"
+              >
+                {tryBusy ? "Loading…" : "Free preview · Series A governance"}
+              </button>
+              <Link
+                href="/dashboard?tab=tools&tool=commission_card"
+                className="min-h-[44px] inline-flex items-center rounded-lg border border-emerald-400/40 px-4 py-2 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/15"
+                data-testid="series-a-commission-cta"
+              >
+                Paid proof · commission
+              </Link>
+              <a
+                href="/pay"
+                className="min-h-[44px] inline-flex items-center rounded-lg border border-emerald-400/25 px-4 py-2 text-sm font-semibold text-emerald-200/90 hover:bg-emerald-500/10"
+                data-testid="series-a-pay-cta"
+              >
+                Feed / pay door
+              </a>
+            </div>
+          </div>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button
               type="button"
