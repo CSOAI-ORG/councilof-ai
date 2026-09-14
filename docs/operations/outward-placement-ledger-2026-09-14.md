@@ -140,3 +140,13 @@ The proof threshold remains strict: `SUBMITTED`, `REGISTERED`, `INDEX PENDING`, 
 |---|---|---|---|
 | GenAI Gurus Awesome EU AI Act | PREVIOUS SUBMISSIONS CLOSED | [PR #7](https://github.com/GenAI-Gurus/awesome-eu-ai-act/pull/7), [#33](https://github.com/GenAI-Gurus/awesome-eu-ai-act/pull/33), [#43](https://github.com/GenAI-Gurus/awesome-eu-ai-act/pull/43), [#45](https://github.com/GenAI-Gurus/awesome-eu-ai-act/pull/45) | Do not resubmit without an explicit invitation or a materially different, curator-requested resource. |
 | Morgan RCU Awesome EU AI Act | PREVIOUS SUBMISSIONS CLOSED | [PR #19](https://github.com/morganrcu/awesome-eu-ai-act/pull/19), [#20](https://github.com/morganrcu/awesome-eu-ai-act/pull/20), [#43](https://github.com/morganrcu/awesome-eu-ai-act/pull/43) | Do not resubmit without an explicit invitation or a materially different, curator-requested resource. |
+
+### Eighth open-source and evaluation wave
+
+| Surface | State | Proof | Exact scope |
+|---|---|---|---|
+| Open Source Observer OSS Directory | SUBMITTED / ADMIN VALIDATION PENDING | [PR #1251](https://github.com/opensource-observer/oss-directory/pull/1251) | Adds only the flagship `CSOAI-ORG/councilof-ai` repository and its canonical npm package. The upstream schema-v7 validation passed across 7,176 projects; the remaining `ACTION_REQUIRED` check explicitly requires an OSO administrator to run `/validate 6854dfe21`. |
+| Awesome AI Benchmarks & Evaluation | SUBMITTED / REVIEW PENDING | [PR #38](https://github.com/brandonhimpfen/awesome-ai-benchmarks-evaluation/pull/38) | Adds one GSPC entry under Evaluation Frameworks with a factual description of public model and agent measurements, signed evidence cards, verifiable roots and offline verification. The pull request is open and mergeable. |
+| Awesome Harness Engineering | SUBMITTED / REVIEW PENDING | [PR #257](https://github.com/ai-boost/awesome-harness-engineering/pull/257) | Adds GSPC once under Evals & Verification as a reference pattern for independently checkable evaluation outputs. The pull request is open and mergeable, and the maintainer relationship is disclosed. |
+
+Eligibility checks prevented low-quality submissions in this wave: Awesome LLM Observability requires at least 250 GitHub stars for open-source projects, which the flagship does not currently meet; Awesome Agentic Commerce requires an end-to-end ACP, UCP or AP2 implementation or a foundational rail/tooling dependency, so a measurement service entry was not submitted. These remain `NOT SUBMITTED`, not pending placements.
