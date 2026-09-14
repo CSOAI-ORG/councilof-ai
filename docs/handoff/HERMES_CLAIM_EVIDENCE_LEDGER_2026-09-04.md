@@ -81,3 +81,27 @@ or “all 425 measured” remain research claims and do not change release state
 5. Continue the global hunt as candidate intake: official source, frozen input,
    reproducible reader, admission, signature and root inclusion are separate
    gates.
+
+## Verified delta — 14 September 2026
+
+**Resolved base:** `14a1b4c1f6f988c976a151264d2a1dcaf56467e9`
+
+| Claim | State | Evidence reference | Observed boundary |
+| --- | --- | --- | --- |
+| RunPod GSPC measurement worker is operating | `OPERATING` | pod `fpowppss5ngtkw` health and `.github/workflows/runpod-intake.yml`; run `34783832228` | cycle 140 reported 140 successful and 0 failed at observation time; intake and candidate output do not prove admission |
+| Business observation is unattended | `OPERATING_REPAIRED` | `/workspace/csoai-operations/releases/a0af893791df8c69`; `/workspace/csoai-operations/install-receipt.json` | exact seven-file release reinstalled after its cron entries disappeared; seven tests passed; unrelated cron preserved |
+| Every Hugging Face model is measured | `FALSE` | live Hub organisation API; HF mill workflows; board coverage | the organisation publishes many artifacts and the curated mills run, but no complete-Hub denominator-to-measurement receipt exists |
+| CSOAI Hugging Face estate is public | `PUBLIC_REPOSITORIES_NOT_ADOPTION` | live Hub API observed 2026-09-14 around 00:40Z | 2 model repositories, 101 datasets and 39 Spaces were returned; repository presence and downloads do not establish independent use |
+| Kaggle is continuously measured and synchronized | `NOT_EVIDENCED` | local Kaggle CLI and `.github/workflows/gspc-spray.yml` | local CLI has no authenticated identity; recent board spray evidence was dry-run pending parity |
+| All 425 stablecoins are measured | `FALSE_INDEXED_ONLY` | `public/interop/stablecoin-universe-2026-09/promotion-queue.json` | 425 indexed, 19 deep-probed, 1 independently measured; 18 need reproducible chain measurement and 406 need issuer evidence review |
+| MCP population is completely measured | `FALSE_CAPPED_CENSUS` | `.github/workflows/mcp-trust-board-round.yml`; run `34797205618`; PR #2222 | scheduled census is operating but output says `complete:false`; listing/tool counts are discovery evidence |
+| MCP Registry publication is current | `BLOCKED` | `.github/workflows/mcp-registry-publish.yml`; run `34797121664` | OIDC exchange parsed `null`; publisher failed closed and no new Registry GET proof exists |
+| x402 first-party doors are continuously verified | `CHALLENGE_MEASURED_FULFILMENT_UNMEASURED` | `.github/workflows/x402-door-conformance.yml`; run `34797204206`; PR #2221 | never-spend scheduled probe measures challenges only |
+| x402 wide census is operating | `BROKEN_REPAIR_PREPARED` | `.github/workflows/x402-census-weekly.yml`; PR #2220 | latest weekly comparison read the wrong schema; require a clean post-repair artifact |
+| x402 legacy refusal set proves every settlement on-chain | `FALSE_ONE_UNCHECKABLE` | `public/interop/x402-census-cards/`; `harness/x402-census/build_cards.test.ts`; PR #2223 | 103 cards carry parseable transaction references; one frozen host-reported receipt has no parseable transaction reference and remains uncheckable |
+| Current root is publicly served | `PUBLIC_REVERIFY_WITNESSES` | live `/root.json` observed 2026-09-14T01:45Z | 291 leaves served; verify signature, Rekor, OTS and any chain witness independently for these exact bytes |
+| Repeat customer demand exists | `NOT_EVIDENCED` | live `/api/revenue` observed 2026-09-14 | one distinct non-self payer and 0.02 USDC remain historical rail evidence; no repeat is evidenced |
+| GitHub dependency estate has no high alerts | `FALSE_BLOCKED_UPSTREAM` | Dependabot alerts #32 and #33 | two high `image-size` denial-of-service alerts are open; GitHub reports no patched version for either advisory |
+
+This delta supersedes dated `DONE` or `ACHIEVED` labels where those labels collapsed indexed,
+reachable, staged, signed, witnessed, independently used or independently paid into one state.

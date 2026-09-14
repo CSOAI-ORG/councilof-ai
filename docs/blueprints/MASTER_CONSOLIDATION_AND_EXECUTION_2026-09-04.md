@@ -1,5 +1,49 @@
 # Council OS master consolidation and execution plan
 
+## Current operating checkpoint — 14 September 2026
+
+This remains the operating index. Volatile totals live at their evidence endpoints and are not
+copied into new master documents. For a new shift, resolve evidence in this order:
+
+1. `GET https://councilof.ai/api/gspc`, `GET /api/revenue`, and `GET /root.json`;
+2. exact `origin/master` commit and current GitHub workflow/PR receipts;
+3. `/workspace/csoai-operations/state/latest.json` and `install-receipt.json` on RunPod
+   `fpowppss5ngtkw`;
+4. `docs/handoff/HERMES_CLAIM_EVIDENCE_LEDGER_2026-09-04.md`;
+5. dated TUI, alignment and handoff files as historical observations.
+
+At `origin/master` `14a1b4c1f6f988c976a151264d2a1dcaf56467e9`, the current operational matrix is:
+
+| Surface | Current state | Evidence / boundary | Next gate |
+| --- | --- | --- | --- |
+| RunPod GSPC worker | `OPERATING` | pod health observed 2026-09-14; cycle 140, 140 successful and 0 failed; scheduled intake run `34783832228` succeeded | retain raw/item evidence and separate admission/signing |
+| Business observer | `OPERATING_REPAIRED` | exact release `a0af893791df8c69`; seven tests passed; 15-minute observer and hourly index census restored in crontab at 2026-09-14T01:46:52Z | repair CDP pagination mismatch and add private intake token only through its existing secret gate |
+| Hugging Face publication | `PUBLIC_PARTIAL` | live public API observed 2026-09-14: organisation has model, dataset and Space repositories; HF mills process a curated queue | publish enumerated/queued/measured/signed coverage; never say every Hub model is measured |
+| Kaggle | `BLOCKED_IDENTITY_AUTH` | local CLI is unauthenticated; current spray workflow can dry-run board parity | establish the canonical Kaggle identity and read-only inventory receipt before any push |
+| Stablecoins | `INDEXED_PARTIAL_MEASUREMENT` | `public/interop/stablecoin-universe-2026-09/promotion-queue.json`: 425 indexed, 19 deep-probed, 1 independently measured | build reproducible chain measurements for the 18 evidence-ready candidates; review source evidence for the remaining 406 |
+| MCP census | `OPERATING_CAPPED` | scheduled run `34797205618`; output explicitly `complete:false` and opened PR #2222 | remove the cap or publish the denominator before a complete-population claim |
+| MCP Registry publication | `BLOCKED_OIDC_EXCHANGE` | run `34797121664` parsed the exchange result as `null` and failed closed | capture HTTP status/body safely, parse a non-null token, retry, then verify Registry GET |
+| x402 first-party doors | `OPERATING_READ_ONLY` | scheduled conformance run `34797204206`; never-spend guard passed; PR #2221 | keep fulfilment UNMEASURED until a paid, delivered receipt is independently verified |
+| x402 wide census | `BROKEN_REPAIR_PREPARED` | weekly comparison consumed the wrong schema; PR #2220 contains the repair | land the repair and require one clean census artifact before calling it operational |
+| Public root | `PUBLICLY_DEPLOYED_REVERIFY_PER_REVISION` | `/root.json` observed 2026-09-14T01:45Z with 291 leaves; HTTP 200 alone is not signature or witness proof | use exact-byte verifier for each revision; report Rekor, OTS and chain witnesses separately |
+| External revenue | `ONE_HISTORICAL_PAYER_NO_REPEAT_PROOF` | `/api/revenue` observed 2026-09-14; 0.02 USDC, one distinct non-self payer | do not add SKUs until the repeat-payer gate is met |
+
+Current review queue: PR #2223 repairs the orphan test runner and HF parity gate; PR #2220 repairs
+the wide x402 census; PR #2221 carries read-only x402 door observations; PR #2222 carries the
+capped MCP census. Human review remains the merge gate. No one should deploy, sign, settle, or
+promote state from this index.
+
+### Superseded snapshots
+
+Preserve these for audit, but do not use their totals or deployment instructions as current state:
+
+- root `ALIGNMENT.md` (6 July; Vercel instructions are superseded by Cloudflare Pages through GHA);
+- `docs/tui/CANONICAL-STATE-2026-09-11.md` and root `TUI-*` reports (dated snapshots with later
+  corrections to stablecoin, HF, x402, root and revenue state);
+- files under `/Users/nicholas/clawd/_alignment/STATUS-*` (operator observations, some mutually
+  contradictory); and
+- numbered `SOVOS-MASTER` copies outside this canonical repository.
+
 **Decision date:** 4 September 2026  
 **Branch:** `codex/council-master-consolidation`  
 **State:** local review candidate; not deployed  
