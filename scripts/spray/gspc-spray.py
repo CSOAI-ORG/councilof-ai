@@ -388,12 +388,12 @@ def render_readme(tr: dict, counts: dict, rows: list[dict]) -> str:
                  f"<{VERIFY_URL}> (free, no account) or follow <{HOWTO_URL}> and check by hand. From Python: "
                  f"`pip install \"csoai-gspc[verify]\"` then `csoai-gspc verify <card_id>` — three states only: "
                  "VALID, INVALID, UNCHECKABLE.")
-    lines.append(f"3. **Root inclusion.** `root.json` lists `card_sha256[]` for every published card and commits to them "
+    lines.append(f"3. **Root inclusion.** `root.json` lists `card_sha256[]` for its specific public-root corpus and commits to those leaves "
                  f"in `merkle_root`. `./check-board.sh` recomputes that root from the list using the rule the root "
                  f"states for itself — leaf: {json.dumps(root.get('leaf_definition'))}; node: "
                  f"{json.dumps(root.get('node_definition'))}. A verifier MUST reject any presentation where "
                  "`len(card_sha256) != card_count`, and any inclusion proof with `index >= card_count`. A card is "
-                 "included when its sha256 appears in the list and the recomputed root matches.")
+                 "included only when its leaf digest, computed under the stated leaf rule, appears in that list and the recomputed root matches. Other catalogues and board measurements are not automatically covered by this root.")
     lines.append(f"4. **Keys.** Signatures resolve through `did:web:csoai.org` → <{DID_URL}>. The board's "
                  f"`site_attestation.signer` is `{(board.get('site_attestation') or {}).get('signer', 'ABSENT')}`; the root's "
                  f"`did_intended` is `{root.get('did_intended')}`; cards sign under the card-attestation key in the same "
