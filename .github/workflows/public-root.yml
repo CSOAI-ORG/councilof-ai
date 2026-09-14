@@ -93,6 +93,15 @@ jobs:
           python-version: "3.11"
       - name: deps
         run: pip install cryptography
+      - name: Layer 0 liveness atom (a PROBED read of the floor itself; the publisher signs it into this root)
+        run: |
+          set -euo pipefail
+          # One atom per run: DID key, root, pointer, Rekor/OTS states as the live site serves them
+          # right now. Staged under public/interop/layer0-liveness-2026-09/ (STAGED_DIRS) — the
+          # publisher below admits it unsigned and signs it into the root it is about to build.
+          # The release gate runs after publish, so its verdict is recorded on the NEXT tick's atom
+          # only when a durable verdict exists; UNRUN is the honest default here.
+          python3 scripts/readers/layer0_liveness_reader.py --stage public/interop/layer0-liveness-2026-09 --gate-result UNRUN || echo "layer0 reader failed — the root ticks without the atom (never a fake read)"
       - name: publish public root
         id: run
         env:
