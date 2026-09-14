@@ -38,12 +38,19 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          master_sha=$(gh api "repos/$REPO/contents/public/root.json?ref=master" -H 'Accept: application/vnd.github.raw' | sha256sum | cut -d' ' -f1)
-          if ! live_raw=$(curl -fsS --max-time 30 https://councilof.ai/root.json); then
+          # Hash FILES, never a $(…) capture. Command substitution strips trailing newlines and
+          # root.json ends with one, so a captured-and-reprinted copy can never equal master:
+          # the first version of this step (#2452) logged LAG_DISPATCHED with master == live
+          # (run 34885044795 → deploy 34885068158, 2026-09-14 19:08Z).
+          master_file="$RUNNER_TEMP/master-root.json"
+          live_file="$RUNNER_TEMP/live-root.json"
+          gh api "repos/$REPO/contents/public/root.json?ref=master" -H 'Accept: application/vnd.github.raw' > "$master_file"
+          if ! curl -fsS --max-time 30 -o "$live_file" https://councilof.ai/root.json; then
             echo "LIVE_UNREADABLE: could not fetch production root.json; an outage is not a publish lag, not dispatching."
             exit 0
           fi
-          live_sha=$(printf '%s' "$live_raw" | sha256sum | cut -d' ' -f1)
+          master_sha=$(sha256sum "$master_file" | cut -d' ' -f1)
+          live_sha=$(sha256sum "$live_file" | cut -d' ' -f1)
           echo "master root.json sha256: $master_sha"
           echo "live   root.json sha256: $live_sha"
           if [ "$master_sha" = "$live_sha" ]; then
