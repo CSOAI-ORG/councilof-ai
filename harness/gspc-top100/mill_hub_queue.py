@@ -268,10 +268,11 @@ def inject_commissioned_subjects(
     *,
     axis: str | None = None,
 ) -> list[dict]:
-    """Upsert commissioned subjects missing from hub-queue census as UNMEASURED mill rows.
+    """Upsert commissioned mill targets missing from hub-queue census as UNMEASURED rows.
 
-    Payment never MEASURED. These rows exist so pick_emptiest can prefer paid subjects
-    that are not yet in the census. Unsigned mill OK; SIGNED still n≥30+4way+keystone.
+    priority_ids must be fulfillable model ids (GET /api/commission-queue fulfillment=QUEUED
+    with non-null model) — never UNFULFILLABLE SKU subjects. Payment never MEASURED.
+    Unsigned mill OK; SIGNED still n≥30+4way+keystone.
     """
     pri = {str(x) for x in (priority_ids or set()) if str(x).strip()}
     if not pri:
@@ -308,8 +309,8 @@ def pick_emptiest(
     inflight: set[tuple[str, str]] | None = None,
     priority_ids: set[str] | None = None,
 ) -> list[dict]:
-    """Emptiest (id, axis) cells by rank. priority_ids (2026-09-14: commissioned subjects from
-    GET /api/commissions) are picked FIRST, in rank order among themselves, then the rest by rank —
+    """Emptiest (id, axis) cells by rank. priority_ids (2026-09-14: QUEUED model ids from
+    GET /api/commission-queue, fallback /api/commissions) are picked FIRST, in rank order among themselves, then the rest by rank —
     a paid request drives the mill instead of waiting for its rank; every other guard still applies. generative_only keeps SERVABLE_TAGS only (no fallback to
     non-generative repos); dead ids are never picked; only_ids is an allowlist; inflight (id, axis)
     cells are already staged in an open landing PR and are skipped until that PR merges or closes."""
@@ -1106,7 +1107,7 @@ def main() -> int:
     ap.add_argument("--banks", default="", help="dir of {axis}.jsonl published banks")
     ap.add_argument("--items", type=int, default=30, help="items per (model,axis); n<30 unquotable")
     ap.add_argument("--only", default="", help="file of provider-live hub slugs (one id per line); skip rank-dead 400s")
-    ap.add_argument("--priority", default="", help="file of commissioned hub slugs (one id per line, from GET /api/commissions); picked first, every other guard still applies")
+    ap.add_argument("--priority", default="", help="file of QUEUED commission model ids (one id per line, from GET /api/commission-queue); picked first; UNFULFILLABLE never listed; every other guard still applies")
     ap.add_argument("--dead", default="", help="persistent dead-slug jsonl (honoured on pick; appended from this run's no-endpoint skips)")
     ap.add_argument("--dead-max-age-days", type=int, default=None, help="re-probe a dead slug older than this (default: never expire). An undated row counts as expired.")
     ap.add_argument("--shards", type=int, default=1, help="split the picked rows across N parallel runs (hash of model id, not position)")

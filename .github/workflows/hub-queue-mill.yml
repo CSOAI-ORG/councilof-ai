@@ -211,18 +211,30 @@ jobs:
           # picker their (id, axis) cells to skip. Empty when nothing is waiting — that is fine.
           BRS=$(gh pr list --state open --limit 100 --json headRefName --jq '.[].headRefName|select(startswith("mill/land-"))' || true)
           python3 harness/gspc-top100/inflight_cells.py --out mill-in/inflight.jsonl $BRS
-      - name: commissioned subjects first (GET /api/commissions → mill-in/priority.txt)
+      - name: commissioned subjects first (GET /api/commission-queue QUEUED models → mill-in/priority.txt)
         if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
         run: |
           set -euo pipefail
-          # Keep background measurement moving, but never label an unavailable queue empty.
+          # Prefer mill-visible /api/commission-queue (QUEUED + non-null model only).
+          # UNFULFILLABLE SKUs stay receipt-only — never enter priority.txt.
+          # Fall back to /api/commissions when queue endpoint is not yet tip-live.
+          # Keep mill-in/commissions.json for commission_run_report (legacy feed).
           : > mill-in/priority.txt
           python3 -m unittest discover -s scripts -p test_commission_priority.py
-          if curl -fsS -m 30 https://councilof.ai/api/commissions -o mill-in/commissions.json &&
+          curl -fsS -m 30 https://councilof.ai/api/commissions -o mill-in/commissions.json || true
+          ok=0
+          if curl -fsS -m 30 https://councilof.ai/api/commission-queue -o mill-in/commission-queue.json &&
+             python3 scripts/commission_priority.py --input mill-in/commission-queue.json \
+               --axis "$AXIS" --output mill-in/priority.txt; then
+            ok=1
+          elif [ -f mill-in/commissions.json ] &&
              python3 scripts/commission_priority.py --input mill-in/commissions.json \
                --axis "$AXIS" --output mill-in/priority.txt; then
+            ok=1
+          fi
+          if [ "$ok" = 1 ]; then
             jq -n --arg axis "$AXIS" --argjson count "$(wc -l < mill-in/priority.txt | tr -d ' ')" \
-              '{status:"AVAILABLE",axis:$axis,subject_count:$count}' > mill-in/commission-health.json
+              '{status:"AVAILABLE",axis:$axis,subject_count:$count,source:"commission-queue-or-commissions"}' > mill-in/commission-health.json
           else
             echo '::warning::Commission queue unavailable or invalid; paid-request priority was NOT verified. Background measurements continue.'
             printf '%s\n' '{"status":"UNAVAILABLE","subject_count":null}' > mill-in/commission-health.json
