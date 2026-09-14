@@ -2,7 +2,7 @@
   "schema": "csoai.interop-listing-state/0.1",
   "slug": "mcp-directories",
   "name": "MCP directory listing state",
-  "as_of": "20260914T073000Z",
+  "as_of": "20260914T110800Z",
   "principle": "Where the fleet is listed, and where it is not. Every row is a probe of the DIRECTORY, never of our own filesystem. A slug scan answers 'do we hold a note saying we are listed', which is a different question and was answering it wrongly: on 2026-09-05 six of these seven rows were produced that way and two of them (glama, docker-mcp) said NOT_LISTED while we were listed. UNKNOWN is a permitted state and is not NOT_LISTED.",
   "totals": {
     "servers_in_official_registry": 330,
@@ -155,14 +155,15 @@
       "state": "UNKNOWN",
       "evidence": "WAS LISTED on 2026-09-05: 213 csoai server URLs in PulseMCP's own sitemap (23,833 total), five sampled, all 200. RE-PROBED 2026-09-06 10:35 BST and PulseMCP now refuses this client on every surface: sitemap 403, site search 403, and two known server pages from that same reading (/servers/csoai-acord-bridge, /servers/csoai-agent-audit-logger) 403 — all four returning an IDENTICAL 5487-byte body, which is what proves it is one block page and not four absences. Their documented v0beta API answers 410 Gone as before. A 403 is not a delisting and a uniform block page is not evidence about any URL behind it, so this reads UNKNOWN rather than NOT_LISTED — and it must not read LISTED either, because nothing here can currently confirm it. Re-check from an unblocked network or with the owner's browser profile.",
       "probe": "curl -s -A '<browser UA>' -o /tmp/a -w '%{http_code} %{size_download}' https://www.pulsemcp.com/sitemap.xml ; repeat for /servers?q=csoai and for a known /servers/csoai-* page. IDENTICAL non-200 sizes across unrelated paths = one block page: report UNKNOWN, never NOT_LISTED. Only a 200 sitemap or a 200 server page may move this row.",
-      "surface": "sitemap"
+      "surface": "sitemap",
+      "submission_state": "2026-09-14: https://www.pulsemcp.com/submit states PulseMCP is not accepting new server or client submissions and is not changing existing listings; it points publishers to the official MCP registry, where we are LISTED. This is a fact about the submission path, not about listing state."
     },
     {
       "id": "mcp-so",
       "name": "mcp.so",
       "url": "https://mcp.so/servers/csoai-gspc-measurement",
       "state": "UNKNOWN",
-      "evidence": "WAS LISTED in the owner browser on 2026-09-11. On 2026-09-14 the exact public detail URL returned HTTP 500. That does not prove delisting, and the authenticated submissions table does not prove current public reachability, so the public state is UNKNOWN until the detail page answers again.",
+      "evidence": "WAS LISTED in the owner browser on 2026-09-11. On 2026-09-14 the exact public detail URL returned HTTP 500. That does not prove delisting, and the authenticated submissions table does not prove current public reachability, so the public state is UNKNOWN until the detail page answers again. Re-probed 2026-09-14T11:08Z: the detail URL now answers HTTP 200 (68,219 bytes), but the served body names neither CSOAI-ORG nor councilof-ai, so the row's own rule still does not allow LISTED.",
       "probe": "curl -sS -L -o /tmp/mcp-so-detail -w '%{http_code} %{url_effective}' https://mcp.so/servers/csoai-gspc-measurement; only a 200 detail page naming @CSOAI-ORG and CSOAI-ORG/councilof-ai may restore LISTED",
       "surface": "rendered"
     },
@@ -179,10 +180,23 @@
       "id": "docker-mcp",
       "name": "Docker MCP catalog",
       "url": "https://hub.docker.com/mcp",
+      "state": "NOT_LISTED",
+      "evidence": "Re-probed 2026-09-14T11:08Z. The Docker MCP catalog is built from github.com/docker/mcp-registry: its servers/ directory has no csoai, gspc or council entry, GitHub code search over docker/mcp-registry for csoai returns 0, and our submission PR docker/mcp-registry#4733 is OPEN (not merged). The previous LISTED reading used the Docker Hub image search, which returns csoai/meok-sovereign: that is a container image repository, not an MCP catalog entry, so it could not establish this row.",
+      "probe": "gh api repos/docker/mcp-registry/contents/servers --jq '[.[].name|select(test(\"csoai|gspc|council\";\"i\"))]'  -> [] ; gh pr view 4733 -R docker/mcp-registry --json state  -> OPEN",
+      "surface": "api",
+      "submission": {
+        "url": "https://github.com/docker/mcp-registry/pull/4733",
+        "state": "OPEN"
+      }
+    },
+    {
+      "id": "lobehub",
+      "name": "LobeHub MCP",
+      "url": "https://lobehub.com/mcp/csoai-org-councilof-ai",
       "state": "LISTED",
-      "evidence": "Docker Hub search API returns 1 repository: csoai/meok-sovereign. The previous NOT_LISTED was a slug scan of our own files",
-      "probe": "curl -s 'https://hub.docker.com/v2/search/repositories/?query=csoai' | jq '.count, .results[].repo_name'  -> 1, csoai/meok-sovereign",
-      "surface": "api"
+      "evidence": "Probed 2026-09-14T11:11Z: the exact detail URL answers HTTP 200 and its served body names the repository CSOAI-ORG/councilof-ai (4 occurrences). A listing page does not prove tool health; tool health stays unmeasured here. Its description is generated from the repository README and currently carries an axis count; the fix belongs in the README, not in LobeHub.",
+      "probe": "curl -sL -A '<browser UA>' https://lobehub.com/mcp/csoai-org-councilof-ai | grep -ci 'CSOAI-ORG/councilof-ai'  -> >0 for LISTED",
+      "surface": "rendered"
     }
   ],
   "known_defects": [

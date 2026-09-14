@@ -73,7 +73,10 @@ describe("every directory row names the surface its state came from", () => {
     for (const r of rendered) {
       if (r.state !== "LISTED") continue;
       const full = doc.directories.find((d) => d.id === r.id)!;
-      expect(full.url, `${r.id}: rendered LISTED needs an exact detail URL`).toMatch(/\/servers?\//i);
+      // A detail page is a path naming one server, with no query string: /servers/<x> (glama, mcp.so)
+      // or /mcp/<slug> (LobeHub). A search URL carries a query and still fails.
+      expect(full.url, `${r.id}: rendered LISTED needs an exact detail URL`).toMatch(/^https:\/\/[^?#]+\/(servers?\/|mcp\/[^/?#]+\/?$)/i);
+      expect(full.url, `${r.id}: rendered LISTED must not be a search URL`).not.toMatch(/[?#]/);
       expect(full.evidence, `${r.id}: rendered LISTED needs a successful detail-page response`).toMatch(/\b200\b/);
       expect(full.evidence, `${r.id}: rendered LISTED needs the repository identity`).toMatch(/CSOAI-ORG\/councilof-ai/i);
       expect(full.evidence, `${r.id}: rendered LISTED must preserve tool-health limits`).toMatch(/does not prove tool health|unmeasured/i);
