@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-14T01:00:27Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-impersonation-mismatch/0.1",
+      "status": "DISCOVERED",
+      "classification": "NOT_IN_VERIFIED_SET",
+      "code": "RLUSD",
+      "issuer": "rM7wX3rZX3ypoZz7vEwNQgHz9DTvMdXqjU",
+      "holders": 12,
+      "supply": 99547448.98371823,
+      "first_seen_in_window": "2025-01-09T10:29:28.155Z",
+      "verified_issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "wording": "issuer not in the archived verified set — legitimacy UNMEASURED",
+      "verified_method": "estate LOCKED_16 registry"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "16f7d6b4996d2a9ee5c6cb4d82233e60eaae3b2105d7c7fe0767db7c5c94e720",
+    "sig_ed25519": "2fbc5dceccb56ef8b6306598b3d56bc98876bc19947155800e60891f05d5a20b0b09f53535e8a1ab909732d51b23d8128d6e0e9f414827c6c857b3e6381e490a",
+    "source_urls": [
+      "https://api.xrpscan.com/api/v1/tokens",
+      "https://xrpscan.com/token/RLUSD.rM7wX3rZX3ypoZz7vEwNQgHz9DTvMdXqjU"
+    ],
+    "subject": "XRPL RLUSD issuer rM7wX3rZX3ypoZz7vEwNQgHz9DTvMdXqjU not in archived verified set",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "impersonation-watch",
+      "code:RLUSD",
+      "mismatch"
+    ],
+    "unmeasured": [
+      "issuer_legitimacy",
+      "long_tail_issuance_below_ranking_window"
+    ]
+  },
+  "proof": [
+    "98e8294856596ce1c0d67ab018ece9775b023035d297d635aca8c46b95fcb52b",
+    "82a639d24ea235b950f73551a317c3b14e4aaf343066f1d1579c6b1323fd5734",
+    "90be1ee3ce73ecbf8cabb918af9b743192b08ccecf80837c4a20defc6b0a1a04",
+    "911b3e5ed1f9ae9e3155b30f4ae1e581a8c5760b4db9f2ea924d85eb12095f3b",
+    "d2f3dbd14bb2154db9981e84a83992e7098426e0e25790226d6004aeaf267e58",
+    "0c8370e743f73643200038a1f8ac0dcfd48255600369eda4a4b0d2eda2f58326",
+    "fa57b173e280a899f219ca7143795437f74731184c1cd6b9219ce56421ca1e67",
+    "3148864d67c40e0761a92c642153f9b2053d74b843b637cc607a5f8cb3d07479",
+    "b3b7362dcacc955f616bfc6cb7b9a257a15cf2524c3cb2fb2bf1a2455834fb05"
+  ]
+}
