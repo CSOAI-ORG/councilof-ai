@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import dataclasses
 import importlib.util
 import http.server
 import json
@@ -11,6 +12,7 @@ import threading
 import unittest
 import urllib.error
 import urllib.request
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest import mock
 
@@ -521,6 +523,139 @@ class WorkerTests(unittest.TestCase):
             self.assertNotIn("must-not-leak", json.dumps(payload))
         finally:
             server.close()
+
+    # ---- restart idempotence (2026-09-14: a restart re-ran completed commission jobs)
+
+    def write_playlist_job(self, *, interval: int = 3600) -> tuple[Path, Path, Path]:
+        config_dir = self.root / "jobs"
+        state_dir = self.root / "state"
+        config_dir.mkdir(exist_ok=True)
+        bank = self.root / "swarm-bank.jsonl"
+        bank_raw = json.dumps({"id": "s1", "prompt": "Pick.", "expected": "YES"}) + "\n"
+        bank.write_text(bank_raw, encoding="utf-8")
+        output = self.root / "swarm-output"
+        (config_dir / "000-commission-swarm.json").write_text(
+            json.dumps(
+                {
+                    "schema": worker.WORKER_SCHEMA,
+                    "workspace_root": str(self.root),
+                    "axis": "swarm",
+                    "model": "unit/model:1",
+                    "bank": str(bank),
+                    "expected_bank_sha256": worker.sha256_bytes(bank_raw.encode()),
+                    "output_dir": str(output),
+                    "ollama_url": "http://127.0.0.1:11434",
+                    "expected_model_manifest_digest": GOOD_DIGEST,
+                    "allowed_labels": ["YES", "NO"],
+                    "interval_seconds": interval,
+                    "disk_low_water_bytes": 100,
+                    "request_timeout_seconds": 5,
+                    "max_tokens": 16,
+                    "seed": 0,
+                    "temperature": 0,
+                }
+            ),
+            encoding="utf-8",
+        )
+        return config_dir, state_dir, output
+
+    def start_process(
+        self,
+        config_dir: Path,
+        state_dir: Path,
+        *,
+        transport_ok: bool = True,
+        wall_clock=None,
+    ) -> tuple[int, list[str]]:
+        """One fresh worker process: new health sink, new in-memory due table."""
+        calls: list[str] = []
+
+        def client_factory(config: worker.WorkerConfig) -> FakeClient:
+            calls.append(config.model)
+            if transport_ok:
+                result = worker.InferenceResult(
+                    True, "YES", "6" * 64, None, response_model=config.model
+                )
+            else:
+                result = worker.InferenceResult(False, None, None, "OLLAMA_UNREACHABLE")
+            return FakeClient([result])
+
+        kwargs = {} if wall_clock is None else {"wall_clock": wall_clock}
+        exit_code = worker.run_playlist(
+            config_dir,
+            state_dir,
+            worker.HealthSink(state_dir / "health.json"),
+            forever=False,
+            stop_event=threading.Event(),
+            client_factory=client_factory,
+            disk_usage=lambda _path: DiskUsage(10_000),
+            **kwargs,
+        )
+        return exit_code, calls
+
+    def test_restart_does_not_rerun_job_with_completed_run_on_disk(self) -> None:
+        config_dir, state_dir, output = self.write_playlist_job(interval=3600)
+        _, first_calls = self.start_process(config_dir, state_dir)
+        self.assertEqual(len(first_calls), 1)
+        self.assertEqual(len(list((output / "runs").glob("*/card-unsigned.json"))), 1)
+
+        exit_code, restart_calls = self.start_process(config_dir, state_dir)
+        self.assertEqual(restart_calls, [], "restart re-ran a job completed within its interval")
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(len(list((output / "runs").iterdir())), 1)
+
+    def test_restart_reruns_once_interval_has_elapsed(self) -> None:
+        config_dir, state_dir, output = self.write_playlist_job(interval=3600)
+        self.start_process(config_dir, state_dir)
+        later = datetime.now(timezone.utc) + timedelta(seconds=3601)
+        _, restart_calls = self.start_process(
+            config_dir, state_dir, wall_clock=lambda: later
+        )
+        self.assertEqual(len(restart_calls), 1)
+        self.assertEqual(len(list((output / "runs").glob("*/card-unsigned.json"))), 2)
+
+    def test_restart_after_incomplete_run_uses_failure_backoff_not_interval(self) -> None:
+        config_dir, state_dir, output = self.write_playlist_job(interval=86_400)
+        self.start_process(config_dir, state_dir, transport_ok=False)
+        self.assertEqual(len(list((output / "runs").glob("*/card-incomplete.json"))), 1)
+        _, within_backoff = self.start_process(config_dir, state_dir)
+        self.assertEqual(within_backoff, [])
+        later = datetime.now(timezone.utc) + timedelta(
+            seconds=worker.FAILURE_RETRY_CAP_SECONDS + 1
+        )
+        _, after_backoff = self.start_process(
+            config_dir, state_dir, wall_clock=lambda: later
+        )
+        self.assertEqual(len(after_backoff), 1)
+
+    def test_restart_reruns_when_run_lacks_candidate_or_identity_differs(self) -> None:
+        config_dir, state_dir, output = self.write_playlist_job(interval=3600)
+        self.start_process(config_dir, state_dir)
+        run_dir = next((output / "runs").iterdir())
+        (run_dir / "card-unsigned.json").unlink()  # an interrupted write, not a run
+        _, calls = self.start_process(config_dir, state_dir)
+        self.assertEqual(len(calls), 1)
+
+        config = worker.WorkerConfig.load(config_dir / "000-commission-swarm.json")
+        self.assertIsNotNone(worker.last_completed_run(config))
+        other_bank = dataclasses.replace(config, expected_bank_sha256="f" * 64)
+        self.assertIsNone(worker.last_completed_run(other_bank))
+
+    def test_worker_state_records_config_dir_and_pid_but_health_endpoint_does_not(self) -> None:
+        config_dir = self.root / "jobs-live"
+        state_dir = self.root / "state"
+        config_dir.mkdir()
+        exit_code = worker.main(
+            ["--config-dir", str(config_dir), "--state-dir", str(state_dir), "--once"]
+        )
+        self.assertEqual(exit_code, 2)  # NO_VALID_JOBS: an empty playlist
+        state = json.loads((state_dir / "health.json").read_text())
+        self.assertEqual(state["config_dir"], str(config_dir.resolve()))
+        self.assertEqual(state["pid"], os.getpid())
+        public = worker.sanitized_health(state)
+        self.assertNotIn("config_dir", public)
+        self.assertNotIn("pid", public)
+        self.assertNotIn(str(config_dir), json.dumps(public))
 
     def test_lock_rejects_second_instance(self) -> None:
         lock = self.root / "worker.lock"
