@@ -6,7 +6,8 @@ the public queue.jsonl from csoai/hub-queue, and the live DID document. Output d
 queue.jsonl + queue.parquet + SUMMARY.json (csoai/hub-queue), mill-cards/INDEX.jsonl + the
 VALID cards (csoai/gspc-hub-cards), and flip-report.json.
 
-Rules: a cell flips only for a VALID card with n>=30 (n<30 is unquotable even when signed).
+Rules: a Hub cell flips only for a VALID card with n>=30 and a current v0.2
+evidence-admission receipt (n<30 is unquotable even when signed).
 Top-level `status` / `card_id` are never touched here. `coverage_state` is derived so a
 row carrying verified cells is not presented as wholly UNMEASURED. Never signs. Never
 writes GET /api/gspc.
@@ -329,7 +330,8 @@ def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path,
         "signed_here": False,
         "rows": verdicts,
         "note": (
-            "A VALID card with n>=30 earns a cell; the signed body decides what that cell says. "
+            "A VALID card with n>=30 and, for Hub models, a current v0.2 evidence-admission "
+            "receipt earns a cell; the signed body decides what that cell says. "
             "Top-level status untouched. Empty stays empty."
         ),
     }

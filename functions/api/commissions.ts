@@ -130,7 +130,8 @@ function joinDelivery(c: Omit<Commission, "cards" | "delivery">, pod: Map<string
                       hub: Map<string, PodCard[]> | null): Pick<Commission, "cards" | "delivery"> {
   if (c.fulfillment !== "QUEUED" || !c.model) return { cards: null, delivery: { state: "NONE", count: 0, note: "not a millable model target" } };
   const index = c.subject_kind === "hub_model" ? hub : pod;
-  if (index === null) return { cards: null, delivery: { state: "UNCHECKABLE", count: null, note: `${POD_CARDS_INDEX} unreadable — null, never substituted` } };
+  const path = c.subject_kind === "hub_model" ? HUB_CARDS_INDEX : POD_CARDS_INDEX;
+  if (index === null) return { cards: null, delivery: { state: "UNCHECKABLE", count: null, note: `${path} unreadable — null, never substituted` } };
   const all = index.get(c.model.toLowerCase()) ?? [];
   const cards = c.axis ? all.filter((k) => k.axis === c.axis) : all;
   return { cards, delivery: { state: cards.length ? "CARDS_PUBLISHED" : "NONE", count: cards.length } };

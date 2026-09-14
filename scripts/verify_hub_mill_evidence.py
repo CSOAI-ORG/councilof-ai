@@ -51,6 +51,15 @@ def canonical(value: object) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
 
 
+def write_immutable(path: Path, raw: bytes) -> None:
+    """Create content-addressed evidence without ever replacing different bytes."""
+    if path.exists() or path.is_symlink():
+        require(path.is_file() and not path.is_symlink(), f"evidence destination is not a regular file: {path.name}")
+        require(path.read_bytes() == raw, f"refusing to alter existing evidence bytes: {path.name}")
+        return
+    path.write_bytes(raw)
+
+
 def safe_file(directory: Path, name: object, pattern: str) -> Path:
     require(isinstance(name, str) and re.fullmatch(pattern, name) is not None, "unsafe evidence filename")
     path = directory / name
@@ -135,7 +144,7 @@ def admit(wrap: dict, staged: Path, evidence_dir: Path) -> dict:
     evidence_dir.mkdir(parents=True, exist_ok=True)
     for key in ("items_file", "bank_file"):
         source = staged / ev[key]
-        (evidence_dir / ev[key]).write_bytes(source.read_bytes())
+        write_immutable(evidence_dir / ev[key], source.read_bytes())
     receipt = {
         "schema": RECEIPT_SCHEMA,
         "state": "VERIFIED_ADMISSION",
@@ -148,7 +157,7 @@ def admit(wrap: dict, staged: Path, evidence_dir: Path) -> dict:
     raw = json.dumps(receipt, indent=2, sort_keys=True).encode() + b"\n"
     digest = sha(raw)
     name = f"admission-{digest[:12]}.json"
-    (evidence_dir / name).write_bytes(raw)
+    write_immutable(evidence_dir / name, raw)
     return {"schema": RECEIPT_SCHEMA, "file": name, "sha256": digest}
 
 

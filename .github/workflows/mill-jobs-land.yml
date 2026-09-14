@@ -140,7 +140,9 @@ jobs:
           from collections import Counter
           from pathlib import Path
           sys.path.insert(0, "harness/gspc-top100")
+          sys.path.insert(0, "scripts")
           from verify_card import verify_signed_card_with_did_doc
+          from verify_hub_mill_evidence import validate_signed_admission
           did = json.loads(Path("did.json").read_text())
           landed = json.loads(Path("staged/land-report.json").read_text())["landed"]
           signed_dir = Path("public/interop/mill-cards-signed")
@@ -164,6 +166,11 @@ jobs:
               if f is None:
                   rows.append((r["file"], "UNSIGNED", "no live signed card for this (model, axis)")); continue
               v, why = verify_signed_card_with_did_doc(f.read_bytes(), did)
+              if v == "VALID":
+                  try:
+                      validate_signed_admission(json.loads(f.read_text(encoding="utf-8")), Path("public/interop/mill-evidence"))
+                  except Exception as error:
+                      v, why = "UNCHECKABLE", f"current evidence admission failed: {error}"
               rows.append((f.name, v, why))
           c = Counter(v for _, v, _ in rows)
           print(f"Signer result on this branch: {dict(c)} (VALID under the live DID; nothing MEASURED until merge + hub-queue-flip)\n")

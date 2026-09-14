@@ -53,6 +53,15 @@ class EvidenceV02Test(unittest.TestCase):
         self.assertEqual(receipt["summary"]["answered"], 30)
         self.assertEqual(receipt["source_card_id"], self.wrap["id"])
 
+    def test_admission_never_replaces_existing_evidence_bytes(self):
+        admission = admit(self.wrap, self.staged, self.evidence)
+        item_path = self.evidence / self.wrap["body"]["evidence"]["items_file"]
+        item_path.write_text("historical different bytes\n")
+        with self.assertRaisesRegex(EvidenceError, "refusing to alter existing evidence bytes"):
+            admit(self.wrap, self.staged, self.evidence)
+        self.assertEqual(item_path.read_text(), "historical different bytes\n")
+        self.assertTrue((self.evidence / admission["file"]).is_file())
+
     def test_negative_mutations_fail_closed(self):
         base = copy.deepcopy(self.wrap["body"])
         cases = []
@@ -117,6 +126,32 @@ class EvidenceV02Test(unittest.TestCase):
         self.assertIsNone(rows[0]["measured_axes"]["governance"]["card_id"])
         self.assertEqual(rows[0]["measured_axes"]["governance"]["historical_card_id"], card_id)
         self.assertEqual(wraps, before)
+
+    def test_queue_accepts_only_the_signed_admitted_transformation(self):
+        source = self.root / "source"; source.mkdir()
+        admitted = copy.deepcopy(self.wrap)
+        admitted["admission"] = admit(admitted, self.staged, self.evidence)
+        (source / "unsigned-card.json").write_text(json.dumps(admitted))
+        signed_dir = self.root / "signed"
+        with mock.patch.object(signer, "DST", signed_dir), \
+             mock.patch.object(signer, "LEDGER", signed_dir / "SUPERSEDED.jsonl"), \
+             mock.patch.object(signer, "sign_via_oidc_attested", return_value=("aa", "f" * 64)):
+            self.assertEqual(signer.main(["--source-dir", str(source), "--evidence-dir",
+                                          str(self.evidence), "--require-hub-admission"]), 0)
+
+        with mock.patch.object(flip, "verify_signed_card_with_did_doc", return_value=("VALID", "ok")):
+            wraps, verdicts = flip.verify_cards(signed_dir, {}, self.evidence)
+        self.assertEqual(verdicts[0]["verdict"], "VALID")
+        self.assertEqual(wraps[0]["_verdict"], "VALID")
+
+        path = next(signed_dir.glob("signed-*.json"))
+        tampered = json.loads(path.read_text())
+        tampered["body"]["admission"]["sha256"] = "0" * 64
+        path.write_text(json.dumps(tampered))
+        with mock.patch.object(flip, "verify_signed_card_with_did_doc", return_value=("VALID", "ok")):
+            wraps, verdicts = flip.verify_cards(signed_dir, {}, self.evidence)
+        self.assertEqual(verdicts[0]["verdict"], "UNCHECKABLE")
+        self.assertEqual(wraps[0]["_verdict"], "UNCHECKABLE")
 
 
 if __name__ == "__main__":
