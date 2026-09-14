@@ -161,4 +161,3 @@ def encode_jsonl(rows: Iterable[dict[str, Any]]) -> bytes:
     for row in materialized:
         validate_envelope(row)
     return ("\n".join(canonical_bytes(row).decode("ascii") for row in materialized) + "\n").encode("ascii")
-
