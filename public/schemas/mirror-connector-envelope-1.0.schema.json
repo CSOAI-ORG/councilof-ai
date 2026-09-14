@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schemas/mirror-connector-envelope-1.0.schema.json",
+  "title": "CSOAI mirror connector envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "source", "subject", "measurement_kind", "artifact",
+    "timestamp", "license_provenance", "lifecycle", "error", "authority",
+    "mirror_role", "envelope_id"
+  ],
+  "properties": {
+    "schema": {"const": "csoai.mirror-connector-envelope/1.0"},
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["platform", "uri", "revision"],
+      "properties": {
+        "platform": {"enum": ["councilofai", "github", "huggingface", "kaggle"]},
+        "uri": {"type": "string", "minLength": 1},
+        "revision": {"type": "string", "minLength": 1}
+      }
+    },
+    "subject": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {"kind": {"type": "string", "minLength": 1}, "id": {"type": "string", "minLength": 1}}
+    },
+    "measurement_kind": {"type": "string", "minLength": 1},
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["uri", "sha256", "bytes", "media_type"],
+      "properties": {
+        "uri": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "media_type": {"type": "string", "minLength": 1}
+      }
+    },
+    "timestamp": {"type": "string", "pattern": "Z$"},
+    "license_provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["license", "provenance_uri"],
+      "properties": {"license": {"type": "string", "minLength": 1}, "provenance_uri": {"type": "string", "minLength": 1}}
+    },
+    "lifecycle": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state"],
+      "properties": {"state": {"enum": ["reviewed", "published", "withdrawn", "error"]}}
+    },
+    "error": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["code", "message", "retryable"],
+          "properties": {
+            "code": {"type": "string", "minLength": 1},
+            "message": {"type": "string", "minLength": 1},
+            "retryable": {"type": "boolean"}
+          }
+        }
+      ]
+    },
+    "authority": {
+      "const": {"uri": "https://councilof.ai", "role": "canonical-review-authority"}
+    },
+    "mirror_role": {"const": "consumer"},
+    "envelope_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

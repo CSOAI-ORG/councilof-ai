@@ -12,3 +12,8 @@ kaggle kernels push -p projects/coai-dashboard/gpu-offload/kaggle-community-cell
 ```
 
 Outputs in `/kaggle/working`: `community_inventory.json`, `kaggle_community_cells_report.json`, `mill-out/unsigned-jail-*.json`.
+
+Before probing, the kernel consumes and validates
+`https://councilof.ai/mirrors/reviewed-stream.jsonl`. The exact bytes and digest
+are retained as `reviewed_public_stream.jsonl` and in the report. Kaggle is a
+consumer of the reviewed stream; it does not sign, root, or promote evidence.
