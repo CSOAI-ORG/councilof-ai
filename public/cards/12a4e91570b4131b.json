@@ -1,0 +1,52 @@
+{
+  "card": {
+    "as_of": "2026-09-14T22:18:51Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-impersonation-mismatch/0.1",
+      "status": "DISCOVERED",
+      "classification": "NOT_IN_VERIFIED_SET",
+      "code": "XSGD",
+      "issuer": "rXSGdyyEPVeBV6oux4gh6W3rDVM2FyKGe",
+      "holders": 14,
+      "supply": 10000000000,
+      "first_seen_in_window": "2025-05-20T00:38:13.063Z",
+      "verified_issuer": "rK67JczCpaYXVtfw3qJVmqwpSfa1bYTptw",
+      "wording": "issuer not in the archived verified set — legitimacy UNMEASURED",
+      "verified_method": "issuer-site-published address + on-ledger Domain backlink (two-way); xrp-ledger.toml absent (404 archived)"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "12a4e91570b4131b43ded757206619ecc9235b6bbdb74af686ab5de9cf6eb053",
+    "sig_ed25519": "792fcf050613c6df2d03f543c5656536b9d3fe0cefb6c9f12c9976b5b8f940c321ee3fbdb85c90ff5f1b65138ff5faf07eefcfde1e6a6cb79e6890603e873400",
+    "source_urls": [
+      "https://api.xrpscan.com/api/v1/tokens",
+      "https://xrpscan.com/token/XSGD.rXSGdyyEPVeBV6oux4gh6W3rDVM2FyKGe"
+    ],
+    "subject": "XRPL XSGD issuer rXSGdyyEPVeBV6oux4gh6W3rDVM2FyKGe not in archived verified set",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "impersonation-watch",
+      "code:XSGD",
+      "mismatch",
+      "entry-1"
+    ],
+    "unmeasured": [
+      "issuer_legitimacy",
+      "long_tail_issuance_below_ranking_window"
+    ]
+  },
+  "proof": [
+    "8d0c3724ab68c16f1a3759203a638cba5b9124e2ea9be4bba4580a44b53d03d7",
+    "6a67672a6f9d255f13efbbc144f6f674755e26ef9102a770ed65e5ea4eea46a6",
+    "e4c4ad29b641c99e16686910441be5c136eededacf07c7c8dbb3e34f84788439",
+    "4bb956792a288babcce5fed3f3dad2114fed67ee4fb90154918babfb261f036c",
+    "92e435d27ed9bca8b5f58bd6a224ca79835a43a04e9619a5fb1fb08a2473a156",
+    "f04d9ecc17d3a4dd2b5e1c50c2b1fccbf1ea009420ed5cbd93a1e0f1f6ff9ee8",
+    "d4fb02a97bc79e3f08f4518b87a22bb1b1a08b016e7edc99594b7331030aa39d",
+    "4ba6f34818c61b36586f3c42154cc966461b56b4b300b9e171d883cc5b510cec",
+    "b49234ec1e2253572c45d1003568955472a1ddba0ef434c229e2d0cee5064f10"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "card": {
+    "as_of": "2026-09-14T22:19:46Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "BBRL",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_supply",
+          "from": 73869886.50639078,
+          "to": 73888604.50639078
+        },
+        {
+          "field": "source_reported_holders",
+          "from": 40,
+          "to": 133
+        }
+      ],
+      "ledger_index": 106988943,
+      "observed_at": "2026-09-14T22:19:46Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "504b7e43e598b9fdbc4544dfc379550943359eef0a1c54d92dbb662c7ff1cc44",
+    "sig_ed25519": "669719cd270807d07e87e145c1297e00a5e3abfb1e22bdb52a058f8e1e9805ace394a917d04825d97e6b027502b66fb1f4227328fd5d3aa0d3424f1f81f4af05",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: BBRL changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:BBRL"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "e50dd90684d172c5976dfe31d8a868fe969344f5d5b35413590ec96f7652f444",
+    "ea654b8c0197f2241d2456be65e8e625cf615bf051d65399ec841e4da203b11e",
+    "0e3ba9c2d79339ab297d05a2bec172ad63a68b3f3a7bc263da4c795e0359aa29",
+    "14855ae674026911de7bf782fea35aaa3447b06af9c4aaa8a73c76b34bd9bc77",
+    "92e435d27ed9bca8b5f58bd6a224ca79835a43a04e9619a5fb1fb08a2473a156",
+    "f04d9ecc17d3a4dd2b5e1c50c2b1fccbf1ea009420ed5cbd93a1e0f1f6ff9ee8",
+    "d4fb02a97bc79e3f08f4518b87a22bb1b1a08b016e7edc99594b7331030aa39d",
+    "4ba6f34818c61b36586f3c42154cc966461b56b4b300b9e171d883cc5b510cec",
+    "b49234ec1e2253572c45d1003568955472a1ddba0ef434c229e2d0cee5064f10"
+  ]
+}
