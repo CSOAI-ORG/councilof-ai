@@ -1,0 +1,58 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "wrapped USDT0 on optimism vs native issuance — UNMEASURED",
+  "as_of": "2026-09-14T02:01:29.387Z",
+  "source_urls": [
+    "https://mainnet.optimism.io",
+    "https://ethereum-rpc.publicnode.com"
+  ],
+  "payload": {
+    "kind": "csoai.wrapper.parity/0.1",
+    "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+    "id": "usdt0:optimism",
+    "backing_model": "native",
+    "wrapped": {
+      "chain": "optimism",
+      "symbol": "USDT0",
+      "address": "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627",
+      "chainId": 10,
+      "block": 156875715,
+      "block_hash": "0x4f8e07e8f3cd666968c09df04949aa7bdf34e8db61b474f70d03889695c83274",
+      "block_time": 1789350207
+    },
+    "canonical": {
+      "chain": "ethereum",
+      "symbol": "USDT",
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "chainId": 1,
+      "block": 25972488,
+      "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+    },
+    "escrow": null,
+    "escrow_name": null,
+    "note": "USDT0 on Optimism via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed.",
+    "reads": {},
+    "escrow_over_wrapped": null,
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "empty eth_call result from 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627",
+    "fetched_at": "2026-09-14T02:01:29.387Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ]
+  },
+  "tags": [
+    "eater:wrapper-parity",
+    "axis:distribution-integrity",
+    "backing:native",
+    "state:UNMEASURED"
+  ],
+  "unmeasured": [
+    "chain reads (rpc failed; nothing inferred)"
+  ],
+  "did_intended": "did:web:csoai.org#board-attestation-1",
+  "sha256": "92d8d99151c93ac9e617b13431d3e7526d41df74beeb483f26dcbc55e22b5d02",
+  "sig_ed25519": null
+}

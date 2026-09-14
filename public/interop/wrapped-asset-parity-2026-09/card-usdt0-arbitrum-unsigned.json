@@ -1,7 +1,7 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
-  "subject": "wrapped USDC on arbitrum vs native issuance — UNCHECKABLE_NATIVE_ISSUANCE",
+  "subject": "wrapped USDT0 on arbitrum vs native issuance — UNMEASURED",
   "as_of": "2026-09-14T02:01:29.387Z",
   "source_urls": [
     "https://arb1.arbitrum.io/rpc",
@@ -10,12 +10,12 @@
   "payload": {
     "kind": "csoai.wrapper.parity/0.1",
     "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
-    "id": "usdc:arbitrum",
+    "id": "usdt0:arbitrum",
     "backing_model": "native",
     "wrapped": {
       "chain": "arbitrum",
-      "symbol": "USDC",
-      "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      "symbol": "USDT0",
+      "address": "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627",
       "chainId": 42161,
       "block": 504923416,
       "block_hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
@@ -23,45 +23,36 @@
     },
     "canonical": {
       "chain": "ethereum",
-      "symbol": "USDC",
-      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "symbol": "USDT",
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
       "chainId": 1,
       "block": 25972488,
       "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
     },
     "escrow": null,
     "escrow_name": null,
-    "note": "Circle mints USDC natively on Arbitrum One (CCTP). No escrow exists to read; the wrapped supply is read, no parity is claimed.",
-    "reads": {
-      "wrapped_total_supply": {
-        "query": "totalSupply()",
-        "raw": "0x0000000000000000000000000000000000000000000000000009c2f3c9dcf521",
-        "raw_sha256": "b1617edd60dd3d7baac3d0d3eb28955404bf24ef10d4a0776c5607b0b4bf784f",
-        "atomic": "2747627109938465",
-        "normalized": "2747627109.938465",
-        "decimals": 6
-      }
-    },
+    "note": "USDT0 on Arbitrum via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed.",
+    "reads": {},
     "escrow_over_wrapped": null,
-    "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
-    "state": "PROBED",
-    "error": null,
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "empty eth_call result from 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627",
     "fetched_at": "2026-09-14T02:01:29.387Z",
     "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
     "unmeasured": [
-      "escrow_balance (natively issued; no escrow exists)"
+      "chain reads (rpc failed; nothing inferred)"
     ]
   },
   "tags": [
     "eater:wrapper-parity",
     "axis:distribution-integrity",
     "backing:native",
-    "state:UNCHECKABLE_NATIVE_ISSUANCE"
+    "state:UNMEASURED"
   ],
   "unmeasured": [
-    "escrow_balance (natively issued; no escrow exists)"
+    "chain reads (rpc failed; nothing inferred)"
   ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "f1be730019865ad84bf8c1c00fad0789cf11187d64b376c819c69e4c540b320d",
+  "sha256": "5cbae37e6a3468f526e81b20d5893501ef3575114babbe94a9445be89c79703d",
   "sig_ed25519": null
 }
