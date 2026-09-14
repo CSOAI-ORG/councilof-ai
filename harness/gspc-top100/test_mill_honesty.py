@@ -1026,3 +1026,24 @@ def test_mill_grading_writes_item_evidence_bundle(tmp_path: Path | None = None) 
     assert card["body"]["n"] == 30 and card["body"]["accuracy"] == 0.5
     if tmp_path is None:
         shutil.rmtree(root, ignore_errors=True)
+
+def test_inject_commissioned_subjects_upserts_unmeasured_not_measured() -> None:
+    import mill_hub_queue as m
+    rows = [{"id": "already/in-queue", "rank": 9, "status": "UNMEASURED", "pipeline_tag": "text-generation"}]
+    out = m.inject_commissioned_subjects(rows, {"paid/subject", "already/in-queue"})
+    ids = [r["id"] for r in out]
+    assert "paid/subject" in ids and ids.count("already/in-queue") == 1
+    paid = next(r for r in out if r["id"] == "paid/subject")
+    assert paid["status"] == "UNMEASURED"
+    assert paid.get("commissioned") is True
+    assert paid.get("card_id") in (None, "")
+
+
+def test_pick_emptiest_prefers_commissioned_priority_ids() -> None:
+    import mill_hub_queue as m
+    rows = [
+        {"id": "zzz/low", "rank": 1, "status": "UNMEASURED", "pipeline_tag": "text-generation"},
+        {"id": "paid/subject", "rank": 99, "status": "UNMEASURED", "pipeline_tag": "text-generation", "commissioned": True},
+    ]
+    picked = m.pick_emptiest(rows, 1, priority_ids={"paid/subject"})
+    assert picked and picked[0]["id"] == "paid/subject"

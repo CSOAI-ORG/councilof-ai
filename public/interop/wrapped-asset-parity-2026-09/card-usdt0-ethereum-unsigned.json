@@ -1,0 +1,57 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "wrapped USDT0 on ethereum vs native issuance — UNMEASURED",
+  "as_of": "2026-09-14T01:44:14.431Z",
+  "source_urls": [
+    "https://ethereum-rpc.publicnode.com"
+  ],
+  "payload": {
+    "kind": "csoai.wrapper.parity/0.1",
+    "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+    "id": "usdt0:ethereum",
+    "backing_model": "native",
+    "wrapped": {
+      "chain": "ethereum",
+      "symbol": "USDT0",
+      "address": "0x48C04ed50508680b93561a5800E97e24C05e639F",
+      "chainId": 1,
+      "block": 25972392,
+      "block_hash": "0x161238dc3fb10be138686476496c40c609790b5b38ba60aee767c1fee0af4af9",
+      "block_time": 1789349207
+    },
+    "canonical": {
+      "chain": "ethereum",
+      "symbol": "USDT",
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "chainId": 1,
+      "block": 25972392,
+      "block_hash": "0x161238dc3fb10be138686476496c40c609790b5b38ba60aee767c1fee0af4af9"
+    },
+    "escrow": null,
+    "escrow_name": null,
+    "note": "USDT0 is Tether LayerZero OFT on Ethereum. Native issuance; no escrow; supply read, no parity claimed.",
+    "reads": {},
+    "escrow_over_wrapped": null,
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "empty eth_call result from 0x48C04ed50508680b93561a5800E97e24C05e639F",
+    "fetched_at": "2026-09-14T01:44:14.431Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ]
+  },
+  "tags": [
+    "eater:wrapper-parity",
+    "axis:distribution-integrity",
+    "backing:native",
+    "state:UNMEASURED"
+  ],
+  "unmeasured": [
+    "chain reads (rpc failed; nothing inferred)"
+  ],
+  "did_intended": "did:web:csoai.org#board-attestation-1",
+  "sha256": "b6eb5d9644c1769710d16b230ab55e0e7f016d517095d064cbac8a60412c0fc7",
+  "sig_ed25519": null
+}

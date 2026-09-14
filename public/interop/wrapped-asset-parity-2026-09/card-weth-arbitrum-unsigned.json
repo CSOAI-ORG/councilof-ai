@@ -1,0 +1,58 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "wrapped WETH on arbitrum vs native issuance — UNMEASURED",
+  "as_of": "2026-09-14T02:01:29.387Z",
+  "source_urls": [
+    "https://arb1.arbitrum.io/rpc",
+    "https://ethereum-rpc.publicnode.com"
+  ],
+  "payload": {
+    "kind": "csoai.wrapper.parity/0.1",
+    "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+    "id": "weth:arbitrum",
+    "backing_model": "custodial",
+    "wrapped": {
+      "chain": "arbitrum",
+      "symbol": "WETH",
+      "address": "0x82aF49448D82B08cD7C12Be3B9395C0e72f16154",
+      "chainId": 42161,
+      "block": 504923416,
+      "block_hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
+      "block_time": 1789350332
+    },
+    "canonical": {
+      "chain": "ethereum",
+      "symbol": "ETH",
+      "address": "native ETH (not an ERC-20 contract)",
+      "chainId": 1,
+      "block": 25972488,
+      "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+    },
+    "escrow": null,
+    "escrow_name": null,
+    "note": "WETH on Arbitrum at 0x82aF... is a WETH9 wrapper (deposit ETH, get WETH). totalSupply() returns empty on Arbiscan RPC (contract may be a minimal proxy with non-standard storage). ETH backing is the deposit mechanism. INDEXED, no parity claimed from here.",
+    "reads": {},
+    "escrow_over_wrapped": null,
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "empty eth_call result from 0x82aF49448D82B08cD7C12Be3B9395C0e72f16154",
+    "fetched_at": "2026-09-14T02:01:29.387Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ]
+  },
+  "tags": [
+    "eater:wrapper-parity",
+    "axis:distribution-integrity",
+    "backing:custodial",
+    "state:UNMEASURED"
+  ],
+  "unmeasured": [
+    "chain reads (rpc failed; nothing inferred)"
+  ],
+  "did_intended": "did:web:csoai.org#board-attestation-1",
+  "sha256": "e45c02e2542ed099cd5215fad7c74c0d59c9d4546ffc697072874dfbe3246f54",
+  "sig_ed25519": null
+}
