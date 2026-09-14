@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import hashlib
 import json
 import sys
 from datetime import datetime, timezone
@@ -230,7 +231,10 @@ def main() -> int:
     if args.stamp:
         sys.path.insert(0, str(HERE / "badger"))
         from ots_stamp import submit_ots  # noqa: E402
-        proof = submit_ots(root_path.read_bytes())
+        # submit_ots takes the sha256 HEX of the file (ots_stamp.py:15). Passing the raw
+        # bytes raised ValueError on 14 Sep and the 03/13 Sep roots were never stamped.
+        # DetachedTimestampFile(OpSHA256) then verifies against exactly these file bytes.
+        proof = submit_ots(hashlib.sha256(root_path.read_bytes()).hexdigest())
         if proof:
             ots_path.write_bytes(proof)
             print(f"stamped     : {ots_path.relative_to(REPO)} (PENDING — a stamp is not an anchor)")
