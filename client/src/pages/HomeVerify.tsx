@@ -71,8 +71,9 @@ export default function HomeVerify() {
             Building a router or agent? <a className="font-semibold text-emerald-800 underline underline-offset-4" href="/route-receipts">Create a route receipt from an OpenTelemetry trace</a>.
             {" "}Start with the free schema and example. Conversion does not sign or publish your receipt.
           </p>
-          {/* Five access surfaces — the rail is reachable from every common agent + browser surface. */}
+          {/* Access surfaces — the rail is reachable from every common agent + browser surface; the quickstart walks an agent from the manifest to a verified paid response. */}
           <div className="mt-5 flex flex-wrap gap-2 max-w-3xl">
+            <a className="rounded-lg border border-emerald-700 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-900 hover:border-emerald-900" href="/quickstart">Agent quickstart · discover → 402 → verify</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/mcp">MCP · POST /mcp</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://github.com/CSOAI-ORG/councilof-ai/tree/master/extensions/chrome-gspc-verify" target="_blank" rel="noreferrer">Chrome extension source</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/tools">Grok plugin</a>
