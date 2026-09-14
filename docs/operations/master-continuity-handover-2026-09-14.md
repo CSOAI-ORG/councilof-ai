@@ -27,12 +27,12 @@ GitHub-reviewed main is authority. RunPod is compute, Oracle is a light worker/w
 
 ## Verified state at handover
 
-- Production deploy `34839466986` completed successfully, including live root/witness and outward-claims gates.
+- Production deploy `34843030147` completed its gated build and deployment successfully for PR #2394, including root/witness integrity and desktop/mobile shell smoke. Its post-merge prover `34843029335` also passed.
 - Public root reports 299 leaves as of `2026-09-14T09:45:35Z`.
 - Public card matrix reports 335 signed cells, 64 models, 16 populated axes.
 - RunPod worker is LIVE/WAITING with 182 successful runs and 0 failed runs.
 - Public `/api/worker` serves the new dispatcher field, but `commission_dispatch` is `null`: the website revision is current and the pod process is still the older runtime.
-- The typed commission dispatcher and sanitized public observability are merged in PRs #2388 and #2393.
+- The typed commission dispatcher and sanitized public observability are merged in PRs #2388 and #2393. PR #2409 also removes already-retrievable subjects from the active commission queue; its deployment is pending.
 - Canonical no-duplicate outward ledger and waves are merged in #2395, #2396, #2400 and #2402.
 - AI Agents Listing is submitted and awaiting editorial review. The detail URL resolves, but visual inspection shows a private-preview banner saying the entry is not yet published. The CSOAI logo and canonical endpoints are present in the preview; promotional updates were disabled. Do not submit a duplicate or call it live until the banner clears.
 - Discussions are live: #2397 verification, #2398 integration, #2399 discrepancy reporting.
@@ -56,17 +56,13 @@ Do not invent credentials. Current M2 environment has no working RunPod shell/co
 
 PR: `https://github.com/CSOAI-ORG/councilof-ai/pull/2394`
 
-PR #2394 merged on 14 September at head `a8032920b3edcd6ec306a4120a381dc73a90dc07` after all required pre-merge checks passed. It contains 276 signed mill cards. The post-merge prover was still running at the last verified check, and the public root still reported 299 cards.
+PR #2394 merged on 14 September as `fc8758228ce10d9342e56718cb773446fcddc551` after all seven required pre-merge checks passed. Its card-root and hub-queue workflows passed. Deployment `34843030147` and post-merge prover `34843029335` passed.
 
-- `affect-048889c94767021d.intoto.json`
-- `cross-reality-02fb6896c022d75e.intoto.json`
-- `detector-interop-03ecbbf4c4f5f7d6.intoto.json`
+The public artifacts retain distinct scopes: `root.json` reports 299 measured-root leaves as of `2026-09-14T09:45:35Z`, while `signed/card_index.json` contains 335 signed cards. Preserve both numbers and labels. Do not add 276 to either count or imply every signed card is a rooted measured leaf.
 
-Do not call the 276 cards public or included in the current root until the post-merge prover and deployment complete and `root.json` changes. Verify the public root, witness and card index together, then record the new count and timestamp.
+### 3. Maintain the canonical outward ledger
 
-### 3. Finish ledger PR #2401
-
-Preserve every concurrent row in the canonical outward ledger and record only verified state transitions. AI Agents Listing remains REVIEW PENDING; do not submit it again.
+PR #2401 is merged. Preserve every concurrent row in the canonical outward ledger and record only verified state transitions. AI Agents Listing remains REVIEW PENDING; do not submit it again.
 
 ### 4. Complete commission → mill proof
 
@@ -85,13 +81,13 @@ Hugging Face publication is automated and green. Kaggle ingestion into the same 
 - Own the canonical outward ledger, UK/AISI/standards readiness, upstream review responses, and public-truth reconciliation.
 - Monitor open external PRs and turn merges into exact LIVE rows.
 - Never hold signing keys, alter measurements, improvise ceremonies, or send drafts without explicit authorization.
-- Immediate goal: finish #2401, reconcile all open external PRs, and prepare only evidence-backed adoption submissions.
+- Immediate goal: reconcile all open external PRs, record verified state changes, and prepare only evidence-backed adoption submissions.
 
 ### Hermes M4 — compute and factory integration
 
 - Own RunPod runtime refresh, commission dispatcher, worker playlists, intake, producer determinism, and #2394.
 - Rotate applicable axes across locally runnable models; fail closed on unavailable providers.
-- Immediate goal: make `commission_dispatch` non-null, verify #2394 in the public root, and prove one new commission end to end.
+- Immediate goal: make `commission_dispatch` non-null and prove one genuinely new commission end to end.
 
 ### Oracle
 
@@ -170,15 +166,14 @@ Maintain the single execution ledger, dependency graph, owner asks, host status 
 
 ## Immediate 24-hour sequence
 
-1. Merge #2401 after current-head reconciliation and green gates.
-2. Verify #2394's post-merge prover, deployment and inclusion in the public root.
-3. Refresh RunPod and prove non-null dispatcher telemetry.
-4. Prove one commission through queue → mill → sign → merge → root → delivery.
-5. Monitor AI Agents Listing until the private-preview banner clears; then record LIVE. Do not duplicate the listing.
-6. Monitor every open external PR; respond only to maintainer feedback and record merges.
-7. Implement the Kaggle/common connector envelope.
-8. Re-run public stranger journeys and mobile checks after deployment.
-9. Publish one evidence-led update only when a new verified event exists: signed-card merge, root confirmation, independent citation, external registry merge, or outside paid delivery.
+1. Let PR #2409's deployment complete and verify that retrievable subjects no longer appear in the active queue.
+2. Refresh RunPod from reviewed main and prove non-null dispatcher telemetry.
+3. Prove one genuinely new commission through queue → mill → sign → merge → root → delivery.
+4. Monitor AI Agents Listing until the private-preview banner clears; then record LIVE. Do not duplicate the listing.
+5. Monitor every open external PR; respond only to maintainer feedback and record merges.
+6. Implement the Kaggle/common connector envelope.
+7. Re-run public stranger journeys and mobile checks after deployment.
+8. Publish one evidence-led update only when a new verified event exists: signed-card merge, root confirmation, independent citation, external registry merge, or outside paid delivery.
 
 ## Reporting template
 
