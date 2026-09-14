@@ -289,8 +289,9 @@ jobs:
       - name: Orphan coverage — tests outside the blanket vitest dirs
         if: steps.scope.outputs.gated == 'true'
         run: |
-          npx vitest run council-os docs/incidents ci/hf-jobs packages/gspc-cli public/no-auto-stubs.test.mjs
-          python3 -m pytest -q harness/x402-census/build_cards.test.ts
+          npm install --ignore-scripts --no-audit --no-fund --prefix packages/gspc-cli
+          node --test council-os/embed-escape.node-test.mjs council-os/planned-ready.lock.test.mjs docs/incidents/register.test.mjs packages/gspc-cli/test/check.test.mjs
+          npx vitest run council-os/compose.lock.test.ts ci/hf-jobs/steps-drift.test.mjs public/no-auto-stubs.test.mjs harness/x402-census/build_cards.test.ts
 
       # public/verifier/gspc-verify.mjs is PUBLISHED — it serves at
       # https://councilof.ai/verifier/gspc-verify.mjs and is the copy a stranger downloads to check
