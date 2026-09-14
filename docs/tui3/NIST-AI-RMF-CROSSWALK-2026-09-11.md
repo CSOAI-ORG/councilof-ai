@@ -55,7 +55,7 @@
 | Public Root | /root.json | 167 leaves, Merkle, Rekor |
 | Frozen Banks | HuggingFace csoai/* | 14 banks, public |
 | Scoring Code | agents-repo/arena-real-runs/ | Deterministic grading |
-| Corrections | /api/corrections | 47 entries, public |
+| Corrections | /api/corrections | 49 entries, public |
 | Regulation | /api/regulation | 20 deadlines, signed |
 
 ## Submission Gate
