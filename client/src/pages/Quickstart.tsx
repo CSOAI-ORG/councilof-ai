@@ -207,7 +207,7 @@ curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/e
         <p className="mt-3 leading-7 text-slate-700">
           A read can be wrong: a stale escrow address, a predicate that missed a case. Corrections are published beside the record,
           never by editing signed bytes. The register is at{" "}
-          <Link href="/corrections" className="underline decoration-emerald-600 underline-offset-4">/corrections</Link>; the revenue
+          <Link href="/api/corrections" className="underline decoration-emerald-600 underline-offset-4">/api/corrections</Link>; the revenue
           contract and the count of distinct outside payers live at{" "}
           <a href="/api/revenue" className="underline decoration-emerald-600 underline-offset-4">/api/revenue</a>.
         </p>
