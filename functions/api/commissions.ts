@@ -2,13 +2,23 @@
  * GET /api/commissions — the open commission queue, read from the same store that holds the
  * settlements (REVENUE_KV, `ras:<receipt sha>` records written by /api/request-attestation).
  *
+ * Requester retrieval (2026-09-14): each QUEUED commission is joined to the signed pod cards
+ * master carries for its subject (from /interop/pod-cards-index.json, a build-time index of
+ * the signed bytes) as `cards[]` + `delivery`. Index unreadable → cards null, UNCHECKABLE.
+ * Publication of a card never rewrites `fulfillment` and is never a certificate.
+ *
  * Typed contract (Stage68): every row exposes subject_kind / model / bank / fulfillment.
  * Legacy ras:* records without fields are classified on read (never invented MEASURED).
  * payai-wrapper → UNFULFILLABLE, not a model mill target.
  */
 import { classifyCommissionTarget, type Fulfillment, type SubjectKind } from "./_commission_target";
 
-type Env = { REVENUE_KV?: KVNamespace };
+type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> } };
+
+/** One signed pod card as the build-time index (/interop/pod-cards-index.json) lists it. */
+type PodCard = { id: string; url: string; subject: string; axis: string | null; n: number | null; status: string | null; run_id: string | null };
+type Delivery = { state: "CARDS_PUBLISHED" | "NONE" | "UNCHECKABLE"; count: number | null; note?: string };
+export const POD_CARDS_INDEX = "/interop/pod-cards-index.json";
 
 type Commission = {
   subject: string;
@@ -20,6 +30,9 @@ type Commission = {
   tx: string | null;
   as_of: string | null;
   receipt_sha: string;
+  /** Signed cards on master for this subject (joined from the pod-cards index). null = index unreadable, never "none". */
+  cards: PodCard[] | null;
+  delivery: Delivery;
 };
 
 const json = (body: unknown, status = 200) =>
@@ -44,8 +57,8 @@ function typedFields(subject: string, r: Record<string, unknown>) {
   return { subject_kind, model, bank, fulfillment };
 }
 
-export async function listCommissions(kv: KVNamespace): Promise<{ commissions: Commission[]; unreadable: number }> {
-  const out: Commission[] = [];
+export async function listCommissions(kv: KVNamespace): Promise<{ commissions: Omit<Commission, "cards" | "delivery">[]; unreadable: number }> {
+  const out: Omit<Commission, "cards" | "delivery">[] = [];
   let unreadable = 0;
   let cursor: string | undefined;
   do {
@@ -74,7 +87,45 @@ export async function listCommissions(kv: KVNamespace): Promise<{ commissions: C
   return { commissions: out, unreadable };
 }
 
-export async function buildCommissions(env: Env) {
+/**
+ * Read the derived pod-cards index (built by build:client from the signed bytes). Returns null
+ * when it cannot be read — the caller then reports UNCHECKABLE, never an empty delivery.
+ */
+export async function readPodCardsIndex(env: Env, origin: string, fetcher: typeof fetch = fetch): Promise<Map<string, PodCard[]> | null> {
+  try {
+    const req = new Request(new URL(POD_CARDS_INDEX, origin).toString());
+    const res = env.ASSETS ? await env.ASSETS.fetch(req) : await fetcher(req);
+    if (!res.ok) return null;
+    const idx = (await res.json()) as { schema?: string; cards?: unknown };
+    if (idx.schema !== "csoai.pod-cards-index/0.1" || !Array.isArray(idx.cards)) return null;
+    const by = new Map<string, PodCard[]>();
+    for (const c of idx.cards as Array<Record<string, unknown>>) {
+      if (typeof c.id !== "string" || typeof c.url !== "string" || typeof c.subject !== "string") continue;
+      const row: PodCard = {
+        id: c.id, url: c.url, subject: c.subject,
+        axis: typeof c.axis === "string" ? c.axis : null,
+        n: Number.isInteger(c.n) ? (c.n as number) : null,
+        status: typeof c.status === "string" ? c.status : null,
+        run_id: typeof c.run_id === "string" ? c.run_id : null,
+      };
+      const k = c.subject.toLowerCase();
+      by.set(k, [...(by.get(k) ?? []), row]);
+    }
+    return by;
+  } catch {
+    return null;
+  }
+}
+
+function joinDelivery(c: Omit<Commission, "cards" | "delivery">, index: Map<string, PodCard[]> | null): Pick<Commission, "cards" | "delivery"> {
+  if (c.fulfillment !== "QUEUED" || !c.model) return { cards: null, delivery: { state: "NONE", count: 0, note: "not a pod-millable target" } };
+  if (index === null) return { cards: null, delivery: { state: "UNCHECKABLE", count: null, note: `${POD_CARDS_INDEX} unreadable — null, never substituted` } };
+  const all = index.get(c.model.toLowerCase()) ?? [];
+  const cards = c.axis ? all.filter((k) => k.axis === c.axis) : all;
+  return { cards, delivery: { state: cards.length ? "CARDS_PUBLISHED" : "NONE", count: cards.length } };
+}
+
+export async function buildCommissions(env: Env, origin = "https://councilof.ai", fetcher: typeof fetch = fetch) {
   const base = {
     schema: "csoai.commissions/0.2",
     endpoint: "/api/commissions",
@@ -85,7 +136,9 @@ export async function buildCommissions(env: Env) {
     return { ...base, status: "UNMEASURED", commissions: null, subjects: null, note: "no store bound — the list is null, not empty" };
   }
   try {
-    const { commissions, unreadable } = await listCommissions(env.REVENUE_KV);
+    const { commissions: bare, unreadable } = await listCommissions(env.REVENUE_KV);
+    const index = await readPodCardsIndex(env, origin, fetcher);
+    const commissions: Commission[] = bare.map((c) => ({ ...c, ...joinDelivery(c, index) }));
     const subjects = [...new Set(commissions.map((c) => c.subject))];
     return {
       ...base,
@@ -94,6 +147,12 @@ export async function buildCommissions(env: Env) {
       count: commissions.length,
       subjects,
       queued: commissions.filter((c) => c.fulfillment === "QUEUED").length,
+      delivered: index === null ? null : commissions.filter((c) => c.delivery.state === "CARDS_PUBLISHED").length,
+      retrieval: {
+        index: POD_CARDS_INDEX,
+        state: index === null ? "UNCHECKABLE" : "READ",
+        how: "each `cards[].url` is a signed card; verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json. Publication of a card is not a certificate and does not change `fulfillment`.",
+      },
       unfulfillable: commissions.filter((c) => c.fulfillment === "UNFULFILLABLE").length,
       commissions,
       records_unreadable: unreadable,
@@ -103,4 +162,4 @@ export async function buildCommissions(env: Env) {
   }
 }
 
-export const onRequestGet: PagesFunction<Env> = async ({ env }) => json(await buildCommissions(env));
+export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => json(await buildCommissions(env, new URL(request.url).origin));
