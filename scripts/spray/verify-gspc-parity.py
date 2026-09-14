@@ -7,6 +7,7 @@ import hashlib
 import io
 import json
 import tempfile
+import urllib.parse
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -14,7 +15,8 @@ from pathlib import Path
 FILES = ("README.md", "board.json", "root.json", "SNAPSHOT.json", "gspc-axes.csv",
          "gspc-axes.jsonl", "check-board.sh", "manifest.jsonl")
 HF = "https://huggingface.co/datasets/csoai/gspc-board/resolve/main/snapshot"
-KAGGLE = "https://www.kaggle.com/api/v1/datasets/download/nicktempleman/csoai-gspc-living-board"
+KAGGLE_ID = "nicktempleman/csoai-gspc-living-board"
+KAGGLE_API = "https://www.kaggle.com/api/v1/datasets"
 LIVE_ROOT = "https://councilof.ai/root.json"
 UA = "csoai-gspc-parity-verifier/1 (+https://github.com/CSOAI-ORG/councilof-ai)"
 
@@ -33,8 +35,21 @@ def read_hf() -> dict[str, bytes]:
     return {name: get(f"{HF}/{name}?download=true") for name in FILES}
 
 
+def newest_ready_kaggle_version(metadata: dict) -> int:
+    """Kaggle may mark a new version Ready before its default download pointer advances."""
+    ready = [row.get("versionNumber") for row in metadata.get("versions", [])
+             if isinstance(row, dict) and row.get("status") == "Ready"
+             and type(row.get("versionNumber")) is int]
+    if not ready:
+        raise ValueError("Kaggle metadata has no Ready dataset version")
+    return max(ready)
+
+
 def read_kaggle() -> dict[str, bytes]:
-    with zipfile.ZipFile(io.BytesIO(get(KAGGLE))) as archive:
+    metadata = json.loads(get(f"{KAGGLE_API}/view/{KAGGLE_ID}"))
+    version = newest_ready_kaggle_version(metadata)
+    query = urllib.parse.urlencode({"datasetVersionNumber": version})
+    with zipfile.ZipFile(io.BytesIO(get(f"{KAGGLE_API}/download/{KAGGLE_ID}?{query}"))) as archive:
         names = {Path(name).name: name for name in archive.namelist() if not name.endswith("/")}
         missing = set(FILES) - set(names)
         if missing:
@@ -69,8 +84,7 @@ def validate(label: str, files: dict[str, bytes]) -> dict:
 def kaggle_behind(hf: dict[str, bytes], kaggle: dict[str, bytes]) -> bool:
     """True when Kaggle's downloadable archive still carries an OLDER snapshot than Hugging Face.
 
-    Kaggle creates a version immediately but its public download keeps serving the previous
-    archive for minutes (seen 2026-09-13 16:50Z: version created, archive still as_of 06:03).
+    Kaggle creates a version immediately but its newest Ready archive can still be behind.
     Judging parity in that window turns a lag into a red. A read that is behind is waited on
     (bounded); a read that is EQUAL in as_of but different in bytes is a real mismatch and is
     never waited on."""
@@ -116,7 +130,7 @@ def main() -> int:
                         help="verify mirror parity without requiring current Council root bytes")
     parser.add_argument("--report", help="write the verified result as JSON")
     parser.add_argument("--kaggle-wait-seconds", type=int, default=0,
-                        help="if Kaggle's archive is BEHIND Hugging Face (older as_of), re-read it for up to this long before judging")
+                        help="if Kaggle's newest Ready archive is BEHIND Hugging Face, re-read it for up to this long")
     args = parser.parse_args()
     result = verify(require_live=not args.allow_stale_live_root, kaggle_wait_seconds=args.kaggle_wait_seconds)
     body = json.dumps(result, indent=1, ensure_ascii=False) + "\n"

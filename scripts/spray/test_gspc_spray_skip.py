@@ -1,7 +1,10 @@
 import importlib.util
+import base64
 from pathlib import Path
 
 import pytest
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 
 HERE = Path(__file__).resolve().parent
@@ -9,6 +12,78 @@ SPRAY_SPEC = importlib.util.spec_from_file_location("gspc_spray", HERE / "gspc-s
 assert SPRAY_SPEC and SPRAY_SPEC.loader
 spray = importlib.util.module_from_spec(SPRAY_SPEC)
 SPRAY_SPEC.loader.exec_module(spray)
+
+
+def signed_root():
+    key = Ed25519PrivateKey.generate()
+    leaves = ["00" * 32, "11" * 32]
+    root = {
+        "kind": "csoai.public-root/v1",
+        "schema": "https://councilof.ai/schema/public-root-v1.json",
+        "as_of": "2026-09-14T03:12:56Z",
+        "merkle_root": spray.merkle_root(leaves),
+        "card_count": len(leaves),
+        "card_sha256": leaves,
+        "did_intended": "did:web:csoai.org#board-attestation-1",
+    }
+    preimage = {name: root[name] for name in spray.ROOT_PREIMAGE_KEYS}
+    root["sig_ed25519"] = key.sign(spray.canonical(preimage)).hex()
+    raw_public = key.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    did = {
+        "id": "did:web:csoai.org",
+        "verificationMethod": [{
+            "id": root["did_intended"],
+            "publicKeyJwk": {
+                "kty": "OKP", "crv": "Ed25519",
+                "x": base64.urlsafe_b64encode(raw_public).decode().rstrip("="),
+            },
+        }],
+    }
+    return root, did
+
+
+def test_public_root_signature_accepts_the_declared_live_did_key():
+    root, did = signed_root()
+    spray.verify_public_root(root, did)
+
+
+def test_public_root_signature_fails_closed_on_tampering_or_a_different_live_key():
+    root, did = signed_root()
+    root["sig_ed25519"] = "00" * 64
+    with pytest.raises(ValueError, match="does not verify"):
+        spray.verify_public_root(root, did)
+
+    root, _ = signed_root()
+    _, different_did = signed_root()
+    with pytest.raises(ValueError, match="does not verify"):
+        spray.verify_public_root(root, different_did)
+
+
+def test_public_root_signature_fails_closed_when_the_leaf_list_does_not_bind_the_root():
+    root, did = signed_root()
+    root["card_sha256"][0] = "22" * 32
+    with pytest.raises(ValueError, match="merkle_root does not bind"):
+        spray.verify_public_root(root, did)
+
+
+def test_kaggle_download_uses_the_newest_ready_version(monkeypatch):
+    import io
+    import json
+    import zipfile
+
+    metadata = {"currentVersionNumber": 24, "versions": [{"versionNumber": 26, "status": "Ready"}]}
+    body = io.BytesIO()
+    with zipfile.ZipFile(body, "w") as archive:
+        archive.writestr("SNAPSHOT.json", "{}")
+    seen = []
+
+    def fake_fetch(url, timeout=60):
+        seen.append(url)
+        return json.dumps(metadata).encode() if "/view/" in url else body.getvalue()
+
+    monkeypatch.setattr(spray, "fetch_ok", fake_fetch)
+    assert spray.kaggle_public_files()["SNAPSHOT.json"] == b"{}"
+    assert seen[-1].endswith("?datasetVersionNumber=26")
 
 
 def test_byte_parity_exact_match_skips():
