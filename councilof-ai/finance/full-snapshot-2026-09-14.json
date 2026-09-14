@@ -1,8 +1,8 @@
 {
   "schema": "csoai.tui2.full-snapshot/0.1",
-  "generated_at": "2026-09-14T07:23:55.125194+00:00",
-  "total_unique_pairs": 64,
-  "grand_total_usd": 195710975370.775,
+  "generated_at": "2026-09-14T10:30:49.080645+00:00",
+  "total_unique_pairs": 65,
+  "grand_total_usd": 195994165370.775,
   "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves",
   "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction",
   "measurements": [
@@ -518,8 +518,20 @@
       "measured_at": "2026-09-14T07:23:55.125074+00:00",
       "source": "eth_call totalSupply() via publicnode RPC",
       "terms_boundary": "totalSupply() only"
+    },
+    {
+      "symbol": "BUSD",
+      "chain": "bsc",
+      "supply_normalized": 283190000,
+      "block": 121822023,
+      "contract": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+      "decimals": 18,
+      "measured_at": "2026-09-14T10:30:49.080529+00:00",
+      "source": "eth_call totalSupply() via publicnode RPC",
+      "terms_boundary": "totalSupply() only",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction-BUSD-bsc"
     }
   ],
-  "unique_assets": 33,
+  "unique_assets": 34,
   "chains_covered": 17
 }
