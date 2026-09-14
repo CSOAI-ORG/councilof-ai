@@ -34,7 +34,7 @@ GitHub-reviewed main is authority. RunPod is compute, Oracle is a light worker/w
 - Public `/api/worker` serves the new dispatcher field, but `commission_dispatch` is `null`: the website revision is current and the pod process is still the older runtime.
 - The typed commission dispatcher and sanitized public observability are merged in PRs #2388 and #2393.
 - Canonical no-duplicate outward ledger and waves are merged in #2395, #2396, #2400 and #2402.
-- AI Agents Listing is live at `https://aiagentslisting.com/agent/council-of-ai-measurement-agent`, verified without authentication on 14 September. The CSOAI logo and canonical endpoints are present; promotional updates were disabled. Do not submit a duplicate.
+- AI Agents Listing is submitted and awaiting editorial review. The detail URL resolves, but visual inspection shows a private-preview banner saying the entry is not yet published. The CSOAI logo and canonical endpoints are present in the preview; promotional updates were disabled. Do not submit a duplicate or call it live until the banner clears.
 - Discussions are live: #2397 verification, #2398 integration, #2399 discrepancy reporting.
 - Numerous external editorial PRs are open. Their exact states live in the canonical outward ledger. Never resubmit while open.
 
@@ -66,7 +66,7 @@ Do not call the 276 cards public or included in the current root until the post-
 
 ### 3. Finish ledger PR #2401
 
-Preserve every concurrent row in the canonical outward ledger and record only verified state transitions. AI Agents Listing is now LIVE; do not submit it again.
+Preserve every concurrent row in the canonical outward ledger and record only verified state transitions. AI Agents Listing remains REVIEW PENDING; do not submit it again.
 
 ### 4. Complete commission → mill proof
 
@@ -166,7 +166,7 @@ Maintain the single execution ledger, dependency graph, owner asks, host status 
 - A submission confirmation is REVIEW PENDING. Only an upstream merge or stable public detail page is LIVE.
 - Prefer maintained, relevant, editorial or structured registries. Skip paid listings, abandoned sites, arbitrary backlink farms, and policies the project does not satisfy.
 - Never manufacture stars, visits, settlements, customers, citations or testimonials.
-- AI Agents Listing is live. Any later promotion must link to the public detail page and use the measured-not-certified description already recorded in the ledger.
+- Do not promote the AI Agents Listing detail URL while it carries the private-preview banner. When editorial review publishes it, link to the public detail page using the measured-not-certified description already recorded in the ledger.
 
 ## Immediate 24-hour sequence
 
@@ -174,7 +174,7 @@ Maintain the single execution ledger, dependency graph, owner asks, host status 
 2. Verify #2394's post-merge prover, deployment and inclusion in the public root.
 3. Refresh RunPod and prove non-null dispatcher telemetry.
 4. Prove one commission through queue → mill → sign → merge → root → delivery.
-5. Monitor AI Agents Listing for factual drift or broken endpoints; do not duplicate the listing.
+5. Monitor AI Agents Listing until the private-preview banner clears; then record LIVE. Do not duplicate the listing.
 6. Monitor every open external PR; respond only to maintainer feedback and record merges.
 7. Implement the Kaggle/common connector envelope.
 8. Re-run public stranger journeys and mobile checks after deployment.
