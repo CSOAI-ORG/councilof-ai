@@ -1,0 +1,81 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:58:07.494Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "jpmd:base",
+      "backing_model": "custodial",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "JPMD",
+        "address": "0x7e0aedc93d9f898be835a44bfca3842e52416b82",
+        "chainId": 8453,
+        "block": 51296622,
+        "block_hash": "0x1b00ce371d168892fc5b182be823a44e3cc1748c6dc9aa0fd31598342e5c94d2",
+        "block_time": 1789382591
+      },
+      "canonical": {
+        "chain": "offchain",
+        "symbol": "USD deposits",
+        "address": "bank deposits at J.P. Morgan; not on any chain",
+        "chainId": null,
+        "block": null,
+        "block_hash": null
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "A bank deposit token: the claim it represents is a deposit held off-chain. Supply read only. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000000005f767a0",
+          "raw_sha256": "1191e35e81b8233733588b94641eb1053451d020a27da132958f2de765bd44bb",
+          "atomic": "100100000",
+          "normalized": "1001000.00",
+          "decimals": 2
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "INDEXED_CUSTODIAL",
+      "state": "DISCOVERED",
+      "error": null,
+      "fetched_at": "2026-09-14T10:58:07.494Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "reserve (custodian-held off this chain; not readable here)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ee82e18b17d76c320d4cd7baa462b4e7d24fce40aa00b2ffbbd9295f505cba4b",
+    "sig_ed25519": "4ba05059a0677b54f565b116ddee8b824cfac6c1bea9488b45b147612e5bad55089a75c75e92ea7407af3bbdda2fb78ec4c77265f3c5d0b647e9eb97f81c0609",
+    "source_urls": [
+      "https://mainnet.base.org"
+    ],
+    "subject": "wrapped JPMD on base vs native issuance — INDEXED_CUSTODIAL",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:custodial",
+      "state:INDEXED_CUSTODIAL"
+    ],
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ]
+  },
+  "proof": [
+    "588e7d0e0109df86e9e574cf27400bee7a21ebbba5de4a01e45e888dbf99a39e",
+    "2c74965e23ae44beb1319ddb51fec66e2256a2e01ccec07b5799343be4e4fe5e",
+    "2be90eee9f14af3af1bb39f6983d0b55ffc9858810ad4b6fe1fc220b07a08740",
+    "12678c41982f739e34fe07bc497fd68dbf1658a5e43aff397d80c8ca855cc216",
+    "92b3ee0f7c353b5b05c85a1f1196d982182e2e402c96980c733f86ac634ba16d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "d9d52240a8436cad529074028a832592dba271f2d01687e6bf3e37989dfbca33",
+    "ddb6d92ea8c4ce44cba9a3aa109f456cc19b2b444e3dd02f0a8f2b5cd67dd0ea",
+    "0a690e153ab6c9e1aa7f6781d3f6e0dfd10cfae2697482f694ad8de44aeee888"
+  ]
+}

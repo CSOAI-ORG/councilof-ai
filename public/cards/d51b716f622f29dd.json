@@ -1,0 +1,82 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:58:07.494Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdt0:arbitrum",
+      "backing_model": "native",
+      "wrapped": {
+        "chain": "arbitrum",
+        "symbol": "USDT0",
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        "chainId": 42161,
+        "block": 505049608,
+        "block_hash": "0x1ffe7b01f0f81c5855d9f86f0ef649be25e75d21a46f18b4963fd5c2330c02df",
+        "block_time": 1789382462
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDT",
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "chainId": 1,
+        "block": 25975174,
+        "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392"
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "Same contract as usdt:arbitrum (it reports name and symbol USD₮0 on 2026-09-14). USDT0 is a LayerZero OFT: USDT is locked in one OFT Adapter on Ethereum (0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee) against the combined supply of every USDT0 chain, so no per-chain escrow exists and no per-pair parity is claimed; treated as native issuance on this chain. Supply read.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000002e39115c94862",
+          "raw_sha256": "8ee50c90d47d1f3a5847b2be32f3c6caa28a85518ee1bd6cb69e0f9a86698f47",
+          "atomic": "813162228697186",
+          "normalized": "813162228.697186",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "state": "PROBED",
+      "error": null,
+      "fetched_at": "2026-09-14T10:58:07.494Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "escrow_balance (natively issued; no escrow exists)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d51b716f622f29dd5479996410effbaaba9bc17b491e7cc1631889b423cb85f7",
+    "sig_ed25519": "764bf33e26a24fbbb315adf42023943aa678cc84caa6121c170cfdf2ca7979aadfb7c89c66627fca3907c19b87c326a1880c373614b22c536765b127ed2a5c01",
+    "source_urls": [
+      "https://arb1.arbitrum.io/rpc",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDT0 on arbitrum vs native issuance — UNCHECKABLE_NATIVE_ISSUANCE",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:native",
+      "state:UNCHECKABLE_NATIVE_ISSUANCE"
+    ],
+    "unmeasured": [
+      "escrow_balance (natively issued; no escrow exists)"
+    ]
+  },
+  "proof": [
+    "6ca1247f517f11e5e053fa501cdb97528eb3cf0df389a185b0c438c2b4fee9f1",
+    "d3b9003d1168330a70cc4bf752a3a89a425b5616b367289776d2021a69610441",
+    "0d7a061b9222e3d940b3c96a1fb026336fc77626c14a1b8eb0203f61d385fc1d",
+    "ba67e86fea75038540a21764d5c732dc73801a592b824bb559ed9584f8a4347d",
+    "ae7733df51ca8dbd1a346b5f4d4891e270168425a818d5754430fa0c25952eff",
+    "d1970dd0cac8843999549d0791976f72e8d1e1ebf7f879925d735b4cdf0a5b8e",
+    "09b28cd35145741c0837988152fdaced5f59bb0d0be32407eaef902ec8b78206",
+    "dd41cfabfde3ef62c995dabf9534dae738f0bf1c9f9634dada38cd21932336bb",
+    "0a690e153ab6c9e1aa7f6781d3f6e0dfd10cfae2697482f694ad8de44aeee888"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "card": {
+    "as_of": "2026-09-14T12:30:02Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "distribution-integrity",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "represented vs distributed never mixed"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f15a326622247943c51667519dc2ab87289badc32cd3e2924d3ee7c7eb903bf2",
+    "sig_ed25519": "deca1f4ffc8b7c94375f3fa8fd0d06f51f67586bd5fede59fbb3388241cf763f090dc4c1f6d819ccc30bef082b35674db8a68bee269fb81b3d319e4856ea7407",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-distribution-integrity"
+    ],
+    "subject": "GSPC distribution-integrity UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "distribution-integrity",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "be158d50077b5527b64a68f890e560d520e3efcfb44fc171c0d1a1aa0be87159",
+    "d74e417d0b575442791e2cee8e09c9fb1a2e675c1c8c897b24cf3b8c1f85c307",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "3ca0d8fa56240799087a1a431d0096ae484b4f0c95d767ca1bbe09bef822b180",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "9862bffffcd607adad768be1963d711775ed351f7f25dc95d433fa118da702f4",
+    "ddb6d92ea8c4ce44cba9a3aa109f456cc19b2b444e3dd02f0a8f2b5cd67dd0ea",
+    "0a690e153ab6c9e1aa7f6781d3f6e0dfd10cfae2697482f694ad8de44aeee888"
+  ]
+}

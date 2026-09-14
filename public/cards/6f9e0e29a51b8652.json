@@ -1,0 +1,91 @@
+{
+  "card": {
+    "as_of": "2026-09-14T12:30:03Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:TBILL:bsc",
+      "symbol": "TBILL",
+      "product": "OpenEden T-Bills",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x5b4681f0d7a01b817675f25892d3ad73572fd1d9",
+      "block": 121837955,
+      "block_hash": "0xb96d01b48588f03d91c0e60d3d7fd667fd9560a60c58ed57c015913527689af8",
+      "block_time": "2026-09-14T12:30:03Z",
+      "rpc": "bsc-dataseed.bnbchain.org",
+      "checked": {
+        "name": "OpenEden T-Bills",
+        "symbol": "TBILL",
+        "decimals": 18,
+        "totalSupply": "174709844718215638878036908",
+        "owner": "0x3ba6c5437232156baacba5c084c8a746e3217ed6",
+        "kycManager": "0xd9cf8c5bb16422d992595f3e3342de25fe7f5cf9",
+        "eip1967_implementation": "0xf3c7bbd9f91de0664a3e2ec5063e45872da472d9"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 121837955 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6f9e0e29a51b86522dc1cc3a2a2dc4a99d2051ea8c3bfcc9fe27778d82628b8f",
+    "sig_ed25519": "c2bd4627699acfae969c991eb1d37fea29aee7937d96a514d7863d8e10346351e952d5ca5175bd7d271ecc27a9ed76e29e892e43a6673c9c4804d4842695c904",
+    "source_urls": [
+      "https://bsc-dataseed.bnbchain.org",
+      "https://docs.openeden.com/tbill/smart-contract-addresses"
+    ],
+    "subject": "evm:TBILL:bsc permission state at block 121837955",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:TBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "3ff2fd5d041d2f6aeca38d7a7eb6ccc754cd3715980b43a5a1ec73c29563aaf7",
+    "a446b41ea07c60294a9561f6d92d1a42ebe6cdecf7f91ae1b5a72151aedb5f17",
+    "e07a097b92717558b22cb03b701ee523a6655e14890a2bb306d6731798bfa23a",
+    "6811e358dd5247017ac8fd6fd9a2402202305c8b7db9c2170dc260a74c7ae3c9",
+    "7d4980372dc79d44d303095185aa5d1c05239604f3b7d055b2d6ee34d721c960",
+    "812182106f8280905e82a9d2c25299c421424cb00862c8af0101d230b844f04a",
+    "a31c51e17fd888556704999437641f1c847de4d4720a12e4532e078623e92b81",
+    "dd41cfabfde3ef62c995dabf9534dae738f0bf1c9f9634dada38cd21932336bb",
+    "0a690e153ab6c9e1aa7f6781d3f6e0dfd10cfae2697482f694ad8de44aeee888"
+  ]
+}

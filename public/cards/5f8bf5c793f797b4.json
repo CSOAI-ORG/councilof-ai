@@ -1,0 +1,116 @@
+{
+  "card": {
+    "as_of": "2026-09-14T12:30:02Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USTBL:arbitrum",
+      "symbol": "USTBL",
+      "product": "Spiko US T-Bills Money Market Fund",
+      "chain": "arbitrum",
+      "chain_id": 42161,
+      "address": "0x021289588cd81dc1ac87ea91e91607eef68303f5",
+      "block": 505075623,
+      "block_hash": "0xf0a7cb633ac84c8b4c26c9600af522fb6ec2d2ddaad19a43b58f9e3f57c22f35",
+      "block_time": "2026-09-14T12:30:02Z",
+      "rpc": "arbitrum-one-rpc.publicnode.com",
+      "checked": {},
+      "absent": [
+        "name()",
+        "symbol()",
+        "decimals()",
+        "totalSupply()",
+        "paused()",
+        "isPaused()",
+        "owner()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_implementation (slot zero)",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "031fbcad63b1037588d49e026e00b12a6e4a53c4ce4dfce541f93aee1454fc12",
+        "bytes": 11649,
+        "url": "/archive/proofs/eip1186/031fbcad63b10375.json",
+        "rpc": "arb1.arbitrum.io",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0x5e4dcb0bb1910f6429e5fe91678990088a51c6d1cfe1b31d05fb9d948cc7867c",
+          "storageHash": "0xf7e090d75e0ea79005704282c5485e02c8edc2dc6ebdbf7868035e852e444632",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0xa0769f7a8fc65e47de93797b4e21c073c117fc80",
+            "nodes": 4
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 3
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 505075623 on arbitrum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "5f8bf5c793f797b4711b51b4b3294a5c26e0b77edb2e1e6dc886c3cc1098fe98",
+    "sig_ed25519": "60bb559b9875215d969c4404a11ad695b9d655c0cfcbbd6eae6c4d19723d7304c9095cb9c9788f67887e5240421f252df50c9cf90905f44715eaca1b0ff83104",
+    "source_urls": [
+      "https://arbitrum-one-rpc.publicnode.com",
+      "https://arbiscan.io/token/0x021289588cd81dC1AC87ea91e91607eEF68303F5",
+      "https://arb1.arbitrum.io/rpc"
+    ],
+    "subject": "evm:USTBL:arbitrum permission state at block 505075623",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:arbitrum",
+      "coverage:permission-state",
+      "subject:USTBL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "60ce01962030a0ba944872d5147f849265faa96f03f92b16f10eb53b47faa1a3",
+    "c1b81ebe7ca6eb9ba7bf6fbdf8b586975eacde517ae8251c5b5d38246b9cda3c",
+    "e07a097b92717558b22cb03b701ee523a6655e14890a2bb306d6731798bfa23a",
+    "6811e358dd5247017ac8fd6fd9a2402202305c8b7db9c2170dc260a74c7ae3c9",
+    "7d4980372dc79d44d303095185aa5d1c05239604f3b7d055b2d6ee34d721c960",
+    "812182106f8280905e82a9d2c25299c421424cb00862c8af0101d230b844f04a",
+    "a31c51e17fd888556704999437641f1c847de4d4720a12e4532e078623e92b81",
+    "dd41cfabfde3ef62c995dabf9534dae738f0bf1c9f9634dada38cd21932336bb",
+    "0a690e153ab6c9e1aa7f6781d3f6e0dfd10cfae2697482f694ad8de44aeee888"
+  ]
+}

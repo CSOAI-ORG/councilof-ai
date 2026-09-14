@@ -1,0 +1,82 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:58:07.494Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdt:polygon",
+      "backing_model": "native",
+      "wrapped": {
+        "chain": "polygon",
+        "symbol": "USDT",
+        "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+        "chainId": 137,
+        "block": 93785617,
+        "block_hash": "0x2df3d2b330902d05559ed6269a1a25e2752397cf9ec6ec76af85b6206e6b51b9",
+        "block_time": 1789383459
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDT",
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "chainId": 1,
+        "block": 25975174,
+        "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392"
+      },
+      "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+      "escrow_name": "Polygon PoS bridge ERC20Predicate (legacy bridged remainder only)",
+      "note": "Tether issues USDT natively on Polygon; the PoS predicate backs only the legacy bridged remainder (escrow ≈1% of supply on 2026-09-13). The wrapped supply is read; no parity is claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000000000000029eb2d4a0c2d0",
+          "raw_sha256": "75ddf2cbd32cdd6665f9207b6e09d80600e362ce497edd662d09f639e6f2a702",
+          "atomic": "737440862094032",
+          "normalized": "737440862.094032",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "state": "PROBED",
+      "error": null,
+      "fetched_at": "2026-09-14T10:58:07.494Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "escrow_balance (natively issued; no escrow exists)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "41225919279bd1dd600d12563f75191b3296e8ce8577c22c62ada4d1213afb1e",
+    "sig_ed25519": "e604cf611cba5888e58d09ce9f5b34e025f49c4de76954e286eac29090c82c63fd9df8b284d4042eff3bab0217778289442427f3053b79f964704bb79bc4660e",
+    "source_urls": [
+      "https://polygon-bor-rpc.publicnode.com",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDT on polygon vs Polygon PoS bridge ERC20Predicate (legacy bridged remainder only) — UNCHECKABLE_NATIVE_ISSUANCE",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:native",
+      "state:UNCHECKABLE_NATIVE_ISSUANCE"
+    ],
+    "unmeasured": [
+      "escrow_balance (natively issued; no escrow exists)"
+    ]
+  },
+  "proof": [
+    "8185d2affdbc6d1402fd13b9a2c2497314003486bac816511ab0039024868db7",
+    "46995c5ac3129c2a1598e8a4adac83f1cfed6ef06ce1f9035cfdb9610bd18688",
+    "0d7a061b9222e3d940b3c96a1fb026336fc77626c14a1b8eb0203f61d385fc1d",
+    "ba67e86fea75038540a21764d5c732dc73801a592b824bb559ed9584f8a4347d",
+    "ae7733df51ca8dbd1a346b5f4d4891e270168425a818d5754430fa0c25952eff",
+    "d1970dd0cac8843999549d0791976f72e8d1e1ebf7f879925d735b4cdf0a5b8e",
+    "09b28cd35145741c0837988152fdaced5f59bb0d0be32407eaef902ec8b78206",
+    "dd41cfabfde3ef62c995dabf9534dae738f0bf1c9f9634dada38cd21932336bb",
+    "0a690e153ab6c9e1aa7f6781d3f6e0dfd10cfae2697482f694ad8de44aeee888"
+  ]
+}

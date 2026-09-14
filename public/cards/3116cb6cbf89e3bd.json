@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-14T12:32:02Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-impersonation-mismatch/0.1",
+      "status": "DISCOVERED",
+      "classification": "NOT_IN_VERIFIED_SET",
+      "code": "USDC",
+      "issuer": "rDsvn6aJG4YMQdHnuJtP9NLrFp18JYTJUf",
+      "holders": 20,
+      "supply": 85.60661907115723,
+      "first_seen_in_window": "2025-01-09T10:29:28.208Z",
+      "verified_issuer": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+      "wording": "issuer not in the archived verified set — legitimacy UNMEASURED",
+      "verified_method": "estate LOCKED_16 registry"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3116cb6cbf89e3bddba4fc03ddf9e31015d9cf52d8cd04192d313000db4aebd8",
+    "sig_ed25519": "7b8fdaa845443bab84fe35b08256e11533a682191fd782d4a013542614f85c29dbf0952db9466a84569129b34cbdd3b2efdfc8005846a3ec47ca2345a3c04b06",
+    "source_urls": [
+      "https://api.xrpscan.com/api/v1/tokens",
+      "https://xrpscan.com/token/USDC.rDsvn6aJG4YMQdHnuJtP9NLrFp18JYTJUf"
+    ],
+    "subject": "XRPL USDC issuer rDsvn6aJG4YMQdHnuJtP9NLrFp18JYTJUf not in archived verified set",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "impersonation-watch",
+      "code:USDC",
+      "mismatch"
+    ],
+    "unmeasured": [
+      "issuer_legitimacy",
+      "long_tail_issuance_below_ranking_window"
+    ]
+  },
+  "proof": [
+    "01489d7176fcc0b076ea2d85dc499403f29e9851641bb2f9ae170e7a16bf8b25",
+    "ac7dccb631f54440f9546689165978578d3937fc8f38422f95200e0868c5c04c",
+    "d54a5d216019b0ee1fc6adcaa4b125edf544d36916600228730083daff24c5cb",
+    "d5dc19aaac56e0882d42bbfe417b1a334f7642abdf68d2c573ac8edce63affda",
+    "4418b9579a88da358cd4db7c7a8f7568cc0df5c1c45ddd05768230e587c3cadd",
+    "c8952b9363cac87e906802279cb3e01f6e89eaef5fce0798e30fdf94479f81eb",
+    "357468bd0d636f8db78e2d6c13b9b1dd0c3f7a44731cba28cc7d73d24a7182ac",
+    "24dd81fbb85eb2aa2f62fdf003ae7618c4890a5716b1c1a1a47af8c3f53d1462",
+    "aee2b5342eb9fa1d6fcc3c0f9813d06e81b50285ac39e7c5d039889bbda0f83f"
+  ]
+}

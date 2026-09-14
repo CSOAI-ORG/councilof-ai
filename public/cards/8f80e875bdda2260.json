@@ -1,0 +1,81 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:58:07.494Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "wxrp:ethereum",
+      "backing_model": "custodial",
+      "wrapped": {
+        "chain": "ethereum",
+        "symbol": "wXRP",
+        "address": "0x39fBBABf11738317a448031930706cd3e612e1B9",
+        "chainId": 1,
+        "block": 25975174,
+        "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392",
+        "block_time": 1789382615
+      },
+      "canonical": {
+        "chain": "xrpl",
+        "symbol": "XRP",
+        "address": "custodian-held XRPL account (Wrapped.com); readable on XRPL, not from here",
+        "chainId": null,
+        "block": null,
+        "block_hash": null
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "XRP reserve held on the XRP Ledger by the wrapper's custodian; a future XRPL-side read can pair with this supply. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000ed88b20f9392362e24000",
+          "raw_sha256": "3b642f245c5076bd8e421ca8c70929c3376adfc6aa651f343d82234d92e54cd0",
+          "atomic": "17947559108324000000000000",
+          "normalized": "17947559.108324000000000000",
+          "decimals": 18
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "INDEXED_CUSTODIAL",
+      "state": "DISCOVERED",
+      "error": null,
+      "fetched_at": "2026-09-14T10:58:07.494Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "reserve (custodian-held off this chain; not readable here)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "8f80e875bdda2260483b8d124de31a3c13518a10666c907ebcd4ebbd12214201",
+    "sig_ed25519": "2632e041f474070dd5fac306bbb78288b44279efa70b20c0ee9fe2451a6354953b3003f37975025b05624031f13f665e854bdef678d591a77be4781a86901302",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped wXRP on ethereum vs native issuance — INDEXED_CUSTODIAL",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:custodial",
+      "state:INDEXED_CUSTODIAL"
+    ],
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ]
+  },
+  "proof": [
+    "583ba71a85615968870c327749d3cdd66bf10de45c2b1171aed2c56fa4065c04",
+    "7f82fc8df6f95d87c828a7fef9629f6e2bc6ea34c85de34e0283c123340b487a",
+    "06b43a0a7fed4788cb9f26f7662ea90033aa50555622fb520fba8f81ed0ef341",
+    "ba67e86fea75038540a21764d5c732dc73801a592b824bb559ed9584f8a4347d",
+    "ae7733df51ca8dbd1a346b5f4d4891e270168425a818d5754430fa0c25952eff",
+    "d1970dd0cac8843999549d0791976f72e8d1e1ebf7f879925d735b4cdf0a5b8e",
+    "09b28cd35145741c0837988152fdaced5f59bb0d0be32407eaef902ec8b78206",
+    "dd41cfabfde3ef62c995dabf9534dae738f0bf1c9f9634dada38cd21932336bb",
+    "0a690e153ab6c9e1aa7f6781d3f6e0dfd10cfae2697482f694ad8de44aeee888"
+  ]
+}
