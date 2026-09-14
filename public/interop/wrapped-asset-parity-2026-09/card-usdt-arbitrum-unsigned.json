@@ -2,7 +2,7 @@
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
   "subject": "wrapped USDT on arbitrum vs Arbitrum One ERC-20 gateway escrow (legacy bridged remainder only) — UNCHECKABLE_NATIVE_ISSUANCE",
-  "as_of": "2026-09-14T02:01:29.387Z",
+  "as_of": "2026-09-14T10:58:07.494Z",
   "source_urls": [
     "https://arb1.arbitrum.io/rpc",
     "https://ethereum-rpc.publicnode.com"
@@ -17,17 +17,17 @@
       "symbol": "USDT",
       "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
       "chainId": 42161,
-      "block": 504923416,
-      "block_hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
-      "block_time": 1789350332
+      "block": 505049608,
+      "block_hash": "0x1ffe7b01f0f81c5855d9f86f0ef649be25e75d21a46f18b4963fd5c2330c02df",
+      "block_time": 1789382462
     },
     "canonical": {
       "chain": "ethereum",
       "symbol": "USDT",
       "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
       "chainId": 1,
-      "block": 25972488,
-      "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+      "block": 25975174,
+      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392"
     },
     "escrow": "0xcEe284F754E854890e311e3280b767F80797180d",
     "escrow_name": "Arbitrum One ERC-20 gateway escrow (legacy bridged remainder only)",
@@ -35,10 +35,10 @@
     "reads": {
       "wrapped_total_supply": {
         "query": "totalSupply()",
-        "raw": "0x0000000000000000000000000000000000000000000000000002e3848f15d4d0",
-        "raw_sha256": "739702cf67dc24d08a41f3008b898662fc8e87ee781f6b8239f3d850d98c47af",
-        "atomic": "813108429182160",
-        "normalized": "813108429.182160",
+        "raw": "0x0000000000000000000000000000000000000000000000000002e39115c94862",
+        "raw_sha256": "8ee50c90d47d1f3a5847b2be32f3c6caa28a85518ee1bd6cb69e0f9a86698f47",
+        "atomic": "813162228697186",
+        "normalized": "813162228.697186",
         "decimals": 6
       }
     },
@@ -46,8 +46,8 @@
     "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
     "state": "PROBED",
     "error": null,
-    "fetched_at": "2026-09-14T02:01:29.387Z",
-    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "fetched_at": "2026-09-14T10:58:07.494Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
     "unmeasured": [
       "escrow_balance (natively issued; no escrow exists)"
     ]
@@ -62,6 +62,6 @@
     "escrow_balance (natively issued; no escrow exists)"
   ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "a91b3938c653e6587444b512ba4834c40e7f5acd8dd4d66ee13b9cfd9e3d5dc7",
+  "sha256": "f6bb81fbe0bb1a4c734f1bd48e227c4e0cbe8d0fca2ae0bba090a6111a324be9",
   "sig_ed25519": null
 }

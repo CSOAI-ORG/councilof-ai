@@ -1,8 +1,8 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
-  "subject": "wrapped USDT0 on optimism vs native issuance — UNMEASURED",
-  "as_of": "2026-09-14T02:01:29.387Z",
+  "subject": "wrapped USDT0 on optimism vs native issuance — UNCHECKABLE_NATIVE_ISSUANCE",
+  "as_of": "2026-09-14T10:58:07.494Z",
   "source_urls": [
     "https://mainnet.optimism.io",
     "https://ethereum-rpc.publicnode.com"
@@ -15,44 +15,53 @@
     "wrapped": {
       "chain": "optimism",
       "symbol": "USDT0",
-      "address": "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627",
+      "address": "0x01bFF41798a0BcF287b996046Ca68b395DbC1071",
       "chainId": 10,
-      "block": 156875715,
-      "block_hash": "0x4f8e07e8f3cd666968c09df04949aa7bdf34e8db61b474f70d03889695c83274",
-      "block_time": 1789350207
+      "block": 156891722,
+      "block_hash": "0xe875cd0c4cfead4cf810909336d946d1376f091af1a02efce707fd814398549b",
+      "block_time": 1789382221
     },
     "canonical": {
       "chain": "ethereum",
       "symbol": "USDT",
       "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
       "chainId": 1,
-      "block": 25972488,
-      "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+      "block": 25975174,
+      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392"
     },
     "escrow": null,
     "escrow_name": null,
-    "note": "USDT0 on Optimism via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed.",
-    "reads": {},
+    "note": "USDT0 is a LayerZero OFT: USDT is locked in one OFT Adapter on Ethereum (0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee) against the combined supply of every USDT0 chain, so no per-chain escrow exists and no per-pair parity is claimed; treated as native issuance on this chain. Supply read.",
+    "reads": {
+      "wrapped_total_supply": {
+        "query": "totalSupply()",
+        "raw": "0x00000000000000000000000000000000000000000000000000000ad885806ebd",
+        "raw_sha256": "a9849eb9ffd96e75308e80eaa9a5f63e8ef68287bb314ca8719e93e8894ce7f5",
+        "atomic": "11925069000381",
+        "normalized": "11925069.000381",
+        "decimals": 6
+      }
+    },
     "escrow_over_wrapped": null,
-    "parity_state": "UNMEASURED",
-    "state": "UNMEASURED",
-    "error": "empty eth_call result from 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627",
-    "fetched_at": "2026-09-14T02:01:29.387Z",
-    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
+    "state": "PROBED",
+    "error": null,
+    "fetched_at": "2026-09-14T10:58:07.494Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
     "unmeasured": [
-      "chain reads (rpc failed; nothing inferred)"
+      "escrow_balance (natively issued; no escrow exists)"
     ]
   },
   "tags": [
     "eater:wrapper-parity",
     "axis:distribution-integrity",
     "backing:native",
-    "state:UNMEASURED"
+    "state:UNCHECKABLE_NATIVE_ISSUANCE"
   ],
   "unmeasured": [
-    "chain reads (rpc failed; nothing inferred)"
+    "escrow_balance (natively issued; no escrow exists)"
   ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "92d8d99151c93ac9e617b13431d3e7526d41df74beeb483f26dcbc55e22b5d02",
+  "sha256": "6e269873590f7a2e93fdca6ddf94ca1f571969d2e0ad2014b8f284bb3991f9dc",
   "sig_ed25519": null
 }

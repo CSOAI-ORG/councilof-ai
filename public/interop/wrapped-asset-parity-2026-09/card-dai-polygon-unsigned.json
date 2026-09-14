@@ -2,7 +2,7 @@
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
   "subject": "wrapped DAI on polygon vs Polygon PoS bridge ERC20Predicate — ESCROW_PARITY_READ",
-  "as_of": "2026-09-14T02:01:29.387Z",
+  "as_of": "2026-09-14T10:58:07.494Z",
   "source_urls": [
     "https://polygon-bor-rpc.publicnode.com",
     "https://ethereum-rpc.publicnode.com"
@@ -17,17 +17,17 @@
       "symbol": "DAI",
       "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
       "chainId": 137,
-      "block": 93764153,
-      "block_hash": "0x0a01249b55529ca890fd6491a7e8ef762297069a29c3cfcb525affd62cd029a1",
-      "block_time": 1789351263
+      "block": 93785617,
+      "block_hash": "0x2df3d2b330902d05559ed6269a1a25e2752397cf9ec6ec76af85b6206e6b51b9",
+      "block_time": 1789383459
     },
     "canonical": {
       "chain": "ethereum",
       "symbol": "DAI",
       "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       "chainId": 1,
-      "block": 25972488,
-      "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+      "block": 25975174,
+      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392"
     },
     "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
     "escrow_name": "Polygon PoS bridge ERC20Predicate",
@@ -35,27 +35,27 @@
     "reads": {
       "wrapped_total_supply": {
         "query": "totalSupply()",
-        "raw": "0x00000000000000000000000000000000000000000195382e00e91f0e7226fa7e",
-        "raw_sha256": "43ad88b51091c22f9c1b312eb4e29763c39140cf77f06b064a85f8d7ada58619",
-        "atomic": "489880258082810723006085758",
-        "normalized": "489880258.082810723006085758",
+        "raw": "0x00000000000000000000000000000000000000000194ed719de9e1909c60f706",
+        "raw_sha256": "37dbb09b8bf887106a423487318447dead302a93d06ce32301bbb93c26c42a1a",
+        "atomic": "489527327841704566419683078",
+        "normalized": "489527327.841704566419683078",
         "decimals": 18
       },
       "escrow_balance": {
         "query": "balanceOf(0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf)",
-        "raw": "0x000000000000000000000000000000000000000001985f97d9ce7549129e774c",
-        "raw_sha256": "9f1b2d35d151fa6e5171be83a45e526f1c1df16b98b564f18931ec99b7736c37",
-        "atomic": "493693160371607157855909708",
-        "normalized": "493693160.371607157855909708",
+        "raw": "0x0000000000000000000000000000000000000000019808014c6687232f52ea19",
+        "raw_sha256": "5c5736b6eee5f3c71b098c10767511adb1a4d0e6f69a559cf843d73a3d921526",
+        "atomic": "493279537286611913845959193",
+        "normalized": "493279537.286611913845959193",
         "decimals": 18
       }
     },
-    "escrow_over_wrapped": "1.007783",
+    "escrow_over_wrapped": "1.007664",
     "parity_state": "ESCROW_PARITY_READ",
     "state": "PROBED",
     "error": null,
-    "fetched_at": "2026-09-14T02:01:29.387Z",
-    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+    "fetched_at": "2026-09-14T10:58:07.494Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
     "unmeasured": []
   },
   "tags": [
@@ -66,6 +66,6 @@
   ],
   "unmeasured": [],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "c241dcc02ae9ef5fd32afe50b989c5edfb145fe55dfa2331545be37ebd114045",
+  "sha256": "2ede7486fd7b2ace54e027a5c4bde0f2acbd94814c2bb06e5097193dd6c81512",
   "sig_ed25519": null
 }

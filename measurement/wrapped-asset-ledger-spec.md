@@ -49,3 +49,31 @@ signed card on payment); staged atoms sit in `public/interop/wrapped-asset-parit
 A pair joins the roster only with: the wrapped contract, the canonical contract, the named escrow
 (or a `native` note explaining why none exists), and a public source for the escrow address. No
 pair is added because it is popular; it is added because it can be read.
+
+## 2026-09-14 additions — issuer profiles, DOCUMENTARY rows, corrections
+
+### Roster changes
+- Added `cbxrp:base`, `fxrp:flare` (new keyless chain `flare`, chainId 14) and `jpmd:base`, all `custodial` → `INDEXED_CUSTODIAL`.
+  Each contract was read on-chain on the day (name, symbol, decimals, totalSupply). FXRP's address was resolved through
+  Flare's own contract registry (`AssetManagerFXRP` → `fAsset()`); JPMD's address is the one J.P. Morgan prints on its
+  Kinexys JPM Coin page.
+- Corrected `usdt0:optimism` and `usdt0:arbitrum`: both named `0x2E1dBfbf…`, which has no token on either chain (empty
+  `eth_call`), so both rows were UNMEASURED for a wrong address, not a dead RPC. Addresses now come from the USDT0
+  deployments page. USDT0 locks USDT in one OFT Adapter on Ethereum for every chain at once, so no per-pair ratio exists;
+  a cross-chain aggregate read is a separate, unbuilt reader.
+- `stageAtoms` carried a pasted roster literal in its result array, so `--stage` reported five junk rows. Fixed.
+
+### `records[].profile` — issuer-documented context
+What the issuer publishes about the wrapper (issuer, custodian, chains, backing-claim method as documented), each claim
+with its source URL and retrieval date. A profile is not a read and not a measurement; every axis in it is `UNMEASURED`.
+Where the issuer's page could not be fetched the claim says so and quotes nothing. `null` means no profile has been compiled.
+
+### `documentary` — class DOCUMENTARY
+Institutional token programmes that cannot be read from a public chain (private or permissioned ledgers, pilots,
+research prototypes): Kinexys, Citi Token Services, HSBC Orion, Swift's shared-ledger pilot (attributed to a dated report
+because swift.com refused fetches), UK Finance's GBTD pilot, BIS Project Agorá. Status is *as documented* on the retrieval
+date, not as observed. Every axis is `UNMEASURED`. These programmes belong to their operators; this ledger has no role in them.
+
+### Premise flag — two tokens called wXRP
+`wxrp:ethereum` (`0x39fBBABf…`, "Wrapped XRP", 18 decimals) is not Hex Trust's wXRP (LayerZero OFT, announced
+2025-12-12). No primary source printed a Hex Trust Ethereum address on 2026-09-14, so that token is not on the roster.
