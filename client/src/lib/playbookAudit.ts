@@ -43,7 +43,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
   },
   {
         id: "empty-names",
-        claim: "The seven empty slots are reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-economy-index, human-labour-index, humanoid-labour-index.",
+        claim: "Historical axis names (once empty placeholders): reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-economy-index, human-labour-index, humanoid-labour-index. LIVE board is 22·22·0 — not seven empty.",
         verdict: "stale",
         live: "GET /api/gspc totals 22·22·0 — those financial/domain axes are MEASURED (unsigned fact runs still count). Empty-as-finding only when unmeasured_axes>0. A scrape still does not write MEASURED.",
   },
