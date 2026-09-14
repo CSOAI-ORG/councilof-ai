@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:54:12Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "USDC",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_supply",
+          "from": 5229779.758900763,
+          "to": 5229779.758900767
+        }
+      ],
+      "ledger_index": 106978359,
+      "observed_at": "2026-09-14T10:54:12Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "42183693a13167829fc6ee393f87001c0ec559a17d6e57b536664e73ea5c8a86",
+    "sig_ed25519": "88bf63087a1810c39b2afea525f972cb0fc096dfe1a51b1a6ad85080f420b902236023de805d14d6c123b383ffb0e846144b5e8103ec3b17b324861218a78007",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: USDC changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:USDC"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "f060959fdf0651f983730e7e390e95500234d8c5ead22c357068e7f19207d348",
+    "2b7270c9a636c6827b9b6bbdeccab593736ca86a9a50c7ebe71cacc8f81d6d00",
+    "06e035429d0492a28e50259ac8acd72b8324320e79bcf0b8cd07adeb330ab877",
+    "c52edd2528229d30dc8843cd8e8b5f71c9838a14a4eb747c4131f4f478c5d6bd",
+    "f9506fc352a27d1b662349b85a2fa715796285e4e9b55cc5c35ad96b22b0dd21",
+    "d2be6a36d8a3d4cdebc5e216d036f939be39aa809b9ca49856af974cf154c3d8",
+    "199a7c01b15ac599ae38fb0f9417fdf25654f299ef817906ff5c8c5b88c4cc5b",
+    "6db8ea4d785eb778ac7f08a4b54ed9a693de74995f89d7d217f3d92dc2b4b536",
+    "1e784e84dbf3232a10410cf11a62f0cfc64a3b53b21149404618005a568b7406"
+  ]
+}
