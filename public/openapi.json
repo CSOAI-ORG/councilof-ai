@@ -865,6 +865,7 @@
     },
     "/api/commissions": {
       "get": {
+        "description": "GET /api/commissions \u2014 the open commission queue, read from the same store that holds the settlements (REVENUE_KV, `ras:<receipt sha>` records written by /api/request-attestation).",
         "operationId": "get__api_commissions",
         "responses": {
           "200": {
@@ -875,7 +876,7 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/commissions \u2014 the open commission queue, read from the same store that holds the\n * settlements (REVENUE_KV, `ras:<receipt sha>` records written by /api/request-attestation).\n *\n * This is "
+        "summary": "GET /api/commissions \u2014 the open commission queue, read from the same store that holds the settlements (REVENUE_KV, `ras:<receipt sha>` records written by /api/request-attestation)."
       }
     },
     "/api/comparison": {
