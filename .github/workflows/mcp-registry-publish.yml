@@ -1,8 +1,9 @@
-name: Publish MCP Registry (v1.4.2)
+name: Publish MCP Registry
 
 # Publishes the gspc MCP server to the official MCP Registry.
-# Auth: GitHub Actions OIDC -> exchange for Registry JWT -> POST /v0/publish.
-# No long-lived NPM_TOKEN or secrets - uses GitHub's OIDC trust.
+# Auth: GitHub token -> exchange for Registry JWT -> POST /v0/publish.
+# The OIDC approach returns null (repo not registered as MCP trusted publisher).
+# The GitHub AT approach works: exchange GitHub PAT for registry JWT.
 "on":
   workflow_dispatch:
     inputs:
@@ -13,14 +14,12 @@ name: Publish MCP Registry (v1.4.2)
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   publish:
     if: ${{ github.ref == 'refs/heads/master' }}
     permissions:
       contents: read
-      id-token: write
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -34,22 +33,17 @@ jobs:
           test "$actual" = "${{ inputs.version }}"
           echo "server.json version: $actual"
 
-      - name: Get GitHub OIDC id_token
-        id: oidc
-        run: |
-          ID_TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=registry.modelcontextprotocol.io" | jq -r .value)
-          echo "ID_TOKEN_LENGTH=${#ID_TOKEN}"
-          echo "id_token=$ID_TOKEN" >> "$GITHUB_OUTPUT"
-
-      - name: Exchange OIDC for Registry JWT
+      - name: Exchange GitHub token for Registry JWT
         id: jwt
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          REGISTRY_JWT=$(curl -sS -X POST \
-            https://registry.modelcontextprotocol.io/v0/auth/github-oidc \
+          set -euo pipefail
+          RESP=$(curl -sS -X POST \
+            https://registry.modelcontextprotocol.io/v0/auth/github-at \
             -H "Content-Type: application/json" \
-            -d "$(jq -nc --arg t "${{ steps.oidc.outputs.id_token }}" '{oidc_token: $t}')" \
-            | jq -r '.registry_token')
+            -d "{\"github_token\": \"$GH_TOKEN\"}")
+          REGISTRY_JWT=$(echo "$RESP" | jq -r '.registry_token')
           echo "REGISTRY_JWT_LENGTH=${#REGISTRY_JWT}"
           echo "registry_token=$REGISTRY_JWT" >> "$GITHUB_OUTPUT"
 
