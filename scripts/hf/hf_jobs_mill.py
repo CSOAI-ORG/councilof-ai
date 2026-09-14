@@ -113,6 +113,7 @@ def main() -> int:
     ap.add_argument("--shards", type=int, default=1)
     ap.add_argument("--flavor", default="cpu-basic")
     ap.add_argument("--timeout", default="6h", help="no 45-minute ceiling here; that is the point")
+    ap.add_argument("--namespace", default="", help="HF namespace to run and bill the job under (e.g. csoai — the team plan); default = the token's user")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -133,12 +134,14 @@ def main() -> int:
         return 2
 
     cmd = ["hf", "jobs", "run", "--detach", "--flavor", args.flavor, "--timeout", args.timeout]
+    if args.namespace:
+        cmd += ["--namespace", args.namespace]
     for k in present:
         cmd += ["--secrets", k]  # value taken from THIS environment, never printed
     cmd += ["python:3.12", "bash", "-c", job_script(args.axis, args.grade, args.shard, args.shards, args.bank_dataset)]
 
     print(f"axis={args.axis} grade={args.grade} shard={args.shard}/{args.shards} "
-          f"flavor={args.flavor} timeout={args.timeout}")
+          f"flavor={args.flavor} timeout={args.timeout} namespace={args.namespace or '(token user)'}")
     print(f"secrets forwarded (names only): {', '.join(present)}")
     if args.dry_run:
         print(f"DRY RUN — would submit a job with a {len(cmd[-1])}-byte script")
