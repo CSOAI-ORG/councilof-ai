@@ -108,7 +108,7 @@ const MODULES = [
     name: "Legacy on-ramp",
     href: "/cobolbridge",
     tag: "In build",
-    what: "COBOL lineage into signed evidence — in build. Apex 522. Pathway UNMEASURED until a signed card exists.",
+    what: "COBOL lineage into signed evidence — apex LIVE 200; mill UNMEASURED until a signed card exists.",
   },
   {
     name: "Council Academy",
