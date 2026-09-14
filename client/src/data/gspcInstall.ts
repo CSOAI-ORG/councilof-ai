@@ -371,14 +371,17 @@ export interface RegistryRow {
   note: string;
 }
 
+// UI mirror of the evidence ledgers in public/interop/{mcp,a2a}-directories.json plus
+// merged upstream PR evidence. A live row must link to its public evidence, never back
+// to a submission form: that distinction prevents duplicate outward submissions.
 export const REGISTRIES: RegistryRow[] = [
-  { name: "Official MCP Registry", status: "listed", permissionless: true, where: "io.github.CSOAI-ORG/gspc", note: "Live, v1.1.1 → https://councilof.ai/mcp. Downstream aggregators ingest from here." },
-  { name: "A2A agent directories", status: "staged", permissionless: true, where: "/.well-known/agent-card.json", note: "Our A2A agent card is live; registration by well-known URI." },
-  { name: "Smithery", status: "staged", permissionless: true, where: "smithery.ai/new", note: "Submit the HTTPS URL; auto-scans tools. Rich tool descriptions raise placement." },
-  { name: "mcp.so", status: "staged", permissionless: true, where: "mcp.so/submit", note: "Submit the public repo; saving auto-publishes." },
-  { name: "awesome-mcp-servers", status: "staged", permissionless: true, where: "punkpeye/awesome-mcp-servers", note: "One README line, alphabetical; 🤖🤖🤖 in the PR title fast-tracks the merge." },
-  { name: "Glama", status: "staged", permissionless: true, where: "https://glama.ai/mcp/servers?query=csoai", note: "Flagship discovery is unstable: direct-page probes conflict and the public CSOAI search did not surface it on 2026-09-04. Other CSOAI servers are listed." },
-  { name: "PulseMCP", status: "staged", permissionless: true, where: "pulsemcp.com", note: "Ingests the official registry automatically; a submit form also exists." },
+  { name: "Official MCP Registry", status: "listed", permissionless: true, where: "io.github.CSOAI-ORG/gspc", note: "Live registry entry pointing to https://councilof.ai/mcp. Downstream aggregators ingest from here." },
+  { name: "A2A agent directories", status: "listed", permissionless: true, where: "https://a2aregistry.org", note: "Council of AI — Measurement Agent is registered and the public record reports healthy and conformant." },
+  { name: "Smithery", status: "listed", permissionless: true, where: "https://smithery.ai/servers/csoai/gspc-mcp", note: "The current csoai/gspc-mcp entry is live. A stale csoai/gspc duplicate should be corrected or retired; do not submit another entry." },
+  { name: "mcp.so", status: "listed", permissionless: true, where: "https://mcp.so/servers/csoai-gspc-measurement", note: "The public flagship page is live, Verified and Featured. Listing presence does not prove tool health or use." },
+  { name: "awesome-mcp-servers", status: "listed", permissionless: true, where: "https://github.com/punkpeye/awesome-mcp-servers/pull/13360", note: "PR #13360 merged the entry. Later open PRs that repeat it are duplicates, not new distribution." },
+  { name: "Glama", status: "listed", permissionless: true, where: "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc", note: "The flagship connector is live and exposes the served tools. Directory ownership remains unverified until the account-issued claim token is published." },
+  { name: "PulseMCP", status: "listed", permissionless: true, where: "https://github.com/CSOAI-ORG/councilof-ai/pull/1452", note: "Merged evidence records the listing after sitemap verification. Do not submit it again." },
   { name: "cursor.directory", status: "staged", permissionless: false, where: "cursor.directory/plugins/new", note: "Reviewed listing; auto-detects via a repo .mcp.json." },
   { name: "Docker MCP Catalog", status: "staged", permissionless: false, where: "docker/mcp-registry", note: "PR (server.yaml + tools.json + readme.md) with Docker-team review." },
 ];

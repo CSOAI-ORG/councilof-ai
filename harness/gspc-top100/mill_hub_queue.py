@@ -350,10 +350,45 @@ def pick_emptiest(
     return empty[:n]
 
 
+# A grading MODE, not an answer. A bank whose `expected` column says this is graded by
+# must_inc keyword containment (see check_bank_discriminates.py); printing it as the
+# answer menu hands the model the answer key.
+GRADING_MODE_SENTINELS = frozenset({"KEYWORD_MATCH"})
+
+
+def exact_label_menu(labels: list[str]) -> list[str]:
+    """The answer menu an exact-label prompt may offer, or ValueError.
+
+    C-2026-0914-01. Every row of csoai/gspc-swarm expects KEYWORD_MATCH, so the menu
+    built from its `expected` column had ONE option and the prompt read "Reply with
+    EXACTLY ONE token from: KEYWORD_MATCH". Every model that followed the format scored
+    1.0, and 26 cards were signed MEASURED. A prompt that cannot be answered wrongly
+    measures format compliance, not the axis, so the menu is refused, never graded.
+
+    Options are counted after strip().upper(), the normalisation read_label() grades
+    with, so "yes" and "YES " are one option. The returned menu keeps the original
+    spelling, so every sound prompt is byte-identical to the one admitted cards recorded.
+    The old fallback (no labels -> the governance menu) is gone too: it put another
+    axis's answers in front of the model.
+    """
+    raw = sorted({str(x) for x in labels if x})
+    options = sorted({x.strip().upper() for x in raw if x.strip()})
+    sentinels = [x for x in options if x in GRADING_MODE_SENTINELS]
+    if sentinels:
+        raise ValueError(
+            f"one-option menu refused: {', '.join(sentinels)} is a grading mode, not an answer label "
+            f"({len(options)} distinct expected value(s) in the bank)"
+        )
+    if len(options) < 2:
+        raise ValueError(
+            f"one-option menu refused: {len(options)} distinct exact label(s) {options}; "
+            "a prompt that cannot be answered wrongly measures nothing"
+        )
+    return raw
+
+
 def axis_prompt(axis: str, item: str, labels: list[str]) -> str:
-    labs = " | ".join(sorted({str(x) for x in labels if x}))
-    if not labs:
-        labs = "PROHIBITED | HIGH_RISK | LIMITED_RISK | MINIMAL_RISK"
+    labs = " | ".join(exact_label_menu(labels))
     return (
         f"You are scoring one frozen {axis} item.\n"
         f"Reply with EXACTLY ONE token from: {labs}\n\n"
@@ -1045,6 +1080,17 @@ def mill(
         bank_name = f"bank-{ax[:8]}-{bank_digest[:12]}.jsonl"
         (out_dir / bank_name).write_bytes(bank_raw)
     labels = [exp for _, exp in items]
+    if items:
+        try:
+            exact_label_menu(labels)
+        except ValueError as refused:
+            # C-2026-0914-01. Fail closed BEFORE one item prompt is spent: a bank that
+            # cannot be graded by exact label yields no card -- not a card reading 1.0.
+            for r in to_grade:
+                mid = str(r.get("id") or "")
+                if not dry and live.get(mid, False):
+                    skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE {refused}"})
+            items = []
     for r in to_grade:
         mid = str(r.get("id") or "")
         if dry:

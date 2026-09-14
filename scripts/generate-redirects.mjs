@@ -79,6 +79,13 @@ const EXISTING = [
   // and it emits one file at public/publisher-health.json. A second copy under
   // /signed/ would drift. Redirect the signed path to the one writer.
   "/signed/publisher-health.json  /publisher-health.json  308",
+  // Guessed-URL aliases for the signed card index (2026-09-14): GET /card_index.json and
+  // GET /cards/card_index.json were 404 while the one writer's output is served at
+  // /signed/card_index.json. Redirected, never copied: a second copy of signed bytes drifts.
+  // /api/card_index is owned by the functions/api catch-all, so it is answered by
+  // functions/api/card_index.ts instead of a rule here.
+  "/card_index.json        /signed/card_index.json  301",
+  "/cards/card_index.json  /signed/card_index.json  301",
   // Revenue densify leftover 2026-09-07: GET /public/openapi.json 404. The
   // OpenAPI document lives at public/openapi.json in git and is served at
   // /openapi.json on Pages (public/ is the site root). /public/openapi.json

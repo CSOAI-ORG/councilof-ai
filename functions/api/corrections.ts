@@ -46,6 +46,21 @@ export const LEDGER = {
       status: "CORRECTED IN SOURCE AND RECORDED; VERIFY THE CURRENT LIVE ENDPOINT",
     },
     {
+      id: "C-2026-0914-01",
+      date: "2026-09-14",
+      // Latency fields carry only what is evidenced: introduction = the merge of #2321,
+      // the first PR that landed these cards. The observation time was not logged and
+      // the fix is not merged, so neither is stated.
+      error_introduced_at: "2026-09-14T08:29Z",
+      what_was_wrong:
+        "44 signed third-party Hub measurement cards on the swarm axis (#2321, merged 2026-09-14T08:29Z, and #2330, 09:41Z; runs gha-34818995409 and gha-34824895140) were graded by a prompt that could not be answered wrongly. The frozen bank csoai/gspc-swarm (revision e8a4ec1e, sha256 ab318986…) is keyword-graded: all 37 rows expect KEYWORD_MATCH and carry must_inc keywords. The Hub mill builds its exact-label answer menu from the bank's expected column, so every item prompt read \"Reply with EXACTLY ONE token from: KEYWORD_MATCH\" and every model that followed the format scored 1.0. 26 of the cards read MEASURED at n=30 with accuracy 1, and /api/hub-cards counted all 26 as MEASURED cells. Every check the cards passed was real — signature, content id, admission receipt, per-item evidence that recomputes byte for byte — and none asked whether the menu offered a wrong answer. Pod (Ollama) swarm cards bind the same bank bytes under a different instrument and read 0.027–0.081, so the two populations were never comparable.",
+      how_caught:
+        "Reading the published item evidence behind one card (signed-swarm-0711716149e0.json, deepseek-ai/DeepSeek-V4-Pro, items-swarm-e91bd4f805de.jsonl): all 30 rows carried the same one-option menu and expected its only option. Contrast under the same instrument hash (86216fbb…): the care bank offers 0 | 1 with mixed expected labels, and Qwen3-14B read 4/30. Every MEASURED swarm row in /interop/hub-cards-index.json read accuracy 1.",
+      fix:
+        "Signed bytes are not edited. The 44 cards are recorded in /interop/mill-cards-signed/WITHDRAWN.jsonl — withdrawn, not superseded, because no sound card exists to replace them — derived from the bound bank bytes by scripts/withdraw_one_option_cards.py, which fails the PR gate if any signed card on a one-option bank is not withdrawn. /api/hub-cards drops withdrawn cards from cells and counts, lists them under withdrawn_cells with this id and their status as published, and withholds totals if the withdrawal ledger is unreadable. The deployed hub-cards index excludes them, and the census flip marks them WITHDRAWN, so its next run retires their queue cells and leaves them out of the rebuilt Hub indexes. The instrument now fails closed: an exact-label menu with fewer than two distinct labels, or one naming a grading mode, is refused; the mill skips such a bank as UNCHECKABLE before spending an item prompt, and the offline admission verifier refuses such a card. Two-label prompts are byte-identical, so admitted care, safety and governance cards still verify. The Hub swarm cell is UNMEASURED until a keyword grader that passes harness/gspc-top100/check_bank_discriminates.py is wired into the Hub mill.",
+      status: "WITHDRAWN IN SOURCE; VERIFY WITH python3 scripts/withdraw_one_option_cards.py",
+    },
+    {
       id: "C-2026-0913-01",
       date: "2026-09-13",
       // First entry carrying the latency fields proposed by scripts/corrections_latency.py.
