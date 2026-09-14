@@ -54,15 +54,32 @@
       "OTS upgrade PRs must resync the witness sidecar in the same PR via scripts/witness_public_root.py (not witness-root.py \u2014 its output predates the gate contract).",
       "The root-witness release gate and stablecoin readiness gate derive truth from proof bytes; hardcoded status strings rot within hours.",
       "Pod rootfs is ephemeral: after any pod restart run bash /workspace/pod-bootstrap.sh (on the persistent volume)."
-    ]
+    ],
+    "2026-09-14T13:00Z": {
+      "as_of": "2026-09-14T13:00:00Z",
+      "auditor": "TUI 1 release controller",
+      "checks_passed": [
+        "10/10 x402 doors return 402",
+        "wrapper/changes returns 402 live",
+        "distinct_payers_by_door returns null live",
+        "audit table on master dated today",
+        "PR #2315 merged",
+        "PR #2336 created"
+      ],
+      "cost": "$0"
+    }
   },
   "lanes": {
     "TUI1": {
       "objective": "release controller, truth ledger, roots and anchors",
       "claims": [
-        "docs/hermes/EXECUTION-LEDGER.json",
-        "public/interop/*.ots (upgrade passes)",
-        "root.json / root-witness facts"
+        "scripts/interop/x402-bazaar-audit.py (10/10 doors return 402)",
+        "functions/api/wrapper/changes.ts (live 402, PR #2315 merged)",
+        "functions/api/revenue.ts (distinct_payers_by_door live, null state)",
+        "client/src/pages/X402Leaderboard.tsx (PR #2336)",
+        "docs/interop/door-listing-parity-2026-09-14.md (on master, fae15fd96)",
+        "docs/interop/yield-payers-by-door-verification-2026-09-14.md (PR #2317)",
+        "docs/interop/x402-leaderboard/latest.json (live data)"
       ],
       "status": "ACTIVE \u2014 257-leaf confirmed root live; later 257-leaf candidate remains Bitcoin-pending and must not replace it",
       "card_root": {
