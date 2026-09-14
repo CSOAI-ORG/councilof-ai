@@ -40,6 +40,12 @@ def select_queue(payload: dict, axis: str) -> list[str]:
         if not isinstance(model, str) or not model.strip() or not _valid_id(model.strip()):
             # null/blank model ⇒ not millable even if status says QUEUED
             continue
+        if not hub_routable(record, model):
+            # Ollama tags (name:tag) belong to the RunPod KEEP worker (runpod_commission_dispatch),
+            # not the Hub mill: the mill's probe bypass for priority ids spent the whole grade
+            # budget of controlled run 34810632210 on clan-csoai-plain:latest (UNCHECKABLE on
+            # every Hub provider). Payment is still honoured — on the rail that can serve it.
+            continue
         requested_axis = record.get("axis") or record.get("bank")
         if requested_axis is not None and (
             not isinstance(requested_axis, str) or not requested_axis.strip()
@@ -48,6 +54,17 @@ def select_queue(payload: dict, axis: str) -> list[str]:
         if requested_axis is None or requested_axis == axis:
             targets.add(model.strip())
     return sorted(targets)
+
+
+def hub_routable(record: dict, model: str) -> bool:
+    """True only for subjects the Hub mill can grade: typed hub_model, or an untyped org/name slug.
+    ollama_model (name:tag) and anything else typed non-hub are for the RunPod worker."""
+    kind = record.get("subject_kind")
+    if kind == "hub_model":
+        return True
+    if kind is not None:
+        return False
+    return "/" in model and ":" not in model
 
 
 def select_commissions(payload: dict, axis: str) -> list[str]:
@@ -72,6 +89,8 @@ def select_commissions(payload: dict, axis: str) -> list[str]:
         model = record.get("model")
         mill_id = None
         if isinstance(model, str) and model.strip() and _valid_id(model.strip()):
+            if not hub_routable(record, model.strip()):
+                continue
             mill_id = model.strip()
         elif isinstance(subject, str) and subject.strip() and _valid_id(subject.strip()):
             if _SKU_UNFULFILLABLE.search(subject.strip()):
