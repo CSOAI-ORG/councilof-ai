@@ -1,5 +1,5 @@
 /**
- * Home — living board first, then the Hub record, then the estate.
+ * Home — explore measurements, see changes, verify evidence, then access feeds.
  * No demo video window in section one. No iframe of a Space.
  * Verify is free. We measure; we do not sell a rank.
  */
@@ -47,9 +47,9 @@ export default function HomeVerify() {
   const [axis, setAxis] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = "Council of AI — check an AI claim, read the GSPC board";
+    document.title = "Council of AI — explore measurements and verify evidence";
     setMetaDescription(
-      "Paste a signed card or read the current GSPC board. Verification is free. Empty cells stay empty. Measurement is a scoped engagement; a rank is never sold.",
+      "Explore the current GSPC measurements, see the published change record, verify signed evidence, and access the supported public feeds.",
     );
   }, []);
 
@@ -61,24 +61,23 @@ export default function HomeVerify() {
       <main className="mx-auto max-w-6xl px-4 py-16 sm:py-24" style={{ paddingBottom: "calc(6rem + var(--cookie-banner-h, 0px))" }}>
         <section aria-labelledby="os-h1">
           <h1 id="os-h1" className="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
-            Check a claim. Request a measurement.
+            Explore measurements. See what changed.
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
+            Start with the live board, then follow the change record and verify the signed evidence.
             Empty means not measured. Not a certificate. Verification is free, no account.
-            Measurement is metered; verify stays free.
           </p>
-          <p className="mt-4 max-w-2xl text-sm text-slate-600">
-            Building a router or agent? <a className="font-semibold text-emerald-800 underline underline-offset-4" href="/route-receipts">Create a route receipt from an OpenTelemetry trace</a>.
-            {" "}Start with the free schema and example. Conversion does not sign or publish your receipt.
-          </p>
-          {/* Access surfaces — the rail is reachable from every common agent + browser surface; the quickstart walks an agent from the manifest to a verified paid response. */}
-          <div className="mt-5 flex flex-wrap gap-2 max-w-3xl">
-            <a className="rounded-lg border border-emerald-700 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-900 hover:border-emerald-900" href="/quickstart">Agent quickstart · discover → 402 → verify</a>
-            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/mcp">MCP · POST /mcp</a>
-            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://github.com/CSOAI-ORG/councilof-ai/tree/master/extensions/chrome-gspc-verify" target="_blank" rel="noreferrer">Chrome extension source</a>
-            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/tools">Grok plugin</a>
-            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/what-is-new.html">Hermes skill</a>
-            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://councilof.ai/api/gspc" target="_blank" rel="noreferrer">REST + curl</a>
+          <nav aria-label="Start with published evidence" className="mt-6 grid max-w-4xl gap-3 sm:grid-cols-2 lg:grid-cols-4" data-testid="supply-led-entry">
+            <a className="rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-800" href="#measurements">1 · Explore measurements</a>
+            <Link className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50" href="/press">2 · See what changed</Link>
+            <Link className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50" href="/gspc-verify" data-testid="home-btn-verify">3 · Verify evidence</Link>
+            <Link className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50" href="/quickstart">4 · Access supported feeds</Link>
+          </nav>
+          <div className="mt-4 flex max-w-3xl flex-wrap gap-x-4 gap-y-2 text-sm text-slate-600">
+            <Link href="/dashboard?tab=home" className="font-semibold text-emerald-800 underline underline-offset-4">Open Council OS</Link>
+            <Link href="/assess" data-testid="home-btn-assess" className="font-semibold text-emerald-800 underline underline-offset-4">Request a scoped measurement</Link>
+            <a className="font-semibold text-emerald-800 underline underline-offset-4" href="/route-receipts">Create a route receipt from an OpenTelemetry trace</a>
+            <span>These commissioned outputs come after the public measurement and verification path.</span>
           </div>
           <HomeUnderstand
             className="mt-6 max-w-2xl"
@@ -100,33 +99,11 @@ export default function HomeVerify() {
             We measure AI against frozen tests, sign the card, and leave empty cells empty.
             Live board is GET /api/gspc — not a remembered count. Verify at /gspc-verify. Plugin at /plugin.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3" data-testid="home-cta-fold">
-            <Link
-              href="/gspc-verify"
-              data-testid="home-btn-verify"
-              className="inline-flex rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
-            >
-              Verify a card
-            </Link>
-            <Link
-              href="/assess"
-              data-testid="home-btn-assess"
-              className="inline-flex rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50"
-            >
-              Get measured
-            </Link>
-            <Link
-              href="/dashboard?tab=home"
-              className="inline-flex rounded-xl border border-emerald-700 bg-emerald-50 px-5 py-3 text-sm font-semibold text-emerald-900 hover:bg-emerald-100"
-            >
-              Open Council OS
-            </Link>
-          </div>
         </section>
 
         {/* The board table: every row, every word, every number off GET /api/gspc at render
             time; the models block under it lists only the leaders the board publishes. */}
-        <div className="mt-20 sm:mt-24">
+        <div id="measurements" className="mt-20 scroll-mt-24 sm:mt-24">
           <HomeGspcTable heading="The living board" highlight={axis} onSelect={setAxis} />
         </div>
 

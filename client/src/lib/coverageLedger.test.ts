@@ -122,7 +122,9 @@ describe("master GSPC coverage ledger", () => {
   it("derives MCP row from server_info", () => {
     const mcp = buildCoverageLedger(input).find((row) => row.id === "mcp")!;
     expect(mcp.indexed.value).toBe(12);
-    expect(mcp.measured.value).toBe(12);
+    expect(mcp.measured.value).toBeNull();
+    expect(mcp.measured.field).toMatch(/implemented tool count is not a measurement/);
+    expect(mcp.measured.unavailable).toBeTruthy();
     expect(mcp.paid.value).toBe(1);
     expect(mcp.writesBoard).toBe(false);
   });
@@ -130,7 +132,9 @@ describe("master GSPC coverage ledger", () => {
   it("derives A2A row from protocol version", () => {
     const a2a = buildCoverageLedger(input).find((row) => row.id === "a2a")!;
     expect(a2a.indexed.value).toBe(7);
-    expect(a2a.measured.value).toBe(7);
+    expect(a2a.measured.value).toBeNull();
+    expect(a2a.measured.field).toMatch(/implemented skill count is not a measurement/);
+    expect(a2a.measured.unavailable).toBeTruthy();
     expect(a2a.signed.value).toBeNull();
     expect(a2a.writesBoard).toBe(false);
   });
@@ -138,7 +142,9 @@ describe("master GSPC coverage ledger", () => {
   it("derives ERC-8004 row from registry_totals", () => {
     const erc = buildCoverageLedger(input).find((row) => row.id === "erc8004")!;
     expect(erc.indexed.value).toBe(803294);
-    expect(erc.measured.value).toBe(803294);
+    expect(erc.measured.value).toBeNull();
+    expect(erc.measured.field).toMatch(/indexer census is not a measurement/);
+    expect(erc.measured.unavailable).toBeTruthy();
     expect(erc.signed.value).toBeNull();
   });
 
