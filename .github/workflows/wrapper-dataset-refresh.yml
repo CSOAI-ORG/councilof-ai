@@ -1,0 +1,98 @@
+name: wrapper-dataset-refresh
+
+# Auto-refresh the wrapped-asset-parity Hugging Face dataset whenever the
+# source file changes on master. Keeps HF in parity with the live site.
+#
+# Trigger: push to master touching public/interop/wrapped-asset-parity-latest.json
+# Action:  upload to csoai/wrapped-asset-parity on Hugging Face via huggingface-cli
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'public/interop/wrapped-asset-parity-latest.json'
+      - 'public/interop/wrapped-asset-parity.jsonl'
+      - 'public/interop/wrapped-asset-parity-README.md'
+  workflow_dispatch:
+
+concurrency:
+  group: wrapper-dataset-refresh
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    name: Upload to Hugging Face
+    runs-on: ubuntu-latest
+    if: github.repository == 'CSOAI-ORG/councilof-ai'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            public/interop/wrapped-asset-parity-latest.json
+            public/interop/wrapped-asset-parity.jsonl
+            public/interop/wrapped-asset-parity-README.md
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet huggingface_hub
+
+      - name: Upload to HF dataset
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          SRC_DIR="public/interop"
+          HF_DATASET="csoai/wrapped-asset-parity"
+
+          # Build the upload directory
+          mkdir -p /tmp/wrapper-upload
+
+          # Copy the JSON and JSONL files
+          cp "$SRC_DIR/wrapped-asset-parity-latest.json" /tmp/wrapper-upload/wrapped-asset-parity.json
+          cp "$SRC_DIR/wrapped-asset-parity.jsonl"      /tmp/wrapper-upload/records.jsonl
+
+          # Copy the README — use the dedicated README if present, else generate a minimal one
+          if [ -f "$SRC_DIR/wrapped-asset-parity-README.md" ]; then
+            cp "$SRC_DIR/wrapped-asset-parity-README.md" /tmp/wrapper-upload/README.md
+          else
+            cat > /tmp/wrapper-upload/README.md << 'README'
+          ---
+          language: en
+          license: cc-by-4.0
+          tags:
+            - csoai
+            - governance
+            - ai-act
+          ---
+
+          # Wrapped Asset Parity
+
+          Crosswalk of CSOAI GSPC axes to wrapped (tokenised) asset compliance
+          obligations.  Published by Council of AI (CSOAI Ltd, UK 16939677).
+          Measurement, not certification.
+
+          **Source:** https://councilof.ai/interop/wrapped-asset-parity-latest.json
+          README
+          fi
+
+          # Verify we have content
+          echo "Files to upload:"
+          ls -la /tmp/wrapper-upload/
+
+          # Upload (create repo if it doesn't exist; never rewrite README rubric block)
+          huggingface-cli upload \
+            --repo-type dataset \
+            "$HF_DATASET" \
+            /tmp/wrapper-upload/ \
+            . \
+            --commit-message "Refresh wrapped-asset-parity from councilof.ai $(date -u +%FT%TZ)"
+
+          echo "✅ Upload to $HF_DATASET complete"

@@ -82,8 +82,10 @@ def kaggle_behind(hf: dict[str, bytes], kaggle: dict[str, bytes]) -> bool:
     return bool(h and k and k < h)
 
 
-def verify(*, require_live: bool = True, kaggle_wait_seconds: int = 0, poll_seconds: int = 30, sleep=None) -> dict:
+def verify(*, require_live: bool = True, kaggle_wait_seconds: int = 0,
+           skip_kaggle_if_stale: bool = False, poll_seconds: int = 30, sleep=None) -> dict:
     import time
+    import sys as _sys
     sleep = sleep or time.sleep
     hf, kaggle = read_hf(), read_kaggle()
     waited = 0
@@ -91,23 +93,45 @@ def verify(*, require_live: bool = True, kaggle_wait_seconds: int = 0, poll_seco
         sleep(poll_seconds)
         waited += poll_seconds
         kaggle = read_kaggle()
-    hf_tuple, kaggle_tuple = validate("Hugging Face", hf), validate("Kaggle", kaggle)
-    mismatches = [name for name in FILES if hf[name] != kaggle[name]]
-    if mismatches:
-        lag = " (Kaggle's archive is still behind after the bounded wait)" if kaggle_behind(hf, kaggle) else ""
-        raise ValueError(f"snapshot parity failed; byte mismatches: {mismatches}{lag}")
-    if hf_tuple != kaggle_tuple:
-        raise ValueError("snapshot parity failed; root tuples disagree")
+
+    hf_tuple = validate("Hugging Face", hf)
+    kaggle_still_behind = kaggle_behind(hf, kaggle)
+
+    if kaggle_still_behind and skip_kaggle_if_stale:
+        # Kaggle's public download archive is still serving a snapshot older than HF's.
+        # This is a known Kaggle CDN caching behaviour (observed lag >30 min).
+        # Verify HF self-consistency only; log the lag as a warning.
+        kaggle_as_of = json.loads(kaggle["SNAPSHOT.json"]).get("as_of", "?")
+        hf_as_of = json.loads(hf["SNAPSHOT.json"]).get("as_of", "?")
+        print(f"WARNING: Kaggle archive is behind HF after {kaggle_wait_seconds}s wait "
+              f"(Kaggle={kaggle_as_of}, HF={hf_as_of}). "
+              f"Skipping Kaggle byte parity; HF-only verification proceeds.",
+              file=_sys.stderr)
+        kaggle_tuple = None
+    else:
+        kaggle_tuple = validate("Kaggle", kaggle)
+        mismatches = [name for name in FILES if hf[name] != kaggle[name]]
+        if mismatches:
+            lag = " (Kaggle's archive is still behind after the bounded wait)" if kaggle_still_behind else ""
+            raise ValueError(f"snapshot parity failed; byte mismatches: {mismatches}{lag}")
+        if hf_tuple != kaggle_tuple:
+            raise ValueError("snapshot parity failed; root tuples disagree")
+
     if require_live and hf["root.json"] != get(LIVE_ROOT):
         raise ValueError("mirrored root.json is not byte-identical to the current Council root")
-    return {
+
+    result = {
         "kind": "csoai.gspc-snapshot-parity/1",
-        "state": "EXTERNALLY_VERIFIED",
+        "state": "EXTERNALLY_VERIFIED" if kaggle_tuple is not None else "HF_VERIFIED_KAGGLE_STALE",
         **hf_tuple,
         "files": {name: {"bytes": len(hf[name]), "sha256": sha(hf[name])} for name in FILES},
         "urls": {"huggingface": HF.rsplit("/resolve/", 1)[0] + "/tree/main/snapshot",
                  "kaggle": "https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board"},
     }
+    if kaggle_tuple is None:
+        result["kaggle_as_of"] = json.loads(kaggle["SNAPSHOT.json"]).get("as_of", "?")
+        result["kaggle_lag"] = True
+    return result
 
 
 def main() -> int:
@@ -117,8 +141,12 @@ def main() -> int:
     parser.add_argument("--report", help="write the verified result as JSON")
     parser.add_argument("--kaggle-wait-seconds", type=int, default=0,
                         help="if Kaggle's archive is BEHIND Hugging Face (older as_of), re-read it for up to this long before judging")
+    parser.add_argument("--skip-kaggle-if-stale", action="store_true",
+                        help="when Kaggle is still behind HF after the bounded wait, verify HF only (non-fatal)")
     args = parser.parse_args()
-    result = verify(require_live=not args.allow_stale_live_root, kaggle_wait_seconds=args.kaggle_wait_seconds)
+    result = verify(require_live=not args.allow_stale_live_root,
+                    kaggle_wait_seconds=args.kaggle_wait_seconds,
+                    skip_kaggle_if_stale=args.skip_kaggle_if_stale)
     body = json.dumps(result, indent=1, ensure_ascii=False) + "\n"
     if args.report:
         Path(args.report).write_text(body, encoding="utf-8")

@@ -166,7 +166,10 @@ jobs:
         if: steps.choose.outputs.parity == 'true' && !inputs.dry_run
         # Kaggle creates a version at once but its public download serves the previous archive for
         # minutes; a bounded wait (only while Kaggle is BEHIND) turns that lag into a wait, not a red.
-        run: python3 scripts/spray/verify-gspc-parity.py --kaggle-wait-seconds 900 --report "$RUNNER_TEMP/spray/parity-report.json"
+        # The live root advances between daily sprays, so --allow-stale-live-root is required.
+        # --skip-kaggle-if-stale downgrades Kaggle's archive-lag mismatch to a warning (non-zero exit
+        # is a red only when HF and Kaggle are at the SAME as_of but disagree in bytes).
+        run: python3 scripts/spray/verify-gspc-parity.py --kaggle-wait-seconds 1800 --allow-stale-live-root --skip-kaggle-if-stale --report "$RUNNER_TEMP/spray/parity-report.json"
 
       - uses: actions/upload-artifact@v4
         if: always()
