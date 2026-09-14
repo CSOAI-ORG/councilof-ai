@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 import StablecoinReadinessView from "@/components/StablecoinReadinessView";
 
-const CANONICAL = "https://councilof.ai/stablecoins";
+const CANONICAL = "https://councilof.ai/stablecoins/";
 const READINESS_LEDGER = "/interop/stablecoin-universe-2026-09/readiness.json";
 const PROMOTION_QUEUE = "/interop/stablecoin-universe-2026-09/promotion-queue.json";
 
@@ -63,7 +63,6 @@ export default function Stablecoins() {
         <title>Stablecoin evidence readiness index | Council of AI</title>
         <meta name="description" content={PAGE_DESCRIPTION} />
         <meta name="robots" content="index,follow" />
-        <link rel="canonical" href={CANONICAL} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Stablecoin evidence readiness index | Council of AI" />
         <meta property="og:description" content={PAGE_DESCRIPTION} />
