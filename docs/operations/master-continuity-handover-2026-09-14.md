@@ -34,7 +34,7 @@ GitHub-reviewed main is authority. RunPod is compute, Oracle is a light worker/w
 - Public `/api/worker` serves the new dispatcher field, but `commission_dispatch` is `null`: the website revision is current and the pod process is still the older runtime.
 - The typed commission dispatcher and sanitized public observability are merged in PRs #2388 and #2393.
 - Canonical no-duplicate outward ledger and waves are merged in #2395, #2396, #2400 and #2402.
-- AI Agents Listing was submitted successfully with the CSOAI logo and `nicholas@csoai.org`; promotional updates were disabled. Submission success: `https://aiagentslisting.com/submit/council-of-ai-measurement-agent/success`. Candidate public URL: `https://aiagentslisting.com/agent/council-of-ai-measurement-agent`. Treat as REVIEW PENDING until that public detail page resolves.
+- AI Agents Listing is live at `https://aiagentslisting.com/agent/council-of-ai-measurement-agent`, verified without authentication on 14 September. The CSOAI logo and canonical endpoints are present; promotional updates were disabled. Do not submit a duplicate.
 - Discussions are live: #2397 verification, #2398 integration, #2399 discrepancy reporting.
 - Numerous external editorial PRs are open. Their exact states live in the canonical outward ledger. Never resubmit while open.
 
@@ -52,21 +52,21 @@ Proof required:
 
 Do not invent credentials. Current M2 environment has no working RunPod shell/control path; the historical SSH endpoint timed out.
 
-### 2. Repair PR #2394 without bypassing gates
+### 2. Verify the post-merge publication from PR #2394
 
 PR: `https://github.com/CSOAI-ORG/councilof-ai/pull/2394`
 
-It contains 276 signed mill cards but remains blocked. The producer self-check passes while the build-time regulatory inventory gate expects three different in-toto filenames after `generate-cards-bundle.mjs` runs:
+PR #2394 merged on 14 September at head `a8032920b3edcd6ec306a4120a381dc73a90dc07` after all required pre-merge checks passed. It contains 276 signed mill cards. The post-merge prover was still running at the last verified check, and the public root still reported 299 cards.
 
 - `affect-048889c94767021d.intoto.json`
 - `cross-reality-02fb6896c022d75e.intoto.json`
 - `detector-interop-03ecbbf4c4f5f7d6.intoto.json`
 
-This is an ordering/input-consistency defect between `generate-cards-bundle.mjs`, `emit_intoto.py`, and `regulatory-inventory-gate.mjs`. Fix the producer contract, add a regression check that runs in build order, regenerate derived files, and merge only after all seven gates pass. Do not hand-edit derived JSON and do not call the 276 cards public/MEASURED until merged and included in a verified root.
+Do not call the 276 cards public or included in the current root until the post-merge prover and deployment complete and `root.json` changes. Verify the public root, witness and card index together, then record the new count and timestamp.
 
 ### 3. Finish ledger PR #2401
 
-Rebase onto current main after #2402, preserve every concurrent row, include the AI Agents Listing submission state, rerun all seven checks, obtain current-head review, then squash merge.
+Preserve every concurrent row in the canonical outward ledger and record only verified state transitions. AI Agents Listing is now LIVE; do not submit it again.
 
 ### 4. Complete commission → mill proof
 
@@ -91,7 +91,7 @@ Hugging Face publication is automated and green. Kaggle ingestion into the same 
 
 - Own RunPod runtime refresh, commission dispatcher, worker playlists, intake, producer determinism, and #2394.
 - Rotate applicable axes across locally runnable models; fail closed on unavailable providers.
-- Immediate goal: make `commission_dispatch` non-null, land #2394 safely, and prove one new commission end to end.
+- Immediate goal: make `commission_dispatch` non-null, verify #2394 in the public root, and prove one new commission end to end.
 
 ### Oracle
 
@@ -166,15 +166,15 @@ Maintain the single execution ledger, dependency graph, owner asks, host status 
 - A submission confirmation is REVIEW PENDING. Only an upstream merge or stable public detail page is LIVE.
 - Prefer maintained, relevant, editorial or structured registries. Skip paid listings, abandoned sites, arbitrary backlink farms, and policies the project does not satisfy.
 - Never manufacture stars, visits, settlements, customers, citations or testimonials.
-- Do not post the AI Agents Listing share links until the public detail page is actually live.
+- AI Agents Listing is live. Any later promotion must link to the public detail page and use the measured-not-certified description already recorded in the ledger.
 
 ## Immediate 24-hour sequence
 
 1. Merge #2401 after current-head reconciliation and green gates.
-2. Fix #2394's build-order producer defect and land the signed cards through normal review.
+2. Verify #2394's post-merge prover, deployment and inclusion in the public root.
 3. Refresh RunPod and prove non-null dispatcher telemetry.
 4. Prove one commission through queue → mill → sign → merge → root → delivery.
-5. Verify AI Agents Listing public page; then update the canonical ledger to LIVE or remain REVIEW PENDING.
+5. Monitor AI Agents Listing for factual drift or broken endpoints; do not duplicate the listing.
 6. Monitor every open external PR; respond only to maintainer feedback and record merges.
 7. Implement the Kaggle/common connector envelope.
 8. Re-run public stranger journeys and mobile checks after deployment.
