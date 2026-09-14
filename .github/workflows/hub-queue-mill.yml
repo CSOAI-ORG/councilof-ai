@@ -26,10 +26,12 @@ on:
       # executed runs, ≈ 340/day. 48 h therefore covers ≈ 340-680 cells, not 5,490 — that
       # ceiling is GitHub's schedule starvation and one sequential door, not the grade count.
       grade: { description: "how many probe-live models to grade", type: string, default: "36" }
+      model: { description: "optional exact HF repo for one controlled proof (owner/name)", type: string, default: "" }
   workflow_call:
     inputs:
       axis: { type: string, default: "" }
       grade: { type: string, default: "36" }
+      model: { type: string, default: "" }
 # Per-axis group so mill-spray can run up to N axes at once. A blank axis
 # (schedule / emptiest) still serialises with other emptiest runs. Each mill
 # stays sequential inside the job — featherless 403s on a burst from ONE
@@ -63,6 +65,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       AXIS_INPUT: ${{ inputs.axis || github.event.inputs.axis }}
       GRADE: ${{ inputs.grade || github.event.inputs.grade || '36' }}
+      MODEL_INPUT: ${{ inputs.model || github.event.inputs.model }}
     steps:
       - uses: actions/checkout@v4
         with: { ref: master }
@@ -244,10 +247,26 @@ jobs:
           if [ -n "$subject_count" ]; then health_args+=(--subject-count "$subject_count"); fi
           python3 scripts/commission_run_report.py "${health_args[@]}"
           cat mill-in/commission-health.json >> "$GITHUB_STEP_SUMMARY"
+      - name: validate an exact one-shot proof target and freeze its revision
+        if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
+        run: |
+          set -euo pipefail
+          if [ -n "${MODEL_INPUT:-}" ]; then
+            python3 -m unittest discover -s scripts -p test_validate_mill_proof_target.py
+            python3 scripts/validate_mill_proof_target.py \
+              --model "$MODEL_INPUT" --axis "$AXIS" --queue mill-in/queue.jsonl \
+              --dead harness/gspc-top100/dead_slugs.jsonl --inflight mill-in/inflight.jsonl \
+              --only-out mill-in/proof-only.txt --revision-pins-out mill-in/proof-revisions.json \
+              --receipt-out mill-out/proof-target.json
+          fi
       - name: mill (stage unsigned cards; MEASURED only after OIDC sign + VALID)
         if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
         run: |
           set -euo pipefail
+          proof_args=()
+          if [ -n "${MODEL_INPUT:-}" ]; then
+            proof_args=(--only mill-in/proof-only.txt --revision-pins mill-in/proof-revisions.json)
+          fi
           # --probe-first asks the Hub which slugs a provider actually serves BEFORE spending
           # a grade. Without it a run picks the 100 emptiest by rank, grades the first 8, and
           # 7 of those 8 are gpt2/opt-125m/GGUF/tiny-test repos that nothing serves — one card
@@ -269,7 +288,8 @@ jobs:
             --dead-max-age-days 14 \
             --bank-dataset "csoai/gspc-${DS}" \
             --bank-revision "$BANK_REVISION" \
-            --inflight mill-in/inflight.jsonl --priority mill-in/priority.txt 2>&1 | tail -40
+            --inflight mill-in/inflight.jsonl --priority mill-in/priority.txt \
+            "${proof_args[@]}" 2>&1 | tail -40
       - name: Link commissions to this run's observed results
         if: always()
         run: |

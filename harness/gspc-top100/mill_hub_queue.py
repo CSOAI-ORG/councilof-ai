@@ -119,6 +119,19 @@ def load_only_ids(path: Path | None) -> set[str] | None:
     return {ln.strip() for ln in p.read_text(encoding="utf-8").splitlines() if ln.strip() and not ln.startswith("#")}
 
 
+def load_revision_pins(path: Path | None) -> dict[str, str] | None:
+    """Exact model revisions resolved by a controlled-run preflight."""
+    if path is None:
+        return None
+    value = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(value, dict) or not value:
+        raise ValueError("revision pins must be a non-empty object")
+    pins = {str(model): str(revision) for model, revision in value.items()}
+    if any(not re.fullmatch(r"[0-9a-f]{40,64}", revision) for revision in pins.values()):
+        raise ValueError("revision pin is not immutable")
+    return pins
+
+
 def load_dead_slugs(path: Path | None, max_age_days: int | None = None) -> set[str]:
     """Persistent dead-slug set (jsonl rows {id, reason, axis, as_of}). Missing file → empty.
 
@@ -1143,9 +1156,11 @@ def main() -> int:
     ap.add_argument("--inflight", default="", help="jsonl of {id, axis} cells already staged in open landing PRs (see inflight_cells.py); never re-picked")
     ap.add_argument("--bank-dataset", default="", help="public HF dataset the frozen bank came from (e.g. csoai/gspc-gov); recorded on the card's evidence, never guessed")
     ap.add_argument("--bank-revision", default="", help="immutable commit of --bank-dataset; required for a quotable staged card")
+    ap.add_argument("--revision-pins", default="", help="JSON object of model id to immutable revision; controlled runs never re-resolve it")
     args = ap.parse_args()
     only = load_only_ids(Path(args.only)) if args.only else None
     priority = load_only_ids(Path(args.priority)) if args.priority else set()
+    revision_pins = load_revision_pins(Path(args.revision_pins)) if args.revision_pins else None
     rep = mill(
         Path(args.queue),
         Path(args.out),
@@ -1165,6 +1180,7 @@ def main() -> int:
         inflight_path=Path(args.inflight) if args.inflight else None,
         bank_dataset=args.bank_dataset or None,
         bank_revision=args.bank_revision or None,
+        revision_fetch=(lambda model: revision_pins.get(model)) if revision_pins is not None else None,
     )
     print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips", "dead_known", "dead_new", "dead_appended", "inflight_known", "inflight_skipped_this_axis", "probe_first") if k in rep}, default=str))
     print("skips", len(rep["skips"]))
