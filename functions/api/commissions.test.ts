@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCommissions, onRequestGet, POD_CARDS_INDEX, HUB_CARDS_INDEX, fulfillmentAfterDelivery } from "./commissions";
+import { buildCommissions, commissionOrigin, onRequestGet, POD_CARDS_INDEX, HUB_CARDS_INDEX, fulfillmentAfterDelivery } from "./commissions";
 
 function kvFrom(entries: Record<string, string>) {
   const store = new Map(Object.entries(entries));
@@ -141,3 +141,42 @@ describe("fulfillmentAfterDelivery — RETRIEVABLE writer", () => {
     expect(body.queued).toBe(0);
   });
 });
+
+describe("/api/commissions — origin: a receipt is demand evidence only when an outside wallet paid", () => {
+  const SELF = "0x4db7aafbe797a39cd6cc4e7aa64d970f7f6e02b7";
+  const OUT = "0x7e6b000000000000000000000000000000000001";
+  const kv = () => kvFrom({
+    "settled:tx:0xself": JSON.stringify({ payer: SELF, self: true, amount_atomic: "20000" }),
+    "settled:tx:0xenv": JSON.stringify({ payer: "0x1111111111111111111111111111111111111111", self: false, amount_atomic: "20000" }),
+    "settled:tx:0xout": JSON.stringify({ payer: OUT, self: false, amount_atomic: "20000" }),
+    "settled:tx:0xzero": JSON.stringify({ payer: OUT, self: false, amount_atomic: "0" }),
+    "settled:tx:0xjunk": "{not json",
+  });
+  const env = { X402_SELF_WALLETS: "0x1111111111111111111111111111111111111111" };
+
+  it("classifies each settlement with the same self/zero rules as /api/revenue", async () => {
+    const k = kv();
+    expect(await commissionOrigin(k, "0xself", env)).toBe("SELF_TEST");
+    expect(await commissionOrigin(k, "0xenv", env)).toBe("SELF_TEST");
+    expect(await commissionOrigin(k, "0xout", env)).toBe("OUTSIDE");
+    expect(await commissionOrigin(k, "0xzero", env)).toBe("ZERO_VALUE");
+    expect(await commissionOrigin(k, "0xmissing", env)).toBe("UNCHECKABLE");
+    expect(await commissionOrigin(k, "0xjunk", env)).toBe("UNCHECKABLE");
+    expect(await commissionOrigin(k, null, env)).toBe("UNCHECKABLE");
+  });
+
+  it("labels every row, counts by origin, and never returns a payer address", async () => {
+    const store = kv();
+    await store.put("ras:aaa", JSON.stringify({ subject: "clan-csoai-plain:latest", tx: "0xself", as_of: "2026-09-06T08:01:23Z" }));
+    await store.put("ras:bbb", JSON.stringify({ subject: "org/model-b", tx: "0xout", as_of: "2026-09-08T00:00:00Z" }));
+    await store.put("ras:ccc", JSON.stringify({ subject: "org/model-c", tx: null, as_of: "2026-09-09T00:00:00Z" }));
+    const ok = (async () => new Response(JSON.stringify({ schema: "csoai.pod-cards-index/0.1", cards: [] }), { status: 200 })) as unknown as typeof fetch;
+    const body = await buildCommissions({ REVENUE_KV: store, ...env }, "https://councilof.ai", ok) as { commissions: Array<Record<string, unknown>>; by_origin: Record<string, number> };
+    expect(body.commissions.map((c) => c.origin)).toEqual(["SELF_TEST", "OUTSIDE", "UNCHECKABLE"]);
+    expect(body.by_origin).toEqual({ OUTSIDE: 1, SELF_TEST: 1, ZERO_VALUE: 0, UNCHECKABLE: 1 });
+    const text = JSON.stringify(body).toLowerCase();
+    expect(text).not.toContain(SELF);
+    expect(text).not.toContain(OUT);
+  });
+});
+
