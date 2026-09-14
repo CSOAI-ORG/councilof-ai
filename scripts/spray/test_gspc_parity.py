@@ -1,6 +1,8 @@
 import hashlib
 import importlib.util
+import io
 import json
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -83,3 +85,35 @@ def test_verify_does_not_wait_on_an_equal_as_of_byte_mismatch(monkeypatch):
     with pytest.raises(ValueError, match="byte mismatches"):
         parity.verify(require_live=False, kaggle_wait_seconds=600, poll_seconds=30, sleep=slept.append)
     assert slept == []
+
+
+def test_newest_ready_version_ignores_stale_current_pointer_and_pending_version():
+    metadata = {
+        "currentVersionNumber": 24,
+        "versions": [
+            {"versionNumber": 27, "status": "Pending"},
+            {"versionNumber": 24, "status": "Ready"},
+            {"versionNumber": 26, "status": "Ready"},
+            {"versionNumber": 25, "status": "Ready"},
+        ],
+    }
+    assert parity.newest_ready_kaggle_version(metadata) == 26
+    assert spray.newest_ready_kaggle_version(metadata) == 26
+
+
+def test_parity_downloads_the_newest_ready_version_explicitly(monkeypatch):
+    metadata = {"currentVersionNumber": 24, "versions": [{"versionNumber": 26, "status": "Ready"}]}
+    body = io.BytesIO()
+    with zipfile.ZipFile(body, "w") as archive:
+        for name in parity.FILES:
+            archive.writestr(name, name)
+    seen = []
+
+    def fake_get(url, timeout=120):
+        seen.append(url)
+        return json.dumps(metadata).encode() if "/view/" in url else body.getvalue()
+
+    monkeypatch.setattr(parity, "get", fake_get)
+    files = parity.read_kaggle()
+    assert set(files) == set(parity.FILES)
+    assert seen[-1].endswith("?datasetVersionNumber=26")
