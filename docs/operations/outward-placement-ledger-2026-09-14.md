@@ -23,11 +23,11 @@ This ledger reconciles public listings, GitHub history and open submissions. A d
 | GitHub profile pins | DONE | GitHub GraphQL shows `councilof-ai` and `gspc-board` as the first two pinned repositories. | No pin change needed. |
 | GitHub releases | DONE | Two public releases were published on 12 September. | Do not create a nominal “first release.” |
 | Sitemap fix | PENDING REVIEW | PR #2344 is open with commit `104a58305a01f43ae2257f4ed226fe360784e75b`; generated-route truth checks pass. | Let CI and review finish; do not open another PR. |
-| AI Agents Listing | NOT LISTED; NOT PENDING | Live homepage exposes 216 listings and a `/submit` route. Its rendered catalogue contained no `CSOAI` or `Council of AI` record. GitHub issue and PR searches found no CSOAI submission, and the only local item is a draft payload. | This is the single net-new public placement. |
+| AI Agents Listing | SUBMITTED / REVIEW PENDING | Submission completed at `https://aiagentslisting.com/submit/council-of-ai-measurement-agent/success`; the intended detail URL is `https://aiagentslisting.com/agent/council-of-ai-measurement-agent`. | CSOAI logo uploaded; contact address supplied; promotional updates off. Do not call live until the public detail URL resolves without authentication. |
 
-## Single highest-impact net-new public action
+## Single highest-impact net-new public action — submitted
 
-Submit the canonical Council of AI Measurement Agent to **AI Agents Listing** once, using its existing A2A card and MCP endpoint:
+The canonical Council of AI Measurement Agent was submitted to **AI Agents Listing** once, using its existing A2A card and MCP endpoint:
 
 - A2A card: `https://councilof.ai/.well-known/agent-card.json`
 - A2A endpoint: `https://councilof.ai/api/a2a`
@@ -35,9 +35,9 @@ Submit the canonical Council of AI Measurement Agent to **AI Agents Listing** on
 - Repository: `https://github.com/CSOAI-ORG/councilof-ai`
 - Public verifier: `https://councilof.ai/gspc-verify`
 
-Why this is the next action: every larger protocol-native directory checked is already live, duplicated or pending. AI Agents Listing spans both A2A agents and MCP servers, has a live submission route, displays 216 listings, and currently has no verified CSOAI presence. One canonical entry therefore adds a new discovery graph instead of adding another copy to an existing graph.
+Why this was the next action: every larger protocol-native directory checked was already live, duplicated or pending. AI Agents Listing spans both A2A agents and MCP servers and had no verified CSOAI presence before submission. One canonical entry adds a new discovery graph instead of another copy in an existing graph.
 
-Proof threshold after action: a public detail URL under `aiagentslisting.com`, reachable without login and naming Council of AI, must exist. A completed form or confirmation screen is not enough.
+Proof threshold after action: `https://aiagentslisting.com/agent/council-of-ai-measurement-agent` must resolve without login and name Council of AI. The success URL proves submission only, so the state remains `SUBMITTED / REVIEW PENDING`.
 
 Safe one-line description:
 
@@ -150,3 +150,17 @@ The proof threshold remains strict: `SUBMITTED`, `REGISTERED`, `INDEX PENDING`, 
 | Awesome Harness Engineering | SUBMITTED / REVIEW PENDING | [PR #257](https://github.com/ai-boost/awesome-harness-engineering/pull/257) | Adds GSPC once under Evals & Verification as a reference pattern for independently checkable evaluation outputs. The pull request is open and mergeable, and the maintainer relationship is disclosed. |
 
 Eligibility checks prevented low-quality submissions in this wave: Awesome LLM Observability requires at least 250 GitHub stars for open-source projects, which the flagship does not currently meet; Awesome Agentic Commerce requires an end-to-end ACP, UCP or AP2 implementation or a foundational rail/tooling dependency, so a measurement service entry was not submitted. These remain `NOT SUBMITTED`, not pending placements.
+
+### Owned GitHub evidence and citation wave
+
+These first-party surfaces were created only after reconciling the canonical ledger, the repository settings, the default branch and the live endpoints. No copied board, card, tool or user counts appear in the new prose.
+
+| Surface | State | Proof | Exact scope |
+|---|---|---|---|
+| GitHub Discussions | LIVE / ENABLED | Repository API returned `has_discussions: true` after the reversible setting change. | Enables a durable first-party venue for evidence verification and corrections without claiming endorsement. |
+| Verification discussion | LIVE | [Discussion #2397](https://github.com/CSOAI-ORG/councilof-ai/discussions/2397) | Points to the live signed card index, signed public root, verification instructions and public verifier; tells readers to use live artifacts for current counts. |
+| Integration discussion | LIVE | [Discussion #2398](https://github.com/CSOAI-ORG/councilof-ai/discussions/2398) | Records the canonical A2A card, A2A endpoint and MCP endpoint without freezing a tool count. |
+| Discrepancy-reporting discussion | LIVE | [Discussion #2399](https://github.com/CSOAI-ORG/councilof-ai/discussions/2399) | Gives a public, reproducible correction intake template and explicitly excludes secrets and compliance conclusions. |
+| Repository citation metadata | ALREADY LIVE / RECONCILED | [`CITATION.cff`](https://github.com/CSOAI-ORG/councilof-ai/blob/master/CITATION.cff) appeared on the default branch during this lane and declares DOI `10.5281/zenodo.21991104`. | Concurrent work already filled this gap. This lane did not overwrite it or create a duplicate citation file. Verify the DOI target separately before describing its contents. |
+
+Do not create a nominal release solely to populate citation metadata.
