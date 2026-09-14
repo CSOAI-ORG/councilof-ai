@@ -27,6 +27,11 @@ describe("/wrappers public ledger page", () => {
     expect(page).toContain("not a reserve attestation");
   });
 
+  it("uses the route title as the single title authority", () => {
+    expect(app).toContain('"/wrappers": "Wrapped-asset parity ledger — read, not rated | Council of AI"');
+    expect(page).not.toContain("<title>");
+  });
+
   it("types no price and no verdict — the amount lives only in the 402; states are named, never collapsed", () => {
     expect(page).not.toMatch(/\$\s?\d/);
     expect(page).not.toMatch(/\b(unbacked|backed by|certif|compliant|approved|guarantee)\b/i);
