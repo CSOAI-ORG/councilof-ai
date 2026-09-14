@@ -2,7 +2,7 @@
  * How every SKU is filled — one signed cell, many views.
  *
  * Plugins, GPAI packs, RAS, XRPL pointers, ERC-3643 (T-REX) attester feeds and
- * OpenTelemetry spans do not average into a fused “Council Space grade.” The coverage
+ * OpenTelemetry spans do not average into a fused “SOV grade.” The coverage
  * index counts signed rows. The corrections ledger is HTTP and append-only.
  * XRPL may later anchor a digest. None of those writes MEASURED.
  */
@@ -99,7 +99,7 @@ export const FILL_ROWS: FillRow[] = [
     layer: "index",
     title: "Coverage index",
     fills: "N measured of M declared slots. Signed coverage index already published as a row count.",
-    never: "A fused Council Space grade. A forecast. An investable index. A bond coupon.",
+    never: "A fused SOV grade. A forecast. An investable index. A bond coupon.",
     href: "/signals/sov-signal.signed.json",
     status: "live",
   },
@@ -151,7 +151,7 @@ export const FILL_ROWS: FillRow[] = [
   {
     id: "fused-sov",
     layer: "forbidden",
-    title: "Fused Council Space grade from all plugins",
+    title: "Fused SOV grade from all plugins",
     fills: "Nothing. Plugins do not emit scores. Cells stay per-axis.",
     never: "Average, Elo, or coupon from every plugin and every site.",
     href: "/api/gspc",
