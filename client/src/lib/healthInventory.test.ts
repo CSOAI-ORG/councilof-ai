@@ -30,7 +30,7 @@ describe("Health inventory — correct facts, not a score", () => {
     expect(LIVE_HEALTH_PIN.not_a_certification).toBe(true);
     expect(HEALTH_NEVER.some((n) => /0–100 health score|0-100 health score/i.test(n))).toBe(true);
     expect(HEALTH_NEVER.some((n) => /mean of axis/i.test(n))).toBe(true);
-    expect(HEALTH_FACTS.some((f) => f.id === "empty-slots" && /Empty is a fact/i.test(f.means))).toBe(
+    expect(HEALTH_FACTS.some((f) => f.id === "empty-slots" && /unmeasured_axes is 0|Empty-as-finding/i.test(f.means))).toBe(
       true,
     );
   });

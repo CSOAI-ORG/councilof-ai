@@ -23,8 +23,8 @@ describe("domination playbook audit", () => {
       "regulatory-framework",
       "distribution-integrity",
       "custody-disclosure",
-      "ai-economy-index",
-      "human-labour-index",
+      "ai-adoption-components",
+      "labour-components",
       "humanoid-labour-index",
     ]);
     expect(EMPTY_SLOT_RULING).toMatch(/UNMEASURED until a signed cell/);
