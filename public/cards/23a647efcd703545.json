@@ -1,0 +1,117 @@
+{
+  "card": {
+    "as_of": "2026-09-14T09:42:59Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:MONY:ethereum",
+      "symbol": "MONY",
+      "product": "My OnChain Net Yield Fund",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6a7c6aa2b8b8a6a891de552bdeffa87c3f53bd46",
+      "block": 25974871,
+      "block_hash": "0x596dd5b7cce8e26afab272b24bf64d00127ae8c1d54c03cd054d547d828f3ab7",
+      "block_time": "2026-09-14T09:42:59Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "My OnChain Net Yield Fund",
+        "symbol": "MONY",
+        "decimals": 4,
+        "totalSupply": 1026676961100,
+        "paused": false,
+        "owner": "0x5ae5d4ada523985dbab22cf046599979897c8418"
+      },
+      "absent": [
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_implementation (slot zero)",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "5edbbf0d6551e0d6e7c313e8f2f69e6ed35cfc90ddeb2be9965eae268bc2614b",
+        "bytes": 13047,
+        "url": "/archive/proofs/eip1186/5edbbf0d6551e0d6.json",
+        "rpc": "1rpc.io",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xf2dea1946270fa0b2005d60f1f55ab8a2be4ce89a8124c1559b530c2c33bf24f",
+          "storageHash": "0x44cb1c5427afe4732fbb3f96d5a633b951a5dc40ee113a59dfe168b0e48bd1a0",
+          "nodes": 9
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x0",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 4
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 25974871 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "23a647efcd703545ee375b8048268453e9a2e89ce16fc1fb9e33bfbfc93d1bfe",
+    "sig_ed25519": "ba418921fa02d3c69010d09c20aefc18e90695b8fbaf4e8c79ab35e588dfaef4c9791b28d86bb35ad19065b290767ac68527f1c82e50940ba416c8150e376b01",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://am.jpmorgan.com/us/en/asset-management/adv/about-us/media/press-releases/jp-morgan-asset-management-launches-second-tokenized-fund-on-ethereum/",
+      "https://1rpc.io/eth"
+    ],
+    "subject": "evm:MONY:ethereum permission state at block 25974871",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:MONY"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ]
+  },
+  "proof": [
+    "df714dc345350fabb89c8ece6fbb21b45128bd9b2b257de52e4d8a9335ccbc3f",
+    "91c880ebd12da08a9773966e1c4a8282dc0e6f6dd6408e95721b343f0a235007",
+    "a6cea3e48aefd408dcb31d7b6d4797cd5cd1224bee62ceaeaca2655b937cf74d",
+    "8c1153c65bb5ecda91e50edc09b4ba9159bbf8664540fd1b90f609c29f7db674",
+    "92433a694db88f4c79dcae78032e2995a9773337aa36f29be78c226024add38a",
+    "d9e855b7bfbf27fa7cb27bc7d216b695bc3d1a410843105b107cbbc2aa4919ec",
+    "6cd1433d17730aa4fc4184fb7e04683a7ef9cb5f2d690d00605a90fb27ac46f2",
+    "f04bd431547f5684a71801d15e2c2a56a7f0e3b46f047397fb56268a178265a5",
+    "238165fb0186fb654927d0d4b74b50a7beb692f2e66e46c49732fe0895ca6837"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-14T09:44:39Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "EURØP",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_supply",
+          "from": 340258.207320247,
+          "to": 340258.2073202471
+        }
+      ],
+      "ledger_index": 106977283,
+      "observed_at": "2026-09-14T09:44:39Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d8b8ed7d609a9c1eaf12ef9fa6239a641239b5a89c9e128ea3ac65a98739cc54",
+    "sig_ed25519": "44fadb26d8dfdc45e678d62a6a32eeafa6f0cf15f81204509a6be8ba570083278cd86729251657019629f7986ccb1e54998b0653394376ccd55cec15857d3c0b",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: EURØP changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:EURØP"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "29a6e6ec12cd9c241452df773766c8575bf63f55f54175a8a035b48e9a593262",
+    "0e285ab49313e5e8d60ff5660e9fa52691b97590ef2109e93014b4cec9cf4e60",
+    "3421fc032e88b76bd6306c1e55e80ce0a62223f7dc25072e2c49948a486b14ae",
+    "b51c3070c26e75f1e2cf4a19a0fdbb99e6074a2816fb7a3ff9310cbadf731f1c",
+    "b69d804021d87d5b306a83237910febd78515c3e508522b5e9c793d84c9a18bd",
+    "d2be6a36d8a3d4cdebc5e216d036f939be39aa809b9ca49856af974cf154c3d8",
+    "bb6ecb40b279c0483beefc27d752a3fc9b1c2e23b1dacdb48e660bc4481f9b25",
+    "2f6081d8b42f507e74b21b9381b7b99062f7246ecf5b1851cf3f147b294c61a0",
+    "2709743fd41d21e5226faef21379907ddf33345a32e8b6ddb15e0e6c5e3fe9d9"
+  ]
+}

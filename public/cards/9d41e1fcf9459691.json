@@ -1,0 +1,86 @@
+{
+  "card": {
+    "as_of": "2026-09-14T02:01:29.387Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "dai:optimism",
+      "backing_model": "escrow",
+      "wrapped": {
+        "chain": "optimism",
+        "symbol": "DAI",
+        "address": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+        "chainId": 10,
+        "block": 156875715,
+        "block_hash": "0x4f8e07e8f3cd666968c09df04949aa7bdf34e8db61b474f70d03889695c83274",
+        "block_time": 1789350207
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "DAI",
+        "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "chainId": 1,
+        "block": 25972488,
+        "block_hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539"
+      },
+      "escrow": "0x467194771dAe2967Aef3ECbEDD3Bf9a310C76C65",
+      "escrow_name": "OP Mainnet DAI bridge escrow (L1Escrow)",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000b53135452d2e5aea12b1f",
+          "raw_sha256": "b888a975b9dcf0bcf783e4767ff4014465c92f42fcf6d9ea2ec886e0e6e78800",
+          "atomic": "13690496998127233151347487",
+          "normalized": "13690496.998127233151347487",
+          "decimals": 18
+        },
+        "escrow_balance": {
+          "query": "balanceOf(0x467194771dAe2967Aef3ECbEDD3Bf9a310C76C65)",
+          "raw": "0x000000000000000000000000000000000000000000110d1f258bd144c479bde8",
+          "raw_sha256": "99299ed7a69ca3d5d88048dc1887f829d11d4d3300a0d4d2c3cc8ebe8f7f5a17",
+          "atomic": "20613704252278380804292072",
+          "normalized": "20613704.252278380804292072",
+          "decimals": 18
+        }
+      },
+      "escrow_over_wrapped": "1.505694",
+      "parity_state": "ESCROW_PARITY_READ",
+      "state": "PROBED",
+      "error": null,
+      "fetched_at": "2026-09-14T02:01:29.387Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
+      "unmeasured": []
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9d41e1fcf9459691cca204edd10a5ebb267ac0f1852cb2338378ce8cb2b8d91a",
+    "sig_ed25519": "193e3797297bb43360358d31a57c183be090bee2b28b73a23e968ba796f2060481a748d3042cdc39561466a1ef6b4519446c6db1731c94c2d4ae45199f66ad02",
+    "source_urls": [
+      "https://mainnet.optimism.io",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped DAI on optimism vs OP Mainnet DAI bridge escrow (L1Escrow) — ESCROW_PARITY_READ",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:escrow",
+      "state:ESCROW_PARITY_READ"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "8f19cdd6933d433e7040a323998225ced5a1df8c727141d8539acb7f38223ade",
+    "b2c7ac087aa8290d07a692564271295db31a31a261b3f94cd21955411ca0216f",
+    "2adad7d6e7ca6225c644be11e52629b77d71e5ce3907ac0a2bf220eb6402f469",
+    "1176473d2d8111c2ccf48b9a952e6ad7e016a8fc83411816a9c81f1b4c9ed3e1",
+    "92b3ee0f7c353b5b05c85a1f1196d982182e2e402c96980c733f86ac634ba16d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "af73749eabba06322843714782c862952e1159f935b03972880393d5b57bac3e",
+    "ff91cc912c1410edd1a3c56163dee07549e0efb683bfe987accd39e5d5a0df2a",
+    "238165fb0186fb654927d0d4b74b50a7beb692f2e66e46c49732fe0895ca6837"
+  ]
+}
