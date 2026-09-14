@@ -48,19 +48,24 @@ jobs:
 
       - name: the intake artifact (runpod-signing-<run>-<attempt>) — count the cards
         id: art
+        env:
+          INTAKE_COMPLETED_AT: ${{ github.event.workflow_run.updated_at }}
         run: |
           set -euo pipefail
-          mkdir -p staged
-          if ! gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" -p "runpod-signing-*" -D staged 2>/dev/null; then
-            echo "outcome=ARTIFACT_DOWNLOAD_FAILED" >> "$GITHUB_OUTPUT"
-            echo "runpod-signing artifact download failed for $RUN_ID — this is not proof of an empty intake" >&2
-            exit 1
-          fi
-          # Classification is a tested script (scripts/runpod_land_classify.py):
-          # MANIFEST_MISSING / MANIFEST_INVALID / MANIFEST_FS_MISMATCH exit 1;
-          # NO_WORK_CONFIRMED / ARTIFACT_READY exit 0. Fixtures: scripts/test_runpod_land_classify.py
+          # Download + classification is a tested script (scripts/runpod_land_classify.py).
+          # gh stderr is classified, never discarded: AUTH fails loudly (no retry); NOT_FOUND
+          # fails (absence is not "no work"); 5xx/429/network errors retry with bounded backoff
+          # then fail; MANIFEST_* exit 1; NO_WORK_CONFIRMED / ARTIFACT_READY exit 0. Every
+          # outcome writes outcome=/cards=/reason= and runpod-land-status.json.
           python3 -m unittest discover -q -s scripts -p test_runpod_land_classify.py
-          python3 scripts/runpod_land_classify.py --staged staged --github-output "$GITHUB_OUTPUT"
+          at="${INTAKE_COMPLETED_AT:-}"
+          if [ -z "$at" ]; then
+            at=$(gh run view "$RUN_ID" --repo "$GITHUB_REPOSITORY" --json conclusion,updatedAt -q 'select(.conclusion=="success")|.updatedAt' 2>/dev/null || true)
+          fi
+          python3 scripts/runpod_land_classify.py \
+            --download-run-id "$RUN_ID" --repo "$GITHUB_REPOSITORY" --staged staged \
+            --intake-completed-at "$at" --status-json runpod-land-status.json \
+            --github-output "$GITHUB_OUTPUT"
 
       - name: review branch (idempotent) + dispatch the OIDC signer on it
         id: br
@@ -142,9 +147,12 @@ jobs:
               print(f"\n**{len(bad)} card(s) did not verify — do not merge.**")
               sys.exit(2)
           PY
-          gh pr create --base master --head "$BR" \
+          PR_URL=$(gh pr create --base master --head "$BR" \
             --title "runpod: $n signed pod cards from intake run ${RUN_ID} — VALID under the live DID, human merge" \
-            --body-file verify.md
+            --body-file verify.md)
+          echo "$PR_URL"
+          # Publication is its own timestamp; an intake that lands no PR never sets it.
+          python3 scripts/runpod_land_classify.py --record-publication --status-json runpod-land-status.json --pr-url "$PR_URL"
           # GITHUB_TOKEN-created PRs fire no pull_request checks; dispatch pr-gates at the branch
           # so required checks attach (same mechanism as hub-queue-land). Never fake a green check.
           if ! gh workflow run pr-gates.yml --ref "$BR" 2>/dev/null; then
@@ -153,8 +161,23 @@ jobs:
 
       - name: summary
         if: always()
+        env:
+          ART_REASON: ${{ steps.art.outputs.reason }}
         run: |
           {
             echo "## runpod-land"
             echo "- intake run: $RUN_ID · artifact outcome: ${{ steps.art.outputs.outcome || 'step failed before classification' }} · cards in artifact: ${{ steps.art.outputs.cards || 'unknown' }} · signer: ${{ steps.wait.outputs.conclusion || 'not dispatched' }} · branch: ${{ steps.br.outputs.branch || '-' }}"
+            echo "- reason: ${ART_REASON:-none recorded}"
+            if [ -f runpod-land-status.json ]; then
+              echo '```json'; cat runpod-land-status.json; echo '```'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: status record (intake and publication timestamps kept separately)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runpod-land-status-${{ env.RUN_ID }}
+          path: runpod-land-status.json
+          if-no-files-found: warn
+          retention-days: 90
