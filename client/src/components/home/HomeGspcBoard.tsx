@@ -543,7 +543,7 @@ export default function HomeGspcBoard({
       </div>
 
       <nav aria-label="Published evidence path" className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4" data-testid="board-supply-led-entry">
-        <a href="/api/gspc" className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800">1 · Explore measurements</a>
+        <a href="/dashboard?tab=board" className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800">1 · Explore measurements</a>
         <a href="/press" className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50 dark:border-emerald-900/50 dark:hover:bg-emerald-950/40">2 · See what changed</a>
         <a href="/gspc-verify" className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50 dark:border-emerald-900/50 dark:hover:bg-emerald-950/40">3 · Verify evidence</a>
         <a href="/quickstart" className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50 dark:border-emerald-900/50 dark:hover:bg-emerald-950/40">4 · Access supported feeds</a>
