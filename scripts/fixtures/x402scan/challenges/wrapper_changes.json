@@ -1,0 +1,22 @@
+{
+  "x402Version": 2,
+  "error": "Payment required",
+  "accepts": [
+    {
+      "scheme": "exact",
+      "network": "base",
+      "resource": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+      "description": "Wrapped-asset change feed — delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
+      "mimeType": "application/json",
+      "outputSchema": {"type": "object"},
+      "maxTimeoutSeconds": 300,
+      "extra": {"name": "USDC", "version": "2"}
+    }
+  ],
+  "extensions": {
+    "bazaar": {
+      "listed": true,
+      "description": "Wrapped-asset change feed — delta of wrapped supply and escrow since the previous ledger snapshot."
+    }
+  }
+}
