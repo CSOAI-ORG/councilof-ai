@@ -33,6 +33,12 @@ SEARCHES = (
     "huggingface model card",
 )
 WORKING = Path(os.environ.get("KAGGLE_WORKING", "/kaggle/working"))
+REVIEWED_STREAM_URL = os.environ.get(
+    "CSOAI_REVIEWED_STREAM_URL",
+    "https://councilof.ai/mirrors/reviewed-stream.jsonl",
+)
+CONNECTOR_SCHEMA = "csoai.mirror-connector-envelope/1.0"
+CANONICAL_AUTHORITY = {"uri": "https://councilof.ai", "role": "canonical-review-authority"}
 
 
 def canonical_body_bytes(body: dict[str, Any]) -> bytes:
@@ -88,6 +94,62 @@ def _get_json(url: str, timeout: int = 30) -> object:
     req = urllib.request.Request(url, headers={"User-Agent": "csoai-kaggle-community-cells"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.loads(r.read().decode("utf-8"))
+
+
+def _get_bytes(url: str, timeout: int = 30) -> bytes:
+    req = urllib.request.Request(url, headers={"User-Agent": "csoai-kaggle-community-cells"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read()
+
+
+def validate_reviewed_stream(payload: bytes) -> list[dict]:
+    """Validate common envelopes. Kaggle stays a consumer, never authority."""
+    rows: list[dict] = []
+    for number, line in enumerate(payload.decode("utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"reviewed stream line {number} is not JSON") from exc
+        if row.get("schema") != CONNECTOR_SCHEMA:
+            raise ValueError(f"reviewed stream line {number} has unknown schema")
+        if row.get("authority") != CANONICAL_AUTHORITY or row.get("mirror_role") != "consumer":
+            raise ValueError(f"reviewed stream line {number} attempts to replace authority")
+        lifecycle = row.get("lifecycle") or {}
+        if lifecycle.get("state") not in {"reviewed", "published"} or row.get("error") is not None:
+            raise ValueError(f"reviewed stream line {number} is not publishable")
+        envelope_id = row.get("envelope_id")
+        core = {k: v for k, v in row.items() if k != "envelope_id"}
+        expected = hashlib.sha256(
+            json.dumps(core, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
+        ).hexdigest()
+        if envelope_id != expected:
+            raise ValueError(f"reviewed stream line {number} has invalid envelope_id")
+        artifact = row.get("artifact") or {}
+        if not re.fullmatch(r"[0-9a-f]{64}", str(artifact.get("sha256", ""))):
+            raise ValueError(f"reviewed stream line {number} has invalid artifact hash")
+        rows.append(row)
+    if not rows:
+        raise ValueError("reviewed stream is empty")
+    return rows
+
+
+def verify_reviewed_artifacts(rows: list[dict]) -> None:
+    for row in rows:
+        artifact = row["artifact"]
+        payload = _get_bytes(artifact["uri"])
+        if len(payload) != artifact["bytes"]:
+            raise ValueError(f"reviewed artifact byte count changed: {artifact['uri']}")
+        if hashlib.sha256(payload).hexdigest() != artifact["sha256"]:
+            raise ValueError(f"reviewed artifact digest changed: {artifact['uri']}")
+
+
+def consume_reviewed_public_stream(url: str = REVIEWED_STREAM_URL) -> tuple[bytes, list[dict]]:
+    payload = _get_bytes(url)
+    rows = validate_reviewed_stream(payload)
+    verify_reviewed_artifacts(rows)
+    return payload, rows
 
 
 def inventory_community_datasets(searches: tuple[str, ...] = SEARCHES) -> dict:
@@ -295,6 +357,13 @@ def main() -> None:
     out_dir = WORKING / "mill-out"
     out_dir.mkdir(exist_ok=True)
 
+    # This is provenance intake, not measurement intake. Fail closed before any
+    # cards are made if the reviewed Council stream is missing or malformed.
+    reviewed_payload, reviewed_rows = consume_reviewed_public_stream()
+    (WORKING / "reviewed_public_stream.jsonl").write_bytes(reviewed_payload)
+    reviewed_stream_sha256 = hashlib.sha256(reviewed_payload).hexdigest()
+    print(f"reviewed public stream n={len(reviewed_rows)} sha256={reviewed_stream_sha256}")
+
     inv = inventory_community_datasets()
     (WORKING / "community_inventory.json").write_text(json.dumps(inv, indent=2) + "\n")
     print(f"community datasets n={inv['n']} (unique refs; not a score)")
@@ -326,6 +395,13 @@ def main() -> None:
         "probes_used": probes_used,
         "community_dataset_n": inv["n"],
         "cards": written,
+        "reviewed_stream": {
+            "url": REVIEWED_STREAM_URL,
+            "sha256": reviewed_stream_sha256,
+            "envelopes": len(reviewed_rows),
+            "authority": "https://councilof.ai",
+            "mirror_role": "consumer",
+        },
         "note": "Unsigned. Land via land_mill_cards.py. Not MEASURED until the signer signs. TIE is TIE. No medals.",
         "hub_gap": "hub-cards jail is 5 ollama cells; this lane is Kaggle-hosted models + community dataset n.",
     }

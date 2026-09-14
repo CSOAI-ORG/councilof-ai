@@ -1,0 +1,42 @@
+name: mirror-connector-contract
+
+on:
+  pull_request:
+    paths:
+      - "scripts/connectors/**"
+      - "gpu-offload/kaggle-community-cells/**"
+      - "public/mirrors/reviewed-stream.jsonl"
+      - "public/schemas/mirror-connector-envelope-1.0.schema.json"
+      - ".github/workflows/mirror-connector-contract.yml"
+      - ".github/workflows/kaggle-community-cells.yml"
+      - "package.json"
+  push:
+    branches: [master]
+    paths:
+      - "scripts/connectors/**"
+      - "gpu-offload/kaggle-community-cells/**"
+      - "public/mirrors/reviewed-stream.jsonl"
+      - "public/schemas/mirror-connector-envelope-1.0.schema.json"
+      - ".github/workflows/mirror-connector-contract.yml"
+      - ".github/workflows/kaggle-community-cells.yml"
+      - "package.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: deterministic envelope and fail-closed consumer tests
+        run: |
+          PYTHONPATH=scripts/connectors python3 -m unittest scripts/connectors/test_mirror_envelope.py
+          python3 gpu-offload/kaggle-community-cells/test_mill_card.py
+          PYTHONPATH=scripts/connectors python3 scripts/connectors/build_reviewed_stream.py --check
+
