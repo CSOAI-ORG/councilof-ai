@@ -2,13 +2,13 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 0.7667,
+      "accuracy": 0.7333,
       "axis": "detector-interop",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.5",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "n": 30,
-      "route": "hf-router",
+      "route": "hf-router:Qwen/Qwen2.5-Coder-7B-Instruct:nscale",
       "status": "MEASURED",
       "unmeasured": []
     },
@@ -31,7 +31,7 @@
     "reproducible": false,
     "source": {
       "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
-      "card_id": "03ecbbf4c4f5f7d6e74e692034c1ce7d2ea96d703a3e95f34620e325f17391eb",
+      "card_id": "038b75f2be1c0b1e2530ced03df7c679d17bc6d8fe01270456788fc8077f82ac",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -59,9 +59,9 @@
   "subject": [
     {
       "digest": {
-        "sha256": "03ecbbf4c4f5f7d6e74e692034c1ce7d2ea96d703a3e95f34620e325f17391eb"
+        "sha256": "038b75f2be1c0b1e2530ced03df7c679d17bc6d8fe01270456788fc8077f82ac"
       },
-      "name": "gspc-measurement-card/detector-interop/tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.5"
+      "name": "gspc-measurement-card/detector-interop/Qwen/Qwen2.5-Coder-7B-Instruct"
     }
   ]
 }

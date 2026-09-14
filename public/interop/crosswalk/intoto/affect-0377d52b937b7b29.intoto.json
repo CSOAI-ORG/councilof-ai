@@ -3,18 +3,18 @@
   "predicate": {
     "figure": {
       "accuracy": 0.7667,
-      "axis": "cross-reality",
+      "axis": "affect",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
       "n": 30,
-      "route": "hf-router",
+      "route": "hf-router:Qwen/Qwen2.5-7B-Instruct:featherless-ai",
       "status": "MEASURED",
       "unmeasured": []
     },
     "inputs": {
       "bank_sha256": null,
-      "grader": "deterministic-exact-token/0.1",
+      "grader": null,
       "items_sha256": null,
       "n": 30,
       "rerun": null
@@ -27,11 +27,11 @@
     ],
     "not_a_certification": true,
     "not_a_conformity_assessment": true,
-    "note": "cannot be recomputed from this attestation: bank_sha256, items_sha256 absent. The signature attests only that we published this figure at this time.",
+    "note": "cannot be recomputed from this attestation: bank_sha256, items_sha256, grader absent. The signature attests only that we published this figure at this time.",
     "reproducible": false,
     "source": {
       "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
-      "card_id": "02fb6896c022d75e601982608be408827ca1e5d92736c41b0058bf20680f92ee",
+      "card_id": "0377d52b937b7b294a71e16fe67b59329ed605d10a30498353a2a02db072bbb6",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -51,16 +51,17 @@
     },
     "unreproducible": [
       "bank_sha256",
-      "items_sha256"
+      "items_sha256",
+      "grader"
     ]
   },
   "predicateType": "https://councilof.ai/attestations/measurement/v1",
   "subject": [
     {
       "digest": {
-        "sha256": "02fb6896c022d75e601982608be408827ca1e5d92736c41b0058bf20680f92ee"
+        "sha256": "0377d52b937b7b294a71e16fe67b59329ed605d10a30498353a2a02db072bbb6"
       },
-      "name": "gspc-measurement-card/cross-reality/TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+      "name": "gspc-measurement-card/affect/Qwen/Qwen2.5-7B-Instruct"
     }
   ]
 }
