@@ -3,7 +3,7 @@ name: Publish MCP Registry (v1.4.2)
 # Publishes the gspc MCP server to the official MCP Registry.
 # Auth: GitHub Actions OIDC -> exchange for Registry JWT -> POST /v0/publish.
 # No long-lived NPM_TOKEN or secrets - uses GitHub's OIDC trust.
-on:
+"on":
   workflow_dispatch:
     inputs:
       version:
