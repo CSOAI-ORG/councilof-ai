@@ -131,6 +131,10 @@ export const onRequestGet: PagesFunction<{
         description:
           "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.",
         accepts: [req(`${origin}/api/wrapper?id=usdc.e:arbitrum`, "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.")]  },
+      { method: "GET", url: `${origin}/api/wrapper/changes?id=usdc.e:arbitrum`, paid_for: "assembly", free_preview: `${origin}/api/wrapper/changes?id=usdc.e:arbitrum&preview=1`,
+        description:
+          "Wrapped-asset change feed — delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
+        accepts: [req(`${origin}/api/wrapper/changes?id=usdc.e:arbitrum`, "Wrapped-asset change feed — delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.")]  },
       // PARAMETER NAME, CHECKED AGAINST THE HANDLER, NOT ASSUMED. This advertised `vendor=<slug>`
       // and the endpoint reads only `url=` (marking-evidence.ts: searchParams.get("url")); the
       // string "vendor" appears nowhere in it. A buyer following this document got
