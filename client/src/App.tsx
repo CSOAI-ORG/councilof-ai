@@ -197,6 +197,7 @@ const MeasuredModels = lazy(() => import("./pages/MeasuredModels"));
 const FinancialAxes = lazy(() => import("./pages/FinancialAxes"));
 const Stablecoins = lazy(() => import("./pages/Stablecoins"));
 const Wrappers = lazy(() => import("./pages/Wrappers"));
+const Quickstart = lazy(() => import("./pages/Quickstart"));
 const Insurers = lazy(() => import("./pages/Insurers"));
 const Coliseum = lazy(() => import("./pages/Coliseum"));
 const OpenSourceFramework = lazy(() => import("./pages/OpenSourceFramework"));
@@ -342,6 +343,7 @@ function ScrollToTop() {
 const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — the rail is free, metered routes quote at the 402 | Council of AI",
   "/wrappers": "Wrapped-asset parity ledger — read, not rated | Council of AI",
+  "/quickstart": "Agent quickstart — discover, read, pay, verify | Council of AI",
   "/products": "Council OS — the SKUs, one workspace | Council of AI",
     "/attestation": "Council Attestation Network | Council of AI",
   "/badge": "White-label badge — Council of AI",
@@ -752,6 +754,7 @@ function App() {
                   <Route path="/financial-axes" component={FinancialAxes} />
                   <Route path="/stablecoins" component={Stablecoins} />
                   <Route path="/wrappers" component={Wrappers} />
+                  <Route path="/quickstart" component={Quickstart} />
                   <Route path="/gspc/jail" component={JailFolder} />
                   <Route path="/gspc/:axis" component={GspcScoreboard} />
                   <Route path="/insurers" component={Insurers} />
