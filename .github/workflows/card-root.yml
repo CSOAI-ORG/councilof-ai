@@ -35,7 +35,7 @@ jobs:
           python-version: "3.11"
       - run: pip install -q opentimestamps-client==0.7.2
       - name: Offline immutability, binding, and state regressions
-        run: python3 -m unittest scripts/test_card_root_automation.py scripts/test_ots_maintenance.py -v
+        run: PYTHONPATH=scripts python3 -m unittest scripts/test_card_root_automation.py scripts/test_ots_maintenance.py -v
 
   build:
     needs: test
