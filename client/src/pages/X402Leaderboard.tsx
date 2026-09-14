@@ -95,7 +95,7 @@ export default function X402Leaderboard() {
                 <tr className="text-left text-slate-400 border-b border-slate-800">
                   <th className="py-2 pr-3">Rank</th>
                   <th className="py-2 pr-3">Vendor</th>
-                  <th className="py-2 pr-3">Host</th>
+                  <th className="py-2 pr-3">Kind</th>
                   <th className="py-2 pr-3">Doors</th>
                   <th className="py-2 pr-3">402</th>
                   <th className="py-2 pr-3">Conform</th>
@@ -109,8 +109,8 @@ export default function X402Leaderboard() {
                 {board.rankings.map((r) => (
                   <tr key={r.rank} className="border-b border-slate-800/40">
                     <td className="py-2 pr-3 font-mono">{r.rank}</td>
-                    <td className="py-2 pr-3">{r.vendor}</td>
-                    <td className="py-2 pr-3 font-mono text-xs">{r.host}</td>
+                    <td className="py-2 pr-3">{r.vendor}<br /><span className="font-mono text-xs text-slate-500">{r.host}</span></td>
+                    <td className="py-2 pr-3 text-xs">{(r as any).kind || "—"}</td>
                     <td className="py-2 pr-3">{r.doors_listed}</td>
                     <td className="py-2 pr-3">{r.doors_returning_402}/{r.doors_listed}</td>
                     <td className="py-2 pr-3">{r.conformance_pct.toFixed(1)}%</td>
