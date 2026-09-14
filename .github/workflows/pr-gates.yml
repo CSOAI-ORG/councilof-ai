@@ -285,6 +285,8 @@ jobs:
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
           python3 scripts/withdraw_one_option_cards.py
           python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
+          # #2391: connector envelope validator (failing controls) + Kaggle adapter replay.
+          python3 -m pytest -q scripts/adapters/test_connector_envelope.py scripts/adapters/test_kaggle_envelopes.py
 
       # TUI-1 (2026-09-14): 14 test files outside client/src, functions, scripts were never
       # run by any gate. These test council-os compose locks, chrome extension verify vectors,
