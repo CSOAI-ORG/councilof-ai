@@ -24,8 +24,6 @@ const SOURCES: Record<keyof CoverageLedgerInput, string> = {
   erc8004: "/interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json",
   wrappers: "/interop/wrapped-asset-parity-latest.json",
   root_kinds: "/interop/root-kinds.json",
-  // Absolute: the pod publishes the daily Bazaar census to a public HF dataset, not to this origin.
-  bazaar: "https://huggingface.co/datasets/csoai/x402-bazaar-conformance/resolve/main/summary-latest.json",
 };
 
 type SourceRead = {
