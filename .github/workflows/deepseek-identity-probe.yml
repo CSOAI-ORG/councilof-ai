@@ -60,4 +60,4 @@ jobs:
           git add public/interop/deepseek-identity
           git commit -m "probe: DeepSeek identity receipt $(date -u +%Y-%m-%dT%H:%MZ)" || { echo "nothing to commit"; exit 0; }
           git push -u origin "$br"
-          gh pr create --base master --head "$br" --title "probe: DeepSeek identity receipt $(date -u +%Y-%m-%dT%H:%MZ)" --body "Receipt of what the DeepSeek API reported it served for each requested model id (V4-Pro → V4.1-Flash reroute window, 2026-09-14 04:00 UTC). A receipt, not a grade. Human merge; the run that lands after 04:00Z beside the one before it is the artifact." || true
+          gh pr create --base master --head "$br" --title "probe: DeepSeek API outcome receipt $(date -u +%Y-%m-%dT%H:%MZ)" --body "Records the API catalogue and per-request outcomes during DeepSeek's announced V4-Pro → V4.1-Flash reroute window. A served-model identity is observed only when a request responds and reports it; refusals remain refusals. This is a receipt, not a grade or quality claim. Human review before merge." || true
