@@ -3,9 +3,15 @@ name: hub-queue-mill
 # (keys as GHA secrets, by name). Stages UNSIGNED ≤3KB cards only; MEASURED happens
 # only after GHA OIDC sign + verify VALID (existing sign path). writes_board=false.
 on:
-  # Schedule DISABLED 2026-09-14 until issue #2075 v0.2 admission
-  # (aggregate-only staging). Re-enable cron only after producer+
-  # verifier+signer+promotion gate green. workflow_dispatch retained.
+  # v0.2 admission was accepted and issue #2075 closed after a real Qwen run
+  # carried the frozen bank, exact transcript, provider/model revisions and
+  # admission receipt through OIDC signing, VALID promotion and live retrieval.
+  # Two chances per hour compensate for GitHub's observed schedule drops in this
+  # workflow-heavy repository. The concurrency group below still permits only
+  # one running and one pending emptiest-axis mill, so delayed ticks cannot burst.
+  schedule:
+    - cron: "11 * * * *"
+    - cron: "41 * * * *"
   workflow_dispatch:
     inputs:
       # Empty means "let the selector choose the emptiest axis", the same thing the
