@@ -183,6 +183,7 @@
   "paths": {
     "/api/a2a": {
       "get": {
+        "description": "POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.",
         "operationId": "get__api_a2a",
         "responses": {
           "200": {
@@ -193,9 +194,10 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.\n *\n * WHY THIS EXISTS (2026-09-05, the a2aproject/A2A#2150 lane)\n * The agent card declared two `supportedI"
+        "summary": "POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at."
       },
       "post": {
+        "description": "POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.",
         "operationId": "post__api_a2a",
         "responses": {
           "200": {
@@ -206,12 +208,12 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.\n *\n * WHY THIS EXISTS (2026-09-05, the a2aproject/A2A#2150 lane)\n * The agent card declared two `supportedI"
+        "summary": "POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at."
       }
     },
     "/api/action-jobs": {
       "get": {
-        "description": "Bare GET returns public contract metadata. Requests with job_id require writer bearer authorization; origin restrictions still apply. ",
+        "description": "Bare GET returns public contract metadata. Requests with job_id require writer bearer authorization; origin restrictions still apply. /api/action-jobs \u2014 bounded, durable action-intent ledger staging.",
         "operationId": "get__api_action-jobs",
         "responses": {
           "200": {
@@ -230,10 +232,10 @@
             "operatorBearer": []
           }
         ],
-        "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
+        "summary": "/api/action-jobs \u2014 bounded, durable action-intent ledger staging."
       },
       "patch": {
-        "description": "Configured writer bearer and exact same-origin Origin header required. ",
+        "description": "Configured writer bearer and exact same-origin Origin header required. /api/action-jobs \u2014 bounded, durable action-intent ledger staging.",
         "operationId": "patch__api_action-jobs",
         "responses": {
           "200": {
@@ -251,10 +253,10 @@
             "operatorBearer": []
           }
         ],
-        "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
+        "summary": "/api/action-jobs \u2014 bounded, durable action-intent ledger staging."
       },
       "post": {
-        "description": "Configured writer bearer and exact same-origin Origin header required. ",
+        "description": "Configured writer bearer and exact same-origin Origin header required. /api/action-jobs \u2014 bounded, durable action-intent ledger staging.",
         "operationId": "post__api_action-jobs",
         "responses": {
           "200": {
@@ -272,11 +274,12 @@
             "operatorBearer": []
           }
         ],
-        "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
+        "summary": "/api/action-jobs \u2014 bounded, durable action-intent ledger staging."
       }
     },
     "/api/agentic-fix": {
       "get": {
+        "description": "",
         "operationId": "get__api_agentic-fix",
         "responses": {
           "503": {
@@ -290,6 +293,7 @@
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
+        "description": "",
         "operationId": "post__api_agentic-fix",
         "responses": {
           "503": {
@@ -574,6 +578,7 @@
     },
     "/api/article50": {
       "get": {
+        "description": "POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed). GET  /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly.",
         "operationId": "get__api_article50",
         "responses": {
           "200": {
@@ -584,9 +589,10 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed).\n * GET  /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly.\n *\n * HONESTY OVER APPEARANCE (same discipli"
+        "summary": "POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed). GET  /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly."
       },
       "post": {
+        "description": "POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed). GET  /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly.",
         "operationId": "post__api_article50",
         "responses": {
           "200": {
@@ -597,11 +603,12 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed).\n * GET  /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly.\n *\n * HONESTY OVER APPEARANCE (same discipli"
+        "summary": "POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed). GET  /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly."
       }
     },
     "/api/assess": {
       "get": {
+        "description": "POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.",
         "operationId": "get__api_assess",
         "responses": {
           "200": {
@@ -612,9 +619,10 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.\n *\n * THE BRIDGE THIS CLOSES\n * The front end (/assess, AssessTool.tsx) has shipped for weeks pointing at\n * `https://api.cs"
+        "summary": "POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper."
       },
       "post": {
+        "description": "POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.",
         "operationId": "post__api_assess",
         "responses": {
           "200": {
@@ -625,11 +633,12 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.\n *\n * THE BRIDGE THIS CLOSES\n * The front end (/assess, AssessTool.tsx) has shipped for weeks pointing at\n * `https://api.cs"
+        "summary": "POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper."
       }
     },
     "/api/atlas": {
       "get": {
+        "description": "atlas \u2014 retired until its response can be derived from current evidence.",
         "operationId": "get__api_atlas",
         "responses": {
           "503": {
@@ -639,10 +648,11 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* atlas \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "summary": "atlas \u2014 retired until its response can be derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
+        "description": "atlas \u2014 retired until its response can be derived from current evidence.",
         "operationId": "post__api_atlas",
         "responses": {
           "503": {
@@ -652,12 +662,13 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* atlas \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "summary": "atlas \u2014 retired until its response can be derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/axis-register": {
       "get": {
+        "description": "GET /api/axis-register \u2014 the GSPC axis register (canonical scored rows).",
         "operationId": "get__api_axis-register",
         "responses": {
           "200": {
@@ -668,11 +679,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/axis-register \u2014 the GSPC axis register (canonical scored rows).\n *\n * Slot counts live in GET /api/gspc totals (public_count, measured_axes,\n * quotable_axes). This register lists the bundl"
+        "summary": "GET /api/axis-register \u2014 the GSPC axis register (canonical scored rows)."
       }
     },
     "/api/badge": {
       "get": {
+        "description": "",
         "operationId": "get__api_badge",
         "responses": {
           "200": {
@@ -688,6 +700,7 @@
     },
     "/api/bank-complete": {
       "get": {
+        "description": "/api/bank-complete \u2014 evidence-derived reader for the bank \u00d7 chain \u00d7 stablecoin census. Data is embedded at build time (zero-drift with public/interop/bank-registry.json).",
         "operationId": "get__api_bank-complete",
         "responses": {
           "200": {
@@ -698,11 +711,12 @@
           }
         },
         "security": [],
-        "summary": "* /api/bank-complete \u2014 evidence-derived reader for the bank \u00d7 chain \u00d7 stablecoin census.\n * Data is embedded at build time (zero-drift with public/interop/bank-registry.json)."
+        "summary": "/api/bank-complete \u2014 evidence-derived reader for the bank \u00d7 chain \u00d7 stablecoin census. Data is embedded at build time (zero-drift with public/interop/bank-registry.json)."
       }
     },
     "/api/benchmark-quality": {
       "get": {
+        "description": "The day every artifact cited in this file was actually fetched.",
         "operationId": "get__api_benchmark-quality",
         "responses": {
           "200": {
@@ -718,7 +732,7 @@
     },
     "/api/board-sign": {
       "post": {
-        "description": "GitHub OIDC bearer required; token claims are validated by the handler. ",
+        "description": "GitHub OIDC bearer required; token claims are validated by the handler. POST /api/board-sign \u2014 GitHub OIDC only. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.",
         "operationId": "post__api_board-sign",
         "responses": {
           "200": {
@@ -736,11 +750,12 @@
             "githubOidc": []
           }
         ],
-        "summary": "* POST /api/board-sign \u2014 GitHub OIDC only.\n * Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64.\n * The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade."
+        "summary": "POST /api/board-sign \u2014 GitHub OIDC only. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade."
       }
     },
     "/api/body-state": {
       "get": {
+        "description": "/api/body-state \u2014 per-workflow last run / last success / last failure.",
         "operationId": "get__api_body-state",
         "responses": {
           "200": {
@@ -751,11 +766,12 @@
           }
         },
         "security": [],
-        "summary": "* /api/body-state \u2014 per-workflow last run / last success / last failure.\n *\n * Rate-limit safe: ONE unauthenticated call to /actions/runs?per_page=100 gives\n * the latest runs across every workflow; w"
+        "summary": "/api/body-state \u2014 per-workflow last run / last success / last failure."
       }
     },
     "/api/cards": {
       "get": {
+        "description": "GET /api/cards \u2014 live signed-measurement surface (G4 fix).",
         "operationId": "get__api_cards",
         "responses": {
           "200": {
@@ -766,11 +782,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/cards \u2014 live signed-measurement surface (G4 fix).\n *\n * Serves the SIGNED living board + the index of signed measurement cards so the\n * public can verify the measurements the estate has ac"
+        "summary": "GET /api/cards \u2014 live signed-measurement surface (G4 fix)."
       }
     },
     "/api/challenge": {
       "get": {
+        "description": "",
         "operationId": "get__api_challenge",
         "responses": {
           "200": {
@@ -784,6 +801,7 @@
         "summary": ""
       },
       "post": {
+        "description": "",
         "operationId": "post__api_challenge",
         "responses": {
           "200": {
@@ -799,6 +817,7 @@
     },
     "/api/chat": {
       "post": {
+        "description": "",
         "operationId": "post__api_chat",
         "responses": {
           "200": {
@@ -814,6 +833,7 @@
     },
     "/api/checkout": {
       "post": {
+        "description": "POST /api/checkout \u2014 public door is closed.",
         "operationId": "post__api_checkout",
         "responses": {
           "200": {
@@ -824,11 +844,12 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/checkout \u2014 public door is closed.\n *\n * No public prices. A grade is never sold. Verify is free at /gspc-verify.\n * Get measured at /assess. We do not remediate. Empty cells stay empty."
+        "summary": "POST /api/checkout \u2014 public door is closed."
       }
     },
     "/api/clarity": {
       "get": {
+        "description": "",
         "operationId": "get__api_clarity",
         "responses": {
           "200": {
@@ -859,6 +880,7 @@
     },
     "/api/comparison": {
       "get": {
+        "description": "",
         "operationId": "get__api_comparison",
         "responses": {
           "200": {
@@ -874,6 +896,7 @@
     },
     "/api/compute": {
       "get": {
+        "description": "GET /api/compute \u2014 probe surface for the two-machine wire.",
         "operationId": "get__api_compute",
         "responses": {
           "200": {
@@ -884,11 +907,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/compute \u2014 probe surface for the two-machine wire.\n *\n * Quotes the committed Hub census digest. Probes the AG-UI wire when\n * AGUI_WIRE_URL is set. Never writes MEASURED. Never invents a po"
+        "summary": "GET /api/compute \u2014 probe surface for the two-machine wire."
       }
     },
     "/api/contact": {
       "post": {
+        "description": "POST /api/contact \u2014 the contact form. Fields stored verbatim when KV (LEADS) is bound; honest `stored:false` + fallback address when not. Nothing inferred, nothing forwarded to third parties.",
         "operationId": "post__api_contact",
         "responses": {
           "200": {
@@ -899,11 +923,12 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/contact \u2014 the contact form. Fields stored verbatim when KV (LEADS) is bound;\n * honest `stored:false` + fallback address when not. Nothing inferred, nothing forwarded\n * to third parties."
+        "summary": "POST /api/contact \u2014 the contact form. Fields stored verbatim when KV (LEADS) is bound; honest `stored:false` + fallback address when not. Nothing inferred, nothing forwarded to third parties."
       }
     },
     "/api/corpus-watch": {
       "get": {
+        "description": "",
         "operationId": "get__api_corpus-watch",
         "responses": {
           "501": {
@@ -926,6 +951,7 @@
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       },
       "post": {
+        "description": "",
         "operationId": "post__api_corpus-watch",
         "responses": {
           "501": {
@@ -950,6 +976,7 @@
     },
     "/api/corrections": {
       "get": {
+        "description": "",
         "operationId": "get__api_corrections",
         "responses": {
           "200": {
@@ -965,6 +992,7 @@
     },
     "/api/counters": {
       "get": {
+        "description": "GET /api/counters \u2014 Wave-1 public-utility counters (EXP 005), derived from artifacts.",
         "operationId": "get__api_counters",
         "responses": {
           "200": {
@@ -975,11 +1003,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/counters \u2014 Wave-1 public-utility counters (EXP 005), derived from artifacts.\n *\n * \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n * WHAT CHANGED (2026-08-26)"
+        "summary": "GET /api/counters \u2014 Wave-1 public-utility counters (EXP 005), derived from artifacts."
       }
     },
     "/api/coverage": {
       "get": {
+        "description": "GET /api/coverage \u2014 one machine-readable lifecycle view over the estate.",
         "operationId": "get__api_coverage",
         "responses": {
           "200": {
@@ -990,11 +1019,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/coverage \u2014 one machine-readable lifecycle view over the estate.\n *\n * This endpoint does not create evidence and never promotes INDEXED to\n * MEASURED. It reads the existing public truth su"
+        "summary": "GET /api/coverage \u2014 one machine-readable lifecycle view over the estate."
       }
     },
     "/api/cross": {
       "get": {
+        "description": "",
         "operationId": "get__api_cross",
         "responses": {
           "200": {
@@ -1010,6 +1040,7 @@
     },
     "/api/dashboard": {
       "get": {
+        "description": "",
         "operationId": "get__api_dashboard",
         "responses": {
           "501": {
@@ -1032,6 +1063,7 @@
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       },
       "post": {
+        "description": "",
         "operationId": "post__api_dashboard",
         "responses": {
           "501": {
@@ -1056,6 +1088,7 @@
     },
     "/api/decide": {
       "get": {
+        "description": "GET /api/decide \u2014 not implemented; no decision attestation is created.",
         "operationId": "get__api_decide",
         "responses": {
           "501": {
@@ -1074,12 +1107,13 @@
             "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/decide \u2014 not implemented; no decision attestation is created.",
+        "summary": "GET /api/decide \u2014 not implemented; no decision attestation is created.",
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/detect": {
       "get": {
+        "description": "POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)). GET  /api/detect  \u2014 service descriptor.",
         "operationId": "get__api_detect",
         "responses": {
           "200": {
@@ -1090,9 +1124,10 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)).\n * GET  /api/detect  \u2014 service descriptor.\n *\n * HONESTY OVER APPEARANCE (same discipline as article50.ts / assess/key.t"
+        "summary": "POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)). GET  /api/detect  \u2014 service descriptor."
       },
       "post": {
+        "description": "POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)). GET  /api/detect  \u2014 service descriptor.",
         "operationId": "post__api_detect",
         "responses": {
           "200": {
@@ -1103,11 +1138,12 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)).\n * GET  /api/detect  \u2014 service descriptor.\n *\n * HONESTY OVER APPEARANCE (same discipline as article50.ts / assess/key.t"
+        "summary": "POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)). GET  /api/detect  \u2014 service descriptor."
       }
     },
     "/api/detector-interop": {
       "get": {
+        "description": "GET /api/detector-interop \u2014 open, signed detector-interoperability matrix.",
         "operationId": "get__api_detector-interop",
         "responses": {
           "200": {
@@ -1118,11 +1154,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/detector-interop \u2014 open, signed detector-interoperability matrix.\n *\n * EU AI Act Article 50 Code of Practice sets 2027-02-02 for interoperability\n * between detection mechanisms (\"does det"
+        "summary": "GET /api/detector-interop \u2014 open, signed detector-interoperability matrix."
       }
     },
     "/api/east-west-bench": {
       "get": {
+        "description": "",
         "operationId": "get__api_east-west-bench",
         "responses": {
           "200": {
@@ -1138,6 +1175,7 @@
     },
     "/api/embed": {
       "get": {
+        "description": "GET /api/embed \u2014 machine contract for the white-label kit. Counts are not typed here. The badge and embed.js read GET /api/gspc.",
         "operationId": "get__api_embed",
         "responses": {
           "200": {
@@ -1148,11 +1186,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/embed \u2014 machine contract for the white-label kit.\n * Counts are not typed here. The badge and embed.js read GET /api/gspc."
+        "summary": "GET /api/embed \u2014 machine contract for the white-label kit. Counts are not typed here. The badge and embed.js read GET /api/gspc."
       }
     },
     "/api/eu-ai-act": {
       "get": {
+        "description": "/api/eu-ai-act \u2014 evidence summary for the EU AI Act regime (Art 50, high-risk, GPAI). Obligation map is the same one the evidence-bundle assembler uses (see ./_obligations).",
         "operationId": "get__api_eu-ai-act",
         "responses": {
           "200": {
@@ -1163,7 +1202,7 @@
           }
         },
         "security": [],
-        "summary": "* /api/eu-ai-act \u2014 evidence summary for the EU AI Act regime (Art 50, high-risk, GPAI).\n * Obligation map is the same one the evidence-bundle assembler uses (see ./_obligations)."
+        "summary": "/api/eu-ai-act \u2014 evidence summary for the EU AI Act regime (Art 50, high-risk, GPAI). Obligation map is the same one the evidence-bundle assembler uses (see ./_obligations)."
       }
     },
     "/api/eunomia-data": {
@@ -1712,6 +1751,7 @@
     },
     "/api/evidence-intake": {
       "post": {
+        "description": "POST /api/evidence-intake \u2014 explicit candidate measurement intake.",
         "operationId": "post__api_evidence-intake",
         "responses": {
           "200": {
@@ -1722,11 +1762,12 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/evidence-intake \u2014 explicit candidate measurement intake.\n *\n * This is deliberately not a measurement endpoint. It verifies the ephemeral\n * browser signature on one <=3KB candidate receip"
+        "summary": "POST /api/evidence-intake \u2014 explicit candidate measurement intake."
       }
     },
     "/api/evidence-pack": {
       "get": {
+        "description": "",
         "operationId": "get__api_evidence-pack",
         "responses": {
           "200": {
@@ -1742,6 +1783,7 @@
     },
     "/api/fabric": {
       "get": {
+        "description": "GET /api/fabric -- normalized, read-only capability evidence.",
         "operationId": "get__api_fabric",
         "responses": {
           "200": {
@@ -1752,11 +1794,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/fabric -- normalized, read-only capability evidence.\n *\n * This is not an action registry. Every positive state is derived from a bounded\n * same-origin probe made for this request. Catalog"
+        "summary": "GET /api/fabric -- normalized, read-only capability evidence."
       }
     },
     "/api/feed.xml": {
       "get": {
+        "description": "",
         "operationId": "get__api_feed.xml",
         "responses": {
           "200": {
@@ -2033,6 +2076,7 @@
     },
     "/api/files": {
       "get": {
+        "description": "files \u2014 retired until its response can be derived from current evidence.",
         "operationId": "get__api_files",
         "responses": {
           "503": {
@@ -2042,10 +2086,11 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* files \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "summary": "files \u2014 retired until its response can be derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
+        "description": "files \u2014 retired until its response can be derived from current evidence.",
         "operationId": "post__api_files",
         "responses": {
           "503": {
@@ -2055,12 +2100,13 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* files \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "summary": "files \u2014 retired until its response can be derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/findings": {
       "get": {
+        "description": "",
         "operationId": "get__api_findings",
         "responses": {
           "200": {
@@ -2076,6 +2122,7 @@
     },
     "/api/fines": {
       "get": {
+        "description": "GET /api/fines \u2014 First-Fine Watch: signed coverage of the public AI enforcement record.",
         "operationId": "get__api_fines",
         "responses": {
           "200": {
@@ -2086,7 +2133,7 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/fines \u2014 First-Fine Watch: signed coverage of the public AI enforcement record.\n *\n * R8 canon (load-bearing): regulators get signed streams free forever (verification free).\n * This endpoin"
+        "summary": "GET /api/fines \u2014 First-Fine Watch: signed coverage of the public AI enforcement record."
       }
     },
     "/api/free-door": {
@@ -2292,6 +2339,7 @@
     },
     "/api/fulfill": {
       "get": {
+        "description": "GET /api/fulfill \u2014 public fulfillment door is closed.",
         "operationId": "get__api_fulfill",
         "responses": {
           "404": {
@@ -2306,12 +2354,13 @@
             "description": "Door closed \u2014 no public prices; a grade is never sold"
           }
         },
-        "summary": "* GET /api/fulfill \u2014 public fulfillment door is closed.\n *\n * No public prices. A grade is never sold. Verify is free at /gspc-verify.\n * Get measured at /assess. We do not remediate. Empty cells stay",
+        "summary": "GET /api/fulfill \u2014 public fulfillment door is closed.",
         "x-csoai-lifecycle": "DOOR_CLOSED"
       }
     },
     "/api/growth-loops": {
       "get": {
+        "description": "/api/growth-loops \u2014 retired until loop status is derived from current evidence.",
         "operationId": "get__api_growth-loops",
         "responses": {
           "503": {
@@ -2321,12 +2370,13 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/growth-loops \u2014 retired until loop status is derived from current evidence.\n * @openapi-unavailable",
+        "summary": "/api/growth-loops \u2014 retired until loop status is derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/gspc": {
       "get": {
+        "description": "The PUBLIC view of the axes, and the count of axes that still carry a public leader.",
         "operationId": "get__api_gspc",
         "responses": {
           "200": {
@@ -2337,11 +2387,12 @@
           }
         },
         "security": [],
-        "summary": "* The PUBLIC view of the axes, and the count of axes that still carry a public leader.\n *\n * Exported because /api/badge published `public_leader_count: 3` as a LITERAL while its\n * own `ruling` strin"
+        "summary": "The PUBLIC view of the axes, and the count of axes that still carry a public leader."
       }
     },
     "/api/hf-spaces": {
       "get": {
+        "description": "",
         "operationId": "get__api_hf-spaces",
         "responses": {
           "200": {
@@ -2357,6 +2408,7 @@
     },
     "/api/hub-cards": {
       "get": {
+        "description": "An index either answered or it did not. `ok: true` with zero cells is a real, empty index \u2014 it has been read. Only `ok: false` is unread, and it always carries the reason, because \"we could not read it\" and \"it holds nothing\" are different facts and only one of them is ours to assert.",
         "operationId": "get__api_hub-cards",
         "responses": {
           "200": {
@@ -2367,11 +2419,12 @@
           }
         },
         "security": [],
-        "summary": "* An index either answered or it did not. `ok: true` with zero cells is a real,\n * empty index \u2014 it has been read. Only `ok: false` is unread, and it always\n * carries the reason, because \"we could no"
+        "summary": "An index either answered or it did not. `ok: true` with zero cells is a real, empty index \u2014 it has been read. Only `ok: false` is unread, and it always carries the reason, because \"we could not\u2026"
       }
     },
     "/api/include": {
       "get": {
+        "description": "GET /api/include \u2014 not implemented; no Merkle inclusion proof is produced.",
         "operationId": "get__api_include",
         "responses": {
           "501": {
@@ -2390,12 +2443,13 @@
             "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/include \u2014 not implemented; no Merkle inclusion proof is produced.",
+        "summary": "GET /api/include \u2014 not implemented; no Merkle inclusion proof is produced.",
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/interop-bulk": {
       "get": {
+        "description": "GET /api/interop-bulk \u2014 metered bulk/replay access to signed interop surfaces.",
         "operationId": "get__api_interop-bulk",
         "responses": {
           "200": {
@@ -2406,11 +2460,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/interop-bulk \u2014 metered bulk/replay access to signed interop surfaces.\n *\n * Free tier (default): single-shard access to the live interop registry (read-only,\n * the trust engine \u2014 never gat"
+        "summary": "GET /api/interop-bulk \u2014 metered bulk/replay access to signed interop surfaces."
       }
     },
     "/api/lead": {
       "get": {
+        "description": "POST /api/lead \u2014 accepts the \"email me the signed report\" form.",
         "operationId": "get__api_lead",
         "responses": {
           "200": {
@@ -2421,9 +2476,10 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/lead \u2014 accepts the \"email me the signed report\" form.\n *\n * HONESTY OVER APPEARANCE\n * There is no datastore bound to this project yet, and this endpoint does not pretend\n * otherwise: it "
+        "summary": "POST /api/lead \u2014 accepts the \"email me the signed report\" form."
       },
       "post": {
+        "description": "POST /api/lead \u2014 accepts the \"email me the signed report\" form.",
         "operationId": "post__api_lead",
         "responses": {
           "200": {
@@ -2434,11 +2490,12 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/lead \u2014 accepts the \"email me the signed report\" form.\n *\n * HONESTY OVER APPEARANCE\n * There is no datastore bound to this project yet, and this endpoint does not pretend\n * otherwise: it "
+        "summary": "POST /api/lead \u2014 accepts the \"email me the signed report\" form."
       }
     },
     "/api/learn-loop": {
       "get": {
+        "description": "/api/learn-loop \u2014 quarantined pre-release surface.",
         "operationId": "get__api_learn-loop",
         "responses": {
           "503": {
@@ -2448,10 +2505,11 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/learn-loop \u2014 quarantined pre-release surface.\n *\n * @openapi-unavailable\n *\n * The former implementation generated hash-shaped placeholders and labelled\n * them as Ed25519, OpenTimestamps, Reko",
+        "summary": "/api/learn-loop \u2014 quarantined pre-release surface.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
+        "description": "/api/learn-loop \u2014 quarantined pre-release surface.",
         "operationId": "post__api_learn-loop",
         "responses": {
           "503": {
@@ -2461,12 +2519,13 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/learn-loop \u2014 quarantined pre-release surface.\n *\n * @openapi-unavailable\n *\n * The former implementation generated hash-shaped placeholders and labelled\n * them as Ed25519, OpenTimestamps, Reko",
+        "summary": "/api/learn-loop \u2014 quarantined pre-release surface.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/learning-scenarios": {
       "get": {
+        "description": "",
         "operationId": "get__api_learning-scenarios",
         "responses": {
           "200": {
@@ -2482,6 +2541,7 @@
     },
     "/api/locale": {
       "get": {
+        "description": "",
         "operationId": "get__api_locale",
         "responses": {
           "200": {
@@ -2497,6 +2557,7 @@
     },
     "/api/mcp": {
       "get": {
+        "description": "GET /api/mcp \u2014 the MCP registry, served from a PROBED artifact.",
         "operationId": "get__api_mcp",
         "responses": {
           "200": {
@@ -2507,11 +2568,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/mcp \u2014 the MCP registry, served from a PROBED artifact.\n *\n * WHAT CHANGED (2026-08-26, lane A4)\n * This handler used to return a hardcoded array of 6 servers in which every entry set\n *   l"
+        "summary": "GET /api/mcp \u2014 the MCP registry, served from a PROBED artifact."
       }
     },
     "/api/memory": {
       "get": {
+        "description": "memory \u2014 retired until its response can be derived from current evidence.",
         "operationId": "get__api_memory",
         "responses": {
           "503": {
@@ -2521,10 +2583,11 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* memory \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "summary": "memory \u2014 retired until its response can be derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
+        "description": "memory \u2014 retired until its response can be derived from current evidence.",
         "operationId": "post__api_memory",
         "responses": {
           "503": {
@@ -2534,12 +2597,13 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* memory \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "summary": "memory \u2014 retired until its response can be derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/methodology": {
       "get": {
+        "description": "",
         "operationId": "get__api_methodology",
         "responses": {
           "200": {
@@ -2555,6 +2619,7 @@
     },
     "/api/mint": {
       "get": {
+        "description": "",
         "operationId": "get__api_mint",
         "responses": {
           "501": {
@@ -2579,6 +2644,7 @@
     },
     "/api/og": {
       "get": {
+        "description": "",
         "operationId": "get__api_og",
         "responses": {
           "200": {
@@ -2594,6 +2660,7 @@
     },
     "/api/openapi.json": {
       "get": {
+        "description": "GET /api/openapi.json \u2014 an OpenAPI 3.1 description of the PUBLIC read endpoints that already exist, for ChatGPT / Custom-GPT Actions and any other schema importer.",
         "operationId": "get__api_openapi.json",
         "responses": {
           "200": {
@@ -2604,11 +2671,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/openapi.json \u2014 an OpenAPI 3.1 description of the PUBLIC read endpoints that\n * already exist, for ChatGPT / Custom-GPT Actions and any other schema importer.\n *\n * Honesty rules for this fi"
+        "summary": "GET /api/openapi.json \u2014 an OpenAPI 3.1 description of the PUBLIC read endpoints that already exist, for ChatGPT / Custom-GPT Actions and any other schema importer."
       }
     },
     "/api/operator": {
       "get": {
+        "description": "operator \u2014 retired until its response can be derived from current evidence.",
         "operationId": "get__api_operator",
         "responses": {
           "503": {
@@ -2618,10 +2686,11 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* operator \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "summary": "operator \u2014 retired until its response can be derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
+        "description": "operator \u2014 retired until its response can be derived from current evidence.",
         "operationId": "post__api_operator",
         "responses": {
           "503": {
@@ -2631,12 +2700,13 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* operator \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "summary": "operator \u2014 retired until its response can be derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/otel": {
       "get": {
+        "description": "GET /api/otel \u2014 collector presence. LIVE only if a collector answers. Else UNCHECKABLE. Not a 23rd axis.",
         "operationId": "get__api_otel",
         "responses": {
           "200": {
@@ -2647,11 +2717,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/otel \u2014 collector presence.\n * LIVE only if a collector answers. Else UNCHECKABLE. Not a 23rd axis."
+        "summary": "GET /api/otel \u2014 collector presence. LIVE only if a collector answers. Else UNCHECKABLE. Not a 23rd axis."
       }
     },
     "/api/owasp-report": {
       "get": {
+        "description": "GET /api/owasp-report \u2014 OWASP LLM Top 10 \u2194 GSPC axis coverage report.",
         "operationId": "get__api_owasp-report",
         "responses": {
           "200": {
@@ -2662,11 +2733,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/owasp-report \u2014 OWASP LLM Top 10 \u2194 GSPC axis coverage report.\n *\n * The mapping (public/interop/owasp-llm-mapping.json v0.2) is RELATED-TO,\n * never equivalence; the report asserts NO measur"
+        "summary": "GET /api/owasp-report \u2014 OWASP LLM Top 10 \u2194 GSPC axis coverage report."
       }
     },
     "/api/pqc": {
       "get": {
+        "description": "GET /api/pqc \u2014 continuity mill vs estate signer. Not a 23rd axis. Continuity MEASURED \u2260 we are PQC.",
         "operationId": "get__api_pqc",
         "responses": {
           "200": {
@@ -2677,11 +2749,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/pqc \u2014 continuity mill vs estate signer.\n * Not a 23rd axis. Continuity MEASURED \u2260 we are PQC."
+        "summary": "GET /api/pqc \u2014 continuity mill vs estate signer. Not a 23rd axis. Continuity MEASURED \u2260 we are PQC."
       }
     },
     "/api/press.json": {
       "get": {
+        "description": "GET /api/press.json \u2014 what changed, with the command that proves each line.",
         "operationId": "get__api_press.json",
         "responses": {
           "200": {
@@ -2692,11 +2765,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/press.json \u2014 what changed, with the command that proves each line.\n *\n * The press surface as CODE. Every figure is read from a committed artifact at build time and\n * every claim ships wit"
+        "summary": "GET /api/press.json \u2014 what changed, with the command that proves each line."
       }
     },
     "/api/prod-readiness": {
       "get": {
+        "description": "/api/prod-readiness \u2014 retired until readiness is derived from current evidence.",
         "operationId": "get__api_prod-readiness",
         "responses": {
           "503": {
@@ -2706,7 +2780,7 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/prod-readiness \u2014 retired until readiness is derived from current evidence.\n * @openapi-unavailable",
+        "summary": "/api/prod-readiness \u2014 retired until readiness is derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
@@ -2967,6 +3041,7 @@
     },
     "/api/provider-canary": {
       "get": {
+        "description": "GET  /api/provider-canary -- public configuration status; never probes. POST /api/provider-canary -- authenticated, fixed one-token capability canary.",
         "operationId": "get__api_provider-canary",
         "responses": {
           "200": {
@@ -2977,10 +3052,10 @@
           }
         },
         "security": [],
-        "summary": "* GET  /api/provider-canary -- public configuration status; never probes.\n * POST /api/provider-canary -- authenticated, fixed one-token capability canary.\n *\n * This route is deliberately not user in"
+        "summary": "GET  /api/provider-canary -- public configuration status; never probes. POST /api/provider-canary -- authenticated, fixed one-token capability canary."
       },
       "post": {
-        "description": "Configured operator bearer and same-origin request required. ",
+        "description": "Configured operator bearer and same-origin request required. GET  /api/provider-canary -- public configuration status; never probes. POST /api/provider-canary -- authenticated, fixed one-token capability canary.",
         "operationId": "post__api_provider-canary",
         "responses": {
           "200": {
@@ -2998,7 +3073,7 @@
             "operatorBearer": []
           }
         ],
-        "summary": "* GET  /api/provider-canary -- public configuration status; never probes.\n * POST /api/provider-canary -- authenticated, fixed one-token capability canary.\n *\n * This route is deliberately not user in"
+        "summary": "GET  /api/provider-canary -- public configuration status; never probes. POST /api/provider-canary -- authenticated, fixed one-token capability canary."
       }
     },
     "/api/receipts/batch": {
@@ -3301,6 +3376,7 @@
     },
     "/api/registers": {
       "get": {
+        "description": "GET /api/registers \u2014 unsigned static benchmark summaries.",
         "operationId": "get__api_registers",
         "responses": {
           "200": {
@@ -3317,12 +3393,13 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/registers \u2014 unsigned static benchmark summaries.\n *\n * This handler publishes hard-coded summary values. It does not load or verify\n * source records, signatures, receipts, or cryptographic",
+        "summary": "GET /api/registers \u2014 unsigned static benchmark summaries.",
         "x-csoai-evidence-state": "UNSIGNED_STATIC_SUMMARY"
       }
     },
     "/api/regulation": {
       "get": {
+        "description": "GET /api/regulation \u2014 source-cited regulation deadline feed.",
         "operationId": "get__api_regulation",
         "responses": {
           "200": {
@@ -3333,11 +3410,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/regulation \u2014 source-cited regulation deadline feed.\n *\n * This endpoint deliberately serves a bounded, versioned register rather than\n * accepting generic writes. Dates are statements from "
+        "summary": "GET /api/regulation \u2014 source-cited regulation deadline feed."
       }
     },
     "/api/regulator-findings": {
       "get": {
+        "description": "",
         "operationId": "get__api_regulator-findings",
         "responses": {
           "200": {
@@ -3353,6 +3431,7 @@
     },
     "/api/report": {
       "get": {
+        "description": "",
         "operationId": "get__api_report",
         "responses": {
           "501": {
@@ -3375,6 +3454,7 @@
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       },
       "post": {
+        "description": "",
         "operationId": "post__api_report",
         "responses": {
           "501": {
@@ -3399,6 +3479,7 @@
     },
     "/api/reported": {
       "get": {
+        "description": "GET /api/reported \u2014 third-party figures we carry but did not measure.",
         "operationId": "get__api_reported",
         "responses": {
           "200": {
@@ -3409,9 +3490,10 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/reported \u2014 third-party figures we carry but did not measure.\n *\n * REPORTED is claims made by a source about itself or another system: unsigned, not\n * measured here, and never entering the"
+        "summary": "GET /api/reported \u2014 third-party figures we carry but did not measure."
       },
       "post": {
+        "description": "GET /api/reported \u2014 third-party figures we carry but did not measure.",
         "operationId": "post__api_reported",
         "responses": {
           "501": {
@@ -3430,7 +3512,7 @@
             "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/reported \u2014 third-party figures we carry but did not measure.\n *\n * REPORTED is claims made by a source about itself or another system: unsigned, not\n * measured here, and never entering the",
+        "summary": "GET /api/reported \u2014 third-party figures we carry but did not measure.",
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
@@ -3704,6 +3786,7 @@
     },
     "/api/revenue": {
       "get": {
+        "description": "GET /api/revenue \u2014 the three-SKU revenue instrumentation (EXEC-A-REVENUE.md \u00a75).",
         "operationId": "get__api_revenue",
         "responses": {
           "200": {
@@ -3714,11 +3797,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/revenue \u2014 the three-SKU revenue instrumentation (EXEC-A-REVENUE.md \u00a75).\n *\n * Reads the revenue counters straight out of counters.json (the counter canon) and, WHERE A\n * store is bound, th"
+        "summary": "GET /api/revenue \u2014 the three-SKU revenue instrumentation (EXEC-A-REVENUE.md \u00a75)."
       }
     },
     "/api/root": {
       "get": {
+        "description": "GET /api/root \u2014 alias of public/root.json. Same bytes the static door serves. Never a second forest.",
         "operationId": "get__api_root",
         "responses": {
           "200": {
@@ -3729,11 +3813,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/root \u2014 alias of public/root.json.\n * Same bytes the static door serves. Never a second forest."
+        "summary": "GET /api/root \u2014 alias of public/root.json. Same bytes the static door serves. Never a second forest."
       }
     },
     "/api/router": {
       "get": {
+        "description": "/api/router \u2014 the bounded discovery + interop + packages router.",
         "operationId": "get__api_router",
         "responses": {
           "200": {
@@ -3744,7 +3829,7 @@
           }
         },
         "security": [],
-        "summary": "* /api/router \u2014 the bounded discovery + interop + packages router."
+        "summary": "/api/router \u2014 the bounded discovery + interop + packages router."
       }
     },
     "/api/rwa/evidence": {
@@ -4019,6 +4104,7 @@
     },
     "/api/sandbox": {
       "get": {
+        "description": "sandbox \u2014 retired until its response can be derived from current evidence.",
         "operationId": "get__api_sandbox",
         "responses": {
           "503": {
@@ -4028,10 +4114,11 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* sandbox \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "summary": "sandbox \u2014 retired until its response can be derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
+        "description": "sandbox \u2014 retired until its response can be derived from current evidence.",
         "operationId": "post__api_sandbox",
         "responses": {
           "503": {
@@ -4041,12 +4128,13 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* sandbox \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "summary": "sandbox \u2014 retired until its response can be derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/security": {
       "get": {
+        "description": "",
         "operationId": "get__api_security",
         "responses": {
           "200": {
@@ -4062,6 +4150,7 @@
     },
     "/api/specialists": {
       "get": {
+        "description": "GET /api/specialists \u2014 the signed specialist-team feed, served LIVE + pass-through.",
         "operationId": "get__api_specialists",
         "responses": {
           "200": {
@@ -4072,11 +4161,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/specialists \u2014 the signed specialist-team feed, served LIVE + pass-through.\n *\n * Honest PROXY of the estate's signed specialist-team feed\n * (https://csoai-sovereign.pages.dev/api/specialis"
+        "summary": "GET /api/specialists \u2014 the signed specialist-team feed, served LIVE + pass-through."
       }
     },
     "/api/state": {
       "get": {
+        "description": "GET /api/state \u2014 the ONE live state surface every lane quotes instead of asserting.",
         "operationId": "get__api_state",
         "responses": {
           "200": {
@@ -4087,11 +4177,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/state \u2014 the ONE live state surface every lane quotes instead of asserting.\n *\n * \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n * WHY THIS EXISTS\n * In one w"
+        "summary": "GET /api/state \u2014 the ONE live state surface every lane quotes instead of asserting."
       }
     },
     "/api/subscribe": {
       "get": {
+        "description": "",
         "operationId": "get__api_subscribe",
         "responses": {
           "501": {
@@ -4114,6 +4205,7 @@
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       },
       "post": {
+        "description": "",
         "operationId": "post__api_subscribe",
         "responses": {
           "501": {
@@ -4138,6 +4230,7 @@
     },
     "/api/swift": {
       "get": {
+        "description": "GET /api/swift \u2014 reader of public/interop/swift-census.json. Three-state census tape (LIVE / COMMITTED / DISCOVERED). DISCOVERED-first, not MEASURED. Not a SWIFT client feed. writes_board=false. Supersedes the swift-17 tape; 26 named banks sourced, 40+ universe cited.",
         "operationId": "get__api_swift",
         "responses": {
           "200": {
@@ -4148,11 +4241,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/swift \u2014 reader of public/interop/swift-census.json.\n * Three-state census tape (LIVE / COMMITTED / DISCOVERED). DISCOVERED-first,\n * not MEASURED. Not a SWIFT client feed. writes_board=fals"
+        "summary": "GET /api/swift \u2014 reader of public/interop/swift-census.json. Three-state census tape (LIVE / COMMITTED / DISCOVERED). DISCOVERED-first, not MEASURED. Not a SWIFT client feed. writes_board=false\u2026"
       }
     },
     "/api/synthesis": {
       "get": {
+        "description": "/api/synthesis \u2014 retired until mappings is derived from current evidence.",
         "operationId": "get__api_synthesis",
         "responses": {
           "503": {
@@ -4162,12 +4256,13 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/synthesis \u2014 retired until mappings is derived from current evidence.\n * @openapi-unavailable",
+        "summary": "/api/synthesis \u2014 retired until mappings is derived from current evidence.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/tools": {
       "get": {
+        "description": "GET /api/tools?q=<query> \u2014 the MCP tool catalogue, derived from a PROBED artifact.",
         "operationId": "get__api_tools",
         "responses": {
           "200": {
@@ -4178,11 +4273,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/tools?q=<query> \u2014 the MCP tool catalogue, derived from a PROBED artifact.\n *\n * WHAT CHANGED (2026-08-26, lane A4)\n * This handler used to return `const CATALOGUE_TOTAL = 378` \u2014 a hardcoded"
+        "summary": "GET /api/tools?q=<query> \u2014 the MCP tool catalogue, derived from a PROBED artifact."
       }
     },
     "/api/trace": {
       "get": {
+        "description": "Resolve one published card by exact SHA-256. This endpoint reads; it never mints.",
         "operationId": "get__api_trace",
         "responses": {
           "200": {
@@ -4196,6 +4292,7 @@
         "summary": "Resolve one published card by exact SHA-256. This endpoint reads; it never mints."
       },
       "post": {
+        "description": "Resolve one published card by exact SHA-256. This endpoint reads; it never mints.",
         "operationId": "post__api_trace",
         "responses": {
           "405": {
@@ -4211,6 +4308,7 @@
     },
     "/api/verify": {
       "get": {
+        "description": "POST /api/verify \u2014 verify a posted measurement card. GET explains how.",
         "operationId": "get__api_verify",
         "responses": {
           "200": {
@@ -4221,9 +4319,10 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/verify \u2014 verify a posted measurement card. GET explains how.\n *\n * WHY THIS EXISTS. /api/verify answered 404 while six /interop manifests and four generators\n * pointed at it, and the esta"
+        "summary": "POST /api/verify \u2014 verify a posted measurement card. GET explains how."
       },
       "post": {
+        "description": "POST /api/verify \u2014 verify a posted measurement card. GET explains how.",
         "operationId": "post__api_verify",
         "responses": {
           "200": {
@@ -4234,11 +4333,12 @@
           }
         },
         "security": [],
-        "summary": "* POST /api/verify \u2014 verify a posted measurement card. GET explains how.\n *\n * WHY THIS EXISTS. /api/verify answered 404 while six /interop manifests and four generators\n * pointed at it, and the esta"
+        "summary": "POST /api/verify \u2014 verify a posted measurement card. GET explains how."
       }
     },
     "/api/verify-batch": {
       "get": {
+        "description": "GET /api/verify-batch \u2014 not implemented; no cards are verified.",
         "operationId": "get__api_verify-batch",
         "responses": {
           "501": {
@@ -4257,12 +4357,13 @@
             "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/verify-batch \u2014 not implemented; no cards are verified.",
+        "summary": "GET /api/verify-batch \u2014 not implemented; no cards are verified.",
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/verify-card": {
       "get": {
+        "description": "GET /api/verify-card \u2014 not implemented; no card is verified.",
         "operationId": "get__api_verify-card",
         "responses": {
           "501": {
@@ -4281,12 +4382,13 @@
             "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/verify-card \u2014 not implemented; no card is verified.",
+        "summary": "GET /api/verify-card \u2014 not implemented; no card is verified.",
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/verify-tally": {
       "get": {
+        "description": "",
         "operationId": "get__api_verify-tally",
         "responses": {
           "200": {
@@ -4300,6 +4402,7 @@
         "summary": ""
       },
       "post": {
+        "description": "",
         "operationId": "post__api_verify-tally",
         "responses": {
           "200": {
@@ -4315,6 +4418,7 @@
     },
     "/api/wave-dashboard": {
       "get": {
+        "description": "",
         "operationId": "get__api_wave-dashboard",
         "responses": {
           "200": {
@@ -4330,6 +4434,7 @@
     },
     "/api/webhooks": {
       "delete": {
+        "description": "GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
         "operationId": "delete__api_webhooks",
         "responses": {
           "200": {
@@ -4340,9 +4445,10 @@
           }
         },
         "security": [],
-        "summary": "* GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound).\n * GET: returns array of { id, url, events, active, created_at }\n * POST: creates new webhook with { url, events }\n * DELETE: ?id=X r"
+        "summary": "GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes\u2026"
       },
       "get": {
+        "description": "GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
         "operationId": "get__api_webhooks",
         "responses": {
           "200": {
@@ -4353,9 +4459,10 @@
           }
         },
         "security": [],
-        "summary": "* GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound).\n * GET: returns array of { id, url, events, active, created_at }\n * POST: creates new webhook with { url, events }\n * DELETE: ?id=X r"
+        "summary": "GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes\u2026"
       },
       "post": {
+        "description": "GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
         "operationId": "post__api_webhooks",
         "responses": {
           "200": {
@@ -4366,11 +4473,12 @@
           }
         },
         "security": [],
-        "summary": "* GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound).\n * GET: returns array of { id, url, events, active, created_at }\n * POST: creates new webhook with { url, events }\n * DELETE: ?id=X r"
+        "summary": "GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes\u2026"
       }
     },
     "/api/witness": {
       "get": {
+        "description": "/api/witness \u2014 quarantined paid witness surface.",
         "operationId": "get__api_witness",
         "responses": {
           "503": {
@@ -4380,10 +4488,11 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/witness \u2014 quarantined paid witness surface.\n *\n * @openapi-unavailable\n *\n * The implementation below is retained and tested as a fixture, but the public\n * handlers return 503 before parsing i",
+        "summary": "/api/witness \u2014 quarantined paid witness surface.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
+        "description": "/api/witness \u2014 quarantined paid witness surface.",
         "operationId": "post__api_witness",
         "responses": {
           "503": {
@@ -4393,12 +4502,13 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/witness \u2014 quarantined paid witness surface.\n *\n * @openapi-unavailable\n *\n * The implementation below is retained and tested as a fixture, but the public\n * handlers return 503 before parsing i",
+        "summary": "/api/witness \u2014 quarantined paid witness surface.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/worker": {
       "get": {
+        "description": "",
         "operationId": "get__api_worker",
         "responses": {
           "501": {
@@ -4421,6 +4531,7 @@
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       },
       "post": {
+        "description": "",
         "operationId": "post__api_worker",
         "responses": {
           "501": {
@@ -4717,6 +4828,7 @@
     },
     "/api/x402": {
       "get": {
+        "description": "GET /api/x402 \u2014 the machine catalog of the metered rail. NO AMOUNTS HERE.",
         "operationId": "get__api_x402",
         "responses": {
           "200": {
@@ -4727,11 +4839,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/x402 \u2014 the machine catalog of the metered rail. NO AMOUNTS HERE.\n *\n * One resource per entry, each with a free preview and a 402 door. Amounts\n * surface only inside a 402 challenge (accep"
+        "summary": "GET /api/x402 \u2014 the machine catalog of the metered rail. NO AMOUNTS HERE."
       }
     },
     "/api/x402-trust-seller": {
       "get": {
+        "description": "GET /api/x402-trust-seller?host=<catalog-host>",
         "operationId": "get__api_x402-trust-seller",
         "responses": {
           "200": {
@@ -4742,11 +4855,12 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/x402-trust-seller?host=<catalog-host>\n *\n * Per-skin seller-side trust page: a catalog owner sees a pointer at their own\n * verified-count door, sold as MCP `commission_card` (request-attes"
+        "summary": "GET /api/x402-trust-seller?host=<catalog-host>"
       }
     },
     "/api/xrpl": {
       "get": {
+        "description": "GET /api/xrpl \u2014 reader of the committed public-root 16.",
         "operationId": "get__api_xrpl",
         "responses": {
           "200": {
@@ -4757,7 +4871,7 @@
           }
         },
         "security": [],
-        "summary": "* GET /api/xrpl \u2014 reader of the committed public-root 16.\n *\n * 200 only when this deploy's /root.json plus /cards yield exactly the locked\n * 16 xrpl.asset.state leaves whose sha256 sit on that root."
+        "summary": "GET /api/xrpl \u2014 reader of the committed public-root 16."
       }
     }
   },
