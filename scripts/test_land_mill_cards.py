@@ -72,15 +72,14 @@ class EvidenceLandingTest(unittest.TestCase):
             (staged / bundle_name).write_text(bundle_text)
         return staged, inbox, signed, evdir
 
-    def test_card_and_bundle_land_together(self):
+    def test_legacy_bundle_is_preserved_but_not_admitted(self):
         wrap, name = _card_with_evidence(self.ITEMS)
         with tempfile.TemporaryDirectory() as td:
             staged, inbox, signed, evdir = self._stage(Path(td), wrap, name, self.ITEMS)
             rep = land(staged, inbox, signed, "777", evidence_dir=evdir, require_evidence=True)
-            self.assertEqual(len(rep["landed"]), 1, rep["skipped"])
-            self.assertTrue((evdir / name).is_file(), "the bundle lands next to the inbox")
-            landed = json.loads(next(inbox.glob("unsigned-*.json")).read_text())
-            self.assertEqual(landed["body"]["evidence"]["items_sha256"], wrap["body"]["evidence"]["items_sha256"])
+            self.assertEqual(len(rep["landed"]), 0)
+            self.assertIn("legacy evidence", rep["skipped"][0]["reason"])
+            self.assertFalse((evdir / name).exists())
 
     def test_bundle_sha_mismatch_fails_closed(self):
         wrap, name = _card_with_evidence(self.ITEMS)

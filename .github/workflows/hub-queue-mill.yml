@@ -186,8 +186,10 @@ jobs:
             jail) DS=jail-goldbank ;;
             *) DS="$AXIS" ;;
           esac
-          echo "DS=$DS" >> "$GITHUB_ENV"  # the mill step's --bank-dataset reads this across the step boundary
-          if curl -fsSL "https://huggingface.co/datasets/csoai/gspc-${DS}/resolve/main/items.jsonl" -o "mill-in/banks/${AXIS}.jsonl"; then
+          echo "DS=$DS" >> "$GITHUB_ENV"
+          BANK_REVISION=$(curl -fsSL "https://huggingface.co/api/datasets/csoai/gspc-${DS}" | jq -er '.sha')
+          echo "BANK_REVISION=$BANK_REVISION" >> "$GITHUB_ENV"
+          if curl -fsSL "https://huggingface.co/datasets/csoai/gspc-${DS}/resolve/${BANK_REVISION}/items.jsonl" -o "mill-in/banks/${AXIS}.jsonl"; then
             echo "bank csoai/gspc-${DS} → banks/${AXIS}.jsonl ($(wc -l < mill-in/banks/${AXIS}.jsonl) items)"; echo "inputs=1" >> "$GITHUB_OUTPUT"
           else
             echo "no public frozen bank for ${AXIS} (tried csoai/gspc-${DS}) — stays UNMEASURED"; echo "inputs=0" >> "$GITHUB_OUTPUT"
@@ -264,6 +266,7 @@ jobs:
             --probe-first --dead harness/gspc-top100/dead_slugs.jsonl \
             --dead-max-age-days 14 \
             --bank-dataset "csoai/gspc-${DS}" \
+            --bank-revision "$BANK_REVISION" \
             --inflight mill-in/inflight.jsonl --priority mill-in/priority.txt 2>&1 | tail -40
       - name: Link commissions to this run's observed results
         if: always()
