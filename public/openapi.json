@@ -4525,50 +4525,18 @@
     },
     "/api/worker": {
       "get": {
-        "description": "",
+        "description": "GET /api/worker \u2014 the GPU worker's state, read from the pod's own health endpoint at request time.",
         "operationId": "get__api_worker",
         "responses": {
-          "501": {
+          "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "accepted": false,
-                  "endpoint": "/api/worker",
-                  "persisted": false,
-                  "schema": "csoai.capability-state/0.1",
-                  "signed": false,
-                  "state": "NOT_IMPLEMENTED"
-                }
-              }
+              "application/json": {}
             },
-            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+            "description": "OK"
           }
         },
-        "summary": "",
-        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
-      },
-      "post": {
-        "description": "",
-        "operationId": "post__api_worker",
-        "responses": {
-          "501": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "accepted": false,
-                  "endpoint": "/api/worker",
-                  "persisted": false,
-                  "schema": "csoai.capability-state/0.1",
-                  "signed": false,
-                  "state": "NOT_IMPLEMENTED"
-                }
-              }
-            },
-            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
-          }
-        },
-        "summary": "",
-        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+        "security": [],
+        "summary": "GET /api/worker \u2014 the GPU worker's state, read from the pod's own health endpoint at request time."
       }
     },
     "/api/wrapper": {
@@ -4970,7 +4938,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 91,
+    "public_operations": 92,
     "quarantined": [
       {
         "buyable": false,
