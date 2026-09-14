@@ -1,0 +1,115 @@
+{
+  "schema": "csoai.commission-fulfillment-probe/0.1",
+  "as_of": "2026-09-14T03:13:02Z",
+  "status": "UNSIGNED",
+  "writes_board": false,
+  "never_certify": true,
+  "board_cite": "https://councilof.ai/api/gspc \u2192 22\u00b722\u00b70",
+  "feed": {
+    "url": "https://councilof.ai/api/commissions",
+    "schema": "csoai.commissions/0.1",
+    "count": 6,
+    "subjects": [
+      "clan-csoai-plain:latest",
+      "llama3.2:3b",
+      "payai-wrapper-0.01-2026-09-14"
+    ]
+  },
+  "hub_queue": {
+    "url": "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl",
+    "n_ids": 2773
+  },
+  "wire": {
+    "receipt_to_kv": "functions/api/request-attestation.ts \u2192 REVENUE_KV ras:<sha>",
+    "kv_to_api": "GET /api/commissions",
+    "api_to_mill_priority": ".github/workflows/hub-queue-mill.yml \u2192 commission_priority.py \u2192 --priority",
+    "api_to_ollama_jobs": "scripts/pod-loops/commission-dispatch.sh \u2192 runpod_commission_dispatch.py",
+    "gap": "All LIVE commissioned subjects (this probe) miss hub-queue ids \u2192 hub mill cannot grade them; Ollama subjects need KEEP dispatch + installed weights."
+  },
+  "rows": [
+    {
+      "receipt_sha": "fb50cbdbd3691cca9c32e6a481e6898b434c98de2cb85353b4ac564f3e7d5617",
+      "subject": "clan-csoai-plain:latest",
+      "axis": null,
+      "tx": "0xeec6b0532d058194d810b52574928fdd5e1e6e3a4fd48ab0304ba2807589b8dd",
+      "as_of": "2026-09-06T08:01:23.527Z",
+      "enqueued_to_commissions_api": true,
+      "in_hub_queue": false,
+      "suggested_rail": "keep-ollama-dispatch",
+      "status": "OLLAMA_CANDIDATE",
+      "reason": "looks like Ollama tag \u2014 needs KEEP commission-dispatch + installed model",
+      "meaning": "Receipt\u2260measured. Enqueue to /api/commissions is necessary but not sufficient."
+    },
+    {
+      "receipt_sha": "dd27ad1b0b0ef0fdc6ecf2f35ba33412018f737081893ee0c5fa9247822af8c1",
+      "subject": "llama3.2:3b",
+      "axis": null,
+      "tx": "0x60172f43ca14e5874eba92b990ce623e6503cee6d060fd89fd828993fababe7f",
+      "as_of": "2026-09-11T13:30:53.614Z",
+      "enqueued_to_commissions_api": true,
+      "in_hub_queue": false,
+      "suggested_rail": "keep-ollama-dispatch",
+      "status": "OLLAMA_CANDIDATE",
+      "reason": "looks like Ollama tag \u2014 needs KEEP commission-dispatch + installed model",
+      "meaning": "Receipt\u2260measured. Enqueue to /api/commissions is necessary but not sufficient."
+    },
+    {
+      "receipt_sha": "397f28437448a39a3775fd7f215393874be48bb556ea5a75c5d8f320e0f70c65",
+      "subject": "llama3.2:3b",
+      "axis": "governance",
+      "tx": "0xeaaafb8a8e087cf5148f5fa59cfe7b773689bf686e2e99be8f7c4a7c393e8807",
+      "as_of": "2026-09-12T06:15:53.111Z",
+      "enqueued_to_commissions_api": true,
+      "in_hub_queue": false,
+      "suggested_rail": "keep-ollama-dispatch",
+      "status": "OLLAMA_CANDIDATE",
+      "reason": "looks like Ollama tag \u2014 needs KEEP commission-dispatch + installed model",
+      "meaning": "Receipt\u2260measured. Enqueue to /api/commissions is necessary but not sufficient."
+    },
+    {
+      "receipt_sha": "f9374db43e3fd54d1beffec53a5bb39ff8b1f1fe70500b17d5e1a9db3c59940c",
+      "subject": "payai-wrapper-0.01-2026-09-14",
+      "axis": null,
+      "tx": "0x137429c096c1dfe1a5072b52f7d2a27e4fa212561c0c0e50e0ee3ac0e6a3a9be",
+      "as_of": "2026-09-14T02:59:39.566Z",
+      "enqueued_to_commissions_api": true,
+      "in_hub_queue": false,
+      "suggested_rail": "none",
+      "status": "UNFULFILLABLE",
+      "reason": "not in hub-queue and not an Ollama-shaped tag \u2014 mill cannot fulfill",
+      "meaning": "Receipt\u2260measured. Enqueue to /api/commissions is necessary but not sufficient."
+    },
+    {
+      "receipt_sha": "ec6a722af2d4a1c2a1e20e6312eb373a3cec14f1516a6d9e72736dd8e5f1a0fe",
+      "subject": "payai-wrapper-0.01-2026-09-14",
+      "axis": null,
+      "tx": "0x6eafb2a1fd178ab7d85e9ffcb2edbb55876517e587810fbf5a944db2fba7d417",
+      "as_of": "2026-09-14T03:00:23.485Z",
+      "enqueued_to_commissions_api": true,
+      "in_hub_queue": false,
+      "suggested_rail": "none",
+      "status": "UNFULFILLABLE",
+      "reason": "not in hub-queue and not an Ollama-shaped tag \u2014 mill cannot fulfill",
+      "meaning": "Receipt\u2260measured. Enqueue to /api/commissions is necessary but not sufficient."
+    },
+    {
+      "receipt_sha": "bac959313ffe4664fcef88558ccc2857f0f2ad105515935adb6bb9f026c78f89",
+      "subject": "payai-wrapper-0.01-2026-09-14",
+      "axis": null,
+      "tx": "0xcf8200cf9357d106707a4b3897f75754aa86ea09f824f8794f651e343bb5b964",
+      "as_of": "2026-09-14T03:01:41.493Z",
+      "enqueued_to_commissions_api": true,
+      "in_hub_queue": false,
+      "suggested_rail": "none",
+      "status": "UNFULFILLABLE",
+      "reason": "not in hub-queue and not an Ollama-shaped tag \u2014 mill cannot fulfill",
+      "meaning": "Receipt\u2260measured. Enqueue to /api/commissions is necessary but not sufficient."
+    }
+  ],
+  "counts": {
+    "receipts": 6,
+    "millable_hub": 0,
+    "ollama_candidate": 3,
+    "unfulfillable": 3
+  }
+}
