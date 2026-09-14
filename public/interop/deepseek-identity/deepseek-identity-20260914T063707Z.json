@@ -1,0 +1,52 @@
+{
+  "schema": "csoai.model-identity-probe/0.1",
+  "provider": "deepseek",
+  "probed_at": "2026-09-14T06:37:07Z",
+  "event_under_observation": "DeepSeek: V4-Pro API traffic rerouted to V4.1-Flash from 2026-09-14T04:00:00Z (provider announcement)",
+  "attests": "what the API reported it served for each requested model id at probed_at — a receipt, not a grade, not a ranking, not a quality claim",
+  "prompt_sha256": "b09ba2887de05738a0eeb7877fe39d9b582d68fb23e368e5ff01d32898f4233e",
+  "models_listed": {
+    "http": 200,
+    "ids": [
+      "deepseek-flash",
+      "deepseek-v4-pro"
+    ]
+  },
+  "probes": [
+    {
+      "requested_model": "deepseek-v4-pro",
+      "http": 402,
+      "latency_ms": 692,
+      "state": "REFUSED_BALANCE",
+      "error": "Insufficient Balance"
+    },
+    {
+      "requested_model": "deepseek-flash",
+      "http": 402,
+      "latency_ms": 721,
+      "state": "REFUSED_BALANCE",
+      "error": "Insufficient Balance"
+    },
+    {
+      "requested_model": "deepseek-chat",
+      "http": 402,
+      "latency_ms": 708,
+      "state": "REFUSED_BALANCE",
+      "error": "Insufficient Balance"
+    },
+    {
+      "requested_model": "deepseek-reasoner",
+      "http": 402,
+      "latency_ms": 725,
+      "state": "REFUSED_BALANCE",
+      "error": "Insufficient Balance"
+    }
+  ],
+  "announcement_source": {
+    "url": "https://www.deepseek.com/en/news/deepseek-v4-1-flash/",
+    "publisher": "DeepSeek",
+    "published_date": "2026-09-10",
+    "claim": "Starting at 04:00 UTC on Sept 14, 2026, deepseek-v4-pro requests route to V4.1-Flash until V4.1-Pro launches.",
+    "scope": "provider announcement; the probes below independently record only HTTP outcomes and do not verify served-model identity because every call was refused for balance"
+  }
+}

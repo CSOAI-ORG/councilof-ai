@@ -1,0 +1,36 @@
+{
+  "schema": "csoai.identity-pack/xrpl-memo/0.1",
+  "prepared_at": "2026-09-14T01:30:00Z",
+  "status": "PREPARED_NOT_SIGNED",
+  "note": "Owner signs this pack. Agent prepares only.",
+  "account": {
+    "address": "OWNER_TO_SPECIFY",
+    "note": "Owner provides XRPL account. Agent does not hold private keys."
+  },
+  "memo": {
+    "format": "XRPL Memo field",
+    "memo_data": "93a244741200be98934a66484baa43381864e1b30a3509200308308adff51316",
+    "memo_data_hex": "39336132343437343132303062653938393334613636343834626161343333383138363465316233306133353039323030333038333038616466663531333136",
+    "memo_format": "application/json",
+    "memo_type": "csoai.root-attestation",
+    "description": "Memo containing the SHA-256 of the current public Merkle root",
+    "byte_length": 32
+  },
+  "root_reference": {
+    "merkle_root": "93a244741200be98934a66484baa43381864e1b30a3509200308308adff51316",
+    "card_count": 291,
+    "as_of": "2026-09-13T19:27:08Z",
+    "source": "https://councilof.ai/root.json"
+  },
+  "fee_estimate": {
+    "base_fee_xrp": 1.2e-05,
+    "with_memo_xrp": 0.00012,
+    "usd_estimate": 0.0003,
+    "source": "XRPL fee schedule (2026-09-14)"
+  },
+  "verification": {
+    "after_submission": "Query XRPL account transactions for memo containing root SHA",
+    "expected_memo": "93a244741200be98934a66484baa43381864e1b30a3509200308308adff51316",
+    "explorer": "https://xrpscan.com/account/OWNER_TO_SPECIFY"
+  }
+}

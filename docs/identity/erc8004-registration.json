@@ -1,0 +1,39 @@
+{
+  "schema": "csoai.identity-pack/erc8004-registration/0.1",
+  "prepared_at": "2026-09-14T01:30:00Z",
+  "status": "PREPARED_NOT_SIGNED",
+  "note": "Owner signs this pack. Agent prepares only.",
+  "chain": {
+    "name": "Base",
+    "chain_id": 8453,
+    "caip2": "eip155:8453",
+    "rpc": "https://mainnet.base.org",
+    "explorer": "https://basescan.org"
+  },
+  "registry": {
+    "address": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+    "type": "ERC1967Proxy",
+    "event": "Registered(uint256 agentId, string agentURI, address owner)",
+    "existing_registrations": 86263
+  },
+  "registration": {
+    "agent_uri": "https://councilof.ai",
+    "description": "CSOAI measurement agent \u2014 GSPC board, signed measurement cards, x402 receipt rail",
+    "calldata": "0x0ec1526d...  # register(string) \u2014 exact calldata to be computed",
+    "cost_estimate": {
+      "gas": 150000,
+      "gas_price_gwei": 0.001,
+      "eth_cost": 0.00015,
+      "usd_cost": 0.56,
+      "source": "https://basescan.org/gastracker (2026-09-14)"
+    }
+  },
+  "wallet": {
+    "address": "OWNER_TO_SPECIFY",
+    "note": "Owner provides wallet address. Agent does not hold private keys."
+  },
+  "verification": {
+    "after_registration": "Query Registered events for agentURI=https://councilof.ai on Base",
+    "expected_event": "Registered(indexed agentId, indexed agentURI, indexed owner)"
+  }
+}

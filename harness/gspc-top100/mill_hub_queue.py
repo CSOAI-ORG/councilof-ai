@@ -596,6 +596,29 @@ def _hf_router(prompt: str, slug: str | None = None) -> tuple[str, str]:
 OPENROUTER_ORG_MAP = {"deepseek-ai": "deepseek"}
 # slug → route that produced the last OK answer ("hf-router" | "openrouter:<id>"); written onto the card body.
 _ROUTE: dict[str, str] = {}
+# slug → providers the Hub API reported LIVE for chat at probe time (provider_mapping_live detail).
+# infer_hub tries these first: the static HF_PROVIDER_SUFFIX list never contained nscale/deepinfra/
+# novita, so Qwen/Qwen3-14B (live on nscale+featherless+deepinfra) burned run 34813568… on groq 400.
+_LIVE_PROVIDERS: dict[str, list[str]] = {}
+
+
+def note_live_providers(slug: str, detail: str) -> list[str]:
+    """Record the probe's live provider names for a slug. Non-provider details are ignored."""
+    if not detail or detail.startswith(("probe-unavailable", "commissioned_", "no live", "HTTP")):
+        return []
+    names = [x.strip() for x in detail.split(",") if x.strip() and " " not in x.strip()]
+    if names:
+        _LIVE_PROVIDERS[slug] = names
+    return names
+
+
+def provider_suffixes(slug: str) -> tuple[str, ...]:
+    """Live providers for this slug first (Hub order), then the static fallbacks, no duplicates."""
+    order: list[str] = [f":{n}" for n in _LIVE_PROVIDERS.get(slug, [])]
+    for suf in HF_PROVIDER_SUFFIX:
+        if suf not in order:
+            order.append(suf)
+    return tuple(order)
 
 
 def openrouter_id(slug: str) -> str:
@@ -638,7 +661,7 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
     last = "no-endpoint hf"
     unsupported = 0
     tried = 0
-    for suf in HF_PROVIDER_SUFFIX:
+    for suf in provider_suffixes(slug):
         name = f"{slug}{suf}"
         if name in _DEAD:
             continue
@@ -979,6 +1002,8 @@ def mill(
                 live_ok, detail = True, "commissioned_priority_bypass_probe"
             else:
                 live_ok, detail = provider_mapping_live(mid, fetch=probe_fetch)
+                if live_ok:
+                    note_live_providers(mid, detail)
             if live_ok:
                 to_grade.append(r)
             else:

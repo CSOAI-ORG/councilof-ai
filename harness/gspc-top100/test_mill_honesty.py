@@ -683,13 +683,13 @@ def test_land_mill_cards_dedupes_and_rejects_signed(tmp_path: Path | None = None
     (staged / "unsigned-governan-cccccccccccc.json").write_text(json.dumps(tampered))
     presigned = dict(stage_unsigned("org/pre", "governance", hits=15, n=30, reason="x"), signature="ab" * 32)
     (staged / "unsigned-governan-dddddddddddd.json").write_text(json.dumps(presigned))
-    rep = lm.land(staged, inbox, signed_dir)
+    rep = lm.land(staged, inbox, signed_dir, "123")
     assert [r["model"] for r in rep["landed"]] == ["org/new"]
     reasons = {s["file"]: s["reason"] for s in rep["skipped"]}
     assert reasons["unsigned-governan-bbbbbbbbbbbb.json"].startswith("already-signed")
     assert "sha256" in reasons["unsigned-governan-cccccccccccc.json"]
     assert "signature" in reasons["unsigned-governan-dddddddddddd.json"]
-    rep2 = lm.land(staged, inbox, signed_dir)
+    rep2 = lm.land(staged, inbox, signed_dir, "123")
     assert rep2["landed"] == []
     assert any(s["reason"] == "already-landed same id" for s in rep2["skipped"])
     assert rep["signed_here"] is False and rep["writes_board"] is False
