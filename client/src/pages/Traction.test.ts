@@ -6,10 +6,16 @@ const ia = readFileSync(new URL("../data/library-ia.ts", import.meta.url), "utf8
 
 describe("traction public-truth contract", () => {
   it("derives operating and commercial counters from public JSON", () => {
-    for (const endpoint of ["/root.json", "/api/revenue", "/api/commissions", "/api/coverage", "/api/worker"]) {
+    for (const endpoint of ["/root.json", "/api/revenue", "/api/commissions", "/api/coverage", "/api/worker", "/api/corrections"]) {
       expect(source).toContain(endpoint);
     }
     expect(source).toContain("No cached number substituted");
+  });
+
+  it("counts published corrections from the ledger, never a typed number", () => {
+    expect(source).toContain("corrections.value.corrections.length");
+    expect(source).toContain('label="Published corrections"');
+    expect(source).not.toMatch(/Published corrections" value="\d/);
   });
 
   it("separates standards participation and discovery from endorsement and customers", () => {

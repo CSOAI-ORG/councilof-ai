@@ -8,9 +8,10 @@ type State = {
   commissions: { count: number; queued: number; unfulfillable: number } | null;
   coverage: number | null;
   worker: string | null;
+  corrections: number | null;
   failed: string[];
 };
-const EMPTY: State = { root: null, revenue: null, commissions: null, coverage: null, worker: null, failed: [] };
+const EMPTY: State = { root: null, revenue: null, commissions: null, coverage: null, worker: null, corrections: null, failed: [] };
 
 async function json(path: string, signal: AbortSignal) {
   const response = await fetch(path, { signal, cache: "no-store", headers: { accept: "application/json" } });
@@ -23,8 +24,8 @@ export default function Traction() {
   const [live, setLive] = useState<State>(EMPTY);
   useEffect(() => {
     const controller = new AbortController();
-    const paths = ["/root.json", "/api/revenue", "/api/commissions", "/api/coverage", "/api/worker"];
-    Promise.allSettled(paths.map((path) => json(path, controller.signal))).then(([root, revenue, commissions, coverage, worker]) => {
+    const paths = ["/root.json", "/api/revenue", "/api/commissions", "/api/coverage", "/api/worker", "/api/corrections"];
+    Promise.allSettled(paths.map((path) => json(path, controller.signal))).then(([root, revenue, commissions, coverage, worker, corrections]) => {
       if (controller.signal.aborted) return;
       const next: State = { ...EMPTY, failed: [] };
       if (root.status === "fulfilled") {
@@ -48,6 +49,9 @@ export default function Traction() {
       else next.failed.push("coverage");
       if (worker.status === "fulfilled" && typeof worker.value?.status === "string") next.worker = worker.value.status;
       else next.failed.push("worker");
+      // Count of published correction entries in the corrections ledger — each states what was wrong and the fix. Never typed by hand.
+      if (corrections.status === "fulfilled" && Array.isArray(corrections.value?.corrections)) next.corrections = corrections.value.corrections.length;
+      else next.failed.push("corrections");
       setLive(next);
     });
     return () => controller.abort();
@@ -83,7 +87,7 @@ export default function Traction() {
 
     <section className="border-y border-white/10 bg-slate-900/70"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-2">
       <div><p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">Operating evidence</p><h2 className="mt-3 text-2xl font-black">A public instrument, commercially early</h2><p className="mt-4 leading-7 text-slate-300">The product and distribution rails operate. Repeat demand, retained feeds and broader outside payment remain the next commercial proof. Indexed resources, downloads, repositories and founder-funded tests are never presented as customers.</p></div>
-      <dl className="grid gap-3 sm:grid-cols-2"><Datum label="Coverage families" value={live.coverage === null ? "UNCHECKABLE" : String(live.coverage)} href="/api/coverage" /><Datum label="Worker state" value={live.worker ?? "UNCHECKABLE"} href="/api/worker" /><Datum label="Corrections" value="Public ledger" href="/refutation-ledger" /><Datum label="Methods" value="Reproducible" href="/methodology" /></dl>
+      <dl className="grid gap-3 sm:grid-cols-2"><Datum label="Coverage families" value={live.coverage === null ? "UNCHECKABLE" : String(live.coverage)} href="/api/coverage" /><Datum label="Worker state" value={live.worker ?? "UNCHECKABLE"} href="/api/worker" /><Datum label="Published corrections" value={live.corrections === null ? "UNCHECKABLE" : String(live.corrections)} href="/api/corrections" /><Datum label="Methods" value="Reproducible" href="/methodology" /></dl>
     </div></section>
 
     <section className="mx-auto max-w-6xl px-5 py-14"><h2 className="text-2xl font-black">The diligence path</h2><div className="mt-5 grid gap-4 md:grid-cols-3"><Step n="01" title="Inspect" body="Read the current root, coverage ledger and methodology." href="/root.json" /><Step n="02" title="Verify" body="Check a signed card and inspect corrections before trusting a claim." href="/gspc-verify" /><Step n="03" title="Commission" body="Move a real subject through queue, mill, signature and publication." href="/start" /></div></section>
