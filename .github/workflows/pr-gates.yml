@@ -279,6 +279,7 @@ jobs:
           python3 -m pip install -q pytest
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
+          python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
 
       # public/verifier/gspc-verify.mjs is PUBLISHED — it serves at
       # https://councilof.ai/verifier/gspc-verify.mjs and is the copy a stranger downloads to check
