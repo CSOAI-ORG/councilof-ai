@@ -30,9 +30,9 @@ GitHub-reviewed main is authority. RunPod is compute, Oracle is a light worker/w
 - Production deploy `34843030147` completed its gated build and deployment successfully for PR #2394, including root/witness integrity and desktop/mobile shell smoke. Its post-merge prover `34843029335` also passed.
 - Public root reports 299 leaves as of `2026-09-14T09:45:35Z`.
 - Public card matrix reports 335 signed cells, 64 models, 16 populated axes.
-- RunPod worker is LIVE/WAITING with 182 successful runs and 0 failed runs.
-- Public `/api/worker` serves the new dispatcher field, but `commission_dispatch` is `null`: the website revision is current and the pod process is still the older runtime.
-- The typed commission dispatcher and sanitized public observability are merged in PRs #2388 and #2393. PR #2409 also removes already-retrievable subjects from the active commission queue; its deployment is pending.
+- RunPod worker is LIVE/RUNNING on reviewed revision `a3bb5144647797ceed0a8f10397e26f8c6d4dd9a`; the process reported 39 successful runs and 0 failed runs at `2026-09-14T12:57Z` after its refresh.
+- Public `/api/worker` exposes a non-null sanitized `commission_dispatch` record. Its first observed dispatch admitted 0 and refused 1 because the only remaining queued model was unavailable.
+- The typed commission dispatcher and sanitized public observability are merged in PRs #2388 and #2393. PR #2409 removes already-retrievable subjects from the active commission queue; deployment `34844060346` passed and the live queue now contains only the unavailable subject.
 - Canonical no-duplicate outward ledger and waves are merged in #2395, #2396, #2400 and #2402.
 - AI Agents Listing is submitted and awaiting editorial review. The detail URL resolves, but visual inspection shows a private-preview banner saying the entry is not yet published. The CSOAI logo and canonical endpoints are present in the preview; promotional updates were disabled. Do not submit a duplicate or call it live until the banner clears.
 - Discussions are live: #2397 verification, #2398 integration, #2399 discrepancy reporting.
@@ -40,17 +40,17 @@ GitHub-reviewed main is authority. RunPod is compute, Oracle is a light worker/w
 
 ## P0 unfinished work
 
-### 1. Refresh the RunPod runtime
+### 1. Maintain the reviewed RunPod runtime
 
-Goal: deploy reviewed main to the active worker and restart it so `/commission-dispatch` exists on the pod.
+The runtime refresh acceptance condition is complete: the active worker reports reviewed source revision `a3bb5144647797ceed0a8f10397e26f8c6d4dd9a` and non-null dispatcher telemetry.
 
 Proof required:
 
-- `https://councilof.ai/api/worker` returns a non-null `commission_dispatch` object.
-- It exposes only sanitized queue schema, source revision, last run, admitted/refused/created/already-present counts.
-- One fresh dispatch completes and the result is recorded on issue #2391.
+- Keep the worker on reviewed main.
+- Preserve only sanitized queue schema, source revision, last run, admitted/refused/created/already-present counts.
+- Record runtime transitions on issue #2391.
 
-Do not invent credentials. Current M2 environment has no working RunPod shell/control path; the historical SSH endpoint timed out.
+Do not invent credentials. Use the reviewed control path once merged; M2 still has no direct RunPod credentials.
 
 ### 2. Verify the post-merge publication from PR #2394
 
@@ -66,7 +66,7 @@ PR #2401 is merged. Preserve every concurrent row in the canonical outward ledge
 
 ### 4. Complete commission → mill proof
 
-The queue includes `clan-csoai-plain:latest` and `llama3.2:3b`. The first is not installed; the second already has published evidence. Reconcile both honestly. A paid SKU is not automatically an Ollama model ID. The commissioned leaf must carry a runnable model/bank or end in an explicit UNFULFILLABLE state.
+The active queue now contains only `clan-csoai-plain:latest`. `llama3.2:3b` was correctly removed after its 14 signed cards became retrievable. The remaining subject was refused by the dispatcher because it is unavailable. A paid SKU is not automatically an Ollama model ID. The commissioned leaf must carry a runnable model/bank or end in an explicit UNFULFILLABLE state.
 
 Proof required: one genuinely new commissioned subject enters the queue, is admitted by the correct worker, produces a signed card, passes intake, merges, enters the next root, updates public board/mirrors, and is retrievable by the requester.
 
@@ -87,7 +87,7 @@ Hugging Face publication is automated and green. Kaggle ingestion into the same 
 
 - Own RunPod runtime refresh, commission dispatcher, worker playlists, intake, producer determinism, and #2394.
 - Rotate applicable axes across locally runnable models; fail closed on unavailable providers.
-- Immediate goal: make `commission_dispatch` non-null and prove one genuinely new commission end to end.
+- Immediate goal: prove one genuinely new runnable commission end to end.
 
 ### Oracle
 
@@ -166,14 +166,13 @@ Maintain the single execution ledger, dependency graph, owner asks, host status 
 
 ## Immediate 24-hour sequence
 
-1. Let PR #2409's deployment complete and verify that retrievable subjects no longer appear in the active queue.
-2. Refresh RunPod from reviewed main and prove non-null dispatcher telemetry.
-3. Prove one genuinely new commission through queue → mill → sign → merge → root → delivery.
-4. Monitor AI Agents Listing until the private-preview banner clears; then record LIVE. Do not duplicate the listing.
-5. Monitor every open external PR; respond only to maintainer feedback and record merges.
-6. Implement the Kaggle/common connector envelope.
-7. Re-run public stranger journeys and mobile checks after deployment.
-8. Publish one evidence-led update only when a new verified event exists: signed-card merge, root confirmation, independent citation, external registry merge, or outside paid delivery.
+1. Prove one genuinely new runnable commission through queue → mill → sign → merge → root → delivery.
+2. Land and document the reviewed RunPod control path so future refreshes do not depend on undocumented operator access.
+3. Monitor AI Agents Listing until the private-preview banner clears; then record LIVE. Do not duplicate the listing.
+4. Monitor every open external PR; respond only to maintainer feedback and record merges.
+5. Implement the Kaggle/common connector envelope.
+6. Re-run public stranger journeys and mobile checks after deployment.
+7. Publish one evidence-led update only when a new verified event exists: signed-card merge, root confirmation, independent citation, external registry merge, or outside paid delivery.
 
 ## Reporting template
 
