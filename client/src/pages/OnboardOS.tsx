@@ -68,6 +68,11 @@ export default function OnboardOS() {
           See how we measure what labs publish: the <a href="/frameworks" className="font-semibold text-emerald-300 underline hover:text-emerald-200">frontier framework presence register</a> —
           a bounded, source-verified record of published frontier-safety frameworks. Presence and provenance, never quality.
         </div>
+
+        <div className="mt-4 rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/75">
+          Wrapped-asset parity: on-chain supply for each bridged stablecoin, read from public endpoints.{" "}
+          <a href="/wrappers" className="font-semibold text-emerald-300 underline hover:text-emerald-200">Wrapped-asset parity ledger →</a>
+        </div>
       </section>
     </div>
   );
