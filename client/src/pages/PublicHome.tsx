@@ -406,7 +406,7 @@ export default function PublicHome() {
                       style={{ width: `${Math.min((loiCount?.total || 0) / 1000 * 100, 100)}%` }}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">Goal: 1,000 LOIs for Series A</p>
+                  <p className="text-xs text-muted-foreground mt-2">Goal: 1,000 independently recorded expressions of interest</p>
                 </div>
                 <Link href="/watchdog-signup">
                   <Button className="w-full gap-2">
