@@ -1,0 +1,72 @@
+{
+  "schema": "csoai.growth-loop/0.1",
+  "date": "2026-09-14",
+  "as_of": "2026-09-14T12:37:00Z",
+  "one_number": {
+    "value": 1,
+    "last_30d": 1,
+    "settlements": 1,
+    "self_settlements": 10,
+    "zero_value_settlements": 6,
+    "status": "MEASURED",
+    "gate": null
+  },
+  "funnel_per_door": {
+    "receipts_lookup_available": false,
+    "distinct_nonself_payers": "?",
+    "settlements_listed": 0,
+    "note": "402s-issued counter lands with TUI-1's builder change; until then this reads settles only"
+  },
+  "signals": {
+    "board_lid": "22 axis \u00b7 22 measured",
+    "census_files": {
+      "x402-settlement-census-dry-2026-09-06.summary.json": "0.0000"
+    },
+    "index_probes": {
+      "mcp_so": 200,
+      "mcpservers": 200,
+      "pulsemcp": 200,
+      "glama": 200,
+      "arcade": 200,
+      "hf_dataset": 200
+    },
+    "hf_downloads": {
+      "x402-settlement-census": 115
+    },
+    "pypi_downloads": {
+      "meok-watermark-attest-mcp": null,
+      "csoai-axis-engine": null
+    }
+  },
+  "costs": {
+    "census_usdc_spent": "0.0000"
+  },
+  "next_moves": [
+    {
+      "rank": 1,
+      "move": "one_number moved \u2192 per gate '\u22651 repeat \u2192 open the next door'",
+      "proof": "one_number 0 \u2192 1",
+      "owner": false
+    },
+    {
+      "rank": 3,
+      "move": "self-settlements recorded \u2014 shown as self, never growth",
+      "proof": "self=10",
+      "owner": false
+    },
+    {
+      "rank": 4,
+      "move": "open grant window on the map \u2014 TUI-5 pack row",
+      "proof": "8 line(s) say open",
+      "owner": true
+    }
+  ],
+  "retro": [
+    {
+      "prior_moves": 4,
+      "one_number_before": 0,
+      "one_number_after": 1,
+      "moved": true
+    }
+  ]
+}
