@@ -1,0 +1,71 @@
+{
+  "_draft": {
+    "schema": "csoai.xrpl-memo-anchor-draft/0.1",
+    "status": "UNSIGNED_DRAFT_NOT_BROADCAST",
+    "prepared_at": "2026-09-14T10:38:03Z",
+    "prepared_by": "governor lane (no key, no signing, no submission)",
+    "owner_action": "Owner replaces OWNER_ACCOUNT, autofills Fee/Sequence/LastLedgerSequence with their own client, reviews, signs and submits. Nothing here is on-ledger until that happens; the root witness sidecar keeps xrpl_memo NOT_YET until a validated tx hash is recorded.",
+    "subject": {
+      "url": "https://councilof.ai/root.json",
+      "fetched_at": "2026-09-14T10:38:03Z",
+      "sha256": "14ed12e5aacf20a372e5dea64b622bbe19470c343a42b257e1644c61f7384dcd",
+      "bytes": 23950,
+      "as_of": "2026-09-14T03:12:56Z",
+      "merkle_root": "8a121be5c52aeab4e9b1f4de824ecb397c671c0259f678cb75bc564b2eeb1446",
+      "card_count": 298,
+      "note": "MemoData commits to sha256(root.json bytes) as served at fetched_at: the same subject the Rekor/OTS witness sidecar names. The live apex was serving an OLDER root than master at prep time (master public/root.json = 402f7b77\u2026, as_of 2026-09-14T09:45:35Z). Re-fetch and regenerate MemoData immediately before signing if the live sha256 has moved."
+    },
+    "memo_semantics": "An XRPL memo proves only that this 32-byte digest was included in a validated ledger no later than that ledger's close time. It says nothing about when, how, or whether any measurement ran, and nothing about the meaning of the bytes.",
+    "why_accountset": "AccountSet with none of its optional fields (ClearFlag/SetFlag/Domain/etc.) set is the smallest self-addressed transaction that can carry a Memo: no Destination, no value moved. The Payment alternative sends 1 drop to a second owner-controlled address; 'Amount' is the API v1 field name (API v2 clients use DeliverMax). Choose one, not both.",
+    "memo_fields_hex": {
+      "MemoType": "csoai/public-root-sha256",
+      "MemoFormat": "application/octet-stream",
+      "MemoData": "raw 32-byte sha256, hex (uppercase)"
+    },
+    "source_docs": [
+      "https://xrpl.org/docs/references/protocol/transactions/common-fields (Memos Field: MemoData/MemoType/MemoFormat are hex Blob fields)",
+      "https://xrpl.org/docs/references/protocol/transactions/types/accountset",
+      "https://xrpl.org/docs/references/protocol/transactions/types/payment"
+    ]
+  },
+  "tx_json": {
+    "TransactionType": "AccountSet",
+    "Account": "OWNER_ACCOUNT",
+    "Memos": [
+      {
+        "Memo": {
+          "MemoType": "63736F61692F7075626C69632D726F6F742D736861323536",
+          "MemoFormat": "6170706C69636174696F6E2F6F637465742D73747265616D",
+          "MemoData": "14ED12E5AACF20A372E5DEA64B622BBE19470C343A42B257E1644C61F7384DCD"
+        }
+      }
+    ]
+  },
+  "alternative_payment_tx_json": {
+    "TransactionType": "Payment",
+    "Account": "OWNER_ACCOUNT",
+    "Destination": "OWNER_SECOND_ACCOUNT",
+    "Amount": "1",
+    "Memos": [
+      {
+        "Memo": {
+          "MemoType": "63736F61692F7075626C69632D726F6F742D736861323536",
+          "MemoFormat": "6170706C69636174696F6E2F6F637465742D73747265616D",
+          "MemoData": "14ED12E5AACF20A372E5DEA64B622BBE19470C343A42B257E1644C61F7384DCD"
+        }
+      }
+    ]
+  },
+  "verification": {
+    "before_signing": [
+      "curl -s https://councilof.ai/root.json | shasum -a 256   # must equal the MemoData below (lowercase) or regenerate",
+      "python3 -c \"import json;d=json.load(open('memo-anchor-payload-2026-09-14.json'));print(d['tx_json']['Memos'][0]['Memo']['MemoData'].lower())\""
+    ],
+    "after_owner_submits": [
+      "curl -s -X POST https://xrplcluster.com -H 'content-type: application/json' -d '{\"method\":\"tx\",\"params\":[{\"transaction\":\"<TX_HASH>\",\"binary\":false}]}' | python3 -c \"import sys,json;r=json.load(sys.stdin)['result'];t=r.get('tx_json',r);print(r.get('validated'),r.get('meta',{}).get('TransactionResult'),t['Memos'][0]['Memo']['MemoData'].lower())\"",
+      "# PASS only if: validated == True, TransactionResult == tesSUCCESS, MemoData == sha256 of the root.json bytes named in subject",
+      "curl -s -X POST https://s1.ripple.com:51234 -H 'content-type: application/json' -d '{\"method\":\"tx\",\"params\":[{\"transaction\":\"<TX_HASH>\"}]}'   # second, independent server must agree",
+      "curl -s -X POST https://xrplcluster.com -H 'content-type: application/json' -d '{\"method\":\"ledger\",\"params\":[{\"ledger_index\":<LEDGER_INDEX>}]}'   # close_time_iso = the no-later-than bound"
+    ]
+  }
+}
