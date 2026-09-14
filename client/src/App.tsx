@@ -89,6 +89,8 @@ const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
 const ContentReviewNotice = lazy(() => import("./pages/ContentReviewNotice"));
 const AnswersIndex = lazy(() => import("./pages/Answers"));
 const AnswerPage = lazy(() => import("./pages/Answers").then((m) => ({ default: m.AnswerPage })));
+const EvidenceNotesIndex = lazy(() => import("./pages/EvidenceNotes"));
+const EvidenceNotePage = lazy(() => import("./pages/EvidenceNotes").then((m) => ({ default: m.EvidenceNotePage })));
 const Recommendations = lazy(() => import("./pages/Recommendations"));
 const MarketingHome = lazy(() => import("./pages/MarketingHome"));
 const Standards = lazy(() => import("./pages/Standards"));
@@ -392,6 +394,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
   "/answers": "Answers — measurement explainers | Council of AI",
+  "/notes": "Evidence notes — one citable page per note | Council of AI",
   "/doctrine": "Doctrine — measurement, not certification | Council of AI",
   "/launch": "The launch story — Council of AI",
   "/owasp-agentic": "OWASP Agentic Top 10 — the public measured mapping | Council of AI",
@@ -799,6 +802,8 @@ function App() {
                   <Route path="/methodology" component={Methodology} />
                   <Route path="/answers/:slug" component={AnswerPage} />
                   <Route path="/answers" component={AnswersIndex} />
+                  <Route path="/notes/:slug" component={EvidenceNotePage} />
+                  <Route path="/notes" component={EvidenceNotesIndex} />
                   <Route path="/ai-act-benchmark" component={AiActBenchmark} />
                   <Route path="/provbench" component={ProvBench} />
                   <Route path="/layer0" component={Layer0} />
