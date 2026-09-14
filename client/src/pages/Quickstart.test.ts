@@ -8,7 +8,7 @@ const nav = readFileSync(resolve(__dirname, "../components/HeaderNav.tsx"), "utf
 const library = readFileSync(resolve(__dirname, "../data/library-ia.ts"), "utf8");
 const prerender = readFileSync(resolve(__dirname, "../../../scripts/prerender.mjs"), "utf8");
 
-describe("/quickstart — the agent path from discovery to a verified paid response", () => {
+describe("/quickstart — the public evidence path before an optional commission", () => {
   it("carries all four wirings a new page needs (route, title, prerender MUST, PRIMARY_PATHS) and a nav entry", () => {
     expect(app).toContain('const Quickstart = lazy(() => import("./pages/Quickstart"))');
     expect(app).toContain('<Route path="/quickstart" component={Quickstart} />');
@@ -33,8 +33,9 @@ describe("/quickstart — the agent path from discovery to a verified paid respo
     expect(page).not.toMatch(/\b\d+ (doors|cards|axes|payers)\b/);
   });
 
-  it("walks the five steps and names the honesty rules that bound them", () => {
-    for (const s of ["1 · Discover", "2 · Read what is free", "3 · Pay a door", "4 · Verify", "5 · Correct"]) expect(page).toContain(s);
+  it("walks the evidence hierarchy before the optional commission and correction", () => {
+    for (const s of ["1 · Explore measurements", "2 · See what changed", "3 · Verify evidence", "4 · Access supported feeds", "5 · Optional: commission an output", "6 · Correct"]) expect(page).toContain(s);
+    expect(page.indexOf("4 · Access supported feeds")).toBeLessThan(page.indexOf("5 · Optional: commission an output"));
     expect(page).toContain("A settlement of zero is not a purchase");
     expect(page).toContain("does not make the read correct");
     expect(page).toContain("Measurement, never certification");

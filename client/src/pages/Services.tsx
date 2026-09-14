@@ -36,7 +36,7 @@ export default function Services() {
   const [load, setLoad] = useState<Load>({ state: "loading" });
 
   useEffect(() => {
-    document.title = "Services — the doors the rail publishes";
+    document.title = "Supported feeds and evidence doors — Council of AI";
     let alive = true;
     void fetch(MANIFEST, { headers: { accept: "application/json" }, cache: "no-store" })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
@@ -52,10 +52,10 @@ export default function Services() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <Helmet>
-        <title>Services — the doors the rail publishes | Council of AI</title>
+        <title>Supported feeds and evidence doors | Council of AI</title>
         <meta
           name="description"
-          content="Every machine door Council of AI publishes, read live from /.well-known/x402.json — what each one measures, its free preview where one exists, and pay-as-you-go x402 at the 402."
+          content="Start with public measurements, the change record and free verification, then read every supported machine feed and evidence door from the live manifest."
         />
       </Helmet>
 
@@ -65,13 +65,19 @@ export default function Services() {
             Services · read from {MANIFEST}
           </p>
           <h1 className="mt-3 text-4xl font-black tracking-tight">
-            Every door the rail publishes.
+            Access the supported feeds and evidence doors.
           </h1>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
-            This page is not a brochure of what we could build. It is the machine doors that answer
-            today, read from the rail's own manifest when you loaded the page. Each one says what it
-            measures, in the manifest's words. Verification stays free.
+            Start with the public measurements, see their change record and verify the signed evidence.
+            The catalogue below then reads the supported machine doors from the rail's own manifest.
+            Commissioned outputs remain secondary. Verification stays free.
           </p>
+          <nav aria-label="Published evidence path" className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4" data-testid="services-supply-led-entry">
+            <a href="/dashboard?tab=board" className="rounded-lg bg-emerald-400 px-3 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-300">1 · Explore measurements</a>
+            <a href="/press" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">2 · See what changed</a>
+            <a href="/gspc-verify" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">3 · Verify evidence</a>
+            <a href="#supported-feeds" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">4 · Access supported feeds</a>
+          </nav>
           {cat ? (
             <p className="mt-4 font-mono text-[12px] text-slate-400" data-testid="services-source">
               {cat.total} door{cat.total === 1 ? "" : "s"} · manifest mode{" "}
@@ -84,7 +90,7 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-12">
+      <section id="supported-feeds" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-12">
         {load.state === "loading" ? (
           <p className="text-slate-400">Reading the manifest…</p>
         ) : load.state === "unread" ? (

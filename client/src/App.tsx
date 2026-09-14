@@ -340,7 +340,7 @@ function ScrollToTop() {
 const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — the rail is free, metered routes quote at the 402 | Council of AI",
   "/wrappers": "Wrapped-asset parity ledger — read, not rated | Council of AI",
-  "/quickstart": "Agent quickstart — discover, read, pay, verify | Council of AI",
+  "/quickstart": "Agent quickstart — measurements, changes, verification and feeds | Council of AI",
   "/products": "Council OS — the SKUs, one workspace | Council of AI",
     "/attestation": "Council Attestation Network | Council of AI",
   "/badge": "White-label badge — Council of AI",

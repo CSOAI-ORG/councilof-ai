@@ -25,7 +25,7 @@ const stack = readFileSync(resolve(here, "../components/home/ToolStack.tsx"), "u
 
 describe("homepage is chat + GSPC list plus the estate", () => {
   it("is OpenRouter desk plus slides, nine products, and Council OS", () => {
-    expect(src).toMatch(/Check a claim\. Request a measurement\./);
+    expect(src).toMatch(/Explore measurements\. See what changed\./);
     expect(src).toContain('href="/gspc-verify"');
     expect(src).toContain('href="/assess"');
     expect(src).toContain('id="os-chat"');
@@ -136,7 +136,7 @@ describe("home lock — later merges must not restore the desk video", () => {
     expect(home).not.toContain("HfLivingRecord");
     expect(home).not.toContain("ReachStrip");
     expect(home).toContain("The living board");
-    expect(home).toMatch(/Check a claim\. Request a measurement\./);
+    expect(home).toMatch(/Explore measurements\. See what changed\./);
     expect(home).not.toContain("HomeDemoLoop");
     expect(home).not.toContain("csoai-demo.mp4");
     expect(home).not.toContain("HomeBoard");
