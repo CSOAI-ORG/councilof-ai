@@ -3,13 +3,9 @@ name: hub-queue-mill
 # (keys as GHA secrets, by name). Stages UNSIGNED ≤3KB cards only; MEASURED happens
 # only after GHA OIDC sign + verify VALID (existing sign path). writes_board=false.
 on:
-  schedule:
-    # Two chances an hour, not one. The hourly line alone EXECUTED 7 times on 2026-09-04 and
-    # 3 times by 12:30Z on 2026-09-05 (`gh run list --workflow=hub-queue-mill.yml`): GitHub
-    # delays and drops schedule events in a repo that runs ~350 workflow runs a day, so the
-    # cron is a ceiling, not a rate. The concurrency group below still serialises runs.
-    - cron: "41 * * * *"
-    - cron: "11 * * * *"
+  # Schedule DISABLED 2026-09-14 until issue #2075 v0.2 admission
+  # (aggregate-only staging). Re-enable cron only after producer+
+  # verifier+signer+promotion gate green. workflow_dispatch retained.
   workflow_dispatch:
     inputs:
       # Empty means "let the selector choose the emptiest axis", the same thing the
