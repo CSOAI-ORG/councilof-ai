@@ -34,6 +34,18 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0914-02",
+      date: "2026-09-14",
+      first_observed_at: "2026-09-14T10:37Z",
+      what_was_wrong:
+        "On GET /api/gspc, the reserve-attestation axis note said '1 PASS, 6 FAIL, 9 UNCHECKABLE'. The evidence file it cites, /interop/financial-measure-run-reserve-attestation.json (as_of 2026-09-07T11:30:35Z), tallies 3 PASS, 4 FAIL, 9 UNCHECKABLE; 1/6/9 is the custody-disclosure tally. The regulatory-framework note said '3 PASS, 4 FAIL, 9 UNCHECKABLE' while its evidence file tallies 4 PASS, 3 FAIL, 9 UNCHECKABLE. When the wrong strings were introduced is UNCHECKABLE from the shallow repository history available; they predate 2026-09-14T01:46Z.",
+      how_caught:
+        "Verifying a regulator comment draft before submission: the draft quoted the board note, and the reviewer compared it with the tally field of the cited evidence file instead of accepting the summary.",
+      fix:
+        "Both notes in functions/api/_gspc_axes_fin.ts now quote their evidence files. functions/api/gspc.financial-tally.test.ts reads every typed PASS/FAIL/UNCHECKABLE triple in a financial note and requires it to equal the cited evidence file's tally, with failing controls for the two pre-correction strings. The evidence files were correct and are unchanged. Signed board snapshots that carry the old notes are superseded by this record, not edited.",
+      status: "CORRECTED IN SOURCE AND RECORDED; VERIFY THE CURRENT LIVE ENDPOINT",
+    },
+    {
       id: "C-2026-0914-01",
       date: "2026-09-14",
       // Latency fields carry only what is evidenced: introduction = the merge of #2321,
