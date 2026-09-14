@@ -44,6 +44,10 @@ Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /.backups/
 Disallow: /_backup/
 Disallow: /api/
+# The living board is public evidence and is listed in the sitemap. Keep the
+# rest of /api/ excluded while allowing crawlers to read the board and its
+# documented query-string filters.
+Allow: /api/gspc
 Disallow: /*?*utm_
 Allow: /
 
