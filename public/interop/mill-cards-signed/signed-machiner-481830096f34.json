@@ -1,0 +1,33 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "accuracy": 0.3667,
+    "axis": "machinery-conformity",
+    "brand": "Council of AI",
+    "compute_evidence": {
+      "bank_sha256": "ab0b40f2336e81703e3c17e9988b88a3b0d4bf3a441aa7c3c53b038a6398a434",
+      "instrument_sha256": "f75359f51aaf20b672239ce8358f0cbc9ff9725699449a5d94553ff9f0dd35a3",
+      "items_sha256": "2b0109ca786d53cb484031c093500ab10093bfd1d4f2c0090038716e8cc8dfb1",
+      "model_manifest_digest": "sha256:61819fb370a3c1a9be6694869331e5f85f867a079e9271d66cb223acb81d04ba",
+      "parse_errors_excluded": 3,
+      "run_id": "20260914T045730.195746Z-2cf2d543ba",
+      "transport_errors_excluded": 0
+    },
+    "issuer": "CSOAI Ltd",
+    "kind": "gspc.measurement-card",
+    "model": "ollama:phi3.5:3.8b@sha256:61819fb370a3c1a9be6694869331e5f85f867a079e9271d66cb223acb81d04ba",
+    "n": 30,
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "status": "MEASURED",
+    "unmeasured": [],
+    "verify": "https://councilof.ai/gspc-verify",
+    "signature_state": "SIGNED"
+  },
+  "id": "481830096f34c2699724158d5e3342542c50cf7bfb94e541a66107d80c989e10",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "c3365a7ae45f53eb8d893e4ff7ff90b685f715b36f70c33f01397cebb4324ae73d9fb2c5bd33a8f8ebffc46634a0974e0a2df229ceaa14582e31dd4c55a51b0e",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}
