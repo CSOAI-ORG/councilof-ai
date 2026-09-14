@@ -1,74 +1,122 @@
 {
-  "schema": "csoai.x402-leaderboard/0.2",
-  "generated_at": "2026-09-14T13:30:00Z",
-  "definition": "x402 doors ranked by conformance to the CSOAI measurement doctrine: every door must return 402 with accepts[] and extensions.bazaar; pricing is published in the 402 challenge, never on a catalog surface.",
-  "rankings": [
+  "schema": "csoai.x402-conformance-board/1.0",
+  "observed_at": "2026-09-14T11:16:55Z",
+  "definition": "Observed x402 challenge fields for each resource in the live Council of AI discovery document. This is a measurement snapshot, not a grade or certification.",
+  "scope": {
+    "operator": "Council of AI",
+    "host": "councilof.ai",
+    "discovery_url": "https://councilof.ai/.well-known/x402.json"
+  },
+  "summary": {
+    "doors_observed": 11,
+    "doors_conforming": 11
+  },
+  "doors": [
     {
-      "rank": 1,
-      "vendor": "Council of AI",
-      "host": "councilof.ai",
-      "kind": "facilitator-native",
-      "doors_listed": 11,
-      "doors_returning_402": 11,
-      "conformance_pct": 100.0,
-      "accepts_check": "PASS",
-      "bazaar_check": "PASS",
-      "preview_check": "PASS (4 doors offer free preview)",
-      "price_in_402_only": "PASS",
-      "price_atomic_listed": 10000,
-      "price_atomic_live": 10000,
-      "listing_matches_live": "PASS",
-      "cdp_listed": false,
-      "facilitator": "X402 rail on Base eip155:8453, mode=live",
-      "notes": "All 11 doors pass. pricing is consistent across listing and live 402. wrapper/changes added 2026-09-14. Free door amount=0 (correct x402 protocol: client must complete 402 negotiation). Settlement documented at docs/product/SETTLED-DOORS."
+      "url": "https://councilof.ai/api/free-door",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "0",
+      "asset": "USD Coin",
+      "bazaar_extension": true
     },
     {
-      "rank": 2,
-      "vendor": "PayAPI Market",
-      "host": "payapi.market",
-      "kind": "listing-aggregator",
-      "doors_listed": 1,
-      "doors_returning_402": 1,
-      "conformance_pct": 100.0,
-      "accepts_check": "PASS",
-      "bazaar_check": "PASS",
-      "preview_check": "N/A",
-      "price_in_402_only": "PASS",
-      "price_atomic_listed": 0,
-      "price_atomic_live": 0,
-      "listing_matches_live": "PASS",
-      "cdp_listed": false,
-      "facilitator": "third-party listing aggregator (no own facilitator)",
-      "notes": "PayAPI Market is a listing aggregator, not a competitor rail. It carries Council of AI's EU Evidence Feed listing but does not run its own facilitator. doors_returning_402 reflects the underlying resource's conformance, not PayAPI's own x402 implementation. Listing is at https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed."
+      "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/eunomia-data?feed=1",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/proof?bundle=1",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
     }
   ],
-  "competitor_observations": {
-    "payapi_market": {
-      "host": "payapi.market",
-      "listing_url": "https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed",
-      "status": "third-party listing of csoai resources only",
-      "cdp_indexed": false,
-      "notes": "PayAPI Market is a listing aggregator, not a competitor rail. It carries Council of AI's listing but does not run its own facilitator."
-    }
-  },
-  "bazaar_audit_summary": {
-    "total_doors": 11,
-    "doors_returning_402": 11,
-    "doors_with_accepts": 11,
-    "doors_with_bazaar_extension": 11,
-    "doors_with_preview": 4,
-    "pricing_published_only_in_402": 11,
-    "conformance": "10/10 existing doors pass; wrapper/changes (new) verified"
-  },
-  "ranking_methodology": "Single-number rankings are the disease this doctrine corrects. Doors are listed with full price transparency, accepts[] exposure, and Bazaar extension status. No composite score; every measured field is shown verbatim from the live 402 challenge. Vendors ranked by self-operated x402 facilitator capability (facilitator-native first), then listing aggregators.",
-  "doctrine": [
-    "Amounts only in the 402 challenge, never in the catalog",
-    "Bazaar extension on every paid door",
-    "Free preview available for every paid door",
-    "No price typing in any surface that names a resource",
-    "No fused grade; this is a listing, not a leaderboard of grades"
+  "methodology": "Each discovery URL was fetched once. Conforming means HTTP 402, at least one accepts[] entry, Base mainnet network eip155:8453, an explicit atomic amount (including zero), and extensions.bazaar present.",
+  "limitations": [
+    "This snapshot measures one operator and does not rank vendors.",
+    "It does not prove settlement, demand, revenue, or future availability.",
+    "Amounts are observations from 402 challenges and may change after observed_at."
   ],
-  "as_of": "2026-09-14T13:30:00Z",
-  "source": "scripts/interop/x402-bazaar-audit.py + manual door checks + payapi.market listing check",
-  "proof_command": "curl -si https://councilof.ai/api/<door> | head -1 (must return HTTP/2 402)"
+  "proof_command": "python3 scripts/interop/build_x402_conformance_board.py --check"
 }
