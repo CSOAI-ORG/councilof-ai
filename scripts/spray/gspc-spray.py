@@ -808,6 +808,45 @@ def spray_hf(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
     return out
 
 
+def kaggle_page_text(tr: dict) -> tuple[str, str]:
+    """The Kaggle page's subtitle and description, derived from the captured truth only.
+
+    Nothing here is typed: as_of, read_at, lid, issuer and fingerprint all come from `tr`.
+    A hand-added line (a Hub triple, a lane note) is exactly what this text is compared against."""
+    subtitle = f"Snapshot of GET councilof.ai/api/gspc · as_of {tr['as_of']}"
+    assert 20 <= len(subtitle) <= 80, f"Kaggle subtitle must be 20–80 chars, got {len(subtitle)}"
+    description = (
+        f"{tr['lid']}\n\n"
+        f"AUTHORITY: GET {BOARD_URL}. This Kaggle copy is a snapshot read at {tr['read_at']}, aligned to the transparency "
+        f"root published at {tr['as_of']}. If the live GET and these files disagree, the live GET wins. A fetch that fails "
+        "is UNCHECKABLE, never a fabricated 0.\n\n"
+        "FILES: board.json (the whole GET, unmodified) · root.json (the transparency root, unmodified) · SNAPSHOT.json "
+        "(digests, derived counts, bank rows) · gspc-axes.csv / .jsonl (one row per slot) · check-board.sh (re-derive the "
+        "totals and the Merkle root yourself) · README.md (the axes, the counts, how to verify).\n\n"
+        f"VERIFY: {VERIFY_URL} (free, no account) · {HOWTO_URL} · pip install \"csoai-gspc[verify]\" then csoai-gspc verify "
+        f"<card_id> · keys resolve via did:web:csoai.org ({DID_URL}).\n\n"
+        "Not a certification, not a rating, not an endorsement, not legal advice. Measurement, not certification.\n\n"
+        f"Methodology DOI: https://doi.org/{ZENODO_METHODOLOGY_DOI} · snapshot series: https://doi.org/10.5281/zenodo.{ZENODO_CONCEPT}\n"
+        f"Issuer: {tr['board'].get('issuer', 'CSOAI Ltd')}.\n\n"
+        f"spray-fingerprint: {tr['fingerprint']}"
+    )
+    return subtitle, description
+
+
+def kaggle_metadata_drift(info: dict, subtitle: str, description: str) -> str | None:
+    """Why the visible Kaggle page differs from the producer's text, or None when it does not.
+
+    Whitespace is normalised (Kaggle may re-wrap), nothing else is: an appended or edited line is drift."""
+    def norm(s: object) -> str:
+        return " ".join(str(s or "").split())
+    reasons = []
+    if norm(info.get("subtitle")) != norm(subtitle):
+        reasons.append(f"subtitle is {info.get('subtitle')!r}, producer says {subtitle!r}")
+    if norm(info.get("description")) != norm(description):
+        reasons.append("description differs from the producer's text")
+    return "; ".join(reasons) or None
+
+
 def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
     page = f"https://www.kaggle.com/datasets/{KAGGLE_ID}"
     kaggle = shutil.which("kaggle")
@@ -838,6 +877,12 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
         remote = json.loads(remote_files["SNAPSHOT.json"])
     except Exception as e:  # noqa: BLE001
         raise Refused(f"cannot parse Kaggle's downloadable SNAPSHOT.json before publish ({e})")
+    subtitle, description = kaggle_page_text(tr)
+    keywords = (info.get("keywords") or ["government", "law", "artificial intelligence", "internet", "benchmark"])[:5]
+    licenses = info.get("licenses") or [{"name": "CC0-1.0"}]
+    if BANNED.search(description):
+        return [result("kaggle", "FAILED", page, detail="description would carry a banned word")]
+
     why = unchanged(remote, tr, force)
     if why:
         bp = byte_parity_reason(built_files(snap), remote_files)
@@ -845,29 +890,30 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
             log(f"[kaggle] {why} — but byte parity fails ({bp}); republishing to hold the byte-strict gate")
             why = None
     if why:
-        return [result("kaggle", "UNCHANGED", page, tr["as_of"], why)]
+        # Bytes are current. The visible page is a separate record: it is editable by hand and
+        # was, on 2026-09-14, still claiming as_of 2026-09-12 plus a typed legacy Hub triple while
+        # the archive carried 2026-09-14. UNCHANGED bytes must not leave that page stale.
+        drift = kaggle_metadata_drift(info, subtitle, description)
+        if not drift:
+            return [result("kaggle", "UNCHANGED", page, tr["as_of"], why)]
+        log(f"[kaggle] {why} — but the visible page metadata drifted ({drift}); repairing metadata only")
+        if dry_run:
+            return [result("kaggle", "DRY-RUN", page, detail=f"bytes unchanged; would repair page metadata ({drift})")]
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "dataset-metadata.json").write_text(json.dumps({
+                "id": KAGGLE_ID, "title": info.get("title") or "GSPC living board", "subtitle": subtitle,
+                "description": description, "keywords": keywords, "licenses": licenses,
+            }, ensure_ascii=False, indent=1))
+            updated = run([kaggle, "datasets", "metadata", "--update", KAGGLE_ID, "-p", d], check=False)
+        if updated.returncode != 0:
+            return [result("kaggle", "PUBLISHED-METADATA-UNCONFIRMED", page, tr["as_of"],
+                           f"bytes unchanged; metadata repair failed: {updated.stdout[-300:]} {updated.stderr[-300:]}")]
+        repaired = wait_for(lambda: kaggle_metadata_drift((lambda m: m.get("info", m))(read_meta() or {}),
+                                                          subtitle, description) is None, tries=12, delay=10)
+        return [result("kaggle", "PUBLISHED" if repaired else "PUBLISHED-METADATA-UNCONFIRMED", page, tr["as_of"],
+                       "bytes unchanged; page metadata repaired to the producer's text" if repaired
+                       else "bytes unchanged; metadata update sent but the drift is still visible")]
 
-    subtitle = f"Snapshot of GET councilof.ai/api/gspc · as_of {tr['as_of']}"
-    assert 20 <= len(subtitle) <= 80, f"Kaggle subtitle must be 20–80 chars, got {len(subtitle)}"
-    keywords = (info.get("keywords") or ["government", "law", "artificial intelligence", "internet", "benchmark"])[:5]
-    licenses = info.get("licenses") or [{"name": "CC0-1.0"}]
-    description = (
-        f"{tr['lid']}\n\n"
-        f"AUTHORITY: GET {BOARD_URL}. This Kaggle copy is a snapshot read at {tr['read_at']}, aligned to the transparency "
-        f"root published at {tr['as_of']}. If the live GET and these files disagree, the live GET wins. A fetch that fails "
-        "is UNCHECKABLE, never a fabricated 0.\n\n"
-        "FILES: board.json (the whole GET, unmodified) · root.json (the transparency root, unmodified) · SNAPSHOT.json "
-        "(digests, derived counts, bank rows) · gspc-axes.csv / .jsonl (one row per slot) · check-board.sh (re-derive the "
-        "totals and the Merkle root yourself) · README.md (the axes, the counts, how to verify).\n\n"
-        f"VERIFY: {VERIFY_URL} (free, no account) · {HOWTO_URL} · pip install \"csoai-gspc[verify]\" then csoai-gspc verify "
-        f"<card_id> · keys resolve via did:web:csoai.org ({DID_URL}).\n\n"
-        "Not a certification, not a rating, not an endorsement, not legal advice. Measurement, not certification.\n\n"
-        f"Methodology DOI: https://doi.org/{ZENODO_METHODOLOGY_DOI} · snapshot series: https://doi.org/10.5281/zenodo.{ZENODO_CONCEPT}\n"
-        f"Issuer: {tr['board'].get('issuer', 'CSOAI Ltd')}.\n\n"
-        f"spray-fingerprint: {tr['fingerprint']}"
-    )
-    if BANNED.search(description):
-        return [result("kaggle", "FAILED", page, detail="description would carry a banned word")]
     if dry_run:
         return [result("kaggle", "DRY-RUN", page, detail=f"would push a new version, subtitle {subtitle!r}")]
     with tempfile.TemporaryDirectory() as d:
