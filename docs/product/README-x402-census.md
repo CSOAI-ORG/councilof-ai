@@ -61,3 +61,18 @@ No leaves are committed for round 2026-09-06. The same 316 purchases are already
 104 cards under `public/interop/x402-census-cards/`, and staging a second set for the same event
 would fork one corpus into two — see `council-os/CARD-CORPORA.md` for why that is the defect this
 estate is most practised at committing.
+
+## Dry observation refresh — 2026-09-14
+
+[Workflow run 34798329655](https://github.com/CSOAI-ORG/councilof-ai/actions/runs/34798329655) completed on revision a90e1822d6b704a49971b5e37e31ba5623fc862d. Its unmodified artifacts are retained in `x402-settlement-census-dry-2026-09-14.jsonl` and `x402-census-diff-2026-09-14.json`.
+
+This is a **challenge-only refresh**, not a second paid settlement round. Of the same 316 sampled URLs, 304 returned recorded challenges and 12 did not. Nineteen endpoints changed observation fields relative to the September 6 dry snapshot. No payment was signed or sent. A missing challenge is not a finding of fraud or a failed paid delivery. Prices are raw challenge units, not automatically comparable dollar amounts.
+
+Reproduce the comparison with:
+
+```sh
+python3 scripts/x402_dry_census_diff.py --from docs/product/x402-settlement-census-dry-2026-09-06.jsonl --to docs/product/x402-settlement-census-dry-2026-09-14.jsonl --out /tmp/x402-dry-diff.json
+cmp /tmp/x402-dry-diff.json docs/product/x402-census-diff-2026-09-14.json
+```
+
+These artifacts are not signed cards or Bitcoin-anchored leaves. They do not change the paid-round manifest, root, coverage grades or revenue totals.
