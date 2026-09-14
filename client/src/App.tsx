@@ -188,6 +188,7 @@ const Launch = lazy(() => import("./pages/Launch"));
 const OwaspAgentic = lazy(() => import("./pages/OwaspAgentic"));
 const PostmortemX402 = lazy(() => import("./pages/PostmortemX402"));
 const ThreeRootCeremony = lazy(() => import("./pages/ThreeRootCeremony"));
+const EvaluatorAccess = lazy(() => import("./pages/EvaluatorAccess"));
 const PublicPress = lazy(() => import("./pages/PublicPress"));
 const TransparencyCop = lazy(() => import("./pages/TransparencyCop"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
@@ -341,6 +342,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — the rail is free, metered routes quote at the 402 | Council of AI",
   "/wrappers": "Wrapped-asset parity ledger — read, not rated | Council of AI",
   "/quickstart": "Agent quickstart — measurements, changes, verification and feeds | Council of AI",
+  "/evaluator-access": "Conditions for Independent Evaluator Access | Council of AI",
   "/products": "Council OS — the SKUs, one workspace | Council of AI",
     "/attestation": "Council Attestation Network | Council of AI",
   "/badge": "White-label badge — Council of AI",
@@ -752,6 +754,7 @@ function App() {
                   <Route path="/stablecoins" component={Stablecoins} />
                   <Route path="/wrappers" component={Wrappers} />
                   <Route path="/quickstart" component={Quickstart} />
+                  <Route path="/evaluator-access" component={EvaluatorAccess} />
                   <Route path="/gspc/jail" component={JailFolder} />
                   <Route path="/gspc/:axis" component={GspcScoreboard} />
                   <Route path="/insurers" component={Insurers} />

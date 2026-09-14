@@ -289,6 +289,7 @@ function discover() {
     "/frameworks",
       "/wrappers",
       "/quickstart",
+      "/evaluator-access",
   ];
   for (const p of MUST) found.add(p);
 
