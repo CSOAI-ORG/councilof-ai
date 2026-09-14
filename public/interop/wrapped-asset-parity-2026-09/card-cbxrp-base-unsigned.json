@@ -1,44 +1,44 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
-  "subject": "wrapped wXRP on ethereum vs native issuance — INDEXED_CUSTODIAL",
+  "subject": "wrapped cbXRP on base vs native issuance — INDEXED_CUSTODIAL",
   "as_of": "2026-09-14T10:58:07.494Z",
   "source_urls": [
-    "https://ethereum-rpc.publicnode.com"
+    "https://mainnet.base.org"
   ],
   "payload": {
     "kind": "csoai.wrapper.parity/0.1",
     "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
-    "id": "wxrp:ethereum",
+    "id": "cbxrp:base",
     "backing_model": "custodial",
     "wrapped": {
-      "chain": "ethereum",
-      "symbol": "wXRP",
-      "address": "0x39fBBABf11738317a448031930706cd3e612e1B9",
-      "chainId": 1,
-      "block": 25975174,
-      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392",
-      "block_time": 1789382615
+      "chain": "base",
+      "symbol": "cbXRP",
+      "address": "0xcb585250f852C6c6bf90434AB21A00f02833a4af",
+      "chainId": 8453,
+      "block": 51296622,
+      "block_hash": "0x1b00ce371d168892fc5b182be823a44e3cc1748c6dc9aa0fd31598342e5c94d2",
+      "block_time": 1789382591
     },
     "canonical": {
       "chain": "xrpl",
       "symbol": "XRP",
-      "address": "custodian-held XRPL account (Wrapped.com); readable on XRPL, not from here",
+      "address": "Coinbase custody; not an EVM contract",
       "chainId": null,
       "block": null,
       "block_hash": null
     },
     "escrow": null,
     "escrow_name": null,
-    "note": "XRP reserve held on the XRP Ledger by the wrapper's custodian; a future XRPL-side read can pair with this supply. INDEXED, no parity claimed.",
+    "note": "XRP reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
     "reads": {
       "wrapped_total_supply": {
         "query": "totalSupply()",
-        "raw": "0x0000000000000000000000000000000000000000000ed88b20f9392362e24000",
-        "raw_sha256": "3b642f245c5076bd8e421ca8c70929c3376adfc6aa651f343d82234d92e54cd0",
-        "atomic": "17947559108324000000000000",
-        "normalized": "17947559.108324000000000000",
-        "decimals": 18
+        "raw": "0x000000000000000000000000000000000000000000000000000072cf73127ac3",
+        "raw_sha256": "32b573554c7bbcea036d92fff74591ca6c128042b80fbf19f65f1ea81f6f6556",
+        "atomic": "126235314387651",
+        "normalized": "126235314.387651",
+        "decimals": 6
       }
     },
     "escrow_over_wrapped": null,
@@ -61,6 +61,6 @@
     "reserve (custodian-held off this chain; not readable here)"
   ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "142970eceff9a402cc96c08701b59564036bba0371cb246d6724facdb4a74774",
+  "sha256": "d942611cc79a13bd6078c034c541845395a9a69b3142783fe3a802b942f0a318",
   "sig_ed25519": null
 }

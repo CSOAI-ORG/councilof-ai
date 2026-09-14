@@ -1,44 +1,44 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
-  "subject": "wrapped wXRP on ethereum vs native issuance — INDEXED_CUSTODIAL",
+  "subject": "wrapped FXRP on flare vs native issuance — INDEXED_CUSTODIAL",
   "as_of": "2026-09-14T10:58:07.494Z",
   "source_urls": [
-    "https://ethereum-rpc.publicnode.com"
+    "https://flare-api.flare.network/ext/C/rpc"
   ],
   "payload": {
     "kind": "csoai.wrapper.parity/0.1",
     "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
-    "id": "wxrp:ethereum",
+    "id": "fxrp:flare",
     "backing_model": "custodial",
     "wrapped": {
-      "chain": "ethereum",
-      "symbol": "wXRP",
-      "address": "0x39fBBABf11738317a448031930706cd3e612e1B9",
-      "chainId": 1,
-      "block": 25975174,
-      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392",
-      "block_time": 1789382615
+      "chain": "flare",
+      "symbol": "FXRP",
+      "address": "0xAd552A648C74D49E10027AB8a618A3ad4901c5bE",
+      "chainId": 14,
+      "block": 69755467,
+      "block_hash": "0xcc508faf635570d89370b29717c53371a80ef3c925e9a2bc3ec7458a76eb801e",
+      "block_time": 1789383464
     },
     "canonical": {
       "chain": "xrpl",
       "symbol": "XRP",
-      "address": "custodian-held XRPL account (Wrapped.com); readable on XRPL, not from here",
+      "address": "FAssets agents' XRPL accounts; not an EVM contract",
       "chainId": null,
       "block": null,
       "block_hash": null
     },
     "escrow": null,
     "escrow_name": null,
-    "note": "XRP reserve held on the XRP Ledger by the wrapper's custodian; a future XRPL-side read can pair with this supply. INDEXED, no parity claimed.",
+    "note": "Underlying XRP sits in FAssets agents' XRPL accounts with agent collateral posted on Flare; Flare documents the XRPL side as verified through its Data Connector. Neither the XRPL holdings nor the agent collateral are read here. INDEXED, no parity claimed.",
     "reads": {
       "wrapped_total_supply": {
         "query": "totalSupply()",
-        "raw": "0x0000000000000000000000000000000000000000000ed88b20f9392362e24000",
-        "raw_sha256": "3b642f245c5076bd8e421ca8c70929c3376adfc6aa651f343d82234d92e54cd0",
-        "atomic": "17947559108324000000000000",
-        "normalized": "17947559.108324000000000000",
-        "decimals": 18
+        "raw": "0x0000000000000000000000000000000000000000000000000000858b3a799738",
+        "raw_sha256": "e925483c0648e543a4966a725d6682d7c4761cfa469140cb2943e29f374fd925",
+        "atomic": "146833027995448",
+        "normalized": "146833027.995448",
+        "decimals": 6
       }
     },
     "escrow_over_wrapped": null,
@@ -61,6 +61,6 @@
     "reserve (custodian-held off this chain; not readable here)"
   ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "142970eceff9a402cc96c08701b59564036bba0371cb246d6724facdb4a74774",
+  "sha256": "fc9f1549694303dc9766295170cbdd06ff0d41f4360bfd5f5bc9e062a5133a02",
   "sig_ed25519": null
 }
