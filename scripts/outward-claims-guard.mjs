@@ -50,6 +50,12 @@ const ok = (c, d) => results.push({ state: "OK", claim: c, detail: d });
 const bad = (c, d) => results.push({ state: "FAIL", claim: c, detail: d });
 const skip = (c, d) => results.push({ state: "SKIP", claim: c, detail: d });
 
+// A priced x402 door is reachable when it answers with the protocol challenge. Treating every
+// non-2xx response as dead made the HF card audit call 115 working paid links broken. The header
+// is required: an arbitrary 402 page is no more proof of an x402 door than an arbitrary 200 page.
+const claimedLinkVerdict = (status, hasPaymentRequired) =>
+  (status >= 200 && status < 400) || (status === 402 && hasPaymentRequired) ? "OK" : "DEAD";
+
 async function j(url, init = {}) {
   const r = await fetch(url, { ...init, headers: { ...UA, ...(init.headers || {}) } });
   const text = await r.text();
@@ -707,9 +713,13 @@ async function checkHfCards() {
 
   const dead = [];
   for (const [u, e] of claims) {
-    let code = 0;
-    try { code = (await fetch(u, { headers: UA, redirect: "follow" })).status; } catch { code = 0; }
-    if (code >= 200 && code < 400) continue;
+    let code = 0, challenge = false;
+    try {
+      const r = await fetch(u, { headers: UA, redirect: "follow" });
+      code = r.status;
+      challenge = Boolean(r.headers.get("payment-required"));
+    } catch { code = 0; }
+    if (claimedLinkVerdict(code, challenge) === "OK") continue;
     if (e.pending) continue; // explicitly future-tense, with the condition named
     dead.push(`${u} -> ${code || "unreachable"} (${e.cards.size} card${e.cards.size > 1 ? "s" : ""})`);
   }
@@ -717,7 +727,7 @@ async function checkHfCards() {
   assertLike(dead);
 
   function assertLike(list) {
-    if (!list.length) return ok("hf card links", "every claimed URL answers, or says it is not live yet");
+    if (!list.length) return ok("hf card links", "every claimed URL answers, challenges with x402, or says it is not live yet");
     bad("hf card links",
       `${list.length} URL(s) in the org's dataset cards do not answer and are not marked pending: ` +
       `${list.join("; ")}. A researcher finds the dataset, reads the card, and follows the link.`);
@@ -739,9 +749,9 @@ async function checkHfCards() {
  *   Smithery      smithery.ai/server/csoai/gspc                              csoai/gspc
  *   Glama         glama.ai/mcp/servers?query=csoai                           7 servers
  *
- * On 2026-09-11 the paid mcp.so submission was verified on its public detail page at
- * /servers/csoai-gspc-measurement. The page marks it Verified and Featured under @CSOAI-ORG;
- * that proves directory presence, while its still-empty detected-tool panel does not prove health.
+ * On 2026-09-11 the paid mcp.so submission was visible on its public detail page. On 2026-09-14
+ * that exact proof URL returned 500, so the repository withdrew the live claim until a public
+ * detail URL can be verified again. Authenticated submission state is not public listing proof.
  *
  * Offline by default. LIVE_PLATFORMS=1 probes every proof_url.
  */
@@ -1005,6 +1015,10 @@ async function main() {
     const probeVerdict = (status, hasChallenge) => (status === 402 && hasChallenge ? "OK" : "JUDGE_LATER");
     if (probeVerdict(402, true) !== "OK") { console.error("selftest FAIL: 402 probe must pass"); bad++; }
     if (probeVerdict(404, false) !== "JUDGE_LATER") { console.error("selftest FAIL: 404 probe must not pass"); bad++; }
+    if (claimedLinkVerdict(200, false) !== "OK") { console.error("selftest FAIL: ordinary 200 link must pass"); bad++; }
+    if (claimedLinkVerdict(402, true) !== "OK") { console.error("selftest FAIL: x402 challenge link must pass"); bad++; }
+    if (claimedLinkVerdict(402, false) !== "DEAD") { console.error("selftest FAIL: bare 402 without PAYMENT-REQUIRED must fail"); bad++; }
+    if (claimedLinkVerdict(404, false) !== "DEAD") { console.error("selftest FAIL: true 404 link must fail"); bad++; }
     // The registry baseline rule, in both directions. A known-failures number that only ever
     // gets compared upward lets a FIXED entry keep its allowance, and the next regression hides
     // inside it. Both drift directions are a FAIL; only equality is OK.
@@ -1129,7 +1143,7 @@ async function main() {
       }
     }
 
-    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 34 decision cases, all correct");
+    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 38 decision cases, all correct");
     process.exit(bad ? 1 : 0);
   }
   await checkManifest();

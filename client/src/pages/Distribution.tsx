@@ -13,7 +13,7 @@ const CHANNELS: Channel[] = [
   { name: "MCP Registry", kind: "Registry", reach: "216 servers", l0: "L0-3", note: "Manifest-driven; every server conformance-badged" },
   { name: "Smithery", kind: "MCP host", reach: "deployable", l0: "L0-1", note: "smithery.yaml present across the fleet" },
   { name: "glama.ai", kind: "MCP directory", reach: "UNSTABLE", l0: "L0-0", note: "Direct-page probes conflict; public CSOAI search did not surface the flagship on 2026-09-04" },
-  { name: "mcp.so / mcpize", kind: "MCP directory", reach: "listed", l0: "L0-1", note: "Directory listing; gateway wrap pending" },
+  { name: "mcp.so / mcpize", kind: "MCP directory", reach: "UNKNOWN", l0: "L0-0", note: "Public detail URL returned 500 on 2026-09-14; listing presence is unverified" },
   { name: "Vercel", kind: "Edge deploy", reach: "40+ surfaces", l0: "L0-3", note: "The OS + every ecosystem front-end" },
 ];
 
