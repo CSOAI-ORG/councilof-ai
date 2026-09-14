@@ -1,8 +1,8 @@
 name: Publish MCP Registry (v1.4.2)
 
 # Publishes the gspc MCP server to the official MCP Registry.
-# Auth: GitHub Actions OIDC → exchange for Registry JWT → POST /v0/publish.
-# No long-lived NPM_TOKEN or secrets — uses GitHub's OIDC trust.
+# Auth: GitHub Actions OIDC -> exchange for Registry JWT -> POST /v0/publish.
+# No long-lived NPM_TOKEN or secrets - uses GitHub's OIDC trust.
 on:
   workflow_dispatch:
     inputs:
@@ -55,27 +55,67 @@ jobs:
 
       - name: Publish server.json to MCP Registry
         working-directory: mcp/gspc-server
-        run: |
-          # GET current server version to check if already published
-          CURRENT=$(curl -sS "https://registry.modelcontextprotocol.io/v0/servers/io.github.CSOAI-ORG%2Fgspc/versions" \
-            | jq -r '.versions[] | select(.version == "'"${{ inputs.version }}'") | .version' 2>/dev/null || true)
-          if [ -n "$CURRENT" ]; then
-            echo "Version ${{ inputs.version }} already published — skipping"
-            exit 0
-          fi
-          # Publish via registry API
-          RESP=$(curl -sS -X POST \
-            https://registry.modelcontextprotocol.io/v0/publish \
-            -H "Authorization: Bearer ${{ steps.jwt.outputs.registry_token }}" \
-            -H "Content-Type: application/json" \
-            -d @server.json 2>&1 || echo "curl failed")
-          echo "Response (first 500 chars):"
-          printf '%s' "$RESP" | head -c 500
-          echo ""
-          echo ""
-          if echo "$RESP" | jq -e '.server.name // .message' > /dev/null 2>&1; then
-            echo "PUBLISH OK"
-          else
-            echo "PUBLISH FAILED (see response above)"
-            exit 1
-          fi
+        env:
+          TOKEN: ${{ steps.jwt.outputs.registry_token }}
+          VER: ${{ inputs.version }}
+        run: node -e '
+          const fs = require("fs");
+          const https = require("https");
+          const server = JSON.parse(fs.readFileSync("server.json"));
+          const VER = process.env.VER;
+          const TOKEN = process.env.TOKEN;
+
+          function get(path) {
+            return new Promise((resolve, reject) => {
+              https.get("https://registry.modelcontextprotocol.io" + path, res => {
+                let d = "";
+                res.on("data", c => d += c);
+                res.on("end", () => resolve({ status: res.statusCode, body: d }));
+              }).on("error", reject);
+            });
+          }
+
+          function post(path, body, headers) {
+            return new Promise((resolve, reject) => {
+              const data = JSON.stringify(body);
+              const req = https.request({
+                hostname: "registry.modelcontextprotocol.io",
+                path, method: "POST",
+                headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(data), ...headers }
+              }, res => {
+                let d = "";
+                res.on("data", c => d += c);
+                res.on("end", () => resolve({ status: res.statusCode, body: d }));
+              });
+              req.on("error", reject);
+              req.write(data);
+              req.end();
+            });
+          }
+
+          (async () => {
+            // Check if version already exists
+            const existing = await get("/v0/servers/io.github.CSOAI-ORG%2Fgspc/versions");
+            if (existing.status === 200) {
+              const d = JSON.parse(existing.body);
+              if (d.versions && d.versions.some(v => v.version === VER)) {
+                console.log(`Version ${VER} already published — skipping`);
+                return;
+              }
+            }
+
+            // Publish
+            const resp = await post("/v0/publish", server, { "Authorization": `Bearer ${TOKEN}` });
+            console.log("Response status:", resp.status);
+            console.log("Response body (first 1000 chars):");
+            console.log(resp.body.substring(0, 1000));
+            if (resp.status >= 200 && resp.status < 300) {
+              console.log("PUBLISH OK");
+            } else {
+              process.exit(1);
+            }
+          })().catch(err => {
+            console.error("Error:", err.message);
+            process.exit(1);
+          });
+          '
