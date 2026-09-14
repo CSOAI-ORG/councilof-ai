@@ -37,11 +37,19 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         ots_state = proof["opentimestamps"]["state"]
         expected_index = index_commitment_state(rekor_state, ots_state)
         expected_anchor = measured_asset_anchor_state(rekor_state, ots_state)
-        self.assertEqual("SIGNED_ROOT_INCLUDED_REKOR_WITNESSED_OTS_CONFIRMED_BITCOIN", expected_index)
         self.assertTrue(all(row["index_commitment_state"] == expected_index for row in self.document["assets"]))
         measured = next(row for row in self.document["assets"] if row["measurement"]["state"] == "MEASURED")
-        self.assertEqual("ROOT_REKOR_WITNESSED_OTS_CONFIRMED_BITCOIN", expected_anchor)
         self.assertEqual(expected_anchor, measured["anchor_state"])
+
+    def test_confirmed_witness_state_spelling(self) -> None:
+        self.assertEqual(
+            "SIGNED_ROOT_INCLUDED_REKOR_WITNESSED_OTS_CONFIRMED_BITCOIN",
+            index_commitment_state("WITNESSED", "CONFIRMED_BITCOIN"),
+        )
+        self.assertEqual(
+            "ROOT_REKOR_WITNESSED_OTS_CONFIRMED_BITCOIN",
+            measured_asset_anchor_state("WITNESSED", "CONFIRMED_BITCOIN"),
+        )
 
     def test_pending_witness_keeps_legacy_public_state_spelling(self) -> None:
         self.assertEqual(
@@ -55,15 +63,23 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
 
     def test_stale_row_witness_state_fails_validation(self) -> None:
         changed = copy.deepcopy(self.document)
+        # Deliberately contradict the current witness, whichever root is current.
+        current = changed["assets"][0]["index_commitment_state"]
         changed["assets"][0]["index_commitment_state"] = (
             "SIGNED_ROOT_INCLUDED_REKOR_WITNESSED_OTS_PENDING_BITCOIN"
+            if current.endswith("CONFIRMED_BITCOIN")
+            else "SIGNED_ROOT_INCLUDED_REKOR_WITNESSED_OTS_CONFIRMED_BITCOIN"
         )
         with self.assertRaises(AssertionError):
             validate(changed)
 
         changed = copy.deepcopy(self.document)
         measured = next(row for row in changed["assets"] if row["measurement"]["state"] == "MEASURED")
-        measured["anchor_state"] = "ROOT_REKOR_WITNESSED_OTS_PENDING_BITCOIN"
+        measured["anchor_state"] = (
+            "ROOT_REKOR_WITNESSED_OTS_PENDING_BITCOIN"
+            if measured["anchor_state"].endswith("CONFIRMED_BITCOIN")
+            else "ROOT_REKOR_WITNESSED_OTS_CONFIRMED_BITCOIN"
+        )
         with self.assertRaises(AssertionError):
             validate(changed)
 
