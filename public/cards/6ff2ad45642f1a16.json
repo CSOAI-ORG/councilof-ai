@@ -1,0 +1,56 @@
+{
+  "card": {
+    "as_of": "2026-09-14T19:20:43Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "USDB",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_supply",
+          "from": 28902731.14000001,
+          "to": 28906238.51000001
+        },
+        {
+          "field": "source_reported_holders",
+          "from": 29,
+          "to": 60
+        }
+      ],
+      "ledger_index": 106986188,
+      "observed_at": "2026-09-14T19:20:43Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6ff2ad45642f1a16674b633c5ed0b974c9af70d0e2a443661080d839c26840e5",
+    "sig_ed25519": "c1362093bd98dca547972c0a5999dd2a2ce99022aff0fc6e20643718e7111712d0574621900e924c5f05f3f58244dc71a2b30cd0b18fa1f1d74d295bfae87f0a",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: USDB changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:USDB"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "add159e2e120f67ccd35515b845aaba1bce3a91f78ff747834cdcdedd72860db",
+    "d24f5f0fd030fa1837abfb60c915ac766dd0d962a72893669a6bef600c5fb235",
+    "647168a7fb1b5740b06e08016cd64f57b79093bb0824d7bcdea9a7b850bf175e",
+    "b3ffafea97032269e9c6cc61b311f9b9a1ca2adc7a15d2efda47684dbb38ea51",
+    "3a94cc303ffe2ce62382157d5f877d312e4413624e7718f1a083d9462971041a",
+    "71f1a330c0709ed1e1ef59048da7162f402a7c3e92904601c46766f87ff361e8",
+    "1f0d09e13e2668ac6bade1fb29f82c477ba1c40e147d164d69282965f62029c8",
+    "2382bfd8228c025d1a3de0894508552fa9eb3d31e62b15e00b2a3ed630fcac31",
+    "5b9fa117d42798f03a779e5cc0b78c3a16bf47ec7ef3277304a2713188b33139"
+  ]
+}
