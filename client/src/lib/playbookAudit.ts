@@ -43,7 +43,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
   },
   {
         id: "empty-names",
-        claim: "The seven empty slots are reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-economy-index, human-labour-index, humanoid-labour-index.",
+        claim: "Historical playbook named reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-economy-index, human-labour-index, humanoid-labour-index as empty — live ids include ai-adoption-components / labour-components; GET /api/gspc is 22·22·0 (MEASURED, not empty).",
         verdict: "stale",
         live: "GET /api/gspc totals 22·22·0 — those financial/domain axes are MEASURED (unsigned fact runs still count). Empty-as-finding only when unmeasured_axes>0. A scrape still does not write MEASURED.",
   },
@@ -111,7 +111,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
         id: "forbid-week-fill",
         claim: "Fill each empty slot in seven days and mark it MEASURED.",
         verdict: "forbidden",
-        live: "MEASURED needs Card v2, a bolted instrument, n, evidence and verify. Board is 22·22·0 today — do not paint seven empty placeholders as live UNMEASURED.",
+        live: "MEASURED needs Card v2, a bolted instrument, n, evidence and verify. Board is 22·22·0 today — do not paint historical empty-slot names as live UNMEASURED.",
   },
   {
         id: "forbid-xrpl-mainnet",

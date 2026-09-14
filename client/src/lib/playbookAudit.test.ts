@@ -12,6 +12,9 @@ describe("domination playbook audit", () => {
     expect(PLAYBOOK_PITCH).toMatch(/AILuminate for chat/);
     expect(playbookByVerdict("keep").some((c) => c.id === "eu-demand")).toBe(true);
     expect(playbookByVerdict("stale").some((c) => c.id === "empty-names")).toBe(true);
+    const emptyNames = PLAYBOOK_CLAIMS.find((c) => c.id === "empty-names");
+    expect(emptyNames?.claim ?? "").not.toMatch(/The seven empty slots are reserve-attestation/);
+    expect(emptyNames?.claim ?? "").toMatch(/22·22·0|MEASURED/);
     expect(playbookByVerdict("keep").some((c) => c.id === "ailuminate-bind")).toBe(true);
     expect(playbookByVerdict("forbidden").some((c) => c.id === "forbid-week-fill")).toBe(true);
     expect(playbookByVerdict("forbidden").some((c) => c.id === "forbid-auto-email")).toBe(true);

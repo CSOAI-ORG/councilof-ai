@@ -86,11 +86,11 @@ export const HEALTH_FACTS: HealthFact[] = [
   },
   {
     id: "empty-slots",
-    title: "Empty slots",
+    title: "Unmeasured axes",
     access: "GET /api/gspc totals.unmeasured_axes",
     href: "https://councilof.ai/api/gspc",
     state: "present",
-    means: "Published gaps. Empty is a fact. Do not zero-fill.",
+    means: "Live board 22·22·0 — unmeasured_axes is 0 today. Empty-as-finding only when that count is >0. Do not paint seven-empty chrome or zero-fill.",
   },
   {
     id: "index-rows",
