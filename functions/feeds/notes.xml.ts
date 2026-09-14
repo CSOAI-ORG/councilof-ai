@@ -32,7 +32,9 @@ export function entries(): Entry[] {
     });
 }
 
-export const onRequestGet: PagesFunction = async () =>
+// Typed without PagesFunction: this module is imported by tests that run under the root
+// tsconfig, where the Cloudflare Workers types are not loaded (TS2304 raised the ratchet 204 -> 205).
+export const onRequestGet = async (): Promise<Response> =>
   new Response(rss(
     "Council of AI — evidence notes",
     "https://councilof.ai/feeds/notes.xml",
