@@ -10,6 +10,13 @@ const payloads: Record<string, unknown> = {
     registry_totals: { registered_all_indexer: 137046 },
   },
   "/interop/root-kinds.json": { by_kind: { "csoai.wrapper.parity/0.1": 17, "csoai.eater.xrpl-issuer/0.1": 16 }, card_count: 294 },
+  "/datasets/csoai/x402-bazaar-conformance/resolve/main/summary-latest.json": {
+    as_of: "2026-09-14T02:29:40Z",
+    hosts_distinct: 2990,
+    hosts_probed: 2990,
+    indexes: { cdp: { resources: 15403 }, payai: { resources: 28619 } },
+    headline: { conformant: 414, conformant_pct: 13.85, unreachable: 284 },
+  },
   "/interop/wrapped-asset-parity-latest.json": {
     counts: { ESCROW_PARITY_READ: 8, UNCHECKABLE_NATIVE_ISSUANCE: 4, INDEXED_CUSTODIAL: 5 },
     records: Array.from({ length: 17 }, (_, i) => ({ id: `pair-${i}` })),
@@ -81,6 +88,7 @@ describe("GET /api/coverage", () => {
       "a2a",
       "erc8004",
       "wrappers",
+      "bazaar",
     ]);
     expect(body.rows.find((row: any) => row.id === "stablecoins").indexed.value).toBe(425);
     expect(body.rows.find((row: any) => row.id === "xrpl").measured.value).toBe(0);
@@ -94,6 +102,9 @@ describe("GET /api/coverage", () => {
     expect(body.rows.find((row: any) => row.id === "wrappers").signed.value).toBe(17);
     expect(body.rows.find((row: any) => row.id === "wrappers").rooted.value).toBe(17);
     expect(body.rows.find((row: any) => row.id === "wrappers").note).toMatch(/escrow-parity reads: 8/);
+    expect(body.rows.find((row: any) => row.id === "bazaar").indexed.value).toBe(2990);
+    expect(body.rows.find((row: any) => row.id === "bazaar").measured.value).toBeNull();
+    expect(body.rows.find((row: any) => row.id === "bazaar").note).toMatch(/414 answered a conformant v2 402/);
   });
 
   it("keeps a failed source visible and renders its lifecycle cells unavailable", async () => {

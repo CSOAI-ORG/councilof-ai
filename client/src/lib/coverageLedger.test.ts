@@ -62,6 +62,13 @@ const input = {
     records: Array.from({ length: 17 }, (_, i) => ({ id: `pair-${i}` })),
   },
   root_kinds: { by_kind: { "csoai.wrapper.parity/0.1": 17 }, card_count: 294 },
+  bazaar: {
+    as_of: "2026-09-14T02:29:40Z",
+    hosts_distinct: 2990,
+    hosts_probed: 2990,
+    indexes: { cdp: { resources: 15403 }, payai: { resources: 28619 } },
+    headline: { conformant: 414, conformant_pct: 13.85, unreachable: 284 },
+  },
 };
 
 describe("master GSPC coverage ledger", () => {
@@ -155,6 +162,7 @@ describe("master GSPC coverage ledger", () => {
       erc8004: null,
       wrappers: null,
       root_kinds: null,
+      bazaar: null,
     });
     for (const row of rows) {
       expect(row.indexed.value).toBeNull();

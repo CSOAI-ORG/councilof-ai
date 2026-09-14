@@ -18,3 +18,8 @@ if [ "${MAX_HOSTS:-}" != "" ]; then log bazaar-conformance "smoke run (MAX_HOSTS
 for f in "snapshots/conformance-$D.jsonl" "summary-$D.json" "diff-$D.json"; do
   log bazaar-conformance "$(python3 "$LOOPS/hf_upload.py" --repo csoai/x402-bazaar-conformance --file "$O/$f" --path-in-repo "$f" 2>&1 | tail -1)"
 done
+# Stable aliases: /api/coverage reads summary-latest.json (bazaar row) — a dated name only would
+# leave the row pointing at yesterday. Same bytes, second path; the dated files stay the archive.
+for f in "summary-$D.json:summary-latest.json" "diff-$D.json:diff-latest.json"; do
+  log bazaar-conformance "$(python3 "$LOOPS/hf_upload.py" --repo csoai/x402-bazaar-conformance --file "$O/${f%%:*}" --path-in-repo "${f##*:}" 2>&1 | tail -1)"
+done
