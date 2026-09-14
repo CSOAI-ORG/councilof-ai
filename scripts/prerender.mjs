@@ -58,6 +58,7 @@ import http from "node:http";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, unlinkSync, copyFileSync } from "node:fs";
 import { join, extname, dirname } from "node:path";
 import { execFileSync } from "node:child_process";
+import { rewriteCanonical } from "./surface/canonical-url.mjs";
 
 const arg = (k, d) => {
   const i = process.argv.indexOf("--" + k);
@@ -600,6 +601,8 @@ async function worker(id) {
       if (dest !== join(DIST, "index.html")) {
         mkdirSync(dirname(dest), { recursive: true });
         copyFileSync(join(DIST, "index.html"), dest);
+        // The copied shell carries the homepage canonical; name this route's served URL instead.
+        writeFileSync(dest, rewriteCanonical(readFileSync(dest, "utf8"), route, PROD_ORIGIN), "utf8");
       }
       rec.ok = true;
       results.push(rec);
@@ -658,8 +661,9 @@ async function worker(id) {
       // captured markup before it is written to dist. PORT is the port actually bound, which is
       // OS-assigned unless --port was passed — brand-gate's infra_leak rule matches any
       // localhost:<port>, not just 4400, so a missed rewrite still fails the build.
-      const html = (await page.content())
-        .split(`http://localhost:${PORT}`).join(PROD_ORIGIN);
+      // Then name the URL the edge actually serves (dir/index.html, bare path 308s to "<route>/").
+      const html = rewriteCanonical((await page.content())
+        .split(`http://localhost:${PORT}`).join(PROD_ORIGIN), route, PROD_ORIGIN);
       // A snapshot that captured a data-fetch failure must be UNABLE to ship: it would
       // bake the error into the crawler-visible page (2026-08-25: /gspc-scoreboard went
       // live reading "Board fetch failed"). Refuse to write it, count it as an error.

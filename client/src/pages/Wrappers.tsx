@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 
-const CANONICAL = "https://councilof.ai/wrappers";
+const CANONICAL = "https://councilof.ai/wrappers/";
 const LEDGER = "/interop/wrapped-asset-parity-latest.json";
 const ROOT_KINDS = "/interop/root-kinds.json";
 const HF_DATASET = "https://huggingface.co/datasets/csoai/wrapped-asset-parity";
@@ -100,7 +100,6 @@ export default function Wrappers() {
       <Helmet>
         <meta name="description" content={PAGE_DESCRIPTION} />
         <meta name="robots" content="index,follow" />
-        <link rel="canonical" href={CANONICAL} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Wrapped-asset parity ledger | Council of AI" />
         <meta property="og:description" content={PAGE_DESCRIPTION} />

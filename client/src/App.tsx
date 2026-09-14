@@ -460,8 +460,10 @@ function RouteTitle() {
     if (t) document.title = t;
 
     // Keep the shell's single canonical record aligned after client-side navigation.
-    const routePath = location.replace(/\/+$/, "") || "/";
-    const canonical = `https://councilof.ai${routePath === "/" ? "" : routePath}`;
+    // The canonical is the URL the edge serves: prerendered routes live at "<route>/" (the bare
+    // path 308s there), so keep the browser's served pathname, trailing slash included.
+    const served = typeof window !== "undefined" ? window.location.pathname : location;
+    const canonical = served === "/" || served === "" ? "https://councilof.ai" : `https://councilof.ai${served}`;
     const link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (link) link.href = canonical;
     document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", canonical);

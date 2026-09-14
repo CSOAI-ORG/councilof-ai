@@ -29,7 +29,9 @@ describe("/stablecoins public evidence landing", () => {
   });
 
   it("publishes honest metadata and dataset JSON-LD", () => {
-    expect(page).toContain('rel="canonical" href={CANONICAL}');
+    // One canonical record: the central writer owns it; the page states the served URL for JSON-LD.
+    expect(page).not.toContain('rel="canonical" href={CANONICAL}');
+    expect(page).toContain('const CANONICAL = "https://councilof.ai/stablecoins/";');
     expect(page).toContain('type="application/ld+json"');
     expect(page).toContain('"@type": "Dataset"');
     expect(page).toContain("READINESS_LEDGER");

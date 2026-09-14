@@ -20,7 +20,9 @@ describe("/wrappers public ledger page", () => {
   });
 
   it("publishes honest metadata and Dataset JSON-LD with both distributions", () => {
-    expect(page).toContain('rel="canonical" href={CANONICAL}');
+    // One canonical record: the central writer owns it; the page states the served URL for JSON-LD.
+    expect(page).not.toContain('rel="canonical" href={CANONICAL}');
+    expect(page).toContain('const CANONICAL = "https://councilof.ai/wrappers/";');
     expect(page).toContain('"@type": "Dataset"');
     expect(page).toContain("huggingface.co/datasets/csoai/wrapped-asset-parity");
     expect(page).toContain("A read is not a measurement");

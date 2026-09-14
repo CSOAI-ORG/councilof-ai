@@ -7,7 +7,7 @@ import { Link } from "wouter";
  * Commissioning is an optional later step. Every door and tool list is read from the live manifest;
  * nothing here types a door, an amount, or a count.
  */
-const CANONICAL = "https://councilof.ai/quickstart";
+const CANONICAL = "https://councilof.ai/quickstart/";
 const MANIFEST = "/.well-known/x402.json";
 const MCP_URL = "https://councilof.ai/mcp";
 
@@ -94,7 +94,6 @@ export default function Quickstart() {
         <title>Agent quickstart — measurements, changes, verification and feeds | Council of AI</title>
         <meta name="description" content={PAGE_DESCRIPTION} />
         <meta name="robots" content="index,follow" />
-        <link rel="canonical" href={CANONICAL} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Agent quickstart | Council of AI" />
         <meta property="og:description" content={PAGE_DESCRIPTION} />
