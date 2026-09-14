@@ -9,10 +9,9 @@ name: deepseek-identity-probe
 # exits 0: a missing key is a fact to show, not a red run to hide.
 
 on:
-  schedule:
-    - cron: "45 3 14 9 *"
-    - cron: "15 4 14 9 *"
-    - cron: "45 4 14 9 *"
+  # The 14 Sep 2026 04:00Z reroute window has passed. The date-pinned crons had no year field
+  # (cron has none), so they would have fired again every 14 September; GitHub also throttled
+  # the 03:45 slot to 09:15Z on the day itself. Dispatch only from here on.
   workflow_dispatch:
 
 permissions:
