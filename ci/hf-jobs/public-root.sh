@@ -71,6 +71,14 @@ git_commit_push() {   # <message> [paths…] — commit staged (+ given) paths, 
   git "${GIT_CRED[@]}" push origin HEAD:master
 }
 
+step 'Layer 0 liveness atom (a PROBED read of the floor itself; the publisher signs it into this root)'
+if ok; then
+  "$PYTHON" scripts/readers/layer0_liveness_reader.py \
+    --stage public/interop/layer0-liveness-2026-09 \
+    --gate-result UNRUN \
+    || echo "layer0 reader failed — the root ticks without the atom (never a fake read)"
+else skipped "preparation failed"; fi
+
 step 'publish public root'
 PUBLISH_RC=0
 if [ "$DRY_RUN" = "1" ]; then
