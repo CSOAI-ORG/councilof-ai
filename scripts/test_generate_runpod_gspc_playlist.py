@@ -82,6 +82,54 @@ class PlaylistGeneratorTests(unittest.TestCase):
                     jobs[0][0], generator.canonical_bytes(jobs[0][1]) + b"\n"
                 )
 
+    def test_keyword_bank_gets_a_budget_that_lets_answers_finish(self) -> None:
+        """#2436: a keyword bank at the 64-token label budget measured the budget."""
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            bank_dir = root / "banks"
+            manifest_root = root / "manifests"
+            bank_dir.mkdir()
+            keyword_axis = generator.AXES[-1][0]
+            for axis, filename in generator.AXES:
+                rows = (
+                    [{"text": "Explain.", "expected": "KEYWORD_MATCH", "must_inc": ["x"]}]
+                    if axis == keyword_axis
+                    else [
+                        {"text": "one", "expected": "YES"},
+                        {"text": "two", "expected": "NO"},
+                    ]
+                )
+                (bank_dir / filename).write_text(
+                    "".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8"
+                )
+            model = "qwen:test"
+            manifest = generator.model_manifest_path(manifest_root, model)
+            manifest.parent.mkdir(parents=True)
+            manifest.write_bytes(b"immutable manifest")
+            digest = generator.sha256_file(manifest)
+            args = generator.parser().parse_args(
+                [
+                    "--bank-dir", str(bank_dir),
+                    "--workspace-root", str(root),
+                    "--model-manifest-root", str(manifest_root),
+                    "--jobs-dir", str(root / "jobs"),
+                    "--output-root", str(root / "out"),
+                    "--models", model,
+                ]
+            )
+            with mock.patch.object(
+                generator, "ollama_digests", return_value={model: digest}
+            ):
+                jobs = {config["axis"]: config for _, config in generator.build_configs(args)}
+
+            self.assertEqual(jobs[keyword_axis]["allowed_labels"], [])
+            self.assertEqual(
+                jobs[keyword_axis]["max_tokens"], generator.KEYWORD_MAX_TOKENS
+            )
+            self.assertGreaterEqual(generator.KEYWORD_MAX_TOKENS, 1024)
+            label_axis = next(a for a, _ in generator.AXES if a != keyword_axis)
+            self.assertEqual(jobs[label_axis]["max_tokens"], 64)
+
 
 if __name__ == "__main__":
     unittest.main()

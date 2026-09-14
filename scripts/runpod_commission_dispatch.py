@@ -227,6 +227,9 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--disk-low-water-bytes", type=int, default=4 * 1024**3)
     result.add_argument("--request-timeout-seconds", type=int, default=180)
     result.add_argument("--max-tokens", type=int, default=64)
+    result.add_argument(
+        "--keyword-max-tokens", type=int, default=playlist.KEYWORD_MAX_TOKENS
+    )
     result.add_argument("--report", type=Path)
     result.add_argument("--source-revision")
     result.add_argument("--dry-run", action="store_true")

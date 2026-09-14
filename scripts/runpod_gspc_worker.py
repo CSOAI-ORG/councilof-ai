@@ -434,7 +434,7 @@ class WorkerConfig:
             },
             "graders": {
                 "exact_label": "unicode-exact-after-outer-whitespace-v1",
-                "keyword_match": "all-nfkc-casefold-whitespace-normalized-substrings-v1",
+                "keyword_match": "all-nfkc-casefold-whitespace-normalized-substrings-v2-length-unanswered",
             },
             "prompt_adapter": "frozen-prompt-plus-public-label-set-v1",
         }
@@ -1240,6 +1240,14 @@ def run_once(
                         else False
                     )
                     parse_errors += int(parsed_label is None)
+                elif result.done_reason == "length":
+                    # The token budget ended the answer, so the keywords it would have
+                    # reached were never written. Measured 2026-09-14 (#2436): 1266 of
+                    # 1295 swarm answers ended "length" at max_tokens=64 and every pass
+                    # was itself a cut-off answer. Like an unparsed label, this item was
+                    # not answered: it leaves n, and it is not a wrong answer.
+                    grade = False
+                    parse_errors += 1
                 else:
                     grade = grade_keyword_match(raw_output, item.required_keywords)
                 correct += int(grade)
