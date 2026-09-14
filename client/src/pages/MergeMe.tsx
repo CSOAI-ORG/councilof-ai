@@ -24,7 +24,10 @@ const REPO = "CSOAI-ORG/councilof-ai";
  * contradicting live totals.public_count. Redact the digit so the page stays
  * honest without declaring merge-me a board-count authority. */
 function sanitizePrTitle(title: string): string {
-  return title.replace(/\b(\d{1,3})\s+(canonical\s+|public\s+|measured\s+|quotable\s+)?(axes|axis|slots)\b/gi, "[count] $2$3");
+  return title.replace(
+    /\b(\d{1,3})\s+(canonical\s+|public\s+|measured\s+|quotable\s+)?(axes|axis|slots)\b/gi,
+    (_m, _n, qual, noun) => `axis-count-redacted ${(qual || "")}${noun}`.replace(/\s+/g, " ").trim(),
+  );
 }
 
 function extractDoneWhen(body: string | null): string[] {
