@@ -29,7 +29,11 @@ permissions:
 jobs:
   land:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
+    env:
+      # gh (pr create, workflow run, pr comment) needs the token in the job env — hub-queue-land
+      # sets it the same way; without it run 34800987085 pushed the branch and died at gh (exit 4).
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
