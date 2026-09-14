@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/connector-envelope-v0.json",
+  "title": "CSOAI connector envelope v0",
+  "description": "The one minimal typed record every collector emits before verify/quarantine/sign/root (issue #2391, 'Common connector envelope'). An envelope points at an artifact by its sha256; any measured value lives in those hashed bytes, never in prose around them. lifecycle_state reuses the estate's existing words: INDEXED is not MEASURED, and an envelope does not sign, root, publish, or write the board. Measurement, not certification. Rules a JSON Schema engine cannot express (idempotency_key recomputation) are enforced by scripts/adapters/connector_envelope.py, which is the reference validator.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "source",
+    "subject",
+    "measurement_kind",
+    "artifact",
+    "observed_at",
+    "license",
+    "provenance",
+    "lifecycle_state",
+    "measurement",
+    "error",
+    "idempotency_key",
+    "writes_board"
+  ],
+  "properties": {
+    "schema": { "const": "csoai.connector-envelope/0.1" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["connector", "url"],
+      "properties": {
+        "connector": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]{0,63}$",
+          "description": "Stable connector id, e.g. kaggle-models-list."
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https://",
+          "description": "The upstream endpoint or page the connector read."
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "revision"],
+      "properties": {
+        "kind": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,31}$" },
+        "id": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "revision": {
+          "type": ["string", "null"],
+          "description": "Version, digest, or revision as published by the source. null means the source did not publish one; it is never guessed."
+        },
+        "url": { "type": "string", "pattern": "^https://" }
+      }
+    },
+    "measurement_kind": {
+      "enum": ["model-comparison", "deterministic-facts", "declared-slot"],
+      "description": "The measurement family the subject belongs to, from functions/api/_gspc_types.ts. lifecycle_state says how far along that family the subject actually got."
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256", "bytes"],
+      "anyOf": [{ "required": ["url"] }, { "required": ["path"] }],
+      "properties": {
+        "sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "sha256 of the artifact bytes. null only when no bytes were obtained (error envelopes); never null for PROBED, MEASURED, SIGNED or ROOTED."
+        },
+        "bytes": { "type": ["integer", "null"], "minimum": 0 },
+        "url": { "type": "string", "pattern": "^https://" },
+        "path": { "type": "string", "pattern": "^[^/]" },
+        "pointer": {
+          "type": "string",
+          "pattern": "^(/[^/]*)*$",
+          "description": "RFC 6901 JSON Pointer to the row inside the artifact, when the subject is one row of a larger file."
+        }
+      }
+    },
+    "observed_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+      "description": "UTC time the source was observed, taken from the artifact. Never the time the envelope was written."
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1,
+      "description": "SPDX id or source license string, or the literal UNCHECKABLE when the source did not publish one."
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["producer", "producer_revision"],
+      "properties": {
+        "producer": { "type": "string", "minLength": 1, "description": "Repo path of the code that emitted the envelope." },
+        "producer_revision": {
+          "type": "string",
+          "pattern": "^(sha256:[0-9a-f]{64}|[0-9a-f]{40}|UNCHECKABLE)$",
+          "description": "Content digest of the producer source or its git commit."
+        }
+      }
+    },
+    "lifecycle_state": {
+      "enum": ["INDEXED", "PROBED", "MEASURED", "UNMEASURED", "UNCHECKABLE", "QUARANTINED", "SIGNED", "ROOTED"]
+    },
+    "measurement": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["value"],
+      "properties": {
+        "value": { "type": ["number", "string", "boolean"] },
+        "n": { "type": "integer", "minimum": 1 },
+        "unit": { "type": "string" }
+      },
+      "description": "Carried only by MEASURED, SIGNED and ROOTED envelopes with an artifact hash and no error. Everything else is null."
+    },
+    "error": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["code", "detail"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{1,63}$" },
+        "detail": { "type": "string" }
+      },
+      "description": "Non-null only for UNMEASURED, UNCHECKABLE or QUARANTINED. An error envelope carries no measurement."
+    },
+    "idempotency_key": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "sha256 over canonical JSON (sorted keys, no whitespace, UTF-8) of [source, subject, measurement_kind, artifact.sha256]. Replaying a collector over the same bytes yields the same key."
+    },
+    "writes_board": { "const": false }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "lifecycle_state": { "enum": ["PROBED", "MEASURED", "SIGNED", "ROOTED"] } } },
+      "then": { "properties": { "artifact": { "properties": { "sha256": { "type": "string" } } } } }
+    },
+    {
+      "if": { "properties": { "lifecycle_state": { "enum": ["MEASURED", "SIGNED", "ROOTED"] } } },
+      "then": { "properties": { "measurement": { "type": "object" }, "error": { "type": "null" } } },
+      "else": { "properties": { "measurement": { "type": "null" } } }
+    },
+    {
+      "if": { "properties": { "error": { "type": "object" } }, "required": ["error"] },
+      "then": { "properties": { "lifecycle_state": { "enum": ["UNMEASURED", "UNCHECKABLE", "QUARANTINED"] } } }
+    }
+  ]
+}

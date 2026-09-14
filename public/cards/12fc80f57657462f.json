@@ -1,0 +1,56 @@
+{
+  "card": {
+    "as_of": "2026-09-14T12:32:52Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "USDC",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_supply",
+          "from": 5229779.758900767,
+          "to": 5229779.758900764
+        },
+        {
+          "field": "source_reported_holders",
+          "from": 80,
+          "to": 10360
+        }
+      ],
+      "ledger_index": 106979891,
+      "observed_at": "2026-09-14T12:32:52Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "12fc80f57657462f65c38b96538d18bc674217d2674e5c70a43433d9b90a79a3",
+    "sig_ed25519": "04e8aa046b3b01239ace4d0460d3fa0008dbad9df5702537011e80ea0ff44494f56dddef2780bd92e6bc0dfde7f3e1369f017e22a82c6ab76d5c320348d16d06",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: USDC changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:USDC"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "2cb6e5a9b48b1671cefcfbd8e71661352e591d43bc0927acffa8b786dad3d870",
+    "be214144878666a49dd9cf65133ae9a1727d635e0c26be291075006169edfa55",
+    "c08087bbb30f3bff95cf922e69109a531470300fb291dbd4cc7b83c223db086e",
+    "a72c2e43b1dd7918b4dfeae72381323cd0691301cce78493870aec15fffa35d3",
+    "740f4555106ba873821cedaf5a59a0141661c25ec0a9a065f5e32e57a7a25f97",
+    "c8952b9363cac87e906802279cb3e01f6e89eaef5fce0798e30fdf94479f81eb",
+    "357468bd0d636f8db78e2d6c13b9b1dd0c3f7a44731cba28cc7d73d24a7182ac",
+    "24dd81fbb85eb2aa2f62fdf003ae7618c4890a5716b1c1a1a47af8c3f53d1462",
+    "aee2b5342eb9fa1d6fcc3c0f9813d06e81b50285ac39e7c5d039889bbda0f83f"
+  ]
+}

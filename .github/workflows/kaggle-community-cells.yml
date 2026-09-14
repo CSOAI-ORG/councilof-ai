@@ -35,15 +35,35 @@ jobs:
         working-directory: gpu-offload/kaggle-community-cells
         run: |
           python3 - <<'PY'
-          from kaggle_community_cells import make_unsigned, filename_for
+          import hashlib, json
+          from kaggle_community_cells import make_unsigned, filename_for, validate_reviewed_stream, CANONICAL_AUTHORITY, CONNECTOR_SCHEMA
           w = make_unsigned(axis="jail", model="kaggle:default", n=20, accuracy=0.5, route="kaggle-community")
           assert w["signature"] is None
           assert w["body"]["status"] == "UNMEASURED"
           assert filename_for(w).startswith("unsigned-jail-")
           src = open("kaggle_community_cells.py").read()
           assert "from mill_card" not in src
+          core = {
+            "schema": CONNECTOR_SCHEMA,
+            "source": {"platform":"councilofai","uri":"https://councilof.ai/root.json","revision":"sha256:"+"a"*64},
+            "subject": {"kind":"measurement-root","id":"gspc-root"},
+            "measurement_kind":"gspc.root-manifest",
+            "artifact": {"uri":"https://councilof.ai/root.json","sha256":"a"*64,"bytes":1,"media_type":"application/json"},
+            "timestamp":"2026-09-14T10:56:05Z",
+            "license_provenance":{"license":"MIT","provenance_uri":"https://councilof.ai/root.json"},
+            "lifecycle":{"state":"published"},"error":None,
+            "authority":CANONICAL_AUTHORITY,"mirror_role":"consumer",
+          }
+          row = dict(core)
+          row["envelope_id"] = hashlib.sha256(json.dumps(core,sort_keys=True,separators=(",",":"),ensure_ascii=True).encode()).hexdigest()
+          assert len(validate_reviewed_stream((json.dumps(row)+"\n").encode())) == 1
           print("self-test PASS")
           PY
+
+      - name: common connector tests
+        run: |
+          PYTHONPATH=scripts/connectors python3 -m unittest scripts/connectors/test_mirror_envelope.py
+          python3 gpu-offload/kaggle-community-cells/test_mill_card.py
 
       - name: deps (current kaggle CLI — SaveKernel wants Bearer, not legacy key)
         if: ${{ inputs.dry_run != true }}

@@ -23,7 +23,7 @@ This ledger reconciles public listings, GitHub history and open submissions. A d
 | GitHub profile pins | DONE | GitHub GraphQL shows `councilof-ai` and `gspc-board` as the first two pinned repositories. | No pin change needed. |
 | GitHub releases | DONE | Two public releases were published on 12 September. | Do not create a nominal “first release.” |
 | Sitemap fix | PENDING REVIEW | PR #2344 is open with commit `104a58305a01f43ae2257f4ed226fe360784e75b`; generated-route truth checks pass. | Let CI and review finish; do not open another PR. |
-| AI Agents Listing | SUBMITTED / REVIEW PENDING | Submission completed at `https://aiagentslisting.com/submit/council-of-ai-measurement-agent/success`; the intended detail URL is `https://aiagentslisting.com/agent/council-of-ai-measurement-agent`. | CSOAI logo uploaded; contact address supplied; promotional updates off. Do not call live until the public detail URL resolves without authentication. |
+| AI Agents Listing | SUBMITTED / REVIEW PENDING | The detail URL returns HTTP 200, but visual inspection on 14 September shows an explicit private-preview banner: “not yet published” and “waiting for review.” | CSOAI logo and canonical endpoints are present in the preview. Do not submit a duplicate or call it live before the banner clears. |
 
 ## Single highest-impact net-new public action — submitted
 
@@ -37,7 +37,7 @@ The canonical Council of AI Measurement Agent was submitted to **AI Agents Listi
 
 Why this was the next action: every larger protocol-native directory checked was already live, duplicated or pending. AI Agents Listing spans both A2A agents and MCP servers and had no verified CSOAI presence before submission. One canonical entry adds a new discovery graph instead of another copy in an existing graph.
 
-Proof threshold after action: `https://aiagentslisting.com/agent/council-of-ai-measurement-agent` must resolve without login and name Council of AI. The success URL proves submission only, so the state remains `SUBMITTED / REVIEW PENDING`.
+Proof threshold is not yet met: the detail URL resolves and names the Council of AI Measurement Agent, but the page labels itself a preview that is not yet published. Keep the placement at `SUBMITTED / REVIEW PENDING` until the preview banner clears for a public visitor.
 
 Safe one-line description:
 

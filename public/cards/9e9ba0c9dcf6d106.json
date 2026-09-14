@@ -1,0 +1,81 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:58:07.494Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "cbxrp:base",
+      "backing_model": "custodial",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "cbXRP",
+        "address": "0xcb585250f852C6c6bf90434AB21A00f02833a4af",
+        "chainId": 8453,
+        "block": 51296622,
+        "block_hash": "0x1b00ce371d168892fc5b182be823a44e3cc1748c6dc9aa0fd31598342e5c94d2",
+        "block_time": 1789382591
+      },
+      "canonical": {
+        "chain": "xrpl",
+        "symbol": "XRP",
+        "address": "Coinbase custody; not an EVM contract",
+        "chainId": null,
+        "block": null,
+        "block_hash": null
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "XRP reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x000000000000000000000000000000000000000000000000000072cf73127ac3",
+          "raw_sha256": "32b573554c7bbcea036d92fff74591ca6c128042b80fbf19f65f1ea81f6f6556",
+          "atomic": "126235314387651",
+          "normalized": "126235314.387651",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "INDEXED_CUSTODIAL",
+      "state": "DISCOVERED",
+      "error": null,
+      "fetched_at": "2026-09-14T10:58:07.494Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "reserve (custodian-held off this chain; not readable here)"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9e9ba0c9dcf6d1065b0af11043a4ff462654c6d50879df6118e5fd836349c576",
+    "sig_ed25519": "1824eeee2045cb62a81d81b7feddee0e696e1c83fea8613fa51ff292f8cd1e14aab530c161084fbde2774f8aa12b52584e740035cf71caa60f878f20af76c206",
+    "source_urls": [
+      "https://mainnet.base.org"
+    ],
+    "subject": "wrapped cbXRP on base vs native issuance — INDEXED_CUSTODIAL",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:custodial",
+      "state:INDEXED_CUSTODIAL"
+    ],
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ]
+  },
+  "proof": [
+    "146f8a127e7e1d2b0aa5038b456fbcfcf6b0312ed66194a04a59b122ad506415",
+    "09718779573afd7816bfb74878cc4e496cb95e98ff2eaffa68db192afb103488",
+    "0c003de1074c32f99a85ef8a28689512606b83171895eccfc7cd62cb74ee5996",
+    "12678c41982f739e34fe07bc497fd68dbf1658a5e43aff397d80c8ca855cc216",
+    "92b3ee0f7c353b5b05c85a1f1196d982182e2e402c96980c733f86ac634ba16d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "d9d52240a8436cad529074028a832592dba271f2d01687e6bf3e37989dfbca33",
+    "ddb6d92ea8c4ce44cba9a3aa109f456cc19b2b444e3dd02f0a8f2b5cd67dd0ea",
+    "0a690e153ab6c9e1aa7f6781d3f6e0dfd10cfae2697482f694ad8de44aeee888"
+  ]
+}

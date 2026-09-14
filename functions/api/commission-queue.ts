@@ -9,8 +9,9 @@
  * Aggregate public facts only. Never a score. SKU/UNFULFILLABLE never enter mill priority.
  */
 import { classifyCommissionTarget } from "./_commission_target";
+import { readHubCardsIndex, readPodCardsIndex } from "./commissions";
 
-type Env = { REVENUE_KV?: KVNamespace };
+type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> } };
 
 type QueueRow = {
   subject: string;
@@ -140,7 +141,27 @@ export async function listCommissionQueue(kv: KVNamespace): Promise<{ rows: Queu
   return { rows, unreadable: mill.unreadable + ras.unreadable };
 }
 
-export async function buildCommissionQueue(env: Env) {
+async function suppressDelivered(
+  rows: QueueRow[],
+  env: Env,
+  origin: string,
+  fetcher: typeof fetch,
+): Promise<{ rows: QueueRow[]; suppressed: number; state: "READ" | "UNCHECKABLE" }> {
+  const needsPod = rows.some((r) => r.subject_kind !== "hub_model" && r.model);
+  const needsHub = rows.some((r) => r.subject_kind === "hub_model" && r.model);
+  const pod = needsPod ? await readPodCardsIndex(env, origin, fetcher) : new Map();
+  const hub = needsHub ? await readHubCardsIndex(env, origin, fetcher) : new Map();
+  if (pod === null || hub === null) return { rows, suppressed: 0, state: "UNCHECKABLE" };
+  const active = rows.filter((row) => {
+    if (!row.model) return true;
+    const index = row.subject_kind === "hub_model" ? hub : pod;
+    const cards = index.get(row.model.toLowerCase()) ?? [];
+    return !cards.some((card) => row.axis === null || card.axis === row.axis);
+  });
+  return { rows: active, suppressed: rows.length - active.length, state: "READ" };
+}
+
+export async function buildCommissionQueue(env: Env, origin = "https://councilof.ai", fetcher: typeof fetch = fetch) {
   const base = {
     schema: "csoai.commission-queue/0.1",
     endpoint: "/api/commission-queue",
@@ -151,7 +172,9 @@ export async function buildCommissionQueue(env: Env) {
     return { ...base, status: "UNMEASURED", rows: null, note: "no store bound — null, never empty" };
   }
   try {
-    const { rows, unreadable } = await listCommissionQueue(env.REVENUE_KV);
+    const listed = await listCommissionQueue(env.REVENUE_KV);
+    const reconciled = await suppressDelivered(listed.rows, env, origin, fetcher);
+    const rows = reconciled.rows;
     return {
       ...base,
       status: "MEASURED",
@@ -159,8 +182,13 @@ export async function buildCommissionQueue(env: Env) {
       count: rows.length,
       queued: rows.filter((r) => r.fulfillment === "QUEUED").length,
       unfulfillable: rows.filter((r) => r.fulfillment === "UNFULFILLABLE").length,
+      delivery_reconciliation: {
+        state: reconciled.state,
+        suppressed: reconciled.suppressed,
+        meaning: "Signed cards already published for the requested model/axis leave the active mill queue. Index unreadable keeps work visible and reports UNCHECKABLE.",
+      },
       rows,
-      records_unreadable: unreadable,
+      records_unreadable: listed.unreadable,
     };
   } catch (e) {
     return {
@@ -172,4 +200,5 @@ export async function buildCommissionQueue(env: Env) {
   }
 }
 
-export const onRequestGet: PagesFunction<Env> = async ({ env }) => json(await buildCommissionQueue(env));
+export const onRequestGet: PagesFunction<Env> = async ({ env, request }) =>
+  json(await buildCommissionQueue(env, new URL(request.url).origin));

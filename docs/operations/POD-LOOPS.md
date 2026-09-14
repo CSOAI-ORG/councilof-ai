@@ -98,6 +98,35 @@ bash <loop>.sh --now                 # run one shell loop by hand, bypassing its
 python3 /workspace/council-of-ai/scripts/runpod_gspc_upload_heartbeat.py --dry-run
 ```
 
+## Deploy reviewed control code without restarting the worker
+
+The pod-local reviewed-control command closes the maintenance gap without
+turning GitHub Actions or a browser into a pod shell. It accepts no token, key,
+host, repository URL or ref. It only recognizes the canonical CSOAI origin and
+`refs/heads/master`; it refuses a dirty checkout, a moving remote ref, concurrent
+maintenance, a missing dispatcher, a failed dispatcher, or telemetry not bound
+to the deployed commit. It never restarts or stops a process and its JSON output
+contains counts rather than commission subjects or payer data.
+
+Run the preflight on the active pod first:
+
+```
+python3 /workspace/council-of-ai/scripts/runpod_reviewed_control.py --dry-run
+```
+
+Only when that returns `DRY_RUN_OK`, apply the exact reviewed revision and run
+one commission-dispatch pass:
+
+```
+python3 /workspace/council-of-ai/scripts/runpod_reviewed_control.py --apply
+```
+
+Success is `APPLIED_AND_DISPATCHED`, an exact `deployed_revision` equal to the
+preflight's `reviewed_revision`, `restart_attempted: false`, `secrets_read:
+false`, and sanitized dispatch counts. The operator must then verify the public
+worker endpoint separately; this command does not claim that deployment of the
+website or collection of pod telemetry occurred.
+
 For restart persistence, first verify that `/start.sh` is the image's real current
 entrypoint and inspect any `/post_start.sh` behavior. Only then configure the pod
 start command to invoke
