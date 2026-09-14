@@ -37,7 +37,7 @@ const CONDITIONS: { id: string; title: string; body: string; check: string; chec
     id: "method-on-the-card",
     title: "3 · The method goes on the card",
     body:
-      "The instrument, item bank version, sample size, grading rule and model identifier are published with the result. A result that cannot carry its method is not published. Anyone can re-check a signed card without an account.",
+      "For an evaluation accepted under these conditions, its published result must name the instrument, item bank version, sample size, grading rule and model identifier. If those fields cannot be published, that evaluation will not produce a result under this policy. Earlier published records use older schemas and may omit some of these fields; this policy does not backfill them. Anyone can check the signature on a signed card without an account.",
     check: "Verify a signed card yourself",
     checkHref: "/gspc-verify",
   },
@@ -53,7 +53,7 @@ const CONDITIONS: { id: string; title: string; body: string; check: string; chec
     id: "access-and-redaction-terms",
     title: "5 · Access and redaction terms are visible",
     body:
-      "Each published result states what access it was measured under: API or weights, rate limits, system prompt, and version or date. Material may be withheld only for exploit detail that would cause harm, personal data, or a third party's confidential information. The fact of a redaction and the reason for it are always published.",
+      "For an evaluation accepted under these conditions, its published result must state the access used: API or weights, applicable rate limits, whether the system prompt was available, and the system version or evaluation date. Earlier published records may not contain these access fields. Under this policy, material may be withheld only for exploit detail that would cause harm, personal data, or a third party's confidential information; the publication must state that a redaction was made and why.",
     check: "How a signed card records what was measured",
     checkHref: "/methodology",
   },
@@ -86,7 +86,9 @@ export default function EvaluatorAccess() {
         </p>
         <p className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm leading-6 text-amber-900">
           This page records our own conditions and nothing more. It does not claim that any developer,
-          lab, regulator or other body has read, accepted, answered or endorsed them.
+          lab, regulator or other body has read, accepted, answered or endorsed them. It is a rule for
+          evaluations accepted under this version; it is not evidence that an earlier published result
+          met these conditions.
         </p>
 
         <div className="mt-8 space-y-6">

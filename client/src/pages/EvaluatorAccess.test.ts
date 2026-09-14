@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -7,6 +7,7 @@ const app = readFileSync(resolve(__dirname, "../App.tsx"), "utf8");
 const nav = readFileSync(resolve(__dirname, "../components/HeaderNav.tsx"), "utf8");
 const library = readFileSync(resolve(__dirname, "../data/library-ia.ts"), "utf8");
 const prerender = readFileSync(resolve(__dirname, "../../../scripts/prerender.mjs"), "utf8");
+const signedCardsDir = resolve(__dirname, "../../../public/signed/cards");
 
 describe("/evaluator-access — Conditions for Independent Evaluator Access", () => {
   it("carries all four wirings a new page needs (route, title, prerender MUST, PRIMARY_PATHS) and a nav entry", () => {
@@ -36,5 +37,23 @@ describe("/evaluator-access — Conditions for Independent Evaluator Access", ()
 
   it("uses the route title as the single title authority", () => {
     expect(page).not.toContain("<title>");
+  });
+
+  it("does not backdate the new publication requirements onto older card schemas", () => {
+    const cards = readdirSync(signedCardsDir)
+      .filter((name) => name.endsWith(".json"))
+      .map((name) => JSON.parse(readFileSync(resolve(signedCardsDir, name), "utf8")))
+      .filter((card) => card?.body?.kind === "gspc.measurement-card");
+    expect(cards.length).toBeGreaterThan(0);
+    expect(cards.some((card) =>
+      card.body.instrument === undefined ||
+      card.body.item_bank_version === undefined ||
+      card.body.n === undefined ||
+      card.body.grading_rule === undefined ||
+      card.body.access === undefined
+    )).toBe(true);
+    expect(page).toContain("Earlier published records use older schemas and may omit some of these fields");
+    expect(page).toContain("Earlier published records may not contain these access fields");
+    expect(page).toMatch(/it is not evidence that an earlier published result\s+met these conditions/);
   });
 });
