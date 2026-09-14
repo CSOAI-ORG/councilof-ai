@@ -33,6 +33,7 @@ export const navigation: NavGroup[] = [
       { name: 'Verify a signed card', href: '/gspc-verify', description: 'Check any Ed25519-signed record offline against the published key. Free forever' },
       { name: 'Watchdog evidence', href: '/watchdog-hub', description: 'Inspect the public evidence surface; incident submission is not live' },
       { section: 'How it works', name: 'Methodology', href: '/methodology', description: 'Gold labels, n≥30, McNemar separation — and how to recompute every number yourself' },
+      { name: 'Evaluator access conditions', href: '/evaluator-access', description: 'No developer money, no gag clauses, the method on the card, corrections govern, access and redaction terms published' },
       { name: 'The GSPC instrument', href: '/instrument', description: 'Four deterministic lenses over frozen provisions. No model sits in the verdict path' },
       { name: 'Published tools', href: '/tools', description: 'MCP servers you can run yourself — not a marketplace' },
       { name: 'Agent quickstart', href: '/quickstart', description: 'Explore measurements, follow the change record, verify evidence, then connect to the supported feeds; commissioning is optional' },

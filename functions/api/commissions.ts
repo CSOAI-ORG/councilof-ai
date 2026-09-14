@@ -14,8 +14,9 @@
  * payai-wrapper → UNFULFILLABLE, not a model mill target.
  */
 import { classifyCommissionTarget, type Fulfillment, type SubjectKind } from "./_commission_target";
+import { selfWallets } from "./_x402";
 
-type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> } };
+type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> }; X402_PAY_TO?: string; X402_SELF_WALLETS?: string };
 
 /** One signed pod card as the build-time index (/interop/pod-cards-index.json) lists it. */
 type PodCard = { id: string; url: string; subject: string; axis: string | null; n: number | null; status: string | null; run_id: string | null };
@@ -36,7 +37,14 @@ type Commission = {
   /** Signed cards on master for this subject (joined from the pod-cards index). null = index unreadable, never "none". */
   cards: PodCard[] | null;
   delivery: Delivery;
+  /**
+   * Who paid, as a class — never the address. OUTSIDE = a non-self wallet moved a non-zero amount;
+   * SELF_TEST = an estate wallet paid itself; ZERO_VALUE = the settlement moved nothing;
+   * UNCHECKABLE = no settlement record to read. A commission is demand evidence only when OUTSIDE.
+   */
+  origin: CommissionOrigin;
 };
+export type CommissionOrigin = "OUTSIDE" | "SELF_TEST" | "ZERO_VALUE" | "UNCHECKABLE";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -153,6 +161,25 @@ function joinDelivery(c: Omit<Commission, "cards" | "delivery">, pod: Map<string
   return { cards, delivery: { state: cards.length ? "CARDS_PUBLISHED" : "NONE", count: cards.length } };
 }
 
+/**
+ * Classify one commission's payment from its settled:tx:<tx> record — the same record and the same
+ * self/zero rules /api/revenue uses, so the two endpoints cannot disagree about who is a buyer.
+ * The payer address is read to classify and is never returned.
+ */
+export async function commissionOrigin(kv: KVNamespace, tx: string | null, env: Env): Promise<CommissionOrigin> {
+  if (!tx) return "UNCHECKABLE";
+  let raw: string | null;
+  try { raw = await kv.get(`settled:tx:${tx}`); } catch { return "UNCHECKABLE"; }
+  if (!raw) return "UNCHECKABLE";
+  let r: { payer?: string | null; self?: boolean; zero_value?: boolean; amount_atomic?: string | number | null };
+  try { r = JSON.parse(raw); } catch { return "UNCHECKABLE"; }
+  const zero = r.zero_value === true || !r.amount_atomic || !/^[1-9]\d*$/.test(String(r.amount_atomic));
+  if (zero) return "ZERO_VALUE";
+  const payer = (r.payer || "").toLowerCase();
+  if (r.self === true || (!!payer && selfWallets(env).has(payer))) return "SELF_TEST";
+  return payer ? "OUTSIDE" : "UNCHECKABLE";
+}
+
 export async function buildCommissions(env: Env, origin = "https://councilof.ai", fetcher: typeof fetch = fetch) {
   const base = {
     schema: "csoai.commissions/0.2",
@@ -170,10 +197,12 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
     const needsHub = bare.some((c) => joinable(c) && c.subject_kind === "hub_model");
     const pod = needsPod ? await readPodCardsIndex(env, origin, fetcher) : new Map<string, PodCard[]>();
     const hub = needsHub ? await readHubCardsIndex(env, origin, fetcher) : new Map<string, PodCard[]>();
-    const commissions: Commission[] = bare.map((c) => {
+    const kv = env.REVENUE_KV;
+    const origins = await Promise.all(bare.map((c) => commissionOrigin(kv, c.tx, env)));
+    const commissions: Commission[] = bare.map((c, i) => {
       const joined = joinDelivery(c, pod, hub);
       // Writer: DID-signed cards in the published index → RETRIEVABLE (never invents MEASURED/scores).
-      return { ...c, ...joined, fulfillment: fulfillmentAfterDelivery(c.fulfillment, joined.delivery) };
+      return { ...c, ...joined, fulfillment: fulfillmentAfterDelivery(c.fulfillment, joined.delivery), origin: origins[i] };
     });
     const subjects = [...new Set(commissions.map((c) => c.subject))];
     return {
@@ -192,6 +221,9 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
         how: "each `cards[].url` is a signed card; verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json. When CARDS_PUBLISHED, fulfillment becomes RETRIEVABLE — publication is not a certificate and invents no MEASURED score.",
       },
       unfulfillable: commissions.filter((c) => c.fulfillment === "UNFULFILLABLE").length,
+      // A receipt is not demand. Only OUTSIDE commissions are evidence that someone else asked.
+      by_origin: Object.fromEntries((["OUTSIDE", "SELF_TEST", "ZERO_VALUE", "UNCHECKABLE"] as const).map((o) => [o, commissions.filter((c) => c.origin === o).length])),
+      origin_rule: "OUTSIDE = a non-self wallet moved a non-zero amount (same record and rules as /api/revenue); SELF_TEST = an estate wallet paid itself; ZERO_VALUE = nothing moved; UNCHECKABLE = no settlement record. Payer addresses are never returned.",
       commissions,
       records_unreadable: unreadable,
     };

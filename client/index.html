@@ -106,7 +106,7 @@
     <!-- Per-route self-canonical: each crawled URL canonicals to itself (not just the root).
          NB: during prerender (scripts/prerender.mjs) the captured markup's localhost origin is
          rewritten to the production origin, so static pages never ship a localhost canonical. -->
-    <script>(function(){try{var u=location.origin+location.pathname.replace(/\/$/,"")||location.origin;var c=document.querySelector('link[rel=canonical]');if(c)c.href=u;var o=document.querySelector('meta[property="og:url"]');if(o)o.setAttribute("content",u);var t=document.querySelector('meta[name="twitter:url"]');if(t)t.setAttribute("content",u);}catch(e){}})();</script>
+    <script>(function(){try{var u=location.pathname==="/"?location.origin:location.origin+location.pathname;var c=document.querySelector('link[rel=canonical]');if(c)c.href=u;var o=document.querySelector('meta[property="og:url"]');if(o)o.setAttribute("content",u);var t=document.querySelector('meta[name="twitter:url"]');if(t)t.setAttribute("content",u);}catch(e){}})();</script>
   </head>
 
   <body>

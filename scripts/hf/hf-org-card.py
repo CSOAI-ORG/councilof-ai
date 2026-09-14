@@ -258,7 +258,56 @@ def stale_hits(body: str) -> list[str]:
     return hits
 
 
-def score_card(kind: str, text: str, files: list[str], viewer_ok: bool | None) -> tuple[int, int, list[str]]:
+# A typed count of OUR door is stale the moment the door changes. On 2026-09-14, 46 csoai/* cards
+# still carried "11 HTTP tools (7 free + 4 x402; verified live tools/list 2026-09-07…)" while live
+# tools/list returned 12, and 50 carried "OpenAPI … version 0.2+6c709613dc31 · 97 paths" against a
+# live 103 — and every one of those cards scored 100/100 because STALE only knows fixed phrases.
+TYPED_MCP_TOOLS = re.compile(r"\*{0,2}(\d+)\s+HTTP\s+tools\b|MCP endpoint\W+(\d+)\s+tools\b", re.I)
+TYPED_OPENAPI_PATHS = re.compile(r"openapi.*?\b(\d+)\s+paths\b", re.I)
+TYPED_OPENAPI_VERSION = re.compile(r"openapi.*?\bversion\s+(0\.\d+\+[0-9a-f]{7,})", re.I)
+
+
+def typed_count_drift(body: str, live: dict) -> list[str]:
+    """Typed counts of the CSOAI MCP/OpenAPI doors that the live door does not say.
+
+    `live` carries mcp_tools / openapi_paths / openapi_version; a value that could not be read is
+    None and its check is skipped (R13: cannot-run is not a fail). Negated/historical sentences are
+    exempt, as for STALE."""
+    hits = []
+    # Split on EVERY newline, not only "newline + whitespace": a markdown table is rows joined by a
+    # bare "\n", and read as one sentence the npm row's "No version is pinned here" exempted the stale
+    # MCP row beside it (0 of 46 live stale cards were caught before this split).
+    for sentence in re.split(r"(?<=[.!?])\s+|\n", body):
+        if NEGATION.search(sentence):
+            continue
+        if live.get("mcp_tools") is not None:
+            for m in TYPED_MCP_TOOLS.finditer(sentence):
+                n = int(m.group(1) or m.group(2))
+                if n != live["mcp_tools"]:
+                    hits.append(f"typed MCP tools {n} != live {live['mcp_tools']}")
+        if live.get("openapi_paths") is not None:
+            for m in TYPED_OPENAPI_PATHS.finditer(sentence):
+                if int(m.group(1)) != live["openapi_paths"]:
+                    hits.append(f"typed OpenAPI paths {m.group(1)} != live {live['openapi_paths']}")
+        if live.get("openapi_version"):
+            for m in TYPED_OPENAPI_VERSION.finditer(sentence):
+                if m.group(1) != live["openapi_version"]:
+                    hits.append(f"typed OpenAPI version {m.group(1)} != live {live['openapi_version']}")
+    return hits
+
+
+def live_door_counts() -> dict:
+    """Read the doors once per --check run. Nothing here is typed; unreadable → None."""
+    mcp_n, _ = mcp_tool_count()
+    spec, _ = fetch_json("https://councilof.ai/openapi.json")
+    paths = spec.get("paths") if isinstance(spec, dict) else None
+    version = (spec.get("info") or {}).get("version") if isinstance(spec, dict) else None
+    return {"mcp_tools": mcp_n, "openapi_paths": len(paths) if isinstance(paths, dict) else None,
+            "openapi_version": version if isinstance(version, str) else None}
+
+
+def score_card(kind: str, text: str, files: list[str], viewer_ok: bool | None,
+               live: dict | None = None) -> tuple[int, int, list[str]]:
     fm, body = split_front_matter(text)
     ds = kind == "dataset"
     # R13: a check that cannot reach its input says CANNOT-RUN, never FAILED.
@@ -296,7 +345,7 @@ def score_card(kind: str, text: str, files: list[str], viewer_ok: bool | None) -
         ("BibTeX", "@misc{" in body),
         ("verify+root", "gspc-verify" in body and "root.json" in body),
         ("org index link", "huggingface.co/csoai" in body),
-        ("no stale strings", not stale_hits(body)),
+        ("no stale strings", not stale_hits(body) and not typed_count_drift(body, live or {})),
         ("body>1800", len(body) > 1800),
     ]
     applicable = [(n, ok) for n, ok in checks if ok is not None]
@@ -319,6 +368,8 @@ def check(public_only: bool, kinds: tuple[str, ...] = ("dataset", "model", "spac
     tmp = Path(tempfile.mkdtemp(prefix="csoai-cards-"))
     bad = 0
     lister = {"dataset": api.list_datasets, "model": api.list_models, "space": api.list_spaces}
+    live = live_door_counts()
+    print(f"live doors: {live}")
     for kind in kinds:
         for it in lister[kind](author=ORG):
             private = bool(getattr(it, "private", False))

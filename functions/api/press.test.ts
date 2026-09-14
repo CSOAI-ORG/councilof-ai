@@ -86,6 +86,7 @@ describe("/api/press.json is derived, and refuses to announce what did not happe
     });
     expect(d.not_announced.map((n) => n.subject)).not.toContain("first outside settlement");
     expect(d.faq.find((f) => f.q.includes("NOT measured"))!.a).toContain("1 outside settlement");
+    expect(d.commercial_evidence.note).toContain("0.02 USDC (20000 atomic units");
   });
 
   it("states the root's proof scope and the three-corpora boundary", async () => {

@@ -68,7 +68,7 @@ export const AXES_FIN: AxisScore[] = [
     run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED v0.3 over the live XRPL reader-16 (start set RLUSD/OUSG/USDB/BBRL bidirectional, " +
-      "then the twelve well-known/registry rows). Three-state per fact: 1 PASS, 6 FAIL, 9 UNCHECKABLE " +
+      "then the twelve well-known/registry rows). Three-state per fact: 3 PASS, 4 FAIL, 9 UNCHECKABLE " +
       "(no on-chain declared Domain = no deterministic disclosure surface; UNREACHABLE is never FAIL). " +
       "Self-declare without attestation language is FAIL. Archax x abrdn and OpenEden TBILL are off " +
       "this reader — parked under rwa-attest-other. Risk verdict UNMEASURED. Not a rating.",
@@ -83,7 +83,7 @@ export const AXES_FIN: AxisScore[] = [
     run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED v0.3 for declaration presence on a retrieved URL, over the live XRPL reader-16. " +
-      "3 PASS, 4 FAIL, 9 UNCHECKABLE (no on-chain Domain; UNREACHABLE is never FAIL). Never " +
+      "4 PASS, 3 FAIL, 9 UNCHECKABLE (no on-chain Domain; UNREACHABLE is never FAIL). Never " +
       "compliance. Risk verdict UNMEASURED. Not a rating.",
   },
   {

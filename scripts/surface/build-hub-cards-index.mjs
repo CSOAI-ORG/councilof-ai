@@ -63,12 +63,34 @@ export function rowFromCard(name, wrap) {
   };
 }
 
+/**
+ * Card ids WITHDRAWN.jsonl withdraws (C-2026-0914-01: graded by a one-option prompt,
+ * no replacement card). Throws on a malformed row: an index built past a ledger it
+ * could not read would list withdrawn cards as current.
+ */
+export function withdrawnIds(cardsDir) {
+  const path = join(cardsDir, "WITHDRAWN.jsonl");
+  const ids = new Set();
+  if (!existsSync(path)) return ids;
+  for (const [i, line] of readFileSync(path, "utf8").split("\n").entries()) {
+    if (!line.trim()) continue;
+    const row = JSON.parse(line);
+    if (!/^[0-9a-f]{64}$/.test(row?.withdrawn_id ?? "") || typeof row.correction !== "string" || !row.correction.trim()) {
+      throw new Error(`WITHDRAWN.jsonl row ${i + 1}: withdrawn_id (sha256) and correction are required`);
+    }
+    ids.add(row.withdrawn_id);
+  }
+  return ids;
+}
+
 export function buildIndex(cardsDir, evidenceDir = "public/interop/mill-evidence") {
-  const cards = []; let skipped = 0;
+  const cards = []; let skipped = 0; let withdrawnExcluded = 0;
+  const withdrawn = withdrawnIds(cardsDir);
   const names = existsSync(cardsDir) ? readdirSync(cardsDir).filter((f) => f.startsWith("signed-") && f.endsWith(".json")).sort() : [];
   for (const name of names) {
     try {
       const wrap = JSON.parse(readFileSync(join(cardsDir, name), "utf8"));
+      if (withdrawn.has(wrap?.id)) { withdrawnExcluded++; continue; }
       const row = hasCurrentAdmission(wrap, evidenceDir) ? rowFromCard(name, wrap) : null;
       row ? cards.push(row) : skipped++;
     }
@@ -77,7 +99,10 @@ export function buildIndex(cardsDir, evidenceDir = "public/interop/mill-evidence
   return { schema: SCHEMA, as_of: new Date().toISOString(),
     source: "reproducibly admitted signed Hub cards on the deployed commit",
     count: cards.length, signed_files_seen: names.length,
-    skipped_non_current_or_unreadable: skipped, cards };
+    skipped_non_current_or_unreadable: skipped,
+    withdrawn_excluded: withdrawnExcluded,
+    withdrawn_ledger: "interop/mill-cards-signed/WITHDRAWN.jsonl — withdrawn cards still resolve and verify; they are not current measurements",
+    cards };
 }
 
 const isMain = process.argv[1] && import.meta.url.endsWith(process.argv[1].split("/").pop());
