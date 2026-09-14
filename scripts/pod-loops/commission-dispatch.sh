@@ -17,7 +17,7 @@ if [ ! -d "$WORKER_JOBS" ] || [ ! -r "$CONTROL_REPO/scripts/generate_runpod_gspc
   log commission-dispatch "HALT worker release/jobs absent release=$WORKER_REL"
   exit 2
 fi
-if ! curl -fsS -m 30 https://councilof.ai/api/commissions -o "$FEED.tmp"; then
+if ! curl -fsS -m 30 https://councilof.ai/api/commission-queue -o "$FEED.tmp"; then
   rm -f "$FEED.tmp"
   log commission-dispatch "UNCHECKABLE commission feed unavailable"
   exit 1

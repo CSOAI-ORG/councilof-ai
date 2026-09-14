@@ -23,18 +23,24 @@ SCHEMA = "csoai.runpod-commission-dispatch/0.1"
 
 
 def _commission_cells(feed: dict[str, Any]) -> tuple[list[dict[str, str]], list[dict[str, Any]]]:
+    schema = feed.get("schema")
+    if schema == "csoai.commission-queue/0.1":
+        records = feed.get("rows")
+    elif schema in {"csoai.commissions/0.1", "csoai.commissions/0.2"}:
+        records = feed.get("commissions")
+    else:
+        records = None
     if (
-        feed.get("schema") not in {"csoai.commissions/0.1", "csoai.commissions/0.2"}
-        or feed.get("status") != "MEASURED"
+        feed.get("status") != "MEASURED"
         or feed.get("records_unreadable") != 0
-        or not isinstance(feed.get("commissions"), list)
+        or not isinstance(records, list)
     ):
         raise playlist.GenerationError("commission feed unavailable or unreadable")
 
     known_axes = {axis for axis, _ in playlist.AXES}
     cells: dict[tuple[str, str], dict[str, str]] = {}
     refused: list[dict[str, Any]] = []
-    for record in feed["commissions"]:
+    for record in records:
         if not isinstance(record, dict):
             raise playlist.GenerationError("invalid commission record")
         subject = record.get("subject")
@@ -46,8 +52,14 @@ def _commission_cells(feed: dict[str, Any]) -> tuple[list[dict[str, str]], list[
             raise playlist.GenerationError("invalid commission subject")
         if not isinstance(receipt, str) or len(receipt) != 64 or any(c not in "0123456789abcdef" for c in receipt):
             raise playlist.GenerationError("invalid commission receipt sha")
+        if schema == "csoai.commission-queue/0.1" and (
+            record.get("status") != "QUEUED" or fulfillment != "QUEUED"
+        ):
+            continue
         if fulfillment == "UNFULFILLABLE":
             refused.append({"receipt_sha": receipt, "subject": subject, "axis": axis, "reason": "UNFULFILLABLE"})
+            continue
+        if fulfillment == "RETRIEVABLE":
             continue
         if fulfillment not in (None, "QUEUED"):
             raise playlist.GenerationError("invalid commission fulfillment")
