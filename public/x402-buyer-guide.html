@@ -63,16 +63,16 @@ curl -H "X-Payment-Signature: &lt;signed-payment&gt;" \
 <table>
 <thead><tr><th>Resource</th><th>Endpoint</th><th>Amount</th></tr></thead>
 <tbody>
-<tr><td>Free door</td><td><code>/api/free-door</code></td><td class="amt">$0.00</td></tr>
+<tr><td>Free door</td><td><code>/api/free-door</code></td><td class="amt">free (no 402)</td></tr>
 <tr><td>Issuance</td><td><code>/api/request-attestation?subject=&lt;id&gt;</code></td><td class="amt">metered — read the 402</td></tr>
-<tr><td>Evidence bundle</td><td><code>/api/evidence-bundle?obligation=&lt;...&gt;</code></td><td class="amt">$0.10</td></tr>
-<tr><td>Proof bundle</td><td><code>/api/proof?bundle=1</code></td><td class="amt">$0.02</td></tr>
-<tr><td>RWA evidence</td><td><code>/api/rwa/evidence?asset=&lt;symbol&gt;</code></td><td class="amt">$0.05</td></tr>
-<tr><td>Wrapper parity</td><td><code>/api/wrapper/parity</code></td><td class="amt">$0.05</td></tr>
-<tr><td>Art. 50 marking</td><td><code>/api/art50/marking-evidence?url=&lt;...&gt;</code></td><td class="amt">$0.10</td></tr>
-<tr><td>Provider diff</td><td><code>/api/feeds/provider-diff?history=1</code></td><td class="amt">$0.05</td></tr>
-<tr><td>Receipts batch</td><td><code>/api/receipts/batch?from=&lt;date&gt;</code></td><td class="amt">$0.25</td></tr>
-<tr><td>Data feed</td><td><code>/api/eunomia-data?feed=1</code></td><td class="amt">$0.50</td></tr>
+<tr><td>Evidence bundle</td><td><code>/api/evidence-bundle?obligation=&lt;...&gt;</code></td><td class="amt">metered — read the 402</td></tr>
+<tr><td>Proof bundle</td><td><code>/api/proof?bundle=1</code></td><td class="amt">metered — read the 402</td></tr>
+<tr><td>RWA evidence</td><td><code>/api/rwa/evidence?asset=&lt;symbol&gt;</code></td><td class="amt">metered — read the 402</td></tr>
+<tr><td>Wrapper parity</td><td><code>/api/wrapper/parity</code></td><td class="amt">metered — read the 402</td></tr>
+<tr><td>Art. 50 marking</td><td><code>/api/art50/marking-evidence?url=&lt;...&gt;</code></td><td class="amt">metered — read the 402</td></tr>
+<tr><td>Provider diff</td><td><code>/api/feeds/provider-diff?history=1</code></td><td class="amt">metered — read the 402</td></tr>
+<tr><td>Receipts batch</td><td><code>/api/receipts/batch?from=&lt;date&gt;</code></td><td class="amt">metered — read the 402</td></tr>
+<tr><td>Data feed</td><td><code>/api/eunomia-data?feed=1</code></td><td class="amt">metered — read the 402</td></tr>
 </tbody></table>
 <h2>Verification — always free</h2>
 <pre><code># Get a card
@@ -90,12 +90,12 @@ curl "https://councilof.ai/api/card?subject=USDC"</code></pre>
 curl https://councilof.ai/api/request-attestation?subject=USDC
 # Pay the 402 challenge, retry with X-Payment-Signature</code></pre>
 <h3>"I need an EU AI Act Article 50 evidence bundle"</h3>
-<pre><code># Paid: $0.10 for a full OSCAL 1.1.0 bundle
+<pre><code># Paid: settle the 402 for a full OSCAL 1.1.0 bundle
 curl https://councilof.ai/api/evidence-bundle?obligation=article-50&amp;subject=model-id&amp;bundle=1</code></pre>
 <h3>"I want to prove this card is in your canonical Merkle root"</h3>
 <pre><code># One leaf: free
 curl "https://councilof.ai/api/proof?sha=&lt;64-hex&gt;"
-# Multiple leaves: paid batch ($0.02)
+# Multiple leaves: paid batch (settle the 402)
 curl "https://councilof.ai/api/proof?bundle=1"</code></pre>
 <h2>MCP integration</h2>
 <pre><code>{"servers":{"csoai-gspc-mcp":{"url":"https://councilof.ai/mcp","stdio":"npx -y csoai-gspc-mcp@0.2.1"}}}</code></pre>
@@ -106,7 +106,7 @@ curl "https://councilof.ai/api/proof?bundle=1"</code></pre>
 </div>
 <div class="cta">
 <h2>Volume pricing</h2>
-<p>If you're settling more than $100/month, contact us for a bundle deal.</p>
+<p>If you settle at volume, contact us for a supported feed — amounts stay in the 402.</p>
 <a class="btn" href="mailto:nicholas@csoai.org">nicholas@csoai.org</a>
 <a class="btn-s" href="/pricing">View pricing</a>
 </div>
