@@ -58,8 +58,8 @@ export const EMPTY_SLOTS: SlotFill[] = [
     id: "ai-adoption-components",
     axis: "ai-adoption-components",
     honest_next:
-      "MEASURED on the live board as component facts (not the retired ai-economy-index / MEASURED-INDEX-v0.1 sticker). Dated aggregates may be REPORTED with attribution.",
-    never: "Crunchbase scrape as a GSPC grade. An investable index. Restore MEASURED-INDEX-v0.1.",
+      "MEASURED on the live board as component facts (not the withdrawn ai-economy-index / MEASURED-INDEX-v0.1 sticker, C-2026-0826-05). Dated aggregates may be REPORTED with attribution.",
+    never: "Crunchbase scrape as a GSPC grade. An investable index. Restoring the withdrawn MEASURED-INDEX-v0.1 sticker (C-2026-0826-05).",
   },
   {
     id: "labour-components",
