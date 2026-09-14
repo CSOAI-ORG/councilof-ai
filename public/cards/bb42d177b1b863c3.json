@@ -1,0 +1,57 @@
+{
+  "card": {
+    "as_of": "2026-09-14T09:44:39Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "EURCV",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "transfer_controls",
+          "from": {
+            "allow_trustline_clawback": true,
+            "default_ripple": true,
+            "global_freeze": false,
+            "no_freeze": false,
+            "require_auth": false
+          },
+          "to": null
+        }
+      ],
+      "ledger_index": 106977283,
+      "observed_at": "2026-09-14T09:44:39Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "bb42d177b1b863c3ba2d7987b70bf0f629bff780939d3edc1d82b7ce0f57cc5a",
+    "sig_ed25519": "a8b2f62a71127bdc34c99d6c631b1b48bb9270321d2dd8f852b88991ae8d20000238397bf94c3fe6d466619999a086c608c3cc22e7069057716e685039a9be00",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: EURCV changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:EURCV"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "0e286e0e2b45b500223da196d83d0fa9715dd3052ffed805a86c24641f3a4195",
+    "cd1a919dcb20ed68030ea24f01c37e240423dda68d18a339b0a18ac5b04cd231",
+    "9eb67c0323ebe75db872a8d253ebef83f42dc902f2a151cc3d573afb36e42e9f",
+    "87184c9b00b663dbbfb0eb5dbeaf07357df4a74e06de8726a9cf788590660b32",
+    "3727a0e3b7d08c836c7fa02077dd4976a7caba1163171760e3e9702741020445",
+    "d2be6a36d8a3d4cdebc5e216d036f939be39aa809b9ca49856af974cf154c3d8",
+    "bb6ecb40b279c0483beefc27d752a3fc9b1c2e23b1dacdb48e660bc4481f9b25",
+    "2f6081d8b42f507e74b21b9381b7b99062f7246ecf5b1851cf3f147b294c61a0",
+    "2709743fd41d21e5226faef21379907ddf33345a32e8b6ddb15e0e6c5e3fe9d9"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "card": {
+    "as_of": "2026-09-14T09:12:33Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "195",
+      "symbol": "USD0",
+      "attestation_page": "https://usual.money/",
+      "auditor": null,
+      "cadence_claimed": "real-time",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "b55010c8759fcd3024ae705e001aeacc9e70de07103f3f68e3760f1b28dec462",
+      "excerpt": "the core stability asset of Usual, USD0 supports transparency and security by maintaining real-time reserves, offering a non-fractional, reliable alternative to",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "staleness"
+      ]
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "2607ff4d7725e09acd1ae501f74e8d079f5e14c1c726362a7906121665027094",
+    "sig_ed25519": "7a68c88fc5a15965b5f266b801ddb949a838296fdeb29befb44938a36d290ee5d6400e8b5f7286e13eb282cd9734b24012183066f7f3e65881b523340fe55401",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://usual.money/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USD0",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "staleness"
+    ]
+  },
+  "proof": [
+    "624731f8665fe501266a4404e92142164722709603ccad841c3280c8c860ce04",
+    "d5f9946f8d044a0f3a8010ef81f9e80f4c96eea7eaf4821e3fee8b992e7f811c",
+    "d4b717b9dcbe1aa7c0d338a4431d02a85cf146c35d4e05a1ef4a271825516993",
+    "358abebf40fe336027b43f5697a6d2eead9b16c89bfcefeda9c67a080a1bf7fb",
+    "6546a6b3f1a5b9f425b37808d4e8e7672cf49f67b67f86594114bd201dd6fdde",
+    "b9f83faa886ec4b591a7e97a3c124a2f3bfdd9412dc55b6580b7bdd1e3e7f196",
+    "bb6ecb40b279c0483beefc27d752a3fc9b1c2e23b1dacdb48e660bc4481f9b25",
+    "2f6081d8b42f507e74b21b9381b7b99062f7246ecf5b1851cf3f147b294c61a0",
+    "2709743fd41d21e5226faef21379907ddf33345a32e8b6ddb15e0e6c5e3fe9d9"
+  ]
+}
