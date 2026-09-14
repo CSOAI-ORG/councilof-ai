@@ -216,11 +216,22 @@ def router_models(token: str) -> dict:
     return {"http": st, "models": models, "providers": provs}
 
 
+BILL_TO = os.environ.get("HF_BILL_TO", "csoai")
+
+
+def router_headers(token: str) -> dict:
+    """Headers for a router chat call. X-HF-Bill-To bills the org (Team plan credit), exactly as the
+    hourly mill does (harness/gspc-top100/mill_hub_queue.py). Without it the call bills the token's
+    personal account; the 2026-09-14 billed probe sent none and read every door as refused while the
+    mill, with the header, was grading through the same router."""
+    return {"Authorization": f"Bearer {token}", "Content-Type": "application/json", "User-Agent": UA,
+            "X-HF-Bill-To": BILL_TO}
+
+
 def probe_router(target: str, token: str) -> dict:
     """One cheapest-possible chat call (max_tokens=1). Returns {http, code, detail}."""
     payload = json.dumps({"model": target, "messages": [{"role": "user", "content": PROBE_PROMPT}], "max_tokens": 1, "temperature": 0}).encode()
-    req = urllib.request.Request(ROUTER_CHAT, data=payload, method="POST",
-                                 headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json", "User-Agent": UA})
+    req = urllib.request.Request(ROUTER_CHAT, data=payload, method="POST", headers=router_headers(token))
     for attempt, wait in enumerate((0, 5, 12, 25)):
         if wait:
             time.sleep(wait)
