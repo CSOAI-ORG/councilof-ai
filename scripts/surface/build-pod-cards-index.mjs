@@ -14,7 +14,7 @@
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 
-export const SCHEMA = "csoai.pod-cards-index/0.2";
+export const SCHEMA = "csoai.pod-cards-index/0.1";
 const CARD_URL = "https://councilof.ai/interop/mill-cards-signed/";
 
 /** "ollama:llama3.2:3b@sha256:abc…" → { subject: "llama3.2:3b", digest: "sha256:abc…" } */
@@ -25,46 +25,29 @@ export function splitModelRef(ref) {
   return at < 0 ? { subject: rest, digest: null } : { subject: rest.slice(0, at), digest: rest.slice(at + 1) };
 }
 
-/** Hub cards count only with a current v0.2 admission receipt (#2075): legacy v0.1 hub cards are
- *  immutable history, not reproducible measurements, so they never become a deliverable. */
-export function hubAdmitted(body) {
-  const ev = body.evidence && typeof body.evidence === "object" ? body.evidence : null;
-  const ad = body.admission && typeof body.admission === "object" ? body.admission : null;
-  return !!(ev && ev.schema === "csoai.mill-item-evidence/0.2" && ad && ad.schema === "csoai.mill-evidence-admission/0.2" && typeof ad.file === "string" && typeof ad.sha256 === "string");
-}
-
 export function rowFromCard(name, wrap) {
   const body = wrap && typeof wrap === "object" ? wrap.body : null;
   if (!body || typeof body !== "object") return null;
-  if (typeof wrap.id !== "string" || typeof wrap.signature !== "string") return null;
   const m = splitModelRef(body.model);
-  const base = {
+  if (!m) return null; // hub / non-pod cards are indexed elsewhere (/api/hub-cards)
+  if (typeof wrap.id !== "string" || typeof wrap.signature !== "string") return null;
+  const ce = body.compute_evidence && typeof body.compute_evidence === "object" ? body.compute_evidence : {};
+  return {
     id: wrap.id,
     file: name,
     url: CARD_URL + name,
+    subject: m.subject,
+    model_ref: body.model,
+    model_digest: m.digest,
     axis: typeof body.axis === "string" ? body.axis : null,
     n: Number.isInteger(body.n) ? body.n : null,
     status: typeof body.status === "string" ? body.status : null,
+    bank_sha256: typeof ce.bank_sha256 === "string" ? ce.bank_sha256 : null,
+    run_id: typeof ce.run_id === "string" ? ce.run_id : null,
     did: typeof wrap.did === "string" ? wrap.did : null,
     signed: true,
     verified_here: false, // the index never verifies; verify the bytes at `url` under did.json
   };
-  if (m) {
-    const ce = body.compute_evidence && typeof body.compute_evidence === "object" ? body.compute_evidence : {};
-    return { ...base, kind: "pod", subject: m.subject, model_ref: body.model, model_digest: m.digest,
-      bank_sha256: typeof ce.bank_sha256 === "string" ? ce.bank_sha256 : null,
-      run_id: typeof ce.run_id === "string" ? ce.run_id : null };
-  }
-  if (typeof body.model === "string" && body.model.includes("/") && hubAdmitted(body)) {
-    const ev = body.evidence;
-    return { ...base, kind: "hub", subject: body.model, model_ref: body.model,
-      model_hf_revision: typeof ev.model_hf_revision === "string" ? ev.model_hf_revision : null,
-      bank_revision: typeof ev.bank_revision === "string" ? ev.bank_revision : null,
-      bank_sha256: typeof ev.bank_sha256 === "string" ? ev.bank_sha256 : null,
-      admission: { file: body.admission.file, sha256: body.admission.sha256, url: "https://councilof.ai/interop/mill-evidence/" + body.admission.file },
-      run_id: null };
-  }
-  return null; // legacy hub card (no v0.2 admission) or unknown shape: not a deliverable
 }
 
 export function buildIndex(cardsDir) {
@@ -83,11 +66,11 @@ export function buildIndex(cardsDir) {
     schema: SCHEMA,
     as_of: new Date().toISOString(),
     source: "public/interop/mill-cards-signed/signed-*.json on the deployed commit",
-    what: "Signed measurement cards by subject: pod (Ollama) cards, and Hub cards that carry a current v0.2 admission receipt. Legacy v0.1 Hub cards are excluded (not reproducible). Derived at build time from the signed bytes; never typed; carries each card's own status and no verdict of its own. Not a certificate.",
+    what: "Signed pod (Ollama) measurement cards by subject. Derived at build time from the signed bytes; never typed; carries each card's own status and no verdict of its own. Not a certificate.",
     verify: "fetch url → verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json",
     count: rows.length,
     signed_files_seen: names.length,
-    skipped_legacy_or_unreadable: skipped,
+    skipped_non_pod_or_unreadable: skipped,
     subjects,
     cards: rows,
   };
@@ -102,5 +85,5 @@ if (isMain) {
   const idx = buildIndex(cards);
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, JSON.stringify(idx, null, 1) + "\n");
-  console.log(`pod-cards-index: ${idx.count} cards over ${Object.keys(idx.subjects).length} subjects (${idx.signed_files_seen} signed files seen, ${idx.skipped_legacy_or_unreadable} legacy/unreadable) → ${out}`);
+  console.log(`pod-cards-index: ${idx.count} pod cards over ${Object.keys(idx.subjects).length} subjects (${idx.signed_files_seen} signed files seen, ${idx.skipped_non_pod_or_unreadable} non-pod/unreadable) → ${out}`);
 }
