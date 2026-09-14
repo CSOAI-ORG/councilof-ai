@@ -19,6 +19,9 @@
     const workspaceRoute = /^\/(?:dashboard|os)(?:\/|$)/.test(window.location.pathname);
     if (workspaceRoute) return;
     if (document.getElementById("council-workspace-launcher")) return;
+    // SPA pages already render CouncilLobby's FAB (`data-council-global-launcher`).
+    // Do not inject a second link with the same accessible name — mobile e2e strict-mode.
+    if (document.querySelector("[data-council-global-launcher]")) return;
 
     const host = document.createElement("div");
     host.id = "council-workspace-launcher";
@@ -48,6 +51,15 @@
         <span>Open workspace</span>
       </a>`;
     document.body.appendChild(host);
+    const dropIfReactOwns = () => {
+      if (document.querySelector("[data-council-global-launcher]") && host.isConnected) {
+        host.remove();
+      }
+    };
+    dropIfReactOwns();
+    queueMicrotask(dropIfReactOwns);
+    setTimeout(dropIfReactOwns, 0);
+    setTimeout(dropIfReactOwns, 250);
   } catch {
     // The page remains fully usable if a restrictive document blocks enhancement.
   }

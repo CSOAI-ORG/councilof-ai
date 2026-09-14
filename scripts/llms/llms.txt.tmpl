@@ -69,6 +69,8 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
   - https://councilof.ai/api/art50/marking-evidence?url=<https-url>
   - https://councilof.ai/api/feeds/provider-diff?history=1
   - https://councilof.ai/api/evidence-bundle?obligation=article-50&subject=<id>&bundle=1
+  - https://councilof.ai/api/wrapper?id=<pair>
+  - https://councilof.ai/api/wrapper/changes?id=<pair>
 - Free preview: omit `bundle=1` or add `preview=1` as the 402 body documents. Verify stays free: https://councilof.ai/gspc-verify
 - PayAPI Market (discovery only — buyers pay the estate payTo, not PayAPI; no listing fee):
   - https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed
@@ -165,7 +167,7 @@ Measurement only. Nothing here is a conformity mark. No SOV names. No invented s
 
 ## Come back / carry the mark
 
-- What changed, as RSS: https://councilof.ai/feed.xml (aliases: https://councilof.ai/rss.xml ;
+- What changed, as RSS: https://councilof.ai/feed.xml (aliases: https://councilof.ai/rss.xml ; https://councilof.ai/atom.xml ;
   canonical https://councilof.ai/api/feed.xml) — MEASURED board changes, REPORTED context,
   regulation-change events and corrections. Historical items keep their sitting-day wording and
   say so; counts typed there are superseded by the live board. No account, no email, no key.

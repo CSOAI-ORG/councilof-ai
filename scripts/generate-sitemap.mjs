@@ -31,8 +31,12 @@ if (!existsSync(FUNCTIONS_DIR)) {
 // A sitemap URL that answers 3xx is a defect: 42 of 423 did on the last count — 4 of
 // them 308'd to the homepage, 36 to their own trailing-slash canonical. The sitemap
 // must list what the edge actually SERVES, so read the rules and either rewrite the
-// entry to its canonical target or drop it. generate-redirects.mjs runs FIRST in
-// build:client so the file read here is this build's, never the previous one's.
+// entry to its canonical target or drop it. generate-redirects.mjs MUST run FIRST in
+// build:client so the file read here is this build's, never the previous one's. Until
+// 2026-09-14 this comment said so while package.json ran the sitemap FIRST: every route added
+// since the last committed _redirects (/quickstart, /stablecoins, /wrappers) had no bare->slash
+// rule yet, was listed bare, and answered 308 live. scripts/sitemap-withdrawal.node-test.mjs
+// now asserts the order.
 const REDIRECTS_FILE = join(ROOT, "public/_redirects");
 const redirectRules = new Map();
 try {
@@ -314,10 +318,21 @@ const seen = new Set();
 const paths = [];
 let skippedParams = 0;
 let skippedJunk = 0;
+let skippedAlias = 0;
 let m;
 while ((m = routeRe.exec(src)) !== null) {
   const p = m[1].trim();
   if (!p.startsWith("/")) continue;
+  // A client-side alias — <Route path="/lookup">{() => <Redirect to="/gspc-verify" />}</Route> —
+  // is not a page. The prerender still snapshots it (to /lookup/index.html), and that snapshot
+  // self-canonicalises to the TARGET, so listing it advertises a duplicate whose own canonical
+  // tag disowns it. Measured live 2026-09-14: /ceremony and /lookup were in the sitemap, each
+  // 308 -> a 200 copy of another page. The target route is listed in its own right.
+  if (/^<Route\b[^>]*?\bpath="[^"]+"[^>]*>\s*\{\s*\(\)\s*=>\s*<Redirect\b/.test(src.slice(m.index, m.index + 400))) {
+    seen.add(p);
+    skippedAlias++;
+    continue;
+  }
   if (p.includes(":")) {
     skippedParams++;
     continue;
@@ -566,7 +581,7 @@ ${urls}
 writeFileSync(OUT, xml);
 console.log(
   `[sitemap] ${finalPaths.length} URLs -> public/sitemap.xml ` +
-    `(skipped ${skippedParams} :param routes, ${skippedJunk} junk/legacy, ` +
+    `(skipped ${skippedParams} :param routes, ${skippedJunk} junk/legacy, ${skippedAlias} client-side <Redirect> aliases, ` +
     `${droppedRedirect} redirect-to-elsewhere, ${blogUnbuilt} unbuilt blog slugs (404), ` +
     `${blogSkipped} redirected or withdrawn blog slugs; ` +
     `${rewritten} rewritten to their trailing-slash canonical; ` +

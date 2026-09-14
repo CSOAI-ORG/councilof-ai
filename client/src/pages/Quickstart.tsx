@@ -7,7 +7,7 @@ import { Link } from "wouter";
  * Commissioning is an optional later step. Every door and tool list is read from the live manifest;
  * nothing here types a door, an amount, or a count.
  */
-const CANONICAL = "https://councilof.ai/quickstart";
+const CANONICAL = "https://councilof.ai/quickstart/";
 const MANIFEST = "/.well-known/x402.json";
 const MCP_URL = "https://councilof.ai/mcp";
 
@@ -94,7 +94,6 @@ export default function Quickstart() {
         <title>Agent quickstart — measurements, changes, verification and feeds | Council of AI</title>
         <meta name="description" content={PAGE_DESCRIPTION} />
         <meta name="robots" content="index,follow" />
-        <link rel="canonical" href={CANONICAL} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Agent quickstart | Council of AI" />
         <meta property="og:description" content={PAGE_DESCRIPTION} />
@@ -207,7 +206,7 @@ curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/e
         <p className="mt-3 leading-7 text-slate-700">
           A read can be wrong: a stale escrow address, a predicate that missed a case. Corrections are published beside the record,
           never by editing signed bytes. The register is at{" "}
-          <Link href="/corrections" className="underline decoration-emerald-600 underline-offset-4">/corrections</Link>; the revenue
+          <Link href="/api/corrections" className="underline decoration-emerald-600 underline-offset-4">/api/corrections</Link>; the revenue
           contract and the count of distinct outside payers live at{" "}
           <a href="/api/revenue" className="underline decoration-emerald-600 underline-offset-4">/api/revenue</a>.
         </p>

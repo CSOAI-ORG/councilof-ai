@@ -1,0 +1,89 @@
+name: "CSOAI verify — signature, root inclusion, OTS presence"
+description: "Verify a Council of AI signed card in CI: Ed25519 under the published DID key, inclusion in a published Merkle root, OpenTimestamps proof presence. Measurement, not certification."
+author: "CSOAI Ltd"
+
+branding:
+  icon: "check-circle"
+  color: "green"
+
+# Online companion to actions/verify-card (which is deliberately offline and checks the
+# signature only). This one fetches the DID document and the published roots, so pin a
+# reviewed commit, and prefer actions/verify-card when you must not touch the network.
+
+inputs:
+  card:
+    description: "Card to verify: a path in the caller workspace, or an https:// URL."
+    required: true
+  did:
+    description: "DID document URL or path the signing key is pinned from."
+    required: false
+    default: "https://csoai.org/.well-known/did.json"
+  require_inclusion:
+    description: "Fail (exit 3) unless a published root includes the card."
+    required: false
+    default: "false"
+  require_ots:
+    description: "Fail (exit 3) unless the including root has an OpenTimestamps proof file."
+    required: false
+    default: "false"
+  tamper_control:
+    description: "Also mutate the card body and require the signature check to say INVALID."
+    required: false
+    default: "true"
+  fail:
+    description: "Fail the step on a non-zero result. false exposes the same outputs without gating."
+    required: false
+    default: "true"
+
+outputs:
+  signature:
+    description: "VALID, INVALID or UNCHECKABLE."
+    value: ${{ steps.verify.outputs.signature }}
+  inclusion:
+    description: "INCLUDED, NOT_IN_SUPPLIED_ROOTS, ROOT_INCONSISTENT or UNCHECKABLE."
+    value: ${{ steps.verify.outputs.inclusion }}
+  ots:
+    description: "PRESENT, ABSENT_AT_SIDECAR_PATH, NOT_AN_OTS_FILE or NOT_APPLICABLE. Presence only; no Bitcoin validation."
+    value: ${{ steps.verify.outputs.ots }}
+  tamper_control:
+    description: "DETECTED, NOT_DETECTED or NOT_RUN."
+    value: ${{ steps.verify.outputs.tamper_control }}
+  id:
+    description: "The card id as stated (64 hex) when readable."
+    value: ${{ steps.verify.outputs.id }}
+  exit_code:
+    description: "0 ok · 1 INVALID or tamper undetected · 2 UNCHECKABLE · 3 required inclusion/OTS not shown."
+    value: ${{ steps.verify.outputs.exit_code }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Ensure the Ed25519 backend
+      shell: bash
+      run: |
+        python3 -c "import cryptography" 2>/dev/null \
+          || python3 -m pip install --quiet --user "cryptography>=42" 2>/dev/null \
+          || python3 -m pip install --quiet --user --break-system-packages "cryptography>=42"
+    - id: verify
+      name: Verify signature, inclusion and OTS presence
+      shell: bash
+      env:
+        CSOAI_ACTION_PATH: ${{ github.action_path }}
+        CSOAI_CARD: ${{ inputs.card }}
+        CSOAI_DID: ${{ inputs.did }}
+        CSOAI_REQUIRE_INCLUSION: ${{ inputs.require_inclusion }}
+        CSOAI_REQUIRE_OTS: ${{ inputs.require_ots }}
+        CSOAI_TAMPER: ${{ inputs.tamper_control }}
+        CSOAI_FAIL: ${{ inputs.fail }}
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        set +e
+        args=(--did "$CSOAI_DID" --github-output)
+        [ "$CSOAI_REQUIRE_INCLUSION" = "true" ] && args+=(--require-inclusion)
+        [ "$CSOAI_REQUIRE_OTS" = "true" ] && args+=(--require-ots)
+        [ "$CSOAI_TAMPER" = "true" ] && args+=(--tamper-control)
+        python3 "$CSOAI_ACTION_PATH/../../tools/verify/csoai_verify.py" "$CSOAI_CARD" "${args[@]}"
+        code=$?
+        echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+        if [ "$CSOAI_FAIL" = "true" ] && [ "$code" -ne 0 ]; then exit "$code"; fi
+        exit 0

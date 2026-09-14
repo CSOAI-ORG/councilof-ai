@@ -1,3 +1,5 @@
+> **SUPERSEDED FOR OMB 3064-0225 (2026-09-14):** this text addresses custody agreements ("RIN 3064-AG25"), not the PS-01/PS-01a reporting forms that close 18 Sep 2026, and cites figures not present at the stated sources. Do not file. Use `measurement/filings/2026-09/FDIC-OMB-3064-0225-PS-01-DRAFT.md`; see `measurement/filings/2026-09/INDEX.md`.
+
 # FDIC Proposed Rule — Field-by-Field Paste
 ## RIN 3064-AG25: Safekeeping of Digital Assets by FDIC-Insured State Nonmember Banks
 

@@ -53,6 +53,15 @@ test("build requires the current receipt and exact evidence bytes", () => {
     writeFileSync(join(cards, "signed-safety-a.json"), JSON.stringify(signed));
     assert.equal(hasCurrentAdmission(signed, evidence), true);
     assert.equal(buildIndex(cards, evidence).count, 1);
+    // C-2026-0914-01: a withdrawn card is admitted, signed and still not current.
+    const ledger = join(cards, "WITHDRAWN.jsonl");
+    writeFileSync(ledger, JSON.stringify({ withdrawn_id: signed.id, correction: "C-2026-0914-01" }) + "\n");
+    assert.equal(buildIndex(cards, evidence).count, 0);
+    assert.equal(buildIndex(cards, evidence).withdrawn_excluded, 1);
+    writeFileSync(ledger, JSON.stringify({ withdrawn_id: signed.id }) + "\n");
+    assert.throws(() => buildIndex(cards, evidence), /correction are required/);
+    rmSync(ledger);
+    assert.equal(buildIndex(cards, evidence).count, 1);
     writeFileSync(join(evidence, sourceBody.evidence.items_file), "changed\n");
     assert.equal(buildIndex(cards, evidence).count, 0);
   } finally { rmSync(root, { recursive: true, force: true }); }

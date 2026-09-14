@@ -142,3 +142,37 @@ def test_adopt_remote_read_at_keeps_a_fresh_clock_when_the_root_changed_or_remot
     assert spray.adopt_remote_read_at(tr, {"fingerprint": "f" * 64, "as_of": "2026-09-12T19:21:56Z", "read_at": "x"}) is False
     assert spray.adopt_remote_read_at(tr, None if False else {}) is False
     assert tr["read_at"] == "2026-09-13T15:00:00Z"
+
+
+def _truth():
+    return {"as_of": "2026-09-14T03:12:56Z", "read_at": "2026-09-14T04:44:14Z", "fingerprint": "9" * 64,
+            "lid": "22 axes measured · not a certificate.", "board": {"issuer": "CSOAI Ltd"}}
+
+
+def test_kaggle_page_text_is_derived_from_the_truth_only():
+    subtitle, description = spray.kaggle_page_text(_truth())
+    assert "2026-09-14T03:12:56Z" in subtitle
+    assert description.startswith("22 axes measured · not a certificate.")
+    assert description.endswith("spray-fingerprint: " + "9" * 64)
+    assert not spray.BANNED.search(description)
+
+
+def test_kaggle_metadata_drift_is_none_when_the_page_matches_modulo_whitespace():
+    subtitle, description = spray.kaggle_page_text(_truth())
+    info = {"subtitle": subtitle, "description": description.replace("\n\n", "\n")}
+    assert spray.kaggle_metadata_drift(info, subtitle, description) is None
+
+
+def test_kaggle_metadata_drift_catches_the_2026_09_14_live_page():
+    """Bytes carried 2026-09-14T03:12:56Z; the visible page still said 2026-09-12 and carried a
+    hand-typed legacy Hub triple in place of the fingerprint line. UNCHANGED bytes must not hide that."""
+    subtitle, description = spray.kaggle_page_text(_truth())
+    stale = {
+        "subtitle": "Snapshot of GET councilof.ai/api/gspc · as_of 2026-09-12T13:27:43Z · 22·22 · cit",
+        "description": description.rsplit("spray-fingerprint:", 1)[0]
+        + "Hub cards: GET https://councilof.ai/api/hub-cards → cells/measured/unmeasured = 1191/1191/0",
+    }
+    reason = spray.kaggle_metadata_drift(stale, subtitle, description)
+    assert reason is not None and "subtitle" in reason and "description" in reason
+    appended = {"subtitle": subtitle, "description": description + "\nA100 COLD."}
+    assert "description" in (spray.kaggle_metadata_drift(appended, subtitle, description) or "")

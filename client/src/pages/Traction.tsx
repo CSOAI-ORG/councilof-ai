@@ -5,12 +5,13 @@ import { Link } from "wouter";
 type State = {
   root: { cards: number; asOf: string } | null;
   revenue: { payers: number; settlements: number; atomic: number } | null;
-  commissions: { count: number; queued: number; unfulfillable: number } | null;
+  commissions: { outside: number; excluded: number; unknown: number; count: number; queued: number; unfulfillable: number } | null;
   coverage: number | null;
   worker: string | null;
+  corrections: number | null;
   failed: string[];
 };
-const EMPTY: State = { root: null, revenue: null, commissions: null, coverage: null, worker: null, failed: [] };
+const EMPTY: State = { root: null, revenue: null, commissions: null, coverage: null, worker: null, corrections: null, failed: [] };
 
 async function json(path: string, signal: AbortSignal) {
   const response = await fetch(path, { signal, cache: "no-store", headers: { accept: "application/json" } });
@@ -23,8 +24,8 @@ export default function Traction() {
   const [live, setLive] = useState<State>(EMPTY);
   useEffect(() => {
     const controller = new AbortController();
-    const paths = ["/root.json", "/api/revenue", "/api/commissions", "/api/coverage", "/api/worker"];
-    Promise.allSettled(paths.map((path) => json(path, controller.signal))).then(([root, revenue, commissions, coverage, worker]) => {
+    const paths = ["/root.json", "/api/revenue", "/api/commissions", "/api/coverage", "/api/worker", "/api/corrections"];
+    Promise.allSettled(paths.map((path) => json(path, controller.signal))).then(([root, revenue, commissions, coverage, worker, corrections]) => {
       if (controller.signal.aborted) return;
       const next: State = { ...EMPTY, failed: [] };
       if (root.status === "fulfilled") {
@@ -40,14 +41,22 @@ export default function Traction() {
         else next.failed.push("revenue");
       } else next.failed.push("revenue");
       if (commissions.status === "fulfilled") {
+        // Outside commissions only: receipts are classified by payer (OUTSIDE / SELF_TEST / ZERO_VALUE / UNCHECKABLE).
+        // A self-paid or zero-value test is never shown as demand; without by_origin the card is UNCHECKABLE.
+        const origin = commissions.value?.by_origin;
+        const outside = integer(origin?.OUTSIDE), selfTest = integer(origin?.SELF_TEST), zeroValue = integer(origin?.ZERO_VALUE), unknown = integer(origin?.UNCHECKABLE);
         const count = integer(commissions.value?.count), queued = integer(commissions.value?.queued), unfulfillable = integer(commissions.value?.unfulfillable);
-        if (count !== null && queued !== null && unfulfillable !== null) next.commissions = { count, queued, unfulfillable };
-        else next.failed.push("commissions");
+        if (outside !== null && selfTest !== null && zeroValue !== null && unknown !== null && count !== null && queued !== null && unfulfillable !== null) {
+          next.commissions = { outside, excluded: selfTest + zeroValue, unknown, count, queued, unfulfillable };
+        } else next.failed.push("commissions");
       } else next.failed.push("commissions");
       if (coverage.status === "fulfilled" && Array.isArray(coverage.value?.rows)) next.coverage = coverage.value.rows.length;
       else next.failed.push("coverage");
       if (worker.status === "fulfilled" && typeof worker.value?.status === "string") next.worker = worker.value.status;
       else next.failed.push("worker");
+      // Count of published correction entries in the corrections ledger — each states what was wrong and the fix. Never typed by hand.
+      if (corrections.status === "fulfilled" && Array.isArray(corrections.value?.corrections)) next.corrections = corrections.value.corrections.length;
+      else next.failed.push("corrections");
       setLive(next);
     });
     return () => controller.abort();
@@ -70,7 +79,7 @@ export default function Traction() {
         <LiveCard label="Admitted cards in current root" value={live.root?.cards} source="/root.json" detail={live.root ? `as of ${live.root.asOf}` : "UNCHECKABLE"} />
         <LiveCard label="Distinct non-self payers" value={live.revenue?.payers} source="/api/revenue" detail={live.revenue ? `${live.revenue.settlements} outside settlement${live.revenue.settlements === 1 ? "" : "s"}` : "UNCHECKABLE"} />
         <LiveCard label="Settled outside value" value={usdc} source="/api/revenue" detail="USDC · self and zero-value tests excluded" />
-        <LiveCard label="Open commissions" value={live.commissions?.count} source="/api/commissions" detail={live.commissions ? `${live.commissions.queued} queued · ${live.commissions.unfulfillable} unfulfillable` : "UNCHECKABLE"} />
+        <LiveCard label="Outside commissions" value={live.commissions?.outside} source="/api/commissions" detail={live.commissions ? `${live.commissions.excluded} self-paid or zero-value test${live.commissions.excluded === 1 ? "" : "s"} excluded${live.commissions.unknown ? ` · ${live.commissions.unknown} origin UNCHECKABLE` : ""}` : "UNCHECKABLE"} />
       </div>
       {live.failed.length ? <p className="mt-4 rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-3 font-mono text-xs text-amber-200">UNCHECKABLE now: {live.failed.join(", ")}. No cached number substituted.</p> : null}
     </section>
@@ -83,7 +92,7 @@ export default function Traction() {
 
     <section className="border-y border-white/10 bg-slate-900/70"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-2">
       <div><p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">Operating evidence</p><h2 className="mt-3 text-2xl font-black">A public instrument, commercially early</h2><p className="mt-4 leading-7 text-slate-300">The product and distribution rails operate. Repeat demand, retained feeds and broader outside payment remain the next commercial proof. Indexed resources, downloads, repositories and founder-funded tests are never presented as customers.</p></div>
-      <dl className="grid gap-3 sm:grid-cols-2"><Datum label="Coverage families" value={live.coverage === null ? "UNCHECKABLE" : String(live.coverage)} href="/api/coverage" /><Datum label="Worker state" value={live.worker ?? "UNCHECKABLE"} href="/api/worker" /><Datum label="Corrections" value="Public ledger" href="/refutation-ledger" /><Datum label="Methods" value="Reproducible" href="/methodology" /></dl>
+      <dl className="grid gap-3 sm:grid-cols-2"><Datum label="Coverage families" value={live.coverage === null ? "UNCHECKABLE" : String(live.coverage)} href="/api/coverage" /><Datum label="Worker state" value={live.worker ?? "UNCHECKABLE"} href="/api/worker" /><Datum label="Published corrections" value={live.corrections === null ? "UNCHECKABLE" : String(live.corrections)} href="/api/corrections" /><Datum label="Methods" value="Reproducible" href="/methodology" /></dl>
     </div></section>
 
     <section className="mx-auto max-w-6xl px-5 py-14"><h2 className="text-2xl font-black">The diligence path</h2><div className="mt-5 grid gap-4 md:grid-cols-3"><Step n="01" title="Inspect" body="Read the current root, coverage ledger and methodology." href="/root.json" /><Step n="02" title="Verify" body="Check a signed card and inspect corrections before trusting a claim." href="/gspc-verify" /><Step n="03" title="Commission" body="Move a real subject through queue, mill, signature and publication." href="/start" /></div></section>

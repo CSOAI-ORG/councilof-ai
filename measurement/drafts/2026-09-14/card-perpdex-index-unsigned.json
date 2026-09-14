@@ -1,0 +1,79 @@
+{
+ "as_of": "2026-09-14T10:34:00Z",
+ "payload": {
+  "axes": {
+   "config": "UNMEASURED",
+   "liquidation": "UNMEASURED",
+   "oracle": "UNMEASURED"
+  },
+  "evidence_state": "INDEXED",
+  "kind": "csoai.perp-venue-index/0.1",
+  "method": "read official docs only; as documented, not as operated",
+  "not_a_grade": true,
+  "retrieved": "2026-09-14T10:34Z",
+  "rows": [
+   {
+    "chain": "Hyperliquid L1 (HyperBFT)",
+    "ev": "INDEXED",
+    "liq_url": "https://hyperliquid.gitbook.io/hyperliquid-docs/trading/liquidations",
+    "oracle_doc": "validator-published; stake-weighted median of CEX+HL spot mids",
+    "oracle_url": "https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/oracle",
+    "venue": "Hyperliquid"
+   },
+   {
+    "chain": "UNMEASURED",
+    "ev": "INDEXED",
+    "liq_url": "https://docs.asterdex.com/trading/perpetuals/fees-and-specs/liquidations",
+    "oracle_doc": "1001x: Pyth anchor, Chainlink cross-check, Binance Oracle fallback; Pro: spot-exchange index",
+    "oracle_url": "https://docs.asterdex.com/trading/1001x/price-oracles",
+    "venue": "Aster"
+   },
+   {
+    "chain": "Ethereum-anchored ZK proofs (Lighter Core)",
+    "ev": "INDEXED",
+    "liq_url": "https://docs.lighter.xyz/trading/liquidations-and-llp-insurance-fund",
+    "oracle_doc": "index from Chainlink, Stork, Pyth",
+    "oracle_url": "https://docs.lighter.xyz/trading/fair-price-marking",
+    "venue": "Lighter"
+   },
+   {
+    "chain": "Arbitrum-stack rollup; anchored to Ethereum",
+    "ev": "INDEXED",
+    "liq_url": "https://edgex-1.gitbook.io/edgeX-documentation/trading/liquidation-logic",
+    "oracle_doc": "oracle price from Stork",
+    "oracle_url": "https://edgex-1.gitbook.io/edgeX-documentation/trading/last-price-index-price-and-oracle-price",
+    "venue": "edgeX"
+   },
+   {
+    "chain": "Starknet-stack appchain; ZK to Ethereum",
+    "ev": "INDEXED",
+    "liq_url": "https://docs.paradex.trade/risk/liquidations",
+    "oracle_doc": "spot oracle from Pyth, Stork",
+    "oracle_url": "https://docs.paradex.trade/risk/mark-price-calculation",
+    "venue": "Paradex"
+   }
+  ],
+  "state": "DISCOVERED"
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "743985e36d029a978d5eec0909081c68ad362a10c886bba429845dc2d4bdd94f",
+ "source_urls": [
+  "https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/overview",
+  "https://docs.lighter.xyz/about-lighter/technical-architecture-lighter-core",
+  "https://edgex-1.gitbook.io/edgeX-documentation/edgex-v2/v2-technical-architecture",
+  "https://docs.paradex.trade/chain/overview"
+ ],
+ "subject": "Perp-DEX venue index: chain, documented oracle, liquidation docs (5 venues)",
+ "surface": "public.notice",
+ "tags": [
+  "perp-dex",
+  "index",
+  "UNSIGNED-DRAFT"
+ ],
+ "unmeasured": [
+  "oracle behaviour under stress",
+  "liquidation execution as operated",
+  "live config parameters",
+  "Aster perp chain (not stated on pages read)"
+ ]
+}

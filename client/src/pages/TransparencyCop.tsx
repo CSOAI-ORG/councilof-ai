@@ -45,7 +45,7 @@ export default function TransparencyCop() {
           <ul className="mt-3 list-disc space-y-1 pl-5 text-[15px] text-gray-600">
             <li>Ed25519 measurement cards (did:web:csoai.org#card-attestation-1)</li>
             <li>Browser verify at /gspc-verify</li>
-            <li>HTTP MCP https://councilof.ai/mcp — 11 tools (7 free + 4 x402); published npm 0.2.1 lists 12 because it also carries the HTTP-quarantined witness_hash tool</li>
+            <li>HTTP MCP https://councilof.ai/mcp — tools/list serves 12 tools (8 free readers + 4 x402-metered); witness_hash is quarantined there. Published npm 0.2.1 also lists 12, split differently (7 free + 5 x402): it carries witness_hash and not x402_trust. Re-check: /.well-known/mcp.json → measured</li>
             <li>
               C2PA / CAI conformance: <strong>not live</strong> (claims register CR-012 planned)
             </li>

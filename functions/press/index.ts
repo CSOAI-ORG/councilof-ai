@@ -31,6 +31,23 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
   // FAQ, and the FAQPage node built from THE SAME answers. Two copies — one for the reader and
   // one for the crawler — is how a page and its structured data come to say different things.
   const faqHtml = d.faq.map((f) => `<article><h3>${esc(f.q)}</h3><p>${esc(f.a)}</p></article>`).join("\n");
+  // The press page is where a journalist or an answer engine looks for WHO publishes. It carried
+  // FAQPage only, so the legal entity was absent from the one page most likely to be asked for it
+  // (live audit 2026-09-14). Same @id, name, legalName and identifiers as the site-wide
+  // Organization in client/index.html, so the two nodes merge instead of competing.
+  const ORG_LD = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://councilof.ai/#org",
+    name: "Council of AI",
+    alternateName: "CSOAI",
+    legalName: "CSOAI LTD",
+    identifier: [
+      { "@type": "PropertyValue", propertyID: "Companies House", value: "16939677" },
+      { "@type": "PropertyValue", propertyID: "DID", value: "did:web:csoai.org" },
+    ],
+    url: "https://councilof.ai/",
+  });
   const faqLd = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -43,6 +60,7 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Press — Council of AI</title>
 <script type="application/ld+json">${faqLd}</script>
+<script type="application/ld+json">${ORG_LD}</script>
 <meta name="description" content="What changed at the Council of AI, with the command that proves each line. Derived from the corrections ledger, the public root and the signed card index. Measurement, not certification.">
 <link rel="canonical" href="https://councilof.ai/press/">
 <link rel="alternate" type="application/rss+xml" title="Corrections" href="https://councilof.ai/feeds/corrections.xml">

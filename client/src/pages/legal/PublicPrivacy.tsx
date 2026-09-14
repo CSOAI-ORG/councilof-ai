@@ -1,11 +1,53 @@
 import { useEffect } from "react";
 
+// Operative privacy notice. Every processing line below names the code that does it, so the
+// notice can be checked against the repository rather than trusted. If a function starts
+// storing something new, this page is wrong until it is updated.
 const controller = {
   name: "CSOAI Ltd",
   number: "16939677",
   address: "3rd Floor, 86–90 Paul Street, London EC2A 4NE, United Kingdom",
-  email: "privacy@csoai.org",
+  email: "nicholas@csoai.org",
 };
+
+const rows: { data: string; where: string; basis: string; kept: string }[] = [
+  {
+    data: "x402 payment records: the settlement transaction hash, the payer wallet address, network, amount, the resource paid for, and time.",
+    where: "functions/api/_x402.ts and _x402_receipt.ts write them to our Cloudflare KV store (settled:tx:*, receipts by transaction and by payer). A payer address can look up its own receipts at /api/receipts?payer=.",
+    basis: "Contract (supplying what was paid for); legal obligation (accounting records); legitimate interests (preventing a payment being replayed).",
+    kept: "No automatic expiry. Kept as accounting records for as long as UK tax law requires (currently six years), then deleted on request.",
+  },
+  {
+    data: "Contact and lead submissions: the email address, name, subject, message, and any report or service reference you enter.",
+    where: "functions/api/contact.ts and lead.ts write them to KV (LEADS). Measurement-intake requests (functions/api/evidence-intake.ts) are stored the same way.",
+    basis: "Steps you ask us to take before a contract; legitimate interests (answering you).",
+    kept: "No automatic expiry. Deleted on request, or when the enquiry is closed and there is no reason to keep it.",
+  },
+  {
+    data: "Email you send to nicholas@csoai.org.",
+    where: "Our mailbox provider (Namecheap Private Email).",
+    basis: "Legitimate interests; steps before a contract.",
+    kept: "Until the conversation is finished and any follow-on record is no longer needed.",
+  },
+  {
+    data: "Workspace accounts, if you register: email, name, a salted password hash, and when the account was made.",
+    where: "functions/api/auth writes them to KV (SOV_ARENA_STATE). No password is stored in readable form.",
+    basis: "Contract (providing the account).",
+    kept: "For the life of the account; deleted on request.",
+  },
+  {
+    data: "Paid witness requests: the URL or hash you submit, the payer address and settlement reference.",
+    where: "functions/api/witness.ts writes a queue entry to KV.",
+    basis: "Contract.",
+    kept: "No automatic expiry; kept with the settlement it belongs to.",
+  },
+  {
+    data: "Request logs: IP address, user agent, URL and time of each request.",
+    where: "Cloudflare processes these to serve and protect the site. Our own functions do not write IP addresses or request logs to storage.",
+    basis: "Legitimate interests (running and securing the service).",
+    kept: "Under Cloudflare's own retention; we keep no copy.",
+  },
+];
 
 export default function PublicPrivacy() {
   useEffect(() => {
@@ -16,84 +58,85 @@ export default function PublicPrivacy() {
     <main className="min-h-screen bg-slate-50 px-5 py-14 text-slate-950">
       <article className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
-          Operative notice · version 1.0 · 13 September 2026
+          Operative notice · version 1.1 · 14 September 2026
         </p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">Privacy notice</h1>
         <p className="mt-5 leading-7 text-slate-700">
-          This notice explains how CSOAI Ltd handles personal data when you use councilof.ai,
-          contact us, request a service, or make a payment. It is written for the UK GDPR and
-          Data Protection Act 2018. If a specific service gives you a more detailed notice, that
-          notice also applies to that interaction.
+          This notice covers councilof.ai under the UK GDPR and the Data Protection Act 2018. It
+          describes only the processing our code actually does.
         </p>
 
         <div className="mt-8 space-y-9">
           <section>
             <h2 className="text-2xl font-bold">Controller and contact</h2>
             <p className="mt-3 leading-7 text-slate-700">
-              {controller.name}, registered in England and Wales No. {controller.number}. Registered
-              office: {controller.address}. Privacy enquiries: <a className="text-emerald-800 underline" href={`mailto:${controller.email}`}>{controller.email}</a>.
+              {controller.name}, a private limited company registered in England and Wales, Companies
+              House No. {controller.number}. Registered office: {controller.address}. Privacy requests:{" "}
+              <a className="text-emerald-800 underline" href={`mailto:${controller.email}`}>{controller.email}</a>.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold">Data we may receive</h2>
-            <ul className="mt-3 list-disc space-y-2 pl-6 leading-7 text-slate-700">
-              <li>Contact and organisation details you send in an email or enquiry.</li>
-              <li>Order, invoice and transaction information needed to supply and account for a paid service.</li>
-              <li>Technical request, security and error logs needed to operate and protect the site.</li>
-              <li>Optional analytics information only when the consent control permits it.</li>
-              <li>Evidence you deliberately submit for a measurement or support request.</li>
-            </ul>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              Do not submit passwords, wallet secrets, private signing material, or sensitive personal
-              data through ordinary contact forms or email.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold">Why we use it</h2>
-            <div className="mt-3 overflow-x-auto">
-              <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
-                <thead><tr className="border-b border-slate-300"><th className="py-2 pr-4">Purpose</th><th className="py-2">Typical lawful basis</th></tr></thead>
-                <tbody className="text-slate-700">
-                  <tr className="border-b border-slate-200"><td className="py-3 pr-4">Answer an enquiry or take steps toward a service</td><td className="py-3">Contract steps or legitimate interests</td></tr>
-                  <tr className="border-b border-slate-200"><td className="py-3 pr-4">Supply a requested service and manage payment</td><td className="py-3">Contract and legal obligation</td></tr>
-                  <tr className="border-b border-slate-200"><td className="py-3 pr-4">Secure, diagnose and maintain the service</td><td className="py-3">Legitimate interests</td></tr>
-                  <tr><td className="py-3 pr-4">Run optional analytics</td><td className="py-3">Consent where required</td></tr>
-                </tbody>
-              </table>
+            <h2 className="text-2xl font-bold">What we hold, why, and for how long</h2>
+            <div className="mt-3 space-y-4">
+              {rows.map((r) => (
+                <div key={r.data} className="rounded-xl border border-slate-200 p-4 text-sm leading-6 text-slate-700">
+                  <p className="font-semibold text-slate-900">{r.data}</p>
+                  <p className="mt-1"><span className="font-semibold">Where:</span> {r.where}</p>
+                  <p className="mt-1"><span className="font-semibold">Lawful basis:</span> {r.basis}</p>
+                  <p className="mt-1"><span className="font-semibold">Retention:</span> {r.kept}</p>
+                </div>
+              ))}
             </div>
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold">Sharing, transfers and retention</h2>
+            <h2 className="text-2xl font-bold">Public blockchains and public evidence</h2>
             <p className="mt-3 leading-7 text-slate-700">
-              We may use service providers for hosting, communications, payments and security. We
-              share only what is needed for the service or required by law. Where data is transferred
-              internationally, the applicable adequacy decision or contractual safeguard depends on
-              the provider and transfer. We retain personal data only for the service, dispute,
-              security and legal-record period that applies; financial records may be kept for the
-              statutory accounting period. Ask us for the period applicable to your record.
+              x402 payments settle on the Base blockchain. The transaction hash and payer address are
+              public on that chain whatever we do, and we cannot delete them from it. Public measurement
+              records are meant to be inspectable and durable. Private submissions and account data do
+              not go into them unless you have agreed that in advance. A signature proves who wrote a
+              record and that it is unchanged. It does not change the privacy status of the data in it.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold">Analytics and cookies</h2>
+            <p className="mt-3 leading-7 text-slate-700">
+              The site stores your cookie choice in your browser. Analytics can only run after you accept
+              them in the consent banner. The current build has no analytics endpoint configured, so no
+              analytics data is sent.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold">Who else processes it</h2>
+            <p className="mt-3 leading-7 text-slate-700">
+              Cloudflare hosts the site, runs its functions and provides the KV store. A payment
+              facilitator verifies and settles x402 payments. Namecheap Private Email carries email.
+              Some of these providers may process data outside the UK, under their own transfer
+              safeguards. We sell no personal data and share it with no one else unless the law
+              requires it.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold">Your rights</h2>
             <p className="mt-3 leading-7 text-slate-700">
-              Depending on the circumstances, you may ask for access, correction, deletion,
-              restriction, portability, or object to processing, and you may withdraw consent without
-              affecting earlier processing. Contact {controller.email}. You can also complain to the
-              UK Information Commissioner's Office at <a className="text-emerald-800 underline" href="https://ico.org.uk/make-a-complaint/">ico.org.uk</a>.
+              You can ask for access, correction, deletion, restriction or a portable copy of your data. You
+              can object to processing based on legitimate interests, and withdraw consent at any time.
+              Write to {controller.email}. We answer within one month. If you are unhappy with our
+              answer, you can complain to the UK Information Commissioner's Office:{" "}
+              <a className="text-emerald-800 underline" href="https://ico.org.uk/make-a-complaint/">ico.org.uk/make-a-complaint</a>.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold">Public evidence is a separate boundary</h2>
             <p className="mt-3 leading-7 text-slate-700">
-              Public measurement records are intended to be inspectable and durable. We do not put
-              private submissions or account data into a public evidence record unless the relevant
-              publication scope has been agreed. A cryptographic signature proves authorship and
-              integrity; it does not change the privacy status of the underlying data.
+              Measurement, not certification. This notice is about personal data. It says nothing about
+              the quality of any measured system.
             </p>
           </section>
         </div>

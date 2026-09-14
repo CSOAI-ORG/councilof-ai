@@ -5,15 +5,18 @@
  * Requester retrieval (2026-09-14): each QUEUED commission is joined to the signed pod cards
  * master carries for its subject (from /interop/pod-cards-index.json, a build-time index of
  * the signed bytes) as `cards[]` + `delivery`. Index unreadable → cards null, UNCHECKABLE.
- * Publication of a card never rewrites `fulfillment` and is never a certificate.
+ * When signed cards are published for a QUEUED model target, fulfillment becomes
+ * RETRIEVABLE (requester can resolve card URLs). A card is never a certificate /
+ * MEASURED invent — only the retrieval state moves.
  *
  * Typed contract (Stage68): every row exposes subject_kind / model / bank / fulfillment.
  * Legacy ras:* records without fields are classified on read (never invented MEASURED).
  * payai-wrapper → UNFULFILLABLE, not a model mill target.
  */
 import { classifyCommissionTarget, type Fulfillment, type SubjectKind } from "./_commission_target";
+import { selfWallets } from "./_x402";
 
-type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> } };
+type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> }; X402_PAY_TO?: string; X402_SELF_WALLETS?: string };
 
 /** One signed pod card as the build-time index (/interop/pod-cards-index.json) lists it. */
 type PodCard = { id: string; url: string; subject: string; axis: string | null; n: number | null; status: string | null; run_id: string | null };
@@ -34,7 +37,14 @@ type Commission = {
   /** Signed cards on master for this subject (joined from the pod-cards index). null = index unreadable, never "none". */
   cards: PodCard[] | null;
   delivery: Delivery;
+  /**
+   * Who paid, as a class — never the address. OUTSIDE = a non-self wallet moved a non-zero amount;
+   * SELF_TEST = an estate wallet paid itself; ZERO_VALUE = the settlement moved nothing;
+   * UNCHECKABLE = no settlement record to read. A commission is demand evidence only when OUTSIDE.
+   */
+  origin: CommissionOrigin;
 };
+export type CommissionOrigin = "OUTSIDE" | "SELF_TEST" | "ZERO_VALUE" | "UNCHECKABLE";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -45,13 +55,13 @@ const json = (body: unknown, status = 200) =>
 function typedFields(subject: string, r: Record<string, unknown>) {
   const classified = classifyCommissionTarget(subject);
   const subject_kind = (typeof r.subject_kind === "string" ? r.subject_kind : classified.subject_kind) as SubjectKind;
-  const fulfillment = (r.fulfillment === "QUEUED" || r.fulfillment === "UNFULFILLABLE"
+  const fulfillment = (r.fulfillment === "QUEUED" || r.fulfillment === "UNFULFILLABLE" || r.fulfillment === "RETRIEVABLE"
     ? r.fulfillment
     : classified.fulfillment) as Fulfillment;
   const model =
     typeof r.model === "string" && r.model
       ? r.model
-      : fulfillment === "QUEUED"
+      : (fulfillment === "QUEUED" || fulfillment === "RETRIEVABLE")
         ? classified.model
         : null;
   const bank = typeof r.bank === "string" && r.bank ? r.bank : classified.bank;
@@ -126,9 +136,23 @@ async function readCardsIndex(env: Env, origin: string, path: string, schema: st
   }
 }
 
+/** Promote QUEUED → RETRIEVABLE once signed (DID-keyed) cards are published for the model. */
+export function fulfillmentAfterDelivery(
+  fulfillment: Fulfillment,
+  delivery: Delivery,
+): Fulfillment {
+  if (fulfillment === "UNFULFILLABLE") return fulfillment;
+  if (fulfillment === "RETRIEVABLE") return fulfillment;
+  if (delivery.state === "CARDS_PUBLISHED" && (delivery.count ?? 0) > 0) return "RETRIEVABLE";
+  return fulfillment;
+}
+
 function joinDelivery(c: Omit<Commission, "cards" | "delivery">, pod: Map<string, PodCard[]> | null,
                       hub: Map<string, PodCard[]> | null): Pick<Commission, "cards" | "delivery"> {
-  if (c.fulfillment !== "QUEUED" || !c.model) return { cards: null, delivery: { state: "NONE", count: 0, note: "not a millable model target" } };
+  // QUEUED (awaiting mill) and RETRIEVABLE (cards already published) both join the index.
+  if ((c.fulfillment !== "QUEUED" && c.fulfillment !== "RETRIEVABLE") || !c.model) {
+    return { cards: null, delivery: { state: "NONE", count: 0, note: "not a millable model target" } };
+  }
   const index = c.subject_kind === "hub_model" ? hub : pod;
   const path = c.subject_kind === "hub_model" ? HUB_CARDS_INDEX : POD_CARDS_INDEX;
   if (index === null) return { cards: null, delivery: { state: "UNCHECKABLE", count: null, note: `${path} unreadable — null, never substituted` } };
@@ -137,11 +161,30 @@ function joinDelivery(c: Omit<Commission, "cards" | "delivery">, pod: Map<string
   return { cards, delivery: { state: cards.length ? "CARDS_PUBLISHED" : "NONE", count: cards.length } };
 }
 
+/**
+ * Classify one commission's payment from its settled:tx:<tx> record — the same record and the same
+ * self/zero rules /api/revenue uses, so the two endpoints cannot disagree about who is a buyer.
+ * The payer address is read to classify and is never returned.
+ */
+export async function commissionOrigin(kv: KVNamespace, tx: string | null, env: Env): Promise<CommissionOrigin> {
+  if (!tx) return "UNCHECKABLE";
+  let raw: string | null;
+  try { raw = await kv.get(`settled:tx:${tx}`); } catch { return "UNCHECKABLE"; }
+  if (!raw) return "UNCHECKABLE";
+  let r: { payer?: string | null; self?: boolean; zero_value?: boolean; amount_atomic?: string | number | null };
+  try { r = JSON.parse(raw); } catch { return "UNCHECKABLE"; }
+  const zero = r.zero_value === true || !r.amount_atomic || !/^[1-9]\d*$/.test(String(r.amount_atomic));
+  if (zero) return "ZERO_VALUE";
+  const payer = (r.payer || "").toLowerCase();
+  if (r.self === true || (!!payer && selfWallets(env).has(payer))) return "SELF_TEST";
+  return payer ? "OUTSIDE" : "UNCHECKABLE";
+}
+
 export async function buildCommissions(env: Env, origin = "https://councilof.ai", fetcher: typeof fetch = fetch) {
   const base = {
     schema: "csoai.commissions/0.2",
     endpoint: "/api/commissions",
-    what: "Subjects that a paid request-attestation commissioned. Typed: subject_kind/model/bank/fulfillment. Mill grades QUEUED model/hub targets only; UNFULFILLABLE (e.g. payai-wrapper) is receipt-only. Never a score.",
+    what: "Subjects that a paid request-attestation commissioned. Typed: subject_kind/model/bank/fulfillment (QUEUED|RETRIEVABLE|UNFULFILLABLE). Mill grades QUEUED model/hub targets; RETRIEVABLE means signed cards are published for retrieve; UNFULFILLABLE (e.g. payai-wrapper) is receipt-only. Never a score.",
     source: "REVENUE_KV ras:* records (written by /api/request-attestation on a facilitator-settled request)",
   };
   if (!env.REVENUE_KV) {
@@ -149,11 +192,18 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
   }
   try {
     const { commissions: bare, unreadable } = await listCommissions(env.REVENUE_KV);
-    const needsPod = bare.some((c) => c.fulfillment === "QUEUED" && c.subject_kind !== "hub_model");
-    const needsHub = bare.some((c) => c.fulfillment === "QUEUED" && c.subject_kind === "hub_model");
+    const joinable = (c: { fulfillment: Fulfillment }) => c.fulfillment === "QUEUED" || c.fulfillment === "RETRIEVABLE";
+    const needsPod = bare.some((c) => joinable(c) && c.subject_kind !== "hub_model");
+    const needsHub = bare.some((c) => joinable(c) && c.subject_kind === "hub_model");
     const pod = needsPod ? await readPodCardsIndex(env, origin, fetcher) : new Map<string, PodCard[]>();
     const hub = needsHub ? await readHubCardsIndex(env, origin, fetcher) : new Map<string, PodCard[]>();
-    const commissions: Commission[] = bare.map((c) => ({ ...c, ...joinDelivery(c, pod, hub) }));
+    const kv = env.REVENUE_KV;
+    const origins = await Promise.all(bare.map((c) => commissionOrigin(kv, c.tx, env)));
+    const commissions: Commission[] = bare.map((c, i) => {
+      const joined = joinDelivery(c, pod, hub);
+      // Writer: DID-signed cards in the published index → RETRIEVABLE (never invents MEASURED/scores).
+      return { ...c, ...joined, fulfillment: fulfillmentAfterDelivery(c.fulfillment, joined.delivery), origin: origins[i] };
+    });
     const subjects = [...new Set(commissions.map((c) => c.subject))];
     return {
       ...base,
@@ -162,14 +212,18 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
       count: commissions.length,
       subjects,
       queued: commissions.filter((c) => c.fulfillment === "QUEUED").length,
+      retrievable: commissions.filter((c) => c.fulfillment === "RETRIEVABLE").length,
       delivered: (pod === null || hub === null) ? null : commissions.filter((c) => c.delivery.state === "CARDS_PUBLISHED").length,
       retrieval: {
         index: POD_CARDS_INDEX,
         hub_index: HUB_CARDS_INDEX,
         state: (pod === null || hub === null) ? "UNCHECKABLE" : "READ",
-        how: "each `cards[].url` is a signed card; verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json. Publication of a card is not a certificate and does not change `fulfillment`.",
+        how: "each `cards[].url` is a signed card; verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json. When CARDS_PUBLISHED, fulfillment becomes RETRIEVABLE — publication is not a certificate and invents no MEASURED score.",
       },
       unfulfillable: commissions.filter((c) => c.fulfillment === "UNFULFILLABLE").length,
+      // A receipt is not demand. Only OUTSIDE commissions are evidence that someone else asked.
+      by_origin: Object.fromEntries((["OUTSIDE", "SELF_TEST", "ZERO_VALUE", "UNCHECKABLE"] as const).map((o) => [o, commissions.filter((c) => c.origin === o).length])),
+      origin_rule: "OUTSIDE = a non-self wallet moved a non-zero amount (same record and rules as /api/revenue); SELF_TEST = an estate wallet paid itself; ZERO_VALUE = nothing moved; UNCHECKABLE = no settlement record. Payer addresses are never returned.",
       commissions,
       records_unreadable: unreadable,
     };
