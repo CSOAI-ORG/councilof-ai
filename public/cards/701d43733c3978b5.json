@@ -1,0 +1,45 @@
+{
+  "card": {
+    "as_of": "2026-09-14T18:01:16.397Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 41200,
+      "issuer": "Ripple",
+      "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1013014745.151408,
+      "symbol": "RLUSD",
+      "verified_domain": "ripple.com",
+      "verified_via": "Bidirectional domain match"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "701d43733c3978b55fd906b790e95d34bd20239d2f75f889480c8669521eae0a",
+    "sig_ed25519": "772c05230e33479774cbd7ef5ea84711551ac156ae79c7a7fab50c7cf0c7a27c065aa7bbbda9a1f7f143dd0aa9e3f652613e74e2ec970e41c967e997f8dc0e0a",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL RLUSD public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "d2676974e2cc515f94271320d859c2d27febdaad545450ae31840c4303c220bb",
+    "f4758ba61f5ee81f76e00ae61d914ed29b2dc2443990a741d7488049739c977e",
+    "6d84e1e65b92df5229e7f77ee9becce291b125116aae829c9558b2f290490ea3",
+    "1a9052ac4965fda208c36e40cb808818aebfcd3638a4b2c0bb9fbd66b15596d7",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "7c5a8a42340f357780564d0693935725e9fe7f4f61edbc18c569e7367810a64b",
+    "9862bffffcd607adad768be1963d711775ed351f7f25dc95d433fa118da702f4",
+    "d8b668d9598e55c2be79b5e69358ee31de48752a91fbdcc7c82c52168622c0fe",
+    "aab3af0cacf4f93566fd7159e834b520f8f1a454dee8d68c7b9f7c499cf14328"
+  ]
+}

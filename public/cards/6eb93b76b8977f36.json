@@ -1,0 +1,52 @@
+{
+  "card": {
+    "as_of": "2026-09-14T18:15:33Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-impersonation-mismatch/0.1",
+      "status": "DISCOVERED",
+      "classification": "NOT_IN_VERIFIED_SET",
+      "code": "XSGD",
+      "issuer": "rXSGdyyEPVeBV6oux4gh6W3rDVM2FyKGe",
+      "holders": 14,
+      "supply": 10000000000,
+      "first_seen_in_window": "2025-05-20T00:38:13.063Z",
+      "verified_issuer": "rK67JczCpaYXVtfw3qJVmqwpSfa1bYTptw",
+      "wording": "issuer not in the archived verified set — legitimacy UNMEASURED",
+      "verified_method": "issuer-site-published address + on-ledger Domain backlink (two-way); xrp-ledger.toml absent (404 archived)"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6eb93b76b8977f3658b1bbb6d6c3936ce1353146e48f0b6459b1e0026511ea6d",
+    "sig_ed25519": "10e8bfa69091499b001072a0b473e4a955d1912e8814a257c8a830e72f1345992d6565bc5e1e6df456e8fb3c7970bbb1811314bf5eca67aaa4a168696083510a",
+    "source_urls": [
+      "https://api.xrpscan.com/api/v1/tokens",
+      "https://xrpscan.com/token/XSGD.rXSGdyyEPVeBV6oux4gh6W3rDVM2FyKGe"
+    ],
+    "subject": "XRPL XSGD issuer rXSGdyyEPVeBV6oux4gh6W3rDVM2FyKGe not in archived verified set",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "impersonation-watch",
+      "code:XSGD",
+      "mismatch",
+      "entry-1"
+    ],
+    "unmeasured": [
+      "issuer_legitimacy",
+      "long_tail_issuance_below_ranking_window"
+    ]
+  },
+  "proof": [
+    "bc349c9608af48a8898853c38c612f27886d01c27ff96d8df7501c485283ee71",
+    "a8a1a8baa68c58cd4b3a7de12b828d15daa8304e2a8a30d64f091095fd361d5e",
+    "8c4bb26237b5fdc8a2755dc2ad5190700abdc35a57b2a4b0f42ea03e36b008d5",
+    "a33e4b576c0e18a10f48d0d456c482f4fcbd54a7aba768efaffe55fb4299ea4b",
+    "f5778c53cd28dd823e56697cc22c46c77ef43fcaf39270819823e5d29a8c63ff",
+    "c8952b9363cac87e906802279cb3e01f6e89eaef5fce0798e30fdf94479f81eb",
+    "15aaa972ddb10e71dff8418efd8b52633deaec41a7f28a0494cbe8ee64a6b796",
+    "f761a033968eff24d0b02d3f2a39da16adecd32adfb09daca46db967a10faaa4",
+    "2b1f73bdd2442b68fbf8ddd48d8022d634a64dbf0ca088d08714e6d4db464ee1"
+  ]
+}
