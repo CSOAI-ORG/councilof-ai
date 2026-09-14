@@ -41,6 +41,8 @@ export const CHAINS = {
   arbitrum: { rpc: "https://arb1.arbitrum.io/rpc", chainId: 42161 },
   // polygon-rpc.com answers 401 without a key since 2026-09; publicnode is keyless.
   polygon: { rpc: "https://polygon-bor-rpc.publicnode.com", chainId: 137 },
+
+    "zksync-era": { rpc: "https://mainnet.era.zksync.io", chainId: 324 },
 };
 
 const SEL = { totalSupply: "0x18160ddd", balanceOf: "0x70a08231", decimals: "0x313ce567" };
@@ -112,6 +114,36 @@ export const ROSTER = [
   { id: "buidl:ethereum", wrapped: { chain: "ethereum", symbol: "BUIDL", address: "0x7712c34205737192402172409a8F7ccef8aA2AEc" },
     canonical: { chain: "offchain", symbol: "fund shares", address: "transfer agent (Securitize); not on any chain" }, backing_model: "custodial", escrow: null, escrow_name: null,
     note: "Tokenised fund shares; the reserve is the fund's assets held off-chain, reported by the transfer agent. INDEXED, no parity claimed." },
+
+  // WETH on Arbitrum — wrapped ETH via Arbitrum One bridge
+  // Source: https://docs.arbitrum.io/build-decentralized-apps/token-bridging/bridge-tokens-overview
+  { id: "weth:arbitrum", wrapped: { chain: "arbitrum", symbol: "WETH", address: "0x82aF49448D82B08cD7C12Be3B9395C0e72f16154" },
+    canonical: { chain: "ethereum", symbol: "ETH", address: "native ETH (not an ERC-20 contract)" }, backing_model: "custodial", escrow: null, escrow_name: null,
+    note: "WETH on Arbitrum at 0x82aF... is a WETH9 wrapper (deposit ETH, get WETH). totalSupply() returns empty on Arbiscan RPC (contract may be a minimal proxy with non-standard storage). ETH backing is the deposit mechanism. INDEXED, no parity claimed from here." },
+
+  // USDC on zkSync Era — bridged via zkSync Era native bridge
+  // Source: https://docs.zksync.io/zksync-protocol/bridging/bridging-asset
+  { id: "usdc:zksync-era", wrapped: { chain: "zksync-era", symbol: "USDC", address: "0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E" },
+    canonical: { chain: "ethereum", symbol: "USDC", address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" }, backing_model: "escrow",
+    escrow: "0x5797EA1b374f2A4F1E8BcE5156c3962b78E1C46a", escrow_name: "zkSync Era L1 USDC Bridge (native bridge)" },
+
+  // USDT0 on Ethereum — Tether native cross-chain OFT token
+  // Source: https://tether.to/en/usdt0/
+  // USDT0:ethereum removed — USDT0 is NOT deployed on Ethereum mainnet per CoinGecko (14 Sep 2026). It exists only on L2s/alt-L1s.
+
+  // USDT0 on Optimism — LayerZero OFT
+  // Source: https://tether.to/en/usdt0/
+  { id: "usdt0:optimism", wrapped: { chain: "optimism", symbol: "USDT0", address: "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
+    canonical: { chain: "ethereum", symbol: "USDT", address: "0xdAC17F958D2ee523a2206206994597C13D831ec7" }, backing_model: "native",
+    escrow: null, escrow_name: null,
+    note: "USDT0 on Optimism via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed." },
+
+  // USDT0 on Arbitrum — LayerZero OFT
+  // Source: https://tether.to/en/usdt0/
+  { id: "usdt0:arbitrum", wrapped: { chain: "arbitrum", symbol: "USDT0", address: "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
+    canonical: { chain: "ethereum", symbol: "USDT", address: "0xdAC17F958D2ee523a2206206994597C13D831ec7" }, backing_model: "native",
+    escrow: null, escrow_name: null,
+    note: "USDT0 on Arbitrum via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed." },
 ];
 
 const sha256 = (s) => createHash("sha256").update(s).digest("hex");
@@ -240,7 +272,39 @@ export async function stageAtoms(doc, dir) {
   const { mkdirSync, writeFileSync } = await import("node:fs");
   const { join } = await import("node:path");
   mkdirSync(dir, { recursive: true });
-  const out = [];
+  const out = [  // WETH on Arbitrum — wrapped ETH via Arbitrum One bridge
+  // Source: https://docs.arbitrum.io/build-decentralized-apps/token-bridging/bridge-tokens-overview
+  { id: "weth:arbitrum", wrapped: { chain: "arbitrum", symbol: "WETH", address: "0x82aF49448D82B08cD7C12Be3B9395C0e72f16154" },
+    canonical: { chain: "ethereum", symbol: "ETH", address: "native ETH (not an ERC-20 contract)" }, backing_model: "custodial", escrow: null, escrow_name: null,
+    note: "WETH on Arbitrum is a minimal-proxy pointing to the canonical WETH-implementation. The wrapped supply is read; ETH backing is the bridge's custody claim. INDEXED, no parity claimed from here." },
+
+  // USDC on zkSync Era — bridged via zkSync Era native bridge
+  // Source: https://docs.zksync.io/zksync-protocol/bridging/bridging-asset
+  { id: "usdc:zksync-era", wrapped: { chain: "zksync-era", symbol: "USDC", address: "0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E" },
+    canonical: { chain: "ethereum", symbol: "USDC", address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" }, backing_model: "escrow",
+    escrow: "0x5797EA1b374f2A4F1E8BcE5156c3962b78E1C46a", escrow_name: "zkSync Era L1 USDC Bridge (native bridge)" },
+
+  // USDT0 on Ethereum — Tether's native cross-chain OFT token
+  // Source: https://tether.to/en/usdt0/
+  { id: "usdt0:ethereum", wrapped: { chain: "ethereum", symbol: "USDT0", address: "0x48C04ed50508680b93561a5800E97e24C05e639F" },
+    canonical: { chain: "ethereum", symbol: "USDT", address: "0xdAC17F958D2ee523a2206206994597C13D831ec7" }, backing_model: "native",
+    escrow: null, escrow_name: null,
+    note: "USDT0 is Tether's LayerZero OFT (Omnichain Fungible Token) on Ethereum. Native issuance on destination chains via OFT burn-and-mint. No escrow exists; supply read, no parity claimed." },
+
+  // USDT0 on Optimism — LayerZero OFT bridged from Ethereum
+  // Source: https://tether.to/en/usdt0/
+  { id: "usdt0:optimism", wrapped: { chain: "optimism", symbol: "USDT0", address: "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
+    canonical: { chain: "ethereum", symbol: "USDT", address: "0xdAC17F958D2ee523a2206206994597C13D831ec7" }, backing_model: "native",
+    escrow: null, escrow_name: null,
+    note: "USDT0 on Optimism via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed." },
+
+  // USDT0 on Arbitrum — LayerZero OFT bridged from Ethereum
+  // Source: https://tether.to/en/usdt0/
+  { id: "usdt0:arbitrum", wrapped: { chain: "arbitrum", symbol: "USDT0", address: "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
+    canonical: { chain: "ethereum", symbol: "USDT", address: "0xdAC17F958D2ee523a2206206994597C13D831ec7" }, backing_model: "native",
+    escrow: null, escrow_name: null,
+    note: "USDT0 on Arbitrum via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed." },
+];
   for (const r of doc.records) {
     const payload = {
       kind: "csoai.wrapper.parity/0.1",
