@@ -53,6 +53,9 @@ class DispatchTests(unittest.TestCase):
     def feed(self, records: list[dict], schema: str = "csoai.commissions/0.2") -> dict:
         return {"schema": schema, "status": "MEASURED", "records_unreadable": 0, "commissions": records}
 
+    def queue_feed(self, records: list[dict]) -> dict:
+        return {"schema": "csoai.commission-queue/0.1", "status": "MEASURED", "records_unreadable": 0, "rows": records}
+
     def receipt(self, char: str) -> str:
         return char * 64
 
@@ -86,6 +89,24 @@ class DispatchTests(unittest.TestCase):
         self.assertEqual(len(writes), 1)
         self.assertEqual(report["admitted"][0]["subject"], self.model)
         self.assertEqual(report["refused"][0]["reason"], "UNFULFILLABLE")
+
+    def test_typed_queue_uses_model_and_skips_nonqueued_rows(self) -> None:
+        feed = self.queue_feed([
+            {"subject": "friendly-display-label", "model": self.model, "fulfillment": "QUEUED", "status": "QUEUED", "axis": "governance", "receipt_sha": self.receipt("a")},
+            {"subject": self.model, "model": self.model, "fulfillment": "RETRIEVABLE", "status": "QUEUED", "axis": "safety", "receipt_sha": self.receipt("b")},
+        ])
+        writes, report = dispatch.build_dispatch(feed, self.args, {self.model: self.digest})
+        self.assertEqual(len(writes), 1)
+        self.assertEqual(report["admitted"][0]["subject"], self.model)
+        self.assertEqual(report["admitted"][0]["axis"], "governance")
+
+    def test_v02_skips_retrievable_records(self) -> None:
+        feed = self.feed([
+            {"subject": self.model, "model": self.model, "fulfillment": "RETRIEVABLE", "axis": "governance", "receipt_sha": self.receipt("a")},
+        ])
+        writes, report = dispatch.build_dispatch(feed, self.args, {self.model: self.digest})
+        self.assertEqual(writes, [])
+        self.assertEqual(report["refused"], [])
 
     def test_v01_remains_compatible(self) -> None:
         feed = self.feed([{"subject": self.model, "axis": "governance", "receipt_sha": self.receipt("a")}], schema="csoai.commissions/0.1")
