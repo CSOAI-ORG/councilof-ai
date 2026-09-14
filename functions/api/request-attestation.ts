@@ -40,6 +40,31 @@ type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespa
 
 type Cell = { model: string; axis: string; card: string; card_url: string; signed: boolean; created?: string };
 
+
+/** Classify commission subject for mill fulfillability. SKU wrappers are UNFULFILLABLE. */
+function classifyCommissionTarget(subject: string): {
+  model: string | null;
+  bank: string | null;
+  fulfillment: "QUEUED" | "UNFULFILLABLE";
+} {
+  const s = subject.trim();
+  if (!s) return { model: null, bank: null, fulfillment: "UNFULFILLABLE" };
+  // PayAI / SKU-shaped subjects are not Ollama or hub model ids
+  if (/^payai-wrapper/i.test(s) || /^sku:/i.test(s) || /wrapper-\d/i.test(s)) {
+    return { model: null, bank: null, fulfillment: "UNFULFILLABLE" };
+  }
+  // Ollama-shaped tags (name:tag) or HF-style org/model → fulfillable model id
+  if (/^[a-zA-Z0-9._-]+:[a-zA-Z0-9._-]+$/.test(s) || /^[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+/.test(s)) {
+    return { model: s, bank: null, fulfillment: "QUEUED" };
+  }
+  // Bare short model names still QUEUED for KEEP/Ollama rails
+  if (/^[a-zA-Z0-9._-]+$/.test(s) && s.length <= 64) {
+    return { model: s, bank: null, fulfillment: "QUEUED" };
+  }
+  return { model: null, bank: null, fulfillment: "UNFULFILLABLE" };
+}
+
+
 const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body, null, 2), {
     status,
@@ -161,9 +186,17 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     ...(tx ? [`https://basescan.org/tx/${tx}`] : []),
     reserve.source.startsWith("http") ? reserve.source : `${origin}/signed/card-matrix.json`,
   ];
+  const target = classifyCommissionTarget(subject);
+  const queue_ref = `${origin}/api/commission-queue`;
   const payload: Record<string, unknown> = {
     status: "COMMISSIONED",
     subject,
+    model: target.model,
+    bank: target.bank,
+    fulfillment: target.fulfillment,
+    enqueued: true,
+    queue: "commission",
+    queue_ref,
     axis: axis || null,
     axis_known: knownAxis,
     settle: { network: payment.settlement?.network || null, transaction: tx, payer: payment.settlement?.payer || null },
@@ -192,14 +225,43 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     unmeasured: ["fresh_run_schedule"],
   });
 
-  // Tally + queue when a store is bound. Absent store ⇒ nothing counted (null, never 0).
+  // Tally + mill-visible enqueue when a store is bound. Absent store ⇒ nothing counted (null, never 0).
+  // Enqueue writes mill:commission:<subject> for GET /api/commission-queue. Failure never blocks receipt.
   if (env.REVENUE_KV) {
     try {
       const n = Number((await env.REVENUE_KV.get("count:issuances")) || "0") + 1;
       await env.REVENUE_KV.put("count:issuances", String(n));
-      await env.REVENUE_KV.put(`ras:${leaf.sha256}`, JSON.stringify({ subject, axis: axis || null, tx, as_of }));
+      await env.REVENUE_KV.put(
+        `ras:${leaf.sha256}`,
+        JSON.stringify({
+          subject,
+          axis: axis || null,
+          tx,
+          as_of,
+          enqueued: true,
+          queue: "commission",
+          model: target.model,
+          bank: target.bank,
+          fulfillment: target.fulfillment,
+        }),
+      );
+      await env.REVENUE_KV.put(
+        `mill:commission:${subject}`,
+        JSON.stringify({
+          subject,
+          model: target.model,
+          bank: target.bank,
+          axis: axis || null,
+          tx,
+          as_of,
+          receipt_sha: leaf.sha256,
+          card_sha: leaf.sha256,
+          status: "QUEUED",
+          fulfillment: target.fulfillment,
+        }),
+      );
     } catch {
-      /* a tally failure never blocks a paid deliverable */
+      /* a tally/enqueue failure never blocks a paid deliverable */
     }
   }
 
