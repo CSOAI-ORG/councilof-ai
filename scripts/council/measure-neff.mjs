@@ -63,7 +63,14 @@ const SYSTEM = "You judge claims. Reply with exactly one word: TRUE or FALSE. No
 async function ask(leg, claim) {
   const res = await fetch(leg.url, {
     method: "POST",
-    headers: { "content-type": "application/json", authorization: leg.auth() },
+    headers: {
+      "content-type": "application/json",
+      authorization: leg.auth(),
+      // Hugging Face router calls bill the csoai org's Team credit, as the mill does. Without this
+      // header they bill the token's personal account, which answered 402 (credits depleted) on
+      // 2026-09-14; the same request with it answered 200.
+      ...(leg.provider === "huggingface" ? { "X-HF-Bill-To": process.env.HF_BILL_TO || "csoai" } : {}),
+    },
     body: JSON.stringify({
       model: leg.model, temperature: 0, max_tokens: 256,
       messages: [{ role: "system", content: SYSTEM }, { role: "user", content: claim }],
