@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCommissions, onRequestGet, POD_CARDS_INDEX, HUB_CARDS_INDEX } from "./commissions";
+import { buildCommissions, onRequestGet, POD_CARDS_INDEX, HUB_CARDS_INDEX, fulfillmentAfterDelivery } from "./commissions";
 
 function kvFrom(entries: Record<string, string>) {
   const store = new Map(Object.entries(entries));
@@ -72,8 +72,12 @@ describe("/api/commissions — requester retrieval (join to the signed pod-cards
     expect(body.delivered).toBe(2);
     expect(body.retrieval.state).toBe("READ");
     expect(body.retrieval.index).toBe(POD_CARDS_INDEX);
-    // publication never rewrites the typed fulfillment field
-    expect(subj.fulfillment).toBe("QUEUED");
+    // writer: DID-signed cards published → RETRIEVABLE (not stuck QUEUED)
+    expect(subj.fulfillment).toBe("RETRIEVABLE");
+    expect(gov.fulfillment).toBe("RETRIEVABLE");
+    expect(wrap.fulfillment).toBe("UNFULFILLABLE");
+    expect((body as any).retrievable).toBe(2);
+    expect((body as any).queued).toBe(0);
   });
 
   it("is UNCHECKABLE with null cards when the index cannot be read — never an empty delivery", async () => {
@@ -107,5 +111,33 @@ describe("/api/commissions — requester retrieval (join to the signed pod-cards
     expect(body.commissions[0].delivery).toEqual({ state: "CARDS_PUBLISHED", count: 1 });
     expect(body.commissions[0].cards[0].id).toBe("h".repeat(64));
     expect(body.retrieval.hub_index).toBe(HUB_CARDS_INDEX);
+  });
+});
+
+describe("fulfillmentAfterDelivery — RETRIEVABLE writer", () => {
+  it("promotes QUEUED to RETRIEVABLE only when CARDS_PUBLISHED with count>0", () => {
+    expect(fulfillmentAfterDelivery("QUEUED", { state: "CARDS_PUBLISHED", count: 14 })).toBe("RETRIEVABLE");
+    expect(fulfillmentAfterDelivery("QUEUED", { state: "NONE", count: 0 })).toBe("QUEUED");
+    expect(fulfillmentAfterDelivery("QUEUED", { state: "UNCHECKABLE", count: null })).toBe("QUEUED");
+    expect(fulfillmentAfterDelivery("UNFULFILLABLE", { state: "CARDS_PUBLISHED", count: 1 })).toBe("UNFULFILLABLE");
+    expect(fulfillmentAfterDelivery("RETRIEVABLE", { state: "NONE", count: 0 })).toBe("RETRIEVABLE");
+  });
+
+  it("accepts a stored RETRIEVABLE fulfillment from KV and still joins cards", async () => {
+    const index = {
+      schema: "csoai.pod-cards-index/0.1",
+      cards: [
+        { id: "c".repeat(64), url: "https://councilof.ai/interop/mill-cards-signed/signed-swarm-c.json", subject: "llama3.2:3b", axis: "swarm", n: 37, status: "MEASURED", run_id: null },
+      ],
+    };
+    const store = kvFrom({
+      "ras:stored": JSON.stringify({ subject: "llama3.2:3b", model: "llama3.2:3b", fulfillment: "RETRIEVABLE", axis: null, as_of: "2026-09-14T00:00:00Z" }),
+    });
+    const fetcher = (async () => new Response(JSON.stringify(index), { status: 200 })) as unknown as typeof fetch;
+    const body = await buildCommissions({ REVENUE_KV: store }, "https://councilof.ai", fetcher) as any;
+    expect(body.commissions[0].fulfillment).toBe("RETRIEVABLE");
+    expect(body.commissions[0].delivery.state).toBe("CARDS_PUBLISHED");
+    expect(body.retrievable).toBe(1);
+    expect(body.queued).toBe(0);
   });
 });

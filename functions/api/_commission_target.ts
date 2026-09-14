@@ -4,7 +4,7 @@
  * payai-wrapper / SKU → UNFULFILLABLE (receipt OK, never model mill).
  */
 export type SubjectKind = "ollama_model" | "hub_model" | "sku_wrapper" | "ambiguous";
-export type Fulfillment = "QUEUED" | "UNFULFILLABLE";
+export type Fulfillment = "QUEUED" | "UNFULFILLABLE" | "RETRIEVABLE";
 
 export type CommissionTarget = {
   subject_kind: SubjectKind;

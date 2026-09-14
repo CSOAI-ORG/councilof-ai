@@ -23,7 +23,7 @@ type QueueRow = {
   receipt_sha: string | null;
   card_sha: string | null;
   status: "QUEUED";
-  fulfillment: "QUEUED" | "UNFULFILLABLE";
+  fulfillment: "QUEUED" | "UNFULFILLABLE" | "RETRIEVABLE";
   source: "mill:commission" | "ras";
 };
 
@@ -69,7 +69,12 @@ async function listPrefix(
 function fromMillKey(name: string, r: Record<string, unknown>): QueueRow | null {
   const subject = typeof r.subject === "string" ? r.subject.trim() : name.slice("mill:commission:".length);
   if (!subject) return null;
-  const fulfillment = r.fulfillment === "UNFULFILLABLE" ? "UNFULFILLABLE" : "QUEUED";
+  const fulfillment =
+    r.fulfillment === "UNFULFILLABLE" ? "UNFULFILLABLE"
+    : r.fulfillment === "RETRIEVABLE" ? "RETRIEVABLE"
+    : "QUEUED";
+  // Mill-visible queue is QUEUED only — RETRIEVABLE means signed cards already published.
+  if (fulfillment !== "QUEUED") return null;
   return {
     subject,
     subject_kind: typeof r.subject_kind === "string" ? r.subject_kind : null,
@@ -92,9 +97,10 @@ function fromRasKey(name: string, r: Record<string, unknown>): QueueRow | null {
   if (!subject) return null;
   const classified = classifyCommissionTarget(subject);
   const fulfillment =
-    r.fulfillment === "QUEUED" || r.fulfillment === "UNFULFILLABLE"
-      ? (r.fulfillment as "QUEUED" | "UNFULFILLABLE")
+    r.fulfillment === "QUEUED" || r.fulfillment === "UNFULFILLABLE" || r.fulfillment === "RETRIEVABLE"
+      ? (r.fulfillment as "QUEUED" | "UNFULFILLABLE" | "RETRIEVABLE")
       : classified.fulfillment;
+  // RETRIEVABLE / UNFULFILLABLE never enter mill priority
   if (fulfillment !== "QUEUED") return null;
   const model =
     typeof r.model === "string" && r.model
@@ -138,7 +144,7 @@ export async function buildCommissionQueue(env: Env) {
   const base = {
     schema: "csoai.commission-queue/0.1",
     endpoint: "/api/commission-queue",
-    what: "Mill-visible commission intents. mill:commission:* after settle, plus legacy ras:* classified QUEUED with non-null model. UNFULFILLABLE/SKU never enter mill priority. Never a measurement.",
+    what: "Mill-visible commission intents. mill:commission:* after settle, plus legacy ras:* classified QUEUED with non-null model. UNFULFILLABLE/SKU/RETRIEVABLE never enter mill priority. Never a measurement.",
     source: "REVENUE_KV mill:commission:* ∪ classified ras:* (QUEUED + model)",
   };
   if (!env.REVENUE_KV) {
