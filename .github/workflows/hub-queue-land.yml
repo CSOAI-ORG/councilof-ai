@@ -5,7 +5,8 @@ name: hub-queue-land
 # This lands them in public/interop/mill-cards-unsigned/ (what scripts/sign_mill_cards.py reads),
 # on a branch — never master — dispatches the EXISTING OIDC signer (hf-fin-shells-measure.yml,
 # target=mill; its filename is the /api/board-sign allowlist key), waits, verifies the signed
-# cards VALID under the live DID, and opens a PR. Human merge is the only gate.
+# cards VALID under the live DID with a current v0.2 admission receipt, and opens a PR.
+# Human merge is the only gate.
 # Never signs here. Never stamps MEASURED. n<30 stays unquotable. Empty stays empty.
 
 on:
@@ -107,7 +108,7 @@ jobs:
             echo "OPERATOR ACTION REQUIRED: PR $BR created but protected checks could not be dispatched." >&2
             echo "Run: gh workflow run pr-gates.yml --ref $BR" >&2
           fi
-      - name: wait for the signer, then verify VALID under the live DID (verification only — no key here)
+      - name: wait for signer, then verify DID signature and current admission (no key here)
         if: steps.land.outputs.landed != '0'
         run: |
           set -euo pipefail

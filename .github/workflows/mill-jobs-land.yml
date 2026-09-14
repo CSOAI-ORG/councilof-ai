@@ -9,7 +9,8 @@ name: HF-Jobs mill — land the staged cards
 # scripts/land_mill_cards.py (dedupe per (model, axis), bind run provenance, REQUIRE the evidence
 # bundle — aggregate-only cards stopped landing after the 2026-09-13 ruling), push a branch,
 # open the PR, dispatch the existing OIDC signer for exactly that run id, wait, verify VALID under
-# the live DID, comment the verdict table. Human merge is the only gate.
+# the live DID plus the current v0.2 admission receipt, and comment the verdict table. Human merge
+# is the only gate.
 #
 # It does NOT sign, does not decide MEASURED (sign_mill_cards.py sets status from n), does not
 # touch the pod, deletes nothing from the dataset, and never writes master.
@@ -120,7 +121,7 @@ jobs:
             echo "OPERATOR ACTION REQUIRED: run: gh workflow run pr-gates.yml --ref $BR" >&2
           fi
 
-      - name: wait for the signer, then verify VALID under the live DID (verification only — no key here)
+      - name: wait for signer, then verify DID signature and current admission (no key here)
         if: steps.land.outputs.landed != '0'
         run: |
           set -euo pipefail

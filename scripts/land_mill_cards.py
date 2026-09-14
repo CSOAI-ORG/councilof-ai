@@ -207,7 +207,8 @@ def pr_body(rep: dict, mill_report: dict | None, run_id: str) -> str:
         "signed cards are pushed back here as `public/interop/mill-cards-signed/signed-*.json`.",
         "",
         "Nothing here is MEASURED. A hub-queue (id, axis) cell flips only after merge, and only if the signed card "
-        "verifies VALID under the live DID with n≥30 (`hub-queue-flip.yml`). n<30 is unquotable. TIE is never a win.",
+        "verifies VALID under the live DID with n≥30 and its current v0.2 admission receipt revalidates "
+        "(`hub-queue-flip.yml`). n<30 is unquotable. TIE is never a win.",
         "",
         "| model | axis | n | accuracy | quotable |",
         "|---|---|---:|---:|---|",

@@ -197,6 +197,12 @@ def main(argv: list[str] | None = None) -> int:
         signed += 1
         if replaces:
             already = superseded_ids()
+            admission = body.get("admission") if isinstance(body.get("admission"), dict) else {}
+            supersede_reason = (
+                "#2075: replaced by a current reproducibly admitted v0.2 item-evidence card"
+                if admission.get("schema") == "csoai.mill-evidence-admission/0.2"
+                else "#1155: body state corrected — the signed body must be true after signing"
+            )
             with LEDGER.open("a", encoding="utf-8") as fh:
                 for prev in replaces:
                     if prev["id"] in already:
@@ -210,7 +216,7 @@ def main(argv: list[str] | None = None) -> int:
                                 "by_file": dest.name,
                                 "model": body.get("model"),
                                 "axis": body.get("axis"),
-                                "reason": "#1155: body state corrected — the signed body must be true after signing",
+                                "reason": supersede_reason,
                                 "at": now_iso(),
                             }
                         )

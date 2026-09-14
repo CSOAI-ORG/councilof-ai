@@ -99,6 +99,11 @@ class EvidenceV02Test(unittest.TestCase):
                                           str(self.evidence), "--require-hub-admission"]), 1)
             signing.assert_not_called()
 
+        legacy_path = self.root / "signed" / "signed-governan-legacy.json"
+        legacy_path.write_text(json.dumps({"id": "c" * 64, "signature": "old", "body": {
+            "model": "org/model", "axis": "governance", "status": "MEASURED",
+            "evidence": {"schema": "csoai.mill-item-evidence/0.1"},
+        }}))
         admitted = copy.deepcopy(self.wrap)
         admitted["admission"] = admit(admitted, self.staged, self.evidence)
         (source / "unsigned-card.json").write_text(json.dumps(admitted))
@@ -111,6 +116,10 @@ class EvidenceV02Test(unittest.TestCase):
         self.assertEqual(signed["body"]["admission"], admitted["admission"])
         self.assertEqual(signed["body"]["status"], "MEASURED")
         self.assertEqual(validate_signed_admission(signed, self.evidence)["source_card_id"], admitted["id"])
+        ledger = json.loads((self.root / "signed" / "SUPERSEDED.jsonl").read_text())
+        self.assertEqual(ledger["superseded_id"], "c" * 64)
+        self.assertIn("#2075", ledger["reason"])
+        self.assertEqual(json.loads(legacy_path.read_text())["id"], "c" * 64)
 
     def test_queue_retires_matching_legacy_positive_cell_without_changing_card(self):
         card_id = "c" * 64
