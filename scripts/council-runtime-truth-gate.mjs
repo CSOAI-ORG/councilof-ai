@@ -829,7 +829,9 @@ const publicPrivacySource = readFileSync("client/src/pages/legal/PublicPrivacy.t
 assert.match(publicPrivacySource, /CSOAI Ltd/);
 assert.match(publicPrivacySource, /16939677/);
 assert.match(publicPrivacySource, /86(?:–|-)90 Paul Street/);
-assert.match(publicPrivacySource, /privacy@csoai\.org/);
+assert.match(publicPrivacySource, /nicholas@csoai\.org/);
+assert.match(publicPrivacySource, /payer wallet address/);
+assert.match(publicPrivacySource, /Retention:/);
 assert.match(publicPrivacySource, /Information Commissioner's Office/);
 assert.match(publicPrivacySource, /Public evidence is a separate boundary/);
 assert.doesNotMatch(publicPrivacySource, /fully compliant|complies with all|guarantee(?:d)? compliance/i);
