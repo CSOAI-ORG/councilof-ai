@@ -1,0 +1,50 @@
+{
+  "card": {
+    "as_of": "2026-09-14T15:12:03Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "reserve-attestation",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "is a third-party reserve attestation publicly published and current?"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "017d1736cf3c90d46e2db8372c5acea2acc9242d917ef4177f54d6a69e2c7cbd",
+    "sig_ed25519": "e4b497b8c6274fe5b0e07c2eb96c4c5714b391859da9f65bbadabd96ac088cb5643f70b1df2b1c55f2010d79d64147f5f6965c1d8fc2e4de28116b8f3734ae02",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-reserve-attestation"
+    ],
+    "subject": "GSPC reserve-attestation UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "reserve-attestation",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "006431b79e916810b24dbb34b25f087589eff19f4cdec73bbabe96c79f07d4f7",
+    "f08435019e249aecba7aa978b184e2d12e4d4b778e2709ea2281c15db41fa72a",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "661a44a36aa694ee1bed96ddd1e1bb7ba361830c65be3d6832861f9ee6386584",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "9862bffffcd607adad768be1963d711775ed351f7f25dc95d433fa118da702f4",
+    "7764b8895f8b9216f24e8d2970ccf9fc115a89a6a81ca4d4b22d0ecd1c2c055d",
+    "a5bb3d3e9485ef4544460fc25eecb6a5bfc407887d71abfb5c7f9e554f0fbc17"
+  ]
+}

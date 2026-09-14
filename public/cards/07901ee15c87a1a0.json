@@ -1,0 +1,117 @@
+{
+  "card": {
+    "as_of": "2026-09-14T15:11:59Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:WTGXX:ethereum",
+      "symbol": "WTGXX",
+      "product": "WisdomTree Government Money Market Digital Fund",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1fecf3d9d4fee7f2c02917a66028a48c6706c179",
+      "block": 25976513,
+      "block_hash": "0xc3fb1b7e9a20a01e09aa847bb93138ff3bf5c78c0720c0e1f655de7f070c49e6",
+      "block_time": "2026-09-14T15:11:59Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "WisdomTree Government Money Market Digital Fund",
+        "symbol": "WTGXX",
+        "decimals": 18,
+        "totalSupply": "1205522356209118520385739107",
+        "isPaused": false
+      },
+      "absent": [
+        "paused()",
+        "owner()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_implementation (slot zero)",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "d65b1324b48c77c8a9386c443c6cdadb0ee16e1beef7a5c6608268e512698191",
+        "bytes": 10944,
+        "url": "/archive/proofs/eip1186/d65b1324b48c77c8.json",
+        "rpc": "eth.drpc.org",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xa33ce549cd15d43ad6ff063e5238d888b9442536de3c4cb591f69d87480dfaeb",
+          "storageHash": "0x1eea0a89f8e2a466fe059d8b53ccfd8b770d08e27ab9bbbdda844b29ae5adcf8",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x0",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 2
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 25976513 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "07901ee15c87a1a03d3ccac9e0610062b04da3df0e34fd05d0cd7a419630d91e",
+    "sig_ed25519": "13f53fde589792e11b9af5d4474ebceb647b55b22bb7d2ba7caa9501f90757a12cc87f52ef3854746f43dc16d9d61bc1c29a54169649f8a90d5047479ebc4405",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://etherscan.io/address/0x1fecf3d9d4fee7f2c02917a66028a48c6706c179",
+      "https://eth.drpc.org"
+    ],
+    "subject": "evm:WTGXX:ethereum permission state at block 25976513",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:WTGXX"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ]
+  },
+  "proof": [
+    "65629bc66c73046678d09fb157db228625bad4561e39e3d028c9341d5e7d9792",
+    "f29857369d2bb68abc4463c5ea985c1fbcbefa7f6eb685680645c2698d657b7f",
+    "083391556aa661564e632c7bd704936f31213862bf031a795af57899c4572cfc",
+    "3df02c10bdf1e25a99f96c2011095e78124151ed6f0d486b1f10850dccdc9de6",
+    "0b7a58b69e7be55ad50bbc549d25fbb6038f1d03573a2ebde72d618c3aa88d9d",
+    "e04592d51482b4931f864c9fe6535c0005c23356d29687021dee68768f77e35a",
+    "8d4957e98196c7c29bf7d91857f0fb09bc0602dda499e4f471e430a9c7d7e21b",
+    "357817a8e3968f478eee10315bc886fbaee279a341622508fe4903496ac1a704",
+    "a5bb3d3e9485ef4544460fc25eecb6a5bfc407887d71abfb5c7f9e554f0fbc17"
+  ]
+}
