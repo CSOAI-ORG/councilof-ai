@@ -1,0 +1,74 @@
+{
+ "as_of": "2026-09-14T10:41:00Z",
+ "payload": {
+  "axes": {
+   "attestation_coverage": "UNMEASURED",
+   "install_time_verification": "UNMEASURED"
+  },
+  "evidence_state": "INDEXED",
+  "frame": "signed != safe: provenance says who built it, not what it does",
+  "kind": "csoai.registry-signing-surface/0.1",
+  "not_a_grade": true,
+  "registry": "rubygems.org",
+  "retrieved": "2026-09-14T10:41Z",
+  "rows": [
+   {
+    "announced": "2023-12-14",
+    "doc": "OIDC short-lived tokens; guide names GitHub Actions only",
+    "ev": "INDEXED",
+    "surface": "trusted_publishing",
+    "url": "https://blog.rubygems.org/2023/12/14/trusted-publishing.html"
+   },
+   {
+    "doc": "gem push --attestation",
+    "ev": "INDEXED",
+    "merged": "2024-11-20",
+    "surface": "sigstore_attestation_push",
+    "url": "https://github.com/ruby/rubygems/pull/8239"
+   },
+   {
+    "doc": "push generates a sigstore bundle; falls back to unattested push on failure",
+    "ev": "INDEXED",
+    "merged": "2026-04-01",
+    "surface": "auto_attestation_push",
+    "url": "https://github.com/ruby/rubygems/pull/9325"
+   },
+   {
+    "as_of": "2025-03-19",
+    "doc": "20 of the top gems shipping attestations",
+    "ev": "ATTRIBUTED",
+    "surface": "adoption_claim",
+    "url": "https://blog.rubygems.org/2025/03/19/february-rubygems-updates.html"
+   },
+   {
+    "doc": "May 2026 spam-publishing campaign; >500 malicious packages yanked; registrations reopened May 16",
+    "ev": "ATTRIBUTED",
+    "published": "2026-09-11",
+    "surface": "incident_context",
+    "url": "https://blog.rubygems.org/2026/09/11/update-may-spam-publishing-campaign.html"
+   }
+  ],
+  "shai_hulud": "OMITTED: not named in the RubyGems primary sources read",
+  "state": "DISCOVERED"
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "2f2573d105bff69bc561b5423a5f58fa8679773632c9b727bc641f0cf7dc421e",
+ "source_urls": [
+  "https://guides.rubygems.org/trusted-publishing/",
+  "https://blog.rubygems.org/2023/12/14/trusted-publishing.html",
+  "https://blog.rubygems.org/2026/09/11/update-may-spam-publishing-campaign.html"
+ ],
+ "subject": "RubyGems signing and attestation surface (index, signed != safe)",
+ "surface": "public.notice",
+ "tags": [
+  "rubygems",
+  "supply-chain",
+  "index",
+  "UNSIGNED-DRAFT"
+ ],
+ "unmeasured": [
+  "share of gems with attestations today",
+  "whether installers verify attestations",
+  "trusted-publishing adoption"
+ ]
+}

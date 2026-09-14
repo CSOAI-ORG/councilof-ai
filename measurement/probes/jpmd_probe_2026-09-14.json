@@ -1,0 +1,57 @@
+{
+  "label": "OBSERVED-UNSIGNED-NOT-A-CARD",
+  "schema": "csoai.observation-probe/0.1",
+  "subject": "JPM Coin (JPMD) deposit token contract on Base",
+  "public_framing": "Measurement, not certification. An observation of public chain state; not a grade, not a reserve attestation, not a traction figure.",
+  "engine": "scripts/probes/jpmd_base_probe.py (stdlib JSON-RPC; eth_call/eth_getLogs)",
+  "corpus": "Base mainnet public chain state at the pinned block",
+  "chain": {
+    "name": "Base",
+    "chain_id": 8453
+  },
+  "rpc_url": "https://mainnet.base.org",
+  "retrieved_started_at": "2026-09-14T10:36:57Z",
+  "retrieved_finished_at": "2026-09-14T10:37:10Z",
+  "contract": {
+    "address": "0x7e0aedc93d9f898be835a44bfca3842e52416b82",
+    "address_source_url": "https://www.jpmorgan.com/kinexys/jpm-coin",
+    "address_source_statement": "J.P. Morgan's JPM Coin page links to basescan.org/token/0x7e0aedc93d9f898be835a44bfca3842e52416b82 as the smart contract and states tokens of the same or similar name at different addresses are not affiliated with J.P. Morgan.",
+    "bytecode_present": true,
+    "eip1967_implementation": "0x620244706ba6c771ec417662a0bfb6fe6d1c5ae2"
+  },
+  "pinned_block": {
+    "number": 51296435,
+    "hash": "0x7daac3bc378410222a3ff6683063aec3fe0cf9a4fb2e3e1845381963c3aa6abc",
+    "timestamp_utc": "2026-09-14T10:36:57Z"
+  },
+  "token": {
+    "name": "JPMD",
+    "symbol": "JPMD",
+    "decimals": 2,
+    "total_supply_raw": "100100000",
+    "total_supply": "1001000.00",
+    "state": "OBSERVED"
+  },
+  "mint_burn_window": {
+    "from_block": 51253236,
+    "to_block": 51296435,
+    "blocks": 43200,
+    "chunk_size": 2000,
+    "chunks_scanned": 22,
+    "chunks_failed": 0,
+    "method": "eth_getLogs Transfer(address,address,uint256) with from==0x0 (mint) or to==0x0 (burn)",
+    "mint_count": 0,
+    "burn_count": 0,
+    "events": [],
+    "scope_note": "Counts cover only this block window. Transfers between non-zero addresses are not counted. Zero here means zero in this window."
+  },
+  "unmeasured": [
+    "reserve / backing of the deposit token (off-chain; not observable from Base state)",
+    "holder distribution",
+    "non-mint/burn transfer volume",
+    "activity outside the scanned window",
+    "claim-side figures published by J.P. Morgan (none quoted here)"
+  ],
+  "rpc_calls": 52,
+  "signature_state": "UNSIGNED"
+}
