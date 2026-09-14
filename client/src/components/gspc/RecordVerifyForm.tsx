@@ -1,4 +1,5 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { currentVerdict, initialFreshness, inputHash, isStale, onInput, settleRun, startRun, type Freshness } from "@/lib/verifyFreshness";
 import { FOCUS } from "../lobby/glass";
 import { verifyRecord, type RecordVerdict } from "@/lib/recordVerify";
 
@@ -105,23 +106,44 @@ export default function RecordVerifyForm({
   onVerdict?: (v: RecordVerdict) => void;
 }) {
   const [text, setText] = useState("");
-  const [verdict, setVerdict] = useState<RecordVerdict | null>(null);
+  // Freshness state machine (client/src/lib/verifyFreshness.ts): a verdict is bound to
+  // the sha256 of the exact text it verified; editing marks it STALE; an older async
+  // result can never overwrite a newer input. `fresh` is a ref so async settles read
+  // the latest state, mirrored into React state for rendering.
+  const freshRef = useRef<Freshness<RecordVerdict>>(initialFreshness<RecordVerdict>());
+  const [fresh, setFresh] = useState<Freshness<RecordVerdict>>(freshRef.current);
+  const commit = (next: Freshness<RecordVerdict>) => { freshRef.current = next; setFresh(next); };
   const [busy, setBusy] = useState(false);
   const light = variant === "light";
   const fieldId = useId();
 
+  // Every edit re-hashes the box. The hash of "" is the empty-input hash, so a cleared
+  // box also invalidates the old verdict.
+  useEffect(() => {
+    let cancelled = false;
+    inputHash(text).then((h) => { if (!cancelled) commit(onInput(freshRef.current, h)); });
+    return () => { cancelled = true; };
+  }, [text]);
+
   useEffect(() => {
     if (typeof seed === "string" && seed) {
-      setText(seed);
-      setVerdict(null); // a new record has not been checked yet — never show the old verdict beside it
+      setText(seed); // the hash effect above marks any previous verdict stale
     }
   }, [seed, seedNonce]);
 
+  const verdict = currentVerdict(fresh);
+  const stale = isStale(fresh);
+
   const run = async () => {
     setBusy(true);
+    // Hash the bytes we are about to verify, then take a run ticket for exactly them.
+    const h = await inputHash(text);
+    const started = startRun(onInput(freshRef.current, h));
+    commit(started.state);
     const v = await verifyRecord(text);
-    setVerdict(v);
-    onVerdict?.(v);
+    const settled = settleRun(freshRef.current, started.seq, started.hash, v);
+    commit(settled.state);
+    if (settled.accepted) onVerdict?.(v);
     setBusy(false);
   };
 
@@ -170,8 +192,17 @@ export default function RecordVerifyForm({
           </span>
         )}
       </div>
+      {stale && (
+        <p
+          data-testid="record-verdict-stale"
+          role="status"
+          className={`mt-4 text-[13px] font-semibold ${light ? "text-amber-800" : "text-amber-300"}`}
+        >
+          Input changed since the last verdict — that verdict no longer describes what is in the box. Verify again.
+        </p>
+      )}
       {verdict && (
-        <div className="mt-4 space-y-2" role="status">
+        <div className="mt-4 space-y-2" role="status" data-verified-input-sha256={fresh.verdictHash ?? undefined}>
           {/* role="status" announces the panel when it appears, and the headline is
               the first thing in that live region — so a screen-reader user hears the
               outcome in words before the per-check list. The headline states the
