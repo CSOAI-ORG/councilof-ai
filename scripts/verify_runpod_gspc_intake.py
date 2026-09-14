@@ -395,6 +395,15 @@ def _model_names_match(configured: str, returned: str) -> bool:
     )
 
 
+# v1 graded whatever text came back. v2 (#2436) treats a keyword answer that ended on
+# the token budget as unanswered. A v1 bundle is still admissible when none of its
+# keyword answers were cut off -- the two rules agree on every such row -- and is
+# refused when any was, because v1 scored those rows as wrong answers.
+KEYWORD_GRADER_V1 = "all-nfkc-casefold-whitespace-normalized-substrings-v1"
+KEYWORD_GRADER_V2 = "all-nfkc-casefold-whitespace-normalized-substrings-v2-length-unanswered"
+KEYWORD_GRADERS = (KEYWORD_GRADER_V1, KEYWORD_GRADER_V2)
+
+
 @dataclass(frozen=True)
 class ItemCounts:
     attempted: int
@@ -460,6 +469,8 @@ def _parse_items(
     ):
         raise IntakeError("BAD_INSTRUMENT", "instrument decode is not deterministic")
 
+    graders = instrument.get("graders")
+    keyword_grader = graders.get("keyword_match") if isinstance(graders, dict) else None
     correct = 0
     parse_errors = 0
     seen_items: set[str] = set()
@@ -565,10 +576,21 @@ def _parse_items(
                 or expected != "KEYWORD_MATCH"
             ):
                 raise IntakeError("BAD_GRADE", "keyword predicate is invalid")
-            normalised_output = _normalise_text(raw_output)
-            computed_grade = all(
-                _normalise_text(keyword) in normalised_output for keyword in keywords
-            )
+            truncated = row.get("done_reason") == "length"
+            if truncated and keyword_grader == KEYWORD_GRADER_V1:
+                raise IntakeError(
+                    "TRUNCATED_KEYWORD_ANSWER",
+                    "a v1 keyword row was cut off by the token budget and graded",
+                )
+            if truncated:
+                computed_grade = False
+                parse_errors += 1
+            else:
+                normalised_output = _normalise_text(raw_output)
+                computed_grade = all(
+                    _normalise_text(keyword) in normalised_output
+                    for keyword in keywords
+                )
         else:
             raise IntakeError(
                 "BAD_GRADE", "predicate is not supported by the pinned worker"
@@ -674,9 +696,11 @@ def _validate_semantics(
     ):
         raise IntakeError("BAD_INSTRUMENT", "instrument does not match the run pins")
     graders = instrument.get("graders")
-    if graders != {
+    if not isinstance(graders, dict) or graders.get(
+        "keyword_match"
+    ) not in KEYWORD_GRADERS or graders != {
         "exact_label": "unicode-exact-after-outer-whitespace-v1",
-        "keyword_match": "all-nfkc-casefold-whitespace-normalized-substrings-v1",
+        "keyword_match": graders.get("keyword_match"),
     }:
         raise IntakeError(
             "BAD_INSTRUMENT", "instrument graders are not the pinned versions"
