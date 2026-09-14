@@ -200,16 +200,17 @@ export default function Disclaimers() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-emerald-900 font-semibold text-lg">
-                  CSOAI'S INSURANCE DOES NOT COVER CLIENT ORGANIZATIONS
+                  INSURANCE DISCLOSURE AND CLIENT RESPONSIBILITY
                 </p>
                 <div className="space-y-3 text-gray-700">
                   <p>
-                    CSOAI LTD does not state professional indemnity cover on this page until the policy document is on file (corrections ledger C-2026-0902-06). In any case:
+                    CSOAI LTD does not state professional indemnity cover until the policy document is on file
+                    (corrections ledger C-2026-0902-06). In any case:
                   </p>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>
-                      <strong>Our insurance covers CSOAI LTD only.</strong> It does not extend to certified
-                      individuals, member organizations, or their AI systems.
+                      <strong>No CSOAI cover is stated here.</strong> This page provides no evidence of a policy,
+                      coverage limit, insurer, broker, or term.
                     </li>
                     <li>
                       <strong>Organizations must maintain their own insurance.</strong> As specified in our
@@ -221,8 +222,8 @@ export default function Disclaimers() {
                       should consider professional indemnity insurance for their consulting activities.
                     </li>
                     <li>
-                      <strong>No claims against CSOAI insurance.</strong> Third parties cannot make claims
-                      against CSOAI's insurance policy for issues arising from attested organizations' AI systems.
+                      <strong>No reliance by third parties.</strong> Nothing on this page provides client
+                      organizations or third parties with insurance cover or a right to make a claim.
                     </li>
                   </ul>
                 </div>
