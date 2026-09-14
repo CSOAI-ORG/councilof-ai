@@ -290,6 +290,7 @@ function discover() {
     "/frameworks",
       "/wrappers",
       "/quickstart",
+      "/evaluator-access",
   ];
   for (const p of MUST) found.add(p);
 
@@ -332,6 +333,23 @@ function discover() {
   } catch (e) {
     // Loud, not silent: a parse failure here means answer deep links ship as 404s.
     console.error(`answers: could not derive /answers/:slug routes — ${e.message}`);
+    process.exitCode = 1;
+  }
+  // ── /notes/:slug — every evidence note page, derived from evidence-notes.json ──
+  // One canonical, citable page per note. Same pattern as /answers: the queue is read from the
+  // data file the pages render, so a note added later is snapshotted without editing this file.
+  found.add("/notes");
+  try {
+    const notesDoc = JSON.parse(readFileSync("client/src/data/evidence-notes.json", "utf8"));
+    const ids = (Array.isArray(notesDoc?.notes) ? notesDoc.notes : [])
+      .map((n) => n && n.id)
+      .filter((s) => typeof s === "string" && /^[a-z0-9-]+$/.test(s));
+    if (ids.length === 0) throw new Error("no ids parsed from evidence-notes.json");
+    for (const s of ids) found.add(`/notes/${s}`);
+    console.log(`notes: queued ${ids.length} /notes/:slug pages from evidence-notes.json`);
+  } catch (e) {
+    // Loud, not silent: a parse failure here means note pages ship as 404s.
+    console.error(`notes: could not derive /notes/:slug routes — ${e.message}`);
     process.exitCode = 1;
   }
   // /api/* are data endpoints served by Pages Functions — snapshotting them writes an

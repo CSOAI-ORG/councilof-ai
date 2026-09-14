@@ -38,6 +38,7 @@ from pathlib import Path
 from typing import Any, Callable, Iterator, Protocol
 
 WORKER_SCHEMA = "csoai.runpod-gspc-worker/0.1"
+DISPATCH_SCHEMA = "csoai.runpod-commission-dispatch/0.1"
 ITEM_SCHEMA = "csoai.runpod-gspc-item-evidence/0.1"
 RUN_SCHEMA = "csoai.runpod-gspc-run/0.1"
 MAX_CARD_BYTES = 3072
@@ -867,8 +868,58 @@ def sanitized_health(value: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+def sanitized_dispatch_status(path: Path | None) -> dict[str, Any]:
+    unavailable = {
+        "schema": "csoai.runpod-commission-dispatch-status/0.1",
+        "status": "UNCHECKABLE",
+        "queue_schema": None,
+        "last_run": None,
+        "source_revision": None,
+        "admitted": None,
+        "refused": None,
+        "created": None,
+        "already_present": None,
+    }
+    if path is None:
+        return unavailable
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return unavailable
+    if not isinstance(value, dict) or value.get("schema") != DISPATCH_SCHEMA:
+        return unavailable
+    admitted = value.get("admitted")
+    refused = value.get("refused")
+    counts = (value.get("created"), value.get("already_present"))
+    queue_schema = value.get("queue_schema")
+    last_run = value.get("last_run")
+    revision = value.get("source_revision")
+    if (
+        not isinstance(admitted, list)
+        or not isinstance(refused, list)
+        or any(not isinstance(n, int) or isinstance(n, bool) or n < 0 for n in counts)
+        or queue_schema not in {"csoai.commission-queue/0.1", "csoai.commissions/0.1", "csoai.commissions/0.2"}
+        or not isinstance(last_run, str)
+        or not isinstance(revision, str)
+        or len(revision) != 40
+        or any(c not in "0123456789abcdef" for c in revision)
+    ):
+        return unavailable
+    return {
+        "schema": "csoai.runpod-commission-dispatch-status/0.1",
+        "status": "OBSERVED",
+        "queue_schema": queue_schema,
+        "last_run": last_run,
+        "source_revision": revision,
+        "admitted": len(admitted),
+        "refused": len(refused),
+        "created": counts[0],
+        "already_present": counts[1],
+    }
+
+
 class ReadOnlyHealthServer:
-    def __init__(self, sink: HealthSink, bind: str, port: int) -> None:
+    def __init__(self, sink: HealthSink, bind: str, port: int, dispatch_report: Path | None = None) -> None:
         if bind not in {"127.0.0.1", "0.0.0.0"}:
             raise WorkerError(
                 "BAD_HEALTH_BIND", "health bind must be 127.0.0.1 or 0.0.0.0"
@@ -879,12 +930,16 @@ class ReadOnlyHealthServer:
             )
         self.sink = sink
         sink_ref = sink
+        dispatch_report_ref = dispatch_report
 
         class Handler(http.server.BaseHTTPRequestHandler):
             server_version = "csoai-health/0.1"
 
             def do_GET(self) -> None:  # noqa: N802
                 path = urllib.parse.urlsplit(self.path).path
+                if path == "/commission-dispatch":
+                    self._reply(200, sanitized_dispatch_status(dispatch_report_ref))
+                    return
                 if path not in {"/", "/health"}:
                     self._reply(404, {"error": "not_found"})
                     return
@@ -1607,6 +1662,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=0,
         help="serve GET / and /health; 0 disables the listener",
     )
+    parser.add_argument(
+        "--commission-dispatch-report",
+        type=Path,
+        help="sanitized read-only status source served at GET /commission-dispatch",
+    )
     return parser
 
 
@@ -1645,7 +1705,7 @@ def main(argv: list[str] | None = None) -> int:
             if args.health_port:
                 try:
                     health_server = ReadOnlyHealthServer(
-                        health, args.health_bind, args.health_port
+                        health, args.health_bind, args.health_port, args.commission_dispatch_report
                     )
                     health_server.start()
                 except OSError:

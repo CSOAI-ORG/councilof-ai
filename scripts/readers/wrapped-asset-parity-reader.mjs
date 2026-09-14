@@ -32,7 +32,7 @@ import { writeFileSync } from "node:fs";
 import { normalizeAtomicAmount, rpcCall } from "./evm-erc20-reader.mjs";
 
 export const SCHEMA = "csoai.wrapped-asset-parity/0.1";
-export const READER_REVISION = "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0";
+export const READER_REVISION = "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1";
 
 export const CHAINS = {
   ethereum: { rpc: "https://ethereum-rpc.publicnode.com", chainId: 1 },
@@ -43,6 +43,8 @@ export const CHAINS = {
   polygon: { rpc: "https://polygon-bor-rpc.publicnode.com", chainId: 137 },
 
     "zksync-era": { rpc: "https://mainnet.era.zksync.io", chainId: 324 },
+  // Flare C-chain public RPC (keyless), for FXRP (FAssets).
+  flare: { rpc: "https://flare-api.flare.network/ext/C/rpc", chainId: 14 },
 };
 
 const SEL = { totalSupply: "0x18160ddd", balanceOf: "0x70a08231", decimals: "0x313ce567" };
@@ -127,23 +129,268 @@ export const ROSTER = [
     canonical: { chain: "ethereum", symbol: "USDC", address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" }, backing_model: "escrow",
     escrow: "0x5797EA1b374f2A4F1E8BcE5156c3962b78E1C46a", escrow_name: "zkSync Era L1 USDC Bridge (native bridge)" },
 
-  // USDT0 on Ethereum — Tether native cross-chain OFT token
-  // Source: https://tether.to/en/usdt0/
-  // USDT0:ethereum removed — USDT0 is NOT deployed on Ethereum mainnet per CoinGecko (14 Sep 2026). It exists only on L2s/alt-L1s.
-
-  // USDT0 on Optimism — LayerZero OFT
-  // Source: https://tether.to/en/usdt0/
-  { id: "usdt0:optimism", wrapped: { chain: "optimism", symbol: "USDT0", address: "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
+  // USDT0 — LayerZero OFT. Token addresses from https://docs.usdt0.to/technical-documentation/deployments (read 2026-09-14):
+  // Arbitrum One token 0xFd086bC7…, OP Mainnet token 0x01bFF417…, Ethereum OFT Adapter 0x6C96dE32….
+  // Correction 2026-09-14: both rows previously named 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627, where eth_call returns empty
+  // on both chains (no token there), which is why both read UNMEASURED. USDT0 is not deployed as a token on Ethereum mainnet.
+  { id: "usdt0:optimism", wrapped: { chain: "optimism", symbol: "USDT0", address: "0x01bFF41798a0BcF287b996046Ca68b395DbC1071" },
     canonical: { chain: "ethereum", symbol: "USDT", address: "0xdAC17F958D2ee523a2206206994597C13D831ec7" }, backing_model: "native",
     escrow: null, escrow_name: null,
-    note: "USDT0 on Optimism via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed." },
-
-  // USDT0 on Arbitrum — LayerZero OFT
-  // Source: https://tether.to/en/usdt0/
-  { id: "usdt0:arbitrum", wrapped: { chain: "arbitrum", symbol: "USDT0", address: "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
+    note: "USDT0 is a LayerZero OFT: USDT is locked in one OFT Adapter on Ethereum (0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee) against the combined supply of every USDT0 chain, so no per-chain escrow exists and no per-pair parity is claimed; treated as native issuance on this chain. Supply read." },
+  { id: "usdt0:arbitrum", wrapped: { chain: "arbitrum", symbol: "USDT0", address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9" },
     canonical: { chain: "ethereum", symbol: "USDT", address: "0xdAC17F958D2ee523a2206206994597C13D831ec7" }, backing_model: "native",
     escrow: null, escrow_name: null,
-    note: "USDT0 on Arbitrum via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed." },
+    note: "Same contract as usdt:arbitrum (it reports name and symbol USD₮0 on 2026-09-14). USDT0 is a LayerZero OFT: USDT is locked in one OFT Adapter on Ethereum (0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee) against the combined supply of every USDT0 chain, so no per-chain escrow exists and no per-pair parity is claimed; treated as native issuance on this chain. Supply read." },
+
+  // Custodial additions 2026-09-14 (#011/#012). Each address was read on-chain the same day (name/symbol/decimals/totalSupply).
+  // cbXRP on Base — https://basescan.org/token/0xcb585250f852c6c6bf90434ab21a00f02833a4af (name() "Coinbase Wrapped XRP").
+  { id: "cbxrp:base", wrapped: { chain: "base", symbol: "cbXRP", address: "0xcb585250f852C6c6bf90434AB21A00f02833a4af" },
+    canonical: { chain: "xrpl", symbol: "XRP", address: "Coinbase custody; not an EVM contract" }, backing_model: "custodial", escrow: null, escrow_name: null,
+    note: "XRP reserve in Coinbase custody, self-published. INDEXED, no parity claimed." },
+  // FXRP on Flare — resolved on-chain: FlareContractRegistry 0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019
+  // getContractAddressByName("AssetManagerFXRP") → 0x2a3Fe068cD92178554cabcf7c95ADf49B4b0B6A8; its fAsset() → 0xAd552A648C74D49E10027AB8a618A3ad4901c5bE.
+  { id: "fxrp:flare", wrapped: { chain: "flare", symbol: "FXRP", address: "0xAd552A648C74D49E10027AB8a618A3ad4901c5bE" },
+    canonical: { chain: "xrpl", symbol: "XRP", address: "FAssets agents' XRPL accounts; not an EVM contract" }, backing_model: "custodial", escrow: null, escrow_name: null,
+    note: "Underlying XRP sits in FAssets agents' XRPL accounts with agent collateral posted on Flare; Flare documents the XRPL side as verified through its Data Connector. Neither the XRPL holdings nor the agent collateral are read here. INDEXED, no parity claimed." },
+  // JPM Coin (JPMD) on Base — contract address published by J.P. Morgan at https://www.jpmorgan.com/kinexys/jpm-coin (read 2026-09-14).
+  { id: "jpmd:base", wrapped: { chain: "base", symbol: "JPMD", address: "0x7e0aedc93d9f898be835a44bfca3842e52416b82" },
+    canonical: { chain: "offchain", symbol: "USD deposits", address: "bank deposits at J.P. Morgan; not on any chain" }, backing_model: "custodial", escrow: null, escrow_name: null,
+    note: "A bank deposit token: the claim it represents is a deposit held off-chain. Supply read only. INDEXED, no parity claimed." },
+];
+
+/**
+ * Issuer profiles (#011, 2026-09-14) — what the issuer DOCUMENTS about the wrapper, beside what the chain says.
+ * A profile is documentary context, never a read and never a measurement: every axis is UNMEASURED until a
+ * reader exists for it. A claim is quoted or paraphrased only from the source listed with it; where the
+ * issuer's own page could not be fetched, the claim says so and names the attributed source instead.
+ */
+export const PROFILE_RULE =
+  "profile = issuer-documented context with sources and retrieval dates. It is not a read, not a measurement and not a reserve attestation. Every axis is UNMEASURED. A missing profile is null, never an empty claim.";
+
+const AXES_UNMEASURED = { reserve_or_backing: "UNMEASURED", redemption: "UNMEASURED", custody_controls: "UNMEASURED", issuer_claim_vs_supply: "UNMEASURED" };
+const D = "2026-09-14";
+
+const USDC_E = (chain, bridge) => ({
+  issuer: `third-party bridged USDC on ${chain} (canonical bridge token), not issued by Circle`,
+  custodian: `the ${bridge} escrow contract named on this record`,
+  chains_documented: [chain],
+  backing_claim: {
+    as_documented: "Circle describes bridged USDC as \"Backed by USDC on another blockchain locked in a smart contract\", deployed by a third-party team. Whether this legacy contract follows Circle's Bridged USDC Standard is UNVERIFIED.",
+    method: "lock-and-mint bridge escrow",
+    documented_by: "https://www.circle.com/bridged-usdc",
+  },
+  measurement_class: "ON_CHAIN_SUPPLY_AND_ESCROW_READ",
+  axes: AXES_UNMEASURED,
+  sources: [{ url: "https://www.circle.com/bridged-usdc", retrieved_at: D, kind: "issuer_page" }],
+});
+
+const USDT0 = (chain, token) => ({
+  issuer: "USDT0 (LayerZero OFT deployment of Tether USDT)",
+  custodian: "OFT Adapter on Ethereum 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee (shared across every USDT0 chain)",
+  chains_documented: ["ethereum (adapter)", "arbitrum", "optimism", "and other chains listed on the deployments page"],
+  backing_claim: {
+    as_documented: "On Ethereum the OAdapterUpgradeable \"Locks/Unlocks tokens for cross-chain transfers\" and interfaces with the TetherToken contract.",
+    method: "single lock adapter on Ethereum; burn-and-mint across OFT chains",
+    documented_by: "https://docs.usdt0.to/technical-documentation/developer",
+  },
+  measurement_class: "ON_CHAIN_SUPPLY_READ",
+  axes: { ...AXES_UNMEASURED, cross_chain_aggregate_parity: "UNMEASURED" },
+  sources: [
+    { url: "https://docs.usdt0.to/technical-documentation/deployments", retrieved_at: D, kind: "issuer_docs", note: `token on ${chain}: ${token}` },
+    { url: "https://docs.usdt0.to/technical-documentation/developer", retrieved_at: D, kind: "issuer_docs" },
+  ],
+});
+
+const CBBTC = (chain) => ({
+  issuer: "Coinbase",
+  custodian: "Coinbase",
+  chains_documented: [chain],
+  backing_claim: {
+    as_documented: "UNVERIFIED on a primary source today: https://www.coinbase.com/cbbtc returned HTTP 403 to a scripted fetch on 2026-09-14. No claim is quoted.",
+    method: "custodian self-report (issuer page not read)",
+    documented_by: null,
+  },
+  measurement_class: "ON_CHAIN_SUPPLY_READ",
+  axes: AXES_UNMEASURED,
+  sources: [{ url: "https://www.coinbase.com/cbbtc", retrieved_at: D, kind: "issuer_page", note: "HTTP 403 to fetch; not read" }],
+});
+
+export const PROFILES = {
+  "usdc.e:arbitrum": USDC_E("arbitrum", "Arbitrum One ERC-20 gateway"),
+  "usdc.e:optimism": USDC_E("optimism", "OP Mainnet L1StandardBridge"),
+  "usdc.e:polygon": USDC_E("polygon", "Polygon PoS ERC20Predicate"),
+  "usdt0:optimism": USDT0("optimism", "0x01bFF41798a0BcF287b996046Ca68b395DbC1071"),
+  "usdt0:arbitrum": USDT0("arbitrum", "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9"),
+  "wbtc:ethereum": {
+    issuer: "WBTC (BitGo named on the issuer page; other custodians not named there)",
+    custodian: "BitGo (as named on wbtc.network); multi-jurisdictional custody reported elsewhere is UNVERIFIED here",
+    chains_documented: ["Ethereum", "Solana", "TRON", "BNB Chain", "Base", "Kava", "Osmosis"],
+    backing_claim: {
+      as_documented: "\"Every WBTC is backed 1:1 by Bitcoin in secure custody, fully verifiable through the on-chain proof of Reserves.\"",
+      method: "custodian-held BTC; issuer-published proof of reserves",
+      documented_by: "https://wbtc.network/",
+    },
+    measurement_class: "ON_CHAIN_SUPPLY_READ",
+    axes: AXES_UNMEASURED,
+    sources: [{ url: "https://wbtc.network/", retrieved_at: D, kind: "issuer_page" }],
+  },
+  "cbbtc:base": CBBTC("base"),
+  "cbbtc:ethereum": CBBTC("ethereum"),
+  "cbxrp:base": {
+    issuer: "Coinbase",
+    custodian: "Coinbase",
+    chains_documented: ["base"],
+    backing_claim: {
+      as_documented: "UNVERIFIED on a primary source today: https://www.coinbase.com/cbxrp returned HTTP 403 to a scripted fetch on 2026-09-14. A launch report (The Block, 2025-06) describes cbXRP as live on Base; that report is attributed, not read in full.",
+      method: "custodian self-report (issuer page not read)",
+      documented_by: null,
+    },
+    measurement_class: "ON_CHAIN_SUPPLY_READ",
+    axes: AXES_UNMEASURED,
+    sources: [
+      { url: "https://www.coinbase.com/cbxrp", retrieved_at: D, kind: "issuer_page", note: "HTTP 403 to fetch; not read" },
+      { url: "https://basescan.org/token/0xcb585250f852c6c6bf90434ab21a00f02833a4af", retrieved_at: D, kind: "explorer", note: "search-observed; on-chain name() read directly: Coinbase Wrapped XRP" },
+      { url: "https://www.theblock.co/post/357087/coinbase-wrapped-xrp-doge-base", retrieved_at: D, kind: "attributed_report", note: "search-observed headline only" },
+    ],
+  },
+  "fxrp:flare": {
+    issuer: "Flare FAssets system (agent-operated)",
+    custodian: "FAssets agents (underlying XRP on the XRP Ledger; collateral on Flare)",
+    chains_documented: ["flare"],
+    backing_claim: {
+      as_documented: "\"FXRP is the FAsset representation of XRP on the Flare network\"; FAssets is described as a \"trustless, over-collateralized bridge\" that \"uses the Flare Data Connector (FDC) to verify XRPL transactions\".",
+      method: "agent over-collateralisation plus FDC attestation of XRPL payments (as documented)",
+      documented_by: "https://dev.flare.network/fxrp/overview",
+    },
+    measurement_class: "ON_CHAIN_SUPPLY_READ",
+    axes: { ...AXES_UNMEASURED, agent_collateral_ratio: "UNMEASURED" },
+    sources: [
+      { url: "https://dev.flare.network/fxrp/overview", retrieved_at: D, kind: "issuer_docs" },
+      { url: "https://flare-api.flare.network/ext/C/rpc", retrieved_at: D, kind: "onchain", note: "FlareContractRegistry getContractAddressByName(\"AssetManagerFXRP\") then fAsset() resolved the token address" },
+    ],
+  },
+  "wxrp:ethereum": {
+    issuer: "UNVERIFIED — the roster names Wrapped.com for this contract; no issuer page for it was read on 2026-09-14",
+    custodian: "UNVERIFIED",
+    chains_documented: ["ethereum"],
+    backing_claim: { as_documented: "UNVERIFIED — no primary source for this contract was read today.", method: "UNVERIFIED", documented_by: null },
+    premise_flag: "Two different tokens are called wXRP. This contract (name() \"Wrapped XRP\", symbol() \"WXRP\", 18 decimals, read 2026-09-14) is not the Hex Trust wXRP announced 2025-12-12 (LayerZero OFT; \"Each wXRP corresponds to one native XRP held in a segregated custody account with Hex Trust\"; chains Solana, Optimism, Ethereum, HyperEVM). No Hex Trust Ethereum contract address was found on a primary source today, so the Hex Trust token is not on the roster.",
+    measurement_class: "ON_CHAIN_SUPPLY_READ",
+    axes: AXES_UNMEASURED,
+    sources: [
+      { url: "https://etherscan.io/token/0x39fbbabf11738317a448031930706cd3e612e1b9", retrieved_at: D, kind: "explorer", note: "search-observed; on-chain name()/symbol() read directly" },
+      { url: "https://www.hextrust.com/resources-collection/hex-trust-to-issue-and-custody-wrapped-xrp-wxrp", retrieved_at: D, kind: "issuer_page", note: "the other wXRP (Hex Trust); no contract address printed" },
+    ],
+  },
+  "buidl:ethereum": {
+    issuer: "BlackRock USD Institutional Digital Liquidity Fund (on-chain name() read 2026-09-14)",
+    custodian: "fund assets: BNY as custodian and administrator; Securitize as transfer agent and tokenization platform — per the 2024-03-20 launch press release, search-observed (page body not retrieved)",
+    chains_documented: ["ethereum", "aptos", "arbitrum", "avalanche", "optimism", "polygon"],
+    backing_claim: {
+      as_documented: "Tokenised fund shares; the fund's assets are held off-chain. Role assignments above are search-observed from the launch press release, not read in full today.",
+      method: "tokenised fund shares; transfer-agent reporting",
+      documented_by: null,
+    },
+    measurement_class: "ON_CHAIN_SUPPLY_READ",
+    axes: { ...AXES_UNMEASURED, nav_vs_supply: "UNMEASURED" },
+    sources: [
+      { url: "https://securitize.io/learn/press/blackrock-launches-first-tokenized-fund-buidl-on-the-ethereum-network", retrieved_at: D, kind: "issuer_press_release", note: "page body not retrieved; roles search-observed" },
+      { url: "https://www.prnewswire.com/news-releases/blackrock-launches-new-buidl-share-classes-across-multiple-blockchains-to-expand-access-and-potential-of-buidl-ecosystem-302304035.html", retrieved_at: D, kind: "issuer_press_release", note: "search-observed: additional chains" },
+    ],
+  },
+  "jpmd:base": {
+    issuer: "Kinexys by J.P. Morgan",
+    custodian: "J.P. Morgan (the token represents a bank deposit)",
+    chains_documented: ["base"],
+    backing_claim: {
+      as_documented: "JPM Coin (ticker JPMD) is \"J.P. Morgan's USD-denominated deposit token\", a \"digital representation of a bank deposit on public blockchain\" (J.P. Morgan newsroom, 2025-11-12). Contract address 0x7e0aedc93d9f898be835a44bfca3842e52416b82 is printed on the Kinexys JPM Coin page.",
+      method: "bank deposit liability; off-chain",
+      documented_by: "https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients",
+    },
+    measurement_class: "ON_CHAIN_SUPPLY_READ",
+    axes: AXES_UNMEASURED,
+    sources: [
+      { url: "https://www.jpmorgan.com/kinexys/jpm-coin", retrieved_at: D, kind: "issuer_page", note: "publishes the Base contract address" },
+      { url: "https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients", retrieved_at: D, kind: "issuer_press_release" },
+    ],
+  },
+};
+
+/**
+ * DOCUMENTARY rows (#012, 2026-09-14) — institutional token programmes that cannot be read from a public chain
+ * (private or permissioned ledgers, pilots, research prototypes). Class DOCUMENTARY: what the operator (or an
+ * attributed report) publishes, with the retrieval date. No row is a read; every axis is UNMEASURED. Third-party
+ * programmes are named as theirs — this ledger has no role in any of them.
+ */
+export const DOCUMENTARY_DEFINITION =
+  "Institutional token programmes described from the operator's own publications, or from an attributed report where the operator's page could not be fetched. Nothing in a DOCUMENTARY row was read from a chain; every axis is UNMEASURED; status is as documented on the retrieval date, not as observed.";
+
+const DOC_AXES = { ledger_observability: "UNMEASURED", supply_or_volume: "UNMEASURED", redemption: "UNMEASURED", operational_status: "UNMEASURED" };
+
+export const DOCUMENTARY = [
+  {
+    id: "kinexys:jpmorgan", name: "Kinexys by J.P. Morgan", operator: "J.P. Morgan", class: "DOCUMENTARY",
+    status_as_documented: "Operating; described by J.P. Morgan as its blockchain business unit, a provider of blockchain-based financial infrastructure since 2015, now offering USD deposit tokens on public blockchain.",
+    what_as_documented: "Blockchain business unit; issues JPM Coin (JPMD), a USD deposit token on Base.",
+    on_chain_observable: "PARTIAL — the JPMD contract on Base is published and read as roster pair jpmd:base; Kinexys's other ledgers are not observable from here.",
+    attribution: null, axes: DOC_AXES,
+    sources: [
+      { url: "https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients", retrieved_at: D, kind: "operator_press_release", note: "dated 2025-11-12" },
+      { url: "https://www.jpmorgan.com/kinexys/jpm-coin", retrieved_at: D, kind: "operator_page" },
+    ],
+  },
+  {
+    id: "citi-token-services:citi", name: "Citi Token Services", operator: "Citi", class: "DOCUMENTARY",
+    status_as_documented: "Live commercial solution for cash between Singapore and New York as of the 2024-10-10 release; a 2025-11-26 Citi insights page describes operation \"in select markets\".",
+    what_as_documented: "\"a private and permissioned blockchain that is solely owned and managed by Citi\"; \"Clients are not required to hold or manage any tokens to access the services.\"",
+    on_chain_observable: "NO — private, permissioned ledger per the operator.",
+    attribution: null, axes: DOC_AXES,
+    sources: [
+      { url: "https://www.citigroup.com/global/news/press-release/2024/citi-token-services-marks-new-milestone", retrieved_at: D, kind: "operator_press_release", note: "dated 2024-10-10" },
+      { url: "https://www.citigroup.com/global/insights/citi-token-services-24-7-usd-clearing", retrieved_at: D, kind: "operator_page", note: "dated 2025-11-26" },
+    ],
+  },
+  {
+    id: "orion:hsbc", name: "HSBC Orion", operator: "HSBC", class: "DOCUMENTARY",
+    status_as_documented: "Operating digital-assets platform; HM Treasury chose HSBC Orion as platform provider for the Digital Gilt Instrument (DIGIT) pilot (HSBC release, 2026-02-12).",
+    what_as_documented: "A digital assets platform that has enabled issuance of over US$3.5 billion in digitally native bonds. A tokenised bond platform, not a deposit token or stablecoin; the release does not mention tokenised deposits.",
+    on_chain_observable: "UNVERIFIED — the release does not state the ledger type.",
+    attribution: null, axes: DOC_AXES,
+    sources: [{ url: "https://www.hsbc.com/news-and-views/news/media-releases/2026/hsbc-orion-awarded-digit-platform-mandate", retrieved_at: D, kind: "operator_press_release", note: "dated 2026-02-12" }],
+  },
+  {
+    id: "shared-ledger:swift", name: "Swift blockchain-based shared ledger (Swift's pilot)", operator: "Swift", class: "DOCUMENTARY",
+    status_as_documented: "Attributed: CoinDesk (2026-07-09) reports Swift saying the ledger is ready for initial use by 17 banks across six continents, which are preparing to pilot live transactions. Swift's own release was not readable: swift.com returned HTTP 403 to fetches on 2026-09-14.",
+    what_as_documented: "Attributed to Swift via CoinDesk: a shared layer for tokenised deposits issued on the banks' own ledgers, for 24/7 cross-border payments. Named banks in the report: UBS, BNP Paribas, BNY, Citi, HSBC, Wells Fargo.",
+    on_chain_observable: "NO — permissioned; tokenised deposits stay on participating banks' ledgers per the report.",
+    attribution: "CoinDesk, 2026-07-09; the Swift press release URL is recorded but was not read (HTTP 403).", axes: DOC_AXES,
+    sources: [
+      { url: "https://www.coindesk.com/business/2026/07/09/swift-rolls-out-24-7-blockchain-payment-systems-with-17-global-banks-across-six-continents", retrieved_at: D, kind: "attributed_report" },
+      { url: "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure", retrieved_at: D, kind: "operator_press_release", note: "HTTP 403 to fetch; not read" },
+    ],
+  },
+  {
+    id: "gbtd:uk-finance", name: "GBTD — Great British Tokenised Deposits (UK Finance industry pilot)", operator: "UK Finance (industry pilot with participating banks)", class: "DOCUMENTARY",
+    status_as_documented: "Pilot phase described as running \"until mid-2026\". That stated end date has passed as of 2026-09-14; the current status is UNVERIFIED.",
+    what_as_documented: "\"GBTD\" is defined by UK Finance as Great British Tokenised Deposits — a digital representation of sterling commercial bank money. Participants listed: Barclays, HSBC, Lloyds Banking Group, Monzo, NatWest, Nationwide, Santander; supported by Quant, EY and Linklaters. Use cases: marketplace person-to-person payments, remortgaging, digital asset settlement.",
+    on_chain_observable: "NO — no public contract or ledger is published on the page.",
+    attribution: null, axes: DOC_AXES,
+    sources: [
+      { url: "https://www.ukfinance.org.uk/tokenised-sterling-deposits", retrieved_at: D, kind: "operator_page", note: "defines GBTD" },
+      { url: "https://www.ukfinance.org.uk/news-and-insight/press-release/uk-finance-announces-live-pilot-phase-deliver-tokenised-sterling", retrieved_at: D, kind: "operator_press_release", note: "search-observed" },
+    ],
+  },
+  {
+    id: "agora:bis", name: "Project Agorá", operator: "BIS Innovation Hub with the Institute of International Finance (convenors)", class: "DOCUMENTARY",
+    status_as_documented: "Experimental. The 2026-05-27 BIS release says the prototype showed tokenisation can address inefficiencies in wholesale cross-border payments and that work will advance to real-value testing; no production timeline is given.",
+    what_as_documented: "A shared programmable platform with tokenised central bank reserves and tokenised commercial bank deposits. Central banks: Bank of England, Federal Reserve Bank of New York, Bank of France, Bank of Japan, Bank of Korea, Bank of Mexico, Swiss National Bank; more than 40 private-sector institutions; Bank of Canada joining.",
+    on_chain_observable: "NO — research prototype; no public ledger.",
+    attribution: null, axes: DOC_AXES,
+    sources: [
+      { url: "https://www.bis.org/press/p260527.htm", retrieved_at: D, kind: "operator_press_release", note: "dated 2026-05-27" },
+      { url: "https://www.bis.org/publ/othp110.pdf", retrieved_at: D, kind: "operator_report", note: "search-observed; not read" },
+    ],
+  },
 ];
 
 const sha256 = (s) => createHash("sha256").update(s).digest("hex");
@@ -245,6 +492,8 @@ export async function readAll(roster = ROSTER) {
   }
   const counts = {};
   for (const r of records) counts[r.state] = (counts[r.state] || 0) + 1;
+  // Issuer-documented context, never a read: null where no profile has been compiled (not an empty claim).
+  for (const r of records) r.profile = PROFILES[r.id] ?? null;
   return {
     schema: SCHEMA,
     reader_revision: READER_REVISION,
@@ -257,6 +506,8 @@ export async function readAll(roster = ROSTER) {
     pins,
     counts,
     records,
+    profile_rule: PROFILE_RULE,
+    documentary: { class: "DOCUMENTARY", definition: DOCUMENTARY_DEFINITION, counts: { DOCUMENTARY: DOCUMENTARY.length }, rows: DOCUMENTARY },
   };
 }
 
@@ -272,39 +523,7 @@ export async function stageAtoms(doc, dir) {
   const { mkdirSync, writeFileSync } = await import("node:fs");
   const { join } = await import("node:path");
   mkdirSync(dir, { recursive: true });
-  const out = [  // WETH on Arbitrum — wrapped ETH via Arbitrum One bridge
-  // Source: https://docs.arbitrum.io/build-decentralized-apps/token-bridging/bridge-tokens-overview
-  { id: "weth:arbitrum", wrapped: { chain: "arbitrum", symbol: "WETH", address: "0x82aF49448D82B08cD7C12Be3B9395C0e72f16154" },
-    canonical: { chain: "ethereum", symbol: "ETH", address: "native ETH (not an ERC-20 contract)" }, backing_model: "custodial", escrow: null, escrow_name: null,
-    note: "WETH on Arbitrum is a minimal-proxy pointing to the canonical WETH-implementation. The wrapped supply is read; ETH backing is the bridge's custody claim. INDEXED, no parity claimed from here." },
-
-  // USDC on zkSync Era — bridged via zkSync Era native bridge
-  // Source: https://docs.zksync.io/zksync-protocol/bridging/bridging-asset
-  { id: "usdc:zksync-era", wrapped: { chain: "zksync-era", symbol: "USDC", address: "0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E" },
-    canonical: { chain: "ethereum", symbol: "USDC", address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" }, backing_model: "escrow",
-    escrow: "0x5797EA1b374f2A4F1E8BcE5156c3962b78E1C46a", escrow_name: "zkSync Era L1 USDC Bridge (native bridge)" },
-
-  // USDT0 on Ethereum — Tether's native cross-chain OFT token
-  // Source: https://tether.to/en/usdt0/
-  { id: "usdt0:ethereum", wrapped: { chain: "ethereum", symbol: "USDT0", address: "0x48C04ed50508680b93561a5800E97e24C05e639F" },
-    canonical: { chain: "ethereum", symbol: "USDT", address: "0xdAC17F958D2ee523a2206206994597C13D831ec7" }, backing_model: "native",
-    escrow: null, escrow_name: null,
-    note: "USDT0 is Tether's LayerZero OFT (Omnichain Fungible Token) on Ethereum. Native issuance on destination chains via OFT burn-and-mint. No escrow exists; supply read, no parity claimed." },
-
-  // USDT0 on Optimism — LayerZero OFT bridged from Ethereum
-  // Source: https://tether.to/en/usdt0/
-  { id: "usdt0:optimism", wrapped: { chain: "optimism", symbol: "USDT0", address: "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
-    canonical: { chain: "ethereum", symbol: "USDT", address: "0xdAC17F958D2ee523a2206206994597C13D831ec7" }, backing_model: "native",
-    escrow: null, escrow_name: null,
-    note: "USDT0 on Optimism via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed." },
-
-  // USDT0 on Arbitrum — LayerZero OFT bridged from Ethereum
-  // Source: https://tether.to/en/usdt0/
-  { id: "usdt0:arbitrum", wrapped: { chain: "arbitrum", symbol: "USDT0", address: "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
-    canonical: { chain: "ethereum", symbol: "USDT", address: "0xdAC17F958D2ee523a2206206994597C13D831ec7" }, backing_model: "native",
-    escrow: null, escrow_name: null,
-    note: "USDT0 on Arbitrum via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed." },
-];
+  const out = [];
   for (const r of doc.records) {
     const payload = {
       kind: "csoai.wrapper.parity/0.1",

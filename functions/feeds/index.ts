@@ -21,6 +21,7 @@ import { entries as corrections } from "./corrections.xml";
 import { entries as cards } from "./cards.xml";
 import { entries as roots } from "./roots.xml";
 import { entries as census } from "./x402-census.xml";
+import { entries as notes } from "./notes.xml";
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -28,7 +29,7 @@ interface Desc { name?: string; state?: string; description?: string; as_of?: st
 
 function feeds() {
   const safe = (f: () => { iso: string }[]) => { try { return f(); } catch { return null; } };
-  const c = safe(corrections), k = safe(cards), r = safe(roots), x = safe(census);
+  const c = safe(corrections), k = safe(cards), r = safe(roots), x = safe(census), nt = safe(notes);
   return [
     { path: "/feeds/corrections.xml", type: "application/rss+xml", title: "Corrections ledger",
       n: c?.length ?? null, newest: c?.[0]?.iso ?? null,
@@ -39,6 +40,9 @@ function feeds() {
     { path: "/feeds/cards.xml", type: "application/rss+xml", title: "Newly signed measurement cards",
       n: k?.length ?? null, newest: k?.[0]?.iso ?? null,
       what: "The newest entries in the SIGNED CARD INDEX, each with the id a stranger can verify. Not the public-root leaf set and not the on-disk wrapper count — three corpora, zero overlap." },
+    { path: "/feeds/notes.xml", type: "application/rss+xml", title: "Evidence notes",
+      n: nt?.length ?? null, newest: nt?.[0]?.iso ?? null,
+      what: "Dated evidence notes, each linking its own page under /notes/ and naming the artifacts behind it. Derived from the same data file the pages render." },
     { path: "/feeds/x402-census.xml", type: "application/rss+xml", title: "x402 settlement census — what hosts deliver",
       n: x?.length ?? null, newest: x?.[0]?.iso ?? null,
       what: "A fixed population of conformant x402 hosts, each paid once per round from a wallet we control, and the rounds diffed. The indexes list who exists; a listing does not move when a host stops answering paid requests, and this is where that shows up. Measurement, not certification: no host is ranked, recommended or accused, and REFUSED is not proof of bad faith." },

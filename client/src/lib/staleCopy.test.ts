@@ -26,10 +26,9 @@ describe("stale copy honesty", () => {
     ]) {
       expect(payDesk).toContain(`/dashboard?tab=tools&amp;tool=${tool}`.replace("&amp;", "&"));
     }
-    expect(payDesk).toContain(
-      "https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed",
-    );
-    expect(payDesk).toContain("https://payapi.market/mcp");
+    // 2026-09-14: both PayAPI URLs answer 404 and PayAPI's own llms.txt / providers page do not list us.
+    // A page may not call a dead link a "verified PayAPI listing"; re-add only with a live detail URL.
+    expect(payDesk).not.toContain("payapi.market");
     expect(payDesk).toContain('fetch("/api/x402"');
     expect(payDesk).toContain('fetch("/api/revenue"');
     expect(payDesk).toContain("revenue.j.one_number.all_time");

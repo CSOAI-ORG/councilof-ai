@@ -304,20 +304,47 @@ export const WRAPPER_ROSTER = [
   },
   {
     "id": "usdt0:optimism",
-    "wrapped": { "chain": "optimism", "symbol": "USDT0", "address": "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
+    "wrapped": { "chain": "optimism", "symbol": "USDT0", "address": "0x01bFF41798a0BcF287b996046Ca68b395DbC1071" },
     "canonical": { "chain": "ethereum", "symbol": "USDT", "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7" },
     "backing_model": "native",
     "escrow": null,
     "escrow_name": null,
-    "note": "USDT0 on Optimism via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed."
+    "note": "USDT0 is a LayerZero OFT: USDT is locked in one OFT Adapter on Ethereum (0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee) against the combined supply of every USDT0 chain, so no per-chain escrow exists and no per-pair parity is claimed; treated as native issuance on this chain. Supply read."
   },
   {
     "id": "usdt0:arbitrum",
-    "wrapped": { "chain": "arbitrum", "symbol": "USDT0", "address": "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627" },
+    "wrapped": { "chain": "arbitrum", "symbol": "USDT0", "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9" },
     "canonical": { "chain": "ethereum", "symbol": "USDT", "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7" },
     "backing_model": "native",
     "escrow": null,
     "escrow_name": null,
-    "note": "USDT0 on Arbitrum via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed."
+    "note": "Same contract as usdt:arbitrum (it reports name and symbol USD₮0 on 2026-09-14). USDT0 is a LayerZero OFT: USDT is locked in one OFT Adapter on Ethereum (0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee) against the combined supply of every USDT0 chain, so no per-chain escrow exists and no per-pair parity is claimed; treated as native issuance on this chain. Supply read."
+  },
+  {
+    "id": "cbxrp:base",
+    "wrapped": { "chain": "base", "symbol": "cbXRP", "address": "0xcb585250f852C6c6bf90434AB21A00f02833a4af" },
+    "canonical": { "chain": "xrpl", "symbol": "XRP", "address": "Coinbase custody; not an EVM contract" },
+    "backing_model": "custodial",
+    "escrow": null,
+    "escrow_name": null,
+    "note": "XRP reserve in Coinbase custody, self-published. INDEXED, no parity claimed."
+  },
+  {
+    "id": "fxrp:flare",
+    "wrapped": { "chain": "flare", "symbol": "FXRP", "address": "0xAd552A648C74D49E10027AB8a618A3ad4901c5bE" },
+    "canonical": { "chain": "xrpl", "symbol": "XRP", "address": "FAssets agents' XRPL accounts; not an EVM contract" },
+    "backing_model": "custodial",
+    "escrow": null,
+    "escrow_name": null,
+    "note": "Underlying XRP sits in FAssets agents' XRPL accounts with agent collateral posted on Flare; Flare documents the XRPL side as verified through its Data Connector. Neither the XRPL holdings nor the agent collateral are read here. INDEXED, no parity claimed."
+  },
+  {
+    "id": "jpmd:base",
+    "wrapped": { "chain": "base", "symbol": "JPMD", "address": "0x7e0aedc93d9f898be835a44bfca3842e52416b82" },
+    "canonical": { "chain": "offchain", "symbol": "USD deposits", "address": "bank deposits at J.P. Morgan; not on any chain" },
+    "backing_model": "custodial",
+    "escrow": null,
+    "escrow_name": null,
+    "note": "A bank deposit token: the claim it represents is a deposit held off-chain. Supply read only. INDEXED, no parity claimed."
   }
 ] as const;

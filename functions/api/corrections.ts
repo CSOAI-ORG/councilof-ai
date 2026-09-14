@@ -34,6 +34,45 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0914-03",
+      date: "2026-09-14",
+      first_observed_at: "2026-09-14T10:54Z",
+      what_was_wrong:
+        "The wrapper-parity roster pointed usdt0:arbitrum and usdt0:optimism at 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627 and usdt0:ethereum at 0x48C04ed50508680b93561a5800E97e24C05e639F. None of these is a USDT0 token contract. Three public.notice cards signed under did:web:csoai.org#board-attestation-1 and included in the public root record those reads: public/cards/385d7cd72fee80b4.json (usdt0:arbitrum), public/cards/a911bc077ebb9b1f.json (usdt0:optimism) and public/cards/293cd51070159fa3.json (usdt0:ethereum). Each honestly states UNMEASURED with an empty eth_call result from that address, but the subject label USDT0 was wrong for the address read. No parity number was published for USDT0.",
+      how_caught:
+        "Re-verifying roster addresses against the issuer's published deployments page (docs.usdt0.to) while adding sourced wrapper rows; the two affected addresses returned no token on either chain.",
+      fix:
+        "The roster now uses the addresses on docs.usdt0.to (Arbitrum 0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9, Optimism 0x01bFF41798a0BcF287b996046Ca68b395DbC1071). The staged atoms were re-staged from the corrected roster and read UNCHECKABLE_NATIVE_ISSUANCE. The usdt0:ethereum atom had no roster row and was removed from staging. The three signed cards are not edited; this record supersedes their subject label.",
+      status: "CORRECTED IN SOURCE AND RECORDED; VERIFY THE NEXT PUBLIC ROOT",
+    },
+    {
+      id: "C-2026-0914-02",
+      date: "2026-09-14",
+      first_observed_at: "2026-09-14T10:37Z",
+      what_was_wrong:
+        "On GET /api/gspc, the reserve-attestation axis note said '1 PASS, 6 FAIL, 9 UNCHECKABLE'. The evidence file it cites, /interop/financial-measure-run-reserve-attestation.json (as_of 2026-09-07T11:30:35Z), tallies 3 PASS, 4 FAIL, 9 UNCHECKABLE; 1/6/9 is the custody-disclosure tally. The regulatory-framework note said '3 PASS, 4 FAIL, 9 UNCHECKABLE' while its evidence file tallies 4 PASS, 3 FAIL, 9 UNCHECKABLE. When the wrong strings were introduced is UNCHECKABLE from the shallow repository history available; they predate 2026-09-14T01:46Z.",
+      how_caught:
+        "Verifying a regulator comment draft before submission: the draft quoted the board note, and the reviewer compared it with the tally field of the cited evidence file instead of accepting the summary.",
+      fix:
+        "Both notes in functions/api/_gspc_axes_fin.ts now quote their evidence files. functions/api/gspc.financial-tally.test.ts reads every typed PASS/FAIL/UNCHECKABLE triple in a financial note and requires it to equal the cited evidence file's tally, with failing controls for the two pre-correction strings. The evidence files were correct and are unchanged. Signed board snapshots that carry the old notes are superseded by this record, not edited.",
+      status: "CORRECTED IN SOURCE AND RECORDED; VERIFY THE CURRENT LIVE ENDPOINT",
+    },
+    {
+      id: "C-2026-0914-01",
+      date: "2026-09-14",
+      // Latency fields carry only what is evidenced: introduction = the merge of #2321,
+      // the first PR that landed these cards. The observation time was not logged and
+      // the fix is not merged, so neither is stated.
+      error_introduced_at: "2026-09-14T08:29Z",
+      what_was_wrong:
+        "44 signed third-party Hub measurement cards on the swarm axis (#2321, merged 2026-09-14T08:29Z, and #2330, 09:41Z; runs gha-34818995409 and gha-34824895140) were graded by a prompt that could not be answered wrongly. The frozen bank csoai/gspc-swarm (revision e8a4ec1e, sha256 ab318986…) is keyword-graded: all 37 rows expect KEYWORD_MATCH and carry must_inc keywords. The Hub mill builds its exact-label answer menu from the bank's expected column, so every item prompt read \"Reply with EXACTLY ONE token from: KEYWORD_MATCH\" and every model that followed the format scored 1.0. 26 of the cards read MEASURED at n=30 with accuracy 1, and /api/hub-cards counted all 26 as MEASURED cells. Every check the cards passed was real — signature, content id, admission receipt, per-item evidence that recomputes byte for byte — and none asked whether the menu offered a wrong answer. Pod (Ollama) swarm cards bind the same bank bytes under a different instrument and read 0.027–0.081, so the two populations were never comparable.",
+      how_caught:
+        "Reading the published item evidence behind one card (signed-swarm-0711716149e0.json, deepseek-ai/DeepSeek-V4-Pro, items-swarm-e91bd4f805de.jsonl): all 30 rows carried the same one-option menu and expected its only option. Contrast under the same instrument hash (86216fbb…): the care bank offers 0 | 1 with mixed expected labels, and Qwen3-14B read 4/30. Every MEASURED swarm row in /interop/hub-cards-index.json read accuracy 1.",
+      fix:
+        "Signed bytes are not edited. The 44 cards are recorded in /interop/mill-cards-signed/WITHDRAWN.jsonl — withdrawn, not superseded, because no sound card exists to replace them — derived from the bound bank bytes by scripts/withdraw_one_option_cards.py, which fails the PR gate if any signed card on a one-option bank is not withdrawn. /api/hub-cards drops withdrawn cards from cells and counts, lists them under withdrawn_cells with this id and their status as published, and withholds totals if the withdrawal ledger is unreadable. The deployed hub-cards index excludes them, and the census flip marks them WITHDRAWN, so its next run retires their queue cells and leaves them out of the rebuilt Hub indexes. The instrument now fails closed: an exact-label menu with fewer than two distinct labels, or one naming a grading mode, is refused; the mill skips such a bank as UNCHECKABLE before spending an item prompt, and the offline admission verifier refuses such a card. Two-label prompts are byte-identical, so admitted care, safety and governance cards still verify. The Hub swarm cell is UNMEASURED until a keyword grader that passes harness/gspc-top100/check_bank_discriminates.py is wired into the Hub mill.",
+      status: "WITHDRAWN IN SOURCE; VERIFY WITH python3 scripts/withdraw_one_option_cards.py",
+    },
+    {
       id: "C-2026-0913-01",
       date: "2026-09-13",
       // First entry carrying the latency fields proposed by scripts/corrections_latency.py.

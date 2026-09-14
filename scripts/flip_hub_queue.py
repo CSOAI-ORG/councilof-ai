@@ -66,6 +66,29 @@ def load_superseded(cards_dir: Path) -> set[str]:
     return out
 
 
+def load_withdrawn(cards_dir: Path) -> dict[str, str]:
+    """Card id -> correction id for every card WITHDRAWN.jsonl withdraws.
+
+    A withdrawal is not a supersession: there is no replacement card, because the
+    instrument that produced the card could not measure the cell (C-2026-0914-01). The
+    signed bytes stay on disk and still verify. Unlike a superseded card, a withdrawn one
+    is NOT skipped by verify_cards(): it must reach retire_unreproducible_cells() so the
+    census cell it already flipped is retired. A malformed row raises; a ledger that is
+    quietly skipped would leave the cells MEASURED."""
+    ledger = cards_dir / "WITHDRAWN.jsonl"
+    if not ledger.is_file():
+        return {}
+    out: dict[str, str] = {}
+    for i, line in enumerate(ledger.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        if not row.get("withdrawn_id") or not row.get("correction"):
+            raise ValueError(f"WITHDRAWN.jsonl row {i}: withdrawn_id and correction are required")
+        out[str(row["withdrawn_id"])] = str(row["correction"])
+    return out
+
+
 def verify_cards(cards_dir: Path, did_doc: dict, evidence_dir: Path = EVIDENCE) -> tuple[list[dict], list[dict]]:
     """Every live signed-*.json → wrap with _verdict/_reason/_file. Superseded cards are
     skipped, so a re-signed (model, axis) contributes one cell, not two. Returns
@@ -73,6 +96,7 @@ def verify_cards(cards_dir: Path, did_doc: dict, evidence_dir: Path = EVIDENCE) 
     wraps: list[dict] = []
     rows: list[dict] = []
     dead = load_superseded(cards_dir)
+    withdrawn = load_withdrawn(cards_dir)
     for f in sorted(cards_dir.glob("signed-*.json")):
         blob = f.read_bytes()
         try:
@@ -95,6 +119,9 @@ def verify_cards(cards_dir: Path, did_doc: dict, evidence_dir: Path = EVIDENCE) 
         quotable = n >= QUOTABLE_N
         w["_verdict"] = verdict if quotable else ("UNQUOTABLE" if verdict == "VALID" else verdict)
         w["_reason"] = reason if quotable else f"n={n}<{QUOTABLE_N}"
+        if str(w.get("id") or "") in withdrawn:
+            w["_verdict"] = "WITHDRAWN"
+            w["_reason"] = f"withdrawn by {withdrawn[str(w['id'])]}"
         w["_file"] = f.name
         wraps.append(w)
         rows.append({"file": f.name, "model": body.get("model"), "axis": body.get("axis"), "n": n, "verdict": w["_verdict"], "reason": w["_reason"]})

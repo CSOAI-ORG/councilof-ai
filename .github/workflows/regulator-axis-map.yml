@@ -9,9 +9,9 @@ name: regulator axis map (false-UNMEASURED guard)
 on:
   push:
     branches: [master, main]
-    paths: ['harness/regulator/**', '.github/workflows/regulator-axis-map.yml']
+    paths: ['harness/regulator/**', 'scripts/owasp_asi_axis_map.py', '.github/workflows/regulator-axis-map.yml']
   pull_request:
-    paths: ['harness/regulator/**', '.github/workflows/regulator-axis-map.yml']
+    paths: ['harness/regulator/**', 'scripts/owasp_asi_axis_map.py', '.github/workflows/regulator-axis-map.yml']
   schedule:
     - cron: '17 6 * * *'
   workflow_dispatch: {}
@@ -27,3 +27,7 @@ jobs:
         run: python3 harness/regulator/axis_map_check.py --selftest
       - name: Every mapped axis key resolves against the live board
         run: python3 harness/regulator/axis_map_check.py
+      - name: OWASP ASI map selftest (offline — proves the check can fail)
+        run: python3 scripts/owasp_asi_axis_map.py --selftest
+      - name: Every live board axis carries an OWASP ASI mapping decision (related or UNMAPPED)
+        run: python3 scripts/owasp_asi_axis_map.py --check

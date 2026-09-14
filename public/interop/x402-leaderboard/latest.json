@@ -1,0 +1,122 @@
+{
+  "schema": "csoai.x402-conformance-board/1.0",
+  "observed_at": "2026-09-14T11:16:55Z",
+  "definition": "Observed x402 challenge fields for each resource in the live Council of AI discovery document. This is a measurement snapshot, not a grade or certification.",
+  "scope": {
+    "operator": "Council of AI",
+    "host": "councilof.ai",
+    "discovery_url": "https://councilof.ai/.well-known/x402.json"
+  },
+  "summary": {
+    "doors_observed": 11,
+    "doors_conforming": 11
+  },
+  "doors": [
+    {
+      "url": "https://councilof.ai/api/free-door",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "0",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/eunomia-data?feed=1",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/proof?bundle=1",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    },
+    {
+      "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+      "http_status": 402,
+      "accepts_count": 1,
+      "network": "eip155:8453",
+      "amount_atomic": "10000",
+      "asset": "USD Coin",
+      "bazaar_extension": true
+    }
+  ],
+  "methodology": "Each discovery URL was fetched once. Conforming means HTTP 402, at least one accepts[] entry, Base mainnet network eip155:8453, an explicit atomic amount (including zero), and extensions.bazaar present.",
+  "limitations": [
+    "This snapshot measures one operator and does not rank vendors.",
+    "It does not prove settlement, demand, revenue, or future availability.",
+    "Amounts are observations from 402 challenges and may change after observed_at."
+  ],
+  "proof_command": "python3 scripts/interop/build_x402_conformance_board.py --check"
+}

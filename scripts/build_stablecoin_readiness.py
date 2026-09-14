@@ -20,6 +20,14 @@ WITNESS_REL = Path("public/interop/root-witness-latest.json")
 CARDS_REL = Path("public/cards")
 OUTPUT_REL = Path("public/interop/stablecoin-universe-2026-09/readiness.json")
 CANDIDATES_REL = Path("public/interop/stablecoin-universe-2026-09/discovery-candidates.json")
+# Documentary regulatory-register block (#017). Built by scripts/build_regulatory_register_baseline.py
+# from hash-pinned register files; absence from a register is UNCHECKED, never "not registered".
+REG_BASELINE_REL = Path("public/interop/regulatory-register-baseline-2026-09-14.json")
+REGISTERS = ("esma_mica_interim_emt", "nydfs_greenlist")
+REGISTER_STATES = {
+    "esma_mica_interim_emt": {"TOKEN_WHITE_PAPER_LISTED", "ISSUER_LISTED_TOKEN_NOT_NAMED", "UNCHECKED"},
+    "nydfs_greenlist": {"LISTED_ON_GREENLIST", "UNCHECKED"},
+}
 
 
 def load(path: Path) -> Any:
@@ -109,6 +117,10 @@ def build(repo: Path) -> dict[str, Any]:
     root = load(root_path)
     witness = load(witness_path)
     candidates = load(repo / CANDIDATES_REL)
+    reg_baseline = load(repo / REG_BASELINE_REL)
+    reg_by_asset: dict[tuple[str, str], dict[str, Any]] = {
+        (row["asset_id"], row["register"]): row for row in reg_baseline["token_map"]
+    }
     index_sha = sha256(index_path)
     commitment_path, commitment = find_index_commitment(repo, index_sha)
     root_hashes = set(root.get("card_sha256") or [])
@@ -178,6 +190,7 @@ def build(repo: Path) -> dict[str, Any]:
             "a2a_discovery_state": "GENERIC_CATALOG_ONLY_NO_ASSET_SKILL",
             "mcp_discovery_state": "GENERIC_CATALOG_ONLY_NO_ASSET_TOOL",
             "x402_door_state": "GENERIC_EXISTING_DATA_DOOR_NO_ASSET_SETTLEMENT_VERIFIED",
+            "regulatory_status": regulatory_status(str(source_row["id"]), reg_by_asset),
         }
         if str(source_row.get("symbol") or "").upper() == "RLUSD":
             row["measurement"] = {
@@ -233,13 +246,33 @@ def build(repo: Path) -> dict[str, Any]:
             "asset_specific_x402_doors": 0,
             "asset_specific_x402_settlements_verified": 0,
             "post_freeze_discovery_candidates": len(candidates.get("candidates") or []),
+            "regulatory_register_rows": {
+                register: {
+                    state: sum(row["regulatory_status"]["registers"][register]["state"] == state for row in assets)
+                    for state in sorted(REGISTER_STATES[register])
+                }
+                for register in REGISTERS
+            },
         },
         "cost": {
             "metadata_index_build_usd": 0,
             "readiness_build_usd": 0,
             "x402_campaign": "0.01 USDC only for eligible existing-data SKUs; fresh compute excluded",
         },
-        "shared_evidence": {"index_commitment": common_index_proof},
+        "shared_evidence": {
+            "index_commitment": common_index_proof,
+            "regulatory_registers": {
+                "class": "DOCUMENTARY",
+                "baseline_url": f"https://councilof.ai/{REG_BASELINE_REL.as_posix().removeprefix('public/')}",
+                "baseline_sha256": sha256(repo / REG_BASELINE_REL),
+                "pins": [
+                    {k: f.get(k) for k in ("register", "url", "retrieved_at", "sha256")}
+                    for f in reg_baseline["pins"]["files"]
+                    if f["name"] in ("EMTWP.csv", "virtual_currency_businesses.html")
+                ],
+                "rule": "Register membership as published in the pinned file on its retrieval date. Absence is UNCHECKED, never 'not registered'. Documentary, not a measurement and not an authorisation opinion.",
+            },
+        },
         "shared_discovery": {
             "a2a": {
                 "state": "CATALOG_DISCOVERABLE",
@@ -269,10 +302,38 @@ def build(repo: Path) -> dict[str, Any]:
             "An OpenTimestamps pending calendar attestation is not a Bitcoin timestamp.",
             "A generic protocol door is not an asset-specific integration or settlement.",
             "A post-freeze issuer-reported candidate is not part of the signed 425-asset index and is not independently measured.",
+            "A register listing is documentary; absence from a register is UNCHECKED, never 'not registered'.",
         ],
         "discovery_candidates": candidates.get("candidates") or [],
         "assets": assets,
     }
+
+
+def regulatory_status(asset_id: str, reg_by_asset: dict[tuple[str, str], dict[str, Any]]) -> dict[str, Any]:
+    registers: dict[str, Any] = {}
+    for register in REGISTERS:
+        hit = reg_by_asset.get((asset_id, register))
+        registers[register] = {"state": hit["state"], "evidence": hit["evidence"]} if hit else {"state": "UNCHECKED"}
+    return {"class": "DOCUMENTARY", "registers": registers}
+
+
+def validate_regulatory(document: dict[str, Any]) -> None:
+    pins = {p["sha256"] for p in document["shared_evidence"]["regulatory_registers"]["pins"]}
+    for row in document["assets"]:
+        status = row["regulatory_status"]
+        assert status["class"] == "DOCUMENTARY"
+        assert set(status["registers"]) == set(REGISTERS)
+        for register, entry in status["registers"].items():
+            assert entry["state"] in REGISTER_STATES[register], f"{row['id']} {register}: {entry['state']}"
+            if entry["state"] == "UNCHECKED":
+                assert "evidence" not in entry, "an UNCHECKED row carries no evidence"
+            else:
+                evidence = entry["evidence"]
+                assert evidence.get("retrieved_at"), "a listing needs a retrieval date"
+                assert (evidence.get("file_sha256") or evidence.get("page_sha256")) in pins, "a listing must cite a pinned register file"
+    for register in REGISTERS:
+        for state, count in document["coverage"]["regulatory_register_rows"][register].items():
+            assert count == sum(row["regulatory_status"]["registers"][register]["state"] == state for row in document["assets"])
 
 
 def validate(document: dict[str, Any]) -> None:
@@ -316,6 +377,7 @@ def validate(document: dict[str, Any]) -> None:
             assert row["anchor_state"] == "NO_ASSET_MEASUREMENT_ANCHOR"
         else:
             assert row["anchor_state"] == expected_measured_anchor_state
+    validate_regulatory(document)
 
 
 def main() -> None:

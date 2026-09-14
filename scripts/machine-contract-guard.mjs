@@ -14,12 +14,17 @@
  *      raw JSON scanned case-insensitively for banned internal strings. The literal path
  *      string "sov-arena" is exempt (legacy alias kept for consumers).
  *   4. /api/feed.xml — must be 200 and well-formed (balanced <rss>/<channel>).
+ *   5. did.json split-brain: csoai.org (authoritative) and the mirror carry the same keys.
+ *   6. Publish verification (scripts/publish-freshness.mjs): sitemap count + sampled URLs 200,
+ *      feed freshness, sampled signed-card URLs 200 with the indexed id, root.json as_of freshness.
  *
  * It reads NOTHING secret and changes NOTHING. It only fetches public URLs and asserts.
  *
  * Run: node scripts/machine-contract-guard.mjs [--host https://councilof.ai]
  * Exit 0 = contracts hold; exit 1 = at least one contract broken (details printed).
  */
+
+import { runPublishChecks } from "./publish-freshness.mjs";
 
 const arg = (k, d) => { const i = process.argv.indexOf("--" + k); return i > 0 ? process.argv[i + 1] : d; };
 const HOST = (arg("host", "https://councilof.ai")).replace(/\/$/, "");
@@ -79,7 +84,14 @@ try {
   const { status, body } = await get(HOST + "/llms.txt");
   if (status !== 200) fail(`/llms.txt returned HTTP ${status}`);
   else {
-    const urls = [...new Set((body.match(/https:\/\/[^\s)\]"'<>]+/g) || []).map((u) => u.replace(/[.,;:]+$/, "")))];
+    // The URL pattern stops at "<", so `?id=<pair>` would be read as `?id=` and fetched as a
+    // real request (a correct 400). Keep the character that ended the match when it opens a
+    // placeholder, so PLACEHOLDER below can see it and skip the documentation URL.
+    const urls = [...new Set([...body.matchAll(/https:\/\/[^\s)\]"'<>]+/g)].map((m) => {
+      const u = m[0].replace(/[.,;:]+$/, "");
+      const next = body[m.index + m[0].length] || "";
+      return u === m[0] && /[<{\u2026]/.test(next) ? u + next : u;
+    }))];
     if (!urls.length) fail(`/llms.txt advertises no absolute https:// URLs (parse regression?)`);
     for (const u of urls) {
       if (PLACEHOLDER.test(u)) { pass(`/llms.txt placeholder, not fetched: ${u}`); continue; }
@@ -157,9 +169,16 @@ try {
   else pass(`did.json consistent across csoai.org (authoritative) and the mirror: ${root}`);
 } catch (e) { fail(`DID consistency check error: ${e.message}`); }
 
+// 6. Publish verification: reachable is not the same as FRESH. A well-formed feed can have
+// stopped weeks ago and a signed root.json can still answer 200 after its publisher stopped.
+console.log("\n  — publish verification —");
+try {
+  await runPublishChecks({ get, host: HOST, rehost, pass, fail });
+} catch (e) { fail(`publish verification error: ${e.message}`); }
+
 console.log("");
 if (fails.length) {
   console.error(`MACHINE-CONTRACT: FAIL — ${fails.length} broken contract(s). The machine surfaces do not hold what they advertise.`);
   process.exit(1);
 }
-console.log(`MACHINE-CONTRACT: PASS — llms.txt links, did.json endpoints, JSON surfaces and feed all hold.`);
+console.log(`MACHINE-CONTRACT: PASS — llms.txt links, did.json endpoints, JSON surfaces, feed, and publish freshness all hold.`);

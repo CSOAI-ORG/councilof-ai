@@ -10,7 +10,7 @@ on:
   workflow_dispatch: {}       # run on demand from the Actions tab
   push:
     branches: [master]
-    paths: ["canon.json", "scripts/drift-guard.mjs", "scripts/machine-contract-guard.mjs", ".github/workflows/drift-guard.yml"]
+    paths: ["canon.json", "scripts/drift-guard.mjs", "scripts/machine-contract-guard.mjs", "scripts/publish-freshness.mjs", ".github/workflows/drift-guard.yml"]
 
 jobs:
   drift-guard:
@@ -33,9 +33,13 @@ jobs:
         continue-on-error: true
         run: node scripts/drift-guard.mjs --host https://councilof.ai
       # Machine contracts (llms.txt links, did.json endpoints, banned strings in API JSON,
-      # feed well-formedness) rot on the same clobber lane — sweep them alongside canon.
+      # feed well-formedness, and publish freshness: sitemap/feed/card URLs/root.json as_of)
+      # rot on the same clobber lane — sweep them alongside canon.
       # No self-heal keyed to this step: a broken machine contract is not necessarily a
       # clobber, so it just turns the run red below.
+      # Offline proof that each freshness check can fail, before trusting its green.
+      - name: Publish-freshness selftest
+        run: node scripts/publish-freshness.mjs --selftest
       - name: Machine-contract sweep
         id: contracts
         continue-on-error: true

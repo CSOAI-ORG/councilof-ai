@@ -37,6 +37,7 @@ Do not quote scores, n, leaders, or stamp tables from this file.
 ## x402 discovery (agents)
 - Discovery: GET https://councilof.ai/.well-known/x402.json — mode live · Base eip155:8453 · USDC (amounts from challenge only; no invent price)
 - Catalog: GET https://councilof.ai/api/x402
+- Paid path in six steps (discover → request → 402 → settle from your own wallet → receive → verify offline): https://councilof.ai/quickstart/ · machine-readable: https://councilof.ai/quickstart.json · offline card-v0 checker: https://councilof.ai/verifier/card-v0-verify.mjs
 - Catalog trust (counts only — fetch, never freeze): GET https://councilof.ai/interop/x402-trust/latest.json — quote live `counts`. A 402 is not delivery; a 404 is a phantom. Do not freeze a pair in this file.
 - Free door (amount 0): GET https://councilof.ai/api/free-door — settles, charges nothing; proves the rail
 - Signed offers: a 402 carries `extensions["offer-receipt"].info.offers[]` only when the Pages signing key is available — one server-signed offer per `accepts[]` entry (x402 Offer & Receipt extension, format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1)
@@ -72,13 +73,6 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
   - https://councilof.ai/api/wrapper?id=<pair>
   - https://councilof.ai/api/wrapper/changes?id=<pair>
 - Free preview: omit `bundle=1` or add `preview=1` as the 402 body documents. Verify stays free: https://councilof.ai/gspc-verify
-- PayAPI Market (discovery only — buyers pay the estate payTo, not PayAPI; no listing fee):
-  - https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed
-  - MCP search: https://payapi.market/mcp
-
-```json
-{"mcpServers":{"payapi":{"url":"https://payapi.market/mcp"}}}
-```
 
 ## Overlay notes (not a 23rd axis)
 
@@ -109,11 +103,12 @@ Scores and regulator rails are free forever. Crosswalk evidence packs are the se
 
 ## Watch it change (no account, no identity)
 
-Four feeds, each DERIVED from the artifact rather than appended by hand, so none can go stale:
+Each feed below is DERIVED from the artifact rather than appended by hand, so none can go stale:
 
 - Corrections ledger (what we got wrong, how it was caught, the fix): https://councilof.ai/feeds/corrections.xml — Atom: https://councilof.ai/feeds/corrections.atom
 - Newly signed measurement cards, each individually verifiable: https://councilof.ai/feeds/cards.xml
 - The public root (guid is the merkle_root, so a poll that finds the same bytes is not a change): https://councilof.ai/feeds/roots.xml
+- Evidence notes (dated, one citable page per note, each naming the artifacts behind it): https://councilof.ai/notes/ — RSS: https://councilof.ai/feeds/notes.xml
 - Press, machine-readable — what changed in the window, with the command that proves each line, and a named list of what we are NOT announcing: https://councilof.ai/api/press.json (human: https://councilof.ai/press/)
 
 The older https://councilof.ai/feed.xml is a hand-maintained item list kept for its subscribers; its historical titles freeze counts that the live board has moved past. Quote the board, not a feed title.

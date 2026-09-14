@@ -1,7 +1,7 @@
 {
   "schema": "csoai.wrapped-asset-parity/0.1",
-  "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.0",
-  "as_of": "2026-09-14T02:01:29.387Z",
+  "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+  "as_of": "2026-09-14T10:51:51.468Z",
   "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
   "states": {
     "ESCROW_PARITY_READ": "both reads succeeded at the pinned blocks; a read, not a measurement (the card doctrine reserves MEASURED for graded banks and refuses it on point-in-time cards)",
@@ -14,53 +14,60 @@
   "license": "CC-BY-4.0 (Council of AI, CSOAI Ltd 16939677, councilof.ai)",
   "pins": {
     "arbitrum": {
-      "number": 504923416,
-      "hex": "0x1e188518",
-      "hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
-      "timestamp": 1789350332,
+      "number": 505048166,
+      "hex": "0x1e1a6c66",
+      "hash": "0xb8795eb49da592664b08eced27415a63314f4f25a6a0f52e565114793410ca41",
+      "timestamp": 1789382099,
       "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
     },
     "ethereum": {
-      "number": 25972488,
-      "hex": "0x18c4f08",
-      "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-      "timestamp": 1789350359,
+      "number": 25975142,
+      "hex": "0x18c5966",
+      "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+      "timestamp": 1789382231,
       "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
     },
     "optimism": {
-      "number": 156875715,
-      "hex": "0x959bbc3",
-      "hash": "0x4f8e07e8f3cd666968c09df04949aa7bdf34e8db61b474f70d03889695c83274",
-      "timestamp": 1789350207,
+      "number": 156891722,
+      "hex": "0x959fa4a",
+      "hash": "0xe875cd0c4cfead4cf810909336d946d1376f091af1a02efce707fd814398549b",
+      "timestamp": 1789382221,
       "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
     },
     "base": {
-      "number": 51280471,
-      "hex": "0x30e7a57",
-      "hash": "0x129ca1bacdc3ba75609c71c688fb2f7869c61f71b84dd874cae6e113c3f97293",
-      "timestamp": 1789350289,
+      "number": 51296427,
+      "hex": "0x30eb8ab",
+      "hash": "0xd9e0b6e85a66fc61efb435fe24fc1ffd46ea5ef6ed265d93d3dab7253c6bd71d",
+      "timestamp": 1789382201,
       "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
     },
     "polygon": {
-      "number": 93764153,
-      "hex": "0x596ba39",
-      "hash": "0x0a01249b55529ca890fd6491a7e8ef762297069a29c3cfcb525affd62cd029a1",
-      "timestamp": 1789351263,
+      "number": 93785368,
+      "hex": "0x5970d18",
+      "hash": "0x76bd1c95bec6f7092baf10a59102d908b5c9ffa44ab21f0077e3201f4ef80d18",
+      "timestamp": 1789383085,
       "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
     },
     "zksync-era": {
-      "number": 71955917,
-      "hex": "0x449f5cd",
-      "hash": "0x81bf8ce158a3c1b17cbebb57b816de7846bc14c2707dad9aa370a4264bee6035",
-      "timestamp": 1789338022,
+      "number": 71959616,
+      "hex": "0x44a0440",
+      "hash": "0x24803f667ba8d51ca16999aea1fa19c781639338da5542cea06469eef7b8fae5",
+      "timestamp": 1789368781,
+      "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+    },
+    "flare": {
+      "number": 69755112,
+      "hex": "0x42860e8",
+      "hash": "0xa6b6363886f51421949204455ac6fb8a41abf877ff0b0267d7688b6434b27f03",
+      "timestamp": 1789383086,
       "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
     }
   },
   "counts": {
     "ESCROW_PARITY_READ": 8,
-    "UNCHECKABLE_NATIVE_ISSUANCE": 4,
-    "INDEXED_CUSTODIAL": 5,
-    "UNMEASURED": 4
+    "UNCHECKABLE_NATIVE_ISSUANCE": 6,
+    "INDEXED_CUSTODIAL": 8,
+    "UNMEASURED": 2
   },
   "records": [
     {
@@ -73,10 +80,10 @@
         "endpoint": "https://arb1.arbitrum.io/rpc",
         "endpoint_substituted": false,
         "block": {
-          "number": 504923416,
-          "hex": "0x1e188518",
-          "hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
-          "timestamp": 1789350332,
+          "number": 505048166,
+          "hex": "0x1e1a6c66",
+          "hash": "0xb8795eb49da592664b08eced27415a63314f4f25a6a0f52e565114793410ca41",
+          "timestamp": 1789382099,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -88,10 +95,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -102,24 +109,50 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x00000000000000000000000000000000000000000000000000002bf181fc2d58",
-          "raw_sha256": "81d6b08f792010b756b46f2d0f43879570e4483c09833582227326fcc96e0e61",
-          "atomic": "48316267900248",
-          "normalized": "48316267.900248",
+          "raw": "0x00000000000000000000000000000000000000000000000000002bf5000e0358",
+          "raw_sha256": "3560ac2d1bf5d05e967545beb1f0910ac4d6be1ed458415f3ca9f011ebb6b0ea",
+          "atomic": "48331267900248",
+          "normalized": "48331267.900248",
           "decimals": 6
         },
         "escrow_balance": {
           "query": "balanceOf(0xcEe284F754E854890e311e3280b767F80797180d)",
-          "raw": "0x00000000000000000000000000000000000000000000000000002f7f4ad667b5",
-          "raw_sha256": "48eed2135bf9c3d8b1a227a1e674582209052f49f99b6c55ae1ecbaed317716b",
-          "atomic": "52223762917301",
-          "normalized": "52223762.917301",
+          "raw": "0x00000000000000000000000000000000000000000000000000002f82c8e83db5",
+          "raw_sha256": "6e23afbb8ea42c9cb6f3cdd4e470e6bf7fcb87397b7d973c17de5a960bed1e2a",
+          "atomic": "52238762917301",
+          "normalized": "52238762.917301",
           "decimals": 6
         }
       },
       "state": "ESCROW_PARITY_READ",
       "error": null,
-      "escrow_over_wrapped": "1.080873"
+      "escrow_over_wrapped": "1.080848",
+      "profile": {
+        "issuer": "third-party bridged USDC on arbitrum (canonical bridge token), not issued by Circle",
+        "custodian": "the Arbitrum One ERC-20 gateway escrow contract named on this record",
+        "chains_documented": [
+          "arbitrum"
+        ],
+        "backing_claim": {
+          "as_documented": "Circle describes bridged USDC as \"Backed by USDC on another blockchain locked in a smart contract\", deployed by a third-party team. Whether this legacy contract follows Circle's Bridged USDC Standard is UNVERIFIED.",
+          "method": "lock-and-mint bridge escrow",
+          "documented_by": "https://www.circle.com/bridged-usdc"
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_AND_ESCROW_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.circle.com/bridged-usdc",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_page"
+          }
+        ]
+      }
     },
     {
       "id": "usdt:arbitrum",
@@ -131,10 +164,10 @@
         "endpoint": "https://arb1.arbitrum.io/rpc",
         "endpoint_substituted": false,
         "block": {
-          "number": 504923416,
-          "hex": "0x1e188518",
-          "hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
-          "timestamp": 1789350332,
+          "number": 505048166,
+          "hex": "0x1e1a6c66",
+          "hash": "0xb8795eb49da592664b08eced27415a63314f4f25a6a0f52e565114793410ca41",
+          "timestamp": 1789382099,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -146,10 +179,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -160,16 +193,17 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x0000000000000000000000000000000000000000000000000002e3848f15d4d0",
-          "raw_sha256": "739702cf67dc24d08a41f3008b898662fc8e87ee781f6b8239f3d850d98c47af",
-          "atomic": "813108429182160",
-          "normalized": "813108429.182160",
+          "raw": "0x0000000000000000000000000000000000000000000000000002e3912363c89a",
+          "raw_sha256": "8c85418404ce4639d91da2e28405932f14c996bf35be22ab2df8838edab856f1",
+          "atomic": "813162456926362",
+          "normalized": "813162456.926362",
           "decimals": 6
         }
       },
       "state": "UNCHECKABLE_NATIVE_ISSUANCE",
       "error": null,
-      "escrow_over_wrapped": null
+      "escrow_over_wrapped": null,
+      "profile": null
     },
     {
       "id": "usdc.e:optimism",
@@ -181,10 +215,10 @@
         "endpoint": "https://mainnet.optimism.io",
         "endpoint_substituted": false,
         "block": {
-          "number": 156875715,
-          "hex": "0x959bbc3",
-          "hash": "0x4f8e07e8f3cd666968c09df04949aa7bdf34e8db61b474f70d03889695c83274",
-          "timestamp": 1789350207,
+          "number": 156891722,
+          "hex": "0x959fa4a",
+          "hash": "0xe875cd0c4cfead4cf810909336d946d1376f091af1a02efce707fd814398549b",
+          "timestamp": 1789382221,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -196,10 +230,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -227,7 +261,33 @@
       },
       "state": "ESCROW_PARITY_READ",
       "error": null,
-      "escrow_over_wrapped": "1.245797"
+      "escrow_over_wrapped": "1.245797",
+      "profile": {
+        "issuer": "third-party bridged USDC on optimism (canonical bridge token), not issued by Circle",
+        "custodian": "the OP Mainnet L1StandardBridge escrow contract named on this record",
+        "chains_documented": [
+          "optimism"
+        ],
+        "backing_claim": {
+          "as_documented": "Circle describes bridged USDC as \"Backed by USDC on another blockchain locked in a smart contract\", deployed by a third-party team. Whether this legacy contract follows Circle's Bridged USDC Standard is UNVERIFIED.",
+          "method": "lock-and-mint bridge escrow",
+          "documented_by": "https://www.circle.com/bridged-usdc"
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_AND_ESCROW_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.circle.com/bridged-usdc",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_page"
+          }
+        ]
+      }
     },
     {
       "id": "usdt:optimism",
@@ -239,10 +299,10 @@
         "endpoint": "https://mainnet.optimism.io",
         "endpoint_substituted": false,
         "block": {
-          "number": 156875715,
-          "hex": "0x959bbc3",
-          "hash": "0x4f8e07e8f3cd666968c09df04949aa7bdf34e8db61b474f70d03889695c83274",
-          "timestamp": 1789350207,
+          "number": 156891722,
+          "hex": "0x959fa4a",
+          "hash": "0xe875cd0c4cfead4cf810909336d946d1376f091af1a02efce707fd814398549b",
+          "timestamp": 1789382221,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -254,10 +314,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -268,24 +328,25 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x0000000000000000000000000000000000000000000000000000d56222ceade3",
-          "raw_sha256": "1eb72cafe7c05522eae2b137d15bd58d0d3fc8708a5798098d52cd8d5430a242",
-          "atomic": "234617467481571",
-          "normalized": "234617467.481571",
+          "raw": "0x0000000000000000000000000000000000000000000000000000d5bb889d316b",
+          "raw_sha256": "da556de1b12b875f82a61e4074b0c4e4984911e99f4c38b1b6a05b441d42582d",
+          "atomic": "235001427603819",
+          "normalized": "235001427.603819",
           "decimals": 6
         },
         "escrow_balance": {
           "query": "balanceOf(0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1)",
-          "raw": "0x0000000000000000000000000000000000000000000000000000d5b2e4e69da9",
-          "raw_sha256": "adce24322cfdc6deb05507dc62521b112c928b6b401ed869f52b5483f1fadb20",
-          "atomic": "234964321213865",
-          "normalized": "234964321.213865",
+          "raw": "0x0000000000000000000000000000000000000000000000000000d60c4ab52131",
+          "raw_sha256": "ef862a581913cddfd49ad0a53b8b7cb2dafc16c0ad5754ee893f179330af8cbf",
+          "atomic": "235348281336113",
+          "normalized": "235348281.336113",
           "decimals": 6
         }
       },
       "state": "ESCROW_PARITY_READ",
       "error": null,
-      "escrow_over_wrapped": "1.001478"
+      "escrow_over_wrapped": "1.001475",
+      "profile": null
     },
     {
       "id": "dai:optimism",
@@ -297,10 +358,10 @@
         "endpoint": "https://mainnet.optimism.io",
         "endpoint_substituted": false,
         "block": {
-          "number": 156875715,
-          "hex": "0x959bbc3",
-          "hash": "0x4f8e07e8f3cd666968c09df04949aa7bdf34e8db61b474f70d03889695c83274",
-          "timestamp": 1789350207,
+          "number": 156891722,
+          "hex": "0x959fa4a",
+          "hash": "0xe875cd0c4cfead4cf810909336d946d1376f091af1a02efce707fd814398549b",
+          "timestamp": 1789382221,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -312,10 +373,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -343,7 +404,8 @@
       },
       "state": "ESCROW_PARITY_READ",
       "error": null,
-      "escrow_over_wrapped": "1.505694"
+      "escrow_over_wrapped": "1.505694",
+      "profile": null
     },
     {
       "id": "usdbc:base",
@@ -355,10 +417,10 @@
         "endpoint": "https://mainnet.base.org",
         "endpoint_substituted": false,
         "block": {
-          "number": 51280471,
-          "hex": "0x30e7a57",
-          "hash": "0x129ca1bacdc3ba75609c71c688fb2f7869c61f71b84dd874cae6e113c3f97293",
-          "timestamp": 1789350289,
+          "number": 51296427,
+          "hex": "0x30eb8ab",
+          "hash": "0xd9e0b6e85a66fc61efb435fe24fc1ffd46ea5ef6ed265d93d3dab7253c6bd71d",
+          "timestamp": 1789382201,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -370,10 +432,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -401,7 +463,8 @@
       },
       "state": "ESCROW_PARITY_READ",
       "error": null,
-      "escrow_over_wrapped": "1.034554"
+      "escrow_over_wrapped": "1.034554",
+      "profile": null
     },
     {
       "id": "dai:base",
@@ -413,10 +476,10 @@
         "endpoint": "https://mainnet.base.org",
         "endpoint_substituted": false,
         "block": {
-          "number": 51280471,
-          "hex": "0x30e7a57",
-          "hash": "0x129ca1bacdc3ba75609c71c688fb2f7869c61f71b84dd874cae6e113c3f97293",
-          "timestamp": 1789350289,
+          "number": 51296427,
+          "hex": "0x30eb8ab",
+          "hash": "0xd9e0b6e85a66fc61efb435fe24fc1ffd46ea5ef6ed265d93d3dab7253c6bd71d",
+          "timestamp": 1789382201,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -428,10 +491,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -459,7 +522,8 @@
       },
       "state": "ESCROW_PARITY_READ",
       "error": null,
-      "escrow_over_wrapped": "1.002426"
+      "escrow_over_wrapped": "1.002426",
+      "profile": null
     },
     {
       "id": "usdc:base",
@@ -471,10 +535,10 @@
         "endpoint": "https://mainnet.base.org",
         "endpoint_substituted": false,
         "block": {
-          "number": 51280471,
-          "hex": "0x30e7a57",
-          "hash": "0x129ca1bacdc3ba75609c71c688fb2f7869c61f71b84dd874cae6e113c3f97293",
-          "timestamp": 1789350289,
+          "number": 51296427,
+          "hex": "0x30eb8ab",
+          "hash": "0xd9e0b6e85a66fc61efb435fe24fc1ffd46ea5ef6ed265d93d3dab7253c6bd71d",
+          "timestamp": 1789382201,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -486,10 +550,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -500,16 +564,17 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x000000000000000000000000000000000000000000000000000f22cd4b31b8d1",
-          "raw_sha256": "2375133e75cf1ea5c2003f97f7ca4194e32b2ae402dbb93d177ce2efadd8c8e4",
-          "atomic": "4260389775849681",
-          "normalized": "4260389775.849681",
+          "raw": "0x000000000000000000000000000000000000000000000000000f31ac7c0e1d25",
+          "raw_sha256": "cdb48b98676dd562291e51c523514172d7cd89b7c2bb2cffa02abdbaa141ccaa",
+          "atomic": "4276741536095525",
+          "normalized": "4276741536.095525",
           "decimals": 6
         }
       },
       "state": "UNCHECKABLE_NATIVE_ISSUANCE",
       "error": null,
-      "escrow_over_wrapped": null
+      "escrow_over_wrapped": null,
+      "profile": null
     },
     {
       "id": "usdc:arbitrum",
@@ -521,10 +586,10 @@
         "endpoint": "https://arb1.arbitrum.io/rpc",
         "endpoint_substituted": false,
         "block": {
-          "number": 504923416,
-          "hex": "0x1e188518",
-          "hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
-          "timestamp": 1789350332,
+          "number": 505048166,
+          "hex": "0x1e1a6c66",
+          "hash": "0xb8795eb49da592664b08eced27415a63314f4f25a6a0f52e565114793410ca41",
+          "timestamp": 1789382099,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -536,10 +601,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -550,16 +615,17 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x0000000000000000000000000000000000000000000000000009c2f3c9dcf521",
-          "raw_sha256": "b1617edd60dd3d7baac3d0d3eb28955404bf24ef10d4a0776c5607b0b4bf784f",
-          "atomic": "2747627109938465",
-          "normalized": "2747627109.938465",
+          "raw": "0x00000000000000000000000000000000000000000000000000099f98d9f765dd",
+          "raw_sha256": "c4cf825b8ac2a47f7726d96c2ad0a6d82c14fa854ce705e8e9e6a9169451e681",
+          "atomic": "2708753631110621",
+          "normalized": "2708753631.110621",
           "decimals": 6
         }
       },
       "state": "UNCHECKABLE_NATIVE_ISSUANCE",
       "error": null,
-      "escrow_over_wrapped": null
+      "escrow_over_wrapped": null,
+      "profile": null
     },
     {
       "id": "usdc.e:polygon",
@@ -571,10 +637,10 @@
         "endpoint": "https://polygon-bor-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 93764153,
-          "hex": "0x596ba39",
-          "hash": "0x0a01249b55529ca890fd6491a7e8ef762297069a29c3cfcb525affd62cd029a1",
-          "timestamp": 1789351263,
+          "number": 93785368,
+          "hex": "0x5970d18",
+          "hash": "0x76bd1c95bec6f7092baf10a59102d908b5c9ffa44ab21f0077e3201f4ef80d18",
+          "timestamp": 1789383085,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -586,10 +652,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -600,24 +666,50 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x0000000000000000000000000000000000000000000000000003a542c00f22d0",
-          "raw_sha256": "e30a71399a0e84fe54885911e699bf3526efce7d715e8e7cb4d38cafb5675460",
-          "atomic": "1026131038773968",
-          "normalized": "1026131038.773968",
+          "raw": "0x0000000000000000000000000000000000000000000000000003a7fd75f094cc",
+          "raw_sha256": "81dadf4050bae5a4e5164839cb8ce74f0122ef6be49815290df6236c112e1c6c",
+          "atomic": "1029131977397452",
+          "normalized": "1029131977.397452",
           "decimals": 6
         },
         "escrow_balance": {
           "query": "balanceOf(0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf)",
-          "raw": "0x0000000000000000000000000000000000000000000000000003adfbc9f6085c",
-          "raw_sha256": "82439db4182ad3552c4a6bab0670158fbe9fc32173a025b65ba822d253d10b46",
-          "atomic": "1035721866872924",
-          "normalized": "1035721866.872924",
+          "raw": "0x0000000000000000000000000000000000000000000000000003b087eee9aa58",
+          "raw_sha256": "d23d1e22d4150dceb73ad6a3b98ff4124b841c48ed7a09f4494d2db69a1452bb",
+          "atomic": "1038522805496408",
+          "normalized": "1038522805.496408",
           "decimals": 6
         }
       },
       "state": "ESCROW_PARITY_READ",
       "error": null,
-      "escrow_over_wrapped": "1.009346"
+      "escrow_over_wrapped": "1.009124",
+      "profile": {
+        "issuer": "third-party bridged USDC on polygon (canonical bridge token), not issued by Circle",
+        "custodian": "the Polygon PoS ERC20Predicate escrow contract named on this record",
+        "chains_documented": [
+          "polygon"
+        ],
+        "backing_claim": {
+          "as_documented": "Circle describes bridged USDC as \"Backed by USDC on another blockchain locked in a smart contract\", deployed by a third-party team. Whether this legacy contract follows Circle's Bridged USDC Standard is UNVERIFIED.",
+          "method": "lock-and-mint bridge escrow",
+          "documented_by": "https://www.circle.com/bridged-usdc"
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_AND_ESCROW_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.circle.com/bridged-usdc",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_page"
+          }
+        ]
+      }
     },
     {
       "id": "usdt:polygon",
@@ -629,10 +721,10 @@
         "endpoint": "https://polygon-bor-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 93764153,
-          "hex": "0x596ba39",
-          "hash": "0x0a01249b55529ca890fd6491a7e8ef762297069a29c3cfcb525affd62cd029a1",
-          "timestamp": 1789351263,
+          "number": 93785368,
+          "hex": "0x5970d18",
+          "hash": "0x76bd1c95bec6f7092baf10a59102d908b5c9ffa44ab21f0077e3201f4ef80d18",
+          "timestamp": 1789383085,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -644,10 +736,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -658,16 +750,17 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x00000000000000000000000000000000000000000000000000029f86530a1801",
-          "raw_sha256": "ad69a5e6ba2f18fc0f0cdf532d531884fbcd3fc1b9e5b5890a28560fa56c3256",
-          "atomic": "738349221025793",
-          "normalized": "738349221.025793",
+          "raw": "0x00000000000000000000000000000000000000000000000000029eb2d8318ab0",
+          "raw_sha256": "3fd037988866d7f8c48730b09aa6eb1d4097854d6139f997c32c565335dcbaf2",
+          "atomic": "737440921914032",
+          "normalized": "737440921.914032",
           "decimals": 6
         }
       },
       "state": "UNCHECKABLE_NATIVE_ISSUANCE",
       "error": null,
-      "escrow_over_wrapped": null
+      "escrow_over_wrapped": null,
+      "profile": null
     },
     {
       "id": "dai:polygon",
@@ -679,10 +772,10 @@
         "endpoint": "https://polygon-bor-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 93764153,
-          "hex": "0x596ba39",
-          "hash": "0x0a01249b55529ca890fd6491a7e8ef762297069a29c3cfcb525affd62cd029a1",
-          "timestamp": 1789351263,
+          "number": 93785368,
+          "hex": "0x5970d18",
+          "hash": "0x76bd1c95bec6f7092baf10a59102d908b5c9ffa44ab21f0077e3201f4ef80d18",
+          "timestamp": 1789383085,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -694,10 +787,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -708,24 +801,25 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x00000000000000000000000000000000000000000195382e00e91f0e7226fa7e",
-          "raw_sha256": "43ad88b51091c22f9c1b312eb4e29763c39140cf77f06b064a85f8d7ada58619",
-          "atomic": "489880258082810723006085758",
-          "normalized": "489880258.082810723006085758",
+          "raw": "0x00000000000000000000000000000000000000000194ed719de9e1909c60f706",
+          "raw_sha256": "37dbb09b8bf887106a423487318447dead302a93d06ce32301bbb93c26c42a1a",
+          "atomic": "489527327841704566419683078",
+          "normalized": "489527327.841704566419683078",
           "decimals": 18
         },
         "escrow_balance": {
           "query": "balanceOf(0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf)",
-          "raw": "0x000000000000000000000000000000000000000001985f97d9ce7549129e774c",
-          "raw_sha256": "9f1b2d35d151fa6e5171be83a45e526f1c1df16b98b564f18931ec99b7736c37",
-          "atomic": "493693160371607157855909708",
-          "normalized": "493693160.371607157855909708",
+          "raw": "0x0000000000000000000000000000000000000000019808014c6687232f52ea19",
+          "raw_sha256": "5c5736b6eee5f3c71b098c10767511adb1a4d0e6f69a559cf843d73a3d921526",
+          "atomic": "493279537286611913845959193",
+          "normalized": "493279537.286611913845959193",
           "decimals": 18
         }
       },
       "state": "ESCROW_PARITY_READ",
       "error": null,
-      "escrow_over_wrapped": "1.007783"
+      "escrow_over_wrapped": "1.007664",
+      "profile": null
     },
     {
       "id": "wbtc:ethereum",
@@ -737,10 +831,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -769,7 +863,39 @@
       },
       "state": "INDEXED_CUSTODIAL",
       "error": null,
-      "escrow_over_wrapped": null
+      "escrow_over_wrapped": null,
+      "profile": {
+        "issuer": "WBTC (BitGo named on the issuer page; other custodians not named there)",
+        "custodian": "BitGo (as named on wbtc.network); multi-jurisdictional custody reported elsewhere is UNVERIFIED here",
+        "chains_documented": [
+          "Ethereum",
+          "Solana",
+          "TRON",
+          "BNB Chain",
+          "Base",
+          "Kava",
+          "Osmosis"
+        ],
+        "backing_claim": {
+          "as_documented": "\"Every WBTC is backed 1:1 by Bitcoin in secure custody, fully verifiable through the on-chain proof of Reserves.\"",
+          "method": "custodian-held BTC; issuer-published proof of reserves",
+          "documented_by": "https://wbtc.network/"
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://wbtc.network/",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_page"
+          }
+        ]
+      }
     },
     {
       "id": "cbbtc:base",
@@ -781,10 +907,10 @@
         "endpoint": "https://mainnet.base.org",
         "endpoint_substituted": false,
         "block": {
-          "number": 51280471,
-          "hex": "0x30e7a57",
-          "hash": "0x129ca1bacdc3ba75609c71c688fb2f7869c61f71b84dd874cae6e113c3f97293",
-          "timestamp": 1789350289,
+          "number": 51296427,
+          "hex": "0x30eb8ab",
+          "hash": "0xd9e0b6e85a66fc61efb435fe24fc1ffd46ea5ef6ed265d93d3dab7253c6bd71d",
+          "timestamp": 1789382201,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -804,16 +930,43 @@
       "reads": {
         "wrapped_total_supply": {
           "query": "totalSupply()",
-          "raw": "0x0000000000000000000000000000000000000000000000000000042b3a3db1ee",
-          "raw_sha256": "00583db17dfffee34e4213e5ff58d441c86b8427124c5ffddd34183804eae80c",
-          "atomic": "4583707226606",
-          "normalized": "45837.07226606",
+          "raw": "0x0000000000000000000000000000000000000000000000000000042a4ab20503",
+          "raw_sha256": "29ce61cc39bf89ffeff5d7f817aff6cdcea6f3845421f1029d9330a4b09e44e3",
+          "atomic": "4579688318211",
+          "normalized": "45796.88318211",
           "decimals": 8
         }
       },
       "state": "INDEXED_CUSTODIAL",
       "error": null,
-      "escrow_over_wrapped": null
+      "escrow_over_wrapped": null,
+      "profile": {
+        "issuer": "Coinbase",
+        "custodian": "Coinbase",
+        "chains_documented": [
+          "base"
+        ],
+        "backing_claim": {
+          "as_documented": "UNVERIFIED on a primary source today: https://www.coinbase.com/cbbtc returned HTTP 403 to a scripted fetch on 2026-09-14. No claim is quoted.",
+          "method": "custodian self-report (issuer page not read)",
+          "documented_by": null
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.coinbase.com/cbbtc",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_page",
+            "note": "HTTP 403 to fetch; not read"
+          }
+        ]
+      }
     },
     {
       "id": "cbbtc:ethereum",
@@ -825,10 +978,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -857,7 +1010,34 @@
       },
       "state": "INDEXED_CUSTODIAL",
       "error": null,
-      "escrow_over_wrapped": null
+      "escrow_over_wrapped": null,
+      "profile": {
+        "issuer": "Coinbase",
+        "custodian": "Coinbase",
+        "chains_documented": [
+          "ethereum"
+        ],
+        "backing_claim": {
+          "as_documented": "UNVERIFIED on a primary source today: https://www.coinbase.com/cbbtc returned HTTP 403 to a scripted fetch on 2026-09-14. No claim is quoted.",
+          "method": "custodian self-report (issuer page not read)",
+          "documented_by": null
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.coinbase.com/cbbtc",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_page",
+            "note": "HTTP 403 to fetch; not read"
+          }
+        ]
+      }
     },
     {
       "id": "wxrp:ethereum",
@@ -869,10 +1049,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -901,7 +1081,41 @@
       },
       "state": "INDEXED_CUSTODIAL",
       "error": null,
-      "escrow_over_wrapped": null
+      "escrow_over_wrapped": null,
+      "profile": {
+        "issuer": "UNVERIFIED — the roster names Wrapped.com for this contract; no issuer page for it was read on 2026-09-14",
+        "custodian": "UNVERIFIED",
+        "chains_documented": [
+          "ethereum"
+        ],
+        "backing_claim": {
+          "as_documented": "UNVERIFIED — no primary source for this contract was read today.",
+          "method": "UNVERIFIED",
+          "documented_by": null
+        },
+        "premise_flag": "Two different tokens are called wXRP. This contract (name() \"Wrapped XRP\", symbol() \"WXRP\", 18 decimals, read 2026-09-14) is not the Hex Trust wXRP announced 2025-12-12 (LayerZero OFT; \"Each wXRP corresponds to one native XRP held in a segregated custody account with Hex Trust\"; chains Solana, Optimism, Ethereum, HyperEVM). No Hex Trust Ethereum contract address was found on a primary source today, so the Hex Trust token is not on the roster.",
+        "measurement_class": "ON_CHAIN_SUPPLY_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://etherscan.io/token/0x39fbbabf11738317a448031930706cd3e612e1b9",
+            "retrieved_at": "2026-09-14",
+            "kind": "explorer",
+            "note": "search-observed; on-chain name()/symbol() read directly"
+          },
+          {
+            "url": "https://www.hextrust.com/resources-collection/hex-trust-to-issue-and-custody-wrapped-xrp-wxrp",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_page",
+            "note": "the other wXRP (Hex Trust); no contract address printed"
+          }
+        ]
+      }
     },
     {
       "id": "buidl:ethereum",
@@ -913,10 +1127,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -945,7 +1159,46 @@
       },
       "state": "INDEXED_CUSTODIAL",
       "error": null,
-      "escrow_over_wrapped": null
+      "escrow_over_wrapped": null,
+      "profile": {
+        "issuer": "BlackRock USD Institutional Digital Liquidity Fund (on-chain name() read 2026-09-14)",
+        "custodian": "fund assets: BNY as custodian and administrator; Securitize as transfer agent and tokenization platform — per the 2024-03-20 launch press release, search-observed (page body not retrieved)",
+        "chains_documented": [
+          "ethereum",
+          "aptos",
+          "arbitrum",
+          "avalanche",
+          "optimism",
+          "polygon"
+        ],
+        "backing_claim": {
+          "as_documented": "Tokenised fund shares; the fund's assets are held off-chain. Role assignments above are search-observed from the launch press release, not read in full today.",
+          "method": "tokenised fund shares; transfer-agent reporting",
+          "documented_by": null
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED",
+          "nav_vs_supply": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://securitize.io/learn/press/blackrock-launches-first-tokenized-fund-buidl-on-the-ethereum-network",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_press_release",
+            "note": "page body not retrieved; roles search-observed"
+          },
+          {
+            "url": "https://www.prnewswire.com/news-releases/blackrock-launches-new-buidl-share-classes-across-multiple-blockchains-to-expand-access-and-potential-of-buidl-ecosystem-302304035.html",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_press_release",
+            "note": "search-observed: additional chains"
+          }
+        ]
+      }
     },
     {
       "id": "weth:arbitrum",
@@ -957,10 +1210,10 @@
         "endpoint": "https://arb1.arbitrum.io/rpc",
         "endpoint_substituted": false,
         "block": {
-          "number": 504923416,
-          "hex": "0x1e188518",
-          "hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
-          "timestamp": 1789350332,
+          "number": 505048166,
+          "hex": "0x1e1a6c66",
+          "hash": "0xb8795eb49da592664b08eced27415a63314f4f25a6a0f52e565114793410ca41",
+          "timestamp": 1789382099,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -972,10 +1225,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -985,7 +1238,8 @@
       "note": "WETH on Arbitrum at 0x82aF... is a WETH9 wrapper (deposit ETH, get WETH). totalSupply() returns empty on Arbiscan RPC (contract may be a minimal proxy with non-standard storage). ETH backing is the deposit mechanism. INDEXED, no parity claimed from here.",
       "reads": {},
       "state": "UNMEASURED",
-      "error": "empty eth_call result from 0x82aF49448D82B08cD7C12Be3B9395C0e72f16154"
+      "error": "empty eth_call result from 0x82aF49448D82B08cD7C12Be3B9395C0e72f16154",
+      "profile": null
     },
     {
       "id": "usdc:zksync-era",
@@ -997,10 +1251,10 @@
         "endpoint": "https://mainnet.era.zksync.io",
         "endpoint_substituted": false,
         "block": {
-          "number": 71955917,
-          "hex": "0x449f5cd",
-          "hash": "0x81bf8ce158a3c1b17cbebb57b816de7846bc14c2707dad9aa370a4264bee6035",
-          "timestamp": 1789338022,
+          "number": 71959616,
+          "hex": "0x44a0440",
+          "hash": "0x24803f667ba8d51ca16999aea1fa19c781639338da5542cea06469eef7b8fae5",
+          "timestamp": 1789368781,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -1012,10 +1266,10 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -1025,22 +1279,23 @@
       "note": null,
       "reads": {},
       "state": "UNMEASURED",
-      "error": "empty eth_call result from 0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E"
+      "error": "empty eth_call result from 0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E",
+      "profile": null
     },
     {
       "id": "usdt0:optimism",
       "wrapped": {
         "chain": "optimism",
         "symbol": "USDT0",
-        "address": "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627",
+        "address": "0x01bFF41798a0BcF287b996046Ca68b395DbC1071",
         "chainId": 10,
         "endpoint": "https://mainnet.optimism.io",
         "endpoint_substituted": false,
         "block": {
-          "number": 156875715,
-          "hex": "0x959bbc3",
-          "hash": "0x4f8e07e8f3cd666968c09df04949aa7bdf34e8db61b474f70d03889695c83274",
-          "timestamp": 1789350207,
+          "number": 156891722,
+          "hex": "0x959fa4a",
+          "hash": "0xe875cd0c4cfead4cf810909336d946d1376f091af1a02efce707fd814398549b",
+          "timestamp": 1789382221,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -1052,35 +1307,81 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
       "backing_model": "native",
       "escrow": null,
       "escrow_name": null,
-      "note": "USDT0 on Optimism via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed.",
-      "reads": {},
-      "state": "UNMEASURED",
-      "error": "empty eth_call result from 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627"
+      "note": "USDT0 is a LayerZero OFT: USDT is locked in one OFT Adapter on Ethereum (0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee) against the combined supply of every USDT0 chain, so no per-chain escrow exists and no per-pair parity is claimed; treated as native issuance on this chain. Supply read.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000000000000000ad885806ebd",
+          "raw_sha256": "a9849eb9ffd96e75308e80eaa9a5f63e8ef68287bb314ca8719e93e8894ce7f5",
+          "atomic": "11925069000381",
+          "normalized": "11925069.000381",
+          "decimals": 6
+        }
+      },
+      "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "error": null,
+      "escrow_over_wrapped": null,
+      "profile": {
+        "issuer": "USDT0 (LayerZero OFT deployment of Tether USDT)",
+        "custodian": "OFT Adapter on Ethereum 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee (shared across every USDT0 chain)",
+        "chains_documented": [
+          "ethereum (adapter)",
+          "arbitrum",
+          "optimism",
+          "and other chains listed on the deployments page"
+        ],
+        "backing_claim": {
+          "as_documented": "On Ethereum the OAdapterUpgradeable \"Locks/Unlocks tokens for cross-chain transfers\" and interfaces with the TetherToken contract.",
+          "method": "single lock adapter on Ethereum; burn-and-mint across OFT chains",
+          "documented_by": "https://docs.usdt0.to/technical-documentation/developer"
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED",
+          "cross_chain_aggregate_parity": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://docs.usdt0.to/technical-documentation/deployments",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_docs",
+            "note": "token on optimism: 0x01bFF41798a0BcF287b996046Ca68b395DbC1071"
+          },
+          {
+            "url": "https://docs.usdt0.to/technical-documentation/developer",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_docs"
+          }
+        ]
+      }
     },
     {
       "id": "usdt0:arbitrum",
       "wrapped": {
         "chain": "arbitrum",
         "symbol": "USDT0",
-        "address": "0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627",
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
         "chainId": 42161,
         "endpoint": "https://arb1.arbitrum.io/rpc",
         "endpoint_substituted": false,
         "block": {
-          "number": 504923416,
-          "hex": "0x1e188518",
-          "hash": "0xe5e7bbdb36c7237e3fa5c688db3bf4526b7a3cf057b4ca57b4f23d59b4f5d400",
-          "timestamp": 1789350332,
+          "number": 505048166,
+          "hex": "0x1e1a6c66",
+          "hash": "0xb8795eb49da592664b08eced27415a63314f4f25a6a0f52e565114793410ca41",
+          "timestamp": 1789382099,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
@@ -1092,20 +1393,484 @@
         "endpoint": "https://ethereum-rpc.publicnode.com",
         "endpoint_substituted": false,
         "block": {
-          "number": 25972488,
-          "hex": "0x18c4f08",
-          "hash": "0xe7daddd816b1c54ac044f8df3db5d549a24494a09fdce280dd3d38929ac55539",
-          "timestamp": 1789350359,
+          "number": 25975142,
+          "hex": "0x18c5966",
+          "hash": "0x501737a59c0c2d21bf55e418ebe25539e8d79ab2ae4ff258c3b44f9609473acd",
+          "timestamp": 1789382231,
           "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
         }
       },
       "backing_model": "native",
       "escrow": null,
       "escrow_name": null,
-      "note": "USDT0 on Arbitrum via LayerZero OFT. Native issuance; no escrow; supply read, no parity claimed.",
-      "reads": {},
-      "state": "UNMEASURED",
-      "error": "empty eth_call result from 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627"
+      "note": "Same contract as usdt:arbitrum (it reports name and symbol USD₮0 on 2026-09-14). USDT0 is a LayerZero OFT: USDT is locked in one OFT Adapter on Ethereum (0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee) against the combined supply of every USDT0 chain, so no per-chain escrow exists and no per-pair parity is claimed; treated as native issuance on this chain. Supply read.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000002e3912363c89a",
+          "raw_sha256": "8c85418404ce4639d91da2e28405932f14c996bf35be22ab2df8838edab856f1",
+          "atomic": "813162456926362",
+          "normalized": "813162456.926362",
+          "decimals": 6
+        }
+      },
+      "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "error": null,
+      "escrow_over_wrapped": null,
+      "profile": {
+        "issuer": "USDT0 (LayerZero OFT deployment of Tether USDT)",
+        "custodian": "OFT Adapter on Ethereum 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee (shared across every USDT0 chain)",
+        "chains_documented": [
+          "ethereum (adapter)",
+          "arbitrum",
+          "optimism",
+          "and other chains listed on the deployments page"
+        ],
+        "backing_claim": {
+          "as_documented": "On Ethereum the OAdapterUpgradeable \"Locks/Unlocks tokens for cross-chain transfers\" and interfaces with the TetherToken contract.",
+          "method": "single lock adapter on Ethereum; burn-and-mint across OFT chains",
+          "documented_by": "https://docs.usdt0.to/technical-documentation/developer"
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED",
+          "cross_chain_aggregate_parity": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://docs.usdt0.to/technical-documentation/deployments",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_docs",
+            "note": "token on arbitrum: 0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9"
+          },
+          {
+            "url": "https://docs.usdt0.to/technical-documentation/developer",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_docs"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cbxrp:base",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "cbXRP",
+        "address": "0xcb585250f852C6c6bf90434AB21A00f02833a4af",
+        "chainId": 8453,
+        "endpoint": "https://mainnet.base.org",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 51296427,
+          "hex": "0x30eb8ab",
+          "hash": "0xd9e0b6e85a66fc61efb435fe24fc1ffd46ea5ef6ed265d93d3dab7253c6bd71d",
+          "timestamp": 1789382201,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "xrpl",
+        "symbol": "XRP",
+        "address": "Coinbase custody; not an EVM contract",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "XRP reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x000000000000000000000000000000000000000000000000000072cf73127ac3",
+          "raw_sha256": "32b573554c7bbcea036d92fff74591ca6c128042b80fbf19f65f1ea81f6f6556",
+          "atomic": "126235314387651",
+          "normalized": "126235314.387651",
+          "decimals": 6
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null,
+      "profile": {
+        "issuer": "Coinbase",
+        "custodian": "Coinbase",
+        "chains_documented": [
+          "base"
+        ],
+        "backing_claim": {
+          "as_documented": "UNVERIFIED on a primary source today: https://www.coinbase.com/cbxrp returned HTTP 403 to a scripted fetch on 2026-09-14. A launch report (The Block, 2025-06) describes cbXRP as live on Base; that report is attributed, not read in full.",
+          "method": "custodian self-report (issuer page not read)",
+          "documented_by": null
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.coinbase.com/cbxrp",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_page",
+            "note": "HTTP 403 to fetch; not read"
+          },
+          {
+            "url": "https://basescan.org/token/0xcb585250f852c6c6bf90434ab21a00f02833a4af",
+            "retrieved_at": "2026-09-14",
+            "kind": "explorer",
+            "note": "search-observed; on-chain name() read directly: Coinbase Wrapped XRP"
+          },
+          {
+            "url": "https://www.theblock.co/post/357087/coinbase-wrapped-xrp-doge-base",
+            "retrieved_at": "2026-09-14",
+            "kind": "attributed_report",
+            "note": "search-observed headline only"
+          }
+        ]
+      }
+    },
+    {
+      "id": "fxrp:flare",
+      "wrapped": {
+        "chain": "flare",
+        "symbol": "FXRP",
+        "address": "0xAd552A648C74D49E10027AB8a618A3ad4901c5bE",
+        "chainId": 14,
+        "endpoint": "https://flare-api.flare.network/ext/C/rpc",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 69755112,
+          "hex": "0x42860e8",
+          "hash": "0xa6b6363886f51421949204455ac6fb8a41abf877ff0b0267d7688b6434b27f03",
+          "timestamp": 1789383086,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "xrpl",
+        "symbol": "XRP",
+        "address": "FAssets agents' XRPL accounts; not an EVM contract",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "Underlying XRP sits in FAssets agents' XRPL accounts with agent collateral posted on Flare; Flare documents the XRPL side as verified through its Data Connector. Neither the XRPL holdings nor the agent collateral are read here. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000858b3a799738",
+          "raw_sha256": "e925483c0648e543a4966a725d6682d7c4761cfa469140cb2943e29f374fd925",
+          "atomic": "146833027995448",
+          "normalized": "146833027.995448",
+          "decimals": 6
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null,
+      "profile": {
+        "issuer": "Flare FAssets system (agent-operated)",
+        "custodian": "FAssets agents (underlying XRP on the XRP Ledger; collateral on Flare)",
+        "chains_documented": [
+          "flare"
+        ],
+        "backing_claim": {
+          "as_documented": "\"FXRP is the FAsset representation of XRP on the Flare network\"; FAssets is described as a \"trustless, over-collateralized bridge\" that \"uses the Flare Data Connector (FDC) to verify XRPL transactions\".",
+          "method": "agent over-collateralisation plus FDC attestation of XRPL payments (as documented)",
+          "documented_by": "https://dev.flare.network/fxrp/overview"
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED",
+          "agent_collateral_ratio": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://dev.flare.network/fxrp/overview",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_docs"
+          },
+          {
+            "url": "https://flare-api.flare.network/ext/C/rpc",
+            "retrieved_at": "2026-09-14",
+            "kind": "onchain",
+            "note": "FlareContractRegistry getContractAddressByName(\"AssetManagerFXRP\") then fAsset() resolved the token address"
+          }
+        ]
+      }
+    },
+    {
+      "id": "jpmd:base",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "JPMD",
+        "address": "0x7e0aedc93d9f898be835a44bfca3842e52416b82",
+        "chainId": 8453,
+        "endpoint": "https://mainnet.base.org",
+        "endpoint_substituted": false,
+        "block": {
+          "number": 51296427,
+          "hex": "0x30eb8ab",
+          "hash": "0xd9e0b6e85a66fc61efb435fe24fc1ffd46ea5ef6ed265d93d3dab7253c6bd71d",
+          "timestamp": 1789382201,
+          "finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL"
+        }
+      },
+      "canonical": {
+        "chain": "offchain",
+        "symbol": "USD deposits",
+        "address": "bank deposits at J.P. Morgan; not on any chain",
+        "chainId": null,
+        "endpoint": null,
+        "endpoint_substituted": false,
+        "block": null
+      },
+      "backing_model": "custodial",
+      "escrow": null,
+      "escrow_name": null,
+      "note": "A bank deposit token: the claim it represents is a deposit held off-chain. Supply read only. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000000005f767a0",
+          "raw_sha256": "1191e35e81b8233733588b94641eb1053451d020a27da132958f2de765bd44bb",
+          "atomic": "100100000",
+          "normalized": "1001000.00",
+          "decimals": 2
+        }
+      },
+      "state": "INDEXED_CUSTODIAL",
+      "error": null,
+      "escrow_over_wrapped": null,
+      "profile": {
+        "issuer": "Kinexys by J.P. Morgan",
+        "custodian": "J.P. Morgan (the token represents a bank deposit)",
+        "chains_documented": [
+          "base"
+        ],
+        "backing_claim": {
+          "as_documented": "JPM Coin (ticker JPMD) is \"J.P. Morgan's USD-denominated deposit token\", a \"digital representation of a bank deposit on public blockchain\" (J.P. Morgan newsroom, 2025-11-12). Contract address 0x7e0aedc93d9f898be835a44bfca3842e52416b82 is printed on the Kinexys JPM Coin page.",
+          "method": "bank deposit liability; off-chain",
+          "documented_by": "https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients"
+        },
+        "measurement_class": "ON_CHAIN_SUPPLY_READ",
+        "axes": {
+          "reserve_or_backing": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "custody_controls": "UNMEASURED",
+          "issuer_claim_vs_supply": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.jpmorgan.com/kinexys/jpm-coin",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_page",
+            "note": "publishes the Base contract address"
+          },
+          {
+            "url": "https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients",
+            "retrieved_at": "2026-09-14",
+            "kind": "issuer_press_release"
+          }
+        ]
+      }
     }
-  ]
+  ],
+  "profile_rule": "profile = issuer-documented context with sources and retrieval dates. It is not a read, not a measurement and not a reserve attestation. Every axis is UNMEASURED. A missing profile is null, never an empty claim.",
+  "documentary": {
+    "class": "DOCUMENTARY",
+    "definition": "Institutional token programmes described from the operator's own publications, or from an attributed report where the operator's page could not be fetched. Nothing in a DOCUMENTARY row was read from a chain; every axis is UNMEASURED; status is as documented on the retrieval date, not as observed.",
+    "counts": {
+      "DOCUMENTARY": 6
+    },
+    "rows": [
+      {
+        "id": "kinexys:jpmorgan",
+        "name": "Kinexys by J.P. Morgan",
+        "operator": "J.P. Morgan",
+        "class": "DOCUMENTARY",
+        "status_as_documented": "Operating; described by J.P. Morgan as its blockchain business unit, a provider of blockchain-based financial infrastructure since 2015, now offering USD deposit tokens on public blockchain.",
+        "what_as_documented": "Blockchain business unit; issues JPM Coin (JPMD), a USD deposit token on Base.",
+        "on_chain_observable": "PARTIAL — the JPMD contract on Base is published and read as roster pair jpmd:base; Kinexys's other ledgers are not observable from here.",
+        "attribution": null,
+        "axes": {
+          "ledger_observability": "UNMEASURED",
+          "supply_or_volume": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "operational_status": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients",
+            "retrieved_at": "2026-09-14",
+            "kind": "operator_press_release",
+            "note": "dated 2025-11-12"
+          },
+          {
+            "url": "https://www.jpmorgan.com/kinexys/jpm-coin",
+            "retrieved_at": "2026-09-14",
+            "kind": "operator_page"
+          }
+        ]
+      },
+      {
+        "id": "citi-token-services:citi",
+        "name": "Citi Token Services",
+        "operator": "Citi",
+        "class": "DOCUMENTARY",
+        "status_as_documented": "Live commercial solution for cash between Singapore and New York as of the 2024-10-10 release; a 2025-11-26 Citi insights page describes operation \"in select markets\".",
+        "what_as_documented": "\"a private and permissioned blockchain that is solely owned and managed by Citi\"; \"Clients are not required to hold or manage any tokens to access the services.\"",
+        "on_chain_observable": "NO — private, permissioned ledger per the operator.",
+        "attribution": null,
+        "axes": {
+          "ledger_observability": "UNMEASURED",
+          "supply_or_volume": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "operational_status": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.citigroup.com/global/news/press-release/2024/citi-token-services-marks-new-milestone",
+            "retrieved_at": "2026-09-14",
+            "kind": "operator_press_release",
+            "note": "dated 2024-10-10"
+          },
+          {
+            "url": "https://www.citigroup.com/global/insights/citi-token-services-24-7-usd-clearing",
+            "retrieved_at": "2026-09-14",
+            "kind": "operator_page",
+            "note": "dated 2025-11-26"
+          }
+        ]
+      },
+      {
+        "id": "orion:hsbc",
+        "name": "HSBC Orion",
+        "operator": "HSBC",
+        "class": "DOCUMENTARY",
+        "status_as_documented": "Operating digital-assets platform; HM Treasury chose HSBC Orion as platform provider for the Digital Gilt Instrument (DIGIT) pilot (HSBC release, 2026-02-12).",
+        "what_as_documented": "A digital assets platform that has enabled issuance of over US$3.5 billion in digitally native bonds. A tokenised bond platform, not a deposit token or stablecoin; the release does not mention tokenised deposits.",
+        "on_chain_observable": "UNVERIFIED — the release does not state the ledger type.",
+        "attribution": null,
+        "axes": {
+          "ledger_observability": "UNMEASURED",
+          "supply_or_volume": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "operational_status": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.hsbc.com/news-and-views/news/media-releases/2026/hsbc-orion-awarded-digit-platform-mandate",
+            "retrieved_at": "2026-09-14",
+            "kind": "operator_press_release",
+            "note": "dated 2026-02-12"
+          }
+        ]
+      },
+      {
+        "id": "shared-ledger:swift",
+        "name": "Swift blockchain-based shared ledger (Swift's pilot)",
+        "operator": "Swift",
+        "class": "DOCUMENTARY",
+        "status_as_documented": "Attributed: CoinDesk (2026-07-09) reports Swift saying the ledger is ready for initial use by 17 banks across six continents, which are preparing to pilot live transactions. Swift's own release was not readable: swift.com returned HTTP 403 to fetches on 2026-09-14.",
+        "what_as_documented": "Attributed to Swift via CoinDesk: a shared layer for tokenised deposits issued on the banks' own ledgers, for 24/7 cross-border payments. Named banks in the report: UBS, BNP Paribas, BNY, Citi, HSBC, Wells Fargo.",
+        "on_chain_observable": "NO — permissioned; tokenised deposits stay on participating banks' ledgers per the report.",
+        "attribution": "CoinDesk, 2026-07-09; the Swift press release URL is recorded but was not read (HTTP 403).",
+        "axes": {
+          "ledger_observability": "UNMEASURED",
+          "supply_or_volume": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "operational_status": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.coindesk.com/business/2026/07/09/swift-rolls-out-24-7-blockchain-payment-systems-with-17-global-banks-across-six-continents",
+            "retrieved_at": "2026-09-14",
+            "kind": "attributed_report"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "retrieved_at": "2026-09-14",
+            "kind": "operator_press_release",
+            "note": "HTTP 403 to fetch; not read"
+          }
+        ]
+      },
+      {
+        "id": "gbtd:uk-finance",
+        "name": "GBTD — Great British Tokenised Deposits (UK Finance industry pilot)",
+        "operator": "UK Finance (industry pilot with participating banks)",
+        "class": "DOCUMENTARY",
+        "status_as_documented": "Pilot phase described as running \"until mid-2026\". That stated end date has passed as of 2026-09-14; the current status is UNVERIFIED.",
+        "what_as_documented": "\"GBTD\" is defined by UK Finance as Great British Tokenised Deposits — a digital representation of sterling commercial bank money. Participants listed: Barclays, HSBC, Lloyds Banking Group, Monzo, NatWest, Nationwide, Santander; supported by Quant, EY and Linklaters. Use cases: marketplace person-to-person payments, remortgaging, digital asset settlement.",
+        "on_chain_observable": "NO — no public contract or ledger is published on the page.",
+        "attribution": null,
+        "axes": {
+          "ledger_observability": "UNMEASURED",
+          "supply_or_volume": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "operational_status": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.ukfinance.org.uk/tokenised-sterling-deposits",
+            "retrieved_at": "2026-09-14",
+            "kind": "operator_page",
+            "note": "defines GBTD"
+          },
+          {
+            "url": "https://www.ukfinance.org.uk/news-and-insight/press-release/uk-finance-announces-live-pilot-phase-deliver-tokenised-sterling",
+            "retrieved_at": "2026-09-14",
+            "kind": "operator_press_release",
+            "note": "search-observed"
+          }
+        ]
+      },
+      {
+        "id": "agora:bis",
+        "name": "Project Agorá",
+        "operator": "BIS Innovation Hub with the Institute of International Finance (convenors)",
+        "class": "DOCUMENTARY",
+        "status_as_documented": "Experimental. The 2026-05-27 BIS release says the prototype showed tokenisation can address inefficiencies in wholesale cross-border payments and that work will advance to real-value testing; no production timeline is given.",
+        "what_as_documented": "A shared programmable platform with tokenised central bank reserves and tokenised commercial bank deposits. Central banks: Bank of England, Federal Reserve Bank of New York, Bank of France, Bank of Japan, Bank of Korea, Bank of Mexico, Swiss National Bank; more than 40 private-sector institutions; Bank of Canada joining.",
+        "on_chain_observable": "NO — research prototype; no public ledger.",
+        "attribution": null,
+        "axes": {
+          "ledger_observability": "UNMEASURED",
+          "supply_or_volume": "UNMEASURED",
+          "redemption": "UNMEASURED",
+          "operational_status": "UNMEASURED"
+        },
+        "sources": [
+          {
+            "url": "https://www.bis.org/press/p260527.htm",
+            "retrieved_at": "2026-09-14",
+            "kind": "operator_press_release",
+            "note": "dated 2026-05-27"
+          },
+          {
+            "url": "https://www.bis.org/publ/othp110.pdf",
+            "retrieved_at": "2026-09-14",
+            "kind": "operator_report",
+            "note": "search-observed; not read"
+          }
+        ]
+      }
+    ]
+  }
 }

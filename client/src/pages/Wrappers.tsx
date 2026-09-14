@@ -49,8 +49,18 @@ type Rec = {
   reads?: { wrapped_total_supply?: Read; escrow_balance?: Read };
   error?: string | null;
   note?: string | null;
+  profile?: Profile | null;
 };
-type Ledger = { as_of: string; counts: Record<string, number>; records: Rec[]; attests?: string };
+type Source = { url: string; retrieved_at: string; kind: string; note?: string };
+type Profile = { issuer: string; measurement_class: string; sources: Source[]; premise_flag?: string };
+type DocRow = { id: string; name: string; operator: string; status_as_documented: string; on_chain_observable: string; attribution?: string | null; axes: Record<string, string>; sources: Source[] };
+type Ledger = {
+  as_of: string;
+  counts: Record<string, number>;
+  records: Rec[];
+  attests?: string;
+  documentary?: { class: string; definition: string; rows: DocRow[] };
+};
 
 const STATE_LABEL: Record<string, string> = {
   ESCROW_PARITY_READ: "Escrow parity read",
@@ -193,6 +203,18 @@ export default function Wrappers() {
                       <div className="font-semibold">{r.wrapped.symbol} <span className="text-slate-500">on {r.wrapped.chain}</span></div>
                       <div className="font-mono text-xs text-slate-500">{short(r.wrapped.address)}</div>
                       <div className="text-xs text-slate-600">{r.backing_model === "escrow" ? `vs ${r.escrow_name}` : r.backing_model === "native" ? "native issuance" : "custodial reserve"}</div>
+                      {r.profile ? (
+                        <details className="mt-1 max-w-xs text-xs text-slate-600">
+                          <summary className="cursor-pointer text-emerald-700">Issuer-documented context ({r.profile.sources.length} sources)</summary>
+                          <p className="mt-1">{r.profile.issuer}</p>
+                          {r.profile.premise_flag ? <p className="mt-1 text-amber-800">{r.profile.premise_flag}</p> : null}
+                          <ul className="mt-1 list-disc pl-4">
+                            {r.profile.sources.map((s) => (
+                              <li key={s.url}><a className="underline" href={s.url} rel="noopener noreferrer">{s.kind}</a> · retrieved {s.retrieved_at}{s.note ? ` · ${s.note}` : ""}</li>
+                            ))}
+                          </ul>
+                        </details>
+                      ) : null}
                     </td>
                     <td className="px-3 py-2 font-mono tabular-nums">{fmt(r.reads?.wrapped_total_supply?.normalized)}</td>
                     <td className="px-3 py-2 font-mono tabular-nums">{fmt(r.reads?.escrow_balance?.normalized)}</td>
@@ -206,6 +228,42 @@ export default function Wrappers() {
             </table>
           </div>
         )}
+        {ledger?.documentary?.rows?.length ? (
+          <div className="mt-10">
+            <h2 id="documentary-heading" className="text-2xl font-black">Institutional token programmes — documentary</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">{ledger.documentary.definition}</p>
+            <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <table className="min-w-full text-sm">
+                <thead className="bg-slate-100 text-left text-xs font-bold uppercase tracking-wider text-slate-600">
+                  <tr>
+                    <th className="px-3 py-2">Programme</th>
+                    <th className="px-3 py-2">Status as documented</th>
+                    <th className="px-3 py-2">Readable from a public chain</th>
+                    <th className="px-3 py-2">Axes</th>
+                    <th className="px-3 py-2">Sources</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ledger.documentary.rows.map((d) => (
+                    <tr key={d.id} className="border-t border-slate-100 align-top">
+                      <td className="px-3 py-2"><div className="font-semibold">{d.name}</div><div className="text-xs text-slate-500">{d.operator}</div></td>
+                      <td className="max-w-md px-3 py-2 text-xs text-slate-700">{d.status_as_documented}{d.attribution ? <div className="mt-1 text-slate-500">Attribution: {d.attribution}</div> : null}</td>
+                      <td className="max-w-xs px-3 py-2 text-xs text-slate-700">{d.on_chain_observable}</td>
+                      <td className="px-3 py-2 font-mono text-xs text-slate-600">{Object.values(d.axes).every((v) => v === "UNMEASURED") ? "all UNMEASURED" : Object.entries(d.axes).map(([k, v]) => `${k}: ${v}`).join(", ")}</td>
+                      <td className="px-3 py-2 text-xs">
+                        <ul className="list-disc pl-4">
+                          {d.sources.map((s) => (
+                            <li key={s.url}><a className="text-emerald-700 underline" href={s.url} rel="noopener noreferrer">{s.kind}</a> · {s.retrieved_at}{s.note ? ` · ${s.note}` : ""}</li>
+                          ))}
+                        </ul>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : null}
         <p className="mt-6 max-w-3xl text-sm leading-6 text-slate-600">
           A ratio above 1 means more sat in the escrow than the wrapped supply at those two heights; heights on two chains are never
           simultaneous, so every record names both blocks. The roster grows only with a wrapped contract, a canonical contract and a

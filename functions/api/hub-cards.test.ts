@@ -399,6 +399,127 @@ describe("/api/hub-cards — the live card, not every card ever signed", () => {
 });
 
 // ---------------------------------------------------------------------------
+// A withdrawn card is not a measurement, and has no replacement.
+//
+// C-2026-0914-01. 26 swarm cells read MEASURED, accuracy 1, because the prompt's only
+// answer option was the expected one. The cards verify; they measured nothing. No
+// sound card exists to supersede them with, so SUPERSEDED.jsonl (which requires by_id)
+// cannot retire them. WITHDRAWN.jsonl does.
+// ---------------------------------------------------------------------------
+
+const WITHDRAWN = "https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl";
+
+const withdrawal = (withdrawn_id: string, model: string, axis: string) =>
+  JSON.stringify({ withdrawn_id, model, axis, correction: "C-2026-0914-01" });
+
+const installWithdrawn = (
+  withdrawnBody: string | null,
+  files: Record<string, string>,
+  supersededBody = "",
+) => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (input: string | URL | Request) => {
+      const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      if (url === TREE) return listedIndexes();
+      if (url === LEDGER) return new Response(supersededBody, { status: 200 });
+      if (url === WITHDRAWN) {
+        return withdrawnBody === null
+          ? new Response("no", { status: 500 })
+          : new Response(withdrawnBody, { status: 200 });
+      }
+      const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
+      return new Response(files[name] ?? "", { status: 200 });
+    }),
+  );
+};
+
+const ONE_OPTION: Record<string, string> = {
+  INDEX: [carded("a/one", "swarm", "MEASURED", "badsha"), carded("a/two", "care", "MEASURED", "goodsha")].join("\n"),
+  "INDEX-safety": "",
+  "INDEX-art5-affect": "",
+  "INDEX-empty3": "",
+};
+
+describe("/api/hub-cards — a withdrawn card is not counted", () => {
+  it("moves a withdrawn card out of cells and counts and lists it with its correction", async () => {
+    installWithdrawn(withdrawal("badsha", "a/one", "swarm"), ONE_OPTION);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    const cells = body.cells as unknown as Array<Record<string, unknown>>;
+    // Without the withdrawal ledger this is {cells: 2, measured: 2}.
+    expect(counts.complete).toBe(true);
+    expect(counts.cells).toBe(1);
+    expect(counts.measured).toBe(1);
+    expect(counts.withdrawn_excluded).toBe(1);
+    expect(counts.withdrawals_resolved).toBe(true);
+    expect(cells.map((c) => c.model)).toEqual(["a/two"]);
+    expect(body.withdrawn_cells).toEqual([
+      expect.objectContaining({
+        model: "a/one",
+        axis: "swarm",
+        card_sha256: "badsha",
+        status_as_published: "MEASURED",
+        correction: "C-2026-0914-01",
+      }),
+    ]);
+  });
+
+  it("an unreadable withdrawal ledger withholds totals and drops nothing", async () => {
+    installWithdrawn(null, ONE_OPTION);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    const honesty = body.honesty as unknown as Record<string, string>;
+    expect(counts.complete).toBe(false);
+    expect(counts.measured).toBeNull();
+    expect(counts.withdrawn_excluded).toBeNull();
+    expect(counts.withdrawn_ledger_read).toBe(false);
+    expect(counts.read_so_far).toMatchObject({ cells: 2, measured: 2 });
+    expect(honesty.withdrawn_ledger).toMatch(/UNREADABLE/);
+  });
+
+  it("a row missing its correction id makes the ledger unreadable, not empty", async () => {
+    installWithdrawn(JSON.stringify({ withdrawn_id: "badsha", model: "a/one", axis: "swarm" }), ONE_OPTION);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    expect(counts.withdrawn_ledger_read).toBe(false);
+    expect(counts.cells).toBeNull();
+  });
+
+  it("does not apply a withdrawal that names a different pair", async () => {
+    installWithdrawn(withdrawal("badsha", "someone/else", "swarm"), ONE_OPTION);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    expect(counts.complete).toBe(false);
+    expect(counts.withdrawn_excluded).toBe(0);
+    expect(counts.withdrawals_unresolved).toEqual([
+      expect.objectContaining({ withdrawn_id: "badsha", reason: "observed row pair does not match withdrawal ledger" }),
+    ]);
+    expect(counts.read_so_far).toMatchObject({ cells: 2, measured: 2 });
+  });
+
+  it("a predecessor retired in favour of a withdrawn card stays retired", async () => {
+    installWithdrawn(
+      withdrawal("newsha", "a/one", "swarm"),
+      {
+        INDEX: carded("a/one", "swarm", "MEASURED", "newsha"),
+        "INDEX-safety": carded("a/one", "swarm", "MEASURED", "oldsha"),
+        "INDEX-art5-affect": "",
+        "INDEX-empty3": "",
+      },
+      JSON.stringify({ superseded_id: "oldsha", by_id: "newsha", model: "a/one", axis: "swarm" }),
+    );
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    expect(counts.complete).toBe(true);
+    expect(counts.superseded_excluded).toBe(1);
+    expect(counts.withdrawn_excluded).toBe(1);
+    expect(counts.cells).toBe(0);
+    expect(counts.measured).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // The population is what the dataset publishes, not what this file remembers.
 //
 // `indexes_total: 4` was a literal. Reporting it beside `complete: true` claimed
@@ -423,7 +544,9 @@ const installDiscovery = (names: string[] | null) => {
               { status: 200 },
             );
       }
-      if (url.endsWith("SUPERSEDED.jsonl")) return new Response("", { status: 200 });
+      if (url.endsWith("SUPERSEDED.jsonl") || url.endsWith("WITHDRAWN.jsonl")) {
+        return new Response("", { status: 200 });
+      }
       const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
       return new Response(row(`m/${name}`, "governance", "MEASURED"), { status: 200 });
     }),

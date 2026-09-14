@@ -121,7 +121,13 @@ for (const dir of STRANGER_DIRS) {
 }
 
 for (const slug of VENDORS) n += pretty(`vs/${slug}`, compare);
-for (const p of PERSONAS) n += pretty(`for/${p}`, home);
+// Persona pages are real prerendered routes (/for/:persona is in prerender.mjs's MUST list).
+// Copying HOME over them with overwrite shipped the homepage title and canonical at /for/<p>/.
+// Keep the prerendered page; fall back to HOME only when no page exists, and never overwrite.
+for (const p of PERSONAS) {
+  const src = fromDir(`for/${p}`, home);
+  if (src) n += pretty(`for/${p}`, src, false);
+}
 for (const s of INDUSTRIES) n += pretty(`industries/${s}`, industriesHub);
 n += pretty("library/axes", library);
 n += pretty("library/measurement", library);

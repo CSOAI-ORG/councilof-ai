@@ -89,6 +89,8 @@ const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
 const ContentReviewNotice = lazy(() => import("./pages/ContentReviewNotice"));
 const AnswersIndex = lazy(() => import("./pages/Answers"));
 const AnswerPage = lazy(() => import("./pages/Answers").then((m) => ({ default: m.AnswerPage })));
+const EvidenceNotesIndex = lazy(() => import("./pages/EvidenceNotes"));
+const EvidenceNotePage = lazy(() => import("./pages/EvidenceNotes").then((m) => ({ default: m.EvidenceNotePage })));
 const Recommendations = lazy(() => import("./pages/Recommendations"));
 const MarketingHome = lazy(() => import("./pages/MarketingHome"));
 const Standards = lazy(() => import("./pages/Standards"));
@@ -188,6 +190,7 @@ const Launch = lazy(() => import("./pages/Launch"));
 const OwaspAgentic = lazy(() => import("./pages/OwaspAgentic"));
 const PostmortemX402 = lazy(() => import("./pages/PostmortemX402"));
 const ThreeRootCeremony = lazy(() => import("./pages/ThreeRootCeremony"));
+const EvaluatorAccess = lazy(() => import("./pages/EvaluatorAccess"));
 const PublicPress = lazy(() => import("./pages/PublicPress"));
 const TransparencyCop = lazy(() => import("./pages/TransparencyCop"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
@@ -316,6 +319,7 @@ const GovGraph = lazy(() => import("./pages/GovGraph"));
 const NetworkPage = lazy(() => import("./pages/NetworkPage"));
 const AttestationNetwork = lazy(() => import("./pages/AttestationNetwork"));
 const McpTrustBoard = lazy(() => import("./pages/McpTrustBoard"));
+const X402Leaderboard = lazy(() => import("./pages/X402Leaderboard"));
 const GspcVsAiluminate = lazy(() => import("./pages/GspcVsAiluminate"));
 const RegulatorAtlas = lazy(() => import("./pages/RegulatorAtlas"));
 const Competitors = lazy(() => import("./pages/Competitors"));
@@ -341,6 +345,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — the rail is free, metered routes quote at the 402 | Council of AI",
   "/wrappers": "Wrapped-asset parity ledger — read, not rated | Council of AI",
   "/quickstart": "Agent quickstart — measurements, changes, verification and feeds | Council of AI",
+  "/evaluator-access": "Conditions for Independent Evaluator Access | Council of AI",
   "/products": "Council OS — the SKUs, one workspace | Council of AI",
     "/attestation": "Council Attestation Network | Council of AI",
   "/badge": "White-label badge — Council of AI",
@@ -356,6 +361,8 @@ const ROUTE_TITLES: Record<string, string> = {
   "/gspc-vs-ailuminate": "GSPC vs AILuminate — an honest breadth comparison | Council of AI",
   "/ailuminate": "GSPC vs AILuminate — an honest breadth comparison | Council of AI",
   "/boards/mcp": "MCP Trust Board — who answers the handshake, under what terms | Council of AI",
+  "/x402-leaderboard": "x402 Bazaar leaderboard — every door returns 402, price in the 402 only | CSOAI",
+  "/x402-board": "x402 Bazaar leaderboard — every door returns 402, price in the 402 only | CSOAI",
   "/certification": "Measurement credential — how CSOAI attestation works | CSOAI",
   "/courses": "AI governance courses & training | CSOAI",
   "/api-docs": "API & MCP documentation | CSOAI",
@@ -390,6 +397,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
   "/answers": "Answers — measurement explainers | Council of AI",
+  "/notes": "Evidence notes — one citable page per note | Council of AI",
   "/doctrine": "Doctrine — measurement, not certification | Council of AI",
   "/launch": "The launch story — Council of AI",
   "/owasp-agentic": "OWASP Agentic Top 10 — the public measured mapping | Council of AI",
@@ -754,6 +762,7 @@ function App() {
                   <Route path="/stablecoins" component={Stablecoins} />
                   <Route path="/wrappers" component={Wrappers} />
                   <Route path="/quickstart" component={Quickstart} />
+                  <Route path="/evaluator-access" component={EvaluatorAccess} />
                   <Route path="/gspc/jail" component={JailFolder} />
                   <Route path="/gspc/:axis" component={GspcScoreboard} />
                   <Route path="/insurers" component={Insurers} />
@@ -796,6 +805,8 @@ function App() {
                   <Route path="/methodology" component={Methodology} />
                   <Route path="/answers/:slug" component={AnswerPage} />
                   <Route path="/answers" component={AnswersIndex} />
+                  <Route path="/notes/:slug" component={EvidenceNotePage} />
+                  <Route path="/notes" component={EvidenceNotesIndex} />
                   <Route path="/ai-act-benchmark" component={AiActBenchmark} />
                   <Route path="/provbench" component={ProvBench} />
                   <Route path="/layer0" component={Layer0} />
@@ -809,6 +820,8 @@ function App() {
                                       <Route path="/attestation" component={AttestationNetwork} />
                                       <Route path="/attestation-network">{() => <Redirect to="/attestation" />}</Route>
                   <Route path="/trust" component={McpTrustBoard} />
+                  <Route path="/x402-leaderboard" component={X402Leaderboard} />
+                  <Route path="/x402-board" component={X402Leaderboard} />
                   <Route path="/gspc-vs-ailuminate" component={GspcVsAiluminate} />
                   <Route path="/ailuminate" component={GspcVsAiluminate} />
                   <Route path="/boards/mcp" component={McpTrustBoard} />

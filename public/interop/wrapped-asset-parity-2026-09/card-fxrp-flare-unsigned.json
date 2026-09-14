@@ -1,0 +1,66 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "wrapped FXRP on flare vs native issuance — INDEXED_CUSTODIAL",
+  "as_of": "2026-09-14T10:58:07.494Z",
+  "source_urls": [
+    "https://flare-api.flare.network/ext/C/rpc"
+  ],
+  "payload": {
+    "kind": "csoai.wrapper.parity/0.1",
+    "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+    "id": "fxrp:flare",
+    "backing_model": "custodial",
+    "wrapped": {
+      "chain": "flare",
+      "symbol": "FXRP",
+      "address": "0xAd552A648C74D49E10027AB8a618A3ad4901c5bE",
+      "chainId": 14,
+      "block": 69755467,
+      "block_hash": "0xcc508faf635570d89370b29717c53371a80ef3c925e9a2bc3ec7458a76eb801e",
+      "block_time": 1789383464
+    },
+    "canonical": {
+      "chain": "xrpl",
+      "symbol": "XRP",
+      "address": "FAssets agents' XRPL accounts; not an EVM contract",
+      "chainId": null,
+      "block": null,
+      "block_hash": null
+    },
+    "escrow": null,
+    "escrow_name": null,
+    "note": "Underlying XRP sits in FAssets agents' XRPL accounts with agent collateral posted on Flare; Flare documents the XRPL side as verified through its Data Connector. Neither the XRPL holdings nor the agent collateral are read here. INDEXED, no parity claimed.",
+    "reads": {
+      "wrapped_total_supply": {
+        "query": "totalSupply()",
+        "raw": "0x0000000000000000000000000000000000000000000000000000858b3a799738",
+        "raw_sha256": "e925483c0648e543a4966a725d6682d7c4761cfa469140cb2943e29f374fd925",
+        "atomic": "146833027995448",
+        "normalized": "146833027.995448",
+        "decimals": 6
+      }
+    },
+    "escrow_over_wrapped": null,
+    "parity_state": "INDEXED_CUSTODIAL",
+    "state": "DISCOVERED",
+    "error": null,
+    "fetched_at": "2026-09-14T10:58:07.494Z",
+    "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ]
+  },
+  "tags": [
+    "eater:wrapper-parity",
+    "axis:distribution-integrity",
+    "backing:custodial",
+    "state:INDEXED_CUSTODIAL"
+  ],
+  "unmeasured": [
+    "reserve (custodian-held off this chain; not readable here)"
+  ],
+  "did_intended": "did:web:csoai.org#board-attestation-1",
+  "sha256": "fc9f1549694303dc9766295170cbdd06ff0d41f4360bfd5f5bc9e062a5133a02",
+  "sig_ed25519": null
+}

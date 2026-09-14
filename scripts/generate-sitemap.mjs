@@ -499,6 +499,21 @@ for (const slug of answerSlugs) {
   if (!seen.has(ap)) { seen.add(ap); paths.push(ap); }
 }
 
+// Evidence notes: one page per note, every id snapshotted by prerender.mjs from the same file.
+// Bare path pushed; canonicalise() rewrites it to the trailing-slash form via the
+// /notes/<id> -> /notes/<id>/ rule generate-redirects emits.
+let noteIds = [];
+try {
+  noteIds = (JSON.parse(readFileSync(join(ROOT, "client/src/data/evidence-notes.json"), "utf8")).notes || [])
+    .map((n) => n && n.id).filter(Boolean);
+} catch {
+  console.warn("[sitemap] evidence-notes.json unreadable — no /notes/:slug entries emitted");
+}
+for (const id of noteIds) {
+  const np = `/notes/${id}`;
+  if (!seen.has(np)) { seen.add(np); paths.push(np); }
+}
+
 // --- Static pages under public/ ---------------------------------------------
 // This generator derives its routes from App.tsx <Route> declarations, so a page that is a
 // PLAIN HTML FILE under public/ is structurally invisible to it. Measured live 2026-09-05:

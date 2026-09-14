@@ -110,6 +110,31 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         with self.assertRaises(AssertionError):
             validate(changed)
 
+    def test_absence_from_a_register_is_unchecked_never_not_registered(self) -> None:
+        rendered = json.dumps(self.document)
+        for word in ("NOT_REGISTERED", "UNREGISTERED", "NOT_LISTED"):
+            self.assertNotIn(word, rendered)
+        usdt = next(row for row in self.document["assets"] if row["symbol"] == "USDT" and row["name"] == "Tether")
+        self.assertEqual("UNCHECKED", usdt["regulatory_status"]["registers"]["esma_mica_interim_emt"]["state"])
+        changed = copy.deepcopy(self.document)
+        changed["assets"][0]["regulatory_status"]["registers"]["esma_mica_interim_emt"] = {"state": "NOT_REGISTERED"}
+        with self.assertRaises(AssertionError):
+            validate(changed)
+
+    def test_register_listing_must_cite_a_pinned_file(self) -> None:
+        usdc = next(row for row in self.document["assets"] if row["id"] == "2")
+        self.assertEqual("TOKEN_WHITE_PAPER_LISTED", usdc["regulatory_status"]["registers"]["esma_mica_interim_emt"]["state"])
+        changed = copy.deepcopy(self.document)
+        row = next(r for r in changed["assets"] if r["id"] == "2")
+        row["regulatory_status"]["registers"]["esma_mica_interim_emt"]["evidence"]["file_sha256"] = "0" * 64
+        with self.assertRaises(AssertionError):
+            validate(changed)
+        changed = copy.deepcopy(self.document)
+        row = next(r for r in changed["assets"] if r["regulatory_status"]["registers"]["nydfs_greenlist"]["state"] == "UNCHECKED")
+        row["regulatory_status"]["registers"]["nydfs_greenlist"] = {"state": "LISTED_ON_GREENLIST", "evidence": {}}
+        with self.assertRaises(AssertionError):
+            validate(changed)
+
     def test_public_root_refreshes_readiness_after_witnesses(self) -> None:
         workflow = (Path(".") / ".github/workflows/public-root.yml").read_text()
         witness_final = workflow.index("python scripts/witness_public_root.py --refresh-eas")

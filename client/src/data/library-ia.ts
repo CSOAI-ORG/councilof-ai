@@ -60,8 +60,10 @@ export const PRIMARY_PATHS = new Set<string>([
   // /findings is the hub; /model/:id and /regulator/:id detail views are covered by
   // PRIMARY_PREFIXES below (a param path can never be an exact-Set member).
   "/findings",
+  // Evidence notes index; each /notes/<id> page is covered by PRIMARY_PREFIXES below.
+  "/notes",
   // Products — the family, and who it is for
-  "/products", "/attestation", "/gpai-evidence", "/cra-readiness", "/financial-axes", "/stablecoins", "/wrappers", "/quickstart",
+  "/products", "/attestation", "/gpai-evidence", "/cra-readiness", "/financial-axes", "/stablecoins", "/wrappers", "/quickstart", "/evaluator-access",
   "/distribution-integrity", "/rlusd", "/embed", "/white-label", "/badge", "/cobol", "/cobolbridge",
   "/council-licensing", "/licensing-agreement",
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
@@ -133,7 +135,7 @@ export const PRIMARY_PATHS = new Set<string>([
  * A prefix here means "this whole family is primary" — it is the same decision
  * PRIMARY_PATHS records, expressed for a route that has no single path.
  */
-export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/vs/", "/model/"];
+export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/vs/", "/model/", "/notes/"];
 
 export function isPrimaryPath(p: string): boolean {
   return PRIMARY_PATHS.has(p) || PRIMARY_PREFIXES.some((pre) => p.startsWith(pre));

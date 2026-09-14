@@ -421,6 +421,22 @@ try {
   console.warn("[redirects] answers.json unreadable — no /answers/:slug bare→slash rules emitted");
 }
 
+// /notes/:slug — one evidence note page per entry in evidence-notes.json, snapshotted by the
+// prerenderer at /notes/<id>/index.html. Same reason as /answers: without a bare→slash rule the
+// no-slash link 404s, and generate-sitemap.mjs needs the rule to list the 200 trailing-slash form.
+let NOTE_SLASH = [];
+try {
+  const noteIds = (JSON.parse(readFileSync(join(ROOT, "client/src/data/evidence-notes.json"), "utf8")).notes || [])
+    .map((n) => n && n.id)
+    .filter(Boolean);
+  NOTE_SLASH = noteIds
+    .map((s) => `/notes/${s}`)
+    .filter((p) => !CLAIMED_FROM.has(normFrom(p)))
+    .map((p) => `${p}  ${p}/  308`);
+} catch {
+  console.warn("[redirects] evidence-notes.json unreadable — no /notes/:slug bare→slash rules emitted");
+}
+
 // Everything with an exact `from`. These land on the 2000-rule STATIC budget.
 const STATIC_RULES = [
   "# --- hand-written consolidation redirects (preserved) ---",
@@ -435,6 +451,9 @@ const STATIC_RULES = [
   "",
   `# --- /answers/:slug explainer bare paths → prerendered trailing-slash (${ANSWER_SLASH.length}) ---`,
   ...ANSWER_SLASH,
+  "",
+  `# --- /notes/:slug evidence note bare paths → prerendered trailing-slash (${NOTE_SLASH.length}) ---`,
+  ...NOTE_SLASH,
   "",
   "# --- storefront static pages: served directly, trailing slash 308→slashless ---",
   ...STOREFRONT,

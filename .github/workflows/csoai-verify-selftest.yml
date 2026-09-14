@@ -1,0 +1,125 @@
+name: csoai-verify self-test (dispatch only)
+
+# Runtime proof for both verify actions on a GitHub-hosted runner — the release requirement
+# actions/verify-card/README.md records as still open. Dispatch only: no schedule, no push
+# trigger, no secrets, read-only. Every positive assertion has a tampered control that must fail.
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency: { group: csoai-verify-selftest, cancel-in-progress: true }
+
+jobs:
+  offline-action:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            actions
+            packages/gspc-card-verifier
+            tools/verify
+            harness/gspc-top100
+          sparse-checkout-cone-mode: true
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - name: Fetch a live signed card and a tampered copy
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          python3 - <<'PY'
+          import json, sys, urllib.request
+          sys.path.insert(0, "tools/verify")
+          import card_v01_validate as v01
+          UA = {"User-Agent": "csoai-verify-selftest"}
+          get = lambda u: urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=30).read()
+          idx = json.loads(get("https://councilof.ai/signed/card_index.json"))
+          card = json.loads(get("https://councilof.ai" + idx["cards"][0]["card_url"]))
+          open("evidence/live-card.json", "w").write(json.dumps(card))
+          open("evidence/tampered-card.json", "w").write(json.dumps(v01.tamper(card)))
+          PY
+      - id: good
+        uses: ./actions/verify-card
+        with: { artifact: evidence/live-card.json, fail_on_mismatch: "false" }
+      - id: bad
+        uses: ./actions/verify-card
+        with: { artifact: evidence/tampered-card.json, fail_on_mismatch: "false" }
+      - name: Assert VALID, and the tampered control INVALID
+        env:
+          GOOD: ${{ steps.good.outputs.verdict }}
+          BAD: ${{ steps.bad.outputs.verdict }}
+        run: |
+          echo "live=$GOOD tampered=$BAD"
+          test "$GOOD" = VALID
+          test "$BAD" = INVALID
+
+  online-action:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            actions
+            packages/gspc-card-verifier
+            tools/verify
+            harness/gspc-top100
+          sparse-checkout-cone-mode: true
+      - name: Offline unit tests (synthetic key; every positive has a failing control)
+        run: |
+          python3 -c "import cryptography" 2>/dev/null || python3 -m pip install --quiet --user "cryptography>=42" 2>/dev/null || python3 -m pip install --quiet --user --break-system-packages "cryptography>=42"
+          python3 tools/verify/test_verify_tools.py
+      - name: Validator over the whole signed index, with tamper controls
+        run: python3 tools/verify/card_v01_validate.py --index https://councilof.ai/signed/card_index.json --tamper-control | tail -2
+      - id: pick
+        name: Pick a signed-index card, a card-root card, and a tampered copy
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, sys
+          sys.path.insert(0, "tools/verify")
+          import csoai_verify as cv, card_v01_validate as v01
+          idx = json.loads(cv.fetch("https://councilof.ai/signed/card_index.json"))
+          signed = "https://councilof.ai" + idx["cards"][0]["card_url"]
+          roots, err = cv.discover_card_roots(1)
+          assert roots, err
+          leaf = json.loads(cv.fetch(roots[0]))["leaves"][0]["card"]
+          mill = f"https://councilof.ai/interop/mill-cards-signed/{leaf}"
+          open("evidence/tampered.json", "w").write(json.dumps(v01.tamper(json.loads(cv.fetch(signed)))))
+          print(f"signed={signed}")
+          print(f"mill={mill}")
+          PY
+      - id: signed
+        uses: ./actions/csoai-verify
+        with: { card: "${{ steps.pick.outputs.signed }}" }
+      - id: mill
+        uses: ./actions/csoai-verify
+        with: { card: "${{ steps.pick.outputs.mill }}", require_inclusion: "true", require_ots: "true" }
+      - id: tampered
+        uses: ./actions/csoai-verify
+        with: { card: evidence/tampered.json, tamper_control: "false", fail: "false" }
+      - name: Assert outcomes
+        env:
+          S_SIG: ${{ steps.signed.outputs.signature }}
+          S_INC: ${{ steps.signed.outputs.inclusion }}
+          S_TAMP: ${{ steps.signed.outputs.tamper_control }}
+          M_SIG: ${{ steps.mill.outputs.signature }}
+          M_INC: ${{ steps.mill.outputs.inclusion }}
+          M_OTS: ${{ steps.mill.outputs.ots }}
+          T_SIG: ${{ steps.tampered.outputs.signature }}
+          T_EXIT: ${{ steps.tampered.outputs.exit_code }}
+        run: |
+          echo "signed-index: $S_SIG / $S_INC / tamper $S_TAMP"
+          echo "card-root:    $M_SIG / $M_INC / ots $M_OTS"
+          echo "tampered:     $T_SIG / exit $T_EXIT"
+          test "$S_SIG" = VALID && test "$S_TAMP" = DETECTED
+          case "$S_INC" in INCLUDED|NOT_IN_SUPPLIED_ROOTS) ;; *) echo "unexpected inclusion state $S_INC"; exit 1;; esac
+          test "$M_SIG" = VALID && test "$M_INC" = INCLUDED && test "$M_OTS" = PRESENT
+          test "$T_SIG" = INVALID && test "$T_EXIT" = 1

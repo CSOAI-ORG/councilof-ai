@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "harness" / "gspc-top100"))
 from mill_hub_queue import (  # noqa: E402
     ITEM_EVIDENCE_SCHEMA, MILL_INSTRUMENT, axis_prompt, canonical_body_bytes,
-    load_bank, read_label,
+    exact_label_menu, load_bank, read_label,
 )
 
 RECEIPT_SCHEMA = "csoai.mill-evidence-admission/0.2"
@@ -87,6 +87,12 @@ def validate_bundle(body: dict, directory: Path) -> dict:
 
     bank = load_bank(bank_path)
     labels = [str(expected).strip().upper() for _, expected in bank]
+    try:
+        exact_label_menu(labels)
+    except ValueError as refused:
+        # C-2026-0914-01: a card graded by a one-option prompt recomputes perfectly and
+        # still measures nothing, so recomputation alone is not admission.
+        raise EvidenceError(str(refused)) from refused
     rows = []
     for i, line in enumerate(items_raw.splitlines(keepends=True)):
         require(line.endswith(b"\n") and line != b"\n", "blank or partial item row")
