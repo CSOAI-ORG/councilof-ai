@@ -84,7 +84,14 @@ try {
   const { status, body } = await get(HOST + "/llms.txt");
   if (status !== 200) fail(`/llms.txt returned HTTP ${status}`);
   else {
-    const urls = [...new Set((body.match(/https:\/\/[^\s)\]"'<>]+/g) || []).map((u) => u.replace(/[.,;:]+$/, "")))];
+    // The URL pattern stops at "<", so `?id=<pair>` would be read as `?id=` and fetched as a
+    // real request (a correct 400). Keep the character that ended the match when it opens a
+    // placeholder, so PLACEHOLDER below can see it and skip the documentation URL.
+    const urls = [...new Set([...body.matchAll(/https:\/\/[^\s)\]"'<>]+/g)].map((m) => {
+      const u = m[0].replace(/[.,;:]+$/, "");
+      const next = body[m.index + m[0].length] || "";
+      return u === m[0] && /[<{\u2026]/.test(next) ? u + next : u;
+    }))];
     if (!urls.length) fail(`/llms.txt advertises no absolute https:// URLs (parse regression?)`);
     for (const u of urls) {
       if (PLACEHOLDER.test(u)) { pass(`/llms.txt placeholder, not fetched: ${u}`); continue; }
