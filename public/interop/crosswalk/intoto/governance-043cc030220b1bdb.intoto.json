@@ -2,13 +2,12 @@
   "_type": "https://in-toto.io/Statement/v1",
   "predicate": {
     "figure": {
-      "accuracy": 0.6,
+      "accuracy": 0.5259,
       "axis": "governance",
       "issuer": "CSOAI Ltd",
       "kind": "gspc.measurement-card",
-      "model": "deepseek-ai/DeepSeek-V3.2-Exp",
-      "n": 30,
-      "route": "hf-router",
+      "model": "ollama:llama3.1:8b@sha256:46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+      "n": 232,
       "status": "MEASURED",
       "unmeasured": []
     },
@@ -16,7 +15,7 @@
       "bank_sha256": null,
       "grader": null,
       "items_sha256": null,
-      "n": 30,
+      "n": 232,
       "rerun": null
     },
     "never": [
@@ -31,7 +30,7 @@
     "reproducible": false,
     "source": {
       "canonical_rule": "sorted JSON.stringify (ECMAScript numbers)",
-      "card_id": "06d0514f3ed72af4a0a6c14025caec916e6a115d0e256080fec44774f6609e0f",
+      "card_id": "043cc030220b1bdb4a03a4204d88890392a8fe3fb81787858e8c896a6722ce8d",
       "card_kind": "gspc.measurement-card",
       "preimage_rule": "sha256(canonical body)",
       "signature_alg": "Ed25519",
@@ -59,9 +58,9 @@
   "subject": [
     {
       "digest": {
-        "sha256": "06d0514f3ed72af4a0a6c14025caec916e6a115d0e256080fec44774f6609e0f"
+        "sha256": "043cc030220b1bdb4a03a4204d88890392a8fe3fb81787858e8c896a6722ce8d"
       },
-      "name": "gspc-measurement-card/governance/deepseek-ai/DeepSeek-V3.2-Exp"
+      "name": "gspc-measurement-card/governance/ollama:llama3.1:8b@sha256:46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e"
     }
   ]
 }
