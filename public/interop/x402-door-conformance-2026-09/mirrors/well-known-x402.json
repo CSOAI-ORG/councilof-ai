@@ -206,6 +206,31 @@
     },
     {
       "method": "GET",
+      "url": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+      "paid_for": "assembly",
+      "free_preview": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum&preview=1",
+      "description": "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+          "description": "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
+          "mimeType": "application/json",
+          "outputSchema": {
+            "type": "object"
+          },
+          "maxTimeoutSeconds": 300,
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          }
+        }
+      ]
+    },
+    {
+      "method": "GET",
       "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
       "paid_for": "assembly",
       "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1",
