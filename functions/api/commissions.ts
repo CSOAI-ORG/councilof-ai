@@ -19,6 +19,7 @@ type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise
 type PodCard = { id: string; url: string; subject: string; axis: string | null; n: number | null; status: string | null; run_id: string | null };
 type Delivery = { state: "CARDS_PUBLISHED" | "NONE" | "UNCHECKABLE"; count: number | null; note?: string };
 export const POD_CARDS_INDEX = "/interop/pod-cards-index.json";
+export const HUB_CARDS_INDEX = "/interop/hub-cards-index.json";
 
 type Commission = {
   subject: string;
@@ -92,12 +93,20 @@ export async function listCommissions(kv: KVNamespace): Promise<{ commissions: O
  * when it cannot be read — the caller then reports UNCHECKABLE, never an empty delivery.
  */
 export async function readPodCardsIndex(env: Env, origin: string, fetcher: typeof fetch = fetch): Promise<Map<string, PodCard[]> | null> {
+  return readCardsIndex(env, origin, POD_CARDS_INDEX, "csoai.pod-cards-index/0.1", fetcher);
+}
+
+export async function readHubCardsIndex(env: Env, origin: string, fetcher: typeof fetch = fetch): Promise<Map<string, PodCard[]> | null> {
+  return readCardsIndex(env, origin, HUB_CARDS_INDEX, "csoai.hub-cards-index/0.1", fetcher);
+}
+
+async function readCardsIndex(env: Env, origin: string, path: string, schema: string, fetcher: typeof fetch): Promise<Map<string, PodCard[]> | null> {
   try {
-    const req = new Request(new URL(POD_CARDS_INDEX, origin).toString());
+    const req = new Request(new URL(path, origin).toString());
     const res = env.ASSETS ? await env.ASSETS.fetch(req) : await fetcher(req);
     if (!res.ok) return null;
     const idx = (await res.json()) as { schema?: string; cards?: unknown };
-    if (idx.schema !== "csoai.pod-cards-index/0.1" || !Array.isArray(idx.cards)) return null;
+    if (idx.schema !== schema || !Array.isArray(idx.cards)) return null;
     const by = new Map<string, PodCard[]>();
     for (const c of idx.cards as Array<Record<string, unknown>>) {
       if (typeof c.id !== "string" || typeof c.url !== "string" || typeof c.subject !== "string") continue;
@@ -117,8 +126,10 @@ export async function readPodCardsIndex(env: Env, origin: string, fetcher: typeo
   }
 }
 
-function joinDelivery(c: Omit<Commission, "cards" | "delivery">, index: Map<string, PodCard[]> | null): Pick<Commission, "cards" | "delivery"> {
-  if (c.fulfillment !== "QUEUED" || !c.model) return { cards: null, delivery: { state: "NONE", count: 0, note: "not a pod-millable target" } };
+function joinDelivery(c: Omit<Commission, "cards" | "delivery">, pod: Map<string, PodCard[]> | null,
+                      hub: Map<string, PodCard[]> | null): Pick<Commission, "cards" | "delivery"> {
+  if (c.fulfillment !== "QUEUED" || !c.model) return { cards: null, delivery: { state: "NONE", count: 0, note: "not a millable model target" } };
+  const index = c.subject_kind === "hub_model" ? hub : pod;
   if (index === null) return { cards: null, delivery: { state: "UNCHECKABLE", count: null, note: `${POD_CARDS_INDEX} unreadable — null, never substituted` } };
   const all = index.get(c.model.toLowerCase()) ?? [];
   const cards = c.axis ? all.filter((k) => k.axis === c.axis) : all;
@@ -137,8 +148,11 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
   }
   try {
     const { commissions: bare, unreadable } = await listCommissions(env.REVENUE_KV);
-    const index = await readPodCardsIndex(env, origin, fetcher);
-    const commissions: Commission[] = bare.map((c) => ({ ...c, ...joinDelivery(c, index) }));
+    const needsPod = bare.some((c) => c.fulfillment === "QUEUED" && c.subject_kind !== "hub_model");
+    const needsHub = bare.some((c) => c.fulfillment === "QUEUED" && c.subject_kind === "hub_model");
+    const pod = needsPod ? await readPodCardsIndex(env, origin, fetcher) : new Map<string, PodCard[]>();
+    const hub = needsHub ? await readHubCardsIndex(env, origin, fetcher) : new Map<string, PodCard[]>();
+    const commissions: Commission[] = bare.map((c) => ({ ...c, ...joinDelivery(c, pod, hub) }));
     const subjects = [...new Set(commissions.map((c) => c.subject))];
     return {
       ...base,
@@ -147,10 +161,11 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
       count: commissions.length,
       subjects,
       queued: commissions.filter((c) => c.fulfillment === "QUEUED").length,
-      delivered: index === null ? null : commissions.filter((c) => c.delivery.state === "CARDS_PUBLISHED").length,
+      delivered: (pod === null || hub === null) ? null : commissions.filter((c) => c.delivery.state === "CARDS_PUBLISHED").length,
       retrieval: {
         index: POD_CARDS_INDEX,
-        state: index === null ? "UNCHECKABLE" : "READ",
+        hub_index: HUB_CARDS_INDEX,
+        state: (pod === null || hub === null) ? "UNCHECKABLE" : "READ",
         how: "each `cards[].url` is a signed card; verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json. Publication of a card is not a certificate and does not change `fulfillment`.",
       },
       unfulfillable: commissions.filter((c) => c.fulfillment === "UNFULFILLABLE").length,
