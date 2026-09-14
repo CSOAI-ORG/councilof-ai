@@ -45,4 +45,20 @@ describe("/wrappers public ledger page", () => {
     expect(ledger.records.length).toBe(Object.values(ledger.counts as Record<string, number>).reduce((a, b) => a + b, 0));
     for (const r of ledger.records) expect(["ESCROW_PARITY_READ", "UNCHECKABLE_NATIVE_ISSUANCE", "INDEXED_CUSTODIAL", "UNMEASURED"]).toContain(r.state);
   });
+
+  it("documentary rows are sourced, dated and never read: every axis UNMEASURED, every source carries a retrieval date", () => {
+    const doc = ledger.documentary;
+    expect(doc?.class).toBe("DOCUMENTARY");
+    expect(doc.rows.length).toBe(doc.counts.DOCUMENTARY);
+    for (const row of doc.rows) {
+      expect(Object.values(row.axes).every((v) => v === "UNMEASURED")).toBe(true);
+      expect(row.sources.length).toBeGreaterThan(0);
+      for (const s of row.sources) { expect(s.url).toMatch(/^https:\/\//); expect(s.retrieved_at).toMatch(/^\d{4}-\d{2}-\d{2}/); }
+    }
+    for (const r of ledger.records) {
+      if (r.profile === null) continue;
+      expect(Object.values(r.profile.axes).every((v) => v === "UNMEASURED")).toBe(true);
+      for (const s of r.profile.sources) expect(s.retrieved_at).toMatch(/^\d{4}-\d{2}-\d{2}/);
+    }
+  });
 });
