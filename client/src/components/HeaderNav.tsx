@@ -37,6 +37,7 @@ export const navigation: NavGroup[] = [
       { name: 'Published tools', href: '/tools', description: 'MCP servers you can run yourself — not a marketplace' },
       { section: 'Specialist boards', name: 'Financial axis', href: '/financial-axes', description: 'The declared financial slots — measured where measured, UNMEASURED and honest where not' },
       { name: 'Stablecoin readiness', href: '/stablecoins', description: 'A frozen discovery index with measurement, signature, root, witness and settlement state kept separate' },
+      { name: 'Wrapper parity', href: '/wrappers', description: 'Wrapped supply against the escrow that backs it, at named blocks — read, not rated; native and custodial wrappers stay indexed' },
       { name: 'EUNOMIA board', href: '/eunomia', description: 'Financial-verification axis, signed, across a two-tier fleet' },
       { name: 'Signed registers', href: '/registers', description: 'The financial-axis register — a stranger can re-derive every row' },
       { name: 'First-Fine Watch', href: '/first-fine-watch', description: 'Signed enforcement record: EU AI Act fines and the deadlines behind them' },
