@@ -1,0 +1,55 @@
+{
+  "card": {
+    "as_of": "2026-09-14T15:11:59Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "did_json_http": 200,
+      "did_key_present": true,
+      "kind": "csoai.layer0.liveness/0.1",
+      "not_a_grade": true,
+      "ots_state": "CONFIRMED_BITCOIN",
+      "pointer_http": 200,
+      "pointer_match": true,
+      "rekor_state": "WITNESSED",
+      "release_gate": "UNRUN",
+      "root_as_of": "2026-09-14T12:34:56Z",
+      "root_card_count": 304,
+      "root_http": 200,
+      "root_merkle_prefix": "831060df66f64745",
+      "state": "PROBED"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6bf9a9f99706a59b8bb4d97a8daf06c4da766a082f1ebed892bccd81e77793ee",
+    "sig_ed25519": "9f2a130590fa2d1305813e51bfc1ea34fe648447ba521ae7ae95cf3147e0f7eeb05a667b71416d3f3ca2bdc6b6236e9f9a76e5b708f8474914de6911b292820a",
+    "source_urls": [
+      "https://councilof.ai/.well-known/did.json",
+      "https://councilof.ai/root.json",
+      "https://councilof.ai/interop/root-witness-pointer.json"
+    ],
+    "subject": "Layer 0 liveness — DID key, signed public root, Rekor + OTS witnesses, at one instant",
+    "surface": "public.notice",
+    "tags": [
+      "layer0",
+      "liveness",
+      "probe",
+      "layer0-liveness-2026-09"
+    ],
+    "unmeasured": [
+      "fault tolerance and independent review (the 33-seat council is a design, not a live property)",
+      "anything about the correctness of the cards the root commits to"
+    ]
+  },
+  "proof": [
+    "8f80e875bdda2260483b8d124de31a3c13518a10666c907ebcd4ebbd12214201",
+    "7f82fc8df6f95d87c828a7fef9629f6e2bc6ea34c85de34e0283c123340b487a",
+    "06b43a0a7fed4788cb9f26f7662ea90033aa50555622fb520fba8f81ed0ef341",
+    "ba67e86fea75038540a21764d5c732dc73801a592b824bb559ed9584f8a4347d",
+    "ae7733df51ca8dbd1a346b5f4d4891e270168425a818d5754430fa0c25952eff",
+    "d1970dd0cac8843999549d0791976f72e8d1e1ebf7f879925d735b4cdf0a5b8e",
+    "20bcd262117269650696952fa7c369577f99a474d9084f4a6409ccb4b3279db1",
+    "357817a8e3968f478eee10315bc886fbaee279a341622508fe4903496ac1a704",
+    "a5bb3d3e9485ef4544460fc25eecb6a5bfc407887d71abfb5c7f9e554f0fbc17"
+  ]
+}
