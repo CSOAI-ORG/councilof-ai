@@ -143,11 +143,6 @@ The board and verification stay free. Metered artefacts (issuance, evidence asse
 - Catalog: https://councilof.ai/api/x402
 - Manifest: https://councilof.ai/.well-known/x402.json
 - MCP: https://councilof.ai/mcp (`commission_card` and the other paid tools return a 402 as `structuredContent` until paid)
-- PayAPI Market (discovery only — buyers pay the estate wallet, not PayAPI): https://payapi.market/api/council-of-ai-gspc-eu-evidence-feed
-
-```json
-{"mcpServers":{"payapi":{"url":"https://payapi.market/mcp"}}}
-```
 
 ## Documentation
 
