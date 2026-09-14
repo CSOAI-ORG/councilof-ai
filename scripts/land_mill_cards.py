@@ -25,7 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "harness" / "gspc-top100"))
 from verify_card import canonical_body_bytes  # noqa: E402
-from verify_hub_mill_evidence import EvidenceError, admit  # noqa: E402
+from verify_hub_mill_evidence import EvidenceError, admit, validate_signed_admission  # noqa: E402
 
 INBOX = ROOT / "public" / "interop" / "mill-cards-unsigned"
 SIGNED = ROOT / "public" / "interop" / "mill-cards-signed"
@@ -46,6 +46,36 @@ def signed_cells(signed_dir: Path) -> dict[tuple[str, str], str]:
         b = w.get("body") if isinstance(w.get("body"), dict) else {}
         if w.get("signature") and b.get("model") and b.get("axis"):
             out[(str(b["model"]), str(b["axis"]))] = f.name
+    return out
+
+
+def admitted_quotable_signed_cells(signed_dir: Path, evidence_dir: Path) -> dict[tuple[str, str], str]:
+    """Cells already closed by a current, reproducible, quotable signed card.
+
+    Legacy aggregate cards and signed n<30 observations must not prevent a new
+    v0.2 bundle from entering the signer.  They remain immutable on disk and the
+    signer records supersession if the replacement is admitted and signed.
+    """
+    out: dict[tuple[str, str], str] = {}
+    if not signed_dir.is_dir():
+        return out
+    for f in sorted(signed_dir.glob("signed-*.json")):
+        try:
+            wrap = json.loads(f.read_text(encoding="utf-8"))
+            body = wrap.get("body") if isinstance(wrap.get("body"), dict) else {}
+            if (
+                wrap.get("signature")
+                and body.get("model")
+                and body.get("axis")
+                and int(body.get("n") or 0) >= 30
+                and str(body.get("status") or "").upper() == "MEASURED"
+            ):
+                validate_signed_admission(wrap, evidence_dir)
+                out[(str(body["model"]), str(body["axis"]))] = f.name
+        except (EvidenceError, OSError, TypeError, ValueError, json.JSONDecodeError):
+            # Invalid, legacy or unreadable signed bytes are preserved but do
+            # not establish that this cell has current reproducible evidence.
+            continue
     return out
 
 
@@ -87,6 +117,8 @@ def bind_run_provenance(wrap: dict, run_id: str) -> dict:
     body = wrap.get("body")
     if not isinstance(body, dict):
         return wrap
+    if wrap.get("id") != hashlib.sha256(canonical_body_bytes(body)).hexdigest():
+        raise ValueError("source card id mismatch before run binding")
     expected = f"gha-{run_id}"
     present = body.get("run_id")
     if present not in (None, "", expected):
@@ -135,16 +167,30 @@ def land_evidence(wrap: dict, staged: Path, evidence_dir: Path) -> str | None:
 def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str,
          evidence_dir: Path | None = None, require_evidence: bool = False) -> dict:
     files = sorted(staged.rglob("unsigned-*.json"))
-    have = signed_cells(signed_dir)
+    evidence_dir = evidence_dir or EVIDENCE
+    have = (
+        admitted_quotable_signed_cells(signed_dir, evidence_dir)
+        if require_evidence else signed_cells(signed_dir)
+    )
     landed: list[dict] = []
     skipped: list[dict] = []
     for f in files:
         try:
             w = json.loads(f.read_text(encoding="utf-8"))
-            w = bind_run_provenance(w, run_id)
         except Exception as e:
             skipped.append({"file": f.name, "reason": f"json {type(e).__name__}"})
             continue
+        why = reject_reason(w)
+        if why:
+            skipped.append({"file": f.name, "reason": why})
+            continue
+        try:
+            w = bind_run_provenance(w, run_id)
+        except ValueError as e:
+            skipped.append({"file": f.name, "reason": str(e)})
+            continue
+        # Provenance is part of the signed body, so recheck its content address
+        # and compact payload limit after adding the immutable Actions run id.
         why = reject_reason(w)
         if why:
             skipped.append({"file": f.name, "reason": why})
@@ -161,7 +207,10 @@ def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str,
             skipped.append({"file": f.name, "reason": f"already-signed {have[key]}"})
             continue
         # Evidence is copied only for a card that can actually enter the inbox.
-        ev_why = land_evidence(w, staged, evidence_dir or EVIDENCE)
+        # Artifacts place each card beside its bank and item transcript (for
+        # example under mill-out/).  The card search is recursive, so admission
+        # must resolve the bound bundle from that same directory.
+        ev_why = land_evidence(w, f.parent, evidence_dir)
         if ev_why:
             skipped.append({"file": f.name, "reason": ev_why})
             continue
