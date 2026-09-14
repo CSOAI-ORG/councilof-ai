@@ -38,6 +38,17 @@ export async function buildWorker(env: Env, fetcher: typeof fetch = fetch) {
     if (!h || typeof h !== "object" || typeof h.state !== "string") {
       return { ...base, status: "OFFLINE", http, worker: null, note: "pod health answered but not in the worker schema — state unknown" };
     }
+    let commission_dispatch: Record<string, unknown> | null = null;
+    try {
+      const dispatchUrl = new URL("/commission-dispatch", url).toString();
+      const dispatchResponse = await fetcher(dispatchUrl, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(8000) });
+      if (dispatchResponse.ok) {
+        const d = (await dispatchResponse.json()) as Record<string, unknown>;
+        commission_dispatch = pick(d, ["schema", "status", "queue_schema", "last_run", "source_revision", "admitted", "refused", "created", "already_present"]);
+      }
+    } catch {
+      commission_dispatch = null;
+    }
     return {
       ...base,
       status: "LIVE",
@@ -49,6 +60,7 @@ export async function buildWorker(env: Env, fetcher: typeof fetch = fetch) {
         "attempted", "correct", "bank_items", "last_success_at", "started_at", "updated_at", "disk_free_bytes",
       ]),
       counters_scope: typeof h.counters_scope === "string" ? h.counters_scope : "successful_runs/failed_runs count this worker process since started_at",
+      commission_dispatch,
     };
   } catch (e) {
     return { ...base, status: "OFFLINE", http, worker: null, note: `pod health unreachable (${(e as Error).name}) — state unknown, not zero` };

@@ -144,7 +144,11 @@ The launcher stays in the foreground so RunPod (or another supervisor) can
 observe and restart it. Do not hide it behind a liveness check that only tests a
 PID. The read-only health listener serves `GET /` and `GET /health` on port
 8888, contains no filesystem paths or credentials, and returns 503 for error or
-low-disk states. Mutation verbs return 405.
+low-disk states. It also serves `GET /commission-dispatch`: only the queue
+schema, source commit, last-run time and aggregate admitted/refused/created/
+existing counts are exposed. Subjects, receipts, filesystem paths and credentials
+never leave the pod. Missing or malformed reports return `UNCHECKABLE` with null
+counts. Mutation verbs return 405.
 
 ## Exit codes and recovery
 

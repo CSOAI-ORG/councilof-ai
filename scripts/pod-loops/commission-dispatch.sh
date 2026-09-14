@@ -31,6 +31,7 @@ PYTHONPATH="$CONTROL_REPO/scripts" python3 "$CONTROL_REPO/scripts/runpod_commiss
   --model-manifest-root /workspace/ollama-models/manifests \
   --jobs-dir "$WORKER_JOBS" \
   --output-root /workspace/gspc-24x7 \
+  --source-revision "$(git -C "$CONTROL_REPO" rev-parse HEAD)" \
   --report "$REPORT" >>"$LOGS/commission-dispatch.run.log" 2>&1
 rc=$?
 if [ "$rc" -ne 0 ]; then

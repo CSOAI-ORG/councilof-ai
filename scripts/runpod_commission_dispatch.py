@@ -15,11 +15,16 @@ import json
 import os
 from pathlib import Path
 from typing import Any
+from datetime import datetime, timezone
 
 import generate_runpod_gspc_playlist as playlist
 
 
 SCHEMA = "csoai.runpod-commission-dispatch/0.1"
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 def _commission_cells(feed: dict[str, Any]) -> tuple[list[dict[str, str]], list[dict[str, Any]]]:
@@ -152,6 +157,7 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--request-timeout-seconds", type=int, default=180)
     result.add_argument("--max-tokens", type=int, default=64)
     result.add_argument("--report", type=Path)
+    result.add_argument("--source-revision")
     result.add_argument("--dry-run", action="store_true")
     return result
 
@@ -159,6 +165,11 @@ def parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
+        revision = None
+        if args.source_revision:
+            revision = args.source_revision.strip().lower()
+            if len(revision) != 40 or any(c not in "0123456789abcdef" for c in revision):
+                raise playlist.GenerationError("source revision must be a 40-character git SHA")
         feed = json.loads(args.input.read_text(encoding="utf-8"))
         writes, report = build_dispatch(feed, args)
         created, existing = (0, 0) if args.dry_run else materialize(writes)
@@ -168,6 +179,10 @@ def main(argv: list[str] | None = None) -> int:
     report["created"] = created
     report["already_present"] = existing
     report["dry_run"] = args.dry_run
+    report["queue_schema"] = feed.get("schema")
+    report["last_run"] = utc_now()
+    if revision:
+        report["source_revision"] = revision
     output = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.report:
         args.report.write_text(output, encoding="utf-8")

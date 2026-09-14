@@ -24,4 +24,5 @@ exec python3 "$repo_dir/scripts/runpod_gspc_worker.py" \
   "${source_args[@]}" \
   --forever \
   --health-bind 0.0.0.0 \
-  --health-port 8888
+  --health-port 8888 \
+  --commission-dispatch-report /workspace/lanes/out/commission-dispatch-latest.json
