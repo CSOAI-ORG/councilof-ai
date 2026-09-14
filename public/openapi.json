@@ -865,7 +865,7 @@
     },
     "/api/commission-queue": {
       "get": {
-        "description": "GET /api/commission-queue \u2014 mill-visible QUEUED intents written by /api/request-attestation after settle (`mill:commission:<subject>` in REVENUE_KV).",
+        "description": "GET /api/commission-queue \u2014 mill-visible QUEUED intents.",
         "operationId": "get__api_commission-queue",
         "responses": {
           "200": {
@@ -876,7 +876,7 @@
           }
         },
         "security": [],
-        "summary": "GET /api/commission-queue \u2014 mill-visible QUEUED intents written by /api/request-attestation after settle (`mill:commission:<subject>` in REVENUE_KV)."
+        "summary": "GET /api/commission-queue \u2014 mill-visible QUEUED intents."
       }
     },
     "/api/commissions": {
