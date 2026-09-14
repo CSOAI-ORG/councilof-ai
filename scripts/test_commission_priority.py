@@ -78,7 +78,9 @@ class CommissionPriorityTests(unittest.TestCase):
                 "fulfillment": "QUEUED",
             },  # null model — skip
         ]
-        self.assertEqual(select(self.queue_feed(rows), "governance"), ["llama3.2:3b"])
+        # llama3.2:3b is an Ollama tag: QUEUED and honoured, but on the RunPod rail — the Hub
+        # mill never receives it as a priority id (see hub_routable).
+        self.assertEqual(select(self.queue_feed(rows), "governance"), [])
         self.assertEqual(select(self.queue_feed(rows), "safety"), ["org/model"])
 
     def test_legacy_sku_and_unfulfillable_skipped(self):
