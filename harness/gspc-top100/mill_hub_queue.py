@@ -28,7 +28,7 @@ HF_ROUTER = "https://router.huggingface.co/v1/chat/completions"
 EAT_NEXT = "llama-3.3-70b-versatile"
 EAT_NEXT_OR = "meta-llama/llama-3.3-70b-instruct"
 NIM_MODEL = "meta/llama-3.3-70b-instruct"
-HF_PROVIDER_SUFFIX = ("", ":featherless-ai", ":hf-inference", ":together", ":fireworks-ai", ":groq")
+HF_PROVIDER_SUFFIX = (":featherless-ai", ":hf-inference", ":together", ":fireworks-ai", ":groq")
 GEN_TAGS = frozenset(
     {"text-generation", "image-text-to-text", "conversational", "text2text-generation"}
 )
@@ -632,7 +632,7 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
         tried += 1
         st, txt = _chat(HF_ROUTER, tok, name, prompt)
         if st == "OK":
-            _ROUTE[slug] = "hf-router"
+            _ROUTE[slug] = f"hf-router:{name}"
             return st, txt
         last = f"hf:{name}:{txt}"
         if "401" in txt:
@@ -649,7 +649,7 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
                 time.sleep(_wait)
                 st, txt = _chat(HF_ROUTER, tok, name, prompt)
                 if st == "OK":
-                    _ROUTE[slug] = "hf-router"
+                    _ROUTE[slug] = f"hf-router:{name}"
                     return st, txt
                 if "429" not in txt:
                     break
@@ -663,7 +663,7 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
             # The parameter was refused, not the model. Ask again without it.
             st, txt = _chat(HF_ROUTER, tok, name, prompt, _thinking_kwarg=False)
             if st == "OK":
-                _ROUTE[slug] = "hf-router"
+                _ROUTE[slug] = f"hf-router:{name}"
                 return st, txt
             last = f"hf:{name}:{txt}"
         if "400" in txt or "404" in txt or "not supported" in txt.lower() or "not a chat" in txt.lower():
@@ -867,7 +867,13 @@ def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str, rou
     return wrap
 
 
-ITEM_EVIDENCE_SCHEMA = "csoai.mill-item-evidence/0.1"
+ITEM_EVIDENCE_SCHEMA = "csoai.mill-item-evidence/0.2"
+MILL_INSTRUMENT = {
+    "prompt_adapter": "frozen-axis-prompt-v1",
+    "grader": "exact-label-after-outer-whitespace-v1",
+    "temperature": 0,
+    "max_tokens": 32,
+}
 
 
 def write_item_evidence(out_dir: Path, axis: str, rows: list[dict]) -> tuple[str, str]:
@@ -922,6 +928,7 @@ def mill(
     probe_fetch=None,
     inflight_path: Path | None = None,
     bank_dataset: str | None = None,
+    bank_revision: str | None = None,
     revision_fetch=None,
 ) -> dict:
     rows = load_queue(queue_path)
@@ -987,14 +994,18 @@ def mill(
             bank_sha256 = hashlib.sha256(bank_path.read_bytes()).hexdigest()
         except OSError:
             bank_sha256 = None
-    if not bank:
+    if not bank or not bank_dataset or not bank_revision:
         for r in to_grade:
             mid = str(r.get("id") or "")
             if live.get(mid, True):
-                skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE no frozen bank"})
+                skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE no immutable frozen bank pin"})
         items: list[tuple[str, str]] = []
     else:
         items = bank[: max(1, items_cap)]
+        bank_raw = bank_path.read_bytes()
+        bank_digest = hashlib.sha256(bank_raw).hexdigest()
+        bank_name = f"bank-{ax[:8]}-{bank_digest[:12]}.jsonl"
+        (out_dir / bank_name).write_bytes(bank_raw)
     labels = [exp for _, exp in items]
     for r in to_grade:
         mid = str(r.get("id") or "")
@@ -1005,21 +1016,43 @@ def mill(
             continue
         if not items:
             continue
+        try:
+            revision = (revision_fetch or hf_model_revision)(mid)
+        except Exception:
+            revision = None
+        if not revision or not re.fullmatch(r"[0-9a-f]{40,64}", str(revision)):
+            skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE exact model revision unavailable"})
+            continue
         hits = 0
         unparsed = 0
         ev_rows: list[dict] = []
         for i, (prompt, expected) in enumerate(items):
-            st, txt = infer_hub(mid, axis_prompt(ax, prompt, labels))
+            sent_prompt = axis_prompt(ax, prompt, labels)
+            started = time.monotonic_ns()
+            st, txt = infer_hub(mid, sent_prompt)
+            elapsed_ms = max(0, (time.monotonic_ns() - started) // 1_000_000)
             if st != "OK":
                 skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE {txt}"})
                 break
             got = read_label(txt, labels)
             ev_rows.append({
+                "schema": ITEM_EVIDENCE_SCHEMA,
                 "i": i,
-                "prompt_sha256": hashlib.sha256(str(prompt).encode()).hexdigest(),
+                "axis": ax,
+                "model": mid,
+                "model_hf_revision": revision,
+                "bank_sha256": bank_sha256,
+                "bank_dataset": bank_dataset,
+                "bank_revision": bank_revision,
+                "provider_route": _ROUTE.get(mid),
+                "prompt": sent_prompt,
+                "prompt_sha256": hashlib.sha256(sent_prompt.encode()).hexdigest(),
                 "expected": str(expected).strip().upper(),
+                "raw_output": txt,
+                "raw_output_sha256": hashlib.sha256(txt.encode()).hexdigest(),
                 "observed": got,
                 "ok": (got == str(expected).strip().upper()) if got is not None else None,
+                "elapsed_ms": elapsed_ms,
             })
             if got is None:
                 # Not an answer, and NOT a wrong answer. Counting it against the model
@@ -1034,21 +1067,15 @@ def mill(
             reason = "n<30 unquotable" if n < 30 else "signed-pending-verify"
             if unparsed:
                 reason = f"{reason}; {unparsed} of {len(items)} items returned no parseable label"
-            revision = None
-            if not dry:
-                rf = revision_fetch or hf_model_revision
-                try:
-                    revision = rf(mid)
-                except Exception:
-                    revision = None
-            evidence = {}
-            if bank_sha256:
-                evidence["bank_sha256"] = bank_sha256
-            if bank_dataset:
-                evidence["bank_dataset"] = bank_dataset
-            if revision:
-                evidence["model_hf_revision"] = revision
-            evidence["schema"] = ITEM_EVIDENCE_SCHEMA
+            evidence = {
+                "schema": ITEM_EVIDENCE_SCHEMA,
+                "bank_sha256": bank_sha256,
+                "bank_file": bank_name,
+                "bank_dataset": bank_dataset,
+                "bank_revision": bank_revision,
+                "model_hf_revision": revision,
+                "instrument_sha256": hashlib.sha256(canonical_body_bytes(MILL_INSTRUMENT)).hexdigest(),
+            }
             items_name, items_sha = write_item_evidence(out_dir, ax, ev_rows)
             evidence["items_file"] = items_name
             evidence["items_sha256"] = items_sha
@@ -1115,6 +1142,7 @@ def main() -> int:
     ap.add_argument("--probe-first", action="store_true", help="ask the Hub inferenceProviderMapping before spending a grade")
     ap.add_argument("--inflight", default="", help="jsonl of {id, axis} cells already staged in open landing PRs (see inflight_cells.py); never re-picked")
     ap.add_argument("--bank-dataset", default="", help="public HF dataset the frozen bank came from (e.g. csoai/gspc-gov); recorded on the card's evidence, never guessed")
+    ap.add_argument("--bank-revision", default="", help="immutable commit of --bank-dataset; required for a quotable staged card")
     args = ap.parse_args()
     only = load_only_ids(Path(args.only)) if args.only else None
     priority = load_only_ids(Path(args.priority)) if args.priority else set()
@@ -1136,6 +1164,7 @@ def main() -> int:
         probe_first=args.probe_first,
         inflight_path=Path(args.inflight) if args.inflight else None,
         bank_dataset=args.bank_dataset or None,
+        bank_revision=args.bank_revision or None,
     )
     print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips", "dead_known", "dead_new", "dead_appended", "inflight_known", "inflight_skipped_this_axis", "probe_first") if k in rep}, default=str))
     print("skips", len(rep["skips"]))

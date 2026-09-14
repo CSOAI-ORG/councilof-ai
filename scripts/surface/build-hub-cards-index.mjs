@@ -1,0 +1,90 @@
+#!/usr/bin/env node
+/** Derived requester index of reproducibly admitted signed Hub-model cards. */
+import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync, lstatSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { createHash } from "node:crypto";
+
+export const SCHEMA = "csoai.hub-cards-index/0.1";
+const CARD_URL = "https://councilof.ai/interop/mill-cards-signed/";
+const RECEIPT_SCHEMA = "csoai.mill-evidence-admission/0.2";
+
+const sha = (value) => createHash("sha256").update(value).digest("hex");
+
+function canonicalDeep(value) {
+  if (Array.isArray(value)) return `[${value.map(canonicalDeep).join(",")}]`;
+  if (value && typeof value === "object") return `{${Object.keys(value).sort().map((k) => `${JSON.stringify(k)}:${canonicalDeep(value[k])}`).join(",")}}`;
+  return JSON.stringify(value);
+}
+
+export function hasCurrentAdmission(wrap, evidenceDir) {
+  try {
+    const body = wrap?.body, admission = body?.admission, ev = body?.evidence;
+    if (!body || admission?.schema !== RECEIPT_SCHEMA || ev?.schema !== "csoai.mill-item-evidence/0.2") return false;
+    if (!/^[0-9a-f]{64}$/.test(admission.sha256) || !/^admission-[0-9a-f]{12}\.json$/.test(admission.file)) return false;
+    const receiptPath = join(evidenceDir, admission.file);
+    if (!lstatSync(receiptPath).isFile() || lstatSync(receiptPath).isSymbolicLink()) return false;
+    const raw = readFileSync(receiptPath);
+    if (sha(raw) !== admission.sha256) return false;
+    const receipt = JSON.parse(raw.toString("utf8"));
+    if (receipt.schema !== RECEIPT_SCHEMA || receipt.state !== "VERIFIED_ADMISSION" || !receipt.source_body) return false;
+    if (receipt.source_card_id !== sha(canonicalDeep(receipt.source_body))) return false;
+    const expected = structuredClone(receipt.source_body);
+    expected.status = Number(expected.n || 0) >= 30 ? "MEASURED" : "UNMEASURED";
+    expected.unmeasured = Number(expected.n || 0) >= 30 ? [] : ["n<30 unquotable"];
+    expected.signature_state = "SIGNED";
+    expected.admission = admission;
+    if (canonicalDeep(body) !== canonicalDeep(expected)) return false;
+    if (wrap.id !== sha(canonicalDeep(body))) return false;
+    if (receipt.items_sha256 !== ev.items_sha256 || receipt.bank_sha256 !== ev.bank_sha256) return false;
+    for (const [file, digest] of [[ev.items_file, ev.items_sha256], [ev.bank_file, ev.bank_sha256]]) {
+      if (!/^(items|bank)-[a-z0-9-]{1,12}-[0-9a-f]{12}\.jsonl$/.test(file) || !/^[0-9a-f]{64}$/.test(digest)) return false;
+      const path = join(evidenceDir, file);
+      if (!lstatSync(path).isFile() || lstatSync(path).isSymbolicLink() || sha(readFileSync(path)) !== digest) return false;
+    }
+    return true;
+  } catch { return false; }
+}
+
+export function rowFromCard(name, wrap) {
+  const body = wrap?.body;
+  if (!body || typeof body !== "object" || typeof body.model !== "string" || body.model.startsWith("ollama:")) return null;
+  if (typeof wrap.id !== "string" || typeof wrap.signature !== "string") return null;
+  if (body.evidence?.schema !== "csoai.mill-item-evidence/0.2" ||
+      body.admission?.schema !== "csoai.mill-evidence-admission/0.2") return null;
+  return {
+    id: wrap.id, file: name, url: CARD_URL + name, subject: body.model,
+    axis: typeof body.axis === "string" ? body.axis : null,
+    n: Number.isInteger(body.n) ? body.n : null,
+    status: typeof body.status === "string" ? body.status : null,
+    run_id: typeof body.run_id === "string" ? body.run_id : null,
+    evidence_schema: body.evidence.schema,
+    admission_sha256: body.admission.sha256,
+    signed: true, verified_here: false,
+  };
+}
+
+export function buildIndex(cardsDir, evidenceDir = "public/interop/mill-evidence") {
+  const cards = []; let skipped = 0;
+  const names = existsSync(cardsDir) ? readdirSync(cardsDir).filter((f) => f.startsWith("signed-") && f.endsWith(".json")).sort() : [];
+  for (const name of names) {
+    try {
+      const wrap = JSON.parse(readFileSync(join(cardsDir, name), "utf8"));
+      const row = hasCurrentAdmission(wrap, evidenceDir) ? rowFromCard(name, wrap) : null;
+      row ? cards.push(row) : skipped++;
+    }
+    catch { skipped++; }
+  }
+  return { schema: SCHEMA, as_of: new Date().toISOString(),
+    source: "reproducibly admitted signed Hub cards on the deployed commit",
+    count: cards.length, signed_files_seen: names.length,
+    skipped_non_current_or_unreadable: skipped, cards };
+}
+
+const isMain = process.argv[1] && import.meta.url.endsWith(process.argv[1].split("/").pop());
+if (isMain) {
+  const args = process.argv.slice(2); const opt = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };
+  const out = opt("--out", "public/interop/hub-cards-index.json");
+  const index = buildIndex(opt("--cards", "public/interop/mill-cards-signed"), opt("--evidence", "public/interop/mill-evidence"));
+  mkdirSync(dirname(out), { recursive: true }); writeFileSync(out, JSON.stringify(index, null, 1) + "\n");
+  console.log(`hub-cards-index: ${index.count} current admitted cards → ${out}`);
+}

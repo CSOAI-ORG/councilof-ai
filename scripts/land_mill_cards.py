@@ -25,6 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "harness" / "gspc-top100"))
 from verify_card import canonical_body_bytes  # noqa: E402
+from verify_hub_mill_evidence import EvidenceError, admit  # noqa: E402
 
 INBOX = ROOT / "public" / "interop" / "mill-cards-unsigned"
 SIGNED = ROOT / "public" / "interop" / "mill-cards-signed"
@@ -108,6 +109,12 @@ def land_evidence(wrap: dict, staged: Path, evidence_dir: Path) -> str | None:
     ev = body.get("evidence")
     if not isinstance(ev, dict):
         return None  # legacy aggregate-only card; --require-evidence decides its fate
+    if ev.get("schema") == "csoai.mill-item-evidence/0.2":
+        try:
+            wrap["admission"] = admit(wrap, staged, evidence_dir)
+            return None
+        except (EvidenceError, OSError, ValueError) as error:
+            return f"evidence admission failed: {error}"
     name = str(ev.get("items_file") or "")
     want = str(ev.get("items_sha256") or "").lower()
     if not name or len(want) != 64:
@@ -146,13 +153,17 @@ def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str,
         if require_evidence and not isinstance(b.get("evidence"), dict):
             skipped.append({"file": f.name, "reason": "no evidence bundle — aggregate-only cards stopped landing after the 2026-09-13 evidence ruling"})
             continue
-        ev_why = land_evidence(w, staged, evidence_dir or EVIDENCE)
-        if ev_why:
-            skipped.append({"file": f.name, "reason": ev_why})
+        if require_evidence and b.get("evidence", {}).get("schema") != "csoai.mill-item-evidence/0.2":
+            skipped.append({"file": f.name, "reason": "legacy evidence is preserved but cannot enter the reproducible signing path"})
             continue
         key = (str(b["model"]), str(b["axis"]))
         if key in have:
             skipped.append({"file": f.name, "reason": f"already-signed {have[key]}"})
+            continue
+        # Evidence is copied only for a card that can actually enter the inbox.
+        ev_why = land_evidence(w, staged, evidence_dir or EVIDENCE)
+        if ev_why:
+            skipped.append({"file": f.name, "reason": ev_why})
             continue
         inbox.mkdir(parents=True, exist_ok=True)
         dest = inbox / f"unsigned-{str(b['axis'])[:8]}-{str(w['id'])[:12]}.json"
@@ -196,7 +207,8 @@ def pr_body(rep: dict, mill_report: dict | None, run_id: str) -> str:
         "signed cards are pushed back here as `public/interop/mill-cards-signed/signed-*.json`.",
         "",
         "Nothing here is MEASURED. A hub-queue (id, axis) cell flips only after merge, and only if the signed card "
-        "verifies VALID under the live DID with n≥30 (`hub-queue-flip.yml`). n<30 is unquotable. TIE is never a win.",
+        "verifies VALID under the live DID with n≥30 and its current v0.2 admission receipt revalidates "
+        "(`hub-queue-flip.yml`). n<30 is unquotable. TIE is never a win.",
         "",
         "| model | axis | n | accuracy | quotable |",
         "|---|---|---:|---:|---|",

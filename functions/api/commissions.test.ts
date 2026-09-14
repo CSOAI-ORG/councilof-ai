@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCommissions, onRequestGet, POD_CARDS_INDEX } from "./commissions";
+import { buildCommissions, onRequestGet, POD_CARDS_INDEX, HUB_CARDS_INDEX } from "./commissions";
 
 function kvFrom(entries: Record<string, string>) {
   const store = new Map(Object.entries(entries));
@@ -90,5 +90,22 @@ describe("/api/commissions — requester retrieval (join to the signed pod-cards
     const ASSETS = { fetch: async (r: Request) => { expect(new URL(r.url).pathname).toBe(POD_CARDS_INDEX); return new Response(JSON.stringify(index), { status: 200 }); } };
     const body = await buildCommissions({ REVENUE_KV: kv(), ASSETS }, "https://councilof.ai") as { delivered: number | null };
     expect(body.delivered).toBe(2);
+  });
+
+  it("joins a typed Hub commission only to the reproducibly admitted Hub index", async () => {
+    const hub = { schema: "csoai.hub-cards-index/0.1", cards: [
+      { id: "h".repeat(64), url: "https://councilof.ai/interop/mill-cards-signed/signed-safety-h.json",
+        subject: "org/model", axis: "safety", n: 30, status: "MEASURED", run_id: "gha-7" },
+    ] };
+    const store = kvFrom({ "ras:hub": JSON.stringify({ subject: "org/model", subject_kind: "hub_model",
+      model: "org/model", fulfillment: "QUEUED", axis: "safety" }) });
+    const fetcher = (async (request: Request) => {
+      expect(new URL(request.url).pathname).toBe(HUB_CARDS_INDEX);
+      return new Response(JSON.stringify(hub), { status: 200 });
+    }) as typeof fetch;
+    const body = await buildCommissions({ REVENUE_KV: store }, "https://councilof.ai", fetcher) as any;
+    expect(body.commissions[0].delivery).toEqual({ state: "CARDS_PUBLISHED", count: 1 });
+    expect(body.commissions[0].cards[0].id).toBe("h".repeat(64));
+    expect(body.retrieval.hub_index).toBe(HUB_CARDS_INDEX);
   });
 });

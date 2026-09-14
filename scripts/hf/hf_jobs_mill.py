@@ -60,15 +60,20 @@ pathlib.Path("mill_hub_queue.py").write_bytes(base64.b64decode("{mill_b64}"))
 pathlib.Path("mill-in/dead.jsonl").write_bytes(base64.b64decode("{dead_b64}"))
 DECODE
 python3 - <<'FETCH'
-from huggingface_hub import hf_hub_download
-import shutil
+from huggingface_hub import HfApi, hf_hub_download
+import os, pathlib, shutil
 shutil.copy(hf_hub_download("csoai/hub-queue","queue.jsonl",repo_type="dataset"), "mill-in/queue.jsonl")
-shutil.copy(hf_hub_download("{bank_ds}","items.jsonl",repo_type="dataset"), "mill-in/banks/{axis}.jsonl")
+revision = HfApi(token=os.environ.get("HF_TOKEN")).dataset_info("{bank_ds}").sha
+if not revision:
+    raise SystemExit("bank dataset revision unavailable")
+pathlib.Path("mill-in/bank-revision.txt").write_text(revision)
+shutil.copy(hf_hub_download("{bank_ds}","items.jsonl",repo_type="dataset",revision=revision), "mill-in/banks/{axis}.jsonl")
 FETCH
 echo "queue rows: $(wc -l < mill-in/queue.jsonl)  bank items: $(wc -l < mill-in/banks/{axis}.jsonl)"
 python3 mill_hub_queue.py --queue mill-in/queue.jsonl --out mill-out \\
   --axis {shlex.quote(axis)} --grade {grade} --pick 1000 --banks mill-in/banks --items 30 \\
-  --probe-first --dead mill-in/dead.jsonl
+  --probe-first --dead mill-in/dead.jsonl --bank-dataset {shlex.quote(bank_ds)} \
+  --bank-revision "$(cat mill-in/bank-revision.txt)"
 echo "staged: $(ls mill-out 2>/dev/null | wc -l) file(s)"
 python3 - <<'UP'
 import os, pathlib

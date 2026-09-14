@@ -9,7 +9,8 @@ name: HF-Jobs mill — land the staged cards
 # scripts/land_mill_cards.py (dedupe per (model, axis), bind run provenance, REQUIRE the evidence
 # bundle — aggregate-only cards stopped landing after the 2026-09-13 ruling), push a branch,
 # open the PR, dispatch the existing OIDC signer for exactly that run id, wait, verify VALID under
-# the live DID, comment the verdict table. Human merge is the only gate.
+# the live DID plus the current v0.2 admission receipt, and comment the verdict table. Human merge
+# is the only gate.
 #
 # It does NOT sign, does not decide MEASURED (sign_mill_cards.py sets status from n), does not
 # touch the pod, deletes nothing from the dataset, and never writes master.
@@ -120,7 +121,7 @@ jobs:
             echo "OPERATOR ACTION REQUIRED: run: gh workflow run pr-gates.yml --ref $BR" >&2
           fi
 
-      - name: wait for the signer, then verify VALID under the live DID (verification only — no key here)
+      - name: wait for signer, then verify DID signature and current admission (no key here)
         if: steps.land.outputs.landed != '0'
         run: |
           set -euo pipefail
@@ -140,7 +141,9 @@ jobs:
           from collections import Counter
           from pathlib import Path
           sys.path.insert(0, "harness/gspc-top100")
+          sys.path.insert(0, "scripts")
           from verify_card import verify_signed_card_with_did_doc
+          from verify_hub_mill_evidence import validate_signed_admission
           did = json.loads(Path("did.json").read_text())
           landed = json.loads(Path("staged/land-report.json").read_text())["landed"]
           signed_dir = Path("public/interop/mill-cards-signed")
@@ -164,6 +167,11 @@ jobs:
               if f is None:
                   rows.append((r["file"], "UNSIGNED", "no live signed card for this (model, axis)")); continue
               v, why = verify_signed_card_with_did_doc(f.read_bytes(), did)
+              if v == "VALID":
+                  try:
+                      validate_signed_admission(json.loads(f.read_text(encoding="utf-8")), Path("public/interop/mill-evidence"))
+                  except Exception as error:
+                      v, why = "UNCHECKABLE", f"current evidence admission failed: {error}"
               rows.append((f.name, v, why))
           c = Counter(v for _, v, _ in rows)
           print(f"Signer result on this branch: {dict(c)} (VALID under the live DID; nothing MEASURED until merge + hub-queue-flip)\n")

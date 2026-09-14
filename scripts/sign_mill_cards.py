@@ -15,6 +15,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from sign_financial_runs import DID, canonical_bytes, sign_via_oidc_attested  # noqa: E402
+from verify_hub_mill_evidence import EvidenceError, validate_admission  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -80,6 +81,9 @@ def superseded_ids() -> set[str]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-dir", type=Path, help="sign only this isolated unsigned-card directory")
+    parser.add_argument("--evidence-dir", type=Path, help="directory holding admitted evidence and receipts")
+    parser.add_argument("--require-hub-admission", action="store_true",
+                        help="refuse non-RunPod cards without a current verified evidence receipt")
     args = parser.parse_args(argv)
     source = args.source_dir if args.source_dir is not None else SRC
     if not source.is_dir():
@@ -109,6 +113,16 @@ def main(argv: list[str] | None = None) -> int:
             print(f"UNSIGNED {fp.name} — no body", file=sys.stderr)
             failures += 1
             continue
+        is_runpod = isinstance(body.get("compute_evidence"), dict)
+        if args.require_hub_admission and not is_runpod:
+            try:
+                if args.evidence_dir is None:
+                    raise EvidenceError("evidence directory required")
+                validate_admission(wrap, args.evidence_dir)
+            except (EvidenceError, OSError, ValueError) as error:
+                print(f"UNSIGNED {fp.name} — evidence {error}", file=sys.stderr)
+                failures += 1
+                continue
         n = int(body.get("n") or 0)
         # A signature freezes the body, so the body must be true AFTER it is signed,
         # not only before. "signed-pending-verify" was a state that expired the moment
@@ -127,6 +141,8 @@ def main(argv: list[str] | None = None) -> int:
         # that survives the signer call. Leaving STAGED_UNSIGNED here creates a
         # cryptographically valid wrapper around a lifecycle contradiction.
         body["signature_state"] = "SIGNED"
+        if args.require_hub_admission and not is_runpod:
+            body["admission"] = wrap["admission"]
         wrap["body"] = body
         raw = canonical_bytes(body)
         if len(raw) > MAX_PAYLOAD_BYTES:
@@ -173,7 +189,7 @@ def main(argv: list[str] | None = None) -> int:
             "signature": sig,
             "did": DID,
             "n": n,
-            "quotable": n >= 30,
+            "quotable": body.get("status") == "MEASURED",
             "not_a_certificate": True,
         }
         dest.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
@@ -181,6 +197,12 @@ def main(argv: list[str] | None = None) -> int:
         signed += 1
         if replaces:
             already = superseded_ids()
+            admission = body.get("admission") if isinstance(body.get("admission"), dict) else {}
+            supersede_reason = (
+                "#2075: replaced by a current reproducibly admitted v0.2 item-evidence card"
+                if admission.get("schema") == "csoai.mill-evidence-admission/0.2"
+                else "#1155: body state corrected — the signed body must be true after signing"
+            )
             with LEDGER.open("a", encoding="utf-8") as fh:
                 for prev in replaces:
                     if prev["id"] in already:
@@ -194,7 +216,7 @@ def main(argv: list[str] | None = None) -> int:
                                 "by_file": dest.name,
                                 "model": body.get("model"),
                                 "axis": body.get("axis"),
-                                "reason": "#1155: body state corrected — the signed body must be true after signing",
+                                "reason": supersede_reason,
                                 "at": now_iso(),
                             }
                         )
