@@ -2,7 +2,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { AXES_FIN } from "./_gspc_axes_fin";
 
-// C-2026-0914-01: the reserve-attestation note carried the custody-disclosure tally
+// C-2026-0914-02: the reserve-attestation note carried the custody-disclosure tally
 // (1/6/9) and the regulatory-framework note had PASS and FAIL swapped (3/4 for 4/3).
 // A typed tally in a note must equal the tally in the evidence file the axis cites.
 

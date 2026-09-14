@@ -34,7 +34,7 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
-      id: "C-2026-0914-01",
+      id: "C-2026-0914-02",
       date: "2026-09-14",
       first_observed_at: "2026-09-14T10:37Z",
       what_was_wrong:
