@@ -268,11 +268,13 @@ jobs:
       # Reader tests were never invoked by any gate (#2162 added the npm script; its workflow step
       # did not land). Every scripts/readers/*.node-test.mjs runs here.
       - name: Reader tests (scripts/readers/*.node-test.mjs)
+        if: steps.scope.outputs.gated == 'true'
         run: npm run test:readers
       # The Python test files (spray parity/skip rules, the publisher's kinds index) were never run
       # by any workflow either — a test nobody runs is a comment. Offline tests only; the
       # live-network publisher tests stay out of the gate on purpose.
       - name: Python tests (spray parity + skip rules, publisher kinds index)
+        if: steps.scope.outputs.gated == 'true'
         run: |
           python3 -m pip install -q pytest
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
