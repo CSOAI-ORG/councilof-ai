@@ -1,6 +1,7 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { FOCUS } from "../lobby/glass";
 import { verifyRecord, type RecordVerdict } from "@/lib/recordVerify";
+import { InputBoundVerifier } from "@/lib/inputBoundVerification";
 
 type Tally = { ok: number; fail: number };
 
@@ -105,23 +106,37 @@ export default function RecordVerifyForm({
   onVerdict?: (v: RecordVerdict) => void;
 }) {
   const [text, setText] = useState("");
-  const [verdict, setVerdict] = useState<RecordVerdict | null>(null);
+  const [verdict, setVerdict] = useState<{ result: RecordVerdict; inputHash: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const verifier = useRef(new InputBoundVerifier<RecordVerdict>());
   const light = variant === "light";
   const fieldId = useId();
 
+  useEffect(() => () => verifier.current.invalidate(), []);
+
   useEffect(() => {
     if (typeof seed === "string" && seed) {
+      verifier.current.invalidate();
       setText(seed);
       setVerdict(null); // a new record has not been checked yet — never show the old verdict beside it
+      setBusy(false);
     }
   }, [seed, seedNonce]);
 
   const run = async () => {
     setBusy(true);
-    const v = await verifyRecord(text);
-    setVerdict(v);
-    onVerdict?.(v);
+    const snapshot = text;
+    const bound = await verifier.current.run(snapshot, verifyRecord);
+    if (!bound) return;
+    setVerdict(bound);
+    onVerdict?.(bound.result);
+    setBusy(false);
+  };
+
+  const edit = (next: string) => {
+    verifier.current.invalidate();
+    setText(next);
+    setVerdict(null);
     setBusy(false);
   };
 
@@ -139,7 +154,7 @@ export default function RecordVerifyForm({
       <textarea
         id={fieldId}
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => edit(e.target.value)}
         placeholder="Paste one estate record JSON — verification runs entirely in your browser."
         className={
           (light
@@ -180,17 +195,20 @@ export default function RecordVerifyForm({
           <p
             data-testid="record-verdict-headline"
             className={`text-[14px] font-bold ${
-              verdict.valid ? (light ? "text-emerald-800" : "text-emerald-300") : light ? "text-red-700" : "text-red-300"
+              verdict.result.valid ? (light ? "text-emerald-800" : "text-emerald-300") : light ? "text-red-700" : "text-red-300"
             }`}
           >
-            {verdict.valid ? "✓ VERIFIED" : "✗ NOT VERIFIED"} —{" "}
-            {verdict.valid
+            {verdict.result.valid ? "✓ VERIFIED" : "✗ NOT VERIFIED"} —{" "}
+            {verdict.result.valid
               ? "this record reproduces its own id and its signature checks out against a published key."
               : "see which check failed below; each failure is reported for what it is."}
           </p>
+          <p className={`break-all font-mono text-[11px] ${light ? "text-slate-600" : "text-emerald-100/60"}`}>
+            Input SHA-256: {verdict.inputHash}
+          </p>
           {/* Keyed by code+index, not by label: two checks can carry the same label
               and a duplicate React key silently drops a reported failure. */}
-          {verdict.lines.map((l, i) => (
+          {verdict.result.lines.map((l, i) => (
             <div key={`${l.code}-${i}`} className="flex items-start gap-2 text-[13px]">
               <span
                 aria-hidden="true"
@@ -207,7 +225,7 @@ export default function RecordVerifyForm({
           {/* The tally follows the ACTUAL verdict. It used to be fed a value derived from
               a verifier that failed every genuine card, so every honest visitor who
               clicked it filed a false failure into a public counter. */}
-          <TallyOptIn ok={verdict.valid} variant={variant} />
+          <TallyOptIn ok={verdict.result.valid} variant={variant} />
         </div>
       )}
     </div>
