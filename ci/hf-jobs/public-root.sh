@@ -48,6 +48,12 @@ FALLBACK_SOURCE="" resolve_source "$SOURCE" "$REF" "$REPO"   # no mirror fallbac
 cd "$REPO"
 prep "setup-python 3.11"
 
+step 'Is a public-root candidate already waiting?'
+skipped 'GitHub PR preflight is Actions-owned; run this only after that preflight reports no pending candidate'
+
+step 'Ask the candidate maintainer to upgrade, verify and promote'
+skipped 'candidate maintenance is dispatched by GitHub Actions when preflight finds a pending candidate'
+
 step 'deps'
 # The image venv (/opt/py311, made by uv) has no pip; bootstrap.sh pre-installs both wheels.
 "$PYTHON" -m pip install -q cryptography 2>/dev/null \
@@ -64,6 +70,14 @@ git_commit_push() {   # <message> [paths…] — commit staged (+ given) paths, 
   git commit -q -m "$msg"
   git "${GIT_CRED[@]}" push origin HEAD:master
 }
+
+step 'Layer 0 liveness atom (a PROBED read of the floor itself; the publisher signs it into this root)'
+if ok; then
+  "$PYTHON" scripts/readers/layer0_liveness_reader.py \
+    --stage public/interop/layer0-liveness-2026-09 \
+    --gate-result UNRUN \
+    || echo "layer0 reader failed — the root ticks without the atom (never a fake read)"
+else skipped "preparation failed"; fi
 
 step 'publish public root'
 PUBLISH_RC=0
@@ -97,6 +111,11 @@ else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
 step 'Refresh exact-root EAS witness metadata after the chain write'
 if ok; then
   "$PYTHON" scripts/witness_public_root.py --refresh-eas
+else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
+
+step 'Refresh witness-derived stablecoin readiness'
+if ok; then
+  "$PYTHON" scripts/build_stablecoin_readiness.py
 else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
 
 step 'mark witnessed digests (KV entries in this root → witnessed; public mirrors; idempotent, never fails the publish)'

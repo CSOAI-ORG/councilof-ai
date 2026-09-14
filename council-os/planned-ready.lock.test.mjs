@@ -31,9 +31,9 @@ describe("SKU lock (shipped Products.tsx)", () => {
     assert.match(block, /never a purchased public rank|never buy a score/);
   });
 
-  it("keeps Verify free and Run as the workspace", () => {
+  it("keeps Verify free and routes commissioned work to the measured workspace", () => {
     assert.equal(hrefs[0], "/gspc-verify");
-    assert.equal(hrefs[1], "/assess");
+    assert.equal(hrefs[1], "/dashboard?tab=measured");
     assert.match(tags[0].toLowerCase(), /free/);
   });
 });
