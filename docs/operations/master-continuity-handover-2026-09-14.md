@@ -27,50 +27,46 @@ GitHub-reviewed main is authority. RunPod is compute, Oracle is a light worker/w
 
 ## Verified state at handover
 
-- Production deploy `34839466986` completed successfully, including live root/witness and outward-claims gates.
+- Production deploy `34843030147` completed its gated build and deployment successfully for PR #2394, including root/witness integrity and desktop/mobile shell smoke. Its post-merge prover `34843029335` also passed.
 - Public root reports 299 leaves as of `2026-09-14T09:45:35Z`.
 - Public card matrix reports 335 signed cells, 64 models, 16 populated axes.
-- RunPod worker is LIVE/WAITING with 182 successful runs and 0 failed runs.
-- Public `/api/worker` serves the new dispatcher field, but `commission_dispatch` is `null`: the website revision is current and the pod process is still the older runtime.
-- The typed commission dispatcher and sanitized public observability are merged in PRs #2388 and #2393.
+- RunPod worker is LIVE/RUNNING on reviewed revision `a3bb5144647797ceed0a8f10397e26f8c6d4dd9a`; the process reported 39 successful runs and 0 failed runs at `2026-09-14T12:57Z` after its refresh.
+- Public `/api/worker` exposes a non-null sanitized `commission_dispatch` record. Its first observed dispatch admitted 0 and refused 1 because the only remaining queued model was unavailable.
+- The typed commission dispatcher and sanitized public observability are merged in PRs #2388 and #2393. PR #2409 removes already-retrievable subjects from the active commission queue; deployment `34844060346` passed and the live queue now contains only the unavailable subject.
 - Canonical no-duplicate outward ledger and waves are merged in #2395, #2396, #2400 and #2402.
-- AI Agents Listing is live at `https://aiagentslisting.com/agent/council-of-ai-measurement-agent`, verified without authentication on 14 September. The CSOAI logo and canonical endpoints are present; promotional updates were disabled. Do not submit a duplicate.
+- AI Agents Listing is submitted and awaiting editorial review. The detail URL resolves, but visual inspection shows a private-preview banner saying the entry is not yet published. The CSOAI logo and canonical endpoints are present in the preview; promotional updates were disabled. Do not submit a duplicate or call it live until the banner clears.
 - Discussions are live: #2397 verification, #2398 integration, #2399 discrepancy reporting.
 - Numerous external editorial PRs are open. Their exact states live in the canonical outward ledger. Never resubmit while open.
 
 ## P0 unfinished work
 
-### 1. Refresh the RunPod runtime
+### 1. Maintain the reviewed RunPod runtime
 
-Goal: deploy reviewed main to the active worker and restart it so `/commission-dispatch` exists on the pod.
+The runtime refresh acceptance condition is complete: the active worker reports reviewed source revision `a3bb5144647797ceed0a8f10397e26f8c6d4dd9a` and non-null dispatcher telemetry.
 
 Proof required:
 
-- `https://councilof.ai/api/worker` returns a non-null `commission_dispatch` object.
-- It exposes only sanitized queue schema, source revision, last run, admitted/refused/created/already-present counts.
-- One fresh dispatch completes and the result is recorded on issue #2391.
+- Keep the worker on reviewed main.
+- Preserve only sanitized queue schema, source revision, last run, admitted/refused/created/already-present counts.
+- Record runtime transitions on issue #2391.
 
-Do not invent credentials. Current M2 environment has no working RunPod shell/control path; the historical SSH endpoint timed out.
+Do not invent credentials. Use the reviewed control path once merged; M2 still has no direct RunPod credentials.
 
 ### 2. Verify the post-merge publication from PR #2394
 
 PR: `https://github.com/CSOAI-ORG/councilof-ai/pull/2394`
 
-PR #2394 merged on 14 September at head `a8032920b3edcd6ec306a4120a381dc73a90dc07` after all required pre-merge checks passed. It contains 276 signed mill cards. The post-merge prover was still running at the last verified check, and the public root still reported 299 cards.
+PR #2394 merged on 14 September as `fc8758228ce10d9342e56718cb773446fcddc551` after all seven required pre-merge checks passed. Its card-root and hub-queue workflows passed. Deployment `34843030147` and post-merge prover `34843029335` passed.
 
-- `affect-048889c94767021d.intoto.json`
-- `cross-reality-02fb6896c022d75e.intoto.json`
-- `detector-interop-03ecbbf4c4f5f7d6.intoto.json`
+The public artifacts retain distinct scopes: `root.json` reports 299 measured-root leaves as of `2026-09-14T09:45:35Z`, while `signed/card_index.json` contains 335 signed cards. Preserve both numbers and labels. Do not add 276 to either count or imply every signed card is a rooted measured leaf.
 
-Do not call the 276 cards public or included in the current root until the post-merge prover and deployment complete and `root.json` changes. Verify the public root, witness and card index together, then record the new count and timestamp.
+### 3. Maintain the canonical outward ledger
 
-### 3. Finish ledger PR #2401
-
-Preserve every concurrent row in the canonical outward ledger and record only verified state transitions. AI Agents Listing is now LIVE; do not submit it again.
+PR #2401 is merged. Preserve every concurrent row in the canonical outward ledger and record only verified state transitions. AI Agents Listing remains REVIEW PENDING; do not submit it again.
 
 ### 4. Complete commission → mill proof
 
-The queue includes `clan-csoai-plain:latest` and `llama3.2:3b`. The first is not installed; the second already has published evidence. Reconcile both honestly. A paid SKU is not automatically an Ollama model ID. The commissioned leaf must carry a runnable model/bank or end in an explicit UNFULFILLABLE state.
+The active queue now contains only `clan-csoai-plain:latest`. `llama3.2:3b` was correctly removed after its 14 signed cards became retrievable. The remaining subject was refused by the dispatcher because it is unavailable. A paid SKU is not automatically an Ollama model ID. The commissioned leaf must carry a runnable model/bank or end in an explicit UNFULFILLABLE state.
 
 Proof required: one genuinely new commissioned subject enters the queue, is admitted by the correct worker, produces a signed card, passes intake, merges, enters the next root, updates public board/mirrors, and is retrievable by the requester.
 
@@ -85,13 +81,13 @@ Hugging Face publication is automated and green. Kaggle ingestion into the same 
 - Own the canonical outward ledger, UK/AISI/standards readiness, upstream review responses, and public-truth reconciliation.
 - Monitor open external PRs and turn merges into exact LIVE rows.
 - Never hold signing keys, alter measurements, improvise ceremonies, or send drafts without explicit authorization.
-- Immediate goal: finish #2401, reconcile all open external PRs, and prepare only evidence-backed adoption submissions.
+- Immediate goal: reconcile all open external PRs, record verified state changes, and prepare only evidence-backed adoption submissions.
 
 ### Hermes M4 — compute and factory integration
 
 - Own RunPod runtime refresh, commission dispatcher, worker playlists, intake, producer determinism, and #2394.
 - Rotate applicable axes across locally runnable models; fail closed on unavailable providers.
-- Immediate goal: make `commission_dispatch` non-null, verify #2394 in the public root, and prove one new commission end to end.
+- Immediate goal: prove one genuinely new runnable commission end to end.
 
 ### Oracle
 
@@ -166,19 +162,17 @@ Maintain the single execution ledger, dependency graph, owner asks, host status 
 - A submission confirmation is REVIEW PENDING. Only an upstream merge or stable public detail page is LIVE.
 - Prefer maintained, relevant, editorial or structured registries. Skip paid listings, abandoned sites, arbitrary backlink farms, and policies the project does not satisfy.
 - Never manufacture stars, visits, settlements, customers, citations or testimonials.
-- AI Agents Listing is live. Any later promotion must link to the public detail page and use the measured-not-certified description already recorded in the ledger.
+- Do not promote the AI Agents Listing detail URL while it carries the private-preview banner. When editorial review publishes it, link to the public detail page using the measured-not-certified description already recorded in the ledger.
 
 ## Immediate 24-hour sequence
 
-1. Merge #2401 after current-head reconciliation and green gates.
-2. Verify #2394's post-merge prover, deployment and inclusion in the public root.
-3. Refresh RunPod and prove non-null dispatcher telemetry.
-4. Prove one commission through queue → mill → sign → merge → root → delivery.
-5. Monitor AI Agents Listing for factual drift or broken endpoints; do not duplicate the listing.
-6. Monitor every open external PR; respond only to maintainer feedback and record merges.
-7. Implement the Kaggle/common connector envelope.
-8. Re-run public stranger journeys and mobile checks after deployment.
-9. Publish one evidence-led update only when a new verified event exists: signed-card merge, root confirmation, independent citation, external registry merge, or outside paid delivery.
+1. Prove one genuinely new runnable commission through queue → mill → sign → merge → root → delivery.
+2. Land and document the reviewed RunPod control path so future refreshes do not depend on undocumented operator access.
+3. Monitor AI Agents Listing until the private-preview banner clears; then record LIVE. Do not duplicate the listing.
+4. Monitor every open external PR; respond only to maintainer feedback and record merges.
+5. Implement the Kaggle/common connector envelope.
+6. Re-run public stranger journeys and mobile checks after deployment.
+7. Publish one evidence-led update only when a new verified event exists: signed-card merge, root confirmation, independent citation, external registry merge, or outside paid delivery.
 
 ## Reporting template
 

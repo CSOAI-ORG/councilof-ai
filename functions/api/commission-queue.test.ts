@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { listCommissionQueue } from "./commission-queue";
+import { buildCommissionQueue, listCommissionQueue } from "./commission-queue";
 
 type Store = Map<string, string>;
 
@@ -115,4 +115,34 @@ describe("listCommissionQueue", () => {
     expect(rows[0].fulfillment).toBe("QUEUED");
   });
 
+});
+
+describe("buildCommissionQueue delivery reconciliation", () => {
+  const queued = JSON.stringify({
+    subject: "llama3.2:3b",
+    subject_kind: "ollama_model",
+    model: "llama3.2:3b",
+    fulfillment: "QUEUED",
+    axis: "governance",
+    receipt_sha: "d".repeat(64),
+  });
+  const response = (cards: unknown[], status = 200) =>
+    (async () => new Response(JSON.stringify({ schema: "csoai.pod-cards-index/0.1", cards }), { status })) as typeof fetch;
+
+  it("suppresses work when the exact model and axis already has a published signed card", async () => {
+    const kv = fakeKv(new Map([["mill:commission:llama3.2:3b", queued]]));
+    const body = await buildCommissionQueue({ REVENUE_KV: kv }, "https://councilof.ai", response([
+      { id: "e".repeat(64), url: "https://councilof.ai/interop/mill-cards-signed/e.json",
+        subject: "llama3.2:3b", axis: "governance", n: 235, status: "MEASURED", run_id: "r" },
+    ])) as any;
+    expect(body.rows).toEqual([]);
+    expect(body.delivery_reconciliation).toMatchObject({ state: "READ", suppressed: 1 });
+  });
+
+  it("keeps work visible and reports UNCHECKABLE when the signed-card index cannot be read", async () => {
+    const kv = fakeKv(new Map([["mill:commission:llama3.2:3b", queued]]));
+    const body = await buildCommissionQueue({ REVENUE_KV: kv }, "https://councilof.ai", response([], 404)) as any;
+    expect(body.rows).toHaveLength(1);
+    expect(body.delivery_reconciliation).toMatchObject({ state: "UNCHECKABLE", suppressed: 0 });
+  });
 });
