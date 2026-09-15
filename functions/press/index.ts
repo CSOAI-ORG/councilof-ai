@@ -83,6 +83,11 @@ footer{margin-top:3rem;color:var(--mut);font-size:.85rem;border-top:1px solid va
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 </style></head><body><main>
 <h1>Press</h1>
+<div style="border-left:3px solid #b45309;padding-left:1rem;margin:0 0 1.4rem">
+<p><strong>Press contact:</strong> Nicholas Templeman, founder — <a href="mailto:press@councilof.ai">press@councilof.ai</a></p>
+<p class="n">For deadline queries, include <strong>PRESS URGENT</strong> in the subject.</p>
+<p class="n"><a href="/feeds/corrections.xml">Corrections feed (RSS)</a> — every correction is published here first.</p>
+</div>
 <p class="lede">${esc(d.doctrine)}</p>
 <p class="lede">Window <b>${esc(d.window.from)} → ${esc(d.window.to)}</b>. ${esc(d.window.derivation)}</p>
 ${pre(d.window.proof)}
