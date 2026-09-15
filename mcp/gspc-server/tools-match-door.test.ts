@@ -22,9 +22,9 @@ const doorPaid = J(resolve(ROOT, "functions/mcp/paid-tools.json")).tools.map((t:
 
 describe("the packaged MCP server advertises exactly what the door serves", () => {
   it("reads the door's canonical lists, so this cannot pass vacuously", () => {
-    expect(doorFree).toHaveLength(8);
+    expect(doorFree).toHaveLength(9);
     expect(doorPaid).toHaveLength(4);
-    expect([...doorFree, ...doorPaid]).toHaveLength(12);
+    expect([...doorFree, ...doorPaid]).toHaveLength(13);
     expect([...doorFree, ...doorPaid]).not.toContain("witness_hash");
   });
 
@@ -42,7 +42,7 @@ describe("the packaged MCP server advertises exactly what the door serves", () =
   it("keeps npm's rendered description short and accurate", () => {
     const { description } = J(resolve(__dirname, "package.json"));
     expect(description.length).toBeLessThanOrEqual(255);
-    expect(description).toContain("Twelve tools: eight free readers and four x402-metered evidence tools");
+    expect(description).toContain("Thirteen tools: nine free readers and four x402-metered evidence tools");
   });
 
   it("ships both canonical tool banks in the Docker client", () => {

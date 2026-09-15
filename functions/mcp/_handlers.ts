@@ -1,6 +1,6 @@
 /**
  * Shared MCP tool handlers for Pages /mcp.
- * Free definitions stay in ./gspc-tools.json. HTTP exposes eight free tools
+ * Free definitions stay in ./gspc-tools.json. HTTP exposes nine free tools
  * plus four paid tools; witness_hash stays quarantined. npm is an independent
  * release: ask that installed implementation for its current tools/list.
  */
@@ -15,6 +15,7 @@ import {
   getRootTool,
   getCardTool,
   x402TrustTool,
+  mcpTrustTool,
   verifyInclusionTool,
 } from "./_board";
 
@@ -100,6 +101,8 @@ function sharedToolSummary(
       return `${payload.state ?? "?"} — inclusion against live merkle.`;
     case "x402_trust":
       return `${payload.state ?? "?"} — ${(payload.headline as string) || "catalog trust counts"}.`;
+    case "mcp_trust":
+      return `${payload.state ?? "?"} — MCP handshake census${payload.partial ? " (partial round)" : ""}.`;
     default:
       return name;
   }
@@ -129,7 +132,9 @@ export async function sharedToolResult(
                 ? await verifyInclusionTool(origin, args)
                 : name === "x402_trust"
                   ? await x402TrustTool(origin)
-                  : await verifyCardThreeState(args, origin);
+                  : name === "mcp_trust"
+                    ? await mcpTrustTool(origin)
+                    : await verifyCardThreeState(args, origin);
   return {
     content: [
       {
