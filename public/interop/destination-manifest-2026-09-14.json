@@ -1,0 +1,223 @@
+{
+  "schema": "csoai.destination-manifest/0.1",
+  "generated_at": "2026-09-14T11:50:00Z",
+  "subject": "Council of AI agent-economy destinations",
+  "doctrine": "Measurement, never certification. A destination record proves presence on a surface; it proves nothing about quality or endorsement. Each record carries its checked_at, proof, and next_check. NEVER re-submit duplicates \u2014 verified records link to their public evidence, not to submission forms.",
+  "summary": {
+    "total_destinations": 16,
+    "live": 10,
+    "listed_with_issues": 2,
+    "staged": 2,
+    "absent": 1,
+    "owner_decision_needed": 3
+  },
+  "destinations": [
+    {
+      "destination": "Official MCP Registry",
+      "category": "mcp",
+      "canonical_resource": "io.github.CSOAI-ORG/gspc",
+      "public_url": "https://registry.modelcontextprotocol.io/v0/servers/io.github.CSOAI-ORG%2Fgspc",
+      "submission_state": "LISTED",
+      "checked_at": "2026-09-14T01:51:01Z",
+      "proof": {
+        "version_published": "1.4.2",
+        "is_latest": true,
+        "status": "active"
+      },
+      "next_check": "2026-09-21T01:51:01Z"
+    },
+    {
+      "destination": "A2A Registry",
+      "category": "a2a",
+      "canonical_resource": "did:web:csoai.org#council-of-ai-measurement-agent",
+      "public_url": "https://a2aregistry.org/agents/48e5bba6-8848-4adc-8f92-b5fa2c0744e0",
+      "submission_state": "LISTED",
+      "checked_at": "2026-09-14T05:00:00Z",
+      "proof": {
+        "agent_name": "Council of AI \u2014 Measurement Agent",
+        "protocol_version": "1.0",
+        "endpoint": "https://councilof.ai/api/a2a"
+      },
+      "next_check": "2026-09-21T05:00:00Z"
+    },
+    {
+      "destination": "Smithery",
+      "category": "mcp_host",
+      "canonical_resource": "csoai/gspc-mcp",
+      "public_url": "https://smithery.ai/servers/csoai/gspc-mcp",
+      "submission_state": "LISTED + STALE",
+      "checked_at": "2026-09-13T05:00:00Z",
+      "proof": {
+        "description_correct": true,
+        "tools_correct": false,
+        "phantom_tools": 4
+      },
+      "issue": "Stale duplicate csoai/gspc still listed with 4 phantom tools (verify, jail-probe, enter-arena, measure). Owner to retire.",
+      "next_check": "2026-09-21T05:00:00Z"
+    },
+    {
+      "destination": "Glama MCP",
+      "category": "mcp_directory",
+      "canonical_resource": "io.github.CSOAI-ORG/gspc",
+      "public_url": "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc",
+      "submission_state": "LISTED + UNSTABLE",
+      "checked_at": "2026-09-14T10:05:00Z",
+      "proof": {
+        "connectors_listed": 1,
+        "unhealthy_count": 40,
+        "total_csoai_connector_count": "unspecified"
+      },
+      "issue": "40/40 sampled connectors marked Unhealthy. Account-issued claim token not yet published to verify ownership.",
+      "next_check": "2026-09-21T10:05:00Z"
+    },
+    {
+      "destination": "mcp.so / mcpize",
+      "category": "mcp_directory",
+      "canonical_resource": "io.github.CSOAI-ORG/gspc",
+      "public_url": "https://mcp.so/servers/csoai-gspc-measurement",
+      "submission_state": "LISTED",
+      "checked_at": "2026-09-14T10:05:00Z",
+      "proof": {
+        "verified": true,
+        "featured": true,
+        "tools_probed": 7
+      },
+      "next_check": "2026-09-21T10:05:00Z"
+    },
+    {
+      "destination": "awesome-mcp-servers",
+      "category": "github_pr",
+      "canonical_resource": "CSOAI-ORG/councilof-ai",
+      "public_url": "https://github.com/punkpeye/awesome-mcp-servers/pull/13360",
+      "submission_state": "MERGED",
+      "checked_at": "2026-09-13T05:00:00Z",
+      "proof": {
+        "pr_number": 13360,
+        "status": "merged"
+      },
+      "issue": "Later open PRs that repeat this entry are duplicates, not new distribution.",
+      "next_check": "2026-09-20T05:00:00Z"
+    },
+    {
+      "destination": "PulseMCP",
+      "category": "ingestion",
+      "canonical_resource": "io.github.CSOAI-ORG/gspc",
+      "public_url": "https://www.pulsemcp.com/servers/detail/io-github-csoai-org-gspc",
+      "submission_state": "LISTED",
+      "checked_at": "2026-09-14T10:05:00Z",
+      "proof": {
+        "sitemap_verified": true,
+        "merged_pull": 1452
+      },
+      "next_check": "2026-09-21T10:05:00Z"
+    },
+    {
+      "destination": "x402 Bazaar (PayAI)",
+      "category": "x402_discovery",
+      "canonical_resource": "https://councilof.ai",
+      "public_url": "https://facilitator.payai.network/discovery/resources",
+      "submission_state": "LISTED",
+      "checked_at": "2026-09-14T05:15:54Z",
+      "proof": {
+        "total_resources": 100,
+        "challenge_402": 82,
+        "serves_200": 1,
+        "alive_needs_input": 8,
+        "template_no_reply": 7,
+        "dead_404": 2
+      },
+      "next_check": "2026-09-21T05:15:54Z"
+    },
+    {
+      "destination": "x402 Bazaar (Coinbase CDP)",
+      "category": "x402_discovery",
+      "canonical_resource": "https://councilof.ai",
+      "public_url": "https://api.cdp.coinbase.com/x402/discovery/resources",
+      "submission_state": "ABSENT",
+      "checked_at": "2026-09-14T05:00:00Z",
+      "proof": {
+        "total_resources": 14567,
+        "csoai_listings": 0
+      },
+      "next_check": "2026-09-21T05:00:00Z"
+    },
+    {
+      "destination": "npm",
+      "category": "package_registry",
+      "canonical_resource": "csoai-gspc-mcp",
+      "public_url": "https://registry.npmjs.org/csoai-gspc-mcp",
+      "submission_state": "LISTED",
+      "checked_at": "2026-09-14T05:00:00Z",
+      "proof": {
+        "version_published": "0.2.2",
+        "trusted_publisher": "GitHub OIDC",
+        "provenance": true
+      },
+      "next_check": "2026-09-21T05:00:00Z"
+    },
+    {
+      "destination": "Hugging Face",
+      "category": "dataset_registry",
+      "canonical_resource": "csoai/gspc-board",
+      "public_url": "https://huggingface.co/datasets/csoai/gspc-board",
+      "submission_state": "LISTED",
+      "checked_at": "2026-09-14T05:00:00Z",
+      "proof": {
+        "card_count": 298,
+        "parity_with_live_root": true
+      },
+      "next_check": "2026-09-21T05:00:00Z"
+    },
+    {
+      "destination": "Kaggle",
+      "category": "dataset_registry",
+      "canonical_resource": "nicktempleman/csoai-gspc-living-board",
+      "public_url": "https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board",
+      "submission_state": "LISTED",
+      "checked_at": "2026-09-14T05:00:00Z",
+      "proof": {
+        "card_count": 298,
+        "parity_with_live_root": true
+      },
+      "next_check": "2026-09-21T05:00:00Z"
+    },
+    {
+      "destination": "PyPI",
+      "category": "package_registry",
+      "canonical_resource": "csoai-gspc",
+      "public_url": "https://pypi.org/project/csoai-gspc/",
+      "submission_state": "LISTED",
+      "checked_at": "2026-09-14T05:00:00Z",
+      "next_check": "2026-09-21T05:00:00Z"
+    },
+    {
+      "destination": "Zenodo",
+      "category": "scholarly_archive",
+      "canonical_resource": "10.5281/zenodo.22732100",
+      "public_url": "https://doi.org/10.5281/zenodo.22732100",
+      "submission_state": "LISTED",
+      "checked_at": "2026-09-14T05:00:00Z",
+      "next_check": "2026-09-21T05:00:00Z"
+    },
+    {
+      "destination": "cursor.directory",
+      "category": "mcp_directory",
+      "canonical_resource": "io.github.CSOAI-ORG/gspc",
+      "public_url": "https://cursor.directory/mcp/io.github.CSOAI-ORG%2Fgspc",
+      "submission_state": "STAGED",
+      "checked_at": "2026-09-14T05:00:00Z",
+      "issue": "Auto-detects via repo .mcp.json (now in repo). Needs owner review submit.",
+      "next_check": "2026-09-21T05:00:00Z"
+    },
+    {
+      "destination": "Docker MCP Catalog",
+      "category": "mcp_directory",
+      "canonical_resource": "io.github.CSOAI-ORG/gspc",
+      "public_url": "https://hub.docker.com/mcp/csoai/gspc",
+      "submission_state": "STAGED",
+      "checked_at": "2026-09-14T05:00:00Z",
+      "issue": "Needs server.yaml + tools.json + readme.md PR to docker/mcp-registry with Docker-team review.",
+      "next_check": "2026-09-21T05:00:00Z"
+    }
+  ]
+}
