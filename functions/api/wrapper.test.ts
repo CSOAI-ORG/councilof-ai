@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { onRequestGet as wrapper, ratioString, normalize, toPreview, findEntry, ROSTER, ATTESTS, KIND, buildPayload } from "./wrapper";
+import { onRequestGet as wrapper, ratioString, normalize, toPreview, findEntry, ROSTER, ATTESTS, KIND, buildPayload, CHAINS } from "./wrapper";
 import { VERDICT_RE } from "./rwa/evidence";
 import { ESTATE_PAY_TO } from "./_x402_config";
 // The reader is the roster's source of truth; the TS mirror must never drift from it.
@@ -12,11 +12,18 @@ const ctx = (path: string, env: Record<string, unknown> = {}, headers: Record<st
 const hex = (n: bigint) => "0x" + n.toString(16).padStart(64, "0");
 
 /** A fake chain: finalized block per host, decimals 6 (18 for DAI), fixed supplies and escrow balances. */
-function stubChain(opts: { down?: string } = {}) {
+function stubChain(opts: { down?: string; rpcError?: { host: string; message: string }; facilitatorCalls?: string[] } = {}) {
   vi.stubGlobal("fetch", async (u: string | URL | Request, init?: RequestInit) => {
     const url = new URL(String(u instanceof Request ? u.url : u));
-    if (url.host === "f.example") return new Response(JSON.stringify({ isValid: true }));
+    if (url.host === "f.example") {
+      opts.facilitatorCalls?.push(url.pathname);
+      if (url.pathname.endsWith("/supported")) return new Response("nope", { status: 404 });
+      if (url.pathname.endsWith("/settle")) return new Response(JSON.stringify({ success: true, transaction: "0xtx", network: "base", payer: "0xp" }));
+      return new Response(JSON.stringify({ isValid: true }));
+    }
     if (opts.down && url.host === opts.down) return new Response("{}", { status: 503 });
+    // A JSON-RPC error answered with HTTP 200 — the shape publicnode returns for an archive read without a token.
+    if (opts.rpcError && url.host === opts.rpcError.host) return new Response(JSON.stringify({ jsonrpc: "2.0", id: 1, error: { code: -32602, message: opts.rpcError.message } }));
     const body = JSON.parse(String(init?.body)) as { method: string; params: unknown[] };
     if (body.method === "eth_getBlockByNumber") return new Response(JSON.stringify({ jsonrpc: "2.0", id: 1, result: { number: "0x100", hash: "0x" + "ab".repeat(32), timestamp: "0x68c4f000" } }));
     if (body.method === "eth_call") {
@@ -133,5 +140,43 @@ describe("/api/wrapper — doors", () => {
     expect(p.payload.inputs_sha256).toBeUndefined();
     expect(p.payload.reads.a.raw_sha256).toBeUndefined();
     expect(p.payload.reads.a.atomic).toBe("1");
+  });
+});
+
+// 2026-09-15 end-user test: the paid door verified AND SETTLED before it read the chain, so on a day
+// the Ethereum RPC refused pinned-block reads a paying agent would have been charged for a card that
+// says "chain reads (rpc failed; nothing inferred)". The read now runs first; UNMEASURED settles nothing.
+describe("/api/wrapper — reads the chain before it settles", () => {
+  const PAY = btoa(JSON.stringify({ x402Version: 2, scheme: "exact", network: "eip155:8453", payload: {} }));
+  const paidCtx = () => ctx("/api/wrapper?id=usdc.e:arbitrum", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": PAY });
+
+  it("an RPC failure returns the unpaid challenge with the reason, and never calls /verify or /settle", async () => {
+    const facilitatorCalls: string[] = [];
+    stubChain({ facilitatorCalls, rpcError: { host: new URL(CHAINS.ethereum.rpc).host, message: "Archive requests require a personal token." } });
+    const r = await wrapper(paidCtx());
+    expect(r.status).toBe(402);
+    expect(r.headers.get("PAYMENT-REQUIRED")).toBeTruthy();
+    expect(r.headers.get("x-payment-response")).toBeNull();
+    const b = await r.json();
+    expect(b.x402Version).toBe(2);
+    expect(b.accepts).toHaveLength(1);
+    expect(b.extensions?.bazaar).toBeTruthy();
+    expect(b.csoai.read_before_settle).toMatchObject({ state: "UNMEASURED", settled: false });
+    expect(String(b.csoai.read_before_settle.error)).toMatch(/Archive requests require a personal token/);
+    expect(String(b.csoai.not_paid_reason)).toMatch(/UNMEASURED/);
+    expect(facilitatorCalls.filter((p) => p.endsWith("/settle"))).toEqual([]);
+    expect(facilitatorCalls.filter((p) => p.endsWith("/verify"))).toEqual([]);
+  });
+
+  it("control: a successful read verifies, settles once, and delivers the card with the payment response", async () => {
+    const facilitatorCalls: string[] = [];
+    stubChain({ facilitatorCalls });
+    const r = await wrapper(paidCtx());
+    expect(r.status).toBe(200);
+    expect(r.headers.get("x-payment-response")).toBeTruthy();
+    const card = await r.json();
+    expect(card.payload.state).toBe("ESCROW_PARITY_READ");
+    expect(facilitatorCalls.filter((p) => p.endsWith("/verify")).length).toBeGreaterThan(0);
+    expect(facilitatorCalls.filter((p) => p.endsWith("/settle"))).toHaveLength(1);
   });
 });
