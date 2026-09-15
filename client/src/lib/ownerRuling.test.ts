@@ -40,7 +40,6 @@ const ALLOW_PRICE: Allow[] = [
   { file: "pages/ProsperityFund.tsx", why: "fund mechanics illustrated with worked examples" },
   { file: "pages/legal/TermsOfService.tsx", why: "liability cap — a legal necessity" },
   { file: "pages/AiActBenchmark.tsx", why: "cost of a published run, stated as $0" },
-  { file: "pages/IvoEvidence.tsx", why: "RunPod compute cost stated as evidence of operational practice, not our product price" },
   { file: "pages/NewHome.tsx", why: "third-party earnings figure" },
   { file: "pages/Support.tsx", why: "regex backreference $1 in a replace(), not a currency amount" },
 ];

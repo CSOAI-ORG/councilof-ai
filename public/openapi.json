@@ -1039,6 +1039,22 @@
         "summary": "GET /api/coverage \u2014 one machine-readable lifecycle view over the estate."
       }
     },
+    "/api/coverage-truth": {
+      "get": {
+        "description": "GET /api/coverage-truth \u2014 distiguish indexed, runnable, measured, signed.",
+        "operationId": "get__api_coverage-truth",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/coverage-truth \u2014 distiguish indexed, runnable, measured, signed."
+      }
+    },
     "/api/cross": {
       "get": {
         "description": "",
@@ -1172,6 +1188,22 @@
         },
         "security": [],
         "summary": "GET /api/detector-interop \u2014 open, signed detector-interoperability matrix."
+      }
+    },
+    "/api/distribution-ledger": {
+      "get": {
+        "description": "GET /api/distribution-ledger \u2014 one deduplicated list of every outward surface CSOAI has shipped to, with canonical URL, state, checked_at, and proof for each entry.",
+        "operationId": "get__api_distribution-ledger",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/distribution-ledger \u2014 one deduplicated list of every outward surface CSOAI has shipped to, with canonical URL, state, checked_at, and proof for each entry."
       }
     },
     "/api/east-west-bench": {
@@ -2657,6 +2689,22 @@
         },
         "summary": "",
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/observability": {
+      "get": {
+        "description": "GET /api/observability \u2014 machine-readable estate health.",
+        "operationId": "get__api_observability",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/observability \u2014 machine-readable estate health."
       }
     },
     "/api/og": {
@@ -4970,7 +5018,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 94,
+    "public_operations": 97,
     "quarantined": [
       {
         "buyable": false,
