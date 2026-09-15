@@ -28,6 +28,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git add public/interop/silent-route-canary-2026-09/
           git diff --cached --quiet || git commit -m "canary: daily capture $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          # Pull any concurrent master changes before pushing to avoid fetch-first rejection
+          # Integrate concurrent master changes; protected branch hook requires PR
           git pull --ff-only --no-edit origin master || true
-          git push
+          # Push via PR branch (protected branch hook allows PRs to master)
+          branch="canary-push/$GITHUB_RUN_ID"
+          git checkout -b "$branch"
+          git push -u origin "$branch"
+          # Open a PR targeting master
+          gh pr create --repo "$GITHUB_REPOSITORY" --head "$branch" --base master --title "canary: daily capture $(date -u +%Y-%m-%dT%H:%M:%SZ)" --body "Automatic canary capture — see public/interop/silent-route-canary-2026-09/baseline.jsonl" || echo "PR creation failed (may already exist)"
