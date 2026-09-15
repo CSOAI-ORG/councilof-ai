@@ -488,8 +488,12 @@ def apply_valid_flips(rows: list[dict], verified: list[dict]) -> int:
     return n
 
 
+_LAST_FINISH_REASON: str | None = None
+
+
 def _chat(url: str, key: str, model: str, prompt: str, max_tokens: int = 32,
           _thinking_kwarg: bool = True) -> tuple[str, str]:
+    """Returns (status, text). Sets _LAST_FINISH_REASON on success."""
     body = {
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
@@ -533,7 +537,10 @@ def _chat(url: str, key: str, model: str, prompt: str, max_tokens: int = 32,
         return "UNCHECKABLE", f"HTTP {e.code} {body}".rstrip()
     except Exception as e:
         return "UNCHECKABLE", type(e).__name__
-    txt = (((d.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+    global _LAST_FINISH_REASON
+    choice = (d.get("choices") or [{}])[0]
+    txt = ((choice.get("message") or {}).get("content") or "").strip()
+    _LAST_FINISH_REASON = choice.get("finish_reason") if isinstance(choice.get("finish_reason"), str) else None
     if not txt:
         return "UNCHECKABLE", "empty"
     return "OK", txt
@@ -562,8 +569,11 @@ def _gemini(prompt: str) -> tuple[str, str]:
         except Exception as e:
             last = f"UNCHECKABLE {type(e).__name__} gemini"
             continue
-        parts = (((d.get("candidates") or [{}])[0].get("content") or {}).get("parts") or [{}])
+        cand = (d.get("candidates") or [{}])[0]
+        parts = ((cand.get("content") or {}).get("parts") or [{}])
         txt = (parts[0].get("text") or "").strip()
+        global _LAST_FINISH_REASON
+        _LAST_FINISH_REASON = cand.get("finishReason") if isinstance(cand.get("finishReason"), str) else None
         if txt:
             return "OK", txt
         last = "UNCHECKABLE empty gemini"
@@ -938,7 +948,7 @@ def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str, rou
     return wrap
 
 
-ITEM_EVIDENCE_SCHEMA = "csoai.mill-item-evidence/0.2"
+ITEM_EVIDENCE_SCHEMA = "csoai.mill-item-evidence/0.3"
 MILL_INSTRUMENT = {
     "prompt_adapter": "frozen-axis-prompt-v1",
     "grader": "exact-label-after-outer-whitespace-v1",
@@ -1113,6 +1123,8 @@ def mill(
         for i, (prompt, expected) in enumerate(items):
             sent_prompt = axis_prompt(ax, prompt, labels)
             started = time.monotonic_ns()
+            global _LAST_FINISH_REASON
+            _LAST_FINISH_REASON = None
             st, txt = infer_hub(mid, sent_prompt)
             elapsed_ms = max(0, (time.monotonic_ns() - started) // 1_000_000)
             if st != "OK":
@@ -1136,12 +1148,13 @@ def mill(
                 "raw_output_sha256": hashlib.sha256(txt.encode()).hexdigest(),
                 "observed": got,
                 "ok": (got == str(expected).strip().upper()) if got is not None else None,
+                "finish_reason": _LAST_FINISH_REASON,
                 "elapsed_ms": elapsed_ms,
             })
-            if got is None:
-                # Not an answer, and NOT a wrong answer. Counting it against the model
-                # is what put 0.0000 on the board for reasoning models that spend the
-                # token budget before emitting a label. It leaves the denominator.
+            if got is None or _LAST_FINISH_REASON == "length":
+                # Not an answer, and NOT a wrong answer. got=None means no parseable label;
+                # finish_reason="length" means the token budget ended the answer before
+                # the label could appear. Both leave the denominator.
                 unparsed += 1
                 continue
             if got == str(expected).strip().upper():

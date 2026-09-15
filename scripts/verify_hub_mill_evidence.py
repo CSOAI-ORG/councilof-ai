@@ -22,12 +22,14 @@ from mill_hub_queue import (  # noqa: E402
 RECEIPT_SCHEMA = "csoai.mill-evidence-admission/0.2"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 REVISION = re.compile(r"^[0-9a-f]{40,64}$")
-ITEM_KEYS = {
+ITEM_KEYS_V2 = frozenset({
     "schema", "i", "axis", "model", "model_hf_revision", "bank_sha256",
     "bank_dataset", "bank_revision", "provider_route", "prompt",
     "prompt_sha256", "expected", "raw_output", "raw_output_sha256",
     "observed", "ok", "elapsed_ms",
-}
+})
+ITEM_KEYS_V3 = ITEM_KEYS_V2 | {"finish_reason"}
+ITEM_KEYS = ITEM_KEYS_V2  # canonical for v0.2; v0.3 adds finish_reason
 EVIDENCE_KEYS = {
     "schema", "items_file", "items_sha256", "bank_file", "bank_sha256",
     "bank_dataset", "bank_revision", "model_hf_revision", "instrument_sha256",
@@ -70,7 +72,8 @@ def safe_file(directory: Path, name: object, pattern: str) -> Path:
 def validate_bundle(body: dict, directory: Path) -> dict:
     ev = body.get("evidence")
     require(isinstance(ev, dict) and set(ev) == EVIDENCE_KEYS, "current evidence fields required")
-    require(ev["schema"] == ITEM_EVIDENCE_SCHEMA, "legacy or unknown evidence schema")
+    require(ev["schema"] in ("csoai.mill-item-evidence/0.2", "csoai.mill-item-evidence/0.3"),
+            "legacy or unknown evidence schema")
     require(bool(SHA256.fullmatch(str(ev["items_sha256"]))), "bad items digest")
     require(bool(SHA256.fullmatch(str(ev["bank_sha256"]))), "bad bank digest")
     require(bool(REVISION.fullmatch(str(ev["bank_revision"]))), "bank revision is not immutable")
@@ -100,9 +103,11 @@ def validate_bundle(body: dict, directory: Path) -> dict:
             row = json.loads(line)
         except Exception as error:
             raise EvidenceError("invalid item JSON") from error
-        require(isinstance(row, dict) and set(row) == ITEM_KEYS, "item fields differ from v0.2")
+        require(isinstance(row, dict) and set(row) in (ITEM_KEYS_V2, ITEM_KEYS_V3),
+                "item fields differ from v0.2/v0.3")
         require(canonical(row) + b"\n" == line, "item row is not canonical")
-        require(row["schema"] == ITEM_EVIDENCE_SCHEMA and row["i"] == i, "item sequence/schema mismatch")
+        require(row["schema"] in ("csoai.mill-item-evidence/0.2", "csoai.mill-item-evidence/0.3")
+                and row["i"] == i, "item sequence/schema mismatch")
         for field in ("axis", "model"):
             require(row[field] == body[field], f"item {field} mismatch")
         for field in ("model_hf_revision", "bank_sha256", "bank_dataset", "bank_revision"):

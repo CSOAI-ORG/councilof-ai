@@ -141,7 +141,7 @@ def land_evidence(wrap: dict, staged: Path, evidence_dir: Path) -> str | None:
     ev = body.get("evidence")
     if not isinstance(ev, dict):
         return None  # legacy aggregate-only card; --require-evidence decides its fate
-    if ev.get("schema") == "csoai.mill-item-evidence/0.2":
+    if ev.get("schema") in ("csoai.mill-item-evidence/0.2", "csoai.mill-item-evidence/0.3"):
         try:
             wrap["admission"] = admit(wrap, staged, evidence_dir)
             return None
@@ -199,7 +199,7 @@ def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str,
         if require_evidence and not isinstance(b.get("evidence"), dict):
             skipped.append({"file": f.name, "reason": "no evidence bundle — aggregate-only cards stopped landing after the 2026-09-13 evidence ruling"})
             continue
-        if require_evidence and b.get("evidence", {}).get("schema") != "csoai.mill-item-evidence/0.2":
+        if require_evidence and b.get("evidence", {}).get("schema") not in ("csoai.mill-item-evidence/0.2", "csoai.mill-item-evidence/0.3"):
             skipped.append({"file": f.name, "reason": "legacy evidence is preserved but cannot enter the reproducible signing path"})
             continue
         key = (str(b["model"]), str(b["axis"]))
