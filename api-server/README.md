@@ -1,5 +1,10 @@
 # CSOAI Governance API
 
+[![npm version](https://img.shields.io/npm/v/csoai-api-server)](https://www.npmjs.com/package/csoai-api-server)
+[![npm downloads](https://img.shields.io/npm/dm/csoai-api-server)](https://www.npmjs.com/package/csoai-api-server)
+[![license](https://img.shields.io/npm/l/csoai-api-server)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/LICENSE)
+
+
 Production backend for the CSOAI app — flips Evidence Hub, Webhooks, the bias harness,
 and the Sovereign Town export from demo‑mode to live. Designed to run on the CSOAI GCP VM.
 
