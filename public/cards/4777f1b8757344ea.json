@@ -1,0 +1,71 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:50:36Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "xai",
+      "surface": "pricing",
+      "url": "https://x.ai/api",
+      "prev_sha256": "0e943f629de58fd8985b56fdddb341fb55b5c7c1fd0c52fd2a36cfa5c5a8ff1c",
+      "new_sha256": "e6d3af99733af2a3e1c0721badb5d89d4158d606a265992cbdc5c18d1974018c",
+      "prev_bytes_sha256": "b53ff5554d9ea608db0a29146a68ea70e8336e380cb5b46d3d3deb1b2807bfa1",
+      "new_bytes_sha256": "75d5d19198a7cd4c5a0513c2d48a43060d94c79a043e3f3d05473d5fc1a6c616",
+      "prev_fetched_at": "2026-09-13T10:19:18Z",
+      "fetched_at": "2026-09-14T10:50:36Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 353133,
+        "new": 353087
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "4777f1b8757344ea02f988bfd3b66db9d57d1b8634f429d179c1c08a9d19c0ca",
+    "sig_ed25519": "8f80260f0686a72d9eb66873132a4c94d70b34615549c10bee16110594641c36c0f9608eb2c28cc0c34eca039385d98d783a57478524db70f8c6537058722000",
+    "source_urls": [
+      "https://x.ai/api"
+    ],
+    "subject": "xAI — pricing: bytes changed 2026-09-14",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:xai",
+      "surface:pricing",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "356b4300aa4bb54bb00ec3d4d18823644f15ff3b4a6ad1ae17c2156e4c47aea2",
+    "05123119168941d8c62319499db99b0876f8d8f78c14b21dfe1860a026f4307d",
+    "13c1681094ce3d68f8846fa2a8f3b1886bebcbb85b6561ea10183cfec9f66885",
+    "e6bd70c7a65eb8d61a65e1218dc868b9d4c9e5591916c56af9d4f750a0f29c4b",
+    "53b1b82189ec13047786d9d09802d5c6c085469eaff28627c46bd2262a1f2324",
+    "999876ab5c4e625116a79bd25092cc85354bb5119ec74ea80a1c9d696436cc68",
+    "8491d3b6a9692f0cdc56b00adceeb3e6b99401531b6ab69141c1ee7c42a64715",
+    "5aa7dcd7c1db7e0acc4d4331079b40e3285586d08e86c0b7b5f25704ceebee90",
+    "f28fe97bc7462cf44036c75ad42c54f477d88d6502b2f01978d0659c2183eceb"
+  ]
+}

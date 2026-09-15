@@ -1,0 +1,71 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:50:52Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "alibaba-qwen",
+      "surface": "usage_policy",
+      "url": "https://www.alibabacloud.com/help/en/model-studio/getting-started/models",
+      "prev_sha256": "a0635cd3c91b1844ce21421d3876f61ff71aac4db6de2070cb14d3bd992f3628",
+      "new_sha256": "51981657584ed32ce1f05b38e03e45237a99f6906a13448ed6cce025a521ed1c",
+      "prev_bytes_sha256": "22d1d8a59ac9d0bfb37e8361695c5c42f916995d0191e6bdf041dff8fd33911e",
+      "new_bytes_sha256": "33e3bc97d96dfc3674c3c8de00787119806bb1e7628fdea34e422d1bd7875ede",
+      "prev_fetched_at": "2026-09-13T10:19:36Z",
+      "fetched_at": "2026-09-14T10:50:52Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 25172,
+        "new": 25166
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "571180ccb3864f5f2ec9d1d651771d6124f48e5b81b6058a6f75669350a23cc9",
+    "sig_ed25519": "a992bd9e45f9a3b0c4db7a2c0cd8bdf7651a2bda2a26e11f34fb6cba56ace8e5834f88ff3f8ac422db1f6b3dce01fcee42ba52ffe204917e81e948ff41329107",
+    "source_urls": [
+      "https://www.alibabacloud.com/help/en/model-studio/getting-started/models"
+    ],
+    "subject": "Alibaba Cloud / Qwen — usage_policy: bytes changed 2026-09-14",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:alibaba-qwen",
+      "surface:usage_policy",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "32814a0ecc35e326c289688fbc727a036bf0fb857af2161072d2e3179da3f4f9",
+    "1fd814f18b1d7f4bfaa593dfe1a831a263797d557c071b60e6404b1ea468ada8",
+    "a589fe81bed5fc14558a6fbfc29d7fbc9f67424d6746b172c25dbfea343dc427",
+    "ae26950405977d0edff039369e8bd9ff4bd5b2ed24c454c41d552e2404c545b7",
+    "95f70a71d2cd2ad67c8f8537d1d74878f07fcc1d9902c6276514fbb11df35e54",
+    "c9a2ac3fac9778bdb1f9b5adff5aa1a386290efa960ab8a9abdf7fd53ff295dd",
+    "97b2b898cb713dbee394d9b3fb96ad771ff337d4f91b802b8b168126963cf171",
+    "5aa7dcd7c1db7e0acc4d4331079b40e3285586d08e86c0b7b5f25704ceebee90",
+    "f28fe97bc7462cf44036c75ad42c54f477d88d6502b2f01978d0659c2183eceb"
+  ]
+}

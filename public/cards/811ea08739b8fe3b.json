@@ -1,0 +1,48 @@
+{
+  "card": {
+    "as_of": "2026-09-14T13:21:37Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "discovered_mismatch": 0,
+      "discovery_state": "PROBED",
+      "kind": "csoai.x402-door-conformance/0.1",
+      "n_doors": 11,
+      "not_delivery_proof": true,
+      "probed_conformant": 11,
+      "report": "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json",
+      "state": "PROBED",
+      "uncheckable": 0
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "811ea08739b8fe3bd9e9e8164a21502eaad5c7823dea1bf3249f23f203de462c",
+    "sig_ed25519": "b59590eb002e4ee0b5cde2537a5b5db6456073c31541f731f58f9caa4151a0012cf98ee808a4fce0304cb7f911fe0e9fcafffe45f8481a9b057cfddeeb2cb805",
+    "source_urls": [
+      "https://councilof.ai/.well-known/x402.json",
+      "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json"
+    ],
+    "subject": "x402 door conformance round — 9 doors, challenge shape",
+    "surface": "public.notice",
+    "tags": [
+      "x402",
+      "conformance",
+      "x402-door-conformance-2026-09"
+    ],
+    "unmeasured": [
+      "fulfillment_bytes",
+      "settlement_classification_from_this_probe"
+    ]
+  },
+  "proof": [
+    "aabafb0f6a4de31511e20418b49568174c6353a31c73402d29923365d71055d3",
+    "9bc7339af3ce9f5e8a21a59befca9d5c04d1a36ce40670912c8aac70d547d0d9",
+    "eb35374dce7c757acc43cebef212338971aaa83404d74f524213156328208980",
+    "dab0b874c9b725d55d6c5e22c2909ff1bc7a13517a6eccb995804834427ffa86",
+    "92b3ee0f7c353b5b05c85a1f1196d982182e2e402c96980c733f86ac634ba16d",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "0dac26f22fd5dd9e642ff7bf5b9d9d9bd82dd3f4629aabc1432468cd0bed98e4",
+    "33586ddba2429c0971a856f8141e4df86102808cb7dfc7f72eab3fa443178600",
+    "f28fe97bc7462cf44036c75ad42c54f477d88d6502b2f01978d0659c2183eceb"
+  ]
+}

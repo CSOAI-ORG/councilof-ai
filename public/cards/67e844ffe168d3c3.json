@@ -1,0 +1,71 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:50:42Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "deepseek",
+      "surface": "model_cards",
+      "url": "https://huggingface.co/deepseek-ai",
+      "prev_sha256": "1f4c4410e01c680b96fea62c73737f6afecef116c8e5b4c7fef5c806e651d0a2",
+      "new_sha256": "ff3dc6934ddf08c3defa65c4587bb5611636d9093e01da8500a788349677bd92",
+      "prev_bytes_sha256": "4209d456ec7eab179b48f624bb6e96bfa6bb4e2f4963b8daa61f9f051698b9f5",
+      "new_bytes_sha256": "699b67b3fec0433db7a5743c1f736a486f09736b5ad6928c194eb58ca7e8a1cb",
+      "prev_fetched_at": "2026-09-13T10:19:26Z",
+      "fetched_at": "2026-09-14T10:50:42Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 423531,
+        "new": 425599
+      },
+      "etag": {
+        "prev": "W/\"6766b-bKqfFFXHQmFJrx1LpC+xKajIMHM\"",
+        "new": "W/\"67e7f-pNK7sMGr03VvmTJSmdbGljVRnMs\""
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "67e844ffe168d3c3f27fa89113ad7193e63511a645b9f8a2a18b93ac74e8553c",
+    "sig_ed25519": "d0030d33811fd897180b26c6ce0054fdf3dbcaeb05934aa5b1080e2337b96961dd9477a51765f02c42ddccfadcea93609cf85cd2cf878887780492144e8ae60a",
+    "source_urls": [
+      "https://huggingface.co/deepseek-ai"
+    ],
+    "subject": "DeepSeek — model_cards: bytes changed 2026-09-14",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:deepseek",
+      "surface:model_cards",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "a1ba9ad7092ea9a1cbe2ed21c3d61e93bb47a57faab73e3934b8f23bb93199d3",
+    "53fc1bf42ef8ec7c08c5a65a9395432d3f02cc8ac61752ee6e9c19d7830dfb70",
+    "e80e4f61f3c60dcbd643d9720a130b47082990c8c7e689cf8e8aedbbbe7534de",
+    "1a4ee3b5f4211e679593c472a2175cfdffd9fe1af6693189aabaae127a64835b",
+    "2117a35b95f086f500bc09b56c8f1049641170c3ac41044be13bea4eb463fc02",
+    "aa2a841e77e982aa94b829593cec8d9df85f861ac0c24dc479a56e6aa06a83b3",
+    "97b2b898cb713dbee394d9b3fb96ad771ff337d4f91b802b8b168126963cf171",
+    "5aa7dcd7c1db7e0acc4d4331079b40e3285586d08e86c0b7b5f25704ceebee90",
+    "f28fe97bc7462cf44036c75ad42c54f477d88d6502b2f01978d0659c2183eceb"
+  ]
+}
