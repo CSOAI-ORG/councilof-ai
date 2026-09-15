@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schemas/csoai-refund-record-0.1.schema.json",
+  "title": "CSOAI Refund / Chargeback Record",
+  "description": "A deterministic, append-only record of a refund or chargeback event. Revokes the named entitlement and any Ed25519 certificate issued under it. Never invents fields the source did not supply — absent data is null, never substituted.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "refund_id",
+    "observed_at",
+    "source",
+    "subject",
+    "revocations",
+    "doctrine",
+    "integrity"
+  ],
+  "properties": {
+    "schema": { "const": "csoai.refund-record/0.1" },
+    "refund_id": {
+      "type": "string",
+      "description": "Stable identifier; sha256 of canonical body bytes (per existing receipt convention).",
+      "minLength": 8,
+      "maxLength": 160
+    },
+    "observed_at": {
+      "type": "string",
+      "description": "When the refund was observed by CSOAI (NOT when the buyer initiated it — that comes from source.timestamp_buyer).",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["channel", "reference"],
+      "properties": {
+        "channel": {
+          "enum": ["paddle_webhook", "operator_manual", "buyer_request", "dispute_resolution"]
+        },
+        "reference": {
+          "type": "string",
+          "description": "Channel-specific stable ID: Paddle event id, operator action id, buyer ticket id, dispute resolution id."
+        },
+        "timestamp_buyer": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "When the buyer initiated the refund — supplied by the channel, not invented here."
+        },
+        "amount": {
+          "type": ["number", "null"],
+          "description": "Refund amount in the currency of the original settlement. Required for chargebacks; null if the channel does not supply it."
+        },
+        "currency": {
+          "type": ["string", "null"],
+          "description": "ISO 4217 currency code. Required for chargebacks; null if the channel does not supply it."
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "enum": ["account", "license", "cert"]
+        },
+        "id": {
+          "type": "string",
+          "description": "CSOAI-side identifier of the subject."
+        }
+      }
+    },
+    "revocations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entitlement", "cert"],
+      "properties": {
+        "entitlement": {
+          "type": "object",
+          "description": "The entitlement granted by the original settlement. Revoked iff revoked: true.",
+          "additionalProperties": false,
+          "required": ["revoked", "original_grant_at", "sku"],
+          "properties": {
+            "revoked": { "const": true },
+            "original_grant_at": { "type": "string", "format": "date-time" },
+            "sku": { "type": "string", "description": "e.g. csoai.measurement-card.issuance." }
+          }
+        },
+        "cert": {
+          "type": "object",
+          "description": "The Ed25519 certificate issued under the entitlement. Revoked iff revoked: true.",
+          "additionalProperties": false,
+          "required": ["revoked", "cert_sha256"],
+          "properties": {
+            "revoked": { "const": true },
+            "cert_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          }
+        }
+      }
+    },
+    "doctrine": {
+      "type": "object",
+      "description": "Free-text doctrine annotations. Never authoritative — descriptive only.",
+      "additionalProperties": true
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["idempotency_key", "writes_board"],
+      "properties": {
+        "idempotency_key": {
+          "type": "string",
+          "description": "sha256 of canonical source-block bytes. Same refund through the same channel twice produces the same key, so retry is idempotent."
+        },
+        "writes_board": { "const": false }
+      }
+    }
+  }
+}
