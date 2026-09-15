@@ -1,7 +1,19 @@
 /**
- * GET /atom.xml — third conventional alias of the one feed at /api/feed.xml.
- * Same handler, same items. See ./feed.xml.ts for why the aliases exist.
- * Feed readers and answer engines probe /atom.xml by convention; without this
- * file Pages falls through to the SPA 404 shell.
+ * /atom.xml — conventional alias of /api/feed.xml.
+ * onRequest covers GET+HEAD; onRequestGet kept for adoption-loop importers.
  */
-export { onRequestGet } from "./api/feed.xml";
+import { onRequestGet as feedGet } from "./api/feed.xml";
+
+export const onRequestGet = feedGet;
+
+export async function onRequest(ctx: { request: Request }) {
+  const method = ctx.request.method.toUpperCase();
+  if (method !== "GET" && method !== "HEAD") {
+    return new Response(null, { status: 405, headers: { allow: "GET, HEAD" } });
+  }
+  const res = await feedGet(ctx as never);
+  if (method === "HEAD") {
+    return new Response(null, { status: res.status, headers: res.headers });
+  }
+  return res;
+}
