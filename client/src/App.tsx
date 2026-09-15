@@ -939,6 +939,7 @@ function App() {
                   <Route path="/conformity-assessment" component={ConformityAssessment} />
                   <Route path="/ai-governance" component={AiGovernanceHub} />
                   <Route path="/ai-governance-guide" component={AiGovernanceHub} />
+                  <Route path="/governance">{() => <Redirect to="/ai-governance" />}</Route>
                   <Route path="/high-risk-ai-systems" component={HighRiskSystems} />
                   <Route path="/classifier" component={EuActClassifier} />
                   <Route path="/report" component={ContentReviewNotice} />

@@ -100,7 +100,7 @@ export default function Library() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         {shownSectors.map((s) => {
           const items = filter(bySector[s.id] ?? []);
           if (!items.length) return null;
@@ -131,7 +131,7 @@ export default function Library() {
               : <>This sector is empty. <Link href="/library" className="font-semibold text-emerald-700 underline">Back to all sectors</Link>.</>}
           </p>
         )}
-      </main>
+      </section>
     </div>
   );
 }

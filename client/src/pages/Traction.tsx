@@ -63,7 +63,7 @@ export default function Traction() {
   }, []);
   const usdc = live.revenue ? `$${(live.revenue.atomic / 1_000_000).toFixed(2)}` : undefined;
 
-  return <main className="min-h-screen bg-slate-950 text-slate-100">
+  return <section className="min-h-screen bg-slate-950 text-slate-100">
     <Helmet><title>Evidence, adoption and commercial proof | Council of AI</title><meta name="description" content="Live, source-linked evidence of CSOAI measurement coverage, signed records, commissioned work, independent discovery and commercial proof." /></Helmet>
     <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,.18),transparent_36%)]">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
@@ -96,7 +96,7 @@ export default function Traction() {
     </div></section>
 
     <section className="mx-auto max-w-6xl px-5 py-14"><h2 className="text-2xl font-black">The diligence path</h2><div className="mt-5 grid gap-4 md:grid-cols-3"><Step n="01" title="Inspect" body="Read the current root, coverage ledger and methodology." href="/root.json" /><Step n="02" title="Verify" body="Check a signed card and inspect corrections before trusting a claim." href="/gspc-verify" /><Step n="03" title="Commission" body="Move a real subject through queue, mill, signature and publication." href="/start" /></div></section>
-  </main>;
+  </section>;
 }
 
 function LiveCard({ label, value, source, detail }: { label: string; value?: string | number; source: string; detail: string }) { return <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5"><div className="text-3xl font-black tabular-nums">{value ?? "—"}</div><div className="mt-2 text-sm font-semibold">{label}</div><div className="mt-1 text-xs text-slate-400">{detail}</div><a href={source} className="mt-3 inline-block font-mono text-[11px] text-emerald-300 underline">{source}</a></div>; }

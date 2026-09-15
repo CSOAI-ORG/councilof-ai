@@ -88,7 +88,7 @@ export default function Art50() {
   const graceDays = grace ? daysUntil(grace.date, now) : NaN;
 
   return (
-    <main className="min-h-screen bg-stone-50 px-5 py-16 text-stone-800">
+    <section className="min-h-screen bg-stone-50 px-5 py-16 text-stone-800">
       <Helmet>
         <title>Article 50 verification services | Council of AI</title>
         <meta
@@ -197,6 +197,6 @@ export default function Art50() {
           .
         </p>
       </section>
-    </main>
+    </section>
   );
 }
