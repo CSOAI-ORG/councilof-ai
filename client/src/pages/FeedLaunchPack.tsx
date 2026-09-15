@@ -1,9 +1,9 @@
 import { Helmet } from "react-helmet-async";
 
 /**
- * /feed — the $199/mo Stablewatch Feed offer page.
+ * /feed — the Stablewatch Feed offer page.
  *
- * G6.6: "The $199/mo offer page: 30-day RLUSD streak as proof, stablewatch
+ * G6.6: "The offer page: 30-day RLUSD streak as proof, stablewatch
  * top-20 as content, alert examples, subscribe-via-x402 button."
  *
  * noindex,nofollow,noarchive until the 30-day streak completes. The page is
@@ -40,7 +40,7 @@ export default function FeedLaunchPack() {
         <title>Council of AI — Stablewatch Feed</title>
         <meta
           name="description"
-          content="$199/month: 30-day RLUSD measurement streak, stablecoin top-20 deep measurement, alert examples. Subscribe via x402. Measurement, not certification."
+          content="30-day RLUSD measurement streak, stablecoin top-20 deep measurement, alert examples. Subscribe via x402; the price is quoted only in the 402 challenge. Measurement, not certification."
         />
         <meta name="robots" content="noindex,nofollow,noarchive" />
       </Helmet>
@@ -56,8 +56,8 @@ export default function FeedLaunchPack() {
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-300">
             30 days of daily RLUSD measurement, the stablecoin top-20 deep
-            index, and real-time alerts — all signed, all verifiable. $199/month,
-            paid via x402. Cancel anytime.
+            index, and real-time alerts — all signed, all verifiable. Paid via x402;
+            the price is quoted in the 402 challenge, never typed on this page. Cancel anytime.
           </p>
         </div>
       </header>
@@ -207,7 +207,7 @@ export default function FeedLaunchPack() {
         {/* CTA */}
         <section className="rounded-xl border border-emerald-700 bg-emerald-950/40 p-8 text-center">
           <h2 className="text-2xl font-bold tracking-tight">
-            Subscribe via x402 — $199/month
+            Subscribe via x402
           </h2>
           <p className="mt-3 text-slate-300">
             Payment via the x402 rail. A signed receipt is issued at settlement.
@@ -217,7 +217,7 @@ export default function FeedLaunchPack() {
             href="/api/subscribe"
             className="mt-6 inline-block rounded-xl bg-emerald-400 px-8 py-3.5 text-lg font-bold text-slate-950 hover:bg-emerald-300"
           >
-            Subscribe via x402 — $199/month
+            Subscribe via x402
           </a>
           <p className="mt-4 font-mono text-xs text-slate-500">
             Settlement on Base (USDC). Receipt signed by did:web:csoai.org#board-attestation-1
