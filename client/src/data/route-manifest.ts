@@ -59,8 +59,13 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/ag-ui",
-  "comp": "AgUiBridge",
-  "title": "Ag Ui Bridge"
+  "comp": "Redirect",
+  "title": "Ag Ui"
+ },
+ {
+  "path": "/agent-blocking",
+  "comp": "AgentBlocking",
+  "title": "Agent Blocking"
  },
  {
   "path": "/agent-council",
@@ -288,6 +293,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Ceasai Training"
  },
  {
+  "path": "/ceremony",
+  "comp": "Redirect",
+  "title": "Ceremony"
+ },
+ {
   "path": "/challenge",
   "comp": "Challenge",
   "title": "Challenge"
@@ -299,8 +309,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/chat",
-  "comp": "AgUiBridge",
-  "title": "Ag Ui Bridge"
+  "comp": "Redirect",
+  "title": "Chat"
  },
  {
   "path": "/checklist",
@@ -609,7 +619,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/enterprise",
-  "comp": "Enterprise",
+  "comp": "Redirect",
   "title": "Enterprise"
  },
  {
@@ -688,6 +698,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Eunomia Indices"
  },
  {
+  "path": "/evaluator-access",
+  "comp": "EvaluatorAccess",
+  "title": "Evaluator Access"
+ },
+ {
   "path": "/events/three-root-ceremony",
   "comp": "ThreeRootCeremony",
   "title": "Three Root Ceremony"
@@ -721,6 +736,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/fedramp",
   "comp": "Fedramp",
   "title": "Fedramp"
+ },
+ {
+  "path": "/feed",
+  "comp": "FeedLaunchPack",
+  "title": "Feed Launch Pack"
  },
  {
   "path": "/finance-ai-act",
@@ -861,6 +881,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/govbench",
   "comp": "GovBench",
   "title": "Gov Bench"
+ },
+ {
+  "path": "/governance",
+  "comp": "Redirect",
+  "title": "Governance"
  },
  {
   "path": "/governance-commons",
@@ -1113,6 +1138,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Iso42001 Vs Eu Act"
  },
  {
+  "path": "/ivo-evidence",
+  "comp": "IvoEvidence",
+  "title": "Ivo Evidence"
+ },
+ {
   "path": "/jewels",
   "comp": "Redirect",
   "title": "Jewels"
@@ -1193,6 +1223,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Membership Agreement"
  },
  {
+  "path": "/legal/privacy",
+  "comp": "PublicPrivacy",
+  "title": "Public Privacy"
+ },
+ {
   "path": "/legal/terms",
   "comp": "TermsOfService",
   "title": "Terms Of Service"
@@ -1221,6 +1256,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/login",
   "comp": "Login",
   "title": "Login"
+ },
+ {
+  "path": "/lookup",
+  "comp": "Redirect",
+  "title": "Lookup"
  },
  {
   "path": "/map",
@@ -1333,6 +1373,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Nist Vs Eu Act"
  },
  {
+  "path": "/notes",
+  "comp": "EvidenceNotesIndex",
+  "title": "Evidence Notes Index"
+ },
+ {
   "path": "/onboard",
   "comp": "OnboardOS",
   "title": "Onboard OS"
@@ -1398,6 +1443,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Owasp Agentic"
  },
  {
+  "path": "/owasp-asi",
+  "comp": "OwaspAsiMapping",
+  "title": "Owasp Asi Mapping"
+ },
+ {
   "path": "/packs/eu-article-50",
   "comp": "Article50Pack",
   "title": "Article50 Pack"
@@ -1444,8 +1494,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/plugin",
-  "comp": "ToolsPage",
-  "title": "Tools Page"
+  "comp": "Redirect",
+  "title": "Plugin"
  },
  {
   "path": "/poc",
@@ -1463,6 +1513,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Postmortem X402"
  },
  {
+  "path": "/press",
+  "comp": "PublicPress",
+  "title": "Public Press"
+ },
+ {
+  "path": "/pressroom",
+  "comp": "PublicPress",
+  "title": "Public Press"
+ },
+ {
   "path": "/pricing",
   "comp": "Pricing",
   "title": "Pricing"
@@ -1471,6 +1531,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/pricing-legacy",
   "comp": "Pricing",
   "title": "Pricing"
+ },
+ {
+  "path": "/privacy",
+  "comp": "PublicPrivacy",
+  "title": "Public Privacy"
+ },
+ {
+  "path": "/privacy-policy",
+  "comp": "PublicPrivacy",
+  "title": "Public Privacy"
  },
  {
   "path": "/products",
@@ -1518,6 +1588,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Governance Pulse"
  },
  {
+  "path": "/quickstart",
+  "comp": "Quickstart",
+  "title": "Quickstart"
+ },
+ {
   "path": "/radar",
   "comp": "RegulationRadar",
   "title": "Regulation Radar"
@@ -1549,8 +1624,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/receipt",
-  "comp": "ProofReceipt",
-  "title": "Proof Receipt"
+  "comp": "ProofOfReceipt",
+  "title": "Proof Of Receipt"
  },
  {
   "path": "/recommendations",
@@ -1818,6 +1893,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Stablecoins"
  },
  {
+  "path": "/stablewatch",
+  "comp": "FeedLaunchPack",
+  "title": "Feed Launch Pack"
+ },
+ {
   "path": "/standards",
   "comp": "Standards",
   "title": "Standards"
@@ -2068,8 +2148,28 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Gov Graph"
  },
  {
+  "path": "/wrappers",
+  "comp": "Wrappers",
+  "title": "Wrappers"
+ },
+ {
+  "path": "/x402-board",
+  "comp": "X402Leaderboard",
+  "title": "X402 Leaderboard"
+ },
+ {
+  "path": "/x402-leaderboard",
+  "comp": "X402Leaderboard",
+  "title": "X402 Leaderboard"
+ },
+ {
   "path": "/xrpl-attest",
   "comp": "XrplAttest",
   "title": "Xrpl Attest"
+ },
+ {
+  "path": "/yield",
+  "comp": "YieldDashboard",
+  "title": "Yield Dashboard"
  }
 ];
