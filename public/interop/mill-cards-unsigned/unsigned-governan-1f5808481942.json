@@ -1,0 +1,40 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "governance",
+    "model": "prism-ml/Ternary-Bonsai-27B-gguf",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.4667,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router:prism-ml/Ternary-Bonsai-27B-gguf:together",
+    "evidence": {
+      "schema": "csoai.mill-item-evidence/0.3",
+      "bank_sha256": "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5",
+      "bank_file": "bank-governan-9c9de457cdde.jsonl",
+      "bank_dataset": "csoai/gspc-gov",
+      "bank_revision": "3ea47bcf75e4367e3034a662f0a3d7c1ce363897",
+      "model_hf_revision": "86e89f34c93201c3dfd5e5880fedb0022fc7e34d",
+      "instrument_sha256": "86216fbb18db98165e7b2feda74f90d89d05fcd8a0208aed82fee37956d8a659",
+      "items_file": "items-governan-1e14d8331f2e.jsonl",
+      "items_sha256": "1e14d8331f2e135171d5dd8fdaac808ff4a68294795cac6c00f63329276ec406"
+    },
+    "run_id": "gha-34944647635"
+  },
+  "id": "1f58084819423f85eef52bd9c433949f85e229da8ea3a881a021444a96d362fd",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1",
+  "admission": {
+    "schema": "csoai.mill-evidence-admission/0.2",
+    "file": "admission-8db89d26466a.json",
+    "sha256": "8db89d26466a5547e00d928e957c725288e57fa5e0a3d8a8994fe64773c2942e"
+  }
+}
