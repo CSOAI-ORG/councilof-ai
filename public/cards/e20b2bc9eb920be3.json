@@ -1,0 +1,50 @@
+{
+  "card": {
+    "as_of": "2026-09-15T01:26:57Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "humanoid-labour-index",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "NOT_BUILT; no input bank"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e20b2bc9eb920be3a026385b925db4147dbafc3867eaf41a7de590f31ff3a6c3",
+    "sig_ed25519": "30aad0af6d0f08fb500f74fc956d9d0c7151c64febb7e2281cfbe41d96a93859d291a1223be207440465744c906ee4d64be361f65805ba781eac697c2cff5e0a",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index"
+    ],
+    "subject": "GSPC humanoid-labour-index UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "humanoid-labour-index",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "5d19ebd0aac780ba39f27b8067781b88b2d5dbbfe442f5198c246bb22c3025fa",
+    "f987297df453d2c933173a75aca60ea230e27d7e910b8870365ea8dc638c7819",
+    "d7bcb57f95309472589534d00a4f3b8b74400d27de811b130c72d9e26c12afa7",
+    "27412a2a5389b46c8a4c94e5e8af988cb231e6a22c733f0e5a200ab82f433b8f",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "0757e19e64274fc4f9571a2592cd539abeff2bd1eada5636708eedead5586fab",
+    "5f5813d7fe061afc5c0526a0fa78e81851365c8557c428a4fe70b03553eca896",
+    "33586ddba2429c0971a856f8141e4df86102808cb7dfc7f72eab3fa443178600",
+    "f28fe97bc7462cf44036c75ad42c54f477d88d6502b2f01978d0659c2183eceb"
+  ]
+}

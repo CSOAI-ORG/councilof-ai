@@ -1,0 +1,45 @@
+{
+  "card": {
+    "as_of": "2026-09-15T01:24:11.442Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Treasuries",
+      "holders": 6,
+      "issuer": "Ondo Finance",
+      "issuer_address": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1639899.441472341,
+      "symbol": "OUSG",
+      "verified_domain": "ondo.finance",
+      "verified_via": "Bidirectional domain match"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "8de471eb347e3d347b9e3e6ba650ebbc860414e3723c8c0c230d264535fd74c0",
+    "sig_ed25519": "86170774da58b91bf327c0a500abb4302915398cdc09e93d830b0b145df29f92fc5f63f7080cba9e882d4db782991efce6f5625ebd6b6d5cbbc04642ca197708",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL OUSG public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "a0d08cbbd7f5a382501beb914769306d5cae863405cbc4fbc0a009b3aea53201",
+    "aec5779fef5d364277f22156afe98e6bb0506275782e76bf9d0109c85c7f278e",
+    "969ff1cca642ae6915e77ad1c36e2c15170088099df4967793877b0ed38bf70a",
+    "063f73de0d64d59cf37928c4512e44c0761ec3b574491e668220feae0db9dc6a",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "08e1f502a01a7943ed342546fb7ebb20c90e59b65d876b748997d09e035350f4",
+    "5f5813d7fe061afc5c0526a0fa78e81851365c8557c428a4fe70b03553eca896",
+    "33586ddba2429c0971a856f8141e4df86102808cb7dfc7f72eab3fa443178600",
+    "f28fe97bc7462cf44036c75ad42c54f477d88d6502b2f01978d0659c2183eceb"
+  ]
+}

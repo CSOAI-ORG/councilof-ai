@@ -1,0 +1,67 @@
+{
+  "card": {
+    "as_of": "2026-09-15T01:29:09Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "BBRL",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_holders",
+          "from": 40,
+          "to": 133
+        },
+        {
+          "field": "domain_on_ledger",
+          "from": "tokens.brazacripto.com.br",
+          "to": null
+        },
+        {
+          "field": "transfer_controls",
+          "from": {
+            "allow_trustline_clawback": false,
+            "default_ripple": true,
+            "global_freeze": false,
+            "no_freeze": false,
+            "require_auth": false
+          },
+          "to": null
+        }
+      ],
+      "ledger_index": 106991875,
+      "observed_at": "2026-09-15T01:29:09Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b8f061df446e59237196ea1371c23ab08658808e5620c8b59a9fca79a48244f5",
+    "sig_ed25519": "ea9bd21c16f3d58df57621e53a09d8043ac170af26998adfda301c6dd984d9aa58797a8abd5e211e5f7530aa4e69b3e75427f8c16982a77ce5fed403e8f88402",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: BBRL changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:BBRL"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "036ded251d8920377abe7269e3f0079c200caabe8b523f463cdf218fdf64eb3a",
+    "539affca8dde8d2acb25e2123ad561d5cf87a697b7d9885311cf887dd65bc50c",
+    "1842f18c907233f75039d557b11a9bf5c036dbd0fffc86ed5cce3e1dabfad987",
+    "5afb3307cba99ba8138a459e432fb16a1cc3c4fbe7218f91beac87afe62f9838",
+    "890721b15f22613c781ca0266416f1333ccb9a9cc97511598b6ee5cc7a2a63b0",
+    "a3b94354a8bc34cd59dea80b17d9c9be3cbe310a50502d57e7f5642c1f3138d6",
+    "9313c3ee8a24b2416442e97768c4563053ba5a21d36b875a12d4f9bfd7768177",
+    "1651df4ab7a4c93960c96fa403b6bf77047bdb1ddf95a53335c3525aa295d940",
+    "923e03962ff0eac8df329e3718a6bce81f9bef7d8d71a9c2765be6f19189eebd"
+  ]
+}
