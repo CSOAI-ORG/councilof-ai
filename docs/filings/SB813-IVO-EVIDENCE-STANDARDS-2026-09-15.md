@@ -7,7 +7,7 @@ CSOAI Ltd · September 15, 2026 · CC BY 4.0
 
 ## Summary
 
-California SB 813 (Chapter 179, signed September 9, 2026) creates the first US statutory framework for Independent Verification Organizations (IVOs) assessing AI systems. The Government Operations Agency must develop IVO designation criteria by January 1, 2028, through stakeholder working groups.
+California SB 813 (Chapter 179, signed September 9, 2026) creates a state statutory framework for Independent Verification Organizations (IVOs) assessing AI systems. The Government Operations Agency must develop IVO designation criteria by January 1, 2028, through stakeholder working groups.
 
 This paper proposes evidence standards for each of the four IVO designation criteria in §8898.1(c)(2). It is grounded in what we actually publish and what a stranger can independently verify.
 
@@ -39,7 +39,7 @@ This paper proposes evidence standards for each of the four IVO designation crit
 
 **Evidence standard proposed:**
 
-1. **Dedicated compute.** The measurement mill runs on dedicated GPU hardware with a worker that grades models against frozen banks 24/7. The worker's health is publicly observable.
+1. **Dedicated compute.** The measurement mill runs on dedicated GPU hardware with a worker that grades models against frozen banks. Its state is not stated here: the worker's health is published at /api/worker.
 
 2. **Multi-witness timestamping.** The public root is maintained by a signed, timestamped, multi-witness process: Ed25519 signatures, OpenTimestamps (Bitcoin), Rekor transparency log, and (pending) XRPL memo anchor.
 
