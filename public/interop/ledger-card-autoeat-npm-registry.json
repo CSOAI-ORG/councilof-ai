@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T13:04:55Z",
+ "as_of": "2026-09-12T06:49:50Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,25 @@
   },
   "method": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 7,
-   "live": 7,
+   "n_probed": 408,
+   "live": 408,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "grok-taskflow (200)",
-    "grok-search-rs-pc (200)",
-    "zubeid-youtube-mcp-server (200)",
-    "@hivelore/cli (200)",
-    "@facilio/cli (200)",
-    "@slatesvideo/cli (200)"
+    "mindvest-atlas (200)",
+    "@solomonneas/adguard-mcp (200)",
+    "@nitrostack/cli (200)",
+    "@nitrostack/widgets (200)",
+    "ask-experts-mcp (200)",
+    "@ainyc/canonry (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T13:04:55Z",
+  "as_of": "2026-09-12T06:49:50Z",
   "unmeasured": [
    "install_integrity",
    "malware",
@@ -39,10 +39,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "0f91240fb5021fabc79a89353bf4ddc2b59407a89441b752a6156c06cebae1e0",
- "sig_ed25519": "e251cabc54baa20bf69c5b26a70598d96e76384939a404d151d0736102a2030275d7ba1f170c9345be2f956ccff63bbb1604c9dc2bd11d9c2a11d837e005c100",
+ "sha256": "97f48c3111546746c4984812f13703138bc4488ac74852f26116d4d5f59a648d",
+ "sig_ed25519": "4c446689ea8f80e8d9521707ea11b355cff7b7d586be51a5abe2cccea469fabcb93b23d6ed1e9cd601c93ce16f3a9cf32623062a6f07331fc258f3a4f11e630a",
  "surface": "autoeat.npm.registry",
- "subject": "auto-eat npm-registry: 7 LIVE of 7 probed (read-only, ungraded)",
+ "subject": "auto-eat npm-registry: 408 LIVE of 408 probed (read-only, ungraded)",
  "source_urls": [
   "https://registry.npmjs.org/-/v1/search"
  ],

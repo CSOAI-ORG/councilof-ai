@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T13:07:33Z",
+ "as_of": "2026-09-12T06:49:50Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,21 +13,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 2,
-   "live": 2,
+   "n_probed": 2000,
+   "live": 248,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
+   "uncheckable": 1752,
+   "live_fraction_of_probed": 0.124,
    "live_examples": [
-    "sabbiccan/deteksilamunmangrove (200)",
-    "madarchik/minimax-h3 (200)"
+    "mightygus/unleashed-high-school-band-competition (200)",
+    "Harshavardhan1703/aegis-ai-demo (200)",
+    "EgoisticCoder/Qifu-v1 (200)",
+    "huappp/pphh (200)",
+    "rijal028/securepixel-engine (200)",
+    "hetchyy/quran-ts-job (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T13:07:33Z",
+  "as_of": "2026-09-12T06:49:50Z",
   "unmeasured": [
    "runtime_behavior",
    "hardware_claim",
@@ -35,10 +39,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "303751a776f549ddbfe77d7725c9efbcba16653cd56c7d65df9adc80a7903ab3",
- "sig_ed25519": "9d9b9ff6929e6c590069c342046126e0aaabb2ee6499844595e71c0e9298f7792a6e7f90f0251832b0c782236d468a42f3d0b91ccfb1e7f1fa7ee8385d5f4808",
+ "sha256": "d787b4e040032b1490d72165a82193a3036df42fac7753e2f29fa7c354ed3cff",
+ "sig_ed25519": "b3de5a33509da32905c6367b67ea8037944c572098f9bf409d8827e0103dc8fe2e9614fdff6f7f050d4fcccc93551fbf32cb276f8306ccfc8906dc2dccedcf00",
  "surface": "autoeat.hf.spaces",
- "subject": "auto-eat hf-space: 2 LIVE of 2 probed (read-only, ungraded)",
+ "subject": "auto-eat hf-space: 248 LIVE of 2000 probed (read-only, ungraded)",
  "source_urls": [
   "https://huggingface.co/api/spaces"
  ],

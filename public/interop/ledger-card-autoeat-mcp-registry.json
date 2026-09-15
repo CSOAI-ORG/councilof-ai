@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T12:21:38Z",
+ "as_of": "2026-09-12T06:49:50Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,20 +13,25 @@
   },
   "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 1,
-   "live": 1,
-   "placeholder": 0,
+   "n_probed": 139,
+   "live": 135,
+   "placeholder": 3,
    "held": 0,
-   "dead": 0,
+   "dead": 1,
    "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
+   "live_fraction_of_probed": 0.9712,
    "live_examples": [
-    "ai.avasis/quant-research (405)"
+    "agency.ottobot/business-contact-finder (405)",
+    "agency.ottobot/contractor-license-changes (405)",
+    "ai.atako/mcp (401)",
+    "ai.akkrudata/akkrudata (401)",
+    "ai.balancos/mcp (401)",
+    "ai.cnpj/mcp (401)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T12:21:38Z",
+  "as_of": "2026-09-12T06:49:50Z",
   "unmeasured": [
    "tool_behavior",
    "capability_claims",
@@ -35,10 +40,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "44a401612c6de9501f18cfb2f6e9c40af3fcf8dcf489d9c9ab2c1fc2b05d2afb",
- "sig_ed25519": "4da3e86563926211aba0395674dc72eac9dec1b3f7aa4092a7958ff93351d4164e228f3ff91baba35da365bf7626fcdc29c4fee0e5d9cf07ce6d06610d5add05",
+ "sha256": "d9b85842afb10607af6851a1a0f704a37894727fc1004e9bbeed783004b1d5ac",
+ "sig_ed25519": "b32b920416d65e6b8ce074a3827816fe1bd493e850628d48cb8c9222abccdec6ccdde8349230ca2fa50fdf849fef317c459a2f9033d3a9467cd58d699ec91a0c",
  "surface": "autoeat.mcp.registry",
- "subject": "auto-eat mcp-server: 1 LIVE of 1 probed (read-only, ungraded)",
+ "subject": "auto-eat mcp-server: 135 LIVE of 139 probed (read-only, ungraded)",
  "source_urls": [
   "https://registry.modelcontextprotocol.io/v0/servers"
  ],
