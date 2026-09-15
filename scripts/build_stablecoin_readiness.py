@@ -43,19 +43,42 @@ def card_body(document: dict[str, Any]) -> dict[str, Any]:
     return body if isinstance(body, dict) else {}
 
 
-def find_index_commitment(repo: Path, index_sha: str) -> tuple[Path, dict[str, Any]]:
-    matches: list[tuple[Path, dict[str, Any]]] = []
+def find_index_commitment(repo: Path, index_sha: str, root_hashes: set[str]) -> tuple[Path, dict[str, Any]]:
+    """The ONE signed commitment to this index that the current public root includes.
+
+    public/cards is append-only: signed bytes are never edited or deleted. When the
+    publisher re-mints a leaf whose card envelope changed (the G5.1 "product" block,
+    #2471/#2478), the same index gets a second signed commitment card with a new
+    whole-card sha, and the superseded card stays on disk. Counting every card on disk
+    therefore failed the publisher on 15 Sep 2026 ("found 2") even though exactly one
+    was in the root it had just signed. Selection is by root inclusion, as
+    latest_rooted_rlusd already does. Every failure mode still fails closed: no signed
+    commitment, none in the current root, or more than one in the current root.
+    """
+    signed: list[tuple[Path, dict[str, Any]]] = []
     for path in sorted((repo / CARDS_REL).glob("*.json")):
         try:
             body = card_body(load(path))
         except (OSError, ValueError):
             continue
         payload = body.get("payload") or {}
-        if payload.get("kind") == "csoai.stablecoin-index.commitment/v1" and payload.get("index_sha256") == index_sha:
-            matches.append((path, body))
-    if len(matches) != 1:
-        raise SystemExit(f"expected exactly one signed index commitment for {index_sha}, found {len(matches)}")
-    return matches[0]
+        if (
+            payload.get("kind") == "csoai.stablecoin-index.commitment/v1"
+            and payload.get("index_sha256") == index_sha
+            and isinstance(body.get("sig_ed25519"), str)
+            and body.get("sig_ed25519")
+        ):
+            signed.append((path, body))
+    if not signed:
+        raise SystemExit(f"no signed index commitment for {index_sha}")
+    rooted = [(path, body) for path, body in signed if body.get("sha256") in root_hashes]
+    if not rooted:
+        raise SystemExit("stablecoin index commitment is signed but absent from the current public root")
+    if len(rooted) != 1:
+        raise SystemExit(
+            f"expected exactly one current-root-included signed index commitment for {index_sha}, found {len(rooted)}"
+        )
+    return rooted[0]
 
 
 def latest_rooted_rlusd(repo: Path, root_hashes: set[str]) -> tuple[Path, dict[str, Any]]:
@@ -122,8 +145,8 @@ def build(repo: Path) -> dict[str, Any]:
         (row["asset_id"], row["register"]): row for row in reg_baseline["token_map"]
     }
     index_sha = sha256(index_path)
-    commitment_path, commitment = find_index_commitment(repo, index_sha)
     root_hashes = set(root.get("card_sha256") or [])
+    commitment_path, commitment = find_index_commitment(repo, index_sha, root_hashes)
     commitment_sha = commitment.get("sha256")
     if commitment_sha not in root_hashes:
         raise SystemExit("stablecoin index commitment is signed but absent from the current public root")
