@@ -719,7 +719,6 @@ for (const route of [
   "/compliance-monitoring",
   "/system",
   "/home-v2",
-  "/feed",
   "/government-links",
   "/regulatory-compliance",
   "/compliance/eu-ai-act",

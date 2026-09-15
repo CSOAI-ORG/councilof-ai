@@ -119,7 +119,6 @@ const CraReadinessKit = lazy(() => import("./pages/CraReadinessKit"));
 const CountdownPage = lazy(() => import("./pages/CountdownPage"));
 const Art50 = lazy(() => import("./pages/Art50"));
 const ProofReceipt = lazy(() => import("./pages/ProofReceipt"));
-const ProofOfReceipt = lazy(() => import("./pages/ProofOfReceipt"));
 const FeedLaunchPack = lazy(() => import("./pages/FeedLaunchPack"));
 const YieldStatus = lazy(() => import("./pages/YieldStatus"));
 const YieldInternal = lazy(() => import("./pages/YieldInternal"));
@@ -1192,7 +1191,7 @@ function App() {
                   <Route path="/yield" component={YieldDashboard} />
                   <Route path="/countdown" component={CountdownPage} />
                   <Route path="/art50" component={Art50} />
-                  <Route path="/receipt" component={ProofOfReceipt} />
+                  <Route path="/receipt" component={ProofReceipt} />
                   <Route path="/feed" component={FeedLaunchPack} />
                   <Route path="/stablewatch" component={FeedLaunchPack} />
                   <Route path="/custody" component={CustodyDisclosure} />
