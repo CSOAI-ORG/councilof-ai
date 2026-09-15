@@ -1,156 +1,144 @@
 #!/usr/bin/env python3
-"""G5.1 product_block schema validation.
+"""test_product_block.py — verify the product block module.
 
-Tests that:
-1. card-v0.json and card-v1.json accept product_block as optional
-2. product_block rejects literal prices (price_ref is a lookup key, not a number)
-3. tier is constrained to free/proof/feed
-4. existing cards without product_block still validate
-5. a canary card WITH product_block validates
+G5.1 PRODUCT BLOCK v0.1. Tests:
+  * Every surface in the publisher's SURFACES set maps to a known SKU
+  * Every SKU entry has required fields
+  * Free-tier cards have empty paid_fields
+  * Proof-tier cards have a price object
+  * The retro_tag function adds a product block to a card without one
+  * The retro_tag function is idempotent (doesn't overwrite existing)
+  * Anchors are always present with expected keys
 """
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
-try:
-    import jsonschema
-except ImportError:
-    print("SKIP: jsonschema not installed", file=sys.stderr)
-    sys.exit(0)
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-ROOT = Path(__file__).resolve().parents[1]
+import product_block as pb
 
-
-def load_schema(name: str) -> dict:
-    return json.loads((ROOT / "public" / "schema" / name).read_text())
-
-
-def validate(schema: dict, instance: dict) -> list[str]:
-    errors = []
-    try:
-        jsonschema.validate(instance=instance, schema=schema)
-    except jsonschema.ValidationError as e:
-        errors.append(e.message)
-    return errors
+# Publisher's SURFACES set (must match publish_public_root.py)
+PUBLISHER_SURFACES = {
+    "xrpl.asset.state",
+    "xrpl.basket.root",
+    "public.notice",
+    "benji.onchain.supply",
+    "receipts.v1",
+}
 
 
-def test_product_block_optional():
-    """Existing cards without product_block must still validate."""
-    schema = load_schema("card-v0.json")
+def test_sku_table_complete():
+    """Every publisher surface must be in the SKU table."""
+    for surface in PUBLISHER_SURFACES:
+        assert surface in pb.SKU_TABLE, (
+            f"publisher surface '{surface}' not in SKU_TABLE"
+        )
+
+
+def test_sku_entries_valid():
+    """Every SKU entry has required fields."""
+    for surface, entry in pb.SKU_TABLE.items():
+        assert "tier" in entry, f"{surface}: missing tier"
+        assert "sku" in entry, f"{surface}: missing sku"
+        assert "free_fields" in entry, f"{surface}: missing free_fields"
+        assert "paid_fields" in entry, f"{surface}: missing paid_fields"
+        assert entry["tier"] in ("free", "proof"), f"{surface}: invalid tier {entry['tier']}"
+        assert isinstance(entry["free_fields"], list), f"{surface}: free_fields not a list"
+        assert isinstance(entry["paid_fields"], list), f"{surface}: paid_fields not a list"
+
+
+def test_free_tier_no_price():
+    """Free-tier cards must have empty paid_fields and no price."""
+    for surface, entry in pb.SKU_TABLE.items():
+        if entry["tier"] == "free":
+            assert entry["paid_fields"] == [], (
+                f"{surface}: free tier has non-empty paid_fields"
+            )
+            assert entry.get("price") is None, (
+                f"{surface}: free tier has a price"
+            )
+
+
+def test_proof_tier_has_price():
+    """Proof-tier cards must have a price object."""
+    for surface, entry in pb.SKU_TABLE.items():
+        if entry["tier"] == "proof":
+            assert entry.get("price") is not None, (
+                f"{surface}: proof tier has no price"
+            )
+            assert "currency" in entry["price"], f"{surface}: price missing currency"
+            assert "amount" in entry["price"], f"{surface}: price missing amount"
+
+
+def test_product_block_structure():
+    """product_block_for returns the correct structure."""
+    for surface in pb.SKU_TABLE:
+        block = pb.product_block_for(surface)
+        assert "sku" in block, f"{surface}: block missing sku"
+        assert "tier" in block, f"{surface}: block missing tier"
+        assert "free_fields" in block, f"{surface}: block missing free_fields"
+        assert "paid_fields" in block, f"{surface}: block missing paid_fields"
+        assert "anchors" in block, f"{surface}: block missing anchors"
+        for key in ("ots", "rekor", "xrpl_memo", "evm_base"):
+            assert key in block["anchors"], f"{surface}: anchors missing {key}"
+
+
+def test_default_fallback():
+    """Unknown surfaces get the default free tier."""
+    block = pb.product_block_for("completely.unknown.surface")
+    assert block["tier"] == "free"
+    assert block["sku"] == "generic"
+
+
+def test_retro_tag_adds_product():
+    """retro_tag adds a product block to a card without one."""
+    card = {"surface": "public.notice", "subject": "test"}
+    result = pb.retro_tag(card)
+    assert "product" in result
+    assert result["product"]["tier"] == "free"
+
+
+def test_retro_tag_idempotent():
+    """retro_tag does not overwrite an existing product block."""
     card = {
-        "schema": "https://councilof.ai/schema/card-v0.json",
-        "surface": "gspc.behavioural",
-        "subject": "test-subject",
-        "as_of": "2026-09-15T00:00:00Z",
-        "source_urls": ["https://example.com"],
-        "payload": {"axis": "test"},
-        "sha256": "a" * 64,
-        "unmeasured": [],
+        "surface": "public.notice",
+        "product": {"sku": "custom", "tier": "proof"},
     }
-    errors = validate(schema, card)
-    assert not errors, f"card without product_block should validate: {errors}"
-    print("PASS: product_block is optional")
+    result = pb.retro_tag(card)
+    assert result["product"]["sku"] == "custom"
+    assert result["product"]["tier"] == "proof"
 
 
-def test_product_block_valid():
-    """A card with a valid product_block must validate."""
-    schema = load_schema("card-v0.json")
-    card = {
-        "schema": "https://councilof.ai/schema/card-v0.json",
-        "surface": "gspc.behavioural",
-        "subject": "test-subject",
-        "as_of": "2026-09-15T00:00:00Z",
-        "source_urls": ["https://example.com"],
-        "payload": {"axis": "test"},
-        "sha256": "a" * 64,
-        "unmeasured": [],
-        "product_block": {
-            "sku": "issuance",
-            "tier": "free",
-            "free_fields": ["total", "staleness_days", "axis", "status"],
-            "paid_fields": ["per_chain_splits", "gap_bps"],
-            "price_ref": "issuance:reserve",
-            "anchors": ["ots:proof.json"],
-        },
-    }
-    errors = validate(schema, card)
-    assert not errors, f"valid product_block should pass: {errors}"
-    print("PASS: valid product_block accepted")
-
-
-def test_product_block_rejects_literal_price():
-    """product_block must NOT contain a literal price — price_ref is a lookup key."""
-    schema = load_schema("card-v0.json")
-    card = {
-        "schema": "https://councilof.ai/schema/card-v0.json",
-        "surface": "gspc.behavioural",
-        "subject": "test-subject",
-        "as_of": "2026-09-15T00:00:00Z",
-        "source_urls": ["https://example.com"],
-        "payload": {"axis": "test"},
-        "sha256": "a" * 64,
-        "unmeasured": [],
-        "product_block": {
-            "tier": "proof",
-            "price_usd": 0.05,
-        },
-    }
-    errors = validate(schema, card)
-    assert errors, f"product_block with extra field (price_usd) should fail: no error"
-    print("PASS: product_block rejects unknown fields (price_usd is not in the schema)")
-
-
-def test_product_block_tier_constraint():
-    """tier must be one of free/proof/feed."""
-    schema = load_schema("card-v0.json")
-    card = {
-        "schema": "https://councilof.ai/schema/card-v0.json",
-        "surface": "gspc.behavioural",
-        "subject": "test-subject",
-        "as_of": "2026-09-15T00:00:00Z",
-        "source_urls": ["https://example.com"],
-        "payload": {"axis": "test"},
-        "sha256": "a" * 64,
-        "unmeasured": [],
-        "product_block": {
-            "tier": "premium",
-        },
-    }
-    errors = validate(schema, card)
-    assert errors, f"tier='premium' should fail validation: no error"
-    print("PASS: tier constrained to free/proof/feed")
-
-
-def test_card_v1_product_block():
-    """card-v1.json also accepts product_block."""
-    schema = load_schema("card-v1.json")
-    card = {
-        "schema": "https://councilof.ai/schema/card-v1.json",
-        "surface": "gspc.behavioural",
-        "subject": "test-subject",
-        "as_of": "2026-09-15T00:00:00Z",
-        "source_urls": ["https://example.com"],
-        "payload": {"axis": "test"},
-        "sha256": "a" * 64,
-        "unmeasured": [],
-        "digest_covers": "all",
-        "sig_covers": "all",
-        "product_block": {
-            "tier": "free",
-            "free_fields": ["total", "staleness_days"],
-        },
-    }
-    errors = validate(schema, card)
-    assert not errors, f"card-v1 with product_block should validate: {errors}"
-    print("PASS: card-v1 accepts product_block")
+def main() -> int:
+    tests = [
+        test_sku_table_complete,
+        test_sku_entries_valid,
+        test_free_tier_no_price,
+        test_proof_tier_has_price,
+        test_product_block_structure,
+        test_default_fallback,
+        test_retro_tag_adds_product,
+        test_retro_tag_idempotent,
+    ]
+    fails = []
+    for test in tests:
+        try:
+            test()
+            print(f"  PASS {test.__name__}")
+        except AssertionError as e:
+            print(f"  FAIL {test.__name__}: {e}")
+            fails.append(test.__name__)
+        except Exception as e:
+            print(f"  ERROR {test.__name__}: {type(e).__name__}: {e}")
+            fails.append(test.__name__)
+    if fails:
+        print(f"\n{len(fails)} FAILED: {', '.join(fails)}")
+        return 1
+    print(f"\nAll {len(tests)} tests passed")
+    return 0
 
 
 if __name__ == "__main__":
-    test_product_block_optional()
-    test_product_block_valid()
-    test_product_block_rejects_literal_price()
-    test_product_block_tier_constraint()
-    test_card_v1_product_block()
-    print("\nAll product_block tests passed.")
+    sys.exit(main())
