@@ -28,4 +28,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git add public/interop/silent-route-canary-2026-09/
           git diff --cached --quiet || git commit -m "canary: daily capture $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          # Pull any concurrent master changes before pushing to avoid fetch-first rejection
+          git pull --ff-only --no-edit origin master || true
           git push
