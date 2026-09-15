@@ -10,6 +10,19 @@ const health = {
 };
 const fetcherWith = (status: number, body: unknown) => (async () => new Response(JSON.stringify(body), { status })) as unknown as typeof fetch;
 
+/** Fake KV that stores in-memory for tests. */
+function fakeKV(initial?: string): { binding: any; store: Map<string, string> } {
+  const store = new Map<string, string>();
+  if (initial) store.set("worker:last-live", initial);
+  return {
+    binding: {
+      get: async (k: string) => store.get(k) ?? null,
+      put: async (k: string, v: string) => { store.set(k, v); },
+    } as any,
+    store,
+  };
+}
+
 describe("/api/worker — the pod's own health, proxied, never remembered", () => {
   it("reads the live health into a LIVE summary and copies only the known worker fields", async () => {
     const out = await buildWorker({}, fetcherWith(200, health));
@@ -19,7 +32,38 @@ describe("/api/worker — the pod's own health, proxied, never remembered", () =
     expect(JSON.stringify(out)).not.toContain("secret_looking_field");
   });
 
-  it("is OFFLINE with the HTTP result when the pod does not answer — never a stale number", async () => {
+  it("caches the LIVE response in KV for fallback", async () => {
+    const { binding: kv, store } = fakeKV();
+    await buildWorker({ WORKER_STATE_KV: kv }, fetcherWith(200, health));
+    expect(store.has("worker:last-live")).toBe(true);
+    const cached = JSON.parse(store.get("worker:last-live")!);
+    expect(cached.status).toBe("LIVE");
+    expect(cached.worker.state).toBe("RUNNING");
+  });
+
+  it("returns STALE with cached data when pod is offline and KV has a previous LIVE response", async () => {
+    const cachedLive = JSON.stringify({ ...({ schema: "csoai.worker-state/0.1", status: "LIVE", read_at: new Date(Date.now() - 120_000).toISOString(), worker: { state: "RUNNING", jobs_total: 168 } }) });
+    const { binding: kv } = fakeKV(cachedLive);
+    const down = await buildWorker({ WORKER_STATE_KV: kv }, fetcherWith(502, { error: "bad gateway" }));
+    expect(down.status).toBe("STALE");
+    expect(down.stale).toBe(true);
+    expect(down.stale_reason).toContain("HTTP 502");
+    expect(down.stale_age_seconds).toBeGreaterThanOrEqual(120);
+    expect(down.worker).toMatchObject({ state: "RUNNING", jobs_total: 168 });
+  });
+
+  it("returns STALE with cached data when pod throws and KV has a previous LIVE response", async () => {
+    const cachedLive = JSON.stringify({ ...({ schema: "csoai.worker-state/0.1", status: "LIVE", read_at: new Date(Date.now() - 60_000).toISOString(), worker: { state: "IDLE" } }) });
+    const { binding: kv } = fakeKV(cachedLive);
+    const throwing = (async () => { throw new TypeError("fetch failed"); }) as unknown as typeof fetch;
+    const off = await buildWorker({ WORKER_STATE_KV: kv }, throwing);
+    expect(off.status).toBe("STALE");
+    expect(off.stale).toBe(true);
+    expect(off.stale_reason).toContain("unreachable");
+    expect(off.worker).toMatchObject({ state: "IDLE" });
+  });
+
+  it("is OFFLINE with no fallback when pod is down and no KV cache exists", async () => {
     const down = await buildWorker({}, fetcherWith(502, { error: "bad gateway" }));
     expect(down.status).toBe("OFFLINE");
     expect(down.http).toBe(502);
