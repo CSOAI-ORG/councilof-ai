@@ -73,8 +73,9 @@ jobs:
           if [ -f "$SRC_DIR/wrapped-asset-parity-2026-09/README.md" ]; then
             cp "$SRC_DIR/wrapped-asset-parity-2026-09/README.md" /tmp/wrapper-upload/README.md
           else
-            cat > /tmp/wrapper-upload/README.md << 'README'
----
+            python3 -c "
+import textwrap, pathlib
+readme = '''---
 language: en
 license: cc-by-4.0
 tags:
@@ -91,7 +92,9 @@ obligations. Published by Council of AI (CSOAI Ltd, UK 16939677).
 Measurement, not certification.
 
 **Source:** https://councilof.ai/interop/wrapped-asset-parity-latest.json
-README
+'''
+pathlib.Path('/tmp/wrapper-upload/README.md').write_text(textwrap.dedent(readme))
+"
           fi
 
           # Verify we have content
