@@ -292,6 +292,10 @@ const EXISTING = [
   "/claimguard.html        /honesty/                308",
   "/coming                 /honesty/                308",
   "/coming/                /honesty/                308",
+  // 2026-09-15: /corrections/ was a guessable 404 and the footer opened raw JSON. The readable
+  // corrections ledger is the dashboard attestations tab (it renders GET /api/corrections).
+  "/corrections            /dashboard?tab=attestations  308",
+  "/corrections/           /dashboard?tab=attestations  308",
   "/stack                  /stack/index.json        308",
   "/stack/                 /stack/index.json        308",
 ];

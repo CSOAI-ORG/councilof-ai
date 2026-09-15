@@ -42,7 +42,8 @@ export function Footer() {
         { name: 'GSPC JSON', href: '/api/gspc', external: true },
         { name: 'Methodology', href: '/methodology' },
         { name: 'Honesty gate', href: '/honesty' },
-        { name: 'Corrections', href: '/api/corrections', external: true },
+        // The readable ledger (DashboardAttestationsPane renders /api/corrections), not raw JSON.
+        { name: 'Corrections', href: '/dashboard?tab=attestations' },
         { name: 'llms.txt', href: '/llms.txt', external: true },
         { name: 'API docs', href: '/api-docs' },
       ],
