@@ -73,6 +73,32 @@ export default function OnboardOS() {
           Wrapped-asset parity: on-chain supply for each bridged stablecoin, read from public endpoints.{" "}
           <a href="/wrappers" className="font-semibold text-emerald-300 underline hover:text-emerald-200">Wrapped-asset parity ledger →</a>
         </div>
+
+        <div className="mt-8">
+          <h2 className="text-lg font-bold text-emerald-100">Explore the estate</h2>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { href: "/quickstart", label: "Quickstart", desc: "One-page guide to the measurement stack" },
+              { href: "/gspc-scoreboard", label: "Scoreboard", desc: "Live board — every axis, every model" },
+              { href: "/leaderboard", label: "Leaderboard", desc: "Benchmark corpus — not a single best AI" },
+              { href: "/countdown", label: "Countdown", desc: "Regulatory deadlines and Art 50 readiness" },
+              { href: "/owasp-asi", label: "OWASP mapping", desc: "22 axes → OWASP AI Exchange categories" },
+              { href: "/evaluator-access", label: "Evaluator access", desc: "Conditions for independent evaluation" },
+              { href: "/press", label: "Press", desc: "Corrections, root, signed index, FAQs" },
+              { href: "/products", label: "Products", desc: "4 SKUs — free verify, scoped commission, enquiry" },
+              { href: "/methodology", label: "Methodology", desc: "The frozen rules every number is computed under" },
+            ].map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="rounded-lg border border-emerald-500/15 bg-black/20 px-4 py-3 hover:border-emerald-400/40"
+              >
+                <span className="text-sm font-semibold text-emerald-200">{link.label}</span>
+                <span className="mt-0.5 block text-xs text-emerald-100/60">{link.desc}</span>
+              </a>
+            ))}
+          </div>
+        </div>
       </section>
     </div>
   );
