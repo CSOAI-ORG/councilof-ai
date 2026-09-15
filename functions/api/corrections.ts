@@ -34,6 +34,18 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0915-01",
+      date: "2026-09-15",
+      first_observed_at: "2026-09-15T07:30Z",
+      what_was_wrong:
+        "On GET /api/gspc, the governance axis's historical_measurement_record.note said the tuned governance specialist \"leads AND the lead is separated (McNemar p=0.0086 vs best base mistral:7b) — one of only 4 separated leads on the board\". The same payload read governance.separation UNTESTED, totals.separated_leads 0 and totals.own_leaders_excluded 8 with governance among them. The sentence predated the own-model exclusion, which removes our own specialist from the public leader slot and with it every public separation determination on that axis. The same class stood in four more places: the care note (\"SEPARATED vs the best base\") and the affect note (\"the cleanest separation on the board\"), both on own-model axes reading UNTESTED; a limitations line on the same payload saying \"care is separated from base models\"; and on the site, /benchmarks typed \"Governance separates at p=0.0086, care at p=0.0356, affect at p=0.0078\" and two sector pages promised a card \"with the separated lead\". A dated /feed.xml item said \"3 of 13 canonical axes carry a separated leader\" in the present tense.",
+      how_caught:
+        "Reading the live payload against itself: the governance note's prose was compared with the governance separation field and with totals.separated_leads in the same response, instead of being accepted as a summary.",
+      fix:
+        "The governance, care and affect notes in functions/api/_gspc_axes_a.ts and _gspc_axes_b.ts now state each separation as an in-lane result on our own model, not a public ranking, and not counted in totals.separated_leads; the typed count is gone. The care limitation in functions/api/gspc.ts is derived from the raw axis rows and carries the same label. /benchmarks and the government and affect sector entries no longer present these as public separated leads. The feed item is dated to its sitting and points at the live count. functions/api/gspc.separation-truth.test.ts reads the served board and fails when any note, historical record or limitation claims a separated lead on an axis whose separation field is not SEPARATED (a historical record passes only when marked superseded and labelled in-lane), or when any typed count of separated leads differs from totals.separated_leads; it carries failing controls for the pre-correction governance sentence. The signed snapshots that carry the old sentence (public/signed/gspc-board.signed.json, public/signed/gspc-measurement.json) are not edited; this record supersedes that sentence in them.",
+      status: "CORRECTED IN SOURCE AND RECORDED; VERIFY THE CURRENT LIVE ENDPOINT",
+    },
+    {
       id: "C-2026-0914-03",
       date: "2026-09-14",
       first_observed_at: "2026-09-14T10:54Z",

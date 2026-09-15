@@ -113,7 +113,7 @@ const ITEMS: FeedItem[] = [
     title: "SITTING 1: the GSPC 14-slot board — 13 measured of 14",
     link: "https://councilof.ai/api/gspc",
     date: "Tue, 18 Aug 2026 12:00:00 GMT",
-    desc: "Jail (slot 14) promoted from the signed living board: 7-model fleet, separation untested, stated honestly. 3 of 13 canonical axes carry a separated leader; ties are ties.",
+    desc: "Jail (slot 14) promoted from the signed living board: 7-model fleet, separation untested, stated honestly. At that sitting 3 of 13 canonical axes carried a separated leader; ties are ties. That count is dated to the sitting and is not the live one: cite totals.separated_leads on GET /api/gspc (C-2026-0915-01).",
   },
 ];
 

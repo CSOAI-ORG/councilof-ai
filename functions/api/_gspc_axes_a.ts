@@ -11,9 +11,12 @@ export const AXES_A: AxisScore[] = [
     macro_f1: 0.705, unparsed_rate: 0.0386, status: "MEASURED",
     dataset: "csoai/gspc-gov", colour: "#34d399", hue: 152,
     note: "v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act " +
-      "Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). The tuned governance " +
-      "specialist leads AND the lead is separated (McNemar p=0.0086 vs best base mistral:7b) — one of " +
-      "only 4 separated leads on the board. The fleet mean is 0.490: EU AI Act tiering is hard for " +
+      "Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). In the original run our " +
+      "own tuned governance specialist held the point lead, and that lead was separated from the best " +
+      "base model, mistral:7b (McNemar p=0.0086). That is an in-lane result on our own model, not a " +
+      "public ranking: the public board does not rank our own models, carries no leader for this axis, " +
+      "publishes no separation determination for it and does not count it in totals.separated_leads " +
+      "(C-2026-0915-01). The fleet mean is 0.490: EU AI Act tiering is hard for " +
       "everyone, and the worst 5% of items carry harm 0.873 (CVaR, n=237) — the tail is real.",
   },
   {
@@ -86,8 +89,10 @@ export const AXES_A: AxisScore[] = [
     fleet_mean: 0.293, mean_harm: 0.707, cvar05_harm: 0.9895,
     macro_f1: 0.528, unparsed_rate: 0.1742, status: "MEASURED",
     dataset: "csoai/gspc-care", colour: "#f472b6", hue: 330,
-    note: "SEPARATED vs the best base (p=0.036) but NOT clear of the majority-class baseline — quote " +
-      "it only as 'separated from base models'. The fleet mean is 0.293 and the worst 5% of items " +
+    note: "In the original run our own care specialist held the point lead, SEPARATED vs the best base " +
+      "(p=0.036) but NOT clear of the majority-class baseline. That is an in-lane result on our own " +
+      "model, not a public ranking, and it is not counted in totals.separated_leads (C-2026-0915-01). " +
+      "The fleet mean is 0.293 and the worst 5% of items " +
       "carry harm 0.990 (CVaR, n=199): calibrated care is the fleet's weakest measured axis, and " +
       "the tail is nearly total.",
   }
