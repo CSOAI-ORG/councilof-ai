@@ -122,3 +122,75 @@ export function copyRuleViolations(note: EvidenceNote): CopyViolation[] {
   }
   return out;
 }
+
+// ── Card currency ─────────────────────────────────────────────────────────────────────────────
+// Signed bytes are never edited; a wrong card is SUPERSEDED (a ledger row names its replacement) or
+// WITHDRAWN (a correction id, no replacement). On 2026-09-15 an outside reader found the art5 note
+// quoting qwen3:8b at 0.9722 from a card SUPERSEDED.jsonl had replaced with a 0.9444 card — the one
+// /api/hub-cards serves. A note may still cite a superseded card (the supersession note exists to),
+// but only beside the card that currently replaces it; a withdrawn card only beside its correction id.
+// Pure functions: the ledgers and card bodies are passed in, so this file stays browser-safe.
+
+export interface SupersessionRow { superseded_file: string; by_file: string }
+export interface WithdrawalRow { withdrawn_file: string; correction: string }
+
+const MILL_CARD_RE = /mill-cards-signed\/(signed-[A-Za-z0-9-]+\.json)/g;
+
+/** Every mill card file a note names, in its body or its artifacts. */
+export function citedMillCards(note: EvidenceNote): string[] {
+  const text = [note.title, note.summary, note.body, note.social, ...note.artifacts.map((a) => a.url)].join("\n");
+  return [...new Set([...text.matchAll(MILL_CARD_RE)].map((m) => m[1]))];
+}
+
+/** Follow the supersession chain to the card that is current now. */
+export function currentCardFor(file: string, superseded: SupersessionRow[]): string {
+  const next = new Map(superseded.map((r) => [r.superseded_file, r.by_file]));
+  let at = file;
+  const seen = new Set<string>();
+  while (next.has(at) && !seen.has(at)) {
+    seen.add(at);
+    at = next.get(at)!;
+  }
+  return at;
+}
+
+export function stalenessViolations(note: EvidenceNote, superseded: SupersessionRow[], withdrawn: WithdrawalRow[]): string[] {
+  const cited = citedMillCards(note);
+  const text = JSON.stringify(note);
+  const out: string[] = [];
+  for (const file of cited) {
+    const current = currentCardFor(file, superseded);
+    if (current !== file && !cited.includes(current)) {
+      out.push(`${file} is superseded; the current card ${current} is not cited beside it`);
+    }
+    const w = withdrawn.find((row) => row.withdrawn_file === current);
+    if (w && !text.includes(w.correction)) {
+      out.push(`${current} is withdrawn (${w.correction}); the note does not name the correction`);
+    }
+  }
+  return out;
+}
+
+/** Each accuracy quoted with a signed-card URL opening within the copy rule's 60-character window. */
+export function quotedAccuracies(note: EvidenceNote): { quoted: string; file: string }[] {
+  const out: { quoted: string; file: string }[] = [];
+  for (const m of note.body.matchAll(/\b0\.\d{2,4}\b/g)) {
+    const end = (m.index ?? 0) + m[0].length;
+    // The URL must OPEN inside the window (same rule as copyRuleViolations); the file name that
+    // follows it runs past 60 characters, so it is read from a wider slice.
+    const card = note.body.slice(end, end + 160).match(/\(https:\/\/councilof\.ai\/interop\/mill-cards-signed\/(signed-[A-Za-z0-9-]+\.json)/);
+    if (card && (card.index ?? Infinity) <= 60) out.push({ quoted: m[0], file: card[1] });
+  }
+  return out;
+}
+
+/** An accuracy quoted beside a signed-card URL must be that card's body.accuracy, as signed. */
+export function quotedAccuracyMismatches(note: EvidenceNote, accuracyOf: (file: string) => number | null | undefined): string[] {
+  const out: string[] = [];
+  for (const { quoted, file } of quotedAccuracies(note)) {
+    const signed = accuracyOf(file);
+    if (signed === undefined) out.push(`${file} is not in public/interop/mill-cards-signed`);
+    else if (signed === null || String(signed) !== quoted) out.push(`${quoted} quoted beside ${file}, whose signed body reads ${signed}`);
+  }
+  return out;
+}
