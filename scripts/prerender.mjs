@@ -107,6 +107,8 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
   "/status/",
   "/receipt",
   "/receipt/",
+  "/stablewatch",
+  "/stablewatch/",
   "/health-inventory",
   "/health-inventory/",
 ]);
