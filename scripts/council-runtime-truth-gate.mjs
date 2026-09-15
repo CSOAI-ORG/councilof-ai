@@ -495,7 +495,7 @@ for (const [component, importPath] of appPageImports) {
 }
 assert.deepEqual(
   unusedPageImports.sort(),
-  ["FrameworkDetail", "Leaderboard"],
+  ["FrameworkDetail", "Leaderboard", "ProofReceipt"],
   "App.tsx page imports changed: every new page import must be routed or explicitly removed",
 );
 assert.ok(
@@ -719,7 +719,6 @@ for (const route of [
   "/compliance-monitoring",
   "/system",
   "/home-v2",
-  "/feed",
   "/government-links",
   "/regulatory-compliance",
   "/compliance/eu-ai-act",
@@ -786,6 +785,16 @@ for (const route of [
 }
 assert.match(
   appSource,
+  /<Route path=["']\/feed["'] component=\{FeedLaunchPack\} \/>/,
+  "/feed uses FeedLaunchPack (TUI-6 ship 2026-09-15)",
+);
+assert.match(
+  appSource,
+  /<Route path=["']\/stablewatch["'] component=\{FeedLaunchPack\} \/>/,
+  "/stablewatch mirrors /feed on the same component",
+);
+assert.match(
+  appSource,
   /<Route path=["']\/press["'] component=\{PublicPress\} \/>/,
   "/press must use the reviewed public press page",
 );
@@ -846,7 +855,7 @@ assert.match(
 );
 assert.match(
   appSource,
-  /<Route path=["']\/receipt["'] component=\{ProofReceipt\} \/>/,
+  /<Route path=["']\/receipt["'] component=\{ProofOfReceipt\} \/>/,
   "/receipt is the free inclusion UI; GET /proof stays the JSON alias of /api/proof",
 );
 
