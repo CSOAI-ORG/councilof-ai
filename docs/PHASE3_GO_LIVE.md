@@ -21,7 +21,7 @@
 - [ ] Paddle **webhook** → backend entitlement grant verified with a **test transaction** (sandbox → live).
 - [ ] On successful payment, backend issues the **Ed25519 certificate** (signing key loaded server-side; never in the client bundle).
 - [ ] `/login` auth issues the entitlement to the account; gated OS/tools unlock.
-- [ ] Refund/chargeback path defined (revoke entitlement + cert).
+- [x] Refund/chargeback path defined (revoke entitlement + cert).
 
 ## C. Signing + trust (M4)
 - [ ] Signing key present on the brain host only; `/sign` returns real Ed25519 (len=128) — **verified live today**.
