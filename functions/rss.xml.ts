@@ -1,8 +1,10 @@
 /**
  * /rss.xml — conventional alias of /api/feed.xml.
- * onRequest covers GET and HEAD.
+ * onRequest covers GET+HEAD; onRequestGet kept for adoption-loop importers.
  */
 import { onRequestGet as feedGet } from "./api/feed.xml";
+
+export const onRequestGet = feedGet;
 
 export async function onRequest(ctx: { request: Request }) {
   const method = ctx.request.method.toUpperCase();
