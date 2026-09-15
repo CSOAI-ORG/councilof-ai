@@ -1,0 +1,112 @@
+{
+  "card": {
+    "as_of": "2026-09-15T03:13:10.870Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "dai:base",
+      "backing_model": "escrow",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "DAI",
+        "address": "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
+        "chainId": 8453,
+        "block": 51325782,
+        "block_hash": "0xadcdf28ff737c15e3378d96d3c0c03f130985640dcfacffee90035ac843d3aa2",
+        "block_time": 1789440911
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "DAI",
+        "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "chainId": 1,
+        "block": 25976515,
+        "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb"
+      },
+      "escrow": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35",
+      "escrow_name": "Base L1StandardBridge",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000001863594c6706098f21bc3",
+          "raw_sha256": "069c49e554236aff6470a0f1ba2e0a3bbcd8dc3e3dd6beb795b86984fb8113b3",
+          "atomic": "1842711326134591426796483",
+          "normalized": "1842711.326134591426796483",
+          "decimals": 18
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "UNMEASURED",
+      "state": "UNMEASURED",
+      "error": "RPC error: Archive requests require a personal token. Get one at: https://www.allnodes.com/publicnode",
+      "fetched_at": "2026-09-15T03:13:10.870Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "chain reads (rpc failed; nothing inferred)"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "2b614982dc91a8ba00264b5e334a404e94f9288c3f65de7292b29e74789e867f",
+    "sig_ed25519": "1ba6e3fb440ad528d16c8e670305a389e63f5a7cbff17ede5ed1928518a75f1129296e42c7c216afab0894fd87a5b136be4bce624256fe5a0e91ef551145ee0e",
+    "source_urls": [
+      "https://mainnet.base.org",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped DAI on base vs Base L1StandardBridge — UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:escrow",
+      "state:UNMEASURED"
+    ],
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "0ef5c17cd592322b280691d28c6d6bf94cbbcf4abdf0131bcb766ab93c3b1e75",
+    "82ced86752cd3735315c64f40a1fcbc6764df3e6d77270d45410e16354c316b3",
+    "17278a9af0c00c12aa884b2ecda231d313476320136abe78771303661835a5c8",
+    "0d04f3f3d564ccb0b88244059cd3e0166e48b3d5b94b4f01a943f85a593b64d7",
+    "a66497701eedff78cac1a822134adc542042b6a86bb94432d3ab182065a742e2",
+    "eabb451f42284199f3d0aaba0280251ed1deb3ad9a4c6c6a3bb2a299f8d98500",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

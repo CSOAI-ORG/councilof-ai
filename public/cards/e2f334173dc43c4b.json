@@ -1,0 +1,75 @@
+{
+  "card": {
+    "as_of": "2026-08-31T07:38:20Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "note": "Public reporting of a staff no-action letter. Not a rule. GraphQL dark. Not a CSOAI client. Do not quote AUM as audited.",
+      "status": "public_notice",
+      "who": [
+        "Franklin Templeton"
+      ],
+      "url_sha256": "1a3e07b6712a611df9756728b659fa1cceb84c4ecc075c892ebf7d678478d750"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e2f334173dc43c4bb4de4d2d72f8863dd36071e688c4709c7dab159de5037aa5",
+    "sig_ed25519": "bdf01a424f33f51a08132933ecf79ffeab46b841ba32ea578c92c85baaee7c987738695ce3c4c41ab4f851de8f4fb2549c0df4d4a2ef310bb3e3fdc1cf82fd06",
+    "source_urls": [
+      "https://www.theblock.co/news/defi/2026-08-12-sec-clears-franklin-templeton-funds-use-onchain-benji-system-cash-management-411654"
+    ],
+    "subject": "SEC staff no-action (12 Aug 2026) — Franklin registered funds may hold BENJI/FOBXX for cash management",
+    "surface": "public.notice",
+    "tags": [
+      "jurisdiction:US",
+      "framework:sec-staff-no-action",
+      "coverage:public-notice-only"
+    ],
+    "unmeasured": [
+      "sec_gov_pdf",
+      "onchain_supply",
+      "graphql"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "c592d00146d3e8b69e9f9c097f45ae415c02c54a56c9e6b5f720206caf55ed33",
+    "c7584becf16158a080db965d304f469873b6d3465191e387b8389353acd51b53",
+    "25d17fc846387d3909e68f9d201f2945b32c6bd80c6e6165db2ce41ed8f35673",
+    "06a5b876ebfc7e85863f39f3b1dc3d397dbb4bf41d062943484be14de8a5d920",
+    "5b210200574a95beba6520adc180a285667849245e5419eb1424f20158a4823c",
+    "34ffc47125515453c353b0b7a9175f7e2c2aed7ef8ec433e9eb0a4ecca7ed64f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

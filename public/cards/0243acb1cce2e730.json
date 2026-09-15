@@ -1,0 +1,153 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:02Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "absent": [
+        "AccountRoot.Domain",
+        "TOML at https://www.palaugov.pw/.well-known/xrp-ledger.toml (HTTP 202)"
+      ],
+      "account_root": {
+        "domain": null,
+        "domain_hex": null,
+        "flags": 10092544,
+        "flags_decoded": {
+          "allow_trustline_clawback": false,
+          "default_ripple": true,
+          "deposit_auth": false,
+          "disable_master": true,
+          "disallow_xrp": true,
+          "global_freeze": false,
+          "no_freeze": false,
+          "require_auth": false,
+          "require_dest_tag": true
+        },
+        "ledger_index": 106707168,
+        "rpc": "https://xrplcluster.com/",
+        "sequence": 75631481
+      },
+      "axes": [
+        "xrpl-issuers",
+        "distribution-integrity"
+      ],
+      "checked": [
+        "account_info.Domain (validated ledger)",
+        "gateway_balances.obligations",
+        "xrpscan well-known directory",
+        "GET https://www.palaugov.pw/.well-known/xrp-ledger.toml (directory domain, one-way probe)"
+      ],
+      "directory": {
+        "domain": "www.palaugov.pw/stablecoin",
+        "fetched_at": "2026-09-02T07:55:32Z",
+        "listed": true,
+        "name": "Palau Stablecoin Pilot",
+        "sha256": "d6d74f001477d2b803ce42defbe91a9b59b5ff35b228f833582b3c5256afe92f",
+        "url": "https://api.xrpscan.com/api/v1/names/well-known"
+      },
+      "directory_domain_toml": {
+        "error": null,
+        "fetched_at": "2026-09-02T07:56:01Z",
+        "http": 202,
+        "url": "https://www.palaugov.pw/.well-known/xrp-ledger.toml"
+      },
+      "fetched_at": "2026-09-02T07:56:02Z",
+      "inputs_sha256": "c3674ee1b67a2c7ccb2d8ac9a1a091ca0d197c11df3af206140125298c360b33",
+      "issuer": "Republic of Palau",
+      "issuer_address": "rwekfW4MiS5yZjXASRBDzzPPWYKuHvKP7E",
+      "kind": "csoai.eater.xrpl-issuer/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "onchain_obligation": {
+        "currency_code": "PSC",
+        "currency_decoded": "PSC",
+        "ledger_index": 106707168,
+        "method": "gateway_balances.obligations (validated ledger)",
+        "rpc": "https://xrplcluster.com/",
+        "value": "14588"
+      },
+      "reader": {
+        "as_of": "2026-09-02T07:13:27Z",
+        "holders": 90,
+        "sig_ed25519_present": true,
+        "supply": 14588,
+        "unmeasured": [
+          "strict_two_way_toml"
+        ],
+        "url": "https://councilof.ai/api/xrpl",
+        "verified_via": "XRPScan well-known directory"
+      },
+      "state": "PROBED",
+      "symbol": "PSC",
+      "toml": null,
+      "two_way_domain": "FAIL",
+      "two_way_reason": "no Domain field on the AccountRoot; two-way check has no first leg",
+      "unmeasured": [
+        "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+      ],
+      "writes_board": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "0243acb1cce2e7303e7fe07da0387a607e2ed047096082bcf20fea3f9a5ae0f3",
+    "sig_ed25519": "906d3d3e0621c126585f31ae1d1a2303841d04aa78353761068f8e25392b76699d0e336ca8e74eebb972e22f649753a0de4056c51020a683494fd9e05036e705",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://api.xrpscan.com/api/v1/names/well-known",
+      "https://www.palaugov.pw/.well-known/xrp-ledger.toml"
+    ],
+    "subject": "XRPL PSC (Republic of Palau) two-way domain FAIL + on-chain obligation",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:xrpl-issuers",
+      "axis:distribution-integrity",
+      "two-way:FAIL",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "74d11920b11279404031019b88b91f123c3c663f202012648b49639b1a644f83",
+    "e1954865bc7b080c637e35dbd91724011ad4ed0612cd0900b7208a2f6f26abeb",
+    "247d05445d13c1a0f9c025a7688af9f4d5fffa565c3f9237bd9ab59562e80fcf",
+    "2ccb2147fbc168e096e0d99e68a3fd61f0f9e77b7270a6070a8e1c969ac6b544",
+    "283153de0c137c116f3d72b21a55b95ba5c248f02bbcdb9aa74f78ea5ef106c0",
+    "38c685362b811f192b2ae112020e9f175c2f97ede41d686bdadca1db9b948794",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

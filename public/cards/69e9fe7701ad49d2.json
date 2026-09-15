@@ -1,0 +1,111 @@
+{
+  "card": {
+    "as_of": "2026-09-15T03:13:10.870Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "cbbtc:base",
+      "backing_model": "custodial",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "cbBTC",
+        "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+        "chainId": 8453,
+        "block": 51325782,
+        "block_hash": "0xadcdf28ff737c15e3378d96d3c0c03f130985640dcfacffee90035ac843d3aa2",
+        "block_time": 1789440911
+      },
+      "canonical": {
+        "chain": "bitcoin",
+        "symbol": "BTC",
+        "address": "Coinbase custody; not an EVM contract",
+        "chainId": null,
+        "block": null,
+        "block_hash": null
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000042b8fb859c3",
+          "raw_sha256": "780aed11ded34c5bc83a8d709a40ccc3e8b625c021da693451bbc4f8da187219",
+          "atomic": "4585141328323",
+          "normalized": "45851.41328323",
+          "decimals": 8
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "INDEXED_CUSTODIAL",
+      "state": "DISCOVERED",
+      "error": null,
+      "fetched_at": "2026-09-15T03:13:10.870Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "reserve (custodian-held off this chain; not readable here)"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "69e9fe7701ad49d250074e689bee84ff95eec0d9f957d440d56e9e8fbb4c9287",
+    "sig_ed25519": "a87119a3711ba3ad5624135b353bf782b9d1257414b10a053edee44bce5223849c77939acc355052e3e4bac075e75eab4f22d854fabc1abdc772e2d9c996080c",
+    "source_urls": [
+      "https://mainnet.base.org"
+    ],
+    "subject": "wrapped cbBTC on base vs native issuance — INDEXED_CUSTODIAL",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:custodial",
+      "state:INDEXED_CUSTODIAL"
+    ],
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "25f108756ede02411334ee913c785bd0a4c572d331f9f8f6032bd0564e39684f",
+    "db6b3e63caeb83874170e86042978e236bad28673d0ab2523b5540f9788193a0",
+    "17278a9af0c00c12aa884b2ecda231d313476320136abe78771303661835a5c8",
+    "0d04f3f3d564ccb0b88244059cd3e0166e48b3d5b94b4f01a943f85a593b64d7",
+    "a66497701eedff78cac1a822134adc542042b6a86bb94432d3ab182065a742e2",
+    "eabb451f42284199f3d0aaba0280251ed1deb3ad9a4c6c6a3bb2a299f8d98500",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

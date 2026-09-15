@@ -1,0 +1,130 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:57Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "attestation_pdf_filter": "attest|examination|reserve",
+      "attestation_pdf_latest": [],
+      "attestation_pdf_links_n": 0,
+      "attestation_pdf_undated_n": 0,
+      "axes": [
+        "reserve-attestation",
+        "stablecoin-attestation-cadence",
+        "custody-disclosure",
+        "regulatory-framework"
+      ],
+      "cadence": null,
+      "fetched_at": "2026-09-02T07:56:57Z",
+      "inputs_sha256": "4427a737c8162d58d9789d65468b4f05ffd1e8eb8cfd66305c84df4cfbc43f76",
+      "issuer": "Republic of Palau",
+      "kind": "csoai.eater.issuer-disclosure/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "pages": [
+        {
+          "body_state": "BOT_GATE",
+          "error": null,
+          "fetched_at": "2026-09-02T07:56:57Z",
+          "http": 202,
+          "n_bytes": 178,
+          "robots": "no-robots",
+          "sha256": null,
+          "url": "https://www.palaugov.pw/stablecoin"
+        }
+      ],
+      "pdf_links_n": 0,
+      "state": "UNMEASURED",
+      "symbols": [
+        "PSC"
+      ],
+      "term_hits": {
+        "custody_terms": 0,
+        "named_accounting_firms": 0,
+        "regulatory_terms": 0,
+        "reserve_attestation_terms": 0
+      },
+      "term_lexicon": {
+        "custody_terms": "custodian|custody|trust company|bny mellon|bank of new york|state street|coinbas",
+        "named_accounting_firms": "deloitte|pricewaterhousecoopers|\\bpwc\\b|\\bkpmg\\b|ernst\\s*&\\s*young|\\bbdo\\b|grant",
+        "regulatory_terms": "\\bmica\\b|e-money token|electronic money|\\bnydfs\\b|new york department of financi",
+        "reserve_attestation_terms": "attestation|attested|proof of reserves?|reserve report|examination report"
+      },
+      "unmeasured": [
+        "attestation_pdf_bodies (not opened)",
+        "reserve_composition",
+        "custodian_confirmation (name presence only)",
+        "regime_confirmation (term presence only)",
+        "risk_verdict (counsel)",
+        "disclosure_page (no readable body this run)"
+      ],
+      "writes_board": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "df031d71b7f5ecdf974c08e9f8d99e890bc9b1f811b4024beb4374b6b5132adb",
+    "sig_ed25519": "8ce3059b18922c91629a711546396e188e174c12e00d818b8ceb35f2b2c2f4c933789506835afe53f478b26790c1fb99e3f341f36298bfc9ff53bd7ca5c0290c",
+    "source_urls": [
+      "https://www.palaugov.pw/stablecoin"
+    ],
+    "subject": "Republic of Palau disclosure page facts: 0 attestation PDF links, term hits, cadence — UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:reserve-attestation",
+      "axis:stablecoin-attestation-cadence",
+      "axis:custody-disclosure",
+      "axis:regulatory-framework",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "attestation_pdf_bodies (not opened)",
+      "reserve_composition",
+      "custodian_confirmation (name presence only)",
+      "regime_confirmation (term presence only)",
+      "risk_verdict (counsel)",
+      "disclosure_page (no readable body this run)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "87786152234c55d3e5feadcf1d25820467641b9bae5b968cc11e07ab6b37112f",
+    "0b8a6ed0d9d19e2177538e08e545e6cedd19151675ffcaa4a0496534f5efbb41",
+    "31d100cf3b9cdc0ddc895cf36359ec3ba41214139dd9eb58a8283d62a3ec97ad",
+    "252d6fa38e09587ffb4b5ef8ddfd3805f3b4afb57ba240239c5973898c0b5d46",
+    "60674fe01021d2d4c84ef3f2dd7ce99347855592de281c60fb47bd4e7777fd72",
+    "8e765ff2924b51296c1ff9d64bb5b07b706837c903782362cb60f5d685fd777f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

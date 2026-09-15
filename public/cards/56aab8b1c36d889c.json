@@ -1,0 +1,112 @@
+{
+  "card": {
+    "as_of": "2026-09-15T03:13:10.870Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdc:arbitrum",
+      "backing_model": "native",
+      "wrapped": {
+        "chain": "arbitrum",
+        "symbol": "USDC",
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "chainId": 42161,
+        "block": 505281156,
+        "block_hash": "0xe0c0a1798d76e156119deacd1825213aa96ad7b9605f541cf292e615fcd90659",
+        "block_time": 1789440852
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "block": 25976515,
+        "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb"
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "Circle mints USDC natively on Arbitrum One (CCTP). No escrow exists to read; the wrapped supply is read, no parity is claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000009a12dca7872d5",
+          "raw_sha256": "2a71a1f639f6ef940dc0508dfcbfe9fd6b03b1b2f0d80bb55a1f12a9d86bfa30",
+          "atomic": "2710492832887509",
+          "normalized": "2710492832.887509",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "state": "PROBED",
+      "error": null,
+      "fetched_at": "2026-09-15T03:13:10.870Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "escrow_balance (natively issued; no escrow exists)"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "56aab8b1c36d889c9c4262cea7b4ff7a8871e083c54d8c0d964bf7cd4051c2bb",
+    "sig_ed25519": "c99278f52ce5fd186b3e5dc97fe896292dcaacd9f10c4d0ffb61fb7b4f1c391b9c37380e586ae44062dee7b09a51a85326b27051a2d5cece408725aba65a1503",
+    "source_urls": [
+      "https://arb1.arbitrum.io/rpc",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDC on arbitrum vs native issuance — UNCHECKABLE_NATIVE_ISSUANCE",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:native",
+      "state:UNCHECKABLE_NATIVE_ISSUANCE"
+    ],
+    "unmeasured": [
+      "escrow_balance (natively issued; no escrow exists)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "a66ff40bdffc94e4492a431c66602c8730a0c2c77f946426f0b63c16ce187535",
+    "2aade7b165ca2ff93d9ad91168eaabd4125dff5c7a6ffe4109dc0d334fa78291",
+    "3755506e2e825b59366576528ff3569c8da99f8d1277c81d1931519bee243b62",
+    "aa94e4f6dd42366f2bf303066318681dce7b4cb95861dc03c866830d1b11397d",
+    "2b5d1ef96b712336fadd1f185d855b18824e021b653158c623fb23eae608958a",
+    "caccc32852ee1a89818d979283dbac8b9db15bc5f7ebe87d82fcfb8738f1a5e6",
+    "e9599b621fc44fd1cec03e82273734f96c50b207dd4b6fea83ffe9c460545a8d",
+    "30fbe3147665515a72d22bece741704c0d0640b0fbf93a394f271c580db0c31e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

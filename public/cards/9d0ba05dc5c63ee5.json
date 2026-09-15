@@ -1,0 +1,122 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:40Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axes": [
+        "swift-rails"
+      ],
+      "bank": "FirstRand Bank Limited",
+      "bank_id": "firstrand",
+      "census_as_of": "2026-09-01",
+      "census_status": "DISCOVERED",
+      "event_date": null,
+      "fetched_at": "2026-09-02T07:56:40Z",
+      "inputs_sha256": "ba60ffcdfbeba920fb8e617c2ab08f89cf1a67c4ae294a85e68514a7cd6f2f51",
+      "kind": "csoai.eater.swift-rail/0.1",
+      "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "named_in_fetched_body_n": 1,
+      "not_a_client": true,
+      "not_a_grade": true,
+      "settlement_still_off_chain": true,
+      "sources": [
+        {
+          "error": "TimeoutError: The read operation timed out",
+          "fetched_at": "2026-09-02T07:56:02Z",
+          "http": 0,
+          "id": "swift_pilot_9jul",
+          "n_bytes": null,
+          "named_in_body": "UNCHECKABLE",
+          "published": "2026-07-09",
+          "sha256": null,
+          "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure"
+        },
+        {
+          "fetched_at": "2026-09-02T07:56:40Z",
+          "http": 200,
+          "id": "gfmag_pilot_10jul",
+          "n_bytes": 109323,
+          "named_in_body": "PASS",
+          "published": "2026-07-10",
+          "sha256": "491411ebe38687ccf771265e27ec607e532255569550a351cec4359e78ae27da",
+          "url": "https://gfmag.com/technology/swift-blockchain-ledger/"
+        }
+      ],
+      "state": "PROBED",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "on_ledger_object",
+        "transaction_recompute"
+      ],
+      "writes_board": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9d0ba05dc5c63ee5601d2b91a42bd38124670347f532d3b444e9a858b34d5dfd",
+    "sig_ed25519": "e6ff6df29c12def88cc520f5d2ab08b65940e12e75fa8d1c131b5f02c8c89609d919a25f1be837d0a7336b786d92f9d3c3dba2e831f28587eceeb84120f99704",
+    "source_urls": [
+      "https://councilof.ai/api/swift",
+      "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+      "https://gfmag.com/technology/swift-blockchain-ledger/"
+    ],
+    "subject": "Swift shared-ledger census: FirstRand Bank Limited — DISCOVERED; named in 1/2 fetched notice bodies",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:swift-rails",
+      "census:discovered",
+      "not-a-client",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "on_ledger_object",
+      "transaction_recompute"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "bad1814e91322f4640983b714f7b6f74cd08b4caabc43f4384a4b4d5e43635d1",
+    "b440a3657d8d146c41256b8d3f3c9f4c05addf7cc0fca709e61722666d1de227",
+    "edc21d037a8962fa4ed921b677a9a77884ad91c54ae00b8de214a5843bcf33ca",
+    "905c03c7edebc6f35f936bb6bbe7f1bd78bfc78263df9933ca048bd4a69b9b39",
+    "229946c8b3fcbfb342ba99c770028e89181fed41abeda97a394bce83156a0473",
+    "38c685362b811f192b2ae112020e9f175c2f97ede41d686bdadca1db9b948794",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

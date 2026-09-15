@@ -1,0 +1,143 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:55:53Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "absent": [
+        "AccountRoot.Domain"
+      ],
+      "account_root": {
+        "domain": null,
+        "domain_hex": null,
+        "flags": 8519680,
+        "flags_decoded": {
+          "allow_trustline_clawback": false,
+          "default_ripple": true,
+          "deposit_auth": false,
+          "disable_master": false,
+          "disallow_xrp": false,
+          "global_freeze": false,
+          "no_freeze": false,
+          "require_auth": false,
+          "require_dest_tag": true
+        },
+        "ledger_index": 106707165,
+        "rpc": "https://xrplcluster.com/",
+        "sequence": 3278
+      },
+      "axes": [
+        "xrpl-issuers",
+        "distribution-integrity"
+      ],
+      "checked": [
+        "account_info.Domain (validated ledger)",
+        "gateway_balances.obligations",
+        "xrpscan well-known directory"
+      ],
+      "directory": {
+        "fetched_at": "2026-09-02T07:55:32Z",
+        "listed": false,
+        "sha256": "d6d74f001477d2b803ce42defbe91a9b59b5ff35b228f833582b3c5256afe92f",
+        "url": "https://api.xrpscan.com/api/v1/names/well-known"
+      },
+      "directory_domain_toml": null,
+      "fetched_at": "2026-09-02T07:55:53Z",
+      "inputs_sha256": "7fbe8b82c11cfe0aff0dfae62de6947e3537c183bb80bd16c0ecd51be2c549f8",
+      "issuer": "GateHub",
+      "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+      "kind": "csoai.eater.xrpl-issuer/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "onchain_obligation": {
+        "currency_code": "EUR",
+        "currency_decoded": "EUR",
+        "ledger_index": 106707165,
+        "method": "gateway_balances.obligations (validated ledger)",
+        "rpc": "https://xrplcluster.com/",
+        "value": "1682129.233419832"
+      },
+      "reader": {
+        "as_of": "2026-09-02T07:13:27Z",
+        "holders": 9400,
+        "sig_ed25519_present": true,
+        "supply": 1901401,
+        "unmeasured": [
+          "strict_two_way_toml"
+        ],
+        "url": "https://councilof.ai/api/xrpl",
+        "verified_via": "XRPLMeta registry"
+      },
+      "state": "PROBED",
+      "symbol": "EUR.gh",
+      "toml": null,
+      "two_way_domain": "FAIL",
+      "two_way_reason": "no Domain field on the AccountRoot; two-way check has no first leg",
+      "unmeasured": [
+        "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+      ],
+      "writes_board": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "a83aee27d018dd2eec1299a44870d0dd2095642d2122778d9d0ba3be4c678d8c",
+    "sig_ed25519": "4fd223c4849afbc8c8a92a45750fc5cfafb435b88397862fba2f446c592349d9f50ba3d5258d8c624cb721ba409c404d0a4ed653de5b32a7782c2a37402be102",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://api.xrpscan.com/api/v1/names/well-known"
+    ],
+    "subject": "XRPL EUR.gh (GateHub) two-way domain FAIL + on-chain obligation",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:xrpl-issuers",
+      "axis:distribution-integrity",
+      "two-way:FAIL",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "90138847c6530b700abdb29f6e7f3054f0d8fc764a76ca40286c66bab2b18d8a",
+    "1e31c699b40e3f562b27e193944f05038cc59fa73687446660b1e25b61a8db04",
+    "3e70421895ecda6248bcd4135916bc3b81c0bdd152f0109a68c873a7ef4651f7",
+    "2ccb2147fbc168e096e0d99e68a3fd61f0f9e77b7270a6070a8e1c969ac6b544",
+    "283153de0c137c116f3d72b21a55b95ba5c248f02bbcdb9aa74f78ea5ef106c0",
+    "38c685362b811f192b2ae112020e9f175c2f97ede41d686bdadca1db9b948794",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

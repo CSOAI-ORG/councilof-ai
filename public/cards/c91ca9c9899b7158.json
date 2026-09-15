@@ -1,0 +1,154 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:55:54Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "absent": [
+        "AccountRoot.Domain",
+        "TOML at https://quantoz.com/.well-known/xrp-ledger.toml (HTTP 404)"
+      ],
+      "account_root": {
+        "domain": null,
+        "domain_hex": null,
+        "flags": 2155872256,
+        "flags_decoded": {
+          "allow_trustline_clawback": true,
+          "default_ripple": true,
+          "deposit_auth": false,
+          "disable_master": false,
+          "disallow_xrp": false,
+          "global_freeze": false,
+          "no_freeze": false,
+          "require_auth": false,
+          "require_dest_tag": false
+        },
+        "ledger_index": 106707166,
+        "rpc": "https://xrplcluster.com/",
+        "sequence": 99671820
+      },
+      "axes": [
+        "xrpl-issuers",
+        "distribution-integrity"
+      ],
+      "checked": [
+        "account_info.Domain (validated ledger)",
+        "gateway_balances.obligations",
+        "xrpscan well-known directory",
+        "GET https://quantoz.com/.well-known/xrp-ledger.toml (directory domain, one-way probe)"
+      ],
+      "directory": {
+        "domain": "quantoz.com",
+        "fetched_at": "2026-09-02T07:55:32Z",
+        "listed": true,
+        "name": "Quantoz",
+        "sha256": "d6d74f001477d2b803ce42defbe91a9b59b5ff35b228f833582b3c5256afe92f",
+        "url": "https://api.xrpscan.com/api/v1/names/well-known"
+      },
+      "directory_domain_toml": {
+        "error": "HTTP 404",
+        "fetched_at": "2026-09-02T07:55:54Z",
+        "http": 404,
+        "url": "https://quantoz.com/.well-known/xrp-ledger.toml"
+      },
+      "fetched_at": "2026-09-02T07:55:54Z",
+      "inputs_sha256": "cc5fd9eed78c9d0e4777ecd1984bc7226e0658b7d67ad20544f0b83b97411528",
+      "issuer": "Quantoz",
+      "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+      "kind": "csoai.eater.xrpl-issuer/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "onchain_obligation": {
+        "currency_code": "5553445100000000000000000000000000000000",
+        "currency_decoded": "USDQ",
+        "ledger_index": 106707166,
+        "method": "gateway_balances.obligations (validated ledger)",
+        "rpc": "https://xrplcluster.com/",
+        "value": "1000000"
+      },
+      "reader": {
+        "as_of": "2026-09-02T07:13:27Z",
+        "holders": 1,
+        "sig_ed25519_present": false,
+        "supply": 1000000,
+        "unmeasured": [
+          "strict_two_way_toml",
+          "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
+        ],
+        "url": "https://councilof.ai/api/xrpl",
+        "verified_via": "XRPScan well-known directory"
+      },
+      "state": "PROBED",
+      "symbol": "USDQ",
+      "toml": null,
+      "two_way_domain": "FAIL",
+      "two_way_reason": "no Domain field on the AccountRoot; two-way check has no first leg",
+      "unmeasured": [
+        "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+      ],
+      "writes_board": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c91ca9c9899b7158e1c0ed5090027486c2b7f6a4e8db17b2079171ab9c741ef2",
+    "sig_ed25519": "4417f759fd3b2a0976b021e55b5c875cd97705a1acacd77e8dfcd47f6225a7fdc6f166aefa324a6d16d705aa9e1546b44f8012d39c6c32e3fa5cd3b2939ca705",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://api.xrpscan.com/api/v1/names/well-known",
+      "https://quantoz.com/.well-known/xrp-ledger.toml"
+    ],
+    "subject": "XRPL USDQ (Quantoz) two-way domain FAIL + on-chain obligation",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:xrpl-issuers",
+      "axis:distribution-integrity",
+      "two-way:FAIL",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "bcb22c68b4749c680b38d69afff91fba604733c34999fb9fe3cff76115a67d86",
+    "e91e338ac3c21b0a857a982294b372508752a658e840ed7cd23e4171a6de2ab9",
+    "41363b604aff2b5b5ac775861b6329d52cd3c99dc8a9cbf99fffd4cbd9d3e620",
+    "d3ad8ac7a11dbd542f893555a4f28e3a61ceb487c7f291bf7540124245335870",
+    "1a9ac5384fa3faa03612f1549707fe4b2c386cf40c446dd7d34c645c0e01ba05",
+    "eabb451f42284199f3d0aaba0280251ed1deb3ad9a4c6c6a3bb2a299f8d98500",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}
