@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { isEmbedded } from "@/lib/embed";
+import { useInsideMainLandmark } from "@/contexts/MainLandmarkContext";
 import {
   DASHBOARD_NAV_GROUPS,
   normalizeLobbyTabId,
@@ -38,6 +39,8 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Inside App's public <main> this layout is a <section>: one <main> landmark per page.
+  const Landmark = useInsideMainLandmark() ? "section" : "main";
   const [location] = useLocation();
   const search = useSearch();
   const navRef = useRef<HTMLElement>(null);
@@ -234,7 +237,7 @@ export default function DashboardLayout({
         />
       ) : null}
 
-      <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      <Landmark className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <header className="flex h-[4.5rem] shrink-0 items-center justify-between gap-3 border-b border-border bg-card/95 px-3 sm:px-4">
           <div className="flex min-w-0 items-center gap-3">
             <Button
@@ -304,7 +307,7 @@ export default function DashboardLayout({
             {children}
           </DashboardWorkspace>
         </div>
-      </main>
+      </Landmark>
     </div>
   );
 }
