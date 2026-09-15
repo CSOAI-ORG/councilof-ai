@@ -4,6 +4,12 @@ import CesiumPortalCard from "@/components/CesiumPortalCard";
 import FaqBlock from "@/components/FaqBlock";
 import SpotInfographic from "@/components/SpotInfographic";
 import { LANE4 } from "@/data/lane4Content";
+import {
+  PROVBENCH_EARLIER_RUNS,
+  PROVBENCH_HEADLINE,
+  PROVBENCH_INTERVAL,
+  PROVBENCH_SIGNED as PB,
+} from "@/data/provbenchSigned";
 
 const L4 = LANE4["provenance-finding"];
 
@@ -13,9 +19,9 @@ const L4 = LANE4["provenance-finding"];
  * This page previously existed only in the dashboard and in csoai-org-v2. Neither is this site.
  * A measurement nobody can read is not published, so it lives here now.
  *
- * Every figure below is recomputable from results/provbench.json in the published dataset.
- * Nothing on this page is inferred at render time — the numbers are static because the artefact
- * is static.
+ * Every survival figure below comes from the signed run at /packs/eu-article-50/provbench.json,
+ * through @/data/provbenchSigned. client/src/lib/provbenchFigures.test.ts re-derives them from the
+ * signed bytes. Earlier unsigned runs appear as earlier runs, never as the headline.
  */
 
 const HF = "https://huggingface.co/datasets/Nicholastempleman/govbench";
@@ -32,7 +38,7 @@ const TRANSFORMS: [string, string, Outcome][] = [
   ["strip metadata", "remove APPn/COM — pixels bit-identical", "destroyed"],
   ["format → PNG", "container change", "destroyed"],
   ["format → WebP", "container change", "destroyed"],
-  ["screenshot-equivalent", "rasterise + rescale + PNG", "modelled"],
+  ["screenshot-equivalent", "simulated capture: rasterise + rescale + PNG", "destroyed"],
   ["format → HEIC", "no encoder available here", "unmeasured"],
 ];
 
@@ -60,7 +66,7 @@ export default function ProvenanceFinding() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
-            Measured finding · Apache-2.0 · 17.14% watermark durability
+            Measured finding · Apache-2.0 · signed run of {PB.generatedLabel} · C2PA manifest survival
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
             The marking that proves content is AI-generated{" "}
@@ -78,12 +84,15 @@ export default function ProvenanceFinding() {
 
           <div className="mt-8 rounded-2xl border-2 border-rose-400/40 bg-rose-500/[0.07] p-6">
             <p className="text-[13px] text-emerald-100/60">
-              Across the marking corpus and its real-world transforms
+              Across {PB.nAssets} marked assets and {PB.transformsMeasured} measured transforms (signed run,{" "}
+              {PB.generatedLabel})
             </p>
             <p className="mt-1 text-3xl sm:text-4xl font-black tabular-nums text-rose-300">
-              17.14% watermark durability
+              {PB.embedded.assetsSurviving} of {PB.nAssets} assets survived
             </p>
-            <p className="mt-1 text-[13px] text-emerald-100/50">(18 of 105 marking checks survived)</p>
+            <p className="mt-1 text-[13px] text-emerald-100/50">
+              ({PROVBENCH_HEADLINE}; {PROVBENCH_INTERVAL})
+            </p>
             <p className="mt-3 text-[13px] text-emerald-100/80 leading-relaxed">
               A marking is scored <strong className="text-emerald-50">SURVIVED</strong> only when its
               binding still validates against the asset it is attached to. A marking present but whose
@@ -136,13 +145,14 @@ export default function ProvenanceFinding() {
           <div className="mt-4 space-y-3 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6 text-[13px] text-emerald-100/80 leading-relaxed">
             <p>
               <strong className="text-emerald-50">
-                The 17.14% is clustered, not per-cell.
+                The interval is clustered, not per-cell.
               </strong>{" "}
               The independent unit is the <strong className="text-emerald-50">asset</strong>, not the
               cell. Nine transforms of the <em>same</em> signed asset are not nine observations — they
               are one deterministic fact restated nine times. If a hard binding breaks at q90 it breaks
-              at q50 for the identical reason. Survival is counted per marking check (18 of 105) but the
-              intervals behind it are computed at the asset level.
+              at q50 for the identical reason. Survival is counted per cell ({PB.embedded.survived} of{" "}
+              {PB.embedded.cells}) but the interval behind it is computed at the asset level:{" "}
+              {PROVBENCH_INTERVAL}.
             </p>
             <p>
               <strong className="text-emerald-50">
@@ -207,7 +217,29 @@ export default function ProvenanceFinding() {
           </div>
         </div>
 
+        <div>
+          <h2 className="text-2xl font-black tracking-tight">Earlier runs, not the headline</h2>
+          <div className="mt-4 space-y-3 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6 text-[13px] text-emerald-100/80 leading-relaxed">
+            {PROVBENCH_EARLIER_RUNS.map((r) => (
+              <p key={r.label}>
+                <strong className="text-emerald-50">
+                  {r.label}, {r.date}.
+                </strong>{" "}
+                {r.design}: {r.result}. Status: {r.status}.
+              </p>
+            ))}
+            <p>
+              These are different experiments. Their figures are not the signed result and are never
+              averaged with it. Until 15 September 2026 this page headlined the preprint figure and
+              described it as the durability of a watermark; the signed run tested no watermark.
+            </p>
+          </div>
+        </div>
+
         <div className="flex flex-wrap gap-4 text-[13px]">
+          <a href={PB.url} className="text-emerald-300 hover:underline">
+            Signed result file →
+          </a>
           <a
             href={HF}
             target="_blank"
@@ -223,8 +255,12 @@ export default function ProvenanceFinding() {
 
         <p className="text-[11px] text-emerald-100/40">
           Reproduce it: <code>python3 provbench.py --selftest</code> then{" "}
-          <code>python3 provbench.py</code>. Harness Apache-2.0; every figure — including the
-          17.14% durability (18 of 105) — recomputable from <code>results/provbench.json</code>.
+          <code>python3 provbench.py</code>. Harness Apache-2.0; every survival figure on this page is
+          recomputable from the signed{" "}
+          <a href={PB.url} className="text-emerald-300 hover:underline">
+            provbench.json
+          </a>{" "}
+          (verify offline: <code>python3 sign.py --verify provbench.json</code>).
         </p>
       </section>
 

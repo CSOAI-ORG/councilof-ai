@@ -1,25 +1,22 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
+import {
+  PROVBENCH_EARLIER_RUNS,
+  PROVBENCH_HEADLINE,
+  PROVBENCH_INTERVAL,
+  PROVBENCH_SIGNED as PB,
+} from "@/data/provbenchSigned";
 
 /**
  * /provbench — Does an EU AI Act Article 50 provenance marking survive real-world transforms?
  *
- * ProvBench canonical finding: 17.14% watermark durability — 18 of 105 marking
- * checks survived across the corpus. A marking that is present but whose binding
- * no longer validates is scored DESTROYED, not SURVIVES. The harness, the corpus,
- * and every per-cell outcome are on disk — no number may be typed by hand without
- * its artefact path.
+ * Canonical finding: the signed run at /packs/eu-article-50/provbench.json, through
+ * @/data/provbenchSigned. A marking that is present but whose binding no longer
+ * validates is scored DESTROYED, not SURVIVES. client/src/lib/provbenchFigures.test.ts
+ * re-derives the figures from the signed bytes; no survival number here is typed by hand.
  */
 
-const ARTEFACT =
-  "csoai-static-deploy2/benchmark-results/provbench.json";
-
-// canonical headline — a marking is DESTROYED unless its binding still validates
-const DURABILITY = {
-  survived: 18,
-  total: 105,
-  rate: "17.14%",
-};
+const ARTEFACT = PB.url;
 
 const FINDINGS = [
   {
@@ -44,10 +41,11 @@ const FINDINGS = [
     title: "Present-but-invalid is not survival",
     tone: "emerald",
     body:
-      "The scoring rule that produces the 17.14% figure: a marking counts as SURVIVED " +
+      "The scoring rule behind the headline: a marking counts as SURVIVED " +
       "only if its binding still validates against the asset it is attached to. Present " +
-      "markers with a broken binding are scored DESTROYED. Under that rule, 18 of 105 " +
-      "checks survive.",
+      "markers with a broken binding are scored DESTROYED. Under that rule, " +
+      PROVBENCH_HEADLINE +
+      ".",
   },
 ];
 
@@ -73,7 +71,7 @@ const TRANSFORMS = [
 
 const CAVEATS = [
   "A surviving marking proves PROVENANCE, NOT CORRECTNESS. It states that these bytes carry a claim signed by this key with this declared history. It says nothing about whether the content is accurate, safe, or lawful.",
-  "Our certificate chains to a PRIVATE ROOT CA not on the C2PA trust list. issuer_resolvable therefore fails by construction everywhere — a property of the credential, not damage from a transform. The 17.14% figure measures binding survival, not trust-list membership.",
+  "Our certificate chains to a PRIVATE ROOT CA not on the C2PA trust list. issuer_resolvable therefore fails by construction everywhere — a property of the credential, not damage from a transform. The survival figure measures binding integrity, not trust-list membership.",
   "A verifier reporting 'signature valid' without reporting the binding is telling you almost nothing: a manifest transplanted from another asset still reports its signature as valid. Only binding_intact catches it.",
   "Transforms are applied by Pillow. A different re-encoder (libvips, ImageMagick, a phone ISP, a CDN) may behave differently. This measures the common case, not every case.",
   "Every figure here is recomputable from the published artefact. Where an encoder is unavailable in the harness (HEIC) the cell is reported UNMEASURED, never scored as a pass or a fail.",
@@ -82,7 +80,7 @@ const CAVEATS = [
 const STATS = [
   {
     title: "The scoring rule",
-    body: "A marking is SURVIVED only if its binding still validates against the asset it is attached to. Present-but-invalid markings are scored DESTROYED. Under that rule the measured durability is 18 of 105 checks — 17.14%.",
+    body: `A marking is SURVIVED only if its binding still validates against the asset it is attached to. Present-but-invalid markings are scored DESTROYED. Under that rule, in the signed run of ${PB.generatedLabel}: ${PROVBENCH_HEADLINE}; ${PROVBENCH_INTERVAL}.`,
   },
   {
     title: "Clustered, not per-cell",
@@ -110,7 +108,7 @@ export default function ProvBench() {
       <section className="border-b border-emerald-800/40 py-16 sm:py-24">
         <div className="mx-auto max-w-4xl px-6">
           <p className="font-mono text-[11px] uppercase tracking-widest text-emerald-500">
-            ProvBench · EU AI Act Article 50 / C2PA marking survival · 17.14% durability
+            ProvBench · EU AI Act Article 50 / C2PA manifest survival · signed run of {PB.generatedLabel}
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-bold leading-tight tracking-tight">
             Does provenance survive{" "}
@@ -124,11 +122,11 @@ export default function ProvBench() {
             format convert, screenshot), and checked whether the marking still validated.
             The measured result:{" "}
             <strong className="text-emerald-300">
-              17.14% watermark durability — 18 of 105 marking checks survived.
+              {PROVBENCH_HEADLINE}.
             </strong>{" "}
             A marking present but whose binding no longer validates is scored{" "}
             <strong className="text-rose-300">DESTROYED, not SURVIVES</strong>.
-            The harness, the corpus, and every per-cell outcome are on disk.
+            Every per-cell outcome is in the signed result file.
           </p>
         </div>
       </section>
@@ -143,13 +141,13 @@ export default function ProvBench() {
 
           <div className="mt-6 rounded-2xl border-2 border-rose-400/40 bg-rose-500/[0.07] p-6">
             <p className="text-[13px] text-emerald-100/60">
-              Across the marking corpus and its transforms
+              Across {PB.nAssets} marked assets and {PB.transformsMeasured} measured transforms
             </p>
             <p className="mt-1 text-3xl sm:text-4xl font-black tabular-nums text-rose-300">
-              {DURABILITY.rate} watermark durability
+              {PB.embedded.assetsSurviving} of {PB.nAssets} assets survived
             </p>
             <p className="mt-1 text-[13px] text-emerald-100/60">
-              {DURABILITY.survived} of {DURABILITY.total} marking checks survived
+              {PB.embedded.survived} of {PB.embedded.cells} measured cells; {PROVBENCH_INTERVAL}
             </p>
             <p className="mt-3 text-[13px] text-emerald-100/80 leading-relaxed">
               A marking is scored SURVIVED only when its binding still validates against
@@ -231,6 +229,25 @@ export default function ProvBench() {
           <p className="mt-3 text-[13px] text-emerald-300/70 leading-relaxed">
             The audio wing (ProvBench-Audio) measures open anti-spoofing detectors
             against modern TTS synthesis — running on Kaggle T4, same discipline.
+          </p>
+        </section>
+
+        {/* EARLIER RUNS — different experiments, labelled, never the headline */}
+        <section className="rounded-2xl border border-emerald-800/30 bg-emerald-950/20 p-6">
+          <h2 className="text-2xl font-bold text-emerald-100">Earlier runs, not the headline</h2>
+          <ul className="mt-4 space-y-2 text-[13px] text-emerald-300/70 list-disc pl-5">
+            {PROVBENCH_EARLIER_RUNS.map((r) => (
+              <li key={r.label}>
+                <strong className="text-emerald-200">
+                  {r.label}, {r.date}.
+                </strong>{" "}
+                {r.design}: {r.result}. Status: {r.status}.
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-[13px] text-emerald-300/70 leading-relaxed">
+            Until 15 September 2026 this page headlined the preprint figure and described it as the
+            durability of a watermark. The signed run tested no watermark.
           </p>
         </section>
 

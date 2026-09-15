@@ -116,7 +116,7 @@ export const LANE4: Record<string, Lane4Page> = {
       },
       {
         q: "What are the current measured results?",
-        a: "17.14% watermark durability: 18 of 105 marking checks survived across the corpus. A marking present but whose binding no longer validates is scored DESTROYED, not SURVIVES — embedded C2PA bindings do not survive an ordinary re-save, and a detached sidecar recovers the disclosure but never the binding. We publish the count and the method.",
+        a: "In the signed run of 13 August 2026, 0 of 12 marked assets kept an intact embedded C2PA manifest (0 of 108 measured cells; clustered 95% interval 0 to 24.25%, computed at n=12 assets). A marking present but whose binding no longer validates is scored DESTROYED, not SURVIVES — embedded C2PA bindings do not survive an ordinary re-save, and a detached sidecar recovers the disclosure but never the binding. No watermark was tested. The signed file is /packs/eu-article-50/provbench.json.",
       },
       {
         q: "Does a provenance marker prove content is true?",
@@ -129,11 +129,11 @@ export const LANE4: Record<string, Lane4Page> = {
     ],
     spotTitle: "ProvBench measured status",
     spotStats: [
-      { value: "17.14%", label: "watermark durability — present-but-invalid markings scored DESTROYED, not SURVIVES", evidence: "measured" },
-      { value: "18 / 105", label: "marking checks that survived across the corpus and its transforms", evidence: "measured" },
-      { value: "signed", label: "every manifest verdict is Ed25519-signed and SHA-256 hash-chained, verifiable offline", evidence: "measured" },
+      { value: "0 of 12", label: "marked assets kept an intact embedded C2PA manifest (signed run, 13 August 2026)", evidence: "measured" },
+      { value: "0 / 108", label: "measured cells survived; the interval is computed at n=12 assets, not per cell", evidence: "measured" },
+      { value: "signed", label: "the result file is Ed25519-signed; verify offline with sign.py --verify provbench.json", evidence: "measured" },
     ],
-    spotSource: "ProvBench manifest-survival corpus (results/provbench.json), 2026-08",
+    spotSource: "Signed ProvBench run, 13 August 2026 (/packs/eu-article-50/provbench.json)",
   },
 
   govbench: {
