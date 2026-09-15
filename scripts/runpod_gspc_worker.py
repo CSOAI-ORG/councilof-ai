@@ -846,6 +846,13 @@ PUBLIC_HEALTH_KEYS = (
     "transport_ok",
     "transport_errors",
     "correct",
+    # 2026-09-15: /api/worker showed transport_ok 37, attempted 37, correct 0 for a
+    # deepseek-r1:8b swarm run. Without these three a reader cannot tell a run whose
+    # answers were all cut off by the token budget (ALL_UNPARSED, graded_n 0, not a
+    # measurement) from 37 graded wrong answers. correct is only meaningful over graded_n.
+    "parse_errors_excluded",
+    "graded_n",
+    "last_run_detail_code",
     "disk_free_bytes",
     "detail_code",
 )
@@ -1190,6 +1197,9 @@ def run_once(
         transport_ok=0,
         transport_errors=0,
         correct=0,
+        parse_errors_excluded=0,
+        graded_n=None,
+        last_run_detail_code=None,
         detail_code="COMPUTE_ONLY",
         job=job_name,
     )
@@ -1305,6 +1315,7 @@ def run_once(
                 transport_ok=transport_ok,
                 transport_errors=transport_errors,
                 correct=correct,
+                parse_errors_excluded=parse_errors,
                 disk_free_bytes=free_bytes,
                 detail_code="COMPUTE_ONLY",
             )
@@ -1430,6 +1441,9 @@ def run_once(
         "transport_ok": transport_ok,
         "transport_errors": transport_errors,
         "correct": correct,
+        "parse_errors_excluded": parse_errors,
+        "graded_n": graded_n,
+        "last_run_detail_code": detail_code,
         "disk_free_bytes": _disk_free(config.output_dir, disk_usage),
     }
     if exit_code == 0:
