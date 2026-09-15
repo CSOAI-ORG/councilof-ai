@@ -1,0 +1,31 @@
+name: canary-daily
+on:
+  schedule:
+    - cron: "23 4 * * *"  # daily 04:23 UTC
+  workflow_dispatch:
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run silent-route canary
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_TOKEN }}
+          MOONSHOT_API_KEY: ${{ secrets.KIMI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_TOKEN }}
+        run: python scripts/canary/canary_run.py
+      - name: Commit canary artifacts
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "github-actions[bot]"
+          git add public/interop/silent-route-canary-2026-09/
+          git diff --cached --quiet || git commit -m "canary: daily capture $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
