@@ -1,5 +1,10 @@
 # @csoai/layer0
 
+[![npm version](https://img.shields.io/npm/v/%40csoai%2Flayer0)](https://www.npmjs.com/package/@csoai/layer0)
+[![npm downloads](https://img.shields.io/npm/dm/%40csoai%2Flayer0)](https://www.npmjs.com/package/@csoai/layer0)
+[![license](https://img.shields.io/npm/l/%40csoai%2Flayer0)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/LICENSE)
+
+
 Make any tool, MCP server, package or plugin **Layer‑0‑governed + A2A‑ready** in ~15 lines.
 Every governed action passes the CSOAI **Sovereign Gate** (policy/identity/human‑in‑loop), then
 emits an **Ed25519‑signed attestation** you (or any auditor) can verify offline — and a signed

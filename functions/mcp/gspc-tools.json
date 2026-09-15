@@ -137,6 +137,32 @@
           }
         }
       }
+    },
+    {
+      "name": "mcp_trust",
+      "description": "GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable. Counts only by doctrine \u2014 host details withheld by design. A partial round or a cap change is disclosed in the snapshot. Measurement, never certification. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "counts": {
+            "type": "object"
+          },
+          "as_of": {
+            "type": "string"
+          },
+          "partial": {
+            "type": "boolean"
+          },
+          "enumeration": {
+            "type": "object"
+          }
+        }
+      }
     }
   ]
 }

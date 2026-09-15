@@ -69,7 +69,7 @@ export default function Leaderboard() {
   useEffect(() => {
     document.title = "Benchmark corpus — not the governance board | Council of AI";
     setMetaDescription(
-      "Not a single 'best AI'. Browse 64 indexed models across 16 benchmark axes: 335 measured cells derived from signed cards out of 1,024 possible pairs. This matrix is not the governance board.",
+      "Not a single 'best AI'. Browse the benchmark corpus: indexed models across measured axes, every cell derived from signed cards. This matrix is not the governance board.",
     );
   }, []);
 

@@ -77,6 +77,7 @@ export default function Services() {
             <a href="/press" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">2 · See what changed</a>
             <a href="/gspc-verify" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">3 · Verify evidence</a>
             <a href="#supported-feeds" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">4 · Access supported feeds</a>
+            <a href="/quickstart" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">5 · Quickstart</a>
           </nav>
           {cat ? (
             <p className="mt-4 font-mono text-[12px] text-slate-400" data-testid="services-source">

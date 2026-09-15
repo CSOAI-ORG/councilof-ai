@@ -1,5 +1,10 @@
 # CSOAI Governance MCP
 
+[![npm version](https://img.shields.io/npm/v/csoai-governance-mcp)](https://www.npmjs.com/package/csoai-governance-mcp)
+[![npm downloads](https://img.shields.io/npm/dm/csoai-governance-mcp)](https://www.npmjs.com/package/csoai-governance-mcp)
+[![license](https://img.shields.io/npm/l/csoai-governance-mcp)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/LICENSE)
+
+
 Give **any** MCP-capable agent — Claude Science, Claude Code, Cursor, or your own —
 the CSOAI Sovereign's governance layer. Seal your outputs to **Layer 0** with Ed25519,
 verify them offline, ask governed compliance questions, and search the **published governed

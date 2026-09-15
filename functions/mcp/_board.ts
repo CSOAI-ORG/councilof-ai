@@ -184,6 +184,25 @@ export async function getRootTool(origin: string) {
   }
 }
 
+export async function mcpTrustTool(origin: string) {
+  try {
+    const d = (await fetchOriginJson(origin, "/interop/mcp-trust/latest.json")) as Record<string, unknown>;
+    return {
+      state: "VALID",
+      source: `${origin}/interop/mcp-trust/latest.json`,
+      kind: d.kind ?? null,
+      as_of: d.as_of ?? null,
+      partial: d.partial ?? false,
+      enumeration: d.enumeration ?? null,
+      counts: d.counts ?? null,
+      diff: d.diff ?? null,
+      not_a_certification: true,
+    };
+  } catch (e) {
+    return { ...unreachablePayload(origin, "/interop/mcp-trust/latest.json", e), state: "UNREACHABLE" };
+  }
+}
+
 export async function x402TrustTool(origin: string) {
   try {
     const d = (await fetchOriginJson(origin, "/interop/x402-trust/latest.json")) as Record<string, unknown>;

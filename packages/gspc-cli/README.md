@@ -1,5 +1,10 @@
 # @csoai/gspc-cli — `csoai`
 
+[![npm version](https://img.shields.io/npm/v/%40csoai%2Fgspc-cli)](https://www.npmjs.com/package/@csoai/gspc-cli)
+[![npm downloads](https://img.shields.io/npm/dm/%40csoai%2Fgspc-cli)](https://www.npmjs.com/package/@csoai/gspc-cli)
+[![license](https://img.shields.io/npm/l/%40csoai%2Fgspc-cli)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/LICENSE)
+
+
 The Council of AI command line. Measurement, never certification.
 
 ## `csoai check <model>`

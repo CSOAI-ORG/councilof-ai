@@ -32,7 +32,7 @@ afterEach(() => {
 });
 
 describe("browser MCP request contract", () => {
-  it("falls back only for local tools/list and receives the exact canonical 12", async () => {
+  it("falls back only for local tools/list and receives the exact canonical 13", async () => {
     const seen: Request[] = [];
     vi.stubGlobal(
       "fetch",

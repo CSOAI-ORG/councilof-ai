@@ -376,6 +376,26 @@ async function verifyInclusion(args) {
  * canonical measured artefact; this package delegates to it instead of
  * copying counts or manufacturing a trust verdict locally.
  */
+async function mcpTrust() {
+  const path = "/interop/mcp-trust/latest.json";
+  try {
+    const d = await fetchJson(path);
+    return {
+      state: "VALID",
+      source: `${ORIGIN}${path}`,
+      kind: d.kind ?? null,
+      as_of: d.as_of ?? null,
+      partial: d.partial ?? false,
+      enumeration: d.enumeration ?? null,
+      counts: d.counts ?? null,
+      diff: d.diff ?? null,
+      not_a_certification: true,
+    };
+  } catch (e) {
+    return { ...unreachable(path, e), state: "UNREACHABLE" };
+  }
+}
+
 async function x402Trust() {
   const path = "/interop/x402-trust/latest.json";
   try {
@@ -632,6 +652,7 @@ const HANDLERS = {
   get_card: getCard,
   verify_inclusion: verifyInclusion,
   x402_trust: x402Trust,
+  mcp_trust: mcpTrust,
 };
 
 /* ----------------------------------------------------------------- transport */
@@ -675,6 +696,8 @@ function summaryLine(name, payload) {
       return `${payload.state ?? "?"} — inclusion against live merkle.`;
     case "x402_trust":
       return `${payload.state ?? "?"} — ${payload.headline || "catalog trust counts"}.`;
+    case "mcp_trust":
+      return `${payload.state ?? "?"} — MCP handshake census${payload.partial ? " (partial round)" : ""}.`;
     case "commission_card":
     case "art50_marking_evidence":
     case "rwa_evidence":
