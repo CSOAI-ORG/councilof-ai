@@ -518,13 +518,13 @@ function LivingLaw() {
         <RotatingHighlight {...SECTION_TITLES.living} />
       </Heading>
       <Body>
-        A one-off assessment starts going stale the day it is stamped, because the statute underneath
-        it does not hold still. We track the primary sources — EUR-Lex, legislation.gov.uk and the
-        national registers — and publish a dated deadline feed at{" "}
+        We detect changes in selected primary sources — EUR-Lex, legislation.gov.uk and the national
+        registers — and publish a dated deadline feed at{" "}
         <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/regulation</code>. When a
-        source changes, the current automation raises a detection signal. Re-measurement and delta-card
-        issuance still require a separate run and are not yet automated. Previously published signed
-        artifacts remain addressable; this page does not claim append-only storage.
+        source changes, the current automation raises a detection signal for review. A fresh
+        measurement appears only after a separate run is completed and admitted: re-measurement and
+        delta-card issuance are not automated. Previously published signed artifacts remain
+        addressable; this page does not claim append-only storage.
       </Body>
       {next.length > 0 && (
         <>
@@ -548,7 +548,7 @@ function LivingLaw() {
           </ul>
         </>
       )}
-      <Cta href="/eu-ai-act" label="What is coming, and when" secondary={{ href: "/assess", label: "Get re-measured" }} />
+      <Cta href="/eu-ai-act" label="What is coming, and when" secondary={{ href: "/assess", label: "Request a scoped measurement" }} />
     </HeavyBand>
   );
 }

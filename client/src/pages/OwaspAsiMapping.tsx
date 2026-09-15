@@ -142,7 +142,7 @@ export default function OwaspAsiMapping() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-14">
+    <section className="mx-auto max-w-5xl px-4 py-14">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-600">
         Council of AI — OWASP AI Exchange mapping
       </p>
@@ -241,6 +241,6 @@ export default function OwaspAsiMapping() {
           OWASP does not endorse this mapping.
         </p>
       </section>
-    </main>
+    </section>
   );
 }

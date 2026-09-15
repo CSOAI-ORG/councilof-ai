@@ -49,9 +49,12 @@ export const SECTION_TITLES: Record<string, RotatingTitle> = {
     after: "— the boundary is the point.",
   },
   living: {
-    before: "When the law moves we re-measure for",
+    // 2026-09-15: the headline used to promise re-measurement ("When the law moves we
+    // re-measure"). The released automation is change DETECTION; a new measurement is a
+    // separate run. The headline now names the delivered stage.
+    before: "Track regulatory changes. See what needs review for",
     words: ["the EU AI Act", "UK regulators", "US state law", "your auditor"],
-    after: "— the old card stays.",
+    after: "— a new measurement is a separate run.",
   },
   corrections: {
     before: "We publish our own",

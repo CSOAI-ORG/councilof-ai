@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setMetaDescription } from "@/lib/utils";
 
 /**
@@ -42,10 +42,10 @@ const CRITERIA = [
     requirement:
       "An IVO must employ or engage personnel with sufficient technical expertise to conduct its assessments.",
     practice: [
-      "The measurement mill runs on dedicated compute (RunPod RTX 3090, $0.22/hr) with a GSPC worker that grades models against frozen banks 24/7. The worker's health is publicly observable at /api/worker.",
-      "The public root is maintained by a signed, timestamped, multi-witness process: Ed25519 signatures, OpenTimestamps (Bitcoin block 966712), Rekor transparency log (entry 2810720876), and (pending) XRPL memo anchor.",
-      "The corrections ledger (52 entries as of Sep 15, 2026) records every error we've made in our own published figures, how it was caught, and the fix. Corrections are permanent — we never delete or edit a correction.",
-      "The measurement methodology is published at /methodology. The frozen banks are published on Hugging Face (101 datasets). The card verification code is published at /signed/verify-card.mjs.",
+      "The measurement mill runs on dedicated GPU compute with a GSPC worker that grades models against frozen banks. Its state is not typed here: the worker's own health is read live at /api/worker and shown below.",
+      "The public root is maintained by a signed, multi-witness process: an Ed25519 signature, an OpenTimestamps proof and a Rekor transparency-log entry, with XRPL and EAS anchors recorded as NOT_YET until they exist. The current witness states are read live from /interop/root-witness-latest.json and shown below — a pending OpenTimestamps proof is not a Bitcoin timestamp.",
+      "The corrections ledger at /api/corrections records every error we have made in our own published figures, how it was caught, and the fix. Corrections are permanent — we never delete or edit a correction.",
+      "The measurement methodology is published at /methodology. The frozen banks are published on Hugging Face under the csoai organisation. The card verification code is published at /signed/verify-card.mjs.",
     ],
     proof: "curl -s https://councilof.ai/api/worker | jq '{status, worker.state}'",
   },
@@ -56,9 +56,9 @@ const CRITERIA = [
     requirement:
       "An IVO must identify and manage potential conflicts of interest. Payment from the assessed party is allowed at reasonable market rates, but payment must not be conditioned on the results of the assessment.",
     practice: [
-      "No issuer-pays: the entities we measure never pay for their measurement. The board publishes results for 425 stablecoins, 16 XRPL instruments, and 22 GSPC axes — none of the measured parties paid for or influenced their measurement.",
-      "Revenue comes from machine-readable data delivery (x402 doors), not from favourable findings. The settlement ledger is public at /api/revenue. One non-self payer, one settlement, 0.02 USDC as of Sep 2026.",
-      "Self-settlements (10 recorded) are explicitly excluded from revenue counts. A wallet we control paying us is recorded for audit but is neither revenue nor a buyer.",
+      "No issuer-pays: the entities we measure never pay for their measurement. The board's own totals are read live at /api/gspc (its count line is derived from the axis array, never typed) — none of the measured parties paid for or influenced their measurement.",
+      "Revenue comes from machine-readable data delivery (x402 doors), not from favourable findings. The settlement ledger is public at /api/revenue; its one_number (distinct non-self payers) is read live and shown below, never typed.",
+      "Self-settlements are explicitly excluded from revenue counts. A wallet we control paying us is recorded for audit but is neither revenue nor a buyer.",
       "Corrections are free forever. A measured party can request a correction at no cost, and the correction is published on the same ledger regardless of who requested it.",
       "The independence-conditions page (/evaluator-access) publishes our five conditions: no lab money, no gag clauses, methods on the card, corrections ledger governs, access/redaction terms published.",
     ],
@@ -80,6 +80,56 @@ const CRITERIA = [
   },
 ] as const;
 
+type LiveState = { text: string; state: "READING" | "READ" | "UNAVAILABLE" };
+
+function useLiveLine(path: string, render: (body: any) => string): LiveState {
+  const [line, setLine] = useState<LiveState>({ text: `reading ${path}…`, state: "READING" });
+  useEffect(() => {
+    let cancelled = false;
+    fetch(path, { headers: { accept: "application/json" }, cache: "no-store" })
+      .then(async (r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((body) => {
+        if (!cancelled) setLine({ text: render(body), state: "READ" });
+      })
+      .catch((e: unknown) => {
+        if (!cancelled)
+          setLine({ text: `UNAVAILABLE — ${path} could not be read (${e instanceof Error ? e.message : String(e)}). Nothing on this page stands in for it.`, state: "UNAVAILABLE" });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [path]);
+  return line;
+}
+
+/** Read-live lines for the figures this paper used to type. Never a number from source. */
+function LiveEvidence({ criterion }: { criterion: string }) {
+  const worker = useLiveLine("/api/worker", (b) =>
+    `/api/worker → status ${b?.status ?? "not published"} · worker state ${b?.worker?.state ?? "not published"} · read_at ${b?.read_at ?? "not published"}`,
+  );
+  const witness = useLiveLine("/interop/root-witness-latest.json", (b) => {
+    const w = b?.witnesses ?? {};
+    const blocks = Array.isArray(w.ots?.bitcoin_blocks) && w.ots.bitcoin_blocks.length ? w.ots.bitcoin_blocks.join(", ") : "none yet";
+    return `root as_of ${b?.artifact?.as_of ?? "not published"} · OpenTimestamps ${w.ots?.status ?? "not published"} (Bitcoin blocks: ${blocks}) · Rekor ${w.rekor?.status ?? "not published"}${typeof w.rekor?.logIndex === "number" ? ` (logIndex ${w.rekor.logIndex})` : ""} · XRPL memo ${w.xrpl_memo?.status ?? "not published"} · EAS ${w.eas_base?.status ?? "not published"}`;
+  });
+  const revenue = useLiveLine("/api/revenue", (b) => {
+    const n = b?.one_number ?? {};
+    return `/api/revenue → one_number ${n.status ?? "not published"}: ${typeof n.all_time === "number" ? n.all_time : "not published"} distinct non-self payer(s) · ${typeof n.settlements === "number" ? n.settlements : "not published"} settlement(s) · ${typeof n.self_settlements === "number" ? n.self_settlements : "not published"} self-settlement(s) excluded`;
+  });
+  const lines = criterion === "B" ? [worker, witness] : criterion === "C" ? [revenue] : [];
+  if (!lines.length) return null;
+  return (
+    <ul className="mt-3 space-y-1 font-mono text-[11px] text-slate-500" aria-label="Read live">
+      {lines.map((l, i) => (
+        <li key={i} data-state={l.state}>{l.text}</li>
+      ))}
+    </ul>
+  );
+}
+
 export default function IvoEvidence() {
   useEffect(() => {
     document.title = "What an IVO's evidence should look like | Council of AI";
@@ -91,7 +141,7 @@ export default function IvoEvidence() {
   }, []);
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-14">
+    <section className="mx-auto max-w-4xl px-4 py-14">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-600">
         Council of AI — position paper
       </p>
@@ -99,8 +149,8 @@ export default function IvoEvidence() {
         What an IVO's evidence should look like
       </h1>
       <p className="mt-4 max-w-3xl text-slate-600">
-        California SB 813 (Chapter 179, signed September 9, 2026) creates the first
-        US statutory framework for Independent Verification Organizations (IVOs) assessing
+        California SB 813 (Chapter 179, signed September 9, 2026) creates a state
+        statutory framework for Independent Verification Organizations (IVOs) assessing
         AI systems. The Government Operations Agency must develop IVO designation criteria
         by January 1, 2028. This paper maps our evidence practice to the four criteria
         in §8898.1(c)(2).
@@ -154,6 +204,7 @@ export default function IvoEvidence() {
                 </li>
               ))}
             </ul>
+            <LiveEvidence criterion={c.id} />
             <div className="mt-4 rounded-lg bg-slate-50 px-4 py-2 font-mono text-xs text-slate-500">
               Verify: <code>{c.proof}</code>
             </div>
@@ -228,6 +279,6 @@ export default function IvoEvidence() {
           (California, signed Sep 9, 2026). As_of: Sep 15, 2026.
         </p>
       </section>
-    </main>
+    </section>
   );
 }

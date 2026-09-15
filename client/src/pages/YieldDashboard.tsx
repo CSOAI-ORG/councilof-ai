@@ -75,7 +75,7 @@ export default function YieldDashboard() {
   }, [period]);
 
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
+    <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
         <title>Yield Dashboard | Council of AI</title>
         <meta
@@ -232,6 +232,6 @@ export default function YieldDashboard() {
           </Link>
         </div>
       </section>
-    </main>
+    </section>
   );
 }

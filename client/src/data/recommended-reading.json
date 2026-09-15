@@ -1,0 +1,77 @@
+{
+  "schema": "csoai.recommended-reading/0.1",
+  "reviewed": "2026-09-15",
+  "purpose": "The producer behind the homepage reading module. Every 'published' entry must resolve to a reviewed page that App.tsx serves with its own component; scripts/content-promise-gate.mjs fails the build if any entry resolves to a withdrawn route. A 'withdrawn' entry is rendered as a labelled withdrawal record, never as ready reading.",
+  "entries": [
+    {
+      "href": "/methodology",
+      "state": "published",
+      "title": "How the instrument measures",
+      "excerpt": "Deterministic predicates, row-declared methods and the sample rules behind every published result. No model sits in the verdict path.",
+      "topic": "Method"
+    },
+    {
+      "href": "/refutation-ledger",
+      "state": "published",
+      "title": "The refutation ledger",
+      "excerpt": "Claims we published, tested and then corrected in public — including the bets the measurement killed.",
+      "topic": "Corrections"
+    },
+    {
+      "href": "/rating-the-raters",
+      "state": "published",
+      "title": "Rating the raters: the one result we have",
+      "excerpt": "One organisation, one criterion, one benchmark: the ARC-AGI-2 human-baseline recomputation, with the comparative survey still marked UNMEASURED.",
+      "topic": "Method"
+    },
+    {
+      "href": "/honesty",
+      "state": "published",
+      "title": "Honesty gate",
+      "excerpt": "What we cannot yet measure, published rather than hidden, with the unmeasured fraction computed from the board.",
+      "topic": "Limits"
+    },
+    {
+      "href": "/evaluator-access",
+      "state": "published",
+      "title": "Evaluator access conditions",
+      "excerpt": "No developer money, no gag clauses, the method on the card, corrections govern; access and redaction terms published.",
+      "topic": "Independence"
+    },
+    {
+      "href": "/instrument",
+      "state": "published",
+      "title": "The GSPC instrument",
+      "excerpt": "The frozen banks and the lenses over them, with the boundary between a measurement and a legal determination kept explicit.",
+      "topic": "Instrument"
+    },
+    {
+      "href": "/gspc-verify",
+      "state": "published",
+      "title": "Verify a signed card",
+      "excerpt": "Recompute the hash and check the Ed25519 signature of any published record in your own browser. Free, no account.",
+      "topic": "Verification"
+    },
+    {
+      "href": "/claims-register",
+      "state": "published",
+      "title": "Claims register",
+      "excerpt": "Every public claim with its evidence state — live, planned, retired or unmeasured — and the record behind it.",
+      "topic": "Corrections"
+    },
+    {
+      "href": "/quickstart",
+      "state": "published",
+      "title": "Agent quickstart",
+      "excerpt": "Explore measurements, follow the change record, verify evidence, then connect to the supported feeds.",
+      "topic": "Access"
+    },
+    {
+      "href": "/blog",
+      "state": "withdrawn",
+      "title": "Field notes: nine earlier articles",
+      "excerpt": "The generated article corpus is withdrawn for evidence review. This link opens the withdrawal record, not the articles.",
+      "topic": "Withdrawal record"
+    }
+  ]
+}

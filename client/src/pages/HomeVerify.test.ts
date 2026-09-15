@@ -24,6 +24,20 @@ const tools = readFileSync(resolve(here, "ToolsPage.tsx"), "utf8");
 const stack = readFileSync(resolve(here, "../components/home/ToolStack.tsx"), "utf8");
 
 describe("homepage is chat + GSPC list plus the estate", () => {
+  it("puts the proposition and one inspectable result before the slide band", () => {
+    // 2026-09-15 review: the first h1 began at y=773 (1440x900) below a rotating band.
+    const proposition = src.indexOf('data-testid="home-proposition"');
+    const band = src.indexOf("<HeroSlides />");
+    expect(proposition).toBeGreaterThan(-1);
+    expect(band).toBeGreaterThan(proposition);
+    expect(src).toContain("Independent measurements. Evidence you can check.");
+    expect(src).toContain("Measurement, not certification. Public verification is free.");
+    expect(src).toContain("<HomeFirstResult />");
+    expect(src.indexOf("<HomeFirstResult />")).toBeLessThan(band);
+    // The supply-led entry stays, as the h2 after the band — one h1 per page.
+    expect(src.match(/<h1\b/g)?.length).toBe(1);
+  });
+
   it("is OpenRouter desk plus slides, nine products, and Council OS", () => {
     expect(src).toMatch(/Explore measurements\. See what changed\./);
     expect(src).toContain('href="/gspc-verify"');

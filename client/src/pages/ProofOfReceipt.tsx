@@ -54,7 +54,7 @@ export default function ProofOfReceipt() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
+    <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
         <title>Receipt status | Council of AI</title>
         <meta
@@ -206,7 +206,7 @@ export default function ProofOfReceipt() {
           </Link>
         </p>
       </section>
-    </main>
+    </section>
   );
 }
 

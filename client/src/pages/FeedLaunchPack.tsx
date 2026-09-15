@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 /**
  * /feed — the Stablewatch Feed offer page.
  *
- * G6.6: "The $199/mo offer page: 30-day RLUSD streak as proof, stablewatch
+ * G6.6: "The offer page: 30-day RLUSD streak as proof, stablewatch
  * top-20 as content, alert examples, subscribe-via-x402 button."
  *
  * Pricing is returned by the x402 challenge, never declared on the public
@@ -38,7 +38,7 @@ const ALERT_EXAMPLES = [
 
 export default function FeedLaunchPack() {
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <section className="min-h-screen bg-slate-950 text-slate-100">
       <Helmet>
         <title>Council of AI — Stablewatch Feed</title>
         <meta
@@ -237,7 +237,7 @@ export default function FeedLaunchPack() {
               Council of AI
             </a>
             {" · "}
-            <a href="/receipt" className="text-emerald-400 underline">
+            <a href="/proof-receipt" className="text-emerald-400 underline">
               Receipt status
             </a>
             {" · "}
@@ -247,6 +247,6 @@ export default function FeedLaunchPack() {
           </p>
         </footer>
       </div>
-    </main>
+    </section>
   );
 }

@@ -159,11 +159,11 @@ const TOOLS: Tool[] = [
     family: "For your own site",
     name: "Embed and white-label kit",
     what:
-      "Builds a badge or card you can paste into your own site that re-checks its own signature in each reader's browser — it goes green only when the bytes are true.",
+      "Builds a badge or card you can paste into your own site that re-checks its own signature in each reader's browser — it goes green only when the signature verifies for that record. That is an integrity check under the published key, not a truth, safety or conformity verdict.",
     pain:
       "Otherwise the people reading your site still have to take your word for the result.",
     ticks: [
-      "A badge that goes green only when the bytes are true.",
+      "Green means one named check passed: the signature verifies for this record.",
       "Each reader's browser re-checks the signature.",
       "Built only from what is actually on the board.",
     ],
@@ -286,6 +286,7 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
     <article id={tool.id} aria-labelledby={`${tool.id}-name`} className="h-full">
       <a
         href={href}
+        aria-labelledby={`${tool.id}-name`}
         className="card-quiet group flex h-full flex-col overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
       >
         <img

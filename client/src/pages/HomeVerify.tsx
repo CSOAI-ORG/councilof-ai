@@ -14,6 +14,7 @@ import HomeCinematicWorlds from "@/components/home/HomeCinematicWorlds";
 import HomeGspcTable from "@/components/home/HomeGspcTable";
 import HomeUnderstand from "@/components/home/HomeUnderstand";
 import HomeEvidenceShowcase from "@/components/home/HomeEvidenceShowcase";
+import HomeFirstResult from "@/components/home/HomeFirstResult";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
 
@@ -56,16 +57,45 @@ export default function HomeVerify() {
   return (
     <div data-testid="home-verify">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
+      {/* FIRST SCREEN — the proposition, one evidence action, the scope note and ONE
+          inspectable result, before any atmosphere. Measured 2026-09-15 before this
+          change: the first h1 began at y=773 (1440x900) / y=800 (390x844), below a
+          rotating band. The band still ships, second. */}
+      <section
+        aria-labelledby="home-h1"
+        data-testid="home-proposition"
+        className="mx-auto max-w-6xl px-4 pb-12 pt-10 sm:pt-16"
+      >
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">Independent measurement body</p>
+        <h1 id="home-h1" className="mt-3 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
+          Independent measurements. Evidence you can check.
+        </h1>
+        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
+          Explore published results for AI systems, agents and digital assets. See the method, date
+          and limits; verify signed records where available.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a href="#measurements" className="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800" data-testid="home-cta-explore">
+            Explore evidence
+          </a>
+          <Link href="/gspc-verify" className="rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50" data-testid="home-cta-verify">
+            Verify a record
+          </Link>
+        </div>
+        <p className="mt-4 text-sm text-slate-600">Measurement, not certification. Public verification is free.</p>
+        <HomeFirstResult />
+      </section>
+
       <HeroSlides />
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:py-24" style={{ paddingBottom: "calc(6rem + var(--cookie-banner-h, 0px))" }}>
         <section aria-labelledby="os-h1">
-          <h1 id="os-h1" className="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
+          <h2 id="os-h1" className="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
             Explore measurements. See what changed.
-          </h1>
+          </h2>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
             Start with the live board, then follow the change record and verify the signed evidence.
-            Empty means not measured. Not a certificate. Verification is free, no account.
+            Empty means not measured. Not a certificate.
           </p>
           <nav aria-label="Start with published evidence" className="mt-6 grid max-w-4xl gap-3 sm:grid-cols-2 lg:grid-cols-4" data-testid="supply-led-entry">
             <a className="rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-800" href="#measurements">1 · Explore measurements</a>
@@ -90,15 +120,9 @@ export default function HomeVerify() {
             ]}
           />
 
-          {/* RECONCILED with #1013: the static estate-doors table that landed there
-              carried typed door states ("7 MCP tools", "signed envelope") and
-              duplicated the probed <EstateDoors/> strip below under the same
-              testid. Its copy line stays; its rows live on in the strip, which
-              probes each same-origin door on load instead of typing a state. */}
-          <p className="mt-4 max-w-2xl text-sm text-slate-600">
-            We measure AI against frozen tests, sign the card, and leave empty cells empty.
-            Live board is GET /api/gspc — not a remembered count. Verify at /gspc-verify. Plugin at /plugin.
-          </p>
+          {/* The doctrine restatement that used to sit here ("We measure AI against frozen
+              tests…") repeated the proposition, the desk list and the ToolStack lede. One
+              introduction per idea; the plugin door stays in the header and ToolStack. */}
         </section>
 
         {/* The board table: every row, every word, every number off GET /api/gspc at render

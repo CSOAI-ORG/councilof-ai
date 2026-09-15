@@ -202,6 +202,13 @@ jobs:
           node scripts/brand-gate.mjs --selftest
           node scripts/brand-gate.mjs dist/client
 
+      # Runs AFTER prerender, so the rendered checks (one <main> per page, no raw enum keys in
+      # primary copy, /status/index.html is a status page) see what a reader sees.
+      - name: Content-promise gate — promises and destinations gated together
+        run: |
+          node scripts/content-promise-gate.mjs --selftest
+          node scripts/content-promise-gate.mjs dist/client
+
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         run: node scripts/signed-json-guard.mjs dist/client
 
