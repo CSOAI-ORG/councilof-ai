@@ -1,8 +1,8 @@
 {
   "schema": "csoai.tui2.full-snapshot/0.1",
-  "generated_at": "2026-09-14T10:30:49.080645+00:00",
-  "total_unique_pairs": 65,
-  "grand_total_usd": 195994165370.775,
+  "generated_at": "2026-09-15T01:11:31.792360+00:00",
+  "total_unique_pairs": 66,
+  "grand_total_usd": 196696605370.775,
   "terms_boundary": "totalSupply() only \u2014 NOT proof of reserves",
   "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction",
   "measurements": [
@@ -530,8 +530,20 @@
       "source": "eth_call totalSupply() via publicnode RPC",
       "terms_boundary": "totalSupply() only",
       "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction-BUSD-bsc"
+    },
+    {
+      "symbol": "PYUSD",
+      "chain": "solana",
+      "supply_normalized": 702440000,
+      "block": null,
+      "contract": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "decimals": 6,
+      "measured_at": "2026-09-15T01:11:31.792244+00:00",
+      "source": "Solana getTokenSupply RPC",
+      "terms_boundary": "totalSupply only",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=TUI2-correction-PYUSD-solana"
     }
   ],
   "unique_assets": 34,
-  "chains_covered": 17
+  "chains_covered": 18
 }
