@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { onRequest } from "./[[path]]";
 import { PAID_TOOL_NAMES, buildPaidRequest } from "./_paid";
@@ -294,8 +296,12 @@ describe("/mcp tools/list — nine free + four paid, catalogue free, nothing lab
       }),
     );
     expect(i.result.serverInfo.version).toBe("1.4.2");
-    expect(i.result.instructions).toMatch(/Eight free read-only tools/);
-    expect(i.result.instructions).toMatch(/four paid x402 tools/i);
+    // Counts are derived from the two definition files, never typed (2026-09-15: the text said
+    // "Eight free" while tools/list served nine free tools).
+    expect(i.result.instructions).toContain(`${FREE.tools.length} free read-only tools`);
+    expect(i.result.instructions).toContain(`${PAID.tools.length} paid x402 tools`);
+    const listed = await call(rpc("tools/list", {}, 7));
+    expect(listed.result.tools.length).toBe(FREE.tools.length + PAID.tools.length);
     expect(i.result.instructions).toMatch(/witness_hash is quarantined/);
     expect(i.result.instructions).toMatch(/Measurement, not certification/);
     expect(i.result.instructions).toMatch(MECHANISM);
@@ -658,5 +664,37 @@ describe("GET /mcp — the one-command install is at the point of discovery", ()
     expect(g.install.no_install_at_all).toMatch(/api\/gspc/);
     // A checkout is a fallback, never the headline.
     expect(JSON.stringify(g.install)).not.toMatch(/git clone|index\.mjs/);
+  });
+});
+
+// 2026-09-15 end-user test: verify_card returned pinned_key "did:web:csoai.org#card-attestation-1"
+// while its own Trust anchor check said the key "is published as did:web:csoai.org#board-attestation-1".
+// The label is now the anchor the check matched.
+describe("/mcp tools/call verify_card — pinned_key names the anchor that matched", () => {
+  const read = (rel: string) => JSON.parse(readFileSync(resolve(__dirname, "../../", rel), "utf8"));
+  const verify = async (card: unknown) => {
+    vi.stubGlobal("fetch", async () => new Response("not stubbed", { status: 404 }));
+    const r = await call(rpc("tools/call", { name: "verify_card", arguments: { card } }, 9));
+    return r.result.structuredContent as unknown as { state: string; pinned_key: string | null; checks: Array<{ code: string; detail: string }> };
+  };
+
+  it("a board-attestation-1 card reports board-attestation-1", async () => {
+    const sc = await verify(read("public/interop/mill-cards-signed/signed-art5-saf-1ee79f215d35.json"));
+    expect(sc.state).toBe("VALID");
+    expect(sc.pinned_key).toBe("did:web:csoai.org#board-attestation-1");
+    expect(sc.checks.find((c) => c.code === "anchor_match")?.detail).toContain(sc.pinned_key);
+  });
+
+  it("control: a card-attestation-1 card reports card-attestation-1", async () => {
+    const sc = await verify(read("public/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json"));
+    expect(sc.state).toBe("VALID");
+    expect(sc.pinned_key).toBe("did:web:csoai.org#card-attestation-1");
+  });
+
+  it("an unpinned key names no anchor", async () => {
+    const card = read("public/interop/mill-cards-signed/signed-art5-saf-1ee79f215d35.json");
+    const sc = await verify({ ...card, did: undefined, pubkey: "11".repeat(32) });
+    expect(sc.state).toBe("INVALID");
+    expect(sc.pinned_key).toBeNull();
   });
 });

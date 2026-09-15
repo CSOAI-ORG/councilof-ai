@@ -7,6 +7,8 @@
  */
 
 import hubCensus from "../../public/signed/hub-census-baseline.json";
+import FREE_MCP_TOOLS from "../mcp/gspc-tools.json";
+import PAID_MCP_TOOLS from "../mcp/paid-tools.json";
 
 interface Env {
   AGUI_WIRE_URL?: string;
@@ -103,7 +105,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     },
     os: {
       doors: ["board", "verify", "space", "assess", "harness"],
-      harness: "HTTP MCP has eight free readers plus four x402-metered evidence tools. witness_hash is quarantined and is not advertised. This compute probe is separate. Not a mill-tool.",
+      harness: `HTTP MCP has ${FREE_MCP_TOOLS.tools.length} free readers plus ${PAID_MCP_TOOLS.tools.length} x402-metered evidence tools (counted from the definitions tools/list serves). witness_hash is quarantined and is not advertised. This compute probe is separate. Not a mill-tool.`,
       view_only: true,
     },
   };
