@@ -2,10 +2,11 @@
   "schema": "csoai.pod-health/0.1",
   "endpoint": "/api/worker",
   "as_of": "2026-09-14T03:55:58Z",
-  "status": "LIVE",
+  "status": "STALE_SNAPSHOT",
+  "stale_warning": "This file is a historical snapshot, not live data. GET /api/worker fetches the pod's own /health at request time. This file may be days out of date.",
   "writes_board": false,
   "never_secrets": true,
-  "note": "Read-only public artifact. Foreman/KEEP refresh this file \u2014 never tokens, wallets, SSH, or private URLs.",
+  "note": "STALE SNAPSHOT — GET /api/worker is the live endpoint. This file was last written 2026-09-14T03:55:58Z. Foreman/KEEP refreshes this file; never tokens, wallets, SSH, or private URLs.",
   "pod": {
     "id": "fpowppss5ngtkw",
     "role": "KEEP-runpod-gspc",

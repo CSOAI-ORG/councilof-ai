@@ -53,6 +53,14 @@
     {
       "binding": "LEADS",
       "id": "8c460488aa6444c187890a579511bf93"
+    },
+    // WORKER_STATE_KV — caches the last LIVE pod-health response for fallback display.
+    // When the pod is OFFLINE, /api/worker returns the cached response with stale:true
+    // and stale_age_seconds so it can never appear as current. Namespace created
+    // 2026-09-15. Without this binding, OFFLINE returns worker:null with no fallback.
+    {
+      "binding": "WORKER_STATE_KV",
+      "id": "TBD_CREATE_NAMESPACE"
     }
   ]
 }
