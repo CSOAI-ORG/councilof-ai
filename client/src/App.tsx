@@ -1195,8 +1195,8 @@ function App() {
                   <Route path="/yield" component={YieldDashboard} />
                   <Route path="/countdown" component={CountdownPage} />
                   <Route path="/art50" component={Art50} />
-                  <Route path="/receipt" component={ProofOfReceipt} />
-                  <Route path="/proof-receipt" component={ProofReceipt} />
+                  <Route path="/receipt" component={ProofReceipt} />
+                  <Route path="/proof-receipt" component={ProofOfReceipt} />
                   <Route path="/feed" component={FeedLaunchPack} />
                   <Route path="/stablewatch" component={FeedLaunchPack} />
                   <Route path="/custody" component={CustodyDisclosure} />
