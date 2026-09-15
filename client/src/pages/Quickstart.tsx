@@ -114,7 +114,7 @@ export default function Quickstart() {
   const verifyUrl = typeof manifest?.verify === "string" ? manifest.verify : "/gspc-verify";
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <section className="min-h-screen bg-slate-50 text-slate-950">
       <Helmet>
         <title>Agent quickstart — measurements, changes, verification and feeds | Council of AI</title>
         <meta name="description" content={PAGE_DESCRIPTION} />
@@ -420,6 +420,6 @@ node gspc-verify.mjs --did-document did.json m.json
           Measurement, never certification. A grade is never sold. Verify stays free.
         </p>
       </section>
-    </main>
+    </section>
   );
 }

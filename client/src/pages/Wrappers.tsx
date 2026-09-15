@@ -106,7 +106,7 @@ export default function Wrappers() {
   const counts = ledger?.counts ?? {};
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <section className="min-h-screen bg-slate-50 text-slate-950">
       <Helmet>
         <meta name="description" content={PAGE_DESCRIPTION} />
         <meta name="robots" content="index,follow" />
@@ -271,6 +271,6 @@ export default function Wrappers() {
           Method: <a className="underline" href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/measurement/wrapped-asset-ledger-spec.md">wrapped-asset-ledger-spec.md</a>.
         </p>
       </section>
-    </main>
+    </section>
   );
 }

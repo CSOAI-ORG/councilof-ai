@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 
 export default function ContentReviewNotice() {
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-20 text-slate-100">
+    <section className="min-h-screen bg-slate-950 px-5 py-20 text-slate-100">
       <Helmet>
         <title>Evidence review in progress | Council of AI</title>
         <meta name="robots" content="noindex,nofollow,noarchive" />
@@ -38,6 +38,6 @@ export default function ContentReviewNotice() {
           </Link>
         </div>
       </section>
-    </main>
+    </section>
   );
 }

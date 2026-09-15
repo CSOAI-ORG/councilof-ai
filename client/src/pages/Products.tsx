@@ -137,7 +137,7 @@ export default function Products() {
   const board = useBoardCount();
   return (
     <div className="min-h-screen bg-[#03110b]">
-    <main className="mx-auto max-w-5xl px-5 py-14 text-slate-100 sm:px-8">
+    <section className="mx-auto max-w-5xl px-5 py-14 text-slate-100 sm:px-8">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">
         Council of AI — verify free · jobs by artefact · enterprise on enquiry
       </p>
@@ -336,7 +336,7 @@ export default function Products() {
           Enquire for Ledger or Data
         </Link>
       </div>
-    </main>
+    </section>
     </div>
   );
 }

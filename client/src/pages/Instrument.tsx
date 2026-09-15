@@ -264,7 +264,7 @@ export default function Instrument() {
         </aside>
 
         {/* ── Main: the chat surface ── */}
-        <main className="mt-8 lg:mt-0 flex-1 min-w-0">
+        <section className="mt-8 lg:mt-0 flex-1 min-w-0">
           <div className="rounded-2xl border border-gray-200 dark:border-gray-800 flex flex-col min-h-[70vh]">
             <div className="border-b border-gray-200 dark:border-gray-800 px-5 py-3 flex items-center justify-between gap-3">
               <div>
@@ -385,7 +385,7 @@ export default function Instrument() {
               </p>
             </div>
           </div>
-        </main>
+        </section>
       </div>
     </div>
   );

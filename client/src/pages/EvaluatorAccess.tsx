@@ -69,7 +69,7 @@ const CONDITIONS: { id: string; title: string; body: string; check: string; chec
 
 export default function EvaluatorAccess() {
   return (
-    <main className="min-h-screen bg-slate-50 px-5 py-14 text-slate-950">
+    <section className="min-h-screen bg-slate-50 px-5 py-14 text-slate-950">
       <Helmet>
         <link rel="canonical" href={CANONICAL} />
         <meta name="description" content={PAGE_DESCRIPTION} />
@@ -115,6 +115,6 @@ export default function EvaluatorAccess() {
           </p>
         </section>
       </article>
-    </main>
+    </section>
   );
 }

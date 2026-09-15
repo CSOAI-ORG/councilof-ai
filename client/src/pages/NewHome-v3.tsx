@@ -13,7 +13,7 @@ import LobbyVerifyPane from "../components/lobby/LobbyVerifyPane";
 export default function NewHomeV3() {
   const [door, setDoor] = useState<DoorId | null>(null);
   return (
-    <main className="surface-base">
+    <section className="surface-base">
       <OsShell variant="hero" door={door} onDoor={setDoor} />
 
       <section className="surface-raised section-y" aria-labelledby="home-verify-h">
@@ -54,6 +54,6 @@ export default function NewHomeV3() {
           </a>
         </div>
       </section>
-    </main>
+    </section>
   );
 }

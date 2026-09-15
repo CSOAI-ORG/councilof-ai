@@ -74,7 +74,7 @@ export default function OsLauncher() {
   return (
     <div data-testid="os-directory">
       <OsHeader />
-      <main className="mx-auto max-w-5xl px-4 py-8">
+      <section className="mx-auto max-w-5xl px-4 py-8">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-700">
           Council OS
         </p>
@@ -334,7 +334,7 @@ export default function OsLauncher() {
             );
           })}
         </ul>
-      </main>
+      </section>
     </div>
   );
 }

@@ -28,7 +28,7 @@ export default function JailFolder() {
   }, []);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-16" data-testid="jail-folder">
+    <section className="mx-auto max-w-3xl px-4 py-16" data-testid="jail-folder">
       <p className="font-mono text-xs text-emerald-800">mill: jail · already MEASURED · not XRPL · not SWIFT</p>
       <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900">Jail folder</h1>
       <p className="mt-3 text-slate-600">
@@ -73,6 +73,6 @@ export default function JailFolder() {
       ) : (
         <p className="mt-6 font-mono text-sm text-slate-500">Loading /interop/jail-index.json</p>
       )}
-    </main>
+    </section>
   );
 }

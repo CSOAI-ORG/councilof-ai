@@ -58,7 +58,7 @@ export default function HomeVerify() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
       <HeroSlides />
 
-      <main className="mx-auto max-w-6xl px-4 py-16 sm:py-24" style={{ paddingBottom: "calc(6rem + var(--cookie-banner-h, 0px))" }}>
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:py-24" style={{ paddingBottom: "calc(6rem + var(--cookie-banner-h, 0px))" }}>
         <section aria-labelledby="os-h1">
           <h1 id="os-h1" className="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
             Explore measurements. See what changed.
@@ -118,7 +118,7 @@ export default function HomeVerify() {
         </section>
 
         <HomeEvidenceShowcase />
-      </main>
+      </section>
 
       <ToolStack />
       <HomeFilms />

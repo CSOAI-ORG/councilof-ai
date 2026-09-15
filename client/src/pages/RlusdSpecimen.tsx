@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 
 export default function RlusdSpecimen() {
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
+    <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
         <title>RLUSD gap specimen (unsigned) | Council of AI</title>
       </Helmet>
@@ -21,6 +21,6 @@ export default function RlusdSpecimen() {
           </a>
         </p>
       </section>
-    </main>
+    </section>
   );
 }

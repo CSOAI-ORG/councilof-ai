@@ -57,7 +57,7 @@ export default function CountdownPage() {
     .sort((a, b) => b.days - a.days);
 
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
+    <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
         <title>Regulatory countdown | Council of AI</title>
         <meta
@@ -152,6 +152,6 @@ export default function CountdownPage() {
           </>
         )}
       </section>
-    </main>
+    </section>
   );
 }

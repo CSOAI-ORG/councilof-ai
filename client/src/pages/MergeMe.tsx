@@ -119,7 +119,7 @@ export default function MergeMe() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
+    <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
         <title>Merge-me — the train | Council of AI</title>
         <meta name="robots" content="noindex" />
@@ -189,6 +189,6 @@ export default function MergeMe() {
           cheap, merges are human.
         </p>
       </section>
-    </main>
+    </section>
   );
 }
