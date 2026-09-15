@@ -272,6 +272,61 @@ export const SKUS: Record<string, Sku> = {
       "artifacts; it never asserts the customer is DORA-/CRA-compliant — that stays the entity's " +
       "and its auditor's call.",
   },
+
+  // ── G5.1 Proof-tier SKUs (product block v0.1) ─────────────────────────────
+  // These SKUs match the proof-tier entries in scripts/product_block.py.
+  // They gate paid_fields behind x402 settlement; free_fields stay public.
+  // Placeholder prices — owner sets real prices after the ceremony anchors
+  // the premium tier. See public/interop/sku-manifest.json for the shared
+  // manifest that both Python and TypeScript read.
+
+  gspc_behavioural: {
+    id: "gspc_behavioural",
+    name: "GSPC Behavioural Measurement (proof-tier card fields)",
+    artifact:
+      "paid_fields from a gspc.behavioural card: accuracy, bank_cites, confidence_interval, " +
+      "drift_history — the deep measurement data behind the free preview (model, axis, status)",
+    unit: "1 card (subject × axis) — paid_fields only; free_fields are always public",
+    sells: "issuance",
+    prices: {
+      proof: band(0.05, [0.01, 0.25], "X402_PRICE_GSPC_BEHAVIOURAL_USD"),
+    },
+    rail: "x402",
+    notes:
+      "Placeholder price. The free preview shows model/axis/status; the full measurement " +
+      "(accuracy, bank_cites, confidence_interval, drift_history) settles on x402. "
+      + "Post-ceremony pricing.",
+  },
+
+  trace_runtime: {
+    id: "trace_runtime",
+    name: "Runtime Trace (proof-tier card fields)",
+    artifact:
+      "paid_fields from a trace.runtime card: latency_p50, latency_p99, error_rate, " +
+      "token_usage — deep runtime telemetry behind the free preview",
+    unit: "1 card (endpoint) — paid_fields only",
+    sells: "issuance",
+    prices: {
+      proof: band(0.01, [0.01, 0.1], "X402_PRICE_TRACE_RUNTIME_USD"),
+    },
+    rail: "x402",
+    notes: "Placeholder price. Post-ceremony pricing.",
+  },
+
+  otel_span: {
+    id: "otel_span",
+    name: "OpenTelemetry Span (proof-tier card fields)",
+    artifact:
+      "paid_fields from an otel.span card: duration_ms, attributes, events — " +
+      "deep span data behind the free preview (trace_id, service, status)",
+    unit: "1 card (span) — paid_fields only",
+    sells: "issuance",
+    prices: {
+      proof: band(0.01, [0.01, 0.1], "X402_PRICE_OTEL_SPAN_USD"),
+    },
+    rail: "x402",
+    notes: "Placeholder price. Post-ceremony pricing.",
+  },
 };
 
 /** The doctrine invariants, carried as data so an API surface can echo them verbatim. */
