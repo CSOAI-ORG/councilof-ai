@@ -1,5 +1,17 @@
 /**
- * GET /rss.xml — second conventional alias of the one feed at /api/feed.xml.
- * Same handler, same items. See ./feed.xml.ts for why the aliases exist.
+ * /rss.xml — conventional alias of /api/feed.xml.
+ * onRequest covers GET and HEAD.
  */
-export { onRequestGet } from "./api/feed.xml";
+import { onRequestGet as feedGet } from "./api/feed.xml";
+
+export async function onRequest(ctx: { request: Request }) {
+  const method = ctx.request.method.toUpperCase();
+  if (method !== "GET" && method !== "HEAD") {
+    return new Response(null, { status: 405, headers: { allow: "GET, HEAD" } });
+  }
+  const res = await feedGet(ctx as never);
+  if (method === "HEAD") {
+    return new Response(null, { status: res.status, headers: res.headers });
+  }
+  return res;
+}
