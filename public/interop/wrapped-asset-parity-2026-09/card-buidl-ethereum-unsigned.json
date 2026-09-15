@@ -1,8 +1,8 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
-  "subject": "wrapped BUIDL on ethereum vs native issuance — INDEXED_CUSTODIAL",
-  "as_of": "2026-09-14T10:58:07.494Z",
+  "subject": "wrapped BUIDL on ethereum vs native issuance — UNMEASURED",
+  "as_of": "2026-09-15T03:13:10.870Z",
   "source_urls": [
     "https://ethereum-rpc.publicnode.com"
   ],
@@ -16,9 +16,9 @@
       "symbol": "BUIDL",
       "address": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
       "chainId": 1,
-      "block": 25975174,
-      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392",
-      "block_time": 1789382615
+      "block": 25976515,
+      "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb",
+      "block_time": 1789398743
     },
     "canonical": {
       "chain": "offchain",
@@ -31,36 +31,27 @@
     "escrow": null,
     "escrow_name": null,
     "note": "Tokenised fund shares; the reserve is the fund's assets held off-chain, reported by the transfer agent. INDEXED, no parity claimed.",
-    "reads": {
-      "wrapped_total_supply": {
-        "query": "totalSupply()",
-        "raw": "0x0000000000000000000000000000000000000000000000000000c0e03e051f2d",
-        "raw_sha256": "dfe95b9dff923992a1276caea51636072507ad8fca0c682b9d39575cb29f4ee5",
-        "atomic": "212069345730349",
-        "normalized": "212069345.730349",
-        "decimals": 6
-      }
-    },
+    "reads": {},
     "escrow_over_wrapped": null,
-    "parity_state": "INDEXED_CUSTODIAL",
-    "state": "DISCOVERED",
-    "error": null,
-    "fetched_at": "2026-09-14T10:58:07.494Z",
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "RPC error: Archive requests require a personal token. Get one at: https://www.allnodes.com/publicnode",
+    "fetched_at": "2026-09-15T03:13:10.870Z",
     "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
     "unmeasured": [
-      "reserve (custodian-held off this chain; not readable here)"
+      "chain reads (rpc failed; nothing inferred)"
     ]
   },
   "tags": [
     "eater:wrapper-parity",
     "axis:distribution-integrity",
     "backing:custodial",
-    "state:INDEXED_CUSTODIAL"
+    "state:UNMEASURED"
   ],
   "unmeasured": [
-    "reserve (custodian-held off this chain; not readable here)"
+    "chain reads (rpc failed; nothing inferred)"
   ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "7f2c79958743025e1bd2e4c9857c9df52e0c360cb6c97bdd48bdf170a8a92ca3",
+  "sha256": "f9abeda4f7b3251bb13056316a2de75561a92968c7012e8af2bbe50249a6d537",
   "sig_ed25519": null
 }

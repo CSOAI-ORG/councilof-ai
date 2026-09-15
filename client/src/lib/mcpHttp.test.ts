@@ -56,7 +56,7 @@ describe("browser MCP request contract", () => {
       : [];
 
     expect(tools.map((tool) => tool.name)).toEqual(ALL_TOOL_NAMES);
-    expect(tools).toHaveLength(12);
+    expect(tools).toHaveLength(13);
     expect(seen).toHaveLength(1);
     expect(seen[0].url).toBe(`${ORIGIN}/mcp`);
     expect(seen[0].headers.get("accept")).toBe(

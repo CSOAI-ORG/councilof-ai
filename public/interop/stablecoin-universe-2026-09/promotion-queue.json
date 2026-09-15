@@ -1,13 +1,13 @@
 {
   "as_of": {
-    "deep_probe": "2026-09-14T09:12:33Z",
+    "deep_probe": "2026-09-15T02:06:49Z",
     "index": "2026-09-11T08:19:34.591714+00:00",
     "readiness": "2026-09-11T08:19:34.591714+00:00"
   },
   "counts": {
-    "anchored": 1,
+    "anchored": 0,
     "asset_specific_x402_settled": 0,
-    "deep_probed": 19,
+    "deep_probed": 18,
     "indexed": 425,
     "issuer_site_registered": 425,
     "measured": 1,
@@ -19,9 +19,10 @@
   },
   "kind": "executable-evidence-backlog",
   "next_action_counts": {
-    "BUILD_REPRODUCIBLE_CHAIN_MEASUREMENT": 18,
-    "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS": 1,
-    "REVIEW_ISSUER_SITE_FOR_ATTESTATION": 406
+    "BUILD_REPRODUCIBLE_CHAIN_MEASUREMENT": 17,
+    "REVIEW_ISSUER_SITE_FOR_ATTESTATION": 406,
+    "RUN_PRIMARY_SOURCE_DEEP_PROBE": 1,
+    "SIGN_ROOT_WITNESS_ANCHOR": 1
   },
   "population": 425,
   "rows": [
@@ -1522,7 +1523,7 @@
         "supply": "one reproducible reader per reported chain at an exact block or ledger"
       },
       "name": "Ripple USD",
-      "next_action": "PUBLISH_ASSET_SPECIFIC_PROTOCOL_DOORS",
+      "next_action": "SIGN_ROOT_WITNESS_ANCHOR",
       "primary_source": "https://ripple.com/stablecoin/",
       "priority_score": 241.458659,
       "rank": 21,
@@ -1541,7 +1542,7 @@
         "verification_state": "MANUALLY_REGISTERED_UNVERIFIED"
       },
       "states": {
-        "anchored": true,
+        "anchored": false,
         "asset_specific_x402_settled": false,
         "deep_probe": "DEEP_PROBED",
         "indexed": true,
@@ -2454,7 +2455,7 @@
     },
     {
       "cost_policy": "public metadata and RPC first; paid inference is not required; payment tests do not promote measurement state",
-      "deep_probe_evidence": "https://councilof.ai/interop/stablecoin-deep-2026-09/mirrors/272.html",
+      "deep_probe_evidence": null,
       "id": "272",
       "indexed_chain_deployments": 2,
       "measurement_contract": {
@@ -2465,7 +2466,7 @@
         "supply": "one reproducible reader per reported chain at an exact block or ledger"
       },
       "name": "YLDS",
-      "next_action": "BUILD_REPRODUCIBLE_CHAIN_MEASUREMENT",
+      "next_action": "RUN_PRIMARY_SOURCE_DEEP_PROBE",
       "primary_source": "https://ylds.com/",
       "priority_score": 171.378635,
       "rank": 40,
@@ -2486,7 +2487,7 @@
       "states": {
         "anchored": false,
         "asset_specific_x402_settled": false,
-        "deep_probe": "DEEP_PROBED",
+        "deep_probe": "NOT_SCHEDULED",
         "indexed": true,
         "issuer_site_registered": true,
         "measured": false,
@@ -7178,7 +7179,7 @@
       "states": {
         "anchored": false,
         "asset_specific_x402_settled": false,
-        "deep_probe": "NOT_SCHEDULED",
+        "deep_probe": "UNMEASURED",
         "indexed": true,
         "issuer_site_registered": true,
         "measured": false,
@@ -19943,8 +19944,8 @@
   ],
   "schema": "csoai.stablecoin-promotion-queue/0.1",
   "signals": {
-    "deep_probed_missing_auditor": 16,
-    "deep_probed_missing_report_date": 18,
+    "deep_probed_missing_auditor": 15,
+    "deep_probed_missing_report_date": 17,
     "issuer_site_only_pending_review": 406,
     "no_source_located": 0,
     "note": "Signals are computed from committed artifacts by this builder; they are not hand-typed.",
