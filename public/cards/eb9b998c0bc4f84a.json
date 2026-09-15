@@ -1,0 +1,47 @@
+{
+  "card": {
+    "as_of": "2026-09-15T01:24:11.442Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Commodities",
+      "holders": 581,
+      "issuer": "GateHub",
+      "issuer_address": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 4132.852267201553,
+      "symbol": "XAU.gh",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "eb9b998c0bc4f84a7966f3eddf37f099fedfa2c06dec8b915df2f9360a382fa3",
+    "sig_ed25519": "016f152a69015c12983d6fea3e2a9aa7c39d09e9dc9c606faba6dd2ace27c915ac49010459595916a799e3bf77ed33388af20f12fc3ab3578f0614c2fb316903",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL XAU.gh public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "011f3ad4f339fc16dd1398efeb4eab71af9effbcf7d6387ce6aba1fcb2f04955",
+    "17c8b66ac5999a2f24a1f5f92b35accff40f6b17e16e7d270e8909f4eb447f82",
+    "bcd4b2f42210fc6289536ffcdf187136965592137832bf515a197ad2f560487d",
+    "8ed025c770951960851fefa4f747684b0357b59b7a9cc8538645fa97548c57d9",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "08e1f502a01a7943ed342546fb7ebb20c90e59b65d876b748997d09e035350f4",
+    "5f5813d7fe061afc5c0526a0fa78e81851365c8557c428a4fe70b03553eca896",
+    "33586ddba2429c0971a856f8141e4df86102808cb7dfc7f72eab3fa443178600",
+    "f28fe97bc7462cf44036c75ad42c54f477d88d6502b2f01978d0659c2183eceb"
+  ]
+}

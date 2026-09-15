@@ -7,6 +7,9 @@
 # explicit shard arguments (gguf-mill-driver2.py <release> <shard> <shards>) and the lanes runbook
 # has no restart recipe for it — a dead mill is logged as ALERT for a human.
 # Liveness is read from `ps -eo pid,args` with a bracketed pattern, never `pgrep -f` (self-match trap).
+# The restart passes --commission-dispatch-report: without it the worker serves GET /commission-dispatch
+# as UNCHECKABLE with every field null, and public /api/worker loses dispatcher telemetry (a manual
+# restart from this command did exactly that on 2026-09-15 01:21Z).
 set -u
 . "$(dirname "$0")/lib.sh"
 [ "${1:-}" = "--now" ] || stamp watchdog 10min || exit 0
@@ -43,7 +46,8 @@ if [ -z "$w_pids" ]; then
       log watchdog "ALERT worker DEAD; NOT restarted: ollama :11434 is not listening"
     else
       cd /workspace/gspc-worker && nohup python3 "$WORKER_PY" --config-dir "$WORKER_JOBS" --state-dir "$WORKER_STATE" \
-        --forever --health-bind 0.0.0.0 --health-port 8888 >> "$WORKER_LOG" 2>&1 &
+        --forever --health-bind 0.0.0.0 --health-port 8888 \
+        --commission-dispatch-report /workspace/lanes/out/commission-dispatch-latest.json >> "$WORKER_LOG" 2>&1 &
       sleep 8
       new=$(pids_of "[r]unpod_gspc_worker.py .*--forever" | tr '\n' ',' | sed 's/,$//')
       hc=$(curl -s -m 5 -o /dev/null -w '%{http_code}' http://127.0.0.1:8888/health 2>/dev/null); hc=${hc:-000}

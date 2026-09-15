@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-15T01:29:09Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "RLUSD",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_supply",
+          "from": 1012959640.631408,
+          "to": 1003959640.63148
+        }
+      ],
+      "ledger_index": 106991875,
+      "observed_at": "2026-09-15T01:29:09Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d60cf9d3ae76405d51e7a6103054b24e1b4b210d276e9d3fc74800bda0a51c70",
+    "sig_ed25519": "56dfd87eb5d4adc05b47e0d71f3ab5147df38fdb5a28853a5b9966cb3a95786452e8fb894eed954bad41b2a10b46ccf92ee1d0c49639f6ce4a5f1b30add14203",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: RLUSD changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:RLUSD"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "a1ce3c3512c3065ea82eb0c532a47c2ba243aaaa2db4d178970f9a19567ef087",
+    "16f5a0eea3e8758bba1ed70a7af916e600fa5522d02d1f75ff7af455e5c4929f",
+    "55ab21b5e664f159a005b9dad3722694a3a44c8478fa29e09ac364f63a006704",
+    "5afb3307cba99ba8138a459e432fb16a1cc3c4fbe7218f91beac87afe62f9838",
+    "890721b15f22613c781ca0266416f1333ccb9a9cc97511598b6ee5cc7a2a63b0",
+    "a3b94354a8bc34cd59dea80b17d9c9be3cbe310a50502d57e7f5642c1f3138d6",
+    "9313c3ee8a24b2416442e97768c4563053ba5a21d36b875a12d4f9bfd7768177",
+    "1651df4ab7a4c93960c96fa403b6bf77047bdb1ddf95a53335c3525aa295d940",
+    "923e03962ff0eac8df329e3718a6bce81f9bef7d8d71a9c2765be6f19189eebd"
+  ]
+}

@@ -76,7 +76,8 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
     "get_root",
     "get_card",
     "verify_inclusion",
-    "x402_trust"
+    "x402_trust",
+    "mcp_trust"
   ],
   "x402_metered": [
     "commission_card",

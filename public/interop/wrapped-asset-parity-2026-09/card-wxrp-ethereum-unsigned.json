@@ -1,8 +1,8 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
-  "subject": "wrapped wXRP on ethereum vs native issuance — INDEXED_CUSTODIAL",
-  "as_of": "2026-09-14T10:58:07.494Z",
+  "subject": "wrapped wXRP on ethereum vs native issuance — UNMEASURED",
+  "as_of": "2026-09-15T03:13:10.870Z",
   "source_urls": [
     "https://ethereum-rpc.publicnode.com"
   ],
@@ -16,9 +16,9 @@
       "symbol": "wXRP",
       "address": "0x39fBBABf11738317a448031930706cd3e612e1B9",
       "chainId": 1,
-      "block": 25975174,
-      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392",
-      "block_time": 1789382615
+      "block": 25976515,
+      "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb",
+      "block_time": 1789398743
     },
     "canonical": {
       "chain": "xrpl",
@@ -31,36 +31,27 @@
     "escrow": null,
     "escrow_name": null,
     "note": "XRP reserve held on the XRP Ledger by the wrapper's custodian; a future XRPL-side read can pair with this supply. INDEXED, no parity claimed.",
-    "reads": {
-      "wrapped_total_supply": {
-        "query": "totalSupply()",
-        "raw": "0x0000000000000000000000000000000000000000000ed88b20f9392362e24000",
-        "raw_sha256": "3b642f245c5076bd8e421ca8c70929c3376adfc6aa651f343d82234d92e54cd0",
-        "atomic": "17947559108324000000000000",
-        "normalized": "17947559.108324000000000000",
-        "decimals": 18
-      }
-    },
+    "reads": {},
     "escrow_over_wrapped": null,
-    "parity_state": "INDEXED_CUSTODIAL",
-    "state": "DISCOVERED",
-    "error": null,
-    "fetched_at": "2026-09-14T10:58:07.494Z",
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "RPC error: Archive requests require a personal token. Get one at: https://www.allnodes.com/publicnode",
+    "fetched_at": "2026-09-15T03:13:10.870Z",
     "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
     "unmeasured": [
-      "reserve (custodian-held off this chain; not readable here)"
+      "chain reads (rpc failed; nothing inferred)"
     ]
   },
   "tags": [
     "eater:wrapper-parity",
     "axis:distribution-integrity",
     "backing:custodial",
-    "state:INDEXED_CUSTODIAL"
+    "state:UNMEASURED"
   ],
   "unmeasured": [
-    "reserve (custodian-held off this chain; not readable here)"
+    "chain reads (rpc failed; nothing inferred)"
   ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "142970eceff9a402cc96c08701b59564036bba0371cb246d6724facdb4a74774",
+  "sha256": "734673cea12a12b433de29f778537928323035a095848c9f6a0c4ab5126a82fb",
   "sig_ed25519": null
 }

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://councilof.ai/schema/card-v0.json",
   "title": "CSOAI public card v0",
-  "description": "Permissionless public-state card \u2014 OUTER surface envelope. Fields: schema, surface, subject, as_of, source_urls, payload, sha256, unmeasured[]; optional sig_ed25519, did, tags. Canonical form: UTF-8 JSON, sorted keys, separators (',', ':'), ensure_ascii=false. SHA-256 over canonical payload only. 3KB hard cap on that payload. For surface gspc.behavioural, GSPC measure nests inside payload \u2014 not on the outer envelope. UNMEASURED[] required for missing fields \u2014 never invent. Additive surface enum 2026-09-01: keep live names; reserve grammar names. Do not fork a second atom. Leave Cobalt alone. Additive: cobol.legacy (CSOAI-ORG COBOL Bridge Layer-0, same root \u2014 not a competitor) + xdc.document.state + owasp.control (cite-only ASI/ASVS coverage leaf \u2014 never cert/endorsement) + genius.reserve (P.L. 119-27 cite-only, no endorsement) + cedulon.recon (EAT Abak/Cedulon population-probe + disposition accounting \u2014 unsigned bank input, never a GSPC axis fill). Microsoft Agent Framework+Channels = supported MCP client; harness stays authority; master plugin one card-v0. Unsigned leaf \u2192 GHA signs \u2192 one writer advances root; chain witnesses root hash only. CEO owns ERC-8004 minute + GENIUS hourly dry-run clocks. Additive 2026-09-02 (revenue rail, metered by x402): ras.commission (a paid request-attestation commission receipt \u2014 cites the settle tx, names the subject/axis, re-serves an existing signed card if one exists, NEVER a score, fresh_run stays UNMEASURED until a published run exists) + evidence.bundle (manifest of an assembled obligation bundle \u2014 lists the signed card shas it wraps, relation always relevant-to, never a conformity determination).",
+  "description": "Permissionless public-state card — OUTER surface envelope. Fields: schema, surface, subject, as_of, source_urls, payload, sha256, unmeasured[]; optional sig_ed25519, did, tags. Canonical form: UTF-8 JSON, sorted keys, separators (',', ':'), ensure_ascii=false. SHA-256 over canonical payload only. 3KB hard cap on that payload. For surface gspc.behavioural, GSPC measure nests inside payload — not on the outer envelope. UNMEASURED[] required for missing fields — never invent. Additive surface enum 2026-09-01: keep live names; reserve grammar names. Do not fork a second atom. Leave Cobalt alone. Additive: cobol.legacy (CSOAI-ORG COBOL Bridge Layer-0, same root — not a competitor) + xdc.document.state + owasp.control (cite-only ASI/ASVS coverage leaf — never cert/endorsement) + genius.reserve (P.L. 119-27 cite-only, no endorsement) + cedulon.recon (EAT Abak/Cedulon population-probe + disposition accounting — unsigned bank input, never a GSPC axis fill). Microsoft Agent Framework+Channels = supported MCP client; harness stays authority; master plugin one card-v0. Unsigned leaf → GHA signs → one writer advances root; chain witnesses root hash only. CEO owns ERC-8004 minute + GENIUS hourly dry-run clocks. Additive 2026-09-02 (revenue rail, metered by x402): ras.commission (a paid request-attestation commission receipt — cites the settle tx, names the subject/axis, re-serves an existing signed card if one exists, NEVER a score, fresh_run stays UNMEASURED until a published run exists) + evidence.bundle (manifest of an assembled obligation bundle — lists the signed card shas it wraps, relation always relevant-to, never a conformity determination).",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -66,7 +66,7 @@
     },
     "payload": {
       "type": "object",
-      "description": "Surface-specific facts only. For gspc.behavioural, nest the GSPC measure here (axis/model/accuracy/status/bank cites). Do not promote measure fields to the outer envelope. cobol.legacy nests copybook/CICS/JCL/VSAM + PII/crosswalk/source_hash. xdc.document.state nests document-state facts. owasp.control nests control coverage cites only \u2014 never a badge. genius.reserve nests P.L. 119-27 cite + reserve disclosure cites \u2014 never endorsement / never board MEASURED. cedulon.recon nests Abak disposition class_counts / conservation rows / package_pin / open_defects \u2014 EAT from public Cedulon probes; optional x402.challenge nest (price/status only; settlement UNCHECKABLE until facilitator receipt exists). Never a GSPC axis fill."
+      "description": "Surface-specific facts only. For gspc.behavioural, nest the GSPC measure here (axis/model/accuracy/status/bank cites). Do not promote measure fields to the outer envelope. cobol.legacy nests copybook/CICS/JCL/VSAM + PII/crosswalk/source_hash. xdc.document.state nests document-state facts. owasp.control nests control coverage cites only — never a badge. genius.reserve nests P.L. 119-27 cite + reserve disclosure cites — never endorsement / never board MEASURED. cedulon.recon nests Abak disposition class_counts / conservation rows / package_pin / open_defects — EAT from public Cedulon probes; optional x402.challenge nest (price/status only; settlement UNCHECKABLE until facilitator receipt exists). Never a GSPC axis fill."
     },
     "sha256": {
       "type": "string",
@@ -116,6 +116,51 @@
         "type": "string"
       },
       "description": "Regulatory tree tags, not licences."
+    },
+    "product_block": {
+      "type": "object",
+      "description": "Machine-readable product metadata. NOT part of the signed payload — lives on the outer envelope. Prices appear only in x402 challenges, never in this block. tier:'free' means every field in this card is freely verifiable; tier:'proof' means additional evidence is behind a 402 door; tier:'feed' means subscription access.",
+      "additionalProperties": false,
+      "properties": {
+        "sku": {
+          "type": "string",
+          "description": "SKU id from functions/api/_skus.ts (e.g. 'issuance', 'evidence_bundle'). Absent when no paid SKU is associated."
+        },
+        "tier": {
+          "type": "string",
+          "enum": [
+            "free",
+            "proof",
+            "feed"
+          ],
+          "description": "Access tier. 'free' = all fields publicly verifiable. 'proof' = additional evidence behind a 402 door. 'feed' = subscription stream."
+        },
+        "free_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Field names available without payment (e.g. ['total', 'staleness_days', 'axis', 'status'])."
+        },
+        "paid_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Field names available after payment (e.g. ['per_chain_splits', 'gap_bps', 'evidence_bundle']). Empty or absent = all fields are free."
+        },
+        "price_ref": {
+          "type": "string",
+          "description": "SKU+tier reference for pricing (e.g. 'issuance:reserve'). The actual price lives in the x402 challenge, NEVER here. This is a lookup key, not a number."
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Anchor references for this card (e.g. ['ots:proof.json', 'rekor:<uuid>', 'xrpl:<tx_hash>']). Empty or absent = not yet anchored."
+        }
+      }
     }
   }
 }

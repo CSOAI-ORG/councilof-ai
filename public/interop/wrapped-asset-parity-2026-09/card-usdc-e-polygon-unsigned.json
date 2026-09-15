@@ -1,8 +1,8 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
-  "subject": "wrapped USDC.e on polygon vs Polygon PoS bridge ERC20Predicate — ESCROW_PARITY_READ",
-  "as_of": "2026-09-14T10:58:07.494Z",
+  "subject": "wrapped USDC.e on polygon vs Polygon PoS bridge ERC20Predicate — UNMEASURED",
+  "as_of": "2026-09-15T03:13:10.870Z",
   "source_urls": [
     "https://polygon-bor-rpc.publicnode.com",
     "https://ethereum-rpc.publicnode.com"
@@ -17,55 +17,42 @@
       "symbol": "USDC.e",
       "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
       "chainId": 137,
-      "block": 93785617,
-      "block_hash": "0x2df3d2b330902d05559ed6269a1a25e2752397cf9ec6ec76af85b6206e6b51b9",
-      "block_time": 1789383459
+      "block": 93811683,
+      "block_hash": "0x4531b40d94e0b1e9ec007b799693787d287a277e02ca1d2b915e0a7ecf611854",
+      "block_time": 1789422558
     },
     "canonical": {
       "chain": "ethereum",
       "symbol": "USDC",
       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       "chainId": 1,
-      "block": 25975174,
-      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392"
+      "block": 25976515,
+      "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb"
     },
     "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
     "escrow_name": "Polygon PoS bridge ERC20Predicate",
     "note": null,
-    "reads": {
-      "wrapped_total_supply": {
-        "query": "totalSupply()",
-        "raw": "0x0000000000000000000000000000000000000000000000000003a7fd75f094cc",
-        "raw_sha256": "81dadf4050bae5a4e5164839cb8ce74f0122ef6be49815290df6236c112e1c6c",
-        "atomic": "1029131977397452",
-        "normalized": "1029131977.397452",
-        "decimals": 6
-      },
-      "escrow_balance": {
-        "query": "balanceOf(0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf)",
-        "raw": "0x0000000000000000000000000000000000000000000000000003b087eee9aa58",
-        "raw_sha256": "d23d1e22d4150dceb73ad6a3b98ff4124b841c48ed7a09f4494d2db69a1452bb",
-        "atomic": "1038522805496408",
-        "normalized": "1038522805.496408",
-        "decimals": 6
-      }
-    },
-    "escrow_over_wrapped": "1.009124",
-    "parity_state": "ESCROW_PARITY_READ",
-    "state": "PROBED",
-    "error": null,
-    "fetched_at": "2026-09-14T10:58:07.494Z",
+    "reads": {},
+    "escrow_over_wrapped": null,
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "RPC error: historical state b523b0ab8f5036a0e43be0cdb05a84e99ea559a41b8a9a03b2f6a721a2cb7cda is not available",
+    "fetched_at": "2026-09-15T03:13:10.870Z",
     "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
-    "unmeasured": []
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ]
   },
   "tags": [
     "eater:wrapper-parity",
     "axis:distribution-integrity",
     "backing:escrow",
-    "state:ESCROW_PARITY_READ"
+    "state:UNMEASURED"
   ],
-  "unmeasured": [],
+  "unmeasured": [
+    "chain reads (rpc failed; nothing inferred)"
+  ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "397c510bd39a810f10f8f1312ed33692f359fa6187e963e2ec930bfb1925f0bd",
+  "sha256": "8599cc910c0c241a4039d7188ceb0873ab1bdb04a43dc3180f3156d5e248307c",
   "sig_ed25519": null
 }

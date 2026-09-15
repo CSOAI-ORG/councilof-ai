@@ -1,5 +1,10 @@
 # gspc-card-verifier
 
+[![npm version](https://img.shields.io/npm/v/gspc-card-verifier)](https://www.npmjs.com/package/gspc-card-verifier)
+[![npm downloads](https://img.shields.io/npm/dm/gspc-card-verifier)](https://www.npmjs.com/package/gspc-card-verifier)
+[![license](https://img.shields.io/npm/l/gspc-card-verifier)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/LICENSE)
+
+
 Check a Council of AI measurement card yourself, offline, without our permission.
 
 Apache-2.0 · zero dependencies · one file if you want it that way · Node 19+ (or Deno/Bun with

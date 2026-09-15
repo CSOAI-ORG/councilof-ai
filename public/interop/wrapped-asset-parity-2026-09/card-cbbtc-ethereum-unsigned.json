@@ -1,8 +1,8 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
-  "subject": "wrapped cbBTC on ethereum vs native issuance — INDEXED_CUSTODIAL",
-  "as_of": "2026-09-14T10:58:07.494Z",
+  "subject": "wrapped cbBTC on ethereum vs native issuance — UNMEASURED",
+  "as_of": "2026-09-15T03:13:10.870Z",
   "source_urls": [
     "https://ethereum-rpc.publicnode.com"
   ],
@@ -16,9 +16,9 @@
       "symbol": "cbBTC",
       "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
       "chainId": 1,
-      "block": 25975174,
-      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392",
-      "block_time": 1789382615
+      "block": 25976515,
+      "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb",
+      "block_time": 1789398743
     },
     "canonical": {
       "chain": "bitcoin",
@@ -31,36 +31,27 @@
     "escrow": null,
     "escrow_name": null,
     "note": "BTC reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
-    "reads": {
-      "wrapped_total_supply": {
-        "query": "totalSupply()",
-        "raw": "0x0000000000000000000000000000000000000000000000000000049065014227",
-        "raw_sha256": "851a4ce4a55e1caf562a464c41ff3e117325532f671a90c0a70fdff2e5bcbe9a",
-        "atomic": "5018216383015",
-        "normalized": "50182.16383015",
-        "decimals": 8
-      }
-    },
+    "reads": {},
     "escrow_over_wrapped": null,
-    "parity_state": "INDEXED_CUSTODIAL",
-    "state": "DISCOVERED",
-    "error": null,
-    "fetched_at": "2026-09-14T10:58:07.494Z",
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "RPC error: Archive requests require a personal token. Get one at: https://www.allnodes.com/publicnode",
+    "fetched_at": "2026-09-15T03:13:10.870Z",
     "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
     "unmeasured": [
-      "reserve (custodian-held off this chain; not readable here)"
+      "chain reads (rpc failed; nothing inferred)"
     ]
   },
   "tags": [
     "eater:wrapper-parity",
     "axis:distribution-integrity",
     "backing:custodial",
-    "state:INDEXED_CUSTODIAL"
+    "state:UNMEASURED"
   ],
   "unmeasured": [
-    "reserve (custodian-held off this chain; not readable here)"
+    "chain reads (rpc failed; nothing inferred)"
   ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "227a64d5c9ff8f4ff3a35a4b20b9703215dfc5ebb46042814c03887a79799ace",
+  "sha256": "f8bf8ed5f7a358b64c0260e2740c4f7a04f2c008dfb68f5eeb3c63580ccc07fb",
   "sig_ed25519": null
 }

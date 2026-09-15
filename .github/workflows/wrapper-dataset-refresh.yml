@@ -1,7 +1,7 @@
 name: wrapper-dataset-refresh
 
-# Auto-refresh the wrapped-asset-parity Hugging Face dataset whenever the source
-# file changes on master. Keeps HF in parity with the live site.
+# Auto-refresh the wrapped-asset-parity Hugging Face dataset whenever the
+# source file changes on master. Keeps HF in parity with the live site.
 #
 # Trigger: push to master touching public/interop/wrapped-asset-parity-latest.json
 # Action:  upload to csoai/wrapped-asset-parity on Hugging Face via huggingface-cli
@@ -11,8 +11,7 @@ on:
     branches: [master]
     paths:
       - 'public/interop/wrapped-asset-parity-latest.json'
-      - 'public/interop/wrapped-asset-parity.jsonl'
-      - 'public/interop/wrapped-asset-parity-README.md'
+      - 'public/interop/wrapped-asset-parity-2026-09/**'
   workflow_dispatch:
 
 concurrency:
@@ -31,8 +30,7 @@ jobs:
         with:
           sparse-checkout: |
             public/interop/wrapped-asset-parity-latest.json
-            public/interop/wrapped-asset-parity.jsonl
-            public/interop/wrapped-asset-parity-README.md
+            public/interop/wrapped-asset-parity-2026-09
           sparse-checkout-cone-mode: false
 
       - uses: actions/setup-python@v5
@@ -53,13 +51,27 @@ jobs:
 
           mkdir -p /tmp/wrapper-upload
 
-          # Copy the JSON and JSONL files
+          # Copy the primary JSON
           cp "$SRC_DIR/wrapped-asset-parity-latest.json" /tmp/wrapper-upload/wrapped-asset-parity.json
-          cp "$SRC_DIR/wrapped-asset-parity.jsonl"      /tmp/wrapper-upload/records.jsonl
 
-          # Copy the README — use the dedicated one if present, else generate a minimal one
-          if [ -f "$SRC_DIR/wrapped-asset-parity-README.md" ]; then
-            cp "$SRC_DIR/wrapped-asset-parity-README.md" /tmp/wrapper-upload/README.md
+          # Generate records.jsonl from the JSON's attests array (one line per record)
+          python3 - <<'PYEOF'
+          import json, pathlib
+          src = json.loads(pathlib.Path("/tmp/wrapper-upload/wrapped-asset-parity.json").read_text())
+          with open("/tmp/wrapper-upload/records.jsonl", "w") as f:
+              for r in src.get("attests", src.get("records", [])):
+                  f.write(json.dumps(r, ensure_ascii=False) + "\n")
+          print(f"wrote {len(src.get('attests', src.get('records', [])))} records to records.jsonl")
+          PYEOF
+
+          # Also copy the per-asset directory if it exists
+          if [ -d "$SRC_DIR/wrapped-asset-parity-2026-09" ]; then
+            cp -r "$SRC_DIR/wrapped-asset-parity-2026-09" /tmp/wrapper-upload/
+          fi
+
+          # README — use a dedicated source if present, else generate a minimal one
+          if [ -f "$SRC_DIR/wrapped-asset-parity-2026-09/README.md" ]; then
+            cp "$SRC_DIR/wrapped-asset-parity-2026-09/README.md" /tmp/wrapper-upload/README.md
           else
             cat > /tmp/wrapper-upload/README.md << 'README'
 ---
@@ -69,6 +81,7 @@ tags:
   - csoai
   - governance
   - ai-act
+  - wrapped-asset-parity
 ---
 
 # Wrapped Asset Parity
