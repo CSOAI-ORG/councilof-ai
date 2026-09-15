@@ -1196,6 +1196,7 @@ function App() {
                   <Route path="/countdown" component={CountdownPage} />
                   <Route path="/art50" component={Art50} />
                   <Route path="/receipt" component={ProofOfReceipt} />
+                  <Route path="/proof-receipt" component={ProofReceipt} />
                   <Route path="/feed" component={FeedLaunchPack} />
                   <Route path="/stablewatch" component={FeedLaunchPack} />
                   <Route path="/custody" component={CustodyDisclosure} />
