@@ -11,25 +11,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 6,
-   "live": 6,
+   "n_probed": 1913,
+   "live": 247,
    "placeholder": 0,
-   "held": 0,
+   "held": 1,
    "dead": 0,
-   "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
+   "uncheckable": 1665,
+   "live_fraction_of_probed": 0.1291,
    "live_examples": [
-    "mrthor102/gun04 (200)",
-    "mrthor102/gun05 (200)",
-    "clear-blue-sky/cto10 (200)",
-    "mrthor102/gun02 (200)",
-    "Adeyemo260/Qwen3.8-Max (200)",
-    "mrthor102/gun01 (200)"
+    "Raivatv24/suzuki-m1-gpt (200)",
+    "asdafee34/my-awesome-model-best-checkpoint (200)",
+    "glory-hyeok/wam-dit4dit-robocasa-kitchen-wan22-v2vstudent-ibot1818-tf025-mimonly-g001-effg",
+    "RyanYr/asyncrl-math_grpo_s40_be4_tn1_ws3-gs1600 (200)",
+    "mradermacher/Angry-Claudius-9B-GGUF (200)",
+    "DASDBCXBC/MyAwesomeModel-TestRepo (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T13:08:24Z",
+  "as_of": "2026-09-12T06:49:50Z",
   "unmeasured": [
    "gspc_score",
    "weights_integrity",
@@ -49,20 +49,25 @@
   },
   "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 1,
-   "live": 1,
-   "placeholder": 0,
+   "n_probed": 139,
+   "live": 135,
+   "placeholder": 3,
    "held": 0,
-   "dead": 0,
+   "dead": 1,
    "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
+   "live_fraction_of_probed": 0.9712,
    "live_examples": [
-    "ai.avasis/quant-research (405)"
+    "agency.ottobot/business-contact-finder (405)",
+    "agency.ottobot/contractor-license-changes (405)",
+    "ai.atako/mcp (401)",
+    "ai.akkrudata/akkrudata (401)",
+    "ai.balancos/mcp (401)",
+    "ai.cnpj/mcp (401)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T12:21:38Z",
+  "as_of": "2026-09-12T06:49:50Z",
   "unmeasured": [
    "tool_behavior",
    "capability_claims",
@@ -82,25 +87,25 @@
   },
   "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 500,
-   "live": 13,
+   "n_probed": 227,
+   "live": 80,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 487,
-   "live_fraction_of_probed": 0.026,
+   "uncheckable": 147,
+   "live_fraction_of_probed": 0.3524,
    "live_examples": [
-    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61164 (tokenURI resolvable)",
-    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61163 (tokenURI resolvable)",
-    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61155 (tokenURI resolvable)",
-    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61160 (tokenURI resolvable)",
-    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61158 (tokenURI resolvable)",
-    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61156 (tokenURI resolvable)"
+    "42161:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:1486 (tokenURI resolvable)",
+    "1:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:50773 (tokenURI resolvable)",
+    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10238 (tokenURI resolvable)",
+    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10230 (tokenURI resolvable)",
+    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10229 (tokenURI resolvable)",
+    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:9216 (tokenURI resolvable)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T08:58:43Z",
+  "as_of": "2026-09-12T06:49:50Z",
   "unmeasured": [
    "reputation_validity",
    "validation_registry_mainnet",
@@ -119,21 +124,25 @@
   },
   "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 2,
-   "live": 2,
+   "n_probed": 13,
+   "live": 13,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "r9Ms1uHdCdjsb6dRj2S1nuFFgvpmE9cXUy (exists)",
-    "rDLKK2DDMMtWWpfq96e9cvVaXfy3gWi21 (exists)"
+    "rXUMMaPpZqPutoRszR29jtC8amWq3APkx (exists)",
+    "rKv5WDWnXoZobskTdhKkZf5KZqy8PdSxLZ (exists)",
+    "rHxyQGMkssTKyf6F4sTik7gyJDHve5jSgY (exists)",
+    "rJfFEy3ZYwsadinHJsyTwveH1hHpsmBk5R (exists)",
+    "rUY6QvosDnP83WMKRcyj96kC3qCSttVoyz (exists)",
+    "rEPrn4DbXvHNBDJghQWUf92NzLU3MURFC3 (exists)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T13:08:24Z",
+  "as_of": "2026-09-12T06:49:50Z",
   "unmeasured": [
    "issuer_identity",
    "reserve_attestation",
@@ -152,21 +161,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 2,
-   "live": 2,
+   "n_probed": 2000,
+   "live": 248,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
+   "uncheckable": 1752,
+   "live_fraction_of_probed": 0.124,
    "live_examples": [
-    "sabbiccan/deteksilamunmangrove (200)",
-    "madarchik/minimax-h3 (200)"
+    "mightygus/unleashed-high-school-band-competition (200)",
+    "Harshavardhan1703/aegis-ai-demo (200)",
+    "EgoisticCoder/Qifu-v1 (200)",
+    "huappp/pphh (200)",
+    "rijal028/securepixel-engine (200)",
+    "hetchyy/quran-ts-job (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T13:07:33Z",
+  "as_of": "2026-09-12T06:49:50Z",
   "unmeasured": [
    "runtime_behavior",
    "hardware_claim",
@@ -185,25 +198,25 @@
   },
   "method": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 7,
-   "live": 7,
+   "n_probed": 408,
+   "live": 408,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "grok-taskflow (200)",
-    "grok-search-rs-pc (200)",
-    "zubeid-youtube-mcp-server (200)",
-    "@hivelore/cli (200)",
-    "@facilio/cli (200)",
-    "@slatesvideo/cli (200)"
+    "mindvest-atlas (200)",
+    "@solomonneas/adguard-mcp (200)",
+    "@nitrostack/cli (200)",
+    "@nitrostack/widgets (200)",
+    "ask-experts-mcp (200)",
+    "@ainyc/canonry (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T13:04:55Z",
+  "as_of": "2026-09-12T06:49:50Z",
   "unmeasured": [
    "install_integrity",
    "malware",
