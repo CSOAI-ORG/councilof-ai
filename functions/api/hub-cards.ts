@@ -373,9 +373,19 @@ export const onRequestGet: PagesFunction = async (ctx) => {
   // dies because it could not name its own host would turn a stale-row fix into
   // an outage.
   let origin = "https://councilof.ai";
+  // ?axis=<id> — an EXACT axis id match on the served rows. Until 2026-09-15 the
+  // parameter was ignored and every cell came back, while /notes/art5-safeguard-gap/
+  // told readers to filter by axis. The filter narrows cells and withdrawn_cells only;
+  // counts keep describing the whole published population, and the response says so.
+  let axisFilter: string | null = null;
   try {
     const u = (ctx as { request?: { url?: string } } | undefined)?.request?.url;
-    if (u) origin = new URL(u).origin;
+    if (u) {
+      const parsed = new URL(u);
+      origin = parsed.origin;
+      const axis = parsed.searchParams.get("axis");
+      if (axis !== null && axis.trim() !== "") axisFilter = axis.trim();
+    }
   } catch {
     /* keep the default */
   }
@@ -497,6 +507,23 @@ export const onRequestGet: PagesFunction = async (ctx) => {
 
   const unreadList = unread.map((r) => ({ index: `${r.name}.jsonl`, reason: r.reason }));
 
+  const onAxis = <T extends { axis: string }>(rows: T[]): T[] =>
+    axisFilter === null ? rows : rows.filter((row) => row.axis === axisFilter);
+  const servedCells = onAxis(cells);
+  const servedWithdrawn = onAxis(withdrawnCells);
+  const filter =
+    axisFilter === null
+      ? undefined
+      : {
+          axis: axisFilter,
+          match: "exact",
+          cells_matched: servedCells.length,
+          withdrawn_cells_matched: servedWithdrawn.length,
+          axes_present: [...new Set(cells.map((c) => c.axis))].sort(),
+          counts_describe:
+            "counts describe the whole published population read by this request, not the filtered rows. cells_matched counts the rows served under this filter; an empty match is not a zero for any model.",
+        };
+
   const body = {
     schema: "csoai.hub-cards/0.2",
     as_of: new Date().toISOString(),
@@ -577,8 +604,9 @@ export const onRequestGet: PagesFunction = async (ctx) => {
       withdrawals_unresolved: unresolvedWithdrawals,
       indexes_unread: unreadList,
     },
-    cells,
-    withdrawn_cells: withdrawnCells,
+    ...(filter ? { filter } : {}),
+    cells: servedCells,
+    withdrawn_cells: servedWithdrawn,
   };
 
   return new Response(JSON.stringify(body, null, 1), {
