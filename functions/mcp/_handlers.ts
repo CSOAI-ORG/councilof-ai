@@ -62,7 +62,9 @@ async function verifyCardThreeState(
       detail: ch.detail,
     })),
     rule: `${origin}/signed/HOW-TO-VERIFY.md`,
-    pinned_key: "did:web:csoai.org#card-attestation-1",
+    // The anchor the Trust anchor check actually matched — never a typed key id. A card signed under
+    // board-attestation-1 used to be labelled card-attestation-1 here (2026-09-15).
+    pinned_key: v.anchor_id ?? null,
     not_a_certification: true,
     note: v.valid
       ? "The body reproduces its own id and the signature verifies under a published key. This is a verified measurement card — not a certification of anything."
