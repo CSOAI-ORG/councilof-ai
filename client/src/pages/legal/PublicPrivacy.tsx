@@ -49,7 +49,7 @@ export default function PublicPrivacy() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-slate-50 px-5 py-14 text-slate-950">
+    <section className="min-h-screen bg-slate-50 px-5 py-14 text-slate-950">
       <article className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
           Operative notice · version 1.2 · 14 September 2026
@@ -147,6 +147,6 @@ export default function PublicPrivacy() {
           </section>
         </div>
       </article>
-    </main>
+    </section>
   );
 }

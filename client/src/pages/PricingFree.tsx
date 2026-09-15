@@ -68,7 +68,7 @@ export default function PricingFree() {
 
   return (
     <div className="min-h-screen bg-[#03110b]">
-      <main className="mx-auto max-w-5xl px-5 py-14 text-slate-100 sm:px-8">
+      <section className="mx-auto max-w-5xl px-5 py-14 text-slate-100 sm:px-8">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">Council of AI — the free rail and the metered rail</p>
         <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight">Verification is free forever. Agents pay per artefact.</h1>
         <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-300">
@@ -155,7 +155,7 @@ export default function PricingFree() {
             Start at <Link href="/products" className="text-emerald-300 underline-offset-2 hover:underline">/products</Link> or write to nicholas@csoai.org.
           </p>
         </section>
-      </main>
+      </section>
     </div>
   );
 }
