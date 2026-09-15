@@ -54,7 +54,7 @@ if (process.argv.includes("--list")) {
   for (const p of manifest.producers) {
     const tag = p.gated ? "GATED " : "ungated";
     console.log(`${tag}  ${p.id}`);
-    if (!p.gated) console.log(`         ${p.reason ?? "(no reason recorded — that is itself a defect)"}`);
+    if (!p.gated) { console.log(`         ${p.volatile ? "VOLATILE" : ""}${p.volatile && p.reason ? " · " : ""}${p.reason ?? "(no reason recorded — that is itself a defect)"}`); }
   }
   process.exit(0);
 }
