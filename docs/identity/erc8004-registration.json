@@ -12,28 +12,41 @@
   },
   "registry": {
     "address": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
-    "type": "ERC1967Proxy",
+    "type": "TransparentUpgradeableProxy (EIP-1967)",
     "event": "Registered(uint256 agentId, string agentURI, address owner)",
-    "existing_registrations": 86263
+    "existing_registrations": "agentId 0x1 owned by 0xa1daee3eb47f05f857aca817523f9ff11d95bd71 (verified via ownerOf)",
+    "implementation": "0x7274e874ca62410a93bd8bf61c69d8045e399c02",
+    "verified_at": "2026-09-14T05:35:00Z"
   },
   "registration": {
     "agent_uri": "https://councilof.ai",
     "description": "CSOAI measurement agent \u2014 GSPC board, signed measurement cards, x402 receipt rail",
-    "calldata": "0x0ec1526d...  # register(string) \u2014 exact calldata to be computed",
+    "calldata": "0xf2c298be0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001468747470733a2f2f636f756e63696c6f662e6169000000000000000000000000",
     "cost_estimate": {
       "gas": 150000,
       "gas_price_gwei": 0.001,
       "eth_cost": 0.00015,
       "usd_cost": 0.56,
       "source": "https://basescan.org/gastracker (2026-09-14)"
-    }
+    },
+    "function_signature": "register(string agentURI)",
+    "selector": "0xf2c298be",
+    "gas_estimate": 150000,
+    "gas_price_gwei": 0.001
   },
   "wallet": {
     "address": "OWNER_TO_SPECIFY",
-    "note": "Owner provides wallet address. Agent does not hold private keys."
+    "note": "Owner provides wallet address. Agent does not hold private keys.",
+    "recommendation": "Use MetaMask wallet 0x212686404a7d1e1fd88f35ed6200c3af7a78ae31 directly OR send gas + to burner 0x6ea00613c15f2463bC10c7188215c4FA6f4943C6",
+    "notes": [
+      "Burner currently has 0 USDC + 0.00489 ETH \u2014 needs funding for gas",
+      "Burner MAY not be authorized on registry admin slot \u2014 needs owner to call directly",
+      "Owner MetaMask wallet has 0.101 ETH on Base \u2014 enough for gas"
+    ]
   },
   "verification": {
     "after_registration": "Query Registered events for agentURI=https://councilof.ai on Base",
-    "expected_event": "Registered(indexed agentId, indexed agentURI, indexed owner)"
+    "expected_event": "Registered(uint256 agentId, string agentURI, address owner)",
+    "one_already_registered": "agentId 0x1 owned by 0xa1daee3eb47f05f857aca817523f9ff11d95bd71 \u2014 separate agent"
   }
 }
