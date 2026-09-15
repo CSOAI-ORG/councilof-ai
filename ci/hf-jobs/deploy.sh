@@ -149,6 +149,11 @@ npm run workspace-launcher:check
 step 'Brand gate — block deploy on any forbidden display string (audit §6.2)'
 node scripts/brand-gate.mjs dist/client
 
+# Mirrors deploy.yml (added there by #2497): runs AFTER prerender so the rendered checks see what a reader sees.
+step 'Content-promise gate — promises and destinations gated together'
+node scripts/content-promise-gate.mjs --selftest
+node scripts/content-promise-gate.mjs dist/client
+
 step 'Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy'
 node scripts/signed-json-guard.mjs dist/client
 

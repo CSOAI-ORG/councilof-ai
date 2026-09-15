@@ -38,6 +38,11 @@ from mill_hub_queue import ITEM_EVIDENCE_SCHEMA, exact_label_menu, load_bank  # 
 CARDS = ROOT / "public" / "interop" / "mill-cards-signed"
 EVIDENCE = ROOT / "public" / "interop" / "mill-evidence"
 LEDGER_NAME = "WITHDRAWN.jsonl"
+# Every item-evidence schema that binds a frozen bank. #2481 bumped mill_hub_queue to 0.3
+# (adds finish_reason) and taught verify_hub_mill_evidence to accept 0.2 and 0.3; this reader
+# kept `!= ITEM_EVIDENCE_SCHEMA`, so the 44 signed 0.2 swarm cards stopped being found and
+# the coverage check passed on an empty set. Same pair as the verifier.
+BANK_BOUND_EVIDENCE_SCHEMAS = ("csoai.mill-item-evidence/0.2", ITEM_EVIDENCE_SCHEMA)
 
 
 class Unreadable(RuntimeError):
@@ -51,7 +56,7 @@ def one_option_cards(cards_dir: Path = CARDS, evidence_dir: Path = EVIDENCE) -> 
         wrap = json.loads(f.read_text(encoding="utf-8"))
         body = wrap.get("body") if isinstance(wrap.get("body"), dict) else {}
         ev = body.get("evidence") if isinstance(body.get("evidence"), dict) else {}
-        if ev.get("schema") != ITEM_EVIDENCE_SCHEMA:
+        if ev.get("schema") not in BANK_BOUND_EVIDENCE_SCHEMAS:
             continue  # binds no frozen bank: not an exact-label mill card
         bank = evidence_dir / str(ev.get("bank_file") or "")
         if not bank.is_file() or hashlib.sha256(bank.read_bytes()).hexdigest() != ev.get("bank_sha256"):
