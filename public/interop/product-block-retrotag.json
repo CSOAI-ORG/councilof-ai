@@ -1,0 +1,22 @@
+{
+  "schema": "csoai.product-block-retrotag/0.1",
+  "as_of": "2026-09-15T02:30:00Z",
+  "note": "Retro-tag index for G5.1. All existing cards are tier:'free' — the board is free. Signed cards cannot be modified, so product_block metadata is served here. New cards carry product_block in their envelope (publish_public_root.py).",
+  "default_tier": "free",
+  "default_product_block": {
+    "sku": "issuance",
+    "tier": "free",
+    "free_fields": [
+      "payload",
+      "subject",
+      "source_urls",
+      "unmeasured",
+      "as_of"
+    ],
+    "paid_fields": [],
+    "price_ref": "issuance:reserve",
+    "anchors": []
+  },
+  "card_count": 312,
+  "overrides": {}
+}
