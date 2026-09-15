@@ -1,0 +1,99 @@
+{
+  "card": {
+    "as_of": "2026-09-15",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.rwa-concentration/0.1",
+      "status": "PROBED",
+      "xrpl_distributed_usd": {
+        "value": 456431738.1130338,
+        "as_of": "2026-09-15",
+        "source": "rwa-xyz-networks.html",
+        "definition": "rwa.xyz networks league table, distributed scope, stablecoins excluded"
+      },
+      "xrpl_represented_usd": {
+        "value": 3975168718.917142,
+        "as_of": "2026-09-15",
+        "source": "rwa-xyz-networks.html",
+        "definition": "rwa.xyz networks league table, represented scope"
+      },
+      "largest_single_asset": {
+        "id_or_name": "JMWH",
+        "represented_usd": 2229136800,
+        "share_pct": 56.08,
+        "as_of": "2026-09-15",
+        "source": "rwa-xyz-network-xrp-ledger.html",
+        "platform": "Justoken"
+      },
+      "rule": "represented is not distributed — never mix scopes",
+      "scope": "rwa.xyz league tables; distributed scope excludes stablecoins per publisher variant",
+      "unmeasured": [
+        "xrpl_represented_usd_3720000000_brief_citation",
+        "jmwh_offchain_legal_identity"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9dbf2399b4032718fbb703e0dfe1509cfa0b5415ea7786030c4be4dc6f7082c6",
+    "sig_ed25519": "52b38197eb20922d0dd92b4b1674e8431ae48bbdcf876cd8d7844fa64edc93849cc55a552c5447e4ee34a450b867554415d111b97750e3f9c11b150ac2e05b06",
+    "source_urls": [
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/figures.json",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-network-xrp-ledger.html",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-networks.html"
+    ],
+    "subject": "XRPL RWA: distributed vs represented, single-asset concentration",
+    "surface": "public.notice",
+    "tags": [
+      "subject:xrpl-rwa",
+      "scope:distributed-vs-represented",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "xrpl_represented_usd_3720000000_brief_citation",
+      "jmwh_offchain_legal_identity"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "3406a37acaa22d558a0d723bd7eb24305ac4ab24eac53673577aa5f66614c5f6",
+    "efa85f9423fe96e739ac69f2e2caacad80e64e2fd52d28d68caaaf8e7aca9a2e",
+    "7eaf900a828789f44ef2712b929085f8857ed96900fb8b080ca353f54c91dc53",
+    "6b0ece840048e45b49509846aae55ab7f7b0081ea9cb97a17cc4abf114219b35",
+    "39bec1c70ba51c7dc86674e7c9cd5389e27c88670bec886ac3538e32b960130f",
+    "a8aefcb2d6a94911a9b842de5c7436863d12593b0606a1aa831fafc86e605dad",
+    "ecc2d55278f19adbe3912b36ed2b14dd6986f23c3157cc697e0e1326bc9bb3d8",
+    "a860a7466ee4ffe20dc8cb3f0fa831bee4e07d8cca0dbad9e10b31f66adc537d",
+    "6037c1fa0bb7ba4a526798d6b0a98a002986ba08706e8a5c2d8d467d94437087"
+  ]
+}

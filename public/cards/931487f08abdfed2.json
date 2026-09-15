@@ -1,0 +1,100 @@
+{
+  "card": {
+    "as_of": "2026-09-15",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.benji-reconciliation/0.1",
+      "status": "PROBED",
+      "number_benji_asset_usd": {
+        "value": 686048784.0549672,
+        "as_of": "2026-09-15",
+        "source": "rwa-xyz-asset-benji.html",
+        "definition": "rwa.xyz circulating asset value of the BENJI token, aggregate across the public chains listed"
+      },
+      "number_fobxx_fund_usd": {
+        "value": 686635362.22,
+        "as_of": "2026-08-31",
+        "source": "sec-nmfp3-2026-08-31.xml",
+        "definition": "SEC Form N-MFP3 netAssetOfSeries for Franklin OnChain U.S. Government Money Fund (series S000067043, single class C000215714), report date 2026-08-31, filed 2026-09-04, accession 0002071691-26-021281"
+      },
+      "number_platform_usd": {
+        "value": 2471872921.6403465,
+        "as_of": "2026-09-15",
+        "source": "rwa-xyz-platform-franklin-benji.html",
+        "definition": "rwa.xyz platform total for Franklin Templeton Benji Investments across all listed platform assets"
+      },
+      "why_they_diverge": "Three publishers, three scopes: token-level circulating value on public chains; fund-level net assets filed with the SEC (transfer-agent books, report date lag); platform-level total across all issuer products including other funds and iBENJI. Different definitions, not a discrepancy.",
+      "daily_tracking": "reconciled each publisher run from figures.json",
+      "unmeasured": [
+        "fobxx_fund_usd_844000000_brief_citation",
+        "bnb_chain_benji_supply",
+        "primary_register_reconciliation"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "931487f08abdfed241baf07181ef037ab6cc306247c7f9497343103d722e6e45",
+    "sig_ed25519": "aa030136575beb428ba9716df5f4f7ed83c6ebfa605cec8df850c1e62c0bb3f33549e3ffc35594ca4b8a758760a0968a4cc32d2601f952d668b68c861134f70e",
+    "source_urls": [
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/figures.json",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-asset-benji.html",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-platform-franklin-benji.html",
+      "https://councilof.ai/interop/rwa-reconciliation-2026-09/mirrors/sec-nmfp3-2026-08-31.xml"
+    ],
+    "subject": "BENJI: three published numbers, three definitions",
+    "surface": "public.notice",
+    "tags": [
+      "subject:benji-fobxx",
+      "scope:three-definitions",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "fobxx_fund_usd_844000000_brief_citation",
+      "bnb_chain_benji_supply",
+      "primary_register_reconciliation"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "4d73c64437d896fedaa6031ad68dbd3a2769ad4c79247f004e41596d3b9c0716",
+    "616a55bde4c8843ecd283cd17030f4bae3ca48fb301b10e09d0d42cfdb9e4e09",
+    "c1dd4f947100d645abf931eaf379cf8af7262188133834558eac0bef35086eb6",
+    "d782b68fb351b672ea71c2078dbbc9289d6d59b61facb1c808222860b18a2e50",
+    "2ff882b87dffd4f7cc6dfa5b07dfc0ec762aa4f4b24cff7ea17d61c85fd98568",
+    "2f4491c83fb7874f7555e933b61013efa9d09e8cc65aade276364486925044f4",
+    "ecc2d55278f19adbe3912b36ed2b14dd6986f23c3157cc697e0e1326bc9bb3d8",
+    "a860a7466ee4ffe20dc8cb3f0fa831bee4e07d8cca0dbad9e10b31f66adc537d",
+    "6037c1fa0bb7ba4a526798d6b0a98a002986ba08706e8a5c2d8d467d94437087"
+  ]
+}

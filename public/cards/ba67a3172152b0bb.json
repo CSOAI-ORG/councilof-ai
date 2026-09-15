@@ -1,0 +1,137 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:48Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "attestation_pdf_filter": "attest|examination|reserve",
+      "attestation_pdf_latest": [],
+      "attestation_pdf_links_n": 0,
+      "attestation_pdf_undated_n": 0,
+      "axes": [
+        "reserve-attestation",
+        "stablecoin-attestation-cadence",
+        "custody-disclosure",
+        "regulatory-framework"
+      ],
+      "cadence": null,
+      "fetched_at": "2026-09-02T07:56:48Z",
+      "inputs_sha256": "fca11a65baf9369563e4e908959f6f4acd1f5782b0ee627891e4d9ba83e006a1",
+      "issuer": "Ondo Finance",
+      "kind": "csoai.eater.issuer-disclosure/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "pages": [
+        {
+          "body_state": "HASHED",
+          "fetched_at": "2026-09-02T07:56:47Z",
+          "http": 200,
+          "n_bytes": 181068,
+          "robots": "allowed",
+          "sha256": "7d307d9e3a9b2105e4fe193ab360435ff42b57f8c328c6fae11e354fcbdc30f9",
+          "url": "https://app.ondo.finance/legal-documentation/us"
+        },
+        {
+          "body_state": "HASHED",
+          "fetched_at": "2026-09-02T07:56:48Z",
+          "http": 200,
+          "n_bytes": 744892,
+          "robots": "allowed",
+          "sha256": "a27b62b311cae84fc3e6fbda759d4776d2cfb2eee5283b7bd0787d2253f592a4",
+          "url": "https://ondo.finance/ousg"
+        }
+      ],
+      "pdf_links_n": 0,
+      "state": "PROBED",
+      "symbols": [
+        "OUSG"
+      ],
+      "term_hits": {
+        "custody_terms": 8,
+        "named_accounting_firms": 0,
+        "regulatory_terms": 31,
+        "reserve_attestation_terms": 14
+      },
+      "term_lexicon": {
+        "custody_terms": "custodian|custody|trust company|bny mellon|bank of new york|state street|coinbas",
+        "named_accounting_firms": "deloitte|pricewaterhousecoopers|\\bpwc\\b|\\bkpmg\\b|ernst\\s*&\\s*young|\\bbdo\\b|grant",
+        "regulatory_terms": "\\bmica\\b|e-money token|electronic money|\\bnydfs\\b|new york department of financi",
+        "reserve_attestation_terms": "attestation|attested|proof of reserves?|reserve report|examination report"
+      },
+      "unmeasured": [
+        "attestation_pdf_bodies (not opened)",
+        "reserve_composition",
+        "custodian_confirmation (name presence only)",
+        "regime_confirmation (term presence only)",
+        "risk_verdict (counsel)"
+      ],
+      "writes_board": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ba67a3172152b0bba021311b910af85f4c40a1f7b320b8d61e53a27cb9c44653",
+    "sig_ed25519": "85da099e6ca569bd52bd231d463458c9ed3401fda8e15c4f62eadc6f33accb95edf94abdf1a402c175323e28869cfdd4856c9c9c71502efc762aee71db6cb608",
+    "source_urls": [
+      "https://app.ondo.finance/legal-documentation/us",
+      "https://ondo.finance/ousg"
+    ],
+    "subject": "Ondo Finance disclosure page facts: 0 attestation PDF links, term hits, cadence — PROBED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:reserve-attestation",
+      "axis:stablecoin-attestation-cadence",
+      "axis:custody-disclosure",
+      "axis:regulatory-framework",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "attestation_pdf_bodies (not opened)",
+      "reserve_composition",
+      "custodian_confirmation (name presence only)",
+      "regime_confirmation (term presence only)",
+      "risk_verdict (counsel)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "c9dbe7214a561b86df52e10f1e70af88b710e42e63787a828b640f113f86e8aa",
+    "bb232f1b166336ec6d0f08510d0893cd6f831d39a6f06448c31dc223656b07c6",
+    "3bc3265c71a791d03b87534056704cf48ad50e2e11c0c4fe01ef2628509dbc12",
+    "607a8283d4e46acbd347f39abedb492649f7db89daa8e43cd3b98066ab590d94",
+    "60674fe01021d2d4c84ef3f2dd7ce99347855592de281c60fb47bd4e7777fd72",
+    "8e765ff2924b51296c1ff9d64bb5b07b706837c903782362cb60f5d685fd777f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

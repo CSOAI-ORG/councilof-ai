@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-09-12T09:23:18Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "google",
+      "surface": "model_cards",
+      "url": "https://modelcards.withgoogle.com/model-cards",
+      "prev_sha256": "6ff3fdb297517ad379e9f66740d88acae69b1cb30f19de4bf410c11bbd48b473",
+      "new_sha256": "6a87af57b6aaf174445de993fd9b02e70c88acc7662d5c8a7a3ea389fdd64e65",
+      "prev_bytes_sha256": "ef5f1da1f8a4e1bbebf8e8cb123e72f6e8c432c119eb5f308bbc20cb6ce71524",
+      "new_bytes_sha256": "049605582dfb0d349b3ae5a6375f541943f73f45a1941e5dfd4820a302752720",
+      "prev_fetched_at": "2026-09-05T09:06:18Z",
+      "fetched_at": "2026-09-12T09:23:18Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 138670,
+        "new": 140268
+      },
+      "etag": {
+        "prev": "\"O2a0og\"",
+        "new": "\"bCRXtg\""
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "db37a3df0f42db8e3cf7392931a0cf5d40911c382540ac0cec85dcb6865dbbff",
+    "sig_ed25519": "e0bf314d83d86cc0585f14a3777aea38cc34f4b3443e553db32f28c27720f0521be2182cc996ea4a7e518e8d173ddfa777e071d7581150986d01c0dbaf263803",
+    "source_urls": [
+      "https://modelcards.withgoogle.com/model-cards"
+    ],
+    "subject": "Google — model_cards: bytes changed 2026-09-12",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:google",
+      "surface:model_cards",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "4bfe4fde71cbe8a0c264e03bba211ed2ee0ceda2c0ab08abd8bb89a987ae05e5",
+    "a64db08640c858db89eaecc94e66c66ac559347bda3f378e3262676348e8721e",
+    "96f93e1243eaf7e2223d729661eadbd9e871cb190fb05b2f278c4cc05838afcd",
+    "d974264b99704c0632cf32ea4a06333ac3d56f8fcb1d14e1cc120bbefc504b1d",
+    "85db8ec801b3cd3c98d254a6936b4d6dbf97ede68aba7b22d55b6ea6aac3fa3c",
+    "47e2c4b832c844942f1452f03f609e6b27d07efbc14ad32f94480c07511cf98d",
+    "127f04503f4449b42c0b4275f8b1f2f217221ca72bd6372c43f1d0c07b370acb",
+    "30fbe3147665515a72d22bece741704c0d0640b0fbf93a394f271c580db0c31e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

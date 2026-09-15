@@ -1,0 +1,110 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:42Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axes": [
+        "swift-rails"
+      ],
+      "bank": "Standard Chartered",
+      "bank_id": "standard-chartered",
+      "census_as_of": "2026-09-01",
+      "census_status": "LIVE",
+      "event_date": "2026-08-19",
+      "fetched_at": "2026-09-02T07:56:42Z",
+      "inputs_sha256": "b8a30e0a452d1d4e94fa99dff9047865b73d1183d0b44848449f9375a0fbc206",
+      "kind": "csoai.eater.swift-rail/0.1",
+      "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "named_in_fetched_body_n": 1,
+      "not_a_client": true,
+      "not_a_grade": true,
+      "settlement_still_off_chain": true,
+      "sources": [
+        {
+          "fetched_at": "2026-09-02T07:56:42Z",
+          "http": 200,
+          "id": "sc_live_19aug",
+          "n_bytes": 131983,
+          "named_in_body": "PASS",
+          "published": "2026-08-19",
+          "sha256": "fa6400a99c4d89a438a0ae7f03f34c3c6f799a8a60d36786a7c457f83542b8f8",
+          "url": "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/"
+        }
+      ],
+      "state": "PROBED",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "on_ledger_object",
+        "transaction_recompute"
+      ],
+      "writes_board": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "30cc38166496db5d5a798fe0e7225ea025f70a0f22eb1752a5d21ae501a5b499",
+    "sig_ed25519": "692f9691c9c325746c16addedaf42a54ed27a7fd6ab4e05ee1aa1563800d0df81ffe28227989a1b16a12e7efa4f74a496953808cdcc209b2caeee607240dbe09",
+    "source_urls": [
+      "https://councilof.ai/api/swift",
+      "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/"
+    ],
+    "subject": "Swift shared-ledger census: Standard Chartered — LIVE; named in 1/1 fetched notice bodies",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:swift-rails",
+      "census:live",
+      "not-a-client",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "on_ledger_object",
+      "transaction_recompute"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "bc031eb61826435169043f9847ac9bf7cc69084f8d6b02be119c19e5f4277904",
+    "a1f1910303f618a0f797e79aefeb7ac9fef7222d68c885ea2ab8da83cb50c6da",
+    "b6506e4ceecf5efadc3e63f2a2cbb0506fda050d5b3f6b933f219bc1fc8476fe",
+    "232e2f98fc669f422a8a5b592e54e390d92f7c75d35e2a9ec68bdde482b0fafc",
+    "283153de0c137c116f3d72b21a55b95ba5c248f02bbcdb9aa74f78ea5ef106c0",
+    "38c685362b811f192b2ae112020e9f175c2f97ede41d686bdadca1db9b948794",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

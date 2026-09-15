@@ -1,0 +1,88 @@
+{
+  "card": {
+    "as_of": "2026-09-15T02:06:49Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "250",
+      "symbol": "RLUSD",
+      "attestation_page": "https://ripple.com/stablecoin/",
+      "auditor": null,
+      "cadence_claimed": "monthly",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "c2a443036c5e2e996031fd32f809268cd9d6ba8528b8bb12c00c7ca1deb8bc9f",
+      "excerpt": "s Ripple provide for RLUSD? Ripple provides transparency measures for RLUSD by publishing monthly third-party attestations of RLUSD's reserve assets. These repo",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "staleness"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "86a2e8ebf2d734d62e86b6d9f1d2980b98688aad87c383b2d5541e79112fc338",
+    "sig_ed25519": "bb2c4d1abea42e44c635d8f3c8123d1f31ec885de73d5934aba007d794d3c4959e3cc2502e495ee4f8286f2e7dd0b857cf295fc377b2d857316b277f75609200",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://ripple.com/stablecoin/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: RLUSD",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "staleness"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "62428a0d3e7f85fae93b9d8a743b8e805b61288088c3b8c6a8a6a53c286b7893",
+    "47c756e96b5f9f958d507b770ea6ac55731e1bfb16d440dcd026c57923d5b8d4",
+    "6d38e0958adcb2f4357ce4f0f027bebe291b893bae66f9951d4782dff9bed433",
+    "8d19a6234118e0b4426357af537f56afa7bd9825b148a8e952c7e446bd776c7c",
+    "2ff882b87dffd4f7cc6dfa5b07dfc0ec762aa4f4b24cff7ea17d61c85fd98568",
+    "2f4491c83fb7874f7555e933b61013efa9d09e8cc65aade276364486925044f4",
+    "ecc2d55278f19adbe3912b36ed2b14dd6986f23c3157cc697e0e1326bc9bb3d8",
+    "a860a7466ee4ffe20dc8cb3f0fa831bee4e07d8cca0dbad9e10b31f66adc537d",
+    "6037c1fa0bb7ba4a526798d6b0a98a002986ba08706e8a5c2d8d467d94437087"
+  ]
+}

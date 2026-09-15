@@ -1,0 +1,103 @@
+{
+  "card": {
+    "as_of": "2026-09-15T03:13:10.870Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdc:zksync-era",
+      "backing_model": "escrow",
+      "wrapped": {
+        "chain": "zksync-era",
+        "symbol": "USDC",
+        "address": "0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E",
+        "chainId": 324,
+        "block": 71972086,
+        "block_hash": "0xb7c5e3e22444470a55980784fe042c30848f04400bf7f217c0251bab0a63f904",
+        "block_time": 1789428443
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "block": 25976515,
+        "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb"
+      },
+      "escrow": "0x5797EA1b374f2A4F1E8BcE5156c3962b78E1C46a",
+      "escrow_name": "zkSync Era L1 USDC Bridge (native bridge)",
+      "note": null,
+      "reads": {},
+      "escrow_over_wrapped": null,
+      "parity_state": "UNMEASURED",
+      "state": "UNMEASURED",
+      "error": "empty eth_call result from 0x1d17CBcF0D6D143135aE9C6B21C1fC6D80C59e3E",
+      "fetched_at": "2026-09-15T03:13:10.870Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "chain reads (rpc failed; nothing inferred)"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d1e356489673a66dd274691d75ebcc13abfdbc66c301aabdd6554c6805662a0e",
+    "sig_ed25519": "6a25da46b8f986ea147137444b8a067df7dfb73514b86167108f0c7d0c327ad88298b4111f4fbb4dbd02168f269910630eef6d8f4d031fb40ac91d5ee81dd204",
+    "source_urls": [
+      "https://mainnet.era.zksync.io",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDC on zksync-era vs zkSync Era L1 USDC Bridge (native bridge) — UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:escrow",
+      "state:UNMEASURED"
+    ],
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "a14a681da4432f95b688bdd79f442426c903ce57d883659b8474eecec7c1aaac",
+    "4c9f20701157ca5fbe260f74e1496b95ea0a99c56b1a4f574276753d7f4862c2",
+    "8b946df908140b4de9fd31d988e0b4e3414bd8e36e6b296f000729a66b2768e7",
+    "aa94e4f6dd42366f2bf303066318681dce7b4cb95861dc03c866830d1b11397d",
+    "2b5d1ef96b712336fadd1f185d855b18824e021b653158c623fb23eae608958a",
+    "caccc32852ee1a89818d979283dbac8b9db15bc5f7ebe87d82fcfb8738f1a5e6",
+    "e9599b621fc44fd1cec03e82273734f96c50b207dd4b6fea83ffe9c460545a8d",
+    "30fbe3147665515a72d22bece741704c0d0640b0fbf93a394f271c580db0c31e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

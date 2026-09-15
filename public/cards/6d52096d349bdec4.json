@@ -1,0 +1,148 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:55:45Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "absent": [],
+      "account_root": {
+        "domain": "bitstamp.net",
+        "domain_hex": "6269747374616D702E6E6574",
+        "flags": 10092544,
+        "flags_decoded": {
+          "allow_trustline_clawback": false,
+          "default_ripple": true,
+          "deposit_auth": false,
+          "disable_master": true,
+          "disallow_xrp": true,
+          "global_freeze": false,
+          "no_freeze": false,
+          "require_auth": false,
+          "require_dest_tag": true
+        },
+        "ledger_index": 106707164,
+        "rpc": "https://xrplcluster.com/",
+        "sequence": 4827
+      },
+      "axes": [
+        "xrpl-issuers",
+        "distribution-integrity"
+      ],
+      "checked": [
+        "account_info.Domain (validated ledger)",
+        "gateway_balances.obligations",
+        "xrpscan well-known directory",
+        "GET https://bitstamp.net/.well-known/xrp-ledger.toml"
+      ],
+      "directory": {
+        "fetched_at": "2026-09-02T07:55:32Z",
+        "listed": false,
+        "sha256": "d6d74f001477d2b803ce42defbe91a9b59b5ff35b228f833582b3c5256afe92f",
+        "url": "https://api.xrpscan.com/api/v1/names/well-known"
+      },
+      "directory_domain_toml": null,
+      "fetched_at": "2026-09-02T07:55:45Z",
+      "inputs_sha256": "8580e4af416e6941028f5b111b35f2e3bbf2865b762d724a2051a071f691460b",
+      "issuer": "Bitstamp",
+      "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+      "kind": "csoai.eater.xrpl-issuer/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "onchain_obligation": {
+        "currency_code": "EUR",
+        "currency_decoded": "EUR",
+        "ledger_index": 106707164,
+        "method": "gateway_balances.obligations (validated ledger)",
+        "rpc": "https://xrplcluster.com/",
+        "value": "4960395.483820634"
+      },
+      "reader": {
+        "as_of": "2026-09-02T07:13:27Z",
+        "holders": 430,
+        "sig_ed25519_present": true,
+        "supply": 4960396,
+        "unmeasured": [
+          "strict_two_way_toml"
+        ],
+        "url": "https://councilof.ai/api/xrpl",
+        "verified_via": "XRPLMeta registry"
+      },
+      "state": "PROBED",
+      "symbol": "EUR.bs",
+      "toml": {
+        "error": "HTTP 404",
+        "fetched_at": "2026-09-02T07:55:45Z",
+        "http": 404,
+        "url": "https://bitstamp.net/.well-known/xrp-ledger.toml"
+      },
+      "two_way_domain": "UNCHECKABLE",
+      "two_way_reason": "TOML not retrievable (HTTP 404); never counted as FAIL",
+      "unmeasured": [
+        "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+      ],
+      "writes_board": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6d52096d349bdec4bffc4bb858c58ce2e6b19ac05fa43c69e7faa39dc281045a",
+    "sig_ed25519": "66eb9b2677b7c02dcf31f386e999562987390a7eec7df25b36fc012105abe0c42dd68d53535ce99ab56ec053a1e0db80bf3d42c1395218746c2d323b2aaf8601",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://api.xrpscan.com/api/v1/names/well-known",
+      "https://bitstamp.net/.well-known/xrp-ledger.toml"
+    ],
+    "subject": "XRPL EUR.bs (Bitstamp) two-way domain UNCHECKABLE + on-chain obligation",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:xrpl-issuers",
+      "axis:distribution-integrity",
+      "two-way:UNCHECKABLE",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "4e9627ceb92875e5cc71dd662f2d50ec646114a22b2c63cc9ed9ecc768f4e7e1",
+    "1874d450510ded48b44964b48398e90d3e4bd30802887851ab13a6c6a4816193",
+    "e6e768c1c01f2f1a91aaa4d3dfd1095f4d4ddaeb0d8e6a47f94e04d27e8d09e0",
+    "232e2f98fc669f422a8a5b592e54e390d92f7c75d35e2a9ec68bdde482b0fafc",
+    "283153de0c137c116f3d72b21a55b95ba5c248f02bbcdb9aa74f78ea5ef106c0",
+    "38c685362b811f192b2ae112020e9f175c2f97ede41d686bdadca1db9b948794",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

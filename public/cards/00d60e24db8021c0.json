@@ -1,0 +1,128 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:49Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "attestation_pdf_filter": "attest|examination|reserve|lastro",
+      "attestation_pdf_latest": [],
+      "attestation_pdf_links_n": 0,
+      "attestation_pdf_undated_n": 0,
+      "axes": [
+        "reserve-attestation",
+        "stablecoin-attestation-cadence",
+        "custody-disclosure",
+        "regulatory-framework"
+      ],
+      "cadence": null,
+      "fetched_at": "2026-09-02T07:56:49Z",
+      "inputs_sha256": "ad263ec8fab9b961fdd2c852817b8fb7c9a1e4c0935ae705619830908dd6847f",
+      "issuer": "Braza Bank",
+      "kind": "csoai.eater.issuer-disclosure/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "pages": [
+        {
+          "body_state": "HASHED",
+          "fetched_at": "2026-09-02T07:56:49Z",
+          "http": 200,
+          "n_bytes": 198005,
+          "robots": "no-robots",
+          "sha256": "9d2a5cf5ad9b7ee25c7f1f4620c1e65b3c389b5de696eabe97d5eb169ec06a96",
+          "url": "https://tokens.brazacripto.com.br"
+        }
+      ],
+      "pdf_links_n": 11,
+      "state": "PROBED",
+      "symbols": [
+        "USDB",
+        "BBRL"
+      ],
+      "term_hits": {
+        "custody_terms": 0,
+        "named_accounting_firms": 0,
+        "regulatory_terms": 2,
+        "reserve_attestation_terms": 0
+      },
+      "term_lexicon": {
+        "custody_terms": "custodian|custody|trust company|bny mellon|bank of new york|state street|coinbas",
+        "named_accounting_firms": "deloitte|pricewaterhousecoopers|\\bpwc\\b|\\bkpmg\\b|ernst\\s*&\\s*young|\\bbdo\\b|grant",
+        "regulatory_terms": "\\bmica\\b|e-money token|electronic money|\\bnydfs\\b|new york department of financi",
+        "reserve_attestation_terms": "attestation|attested|proof of reserves?|reserve report|examination report"
+      },
+      "unmeasured": [
+        "attestation_pdf_bodies (not opened)",
+        "reserve_composition",
+        "custodian_confirmation (name presence only)",
+        "regime_confirmation (term presence only)",
+        "risk_verdict (counsel)"
+      ],
+      "writes_board": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "00d60e24db8021c06027ad951994dde973cf08defe156592df739c2823ef1045",
+    "sig_ed25519": "0c6a6907316c36649316eceb580da3f485e81fc7253a0369be59c949a9a4d6eaafc6d9e770a961bd256007348d33bb8c61cbe733f4f09d591b6440610b9fc502",
+    "source_urls": [
+      "https://tokens.brazacripto.com.br"
+    ],
+    "subject": "Braza Bank disclosure page facts: 0 attestation PDF links, term hits, cadence — PROBED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:reserve-attestation",
+      "axis:stablecoin-attestation-cadence",
+      "axis:custody-disclosure",
+      "axis:regulatory-framework",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "attestation_pdf_bodies (not opened)",
+      "reserve_composition",
+      "custodian_confirmation (name presence only)",
+      "regime_confirmation (term presence only)",
+      "risk_verdict (counsel)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "384d4865750d9ddf120888e75863cc91d02f56d50efb682e67857cdd0b2ba5c9",
+    "563c2a3cd33a9a82199e0fedd10982bee8849231e301be2e3a297903af644525",
+    "fbe9721b6980aa7bd285403f4ad848cc1365768bc85947ddc89db1152eb6af32",
+    "607a8283d4e46acbd347f39abedb492649f7db89daa8e43cd3b98066ab590d94",
+    "60674fe01021d2d4c84ef3f2dd7ce99347855592de281c60fb47bd4e7777fd72",
+    "8e765ff2924b51296c1ff9d64bb5b07b706837c903782362cb60f5d685fd777f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

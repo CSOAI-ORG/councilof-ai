@@ -1,0 +1,82 @@
+{
+  "card": {
+    "as_of": "2026-09-01T00:00:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "gspc.crosswalk/0.1",
+      "status": "MAPPING",
+      "not_a_legal_determination": true,
+      "not_a_certification": true,
+      "mou": "CAISI (NIST) x GSA, signed 18 Mar 2026, for the USAi platform",
+      "public_behavioural_axes": 14,
+      "crosswalk_artifact": "https://councilof.ai/interop/nist-airmf-gspc-crosswalk.json",
+      "open_docket": "NIST 'Trustworthy AI in Critical Infrastructure' Profile - Community of Interest (OPEN; mailing list + Slack; concept note 7 Apr 2026)",
+      "closed_docket": "GSA GSAR clause 552.239-7001 comment window CLOSED 2026-08-03 - do not file there"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "878fa508ebb6153e847a5bbd340b06a89f5455bf19c7c23eee87e682643314ef",
+    "sig_ed25519": "84596fe1e3b890f9e54967898fd014812d2ec573914520e1356eeffc349cca42bdef38cd573de4be030d39ce285b4c27252bd90b5471c6c48585d27bbd04d80e",
+    "source_urls": [
+      "https://www.nist.gov/news-events/news/2026/03/caisi-signs-mou-gsa-boost-ai-evaluation-science-federal-procurement-through",
+      "https://www.gsa.gov/about-gsa/newsroom/news-releases/gsa-and-nist-partner-to-boost-ai-evaluation-science-in-federal-procurement-03182026",
+      "https://www.nist.gov/programs-projects/concept-note-ai-rmf-profile-trustworthy-ai-critical-infrastructure",
+      "https://www.federalregister.gov/documents/2026/06/17/2026-12205/general-services-acquisition-regulation-acquisition-of-information-and-communication-technology",
+      "https://councilof.ai/interop/nist-airmf-gspc-crosswalk.json"
+    ],
+    "subject": "Crosswalk: NIST AI RMF -> GSPC axes (CAISI x GSA MOU, 18 Mar 2026)",
+    "surface": "public.notice",
+    "tags": [
+      "framework:nist-ai-rmf",
+      "coverage:crosswalk",
+      "docket:open-nist-ci-profile",
+      "genai-mil"
+    ],
+    "unmeasured": [
+      "legal_conformity_determination",
+      "certification_of_any_model"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "9c234eb709a655e48c7e69c203397f76bbf311962a494675c4cc53f8411b238d",
+    "d5f7a7e169ba30b8a1559dff67b961b925235a642b65c4d02cba871788a9abf2",
+    "fbe9721b6980aa7bd285403f4ad848cc1365768bc85947ddc89db1152eb6af32",
+    "607a8283d4e46acbd347f39abedb492649f7db89daa8e43cd3b98066ab590d94",
+    "60674fe01021d2d4c84ef3f2dd7ce99347855592de281c60fb47bd4e7777fd72",
+    "8e765ff2924b51296c1ff9d64bb5b07b706837c903782362cb60f5d685fd777f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

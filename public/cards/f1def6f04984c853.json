@@ -1,0 +1,78 @@
+{
+  "card": {
+    "as_of": "2026-09-14T13:21:37Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "discovered_mismatch": 0,
+      "discovery_state": "PROBED",
+      "kind": "csoai.x402-door-conformance/0.1",
+      "n_doors": 11,
+      "not_delivery_proof": true,
+      "probed_conformant": 11,
+      "report": "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json",
+      "state": "PROBED",
+      "uncheckable": 0
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f1def6f04984c8533d712ddb14a2ff875e61751f9dfe08b5e41a29d0a2457834",
+    "sig_ed25519": "1c7c45642e8636d3742093859072d89ceab9ea2e9d8b9f9b92fac0cd34b3bec23191152a96b3fd46f23c3cfe1f7ee89ae5118d773b3a1aa3a4c798b72f6c9204",
+    "source_urls": [
+      "https://councilof.ai/.well-known/x402.json",
+      "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json"
+    ],
+    "subject": "x402 door conformance round — 9 doors, challenge shape",
+    "surface": "public.notice",
+    "tags": [
+      "x402",
+      "conformance",
+      "x402-door-conformance-2026-09"
+    ],
+    "unmeasured": [
+      "fulfillment_bytes",
+      "settlement_classification_from_this_probe"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "252d1a28e9d9218818e776fe193eaafa75105405da290a94b17b6d32fc981a34",
+    "255975bf1ff1f70afc5d6843b36623abd06ad79aa3491f9f90545a724329421e",
+    "b7726a8ecf8a606f1baa63d4cff0c1f6055e08391f4284de870d8b703033b70e",
+    "a8664263c641796b2836c08c82d8789506ce0c24399761f88fdee82e6e5dfdff",
+    "a66497701eedff78cac1a822134adc542042b6a86bb94432d3ab182065a742e2",
+    "eabb451f42284199f3d0aaba0280251ed1deb3ad9a4c6c6a3bb2a299f8d98500",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

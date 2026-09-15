@@ -1,0 +1,85 @@
+{
+  "card": {
+    "as_of": "2026-08-31T07:38:20Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "chains_claimed_public": [
+        "Stellar",
+        "Polygon",
+        "Avalanche",
+        "Base",
+        "Arbitrum",
+        "Aptos"
+      ],
+      "graphql": "DARK",
+      "xrpl_toml": "ABSENT",
+      "stellar_toml": "HAVE",
+      "stellar_toml_http": 200,
+      "not_issuer_7": true
+    },
+    "product": {
+      "sku": "benji-supply",
+      "tier": "free",
+      "free_fields": [
+        "asset_total",
+        "fobxx_total",
+        "platform_total",
+        "delta"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c592d00146d3e8b69e9f9c097f45ae415c02c54a56c9e6b5f720206caf55ed33",
+    "sig_ed25519": "5c4946634191b95622c3749d7a051dd4285f0cea7f6091a72228760a665926a833aac258b563164496072cb385e0884b8a25d7dab102f0605edc146c6f28c508",
+    "source_urls": [
+      "https://www.theblock.co/news/defi/2026-08-12-sec-clears-franklin-templeton-funds-use-onchain-benji-system-cash-management-411654",
+      "https://www.franklintempleton.com/.well-known/stellar.toml"
+    ],
+    "subject": "BENJI/FOBXX on-chain supply (public layer)",
+    "surface": "benji.onchain.supply",
+    "tags": [
+      "jurisdiction:US",
+      "framework:sec-staff-no-action",
+      "subject:BENJI"
+    ],
+    "unmeasured": [
+      "onchain_supply_per_chain",
+      "dune_query",
+      "graphql",
+      "xrpl_toml"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "e2f334173dc43c4bb4de4d2d72f8863dd36071e688c4709c7dab159de5037aa5",
+    "c7584becf16158a080db965d304f469873b6d3465191e387b8389353acd51b53",
+    "25d17fc846387d3909e68f9d201f2945b32c6bd80c6e6165db2ce41ed8f35673",
+    "06a5b876ebfc7e85863f39f3b1dc3d397dbb4bf41d062943484be14de8a5d920",
+    "5b210200574a95beba6520adc180a285667849245e5419eb1424f20158a4823c",
+    "34ffc47125515453c353b0b7a9175f7e2c2aed7ef8ec433e9eb0a4ecca7ed64f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

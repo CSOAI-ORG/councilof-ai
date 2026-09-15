@@ -1,0 +1,111 @@
+{
+  "card": {
+    "as_of": "2026-09-15T03:13:10.870Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "fxrp:flare",
+      "backing_model": "custodial",
+      "wrapped": {
+        "chain": "flare",
+        "symbol": "FXRP",
+        "address": "0xAd552A648C74D49E10027AB8a618A3ad4901c5bE",
+        "chainId": 14,
+        "block": 69808018,
+        "block_hash": "0x9fb59c7032ccc02d30d0f07d870c9bfd4659e072af7f0ec3b938dd17c9ab0cd4",
+        "block_time": 1789441970
+      },
+      "canonical": {
+        "chain": "xrpl",
+        "symbol": "XRP",
+        "address": "FAssets agents' XRPL accounts; not an EVM contract",
+        "chainId": null,
+        "block": null,
+        "block_hash": null
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "Underlying XRP sits in FAssets agents' XRPL accounts with agent collateral posted on Flare; Flare documents the XRPL side as verified through its Data Connector. Neither the XRPL holdings nor the agent collateral are read here. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000854d8a345558",
+          "raw_sha256": "8b24c60e779ae65ab3e1ef1a6e51e9288599450649b8af27ebfba665ad31f289",
+          "atomic": "146568077661528",
+          "normalized": "146568077.661528",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "INDEXED_CUSTODIAL",
+      "state": "DISCOVERED",
+      "error": null,
+      "fetched_at": "2026-09-15T03:13:10.870Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "reserve (custodian-held off this chain; not readable here)"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "120dfa3b0e9f1497421a02cd7467253dcb1b2706066fb44284424da286756263",
+    "sig_ed25519": "5d72f43f92d11ca9f376a5420185214eab3e06b93e44cb87607806ce53bea241b35664392792fad83e06b559c3e8bde2928c6fb9607e7160fa41aa02591f4707",
+    "source_urls": [
+      "https://flare-api.flare.network/ext/C/rpc"
+    ],
+    "subject": "wrapped FXRP on flare vs native issuance — INDEXED_CUSTODIAL",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:custodial",
+      "state:INDEXED_CUSTODIAL"
+    ],
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "f79ae91689b16ce905aa6a6e93c089a6fb1fa08d95dbce2c6c14ce9b2bb151fe",
+    "abb84e6f5dfb413f8a4f05c4ba3f5e71049c978f5a30c6136bf388449dc8a0af",
+    "27cc014e275ff685c8cc3fe2be3a71d9e9e485c864144dfeaea9edef64e9f8eb",
+    "0d04f3f3d564ccb0b88244059cd3e0166e48b3d5b94b4f01a943f85a593b64d7",
+    "a66497701eedff78cac1a822134adc542042b6a86bb94432d3ab182065a742e2",
+    "eabb451f42284199f3d0aaba0280251ed1deb3ad9a4c6c6a3bb2a299f8d98500",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

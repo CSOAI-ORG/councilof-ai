@@ -1,0 +1,77 @@
+{
+  "card": {
+    "as_of": "2026-09-01T00:00:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "gspc.coverage-card/0.1",
+      "status": "UNMEASURED",
+      "vendor": "OpenAI GPT (ChatGPT)",
+      "vendor_disclosure": "Vendor published a public GPT-5 System Card documenting safety evaluations and known limitations.",
+      "vendor_claim_type": "self-reported safety testing (public disclosure)",
+      "our_card": "UNMEASURED",
+      "our_card_note": "CSOAI has no signed GSPC card for this public model yet. Grading the public models on the 14 behavioural axes is an owner step (OpenRouter key). Public disclosures compared, not certified. Measurement, not certification. Not defamatory.",
+      "url_sha256": "817c3cbf13144f2030ed174d74f3cf8fdc2a47c19c2d819442eba85fc0822969"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "215de356942aea05b4f35d034803cb530ca4bcafeae947493a63adac7dd11bbe",
+    "sig_ed25519": "9c260fc7b9511dc0972312bde4f64a857bfb01df32a6858f149de8611ad7af6146968daa35f30ac606acde3b36d1dfd0faab032882b31e01f1510725e2c4a90d",
+    "source_urls": [
+      "https://openai.com/index/gpt-5-system-card/"
+    ],
+    "subject": "Vendor system-card claim vs CSOAI card: OpenAI GPT (ChatGPT) - UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "framework:vendor-system-card",
+      "coverage:claim-vs-card",
+      "coverage:UNMEASURED",
+      "genai-mil"
+    ],
+    "unmeasured": [
+      "our_gspc_measurement_of_this_public_model",
+      "the_matching_axis_score"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "fd9675a2e20398c9ab064f27c5df05272ea67ac756a728f07c033a3b24990cd1",
+    "0f11479f47ea6fc8e8b2786d8e515019f505e50d18c0a3ff0d3d4cea4f4add64",
+    "be42d13e37d440619c2827ee8c8391214131103654d11c4c71c449f60e64e7aa",
+    "e1592d2e3b0214faa0107be12c8fb9df842ffa7da918baaaca8ccd5adf3b4368",
+    "47e82207ed926bb459877de2022332940282cddd7e6d9f4ee99d266f6d66839e",
+    "8e765ff2924b51296c1ff9d64bb5b07b706837c903782362cb60f5d685fd777f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}
