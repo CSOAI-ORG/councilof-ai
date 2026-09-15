@@ -592,3 +592,39 @@ describe("/api/hub-cards — the index list is discovered, not remembered", () =
     expect(counts.read_so_far).toMatchObject({ cells: 4 });
   });
 });
+
+// 2026-09-15 end-user test: GET /api/hub-cards?axis=swarm returned every cell, because the handler
+// never read a query parameter — while /notes/art5-safeguard-gap/ tells readers to filter by axis.
+describe("/api/hub-cards?axis= — an exact axis filter", () => {
+  const invokeAt = async (qs: string) => {
+    const res = await onRequestGet({ request: new Request(`https://councilof.ai/api/hub-cards${qs}`) } as never);
+    return { res, body: (await res.json()) as Record<string, never> };
+  };
+
+  it("serves only cells whose axis equals the parameter, and says counts still describe the population", async () => {
+    installFetch([]);
+    const { body } = await invokeAt("?axis=safety");
+    const cells = body.cells as unknown as Array<{ axis: string; model: string }>;
+    const counts = body.counts as unknown as Record<string, unknown>;
+    const filter = body.filter as unknown as Record<string, unknown>;
+    expect(cells.map((c) => c.axis)).toEqual(["safety"]);
+    expect(filter).toMatchObject({ axis: "safety", match: "exact", cells_matched: 1 });
+    expect(counts.cells).toBe(5);
+  });
+
+  it("matches exactly: a prefix is not an axis, and an unmatched axis is empty with the axes that exist", async () => {
+    installFetch([]);
+    const { body } = await invokeAt("?axis=safe");
+    const filter = body.filter as unknown as Record<string, unknown>;
+    expect(body.cells).toEqual([]);
+    expect(filter.cells_matched).toBe(0);
+    expect(filter.axes_present).toEqual(expect.arrayContaining(["governance", "care", "safety", "affect", "openness"]));
+  });
+
+  it("without the parameter every cell is served and no filter block is added", async () => {
+    installFetch([]);
+    const { body } = await invokeAt("");
+    expect((body.cells as unknown as unknown[]).length).toBe(5);
+    expect(body.filter).toBeUndefined();
+  });
+});
