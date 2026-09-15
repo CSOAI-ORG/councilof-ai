@@ -2,11 +2,12 @@
 # SPDX-License-Identifier: CC0-1.0
 """csoai_verify.py — one command: signature under the DID, root inclusion, OTS proof presence.
 
-It wraps the estate's existing library rather than re-implementing it:
-  signature  harness/gspc-top100/verify_card.py → verify_signed_card_with_did_doc
-             (sha256(canonical body) == id, Ed25519 under the key the DID document publishes
-             for the card's `did`, default did:web:csoai.org#card-attestation-1)
-  shape/id   tools/verify/card_v01_validate.py (card-v0.1 schema + id recompute)
+Handles three card shapes:
+  gspc-card       harness/gspc-top100/verify_card.py → verify_signed_card_with_did_doc
+                  (sha256(canonical body) == id, Ed25519 under the DID key)
+  public-root-card  Ed25519 over canonical {did, schema, surface, as_of, sha256}
+  csoai-certificate sha256(canon(payload)) == certificate_id, Ed25519 over canon(payload)
+                  under issuer_did — PHASE3 C.3
 
 Then it asks the two published Merkle roots whether they carry this card:
   card-root  /interop/card-root-*.json (csoai.card-root/1). leaf = sha256(canonical WHOLE card,
@@ -188,16 +189,60 @@ def discover_card_roots(limit: int) -> tuple[list[str], str | None]:
     return [f"{EDGE}/interop/{n}" for n in names[:limit]], None
 
 
+def verify_csoai_certificate(wrapper: dict, did_doc: dict) -> tuple[str, str]:
+    """VALID only when the cid matches sha256(canon(payload)) AND the Ed25519
+    signature on canon(payload) recovers under the issuer_did key.
+
+    Conformance with public/schemas/csoai-certificate-0.1.schema.json.
+    """
+    if not isinstance(wrapper, dict) or wrapper.get("schema") != "csoai.certificate/0.1":
+        return "UNCHECKABLE", "not a csoai.certificate/0.1 wrapper"
+    payload = wrapper.get("payload")
+    cid = wrapper.get("certificate_id")
+    sig = wrapper.get("sig_ed25519")
+    issuer_did = str(wrapper.get("issuer_did") or "did:web:csoai.org#board-attestation-1")
+    if not isinstance(payload, dict) or not isinstance(cid, str) or not isinstance(sig, str):
+        return "INVALID", "wrapper missing payload, certificate_id, or sig_ed25519"
+    preimage = canon(payload, ensure_ascii=False)
+    expected_id = hashlib.sha256(preimage).hexdigest()
+    if expected_id != cid:
+        return "INVALID", "sha256(canon(payload)) != certificate_id"
+    try:
+        pub = did_key(did_doc, issuer_did)
+    except Exception as e:
+        return "UNCHECKABLE", f"did {e}"
+    try:
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+        Ed25519PublicKey.from_public_bytes(pub).verify(bytes.fromhex(sig), preimage)
+    except ValueError:
+        return "INVALID", "sig_ed25519 is not hex"
+    except Exception:
+        return "INVALID", "signature does not verify over canon(payload)"
+    return "VALID", issuer_did
+
+
 def card_shape(card) -> tuple[str, dict | None]:
-    """gspc-card {body,id,signature} · public-root-card {sha256, sig_ed25519, did} (bare or under "card") · other."""
+    """Detect card / certificate wrapper shapes.
+
+    gspc-card {body,id,signature} · public-root-card {sha256, sig_ed25519, did}
+    · csoai-certificate {schema, certificate_id, payload, sig_ed25519, ...}.
+    Returns one of {'gspc-card', 'public-root-card', 'csoai-certificate', 'other'}
+    plus an inner-dict (the inner for the first two kinds, the wrapper for
+    certificates).
+    """
     if not isinstance(card, dict):
         return "other", None
+    if card.get("schema") == "csoai.certificate/0.1":
+        return "csoai-certificate", card
     if isinstance(card.get("body"), dict) and card.get("id"):
         return "gspc-card", card
     inner = card.get("card") if isinstance(card.get("card"), dict) else card
     if all(k in inner for k in ("sha256", "sig_ed25519", "did")):
         return "public-root-card", inner
     return "other", None
+
+
+
 
 
 def verify_public_root_card(inner: dict, did_doc: dict) -> tuple[str, str]:
@@ -265,6 +310,17 @@ def run(a) -> tuple[int, dict]:
             t = copy.deepcopy(inner)
             t["payload"] = {"tampered": True, "was": t.get("payload")}
             tv, treason = verify_public_root_card(t, did_doc)
+            report["tamper_control"] = {"state": "DETECTED" if tv == "INVALID" else "NOT_DETECTED", "tampered_verdict": tv, "detail": treason}
+    elif kind == "csoai-certificate":
+        verdict, reason = verify_csoai_certificate(inner, did_doc)
+        report["signature"] = {"state": verdict, "detail": reason,
+                               "rule": "certificate_id == sha256(canon(payload)); Ed25519 over canon(payload) under issuer_did"}
+        report["shape"] = {"verdict": "NOT_APPLICABLE", "reason": "paid-entitlement certificate, not a measurement card"}
+        report["card_id"] = inner.get("certificate_id")
+        if a.tamper_control:
+            t = copy.deepcopy(inner)
+            t["payload"] = {"tampered": True, "was": t.get("payload")}
+            tv, treason = verify_csoai_certificate(t, did_doc)
             report["tamper_control"] = {"state": "DETECTED" if tv == "INVALID" else "NOT_DETECTED", "tampered_verdict": tv, "detail": treason}
     else:
         verdict, reason = "UNCHECKABLE", "NOT_A_CARD: no body/id and not a public-root card — not checked, not accused"

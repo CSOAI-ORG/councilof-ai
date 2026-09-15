@@ -26,7 +26,7 @@
 ## C. Signing + trust (M4)
 - [ ] Signing key present on the brain host only; `/sign` returns real Ed25519 (len=128) — **verified live today**.
 - [x] Certificate payload schema fixed (what's attested, expiry, verification URL).
-- [ ] `csoai_verify` verifies an issued cert offline.
+- [x] `csoai_verify` verifies an issued cert offline.
 
 ## D. Cutover
 - [ ] Announce a short freeze window in `AGENT_COORDINATION.md` (avoid a parallel-edit race).
