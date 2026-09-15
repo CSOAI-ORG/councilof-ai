@@ -69,7 +69,7 @@ gh api repos/CSOAI-ORG/councilof-ai --jq '{stars: .stargazers_count, watchers: .
 
 | Lane | Metric | Current | Target |
 |------|--------|---------|--------|
-| Verified cells | Cards in public root | 167 | 335 |
+| Verified cells | Cards in public root | 298 | 335 |
 | Subjects covered | Deeply measured assets | 5 | 20 |
 | Signatures produced | Ed25519 signed cards | 335 | 500 |
 | Roots completed | Merkle root generations | 29 | 52 (weekly) |
