@@ -1,0 +1,120 @@
+{
+  "schema": "csoai.ceremony-proof-bundle/0.1",
+  "generated_at": "2026-09-15T03:37:58Z",
+  "generated_by": "scripts/ceremony/run_ceremony.sh + Rekor push + triple anchor",
+  "label": "SIMULATED \u2014 proves toolchain, not a real ceremony",
+  "root_json_sha256": "74797e30d6d98267e5ab4c8e275b135235fdf1afc6eee6b5c1f00537c41b751b",
+  "ceremony": {
+    "card0_sha256": "0ae7ffd479fba680a32686fc9fa150c76123771abe3518287b1496f9f2761ff4",
+    "card0_created_at": "2026-09-15T03:36:17Z",
+    "root_alpha_pubkey": "965cf4968ed65359eb5e4879bd692840b445473a854b82482aa37df40554fd79",
+    "root_beta_pubkey": "f8097a833ae6c030b786b338cdcd60d646f62e67396493302178b3520ccf485d",
+    "root_alpha_jwk_thumbprint": "ci5kl7kteo4N9zy4AMGTBAVsqBrAzIflUTKuOjv5S6I",
+    "root_beta_jwk_thumbprint": "tP6U7o9VH0SUltk-JZVdsfuoX84VezlLqbUGTdpX1zY",
+    "shamir_crosscheck_status": "PASS",
+    "shamir_crosscheck_secret_sha256": "ca6bf6bfba55576cad6de9454e992304327de970e85838867ca0359fec423dd2",
+    "share_count": 3,
+    "share_scheme": "shamir-gf256-0x11b/v1"
+  },
+  "rekor": {
+    "status": "VALID",
+    "uuid": "108e9186e8c5677a57a5de6983bda9a134a8dbbf1f8decdcd4e3fbbd9176dac1d54293a32f6ffe58",
+    "logIndex": 2838908623,
+    "integratedTime": 1789443401,
+    "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
+    "checks": {
+      "log_identity": "VALID",
+      "set": "VALID",
+      "inclusion": "VALID",
+      "checkpoint": "VALID",
+      "sth": "VALID",
+      "root_hash": "VALID"
+    },
+    "verify_command": "python3 scripts/rekor_inclusion_verify.py 108e9186e8c5677a57a5de6983bda9a134a8dbbf1f8decdcd4e3fbbd9176dac1d54293a32f6ffe58 --sth --verify-root public/root.json"
+  },
+  "anchors": {
+    "xrpl_memo": {
+      "status": "SIGNED",
+      "MemoType": "csoai/public-root-sha256",
+      "MemoData": "74797E30D6D98267E5AB4C8E275B135235FDF1AFC6EEE6B5C1F00537C41B751B",
+      "tx_file": "anchors/xrpl-signed-tx.json"
+    },
+    "evm_base": {
+      "status": "SIGNED",
+      "chain": "base",
+      "chain_id": 8453,
+      "data_prefix": "CSOA",
+      "root_sha256": "74797e30d6d98267e5ab4c8e275b135235fdf1afc6eee6b5c1f00537c41b751b",
+      "tx_file": "anchors/evm-base-signed-tx.json"
+    },
+    "ots": {
+      "status": "ACTIVE",
+      "note": "Hourly OTS upgrade loop running via GHA card-root-ots-upgrade.yml"
+    }
+  },
+  "files": {
+    "rolls-alpha.txt": {
+      "sha256": "7346c126de2bb7f37d9c8c414a3c8de3763fba4f4caf96e7f65d260acc479c44",
+      "size": 125
+    },
+    "rolls-beta.txt": {
+      "sha256": "9b87a940c69754e6b22ad72be82dec8a150d8667233cec0e501e42ceae14de7e",
+      "size": 126
+    },
+    "proof/rekor-verification.json": {
+      "sha256": "15edc44c870d26bc7a2aa45fe9846724cd7b976d519b6f782ab1843fe3387538",
+      "size": 2077
+    },
+    "proof/root.json": {
+      "sha256": "74797e30d6d98267e5ab4c8e275b135235fdf1afc6eee6b5c1f00537c41b751b",
+      "size": 24310
+    },
+    "ceremony/card0-genesis.json": {
+      "sha256": "0ae7ffd479fba680a32686fc9fa150c76123771abe3518287b1496f9f2761ff4",
+      "size": 1494
+    },
+    "ceremony/shamir-crosscheck.json": {
+      "sha256": "75ebd6e0f689067b75107a25c25226c86835dc1d79c6c3aa680c51e271ff74bb",
+      "size": 556
+    },
+    "ceremony/share-1.json": {
+      "sha256": "2cbd6a82728d6914930e9353f354b8a3f8bbc7fac37e68c8db84ac5f09540dac",
+      "size": 238
+    },
+    "ceremony/share-2.json": {
+      "sha256": "8ccba6dbff70367b889e1fb950aed808ebaadd8998b71290e9267413dde09b34",
+      "size": 238
+    },
+    "ceremony/share-3.json": {
+      "sha256": "660a4664c7a4075ad8952aa49f90910f589fa5a0d5e83c60ee4e0a5c0fbd62f3",
+      "size": 238
+    },
+    "rekor/rekor-entry.json": {
+      "sha256": "a9952617e4a0ea044582f20b4118842b07980b9084cbc5e5620a64d2e19c2c96",
+      "size": 32882
+    },
+    "rekor/rekor-response.json": {
+      "sha256": "7c5c3ef81c2dd5ea4d2c588bb6e246f417e9691d4425572eaf136cffbfa6b6c4",
+      "size": 3071
+    },
+    "anchors/evm-base-signed-tx.json": {
+      "sha256": "1ea5fec9756f318241da9fc62f1a464e00584cc66569e240cb56055a3cc06aa4",
+      "size": 495
+    },
+    "anchors/xrpl-signed-tx.json": {
+      "sha256": "55e88cdd1c4da90da4bd3072ad957072b6ca3efce89ad58d4c08f9b0f22022db",
+      "size": 633
+    }
+  },
+  "verification": {
+    "card_signature": "VALID \u2014 Ed25519 self-attestation from ROOT-alpha",
+    "shamir_crosscheck": "PASS \u2014 independent reconstruction matched secret_sha256",
+    "shamir_reconstruction": "PASS \u2014 shares 1+2 reconstruct to matching secret",
+    "rekor_inclusion": "VALID \u2014 6/6 checks (log_identity, SET, inclusion, checkpoint, STH, root_hash)",
+    "rekor_root_hash": "MATCH \u2014 74797e30d6d98267e5ab4c8e275b135235fdf1afc6eee6b5c1f00537c41b751b",
+    "xrpl_memo_data": "MATCH \u2014 74797E30D6D98267E5AB4C8E275B135235FDF1AFC6EEE6B5C1F00537C41B751B",
+    "evm_base_data": "MATCH \u2014 CSOA + 74797e30d6d98267e5ab4c8e275b135235fdf1afc6eee6b5c1f00537c41b751b",
+    "share_consistency": "PASS \u2014 all 3 shares + crosscheck bind same secret_sha256"
+  },
+  "honest_limits": "This bundle proves toolchain integrity on SIMULATED dice rolls and throwaway keys. It demonstrates that the ceremony scripts, Shamir splitting, Rekor witnessing, XRPL memo generation, and EVM anchor generation all work correctly end-to-end. It does NOT prove custody of any real key material. The Rekor entry commits to the real root.json bytes (SHA-256 direct match). Measurement, never certification."
+}
