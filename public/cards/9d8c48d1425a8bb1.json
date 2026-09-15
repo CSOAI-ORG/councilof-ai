@@ -1,0 +1,116 @@
+{
+  "card": {
+    "as_of": "2026-09-15T00:23:18Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USDY:arbitrum",
+      "symbol": "USDY",
+      "product": "Ondo U.S. Dollar Yield",
+      "chain": "arbitrum",
+      "chain_id": 42161,
+      "address": "0x35e050d3c0ec2d29d269a8ecea763a183bdf9a9d",
+      "block": 505245875,
+      "block_hash": "0x50f818c57042eea22ab0edd9507e38e2737cb8327ed83410e97c8f7d6ea314fd",
+      "block_time": "2026-09-15T00:23:18Z",
+      "rpc": "arbitrum-one-rpc.publicnode.com",
+      "checked": {
+        "name": "Ondo U.S. Dollar Yield",
+        "symbol": "USDY",
+        "decimals": 18,
+        "totalSupply": "3182197410340110000000000",
+        "paused": false,
+        "defaultAdminRoleMembers": 1,
+        "blocklist": "0xb9123f09d44e6df568726835233727a6e0ff16a2",
+        "sanctionsList": "0x40c57923924b5c5c5455c48d93317139addac8fb",
+        "eip1967_implementation": "0x5692349f8e7081e2ad0ba629e01761b43187304c",
+        "eip1967_admin": "0xb7bcc4af60fb5267946deff1fe373989995352b2"
+      },
+      "absent": [
+        "isPaused()",
+        "owner()",
+        "allowlist()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "7cb33b73297149b71d267434a94327d16bc5b6a9601332062d810d862babc5d6",
+        "bytes": 13878,
+        "url": "/archive/proofs/eip1186/7cb33b73297149b7.json",
+        "rpc": "arbitrum-one-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xa23b20d4f9e75f4bf9bd74d8c1b7f0219547289c67a11dea65370c1810fc1387",
+          "storageHash": "0x1e2c7a076cf170fb29c4187d775f3832a1436e4560e47714d5af21d6e0af5f5b",
+          "nodes": 9
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x5692349f8e7081e2ad0ba629e01761b43187304c",
+            "nodes": 5
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0xb7bcc4af60fb5267946deff1fe373989995352b2",
+            "nodes": 5
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 505245875 on arbitrum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9d8c48d1425a8bb19dec0f82806105afe9aace8de740270132caee16813a2081",
+    "sig_ed25519": "1938c35f148ef96953909a104fd6e5e152838d4881389284a6df38ba818ecd2b058805c52706457124a3d2857e5bf0809373eccbac366538c57ff3e788de950a",
+    "source_urls": [
+      "https://arbitrum-one-rpc.publicnode.com",
+      "https://arbiscan.io/token/0x35e050d3C0eC2d29D269a8EcEa763a183bDF9A9D"
+    ],
+    "subject": "evm:USDY:arbitrum permission state at block 505245875",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:arbitrum",
+      "coverage:permission-state",
+      "subject:USDY"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ]
+  },
+  "proof": [
+    "9af17ae8fe0fceb332a60c54a70b0d89e1318f350f70d57e75ca77a1f460f31e",
+    "b8ec683881b313f6c4f60732961480bd348206c69d5c1da7a19d34b29079f44e",
+    "e9dcf0a36da418b4ad775a7013ab76f3e0eadf4b82d88e0ce90f3f60cb6ef105",
+    "4137b610d53e2a540e1026f112a4d562ffb7ba6d150fbf74e8e222bbad22c14f",
+    "8fa1b4700c704b535ef20cf75f5dc2591f6e7e983355925441c7a65800537959",
+    "768456b04ff2cc23bd72ae21020baa55103f1f5cea0f8ba0e40f45fc10703c93",
+    "1d343c9e4bc5aa5e30e7c2c0b6b6bf970416c75df2bc18bec549f6aeb4803959",
+    "564c9247ab4a9a5d934e230887a162413e32876dd002d21ae03578fb029dff09",
+    "5144e5ddfec41cc7f80e1c1f1d53f477a78b032fa40c20b4ff204591bdae7dd9"
+  ]
+}
