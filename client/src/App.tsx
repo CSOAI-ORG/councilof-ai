@@ -119,6 +119,7 @@ const CraReadinessKit = lazy(() => import("./pages/CraReadinessKit"));
 const CountdownPage = lazy(() => import("./pages/CountdownPage"));
 const Art50 = lazy(() => import("./pages/Art50"));
 const ProofReceipt = lazy(() => import("./pages/ProofReceipt"));
+const ProofOfReceipt = lazy(() => import("./pages/ProofOfReceipt"));
 const FeedLaunchPack = lazy(() => import("./pages/FeedLaunchPack"));
 const YieldStatus = lazy(() => import("./pages/YieldStatus"));
 const YieldInternal = lazy(() => import("./pages/YieldInternal"));
@@ -192,6 +193,7 @@ const Launch = lazy(() => import("./pages/Launch"));
 const OwaspAgentic = lazy(() => import("./pages/OwaspAgentic"));
 const OwaspAsiMapping = lazy(() => import("./pages/OwaspAsiMapping"));
 const AgentBlocking = lazy(() => import("./pages/AgentBlocking"));
+const IvoEvidence = lazy(() => import("./pages/IvoEvidence"));
 const PostmortemX402 = lazy(() => import("./pages/PostmortemX402"));
 const ThreeRootCeremony = lazy(() => import("./pages/ThreeRootCeremony"));
 const EvaluatorAccess = lazy(() => import("./pages/EvaluatorAccess"));
@@ -407,6 +409,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/owasp-agentic": "OWASP Agentic Top 10 — the public measured mapping | Council of AI",
   "/owasp-asi": "OWASP AI Exchange — GSPC Axis Mapping | Council of AI",
   "/agent-blocking": "Agent traffic and Cloudflare's blocking change | Council of AI",
+  "/ivo-evidence": "What an IVO's evidence should look like | Council of AI",
   "/postmortems/x402-settlement-reading": "X402 settlement postmortem — the record was not lost | Council of AI",
   "/events/three-root-ceremony": "Three-root ceremony — public witness record | Council of AI",
   "/transparency-cop": "Transparency Code — detection/verify tool, C2PA planned | Council of AI",
@@ -765,6 +768,7 @@ function App() {
                   <Route path="/owasp-agentic" component={OwaspAgentic} />
                   <Route path="/owasp-asi" component={OwaspAsiMapping} />
                   <Route path="/agent-blocking" component={AgentBlocking} />
+                  <Route path="/ivo-evidence" component={IvoEvidence} />
                   <Route path="/postmortems/x402-settlement-reading" component={PostmortemX402} />
                   <Route path="/events/three-root-ceremony" component={ThreeRootCeremony} />
                   <Route path="/ceremony">{() => <Redirect to="/events/three-root-ceremony" />}</Route>
@@ -1192,6 +1196,7 @@ function App() {
                   <Route path="/countdown" component={CountdownPage} />
                   <Route path="/art50" component={Art50} />
                   <Route path="/receipt" component={ProofReceipt} />
+                  <Route path="/proof-receipt" component={ProofOfReceipt} />
                   <Route path="/feed" component={FeedLaunchPack} />
                   <Route path="/stablewatch" component={FeedLaunchPack} />
                   <Route path="/custody" component={CustodyDisclosure} />
