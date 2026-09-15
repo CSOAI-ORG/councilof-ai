@@ -1,0 +1,112 @@
+{
+  "card": {
+    "as_of": "2026-09-15T03:13:10.870Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdbc:base",
+      "backing_model": "escrow",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "USDbC",
+        "address": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+        "chainId": 8453,
+        "block": 51325782,
+        "block_hash": "0xadcdf28ff737c15e3378d96d3c0c03f130985640dcfacffee90035ac843d3aa2",
+        "block_time": 1789440911
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDC",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "chainId": 1,
+        "block": 25976515,
+        "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb"
+      },
+      "escrow": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35",
+      "escrow_name": "Base L1StandardBridge",
+      "note": null,
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x0000000000000000000000000000000000000000000000000000053c5b1c6c77",
+          "raw_sha256": "e3255a653a7d980a69de0fb2ac8da01ce9c22d9c0040bbb7495c99fcc099a8bd",
+          "atomic": "5756784766071",
+          "normalized": "5756784.766071",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "UNMEASURED",
+      "state": "UNMEASURED",
+      "error": "RPC error: Archive requests require a personal token. Get one at: https://www.allnodes.com/publicnode",
+      "fetched_at": "2026-09-15T03:13:10.870Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "chain reads (rpc failed; nothing inferred)"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "a66ff40bdffc94e4492a431c66602c8730a0c2c77f946426f0b63c16ce187535",
+    "sig_ed25519": "a18e7ee594f844ccc95790cb1ca426aec46b1a2fa3c3c8e13c8a7f98382a8496be36049af1ccf5dc8b53a1d4b6fc6430216205c11acc025197a2cdd372eaec0f",
+    "source_urls": [
+      "https://mainnet.base.org",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDbC on base vs Base L1StandardBridge — UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:escrow",
+      "state:UNMEASURED"
+    ],
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "56aab8b1c36d889c9c4262cea7b4ff7a8871e083c54d8c0d964bf7cd4051c2bb",
+    "2aade7b165ca2ff93d9ad91168eaabd4125dff5c7a6ffe4109dc0d334fa78291",
+    "3755506e2e825b59366576528ff3569c8da99f8d1277c81d1931519bee243b62",
+    "aa94e4f6dd42366f2bf303066318681dce7b4cb95861dc03c866830d1b11397d",
+    "2b5d1ef96b712336fadd1f185d855b18824e021b653158c623fb23eae608958a",
+    "caccc32852ee1a89818d979283dbac8b9db15bc5f7ebe87d82fcfb8738f1a5e6",
+    "e9599b621fc44fd1cec03e82273734f96c50b207dd4b6fea83ffe9c460545a8d",
+    "30fbe3147665515a72d22bece741704c0d0640b0fbf93a394f271c580db0c31e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

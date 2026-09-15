@@ -1,0 +1,122 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:40Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axes": [
+        "swift-rails"
+      ],
+      "bank": "BNP Paribas",
+      "bank_id": "bnp-paribas",
+      "census_as_of": "2026-09-01",
+      "census_status": "DISCOVERED",
+      "event_date": null,
+      "fetched_at": "2026-09-02T07:56:40Z",
+      "inputs_sha256": "ba60ffcdfbeba920fb8e617c2ab08f89cf1a67c4ae294a85e68514a7cd6f2f51",
+      "kind": "csoai.eater.swift-rail/0.1",
+      "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "named_in_fetched_body_n": 1,
+      "not_a_client": true,
+      "not_a_grade": true,
+      "settlement_still_off_chain": true,
+      "sources": [
+        {
+          "error": "TimeoutError: The read operation timed out",
+          "fetched_at": "2026-09-02T07:56:02Z",
+          "http": 0,
+          "id": "swift_pilot_9jul",
+          "n_bytes": null,
+          "named_in_body": "UNCHECKABLE",
+          "published": "2026-07-09",
+          "sha256": null,
+          "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure"
+        },
+        {
+          "fetched_at": "2026-09-02T07:56:40Z",
+          "http": 200,
+          "id": "gfmag_pilot_10jul",
+          "n_bytes": 109323,
+          "named_in_body": "PASS",
+          "published": "2026-07-10",
+          "sha256": "491411ebe38687ccf771265e27ec607e532255569550a351cec4359e78ae27da",
+          "url": "https://gfmag.com/technology/swift-blockchain-ledger/"
+        }
+      ],
+      "state": "PROBED",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "on_ledger_object",
+        "transaction_recompute"
+      ],
+      "writes_board": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d7e903f89c0d774ff7c8efc7004cae202b3c4a56d536f35d6b90fe96ff0843b6",
+    "sig_ed25519": "cd4f72528b6390fde4a93565dc967ee08abdf382ab545d1a4541a75470bddac664cadcc911eda24096d4439c5353e4be80a66cc35360ea80a523b801d9b8a40d",
+    "source_urls": [
+      "https://councilof.ai/api/swift",
+      "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+      "https://gfmag.com/technology/swift-blockchain-ledger/"
+    ],
+    "subject": "Swift shared-ledger census: BNP Paribas — DISCOVERED; named in 1/2 fetched notice bodies",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:swift-rails",
+      "census:discovered",
+      "not-a-client",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "on_ledger_object",
+      "transaction_recompute"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "78eccc1c6d7a8d2d455be7e85a4bde97c28cb604e24004902bea175a080ec82c",
+    "902575e1250110f55b7cf56bb15600a9acc40cb3786f4e393d7fe21dac009f9f",
+    "0b8ec7f155144da82bfe54e55a051c736682dd27c6e1eaf4e9886a4f9c2c8226",
+    "252d6fa38e09587ffb4b5ef8ddfd3805f3b4afb57ba240239c5973898c0b5d46",
+    "60674fe01021d2d4c84ef3f2dd7ce99347855592de281c60fb47bd4e7777fd72",
+    "8e765ff2924b51296c1ff9d64bb5b07b706837c903782362cb60f5d685fd777f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-09-12T09:23:44Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "deepseek",
+      "surface": "model_cards",
+      "url": "https://huggingface.co/deepseek-ai",
+      "prev_sha256": "0730d9618429860f4e369fdbf49a9ada4876e0ca7bb51a26d4a5699599421fb1",
+      "new_sha256": "35a4e947b3e38cf59533f27df1c5a7523bbb2f0aca88eb392d118732ab5bcbda",
+      "prev_bytes_sha256": "13d5e7a621484aff308e26b3ff75c9632603488a34d197998db1e4b96d5803a6",
+      "new_bytes_sha256": "acb59e4bf5a5d1e0830777ab833f25d7f3e1a8c5fedafd0dcafacd5e17e3b01d",
+      "prev_fetched_at": "2026-09-05T09:06:18Z",
+      "fetched_at": "2026-09-12T09:23:44Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 422458,
+        "new": 423457
+      },
+      "etag": {
+        "prev": "W/\"6723a-+iBmp6OL8WK1HK4Ktdc4zMWOFQ0\"",
+        "new": "W/\"67621-dB4QkMBYgQY9bhjHm2NVzf1IrGs\""
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "93c6e95205944dcb5faae05a40786da7692090656bfed99fd64f5303ecbcb7b9",
+    "sig_ed25519": "6e4270a7dedc7d17a897e7b4194fa80b4d23b65fa0fd44ae2c7779cae4230eaded0a9f124c535e7e341f9c2335a4a71b1b842a0163efaba242db0d54b1378a08",
+    "source_urls": [
+      "https://huggingface.co/deepseek-ai"
+    ],
+    "subject": "DeepSeek — model_cards: bytes changed 2026-09-12",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:deepseek",
+      "surface:model_cards",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "061834e1d6c1ae6ae1c9c573c25367a5477877b2456d77f37478b394d3e9a984",
+    "48951f72db31807cffd29c39ead9e7626a15777626da847681edc6c175201c90",
+    "7927aced95a1fbf04cfb6c58e9302dd14b924734450fbb0e025670b507af1fd7",
+    "84bfddd593e986e72d2910b9ba18f17739d4ab1decd4e7998a86ed517c7416c3",
+    "e27559339cead2929fca20472a74f61737571ed2be73a407f5fe066072b6d26c",
+    "cd2fd5436304eca994b0b2e0ed40bf8e6ec8ddb9f34fc537dbeeb5d03809b9ed",
+    "e9599b621fc44fd1cec03e82273734f96c50b207dd4b6fea83ffe9c460545a8d",
+    "30fbe3147665515a72d22bece741704c0d0640b0fbf93a394f271c580db0c31e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

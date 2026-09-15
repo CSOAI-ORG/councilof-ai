@@ -1,0 +1,84 @@
+{
+  "card": {
+    "as_of": "2026-09-13T12:59:05Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.mcp-liveness/0.1",
+      "not_a_grade": true,
+      "probed": 100,
+      "report": "https://councilof.ai/interop/mcp-liveness-2026-09/report.json",
+      "sample_n": 100,
+      "selection": "deterministic sha256(id) sample",
+      "state": "PROBED",
+      "state_counts": {
+        "AUTH_REQUIRED": 17,
+        "LIVE": 65,
+        "NON_CONFORMANT": 9,
+        "SSE_ONLY": 2,
+        "UNREACHABLE": 7
+      }
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e966acbae96a7ab893e5f399e64fd0d71678a2f843593adeddd745488e507314",
+    "sig_ed25519": "f855317e6ee8f88a36f5f697bb3fd20591c236fd009b16d89c95dd26532e69a9d434698126fcc0164e25bb76073df3985c84757f4973c88166ac2ea963392400",
+    "source_urls": [
+      "https://registry.modelcontextprotocol.io/v0/servers?limit=100",
+      "https://councilof.ai/interop/mcp-liveness-2026-09/report.json"
+    ],
+    "subject": "MCP remote-endpoint liveness sample (n=100)",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "liveness",
+      "probe",
+      "mcp-liveness-2026-09"
+    ],
+    "unmeasured": [
+      "capability behavior",
+      "the unsampled population"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "70dc98d5689b9f6551ddae5b92b5aac48b9b5ed3cb9821f31615c4af49cad7fd",
+    "c9f615a53e8e1c375313c38c81812cdcebe266819ef942e30a26fb65783b2bea",
+    "b7726a8ecf8a606f1baa63d4cff0c1f6055e08391f4284de870d8b703033b70e",
+    "a8664263c641796b2836c08c82d8789506ce0c24399761f88fdee82e6e5dfdff",
+    "a66497701eedff78cac1a822134adc542042b6a86bb94432d3ab182065a742e2",
+    "eabb451f42284199f3d0aaba0280251ed1deb3ad9a4c6c6a3bb2a299f8d98500",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

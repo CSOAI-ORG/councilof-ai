@@ -1,0 +1,83 @@
+{
+  "card": {
+    "as_of": "2026-09-01T00:00:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "gspc.coverage-card/0.1",
+      "status": "UNMEASURED",
+      "not_a_grade": true,
+      "gap_note": "The security WRAPPER is authorised. MODEL BEHAVIOUR on the 14 behavioural GSPC axes is unsigned. That gap is us.",
+      "wrappers_authorised": {
+        "OpenAI ChatGPT Enterprise + API": "FedRAMP (marketplace FR2533155773; ongoing as of 2026-01-09)",
+        "Google Gemini": "FedRAMP High (Mar 2025)",
+        "Anthropic Claude": "FedRAMP High via AWS/GCP (Apr 2 / Jun 11 2025)"
+      },
+      "what_fedramp_covers": "cloud security controls of the wrapper",
+      "what_fedramp_does_not_cover": "model behaviour on the behavioural axes"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "fd9675a2e20398c9ab064f27c5df05272ea67ac756a728f07c033a3b24990cd1",
+    "sig_ed25519": "fccc9a4038819eeeb90b03e5fd6cfefc1e4dc033676ddabb4871908ea913404e6d86a25c39ea610c38e9aa3e2941121b42dc7c9ee0346d09cc10def95855700d",
+    "source_urls": [
+      "https://marketplace.fedramp.gov/products",
+      "https://www.fedramp.gov/marketplace/products/FR2533155773/",
+      "https://cloud.google.com/blog/topics/public-sector/gemini-in-workspace-apps-and-the-gemini-app-are-first-to-achieve-fedramp-high-authorization"
+    ],
+    "subject": "FedRAMP wrapper authorised, model behaviour unsigned - the gap (1 Sep 2026)",
+    "surface": "public.notice",
+    "tags": [
+      "framework:fedramp-marketplace",
+      "coverage:wrapper-authorised",
+      "coverage:behaviour-unsigned",
+      "genai-mil"
+    ],
+    "unmeasured": [
+      "model_behaviour_on_gspc_axes",
+      "runtime_conduct",
+      "in_deployment_measurement"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "215de356942aea05b4f35d034803cb530ca4bcafeae947493a63adac7dd11bbe",
+    "0f11479f47ea6fc8e8b2786d8e515019f505e50d18c0a3ff0d3d4cea4f4add64",
+    "be42d13e37d440619c2827ee8c8391214131103654d11c4c71c449f60e64e7aa",
+    "e1592d2e3b0214faa0107be12c8fb9df842ffa7da918baaaca8ccd5adf3b4368",
+    "47e82207ed926bb459877de2022332940282cddd7e6d9f4ee99d266f6d66839e",
+    "8e765ff2924b51296c1ff9d64bb5b07b706837c903782362cb60f5d685fd777f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

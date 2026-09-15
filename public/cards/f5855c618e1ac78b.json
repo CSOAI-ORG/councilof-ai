@@ -1,0 +1,110 @@
+{
+  "card": {
+    "as_of": "2026-09-12T12:20:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-cohort.reading/v1",
+      "state": "PROBED",
+      "subject_symbol": "USDS",
+      "chain_readings": [
+        {
+          "chain": "ethereum",
+          "contract": "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+          "totalSupply": "6671571131.263178077565919734",
+          "block": 25961213,
+          "amount_encoding": "exact_decimal_string",
+          "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        },
+        {
+          "chain": "base",
+          "contract": "0x820C137fa70C8691f0e44Dc420a5e53c168921Dc",
+          "totalSupply": "2644564.066650368453157670",
+          "block": 51212701,
+          "amount_encoding": "exact_decimal_string",
+          "block_finality": "RPC_LATEST_AT_OBSERVATION_NOT_INDEPENDENTLY_PROVEN_FINAL",
+          "replay_result": "NOT_REPLAYED_AT_RECORDED_HEIGHT",
+          "replay_scope": "CURRENT_STATE_RERUN_ONLY"
+        }
+      ],
+      "evidence": {
+        "file": "tui2-measurements/tui2-cohort-2026-09-12.json",
+        "sha256": "c6a6fd93c03bd465e3bc85c152ee366ecdd50327bb21bd7cdf8dd385701a6f15"
+      },
+      "onchain_identity_check": "EVM symbol()/decimals() matched expected before recording",
+      "attestation_state": "UNMEASURED",
+      "not_a_risk_score": true,
+      "not_proof_of_reserves": true,
+      "holders_state": "UNMEASURED",
+      "note": "Same-day on-chain supply readings from keyless public endpoints. Trust-line counts are not holder counts.",
+      "replay_boundary": "Commands in the evidence file rerun current state; historical replay at the recorded heights was not executed.",
+      "subject_identity": "defillama-stablecoin:209",
+      "stablecoin_registry_id": "209"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f5855c618e1ac78b3c18c3595b979a7b8b517e1afab462e7ff85bcc8ac2aeca5",
+    "sig_ed25519": "884c72bcf7aa8b995e6c10562e82aadc28a5fe21eb6418ee4d7f43cba51be4a00f361163497d29a8c4d6ced7c9c299b6ee09465782fc176beeb9fa56baeea00f",
+    "source_urls": [
+      "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+      "https://ethereum-rpc.publicnode.com",
+      "https://mainnet.base.org"
+    ],
+    "subject": "stablecoin USDS — on-chain supply readings 2026-09-12 (unsigned staged)",
+    "surface": "public.notice",
+    "tags": [
+      "stablecoin",
+      "tui2-cohort",
+      "on-chain-reading"
+    ],
+    "unmeasured": [
+      "proof of reserves",
+      "attestation cadence",
+      "holder counts",
+      "peg verdict"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "6888baef5852558aebb47753d8b6b72e876b9cf1bbff96b9b8162174b56a79c7",
+    "f1ed02781910bc3a995c15c4f46ba3ab881f6dc18f8cf2f1ba8788d527b1a166",
+    "6d32f217950442c62094ae8e45031511f82c37cc9317c0a9d0dffc40e1233cd0",
+    "a8664263c641796b2836c08c82d8789506ce0c24399761f88fdee82e6e5dfdff",
+    "a66497701eedff78cac1a822134adc542042b6a86bb94432d3ab182065a742e2",
+    "eabb451f42284199f3d0aaba0280251ed1deb3ad9a4c6c6a3bb2a299f8d98500",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

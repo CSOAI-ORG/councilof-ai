@@ -1,0 +1,112 @@
+{
+  "card": {
+    "as_of": "2026-09-15T03:13:10.870Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdt0:optimism",
+      "backing_model": "native",
+      "wrapped": {
+        "chain": "optimism",
+        "symbol": "USDT0",
+        "address": "0x01bFF41798a0BcF287b996046Ca68b395DbC1071",
+        "chainId": 10,
+        "block": 156920988,
+        "block_hash": "0xfe24e35f8a6f7afea0dffb4ff30b31164ddc4838c984d6cdf7acc4592627f00e",
+        "block_time": 1789440753
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDT",
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "chainId": 1,
+        "block": 25976515,
+        "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb"
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "USDT0 is a LayerZero OFT: USDT is locked in one OFT Adapter on Ethereum (0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee) against the combined supply of every USDT0 chain, so no per-chain escrow exists and no per-pair parity is claimed; treated as native issuance on this chain. Supply read.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x00000000000000000000000000000000000000000000000000000ae7d8f163cd",
+          "raw_sha256": "bec6f809e2e29e1ac68c6bf33786b2d61e98d8fa5502f14c2e769a9d551945cc",
+          "atomic": "11990893421517",
+          "normalized": "11990893.421517",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
+      "state": "PROBED",
+      "error": null,
+      "fetched_at": "2026-09-15T03:13:10.870Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "escrow_balance (natively issued; no escrow exists)"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "da60746e5afaa4701a4f4ec68a127f1b0820330b46c0933cbb466c847706408d",
+    "sig_ed25519": "6cdd863243964dfcb3f24ddc7934380af30bf991c02c6d4e0835fbb072848fc7c7429d5d7ff7cb1180f6758153cad2d6890cb16d72838ce9d684dc99a1ba3603",
+    "source_urls": [
+      "https://mainnet.optimism.io",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDT0 on optimism vs native issuance — UNCHECKABLE_NATIVE_ISSUANCE",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:native",
+      "state:UNCHECKABLE_NATIVE_ISSUANCE"
+    ],
+    "unmeasured": [
+      "escrow_balance (natively issued; no escrow exists)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "622314eb553ba99a09f7b4ecdd09988e700eb405d87de0f32f3916af27be5b04",
+    "993ba7c93eb07870238713e2a599739fd508b6a7ee7a2b0574fa5885bf91cb7d",
+    "29568962be50215ae1ce937a4a77683d14b98944e148f33d58d1ac51fd18bacb",
+    "8a05ad6a733b0352a40024850f0e0797b146c6b0e95a991a48a78aa7022732e4",
+    "2b5d1ef96b712336fadd1f185d855b18824e021b653158c623fb23eae608958a",
+    "caccc32852ee1a89818d979283dbac8b9db15bc5f7ebe87d82fcfb8738f1a5e6",
+    "e9599b621fc44fd1cec03e82273734f96c50b207dd4b6fea83ffe9c460545a8d",
+    "30fbe3147665515a72d22bece741704c0d0640b0fbf93a394f271c580db0c31e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

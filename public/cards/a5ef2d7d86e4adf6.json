@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-09-14T10:50:48Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "alibaba-qwen",
+      "surface": "pricing",
+      "url": "https://www.alibabacloud.com/help/en/model-studio/billing-for-model-studio",
+      "prev_sha256": "d5926d149153ba1b262863d50ef1a5ebd17fb85ca364ea6cc7cccaa64b73e9a9",
+      "new_sha256": "f95302d6caecbe096d3f7405b005a30e9c896021e90e5be3a035a969b626ffd8",
+      "prev_bytes_sha256": "c0e19ca368248fb535ee4b2f522eb046b3998a09734caa0ae09f1d4906acbc98",
+      "new_bytes_sha256": "3e2dee8853fc3bdf22eb014495ed1f62c4cf8547f937559a7429fa7a5a390d2d",
+      "prev_fetched_at": "2026-09-13T10:19:33Z",
+      "fetched_at": "2026-09-14T10:50:48Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 430984,
+        "new": 437525
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "a5ef2d7d86e4adf6119fec8359ce33e8ac4a913562c99e73097e3b78b88b63aa",
+    "sig_ed25519": "fe6913c9b96297a2c401bcf2058f2829d3e29bd7f4eebc32c389628b10237881e7926572988c9786af9f6083b46e3cb71d10919f5290b1f01c48cc82bddf9702",
+    "source_urls": [
+      "https://www.alibabacloud.com/help/en/model-studio/billing-for-model-studio"
+    ],
+    "subject": "Alibaba Cloud / Qwen — pricing: bytes changed 2026-09-14",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:alibaba-qwen",
+      "surface:pricing",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "0102dc8878b7136625760a4fa95909b64c2e97e92e9b68be59b66466494fde96",
+    "5bc768433414cde406bd7136649314a116b7a75308d2f2186cedb22508c26fec",
+    "00a01db3c93bc561cbf0e756b1d533fe9243baefdee08856e0f068d9722906b0",
+    "e6642355f9f54ff7fbb3e68c4236dd488179305227e41b95860edbe025d79dc6",
+    "4f08f62f6d1ee50d0740c61bbde4ff1e6882f8d8df29bf2cd350b160d6bcc60f",
+    "caccc32852ee1a89818d979283dbac8b9db15bc5f7ebe87d82fcfb8738f1a5e6",
+    "e9599b621fc44fd1cec03e82273734f96c50b207dd4b6fea83ffe9c460545a8d",
+    "30fbe3147665515a72d22bece741704c0d0640b0fbf93a394f271c580db0c31e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

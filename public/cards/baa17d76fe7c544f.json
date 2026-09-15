@@ -1,0 +1,77 @@
+{
+  "card": {
+    "as_of": "2026-08-28T09:06:28.399Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Treasuries",
+      "holders": 50,
+      "issuer": "Ondo Finance",
+      "issuer_address": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1986128,
+      "symbol": "OUSG",
+      "verified_domain": "ondo.finance",
+      "verified_via": "Bidirectional domain match"
+    },
+    "product": {
+      "sku": "xrpl-asset-state",
+      "tier": "free",
+      "free_fields": [
+        "issuer",
+        "currency",
+        "holders",
+        "supply",
+        "trust_lines"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "baa17d76fe7c544f46966e2bb141b3ec97ecdc10b053219919742508094233dc",
+    "sig_ed25519": "2370a5036bda69b1482fdee530d2ee565bebec02d7ed27b3c3f9c080602eeab6f667a0f5c2f8e957eff1745e13cd13cc5a6dbf15420a105179c9d471acfe980d",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL OUSG public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "056a1efd58d1324912ee3fcfced1c7308e7571348167dfe27e0e261701dbce54",
+    "aadc2ad12a9e610e8125f4040bede34d0973856f4fce947cc2a4ab09f5fb6871",
+    "c991fa4adf520cd089c01ec0570d9c43aaaed7b9a411d696d16450d575468f5c",
+    "cd44e61e26d2bc350810d21294409d28d8679cfa7d1d8058e2ca5279b669577a",
+    "42bead95c24b1083352b01cd495fd9ab7ea2d695dce9a216d80f44f21aeb49f0",
+    "34ffc47125515453c353b0b7a9175f7e2c2aed7ef8ec433e9eb0a4ecca7ed64f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

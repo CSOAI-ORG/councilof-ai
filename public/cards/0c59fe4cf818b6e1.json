@@ -1,0 +1,88 @@
+{
+  "card": {
+    "as_of": "2026-09-15T02:06:49Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "221",
+      "symbol": "USDTB",
+      "attestation_page": "https://usdtb.money/",
+      "auditor": null,
+      "cadence_claimed": "monthly",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "ca17e42582fd34aa4fd497b9d09355d9a544261d6cc85f9b5ea7ed6daa639ccd",
+      "excerpt": "Our smart contracts have undergone numerous rigorous audits by top firms and we provide monthly attestations and live dashboards of reserves. USDtb Digital Doll",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "staleness"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "0c59fe4cf818b6e1de5e7ca686e73b7ee61c5dd910193d7cebe1b70537b54505",
+    "sig_ed25519": "279d885d6e05fde872b9b092de94c60347fb89aa2f04d8ab3caf5b5d927091f6f958405b4cbf8606faf696f1db6b3876530a0d46f5b14453dc6dfcec4a551f0a",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://usdtb.money/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDTB",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "staleness"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "5bb37f586893fb73f8e110978d5e469f3b650aad0e0a8b8ddd1b5f307569d86e",
+    "cb262bd2658cf5eae5b5b1f90a2b17394dff80a60506fbe7abcaa7389d1fe682",
+    "c84dee0ddec25fe8ec99f58c46adbe62d524e2b935bba63b3b957d99889b9ab7",
+    "a518404c052baf9715eca2d447c8633aa04bc866282af4f30ffa7e3cad7c36ba",
+    "75662763e6dcbe401a157be824ac76e965586adc8874fa5c8797e377be25555f",
+    "2f4491c83fb7874f7555e933b61013efa9d09e8cc65aade276364486925044f4",
+    "ecc2d55278f19adbe3912b36ed2b14dd6986f23c3157cc697e0e1326bc9bb3d8",
+    "a860a7466ee4ffe20dc8cb3f0fa831bee4e07d8cca0dbad9e10b31f66adc537d",
+    "6037c1fa0bb7ba4a526798d6b0a98a002986ba08706e8a5c2d8d467d94437087"
+  ]
+}

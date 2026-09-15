@@ -1,0 +1,81 @@
+{
+  "card": {
+    "as_of": "2026-08-31T07:38:20Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "bank": "MUFG Bank",
+      "kind": "gspc.coverage-card/0.1",
+      "status": "UNMEASURED",
+      "n": 0,
+      "not_a_grade": true,
+      "not_a_client": true,
+      "settlement": "off_chain",
+      "settlement_still_off_chain": true,
+      "note": "TARGET not client. Official public notice hashed. Tokenised deposits orchestrated 24/7; final settlement still through existing systems. Not a GPI firehose.",
+      "url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "465f195caa1b8c8a34bd6ce4152d99c9311078a78699de2036936e9b5a1aadac",
+    "sig_ed25519": "333dbfb172d714a3ed3fdb99c43a2cf2f24fb46a71007544e6b17040990064ab42ec2b90dba307ff64eb86259fc8b5f52db47451de74244d04503da3d7790b05",
+    "source_urls": [
+      "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure"
+    ],
+    "subject": "SWIFT shared-ledger TARGET: MUFG Bank (9 Jul 2026 press)",
+    "surface": "public.notice",
+    "tags": [
+      "framework:swift-public-press",
+      "coverage:TARGETS-not-clients",
+      "coverage:UNMEASURED",
+      "settlement:off-chain"
+    ],
+    "unmeasured": [
+      "press_html_body",
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "gpi_firehose"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "10ba26e58a2419bdb783742e35ef88a258ab1f29f6fbd5243c6365759265cfb5",
+    "c5710eab45e961b185e269250bf6a7864ebb997a97f89df63dc522e88e742e5a",
+    "e4bc56c30b0b90ecffa864c43dcb529334eb4d909620fcbb724f83603c962766",
+    "2783c4443768433f7927c83fd6efda466dca894392e944a4e0dfefacfbab497a",
+    "5b210200574a95beba6520adc180a285667849245e5419eb1424f20158a4823c",
+    "34ffc47125515453c353b0b7a9175f7e2c2aed7ef8ec433e9eb0a4ecca7ed64f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

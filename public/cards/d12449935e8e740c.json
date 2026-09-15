@@ -1,0 +1,88 @@
+{
+  "card": {
+    "as_of": "2026-09-15T02:06:49Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.stablecoin-deep-asset/0.1",
+      "status": "DEEP_PROBED",
+      "id": "1",
+      "symbol": "USDT",
+      "attestation_page": "https://tether.to/en/transparency/",
+      "auditor": null,
+      "cadence_claimed": "daily",
+      "latest_report_date": null,
+      "staleness_days": null,
+      "mirror_sha256": "5c82dba1a600ec5baa27f38e319e4058b77ec3d4e148a229cab0652254e11f15",
+      "excerpt": "Tether’s Reserves. Information about Tether Tokens in circulation is typically published daily. 1 The Tether Issuer's 2 assets exceed its liabilities. Tether To",
+      "findings": [
+        "no attestation figure/date in served bytes"
+      ],
+      "unmeasured": [
+        "auditor",
+        "staleness"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d12449935e8e740c32929e19b146cc87744da1cceb470042e890c9aac7b5c5c1",
+    "sig_ed25519": "a9b682cd1e8247488091b4c392f1e88b054a2f20fe5da9f39c874f44b8ffda34aedc1368174b83aebb0e79a1a10d74ea878b06b440df3d52f9976d42c445c206",
+    "source_urls": [
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/artefact-manifest.json",
+      "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
+      "https://tether.to/en/transparency/"
+    ],
+    "subject": "Stablecoin attestation deep-probe: USDT",
+    "surface": "public.notice",
+    "tags": [
+      "subject:stablecoin-attestation",
+      "release:stablecoin-deep-2026-09",
+      "facts-not-grades"
+    ],
+    "unmeasured": [
+      "auditor",
+      "staleness"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "1472cfd9b852f42d9fb02702a6b7d9d3afd75118591e4bd638d38c5d1635cb72",
+    "f35e4b291ff077c0ec59cec0f53811c9f489b3d38852d9ac9e082234ab01ecb6",
+    "c1dd4f947100d645abf931eaf379cf8af7262188133834558eac0bef35086eb6",
+    "d782b68fb351b672ea71c2078dbbc9289d6d59b61facb1c808222860b18a2e50",
+    "2ff882b87dffd4f7cc6dfa5b07dfc0ec762aa4f4b24cff7ea17d61c85fd98568",
+    "2f4491c83fb7874f7555e933b61013efa9d09e8cc65aade276364486925044f4",
+    "ecc2d55278f19adbe3912b36ed2b14dd6986f23c3157cc697e0e1326bc9bb3d8",
+    "a860a7466ee4ffe20dc8cb3f0fa831bee4e07d8cca0dbad9e10b31f66adc537d",
+    "6037c1fa0bb7ba4a526798d6b0a98a002986ba08706e8a5c2d8d467d94437087"
+  ]
+}

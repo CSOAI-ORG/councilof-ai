@@ -1,0 +1,111 @@
+{
+  "card": {
+    "as_of": "2026-09-15T03:13:10.870Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "cbxrp:base",
+      "backing_model": "custodial",
+      "wrapped": {
+        "chain": "base",
+        "symbol": "cbXRP",
+        "address": "0xcb585250f852C6c6bf90434AB21A00f02833a4af",
+        "chainId": 8453,
+        "block": 51325782,
+        "block_hash": "0xadcdf28ff737c15e3378d96d3c0c03f130985640dcfacffee90035ac843d3aa2",
+        "block_time": 1789440911
+      },
+      "canonical": {
+        "chain": "xrpl",
+        "symbol": "XRP",
+        "address": "Coinbase custody; not an EVM contract",
+        "chainId": null,
+        "block": null,
+        "block_hash": null
+      },
+      "escrow": null,
+      "escrow_name": null,
+      "note": "XRP reserve in Coinbase custody, self-published. INDEXED, no parity claimed.",
+      "reads": {
+        "wrapped_total_supply": {
+          "query": "totalSupply()",
+          "raw": "0x000000000000000000000000000000000000000000000000000072cf73127ac3",
+          "raw_sha256": "32b573554c7bbcea036d92fff74591ca6c128042b80fbf19f65f1ea81f6f6556",
+          "atomic": "126235314387651",
+          "normalized": "126235314.387651",
+          "decimals": 6
+        }
+      },
+      "escrow_over_wrapped": null,
+      "parity_state": "INDEXED_CUSTODIAL",
+      "state": "DISCOVERED",
+      "error": null,
+      "fetched_at": "2026-09-15T03:13:10.870Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "reserve (custodian-held off this chain; not readable here)"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "0ef5c17cd592322b280691d28c6d6bf94cbbcf4abdf0131bcb766ab93c3b1e75",
+    "sig_ed25519": "03060153cd9a62a33934536ac465af0bf9a652895bbfb53d803764c67fdd4019c9aec7e574cd33832428e16f297002daafbbbf03843371ae400b0dde7bc8db08",
+    "source_urls": [
+      "https://mainnet.base.org"
+    ],
+    "subject": "wrapped cbXRP on base vs native issuance — INDEXED_CUSTODIAL",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:custodial",
+      "state:INDEXED_CUSTODIAL"
+    ],
+    "unmeasured": [
+      "reserve (custodian-held off this chain; not readable here)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "2b614982dc91a8ba00264b5e334a404e94f9288c3f65de7292b29e74789e867f",
+    "82ced86752cd3735315c64f40a1fcbc6764df3e6d77270d45410e16354c316b3",
+    "17278a9af0c00c12aa884b2ecda231d313476320136abe78771303661835a5c8",
+    "0d04f3f3d564ccb0b88244059cd3e0166e48b3d5b94b4f01a943f85a593b64d7",
+    "a66497701eedff78cac1a822134adc542042b6a86bb94432d3ab182065a742e2",
+    "eabb451f42284199f3d0aaba0280251ed1deb3ad9a4c6c6a3bb2a299f8d98500",
+    "c3642cec82c524816a859c52414fdc228f445d1d82fec6ca786429343693ce3c",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

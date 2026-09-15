@@ -1,0 +1,103 @@
+{
+  "card": {
+    "as_of": "2026-09-15T03:13:10.870Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.wrapper.parity/0.1",
+      "attests": "point-in-time reads of wrapped totalSupply and origin-chain escrow balance at the pinned blocks named in each record; a ratio, not a rate, not a grade, not a reserve attestation, not a certificate",
+      "id": "usdt:polygon",
+      "backing_model": "native",
+      "wrapped": {
+        "chain": "polygon",
+        "symbol": "USDT",
+        "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+        "chainId": 137,
+        "block": 93811683,
+        "block_hash": "0x4531b40d94e0b1e9ec007b799693787d287a277e02ca1d2b915e0a7ecf611854",
+        "block_time": 1789422558
+      },
+      "canonical": {
+        "chain": "ethereum",
+        "symbol": "USDT",
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "chainId": 1,
+        "block": 25976515,
+        "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb"
+      },
+      "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+      "escrow_name": "Polygon PoS bridge ERC20Predicate (legacy bridged remainder only)",
+      "note": "Tether issues USDT natively on Polygon; the PoS predicate backs only the legacy bridged remainder (escrow ≈1% of supply on 2026-09-13). The wrapped supply is read; no parity is claimed.",
+      "reads": {},
+      "escrow_over_wrapped": null,
+      "parity_state": "UNMEASURED",
+      "state": "UNMEASURED",
+      "error": "RPC error: historical state b523b0ab8f5036a0e43be0cdb05a84e99ea559a41b8a9a03b2f6a721a2cb7cda is not available",
+      "fetched_at": "2026-09-15T03:13:10.870Z",
+      "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
+      "unmeasured": [
+        "chain reads (rpc failed; nothing inferred)"
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "efa728cd6c1da928481b4ecd92bd13b5789bc73536b6dbb9a1a4ed7c135a324d",
+    "sig_ed25519": "f8e756b888d579f6a4e6b52070fcf74d228af898fb18b9bbb9880458da9bd6c5436e76912bf1f80e2ab83041743ebc7e692a20f368b789764307804e9289ad0f",
+    "source_urls": [
+      "https://polygon-bor-rpc.publicnode.com",
+      "https://ethereum-rpc.publicnode.com"
+    ],
+    "subject": "wrapped USDT on polygon vs Polygon PoS bridge ERC20Predicate (legacy bridged remainder only) — UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:wrapper-parity",
+      "axis:distribution-integrity",
+      "backing:native",
+      "state:UNMEASURED"
+    ],
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "d973b122fb98fa9ba5ea3c6dc5ce82049a6e9946e1f1473adba83f6fb00732b5",
+    "eee9b8248308fcdb2b876ed2279ba89a19d35fc2938c5af094bb0d6bc9bb2e52",
+    "29568962be50215ae1ce937a4a77683d14b98944e148f33d58d1ac51fd18bacb",
+    "8a05ad6a733b0352a40024850f0e0797b146c6b0e95a991a48a78aa7022732e4",
+    "2b5d1ef96b712336fadd1f185d855b18824e021b653158c623fb23eae608958a",
+    "caccc32852ee1a89818d979283dbac8b9db15bc5f7ebe87d82fcfb8738f1a5e6",
+    "e9599b621fc44fd1cec03e82273734f96c50b207dd4b6fea83ffe9c460545a8d",
+    "30fbe3147665515a72d22bece741704c0d0640b0fbf93a394f271c580db0c31e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-09-12T09:23:58Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "amazon",
+      "surface": "pricing",
+      "url": "https://aws.amazon.com/bedrock/pricing/",
+      "prev_sha256": "f7e0036847030ae1bdd2fc4a88eeefe41f695e3c9586c3229fead501a120c657",
+      "new_sha256": "d86cbd920fb4aa564ba67346bfa97ec8f1271f0e00d0901a24dcc2cc1d799da5",
+      "prev_bytes_sha256": "cccb235004368e3201ca6c370f0f3c820b91ad26366b89c27962ecee63b2edb9",
+      "new_bytes_sha256": "34c9c57c10a401a0ee9988217e9ad3718be08a8e35be9b73ff3b5191945e93af",
+      "prev_fetched_at": "2026-09-05T09:06:18Z",
+      "fetched_at": "2026-09-12T09:23:58Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 894884,
+        "new": 895209
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": "Thu, 03 Sep 2026 12:18:55 GMT",
+        "new": "Wed, 09 Sep 2026 10:33:05 GMT"
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "1bdf6d419ec4cf01ce31aae07cec38c7ac4010bea9b2755811bd290280a2256c",
+    "sig_ed25519": "92de0df1f2a2a82eb9b43b3993065efad55cd81c2e5ae612148b8269438a355954c46a79e3f83e2ebc3207110900665a7dcb57020b3d6b44b231a9c126fc540c",
+    "source_urls": [
+      "https://aws.amazon.com/bedrock/pricing/"
+    ],
+    "subject": "Amazon (AWS Bedrock / Nova) — pricing: bytes changed 2026-09-12",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:amazon",
+      "surface:pricing",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "c8e78ddba0dc717b6506c30135d1c186320d944ba9d0871979a3e7839332e973",
+    "ea64c7f2947fe43fa608ba22e0d28b4b058c3a81c5b7d8dfc3d9353d0a5c8343",
+    "8766a03fb8497f47db97d959e88a3a38254dc5ae576949f4d47a5245ba64a11e",
+    "8d85e2775bc85b49031deab846bf28dcab6c68c4a24c6ca6b4e2ea8357afe764",
+    "4f08f62f6d1ee50d0740c61bbde4ff1e6882f8d8df29bf2cd350b160d6bcc60f",
+    "caccc32852ee1a89818d979283dbac8b9db15bc5f7ebe87d82fcfb8738f1a5e6",
+    "e9599b621fc44fd1cec03e82273734f96c50b207dd4b6fea83ffe9c460545a8d",
+    "30fbe3147665515a72d22bece741704c0d0640b0fbf93a394f271c580db0c31e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

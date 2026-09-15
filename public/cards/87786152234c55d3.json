@@ -1,0 +1,138 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:46Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "attestation_pdf_filter": "attestation|reserves? report",
+      "attestation_pdf_latest": [
+        "https://cdn.sanity.io/files/ior4a5y3/production/00bb3899f244c392ab77e55e65dee33cf271dfce.pdf/RLUSD_Attestation_Report_-_May_2026_Final.pdf",
+        "https://cdn.sanity.io/files/ior4a5y3/production/5a9121caa4206788930869cac0f868e5841d7fae.pdf/RLUSD_Attestation_Report_-_June&#x27;26_FINAL.pdf",
+        "https://cdn.sanity.io/files/ior4a5y3/production/42b2ca149329bbf0e34d5d687d30cbb750eea6b8.pdf/RLUSD_Attestation_Report_-_July_26.docx (Final).pdf"
+      ],
+      "attestation_pdf_links_n": 20,
+      "attestation_pdf_undated_n": 0,
+      "axes": [
+        "reserve-attestation",
+        "stablecoin-attestation-cadence",
+        "custody-disclosure",
+        "regulatory-framework"
+      ],
+      "cadence": {
+        "basis": "year+month parsed from attestation PDF link filenames on the fetched page (2-digit years read as 20yy); bodies not opened",
+        "consecutive_monthly": true,
+        "dated_reports_n": 20,
+        "first": "2024-12",
+        "last": "2026-07",
+        "max_gap_months": 1
+      },
+      "fetched_at": "2026-09-02T07:56:46Z",
+      "inputs_sha256": "58a039e9de27d43c527b44d48565e681f77d95fce05b94c1bf9dfbcd93310669",
+      "issuer": "Ripple",
+      "kind": "csoai.eater.issuer-disclosure/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "pages": [
+        {
+          "body_state": "HASHED",
+          "fetched_at": "2026-09-02T07:56:46Z",
+          "http": 200,
+          "n_bytes": 122710,
+          "robots": "allowed",
+          "sha256": "d868ab693342ed198372b3b4dc06abdae2f8b9fee871b9131b7b26c7ad35ce90",
+          "url": "https://ripple.com/solutions/stablecoin/transparency/"
+        }
+      ],
+      "pdf_links_n": 20,
+      "state": "PROBED",
+      "symbols": [
+        "RLUSD"
+      ],
+      "term_hits": {
+        "custody_terms": 34,
+        "named_accounting_firms": 0,
+        "regulatory_terms": 6,
+        "reserve_attestation_terms": 28
+      },
+      "term_lexicon": {
+        "custody_terms": "custodian|custody|trust company|bny mellon|bank of new york|state street|coinbas",
+        "named_accounting_firms": "deloitte|pricewaterhousecoopers|\\bpwc\\b|\\bkpmg\\b|ernst\\s*&\\s*young|\\bbdo\\b|grant",
+        "regulatory_terms": "\\bmica\\b|e-money token|electronic money|\\bnydfs\\b|new york department of financi",
+        "reserve_attestation_terms": "attestation|attested|proof of reserves?|reserve report|examination report"
+      },
+      "unmeasured": [
+        "attestation_pdf_bodies (not opened)",
+        "reserve_composition",
+        "custodian_confirmation (name presence only)",
+        "regime_confirmation (term presence only)",
+        "risk_verdict (counsel)"
+      ],
+      "writes_board": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "87786152234c55d3e5feadcf1d25820467641b9bae5b968cc11e07ab6b37112f",
+    "sig_ed25519": "e198768fb027f595551341104327a5e411095c22a0a23f70af5df0d889b2d276f20ed722547de586baece7af7331a723b5855d265d58e135702b74599a054203",
+    "source_urls": [
+      "https://ripple.com/solutions/stablecoin/transparency/"
+    ],
+    "subject": "Ripple disclosure page facts: 20 attestation PDF links, term hits, cadence — PROBED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:reserve-attestation",
+      "axis:stablecoin-attestation-cadence",
+      "axis:custody-disclosure",
+      "axis:regulatory-framework",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "attestation_pdf_bodies (not opened)",
+      "reserve_composition",
+      "custodian_confirmation (name presence only)",
+      "regime_confirmation (term presence only)",
+      "risk_verdict (counsel)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "df031d71b7f5ecdf974c08e9f8d99e890bc9b1f811b4024beb4374b6b5132adb",
+    "0b8a6ed0d9d19e2177538e08e545e6cedd19151675ffcaa4a0496534f5efbb41",
+    "31d100cf3b9cdc0ddc895cf36359ec3ba41214139dd9eb58a8283d62a3ec97ad",
+    "252d6fa38e09587ffb4b5ef8ddfd3805f3b4afb57ba240239c5973898c0b5d46",
+    "60674fe01021d2d4c84ef3f2dd7ce99347855592de281c60fb47bd4e7777fd72",
+    "8e765ff2924b51296c1ff9d64bb5b07b706837c903782362cb60f5d685fd777f",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "e6a08613a50129f3e0c2d2778bc45ec8e96d65e3a68b67212deec396690d125e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}

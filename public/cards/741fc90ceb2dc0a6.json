@@ -1,0 +1,110 @@
+{
+  "card": {
+    "as_of": "2026-09-05T09:06:18Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms.daily/0.1",
+      "state": "PROBED",
+      "run_at": "2026-09-05T09:06:18Z",
+      "normaliser": "csoai-norm-v1",
+      "n_targets": 51,
+      "n_ok": 45,
+      "n_unchanged": 5,
+      "n_changed": 14,
+      "n_bytes_only": 26,
+      "n_first_capture": 0,
+      "n_uncheckable": 6,
+      "n_unknown": 0,
+      "changed": [
+        "anthropic/pricing",
+        "anthropic/art50_marking",
+        "google/safety_policy",
+        "xai/terms",
+        "xai/usage_policy",
+        "xai/pricing",
+        "xai/safety_policy",
+        "cohere/usage_policy",
+        "cohere/model_cards",
+        "cohere/safety_policy",
+        "deepseek/model_cards",
+        "deepseek/pricing",
+        "alibaba-qwen/model_cards",
+        "alibaba-qwen/usage_policy"
+      ],
+      "uncheckable": [
+        "openai/terms",
+        "openai/usage_policy",
+        "openai/model_cards",
+        "openai/pricing",
+        "openai/safety_policy",
+        "openai/art50_marking"
+      ],
+      "unknown": [],
+      "attests": "for each target listed as unchanged, the normalised sha256 of this capture equals the previous OK capture — an observation of two captures, nothing about the document between them",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "741fc90ceb2dc0a649d25872a3a28392c21cde44988390d3f620ebf4a044e241",
+    "sig_ed25519": "c235e0b1042642dc62f2abf26f9013f5b06fa9e192ebe927e7749841d551f49c57aff3e3f5e6f6471aed0ee60c4c16fdbd378b9f5dac0d3567654356ccf1ca02",
+    "source_urls": [
+      "https://councilof.ai/feeds/provider-diff/index.json"
+    ],
+    "subject": "provider-diff daily capture 2026-09-05: 14 changed, 6 uncheckable, 0 unknown of 51",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "daily",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "targets listed as uncheckable/unknown (nothing observed; never 'unchanged')",
+      "what changed on any changed target",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "a7bab982ff11e082ee477278cef5ac81e99065e6d5d21a839c6a17711d6f71ce",
+    "15d602e43790cfbe8e809ccadb226b843d7c54edb6c7d6b508aa36f459070d50",
+    "86b3793885a3a835b8f992a509368a6a28e33761e752aeaa397e5fd4ea820935",
+    "839f5265bec1901f40884f63c4c2301f642c975c4bb6e54552849a2c135d400c",
+    "e27559339cead2929fca20472a74f61737571ed2be73a407f5fe066072b6d26c",
+    "cd2fd5436304eca994b0b2e0ed40bf8e6ec8ddb9f34fc537dbeeb5d03809b9ed",
+    "e9599b621fc44fd1cec03e82273734f96c50b207dd4b6fea83ffe9c460545a8d",
+    "30fbe3147665515a72d22bece741704c0d0640b0fbf93a394f271c580db0c31e",
+    "806e161f7d8c4b91f304edb88cc6225c36fdd5dfc94540c18ff5ae754d1276d1"
+  ]
+}
