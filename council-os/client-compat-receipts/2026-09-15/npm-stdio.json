@@ -1,0 +1,62 @@
+{
+  "schema": "csoai.client-compat-receipt/0.1",
+  "client": "npm stdio (npx)",
+  "package": "csoai-gspc-mcp@0.2.2",
+  "node": "v22.22.3",
+  "read_at": "2026-09-15T06:36:55.967Z",
+  "initialize": {
+    "protocolVersion": "2025-06-18",
+    "serverInfo": {
+      "name": "csoai-gspc-mcp",
+      "version": "0.2.2"
+    }
+  },
+  "tools_list": {
+    "count": 12,
+    "names": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion",
+      "x402_trust",
+      "commission_card",
+      "art50_marking_evidence",
+      "rwa_evidence",
+      "receipts_batch"
+    ],
+    "paid": [
+      "commission_card",
+      "art50_marking_evidence",
+      "rwa_evidence",
+      "receipts_batch"
+    ]
+  },
+  "free_call": {
+    "tool": "board_totals",
+    "isError": false,
+    "headline": "LIVE board totals — 22 axis · 22 measured (slots and measurements are different kinds; never summed)."
+  },
+  "stderr_tail": "csoai-gspc-mcp 0.2.2 — stdio MCP server, live source https://councilof.ai\n",
+  "exact_config": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "csoai-gspc-mcp@0.2.2"
+    ],
+    "transport": "stdio"
+  },
+  "verdict": "TESTED_PASS",
+  "drift_vs_remote": {
+    "remote_server_version": "1.4.2",
+    "npm_server_version": "0.2.2",
+    "remote_tools": 13,
+    "npm_tools": 12,
+    "missing_from_npm": [
+      "mcp_trust"
+    ],
+    "note": "Separately versioned implementations. mcp_trust reached master 2026-09-15T02:57Z (a59aa263a); npm 0.2.2 was published 2026-09-13."
+  }
+}
