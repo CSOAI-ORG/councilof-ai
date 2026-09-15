@@ -15,6 +15,7 @@ import DashboardAttestationsPane from "@/components/DashboardAttestationsPane";
 import LobbyEvidencePane from "./LobbyEvidencePane";
 import LobbyEmbedPane from "./LobbyEmbedPane";
 import LobbyArt50Pane from "./LobbyArt50Pane";
+import EvidenceIndexPane from "@/components/evidence-index/EvidenceIndexPane";
 import LobbyMatrixPane from "./LobbyMatrixPane";
 import LobbyPlay from "./LobbyPlay";
 import LobbyHome from "./LobbyHome";
@@ -544,6 +545,10 @@ export default function LobbyOverlay({
                   <LobbyEmbedPane onOpenRoute={openRoute} />
                 ) : nativePane && tab.id === "art50" ? (
                   <LobbyArt50Pane onOpenRoute={openRoute} />
+                ) : nativePane && tab.id === "evidence-index" ? (
+                  <div className="h-full overflow-auto">
+                    <EvidenceIndexPane />
+                  </div>
                 ) : (
                   <>
                     {/* The pane was asked for a destination behind RequireAuth and the

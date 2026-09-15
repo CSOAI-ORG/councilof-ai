@@ -11,6 +11,9 @@ import { Link } from "wouter";
 import { LOBBY_TABS, normalizeLobbyTabId } from "@/components/lobby/tabs";
 import DashboardEmbeddedView from "@/components/DashboardEmbeddedView";
 const LobbyBoardPane = lazy(() => import("@/components/lobby/LobbyBoardPane"));
+const EvidenceIndexPane = lazy(
+  () => import("@/components/evidence-index/EvidenceIndexPane"),
+);
 const HomeGspcBoard = lazy(() => import("@/components/home/HomeGspcBoard"));
 const LobbyMatrixPane = lazy(
   () => import("@/components/lobby/LobbyMatrixPane"),
@@ -72,6 +75,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   results: HomeGspcBoard, // Stale iframe retired: one canonical native result surface.
   leaderboard: Page_Leaderboard, // the full model x axis table, in-shell
   terminal: LobbyBoardPane, // GSPC terminal
+  "evidence-index": EvidenceIndexPane, // GSPC evidence index: GET /api/coverage + /api/worker, beside the board (owner 15 Sep)
   console: DashboardConsolePane, // the ONE console — same file as /gspc-console.html and the HF Space
   matrix: LobbyMatrixPane, // industry × regulation grid, native
   archive: DashboardArchivePane, // provable archive: signed hourly history of permission-state leaves (GET /archive/index.json)

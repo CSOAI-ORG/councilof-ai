@@ -1,11 +1,14 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { onRequestGet } from "./coverage";
+import { MCP_TOOL_TABLE, onRequestGet } from "./coverage";
+import GSPC_TOOLS from "../mcp/gspc-tools.json";
+import PAID_TOOLS from "../mcp/paid-tools.json";
 
 const payloads: Record<string, unknown> = {
   // The three agent-economy sources added with the mcp/a2a/erc8004 rows; every
   // owning source must answer or `complete` is false by design.
   "/mcp": { ok: true, server_info: { version: "1.4.2" } },
   "/api/a2a": { protocolVersion: "1.0" },
+  "/.well-known/agent-card.json": { skills: [{ id: "gspc-board" }, { id: "x402-discovery" }] },
   "/interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json": {
     registry_totals: { registered_all_indexer: 137046 },
   },
@@ -93,9 +96,17 @@ describe("GET /api/coverage", () => {
     expect(body.rows.find((row: any) => row.id === "stablecoins").indexed.value).toBe(425);
     expect(body.rows.find((row: any) => row.id === "xrpl").measured.value).toBe(0);
     expect(body.rows.find((row: any) => row.id === "x402").paid.value).toBe(1);
-    expect(body.rows.find((row: any) => row.id === "mcp").indexed.value).toBe(12);
+    // The MCP count is the tool table tools/list serves (paid-tools.test.ts pins tools/list to
+    // exactly these two files), so a tool added to either file moves this number with it.
+    const tableCount = GSPC_TOOLS.tools.length + PAID_TOOLS.tools.length;
+    expect(MCP_TOOL_TABLE.free.length + MCP_TOOL_TABLE.paid.length).toBe(tableCount);
+    expect(body.rows.find((row: any) => row.id === "mcp").indexed.value).toBe(tableCount);
+    expect(body.rows.find((row: any) => row.id === "mcp").note).toContain(
+      `serves ${tableCount} tools (${GSPC_TOOLS.tools.length} free readers + ${PAID_TOOLS.tools.length} x402-metered`,
+    );
     expect(body.rows.find((row: any) => row.id === "mcp").measured.value).toBeNull();
-    expect(body.rows.find((row: any) => row.id === "a2a").indexed.value).toBe(7);
+    expect(body.rows.find((row: any) => row.id === "a2a").indexed.value).toBe(2);
+    expect(body.sources.a2a_card).toMatchObject({ http: 200, parsed: true });
     expect(body.rows.find((row: any) => row.id === "a2a").measured.value).toBeNull();
     expect(body.rows.find((row: any) => row.id === "erc8004").indexed.value).toBe(137046);
     expect(body.rows.find((row: any) => row.id === "erc8004").measured.value).toBeNull();
@@ -108,6 +119,7 @@ describe("GET /api/coverage", () => {
     expect(body.rows.find((row: any) => row.id === "bazaar").indexed.value).toBe(2990);
     expect(body.rows.find((row: any) => row.id === "bazaar").measured.value).toBeNull();
     expect(body.rows.find((row: any) => row.id === "bazaar").note).toMatch(/414 answered a conformant v2 402/);
+    expect(body.rows.find((row: any) => row.id === "bazaar").note).toMatch(/our own 9 doors are the x402 row/);
   });
 
   it("keeps a failed source visible and renders its lifecycle cells unavailable", async () => {

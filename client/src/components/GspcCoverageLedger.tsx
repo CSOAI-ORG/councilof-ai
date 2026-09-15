@@ -20,6 +20,7 @@ const SOURCES: Record<keyof CoverageLedgerInput, string> = {
   // fallback must fetch every CoverageLedgerInput key or the row reads "—".
   mcp: "/mcp",
   a2a: "/api/a2a",
+  a2a_card: "/.well-known/agent-card.json",
   erc8004: "/interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json",
   wrappers: "/interop/wrapped-asset-parity-latest.json",
   root_kinds: "/interop/root-kinds.json",

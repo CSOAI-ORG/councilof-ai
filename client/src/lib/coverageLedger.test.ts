@@ -51,13 +51,17 @@ const input = {
   revenue: { one_number: { settlements: 1 } },
   mcp: { ok: true, server_info: { version: "1.4.2" } },
   a2a: { protocolVersion: "1.0", endpoint: "https://councilof.ai/api/a2a" },
+  a2a_card: { skills: [{ id: "gspc-board" }, { id: "x402-discovery" }, { id: "article50-detect" }] },
   erc8004: {
+    indexer: "https://api.8004scan.io/api/v1/agents",
+    probed_at: "2026-09-02T03:30:51Z",
     registry_totals: {
       registered_all_indexer: 803294,
       with_feedback_ge1: 138979,
     },
   },
   wrappers: {
+    // UNMEASURED deliberately absent: the note must print "?" for it, never 0.
     counts: { ESCROW_PARITY_READ: 8, UNCHECKABLE_NATIVE_ISSUANCE: 4, INDEXED_CUSTODIAL: 5 },
     records: Array.from({ length: 17 }, (_, i) => ({ id: `pair-${i}` })),
   },
@@ -119,9 +123,45 @@ describe("master GSPC coverage ledger", () => {
     expect(x402.paid.value).toBe(1);
   });
 
-  it("derives MCP row from server_info", () => {
-    const mcp = buildCoverageLedger(input).find((row) => row.id === "mcp")!;
-    expect(mcp.indexed.value).toBe(12);
+  const TABLE = {
+    free: ["board_totals", "get_axis", "verify_card"],
+    paid: ["commission_card", "rwa_evidence"],
+  };
+
+  it("counts the MCP tool table, not a typed number — control: another table gives another count", () => {
+    const mcp = buildCoverageLedger(input, { mcpTools: TABLE }).find((row) => row.id === "mcp")!;
+    expect(mcp.indexed.value).toBe(5);
+    expect(mcp.note).toMatch(/serves 5 tools \(3 free readers \+ 2 x402-metered/);
+    expect(mcp.note).toMatch(/v1\.4\.2/);
+    expect(mcp.note).not.toMatch(/\b12 tools\b|Registry entry lags/);
+    const bigger = buildCoverageLedger(input, {
+      mcpTools: { free: [...TABLE.free, "mcp_trust"], paid: TABLE.paid },
+    }).find((row) => row.id === "mcp")!;
+    expect(bigger.indexed.value).toBe(6);
+  });
+
+  it("leaves the MCP count null without a tool table, without a live server, or when GET /mcp disagrees", () => {
+    const noTable = buildCoverageLedger(input).find((row) => row.id === "mcp")!;
+    expect(noTable.indexed.value).toBeNull();
+    expect(noTable.indexed.unavailable).toMatch(/tool table is not available/);
+    const down = buildCoverageLedger({ ...input, mcp: null }, { mcpTools: TABLE }).find((row) => row.id === "mcp")!;
+    expect(down.indexed.value).toBeNull();
+    expect(down.note).toMatch(/null, not zero/);
+    const disagree = buildCoverageLedger(
+      { ...input, mcp: { ...input.mcp, paid_tools: { names: ["commission_card"] } } },
+      { mcpTools: TABLE },
+    ).find((row) => row.id === "mcp")!;
+    expect(disagree.indexed.value).toBeNull();
+    expect(disagree.indexed.unavailable).toMatch(/disagrees/);
+    const agree = buildCoverageLedger(
+      { ...input, mcp: { ...input.mcp, paid_tools: { names: ["rwa_evidence", "commission_card"] } } },
+      { mcpTools: TABLE },
+    ).find((row) => row.id === "mcp")!;
+    expect(agree.indexed.value).toBe(5);
+  });
+
+  it("keeps the MCP row's other stages null", () => {
+    const mcp = buildCoverageLedger(input, { mcpTools: TABLE }).find((row) => row.id === "mcp")!;
     expect(mcp.measured.value).toBeNull();
     expect(mcp.measured.field).toMatch(/implemented tool count is not a measurement/);
     expect(mcp.measured.unavailable).toBeTruthy();
@@ -129,9 +169,14 @@ describe("master GSPC coverage ledger", () => {
     expect(mcp.writesBoard).toBe(false);
   });
 
-  it("derives A2A row from protocol version", () => {
+  it("counts A2A skills from the published agent card — control: no card, no count", () => {
     const a2a = buildCoverageLedger(input).find((row) => row.id === "a2a")!;
-    expect(a2a.indexed.value).toBe(7);
+    expect(a2a.indexed.value).toBe(3);
+    expect(a2a.indexed.source).toBe("GET /.well-known/agent-card.json");
+    expect(a2a.note).toMatch(/3 implemented skills/);
+    expect(a2a.note).toMatch(/gspc-board, x402-discovery, article50-detect/);
+    expect(buildCoverageLedger({ ...input, a2a_card: null }).find((row) => row.id === "a2a")!.indexed.value).toBeNull();
+    expect(buildCoverageLedger({ ...input, a2a: null }).find((row) => row.id === "a2a")!.indexed.value).toBeNull();
     expect(a2a.measured.value).toBeNull();
     expect(a2a.measured.field).toMatch(/implemented skill count is not a measurement/);
     expect(a2a.measured.unavailable).toBeTruthy();
@@ -142,10 +187,25 @@ describe("master GSPC coverage ledger", () => {
   it("derives ERC-8004 row from registry_totals", () => {
     const erc = buildCoverageLedger(input).find((row) => row.id === "erc8004")!;
     expect(erc.indexed.value).toBe(803294);
+    // The note repeats only what the probe publishes; the per-chain figures it once typed are gone.
+    expect(erc.note).toMatch(/803294 registered, 138979 with at least one feedback/);
+    expect(erc.note).not.toMatch(/50,783|86,263|16,518/);
+    expect(erc.indexed.source).not.toMatch(/\/api\/erc8004\b/);
     expect(erc.measured.value).toBeNull();
     expect(erc.measured.field).toMatch(/indexer census is not a measurement/);
     expect(erc.measured.unavailable).toBeTruthy();
     expect(erc.signed.value).toBeNull();
+  });
+
+  it("never prints an unpublished wrapper or door count as 0", () => {
+    const rows = buildCoverageLedger(input);
+    const wrappers = rows.find((row) => row.id === "wrappers")!;
+    expect(wrappers.note).toMatch(/escrow-parity reads: 8/);
+    expect(wrappers.note).toMatch(/unmeasured: \?/);
+    const bazaar = rows.find((row) => row.id === "bazaar")!;
+    expect(bazaar.note).toMatch(/our own 9 doors are the x402 row/);
+    const noDoors = buildCoverageLedger({ ...input, x402: null }).find((row) => row.id === "bazaar")!;
+    expect(noDoors.note).toMatch(/our own \? doors/);
   });
 
   it("AP2 row does not exist (no implementation)", () => {
@@ -165,6 +225,7 @@ describe("master GSPC coverage ledger", () => {
       revenue: null,
       mcp: null,
       a2a: null,
+      a2a_card: null,
       erc8004: null,
       wrappers: null,
       root_kinds: null,
