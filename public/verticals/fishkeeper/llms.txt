@@ -1,0 +1,46 @@
+# Fishkeeper — Aquarium Fish Measurement (Vertical Discovery)
+
+Fishkeeper is a demonstration vertical for Council of AI measurement infrastructure applied to aquarium fish health, husbandry, and water-quality tracking. This file is a discovery entrypoint for agents and AI systems.
+
+Status: DEMO VERTICAL — not a live measurement service. No real aquarium data is being measured or certified. This file demonstrates how vertical-specific measurement would plug into the councilof.ai card and verification infrastructure.
+
+## What this vertical is
+
+Aquarium fish keeping involves tracking water parameters, fish health observations, breeding records, and tank conditions over time. These are measurable observations with evidence — exactly the kind of thing a measurement card can record without issuing grades or certifications.
+
+A fishkeeper measurement card would record:
+
+- subject: the tank, fish, or water system being observed
+- source_urls: test kit results, sensor logs, photo/video evidence
+- payload: observation data (pH, temperature, ammonia, nitrite, fish behaviour notes)
+- surface: a registered surface name (pending — not yet in the card-v1 enum)
+- unmeasured: what the card does NOT claim to have measured
+
+This is measurement, not certification. A fishkeeper card records observations and links to evidence. It does not award grades, rankings, or compliance marks.
+
+## How it connects to councilof.ai
+
+- Card schema: https://councilof.ai/schema/card-v1.json
+- Verification: https://councilof.ai/gspc-verify (free, always)
+- Public root: https://councilof.ai/root.json
+- Living board: GET https://councilof.ai/api/gspc
+- Agent card: https://councilof.ai/.well-known/agent-card.json
+
+## Agent card
+
+- Fishkeeper A2A agent card: https://councilof.ai/.well-known/verticals/fishkeeper/agent-card.json
+
+## Demo artefact
+
+The same demo lineage card generator at scripts/adapters/koi_lineage_demo.py also demonstrates the fishkeeper pattern.
+Run with --demo to produce a sample unsigned card structure following card-v1.
+The output is a DEMO — not signed, not in the public root, not MEASURED.
+
+## What we do not do
+
+- No aquarium compliance certifications
+- No fish health grading or ranking
+- No water quality certifications
+- No fabricated observation data in this file or the demo
+
+Measurement only. Not a certificate. Not a compliance authority.

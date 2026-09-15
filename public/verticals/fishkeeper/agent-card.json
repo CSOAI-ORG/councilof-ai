@@ -1,0 +1,56 @@
+{
+  "name": "Fishkeeper — Aquarium Measurement (Demo)",
+  "description": "DEMO vertical agent card for aquarium fish and water-quality measurement using Council of AI infrastructure. Not a live service. Demonstrates how a domain-specific measurement vertical would declare its A2A agent card alongside councilof.ai's measurement rails. A fishkeeper card records water-parameter observations (pH, temperature, ammonia, nitrite), fish health notes, and breeding records with evidence links, using the same card-v1 schema as every other measurement card. Measurement, not certification — no compliance grades, no aquarium rankings. The card-v1 surface for fishkeeper is pending registration; this card is a structural demo.",
+  "version": "0.1.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/verticals/fishkeeper/llms.txt",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "fishkeeper-card",
+      "name": "fishkeeper-card",
+      "description": "DEMO. Produce a sample unsigned aquarium measurement card following the card-v1 schema (https://councilof.ai/schema/card-v1.json). Accepts observation data (tank id, water parameters, fish health notes, sensor readings). Returns a card structure with sha256 computed over the canonical body. The card is UNSIGNED and NOT in the public root — it is a structural demo, not a live measurement. Measurement, not certification.",
+      "tags": [
+        "measurement",
+        "demo",
+        "aquarium",
+        "water-quality"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"fishkeeper-card\",\"input\":{\"tank_id\":\"DEMO-TANK-01\",\"ph\":7.2}}"
+      ]
+    }
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "aquarium-compliance",
+    "fish-health-grading"
+  ],
+  "did": "did:web:councilof.ai:verticals:fishkeeper:demo",
+  "demo": true,
+  "demo_note": "This is a structural demo of how a vertical agent card would look. No live measurement service exists behind this card. The card-v1 surface enum does not yet include a fishkeeper surface."
+}
