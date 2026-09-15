@@ -1,13 +1,19 @@
 {
   "kind": "csoai.publisher-health/v0",
+<<<<<<< Updated upstream
   "as_of": "2026-09-14T09:45:35Z",
+=======
+  "as_of": "2026-09-15T01:15:25Z",
+  "last_success": "unsigned-snapshot",
+  "last_success_as_of": "2026-08-31T07:38:20Z",
+>>>>>>> Stashed changes
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
-  "key": "present",
-  "envelope": "signed",
+  "key": "absent",
   "halt": {
-    "split": false,
+    "split": true,
     "unsigned_new_leaves": 0,
+<<<<<<< Updated upstream
     "missing_key": false
   },
   "xrpl_basket_merkle": "c558cbe482e80f041123c38fda62c7e54f5ae243e62c051348a90b532924a286",
@@ -614,6 +620,13 @@
     "payload_bytes": 601
   },
   "card_count": 299,
+=======
+    "missing_key": false,
+    "reason": "split"
+  },
+  "merkle_root": "8a121be5c52aeab4e9b1f4de824ecb397c671c0259f678cb75bc564b2eeb1446",
+  "card_count": 298,
+>>>>>>> Stashed changes
   "xrpl_asset_state_count": 16,
-  "note": "hub.census.digest and gspc.board.cite live here, not on card-v0. Never MEASURED. Never certify. Never partnered with SWIFT. Never 17-banks-on-our-feed."
+  "note": "Halt health. Tree not rewritten. Last success is the 07:38Z unsigned snapshot. Fail-closed. Not MEASURED. Not a certificate."
 }
