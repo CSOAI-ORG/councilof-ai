@@ -98,7 +98,7 @@ export const FILL_ROWS: FillRow[] = [
     id: "coverage-index",
     layer: "index",
     title: "Coverage index",
-    fills: "N measured of M declared slots. Machine schema csoai.sov-signal-index/1 already published as a row count.",
+    fills: "N measured of M declared slots. Signed coverage index already published as a row count.",
     never: "A fused SOV grade. A forecast. An investable index. A bond coupon.",
     href: "/signals/sov-signal.signed.json",
     status: "live",

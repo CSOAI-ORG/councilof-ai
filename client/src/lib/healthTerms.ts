@@ -105,7 +105,7 @@ export const HEALTH_TERMS: HealthTerm[] = [
     term: "Coverage",
     use: "use",
     they_say: "Vaccinated of eligible. N of M, never ‘the city is healthy 0.8’.",
-    we_say: "N measured of M declared. csoai.sov-signal-index/1 counts rows.",
+    we_say: "N measured of M declared. Signed coverage index counts rows.",
   },
   {
     id: "triage",

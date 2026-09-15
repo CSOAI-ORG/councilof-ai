@@ -3,7 +3,7 @@
  *
  * Agents already reach the board. Enterprise already has a RAS pack schema.
  * x402 already names the charge: assembly. The missing piece is custody
- * (payTo), not a new token, not a mined coin, not a fused SOV grade.
+ * (payTo), not a new token, not a mined coin, not a fused Council Space grade.
  *
  * Was true 2026-08-30, NOT NOW: the x402 card had no payTo and pointed at
  * pack.councilof.ai/v1/pack/assemble. Live today: /.well-known/x402.json is
@@ -136,17 +136,17 @@ export const OPENINGS: Opening[] = [
     when: "after-payto",
     title: "Be the attester others mint against",
     eats: "T-REX / XRPL partners may point a token at a digest we already signed. We take an attester fee for the pointer, never the coupon.",
-    never: "Council as issuer, miner, or SOV token house.",
+    never: "Council as issuer, miner, or fused-index token house.",
     feed: "/xrpl-attest is a /root.json reader now. Partner issuer later. No invented r-address.",
     href: "/xrpl-attest",
   },
   {
     id: "mint-sov",
     when: "never",
-    title: "Mint or mine a SOV / GAT / release-bond token",
+    title: "Mint or mine a fused-index / GAT / release-bond token",
     eats: "Nothing. A weighted average of scores is not a market we issue.",
     never: "XRP mining, score coupons, on-chain MEASURED, invented payTo.",
-    feed: "csoai.sov-signal-index/1 counts rows.",
+    feed: "Signed coverage index counts rows.",
     href: "https://councilof.ai/signals/sov-signal.signed.json",
   },
 ];
