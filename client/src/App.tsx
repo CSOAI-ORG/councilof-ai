@@ -119,6 +119,8 @@ const CraReadinessKit = lazy(() => import("./pages/CraReadinessKit"));
 const CountdownPage = lazy(() => import("./pages/CountdownPage"));
 const Art50 = lazy(() => import("./pages/Art50"));
 const ProofReceipt = lazy(() => import("./pages/ProofReceipt"));
+const ProofOfReceipt = lazy(() => import("./pages/ProofOfReceipt"));
+const FeedLaunchPack = lazy(() => import("./pages/FeedLaunchPack"));
 const YieldStatus = lazy(() => import("./pages/YieldStatus"));
 const YieldInternal = lazy(() => import("./pages/YieldInternal"));
 const YieldDashboard = lazy(() => import("./pages/YieldDashboard"));
@@ -469,6 +471,9 @@ const ROUTE_TITLES: Record<string, string> = {
   "/assessment": "Readiness Assessment | Council of AI",
   "/health-inventory": "Health Inventory | Council of AI",
   "/mcp-tools": "Tool Commons | CSOAI",
+  "/proof-of-receipt": "Proof of receipt — latest issuance status | Council of AI",
+  "/feed": "Council of AI — Stablewatch Feed",
+  "/stablewatch": "Council of AI — Stablewatch Feed",
 };
 function RouteTitle() {
   const [location] = useLocation();
@@ -708,7 +713,6 @@ function App() {
                   <Route path="/enterprise-plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>
                   <Route path="/eu-ai-act-classifier" component={EUAIActClassifier} />
                   <Route path="/eu-ai-act-urgency" component={ContentReviewNotice} />
-                  <Route path="/feed" component={ContentReviewNotice} />
                   <Route path="/frameworks/australia-ai" component={AustraliaAIGovernance} />
                   <Route path="/frameworks/canada-ai-act" component={CanadaAIAct} />
                   <Route path="/frameworks/uk-ai-bill" component={UKAIBill} />
@@ -1188,7 +1192,9 @@ function App() {
                   <Route path="/yield" component={YieldDashboard} />
                   <Route path="/countdown" component={CountdownPage} />
                   <Route path="/art50" component={Art50} />
-                  <Route path="/receipt" component={ProofReceipt} />
+                  <Route path="/receipt" component={ProofOfReceipt} />
+                  <Route path="/feed" component={FeedLaunchPack} />
+                  <Route path="/stablewatch" component={FeedLaunchPack} />
                   <Route path="/custody" component={CustodyDisclosure} />
                   <Route path="/merge-me" component={MergeMe} />
                   <Route path="/specimens/clarity" component={ClaritySpecimen} />

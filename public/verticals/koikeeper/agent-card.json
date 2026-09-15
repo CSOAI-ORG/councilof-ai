@@ -1,0 +1,56 @@
+{
+  "name": "Koikeeper — Koi Lineage Measurement (Demo)",
+  "description": "DEMO vertical agent card for koi fish lineage measurement using Council of AI infrastructure. Not a live service. Demonstrates how a domain-specific measurement vertical would declare its A2A agent card alongside councilof.ai's measurement rails. A koi lineage card records observations (growth, pattern, parentage claims) with evidence links, using the same card-v1 schema as every other measurement card. Measurement, not certification — no pedigree grades, no breed rankings. The card-v1 surface for koi lineage is pending registration; this card is a structural demo.",
+  "version": "0.1.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/verticals/koikeeper/llms.txt",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "koi-lineage-card",
+      "name": "koi-lineage-card",
+      "description": "DEMO. Produce a sample unsigned koi lineage measurement card following the card-v1 schema (https://councilof.ai/schema/card-v1.json). Accepts lineage observation data (fish id, parentage claims, growth measurements, pattern notes, photo URLs). Returns a card structure with sha256 computed over the canonical body. The card is UNSIGNED and NOT in the public root — it is a structural demo, not a live measurement. To become a real measurement, the card would need to be signed by did:web:csoai.org#board-attestation-1 and committed to the Merkle root via publish_public_root.py. Measurement, not certification.",
+      "tags": [
+        "measurement",
+        "demo",
+        "lineage",
+        "koi"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"koi-lineage-card\",\"input\":{\"fish_id\":\"DEMO-001\",\"variety\":\"Kohaku\"}}"
+      ]
+    }
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "pedigree-grading",
+    "breed-ranking"
+  ],
+  "did": "did:web:councilof.ai:verticals:koikeeper:demo",
+  "demo": true,
+  "demo_note": "This is a structural demo of how a vertical agent card would look. No live measurement service exists behind this card. The card-v1 surface enum does not yet include a koi-lineage surface."
+}

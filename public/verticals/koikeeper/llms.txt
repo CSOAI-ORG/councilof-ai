@@ -1,0 +1,46 @@
+# Koikeeper — Koi Lineage Measurement (Vertical Discovery)
+
+Koikeeper is a demonstration vertical for Council of AI measurement infrastructure applied to koi fish lineage tracking. This file is a discovery entrypoint for agents and AI systems.
+
+Status: DEMO VERTICAL — not a live measurement service. No real koi lineages are being measured or certified. This file demonstrates how vertical-specific measurement would plug into the councilof.ai card and verification infrastructure.
+
+## What this vertical is
+
+Koi lineage tracking is a domain where provenance and measurement matter: breeders document parentage, body conformation, pattern development, and show results across generations. A measurement card for a koi lineage would record observations and evidence, not issue grades or certifications.
+
+The koikeeper vertical uses the same card-v1 schema (https://councilof.ai/schema/card-v1.json) as every other measurement card on councilof.ai. A lineage card would carry:
+
+- subject: the fish or lineage being documented
+- source_urls: breeder records, show catalogues, photo evidence
+- payload: observation data (growth measurements, pattern changes, lineage claims)
+- surface: a registered surface name (pending — not yet in the card-v1 enum)
+- unmeasured: what the card does NOT claim to have measured
+
+This is measurement, not certification. A lineage card records observations and links to evidence. It does not award grades, rankings, or pedigree certificates.
+
+## How it connects to councilof.ai
+
+- Card schema: https://councilof.ai/schema/card-v1.json
+- Verification: https://councilof.ai/gspc-verify (free, always)
+- Public root: https://councilof.ai/root.json
+- Living board: GET https://councilof.ai/api/gspc
+- Agent card: https://councilof.ai/.well-known/agent-card.json
+
+## Agent card
+
+- Koikeeper A2A agent card: https://councilof.ai/.well-known/verticals/koikeeper/agent-card.json
+
+## Demo artefact
+
+A demo lineage card generator lives at scripts/adapters/koi_lineage_demo.py.
+Run with --demo to produce a sample unsigned card structure following card-v1.
+The output is a DEMO — not signed, not in the public root, not MEASURED.
+
+## What we do not do
+
+- No pedigree certifications
+- No breed grading or ranking
+- No lineage authentication (a card records claims and links to evidence; verification is the reader's job)
+- No fabricated lineage data in this file or the demo
+
+Measurement only. Not a certificate. Not a pedigree authority.
