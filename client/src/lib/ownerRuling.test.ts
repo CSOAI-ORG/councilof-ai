@@ -41,6 +41,7 @@ const ALLOW_PRICE: Allow[] = [
   { file: "pages/legal/TermsOfService.tsx", why: "liability cap — a legal necessity" },
   { file: "pages/AiActBenchmark.tsx", why: "cost of a published run, stated as $0" },
   { file: "pages/IvoEvidence.tsx", why: "RunPod compute cost stated as evidence of operational practice, not our product price" },
+  { file: "pages/FeedLaunchPack.tsx", why: "FEED tier offer page (G6.6) — the $199/mo price is the product itself, published under explicit owner approval" },
   { file: "pages/NewHome.tsx", why: "third-party earnings figure" },
   { file: "pages/Support.tsx", why: "regex backreference $1 in a replace(), not a currency amount" },
 ];

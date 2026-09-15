@@ -134,7 +134,13 @@
       "type": "object",
       "description": "G5.1 product block v0.1 — pricing and access metadata for the /feed endpoint and x402 gateway. Optional; absent on pre-v0.1 cards (treated as tier:free). Bound into the card digest, so it cannot be tampered without invalidating sha256.",
       "additionalProperties": false,
-      "required": ["sku", "tier", "free_fields", "paid_fields", "anchors"],
+      "required": [
+        "sku",
+        "tier",
+        "free_fields",
+        "paid_fields",
+        "anchors"
+      ],
       "properties": {
         "sku": {
           "type": "string",
@@ -142,39 +148,111 @@
         },
         "tier": {
           "type": "string",
-          "enum": ["free", "proof"],
+          "enum": [
+            "free",
+            "proof"
+          ],
           "description": "Access tier. 'free' = all fields publicly served. 'proof' = paid_fields gated behind x402 settlement."
         },
         "free_fields": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Payload fields served without payment. Always at least [kind, status]."
         },
         "paid_fields": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Payload fields disclosed only after x402 settlement. Empty for free-tier cards."
         },
         "price": {
-          "type": ["object", "null"],
+          "type": [
+            "object",
+            "null"
+          ],
           "description": "Per-request price for proof-tier cards. null for free-tier. Object: {currency, amount, note}.",
           "properties": {
-            "currency": { "type": "string" },
-            "amount": { "type": "number" },
-            "note": { "type": "string" }
+            "currency": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number"
+            },
+            "note": {
+              "type": "string"
+            }
           },
-          "required": ["currency", "amount"]
+          "required": [
+            "currency",
+            "amount"
+          ]
         },
         "anchors": {
           "type": "object",
           "description": "Witness anchor status for this card's root commitment.",
           "additionalProperties": false,
           "properties": {
-            "ots": { "type": "string" },
-            "rekor": { "type": "string" },
-            "xrpl_memo": { "type": "string" },
-            "evm_base": { "type": "string" }
+            "ots": {
+              "type": "string"
+            },
+            "rekor": {
+              "type": "string"
+            },
+            "xrpl_memo": {
+              "type": "string"
+            },
+            "evm_base": {
+              "type": "string"
+            }
           }
+        }
+      }
+    },
+    "product_block": {
+      "type": "object",
+      "description": "Machine-readable product metadata. NOT part of the signed payload — lives on the outer envelope. Prices appear only in x402 challenges, never in this block. tier:'free' means every field in this card is freely verifiable; tier:'proof' means additional evidence is behind a 402 door; tier:'feed' means subscription access.",
+      "additionalProperties": false,
+      "properties": {
+        "sku": {
+          "type": "string",
+          "description": "SKU id from functions/api/_skus.ts (e.g. 'issuance', 'evidence_bundle'). Absent when no paid SKU is associated."
+        },
+        "tier": {
+          "type": "string",
+          "enum": [
+            "free",
+            "proof",
+            "feed"
+          ],
+          "description": "Access tier. 'free' = all fields publicly verifiable. 'proof' = additional evidence behind a 402 door. 'feed' = subscription stream."
+        },
+        "free_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Field names available without payment (e.g. ['total', 'staleness_days', 'axis', 'status'])."
+        },
+        "paid_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Field names available after payment (e.g. ['per_chain_splits', 'gap_bps', 'evidence_bundle']). Empty or absent = all fields are free."
+        },
+        "price_ref": {
+          "type": "string",
+          "description": "SKU+tier reference for pricing (e.g. 'issuance:reserve'). The actual price lives in the x402 challenge, NEVER here. This is a lookup key, not a number."
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Anchor references for this card (e.g. ['ots:proof.json', 'rekor:<uuid>', 'xrpl:<tx_hash>']). Empty or absent = not yet anchored."
         }
       }
     }
