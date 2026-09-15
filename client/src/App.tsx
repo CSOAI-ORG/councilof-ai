@@ -121,6 +121,7 @@ const Art50 = lazy(() => import("./pages/Art50"));
 const ProofReceipt = lazy(() => import("./pages/ProofReceipt"));
 const YieldStatus = lazy(() => import("./pages/YieldStatus"));
 const YieldInternal = lazy(() => import("./pages/YieldInternal"));
+const YieldDashboard = lazy(() => import("./pages/YieldDashboard"));
 const ClaritySpecimen = lazy(() => import("./pages/ClaritySpecimen"));
 const CustodyDisclosure = lazy(() => import("./pages/CustodyDisclosure"));
 const MergeMe = lazy(() => import("./pages/MergeMe"));
@@ -439,6 +440,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/governance-layer": "Council Governance Layer | CSOAI",
   "/status": "Yield status | Council of AI",
   "/status/internal": "Weekly yield template | Council of AI",
+  "/yield": "Yield Dashboard | Council of AI",
   "/countdown": "Regulatory countdown | Council of AI",
   "/art50": "Article 50 verification services | Council of AI",
   "/rlusd": "RLUSD supply on XRPL and Ethereum | Council of AI",
@@ -1179,6 +1181,7 @@ function App() {
                   <Route path="/commons" component={OpenMedia} />
                   <Route path="/status" component={YieldStatus} />
                   <Route path="/status/internal" component={YieldInternal} />
+                  <Route path="/yield" component={YieldDashboard} />
                   <Route path="/countdown" component={CountdownPage} />
                   <Route path="/art50" component={Art50} />
                   <Route path="/receipt" component={ProofReceipt} />

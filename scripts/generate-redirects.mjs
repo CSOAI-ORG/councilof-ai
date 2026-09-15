@@ -306,7 +306,7 @@ const PERSONA_SLASH = [
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
   "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
   "models", "tools", "api-docs",
-  "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
+  "workbench", "instrument", "system-card", "mcp-fleet", "crosswalk",
   "east-west", "challenge",
   "refutation-ledger",
   "benchmarks", "benchmark-index", "benchmark-quality", "watchdog-map",

@@ -1,0 +1,300 @@
+{
+  "schema": "csoai.sku-manifest/0.1",
+  "generated_by": "scripts/sync_skus.py",
+  "source": "scripts/product_block.py SKU_TABLE",
+  "count": 25,
+  "skus": [
+    {
+      "id": "aibom-doc",
+      "surface": "aibom.document",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "art50-marking",
+      "surface": "art50.marking-evidence",
+      "tier": "free",
+      "free_fields": [
+        "generator",
+        "c2pa_present",
+        "markings"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "benji-supply",
+      "surface": "benji.onchain.supply",
+      "tier": "free",
+      "free_fields": [
+        "asset_total",
+        "fobxx_total",
+        "platform_total",
+        "delta"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "benji-supply-legacy",
+      "surface": "benji.supply",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "cedulon-recon",
+      "surface": "cedulon.recon",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "cobol-legacy",
+      "surface": "cobol.legacy",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "erc8004-callable",
+      "surface": "erc8004.callable",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "registry"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "eval-delta",
+      "surface": "eval.delta",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "evidence-bundle",
+      "surface": "evidence.bundle",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "genius-reserve",
+      "surface": "genius.reserve",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "gspc-behavioural",
+      "surface": "gspc.behavioural",
+      "tier": "proof",
+      "free_fields": [
+        "model",
+        "axis",
+        "status"
+      ],
+      "paid_fields": [
+        "accuracy",
+        "bank_cites",
+        "confidence_interval",
+        "drift_history"
+      ],
+      "price": {
+        "currency": "USD",
+        "amount": 0.05,
+        "note": "placeholder; owner sets after ceremony"
+      }
+    },
+    {
+      "id": "otel-span",
+      "surface": "otel.span",
+      "tier": "proof",
+      "free_fields": [
+        "trace_id",
+        "service",
+        "status"
+      ],
+      "paid_fields": [
+        "duration_ms",
+        "attributes",
+        "events"
+      ],
+      "price": {
+        "currency": "USD",
+        "amount": 0.01,
+        "note": "placeholder"
+      }
+    },
+    {
+      "id": "owasp-control",
+      "surface": "owasp.control",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "control_id"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "public-notice",
+      "surface": "public.notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "ras-commission",
+      "surface": "ras.commission",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "receipts-batch",
+      "surface": "receipts.batch",
+      "tier": "free",
+      "free_fields": [
+        "count",
+        "total_usd"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "receipts-v1",
+      "surface": "receipts.v1",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "amount_usd"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "redteam-evidence",
+      "surface": "redteam.evidence",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "rwa-reserve",
+      "surface": "rwa.reserve",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "swift-notice",
+      "surface": "swift.notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "trace-runtime",
+      "surface": "trace.runtime",
+      "tier": "proof",
+      "free_fields": [
+        "model",
+        "endpoint",
+        "status"
+      ],
+      "paid_fields": [
+        "latency_p50",
+        "latency_p99",
+        "error_rate",
+        "token_usage"
+      ],
+      "price": {
+        "currency": "USD",
+        "amount": 0.01,
+        "note": "placeholder"
+      }
+    },
+    {
+      "id": "x402-settlement",
+      "surface": "x402.settlement",
+      "tier": "free",
+      "free_fields": [
+        "status",
+        "amount_usd"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "xdc-doc-state",
+      "surface": "xdc.document.state",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "xrpl-asset-state",
+      "surface": "xrpl.asset.state",
+      "tier": "free",
+      "free_fields": [
+        "issuer",
+        "currency",
+        "holders",
+        "supply",
+        "trust_lines"
+      ],
+      "paid_fields": []
+    },
+    {
+      "id": "xrpl-basket-root",
+      "surface": "xrpl.basket.root",
+      "tier": "free",
+      "free_fields": [
+        "n",
+        "merkle",
+        "leaf_sha256"
+      ],
+      "paid_fields": []
+    }
+  ],
+  "note": "Single source of truth for SKU IDs, tiers, and field access. product_block.py and _skus.ts both reference this manifest. Prices are estimates — owner sets real prices via env overrides. Not served publicly. Measurement, never certification."
+}
