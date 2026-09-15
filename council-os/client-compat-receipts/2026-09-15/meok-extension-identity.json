@@ -1,0 +1,36 @@
+{
+  "schema": "csoai.client-compat-receipt/0.1",
+  "kind": "extension-identity",
+  "read_at": "2026-09-15T06:37Z",
+  "repo": "CSOAI-ORG/meok-vscode-extension",
+  "package_json_blob": "0251d84e98c7d058b77b249f98f7e3a341e80753",
+  "declares": {
+    "name": "meok-compliance-lens",
+    "displayName": "MEOK Compliance Lens",
+    "version": "0.1.0",
+    "publisher": "csoai",
+    "default_apiBase": "https://meok-attestation-api.vercel.app",
+    "commands": [
+      "meok.verify",
+      "meok.sign",
+      "meok.openDocs",
+      "meok.fetchOpenApi",
+      "meok.catalogue"
+    ],
+    "other_hosts_called": [
+      "https://haulage.app/catalogue.json",
+      "https://pypi.org/project/<name>/"
+    ]
+  },
+  "backend_probe": {
+    "https://meok-attestation-api.vercel.app/": "402 DEPLOYMENT_DISABLED",
+    "https://meok-attestation-api.vercel.app/openapi.json": "402 DEPLOYMENT_DISABLED",
+    "https://haulage.app/catalogue.json": "402 DEPLOYMENT_DISABLED"
+  },
+  "store_probe": {
+    "VS Code Marketplace csoai.meok-compliance-lens": "TotalCount 0",
+    "Open VSX csoai/meok-compliance-lens": "Extension not found"
+  },
+  "relation_to_gspc": "Does not call https://councilof.ai/mcp or any GSPC route. It uses a separate HMAC attestation API with an API-key signing path. It is not the GSPC evidence contract.",
+  "verdict": "NOT_APPLICABLE"
+}
