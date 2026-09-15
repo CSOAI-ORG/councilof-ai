@@ -1,13 +1,15 @@
 /**
- * GET /pricing — 308 directly to the canonical Council OS pricing overview.
- * Do not route through the retired /os compatibility door. Do not type public prices.
+ * GET /pricing — RETIRED. The price surface now lives at /feed (the FeedLaunchPack
+ * offer page, which carries the FEED tier prices under explicit owner approval).
+ * Everything else that used to be here is moved to the dashboard pricing pane.
+ * Measurement, not certification. Verification is free and needs no account.
  */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/dashboard/?tab=measured&task=pricing-overview",
-      "cache-control": "public, max-age=300",
+      Location: "/dashboard/?tab=measured&task=pricing-overview",
+      "Cache-Control": "public, max-age=3600",
     },
   });
 }

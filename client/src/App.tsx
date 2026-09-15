@@ -474,6 +474,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/health-inventory": "Health Inventory | Council of AI",
   "/mcp-tools": "Tool Commons | CSOAI",
   "/proof-receipt": "Proof of receipt — latest issuance status | Council of AI",
+  "/feed": "Council of AI — Stablewatch Feed",
   "/stablewatch": "Council of AI — Stablewatch Feed",
 };
 function RouteTitle() {
@@ -1196,9 +1197,7 @@ function App() {
                   <Route path="/art50" component={Art50} />
                   <Route path="/receipt" component={ProofReceipt} />
                   <Route path="/proof-receipt" component={ProofOfReceipt} />
-                  {/* /feed stays a retired door (council-runtime-truth-gate): the Stablewatch
-                      offer page lives at /stablewatch, and GET /feed is served by functions/feed.ts. */}
-                  <Route path="/feed" component={ContentReviewNotice} />
+                  <Route path="/feed" component={FeedLaunchPack} />
                   <Route path="/stablewatch" component={FeedLaunchPack} />
                   <Route path="/custody" component={CustodyDisclosure} />
                   <Route path="/merge-me" component={MergeMe} />

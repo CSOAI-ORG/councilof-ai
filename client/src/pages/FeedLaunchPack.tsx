@@ -237,7 +237,7 @@ export default function FeedLaunchPack() {
               Council of AI
             </a>
             {" · "}
-            <a href="/proof-receipt" className="text-emerald-400 underline">
+            <a href="/receipt" className="text-emerald-400 underline">
               Receipt status
             </a>
             {" · "}
