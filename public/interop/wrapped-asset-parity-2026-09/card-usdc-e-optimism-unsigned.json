@@ -1,8 +1,8 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
-  "subject": "wrapped USDC.e on optimism vs OP Mainnet L1StandardBridge — ESCROW_PARITY_READ",
-  "as_of": "2026-09-14T10:58:07.494Z",
+  "subject": "wrapped USDC.e on optimism vs OP Mainnet L1StandardBridge — UNMEASURED",
+  "as_of": "2026-09-15T03:13:10.870Z",
   "source_urls": [
     "https://mainnet.optimism.io",
     "https://ethereum-rpc.publicnode.com"
@@ -17,17 +17,17 @@
       "symbol": "USDC.e",
       "address": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
       "chainId": 10,
-      "block": 156891722,
-      "block_hash": "0xe875cd0c4cfead4cf810909336d946d1376f091af1a02efce707fd814398549b",
-      "block_time": 1789382221
+      "block": 156920988,
+      "block_hash": "0xfe24e35f8a6f7afea0dffb4ff30b31164ddc4838c984d6cdf7acc4592627f00e",
+      "block_time": 1789440753
     },
     "canonical": {
       "chain": "ethereum",
       "symbol": "USDC",
       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       "chainId": 1,
-      "block": 25975174,
-      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392"
+      "block": 25976515,
+      "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb"
     },
     "escrow": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
     "escrow_name": "OP Mainnet L1StandardBridge",
@@ -40,32 +40,28 @@
         "atomic": "19628660419181",
         "normalized": "19628660.419181",
         "decimals": 6
-      },
-      "escrow_balance": {
-        "query": "balanceOf(0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1)",
-        "raw": "0x0000000000000000000000000000000000000000000000000000163d7cb2d82b",
-        "raw_sha256": "14924fecc396cf2b8db7e3fa950baa55fb32645eecd952ab82bb12391f4f55d6",
-        "atomic": "24453340911659",
-        "normalized": "24453340.911659",
-        "decimals": 6
       }
     },
-    "escrow_over_wrapped": "1.245797",
-    "parity_state": "ESCROW_PARITY_READ",
-    "state": "PROBED",
-    "error": null,
-    "fetched_at": "2026-09-14T10:58:07.494Z",
+    "escrow_over_wrapped": null,
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "RPC error: Archive requests require a personal token. Get one at: https://www.allnodes.com/publicnode",
+    "fetched_at": "2026-09-15T03:13:10.870Z",
     "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
-    "unmeasured": []
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ]
   },
   "tags": [
     "eater:wrapper-parity",
     "axis:distribution-integrity",
     "backing:escrow",
-    "state:ESCROW_PARITY_READ"
+    "state:UNMEASURED"
   ],
-  "unmeasured": [],
+  "unmeasured": [
+    "chain reads (rpc failed; nothing inferred)"
+  ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "74a990f1759d590eb28517b52b8746a9179b9ad32f30207467c0332c67684062",
+  "sha256": "17ad182ed80b7922d9150d8b93e36224911d8de2e10f0ffde02d2e1f00cee403",
   "sig_ed25519": null
 }

@@ -1,8 +1,8 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
-  "subject": "wrapped USDT on polygon vs Polygon PoS bridge ERC20Predicate (legacy bridged remainder only) — UNCHECKABLE_NATIVE_ISSUANCE",
-  "as_of": "2026-09-14T10:58:07.494Z",
+  "subject": "wrapped USDT on polygon vs Polygon PoS bridge ERC20Predicate (legacy bridged remainder only) — UNMEASURED",
+  "as_of": "2026-09-15T03:13:10.870Z",
   "source_urls": [
     "https://polygon-bor-rpc.publicnode.com",
     "https://ethereum-rpc.publicnode.com"
@@ -17,51 +17,42 @@
       "symbol": "USDT",
       "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
       "chainId": 137,
-      "block": 93785617,
-      "block_hash": "0x2df3d2b330902d05559ed6269a1a25e2752397cf9ec6ec76af85b6206e6b51b9",
-      "block_time": 1789383459
+      "block": 93811683,
+      "block_hash": "0x4531b40d94e0b1e9ec007b799693787d287a277e02ca1d2b915e0a7ecf611854",
+      "block_time": 1789422558
     },
     "canonical": {
       "chain": "ethereum",
       "symbol": "USDT",
       "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
       "chainId": 1,
-      "block": 25975174,
-      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392"
+      "block": 25976515,
+      "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb"
     },
     "escrow": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
     "escrow_name": "Polygon PoS bridge ERC20Predicate (legacy bridged remainder only)",
     "note": "Tether issues USDT natively on Polygon; the PoS predicate backs only the legacy bridged remainder (escrow ≈1% of supply on 2026-09-13). The wrapped supply is read; no parity is claimed.",
-    "reads": {
-      "wrapped_total_supply": {
-        "query": "totalSupply()",
-        "raw": "0x00000000000000000000000000000000000000000000000000029eb2d4a0c2d0",
-        "raw_sha256": "75ddf2cbd32cdd6665f9207b6e09d80600e362ce497edd662d09f639e6f2a702",
-        "atomic": "737440862094032",
-        "normalized": "737440862.094032",
-        "decimals": 6
-      }
-    },
+    "reads": {},
     "escrow_over_wrapped": null,
-    "parity_state": "UNCHECKABLE_NATIVE_ISSUANCE",
-    "state": "PROBED",
-    "error": null,
-    "fetched_at": "2026-09-14T10:58:07.494Z",
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "RPC error: historical state b523b0ab8f5036a0e43be0cdb05a84e99ea559a41b8a9a03b2f6a721a2cb7cda is not available",
+    "fetched_at": "2026-09-15T03:13:10.870Z",
     "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
     "unmeasured": [
-      "escrow_balance (natively issued; no escrow exists)"
+      "chain reads (rpc failed; nothing inferred)"
     ]
   },
   "tags": [
     "eater:wrapper-parity",
     "axis:distribution-integrity",
     "backing:native",
-    "state:UNCHECKABLE_NATIVE_ISSUANCE"
+    "state:UNMEASURED"
   ],
   "unmeasured": [
-    "escrow_balance (natively issued; no escrow exists)"
+    "chain reads (rpc failed; nothing inferred)"
   ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "4395551551c21d96f92a9412dddb79445637300dcded2f00b2427dbabbfd50b1",
+  "sha256": "221b442206c347a378ee4aad4f312b450cd4e4fcedd1e716a265849d4317b054",
   "sig_ed25519": null
 }

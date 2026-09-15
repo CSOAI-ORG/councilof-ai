@@ -1,8 +1,8 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "public.notice",
-  "subject": "wrapped USDC.e on arbitrum vs Arbitrum One ERC-20 gateway escrow — ESCROW_PARITY_READ",
-  "as_of": "2026-09-14T10:58:07.494Z",
+  "subject": "wrapped USDC.e on arbitrum vs Arbitrum One ERC-20 gateway escrow — UNMEASURED",
+  "as_of": "2026-09-15T03:13:10.870Z",
   "source_urls": [
     "https://arb1.arbitrum.io/rpc",
     "https://ethereum-rpc.publicnode.com"
@@ -17,17 +17,17 @@
       "symbol": "USDC.e",
       "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
       "chainId": 42161,
-      "block": 505049608,
-      "block_hash": "0x1ffe7b01f0f81c5855d9f86f0ef649be25e75d21a46f18b4963fd5c2330c02df",
-      "block_time": 1789382462
+      "block": 505281156,
+      "block_hash": "0xe0c0a1798d76e156119deacd1825213aa96ad7b9605f541cf292e615fcd90659",
+      "block_time": 1789440852
     },
     "canonical": {
       "chain": "ethereum",
       "symbol": "USDC",
       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       "chainId": 1,
-      "block": 25975174,
-      "block_hash": "0x35d0c8a471cb5d904250ca7676f0b289433e5ea5fb91c15045850ec497107392"
+      "block": 25976515,
+      "block_hash": "0x2981ab7d23559beb19635e8c08102634aee83fe2a5df7c71f33db62a5602e8eb"
     },
     "escrow": "0xcEe284F754E854890e311e3280b767F80797180d",
     "escrow_name": "Arbitrum One ERC-20 gateway escrow",
@@ -35,37 +35,33 @@
     "reads": {
       "wrapped_total_supply": {
         "query": "totalSupply()",
-        "raw": "0x00000000000000000000000000000000000000000000000000002bf5000e0358",
-        "raw_sha256": "3560ac2d1bf5d05e967545beb1f0910ac4d6be1ed458415f3ca9f011ebb6b0ea",
-        "atomic": "48331267900248",
-        "normalized": "48331267.900248",
-        "decimals": 6
-      },
-      "escrow_balance": {
-        "query": "balanceOf(0xcEe284F754E854890e311e3280b767F80797180d)",
-        "raw": "0x00000000000000000000000000000000000000000000000000002f82c8e83db5",
-        "raw_sha256": "6e23afbb8ea42c9cb6f3cdd4e470e6bf7fcb87397b7d973c17de5a960bed1e2a",
-        "atomic": "52238762917301",
-        "normalized": "52238762.917301",
+        "raw": "0x00000000000000000000000000000000000000000000000000002bbfd3558dea",
+        "raw_sha256": "d1e5f281f28fa8980e8b217fcd5f0a383d47a17ccd32dc265698e2ba131e3a1a",
+        "atomic": "48102884347370",
+        "normalized": "48102884.347370",
         "decimals": 6
       }
     },
-    "escrow_over_wrapped": "1.080848",
-    "parity_state": "ESCROW_PARITY_READ",
-    "state": "PROBED",
-    "error": null,
-    "fetched_at": "2026-09-14T10:58:07.494Z",
+    "escrow_over_wrapped": null,
+    "parity_state": "UNMEASURED",
+    "state": "UNMEASURED",
+    "error": "RPC error: Archive requests require a personal token. Get one at: https://www.allnodes.com/publicnode",
+    "fetched_at": "2026-09-15T03:13:10.870Z",
     "reader_revision": "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1",
-    "unmeasured": []
+    "unmeasured": [
+      "chain reads (rpc failed; nothing inferred)"
+    ]
   },
   "tags": [
     "eater:wrapper-parity",
     "axis:distribution-integrity",
     "backing:escrow",
-    "state:ESCROW_PARITY_READ"
+    "state:UNMEASURED"
   ],
-  "unmeasured": [],
+  "unmeasured": [
+    "chain reads (rpc failed; nothing inferred)"
+  ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
-  "sha256": "f8b14f31c158d8accdaf18d0589db52b509a20cb3594362b3df7022fdc9c581c",
+  "sha256": "496651baafd27a6ee2116cb72d9a9c4e3f3d4b72a4abc251d60e42804fd5646e",
   "sig_ed25519": null
 }
