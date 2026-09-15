@@ -191,7 +191,11 @@ export default function ToolsPage() {
         <a href="/gspc-verify" className="font-medium text-emerald-800 hover:underline">
           verify here
         </a>
-        , free.
+        , free. New here?{" "}
+        <a href="/quickstart" className="font-medium text-emerald-800 hover:underline">
+          quickstart
+        </a>
+        .
       </p>
       <SignedAgentTravel />
       <TwoSpeed />
