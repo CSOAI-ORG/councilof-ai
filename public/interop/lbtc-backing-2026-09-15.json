@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.lbtc-backing/0.1",
+  "as_of": "2026-09-15T04:32:51.411Z",
+  "measurement_class": "OBSERVED-UNSIGNED",
+  "asset": "L-BTC (Liquid Bitcoin)",
+  "issuer": "Blockstream (federation-controlled peg)",
+  "data": {
+    "circulating_supply_sat": "423239358347",
+    "circulating_supply_btc": 4232.39358347,
+    "federation_reserves_sat": "362986351803",
+    "federation_reserves_btc": 3629.86351803,
+    "backing_ratio": 0.857638,
+    "per_coin_btc": 0.857638,
+    "deficit_btc": 602.53,
+    "last_block_update": 967076
+  },
+  "incident": {
+    "date": "2026-09-06",
+    "description": "Elements range-proof verification-cache exploit; ~3,996 BTC pegged out (~95% of federation reserve)",
+    "remediation_claims": [
+      {
+        "party": "Blockstream",
+        "claim": "the LBTC-to-BTC 1:1 peg will be covered",
+        "source": "Adam Back, Sep 11 2026",
+        "status": "TRACKED",
+        "fuse_days": 14
+      }
+    ],
+    "peg_status": "peg-ins and peg-outs frozen since Sep 10 restart; emergency patch Elements v23.3.4 deployed"
+  },
+  "sources": {
+    "supply": "https://blockstream.info/liquid/api/asset/6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a11eec381c526d/supply",
+    "reserves": "https://liquid.network/api/v1/liquid/reserves",
+    "incident_timeline": "https://blockstream.info/liquid"
+  },
+  "note": "Backing ratio is an observed on-chain fact at request time. It is not a claim about federation security, peg validity, or Blockstream solvency. The deficit reflects the exploit, not normal operations."
+}
