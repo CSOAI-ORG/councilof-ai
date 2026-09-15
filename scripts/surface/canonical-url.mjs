@@ -21,10 +21,16 @@ export function servedUrl(route, origin) {
 
 /**
  * Rewrite canonical/og:url/twitter:url values that name this route WITHOUT its trailing slash, or
- * name the bare origin (the shell default), to the served URL. Values pointing anywhere else
- * (a real alias target such as /dashboard) are left alone. Query-string routes are not rewritten.
+ * name the bare origin (the shell default), to the served URL. Query-string routes are not rewritten.
+ *
+ * An alias route that client-redirects (e.g. /coliseum renders <Redirect to="/dashboard">) is
+ * snapshotted after the redirect, so its canonical names the alias TARGET without a slash — and
+ * that bare path 308s. Measured 2026-09-15 across the sitemap: 14 such canonicals (13 × /dashboard,
+ * /faqs → /faq). When `servedRoutes` (normalized routes the prerender writes as dir/index.html) is
+ * given, an on-site canonical naming one of them without its slash is rewritten to its served URL.
+ * Without `servedRoutes`, other targets are left alone, as before.
  */
-export function rewriteCanonical(html, route, origin) {
+export function rewriteCanonical(html, route, origin, servedRoutes = null) {
   if (String(route).includes("?")) return html;
   const r = normRoute(route);
   if (r === "/") return html;
@@ -38,6 +44,17 @@ export function rewriteCanonical(html, route, origin) {
       .replace(new RegExp(`(<link[^>]*rel=["']canonical["'][^>]*href=["'])${v}(["'])`, "g"), `$1${target}$2`)
       .replace(new RegExp(`(<meta[^>]*property=["']og:url["'][^>]*content=["'])${v}(["'])`, "g"), `$1${target}$2`)
       .replace(new RegExp(`(<meta[^>]*name=["']twitter:url["'][^>]*content=["'])${v}(["'])`, "g"), `$1${target}$2`);
+  }
+  if (servedRoutes && servedRoutes.size) {
+    const o = esc(origin);
+    const toServed = (m, pre, path, post) => {
+      const p = normRoute(path);
+      return p !== "/" && !path.endsWith("/") && servedRoutes.has(p) ? `${pre}${servedUrl(p, origin)}${post}` : m;
+    };
+    out = out
+      .replace(new RegExp(`(<link[^>]*rel=["']canonical["'][^>]*href=["'])${o}(/[^"'?#]*)(["'])`, "g"), toServed)
+      .replace(new RegExp(`(<meta[^>]*property=["']og:url["'][^>]*content=["'])${o}(/[^"'?#]*)(["'])`, "g"), toServed)
+      .replace(new RegExp(`(<meta[^>]*name=["']twitter:url["'][^>]*content=["'])${o}(/[^"'?#]*)(["'])`, "g"), toServed);
   }
   return out;
 }
