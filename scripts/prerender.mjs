@@ -59,6 +59,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSy
 import { join, extname, dirname } from "node:path";
 import { execFileSync } from "node:child_process";
 import { rewriteCanonical } from "./surface/canonical-url.mjs";
+import { parseRouteTitles, rewriteTitle } from "./surface/route-title.mjs";
 
 const arg = (k, d) => {
   const i = process.argv.indexOf("--" + k);
@@ -437,6 +438,11 @@ const skippedLive = discovered.filter((r) => LIVE_ONLY.has(normRoute(r)));
 const routes = discovered.filter(
   (r) => !skippedStatic.includes(r) && !skippedRedirect.includes(r) && !skippedFn308.includes(r) && !skippedLive.includes(r),
 );
+// Routes written as dir/index.html: an alias canonical naming one without its slash 308s, so the
+// rewrite names the served URL (scripts/surface/canonical-url.mjs). public/-owned files are excluded.
+const SERVED_ROUTES = new Set(routes.map(normRoute));
+// Per-route <title> for client-only shells, parsed from App.tsx ROUTE_TITLES (scripts/surface/route-title.mjs).
+const ROUTE_TITLE_MAP = parseRouteTitles(readFileSync("client/src/App.tsx", "utf8"));
 if (skippedLive.length)
   console.log(`prerender: ${skippedLive.length} route(s) skipped — content is derived live from a third-party API and must not be baked: ${skippedLive.join(", ")}`);
 if (skippedStatic.length)
@@ -619,8 +625,10 @@ async function worker(id) {
       if (dest !== join(DIST, "index.html")) {
         mkdirSync(dirname(dest), { recursive: true });
         copyFileSync(join(DIST, "index.html"), dest);
-        // The copied shell carries the homepage canonical; name this route's served URL instead.
-        writeFileSync(dest, rewriteCanonical(readFileSync(dest, "utf8"), route, PROD_ORIGIN), "utf8");
+        // The copied shell carries the homepage canonical AND the homepage <title>; name this
+        // route's served URL and its own title instead (crawlers never run the JS that sets them).
+        const shellHtml = rewriteCanonical(readFileSync(dest, "utf8"), route, PROD_ORIGIN, SERVED_ROUTES);
+        writeFileSync(dest, rewriteTitle(shellHtml, ROUTE_TITLE_MAP.get(normRoute(route))), "utf8");
       }
       rec.ok = true;
       results.push(rec);
@@ -681,7 +689,7 @@ async function worker(id) {
       // localhost:<port>, not just 4400, so a missed rewrite still fails the build.
       // Then name the URL the edge actually serves (dir/index.html, bare path 308s to "<route>/").
       const html = rewriteCanonical((await page.content())
-        .split(`http://localhost:${PORT}`).join(PROD_ORIGIN), route, PROD_ORIGIN);
+        .split(`http://localhost:${PORT}`).join(PROD_ORIGIN), route, PROD_ORIGIN, SERVED_ROUTES);
       // A snapshot that captured a data-fetch failure must be UNABLE to ship: it would
       // bake the error into the crawler-visible page (2026-08-25: /gspc-scoreboard went
       // live reading "Board fetch failed"). Refuse to write it, count it as an error.

@@ -460,6 +460,9 @@ const ROUTE_TITLES: Record<string, string> = {
   "/government": "Government | CSOAI",
   "/regulators": "Regulators | CSOAI",
   "/blog": "Blog | CSOAI",
+  "/assessment": "Readiness Assessment | Council of AI",
+  "/health-inventory": "Health Inventory | Council of AI",
+  "/mcp-tools": "Tool Commons | CSOAI",
 };
 function RouteTitle() {
   const [location] = useLocation();
