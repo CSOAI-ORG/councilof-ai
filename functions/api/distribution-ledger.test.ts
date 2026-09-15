@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildLedger, onRequestGet } from "./distribution-ledger";
+import { buildLedger, normalizeStatus, onRequestGet } from "./distribution-ledger";
 
 describe("/api/distribution-ledger — unified outward destinations", () => {
   it("aggregates entries from all three source ledgers with dedup", () => {
@@ -30,7 +30,7 @@ describe("/api/distribution-ledger — unified outward destinations", () => {
 
   it("entries are sorted live first, then planned, stale, absent", () => {
     const entries = buildLedger();
-    const order: Record<string, number> = { live: 0, planned: 1, stale: 2, absent: 3 };
+    const order: Record<string, number> = { live: 0, planned: 1, stale: 2, unknown: 3, absent: 4 };
     for (let i = 1; i < entries.length; i++) {
       expect(order[entries[i - 1].state]).toBeLessThanOrEqual(order[entries[i].state]);
     }
@@ -53,6 +53,23 @@ describe("/api/distribution-ledger — unified outward destinations", () => {
     expect(typeof body.summary.total).toBe("number");
     expect(body.summary.by_state).toBeDefined();
     expect(typeof body.summary.by_state.live).toBe("number");
+  });
+
+  it("an UNKNOWN or unrecognised source state is served as unknown, never as planned", () => {
+    expect(normalizeStatus("UNKNOWN")).toBe("unknown");
+    expect(normalizeStatus("something-new")).toBe("unknown");
+    expect(normalizeStatus(null)).toBe("unknown");
+    expect(normalizeStatus("NOT_A_DIRECTORY")).toBe("absent");
+    expect(normalizeStatus("LISTED")).toBe("live");
+    expect(normalizeStatus("NOT_LISTED")).toBe("absent");
+    expect(normalizeStatus("planned")).toBe("planned");
+  });
+
+  it("no directory-ledger entry is served as planned (those ledgers never record planned)", () => {
+    for (const e of buildLedger()) {
+      if (e.state !== "planned") continue;
+      expect(e.source_file, `${e.id} planned from a directory ledger`).toBe("public/interop/platforms-registered.json");
+    }
   });
 
   it("includes all four state categories", () => {
