@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Drive the shipped stdio server: tools/list must be exactly the names that
- * tools/call actually runs — the eight free tools and the four x402-metered ones.
+ * tools/call actually runs — the nine free tools and the four x402-metered ones.
  * A listed tool that does not run, or a running tool that is not listed, fails here.
  * Spawns index.mjs — not a reimplementation.
  */
@@ -19,6 +19,7 @@ const FREE = [
   "get_card",
   "verify_inclusion",
   "x402_trust",
+  "mcp_trust",
 ];
 const PAID = [
   "commission_card",
@@ -61,6 +62,9 @@ const routeServer = createServer((req, res) => {
   if (url.pathname === "/root.json") return answer(res, 200, { kind: "public-root", card_count: 0, merkle_root: "0".repeat(64) });
   if (url.pathname === "/interop/x402-trust/latest.json") {
     return answer(res, 200, { kind: "x402-trust", counts: { payable: 1 }, headline: "fixture measurement" });
+  }
+  if (url.pathname === "/interop/mcp-trust/latest.json") {
+    return answer(res, 200, { kind: "mcp-trust", counts: { total: 13 }, headline: "fixture mcp measurement", not_a_certification: true });
   }
   if (url.pathname === "/api/request-attestation") {
     return answer(
@@ -138,6 +142,7 @@ const freeCalls = {
   get_card: { sha256: "bad" },
   verify_inclusion: { sha256: "bad" },
   x402_trust: {},
+  mcp_trust: {},
 };
 const freeResults = new Map();
 for (const name of FREE) {
@@ -157,6 +162,16 @@ check(
     trust?.counts && typeof trust.counts === "object" &&
     typeof trust?.headline === "string" && trust.headline.length > 0 &&
     trust?.not_a_certification === true,
+);
+
+const mcpTrust = freeResults.get("mcp_trust")?.result?.structuredContent;
+check(
+  "mcp_trust delegates to the canonical measured snapshot",
+  mcpTrust?.state === "VALID" &&
+    mcpTrust?.source === `${fixtureOrigin}/interop/mcp-trust/latest.json` &&
+    mcpTrust?.counts && typeof mcpTrust.counts === "object" &&
+    typeof mcpTrust?.headline === "string" && mcpTrust.headline.length > 0 &&
+    mcpTrust?.not_a_certification === true,
 );
 
 const unknown = await rpc("tools/call", { name: "not_a_tool", arguments: {} });
