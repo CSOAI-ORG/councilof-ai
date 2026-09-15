@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schemas/csoai-certificate-0.1.schema.json",
+  "title": "CSOAI Paid-Entitlement Certificate",
+  "description": "The signed payload issued to a paying customer on successful settlement. It is a measurement credential, never a certification or conformity assessment. The signing key never appears in the payload: the issuer (the board-attestation key in the operator's secret store) signs canonically-serialized JSON, and the certificate carries the signature, payload SHA-256, and the issuer DID intent. A revocation record (csoai.refund-record/0.1) supersedes the certificate without erasing history.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "certificate_id",
+    "issued_at",
+    "issuer_did",
+    "subject",
+    "entitlement",
+    "scope",
+    "limits",
+    "verification",
+    "integrity"
+  ],
+  "properties": {
+    "schema": { "const": "csoai.certificate/0.1" },
+    "certificate_id": {
+      "type": "string",
+      "description": "Stable identifier: sha256 of the canonical payload bytes. Cert verifier reads the same canonical form to recompute the id.",
+      "minLength": 8,
+      "maxLength": 160,
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "issued_at": {
+      "type": "string",
+      "description": "UTC ISO-8601 timestamp when the certificate was issued.",
+      "format": "date-time"
+    },
+    "issuer_did": {
+      "type": "string",
+      "description": "The DID of the signing party. The verifier fetches the DID document and resolves the verification method.",
+      "pattern": "^did:web:.+#"
+    },
+    "subject": {
+      "type": "object",
+      "description": "Who this certificate is issued to.",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "enum": ["account", "license"]
+        },
+        "id": {
+          "type": "string",
+          "description": "CSOAI-side stable id (login email is fine; license id is fine).",
+          "minLength": 1
+        },
+        "email_hash": {
+          "type": ["string", "null"],
+          "description": "Optional: sha256 of the subject email for privacy-preserving uniqueness. null when the subject is a license id.",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "entitlement": {
+      "type": "object",
+      "description": "What this certificate unlocks. A sku is an opaque identifier; the entitlements those unlock live in functions/api/_skus.ts.",
+      "additionalProperties": false,
+      "required": ["sku", "tier", "issued_via"],
+      "properties": {
+        "sku": {
+          "type": "string",
+          "description": "One of the entitlement skus that csoai exposes (e.g. csoai.measurement-card.issuance, csoai.depth-probe, csoai.cert.period).",
+          "minLength": 1
+        },
+        "tier": {
+          "enum": ["free", "proof", "feed"],
+          "description": "free = no fee · proof = per-call paid · feed = sustained subscription."
+        },
+        "issued_via": {
+          "type": "object",
+          "description": "Provenance of issuance. Tells the verifier whether the cert was issued by an automated pipeline or by an operator.",
+          "additionalProperties": false,
+          "required": ["channel"],
+          "properties": {
+            "channel": {
+              "enum": ["paddle_settlement", "operator_manual", "self_test"]
+            },
+            "settlement_reference": {
+              "type": ["string", "null"],
+              "description": "The paddle event id or operator action id that produced the settlement. Required when channel != self_test."
+            }
+          }
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "description": "What the subject can claim under this cert. Scope is bound to the cert, not the subject, so a refund revokes it cleanly.",
+      "additionalProperties": false,
+      "required": ["tool_set"],
+      "properties": {
+        "tool_set": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "MCP tool name (e.g. mcp_trust, x402_trust) or measurement axis (e.g. safety, governance)."
+          },
+          "minItems": 1
+        },
+        "free_calls_per_day": {
+          "type": ["integer", "null"],
+          "description": "Rate limit, null = unlimited under the paid plan."
+        },
+        "expires_at": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "Optional expiry. null = no expiry."
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "description": "What this cert does NOT enable. Mirror of the entitlement doctrinally, not a marketing claim.",
+      "additionalProperties": false,
+      "required": ["non_certification", "non_promotion"],
+      "properties": {
+        "non_certification": {
+          "const": true,
+          "description": "This cert does not certify conformity, accuracy, or quality. True always; absent means false."
+        },
+        "non_promotion": {
+          "const": true,
+          "description": "Issuance of this cert is not a promotion of the subject's product, service, or character. True always."
+        },
+        "non_transferability": {
+          "type": "boolean",
+          "description": "When true the cert is bound to subject.id and may not be reissued to a third party. Recommended true."
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "description": "How to verify the signature. The DID document is fetched separately; these fields name where and how.",
+      "additionalProperties": false,
+      "required": ["method", "url"],
+      "properties": {
+        "method": { "const": "Ed25519" },
+        "url": {
+          "type": "string",
+          "description": "Free, public verification URL. csoai_verify uses this in its usage line.",
+          "format": "uri"
+        },
+        "did_document": {
+          "type": "string",
+          "description": "Default canonical DID document location.",
+          "format": "uri"
+        }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["payload_sha256", "sig_ed25519", "writes_board"],
+      "properties": {
+        "payload_sha256": {
+          "type": "string",
+          "description": "sha256 of the canonical payload bytes (the bytes that were signed).",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "sig_ed25519": {
+          "type": ["string", "null"],
+          "description": "Ed25519 signature over the canonical payload, base64. null only at issuance time before signing (the publisher signs and replaces); never null in a published certificate.",
+          "pattern": "^[A-Za-z0-9+/=]+$"
+        },
+        "writes_board": { "const": false }
+      }
+    }
+  }
+}

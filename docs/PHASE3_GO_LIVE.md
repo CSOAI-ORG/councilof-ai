@@ -25,7 +25,7 @@
 
 ## C. Signing + trust (M4)
 - [ ] Signing key present on the brain host only; `/sign` returns real Ed25519 (len=128) — **verified live today**.
-- [ ] Certificate payload schema fixed (what's attested, expiry, verification URL).
+- [x] Certificate payload schema fixed (what's attested, expiry, verification URL).
 - [ ] `csoai_verify` verifies an issued cert offline.
 
 ## D. Cutover
