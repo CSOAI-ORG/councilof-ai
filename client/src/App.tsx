@@ -188,6 +188,7 @@ const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const Doctrine = lazy(() => import("./pages/Doctrine"));
 const Launch = lazy(() => import("./pages/Launch"));
 const OwaspAgentic = lazy(() => import("./pages/OwaspAgentic"));
+const OwaspAsiMapping = lazy(() => import("./pages/OwaspAsiMapping"));
 const PostmortemX402 = lazy(() => import("./pages/PostmortemX402"));
 const ThreeRootCeremony = lazy(() => import("./pages/ThreeRootCeremony"));
 const EvaluatorAccess = lazy(() => import("./pages/EvaluatorAccess"));
@@ -401,6 +402,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/doctrine": "Doctrine — measurement, not certification | Council of AI",
   "/launch": "The launch story — Council of AI",
   "/owasp-agentic": "OWASP Agentic Top 10 — the public measured mapping | Council of AI",
+  "/owasp-asi": "OWASP AI Exchange — GSPC Axis Mapping | Council of AI",
   "/postmortems/x402-settlement-reading": "X402 settlement postmortem — the record was not lost | Council of AI",
   "/events/three-root-ceremony": "Three-root ceremony — public witness record | Council of AI",
   "/transparency-cop": "Transparency Code — detection/verify tool, C2PA planned | Council of AI",
@@ -754,6 +756,7 @@ function App() {
                   <Route path="/doctrine" component={Doctrine} />
                   <Route path="/launch" component={Launch} />
                   <Route path="/owasp-agentic" component={OwaspAgentic} />
+                  <Route path="/owasp-asi" component={OwaspAsiMapping} />
                   <Route path="/postmortems/x402-settlement-reading" component={PostmortemX402} />
                   <Route path="/events/three-root-ceremony" component={ThreeRootCeremony} />
                   <Route path="/ceremony">{() => <Redirect to="/events/three-root-ceremony" />}</Route>
