@@ -528,7 +528,14 @@ test("the 22-axis learning arena keeps coaching, practice and human review in on
       name: /Learn the problem\. Play it\. Explain it\. Fix it/i,
     }),
   ).toBeVisible();
-  await expect(pane.locator("[data-axis-learning]").first()).toBeVisible();
+  // #2497 (15 Sep review, measured 390x844): below lg the 22-row chooser is replaced by a compact
+  // selector so the selected lesson is the next thing in the viewport. Each width must show its own.
+  if ((page.viewportSize()?.width ?? 1280) >= 1024) {
+    await expect(pane.locator("[data-axis-learning]").first()).toBeVisible();
+  } else {
+    await expect(pane.getByTestId("learning-axis-select")).toBeVisible();
+    await expect(pane.getByTestId("learning-axis-list")).toBeHidden();
+  }
   await expect(pane.getByTestId("learning-progress")).toBeVisible();
   await expect(pane.getByTestId("learning-stage-learn")).toContainText(
     "AVAILABLE",
@@ -540,6 +547,11 @@ test("the 22-axis learning arena keeps coaching, practice and human review in on
     "AVAILABLE",
   );
 
+  // #2497 (15 Sep review): coaching is secondary, behind the "Coaching (optional)" disclosure
+  // beside the primary action. It must still be one step away and still work.
+  const coaching = pane.getByTestId("learning-coaching");
+  await coaching.locator("summary", { hasText: "Coaching (optional)" }).click();
+  await expect(coaching).toHaveAttribute("open", "");
   await pane
     .getByRole("link", { name: "Ask Council to coach this stage" })
     .click();

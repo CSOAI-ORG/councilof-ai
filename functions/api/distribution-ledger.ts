@@ -38,7 +38,7 @@ interface DistributionEntry {
   category: Category;
   canonical_url: string | null;
   resource: string | null;
-  state: "live" | "planned" | "stale" | "absent";
+  state: "live" | "planned" | "stale" | "absent" | "unknown";
   checked_at: string | null;
   proof: string | null;
   proof_note: string | null;
@@ -48,13 +48,21 @@ interface DistributionEntry {
 
 const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-function normalizeStatus(s: string | null | undefined): DistributionEntry["state"] {
+/**
+ * Map a source ledger's own status word onto the served states.
+ *
+ * An unrecognised or UNKNOWN source state is served as "unknown", never as "planned":
+ * mcp-directories.json records UNKNOWN (the probe could not decide) and a2a-directories.json
+ * records NOT_A_DIRECTORY (the target is not a directory at all). The first version of this
+ * route defaulted both to "planned", which publishes an intent no ledger recorded.
+ */
+export function normalizeStatus(s: string | null | undefined): DistributionEntry["state"] {
   const v = (s ?? "").toLowerCase();
   if (v === "live" || v === "listed") return "live";
-  if (v === "planned" || v === "live+stale" || v === "staged") return "planned";
-  if (v === "stale") return "stale";
-  if (v === "absent" || v === "not_listed" || v === "removed") return "absent";
-  return "planned";
+  if (v === "planned" || v === "staged") return "planned";
+  if (v === "stale" || v === "live+stale") return "stale";
+  if (v === "absent" || v === "not_listed" || v === "removed" || v === "not_a_directory") return "absent";
+  return "unknown";
 }
 
 function pickOne<T>(...vals: (T | null | undefined)[]): T | null {
@@ -139,8 +147,8 @@ export function buildLedger(): DistributionEntry[] {
     });
   }
 
-  // Sort: live first, then planned, stale, absent; then by platform name.
-  const order: Record<DistributionEntry["state"], number> = { live: 0, planned: 1, stale: 2, absent: 3 };
+  // Sort: live first, then planned, stale, unknown, absent; then by platform name.
+  const order: Record<DistributionEntry["state"], number> = { live: 0, planned: 1, stale: 2, unknown: 3, absent: 4 };
   return entries.sort((a, b) => order[a.state] - order[b.state] || a.platform.localeCompare(b.platform));
 }
 
@@ -158,7 +166,8 @@ export const onRequestGet: PagesFunction = async () => {
       "One deduplicated list of every outward surface CSOAI has shipped to. " +
       "Each entry carries canonical_url, state, checked_at, and proof. " +
       "Dedup key is (platform, canonical_url). Entries without canonical_url are skipped. " +
-      "A platform's homepage is not proof of a CSOAI listing — proof is the resource or the directory's held entry.",
+      "A platform's homepage is not proof of a CSOAI listing — proof is the resource or the directory's held entry. " +
+      "A source state this route does not recognise is served as unknown, never as planned.",
     summary: {
       total: entries.length,
       by_state: byState,

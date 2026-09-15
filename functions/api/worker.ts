@@ -79,7 +79,7 @@ export async function buildWorker(env: Env, fetcher: typeof fetch = fetch) {
       worker: pick(h, [
         "schema", "state", "detail_code", "job", "model", "axis", "cycle", "jobs_total", "jobs_degraded",
         "invalid_config_count", "successful_runs", "failed_runs", "transport_ok", "transport_errors",
-        "attempted", "correct", "bank_items", "last_success_at", "started_at", "updated_at", "disk_free_bytes",
+        "attempted", "correct", "parse_errors_excluded", "graded_n", "last_run_detail_code", "bank_items", "last_success_at", "started_at", "updated_at", "disk_free_bytes",
       ]),
       counters_scope: typeof h.counters_scope === "string" ? h.counters_scope : "successful_runs/failed_runs count this worker process since started_at",
       commission_dispatch,
