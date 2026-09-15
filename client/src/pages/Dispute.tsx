@@ -134,6 +134,37 @@ export default function Dispute() {
           body selling access to its own appeal — that is exactly what this estate does not do.
         </p>
 
+        <div className="mt-8 rounded-xl border border-slate-200 bg-white p-5">
+          <h3 className="font-bold">Direct dispute contact</h3>
+          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+            Email{" "}
+            <a href="mailto:disputes@councilof.ai" className="text-emerald-700 underline font-medium">
+              disputes@councilof.ai
+            </a>{" "}
+            with the card hash, board cell, or instrument run you contest. Include your name,
+            organisation (if applicable), and the specific claim you are raising.
+          </p>
+          <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900">
+            <strong>Response SLA:</strong> acknowledgement within 3 business days. Reasoned
+            decision within 20 business days of receipt. If we need more time (complex
+            measurement re-runs), we tell you before day 20 and give a revised date.
+          </div>
+        </div>
+
+        <div className="mt-8 rounded-xl border border-slate-200 bg-white p-5">
+          <h3 className="font-bold">Re-measurement policy</h3>
+          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+            Every dispute is answered with a re-measurement on the frozen instrument — same items,
+            same scoring code, same seed discipline. The re-run is published as a new signed record
+            on the same surface as the original. If the re-run differs, the correction supersedes
+            (never deletes) the original. The corrections ledger at{" "}
+            <Link href="/refutation-ledger" className="text-emerald-700 underline">
+              /refutation-ledger
+            </Link>{" "}
+            records every correction, starting with our own.
+          </p>
+        </div>
+
         <div className="mt-12 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
           Even guardians need guardians. The instrument measures everyone, including the
           people selling it — verify any card free at{" "}
