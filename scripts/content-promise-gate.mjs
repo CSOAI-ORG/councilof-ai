@@ -143,7 +143,11 @@ export function checkStatusRoute({ appSource, pageSourceFor, statusHtml }) {
   }
   if (typeof statusHtml === "string") {
     if (/data-testid="home-verify"/.test(statusHtml)) out.push("rendered /status/index.html carries the homepage (data-testid=\"home-verify\")");
-    if (!/data-testid="service-status"/.test(statusHtml)) out.push("rendered /status/index.html does not carry data-testid=\"service-status\"");
+    // /status is client-only in prerender.mjs (it reads live Functions), so the file may be the
+    // unrendered SPA shell that hydrates into the page checked above. That is honest; the homepage,
+    // or any other rendered page, is not.
+    const unrenderedShell = /<div id="root"><\/div>/.test(statusHtml);
+    if (!/data-testid="service-status"/.test(statusHtml) && !unrenderedShell) out.push("rendered /status/index.html does not carry data-testid=\"service-status\" and is not the unrendered client-only shell");
   }
   return out;
 }
@@ -285,6 +289,8 @@ function selftest() {
   const statusHome = (comp) => (comp === "YieldStatus" ? '<div data-testid="home-verify"><HeroSlides />' : null);
   must("/status is a status page", checkStatusRoute({ appSource: app, pageSourceFor: statusOk, statusHtml: '<main></main><section data-testid="service-status">' }), false);
   must("/status renders the homepage (source)", checkStatusRoute({ appSource: app, pageSourceFor: statusHome }), true);
+  must("/status client-only SPA shell (unrendered root)", checkStatusRoute({ appSource: app, pageSourceFor: statusOk, statusHtml: '<title>Service status | Council of AI</title><div id="root"></div>' }), false);
+  must("/status prerendered as another page", checkStatusRoute({ appSource: app, pageSourceFor: statusOk, statusHtml: '<main><div id="root"><section data-testid="yield-dashboard">x</section></div></main>' }), true);
   must("/status renders the homepage (prerendered)", checkStatusRoute({ appSource: app, pageSourceFor: statusOk, statusHtml: '<div data-testid="home-verify">' }), true);
 
   must("raw label in primary copy", checkRawLabelsRendered("<p>most_obligations_incl_art50_and_gpai</p>"), true);
