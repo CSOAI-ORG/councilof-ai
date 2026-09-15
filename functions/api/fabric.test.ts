@@ -85,7 +85,7 @@ function fixtureFetcher(
         return json({
           jsonrpc: "2.0",
           result: {
-            tools: Array.from({ length: 12 }, (_, index) => ({
+            tools: Array.from({ length: 13 }, (_, index) => ({
               name: `tool-${index}`,
             })),
           },
@@ -372,7 +372,7 @@ describe("GET /api/fabric", () => {
       expect(externalFetch).not.toHaveBeenCalled();
       expect(byId(manifest, "mcp-tools")).toMatchObject({
         state: "RUNTIME_OBSERVED",
-        summary: expect.stringContaining("12 tool declarations"),
+        summary: expect.stringContaining("13 tool declarations"),
         writes_board: false,
       });
     } finally {
@@ -436,7 +436,7 @@ describe("GET /api/fabric", () => {
 
     expect(byId(manifest, "mcp-tools")).toMatchObject({
       state: "RUNTIME_OBSERVED",
-      summary: expect.stringContaining("12 tool declarations"),
+      summary: expect.stringContaining("13 tool declarations"),
     });
     expect(byId(manifest, "gspc-board")).toMatchObject({
       state: "RUNTIME_OBSERVED",
