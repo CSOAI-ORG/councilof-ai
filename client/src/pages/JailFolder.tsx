@@ -58,7 +58,7 @@ export default function JailFolder() {
               </a>
             </li>
           </ul>
-          <h2 className="mt-8 text-lg font-bold">Signed jail cards in the 335-card chain</h2>
+          <h2 className="mt-8 text-lg font-bold">Signed jail cards in the card chain</h2>
           <ol className="mt-3 list-decimal space-y-1 pl-5 font-mono text-xs">
             {idx.cards.map((c) => (
               <li key={c.id}>
