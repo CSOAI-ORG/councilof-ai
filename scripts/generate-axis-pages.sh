@@ -35,7 +35,7 @@ TEMPLATE = """<!doctype html>
 <title>{axis_title} · GSPC axis · Council of AI</title>
 <meta name="description" content="{axis_desc}" />
 <meta name="robots" content="index,follow" />
-<link rel="canonical" href="https://councilof.ai/axis/{slug}.html" />
+<link rel="canonical" href="https://councilof.ai/axis/{slug}" />
 <style>
   :root {{ --bg:#fff; --fg:#0b1a12; --muted:#5b6b62; --line:#e2e8e4; --accent:#0f766e; --ok:#16a34a; --wait:#ca8a04; --bad:#dc2626; }}
   @media (prefers-color-scheme: dark) {{
