@@ -394,6 +394,19 @@ def make_card(leaf: dict, sig: str | None, will_sign: bool | None = None) -> dic
         "surface": surface,
         "tags": list(leaf.get("tags") or []),
         "unmeasured": missing,
+        # G5.1 product block v0.1: machine-readable product metadata.
+        # NOT part of the signed payload (lives on the outer envelope).
+        # Prices appear only in x402 challenges, never here.
+        # v0.1: all current cards are tier:'free' — the board is free.
+        # paid_fields populated when proof/feed tiers go live (G5.2/G5.3).
+        "product_block": {
+            "sku": "issuance",
+            "tier": "free",
+            "free_fields": ["payload", "subject", "source_urls", "unmeasured", "as_of"],
+            "paid_fields": [],
+            "price_ref": "issuance:reserve",
+            "anchors": [],
+        },
     }
     # digest LAST, over the finished card — so subject and source_urls are bound
     card["sha256"] = card_sha256(card)
