@@ -4858,6 +4858,22 @@
         "security": [],
         "summary": "GET /api/xrpl \u2014 reader of the committed public-root 16."
       }
+    },
+    "/api/yield": {
+      "get": {
+        "description": "GET /api/yield \u2014 the weekly yield dashboard (V3 brief G5.6).",
+        "operationId": "get__api_yield",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/yield \u2014 the weekly yield dashboard (V3 brief G5.6)."
+      }
     }
   },
   "servers": [
@@ -4938,7 +4954,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 92,
+    "public_operations": 93,
     "quarantined": [
       {
         "buyable": false,
