@@ -1,5 +1,10 @@
 # csoai-gspc-mcp
 
+[![npm version](https://img.shields.io/npm/v/csoai-gspc-mcp)](https://www.npmjs.com/package/csoai-gspc-mcp)
+[![npm downloads](https://img.shields.io/npm/dm/csoai-gspc-mcp)](https://www.npmjs.com/package/csoai-gspc-mcp)
+[![license](https://img.shields.io/npm/l/csoai-gspc-mcp)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/LICENSE)
+
+
 [![22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate. Three states only: VALID · INVALID · UNCHECKABLE.](https://councilof.ai/badge/gspc.svg)](https://councilof.ai/gspc-scoreboard)
 
 Stdio MCP server for the live GSPC board and the signed measurement cards at

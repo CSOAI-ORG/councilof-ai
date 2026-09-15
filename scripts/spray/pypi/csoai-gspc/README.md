@@ -2,6 +2,9 @@
 
 Read the live **GSPC** AI-governance board and verify its Ed25519-signed measurement cards.
 
+[![PyPI version](https://img.shields.io/pypi/v/csoai-gspc?color=0B1F33)](https://pypi.org/project/csoai-gspc/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/csoai-gspc?color=0B1F33)](https://pypi.org/project/csoai-gspc/)
+[![License](https://img.shields.io/pypi/l/csoai-gspc?color=0B1F33)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/spray/pypi/csoai-gspc/LICENSE)
 [![board](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc&query=%24.totals.public_count&label=GSPC%20board&color=0B1F33)](https://councilof.ai/api/gspc)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21991104-0B1F33)](https://doi.org/10.5281/zenodo.21991104)
 
