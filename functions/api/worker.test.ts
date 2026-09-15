@@ -7,6 +7,7 @@ const health = {
   successful_runs: 180, failed_runs: 0, transport_ok: 237, transport_errors: 0, last_success_at: "2026-09-14T02:41:19Z",
   started_at: "2026-09-12T15:33:12Z", updated_at: "2026-09-14T02:41:19Z", disk_free_bytes: 110687039488,
   counters_scope: "this process", secret_looking_field: "never copied",
+  attempted: 37, correct: 0, parse_errors_excluded: 37, graded_n: 0, last_run_detail_code: "ALL_UNPARSED",
 };
 const fetcherWith = (status: number, body: unknown) => (async () => new Response(JSON.stringify(body), { status })) as unknown as typeof fetch;
 
@@ -30,6 +31,11 @@ describe("/api/worker — the pod's own health, proxied, never remembered", () =
     expect(out.source).toBe(DEFAULT_HEALTH_URL);
     expect(out.worker).toMatchObject({ state: "RUNNING", jobs_total: 168, successful_runs: 180, failed_runs: 0, model: "qwen3:4b", axis: "care" });
     expect(JSON.stringify(out)).not.toContain("secret_looking_field");
+  });
+
+  it("carries graded_n and parse_errors_excluded so 0 correct of 37 cut-off answers is not read as 37 wrong", async () => {
+    const out = await buildWorker({}, fetcherWith(200, health));
+    expect(out.worker).toMatchObject({ attempted: 37, correct: 0, parse_errors_excluded: 37, graded_n: 0, last_run_detail_code: "ALL_UNPARSED" });
   });
 
   it("caches the LIVE response in KV for fallback", async () => {
