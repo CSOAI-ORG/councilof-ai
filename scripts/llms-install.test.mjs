@@ -55,7 +55,7 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     catalog.x402_metered,
     paid.tools.map((tool) => tool.name),
   );
-  assert.equal(catalog.free.length, 8);
+  assert.equal(catalog.free.length, 9);
   assert.equal(catalog.x402_metered.length, 4);
 
   assert.equal(packageJson.version, "0.2.2");

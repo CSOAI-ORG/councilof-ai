@@ -87,7 +87,7 @@ const call = async (
   return decode(response, body.id);
 };
 
-const FREE_EIGHT = [
+const FREE_NINE = [
   "board_totals",
   "get_axis",
   "verify_card",
@@ -96,6 +96,7 @@ const FREE_EIGHT = [
   "get_card",
   "verify_inclusion",
   "x402_trust",
+  "mcp_trust",
 ];
 const PAID_FOUR = [
   "commission_card",
@@ -219,12 +220,12 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-describe("/mcp tools/list — eight free + four paid, catalogue free, nothing labelled safe", () => {
-  it("lists the free eight first and the paid four after, one definitions file each", async () => {
+describe("/mcp tools/list — nine free + four paid, catalogue free, nothing labelled safe", () => {
+  it("lists the free nine first and the paid four after, one definitions file each", async () => {
     const r = await call(rpc("tools/list"));
     const names = r.result.tools.map((t: { name: string }) => t.name);
-    expect(names).toEqual([...FREE_EIGHT, ...PAID_FOUR]);
-    expect((FREE as { tools: unknown[] }).tools).toHaveLength(8);
+    expect(names).toEqual([...FREE_NINE, ...PAID_FOUR]);
+    expect((FREE as { tools: unknown[] }).tools).toHaveLength(9);
     expect((PAID as { tools: unknown[] }).tools).toHaveLength(4);
     expect([...PAID_TOOL_NAMES]).toEqual(PAID_FOUR);
   });
@@ -258,13 +259,13 @@ describe("/mcp tools/list — eight free + four paid, catalogue free, nothing la
     expect(JSON.stringify(PAID)).not.toMatch(/[£$€]\s?\d/);
   });
 
-  it("the free eight definitions are byte-identical to what the stdio server reads (no drift)", async () => {
+  it("the free nine definitions are byte-identical to what the stdio server reads (no drift)", async () => {
     const { readFileSync } = await import("node:fs");
     const canonical = JSON.parse(
       readFileSync(new URL("./gspc-tools.json", import.meta.url), "utf8"),
     );
     expect(canonical.tools.map((t: { name: string }) => t.name)).toEqual(
-      FREE_EIGHT,
+      FREE_NINE,
     );
     expect(
       canonical.tools.some((t: { name: string }) => PAID_FOUR.includes(t.name)),
@@ -589,7 +590,7 @@ describe("/mcp tools/call — paid tools", () => {
     expect(JSON.stringify(response)).not.toContain(token);
   });
 
-  it("bad arguments are refused before any fetch; the free eight still dispatch to their own handler", async () => {
+  it("bad arguments are refused before any fetch; the free nine still dispatch to their own handler", async () => {
     const seen = stubOrigin({ deployed: [] });
     const r = await call(
       rpc("tools/call", { name: "witness_hash", arguments: {} }),
