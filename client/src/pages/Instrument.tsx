@@ -60,8 +60,8 @@ const LENSES: Record<LensKey, {
   provenance: {
     name: "Provenance", icon: FileCheck,
     asks: "Does the marking survive?",
-    measured: "0 / 108 survive any transform  ·  CI [0.0%, 24.2%]",
-    artefact: "results/provbench.json",
+    measured: "0 / 108 survive any transform  ·  CI [0.0%, 24.25%]",
+    artefact: "/packs/eu-article-50/provbench.json",
     caveat: "An embedded Article 50 marking does not survive one ordinary save. The finding is the product.",
   },
   continuity: {

@@ -157,7 +157,7 @@ export default function RefutationLedger() {
             Every artefact above →
           </a>
           <Link href="/provenance-finding" className="text-emerald-300 hover:underline">
-            0 of 20 assets survived →
+            0 of 12 assets survived →
           </Link>
         </div>
       </section>

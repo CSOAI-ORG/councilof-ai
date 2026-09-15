@@ -363,7 +363,7 @@ export default function Layer0() {
               Signed records, live →
             </Link>
             <Link href="/provenance-finding" className="text-emerald-300 hover:underline">
-              ProvBench: 0 of 20 assets survived →
+              ProvBench: 0 of 12 assets survived →
             </Link>
             <Link href="/mcp-fleet" className="text-emerald-300 hover:underline">
               The MCP fleet →

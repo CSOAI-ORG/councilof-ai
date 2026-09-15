@@ -72,13 +72,13 @@ const LENSES: Lens[] = [
   },
   {
     id: "provbench",
-    name: "ProvBench durability (%)",
+    name: "ProvBench preprint cell survival (%)",
     score: 17.14,
     n: 105,
     cost: 0,
-    tag: "[MEASURED]",
+    tag: "[INCOMPLETE]",
     kind: "historical experiment",
-    basis: "A dated provenance-durability run; superseded for public ranking by the board's provenance row.",
+    basis: "Earlier unsigned preprint run (30 July 2026): 15 assets × 7 transforms, mixed binding types including a soft watermark. Its per-cell data is not published here, so it cannot be re-derived. The signed run of 13 August 2026 measured 0 of 12 assets (0 of 108 cells).",
   },
   {
     id: "pqc",

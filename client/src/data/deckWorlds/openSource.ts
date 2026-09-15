@@ -6,8 +6,8 @@ import type { Slide } from "@/components/scrollworld";
  * CORRECTIONS APPLIED TO THE SOURCE DECK:
  *  1. Deck slide 11 "Generations are natively compliant at the exact millisecond of
  *     creation" — FLATLY CONTRADICTED BY OUR OWN MEASUREMENT. provbench (public/packs/
- *     eu-article-50/provbench.body) measured 0 of 20 marked assets surviving ordinary
- *     transforms (0 of 180 measured cells), and records that our signing certificate
+ *     eu-article-50/provbench.body, signed run of 13 Aug 2026) measured 0 of 12 marked assets
+ *     surviving ordinary transforms (0 of 108 measured cells), and records that our signing certificate
  *     chains to a PRIVATE ROOT CA that is not on the C2PA trust list, so
  *     issuer_resolvable is 0% by construction. Rewritten to say what we measured.
  *  2. Every adoption counter — "2.6k+ stars", "22,000+ GitHub stars", "150+ production
@@ -165,7 +165,7 @@ export const OPEN_SOURCE_SLIDES: Slide[] = [
 ];
 
 export const OPEN_SOURCE_NOT_CLAIMED = [
-  "We do not claim generated content is \"natively compliant at the millisecond of creation\". Our own provenance bench measured 0 of 20 marked assets surviving ordinary transforms (0 of 180 measured cells), and our test certificate chains to a private root that is not on the C2PA trust list — so issuer resolution is 0% there by construction.",
+  "We do not claim generated content is \"natively compliant at the millisecond of creation\". Our own provenance bench, in its signed run of 13 August 2026, measured 0 of 12 marked assets surviving ordinary transforms (0 of 108 measured cells), and our test certificate chains to a private root that is not on the C2PA trust list — so issuer resolution is 0% there by construction.",
   "We do not claim membership of, or a seat on, any standards working group. We publish tooling, test vectors and a resolvable did:web; anything beyond that would need a record we do not have.",
   "We do not publish adoption counters for the components we build on — star counts, org counts, adoption dates. Those numbers are not ours to evidence, so they are not on this page.",
   "We do not claim post-quantum signing. Signing is Ed25519 today; ML-DSA-65 (FIPS-204) is planned and scaffolded only, and no PQC runtime is built or published.",

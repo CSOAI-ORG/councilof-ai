@@ -26,7 +26,7 @@ const CHECKLIST: { art: string; t: string; law: string; us: string; link?: { hre
     art: "Art. 50(2)",
     t: "Machine-readable marking of synthetic content",
     law: "Providers of AI systems that generate synthetic audio, image, video or text must mark the output as artificially generated in a machine-readable way — detectable, effective, interoperable, robust. This is the direction the C2PA content-provenance ecosystem and the Code of Practice on marking are converging on.",
-    us: "Nothing on this site generates synthetic audio, image, video or text, so there is no output to mark — the registry says so out loud. We also measured whether the ecosystem's existing marks survive in the wild: 0 of 20 assets kept their provenance. If we ever ship generative output, the marking obligation attaches immediately — no grace period for features launched after 2 Aug 2026.",
+    us: "Nothing on this site generates synthetic audio, image, video or text, so there is no output to mark — the registry says so out loud. We also measured whether an embedded C2PA manifest survives ordinary transforms on assets we marked ourselves: in the signed run of 13 August 2026, 0 of 12 marked assets kept it intact (0 of 108 measured cells). If we ever ship generative output, the marking obligation attaches immediately — no grace period for features launched after 2 Aug 2026.",
     link: { href: "/provenance-finding", label: "The 0-of-20 provenance finding →" },
   },
   {

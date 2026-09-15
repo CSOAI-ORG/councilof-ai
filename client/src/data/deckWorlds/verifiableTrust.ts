@@ -11,9 +11,11 @@ import type { Slide } from "@/components/scrollworld";
  *     canonical axis (a protocol bank, carrying an effective-n caveat). Rewritten to the
  *     real discipline, which is a better story than the invented one.
  *  2. Deck slides 11/12 "ProvBench & The 13.9% Retraction ... 4.2% RE-MEASURED & SIGNED"
- *     — the retraction narrative is BACKWARDS. 13.9% is not retracted: it is the figure we
- *     currently publish (one-sided 95% Clopper-Pearson upper bound, 0 of 20 assets
- *     surviving, 0 of 180 measured cells, computed at n=20 assets). The replacement "4.2%"
+ *     — the retraction narrative is BACKWARDS. 13.9% is not retracted: it belongs to the
+ *     earlier unsigned 20-asset run of 29–30 July 2026 (one-sided 95% Clopper-Pearson upper
+ *     bound, 0 of 20 assets surviving, 0 of 180 measured cells, computed at n=20 assets). The
+ *     signed run of 13 August 2026 is the current figure: 0 of 12 assets, 0 of 108 cells,
+ *     upper bound 22.1% (client/src/data/provbenchSigned.ts). The replacement "4.2%"
  *     has no source anywhere in this repo and is DROPPED. What we kept is the real
  *     correction: the interval belongs to n=20 assets, not n=180 cells, and we say so.
  *  3. Deck slide 4 "hash-timestamped sealing" — no timestamping authority exists behind
@@ -144,7 +146,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     kicker: "Worked example",
     title: "The interval belonged to twenty assets, not a hundred and eighty cells",
     body:
-      "Our provenance bench measured whether content marking survives ordinary handling. It did not: 0 of 20 marked assets survived, across 0 of 180 measured cells, giving a one-sided 95% Clopper–Pearson upper bound of 13.9%. The correction we published was about the denominator — that bound is computed at n=20 assets, not at n=180 cells, and quoting it against the larger number would have made the result look far stronger than it is. Small correction. Published anyway.",
+      "Our provenance bench's earlier unsigned run (29–30 July 2026) measured whether content marking survives ordinary handling. It did not: 0 of 20 marked assets survived, across 0 of 180 measured cells, giving a one-sided 95% Clopper–Pearson upper bound of 13.9%. The correction we published was about the denominator — that bound is computed at n=20 assets, not at n=180 cells, and quoting it against the larger number would have made the result look far stronger than it is. Small correction. Published anyway. The later signed run (13 August 2026) measured 0 of 12 assets and 0 of 108 cells, upper bound 22.1%.",
     points: [
       { tag: "pain", text: "Intervals quoted against the biggest denominator in the room" },
       { tag: "benefit", text: "The n an interval belongs to is stated next to the interval" },

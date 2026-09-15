@@ -124,7 +124,7 @@ export const LAYER0_NODES: Layer0Node[] = [
     href: "/benchmarks", personas: ["developer"] },
   { id: "c2pa-spec", name: "C2PA specification", org: "C2PA / Linux Foundation, San Francisco",
     lng: -122.42, lat: 37.77, cls: "STANDARD", status: "UNKNOWN", verified: "2026-07-29",
-    does: "Spec watcher. Currently UNKNOWN — the raw path 404s, reported as unreadable rather than 'unchanged'. The measurement against it: 0 of 20 assets survived.",
+    does: "Spec watcher. Currently UNKNOWN — the raw path 404s, reported as unreadable rather than 'unchanged'. The measurement against it: 0 of 12 marked assets kept an intact embedded manifest (signed run, 13 Aug 2026).",
     href: "/provenance-finding", personas: ["developer", "regulator", "everyone"] },
 
   // ── CANDIDATES (the N-sites plan — no fetch yet, and the map says so) ────────

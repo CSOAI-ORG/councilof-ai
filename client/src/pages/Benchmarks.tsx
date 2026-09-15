@@ -75,12 +75,13 @@ const AXES: {
   },
   {
     key: "prov", name: "PROVENANCE", question: "Does the marking survive?", state: "built",
-    headline: "17.14% durability",
+    headline: "0 of 12 assets survived",
     detail:
-      "18 of 105 marking checks survived across the corpus and its transforms. A marking " +
+      "In the signed run of 13 August 2026, 0 of 108 measured cells kept an intact embedded " +
+      "C2PA manifest across 12 marked assets. A marking " +
       "present but whose binding no longer validates is scored DESTROYED, not SURVIVES. " +
       "Clustered on assets, not on cells.",
-    artefact: "results/provbench.json",
+    artefact: "/packs/eu-article-50/provbench.json",
     uncomfortable:
       "An embedded Article 50 marking does not survive a single ordinary save. A detached " +
       "sidecar recovers the disclosure but never the binding — and a manifest lifted from a " +
