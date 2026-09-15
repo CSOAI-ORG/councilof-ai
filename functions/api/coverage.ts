@@ -10,6 +10,15 @@ import {
   buildCoverageLedger,
   type CoverageLedgerInput,
 } from "../../client/src/lib/coverageLedger";
+// The MCP row counts the same definitions tools/list serves (functions/mcp/[[path]].ts
+// DEFINITIONS = gspc-tools.json + paid-tools.json) — never a typed number.
+import GSPC_TOOLS from "../mcp/gspc-tools.json";
+import PAID_TOOLS from "../mcp/paid-tools.json";
+
+export const MCP_TOOL_TABLE = {
+  free: (GSPC_TOOLS as { tools: { name: string }[] }).tools.map((tool) => tool.name),
+  paid: (PAID_TOOLS as { tools: { name: string }[] }).tools.map((tool) => tool.name),
+};
 
 const SOURCES: Record<keyof CoverageLedgerInput, string> = {
   gspc: "/api/gspc",
@@ -21,6 +30,7 @@ const SOURCES: Record<keyof CoverageLedgerInput, string> = {
   revenue: "/api/revenue",
   mcp: "/mcp",
   a2a: "/api/a2a",
+  a2a_card: "/.well-known/agent-card.json",
   erc8004: "/interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json",
   wrappers: "/interop/wrapped-asset-parity-latest.json",
   root_kinds: "/interop/root-kinds.json",
@@ -117,7 +127,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       "ANCHORED",
       "PAID",
     ],
-    rows: buildCoverageLedger(input),
+    rows: buildCoverageLedger(input, { mcpTools: MCP_TOOL_TABLE }),
     sources: sourceReads,
     truth_rules: [
       "INDEXED is not MEASURED.",
