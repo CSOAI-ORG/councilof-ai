@@ -1,6 +1,7 @@
 name: gspc-spray
 
-# Publish the live GSPC board to every distribution surface we hold a credential for — daily, and on demand.
+# Publish the live GSPC board to every distribution surface we hold a credential for — after every
+# successful site deploy, daily, and on demand.
 #
 # One snapshot is built from LIVE truth (GET /api/gspc, root.json, the frozen banks on the Hub) by
 # scripts/spray/gspc-spray.py and pushed, unchanged, to each surface. Every number is derived at run time;
@@ -25,6 +26,21 @@ name: gspc-spray
 on:
   schedule:
     - cron: "40 9 * * *"   # after the 09:07 UTC public-root tick, clear of the 06:00-07:15 UTC pile-up
+  workflow_run:
+    # Follow what actually went live, not the clock. The spray reads the APEX (councilof.ai/root.json),
+    # and the apex moves only when deploy.yml finishes — minutes to hours after public-root merges a
+    # new root to master. Measured 2026-09-15: root merged at 01:10:57Z (#2459) and 01:32:17Z (#2466);
+    # a spray dispatched at 01:11:06Z read the apex at 01:11:31Z and, correctly, found the root the
+    # last deploy had shipped (as_of 2026-09-14T22:21:53Z). Deploys then landed at 01:37Z and 01:54Z,
+    # the apex moved to 01:31:22Z (303 → 312 cards, new merkle_root), and every surface sat one tick
+    # behind with nothing due to re-read it before the 09:40 cron. So: run after each successful
+    # deploy and let the script's own idempotency (as_of, then content fingerprint, then byte parity)
+    # turn the no-change runs into no-ops. The concurrency group below collapses deploy bursts.
+    # The `name:` string below is deploy.yml's — a rename there would silently stop this trigger, so
+    # scripts/spray/test_gspc_spray_skip.py pins the coupling.
+    workflows:
+      - "Build + deploy site (prerender + fields + tour → both domains)"
+    types: [completed]
   workflow_dispatch:
     inputs:
       force:
@@ -45,6 +61,9 @@ permissions:
 
 jobs:
   spray:
+    # workflow_run fires on 'completed' regardless of conclusion; a cancelled or failed deploy moved
+    # nothing at the apex, so there is nothing new to read.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -115,6 +134,7 @@ jobs:
           HAS_ZENODO: ${{ secrets.ZENODO_TOKEN != '' }}
           HAS_PYPI: ${{ secrets.PYPI_API_TOKEN != '' }}
           HAS_NPM: ${{ secrets.NPM_TOKEN != '' }}
+          EVENT: ${{ github.event_name }}
         run: |
           set -euo pipefail
           flags=""
@@ -122,7 +142,12 @@ jobs:
           if [ "$HAS_HF" = "true" ];     then flags="$flags --hf";     else note "HF_TOKEN missing — Hugging Face skipped"; fi
           if [ "$HAS_KAGGLE" = "true" ]; then flags="$flags --kaggle"; else note "KAGGLE_ACCESS_TOKEN missing — Kaggle skipped"; fi
           if [ "$HAS_GITHUB" = "true" ]; then flags="$flags --github"; else note "GSPC_BOARD_TOKEN missing — GitHub mirror skipped (GITHUB_TOKEN cannot push to CSOAI-ORG/gspc-board)"; fi
-          if [ "$HAS_ZENODO" = "true" ]; then flags="$flags --zenodo"; else note "ZENODO_TOKEN missing — Zenodo skipped"; fi
+          # Zenodo mints a public DOI per snapshot. The living mirrors (HF, Kaggle, GitHub) follow every
+          # deploy; the DOI record keeps the daily clock and explicit dispatch, so a root that ticks
+          # hourly does not become a DOI an hour. Widening this is an owner decision, not a lane's.
+          if [ "$HAS_ZENODO" = "true" ]; then
+            if [ "$EVENT" = "workflow_run" ]; then note "follow-the-deploy run: Zenodo stays on the daily clock (no DOI minted here)"; else flags="$flags --zenodo"; fi
+          else note "ZENODO_TOKEN missing — Zenodo skipped"; fi
           if [ "$HAS_PYPI" = "true" ];   then flags="$flags --pypi";   else note "PYPI_API_TOKEN missing — PyPI skipped"; fi
           if [ "$HAS_NPM" = "true" ];    then note "NPM_TOKEN present but npm publishing is not wired in this workflow yet — report only"; else note "NPM_TOKEN missing — npm BLOCKED (WebAuthn account needs a Bypass-2FA token)"; fi
           flags="$flags --npm"   # always reports the npm blocker in the table

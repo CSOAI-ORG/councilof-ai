@@ -176,3 +176,29 @@ def test_kaggle_metadata_drift_catches_the_2026_09_14_live_page():
     assert reason is not None and "subtitle" in reason and "description" in reason
     appended = {"subtitle": subtitle, "description": description + "\nA100 COLD."}
     assert "description" in (spray.kaggle_metadata_drift(appended, subtitle, description) or "")
+
+
+WORKFLOWS = HERE.parent.parent / ".github" / "workflows"
+
+
+def _workflow_name(path: Path) -> str:
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("name:"):
+            return line[len("name:"):].strip().strip('"').strip("'")
+    raise AssertionError(f"{path.name} has no top-level name:")
+
+
+def test_spray_follows_the_deploy_workflow_by_its_exact_name():
+    """workflow_run couples two files by the producer's `name:` STRING and nothing else checks it:
+    rename deploy.yml and every follow-the-deploy spray stops with no red anywhere (2026-09-15 — the
+    surfaces sat one root tick behind the apex because only a daily clock re-read it). Pin the
+    coupling, and pin the guard that a cancelled or failed deploy — which moved nothing at the apex —
+    is skipped."""
+    deploy_name = _workflow_name(WORKFLOWS / "deploy.yml")
+    spray_text = (WORKFLOWS / "gspc-spray.yml").read_text(encoding="utf-8")
+    assert "workflow_run:" in spray_text
+    assert f'- "{deploy_name}"' in spray_text
+    assert "github.event.workflow_run.conclusion == 'success'" in spray_text
+    # Failing control: the coupling is byte-exact — one extra character and the trigger is a miss.
+    assert f'- "{deploy_name}x"' not in spray_text
+    assert _workflow_name(WORKFLOWS / "gspc-spray.yml") == "gspc-spray"
