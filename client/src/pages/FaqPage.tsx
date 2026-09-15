@@ -55,7 +55,7 @@ export default function FaqPage() {
   };
 
   return (
-    <main className="surface-base min-h-screen">
+    <section className="surface-base min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -207,6 +207,6 @@ export default function FaqPage() {
           </p>
         </footer>
       </div>
-    </main>
+    </section>
   );
 }

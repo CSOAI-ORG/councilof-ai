@@ -58,7 +58,7 @@ const PAGE_LD = {
 
 export default function Stablecoins() {
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <section className="min-h-screen bg-slate-50 text-slate-950">
       <Helmet>
         <title>Stablecoin evidence readiness index | Council of AI</title>
         <meta name="description" content={PAGE_DESCRIPTION} />
@@ -142,6 +142,6 @@ export default function Stablecoins() {
       <section aria-label="Stablecoin evidence catalog" className="mx-auto max-w-7xl px-5 pb-16">
         <StablecoinReadinessView />
       </section>
-    </main>
+    </section>
   );
 }

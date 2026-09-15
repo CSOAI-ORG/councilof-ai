@@ -16,7 +16,7 @@ export default function AnswersIndex() {
     document.title = "Answers — measurement explainers | Council of AI";
   }, []);
   return (
-    <main className="mx-auto max-w-3xl px-6 py-14">
+    <section className="mx-auto max-w-3xl px-6 py-14">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-700">AEO · measurement, not certification</p>
       <h1 className="mt-3 text-3xl font-black tracking-tight">Explainers</h1>
       <p className="mt-3 text-slate-600">
@@ -32,7 +32,7 @@ export default function AnswersIndex() {
           </li>
         ))}
       </ul>
-    </main>
+    </section>
   );
 }
 
@@ -44,14 +44,14 @@ export function AnswerPage() {
   }, [a]);
   if (!a) {
     return (
-      <main className="mx-auto max-w-3xl px-6 py-14">
+      <section className="mx-auto max-w-3xl px-6 py-14">
         <p>No explainer at this slug.</p>
         <Link href="/answers" className="text-emerald-800 underline">All explainers</Link>
-      </main>
+      </section>
     );
   }
   return (
-    <main className="mx-auto max-w-3xl px-6 py-14">
+    <section className="mx-auto max-w-3xl px-6 py-14">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-700">
         <Link href="/answers" className="hover:underline">Answers</Link>
       </p>
@@ -71,6 +71,6 @@ export function AnswerPage() {
         Measurement, not certification. Verify a card at{" "}
         <Link href="/gspc-verify" className="text-emerald-800 underline">/gspc-verify</Link>.
       </p>
-    </main>
+    </section>
   );
 }

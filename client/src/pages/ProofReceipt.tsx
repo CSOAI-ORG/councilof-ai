@@ -51,7 +51,7 @@ export default function ProofReceipt() {
         : "INVALID";
 
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
+    <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
         <title>Inclusion receipt | Council of AI</title>
         <meta
@@ -121,6 +121,6 @@ export default function ProofReceipt() {
           </div>
         ) : null}
       </section>
-    </main>
+    </section>
   );
 }

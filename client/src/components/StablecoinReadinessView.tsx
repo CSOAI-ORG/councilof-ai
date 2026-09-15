@@ -68,7 +68,7 @@ export default function StablecoinReadinessView() {
     return () => controller.abort();
   }, []);
   const shown = useMemo(() => filterStablecoinReadiness(data?.assets || [], query, filter), [data, query, filter]);
-  const selected = data?.assets.find((asset) => asset.id === selectedId) || shown[0];
+  const selected = shown.find((asset) => asset.id === selectedId) || shown[0];
   if (error) return <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">Stablecoin readiness is unavailable: {error}. No fallback counts are shown.</div>;
   if (!data) return <div className="rounded-xl border border-slate-200 p-6 text-sm text-slate-500">Loading the signed readiness catalog…</div>;
   const c = data.coverage;

@@ -117,6 +117,16 @@ export const PRIMARY_PATHS = new Set<string>([
   // Company
   "/about", "/library", "/contact", "/disclaimers",
   "/faq", "/traction",
+  // #148 — /dispute is a live Charter Article 18 page, not an archive.
+  // Without this entry it shipped under the "Reference / archive" banner.
+  "/dispute",
+  // /press is the estate's press hub — must be primary or journalists
+  // land on an "archived reference" page.
+  "/press",
+  // /pricing — real pricing page (was a 308 redirect, now a live surface).
+  "/pricing",
+  // /governance — governance framework page.
+  "/governance",
   // Who it is for — the six /for/:persona audience pages (PersonaRouter).
   // These are DYNAMIC routes, so they never appear in ROUTE_MANIFEST and cannot be
   // registered by the manifest sweep; they have to be listed by hand or every one of

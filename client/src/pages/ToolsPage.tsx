@@ -66,7 +66,7 @@ export default function ToolsPage() {
   }, []);
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-16" data-testid="tools-mcp">
+    <section className="mx-auto max-w-4xl px-4 py-16" data-testid="tools-mcp">
       <h1 className="text-3xl font-black tracking-tight text-slate-900">
         Use this in Claude / Cursor / Kimi / Grok
       </h1>
@@ -200,6 +200,6 @@ export default function ToolsPage() {
       <SignedAgentTravel />
       <TwoSpeed />
       <WatchlistPane />
-    </main>
+    </section>
   );
 }

@@ -84,7 +84,7 @@ export default function YieldStatus() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
+    <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
         <title>Yield status | Council of AI</title>
         <meta
@@ -128,6 +128,6 @@ export default function YieldStatus() {
           .
         </p>
       </section>
-    </main>
+    </section>
   );
 }

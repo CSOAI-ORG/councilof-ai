@@ -39,7 +39,7 @@ const emptyChairs = register.empty_chairs as EmptyChairRow[];
 
 export default function FrameworkPresence() {
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
+    <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
         <title>Frontier framework presence register | Council of AI</title>
         <meta
@@ -171,6 +171,6 @@ export default function FrameworkPresence() {
           .
         </p>
       </section>
-    </main>
+    </section>
   );
 }

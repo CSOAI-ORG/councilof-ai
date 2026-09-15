@@ -3,7 +3,7 @@ import { Link } from "wouter";
 
 export default function ClaritySpecimen() {
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
+    <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
         <title>CLARITY pre-commit specimen (unsigned) | Council of AI</title>
         <meta
@@ -39,6 +39,6 @@ export default function ClaritySpecimen() {
           </Link>
         </p>
       </section>
-    </main>
+    </section>
   );
 }

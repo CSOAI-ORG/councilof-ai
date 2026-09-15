@@ -148,7 +148,7 @@ export default function ClaimsRegister() {
   const missing = CLAIMS.filter((c) => !rendered.includes(c));
 
   return (
-    <main className="min-h-screen bg-white text-slate-900">
+    <section className="min-h-screen bg-white text-slate-900">
       <section className="border-b border-slate-200 bg-slate-50">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-700">
@@ -300,6 +300,6 @@ export default function ClaimsRegister() {
           </p>
         </section>
       </div>
-    </main>
+    </section>
   );
 }

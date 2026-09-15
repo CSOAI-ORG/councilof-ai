@@ -17,7 +17,7 @@ const GUARDS: Array<{ name: string; what: string }> = [
 
 export default function CustodyDisclosure() {
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
+    <section className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
       <Helmet>
         <title>Custody disclosure | Council of AI</title>
         <meta
@@ -112,6 +112,6 @@ export default function CustodyDisclosure() {
           </li>
         </ul>
       </section>
-    </main>
+    </section>
   );
 }

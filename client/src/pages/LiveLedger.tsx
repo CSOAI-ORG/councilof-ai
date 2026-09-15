@@ -80,7 +80,7 @@ function LiveLedgerTool() {
   }, [wanted, loading, error, records]);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-200 py-16">
+    <section className="min-h-screen bg-slate-950 text-slate-200 py-16">
       <div className="mx-auto max-w-5xl px-6">
         <span className="inline-block rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-400">
           Live · signed · queryable
@@ -188,7 +188,7 @@ function LiveLedgerTool() {
           ))}
         </div>
       </div>
-    </main>
+    </section>
   );
 }
 

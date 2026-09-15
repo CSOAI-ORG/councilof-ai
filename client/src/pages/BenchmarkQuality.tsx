@@ -267,7 +267,7 @@ export default function BenchmarkQuality() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-14">
+      <section className="mx-auto max-w-6xl px-6 py-14">
         {/* ── The impartiality firewall ─────────────────────────────────────── */}
         <section className="rounded-2xl border-2 border-indigo-200 bg-indigo-50 p-8 dark:border-indigo-800 dark:bg-indigo-950/40">
           <h2 className="flex items-center gap-2.5 text-xl font-black tracking-tight text-gray-900 dark:text-white">
@@ -537,7 +537,7 @@ export default function BenchmarkQuality() {
             </section>
           </>
         )}
-      </main>
+      </section>
     </div>
   );
 }

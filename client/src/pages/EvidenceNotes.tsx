@@ -56,7 +56,7 @@ function linkify(text: string): ReactNode[] {
 export default function EvidenceNotesIndex() {
   const notes = notesNewestFirst();
   return (
-    <main className="mx-auto max-w-3xl px-6 py-14">
+    <section className="mx-auto max-w-3xl px-6 py-14">
       <Helmet>
         <meta name="description" content={NOTES_PAGE_COPY.indexDescription} />
         <meta name="robots" content="index,follow" />
@@ -88,7 +88,7 @@ export default function EvidenceNotesIndex() {
           </li>
         ))}
       </ol>
-    </main>
+    </section>
   );
 }
 
@@ -101,16 +101,16 @@ export function EvidenceNotePage() {
 
   if (!note) {
     return (
-      <main className="mx-auto max-w-3xl px-6 py-14">
+      <section className="mx-auto max-w-3xl px-6 py-14">
         <p>{NOTES_PAGE_COPY.notFound}</p>
         <Link href="/notes/" className="text-emerald-800 underline">{NOTES_PAGE_COPY.allNotes}</Link>
-      </main>
+      </section>
     );
   }
 
   const url = noteUrl(note.id);
   return (
-    <main className="mx-auto max-w-3xl px-6 py-14">
+    <section className="mx-auto max-w-3xl px-6 py-14">
       <Helmet>
         <meta name="description" content={note.summary} />
         <meta name="robots" content="index,follow" />
@@ -160,6 +160,6 @@ export function EvidenceNotePage() {
         {" · "}
         <a href={NOTES_FEED_PATH} className="font-mono text-emerald-800 underline">{NOTES_FEED_PATH}</a>
       </p>
-    </main>
+    </section>
   );
 }

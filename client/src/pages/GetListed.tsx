@@ -106,7 +106,7 @@ export default function GetListed() {
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
-      <main className="mx-auto max-w-3xl px-6 py-16">
+      <section className="mx-auto max-w-3xl px-6 py-16">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
           GSPC census · opt-in funnel
         </p>
@@ -238,7 +238,7 @@ export default function GetListed() {
             Machine JSON
           </a>
         </div>
-      </main>
+      </section>
     </div>
   );
 }

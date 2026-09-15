@@ -144,7 +144,7 @@ export default function Blog() {
         </div>
       </div>
 
-      <main className="container mx-auto px-4 py-12 md:py-16">
+      <section className="container mx-auto px-4 py-12 md:py-16">
         {/* Featured Post */}
         {featuredPost && (
           <div className="mb-16">
@@ -318,7 +318,7 @@ export default function Blog() {
             </Link>
           </div>
         </div>
-      </main>
+      </section>
     </div>
   );
 }
