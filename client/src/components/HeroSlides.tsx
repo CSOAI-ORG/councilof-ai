@@ -8,7 +8,10 @@ import { Link } from "wouter";
  * the measured-not-modelled voice. Between them, the old Ken-Burns arena stills
  * — clay coliseum plates — so the band is not a wall of emerald. Each image
  * slide has its own title. Honors prefers-reduced-motion (static frame, no
- * auto-advance, no zoom).
+ * auto-advance, no zoom). Auto-rotation pauses on hover, on keyboard focus
+ * inside the band, and on a persistent Pause/Play control (W3C WAI carousel
+ * guidance: user-controlled stop/resume). The slide text is aria-live only
+ * while rotation is stopped.
  *
  * Discipline: no invented scores, no certification language, no frozen board
  * counts. Living totals live on GET /api/gspc.
@@ -193,7 +196,9 @@ function startScene(canvas: HTMLCanvasElement, kind: CanvasScene, reduced: boole
 
 export default function HeroSlides() {
   const [idx, setIdx] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
+  const [hoverPaused, setHoverPaused] = useState(false);
+  const paused = userPaused || hoverPaused;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const slide = SLIDES[idx];
   const isImage = Boolean(slide.image);
@@ -215,10 +220,14 @@ export default function HeroSlides() {
   return (
     <section
       className="relative w-full overflow-hidden bg-[#04120c]"
-      aria-label="Featured"
+      aria-label="Featured slides"
       aria-roledescription="carousel"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onMouseEnter={() => setHoverPaused(true)}
+      onMouseLeave={() => setHoverPaused(false)}
+      onFocusCapture={() => setHoverPaused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setHoverPaused(false);
+      }}
     >
       <style>{`@keyframes coaiKenBurns{from{transform:scale(1.03) translate3d(0,0,0)}to{transform:scale(1.16) translate3d(0,-1.8%,0)}}`}</style>
 
@@ -265,7 +274,10 @@ export default function HeroSlides() {
         />
       )}
 
-      <div className="relative z-10 mx-auto flex min-h-[68vh] max-w-6xl flex-col items-center justify-center px-6 py-28 text-center">
+      <div
+        className="relative z-10 mx-auto flex min-h-[68vh] max-w-6xl flex-col items-center justify-center px-6 py-28 text-center"
+        aria-live={paused || reduced ? "polite" : "off"}
+      >
         <p className="mb-5 font-mono text-xs uppercase tracking-[0.35em] text-emerald-300/70">
           {slide.kicker}
         </p>
@@ -316,6 +328,16 @@ export default function HeroSlides() {
             className="rounded-full border border-emerald-500/30 px-3 py-1.5 text-emerald-300/80 transition hover:bg-emerald-500/10"
           >
             →
+          </button>
+          <button
+            type="button"
+            onClick={() => setUserPaused((p) => !p)}
+            aria-pressed={userPaused}
+            aria-label={userPaused ? "Play slides" : "Pause slides"}
+            data-testid="carousel-toggle"
+            className="rounded-full border border-emerald-500/30 px-3 py-1.5 font-mono text-xs text-emerald-300/80 transition hover:bg-emerald-500/10"
+          >
+            {reduced ? "Static" : userPaused ? "▶ Play" : "❚❚ Pause"}
           </button>
         </div>
       </div>

@@ -157,6 +157,18 @@ jobs:
           node scripts/facts-gate.mjs --selftest
           node scripts/facts-gate.mjs dist/client
 
+      # 2026-09-15 review: nine promoted articles resolved to the withdrawal notice, /status/
+      # rendered the homepage, enum keys shipped as teaching copy, a "no other body publishes"
+      # claim sat beside its own retraction, and the homepage carried two <main> landmarks.
+      # brand-gate reads display strings and facts-gate reads claims; neither binds a promise
+      # to the destination it points at. This gate does, in source and in rendered output.
+      # --selftest first: every check is proven to go red before it is trusted on our bytes.
+      - name: Content-promise gate — promises and destinations gated together
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/content-promise-gate.mjs --selftest
+          node scripts/content-promise-gate.mjs dist/client
+
       # #1482 passed every PR check and then failed the deploy at the council-truth gate,
       # which lived only in deploy.yml: a retired door (/cobol) was rewired to a real page and
       # nothing on the PR could say so. Two deploys went red and nothing shipped for an hour.

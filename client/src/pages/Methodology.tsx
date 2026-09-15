@@ -66,11 +66,13 @@ export default function Methodology() {
             </span>
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            Every compliance verdict is produced by a deterministic predicate inspecting a
-            recorded trace — <strong className="text-emerald-50">no model decides, no LLM-as-judge, ever</strong>.
-            A published verdict must trace to a verifiable record you can recompute yourself, and every hedge
-            (sample size, lower bound, INCOMPLETE) is carried to the surface instead of being
-            averaged away.
+            Each result reports what a published test found. The record identifies the subject,
+            method, test material and limits. Deterministic grading applies the rule consistently
+            — <strong className="text-emerald-50">no model decides, no LLM-as-judge, ever</strong> — and
+            the rule and reference labels still require review. A published result must trace to a
+            verifiable record you can recompute yourself, and every hedge (sample size, lower bound,
+            INCOMPLETE) is carried to the surface instead of being averaged away. A test result under
+            a published predicate is not a legal determination.
           </p>
         </div>
       </section>
@@ -80,8 +82,8 @@ export default function Methodology() {
         <section>
           <h2 className="text-2xl font-bold text-emerald-50">The five deterministic predicates</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
-            Every compliance verdict is produced by one of these five predicates. No model
-            decides — the predicate inspects the trace. Three are in use on the measured
+            Every published result is produced by one of these five predicates. No model
+            decides — the predicate inspects the trace, and each PASS names the exact test passed. Three are in use on the measured
             behavioural axis today; two describe checks whose rails are not yet built, and the
             table says which is which rather than presenting all five as live.
           </p>
@@ -122,8 +124,9 @@ export default function Methodology() {
         <section>
           <h2 className="text-2xl font-bold text-emerald-50">Statistical discipline</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
-            The part no on-chain rating or attestation body publishes. Every number carries
-            its uncertainty, and a leader is declared only when the statistics permit it.
+            Every number carries its uncertainty, and a leader is declared only when the
+            statistics permit it. Whether other raters publish the same is UNMEASURED — the
+            correction record is further down this page.
           </p>
           <div className="mt-4 space-y-4">
             <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">

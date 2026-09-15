@@ -19,3 +19,24 @@ describe("yield status live-source contract", () => {
     expect(source).toContain('typeof payers === "number"');
   });
 });
+
+describe("/status is a service status page, not the homepage", () => {
+  it("declares itself and names the five component groups with an explicit unknown state", () => {
+    expect(source).toContain('data-testid="service-status"');
+    expect(source).not.toContain("home-verify");
+    expect(source).not.toContain("HeroSlides");
+    for (const group of ["Public website", "Evidence API", "Verification resources", "Measurement queue", "Publication mirrors"]) {
+      expect(source).toContain(`"${group}"`);
+    }
+    expect(source).toContain('"UNKNOWN"');
+    expect(source).toContain('"UNAVAILABLE"');
+    expect(source).toContain("/api/health");
+    expect(source).toContain("/api/state");
+    expect(source).toContain("/api/worker");
+  });
+
+  it("never promotes a page load into all-services-operational", () => {
+    expect(source).not.toMatch(/all systems operational|all services operational|uptime\s*\d/i);
+    expect(source).toMatch(/proves nothing about any other component/);
+  });
+});

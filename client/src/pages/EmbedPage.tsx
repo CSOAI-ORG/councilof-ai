@@ -174,9 +174,12 @@ export default function EmbedPage() {
             card and does <strong className="text-emerald-50">real Ed25519 verification</strong> in
             their browser: it recomputes the content hash from the card's own bytes and checks the
             signature against the published key. A green{" "}
-            <span className="text-emerald-300">✓ signature verified</span> means the bytes are
-            unaltered and signed by the published key; any tampering shows red. Nothing is faked and
-            nothing is sent to a server.
+            <span className="text-emerald-300">Signature verified for this record</span> establishes
+            integrity under the identified key — the bytes are unaltered and were signed by that key —
+            and any tampering shows red. It does not establish that the measurement is valid, that the
+            record is included in the public root, when it was made, or that the subject is safe,
+            accurate or legally conformant; each of those is a separate check with its own outcome.
+            Nothing is faked and nothing is sent to a server.
           </p>
 
           <div className="mt-5 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6 space-y-5">

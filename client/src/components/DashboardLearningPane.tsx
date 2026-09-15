@@ -17,6 +17,12 @@ import {
   type LearningStageId,
 } from "@/data/gspc-learning-paths";
 import { boardAxisLabel } from "@/components/home/HomeGspcBoard";
+import {
+  boardStateLabel,
+  evidenceStateLabel,
+  fineTierLabel,
+  regulationStateLabel,
+} from "@/data/learningDisplayLabels";
 import { dashboardViewHref } from "@/lib/dashboardView";
 
 type ReviewDecision = "READY_FOR_REVIEW" | "RETURN_FOR_REVISION" | "DISCARD";
@@ -224,7 +230,9 @@ export default function DashboardLearningPane() {
 
   return (
     <div
-      className="h-full overflow-y-auto bg-[var(--surface-canvas,#fafaf7)] px-4 py-6 sm:px-7 lg:px-10"
+      // Bottom padding reserves room for the persistent composer, the safe-area inset and a
+      // software keyboard on small screens, so the focused task is never hidden under them.
+      className="h-full overflow-y-auto bg-[var(--surface-canvas,#fafaf7)] px-4 py-6 pb-[calc(13rem+env(safe-area-inset-bottom))] sm:px-7 lg:px-10 lg:pb-6"
       data-testid="dashboard-learning-pane"
     >
       <div className="mx-auto w-full max-w-6xl">
@@ -264,20 +272,20 @@ export default function DashboardLearningPane() {
           </Link>
         </nav>
 
-        <header className="mx-auto mt-7 max-w-3xl text-center">
+        <header className="mx-auto mt-5 max-w-3xl text-center sm:mt-7">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-800">
             Human-guided GSPC curriculum
           </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-foreground sm:text-4xl">
             Learn the problem. Play it. Explain it. Fix it—with approval.
           </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-3 max-w-2xl text-xs leading-relaxed text-muted-foreground sm:text-sm">
             One practice path for every canonical GSPC axis. The Council can
             coach and draft remediation, but a person owns the final decision.
             Practice never becomes evidence, a score, or model training by
             itself.
           </p>
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-wide">
+          <div className="mt-4 hidden flex-wrap items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-wide sm:flex">
             <span className="rounded-full border border-emerald-700/20 bg-emerald-50 px-2.5 py-1 text-emerald-900">
               {CANONICAL_AXIS_COUNT} canonical paths
             </span>
@@ -291,8 +299,36 @@ export default function DashboardLearningPane() {
         </header>
 
         <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(15rem,0.72fr)_minmax(0,2fr)]">
+          {/* Small screens: a compact selector instead of the full list, so the chosen lesson
+              is the next thing in the viewport (measured 2026-09-15: the selected heading sat
+              at y=1419 on 390x844 behind the full chooser). */}
+          <div className="rounded-2xl border border-border bg-card p-3 shadow-sm lg:hidden">
+            <label
+              htmlFor="learning-axis-select"
+              className="px-1 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground"
+            >
+              Choose an axis
+            </label>
+            <select
+              id="learning-axis-select"
+              data-testid="learning-axis-select"
+              value={selected.axis.id}
+              onChange={(event) => setAxisId(event.target.value)}
+              className="mt-2 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/15"
+            >
+              {GSPC_LEARNING_PATHS.map((path, index) => (
+                <option key={path.axis.id} value={path.axis.id}>
+                  {String(index + 1).padStart(2, "0")} · {boardAxisLabel(path.axis.id)} ·{" "}
+                  {completedByAxis[path.axis.id]?.length ?? 0}/{path.stages.length}
+                </option>
+              ))}
+            </select>
+            <p className="mt-2 px-1 text-[11px] text-muted-foreground">
+              {CANONICAL_AXIS_COUNT} canonical paths. The selected lesson opens directly below.
+            </p>
+          </div>
           <aside
-            className="rounded-2xl border border-border bg-card p-3 shadow-sm"
+            className="hidden rounded-2xl border border-border bg-card p-3 shadow-sm lg:block"
             aria-label="GSPC learning paths"
           >
             <label
@@ -411,7 +447,7 @@ export default function DashboardLearningPane() {
                     Board context
                   </p>
                   <p className="mt-1 text-xs font-semibold text-foreground">
-                    {boardState}
+                    {boardStateLabel(boardState).label}
                   </p>
                 </div>
                 <div className="rounded-lg border border-border bg-background p-2.5">
@@ -419,7 +455,7 @@ export default function DashboardLearningPane() {
                     Published card evidence
                   </p>
                   <p className="mt-1 text-xs font-semibold text-foreground">
-                    {publishedState}
+                    {evidenceStateLabel(publishedState).label}
                   </p>
                 </div>
                 <div className="rounded-lg border border-border bg-background p-2.5">
@@ -427,25 +463,53 @@ export default function DashboardLearningPane() {
                     Regulation mapping
                   </p>
                   <p className="mt-1 text-xs font-semibold text-foreground">
-                    {scenario?.regulation_context?.state ?? "UNCHECKABLE"}
+                    {regulationStateLabel(scenario?.regulation_context?.state ?? "UNCHECKABLE").label}
                   </p>
                 </div>
               </div>
               {pointers.length ? (
-                <ul className="mt-3 space-y-2">
-                  {pointers.slice(0, 3).map((pointer, index) => (
-                    <li
-                      key={`${pointer.regulator_name ?? "regulator"}-${index}`}
-                      className="text-[11px] leading-relaxed text-slate-700"
-                    >
-                      <strong>
-                        {pointer.regulator_name ?? "Published pointer"}
-                      </strong>
-                      {pointer.tier ? ` · ${pointer.tier}` : ""} —{" "}
-                      {pointer.obligation ?? "No obligation text published."}
-                    </li>
-                  ))}
-                </ul>
+                <section
+                  className="mt-3 rounded-lg border border-border bg-background p-3"
+                  aria-labelledby="related-framework-sources-h"
+                  data-testid="related-framework-sources"
+                >
+                  <h4 id="related-framework-sources-h" className="text-xs font-semibold text-foreground">
+                    Related framework sources
+                  </h4>
+                  <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+                    These links explain the framework relevant to this lesson. A link is not a
+                    determination that an obligation applies.
+                  </p>
+                  <ul className="mt-2 space-y-2">
+                    {pointers.slice(0, 3).map((pointer, index) => {
+                      const tier = fineTierLabel(pointer.tier);
+                      return (
+                        <li
+                          key={`${pointer.regulator_name ?? "regulator"}-${index}`}
+                          className="text-[11px] leading-relaxed text-slate-700"
+                        >
+                          <strong>{pointer.regulator_name ?? "Published pointer"}</strong> —{" "}
+                          {pointer.obligation ?? "No obligation text published."}
+                          <span className="block text-muted-foreground">{tier.label}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <details className="mt-2 text-[11px] text-muted-foreground">
+                    <summary className="cursor-pointer font-semibold">Technical details</summary>
+                    <ul className="mt-1 space-y-1 font-mono">
+                      <li>
+                        mapping state: <code>{scenario?.regulation_context?.state ?? "UNCHECKABLE"}</code>
+                        {" · "}source: <code>{scenario?.regulation_context?.source ?? "not published"}</code>
+                      </li>
+                      {pointers.slice(0, 3).map((pointer, index) => (
+                        <li key={`raw-${index}`}>
+                          tier id: <code>{pointer.tier ?? "none"}</code>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                </section>
               ) : null}
             </section>
 
@@ -462,8 +526,10 @@ export default function DashboardLearningPane() {
                     className="mt-1 text-[11px] text-muted-foreground"
                     data-testid="learning-progress"
                   >
-                    {progress.completedStageIds.length} of{" "}
-                    {selected.stages.length} stages reviewed in this session
+                    Practice progress: {progress.completedStageIds.length} of{" "}
+                    {selected.stages.length} stages reviewed. Progress lasts for this session.
+                    Completing practice does not create an independently measured result or a
+                    regulatory credential.
                   </p>
                 </div>
                 <span className="font-mono text-[10px] text-muted-foreground">
@@ -584,23 +650,32 @@ export default function DashboardLearningPane() {
                       ? "Record my review"
                       : `Complete ${activeStage.label}`}
                   </button>
-                  <Link
-                    href={`/dashboard?tab=learn&ask=${encodeURIComponent(coachPrompt(selected.axis.id, activeStage.id))}`}
-                    className="rounded-xl border border-amber-800/25 bg-white px-4 py-2.5 text-xs font-semibold text-amber-950 hover:border-amber-800/50"
-                  >
-                    Ask Council to coach this stage
-                  </Link>
-                  {activeStage.id === "play" ? (
-                    <Link
-                      href={dashboardViewHref(
-                        "/gspc-quests.html",
-                        "GSPC Quests",
-                      )}
-                      className="rounded-xl border border-amber-800/25 bg-white px-4 py-2.5 text-xs font-semibold text-amber-950 hover:border-amber-800/50"
-                    >
-                      Open available challenge banks
-                    </Link>
-                  ) : null}
+                  {/* Coaching is secondary: an expandable control beside the primary action,
+                      not a rail competing with the lesson for reading space. */}
+                  <details className="w-full sm:w-auto" data-testid="learning-coaching">
+                    <summary className="cursor-pointer rounded-xl border border-amber-800/25 bg-white px-4 py-2.5 text-xs font-semibold text-amber-950 hover:border-amber-800/50">
+                      Coaching (optional)
+                    </summary>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <Link
+                        href={`/dashboard?tab=learn&ask=${encodeURIComponent(coachPrompt(selected.axis.id, activeStage.id))}`}
+                        className="rounded-xl border border-amber-800/25 bg-white px-4 py-2.5 text-xs font-semibold text-amber-950 hover:border-amber-800/50"
+                      >
+                        Ask Council to coach this stage
+                      </Link>
+                      {activeStage.id === "play" ? (
+                        <Link
+                          href={dashboardViewHref(
+                            "/gspc-quests.html",
+                            "GSPC Quests",
+                          )}
+                          className="rounded-xl border border-amber-800/25 bg-white px-4 py-2.5 text-xs font-semibold text-amber-950 hover:border-amber-800/50"
+                        >
+                          Open available challenge banks
+                        </Link>
+                      ) : null}
+                    </div>
+                  </details>
                 </div>
               </section>
             ) : (

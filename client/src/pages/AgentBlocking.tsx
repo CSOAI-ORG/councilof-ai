@@ -26,7 +26,7 @@ export default function AgentBlocking() {
   }, []);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-14">
+    <section className="mx-auto max-w-3xl px-4 py-14">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-600">
         Council of AI — agent infrastructure
       </p>
@@ -177,6 +177,6 @@ export default function AgentBlocking() {
           Sources: Cloudflare blog (blog.cloudflare.com), Cloudflare Radar (radar.cloudflare.com).
         </p>
       </section>
-    </main>
+    </section>
   );
 }

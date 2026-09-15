@@ -38,7 +38,7 @@ const ALERT_EXAMPLES = [
 
 export default function FeedLaunchPack() {
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <section className="min-h-screen bg-slate-950 text-slate-100">
       <Helmet>
         <title>Council of AI — Stablewatch Feed</title>
         <meta
@@ -247,6 +247,6 @@ export default function FeedLaunchPack() {
           </p>
         </footer>
       </div>
-    </main>
+    </section>
   );
 }

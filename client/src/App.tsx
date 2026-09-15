@@ -444,7 +444,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/cobol": "COBOL Bridge — Council of AI Layer-0 MCP | CSOAI",
   "/verify": "Verify a signed CSOAI measurement | CSOAI",
   "/governance-layer": "Council Governance Layer | CSOAI",
-  "/status": "Yield status | Council of AI",
+  "/status": "Service status | Council of AI",
   "/status/internal": "Weekly yield template | Council of AI",
   "/yield": "Yield Dashboard | Council of AI",
   "/countdown": "Regulatory countdown | Council of AI",

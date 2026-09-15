@@ -75,7 +75,9 @@ export default function Contact() {
     {
       icon: Clock,
       title: 'Hours',
-      value: 'Mon-Fri, 9am-6pm GMT',
+      // Europe/London named explicitly: the window follows UK local time (GMT in winter,
+      // BST in summer), so a reader in New York or Singapore can convert it.
+      value: 'Mon–Fri, 09:00–18:00 Europe/London (UK local time: GMT in winter, BST in summer)',
       link: '#',
     },
   ];
@@ -216,7 +218,8 @@ export default function Contact() {
                     >
                       enterprise@csoai.org
                     </a>{' '}
-                    — we reply within one working day.
+                    — read on working days, Europe/London. No response-time target is published
+                    here because none is measured.
                   </p>
                   <p className="text-gray-600 mb-4">
                     The demo is 30 minutes and covers three things: the instrument (how CSOAI
@@ -224,14 +227,16 @@ export default function Contact() {
                     scored), and the provisions of interest to you — tell us your sector and we
                     walk those first.
                   </p>
-                  <a
-                    href="mailto:enterprise@csoai.org?subject=Demo%20request%20%E2%80%94%20CSOAI%20master%20walkthrough"
-                  >
-                    <Button size="lg" className="w-full bg-green-600 hover:bg-green-700" data-testid="book-demo-button">
+                  {/* A link, not a button inside a link: one control per action. */}
+                  <Button asChild size="lg" className="w-full bg-green-600 hover:bg-green-700">
+                    <a
+                      href="mailto:enterprise@csoai.org?subject=Demo%20request%20%E2%80%94%20CSOAI%20master%20walkthrough"
+                      data-testid="book-demo-button"
+                    >
                       <Mail className="h-4 w-4 mr-2" />
                       Book a demo
-                    </Button>
-                  </a>
+                    </a>
+                  </Button>
                 </Card>
                 <Card className="p-6">
                   <h3 className="text-lg font-bold text-gray-900 mb-2">Partnership Inquiries</h3>

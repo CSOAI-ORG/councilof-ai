@@ -237,9 +237,9 @@ export function Header() {
             ) : (
               <>
                 {!loginlessVerify && (
-                  <Link href="/login"><Button variant="ghost" size="sm" className="text-muted-foreground font-medium">Sign In</Button></Link>
+                  <Button asChild variant="ghost" size="sm" className="text-muted-foreground font-medium"><Link href="/login">Sign In</Link></Button>
                 )}
-                <Link href="/assess"><Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm">Get measured</Button></Link>
+                <Button asChild size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm"><Link href="/assess">Get measured</Link></Button>
               </>
             )}
           </div>
@@ -305,15 +305,15 @@ export function Header() {
                 <a href="/library" className="block" onClick={() => setMobileMenuOpen(false)}><Button variant="outline" className="w-full">Browse the full Library</Button></a>
                 {user ? (
                   <>
-                    <a href="/dashboard" className="block"><Button variant="outline" className="w-full justify-start" onClick={() => setMobileMenuOpen(false)}><BarChart3 className="h-4 w-4 mr-2" />Dashboard</Button></a>
+                    <Button asChild variant="outline" className="w-full justify-start"><a href="/dashboard" onClick={() => setMobileMenuOpen(false)}><BarChart3 className="h-4 w-4 mr-2" />Dashboard</a></Button>
                     <Button variant="ghost" className="w-full justify-start text-red-600" onClick={() => { logout(); setMobileMenuOpen(false); }}><LogOut className="h-4 w-4 mr-2" />Sign Out</Button>
                   </>
                 ) : (
                   <>
                     {!loginlessVerify && (
-                      <a href="/login" className="block"><Button variant="outline" className="w-full" onClick={() => setMobileMenuOpen(false)}>Sign In</Button></a>
+                      <Button asChild variant="outline" className="w-full"><a href="/login" onClick={() => setMobileMenuOpen(false)}>Sign In</a></Button>
                     )}
-                    <a href="/assess" className="block"><Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={() => setMobileMenuOpen(false)}>Get measured</Button></a>
+                    <Button asChild className="w-full bg-emerald-600 hover:bg-emerald-700"><a href="/assess" onClick={() => setMobileMenuOpen(false)}>Get measured</a></Button>
                   </>
                 )}
               </div>
