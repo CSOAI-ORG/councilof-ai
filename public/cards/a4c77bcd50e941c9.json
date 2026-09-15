@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-15T00:25:47Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-identity-delta/0.1",
+      "status": "DISCOVERED",
+      "symbol": "PSC",
+      "change_kind": "changed",
+      "changed_fields": [
+        {
+          "field": "source_reported_holders",
+          "from": 91,
+          "to": 90
+        }
+      ],
+      "ledger_index": 106990893,
+      "observed_at": "2026-09-15T00:25:47Z",
+      "note": "a source change, recorded — never a verdict"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "a4c77bcd50e941c980c48a9099cad7f14732f25d6ec85a754ee1f3c60b7caf55",
+    "sig_ed25519": "a55006fdb91d02e7361e595c320f2309df82ebbd04f166c6a3a3508698f1155726f16cd6395b431d990edc38601f94596257c623e0ca98eec0ded71c22fed809",
+    "source_urls": [
+      "https://s1.ripple.com:51234/",
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL identity delta: PSC changed",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "identity-delta",
+      "xrpl-16-state-matrix",
+      "symbol:PSC"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "29a6e6ec12cd9c241452df773766c8575bf63f55f54175a8a035b48e9a593262",
+    "9bff7ea93b35ff788a9e8426875ef36f2cb0d6fb22e4534ca83f68c3cff77c49",
+    "a2493c5988359906de98ad60e9d49ee3147b668856193009af5052eb0bf45b9f",
+    "9e61da5bb7a553cf574450b0e935967b2c66e391339582472e9935ad0520cc74",
+    "20c2083ac41e6fecbeb0bd465ad314957730fd9ebcdd73dd88531accda0d47a9",
+    "f04d9ecc17d3a4dd2b5e1c50c2b1fccbf1ea009420ed5cbd93a1e0f1f6ff9ee8",
+    "2e0a175a9207d28215c6796219ffa9cb437ee35c87fe49041b2517a90730d62f",
+    "e6ffff9550ec47509f50be8ddf25ef32d86fa195d7960785635f519c180761a1",
+    "712c4b7ec4451234b437292326240aa9e3534157efd568363d4352e9ada5cf8d"
+  ]
+}
