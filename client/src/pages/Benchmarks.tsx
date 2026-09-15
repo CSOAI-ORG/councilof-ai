@@ -46,10 +46,14 @@ const AXES: {
     // now DERIVED at render time from GET /api/gspc (see boardSeparation below
     // and client/src/lib/boardCount.ts). What stays typed is only the per-axis
     // p-values, which name specific measured runs rather than counting anything.
+    // Those runs were led by our OWN specialists, which the public board excludes
+    // from its leader slots, so they are labelled in-lane here (C-2026-0915-01).
     uncomfortable:
-      "Governance separates at p=0.0086, care at p=0.0356, affect at p=0.0078 — measured " +
-      "runs, not point-estimate leads. Ties are not wins, and we never publish a 'we win " +
-      "N of M' claim.",
+      "Our own governance, care and affect specialists separated from base models at " +
+      "p=0.0086, p=0.0356 and p=0.0078 in their original runs — each an in-lane result on our " +
+      "own model, not a public ranking, because the board excludes our own models from its " +
+      "leader slots and does not count these in its separation tally. Ties are not wins, and " +
+      "we never publish a 'we win N of M' claim.",
     separationFromBoard: true,
   },
   {

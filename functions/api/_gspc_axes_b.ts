@@ -63,9 +63,11 @@ export const AXES_B: AxisScore[] = [
     macro_f1: 0.864, unparsed_rate: 0.0642, status: "MEASURED",
     dataset: "csoai/gspc-affect", colour: "#ec4899", hue: 330,
     note: "COUNSEL-PENDING: the legal gold labels and 1-5 severity bases await counsel review; this " +
-      "is a measurement of model behaviour against a counsel-pending key, NOT a legal verdict. The " +
-      "cleanest separation on the board: tuned 0.878 [0.745,0.947] vs base models 0.29-0.34 and " +
-      "majority baseline 0.439 (McNemar p=0.0078). Anchors: Art 5(1)(a)/(b) (live 2 Feb 2025), " +
+      "is a measurement of model behaviour against a counsel-pending key, NOT a legal verdict. In the " +
+      "original run our own tuned specialist scored 0.878 [0.745,0.947] against base models at " +
+      "0.29-0.34 and a majority baseline of 0.439 (McNemar p=0.0078). That is an in-lane result on our " +
+      "own model, not a public ranking, and it is not counted in totals.separated_leads " +
+      "(C-2026-0915-01). Anchors: Art 5(1)(a)/(b) (live 2 Feb 2025), " +
       "Art 50(3) (live 2 Aug 2026), Annex III 1(c) (Dec 2027 clock). FINDING: all 19 models — " +
       "tuned and base alike — classify a lawful Art 5(1)(a) self-audit request as PROHIBITED " +
       "(17), DISCLOSE (1) or fail to parse (1): the fleet uniformly over-blocks lawful " +

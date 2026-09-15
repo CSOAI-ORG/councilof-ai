@@ -545,7 +545,20 @@ export const onRequestGet: PagesFunction = async (context) => {
       "Jail (slot 14) separation determination 2026-08-25: TIE — the leader's Wilson 95% interval [0.475, 0.698] contains the fleet mean 0.5455, so the point-estimate lead is not a measured advantage. Measured on a 7-model gold-bank fleet (all models n≥30 usable, 68–71), not the 19-model board fleet; the gold bank is published (csoai/gspc-jail-goldbank, HF 2026-08-25).",
       "jail's fleet accuracy 0.5455 is the mean of per-model accuracies across 7 models x 71 gold cells (usable n 68–71); the leader accuracy 0.5915 is the best zero-false-positive detector's (tp+tn)/71. Best precision 1.0, best recall 0.237 — the best detector still misses 3 of 4 escapes.",
       "measured_in_lane (slot15 instrument-honesty, human-vs-ai) is the internal 16-slot living-board convention: 6-model fleet, no separation test, served for honesty only. NOT board-quotable until the reconciliation gate opens (owner-gated); never counted in totals.",
-      "care is separated from base models but NOT clear of the majority-class baseline; detector-interop and the swarm point leader are also not clear of baseline. Quote accordingly.",
+      // Derived from the RAW axis rows (C-2026-0915-01). This line used to say "care is separated
+      // from base models" while care's public separation was UNTESTED: the separation belonged to
+      // our own specialist, which the public view removes. Name the in-lane separations from the
+      // rows that carry them, label them, and never let them read as public determinations.
+      (() => {
+        const inLane = selectedRaw
+          .filter((a) => a.kind === "model-comparison" && isOwnCouncilModel(a.leader) && a.separation === "SEPARATED")
+          .map((a) => a.axis);
+        const lead = inLane.length
+          ? `The original-run separations on ${inLane.join(", ")} were measured with our own specialist as the leader; each is an in-lane result on our own model, not a public ranking, and none is counted in totals.separated_leads. ` +
+            (inLane.includes("care") ? "care's was against base models only and was not clear of the majority-class baseline. " : "")
+          : "";
+        return `${lead}detector-interop and the swarm point leader are not clear of baseline. Quote accordingly.`;
+      })(),
       "swarm now serves the wave-2b bank (37 independent items, 5-model fleet; n≥36 usable per cell), not the retired 3-prompt PROTOCOL bank. Its signed candidate cards support qwen2.5:7b as the point leader but do not publish paired rows or compatible intervals, so separation is UNTESTED. The old PROTOCOL result remains historical evidence and is not the active board row.",
       "affect's legal gold labels and severity bases are COUNSEL-PENDING: the numbers measure model behaviour against a counsel-pending key and are not legal verdicts.",
       "Scores describe measured runs on frozen splits on a date. They do not describe a system's compliance with anything.",
