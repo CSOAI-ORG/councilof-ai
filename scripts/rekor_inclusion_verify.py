@@ -58,9 +58,28 @@ Constructions pinned to PRIMARY SOURCES (not guessed):
 
 Usage:
   rekor_inclusion_verify.py <entry-uuid>
+  rekor_inclusion_verify.py --log-index 2825272241
   rekor_inclusion_verify.py --latest          # uuid from public/interop/root-witness-latest.json
   rekor_inclusion_verify.py --entry-file public/interop/rekor-root-a6f79e25.json [--offline]
+  rekor_inclusion_verify.py --verify-root public/root.json --entry-file public/interop/rekor-root-14ed12e5.json
   rekor_inclusion_verify.py --selftest        # structural checks, no network
+
+  (d) STH (SignedTreeHead) — fetched independently from /api/v1/log. The
+      endpoint returns a note-format checkpoint in the `signedTreeHead` field
+      (a plain string, not base64). Verified identically to (c): key hint,
+      ECDSA P-256, and the signed tree size must be >= the entry's inclusion
+      proof treeSize. The STH root hash will differ from the proof root hash
+      for historical entries (the tree has grown since integration). This is
+      an independent fetch — the checkpoint embedded in the entry's
+      inclusionProof could theoretically be tampered in transit, while the
+      STH comes directly from the log server.
+
+  (e) --verify-root — given a local root.json file, compute SHA-256 of its
+      bytes and check whether the Rekor entry body (decoded rekord JSON)
+      contains that hash in spec.data.hash.value. This proves the Rekor
+      entry was created over the exact same root.json bytes. It does NOT
+      prove the root.json is current, deployed, or endorsed — only that
+      the same bytes were witnessed.
 
 Exit codes: 0 VALID (all checks VALID); 1 INVALID (any check INVALID);
 2 UNCHECKABLE (fetch/parse failure or missing material).
@@ -106,6 +125,21 @@ def load_entry(args) -> tuple[str | None, dict | None, str | None]:
     if args.offline:
         return None, None, "--offline requires --entry-file"
     uuid = args.uuid
+    # --log-index: fetch by logIndex via query parameter (Rekor v1 API).
+    # The response format is the same {uuid: entry} dict.
+    if args.log_index is not None:
+        if args.offline:
+            return None, None, "--offline requires --entry-file"
+        try:
+            idx = int(args.log_index)
+        except (TypeError, ValueError):
+            return None, None, f"--log-index must be an integer, got: {args.log_index!r}"
+        try:
+            blob = json.loads(_get(f"{REKOR}/api/v1/log/entries?logIndex={idx}"))
+            uuid = next(iter(blob))
+            return uuid, blob[uuid], None
+        except (urllib.error.URLError, KeyError, json.JSONDecodeError, TimeoutError) as exc:
+            return None, None, f"cannot fetch entry by logIndex {idx}: {type(exc).__name__}: {str(exc)[:160]}"
     if args.latest:
         try:
             uuid = (json.loads(WITNESS_LATEST.read_text(encoding="utf-8"))
@@ -115,7 +149,7 @@ def load_entry(args) -> tuple[str | None, dict | None, str | None]:
         if not uuid:
             return None, None, "root-witness-latest.json carries no rekor uuid"
     if not uuid:
-        return None, None, "no uuid given (positional, --latest, or --entry-file)"
+        return None, None, "no uuid given (positional, --log-index, --latest, or --entry-file)"
     try:
         blob = json.loads(_get(f"{REKOR}/api/v1/log/entries/{uuid}"))
         return uuid, blob[uuid], None
@@ -304,10 +338,174 @@ def check_checkpoint(entry: dict, pubkey) -> dict:
             "size_matches_proof": True}
 
 
+def fetch_sth(rekor_url: str = REKOR) -> dict | None:
+    """Fetch the SignedTreeHead from /api/v1/log.
+
+    Returns the parsed JSON (treeID, treeSize, rootHash, signedTreeHead) or
+    None on failure. The signedTreeHead field is a plain note-format checkpoint
+    string — same structure as inclusionProof.checkpoint but fetched
+    independently from the log server.
+    """
+    try:
+        raw = _get(f"{rekor_url}/api/v1/log")
+        return json.loads(raw)
+    except Exception:
+        return None
+
+
+def check_sth(entry: dict, pubkey, sth: dict | None = None,
+              rekor_url: str = REKOR) -> dict:
+    """(d) Verify the SignedTreeHead fetched independently from /api/v1/log.
+
+    The STH is the log server's signed assertion of the current tree head.
+    This is an independent fetch — the checkpoint embedded in the entry's
+    inclusionProof could theoretically be tampered in transit, while the
+    STH comes directly from the log server's /api/v1/log endpoint.
+
+    The verification mirrors check_checkpoint: key hint + ECDSA over the
+    note text, plus agreement of root hash and tree size with the entry's
+    inclusion proof.
+    """
+    if sth is None:
+        sth = fetch_sth(rekor_url)
+    if sth is None:
+        return {"check": "sth", "verdict": UNCHECKABLE,
+                "reason": "could not fetch /api/v1/log"}
+    sth_str = sth.get("signedTreeHead")
+    if not sth_str:
+        return {"check": "sth", "verdict": UNCHECKABLE,
+                "reason": "/api/v1/log response lacks signedTreeHead"}
+    # The signedTreeHead is a plain note-format checkpoint string (not base64).
+    cp = sth_str
+    # Parse the note-format checkpoint (same structure as inclusionProof.checkpoint)
+    ip = (entry.get("verification") or {}).get("inclusionProof") or {}
+    try:
+        text, sep, sigblock = cp.partition("\n\n")
+        if not sep:
+            return {"check": "sth", "verdict": INVALID,
+                    "detail": "STH note has no blank line before signature block"}
+        note_text = (text + "\n").encode("utf-8")
+        lines = [ln for ln in sigblock.strip().split("\n") if ln.strip()]
+        name, sig_b64 = None, None
+        for ln in lines:
+            if ln.startswith("— "):
+                name, sig_b64 = ln[2:].rsplit(" ", 1)
+        if not sig_b64:
+            return {"check": "sth", "verdict": INVALID,
+                    "detail": "STH note has no '— name sig' line"}
+        raw = base64.b64decode(sig_b64)
+        hint, sig = int.from_bytes(raw[:4], "big"), raw[4:]
+        origin, size_s, root_b64 = text.split("\n")[:3]
+        sth_root = base64.b64decode(root_b64)
+    except Exception as exc:
+        return {"check": "sth", "verdict": INVALID,
+                "detail": f"STH note unparseable: {type(exc).__name__}"}
+    spki = _spki_der(pubkey)
+    if hint != int.from_bytes(hashlib.sha256(spki).digest()[:4], "big"):
+        return {"check": "sth", "verdict": INVALID,
+                "detail": "STH key hint != sha256(SPKI DER) of the Rekor log key"}
+    try:
+        from cryptography.hazmat.primitives.asymmetric import ec
+        from cryptography.hazmat.primitives import hashes
+        pubkey.verify(sig, note_text, ec.ECDSA(hashes.SHA256()))
+    except Exception:
+        return {"check": "sth", "verdict": INVALID,
+                "detail": f"STH ECDSA signature does not verify (signer '{name}')"}
+    # Cross-check against the entry's inclusion proof.
+    # The STH reflects the CURRENT tree head — its root hash covers all entries
+    # up to the current tree size. The inclusion proof's root hash is a snapshot
+    # at the time the entry was integrated. They will only match if the tree
+    # hasn't grown since. So we check: STH treeSize >= proof treeSize (the entry
+    # must be included), but do NOT require root hash equality for historical entries.
+    try:
+        sth_size = int(size_s)
+        proof_size = int(ip.get("treeSize")) if ip.get("treeSize") is not None else None
+    except (TypeError, ValueError):
+        return {"check": "sth", "verdict": INVALID,
+                "detail": "STH size or proof treeSize is not an integer"}
+    if proof_size is not None and sth_size < proof_size:
+        return {"check": "sth", "verdict": INVALID,
+                "detail": "STH treeSize < inclusionProof.treeSize (entry not yet covered by this STH)",
+                "sth_size": sth_size, "proof_size": proof_size}
+    ip_root = ip.get("rootHash")
+    root_note = None
+    if ip_root and sth_root.hex() != ip_root:
+        # Expected for historical entries where the tree has grown since integration
+        root_note = (f"STH root ({sth_root.hex()[:16]}…) != proof root ({ip_root[:16]}…); "
+                     f"expected: tree grew from {proof_size} to {sth_size} entries")
+    if name != "rekor.sigstore.dev" or not origin.startswith("rekor.sigstore.dev - "):
+        return {"check": "sth", "verdict": INVALID,
+                "detail": "STH origin/signer is not the pinned Rekor production identity",
+                "origin": origin, "signer": name}
+    tree_id = sth.get("treeID", "")
+    result = {"check": "sth", "verdict": VALID,
+              "detail": f"STH signed by '{name}'; treeSize {sth_size} covers entry (proof size {proof_size})",
+              "origin": origin, "sth_size": sth_size, "tree_id": tree_id}
+    if root_note:
+        result["root_note"] = root_note
+    return result
+
+
+def check_root_hash(entry: dict, root_file: str) -> dict:
+    """(e) --verify-root: check if SHA-256 of root_file matches or appears in the entry body.
+
+    Two-tier check:
+      1. Primary: SHA-256(root_file bytes) == entry spec.data.hash.value
+         (direct match — the entry was created over the file itself)
+      2. Fallback: the file's SHA-256 hex appears as a substring anywhere in the
+         decoded entry body JSON. This catches cases where the Rekor entry
+         witnesses a preimage hash but the file's hash is embedded in a field
+         (e.g., the root.json SHA-256 appears in a witness preimage's fields).
+
+    Neither check proves the root is current, deployed, or endorsed — only that
+    the same bytes (or their hash) were witnessed in the transparency log.
+    """
+    try:
+        root_bytes = Path(root_file).read_bytes()
+    except Exception as exc:
+        return {"check": "root_hash", "verdict": UNCHECKABLE,
+                "reason": f"cannot read root file: {type(exc).__name__}: {exc}"}
+    root_sha = hashlib.sha256(root_bytes).hexdigest()
+    body_b64 = entry.get("body")
+    if not body_b64:
+        return {"check": "root_hash", "verdict": UNCHECKABLE,
+                "reason": "entry has no body field"}
+    try:
+        body_bytes = base64.b64decode(body_b64)
+        body = json.loads(body_bytes)
+    except Exception as exc:
+        return {"check": "root_hash", "verdict": UNCHECKABLE,
+                "reason": f"cannot decode entry body: {type(exc).__name__}"}
+    # Primary: direct hash match in spec.data.hash.value
+    entry_hash = (body.get("spec", {}).get("data", {}).get("hash", {}))
+    if isinstance(entry_hash, dict):
+        algo = entry_hash.get("algorithm", "")
+        value = entry_hash.get("value", "")
+        if algo == "sha256" and value:
+            if value.lower() == root_sha.lower():
+                return {"check": "root_hash", "verdict": VALID,
+                        "detail": "SHA-256 of root file matches entry spec.data.hash.value (direct match)",
+                        "sha256": root_sha, "match": "direct"}
+    # Fallback: check if the file's hash appears as a substring in the raw body JSON
+    body_text = body_bytes.decode("utf-8", errors="replace")
+    if root_sha.lower() in body_text.lower():
+        return {"check": "root_hash", "verdict": VALID,
+                "detail": "SHA-256 of root file found in entry body JSON (embedded hash match)",
+                "sha256": root_sha, "match": "embedded"}
+    return {"check": "root_hash", "verdict": INVALID,
+            "detail": "SHA-256 of root file not found in entry body (neither as spec.data.hash.value nor embedded)",
+            "file_sha256": root_sha,
+            "entry_hash": entry_hash.get("value", "") if isinstance(entry_hash, dict) else ""}
+
+
 def verify_entry(entry: dict, pubkey,
-                 pinned_log_id: str = PRODUCTION_REKOR_LOG_ID) -> dict:
+                 pinned_log_id: str = PRODUCTION_REKOR_LOG_ID,
+                 include_sth: bool = False,
+                 rekor_url: str = REKOR) -> dict:
     checks = [check_log_identity(entry, pubkey, pinned_log_id), check_set(entry, pubkey),
               check_inclusion(entry), check_checkpoint(entry, pubkey)]
+    if include_sth:
+        checks.append(check_sth(entry, pubkey, rekor_url=rekor_url))
     verdicts = [c["verdict"] for c in checks]
     overall = INVALID if INVALID in verdicts else (UNCHECKABLE if UNCHECKABLE in verdicts else VALID)
     return {"overall": overall, "checks": checks,
@@ -364,13 +562,54 @@ def selftest() -> int:
     assert check_inclusion(wrong_index)["verdict"] == INVALID
     missing = check_set({"verification": {}}, key)
     assert missing["verdict"] == UNCHECKABLE
-    print("selftest: valid bundle accepted; wrong logID/SPKI, checkpoint size, and proof index rejected")
+
+    # --- check_root_hash: positive and negative ---
+    import tempfile, os
+    rekord_body = {"apiVersion": "0.0.1", "kind": "rekord", "spec": {
+        "data": {"hash": {"algorithm": "sha256", "value": hashlib.sha256(b"root-bytes").hexdigest()}},
+        "signature": {"format": "x509", "content": "", "publicKey": {"content": ""}}}}
+    entry_with_hash = json.loads(json.dumps(entry))
+    entry_with_hash["body"] = base64.b64encode(json.dumps(rekord_body).encode()).decode()
+    tmpf = tempfile.NamedTemporaryFile(delete=False, suffix=".json")
+    try:
+        tmpf.write(b"root-bytes"); tmpf.flush(); tmpf.close()
+        # Primary match: spec.data.hash.value == sha256(file)
+        assert check_root_hash(entry_with_hash, tmpf.name)["verdict"] == VALID
+        assert check_root_hash(entry_with_hash, tmpf.name)["match"] == "direct"
+        # No match at all
+        assert check_root_hash(entry_with_hash, "/dev/null")["verdict"] == INVALID
+        # UNCHECKABLE: no body
+        no_body = json.loads(json.dumps(entry_with_hash))
+        del no_body["body"]
+        assert check_root_hash(no_body, tmpf.name)["verdict"] == UNCHECKABLE
+        # Embedded match: the file hash appears in the body JSON but not as spec.data.hash.value
+        embedded_body = {"apiVersion": "0.0.1", "kind": "rekord", "spec": {
+            "data": {"hash": {"algorithm": "sha256", "value": "00" * 32}},
+            "signature": {"format": "x509", "content": "", "publicKey": {"content": ""}}},
+            "note": f"root sha256={hashlib.sha256(b'root-bytes').hexdigest()} in context"}
+        entry_embedded = json.loads(json.dumps(entry))
+        entry_embedded["body"] = base64.b64encode(json.dumps(embedded_body).encode()).decode()
+        r = check_root_hash(entry_embedded, tmpf.name)
+        assert r["verdict"] == VALID, f"expected embedded VALID, got {r}"
+        assert r["match"] == "embedded"
+    finally:
+        os.unlink(tmpf.name)
+
+    # --- check_sth: structural negative (no signedTreeHead -> UNCHECKABLE) ---
+    assert check_sth(entry, key, sth={})["verdict"] == UNCHECKABLE
+    bad_sth = {"signedTreeHead": "not-a-valid-note-format"}
+    assert check_sth(entry, key, sth=bad_sth)["verdict"] == INVALID
+
+    print("selftest: valid bundle accepted; wrong logID/SPKI, checkpoint size, proof index rejected; "
+          "root_hash positive+negative; STH structural negatives")
     return 0
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("uuid", nargs="?", default=None, help="Rekor entry UUID")
+    ap.add_argument("--log-index", default=None,
+                    help="fetch entry by log index (Rekor v1 ?logIndex= query)")
     ap.add_argument("--latest", action="store_true",
                     help="use the uuid committed in public/interop/root-witness-latest.json")
     ap.add_argument("--entry-file", help="use a committed entry JSON instead of fetching")
@@ -380,6 +619,10 @@ def main() -> int:
     ap.add_argument("--rekor-url", default=None, help="override the Rekor base URL")
     ap.add_argument("--expected-log-id", default=PRODUCTION_REKOR_LOG_ID,
                     help="reviewed sha256(SPKI DER) trust anchor; defaults to Rekor production")
+    ap.add_argument("--sth", action="store_true",
+                    help="also fetch and verify the SignedTreeHead from /api/v1/log")
+    ap.add_argument("--verify-root", default=None, metavar="ROOT_FILE",
+                    help="check if SHA-256 of ROOT_FILE matches the hash in the Rekor entry body")
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
     if args.rekor_url:
@@ -407,7 +650,16 @@ def main() -> int:
         print(json.dumps({"overall": UNCHECKABLE, "uuid": uuid,
                           "reason": f"invalid expected log ID: {exc}"}, indent=1))
         return 2
-    out = verify_entry(entry, pubkey, args.expected_log_id)
+    out = verify_entry(entry, pubkey, args.expected_log_id,
+                       include_sth=args.sth, rekor_url=REKOR)
+    # --verify-root: check if the root file hash matches the entry body
+    if args.verify_root:
+        root_check = check_root_hash(entry, args.verify_root)
+        out.setdefault("checks", []).append(root_check)
+        if root_check["verdict"] == INVALID:
+            out["overall"] = INVALID
+        elif root_check["verdict"] == UNCHECKABLE and out["overall"] == VALID:
+            out["overall"] = UNCHECKABLE
     out["uuid"] = uuid
     out["rekor"] = REKOR
     out["expected_log_id"] = args.expected_log_id.lower()

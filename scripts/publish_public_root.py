@@ -55,6 +55,8 @@ from adapters import (  # noqa: E402
     xrpl_state_matrix,
 )
 
+import product_block as _product  # noqa: E402
+
 CARD_SCHEMA = "https://councilof.ai/schema/card-v1.json"
 ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v1.json"
 DID = "did:web:csoai.org#board-attestation-1"
@@ -376,6 +378,22 @@ def make_card(leaf: dict, sig: str | None, will_sign: bool | None = None) -> dic
         tag = "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
         if not any("sig_ed25519" in x for x in missing):
             missing.append(tag)
+    # G5.1 THIN firewall: refuse to sign a card whose subject or tags
+    # declare it THIN, TEMPLATE, or specimen. The publisher is the one writer;
+    # if it signs a THIN card, the estate's integrity claim is broken.
+    subject_lower = (leaf.get("subject") or "").lower()
+    tags_lower = [t.lower() for t in (leaf.get("tags") or [])]
+    thin_markers = ("thin", "template", "specimen")
+    if signed and any(m in subject_lower for m in thin_markers):
+        raise ValueError(
+            f"THIN FIREWALL: refusing to sign card with '{thin_markers}' in subject: "
+            f"{leaf.get('subject')!r}"
+        )
+    if signed and any(any(m in t for m in thin_markers) for t in tags_lower):
+        raise ValueError(
+            f"THIN FIREWALL: refusing to sign card with THIN/TEMPLATE/specimen tag"
+        )
+
     card = {
         "as_of": leaf["as_of"] or now_iso(),
         "did": DID,
@@ -386,6 +404,7 @@ def make_card(leaf: dict, sig: str | None, will_sign: bool | None = None) -> dic
             "unmeasured and payload through it"
         ),
         "payload": payload,
+        "product": _product.product_block_for(surface, payload),
         "schema": CARD_SCHEMA,
         "sha256": None,
         "sig_ed25519": sig,
