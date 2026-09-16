@@ -47,9 +47,19 @@
 #   bash scripts/deploy-site.sh --dry           # build + gates, print the deploy commands, do not run them
 #   bash scripts/deploy-site.sh --verify-only   # just re-check what the apex is serving right now
 #   bash scripts/deploy-site.sh --selftest      # prove the apex verifier can FAIL (no deploy)
+#   bash scripts/deploy-site.sh --tree-check    # the two ship-only-pushed-bytes predicates, nothing else
 #   bash scripts/deploy-site.sh --direct --break-deploy-lock
-#                                               # build + gates + write all 3 aliases + verify apex
+#                                               # tree-check + build + gates + write all 3 aliases
+#                                               # + verify apex + scripts/post-deploy-verify.sh
 #   bash scripts/deploy-site.sh --skip-build --direct --break-deploy-lock
+#   bash scripts/deploy-site.sh --direct --break-deploy-lock --i-know-tree-is-dirty
+#                                               # overrides the dirty-tree predicate ONLY; an
+#                                               # unpushed HEAD is never overridable
+#
+# WHAT --direct REFUSES (added 2026-09-16, after a hand deploy shipped from the shared checkout
+# with other lanes' untracked files in it): the tree must carry only the build's own output,
+# and HEAD must already be on origin/master. Bytes that are not on master do not ship.
+# Exit 3 = tree-check refused, exit 6 = apex or post-deploy verification failed.
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
@@ -63,12 +73,19 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 MODE="${1:---help}"
 ACK=""
-for a in "$@"; do [ "$a" = "--break-deploy-lock" ] && ACK=1; done
+DIRTY_ACK=""
+for a in "$@"; do
+  [ "$a" = "--break-deploy-lock" ] && ACK=1
+  [ "$a" = "--i-know-tree-is-dirty" ] && DIRTY_ACK=1
+done
 case "$MODE" in
-  --via-actions|--preflight|--direct|--skip-build|--dry|--verify-only|--selftest) ;;
-  --help|-h) sed -n '1,60p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+  --via-actions|--preflight|--direct|--skip-build|--dry|--verify-only|--selftest|--tree-check) ;;
+  --help|-h) sed -n '1,72p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
   *) echo "FATAL: unknown mode '$MODE'. Run with --help." >&2; exit 2 ;;
 esac
+# --direct and --skip-build are the two modes that write production by hand.
+DIRECT=""
+case "$MODE" in --direct|--skip-build) DIRECT=1 ;; esac
 
 say()  { printf '\n\033[1m== %s\033[0m\n' "$*"; }
 ok()   { printf '   \033[32mok\033[0m   %s\n' "$*"; }
@@ -76,6 +93,136 @@ bad()  { printf '   \033[31mFAIL\033[0m %s\n' "$*"; }
 
 command -v npx  >/dev/null 2>&1 || { echo "FATAL: npx not found"; exit 2; }
 command -v curl >/dev/null 2>&1 || { echo "FATAL: curl not found"; exit 2; }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# tree_check — the two predicates that make "what shipped" equal "what is on master".
+#
+# 1. The working tree may be dirty ONLY in ways the build itself causes. Every path below
+#    was read off the writer named beside it (`npm run build:client` in package.json, in
+#    order); nothing here is guessed. A generator's output is a deterministic function of
+#    committed inputs, so a diff on one of these is the build talking, not a lane. A diff
+#    anywhere else — or an untracked file the build did not create — is bytes master does
+#    not carry, and on 2026-09-16 exactly that shipped: a hand deploy from the shared
+#    checkout took other lanes' untracked files with it.
+# 2. HEAD must be an ancestor of origin/master (fetched now, not remembered). A commit that
+#    is not pushed cannot be reconciled after the fact, so this one has no override.
+# ─────────────────────────────────────────────────────────────────────────────
+GEN_TRACKED=(
+  public/signed/card-matrix.json             # scripts/build-card-matrix.mjs            (build:client step 2)
+  public/receipts/root-history.json          # scripts/build-root-history.mjs           (step 3)
+  public/signed/public-root-leaf-union.json  # scripts/build-root-leaf-union.mjs        (step 4)
+  public/cards-bundle.json                   # scripts/generate-cards-bundle.mjs        (step 6)
+  public/mirrors/reviewed-stream.jsonl       # scripts/connectors/build_reviewed_stream.py (step 7)
+  public/signed/findings_index.json          # scripts/build-findings-index.mjs         (step 8)
+  public/_redirects                          # scripts/generate-redirects.mjs           (step 17)
+  public/sitemap.xml                         # scripts/generate-sitemap.mjs             (step 18)
+  public/signed/index.html                   # scripts/generate-signed-index.mjs        (step 21)
+  public/signed/cards/index.html             # scripts/generate-signed-index.mjs        (step 21)
+  client/src/data/route-manifest.ts          # scripts/generate-route-manifest.mjs      (step 24)
+)
+# NOT in the set, deliberately:
+#   client/src/App.tsx      resolve-app-tsx.mjs (step 1) rewrites it, but master already
+#                           carries the auth-gated /workbench route, so on master the
+#                           rewrite is a byte no-op. A modified App.tsx is a hand edit.
+#   public/llms*.txt        scripts/llms-txt.mjs is NOT a build:client step and is not run by
+#                           deploy.yml; it is regenerated from LIVE after a deploy and
+#                           committed separately. An uncommitted llms.txt is a hand step.
+#   public/signed/gspc-quest-instruments.json, evidence/mcp-registry.json
+#                           their generators run with --check in build:client: read-only.
+#   prerender-report.json, public/interop/pod-cards-index.json, dist/, .wrangler/
+#                           written by the build but gitignored, so never in porcelain.
+# Untracked paths the build creates that .gitignore does NOT hide:
+BUILD_UNTRACKED=(
+  public/interop/hub-cards-index.json        # scripts/surface/build-hub-cards-index.mjs (step 23)
+)
+# Prefixes allowed untracked even in a checkout whose .gitignore has been lost.
+BUILD_UNTRACKED_PREFIX=( dist/ node_modules/ )
+
+in_list() { local needle="$1"; shift; local x; for x in "$@"; do [ "$x" = "$needle" ] && return 0; done; return 1; }
+allowed_untracked() {
+  local p="$1" pre
+  in_list "$p" "${BUILD_UNTRACKED[@]}" && return 0
+  for pre in "${BUILD_UNTRACKED_PREFIX[@]}"; do case "$p" in "$pre"*) return 0 ;; esac; done
+  return 1
+}
+
+tree_check() {
+  local label="${1:-tree-check}" dirty=0 unpushed=0 line st p head base
+  say "Tree check ($label): only pushed, build-only-dirty bytes may ship"
+  if ! git fetch -q origin master 2>/dev/null; then
+    bad "git fetch origin master failed — cannot prove HEAD is on origin/master"
+    echo "   predicate: 'git fetch origin master' must succeed (FETCH_HEAD is the reference, never a cached ref)"
+    echo "REFUSING (tree-check). Nothing was deployed."
+    return 3
+  fi
+  head="$(git rev-parse HEAD)"
+  base="$(git rev-parse FETCH_HEAD)"
+
+  while IFS= read -r line; do
+    [ -n "$line" ] || continue
+    st="${line:0:2}"; p="${line:3}"
+    if [ "$st" = "??" ]; then
+      allowed_untracked "$p" || { dirty=1; bad "untracked file the build does not produce: $p"; }
+    else
+      in_list "$p" "${GEN_TRACKED[@]}" || { dirty=1; bad "modified tracked file outside the generator-owned set: [$st] $p"; }
+    fi
+  done < <(git status --porcelain --untracked-files=all)
+
+  if [ "$dirty" -ne 0 ]; then
+    echo "   predicate: every 'git status --porcelain' row must be a GEN_TRACKED modification or a BUILD_UNTRACKED path"
+    if [ -n "$DIRTY_ACK" ]; then
+      echo "   OVERRIDDEN by --i-know-tree-is-dirty ($(git config user.name 2>/dev/null || echo unknown) at $(date -u +%FT%TZ)) — those bytes WILL ship"
+      dirty=0
+    else
+      echo "   Commit and push it, or move it out of this checkout. Deploy from a clean clone, never the dirty tree."
+    fi
+  else
+    ok "working tree carries only build output"
+  fi
+
+  if git merge-base --is-ancestor "$head" "$base" 2>/dev/null; then
+    ok "HEAD ${head:0:12} is on origin/master (${base:0:12})"
+  else
+    unpushed=1
+    bad "HEAD ${head:0:12} is NOT an ancestor of origin/master (${base:0:12}) — the commit being shipped is not pushed"
+    echo "   predicate: 'git merge-base --is-ancestor HEAD FETCH_HEAD' after 'git fetch origin master'"
+    echo "   (no override exists for this one: push first, then deploy what master has)"
+  fi
+
+  if [ "$dirty" -eq 0 ] && [ "$unpushed" -eq 0 ]; then
+    ok "tree-check ok"
+    return 0
+  fi
+  echo "REFUSING (tree-check). Nothing was deployed."
+  return 3
+}
+
+# credential_check — a Pages upload needs EITHER CLOUDFLARE_API_TOKEN OR a wrangler OAuth
+# login that carries pages (write). The old hard `:?` on the token refused a working OAuth
+# session. Prints which credential will be used, by name only; never a value, never the
+# whoami table (it carries the email and account ids).
+credential_check() {
+  say "Credential for the Pages upload"
+  if [ -n "${CLOUDFLARE_API_TOKEN:-}" ]; then
+    ok "credential: CLOUDFLARE_API_TOKEN (env) — value not printed"
+    return 0
+  fi
+  local who
+  who="$(npx wrangler whoami 2>&1 || true)"
+  if grep -q "OAuth Token" <<<"$who" && grep -qE '^- pages \(write\)' <<<"$who"; then
+    ok "credential: wrangler OAuth login carrying 'pages (write)' (CLOUDFLARE_API_TOKEN unset)"
+    return 0
+  fi
+  bad "no usable credential: CLOUDFLARE_API_TOKEN is unset and 'npx wrangler whoami' shows no OAuth login with 'pages (write)'"
+  echo "   predicate: CLOUDFLARE_API_TOKEN non-empty  OR  wrangler whoami ~ /OAuth Token/ && /^- pages \\(write\\)/"
+  echo "   fix: export CLOUDFLARE_API_TOKEN (Pages:Edit) or 'npx wrangler login' with the pages scope"
+  return 2
+}
+
+if [ "$MODE" = "--tree-check" ]; then
+  tree_check "standalone"
+  exit $?
+fi
 
 # ─────────────────────────────────────────────────────────────────────────────
 # apex_bundles — what /assets/*.js does a host's homepage actually reference?
@@ -195,6 +342,14 @@ if [ "$MODE" = "--verify-only" ]; then
   exit 0
 fi
 
+# ── tree check, BEFORE the build: a 15-minute build of a tree that will be refused is waste ──
+if [ -n "$DIRECT" ]; then
+  tree_check "before build" || exit 3
+fi
+if [ "$MODE" = "--dry" ]; then
+  tree_check "dry run — reporting only" || echo "   (dry run: a --direct deploy from this tree would be REFUSED, exit 3)"
+fi
+
 # ── build ────────────────────────────────────────────────────────────────────
 if [ "$MODE" = "--direct" ] || [ "$MODE" = "--dry" ]; then
   say "Build + prerender"
@@ -301,7 +456,11 @@ LOCK
   exit 0
 fi
 
-: "${CLOUDFLARE_API_TOKEN:?FATAL: CLOUDFLARE_API_TOKEN not set — the deploy would fail halfway}"
+credential_check || exit 2
+# The definitive check: immediately before the first upload, after the build has written
+# everything it writes. If the build produced a path this list does not know, this refuses
+# — fail closed; read the writer, then add the path above with its writer named.
+tree_check "before upload" || exit 3
 say "DEPLOY-LOCK deliberately overridden (--break-deploy-lock) by $(git config user.name 2>/dev/null || echo unknown) at $(date -u +%FT%TZ)"
 say "Deploying $DIST to $PROJECT on ALL alias names: ${BRANCHES[*]}"
 for b in "${BRANCHES[@]}"; do
@@ -321,4 +480,13 @@ fi
 
 say "Apex confirmed — deep-link + prerender assertion"
 node scripts/assert-prerender-live.mjs --label deploy-site --host "$APEX" --also "$PREVIEW"
+
+# ── post-deploy verification: the board the apex serves vs canon, every endpoint agreeing ──
+say "Post-deploy verification (scripts/post-deploy-verify.sh)"
+if ! bash scripts/post-deploy-verify.sh --host "$APEX" --dist "$DIST"; then
+  echo ""
+  echo "x DEPLOY NOT CONFIRMED. The apex serves the bundle but post-deploy verification FAILED."
+  echo "  Do not report this deploy as done."
+  exit 6
+fi
 say "DEPLOY CONFIRMED at $APEX"
