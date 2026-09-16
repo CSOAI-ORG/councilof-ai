@@ -21,6 +21,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_TOKEN }}
           MOONSHOT_API_KEY: ${{ secrets.KIMI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_TOKEN }}
+          XAI_API_KEY: ${{ secrets.GROK_TOKEN }}
         run: python scripts/canary/canary_run.py
       - name: Commit canary artifacts
         env:
