@@ -7,13 +7,15 @@ const app = readFileSync(resolve(__dirname, "../App.tsx"), "utf8");
 const nav = readFileSync(resolve(__dirname, "../components/HeaderNav.tsx"), "utf8");
 const library = readFileSync(resolve(__dirname, "../data/library-ia.ts"), "utf8");
 const prerender = readFileSync(resolve(__dirname, "../../../scripts/prerender.mjs"), "utf8");
+const head = JSON.parse(readFileSync(resolve(__dirname, "../data/seo-head.json"), "utf8")) as { routes: Record<string, { title: string }> };
 const signedCardsDir = resolve(__dirname, "../../../public/signed/cards");
 
 describe("/evaluator-access — Conditions for Independent Evaluator Access", () => {
   it("carries all four wirings a new page needs (route, title, prerender MUST, PRIMARY_PATHS) and a nav entry", () => {
     expect(app).toContain('const EvaluatorAccess = lazy(() => import("./pages/EvaluatorAccess"))');
     expect(app).toContain('<Route path="/evaluator-access" component={EvaluatorAccess} />');
-    expect(app).toMatch(/"\/evaluator-access": "Conditions for Independent Evaluator Access/);
+    // Titles live in client/src/data/seo-head.json since 2026-09-16 (one producer, see lib/seoHead.ts).
+    expect(head.routes["/evaluator-access"]?.title).toMatch(/^Conditions for Independent Evaluator Access/);
     expect(prerender).toContain('"/evaluator-access"');
     expect(library).toContain('"/evaluator-access"');
     expect(nav).toContain("href: '/evaluator-access'");

@@ -39,7 +39,8 @@ describe("/notes wiring", () => {
     expect(app).toContain('<Route path="/notes" component={EvidenceNotesIndex} />');
     // The :slug route must be declared before the index, or wouter never reaches it.
     expect(app.indexOf('path="/notes/:slug"')).toBeLessThan(app.indexOf('path="/notes"'));
-    expect(app).toMatch(/"\/notes": "Evidence notes/);
+    // Titles live in client/src/data/seo-head.json since 2026-09-16 (one producer, see lib/seoHead.ts).
+    expect(JSON.parse(read("client/src/data/seo-head.json")).routes["/notes"]?.title).toMatch(/^Evidence notes/);
     expect(prerender).toContain('found.add("/notes")');
     expect(prerender).toContain('readFileSync("client/src/data/evidence-notes.json"');
     expect(isPrimaryPath("/notes")).toBe(true);

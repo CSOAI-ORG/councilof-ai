@@ -235,6 +235,11 @@ gate "brand-gate"                    node scripts/brand-gate.mjs "$DIST"
 gate "signed-json-guard"             node scripts/signed-json-guard.mjs "$DIST"
 gate "price-gate"                    node scripts/price-gate.mjs "$DIST"
 gate "facts-gate"                    node scripts/facts-gate.mjs "$DIST"
+# Head gate: no "undefined" <title>, no SPA page without a meta description, no bare shell
+# title off the root. Selftest first; it skips itself (exit 0, says so) when $DIST holds no
+# prerender output, so a --preflight against a plain vite build is not blocked by it.
+gate "seo-head-guard selftest"       node scripts/seo-head-guard.mjs --selftest
+gate "seo-head-guard"                node scripts/seo-head-guard.mjs "$DIST"
 
 # The routes deploy.yml treats as load-bearing must be real files in the tree.
 MISSING=""

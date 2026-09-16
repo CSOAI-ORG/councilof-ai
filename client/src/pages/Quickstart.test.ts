@@ -20,7 +20,8 @@ describe("/quickstart — the public evidence path before an optional commission
   it("carries all four wirings a new page needs (route, title, prerender MUST, PRIMARY_PATHS) and a nav entry", () => {
     expect(app).toContain('const Quickstart = lazy(() => import("./pages/Quickstart"))');
     expect(app).toContain('<Route path="/quickstart" component={Quickstart} />');
-    expect(app).toMatch(/"\/quickstart": "Agent quickstart/);
+    // Titles live in client/src/data/seo-head.json since 2026-09-16 (one producer, see lib/seoHead.ts).
+    expect(JSON.parse(readFileSync(resolve(__dirname, "../data/seo-head.json"), "utf8")).routes["/quickstart"]?.title).toMatch(/^Agent quickstart/);
     expect(prerender).toContain('"/quickstart"');
     expect(library).toContain('"/quickstart"');
     expect(nav).toContain("href: '/quickstart'");

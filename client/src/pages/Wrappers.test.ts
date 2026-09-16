@@ -8,12 +8,14 @@ const nav = readFileSync(resolve(__dirname, "../components/HeaderNav.tsx"), "utf
 const library = readFileSync(resolve(__dirname, "../data/library-ia.ts"), "utf8");
 const prerender = readFileSync(resolve(__dirname, "../../../scripts/prerender.mjs"), "utf8");
 const ledger = JSON.parse(readFileSync(resolve(__dirname, "../../../public/interop/wrapped-asset-parity-latest.json"), "utf8"));
+const head = JSON.parse(readFileSync(resolve(__dirname, "../data/seo-head.json"), "utf8")) as { routes: Record<string, { title: string }> };
 
 describe("/wrappers public ledger page", () => {
   it("carries all four wirings a new page needs (route, title, prerender MUST, PRIMARY_PATHS) and a nav entry", () => {
     expect(app).toContain('const Wrappers = lazy(() => import("./pages/Wrappers"))');
     expect(app).toContain('<Route path="/wrappers" component={Wrappers} />');
-    expect(app).toMatch(/"\/wrappers": "Wrapped-asset parity ledger/);
+    // Titles live in client/src/data/seo-head.json since 2026-09-16 (one producer, see lib/seoHead.ts).
+    expect(head.routes["/wrappers"]?.title).toMatch(/^Wrapped-asset parity ledger/);
     expect(prerender).toContain('"/wrappers"');
     expect(library).toContain('"/wrappers"');
     expect(nav).toContain("href: '/wrappers'");
@@ -30,7 +32,8 @@ describe("/wrappers public ledger page", () => {
   });
 
   it("uses the route title as the single title authority", () => {
-    expect(app).toContain('"/wrappers": "Wrapped-asset parity ledger — read, not rated | Council of AI"');
+    expect(head.routes["/wrappers"]?.title).toBe("Wrapped-asset parity ledger — read, not rated | Council of AI");
+    expect(app).not.toMatch(/const ROUTE_TITLES/);
     expect(page).not.toContain("<title>");
   });
 
