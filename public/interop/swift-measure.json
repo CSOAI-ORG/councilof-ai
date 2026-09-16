@@ -7,8 +7,8 @@
   "n_ok": 6,
   "n_unreachable": 0,
   "n_http_error": 11,
-  "status_all": "DISCOVERED",
-  "honesty": "What this file records is the HTTP state of seventeen URLs WE chose, not anything about the seventeen banks. Eleven of those URLs are newsroom index pages we guessed; a 404 on a path we invented is evidence about our guess, never about the bank. The primary source \u2014 Swift's own press release naming the cohort \u2014 has NOT been fetched: swift.com answers 403 to this client. No bank in this file has been measured on tokenisation posture, and none should be quoted as such.",
+  "status_all": "DISCOVERED_PER_BANK_COHORT_MEMBERSHIP_MEASURED",
+  "honesty": "Cohort membership is now MEASURED against the primary source: the seventeen names below are the seventeen Swift names, and our earlier list matched it exactly. Everything else in this file is still the HTTP state of URLs WE chose — eleven are newsroom index pages we guessed, and a 404 on a path we invented is evidence about our guess, never about the bank. No bank here has been measured on tokenisation posture and none may be quoted as such.",
   "rows": [
     {
       "id": "anz",
@@ -18,7 +18,10 @@
       "page_state": "HTTP_404",
       "page_sha256": null,
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "bnp-paribas",
@@ -28,7 +31,10 @@
       "page_state": "HTTP_403",
       "page_sha256": null,
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "bny",
@@ -38,7 +44,10 @@
       "page_state": "OK",
       "page_sha256": "de90b53e8f36e5d101870ffb59f6ba980e5cea7bf19e349a74d678c828944689",
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "citi",
@@ -48,7 +57,10 @@
       "page_state": "HTTP_404",
       "page_sha256": null,
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "dbs",
@@ -58,7 +70,10 @@
       "page_state": "OK",
       "page_sha256": "fd22d290cb58676c4662eee512305c51fb1172817b47ffe51adffc952ec009ce",
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "fab",
@@ -68,7 +83,10 @@
       "page_state": "HTTP_404",
       "page_sha256": null,
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "firstrand",
@@ -78,7 +96,10 @@
       "page_state": "HTTP_404",
       "page_sha256": null,
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "hsbc",
@@ -88,7 +109,10 @@
       "page_state": "OK",
       "page_sha256": "2fa561135c784bada75884e7cd1a8f23ff3c75c3d26956a48f1c727652f4796e",
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "itau-unibanco",
@@ -98,7 +122,10 @@
       "page_state": "HTTP_403",
       "page_sha256": null,
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "lloyds",
@@ -108,7 +135,10 @@
       "page_state": "OK",
       "page_sha256": "25f1228f3a1401f506234cd292cbfb1f977b3519f8244b02c13667078adee774",
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "mashreq",
@@ -118,7 +148,10 @@
       "page_state": "HTTP_404",
       "page_sha256": null,
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "mufg",
@@ -128,7 +161,10 @@
       "page_state": "HTTP_404",
       "page_sha256": null,
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "ocbc",
@@ -138,7 +174,10 @@
       "page_state": "OK",
       "page_sha256": "8bd51daf86cfb53f3c86e813478a69d583ee5703cdcd0a2c5009a0c882a9cda0",
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "standard-chartered",
@@ -148,7 +187,10 @@
       "page_state": "OK",
       "page_sha256": "c8efbc3a46902d4803fb4011c8bb133ecf5be5872a53cbf68be6740ff9203aca",
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "ubs",
@@ -158,7 +200,10 @@
       "page_state": "HTTP_403",
       "page_sha256": null,
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "uob",
@@ -168,7 +213,10 @@
       "page_state": "HTTP_404",
       "page_sha256": null,
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     },
     {
       "id": "wells-fargo",
@@ -178,17 +226,50 @@
       "page_state": "HTTP_404",
       "page_sha256": null,
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
-      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank",
+      "named_in_primary_source": true,
+      "cohort_membership_state": "MEASURED",
+      "tokenisation_posture_state": "UNMEASURED"
     }
   ],
   "sha256_payload": "25644133855ef394c9e03578a25f803bdba217767a7a9cc980ba41b4356aba8a",
   "sig_status": "UNSIGNED_PENDING_OIDC",
   "sig_required": true,
   "primary_source": {
-    "url": "https://www.swift.com/news-events/press-releases",
-    "state": "UNFETCHED_HTTP_403",
-    "read_at": "2026-09-16T12:40Z",
-    "note": "403 to our client. Until these bytes are held and digested, the cohort membership itself is second-hand."
+    "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "state": "FETCHED",
+    "retrieved_at": "2026-09-16T12:46Z",
+    "retrieval_method": "rendered article text read in a browser. swift.com answers HTTP 403 to our command-line client, so this is NOT a raw HTTP body digest and must not be quoted as one; it is what the page rendered to a browser at that time.",
+    "dateline": "Brussels, 9 July 2026",
+    "article_text_chars": 12964,
+    "cohort_named": [
+      "ANZ",
+      "BNP Paribas",
+      "BNY",
+      "Citi",
+      "DBS",
+      "First Abu Dhabi Bank (FAB)",
+      "FirstRand Bank Limited",
+      "HSBC",
+      "Itaú Unibanco",
+      "Lloyds Bank",
+      "Mashreq",
+      "MUFG Bank",
+      "OCBC",
+      "Standard Chartered",
+      "UBS",
+      "UOB",
+      "Wells Fargo"
+    ],
+    "cohort_n": 17,
+    "discarded_field": "A per-bank executive-quote flag was computed and discarded: the detector returned true for all 17 because the cohort list sits immediately before the quotes, so proximity matched every name. A number we cannot compute reliably is not published."
   },
-  "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE"
+  "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+  "cohort_membership": {
+    "state": "MEASURED",
+    "n": 17,
+    "what_is_measured": "named by Swift, in Swift's own press release of 9 July 2026, as a bank preparing to pilot live transactions on its blockchain-based ledger",
+    "what_is_not_measured": "whether any of these banks has tokenised deposits live, the state of any pilot, volumes, or any tokenisation posture. None of that is read here.",
+    "agreement_with_our_earlier_list": "exact: the 17 names we had published match the primary source, no additions and no omissions"
+  }
 }

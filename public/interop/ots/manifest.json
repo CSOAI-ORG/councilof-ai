@@ -1,6 +1,6 @@
 {
   "schema": "csoai.ots-manifest/0.2",
-  "as_of": "2026-09-16T12:41:00Z",
+  "as_of": "2026-09-16T12:47:00Z",
   "note": "A stamp is a REQUEST, not evidence. Each proof below carries only PendingAttestations: the calendars have accepted the digest but no Bitcoin attestation exists yet. Nothing here is anchored. Run scripts/ots-upgrade.py until a BitcoinBlockHeaderAttestation lands, then this state changes to UPGRADED with the block height.",
   "supersedes": {
     "schema": "csoai.ots-manifest/0.1",
@@ -9,7 +9,7 @@
   "proofs": [
     {
       "subject": "swift-measure.json",
-      "sha256": "ae607b6f12120e69582b95d6663fbf1ea9635d012792066163ed870e73bed64e",
+      "sha256": "b3e60c34913da667ca8ad35968ae47d23db4f2a19aa1156f16cfe4f54b1721e3",
       "ots_url": "/interop/ots/swift-measure.json.ots",
       "state": "PENDING_BITCOIN_CONFIRMATION",
       "calendars": [
@@ -18,7 +18,7 @@
         "https://alice.btc.calendar.opentimestamps.org",
         "https://bob.btc.calendar.opentimestamps.org"
       ],
-      "stamped_at": "2026-09-16T12:41:00Z",
+      "stamped_at": "2026-09-16T12:47:00Z",
       "verify": "python3 scripts/ots/ots-stamp.py --verify public/interop/ots/swift-measure.json.ots"
     },
     {
