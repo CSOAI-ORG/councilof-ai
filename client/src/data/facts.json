@@ -87,7 +87,17 @@
         "status": "superseded-known-claim-defect",
         "observed": "a verified historical 22/22 MPC-signed snapshot whose separate status document forbids current reliance",
         "note": "The original signature still verifies, but /signed/gspc-board.status.json records a financial-run signature overclaim and historical leader-note ambiguity. Integrity of the bytes does not make those claims current. The snapshot remains published for audit and is never a live fallback unless a replacement MPC ceremony makes its status CURRENT.",
-        "surface": "/signed/gspc-board.signed.json"
+        "surface": "/signed/gspc-board.signed.json",
+        "surfaces": [
+          "/signed/gspc-board.signed.json",
+          "/interop/root-witness-2026-09-02.json",
+          "/interop/eas-base-root-2026-09/mirrors/root-witness-2026-09-02.json",
+          "/interop/gspc-board-freeze-witness-2026-09-02.json",
+          "/interop/gspc-board-freeze-witness-pointer.json",
+          "/interop/gspc-board-freeze-pointer.json",
+          "/interop/layer0-ceremony-2026-09-03.json"
+        ],
+        "surfaces_note": "Added 2026-09-16 when the board grew to a 23rd DECLARED slot (effect-binding, UNMEASURED). The dated witness and pointer artifacts of this 2026-09-02 freeze each record the freeze's own totals; their bytes are hashed elsewhere (eas-base-root artefact-manifest sha256, an OpenTimestamps .ots over layer0-ceremony) or are Rekor pointer records, so they are superseded, never edited. Exonerated as snapshots of themselves, never as the live count."
       },
       "gspc_board_snapshot_2026_08_05": {
         "authority": "none — this is a record, not an authority. The count authority is GET /api/gspc.",

@@ -143,6 +143,10 @@ const BREAKDOWN_BEFORE = /\b(?:\d+\s+of|the other|remaining|only|another)\s+$/i;
 // "13 axis signals", "5 axis lens" — the noun is qualified; not a board count.
 const QUALIFIED_AFTER = /^\s*(?:signals?|lens|families|groups?|pairs?)\b/i;
 
+// "22 axes measured" — postfix-qualified MEASURED count (the live totals.lid grammar).
+// Delegated to ruleMeasuredOverclaim; see the note inside ruleAxisCount.
+const MEASURED_POSTFIX_AFTER = /^\s+measured\b/i;
+
 // "3 axes carry an external public leader" — a SUBSET PREDICATE. The sentence says
 // how many axes have a property; it does not assert the board's total. Blocked the
 // whole deploy pipeline on 2026-09-03, and the sentence lives in
@@ -195,6 +199,13 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
     // A measured/quotable-qualified count is a claim about the MEASURED count, not
     // the board total. ruleMeasuredOverclaim owns it.
     if (/^(?:measured|quotable)\s*$/i.test(m[2] || "")) continue;
+    // The POSTFIX form "22 axes measured" is the same claim — it is the grammar of the
+    // live board's own derived `totals.lid` ("22 axes measured · 14 model fleets · …"),
+    // which every surface is told to quote verbatim. When the board grew to 23 slots
+    // (2026-09-16, one declared slot with no run) that verbatim quote was flagged 26
+    // times as a wrong SLOT count. It is a measured count; MEASURED_RE (below) parses
+    // the postfix form too, so an overclaim in this shape still fails.
+    if (MEASURED_POSTFIX_AFTER.test(text.slice(COUNT_RE.lastIndex))) continue;
     if (isProhibition(text, m.index)) continue; // "do not invent 22 axes"
     if (isNegated(text, m.index, COUNT_RE.lastIndex)) continue;
 
@@ -267,7 +278,9 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
 // fails any surface asserting that MORE axes are measured than actually are. An
 // axis-count rule cannot catch that, because the error is in the word "measured",
 // not in the number.
-const MEASURED_RE = /\b(\d{1,3})\s+(?:of\s+\d{1,3}\s+)?measured\s+(?:axes|axis|slots)\b/gi;
+// Both orders: "22 measured axes" and "22 axes measured" (the live totals.lid grammar).
+const MEASURED_RE =
+  /\b(\d{1,3})\s+(?:of\s+\d{1,3}\s+)?(?:measured\s+(?:axes|axis|slots)|(?:axes|axis|slots)\s+measured)\b/gi;
 const ALL_MEASURED_RE = /\ball\s+(\d{1,3})\s+(?:axes|axis|slots)\s+(?:are|were|have\s+been)\s+measured\b/gi;
 
 function ruleMeasuredOverclaim(facts, file, text, add, liveMeasured) {
@@ -574,6 +587,9 @@ const SELFTEST_CASES = [
   ["22 measured is now true, not an overclaim", "<p>The board publishes 22 measured axes.</p>", false],
   ["all 22 axes are measured is now honest", "<p>All 22 axes are measured and signed.</p>", false],
   ["VIOLATION: 30 measured axes (more than the board carries)", "<p>The board publishes 30 measured axes.</p>", true],
+  // ── postfix measured grammar = the live totals.lid (2026-09-16, board 23 · 22) ──
+  ["live lid verbatim: N axes measured is a MEASURED claim, not a slot count", "<p>Lid: 15 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.</p>", false],
+  ["VIOLATION: postfix overclaim still fails", "<p>Board right now: 30 axes measured · 14 model fleets.</p>", true],
   ["understatement passes (fewer than measured is safe)", "<p>The board carries 15 measured axes today.</p>", false],
   ["VIOLATION: EAS asserted live", "<p>Every attestation is anchored on EAS today.</p>", true],
   ["honest EAS label", "<p>EVM · EAS BlackRock BUIDL 0x7712c3420573… UNMEASURED</p>", false],

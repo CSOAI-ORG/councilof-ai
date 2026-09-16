@@ -274,7 +274,7 @@ def build_custom_gpt_bridge() -> dict:
         "gpts": [
             {
                 "name": "GSPC 22-axis measurement",
-                "description": "Measure any AI model on 22 axes. Returns signed card.",
+                "description": "Measure any AI model on every axis of the live board (GET /api/gspc). Returns signed card.",
                 "instructions": "You measure AI models on 22 governance axes. Every measurement is signed + anchored. Use POST /api/x402 with sku=engine-gspc to emit a card. The card is 3KB max, signed Ed25519, anchored to OTS pending + Rekor + EAS planned.",
                 "conversation_starters": [
                     "Measure gpt-4o on the governance axis",

@@ -32,7 +32,7 @@ HERE = Path(__file__).resolve().parent
 OUT = HERE.parent.parent / "public" / "subdomains"
 DID = "did:web:csoai.org#card-attestation-1"
 
-LID = "22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact."
+LID = "Board count: quote live totals.public_count from GET /api/gspc."
 
 # (slug, title, description, schema_type, cta_text, cta_url, body)
 SUBDOMAINS = [
@@ -108,10 +108,10 @@ SUBDOMAINS = [
         "/products",
         """<h2>Available packs</h2>
 <div class="grid">
-  <div class="card"><p class="card-name">EU AI Act Article 5</p><p class="price">$0.50 USDC</p><p class="card-desc">Prohibited practice evidence pack — 22 axes × EU AI Act Article 5 prohibited practices.</p></div>
+  <div class="card"><p class="card-name">EU AI Act Article 5</p><p class="price">$0.50 USDC</p><p class="card-desc">Prohibited practice evidence pack — every live axis × EU AI Act Article 5 prohibited practices.</p></div>
   <div class="card"><p class="card-name">EU AI Act Article 50</p><p class="price">$0.50 USDC</p><p class="card-desc">Transparency marking evidence pack — C2PA detection + signed card.</p></div>
-  <div class="card"><p class="card-name">CRA readiness</p><p class="price">$1.00 USDC</p><p class="card-desc">Cyber Resilience Act evidence pack — 22 axes × CRA essential requirements.</p></div>
-  <div class="card"><p class="card-name">Insurer evidence</p><p class="price">$2.00 USDC</p><p class="card-desc">Lloyd's syndicate evidence pack — 22 axes × liability mapping.</p></div>
+  <div class="card"><p class="card-name">CRA readiness</p><p class="price">$1.00 USDC</p><p class="card-desc">Cyber Resilience Act evidence pack — every live axis × CRA essential requirements.</p></div>
+  <div class="card"><p class="card-name">Insurer evidence</p><p class="price">$2.00 USDC</p><p class="card-desc">Lloyd's syndicate evidence pack — every live axis × liability mapping.</p></div>
 </div>""",
     ),
     (
@@ -154,9 +154,9 @@ SUBDOMAINS = [
         "/dashboards/",
         """<h2>5 persona dashboards</h2>
 <div class="grid">
-  <div class="card"><p class="card-name">EU AI Office</p><p class="price">Article 5, 50, GPAI</p><p class="card-desc">The regulator's view of the 22 axes.</p></div>
+  <div class="card"><p class="card-name">EU AI Office</p><p class="price">Article 5, 50, GPAI</p><p class="card-desc">The regulator's view of every axis on the live board.</p></div>
   <div class="card"><p class="card-name">Vendor</p><p class="price">CTO, compliance</p><p class="card-desc">Get a signed card back for your model.</p></div>
-  <div class="card"><p class="card-name">Insurer</p><p class="price">Lloyd's syndicate</p><p class="card-desc">Liability mapping across the 22 axes.</p></div>
+  <div class="card"><p class="card-name">Insurer</p><p class="price">Lloyd's syndicate</p><p class="card-desc">Liability mapping across every axis on the live board.</p></div>
   <div class="card"><p class="card-name">Journalist</p><p class="price">Tech, AI safety</p><p class="card-desc">Independent verification of vendor claims.</p></div>
   <div class="card"><p class="card-name">Affected person</p><p class="price">Anyone</p><p class="card-desc">Submit a correction in plain English.</p></div>
 </div>""",
@@ -229,7 +229,7 @@ def build_html(slug: str, title: str, description: str, schema_type: str,
 
 <footer>
 <p>CSOAI Ltd · UK 16939677 · <a href="https://councilof.ai">councilof.ai</a> · <a href="https://csoai.org">csoai.org</a></p>
-<p style="margin-top: 8px;">The lid phrase: 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. Measurement, not certification. Anyone can re-check.</p>
+<p style="margin-top: 8px;">Board count: quote live totals.public_count from GET /api/gspc. Measurement, not certification. Anyone can re-check.</p>
 </footer>
 
 </body>

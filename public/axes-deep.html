@@ -312,9 +312,9 @@
 <main>
 
   <header class="hero">
-    <h1>The 22 axes of GSPC</h1>
+    <h1>The axes of GSPC</h1>
     <p class="sub">A canonical reference. Each axis: scope, what's MEASURED, the discipline, the lane. Live from the board, free, Ed25519-signed.</p>
-    <p class="lid" id="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact · live</p>
+    <p class="lid" id="lid">Board count: live at GET /api/gspc (totals.public_count) · loading</p>
   </header>
 
   <section class="family" id="family-model-comparison">
@@ -376,7 +376,7 @@
   <section class="notes">
     <h2>Notes for the end user</h2>
     <ol>
-      <li>The lid (22 axes · 22 measured) is the <em>full set we measure</em>. Empty cells are not a missing feature — they are a discipline.</li>
+      <li>The lid (live <code>totals.public_count</code>) is the <em>full set we measure</em>. Empty cells are not a missing feature — they are a discipline.</li>
       <li>Jail (axis 14) is a <em>containment floor</em>, not a certification. It carries its per-model rows verbatim from the signed living board.</li>
       <li>The 8 financial axes are fact runs, not leader scores. None has a fleet, an accuracy, or a separation determination. Measured, not scored.</li>
       <li>The two former index slots (ai-adoption-components, labour-components) are measured as component facts, never restored to any retired sticker.</li>
@@ -406,7 +406,7 @@
       const n = a.n ?? 0;
       const sep = a.separation || "";
       const acc = a.accuracy != null ? `acc=${a.accuracy}` : "";
-      const lid = b.totals?.public_count || "22 axes · 22 measured";
+      const lid = b.totals?.public_count || "live count: GET /api/gspc";
       const live = lid.match(/(\d+)\s+axis/i)?.[1] ?? "22";
       return `<a class="axis" href="https://councilof.ai/axis/${slug}.html">
         <h3>${slug}</h3>
@@ -477,7 +477,7 @@
         Published measurement cards are Ed25519-signed. See /api/state for the current exact-root witness state.
       </p>
       <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
-        22 axes · 22 measured
+        Board count: live at GET /api/gspc (totals.public_count)
       </p>
     </div>
     <div class="footer-col">
@@ -499,7 +499,7 @@
   </div>
   <div class="footer-bottom">
     <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
-    <span class="lid-phrase">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
+    <span class="lid-phrase">Board count: quote live totals.public_count from GET /api/gspc</span>
   </div>
 </footer>
 
@@ -514,7 +514,7 @@
     "name": "CSOAI Ltd",
     "url": "https://councilof.ai"
   },
-  "headline": "The 22 axes of GSPC \u2014 deep reference",
+  "headline": "The axes of GSPC \u2014 deep reference",
   "inLanguage": "en"
 }
 </script>

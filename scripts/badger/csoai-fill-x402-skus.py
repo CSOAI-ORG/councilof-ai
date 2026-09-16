@@ -39,7 +39,7 @@ def build_engine_skus() -> dict:
                 "name": "Anthropic Claude measurement",
                 "engine": "anthropic",
                 "price_usdc": 0.50,
-                "scope": "Measure Anthropic Claude models on the 22 axes",
+                "scope": "Measure Anthropic Claude models on every axis of the live board (GET /api/gspc)",
                 "endpoint": "/api/x402?sku=engine-anthropic",
             },
             {
@@ -47,7 +47,7 @@ def build_engine_skus() -> dict:
                 "name": "OpenAI GPT measurement",
                 "engine": "openai",
                 "price_usdc": 0.50,
-                "scope": "Measure OpenAI GPT models on the 22 axes",
+                "scope": "Measure OpenAI GPT models on every axis of the live board (GET /api/gspc)",
                 "endpoint": "/api/x402?sku=engine-openai",
             },
             {
@@ -55,7 +55,7 @@ def build_engine_skus() -> dict:
                 "name": "Google Gemini measurement",
                 "engine": "google",
                 "price_usdc": 0.50,
-                "scope": "Measure Google Gemini models on the 22 axes",
+                "scope": "Measure Google Gemini models on every axis of the live board (GET /api/gspc)",
                 "endpoint": "/api/x402?sku=engine-google",
             },
             {
@@ -63,7 +63,7 @@ def build_engine_skus() -> dict:
                 "name": "Meta Llama measurement",
                 "engine": "meta",
                 "price_usdc": 0.50,
-                "scope": "Measure Meta Llama models on the 22 axes",
+                "scope": "Measure Meta Llama models on every axis of the live board (GET /api/gspc)",
                 "endpoint": "/api/x402?sku=engine-meta",
             },
             {
@@ -71,7 +71,7 @@ def build_engine_skus() -> dict:
                 "name": "Mistral AI measurement",
                 "engine": "mistral",
                 "price_usdc": 0.50,
-                "scope": "Measure Mistral models on the 22 axes",
+                "scope": "Measure Mistral models on every axis of the live board (GET /api/gspc)",
                 "endpoint": "/api/x402?sku=engine-mistral",
             },
             {

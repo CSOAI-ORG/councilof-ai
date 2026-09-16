@@ -323,7 +323,7 @@
     <div class="pillars">
       <div class="pillar">
         <h3>GSPC board</h3>
-        <p>The board declares <strong>22 axes</strong>: 14 model-comparison and 8 deterministic-fact. Read the current <code>GET /api/gspc</code> response for its measured and unmeasured state. TIE is TIE; UNMEASURED stays empty.</p>
+        <p>The board previously read <strong>22 axes</strong> (14 model-comparison and 8 deterministic-fact) when this entry was written; that count is superseded by the live board. Read the current <code>GET /api/gspc</code> response for its slot, measured and unmeasured counts. TIE is TIE; UNMEASURED stays empty.</p>
       </div>
       <div class="pillar">
         <h3>Ed25519 + Rekor witness</h3>
@@ -510,7 +510,7 @@ GSPC_ORIGIN=https://councilof.ai npx csoai-gspc-mcp</code></pre>
         Verify the current root, signature and witness states from /api/state and /interop/root-witness-latest.json.
       </p>
       <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
-        22 axes · 22 measured
+        Board count: live at GET /api/gspc (totals.public_count)
       </p>
     </div>
     <div class="footer-col">
@@ -532,7 +532,7 @@ GSPC_ORIGIN=https://councilof.ai npx csoai-gspc-mcp</code></pre>
   </div>
   <div class="footer-bottom">
     <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
-    <span class="lid-phrase">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
+    <span class="lid-phrase">Board count: quote live totals.public_count from GET /api/gspc</span>
   </div>
 </footer>
 

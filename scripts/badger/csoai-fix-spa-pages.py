@@ -78,7 +78,7 @@ def fix_spa_page(path: Path, title: str) -> tuple[bool, str]:
       <p style="font-size: 14px; line-height: 1.6; margin-top: 16px;">
         Independent AI-governance measurement body.<br>Published measurement cards are Ed25519-signed. See /api/state for the current exact-root witness state.
       </p>
-      <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">22 axes · 22 measured</p>
+      <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">Board count: live at GET /api/gspc (totals.public_count)</p>
     </div>
     <div class="footer-col">
       <h4>Product</h4>
@@ -96,7 +96,7 @@ def fix_spa_page(path: Path, title: str) -> tuple[bool, str]:
   </div>
   <div class="footer-bottom">
     <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
-    <span class="lid-phrase">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
+    <span class="lid-phrase">Board count: quote live totals.public_count from GET /api/gspc</span>
   </div>
 </footer>"""
 
