@@ -1,6 +1,6 @@
 {
   "artifact": "master-consolidation",
-  "as_of": "2026-09-16T15:54:48Z",
+  "as_of": "2026-09-16T16:15:29Z",
   "what_this_is": "A census of every artifact CSOAI holds across every surface, committed to one Merkle root.",
   "what_the_root_proves": "That these exact entries were in this set when the root was stamped. Nothing else.",
   "what_this_is_not": [
@@ -75,6 +75,13 @@
       "sig_status": "UNSIGNED_PENDING_OIDC",
       "honesty": "Cohort membership is now MEASURED against the primary source: the seventeen names below are the seventeen Swift names, and our earlier list matched it exactly. Everything else in this file is still the HTTP state of URLs WE chose \u2014 eleven are newsroom index pages we guessed, and a 404 on a path we invented is evidence about our guess, never about the bank. No bank here has been measured on tokenisation posture and none may be quoted as such."
     },
+    "x402_doors": {
+      "source": "public/interop/x402-door-census-2026-09-16.json",
+      "n": 11,
+      "as_of": "2026-09-16T11:40:00Z",
+      "discovery": "https://councilof.ai/.well-known/x402.json",
+      "doors_whose_challenge_a_stdlib_client_never_receives": 11
+    },
     "stablecoin_corpus": {
       "source": "public/interop/stablecoin-corpus-index-2026-09-16.json",
       "universe_asset_count": 425,
@@ -84,7 +91,7 @@
       "not_a_supply_total": "This counts ASSETS with at least one measured deployment. It is not a sum of supply: the universe mixes peg currencies, and one asset may be deployed on several chains, so a sum would mix units or double-count a bridged token."
     }
   },
-  "merkle_root": "9d85d89da23d93f100253aa175f31faa8b75111a2edf9c2b86dbc562bd647b85",
+  "merkle_root": "8348afa2b9c968ad3e5f2d7a3817f15a224dacb455244d5c5228add0b2c75879",
   "inclusion_self_check": {
     "sampled": 204,
     "verified": 204,
@@ -23450,181 +23457,241 @@
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/csoai-corpus-baselines",
-      "digest": "c8269404b989e3a08047a5e45c25e696bc3509ec51e3e598592a80f43e5b8671",
+      "digest": "4ea989b33fd50ce8f61cba802b30aa55983f16fd3bd15ab0398ec447cd500f9a",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "CSOAI Corpus Baselines \u2014 AI Regulation Hash Watch"
+      "title": "CSOAI Corpus Baselines \u2014 AI Regulation Hash Watch",
+      "version": 2,
+      "licence": "CC0: Public Domain",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/csoai-gspc-living-board",
-      "digest": "eb09b4cf5340f2702bbbcc00ae77c43b267b96d35537f3cbdedb15aaec8b5f29",
+      "digest": "aba15223880d7d034ec4e5d0c84b82723b2e14a42bf8e0159a46eace9fe165eb",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "GSPC living board"
+      "title": "GSPC living board",
+      "version": 29,
+      "licence": "CC0: Public Domain",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/csoai-signed-measurement-cards",
-      "digest": "bb72ecf9170ac4b76e464415690b24baa97a5941089aa071372dc0a7e1727615",
+      "digest": "6cc2b39dce900f71d3ea8a17916ca76aab257cc30a3f4ae91fcc441083f5fba6",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "ARCHIVED measurement cards chrome"
+      "title": "ARCHIVED measurement cards chrome",
+      "version": 2,
+      "licence": "CC BY-SA 4.0",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-accountability",
-      "digest": "5ed5ab46a20a4e0e8342d9f6c180a584d969d2eec87608147839d5dc66f75d74",
+      "digest": "15472f461e541e7fb67315a51a25c8092a06e3db795f502c4268326d4b9fd242",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "HOLD parallel bank - not live axis"
+      "title": "HOLD parallel bank - not live axis",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-continuity",
-      "digest": "66749c1e49779ab03d3cef154d0ff0d190f129cc1611a2583d08421995263e87",
+      "digest": "d91c315d85cf65c856b5f068436bd0df2336e9a5da289ee3749916ddf998168e",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "HOLD parallel bank - not live axis"
+      "title": "HOLD parallel bank - not live axis",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-creativity",
-      "digest": "a419230099213d09ad8185ffc31e2bd135bbc635c1533b5a9752c3b2aeff4ccb",
+      "digest": "1f21bafc4da31c996d3ab361be07a12f1e9566651c97a654c7d77ed751710698",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "HOLD parallel bank \u2014 not live axis"
+      "title": "HOLD parallel bank \u2014 not live axis",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-defbench",
-      "digest": "bf1ac184d002dd15ea918d0cf1c867a7e99c2f2a49863c22a99b18ec8b0ec2e8",
+      "digest": "146402c7c2776eec4abd595a2f272bea24f386cfa3d7df935a5e912b4a76e036",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "GSPC-DEFBENCH (DEPRECATED \u2014 use gspc-det)"
+      "title": "GSPC-DEFBENCH (DEPRECATED \u2014 use gspc-det)",
+      "version": 6,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-efficiency",
-      "digest": "4edf1a7cc90a55ac8e16b62f8221d92c58c22835d14b01ecb65edd39e50385c9",
+      "digest": "de91a6e1c70311771f4e3a8562771c5fe10d616fe2bfe2c755f06ea6814ee98b",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "HOLD parallel bank \u2014 not live axis"
+      "title": "HOLD parallel bank \u2014 not live axis",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-fairness",
-      "digest": "3afbf1bc9f635457c26556ac7e9938f23e5db4969b50ffcc35fef2593b5a1c02",
+      "digest": "d7de4fd54d854aa1a085cc9c83613e72f42adaad5f08c8559c133a3a9d22d125",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "HOLD parallel bank \u2014 not live axis"
+      "title": "HOLD parallel bank \u2014 not live axis",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-govbench",
-      "digest": "6c11f46b5eb463a35a0f3c25bd85684c727784d5b5b1e95b053e585406e6f1ab",
+      "digest": "c67bf1e19f11f6e2b00ea0eb59d7166d83a1c5633be2a3388ab534dcec1d794f",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "GSPC-GOVBENCH (DEPRECATED \u2014 use gspc-agi)"
+      "title": "GSPC-GOVBENCH (DEPRECATED \u2014 use gspc-agi)",
+      "version": 6,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-human-vs-ai",
-      "digest": "1754473ba0b59116005922c0189d5ce97bc68e86a8ad06d7914cbb4e2f3abf93",
+      "digest": "bb8343b5e85c5ea3d5bffd7376641de8f0d2640902f3c8cc6c8e2fb02f6d2893",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "HOLD parallel bank - not live axis"
+      "title": "HOLD parallel bank - not live axis",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-kernel-results",
-      "digest": "e702317fc95befc06837e21357f6a088b63b7d39e5b4dd2630b1f3b15acce35b",
+      "digest": "21214fbade470298364961be991dccf361734e81b3382c15f0d6711d79bff8c2",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "GSPC Kernel Results \u2014 CSOAI measured sweep records"
+      "title": "GSPC Kernel Results \u2014 CSOAI measured sweep records",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-safety",
-      "digest": "b561ebcfb9190c7755c89861b353daaf4608194ba2dbda3ab80bf897ed089d6d",
+      "digest": "38e225a4c30edfeb3821549a6f385fbf00c4253d5c5d37612693ac4cf222e1f9",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "HOLD parallel bank - not live axis"
+      "title": "HOLD parallel bank - not live axis",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-sim-cards",
-      "digest": "2a7869ce321baa54a10fa463d1307ef27e1346efae4ec1589c049a33a12a7027",
+      "digest": "c1cf6d66c5e508ac6f73e00f088229c23a398b5915ab2dda6bb5e19b3de03825",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "GSPC Sim Cards \u2014 CSOAI simulation cards"
+      "title": "GSPC Sim Cards \u2014 CSOAI simulation cards",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-slot15",
-      "digest": "56744b3ba06fed43d1484405033fe1cd69975215c5259c80a45b8ade0a14fa7f",
+      "digest": "f9ba8de2ac6573d505281ac5f38bef97e7d9aab55a91404ec2db24ca89c3620f",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "HOLD parallel bank \u2014 not slot-15"
+      "title": "HOLD parallel bank \u2014 not slot-15",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-sovereignty",
-      "digest": "15689dba827338e25d1c6419f57d113b64f97087e6c5160eb1e3dce1c3cfde9a",
+      "digest": "32cb85560a65019688d045c18ab39753a387be6ef3dea320795c62e012a24ed5",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "ARCHIVED parallel bank HOLD"
+      "title": "ARCHIVED parallel bank HOLD",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-swarm",
-      "digest": "0a34bd34e017bb02d42f7a8fc1feb365b4e768116cda9f11dc912172cebbc81a",
+      "digest": "3bffbf455121a36585d4ac13ae27c3262b54281378cab83ee24643cb9b983c3a",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "GSPC-SWARM \u2014 multi-agent safety (MEASURED)"
+      "title": "GSPC-SWARM \u2014 multi-agent safety (MEASURED)",
+      "version": 4,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/gspc-transparency",
-      "digest": "845597be0e33fc5657ec412471a94cecec8d1eec33a344ecd1fcdc0453f290a9",
+      "digest": "5391d532e9a7086b533980f5700a387e0100123ea3373e5915d857d7143e1a1f",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "HOLD parallel bank - not live axis"
+      "title": "HOLD parallel bank - not live axis",
+      "version": 1,
+      "licence": "Attribution 4.0 International (CC BY 4.0)",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/oowm-ground-truth-v9",
-      "digest": "20a7334c27b95092f001e921445640c6f20d9f8e0957fe48320034036ef1c8c8",
+      "digest": "42d569cd4a1cac6db35034b6126c0cc52eed0b332f841a31f2deccfbe1174988",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "ARCHIVED historical ground-truth v9"
+      "title": "ARCHIVED historical ground-truth v9",
+      "version": 3,
+      "licence": "CC0: Public Domain",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "kaggle",
       "kind": "dataset",
       "id": "nicktempleman/sov-signal-ground-truth-v8",
-      "digest": "8d777162eeb67909e0bcb186562a04b33f264e3e46e344d6abe1dee7b8b26ec2",
+      "digest": "fd243d1c2344c0c995c482ab7da573900b2b1e6f4068e53ff317d7e682a2353b",
       "leaf_class": "record_leaf",
       "state": "INDEXED",
-      "title": "ARCHIVED historical signal ground-truth"
+      "title": "ARCHIVED historical signal ground-truth",
+      "version": 3,
+      "licence": "CC0: Public Domain",
+      "licence_note": "The licence is this dataset's own, read from Kaggle. Licences differ by artifact across this estate and are never stated once for all of it."
     },
     {
       "surface": "oracle_object_storage",
