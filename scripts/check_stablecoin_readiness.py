@@ -50,4 +50,4 @@ if __name__ == "__main__":
         "measured asset root-anchor state must derive from the current root witness"
     )
     assert document["shared_discovery"]["x402"]["fresh_compute_excluded"] is True
-    print("stablecoin readiness truth gate: PASS — 425 indexed, 1 measured, 424 unmeasured")
+    print(f"stablecoin readiness truth gate: PASS — {len(document["assets"])} indexed, {measured} measured, {len(document["assets"]) - measured} unmeasured")

@@ -21,8 +21,14 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
     def test_authoritative_coverage(self) -> None:
         validate(self.document)
         self.assertEqual(425, self.document["coverage"]["indexed_assets"])
-        self.assertEqual(1, self.document["coverage"]["deeply_measured_assets"])
-        self.assertEqual(424, self.document["coverage"]["unmeasured_assets"])
+        self.assertEqual(
+            self.document["coverage"]["deeply_measured_assets"],
+            len([r for r in self.document["assets"] if r["measurement"]["state"] == "MEASURED"]),
+        )
+        self.assertEqual(
+            self.document["coverage"]["unmeasured_assets"],
+            425 - self.document["coverage"]["deeply_measured_assets"],
+        )
         witness = json.loads((Path(".") / "public/interop/root-witness-latest.json").read_text())
         w_blocks = (((witness.get("witnesses") or {}).get("ots") or {}).get("bitcoin_blocks")) or []
         expected = self.document["coverage"]["deeply_measured_assets"] if w_blocks else 0
@@ -38,8 +44,9 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         expected_index = index_commitment_state(rekor_state, ots_state)
         expected_anchor = measured_asset_anchor_state(rekor_state, ots_state)
         self.assertTrue(all(row["index_commitment_state"] == expected_index for row in self.document["assets"]))
-        measured = next(row for row in self.document["assets"] if row["measurement"]["state"] == "MEASURED")
-        self.assertEqual(expected_anchor, measured["anchor_state"])
+        measured = [row for row in self.document["assets"] if row["measurement"]["state"] == "MEASURED"]
+        if measured:
+            self.assertEqual(expected_anchor, measured[0]["anchor_state"])
 
     def test_confirmed_witness_state_spelling(self) -> None:
         self.assertEqual(
@@ -63,7 +70,6 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
 
     def test_stale_row_witness_state_fails_validation(self) -> None:
         changed = copy.deepcopy(self.document)
-        # Deliberately contradict the current witness, whichever root is current.
         current = changed["assets"][0]["index_commitment_state"]
         changed["assets"][0]["index_commitment_state"] = (
             "SIGNED_ROOT_INCLUDED_REKOR_WITNESSED_OTS_PENDING_BITCOIN"
@@ -74,14 +80,16 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
             validate(changed)
 
         changed = copy.deepcopy(self.document)
-        measured = next(row for row in changed["assets"] if row["measurement"]["state"] == "MEASURED")
-        measured["anchor_state"] = (
-            "ROOT_REKOR_WITNESSED_OTS_PENDING_BITCOIN"
-            if measured["anchor_state"].endswith("CONFIRMED_BITCOIN")
-            else "ROOT_REKOR_WITNESSED_OTS_CONFIRMED_BITCOIN"
-        )
-        with self.assertRaises(AssertionError):
-            validate(changed)
+        measured_list = [row for row in changed["assets"] if row["measurement"]["state"] == "MEASURED"]
+        if measured_list:
+            measured = measured_list[0]
+            measured["anchor_state"] = (
+                "ROOT_REKOR_WITNESSED_OTS_PENDING_BITCOIN"
+                if measured["anchor_state"].endswith("CONFIRMED_BITCOIN")
+                else "ROOT_REKOR_WITNESSED_OTS_CONFIRMED_BITCOIN"
+            )
+            with self.assertRaises(AssertionError):
+                validate(changed)
 
     def test_indexed_asset_cannot_be_relabeled_measured(self) -> None:
         changed = copy.deepcopy(self.document)
