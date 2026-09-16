@@ -50,7 +50,7 @@ npx -y csoai-gspc-mcp@0.2.1
 ```
 
 The published `0.2.1` package predates the reviewed `0.2.2` conformance repair;
-its existence does not prove that the exact reviewed 12-tool runtime has shipped
+its existence does not prove that the exact reviewed 13-tool runtime has shipped
 to npm. The repository currently prepares `0.2.2`, but that source version is
 **not a published npm release** until `npm view csoai-gspc-mcp@0.2.2 version`
 confirms that exact version. Do not install or advertise `0.2.2` from npm before
