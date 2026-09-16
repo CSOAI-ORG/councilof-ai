@@ -1,0 +1,40 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "x402.settlement.census.2026-09-06",
+  "subject": "x402 settlement census: 316 hosts, 100 delivered, 213 refused",
+  "as_of": "2026-09-06T06:46:22Z",
+  "source_urls": [
+    "/interop/ledger-card-x402-settlement-unsigned.json"
+  ],
+  "payload": {
+    "kind": "csoai.x402-settlement-census/0.1",
+    "flags": {
+      "self_settlement": false,
+      "revenue": false,
+      "ranking": false,
+      "hosts_contacted": false,
+      "not_a_grade": true,
+      "from_x402_census": true
+    },
+    "method": "GET the resource, sign EIP-3009, GET again with PAYMENT-SIGNATURE",
+    "population": 316,
+    "outcome": {
+      "REFUSED": 213,
+      "DELIVERED": 100,
+      "NO_CHALLENGE": 2,
+      "MISMATCH": 1
+    },
+    "usdc_spent": 1.3398,
+    "settlement_txs": 100,
+    "distinct_pay_to": 174,
+    "took_settlement_and_refused": 13,
+    "evidence_url": "/interop/ledger-card-x402-settlement-unsigned.json",
+    "honesty": "316 conformant hosts; 100 delivered; 213 refused; 13 settled-then-refused. Being listed and conformant is not the same as taking money and answering."
+  },
+  "unmeasured": [
+    "per-host reliability: n=1 per host",
+    "delivery quality: bytes only",
+    "refusal reason: may be rate-limiting, account requirement, or changed terms"
+  ],
+  "sha256": "d8f02d9823b736b1818f3978b892bbf7bf2bad5ed9c146182f025614e91913db"
+}
