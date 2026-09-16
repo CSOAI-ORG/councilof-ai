@@ -3093,6 +3093,22 @@
         "summary": "GET  /api/provider-canary -- public configuration status; never probes. POST /api/provider-canary -- authenticated, fixed one-token capability canary."
       }
     },
+    "/api/receipt-status": {
+      "get": {
+        "description": "GET /api/receipt-status \u2014 current receipt issuance status.",
+        "operationId": "get__api_receipt-status",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/receipt-status \u2014 current receipt issuance status."
+      }
+    },
     "/api/receipts/batch": {
       "get": {
         "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts. preview=1 is free digest. Paid leaves require from (HTTP 402).",
@@ -4858,6 +4874,22 @@
         "security": [],
         "summary": "GET /api/xrpl \u2014 reader of the committed public-root 16."
       }
+    },
+    "/api/yield": {
+      "get": {
+        "description": "GET /api/yield \u2014 the weekly yield dashboard (V3 brief G5.6).",
+        "operationId": "get__api_yield",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/yield \u2014 the weekly yield dashboard (V3 brief G5.6)."
+      }
     }
   },
   "servers": [
@@ -4938,7 +4970,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 92,
+    "public_operations": 94,
     "quarantined": [
       {
         "buyable": false,
