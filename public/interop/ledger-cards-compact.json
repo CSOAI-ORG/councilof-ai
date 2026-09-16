@@ -1004,5 +1004,31 @@
     ],
     "evidence_url": "https://github.com/CSOAI-ORG",
     "honesty": "200 public repos in CSOAI-ORG (2 pages of 100). 2 total stars, 2 forks. Topics mostly ai-governance, csoai, mcp, compliance."
+  },
+  "mcp.fleet.state.2026-09-16": {
+    "kind": "csoai.mcp-fleet-state-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true
+    },
+    "as_of": "2026-09-16T11:35:00Z",
+    "reachable_distinct_servers": 2,
+    "reachable_endpoints": 2,
+    "unreachable_endpoints": 2,
+    "catalogued_not_probed": 6,
+    "tools_probed": 8,
+    "external_catalogues": [
+      {
+        "id": "gspc-os-vendored",
+        "count": 363,
+        "unit": "server directories",
+        "source": "CSOAI-ORG/gspc-os servers/ (private, pod-only)",
+        "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
+      }
+    ],
+    "external_total": 363,
+    "evidence_url": "/api/state",
+    "honesty": "MCP fleet state from /api/state. 2 reachable, 6 catalogued, 363 external. never_sum: reachable + catalogued are different kinds."
   }
 }
