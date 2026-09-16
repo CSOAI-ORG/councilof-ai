@@ -1,0 +1,32 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "mcp.registry.mining.2026-09-16",
+  "subject": "CSOAI MCP registry: 18 unique server slugs",
+  "as_of": "2026-09-16T11:00:00Z",
+  "source_urls": [
+    "https://registry.modelcontextprotocol.io/v0/servers?search=csoai"
+  ],
+  "payload": {
+    "kind": "csoai.mcp-registry-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true
+    },
+    "as_of": "2026-09-16T11:00:00Z",
+    "total_csoai_servers": 100,
+    "unique_slugs": 18,
+    "top_servers": [
+      "a2a-governance-bridge-mcp v1.1.5",
+      "agent-audit-logger-mcp v1.1.9",
+      "agent-content-watermark-mcp v1.1.9",
+      "agent-mcp-router-mcp v1.1.8"
+    ],
+    "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=csoai",
+    "honesty": "CSOAI publishes 18 unique MCP server slugs. Some have multiple versions. All registered via official registry."
+  },
+  "unmeasured": [
+    "per-server download counts (PyPI/npm)"
+  ],
+  "sha256": "db6d0f405e51e7bea9f728f9c4b97f3bc7fd7d7b845dfd4c6bd40bf5bca7245e"
+}

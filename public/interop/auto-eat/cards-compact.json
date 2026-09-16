@@ -429,5 +429,25 @@
     "took_settlement_and_refused": 13,
     "evidence_url": "/interop/ledger-card-x402-settlement-unsigned.json",
     "honesty": "316 conformant hosts; 100 delivered; 213 refused; 13 settled-then-refused. Being listed and conformant is not the same as taking money and answering."
+  },
+  "autoeat.mcp.registry.mining": {
+    "kind": "csoai.mcp-registry-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:00:00Z",
+    "total_csoai_servers": 100,
+    "unique_slugs": 18,
+    "top_servers": [
+      "a2a-governance-bridge-mcp v1.1.5",
+      "agent-audit-logger-mcp v1.1.9",
+      "agent-content-watermark-mcp v1.1.9",
+      "agent-mcp-router-mcp v1.1.8"
+    ],
+    "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=csoai",
+    "honesty": "CSOAI publishes 18 unique MCP server slugs. Some have multiple versions. All registered via official registry."
   }
 }
