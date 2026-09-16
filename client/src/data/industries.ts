@@ -182,8 +182,8 @@ export const industries: Industry[] = [
     },
     axes: ["governance", "art5-safeguard", "provenance", "continuity"],
     artefactProves:
-      "which model tiered which use case, on the frozen 237-item bank, with the " +
-      "separated lead and its interval intact.",
+      "which model tiered which use case, on the frozen 237-item bank, with each " +
+      "model's score and its interval intact.",
   },
 
   // 3 — CARE
@@ -617,7 +617,7 @@ export const industries: Industry[] = [
     },
     axes: ["affect", "art5-safeguard"],
     artefactProves:
-      "which model was scored on the frozen 41-item affect bank, with the separated lead " +
+      "which model was scored on the frozen 41-item affect bank, with each model's score " +
       "and the counsel-pending caveat both carried on the card.",
   },
 ];

@@ -328,7 +328,7 @@ function visibleText(html) {
 //                        estate's own production signature-chain records, NOT a marketing claim;
 //                        "sigil" appears only as the name of the signed-event chain it visualizes,
 //                        the same data-artifact category as regulator-console/refutation-ledger.
-const EXCLUDE_PAGES = /(^|\/)(regulator-console\.html$|refutation-ledger(\/|\.html|$)|mcps?(\/|\.html|$)|mcp-|ai-transparency|authority|badges|j-space(\/|\.html|$))/;
+const EXCLUDE_PAGES = /(^|\/)(regulator-console\.html$|refutation-ledger(\/|\.html|$)|mcps?(\/|\.html|$)|mcp-|ai-transparency|authority|(?<!images\/)badges|j-space(\/|\.html|$))/;
 
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;

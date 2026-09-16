@@ -1,4 +1,4 @@
-/** Public MCP: request-scoped SDK server; eight free tools and four x402 tools. */
+/** Public MCP: request-scoped SDK server; the free tools in gspc-tools.json plus the x402 tools in paid-tools.json. */
 import {
   createMcpHandler,
   fromJsonSchema,
@@ -19,8 +19,12 @@ const SERVER_INFO = {
   name: "csoai-gspc-mcp",
   version: MCP_HTTP_SERVER_VERSION,
 };
+// Counts are derived from the definition files that tools/list serves; a typed "Eight" drifted
+// from nine free tools once mcp_trust was added (2026-09-15).
+const FREE_TOOL_COUNT = GSPC_TOOLS.tools.length;
+const PAID_TOOL_COUNT = PAID_TOOL_DEFS.length;
 const INSTRUCTIONS =
-  "GSPC MCP. Eight free read-only tools and four paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT; each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.";
+  `GSPC MCP. ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT; each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.`;
 const CORS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, HEAD, POST, OPTIONS",
@@ -86,7 +90,7 @@ const mcp = createMcpHandler(
             : sharedToolResult(definition.name, args, origin),
       );
     }
-    // Historical unlisted alias; it does not inflate the twelve canonical tools.
+    // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.
     server.registerTool(
       "verify",
       {

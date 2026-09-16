@@ -46,10 +46,14 @@ const AXES: {
     // now DERIVED at render time from GET /api/gspc (see boardSeparation below
     // and client/src/lib/boardCount.ts). What stays typed is only the per-axis
     // p-values, which name specific measured runs rather than counting anything.
+    // Those runs were led by our OWN specialists, which the public board excludes
+    // from its leader slots, so they are labelled in-lane here (C-2026-0915-01).
     uncomfortable:
-      "Governance separates at p=0.0086, care at p=0.0356, affect at p=0.0078 — measured " +
-      "runs, not point-estimate leads. Ties are not wins, and we never publish a 'we win " +
-      "N of M' claim.",
+      "Our own governance, care and affect specialists separated from base models at " +
+      "p=0.0086, p=0.0356 and p=0.0078 in their original runs — each an in-lane result on our " +
+      "own model, not a public ranking, because the board excludes our own models from its " +
+      "leader slots and does not count these in its separation tally. Ties are not wins, and " +
+      "we never publish a 'we win N of M' claim.",
     separationFromBoard: true,
   },
   {
@@ -71,12 +75,13 @@ const AXES: {
   },
   {
     key: "prov", name: "PROVENANCE", question: "Does the marking survive?", state: "built",
-    headline: "17.14% durability",
+    headline: "0 of 12 assets survived",
     detail:
-      "18 of 105 marking checks survived across the corpus and its transforms. A marking " +
+      "In the signed run of 13 August 2026, 0 of 108 measured cells kept an intact embedded " +
+      "C2PA manifest across 12 marked assets. A marking " +
       "present but whose binding no longer validates is scored DESTROYED, not SURVIVES. " +
       "Clustered on assets, not on cells.",
-    artefact: "results/provbench.json",
+    artefact: "/packs/eu-article-50/provbench.json",
     uncomfortable:
       "An embedded Article 50 marking does not survive a single ordinary save. A detached " +
       "sidecar recovers the disclosure but never the binding — and a manifest lifted from a " +

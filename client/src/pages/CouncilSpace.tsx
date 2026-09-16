@@ -135,7 +135,7 @@ const HIVE: HiveLayer[] = [
 const FLYWHEELS: FlywheelPlanet[] = [
   { id: "find-besT", name: "find_besT", axis: "care", phase: "honey", description: "21-subject Day-1 sweep, care_cost joint scoring", metric: "composite=3.1564 (unified fine-tune)", last_run_iso: "2026-07-30T11:17:00Z" },
   { id: "n-eff", name: "n_eff_diversity", axis: "continuity", phase: "milk", description: "pairwise ρ + Kish n_eff across council roster", metric: "n_eff=1.285 · gate failed (>2.0 required)", last_run_iso: "2026-07-30T11:25:00Z" },
-  { id: "provbench", name: "ProvBench", axis: "provenance", phase: "honey", description: "0/20 C2PA markings survive binding-intact", metric: "0 of 20 · one-sided 95% CP upper = 13.9% (rule-of-three: 15.0%)", last_run_iso: "2026-07-30T11:00:00Z" },
+  { id: "provbench", name: "ProvBench", axis: "provenance", phase: "honey", description: "0/12 embedded C2PA markings survive binding-intact (signed run)", metric: "0 of 12 assets · 0 of 108 cells · one-sided 95% CP upper = 22.1%", last_run_iso: "2026-08-13T04:02:31Z" },
   { id: "defbench", name: "DefBench", axis: "safety", phase: "honey", description: "45-item care battery, 33 harmful / 12 benign", metric: "1 of 4 axis resolved (with gate)", last_run_iso: "2026-07-30T09:35:00Z" },
   { id: "govbench", name: "GovBench", axis: "governance", phase: "honey", description: "193 samples, 26 dimensions, cluster-robust", metric: "composed +6.63 [+1.05, +12.21]", last_run_iso: "2026-07-30T09:46:00Z" },
   { id: "pqcbench", name: "PQCBench", axis: "continuity", phase: "water", description: "25 criteria for PQC-ready signing chains", metric: "1 of 25 criteria pass · ML-DSA-65 needed", last_run_iso: "2026-07-30T08:00:00Z" },

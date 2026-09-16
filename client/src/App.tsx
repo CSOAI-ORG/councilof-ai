@@ -9,6 +9,7 @@ import { SectionLoader } from "./components/PageLoader";
 const Registers = lazy(() => import("./pages/Registers"));
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import { MainLandmarkContext } from "./contexts/MainLandmarkContext";
 import { Header } from "./components/Header";
 import { useSearch as useOsSearch } from "wouter";
 import { normalizeLobbyTabId } from "@/components/lobby/tabs";
@@ -665,6 +666,7 @@ function App() {
                 <PageSchema />
                 <ArchivedBanner />
                 <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
+                  <MainLandmarkContext.Provider value={true}>
                   <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center bg-background"><SectionLoader /></div>}><Switch>
                   <Route path="/" component={HomeVerify} />
                   <Route path="/home-v2" component={ContentReviewNotice} />
@@ -1218,6 +1220,7 @@ function App() {
                   <Route path="/sovereign-twin">{() => <Redirect to="/me" />}</Route>
                   <Route component={NotFound} />
                   </Switch></Suspense>
+                  </MainLandmarkContext.Provider>
                 </main>
                 <Footer />
                 {/* 2026-08-26: CouncilConsole was still mounted here, and its own

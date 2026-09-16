@@ -31,10 +31,21 @@ export type CoverageLedgerInput = {
   revenue: unknown;
   mcp: unknown;
   a2a: unknown;
+  /** GET /.well-known/agent-card.json — the published A2A card whose skills[] the a2a row counts. */
+  a2a_card: unknown;
   erc8004: unknown;
   wrappers: unknown;
   root_kinds: unknown;
   bazaar: unknown;
+};
+
+/**
+ * Values the reader holds in its own bundle rather than fetching. `mcpTools` is the
+ * MCP tool table — the same definitions `tools/list` serves (functions/mcp/gspc-tools.json
+ * + paid-tools.json). Absent → the MCP row's indexed cell is null, never a typed count.
+ */
+export type CoverageLedgerContext = {
+  mcpTools?: { free: readonly string[]; paid: readonly string[] } | null;
 };
 
 export type CoverageSnapshot = {
@@ -96,7 +107,10 @@ export function isCoverageSnapshot(value: unknown): value is CoverageSnapshot {
  * that produced it. Null means that lifecycle stage is not published for that
  * universe; it is never rendered as zero.
  */
-export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
+export function buildCoverageLedger(
+  input: CoverageLedgerInput,
+  context: CoverageLedgerContext = {},
+): CoverageRow[] {
   const gspc = record(input.gspc);
   const gspcTotals = record(gspc?.totals);
   const gspcAttestations = record(gspcTotals?.financial_run_attestations);
@@ -112,8 +126,33 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
   const revenueNumber = record(revenue?.one_number);
   const mcp = record(input.mcp);
   const mcpServerInfo = record(mcp?.server_info);
+  const mcpPaidNames = Array.isArray(record(mcp?.paid_tools)?.names)
+    ? (record(mcp?.paid_tools)!.names as unknown[])
+    : null;
+  const mcpTools = context.mcpTools ?? null;
+  // The tool table is bundled with this deploy; GET /mcp is the running server. Count the
+  // table only while the server answers, and refuse the count if the server's own paid list
+  // disagrees with the table — two sources that disagree are not one number.
+  const mcpTableAgrees =
+    mcpTools !== null &&
+    (mcpPaidNames === null ||
+      (mcpPaidNames.length === mcpTools.paid.length &&
+        mcpPaidNames.every((name) => mcpTools.paid.includes(String(name)))));
+  const mcpToolCount =
+    mcp?.ok === true && typeof mcpServerInfo?.version === "string" && mcpTools && mcpTableAgrees
+      ? mcpTools.free.length + mcpTools.paid.length
+      : null;
   const a2a = record(input.a2a);
+  const a2aCard = record(input.a2a_card);
+  const a2aSkills = Array.isArray(a2aCard?.skills) ? (a2aCard!.skills as unknown[]) : null;
+  const a2aSkillIds = (a2aSkills ?? [])
+    .map((skill) => record(skill)?.id)
+    .filter((id): id is string => typeof id === "string");
   const erc8004 = record(input.erc8004);
+  const ercTotals = record(erc8004?.registry_totals);
+  const x402Count = Array.isArray(x402?.resources) ? array(x402?.resources).length : null;
+  const known = (value: unknown) =>
+    typeof value === "number" && Number.isFinite(value) ? String(value) : "?";
   const wrappers = record(input.wrappers);
   const rootKinds = record(input.root_kinds);
   const kindCounts = record(rootKinds?.by_kind) ?? {};
@@ -131,7 +170,11 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
   const revenueSource = "GET /api/revenue";
   const mcpSource = "GET /mcp";
   const a2aSource = "GET /api/a2a";
-  const erc8004Source = "GET /api/erc8004 (census scripts/x402/erc8004_census.py)";
+  const a2aCardSource = "GET /.well-known/agent-card.json";
+  // The row reads this probe file (functions/api/coverage.ts SOURCES.erc8004). There is no
+  // GET /api/erc8004 on this origin — the label used to name one, and it 404s.
+  const erc8004Source =
+    "GET /interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json (census scripts/x402/erc8004_census.py)";
   const wrappersSource = "GET /interop/wrapped-asset-parity-latest.json (scripts/readers/wrapped-asset-parity-reader.mjs)";
 
   const bazaarSource = "https://huggingface.co/datasets/csoai/x402-bazaar-conformance/resolve/main/summary-latest.json";
@@ -282,7 +325,7 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
       href: "/api/x402",
       unit: "doors",
       indexed: field(
-        Array.isArray(x402?.resources) ? array(x402?.resources).length : null,
+        x402Count,
         x402Source,
         "resources.length",
       ),
@@ -305,9 +348,14 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
       href: "/mcp",
       unit: "tools",
       indexed: field(
-        mcp?.ok === true && typeof mcpServerInfo?.version === "string" ? 12 : null,
+        mcpToolCount,
         mcpSource,
-        "ok + server_info.version present → 12 tools",
+        "tools/list definitions (functions/mcp/gspc-tools.json + paid-tools.json), counted while GET /mcp answers ok with server_info.version",
+        mcpTools === null
+          ? "the MCP tool table is not available to this reader"
+          : !mcpTableAgrees
+            ? "GET /mcp paid_tools.names disagrees with the bundled tool table"
+            : "source did not publish this stage",
       ),
       measured: absent(
         mcpSource,
@@ -323,7 +371,10 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
         "one_number.settlements",
       ),
       writesBoard: false,
-      note: "MCP server serves 12 tools (8 free readers + 4 x402-metered evidence tools). That is an implemented-tool index, not a measurement. The MCP Registry entry lags at v1.4.0; live is v1.4.2.",
+      note:
+        mcpToolCount !== null && mcpTools
+          ? `MCP server v${String(mcpServerInfo?.version)} serves ${mcpToolCount} tools (${mcpTools.free.length} free readers + ${mcpTools.paid.length} x402-metered evidence tools), counted from the tool table tools/list serves. That is an implemented-tool index, not a measurement.`
+          : "MCP tool count unavailable at this read — the row is null, not zero. That count would be an implemented-tool index, not a measurement.",
     },
     {
       id: "a2a",
@@ -331,9 +382,9 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
       href: "/api/a2a",
       unit: "skills",
       indexed: field(
-        a2a?.protocolVersion === "1.0" ? 7 : null,
-        a2aSource,
-        "skills (7 declared in agent-card.json)",
+        a2a?.protocolVersion === "1.0" && a2aSkills ? a2aSkills.length : null,
+        a2aCardSource,
+        "skills.length (counted while GET /api/a2a answers protocolVersion 1.0)",
       ),
       measured: absent(
         a2aSource,
@@ -345,7 +396,10 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
       anchored: absent(a2aSource, "anchored_skills"),
       paid: absent(a2aSource, "paid_skills"),
       writesBoard: false,
-      note: "A2A v1.0 JSON-RPC endpoint. 7 implemented skills are indexed; implementation is not measurement. Skills: gspc-board, east-west-crosswalk, measured-badge, benchmark-quality-register, article50-detect, eu-ai-act-screen, x402-discovery. No task store, no streaming.",
+      note:
+        a2a?.protocolVersion === "1.0" && a2aSkills
+          ? `A2A v1.0 JSON-RPC endpoint. ${a2aSkills.length} implemented skills are indexed from the published agent card; implementation is not measurement. Skills: ${a2aSkillIds.join(", ") || "none named"}. No task store, no streaming.`
+          : "A2A skill count unavailable at this read (endpoint or agent card not read) — the row is null, not zero.",
     },
     {
       id: "erc8004",
@@ -353,7 +407,7 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
       href: "/interop/erc8004-callable/",
       unit: "registrations",
       indexed: field(
-        record(erc8004?.registry_totals)?.registered_all_indexer ?? null,
+        ercTotals?.registered_all_indexer ?? null,
         erc8004Source,
         "registry_totals.registered_all_indexer",
       ),
@@ -367,7 +421,9 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
       anchored: absent(erc8004Source, "anchored_registrations"),
       paid: absent(erc8004Source, "paid_registrations"),
       writesBoard: false,
-      note: "ERC-8004 Trustless Agents identity registry. The indexed total is an indexer census, not a measured or chain-verified registration count. Singleton at 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432. Corrected census: ETH 50,783 (full history via Tenderly, anchor-checked), Base 86,263 (full history), BSC UNCHECKABLE full-history (48.club ~984k blocks). Reputation registry at 0x8004BAa1...9b63: ETH 3,445, Base 16,518, BSC 0 (window).",
+      note: erc8004
+        ? `ERC-8004 Trustless Agents identity registry. The indexed total is an indexer census, not a measured or chain-verified registration count. Singleton at 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432. Probe of ${String(erc8004.indexer ?? "?")} at ${String(erc8004.probed_at ?? "?")}: ${known(ercTotals?.registered_all_indexer)} registered, ${known(ercTotals?.with_feedback_ge1)} with at least one feedback. Per-chain counts are not published by this source and are not repeated here.`
+        : "ERC-8004 indexer probe unavailable at this read — the row is null, not zero.",
     },
     {
       id: "wrappers",
@@ -385,7 +441,7 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
       anchored: absent(wrappersSource, "anchored_pairs"),
       paid: absent(wrappersSource, "paid_pairs (door /api/wrapper is live; settlements are counted by /api/revenue, never here)"),
       writesBoard: false,
-      note: `Bridged and custodial stablecoin/asset wrappers read from public RPC at pinned finalized blocks. States never collapsed — escrow-parity reads: ${Number(wrapperCounts.ESCROW_PARITY_READ ?? 0)}, native issuance (uncheckable): ${Number(wrapperCounts.UNCHECKABLE_NATIVE_ISSUANCE ?? 0)}, custodial (indexed only): ${Number(wrapperCounts.INDEXED_CUSTODIAL ?? 0)}, unmeasured: ${Number(wrapperCounts.UNMEASURED ?? 0)}. A ratio, not a rate, not a reserve attestation; nothing is ever "unbacked". Door: GET /api/wrapper?id=<pair>.`,
+      note: `Bridged and custodial stablecoin/asset wrappers read from public RPC at pinned finalized blocks. States never collapsed — escrow-parity reads: ${known(wrapperCounts.ESCROW_PARITY_READ)}, native issuance (uncheckable): ${known(wrapperCounts.UNCHECKABLE_NATIVE_ISSUANCE)}, custodial (indexed only): ${known(wrapperCounts.INDEXED_CUSTODIAL)}, unmeasured: ${known(wrapperCounts.UNMEASURED)} ("?" = not published at this read, never 0). A ratio, not a rate, not a reserve attestation; nothing is ever "unbacked". Door: GET /api/wrapper?id=<pair>.`,
     },
     {
       id: "bazaar",
@@ -406,7 +462,7 @@ export function buildCoverageLedger(input: CoverageLedgerInput): CoverageRow[] {
       paid: absent(bazaarSource, "paid_hosts (the census pays nothing and settles nothing)"),
       writesBoard: false,
       note: bazaar
-        ? `Daily census from the pod: ${bzNum(bazaar.hosts_probed) ?? "?"} distinct hosts probed across CDP (${bzNum(bzIdx?.cdp?.resources) ?? "?"} resources) and PayAI (${bzNum(bzIdx?.payai?.resources) ?? "?"}); ${bzNum(bzHead?.conformant) ?? "?"} answered a conformant v2 402 with a bazaar block (${bzNum(bzHead?.conformant_pct) ?? "?"}%), ${bzNum(bzHead?.unreachable) ?? "?"} unreachable; as_of ${String(bazaar.as_of ?? "?")}. Third-party doors only — our own 10 doors are the x402 row. Nothing paid, nothing signed.`
+        ? `Daily census from the pod: ${bzNum(bazaar.hosts_probed) ?? "?"} distinct hosts probed across CDP (${bzNum(bzIdx?.cdp?.resources) ?? "?"} resources) and PayAI (${bzNum(bzIdx?.payai?.resources) ?? "?"}); ${bzNum(bzHead?.conformant) ?? "?"} answered a conformant v2 402 with a bazaar block (${bzNum(bzHead?.conformant_pct) ?? "?"}%), ${bzNum(bzHead?.unreachable) ?? "?"} unreachable; as_of ${String(bazaar.as_of ?? "?")}. Third-party doors only — our own ${known(x402Count)} doors are the x402 row. Nothing paid, nothing signed.`
         : "Daily census from the pod (csoai/x402-bazaar-conformance on Hugging Face): unavailable at this read — the row is null, not zero.",
     },
   ];

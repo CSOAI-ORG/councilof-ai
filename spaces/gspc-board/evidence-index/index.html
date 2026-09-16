@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GSPC evidence index — Council of AI</title>
+  <meta name="description" content="One read-only index over the Council of AI evidence readers: coverage, declared source fields, compute state and client connections. Measurement, not certification.">
+  <link rel="icon" href="https://councilof.ai/csoai-icon.svg" type="image/svg+xml">
+  <style>
+    body{margin:0;background:#edf3ef;color:#152d30;font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+    .shell{max-width:1320px;margin:auto;padding:24px 30px 50px}
+    .brand{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;padding:0 0 22px}
+    .brand h1{font-size:20px;letter-spacing:-.04em;margin:0}
+    .brand small{font-size:12px;color:#526568}
+    .brand a{color:#075b49;min-height:44px;display:inline-flex;align-items:center}
+    #skip{position:absolute;top:-100px;background:#fff;padding:12px}
+    #skip:focus{top:0}
+    noscript p{background:#fff7e8;border-left:3px solid #ad7c20;padding:12px 16px}
+    @media(max-width:680px){.shell{padding:16px 10px}.brand{padding:0 6px 15px}.brand h1{font-size:18px}}
+  </style>
+</head>
+<body>
+  <a id="skip" href="#workspace">Skip to evidence index</a>
+  <main class="shell" id="workspace" tabindex="-1">
+    <div class="brand">
+      <h1>Council of AI <small>/ GSPC evidence index</small></h1>
+      <a href="https://councilof.ai/dashboard?tab=evidence-index" target="_blank" rel="noopener noreferrer">Open in the councilof.ai dashboard ↗</a>
+    </div>
+    <!-- Live reads of https://councilof.ai/api/coverage and /api/worker. No snapshot is bundled:
+         if a reader fails, the view says so and substitutes nothing. -->
+    <div data-evidence-index data-origin="https://councilof.ai"></div>
+    <noscript><p>This index reads live JSON and needs JavaScript. The same data: <a href="https://councilof.ai/api/coverage">https://councilof.ai/api/coverage</a> and <a href="https://councilof.ai/api/worker">https://councilof.ai/api/worker</a>.</p></noscript>
+  </main>
+  <script type="module" src="./evidence-index.js"></script>
+</body>
+</html>

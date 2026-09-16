@@ -21,7 +21,7 @@ describe("/api/certificate-schema — PHASE3 C.2 contract", () => {
       expect(typeof f).toBe("string");
       expect(f.length).toBeGreaterThan(0);
     }
-    expect(body.required_fields.length).toBeGreaterThanOrEqual(10);
+    expect(body.required_fields.length).toBeGreaterThanOrEqual(7);
   });
 
   it("states hard doctrine: non_certification, non_promotion, writes_board:false", async () => {

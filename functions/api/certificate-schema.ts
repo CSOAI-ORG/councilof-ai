@@ -24,8 +24,8 @@ export const onRequestGet: PagesFunction = async () => {
     schema_url: "/schemas/csoai-certificate-0.1.schema.json",
     schema_version: "csoai.certificate/0.1",
     required_fields: [
-      "schema", "certificate_id", "issued_at", "issuer_did", "subject",
-      "entitlement", "scope", "limits", "verification", "integrity",
+      "schema", "certificate_id", "issued_at", "issuer_did",
+      "payload", "sig_ed25519", "limits",
     ],
     hard_doctrine: [
       "cert is a measurement credential — non_certification is always true",

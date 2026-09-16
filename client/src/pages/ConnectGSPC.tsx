@@ -14,6 +14,99 @@ import {
   type ConfigBlock,
   type Gate,
 } from "@/data/gspcInstall";
+import compat from "../../../council-os/client-compatibility.json";
+
+type CompatClient = {
+  id: string;
+  name: string;
+  transport: string;
+  state: string;
+  tested_at: string | null;
+  client_version: string | null;
+  tools_discovered: number | null;
+  receipt: string | null;
+  doc_url: string | null;
+};
+
+const STATE_STYLE: Record<string, string> = {
+  TESTED_PASS: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  TESTED_FAIL: "bg-red-50 text-red-700 border-red-200",
+  PREPARED_NOT_TESTED: "bg-amber-50 text-amber-700 border-amber-200",
+  STORE_SUBMISSION_REQUIRED: "bg-blue-50 text-blue-700 border-blue-200",
+  NOT_APPLICABLE: "bg-slate-100 text-slate-600 border-slate-200",
+};
+
+function ClientCompatibility() {
+  const clients = compat.clients as CompatClient[];
+  return (
+    <section className="max-w-6xl mx-auto px-6 py-12 border-t">
+      <h2 className="text-2xl font-bold">Client test register</h2>
+      <p className="text-sm text-gray-600 mt-1 max-w-3xl">
+        One backend serves every client, but each client needs its own test. A config checked against the docs is
+        not a tested client, and a tested client is not a store listing. This table is rendered from{" "}
+        <a
+          href={`${compat.receipt_base_url}council-os/client-compatibility.json`}
+          className="text-emerald-700 underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          council-os/client-compatibility.json
+        </a>{" "}
+        (as of {compat.as_of}). Every tested row links to its receipt.
+      </p>
+      <div className="mt-6 overflow-x-auto">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="text-left text-gray-500 border-b">
+              <th className="py-2 pr-4 font-semibold">Client</th>
+              <th className="py-2 pr-4 font-semibold">State</th>
+              <th className="py-2 pr-4 font-semibold">Transport</th>
+              <th className="py-2 pr-4 font-semibold">Tools seen</th>
+              <th className="py-2 font-semibold">Evidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            {clients.map((c) => (
+              <tr key={c.id} className="border-b border-gray-100 align-top">
+                <td className="py-2 pr-4 font-medium text-gray-800">
+                  {c.name}
+                  {c.client_version && <div className="text-[11px] font-normal text-gray-400">{c.client_version}</div>}
+                </td>
+                <td className="py-2 pr-4">
+                  <Badge className={`text-[10px] ${STATE_STYLE[c.state] ?? STATE_STYLE.NOT_APPLICABLE}`}>{c.state}</Badge>
+                  {c.tested_at && <div className="text-[11px] text-gray-400 mt-1 font-mono">{c.tested_at}</div>}
+                </td>
+                <td className="py-2 pr-4 font-mono text-[11px] text-gray-500">{c.transport}</td>
+                <td className="py-2 pr-4 text-gray-600">{c.tools_discovered ?? "—"}</td>
+                <td className="py-2 text-xs space-x-3">
+                  {c.receipt && (
+                    <a
+                      href={`${compat.receipt_base_url}${c.receipt}`}
+                      className="text-emerald-700 underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      receipt
+                    </a>
+                  )}
+                  {c.doc_url && (
+                    <a href={c.doc_url} className="text-gray-400 hover:text-gray-600" target="_blank" rel="noopener noreferrer">
+                      docs ↗
+                    </a>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-4 text-[11px] text-gray-400">
+        Tool counts differ by implementation: the HTTP endpoint served {compat.backend.tools_observed} tools on{" "}
+        {compat.as_of}; the npm stdio package is versioned separately. Measurement, not certification.
+      </p>
+    </section>
+  );
+}
 
 const TOOLS = [
   ["board_totals", "the live slot + measured counts"],
@@ -187,9 +280,10 @@ export default function ConnectGSPC() {
               ))}
             </ul>
             <p className="mt-2 text-[11px] text-gray-400">
-              HTTP also exposes four x402-metered evidence tools (11 total). Published npm{" "}
-              <code className="font-mono">csoai-gspc-mcp@0.2.1</code> lists 12: those 11 plus{" "}
-              <code className="font-mono">witness_hash</code>, which is quarantined on the HTTP door.
+              These seven are a subset. On {compat.as_of} the HTTP endpoint served {compat.backend.tools_observed} tools,{" "}
+              {compat.backend.paid_tools_observed} of them x402-metered; npm{" "}
+              <code className="font-mono">csoai-gspc-mcp@0.2.2</code> served 12 (no{" "}
+              <code className="font-mono">mcp_trust</code>). Receipts are in the client test register below.
             </p>
           </div>
         </div>
@@ -200,7 +294,8 @@ export default function ConnectGSPC() {
         <h2 className="text-2xl font-bold">MCP-native clients</h2>
         <p className="text-sm text-gray-600 mt-1">
           The server speaks streamable-HTTP at <code className="font-mono">{MCP_URL}</code>, with a stdio fallback
-          (<code className="font-mono">{STDIO_CMD}</code>). Every config below was checked against the client's current docs.
+          (<code className="font-mono">{STDIO_CMD}</code>). Every config below was checked against the client's current docs;
+          that is not a client test. Which clients were actually run is recorded in the client test register below.
         </p>
         <div className="grid md:grid-cols-2 gap-5 mt-6">
           {MCP_NATIVE.map((p) => (
@@ -225,6 +320,8 @@ export default function ConnectGSPC() {
           </div>
         </div>
       </section>
+
+      <ClientCompatibility />
 
       {/* Badge */}
       <section className="max-w-5xl mx-auto px-6 py-12">

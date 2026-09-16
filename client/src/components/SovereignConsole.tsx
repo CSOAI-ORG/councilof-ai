@@ -92,7 +92,7 @@ function dispatch(q: string, lens: LensKey): Line[] {
   }
   if (lens === "provenance") {
     out.push({ tag: GENERATES.test(q) ? "ART 50 APPLIES" : "ART 50 — CHECK", provision: "EU AI Act Art 50(2)", tone: "warn",
-      body: "Generated content must be marked machine-readably from 2 Aug 2026 — not deferred by the Digital Omnibus. We measured what that marking is worth in practice: 0 of 20 assets survived (0 of 180 measured cells), one-sided 95% Clopper–Pearson upper bound 13.9%, computed at n=20 assets." });
+      body: "Generated content must be marked machine-readably from 2 Aug 2026 — not deferred by the Digital Omnibus. We measured what an embedded marking is worth after ordinary transforms: in the signed run of 13 August 2026, 0 of 12 marked assets kept an intact C2PA manifest (0 of 108 measured cells), one-sided 95% Clopper–Pearson upper bound 22.1%, computed at n=12 assets." });
   }
   if (lens === "continuity") {
     out.push({ tag: SIGNS.test(q) ? "CHAIN IN SCOPE" : "CONTINUITY", provision: "NIST IR 8547 · RFC 9964", tone: "warn",
@@ -232,10 +232,10 @@ export function SovereignConsole() {
         <div className="mt-2 flex flex-wrap gap-3 text-[11px]">
           <Link href="/instrument" className="text-emerald-700 hover:underline">Full instrument <ArrowRight className="inline h-3 w-3" /></Link>
           <Link href="/benchmarks" className="text-emerald-700 hover:underline">All four axis</Link>
-          {/* Figure must match benchmark-results/provbench.json (n_assets_marked).
-              It said 0/108 — the superseded 12-asset run — while /provenance-finding
-              said 0 of 20. Two different numbers for one result, on one site. */}
-          <Link href="/provenance-finding" className="text-emerald-700 hover:underline">0 of 20 assets survived — the finding</Link>
+          {/* Figure must match the signed run, public/packs/eu-article-50/provbench.json
+              (n_assets_marked; provbenchFigures.test.ts enforces it). The 12-asset run is the
+              later and the signed one; the unsigned 20-asset run is earlier and not served here. */}
+          <Link href="/provenance-finding" className="text-emerald-700 hover:underline">0 of 12 assets survived — the finding</Link>
         </div>
       </div>
     </div>

@@ -38,6 +38,7 @@ export type LobbyTabId =
   | "home"
   | "explore"
   | "board"
+  | "evidence-index"
   | "matrix"
   | "results"
   | "models"
@@ -147,6 +148,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "/gspc-scoreboard",
     kind: "native",
     cues: /\b(board|scoreboard|score|axes|axis|gspc|leaderboard)\b/i,
+  },
+  {
+    id: "evidence-index",
+    label: "Evidence index",
+    blurb:
+      "One read-only index over GET /api/coverage and GET /api/worker — evidence-family coverage, declared source fields, compute state and client connection guides. Unknown stays unknown; nothing is summed across units.",
+    path: "",
+    kind: "native",
+    cues: /\b(evidence index|coverage index|master coverage|source graph|compute (?:and|&) storage|connect apps)\b/i,
   },
   {
     id: "matrix",
@@ -785,6 +795,7 @@ const DASHBOARD_NAV_DEFINITION: {
     label: "Work",
     tabs: [
       { id: "board", label: "GSPC board" },
+      { id: "evidence-index", label: "Evidence index" },
       { id: "swift", label: "SWIFT · x402" },
       { id: "evidence", label: "Evidence" },
       { id: "tools", label: "Improve" },

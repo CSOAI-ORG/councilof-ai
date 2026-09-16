@@ -286,9 +286,10 @@ class WorkerTests(unittest.TestCase):
                 )
             ]
         )
+        health = worker.HealthSink(output / "health.json")
         worker.run_once(
             config,
-            worker.HealthSink(output / "health.json"),
+            health,
             client=fake,
             disk_usage=lambda _path: DiskUsage(10_000),
         )
@@ -297,6 +298,13 @@ class WorkerTests(unittest.TestCase):
         run = json.loads((run_dir / "run.json").read_text())
         self.assertEqual(run["detail_code"], "ALL_UNPARSED")
         self.assertFalse(run["landable_candidate"])
+        # The public health must say "not answered", not just "0 correct".
+        public = worker.sanitized_health(health.read())
+        self.assertEqual(public["correct"], 0)
+        self.assertEqual(public["parse_errors_excluded"], 1)
+        self.assertEqual(public["graded_n"], 0)
+        self.assertEqual(public["last_run_detail_code"], "ALL_UNPARSED")
+        self.assertEqual(public["graded_n"], run["counts"]["graded_n"])
 
     def test_model_digest_mismatch_halts_before_inference(self) -> None:
         config, output = self.write_config(

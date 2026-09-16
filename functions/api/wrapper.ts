@@ -7,7 +7,8 @@
  *
  *   ?preview=1   free — the unsigned state: no signature, no raw-read hashes. Verify stays free.
  *   (no header)  402 — the challenge (the amount lives ONLY here).
- *   X-PAYMENT    the signed pack: ONE card-v0 leaf (surface public.notice, kind
+ *   X-PAYMENT    the chain is read FIRST; an UNMEASURED read answers the 402 again with the reason
+ *                and settles nothing. Otherwise the signed pack: ONE card-v0 leaf (surface public.notice, kind
  *                csoai.wrapper.parity/0.1), canonical bytes ≤3072, Ed25519 under
  *                did:web:csoai.org#board-attestation-1 when the Pages key is present, else
  *                sig_ed25519:null declared in unmeasured[].
@@ -61,7 +62,11 @@ export type RosterEntry = {
 export const ROSTER: RosterEntry[] = WRAPPER_ROSTER as unknown as RosterEntry[];
 
 export const CHAINS: Record<string, { rpc: string; chainId: number }> = {
-  ethereum: { rpc: "https://ethereum-rpc.publicnode.com", chainId: 1 },
+  // publicnode began refusing pinned-block eth_call without a personal token ("Archive requests
+  // require a personal token", seen on every escrow preview 2026-09-15). eth.drpc.org answered the
+  // same finalized-block balanceOf keyless that day, and is already the first Ethereum endpoint in
+  // scripts/adapters/evm_permission_events.py.
+  ethereum: { rpc: "https://eth.drpc.org", chainId: 1 },
   base: { rpc: "https://mainnet.base.org", chainId: 8453 },
   optimism: { rpc: "https://mainnet.optimism.io", chainId: 10 },
   arbitrum: { rpc: "https://arb1.arbitrum.io/rpc", chainId: 42161 },
@@ -209,42 +214,46 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   const description = `A signed wrapped-asset parity card for ${id || "<id>"}: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain, both at pinned finalized blocks, raw reads sha256'd. A ratio — not a rate, a grade or a reserve attestation.`;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
-  const payment = preview ? { ok: false as const, reason: "preview" } : await verifyX402Payment(request, env, resourceUrl, accepts[0]);
-
-  if (!preview && !payment.ok) {
-    return paymentRequiredResponseSigned(
-      buildPaymentRequiredV2({
-        resourceUrl,
-        description,
-        serviceName: "CSOAI Wrapped-Asset Parity",
-        tags: ["stablecoin", "bridge", "wrapped", "parity", "evidence", "x402"],
-        accepts,
-        bazaar: declareBazaarHttpGet({
-          method: "GET",
-          queryParams: { id: id || "usdc.e:arbitrum" },
-          queryParamsSchema: { properties: { id: { type: "string", description: "roster id <wrapped-symbol>:<chain>, e.g. usdc.e:arbitrum (free ledger lists them)" } }, required: ["id"] },
-          outputExample: { schema: SCHEMA, surface: "public.notice", subject: "wrapped <SYMBOL> on <chain> vs <escrow> — ESCROW_PARITY_READ", payload: { kind: KIND, state: "ESCROW_PARITY_READ", reads: { wrapped_total_supply: {}, escrow_balance: {} }, escrow_over_wrapped: "<decimal>", inputs_sha256: "<hex>" }, sha256: "<hex>", sig_ed25519: "<hex or null>", unmeasured: [] },
-        }),
-        csoai: {
-          schema: "csoai.wrapper-parity/0.1",
-          per: "pair-request",
-          lid: CSOAI_LID,
-          never: ["rating", "guarantee", "verdict", "rank", "certificate", "reserve attestation"],
-          deliverable: "one card-v0 leaf (public.notice / csoai.wrapper.parity/0.1), canonical ≤3072 bytes, signed when the Pages key is present",
-          free_preview: `${resourceUrl}&preview=1`,
-          free_ledger: `${origin}/interop/wrapped-asset-parity-2026-09-13.json`,
-          rail: railMode(env),
-          not_paid_reason: payment.reason,
-          catalog: `${origin}/api/x402`,
-        },
+  const challenge = (notPaidReason: string, extra: { error?: string; csoai?: Record<string, unknown> } = {}) => {
+    const pr = buildPaymentRequiredV2({
+      resourceUrl,
+      description,
+      serviceName: "CSOAI Wrapped-Asset Parity",
+      tags: ["stablecoin", "bridge", "wrapped", "parity", "evidence", "x402"],
+      accepts,
+      bazaar: declareBazaarHttpGet({
+        method: "GET",
+        queryParams: { id: id || "usdc.e:arbitrum" },
+        queryParamsSchema: { properties: { id: { type: "string", description: "roster id <wrapped-symbol>:<chain>, e.g. usdc.e:arbitrum (free ledger lists them)" } }, required: ["id"] },
+        outputExample: { schema: SCHEMA, surface: "public.notice", subject: "wrapped <SYMBOL> on <chain> vs <escrow> — ESCROW_PARITY_READ", payload: { kind: KIND, state: "ESCROW_PARITY_READ", reads: { wrapped_total_supply: {}, escrow_balance: {} }, escrow_over_wrapped: "<decimal>", inputs_sha256: "<hex>" }, sha256: "<hex>", sig_ed25519: "<hex or null>", unmeasured: [] },
       }),
-      env,
-    );
+      csoai: {
+        schema: "csoai.wrapper-parity/0.1",
+        per: "pair-request",
+        lid: CSOAI_LID,
+        never: ["rating", "guarantee", "verdict", "rank", "certificate", "reserve attestation"],
+        deliverable: "one card-v0 leaf (public.notice / csoai.wrapper.parity/0.1), canonical ≤3072 bytes, signed when the Pages key is present",
+        free_preview: `${resourceUrl}&preview=1`,
+        free_ledger: `${origin}/interop/wrapped-asset-parity-2026-09-13.json`,
+        rail: railMode(env),
+        not_paid_reason: notPaidReason,
+        catalog: `${origin}/api/x402`,
+        ...(extra.csoai || {}),
+      },
+    });
+    return paymentRequiredResponseSigned(extra.error ? { ...pr, error: extra.error } : pr, env);
+  };
+
+  if (!preview && !hasPaymentHeader(request)) {
+    return challenge((await verifyX402Payment(request, env, resourceUrl, accepts[0])).reason);
   }
 
   if (!valid) return bad("pass id=<roster id> (see known_ids)", 400);
   if (!entry) return bad(`${id} is not on the roster. No payment was taken for a 404.`, 404);
 
+  // READ BEFORE SETTLE. The chain reads, the signature and every refusal check run before the
+  // facilitator is asked to move money. A buyer is charged only for a card that is ready to hand
+  // over — never for "chain reads (rpc failed; nothing inferred)", and never for a 500.
   const built = await buildPayload(entry);
   const envelope = (payload: Record<string, unknown>) => ({
     schema: SCHEMA,
@@ -266,11 +275,22 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.wrapper-parity/0.1", kind: "preview", card, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402` }, rail: railMode(env) });
   }
 
+  if (payload.state === "UNMEASURED") {
+    const error = payload.error ? String(payload.error) : null;
+    return challenge(
+      `read before settle: the chain reads came back UNMEASURED${error ? ` (${error})` : ""}. The payment was not sent to the facilitator, so nothing was settled. Check the free preview before paying again.`,
+      {
+        error: "Chain reads UNMEASURED — payment not settled",
+        csoai: { read_before_settle: { state: "UNMEASURED", error, unmeasured: payload.unmeasured, fetched_at: built.fetched_at, settled: false } },
+      },
+    );
+  }
+
   let leaf;
   try {
     leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
   } catch (e) {
-    return json({ schema: "csoai.wrapper-parity/0.1", error: "uncheckable", reason: (e as Error).message }, 500);
+    return json({ schema: "csoai.wrapper-parity/0.1", error: "uncheckable", reason: (e as Error).message, settled: false }, 500);
   }
   const unmeasured = [...(payload.unmeasured as string[])];
   if (!leaf.sig_ed25519) unmeasured.push(/absent/.test(leaf.unsigned_reason || "") ? "sig_ed25519 (no Pages key)" : "sig_ed25519 (sign failed)");
@@ -278,8 +298,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const card: Record<string, unknown> = { ...base, ...(leaf.did ? { did: leaf.did } : { did_intended }), sha256: leaf.sha256, sig_ed25519: leaf.sig_ed25519, unmeasured, tags: [...cardBase.tags, leaf.sig_ed25519 ? "signed" : "unsigned"] };
   const bytes = canonicalBytes(card);
   const text = new TextDecoder().decode(bytes);
-  if (VERDICT_RE.test(text)) return json({ schema: "csoai.wrapper-parity/0.1", error: "refused", reason: `card carries a verdict word: ${text.match(VERDICT_RE)![0]}` }, 500);
-  if (bytes.byteLength > PAYLOAD_CAP_BYTES) return json({ schema: "csoai.wrapper-parity/0.1", error: "uncheckable", reason: `card ${bytes.byteLength}B > ${PAYLOAD_CAP_BYTES}B cap` }, 500);
+  if (VERDICT_RE.test(text)) return json({ schema: "csoai.wrapper-parity/0.1", error: "refused", reason: `card carries a verdict word: ${text.match(VERDICT_RE)![0]}`, settled: false }, 500);
+  if (bytes.byteLength > PAYLOAD_CAP_BYTES) return json({ schema: "csoai.wrapper-parity/0.1", error: "uncheckable", reason: `card ${bytes.byteLength}B > ${PAYLOAD_CAP_BYTES}B cap`, settled: false }, 500);
+
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  if (!payment.ok) return challenge(payment.reason);
 
   if (env.REVENUE_KV) {
     try {

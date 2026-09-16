@@ -1,0 +1,91 @@
+{
+  "schema": "csoai.client-compat-receipt/0.1",
+  "client": "remote-http-curl-equivalent",
+  "client_version": "python3 urllib (JSON-RPC over HTTP POST, streamable-http)",
+  "endpoint": "https://councilof.ai/mcp",
+  "read_at": "2026-09-15T06:35:42.181842+00:00",
+  "initialize": {
+    "http_status": 200,
+    "content_type": "text/event-stream",
+    "protocolVersion": "2025-06-18",
+    "serverInfo": {
+      "name": "csoai-gspc-mcp",
+      "version": "1.4.2"
+    }
+  },
+  "tools_list": {
+    "http_status": 200,
+    "count": 13,
+    "names": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion",
+      "x402_trust",
+      "mcp_trust",
+      "commission_card",
+      "art50_marking_evidence",
+      "rwa_evidence",
+      "receipts_batch"
+    ]
+  },
+  "free_call": {
+    "tool": "board_totals",
+    "http_status": 200,
+    "isError": false,
+    "headline": "LIVE board totals — 22 axis · 22 measured (slots and measurements are different kinds; never summed).",
+    "state": "LIVE",
+    "totals": null
+  },
+  "paid_call_schema_required": [
+    "subject"
+  ],
+  "paid_call_attempt_missing_required_arg": {
+    "tool": "commission_card",
+    "arguments": {},
+    "result_text": "Input validation error: Invalid arguments for tool commission_card: #: Instance does not have required property \"subject\".",
+    "isError": true
+  },
+  "paid_call_without_payment": {
+    "read_at": "2026-09-15T06:43:02Z",
+    "client": "curl",
+    "tool": "rwa_evidence",
+    "arguments": {
+      "asset": "RLUSD"
+    },
+    "x_payment_sent": false,
+    "mcp_http_status": 200,
+    "headline": "PAYMENT_REQUIRED — /api/rwa/evidence answered 402; accepts[] carries asset, amount and payTo. No payment authorization was presented; nothing was charged by this request. measurement, not certification — no tool here carries or awards a trust label of any kind; verification stays free.",
+    "status": "PAYMENT_REQUIRED",
+    "upstream_http_status": 402,
+    "x402Version": 2,
+    "accepts0": {
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "maxTimeoutSeconds": 300
+    },
+    "note": "Challenge only. A 402 challenge is not settlement, delivery or revenue. No wallet was used."
+  },
+  "paid_tools_detected": [
+    "commission_card",
+    "art50_marking_evidence",
+    "rwa_evidence",
+    "receipts_batch"
+  ],
+  "paid_tools_detection_rule": "inputSchema.properties contains x_payment",
+  "exact_config": {
+    "transport": "streamable-http",
+    "url": "https://councilof.ai/mcp",
+    "request_headers": {
+      "content-type": "application/json",
+      "accept": "application/json, text/event-stream"
+    }
+  },
+  "verdict": "TESTED_PASS",
+  "verdict_scope": "The endpoint answers initialize, tools/list and a free tools/call over streamable HTTP, and a paid tool returns its x402 challenge without payment. Not a test of any named client."
+}

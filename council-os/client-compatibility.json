@@ -1,0 +1,299 @@
+{
+  "schema": "csoai.client-compatibility/0.1",
+  "as_of": "2026-09-15",
+  "backend": {
+    "id": "io.github.CSOAI-ORG/gspc",
+    "url": "https://councilof.ai/mcp",
+    "transport": "streamable-http",
+    "server_version_observed": "1.4.2",
+    "tools_observed": 13,
+    "paid_tools_observed": 4
+  },
+  "states": {
+    "TESTED_PASS": "A named client or transport was run against the backend on the recorded date: tools were discovered and one free tool call returned. The receipt holds the exact config and result.",
+    "TESTED_FAIL": "The same test was run and failed. The receipt says where.",
+    "PREPARED_NOT_TESTED": "A config shape is documented against the client's official docs, but no client run exists. It may still fail.",
+    "STORE_SUBMISSION_REQUIRED": "A directory or store listing needs an owner account and a review. Nothing has been submitted.",
+    "NOT_APPLICABLE": "Not an MCP client of this backend, or a separate product."
+  },
+  "doctrine": "One backend, many clients. A working endpoint is not a tested client, and a tested client is not a store listing. Measurement, not certification.",
+  "receipt_base_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/",
+  "clients": [
+    {
+      "id": "remote-http",
+      "name": "Remote endpoint (raw JSON-RPC)",
+      "package_or_connector_id": "io.github.CSOAI-ORG/gspc (remote)",
+      "backend_url": "https://councilof.ai/mcp",
+      "transport": "streamable-http",
+      "config": {
+        "url": "https://councilof.ai/mcp"
+      },
+      "state": "TESTED_PASS",
+      "tested_at": "2026-09-15T06:35:42Z",
+      "client_version": "python urllib + curl",
+      "tools_discovered": 13,
+      "receipt": "council-os/client-compat-receipts/2026-09-15/remote-http.json",
+      "doc_url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/transports",
+      "store": null,
+      "owner_steps": []
+    },
+    {
+      "id": "claude-code",
+      "name": "Claude Code",
+      "package_or_connector_id": "csoai-gspc (project .mcp.json)",
+      "backend_url": "https://councilof.ai/mcp",
+      "transport": "streamable-http",
+      "config": {
+        "mcpServers": {
+          "csoai-gspc": {
+            "type": "http",
+            "url": "https://councilof.ai/mcp"
+          }
+        }
+      },
+      "state": "TESTED_PASS",
+      "tested_at": "2026-09-15T06:38:05Z",
+      "client_version": "2.1.266",
+      "tools_discovered": 12,
+      "receipt": "council-os/client-compat-receipts/2026-09-15/claude-code.json",
+      "doc_url": "https://code.claude.com/docs/en/mcp",
+      "store": null,
+      "owner_steps": [
+        "Reconnect the server in a new session and confirm 13 tools (mcp_trust arrived after this session connected)."
+      ]
+    },
+    {
+      "id": "npm-stdio",
+      "name": "npm stdio package",
+      "package_or_connector_id": "csoai-gspc-mcp@0.2.2",
+      "backend_url": "https://councilof.ai (read by the package)",
+      "transport": "stdio",
+      "config": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "csoai-gspc-mcp"
+        ]
+      },
+      "state": "TESTED_PASS",
+      "tested_at": "2026-09-15T06:36:55Z",
+      "client_version": "node v22.22.3, JSON-RPC over stdio",
+      "tools_discovered": 12,
+      "receipt": "council-os/client-compat-receipts/2026-09-15/npm-stdio.json",
+      "doc_url": "https://www.npmjs.com/package/csoai-gspc-mcp",
+      "store": {
+        "name": "npm",
+        "url": "https://www.npmjs.com/package/csoai-gspc-mcp",
+        "status": "PUBLISHED"
+      },
+      "owner_steps": [
+        "npm 0.2.2 serves 12 tools; the HTTP endpoint serves 13 (no mcp_trust). Publishing 0.2.3 needs a Bypass-2FA granular token (the account uses WebAuthn) or npm Trusted Publishing. This lane does not publish."
+      ]
+    },
+    {
+      "id": "claude-desktop-connector",
+      "name": "Claude Desktop / claude.ai custom connector",
+      "package_or_connector_id": "custom connector URL",
+      "backend_url": "https://councilof.ai/mcp",
+      "transport": "streamable-http",
+      "config": {
+        "connector_url": "https://councilof.ai/mcp"
+      },
+      "state": "PREPARED_NOT_TESTED",
+      "tested_at": null,
+      "client_version": "Claude.app 1.52386.3 installed; not exercised",
+      "tools_discovered": null,
+      "receipt": "council-os/client-compat-receipts/2026-09-15/environment.json",
+      "doc_url": "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp",
+      "store": null,
+      "owner_steps": [
+        "In a signed-in Claude app: Settings, Connectors, Add custom connector, paste the URL, call board_totals, and save the result as a receipt."
+      ]
+    },
+    {
+      "id": "claude-connectors-directory",
+      "name": "Claude connectors directory",
+      "package_or_connector_id": null,
+      "backend_url": "https://councilof.ai/mcp",
+      "transport": "streamable-http",
+      "config": null,
+      "state": "STORE_SUBMISSION_REQUIRED",
+      "tested_at": null,
+      "client_version": null,
+      "tools_discovered": null,
+      "receipt": null,
+      "doc_url": "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp",
+      "store": {
+        "name": "Claude connectors directory",
+        "url": null,
+        "status": "NOT_SUBMITTED"
+      },
+      "owner_steps": [
+        "Decide whether to apply. Review happens under an owner account; nothing has been submitted."
+      ]
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "package_or_connector_id": "csoai-gspc (mcp.json)",
+      "backend_url": "https://councilof.ai/mcp",
+      "transport": "streamable-http",
+      "config": {
+        "mcpServers": {
+          "csoai-gspc": {
+            "url": "https://councilof.ai/mcp"
+          }
+        }
+      },
+      "state": "PREPARED_NOT_TESTED",
+      "tested_at": null,
+      "client_version": "Cursor.app 3.18.25 installed; not exercised",
+      "tools_discovered": null,
+      "receipt": "council-os/client-compat-receipts/2026-09-15/cursor-observation.json",
+      "doc_url": "https://cursor.com/docs/mcp",
+      "store": {
+        "name": "cursor.directory",
+        "url": null,
+        "status": "NOT_SUBMITTED"
+      },
+      "owner_steps": [
+        "The owner's ~/.cursor/mcp.json entry 'council-measure' points at the legacy workers.dev remote (v1.0.0). Replace its url with https://councilof.ai/mcp, open Cursor, check the MCP panel lists 13 tools, call board_totals, and save a receipt."
+      ]
+    },
+    {
+      "id": "vscode-copilot",
+      "name": "VS Code (GitHub Copilot agent mode)",
+      "package_or_connector_id": "csoai-gspc (.vscode/mcp.json)",
+      "backend_url": "https://councilof.ai/mcp",
+      "transport": "streamable-http",
+      "config": {
+        "servers": {
+          "csoai-gspc": {
+            "type": "http",
+            "url": "https://councilof.ai/mcp"
+          }
+        }
+      },
+      "state": "PREPARED_NOT_TESTED",
+      "tested_at": null,
+      "client_version": "VS Code not installed on the test Mac",
+      "tools_discovered": null,
+      "receipt": "council-os/client-compat-receipts/2026-09-15/environment.json",
+      "doc_url": "https://code.visualstudio.com/docs/agent-customization/mcp-servers",
+      "store": null,
+      "owner_steps": [
+        "On a machine with VS Code and Copilot, add .vscode/mcp.json, start the server, list tools, call board_totals, and save a receipt. No extension is needed or claimed."
+      ]
+    },
+    {
+      "id": "gemini-cli",
+      "name": "Gemini CLI",
+      "package_or_connector_id": "csoai-gspc (settings.json)",
+      "backend_url": "https://councilof.ai/mcp",
+      "transport": "streamable-http",
+      "config": {
+        "mcpServers": {
+          "csoai-gspc": {
+            "httpUrl": "https://councilof.ai/mcp"
+          }
+        }
+      },
+      "state": "PREPARED_NOT_TESTED",
+      "tested_at": null,
+      "client_version": "gemini CLI not installed on the test Mac",
+      "tools_discovered": null,
+      "receipt": "council-os/client-compat-receipts/2026-09-15/environment.json",
+      "doc_url": "https://geminicli.com/docs/tools/mcp-server/",
+      "store": null,
+      "owner_steps": [
+        "Install Gemini CLI, add the config to a temporary settings file, run /mcp to list tools, call board_totals, and save a receipt. This is not a Gemini consumer-app integration."
+      ]
+    },
+    {
+      "id": "chatgpt-apps-sdk",
+      "name": "ChatGPT (Apps SDK / developer mode)",
+      "package_or_connector_id": null,
+      "backend_url": "https://councilof.ai/mcp",
+      "transport": "streamable-http",
+      "config": {
+        "connector_url": "https://councilof.ai/mcp"
+      },
+      "state": "PREPARED_NOT_TESTED",
+      "tested_at": null,
+      "client_version": "ChatGPT.app 26.908.70816 installed; not exercised (needs a signed-in plan with developer mode)",
+      "tools_discovered": null,
+      "receipt": "council-os/client-compat-receipts/2026-09-15/environment.json",
+      "doc_url": "https://help.openai.com/en/articles/12515353-build-with-the-apps-sdk",
+      "store": {
+        "name": "ChatGPT app directory",
+        "url": null,
+        "status": "NOT_SUBMITTED",
+        "required_for_listing": true
+      },
+      "owner_steps": [
+        "Test in developer mode first and save a receipt. A directory listing is a separate submission and review under an owner account; nothing has been submitted."
+      ]
+    },
+    {
+      "id": "huggingface-space",
+      "name": "Hugging Face Space csoai/gspc-board",
+      "package_or_connector_id": "csoai/gspc-board",
+      "backend_url": "https://councilof.ai/api/gspc (board reader)",
+      "transport": "static web page",
+      "config": null,
+      "state": "NOT_APPLICABLE",
+      "tested_at": null,
+      "client_version": null,
+      "tools_discovered": null,
+      "receipt": "council-os/client-compat-receipts/2026-09-15/environment.json",
+      "doc_url": "https://huggingface.co/spaces/csoai/gspc-board",
+      "store": {
+        "name": "Hugging Face Spaces",
+        "url": "https://huggingface.co/spaces/csoai/gspc-board",
+        "status": "PUBLISHED"
+      },
+      "owner_steps": [],
+      "note": "A static Space that shows the board (runtime RUNNING when read 2026-09-15T06:38Z). A distribution surface, not an MCP client."
+    },
+    {
+      "id": "meok-compliance-lens",
+      "name": "MEOK Compliance Lens (VS Code extension, separate product)",
+      "package_or_connector_id": "csoai.meok-compliance-lens@0.1.0",
+      "backend_url": "https://meok-attestation-api.vercel.app",
+      "transport": "HTTPS REST (HMAC attestation API)",
+      "config": null,
+      "state": "NOT_APPLICABLE",
+      "tested_at": null,
+      "client_version": null,
+      "tools_discovered": null,
+      "receipt": "council-os/client-compat-receipts/2026-09-15/meok-extension-identity.json",
+      "doc_url": "https://github.com/CSOAI-ORG/meok-vscode-extension",
+      "store": {
+        "name": "VS Code Marketplace",
+        "url": null,
+        "status": "NOT_FOUND"
+      },
+      "owner_steps": [
+        "Decide the extension's future (decision memo prepared). It must not be relabelled as the Council of AI client."
+      ],
+      "note": "Does not call this backend; its default backend answered 402 DEPLOYMENT_DISABLED on 2026-09-15. Not the GSPC evidence contract."
+    }
+  ],
+  "registry": {
+    "id": "io.github.CSOAI-ORG/gspc",
+    "receipt": "council-os/client-compat-receipts/2026-09-15/mcp-registry-versions.json",
+    "active_versions": 11,
+    "latest": "1.4.2",
+    "stale_remotes_still_active": [
+      "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
+      "https://councilof.ai/api/assess"
+    ],
+    "latest_description_tool_count": 12,
+    "endpoint_tool_count": 13,
+    "note": "Do not use --all-versions: it would also deprecate the current 1.4.2.",
+    "owner_steps": [
+      "Deprecate versions 1.0.0, 1.0.1, 1.0.2, 1.0.3, 1.1.0, 1.1.1, 1.2.0, 1.3.0, 1.4.0 and the mistaken server version 0.2.2 (published 2026-09-13, an npm version in server.version) with PATCH /v0.1/servers/{name}/versions/{version}/status or `mcp-publisher status --status deprecated`. This needs a Registry token with publish or edit rights on io.github.CSOAI-ORG: `mcp-publisher login github`, or the GitHub Actions OIDC exchange the publish workflow already uses. No npm token is involved.",
+      "Publish 1.4.3 (server.json already says 13 tools) through the existing workflow_dispatch mcp-registry-publish.yml once master's deploy is green."
+    ]
+  }
+}

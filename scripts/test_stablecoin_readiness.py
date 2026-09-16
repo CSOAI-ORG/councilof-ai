@@ -5,8 +5,11 @@ import json
 import unittest
 from pathlib import Path
 
+import tempfile
+
 from build_stablecoin_readiness import (
     build,
+    find_index_commitment,
     index_commitment_state,
     measured_asset_anchor_state,
     validate,
@@ -146,6 +149,62 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
             "git add public/interop/stablecoin-universe-2026-09/readiness.json",
             workflow[commit:],
         )
+
+
+class IndexCommitmentSelectionTest(unittest.TestCase):
+    """Fixture repo: never reads the real tree, so it runs whatever state master is in."""
+
+    INDEX = "a" * 64
+
+    def write_card(self, repo: Path, sha: str, *, index: str | None = None, sig: str | None = "c2ln") -> None:
+        cards = repo / "public/cards"
+        cards.mkdir(parents=True, exist_ok=True)
+        body = {
+            "sha256": sha,
+            "sig_ed25519": sig,
+            "payload": {"kind": "csoai.stablecoin-index.commitment/v1", "index_sha256": index or self.INDEX},
+        }
+        (cards / f"{sha[:16]}.json").write_text(json.dumps({"card": body}))
+
+    def test_superseded_signed_duplicate_does_not_block_the_rooted_one(self) -> None:
+        # 15 Sep 2026: the 11 Sep card (no product block) and the re-minted card both on disk.
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            self.write_card(repo, "1" * 64)
+            self.write_card(repo, "2" * 64)
+            path, body = find_index_commitment(repo, self.INDEX, {"2" * 64})
+            self.assertEqual(body["sha256"], "2" * 64)
+            self.assertEqual(path.name, "2" * 16 + ".json")
+
+    def test_signed_but_absent_from_root_still_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            self.write_card(repo, "1" * 64)
+            self.write_card(repo, "2" * 64)
+            with self.assertRaisesRegex(SystemExit, "absent from the current public root"):
+                find_index_commitment(repo, self.INDEX, {"3" * 64})
+
+    def test_two_rooted_commitments_still_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            self.write_card(repo, "1" * 64)
+            self.write_card(repo, "2" * 64)
+            with self.assertRaisesRegex(SystemExit, "exactly one current-root-included"):
+                find_index_commitment(repo, self.INDEX, {"1" * 64, "2" * 64})
+
+    def test_unsigned_commitment_never_counts_even_if_rooted(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            self.write_card(repo, "1" * 64, sig=None)
+            with self.assertRaisesRegex(SystemExit, "no signed index commitment"):
+                find_index_commitment(repo, self.INDEX, {"1" * 64})
+
+    def test_commitment_to_another_index_never_counts(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            repo = Path(d)
+            self.write_card(repo, "1" * 64, index="b" * 64)
+            with self.assertRaisesRegex(SystemExit, "no signed index commitment"):
+                find_index_commitment(repo, self.INDEX, {"1" * 64})
 
 
 if __name__ == "__main__":

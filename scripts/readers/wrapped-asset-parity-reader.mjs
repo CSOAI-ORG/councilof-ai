@@ -23,8 +23,8 @@
  *
  * Usage: node scripts/readers/wrapped-asset-parity-reader.mjs [--json] [--out <file>] [--stage <dir>]
  * Env:   EVM_RPC_<CHAIN> overrides a default endpoint (recorded, never silent), same as
- *        evm-erc20-reader.mjs. eth.llamarpc.com answered HTTP 525 on 2026-09-13, so the
- *        Ethereum default here is publicnode.
+ *        evm-erc20-reader.mjs. eth.llamarpc.com answered HTTP 525 on 2026-09-13 and publicnode
+ *        refused pinned-block reads without a token on 2026-09-15, so the Ethereum default is drpc.
  */
 
 import { createHash } from "node:crypto";
@@ -35,7 +35,9 @@ export const SCHEMA = "csoai.wrapped-asset-parity/0.1";
 export const READER_REVISION = "scripts/readers/wrapped-asset-parity-reader.mjs@0.1.1";
 
 export const CHAINS = {
-  ethereum: { rpc: "https://ethereum-rpc.publicnode.com", chainId: 1 },
+  // publicnode now refuses pinned-block eth_call without a personal token ("Archive requests require
+  // a personal token", 2026-09-15); eth.drpc.org answered the same finalized-block read keyless.
+  ethereum: { rpc: "https://eth.drpc.org", chainId: 1 },
   base: { rpc: "https://mainnet.base.org", chainId: 8453 },
   optimism: { rpc: "https://mainnet.optimism.io", chainId: 10 },
   arbitrum: { rpc: "https://arb1.arbitrum.io/rpc", chainId: 42161 },

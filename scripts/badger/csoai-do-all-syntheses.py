@@ -166,14 +166,14 @@ def build_cobol():
     return {
         "schema": "csoai.cobol-evidence/0.1",
         "as_of": now(),
-        "principle": "Every COBOL modernization engagement emits signed conversion-attestation cards.",
+        "status": "UNMEASURED",
+        "principle": "PLANNED, not built. The conversion-attestation format below is a draft. No COBOL engagement has been measured and no conversion-attestation card has been signed.",
         "service": "COBOLBridge.ai (portfolio arm)",
         "conversion_attestation": {
             "schema": "csoai.cobol-conversion-attestation/v0.1",
             "fields": ["source_module_sha256", "target_module_sha256", "behavioral_equivalence_tests",
                        "conversion_method", "signed_by", "verified_at"],
-            "price_usdc": 1.00,
-            "x402_sku": "cobol-conversion-attestation",
+            "door": "NOT_IMPLEMENTED",
         },
         "market_size_note": "verify before quoting — commonly cited multi-billion-line COBOL installed base; no number asserted here.",
         "ties": ["banks (26 registered)", "SWIFT MT rails (3 MT doors)", "regulatory attestation (eu-ai-act-pack)"],
@@ -225,7 +225,7 @@ def main() -> None:
     (INTEROP / "cobol-evidence.json").write_text(json.dumps(f8, indent=2))
     (WK / "cobol-bridge.json").write_text(json.dumps({
         "schema": "csoai.well-known/0.1", "slug": "cobol-bridge", "name": "COBOLBridge.ai",
-        "description": "Legacy COBOL modernization with signed conversion attestations.", "as_of": now()}, indent=2))
+        "description": "Marketing landing for legacy COBOL modernization (cobolbridge.ai). UNMEASURED: no COBOL measurement, conversion attestation or signed card exists.", "as_of": now()}, indent=2))
     print("  ✓ cobol-evidence.json + cobol-bridge.json")
 
     print()

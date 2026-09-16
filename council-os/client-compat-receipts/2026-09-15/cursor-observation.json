@@ -1,0 +1,34 @@
+{
+  "schema": "csoai.client-compat-receipt/0.1",
+  "client": "Cursor",
+  "client_version": "Cursor.app 3.18.25",
+  "read_at": "2026-09-15T06:38:11Z",
+  "test_attempted": false,
+  "why_not": "No working headless client on this Mac: the cursor-agent symlink points at a missing version directory. Discovering tools in the GUI needs the signed-in app, and this lane does not sign in or edit the user's global config.",
+  "observed_existing_user_config": {
+    "file": "~/.cursor/mcp.json (read only; not changed)",
+    "server_key": "council-measure",
+    "type": "http",
+    "url": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
+    "probe_of_that_url": {
+      "serverInfo": {
+        "name": "csoai-gspc-mcp",
+        "version": "1.0.0"
+      },
+      "first_tools": [
+        "measure",
+        "verify"
+      ],
+      "note": "A legacy workers.dev remote still answers with the v1.0.0 tool set. It is not the current contract at https://councilof.ai/mcp."
+    }
+  },
+  "prepared_config": {
+    "mcpServers": {
+      "csoai-gspc": {
+        "url": "https://councilof.ai/mcp"
+      }
+    }
+  },
+  "doc_url": "https://cursor.com/docs/mcp",
+  "verdict": "PREPARED_NOT_TESTED"
+}

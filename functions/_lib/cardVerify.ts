@@ -290,6 +290,8 @@ export interface CardVerdict {
   checks: CardCheck[];
   /** The declared id/content_id, if any. */
   id: string | null;
+  /** The pinned trust anchor the signing key matched, or null when none matched / no key was read. */
+  anchor_id?: string | null;
 }
 
 /** A trust anchor as published in a DID document. */
@@ -648,5 +650,5 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
     });
   }
 
-  return { family, family_label: FAMILY_LABEL[family], valid, reasons, checks, id: declaredId };
+  return { family, family_label: FAMILY_LABEL[family], valid, reasons, checks, id: declaredId, anchor_id: anchorId };
 }

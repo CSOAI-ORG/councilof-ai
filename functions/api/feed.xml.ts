@@ -4,6 +4,10 @@
 // about + a free, no-identity way to watch it. Zero PII (RSS stores nothing on
 // the client). Items are appended here with each shipped change — the feed is
 // code, so every entry rides the same review+deploy gate as the site itself.
+//
+// B-03 fix (2026-09-15): the GSPC board-count item is now derived live from
+// GET /api/gspc at serve time, so it can never freeze on a stale count.
+// Historical items below are preserved as-is.
 
 interface FeedItem {
   title: string;
@@ -12,7 +16,7 @@ interface FeedItem {
   desc: string;
 }
 
-const ITEMS: FeedItem[] = [
+const HISTORICAL_ITEMS: FeedItem[] = [
   {
     title: "XRPL impersonation watch: 22 issuers of verified codes are not the verified issuer",
     link: "https://councilof.ai/interop/xrpl-impersonation-2026-09/latest.json",
@@ -48,12 +52,6 @@ const ITEMS: FeedItem[] = [
     link: "https://councilof.ai/interop/stablecoin-universe-2026-09/readiness.json",
     date: "Fri, 11 Sep 2026 09:45:00 GMT",
     desc: "The frozen index contains 425 assets, 1,640 asset-chain entries and 211 reported chains. One asset has independent measurement evidence and 424 do not. Asset-specific A2A, MCP, x402 and settlement coverage remain zero; generic protocol doors are reported separately.",
-  },
-  {
-    title: "GSPC board: 22 axis · 22 measured — living lock (after #1077)",
-    link: "https://councilof.ai/api/gspc",
-    date: "Tue, 01 Sep 2026 17:21:00 GMT",
-    desc: "Live board is 22 axis · 22 measured · 0 empty. Cite totals.public_count from GET /api/gspc. #1077 restored all eight financial/domain deterministic-facts runs after the #1074 15/7 regression. Historical RSS items below keep their sitting-day wording; counts typed there are superseded by the live board.",
   },
   {
     title: "GSPC board: 22 axis · 15 measured — historical sitting-day (28 Aug)",
@@ -113,14 +111,44 @@ const ITEMS: FeedItem[] = [
     title: "SITTING 1: the GSPC 14-slot board — 13 measured of 14",
     link: "https://councilof.ai/api/gspc",
     date: "Tue, 18 Aug 2026 12:00:00 GMT",
-    desc: "Jail (slot 14) promoted from the signed living board: 7-model fleet, separation untested, stated honestly. 3 of 13 canonical axes carry a separated leader; ties are ties.",
+    desc: "Jail (slot 14) promoted from the signed living board: 7-model fleet, separation untested, stated honestly. At that sitting 3 of 13 canonical axes carried a separated leader; ties are ties. That count is dated to the sitting and is not the live one: cite totals.separated_leads on GET /api/gspc (C-2026-0915-01).",
   },
 ];
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-export const onRequestGet: PagesFunction = async () => {
-  const items = ITEMS.map(
+async function fetchBoardItem(origin: string): Promise<FeedItem> {
+  const now = new Date().toUTCString();
+  try {
+    const url = new URL("/api/gspc", origin).toString();
+    const r = await fetch(url, { headers: { "User-Agent": "feed.xml/1.0" } });
+    if (!r.ok) throw new Error(`GSPC ${r.status}`);
+    const gspc = await r.json() as any;
+    const t = gspc?.totals;
+    if (!t?.public_count) throw new Error("no totals");
+    return {
+      title: `GSPC board: ${t.public_count} — live`,
+      link: `${origin}/api/gspc`,
+      date: now,
+      desc: `Derived live from GET /api/gspc. ${t.model_fleets ?? "?"} model fleets · ${t.fact_runs ?? "?"} fact runs · ${t.items ?? "?"} items. ${t.count_grammar ?? "Cite totals.public_count from GET /api/gspc."}`,
+    };
+  } catch {
+    // Honest fallback: never fabricate a count.
+    return {
+      title: "GSPC board: live count unavailable",
+      link: `${origin}/api/gspc`,
+      date: now,
+      desc: "The board count could not be derived from GET /api/gspc at this time. Cite totals.public_count directly. Never fabricate a count.",
+    };
+  }
+}
+
+export const onRequestGet: PagesFunction = async (ctx) => {
+  const origin = new URL(ctx.request.url).origin;
+  const boardItem = await fetchBoardItem(origin);
+  const allItems = [boardItem, ...HISTORICAL_ITEMS];
+
+  const items = allItems.map(
     (i) => `    <item>
       <title>${esc(i.title)}</title>
       <link>${esc(i.link)}</link>
@@ -130,12 +158,14 @@ export const onRequestGet: PagesFunction = async () => {
     </item>`,
   ).join("\n");
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Council of AI — state changes</title>
     <link>https://councilof.ai/</link>
-    <description>MEASURED boards, REPORTED context, regulation-change events and corrections from the independent AI-measurement body. Measurement, not certification. Verification free forever.</description>
+    <description>MEASURED boards, REPORTED context, regulation-change events and corrections from the independent AI-measurement body. Measurement, not certification. Verification free forever. Derived feeds at /feeds/.</description>
     <language>en-gb</language>
+    <atom:link href="${origin}/feed.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="${origin}/feeds" rel="alternate" type="text/html" />
 ${items}
   </channel>
 </rss>`;

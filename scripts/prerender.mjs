@@ -626,10 +626,13 @@ async function worker(id) {
         : join(DIST, route.replace(/^\//, "").replace(/\/$/, ""), "index.html");
       if (dest !== join(DIST, "index.html")) {
         mkdirSync(dirname(dest), { recursive: true });
-        copyFileSync(join(DIST, "index.html"), dest);
-        // The copied shell carries the homepage canonical AND the homepage <title>; name this
-        // route's served URL and its own title instead (crawlers never run the JS that sets them).
-        const shellHtml = rewriteCanonical(readFileSync(dest, "utf8"), route, PROD_ORIGIN, SERVED_ROUTES);
+        // Write the PRISTINE shell read at startup (`shell`, before any snapshot), never
+        // dist/index.html as it is now: "/" is snapshotted first, so copying it gave every
+        // client-only route the rendered homepage body (content-promise gate, 2026-09-15:
+        // /status/index.html carried data-testid="home-verify"). The shell still carries the
+        // homepage canonical AND <title>; name this route's served URL and its own title instead
+        // (crawlers never run the JS that sets them).
+        const shellHtml = rewriteCanonical(shell, route, PROD_ORIGIN, SERVED_ROUTES);
         writeFileSync(dest, rewriteTitle(shellHtml, ROUTE_TITLE_MAP.get(normRoute(route))), "utf8");
       }
       rec.ok = true;
