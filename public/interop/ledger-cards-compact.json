@@ -688,5 +688,62 @@
     "extends_bank_registry_6": true,
     "evidence_url": "/interop/stablecoins-extended.json",
     "honesty": "45 stablecoins across 17 chains measured against public disclosure pages. Extends XRPL reader-16 + bank-registry 6."
+  },
+  "stablecoin.deep.summary.2026-09": {
+    "kind": "csoai.stablecoin-deep-summary/0.1",
+    "status": "PROBED",
+    "release_id": "stablecoin-deep-2026-09",
+    "top_n": 20,
+    "n_deep_probed": 18,
+    "n_unmeasured": 2,
+    "n_with_attestation_page": 18,
+    "n_with_auditor": 3,
+    "n_with_staleness": 1,
+    "median_staleness_days": 4,
+    "free_surface": "index total + staleness_days",
+    "paid_surface": "per-chain splits + gap basis points (PROOF door)",
+    "not_a_certification": true,
+    "truth_rules": [
+      "facts not grades",
+      "DEEP_PROBED means page fetched + bytes inspected",
+      "bare MEASURED banned"
+    ],
+    "evidence_url": "/interop/stablecoin-deep-2026-09/deep.json"
+  },
+  "xrpl.reader.status.2026-09-16": {
+    "kind": "csoai.xrpl-reader/0.1",
+    "status": "LOCKED_TO_ROOT",
+    "n": 16,
+    "xrpl_fi_assetCount": 16,
+    "distinct_issuers": 10,
+    "top_issuers": [
+      "GateHub:4",
+      "Braza Bank:2",
+      "Bitstamp:2",
+      "Quantoz:2"
+    ],
+    "evidence_url": "/api/xrpl",
+    "honesty": "Reader locked to public-root merkle; not a mill. Cannot grow without root update.",
+    "extends_to_full_universe": "425 stablecoins indexed at /interop/stablecoin-universe-2026-09/index.json"
+  },
+  "x402.rail.weekly.2026-09-16": {
+    "kind": "csoai.x402-rail-status/0.1",
+    "mode": "live",
+    "network": "eip155:8453",
+    "asset": "USDC",
+    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "resources": 11,
+    "external_revenue_usdc": 0.02,
+    "distinct_paid_payers": 1,
+    "free_door_settlements_30d": 18,
+    "free_door_unique_buyers": "10+",
+    "uptime": "100%",
+    "promo": "csoai-launch-30d-20260911 (ends 2026-10-11)",
+    "discovery": "https://councilof.ai/.well-known/x402.json",
+    "bazaars": [
+      "PayAI: indexed",
+      "Coinbase CDP: ABSENT (requires owner CDP key)"
+    ],
+    "evidence_url": "/api/revenue"
   }
 }

@@ -1,0 +1,30 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "xrpl.reader.status.2026-09-16",
+  "subject": "XRPL reader status: 16 issuers on root, 425 in full universe index",
+  "as_of": "2026-09-16T10:50:00Z",
+  "source_urls": [
+    "/api/xrpl"
+  ],
+  "payload": {
+    "kind": "csoai.xrpl-reader/0.1",
+    "status": "LOCKED_TO_ROOT",
+    "n": 16,
+    "xrpl_fi_assetCount": 16,
+    "distinct_issuers": 10,
+    "top_issuers": [
+      "GateHub:4",
+      "Braza Bank:2",
+      "Bitstamp:2",
+      "Quantoz:2"
+    ],
+    "evidence_url": "/api/xrpl",
+    "honesty": "Reader locked to public-root merkle; not a mill. Cannot grow without root update.",
+    "extends_to_full_universe": "425 stablecoins indexed at /interop/stablecoin-universe-2026-09/index.json"
+  },
+  "unmeasured": [
+    "gspc_axis_assignment: 22-axis canon (ADR-001) is frozen",
+    "oidc_signature: pending auto-eat-sign workflow"
+  ],
+  "sha256": "6b5f8138feddded7ed11c1e7afd2c18b2fae48591f85709ec40e8e05de703ef6"
+}

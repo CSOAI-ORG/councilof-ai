@@ -1,0 +1,35 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "stablecoin.deep.summary.2026-09",
+  "subject": "Stablecoin top-20 deep-probe summary: 18/20 DEEP_PROBED",
+  "as_of": "2026-09-16T10:50:00Z",
+  "source_urls": [
+    "/interop/stablecoin-deep-2026-09/deep.json"
+  ],
+  "payload": {
+    "kind": "csoai.stablecoin-deep-summary/0.1",
+    "status": "PROBED",
+    "release_id": "stablecoin-deep-2026-09",
+    "top_n": 20,
+    "n_deep_probed": 18,
+    "n_unmeasured": 2,
+    "n_with_attestation_page": 18,
+    "n_with_auditor": 3,
+    "n_with_staleness": 1,
+    "median_staleness_days": 4,
+    "free_surface": "index total + staleness_days",
+    "paid_surface": "per-chain splits + gap basis points (PROOF door)",
+    "not_a_certification": true,
+    "truth_rules": [
+      "facts not grades",
+      "DEEP_PROBED means page fetched + bytes inspected",
+      "bare MEASURED banned"
+    ],
+    "evidence_url": "/interop/stablecoin-deep-2026-09/deep.json"
+  },
+  "unmeasured": [
+    "gspc_axis_assignment: 22-axis canon (ADR-001) is frozen",
+    "oidc_signature: pending auto-eat-sign workflow"
+  ],
+  "sha256": "d2fc1d8f7fac20fd9989f521e0a3f7ed9e0f94140ab6efb0848b6eb6646c5211"
+}
