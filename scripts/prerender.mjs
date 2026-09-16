@@ -460,6 +460,33 @@ console.log(`${routes.length} routes to prerender from ${DIST}/\n`);
 const MIME = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css",
   ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png",
   ".jpg": "image/jpeg", ".ico": "image/x-icon", ".woff2": "font/woff2", ".txt": "text/plain" };
+
+/** Keep the Vite asset graph from the pristine shell.
+ *  page.content() after a dashboard paint can carry modulepreload tags for the
+ *  route's lazy graph (good) but a tip/partial republish that leaves an older
+ *  /dashboard/index.html beside a newer index.html is how LobbyPlay mapDeps
+ *  404 while DashboardLayout still 200. Re-stamp every build's script +
+ *  modulepreload hrefs from `shell` so a route snapshot cannot pin a foreign
+ *  index.r2-* / DashboardLayout.r2-* pair. Body markup stays captured. */
+function restampShellAssetTags(capturedHtml, shellHtml) {
+  const shellTags = [];
+  const tagRe = /<script\b[^>]*\btype=["']module["'][^>]*>\s*<\/script>|<script\b[^>]*\bsrc=["']\/assets\/[^"']+["'][^>]*>\s*<\/script>|<link\b[^>]*\brel=["']modulepreload["'][^>]*>/gi;
+  const shellHead = shellHtml.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i)?.[1] ?? shellHtml;
+  let m;
+  while ((m = tagRe.exec(shellHead))) shellTags.push(m[0]);
+  if (!shellTags.length) return capturedHtml;
+
+  let html = capturedHtml;
+  html = html.replace(/<script\b[^>]*\bsrc=["']\/assets\/[^"']+["'][^>]*>\s*<\/script>/gi, "");
+  html = html.replace(/<script\b[^>]*\btype=["']module["'][^>]*>\s*<\/script>/gi, "");
+  html = html.replace(/<link\b[^>]*\brel=["']modulepreload["'][^>]*>\s*/gi, "");
+
+  if (/<\/head>/i.test(html)) {
+    html = html.replace(/<\/head>/i, `${shellTags.join("\n")}\n</head>`);
+  }
+  return html;
+}
+
 const shell = readFileSync(join(DIST, "index.html"), "utf8");
 // Every non-2xx or unreachable response the data proxy saw, so a failed run can name its cause
 // instead of leaving 19 identical BAKED-FETCH-FAILURE lines and no explanation.
@@ -694,8 +721,8 @@ async function worker(id) {
       // OS-assigned unless --port was passed — brand-gate's infra_leak rule matches any
       // localhost:<port>, not just 4400, so a missed rewrite still fails the build.
       // Then name the URL the edge actually serves (dir/index.html, bare path 308s to "<route>/").
-      const html = rewriteCanonical((await page.content())
-        .split(`http://localhost:${PORT}`).join(PROD_ORIGIN), route, PROD_ORIGIN, SERVED_ROUTES);
+      const html = rewriteCanonical(restampShellAssetTags((await page.content())
+        .split(`http://localhost:${PORT}`).join(PROD_ORIGIN), shell), route, PROD_ORIGIN, SERVED_ROUTES);
       // A snapshot that captured a data-fetch failure must be UNABLE to ship: it would
       // bake the error into the crawler-visible page (2026-08-25: /gspc-scoreboard went
       // live reading "Board fetch failed"). Refuse to write it, count it as an error.

@@ -168,6 +168,8 @@ jobs:
         run: |
           node scripts/content-promise-gate.mjs --selftest
           node scripts/content-promise-gate.mjs dist/client
+          node scripts/assert-dashboard-lazy-chunks.mjs --selftest
+          node scripts/assert-dashboard-lazy-chunks.mjs dist/client
 
       # #1482 passed every PR check and then failed the deploy at the council-truth gate,
       # which lived only in deploy.yml: a retired door (/cobol) was rewired to a real page and
