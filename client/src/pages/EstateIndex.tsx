@@ -39,6 +39,8 @@ interface Master {
     bytes_leaves: number;
     record_leaves: number;
     by_surface: Record<string, number>;
+    by_state?: Record<string, number>;
+    state_meanings?: Record<string, string>;
     never_add_these: string;
   };
   inclusion_self_check: { sampled: number; verified: number; a_leaf_outside_the_set_is_rejected: boolean };
@@ -123,6 +125,25 @@ export default function EstateIndex() {
               </tbody>
             </table>
           </div>
+
+          {m.totals.by_state && (
+            <>
+              <h2 className="mt-10 text-xl font-semibold">What state each entry is in</h2>
+              <div className="mt-3 space-y-3">
+                {Object.entries(m.totals.by_state).map(([s, n]) => (
+                  <div key={s} className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+                    <div className="flex items-baseline gap-3">
+                      <span className="font-medium">{s}</span>
+                      <span className="text-2xl font-semibold tabular-nums">{n}</span>
+                    </div>
+                    <p className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+                      {m.totals.state_meanings?.[s]}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
 
           <h2 className="mt-10 text-xl font-semibold">Frozen question banks</h2>
           <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">

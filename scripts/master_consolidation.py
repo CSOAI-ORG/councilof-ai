@@ -163,6 +163,25 @@ def main():
     if dp.exists():
         for r in json.loads(dp.read_text()):
             add("repo","written_document",r["path"],r["sha256"],"bytes_leaf",bytes=r["bytes"])
+    ip=d/"intake_files.json"
+    if ip.exists():
+        for r in json.loads(ip.read_text()):
+            path=r["path"]
+            if not path.endswith("card-unsigned.json"):
+                continue
+            rec={"surface":"huggingface","kind":"unsigned_intake_card",
+                 "id":f"csoai/runpod-gspc-intake:{path}","oid":r.get("oid"),"bytes":r.get("size")}
+            e={"surface":"huggingface","kind":"unsigned_intake_card",
+               "id":rec["id"],"digest":sha256b(canon(rec)),"leaf_class":"record_leaf",
+               "state":"UNSIGNED",
+               "bytes":r.get("size"),
+               "digest_covers":("our record of the file's path and the store's own object id. We did not "
+                                "download 1,513 card bodies to hash them ourselves, and the store's id is "
+                                "a git object hash, not our sha256."),
+               "not_measured":("UNSIGNED is not UNMEASURED and neither is MEASURED. These bodies carry "
+                               "signature: null by design. Promotion is the signer's decision and the "
+                               "board signing key is not reachable from here.")}
+            entries.append(e)
     for r in json.loads((d/"banks.json").read_text()):
         if r.get("sha256"):
             add("huggingface","frozen_question_bank",r["bank"],r["sha256"],"bytes_leaf",
@@ -198,6 +217,7 @@ def main():
 
     from collections import Counter
     by_surface=Counter(e["surface"] for e in entries)
+    by_state=Counter(e["state"] for e in entries)
     by_class=Counter(e["leaf_class"] for e in entries)
     art={
       "artifact":"master-consolidation",
@@ -217,6 +237,10 @@ def main():
                 "bytes_leaves":by_class["bytes_leaf"],
                 "record_leaves":by_class["record_leaf"],
                 "by_surface":dict(sorted(by_surface.items())),
+                "by_state":dict(sorted(by_state.items())),
+                "state_meanings":{
+                  "INDEXED":"We found the artifact and recorded it. Nothing was measured against it.",
+                  "UNSIGNED":"A card body that exists and carries signature: null by design. Not measured, not withdrawn, not pending: awaiting a signing decision that only the board key can make."},
                 "never_add_these":"bytes_leaves and record_leaves answer different questions; report both, never their sum as one number"},
       "identifiers_withheld":{
         "count":withheld,
