@@ -1,0 +1,40 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "autoeat.mcp.fleet.state",
+  "subject": "auto-eat MCP fleet state",
+  "as_of": "2026-09-16T11:35:00Z",
+  "source_urls": [
+    "/api/state"
+  ],
+  "payload": {
+    "kind": "csoai.mcp-fleet-state-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:35:00Z",
+    "reachable_distinct_servers": 2,
+    "reachable_endpoints": 2,
+    "unreachable_endpoints": 2,
+    "catalogued_not_probed": 6,
+    "tools_probed": 8,
+    "external_catalogues": [
+      {
+        "id": "gspc-os-vendored",
+        "count": 363,
+        "unit": "server directories",
+        "source": "CSOAI-ORG/gspc-os servers/ (private, pod-only)",
+        "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
+      }
+    ],
+    "external_total": 363,
+    "evidence_url": "/api/state",
+    "honesty": "MCP fleet state from /api/state. 2 reachable, 6 catalogued, 363 external. never_sum: reachable + catalogued are different kinds."
+  },
+  "unmeasured": [
+    "per-server reachability breakdown"
+  ],
+  "sha256": "f7068b0307c1b95111aab08d9deaa7c417c172f3dc0a3e99ebe76281663319fd"
+}

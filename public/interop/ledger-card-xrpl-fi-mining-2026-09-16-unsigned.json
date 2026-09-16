@@ -1,0 +1,35 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "xrpl.fi.mining.2026-09-16",
+  "subject": "XRPL-FI: 13 trusted + 37 flagged = 50 issuers",
+  "as_of": "2026-09-16T11:15:00Z",
+  "source_urls": [
+    "https://xrpl.fi/api/issuers",
+    "https://xrpl.fi/api/metrics"
+  ],
+  "payload": {
+    "kind": "csoai.xrpl-fi-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "uses_third_party_data": true
+    },
+    "as_of": "2026-09-16T11:15:00Z",
+    "source": "xrpl.fi/api/issuers",
+    "trusted_count": 13,
+    "flagged_count": 37,
+    "total_count": 50,
+    "csoai_reader_n": 16,
+    "csoai_reader_distinct_issuers": 10,
+    "coverage_gap": "xrpl.fi has 50 issuers; CSOAI reader has 16; not all overlap",
+    "totalTvl": 1075447304.29,
+    "totalHolders": 86897,
+    "evidence_url": "https://xrpl.fi/api/issuers",
+    "honesty": "Third-party xrpl.fi data. Not promoted to leaf claims. CSOAI reader remains locked to its 16."
+  },
+  "unmeasured": [
+    "per-issuer supply/holder counts"
+  ],
+  "sha256": "2b8468bb9cd706d9cc39a0e2894b706bef10339c798b6787461c6d2a84dd0711"
+}

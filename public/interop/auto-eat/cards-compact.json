@@ -404,5 +404,366 @@
     ],
     "extends_reader_16": true,
     "honesty": "45 stablecoins, 34/45 reachable. Extends XRPL reader-16 + bank-registry 6."
+  },
+  "autoeat.x402.settlement.census": {
+    "kind": "csoai.x402-settlement-census/0.1",
+    "flags": {
+      "self_settlement": false,
+      "revenue": false,
+      "ranking": false,
+      "hosts_contacted": false,
+      "not_a_grade": true,
+      "from_x402_census": true
+    },
+    "method": "GET the resource, sign EIP-3009, GET again with PAYMENT-SIGNATURE",
+    "population": 316,
+    "outcome": {
+      "REFUSED": 213,
+      "DELIVERED": 100,
+      "NO_CHALLENGE": 2,
+      "MISMATCH": 1
+    },
+    "usdc_spent": 1.3398,
+    "settlement_txs": 100,
+    "distinct_pay_to": 174,
+    "took_settlement_and_refused": 13,
+    "evidence_url": "/interop/ledger-card-x402-settlement-unsigned.json",
+    "honesty": "316 conformant hosts; 100 delivered; 213 refused; 13 settled-then-refused. Being listed and conformant is not the same as taking money and answering."
+  },
+  "autoeat.mcp.registry.mining": {
+    "kind": "csoai.mcp-registry-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:00:00Z",
+    "total_csoai_servers": 100,
+    "unique_slugs": 18,
+    "top_servers": [
+      "a2a-governance-bridge-mcp v1.1.5",
+      "agent-audit-logger-mcp v1.1.9",
+      "agent-content-watermark-mcp v1.1.9",
+      "agent-mcp-router-mcp v1.1.8"
+    ],
+    "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=csoai",
+    "honesty": "CSOAI publishes 18 unique MCP server slugs. Some have multiple versions. All registered via official registry."
+  },
+  "autoeat.npm.registry.mining": {
+    "kind": "csoai.npm-registry-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:00:00Z",
+    "total_csoai_packages": 105,
+    "csoai_gspc_mcp_last_week": 141,
+    "csoai_x402_rail_client_published": true,
+    "top_packages": [
+      "csoai-gspc-mcp v0.2.2 (MCP server)",
+      "csoai-x402-rail-client v0.1.0 (x402 buyer)",
+      "eu-ai-act-compliance-mcp v1.8.18"
+    ],
+    "evidence_url": "https://registry.npmjs.org/-/v1/search?text=csoai",
+    "honesty": "CSOAI publishes 105 npm packages. csoai-gspc-mcp is the most-downloaded at 141/wk."
+  },
+  "autoeat.a2a.mining.summary": {
+    "kind": "csoai.a2a-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:00:00Z",
+    "total_a2a_agents": 12,
+    "evidence_url": "/interop/a2a-engine-cards.json",
+    "honesty": "12 A2A agent cards tracked. Each agent card is a public notice, not a grade."
+  },
+  "autoeat.hf.mining.summary": {
+    "kind": "csoai.hf-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:00:00Z",
+    "csoai_datasets": "csoai/gspc-* (multiple)",
+    "csoai_spaces": "tracked via autoeat.hf.spaces",
+    "evidence_url": "/interop/auto-eat/cards-compact.json",
+    "honesty": "Hugging Face datasets and spaces tracked. Counts verified separately."
+  },
+  "autoeat.hf.full.mining": {
+    "kind": "csoai.hf-full-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:15:00Z",
+    "total_datasets": 105,
+    "total_models": 2,
+    "total_spaces": 38,
+    "top_datasets": [
+      "csoai/eldorado-eval-results",
+      "csoai/aiact-frozen-split-harness",
+      "csoai/coai-bench",
+      "csoai/compbench",
+      "csoai/arena-matrices",
+      "csoai/gspc-care",
+      "csoai/lmeval-official-format",
+      "csoai/poai-bench",
+      "csoai/gspc-airbench-eu-mandatory-run",
+      "csoai/gspc-swarm"
+    ],
+    "top_models": [
+      "csoai/clan-csoai-plain",
+      "csoai/council-safe"
+    ],
+    "evidence_url": "https://huggingface.co/csoai",
+    "honesty": "CSOAI publishes 105 datasets, 2 models, 38 spaces on Hugging Face. All public, all CSOAI-org. Not certifications."
+  },
+  "autoeat.xrpl.fi.mining": {
+    "kind": "csoai.xrpl-fi-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "uses_third_party_data": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:15:00Z",
+    "source": "xrpl.fi/api/issuers",
+    "trusted_count": 13,
+    "flagged_count": 37,
+    "total_count": 50,
+    "csoai_reader_n": 16,
+    "csoai_reader_distinct_issuers": 10,
+    "coverage_gap": "xrpl.fi has 50 issuers; CSOAI reader has 16; not all overlap",
+    "totalTvl": 1075447304.29,
+    "totalHolders": 86897,
+    "evidence_url": "https://xrpl.fi/api/issuers",
+    "honesty": "Third-party xrpl.fi data. Not promoted to leaf claims. CSOAI reader remains locked to its 16."
+  },
+  "autoeat.kaggle.mining": {
+    "kind": "csoai.kaggle-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:15:00Z",
+    "total_kaggle_datasets": 20,
+    "creator": "Nick Templeman (CSOAI Ltd)",
+    "top_datasets": [
+      "gspc-sim-cards",
+      "csoai-gspc-normalized",
+      "csoai-corpus-baselines",
+      "gspc-kernel-results",
+      "csoai-gspc-gov",
+      "csoai-gspc-agi",
+      "csoai-gspc-asi",
+      "csoai-gspc-mcp",
+      "csoai-gspc-drift",
+      "csoai-gspc-prv"
+    ],
+    "evidence_url": "https://www.kaggle.com/nicktempleman",
+    "honesty": "CSOAI publishes 20 datasets on Kaggle. All under user nicktempleman."
+  },
+  "autoeat.erc8004.mining": {
+    "kind": "csoai.erc8004-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:20:00Z",
+    "total_probed": 13166,
+    "chains_probed": {
+      "erc8004": 1729,
+      "hf-model": 4081,
+      "hf-space": 4059,
+      "mcp-server": 666,
+      "npm-registry": 2408,
+      "xrpl-account": 223
+    },
+    "evidence_url": "/interop/auto-eat/probed.json",
+    "honesty": "13166 ERC-8004 trust registry probes across 6 chains. Status: UNMEASURED for each (probed = queued, not measured)."
+  },
+  "autoeat.art50.hub.queue.mining": {
+    "kind": "csoai.art50-hub-queue-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:25:00Z",
+    "total_files": 25,
+    "evidence_url": "/interop/art50-hub-queue-2026-09/",
+    "honesty": "EU AI Act Article 50 hub-queue: per-model public-notice cards. Honest measurement only."
+  },
+  "autoeat.ai.platforms.mining": {
+    "kind": "csoai.ai-platforms-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:25:00Z",
+    "total_platforms": 15,
+    "total_manifests": 24,
+    "platform_names": [
+      "ChatGPT",
+      "Claude",
+      "Gemini",
+      "Copilot",
+      "Grok",
+      "Mistral / Le Chat",
+      "Perplexity",
+      "Poe",
+      "HuggingChat",
+      "You.com",
+      "Pi",
+      "Coze",
+      "Reka Core",
+      "Cohere Coral",
+      "Groq"
+    ],
+    "evidence_url": "/interop/ai-platform-plugins.json",
+    "honesty": "15 AI platforms support CSOAI measurement via 24 plugin manifests."
+  },
+  "autoeat.github.mining": {
+    "kind": "csoai.github-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:30:00Z",
+    "total_repos": 200,
+    "total_stars": 2,
+    "total_forks": 2,
+    "unique_topics": 106,
+    "top_topics": [
+      "ai-governance:128",
+      "mcp:121",
+      "csoai:111",
+      "compliance:104",
+      "mcp-server:103",
+      "model-context-protocol:102",
+      "ai:97",
+      "awesome-list:66",
+      "open-source:62",
+      "meok-ai-labs:33"
+    ],
+    "top_repos_by_stars": [
+      "CSOAI-ORG/agent-rate-limiter-mcp: 1",
+      "CSOAI-ORG/blockchain-verification-mcp: 1",
+      "CSOAI-ORG/.github: 0",
+      "CSOAI-ORG/a-evolve: 0",
+      "CSOAI-ORG/a2a-directory: 0"
+    ],
+    "evidence_url": "https://github.com/CSOAI-ORG",
+    "honesty": "200 public repos in CSOAI-ORG (2 pages of 100). 2 total stars, 2 forks. Topics mostly ai-governance, csoai, mcp, compliance."
+  },
+  "autoeat.mcp.fleet.state": {
+    "kind": "csoai.mcp-fleet-state-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:35:00Z",
+    "reachable_distinct_servers": 2,
+    "reachable_endpoints": 2,
+    "unreachable_endpoints": 2,
+    "catalogued_not_probed": 6,
+    "tools_probed": 8,
+    "external_catalogues": [
+      {
+        "id": "gspc-os-vendored",
+        "count": 363,
+        "unit": "server directories",
+        "source": "CSOAI-ORG/gspc-os servers/ (private, pod-only)",
+        "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
+      }
+    ],
+    "external_total": 363,
+    "evidence_url": "/api/state",
+    "honesty": "MCP fleet state from /api/state. 2 reachable, 6 catalogued, 363 external. never_sum: reachable + catalogued are different kinds."
+  },
+  "autoeat.hub.census.state": {
+    "kind": "csoai.hub-census-state-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:35:00Z",
+    "authority": "public/signed/hub-census-baseline.json",
+    "live_endpoint": "/api/compute",
+    "cell_arithmetic_rule": "cells = rows_served_by_indexes \u2212 superseded_excluded \u2212 withdrawn_excluded \u2212 duplicates_collapsed",
+    "signed_cards_in_index": "?",
+    "evidence_url": "/api/state",
+    "honesty": "Hub census is a strict distinct (model, axis) pair count. Per-arithmetic rule."
+  },
+  "autoeat.gspc.board.state": {
+    "kind": "csoai.gspc-board-state-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:35:00Z",
+    "axis_slots": 23,
+    "measured_axes": 22,
+    "unmeasured_axes": 1,
+    "public_count": "23 axis \u00b7 22 measured",
+    "evidence_url": "/api/state",
+    "honesty": "GSPC board state from /api/state. 23 slots, 22 measured, 1 unmeasured."
+  },
+  "autoeat.github.topics.mining": {
+    "kind": "csoai.github-topics-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:40:00Z",
+    "total_repos_sampled": 200,
+    "unique_topics": 106,
+    "top_topics": [
+      "ai-governance: 128",
+      "mcp: 121",
+      "csoai: 111",
+      "compliance: 104",
+      "mcp-server: 103",
+      "model-context-protocol: 102",
+      "ai: 97",
+      "awesome-list: 66",
+      "open-source: 62",
+      "meok-ai-labs: 33",
+      "eu-ai-act: 24",
+      "a2a: 18",
+      "ai-agents: 15",
+      "ed25519: 13",
+      "claude: 11"
+    ],
+    "evidence_url": "https://github.com/CSOAI-ORG",
+    "honesty": "200 repos sampled, 106 unique topics. Top 3: ai-governance (128), csoai (111), compliance (104)."
   }
 }

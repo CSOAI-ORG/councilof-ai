@@ -1,0 +1,27 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "autoeat.hub.census.state",
+  "subject": "auto-eat hub census",
+  "as_of": "2026-09-16T11:35:00Z",
+  "source_urls": [
+    "/api/state"
+  ],
+  "payload": {
+    "kind": "csoai.hub-census-state-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16T11:35:00Z",
+    "authority": "public/signed/hub-census-baseline.json",
+    "live_endpoint": "/api/compute",
+    "cell_arithmetic_rule": "cells = rows_served_by_indexes \u2212 superseded_excluded \u2212 withdrawn_excluded \u2212 duplicates_collapsed",
+    "signed_cards_in_index": "?",
+    "evidence_url": "/api/state",
+    "honesty": "Hub census is a strict distinct (model, axis) pair count. Per-arithmetic rule."
+  },
+  "unmeasured": [],
+  "sha256": "48244f1432a31e39c0a840c2d32368253c2bc923ac2f8d4993eb558b6b95aa29"
+}
