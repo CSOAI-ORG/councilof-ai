@@ -55,6 +55,14 @@
       "style": "openai-chat"
     },
     {
+      "id": "grok",
+      "base_url": "https://api.x.ai/v1",
+      "model": "grok-3-mini",
+      "env_key": "XAI_API_KEY",
+      "env_key_fallback": "GROK_TOKEN",
+      "style": "openai-chat"
+    },
+    {
       "id": "local-ollama",
       "base_url": "http://localhost:11434/v1",
       "model": "qwen3:0.6b",

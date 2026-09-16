@@ -154,6 +154,20 @@ def run_endpoint(endpoint, prompts, today):
             row["prompt_hashes"][p["id"]] = sha256_hex(text)
         row["daily_digest"] = daily_digest(row["prompt_hashes"])
         row["status"] = "HASHED"
+    except urllib.error.HTTPError as exc:
+        code = exc.code
+        detail = str(exc.read()[:200]) if hasattr(exc, "read") else str(exc)[:200]
+        if code == 402:
+            row["status"] = "NO_BALANCE"
+        elif code == 401:
+            row["status"] = "BAD_CREDENTIALS"
+        elif code == 403:
+            row["status"] = "FORBIDDEN"
+        elif code == 429:
+            row["status"] = "RATE_LIMITED"
+        else:
+            row["status"] = "ERROR"
+        row["note"] = "HTTP %d: %s" % (code, detail)
     except Exception as exc:  # recorded, never raised
         row["status"] = "ERROR"
         row["note"] = "%s: %s" % (type(exc).__name__, str(exc)[:200])
@@ -259,6 +273,10 @@ def real_run():
             extra = " (%s)" % row["note"]
         print("%-14s %-11s%s" % (row["endpoint_id"], row["status"], extra))
     fired = detect_drift(today_rows, today)
+    from collections import Counter
+    status_counts = Counter(r["status"] for r in today_rows)
+    summary = ", ".join("%s=%d" % (s, c) for s, c in sorted(status_counts.items()))
+    print("summary: %s" % summary)
     print("baseline rows written: %d -> %s" % (len(today_rows), os.path.relpath(BASELINE_PATH)))
     print("drift dry-run records fired today: %d" % fired)
     return 0
