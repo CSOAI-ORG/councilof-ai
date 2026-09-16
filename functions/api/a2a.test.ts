@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { A2A_ERROR, A2A_PROTOCOL_VERSION, onRequestGet, onRequestPost } from "./a2a";
+import { A2A_ERROR, A2A_PROTOCOL_VERSION, SKILL_IDS, onRequestGet, onRequestPost } from "./a2a";
 
 const LID =
   "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
@@ -484,5 +484,49 @@ describe("GET /api/a2a and the card that points here", () => {
         example.includes("SendMessage with Part.data") && example.includes(`"skill":"${skill.id}"`)
       ), `${skill.id} has no structured A2A example`).toBe(true);
     }
+  });
+});
+
+/**
+ * The card advertised estate-index while the router's SKILL_IDS did not, so a stranger reading
+ * /.well-known/agent-card.json and calling the skill it names got "unknown skill". A card that
+ * promises what the router rejects is worse than a card with fewer skills.
+ */
+describe("every skill the card advertises is one the router will accept", () => {
+  it("card skills and SKILL_IDS are the same set", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const card = JSON.parse(
+      readFileSync(resolve(__dirname, "../../public/.well-known/agent-card.json"), "utf8"),
+    );
+    const advertised = (card.skills as Array<{ id: string }>).map((s) => s.id).sort();
+    expect(advertised).toEqual([...SKILL_IDS].sort());
+  });
+});
+
+/**
+ * Being in SKILL_IDS is not enough: validateSkillInput has its own per-skill branches and falls
+ * through to "unsupported skill". estate-index passed the allowlist and was refused there, so the
+ * card still advertised something the router would not answer. This asserts every advertised skill
+ * survives BOTH checks with the input its own card example shows.
+ */
+describe("every advertised skill survives input validation, not just the allowlist", () => {
+  it("no skill is refused as unsupported when called with an empty input", async () => {
+    const refused: string[] = [];
+    for (const id of SKILL_IDS) {
+      const res = await onRequestPost({
+        request: new Request("https://councilof.ai/api/a2a", {
+          method: "POST",
+          headers: { "content-type": "application/json", "a2a-version": "1.0" },
+          body: JSON.stringify({
+            jsonrpc: "2.0", id: 1, method: "SendMessage",
+            params: { message: { messageId: `probe-${id}`, role: "user", parts: [{ data: { skill: id, input: {} } }] } },
+          }),
+        }),
+      } as never);
+      const body = await res.json();
+      if (String(body?.error?.message ?? "") === "unsupported skill") refused.push(id);
+    }
+    expect(refused).toEqual([]);
   });
 });

@@ -93,6 +93,7 @@ export const SKILL_IDS = [
   "article50-detect",
   "eu-ai-act-screen",
   "x402-discovery",
+  "estate-index",
 ] as const;
 type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
@@ -296,7 +297,10 @@ function parseSkillSelection(message: Json): SkillSelection | string {
 
 function validateSkillInput(selection: SkillSelection): string | null {
   const { skill, input } = selection;
-  if (["gspc-board", "east-west-crosswalk", "benchmark-quality-register", "x402-discovery"].includes(skill)) {
+  // A skill that takes no input belongs in this list. Forgetting it here means the router accepts
+  // the skill name and then refuses it as "unsupported skill" — which is what happened to
+  // estate-index on 2026-09-16, after it had already been added to the card and to SKILL_IDS.
+  if (["gspc-board", "east-west-crosswalk", "benchmark-quality-register", "x402-discovery", "estate-index"].includes(skill)) {
     return Object.keys(input).length === 0 ? null : `${skill} input must be an empty object`;
   }
   if (skill === "measured-badge") {
@@ -489,6 +493,13 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
       break;
     case "x402-discovery":
       path = "/api/x402";
+      break;
+    // The estate census. /api/state is the whole state surface, so the handler below returns the
+    // source as-is; a caller wanting only the census reads .estate_index from it. The full index
+    // is deliberately NOT served here: 7,940 rows do not belong in a message payload, and the
+    // artefact URL plus its OpenTimestamps proof are named on the card.
+    case "estate-index":
+      path = "/api/state";
       break;
   }
   const result = await fetchJsonSource(origin, path, { method, body });
