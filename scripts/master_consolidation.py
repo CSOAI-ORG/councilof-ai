@@ -101,6 +101,8 @@ def _proofs(repo_rows, ots_state, card_verify):
          ("n", "n_measured", "n_unmeasured", "n_uncheckable", "as_of", "honesty")),
         ("swift_cohort", "public/interop/swift-measure.json",
          ("n", "status_all", "as_of", "url_provenance", "sig_status", "honesty")),
+        ("x402_doors", "public/interop/x402-door-census-2026-09-16.json",
+         ("n", "as_of", "discovery", "doors_whose_challenge_a_stdlib_client_never_receives")),
         ("stablecoin_corpus", "public/interop/stablecoin-corpus-index-2026-09-16.json",
          ("universe_asset_count", "assets_with_at_least_one_measured_deployment",
           "still_unmeasured", "as_of", "not_a_supply_total")),
@@ -147,10 +149,16 @@ def main():
         add("github","repository","CSOAI-ORG/"+r["name"],sha256b(canon(rec)),"record_leaf",
             visibility=r["visibility"],url=r.get("url"))
     kp=d/"kaggle.json"
+    kv={x["ref"]: x for x in json.loads((d/"kaggle_view.json").read_text())} if (d/"kaggle_view.json").exists() else {}
     if kp.exists():
         for r in json.loads(kp.read_text()):
-            rec={"surface":"kaggle","kind":"dataset","id":r.get("ref"),"total_bytes":r.get("totalBytes")}
-            add("kaggle","dataset",r.get("ref"),sha256b(canon(rec)),"record_leaf",title=r.get("title"))
+            ref=r.get("ref"); v=kv.get(ref, {})
+            rec={"surface":"kaggle","kind":"dataset","id":ref,"total_bytes":r.get("totalBytes"),
+                 "version":v.get("versionNumber"),"licence":v.get("licenseName")}
+            add("kaggle","dataset",ref,sha256b(canon(rec)),"record_leaf",title=r.get("title"),
+                version=v.get("versionNumber"),licence=v.get("licenseName"),
+                licence_note=("The licence is this dataset's own, read from Kaggle. Licences differ by "
+                              "artifact across this estate and are never stated once for all of it."))
     op=d/"oracle.json"
     if op.exists():
         for r in json.loads(op.read_text()):
