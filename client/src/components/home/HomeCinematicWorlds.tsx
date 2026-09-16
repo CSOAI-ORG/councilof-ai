@@ -3,11 +3,14 @@
  *
  * MERGE CONTRACT. Living GET /api/gspc is totals.public_count. Jail is MEASURED,
  * TIE stays TIE. No 22/22, Six-axis, Dunder Mifflin, bought ranks, or pip install csoai.
+ *
+ * NO COUNT HERE. The homepage prints totals.public_count exactly once, on HomeGspcTable.
+ * The OS card used to print a second copy through its own useBoardCount fetch
+ * (2026-09-16); the card now describes the door and the board above carries the number.
  */
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { VideoEmbed } from "@/components/scrollworld";
-import { useBoardCount } from "@/lib/boardCount";
 
 export const CINEMATIC_VIDEO = {
   coliseum: "/videos/csoai-coliseum-plunge.mp4",
@@ -140,7 +143,7 @@ function WorldMedia({ world }: { world: World }) {
   );
 }
 
-function WorldCard({ world, count }: { world: World; count: string }) {
+function WorldCard({ world }: { world: World }) {
   return (
     <article
       id={`world-${world.id}`}
@@ -154,14 +157,6 @@ function WorldCard({ world, count }: { world: World; count: string }) {
           {world.headline}
         </h3>
         <p className="mt-3 text-[15px] leading-relaxed text-slate-600">{world.lede}</p>
-        {world.id === "os" && (
-          <p className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-950">
-            {count}
-            <span className="mt-0.5 block text-[11px] font-medium text-emerald-800/70">
-              living from GET /api/gspc
-            </span>
-          </p>
-        )}
         <ul className="mt-4 space-y-2 text-[14px] leading-relaxed text-slate-700">
           {world.takeaways.map((t) => (
             <li key={t} className="flex items-start gap-2">
@@ -192,7 +187,6 @@ function WorldCard({ world, count }: { world: World; count: string }) {
 }
 
 export default function HomeCinematicWorlds() {
-  const board = useBoardCount();
   return (
     <section id="worlds" aria-labelledby="worlds-h" className="border-t border-slate-200 bg-slate-50 py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -202,11 +196,11 @@ export default function HomeCinematicWorlds() {
         </h2>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
           Three landscape films, one row. Until the file is on the path, you see the still.
-          Counts stay living. Empty stays empty.
+          The count line lives on the board above. Empty stays empty.
         </p>
         <div className="mt-14 grid gap-8 lg:grid-cols-3 lg:gap-7">
           {WORLDS.map((w) => (
-            <WorldCard key={w.id} world={w} count={board.public_count} />
+            <WorldCard key={w.id} world={w} />
           ))}
         </div>
       </div>

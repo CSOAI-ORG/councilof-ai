@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { mcpRpc } from "@/lib/mcpHttp";
+import { loadGspcBoard } from "@/components/board/useGspcBoard";
 
 /**
  * EstateDoors — the honest doors strip (B1.2, CSOAI_FRONTEND_REACH_AGENTS).
@@ -46,11 +47,12 @@ export default function EstateDoors() {
   useEffect(() => {
     const ac = new AbortController();
 
-    fetch("/api/gspc", { signal: ac.signal, headers: { accept: "application/json" } })
-      .then(async (r) => {
-        if (!r.ok) return setBoard({ label: `HTTP ${r.status}`, detail: "board not readable this load", tone: "warn" });
-        if (!isJson(r)) return setBoard(HTML_ANSWERED);
-        const d = await r.json().catch(() => ({}));
+    // The board door reads through the shared loader (one GET /api/gspc per page,
+    // shared with every other board surface) instead of a second private fetch.
+    // The loader already refuses an HTML answer and reports the HTTP status in its
+    // error message, so the same three door states are printed from that message.
+    loadGspcBoard()
+      .then((d) => {
         const count = typeof d?.totals?.public_count === "string" ? d.totals.public_count : null;
         setBoard(
           count
@@ -58,7 +60,14 @@ export default function EstateDoors() {
             : HTML_ANSWERED,
         );
       })
-      .catch(() => !ac.signal.aborted && setBoard({ label: "UNREACHABLE", detail: "GET /api/gspc did not answer", tone: "warn" }));
+      .catch((e: unknown) => {
+        if (ac.signal.aborted) return;
+        const msg = e instanceof Error ? e.message : String(e);
+        const http = /HTTP (\d{3})/.exec(msg);
+        if (http) return setBoard({ label: `HTTP ${http[1]}`, detail: "board not readable this load", tone: "warn" });
+        if (/HTML|not JSON/i.test(msg)) return setBoard(HTML_ANSWERED);
+        setBoard({ label: "UNREACHABLE", detail: "GET /api/gspc did not answer", tone: "warn" });
+      });
 
     fetch("/root.json", { signal: ac.signal, headers: { accept: "application/json" } })
       .then(async (r) => {

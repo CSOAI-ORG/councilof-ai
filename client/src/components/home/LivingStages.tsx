@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { RotatingHighlight } from "../type/RotatingHighlight";
 import { SECTION_TITLES } from "../type/sectionTitles";
 import { VideoEmbed } from "@/components/scrollworld";
-import FooterVerifyStrip from "../FooterVerifyStrip";
+import { useGspcBoard } from "@/components/board/useGspcBoard";
 import { ANCHORING_CLAIM } from "../../data/anchoringClaim";
 
 /**
@@ -38,6 +38,17 @@ import { ANCHORING_CLAIM } from "../../data/anchoringClaim";
  * /api/regulation. A count renders ONLY once its payload has landed — the
  * prerendered snapshot therefore carries no figure at all rather than a stale one,
  * and no heading is ever left holding a placeholder dash.
+ *
+ * ONE COUNT LINE PER PAGE. The board read is the shared useGspcBoard hook (one
+ * GET /api/gspc per page, shared with HomeGspcTable). The "N measured of M slots"
+ * sentence this band used to print was the fourth copy of totals.public_count on
+ * the homepage (2026-09-16); the one count line is HomeGspcTable's. This band keeps
+ * the occupancy schematic, the jail n and the REPORTED human figures — none of
+ * which is a count line.
+ *
+ * ONE VERIFY STRIP PER PAGE. FooterVerifyStrip is site chrome (Footer.tsx, every
+ * route). VerifyYourself used to mount a second copy, so the homepage carried the
+ * same twelve badges twice. It now points at the footer instead.
  */
 
 /* ─── live data ─────────────────────────────────────────────── */
@@ -61,20 +72,6 @@ function useJson<T>(url: string): T | null {
   return data;
 }
 
-type GspcTotals = {
-  axes?: number;
-  measured_axes?: number;
-  quotable_axes?: number;
-  public_count?: string;
-  items?: number;
-  separated_leads?: number;
-  ties?: number;
-};
-type Gspc = {
-  measured_on?: { date?: string; model?: string };
-  totals?: GspcTotals;
-  axes?: { axis?: string; status?: string; n?: number }[];
-};
 type Corrections = { corrections?: { id: string; date: string; what_was_wrong: string }[] };
 type Reported = { count?: number; entries?: { id: string; claim: string; source: string; as_of?: string }[] };
 type RegFeed = {
@@ -409,7 +406,10 @@ function VerifyYourself() {
             ))}
           </ol>
 
-          <FooterVerifyStrip />
+          <p className="text-[14px] leading-relaxed text-gray-600">
+            The public records that let you check us — source, packages, DOI, company register,
+            trust root — are linked once, in the footer of every page.
+          </p>
         </div>
 
         <div className="mt-10 max-w-3xl rounded-2xl border border-emerald-200/70 bg-emerald-50/50 px-5 py-4">
@@ -556,13 +556,14 @@ function LivingLaw() {
 /* ─── 6 · the live board, with humans beside it ───────────────────────── */
 
 function LiveBoard() {
-  const gspc = useJson<Gspc>("/api/gspc");
+  const { data: gspc } = useGspcBoard();
   const reported = useJson<Reported>("/api/reported");
 
   const totals = gspc?.totals;
   const measured = totals?.measured_axes;
   const slots = totals?.axes;
-  const stamp = gspc?.measured_on?.date;
+  const stampRaw = (gspc?.measured_on as { date?: unknown } | undefined)?.date;
+  const stamp = typeof stampRaw === "string" ? stampRaw : undefined;
   const jail = gspc?.axes?.find((a) => a.axis === "jail");
   const humans = (reported?.entries ?? []).slice(0, 3);
 
@@ -586,17 +587,13 @@ function LiveBoard() {
         live from <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/gspc</code> — we
         do not type numbers into the page, because a typed number is the first thing to go stale.
       </Body>
-      {measured != null && slots != null ? (
-        <p className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50/80 px-5 py-4 text-lg font-black tracking-tight text-emerald-900">
-          {measured} measured of {slots} slots
-          <span className="ml-2 text-sm font-semibold text-emerald-700">live from GET /api/gspc</span>
-        </p>
-      ) : (
-        <p className="mt-6 rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm font-semibold text-gray-500">
-          Reading the live board from GET /api/gspc. No count is printed here until the payload
-          arrives — we would rather show nothing than a number that has gone stale.
-        </p>
-      )}
+      <p className="mt-6 text-[15px] leading-relaxed text-gray-700">
+        The count line is printed once on this page, on{" "}
+        <a href="#measurements" className="font-semibold text-emerald-800 underline underline-offset-4">
+          the living board
+        </a>{" "}
+        above, straight off totals.public_count.
+      </p>
       <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
         The last slot is jail, containment: whether a model can be talked out of its own guardrails.
         It is measured{jail?.n ? ` on ${jail.n} gold cells` : ""}, on a smaller fleet than the rest of
