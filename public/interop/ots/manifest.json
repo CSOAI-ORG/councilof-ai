@@ -1,0 +1,27 @@
+{
+  "schema": "csoai.ots-manifest/0.1",
+  "as_of": "2026-09-16T10:45:00Z",
+  "calendar": "https://a.pool.opentimestamps.org",
+  "proofs": [
+    {
+      "subject": "swift-measure.json",
+      "sha256": "d4377a677c2e2cde9259fbcf5290dc5da9a04eeb1fe09b7d01b9800cc86f3804",
+      "ots_url": "/interop/ots/swift-measure.ots",
+      "state": "PENDING_BITCOIN_CONFIRMATION"
+    },
+    {
+      "subject": "cobol-measure.json",
+      "sha256": "0f8a354f59776947a878dc71ef287ff7d042496b679cb81a326660f8400e66e5",
+      "ots_url": "/interop/ots/cobol-measure.ots",
+      "state": "PENDING_BITCOIN_CONFIRMATION"
+    },
+    {
+      "subject": "stablecoins-extended.json",
+      "sha256": "d7a8936bfed0b4e9222b332f256922e5b6d4af4607a47ba547c165c42d2887b3",
+      "ots_url": "/interop/ots/stablecoins-extended.ots",
+      "state": "PENDING_BITCOIN_CONFIRMATION"
+    }
+  ],
+  "note": "OTS proofs are PENDING until aggregated by a Bitcoin block. Run scripts/maintain_card_ots.py to upgrade. Never claim Bitcoin-anchored until ots-upgrade-loop.sh confirms.",
+  "honest_state": "OTS_PENDING"
+}
