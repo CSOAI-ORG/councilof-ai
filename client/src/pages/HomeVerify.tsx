@@ -14,7 +14,6 @@ import HomeCinematicWorlds from "@/components/home/HomeCinematicWorlds";
 import HomeGspcTable from "@/components/home/HomeGspcTable";
 import HomeUnderstand from "@/components/home/HomeUnderstand";
 import HomeEvidenceShowcase from "@/components/home/HomeEvidenceShowcase";
-import HomeFirstResult from "@/components/home/HomeFirstResult";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
 
@@ -57,35 +56,12 @@ export default function HomeVerify() {
   return (
     <div data-testid="home-verify">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
-      {/* FIRST SCREEN — the proposition, one evidence action, the scope note and ONE
-          inspectable result, before any atmosphere. Measured 2026-09-15 before this
-          change: the first h1 began at y=773 (1440x900) / y=800 (390x844), below a
-          rotating band. The band still ships, second. */}
-      <section
-        aria-labelledby="home-h1"
-        data-testid="home-proposition"
-        className="mx-auto max-w-6xl px-4 pb-12 pt-10 sm:pt-16"
-      >
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">Independent measurement body</p>
-        <h1 id="home-h1" className="mt-3 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
-          Independent measurements. Evidence you can check.
-        </h1>
-        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
-          Explore published results for AI systems, agents and digital assets. See the method, date
-          and limits; verify signed records where available.
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <a href="#measurements" className="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800" data-testid="home-cta-explore">
-            Explore evidence
-          </a>
-          <Link href="/gspc-verify" className="rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50" data-testid="home-cta-verify">
-            Verify a record
-          </Link>
-        </div>
-        <p className="mt-4 text-sm text-slate-600">Measurement, not certification. Public verification is free.</p>
-        <HomeFirstResult />
-      </section>
-
+      {/* The first-screen proposition block and HomeFirstResult were removed on 2026-09-16 at the
+          owner's instruction. HomeFirstResult was rendering "No result could be read live" on the
+          home page when its fetch did not return: an empty failure state on the first screen is
+          worse than no block at all, because a reader cannot tell a broken page from an estate
+          with nothing to show. The board table below is the first thing now, and it reads its
+          counts live from /api/gspc. */}
       <HeroSlides />
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:py-24" style={{ paddingBottom: "calc(6rem + var(--cookie-banner-h, 0px))" }}>

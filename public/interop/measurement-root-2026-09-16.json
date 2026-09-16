@@ -1,0 +1,241 @@
+{
+  "schema": "csoai.measurement-root/0.1",
+  "kind": "merkle-root-unsigned",
+  "as_of": "2026-09-16T13:49:25Z",
+  "merkle_root": "c216823239f1a233fedea8d09d420a5262be0a1fcd2bb11085f2c82f7021342a",
+  "n_leaves": 10,
+  "leaf_rule": "sha256 of the file's exact bytes",
+  "tree_rule": "leaves sorted by their own hash; pairs hashed in order as sha256(left||right) over raw 32-byte digests; an odd node is carried up unchanged and never duplicated",
+  "all_inclusion_proofs_verify": true,
+  "signed": false,
+  "signature_state": "UNSIGNED \u2014 no Ed25519 signature exists over this root",
+  "rekor_state": "NOT_WITNESSED \u2014 the public-root witness uploads the preimage, its signature and the board public key; with no signature there is nothing to upload. Signing the root with any other key we hold would misrepresent who attested it.",
+  "what_inclusion_proves": "that these exact bytes were in this set when the root was stamped, and nothing else: not that a measurement is correct, not who produced it, and not that the set is complete",
+  "not_the_public_root": "public/root.json and the card roots commit to SIGNED artifacts. This root is a separate, unsigned commitment over deterministic-facts artifacts.",
+  "entries": [
+    {
+      "path": "public/interop/stablecoin-onchain-supply-2026-09-16.json",
+      "bytes": 5775,
+      "leaf_sha256": "0e4a34a1212b208ad2976f5c1b49d072774be8f1a359a989e64b5454c4f6315d",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "15900afe646981dfb492355994cbb1562facc46428c0970cb3b0706bb411be18"
+        },
+        {
+          "side": "right",
+          "hash": "00901eb88c249a95cbcacb32523e2c4ef4136af41d314feab75dfd5d04c56ed9"
+        },
+        {
+          "side": "right",
+          "hash": "4b033996541dfd3c92d0dae795b8beca2fc0f581d73a6df3f8344ecb37758128"
+        },
+        {
+          "side": "right",
+          "hash": "8e5867f178761e066e15cacef833546385b05ace4d98361758038c5521837939"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "public/interop/cobol-measure.json",
+      "bytes": 4382,
+      "leaf_sha256": "15900afe646981dfb492355994cbb1562facc46428c0970cb3b0706bb411be18",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "0e4a34a1212b208ad2976f5c1b49d072774be8f1a359a989e64b5454c4f6315d"
+        },
+        {
+          "side": "right",
+          "hash": "00901eb88c249a95cbcacb32523e2c4ef4136af41d314feab75dfd5d04c56ed9"
+        },
+        {
+          "side": "right",
+          "hash": "4b033996541dfd3c92d0dae795b8beca2fc0f581d73a6df3f8344ecb37758128"
+        },
+        {
+          "side": "right",
+          "hash": "8e5867f178761e066e15cacef833546385b05ace4d98361758038c5521837939"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "public/interop/stablecoin-solana-supply-2026-09-16.json",
+      "bytes": 16160,
+      "leaf_sha256": "182cb502c7e189839c016d52a72f8d07d7a121ccaec376d3605e6df56c9ae957",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "2ca0a8d223749a7fc7045552e9b4aed626a485c3f4eaf6d2f321f068710d337b"
+        },
+        {
+          "side": "left",
+          "hash": "869001b53a1e16d691abf9bc5b9c8e3d1b7408884a17d1d69a5398b44efe2197"
+        },
+        {
+          "side": "right",
+          "hash": "4b033996541dfd3c92d0dae795b8beca2fc0f581d73a6df3f8344ecb37758128"
+        },
+        {
+          "side": "right",
+          "hash": "8e5867f178761e066e15cacef833546385b05ace4d98361758038c5521837939"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "measurement/instrument/token-budget-2026-09-16.json",
+      "bytes": 2376,
+      "leaf_sha256": "2ca0a8d223749a7fc7045552e9b4aed626a485c3f4eaf6d2f321f068710d337b",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "182cb502c7e189839c016d52a72f8d07d7a121ccaec376d3605e6df56c9ae957"
+        },
+        {
+          "side": "left",
+          "hash": "869001b53a1e16d691abf9bc5b9c8e3d1b7408884a17d1d69a5398b44efe2197"
+        },
+        {
+          "side": "right",
+          "hash": "4b033996541dfd3c92d0dae795b8beca2fc0f581d73a6df3f8344ecb37758128"
+        },
+        {
+          "side": "right",
+          "hash": "8e5867f178761e066e15cacef833546385b05ace4d98361758038c5521837939"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "public/interop/x402-door-census-2026-09-16.json",
+      "bytes": 7204,
+      "leaf_sha256": "3edc0fcfa821290a7e06f58c17e24672cb18ea12adf3151bb21b123edaa948ec",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "3fe5971517c5ad2135fb9ce960c67b2f020fcb7429505d9323fdd5d90bfdabe7"
+        },
+        {
+          "side": "right",
+          "hash": "c9dd4e072ec36b72dbfc0de504b35c818702bb4aa747b213a1765a22f17e3c44"
+        },
+        {
+          "side": "left",
+          "hash": "adaafb5716de92d318f006e646a1cc79c535caad4e0d60c7d7f8a09521258a95"
+        },
+        {
+          "side": "right",
+          "hash": "8e5867f178761e066e15cacef833546385b05ace4d98361758038c5521837939"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "public/interop/stablecoin-corpus-index-2026-09-16.json",
+      "bytes": 1666,
+      "leaf_sha256": "3fe5971517c5ad2135fb9ce960c67b2f020fcb7429505d9323fdd5d90bfdabe7",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "3edc0fcfa821290a7e06f58c17e24672cb18ea12adf3151bb21b123edaa948ec"
+        },
+        {
+          "side": "right",
+          "hash": "c9dd4e072ec36b72dbfc0de504b35c818702bb4aa747b213a1765a22f17e3c44"
+        },
+        {
+          "side": "left",
+          "hash": "adaafb5716de92d318f006e646a1cc79c535caad4e0d60c7d7f8a09521258a95"
+        },
+        {
+          "side": "right",
+          "hash": "8e5867f178761e066e15cacef833546385b05ace4d98361758038c5521837939"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "public/interop/stablecoins-extended.json",
+      "bytes": 12928,
+      "leaf_sha256": "752175b2c55d689e8d847429e538dd9b3d62b6bc1d56957599a254e3d7a8e8f4",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "92cfe969795947d14b3c43adb34c44cee95f971c33193b0a5c35ad5b3ac08ebc"
+        },
+        {
+          "side": "left",
+          "hash": "7dc896de4e2540e69d704d769282611851e5982008bde9124e9cfb7a2e5332cf"
+        },
+        {
+          "side": "left",
+          "hash": "adaafb5716de92d318f006e646a1cc79c535caad4e0d60c7d7f8a09521258a95"
+        },
+        {
+          "side": "right",
+          "hash": "8e5867f178761e066e15cacef833546385b05ace4d98361758038c5521837939"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "public/interop/stablecoin-universe-supply-2026-09-16.json",
+      "bytes": 324968,
+      "leaf_sha256": "92cfe969795947d14b3c43adb34c44cee95f971c33193b0a5c35ad5b3ac08ebc",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "752175b2c55d689e8d847429e538dd9b3d62b6bc1d56957599a254e3d7a8e8f4"
+        },
+        {
+          "side": "left",
+          "hash": "7dc896de4e2540e69d704d769282611851e5982008bde9124e9cfb7a2e5332cf"
+        },
+        {
+          "side": "left",
+          "hash": "adaafb5716de92d318f006e646a1cc79c535caad4e0d60c7d7f8a09521258a95"
+        },
+        {
+          "side": "right",
+          "hash": "8e5867f178761e066e15cacef833546385b05ace4d98361758038c5521837939"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "public/interop/xrpl-supply-2026-09-16.json",
+      "bytes": 10159,
+      "leaf_sha256": "9bbb3ba0285697dfe629c3bea994a004d9292a6a91b1e33723d53ad8e41cf3cd",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "b3e60c34913da667ca8ad35968ae47d23db4f2a19aa1156f16cfe4f54b1721e3"
+        },
+        {
+          "side": "left",
+          "hash": "a8ea30a5edb7a2cdc482ce4bb72cc9c3c8f36a74499a6e352684c19390c484fd"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "public/interop/swift-measure.json",
+      "bytes": 11758,
+      "leaf_sha256": "b3e60c34913da667ca8ad35968ae47d23db4f2a19aa1156f16cfe4f54b1721e3",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "9bbb3ba0285697dfe629c3bea994a004d9292a6a91b1e33723d53ad8e41cf3cd"
+        },
+        {
+          "side": "left",
+          "hash": "a8ea30a5edb7a2cdc482ce4bb72cc9c3c8f36a74499a6e352684c19390c484fd"
+        }
+      ],
+      "proof_verifies": true
+    }
+  ]
+}

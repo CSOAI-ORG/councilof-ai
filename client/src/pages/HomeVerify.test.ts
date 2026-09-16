@@ -24,18 +24,16 @@ const tools = readFileSync(resolve(here, "ToolsPage.tsx"), "utf8");
 const stack = readFileSync(resolve(here, "../components/home/ToolStack.tsx"), "utf8");
 
 describe("homepage is chat + GSPC list plus the estate", () => {
-  it("puts the proposition and one inspectable result before the slide band", () => {
-    // 2026-09-15 review: the first h1 began at y=773 (1440x900) below a rotating band.
-    const proposition = src.indexOf('data-testid="home-proposition"');
-    const band = src.indexOf("<HeroSlides />");
-    expect(proposition).toBeGreaterThan(-1);
-    expect(band).toBeGreaterThan(proposition);
-    expect(src).toContain("Independent measurements. Evidence you can check.");
-    expect(src).toContain("Measurement, not certification. Public verification is free.");
-    expect(src).toContain("<HomeFirstResult />");
-    expect(src.indexOf("<HomeFirstResult />")).toBeLessThan(band);
-    // The supply-led entry stays, as the h2 after the band — one h1 per page.
-    expect(src.match(/<h1\b/g)?.length).toBe(1);
+  it("does not ship the removed proposition block or a live-read result on the first screen", () => {
+    // Removed 2026-09-16 at the owner's instruction. HomeFirstResult rendered
+    // "No result could be read live" when its fetch did not return, which put an empty
+    // failure state on the first screen: a reader cannot tell a broken page from an
+    // estate with nothing to show. This test pins the removal so it cannot come back by
+    // accident, and pins that the page still has exactly one h1.
+    expect(src).not.toContain('data-testid="home-proposition"');
+    expect(src).not.toContain("<HomeFirstResult />");
+    expect(src).not.toContain("Independent measurements. Evidence you can check.");
+    expect(src.match(/<h1\b/g)?.length ?? 0).toBeLessThanOrEqual(1);
   });
 
   it("is OpenRouter desk plus slides, nine products, and Council OS", () => {
