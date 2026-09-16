@@ -49,3 +49,29 @@ alive() { ps -eo pid,args | grep -v grep | grep -q -- "$1"; }
 pids_of() { ps -eo pid,args | grep -v grep | grep -- "$1" | awk '{print $1}'; }
 
 disk_free_gb() { df -BG --output=avail "$1" | tail -1 | tr -dc '0-9'; }
+
+# ---- pod chain (land → sign → root → ots; scripts land.sh sign.sh root.sh ots.sh) -----------
+# chain_repo  -> the checkout the chain reads and writes (CHAIN_REPO overrides $REPO).
+chain_repo() { echo "${CHAIN_REPO:-$REPO}"; }
+# chain_dry   -> 0 (true) when DRY_RUN=1: print what would run, write nothing, stamp nothing.
+chain_dry() { [ "${DRY_RUN:-0}" = "1" ]; }
+# chain_log <stage> <inputs_count> <outputs_count> <sha256-of-outputs-list> <cmd...>
+#   ONE line per run in $LOGS/chain.log: "<utc> <stage> <in> <out> <sha> <cmd>". The sha is
+#   chain_tools.py new's digest over the "sha256  path" lines this run produced (content-
+#   bound), so two machines producing identical bytes log identical digests. A dry run logs
+#   stage "<stage>[dry]" with "-" for the sha. A stage with nothing to do still logs: no line
+#   in chain.log means the stage never ran (silent-no-op doctrine).
+chain_log() {
+  local stage=$1 nin=$2 nout=$3 sha=$4; shift 4
+  local line="$(now) $stage $nin $nout $sha $*"
+  echo "$line" >> "$LOGS/chain.log"; echo "$line"
+}
+# chain_slot <name> [--now]  -> proceed (0) or already done this UTC hour (1). --now and
+#   DRY_RUN bypass the stamp; the scheduler passes --now because it stamps before spawning.
+chain_slot() {
+  local name=$1 flag=${2:-}
+  if chain_dry || [ "$flag" = "--now" ]; then return 0; fi
+  stamp "chain-$name" hour
+}
+# chain_tools.py sits beside THIS file (the repo's scripts/pod-loops or the pod's $LOOPS install).
+CHAIN_TOOLS=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/chain_tools.py

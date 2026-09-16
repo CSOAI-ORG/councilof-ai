@@ -13,6 +13,12 @@
 #   05:00Z         hubcard-refresh.sh       logs/hubcard-refresh.log
 #   05:30Z         hf_upload.py --flush     logs/hf-flush.log   (pushes anything queued while no token existed)
 #
+#   pod chain — OFF unless CHAIN_ENABLED=1 is in this scheduler's environment (owner flips it):
+#   hourly  :15    land.sh                  logs/chain.log + logs/land.log
+#   hourly  :25    sign.sh                  logs/chain.log + logs/sign.log   (needs $LANES/.secrets/board-sign-key.pkcs8.b64)
+#   hourly  :35    root.sh                  logs/chain.log + logs/root.log
+#   hourly  :45    ots.sh                   logs/chain.log + logs/ots.log
+#
 # A daily job is "due" for the whole hour after its start minute, so a scheduler that was down at
 # 03:00 and back at 03:40 still runs it once that day. Jobs run in the background so a slow census
 # never delays the watchdog.
@@ -38,5 +44,15 @@ while true; do
   if due 04 00 && stamp revenue-snapshot;    then nohup bash "$LOOPS/revenue-snapshot.sh" --now 8>&- >/dev/null 2>&1 & fi
   if due 05 00 && stamp hubcard-refresh;     then nohup bash "$LOOPS/hubcard-refresh.sh" --now 8>&- >/dev/null 2>&1 & fi
   if due 05 30 && stamp hf-flush;            then (exec 8>&-; python3 "$LOOPS/hf_upload.py" --flush 2>&1 | while read -r l; do log hf-flush "$l"; done) & fi
+  # Pod chain: land → sign → root → ots, one slot each per UTC hour. Default OFF — deploying
+  # these scripts changes nothing until the owner exports CHAIN_ENABLED=1 for this process.
+  # The stamp is taken here (like the daily jobs), so a slot fires at most once per hour even
+  # across a restart; each script gets --now and appends its own line to logs/chain.log.
+  if [ "${CHAIN_ENABLED:-0}" = "1" ]; then
+    if [ "${M#0}" -ge 15 ] && stamp chain-land hour; then nohup bash "$LOOPS/land.sh" --now 8>&- >>"$LOGS/land.log" 2>&1 & fi
+    if [ "${M#0}" -ge 25 ] && stamp chain-sign hour; then nohup bash "$LOOPS/sign.sh" --now 8>&- >>"$LOGS/sign.log" 2>&1 & fi
+    if [ "${M#0}" -ge 35 ] && stamp chain-root hour; then nohup bash "$LOOPS/root.sh" --now 8>&- >>"$LOGS/root.log" 2>&1 & fi
+    if [ "${M#0}" -ge 45 ] && stamp chain-ots hour;  then nohup bash "$LOOPS/ots.sh"  --now 8>&- >>"$LOGS/ots.log"  2>&1 & fi
+  fi
   sleep 60 8>&-
 done
