@@ -1,13 +1,9 @@
-import { useEffect } from "react";
 
 /**
  * Marketing door. No free trial, no public prices, no certificate.
  * AG UI / Home is /os?lobby=home. Get measured is /assess.
  */
 export default function MarketingHome() {
-  useEffect(() => {
-    document.title = "Council of AI — we measure, we sign, we re-attest";
-  }, []);
   return (
     <div className="min-h-screen bg-white">
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">

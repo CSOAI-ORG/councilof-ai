@@ -1,13 +1,9 @@
-import { useEffect } from "react";
 
 /**
  * Horus door. No competitor rate card, no public prices, no certificate.
  * Get measured is /assess. Enterprise is the lobby door.
  */
 export default function HorusIntel() {
-  useEffect(() => {
-    document.title = "Council of AI — we measure, we sign, we re-attest";
-  }, []);
   return (
     <div className="min-h-screen bg-white">
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
