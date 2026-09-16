@@ -44,7 +44,7 @@
       "numeric_field": "totals.axes",
       "measured_numeric_field": "totals.measured_axes",
       "gspc_family_axes": 14,
-      "gspc_family_note": "The behavioural family's own size, 14, recorded so the gate can recognise the historical measurement stamp '13 canonical axes · jail' as a breakdown of THAT family rather than a competing claim about the 22-axis board. Not a public count — quote totals.public_count.",
+      "gspc_family_note": "The behavioural family's own size, 14, recorded so the gate can recognise the historical measurement stamp '13 canonical axes · jail' as a breakdown of THAT family rather than a competing claim about the GSPC board. Not a public count — quote totals.public_count.",
       "field_note": "TWO fields, deliberately. totals.public_count is the SENTENCE a surface quotes; totals.axes is the INTEGER the gate compares against. They are not interchangeable: public_count is a string, and a numeric comparison against it is a type error waiting to be noticed. Until 2026-08-26 the gate read totals.axes while this file declared public_count as the authority — masked only because both happened to yield 14. Both are now named for what they are.",
       "grammar_warning": "The two numbers still mean different things — 22 counts SLOTS on the board and measured_axes counts slots with a run behind them — but they now coincide: every one of the 22 slots carries a measurement, so measured_axes is 22 and 0 slots are declared-but-unmeasured. Quoting '22 measured' asserts no measurement that does not exist. Quote totals.public_count, which still carries both numbers."
     },
@@ -52,8 +52,9 @@
       "status": "live",
       "public_claim": true,
       "authority": "Owner ruling 2026-08-24, csoai-static-deploy2 commit 2bdbac34986333f6de992fcd76cb08aa3e19d1cf; recorded in council-os/ADR-001-axis-count.md. Backed on the wire by GET /api/gspc -> totals.axes == 22 and totals.measured_axes == 22 after the sweep of 2026-08-26 wired the axes in and the later measurement sweep measured every remaining slot.",
-      "note": "'22' is a count of AXES ON THE BOARD, and every one of them now carries a measurement. 14 GSPC behavioural axes + 8 financial/domain axes; 22 of the 22 carry a run and 0 remain declared-but-unmeasured.",
-      "correct_forms": [
+      "note": "'22' is the MEASURED count. Since ADR-002 (2026-09-16) the board carries 23 slots: 14 GSPC behavioural + 8 financial/domain + 1 declared slot (effect-binding, UNMEASURED, n 0). 22 of the 23 carry a run. The gate never reads this block for a number; it reads numeric_field / measured_numeric_field off the live endpoint. This prose is documentation and was last true-as-written on 2026-09-01.",
+      "correct_forms_note": "HISTORICAL. Forms below were correct 2026-09-01 to 2026-09-15 (22 slots, 22 measured). From ADR-002 (2026-09-16) the correct form is the live totals.public_count sentence, which reads 23 axis \u00b7 22 measured; \"22 axes \u00b7 22 measured\" is now a wrong SLOT count.",
+  "correct_forms": [
         "22 axes · 22 measured",
         "22 axes, 22 of them measured",
         "22 measured axes of 22 on the board"
