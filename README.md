@@ -144,6 +144,28 @@ The board and verification stay free. Metered artefacts (issuance, evidence asse
 - Manifest: https://councilof.ai/.well-known/x402.json
 - MCP: https://councilof.ai/mcp (`commission_card` and the other paid tools return a 402 as `structuredContent` until paid)
 
+### Verified week-one revenue (PayAI bazaar, 2026-09-16)
+
+| Metric | Value |
+|--------|------:|
+| External USDC settled | $0.02 |
+| Distinct external payers | 1 (paid), 10+ (free-door) |
+| Issuances | 8 |
+| CSOAI /api/free-door settlements/30d | 18 |
+| CSOAI uptime | 100% |
+| csoai-gspc-mcp npm downloads (last-month) | 776 |
+
+Source: `GET https://councilof.ai/api/revenue` and PayAI bazaar stats.
+
+### Buyer integration guides
+
+- Python (eth_account): https://github.com/CSOAI-ORG/csoai-x402-buyer-guide
+- TypeScript (viem): https://github.com/CSOAI-ORG/csoai-x402-typescript-example
+- Revenue catalog: https://github.com/CSOAI-ORG/csoai-x402-revenue
+- Week-one report: https://github.com/CSOAI-ORG/csoai-blog-x402-revenue
+
+Network: Base (eip155:8453) · Asset: USDC · Pay-to: 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 · Promo $0.01 until 2026-10-11.
+
 ## Documentation
 
 - [Measurement body overview](https://councilof.ai/about/)
