@@ -1,0 +1,276 @@
+{
+  "schema": "csoai.xrpl-supply/0.1",
+  "kind": "deterministic-facts",
+  "as_of": "2026-09-16T11:06:53Z",
+  "source": "XRPL public JSON-RPC, gateway_balances, validated ledger",
+  "n": 16,
+  "n_measured": 16,
+  "n_unmeasured": 0,
+  "n_uncheckable": 0,
+  "writes_board": false,
+  "honesty": "Obligations are what the issuing account owes on the XRP Ledger at the named validated ledger: that is the issued supply, and nothing more. It is not a reserve attestation, not a claim about backing, and not a grade.",
+  "rows": [
+    {
+      "symbol": "RLUSD",
+      "issuer": "Ripple",
+      "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023200,
+      "ledger_hash": "0532EFA536C6C0A5C09BB42C74585512A0F52E4DB6DC696B9DF103EF94E60C7F",
+      "obligations_all": {
+        "RLUSD": "999572573.51148"
+      },
+      "supply": "999572573.51148",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "RLUSD"
+    },
+    {
+      "symbol": "OUSG",
+      "issuer": "Ondo Finance",
+      "issuer_address": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023200,
+      "ledger_hash": "0532EFA536C6C0A5C09BB42C74585512A0F52E4DB6DC696B9DF103EF94E60C7F",
+      "obligations_all": {
+        "OUSG": "1639899.441472341"
+      },
+      "supply": "1639899.441472341",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "OUSG"
+    },
+    {
+      "symbol": "USDB",
+      "issuer": "Braza Bank",
+      "issuer_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023201,
+      "ledger_hash": "851647C7DDA48EA04CA3CAF5A4579C9CA6830C4D12ECE2179EC2D91604E6F494",
+      "obligations_all": {
+        "USDB": "29215604.75000001"
+      },
+      "supply": "29215604.75000001",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "USDB"
+    },
+    {
+      "symbol": "BBRL",
+      "issuer": "Braza Bank",
+      "issuer_address": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023201,
+      "ledger_hash": "851647C7DDA48EA04CA3CAF5A4579C9CA6830C4D12ECE2179EC2D91604E6F494",
+      "obligations_all": {
+        "BBRL": "83367488.07639077"
+      },
+      "supply": "83367488.07639077",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "BBRL"
+    },
+    {
+      "symbol": "EURCV",
+      "issuer": "Soci\u00e9t\u00e9 G\u00e9n\u00e9rale-FORGE",
+      "issuer_address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023201,
+      "ledger_hash": "851647C7DDA48EA04CA3CAF5A4579C9CA6830C4D12ECE2179EC2D91604E6F494",
+      "obligations_all": {
+        "EURCV": "10000000"
+      },
+      "supply": "10000000",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "EURCV"
+    },
+    {
+      "symbol": "USD.bs",
+      "issuer": "Bitstamp",
+      "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023201,
+      "ledger_hash": "851647C7DDA48EA04CA3CAF5A4579C9CA6830C4D12ECE2179EC2D91604E6F494",
+      "obligations_all": {
+        "AUD": "8692.124775162521",
+        "BTC": "325.8337698356414",
+        "CHF": "8999.899901060894",
+        "ETH": "382.7101861286041",
+        "EUR": "4960395.207720354",
+        "GBP": "2358.979490177198",
+        "JPY": "898766.5053091126",
+        "USD": "7992132.764208162"
+      },
+      "supply": "7992132.764208162",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "USD"
+    },
+    {
+      "symbol": "EUR.bs",
+      "issuer": "Bitstamp",
+      "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023201,
+      "ledger_hash": "851647C7DDA48EA04CA3CAF5A4579C9CA6830C4D12ECE2179EC2D91604E6F494",
+      "obligations_all": {
+        "AUD": "8692.124775162521",
+        "BTC": "325.8337698356414",
+        "CHF": "8999.899901060894",
+        "ETH": "382.7101861286041",
+        "EUR": "4960395.207720354",
+        "GBP": "2358.979490177198",
+        "JPY": "898766.5053091126",
+        "USD": "7992132.764208162"
+      },
+      "supply": "4960395.207720354",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "EUR"
+    },
+    {
+      "symbol": "USD.gh",
+      "issuer": "GateHub",
+      "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023201,
+      "ledger_hash": "851647C7DDA48EA04CA3CAF5A4579C9CA6830C4D12ECE2179EC2D91604E6F494",
+      "obligations_all": {
+        "EUR": "1646839.126603515",
+        "USD": "4937047.777878376"
+      },
+      "supply": "4937047.777878376",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "USD"
+    },
+    {
+      "symbol": "USDC",
+      "issuer": "Circle",
+      "issuer_address": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023202,
+      "ledger_hash": "493985F3BE97D1FAC71F5BA17547B91DC0D13640B6E63984610A6E71EA85FA07",
+      "obligations_all": {
+        "USDC": "5492586.008900765"
+      },
+      "supply": "5492586.008900765",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "USDC"
+    },
+    {
+      "symbol": "EUR.gh",
+      "issuer": "GateHub",
+      "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023201,
+      "ledger_hash": "851647C7DDA48EA04CA3CAF5A4579C9CA6830C4D12ECE2179EC2D91604E6F494",
+      "obligations_all": {
+        "EUR": "1646839.126603515",
+        "USD": "4937047.777878376"
+      },
+      "supply": "1646839.126603515",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "EUR"
+    },
+    {
+      "symbol": "EURQ",
+      "issuer": "Quantoz",
+      "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023202,
+      "ledger_hash": "493985F3BE97D1FAC71F5BA17547B91DC0D13640B6E63984610A6E71EA85FA07",
+      "obligations_all": {
+        "EURQ": "1000000",
+        "USDQ": "1000000"
+      },
+      "supply": "1000000",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "EURQ"
+    },
+    {
+      "symbol": "USDQ",
+      "issuer": "Quantoz",
+      "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023202,
+      "ledger_hash": "493985F3BE97D1FAC71F5BA17547B91DC0D13640B6E63984610A6E71EA85FA07",
+      "obligations_all": {
+        "EURQ": "1000000",
+        "USDQ": "1000000"
+      },
+      "supply": "1000000",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "USDQ"
+    },
+    {
+      "symbol": "EUR\u00d8P",
+      "issuer": "Schuman Financial",
+      "issuer_address": "rMkEuRii9w9uBMQDnWV5AA43gvYZR9JxVK",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "symbol_differs_from_ledger_code": {
+        "published_symbol": "EUR\u00d8P",
+        "ledger_currency_code": "EUROP"
+      },
+      "ledger_index": 107023202,
+      "ledger_hash": "493985F3BE97D1FAC71F5BA17547B91DC0D13640B6E63984610A6E71EA85FA07",
+      "obligations_all": {
+        "EUROP": "339459.2173202474"
+      },
+      "supply": "339459.2173202474",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "EUROP"
+    },
+    {
+      "symbol": "XAU.gh",
+      "issuer": "GateHub",
+      "issuer_address": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023202,
+      "ledger_hash": "493985F3BE97D1FAC71F5BA17547B91DC0D13640B6E63984610A6E71EA85FA07",
+      "obligations_all": {
+        "XAU": "4132.852267201553"
+      },
+      "supply": "4132.852267201553",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "XAU"
+    },
+    {
+      "symbol": "GBP.gh",
+      "issuer": "GateHub",
+      "issuer_address": "r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023202,
+      "ledger_hash": "493985F3BE97D1FAC71F5BA17547B91DC0D13640B6E63984610A6E71EA85FA07",
+      "obligations_all": {
+        "GBP": "199429.0200792867"
+      },
+      "supply": "199429.0200792867",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "GBP"
+    },
+    {
+      "symbol": "PSC",
+      "issuer": "Republic of Palau",
+      "issuer_address": "rwekfW4MiS5yZjXASRBDzzPPWYKuHvKP7E",
+      "method": "XRPL JSON-RPC gateway_balances (obligations = issued supply)",
+      "endpoint": "https://xrplcluster.com/",
+      "ledger_index": 107023202,
+      "ledger_hash": "493985F3BE97D1FAC71F5BA17547B91DC0D13640B6E63984610A6E71EA85FA07",
+      "obligations_all": {
+        "PSC": "14588"
+      },
+      "supply": "14588",
+      "supply_state": "MEASURED",
+      "currency_code_matched": "PSC"
+    }
+  ]
+}
