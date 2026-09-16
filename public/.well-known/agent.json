@@ -155,6 +155,24 @@
         "POST https://councilof.ai/api/receipts/verify -d '{\"receipt\":\"eyJ...\"}'",
         "GET https://councilof.ai/api/receipts?payer=0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7"
       ]
+    },
+    {
+      "id": "estate-index",
+      "name": "Estate index (census, not evidence)",
+      "description": "SendMessage answers with the estate census summary from GET /api/state -> estate_index, and the full index is GET /interop/master-consolidation-2026-09-16.json with its OpenTimestamps proof beside it. Every artefact CSOAI holds across this repository, Hugging Face, GitHub, Kaggle and Oracle Object Storage, committed to one Merkle root. Read it as a census, never as evidence: INDEXED means we found the artefact and measured nothing against it, and UNSIGNED means a card body exists carrying signature: null awaiting a signing decision. Two leaf classes sit under the root and are never added together: a bytes leaf is the sha256 of an artefact we read, a record leaf is the sha256 of our own note about a remote artefact we did not download and proves nothing about the remote bytes. The root is UNSIGNED, so it records when the set existed and not who assembled it, and it is therefore not Rekor-witnessable the way public/root.json is. It does not replace root.json or the signed card index, each of which commits to its own separate corpus with zero identifier overlap. Some identifiers are withheld because they carry internal names; those entries are kept and their digests untouched, so inclusion can still be proved by a holder of the real identifier. Measurement, never certification.",
+      "tags": [
+        "census",
+        "provenance",
+        "merkle",
+        "measurement"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"estate-index\",\"input\":{}} — returns the summary, not the 7,940 rows",
+        "GET https://councilof.ai/api/state  # estate_index.merkle_root and the counts",
+        "GET https://councilof.ai/interop/master-consolidation-2026-09-16.json",
+        "GET https://councilof.ai/interop/master-consolidation-2026-09-16.json.ots",
+        "GET https://councilof.ai/estate/"
+      ]
     }
   ],
   "catalogUrl": "https://councilof.ai/interop/surface-catalog.json",

@@ -52,6 +52,22 @@ interface DashboardStats {
   cards?: { count: number; signed: number };
 }
 
+/** The estate census, read live. It is deliberately a SEPARATE query from the dashboard stats:
+ *  the census is not a dashboard statistic, it is an inventory, and conflating the two is how a
+ *  reader comes to believe an inventory count is a measurement count. */
+async function fetchEstateIndex(): Promise<{
+  merkle_root: string;
+  entries: { value: number | null };
+  bytes_leaves: { value: number | null };
+  record_leaves: { value: number | null };
+  signed: boolean;
+} | null> {
+  const r = await fetch("/api/state");
+  if (!r.ok) return null;
+  const s = await r.json();
+  return s?.estate_index ?? null;
+}
+
 async function fetchDashboardStats(): Promise<DashboardStats> {
   const r = await fetch("/api/dashboard/stats");
   if (!r.ok) throw new Error("dashboard stats unavailable");
@@ -83,6 +99,12 @@ export default function Dashboard() {
     staleTime: 30_000,
   });
 
+  const { data: estateIndex } = useQuery({
+    queryKey: ["estate-index"],
+    queryFn: fetchEstateIndex,
+    staleTime: 60_000,
+  });
+
   const dashboardStats = stats;
   const councilStats = stats?.council;
   const watchdogReports = stats?.watchdog?.reports ?? [];
@@ -111,6 +133,19 @@ export default function Dashboard() {
       color: "text-blue-600",
       bgColor: "bg-blue-50",
       description: "Cards reported signed by the card index",
+    },
+    {
+      title: "Estate index (INDEXED, not measured)",
+      value: estateIndex?.entries?.value?.toString() ?? "—",
+      change: estateIndex
+        ? `${estateIndex.bytes_leaves?.value ?? "—"} read, ${estateIndex.record_leaves?.value ?? "—"} recorded elsewhere`
+        : "census unavailable",
+      changeType: "neutral",
+      icon: FileCheck,
+      color: "text-slate-600",
+      bgColor: "bg-slate-50",
+      description:
+        "Every artefact we hold, under one unsigned Merkle root. Finding an artefact is not measuring it, and the two leaf counts are never added together.",
     },
     {
       title: "Watchdog Reports",
