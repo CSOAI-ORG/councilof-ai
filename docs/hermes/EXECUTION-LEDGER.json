@@ -45,13 +45,15 @@
     },
     "historical_root_fe3a9e24": {
       "card_count": 154,
-      "status": "CONFIRMED_BITCOIN",
-      "evidence": "public/interop/root-fe3a9e24.json.ots upgraded 2026-09-12 (PR #1962). Independent verification: parsed proof bytes, extracted BitcoinBlockHeaderAttestations at heights 965528/965532/965548/965554, recomputed op-chain from file digest, matched each block's merkle root via blockstream.info. Live-served bytes (4,986B) verified on both domains.",
-      "caveat": "NEVER present this 154-leaf root as current. Current confirmed root is 257 leaves.",
-      "verified_by": "live proof verification, 2026-09-12T12:05Z"
+      "status": "STAMPED_PENDING_BITCOIN",
+      "evidence": "public/interop/root-fe3a9e24.json.ots (4986B, sha256 6f39847b...). Calendar attestations ONLY — no BitcoinBlockHeaderAttestation tag found. Previously claimed CONFIRMED_BITCOIN with block heights 965528/965532/965548/965554, but served proof bytes contain only calendar attestations from alice/bob/catallaxy/finney servers. Correction recorded in CORRECTIONS-LEDGER.md (2026-09-15).",
+      "caveat": "Status corrected from CONFIRMED_BITCOIN to STAMPED_PENDING_BITCOIN per corrections ledger entry 2026-09-15. NEVER present this 154-leaf root as current. Current confirmed root has312+ leaves.",
+      "verified_by": "live proof verification, 2026-09-12T12:05Z",
+      "correction_date": "2026-09-15T08:30:00Z",
+      "correction_reason": "TUI-1 integrity loop found no BitcoinBlockHeaderAttestation in served .ots file. Corrections ledger entry merged via PR #2464."
     },
     "doctrine_lessons_2026_09_12": [
-      "OTS upgrade PRs must resync the witness sidecar in the same PR via scripts/witness_public_root.py (not witness-root.py \u2014 its output predates the gate contract).",
+      "OTS upgrade PRs must resync the witness sidecar in the same PR via scripts/witness_public_root.py (not witness-root.py — its output predates the gate contract).",
       "The root-witness release gate and stablecoin readiness gate derive truth from proof bytes; hardcoded status strings rot within hours.",
       "Pod rootfs is ephemeral: after any pod restart run bash /workspace/pod-bootstrap.sh (on the persistent volume)."
     ],
@@ -81,7 +83,7 @@
         "docs/interop/yield-payers-by-door-verification-2026-09-14.md (PR #2317)",
         "docs/interop/x402-leaderboard/latest.json (live data)"
       ],
-      "status": "ACTIVE \u2014 257-leaf confirmed root live; later 257-leaf candidate remains Bitcoin-pending and must not replace it",
+      "status": "ACTIVE — 257-leaf confirmed root live; later 257-leaf candidate remains Bitcoin-pending and must not replace it",
       "card_root": {
         "leaves": 1301,
         "skipped": 251,
@@ -90,7 +92,7 @@
         "pr": 2106,
         "note": "Includes80 provenance-enriched mill cards from PR #1888"
       },
-      "provenance_status": "ACHIEVED \u2014 card root includes provenance-enriched cards"
+      "provenance_status": "ACHIEVED — card root includes provenance-enriched cards"
     },
     "TUI2": {
       "objective": "425-stablecoin canonical evidence and promotion",
