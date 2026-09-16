@@ -238,6 +238,8 @@ gate "facts-gate"                    node scripts/facts-gate.mjs "$DIST"
 # Head gate: no "undefined" <title>, no SPA page without a meta description, no bare shell
 # title off the root. Selftest first; it skips itself (exit 0, says so) when $DIST holds no
 # prerender output, so a --preflight against a plain vite build is not blocked by it.
+gate "master-consolidation selftest" python3 scripts/master_consolidation.py --selftest --inputs . --out /dev/null
+gate "estate root matches index"   python3 scripts/estate_root_gate.py
 gate "ots-guard selftest"            python3 scripts/ots_guard.py --selftest
 gate "ots-guard (.ots are proofs)"   python3 scripts/ots_guard.py
 gate "seo-head-guard selftest"       node scripts/seo-head-guard.mjs --selftest

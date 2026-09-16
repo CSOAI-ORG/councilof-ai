@@ -1,0 +1,43 @@
+{
+  "artifact": "master-consolidation",
+  "as_of": "2026-09-16T14:44:24Z",
+  "what_this_is": "A census of every artifact CSOAI holds across every surface, committed to one Merkle root.",
+  "what_the_root_proves": "That these exact entries were in this set when the root was stamped. Nothing else.",
+  "what_this_is_not": [
+    "Not signed. No key is applied, so the root says when, not who.",
+    "Not Rekor-witnessable: that witness uploads a signature, and there is no signature here.",
+    "Not a replacement for public/root.json or public/signed/card_index.json, which commit to their own separate corpora.",
+    "INDEXED is not MEASURED. An entry here means we found the artifact, never that it was measured."
+  ],
+  "leaf_classes": {
+    "bytes_leaf": "sha256 of the artifact's own bytes, which we read. Inclusion proves those bytes were in the set.",
+    "record_leaf": "sha256 of our canonical record about a remote artifact we did not download. Inclusion proves we recorded that identity and revision at that time, and proves nothing about the remote bytes."
+  },
+  "merkle_rule": "leaf = sha256(bytes); pairs hashed in order; an odd node is carried up unchanged, never duplicated",
+  "totals": {
+    "entries": 6427,
+    "bytes_leaves": 5773,
+    "record_leaves": 654,
+    "by_surface": {
+      "github": 400,
+      "huggingface": 245,
+      "kaggle": 20,
+      "oracle_object_storage": 8,
+      "repo": 5754
+    },
+    "never_add_these": "bytes_leaves and record_leaves answer different questions; report both, never their sum as one number"
+  },
+  "identifiers_withheld": {
+    "count": 21,
+    "rule": "An identifier carrying an internal codename is replaced by a marker. The entry is NOT dropped and its digest is NOT recomputed, so the leaf still commits to the real record and inclusion can still be proved by anyone who holds the real identifier.",
+    "why": "scripts/brand-gate.mjs blocks internal codenames on every public surface, and a census that quietly dropped them would understate the estate."
+  },
+  "merkle_root": "eddce8de60c02789edbdb252914bd94edc798083e8341838d4319938eaa2d64f",
+  "inclusion_self_check": {
+    "sampled": 201,
+    "verified": 201,
+    "a_leaf_outside_the_set_is_rejected": true
+  },
+  "full_artifact": "/interop/master-consolidation-2026-09-16.json",
+  "entries_are_not_here": "The 6,000-plus entries live in the full artifact. This summary exists so the live API can quote the root and the counts without bundling the whole index."
+}
