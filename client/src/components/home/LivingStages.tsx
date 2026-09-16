@@ -152,12 +152,20 @@ function HeavyBand({
       : "bg-gradient-to-r from-white/75 via-white/25 to-transparent";
   return (
     <section className="surface-raised relative flex min-h-[78svh] items-center overflow-hidden">
+      {/* 2026-09-16: these band photographs are 1376px wide and there is no larger source
+          anywhere in the repository. Stretched across a full-bleed band they were upscaled
+          roughly twice on a retina display, which is exactly why they read as blurry. They sit
+          behind an opaque panel and carry no information, so they are capped at their own
+          native width and centred: inside that width the pixels are real, and beyond it the
+          band is a flat tint rather than a soft enlargement. If a higher-resolution original
+          ever lands, raise the cap to its width and nothing else needs to change. */}
       <img
         src={image}
         alt={alt}
         loading="lazy"
         decoding="async"
-        className="absolute inset-0 h-full w-full object-cover"
+        width={1376}
+        className="pointer-events-none absolute inset-y-0 left-1/2 h-full max-w-[1376px] w-full -translate-x-1/2 object-cover"
         style={objectPosition ? { objectPosition } : undefined}
       />
       <div className={`absolute inset-0 ${wash}`} />
@@ -253,6 +261,24 @@ function Heading({ children }: { children: ReactNode }) {
 }
 function Body({ children }: { children: ReactNode }) {
   return <p className="t-lede measure mt-5 font-medium text-gray-700">{children}</p>;
+}
+
+/**
+ * Limits — the caveats, kept, but out of the lede.
+ *
+ * 2026-09-16. Every band fused its claim and its qualifications into one paragraph, so a reader
+ * met six or seven hedges before learning what the section was about, and in practice read none
+ * of them. Doctrine forbids dropping a qualification and none is dropped: the same sentences are
+ * rendered under a heading that says what they are, where a reader looking for the limits finds
+ * them and a reader looking for the claim can pass them. ANCHORING_CLAIM renders verbatim.
+ */
+function Limits({ children }: { children: ReactNode }) {
+  return (
+    <div className="measure mt-6 rounded-2xl border border-gray-200 bg-gray-50/70 p-5">
+      <p className="t-kicker text-gray-500">What this does not prove</p>
+      <div className="mt-2 space-y-2 text-[14px] leading-[1.65] text-gray-600">{children}</div>
+    </div>
+  );
 }
 
 /* ─── 1 · independence ─────────────────────────────────────────── */
@@ -373,15 +399,20 @@ function VerifyYourself() {
           <Kicker>Do not trust us — check</Kicker>
           <Heading>Three steps. Then you know.</Heading>
           <Body>
-            Published signed cards are small records — current v0.1 cards are under a kilobyte,
-            carrying the axis, the model, the accuracy, the issuer, the date and the hash of the
-            card before it. Some board aggregates are explicitly uncarded and cannot be verified
-            through this card path.
-            You do not need an account, our servers, or our permission to confirm it is genuine and
-            unaltered. Pin our key from /.well-known/did.json first: a card checked against the key
-            it ships with proves only that the file is self-consistent, not that we issued it.
-            {ANCHORING_CLAIM} That signature over that hash chain is exactly what you re-compute.
+            A published card is a small record — under a kilobyte — carrying the axis, the model,
+            the accuracy, the issuer, the date and the hash of the card before it. You can confirm
+            it is genuine and unaltered on your own machine, with no account, no CSOAI code and no
+            permission from us.
           </Body>
+          <Limits>
+            <p>
+              Pin our key from /.well-known/did.json first. A card checked against the key it ships
+              with proves only that the file is self-consistent, not that we issued it — anyone can
+              alter a body and sign it with a key made a second ago.
+            </p>
+            <p>Some board aggregates are explicitly uncarded and cannot be verified through this card path.</p>
+            <p>{ANCHORING_CLAIM}</p>
+          </Limits>
         </div>
 
         <Figure
@@ -448,11 +479,10 @@ function OwnErrors() {
         <RotatingHighlight {...SECTION_TITLES.corrections} />
       </Heading>
       <Body>
-        Anyone can be right on a good day. What you should judge a measurement body on is what it does
-        on a bad one. We keep a public, source-maintained corrections record at{" "}
-        <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/corrections</code>. It is
-        not backed by append-only storage proof. Each entry says what was wrong, how it was caught,
-        and what changed.
+        Anyone can be right on a good day. Judge a measurement body on what it does on a bad one.
+        Our corrections record at{" "}
+        <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/corrections</code>{" "}
+        says, for every entry, what was wrong, how it was caught and what changed.
         {entries.length > 0 && (
           <>
             {" "}It currently holds{" "}
@@ -460,6 +490,9 @@ function OwnErrors() {
           </>
         )}
       </Body>
+      <Limits>
+        <p>The record is source-maintained and is not backed by an append-only storage proof.</p>
+      </Limits>
       <Points
         points={[
           { tag: "pain", text: "Most measurement bodies quietly reword a claim that did not hold" },
@@ -518,14 +551,21 @@ function LivingLaw() {
         <RotatingHighlight {...SECTION_TITLES.living} />
       </Heading>
       <Body>
-        We detect changes in selected primary sources — EUR-Lex, legislation.gov.uk and the national
-        registers — and publish a dated deadline feed at{" "}
-        <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/regulation</code>. When a
-        source changes, the current automation raises a detection signal for review. A fresh
-        measurement appears only after a separate run is completed and admitted: re-measurement and
-        delta-card issuance are not automated. Previously published signed artifacts remain
-        addressable; this page does not claim append-only storage.
+        We watch selected primary sources — EUR-Lex, legislation.gov.uk and the national registers
+        — and publish a dated deadline feed at{" "}
+        <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/regulation</code>.
       </Body>
+      <Limits>
+        <p>
+          A source change raises a detection signal for review. It does not re-measure anything:
+          re-measurement and delta-card issuance are not automated, and a fresh measurement appears
+          only after a separate run is completed and admitted.
+        </p>
+        <p>
+          Previously published signed artifacts remain addressable. This page does not claim
+          append-only storage.
+        </p>
+      </Limits>
       {next.length > 0 && (
         <>
           <p className="mt-7 text-[11px] font-black uppercase tracking-[0.2em] text-gray-500">
