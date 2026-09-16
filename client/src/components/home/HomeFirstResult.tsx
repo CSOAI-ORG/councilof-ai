@@ -43,13 +43,26 @@ export function firstMeasuredRow(rows: GspcAxis[]): GspcAxis | null {
   return rows.find((r) => String(r.status || "").trim() === "MEASURED") ?? null;
 }
 
+function usable(m: Measurement): boolean {
+  return m.signature_verified === true && typeof m.card_url === "string" && typeof m.measured_on === "string";
+}
+
+/**
+ * A subject whose name was not published is served with a placeholder id
+ * ("withheld-name-N"). That is a deliberate publication state, not a defect, and
+ * it is never overridden here. But it makes a poor first example: a reader meets
+ * an anonymous subject on the first screen while named subjects sit in the same
+ * response. So a record with a published name is preferred, and a withheld one is
+ * used only when nothing else verifies — in which case the panel says why.
+ */
+export function subjectNameWithheld(m: Measurement): boolean {
+  return /^withheld-name-\d+$/.test(String(m.subject?.id ?? ""));
+}
+
 export function firstVerifiedRecord(list: Measurement[] | undefined): Measurement | null {
   if (!Array.isArray(list)) return null;
-  return (
-    list.find(
-      (m) => m.signature_verified === true && typeof m.card_url === "string" && typeof m.measured_on === "string",
-    ) ?? null
-  );
+  const verified = list.filter(usable);
+  return verified.find((m) => !subjectNameWithheld(m)) ?? verified[0] ?? null;
 }
 
 function readableDate(iso: string): string {
@@ -95,7 +108,7 @@ export default function HomeFirstResult() {
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">One result you can inspect</p>
       <h2 id="home-first-result-h" className="mt-2 text-xl font-black tracking-tight text-slate-900 sm:text-2xl">
         {loaded.state === "READY"
-          ? `${loaded.record.subject?.id ?? "subject not published"} on ${loaded.row.bench || boardAxisLabel(loaded.row.axis)}`
+          ? `${subjectNameWithheld(loaded.record) ? "A model whose name is not published" : (loaded.record.subject?.id ?? "subject not published")} on ${loaded.row.bench || boardAxisLabel(loaded.row.axis)}`
           : loaded.state === "READING"
             ? "Reading the live board…"
             : "No result could be read live"}
@@ -106,7 +119,7 @@ export default function HomeFirstResult() {
           <div>
             <dt className="font-semibold text-slate-500">Subject</dt>
             <dd className="mt-0.5 font-mono text-slate-900">
-              {loaded.record.subject?.id ?? "not published"}
+              {subjectNameWithheld(loaded.record) ? "name not published" : (loaded.record.subject?.id ?? "not published")}
               <span className="ml-2 font-sans text-xs text-slate-500">{loaded.record.subject?.kind ?? ""}</span>
             </dd>
           </div>
@@ -147,9 +160,9 @@ export default function HomeFirstResult() {
             </dd>
           </div>
           <div className="sm:col-span-2 text-xs leading-relaxed text-slate-500">
-            Signature verified for this record — an integrity check under the published key. It does not establish
-            measurement validity, root inclusion, a timestamp, safety, factual accuracy or legal conformity; each of
-            those is a separate check with its own outcome.
+            The signature on this record verified under the published key. That means the bytes are unchanged since
+            signing — nothing more. It is not a finding about safety, accuracy or the law, and it does not establish
+            root inclusion or a trusted timestamp. Each of those is a separate check with its own published outcome.
           </div>
         </dl>
       ) : (
