@@ -275,18 +275,23 @@ def main() -> int:
     ap.add_argument("--verify", action="store_true", help="re-check the published root, no network")
     ap.add_argument("--stamp", action="store_true", help="submit the root to OTS calendars")
     ap.add_argument("--root", type=Path, help="exact root to verify (defaults to today's current set)")
+    # Directory overrides exist for the pod chain's determinism test (tests/pod_chain), which
+    # runs land → sign → root twice in temp dirs and compares roots. Defaults are the repo.
+    ap.add_argument("--signed-dir", type=Path, default=SIGNED, help="signed cards to commit (default public/interop/mill-cards-signed)")
+    ap.add_argument("--out-dir", type=Path, default=OUT, help="where card-root-*.json lands (default public/interop)")
     args = ap.parse_args()
+    signed_dir, out_dir = args.signed_dir, args.out_dir
 
     if args.verify:
         if args.root:
             root_path = args.root
         else:
-            leaves, _ = collect()
+            leaves, _ = collect(signed_dir)
             if not leaves:
                 print("no signed cards to verify", file=sys.stderr)
                 return 1
             current = merkle_root([leaf["leaf"] for leaf in leaves])
-            root_path, _ = _root_paths(OUT, datetime.now(timezone.utc).strftime("%Y-%m-%d"), current)
+            root_path, _ = _root_paths(out_dir, datetime.now(timezone.utc).strftime("%Y-%m-%d"), current)
         ots_path = root_path.with_suffix(root_path.suffix + ".ots")
         if not root_path.exists():
             print(f"no card root at {root_path}")
@@ -302,7 +307,7 @@ def main() -> int:
         # root is committing to bytes that no longer exist.
         drift = []
         for l in body["leaves"]:
-            fp = SIGNED / l["card"]
+            fp = signed_dir / l["card"]
             if not fp.is_file():
                 drift.append((l["card"], "missing"))
                 continue
@@ -320,19 +325,23 @@ def main() -> int:
             print(f"ots         : UNCHECKED ({e.__class__.__name__})")
         return 0 if (ok and not drift) else 1
     try:
-        result = build(stamp=args.stamp)
+        result = build(stamp=args.stamp, signed_dir=signed_dir, out_dir=out_dir)
     except Exception as exc:
         print(f"FAILED CLOSED: {exc}", file=sys.stderr)
         return 1
+
+    def shown(p: Path) -> Path:
+        return p.relative_to(REPO) if p.is_relative_to(REPO) else p
+
     print(f"leaves      : {result['n_leaves']}  (skipped {result['n_skipped']})")
     print(f"merkle_root : {result['merkle_root']}")
     print(f"subject_sha : {result['subject_sha256']}")
     action = "written" if result["created_root"] else "preserved"
-    print(f"{action:12}: {result['root_path'].relative_to(REPO)}")
+    print(f"{action:12}: {shown(result['root_path'])}")
     if args.stamp:
         state = result["proof_state"].get("state", "absent")
         label = "PENDING — not anchored" if state == "pending" else "BITCOIN ATTESTATION UNVERIFIED"
-        print(f"proof       : {result['ots_path'].relative_to(REPO)} ({label})")
+        print(f"proof       : {shown(result['ots_path'])} ({label})")
     return 0
 
 

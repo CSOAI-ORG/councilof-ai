@@ -60,7 +60,11 @@ if [ -n "$ROOT_SHA" ] && [ -f "$CURRENT_PROOF" ] && ! git diff --quiet -- "$CURR
   fi
 fi
 
-if ! git diff --quiet -- public 2>/dev/null; then
+# OTS_NO_GIT=1 (pod chain, scripts/pod-loops/ots.sh): upgrade in place and stop. The pod's
+# outputs reach a branch by their own step; no loop pushes master from a pod.
+if [ "${OTS_NO_GIT:-0}" = "1" ]; then
+  echo "$(TS) OTS_NO_GIT=1 — upgrades left in the working tree; no commit, no push" >> "$LOG"
+elif ! git diff --quiet -- public 2>/dev/null; then
   git add public/**/*.ots public/*.ots 2>/dev/null
   git add public/interop/root-witness-latest.json \
     public/interop/root-witness-pointer.json \
@@ -86,7 +90,7 @@ fi
 # next run that happens to have NEW upgrades (measured 2026-09-13: one commit stranded
 # 8 behind until flushed by hand). Unstaged upgrade leftovers are stashed around the
 # rebase so it cannot refuse on a dirty tree.
-if [ "$(git rev-list --count origin/master..master 2>/dev/null || echo 0)" != "0" ]; then
+if [ "${OTS_NO_GIT:-0}" != "1" ] && [ "$(git rev-list --count origin/master..master 2>/dev/null || echo 0)" != "0" ]; then
   git stash -q 2>/dev/null
   git fetch -q origin master 2>/dev/null
   if git rebase -q origin/master 2>/dev/null; then

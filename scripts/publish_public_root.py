@@ -13,7 +13,6 @@ Never print BOARD_SIGN_KEY. Never stamp MEASURED. Never certify.
 from __future__ import annotations
 
 import argparse
-import base64
 import hashlib
 import json
 import os
@@ -109,8 +108,16 @@ EXIT_UNSIGNED = 4
 EXIT_BAD = 1
 
 
-def canonical_bytes(obj: Any) -> bytes:
-    return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+# The canonical form, key loader and signature primitive live in ONE module so a
+# second local signer (sign_mill_cards.py --key-env, 2026-09-16) cannot drift from
+# this one. Re-exported under the same names: every importer of this module keeps
+# working and keeps getting the same bytes.
+from lib.estate_sign import (  # noqa: E402
+    canonical_bytes,
+    key_present as _estate_key_present,
+    load_key as _estate_load_key,
+    sign_bytes as _estate_sign_bytes,
+)
 
 
 # Compact envelope preimage — board-sign cap is 3KB; the full root with card_sha256[]
@@ -247,8 +254,7 @@ def fetch_json(url: str, timeout: int = 20) -> tuple[int, Any]:
 
 
 def key_present() -> bool:
-    v = os.environ.get("BOARD_SIGN_KEY_PKCS8_B64", "")
-    return bool(v.strip())
+    return _estate_key_present("BOARD_SIGN_KEY_PKCS8_B64")
 
 
 def oidc_available() -> bool:
@@ -308,21 +314,16 @@ def sign_via_oidc(payload: dict) -> str | None:
 
 
 def load_key():
-    raw = os.environ.get("BOARD_SIGN_KEY_PKCS8_B64", "").strip()
-    if not raw:
-        return None
     try:
-        from cryptography.hazmat.primitives.serialization import load_der_private_key
+        return _estate_load_key("BOARD_SIGN_KEY_PKCS8_B64")
     except ImportError:
         print("cryptography not installed; cannot sign", file=sys.stderr)
         return None
-    der = base64.b64decode(raw)
-    return load_der_private_key(der, password=None)
 
 
 def sign_payload(payload: dict, key) -> str:
     if key is not None:
-        return key.sign(canonical_bytes(payload)).hex()
+        return _estate_sign_bytes(key, canonical_bytes(payload))
     remote = sign_via_oidc(payload)
     if remote:
         return remote

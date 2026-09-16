@@ -11,6 +11,16 @@ already carries a signed card is skipped — one cell, one card.
 
 Never signs. Never stamps MEASURED. Never touches master (the workflow lands on a branch and
 opens a PR; a human merge is the gate).
+
+Pod cards (2026-09-16, scripts/pod-loops/land.sh). A RunPod worker card carries its item
+evidence as body.compute_evidence (schema csoai.runpod-gspc-item-evidence/0.1) and its
+provenance as compute_evidence.run_id, not as body.evidence/run_id. Under --require-evidence
+such a card is admitted only when the intake receipt verify_runpod_gspc_intake.py wrote
+(verification.json, state VERIFIED_QUARANTINE) sits beside it and binds this exact card id,
+its items digest, its measurement and the current bank allowlist, and the items.jsonl beside
+it hashes to compute_evidence.items_sha256. The receipt (hashes only) lands in the evidence
+dir; raw model outputs stay in the private intake, as on the GHA road. The body is never
+rewritten — the receipt binds it — so run binding is a no-op for a pod card.
 """
 from __future__ import annotations
 
@@ -25,12 +35,25 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "harness" / "gspc-top100"))
 from verify_card import canonical_body_bytes  # noqa: E402
-from verify_hub_mill_evidence import EvidenceError, admit, validate_signed_admission  # noqa: E402
+from verify_hub_mill_evidence import EvidenceError, admit, validate_signed_admission, write_immutable  # noqa: E402
 
 INBOX = ROOT / "public" / "interop" / "mill-cards-unsigned"
 SIGNED = ROOT / "public" / "interop" / "mill-cards-signed"
 EVIDENCE = ROOT / "public" / "interop" / "mill-evidence"
+BANK_ALLOWLIST = ROOT / "scripts" / "runpod_gspc_bank_allowlist.current.json"
 MAX_PAYLOAD_BYTES = 3072
+HUB_EVIDENCE_SCHEMAS = ("csoai.mill-item-evidence/0.2", "csoai.mill-item-evidence/0.3")
+RUNPOD_RECEIPT_SCHEMA = "csoai.runpod-gspc-intake-verification/0.1"
+
+
+def evidence_kind(body: dict) -> str:
+    """hub-v02 | hub-legacy | runpod | none — which evidence road a card body is on."""
+    ev = body.get("evidence")
+    if isinstance(ev, dict):
+        return "hub-v02" if ev.get("schema") in HUB_EVIDENCE_SCHEMAS else "hub-legacy"
+    if isinstance(body.get("compute_evidence"), dict):
+        return "runpod"
+    return "none"
 
 
 def signed_cells(signed_dir: Path) -> dict[tuple[str, str], str]:
@@ -112,9 +135,18 @@ def bind_run_provenance(wrap: dict, run_id: str) -> dict:
     the immutable GitHub Actions run id, so bind it before the content address is
     checked and before the card enters the signer inbox.
     """
+    body = wrap.get("body")
+    pod = body.get("compute_evidence") if isinstance(body, dict) else None
+    if isinstance(pod, dict) and pod.get("run_id"):
+        # A pod card already carries its provenance INSIDE the body, and the intake
+        # receipt binds sha256(canonical body). Rewriting the body here would break
+        # that binding, so the card passes through untouched; a caller-supplied run
+        # id must agree with the one the pod recorded.
+        if run_id not in ("", str(pod["run_id"])):
+            raise ValueError(f"pod card run_id {pod['run_id']!r} conflicts with {run_id!r}")
+        return wrap
     if not run_id.isdigit() or int(run_id) <= 0:
         raise ValueError("a positive GitHub Actions run id is required")
-    body = wrap.get("body")
     if not isinstance(body, dict):
         return wrap
     if wrap.get("id") != hashlib.sha256(canonical_body_bytes(body)).hexdigest():
@@ -129,7 +161,73 @@ def bind_run_provenance(wrap: dict, run_id: str) -> dict:
     return wrap
 
 
-def land_evidence(wrap: dict, staged: Path, evidence_dir: Path) -> str | None:
+def _sha256(raw: bytes) -> str:
+    return hashlib.sha256(raw).hexdigest()
+
+
+def land_runpod_evidence(wrap: dict, staged: Path, evidence_dir: Path,
+                         bank_allowlist: Path | None) -> str | None:
+    """Admit a pod card by the intake receipt beside it. Returns a reject reason or None.
+
+    Every check is against bytes at hand — nothing is trusted because of where it sits:
+    the receipt must be VERIFIED_QUARANTINE and bind this card id, run id, items digest,
+    axis/subject/n/accuracy; the current bank allowlist must be the one the run was verified
+    against and must list the run's bank; items.jsonl beside the card must hash to the pinned
+    digest. Only the receipt (hashes, no model output) is copied into the evidence dir.
+    """
+    body = wrap.get("body") or {}
+    pod = body.get("compute_evidence") or {}
+    receipt_path = staged / "verification.json"
+    if receipt_path.is_symlink() or not receipt_path.is_file():
+        return "pod card without its intake receipt (verification.json) beside it"
+    raw = receipt_path.read_bytes()
+    try:
+        receipt = json.loads(raw)
+    except Exception as error:  # noqa: BLE001
+        return f"intake receipt unreadable ({type(error).__name__})"
+    if not isinstance(receipt, dict) or receipt.get("schema") != RUNPOD_RECEIPT_SCHEMA \
+            or receipt.get("state") != "VERIFIED_QUARANTINE":
+        return "intake receipt is not a VERIFIED_QUARANTINE receipt"
+    hashes = receipt.get("source_hashes") if isinstance(receipt.get("source_hashes"), dict) else {}
+    if hashes.get("card_id") != wrap.get("id"):
+        return "intake receipt does not bind this card id"
+    if receipt.get("run_id") != pod.get("run_id"):
+        return "intake receipt run id differs from compute_evidence.run_id"
+    if hashes.get("items_sha256") != pod.get("items_sha256"):
+        return "intake receipt items digest differs from compute_evidence.items_sha256"
+    counts = receipt.get("counts") if isinstance(receipt.get("counts"), dict) else {}
+    if (receipt.get("axis") != body.get("axis") or receipt.get("subject") != body.get("model")
+            or counts.get("graded_n") != body.get("n") or receipt.get("accuracy") != body.get("accuracy")):
+        return "intake receipt measurement differs from the card"
+    if bank_allowlist is None or bank_allowlist.is_symlink() or not bank_allowlist.is_file():
+        return "bank allowlist unavailable — cannot confirm the frozen bank"
+    allow_raw = bank_allowlist.read_bytes()
+    if hashes.get("bank_allowlist_sha256") != _sha256(allow_raw):
+        return "bank allowlist changed since intake — re-verify the run"
+    try:
+        banks = {(b.get("axis"), b.get("sha256")) for b in json.loads(allow_raw).get("banks", [])}
+    except Exception as error:  # noqa: BLE001
+        return f"bank allowlist unreadable ({type(error).__name__})"
+    if (body.get("axis"), pod.get("bank_sha256")) not in banks:
+        return "bank digest not in the allowlist for this axis"
+    items = staged / "items.jsonl"
+    if items.is_symlink() or not items.is_file():
+        return "items.jsonl absent beside the pod card"
+    if _sha256(items.read_bytes()) != pod.get("items_sha256"):
+        return "items.jsonl beside the card does not hash to compute_evidence.items_sha256"
+    bundle = str(receipt.get("bundle_sha256") or "")
+    if not re.fullmatch(r"[0-9a-f]{64}", bundle):
+        return "intake receipt has no bundle digest"
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        write_immutable(evidence_dir / f"runpod-verification-{bundle[:12]}.json", raw)
+    except (EvidenceError, OSError) as error:
+        return f"receipt landing failed: {error}"
+    return None
+
+
+def land_evidence(wrap: dict, staged: Path, evidence_dir: Path,
+                  bank_allowlist: Path | None = None) -> str | None:
     """Land the item-level evidence bundle a card binds to. Returns a reject reason or None.
 
     TUI-1 evidence ruling (2026-09-13): an aggregate-only card is never quotable. A card
@@ -138,6 +236,8 @@ def land_evidence(wrap: dict, staged: Path, evidence_dir: Path) -> str | None:
     fails closed. The bundle lands at public/interop/mill-evidence/ next to the inbox.
     """
     body = wrap.get("body") or {}
+    if evidence_kind(body) == "runpod":
+        return land_runpod_evidence(wrap, staged, evidence_dir, bank_allowlist)
     ev = body.get("evidence")
     if not isinstance(ev, dict):
         return None  # legacy aggregate-only card; --require-evidence decides its fate
@@ -165,9 +265,11 @@ def land_evidence(wrap: dict, staged: Path, evidence_dir: Path) -> str | None:
 
 
 def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str,
-         evidence_dir: Path | None = None, require_evidence: bool = False) -> dict:
+         evidence_dir: Path | None = None, require_evidence: bool = False,
+         bank_allowlist: Path | None = None) -> dict:
     files = sorted(staged.rglob("unsigned-*.json"))
     evidence_dir = evidence_dir or EVIDENCE
+    bank_allowlist = bank_allowlist or BANK_ALLOWLIST
     have = (
         admitted_quotable_signed_cells(signed_dir, evidence_dir)
         if require_evidence else signed_cells(signed_dir)
@@ -196,10 +298,11 @@ def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str,
             skipped.append({"file": f.name, "reason": why})
             continue
         b = w["body"]
-        if require_evidence and not isinstance(b.get("evidence"), dict):
+        kind = evidence_kind(b)
+        if require_evidence and kind == "none":
             skipped.append({"file": f.name, "reason": "no evidence bundle — aggregate-only cards stopped landing after the 2026-09-13 evidence ruling"})
             continue
-        if require_evidence and b.get("evidence", {}).get("schema") not in ("csoai.mill-item-evidence/0.2", "csoai.mill-item-evidence/0.3"):
+        if require_evidence and kind == "hub-legacy":
             skipped.append({"file": f.name, "reason": "legacy evidence is preserved but cannot enter the reproducible signing path"})
             continue
         key = (str(b["model"]), str(b["axis"]))
@@ -210,7 +313,7 @@ def land(staged: Path, inbox: Path, signed_dir: Path, run_id: str,
         # Artifacts place each card beside its bank and item transcript (for
         # example under mill-out/).  The card search is recursive, so admission
         # must resolve the bound bundle from that same directory.
-        ev_why = land_evidence(w, f.parent, evidence_dir)
+        ev_why = land_evidence(w, f.parent, evidence_dir, bank_allowlist)
         if ev_why:
             skipped.append({"file": f.name, "reason": ev_why})
             continue
@@ -294,10 +397,13 @@ def main() -> int:
     ap.add_argument("--evidence", default=str(EVIDENCE), help="where item-evidence bundles land")
     ap.add_argument("--require-evidence", action="store_true",
                     help="fail closed on aggregate-only cards (post-2026-09-13 evidence ruling)")
+    ap.add_argument("--bank-allowlist", default=str(BANK_ALLOWLIST),
+                    help="frozen-bank allowlist a pod card's intake receipt must have been verified against")
     args = ap.parse_args()
     staged = Path(args.staged)
     rep = land(staged, Path(args.inbox), Path(args.signed), args.run_id,
-               evidence_dir=Path(args.evidence), require_evidence=args.require_evidence)
+               evidence_dir=Path(args.evidence), require_evidence=args.require_evidence,
+               bank_allowlist=Path(args.bank_allowlist))
     mill_report = None
     mr = next(iter(staged.rglob("mill-report.json")), None)
     if mr is not None:

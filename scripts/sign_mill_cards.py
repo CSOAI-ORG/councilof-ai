@@ -1,23 +1,43 @@
 #!/usr/bin/env python3
-"""Sign mill unsigned cards via GHA OIDC → /api/board-sign.
+"""Sign mill unsigned cards — GHA OIDC → /api/board-sign by default, or a pod-resident key.
 
-Never loads PKCS8. Workflow filename must contain hf-fin-shells (OIDC allowlist).
-Records the DID that actually signed (#board-attestation-1). No laptop-sign.
-n<30 cards stay UNMEASURED even if signed. Empty is never 0.
+Two signers, ONE preimage rule (sha256 over the canonical body; the signature is over
+those canonical body bytes, not the digest):
+
+  default        sign_via_oidc_attested → Pages /api/board-sign. The key stays on Pages;
+                 the workflow filename must be on the OIDC allowlist. Unchanged.
+  --key-env NAME base64(PKCS8) Ed25519 read from the environment variable NAME and used
+                 locally, through lib/estate_sign.py — the same loader, canonical form
+                 and Ed25519 primitive scripts/publish_public_root.py signs the public
+                 root with. Added 2026-09-16 because GitHub Actions stopped running on
+                 2026-09-15 and the pod chain (scripts/pod-loops/sign.sh) is the only
+                 other road to a signed card. Never a laptop key: the pod holds the key
+                 in $LANES/.secrets and hands it to this process as an env var only.
+                 The key value is never printed, never written, never logged.
+
+Both paths record the DID that actually signed (--did; default #board-attestation-1).
+n<30 cards stay UNMEASURED ("n<30 unquotable") even if signed. Empty is never 0.
+Signed bytes are content-addressed and never overwritten: a changed body lands on a
+new path and the old card is recorded in SUPERSEDED.jsonl, not edited.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from sign_financial_runs import DID, canonical_bytes, sign_via_oidc_attested  # noqa: E402
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent / "harness" / "gspc-top100"))
+from lib.estate_sign import canonical_bytes, load_key, sign_bytes  # noqa: E402
+from sign_financial_runs import DID, sign_label_violation, sign_via_oidc_attested  # noqa: E402
+from verify_card import canonical_js_body_bytes  # noqa: E402
 from verify_hub_mill_evidence import EvidenceError, validate_admission  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = HERE.parent
 
 
 def now_iso() -> str:
@@ -78,13 +98,59 @@ def superseded_ids() -> set[str]:
     return {str(r.get("superseded_id") or "") for r in ledger_rows() if r.get("superseded_id")}
 
 
+def sign_locally(body: dict, key) -> tuple[str, str]:
+    """(signature hex, digest hex) over the canonical body, with the pod-resident key.
+
+    The preimage is the JS edge signer's canonical form (harness/gspc-top100/verify_card
+    .canonical_js_body_bytes) — the bytes every verifier of a style-C card recomputes —
+    and it must ALSO equal the estate's Python canonical form (lib.estate_sign
+    .canonical_bytes, what publish_public_root.py signs). The two differ only for an
+    integral float (1.0 → "1" vs "1.0"); the mill never emits one, and if it ever does
+    this refuses rather than sign a preimage two verifiers would disagree about.
+    The G1.3 never-sign labels are refused here exactly as the Pages signer refuses them.
+    """
+    violation = sign_label_violation(body)
+    if violation:
+        raise RuntimeError(
+            f"refused: never-sign label {violation!r} in payload — THIN/TEMPLATE/specimen is never signed (G1.3)"
+        )
+    pre = canonical_js_body_bytes(body)
+    if pre != canonical_bytes(body):
+        raise RuntimeError(
+            "canonical divergence: the body renders differently under the Python and JS "
+            "canonical forms (an integral float?) — refusing to sign an ambiguous preimage"
+        )
+    return sign_bytes(key, pre), hashlib.sha256(pre).hexdigest()
+
+
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    global DST, LEDGER
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--source-dir", type=Path, help="sign only this isolated unsigned-card directory")
+    parser.add_argument("--dest-dir", type=Path,
+                        help="write signed cards (and SUPERSEDED.jsonl) here instead of public/interop/mill-cards-signed")
     parser.add_argument("--evidence-dir", type=Path, help="directory holding admitted evidence and receipts")
     parser.add_argument("--require-hub-admission", action="store_true",
                         help="refuse non-RunPod cards without a current verified evidence receipt")
+    parser.add_argument("--key-env", metavar="NAME",
+                        help="sign locally with the base64(PKCS8) Ed25519 key in environment variable NAME "
+                             "(pod chain); default is the GHA OIDC relay to /api/board-sign")
+    parser.add_argument("--did", default=DID,
+                        help=f"DID verification method recorded on each signed card (default {DID})")
     args = parser.parse_args(argv)
+    if args.dest_dir is not None:
+        DST = args.dest_dir
+        LEDGER = DST / "SUPERSEDED.jsonl"
+    key = None
+    if args.key_env:
+        try:
+            key = load_key(args.key_env)
+        except Exception as error:  # noqa: BLE001 — the message never carries the value
+            print(f"UNSIGNED — --key-env {args.key_env}: {error}", file=sys.stderr)
+            return 3
+        if key is None:
+            print(f"UNSIGNED — --key-env {args.key_env} is empty or unset", file=sys.stderr)
+            return 3
     source = args.source_dir if args.source_dir is not None else SRC
     if not source.is_dir():
         print("UNSIGNED — no mill-cards-unsigned dir", file=sys.stderr)
@@ -149,12 +215,13 @@ def main(argv: list[str] | None = None) -> int:
             print(f"HALT {fp.name} {len(raw)}B", file=sys.stderr)
             failures += 1
             continue
-        # The trusted signer parses the payload in JavaScript and returns the
+        # OIDC: the trusted signer parses the payload in JavaScript and returns the
         # digest of the exact bytes it signed. Numeric JSON values do not retain
         # Python's int/float distinction across that boundary, so its attested
-        # digest is the only safe content address.
+        # digest is the only safe content address. Local: the same JS canonical
+        # form is computed here and cross-checked against the Python form.
         try:
-            sig, digest = sign_via_oidc_attested(body)
+            sig, digest = sign_locally(body, key) if key is not None else sign_via_oidc_attested(body)
         except Exception as e:
             print(f"UNSIGNED {fp.name} — {e}", file=sys.stderr)
             failures += 1
@@ -187,7 +254,7 @@ def main(argv: list[str] | None = None) -> int:
             "id": digest,
             "preimage_rule": "sha256(canonical body)",
             "signature": sig,
-            "did": DID,
+            "did": args.did,
             "n": n,
             "quotable": body.get("status") == "MEASURED",
             "not_a_certificate": True,
