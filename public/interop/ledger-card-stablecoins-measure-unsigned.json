@@ -1,24 +1,24 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "stablecoins.extended.2026-09-16",
-  "subject": "Extended stablecoin coverage \u2014 45 instruments across 17 chains",
+  "subject": "Extended stablecoin coverage: 45 instruments across 17 chains, public disclosure pages fetched and digested \u2014 34 reachable, 7 HTTP error, 4 unreachable. DISCOVERED, not a reserve measurement.",
   "as_of": "2026-09-16T10:31:23Z",
   "source_urls": [
-    "https://councilof.ai/interop/stablecoins-measure.json"
+    "https://councilof.ai/interop/stablecoins-extended.json"
   ],
   "payload": {
     "kind": "csoai.eat-mining/0.1",
     "flags": {
-      "measures": true,
+      "measures": false,
       "signs": false,
       "anchors": false,
       "writes_board": false,
-      "not_a_grade": true
+      "not_a_grade": true,
+      "discovery_only": true
     },
     "surface_marker": "stablecoins.extended.2026-09-16",
     "source_urls": [
-      "https://councilof.ai/api/xrpl",
-      "https://councilof.ai/interop/bank-registry.json"
+      "https://councilof.ai/interop/stablecoins-extended.json"
     ],
     "n": 45,
     "n_ok": 34,
@@ -46,7 +46,8 @@
     "extends_reader_16": true,
     "extends_bank_registry_6": true,
     "evidence_url": "/interop/stablecoins-extended.json",
-    "honesty": "45 stablecoins across 17 chains measured against public disclosure pages. Extends XRPL reader-16 + bank-registry 6."
+    "honesty": "45 stablecoins across 17 chains measured against public disclosure pages. Extends XRPL reader-16 + bank-registry 6.",
+    "discovery_note": "What was measured is page reachability and the sha256 of the bytes returned, at as_of. The subject property itself is DISCOVERED and carries no score, no grade and no n. Corrected 2026-09-16 under C-2026-0916-02; the earlier subject said 'measured'."
   },
   "unmeasured": [
     "gspc_axis_assignment: 22-axis canon (ADR-001) is frozen; new axes require owner MPC ceremony",

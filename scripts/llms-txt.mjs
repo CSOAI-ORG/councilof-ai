@@ -139,8 +139,18 @@ const axesRows = (b.axes || []).map((a) => ({
   axis: a.axis, status: a.status, family: a.family, kind: a.kind,
   n: a.n ?? null, accuracy: a.accuracy ?? null, separation: a.separation ?? null,
 }));
+// totals.sweep_note is a dated prose note (the 2026-08-26 ADR-001 sweep) that states a board
+// count in words. Mirroring prose into a static file is how a count goes stale: the note is
+// true of the day it describes, but this file is read as current. It is therefore replaced by
+// a pointer — visibly, never silently dropped — so the only counts in this file are the derived
+// totals.* fields above. Every other key is copied verbatim. (C-2026-0916-01, facts-gate.)
+const totalsForSnapshot = { ...(b.totals || {}) };
+if (Object.prototype.hasOwnProperty.call(totalsForSnapshot, "sweep_note")) {
+  totalsForSnapshot.sweep_note =
+    "<not mirrored: a dated prose note. Read it live at GET /api/gspc -> totals.sweep_note>";
+}
 const snapshot = JSON.stringify(
-  { schema: b.schema, as_of: b.as_of ?? null, totals: b.totals, axes_count: axesRows.length, axes: axesRows },
+  { schema: b.schema, as_of: b.as_of ?? null, totals: totalsForSnapshot, axes_count: axesRows.length, axes: axesRows },
   null, 2);
 const corpora = corporaSection();
 

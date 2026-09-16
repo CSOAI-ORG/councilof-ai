@@ -1,7 +1,7 @@
 {
   "schema": "https://councilof.ai/schema/card-v0.json",
   "surface": "swift.measure.2026-09-16",
-  "subject": "Swift 17 banks measured (tokenized-finance posture) \u2014 17 banks, 6 reachable",
+  "subject": "Swift tokenised-finance cohort: 17 banks' public disclosure pages fetched and digested \u2014 6 reachable, 11 HTTP error. DISCOVERED, not a measurement of tokenisation posture.",
   "as_of": "2026-09-16T10:30:01Z",
   "source_urls": [
     "https://councilof.ai/interop/swift-measure.json"
@@ -9,15 +9,16 @@
   "payload": {
     "kind": "csoai.eat-mining/0.1",
     "flags": {
-      "measures": true,
+      "measures": false,
       "signs": false,
       "anchors": false,
       "writes_board": false,
-      "not_a_grade": true
+      "not_a_grade": true,
+      "discovery_only": true
     },
     "surface_marker": "swift.measure.2026-09-16",
     "source_urls": [
-      "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure"
+      "https://councilof.ai/interop/swift-measure.json"
     ],
     "n": 17,
     "n_ok": 6,
@@ -42,7 +43,8 @@
       "Wells Fargo"
     ],
     "evidence_url": "/interop/swift-measure.json",
-    "honesty": "17 SWIFT pioneer TARGETS measured against press URLs. Cohort are TARGETS, not clients. Settlement still off-chain. 6/17 reachable."
+    "honesty": "17 SWIFT pioneer TARGETS measured against press URLs. Cohort are TARGETS, not clients. Settlement still off-chain. 6/17 reachable.",
+    "discovery_note": "What was measured is page reachability and the sha256 of the bytes returned, at as_of. The subject property itself is DISCOVERED and carries no score, no grade and no n. Corrected 2026-09-16 under C-2026-0916-02; the earlier subject said 'measured'."
   },
   "unmeasured": [
     "gspc_axis_assignment: 22-axis canon (ADR-001) is frozen; new axes require owner MPC ceremony",

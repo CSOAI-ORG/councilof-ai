@@ -34,6 +34,18 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0916-02",
+      date: "2026-09-16",
+      first_observed_at: "2026-09-16T10:42Z",
+      what_was_wrong:
+        "Three files published at /interop/ots/ as OpenTimestamps proofs were not OpenTimestamps proofs. swift-measure.ots, cobol-measure.ots and stablecoins-extended.ots carried no .ots magic header and python-opentimestamps rejects each with BadMagicError. The manifest beside them (csoai.ots-manifest/0.1) listed a sha256 per subject; none of the three matched the bytes of the artifact it named (swift-measure.json actual 005d04fd…, manifest d4377a67…; cobol-measure.json actual 15900afe…, manifest 0f8a354f…; stablecoins-extended.json actual 752175b2…, manifest d7a8936b…). A reader following the manifest would have been told an anchor existed for bytes that were never stamped. Separately, the three ledger cards for the same run carried subjects saying the banks, COBOL systems and stablecoins were 'measured' and payload flags.measures true, while every row in all three artifacts reads status DISCOVERED and each artifact's own honesty field says a homepage fetch is not a measurement of the subject property.",
+      how_caught:
+        "Auditing what landed on master before deploying it: recomputing the sha256 of each named artifact and comparing it with the manifest, then deserializing each .ots with python-opentimestamps instead of trusting the file extension.",
+      fix:
+        "Root cause was the producer: scripts/ots/ots-stamp.py wrote the calendar's raw HTTP response fragment to disk. A detached proof is magic header + version + file-hash-op + file digest + serialized timestamp. The script is rewritten to build a DetachedTimestampFile with the opentimestamps library, to submit to four calendars, and to expose --verify; it reports PENDING and never says anchored. Real proofs were created for the three artifacts (swift-measure.json.ots, cobol-measure.json.ots, stablecoins-extended.json.ots), each verified to commit to the actual file digest and each carrying four PendingAttestations and no Bitcoin attestation. The manifest is reissued as csoai.ots-manifest/0.2 with recomputed digests, the pending state stated plainly, and a supersedes block naming this record. The three invalid files are kept unedited under /interop/ots/_invalid-2026-09-16/ with a README, so anyone who read them can see what was published. The three card subjects now state what was measured (page reachability and the sha256 of the bytes returned) and that the subject property is DISCOVERED; flags.measures is false and discovery_only is true. Nothing here is anchored until scripts/ots-upgrade.py lands a BitcoinBlockHeaderAttestation.",
+      status: "CORRECTED IN SOURCE AND RECORDED; PROOFS ARE PENDING, NOT ANCHORED",
+    },
+    {
       id: "C-2026-0916-01",
       date: "2026-09-16",
       first_observed_at: "2026-09-16T09:47Z",
