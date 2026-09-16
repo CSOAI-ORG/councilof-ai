@@ -34,6 +34,18 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0916-03",
+      date: "2026-09-16",
+      first_observed_at: "2026-09-16T12:38Z",
+      what_was_wrong:
+        "/interop/swift-measure.json published a per-bank page_state for seventeen banks — six OK, eight HTTP_404, three HTTP_403 — in a file whose card was titled around the banks being measured. Eleven of those seventeen URLs are newsroom index pages we chose ourselves (anz.com.au/newsroom/media-releases/2026/, citigroup.com/global/news/newsroom, wellsfargo.com/about/press and so on). A 404 on a path we invented is evidence about our guess and not about the bank, so eleven rows read as findings about institutions when they were findings about our own URL list. Separately the primary source — Swift's press release naming the cohort — had never been fetched at all: swift.com answers HTTP 403 to this client, so even cohort membership was second-hand.",
+      how_caught:
+        "Reading the failing rows instead of the summary, and noticing that the failures clustered on hand-written newsroom index paths rather than on the banks.",
+      fix:
+        "The file now states, at the top and on every row, that it records the HTTP state of seventeen URLs we chose and nothing about the seventeen banks, with url_provenance GUESSED_BY_US_NOT_PRIMARY_SOURCE on each row and a page_state_means sentence saying what the state does and does not support. A primary_source block records the Swift press release as UNFETCHED_HTTP_403 with the time of the attempt. status_all stays DISCOVERED. No bank in this file has been measured on tokenisation posture and none may be quoted as such. The artifact was re-stamped after the edit and the OTS manifest digest updated, because a proof stops covering a file the moment the bytes change.",
+      status: "CORRECTED IN SOURCE AND RECORDED; THE COHORT REMAINS UNMEASURED",
+    },
+    {
       id: "C-2026-0916-02",
       date: "2026-09-16",
       first_observed_at: "2026-09-16T10:42Z",

@@ -8,7 +8,7 @@
   "n_unreachable": 0,
   "n_http_error": 11,
   "status_all": "DISCOVERED",
-  "honesty": "DISCOVERED until public ISO 20022 / copybook / MT artifact is fetched. UNREACHABLE = UNCHECKABLE (never FAIL).",
+  "honesty": "What this file records is the HTTP state of seventeen URLs WE chose, not anything about the seventeen banks. Eleven of those URLs are newsroom index pages we guessed; a 404 on a path we invented is evidence about our guess, never about the bank. The primary source \u2014 Swift's own press release naming the cohort \u2014 has NOT been fetched: swift.com answers 403 to this client. No bank in this file has been measured on tokenisation posture, and none should be quoted as such.",
   "rows": [
     {
       "id": "anz",
@@ -16,7 +16,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.anz.com.au/newsroom/media-releases/2026/",
       "page_state": "HTTP_404",
-      "page_sha256": null
+      "page_sha256": null,
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
     },
     {
       "id": "bnp-paribas",
@@ -24,7 +26,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://group.bnpparibas/en/our-commitments/innovation",
       "page_state": "HTTP_403",
-      "page_sha256": null
+      "page_sha256": null,
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
     },
     {
       "id": "bny",
@@ -32,7 +36,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.bny.com/corporate/global/en/about-us/newsroom.html",
       "page_state": "OK",
-      "page_sha256": "de90b53e8f36e5d101870ffb59f6ba980e5cea7bf19e349a74d678c828944689"
+      "page_sha256": "de90b53e8f36e5d101870ffb59f6ba980e5cea7bf19e349a74d678c828944689",
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
     },
     {
       "id": "citi",
@@ -40,7 +46,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.citigroup.com/global/news/newsroom",
       "page_state": "HTTP_404",
-      "page_sha256": null
+      "page_sha256": null,
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
     },
     {
       "id": "dbs",
@@ -48,7 +56,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.dbs.com/newsroom",
       "page_state": "OK",
-      "page_sha256": "fd22d290cb58676c4662eee512305c51fb1172817b47ffe51adffc952ec009ce"
+      "page_sha256": "fd22d290cb58676c4662eee512305c51fb1172817b47ffe51adffc952ec009ce",
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
     },
     {
       "id": "fab",
@@ -56,7 +66,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.bankfab.com/en-ae/about-fab/media-centre",
       "page_state": "HTTP_404",
-      "page_sha256": null
+      "page_sha256": null,
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
     },
     {
       "id": "firstrand",
@@ -64,7 +76,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.firstrand.co.za/investors/news/",
       "page_state": "HTTP_404",
-      "page_sha256": null
+      "page_sha256": null,
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
     },
     {
       "id": "hsbc",
@@ -72,7 +86,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.hsbc.com/news-and-insight",
       "page_state": "OK",
-      "page_sha256": "2fa561135c784bada75884e7cd1a8f23ff3c75c3d26956a48f1c727652f4796e"
+      "page_sha256": "2fa561135c784bada75884e7cd1a8f23ff3c75c3d26956a48f1c727652f4796e",
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
     },
     {
       "id": "itau-unibanco",
@@ -80,7 +96,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.itau.com.br/en/investor-relations/news",
       "page_state": "HTTP_403",
-      "page_sha256": null
+      "page_sha256": null,
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
     },
     {
       "id": "lloyds",
@@ -88,7 +106,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.lloydsbankinggroup.com/media/press-releases/",
       "page_state": "OK",
-      "page_sha256": "25f1228f3a1401f506234cd292cbfb1f977b3519f8244b02c13667078adee774"
+      "page_sha256": "25f1228f3a1401f506234cd292cbfb1f977b3519f8244b02c13667078adee774",
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
     },
     {
       "id": "mashreq",
@@ -96,7 +116,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.mashreq.com/en/press-releases",
       "page_state": "HTTP_404",
-      "page_sha256": null
+      "page_sha256": null,
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
     },
     {
       "id": "mufg",
@@ -104,7 +126,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.mufg.jp/english/newsroom/",
       "page_state": "HTTP_404",
-      "page_sha256": null
+      "page_sha256": null,
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
     },
     {
       "id": "ocbc",
@@ -112,7 +136,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.ocbc.com/group/media-centre.page",
       "page_state": "OK",
-      "page_sha256": "8bd51daf86cfb53f3c86e813478a69d583ee5703cdcd0a2c5009a0c882a9cda0"
+      "page_sha256": "8bd51daf86cfb53f3c86e813478a69d583ee5703cdcd0a2c5009a0c882a9cda0",
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
     },
     {
       "id": "standard-chartered",
@@ -120,7 +146,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.sc.com/en/news/",
       "page_state": "OK",
-      "page_sha256": "c8efbc3a46902d4803fb4011c8bb133ecf5be5872a53cbf68be6740ff9203aca"
+      "page_sha256": "c8efbc3a46902d4803fb4011c8bb133ecf5be5872a53cbf68be6740ff9203aca",
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL served; the bytes are a newsroom index, not a tokenisation disclosure"
     },
     {
       "id": "ubs",
@@ -128,7 +156,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.ubs.com/global/en/media.html",
       "page_state": "HTTP_403",
-      "page_sha256": null
+      "page_sha256": null,
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
     },
     {
       "id": "uob",
@@ -136,7 +166,9 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.uobgroup.com/uobgroup/news/index.html",
       "page_state": "HTTP_404",
-      "page_sha256": null
+      "page_sha256": null,
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
     },
     {
       "id": "wells-fargo",
@@ -144,10 +176,19 @@
       "status": "DISCOVERED",
       "artifact_url": "https://www.wellsfargo.com/about/press",
       "page_state": "HTTP_404",
-      "page_sha256": null
+      "page_sha256": null,
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "page_state_means": "our guessed URL did not serve; says nothing about this bank"
     }
   ],
   "sha256_payload": "25644133855ef394c9e03578a25f803bdba217767a7a9cc980ba41b4356aba8a",
   "sig_status": "UNSIGNED_PENDING_OIDC",
-  "sig_required": true
+  "sig_required": true,
+  "primary_source": {
+    "url": "https://www.swift.com/news-events/press-releases",
+    "state": "UNFETCHED_HTTP_403",
+    "read_at": "2026-09-16T12:40Z",
+    "note": "403 to our client. Until these bytes are held and digested, the cohort membership itself is second-hand."
+  },
+  "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE"
 }
