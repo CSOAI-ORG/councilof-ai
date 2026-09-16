@@ -1,0 +1,1507 @@
+{
+  "$comment": "The ONE producer of route <title> + meta description. Read by client/src/lib/seoHead.ts (runtime, synchronous — applied before any data arrives), scripts/surface/route-title.mjs (prerender: client-only SPA shells), client/src/lib/ownerRuling.test.ts (copy rulings) and client/src/lib/seoHead.test.ts (length + word guards). `routes` is keyed by exact path; `components` by the App.tsx component name (aliases inherit it via the route manifest). Rules: title <= 60 chars for new entries (older owner-ruled titles are kept verbatim); description 110–160 chars, specific to the page, no typed count, no price, no tier/plan word, never a certification claim. Counts render in the body from the artifact that owns them, never here.",
+  "site": {
+    "name": "Council of AI",
+    "origin": "https://councilof.ai",
+    "shellTitle": "Council of AI — we measure, we sign, we re-attest",
+    "shellDescription": "Council of AI (CSOAI LTD, UK 16939677) — a neutral AI-governance measurement body. We measure against frozen statute and issue signed, independently verifiable evidence. Measurement, not certification."
+  },
+  "routes": {
+    "/": {
+      "title": "Council OS | Council of AI",
+      "description": "Council of AI is an independent AI-measurement body. Explore the current GSPC measurements, read the change record, verify signed evidence, use the feeds."
+    },
+    "/pricing": {
+      "title": "Pricing — the rail is free, metered routes quote at the 402 | Council of AI",
+      "description": "How Council of AI charges: reading and verifying is free; metered evidence routes quote their price inside the HTTP 402 challenge itself. A grade is never sold."
+    },
+    "/wrappers": {
+      "title": "Wrapped-asset parity ledger — read, not rated | Council of AI",
+      "description": "One row per bridged or custodial wrapper pair: wrapped supply on its chain beside the escrow that backs it, read at named blocks from public RPC. Not rated."
+    },
+    "/quickstart": {
+      "title": "Agent quickstart — measurements, changes, verification and feeds | Council of AI",
+      "description": "Start here as an agent or developer: fetch the measurements, see what changed, verify a signed card, then connect a feed. Every step is a public endpoint."
+    },
+    "/evaluator-access": {
+      "title": "Conditions for Independent Evaluator Access | Council of AI",
+      "description": "The published conditions under which an independent evaluator can access CSOAI instruments, frozen banks and signed records, with version and date stated."
+    },
+    "/products": {
+      "title": "Council OS — the SKUs, one workspace | Council of AI",
+      "description": "What Council of AI offers as work: verification is free for everyone; measurement runs, the evidence feed and data access are named jobs inside one workspace."
+    },
+    "/attestation": {
+      "title": "Council Attestation Network | Council of AI",
+      "description": "How a measurement becomes public evidence: measure, sign, root, anchor. Verification is free forever; agents settle signed recordings over x402."
+    },
+    "/badge": {
+      "title": "White-label badge — Council of AI",
+      "description": "Drop one script tag on your site. The badge reads the live GSPC board, shows the measured status honestly and links to free verification. Not a certification."
+    },
+    "/get-listed": {
+      "title": "You are listed. You are not graded. — Council of AI",
+      "description": "What being in a Council of AI census means, what the GSPC badges are, and how a maintainer opts a model or server into a frozen bank to earn a signed card."
+    },
+    "/licensing-agreement": {
+      "title": "Measurement licence — evidence and data | Council of AI",
+      "description": "The licence terms under which CSOAI Ltd supplies measurement evidence and data: what is licensed, what stays free, and what a licensee may and may not claim."
+    },
+    "/frameworks": {
+      "title": "Frontier framework presence register | Council of AI",
+      "description": "Which frontier-safety frameworks each AI developer has published, read from the documents themselves on a stated date. Presence recorded, not judged."
+    },
+    "/licence-manifest": {
+      "title": "Licence manifest — request evidence, not a rank | Council of AI",
+      "description": "The CSOAI Ltd licence manifest template: the paid arms for measurement runs, the evidence feed and data, and what is never sold. Verification costs nothing."
+    },
+    "/council-model-card": {
+      "title": "Council model card | Council of AI",
+      "description": "The model card for the Council Workbench: a governed measurement engine rather than a foundation model, with its inputs, limits and intended use stated plainly."
+    },
+    "/council-system-card": {
+      "title": "Council system card | Council of AI",
+      "description": "The system and safety card for the Council Workbench: components, data flows, known failure modes and the safety record, published for independent review."
+    },
+    "/watchdog-signup": {
+      "title": "Become an AI Safety Watchdog Analyst | CSOAI",
+      "description": "Sign up as a public watchdog analyst: report AI incidents, review published evidence and help keep the public record accurate. No credential is sold or implied."
+    },
+    "/trust-center": {
+      "title": "Trust Center — security, compliance & Layer 0 | CSOAI",
+      "description": "Council of AI security and trust posture: how signing keys are held, how the public root is witnessed, what Layer 0 checks, and where to report a vulnerability."
+    },
+    "/trust": {
+      "title": "MCP Trust Board — who answers the handshake, under what terms | Council of AI",
+      "description": "A read-only handshake census of internet-facing MCP servers: who answers initialize, who challenges with auth, who is unreachable. Counts from the live run."
+    },
+    "/gspc-vs-ailuminate": {
+      "title": "GSPC vs AILuminate — an honest breadth comparison | Council of AI",
+      "description": "How the GSPC board differs from MLCommons AILuminate: AILuminate measures chat hazard; GSPC measures governance, safety, provenance and financial behaviour."
+    },
+    "/ailuminate": {
+      "title": "GSPC vs AILuminate — an honest breadth comparison | Council of AI",
+      "description": "How the GSPC board differs from MLCommons AILuminate: AILuminate measures chat hazard; GSPC measures governance, safety, provenance and financial behaviour."
+    },
+    "/boards/mcp": {
+      "title": "MCP Trust Board — who answers the handshake, under what terms | Council of AI",
+      "description": "A read-only handshake census of internet-facing MCP servers: who answers initialize, who challenges with auth, who is unreachable. Counts from the live run."
+    },
+    "/x402-leaderboard": {
+      "title": "x402 Bazaar leaderboard — every door returns 402, price in the 402 only | CSOAI",
+      "description": "Observed x402 challenge fields for CSOAI discovery resources: which doors answer 402, what the challenge carries and when it was read. A snapshot, not a grade."
+    },
+    "/x402-board": {
+      "title": "x402 Bazaar leaderboard — every door returns 402, price in the 402 only | CSOAI",
+      "description": "Observed x402 challenge fields for CSOAI discovery resources: which doors answer 402, what the challenge carries and when it was read. A snapshot, not a grade."
+    },
+    "/certification": {
+      "title": "Measurement credential — how CSOAI attestation works | CSOAI",
+      "description": "How a CSOAI measurement credential is produced and verified: a signed record of one run on a frozen instrument. It attests a measurement, not conformity."
+    },
+    "/courses": {
+      "title": "AI governance courses & training | CSOAI",
+      "description": "Council Academy courses on AI governance, the GSPC board and signed evidence. A completion record attests training was done, never that a system conforms."
+    },
+    "/api-docs": {
+      "title": "API & MCP documentation | CSOAI",
+      "description": "Reference for the public Council of AI API and MCP server: the GSPC board endpoint, signed card verification, feeds, and the fields every response carries."
+    },
+    "/academy": {
+      "title": "Council Academy — AI governance training | CSOAI",
+      "description": "Council Academy teaches the measurement board, the signed card format and the regulation it maps to by working through real published evidence not slides."
+    },
+    "/webhooks": {
+      "title": "Regulatory webhooks — live framework updates | CSOAI",
+      "description": "Webhook notifications when a tracked regulation, deadline or published measurement changes, with the event schema and delivery guarantees documented."
+    },
+    "/models": {
+      "title": "AI model registry & scoreboard | CSOAI",
+      "description": "Model-comparison runs from the living GSPC board. Counts and axis families are read from the board endpoint; an absent public leader never reclassifies a row."
+    },
+    "/plans": {
+      "title": "The rail is free — one signed card | Council of AI",
+      "description": "Reading, verifying and the public board are free. This page explains what a signed measurement card is, how to get one, and what is metered per call not sold."
+    },
+    "/gspc-arena": {
+      "title": "GSPC Arena | CSOAI",
+      "description": "Council Space is an interactive scenario demo on the GSPC axes. Published measurements stay separately verifiable; this page claims no signed run."
+    },
+    "/arena-scoreboard": {
+      "title": "Signed Per-Axis Leaderboard | CSOAI",
+      "description": "The signed per-axis leaderboard: models ranked on each GSPC axis from Ed25519-signed cards, with the verification path beside every row. Empty cells stay empty."
+    },
+    "/leaderboard": {
+      "title": "The AI Governance Leaderboard — sorted by the axis you care about | Council of AI",
+      "description": "The fleet-by-axis governance leaderboard: sort the measured models by whichever GSPC axis matters to you, and open the signed card behind any cell to verify it."
+    },
+    "/gspc-verify": {
+      "title": "GSPC Verify | CSOAI",
+      "description": "Paste a signed Council of AI measurement card and recompute it locally: payload hash and Ed25519 signature against the published key. Nothing is sent to us."
+    },
+    "/connect-gspc": {
+      "title": "Connect GSPC to your AI — every platform | CSOAI",
+      "description": "Copy-paste configs that add the GSPC measurement server to Claude, Cursor, ChatGPT, Gemini, Grok, Perplexity and others over MCP, OpenAPI or function calling."
+    },
+    "/connect-ai": {
+      "title": "Connect GSPC to your AI — every platform | CSOAI",
+      "description": "Copy-paste configs that add the GSPC measurement server to Claude, Cursor, ChatGPT, Gemini, Grok, Perplexity and others over MCP, OpenAPI or function calling."
+    },
+    "/embed": {
+      "title": "Embed / white-label — Powered by Council of AI | CSOAI",
+      "description": "Embed an independently signed Council of AI measurement in your own site: a live-status badge and a self-verifying card widget anyone can recompute client-side."
+    },
+    "/regulator-findings": {
+      "title": "Regulator Findings — signed EU AI Act | CSOAI",
+      "description": "Signed measurement findings mapped to the EU AI Act provisions they touch, with model, axis, run date and verification path. Withdrawn pending review."
+    },
+    "/findings": {
+      "title": "Regulation Findings — every signed finding, mapped to its regulator | CSOAI",
+      "description": "Every signed (model, axis) finding joined to the regulator and fine band it maps to, with the card behind each row. Read from the published findings index."
+    },
+    "/gspc-gap-map": {
+      "title": "GSPC Gap Map | CSOAI",
+      "description": "The coverage gap map: enumerated legal provisions crossed with the GSPC lenses, showing which cells the field has measured and which still have no instrument."
+    },
+    "/board": {
+      "title": "The measurement board — every set, what it measures, what it does not | Council of AI",
+      "description": "One navigable board across every axis set Council of AI publishes. Each set states what it measures, over what, when, what it establishes and what it does not.",
+      "note": "No count in this title or description. A static entry cannot derive one, and ADR-001 forbids typing it — every count on /board renders in the body from the artifact that owns it."
+    },
+    "/board/models": {
+      "title": "Measured models — the signed card set | Council of AI",
+      "description": "Every model Council of AI has measured, every axis it was measured on, and the signed record behind each cell. Sortable, filterable, honest about empty cells."
+    },
+    "/financial-axes": {
+      "title": "Financial axis — the financial half of the GSPC board | Council of AI",
+      "description": "The financial and domain half of the GSPC board, read live from the board endpoint: what each financial row measures, over which instruments, and its limits.",
+      "note": "No count in this title or description: a static entry cannot derive one, and ADR-001 forbids typing it. The live counts render in the page body from /api/gspc."
+    },
+    "/badges": {
+      "title": "Governance badges — wear your measured status | CSOAI",
+      "description": "The badges a measured model or server can display, what each records, and how to verify the signed card behind it. A badge states a measurement, not approval."
+    },
+    "/verify-certificate": {
+      "title": "Verify a completion record | CSOAI",
+      "description": "Check a Council Academy completion record by its identifier. A record attests a named course was completed on a date; it is not a licence or a conformity mark."
+    },
+    "/gspc-anchors": {
+      "title": "GSPC Anchors | CSOAI",
+      "description": "The statute registries each GSPC provision is anchored to, with the timestamp of the last successful fetch. A stale anchor is shown as stale, never re-stamped."
+    },
+    "/xrpl-attest": {
+      "title": "XRPL public-root catalogue — unsigned leaves; /api/xrpl reader | Council of AI",
+      "description": "The living XRPL public-root catalogue read through /api/xrpl: which leaves are signed, which unsigned, what the reader derives. It never writes the board."
+    },
+    "/claims-register": {
+      "title": "Claims register — every public claim, its evidence, its status | CSOAI",
+      "description": "Every public claim CSOAI makes about itself, the evidence behind it and its current status, generated from the register so a claim cannot outlive its proof."
+    },
+    "/distribution-integrity": {
+      "title": "Distribution integrity — represented is not distributed | Council of AI",
+      "description": "The financial-axis reading of tokenised real-world assets: the spread between what issuers report as represented and what is distributed, with sources dated."
+    },
+    "/layer0": {
+      "title": "Layer 0 | CSOAI",
+      "description": "The trust floor, benched: one probed record per public-root run states what the DID key, served root, pointer, Rekor and OpenTimestamps state were then."
+    },
+    "/methodology": {
+      "title": "Methodology | CSOAI",
+      "description": "How the CSOAI instrument measures: deterministic predicates, no model-as-judge, row-declared methods and evidence boundaries and how hedged answers propagate."
+    },
+    "/answers": {
+      "title": "Answers — measurement explainers | Council of AI",
+      "description": "Short explainers that answer one measurement or regulation question each, written to be quoted: what a term means, what the board shows, its limits."
+    },
+    "/notes": {
+      "title": "Evidence notes — one citable page per note | Council of AI",
+      "description": "Dated evidence notes from the measurement programme, one citable page each: what was observed, the signed artifacts it rests on, and what remains unmeasured."
+    },
+    "/doctrine": {
+      "title": "Doctrine — measurement, not certification | Council of AI",
+      "description": "CSOAI doctrine and refusal lines: measurement, not certification; uncertainty stays visible; unmeasured is a first-class status; verification remains free."
+    },
+    "/launch": {
+      "title": "The launch story — Council of AI",
+      "description": "How an independent measurement body came to publish scoped, replayable evidence about AI systems: every number traceable, every correction public."
+    },
+    "/owasp-agentic": {
+      "title": "OWASP Agentic Top 10 — the public measured mapping | Council of AI",
+      "description": "The OWASP Top 10 for Agentic Applications mapped to the measurement controls Council of AI runs. An informative crosswalk, not an OWASP product or endorsement."
+    },
+    "/owasp-asi": {
+      "title": "OWASP AI Exchange — GSPC Axis Mapping | Council of AI",
+      "description": "How the GSPC axes map onto the OWASP AI Exchange threat and control catalogue, axis by axis, so you see which risks a measurement touches and which it does not."
+    },
+    "/agent-blocking": {
+      "title": "Agent traffic and Cloudflare's blocking change | Council of AI",
+      "description": "What changed when Cloudflare began blocking mixed-use AI crawlers by default, what it means for agents that read this site and how CSOAI keeps its doors open."
+    },
+    "/ivo-evidence": {
+      "title": "What an IVO's evidence should look like | Council of AI",
+      "description": "A position paper for the California SB 813 rulemaking: what an independent verification organisation should publish as evidence, and what it must not claim."
+    },
+    "/postmortems/x402-settlement-reading": {
+      "title": "X402 settlement postmortem — the record was not lost | Council of AI",
+      "description": "A public correction of an incorrect x402 settlement diagnosis: what was claimed, what the record showed, the defects found and the controls added after."
+    },
+    "/events/three-root-ceremony": {
+      "title": "Three-root ceremony — public witness record | Council of AI",
+      "description": "Inspect the Council of AI public root: exact witness match, Ed25519 signature presence, Rekor transparency-log state and Bitcoin OpenTimestamps state, live."
+    },
+    "/transparency-cop": {
+      "title": "Transparency Code — detection/verify tool, C2PA planned | Council of AI",
+      "description": "Where CSOAI stands under the EU transparency code of practice: a free detection and provenance verification tool today, C2PA support planned, not a model lab."
+    },
+    "/ai-act-benchmark": {
+      "title": "AI Act Benchmark — measured, not claimed | CSOAI",
+      "description": "CSOAI measured against an external EU AI Act benchmark on held-out scenarios, with the losses published beside the passes and the run available to re-check."
+    },
+    "/provbench": {
+      "title": "ProvBench — Does provenance survive the real world? | CSOAI",
+      "description": "ProvBench measures whether C2PA content credentials survive ordinary saves, resizes and re-uploads, as EU AI Act Article 50 assumes. Signed, dated runs."
+    },
+    "/refutation-ledger": {
+      "title": "Refutation Ledger | CSOAI",
+      "description": "The experiments that refuted CSOAI's own theses, recorded in full: the claim, the test, the result and what was withdrawn. Every entry is ours, none is hidden."
+    },
+    "/dispute": {
+      "title": "Appeals & dispute resolution | Council of AI",
+      "description": "How to contest a published CSOAI measurement. Every decision is reviewable; a dispute is answered by re-measurement on the frozen instrument, not assertion."
+    },
+    "/east-west": {
+      "title": "East-West — one signed measurement, every regime mapped | Council of AI",
+      "description": "One signed measurement mapped to every regulatory regime it touches, from the EU AI Act to China's TC260, so a cross-border reader sees the same evidence."
+    },
+    "/challenge": {
+      "title": "Challenge a measurement — East-West redress | Council of AI",
+      "description": "The redress path for a cross-border measurement: how to challenge a published result, what evidence a challenge needs, and how the answer is measured."
+    },
+    "/crosswalk": {
+      "title": "AI governance framework crosswalk | Council of AI",
+      "description": "An open crosswalk mapping published AI-governance frameworks (EU AI Act, UK DRCF, US state law, China GB/T, NIST AI RMF, ISO 42001) to one requirement set."
+    },
+    "/live-ledger": {
+      "title": "Live Ledger | CSOAI",
+      "description": "The living ledger of published CSOAI measurements and corrections in the order they were made. Withdrawn from the public decision path pending evidence review."
+    },
+    "/coliseum": {
+      "title": "The Coliseum of AI | Council of AI",
+      "description": "The Coliseum story: how models are measured in public against a frozen instrument, why the empty cells are published, and where to verify each signed result."
+    },
+    "/open-source": {
+      "title": "The open-source framework | Council of AI",
+      "description": "Why the Council of AI measurement framework is open source: the harness, banks, predicates and verifier are public so anyone can rerun a measurement without us."
+    },
+    "/verifiable-trust": {
+      "title": "The science of verifiable trust | Council of AI",
+      "description": "What makes a measurement verifiable not merely asserted: frozen inputs, deterministic grading, Ed25519 signatures and a public root any reader can recompute."
+    },
+    "/evidence-rail": {
+      "title": "The independent evidence rail | Council of AI",
+      "description": "The evidence rail explained: how a measurement travels from a run to a signed card, a public root and a witnessed anchor, and why every stop is public."
+    },
+    "/metrology": {
+      "title": "The metrology apparatus | Council of AI",
+      "description": "The metrology behind the board: how an instrument is frozen, how error and confidence intervals are reported, and why a reading without uncertainty is withheld."
+    },
+    "/accountability-loop": {
+      "title": "The accountability loop — from a public report to a complaint a regulator can open | Council of AI",
+      "description": "How a public measurement report becomes something a regulator can act on: the evidence chain from a signed card to a complaint a supervisory authority can open."
+    },
+    "/where-the-record-lives": {
+      "title": "Where the record lives — mirrored, not indestructible | Council of AI",
+      "description": "Where CSOAI's signed record is stored and mirrored, what each copy proves and the honest limit: mirrored across independent hosts, but not indestructible."
+    },
+    "/statute-to-predicate": {
+      "title": "From statute to predicate — how a law becomes a test | Council of AI",
+      "description": "How a legal provision becomes a deterministic predicate the harness can run: the reading, the hashed statute text, the test items and the mapping's limits."
+    },
+    "/instrument": {
+      "title": "The Instrument | CSOAI",
+      "description": "The Council of AI instrument: one deterministic engine, the lenses it applies and the hashed provisions it tests against, described so you can reproduce a run."
+    },
+    "/harness": {
+      "title": "The measurement harness | Council of AI",
+      "description": "How a measurement becomes a signed card anyone can verify offline, what the harness measures today, and which capabilities are not yet available."
+    },
+    "/benchmarks": {
+      "title": "Benchmarks | CSOAI",
+      "description": "The CSOAI benchmark surfaces on one foundation: does a system comply with statute, refuse what statute forbids, mark what it produces and keep its record."
+    },
+    "/benchmark-index": {
+      "title": "Meta-benchmark index — what other benchmarks report, beside what we measure | Council of AI",
+      "description": "One index of public AI benchmarks: SWE-bench, Terminal-Bench, METR, HELM, LMArena and others: each shown beside what CSOAI measures. Composed, never fused."
+    },
+    "/benchmark-quality": {
+      "title": "Benchmark-quality register — deterministic predicates on third-party AI benchmarks | Council of AI",
+      "description": "A signed register of what third-party AI benchmarks disclose about contamination, licensing, versioning and grading, read by deterministic predicates and dated."
+    },
+    "/provenance-finding": {
+      "title": "Provenance Finding | CSOAI",
+      "description": "A measured finding on content provenance: the marking that proves an image is AI-generated did not survive one ordinary save. Signed run and method published."
+    },
+    "/learn": {
+      "title": "Learn | CSOAI",
+      "description": "Learn the GSPC board in an afternoon: what each axis measures, how to read a signed card, how to verify one yourself and where the unmeasured cells are and why."
+    },
+    "/article-50": {
+      "title": "Article 50 | CSOAI",
+      "description": "EU AI Act Article 50, the transparency and content-marking duty: who it binds, when it applies, what a durable marking has to survive and what CSOAI measures."
+    },
+    "/packs/eu-article-50": {
+      "title": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
+      "description": "An evidence pack for EU AI Act Article 50: signed measurements of whether C2PA content credentials survive real-world handling, packaged for a provider's file."
+    },
+    "/gpai-evidence": {
+      "title": "GPAI Evidence Pack — independent evidence for the AI Office | CSOAI",
+      "description": "Independent third-party evidence a general-purpose AI provider can put before the EU AI Office: signed measurement runs against the GPAI obligations, dated."
+    },
+    "/cra-readiness": {
+      "title": "CRA Readiness Kit — the 24h/72h/14-day runbook, signed | CSOAI",
+      "description": "The EU Cyber Resilience Act reporting runbook (the 24-hour, 72-hour and 14-day duties) as a signed, dated kit a manufacturer can rehearse before an incident."
+    },
+    "/cobolbridge": {
+      "title": "COBOL Bridge — Council of AI Layer-0 MCP | CSOAI",
+      "description": "COBOL Bridge turns a COBOL copybook into signed evidence over the CSOAI Layer-0 MCP: what it reads, what it signs and what it does not promise about the code."
+    },
+    "/cobol": {
+      "title": "COBOL Bridge — Council of AI Layer-0 MCP | CSOAI",
+      "description": "COBOL Bridge turns a COBOL copybook into signed evidence over the CSOAI Layer-0 MCP: what it reads, what it signs and what it does not promise about the code."
+    },
+    "/verify": {
+      "title": "Verify a signed CSOAI measurement | CSOAI",
+      "description": "Verify any signed Council of AI measurement card: recompute its hash and Ed25519 signature against the public key, free, with nothing leaving your browser."
+    },
+    "/governance-layer": {
+      "title": "Council Governance Layer | CSOAI",
+      "description": "The Council governance layer for AI companies shipping into regulated markets: your model keeps its behaviour; the layer records what it did against the rules."
+    },
+    "/status": {
+      "title": "Service status | Council of AI",
+      "description": "Live service status for Council of AI public endpoints, feeds and signing: each row is read from the service itself and never typed into the page by hand."
+    },
+    "/status/internal": {
+      "title": "Weekly yield template | Council of AI",
+      "description": "The weekly scorecard template derived from the public status and settlement records: which fields are read live and which stay unmeasured."
+    },
+    "/yield": {
+      "title": "Yield Dashboard | Council of AI",
+      "description": "The yield dashboard reads settled x402 receipts and published measurements to show what the rail earned and measured. Derived from settlements, never typed."
+    },
+    "/countdown": {
+      "title": "Regulatory countdown | Council of AI",
+      "description": "Countdown to the next binding AI-regulation dates, read from the published regulation feed: what comes into force, when, and who it binds. Fetched, never typed."
+    },
+    "/art50": {
+      "title": "Article 50 verification services | Council of AI",
+      "description": "Article 50 verification services from CSOAI: check whether AI-generated content carries a durable, machine-readable marking, with the method and limits stated."
+    },
+    "/rlusd": {
+      "title": "RLUSD supply on XRPL and Ethereum | Council of AI",
+      "description": "RLUSD supply read live from public XRPL and Ethereum endpoints at named ledgers and blocks, shown beside the query used so the reading can be repeated."
+    },
+    "/receipt": {
+      "title": "Inclusion receipt | Council of AI",
+      "description": "A free inclusion check: give the hash of a signed card and see whether it is in the public root, with the Merkle path returned so the proof can be recomputed."
+    },
+    "/custody": {
+      "title": "Custody disclosure | Council of AI",
+      "description": "CSOAI's published custody disclosure for the custody axis: how keys and records are held, what is single-key today and what the disclosure does not claim."
+    },
+    "/merge-me": {
+      "title": "Merge-me — the train | Council of AI",
+      "description": "The merge-train conductor view: which changes are queued, gated and merged into the site, derived from the repository state. Informational, never authoritative."
+    },
+    "/specimens/clarity": {
+      "title": "CLARITY pre-commit specimen (unsigned) | Council of AI",
+      "description": "An unsigned pre-commit specimen for the CLARITY Act reading: what the artifact contains, why it is unsigned, and what must happen before it enters the board."
+    },
+    "/contact": {
+      "title": "Contact | CSOAI",
+      "description": "How to reach CSOAI (CSOAI Ltd): the mailbox for measurement requests, evidence questions, disputes and press and what to include so a reply can be useful."
+    },
+    "/about": {
+      "title": "About | CSOAI",
+      "description": "CSOAI (CSOAI Ltd, UK 16939677) measures AI systems against frozen instruments, signs the result and publishes what it could not measure. A measurement body."
+    },
+    "/mcp": {
+      "title": "MCP Hub | CSOAI",
+      "description": "The Council of AI MCP hub: the governance MCP server, its free reader tools and metered evidence tools, and a catalogue of other Model Context Protocol servers."
+    },
+    "/mcp-fleet": {
+      "title": "MCP Fleet | CSOAI",
+      "description": "The MCP fleet catalogue of governance, safety and agent-infrastructure servers. A catalogue row records a listing, not that a server is reachable or safe."
+    },
+    "/tool-commons": {
+      "title": "Tool Commons | CSOAI",
+      "description": "MCP servers listed by what was reached: each entry answered a live tools/list call from the probe not being copied from a directory. Counts from the run."
+    },
+    "/globe": {
+      "title": "Global Regulation Globe | CSOAI",
+      "description": "A globe of AI and cyber regulation by jurisdiction: which regimes are in force, phasing in or proposed, each linked to its published source and its next date."
+    },
+    "/tour": {
+      "title": "Platform Tour | CSOAI",
+      "description": "A guided tour of the Council of AI surfaces: the measurement board, signed cards, verification, the regulation map and the feeds, with what each shows."
+    },
+    "/demo": {
+      "title": "Demo | CSOAI",
+      "description": "A demo of the Council OS assistant. Microphone use is optional; recognised text goes to the Council endpoint and nothing here is a signed measurement."
+    },
+    "/assess": {
+      "title": "Get measured — measurement is metered; verify stays free | Council of AI",
+      "description": "Request a measurement of your AI system or agent against the GSPC board. Runs are metered per call; the resulting signed card is free for anyone to verify."
+    },
+    "/login": {
+      "title": "Sign in | Council of AI",
+      "description": "Sign in to your CSOAI workspace: your Council assistant, saved measurements and evidence tools in one place. Public boards and verification need no account."
+    },
+    "/dashboard": {
+      "title": "Council OS | Council of AI",
+      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+    },
+    "/os": {
+      "title": "Council OS | Council of AI",
+      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+    },
+    "/enterprise": {
+      "title": "Enterprise | CSOAI",
+      "description": "CSOAI for enterprises: independent, signed measurement of the AI systems you deploy, evidence your auditors can recompute and no remediation sold on the result."
+    },
+    "/government": {
+      "title": "Government | CSOAI",
+      "description": "A preview of the government evidence workspace: scoped evidence, jurisdiction views and accountable review. No registry or live monitor is connected."
+    },
+    "/regulators": {
+      "title": "Regulators | CSOAI",
+      "description": "The regulator atlas: AI and cyber regimes (EU AI Act, NIS2, DORA, UK, US, TC260 and more) with each regulator's tools and next enforcement date, sourced."
+    },
+    "/blog": {
+      "title": "Blog | CSOAI",
+      "description": "The Council of AI blog: articles on AI measurement, the EU AI Act and governance evidence. Withdrawn from the public decision path while each claim is checked."
+    },
+    "/assessment": {
+      "title": "Readiness Assessment | Council of AI",
+      "description": "A short self-assessment of your organisation's AI governance readiness: answer a few questions, see which obligations apply and where the evidence gaps are."
+    },
+    "/health-inventory": {
+      "title": "Health Inventory | Council of AI",
+      "description": "A same-origin scanner that inventories the site's own public endpoints and reports which respond and how. A v0 tool that reads, never repairs."
+    },
+    "/mcp-tools": {
+      "title": "Tool Commons | CSOAI",
+      "description": "MCP servers listed by what was reached: each entry answered a live tools/list call from the probe not being copied from a directory. Counts from the run."
+    },
+    "/proof-receipt": {
+      "title": "Proof of receipt — latest issuance status | Council of AI",
+      "description": "The latest proof-of-receipt issuance status: whether a receipt was issued, for which root, and how to verify it. Measurement, not certification."
+    },
+    "/stablewatch": {
+      "title": "Council of AI — Stablewatch Feed",
+      "description": "The Stablewatch feed: an alert fires when RLUSD/USD deviates from its published target by more than the stated threshold at the close of a measurement window."
+    },
+    "/404": {
+      "title": "Page not found | Council of AI",
+      "description": "The page you asked for does not exist on Council of AI or has moved. Use the library to find the page, or start from the measurement board and verification."
+    },
+    "/about-credential": {
+      "title": "About the measurement credential | Council of AI",
+      "description": "What the Council of AI measurement credential is: a signed record of a completed training path, what it attests, what it does not, and how anyone can verify it."
+    },
+    "/accreditation": {
+      "title": "Training and attestation | Council of AI",
+      "description": "CSOAI is a measurement body, not an accreditation authority. Its training paths end in signed attestations of completion aligned to published frameworks."
+    },
+    "/admin": {
+      "title": "Admin | Council of AI",
+      "description": "The administration area of the Council OS workspace. Sign in to manage measurements, keys and settings. Nothing here is public evidence."
+    },
+    "/api-keys": {
+      "title": "API keys | Council of AI",
+      "description": "Manage the API keys for your CSOAI workspace: create, rotate and revoke keys for metered measurement calls. Reading the public board needs no key at all."
+    },
+    "/my-applications": {
+      "title": "My applications | Council of AI",
+      "description": "Your measurement applications and their status inside the Council OS workspace, from request through run to the signed card. Sign in to see your own records."
+    },
+    "/settings": {
+      "title": "Settings | Council of AI",
+      "description": "Account settings for your Council OS workspace: profile, region and language, notifications and billing preferences. Public verification needs no account."
+    },
+    "/settings/billing": {
+      "title": "Billing settings | Council of AI",
+      "description": "Billing settings for metered measurement calls in your Council OS workspace. Verification and the public board stay free; measurement runs alone are metered."
+    },
+    "/settings/notifications": {
+      "title": "Notification settings | Council of AI",
+      "description": "Choose which Council of AI events notify you: regulation changes, new measurements on systems you follow, and corrections to records you have cited."
+    },
+    "/workbench": {
+      "title": "Workbench | Council of AI",
+      "description": "The Council Workbench: run a governed measurement against a frozen instrument, inspect each predicate result and export the signed card. Sign in to use it."
+    },
+    "/agent-council": {
+      "title": "Agent Council | Council of AI",
+      "description": "The Agent Council design: how several reviewing agents and a human seat structure a governance decision, what is a live tool today and what remains a design."
+    },
+    "/features/33-agent-council": {
+      "title": "The 33-seat council design | Council of AI",
+      "description": "The 33-seat council as a design, not a live system: how seats, thresholds and human oversight are meant to work, and why its independence must be shown first."
+    },
+    "/features/pdca-framework": {
+      "title": "SOAI-PDCA framework | Council of AI",
+      "description": "The SOAI-PDCA framework: a continuous improvement cycle for AI safety management, with objectives, named checks and improvement records tied to published rules."
+    },
+    "/features/watchdog-jobs": {
+      "title": "Watchdog jobs | Council of AI",
+      "description": "Open public-watchdog tasks: reviewing published evidence, reporting AI incidents and checking claims against the record. Volunteer work, described plainly."
+    },
+    "/first-fine-watch": {
+      "title": "First-Fine Watch | Council of AI",
+      "description": "First-Fine Watch: the signed public record of enforcement actions and fines under AI regulation, each with its source, date and provision."
+    },
+    "/glossary": {
+      "title": "AI governance glossary | Council of AI",
+      "description": "Definitions of the AI governance, measurement, legal and technical terms used across Council of AI, from axis and frozen bank to notified body and public root."
+    },
+    "/ai-glossary": {
+      "title": "AI governance glossary | Council of AI",
+      "description": "Definitions of the AI governance, measurement, legal and technical terms used across Council of AI, from axis and frozen bank to notified body and public root."
+    },
+    "/home-v3": {
+      "title": "Verify a card | Council of AI",
+      "description": "Paste a signed CSOAI card and check it locally. The result is VALID, INVALID or UNCHECKABLE; the paste never leaves the page and it is not a certificate."
+    },
+    "/jobs": {
+      "title": "Jobs | Council of AI",
+      "description": "Open roles and collaborations at CSOAI: measurement, safety research and watchdog work, with the scope, evidence and terms defined before any work begins."
+    },
+    "/knowledge-base": {
+      "title": "Knowledge base | Council of AI",
+      "description": "A knowledge base of documented AI safety incidents and review decisions, each with what happened, what was learned and which published provision it relates to."
+    },
+    "/landing": {
+      "title": "AI safety governance | Council of AI",
+      "description": "CSOAI measures AI systems against published frameworks: EU AI Act, NIST AI RMF, TC260: signs the evidence and keeps the public accountable through the record."
+    },
+    "/motion-lab": {
+      "title": "Motion lab | Council of AI",
+      "description": "The scroll-world motion and graphics kit used across Council of AI story pages: the components, timings and accessibility settings, shown live for review."
+    },
+    "/opengridworks": {
+      "title": "Open Grid Works | Council of AI",
+      "description": "Open Grid Works: the open infrastructure behind the Council assistant grid, what each node runs, how nodes join, and which parts are live today versus designed."
+    },
+    "/payg": {
+      "title": "Pay as you go | Council of AI",
+      "description": "One key for every metered instrument: a free daily allowance of calls, then metered machine access. A published measurement may return a signed card to verify."
+    },
+    "/pdca": {
+      "title": "PDCA cycles | Council of AI",
+      "description": "Continuous improvement cycles for AI safety: recognise the opportunity, analyse the baseline, decide the change, check the result and record what happened."
+    },
+    "/pdca-simulator": {
+      "title": "PDCA cycle simulator | Council of AI",
+      "description": "Walk through a full SOAI-PDCA cycle with a fictional AI system and see how the proposed council workflow could structure review at each phase. A simulation."
+    },
+    "/policy-generator": {
+      "title": "AI policy generator | Council of AI",
+      "description": "Draft an internal AI use policy from published requirements: pick the frameworks that bind you and the generator assembles clauses with sources for your review."
+    },
+    "/pricing-legacy": {
+      "title": "Pricing — the rail is free, metered routes quote at the 402 | Council of AI",
+      "description": "How Council of AI charges: reading and verifying is free; metered evidence routes quote their price inside the HTTP 402 challenge itself. A grade is never sold."
+    },
+    "/public-watchdog": {
+      "title": "Public watchdog | Council of AI",
+      "description": "The public watchdog: incident reports, evidence reviews and the analysts who file them, kept in the open so anyone can check a report against the record."
+    },
+    "/recommendations": {
+      "title": "Recommendations | Council of AI",
+      "description": "Recommendations for your AI systems drawn from the published requirements and your own inputs. Suggestions to review, not a compliance verdict or a measurement."
+    },
+    "/registers": {
+      "title": "EUNOMIA registers | Council of AI",
+      "description": "The EUNOMIA registers: signed financial-axis rows with exact labels, Wilson intervals and Ed25519 signatures, every one recomputable from the published data."
+    },
+    "/regulator": {
+      "title": "Regulator dashboard | Council of AI",
+      "description": "A dashboard prototype for regulators: aggregated views over registered AI systems and their published evidence. A preview, not a live connection."
+    },
+    "/remediation-partners": {
+      "title": "Remediation partners | Council of AI",
+      "description": "CSOAI measures and never sells remediation on what it ranks. How to find independent partners to fix what a measurement found, kept at arm's length from us."
+    },
+    "/reports": {
+      "title": "Reports | Council of AI",
+      "description": "Generated reports and documentation for your AI systems inside the Council OS workspace, each built from published measurements and your own recorded evidence."
+    },
+    "/resources": {
+      "title": "Implementation resources | Council of AI",
+      "description": "Guides, templates and tools for putting AI governance frameworks into practice: registering systems, gathering evidence and preparing for review. Free to use."
+    },
+    "/risk-assessment": {
+      "title": "Risk assessment | Council of AI",
+      "description": "Assess an AI system's risk classification against the EU AI Act and other published frameworks, with the provisions each answer turns on shown beside it."
+    },
+    "/risk-heatmap": {
+      "title": "Risk heatmap | Council of AI",
+      "description": "A heatmap of AI risk scenarios across the systems and provisions in your workspace: where evidence is strong, where it is thin, where nothing is measured."
+    },
+    "/soai-pdca": {
+      "title": "SOAI-PDCA framework | Council of AI",
+      "description": "The SOAI-PDCA continuous improvement framework: safety oversight for AI combined with a repeatable improvement cycle, with objectives and risks recorded."
+    },
+    "/standards": {
+      "title": "AI governance standards | Council of AI",
+      "description": "Implementation guides for global AI safety and governance standards, with measurement harnesses crosswalked to the EU AI Act, NIST AI RMF, ISO 42001 and TC260."
+    },
+    "/transparency": {
+      "title": "Public transparency dashboard | Council of AI",
+      "description": "The public transparency dashboard: what CSOAI has published, measured, corrected and left unmeasured, with each figure read from the record that owns it."
+    },
+    "/watchdog": {
+      "title": "Watchdog | Council of AI",
+      "description": "The AI watchdog programme: public incident reports, evidence reviews and analyst sign-up, kept in the open so every report can be checked against the record."
+    },
+    "/watchdog-hub": {
+      "title": "Watchdog hub | Council of AI",
+      "description": "The public watchdog hub: file an AI incident report, review open reports and see how each is checked against published evidence before anything is concluded."
+    },
+    "/watchdog/report": {
+      "title": "Report an AI incident | Council of AI",
+      "description": "File a public AI incident report: what happened, which system, when, and what evidence you have. Reports are reviewed against the record before publication."
+    },
+    "/watchdog-leaderboard": {
+      "title": "Watchdog leaderboard | Council of AI",
+      "description": "Public watchdog analysts ranked by reviewed contributions: reports filed, evidence checked and corrections accepted. Activity counts, never a verdict."
+    },
+    "/watchdog/help-protect-humanity": {
+      "title": "Help protect the public record | Council of AI",
+      "description": "Why the watchdog programme exists and how to take part: review published AI evidence, report incidents and help keep the public measurement record accurate."
+    },
+    "/watchdog/incident": {
+      "title": "AI incident report form | Council of AI",
+      "description": "The incident report form for the public watchdog: describe the AI system, the event, the date and your evidence. Reviewed against the record before publication."
+    },
+    "/heatmap": {
+      "title": "Watchdog map | Council of AI",
+      "description": "A map of reported AI incidents and watchdog activity by region, drawn from public reports and the published record. Locations are as reported, never inferred."
+    },
+    "/watchdog-heatmap": {
+      "title": "Watchdog map | Council of AI",
+      "description": "A map of reported AI incidents and watchdog activity by region, drawn from public reports and the published record. Locations are as reported, never inferred."
+    },
+    "/watchdog-map": {
+      "title": "Watchdog map | Council of AI",
+      "description": "A map of reported AI incidents and watchdog activity by region, drawn from public reports and the published record. Locations are as reported, never inferred."
+    },
+    "/careers": {
+      "title": "Collaborate on measurement research | Council of AI",
+      "description": "Propose a bounded experiment, dataset or reproducibility study that strengthens an existing GSPC instrument. Scope and terms are set before work starts."
+    },
+    "/charter": {
+      "title": "Partnership charter | Council of AI",
+      "description": "The CSOAI partnership charter: the articles, schedules and parts that state how the body measures, signs, corrects and refuses and what partners agree to."
+    },
+    "/comparison": {
+      "title": "Why organisations use Council of AI | CSOAI",
+      "description": "How CSOAI compares with compliance software: independent measurement against published frameworks, dated evidence records and training, with no grade sold."
+    },
+    "/compliance": {
+      "title": "Compliance overview | Council of AI",
+      "description": "Track your AI systems' evidence against several published frameworks at once, with each status read from your recorded checks. An overview, not a certification."
+    },
+    "/council": {
+      "title": "The Council | Council of AI",
+      "description": "The Council: a multi-seat oversight design that checks evidence against selected regulatory mappings. Its independence must be shown before it governs anything."
+    },
+    "/covenant": {
+      "title": "The Maternal Covenant | Council of AI",
+      "description": "The Maternal Covenant: the founding statement of how Council of AI relates to the systems it measures — partnership through care not control or obedience."
+    },
+    "/maternal-covenant": {
+      "title": "The Maternal Covenant | Council of AI",
+      "description": "The Maternal Covenant: the founding statement of how Council of AI relates to the systems it measures — partnership through care not control or obedience."
+    },
+    "/crosswalks": {
+      "title": "Framework crosswalks | Council of AI",
+      "description": "How the Council of AI charter maps to global AI governance standards, clause by clause, so a reader can see which published requirement each commitment answers."
+    },
+    "/framework-crosswalks": {
+      "title": "Framework crosswalks | Council of AI",
+      "description": "How the Council of AI charter maps to global AI governance standards, clause by clause, so a reader can see which published requirement each commitment answers."
+    },
+    "/drift-audit": {
+      "title": "Drift audit | Council of AI",
+      "description": "Is your AI system still within the rules today? Provisions across the EU AI Act, CRA, DORA, NIS2 and UK GDPR are hashed daily; when the law changes, you see it."
+    },
+    "/drift-product": {
+      "title": "Drift audit | Council of AI",
+      "description": "Is your AI system still within the rules today? Provisions across the EU AI Act, CRA, DORA, NIS2 and UK GDPR are hashed daily; when the law changes, you see it."
+    },
+    "/ecosystem": {
+      "title": "Integrations | Council of AI",
+      "description": "Connect Council of AI to the platforms and tools you already run: register systems, pull measurements and evidence into your own workflow and watch for changes."
+    },
+    "/integrations": {
+      "title": "Integrations | Council of AI",
+      "description": "Connect Council of AI to the platforms and tools you already run: register systems, pull measurements and evidence into your own workflow and watch for changes."
+    },
+    "/enterprise-dashboard": {
+      "title": "Enterprise dashboard | Council of AI",
+      "description": "The enterprise dashboard for managing AI systems, evidence and reviews across an organisation inside Council OS. Values that have not been measured stay empty."
+    },
+    "/enterprise-onboarding": {
+      "title": "Enterprise onboarding | Council of AI",
+      "description": "Set up your organisation in Council OS: basic details, the AI systems you run and the frameworks that bind them, so measurements and evidence land in one place."
+    },
+    "/eunomia": {
+      "title": "EUNOMIA financial-verification board | Council of AI",
+      "description": "EUNOMIA, the financial-verification board: exact-label measurements with Wilson intervals, Ed25519-signed and recomputable, read live from the board endpoint."
+    },
+    "/eunomia-catalog": {
+      "title": "EUNOMIA catalogue | Council of AI",
+      "description": "The EUNOMIA measurement ecosystem catalogued: every surface, feed and register linked, with measured and unmeasured status shown for each rather than assumed."
+    },
+    "/eunomia-crosswalk": {
+      "title": "EUNOMIA EU AI Act and CRA cross-reference | Council of AI",
+      "description": "The EUNOMIA cross-reference watch: statute to axis to requirement to exposure across the EU AI Act and the Cyber Resilience Act, with live sources linked."
+    },
+    "/eunomia-data": {
+      "title": "EUNOMIA Data feed | Council of AI",
+      "description": "EUNOMIA Data: the data-only enforcement feed delivered over x402. Rows are published as measured; the feed never scores, ranks or grades what it carries."
+    },
+    "/eunomia-indices": {
+      "title": "EUNOMIA indices — unmeasured | Council of AI",
+      "description": "The EUNOMIA aspirational index axes, published as UNMEASURED: what each index would measure, why nothing is claimed yet, and which board stays the authority."
+    },
+    "/founding-council-agreement": {
+      "title": "Founding Council agreement | Council of AI",
+      "description": "The Founding Council agreement of CSOAI Ltd: the terms under which founding council members take part, their duties, and the limits of what the council decides."
+    },
+    "/legal/founding-council": {
+      "title": "Founding Council agreement | Council of AI",
+      "description": "The Founding Council agreement of CSOAI Ltd: the terms under which founding council members take part, their duties, and the limits of what the council decides."
+    },
+    "/framework-catalog": {
+      "title": "Framework catalogue | Council of AI",
+      "description": "A catalogue of AI governance frameworks and regulations with the coverage each has in the CSOAI crosswalk and measurement instruments, sourced and dated."
+    },
+    "/government-dashboard": {
+      "title": "Government dashboard | Council of AI",
+      "description": "A preview of the government evidence workspace: scoped evidence, jurisdiction views and accountable review. No registry or live monitor is connected."
+    },
+    "/cookie-policy": {
+      "title": "Cookie policy | Council of AI",
+      "description": "How Council of AI uses cookies and similar technologies: what is set, why, for how long and how to withdraw consent. Public verification pages work without any."
+    },
+    "/cookies": {
+      "title": "Cookie policy | Council of AI",
+      "description": "How Council of AI uses cookies and similar technologies: what is set, why, for how long and how to withdraw consent. Public verification pages work without any."
+    },
+    "/legal/cookies": {
+      "title": "Cookie policy | Council of AI",
+      "description": "How Council of AI uses cookies and similar technologies: what is set, why, for how long and how to withdraw consent. Public verification pages work without any."
+    },
+    "/disclaimers": {
+      "title": "Disclaimers | Council of AI",
+      "description": "Disclaimers for CSOAI services: a measurement is not legal advice, a compliance determination or a certification and what a reader may and may not rely on."
+    },
+    "/legal/disclaimers": {
+      "title": "Disclaimers | Council of AI",
+      "description": "Disclaimers for CSOAI services: a measurement is not legal advice, a compliance determination or a certification and what a reader may and may not rely on."
+    },
+    "/legal/licensing": {
+      "title": "Measurement licence — evidence and data | Council of AI",
+      "description": "The licence terms under which CSOAI Ltd supplies measurement evidence and data: what is licensed, what stays free, and what a licensee may and may not claim."
+    },
+    "/membership-agreement": {
+      "title": "Membership agreement | Council of AI",
+      "description": "The Council of AI membership agreement: what members receive, what they agree to, how measurement independence is protected, and how membership ends."
+    },
+    "/legal/membership": {
+      "title": "Membership agreement | Council of AI",
+      "description": "The Council of AI membership agreement: what members receive, what they agree to, how measurement independence is protected, and how membership ends."
+    },
+    "/terms": {
+      "title": "Terms of service | Council of AI",
+      "description": "The terms of service for CSOAI (CSOAI Ltd): use of the public boards, verification tools, metered measurement calls and the workspace and the limits of each."
+    },
+    "/terms-of-service": {
+      "title": "Terms of service | Council of AI",
+      "description": "The terms of service for CSOAI (CSOAI Ltd): use of the public boards, verification tools, metered measurement calls and the workspace and the limits of each."
+    },
+    "/legal/terms": {
+      "title": "Terms of service | Council of AI",
+      "description": "The terms of service for CSOAI (CSOAI Ltd): use of the public boards, verification tools, metered measurement calls and the workspace and the limits of each."
+    },
+    "/prosperity": {
+      "title": "AI Prosperity Fund | Council of AI",
+      "description": "The AI Prosperity Fund proposal: how value created by AI could be shared beyond shareholders, as part of the Maternal Covenant. A proposal, not a fund."
+    },
+    "/prosperity-fund": {
+      "title": "AI Prosperity Fund | Council of AI",
+      "description": "The AI Prosperity Fund proposal: how value created by AI could be shared beyond shareholders, as part of the Maternal Covenant. A proposal, not a fund."
+    },
+    "/roi": {
+      "title": "ROI calculator | Council of AI",
+      "description": "Estimate what independent measurement could save your organisation against repeated internal review, from your own inputs. An estimate, not a promise."
+    },
+    "/roi-calculator": {
+      "title": "ROI calculator | Council of AI",
+      "description": "Estimate what independent measurement could save your organisation against repeated internal review, from your own inputs. An estimate, not a promise."
+    },
+    "/bulk-import": {
+      "title": "Bulk AI system import | Council of AI",
+      "description": "Import many AI systems into your Council OS workspace at once, with validation and a first risk classification for each, ready for evidence and measurement."
+    },
+    "/authority": {
+      "title": "Governance badges | Council of AI",
+      "description": "The badges a measured model or server can display, what each records, and how to verify the signed card behind it. A badge states a measurement, not approval."
+    }
+  },
+  "components": {
+    "Redirect": {
+      "title": "Council of AI",
+      "description": "This address forwards to its current page on Council of AI, the independent AI-measurement body. Measurement, not certification; verification is free for all."
+    },
+    "RequireAuth": {
+      "title": "Sign in | Council of AI",
+      "description": "This part of the Council OS workspace needs a signed-in account. Public boards, signed cards and verification tools remain open to everyone without an account."
+    },
+    "ABTesting": {
+      "title": "A/B testing framework | Council of AI",
+      "description": "Test different intervention strategies on an AI system and measure their effect against a baseline, with the design and the result recorded for later review."
+    },
+    "Accessibility": {
+      "title": "Accessibility statement | Council of AI",
+      "description": "The Council of AI accessibility statement: the current posture, known limits, the standards aimed at, and a direct route for reporting a barrier you have found."
+    },
+    "AgentGovernance": {
+      "title": "AI agent governance | Council of AI",
+      "description": "Governing AI agents, not just models: what changes when a system acts, which published requirements apply to agent behaviour, and what Council of AI measures."
+    },
+    "Agents": {
+      "title": "A Council, not one agent | Council of AI",
+      "description": "Why Council of AI designed a council of reviewing agents not a single governance agent: separated roles, recorded disagreement and a human seat at the end."
+    },
+    "NetworkPage": {
+      "title": "The Council network | Council of AI",
+      "description": "The catalogued public surfaces of the CSOAI network: boards, feeds, MCP servers and verification doors, each named with what it serves and where it is read."
+    },
+    "AiActFaq": {
+      "title": "EU AI Act FAQ | Council of AI",
+      "description": "Frequently asked questions about the EU AI Act: who it binds, the risk classes, the dates, the penalties, and what a measurement can and cannot show."
+    },
+    "ActSummary": {
+      "title": "The EU AI Act, explained | Council of AI",
+      "description": "The EU AI Act in a short read: its risk-based structure, the obligations on providers and deployers, the key dates and where measurement fits beside conformity."
+    },
+    "ActTimeline": {
+      "title": "EU AI Act timeline | Council of AI",
+      "description": "The EU AI Act date by date: entry into force, prohibited practices, general-purpose model duties, high-risk obligations and transparency duties, with sources."
+    },
+    "EuActVsGdpr": {
+      "title": "EU AI Act vs GDPR | Council of AI",
+      "description": "How the EU AI Act and the GDPR differ and overlap: scope, roles, risk assessments, transparency duties and enforcement, and where one duty satisfies the other."
+    },
+    "AiGovernanceHub": {
+      "title": "AI governance, end to end | Council of AI",
+      "description": "A complete guide to AI governance: the regulations and standards, the roles they create, the evidence they require, and how independent measurement fits in."
+    },
+    "AiTransparency": {
+      "title": "What each surface on this site is | Council of AI",
+      "description": "An AI transparency page for the site itself: which surfaces are live measurements, which are demos or designs, and which use generated content, one by one."
+    },
+    "ApiDocs": {
+      "title": "API & MCP documentation | CSOAI",
+      "description": "Reference for the public Council of AI API and MCP server: the GSPC board endpoint, signed card verification, feeds, and the fields every response carries."
+    },
+    "Readiness": {
+      "title": "EU AI Act readiness — 2 August 2026 | Council of AI",
+      "description": "The 2 August 2026 EU AI Act duties on transparency and general-purpose models: what came into force, who it binds, and how to check your evidence against it."
+    },
+    "BadgesPage": {
+      "title": "Governance badges | Council of AI",
+      "description": "The badges a measured model or server can display, what each records, and how to verify the signed card behind it. A badge states a measurement, not approval."
+    },
+    "Competitors": {
+      "title": "AI-governance battlecards | Council of AI",
+      "description": "Cited battlecards comparing Council of AI with Vanta, Credo AI and OneTrust: what each publishes about itself, where scope differs, and what we do instead."
+    },
+    "AccountBrief": {
+      "title": "Account brief | Council of AI",
+      "description": "A tailored brief for a named account: the jurisdictions and provisions in scope, the measurements that exist, and the sources each statement rests on."
+    },
+    "UsStateAct": {
+      "title": "US state AI law | Council of AI",
+      "description": "A US state AI law explained: what the statute requires, who it binds, the effective dates and enforcement and what CSOAI measures against it, with sources."
+    },
+    "JurisdictionAct": {
+      "title": "AI regulation by jurisdiction | Council of AI",
+      "description": "AI regulation in one jurisdiction explained: the binding rules, the voluntary frameworks, the enforcement bodies and dates, and what a measurement covers."
+    },
+    "EUActChecklist": {
+      "title": "EU AI Act readiness checklist | Council of AI",
+      "description": "A free checklist for the EU AI Act duties in force since 2 August 2026: transparency, general-purpose models and documentation, each item tied to its provision."
+    },
+    "EuActClassifier": {
+      "title": "EU AI Act risk classifier | Council of AI",
+      "description": "Is your AI system high-risk under the EU AI Act? Answer a few questions and see the risk class, the obligations that follow and the provisions behind each."
+    },
+    "EUAIActClassifier": {
+      "title": "EU AI Act risk classifier | Council of AI",
+      "description": "A free three-step classifier for the EU AI Act: describe your AI system and see its risk class, the exact obligations it triggers and the dates they apply from."
+    },
+    "OpenMedia": {
+      "title": "Open commons media | Council of AI",
+      "description": "Open commons media from CSOAI: graphics, diagrams and explainers published for reuse, with the licence and attribution each file carries stated beside it."
+    },
+    "Compare": {
+      "title": "Council of AI compared | Council of AI",
+      "description": "Council of AI compared with Vanta, Drata, Credo AI and OneTrust on what each publishes: independent measurement, signed evidence and free verification, cited."
+    },
+    "AustraliaAIGovernanceCompliance": {
+      "title": "Australia AI governance | Council of AI",
+      "description": "Australia's principles-based AI governance framework: the voluntary standard, the proposed guardrails, who they would bind and the evidence to gather now."
+    },
+    "CanadaAIActCompliance": {
+      "title": "Canada AI regulation | Council of AI",
+      "description": "Canada's AI regulation for high-impact systems: what was proposed, its current status, the obligations it would create, and how evidence would be shown."
+    },
+    "TC260Compliance": {
+      "title": "China TC260 AI standards | Council of AI",
+      "description": "China's TC260 technical standards for AI security and algorithm governance: what they cover, who applies them, and how Council of AI measures against them."
+    },
+    "UKAIBillCompliance": {
+      "title": "UK AI regulation | Council of AI",
+      "description": "The UK's principles-based approach to AI regulation: the regulators involved, the proposed bill, what binds today, and what evidence a deployer can prepare now."
+    },
+    "ConformityAssessment": {
+      "title": "EU AI Act conformity assessment | Council of AI",
+      "description": "How a high-risk AI system reaches the EU market: self-assessment versus a notified body, technical documentation, CE marking and where measurement helps."
+    },
+    "ConformityRoute": {
+      "title": "Conformity route — Annex VI or VII | Council of AI",
+      "description": "Which EU AI Act conformity route applies to your high-risk system: Annex VI self-assessment for most, a notified body under Annex VII for biometrics."
+    },
+    "CouncilDetail": {
+      "title": "The 33-seat council design | Council of AI",
+      "description": "The 33-seat council as a design, not a live system: how seats, thresholds and human oversight are meant to work, and why its independence must be shown first."
+    },
+    "CouncilLicensingLanding": {
+      "title": "Council Ledger — signed evidence feed | Council of AI",
+      "description": "Council Ledger is the paid evidence feed: signed measurement receipts for insurers, procurement and deployers, from a body that measures and never underwrites."
+    },
+    "Protect": {
+      "title": "Personal protection | Council of AI",
+      "description": "How the Council assistant helps protect a person from deepfakes and impersonation: what it checks, what it flags and what it cannot verify."
+    },
+    "SectorAct": {
+      "title": "The EU AI Act by sector | Council of AI",
+      "description": "How the EU AI Act applies in one sector: which uses are high-risk, which provisions bind, the dates, and what Council of AI measures for systems in that sector."
+    },
+    "DemoOS": {
+      "title": "Council OS demo | Council of AI",
+      "description": "A demo of the Council OS assistant. Microphone use is optional; recognised text goes to the Council endpoint and nothing here is a signed measurement."
+    },
+    "Dora": {
+      "title": "DORA for financial services | Council of AI",
+      "description": "The EU Digital Operational Resilience Act for financial services: ICT risk, incident reporting, testing and third-party rules, and what Council of AI measures."
+    },
+    "Dragonfly": {
+      "title": "The Dragonfly four-wing model | Council of AI",
+      "description": "The Dragonfly architecture: four wings that separate measuring, recording, reviewing and correcting so no single part can both make and grade a claim."
+    },
+    "EarlyAccessLanding": {
+      "title": "Early access | Council of AI",
+      "description": "Early access to Council of AI training in AI safety analysis, frameworks and incident review. Completion attests training was done, not that a system conforms."
+    },
+    "EI3": {
+      "title": "EI3 emotional-intelligence substrate | Council of AI",
+      "description": "EI3, a measurable emotional-intelligence substrate for AI: concern density as care-token frequency normalised by total tokens, formula cited and audit-friendly."
+    },
+    "OsEnter": {
+      "title": "Enter Council OS | Council of AI",
+      "description": "Enter Council OS with the regulations and crosswalks for your region pre-loaded, plus sample scenarios on Council Town. No setup and no training needed."
+    },
+    "EUAIActGuide": {
+      "title": "EU AI Act — we measure, we do not certify | CSOAI",
+      "description": "The EU AI Act guide from a measurement body: measure the system against the provisions not buying a certificate, with what each obligation actually requires."
+    },
+    "Eunomia": {
+      "title": "EUNOMIA financial-verification board | Council of AI",
+      "description": "EUNOMIA, the financial-verification board: exact-label measurements with Wilson intervals, Ed25519-signed and recomputable, read live from the board endpoint."
+    },
+    "FaqPage": {
+      "title": "Frequently asked questions | Council of AI",
+      "description": "Definitions and pointers for CSOAI, the GSPC measurement board and signed measurement cards. Live counts are fetched from the board endpoint, never typed."
+    },
+    "Fedramp": {
+      "title": "FedRAMP RFC-0024 / OSCAL readiness | Council of AI",
+      "description": "Machine-readable FedRAMP under RFC-0024: what OSCAL packages must contain before the 30 September 2026 mandate and how measurement evidence fits alongside them."
+    },
+    "FindingsExplorer": {
+      "title": "Regulation Findings — every signed finding, mapped to its regulator | CSOAI",
+      "description": "Every signed (model, axis) finding joined to the regulator and fine band it maps to, with the card behind each row. Read from the published findings index."
+    },
+    "Penalties": {
+      "title": "EU AI Act penalties | Council of AI",
+      "description": "What an EU AI Act breach can cost: the fine bands by provision, how turnover caps apply, and an estimator that shows its working. An estimate, not legal advice."
+    },
+    "GpaiObligations": {
+      "title": "GPAI obligations under the EU AI Act | Council of AI",
+      "description": "The obligations on general-purpose AI model providers in force since 2 August 2026: documentation, copyright policy, training summary and systemic-risk duties."
+    },
+    "Temples": {
+      "title": "Framework temples | Council of AI",
+      "description": "Each AI regulation and framework visualised as a temple on the map: its authority, status, next date and the obligations it carries, linked to its source."
+    },
+    "AustraliaAIGovernance": {
+      "title": "Australian AI regulation | Council of AI",
+      "description": "An introduction to Australian AI regulation: the voluntary safety standard, proposed mandatory guardrails, impact assessments and the evidence to gather."
+    },
+    "CanadaAIAct": {
+      "title": "Canadian AI regulation | Council of AI",
+      "description": "An overview of Canadian AI regulation: the proposed act for high-impact systems, its status, the obligations it would create, and how evidence would be shown."
+    },
+    "ISO42001Guide": {
+      "title": "ISO/IEC 42001 — we measure, we do not certify | CSOAI",
+      "description": "ISO/IEC 42001 from a measurement body: what the AI management system standard requires, what an auditor checks, and how independent measurement sits beside it."
+    },
+    "NISTAIRMFGuide": {
+      "title": "NIST AI RMF — we measure, we do not certify | CSOAI",
+      "description": "The NIST AI Risk Management Framework explained: govern, map, measure and manage, why no NIST certificate exists, and how independent measurement evidences it."
+    },
+    "TC260Guide": {
+      "title": "TC260 — we measure, we do not certify | CSOAI",
+      "description": "China's TC260 AI standards explained: the security and algorithm-governance requirements, who applies them, and how Council of AI measures against them."
+    },
+    "UKAIBill": {
+      "title": "UK AI regulation | Council of AI",
+      "description": "An introduction to UK AI regulation: the principles-based approach, the regulators involved, risk classification and what evidence a deployer can prepare today."
+    },
+    "GlobalAISafetyInitiative": {
+      "title": "Global AI Safety Initiative | Council of AI",
+      "description": "AI governance for every nation: how CSOAI helps governments outside the major initiatives build measurement capacity, starting from published instruments."
+    },
+    "GlobalRegulationTracker": {
+      "title": "Global AI regulation tracker | Council of AI",
+      "description": "AI regulation tracked across jurisdictions: what is in force, phasing in or proposed, each sourced and dated. From a body that measures, not certifies."
+    },
+    "Gone": {
+      "title": "410 Gone | Council of AI",
+      "description": "This resource has been permanently removed from Council of AI and will not return. Use the library to find the page, or start from the measurement board."
+    },
+    "GovBench": {
+      "title": "GovBench | Council of AI",
+      "description": "GovBench is a deterministic AI governance benchmark that publishes its own limits: per-item rows, cluster-robust intervals, and negative or retracted results."
+    },
+    "Ecosystem": {
+      "title": "The AI governance ecosystem | Council of AI",
+      "description": "One shared space for AI governance: the partners, open-source projects and standards bodies CSOAI works beside, and what each relationship means."
+    },
+    "GovGraph": {
+      "title": "Governance graph | Council of AI",
+      "description": "The governance graph: regulations, provisions, systems and measurements linked as a searchable graph, from a law to the evidence that touches it."
+    },
+    "GovernmentDashboard": {
+      "title": "Government dashboard | Council of AI",
+      "description": "A preview of the government evidence workspace: scoped evidence, jurisdiction views and accountable review. No registry or live monitor is connected."
+    },
+    "GSPCAnchors": {
+      "title": "GSPC Anchors | CSOAI",
+      "description": "The statute registries each GSPC provision is anchored to, with the timestamp of the last successful fetch. A stale anchor is shown as stale, never re-stamped."
+    },
+    "JailFolder": {
+      "title": "Jail folder | Council of AI",
+      "description": "The jail folder: the axis, the frozen gold bank and the signed cards behind the jail measurement, with the tie reported as a tie. Not a second score, not XRPL."
+    },
+    "HealthInventory": {
+      "title": "Health Inventory | Council of AI",
+      "description": "A same-origin scanner that inventories the site's own public endpoints and reports which respond and how. A v0 tool that reads, never repairs."
+    },
+    "HelpCenter": {
+      "title": "Help centre | Council of AI",
+      "description": "Answers to common questions about Council of AI: reading the board, verifying a signed card, requesting a measurement, training records and how to get support."
+    },
+    "HighRiskSystems": {
+      "title": "High-risk AI under the EU AI Act | Council of AI",
+      "description": "What counts as high-risk AI under the EU AI Act: the Annex III use cases, the product-safety route, the obligations that follow and the dates they apply from."
+    },
+    "FrameworkHive": {
+      "title": "The Framework Hive | Council of AI",
+      "description": "Every AI framework and regulation collected in one hive: authority, status, effective dates, obligations, penalties and crosswalks, each linked to its source."
+    },
+    "HiveModel": {
+      "title": "The Hive model | Council of AI",
+      "description": "How the Hive reaches a conclusion: several reviewing agents, recorded disagreement and a human seat, described as the design it is rather than a live guarantee."
+    },
+    "NewHomeV3": {
+      "title": "Verify a card | Council of AI",
+      "description": "Paste a signed CSOAI card and check it locally. The result is VALID, INVALID or UNCHECKABLE; the paste never leaves the page and it is not a certificate."
+    },
+    "Honesty": {
+      "title": "The honesty gate | Council of AI",
+      "description": "What CSOAI publishes against itself: its own fine-tunes below base models in its signed arena reference, the cards it withholds and the chain's limit."
+    },
+    "HorusIntel": {
+      "title": "Horus | Council of AI",
+      "description": "Horus: the intelligence view over what Council of AI has measured, signed and re-attested, read from the public record. We measure; a grade is never sold."
+    },
+    "HowItWorks": {
+      "title": "How it works | Council of AI",
+      "description": "From a system description to a signed card: how CSOAI measures against a frozen instrument, signs the result and leaves an empty cell empty when it cannot."
+    },
+    "ComplianceHowItWorks": {
+      "title": "Compliance guide | Council of AI",
+      "description": "A five-step evidence workflow: scope the system, compare evidence with the selected requirements, implement controls, repeat named checks, record improvements."
+    },
+    "DashboardHowItWorks": {
+      "title": "Dashboard guide | Council of AI",
+      "description": "The Council OS dashboard step by step: sign in, read your overview, start a training path, prepare for the assessment, browse open tasks, record your progress."
+    },
+    "EnterpriseHowItWorks": {
+      "title": "Enterprise evaluation preview | Council of AI",
+      "description": "A proposed enterprise evaluation sequence for the published measurement interfaces and Council workflow. A preview, not a live deployment or support commitment."
+    },
+    "PocShowcase": {
+      "title": "ONE OS concept simulation | Council of AI",
+      "description": "A concept simulation of one operating layer for AI agents and humanoid robots: what the design proposes, what is simulated here, and what has not been built."
+    },
+    "IndustrySolutions": {
+      "title": "What we measure, by industry | Council of AI",
+      "description": "Sectors each with their own law and named board axes: pick one to see the provisions that bind it and what Council of AI measures for systems deployed in it."
+    },
+    "Playbooks": {
+      "title": "Industry playbooks | Council of AI",
+      "description": "A playbook for each sector: the regulations in scope, the evidence to gather, the measurements and the gaps. From a body that does not certify."
+    },
+    "Insurers": {
+      "title": "Evidence an underwriter can verify | Council of AI",
+      "description": "Evidence an underwriter can verify: Ed25519-signed AI measurement cards, recomputable from published rows, from Council of AI. Measurement, not certification."
+    },
+    "Intel": {
+      "title": "Distribution Hive | Council of AI",
+      "description": "The Distribution Hive: account intelligence on the organisations in scope of AI regulation, drawn from public sources and used to offer help before a deadline."
+    },
+    "Iso42001VsEuAct": {
+      "title": "ISO 42001 vs the EU AI Act | Council of AI",
+      "description": "Do you need both? How ISO/IEC 42001 and the EU AI Act relate: a management-system standard beside a binding regulation, and where they overlap."
+    },
+    "IvoEvidence": {
+      "title": "What an IVO's evidence should look like | Council of AI",
+      "description": "A position paper for the California SB 813 rulemaking: what an independent verification organisation should publish as evidence, and what it must not claim."
+    },
+    "CouncilRegistry": {
+      "title": "Join the Council grid | Council of AI",
+      "description": "Register a Council assistant on the grid: what joining means, what a node runs, what it shares, and how the grid grows one verified node at a time."
+    },
+    "Landscape": {
+      "title": "Compliance landscape | Council of AI",
+      "description": "Aggregate AI-compliance intelligence for regulators: which systems are measured, against which provisions, and where the evidence is thin."
+    },
+    "Layer0": {
+      "title": "Layer 0 | CSOAI",
+      "description": "The trust floor, benched: one probed record per public-root run states what the DID key, served root, pointer, Rekor and OpenTimestamps state were then."
+    },
+    "Academy": {
+      "title": "Learn | CSOAI",
+      "description": "Learn the GSPC board in an afternoon: what each axis measures, how to read a signed card, how to verify one yourself and where the unmeasured cells are and why."
+    },
+    "PublicPrivacy": {
+      "title": "Privacy notice — CSOAI Ltd | Council of AI",
+      "description": "The CSOAI privacy notice: what personal data CSOAI Ltd processes, why, for how long, who it is shared with and your rights over it, with version and date."
+    },
+    "Library": {
+      "title": "The Council of AI Library | Council of AI",
+      "description": "The reference archive of CSOAI: measured axes, EU AI Act statute, governance frameworks, jurisdictions, verification tech and company records, by sector."
+    },
+    "Lineage": {
+      "title": "Rediscovered, not invented | Council of AI",
+      "description": "The lineage of the Council of AI architecture: the older ideas of measurement, witness and record it draws on, and why the design is rediscovered not new."
+    },
+    "Login": {
+      "title": "Sign in | Council of AI",
+      "description": "Sign in to your CSOAI workspace: your Council assistant, saved measurements and evidence tools in one place. Public boards and verification need no account."
+    },
+    "RelevanceMap": {
+      "title": "Relevance map | Council of AI",
+      "description": "What governs what: a map from AI systems and uses to the regulations, standards and provisions that apply to them, so you can find the rule before the evidence."
+    },
+    "RegionsMap": {
+      "title": "Regulatory map by region | Council of AI",
+      "description": "What governs AI by region — EU, US, UK, China, Singapore, Canada and global initiatives — with the status of each regime and a link to its published source."
+    },
+    "MarketingHome": {
+      "title": "Get measured, not certified | Council of AI",
+      "description": "Council of AI measures your AI system against a frozen instrument, signs the evidence and re-attests it over time. Verification is free; a grade is never sold."
+    },
+    "MCPRegistry": {
+      "title": "MCP governance fleet | Council of AI",
+      "description": "A registry of Model Context Protocol servers for governance, safety and agent infrastructure. A catalogue row records a listing, not that a server is reachable."
+    },
+    "MCPDetail": {
+      "title": "MCP server | Council of AI",
+      "description": "A single MCP server from the Council of AI registry: what it does, the frameworks it maps to, its language and source. A listing, not a reachability test."
+    },
+    "ToolCommons": {
+      "title": "Tool Commons | CSOAI",
+      "description": "MCP servers listed by what was reached: each entry answered a live tools/list call from the probe not being copied from a directory. Counts from the run."
+    },
+    "CouncilHub": {
+      "title": "Your Council assistant | Council of AI",
+      "description": "One Council assistant across the whole OS: the same identity, memory and evidence tools wherever you are working, with what it stores and what it never shares."
+    },
+    "Methodology": {
+      "title": "Methodology | CSOAI",
+      "description": "How the CSOAI instrument measures: deterministic predicates, no model-as-judge, row-declared methods and evidence boundaries and how hedged answers propagate."
+    },
+    "CouncilMinds": {
+      "title": "Council Minds | Council of AI",
+      "description": "Council Minds, the cognition and voice layer of the OS: how the assistant reasons, speaks and listens, what runs locally, and what is still a design not live."
+    },
+    "ModelRegistry": {
+      "title": "AI model registry & scoreboard | CSOAI",
+      "description": "Model-comparison runs from the living GSPC board. Counts and axis families are read from the board endpoint; an absent public leader never reclassifies a row."
+    },
+    "ModelFindings": {
+      "title": "Model findings | Council of AI",
+      "description": "Every signed finding for one measured model: the axis, the run, the regulator and fine band it maps to, and the card behind each row."
+    },
+    "Nis2": {
+      "title": "NIS2 Directive | Council of AI",
+      "description": "The EU NIS2 Directive on network and information security: who is in scope, the management duties, incident reporting and what CSOAI measures against it."
+    },
+    "NistVsEuAct": {
+      "title": "NIST AI RMF vs the EU AI Act | Council of AI",
+      "description": "How the NIST AI Risk Management Framework and the EU AI Act relate: a voluntary framework beside a binding regulation, and where they align."
+    },
+    "EvidenceNotesIndex": {
+      "title": "Evidence notes — one citable page per note | Council of AI",
+      "description": "Dated evidence notes from the measurement programme, one citable page each: what was observed, the signed artifacts it rests on, and what remains unmeasured."
+    },
+    "EvidenceNotePage": {
+      "title": "Evidence note | Council of AI",
+      "description": "One dated evidence note from the Council of AI measurement programme: what was observed, the signed artifacts it rests on, and what remains unmeasured."
+    },
+    "AnswersIndex": {
+      "title": "Answers — measurement explainers | Council of AI",
+      "description": "Short explainers that answer one measurement or regulation question each, written to be quoted: what a term means, what the board shows, its limits."
+    },
+    "AnswerPage": {
+      "title": "Answer | Council of AI",
+      "description": "One short explainer answering a single measurement or regulation question, with its references listed, written so it can be quoted without losing its limits."
+    },
+    "OnboardOS": {
+      "title": "Get a signed measurement card | Council of AI",
+      "description": "Get an Ed25519-signed AI measurement card from Council of AI (CSOAI Ltd): measure against the GSPC board, publish the card, and let anyone verify it for free."
+    },
+    "Ontology": {
+      "title": "The Council ontology | Council of AI",
+      "description": "The semantic layer for AI governance: how systems, provisions, measurements and evidence are named and related, so tools and readers use the same words."
+    },
+    "OsRoute": {
+      "title": "Council OS | Council of AI",
+      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+    },
+    "WhyCSOAI": {
+      "title": "Why Council of AI | Council of AI",
+      "description": "Why a measurement body not a certifier: measure it, sign it, and leave the cell empty if it cannot be measured. What that refusal buys a reader of the evidence."
+    },
+    "Outreach": {
+      "title": "Help-first outreach queue | Council of AI",
+      "description": "Organisations ranked by who is in scope of the nearest binding AI deadline, so CSOAI can offer help preparing. Scope and deadline signals, never a verdict."
+    },
+    "OwaspAgentic": {
+      "title": "OWASP Agentic Top 10 — the public measured mapping | Council of AI",
+      "description": "The OWASP Top 10 for Agentic Applications mapped to the measurement controls Council of AI runs. An informative crosswalk, not an OWASP product or endorsement."
+    },
+    "Article50Pack": {
+      "title": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
+      "description": "An evidence pack for EU AI Act Article 50: signed measurements of whether C2PA content credentials survive real-world handling, packaged for a provider's file."
+    },
+    "PostmortemX402": {
+      "title": "X402 settlement postmortem — the record was not lost | Council of AI",
+      "description": "A public correction of an incorrect x402 settlement diagnosis: what was claimed, what the record showed, the defects found and the controls added after."
+    },
+    "PublicPress": {
+      "title": "Pressroom | Council of AI",
+      "description": "The Council of AI press and media kit: who we are, what we measure, the facts a journalist can check against the public record, logos, and how to reach us."
+    },
+    "Products": {
+      "title": "Council OS — the SKUs, one workspace | Council of AI",
+      "description": "What Council of AI offers as work: verification is free for everyone; measurement runs, the evidence feed and data access are named jobs inside one workspace."
+    },
+    "ProvBench": {
+      "title": "ProvBench — Does provenance survive the real world? | CSOAI",
+      "description": "ProvBench measures whether C2PA content credentials survive ordinary saves, resizes and re-uploads, as EU AI Act Article 50 assumes. Signed, dated runs."
+    },
+    "GovernancePulse": {
+      "title": "Governance Pulse | Council of AI",
+      "description": "Governance Pulse: a daily view of regulation changes, new measurements and corrections across the Council grid, synced from the public record rather than typed."
+    },
+    "RegulationRadar": {
+      "title": "Regulation Radar | Council of AI",
+      "description": "Regulation Radar tracks AI compliance deadlines worldwide: what comes into force, when and who it binds, each date linked to the published text it is read from."
+    },
+    "RatingTheRaters": {
+      "title": "Rating the Raters | Council of AI",
+      "description": "Who measures the measurers? CSOAI recomputes published benchmark results and reports where they hold and where they do not, with the method and data open."
+    },
+    "RealWorldMap": {
+      "title": "Real-world 3D map | Council of AI",
+      "description": "A three-dimensional globe of AI regulation and measurement activity by place, drawn from the public record, with each regime linked to its source and status."
+    },
+    "RegionSettings": {
+      "title": "Region and language settings | Council of AI",
+      "description": "Set your language, region and display preferences for the Council OS workspace so regulations, dates and evidence are shown in the frame that applies to you."
+    },
+    "RegionalAnalytics": {
+      "title": "Regional analytics | Council of AI",
+      "description": "Enrolment, completion and attestation activity across the regional training frameworks in Council Academy, read from the records rather than estimated."
+    },
+    "RegulatorAtlas": {
+      "title": "Regulators | CSOAI",
+      "description": "The regulator atlas: AI and cyber regimes (EU AI Act, NIS2, DORA, UK, US, TC260 and more) with each regulator's tools and next enforcement date, sourced."
+    },
+    "RegulatoryAuthority": {
+      "title": "A measurement body for AI governance | Council of AI",
+      "description": "Council of AI as a measurement body: signed, provision-anchored measurement records not accredited certification, and what that distinction means in practice."
+    },
+    "ResearchTransparency": {
+      "title": "Research and transparency | Council of AI",
+      "description": "CSOAI publishes its wrong turns as well as its results: the research programme, the refutations, the withdrawn claims and the methods behind each finding."
+    },
+    "Rlusd": {
+      "title": "RLUSD supply on XRPL and Ethereum | Council of AI",
+      "description": "RLUSD supply read live from public XRPL and Ethereum endpoints at named ledgers and blocks, shown beside the query used so the reading can be repeated."
+    },
+    "SectorsAtlas": {
+      "title": "Sector atlas | Council of AI",
+      "description": "Every sector mapped onto Council OS: its regulations, its high-risk AI uses and its measurements, each linked to its source."
+    },
+    "Services": {
+      "title": "Supported feeds and evidence doors | Council of AI",
+      "description": "The supported public feeds and evidence doors of Council of AI: what each serves, how it is read, what it costs (usually nothing) and where its record lives."
+    },
+    "Signals": {
+      "title": "Signals — signed measurement, verifiable | Council of AI",
+      "description": "The signed signals surface: the wave dashboard, per-axis signals and the value ledger, every row independently verifiable against the published public key."
+    },
+    "SocialOS": {
+      "title": "Social OS | Council of AI",
+      "description": "Social OS: the social layer of the Council assistant, how an AI character represents a person publicly, and what stays under the person's control."
+    },
+    "ClaritySpecimen": {
+      "title": "CLARITY pre-commit specimen (unsigned) | Council of AI",
+      "description": "An unsigned pre-commit specimen for the CLARITY Act reading: what the artifact contains, why it is unsigned, and what must happen before it enters the board."
+    },
+    "KokotajloSpecimen": {
+      "title": "Kokotajlo swarm specimen (unsigned) | Council of AI",
+      "description": "An unsigned swarm-response specimen in the publisher queue: what was collected, why it is thin, why it is unsigned, and what must happen before it is measured."
+    },
+    "RlusdSpecimen": {
+      "title": "RLUSD gap specimen (unsigned) | Council of AI",
+      "description": "An unsigned specimen from the RLUSD attestation watch in the publisher queue: the gap observed, why it is unsigned and what would make it a measurement."
+    },
+    "Stablecoins": {
+      "title": "Stablecoin evidence readiness index | Council of AI",
+      "description": "A frozen discovery index of stablecoins whose rows separately report measurement, signature, root, witness and settlement state. Inclusion is not a measurement."
+    },
+    "FeedLaunchPack": {
+      "title": "Council of AI — Stablewatch Feed",
+      "description": "The Stablewatch feed: an alert fires when RLUSD/USD deviates from its published target by more than the stated threshold at the close of a measurement window."
+    },
+    "YieldStatus": {
+      "title": "Service status | Council of AI",
+      "description": "Live service status for Council of AI public endpoints, feeds and signing: each row is read from the service itself and never typed into the page by hand."
+    },
+    "YieldInternal": {
+      "title": "Weekly yield template | Council of AI",
+      "description": "The weekly scorecard template derived from the public status and settlement records: which fields are read live and which stay unmeasured."
+    },
+    "ToolsPage": {
+      "title": "Use Council OS in your tool | Council of AI",
+      "description": "Council OS for people already in Claude, Cursor, Kimi or Grok: add the MCP server, ask for board totals, paste a card to verify. Free readers included."
+    },
+    "CouncilTour": {
+      "title": "Platform Tour | CSOAI",
+      "description": "A guided tour of the Council of AI surfaces: the measurement board, signed cards, verification, the regulation map and the feeds, with what each shows."
+    },
+    "Traction": {
+      "title": "Proof of operation | Council of AI",
+      "description": "Evidence, adoption and commercial proof for Council of AI, read from live records not typed: what has been measured, settled and cited, with no inflation."
+    },
+    "PublicDashboard": {
+      "title": "Public transparency dashboard | Council of AI",
+      "description": "The public transparency dashboard: what CSOAI has published, measured, corrected and left unmeasured, with each figure read from the record that owns it."
+    },
+    "TransparencyCop": {
+      "title": "Transparency Code — detection/verify tool, C2PA planned | Council of AI",
+      "description": "Where CSOAI stands under the EU transparency code of practice: a free detection and provenance verification tool today, C2PA support planned, not a model lab."
+    },
+    "TryCouncil": {
+      "title": "Try the AI governance council | Council of AI",
+      "description": "A design demo of the governed AI council: pose a governance question and watch how separated reviewing roles and a human seat structure the answer. A demo."
+    },
+    "VerifyLeaderboard": {
+      "title": "Verify this leaderboard | Council of AI",
+      "description": "Recompute the signed per-axis Elo leaderboard in your browser and verify its Ed25519 signature against the published key. No trust in Council of AI required."
+    },
+    "VulnerabilityDisclosure": {
+      "title": "Vulnerability disclosure policy | Council of AI",
+      "description": "How to report a security vulnerability in CSOAI systems: the contact, what to include, the response timeline and the safe-harbour terms for good-faith research."
+    },
+    "WatchdogSignup": {
+      "title": "Become an AI Safety Watchdog Analyst | CSOAI",
+      "description": "Sign up as a public watchdog analyst: report AI incidents, review published evidence and help keep the public record accurate. No credential is sold or implied."
+    },
+    "CouncilWhitepaper": {
+      "title": "Growth by Accretion — the Council Workbench paper | CSOAI",
+      "description": "The Council Workbench architecture paper: a measurement engine that grows by accretion without forgetting earlier runs, with its limits stated."
+    },
+    "Wrappers": {
+      "title": "Wrapped-asset parity ledger — read, not rated | Council of AI",
+      "description": "One row per bridged or custodial wrapper pair: wrapped supply on its chain beside the escrow that backs it, read at named blocks from public RPC. Not rated."
+    },
+    "X402Leaderboard": {
+      "title": "x402 Bazaar leaderboard — every door returns 402, price in the 402 only | CSOAI",
+      "description": "Observed x402 challenge fields for CSOAI discovery resources: which doors answer 402, what the challenge carries and when it was read. A snapshot, not a grade."
+    },
+    "XrplAttest": {
+      "title": "XRPL public-root catalogue — unsigned leaves; /api/xrpl reader | Council of AI",
+      "description": "The living XRPL public-root catalogue read through /api/xrpl: which leaves are signed, which unsigned, what the reader derives. It never writes the board."
+    },
+    "YieldDashboard": {
+      "title": "Yield Dashboard | Council of AI",
+      "description": "The yield dashboard reads settled x402 receipts and published measurements to show what the rail earned and measured. Derived from settlements, never typed."
+    },
+    "CourseDetail": {
+      "title": "Course | Council of AI",
+      "description": "One Council Academy course: what it teaches about the measurement board, signed evidence and the regulation it maps to, the modules and what completion attests."
+    },
+    "ComplianceScorecard": {
+      "title": "System scorecard | Council of AI",
+      "description": "A scorecard for one registered AI system: the frameworks in scope, the evidence per requirement and the gaps. A working view, not a certificate."
+    },
+    "PersonaRouter": {
+      "title": "Council of AI for your role | Council of AI",
+      "description": "What CSOAI does for your role: regulator, enterprise, finance, healthcare, startup or SEC filer: the measurements, the signed evidence and the honest limits."
+    },
+    "GspcScoreboard": {
+      "title": "The GSPC board | Council of AI",
+      "description": "The live GSPC board. Every measured cell has n and a confidence interval where honest; UNMEASURED is reported, never hidden. Counts come from the endpoint."
+    },
+    "Dashboard": {
+      "title": "Council OS | Council of AI",
+      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+    },
+    "Blog": {
+      "title": "Blog | CSOAI",
+      "description": "The CSOAI blog: articles on AI measurement, the EU AI Act and governance evidence, each with its author, date and the sources it cites where it has them."
+    }
+  }
+}

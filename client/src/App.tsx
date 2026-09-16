@@ -3,7 +3,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation, Redirect } from "wouter";
 import RequireAuth from "./components/RequireAuth";
-import { useEffect, lazy, Suspense } from "react";
+import { useEffect, useLayoutEffect, lazy, Suspense } from "react";
+import { applyHead, resolveHead } from "./lib/seoHead";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
 const Registers = lazy(() => import("./pages/Registers"));
@@ -348,150 +349,19 @@ function ScrollToTop() {
   return null;
 }
 
-const ROUTE_TITLES: Record<string, string> = {
-  "/pricing": "Pricing — the rail is free, metered routes quote at the 402 | Council of AI",
-  "/wrappers": "Wrapped-asset parity ledger — read, not rated | Council of AI",
-  "/quickstart": "Agent quickstart — measurements, changes, verification and feeds | Council of AI",
-  "/evaluator-access": "Conditions for Independent Evaluator Access | Council of AI",
-  "/products": "Council OS — the SKUs, one workspace | Council of AI",
-    "/attestation": "Council Attestation Network | Council of AI",
-  "/badge": "White-label badge — Council of AI",
-  "/get-listed": "You are listed. You are not graded. — Council of AI",
-  "/licensing-agreement": "Measurement licence — evidence and data | Council of AI",
-  "/frameworks": "Frontier framework presence register | Council of AI",
-  "/licence-manifest": "Licence manifest — request evidence, not a rank | Council of AI",
-  "/council-model-card": "Council model card | Council of AI",
-  "/council-system-card": "Council system card | Council of AI",
-  "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
-  "/trust-center": "Trust Center — security, compliance & Layer 0 | CSOAI",
-  "/trust": "MCP Trust Board — who answers the handshake, under what terms | Council of AI",
-  "/gspc-vs-ailuminate": "GSPC vs AILuminate — an honest breadth comparison | Council of AI",
-  "/ailuminate": "GSPC vs AILuminate — an honest breadth comparison | Council of AI",
-  "/boards/mcp": "MCP Trust Board — who answers the handshake, under what terms | Council of AI",
-  "/x402-leaderboard": "x402 Bazaar leaderboard — every door returns 402, price in the 402 only | CSOAI",
-  "/x402-board": "x402 Bazaar leaderboard — every door returns 402, price in the 402 only | CSOAI",
-  "/certification": "Measurement credential — how CSOAI attestation works | CSOAI",
-  "/courses": "AI governance courses & training | CSOAI",
-  "/api-docs": "API & MCP documentation | CSOAI",
-  "/academy": "Council Academy — AI governance training | CSOAI",
-  "/webhooks": "Regulatory webhooks — live framework updates | CSOAI",
-  "/models": "AI model registry & scoreboard | CSOAI",
-  "/": "Council OS | Council of AI",
-  "/plans": "The rail is free — one signed card | Council of AI",
-  "/gspc-arena": "GSPC Arena | CSOAI",
-  "/arena-scoreboard": "Signed Per-Axis Leaderboard | CSOAI",
-  "/leaderboard": "The AI Governance Leaderboard — sorted by the axis you care about | Council of AI",
-  "/gspc-verify": "GSPC Verify | CSOAI",
-  "/connect-gspc": "Connect GSPC to your AI — every platform | CSOAI",
-  "/connect-ai": "Connect GSPC to your AI — every platform | CSOAI",
-  "/embed": "Embed / white-label — Powered by Council of AI | CSOAI",
-  "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
-  "/findings": "Regulation Findings — every signed finding, mapped to its regulator | CSOAI",
-  "/gspc-gap-map": "GSPC Gap Map | CSOAI",
-  // No count in this title. A static title cannot derive one, and ADR-001 forbids
-  // typing it — every count on /board renders in the body from the artifact that owns it.
-  "/board": "The measurement board — every set, what it measures, what it does not | Council of AI",
-  "/board/models": "Measured models — the signed card set | Council of AI",
-  // No count in this title: a static route title cannot derive one, and ADR-001
-  // forbids typing it. The live counts render in the page body from /api/gspc.
-  "/financial-axes": "Financial axis — the financial half of the GSPC board | Council of AI",
-  "/badges": "Governance badges — wear your measured status | CSOAI",
-  "/verify-certificate": "Verify a completion record | CSOAI",
-  "/gspc-anchors": "GSPC Anchors | CSOAI",
-  "/xrpl-attest": "XRPL public-root catalogue — unsigned leaves; /api/xrpl reader | Council of AI",
-  "/claims-register": "Claims register — every public claim, its evidence, its status | CSOAI",
-  "/distribution-integrity": "Distribution integrity — represented is not distributed | Council of AI",
-  "/layer0": "Layer 0 | CSOAI",
-  "/methodology": "Methodology | CSOAI",
-  "/answers": "Answers — measurement explainers | Council of AI",
-  "/notes": "Evidence notes — one citable page per note | Council of AI",
-  "/doctrine": "Doctrine — measurement, not certification | Council of AI",
-  "/launch": "The launch story — Council of AI",
-  "/owasp-agentic": "OWASP Agentic Top 10 — the public measured mapping | Council of AI",
-  "/owasp-asi": "OWASP AI Exchange — GSPC Axis Mapping | Council of AI",
-  "/agent-blocking": "Agent traffic and Cloudflare's blocking change | Council of AI",
-  "/ivo-evidence": "What an IVO's evidence should look like | Council of AI",
-  "/postmortems/x402-settlement-reading": "X402 settlement postmortem — the record was not lost | Council of AI",
-  "/events/three-root-ceremony": "Three-root ceremony — public witness record | Council of AI",
-  "/transparency-cop": "Transparency Code — detection/verify tool, C2PA planned | Council of AI",
-  "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
-  "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
-  "/refutation-ledger": "Refutation Ledger | CSOAI",
-  "/dispute": "Appeals & dispute resolution | Council of AI",
-  "/east-west": "East-West — one signed measurement, every regime mapped | Council of AI",
-  "/challenge": "Challenge a measurement — East-West redress | Council of AI",
-  "/crosswalk": "AI governance framework crosswalk | Council of AI",
-  "/live-ledger": "Live Ledger | CSOAI",
-  "/coliseum": "The Coliseum of AI | Council of AI",
-  "/open-source": "The open-source framework | Council of AI",
-  "/verifiable-trust": "The science of verifiable trust | Council of AI",
-  "/evidence-rail": "The independent evidence rail | Council of AI",
-  "/metrology": "The metrology apparatus | Council of AI",
-  "/accountability-loop": "The accountability loop — from a public report to a complaint a regulator can open | Council of AI",
-  "/where-the-record-lives": "Where the record lives — mirrored, not indestructible | Council of AI",
-  "/statute-to-predicate": "From statute to predicate — how a law becomes a test | Council of AI",
-  "/instrument": "The Instrument | CSOAI",
-  "/harness": "The measurement harness | Council of AI",
-  "/benchmarks": "Benchmarks | CSOAI",
-  "/benchmark-index": "Meta-benchmark index — what other benchmarks report, beside what we measure | Council of AI",
-  "/benchmark-quality": "Benchmark-quality register — deterministic predicates on third-party AI benchmarks | Council of AI",
-  "/provenance-finding": "Provenance Finding | CSOAI",
-  "/learn": "Learn | CSOAI",
-  "/article-50": "Article 50 | CSOAI",
-  "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
-  "/gpai-evidence": "GPAI Evidence Pack — independent evidence for the AI Office | CSOAI",
-  "/cra-readiness": "CRA Readiness Kit — the 24h/72h/14-day runbook, signed | CSOAI",
-  "/cobolbridge": "COBOL Bridge — Council of AI Layer-0 MCP | CSOAI",
-  "/cobol": "COBOL Bridge — Council of AI Layer-0 MCP | CSOAI",
-  "/verify": "Verify a signed CSOAI measurement | CSOAI",
-  "/governance-layer": "Council Governance Layer | CSOAI",
-  "/status": "Service status | Council of AI",
-  "/status/internal": "Weekly yield template | Council of AI",
-  "/yield": "Yield Dashboard | Council of AI",
-  "/countdown": "Regulatory countdown | Council of AI",
-  "/art50": "Article 50 verification services | Council of AI",
-  "/rlusd": "RLUSD supply on XRPL and Ethereum | Council of AI",
-  "/receipt": "Inclusion receipt | Council of AI",
-  "/custody": "Custody disclosure | Council of AI",
-  "/merge-me": "Merge-me — the train | Council of AI",
-  "/specimens/clarity": "CLARITY pre-commit specimen (unsigned) | Council of AI",
-  "/contact": "Contact | CSOAI",
-  "/about": "About | CSOAI",
-  "/mcp": "MCP Hub | CSOAI",
-  "/mcp-fleet": "MCP Fleet | CSOAI",
-  "/tool-commons": "Tool Commons | CSOAI",
-  "/globe": "Global Regulation Globe | CSOAI",
-  "/tour": "Platform Tour | CSOAI",
-  "/demo": "Demo | CSOAI",
-  "/assess": "Get measured — measurement is metered; verify stays free | Council of AI",
-  "/login": "Sign in | Council of AI",
-  "/dashboard": "Council OS | Council of AI",
-  "/os": "Council OS | Council of AI",
-  "/enterprise": "Enterprise | CSOAI",
-  "/government": "Government | CSOAI",
-  "/regulators": "Regulators | CSOAI",
-  "/blog": "Blog | CSOAI",
-  "/assessment": "Readiness Assessment | Council of AI",
-  "/health-inventory": "Health Inventory | Council of AI",
-  "/mcp-tools": "Tool Commons | CSOAI",
-  "/proof-receipt": "Proof of receipt — latest issuance status | Council of AI",
-  "/stablewatch": "Council of AI — Stablewatch Feed",
-};
-function RouteTitle() {
+/**
+ * RouteHead — the ONE writer of <title>, meta description, canonical and OG tags on every
+ * navigation, applied in a layout effect BEFORE any page mounts or any fetch resolves.
+ * client/src/lib/seoHead.ts resolves it synchronously from client/src/data/seo-head.json, the
+ * route manifest and the publication manifest, so the prerender snapshot never carries the
+ * shell title, a shared withdrawal title or the string "undefined". A page that knows better
+ * (a note's own headline, the board's live count) still overwrites it after it mounts.
+ * The canonical is the URL the edge serves ("<route>/"), matching the prerender's rewrite.
+ */
+function RouteHead() {
   const [location] = useLocation();
-  useEffect(() => {
-    const t = ROUTE_TITLES[location];
-    if (t) document.title = t;
-
-    // Keep the shell's single canonical record aligned after client-side navigation.
-    // The canonical is the URL the edge serves: prerendered routes live at "<route>/" (the bare
-    // path 308s there), so keep the browser's served pathname, trailing slash included.
-    const served = typeof window !== "undefined" ? window.location.pathname : location;
-    const canonical = served === "/" || served === "" ? "https://councilof.ai" : `https://councilof.ai${served}`;
-    const link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (link) link.href = canonical;
-    document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", canonical);
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:url"]')?.setAttribute("content", canonical);
+  useLayoutEffect(() => {
+    applyHead(resolveHead(location));
   }, [location]);
   return null;
 }
@@ -628,7 +498,7 @@ function App() {
           <AuthProvider>
             <AnalyticsProvider>
               <TooltipProvider>
-                <RouteTitle />
+                <RouteHead />
                 <RouteAnnouncer />
                 <Suspense
                   fallback={
@@ -660,7 +530,7 @@ function App() {
               <div className="flex flex-col min-h-screen">
                 <SkipNavigation />
                 <ScrollToTop />
-                <RouteTitle />
+                <RouteHead />
                 <RouteAnnouncer />
                 <Header />
                 <PageSchema />

@@ -133,16 +133,24 @@ describe("the exemptions stay honest", () => {
  * rule than body text: no bare tier/plan/subscription words, no currency, no typed count.
  */
 describe("route titles obey the ruling and type no count", () => {
-  const app = readFileSync(new URL("../App.tsx", import.meta.url), "utf8");
-  const block = app.match(/const ROUTE_TITLES[^=]*=\s*\{([\s\S]*?)\n\};/)?.[1] ?? "";
-  // Only the TITLE VALUE is copy. The route key is a URL — /plans may keep its path while its
-  // title says the rail is free, and renaming a live route to satisfy a copy rule breaks links.
-  const titles = [...block.matchAll(/"[^"]*"\s*:\s*"([^"]*)"/g)].map((m) => m[1]);
+  // The map moved from App.tsx ROUTE_TITLES to client/src/data/seo-head.json on 2026-09-16
+  // (one producer for title + description; client/src/lib/seoHead.ts applies it). Both the
+  // route-keyed and the component-keyed titles are copy; so are the descriptions, which the
+  // same ruling now covers. Only the VALUES are copy. The route key is a URL — /plans may keep
+  // its path while its title says the rail is free, and renaming a live route to satisfy a copy
+  // rule breaks links.
+  const headJson = JSON.parse(readFileSync(new URL("../data/seo-head.json", import.meta.url), "utf8")) as {
+    routes: Record<string, { title: string; description: string }>;
+    components: Record<string, { title: string; description: string }>;
+  };
+  const entries = [...Object.values(headJson.routes), ...Object.values(headJson.components)];
+  const titles = entries.flatMap((e) => [e.title, e.description]);
 
-  it("finds the title map, so this cannot pass vacuously", () => {
-    expect(block.length).toBeGreaterThan(500);
-    expect(block).toMatch(/"\/products":/);
+  it("finds the head map, so this cannot pass vacuously", () => {
+    expect(Object.keys(headJson.routes).length).toBeGreaterThan(100);
+    expect(headJson.routes["/products"]?.title).toMatch(/Council OS/);
     expect(titles.length, "no titles parsed — the guard would be empty").toBeGreaterThan(50);
+    expect(readFileSync(new URL("../App.tsx", import.meta.url), "utf8")).not.toMatch(/const ROUTE_TITLES/);
   });
 
   it("no title sells a tier, a plan or a subscription", () => {

@@ -35,6 +35,7 @@ import {
   periodGradient,
   UNLISTED_UNTIL_REWRITTEN,
 } from "@/lib/blogIndex";
+import { blogBreadcrumbLd, blogListingLd, blogPostBySlug, ldJson } from "@/lib/blogSeo";
 
 export default function Blog() {
   // 2026-08-26: this form used to call preventDefault(), flip a boolean, and show
@@ -79,8 +80,17 @@ export default function Blog() {
     }
   };
 
+  // Answer-engine surface (lib/blogSeo): Home → Blog breadcrumb and a Blog node listing every
+  // post shown here as a BlogPosting, dates and author only where the post's own data has them.
+  const listedIndexPosts = useMemo(
+    () => allPosts.map((p) => blogPostBySlug(p.slug)).filter((p): p is NonNullable<typeof p> => !!p),
+    [allPosts],
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson(blogBreadcrumbLd()) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson(blogListingLd(listedIndexPosts)) }} />
       {/* Hero Section with Newsletter */}
       <div className="w-full bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-900 text-white py-16 sm:py-20 md:py-24">
         <div className="container mx-auto px-4">

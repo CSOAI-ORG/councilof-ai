@@ -59,7 +59,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSy
 import { join, extname, dirname } from "node:path";
 import { execFileSync } from "node:child_process";
 import { rewriteCanonical } from "./surface/canonical-url.mjs";
-import { parseRouteTitles, rewriteTitle } from "./surface/route-title.mjs";
+import { loadRouteHeads, rewriteHead } from "./surface/route-title.mjs";
 
 const arg = (k, d) => {
   const i = process.argv.indexOf("--" + k);
@@ -444,8 +444,9 @@ const routes = discovered.filter(
 // Routes written as dir/index.html: an alias canonical naming one without its slash 308s, so the
 // rewrite names the served URL (scripts/surface/canonical-url.mjs). public/-owned files are excluded.
 const SERVED_ROUTES = new Set(routes.map(normRoute));
-// Per-route <title> for client-only shells, parsed from App.tsx ROUTE_TITLES (scripts/surface/route-title.mjs).
-const ROUTE_TITLE_MAP = parseRouteTitles(readFileSync("client/src/App.tsx", "utf8"));
+// Per-route <title> + meta description for client-only shells, read from client/src/data/seo-head.json —
+// the same map the app applies at runtime (scripts/surface/route-title.mjs, client/src/lib/seoHead.ts).
+const ROUTE_HEAD_MAP = loadRouteHeads();
 if (skippedLive.length)
   console.log(`prerender: ${skippedLive.length} route(s) skipped — content is derived live from a third-party API and must not be baked: ${skippedLive.join(", ")}`);
 if (skippedStatic.length)
@@ -658,11 +659,18 @@ async function worker(id) {
         // dist/index.html as it is now: "/" is snapshotted first, so copying it gave every
         // client-only route the rendered homepage body (content-promise gate, 2026-09-15:
         // /status/index.html carried data-testid="home-verify"). The shell still carries the
-        // homepage canonical AND <title>; name this route's served URL and its own title instead
-        // (crawlers never run the JS that sets them).
+        // homepage canonical, <title> AND description; name this route's served URL and its own
+        // title + description instead (crawlers never run the JS that sets them).
         const shellHtml = rewriteCanonical(shell, route, PROD_ORIGIN, SERVED_ROUTES);
-        writeFileSync(dest, rewriteTitle(shellHtml, ROUTE_TITLE_MAP.get(normRoute(route))), "utf8");
+        writeFileSync(dest, rewriteHead(shellHtml, ROUTE_HEAD_MAP.get(normRoute(route))), "utf8");
       }
+      // Record what the shell now carries. Until 2026-09-16 client-only records had no `title`
+      // and no `hasDesc`, so the end-of-run report counted them as "14× undefined" in the
+      // duplicate-title table and "14 routes have no meta description" — a reporting artifact
+      // that read as 14 broken pages.
+      const shellHead = ROUTE_HEAD_MAP.get(normRoute(route));
+      rec.title = shellHead?.title ?? (shell.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "");
+      rec.hasDesc = !!(shellHead?.description || /<meta[^>]*name=["']description["']/i.test(shell));
       rec.ok = true;
       results.push(rec);
       console.log(`SKIP ${String(0).padStart(6)}ch  ${route}  client-only (SPA shell written)`);

@@ -35,8 +35,12 @@ export function setPageMetadata({
   openGraphDescription?: string;
   openGraphType?: "website" | "article";
 }): void {
+  // A page that reads `data.title` before its fetch resolves used to write the literal string
+  // "undefined" here (14 prerendered routes, 2026-09-16). An absent value leaves the head the
+  // route-level writer (App.tsx RouteHead) already set; it never overwrites it with nothing.
+  if (typeof title !== "string" || !title) return;
   document.title = title;
-  setMetaDescription(description);
+  if (typeof description === "string" && description) setMetaDescription(description);
 
   const setMeta = (selector: string, attribute: "name" | "property", key: string, content: string) => {
     let meta = document.querySelector(selector) as HTMLMetaElement | null;
@@ -49,11 +53,15 @@ export function setPageMetadata({
   };
 
   setMeta('meta[property="og:type"]', "property", "og:type", openGraphType);
-  setMeta('meta[property="og:title"]', "property", "og:title", openGraphTitle);
-  setMeta('meta[property="og:description"]', "property", "og:description", openGraphDescription);
+  if (typeof openGraphTitle === "string" && openGraphTitle) {
+    setMeta('meta[property="og:title"]', "property", "og:title", openGraphTitle);
+    setMeta('meta[name="twitter:title"]', "name", "twitter:title", openGraphTitle);
+  }
+  if (typeof openGraphDescription === "string" && openGraphDescription) {
+    setMeta('meta[property="og:description"]', "property", "og:description", openGraphDescription);
+    setMeta('meta[name="twitter:description"]', "name", "twitter:description", openGraphDescription);
+  }
   setMeta('meta[name="twitter:card"]', "name", "twitter:card", "summary");
-  setMeta('meta[name="twitter:title"]', "name", "twitter:title", openGraphTitle);
-  setMeta('meta[name="twitter:description"]', "name", "twitter:description", openGraphDescription);
 }
 
 export function formatCurrency(cents: number, currency = 'USD'): string {

@@ -33,8 +33,10 @@ export function DeckPage({
   children?: ReactNode;
 }) {
   useEffect(() => {
-    document.title = title;
-    setMetaDescription(description);
+    // Never write a non-string: an absent deck title used to land as the literal "undefined"
+    // in the prerendered <title>. RouteHead (App.tsx) has already set a correct fallback.
+    if (typeof title === "string" && title) document.title = title;
+    if (typeof description === "string" && description) setMetaDescription(description);
   }, [title, description]);
 
   return (
