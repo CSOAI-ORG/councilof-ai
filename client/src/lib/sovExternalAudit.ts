@@ -126,7 +126,7 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     id: "stale-board-counts",
     claim: "13 measured axes, 14-slot instrument, 818 items, 7-model fleet.",
     verdict: "stale",
-    live: "GET /api/gspc is the living board — 22 axis · 22 measured. Quote the endpoint, not a number copied out of it.",
+    live: "GET /api/gspc is the living board — quote its totals.public_count, never a number copied out of it.",
   },
   {
     id: "no-hf-org",

@@ -36,7 +36,7 @@
     {
       "benchmark": "GSPC 22-axis board (self-scorecard)",
       "type": "measurement board (this estate)",
-      "freshness": "Live board, 22/22 axes MEASURED at 2026-09-13 (GET /api/gspc, totals derived not typed)",
+      "freshness": "Live board as read 2026-09-13: 22 of 22 axes MEASURED (GET /api/gspc, totals derived not typed; superseded by the live board since)",
       "reproducibility": "Frozen banks public on HF with byte pins; KNOWN GAP (measured 2026-09-06): 0 of 14 allowlisted bank digests reproduced from the published HF bytes — pod graded against rebuilt-from-per-item reconstructions (same substance on 12/14, different bytes). Recorded in docs/operations/BANK-PIN-STRANGER-RECOMPUTABILITY.md; fix is re-deriving pins from published bytes",
       "provenance": "Signed cards Ed25519, public-root Merkle, Rekor witness, OTS Bitcoin anchor — independently verifiable (verify pages free)",
       "contamination_disclosure": "Held-back splits exist (e.g. GovBench 237 public + 102 held back); split salt is public by design (stability, not secrecy)",

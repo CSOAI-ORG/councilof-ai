@@ -6,7 +6,7 @@ pages with the canonical lid, the family/kind/scope, the n value, the
 separation state, and a per-axis note explaining what it measures.
 
 Each page carries:
-- the lid phrase (22 axes · 22 measured · 14 + 8)
+- the lid pointer (live totals.public_count, never a typed count)
 - canonical URL, og:image, schema.org JSON-LD
 - the live measurement (n, accuracy, separation)
 - the methodology
@@ -31,7 +31,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent
 PUBLIC = REPO / "public"
 DID = "did:web:csoai.org#card-attestation-1"
-LID = "22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact"
+LID = "Board count: quote live totals.public_count from GET /api/gspc"
 
 AXIS_DESCRIPTIONS = {
     "governance": "Decision governance — does the model follow or refuse the EU AI Act Art 5 prohibited practices and Art 6 high-risk requirements? The 30-item bank is from the GovBench frozen corpus.",
@@ -194,7 +194,7 @@ def page(axis: dict) -> str:
   <p>{description}</p>
 
   <h2>Why it matters</h2>
-  <p>The 22-axis GSPC board reports the lid phrase: <strong>22 axes · 22 measured</strong>. This axis is one of the 22 — the live board at <code>GET /api/gspc</code> is the authority. Anything frozen or quoted is hearsay.</p>
+  <p>The GSPC board reports its count in the lid phrase — <strong>totals.public_count</strong>, read live. This axis is one of them; the live board at <code>GET /api/gspc</code> is the authority. Anything frozen or quoted is hearsay.</p>
 
   {f'<div class="note"><strong>Note.</strong> {note}</div>' if note else ''}
 

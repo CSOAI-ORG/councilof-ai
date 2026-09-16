@@ -48,7 +48,7 @@ def build_jsonld(title: str, description: str, url: str) -> str:
                 "name": "CSOAI Ltd",
                 "url": "https://csoai.org",
                 "logo": "https://councilof.ai/favicon.ico",
-                "description": "Independent AI-governance measurement body. The lid phrase: 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. Measurement, not certification.",
+                "description": "Independent AI-governance measurement body. Board count: quote live totals.public_count from GET /api/gspc. Measurement, not certification.",
                 "foundingDate": "2025",
                 "areaServed": "Worldwide",
                 "sameAs": [
@@ -124,7 +124,7 @@ def extract_meta(html: str) -> tuple[str, str]:
     if not title:
         title = "Council of AI — measurement, not certification"
     if not description:
-        description = "Independent AI-governance measurement body. 22 axes, 22 measured. Anyone can re-check."
+        description = "Independent AI-governance measurement body. Board count live at GET /api/gspc. Anyone can re-check."
     return title, description
 
 

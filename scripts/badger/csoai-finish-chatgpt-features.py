@@ -245,7 +245,7 @@ def build_persona_tests() -> dict:
             {
                 "name": "AI lab researcher (Anthropic)",
                 "needs": [
-                    "Measure Claude on the 22 axes",
+                    "Measure Claude on every axis of the live board (GET /api/gspc)",
                     "Get a signed card for the measurement",
                     "Compare Claude vs GPT-4 vs Gemini",
                     "Anchor the measurement to OTS",

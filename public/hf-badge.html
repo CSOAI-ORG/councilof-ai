@@ -314,14 +314,14 @@
   <header class="hero">
     <h1>Publish an honest GSPC status for a Hugging Face model</h1>
     <p class="sub">The global board badge is a link to the GSPC catalogue, not a measurement of the model whose README contains it. A model-specific score is allowed only when a VALID signed cell names that exact model and immutable revision. Otherwise the model stays UNMEASURED or UNSIGNED.</p>
-    <p class="lid" id="lid">Global board · 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact · live</p>
+    <p class="lid" id="lid">Global board · Board count: live at GET /api/gspc (totals.public_count) · loading</p>
   </header>
 
   <section class="stats" id="stats">
     <div class="stat"><div class="num" id="stat-badges">—</div><div class="label">unsigned model records staged</div></div>
     <div class="stat"><div class="num" id="stat-pipelines">—</div><div class="label">pipelines covered</div></div>
     <div class="stat"><div class="num" id="stat-hf-models">—</div><div class="label">HF models enumerable</div></div>
-    <div class="stat"><div class="num" id="stat-axes">22</div><div class="label">axes (lid)</div></div>
+    <div class="stat"><div class="num" id="stat-axes">—</div><div class="label">axes on the live board (totals.axes)</div></div>
   </section>
 
   <section>
@@ -425,6 +425,8 @@ python3 scripts/badger/hf-eat-all.py --limit 5000 --pipeline image-text-to-text
       if (lid && b.totals?.public_count) {
         lid.textContent = "Global board · " + b.totals.public_count + " · live";
       }
+      const sa = document.getElementById("stat-axes");
+      if (sa && typeof b.totals?.axes === "number") sa.textContent = String(b.totals.axes);
     }
   } catch {}
   // Count the queued cards (from the live api/state mirror — falls back to the static lid)
@@ -459,7 +461,7 @@ python3 scripts/badger/hf-eat-all.py --limit 5000 --pipeline image-text-to-text
         Published measurement cards are Ed25519-signed. See /api/state for the current exact-root witness state.
       </p>
       <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
-        Global board · 22 axes · 22 measured
+        Global board · Board count: live at GET /api/gspc (totals.public_count)
       </p>
     </div>
     <div class="footer-col">
@@ -481,7 +483,7 @@ python3 scripts/badger/hf-eat-all.py --limit 5000 --pipeline image-text-to-text
   </div>
   <div class="footer-bottom">
     <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
-    <span class="lid-phrase">Global board · 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
+    <span class="lid-phrase">Global board · Board count: quote live totals.public_count from GET /api/gspc</span>
   </div>
 </footer>
 

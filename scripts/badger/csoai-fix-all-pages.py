@@ -390,7 +390,7 @@ FOOTER = """<footer class="site-footer">
         Published measurement cards are Ed25519-signed. See /api/state for the current exact-root witness state.
       </p>
       <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
-        22 axes · 22 measured
+        Board count: live at GET /api/gspc (totals.public_count)
       </p>
     </div>
     <div class="footer-col">
@@ -412,7 +412,7 @@ FOOTER = """<footer class="site-footer">
   </div>
   <div class="footer-bottom">
     <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
-    <span class="lid-phrase">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
+    <span class="lid-phrase">Board count: quote live totals.public_count from GET /api/gspc</span>
   </div>
 </footer>"""
 
@@ -484,7 +484,7 @@ def main():
         slug = path.stem if path.parent == PUBLIC else path.parent.name + "/" + path.stem
         if slug == "index":
             title = "Council of AI — check an AI claim, read the GSPC board"
-            description = "Independent AI-governance measurement body. 22 axes, 22 measured. Anyone can re-check."
+            description = "Independent AI-governance measurement body. Board count live at GET /api/gspc. Anyone can re-check."
         elif slug.startswith("subdomains/"):
             title = f"{path.parent.name.capitalize()} — Council of AI"
             description = f"CSOAI {path.parent.name} — the substrate for {path.parent.name} on the AI measurement board."

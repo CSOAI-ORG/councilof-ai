@@ -419,8 +419,9 @@ export const onRequestGet: PagesFunction = async (context) => {
         sweep_note:
           "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but " +
           "were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept " +
-          "state. All 8 now carry published deterministic-facts run artifacts, so every one of the " +
-          "22 axis on the board has a run behind it: 14 model-comparison axes and 8 deterministic-fact " +
+          "state. All 8 now carry published deterministic-facts run artifacts. Today " +
+          `${measured} of ${selected.length} axis on the board carry a run behind them: ` +
+          `${bySelectedFamily("gspc").measured} model-comparison and ${bySelectedFamily("financial").measured} deterministic-fact ` +
           "axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. " +
           `${signedFactRuns.length} run artifact${signedFactRuns.length === 1 ? "" : "s"} ` +
           `${signedFactRuns.length === 1 ? "carries" : "carry"} an Ed25519 signature; ` +

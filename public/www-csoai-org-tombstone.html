@@ -318,7 +318,7 @@
 <li><code>http://www.csoai.org</code> 200 hops to <code>https://csoai.org/</code>. Apex is not this page.</li>
 <li>No FAA / scholarship HTML was found in CSOAI-ORG/councilof-ai, CSOAI-ORG/csoai-org, or CSOAI-ORG/csoai-static-deploy2. Paths <code>/faa</code> and <code>/scholarship</code> on csoai.org and councilof.ai are HTTP 404.</li>
 </ul>
-<p><strong>Living board (one only):</strong> <a href="https://councilof.ai/api/gspc"><code>GET https://councilof.ai/api/gspc</code></a> — 22 axis · 22 measured (14 model + 8 fact, 0 unmeasured). This tombstone is not a second board, not a scoreboard, not MEASURED.</p>
+<p><strong>Living board (one only):</strong> <a href="https://councilof.ai/api/gspc"><code>GET https://councilof.ai/api/gspc</code></a> — quote its live <code>totals.public_count</code> (this tombstone previously read 22 axis · 22 measured, 14 model + 8 fact, 0 unmeasured, when written; superseded by the live board). This tombstone is not a second board, not a scoreboard, not MEASURED.</p>
 <p>Public root (unsigned leaves until Keystone): <a href="https://councilof.ai/root.json"><code>/root.json</code></a>. Schema: <a href="https://councilof.ai/schema/card-v0.json"><code>/schema/card-v0.json</code></a>.</p>
 <p>Do not wrangler. Do not invent FAA copy. Do not stamp MEASURED.</p>
 
@@ -333,7 +333,7 @@
         Published measurement cards are Ed25519-signed. See /api/state for the current exact-root witness state.
       </p>
       <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
-        22 axes · 22 measured
+        Board count: live at GET /api/gspc (totals.public_count)
       </p>
     </div>
     <div class="footer-col">
@@ -355,7 +355,7 @@
   </div>
   <div class="footer-bottom">
     <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
-    <span class="lid-phrase">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
+    <span class="lid-phrase">Board count: quote live totals.public_count from GET /api/gspc</span>
   </div>
 </footer>
 

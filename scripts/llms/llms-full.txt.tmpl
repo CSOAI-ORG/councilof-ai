@@ -37,7 +37,7 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 {{BOARD_SNAPSHOT_JSON}}
 ```
 
-## 3. THE 22 AXES — deep reference
+## 3. THE AXES — deep reference ({{PUBLIC_COUNT}}, read live at generation)
 
 ### governance
 - family: `gspc`
@@ -238,7 +238,7 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     {
       "id": "C-2026-0902-08",
       "date": "2026-09-02",
-      "what_was_wrong": "/api/state quoted public/signed/gspc-board.signed.json totals (22 slots \u00b7 15 measured \u00b7 7 empty) as the number to file, and said that when that snapshot disagreed with live /api/gspc neither figure was quotable. Live GET /api/gspc (and the committed axis arrays it derives from) is 22 axis \u00b7 22 measured \u00b7 0 empty. A VRO map mailed 1 Sep used the 15/7 freeze; the correction that actually transited SMTP is Sent 82 (2 Sep 14:50Z) pointing at /api/gspc.",
+      "what_was_wrong": "/api/state quoted public/signed/gspc-board.signed.json totals (22 slots \u00b7 15 measured \u00b7 7 empty) as the number to file, and said that when that snapshot disagreed with live /api/gspc neither figure was quotable. Live GET /api/gspc (and the committed axis arrays it derives from) is 22 axis \u00b7 22 measured \u00b7 0 empty [as of that date; superseded by the live board]. A VRO map mailed 1 Sep used the 15/7 freeze; the correction that actually transited SMTP is Sent 82 (2 Sep 14:50Z) pointing at /api/gspc.",
       "how_caught": "Recipient audit of the VRO table: /api/gspc and the homepage said 22/22; /signed/gspc-board.signed.json and /api/state still said 15/7 with signed_snapshot_agrees false.",
       "fix": "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) and is labelled 
 ```
