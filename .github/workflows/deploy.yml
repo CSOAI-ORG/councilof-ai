@@ -208,6 +208,8 @@ jobs:
         run: |
           node scripts/content-promise-gate.mjs --selftest
           node scripts/content-promise-gate.mjs dist/client
+          node scripts/assert-dashboard-lazy-chunks.mjs --selftest
+          node scripts/assert-dashboard-lazy-chunks.mjs dist/client
 
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         run: node scripts/signed-json-guard.mjs dist/client

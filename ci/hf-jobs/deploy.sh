@@ -153,6 +153,8 @@ node scripts/brand-gate.mjs dist/client
 step 'Content-promise gate — promises and destinations gated together'
 node scripts/content-promise-gate.mjs --selftest
 node scripts/content-promise-gate.mjs dist/client
+node scripts/assert-dashboard-lazy-chunks.mjs --selftest
+node scripts/assert-dashboard-lazy-chunks.mjs dist/client
 
 step 'Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy'
 node scripts/signed-json-guard.mjs dist/client
