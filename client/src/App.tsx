@@ -175,6 +175,7 @@ const WatchdogHelpProtectHumanity = lazy(() => import("./pages/WatchdogHelpProte
 const WatchdogIncidentReport = lazy(() => import("./pages/WatchdogIncidentReport"));
 const Benchmarks = lazy(() => import("./pages/Benchmarks"));
 const BenchmarkIndex = lazy(() => import("./pages/BenchmarkIndex"));
+const EstateIndex = lazy(() => import("./pages/EstateIndex"));
 const BenchmarkQuality = lazy(() => import("./pages/BenchmarkQuality"));
 const Instrument = lazy(() => import("./pages/Instrument"));
 const Harness = lazy(() => import("./pages/Harness"));
@@ -626,6 +627,7 @@ function App() {
                   <Route path="/watchdog/report" component={PublicWatchdogHub} />
                   <Route path="/benchmarks" component={Benchmarks} />
                   <Route path="/benchmark-index" component={BenchmarkIndex} />
+                  <Route path="/estate" component={EstateIndex} />
                   <Route path="/benchmark-quality" component={BenchmarkQuality} />
                   <Route path="/library" component={Library} />
                   <Route path="/library/:sector" component={Library} />

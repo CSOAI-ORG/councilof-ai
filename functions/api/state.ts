@@ -71,6 +71,7 @@ import mcpRegistry from "../../evidence/mcp-registry.json";
 import councilMcpDoor from "../../evidence/council-mcp-door.json";
 import publicRoot from "../../public/root.json";
 import hubCensus from "../../public/signed/hub-census-baseline.json";
+import estateSummary from "../../public/interop/master-consolidation-summary.json";
 
 import { MEASURED_ON, type AxisScore } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
@@ -628,6 +629,55 @@ export const onRequestGet: PagesFunction = async () => {
         "as_of",
         "Must stay 0. A census machine does not download weights.",
       ),
+    },
+
+    // ── THE ESTATE INDEX ─────────────────────────────────────────────────────
+    // One census of everything held across every surface, under one unsigned Merkle
+    // root. It is here so a reader can quote the root and the counts without
+    // downloading the full index, and so the two leaf classes are never summed:
+    // a bytes leaf covers an artifact we read, a record leaf covers only our note
+    // about an artifact held elsewhere. They answer different questions.
+    estate_index: {
+      authority: "public/interop/master-consolidation-summary.json",
+      full_artifact: (estateSummary as any).full_artifact,
+      page: "/estate",
+      merkle_root: (estateSummary as any).merkle_root,
+      merkle_rule: (estateSummary as any).merkle_rule,
+      entries: fact(
+        (estateSummary as any).totals?.entries ?? null,
+        "catalogued",
+        "public/interop/master-consolidation-summary.json → totals.entries",
+        (estateSummary as any).as_of ?? null,
+        "as_of",
+        "Every artifact found across every surface. INDEXED, never MEASURED: a row here says we " +
+          "found the artifact, not that anything was measured against it.",
+      ),
+      bytes_leaves: fact(
+        (estateSummary as any).totals?.bytes_leaves ?? null,
+        "catalogued",
+        "public/interop/master-consolidation-summary.json → totals.bytes_leaves",
+        (estateSummary as any).as_of ?? null,
+        "as_of",
+        "Artifacts whose own bytes we read and hashed. Inclusion proves those bytes were in the set.",
+      ),
+      record_leaves: fact(
+        (estateSummary as any).totals?.record_leaves ?? null,
+        "catalogued",
+        "public/interop/master-consolidation-summary.json → totals.record_leaves",
+        (estateSummary as any).as_of ?? null,
+        "as_of",
+        "Our own records about remote artifacts we did not download. Inclusion proves we recorded " +
+          "that identity, and proves nothing about the remote bytes.",
+      ),
+      by_surface: (estateSummary as any).totals?.by_surface ?? null,
+      never_add_these: (estateSummary as any).totals?.never_add_these ?? null,
+      inclusion_self_check: (estateSummary as any).inclusion_self_check ?? null,
+      what_this_is_not: (estateSummary as any).what_this_is_not ?? null,
+      signed: false,
+      signing_note:
+        "This root carries no signature, so it records WHEN the set existed and not WHO assembled it. " +
+        "It is therefore not witnessable in Rekor the way public/root.json is, because that witness " +
+        "uploads a signature and there is none here.",
     },
 
     // ── PUBLISHED SIGNED CARDS ───────────────────────────────────────────────

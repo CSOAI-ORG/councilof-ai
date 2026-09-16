@@ -638,6 +638,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Enterprise Plans"
  },
  {
+  "path": "/estate",
+  "comp": "EstateIndex",
+  "title": "Estate Index"
+ },
+ {
   "path": "/eu-ai-act",
   "comp": "EUAIActGuide",
   "title": "EUAIAct Guide"
