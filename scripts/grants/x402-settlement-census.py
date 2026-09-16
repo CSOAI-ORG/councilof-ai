@@ -151,7 +151,7 @@ def main():
             acc = ch["accepts"][0]
             units = int(acc.get("amount") or acc.get("maxAmountRequired") or 0)
             rec.update(challenge_units=units, x402_version=ch.get("x402Version"), pay_to=acc.get("payTo"),
-                       mime=(ch.get("resource") or {}).get("mimeType") or acc.get("mimeType"), probe_s=round(dt, 2))
+                       mime=(ch.get("resource") if isinstance(ch.get("resource"), dict) else {}).get("mimeType") or acc.get("mimeType"), probe_s=round(dt, 2))
             if units <= 0 or units > a.per_host_cap or acc.get("network") != a.network or acc.get("scheme") != "exact":
                 rec.update(status="NO_CHALLENGE", reason="live terms outside caps/network")
                 out.write(json.dumps(rec) + "\n"); out.flush(); continue
