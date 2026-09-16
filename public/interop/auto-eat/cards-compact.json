@@ -1,312 +1,408 @@
 {
- "autoeat.hf.newmodels": {
-  "kind": "csoai.auto-eat-probe/0.1",
-  "flags": {
-   "read_only": true,
-   "no_tx": true,
-   "nothing_minted": true,
-   "no_payment_made": true,
-   "auto_measured": false,
-   "cited_not_endorsed": true
+  "autoeat.hf.newmodels": {
+    "kind": "csoai.auto-eat-probe/0.1",
+    "flags": {
+      "read_only": true,
+      "no_tx": true,
+      "nothing_minted": true,
+      "no_payment_made": true,
+      "auto_measured": false,
+      "cited_not_endorsed": true
+    },
+    "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
+    "sample": {
+      "n_probed": 1913,
+      "live": 247,
+      "placeholder": 0,
+      "held": 1,
+      "dead": 0,
+      "uncheckable": 1665,
+      "live_fraction_of_probed": 0.1291,
+      "live_examples": [
+        "Raivatv24/suzuki-m1-gpt (200)",
+        "asdafee34/my-awesome-model-best-checkpoint (200)",
+        "glory-hyeok/wam-dit4dit-robocasa-kitchen-wan22-v2vstudent-ibot1818-tf025-mimonly-g001-effg",
+        "RyanYr/asyncrl-math_grpo_s40_be4_tn1_ws3-gs1600 (200)",
+        "mradermacher/Angry-Claudius-9B-GGUF (200)",
+        "DASDBCXBC/MyAwesomeModel-TestRepo (200)"
+      ]
+    },
+    "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+    "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+    "as_of": "2026-09-12T06:49:50Z",
+    "unmeasured": [
+      "gspc_score",
+      "weights_integrity",
+      "lineage",
+      "runtime_variant"
+    ]
   },
-  "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
-  "sample": {
-   "n_probed": 1913,
-   "live": 247,
-   "placeholder": 0,
-   "held": 1,
-   "dead": 0,
-   "uncheckable": 1665,
-   "live_fraction_of_probed": 0.1291,
-   "live_examples": [
-    "Raivatv24/suzuki-m1-gpt (200)",
-    "asdafee34/my-awesome-model-best-checkpoint (200)",
-    "glory-hyeok/wam-dit4dit-robocasa-kitchen-wan22-v2vstudent-ibot1818-tf025-mimonly-g001-effg",
-    "RyanYr/asyncrl-math_grpo_s40_be4_tn1_ws3-gs1600 (200)",
-    "mradermacher/Angry-Claudius-9B-GGUF (200)",
-    "DASDBCXBC/MyAwesomeModel-TestRepo (200)"
-   ]
+  "autoeat.mcp.registry": {
+    "kind": "csoai.auto-eat-probe/0.1",
+    "flags": {
+      "read_only": true,
+      "no_tx": true,
+      "nothing_minted": true,
+      "no_payment_made": true,
+      "auto_measured": false,
+      "cited_not_endorsed": true
+    },
+    "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
+    "sample": {
+      "n_probed": 139,
+      "live": 135,
+      "placeholder": 3,
+      "held": 0,
+      "dead": 1,
+      "uncheckable": 0,
+      "live_fraction_of_probed": 0.9712,
+      "live_examples": [
+        "agency.ottobot/business-contact-finder (405)",
+        "agency.ottobot/contractor-license-changes (405)",
+        "ai.atako/mcp (401)",
+        "ai.akkrudata/akkrudata (401)",
+        "ai.balancos/mcp (401)",
+        "ai.cnpj/mcp (401)"
+      ]
+    },
+    "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+    "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+    "as_of": "2026-09-12T06:49:50Z",
+    "unmeasured": [
+      "tool_behavior",
+      "capability_claims",
+      "auth_scope",
+      "service_quality"
+    ]
   },
-  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
-  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-12T06:49:50Z",
-  "unmeasured": [
-   "gspc_score",
-   "weights_integrity",
-   "lineage",
-   "runtime_variant"
-  ]
- },
- "autoeat.mcp.registry": {
-  "kind": "csoai.auto-eat-probe/0.1",
-  "flags": {
-   "read_only": true,
-   "no_tx": true,
-   "nothing_minted": true,
-   "no_payment_made": true,
-   "auto_measured": false,
-   "cited_not_endorsed": true
+  "autoeat.erc8004.newagents": {
+    "kind": "csoai.auto-eat-probe/0.1",
+    "flags": {
+      "read_only": true,
+      "no_tx": true,
+      "nothing_minted": true,
+      "no_payment_made": true,
+      "auto_measured": false,
+      "cited_not_endorsed": true
+    },
+    "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
+    "sample": {
+      "n_probed": 227,
+      "live": 80,
+      "placeholder": 0,
+      "held": 0,
+      "dead": 0,
+      "uncheckable": 147,
+      "live_fraction_of_probed": 0.3524,
+      "live_examples": [
+        "42161:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:1486 (tokenURI resolvable)",
+        "1:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:50773 (tokenURI resolvable)",
+        "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10238 (tokenURI resolvable)",
+        "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10230 (tokenURI resolvable)",
+        "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10229 (tokenURI resolvable)",
+        "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:9216 (tokenURI resolvable)"
+      ]
+    },
+    "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+    "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+    "as_of": "2026-09-12T06:49:50Z",
+    "unmeasured": [
+      "reputation_validity",
+      "validation_registry_mainnet",
+      "service_quality"
+    ]
   },
-  "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
-  "sample": {
-   "n_probed": 139,
-   "live": 135,
-   "placeholder": 3,
-   "held": 0,
-   "dead": 1,
-   "uncheckable": 0,
-   "live_fraction_of_probed": 0.9712,
-   "live_examples": [
-    "agency.ottobot/business-contact-finder (405)",
-    "agency.ottobot/contractor-license-changes (405)",
-    "ai.atako/mcp (401)",
-    "ai.akkrudata/akkrudata (401)",
-    "ai.balancos/mcp (401)",
-    "ai.cnpj/mcp (401)"
-   ]
+  "autoeat.xrpl.accounts": {
+    "kind": "csoai.auto-eat-probe/0.1",
+    "flags": {
+      "read_only": true,
+      "no_tx": true,
+      "nothing_minted": true,
+      "no_payment_made": true,
+      "auto_measured": false,
+      "cited_not_endorsed": true
+    },
+    "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
+    "sample": {
+      "n_probed": 13,
+      "live": 13,
+      "placeholder": 0,
+      "held": 0,
+      "dead": 0,
+      "uncheckable": 0,
+      "live_fraction_of_probed": 1.0,
+      "live_examples": [
+        "rXUMMaPpZqPutoRszR29jtC8amWq3APkx (exists)",
+        "rKv5WDWnXoZobskTdhKkZf5KZqy8PdSxLZ (exists)",
+        "rHxyQGMkssTKyf6F4sTik7gyJDHve5jSgY (exists)",
+        "rJfFEy3ZYwsadinHJsyTwveH1hHpsmBk5R (exists)",
+        "rUY6QvosDnP83WMKRcyj96kC3qCSttVoyz (exists)",
+        "rEPrn4DbXvHNBDJghQWUf92NzLU3MURFC3 (exists)"
+      ]
+    },
+    "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+    "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+    "as_of": "2026-09-12T06:49:50Z",
+    "unmeasured": [
+      "issuer_identity",
+      "reserve_attestation",
+      "off_ledger_backing"
+    ]
   },
-  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
-  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-12T06:49:50Z",
-  "unmeasured": [
-   "tool_behavior",
-   "capability_claims",
-   "auth_scope",
-   "service_quality"
-  ]
- },
- "autoeat.erc8004.newagents": {
-  "kind": "csoai.auto-eat-probe/0.1",
-  "flags": {
-   "read_only": true,
-   "no_tx": true,
-   "nothing_minted": true,
-   "no_payment_made": true,
-   "auto_measured": false,
-   "cited_not_endorsed": true
+  "autoeat.hf.spaces": {
+    "kind": "csoai.auto-eat-probe/0.1",
+    "flags": {
+      "read_only": true,
+      "no_tx": true,
+      "nothing_minted": true,
+      "no_payment_made": true,
+      "auto_measured": false,
+      "cited_not_endorsed": true
+    },
+    "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
+    "sample": {
+      "n_probed": 2000,
+      "live": 248,
+      "placeholder": 0,
+      "held": 0,
+      "dead": 0,
+      "uncheckable": 1752,
+      "live_fraction_of_probed": 0.124,
+      "live_examples": [
+        "mightygus/unleashed-high-school-band-competition (200)",
+        "Harshavardhan1703/aegis-ai-demo (200)",
+        "EgoisticCoder/Qifu-v1 (200)",
+        "huappp/pphh (200)",
+        "rijal028/securepixel-engine (200)",
+        "hetchyy/quran-ts-job (200)"
+      ]
+    },
+    "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+    "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+    "as_of": "2026-09-12T06:49:50Z",
+    "unmeasured": [
+      "runtime_behavior",
+      "hardware_claim",
+      "lineage"
+    ]
   },
-  "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
-  "sample": {
-   "n_probed": 227,
-   "live": 80,
-   "placeholder": 0,
-   "held": 0,
-   "dead": 0,
-   "uncheckable": 147,
-   "live_fraction_of_probed": 0.3524,
-   "live_examples": [
-    "42161:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:1486 (tokenURI resolvable)",
-    "1:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:50773 (tokenURI resolvable)",
-    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10238 (tokenURI resolvable)",
-    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10230 (tokenURI resolvable)",
-    "11155111:0x8004a818bfb912233c491871b3d84c89a494bd9e:10229 (tokenURI resolvable)",
-    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:9216 (tokenURI resolvable)"
-   ]
+  "autoeat.npm.registry": {
+    "kind": "csoai.auto-eat-probe/0.1",
+    "flags": {
+      "read_only": true,
+      "no_tx": true,
+      "nothing_minted": true,
+      "no_payment_made": true,
+      "auto_measured": false,
+      "cited_not_endorsed": true
+    },
+    "method": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
+    "sample": {
+      "n_probed": 408,
+      "live": 408,
+      "placeholder": 0,
+      "held": 0,
+      "dead": 0,
+      "uncheckable": 0,
+      "live_fraction_of_probed": 1.0,
+      "live_examples": [
+        "mindvest-atlas (200)",
+        "@solomonneas/adguard-mcp (200)",
+        "@nitrostack/cli (200)",
+        "@nitrostack/widgets (200)",
+        "ask-experts-mcp (200)",
+        "@ainyc/canonry (200)"
+      ]
+    },
+    "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+    "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+    "as_of": "2026-09-12T06:49:50Z",
+    "unmeasured": [
+      "install_integrity",
+      "malware",
+      "maintainer_identity"
+    ]
   },
-  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
-  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-12T06:49:50Z",
-  "unmeasured": [
-   "reputation_validity",
-   "validation_registry_mainnet",
-   "service_quality"
-  ]
- },
- "autoeat.xrpl.accounts": {
-  "kind": "csoai.auto-eat-probe/0.1",
-  "flags": {
-   "read_only": true,
-   "no_tx": true,
-   "nothing_minted": true,
-   "no_payment_made": true,
-   "auto_measured": false,
-   "cited_not_endorsed": true
+  "autoeat.xrpl.twoway": {
+    "kind": "csoai.auto-eat-probe/0.1",
+    "flags": {
+      "read_only": true,
+      "no_tx": true,
+      "nothing_minted": true,
+      "no_payment_made": true,
+      "auto_measured": false,
+      "cited_not_endorsed": true,
+      "not_16_of_16": true
+    },
+    "method": "on-ledger Domain <-> issuer .well-known/xrp-ledger.toml [[ACCOUNTS]]; extra www/guess URLs probed, no invented PASS",
+    "sample": {
+      "n": 16,
+      "PASS": 4,
+      "FAIL": 9,
+      "UNCHECKABLE": 3,
+      "honest_two_way_count": "4/16",
+      "pass_symbols": [
+        "RLUSD",
+        "OUSG",
+        "USDB",
+        "BBRL"
+      ],
+      "fail_symbols": [
+        "EURCV",
+        "USD.gh",
+        "EUR.gh",
+        "EURQ",
+        "USDQ",
+        "EUR\u00d8P",
+        "XAU.gh",
+        "GBP.gh",
+        "PSC"
+      ],
+      "uncheckable_symbols": [
+        "USD.bs",
+        "EUR.bs",
+        "USDC"
+      ]
+    },
+    "story": "Re-ran 2026-09-01T13:01:56Z against live GET /api/xrpl n=16. Still 4/16. GateHub toml URL is HTML. Bitstamp/Circle toml 404. Nine issuers have no Domain. SWIFT banks are a different census, not this roster.",
+    "verified_via": "xrpl_two_way_check.py vs publicnode/s1/s2 + issuer toml",
+    "as_of": "2026-09-01T13:01:56Z",
+    "unmeasured": [
+      "gspc_score",
+      "16/16 two-way",
+      "SWIFT clients"
+    ]
   },
-  "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
-  "sample": {
-   "n_probed": 13,
-   "live": 13,
-   "placeholder": 0,
-   "held": 0,
-   "dead": 0,
-   "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
-   "live_examples": [
-    "rXUMMaPpZqPutoRszR29jtC8amWq3APkx (exists)",
-    "rKv5WDWnXoZobskTdhKkZf5KZqy8PdSxLZ (exists)",
-    "rHxyQGMkssTKyf6F4sTik7gyJDHve5jSgY (exists)",
-    "rJfFEy3ZYwsadinHJsyTwveH1hHpsmBk5R (exists)",
-    "rUY6QvosDnP83WMKRcyj96kC3qCSttVoyz (exists)",
-    "rEPrn4DbXvHNBDJghQWUf92NzLU3MURFC3 (exists)"
-   ]
+  "autoeat.swift.census": {
+    "kind": "csoai.auto-eat-probe/0.1",
+    "flags": {
+      "read_only": true,
+      "no_tx": true,
+      "nothing_minted": true,
+      "no_payment_made": true,
+      "auto_measured": false,
+      "cited_not_endorsed": true,
+      "cohort_are_clients": false
+    },
+    "method": "GET https://councilof.ai/api/swift \u2014 three-state census of named press cohort",
+    "sample": {
+      "n": 26,
+      "n_measured": 0,
+      "n_live": 3,
+      "n_committed": 9,
+      "n_discovered": 14,
+      "live_ids": [
+        "hsbc",
+        "standard-chartered",
+        "uob"
+      ],
+      "committed_n": 9,
+      "discovered_n": 14
+    },
+    "story": "SWIFT named banks are TARGETS / press list, not clients. 3 LIVE (HSBC, Standard Chartered, UOB) from sourced press. 0 MEASURED. Official swift.com HTML UNCHECKABLE (timeout). No ISO 20022 / MT artifact fetched.",
+    "verified_via": "live GET /api/swift three-state",
+    "as_of": "2026-09-01",
+    "unmeasured": [
+      "gspc_score",
+      "ISO20022 artifact",
+      "SWIFT membership",
+      "clients"
+    ]
   },
-  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
-  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-12T06:49:50Z",
-  "unmeasured": [
-   "issuer_identity",
-   "reserve_attestation",
-   "off_ledger_backing"
-  ]
- },
- "autoeat.hf.spaces": {
-  "kind": "csoai.auto-eat-probe/0.1",
-  "flags": {
-   "read_only": true,
-   "no_tx": true,
-   "nothing_minted": true,
-   "no_payment_made": true,
-   "auto_measured": false,
-   "cited_not_endorsed": true
+  "autoeat.eat-mining.swift": {
+    "kind": "csoai.eat-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true
+    },
+    "as_of": "2026-09-16T10:30:01Z",
+    "n": 17,
+    "n_ok": 6,
+    "n_http_error": 11,
+    "evidence_url": "/interop/swift-measure.json",
+    "banks": [
+      "ANZ",
+      "BNP Paribas",
+      "BNY",
+      "Citi",
+      "DBS",
+      "FAB",
+      "FirstRand",
+      "HSBC",
+      "Ita\u00fa",
+      "Lloyds",
+      "Mashreq",
+      "MUFG",
+      "OCBC",
+      "Standard Chartered",
+      "UBS",
+      "UOB",
+      "Wells Fargo"
+    ],
+    "honesty": "17 SWIFT TARGETS, 6/17 reachable. Press body UNCHECKABLE on most."
   },
-  "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
-  "sample": {
-   "n_probed": 2000,
-   "live": 248,
-   "placeholder": 0,
-   "held": 0,
-   "dead": 0,
-   "uncheckable": 1752,
-   "live_fraction_of_probed": 0.124,
-   "live_examples": [
-    "mightygus/unleashed-high-school-band-competition (200)",
-    "Harshavardhan1703/aegis-ai-demo (200)",
-    "EgoisticCoder/Qifu-v1 (200)",
-    "huappp/pphh (200)",
-    "rijal028/securepixel-engine (200)",
-    "hetchyy/quran-ts-job (200)"
-   ]
+  "autoeat.eat-mining.cobol": {
+    "kind": "csoai.eat-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true
+    },
+    "as_of": "2026-09-16T10:30:16Z",
+    "n": 12,
+    "n_ok": 9,
+    "n_http_error": 3,
+    "evidence_url": "/interop/cobol-measure.json",
+    "systems": [
+      "Fed ACH",
+      "Fed Wire",
+      "JPMorgan",
+      "BoA",
+      "Citi",
+      "Visa",
+      "Mastercard",
+      "NYSE",
+      "Allstate",
+      "AIG",
+      "SSA",
+      "IRS"
+    ],
+    "honesty": "12 COBOL-using systems, 9/12 reachable."
   },
-  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
-  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-12T06:49:50Z",
-  "unmeasured": [
-   "runtime_behavior",
-   "hardware_claim",
-   "lineage"
-  ]
- },
- "autoeat.npm.registry": {
-  "kind": "csoai.auto-eat-probe/0.1",
-  "flags": {
-   "read_only": true,
-   "no_tx": true,
-   "nothing_minted": true,
-   "no_payment_made": true,
-   "auto_measured": false,
-   "cited_not_endorsed": true
-  },
-  "method": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
-  "sample": {
-   "n_probed": 408,
-   "live": 408,
-   "placeholder": 0,
-   "held": 0,
-   "dead": 0,
-   "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
-   "live_examples": [
-    "mindvest-atlas (200)",
-    "@solomonneas/adguard-mcp (200)",
-    "@nitrostack/cli (200)",
-    "@nitrostack/widgets (200)",
-    "ask-experts-mcp (200)",
-    "@ainyc/canonry (200)"
-   ]
-  },
-  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
-  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-12T06:49:50Z",
-  "unmeasured": [
-   "install_integrity",
-   "malware",
-   "maintainer_identity"
-  ]
- },
- "autoeat.xrpl.twoway": {
-  "kind": "csoai.auto-eat-probe/0.1",
-  "flags": {
-   "read_only": true,
-   "no_tx": true,
-   "nothing_minted": true,
-   "no_payment_made": true,
-   "auto_measured": false,
-   "cited_not_endorsed": true,
-   "not_16_of_16": true
-  },
-  "method": "on-ledger Domain <-> issuer .well-known/xrp-ledger.toml [[ACCOUNTS]]; extra www/guess URLs probed, no invented PASS",
-  "sample": {
-   "n": 16,
-   "PASS": 4,
-   "FAIL": 9,
-   "UNCHECKABLE": 3,
-   "honest_two_way_count": "4/16",
-   "pass_symbols": [
-    "RLUSD",
-    "OUSG",
-    "USDB",
-    "BBRL"
-   ],
-   "fail_symbols": [
-    "EURCV",
-    "USD.gh",
-    "EUR.gh",
-    "EURQ",
-    "USDQ",
-    "EURØP",
-    "XAU.gh",
-    "GBP.gh",
-    "PSC"
-   ],
-   "uncheckable_symbols": [
-    "USD.bs",
-    "EUR.bs",
-    "USDC"
-   ]
-  },
-  "story": "Re-ran 2026-09-01T13:01:56Z against live GET /api/xrpl n=16. Still 4/16. GateHub toml URL is HTML. Bitstamp/Circle toml 404. Nine issuers have no Domain. SWIFT banks are a different census, not this roster.",
-  "verified_via": "xrpl_two_way_check.py vs publicnode/s1/s2 + issuer toml",
-  "as_of": "2026-09-01T13:01:56Z",
-  "unmeasured": [
-   "gspc_score",
-   "16/16 two-way",
-   "SWIFT clients"
-  ]
- },
- "autoeat.swift.census": {
-  "kind": "csoai.auto-eat-probe/0.1",
-  "flags": {
-   "read_only": true,
-   "no_tx": true,
-   "nothing_minted": true,
-   "no_payment_made": true,
-   "auto_measured": false,
-   "cited_not_endorsed": true,
-   "cohort_are_clients": false
-  },
-  "method": "GET https://councilof.ai/api/swift — three-state census of named press cohort",
-  "sample": {
-   "n": 26,
-   "n_measured": 0,
-   "n_live": 3,
-   "n_committed": 9,
-   "n_discovered": 14,
-   "live_ids": [
-    "hsbc",
-    "standard-chartered",
-    "uob"
-   ],
-   "committed_n": 9,
-   "discovered_n": 14
-  },
-  "story": "SWIFT named banks are TARGETS / press list, not clients. 3 LIVE (HSBC, Standard Chartered, UOB) from sourced press. 0 MEASURED. Official swift.com HTML UNCHECKABLE (timeout). No ISO 20022 / MT artifact fetched.",
-  "verified_via": "live GET /api/swift three-state",
-  "as_of": "2026-09-01",
-  "unmeasured": [
-   "gspc_score",
-   "ISO20022 artifact",
-   "SWIFT membership",
-   "clients"
-  ]
- }
+  "autoeat.eat-mining.stablecoins": {
+    "kind": "csoai.eat-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true
+    },
+    "as_of": "2026-09-16T10:31:23Z",
+    "n": 45,
+    "n_ok": 34,
+    "n_http_error": 7,
+    "evidence_url": "/interop/stablecoins-extended.json",
+    "chains_covered": 17,
+    "chains": [
+      "Ethereum",
+      "XRPL",
+      "Solana",
+      "Algorand",
+      "Aptos",
+      "Arbitrum",
+      "Avalanche",
+      "BSC",
+      "Base",
+      "Hedera",
+      "Near",
+      "Optimism",
+      "Polkadot",
+      "Polygon",
+      "Stellar",
+      "Sui",
+      "Tron"
+    ],
+    "extends_reader_16": true,
+    "honesty": "45 stablecoins, 34/45 reachable. Extends XRPL reader-16 + bank-registry 6."
+  }
 }
