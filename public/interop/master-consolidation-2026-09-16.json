@@ -1,6 +1,6 @@
 {
   "artifact": "master-consolidation",
-  "as_of": "2026-09-16T14:44:24Z",
+  "as_of": "2026-09-16T15:33:14Z",
   "what_this_is": "A census of every artifact CSOAI holds across every surface, committed to one Merkle root.",
   "what_the_root_proves": "That these exact entries were in this set when the root was stamped. Nothing else.",
   "what_this_is_not": [
@@ -31,6 +31,50 @@
     "count": 21,
     "rule": "An identifier carrying an internal codename is replaced by a marker. The entry is NOT dropped and its digest is NOT recomputed, so the leaf still commits to the real record and inclusion can still be proved by anyone who holds the real identifier.",
     "why": "scripts/brand-gate.mjs blocks internal codenames on every public surface, and a census that quietly dropped them would understate the estate."
+  },
+  "proven": {
+    "signed_card_corpus": {
+      "source": "public/signed/cards/*.json verified against the live did:web:csoai.org document",
+      "bodies_on_disk": 335,
+      "verify_valid": 335,
+      "signing_key": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "control": "one byte flipped in a card that verifies -> INVALID: InvalidSignature",
+      "does_not_establish": "That the cards are correct. A signature proves the bytes have not changed since signing, never that they were worth signing. On 14 September 44 signed results were withdrawn whose signatures all verified."
+    },
+    "anchoring": {
+      "source": "every .ots under public/, parsed and checked against the file it names",
+      "proofs": 85,
+      "bitcoin_attested": 56,
+      "calendar_pending": 29,
+      "unreadable": 0,
+      "does_not_establish": "A calendar-pending stamp is a REQUEST, not an anchor. Only the Bitcoin-attested count is evidence of a time."
+    },
+    "xrpl_issued_supply": {
+      "source": "public/interop/xrpl-supply-2026-09-16.json",
+      "n": 16,
+      "n_measured": 16,
+      "n_unmeasured": 0,
+      "n_uncheckable": 0,
+      "as_of": "2026-09-16T11:06:53Z",
+      "honesty": "Obligations are what the issuing account owes on the XRP Ledger at the named validated ledger: that is the issued supply, and nothing more. It is not a reserve attestation, not a claim about backing, and not a grade."
+    },
+    "swift_cohort": {
+      "source": "public/interop/swift-measure.json",
+      "n": 17,
+      "status_all": "DISCOVERED_PER_BANK_COHORT_MEMBERSHIP_MEASURED",
+      "as_of": "2026-09-16T10:30:01Z",
+      "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
+      "sig_status": "UNSIGNED_PENDING_OIDC",
+      "honesty": "Cohort membership is now MEASURED against the primary source: the seventeen names below are the seventeen Swift names, and our earlier list matched it exactly. Everything else in this file is still the HTTP state of URLs WE chose \u2014 eleven are newsroom index pages we guessed, and a 404 on a path we invented is evidence about our guess, never about the bank. No bank here has been measured on tokenisation posture and none may be quoted as such."
+    },
+    "stablecoin_corpus": {
+      "source": "public/interop/stablecoin-corpus-index-2026-09-16.json",
+      "universe_asset_count": 425,
+      "assets_with_at_least_one_measured_deployment": 302,
+      "still_unmeasured": 123,
+      "as_of": "2026-09-16T12:06:54Z",
+      "not_a_supply_total": "This counts ASSETS with at least one measured deployment. It is not a sum of supply: the universe mixes peg currencies, and one asset may be deployed on several chains, so a sum would mix units or double-count a bridged token."
+    }
   },
   "merkle_root": "eddce8de60c02789edbdb252914bd94edc798083e8341838d4319938eaa2d64f",
   "inclusion_self_check": {

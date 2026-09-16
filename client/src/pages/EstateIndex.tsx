@@ -42,6 +42,7 @@ interface Master {
     never_add_these: string;
   };
   inclusion_self_check: { sampled: number; verified: number; a_leaf_outside_the_set_is_rejected: boolean };
+  proven?: Record<string, Record<string, unknown>>;
   entries: Entry[];
 }
 
@@ -148,6 +149,41 @@ export default function EstateIndex() {
               </tbody>
             </table>
           </div>
+
+          {m.proven && (
+            <>
+              <h2 className="mt-10 text-xl font-semibold">What was checked, and what each check does not settle</h2>
+              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+                Every figure here is read from the artifact named beside it. None is typed.
+              </p>
+              <div className="mt-3 space-y-4">
+                {Object.entries(m.proven).map(([name, block]) => (
+                  <div key={name} className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+                    <div className="font-medium">{name.replace(/_/g, " ")}</div>
+                    <table className="mt-2 w-full text-sm">
+                      <tbody>
+                        {Object.entries(block)
+                          .filter(([k]) => !["does_not_establish", "honesty", "not_a_supply_total"].includes(k))
+                          .map(([k, v]) => (
+                            <tr key={k} className="border-t border-neutral-200 dark:border-neutral-800">
+                              <td className="w-1/3 py-1.5 pr-4 text-neutral-500">{k.replace(/_/g, " ")}</td>
+                              <td className="py-1.5 break-all">{String(v)}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                    {["does_not_establish", "honesty", "not_a_supply_total"].map((k) =>
+                      block[k] ? (
+                        <p key={k} className="mt-3 border-l-2 border-amber-400/60 pl-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+                          {String(block[k])}
+                        </p>
+                      ) : null,
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
 
           <h2 className="mt-10 text-xl font-semibold">Search the index</h2>
           <input
