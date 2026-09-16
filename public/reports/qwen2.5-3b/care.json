@@ -1,0 +1,96 @@
+{
+ "schema": "csoai.axis-report/0.1",
+ "axis": "care",
+ "kind": "model-comparison",
+ "subject": "qwen2.5:3b",
+ "subject_slug": "qwen2.5-3b",
+ "status": "UNMEASURED",
+ "reason": "source card carries no n: accuracy is a single point on one small bank on one date, and the card does not state a sample size, so nothing here may read MEASURED",
+ "n": 0,
+ "n_unit": "bank items",
+ "rows": [],
+ "rows_note": "the source card publishes no per-item rows",
+ "separation": "UNTESTED",
+ "obligations": [
+  {
+   "regulator": "eu-ai-act",
+   "regulator_name": "EU AI Act",
+   "relation": "relevant-to",
+   "obligation": "Article 5(1)(b) — exploitation of vulnerabilities of persons",
+   "tier": "prohibited_practices",
+   "statutory_maximum": "up to €35,000,000 or 7% of worldwide annual turnover, whichever is higher",
+   "fine_cited_to": "EU AI Act (Reg (EU) 2024/1689) Art 99(3)",
+   "no_fine_asserted_owed": true,
+   "via_axis": "care"
+  },
+  {
+   "regulator": "nist-ai-rmf",
+   "regulator_name": "NIST AI RMF 1.0",
+   "relation": "relevant-to",
+   "obligation": "MEASURE core function (harmful outputs)",
+   "tier": "no_fine",
+   "statutory_maximum": null,
+   "fine_cited_to": null,
+   "no_fine_asserted_owed": true,
+   "via_axis": "care"
+  },
+  {
+   "regulator": "owasp-asi",
+   "regulator_name": "OWASP Top 10 for Agentic Applications (2026)",
+   "relation": "relevant-to",
+   "obligation": "ASI09 Human-Agent Trust Exploitation",
+   "tier": "no_fine",
+   "statutory_maximum": null,
+   "fine_cited_to": null,
+   "no_fine_asserted_owed": true,
+   "via_axis": "care"
+  },
+  {
+   "regulator": "nist-ai-rmf",
+   "regulator_name": "NIST AI RMF 1.0",
+   "relation": "relevant-to",
+   "obligation": "MEASURE core function (validity & reliability)",
+   "tier": "no_fine",
+   "statutory_maximum": null,
+   "fine_cited_to": null,
+   "no_fine_asserted_owed": true,
+   "via_axis": "care-refusal-help"
+  },
+  {
+   "regulator": "nist-ai-rmf",
+   "regulator_name": "NIST AI RMF 1.0",
+   "relation": "relevant-to",
+   "obligation": "MEASURE + MANAGE core functions",
+   "tier": "no_fine",
+   "statutory_maximum": null,
+   "fine_cited_to": null,
+   "no_fine_asserted_owed": true,
+   "via_axis": "care-refusal-protect"
+  }
+ ],
+ "source_axes": [
+  "care",
+  "care-refusal-help",
+  "care-refusal-protect"
+ ],
+ "source_cards": [
+  {
+   "sha256": "a38316158f8c59380275313e1769feb749199756e1a67013bfb647f68328d4c2",
+   "path": "/signed/cards/a38316158f8c59380275313e1769feb749199756e1a67013bfb647f68328d4c2.json",
+   "axis": "care",
+   "created": "2026-08-19T09:24:39.161576+00:00",
+   "accuracy": 0,
+   "n": null,
+   "status": null
+  }
+ ],
+ "root_ref": "NOT_YET_ROOTED",
+ "as_of": "2026-08-19T09:24:39.161576+00:00",
+ "as_of_field": "the newest source card's body.created — when it was measured, never when this file was written",
+ "not_a": "grade, rank, conformity mark or legal determination. Measurement, not certification; verification is free.",
+ "api": "/api/report?subject=qwen2.5-3b&axis=care",
+ "verify": "/signed/verify-card.mjs against each source_cards[].path; /api/report for the index",
+ "canonical_rule": "canonical_sha256 = sha256(canonical JSON of this object minus generated_at and canonical_sha256; keys sorted, no whitespace)",
+ "generated_at": "2026-09-16T09:39:10.766Z",
+ "canonical_sha256": "44ac080c93acfff78c3e0f81c7a12989d6b7debcac835e0962416b8d81e2a499"
+}

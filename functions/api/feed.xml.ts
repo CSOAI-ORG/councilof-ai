@@ -1,13 +1,20 @@
-// functions/api/feed.xml — RSS 2.0 of estate state changes (watch-subscription v0.1).
+// functions/api/feed.xml — RSS 2.0 of estate state changes (watch-subscription v0.2).
 //
 // The retention primitive from the flywheel doctrine: a changing state you care
 // about + a free, no-identity way to watch it. Zero PII (RSS stores nothing on
-// the client). Items are appended here with each shipped change — the feed is
-// code, so every entry rides the same review+deploy gate as the site itself.
+// the client).
 //
-// B-03 fix (2026-09-15): the GSPC board-count item is now derived live from
-// GET /api/gspc at serve time, so it can never freeze on a stale count.
-// Historical items below are preserved as-is.
+// v0.2 (2026-09-16): items are DERIVED at serve time, never typed here.
+//   · the GSPC board-count line — live from GET /api/gspc (B-03, 2026-09-15), always first,
+//     never a stale count; an honest "unavailable" line when the board cannot be read.
+//   · one item per axis report — from /reports/index.json (scripts/build-axis-reports.mjs),
+//     each dated by its newest source card, so a new signed card reaches this feed with no
+//     code edit. MEASURED carries n; UNMEASURED carries its reason. Nothing carries a grade.
+//   · one item for the regulation-findings index — from /signed/findings_index.json, counts
+//     read from the file, dated by its as_of.
+// Newest first, capped at 50 derived items after the board line. The hand-typed history that
+// used to live here was retired with this change: no test read it, and a feed that is code
+// cannot be the durable record — /feeds/corrections.xml and /interop/** are.
 
 interface FeedItem {
   title: string;
@@ -16,137 +23,101 @@ interface FeedItem {
   desc: string;
 }
 
-const HISTORICAL_ITEMS: FeedItem[] = [
-  {
-    title: "XRPL impersonation watch: 22 issuers of verified codes are not the verified issuer",
-    link: "https://councilof.ai/interop/xrpl-impersonation-2026-09/latest.json",
-    date: "Sat, 12 Sep 2026 13:30:00 GMT",
-    desc: "Daily scan of 12,000 ranked XRPL tokens for RLUSD/XSGD/USDC/AUDD issuers against the archived verified set. 22 issuer accounts observed issuing those codes without being the verified issuer, including a 10,000,000,000-supply XSGD account whose on-ledger Domain claims straitsx.com while StraitsX's own site publishes a different address. A mismatch is a fact about the set, never a verdict: legitimacy stays UNMEASURED. Verified issuers for XSGD and AUDD are archived from issuer-published pages with digests.",
-  },
-  {
-    title: "Stablecoin top-20 deep-probe: 19 attestation pages located, 3 auditors named, staleness mostly UNMEASURED",
-    link: "https://councilof.ai/interop/stablecoin-deep-2026-09/deep.json",
-    date: "Sat, 12 Sep 2026 13:30:00 GMT",
-    desc: "The 425-asset index's top 20 deep-probed on attestation dimensions (page, auditor, cadence, staleness). Most issuers serve no report date in their page bytes, so staleness stays UNMEASURED rather than guessed. Every figure comes from archived bytes with sha256 and retrieval metadata. Free surface: index total + staleness_days; per-chain splits ride the PROOF door.",
-  },
-  {
-    title: "XRPL RWA reconciliation: distributed $456.4M is not represented $4.06B",
-    link: "https://councilof.ai/interop/rwa-reconciliation-2026-09/figures.json",
-    date: "Sat, 12 Sep 2026 13:30:00 GMT",
-    desc: "Two scopes, never mixed: XRPL distributed asset value $456.4M vs represented $4.06B, with one asset (JMWH, $2.23B) holding 54.91% of the represented side, crosschecked across two league tables archived today. Also reconciled: BENJI's three published numbers (asset $685.9M / FOBXX fund / platform $2.5B) — three definitions, not a discrepancy.",
-  },
-  {
-    title: "C2PA marking census: stated posture is not detectable marking",
-    link: "https://councilof.ai/interop/art50-census-2026-09/endpoint.json",
-    date: "Sat, 12 Sep 2026 13:30:00 GMT",
-    desc: "Four-generator census of the 4-boolean marking stack (C2PA manifest, metadata marking, invisible watermark, visible marking). Anthropic, OpenAI and Google carry stated postures from archived pages; detectable fields stay UNMEASURED until sample probes run. Midjourney is owner-gated. JSON endpoint feeds the art50 panel.",
-  },
-  {
-    title: "Mill receipts: signature, lifecycle and regulation states separated",
-    link: "https://councilof.ai/interop/mill-receipt-readiness.json",
-    date: "Fri, 11 Sep 2026 10:50:00 GMT",
-    desc: "Production readback verifies 36 of 36 outer Ed25519 signatures. All 36 inner records still declare STAGED_UNSIGNED. Five carry direct regulation links and 31 are unlinked; unlinked records have no regulation score. These are independent states, not one pass label.",
-  },
-  {
-    title: "Stablecoin estate: 425 indexed is not 425 measured",
-    link: "https://councilof.ai/interop/stablecoin-universe-2026-09/readiness.json",
-    date: "Fri, 11 Sep 2026 09:45:00 GMT",
-    desc: "The frozen index contains 425 assets, 1,640 asset-chain entries and 211 reported chains. One asset has independent measurement evidence and 424 do not. Asset-specific A2A, MCP, x402 and settlement coverage remain zero; generic protocol doors are reported separately.",
-  },
-  {
-    title: "GSPC board: 22 axis · 15 measured — historical sitting-day (28 Aug)",
-    link: "https://councilof.ai/api/gspc",
-    date: "Thu, 28 Aug 2026 04:55:00 GMT",
-    desc: "Sitting-day wording for 28 Aug 2026: board then derived 22 axis · 15 measured · 7 empty. Superseded by the live board — cite totals.public_count from GET /api/gspc (now 22 axis · 22 measured).",
-  },
-  {
-    title: "The carder is live: deterministic fact-cards, and it caught us first",
-    link: "https://github.com/CSOAI-ORG/carder",
-    date: "Wed, 19 Aug 2026 13:30:00 GMT",
-    desc: "One engine, four valves (datasets / benchmarks / leaderboards / models). Pilot on our own 29 datasets found 14 missing machine-readable licences and near-empty cards — all fixed same day, verified by re-card: 29/29 GREEN. Valve 2 then flagged our own repos' missing LICENSE files and the board API's missing licence field — also fixed same day. Right-of-reply pipeline shipped: no third-party card publishes without a token. Own assets first, always.",
-  },
-  {
-    title: "/insurers — the evidence pack an underwriter can verify",
-    link: "https://councilof.ai/insurers",
-    date: "Wed, 19 Aug 2026 12:00:00 GMT",
-    desc: "Card anatomy, offline curl verification, severity tails (CVaR@5% where n≥100), drift via reg-watch, and the honesty gate. No pricing; verification free forever.",
-  },
-  {
-    title: "Verify one record, in your browser, with a shareable permalink",
-    link: "https://councilof.ai/gspc-verify",
-    date: "Wed, 19 Aug 2026 12:30:00 GMT",
-    desc: "Paste any estate record: content_id recomputed (both envelope generations), Ed25519 checked against the published did.json keys via WebCrypto. Tested against a real card (PASS) and a tampered copy (FAIL). Unsigned records get an honest 'hash checked only' — never a fake pass.",
-  },
-  {
-    title: "Correction: swarm point leader retained; separation claim withdrawn",
-    link: "https://councilof.ai/api/gspc",
-    date: "Sat, 12 Sep 2026 09:00:00 GMT",
-    desc: "The signed wave-2b candidate cards support qwen2.5:7b as the point leader (0.4444), followed by qwen3:4b (0.4070). They do not publish paired rows or compatible intervals, so the earlier SEPARATED claim is withdrawn and the live axis is UNTESTED for separation. Measurement remains; unsupported statistical certainty does not.",
-  },
-  {
-    title: "Arena feed live: 2,900+ signed AI-vs-AI rounds streaming",
-    link: "https://councilof.ai/api/sov-arena/rounds.jsonl",
-    date: "Wed, 19 Aug 2026 09:30:00 GMT",
-    desc: "The live arena evidence feed is public: NDJSON rounds with per-model scores. Honest 503 when no live state — never a fabricated round.",
-  },
-  {
-    title: "REPORTED — the third data state, published",
-    link: "https://councilof.ai/api/reported",
-    date: "Wed, 19 Aug 2026 08:00:00 GMT",
-    desc: "Third-party figures, cited + timestamped ('reported by source, not measured here'), unsigned, never mixed with MEASURED. Five entries at launch.",
-  },
-  {
-    title: "The Measurement/Remediation Firewall Charter",
-    link: "https://councilof.ai/firewall-charter",
-    date: "Wed, 19 Aug 2026 08:00:00 GMT",
-    desc: "Seven published commitments: never operate the fixer; re-measurement free and unpurchasable; ranked-never-pay; signing-key isolation; disclosed-never-preferred affiliates; engagement fills the funnel, only sealed measurement fills the board; corrections appended, never edited.",
-  },
-  {
-    title: "Regulation-change detector live (daily)",
-    link: "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/reg-watch.mjs",
-    date: "Tue, 18 Aug 2026 23:00:00 GMT",
-    desc: "EU AI Act, GDPR, Machinery Reg, DPA 2018, DUAA watched at their official sources; provision-change events emitted for the recurrency loop.",
-  },
-  {
-    title: "SITTING 1: the GSPC 14-slot board — 13 measured of 14",
-    link: "https://councilof.ai/api/gspc",
-    date: "Tue, 18 Aug 2026 12:00:00 GMT",
-    desc: "Jail (slot 14) promoted from the signed living board: 7-model fleet, separation untested, stated honestly. At that sitting 3 of 13 canonical axes carried a separated leader; ties are ties. That count is dated to the sitting and is not the live one: cite totals.separated_leads on GET /api/gspc (C-2026-0915-01).",
-  },
-];
+export const CAP = 50;
 
-const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const esc = (s: string) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const rfc822 = (iso: unknown, fallback: string) => {
+  const d = new Date(String(iso ?? ""));
+  return Number.isNaN(d.getTime()) ? fallback : d.toUTCString();
+};
+
+async function fetchJson(origin: string, path: string): Promise<any | null> {
+  try {
+    const r = await fetch(new URL(path, origin).toString(), { headers: { "User-Agent": "feed.xml/1.0", accept: "application/json" } });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch {
+    return null;
+  }
+}
 
 async function fetchBoardItem(origin: string): Promise<FeedItem> {
   const now = new Date().toUTCString();
-  try {
-    const url = new URL("/api/gspc", origin).toString();
-    const r = await fetch(url, { headers: { "User-Agent": "feed.xml/1.0" } });
-    if (!r.ok) throw new Error(`GSPC ${r.status}`);
-    const gspc = await r.json() as any;
-    const t = gspc?.totals;
-    if (!t?.public_count) throw new Error("no totals");
+  const gspc = await fetchJson(origin, "/api/gspc");
+  const t = gspc?.totals;
+  if (t?.public_count) {
     return {
       title: `GSPC board: ${t.public_count} — live`,
       link: `${origin}/api/gspc`,
       date: now,
       desc: `Derived live from GET /api/gspc. ${t.model_fleets ?? "?"} model fleets · ${t.fact_runs ?? "?"} fact runs · ${t.items ?? "?"} items. ${t.count_grammar ?? "Cite totals.public_count from GET /api/gspc."}`,
     };
-  } catch {
-    // Honest fallback: never fabricate a count.
-    return {
-      title: "GSPC board: live count unavailable",
-      link: `${origin}/api/gspc`,
-      date: now,
-      desc: "The board count could not be derived from GET /api/gspc at this time. Cite totals.public_count directly. Never fabricate a count.",
-    };
   }
+  // Honest fallback: never fabricate a count.
+  return {
+    title: "GSPC board: live count unavailable",
+    link: `${origin}/api/gspc`,
+    date: now,
+    desc: "The board count could not be derived from GET /api/gspc at this time. Cite totals.public_count directly. Never fabricate a count.",
+  };
+}
+
+export function reportItems(index: any, origin: string, now: string): Array<FeedItem & { sort: number }> {
+  const rows: any[] = Array.isArray(index?.reports) ? index.reports : [];
+  return rows.map((r) => {
+    const measured = r.status === "MEASURED";
+    const status = measured ? `MEASURED (n=${r.n} ${r.n_unit ?? ""})`.trim() : "UNMEASURED";
+    const obligations = r.obligations === "UNMAPPED" ? "obligations UNMAPPED" : `${r.obligations} crosswalk pointer(s), relevant-to only`;
+    const d = new Date(String(r.as_of ?? ""));
+    return {
+      title: `${r.subject} × ${r.axis}: ${status}`,
+      link: `${origin}${r.api ?? `/api/report?subject=${encodeURIComponent(r.slug)}&axis=${encodeURIComponent(r.axis)}`}`,
+      date: rfc822(r.as_of, now),
+      sort: Number.isNaN(d.getTime()) ? 0 : d.getTime(),
+      desc: `${measured ? "" : `UNMEASURED — ${r.reason ?? "reason not stated"}. `}${r.source_cards ?? "?"} signed source card(s); ${obligations}; ${r.rooted ? "carried by a published card root" : "NOT_YET_ROOTED"}. canonical_sha256 ${r.canonical_sha256 ?? "?"}. Measurement, not certification.`,
+    };
+  });
+}
+
+export function findingsItem(fi: any, origin: string, now: string): (FeedItem & { sort: number }) | null {
+  const c = fi?.counts;
+  if (!c || typeof c.findings !== "number") return null;
+  const d = new Date(String(fi.as_of ?? ""));
+  return {
+    title: `Regulation-findings index: ${c.findings} findings · ${c.models} models · ${c.axes} axes · ${c.regulators} regulators`,
+    link: `${origin}/signed/findings_index.json`,
+    date: rfc822(fi.as_of, now),
+    sort: Number.isNaN(d.getTime()) ? 0 : d.getTime(),
+    desc: `Every locally verified (model × axis) card joined to its crosswalk pointers and statutory fine tier. ${typeof c.unmeasured_cells === "number" ? `${c.unmeasured_cells} of ${c.possible_cells} possible cells are unmeasured and honestly absent. ` : ""}Pointers are relevant-to, never a determination; no fine is asserted owed.`,
+  };
+}
+
+export async function deriveItems(origin: string): Promise<FeedItem[]> {
+  const now = new Date().toUTCString();
+  const [board, index, fi] = await Promise.all([
+    fetchBoardItem(origin),
+    fetchJson(origin, "/reports/index.json"),
+    fetchJson(origin, "/signed/findings_index.json"),
+  ]);
+  const derived = [...reportItems(index, origin, now)];
+  const f = findingsItem(fi, origin, now);
+  if (f) derived.push(f);
+  if (!derived.length) {
+    derived.push({
+      title: "Derived items unavailable",
+      link: `${origin}/api/report`,
+      date: now,
+      sort: 0,
+      desc: "Neither /reports/index.json nor /signed/findings_index.json could be read from this deployment, so no report items are listed. Nothing is fabricated in their place.",
+    });
+  }
+  derived.sort((a, b) => b.sort - a.sort || a.title.localeCompare(b.title));
+  return [board, ...derived.slice(0, CAP).map(({ sort: _s, ...i }) => i)];
 }
 
 export const onRequestGet: PagesFunction = async (ctx) => {
   const origin = new URL(ctx.request.url).origin;
-  const boardItem = await fetchBoardItem(origin);
-  const allItems = [boardItem, ...HISTORICAL_ITEMS];
+  const allItems = await deriveItems(origin);
 
   const items = allItems.map(
     (i) => `    <item>

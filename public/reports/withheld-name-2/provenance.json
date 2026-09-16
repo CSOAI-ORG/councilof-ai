@@ -1,0 +1,72 @@
+{
+ "schema": "csoai.axis-report/0.1",
+ "axis": "provenance",
+ "kind": "model-comparison",
+ "subject": "withheld-name-2",
+ "subject_slug": "withheld-name-2",
+ "status": "UNMEASURED",
+ "reason": "source card carries no n: accuracy is a single point on one small bank on one date, and the card does not state a sample size, so nothing here may read MEASURED",
+ "n": 0,
+ "n_unit": "bank items",
+ "rows": [],
+ "rows_note": "the source card publishes no per-item rows",
+ "separation": "UNTESTED",
+ "obligations": [
+  {
+   "regulator": "eu-ai-act",
+   "regulator_name": "EU AI Act",
+   "relation": "relevant-to",
+   "obligation": "Article 50 — transparency & marking of AI-generated content",
+   "tier": "most_obligations_incl_art50_and_gpai",
+   "statutory_maximum": "up to €15,000,000 or 3% of worldwide annual turnover, whichever is higher",
+   "fine_cited_to": "EU AI Act (Reg (EU) 2024/1689) Art 99(4)",
+   "no_fine_asserted_owed": true,
+   "via_axis": "gspc-provenance"
+  },
+  {
+   "regulator": "nist-ai-rmf",
+   "regulator_name": "NIST AI RMF 1.0",
+   "relation": "relevant-to",
+   "obligation": "MAP core function (context & provenance)",
+   "tier": "no_fine",
+   "statutory_maximum": null,
+   "fine_cited_to": null,
+   "no_fine_asserted_owed": true,
+   "via_axis": "gspc-provenance"
+  },
+  {
+   "regulator": "owasp-asi",
+   "regulator_name": "OWASP Top 10 for Agentic Applications (2026)",
+   "relation": "relevant-to",
+   "obligation": "ASI04 Agentic Supply Chain Vulnerabilities",
+   "tier": "no_fine",
+   "statutory_maximum": null,
+   "fine_cited_to": null,
+   "no_fine_asserted_owed": true,
+   "via_axis": "gspc-provenance"
+  }
+ ],
+ "source_axes": [
+  "gspc-provenance"
+ ],
+ "source_cards": [
+  {
+   "sha256": "78ca73da4697e4733a3e1f67b10e34d78c3ee762dd2b9f9528325dfdac840b3c",
+   "path": "/signed/cards/78ca73da4697e4733a3e1f67b10e34d78c3ee762dd2b9f9528325dfdac840b3c.json",
+   "axis": "gspc-provenance",
+   "created": "2026-08-19T09:24:39.167042+00:00",
+   "accuracy": 0.8571,
+   "n": null,
+   "status": null
+  }
+ ],
+ "root_ref": "NOT_YET_ROOTED",
+ "as_of": "2026-08-19T09:24:39.167042+00:00",
+ "as_of_field": "the newest source card's body.created — when it was measured, never when this file was written",
+ "not_a": "grade, rank, conformity mark or legal determination. Measurement, not certification; verification is free.",
+ "api": "/api/report?subject=withheld-name-2&axis=provenance",
+ "verify": "/signed/verify-card.mjs against each source_cards[].path; /api/report for the index",
+ "canonical_rule": "canonical_sha256 = sha256(canonical JSON of this object minus generated_at and canonical_sha256; keys sorted, no whitespace)",
+ "generated_at": "2026-09-16T09:39:10.766Z",
+ "canonical_sha256": "ab2b694e9f6cf0bb645d802839de0e5ac0143e828ed23fd35ceee93026c8d4e3"
+}
