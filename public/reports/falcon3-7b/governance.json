@@ -1,0 +1,84 @@
+{
+ "schema": "csoai.axis-report/0.1",
+ "axis": "governance",
+ "kind": "model-comparison",
+ "subject": "falcon3:7b",
+ "subject_slug": "falcon3-7b",
+ "status": "UNMEASURED",
+ "reason": "source card carries no n: accuracy is a single point on one small bank on one date, and the card does not state a sample size, so nothing here may read MEASURED",
+ "n": 0,
+ "n_unit": "bank items",
+ "rows": [],
+ "rows_note": "the source card publishes no per-item rows",
+ "separation": "UNTESTED",
+ "obligations": [
+  {
+   "regulator": "eu-ai-act",
+   "regulator_name": "EU AI Act",
+   "relation": "relevant-to",
+   "obligation": "Article 6 — classification of high-risk AI systems (Annex III)",
+   "tier": "most_obligations_incl_art50_and_gpai",
+   "statutory_maximum": "up to €15,000,000 or 3% of worldwide annual turnover, whichever is higher",
+   "fine_cited_to": "EU AI Act (Reg (EU) 2024/1689) Art 99(4)",
+   "no_fine_asserted_owed": true,
+   "via_axis": "gov"
+  },
+  {
+   "regulator": "eu-ai-act",
+   "regulator_name": "EU AI Act",
+   "relation": "relevant-to",
+   "obligation": "Article 9 — risk-management system for high-risk AI",
+   "tier": "most_obligations_incl_art50_and_gpai",
+   "statutory_maximum": "up to €15,000,000 or 3% of worldwide annual turnover, whichever is higher",
+   "fine_cited_to": "EU AI Act (Reg (EU) 2024/1689) Art 99(4)",
+   "no_fine_asserted_owed": true,
+   "via_axis": "gov"
+  },
+  {
+   "regulator": "nist-ai-rmf",
+   "regulator_name": "NIST AI RMF 1.0",
+   "relation": "relevant-to",
+   "obligation": "GOVERN + MAP core functions",
+   "tier": "no_fine",
+   "statutory_maximum": null,
+   "fine_cited_to": null,
+   "no_fine_asserted_owed": true,
+   "via_axis": "gov"
+  },
+  {
+   "regulator": "owasp-asi",
+   "regulator_name": "OWASP Top 10 for Agentic Applications (2026)",
+   "relation": "relevant-to",
+   "obligation": "ASI01 Agent Goal Hijack",
+   "tier": "no_fine",
+   "statutory_maximum": null,
+   "fine_cited_to": null,
+   "no_fine_asserted_owed": true,
+   "via_axis": "gspc-governance"
+  }
+ ],
+ "source_axes": [
+  "gov",
+  "gspc-governance"
+ ],
+ "source_cards": [
+  {
+   "sha256": "c3be7b095029076863133572c8eb71077ff3e157f74a47da6149b6f28e7c4196",
+   "path": "/signed/cards/c3be7b095029076863133572c8eb71077ff3e157f74a47da6149b6f28e7c4196.json",
+   "axis": "gspc-governance",
+   "created": "2026-08-19T09:24:39.157030+00:00",
+   "accuracy": 0.2273,
+   "n": null,
+   "status": null
+  }
+ ],
+ "root_ref": "NOT_YET_ROOTED",
+ "as_of": "2026-08-19T09:24:39.157030+00:00",
+ "as_of_field": "the newest source card's body.created — when it was measured, never when this file was written",
+ "not_a": "grade, rank, conformity mark or legal determination. Measurement, not certification; verification is free.",
+ "api": "/api/report?subject=falcon3-7b&axis=governance",
+ "verify": "/signed/verify-card.mjs against each source_cards[].path; /api/report for the index",
+ "canonical_rule": "canonical_sha256 = sha256(canonical JSON of this object minus generated_at and canonical_sha256; keys sorted, no whitespace)",
+ "generated_at": "2026-09-16T09:39:10.766Z",
+ "canonical_sha256": "a15d9447ea4f3f03d3b609820b3cbd62dcf960c38de84b0ff25315179f77cc7c"
+}

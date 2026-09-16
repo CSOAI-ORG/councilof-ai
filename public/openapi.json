@@ -2817,6 +2817,36 @@
         "summary": "GET /api/owasp-report \u2014 OWASP LLM Top 10 \u2194 GSPC axis coverage report."
       }
     },
+    "/api/paddle-webhook": {
+      "get": {
+        "description": "POST /api/paddle-webhook \u2014 Paddle settlement webhook.",
+        "operationId": "get__api_paddle-webhook",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/paddle-webhook \u2014 Paddle settlement webhook."
+      },
+      "post": {
+        "description": "POST /api/paddle-webhook \u2014 Paddle settlement webhook.",
+        "operationId": "post__api_paddle-webhook",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/paddle-webhook \u2014 Paddle settlement webhook."
+      }
+    },
     "/api/pqc": {
       "get": {
         "description": "GET /api/pqc \u2014 continuity mill vs estate signer. Not a 23rd axis. Continuity MEASURED \u2260 we are PQC.",
@@ -3561,24 +3591,15 @@
         "description": "",
         "operationId": "get__api_report",
         "responses": {
-          "501": {
+          "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "accepted": false,
-                  "endpoint": "/api/report",
-                  "persisted": false,
-                  "schema": "csoai.capability-state/0.1",
-                  "signed": false,
-                  "state": "NOT_IMPLEMENTED"
-                }
-              }
+              "application/json": {}
             },
-            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+            "description": "OK"
           }
         },
-        "summary": "",
-        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+        "security": [],
+        "summary": ""
       },
       "post": {
         "description": "",
@@ -4355,6 +4376,22 @@
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
+    "/api/summary": {
+      "get": {
+        "description": "GET /api/summary \u2014 one-shot media-briefing payload.",
+        "operationId": "get__api_summary",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/summary \u2014 one-shot media-briefing payload."
+      }
+    },
     "/api/swift": {
       "get": {
         "description": "GET /api/swift \u2014 reader of public/interop/swift-census.json. Three-state census tape (LIVE / COMMITTED / DISCOVERED). DISCOVERED-first, not MEASURED. Not a SWIFT client feed. writes_board=false. Supersedes the swift-17 tape; 26 named banks sourced, 40+ universe cited.",
@@ -5064,7 +5101,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 100,
+    "public_operations": 104,
     "quarantined": [
       {
         "buyable": false,

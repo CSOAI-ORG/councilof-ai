@@ -1,0 +1,83 @@
+{
+ "schema": "csoai.axis-report/0.1",
+ "axis": "jail",
+ "kind": "model-comparison",
+ "subject": "qwen2.5:1.5b",
+ "subject_slug": "qwen2.5-1.5b",
+ "status": "UNMEASURED",
+ "reason": "source card carries no n: accuracy is a single point on one small bank on one date, and the card does not state a sample size, so nothing here may read MEASURED",
+ "n": 0,
+ "n_unit": "bank items",
+ "rows": [],
+ "rows_note": "the source card publishes no per-item rows",
+ "separation": "UNTESTED",
+ "obligations": [
+  {
+   "regulator": "eu-ai-act",
+   "regulator_name": "EU AI Act",
+   "relation": "relevant-to",
+   "obligation": "Article 15 — robustness & cybersecurity against manipulation",
+   "tier": "most_obligations_incl_art50_and_gpai",
+   "statutory_maximum": "up to €15,000,000 or 3% of worldwide annual turnover, whichever is higher",
+   "fine_cited_to": "EU AI Act (Reg (EU) 2024/1689) Art 99(4)",
+   "no_fine_asserted_owed": true,
+   "via_axis": "jail-escape-detection"
+  },
+  {
+   "regulator": "eu-ai-act",
+   "regulator_name": "EU AI Act",
+   "relation": "relevant-to",
+   "obligation": "Article 5 — circumvention of prohibited-practice safeguards",
+   "tier": "prohibited_practices",
+   "statutory_maximum": "up to €35,000,000 or 7% of worldwide annual turnover, whichever is higher",
+   "fine_cited_to": "EU AI Act (Reg (EU) 2024/1689) Art 99(3)",
+   "no_fine_asserted_owed": true,
+   "via_axis": "jail-escape-detection"
+  },
+  {
+   "regulator": "nist-ai-rmf",
+   "regulator_name": "NIST AI RMF 1.0",
+   "relation": "relevant-to",
+   "obligation": "MANAGE core function (incident & abuse)",
+   "tier": "no_fine",
+   "statutory_maximum": null,
+   "fine_cited_to": null,
+   "no_fine_asserted_owed": true,
+   "via_axis": "jail-escape-detection"
+  },
+  {
+   "regulator": "owasp-asi",
+   "regulator_name": "OWASP Top 10 for Agentic Applications (2026)",
+   "relation": "relevant-to",
+   "obligation": "ASI05 Unexpected Code Execution + ASI10 Rogue Agents",
+   "tier": "no_fine",
+   "statutory_maximum": null,
+   "fine_cited_to": null,
+   "no_fine_asserted_owed": true,
+   "via_axis": "jail-escape-detection"
+  }
+ ],
+ "source_axes": [
+  "jail-escape-detection"
+ ],
+ "source_cards": [
+  {
+   "sha256": "522a12e784470ccc91b778317a796781660688e5e325c82187894c03dd4ea9af",
+   "path": "/signed/cards/522a12e784470ccc91b778317a796781660688e5e325c82187894c03dd4ea9af.json",
+   "axis": "jail-escape-detection",
+   "created": "2026-08-19T09:24:39.161227+00:00",
+   "accuracy": 0.5634,
+   "n": null,
+   "status": null
+  }
+ ],
+ "root_ref": "NOT_YET_ROOTED",
+ "as_of": "2026-08-19T09:24:39.161227+00:00",
+ "as_of_field": "the newest source card's body.created — when it was measured, never when this file was written",
+ "not_a": "grade, rank, conformity mark or legal determination. Measurement, not certification; verification is free.",
+ "api": "/api/report?subject=qwen2.5-1.5b&axis=jail",
+ "verify": "/signed/verify-card.mjs against each source_cards[].path; /api/report for the index",
+ "canonical_rule": "canonical_sha256 = sha256(canonical JSON of this object minus generated_at and canonical_sha256; keys sorted, no whitespace)",
+ "generated_at": "2026-09-16T09:39:10.766Z",
+ "canonical_sha256": "65f69167d0168fbbd1c51dfdeb9bb02de641be2666028e86ded2ff3fa2245aab"
+}

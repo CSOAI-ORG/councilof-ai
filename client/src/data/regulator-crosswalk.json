@@ -84,6 +84,7 @@
     "gspc-governance": {
       "label": "Governance",
       "kind": "governance-axis",
+      "board_axis": "governance",
       "bench": "GovBench — EU AI Act risk-tier classification",
       "pointers": [
         {
@@ -116,6 +117,7 @@
     "gov": {
       "label": "Governance (bank)",
       "kind": "governance-axis",
+      "board_axis": "governance",
       "bench": "governance bank",
       "same_as": "gspc-governance",
       "pointers": [
@@ -143,6 +145,7 @@
     "gspc-safety": {
       "label": "Safety",
       "kind": "governance-axis",
+      "board_axis": "safety",
       "bench": "DefBench — calibrated refusal on paired requests",
       "pointers": [
         {
@@ -175,6 +178,7 @@
     "gspc-provenance": {
       "label": "Provenance",
       "kind": "governance-axis",
+      "board_axis": "provenance",
       "bench": "ProvBench — Article 50 marking survival by validity",
       "pointers": [
         {
@@ -201,6 +205,7 @@
     "gspc-continuity": {
       "label": "Continuity",
       "kind": "governance-axis",
+      "board_axis": "continuity",
       "bench": "PQCBench — post-quantum status of a cryptographic assumption",
       "pointers": [
         {
@@ -233,6 +238,7 @@
     "gspc-conformance": {
       "label": "Conformance",
       "kind": "governance-axis",
+      "board_axis": "conformance",
       "bench": "MCPBench — MCP tool conformance",
       "pointers": [
         {
@@ -265,6 +271,7 @@
     "gspc-openness": {
       "label": "Openness",
       "kind": "governance-axis",
+      "board_axis": "openness",
       "bench": "OSSBench — licence reasoning versus intended use",
       "pointers": [
         {
@@ -291,6 +298,7 @@
     "care": {
       "label": "Care",
       "kind": "governance-axis",
+      "board_axis": "care",
       "bench": "care bank — proportional protection of vulnerable users",
       "pointers": [
         {
@@ -317,6 +325,7 @@
     "care-refusal-help": {
       "label": "Care — refusal (helpfulness side)",
       "kind": "governance-axis",
+      "board_axis": "care",
       "bench": "paired-request bank — does not over-refuse the benign twin",
       "pointers": [
         {
@@ -343,6 +352,7 @@
     "care-refusal-protect": {
       "label": "Care — refusal (protection side)",
       "kind": "governance-axis",
+      "board_axis": "care",
       "bench": "paired-request bank — refuses the harmful twin",
       "pointers": [
         {
@@ -369,6 +379,7 @@
     "jail-escape-detection": {
       "label": "Jail-escape detection",
       "kind": "governance-axis",
+      "board_axis": "jail",
       "bench": "jail floor — containment measurement (TIE floor)",
       "pointers": [
         {
@@ -401,6 +412,7 @@
     "swarm-candidates": {
       "label": "Swarm candidates",
       "kind": "governance-axis",
+      "board_axis": "swarm",
       "bench": "multi-agent oversight bank",
       "pointers": [
         {
@@ -427,6 +439,7 @@
     "arc-30": {
       "label": "ARC (abstract reasoning)",
       "kind": "capability-benchmark",
+      "board_axis": null,
       "bench": "ARC-30 general-reasoning bank",
       "no_obligation_reason": "General-capability benchmark, not a governance axis. No direct statutory obligation is mapped — included only as capability evidence, never as a compliance finding.",
       "pointers": [],
@@ -435,6 +448,7 @@
     "gsm8k-30": {
       "label": "GSM8K (grade-school math)",
       "kind": "capability-benchmark",
+      "board_axis": null,
       "bench": "GSM8K-30 arithmetic-reasoning bank",
       "no_obligation_reason": "General-capability benchmark, not a governance axis. No direct statutory obligation is mapped — included only as capability evidence, never as a compliance finding.",
       "pointers": [],
@@ -443,6 +457,7 @@
     "mmlu-30": {
       "label": "MMLU (knowledge)",
       "kind": "capability-benchmark",
+      "board_axis": null,
       "bench": "MMLU-30 knowledge bank",
       "no_obligation_reason": "General-capability benchmark, not a governance axis. No direct statutory obligation is mapped — included only as capability evidence, never as a compliance finding.",
       "pointers": [],
@@ -451,10 +466,12 @@
     "swag-30": {
       "label": "SWAG (commonsense)",
       "kind": "capability-benchmark",
+      "board_axis": null,
       "bench": "SWAG-30 commonsense-inference bank",
       "no_obligation_reason": "General-capability benchmark, not a governance axis. No direct statutory obligation is mapped — included only as capability evidence, never as a compliance finding.",
       "pointers": [],
       "keywords": "capability commonsense inference benchmark swag"
     }
-  }
+  },
+  "board_axis_note": "board_axis on each axis below is the join from this card-corpus axis to the GSPC board slot (functions/api/_gspc_axes_*.ts) whose report lists its cards as source evidence. null means the axis is a capability benchmark with no board slot; scripts/build-axis-reports.mjs refuses any board_axis that is not an exported slot id. A join is a pointer, not a claim that the two banks are the same."
 }
