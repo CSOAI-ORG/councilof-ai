@@ -1,0 +1,213 @@
+{
+  "schema": "csoai.x402-door-census/0.1",
+  "kind": "deterministic-facts",
+  "as_of": "2026-09-16T11:40:00Z",
+  "discovery": "https://councilof.ai/.well-known/x402.json",
+  "n": 11,
+  "counts": {
+    "PAYABLE_CHALLENGE": 11
+  },
+  "doors_a_stdlib_client_cannot_price": 11,
+  "writes_board": false,
+  "honesty": "This measures whether each door issues a payable challenge. A 402 is not settlement, not delivery and not revenue, and nothing here is a payment. Separately: a client using the Python standard library is answered 403 by the CDN in front of this estate, so for those doors the price is never shown to that buyer at all. Both readings are on every row.",
+  "rows": [
+    {
+      "resource": "https://councilof.ai/api/free-door",
+      "client_ua": "csoai-gspc/1.4",
+      "http": 402,
+      "accepts_n": 1,
+      "quote": {
+        "amount": "0",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "eip155:8453",
+        "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      },
+      "challenge_state": "PAYABLE_CHALLENGE",
+      "stdlib_client": {
+        "user_agent": "Python-urllib/3.12",
+        "http": 403,
+        "sees_the_price": false
+      }
+    },
+    {
+      "resource": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+      "client_ua": "csoai-gspc/1.4",
+      "http": 402,
+      "accepts_n": 1,
+      "quote": {
+        "amount": "10000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "eip155:8453",
+        "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      },
+      "challenge_state": "PAYABLE_CHALLENGE",
+      "stdlib_client": {
+        "user_agent": "Python-urllib/3.12",
+        "http": 403,
+        "sees_the_price": false
+      }
+    },
+    {
+      "resource": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+      "client_ua": "csoai-gspc/1.4",
+      "http": 402,
+      "accepts_n": 1,
+      "quote": {
+        "amount": "10000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "eip155:8453",
+        "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      },
+      "challenge_state": "PAYABLE_CHALLENGE",
+      "stdlib_client": {
+        "user_agent": "Python-urllib/3.12",
+        "http": 403,
+        "sees_the_price": false
+      }
+    },
+    {
+      "resource": "https://councilof.ai/api/eunomia-data?feed=1",
+      "client_ua": "csoai-gspc/1.4",
+      "http": 402,
+      "accepts_n": 1,
+      "quote": {
+        "amount": "10000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "eip155:8453",
+        "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      },
+      "challenge_state": "PAYABLE_CHALLENGE",
+      "stdlib_client": {
+        "user_agent": "Python-urllib/3.12",
+        "http": 403,
+        "sees_the_price": false
+      }
+    },
+    {
+      "resource": "https://councilof.ai/api/proof?bundle=1",
+      "client_ua": "csoai-gspc/1.4",
+      "http": 402,
+      "accepts_n": 1,
+      "quote": {
+        "amount": "10000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "eip155:8453",
+        "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      },
+      "challenge_state": "PAYABLE_CHALLENGE",
+      "stdlib_client": {
+        "user_agent": "Python-urllib/3.12",
+        "http": 403,
+        "sees_the_price": false
+      }
+    },
+    {
+      "resource": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+      "client_ua": "csoai-gspc/1.4",
+      "http": 402,
+      "accepts_n": 1,
+      "quote": {
+        "amount": "10000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "eip155:8453",
+        "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      },
+      "challenge_state": "PAYABLE_CHALLENGE",
+      "stdlib_client": {
+        "user_agent": "Python-urllib/3.12",
+        "http": 403,
+        "sees_the_price": false
+      }
+    },
+    {
+      "resource": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+      "client_ua": "csoai-gspc/1.4",
+      "http": 402,
+      "accepts_n": 1,
+      "quote": {
+        "amount": "10000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "eip155:8453",
+        "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      },
+      "challenge_state": "PAYABLE_CHALLENGE",
+      "stdlib_client": {
+        "user_agent": "Python-urllib/3.12",
+        "http": 403,
+        "sees_the_price": false
+      }
+    },
+    {
+      "resource": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+      "client_ua": "csoai-gspc/1.4",
+      "http": 402,
+      "accepts_n": 1,
+      "quote": {
+        "amount": "10000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "eip155:8453",
+        "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      },
+      "challenge_state": "PAYABLE_CHALLENGE",
+      "stdlib_client": {
+        "user_agent": "Python-urllib/3.12",
+        "http": 403,
+        "sees_the_price": false
+      }
+    },
+    {
+      "resource": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+      "client_ua": "csoai-gspc/1.4",
+      "http": 402,
+      "accepts_n": 1,
+      "quote": {
+        "amount": "10000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "eip155:8453",
+        "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      },
+      "challenge_state": "PAYABLE_CHALLENGE",
+      "stdlib_client": {
+        "user_agent": "Python-urllib/3.12",
+        "http": 403,
+        "sees_the_price": false
+      }
+    },
+    {
+      "resource": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "client_ua": "csoai-gspc/1.4",
+      "http": 402,
+      "accepts_n": 1,
+      "quote": {
+        "amount": "10000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "eip155:8453",
+        "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      },
+      "challenge_state": "PAYABLE_CHALLENGE",
+      "stdlib_client": {
+        "user_agent": "Python-urllib/3.12",
+        "http": 403,
+        "sees_the_price": false
+      }
+    },
+    {
+      "resource": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+      "client_ua": "csoai-gspc/1.4",
+      "http": 402,
+      "accepts_n": 1,
+      "quote": {
+        "amount": "10000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "eip155:8453",
+        "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+      },
+      "challenge_state": "PAYABLE_CHALLENGE",
+      "stdlib_client": {
+        "user_agent": "Python-urllib/3.12",
+        "http": 403,
+        "sees_the_price": false
+      }
+    }
+  ]
+}
