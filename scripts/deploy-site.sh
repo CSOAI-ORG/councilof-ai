@@ -238,7 +238,10 @@ gate "facts-gate"                    node scripts/facts-gate.mjs "$DIST"
 
 # The routes deploy.yml treats as load-bearing must be real files in the tree.
 MISSING=""
-for p in sov-os/index.html api-docs/index.html os/index.html gspc-verify/index.html; do
+# /sov-os became a 308 -> /dashboard?tab=home in public/_redirects (master and live
+# agree), so prerender rightly writes no sov-os/index.html and this guard was failing
+# every clean build on a stale list. Load-bearing = routes that must be REAL FILES.
+for p in api-docs/index.html os/index.html gspc-verify/index.html dashboard/index.html; do
   [ -f "$DIST/$p" ] || MISSING="$MISSING $p"
 done
 if [ -n "$MISSING" ]; then bad "dist bundle guard — missing:$MISSING"; FAILED=1; else ok "dist bundle guard"; fi
