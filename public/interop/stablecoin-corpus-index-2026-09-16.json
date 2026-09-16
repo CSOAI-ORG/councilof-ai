@@ -1,0 +1,40 @@
+{
+  "schema": "csoai.stablecoin-corpus-index/0.1",
+  "kind": "index",
+  "as_of": "2026-09-16T12:06:54Z",
+  "universe_asset_count": 425,
+  "assets_with_at_least_one_measured_deployment": 302,
+  "still_unmeasured": 123,
+  "by_reader": {
+    "evm": {
+      "file": "/interop/stablecoin-universe-supply-2026-09-16.json",
+      "measured_assets": 283,
+      "chains": {
+        "ethereum": 199,
+        "bsc": 15,
+        "polygon": 10,
+        "avax": 8,
+        "base": 9,
+        "celo": 15,
+        "optimism": 4,
+        "hyperliquid": 8,
+        "arbitrum": 9,
+        "rsk": 6
+      },
+      "identification": "symbol() confirmed on chain"
+    },
+    "solana": {
+      "file": "/interop/stablecoin-solana-supply-2026-09-16.json",
+      "measured_assets": 19,
+      "slot": 447515169,
+      "identification": "UNCONFIRMED_ONCHAIN \u2014 an SPL mint carries no symbol() to call"
+    }
+  },
+  "disjointness_checked": {
+    "overlapping_asset_ids": [],
+    "result": "disjoint",
+    "why_it_is_checked": "Two sets may only be added when nothing is in both. That is a claim, so it is tested here and the union is refused if it fails, rather than assumed."
+  },
+  "not_a_supply_total": "This counts ASSETS with at least one measured deployment. It is not a sum of supply: the universe mixes peg currencies, and one asset may be deployed on several chains, so a sum would mix units or double-count a bridged token.",
+  "not_measured_breakdown": "see each reader's rows; every unmeasured asset carries its own reason \u2014 a chain with no endpoint here, an upstream with no address, a chain label that disagrees with its address, or a symbol mismatch. None is a zero."
+}
