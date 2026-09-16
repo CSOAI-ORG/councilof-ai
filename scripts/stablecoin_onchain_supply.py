@@ -4,7 +4,10 @@
 Why the roster is small: the frozen universe index (425 assets) carries name, symbol, chains
 and an aggregator's circulating figure, but no contract address. An address typed from memory
 is exactly the defect this estate corrects, so an asset enters this roster only when its address
-comes from a file already in the repository, and the file is named per row.
+comes from a file already in the repository - a reader constant, a signed fact file, or an issuer
+transparency page we mirrored - and the source is named per row. An address taken from a mirrored
+issuer page is additionally confirmed on-chain: symbol() must return the asset's own symbol, so a
+wrong address on a page full of addresses is rejected rather than measured.
 
 What is measured: totalSupply() at a named block, and decimals(). That is the token's issued
 supply on that chain. It is not circulating supply, not a reserve attestation, not backing,
@@ -28,6 +31,9 @@ ROSTER = [
     {"symbol": "BUIDL", "name": "BlackRock USD Institutional Digital Liquidity Fund",
      "address": "0x7712c34205737192402172409a8f7ccef8aa2aec",
      "address_source": "public/interop/evm-control-facts.json (measured[0].contract)"},
+    {"symbol": "USDY", "name": "Ondo U.S. Dollar Yield", "address": "0x96F6eF951840721AdBF46Ac996b59E0235CB985C", "address_source": "issuer transparency page https://ondo.finance/usdy mirrored at public/interop/stablecoin-deep-2026-09/mirrors/129.html (sha256 7e824c97bedcbb07…), confirmed on-chain: symbol() returns USDY"},
+    {"symbol": "GHO", "name": "Gho Token", "address": "0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f", "address_source": "issuer transparency page https://gho.xyz/ mirrored at public/interop/stablecoin-deep-2026-09/mirrors/118.html (sha256 e765d443a56de63d…), confirmed on-chain: symbol() returns GHO"},
+    {"symbol": "USDTB", "name": "USDtb", "address": "0xc139190f447e929f090edeb554d95abb8b18ac1c", "address_source": "issuer transparency page https://usdtb.money/ mirrored at public/interop/stablecoin-deep-2026-09/mirrors/221.html (sha256 ca17e42582fd34aa…), confirmed on-chain: symbol() returns USDtb"},
 ]
 
 

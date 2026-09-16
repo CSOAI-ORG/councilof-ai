@@ -1,13 +1,13 @@
 {
   "schema": "csoai.stablecoin-onchain-supply/0.1",
   "kind": "deterministic-facts",
-  "as_of": "2026-09-16T11:15:51Z",
+  "as_of": "2026-09-16T11:35:03Z",
   "rpc": "https://ethereum-rpc.publicnode.com",
-  "n": 4,
-  "n_measured": 4,
+  "n": 7,
+  "n_measured": 7,
   "writes_board": false,
   "universe_asset_count": 425,
-  "universe_unmeasured_here": 421,
+  "universe_unmeasured_here": 418,
   "honesty": "totalSupply() at a named block is the issued supply of that contract on that chain. It is not circulating supply, not a reserve attestation, not backing, and not a grade. The frozen universe carries no contract addresses, so an asset enters this roster only when its address is already in a file in this repository, named per row. Every other asset in the universe stays UNMEASURED here, and the reason is the missing sourced address, never a zero.",
   "rows": [
     {
@@ -17,10 +17,10 @@
       "address_source": "scripts/readers/wrapped-asset-parity-reader.mjs (USDT_ETH)",
       "chain": "ethereum",
       "block": {
-        "number": 25989675,
-        "hex": "0x18c922b",
-        "hash": "0xda73d91643b9c1ccfa1d51f0b6ff7d9d7dfc6ef4f6b9aadcb6faebc29370c30e",
-        "timestamp": 1789557347
+        "number": 25989770,
+        "hex": "0x18c928a",
+        "hash": "0x5c4392d344be1027cb046b966c37d71f77d9763d9afec7b99d195728949ab8ad",
+        "timestamp": 1789558487
       },
       "decimals": 6,
       "total_supply_raw": "88305985017331899",
@@ -35,14 +35,14 @@
       "address_source": "scripts/readers/wrapped-asset-parity-reader.mjs (USDC_ETH)",
       "chain": "ethereum",
       "block": {
-        "number": 25989675,
-        "hex": "0x18c922b",
-        "hash": "0xda73d91643b9c1ccfa1d51f0b6ff7d9d7dfc6ef4f6b9aadcb6faebc29370c30e",
-        "timestamp": 1789557347
+        "number": 25989770,
+        "hex": "0x18c928a",
+        "hash": "0x5c4392d344be1027cb046b966c37d71f77d9763d9afec7b99d195728949ab8ad",
+        "timestamp": 1789558487
       },
       "decimals": 6,
-      "total_supply_raw": "50049098060887751",
-      "total_supply": 50049098060.88775,
+      "total_supply_raw": "50054652242335580",
+      "total_supply": 50054652242.33558,
       "state": "MEASURED",
       "method": "eth_call totalSupply() at the named block, public RPC"
     },
@@ -53,14 +53,14 @@
       "address_source": "scripts/readers/wrapped-asset-parity-reader.mjs (DAI_ETH)",
       "chain": "ethereum",
       "block": {
-        "number": 25989675,
-        "hex": "0x18c922b",
-        "hash": "0xda73d91643b9c1ccfa1d51f0b6ff7d9d7dfc6ef4f6b9aadcb6faebc29370c30e",
-        "timestamp": 1789557347
+        "number": 25989770,
+        "hex": "0x18c928a",
+        "hash": "0x5c4392d344be1027cb046b966c37d71f77d9763d9afec7b99d195728949ab8ad",
+        "timestamp": 1789558487
       },
       "decimals": 18,
-      "total_supply_raw": "4584687483044101742718754416",
-      "total_supply": 4584687483.044102,
+      "total_supply_raw": "4584855934904612178718583032",
+      "total_supply": 4584855934.904613,
       "state": "MEASURED",
       "method": "eth_call totalSupply() at the named block, public RPC"
     },
@@ -71,14 +71,68 @@
       "address_source": "public/interop/evm-control-facts.json (measured[0].contract)",
       "chain": "ethereum",
       "block": {
-        "number": 25989675,
-        "hex": "0x18c922b",
-        "hash": "0xda73d91643b9c1ccfa1d51f0b6ff7d9d7dfc6ef4f6b9aadcb6faebc29370c30e",
-        "timestamp": 1789557347
+        "number": 25989770,
+        "hex": "0x18c928a",
+        "hash": "0x5c4392d344be1027cb046b966c37d71f77d9763d9afec7b99d195728949ab8ad",
+        "timestamp": 1789558487
       },
       "decimals": 6,
       "total_supply_raw": "212143220660349",
       "total_supply": 212143220.660349,
+      "state": "MEASURED",
+      "method": "eth_call totalSupply() at the named block, public RPC"
+    },
+    {
+      "symbol": "USDY",
+      "name": "Ondo U.S. Dollar Yield",
+      "address": "0x96F6eF951840721AdBF46Ac996b59E0235CB985C",
+      "address_source": "issuer transparency page https://ondo.finance/usdy mirrored at public/interop/stablecoin-deep-2026-09/mirrors/129.html (sha256 7e824c97bedcbb07\u2026), confirmed on-chain: symbol() returns USDY",
+      "chain": "ethereum",
+      "block": {
+        "number": 25989770,
+        "hex": "0x18c928a",
+        "hash": "0x5c4392d344be1027cb046b966c37d71f77d9763d9afec7b99d195728949ab8ad",
+        "timestamp": 1789558487
+      },
+      "decimals": 18,
+      "total_supply_raw": "1049288641510316999333291198",
+      "total_supply": 1049288641.510317,
+      "state": "MEASURED",
+      "method": "eth_call totalSupply() at the named block, public RPC"
+    },
+    {
+      "symbol": "GHO",
+      "name": "Gho Token",
+      "address": "0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f",
+      "address_source": "issuer transparency page https://gho.xyz/ mirrored at public/interop/stablecoin-deep-2026-09/mirrors/118.html (sha256 e765d443a56de63d\u2026), confirmed on-chain: symbol() returns GHO",
+      "chain": "ethereum",
+      "block": {
+        "number": 25989770,
+        "hex": "0x18c928a",
+        "hash": "0x5c4392d344be1027cb046b966c37d71f77d9763d9afec7b99d195728949ab8ad",
+        "timestamp": 1789558487
+      },
+      "decimals": 18,
+      "total_supply_raw": "699000000000000000000000000",
+      "total_supply": 699000000.0,
+      "state": "MEASURED",
+      "method": "eth_call totalSupply() at the named block, public RPC"
+    },
+    {
+      "symbol": "USDTB",
+      "name": "USDtb",
+      "address": "0xc139190f447e929f090edeb554d95abb8b18ac1c",
+      "address_source": "issuer transparency page https://usdtb.money/ mirrored at public/interop/stablecoin-deep-2026-09/mirrors/221.html (sha256 ca17e42582fd34aa\u2026), confirmed on-chain: symbol() returns USDtb",
+      "chain": "ethereum",
+      "block": {
+        "number": 25989770,
+        "hex": "0x18c928a",
+        "hash": "0x5c4392d344be1027cb046b966c37d71f77d9763d9afec7b99d195728949ab8ad",
+        "timestamp": 1789558487
+      },
+      "decimals": 18,
+      "total_supply_raw": "482648341626182572000000000",
+      "total_supply": 482648341.62618256,
       "state": "MEASURED",
       "method": "eth_call totalSupply() at the named block, public RPC"
     }
