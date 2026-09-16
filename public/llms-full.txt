@@ -2,7 +2,7 @@
 
 ## 1. THE LID
 
-The GSPC board: **22 axis · 22 measured** = 14 model-comparison + 8 deterministic-fact.
+The GSPC board: **23 axis · 22 measured** = 14 model-comparison + 8 deterministic-fact.
 Measurement, not certification. Anyone can re-check.
 
 ## 1b. x402 catalog trust (counts only — fetch, never freeze)
@@ -38,17 +38,17 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
   "schema": "csoai.gspc-axes/0.5",
   "as_of": null,
   "totals": {
-    "axes": 22,
+    "axes": 23,
     "measured_axes": 22,
-    "unmeasured_axes": 0,
+    "unmeasured_axes": 1,
     "quotable_axes": 22,
-    "public_count": "22 axis · 22 measured",
+    "public_count": "23 axis · 22 measured",
     "model_fleets": 14,
     "fact_runs": 8,
-    "count_grammar": "22 axis are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own.",
+    "count_grammar": "23 axis are on the board; 22 of them carry a measurement and 1 are declared slots with no run behind them. The larger number counts slots, the smaller counts measurements — quote both or quote the smaller. A published slot exists so the gap is visible; it is not evidence of anything having been measured.",
     "by_family": {
       "gspc": {
-        "axes": 14,
+        "axes": 15,
         "measured": 14,
         "note": "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically."
       },
@@ -120,7 +120,7 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     "mean_unparsed_rate": 0.0541,
     "mean_note": "Means are over MEASURED MODEL-COMPARISON axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the measured board-v2 axes. No financial axis enters any of these means: an axis with no accuracy contributes nothing rather than a zero."
   },
-  "axes_count": 22,
+  "axes_count": 23,
   "axes": [
     {
       "axis": "governance",
@@ -247,6 +247,15 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
       "n": 71,
       "accuracy": 0.5915,
       "separation": "TIE"
+    },
+    {
+      "axis": "effect-binding",
+      "status": "UNMEASURED",
+      "family": "gspc",
+      "kind": "declared-slot",
+      "n": 0,
+      "accuracy": null,
+      "separation": null
     },
     {
       "axis": "provenance-controls",
