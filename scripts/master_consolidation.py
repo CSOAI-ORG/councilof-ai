@@ -61,6 +61,59 @@ def verify(leaf, path, root):
               else sha256b(bytes.fromhex(cur)+bytes.fromhex(step["hash"]))
     return cur==root
 
+
+def _read(path):
+    try: return json.loads(pathlib.Path(path).read_text())
+    except Exception: return None
+
+
+def _proofs(repo_rows, ots_state, card_verify):
+    """What was actually PROVEN, each figure derived from a named artifact, never typed.
+
+    Every entry carries what it does NOT establish, because each of these numbers has been
+    misread at least once in this estate's history.
+    """
+    out = {}
+    sc = _read("public/signed/card_index.json")
+    if sc and card_verify:
+        out["signed_card_corpus"] = {
+            "source": "public/signed/cards/*.json verified against the live did:web:csoai.org document",
+            "bodies_on_disk": card_verify["total"],
+            "verify_valid": card_verify["valid"],
+            "signing_key": sc.get("pubkey"),
+            "control": card_verify["control"],
+            "does_not_establish": ("That the cards are correct. A signature proves the bytes have not changed "
+                                   "since signing, never that they were worth signing. On 14 September 44 "
+                                   "signed results were withdrawn whose signatures all verified."),
+        }
+    if ots_state:
+        out["anchoring"] = {
+            "source": "every .ots under public/, parsed and checked against the file it names",
+            "proofs": ots_state["total"],
+            "bitcoin_attested": ots_state["bitcoin"],
+            "calendar_pending": ots_state["pending"],
+            "unreadable": ots_state["unreadable"],
+            "does_not_establish": ("A calendar-pending stamp is a REQUEST, not an anchor. Only the "
+                                   "Bitcoin-attested count is evidence of a time."),
+        }
+    for key, path, fields in (
+        ("xrpl_issued_supply", "public/interop/xrpl-supply-2026-09-16.json",
+         ("n", "n_measured", "n_unmeasured", "n_uncheckable", "as_of", "honesty")),
+        ("swift_cohort", "public/interop/swift-measure.json",
+         ("n", "status_all", "as_of", "url_provenance", "sig_status", "honesty")),
+        ("stablecoin_corpus", "public/interop/stablecoin-corpus-index-2026-09-16.json",
+         ("universe_asset_count", "assets_with_at_least_one_measured_deployment",
+          "still_unmeasured", "as_of", "not_a_supply_total")),
+    ):
+        d = _read(path)
+        if d:
+            out[key] = {"source": path, **{f: d[f] for f in fields if f in d}}
+    return out
+
+
+PROOF_INPUTS = {}
+
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--inputs",required=True,help="directory holding the mined surface files")
@@ -77,6 +130,8 @@ def main():
         print("selftest OK: 7/7 leaves verify; a leaf outside the set does not"); return 0
 
     d=pathlib.Path(a.inputs); entries=[]
+    PROOF_INPUTS["ots"]=_read(str(d/"ots_summary.json"))
+    PROOF_INPUTS["cards"]=_read(str(d/"card_verify.json"))
     def add(surface,kind,ident,digest,leaf_class,**extra):
         entries.append({"surface":surface,"kind":kind,"id":ident,"digest":digest,
                         "leaf_class":leaf_class,"state":"INDEXED",**extra})
@@ -167,6 +222,7 @@ def main():
         "count":withheld,
         "rule":"An identifier carrying an internal codename is replaced by a marker. The entry is NOT dropped and its digest is NOT recomputed, so the leaf still commits to the real record and inclusion can still be proved by anyone who holds the real identifier.",
         "why":"scripts/brand-gate.mjs blocks internal codenames on every public surface, and a census that quietly dropped them would understate the estate."},
+      "proven":_proofs(entries, PROOF_INPUTS.get("ots"), PROOF_INPUTS.get("cards")),
       "merkle_root":root,
       "inclusion_self_check":{"sampled":len(checked),"verified":verified,
         "a_leaf_outside_the_set_is_rejected":control_ok},
