@@ -1,9 +1,9 @@
 {
   "kind": "csoai.gspc-overlay/0.1",
   "board_schema": "csoai.gspc-axes/0.5",
-  "board_slots": 22,
+  "board_slots": 23,
   "as_of": "2026-09-01",
-  "note": "Overlays are not panes. Do not bump to csoai.gspc-axes/0.6 until a frozen gold bank exists. Never ship 23 measured of 22. GET /api/gspc remains the board.",
+  "note": "Overlays are not panes. Do not bump to csoai.gspc-axes/0.6 until a frozen gold bank exists. Never ship a measured count higher than the runs behind it. Since ADR-002 (2026-09-16) the board has 23 slots, 22 measured: slot 23 (effect-binding) is a declared slot, not an overlay. GET /api/gspc remains the board.",
   "overlays": [
     {
       "id": "abstract-reasoning",
@@ -17,7 +17,7 @@
         "swarm"
       ],
       "schema_bump_required_to_become_a_slot": "csoai.gspc-axes/0.6",
-      "notes": "overlay ARC-AGI UNMEASURED until a frozen gold bank exists; not a 23rd axis. Public GET stays 22·22·0."
+      "notes": "overlay ARC-AGI UNMEASURED until a frozen gold bank exists; still not an axis. Public GET reads 23·22·1 since ADR-002 (2026-09-16): the 23rd slot is effect-binding, a declared slot, not ARC-AGI."
     }
   ],
   "labelled_facts": [
@@ -125,5 +125,5 @@
     "is_signer": false,
     "note": "Treasury is not the signer. BOARD_SIGN_KEY is not in MetaMask."
   },
-  "notes": "overlay ARC-AGI UNMEASURED until a frozen gold bank exists; not a 23rd axis. Public GET https://councilof.ai/api/gspc stays 22·22·0. Do not bump the board to 23. Do not add an axis to gspc.ts / /api/gspc / board_living.json. Do not bump schema to csoai.gspc-axes/0.6 until a frozen gold bank exists."
+  "notes": "overlay ARC-AGI UNMEASURED until a frozen gold bank exists; still not an axis. Public GET https://councilof.ai/api/gspc reads 23·22·1 since ADR-002 (2026-09-16); the 23rd slot is effect-binding, declared and UNMEASURED, not ARC-AGI. Do not add ARC-AGI as an axis; do not add an axis to gspc.ts / /api/gspc / board_living.json. Do not bump schema to csoai.gspc-axes/0.6 until a frozen gold bank exists."
 }

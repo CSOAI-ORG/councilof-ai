@@ -3,6 +3,7 @@ import { onRequestGet } from "./axes.json";
 import { AXES_A } from "../api/_gspc_axes_a";
 import { AXES_B } from "../api/_gspc_axes_b";
 import { AXES_FIN } from "../api/_gspc_axes_fin";
+import { AXES_C } from "../api/_gspc_axes_c";
 
 const badge = async () => {
   const r = (await (onRequestGet as unknown as (c: unknown) => Promise<Response>)({
@@ -18,25 +19,30 @@ describe("/badge/axes.json — a badge that cannot drift from the board", () => 
   // most-copied claims we publish — it lands in READMEs we do not control — and nothing
   // regenerated it, so nothing could keep it current.
   it("counts the same axis set /api/gspc counts, derived not typed", async () => {
-    const axes = [...AXES_A, ...AXES_B, ...AXES_FIN];
+    const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
     const measured = axes.filter((a) => a.status === "MEASURED").length;
     const { status, body } = await badge();
     expect(status).toBe(200);
     expect(body.message).toBe(`${measured} of ${axes.length}`);
   });
 
-  it("says 22 of 22 today, which is what the live board says", async () => {
+  it("says 22 of 23 today — 22 measured of 23 slots since ADR-002 — which is what the live board says", async () => {
     const { body } = await badge();
-    expect(body.message).toBe("22 of 22");
+    expect(body.message).toBe("22 of 23");
     // and the stale figure this file exists to kill must never reappear
     expect(body.message).not.toBe("15 of 22");
   });
 
   it("goes amber on its own if a slot ever ships without a run behind it", async () => {
-    const axes = [...AXES_A, ...AXES_B, ...AXES_FIN];
+    const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
     const allMeasured = axes.every((a) => a.status === "MEASURED");
     const { body } = await badge();
     expect(body.color).toBe(allMeasured ? "brightgreen" : "orange");
+    // Since ADR-002 (2026-09-16) this is not hypothetical: effect-binding is a declared
+    // slot with no run, so the badge IS amber today, on its own, with nobody editing a
+    // colour. That is the mechanism this test exists to prove, observed rather than mocked.
+    expect(allMeasured).toBe(false);
+    expect(body.color).toBe("orange");
   });
 
   it("claims a count and never a grade", async () => {

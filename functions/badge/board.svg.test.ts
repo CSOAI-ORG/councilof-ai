@@ -3,6 +3,7 @@ import { handle, onRequestGet, readBoard, type BoardSource } from "./board.svg";
 import { AXES_A } from "../api/_gspc_axes_a";
 import { AXES_B } from "../api/_gspc_axes_b";
 import { AXES_FIN } from "../api/_gspc_axes_fin";
+import { AXES_C } from "../api/_gspc_axes_c";
 import capture from "./__fixtures__/gspc-2026-09-05.json";
 
 // A REAL capture of GET https://councilof.ai/api/gspc, read 2026-09-05 (66 KB, verbatim).
@@ -167,10 +168,17 @@ describe("/badge/board.svg — the whole board as one image, derived and never t
     });
     const svg = await r.text();
     expect(r.headers.get("x-gspc-board")).toBe("derived");
-    const ids = [...AXES_A, ...AXES_B, ...AXES_FIN].map((a) => a.axis);
+    const all = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
+    const ids = all.map((a) => a.axis);
     const inSvg = [...svg.matchAll(/<text x="56" y="\d+" font-size="13" fill="#111827">([^<]+)<\/text>/g)].map((m) => m[1]);
     expect(inSvg).toEqual(ids);
-    // and the capture taken from production today lists the same roster — the image cannot drift from the board
-    expect(inSvg).toEqual(CAPTURE.axes.map((a) => a.axis));
+    // The capture in __fixtures__ is a REAL production read from 2026-09-05, before ADR-002
+    // added the effect-binding declared slot. It is not edited to say what production does
+    // not yet say. Until it is re-captured after the deploy that carries _gspc_axes_c.ts,
+    // the roster it holds must equal today's roster with declared slots removed — and
+    // nothing else may differ. Re-capture, then restore the strict equality.
+    const declared = new Set(all.filter((a) => a.kind === "declared-slot").map((a) => a.axis));
+    expect(declared).toEqual(new Set(["effect-binding"]));
+    expect(inSvg.filter((id) => !declared.has(id))).toEqual(CAPTURE.axes.map((a) => a.axis));
   });
 });

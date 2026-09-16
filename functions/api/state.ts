@@ -76,6 +76,7 @@ import { MEASURED_ON, type AxisScore } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
+import { AXES_C } from "./_gspc_axes_c";
 
 /** How a number was obtained. Never collapsed, never inferred from the value. */
 type Kind = "measured" | "probed" | "catalogued" | "declared" | "unmeasured";
@@ -110,7 +111,7 @@ const SRC_RWA = "public/interop/rwa-registry.json";
 const SRC_MCP = "evidence/mcp-registry.json";
 const SRC_CENSUS = "public/signed/hub-census-baseline.json";
 const SRC_PUBLIC_ROOT = "public/root.json";
-const SRC_AXES = "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from)";
+const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin}.ts (the arrays /api/gspc derives from)";
 
 const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? null;
 
@@ -129,7 +130,7 @@ const boardClaimState = (boardStatus as any).state ?? "UNCHECKABLE";
 // number a lane quotes depends on which surface it happened to read — exactly the
 // failure this endpoint exists to end. So both are computed and compared here,
 // and the disagreement (if any) is published rather than resolved silently.
-const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
+const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
 const liveAxisSlots = LIVE_AXES.length;
 const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
 const liveUnmeasuredAxes = liveAxisSlots - liveMeasuredAxes;

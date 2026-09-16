@@ -84,10 +84,14 @@ def test_live_board_not_rewritten() -> None:
         g = json.loads(r.read())
     axes = {(a.get("axis") or a.get("id")): a for a in (g.get("axes") or [])}
     totals = g.get("totals") or {}
-    assert totals.get("axes") == 22
+    # ADR-002 (2026-09-16): 23 slots, 22 measured, 1 declared (effect-binding).
+    assert totals.get("axes") == 23
     assert totals.get("measured_axes") == 22
-    assert totals.get("unmeasured_axes") == 0
-    assert totals.get("public_count") == "22 axis · 22 measured"
+    assert totals.get("unmeasured_axes") == 1
+    assert totals.get("public_count") == "23 axis · 22 measured"
+    assert axes["effect-binding"]["status"] == "UNMEASURED"
+    assert axes["effect-binding"]["kind"] == "declared-slot"
+    assert (axes["effect-binding"].get("n") or 0) == 0
     for axis in MEASURED15:
         assert axes[axis]["status"] == "MEASURED", axis
     for axis in MEASURED_FIN:

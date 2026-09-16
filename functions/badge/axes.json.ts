@@ -22,9 +22,10 @@
 import { AXES_A } from "../api/_gspc_axes_a";
 import { AXES_B } from "../api/_gspc_axes_b";
 import { AXES_FIN } from "../api/_gspc_axes_fin";
+import { AXES_C } from "../api/_gspc_axes_c";
 
 export const onRequestGet: PagesFunction = async () => {
-  const axes = [...AXES_A, ...AXES_B, ...AXES_FIN];
+  const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
   const total = axes.length;
   const measured = axes.filter((a) => a.status === "MEASURED").length;
 

@@ -7,13 +7,14 @@ import { MEASURED_ON } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
+import { AXES_C } from "./_gspc_axes_c";
 import { MEASURED_IN_LANE } from "./_gspc_lane";
 import { FINANCIAL_FACTS_AS_OF, financialFamilyBlock } from "./_gspc_fin_as_of";
 
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
 // in but absent from the data, so the board reported 14 — the un-swept state.
-const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
+const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
 
 const round = (x: number, p = 4) => Math.round(x * 10 ** p) / 10 ** p;
 
@@ -365,11 +366,12 @@ export const onRequestGet: PagesFunction = async (context) => {
       };
 
       // ── the count, derived, never typed ──────────────────────────────────────
-      // A SLOT ON THE BOARD IS NOT A MEASUREMENT. The 22-axis canon is a count of
+      // A SLOT ON THE BOARD IS NOT A MEASUREMENT. The canon is a count of
       // slots; measured_axes is the count of slots with a real run behind them.
-      // Every axis now carries a run, so measured_axes == axes == 22. The grammar
-      // still DERIVES both from the axis array rather than typing either: if a
-      // future slot is added with no run, the gap re-appears honestly on its own.
+      // Since ADR-002 (2026-09-16) one slot — effect-binding — is declared with no
+      // run, so axes == measured_axes + 1 and the grammar below takes its non-zero
+      // branch. Both are DERIVED from the axis array rather than typed; the gap
+      // re-appeared on its own exactly as this comment always said it would.
       // Every number below is computed from the axis array.
       const measured = m.length;                       // status MEASURED — a run exists
       const unmeasured = selected.length - measured;   // slot published, no run

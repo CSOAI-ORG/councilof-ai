@@ -90,17 +90,29 @@ describe("/badge.md — the snippets are in the body, which is the whole point",
 });
 
 describe("every axis on the board points at its published bank", () => {
-  it("all 22 axes carry a dataset slug — no dead ends", async () => {
+  it("every MEASURED axis carries a dataset slug — no dead ends on a measured slot", async () => {
     const { AXES_FIN } = await import("./api/_gspc_axes_fin");
+    const { AXES_C } = await import("./api/_gspc_axes_c");
     const a = await import("./api/_gspc_axes_a");
     const b = await import("./api/_gspc_axes_b");
     const all = [
       ...Object.values(a).flat(),
       ...Object.values(b).flat(),
+      ...AXES_C,
       ...AXES_FIN,
-    ].filter((x): x is { axis: string; dataset?: string } => !!x && typeof x === "object" && "axis" in x);
+    ].filter(
+      (x): x is { axis: string; dataset?: string; status?: string; kind?: string } =>
+        !!x && typeof x === "object" && "axis" in x,
+    );
 
-    const missing = all.filter((x) => !x.dataset).map((x) => x.axis);
+    // ADR-002: a DECLARED slot has no bank, and minting a slug for a bank that does
+    // not exist would publish a dataset_url that 404s — the dead end this test is
+    // against, only worse, because it looks resolvable. The invariant is therefore
+    // over MEASURED slots, which is what the rationale below always said.
+    const declared = all.filter((x) => x.kind === "declared-slot").map((x) => x.axis);
+    expect(declared).toEqual(["effect-binding"]);
+    for (const x of all.filter((x) => x.kind === "declared-slot")) expect(x.status).toBe("UNMEASURED");
+    const missing = all.filter((x) => x.status === "MEASURED" && !x.dataset).map((x) => x.axis);
     // Eight financial axes had no dataset link, so a reader on the board could not reach the
     // bank behind them even though all eight repos were public. A dead end on a measured slot
     // is the cheapest kind of lost reader.

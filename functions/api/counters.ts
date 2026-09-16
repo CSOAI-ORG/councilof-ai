@@ -53,6 +53,7 @@ import type { AxisScore } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
+import { AXES_C } from "./_gspc_axes_c";
 import { AXES as REGISTER_ROWS, AXIS_REGISTER_SOURCE } from "./_axis_register";
 
 /** How a number was obtained. Never inferred from the value, never collapsed. */
@@ -97,7 +98,7 @@ const counter = (
 
 // ── sources, named once ──────────────────────────────────────────────────────
 const SRC_BOARD = "public/signed/gspc-board.signed.json";
-const SRC_AXES = "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from)";
+const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin}.ts (the arrays /api/gspc derives from)";
 const SRC_REGULATORY_INVENTORY = "public/interop/regulatory-inventory.json";
 
 // ── the board's own date-of-record ───────────────────────────────────────────
@@ -113,7 +114,7 @@ const boardClaimState = (boardStatus as any).state ?? "UNCHECKABLE";
 // a snapshot of that computation. Both are computed here and compared, so that if they
 // ever disagree the disagreement is visible instead of depending on which surface a
 // reader happened to open.
-const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
+const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
 const liveAxisSlots = LIVE_AXES.length;
 const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
 const boardCountsAgree =

@@ -19,6 +19,7 @@
 | council-arena-practice | codex | DashboardArenaPane + canonical home/dashboard GSPC components + useGspcBoard localhost transport fallback + focused tests; deterministic human-vs-simulated-opponent practice plus one separately labelled /api/hub-cards measured-model table shared by homepage and Council OS; verbose duplicate Hub-record homepage block retired; no instrument fusion, gameplay admission, or inferred state | RUNNING |
 | distribution-parity-20260912 | codex | guarded HF/Kaggle snapshot parity, conventional corrections-feed alias, and csoai-gspc source-version reconciliation | RUNNING |
 | frozen-to-fluid-step1 | claude (agent) | council-os/FROZEN-TO-FLUID-STEP1.md ONLY — documents the existing 22-axis schema as field paths and lists the Evidence Object gaps from the owner handoff. Reads functions/api/_gspc_axes_{a,b,fin}.ts, writes NO code, changes NO axis. | RUNNING |
+| axis-23-effect-binding | claude (agent) | functions/api/_gspc_axes_c.ts (new) + AXES_C wired into gspc/state/counters/owasp-report/badge/badge-axes.json; canon.json; public/gspc-overlays.json; _gspc_types.ts header; adoption-loop + badge tests; test_gspc_ready.py; council-os/ADR-002. Owner ruling 16 Sep. Declared slot, UNMEASURED, n 0 — NOT a measurement. | RUNNING |
 
 RULES (all agents): master only, no worktrees, no dev servers left running, stage-by-name,
 six gates before any dist build claim, browser-verify (green build ≠ working page),

@@ -23,9 +23,10 @@ import mapping from "../../public/interop/owasp-llm-mapping.json";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
+import { AXES_C } from "./_gspc_axes_c";
 import type { AxisScore } from "./_gspc_types";
 
-const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
+const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
 
 const json = (body: unknown) =>
   new Response(JSON.stringify(body, null, 2), {

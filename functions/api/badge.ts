@@ -38,6 +38,7 @@ import { AXES_A } from "./_gspc_axes_a";
 import { publicLeaderCount } from "./gspc";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
+import { AXES_C } from "./_gspc_axes_c";
 import { verifyCard } from "../_lib/cardVerify";
 
 // WHAT WAS WRONG (found by operating the endpoint, 2026-08-26)
@@ -61,7 +62,7 @@ import { verifyCard } from "../_lib/cardVerify";
 // The grammar below is now character-for-character the one in functions/api/gspc.ts:
 // axes = every slot, measured = status MEASURED. If those two files ever disagree again,
 // the badge is wrong, not the board.
-const AXES = [...AXES_A, ...AXES_B, ...AXES_FIN];
+const AXES = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
 
 // BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — badge alt must carry the 3-leader clause
 // beside 22 measured. Visible message stays short; aria-label/title carry the full lid.

@@ -1,8 +1,12 @@
 // Private module — AxisScore type + MEASURED_ON.
 // Schema notes (not an axis): overlay ARC-AGI UNMEASURED until a frozen gold bank
-// exists; not a 23rd axis. Public GET https://councilof.ai/api/gspc slot count is 22; measured_axes is derived.
-// Do not bump the board to 23. Do not add an axis here, in gspc.ts, /api/gspc, or
-// board_living.json. See public/gspc-overlays.json.
+// exists; ARC-AGI is still not an axis. See public/gspc-overlays.json.
+// SUPERSEDED 2026-09-16 by ADR-002: the board carries 23 slots. Slot 23
+// (effect-binding, _gspc_axes_c.ts) is a DECLARED slot — kind "declared-slot",
+// status UNMEASURED, n 0 — so public GET /api/gspc reads 23 axis · 22 measured,
+// both derived. The earlier line here ("do not bump the board to 23") was about
+// ARC-AGI and remains true for ARC-AGI; it no longer bars a declared slot.
+// board_living.json is a signed artifact and is NOT edited for this.
 // Restored from blob b4b3ab1788ec044156da0d4962189fe5f4dd975f (pre-PR#425).
 export interface AxisScore {
   axis: string;
