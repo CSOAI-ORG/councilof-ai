@@ -152,6 +152,7 @@ const EXISTING = [
   // AEO short doors from LIVE-GAP-AUDIT. Destinations already ship as blog
   // (or /colorado-ai-act). Do not invent an SS 584 seed page — pin the
   // existing explainer. After /answers merges, the blog still 200s.
+  "/.well-known/scitt-configuration  /.well-known/scitt.json  308",
   "/scitt          /blog/scitt-ai-supply-chain-transparency/  308",
   "/scitt/         /blog/scitt-ai-supply-chain-transparency/  308",
   "/colorado       /colorado-ai-act/         308",
