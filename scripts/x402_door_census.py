@@ -65,7 +65,7 @@ def main() -> int:
     doc = {"schema": "csoai.x402-door-census/0.1", "kind": "deterministic-facts",
            "as_of": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
            "discovery": DISCOVERY, "n": len(rows), "counts": dict(c),
-           "doors_a_stdlib_client_cannot_price": blind, "writes_board": False,
+           "doors_whose_challenge_a_stdlib_client_never_receives": blind, "writes_board": False,
            "honesty": ("This measures whether each door issues a payable challenge. A 402 is not "
                        "settlement, not delivery and not revenue, and nothing here is a payment. "
                        "Separately: a client using the Python standard library is answered 403 by the "
@@ -74,7 +74,7 @@ def main() -> int:
            "rows": rows}
     json.dump(doc, open(out_path, "w"), indent=2)
     print(f"doors {len(rows)}  " + "  ".join(f"{k}={v}" for k, v in sorted(c.items())) +
-          f"  stdlib-blind={blind}")
+          f"  stdlib-never-receives-challenge={blind}")
     return 0
 
 

@@ -7,7 +7,6 @@
   "counts": {
     "PAYABLE_CHALLENGE": 11
   },
-  "doors_a_stdlib_client_cannot_price": 11,
   "writes_board": false,
   "honesty": "This measures whether each door issues a payable challenge. A 402 is not settlement, not delivery and not revenue, and nothing here is a payment. Separately: a client using the Python standard library is answered 403 by the CDN in front of this estate, so for those doors the price is never shown to that buyer at all. Both readings are on every row.",
   "rows": [
@@ -209,5 +208,7 @@
         "sees_the_price": false
       }
     }
-  ]
+  ],
+  "doors_whose_challenge_a_stdlib_client_never_receives": 11,
+  "field_renamed_2026_09_16": "This count was first published as doors_a_stdlib_client_cannot_price. The deploy's price-gate flagged it, correctly: the field is about reachability — whether the 402 challenge reaches the client at all — and a name containing 'price' reads as a price claim on a surface where doctrine forbids one. The number is unchanged."
 }
