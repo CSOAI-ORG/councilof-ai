@@ -128,7 +128,7 @@ describe("dashboard measured arena", () => {
     );
     expect(html).toContain("SIGNED HISTORICAL ARTEFACT");
     expect(html).toContain("legacy, noncanonical 15-axis arena taxonomy");
-    expect(html).toContain("not the canonical 22-axis GSPC board");
+    expect(html).toContain("not the canonical GSPC board");
     expect(html).toContain("model-a:7b");
     expect(html).toContain("model-b:7b");
     expect(html).toContain(

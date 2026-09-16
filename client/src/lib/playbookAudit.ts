@@ -81,7 +81,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
         id: "stale-13",
         claim: "The brief still says 13 measured axes and a 14-slot instrument.",
         verdict: "stale",
-        live: "Living board: 22 axis · 22 measured. Quote GET /api/gspc.",
+        live: "Living board: quote totals.public_count from GET /api/gspc — the count is derived there, never typed here.",
   },
   {
         id: "stale-300-mcp",

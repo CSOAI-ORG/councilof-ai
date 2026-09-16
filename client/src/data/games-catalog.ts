@@ -87,7 +87,7 @@ export const GAMES_CATALOG: CatalogEntry[] = [
     path: "/compliance-training-world/catalog.html",
     kind: "leftover",
     description:
-      "Industry compliance quests (Art 50(2), bank, insurance, equity, bond, cross-border) with in-browser deterministic grader. Training attestation only — never certification, never the living 22-axis board.",
+      "Industry compliance quests (Art 50(2), bank, insurance, equity, bond, cross-border) with in-browser deterministic grader. Training attestation only — never certification, never the living GSPC board.",
     usesLiveBoard: false,
     badge: "frozen",
     frozen: true,

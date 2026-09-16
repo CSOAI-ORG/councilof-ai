@@ -21,7 +21,7 @@ const ROWS: Row[] = [
   {
     dim: "What it measures",
     ailuminate: "Chat-style hazard response — one conversational surface",
-    gspc: "22 axes across two families: 14 behavioural (governance, safety, provenance, continuity, conformance, openness, machinery, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail) + 8 financial/domain",
+    gspc: "Two families on one board, plus any declared slot published with no run yet — the slot and measured counts are derived live at GET /api/gspc → totals.public_count, never typed here. 14 behavioural (governance, safety, provenance, continuity, conformance, openness, machinery, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail) + 8 financial/domain",
   },
   {
     dim: "What a result is",
@@ -75,7 +75,7 @@ export default function GspcVsAiluminate() {
   useEffect(() => {
     document.title = "GSPC vs AILuminate — AILuminate for chat; GSPC beyond chat | Council of AI";
     setMetaDescription(
-      "An honest breadth comparison: AILuminate measures chat-style hazard; GSPC measures 22 axes including financial, regulatory and provenance. Attachment, never a fused grade.",
+      "An honest breadth comparison: AILuminate measures chat-style hazard; GSPC measures across two axis families including financial, regulatory and provenance. Attachment, never a fused grade.",
     );
   }, []);
 
@@ -90,7 +90,7 @@ export default function GspcVsAiluminate() {
         </h1>
         <p className="mt-4 max-w-2xl text-slate-400">
           AILuminate (MLCommons AI Safety v1.1, 11 Feb 2025, arXiv 2503.05731) is the
-          industry&apos;s chat-hazard benchmark, and a good one. GSPC is a 22-axis
+          industry&apos;s chat-hazard benchmark, and a good one. GSPC is a multi-axis
           measurement board. They are not rivals — one is an attachment to the other.
           This page says exactly where each is strong, and exactly how results from
           the first may ride on the second without ever pretending to be it.
@@ -179,7 +179,7 @@ export default function GspcVsAiluminate() {
               GET /api/gspc — the living board
             </a>
             <Link href="/board" className="text-emerald-300 underline-offset-2 hover:underline">
-              The 22-axis board
+              The GSPC board
             </Link>
             <Link href="/methodology" className="text-emerald-300 underline-offset-2 hover:underline">
               Methodology

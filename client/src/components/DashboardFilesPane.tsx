@@ -35,7 +35,7 @@ export default function DashboardFilesPane() {
         <CardHeader>
           <CardTitle>Files</CardTitle>
           <p className="text-sm text-muted-foreground">
-            File upload + 22-axis analysis. Every file gets a signed card.
+            File upload + per-axis analysis. Every file gets a signed card.
           </p>
         </CardHeader>
         <CardContent>

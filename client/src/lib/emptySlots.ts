@@ -16,7 +16,7 @@ export type SlotFill = {
 
 /** Prefer live GET; this static line is only a last-observation fallback. */
 export const BOARD_LIVE_RULING =
-  "Live board: GET /api/gspc — 22 axis · 22 measured · 0 unmeasured. Empty-as-finding only when unmeasured_axes > 0. A slot stays UNMEASURED until a signed cell exists — never fill with 0.";
+  "Live board: GET /api/gspc — quote totals.public_count, never type the count here. Empty-as-finding only when unmeasured_axes > 0, which since ADR-002 (16 Sep 2026) it is: one declared slot, effect-binding, with no run behind it. A slot stays UNMEASURED until a signed cell exists — never fill with 0.";
 
 /** @deprecated name kept for imports; no longer claims seven UNMEASURED slots. */
 export const EMPTY_SLOT_RULING = BOARD_LIVE_RULING;

@@ -82,7 +82,7 @@ export default function OnboardOS() {
               { href: "/gspc-scoreboard", label: "Scoreboard", desc: "Live board — every axis, every model" },
               { href: "/leaderboard", label: "Leaderboard", desc: "Benchmark corpus — not a single best AI" },
               { href: "/countdown", label: "Countdown", desc: "Regulatory deadlines and Art 50 readiness" },
-              { href: "/owasp-asi", label: "OWASP mapping", desc: "22 axes → OWASP AI Exchange categories" },
+              { href: "/owasp-asi", label: "OWASP mapping", desc: "Board axes → OWASP AI Exchange categories" },
               { href: "/evaluator-access", label: "Evaluator access", desc: "Conditions for independent evaluation" },
               { href: "/press", label: "Press", desc: "Corrections, root, signed index, FAQs" },
               { href: "/products", label: "Products", desc: "4 SKUs — free verify, scoped commission, enquiry" },

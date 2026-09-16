@@ -151,7 +151,7 @@ export default function OwaspAsiMapping() {
       </h1>
       <p className="mt-4 max-w-3xl text-slate-600">
         The OWASP AI Exchange (owaspai.org, CC0 1.0) organises AI security into 7 sections
-        with 10 essential control subcategories. The {board.public_count ?? "22-axis"} GSPC board
+        with 10 essential control subcategories. The {board.public_count ?? "GSPC"} GSPC board
         measures behavioural and financial axes. This page maps each GSPC axis to the OWASP
         concern it addresses. The mapping is a CSOAI editorial act — not an OWASP endorsement.
         One axis may span multiple categories.

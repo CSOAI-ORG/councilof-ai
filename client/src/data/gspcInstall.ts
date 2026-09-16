@@ -21,7 +21,7 @@ export const FN_TOOLS_URL = "https://councilof.ai/openapi/gspc-function-tools.js
 
 // The one line that proves it worked, everywhere.
 export const TEST_LINE =
-  'Test it: ask your AI to call board_totals — expect the live board, currently "22 axis · 22 measured".';
+  'Test it: ask your AI to call board_totals — expect the board\'s own totals.public_count line ("<slots> axis · <measured> measured"), derived live, never a number typed from memory.';
 
 export type Gate = "live" | "paid" | "review";
 

@@ -147,6 +147,6 @@ describe("HomeGspcTable renders the payload and nothing else", () => {
     expect(html).toContain("2 published MEASURED cells · 2 models · 1 model axis");
     expect(html).toContain("publisher/model-a");
     expect(html).toContain("publisher/model-b");
-    expect(html).toContain("separate benchmark instrument from the 22-axis board");
+    expect(html).toContain("separate benchmark instrument from the GSPC board");
   });
 });

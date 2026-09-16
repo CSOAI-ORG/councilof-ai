@@ -386,7 +386,7 @@ export function HubResultsBoard({
             Hugging Face measured-model results
           </h3>
           <p className="mt-1 max-w-3xl text-sm text-slate-600 dark:text-emerald-100/70">
-            Third-party Hub cells from <code>/api/hub-cards</code>. This is a separate benchmark instrument from the 22-axis board above: model axes rank measured cells; deterministic fact axes do not rank models.
+            Third-party Hub cells from <code>/api/hub-cards</code>. This is a separate benchmark instrument from the GSPC board above: model axes rank measured cells; deterministic fact axes do not rank models.
           </p>
         </div>
         <a href={HUB_CARDS_PAGE_URL} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-emerald-800 hover:underline dark:text-emerald-300">

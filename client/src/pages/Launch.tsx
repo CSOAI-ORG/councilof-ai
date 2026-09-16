@@ -35,7 +35,7 @@ const VERIFICATION_LINKS = [
     desc: "The exact listed leaf hashes, count and Merkle root. Its scope is separate from the signed-card catalogue.",
   },
   {
-    label: "Measurement board (22 axes)",
+    label: "Measurement board",
     url: "/board",
     desc: "Per-axis measurement state, accuracy, and card links.",
   },

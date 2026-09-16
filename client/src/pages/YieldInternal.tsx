@@ -30,7 +30,7 @@ export default function YieldInternal() {
           </thead>
           <tbody className="font-mono text-xs text-slate-300">
             <tr className="border-b border-slate-800">
-              <td className="py-2">public_count / 22 axes</td>
+              <td className="py-2">public_count (slots · measured, derived)</td>
               <td>/api/gspc</td>
             </tr>
             <tr className="border-b border-slate-800">
