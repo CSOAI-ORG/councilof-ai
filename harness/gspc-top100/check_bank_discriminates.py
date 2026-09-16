@@ -45,7 +45,8 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-PROMPT_KEYS = ("text", "prompt", "request", "item", "case", "question", "operation", "tool")
+PROMPT_KEYS = ("text", "prompt", "request", "item", "case", "question", "operation", "tool",
+                "record", "input", "content", "statement")
 DEFAULT_MAX = 0.10
 
 
@@ -123,6 +124,14 @@ def main() -> int:
             unreadable.append((src, "empty"))
             continue
         h, n, kind = parrot_score(rows)
+        if n == 0:
+            # The file parsed and held rows, but not one of them could be graded: no row
+            # carried a field this checker recognises as the prompt. Scoring that 0/0 and
+            # printing "ok" is a guard that cannot fail — the exact defect this family of
+            # checks exists to catch. Report it as UNCHECKABLE and exit non-zero.
+            unreadable.append((src, f"{len(rows)} row(s) read, 0 gradeable: no known prompt field "
+                                    f"(looked for {', '.join(PROMPT_KEYS)})"))
+            continue
         rows_out.append((src, h, n, h / n if n else 0.0, kind))
 
     for src, h, n, score, kind in rows_out:
