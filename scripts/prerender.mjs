@@ -176,6 +176,7 @@ function discover() {
     "/industries/agent-rails", "/industries/open-source", "/industries/multi-agent-commerce",
     "/industries/security", "/industries/machinery", "/industries/humanoid",
     "/industries/xr", "/industries/legal", "/industries/emotion-ai",
+    "/agent-blocking", "/ivo-evidence", "/owasp-asi",
     // Legacy slugs kept so no existing URL 404s — these fall through to the
     // ContentPage dataset, not the sector template.
     "/industries/finance", "/industries/healthcare",
