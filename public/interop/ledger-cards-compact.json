@@ -1030,5 +1030,20 @@
     "external_total": 363,
     "evidence_url": "/api/state",
     "honesty": "MCP fleet state from /api/state. 2 reachable, 6 catalogued, 363 external. never_sum: reachable + catalogued are different kinds."
+  },
+  "hub.census.state.2026-09-16": {
+    "kind": "csoai.hub-census-state-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true
+    },
+    "as_of": "2026-09-16T11:35:00Z",
+    "authority": "public/signed/hub-census-baseline.json",
+    "live_endpoint": "/api/compute",
+    "cell_arithmetic_rule": "cells = rows_served_by_indexes \u2212 superseded_excluded \u2212 withdrawn_excluded \u2212 duplicates_collapsed",
+    "signed_cards_in_index": "?",
+    "evidence_url": "/api/state",
+    "honesty": "Hub census is a strict distinct (model, axis) pair count. Per-arithmetic rule."
   }
 }
