@@ -1,6 +1,6 @@
 {
   "artifact": "master-consolidation",
-  "as_of": "2026-09-16T15:33:14Z",
+  "as_of": "2026-09-16T15:54:48Z",
   "what_this_is": "A census of every artifact CSOAI holds across every surface, committed to one Merkle root.",
   "what_the_root_proves": "That these exact entries were in this set when the root was stamped. Nothing else.",
   "what_this_is_not": [
@@ -15,15 +15,23 @@
   },
   "merkle_rule": "leaf = sha256(bytes); pairs hashed in order; an odd node is carried up unchanged, never duplicated",
   "totals": {
-    "entries": 6427,
+    "entries": 7940,
     "bytes_leaves": 5773,
-    "record_leaves": 654,
+    "record_leaves": 2167,
     "by_surface": {
       "github": 400,
-      "huggingface": 245,
+      "huggingface": 1758,
       "kaggle": 20,
       "oracle_object_storage": 8,
       "repo": 5754
+    },
+    "by_state": {
+      "INDEXED": 6427,
+      "UNSIGNED": 1513
+    },
+    "state_meanings": {
+      "INDEXED": "We found the artifact and recorded it. Nothing was measured against it.",
+      "UNSIGNED": "A card body that exists and carries signature: null by design. Not measured, not withdrawn, not pending: awaiting a signing decision that only the board key can make."
     },
     "never_add_these": "bytes_leaves and record_leaves answer different questions; report both, never their sum as one number"
   },
@@ -76,10 +84,10 @@
       "not_a_supply_total": "This counts ASSETS with at least one measured deployment. It is not a sum of supply: the universe mixes peg currencies, and one asset may be deployed on several chains, so a sum would mix units or double-count a bridged token."
     }
   },
-  "merkle_root": "eddce8de60c02789edbdb252914bd94edc798083e8341838d4319938eaa2d64f",
+  "merkle_root": "9d85d89da23d93f100253aa175f31faa8b75111a2edf9c2b86dbc562bd647b85",
   "inclusion_self_check": {
-    "sampled": 201,
-    "verified": 201,
+    "sampled": 204,
+    "verified": 204,
     "a_leaf_outside_the_set_is_rejected": true
   },
   "full_artifact": "/interop/master-consolidation-2026-09-16.json",
