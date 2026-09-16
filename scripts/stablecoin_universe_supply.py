@@ -10,7 +10,7 @@ Because an aggregator can be wrong, no address is trusted on its word: symbol() 
 on chain and must return the asset's own symbol before any supply is recorded. A mismatch
 is REJECTED, not measured.
 
-Eight EVM chains are read, each at its own head block, recorded per row. An asset on a chain
+Ten EVM chains are read, each at its own head block, recorded per row. An asset on a chain
 with no endpoint here is UNMEASURED with that reason — not zero, and not silently dropped.
 """
 import json, re, sys, time, urllib.request
@@ -27,6 +27,8 @@ CHAIN_RPC = {
     "bsc": "https://bsc-rpc.publicnode.com",
     "avax": "https://avalanche-c-chain-rpc.publicnode.com",
     "celo": "https://forno.celo.org",
+    "rsk": "https://public-node.rsk.co",
+    "hyperliquid": "https://rpc.hyperliquid.xyz/evm",
 }
 RPC = CHAIN_RPC["ethereum"]
 SEL = {"symbol": "0x95d89b41", "name": "0x06fdde03", "decimals": "0x313ce567", "totalSupply": "0x18160ddd"}
@@ -97,9 +99,19 @@ def main() -> int:
             chain, addr = addr.split(":", 1)
         row["address"] = addr; row["address_chain"] = chain
         ch = "ethereum" if chain.lower() in ("ethereum", "eth") else chain.lower()
-        if ch not in CHAIN_RPC or not re.fullmatch(r"0x[0-9a-fA-F]{40}", addr):
+        well_formed = bool(re.fullmatch(r"0x[0-9a-fA-F]{40}", addr))
+        if ch in CHAIN_RPC and not well_formed:
+            # The upstream's chain label and its address disagree. Saying "no endpoint for that
+            # chain" would blame our reader for a defect in the source, so name it as what it is.
+            row.update({"state": "UNMEASURED", "upstream_label_disagrees_with_address": True,
+                        "reason": (f"the upstream labels this {chain}, but {addr!r} is not a 20-byte EVM "
+                                   f"address, so the label and the address disagree. Not read; not guessed at.")})
+            rows.append(row); continue
+        if ch not in CHAIN_RPC:
             row.update({"state": "UNMEASURED",
                         "reason": f"address is on {chain}; this reader has no endpoint for that chain"}); rows.append(row); continue
+        if not well_formed:
+            row.update({"state": "UNMEASURED", "reason": f"{addr!r} is not a 20-byte EVM address"}); rows.append(row); continue
         hd = heads.get(ch, {})
         if "error" in hd:
             row.update({"state": "UNCHECKABLE", "reason": f"{ch} endpoint: {hd['error']}"}); rows.append(row); continue
@@ -120,6 +132,36 @@ def main() -> int:
             row.update({"state": "UNCHECKABLE", "reason": f"{type(e).__name__}: {e}"[:110]})
         rows.append(row)
         time.sleep(0.12)
+
+    # One retry for the transient conditions seen in the first pass: 403 and 429 from a
+    # rate-limited endpoint, and "missing trie node", which is the node having pruned the
+    # state for the block we pinned between reading the head and calling. The retry takes a
+    # fresh head for that chain. Anything that fails twice stays UNCHECKABLE with its reason.
+    TRANSIENT = ("403", "429", "missing trie node", "Too Many Requests", "Forbidden")
+    for row in rows:
+        if row.get("state") != "UNCHECKABLE" or not any(t in str(row.get("reason", "")) for t in TRANSIENT):
+            continue
+        ch = row.get("address_chain"); ep = CHAIN_RPC.get(ch if ch != "eth" else "ethereum")
+        if not ep or not row.get("address"):
+            continue
+        try:
+            h2 = rpc("eth_blockNumber", [], ep)["result"]
+            sym = dec_str(call(row["address"], SEL["symbol"], h2, ep))
+            row["onchain_symbol"] = sym; row["retried"] = True
+            expected = row.get("symbol")
+            if not sym or not expected or sym.upper() != str(expected).upper():
+                row.update({"state": "REJECTED",
+                            "reason": f"on-chain symbol {sym!r} does not match {expected!r}; not this token's contract"})
+            else:
+                dec = int(call(row["address"], SEL["decimals"], h2, ep), 16)
+                raw = int(call(row["address"], SEL["totalSupply"], h2, ep), 16)
+                row.update({"state": "MEASURED", "decimals": dec, "total_supply_raw": str(raw),
+                            "total_supply": raw / (10 ** dec),
+                            "block": {"number": int(h2, 16), "hex": h2, "retried_at_fresh_head": True}})
+                row.pop("reason", None)
+        except Exception as e:
+            row["retry_reason"] = f"{type(e).__name__}: {e}"[:110]
+        time.sleep(0.3)
 
     from collections import Counter
     c = Counter(r["state"] for r in rows)

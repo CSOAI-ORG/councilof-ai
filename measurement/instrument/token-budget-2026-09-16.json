@@ -1,0 +1,46 @@
+{
+  "schema": "csoai.instrument-experiment/0.1",
+  "kind": "deterministic-facts",
+  "as_of": "2026-09-16T12:05:01Z",
+  "question": "Does the pod's token budget, and not its compute, explain why its cards are unquotable?",
+  "why_it_matters": "Every open-ended card the RunPod 3090 has produced reads done_reason 'length' and parses to nothing, so n is 0 and no card can reach the n>=30 floor in scripts/sign_mill_cards.py. If the cause is the budget, the 3090 is not failing to measure; it is being asked to answer in fewer tokens than the model needs.",
+  "setup": {
+    "host": "RunPod RTX 3090 (pod fpowppss5ngtkw)",
+    "model": "deepseek-r1:8b (local Ollama, keyless)",
+    "bank": "/workspace/banks-all/gspc-agi.jsonl",
+    "bank_items": 36,
+    "labels": [
+      "COMPLY",
+      "REFUSE"
+    ],
+    "prompt": "the worker's own: item text + 'Reply with exactly one label and no other text: [labels]'",
+    "temperature": 0,
+    "seed": 0,
+    "only_variable": "num_predict (max_tokens)"
+  },
+  "result": [
+    {
+      "max_tokens": 64,
+      "n": 36,
+      "parseable": 0,
+      "done_reason": {
+        "length": 36
+      },
+      "wall_seconds": 51
+    },
+    {
+      "max_tokens": 512,
+      "n": 36,
+      "parseable": 33,
+      "done_reason": {
+        "stop": 33,
+        "length": 3
+      },
+      "wall_seconds": 181
+    }
+  ],
+  "finding": "At the budget the jobs actually use, 64, not one of the 36 answers completed: all 36 ended 'length' and 0 parsed. At 512, 33 of 36 completed and parsed. The model is a reasoning model, so the budget is spent before the label is emitted. This is an instrument setting, not a capability of the model and not a limit of the hardware.",
+  "what_this_does_NOT_establish": "It does not say the model is accurate. Nothing here was graded against the expected labels; parseable only means one label was emitted. It also does not make prior pod cards valid: they remain unquotable.",
+  "consequence_if_changed": "max_tokens is part of the instrument. Raising it changes the instrument hash, so results after the change are a NEW series and are not comparable with anything measured at 64. That is a ruling for the measurement lane, not a config tweak, which is why this file states the evidence and stops.",
+  "reproduce": "the script is /tmp/tokbudget.py on the pod; 72 generations, no key, no network beyond loopback Ollama"
+}
