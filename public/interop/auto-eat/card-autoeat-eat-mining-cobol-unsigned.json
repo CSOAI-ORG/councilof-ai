@@ -1,0 +1,43 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "autoeat.eat-mining.cobol",
+  "subject": "EAT-mining: 12 COBOL systems measured (9/12 reachable)",
+  "as_of": "2026-09-16T10:30:16Z",
+  "source_urls": [
+    "https://councilof.ai/interop/cobol-measure.json"
+  ],
+  "payload": {
+    "kind": "csoai.eat-mining/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true
+    },
+    "as_of": "2026-09-16T10:30:16Z",
+    "n": 12,
+    "n_ok": 9,
+    "n_http_error": 3,
+    "evidence_url": "/interop/cobol-measure.json",
+    "systems": [
+      "Fed ACH",
+      "Fed Wire",
+      "JPMorgan",
+      "BoA",
+      "Citi",
+      "Visa",
+      "Mastercard",
+      "NYSE",
+      "Allstate",
+      "AIG",
+      "SSA",
+      "IRS"
+    ],
+    "honesty": "12 COBOL-using systems, 9/12 reachable."
+  },
+  "unmeasured": [
+    "gspc_axis_assignment: 22-axis canon (ADR-001) is frozen",
+    "ots_anchor: pending ots-upgrade-loop.sh workflow",
+    "oidc_signature: pending auto-eat-sign workflow"
+  ],
+  "sha256": "9340da77c2c7d2dac6e3ce57bb5fb70ef7fddcc70aa77ee876092c048ba4867b"
+}

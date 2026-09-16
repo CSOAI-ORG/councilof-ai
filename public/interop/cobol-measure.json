@@ -1,0 +1,125 @@
+{
+  "schema": "csoai.cobol-measure/0.1",
+  "as_of": "2026-09-16T10:30:16Z",
+  "kind": "cobol-system-measurement",
+  "writes_board": false,
+  "n": 12,
+  "n_ok": 9,
+  "n_unreachable": 0,
+  "n_http_error": 3,
+  "status_all": "DISCOVERED",
+  "honesty": "DISCOVERED until public COBOL retirement / modernization disclosure is verifiable. Bank COBOL exposure is industry-known; we don't pretend to measure it from a homepage fetch.",
+  "rows": [
+    {
+      "id": "fed-ach",
+      "name": "Fed ACH",
+      "status": "DISCOVERED",
+      "artifact_url": "https://www.frbservices.org/financial-services/ach/",
+      "page_state": "OK",
+      "page_sha256": "77656ccc5a3e7a0034bed6872c3a9e8796be128ba538814ffbcb26c73c3d855b",
+      "note": "Federal Reserve ACH operator (FedACH) - 100% COBOL backbone"
+    },
+    {
+      "id": "fed-wire",
+      "name": "Fed Wire",
+      "status": "DISCOVERED",
+      "artifact_url": "https://www.frbservices.org/financial-services/wires/",
+      "page_state": "OK",
+      "page_sha256": "fd91f9a2eaaf7dbff9aec4a61877b07df5d95483be3fcd3f86491b099d2ebb1a",
+      "note": "Fedwire Funds Service - real-time gross settlement"
+    },
+    {
+      "id": "jpm-cobol",
+      "name": "JPMorgan",
+      "status": "DISCOVERED",
+      "artifact_url": "https://www.jpmorgan.com/technology",
+      "page_state": "OK",
+      "page_sha256": "994d93e4b5e80cb9ada2a4effa2fd7021e0d05de854609662618c338fce92b10",
+      "note": "JPMorgan famously retired COBOL from ATM/branch but kept it for risk"
+    },
+    {
+      "id": "boa-cobol",
+      "name": "Bank of America",
+      "status": "DISCOVERED",
+      "artifact_url": "https://about.bankofamerica.com/en-us/our-story.html",
+      "page_state": "OK",
+      "page_sha256": "2998494283e1ec32b2bcb0e99323ea76a30cec15e474b14248b5a2ace29bccd1",
+      "note": "BofA ATM and core systems"
+    },
+    {
+      "id": "citi-cobol",
+      "name": "Citi",
+      "status": "DISCOVERED",
+      "artifact_url": "https://www.citigroup.com/technology.html",
+      "page_state": "HTTP_404",
+      "page_sha256": null,
+      "note": "Citi COBOL-based core banking"
+    },
+    {
+      "id": "visa-cobol",
+      "name": "Visa",
+      "status": "DISCOVERED",
+      "artifact_url": "https://usa.visa.com/about-visa.html",
+      "page_state": "OK",
+      "page_sha256": "8fc2d18323327d889b0f85dc0a1c6a11d8c2250a5c60f3a4277c363d0710aa7c",
+      "note": "VisaNet - COBOL-based authorization"
+    },
+    {
+      "id": "mc-cobol",
+      "name": "Mastercard",
+      "status": "DISCOVERED",
+      "artifact_url": "https://www.mastercard.us/en-us/vision/who-we-are.html",
+      "page_state": "HTTP_403",
+      "page_sha256": null,
+      "note": "Banknet - Mastercard's COBOL core"
+    },
+    {
+      "id": "nyse-cobol",
+      "name": "NYSE",
+      "status": "DISCOVERED",
+      "artifact_url": "https://www.nyse.com/markets",
+      "page_state": "OK",
+      "page_sha256": "0f6f60c65e78228887ed2ca4c648ccabc06ae94566afaa22682b99d9c3b27db8",
+      "note": "NYSE trading engine (COBOL until recent migrations)"
+    },
+    {
+      "id": "allstate-cobol",
+      "name": "Allstate",
+      "status": "DISCOVERED",
+      "artifact_url": "https://www.allstate.com/about.aspx",
+      "page_state": "OK",
+      "page_sha256": "8557eae2106d5897ead74f2547893f7fff539fc493e16ce0f2da7055c95e4cda",
+      "note": "Insurance COBOL mainframes"
+    },
+    {
+      "id": "aig-cobol",
+      "name": "AIG",
+      "status": "DISCOVERED",
+      "artifact_url": "https://www.aig.com/about-us",
+      "page_state": "OK",
+      "page_sha256": "800c79ab3c0aab2540cf0efb8e6a5b4621bc3659187fe53419e5f4e036c8d0e0",
+      "note": "AIG claims systems COBOL"
+    },
+    {
+      "id": "ssa-cobol",
+      "name": "SSA",
+      "status": "DISCOVERED",
+      "artifact_url": "https://www.ssa.gov/open/data/",
+      "page_state": "HTTP_403",
+      "page_sha256": null,
+      "note": "Social Security - COBOL for 60+ years"
+    },
+    {
+      "id": "irs-cobol",
+      "name": "IRS",
+      "status": "DISCOVERED",
+      "artifact_url": "https://www.irs.gov/statistics",
+      "page_state": "OK",
+      "page_sha256": "8ac1aa1a50318c6beb5987df0cb7f585bb3dee2b0e2bf581e657754b2ee33f71",
+      "note": "IRS Individual Master File - COBOL"
+    }
+  ],
+  "sha256_payload": "6b8f264d1c88202577970f5534c519682b7b8260b33982f9cb22fac75f0f26ff",
+  "sig_status": "UNSIGNED_PENDING_OIDC",
+  "sig_required": true
+}

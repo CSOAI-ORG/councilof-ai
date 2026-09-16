@@ -1,0 +1,34 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "x402.rail.weekly.2026-09-16",
+  "subject": "x402 rail weekly status: $0.02 USDC, 1 distinct paid buyer, 100% uptime",
+  "as_of": "2026-09-16T10:50:00Z",
+  "source_urls": [
+    "/api/revenue"
+  ],
+  "payload": {
+    "kind": "csoai.x402-rail-status/0.1",
+    "mode": "live",
+    "network": "eip155:8453",
+    "asset": "USDC",
+    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "resources": 11,
+    "external_revenue_usdc": 0.02,
+    "distinct_paid_payers": 1,
+    "free_door_settlements_30d": 18,
+    "free_door_unique_buyers": "10+",
+    "uptime": "100%",
+    "promo": "csoai-launch-30d-20260911 (ends 2026-10-11)",
+    "discovery": "https://councilof.ai/.well-known/x402.json",
+    "bazaars": [
+      "PayAI: indexed",
+      "Coinbase CDP: ABSENT (requires owner CDP key)"
+    ],
+    "evidence_url": "/api/revenue"
+  },
+  "unmeasured": [
+    "gspc_axis_assignment: 22-axis canon (ADR-001) is frozen",
+    "oidc_signature: pending auto-eat-sign workflow"
+  ],
+  "sha256": "0366ee68236368ddeb33a624e75f1b61ec7e15f6732682b9090fad0b508e783f"
+}

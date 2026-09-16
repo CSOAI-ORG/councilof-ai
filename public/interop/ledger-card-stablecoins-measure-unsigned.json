@@ -1,0 +1,57 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "stablecoins.extended.2026-09-16",
+  "subject": "Extended stablecoin coverage \u2014 45 instruments across 17 chains",
+  "as_of": "2026-09-16T10:31:23Z",
+  "source_urls": [
+    "https://councilof.ai/interop/stablecoins-measure.json"
+  ],
+  "payload": {
+    "kind": "csoai.eat-mining/0.1",
+    "flags": {
+      "measures": true,
+      "signs": false,
+      "anchors": false,
+      "writes_board": false,
+      "not_a_grade": true
+    },
+    "surface_marker": "stablecoins.extended.2026-09-16",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://councilof.ai/interop/bank-registry.json"
+    ],
+    "n": 45,
+    "n_ok": 34,
+    "n_unreachable": 11,
+    "chains_covered": 17,
+    "chains": [
+      "Ethereum",
+      "XRPL",
+      "Solana",
+      "Algorand",
+      "Aptos",
+      "Arbitrum",
+      "Avalanche",
+      "BSC",
+      "Base",
+      "Hedera",
+      "Near",
+      "Optimism",
+      "Polkadot",
+      "Polygon",
+      "Stellar",
+      "Sui",
+      "Tron"
+    ],
+    "extends_reader_16": true,
+    "extends_bank_registry_6": true,
+    "evidence_url": "/interop/stablecoins-extended.json",
+    "honesty": "45 stablecoins across 17 chains measured against public disclosure pages. Extends XRPL reader-16 + bank-registry 6."
+  },
+  "unmeasured": [
+    "gspc_axis_assignment: 22-axis canon (ADR-001) is frozen; new axes require owner MPC ceremony",
+    "ots_anchor: pending ots-upgrade-loop.sh workflow",
+    "oidc_signature: pending hf-fin-shells-measure.yml workflow"
+  ],
+  "sha256": "0978d7ad9e3339ecb784c53cf449e1dbfaf5fff19e89514bbe2d95382f06754c"
+}

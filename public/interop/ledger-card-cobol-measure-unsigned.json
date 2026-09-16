@@ -1,0 +1,48 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "cobol.measure.2026-09-16",
+  "subject": "COBOL financial systems measured \u2014 12 institutions, 9 reachable",
+  "as_of": "2026-09-16T10:30:16Z",
+  "source_urls": [
+    "https://councilof.ai/interop/cobol-measure.json"
+  ],
+  "payload": {
+    "kind": "csoai.eat-mining/0.1",
+    "flags": {
+      "measures": true,
+      "signs": false,
+      "anchors": false,
+      "writes_board": false,
+      "not_a_grade": true
+    },
+    "surface_marker": "cobol.measure.2026-09-16",
+    "source_urls": [
+      "https://www.frbservices.org/financial-services/ach/"
+    ],
+    "n": 12,
+    "n_ok": 9,
+    "n_http_error": 3,
+    "systems": [
+      "Fed ACH",
+      "Fed Wire",
+      "JPMorgan",
+      "Bank of America",
+      "Citi",
+      "Visa",
+      "Mastercard",
+      "NYSE",
+      "Allstate",
+      "AIG",
+      "SSA",
+      "IRS"
+    ],
+    "evidence_url": "/interop/cobol-measure.json",
+    "honesty": "12 COBOL-using systems measured against public press URLs. Industry-known COBOL backbone; not a retirement-disclosure measurement."
+  },
+  "unmeasured": [
+    "gspc_axis_assignment: 22-axis canon (ADR-001) is frozen; new axes require owner MPC ceremony",
+    "ots_anchor: pending ots-upgrade-loop.sh workflow",
+    "oidc_signature: pending hf-fin-shells-measure.yml workflow"
+  ],
+  "sha256": "03ee30482f0ca37ffc3f170bf541c820b5941ac5b16191f1d453aa3e1264b678"
+}
