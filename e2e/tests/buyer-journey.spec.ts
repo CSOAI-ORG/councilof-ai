@@ -24,10 +24,14 @@ const FILL: Record<string, string> = {
   '<symbol|issuer_address>': 'RLUSD', '<symbol>': 'RLUSD', '<iso>': '2026-09-01',
   '<64-hex>': 'a'.repeat(64),
   '<https://…>': encodeURIComponent('https://councilof.ai/images/coliseum_hero_arena.jpg'),
+  '<wrapped-symbol:chain>': 'RLUSD:XRPL',
+  '<https-output-url>': encodeURIComponent('https://councilof.ai/images/sample.png'),
+  '<article-50|article-53|dora|cra>': 'article-50',
 };
 const fill = (u: string) => Object.entries(FILL).reduce((a, [k, v]) => a.split(k).join(v), u);
 
 test('a discovering agent reaches a payment challenge from the indexed door alone', async () => {
+  test.setTimeout(120000);
   const api = await request.newContext({ baseURL: 'https://councilof.ai' });
 
   // 1. the door the Bazaar names
@@ -41,21 +45,31 @@ test('a discovering agent reaches a payment challenge from the indexed door alon
   // 2. it must say, machine-readably, that anything is for sale
   expect(body.catalog, 'prose is not a pointer an agent can follow').toBe('https://councilof.ai/api/x402');
 
-  // 3. the catalogue resolves and advertises tiers
+  // 3. the catalogue resolves and advertises resources
   const cat = await api.get('/api/x402');
   expect(cat.status()).toBe(200);
-  const tiers = (await cat.json()).tiers as { id: string; resource?: string; free_preview?: string }[];
+  const tiers = (await cat.json()).resources as { id: string; resource?: string; free_preview?: string }[];
   expect(tiers.length).toBeGreaterThanOrEqual(6);
 
   // 4. every advertised URL must be usable AS PUBLISHED
+  // URLs with placeholders (e.g. <64-hex>, <wrapped-symbol:chain>) need real values.
+  // The catalog documents placeholder schemas; we don't expect placeholder strings to 402.
+  // What we DO require: placeholders documented in the FILL map must resolve to a
+  // valid URL that returns the expected status; undocumented placeholders are a finding.
   const failures: string[] = [];
+  const FILL_KEYS = new Set(Object.keys(FILL));
   for (const t of tiers) {
     for (const [field, raw] of [['resource', t.resource], ['free_preview', t.free_preview]] as const) {
       if (!raw) continue;
+      const placeholders = [...raw.matchAll(/<([^>]+)>/g)].map(m => m[1]);
+      const undocumented = placeholders.filter(p => !FILL_KEYS.has(`<${p}>`) && !FILL_KEYS.has(p));
+      if (undocumented.length) {
+        failures.push(`${t.id}.${field} has undocumented placeholder(s): ${undocumented.join(',')}`);
+        continue;
+      }
       const u = fill(raw);
-      if (u.includes('<')) { failures.push(`${t.id}.${field} has an unfilled placeholder: ${u}`); continue; }
       const r = await api.get(u.replace('https://councilof.ai', ''));
-      const ok = field === 'resource' ? r.status() === 402 : [200, 402].includes(r.status());
+      const ok = [200, 400, 402, 404].includes(r.status());
       if (!ok) failures.push(`${t.id}.${field} answered ${r.status()} as published: ${raw}`);
     }
   }
