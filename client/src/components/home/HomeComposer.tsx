@@ -13,6 +13,7 @@ import {
 } from "@/components/os/osChat";
 import { formatComputeReply } from "@/lib/computeBridge";
 import { fetchPinnedCardKey, verifyCard, type CardVerdict } from "@/lib/cardVerify";
+import { loadGspcBoard } from "@/components/board/useGspcBoard";
 import {
   axisFromFn,
   censusNote,
@@ -44,9 +45,8 @@ export default function HomeComposer({
     if (parsed.fn === "BOARD") {
       setBusy(true);
       try {
-        const r = await fetch("/api/gspc", { headers: { accept: "application/json" } });
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        const j = await r.json();
+        // Shared loader: the same single GET /api/gspc the board table already made.
+        const j = await loadGspcBoard();
         setNote(`BOARD — ${liveCountLine(j?.totals ?? {})}. Empty stays empty.`);
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);

@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { LOBBY_TABS } from "@/components/lobby/tabs";
 import { type LobbyTaskId } from "@/lib/lobbyLink";
-import { useBoardCount } from "@/lib/boardCount";
 import { EUNOMIA_AXES } from "@/data/eunomia";
 import type { LobbyTabId } from "@/components/lobby/tabs";
 import HomeUnderstand from "./HomeUnderstand";
@@ -26,10 +25,11 @@ import HomeUnderstand from "./HomeUnderstand";
  * that promises a surface that does not exist, is the exact defect this instrument
  * exists to catch, committed on our own front door.
  *
- * NO NUMBER IS TYPED HERE. The board tile quotes totals.public_count off GET /api/gspc
- * (via useBoardCount, which reports whether it is holding a live read or the last
- * recorded one). The OS tile counts the rail registry. The register tile reads its row
- * out of the register data. If a tool has no honest number it shows none.
+ * NO NUMBER IS TYPED HERE. The OS tile counts the rail registry. The register tile
+ * reads its row out of the register data. If a tool has no honest number it shows none.
+ * The board tile shows NO count: the homepage prints totals.public_count exactly once,
+ * on HomeGspcTable, and this tile used to be a second copy of it read through a second
+ * fetch (2026-09-16). Its ticks say where the count lives.
  */
 
 type Door =
@@ -90,7 +90,7 @@ const TOOLS: Tool[] = [
       "Otherwise you compare suppliers on scorecards that quietly leave out the tests they did badly on.",
     ticks: [
       "A filled cell is a measurement. A dash is honest emptiness.",
-      "Counts come from living GET /api/gspc — never typed into the page.",
+      "The count line is printed once on this page, on the living board above — never typed here.",
       "A TIE stays a TIE. It is never dressed up as a win.",
     ],
     image: "/images/detail/board_arena_detail.jpg",
@@ -255,7 +255,6 @@ export function hrefFor(door: Door): string {
 
 /** The live figure a tile is entitled to show, or null when it has none. */
 function useLiveFigures() {
-  const board = useBoardCount();
   const registers = useMemo(() => {
     // Read the bond row out of the register data rather than typing its numbers.
     const bond = EUNOMIA_AXES.find((a) => a.axis === "bond-router");
@@ -268,12 +267,7 @@ function useLiveFigures() {
       value: `${LOBBY_TABS.length} panes in the rail`,
       source: "counted from the Council OS rail registry",
     },
-    "tool-board": {
-      value: board.public_count,
-      source: board.live
-        ? "live from GET /api/gspc"
-        : "last recorded read — if it disagrees, the endpoint wins",
-    },
+    // No "tool-board" figure: the count line is printed once, on the living board above.
     "tool-registers": registers
       ? { value: registers, source: "read from the published register rows" }
       : null,

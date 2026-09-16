@@ -25,7 +25,9 @@ describe("homepage films and understand lists", () => {
     const living = readFileSync(resolve(__dirname, "LivingStages.tsx"), "utf8");
     const verify = living.slice(living.indexOf("function VerifyYourself"), living.indexOf("function OwnErrors"));
     expect(verify).not.toContain("/videos/proving-ground.mp4");
-    expect(verify).toContain("FooterVerifyStrip");
+    // FooterVerifyStrip is site chrome (Footer.tsx, every route). Mounting it here too put
+    // the same twelve badges on the homepage twice (2026-09-16); the band now points at it.
+    expect(verify).not.toContain("FooterVerifyStrip");
     expect(verify).toContain("lg:grid-cols-3");
     expect(verify).not.toContain("lg:grid-cols-[1.15fr_1fr]");
     expect(verify).not.toContain("architecture-of-measurement.mp4");
