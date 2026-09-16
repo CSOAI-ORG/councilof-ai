@@ -34,6 +34,18 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0916-01",
+      date: "2026-09-16",
+      first_observed_at: "2026-09-16T09:47Z",
+      what_was_wrong:
+        "Two outbound emails on 16 September (to DBTA and Nieman Lab, 05:35-05:36Z) corrected an earlier figure for the supersession ledger from 953 to 841 rows and asked the recipients to use 841. At that moment the live file https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl did read 841 lines. The copy on master already held 953: 112 entries dated 2026-09-15 (latest at 2026-09-15T08:02:55Z) had been committed but not deployed, because the deploy workflow had not run since 2026-09-15T08:06Z. The hand deploy at 2026-09-16T09:31Z shipped them, so the live file now reads 953 lines and 953 distinct superseded_id values. Both figures were true of the bytes they were read from; neither message said which copy it had read.",
+      how_caught:
+        "Re-reading the live ledger at 09:47Z before quoting it in a further approach, and comparing the count with the figure sent earlier in the day and with the entries' own at timestamps.",
+      fix:
+        "Approaches sent after 09:47Z quote 953 with the read time. The two recipients of the 841 figure are not written to again; this record is the correction, and the ledger they were pointed at now reads 953. Outreach rule recorded: a figure quoted outward names the copy it was read from (live URL and read time), and a deploy that moves a quoted figure is logged against the messages that quoted it.",
+      status: "RECORDED; THE LIVE LEDGER IS AUTHORITATIVE AT ITS READ TIME",
+    },
+    {
       id: "C-2026-0915-01",
       date: "2026-09-15",
       first_observed_at: "2026-09-15T07:30Z",
