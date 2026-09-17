@@ -1,34 +1,37 @@
 {
  "schema": "csoai.financial-measure-run/0.4",
  "axis": "labour-components",
- "as_of": "2026-09-07T11:30:35Z",
- "n": 1,
+ "as_of": "2026-09-17T12:32:42Z",
+ "n": 2,
  "n_unit": "public series",
  "status": "MEASURED",
  "risk_verdict": "UNMEASURED",
  "three_state": "PASS / FAIL / UNCHECKABLE per fact. UNREACHABLE page => UNCHECKABLE, never FAIL.",
- "producer": "scripts/grade_financial_ledgers.py",
+ "producer": "scripts/gspc_financial_facts.py (invoked from grade_financial_ledgers.py --gspc-facts)",
  "honesty": "Facts MEASURED from this run's fetches. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. No model, no accuracy, no leader. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
  "measured": [
   {
-   "series": "EU participation rate",
-   "status": "UNREACHABLE",
-   "source": "https://api.worldbank.org/v2/country/EUU/indicator/SL.TLF.CACT.ZS?format=json&per_page=8"
-  },
-  {
-   "series": "EU unemployment rate",
+   "series": "EU27 activity rate, age 15-64 (% of population)",
    "status": "MEASURED",
    "year": "2025",
-   "value": 5.92604538207809,
+   "value": 75.6,
    "unit": "%",
-   "source": "https://api.worldbank.org/v2/country/EUU/indicator/SL.UEM.TOTL.ZS?format=json&per_page=8"
+   "source": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lfsi_emp_a?format=JSON&lang=EN&geo=EU27_2020&sex=T&age=Y15-64&unit=PC_POP&indic_em=ACT"
+  },
+  {
+   "series": "EU27 unemployment rate, age 15-74 (% of labour force)",
+   "status": "MEASURED",
+   "year": "2025",
+   "value": 6.0,
+   "unit": "%",
+   "source": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_a?format=JSON&lang=EN&geo=EU27_2020&sex=T&age=Y15-74&unit=PC_ACT"
   }
  ],
+ "bench": "Eurostat",
  "index_formula": false,
  "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
  "tally": {
-  "UNREACHABLE": 1,
-  "MEASURED": 1
+  "MEASURED": 2
  },
- "content_id": "be45e14d56a338d763625ee41303221987dc96fae287ecfd4308df21c3b4e835"
+ "content_id": "1f857a2bde8483234e80c80fda03241ce85a618dd08df73772397034a3f89c32"
 }

@@ -123,7 +123,14 @@ export const AXES_FIN: AxisScore[] = [
     evidence_url: "/interop/financial-measure-run-ai-adoption-components.json",
     run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
-    note: "MEASURED as two Eurostat series (13.48% / 41.17% 2024). Not an index. No formula file. " +
+    // Every number in this note is a cell of the linked run artifact, at the year the
+    // artifact records. It previously read "13.48% / 41.17% 2024" — the true 2024 cells,
+    // but quoted from a hardcoded producer rather than from the run behind evidence_url,
+    // which by then said n=1 and 55.03. Both are now read by dimension walk from the one
+    // live response, so the row and its evidence cannot drift apart again.
+    note: "MEASURED as two Eurostat series from isoc_eb_ai, 2025: enterprises with 10+ employees " +
+      "using any AI 19.95%, large enterprises 250+ 55.03%. The size class is a dimension of the " +
+      "same response, so both series are read from one fetch. Not an index. No formula file. " +
       "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id ai-economy-index.",
   },
   {
@@ -136,7 +143,17 @@ export const AXES_FIN: AxisScore[] = [
     evidence_url: "/interop/financial-measure-run-labour-components.json",
     run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
-    note: "MEASURED as two labour series (participation 57.58%, unemployment 5.92% 2024). Not an index. " +
+    // BENCH SAID EUROSTAT AND THE RUN FETCHED THE WORLD BANK. The run read
+    // api.worldbank.org SL.TLF.CACT.ZS / SL.UEM.TOTL.ZS — that is the World Bank's
+    // redistribution of MODELLED ILO estimates for its "EUU" aggregate, not Eurostat.
+    // Resolved by fetching what the label claims (Eurostat lfsi_emp_a + une_rt_a, the EU's
+    // own observed Labour Force Survey) rather than by degrading the label.
+    // THE DEFINITIONS MOVED WITH THE SOURCE. The old "participation 57.58%" was a share of
+    // TOTAL population, all ages; the activity rate below is a share of the population aged
+    // 15-64. ~57% and ~75% are different quantities, not a jump — never chart them as one series.
+    note: "MEASURED as two Eurostat series, 2025: activity rate age 15-64 75.6% of population " +
+      "(lfsi_emp_a), unemployment rate age 15-74 6.0% of the labour force (une_rt_a). Supersedes a " +
+      "World Bank modelled-ILO pair that this row used to quote as Eurostat. Not an index. " +
       "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id human-labour-index.",
   },
   {

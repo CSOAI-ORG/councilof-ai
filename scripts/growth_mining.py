@@ -27,7 +27,13 @@ import hashlib, json, os, pathlib, re, sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 
-BASE = pathlib.Path("/Users/nicholas/clawd/councilof-ai-work")
+# BASE IS THE CHECKOUT THIS SCRIPT LIVES IN, not a fixed machine path. It was hardcoded to
+# /Users/nicholas/clawd/councilof-ai-work, so running scripts/growth_mining.py from any other
+# clone read that tree's corpus and wrote that tree's outbound files — a branch could not
+# regenerate its own growth surfaces, and an edit made in one checkout silently landed in
+# another lane's working tree. parents[1] resolves to the same directory when the script is
+# run from councilof-ai-work, so the cron's behaviour there is unchanged.
+BASE = pathlib.Path(os.environ.get("GROWTH_BASE") or pathlib.Path(__file__).resolve().parents[1])
 INTEROP = BASE / "public" / "interop"
 AUTO_EAT = INTEROP / "auto-eat"
 OUT = INTEROP / "growth"
@@ -93,6 +99,14 @@ def walk_corpus():
                 "signed": signed,
                 "headline": summary,
                 "schema": (data.get("schema") if isinstance(data, dict) else None),
+                # A retired artifact keeps its frozen headline forever. Carry the markers
+                # that say so, or build_citable_figures cannot tell one from a live finding.
+                "status": (data.get("status") if isinstance(data, dict) else None),
+                # ONLY status_correction, never the generic `correction` field: the LIVE
+                # component-facts runs carry correction="C-2026-0826-05 — do not restore
+                # MEASURED-INDEX-v0.1" as a standing instruction, and suppressing those
+                # would silence the very artifacts that replaced the retired index.
+                "status_correction": (data.get("status_correction") if isinstance(data, dict) else None),
                 "size_bytes": p.stat().st_size,
             }
 
@@ -292,6 +306,18 @@ def build_citable_figures(corpus):
         h = item.get("headline", "").strip()
         if not h or len(h) < 40:
             continue
+        # NEVER QUOTE A RETIRED ARTIFACT. ai-economy-index.v0.1.json carries
+        # status_correction "C-2026-0826-05 — MEASURED-INDEX-v0.1 was an over-claim", yet its
+        # frozen headline -- "13.48% (2024) ... +5.42pp YoY (deterministic, citable,
+        # recomputable)" -- was harvested into citable-figures.md and the dated press
+        # releases on every run, months after the live axis had moved past it. A superseded
+        # number does not become quotable by sitting in a file that is regenerated today.
+        #
+        # The test is status_correction: an artifact whose own STATUS claim was corrected.
+        # UNMEASURED alone is not the test — UNMEASURED is first-class here, and an
+        # UNMEASURED artifact routinely carries a real, quotable finding.
+        if item.get("status_correction"):
+            continue
         if any(h.startswith(s) for s in skip_prefixes):
             continue
         if any(s in h for s in skip_substrings):
@@ -417,13 +443,32 @@ def main() -> int:
 
     # 7. AI-economy movers
     print("\n--- Step 7: ai-economy-movers.json ---")
+    # THE HEADLINE COMES FROM THE LIVE RUN, NOT THE RETIRED INDEX.
+    # This step used to lift `headline` straight out of ai-economy-index.v0.1.json -- the
+    # MEASURED-INDEX-v0.1 artifact that C-2026-0826-05 retired. That sentence is frozen at
+    # its 2026-08 vintage, so every regeneration of this outward, explicitly "citable" feed
+    # re-published "13.48% (2024)" as today's number, long after Eurostat had published 2025
+    # and after the live axis had moved on. A feed that regenerates daily must not carry a
+    # figure that cannot.
+    run = load_json(INTEROP / "financial-measure-run-ai-adoption-components.json")
+    cells = [r for r in ((run or {}).get("measured") or []) if r.get("status") == "MEASURED"]
+    if cells:
+        parts = ", ".join(f"{c['series']}: {c['value']}% ({c['year']})" for c in cells)
+        headline = f"Eurostat isoc_eb_ai — {parts}. Deterministic, citable, recomputable from the cited source."
+    else:
+        # No measured cell this run: say so. Never fall back to a remembered number.
+        headline = None
     aei = load_json(INTEROP / "ai-economy-index.v0.1.json")
     (OUT / "ai-economy-movers.json").write_text(json.dumps({
         "schema": "csoai.growth.ai-economy-movers/0.1",
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "headline": aei.get("headline") if isinstance(aei, dict) else None,
-        "components": list((aei.get("components", {}) if isinstance(aei, dict) else {}).keys()),
+        "headline": headline,
+        "headline_source": "/interop/financial-measure-run-ai-adoption-components.json",
+        "headline_status": (run or {}).get("status", "UNREACHABLE"),
+        "components": [c.get("series") for c in cells],
+        # A list of what is still MISSING, not a measurement — unchanged by the source swap.
         "bank_gaps": aei.get("bank_gaps", []) if isinstance(aei, dict) else [],
+        "not_an_index": "Component facts only. C-2026-0826-05: the retired MEASURED-INDEX-v0.1 is never restored, and this feed no longer quotes it.",
         "scarcity_signals": "Compute-price, AI-investment, sector-output: no authoritative public machine series. The grist for a 5-figure data partnership.",
     }, indent=2))
 

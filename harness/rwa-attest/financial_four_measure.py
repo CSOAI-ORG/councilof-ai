@@ -432,65 +432,57 @@ def humanoid_run() -> dict:
     )
 
 
-def components_ai() -> dict:
-    # Cite the already-fetched Eurostat series. New object, not MEASURED-INDEX-v0.1.
-    rows = [
-        {
-            "series": "EU27 enterprises 10+ staff using any AI",
-            "year": 2024,
-            "value": 13.48,
-            "unit": "%",
-            "source": "Eurostat isoc_eb_ai (E_AI_TANY, PC_ENT, EU27_2020)",
-            "surface": "/interop/ai-economy-index.v0.1.json",
-        },
-        {
-            "series": "EU27 large enterprises 250+ using any AI",
-            "year": 2024,
-            "value": 41.17,
-            "unit": "%",
-            "source": "Eurostat isoc_eb_ai",
-            "surface": "/interop/ai-economy-index.v0.1.json",
-        },
-    ]
-    return envelope(
-        "ai-adoption-components",
-        "deterministic cited public series. Not an index. No formula file.",
-        rows,
-        extra={
-            "index_formula": False,
-            "bank_gaps": ["compute-price", "AI-investment", "sector-output", "published formula"],
-            "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
-        },
-    )
+def series_run_from_disk(axis: str) -> dict:
+    """Read the live-fetched run for a series axis. This file no longer owns those numbers.
+
+    components_ai() and components_labour() used to hold literals -- 13.48 / 41.17 for AI,
+    57.58 / 5.92 for labour -- and write them to
+    public/interop/financial-measure-run-<axis>.json. scripts/gspc_financial_facts.py
+    fetches those same two axes for real and writes THE SAME FILENAME. Two writers, one
+    path: whichever ran last won the artifact, while the board row kept quoting the
+    literals from here. That is exactly how /api/gspc came to assert
+    "13.48% / 41.17% 2024, n=2" over an artifact that said n=1 and 55.03.
+
+    So the numbers now have one producer -- the one that actually fetches -- and this file
+    reads its output. A missing artifact is refused, never back-filled from a constant.
+    """
+    path = OUT / f"financial-measure-run-{axis}.json"
+    if not path.exists():
+        raise SystemExit(
+            f"{path.name} is missing. Run `python3 scripts/gspc_financial_facts.py --only {axis}` "
+            f"first — this file will not invent series values."
+        )
+    body = json.loads(path.read_text(encoding="utf-8"))
+    if body.get("axis") != axis:
+        raise SystemExit(f"{path.name} carries axis={body.get('axis')!r}, expected {axis!r}")
+    return body
 
 
-def components_labour() -> dict:
-    rows = [
-        {
-            "series": "EU participation rate",
-            "year": 2024,
-            "value": 57.58,
-            "unit": "%",
-            "surface": "/interop/human-labour-index.v0.1.json",
-        },
-        {
-            "series": "EU unemployment rate",
-            "year": 2024,
-            "value": 5.92,
-            "unit": "%",
-            "surface": "/interop/human-labour-index.v0.1.json",
-        },
-    ]
-    return envelope(
-        "labour-components",
-        "deterministic cited public series. Not an index. No formula file.",
-        rows,
-        extra={
-            "index_formula": False,
-            "bank_gaps": ["displacement", "wages", "hours-by-AI-exposure", "published formula"],
-            "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
-        },
-    )
+def series_compact(body: dict) -> dict:
+    """Compact entry for a series axis, taking n and status FROM THE RUN.
+
+    compact() sets n = len(rows) and status = MEASURED unconditionally. For a series
+    axis that is wrong twice over: an UNCHECKABLE or UNREACHABLE series is still a row,
+    so len(rows) counted it, and a run with nothing measured still came out "MEASURED".
+    """
+    rows = []
+    for r in body.get("measured") or []:
+        row = {"series": r.get("series"), "status": r.get("status")}
+        if r.get("status") == "MEASURED":
+            row.update({"year": r.get("year"), "value": r.get("value"), "unit": r.get("unit")})
+        else:
+            row["note"] = r.get("note") or r.get("error") or "not measured this run"
+        rows.append(row)
+    return {
+        "axis": body["axis"],
+        "kind": body.get("schema", "csoai.financial-measure-run/0.4"),
+        "bench": body.get("bench"),
+        "n": body.get("n"),
+        "risk_verdict": body.get("risk_verdict", "UNMEASURED"),
+        "status": body.get("status"),
+        "as_of": body.get("as_of"),
+        "rows": rows,
+    }
 
 
 def main() -> int:
@@ -534,8 +526,6 @@ def main() -> int:
             custody,
         ),
         "humanoid-labour-index": humanoid_run(),
-        "ai-adoption-components": components_ai(),
-        "labour-components": components_labour(),
     }
     compact_out = {}
     for axis, body in runs.items():
@@ -549,6 +539,14 @@ def main() -> int:
             raw = canonical_bytes(c)
         compact_out[axis] = c
         print(f"WROTE {path.name} cid={body['content_id'][:16]} compact={len(raw)}B")
+
+    # The two series axes are fetched and written by scripts/gspc_financial_facts.py.
+    # Read them; never rewrite them from here.
+    for axis in ("ai-adoption-components", "labour-components"):
+        body = series_run_from_disk(axis)
+        compact_out[axis] = series_compact(body)
+        print(f"READ  financial-measure-run-{axis}.json "
+              f"cid={str(body.get('content_id'))[:16]} n={body.get('n')} status={body.get('status')}")
 
     (OUT / "financial-measure-compact.json").write_text(
         json.dumps(compact_out, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"

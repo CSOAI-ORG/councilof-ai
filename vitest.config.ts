@@ -43,6 +43,11 @@ export default defineConfig({
     // which made `npm test` red for three suites that are green under their own
     // runner (37/37 in packages/gspc-card-verifier). Excluded rather than left
     // failing, because a permanently-red gate is a gate nobody reads.
-    exclude: [...defaultExclude, '**/.git-wt-*/**', 'docs/**/*.test.mjs', 'mcp/gspc-server/wired-tools.test.mjs', 'e2e/**', '**/e2e/**', '**/worktrees/**', 'packages/**', 'council-os/planned-ready.lock.test.mjs'],
+    // `dist/**` is BUILD OUTPUT. `npm run build:client` copies the repo's functions/ and
+    // public/ into dist/client, so after any build 113 test files exist twice — and the
+    // copies resolve their fixture paths relative to dist/, so they fail on files that are
+    // present in the source tree. dist/ is gitignored, so CI never saw it and only a local
+    // run after a build went red, which reads like a broken test rather than a duplicate.
+    exclude: [...defaultExclude, 'dist/**', '**/dist/**', '**/.git-wt-*/**', 'docs/**/*.test.mjs', 'mcp/gspc-server/wired-tools.test.mjs', 'e2e/**', '**/e2e/**', '**/worktrees/**', 'packages/**', 'council-os/planned-ready.lock.test.mjs'],
   },
 });
