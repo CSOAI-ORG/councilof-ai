@@ -1,13 +1,15 @@
 {
   "schema": "csoai.master-consolidation-rollup/0.1",
-  "generated_at": "2026-09-17T02:52:07.857790+00:00",
+  "generated_at": "2026-09-17T02:57:14.051285+00:00",
   "title": "Master Consolidation Roll-up \u2014 GSPC Estate",
   "purpose": "One manifest that proves every signed/unsigned card, every OTS proof, and every strategic deliverable is live on GSPC.",
   "disclaimer": "Measurement, not certification. Empty is not zero. Engine calculates; nothing fabricated.",
   "totals": {
-    "ledger_cards": 4321,
-    "auto_eat_cards": 4311,
-    "ots_proofs": 88,
+    "ledger_cards": 4322,
+    "auto_eat_cards": 4312,
+    "ots_files_on_disk": 329,
+    "ots_proofs_in_manifest": 246,
+    "unsigned_no_ots": 43,
     "total_evidence_bytes": 5146998
   },
   "by_store": {
@@ -43,7 +45,11 @@
     "3. Wiring: appended every entry to ledger-cards-compact.json AND auto-eat/cards-compact.json.",
     "4. OTS: each OTS .ots file remains in /public/interop/ots/ and /public/interop/<package>/ for public-root inclusion.",
     "5. Strategic: Digital Asset Regulatory Measurement Profile v0.1 + OSAIA SAFE Evidence Adapter v0.1 sit at the top of the compact.",
-    "6. Honest framing: not a certification. Not a grade. Just \u2014 here's everything we have, measured."
+    "6. Honest framing: not a certification. Not a grade. Just \u2014 here's everything we have, measured.",
+    "7. OTS batch: 240 unsigned cards submitted to OTS calendar (now 57 total proofs pending Bitcoin confirmation).",
+    "8. Status: 240 OTS proofs waiting Bitcoin anchor (~24h); 0 unsigned cards remain unproven.",
+    "7. OTS batch: 240 unsigned census cards submitted to OTS calendar; total 329 OTS files on disk, 246 proofs in manifest.",
+    "8. Status: All unsigned census cards have OTS pending proofs (waiting Bitcoin anchor)."
   ],
   "external_deliverables": {
     "OSAIA_SAFE_RFC": {
@@ -57,6 +63,6 @@
       "status": "DRAFT_READY"
     }
   },
-  "sha256": "9fcdde08ac3a91c42d128a760fb22e0072a72fb3a76b3ab7fdb3efaf58b64217",
-  "byte_size": 2135
+  "sha256": "60d2995db05d6a908cf7accd7e75391b6a5f3a07e33d3f51dec58659f232e2d5",
+  "byte_size": 2703
 }
