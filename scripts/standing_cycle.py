@@ -34,7 +34,9 @@ EXCLUSION_CEILING = 0.20
 THIRD_STATE = "MEASURED_HIGH_EXCLUSION"  # run happened, score is real for what was graded, not quotable as the bank's result
 
 # Surfaces to mirror + read back
-HF_TOKEN_KEYCHAIN_NAME = "meok-keystone"  # the HF_TOKEN entry in the keychain
+# The HF token is stored under service name "meok.ai" (verified 2026-09-17).
+# NOT "meok-keystone" — that was the wrong assumption in the brief.
+HF_TOKEN_KEYCHAIN_NAME = "meok.ai"  # the HF_TOKEN entry in the keychain (verified 2026-09-17)
 
 
 def hf_token() -> str | None:

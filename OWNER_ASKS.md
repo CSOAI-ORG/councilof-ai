@@ -72,6 +72,40 @@ curl -sS -H "Authorization: Bearer $(cat ~/.runpod_api_key)" https://api.runpod.
 
 ---
 
+## 7. HuggingFace token + org-write scope (BLOCKING for HF mirror publication)
+
+**State**: token exists, but org-write scope is missing.
+**Evidence**: `security find-generic-password -s meok.ai -w` returns a real token (`hf_…`-shaped, but token starting with `value-` was found earlier — current token may be the right one). When used: `hf_write("csoai", "standing-cycle", ...)` returns `WRITE_FAILED` with HTTP 401 "Repository Not Found" on `https://huggingface.co/api/datasets/csoai/standing-cycle/pr`. `api.create_repo("csoai/standing-cycle", repo_type="dataset")` returns 401 Unauthorized.
+**Reason**: the keychain entry stores a real HF token, but the token is scoped to a user account that does NOT have write permission to the `csoai` org on HuggingFace. Each HF write attempt is being rejected at the org-scope layer, not the credential layer.
+**Owner action**: at https://huggingface.co/settings/tokens — confirm the stored token has `write` scope AND is a member of the `csoai` org. If the token is fine but the org membership is missing, request org admin to add the user at https://huggingface.co/organizations/csoai/settings/members.
+**Exact verification command after rotation**:
+```bash
+HF_TOKEN=$(security find-generic-password -s meok.ai -w) python3 -c "
+from huggingface_hub import HfApi
+import sys
+api = HfApi(token=sys.argv[1])
+try:
+    api.whoami()
+    print('OK: token valid')
+except Exception as e:
+    print('FAIL: token rejected:', str(e)[:120])
+" "$HF_TOKEN"
+# Then attempt org-write:
+HF_TOKEN="$HF_TOKEN" python3 -c "
+from huggingface_hub import HfApi
+import sys
+api = HfApi(token=sys.argv[1])
+try:
+    api.create_repo('csoai/standing-cycle', repo_type='dataset', private=False, exist_ok=True)
+    print('OK: csoai org-write works')
+except Exception as e:
+    print('FAIL:', str(e)[:120])
+" "$HF_TOKEN"
+```
+**Until done**: every cycle's HF write fails honestly with `WRITE_FAILED` recorded in the manifest. **NO silent pass** — the manifest publishes the failure so a stranger sees it.
+
+---
+
 ## Summary
 
 | # | Blocker | State | Owner-needed |
@@ -82,5 +116,6 @@ curl -sS -H "Authorization: Bearer $(cat ~/.runpod_api_key)" https://api.runpod.
 | 4 | COSE interop key | FORBIDDEN | NEVER (do not touch) |
 | 5 | xAI spending limit | BLOCKING | YES — raise limit |
 | 6 | Cloudflare zone setting | BLOCKING | YES — adjust zone |
+| 7 | HuggingFace token + org-write | BLOCKING | YES — token scope + org membership |
 
 **Until a blocker is resolved by its owner action, the estate runs without it. Nothing is faked, no workaround obscures the wait.** This is the contract; mirrors and readbacks make the contract verifiable from a stranger's machine.
