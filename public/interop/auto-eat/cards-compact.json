@@ -73693,5 +73693,24 @@
     "evidence_url": "/interop/benchmark-index-v0.1.json",
     "sha256": "36ed7f30d016b9f20ae040806cef147229c7e730fa5b8bb27cb3eebf73612288",
     "honesty": "Measurement, not certification. Each card carries its own sha256 id + Ed25519 signature (signed) or unsigned status."
+  },
+  "autoeat.measurement_root.2026-09-16": {
+    "kind": "csoai.measurement-root/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": true,
+      "not_a_grade": true,
+      "is_merkle_root": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-16",
+    "merkle_root": "c216823239f1a233fedea8d09d420a5262be0a1fcd2bb11085f2c82f7021342a",
+    "n_leaves": 10,
+    "all_inclusion_proofs_verify": true,
+    "signed": false,
+    "signature_state": "UNSIGNED \u2014 no Ed25519 signature exists over this root",
+    "rekor_state": "NOT_WITNESSED \u2014 the public-root witness uploads the preimage, its signature and the board public key; with no signature there is nothing to upload. Signing the root with any other key we hold would misrepresent who attested it.",
+    "evidence_url": "/interop/measurement-root-2026-09-16.json",
+    "honesty": "Canonical measurement-root for 2026-09-16. Merkle root of 10 measurement entries, all inclusion proofs verify. UNSIGNED \u2014 no Ed25519 signature exists over this root (per honest framing)."
   }
 }
