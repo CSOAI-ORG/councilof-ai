@@ -1,0 +1,62 @@
+{
+  "schema": "csoai.master-consolidation-rollup/0.1",
+  "generated_at": "2026-09-17T02:52:07.857790+00:00",
+  "title": "Master Consolidation Roll-up \u2014 GSPC Estate",
+  "purpose": "One manifest that proves every signed/unsigned card, every OTS proof, and every strategic deliverable is live on GSPC.",
+  "disclaimer": "Measurement, not certification. Empty is not zero. Engine calculates; nothing fabricated.",
+  "totals": {
+    "ledger_cards": 4321,
+    "auto_eat_cards": 4311,
+    "ots_proofs": 88,
+    "total_evidence_bytes": 5146998
+  },
+  "by_store": {
+    "unknown": 39,
+    "cards": 22,
+    "ledger-card-direct": 38,
+    "package-card": 224,
+    "mill-cards-signed": 2378,
+    "mill-cards-unsigned": 1620
+  },
+  "by_axis": {},
+  "by_signed": {
+    "signed": 2400,
+    "unsigned": 1921
+  },
+  "strategic_deliverables": {
+    "digital asset regulatory measurement profile.v0.1": {
+      "kind": "csoai.digital-asset-regulatory-measurement-profile/0.1",
+      "evidence_url": "/interop/digital-asset-regulatory-measurement-profile-v0.1.json",
+      "sha256": null,
+      "signed": false
+    },
+    "osaia safe evidence adapter.v0.1": {
+      "kind": "csoai.osaia-safe-evidence-adapter/0.1",
+      "evidence_url": "/interop/osaia-safe-evidence-adapter-v0.1.json",
+      "sha256": null,
+      "signed": false
+    }
+  },
+  "consolidation_chain": [
+    "1. Master discovery: walked every store (mill-cards-signed, mill-cards-unsigned, cards/, package-cards, ledger-card-direct).",
+    "2. Normalization: converted each card to a compact entry with kind/as_of/store/sha256/size_b/evidence_url/honesty.",
+    "3. Wiring: appended every entry to ledger-cards-compact.json AND auto-eat/cards-compact.json.",
+    "4. OTS: each OTS .ots file remains in /public/interop/ots/ and /public/interop/<package>/ for public-root inclusion.",
+    "5. Strategic: Digital Asset Regulatory Measurement Profile v0.1 + OSAIA SAFE Evidence Adapter v0.1 sit at the top of the compact.",
+    "6. Honest framing: not a certification. Not a grade. Just \u2014 here's everything we have, measured."
+  ],
+  "external_deliverables": {
+    "OSAIA_SAFE_RFC": {
+      "deadline": "2026-09-21",
+      "url": "/interop/osaia-safe-evidence-adapter-v0.1.json",
+      "status": "DRAFT_READY"
+    },
+    "SEC_Regulation_Crypto_Assets_comment": {
+      "deadline": "2026-10-20",
+      "url": "/interop/digital-asset-regulatory-measurement-profile-v0.1.json",
+      "status": "DRAFT_READY"
+    }
+  },
+  "sha256": "9fcdde08ac3a91c42d128a760fb22e0072a72fb3a76b3ab7fdb3efaf58b64217",
+  "byte_size": 2135
+}
