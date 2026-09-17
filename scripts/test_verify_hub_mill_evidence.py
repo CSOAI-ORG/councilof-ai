@@ -121,6 +121,35 @@ class EvidenceV02Test(unittest.TestCase):
         self.assertIn("#2075", ledger["reason"])
         self.assertEqual(json.loads(legacy_path.read_text())["id"], "c" * 64)
 
+    def test_exclusions_survive_admission_and_signing(self):
+        """What the mill counted out of `n` must still be readable on the signed bytes.
+
+        The hub producer publishes its excluded attempts under compute_evidence, the same
+        key and the same names the pod worker uses. Two things have to hold at once:
+        the counts must travel unchanged through admission and the signer transformation,
+        AND carrying that key must not make the signer mistake a hub card for a pod card
+        and wave it past --require-hub-admission (see test_signer_requires_current_receipt,
+        which fails if the discriminator reads compute_evidence before evidence).
+        """
+        counted = {"parse_errors_excluded": 0, "transport_errors_excluded": 0}
+        self.assertEqual(self.wrap["body"]["compute_evidence"], counted,
+                         "every one of the 30 attempts parsed and none was dropped")
+        source = self.root / "source"; source.mkdir()
+        admitted = copy.deepcopy(self.wrap)
+        admitted["admission"] = admit(admitted, self.staged, self.evidence)
+        (source / "unsigned-card.json").write_text(json.dumps(admitted))
+        signed_dir = self.root / "signed"
+        with mock.patch.object(signer, "DST", signed_dir), \
+             mock.patch.object(signer, "LEDGER", signed_dir / "SUPERSEDED.jsonl"), \
+             mock.patch.object(signer, "sign_via_oidc_attested", return_value=("aa", "f" * 64)):
+            self.assertEqual(signer.main(["--source-dir", str(source), "--evidence-dir",
+                                          str(self.evidence), "--require-hub-admission"]), 0)
+        signed = json.loads(next(signed_dir.glob("signed-*.json")).read_text())
+        self.assertEqual(signed["body"]["compute_evidence"], counted)
+        self.assertEqual(signed["body"]["n"] + counted["parse_errors_excluded"]
+                         + counted["transport_errors_excluded"], 30, "attempted recomputes")
+        validate_signed_admission(signed, self.evidence)
+
     def test_queue_retires_matching_legacy_positive_cell_without_changing_card(self):
         card_id = "c" * 64
         rows = [{"id": "org/model", "measured_axes": {

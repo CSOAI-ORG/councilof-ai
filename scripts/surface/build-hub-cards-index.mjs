@@ -55,9 +55,13 @@ export function rowFromCard(name, wrap) {
   return {
     id: wrap.id, file: name, url: CARD_URL + name, subject: body.model,
     axis: typeof body.axis === "string" ? body.axis : null,
-    // Same denominator vocabulary as the pod index. Hub card bodies carry no
-    // compute_evidence, so these read EXCLUSIONS_ABSENT with nulls: the hub route
-    // publishes no excluded-attempt counts, which is not the same as excluding none.
+    // Same denominator vocabulary as the pod index — and, from 2026-09-17, the same
+    // producer-side source: harness/gspc-top100/mill_hub_queue.py counts the attempts it
+    // drops and publishes them as compute_evidence.parse_errors_excluded /
+    // transport_errors_excluded. Cards signed BEFORE that carry no such counts and keep
+    // reading EXCLUSIONS_ABSENT with nulls — signed bytes are superseded, never edited,
+    // and "published no count" is not the same claim as "excluded none". Both states are
+    // true about their own bytes; rows_by_exclusions_state below reports the split.
     ...denominatorFields(body),
     status: typeof body.status === "string" ? body.status : null,
     run_id: typeof body.run_id === "string" ? body.run_id : null,

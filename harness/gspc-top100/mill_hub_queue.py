@@ -910,7 +910,22 @@ def js_safe_number(x):
 
 
 def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str, route: str | None = None,
-                   evidence: dict | None = None) -> dict:
+                   evidence: dict | None = None, parse_errors_excluded: int | None = None,
+                   transport_errors_excluded: int | None = None) -> dict:
+    """Stage one unsigned hub-router card.
+
+    `n` is graded_n, not the attempts: the caller subtracts from it every item whose
+    reply carried no parseable label. A reader given `n` alone cannot tell 30 items put
+    to the model from 34 with 4 thrown away, which is what all 412 hub rows looked like.
+    parse_errors_excluded / transport_errors_excluded are the COUNTS the caller observed,
+    published in compute_evidence under the names the pod worker
+    (scripts/runpod_gspc_worker.py) has used all along — one vocabulary, not two, and the
+    same names functions/_lib/denominator.ts already reads.
+
+    A count that is None is a count nobody took, and is simply absent from the bytes:
+    the reader then says EXCLUSIONS_ABSENT / EXCLUSIONS_PARTIAL and null. Never 0.
+    Zero and absent are different claims and a producer must not collapse them.
+    """
     acc = round(hits / n, 4) if n else None
     body = {
         "kind": "gspc.measurement-card",
@@ -930,6 +945,17 @@ def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str, rou
     }
     if route:
         body["route"] = route
+    excluded = {
+        k: v for k, v in (
+            ("parse_errors_excluded", parse_errors_excluded),
+            ("transport_errors_excluded", transport_errors_excluded),
+        ) if v is not None
+    }
+    if excluded:
+        # Not the item-evidence bundle below (that is `evidence`, content addresses of the
+        # transcript). This is the DENOMINATOR: what `n` above leaves out. Legacy callers
+        # that pass neither count stay byte-stable — the key does not appear.
+        body["compute_evidence"] = excluded
     if evidence:
         # Item-level evidence binding (TUI-1 evidence ruling 2026-09-13): an aggregate-only
         # card is never quotable. The card carries content addresses, never the items
@@ -1119,6 +1145,11 @@ def mill(
             continue
         hits = 0
         unparsed = 0
+        # Counted, never inferred from control flow. A transport failure below breaks out
+        # of the loop and the for/else never stages a card, so today this is always 0 on a
+        # staged card -- but `transport_errors_excluded: 0` is published as an observation,
+        # and stays true if that control flow is ever changed.
+        transport_errors = 0
         ev_rows: list[dict] = []
         for i, (prompt, expected) in enumerate(items):
             sent_prompt = axis_prompt(ax, prompt, labels)
@@ -1128,6 +1159,7 @@ def mill(
             st, txt = infer_hub(mid, sent_prompt)
             elapsed_ms = max(0, (time.monotonic_ns() - started) // 1_000_000)
             if st != "OK":
+                transport_errors += 1
                 skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE {txt}"})
                 break
             got = read_label(txt, labels)
@@ -1176,7 +1208,9 @@ def mill(
             items_name, items_sha = write_item_evidence(out_dir, ax, ev_rows)
             evidence["items_file"] = items_name
             evidence["items_sha256"] = items_sha
-            wrap = stage_unsigned(mid, ax, hits, n, reason, route=_ROUTE.get(mid), evidence=evidence)
+            wrap = stage_unsigned(mid, ax, hits, n, reason, route=_ROUTE.get(mid), evidence=evidence,
+                                  parse_errors_excluded=unparsed,
+                                  transport_errors_excluded=transport_errors)
             blob = json.dumps(wrap, separators=(",", ":"), ensure_ascii=True).encode()
             if len(blob) > MAX_PAYLOAD:
                 skips.append({"id": mid, "axis": ax, "reason": f"HALT {len(blob)}B>3KB"})

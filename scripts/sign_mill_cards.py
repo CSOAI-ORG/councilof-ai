@@ -179,7 +179,13 @@ def main(argv: list[str] | None = None) -> int:
             print(f"UNSIGNED {fp.name} — no body", file=sys.stderr)
             failures += 1
             continue
-        is_runpod = isinstance(body.get("compute_evidence"), dict)
+        # A hub card is whichever card carries the hub ITEM-EVIDENCE bundle, and that test
+        # comes first. compute_evidence alone no longer identifies a pod card: the hub mill
+        # now publishes its excluded attempts under that same key (the estate has one
+        # denominator vocabulary), and reading it as "pod" here would have waved every hub
+        # card past --require-hub-admission. Same precedence as land_mill_cards.evidence_kind.
+        is_hub = isinstance(body.get("evidence"), dict)
+        is_runpod = not is_hub and isinstance(body.get("compute_evidence"), dict)
         if args.require_hub_admission and not is_runpod:
             try:
                 if args.evidence_dir is None:

@@ -12,6 +12,11 @@ const cases: Array<[string, unknown]> = [
   ["the real qwen3:4b card: transport count only, no parse count",
     { n: 237, compute_evidence: { transport_errors_excluded: 0 } }],
   ["a hub card: no compute_evidence at all", { n: 30, route: "hf-router" }],
+  // What harness/gspc-top100/mill_hub_queue.py stages from 2026-09-17: the hub-router
+  // producer now counts its own exclusions in the pod path's vocabulary, so a NEW hub
+  // card reads PUBLISHED here. Already-signed hub cards keep their bytes and stay ABSENT.
+  ["a hub card produced after the exclusions fix",
+    { n: 30, route: "hf-router", compute_evidence: { parse_errors_excluded: 4, transport_errors_excluded: 0 } }],
   ["no n", { compute_evidence: { parse_errors_excluded: 1, transport_errors_excluded: 0 } }],
   ["a float where an integer belongs", { n: 30, compute_evidence: { parse_errors_excluded: 1.5, transport_errors_excluded: 0 } }],
   ["not an object", null],

@@ -1054,3 +1054,104 @@ def test_pick_emptiest_prefers_commissioned_priority_ids() -> None:
     ]
     picked = m.pick_emptiest(rows, 1, priority_ids={"paid/subject"})
     assert picked and picked[0]["id"] == "paid/subject"
+
+
+def _hub_mill_run(root: Path, replies, *, n_items: int = 34):
+    """Run one non-dry hub mill over `n_items` frozen items; `replies(i)` is the model's text.
+
+    Returns (report, out_dir). Shared by the denominator tests below.
+    """
+    import unittest.mock as mock
+
+    banks = root / "banks"
+    banks.mkdir(parents=True, exist_ok=True)
+    items = [{"prompt": f"Q{i}", "expected": "YES" if i % 2 == 0 else "NO"} for i in range(n_items)]
+    (banks / "governance.jsonl").write_text("".join(json.dumps(r) + "\n" for r in items))
+    q = root / "queue.jsonl"
+    q.write_text(json.dumps(
+        {"rank": 1, "id": "org/m", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"}
+    ) + "\n")
+    out = root / "out"
+    calls = {"i": -1}
+
+    def fake_infer(mid, prompt):
+        _ROUTE[mid] = "hf-router:org/m:featherless-ai"
+        if calls["i"] < 0:  # the liveness PING before grading
+            calls["i"] = 0
+            return "OK", "PING"
+        i = calls["i"]
+        calls["i"] += 1
+        return replies(i)
+
+    with mock.patch("mill_hub_queue.infer_hub", side_effect=fake_infer):
+        rep = mill(
+            q, out, pick_n=1, grade_n=1, axis="governance", banks_dir=banks, items_cap=n_items,
+            bank_dataset="csoai/gspc-gov", bank_revision="e" * 40,
+            revision_fetch=lambda m: "f" * 40,
+        )
+    return rep, out
+
+
+def test_hub_card_publishes_the_attempts_its_n_excludes(tmp_path: Path | None = None) -> None:
+    """A hub-router card must say what left its denominator, in the pod path's vocabulary.
+
+    All 412 hub rows read EXCLUSIONS_ABSENT because this producer published `n` alone.
+    `n` here is `len(items) - unparsed`, so a reader of `"n": 30` could not tell whether
+    30 items were put to the model or 34. The pod path (scripts/runpod_gspc_worker.py)
+    has published compute_evidence.parse_errors_excluded / transport_errors_excluded all
+    along; one vocabulary, not two.
+    """
+    import hashlib
+    import shutil
+    import tempfile
+
+    root = tmp_path or Path(tempfile.mkdtemp())
+    # 4 of 34 answers carry no parseable label; the other 30 do.
+    rep, out = _hub_mill_run(root, lambda i: ("OK", "I would rather not say." if i < 4 else "Answer: YES"))
+    assert len(rep["staged_unsigned"]) == 1, rep["skips"]
+    body = json.loads(next(out.glob("unsigned-*.json")).read_text())["body"]
+    ce = body.get("compute_evidence")
+    assert isinstance(ce, dict), "a hub card must publish its excluded attempts, not just n"
+    assert ce["parse_errors_excluded"] == 4
+    # OBSERVED, not assumed: every one of the 34 attempts returned OK. See the transport
+    # test below for why a card with a dropped attempt is never staged at all.
+    assert ce["transport_errors_excluded"] == 0
+    assert body["n"] == 30
+    assert body["n"] + ce["parse_errors_excluded"] + ce["transport_errors_excluded"] == 34, \
+        "attempted must recompute from the card's own bytes"
+    assert set(ce) == {"parse_errors_excluded", "transport_errors_excluded"}, \
+        "the hub card carries the two counts and no derived `attempted`"
+    raw = canonical_body_bytes(body)
+    assert len(raw) <= 3072, "the exclusions must fit the 3KB envelope"
+    wrap = json.loads(next(out.glob("unsigned-*.json")).read_text())
+    assert hashlib.sha256(raw).hexdigest() == wrap["id"]
+    if tmp_path is None:
+        shutil.rmtree(root, ignore_errors=True)
+
+
+def test_hub_transport_failure_stages_no_card_so_zero_is_observed() -> None:
+    """`transport_errors_excluded: 0` is a count, not an assumption.
+
+    A transport failure mid-run abandons the whole card, so no staged hub card ever
+    carries an attempt dropped for transport. The producer counts them anyway, so the
+    zero survives a future change to that control flow.
+    """
+    import shutil
+    import tempfile
+
+    root = Path(tempfile.mkdtemp())
+    rep, out = _hub_mill_run(root, lambda i: ("UNCHECKABLE", "HTTP 503") if i == 7 else ("OK", "Answer: YES"))
+    assert rep["staged_unsigned"] == [], "a run with a dropped attempt must not stage a card"
+    assert not list(out.glob("unsigned-*.json"))
+    shutil.rmtree(root, ignore_errors=True)
+
+
+def test_stage_unsigned_omits_exclusions_it_was_not_given() -> None:
+    """Absent is not zero. A caller that counted nothing publishes nothing."""
+    silent = stage_unsigned("unit/model", "governance", hits=24, n=30, reason="x")
+    assert "compute_evidence" not in silent["body"], "never invent a 0 the producer did not count"
+    counted = stage_unsigned("unit/model", "governance", hits=24, n=30, reason="x",
+                             parse_errors_excluded=2, transport_errors_excluded=0)
+    assert counted["body"]["compute_evidence"] == {
+        "parse_errors_excluded": 2, "transport_errors_excluded": 0,
+    }
