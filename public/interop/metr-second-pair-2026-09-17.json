@@ -1,0 +1,76 @@
+{
+  "schema": "csoai.metr-second-pair/0.1",
+  "kind": "second-pairing-attempt",
+  "generated_at": "2026-09-17T11:33:11.772766+00:00",
+  "rule": "If the task identifiers do not actually intersect, say they do not and stop.",
+  "metr_probe": {
+    "url": "https://raw.githubusercontent.com/METR/eval-analysis-public/main/reports/time-horizon-1-1/data/raw/runs.jsonl",
+    "state": "REACHED",
+    "rows_count": 1549,
+    "first_row_keys": [
+      "task_id",
+      "task_family",
+      "run_id",
+      "alias",
+      "model",
+      "score_cont",
+      "score_binarized",
+      "fatal_error_from",
+      "human_minutes",
+      "human_score",
+      "human_source",
+      "task_source",
+      "generation_cost",
+      "human_cost",
+      "time_limit",
+      "started_at",
+      "completed_at",
+      "task_version",
+      "tokens_count",
+      "cloned",
+      "scaffold",
+      "equal_task_weight",
+      "invsqrt_task_weight"
+    ]
+  },
+  "arc_v1_task_ids_count": 0,
+  "arc_v2_task_ids_count": 0,
+  "pairs": [
+    {
+      "pair": "metr_x_arc_v1",
+      "side_a_count": 0,
+      "side_b_count": 0,
+      "overlap_count": 0,
+      "overlap_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pairable": false
+    },
+    {
+      "pair": "metr_x_arc_v2",
+      "side_a_count": 0,
+      "side_b_count": 0,
+      "overlap_count": 0,
+      "overlap_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pairable": false
+    },
+    {
+      "pair": "arc_v1_x_arc_v2",
+      "side_a_count": 0,
+      "side_b_count": 0,
+      "overlap_count": 0,
+      "overlap_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pairable": false
+    }
+  ],
+  "verdict": "NOT_PAIRABLE",
+  "verdict_reason": "ARC v1 and v2 public-eval banks share zero task ids (per the brief). Pairing across them would have produced a beautiful meaningless number.",
+  "open_defect": "METR's runs.jsonl task-identifier scheme is not the same as ARC's task-id scheme, so a join across them is structurally impossible without a manual subject-task mapping that METR does not publish. We refuse to invent one.",
+  "unsigned_reason": "The board signer runs inside GitHub Actions, which is disabled. This artifact ships unsigned.",
+  "disclaimers": [
+    "MEASUREMENT, not CERTIFICATION.",
+    "We do not fabricate a JUDGE observation (per brief).",
+    "Where two corpora do not share keys, we say so and stop \u2014 that is a real result.",
+    "Every denominator is named; every rate carries its source."
+  ],
+  "sha256": "3c02df294b66530abb5b6ded31a0f16553f204702bc53e384d8ecabca72b3d75",
+  "byte_size": 2106
+}

@@ -1,0 +1,223 @@
+{
+  "schema": "csoai.observation-schema/0.1",
+  "title": "One observation schema for a LAB, a MODEL or a HUMAN",
+  "as_of": "2026-09-17",
+  "signature_state": "UNSIGNED",
+  "unsigned_note": "UNSIGNED. No signature covers these bytes. The board signer (did:web:csoai.org#board-attestation-1) runs inside GitHub Actions, which is disabled on this account, so this document was never offered to it. Do not cite it as attested.",
+  "not_a_certificate": true,
+  "no_ranking": "This schema ranks nothing and cannot be used to. Observations of different subjects are never ordered, differenced or totalled across subjects. A LAB's staleness interval and a MODEL's accuracy are not the same kind of number and no arithmetic relates them. There is no league table, no cross-subject score and no 'best'.",
+
+  "the_model": {
+    "source": "the owner, 2026-09-17 — implemented as given, not adapted",
+    "statement": [
+      "ONE instrument, ONE graph.",
+      "A SUBJECT is a lab, a model, or a human.",
+      "An OBSERVATION is one measurement of one subject. (The owner calls it a marble.)",
+      "A HUMAN subject appears in one of exactly two ROLES: PARTICIPANT (they did the task) or JUDGE (they scored someone else's work). These are different facts and must never collapse into 'a human was involved'.",
+      "Observations link to each other so a graph exists: a model observation and a human-PARTICIPANT observation on the SAME items are a PAIR; a judge observation SCORES another observation."
+    ]
+  },
+
+  "extends": {
+    "schema": "csoai.evidence-object/0.1",
+    "producer": "scripts/express_as_evidence.py",
+    "relationship": "EXTENSION, not a competitor. The evidence object's ten bindings keep their names, their {state, reason} absence shape and their four-kinds-of-time rule verbatim. An observation IS an evidence object with four further bindings. A reader of one can read the other.",
+    "parent_bindings": ["subject", "instrument", "run", "observation", "admission", "signature", "corpus_inclusion", "witness", "publication", "time"],
+    "added_here": ["observation_id", "subject_type", "role", "score", "denominator", "item_set", "links"],
+    "vendoring_note": "The parent lives on branch m4-integrity (commit 7706b2fd) and has not landed on fix-cards-truncation-17sep, so scripts/express_observation.py cannot import it today and vendors the identical vocabulary instead. When that branch merges the vendored half is deleted and the import becomes real. The vocabulary did not fork — avoiding a fork is the whole point.",
+    "clean_extension": true,
+    "why_it_extends_cleanly": "The evidence object already had a `subject` binding with a free-shaped value and an `observation` binding for the measured quantity. Typing the subject and adding the role, the divisor, the item set and the edges required renaming nothing and removing nothing."
+  },
+
+  "field_list": {
+    "observation_id": {
+      "type": "string",
+      "required": true,
+      "note": "stable identifier for this observation; the target of any link"
+    },
+    "subject_type": {
+      "type": "enum",
+      "required": true,
+      "values": ["LAB", "MODEL", "HUMAN"],
+      "refusal": "SUBJECT_TYPE_UNKNOWN — a subject is a lab, a model or a human. Nothing else is a subject."
+    },
+    "role": {
+      "type": "enum",
+      "values": ["PARTICIPANT", "JUDGE"],
+      "required_iff": "subject_type == HUMAN",
+      "forbidden_when": "subject_type is LAB or MODEL",
+      "note": "PARTICIPANT did the task. JUDGE scored someone else's work. These are different facts. A human observation with no role is REFUSED rather than recorded, because recording it would make the two indistinguishable for good.",
+      "refusals": ["HUMAN_ROLE_MISSING", "HUMAN_ROLE_UNKNOWN", "ROLE_ON_NON_HUMAN"]
+    },
+    "subject": {
+      "type": "binding",
+      "note": "parent binding, now carrying subject_id plus whatever the producer publishes about the subject"
+    },
+    "score": {
+      "type": "binding",
+      "note": "the numerator. PRESENT only when the observation grades items. A score PRESENT with denominator ABSENT is REFUSED.",
+      "refusal": "SCORE_WITHOUT_DENOMINATOR"
+    },
+    "denominator": {
+      "type": "binding",
+      "vocabulary_source": "functions/_lib/denominator.ts — denominatorFields(). These four names are used unchanged; a fifth spelling of the divisor is the defect this schema exists to stop.",
+      "fields": {
+        "graded_n": "attempts that produced a gradeable result. THIS is the score's divisor.",
+        "parse_errors_excluded": "attempts dropped because the output could not be parsed. ABSENT when unpublished — never 0.",
+        "transport_errors_excluded": "attempts dropped before a result came back. ABSENT when unpublished — never 0.",
+        "attempted": "DERIVED: graded_n + parse_errors_excluded + transport_errors_excluded. ABSENT unless all three are integers — EXCEPT where a producer emits one row per attempt, in which case it is COUNTED and said to be counted.",
+        "exclusions_state": "EXCLUSIONS_PUBLISHED | EXCLUSIONS_PARTIAL | EXCLUSIONS_ABSENT",
+        "exclusion_ratio": "(parse + transport) / attempted. ABSENT unless BOTH exclusion counts are published — treating an absent count as 0 would compute 0.0 and read as 'nothing was excluded'.",
+        "against_ceiling": "the EXCLUSION_CEILING = 0.20 predicate from scripts/sign_mill_cards.py applied to this observation's own ratio, yielding MEASURED_HIGH_EXCLUSION or WITHIN_CEILING. ABSENT when the ratio is unknown: unpublished exclusions are NOT thereby WITHIN_CEILING."
+      },
+      "rule": "A score's denominator is graded_n, not attempted."
+    },
+    "item_set": {
+      "type": "binding",
+      "fields": {
+        "item_set_sha256": "sha256 of the sorted item ids joined by newline",
+        "item_count": "how many ids went into the digest",
+        "canonicalisation": "stated in the bytes so another party can recompute it",
+        "item_source": "where the ids were read from"
+      },
+      "note": "This is what makes PAIRED_WITH checkable instead of asserted. Two observations put to the same items produce the same digest; two that were not, cannot. A producer that publishes only a digest of its bank (and not the ids) cannot be intersected with another producer's, and says so."
+    },
+    "links": {
+      "type": "array",
+      "note": "the edges that make this a graph rather than a pile of records",
+      "relations": {
+        "PAIRED_WITH": {
+          "joins": "a MODEL observation to a HUMAN-PARTICIPANT observation on the SAME items",
+          "checked_how": "both sides' item_set_sha256 are computed from their own rows and compared. The edge exists because the digests are equal — never because the two runs share a benchmark name, a date or an author's say-so.",
+          "refusals": ["PAIR_ITEMS_NOT_SHARED", "PAIR_ITEMS_NOT_ENUMERABLE", "PAIR_NOT_MODEL_HUMAN", "PAIR_HUMAN_NOT_PARTICIPANT"]
+        },
+        "SCORES": {
+          "joins": "a HUMAN observation whose role is JUDGE to the observation it scored",
+          "refusals": ["SCORES_FROM_NON_JUDGE"]
+        }
+      },
+      "refusal": "LINK_REL_UNKNOWN"
+    },
+    "instrument": { "type": "binding", "note": "parent binding — what was used to measure" },
+    "run": { "type": "binding", "note": "parent binding — the run identifier" },
+    "observation": { "type": "binding", "note": "parent binding — the measured quantity as the producer published it" },
+    "admission": { "type": "binding", "note": "parent binding — any MEASURED/UNMEASURED decision the producer asserts, with the quantity it was decided from" },
+    "signature": { "type": "binding", "note": "parent binding — what the artifact CLAIMS. Nothing here verifies a signature." },
+    "corpus_inclusion": { "type": "binding", "note": "parent binding — which corpus, if any, holds this observation" },
+    "witness": { "type": "binding", "note": "parent binding — always ABSENT today; no witness protocol covers any CSOAI corpus" },
+    "publication": { "type": "binding", "note": "parent binding — where the bytes were read from, and under which header profile" },
+    "time": { "type": "binding", "note": "parent binding — the four kinds of time, below" },
+    "signature_state": { "type": "string", "const": "UNSIGNED", "note": "carried in every observation's own bytes" }
+  },
+
+  "absence_rule": {
+    "statement": "Absence is recorded with a reason and NEVER zero-filled.",
+    "shape": { "state": "ABSENT", "reason": "<why the producer does not publish it>", "would_be_called": "<optional: the name it would have>" },
+    "forbidden_substitutes": [0, null, "", "unknown", "n/a", "0.0", "pending"],
+    "worked_examples": [
+      "A lab that declares no review cadence gets NO_CADENCE_DECLARED, not 0.",
+      "A lab whose document declares no date gets NO_DATE_DECLARED — not the date of the blog post that links it, not an HTTP Last-Modified header, not a copyright footer, and not a figure from a third party's summary.",
+      "A document this process could not fetch gets UNREACHABLE_TO_US, which is a fact about our read and never a licence to substitute a date from elsewhere.",
+      "A producer publishing no parse-error count gets ABSENT and EXCLUSIONS_ABSENT, so `attempted` stays underivable and `exclusion_ratio` stays ABSENT rather than computing to a clean 0.0."
+    ]
+  },
+
+  "four_kinds_of_time": {
+    "statement": "Four kinds of time stay separate and never collapse into one.",
+    "observed_at": "when the measurement happened",
+    "published_at": "when the bytes appeared on a surface",
+    "read_at": "when this observation was built — the only one this process knows first-hand",
+    "witnessed_at": "when an independent party cosigned. ABSENT for every observation today: no witness protocol covers any CSOAI corpus, and the third-party producers read here were cosigned by nobody."
+  },
+
+  "refusals": {
+    "note": "A schema that only accepts good input proves nothing. Each refusal below is a claim that could not be checked from the bytes; each names the missing binding so a producer can publish it rather than guess. All are exercised by `python3 scripts/express_observation.py --selftest`.",
+    "SUBJECT_TYPE_UNKNOWN": "subject_type is not LAB, MODEL or HUMAN",
+    "HUMAN_ROLE_MISSING": "a HUMAN subject with no role — the required refusal that keeps PARTICIPANT and JUDGE from collapsing into 'a human was involved'",
+    "HUMAN_ROLE_UNKNOWN": "role is not PARTICIPANT or JUDGE",
+    "ROLE_ON_NON_HUMAN": "a role was given for a LAB or a MODEL; only a human holds a role",
+    "SCORE_WITHOUT_DENOMINATOR": "a score is asserted with no denominator. A numerator alone cannot be read, compared to its own exclusions, or checked against EXCLUSION_CEILING.",
+    "PAIR_ITEMS_NOT_SHARED": "a PAIRED_WITH edge between observations whose item_set digests differ — a comparison of two unrelated runs wearing the word 'pair'",
+    "PAIR_ITEMS_NOT_ENUMERABLE": "a PAIRED_WITH edge where one side publishes no item set, so 'the same items' cannot be checked",
+    "PAIR_NOT_MODEL_HUMAN": "a PAIRED_WITH edge that does not join a MODEL to a HUMAN",
+    "PAIR_HUMAN_NOT_PARTICIPANT": "a PAIRED_WITH edge whose human side is a JUDGE; a judge scored someone else's work and did not do the task",
+    "SCORES_FROM_NON_JUDGE": "a SCORES edge originating anywhere but a HUMAN observation whose role is JUDGE",
+    "LINK_REL_UNKNOWN": "a link relation outside PAIRED_WITH / SCORES",
+    "UNREACHABLE": "no header profile could obtain the bytes; recorded, never worked around"
+  },
+
+  "judge_role_state": "UNEXERCISED. The JUDGE role is defined, validated and refusable, but no expressed observation uses it: no genuine human-judge data was found. Both human sources grade deterministically — ARC Prize by exact grid match, METR by its task scorers — so the human in each is a PARTICIPANT, never a judge of someone else's work. The role is left empty rather than filled with a participant relabelled, which is exactly the collapse the two-role rule exists to prevent. The selftest still exercises the JUDGE validation path so the rule is proven to fire.",
+
+  "expressed_by": "scripts/express_observation.py",
+  "expressed_observations": {
+    "note": "Real published bytes, re-fetched and re-verified on 2026-09-17. No field is invented where a source lacks it.",
+    "MODEL": {
+      "subject": "ollama:llama3.1:8b on GSPC axis `care`",
+      "source_url": "https://councilof.ai/interop/mill-cards-signed/signed-care-26e1f64e1436.json",
+      "graded_n": 49,
+      "parse_errors_excluded": 150,
+      "transport_errors_excluded": 0,
+      "attempted": 199,
+      "exclusion_ratio": 0.7538,
+      "against_ceiling": "MEASURED_HIGH_EXCLUSION",
+      "finding": "the card's own signed bytes say status MEASURED, decided under the `n >= 30` predicate in force when it was signed. Against today's EXCLUSION_CEILING = 0.20 the same bytes give MEASURED_HIGH_EXCLUSION. The signed bytes are NOT edited; the restatement sits beside them."
+    },
+    "LAB": {
+      "measurement": "days since each frontier-lab safety document's OWN declared date",
+      "method": "the date is read from the document's own declared text. HTTP headers, CDN timestamps, copyright footers, linking-blog dates and version numbers in file names are rejected by construction — none is ever read.",
+      "results": [
+        { "lab": "OpenAI", "document": "Preparedness Framework", "declared_version": "2", "quoted": "Last updated: 15th April, 2025", "precision": "DAY", "staleness_days": 520, "source_url": "https://cdn.openai.com/pdf/18a02b5d-6b67-4cec-ab64-68cdfbddebcd/preparedness-framework-v2.pdf", "sourcing": "PRIMARY", "note": "openai.com/safety/preparedness/ returns HTTP 403 to this process, but the PDF on cdn.openai.com returns 200 to any user-agent including curl's default. The document was read FIRST-HAND, so this figure is primary-sourced, not secondary." },
+        { "lab": "Microsoft", "document": "Frontier Governance Framework", "declared_version": { "state": "ABSENT", "reason": "the document's own text declares no version number" }, "quoted": "February 2026", "precision": "MONTH", "staleness_days_range": [201, 228], "source_url": "https://cdn-dynmedia-1.microsoft.com/is/content/microsoftcorp/microsoft/msc/documents/presentations/CSR/Frontier-Governance-Framework-Feb-2026.pdf", "sourcing": "PRIMARY", "note": "the document declares a month, not a day, so the staleness is an INTERVAL. A single figure here would assert a day Microsoft never declared." },
+        { "lab": "Meta", "document": "Advanced AI Scaling Framework", "declared_version": "2", "quoted": { "state": "ABSENT", "reason": "NO_DATE_DECLARED" }, "staleness_days": { "state": "ABSENT", "reason": "NO_DATE_DECLARED — the document's own text declares no publication, effective or last-updated date. NOT zero, NOT today, and NOT the date of the blog post that links it." }, "source_url": "https://ai.meta.com/static-resource/Meta_Advanced-AI-Scaling-Framework-v2", "sourcing": "PRIMARY", "note": "ai.meta.com serves this document to a client sending NO User-Agent and returns HTTP 400 to a browser User-Agent — the inverse of openai.com. A fetcher hardcoding either profile would publish the other lab as unreachable." },
+        { "lab": "Google DeepMind", "document": "Frontier Safety Framework", "declared_version": "3.1", "quoted": "Published: April 17, 2026", "precision": "DAY", "staleness_days": 153, "source_url": "https://storage.googleapis.com/deepmind-media/DeepMind.com/Blog/strengthening-our-frontier-safety-framework/frontier-safety-framework_3-1.pdf", "sourcing": "PRIMARY" },
+        { "lab": "xAI", "document": "Frontier Artificial Intelligence Framework", "declared_version": { "state": "ABSENT", "reason": "the document's own text declares no version number; a version named only on the linking page or in a file name is not the document's own claim" }, "quoted": "Effective Date: 30 June 2026", "precision": "DAY", "staleness_days": 79, "source_url": "https://media.x.ai/v1/website/xai-frontier-artificial-intelligence-framework-30-june-2026-99c40684.pdf", "sourcing": "PRIMARY" },
+        { "lab": "Anthropic", "document": "Responsible Scaling Policy", "declared_version": "3.4", "quoted": "Effective July 8, 2026", "precision": "DAY", "staleness_days": 71, "source_url": "https://cdn.sanity.io/files/4zrzovbb/website/0bacdc8440ea96e62a8766d99ebe1d4eea6d5f3a.pdf", "sourcing": "PRIMARY" }
+      ],
+      "review_cadence": { "state": "ABSENT", "reason": "NO_CADENCE_DECLARED — this lane did not measure whether these documents declare a review cadence, and an unmeasured cadence is not a cadence of 0" }
+    },
+    "HUMAN": {
+      "note": "CSOAI holds NO human measurements of its own and invented none. Both observations below are third-party data, cited as such.",
+      "observations": [
+        {
+          "subject": "METR HCAST/RE-Bench human baseliners (aggregate cohort)",
+          "role": "PARTICIPANT",
+          "held_by": "METR, not CSOAI",
+          "source_url": "https://raw.githubusercontent.com/METR/eval-analysis-public/main/reports/time-horizon-1-1/data/raw/runs.jsonl",
+          "attempts": 658,
+          "successful": 528,
+          "score": 0.8024,
+          "distinct_tasks": 162,
+          "human_minutes_total": 9526.98,
+          "excluded": "115 rows whose human_source is 'estimate' are METR's estimate of how long a task would take, not a record of a human attempting it. Counting them as human observations would collapse 'a human did this' into 'someone guessed how long this takes'.",
+          "cohort_size": { "state": "ABSENT", "reason": "METR publishes no participant identifiers or counts in this file; rows carry run_id 0. The number of PEOPLE is unknown — unknown, not one, and not the row count." }
+        },
+        {
+          "subject": "ARC Prize ARC-AGI-2 human test participants (aggregate cohort)",
+          "role": "PARTICIPANT",
+          "held_by": "ARC Prize, not CSOAI",
+          "source_url": "https://huggingface.co/datasets/arcprize/arc_agi_2_human_testing/resolve/main/test_pair_attempts.csv",
+          "attempts": 1260,
+          "solved": 773,
+          "score": 0.6135,
+          "distinct_tasks": 115,
+          "distinct_sessions": 392,
+          "cohort_size": { "state": "ABSENT", "reason": "the file publishes session ids, not person ids. One person may hold several sessions, so the number of PEOPLE is unknown — unknown, not the session count." },
+          "coverage_caveat": "ARC's own README: 'Not all tasks in the released Public Train sets were tested, so these results are not comprehensive.'"
+        }
+      ]
+    },
+    "PAIR": {
+      "edge": "PAIRED_WITH",
+      "from": "obs:model:metr-o3-inspect:hcast",
+      "to": "obs:human:metr-hcast-baseliner:participant",
+      "shared_item_set_sha256": "de473d1ff7a0b6f7c3a309fdbe03966d5755c8e284f38ba4b675f3f65dfb3666",
+      "shared_item_count": 162,
+      "checked_how": "both item sets were computed from each side's own rows and the digests compared. The edge exists because they are equal.",
+      "model_side": { "graded_n": 748, "transport_errors_excluded": 32, "attempted": 780, "score": 0.9358, "against_ceiling": "WITHIN_CEILING" },
+      "human_side": { "graded_n": 658, "attempted": 658, "score": 0.8024, "against_ceiling": { "state": "ABSENT", "reason": "METR publishes no exclusion counts for human rows; unpublished exclusions are not WITHIN_CEILING" } },
+      "not_a_comparison": "The two scores are recorded, not compared. The model and the humans faced the same task ids but not the same conditions, time limits or attempt counts, and this schema draws no conclusion from the difference."
+    }
+  },
+
+  "what_this_is_not": "This schema restates what producers published, in one vocabulary. It does not re-measure, does not verify signatures, does not grade and does not rank. An ABSENT field means the producer did not publish it — not that it is zero."
+}
