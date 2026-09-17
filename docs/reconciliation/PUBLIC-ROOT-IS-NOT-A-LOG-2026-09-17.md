@@ -86,11 +86,28 @@ The transition at **2026-09-15T05:30Z** is the clearest case: 312 leaves in, 311
 
 This is not a future risk awaiting a witness protocol.
 
-An inclusion proof is cut against one root. On this evidence a leaf has roughly a **two-in-three
-chance of being absent from the next root**. The proof still verifies against the root it names —
-the mathematics is sound and nothing here says otherwise — but the leaf is no longer in the
-currently published set, and nothing on the surface tells the reader which state is current or that
-the two can differ at all.
+An inclusion proof is cut against one root, and the set is re-derived at the next one. Two different
+rates matter here and they must not be run together:
+
+- **Across a single publish**, a leaf survives about **73%** of the time (median over 27
+  transitions; range 0–78%). So roughly **one leaf in four is dropped at each publish**, and the
+  smallest loss in any publish is 43 leaves. One transition — 2026-09-15T05:30Z — dropped **all**
+  of them.
+- **Across the whole window**, **79%** of every leaf ever published appears in exactly one revision.
+  That is the cumulative effect of repeated churn over 28 publishes, **not** the single-step rate.
+
+An earlier draft of this document stated the single-step risk as "roughly two-in-three". That was
+wrong: it applied the window-wide 79% figure to a single transition. The per-publish number is
+about one in four. The finding is unchanged and the direction is unchanged; the magnitude of the
+single-step claim was overstated and is corrected here rather than quietly adjusted.
+
+The proof still verifies against the root it names — the mathematics is sound and nothing here says
+otherwise. But the leaf may no longer be in the currently published set, and nothing on the surface
+tells the reader which state is current, or that the two can differ at all.
+
+Put plainly, for a reader outside this estate: **a proof handed to a third party may name a leaf
+that the next published root does not contain — not because anything was deleted, but because the
+set is re-derived on every publish.**
 
 For witnessing specifically, the consequence is terminal rather than awkward: a witness cosigns
 consistency between successive trees, and here there is no consistency relation to sign. Witness

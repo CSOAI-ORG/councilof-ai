@@ -95,9 +95,13 @@ and here there is no such relation to sign. Witness cosigning is not merely unim
 **not yet meaningful**.
 
 The consequence for a reader is more immediate and does not wait for witnesses: an inclusion proof
-is issued against one root. If that leaf is not in the next root — a two-in-three chance, on this
-evidence — the proof still verifies against the root it was cut from, while the leaf is absent from
-the published set. Nothing on the surface tells the reader which state is current.
+is issued against one root. Roughly one leaf in four is dropped at each publish (median survival
+73% across 27 transitions; one publish dropped all of them), so a proof may name a leaf the next
+root does not contain. It still verifies against the root it was cut from, while the leaf is absent
+from the currently published set, and nothing on the surface tells the reader which state is
+current. The window-wide figure — 79% of leaves appear in exactly one revision — is the cumulative
+effect of repeated churn, NOT the single-step rate; see
+docs/reconciliation/PUBLIC-ROOT-IS-NOT-A-LOG-2026-09-17.md.
 
 Reproduce: `python3 scripts/audit_root_leaf_churn.py 28` → machine artifact
 `docs/reconciliation/public-root-churn-2026-09-17.json`, write-up
