@@ -1,7 +1,7 @@
 # Can you check their work?
 
-**Twelve organisations publish AI evaluation results. Every one of them corrects its own
-errors. Not one of them signs a result.**
+**Fifteen organisations publish AI evaluation results. Thirteen of them keep a public record
+of their own mistakes. Not one of them signs a result.**
 
 17 September 2026 · Council of AI (CSOAI Ltd, UK) · nicholas@csoai.org
 
@@ -23,11 +23,11 @@ Five checks. Each one answerable by fetching public bytes.
 4. **Corrections** — is there a public record of errors the organisation found in *its own* published results?
 5. **Recomputable** — can a third party reproduce a published score from published artifacts?
 
-We ran them on twelve organisations on 17 September 2026, and on ourselves.
+We ran them on fifteen organisations on 17 September 2026, and on ourselves.
 
 ## What came back
 
-The corrections column is the good news, and it is close to unanimous. Eleven of twelve keep
+The corrections column is the good news, and it is close to unanimous. Thirteen of fifteen keep
 a public record of their own mistakes, and several of them are unusually frank about it.
 Epoch AI's FrontierMath v2 changelog records corrections to 123 problems in Tiers 1–3 and
 addresses errors in 42% of problems overall, with v1 retained as a separate page so earlier
@@ -62,6 +62,17 @@ is the copy that was published.
 
 ## Why this is the thing to fix
 
+Two organisations show that the rest of it can be done, and done fully. **SWE-bench** publishes
+its results as files in git, pins each entry's artifact repository by commit — and ships an
+official re-grader, `swebench submit verify`, which re-derives every verdict from the test
+output in the submitter's own repository. Its README says it plainly: anyone can check your
+submission, no Docker, no re-execution. **HELM** publishes the bank, the harness with the exact
+configuration per leaderboard version, and every model output, all anonymously downloadable —
+and where its questions are encrypted against crawlers, it publishes the key in the same
+directory, so the bank is obfuscated rather than withheld.
+
+Both of them are still NO in the signed column.
+
 Every other column has a defensible reason to be closed. Banks are held back to stop
 contamination — Epoch blocks its benchmark path in robots.txt "to avoid contaminating
 training datasets"; Apollo publishes its insider-trading prompts in full but others cannot;
@@ -71,8 +82,9 @@ are real trade-offs, argued in public, and we are not going to pretend they are 
 Signing has no such trade-off. It reveals nothing. It costs one key and one line in a
 publish step. It is simply not the custom.
 
-That is the whole finding: the field is careful and unbound. The care is real. The binding is
-missing.
+That is the whole finding: the field is careful and unbound. SWE-bench and HELM prove the work
+is not the obstacle — they do the hard columns, the expensive ones, in full. The care is real.
+The binding is missing.
 
 ## Our own row
 
@@ -117,7 +129,11 @@ we changed it.
 The full census — thirteen rows, five columns, every cell carrying its evidence and the UTC
 time it was fetched — reads at:
 
-`https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/verifiability-census-2026-09-17.json`
+`https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/verifiability-census-2026-09-17-v0.2.json`
+
+The first version, covering twelve organisations, is left exactly as it was published at
+`…/verifiability-census-2026-09-17.json`. It is superseded, not edited, and v0.2 records what
+changed and why.
 
 It is not itself signed, and it says so in its own `unsigned_reason` field: our board signer
 runs as OIDC inside GitHub Actions, which is disabled account-wide under a restriction on our
@@ -125,6 +141,30 @@ organisation account that we are appealing. The same restriction is why this fil
 served from our Hugging Face mirror rather than from councilof.ai, and why our grader is not
 publicly readable today. Publishing an unsigned file about unsigned publishing, and labelling
 it, is better than the alternative — and stating why it is unsigned is part of the point.
+
+---
+
+## What changed since this was first published
+
+**17 September 2026, later the same day.** First published covering twelve organisations. Three
+were then added — MLCommons AILuminate, Stanford CRFM HELM and SWE-bench — and two of them
+changed the picture in the field's favour. The first version's account of the recomputable
+column was drawn from twelve organisations and was harsher than fifteen support: HELM and
+SWE-bench are both fully recomputable with no account required, and SWE-bench publishes an
+official re-grader. SWE-bench is also the only organisation besides ourselves that is YES on
+content-addressing *and* cites the pin itself.
+
+One cell was corrected upward in specificity. ARC Prize's per-attempt model outputs **are**
+published — 8,114 files on Hugging Face, which a GitHub-and-website sweep missed. The state
+stays PARTIAL because no attempts are published for the semi-private sets the headline numbers
+come from. And a new limit was found inside the published half: 16 of those 70 configurations
+carry `correct: null` on every attempt. The attempts exist; the grades do not. Anyone treating
+"not true" as "wrong" there will print 0.0% against six named third-party models. We nearly did
+— our own grader did exactly that, twice, before its controls caught it. That measurement is
+published separately, with the failing controls, at
+`…/public/interop/paired-arm-arc-agi-2-2026-09-17.json`.
+
+The signed column did not move. It is still zero.
 
 ---
 
