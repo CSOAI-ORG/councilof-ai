@@ -1,21 +1,25 @@
 {
   "schema": "csoai.master-consolidation-rollup/0.1",
-  "generated_at": "2026-09-17T03:10:00.659984+00:00",
+  "generated_at": "2026-09-17T03:10:45.232897+00:00",
   "title": "Master Consolidation Roll-up \u2014 GSPC Estate",
   "purpose": "One manifest that proves every signed/unsigned card, every OTS proof, and every strategic deliverable is live on GSPC.",
   "disclaimer": "Measurement, not certification. Empty is not zero. Engine calculates; nothing fabricated.",
   "totals": {
-    "ledger_cards": 4509,
-    "auto_eat_cards": 4499,
+    "ledger_cards": 6268,
+    "auto_eat_cards": 6258,
     "ots_files_on_disk": 332,
     "ots_proofs_in_manifest": 249,
     "unsigned_no_ots": 0,
-    "total_evidence_bytes": 15075679,
+    "total_evidence_bytes": 38527273,
     "white_papers_indexed": 1051,
     "benchmark_cards": 3998,
     "axes": 14,
     "models_benchmarked": 165,
-    "measurement_root_n_leaves": 10
+    "measurement_root_n_leaves": 10,
+    "eip1186_proofs_indexed": 1530,
+    "sov_reports_indexed": 211,
+    "public_signed_indexed": 16,
+    "rwa_attestations": 2
   },
   "by_store": {
     "unknown": 39,
@@ -59,7 +63,8 @@
     "10. Benchmark index v0.1: 3998 GSPC measurement cards across 14 axes x 165 models (2378 Ed25519-signed, 1620 unsigned).",
     "11. Both indexes have OTS pending proofs; total manifest now 248 proofs.",
     "12. Canonical measurement-root-2026-09-16 wired (10 leaves, all inclusion proofs verify, unsigned per honest framing).",
-    "13. Signed-evidence harvest v4: 184 additional pre-signed evidence JSONs (with did/sha256/merkle_root) added to compacts."
+    "13. Signed-evidence harvest v4: 184 additional pre-signed evidence JSONs (with did/sha256/merkle_root) added to compacts.",
+    "14. Estate-wide harvest v5: +1759 evidence JSONs harvested across eip1186 archive proofs (1530), sovereign/clan reports (211), public/signed (16), RWA attestations (2)."
   ],
   "external_deliverables": {
     "OSAIA_SAFE_RFC": {
@@ -73,6 +78,6 @@
       "status": "DRAFT_READY"
     }
   },
-  "sha256": "3cf90b984d4b77e9a73a14f9e3d8ec4796dbfd089afcaa1e8613aaa012f98745",
-  "byte_size": 3394
+  "sha256": "c4695e5d7bd796da652b275f5797999c747e1fb060fb4e8ebc2142c0def92bf1",
+  "byte_size": 3669
 }
