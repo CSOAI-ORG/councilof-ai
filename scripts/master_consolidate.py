@@ -112,6 +112,44 @@ def discover_all_cards():
                 'size_b': os.path.getsize(fp),
             })
 
+    # 5) mill-cards-signed/* : each file has {alg, body, id, signature, did, ...}
+    #    These are Ed25519-signed measurement cards (axis × model × accuracy)
+    mill_signed = f'{INTEROP}/mill-cards-signed'
+    if os.path.exists(mill_signed):
+        for fp in glob.glob(f'{mill_signed}/*.json'):
+            data = safe_load(fp)
+            if not isinstance(data, dict):
+                continue
+            body = data.get('body', {})
+            cards.append({
+                'path': fp.replace(INTEROP + '/', ''),
+                'store': 'mill-cards-signed',
+                'signed': True,
+                'kind': body.get('kind', data.get('kind', 'gspc.measurement-card')),
+                'subject': f"{body.get('axis', '?')} × {body.get('model', '?')}",
+                'as_of': None,
+                'sha256': data.get('id', ''),
+                'size_b': os.path.getsize(fp),
+            })
+
+    # 6) mill-cards-unsigned/*
+    mill_unsigned = f'{INTEROP}/mill-cards-unsigned'
+    if os.path.exists(mill_unsigned):
+        for fp in glob.glob(f'{mill_unsigned}/*.json'):
+            data = safe_load(fp)
+            if not isinstance(data, dict):
+                continue
+            cards.append({
+                'path': fp.replace(INTEROP + '/', ''),
+                'store': 'mill-cards-unsigned',
+                'signed': False,
+                'kind': data.get('kind', 'gspc.measurement-card'),
+                'subject': f"{data.get('axis', '?')} × {data.get('model', '?')}",
+                'as_of': None,
+                'sha256': '',
+                'size_b': os.path.getsize(fp),
+            })
+
     return cards
 
 
