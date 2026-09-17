@@ -1,0 +1,1542 @@
+{
+  "schema": "csoai.axis-corpus-reconciliation/1",
+  "lane": "M4-RECONCILER",
+  "built_at": "2026-09-17T06:13:27Z",
+  "what_this_is": "Per-axis standing in each card corpus. The corpora are separate and are never added, reconciled against each other, or substituted for one another.",
+  "counts_rule": "every integer below carries the live URL and JSON path it was read from at build time",
+  "board": {
+    "axes": {
+      "value": 23,
+      "source": "https://councilof.ai/api/gspc → totals.axes",
+      "read_at": "2026-09-17T06:13:27Z"
+    },
+    "measured": {
+      "value": 22,
+      "source": "https://councilof.ai/api/gspc → totals.measured_axes",
+      "read_at": "2026-09-17T06:13:27Z"
+    },
+    "unmeasured": {
+      "value": 1,
+      "source": "https://councilof.ai/api/gspc → totals.unmeasured_axes",
+      "read_at": "2026-09-17T06:13:27Z"
+    },
+    "measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+    "gold_run": "2026-08-18T03:22:16Z",
+    "unmeasured_axes": [
+      "effect-binding"
+    ],
+    "not_the_same_as": "the harness's own 'measured' count is a stricter count of a different thing. Never print one as the other."
+  },
+  "corpora": {
+    "public_root": {
+      "leaves": {
+        "value": 305,
+        "source": "https://councilof.ai/root.json → card_count",
+        "read_at": "2026-09-17T06:13:27Z"
+      },
+      "leaves_listed": {
+        "value": 305,
+        "source": "https://councilof.ai/root.json → len(card_sha256)",
+        "read_at": "2026-09-17T06:13:27Z"
+      },
+      "as_of": "2026-09-15T07:13:43Z",
+      "kind": "catalogued",
+      "merkle_root": "07dd5eb3eb0e5c9eae40f56ce859a064dff95f2eed47acad64fb54a1aa0122e2"
+    },
+    "signed_card_index": {
+      "cards": {
+        "value": 335,
+        "source": "https://councilof.ai/signed/card_index.json → n_cards",
+        "read_at": "2026-09-17T06:13:27Z"
+      },
+      "cells": {
+        "value": 335,
+        "source": "https://councilof.ai/signed/card_index.json → n_cells",
+        "read_at": "2026-09-17T06:13:27Z"
+      },
+      "cards_listed": {
+        "value": 335,
+        "source": "https://councilof.ai/signed/card_index.json → len(cards)",
+        "read_at": "2026-09-17T06:13:27Z"
+      },
+      "as_of": "2026-08-19T09:24:39.174287+00:00",
+      "kind": "measured"
+    },
+    "relationship": "SEPARATE_CORPORA — identifier overlap 0, per /api/state → signed_cards.corpus_relation"
+  },
+  "leaf_resolution": {
+    "leaves_walked": {
+      "value": 305,
+      "source": "https://councilof.ai/root.json → len(card_sha256)",
+      "read_at": "2026-09-17T06:13:27Z"
+    },
+    "verified": {
+      "value": 305,
+      "source": "https://councilof.ai/cards/<leaf[:16]>.json → re-digested under root.leaf_definition and equal to the leaf",
+      "read_at": "2026-09-17T06:13:27Z"
+    },
+    "unresolved": {
+      "value": 0,
+      "source": "https://councilof.ai/cards/<leaf[:16]>.json → fetch failed or digest mismatch",
+      "read_at": "2026-09-17T06:13:27Z"
+    },
+    "walk": "COMPLETE",
+    "walk_note": "every leaf resolved and re-digested",
+    "failures": {}
+  },
+  "axes": [
+    {
+      "axis": "governance",
+      "board_status": "MEASURED",
+      "card_held_in": "SIGNED_CARD_INDEX_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 44,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'governance'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [
+          "1390baba7c0507ddd6ec85088b3a9763c1b7d929aa01ca298414478ff90b356d",
+          "bdda87864d193bf0d8e5eee0b7e874b3354daa71decf1e0defbab85d121f3011",
+          "c3be7b095029076863133572c8eb71077ff3e157f74a47da6149b6f28e7c4196",
+          "94b8831311c24df5e7d93e1f1dc989d24639bbe64abc4034a51d78a0306508e1",
+          "a14dfc583db23cc6ef6ab50b269c5dcd4f7aaf7fd25441c8b64ca7f59bb12068",
+          "76a1d3e23494015d61f15e629696b2b75e4887778d289af8677687023a45d9bf",
+          "8412ad023f82a9bb9fb429cddfe68513a124f7d0632887594819fc987e195e35",
+          "97df7c8d3f062f5c32198482340a1a7f2cde9306b8560274d5fda108dee9fc6b",
+          "9e4db8a75256c56f2383ea601c163f3762899ace17cf53cdd9c1668070ee293d",
+          "1f613ac5091170cbec545488f53dcd61134b06c566018de52e47d157480abbe5"
+        ],
+        "card_ids_truncated": true,
+        "matched_axis_ids": {
+          "gspc-governance": "gspc_prefix",
+          "gov": "explicit_alias (the board's own frozen-bank map sends governance → csoai/gspc-gov (.github/workflows/hub-queue-mill.yml:174))"
+        }
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'governance'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "safety",
+      "board_status": "MEASURED",
+      "card_held_in": "BOTH_CORPORA_SEPARATELY",
+      "signed_card_index": {
+        "cards": {
+          "value": 21,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'safety'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [
+          "5dfe7d868d252689ff4d5eabb9cad17587f797ddbd8fce26a63b7f5227c29373",
+          "af649576659be1b196d0b7f274a3b42dc5e9a295707b4edef447e49983ec147b",
+          "0dc8b7ef05fd1c2b4584079ce99a12d24b157d2f2683cffce763377dd88c7213",
+          "2820aa929f4640c1ab47f85c4eb03451cbda1906d34f90f70c5f35c5edc76467",
+          "934d21b94bb149b2900464f2ec2a95b9312d54f9638852e2fb840bca672df4e0",
+          "7afd981583afc41922731424ea2d9c33a9ae5ba9d542aab6af2efd86c4d6b09a",
+          "abb7150f242321eb9a31b87ecf34d76af4e7227ac620d3673527325709ae1351",
+          "1e74505674ce91c5642e24a8efaac0c75e41ddde573a242182e8daf325da6a15",
+          "f53c08ff3f71257c0a7ed07cf8ae8da266bc4a75057729fb0a27907029827b23",
+          "c683e3e8ceb3723969a4b2e91b6c69ab7a74a8621b79c54d16a5da19c34fd70d"
+        ],
+        "card_ids_truncated": true,
+        "matched_axis_ids": {
+          "gspc-safety": "gspc_prefix"
+        }
+      },
+      "public_root": {
+        "leaves": {
+          "value": 8,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'safety'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": [
+          "2026-09-05T09:06:18Z",
+          "2026-09-12T09:23:59Z"
+        ],
+        "match_basis": {
+          "subject_substring_WEAK": {
+            "value": 8,
+            "source": "https://councilof.ai/cards/<leaf[:16]>.json → cards matched to 'safety' by subject_substring_WEAK",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        }
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "provenance",
+      "board_status": "MEASURED",
+      "card_held_in": "SIGNED_CARD_INDEX_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 21,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'provenance'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [
+          "35a4eb2b69dfe03fad8aa082a6ab0845f506d03218ea3c1bece93337cb427bca",
+          "a5e2dc5e86437a4e684b2ae47c88be847f5febee108930e888fbd7ec27d4c4ec",
+          "9ced28fec63b6e799bc45bb3e2e672ec5b8ba2bdb0b35920aae601651565ba0c",
+          "62123d93724144cdfec5497af3984fa22d8ce749a4f2d0710b774c6614d8ed72",
+          "612d1f5ba92962e414c76271c0a271e9d2eb5d69204360ae62cee7f4792d1404",
+          "ddd530215d04f5391ccf170da8178c105dd2244fca5cd5446553a6be1e50cf6e",
+          "ac05a5e119ca3c683acefbee3d290d8c0fce75c5af0be02048123838ad221504",
+          "70676b498f9419d9e0b393f4a064860115962be05fbb88d6b02cb3136a854061",
+          "46305c10be50fad864218157b248d7976cfaaca788d8f5a0b01d57b74dacec62",
+          "91f79a794f610ab7bb41a8242e8a6b6f9059397c2eecae995e7802565d0c0e78"
+        ],
+        "card_ids_truncated": true,
+        "matched_axis_ids": {
+          "gspc-provenance": "gspc_prefix"
+        }
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'provenance'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "continuity",
+      "board_status": "MEASURED",
+      "card_held_in": "SIGNED_CARD_INDEX_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 21,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'continuity'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [
+          "58bd1deacf1422a805816242176ae63e688307ee767cc384e44a96fac114a5f1",
+          "4cf1745607b0759f5c419c3b04e83104b0dbdf23824b45c8359d67f9e7a58747",
+          "1e772582aba999cada11df195acde19fc604113b2a0fe85b4b9f7d66a4ef95e3",
+          "9a45f78d418ac2f35cbbe5d5b9724cbecdf8b1de12b5660fe1dab1ff98f1aa8c",
+          "279d602347f2eeef6cfafc36488a329ea991ec2973c312d82dcb037d182e480c",
+          "435d9c5df4697efb4b39305473cb1289f517f5d2be8cc35953897c4ab1a7fa68",
+          "9c343315b278a562686e71c75758fde5c757293b7dcaf2e6bb197e9b14b8465a",
+          "aa8abca221fa7fd8886d5f3800b5ffa70645af58c5cd30e147405ba7defd1f63",
+          "149ae1cc5beced568497a1738f61a521b95ee4ff4ccc6df9c65477ae62b56cf5",
+          "9b5ffb530f5e1cabbcde1041fc69e3d2e699fcb79ef848957d1a3f1d12e19636"
+        ],
+        "card_ids_truncated": true,
+        "matched_axis_ids": {
+          "gspc-continuity": "gspc_prefix"
+        }
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'continuity'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "conformance",
+      "board_status": "MEASURED",
+      "card_held_in": "BOTH_CORPORA_SEPARATELY",
+      "signed_card_index": {
+        "cards": {
+          "value": 21,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'conformance'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [
+          "32df7c2b25d7306e30efdfc25a6d2a1c17a951071e2567e19db475b86214b17d",
+          "c9a2a68c809477f2e47e573d97de42713bf8d79176d045000fde92e25236257d",
+          "0cf0371f83d27eac9ee0ac6fca38b1c37f7cbab53ff02636edea4a37a369d475",
+          "519cc296e47057d8dd14bb2aa2b56024f2f1d69c9669f50e8922c8fa1e186c31",
+          "ea109e668ae5acbda9297f7fa335874bb5101ffd6a7bed51c9f24f9e116a7eb9",
+          "b660602ba67010b2697e919e704e7e85c31859e92f2c8a9573279915b8a4fab7",
+          "48cc8dfab382d38d23e1167bff2576c64cad76e324ada51734ab0e6edd56bb39",
+          "be3a35cf9c55c032cbbdb29413295c08fb19b28d92ec44b6742f937c470e1878",
+          "dd09f682075fba0936c904bbbda9a448e575275934d4ec2e3dc54476f76cbcb5",
+          "4d960dc2bacf3a4d6abe2cceb097e45d6ba75bc486114961b54c43679bf0c7c7"
+        ],
+        "card_ids_truncated": true,
+        "matched_axis_ids": {
+          "gspc-conformance": "gspc_prefix"
+        }
+      },
+      "public_root": {
+        "leaves": {
+          "value": 1,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'conformance'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": [
+          "2026-09-14T13:21:37Z",
+          "2026-09-14T13:21:37Z"
+        ],
+        "match_basis": {
+          "tag_exact": {
+            "value": 1,
+            "source": "https://councilof.ai/cards/<leaf[:16]>.json → cards matched to 'conformance' by tag_exact",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        }
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "openness",
+      "board_status": "MEASURED",
+      "card_held_in": "SIGNED_CARD_INDEX_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 21,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'openness'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [
+          "75c0f83d849121a8bf43306d10591cbba15465816e7364438af25a5d0401ac3d",
+          "2afb768b7835fd1be9e083da2621b4093a059a994c55b3cc934c9ec847f0f734",
+          "4b633b7ff828dd918bedfe42ab5a6beec69f3744cb56d795c173b962913dcefd",
+          "851e263754518e692655902debb727d26c7a4e14b5fe6c6382a480b96f6b1a35",
+          "2aba0727a9b6c79a4c0bbd19c8edd2a01230e8d7083f6bd389cebe84c6fd2a17",
+          "ab20a48716e67ebaf7351d35fa9f248e84596cd0612f82b08c9b06f0e0cec455",
+          "8fbf552908b905f6ec6fcc1c04e1b30cbcdd8ae5d9434acdd7cfff00b5337509",
+          "3d02498e860d4ecf1fdf16373f95fdd5fd05b6e7833791ebce83668bab4256b3",
+          "719e122506ffbc49184a2b5f1c67f75985749e90ead9cb96e9f991b8bf1e7410",
+          "42a7240ad8a1d0ae6658a9cde947e273a79f0c2462900269a5de8235522606c8"
+        ],
+        "card_ids_truncated": true,
+        "matched_axis_ids": {
+          "gspc-openness": "gspc_prefix"
+        }
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'openness'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "machinery-conformity",
+      "board_status": "MEASURED",
+      "card_held_in": "NEITHER_CORPUS",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'machinery-conformity'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'machinery-conformity'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "care",
+      "board_status": "MEASURED",
+      "card_held_in": "SIGNED_CARD_INDEX_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 77,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'care'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [
+          "82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c",
+          "3011c3873bb018cdc9ecbad58f136e0fd3e12898adbaa107a27e8038c16bdf6c",
+          "c5b4d27f302b1d655f906b3360b32f301f99e10b4430d35f1efb5ceada342ea6",
+          "a072263fe05036fb40a8efd52e87b2ea48773a545e69407a7ad616ddb4b4a50a",
+          "c8aaa340050f72385dcd98ae060108a43b17f799a2ade794c4a9fee0277cbfda",
+          "14704f0d9f1ee8f7dd472421732ef36c4f84d7ad8e5bfe3f917cccfbcf45235e",
+          "27b12158388dc993d2878487a64569903a673482f49969a3ef808678e2a76ecb",
+          "884091003fe168764cb955a394fa48343c0ed934df8d68d485f6156a32993945",
+          "903907ad452f601394cfd5105e13e5a61dbf702fe93339293ce6f39af91f0e21",
+          "29e7d0813735fb3ecb85ff35f9e96308158c6005f9a84c5b10293ee20d03e33d"
+        ],
+        "card_ids_truncated": true,
+        "matched_axis_ids": {
+          "care-refusal-protect": "board_axis_prefix",
+          "care-refusal-help": "board_axis_prefix",
+          "care": "exact"
+        }
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'care'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "cross-reality",
+      "board_status": "MEASURED",
+      "card_held_in": "NEITHER_CORPUS",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'cross-reality'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'cross-reality'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "detector-interop",
+      "board_status": "MEASURED",
+      "card_held_in": "NEITHER_CORPUS",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'detector-interop'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'detector-interop'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "art5-safeguard",
+      "board_status": "MEASURED",
+      "card_held_in": "NEITHER_CORPUS",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'art5-safeguard'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'art5-safeguard'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "swarm",
+      "board_status": "MEASURED",
+      "card_held_in": "SIGNED_CARD_INDEX_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 7,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'swarm'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [
+          "8591fdc18b6b7cbd0513c3306d59bc6624f4e93bcafe2ce4326691a2a79ad891",
+          "4eb8ffdb407800ec5ff64bfdd8c5e3359ae06c2381190edb52bd543ab8c540c9",
+          "31bcd0b2f21af1fb22cd4d74aeb392870bd068b0b507eb59dd366ae4d1504c5d",
+          "eb9c45816edd670bc3aafeff001f983b1d503ccd0cec432ba19b3bbe936ace36",
+          "688a30e266f0a1ae007e0ff1e23915e283ed6e10eed25a8f54db2b5bc25cb71e",
+          "b44335819f7720966b41e2ee26f5798892b0eb8d2571c71e0c9090506f1ff823",
+          "f48e88bb336b76588334c694b1331b2e4de122e528baf6f00b8ebf65867a7fbf"
+        ],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {
+          "swarm-candidates": "board_axis_prefix"
+        }
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'swarm'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "affect",
+      "board_status": "MEASURED",
+      "card_held_in": "NEITHER_CORPUS",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'affect'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'affect'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "jail",
+      "board_status": "MEASURED",
+      "card_held_in": "SIGNED_CARD_INDEX_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 8,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'jail'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [
+          "acec0ee7b86c1385e0455660ea1f2f23bfccc904a1b68308263a5e2eb982fa57",
+          "cff1aaf070acb97c224177809856bc20310f4958eb44bdffab7d4b04836535f4",
+          "c42bda59a7df7627956f385401f5f94c8e71046c6eee11a1d9573d478f7d0a37",
+          "4297a8b47e3c4a9b4644a2d90dadc7bc36ed92d3380e9c0c68eb95bd7af4890c",
+          "d353007a873ad527cb39e99ef2ac8a77e0fe917f1affe124b0aa379c51c427e0",
+          "522a12e784470ccc91b778317a796781660688e5e325c82187894c03dd4ea9af",
+          "3cc7a3caa1a9cb2f04efe93d8ab966ed8ab648309743d0466dbf60ceb709aa23",
+          "0f3255b855d40813456bf6a73a430a2fd9132dfb0192c3dc6310d81943e23e39"
+        ],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {
+          "jail-escape-detection": "board_axis_prefix"
+        }
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'jail'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "effect-binding",
+      "board_status": "UNMEASURED",
+      "card_held_in": "NEITHER_CORPUS",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'effect-binding'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'effect-binding'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "provenance-controls",
+      "board_status": "MEASURED",
+      "card_held_in": "NEITHER_CORPUS",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'provenance-controls'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'provenance-controls'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "reserve-attestation",
+      "board_status": "MEASURED",
+      "card_held_in": "PUBLIC_ROOT_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'reserve-attestation'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 1,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'reserve-attestation'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": [
+          "2026-09-15T07:10:31Z",
+          "2026-09-15T07:10:31Z"
+        ],
+        "match_basis": {
+          "subject_substring_WEAK": {
+            "value": 1,
+            "source": "https://councilof.ai/cards/<leaf[:16]>.json → cards matched to 'reserve-attestation' by subject_substring_WEAK",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        }
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "regulatory-framework",
+      "board_status": "MEASURED",
+      "card_held_in": "PUBLIC_ROOT_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'regulatory-framework'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 1,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'regulatory-framework'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": [
+          "2026-09-15T07:10:31Z",
+          "2026-09-15T07:10:31Z"
+        ],
+        "match_basis": {
+          "subject_substring_WEAK": {
+            "value": 1,
+            "source": "https://councilof.ai/cards/<leaf[:16]>.json → cards matched to 'regulatory-framework' by subject_substring_WEAK",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        }
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "distribution-integrity",
+      "board_status": "MEASURED",
+      "card_held_in": "PUBLIC_ROOT_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'distribution-integrity'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 1,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'distribution-integrity'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": [
+          "2026-09-15T07:10:31Z",
+          "2026-09-15T07:10:31Z"
+        ],
+        "match_basis": {
+          "subject_substring_WEAK": {
+            "value": 1,
+            "source": "https://councilof.ai/cards/<leaf[:16]>.json → cards matched to 'distribution-integrity' by subject_substring_WEAK",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        }
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "custody-disclosure",
+      "board_status": "MEASURED",
+      "card_held_in": "PUBLIC_ROOT_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'custody-disclosure'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 1,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'custody-disclosure'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": [
+          "2026-09-15T07:10:31Z",
+          "2026-09-15T07:10:31Z"
+        ],
+        "match_basis": {
+          "subject_substring_WEAK": {
+            "value": 1,
+            "source": "https://councilof.ai/cards/<leaf[:16]>.json → cards matched to 'custody-disclosure' by subject_substring_WEAK",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        }
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "ai-adoption-components",
+      "board_status": "MEASURED",
+      "card_held_in": "NEITHER_CORPUS",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'ai-adoption-components'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'ai-adoption-components'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "labour-components",
+      "board_status": "MEASURED",
+      "card_held_in": "NEITHER_CORPUS",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'labour-components'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 0,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'labour-components'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": null,
+        "match_basis": {}
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "board_status": "MEASURED",
+      "card_held_in": "PUBLIC_ROOT_ONLY",
+      "signed_card_index": {
+        "cards": {
+          "value": 0,
+          "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'humanoid-labour-index'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-08-19T09:24:39.174287+00:00",
+        "as_of_field": "card_index.json → created",
+        "card_ids": [],
+        "card_ids_truncated": false,
+        "matched_axis_ids": {}
+      },
+      "public_root": {
+        "leaves": {
+          "value": 1,
+          "source": "https://councilof.ai/root.json → card_sha256[] whose fetched card mentions 'humanoid-labour-index'",
+          "read_at": "2026-09-17T06:13:27Z"
+        },
+        "corpus_as_of": "2026-09-15T07:13:43Z",
+        "as_of_field": "root.json → as_of",
+        "card_as_of_range": [
+          "2026-09-15T07:10:31Z",
+          "2026-09-15T07:10:31Z"
+        ],
+        "match_basis": {
+          "subject_substring_WEAK": {
+            "value": 1,
+            "source": "https://councilof.ai/cards/<leaf[:16]>.json → cards matched to 'humanoid-labour-index' by subject_substring_WEAK",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        }
+      },
+      "stale_relative_to_board": {
+        "board_gold_run": "2026-08-18T03:22:16Z",
+        "board_gold_run_field": "/api/gspc → measured_on.living_stamp.gold_run (signed machine timestamp)",
+        "board_measured_on_date_verbatim": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "board_measured_on_note": "measured_on.date is prose covering three axis families with three different dates; it is carried verbatim and never collapsed into one timestamp",
+        "signed_card_index": {
+          "as_of": "2026-08-19T09:24:39.174287+00:00",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 28,
+            "source": "https://councilof.ai/signed/card_index.json → created, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "public_root": {
+          "as_of": "2026-09-15T07:13:43Z",
+          "older_than_board_gold_run": false,
+          "days_behind_this_build": {
+            "value": 1,
+            "source": "https://councilof.ai/root.json → as_of, differenced against this build's read_at",
+            "read_at": "2026-09-17T06:13:27Z"
+          }
+        },
+        "cause": "card signing runs inside GitHub Actions (auto-eat-sign.yml, OIDC). Actions is disabled account-wide (HTTP 422, ticket #4720908), so no card has been signed since. What this measures is FRESHNESS of the signer, not disagreement between the corpora — their declared counts and identifiers are consistent."
+      }
+    }
+  ],
+  "signed_corpus_internal_framing": {
+    "board_public_count_now": "23 axis · 22 measured",
+    "board_public_count_source": "https://councilof.ai/api/gspc → totals.public_count",
+    "framings_found_in_card_bodies": {
+      "13 measured of 14 quotable": {
+        "value": 335,
+        "source": "https://councilof.ai/signed/cards/<id>.json → body.public_framing",
+        "read_at": "2026-09-17T06:13:27Z"
+      }
+    },
+    "bodies_unreadable": {
+      "value": 0,
+      "source": "https://councilof.ai/signed/cards/<id>.json → fetch failed",
+      "read_at": "2026-09-17T06:13:27Z"
+    },
+    "created_dates": {
+      "2026-08-19": {
+        "value": 335,
+        "source": "https://councilof.ai/signed/cards/<id>.json → body.created starting 2026-08-19",
+        "read_at": "2026-09-17T06:13:27Z"
+      }
+    },
+    "contradicting_the_live_board": {
+      "13 measured of 14 quotable": {
+        "value": 335,
+        "source": "https://councilof.ai/signed/cards/<id>.json → body.public_framing",
+        "read_at": "2026-09-17T06:13:27Z"
+      }
+    },
+    "finding": "every signed card body carries a public_framing string that the live board supersedes. These are SIGNED bytes: editing them would break the signature and is forbidden. The only honest repairs are to supersede the corpus with a re-signed one, or to ledger the supersession. Both need the board signer, which runs inside GitHub Actions and is dead."
+  },
+  "signed_index_axis_ids_claimed_by_no_board_axis": {
+    "ids": {
+      "swag-30": {
+        "value": 25,
+        "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'swag-30'",
+        "read_at": "2026-09-17T06:13:27Z"
+      },
+      "mmlu-30": {
+        "value": 23,
+        "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'mmlu-30'",
+        "read_at": "2026-09-17T06:13:27Z"
+      },
+      "gsm8k-30": {
+        "value": 23,
+        "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'gsm8k-30'",
+        "read_at": "2026-09-17T06:13:27Z"
+      },
+      "arc-30": {
+        "value": 23,
+        "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'arc-30'",
+        "read_at": "2026-09-17T06:13:27Z"
+      }
+    },
+    "note": "these are capability-benchmark card sets (MMLU/GSM8K/ARC/SWAG style), not GSPC board axes. They are listed so the index's 335 is never silently attributed to the 23 axes."
+  }
+}

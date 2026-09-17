@@ -65,6 +65,43 @@ def machine_keypair():
     return priv, pub, f"machine-harvest:{fp}"
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# 1b. AUTHORITY — a signature being VALID says nothing about who may speak
+# ──────────────────────────────────────────────────────────────────────────────
+# A harvest key signs correctly every time. That is arithmetic, not standing.
+# Before this existed the pipeline emitted a bare `signed` state and a banner read
+# "SIGNED ✓" over 56 artifacts whose own scope text disclaimed authority. Authority
+# is now a FIELD, so a banner can never outrun what the artifact says.
+#
+# The allowlist can grant HARVEST authority only. It can NEVER grant board/sovereign
+# authority: that lives with did:web:csoai.org#board-attestation-1 via the approved
+# signer, and this code has no path to it.
+HARVEST_ALLOWLIST_PATH = pathlib.Path(
+    os.environ.get("CSOAI_HARVEST_ALLOWLIST", pathlib.Path.home() / ".csoai" / "harvest_allowlist.json")
+)
+
+
+def harvest_authority(fingerprint: str) -> tuple[str, dict | None]:
+    """(authority, grant) for a harvest key fingerprint.
+
+    Default — and the default is the whole point — is NOT_ESTABLISHED. A grant
+    appears only if an allowlist file explicitly names this fingerprint AND gives
+    a reason. A malformed or absent allowlist is NOT_ESTABLISHED, never a grant.
+    """
+    try:
+        entries = json.loads(HARVEST_ALLOWLIST_PATH.read_text()).get("grants") or {}
+    except Exception:  # noqa: BLE001 — absent/unreadable/malformed all mean: no grant
+        return "NOT_ESTABLISHED", None
+    grant = entries.get(fingerprint)
+    if not isinstance(grant, dict) or not grant.get("reason"):
+        return "NOT_ESTABLISHED", None
+    return "HARVEST_AUTHORITY_GRANTED", {
+        "scope": "harvest-stage only — never board/sovereign authority",
+        "granted_by": HARVEST_ALLOWLIST_PATH.as_posix(),
+        "reason": grant["reason"],
+    }
+
+
 def sign_harvest(canonical_bytes: bytes) -> dict:
     """Sign with the per-machine Ed25519 key.
     This is a HARVEST/STAGE signature, NOT a board signature.
@@ -85,14 +122,18 @@ def sign_harvest(canonical_bytes: bytes) -> dict:
     else:
         raise RuntimeError(f"Expected Ed25519PrivateKey, got {type(k).__name__}")
     fp = hashlib.sha256(pub_path.read_bytes()).hexdigest()[:16]
-    return {
+    authority, grant = harvest_authority(fp)
+    out = {
         "signature_kind": "harvest-stage",
         "algorithm": "ed25519",
         "key_fingerprint": f"machine-harvest:{fp}",
         "signature_b64": __import__("base64").b64encode(sig).decode(),
-        "signer_authority": "NOT_ESTABLISHED",
-        "scope": "this signature attests the measurement artifact was produced by THIS MACHINE'S harvest pipeline. signer_authority is NOT_ESTABLISHED: no allowlist grants harvest authority. The COSE interop key in ~/.csoai-keys/ is a different system; using it for sig:null would be forgery. Only the board key (via approved signer / GHA) carries authority.",
+        "signer_authority": authority,
+        "scope": "this signature attests the measurement artifact was produced by THIS MACHINE'S harvest pipeline. The COSE interop key in ~/.csoai-keys/ is a different system; using it for sig:null would be forgery. Only the board key (via approved signer / GHA) carries sovereign authority — no allowlist entry can confer it.",
     }
+    if grant:
+        out["harvest_authority_grant"] = grant
+    return out
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -147,63 +188,106 @@ def verify_inclusion(leaf: bytes, proof: list[str], root_hex: str) -> bool:
     return h.hex() == root_hex
 
 
+def sign_raw_ed25519(data: bytes) -> bytes:
+    """Raw Ed25519 signature over `data` with the per-machine harvest key.
+
+    Used for Rekor `rekord` entries, which carry the bytes and a signature over
+    exactly those bytes. This says the harvest pipeline produced them; it says
+    nothing about authority — see harvest_authority().
+    """
+    from cryptography.hazmat.primitives import serialization
+    priv_path = pathlib.Path(os.environ.get("CSOAI_HARVEST_PRIV", pathlib.Path.home() / ".csoai" / "keys" / "harvest_ed25519.pem"))
+    key = serialization.load_pem_private_key(priv_path.read_bytes(), password=None)
+    return key.sign(data)
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # 3. SIGSTORE REKOR — FREE public log, no key needed
 # ──────────────────────────────────────────────────────────────────────────────
-def submit_rekor(artifact_canonical: bytes, sha256_hex: str, real_ed25519_pubkey_pem: bytes | None = None) -> dict:
-    """Submit a hash to the public Sigstore Rekor log.
+def submit_rekor(artifact_canonical: bytes, sha256_hex: str,
+                 real_ed25519_pubkey_pem: bytes | None = None,
+                 sign_bytes=None, enabled: bool | None = None) -> dict:
+    """Record this artifact in the public Sigstore Rekor log — or say why we did not.
 
-    Two paths:
-      A. If a real Ed25519 public key (PEM) is supplied, build a real hashedrekord
-         entry with a valid signature. The signature is computed over a synthetic
-         message; this is a measurement-artifact hash anchor, not a forgery of any
-         external signer.
-      B. Otherwise (default), DO NOT submit a zero-key hashedrekord (that gets rejected
-         by Sigstore's anti-spam policy). Record state = NOT_SUBMITTED with the reason.
+    What was wrong here before (found 2026-09-17): the "real key" path posted a
+    hashedrekord whose signature content was sixty-four ZERO BYTES with a genuine
+    public key beside it. Sigstore rejects it, correctly. Worse, had it ever been
+    accepted it would have been an anchor to a signature nobody made. A submission
+    we know will be rejected is not a submission, and must never be counted as one.
 
-    Returns the log entry index + URL on success, NOT_SUBMITTED on refusal.
+    Now there are exactly two outcomes, and no third:
+      A. SUBMITTED — a real `rekord` entry: the artifact bytes, an Ed25519 signature
+         this process actually computed over those bytes, and the PEM public key.
+         `rekord` (not `hashedrekord`) because hashedrekord verifies a signature
+         against a digest, which Ed25519 cannot do — that shape is rejected by
+         construction, whatever key you put beside it.
+      B. NOT_SUBMITTED — with the reason. Absent key, absent bytes, submission
+         disabled, or a live error: all say so in `reason`.
+
+    Submission is OFF unless explicitly enabled. A Rekor entry is permanent and
+    public; that is the owner's call to make, not this script's.
     """
-    import urllib.request, urllib.error, urllib.parse
+    import base64, os, urllib.request
+
+    now_ts = datetime.now(timezone.utc).isoformat()
+
+    def not_submitted(reason: str) -> dict:
+        return {"state": "NOT_SUBMITTED", "reason": reason, "checked_at": now_ts}
+
+    if enabled is None:
+        enabled = os.environ.get("CSOAI_REKOR_SUBMIT", "").lower() in ("1", "true", "yes")
+    if not enabled:
+        return not_submitted(
+            "submission disabled (set CSOAI_REKOR_SUBMIT=1 to enable). A Rekor entry is "
+            "permanent and public; publishing one is an owner decision.")
     if real_ed25519_pubkey_pem is None:
-        return {
-            "state": "NOT_SUBMITTED",
-            "reason": "no real Ed25519 public key supplied; zero-key hashedrekord would be rejected by Sigstore anti-spam policy",
-            "submitted_at": datetime.now(timezone.utc).isoformat(),
-        }
-    # Path A: real key path (sketch — Sigstore v0.6+ requires a Fulcio-issued cert
-    # for full inclusion; the anonymous hashedrekord path is deprecated). Until the
-    # GHA-issued Fulcio path is restored, treat this as a best-effort attempt.
+        return not_submitted(
+            "no Ed25519 public key (PEM) supplied. The old zero-signature hashedrekord "
+            "path was removed: it was rejected by Sigstore and would have been a false "
+            "anchor if it had not been.")
+    if not artifact_canonical:
+        return not_submitted(
+            "no artifact bytes supplied. A `rekord` entry carries the bytes and a real "
+            "signature over them; there is nothing here to sign or to anchor.")
+    if sign_bytes is None:
+        return not_submitted("no signing function supplied; refusing to post an unsigned entry")
+
+    try:
+        signature = sign_bytes(artifact_canonical)
+    except Exception as e:  # noqa: BLE001
+        return not_submitted(f"signing failed: {type(e).__name__}: {str(e)[:120]}")
+
     try:
         body = json.dumps({
-            "kind": "hashedrekord",
+            "apiVersion": "0.0.1",
+            "kind": "rekord",
             "spec": {
-                "data": {"hash": {"algorithm": "sha256", "value": sha256_hex}},
+                "data": {"content": base64.b64encode(artifact_canonical).decode()},
                 "signature": {
-                    "content": __import__("base64").b64encode(b"\x00" * 64).decode(),
-                    "public_key": {"content": __import__("base64").b64encode(real_ed25519_pubkey_pem).decode()}
-                }
-            }
+                    "format": "ed25519",
+                    "content": base64.b64encode(signature).decode(),
+                    "publicKey": {"content": base64.b64encode(real_ed25519_pubkey_pem).decode()},
+                },
+            },
         }).encode()
         req = urllib.request.Request(
             "https://rekor.sigstore.dev/api/v1/log/entries",
-            data=body,
-            headers={"Content-Type": "application/json"},
-            method="POST")
+            data=body, headers={"Content-Type": "application/json"}, method="POST")
         with urllib.request.urlopen(req, timeout=20) as resp:
             data = json.loads(resp.read())
-            return {
-                "state": "SUBMITTED",
-                "log_index": data.get("uuid") or data.get("logIndex"),
-                "log_url": f"https://rekor.sigstore.dev/api/v1/log/entries?uuid={data.get('uuid')}",
-                "submitted_at": datetime.now(timezone.utc).isoformat(),
-                "integrated_time": data.get("integratedTime"),
-            }
-    except Exception as e:
+        uuid = next(iter(data), None) if isinstance(data, dict) else None
+        entry = data.get(uuid, {}) if uuid else {}
         return {
-            "state": "NOT_SUBMITTED",
-            "reason": str(e)[:200],
-            "submitted_at": datetime.now(timezone.utc).isoformat(),
+            "state": "SUBMITTED",
+            "uuid": uuid,
+            "log_index": entry.get("logIndex"),
+            "log_url": f"https://rekor.sigstore.dev/api/v1/log/entries?uuid={uuid}",
+            "integrated_time": entry.get("integratedTime"),
+            "sha256_anchored": sha256_hex,
+            "submitted_at": now_ts,
         }
+    except Exception as e:  # noqa: BLE001
+        return not_submitted(f"{type(e).__name__}: {str(e)[:200]}")
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -328,21 +412,25 @@ def run_loop(artifacts: list[dict], outdir: pathlib.Path) -> dict:
         del ots_rollup["ots_bytes"]
     rollup["ots"] = ots_rollup
 
-    # Step 5: Submit each card to Sigstore Rekor.
-    # We pass our real per-machine Ed25519 public key (NOT the COSE interop key).
-    # If Sigstore's anonymous hashedrekord path is deprecated (GHA-Fulcio dead), the
-    # response will be NOT_SUBMITTED — we record that honestly, never a fake count.
+    # Step 5: Record each card in Sigstore Rekor — or record why we did not.
+    # We pass our real per-machine Ed25519 public key (NOT the COSE interop key),
+    # the ACTUAL artifact bytes, and a signer that really signs them. Anything
+    # missing yields NOT_SUBMITTED with the reason. Never a fake count.
     pubkey_path = pathlib.Path(os.environ.get("CSOAI_HARVEST_PUB", pathlib.Path.home() / ".csoai" / "keys" / "harvest_ed25519.pub"))
     real_pk_pem = pubkey_path.read_bytes() if pubkey_path.exists() else None
     rekor_results = []
     for art in cards:
-        r = submit_rekor(b"", art["sha256"], real_ed25519_pubkey_pem=real_pk_pem)
+        art_bytes = json.dumps(art, sort_keys=True, separators=(",", ":")).encode()
+        r = submit_rekor(art_bytes, art["sha256"],
+                         real_ed25519_pubkey_pem=real_pk_pem, sign_bytes=sign_raw_ed25519)
         art["rekor"] = r
         rekor_results.append({"sha256": art["sha256"], "rekor": r})
     rollup["rekor_submissions"] = rekor_results
 
-    # Step 6: Submit the rollup root to Sigstore Rekor
-    rollup_rekor = submit_rekor(b"", rollup["sha256"], real_ed25519_pubkey_pem=real_pk_pem)
+    # Step 6: Record the rollup root the same way
+    rollup_bytes = json.dumps(rollup, sort_keys=True, separators=(",", ":")).encode()
+    rollup_rekor = submit_rekor(rollup_bytes, rollup["sha256"],
+                                real_ed25519_pubkey_pem=real_pk_pem, sign_bytes=sign_raw_ed25519)
     rollup["rollup_rekor"] = rollup_rekor
 
     # Step 7: Write final rollup
@@ -422,9 +510,11 @@ def main() -> int:
     print(f"ots_cards_pending: {sum(1 for k in pairs if True)}")
     rollup_rekor_state = (rollup.get('rollup_rekor') or {}).get('state', 'NOT_SUBMITTED')
     print(f"rollup_rekor_state: {rollup_rekor_state}")
-    print(f"\nDONE. Artifacts signed (signer_authority=NOT_ESTABLISHED on every signature), rooted, OTS-stamped. Rekor state reported honestly.")
+    authorities = sorted({(a.get("signature") or {}).get("signer_authority", "MISSING") for a in artifacts}) if artifacts else []
+    print(f"\nDONE. Artifacts signed (signer_authority: {', '.join(authorities) or 'n/a'}), rooted, OTS-stamped. Rekor state reported honestly.")
     if n_submitted == 0:
-        print(f"  NOTE: 0/{len(rollup['rekor_submissions'])} Rekor submissions. Sigstore anonymous hashedrekord path is deprecated; the GHA-Fulcio path is dead. We do NOT count un-submitted entries as submitted.")
+        reasons = sorted({(r.get('rekor') or {}).get('reason', '?') for r in rollup['rekor_submissions']})
+        print(f"  NOTE: 0/{len(rollup['rekor_submissions'])} Rekor submissions. Un-submitted entries are NEVER counted as submitted. Reason(s): " + " | ".join(reasons))
     print(f"\nSix external blockers (NOT ours to move):")
     print(f"  1. xAI spending limit                 — cannot submit to grok")
     print(f"  2. Cloudflare zone blocking curl      — cannot verify edge deploys without browser")
