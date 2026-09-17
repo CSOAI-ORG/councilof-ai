@@ -102,6 +102,11 @@ HF_REPO = "csoai/councilof-ai-mirror"
 KAGGLE_OWNER = "nicktempleman"
 KAGGLE_SLUG = "csoai-gspc-living-board"
 ZENODO_RECORD = "21991104"
+# 21991104 is the CONCEPT recid of the published methodology record (it 302s to
+# record 21991105). scripts/spray/gspc-spray.py pins it as ZENODO_METHODOLOGY_DOI and
+# guards it as "NEVER modified", so the two single-homed artifacts were NOT versioned
+# into it. They were staged as a separate deposit instead — see ZENODO_MIRROR_RECORD.
+ZENODO_MIRROR_RECORD = "22806072"
 GITHUB_OWNER = "CSOAI-ORG"
 GITHUB_REPO = "councilof-ai"
 GITHUB_REF = "master"
@@ -331,8 +336,8 @@ def kaggle_listing(fetch: Fetcher) -> SurfaceListing:
         return SurfaceListing(names=set(), error=f"unparseable listing: {e}")
 
 
-def zenodo_listing(fetch: Fetcher) -> SurfaceListing:
-    r = fetch(f"https://zenodo.org/api/records/{ZENODO_RECORD}")
+def _zenodo_record_listing(fetch: Fetcher, recid: str) -> SurfaceListing:
+    r = fetch(f"https://zenodo.org/api/records/{recid}")
     if not r.ok:
         return SurfaceListing(names=set(), error=r.error or f"HTTP {r.status}")
     try:
@@ -340,6 +345,14 @@ def zenodo_listing(fetch: Fetcher) -> SurfaceListing:
         return SurfaceListing(names={f["key"] for f in d.get("files", [])})
     except Exception as e:
         return SurfaceListing(names=set(), error=f"unparseable listing: {e}")
+
+
+def zenodo_listing(fetch: Fetcher) -> SurfaceListing:
+    return _zenodo_record_listing(fetch, ZENODO_RECORD)
+
+
+def zenodo_mirror_listing(fetch: Fetcher) -> SurfaceListing:
+    return _zenodo_record_listing(fetch, ZENODO_MIRROR_RECORD)
 
 
 @dataclass
@@ -373,6 +386,16 @@ def _zenodo_url(rel: str, listing: SurfaceListing) -> Optional[str]:
     if listing.names is not None and base not in listing.names:
         return None
     return f"https://zenodo.org/api/records/{ZENODO_RECORD}/files/{urllib.parse.quote(base)}/content"
+
+
+def _zenodo_mirror_url(rel: str, listing: SurfaceListing) -> Optional[str]:
+    base = os.path.basename(rel)
+    if listing.names is not None and base not in listing.names:
+        return None
+    return (
+        f"https://zenodo.org/api/records/{ZENODO_MIRROR_RECORD}"
+        f"/files/{urllib.parse.quote(base)}/content"
+    )
 
 
 def _councilof_url(rel: str, _listing: SurfaceListing) -> Optional[str]:
@@ -422,16 +445,48 @@ SURFACES: list[Surface] = [
     Surface(
         name="kaggle",
         provider="Kaggle",
-        note=f"dataset {KAGGLE_OWNER}/{KAGGLE_SLUG}; per-file anonymous download",
+        note=(
+            f"dataset {KAGGLE_OWNER}/{KAGGLE_SLUG}; per-file anonymous download. "
+            "MEASURED 2026-09-17: a fresh, complete, byte-correct version can exist on Kaggle "
+            "while the anonymous default still serves an older one. Versions 30 and 31 carry the "
+            "current root.json (24454 bytes, dedb49d0…); the version-less per-file endpoint, the "
+            "version-less dataset zip and datasets/view all still resolved to version 29 "
+            "(24310 bytes, d9639d9a…) for 20+ minutes after the push. The `?datasetVersionNumber=` "
+            "parameter was proved falsifiable in the same run (v=28 → different bytes, v=32 → 404), "
+            "so this is Kaggle's current-version pointer lagging, not a failed upload. A reader "
+            "following the documented URL therefore still gets the stale copy, which is exactly why "
+            "this leg is probed anonymously rather than trusted from the upload's exit code."
+        ),
         url_for=_kaggle_url,
         list_fn=kaggle_listing,
     ),
     Surface(
         name="zenodo",
         provider="Zenodo",
-        note=f"record {ZENODO_RECORD}; immutable DOI-backed deposit",
+        note=(
+            f"concept {ZENODO_RECORD} (published record 21991105); immutable DOI-backed deposit. "
+            "This is the GSPC methodology / 417-provision corpus-anchor record. "
+            "scripts/spray/gspc-spray.py pins it as ZENODO_METHODOLOGY_DOI and refuses to write to "
+            "it, so nothing is versioned into it from here."
+        ),
         url_for=_zenodo_url,
         list_fn=zenodo_listing,
+    ),
+    Surface(
+        name="zenodo-mirror-deposit",
+        provider="Zenodo",
+        note=(
+            f"deposit {ZENODO_MIRROR_RECORD} — created on PRODUCTION zenodo.org 2026-09-17 to give "
+            "agent-population-2026-09-17.json and master-consolidation-rollup-v0.1.json a second "
+            "independent provider. MEASURED: it is state=unsubmitted. Both files are uploaded and "
+            "read back with matching md5 over the authenticated deposit API, but a Zenodo draft is "
+            "not public — /api/records/22806072 and its file contents both 404 anonymously, while a "
+            "published record's file (21991105/methodology.md) returns 200 in the same run. "
+            "Publishing mints the permanent DOI 10.5281/zenodo.22806072 and cannot be undone, so it "
+            "is left to the owner. Until then this surface is correctly NOT a verified mirror."
+        ),
+        url_for=_zenodo_mirror_url,
+        list_fn=zenodo_mirror_listing,
     ),
     Surface(
         name="github-raw",
