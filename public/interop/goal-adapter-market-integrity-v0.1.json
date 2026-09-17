@@ -1,0 +1,99 @@
+{
+  "schema": "csoai.goal-adapter-market-integrity/0.1",
+  "generated_at": "2026-09-17T04:30:50.492617+00:00",
+  "title": "Market Integrity Goal-Object Adapter",
+  "covers_goal_objects": [
+    "market_integrity",
+    "transaction_integrity"
+  ],
+  "principle": "Market integrity measures whether an AI/financial system resists manipulation, wash trading, spoofing, front-running, and insider abuse.",
+  "bindings": [
+    {
+      "source": "SEC Rule 10b-5 + Section 17(a)",
+      "goal": "market_integrity",
+      "type": "ANTIFRAUD"
+    },
+    {
+      "source": "CFTC Section 6(c)",
+      "goal": "market_integrity",
+      "type": "MARKET_MANIPULATION"
+    },
+    {
+      "source": "CFTC Section 9",
+      "goal": "market_integrity",
+      "type": "BROKER_MANIPULATION"
+    },
+    {
+      "source": "CLARITY \u00a7302",
+      "goal": "market_integrity",
+      "type": "ANTIFRAUD"
+    },
+    {
+      "source": "CLARITY \u00a7413",
+      "goal": "market_integrity",
+      "type": "CONFLICT_OF_INTEREST"
+    },
+    {
+      "source": "CLARITY \u00a7501",
+      "goal": "market_integrity",
+      "type": "INNOVATION_INTEGRITY"
+    },
+    {
+      "source": "SEC RegCryptoAssets \u00a7III.D",
+      "goal": "market_integrity",
+      "type": "ANTIFRAUD_ANTIMANIPULATION"
+    },
+    {
+      "source": "GENIUS \u00a7302",
+      "goal": "market_integrity",
+      "type": "ANTIFRAUD"
+    },
+    {
+      "source": "CFTC Innovation TF (autonomous systems + AI)",
+      "goal": "market_integrity",
+      "type": "AI_MARKET_INTEGRITY"
+    }
+  ],
+  "canonical_object_template": {
+    "subject": "market.name + market_integrity.manipulation_type",
+    "requirement": "specific regulation reference",
+    "jurisdiction": "US/EU/...",
+    "source": "SEC/CFTC/CLARITY/RegCryptoAssets",
+    "source_version": "as_of date",
+    "effective_state": "OBSERVED|MEASURED|UNMEASURED",
+    "claim": "integrity claim",
+    "observation": "observed manipulation events",
+    "measurement": "anomaly score / wash-trade ratio / spoofing rate",
+    "evidence": "trade logs, surveillance alerts",
+    "provenance": "who detected",
+    "uncertainty": "false-positive risk",
+    "timestamp": "ISO-8601",
+    "valid_from": "as_of",
+    "valid_until": null,
+    "supersedes": "previous version sha256",
+    "hash": "sha256",
+    "signature": "ed25519",
+    "root": "OTS anchor"
+  },
+  "measurement_signals": [
+    "GSPC axis 'jail' \u2014 model jailbreak success rate",
+    "GSPC axis 'care' \u2014 false-positive / false-negative rate on safeguards",
+    "GSPC axis 'conformance' \u2014 adherence to documented rules",
+    "On-chain: wash-trade ratio, spoofing rate, abnormal cancellation rate"
+  ],
+  "evidence_in_estate": [
+    "public/reports/mistral-7b/jail.json",
+    "public/reports/qwen2.5-1.5b/jail.json",
+    "public/reports/qwen2.5-0.5b-instruct/jail.json",
+    "public/reports/council-safe-latest/jail.json",
+    "public/reports/muse-glimmer-latest/jail.json"
+  ],
+  "honest_findings": [
+    "Market integrity for AI systems is observable via jailbreak success rate + conformance score.",
+    "GSPC board already measures 'jail' axis on every model \u2014 that's market-integrity data for AI.",
+    "Cross-walking to financial market manipulation requires real trade logs.",
+    "CLARITY \u00a7413 conflict-of-interest rulemaking is the explicit hook for AI market-integrity obligations."
+  ],
+  "sha256": "1d5d773c781b70c757ca822c589c99acfbf56f2f07d0c20df244dc6fccad5d68",
+  "byte_size": 2776
+}

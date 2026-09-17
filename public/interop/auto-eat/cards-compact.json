@@ -73624,7 +73624,7 @@
       "is_master_rollup": true,
       "autoeat": true
     },
-    "as_of": "2026-09-17T04:29:43.962633+00:00",
+    "as_of": "2026-09-17T04:31:17.586781+00:00",
     "totals": {
       "ledger_cards": 11539,
       "auto_eat_cards": 11529,
@@ -73654,7 +73654,7 @@
       "unsigned": 1921
     },
     "evidence_url": "/interop/master-consolidation-rollup-v0.1.json",
-    "sha256": "18a70648f2653fd77f8c6e9de792c3678288cad00d3acae7e33e9ce3fa7deb56",
+    "sha256": "49a80a08c3e7e573f0d40ac5b0ef22198f4b26365200fb44cbca7632870a014b",
     "honesty": "Measurement, not certification. Empty is not zero. Engine calculates; nothing fabricated."
   },
   "autoeat.white_paper_index.v0.1": {
@@ -196390,5 +196390,62 @@
     "sha256": "0293bc63a946d0e83663e681253979a3b1de1bbb0150a6444df1350f086cf2b0",
     "evidence_url": "/interop/deep-research-regulatory-2026-09.json",
     "honesty": "Bleeding-edge regulatory research (CLARITY, GENIUS, RegCryptoAssets, SWIFT ledger)."
+  },
+  "autoeat.goal_adapter.customer_protection.v0.1": {
+    "kind": "csoai.goal-adapter-customer-protection/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": true,
+      "not_a_grade": true,
+      "fills_gap": true,
+      "covers_goal": "customer_protection",
+      "autoeat": true
+    },
+    "as_of": "2026-09-17T04:30:50.492604+00:00",
+    "covers": [
+      "customer_protection",
+      "disclosure"
+    ],
+    "bindings_count": 13,
+    "sha256": "4b511ea71ec6ef1eb1bc85dc4eb8bde6a4f6d27d620a3ce155863d3815145cd3",
+    "evidence_url": "/interop/goal-adapter-customer-protection-v0.1.json",
+    "honesty": "Customer Protection Adapter \u2014 covers the previously-uncovered customer_protection goal-object. Binds EU AI Act Art 50, GENIUS \u00a7302/311/314, CLARITY \u00a7302/311/314, RegCryptoAssets \u00a7III.D, DORA."
+  },
+  "autoeat.goal_adapter.market_integrity.v0.1": {
+    "kind": "csoai.goal-adapter-market-integrity/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": true,
+      "not_a_grade": true,
+      "fills_gap": true,
+      "covers_goal": "market_integrity",
+      "autoeat": true
+    },
+    "as_of": "2026-09-17T04:30:50.492617+00:00",
+    "covers": [
+      "market_integrity",
+      "transaction_integrity"
+    ],
+    "bindings_count": 9,
+    "sha256": "1d5d773c781b70c757ca822c589c99acfbf56f2f07d0c20df244dc6fccad5d68",
+    "evidence_url": "/interop/goal-adapter-market-integrity-v0.1.json",
+    "honesty": "Market Integrity Adapter \u2014 covers the previously-uncovered market_integrity goal-object. Binds SEC 10b-5 + 17(a), CFTC \u00a76(c) + \u00a79, CLARITY \u00a7302/413/501, RegCryptoAssets \u00a7III.D, GENIUS \u00a7302."
+  },
+  "autoeat.continuous_churn_engine.v0.1": {
+    "kind": "csoai.continuous-churn-engine/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "is_engine": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-17T04:31:04.218894+00:00",
+    "adapters": 35,
+    "next_pre_release_adapters": 6,
+    "engine_loop_steps": 7,
+    "sha256": "6a32c31c8250aa956aa281e3134320f51651fc05888a0de01dd23afc26d7d7ac",
+    "evidence_url": "/interop/continuous-churn-engine-v0.1.json",
+    "honesty": "Continuous Churn Engine \u2014 35 adapters + 6 pre-release. Permissionless, relentless, continuous. MEASURE BEFORE AI COMPANIES RELEASE."
   }
 }

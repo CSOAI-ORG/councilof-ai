@@ -1,0 +1,117 @@
+{
+  "schema": "csoai.goal-adapter-customer-protection/0.1",
+  "generated_at": "2026-09-17T04:30:50.492604+00:00",
+  "title": "Customer Protection Goal-Object Adapter",
+  "covers_goal_objects": [
+    "customer_protection",
+    "disclosure"
+  ],
+  "principle": "Customer protection measures whether an AI/financial system provides transparency, disclosure, redress, and informed consent to its users. This adapter maps EU AI Act Article 50, GENIUS Act consumer safeguards, SEC broker-dealer disclosures, and CFTC antifraud protections to the customer_protection axis.",
+  "bindings": [
+    {
+      "source": "EU AI Act Article 50",
+      "goal": "customer_protection",
+      "type": "TRANSPARENCY",
+      "applies_from": "2026-08-02",
+      "penalty_max": "\u20ac15M or 3% worldwide turnover"
+    },
+    {
+      "source": "EU AI Act Article 50(1)",
+      "goal": "customer_protection",
+      "type": "INFORM_AI_INTERACTION",
+      "description": "AI agents/chatbots must disclose AI nature to humans"
+    },
+    {
+      "source": "EU AI Act Article 50(2)",
+      "goal": "customer_protection",
+      "type": "MARK_AI_CONTENT",
+      "description": "machine-readable marks on generative outputs"
+    },
+    {
+      "source": "EU AI Act Article 50(3)",
+      "goal": "customer_protection",
+      "type": "EMOTION_BIO_DISCLOSURE",
+      "description": "inform persons exposed to emotion recognition / biometric categorisation"
+    },
+    {
+      "source": "EU AI Act Article 50(4)",
+      "goal": "customer_protection",
+      "type": "DEEPFAKE_LABEL",
+      "description": "label deepfakes + AI-generated public interest text"
+    },
+    {
+      "source": "GENIUS Act \u00a7302",
+      "goal": "customer_protection",
+      "type": "ANTIFRAUD"
+    },
+    {
+      "source": "GENIUS Act \u00a7311",
+      "goal": "customer_protection",
+      "type": "DISCLOSURE"
+    },
+    {
+      "source": "GENIUS Act \u00a7314",
+      "goal": "customer_protection",
+      "type": "EDUCATION"
+    },
+    {
+      "source": "SEC RegCryptoAssets \u00a7III.D",
+      "goal": "customer_protection",
+      "type": "ANTIFRAUD_ANTIMANIPULATION"
+    },
+    {
+      "source": "CLARITY Act \u00a7302",
+      "goal": "customer_protection",
+      "type": "ANTIFRAUD"
+    },
+    {
+      "source": "CLARITY Act \u00a7311",
+      "goal": "customer_protection",
+      "type": "DISCLOSURE"
+    },
+    {
+      "source": "CLARITY Act \u00a7314",
+      "goal": "customer_protection",
+      "type": "EDUCATION"
+    },
+    {
+      "source": "DORA consumer protection provisions",
+      "goal": "customer_protection",
+      "type": "DIGITAL_OPERATIONAL_RESILIENCE"
+    }
+  ],
+  "canonical_object_template": {
+    "subject": "system.name + customer_protection.disclosure_obligation",
+    "requirement": "specific article reference",
+    "jurisdiction": "EU/UK/US/CA/...",
+    "source": "EU AI Act / GENIUS / CLARITY / RegCryptoAssets / DORA",
+    "source_version": "as of as_of date",
+    "effective_state": "OBSERVED|MEASURED|UNMEASURED|DISPUTED",
+    "claim": "what the disclosure states",
+    "observation": "what was actually disclosed",
+    "measurement": "coverage / completeness / timeliness score",
+    "evidence": "URLs to the disclosure artifacts",
+    "provenance": "who attested to it",
+    "uncertainty": "what is unknown",
+    "timestamp": "ISO-8601",
+    "valid_from": "when effective",
+    "valid_until": null,
+    "supersedes": "previous version sha256",
+    "hash": "sha256",
+    "signature": "ed25519 sig",
+    "root": "OTS anchor"
+  },
+  "evidence_in_estate": [
+    "public/interop/osaia-safe-evidence-adapter-v0.1.json",
+    "public/interop/digital-asset-regulatory-measurement-profile-v0.1.json",
+    "public/interop/deep-research-regulatory-2026-09.json"
+  ],
+  "honest_findings": [
+    "EU AI Act Article 50 enters force 2026-08-02 \u2014 every generative AI deployment in EU must comply.",
+    "GENIUS Act \u00a7302 grants SEC anti-fraud authority over permitted payment stablecoins.",
+    "SEC RegCryptoAssets \u00a7III.D antifraud/antimanipulation provisions apply in full to crypto offerings under the proposed exemptions.",
+    "Customer protection is measurable: count disclosures, label coverage, timeliness."
+  ],
+  "sha256": "4b511ea71ec6ef1eb1bc85dc4eb8bde6a4f6d27d620a3ce155863d3815145cd3",
+  "byte_size": 3456
+}
