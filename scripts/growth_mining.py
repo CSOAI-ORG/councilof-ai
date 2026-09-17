@@ -122,12 +122,24 @@ def build_leads():
     if isinstance(br, dict) and "banks" in br:
         for b in br["banks"][:100]:  # top 100
             if isinstance(b, dict):
+                name = b.get("bank") or b.get("name") or b.get("bic") or b.get("id")
+                country = b.get("country", "")
+                chains = b.get("chains", [])
+                stablecoins = b.get("stablecoins", [])
                 leads.append({
                     "lead_kind": "bank",
-                    "identifier": b.get("name") or b.get("bic") or b.get("id"),
-                    "axis": "custody / settlement",
+                    "identifier": f"{name} ({country})" if country else name,
+                    "bank_name": name,
+                    "country": country,
+                    "chains": chains,
+                    "stablecoins": stablecoins,
+                    "axis": "custody / settlement / reserves_collateral",
                     "source_artifact": "public/interop/bank-registry.json",
-                    "opening_line": f"We measure {b.get('name','?')}'s ISO 20022 GPI message surface against the GENIUS Act §202/§310 and CLARITY §501.",
+                    "opening_line": (
+                        f"{name} is registered with us on {len(chains)} chains and "
+                        f"{len(stablecoins)} stablecoins. We measure {name}'s ISO 20022 GPI surface "
+                        f"against GENIUS Act §202/§310 and CLARITY §501."
+                    ),
                     "signed": False,
                     "discovered_at": None,
                 })
@@ -254,26 +266,62 @@ def build_registry_asks():
 
 
 def build_citable_figures(corpus):
-    """Top 10 citable, quotable, reproducible findings from the corpus."""
+    """Top 10 citable, quotable, reproducible findings from the corpus.
+
+    Filter: only signed OR content-addressed artifacts whose headline is NOT a
+    NO_LAPTOP_SIGN placeholder. Headlines shorter than 40 chars or starting with
+    noise prefixes are not quotable findings — they're status text.
+
+    We allow up to 3 figures per axis — the first three citable items. This lets
+    a strong axis (like AI economy) contribute multiple findings rather than
+    collapsing to one.
+    """
     figures = []
-    seen_axes = set()
+    per_axis_count = defaultdict(int)
+    skip_prefixes = (
+        "NO_LAPTOP_SIGN", "Envelope schema is", "None", "None.", "axis",
+        "UNSIGNED card-v0", "Measurement, not certification.",
+        "Voluntary-list", "Definition: ledger-card", "Definition: ",
+        "Reference identifier", "Source: ", "Signed by ", "as_of ",
+    )
+    skip_substrings = (
+        "MEASUREMENT, not certification", "no host was contacted",
+        "Voluntary-list appearance", "UNSIGNED",
+    )
     for item in corpus:
-        if not item["headline"]:
+        h = item.get("headline", "").strip()
+        if not h or len(h) < 40:
             continue
-        if item["axis"] in seen_axes:
+        if any(h.startswith(s) for s in skip_prefixes):
             continue
-        if not item["signed"]:
-            continue  # Only signed artifacts are quotable
-        seen_axes.add(item["axis"])
+        if any(s in h for s in skip_substrings):
+            continue
+        axis = item.get("axis") or "(uncategorized)"
+        if per_axis_count[axis] >= 3:
+            continue
+        # Signed OR content-addressed. We check by looking for content_id in the underlying file.
+        is_signed = item["signed"]
+        is_content_addressed = False
+        if not is_signed:
+            try:
+                d = json.loads((BASE / item["path"]).read_text())
+                if isinstance(d, dict) and (d.get("content_id") or d.get("sha256") or d.get("content_hash")):
+                    is_content_addressed = True
+            except Exception:
+                pass
+        if not (is_signed or is_content_addressed):
+            continue
+        per_axis_count[axis] += 1
         figures.append({
-            "axis": item["axis"],
-            "headline": item["headline"],
+            "axis": axis,
+            "headline": h,
             "source_artifact": item["path"],
-            "signed": True,
+            "signed": is_signed,
+            "content_addressed": is_content_addressed,
             "reproduces_via": f"git clone https://github.com/CSOAI-ORG/councilof-ai && cat {item['path']}",
             "disclaimers": [
                 "MEASUREMENT, not CERTIFICATION.",
-                "Reproduce from the artifact; sha256 in the file's `.content_id` field.",
+                "Reproduce from the artifact; sha256 in the file's `.content_id` field." if is_content_addressed else "Signed and timestamped; reproduce from the artifact.",
             ],
         })
         if len(figures) >= 10:
