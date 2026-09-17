@@ -1,0 +1,64 @@
+{
+  "schema": "csoai.ungraded-sweep/0.1",
+  "kind": "three-state-ungraded-sweep",
+  "generated_at": "2026-09-17T11:31:11.171908+00:00",
+  "rule": "Every published cell is in one of {MEASURED, UNMEASURED, UNGRADED}. We do not collapse to 0, null, or percentage-without-denominator.",
+  "corpora": [
+    {
+      "corpus": "arc-agi-2",
+      "denominator": {
+        "scanned_count": 0,
+        "as_of": "2026-09-17"
+      },
+      "ungraded": 0,
+      "state": "ABSENT",
+      "rule": "correct:null == UNGRADED. Never 0, never null-as-zero."
+    },
+    {
+      "corpus": "estate-catalog (canonical-23-axis-index-v0.1)",
+      "denominator": {
+        "scanned_count": 23,
+        "as_of": "2026-09-17T11:18Z"
+      },
+      "states": {
+        "MEASURED": 22,
+        "UNMEASURED": 1,
+        "UNGRADED": 0,
+        "NO_DATA": 0
+      },
+      "rule": "Three-state, NEVER collapsed into 0."
+    },
+    {
+      "corpus": "huggingface-datasets (csoai)",
+      "denominator": {
+        "scanned_count": 106,
+        "as_of": "2026-09-17"
+      },
+      "ungraded": 0,
+      "state": "ABSENT",
+      "rule": "Gated/private/empty downloads/sha-absent items are published-but-ungraded."
+    },
+    {
+      "corpus": "ots-stamps (public/interop/ots/)",
+      "denominator": {
+        "scanned_count": 346,
+        "as_of": "2026-09-17"
+      },
+      "ungraded": 0,
+      "rule": "OTS files are either real proofs (PENDING or ATTESTED) or .invalid. Both are not 'ungraded' \u2014 they're a different state."
+    },
+    {
+      "corpus": "signed-cards",
+      "denominator": {
+        "scanned_count": 335,
+        "as_of": "2026-08-19T09:24:39Z",
+        "source": "live receipt receipts/state.2026-09-17.raw \u2192 signed_cards.count.value"
+      },
+      "ungraded": 0,
+      "note": "all are signed; re-grading against EXCLUSION_CEILING=0.20 is a separate sweep \u2014 see scripts/build_axis_reconciliation_v2.py and public/interop/exclusion-ratio-audit-2026-09-17.json",
+      "rule": "SIGNED bytes never move without an explicit re-sign. UNGRADED does not apply to signed bytes."
+    }
+  ],
+  "sha256": "19218e6f3a579192e207b28a66f8717e381aceacc1950e4d97ac795840b4725c",
+  "byte_size": 1637
+}
