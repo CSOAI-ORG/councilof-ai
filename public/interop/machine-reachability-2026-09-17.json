@@ -1,0 +1,165 @@
+{
+  "schema": "csoai.machine-reachability/0.1",
+  "as_of": "2026-09-17T03:44:18Z",
+  "origin": "https://councilof.ai",
+  "method": "Two requests per URL from one network: a Python standard-library client with no User-Agent override, and the same request carrying a browser User-Agent. HTTP 402 counts as reachable, because a payable door answering 402 is working.",
+  "what_this_is_not": [
+    "Not a claim about any vendor's intentions.",
+    "Not a security finding.",
+    "One network, one moment. A different network may see different results."
+  ],
+  "why_this_matters": "Everything published here is addressed to machines. The DID document exists so a verifier can fetch a key; the agent card so an agent can find our skills; robots.txt and llms.txt so a crawler can read our rules; x402 so a buying agent can receive a payment challenge. HUMAN_ONLY on those surfaces means the product does not work, whatever a browser shows.",
+  "totals": {
+    "urls": 21,
+    "HUMAN_ONLY": 21
+  },
+  "rows": [
+    {
+      "path": "/",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/estate/",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/verify",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/gspc-verify",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/board",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/press",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/api/gspc",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/api/state",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/api/corrections",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/api/cards",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/api/root",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/api/revenue",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/api/x402",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/api/free-door",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 402,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/api/learning-scenarios",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/.well-known/agent-card.json",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/.well-known/x402.json",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/.well-known/did.json",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/sitemap.xml",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/robots.txt",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    },
+    {
+      "path": "/llms.txt",
+      "plain_client_status": 403,
+      "plain_client_body": "error code: 1010",
+      "browser_ua_status": 200,
+      "state": "HUMAN_ONLY"
+    }
+  ]
+}

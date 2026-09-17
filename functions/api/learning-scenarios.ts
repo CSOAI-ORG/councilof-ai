@@ -1,4 +1,5 @@
-// /api/learning-scenarios — deterministic, read-only material for the 22-axis UI.
+// /api/learning-scenarios — deterministic, read-only material for the GSPC axis UI.
+// Axis counts are read from the board at request time, never written here.
 //
 // This endpoint does not generate findings. It joins three already-published sources:
 //   * /api/gspc                         — board measurement context;
@@ -101,10 +102,20 @@ function validBoardAxis(value: unknown): value is BoardAxis {
 }
 
 function boardAxes(board: JsonObject): BoardAxis[] | null {
+  // The board's cardinality is NOT asserted against a typed constant here, and must not be.
+  // It was `!== 22`, and when ADR-002 added the declared effect-binding slot the board began
+  // returning 23, so this endpoint answered 503 GSPC_SOURCE_UNAVAILABLE_OR_INVALID to every
+  // caller while the board it validates was perfectly healthy. A typed count turns a governance
+  // decision into an outage.
+  //
+  // Nothing is weakened by removing it. The self-consistency checks below are strictly stronger:
+  // they require the board's own totals to agree with the rows it actually carries, which a
+  // hardcoded length never tested. A board with the "right" number of malformed or disagreeing
+  // rows passed the old check and fails these.
   if (
     board.schema !== BOARD_SCHEMA ||
     !Array.isArray(board.axes) ||
-    board.axes.length !== 22
+    board.axes.length === 0
   )
     return null;
   if (!board.axes.every(validBoardAxis)) return null;
@@ -352,7 +363,9 @@ function unavailable(errors: string[]) {
         schema: OUTPUT_SCHEMA,
         state: "UNCHECKABLE",
         errors,
-        canonical_axis_count: 22,
+        // The board could not be read, so there is no count to report. Reporting a remembered
+        // number here would tell a caller the board says something we did not manage to read.
+        canonical_axis_count: null,
         scenario_count: 0,
         scenarios: [],
         writes_board: false,
@@ -538,7 +551,7 @@ export async function onRequestGet({ request }: { request: Request }) {
         schema: OUTPUT_SCHEMA,
         state: "READY",
         purpose:
-          "Deterministic human-guided inspection and replay planning for the 22-axis GSPC UI.",
+          "Deterministic human-guided inspection and replay planning for the GSPC axis UI.",
         classification_enum: [
           "BOARD_MEASUREMENT_CONTEXT",
           "VERIFIED_PUBLISHED_EVIDENCE",
@@ -596,3 +609,7 @@ export async function onRequestGet({ request }: { request: Request }) {
     { status: 200, headers: HEADERS },
   );
 }
+
+// Exported for the cardinality tests. The outage it guards against was invisible to every
+// test that built a board with the blessed number of rows.
+export const boardAxesForTest = boardAxes;

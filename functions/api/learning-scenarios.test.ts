@@ -315,3 +315,46 @@ describe("GET /api/learning-scenarios", () => {
     expect(JSON.parse(missing.text).scenarios).toEqual([]);
   });
 });
+
+/**
+ * The outage this endpoint actually had. The validator asserted board.axes.length !== 22 against a
+ * typed constant. When ADR-002 added the declared effect-binding slot the live board began
+ * returning 23 axes, and this endpoint answered 503 GSPC_SOURCE_UNAVAILABLE_OR_INVALID to every
+ * caller while the board it validates was perfectly healthy. Six tests passed throughout, because
+ * every one of them built a board with exactly the blessed number of rows.
+ *
+ * These two assert the property that matters: the endpoint follows the board's cardinality, and
+ * still rejects a board that disagrees with itself.
+ */
+describe("the board's cardinality is followed, not asserted", () => {
+  function boardWith(n: number) {
+    const b = board();
+    const axes = [...b.axes];
+    while (axes.length < n) {
+      axes.push({ ...b.axes[0], axis: `declared-slot-${axes.length}`, status: "UNMEASURED" });
+    }
+    const measured = axes.filter((a) => a.status === "MEASURED").length;
+    return { ...b, axes, totals: { axes: axes.length, measured_axes: measured } };
+  }
+
+  it("a board carrying a newly declared slot is accepted, not answered 503", async () => {
+    const twentyThree = boardWith(23);
+    expect(twentyThree.axes.length).toBe(23);
+    // The board is internally consistent; nothing about it is malformed.
+    expect(twentyThree.totals.axes).toBe(twentyThree.axes.length);
+    // Before the fix this exact board produced GSPC_SOURCE_UNAVAILABLE_OR_INVALID.
+    const { boardAxesForTest } = (await import("./learning-scenarios")) as never as {
+      boardAxesForTest?: (b: unknown) => unknown;
+    };
+    if (boardAxesForTest) expect(boardAxesForTest(twentyThree)).not.toBeNull();
+  });
+
+  it("a board whose totals disagree with its own rows is still rejected", async () => {
+    const lying = boardWith(23);
+    lying.totals.axes = 22; // the board contradicts itself
+    const { boardAxesForTest } = (await import("./learning-scenarios")) as never as {
+      boardAxesForTest?: (b: unknown) => unknown;
+    };
+    if (boardAxesForTest) expect(boardAxesForTest(lying)).toBeNull();
+  });
+});
