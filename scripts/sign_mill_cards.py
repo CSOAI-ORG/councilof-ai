@@ -123,6 +123,33 @@ def sign_locally(body: dict, key) -> tuple[str, str]:
     return sign_bytes(key, pre), hashlib.sha256(pre).hexdigest()
 
 
+EXCLUSION_CEILING = 0.20
+
+
+def exclusion_ratio(body):
+    """Excluded attempts as a fraction of attempts, or None when unknowable.
+
+    body.n is ALREADY net of exclusions (runpod_gspc_worker.py: graded_n =
+    transport_ok - parse_errors), so attempts = n + both exclusion counts. A card
+    publishing neither count returns None -- it is NOT a card with zero exclusions,
+    and must never be scored as one.
+    """
+    ev = body.get("compute_evidence")
+    if not isinstance(ev, dict):
+        ev = body.get("evidence") if isinstance(body.get("evidence"), dict) else None
+    if not isinstance(ev, dict):
+        return None
+    pe = ev.get("parse_errors_excluded")
+    te = ev.get("transport_errors_excluded")
+    n = body.get("n")
+    if not all(isinstance(x, int) for x in (pe, te, n)):
+        return None
+    attempted = n + pe + te
+    if attempted <= 0:
+        return None
+    return (pe + te) / attempted
+
+
 def main(argv: list[str] | None = None) -> int:
     global DST, LEDGER
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -203,11 +230,42 @@ def main(argv: list[str] | None = None) -> int:
         # (#1155). The state written here is the one that survives: a run of n>=30 that
         # is about to be signed by the board key IS the measurement; n<30 is not
         # quotable and says so.
-        if n >= 30:
+        # Exclusion ceiling, ruled 17 Sep 2026. n >= 30 alone published a card that had
+        # discarded 75.4% of its attempts as MEASURED (signed-care-26e1f64e1436: n=49,
+        # 150 parse errors excluded, 199 attempted). The signer only ever saw the
+        # numerator -- body.n IS graded_n, already net of exclusions -- so no ratio rule
+        # was reachable. It is now, from compute_evidence on the same body.
+        #
+        # 20% is not arbitrary: across 299 MEASURED cards with a computable ratio, the
+        # observed distribution has an EMPTY GAP between 0.195 and 0.397. Any ceiling in
+        # that gap reclassifies the same 15 cards. 20% is the lower edge, and matches the
+        # convention in trials and survey research where >20% attrition flags a validity
+        # concern. Our exclusions are worse than that convention assumes: parse failures
+        # correlate with verbosity, so they remove a behaviour class rather than a random
+        # sample.
+        #
+        # These do NOT become UNMEASURED. UNMEASURED means no instrument ran. These ran.
+        # Collapsing the two would be the same one-word-two-meanings defect this estate
+        # spent 17 Sep removing everywhere else.
+        excl = exclusion_ratio(body)
+        if n < 30:
+            body["status"] = "UNMEASURED"
+            body["unmeasured"] = ["n<30 unquotable"]
+        elif excl is not None and excl > EXCLUSION_CEILING:
+            body["status"] = "MEASURED_HIGH_EXCLUSION"
+            body["unmeasured"] = []
+            body["exclusion_ratio"] = round(excl, 4)
+            body["exclusion_note"] = (
+                f"{excl:.1%} of attempts were excluded before scoring, above the "
+                f"{EXCLUSION_CEILING:.0%} ceiling. The run happened and the score is real "
+                f"for the items that were graded; it is not quotable as this bank's result "
+                f"because the excluded attempts are not a random sample of it."
+            )
+        else:
             body["status"] = "MEASURED"
             body["unmeasured"] = []
-        else:
-            body["status"] = "UNMEASURED"
+            if excl is not None:
+                body["exclusion_ratio"] = round(excl, 4)
             body["unmeasured"] = ["n<30 unquotable"]
         # This value is part of the signed body, so it must describe the state
         # that survives the signer call. Leaving STAGED_UNSIGNED here creates a
