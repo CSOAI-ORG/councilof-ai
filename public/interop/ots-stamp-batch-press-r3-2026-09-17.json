@@ -1,0 +1,31 @@
+{
+ "schema": "csoai.ots-stamp-batch/0.1",
+ "as_of": "2026-09-17T12:16:07Z",
+ "signed": false,
+ "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
+ "anchoring_is_not_signing": "Anchoring proves WHEN bytes existed. Signing proves WHO attests to them. These artifacts are being anchored and are NOT signed; neither substitutes for the other.",
+ "calendars": [
+  "https://alice.btc.calendar.opentimestamps.org",
+  "https://bob.btc.calendar.opentimestamps.org",
+  "https://finney.calendar.eternitywall.com"
+ ],
+ "stamps": [
+  {
+   "path": "public/press/2026-09-17-can-you-check-their-work.md",
+   "sha256": "8ac65c0b58f470ce0f0fa55ed1878d2c7611eacd25cd3b92a6b6af42be672dab",
+   "bytes": 12724,
+   "ots_file": "public/press/2026-09-17-can-you-check-their-work.md.ots",
+   "ots_bytes": 740,
+   "calendars_accepted": [
+    "https://alice.btc.calendar.opentimestamps.org",
+    "https://bob.btc.calendar.opentimestamps.org",
+    "https://finney.calendar.eternitywall.com"
+   ],
+   "proof_parses": true,
+   "proof_binds_to_file_digest": true,
+   "attestation_count": 3,
+   "state": "PENDING_CALENDAR_COMMITMENT",
+   "state_meaning": "A calendar has accepted this digest and promised future Bitcoin inclusion. This is NOT a Bitcoin attestation and must never be described as one. Run scripts/ots-upgrade.py in a few hours, then verify against the chain, before any file is called anchored."
+  }
+ ]
+}
