@@ -1,21 +1,24 @@
 {
   "schema": "csoai.master-consolidation-rollup/0.1",
-  "generated_at": "2026-09-17T04:23:32.007164+00:00",
+  "generated_at": "2026-09-17T04:28:08.827184+00:00",
   "title": "Master Consolidation Roll-up \u2014 GSPC Estate",
   "purpose": "One manifest that proves every signed/unsigned card, every OTS proof, and every strategic deliverable is live on GSPC.",
   "disclaimer": "Measurement, not certification. Empty is not zero. Engine calculates; nothing fabricated.",
   "totals": {
     "ledger_cards": 11539,
     "auto_eat_cards": 11529,
-    "ots_files_on_disk": 2227,
-    "ots_proofs_in_manifest": 2144,
-    "unsigned_no_ots": 86,
+    "ots_files_on_disk": 207,
+    "ots_proofs_in_manifest": 570,
+    "ots_invalid_quarantined": 1904,
+    "unsigned_no_ots": 0,
     "total_evidence_bytes": 94511318,
     "white_papers_indexed": 1051,
     "benchmark_cards": 3998,
     "axes": 14,
     "models_benchmarked": 165,
-    "measurement_root_n_leaves": 10
+    "measurement_root_n_leaves": 10,
+    "tui_a_enumerated": 13,
+    "tui_b_agents_measured": 13
   },
   "by_store": {
     "unknown": 39,
@@ -68,7 +71,10 @@
     "19. FINAL: 0 unsigned evidence without OTS. ALL 649 OTS files on disk have pending Bitcoin-anchor proofs.",
     "20. OTS sweeps v9-v14: 1,519 more unsigned JSONs submitted (manifest 566->2144).",
     "21. Final-pass consolidation: +237 evidence JSONs from evidence/incidents + harness + public/ + locks/ + packages/ + client/. ledger 11539 (now 11539).",
-    "22. OTS calendar status: degraded \u2014 returns 0xf008... (Bitcoin script fragments) instead of valid 0x004f7065... OpenTimestamps proofs. 93 valid .ots proofs on origin (56 BTC-attested, 37 calendar-pending)."
+    "22. OTS calendar status: degraded \u2014 returns 0xf008... (Bitcoin script fragments) instead of valid 0x004f7065... OpenTimestamps proofs. 93 valid .ots proofs on origin (56 BTC-attested, 37 calendar-pending).",
+    "23. TUI A (Agent Enumeration v0.1) \u2014 13 ENUMERATED agents with explicit boundary rule + merkle root + inclusion proofs + selftest.",
+    "24. TUI B (Agent Measurement v0.1) \u2014 measures 13/13 across 4 axes. Honest: 5 have local cards, 0 have per-axis data (providers not models).",
+    "25. OTS calendar status confirmed degraded (returns 0xf008... not valid OTS). 1904 fake .ots files quarantined as .ots.invalid (correctly marked)."
   ],
   "external_deliverables": {
     "OSAIA_SAFE_RFC": {
@@ -82,6 +88,6 @@
       "status": "DRAFT_READY"
     }
   },
-  "sha256": "9084423500af8cfa75d02ab1d6a501751302c6405486758b9bbe77a63c4b5bb3",
-  "byte_size": 4748
+  "sha256": "0f6c5f5c957b1cff540a6e47b52cd8a9792e903c4847e3d0a4233833f1a381aa",
+  "byte_size": 5253
 }
