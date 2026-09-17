@@ -55,7 +55,12 @@ const RULES = [
     // sov3 / sov33 / sov34 (and hyphenated variants like sov33-dist-c3), SOVOS,
     // dorado, cibola — internal names, never public. Caught live on /benchmarks
     // 2026-08-25 because this class was missing from the gate.
-    pattern: /\bsovos\b|\bsov3\d*(?:-[a-z0-9-]+)?\b|\bdorado\b|\bcibola\b/i,
+    // \b does NOT fire on snake_case: underscore is a word character, so
+    // gspc_baseline_sov34_latest.md, DAY3_LAYER4_SOV3_AUDIT.md and
+    // SOVOS_VIDEO_BIBLE.md all passed this gate and reached a public
+    // dataset. Alphanumeric lookarounds treat _ and - as boundaries while
+    // still excluding eldorado (the char before 'dorado' is 'l').
+    pattern: /(?<![a-z0-9])(?:sovos|sov3\d*(?:-[a-z0-9-]+)?|dorado|cibola)(?![a-z0-9])/i,
     why: "Internal codename on a public surface. Use the public-canon name (Council / the fine-tune's neutral description).",
   },
   {
@@ -170,7 +175,8 @@ const RULES = [
   },
 ];
 
-const PATH_BANNED = /\b(sovos|sov3\d*|dorado|cibola|ceasai)\b/i;
+// Same fix as the display pattern: \b cannot see a codename inside snake_case.
+const PATH_BANNED = /(?<![a-z0-9])(sovos|sov3\d*|dorado|cibola|ceasai)(?![a-z0-9])/i;
 
 /**
  * Whole-body public-JSON codename scan. `/signed/` is evidence (real model ids).
