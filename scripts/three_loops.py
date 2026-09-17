@@ -491,11 +491,14 @@ def publish_measurement(observation: dict, axis: str, source: str, outdir: pathl
     }
     canonical = json.dumps(artifact, sort_keys=True, separators=(",", ":")).encode()
     artifact["sha256"] = hashlib.sha256(canonical).hexdigest()
-    p = outdir / f"measurement-{axis}-{source}-{artifact['sha256'][:8]}.json"
+    # Fresh filename per cycle — never overwrite a stamped file (the orphan trap)
+    ts_suffix = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+    p = outdir / f"measurement-{axis}-{source}-{ts_suffix}.json"
     p.write_bytes(json.dumps(artifact, indent=2).encode())
 
-    # OTS stamp
-    digest = bytes.fromhex(artifact["sha256"])
+    # OTS stamp — must cover the BYTES ON DISK, not the pre-write canonical form.
+    # Re-hash the written file so the stamp can never orphan.
+    digest = hashlib.sha256(p.read_bytes()).digest()
     ts = Timestamp(digest)
     cal_responses = {}
     for url in CALS:
@@ -590,8 +593,8 @@ def main() -> int:
             p = outdir / f"loop1-staged-{pick['name'].lower().replace(' ', '_').replace('/', '_')}.json"
             p.write_bytes(json.dumps(send_artifact, indent=2).encode())
 
-            # OTS stamp
-            digest = bytes.fromhex(send_artifact["sha256"])
+            # OTS stamp — must cover the BYTES ON DISK (the orphan trap fix)
+            digest = hashlib.sha256(p.read_bytes()).digest()
             ts = Timestamp(digest)
             for url in CALS:
                 try: ts.merge(RemoteCalendar(url).submit(digest, timeout=15))
@@ -673,8 +676,8 @@ def main() -> int:
             submit["sha256"] = hashlib.sha256(canonical).hexdigest()
             p = outdir / f"loop3-staged-{pick['name'].lower().replace(' ', '_').replace('.', '_')}.json"
             p.write_bytes(json.dumps(submit, indent=2).encode())
-            # OTS
-            digest = bytes.fromhex(submit["sha256"])
+            # OTS — must cover the BYTES ON DISK (the orphan trap fix)
+            digest = hashlib.sha256(p.read_bytes()).digest()
             ts = Timestamp(digest)
             for url in CALS:
                 try: ts.merge(RemoteCalendar(url).submit(digest, timeout=15))
