@@ -1,0 +1,86 @@
+{
+ "schema": "csoai.agent-population-census/0.1",
+ "as_of": "2026-09-17T05:48:05Z",
+ "what_this_is": "Populations of agents and payable endpoints that can be enumerated without a credential.",
+ "what_this_is_not": [
+  "Not a global count of anything. Each row is a count WITHIN a named frame, and the frame is the source.",
+  "Not a measurement of those agents. Appearing in a registry says nothing about whether the agent works.",
+  "Not a total. Sources overlap, and the overlap is published rather than assumed to be zero."
+ ],
+ "on_the_figure_750000": "A figure of 750,000 A2A agents was circulating when this was built. We searched for a published source and found none: no crawl, no method, no denominator. The largest independently measured A2A population we could find is in the hundreds, and this census counts the same order. We record the discrepancy rather than repeating the figure.",
+ "totals": {
+  "x402-cdp-bazaar": 15742,
+  "x402-payai-bazaar": 25491,
+  "mcp-official-registry": 32670,
+  "a2aregistry-org": 391
+ },
+ "pairwise_overlap": {
+  "x402-cdp-bazaar ∩ x402-payai-bazaar": 1104,
+  "x402-cdp-bazaar ∩ mcp-official-registry": 0,
+  "x402-cdp-bazaar ∩ a2aregistry-org": 0,
+  "x402-payai-bazaar ∩ mcp-official-registry": 0,
+  "x402-payai-bazaar ∩ a2aregistry-org": 0,
+  "mcp-official-registry ∩ a2aregistry-org": 0
+ },
+ "sources": [
+  {
+   "source": "x402-cdp-bazaar",
+   "state": "ENUMERATED_COMPLETE",
+   "pages_walked": 158,
+   "items_returned": 15742,
+   "distinct_keys": 15742,
+   "duplicates_in_source": 0,
+   "seconds": 152.7,
+   "credential_required": false,
+   "note": "Coinbase documents this endpoint as public and requiring no API key. Our walk is unauthenticated."
+  },
+  {
+   "source": "x402-payai-bazaar",
+   "state": "ENUMERATED_COMPLETE",
+   "pages_walked": 256,
+   "items_returned": 25505,
+   "distinct_keys": 25491,
+   "duplicates_in_source": 14,
+   "seconds": 187.1,
+   "credential_required": false,
+   "note": "Response headers publish a 25 requests per second limit; we stay well under it."
+  },
+  {
+   "source": "mcp-official-registry",
+   "state": "ENUMERATED_COMPLETE",
+   "pages_walked": 327,
+   "items_returned": 32670,
+   "distinct_keys": 32670,
+   "duplicates_in_source": 0,
+   "seconds": 643.7,
+   "credential_required": false,
+   "note": "version=latest is required. Without it the endpoint returns EVERY published version of every server. Pagination is metadata.nextCursor (camelCase); an earlier walk of ours looked for next_cursor, stopped after one page, and published 100 as ENUMERATED_COMPLETE. The identity is record.server.name, not record.name.",
+   "records_without_a_name": 0,
+   "by_status": {
+    "active": 32323,
+    "deprecated": 347
+   }
+  },
+  {
+   "source": "a2aregistry-org",
+   "state": "ENUMERATED_COMPLETE",
+   "pages_walked": 4,
+   "items_returned": 391,
+   "distinct_keys": 391,
+   "duplicates_in_source": 0,
+   "seconds": 2.7,
+   "credential_required": false,
+   "note": "Returns 403 to a request with no User-Agent. Permissionless only if you send one."
+  }
+ ],
+ "content_digest": "416edbe35d36fc9571cb07e61e4410a2800ba057cfc5f9d4ea7c128a0da21ab0",
+ "corrections": [
+  {
+   "id": "census-2026-09-17-mcp-recount",
+   "date": "2026-09-17",
+   "what_was_wrong": "This file previously recorded mcp-official-registry as 100 distinct with state ENUMERATED_COMPLETE, from a single page.",
+   "what_is_true": "32,670 distinct servers across 327 pages: 32,323 active and 347 deprecated, zero duplicates, zero unnamed records.",
+   "why": "The walker read next_cursor; the field is nextCursor. It therefore never advanced past page one, and labelled that page COMPLETE. The understatement was 327-fold. A second bug in the repaired walker keyed on record.name when the identity is record.server.name, which collapsed every record to one key -- caught only because the duplicate counter read 32,643. The replacement walker reports TRUNCATED_AT_CAP when it hits its page cap and can never report COMPLETE from a capped walk."
+  }
+ ]
+}
