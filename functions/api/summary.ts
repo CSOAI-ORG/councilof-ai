@@ -77,15 +77,26 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
     },
 
     headline: {
-      signed_cards: fact(num(rootObj?.card_count), "/root.json", String(rootObj?.as_of ?? "")),
+      // NOT signed measurement cards. root.json's card_sha256 leaves are timestamp
+      // notices over third-party bytes plus ledger-state records -- zero measurement
+      // cards, and zero identifier overlap with the signed card index. Renamed so the
+      // number cannot be read as "we have signed 305 measurements".
+      public_root_leaves: fact(num(rootObj?.card_count), "/root.json", String(rootObj?.as_of ?? "")),
+      // measured_axes MUST come from totals.measured_axes, never from parsing
+      // totals.public_count. That string is "23 axis \u00b7 22 measured"; splitting on
+      // the first space took 23 -- the SLOT count -- and published it as the MEASURED
+      // count. The board's own count_grammar field exists to forbid exactly this, and
+      // /api/summary was doing it while citing /api/gspc as the source.
       measured_axes: fact(
-        num(
-          boardObj && typeof boardObj === "object" && "totals" in boardObj
-            ? ((boardObj as { totals?: { public_count?: string } }).totals?.public_count
-                ? Number(String((boardObj as { totals: { public_count: string } }).totals.public_count).split(" ")[0]) || null
-                : null)
-            : null
-        ),
+        num((boardObj as { totals?: { measured_axes?: number } } | undefined)?.totals?.measured_axes),
+        "/api/gspc"
+      ),
+      declared_axes: fact(
+        num((boardObj as { totals?: { axes?: number } } | undefined)?.totals?.axes),
+        "/api/gspc"
+      ),
+      unmeasured_axes: fact(
+        num((boardObj as { totals?: { unmeasured_axes?: number } } | undefined)?.totals?.unmeasured_axes),
         "/api/gspc"
       ),
       mcp_servers_probed: fact(num((mcpObj as { counts?: { total?: number } })?.counts?.total), "/interop/mcp-trust/latest.json", String(mcpObj?.as_of ?? "")),

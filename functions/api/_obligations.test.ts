@@ -11,11 +11,24 @@ describe("obligation map — SKU-2 assembles against real obligations, never det
     expect(resolveObligation("nonsense")).toBeNull();
   });
 
-  it("only Article 50 is counsel-confirmed; the others ship their honesty note", () => {
+  it("EVERY obligation ships an honesty note, counsel-confirmed or not", () => {
+    // The previous form said: if counsel_confirmed then honesty MUST be null. That made
+    // the flag switch the honesty note OFF, and Article 50 shipped counsel_confirmed:true
+    // with honesty:null while its own statutory_maximum read "confirm exact figure with
+    // counsel". A flag that suppresses a disclosure is the wrong shape regardless of
+    // whether the flag is accurate.
     for (const o of Object.values(OBLIGATIONS)) {
-      if (o.counsel_confirmed) expect(o.honesty).toBeNull();
-      else expect(o.honesty).toMatch(/counsel|not (?:yet )?in the .*crosswalk|conformity/i);
+      expect(o.honesty, `${o.id} must carry an honesty note`).toBeTruthy();
+      expect(o.honesty).toMatch(/counsel|not (?:yet )?in the .*crosswalk|conformity/i);
     }
+  });
+
+  it("nothing currently claims counsel confirmation", () => {
+    // Not a permanent rule: if counsel genuinely reviews an obligation, flip its flag
+    // and this test fails, which is the moment to check the honesty note still stands
+    // on its own rather than being deleted.
+    const claimed = Object.values(OBLIGATIONS).filter((o) => o.counsel_confirmed).map((o) => o.id);
+    expect(claimed, "counsel_confirmed is set for: " + claimed.join(", ")).toEqual([]);
   });
 
   it("relevance always needs an obligation keyword; a given subject must also match, an absent one constrains nothing", () => {

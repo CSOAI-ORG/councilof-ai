@@ -31,8 +31,18 @@ export const OBLIGATIONS: Record<string, Obligation> = {
       "up to €15,000,000 or 3% of worldwide annual turnover (EU AI Act Art. 99) — confirm exact figure with counsel",
     keywords: ["article 50", "art50", "art 50", "disclosure", "transparency", "provenance", "c2pa", "watermark", "synthetic", "marking", "agent.disclosure"],
     existing_pack: "/packs/eu-article-50",
-    counsel_confirmed: true,
-    honesty: null,
+    // Was `true` with `honesty: null`. No counsel has reviewed this mapping. The flag
+    // was set because the ProvBench pack is built and signed, which is a statement
+    // about an artifact, not about legal review -- and the same record's
+    // statutory_maximum says "confirm exact figure with counsel" three lines above.
+    // Live /api/eu-ai-act published counsel_confirmed: true for this obligation while
+    // every other obligation correctly published false.
+    counsel_confirmed: false,
+    honesty:
+      "No counsel has reviewed this mapping. A signed ProvBench pack evidences that we " +
+      "measured marking behaviour; it does not establish that our reading of Article 50, " +
+      "or the penalty exposure quoted above, is legally correct. Confirm with counsel " +
+      "before relying on either.",
   },
   "article-53": {
     id: "article-53",
