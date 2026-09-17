@@ -1,18 +1,21 @@
 {
  "schema": "csoai.financial-measure-run/0.4",
  "axis": "labour-components",
- "as_of": "2026-09-07T11:30:35Z",
- "n": 1,
+ "as_of": "2026-09-17T12:58:11Z",
+ "n": 2,
  "n_unit": "public series",
  "status": "MEASURED",
  "risk_verdict": "UNMEASURED",
  "three_state": "PASS / FAIL / UNCHECKABLE per fact. UNREACHABLE page => UNCHECKABLE, never FAIL.",
- "producer": "scripts/grade_financial_ledgers.py",
+ "producer": "scripts/gspc_financial_facts.py (invoked from grade_financial_ledgers.py --gspc-facts)",
  "honesty": "Facts MEASURED from this run's fetches. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. No model, no accuracy, no leader. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
  "measured": [
   {
    "series": "EU participation rate",
-   "status": "UNREACHABLE",
+   "status": "MEASURED",
+   "year": "2025",
+   "value": 57.2757723145448,
+   "unit": "%",
    "source": "https://api.worldbank.org/v2/country/EUU/indicator/SL.TLF.CACT.ZS?format=json&per_page=8"
   },
   {
@@ -27,8 +30,7 @@
  "index_formula": false,
  "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
  "tally": {
-  "UNREACHABLE": 1,
-  "MEASURED": 1
+  "MEASURED": 2
  },
- "content_id": "be45e14d56a338d763625ee41303221987dc96fae287ecfd4308df21c3b4e835"
+ "content_id": "9eac1f2223feded17305f1abb197a0aa6500395e0562772d69b38244dde4d1c1"
 }

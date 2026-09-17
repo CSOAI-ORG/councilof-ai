@@ -34,6 +34,60 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0917-03",
+      date: "2026-09-17",
+      first_observed_at: "2026-09-17T12:06Z",
+      what_was_wrong:
+        "The GSPC axis humanoid-labour-index published a PASS that was not true. The run of " +
+        "2026-09-07 recorded, for https://www.sanctuary.ai, dated_deployment_count_published true " +
+        "and three_state PASS, and served a tally of PASS 1 / FAIL 6 / UNCHECKABLE 1. The axis asks " +
+        "whether a named vendor publishes a dated deployment count on a stable URL. That page " +
+        "publishes no count of robots at all: fetched 17 September, HTTP 200, 245,649 bytes, 8,794 " +
+        "characters of visible text, not one number followed by a unit noun. The only PASS on the " +
+        "axis was manufactured by our own grader.",
+      why_it_was_wrong:
+        "The predicate was a single regex run against raw markup, and its second alternative had no " +
+        "word boundary after the unit noun. So the press-coverage headline \"Sanctuary AI #1 Robotics " +
+        "Story of April 2026\" supplied all three things it asked for: \"Robot\" inside \"Robotics\" was " +
+        "the unit, the \"1\" of \"#1\" was the count, and \"2026\" was the date. Three errors compounded " +
+        "— reading markup rather than prose, accepting a rank as a count, and never requiring any " +
+        "deployment claim. The predicate had two unit tests; both used clean invented sentences, so " +
+        "neither could have caught a real page.",
+      what_changed:
+        "Two commits. The first fixed the predicate: a count, a deployment claim and a year must now " +
+        "co-occur in one 120-character window, ordering-free so word order cannot defeat it, and a " +
+        "count preceded by a rank is rejected. It changed the producer only, so the false PASS went on " +
+        "being served after it landed. The second regenerates the artifact, which is what the public " +
+        "actually reads, and closes three leaks the window predicate still had: a claim appearing only " +
+        "in a JSON-LD script block or an HTML comment passed, because the predicate matched raw markup " +
+        "rather than visible text, and a model designator read as a count - \"Digit 5 Humanoid Robot\", " +
+        "live on agilityrobotics.com, passed whenever a deploy word fell inside the window. Every PASS " +
+        "now carries the sentence it was read from. The re-run publishes PASS 0 / FAIL 7 / UNCHECKABLE 1.",
+      note_on_controls:
+        "26 of 26. The regression control is the real bytes of the page, now kept in the repository " +
+        "with their URL, fetch time and sha256; it previously read /tmp/sanc.html, so the one case " +
+        "taken from the real page silently skipped wherever /tmp had been cleared, CI included. One " +
+        "control proves the ORIGINAL pattern still fires on those bytes, because a control is only a " +
+        "control if the defect reproduces on it. Three mutants were run and each fails a different " +
+        "control.",
+      reached_the_public: true,
+      note:
+        "This was a live MEASURED claim any stranger could falsify in one fetch, which is the worst " +
+        "kind of defect this board can carry. The signed card for the axis, dated 1 September, was " +
+        "always honest and records false for all eight URLs; the defect existed only in the later " +
+        "unsigned run, and no signed bytes were edited. FAIL on the seven reachable URLs is a finding " +
+        "about what those addresses published, not about whether the companies deploy robots. The " +
+        "reusable lesson is the hour between the two commits: the producer was correct and the board " +
+        "still served the false PASS, because nothing had re-run it. A claim lives in the artifact as " +
+        "well as in its generator.",
+      evidence: [
+        "/corrections/humanoid-labour-index-false-pass.json",
+        "/interop/financial-measure-run-humanoid-labour-index.json",
+        "scripts/gspc_financial_facts.py",
+        "scripts/test_grade_financial_ledgers.py",
+      ],
+    },
+    {
       id: "C-2026-0917-01",
       date: "2026-09-17",
       first_observed_at: "2026-09-17T04:30Z",

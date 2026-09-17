@@ -1,0 +1,18 @@
+{
+ "why": "Verbatim bytes from the live page that the 2026-09-07 run graded PASS. Kept so the control that must not PASS is the real upstream, not a shape invented to fit the fix.",
+ "url": "https://www.sanctuary.ai",
+ "fetched_utc": "2026-09-17T12:06:32Z",
+ "http": 200,
+ "full_page_sha256": "bc396f112de323a0d2c80ff2df98910bbdd0456bd21a5e36f2b1c6e48e08ecfc",
+ "full_page_bytes": 245602,
+ "excerpt_bytes": 1100,
+ "excerpt_sha256": "ac06b65a72010e7d172f6eaab3e0f90f7493bcd2f9720293e8a7f692c87fe8bd",
+ "excerpt_offset_in_full_page": 185360,
+ "contains": "the press-coverage headline 'Sanctuary AI #1 Robotics Story of April 2026'",
+ "false_pass_mechanism": "The old DATED_COUNT_RE had no word boundary after its unit noun, so 'Robot' inside 'Robotics' matched robots?. The '1' of '#1' became the count and '2026' the date.",
+ "visible_text_numeric_unit_hits_whole_page": 0,
+ "note": "The full page carries no count of robots anywhere in its visible text. This excerpt is not the only place it does not; it is the place the old regex fired.",
+ "full_page_sha256_raw_bytes": "75301c1cab4894b64c0b603afaf0851f634f05b21dfd8986d77e0a87dc093bc8",
+ "full_page_bytes_raw": 245649,
+ "sha_note": "full_page_sha256_raw_bytes/full_page_bytes_raw are the bytes as served, hashed by fetch_raw() on two independent fetches on 2026-09-17. full_page_sha256/full_page_bytes below are of the same response after utf-8 decode with errors='replace', which is the string the grader sees; they differ because the page serves a few undecodable bytes."
+}

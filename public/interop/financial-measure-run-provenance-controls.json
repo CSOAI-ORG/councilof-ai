@@ -1,13 +1,13 @@
 {
  "schema": "csoai.financial-measure-run/0.4",
  "axis": "provenance-controls",
- "as_of": "2026-09-07T11:30:35Z",
+ "as_of": "2026-09-17T12:58:11Z",
  "n": 6,
  "n_unit": "issuer accounts (not bank items)",
  "status": "MEASURED",
  "risk_verdict": "UNMEASURED",
  "three_state": "per instrument MEASURED | UNREACHABLE. Flags are booleans, not a score.",
- "producer": "scripts/grade_financial_ledgers.py",
+ "producer": "scripts/gspc_financial_facts.py (invoked from grade_financial_ledgers.py --gspc-facts)",
  "honesty": "Facts MEASURED from this run's fetches. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. No model, no accuracy, no leader. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
  "measured": [
   {
@@ -30,7 +30,7 @@
     },
     "domain": "https://ripple.com/",
     "risk_verdict": "UNMEASURED",
-    "as_of": "2026-09-07T11:30:35Z",
+    "as_of": "2026-09-17T12:58:11Z",
     "source": "https://s1.ripple.com:51234/"
    },
    "risk_verdict_status": "UNMEASURED"
@@ -55,7 +55,7 @@
     },
     "domain": "ondo.finance",
     "risk_verdict": "UNMEASURED",
-    "as_of": "2026-09-07T11:30:35Z",
+    "as_of": "2026-09-17T12:58:11Z",
     "source": "https://s1.ripple.com:51234/"
    },
    "risk_verdict_status": "UNMEASURED"
@@ -80,7 +80,7 @@
     },
     "domain": "openeden.com",
     "risk_verdict": "UNMEASURED",
-    "as_of": "2026-09-07T11:30:35Z",
+    "as_of": "2026-09-17T12:58:11Z",
     "source": "https://s1.ripple.com:51234/"
    },
    "risk_verdict_status": "UNMEASURED"
@@ -105,7 +105,7 @@
     },
     "domain": "archax.com",
     "risk_verdict": "UNMEASURED",
-    "as_of": "2026-09-07T11:30:35Z",
+    "as_of": "2026-09-17T12:58:11Z",
     "source": "https://s1.ripple.com:51234/"
    },
    "risk_verdict_status": "UNMEASURED"
@@ -130,7 +130,7 @@
     },
     "domain": "tokens.brazacripto.com.br",
     "risk_verdict": "UNMEASURED",
-    "as_of": "2026-09-07T11:30:35Z",
+    "as_of": "2026-09-17T12:58:11Z",
     "source": "https://s1.ripple.com:51234/"
    },
    "risk_verdict_status": "UNMEASURED"
@@ -155,7 +155,7 @@
     },
     "domain": "tokens.brazacripto.com.br",
     "risk_verdict": "UNMEASURED",
-    "as_of": "2026-09-07T11:30:35Z",
+    "as_of": "2026-09-17T12:58:11Z",
     "source": "https://s1.ripple.com:51234/"
    },
    "risk_verdict_status": "UNMEASURED"
@@ -167,5 +167,5 @@
  },
  "coverage": "6 of 6 locatable issuer addresses",
  "roster_source": "https://councilof.ai/api/xrpl",
- "content_id": "ce146f7e52f780afb3d065eeca9a5c6bcb6de6a5928784b6a2255ff68599cd98"
+ "content_id": "6363e8291a1b29bc1e396b02731056655aa692ef30ed968d5b2c031a53d0a8db"
 }

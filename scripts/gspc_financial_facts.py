@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import json
 import os
 import re
@@ -163,6 +164,64 @@ def has_dated_deployment_count(body: str) -> bool:
 # retained for callers that want the bare count pattern; the PREDICATE above is
 # what grades, because a count on its own is not a deployment disclosure.
 DATED_COUNT_RE = _COUNT_RE
+
+
+# ── three leaks the window predicate above still had ──────────────────────────
+# Measured 2026-09-17 against the real pages, each with a control below:
+#   1. It matched RAW MARKUP. A claim that appears only in a JSON-LD <script> or
+#      an HTML comment PASSed, and neither is text the vendor published to a
+#      reader. These pages carry 245 KB of markup around ~9 KB of prose.
+#   2. A MODEL DESIGNATOR reads exactly like a count. "Digit 5 Humanoid Robot" is
+#      live on agilityrobotics.com; with any deploy word inside the window it
+#      PASSed. It does not fire there today only because the nearest deploy word
+#      happens to sit beyond 120 chars, which is luck rather than a rule.
+#   3. A PASS carried no quote, so a reader could not re-read it on the page --
+#      which is the whole reason the sanctuary.ai PASS survived ten days.
+#
+# So the predicate reads visible text, rejects the designator shape, and returns
+# the sentence it read. The bias is one-directional and deliberate: a count
+# phrased in a way this cannot read is FAIL, never PASS. On this board a missed
+# disclosure is recoverable and a fabricated one is not.
+
+# "Digit 5 Humanoid Robot", "Atlas 2 robot" -- a name immediately before the number.
+_MODEL_RE = re.compile(r"\b[A-Z][a-z][\w-]*\s+$")
+
+_SCRIPTISH_RE = re.compile(r"(?is)<(script|style|noscript|template|svg)\b.*?</\1\s*>")
+_COMMENT_RE = re.compile(r"(?s)<!--.*?-->")
+_ANYTAG_RE = re.compile(r"(?s)<[^>]+>")
+
+
+def visible_text(body: str) -> str:
+    """The prose a reader sees. Script, style, comments and markup are not claims."""
+    b = _SCRIPTISH_RE.sub(" ", body or "")
+    b = _COMMENT_RE.sub(" ", b)
+    b = _ANYTAG_RE.sub(" ", b)
+    return re.sub(r"\s+", " ", html.unescape(b)).strip()
+
+
+def find_dated_deployment_count(body: str) -> dict[str, Any] | None:
+    """has_dated_deployment_count, over visible text, returning the quote it read.
+
+    None when the page publishes no such count. Returning the quote is the point:
+    a PASS a stranger cannot re-read on the page is the defect this replaces.
+    """
+    text = visible_text(body)
+    for m in _COUNT_RE.finditer(text):
+        before = text[max(0, m.start() - 12):m.start()]
+        if _RANK_RE.search(before):
+            continue                                  # "#1 Robotics Story of April 2026"
+        if _MODEL_RE.search(text[max(0, m.start() - 24):m.start()]):
+            continue                                  # "Digit 5 Humanoid Robot"
+        w = text[max(0, m.start() - _WINDOW): m.end() + _WINDOW]
+        cue, year = _DEPLOY_RE.search(w), _YEAR_RE.search(w)
+        if cue and year:
+            return {
+                "count_phrase": m.group(0),
+                "deployment_cue": cue.group(0),
+                "date_token": year.group(0),
+                "quote": w.strip(),
+            }
+    return None
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INTEROP = os.path.join(REPO, "dist", "client", "interop")
@@ -355,6 +414,7 @@ def grade_series_values(values: list[float] | None, *, unreachable: bool = False
 
 
 def grade_humanoid(http: int, body: str, page_state: str) -> dict[str, Any]:
+    """Y/N on one vendor page. A PASS carries the sentence it was read from."""
     if page_state != "OK":
         return {
             "http": http,
@@ -363,15 +423,23 @@ def grade_humanoid(http: int, body: str, page_state: str) -> dict[str, Any]:
             "three_state": "UNCHECKABLE",
             "fleet_size": None,
             "fleet_size_status": "UNMEASURED",
+            "evidence": None,
+            "reason": "page UNREACHABLE this run; absence of a count was never observed",
         }
-    hit = has_dated_deployment_count(body or "")
+    found = find_dated_deployment_count(body or "")
     return {
         "http": http,
         "page_state": page_state,
-        "dated_deployment_count_published": hit,
-        "three_state": "PASS" if hit else "FAIL",
+        "dated_deployment_count_published": bool(found),
+        "three_state": "PASS" if found else "FAIL",
         "fleet_size": None,
         "fleet_size_status": "UNMEASURED",
+        "evidence": found,
+        "reason": None if found else (
+            "no count of robots/units in the visible text that is both dated and "
+            "stated as deployed"
+        ),
+        "visible_chars": len(visible_text(body or "")),
     }
 
 
@@ -671,7 +739,20 @@ def run(write: bool = True) -> dict[str, Any]:
         "humanoid-labour-index": axis_envelope(
             "humanoid-labour-index", hum_n, hum_status, as_of, humanoid_measured,
             {"n_unit": "frozen vendor URLs", "object": "disclosure-facts", "index_formula": False,
-             "tally": three_state_tally(hum_states)},
+             "tally": three_state_tally(hum_states),
+             "rubric": (
+                 "PASS needs all three in the page's VISIBLE TEXT, within "
+                 f"{_WINDOW} characters of each other: a count of robots/units, "
+                 "deployment language, and a date. A rank ('#1 Robotics Story of April 2026') "
+                 "and a model designator ('Digit 5 Humanoid Robot') are not counts. Markup is "
+                 "not a published claim. Every PASS carries the sentence it was read from, in "
+                 "`evidence.quote`, so a stranger can re-read it on the page."
+             ),
+             "predicate_bias": (
+                 "One-directional: a count stated in a way this predicate cannot read is graded "
+                 "FAIL, never PASS. A missed disclosure is recoverable; a fabricated one is not."
+             ),
+             "correction": "C-2026-0917-03 — the 2026-09-07 run published a false PASS on sanctuary.ai"},
         ),
     }
 

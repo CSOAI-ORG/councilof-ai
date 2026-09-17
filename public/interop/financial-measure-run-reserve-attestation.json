@@ -1,13 +1,13 @@
 {
  "schema": "csoai.financial-measure-run/0.4",
  "axis": "reserve-attestation",
- "as_of": "2026-09-07T11:30:35Z",
+ "as_of": "2026-09-17T12:58:11Z",
  "n": 16,
  "n_unit": "issuer accounts (not bank items)",
  "status": "MEASURED",
  "risk_verdict": "UNMEASURED",
  "three_state": "PASS / FAIL / UNCHECKABLE per fact. UNREACHABLE page => UNCHECKABLE, never FAIL.",
- "producer": "scripts/grade_financial_ledgers.py",
+ "producer": "scripts/gspc_financial_facts.py (invoked from grade_financial_ledgers.py --gspc-facts)",
  "honesty": "Facts MEASURED from this run's fetches. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. No model, no accuracy, no leader. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
  "measured": [
   {
@@ -17,7 +17,7 @@
    "verified_via": "Bidirectional domain match",
    "primary_url": "https://ripple.com/solutions/stablecoin/transparency/",
    "page_state": "OK",
-   "page_sha256": "7a097b10d1ebd87fda74fef04d8c838c1ae3d4e005e82d389015dd2534404d1d",
+   "page_sha256": "74ca5fe109979d57a58bbce548b61c9b4878c93d19be84a9c7d4d15b223269f2",
    "reserve": {
     "third_party_attestation_language": "PASS"
    }
@@ -29,7 +29,7 @@
    "verified_via": "Bidirectional domain match",
    "primary_url": "https://app.ondo.finance/legal-documentation/us",
    "page_state": "OK",
-   "page_sha256": "b03de728bcfaf681b0ee71505002f693092374d85ef5b30f6b5d92df93b33d8f",
+   "page_sha256": "50df760fb5939763df436e844a9c51b6ecea4653832a88d8051757362f561582",
    "reserve": {
     "third_party_attestation_language": "PASS"
    }
@@ -41,7 +41,7 @@
    "verified_via": "Bidirectional domain match",
    "primary_url": "https://ripple.com/ripple-press/usdb-stablecoin-on-xrp-ledger/",
    "page_state": "OK",
-   "page_sha256": "0eb033a90d409d22cef00704183981e43e6684930859be5531a39cd3c602fa58",
+   "page_sha256": "2a5f2888f80691fa5f81ad4a74e3d6982a3d2727b713738a09899f8889ce4ec4",
    "reserve": {
     "third_party_attestation_language": "FAIL"
    }
@@ -53,7 +53,7 @@
    "verified_via": "Bidirectional domain match",
    "primary_url": "https://ripple.com/ripple-press/usdb-stablecoin-on-xrp-ledger/",
    "page_state": "OK",
-   "page_sha256": "0eb033a90d409d22cef00704183981e43e6684930859be5531a39cd3c602fa58",
+   "page_sha256": "2a5f2888f80691fa5f81ad4a74e3d6982a3d2727b713738a09899f8889ce4ec4",
    "reserve": {
     "third_party_attestation_language": "FAIL"
    }
@@ -113,7 +113,7 @@
    "verified_via": "XRPScan well-known directory",
    "primary_url": "https://www.circle.com/transparency",
    "page_state": "OK",
-   "page_sha256": "9f76b198f16b0188a9fade81a166dd03e01e06714cb25f6032eac65e8f541d8a",
+   "page_sha256": "4ec750fbf1e2e4ba7f26aedf606fce0f2147fd6b6dde777b529c1a013f841326",
    "reserve": {
     "third_party_attestation_language": "PASS"
    }
@@ -203,12 +203,12 @@
    }
   }
  ],
- "roster": "GET https://councilof.ai/api/xrpl as_of=2026-09-06T23:49:21Z",
+ "roster": "GET https://councilof.ai/api/xrpl as_of=2026-09-15T07:13:43Z",
  "tally": {
   "PASS": 3,
   "FAIL": 4,
   "UNCHECKABLE": 9
  },
  "rubric": "Third-party attestation language on a retrieved issuer page? Self-declare != attestation.",
- "content_id": "be700eb070cd3cd5d49019d0f74cd3461ae2c6fe4341b862a046b497b07fa6b7"
+ "content_id": "e838a64a58a63feddf59bd86d8af523a844c5533a0bfb1bf2a240658456c76c2"
 }
