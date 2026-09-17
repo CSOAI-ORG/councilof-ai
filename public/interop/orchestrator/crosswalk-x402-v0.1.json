@@ -1,0 +1,114 @@
+{
+  "schema": "csoai.regulator-crosswalk/0.1",
+  "kind": "regulator-crosswalk",
+  "generated_at": "2026-09-17T05:14:44.113154+00:00",
+  "regulator": {
+    "key": "x402",
+    "name": "x402 Protocol (Coinbase)",
+    "url": "https://www.x402.org",
+    "submissions": null,
+    "outreach_channel": "x402 Bazaar + PayAI",
+    "goals_in_remit": [
+      "settlement",
+      "transaction_integrity",
+      "agent_authority"
+    ]
+  },
+  "findings_count": 11,
+  "findings": [
+    {
+      "title": "detector-interop \u00d7 GSPC axis 10: detector-interop \u2192 agent_authority",
+      "axis": "detector-interop",
+      "goal": "agent_authority",
+      "summary": "Measurement of detector-interop from GSPC axis 10: detector-interop against goal agent_authority.",
+      "sha256": "c54995b244984dbb6ed27a2a21640e5367a0b2042241b0f599dcafd86d637fde",
+      "evidence_url": null
+    },
+    {
+      "title": "detector-interop \u00d7 GSPC axis 10: detector-interop \u2192 transaction_integrity",
+      "axis": "detector-interop",
+      "goal": "transaction_integrity",
+      "summary": "Measurement of detector-interop from GSPC axis 10: detector-interop against goal transaction_integrity.",
+      "sha256": "b0eaf2bf15d31f265fd1516c05b9f8e2d398d72873cb0ed0ccd392ea74e4c8e0",
+      "evidence_url": null
+    },
+    {
+      "title": "swarm \u00d7 GSPC axis 12: swarm \u2192 agent_authority",
+      "axis": "swarm",
+      "goal": "agent_authority",
+      "summary": "Measurement of swarm from GSPC axis 12: swarm against goal agent_authority.",
+      "sha256": "9084b1daadd9856004b10567e2f2c099eaf20a93ea06359ab06336deb89fbf80",
+      "evidence_url": null
+    },
+    {
+      "title": "oversight \u00d7 GSPC axis 16: oversight (REGISTERING, adapter defined) \u2192 agent_authority",
+      "axis": "oversight",
+      "goal": "agent_authority",
+      "summary": "Measurement of oversight from GSPC axis 16: oversight (REGISTERING, adapter defined) against goal agent_authority.",
+      "sha256": "4fd8496e985c062f8eebb2cbdd9e9928e41248b1bcb6ef226ba4ed55ff4e1d4a",
+      "evidence_url": null
+    },
+    {
+      "title": "agent-identity \u00d7 GSPC axis 17: agent-identity (REGISTERING, adapter defined) \u2192 agent_authority",
+      "axis": "agent-identity",
+      "goal": "agent_authority",
+      "summary": "Measurement of agent-identity from GSPC axis 17: agent-identity (REGISTERING, adapter defined) against goal agent_authority.",
+      "sha256": "dde95ee74244b2a30516fefe7d5b97f50c15f7ce847ab01b9560ff0d6f8656d8",
+      "evidence_url": null
+    },
+    {
+      "title": "economic-behavior \u00d7 GSPC axis 18: economic-behavior (REGISTERING, adapter defined) \u2192 transaction_integrity",
+      "axis": "economic-behavior",
+      "goal": "transaction_integrity",
+      "summary": "Measurement of economic-behavior from GSPC axis 18: economic-behavior (REGISTERING, adapter defined) against goal transaction_integrity.",
+      "sha256": "f81c190f1024907bb95528fa63b58facb0d24f25a685fc7759e7f7082920cc8b",
+      "evidence_url": null
+    },
+    {
+      "title": "economic-behavior \u00d7 GSPC axis 18: economic-behavior (REGISTERING, adapter defined) \u2192 settlement",
+      "axis": "economic-behavior",
+      "goal": "settlement",
+      "summary": "Measurement of economic-behavior from GSPC axis 18: economic-behavior (REGISTERING, adapter defined) against goal settlement.",
+      "sha256": "4d5063bb04556ca1f17df040124cfa4b0cf33758bca295f1ca30f3617bad0455",
+      "evidence_url": null
+    },
+    {
+      "title": "collusion \u00d7 GSPC axis 19: collusion (REGISTERING, adapter defined) \u2192 agent_authority",
+      "axis": "collusion",
+      "goal": "agent_authority",
+      "summary": "Measurement of collusion from GSPC axis 19: collusion (REGISTERING, adapter defined) against goal agent_authority.",
+      "sha256": "ee0deeba48067750ccff4fc28f719ba293f45d57cd15e5b2df8ccf7c570af51d",
+      "evidence_url": null
+    },
+    {
+      "title": "collusion \u00d7 GSPC axis 19: collusion (REGISTERING, adapter defined) \u2192 transaction_integrity",
+      "axis": "collusion",
+      "goal": "transaction_integrity",
+      "summary": "Measurement of collusion from GSPC axis 19: collusion (REGISTERING, adapter defined) against goal transaction_integrity.",
+      "sha256": "749b5de852ce539185f608e0136e35aaeba933fbae8a32a664e84ccdaa1681d3",
+      "evidence_url": null
+    },
+    {
+      "title": "effect-binding \u00d7 GSPC axis 23: effect-binding (REGISTERING, adapter defined) \u2192 transaction_integrity",
+      "axis": "effect-binding",
+      "goal": "transaction_integrity",
+      "summary": "Measurement of effect-binding from GSPC axis 23: effect-binding (REGISTERING, adapter defined) against goal transaction_integrity.",
+      "sha256": "faeef428b4a85494d5c44d233e13e3532173ffbf3471fc966a594810bf0bf616",
+      "evidence_url": null
+    },
+    {
+      "title": "effect-binding \u00d7 GSPC axis 23: effect-binding (REGISTERING, adapter defined) \u2192 agent_authority",
+      "axis": "effect-binding",
+      "goal": "agent_authority",
+      "summary": "Measurement of effect-binding from GSPC axis 23: effect-binding (REGISTERING, adapter defined) against goal agent_authority.",
+      "sha256": "602312c870df1cf146d19468e44dd3bcc2375191b7b91090393020a6b0f7e1f2",
+      "evidence_url": null
+    }
+  ],
+  "summary_text": "Of 56 total findings released this period, 11 touch goals in x402 Protocol (Coinbase)'s remit. Goals in remit: settlement, transaction_integrity, agent_authority. The findings span the harness sources: GSPC axis 17: agent-identity (REGISTERING, adapter defined), GSPC axis 18: economic-behavior (REGISTERING, adapter defined), GSPC axis 12: swarm, GSPC axis 10: detector-interop, GSPC axis 23: effect-binding (REGISTERING, adapter defined), GSPC axis 19: collusion (REGISTERING, adapter defined), GSPC axis 16: oversight (REGISTERING, adapter defined).",
+  "outreach_pack": {
+    "cover_letter": "Dear x402 Protocol (Coinbase),\n\nThis is a permissionless, openly-licensed measurement crosswalk for the period September 2026. Every figure is reproducible from the linked artifacts; every linked artifact carries a sha256 and an OpenTimestamps stamp. The CSOAI substrate does not certify, accredit, or rate \u2014 it measures, signs, and records. Please treat this as raw observation; we welcome challenge on method, scope, and conclusion.\n\nBest,\nNicholas Templeman\nFounder, CSOAI",
+    "submission_recommendation": "Open public-comment period / consultation response / evidence submission as appropriate for the regulator's process."
+  },
+  "sha256": "f1c84ff0f091290f5c00db34440e653d20f61cc89758aaccee9005012094d8a5"
+}
