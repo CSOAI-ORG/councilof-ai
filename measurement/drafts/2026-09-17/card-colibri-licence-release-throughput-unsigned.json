@@ -1,0 +1,229 @@
+{
+ "as_of": "2026-09-17T06:03:57Z",
+ "payload": {
+  "asserted_unverified": [
+   {
+    "claim": "Run frontier MoE models on hardware you already own — pure C, zero deps, experts streamed from disk. Tiny engine, immense model.",
+    "claimant": "repository owner (GitHub repo description)",
+    "fetched_at": "2026-09-17T06:03:00Z",
+    "state": "ASSERTED_UNVERIFIED",
+    "where": "https://github.com/JustVugg/colibri"
+   },
+   {
+    "claim": "744B-2.8T parameter MoE models run on consumer hardware",
+    "claimant": "carried into this card by the commissioning brief",
+    "note": "The word doing the work is 'run'. The repository's own documentation is explicit that running is not the same as running usefully fast — see the self-reported figures below.",
+    "state": "ASSERTED_UNVERIFIED"
+   },
+   {
+    "claim": "~6.84 tok/s single-request decode with full expert residency across VRAM+RAM",
+    "claimant": "repository author, experiments/glm52-6x5090-2026-07-12.md",
+    "fetched_at": "2026-09-17T06:03:57Z",
+    "hardware_as_described": "6x RTX 5090, GLM-5.2",
+    "measurement_type": "SELF_REPORTED",
+    "state": "ASSERTED_UNVERIFIED",
+    "where": "https://raw.githubusercontent.com/JustVugg/colibri/main/docs/benchmarks.md"
+   },
+   {
+    "claim": "~0.05-0.1 tok/s cold decode on the reference development machine",
+    "claimant": "repository author",
+    "fetched_at": "2026-09-17T06:03:57Z",
+    "hardware_as_described": "WSL2, 12 cores, 25 GB RAM, NVMe via VHDX; ~370 GB int4 model on disk; ~11 GB disk reads per token",
+    "measurement_type": "SELF_REPORTED",
+    "state": "ASSERTED_UNVERIFIED",
+    "where": "https://raw.githubusercontent.com/JustVugg/colibri/main/docs/benchmarks.md"
+   },
+   {
+    "claim": "0.80 -> 1.10 tok/s (+37.5%) using two NVMe drives on independent controllers",
+    "claimant": "an issue reporter, cross-referenced as #1249",
+    "fetched_at": "2026-09-17T06:03:57Z",
+    "hardware_as_described": "Threadripper PRO 7965WX 24C/48T, Linux, 123 GB RAM, 990 PRO 4TB + 9100, CPU-only",
+    "measurement_type": "SELF_REPORTED_BY_THIRD_PARTY",
+    "note": "Reported by someone other than the author, which is useful corroboration of direction. It is still an uncontrolled self-report on undisclosed-provenance hardware, so it does not reach MEASURED.",
+    "state": "ASSERTED_UNVERIFIED",
+    "where": "https://raw.githubusercontent.com/JustVugg/colibri/main/docs/benchmarks.md"
+   }
+  ],
+  "attestation": {
+   "do_not_publish": true,
+   "reason": "DRAFT. The board signer is unavailable (GitHub Actions disabled account-wide). Signing with any other key would misattribute the attestation, so this card is deliberately unsigned. Absence of a signature is the honest state, not an omission.",
+   "signature": null,
+   "signed": false
+  },
+  "doctrine": [
+   "We measure. We do not certify. This card is not a conformity mark and not a grade.",
+   "ASSERTED_UNVERIFIED and UNMEASURED are first-class outcomes and are never zero-filled.",
+   "Nothing here states or implies that any organisation named endorses, partners with, or has reviewed CSOAI.",
+   "Figures attributed to a third party are quotations of that party's own claim, not our findings."
+  ],
+  "handling_rule": "Never quote any throughput figure in this card as fact. Every such figure is self-reported on self-described hardware and must be attributed to its reporter whenever it is repeated.",
+  "kind": "csoai.repo-licence-release-claim-split/0.1",
+  "measured": [
+   {
+    "fetched_at": "2026-09-17T06:03:10Z",
+    "http": 200,
+    "note": "The blob sha pins the exact licence bytes. Anyone re-fetching can confirm the file has not changed since this reading.",
+    "observed": {
+     "blob_sha": "17303f1b8e08ef6280318dd81dc418e8c5bfd340",
+     "name": "Apache License 2.0",
+     "path": "LICENSE",
+     "size_bytes": 11346,
+     "spdx_id": "Apache-2.0"
+    },
+    "row": "licence",
+    "state": "MEASURED",
+    "url": "https://api.github.com/repos/JustVugg/colibri/license"
+   },
+   {
+    "fetched_at": "2026-09-17T06:03:10Z",
+    "http": 200,
+    "observed": "NOTICE (673 bytes) and THIRD_PARTY_NOTICES.md (2548 bytes) both present at repository root, consistent with Apache-2.0 attribution practice.",
+    "row": "licence_supporting_files",
+    "state": "MEASURED",
+    "url": "https://api.github.com/repos/JustVugg/colibri/contents/"
+   },
+   {
+    "fetched_at": "2026-09-17T06:03:10Z",
+    "http": 200,
+    "note": "Confirms the brief's '13 Sep' to the minute, and confirms it is a full release, not a draft or prerelease.",
+    "observed": {
+     "asset_count": 4,
+     "created_at": "2026-09-13T13:39:03Z",
+     "draft": false,
+     "name": "colibri v1.11.0",
+     "prerelease": false,
+     "published_at": "2026-09-13T13:44:10Z",
+     "tag_name": "v1.11.0"
+    },
+    "row": "release_v1_11_0",
+    "state": "MEASURED",
+    "url": "https://api.github.com/repos/JustVugg/colibri/releases?per_page=3"
+   },
+   {
+    "fetched_at": "2026-09-17T06:03:10Z",
+    "http": 200,
+    "observed": "v1.11.0 2026-09-13T13:44:10Z; v1.10.2 2026-09-06T20:47:32Z; v1.10.1 2026-08-31T13:18:32Z. Three releases in 13 days, 4 assets each.",
+    "row": "release_cadence",
+    "state": "MEASURED",
+    "url": "https://api.github.com/repos/JustVugg/colibri/releases?per_page=3"
+   },
+   {
+    "fetched_at": "2026-09-17T06:03:00Z",
+    "http": 200,
+    "observed": {
+     "archived": false,
+     "created_at": "2026-07-01T12:27:49Z",
+     "default_branch": "main",
+     "fork": false,
+     "forks_count": 3699,
+     "language": "C",
+     "open_issues_count": 141,
+     "pushed_at": "2026-09-15T21:33:15Z",
+     "subscribers_count": 282
+    },
+    "row": "repo_metadata",
+    "state": "MEASURED",
+    "url": "https://api.github.com/repos/JustVugg/colibri"
+   },
+   {
+    "fetched_at": "2026-09-17T06:03:00Z",
+    "http": 200,
+    "note": "The brief carried ~35,164. We read 35,188. The difference is elapsed time, not disagreement. A star count is a single reading with a timestamp; it is not a rate, and this row must not be cited as one.",
+    "observed": {
+     "stargazers_count": 35188
+    },
+    "row": "stars_point_in_time",
+    "scope": "POINT_IN_TIME_ONLY",
+    "state": "MEASURED",
+    "url": "https://api.github.com/repos/JustVugg/colibri"
+   },
+   {
+    "consequence": "Star VELOCITY is UNMEASURED. The brief's inference that 'star velocity suggests social amplification' is therefore not supported by anything in this card, and is not adopted by it. The count is high and the repository is ten weeks old; that is an observation about two measured numbers, and it is not a measurement of amplification.",
+    "fetched_at": "2026-09-17T06:03:31Z",
+    "how_to_close": "Re-run the stargazers endpoint with an authenticated token and the Accept: application/vnd.github.star+json media type, which returns starred_at per record.",
+    "http": 401,
+    "observed": "GitHub returned 'Requires authentication' for timestamped stargazer records. No per-star timestamps were obtained.",
+    "row": "star_velocity",
+    "state": "FETCH_FAILED",
+    "url": "https://api.github.com/repos/JustVugg/colibri/stargazers?per_page=100&page=352"
+   },
+   {
+    "corrects": "The brief stated 'no independent benchmarks'. More precisely: benchmark DOCUMENTATION exists and is unusually candid about its own limits; what is absent is a CONTROLLED THIRD-PARTY evaluation. Those are different absences and the card records the second, not the first.",
+    "fetched_at": "2026-09-17T06:03:57Z",
+    "http": 200,
+    "observed": "docs/benchmarks.md exists, 26123 bytes. Opens: 'Everything on this page is a measurement, not a promise.' Numbers are attributed to specific hardware and cross-referenced to issue numbers (#8, #86, #1249).",
+    "row": "benchmark_documentation_present",
+    "state": "MEASURED",
+    "url": "https://raw.githubusercontent.com/JustVugg/colibri/main/docs/benchmarks.md"
+   },
+   {
+    "fetched_at": "2026-09-17T06:03:57Z",
+    "http": 200,
+    "note": "This is a genuine reproducibility affordance and is recorded as such. It does not by itself make any published throughput number independently verified.",
+    "observed": "The document ships a self-serve measurement path — an iobench.c micro-benchmark with exact invocations, an architecture self-test via c/setup.sh, and an explicit caveat (#86) that buffered reads on a large-RAM machine report the page cache rather than the disk, directing readers to the O_DIRECT run for a true number.",
+    "row": "reproduction_harness_present",
+    "state": "MEASURED",
+    "url": "https://raw.githubusercontent.com/JustVugg/colibri/main/docs/benchmarks.md"
+   },
+   {
+    "fetched_at": "2026-09-17T06:03:57Z",
+    "finding": "ABSENT",
+    "http": 200,
+    "observed": "Contributed datapoints are self-reported by issue authors on self-described hardware. No third-party controlled harness, no standardised model/prompt/seed set, no adjudicated leaderboard was found.",
+    "row": "independent_controlled_benchmark",
+    "state": "MEASURED",
+    "url": "https://raw.githubusercontent.com/JustVugg/colibri/main/docs/benchmarks.md"
+   }
+  ],
+  "method": "Read repository metadata, licence and release history from the GitHub REST API — machine facts an outside party can re-fetch and get the same answer. Read the repository's own benchmark documentation to establish what performance numbers are published and who measured them. Licence and release facts are MEASURED. Every throughput number is attributed to whoever reported it and is never restated as fact.",
+  "not_a_grade": true,
+  "observation": {
+   "note": "The gap measured here is between the repository's documentation and its amplification, not a defect in the repository. On the evidence fetched, the project's own docs are more conservative than the claims made about it elsewhere.",
+   "state": "MEASURED_DOCUMENTS_ASSERTED_NUMBERS",
+   "text": "On the numbers the repository itself publishes, decode throughput on non-datacentre hardware is reported in the range of roughly 0.05 to 1.1 tokens per second, with a best reported figure of 6.84 tok/s on six RTX 5090s. The repository states this plainly — 'This is not fast' — and frames the achievement as correctness on cheap hardware rather than speed. A reader who encounters only the headline framing 'run frontier models on hardware you already own' would likely form a materially different expectation of throughput than the repository's own documentation supports."
+  },
+  "recheck_trigger": "Re-run on the next tagged release, or if the LICENSE blob sha changes.",
+  "state_vocabulary": {
+   "ASSERTED_UNVERIFIED": "a party asserts this; no independent check was run by us or, so far as we could find, by anyone",
+   "FETCH_FAILED": "we attempted the fetch and it did not return usable bytes; the attempt is recorded",
+   "MEASURED": "we fetched a primary source and the row records what the bytes said",
+   "NOT_CHECKED_THIS_RUN": "carried into this card from a referring summary and not independently checked here",
+   "UNMEASURED": "not measured; first-class, never zero-filled"
+  },
+  "subject_identity": {
+   "html_url": "https://github.com/JustVugg/colibri",
+   "node_id": "R_kgDOTKgHjQ",
+   "note": "Pinned by numeric repo id so a later rename or transfer does not silently re-point this card at a different repository.",
+   "repo": "JustVugg/colibri",
+   "repo_id": 1286080397,
+   "state": "MEASURED"
+  }
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "781df8576a81abd1cac2e281ae95a1a7483ab06c9e6dbd90c557809e78bb30bf",
+ "source_urls": [
+  "https://api.github.com/repos/JustVugg/colibri",
+  "https://api.github.com/repos/JustVugg/colibri/license",
+  "https://api.github.com/repos/JustVugg/colibri/releases?per_page=3",
+  "https://api.github.com/repos/JustVugg/colibri/contents/",
+  "https://api.github.com/repos/JustVugg/colibri/contents/docs",
+  "https://raw.githubusercontent.com/JustVugg/colibri/main/docs/benchmarks.md",
+  "https://github.com/JustVugg/colibri"
+ ],
+ "subject": "JustVugg/colibri: licence and release facts MEASURED from the GitHub API; throughput claims recorded as self-reported and ASSERTED_UNVERIFIED",
+ "surface": "public.notice",
+ "tags": [
+  "repo-licence",
+  "colibri",
+  "MEASURED",
+  "ASSERTED_UNVERIFIED",
+  "UNSIGNED-DRAFT"
+ ],
+ "unmeasured": [
+  "star velocity — the timestamped stargazers endpoint returned 401 Requires authentication",
+  "any throughput figure under conditions we controlled",
+  "whether the self-reported hardware configurations are as described",
+  "output quality or correctness of any model run under colibri",
+  "provenance and licensing of the model weights the engine streams (distinct from the engine licence)"
+ ]
+}

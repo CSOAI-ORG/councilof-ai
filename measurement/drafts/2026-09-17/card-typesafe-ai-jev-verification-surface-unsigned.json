@@ -1,0 +1,247 @@
+{
+ "as_of": "2026-09-17T06:05:21Z",
+ "payload": {
+  "asserted_unverified": [
+   {
+    "claim": "193.6x Faster, 444.6x Cheaper",
+    "claimant": "TypeSafe AI",
+    "fetched_at": "2026-09-17T06:03:25Z",
+    "independent_evaluation": "NONE FOUND",
+    "qualifier_as_published": "*based on workflows for System One tasks (proof)",
+    "state": "ASSERTED_UNVERIFIED",
+    "where": "https://typesafe.ai/ (homepage headline)"
+   },
+   {
+    "claim": "two orders of magnitude faster and more efficient, at similar levels of intelligence on System One tasks compared to existing LLMs",
+    "claimant": "Diogo Almeida, founder, TypeSafe AI",
+    "fetched_at": "2026-09-17T06:05:03Z",
+    "independent_evaluation": "NONE FOUND",
+    "note": "'System One tasks' is a vendor-defined task class. No task list is published, so the comparison set cannot be reconstructed by a third party.",
+    "state": "ASSERTED_UNVERIFIED",
+    "where": "https://typesafe.ai/blog/introducing-system-one-models-and-jev"
+   },
+   {
+    "claim": "Zero Hallucinations / 'it can't hallucinate'",
+    "claimant": "TypeSafe AI",
+    "fetched_at": "2026-09-17T06:05:03Z",
+    "independent_evaluation": "NONE FOUND",
+    "note": "The vendor's own FAQ separately carries the question 'Can Jev still get things wrong?'. The claim as headlined and the claim as qualified in the FAQ are not obviously the same claim. A typed output space constrains the FORM of an output; whether it constrains the CORRECTNESS of an output is exactly the thing an independent evaluation would have to establish, and none exists.",
+    "state": "ASSERTED_UNVERIFIED",
+    "where": "https://typesafe.ai/ and the launch post"
+   },
+   {
+    "claim": "238x lower input price than a named competitor model",
+    "claimant": "TypeSafe AI",
+    "fetched_at": "2026-09-17T06:03:25Z",
+    "independent_evaluation": "NONE FOUND",
+    "state": "ASSERTED_UNVERIFIED",
+    "where": "https://typesafe.ai/ (homepage)"
+   },
+   {
+    "claim": "a per-billion-input-token USD price",
+    "claimant": "TypeSafe AI",
+    "fetched_at": "2026-09-17T06:03:25Z",
+    "figure_restated_here": false,
+    "note": "The vendor publishes a specific dollar figure. CSOAI artifacts carry no public dollar prices, so the figure is not reproduced; the URL above is the evidence. The vendor's own FAQ asks 'Are these prices temporary or subsidized?', so the durability of the figure is not established even by the vendor.",
+    "state": "ASSERTED_UNVERIFIED",
+    "where": "https://typesafe.ai/ (homepage)"
+   },
+   {
+    "claim": "$40M seed round led by DCVC",
+    "claimant": "carried into this card by the commissioning brief",
+    "note": "No funding registry or filing was fetched. Recorded so the claim is not silently promoted to MEASURED by appearing alongside rows that were measured.",
+    "state": "NOT_CHECKED_THIS_RUN",
+    "where": "not independently checked in this run"
+   }
+  ],
+  "attestation": {
+   "do_not_publish": true,
+   "reason": "DRAFT. The board signer is unavailable (GitHub Actions disabled account-wide). Signing with any other key would misattribute the attestation, so this card is deliberately unsigned. Absence of a signature is the honest state, not an omission.",
+   "signature": null,
+   "signed": false
+  },
+  "doctrine": [
+   "We measure. We do not certify. This card is not a conformity mark and not a grade.",
+   "ASSERTED_UNVERIFIED and UNMEASURED are first-class outcomes and are never zero-filled.",
+   "Nothing here states or implies that any organisation named endorses, partners with, or has reviewed CSOAI.",
+   "Figures attributed to a third party are quotations of that party's own claim, not our findings."
+  ],
+  "kind": "csoai.claims-vs-verification-surface/0.1",
+  "measured": [
+   {
+    "fetched_at": "2026-09-17T06:05:03Z",
+    "http": 200,
+    "observed": "Post titled 'Introducing System One Models & Jev', dated 'Sep 15, 2026', bylined 'Diogo Almeida, founder, TypeSafe'. States 'Our first public model is Jev, available today in early access.'",
+    "question": "Does a dated launch announcement exist on the vendor's own domain?",
+    "row": "launch_post_exists",
+    "state": "MEASURED",
+    "url": "https://typesafe.ai/blog/introducing-system-one-models-and-jev"
+   },
+   {
+    "fetched_at": "2026-09-17T06:03:25Z",
+    "http": 200,
+    "note": "This is the probative basis for the ABSENT rows below: the absence is read from the vendor's own published index, not inferred from a 404 on a path we invented.",
+    "observed": "12 URLs total: /, /team, /manifesto, 5 blog posts, 4 legal pages (/legal/data-processing, /legal/mca, /legal/privacy-policy, /legal/terms). No API reference, no model card, no evaluation report, no benchmark page.",
+    "question": "What does the vendor's own index say the public surface consists of?",
+    "row": "sitemap_enumeration",
+    "state": "MEASURED",
+    "url": "https://typesafe.ai/sitemap.xml"
+   },
+   {
+    "fetched_at": "2026-09-17T06:02:58Z",
+    "finding": "ABSENT",
+    "http": 404,
+    "observed": "404. No API-reference URL appears in sitemap.xml either.",
+    "question": "Is there a public API reference a third party could code against?",
+    "row": "public_api_reference",
+    "state": "MEASURED",
+    "url": "https://typesafe.ai/docs"
+   },
+   {
+    "fetched_at": "2026-09-17T06:02:59Z",
+    "finding": "NOT_PROBATIVE",
+    "http": 404,
+    "note": "We constructed this hostname. A 404 on a host we guessed is evidence about our guess, not about the vendor. Recorded so the attempt is visible; it carries no weight in the ABSENT findings.",
+    "observed": "404, content-type application/json, 22 bytes.",
+    "question": "Does a conventionally-named API host answer?",
+    "row": "api_host_probe",
+    "state": "MEASURED",
+    "url": "https://api.typesafe.ai/"
+   },
+   {
+    "fetched_at": "2026-09-17T06:05:08Z",
+    "finding": "ABSENT",
+    "http": 200,
+    "observed": "0 results for 'typesafe'. A separate search for 'jev' returned 8 unrelated accounts (huggingtweets/jeveuxrien95, jevlogin/test, jEVVB/dreamSD, and similar), none attributable to this vendor.",
+    "question": "Is a model card published on the dominant public model registry?",
+    "row": "model_card",
+    "state": "MEASURED",
+    "url": "https://huggingface.co/api/models?search=typesafe&limit=8"
+   },
+   {
+    "fetched_at": "2026-09-17T06:05:08Z",
+    "finding": "ABSENT",
+    "http": 200,
+    "observed": "0 entries returned for the exact phrase 'System One Models'.",
+    "question": "Is the training method (RLCD) or the model class described in a preprint?",
+    "row": "published_paper_or_eval",
+    "state": "MEASURED",
+    "url": "http://export.arxiv.org/api/query?search_query=all:%22System%20One%20Models%22&max_results=5"
+   },
+   {
+    "fetched_at": "2026-09-17T06:05:03Z",
+    "finding": "ABSENT",
+    "http": 200,
+    "observed": "The post offers 'see below for the receipts' and the homepage footnotes its headline multiples '*based on workflows for System One tasks (proof)'. No task list, no dataset, no harness, no comparator configuration and no seed/hardware disclosure is published at any URL in the vendor's sitemap.",
+    "question": "Is there a benchmark a third party could re-run — harness, dataset, task definitions, or comparator configuration?",
+    "row": "reproducible_benchmark",
+    "state": "MEASURED",
+    "url": "https://typesafe.ai/blog/introducing-system-one-models-and-jev"
+   },
+   {
+    "fetched_at": "2026-09-17T06:05:21Z",
+    "finding": "PROPRIETARY_NO_OPEN_LICENCE",
+    "http": 200,
+    "observed": "No open-source licence. Terms grant only 'a limited, non-exclusive, non-transferable, non-sublicensable, revocable license to access and use the Site', and assert 'Ownership; Proprietary Rights'. A separate master customer agreement is published at /legal/mca (HTTP 200).",
+    "question": "Under what licence, if any, is the model or any artifact released?",
+    "row": "licence",
+    "state": "MEASURED",
+    "url": "https://typesafe.ai/legal/terms"
+   },
+   {
+    "consequence": "Independent evaluation is not merely absent — under the surface as published today it is not available to be performed by an outside party acting alone.",
+    "fetched_at": "2026-09-17T06:03:13Z",
+    "finding": "GATED",
+    "http": 200,
+    "observed": "The site-wide call to action is 'Join Waitlist'. The launch post describes Jev as 'available today in early access'. Access is gated and discretionary; no self-serve path to an evaluation key was found.",
+    "question": "Can an independent evaluator obtain access today?",
+    "row": "access_gate",
+    "state": "MEASURED",
+    "url": "https://typesafe.ai/"
+   },
+   {
+    "fetched_at": "2026-09-17T06:03:00Z",
+    "http": 200,
+    "observed": "'User-agent: * / Allow: /' plus a sitemap pointer. All fetches in this card are permitted by that policy.",
+    "question": "Does the vendor permit automated retrieval of these pages?",
+    "row": "crawler_policy",
+    "state": "MEASURED",
+    "url": "https://typesafe.ai/robots.txt"
+   },
+   {
+    "fetched_at": "2026-09-17T06:03:25Z",
+    "finding": "DRIFT_BETWEEN_SUMMARY_AND_SOURCE",
+    "http": 200,
+    "note": "We do not adjudicate which figure the vendor intends. We record that a reader relying on a secondhand summary would have quoted numbers the primary source does not carry. This is the failure mode the card exists to catch.",
+    "observed": "The commissioning brief carried '20-200x faster, 40-400x cheaper'. The live homepage states '193.6x Faster, 444.6x Cheaper'. The vendor's own launch post instead says 'two orders of magnitude faster and more efficient'. Three different magnitude statements for the same product.",
+    "question": "Do the figures in the brief that prompted this card match the primary source?",
+    "row": "referring_summary_drift",
+    "state": "MEASURED",
+    "url": "https://typesafe.ai/"
+   },
+   {
+    "fetched_at": "2026-09-17T06:05:03Z",
+    "http": 200,
+    "inference_drawn": "NONE",
+    "note": "Recorded as a dated fact about the public record only. We assert no intent, no causal link to the absence of published evaluations, and no criticism of the argument, which is made in good faith and is substantially one we share. A reader may hold both that public benchmarks are gameable and that vendor-internal figures are uncheckable; this card measures only the second.",
+    "observed": "Post 'Lies, Damned Lies, and Benchmarks', dated 'Sep 11, 2026' — four days before the Jev launch — argues that public evaluations are systematically gamed: 'A benchmark inevitably gets benchmaxxed when people building the model can optimize for a public eval score.'",
+    "question": "Has the vendor published a position on third-party benchmarking?",
+    "row": "vendor_position_on_public_evals",
+    "state": "MEASURED",
+    "url": "https://typesafe.ai/blog/antibenchmaxxing"
+   }
+  ],
+  "method": "Enumerate the vendor's own public surface and ask, for each artifact a third party would need in order to check a performance claim, whether that artifact exists. Every row is the result of a fetch we performed, with the URL and the UTC timestamp of that fetch. Absence is only recorded as ABSENT where it was established from an index the vendor itself publishes (sitemap.xml, a registry search API) — never from a URL we guessed.",
+  "not_a_grade": true,
+  "recheck_trigger": "Re-run when sitemap.xml gains a docs, model-card or evaluation URL, when a model card appears on a public registry, or when self-serve access opens.",
+  "state_vocabulary": {
+   "ASSERTED_UNVERIFIED": "a party asserts this; no independent check was run by us or, so far as we could find, by anyone",
+   "FETCH_FAILED": "we attempted the fetch and it did not return usable bytes; the attempt is recorded",
+   "MEASURED": "we fetched a primary source and the row records what the bytes said",
+   "NOT_CHECKED_THIS_RUN": "carried into this card from a referring summary and not independently checked here",
+   "UNMEASURED": "not measured; first-class, never zero-filled"
+  },
+  "subject_identity": {
+   "product": "Jev",
+   "product_class_claimed_by_vendor": "System One Model",
+   "site": "https://typesafe.ai/",
+   "state": "MEASURED",
+   "vendor": "TypeSafe AI"
+  },
+  "what_this_card_does_not_say": [
+   "It does not say the vendor's figures are wrong. It says they are uncheckable from public sources today.",
+   "It does not say the product does not work.",
+   "It does not grade, rank, score or certify TypeSafe AI or Jev.",
+   "It does not assert that the vendor is obliged to publish an evaluation."
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "167e7dd2187784a89a681434c71e61c8f5e6fa77948f281832c8b3fd842c08ea",
+ "source_urls": [
+  "https://typesafe.ai/",
+  "https://typesafe.ai/sitemap.xml",
+  "https://typesafe.ai/robots.txt",
+  "https://typesafe.ai/blog/introducing-system-one-models-and-jev",
+  "https://typesafe.ai/blog/antibenchmaxxing",
+  "https://typesafe.ai/legal/terms",
+  "https://typesafe.ai/legal/mca",
+  "https://huggingface.co/api/models?search=typesafe&limit=8",
+  "http://export.arxiv.org/api/query?search_query=all:%22System%20One%20Models%22&max_results=5"
+ ],
+ "subject": "typesafe.ai 'Jev' / System One Models: what is publicly verifiable about the 15 Sep 2026 launch, and which performance claims carry no independent evaluation",
+ "surface": "public.notice",
+ "tags": [
+  "claims-vs-verification",
+  "typesafe-ai",
+  "jev",
+  "ASSERTED_UNVERIFIED",
+  "UNSIGNED-DRAFT"
+ ],
+ "unmeasured": [
+  "Jev's actual latency, cost or accuracy on any task — access is gated, so no measurement was possible",
+  "whether the vendor's internal figures are reproducible",
+  "the funding round and its investors (not checked this run)",
+  "calibration of the claimed confidence estimates",
+  "the comparator configuration behind the 193.6x / 444.6x / 238x multiples"
+ ]
+}

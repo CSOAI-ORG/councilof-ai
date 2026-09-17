@@ -1,0 +1,232 @@
+{
+ "as_of": "2026-09-17T06:04:54Z",
+ "payload": {
+  "attestation": {
+   "do_not_publish": true,
+   "reason": "DRAFT. The board signer is unavailable (GitHub Actions disabled account-wide). Signing with any other key would misattribute the attestation, so this card is deliberately unsigned. Absence of a signature is the honest state, not an omission.",
+   "signature": null,
+   "signed": false
+  },
+  "doctrine": [
+   "We measure. We do not certify. This card is not a conformity mark and not a grade.",
+   "ASSERTED_UNVERIFIED and UNMEASURED are first-class outcomes and are never zero-filled.",
+   "Nothing here states or implies that any organisation named endorses, partners with, or has reviewed CSOAI.",
+   "Figures attributed to a third party are quotations of that party's own claim, not our findings."
+  ],
+  "instrument": {
+   "id": "RCCL/0.1",
+   "name": "Regulatory Claim-to-Calendar Latency",
+   "one_line": "For a viral claim that a named regulator will take a dated official action, measure how that claim stands against the regulator's own calendar of record, and how far the claim runs ahead of the nearest real milestone.",
+   "step_1_claim_admissibility": {
+    "criteria": [
+     "A1 CAPTURED: the claim artifact is reachable at capture time and archived by URL plus retrieval timestamp. A claim relayed secondhand without a URL is NOT admissible.",
+     "A2 TIMESTAMPED: the artifact carries a publication time, normalised to UTC.",
+     "A3 NAMED REGULATOR: it names a specific body (SEC, CFTC, FCA, ESMA, ...), not 'regulators' or 'Washington'.",
+     "A4 DATED ACTION: it asserts an official action on a resolvable date. Relative expressions ('tomorrow', 'this week') resolve against the artifact's own publication timestamp in the regulator's local timezone, and the resolution is recorded.",
+     "A5 CALENDARABLE TYPE: the asserted action is of a kind the regulator publishes in advance — an open meeting, a roundtable, a scheduled vote, a rule adoption. Actions that are never pre-announced (enforcement filings, staff statements, no-action letters) fail A5 and are UNCHECKABLE by construction."
+    ],
+    "note": "A claim enters the instrument only if ALL of the following hold. Anything else is logged and excluded, never scored."
+   },
+   "step_2_official_source_of_record": {
+    "SEC": {
+     "calendar_of_record": "https://www.sec.gov/newsroom/meetings-events",
+     "canonicalisation": "https://www.sec.gov/news/upcoming-events redirects to the calendar of record; follow redirects and record the effective URL.",
+     "docket_of_record": "https://www.sec.gov/rules-regulations/rulemaking-activity"
+    },
+    "extension_rule": "Adding a regulator means pinning its two URLs in this block first. An observation against an unpinned source is inadmissible.",
+    "note": "Sources are pinned per regulator BEFORE the observation, so the instrument cannot be steered by choosing a convenient source after the fact. Each is fetched and its retrieval timestamp recorded, including on failure."
+   },
+   "step_3_resolution": {
+    "procedure": [
+     "R1 At check time t_check, fetch the calendar of record and extract every scheduled item: date, time, type, title.",
+     "R2 Ask whether any item on the asserted date matches the asserted action by subject. Matching is on the published title only — never on inference about what a meeting might cover.",
+     "R3 Fetch the docket of record and locate the nearest genuinely related official milestone, recording its release number, file number and dates.",
+     "R4 Emit exactly one verdict from the vocabulary below."
+    ],
+    "verdicts": {
+     "CORROBORATED": "An item on the calendar of record matches the asserted action and date by published title.",
+     "NOT_ON_CALENDAR": "The calendar of record was fetched successfully and carries no item matching the asserted subject on the asserted date.",
+     "SUPERSEDED": "The asserted action was not on the calendar at t_check but was subsequently published. The row is updated and retains both timestamps.",
+     "UNCHECKABLE": "The calendar could not settle the question. See the enumerated conditions below. This is a first-class outcome and is never collapsed into NOT_ON_CALENDAR."
+    }
+   },
+   "step_4_latency_computation": {
+    "D_context": {
+     "definition": "t_nearest_official_milestone - t_asserted_action",
+     "note": "Deliberately not called a latency. It relates the claim's date to a real milestone that may be a different action entirely, so it must never be aggregated with L_official.",
+     "status": "CONTEXT_ONLY",
+     "units": "days"
+    },
+    "L_official": {
+     "definition": "t_official_first_publication - t_claim_post",
+     "meaning": "How long before the official record the claim ran. Signed: negative means the claim PRECEDED the official publication, positive means it trailed it.",
+     "prohibition": "UNDEFINED is never rendered as 0, as infinity, or as a large placeholder, and a row with L_official UNDEFINED is excluded from any mean, median or distribution over L_official. Zero-filling this field would silently convert 'never happened' into 'happened instantly', which inverts the finding.",
+     "undefined_when": "No matching official item is published within the observation window W. L_official is then UNDEFINED.",
+     "units": "hours"
+    },
+    "L_reach": {
+     "definition": "t_asserted_action - t_claim_post",
+     "meaning": "How far ahead of itself the claim reaches. Always computable for an admissible claim.",
+     "units": "hours"
+    },
+    "observation_window_W": "90 days from t_claim_post, unless the docket of record shows a later comment deadline, in which case W extends to that deadline plus 30 days. W is fixed at observation time and recorded."
+   },
+   "step_5_uncheckable_conditions": {
+    "U1_closed_session": "The calendar carries a Closed Meeting on the asserted date. Closed meetings publish no agenda, so the subject can be neither confirmed nor refuted from public sources. A claim asserting a closed-session action is UNCHECKABLE even if the calendar is otherwise complete.",
+    "U2_non_calendarable": "The asserted action type fails admissibility criterion A5.",
+    "U3_unresolvable_date": "The artifact has no publication timestamp, so a relative date cannot be resolved.",
+    "U4_source_unreachable": "The calendar or docket of record returned a non-200 response or unusable bytes at t_check. The HTTP status and timestamp are recorded and the observation is retried, never inferred.",
+    "U5_claim_not_captured": "The claim artifact was unreachable, deleted, or reached us only as a paraphrase without a URL. Fails A1.",
+    "U6_title_ambiguous": "A calendar item exists on the asserted date whose published title neither clearly matches nor clearly excludes the asserted subject. Resolving it would require inference about meeting content, which R2 forbids.",
+    "note": "Enumerated in advance so UNCHECKABLE is a determination, not a shrug."
+   },
+   "step_6_reproducibility": {
+    "claim": "Two operators applying this definition to the same claim artifact and the same fetch timestamps must reach the same verdict without consulting each other.",
+    "companion_probe": "hype-latency-probe.py, in this directory, performs the SEC calendar and docket side of the procedure and emits a JSON observation stub.",
+    "explicitly_out_of_scope": [
+     "Whether the claimant intended to mislead.",
+     "Whether the claim moved any market.",
+     "Whether the underlying regulatory position is good policy.",
+     "How many people saw the claim."
+    ],
+    "mechanism": "Every verdict is derivable from exactly two archived artifacts — the claim capture and the calendar capture — plus the pinned rules above. No step admits a judgement about intent, virality, sincerity or harm."
+   },
+   "why_it_is_measurable": "Both sides are public and timestamped. The claim carries a post time; the regulator publishes a calendar and a rulemaking docket. The comparison needs no private information and no judgement about the claimant's motives."
+  },
+  "kind": "csoai.instrument-definition-and-first-observation/0.1",
+  "not_a_grade": true,
+  "observation_001": {
+   "admissibility": {
+    "A1_captured": false,
+    "A2_timestamped": false,
+    "A3_named_regulator": true,
+    "A4_dated_action": "PARTIAL — 'TOMORROW' is relative and cannot be resolved without A2",
+    "A5_calendarable_type": true,
+    "verdict": "INADMISSIBLE_AS_SCORED_DATAPOINT"
+   },
+   "calendar_side": {
+    "crypto_matching_items": 0,
+    "effective_url_note": "https://www.sec.gov/news/upcoming-events redirected here (200).",
+    "fetched_at": "2026-09-17T06:04:21Z",
+    "http": 200,
+    "items_scheduled_in_full": [
+     {
+      "date": "2026-09-17",
+      "time": "10:00 AM ET",
+      "title": "Roundtable on Preparations for 24-Hour Trading",
+      "type": "SEC Meetings and Other Events"
+     },
+     {
+      "date": "2026-09-17",
+      "time": "2:00 PM ET",
+      "title": "Closed Meeting",
+      "type": "SEC Meetings and Other Events"
+     },
+     {
+      "date": "2026-10-27",
+      "time": "10:00 AM ET",
+      "title": "2026 Compliance Outreach Program Regional Seminar for Investment Advisers and Investment Companies (Denver and Salt Lake City)",
+      "type": "SEC Meetings and Other Events"
+     }
+    ],
+    "note": "The only occurrence of the string 'crypto' anywhere on the page is the site-wide navigation link 'Crypto Task Force', which is a standing topic page and not a scheduled item. The full item list is recorded above so a reader can check the zero rather than take it on trust.",
+    "state": "MEASURED",
+    "url": "https://www.sec.gov/newsroom/meetings-events",
+    "verdict": "NOT_ON_CALENDAR"
+   },
+   "claim_artifact": {
+    "captured": false,
+    "note": "The claim reached this card as a paraphrase in the commissioning brief, with no post URL and no post timestamp. Under A1 and A2 it is NOT ADMISSIBLE as a scored datapoint, and under U5 the claim side is UNCHECKABLE.",
+    "state": "UNCAPTURED",
+    "url": null
+   },
+   "claim_as_relayed": "SEC will officially announce new Bitcoin and crypto rules TOMORROW",
+   "finding": "The SEC's calendar of record, fetched in full, carries three scheduled items and none is crypto-titled. The SEC's docket of record shows the live crypto position is a proposed rule already published on 18 August and open for comment until 20 October. Both halves are MEASURED. The claim itself was never captured, so this observation stands as a calendar measurement and not as a scored latency datapoint.",
+   "id": "RCCL/0.1#001",
+   "latency_fields": {
+    "D_context": {
+     "computed_as": "2026-10-20 (public comments due) minus 2026-09-17 (asserted date as relayed)",
+     "reading": "The nearest real milestone on the SEC's own record is a comment deadline 33 days after the date the claim pointed at — and a deadline for the public to write in is a different kind of event from an announcement of new rules.",
+     "status": "CONTEXT_ONLY",
+     "value_days": 33
+    },
+    "L_official": "UNDEFINED — no matching official calendar item exists; per the prohibition in step_4 this is NOT recorded as 0 and NOT aggregated",
+    "L_reach": "UNDEFINED — requires t_claim_post (A2 failed)"
+   },
+   "real_position_measured": {
+    "comment_file_of_record": "https://www.sec.gov/comments/s7-2026-27/regulation-crypto-assets",
+    "corroborates_brief": "The brief's 'proposed 18 Aug, comments open to 20 Oct' is confirmed against the SEC's own record. The Federal Register publication date of 21 Aug and RIN 3235-AN38 are additional measured facts.",
+    "federal_register_publish_date": "2026-08-21",
+    "fetched_at": "2026-09-17T06:04:54Z",
+    "file_number": "S7-2026-27",
+    "http": 200,
+    "overview_as_published": "Would create a tailored offering regime for certain investment contracts involving crypto assets, with two exemptions from Securities Act 1933 registration, principles-based issuer disclosures, continued application of the antifraud and antimanipulation provisions, and a conditional safe harbor from the term 'investment contract' in the definition of 'security'.",
+    "parse_correction": {
+     "note": "An earlier pass of this measurement read the rulemaking INDEX page with a line-joining heuristic and produced 'release 34-106225' for this rule. That was wrong: 34-106225 belongs to S7-2026-29 (a separate proposed rule on exemption of debt obligations), and the heuristic had joined cells across two table rows. The values above are taken from the rule's own Details table, which is the authoritative surface.",
+     "why_recorded": "The error was caught because the companion probe re-derived the docket rows and surfaced a second, inconsistent pairing. A measurement instrument that cannot catch its own parse errors is not an instrument, so the catch is part of the record."
+    },
+    "public_comments_due": "2026-10-20",
+    "read_from": "the 'Details' table on the SEC's own rule page, verbatim",
+    "release_numbers": [
+     "33-11434",
+     "34-106150"
+    ],
+    "rin": "3235-AN38",
+    "rule_type": "Proposed",
+    "sec_issue_date": "2026-08-18",
+    "state": "MEASURED",
+    "title": "Regulation Crypto Assets",
+    "url": "https://www.sec.gov/rules-regulations/2026/08/s7-2026-27"
+   },
+   "uncheckable_flag": {
+    "applies": true,
+    "condition": "U1_closed_session",
+    "detail": "A Closed Meeting is scheduled for 2026-09-17 at 2:00 PM ET. Closed meetings publish no agenda. If the relayed claim referred to that session, the claim can be neither confirmed nor refuted from public sources. This is the single most important qualification on this observation: the calendar shows no crypto-titled item, and it also shows one item whose title shows nothing at all."
+   },
+   "what_would_make_it_scored": "A URL and publication timestamp for the original post. Nothing else is missing."
+  },
+  "recheck_trigger": "Re-run the calendar side daily while W is open for any live observation, and re-run this observation if the original post URL is supplied.",
+  "self_assessment": {
+   "known_limitations": [
+    "Title-only matching (R2) is deliberately conservative and will under-report CORROBORATED for items whose titles are vague.",
+    "The closed-session condition U1 means a regulator with frequent closed meetings yields more UNCHECKABLE rows; this is a property of the public record, not a defect to tune away.",
+    "Calendars are amended. SUPERSEDED exists for this, but a row is only correct as of its recorded fetch timestamp.",
+    "No inter-rater reliability has been measured, because the instrument has been run once, by one operator. The reproducibility claim in step_6 is a design property, not yet an observed result.",
+    "Extracting items from an HTML calendar is a parse, and parses fail. This run's own parse of the rulemaking index produced a wrong release number before it was corrected against the rule's Details table — see real_position_measured.parse_correction. Index pages that join cells across rows must not be treated as a source of record for field values; the per-rule page is."
+   ],
+   "note": "The instrument's first run failed its own admissibility test, on the claim side, for the most ordinary reason there is: the claim arrived as a paraphrase without a link. That is worth stating plainly rather than quietly scoring it anyway. It also validates the design — A1 caught it, and the calendar measurement survives on its own terms because the two sides are scored separately."
+  },
+  "state_vocabulary": {
+   "ASSERTED_UNVERIFIED": "a party asserts this; no independent check was run by us or, so far as we could find, by anyone",
+   "FETCH_FAILED": "we attempted the fetch and it did not return usable bytes; the attempt is recorded",
+   "MEASURED": "we fetched a primary source and the row records what the bytes said",
+   "NOT_CHECKED_THIS_RUN": "carried into this card from a referring summary and not independently checked here",
+   "UNMEASURED": "not measured; first-class, never zero-filled"
+  }
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "5e7c8a7f1c6615f5f8f82c6aacf8d65dcb7ccb9b1bfe7c48ca50c5309c3631e8",
+ "source_urls": [
+  "https://www.sec.gov/newsroom/meetings-events",
+  "https://www.sec.gov/rules-regulations/rulemaking-activity",
+  "https://www.sec.gov/rules-regulations/2026/08/s7-2026-27",
+  "https://www.sec.gov/comments/s7-2026-27/regulation-crypto-assets"
+ ],
+ "subject": "Instrument RCCL/0.1: measuring the gap between a viral regulatory claim and the regulator's official calendar — definition, procedure, and first observation",
+ "surface": "public.notice",
+ "tags": [
+  "instrument",
+  "hype-latency",
+  "RCCL",
+  "sec",
+  "UNCHECKABLE",
+  "UNSIGNED-DRAFT"
+ ],
+ "unmeasured": [
+  "the original viral post — no URL or timestamp was supplied, so it was never captured",
+  "the subject of the 2026-09-17 SEC Closed Meeting (closed meetings publish no agenda)",
+  "reach, impressions or market effect of the claim — deliberately out of scope",
+  "inter-rater reliability of the instrument (run once, by one operator)",
+  "L_reach and L_official for observation 001, both UNDEFINED and not zero-filled"
+ ]
+}
