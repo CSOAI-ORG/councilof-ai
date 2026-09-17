@@ -1,0 +1,26 @@
+{
+  "schema": "csoai.crosswalk-goals/0.1",
+  "as_of": "2026-09-17",
+  "what_this_is": "Stable goal objects. A crosswalk anchored to section numbers dies when the document changes; a crosswalk anchored to goals survives it. CLARITY's cloture vote failed on 15 September 2026 and every goal below still stands, which is the argument for this shape.",
+  "what_this_is_not": [
+    "Not a statement of what any law requires. A goal is a question we can gather observable evidence against, never a legal conclusion.",
+    "Not a compliance determination. CSOAI measures and never certifies, so no goal ever resolves to compliant or non-compliant.",
+    "Not exhaustive. Goals are added when a source raises a question no existing goal can carry, and the addition is recorded."
+  ],
+  "goals": [
+    {"id": "asset-classification", "question": "What is the instrument?", "observable": "on-chain contract behaviour, issuer disclosure, transfer restrictions, redemption rights"},
+    {"id": "actor-identity", "question": "Who issued, controls or transacted?", "observable": "signing keys, registered entity records, contract ownership, admin roles"},
+    {"id": "jurisdiction", "question": "Which authority and rules potentially attach?", "observable": "venue, counterparty location, registration filings, declared governing law"},
+    {"id": "disclosure", "question": "What information exists, and where?", "observable": "published documents, their hashes, their dates, what is absent"},
+    {"id": "custody", "question": "Who controls the asset and the keys?", "observable": "multisig configuration, custodian attestations, withdrawal controls, freeze authority"},
+    {"id": "transaction-integrity", "question": "What actually occurred?", "observable": "ledger state, transaction receipts, reconciliations against the issuer's own record"},
+    {"id": "market-integrity", "question": "What manipulation or abuse observations exist?", "observable": "surveillance findings, published enforcement, anomaly detection output"},
+    {"id": "customer-protection", "question": "What safeguards are observable?", "observable": "segregation evidence, complaint handling records, disclosed limits"},
+    {"id": "reserves-collateral", "question": "What assets actually back the obligation?", "observable": "attestation reports, on-chain reserve addresses, issued supply against reserve"},
+    {"id": "settlement", "question": "Where, how and when did finality occur?", "observable": "ledger finality, settlement windows, failure and reversal records"},
+    {"id": "agent-authority", "question": "What was an AI permitted to do?", "observable": "spending limits, tool allowlists, delegation records, the evidence present when authority was granted"},
+    {"id": "provenance", "question": "What produced the transaction or instruction?", "observable": "signed content credentials, model and prompt identity, tool-call traces"},
+    {"id": "assurance", "question": "What evidence supports those assertions, and could it have failed?", "observable": "measurement records, their banks and graders by hash, incident findings, whether the instrument can return a negative result"},
+    {"id": "change", "question": "What changed since the last measurement, and what does that invalidate?", "observable": "source version diffs, superseded records, re-measurement results"}
+  ]
+}
