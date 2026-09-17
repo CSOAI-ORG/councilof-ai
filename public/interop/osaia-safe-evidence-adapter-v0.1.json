@@ -1,0 +1,198 @@
+{
+  "schema": "csoai.osaia-safe-evidence-adapter/0.1",
+  "generated_at": "2026-09-17T03:05:00Z",
+  "external_deadline": "2026-09-21",
+  "external_target": "OSAIA SAFE RFC submission",
+  "title": "CSOAI SAFE Evidence Adapter \u2014 Finding to Remeasurement",
+  "disclaimer": "OSAIA SAFE is the Open Secure AI Alliance's Security Analysis Findings Exchange format. This adapter wraps SAFE findings into CSOAI's canonical evidence-object grammar so they can be measured, signed, and cross-walked against regulatory requirements and assurance goals. Not a vulnerability declaration; not a certification; not an autonomous remediation.",
+  "pipeline": [
+    {
+      "stage": "Finding",
+      "input": "SAFE JSON (tool, finding_type, severity, location, description)",
+      "canonical_object_field": "subject / claim / source",
+      "example_safe_keys": [
+        "tool",
+        "finding_type",
+        "severity",
+        "location",
+        "description"
+      ]
+    },
+    {
+      "stage": "Measurement",
+      "input": "Finding mapped to GSPC axis + safe-derived measurement",
+      "canonical_object_field": "measurement / observation / uncertainty",
+      "example_gspc_axes": [
+        "safety",
+        "conformance",
+        "provenance",
+        "governance",
+        "openness"
+      ]
+    },
+    {
+      "stage": "Provenance",
+      "input": "Source tool version, scanner signature, evidence sha256, OTS stamp",
+      "canonical_object_field": "source / source_version / evidence / hash / signature / root",
+      "example_provenance_fields": [
+        "tool_version",
+        "scanner_sig",
+        "evidence_sha256",
+        "ots_url"
+      ]
+    },
+    {
+      "stage": "Remediation",
+      "input": "Recommended fix linked to axis-impact + measurement delta",
+      "canonical_object_field": "effective_state / claim (post-fix expectation)",
+      "example_remediation": "patch_id, expected_measurement_delta, axis_targets"
+    },
+    {
+      "stage": "Remeasurement",
+      "input": "After-remediation scanner run -> new canonical object -> diff vs prior",
+      "canonical_object_field": "change / supersedes / timestamp / valid_from / valid_until",
+      "example_remeasurement": "diff_id, axis_changes, new_ots_url"
+    }
+  ],
+  "canonical_object_grammar": {
+    "subject": "string (axis + axis_slot)",
+    "requirement": "string (regulatory or framework reference, if any)",
+    "jurisdiction": "string (ISO-3166 or framework code)",
+    "source": "string (scanner / framework / regulator)",
+    "source_version": "string",
+    "effective_state": "enum: OBSERVED | MEASURED | DISPUTED | SUPERSEDED",
+    "claim": "string (human-readable assertion)",
+    "observation": "object (raw scanner output)",
+    "measurement": "object (axis value, units, method)",
+    "evidence": "array of evidence-object URLs",
+    "provenance": "object (tool, version, signer, timestamp)",
+    "uncertainty": "object (interval, method, confidence)",
+    "timestamp": "ISO-8601 string",
+    "valid_from": "ISO-8601 string",
+    "valid_until": "ISO-8601 string (or null)",
+    "supersedes": "string (sha256 of prior canonical object)",
+    "hash": "sha256 of canonical JSON",
+    "signature": "Ed25519 signature",
+    "root": "OTS bitcoin anchor URL"
+  },
+  "crosswalk_to_goal_objects": {
+    "asset_classification": [
+      "tool_inventory",
+      "model_inventory"
+    ],
+    "actor_identity": [
+      "signer_inventory",
+      "key_inventory"
+    ],
+    "jurisdiction": [
+      "deployment_region"
+    ],
+    "disclosure": [
+      "model_card",
+      "system_card"
+    ],
+    "custody": [
+      "key_management"
+    ],
+    "transaction_integrity": [
+      "input_validation",
+      "output_validation"
+    ],
+    "market_integrity": [
+      "prompt_injection_robustness"
+    ],
+    "customer_protection": [
+      "pii_handling",
+      "redaction"
+    ],
+    "reserves_collateral": [
+      "resource_limits"
+    ],
+    "settlement": [
+      "idempotency"
+    ],
+    "agent_authority": [
+      "permission_scope",
+      "tool_authorization"
+    ],
+    "provenance": [
+      "training_data_provenance",
+      "data_lineage"
+    ],
+    "assurance": [
+      "test_coverage",
+      "red_team_results"
+    ],
+    "change": [
+      "version_drift",
+      "config_drift"
+    ]
+  },
+  "bft_council_role": {
+    "description": "The CSOAI BFT-style measurement council examines agreement/disagreement across heterogeneous SAFE sources. It does NOT vote on compliance; it measures agreement, dispersion, source independence, freshness, contradiction, replication, coverage, and uncertainty.",
+    "quorum": "23/33 voters (CSOAI ADR-002)",
+    "input": "Multiple SAFE findings for the same axis-target from independent scanners",
+    "output": "BFT verdict card with agreement score, dispersion, source-independence grade"
+  },
+  "osaia_safe_integration": {
+    "format_input": "https://github.com/ossf/osaia-safe (JSON)",
+    "format_output": "Canonical CSOAI evidence object (see canonical_object_grammar)",
+    "example_input": {
+      "tool": "garak",
+      "finding_type": "prompt_injection",
+      "severity": "high",
+      "location": "model:claude-opus-5:prompt-template",
+      "description": "Jailbreak detected at confidence 0.92"
+    },
+    "example_output": {
+      "subject": "axis:safety#claude-opus-5",
+      "requirement": "OSAIA-SAFE/FindingType/prompt_injection",
+      "jurisdiction": "OSAIA",
+      "source": "garak",
+      "source_version": "v3.2.1",
+      "effective_state": "MEASURED",
+      "claim": "Jailbreak detected with 92% confidence against prompt template",
+      "observation": {
+        "asr": 0.92,
+        "samples": 100
+      },
+      "measurement": {
+        "axis": "safety",
+        "value": "high_risk",
+        "method": "garak.probe.jailbreak"
+      },
+      "evidence": [
+        "/interop/safe-evidence/claude-opus-5-garak-2026-09-17.json"
+      ],
+      "provenance": {
+        "tool": "garak",
+        "version": "v3.2.1",
+        "signer": "garak-bot",
+        "timestamp": "2026-09-17T03:05:00Z"
+      },
+      "uncertainty": {
+        "ci_95": [
+          0.85,
+          0.97
+        ]
+      },
+      "timestamp": "2026-09-17T03:05:00Z",
+      "valid_from": "2026-09-17T03:05:00Z",
+      "valid_until": null,
+      "supersedes": null,
+      "hash": "computed-sha256-of-canonical",
+      "signature": "ed25519-signature",
+      "root": "ots-pending-url"
+    }
+  },
+  "external_deliverables": [
+    {
+      "deliverable": "OSAIA SAFE Evidence Adapter",
+      "deadline": "2026-09-21",
+      "external_target": "OSAIA SAFE RFC",
+      "status": "DRAFT \u2014 submit ready"
+    }
+  ],
+  "sha256": "7c60c24acf9acb1452f6c844d06657aaa49b693eeeaca2a152524078956e375b",
+  "byte_size": 5291
+}
