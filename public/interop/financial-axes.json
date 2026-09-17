@@ -64,7 +64,7 @@
    "measured_count": 2,
    "surface": "/interop/financial-measure-run-ai-adoption-components.json",
    "risk_verdict": "UNMEASURED (needs counsel)",
-   "data": "2 Eurostat series (13.48% / 41.17% 2024). Bank gaps for a full index remain stated on the run card.",
+   "data": "2 Eurostat series from isoc_eb_ai, 2025: enterprises 10+ employees 19.95%, large enterprises 250+ 55.03%. Bank gaps for a full index remain stated on the run card.",
    "note": "Former slot id ai-economy-index. MEASURED as component facts only. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Reference components existing is not an index being measured.",
    "status_correction": "The linked v0.1 index artifact may still carry a MEASURED-INDEX-v0.1 label — that label was an OVER-CLAIM and is superseded. Board + this register cite the component-facts run, not the index sticker."
   },
@@ -74,12 +74,12 @@
    "status": "MEASURED",
    "former_id": "human-labour-index",
    "object": "component-facts",
-   "rubric": "deterministic cited public labour series (Eurostat). Not an index. No formula file.",
+   "rubric": "deterministic cited public labour series (Eurostat lfsi_emp_a + une_rt_a). Not an index. No formula file.",
    "measured_count": 2,
    "surface": "/interop/financial-measure-run-labour-components.json",
    "risk_verdict": "UNMEASURED (needs counsel)",
-   "data": "2 labour series (participation 57.58%, unemployment 5.92% 2024). Bank gaps for a full index remain stated on the run card.",
-   "note": "Former slot id human-labour-index. MEASURED as component facts only. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
+   "data": "2 Eurostat series, 2025: activity rate age 15-64 75.6% of population, unemployment rate age 15-74 6.0% of the labour force. Bank gaps for a full index remain stated on the run card.",
+   "note": "Former slot id human-labour-index. MEASURED as component facts only. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. SOURCE CHANGED 2026-09-17: the run fetched the World Bank's modelled-ILO EUU series while this register said Eurostat; it now fetches Eurostat. The old participation figure was a share of TOTAL population, the activity rate below is a share of the population aged 15-64 — different quantities, not a jump.",
    "status_correction": "The linked v0.1 index artifact may still carry a MEASURED-INDEX-v0.1 label — that label was an OVER-CLAIM and is superseded. Board + this register cite the component-facts run, not the index sticker."
   },
   {

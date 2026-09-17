@@ -327,7 +327,7 @@ Upgrade. Who holds keys, where, under which law. Custodian AND auditor named+URL
 
 First gen: n=0, leader/facts 2 of 4 inputs, CI ---, UNMEASURED. Home csoai/gspc-ai-economy-index. Kind declared-index.
 
-Upgrade. HAVE: EU enterprise AI adoption 13.48% (isoc_eb_ai). ADD: Anthropic Economic Index (June 2026 Cadences), compute-price series, investment series. ERC-8004 signed-and-callable fraction as OPTIONAL labelled component. No composite until every series is pinned. C-2026-0826-05 forbids restoring MEASURED-INDEX-v0.1.
+Upgrade. HAVE: EU enterprise AI adoption 19.95% for enterprises with 10+ employees, 55.03% for 250+ (isoc_eb_ai, 2025). ADD: Anthropic Economic Index (June 2026 Cadences), compute-price series, investment series. ERC-8004 signed-and-callable fraction as OPTIONAL labelled component. No composite until every series is pinned. C-2026-0826-05 forbids restoring MEASURED-INDEX-v0.1.
 
 *n-target. pin series IDs; no composite Forbidden. Compute composite · v0.1 sticker · treat Claude usage as the economy*
 
@@ -335,7 +335,7 @@ Upgrade. HAVE: EU enterprise AI adoption 13.48% (isoc_eb_ai). ADD: Anthropic Eco
 
 First gen: n=0, leader/facts 2 of 4 inputs, CI ---, UNMEASURED. Home csoai/gspc-human-labour-index. Kind declared-index.
 
-Upgrade. HAVE: EU participation 57.58%, unemployment 5.92%. ADD: Anthropic Index labour-market tables (O\*NET/SOC), wage and hours series, displacement indicators. Do not treat Claude usage as the whole labour market.
+Upgrade. HAVE: EU activity rate age 15-64 75.6% of population, unemployment age 15-74 6.0% of the labour force (Eurostat, 2025). ADD: Anthropic Index labour-market tables (O\*NET/SOC), wage and hours series, displacement indicators. Do not treat Claude usage as the whole labour market.
 
 *n-target. pin O\*NET/SOC + wages + hours; no composite Forbidden. Claude-usage as labour market · composite from 2 of 4*
 

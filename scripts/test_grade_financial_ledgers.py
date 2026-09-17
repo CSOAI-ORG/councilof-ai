@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from gspc_financial_facts import (  # noqa: E402
     LSF,
     decode_flags,
-    eurostat_extract_2024,
+    eurostat_latest,
     grade_control_facts,
     grade_custody,
     grade_distribution,
@@ -23,7 +23,7 @@ from gspc_financial_facts import (  # noqa: E402
     grade_regime,
     grade_reserve,
     grade_series_values,
-    worldbank_latest,
+    jsonstat_cells,
 )
 
 
@@ -130,15 +130,52 @@ class SeriesAndHumanoid(unittest.TestCase):
         self.assertEqual(g["status"], "MEASURED")
         self.assertEqual(g["n"], 2)
 
-    def test_eurostat_extract_from_jsonstat_value_map(self):
-        payload = {"value": {"0": 8.06, "1": 13.48}}
-        self.assertEqual(eurostat_extract_2024(payload), 13.48)
+    # Shaped like the LIVE isoc_eb_ai response: a flat row-major value map over
+    # size_emp x time. The fixture this replaces was {"value": {"0": 8.06, "1": 13.48}}
+    # -- a shape Eurostat never returns, with no dimensions to walk. It passed while
+    # the extractor was taking an arbitrary cell and stamping 2024 on it.
+    EUROSTAT_AI_FIXTURE = {
+        "id": ["size_emp", "time"],
+        "size_emp": None,
+        "size": [2, 2],
+        "dimension": {
+            "size_emp": {"category": {"index": {"GE10": 0, "GE250": 1}}},
+            "time": {"category": {"index": {"2024": 0, "2025": 1}}},
+        },
+        "value": {"0": 13.48, "1": 19.95, "2": 41.17, "3": 55.03},
+    }
 
-    def test_worldbank_latest_skips_nulls(self):
-        payload = [{"page": 1}, [{"date": "2025", "value": None}, {"date": "2024", "value": 57.58}]]
-        val, year = worldbank_latest(payload)
-        self.assertEqual(val, 57.58)
-        self.assertEqual(year, "2024")
+    def test_eurostat_isolates_each_size_class(self):
+        for selector, value in (({"size_emp": "GE10"}, 19.95), ({"size_emp": "GE250"}, 55.03)):
+            val, year = eurostat_latest(self.EUROSTAT_AI_FIXTURE, selector)
+            self.assertEqual((val, year), (value, "2025"))
+
+    def test_eurostat_never_reports_another_size_class_cell(self):
+        """The defect: 55.03 is the 250+/2025 cell and was published as the 2024 headline."""
+        val, year = eurostat_latest(self.EUROSTAT_AI_FIXTURE, {"size_emp": "GE10"})
+        self.assertNotEqual(val, 55.03)
+        self.assertEqual(year, "2025")
+
+    def test_eurostat_year_is_read_not_assumed(self):
+        """A control that CAN fail: shift the response a year and the year must move."""
+        shifted = {
+            **self.EUROSTAT_AI_FIXTURE,
+            "dimension": {
+                "size_emp": {"category": {"index": {"GE10": 0, "GE250": 1}}},
+                "time": {"category": {"index": {"2030": 0, "2031": 1}}},
+            },
+        }
+        _val, year = eurostat_latest(shifted, {"size_emp": "GE10"})
+        self.assertEqual(year, "2031")
+
+    def test_eurostat_missing_series_is_uncheckable_not_substituted(self):
+        val, year = eurostat_latest(self.EUROSTAT_AI_FIXTURE, {"size_emp": "GE1000"})
+        self.assertIsNone(val)
+        self.assertIsNone(year)
+
+    def test_jsonstat_unrecognised_shape_yields_no_cells(self):
+        """The old fixture's shape: values with nothing to label them by."""
+        self.assertEqual(jsonstat_cells({"value": {"0": 8.06, "1": 13.48}}), [])
 
     def test_humanoid_unreachable_uncheckable(self):
         g = grade_humanoid(0, "", "UNREACHABLE")
