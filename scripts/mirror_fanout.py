@@ -58,6 +58,43 @@ Some surfaces expose a public listing API, so whether an artifact is published
 there is MEASURED, not assumed. Where no listing exists (a static host), we
 always assign a URL and let the fetch decide.
 
+Surfaces evaluated and REJECTED
+-------------------------------
+S3 (2026-09-17) — evaluated as a candidate independent provider and rejected on
+two independent grounds, either of which is sufficient. Recorded here so the
+evaluation is not repeated.
+
+  1. The credentials are not AWS. ~/.aws/credentials holds exactly one profile,
+     [hf], and ~/.aws/config pins it to endpoint_url https://s3.hf.co/<user> —
+     Hugging Face's S3-compatible gateway. Against real AWS the same keys are
+     rejected: sts.us-east-1.amazonaws.com returns InvalidClientTokenId and
+     s3.us-east-1.amazonaws.com returns InvalidAccessKeyId. The two visible
+     buckets (csoai-cards, sovereign-offload) are HF repos wearing S3 clothes.
+     So an "s3" surface would be a SECOND URL ON THE HUGGING FACE PROVIDER,
+     which by the independence rule below counts once, not twice. It would add
+     a row and zero durability — the exact failure cloudflare-pages-csoai is
+     already annotated against.
+
+  2. It cannot satisfy R5/anonymous readback at all. s3.hf.co requires a SigV4
+     signature on every read: an unsigned GET returns 403 with
+     <Code>AccessDenied</Code><Message>Signature is required</Message>. This is
+     a property of the gateway, not of repo visibility — PROVED by control:
+     csoai/councilof-ai-mirror is public and served root.json (24454 bytes) with
+     200 over huggingface.co in the same run, and STILL returned that same 403
+     through s3.hf.co. There is also no mechanism to change it: GetBucketPolicy
+     and GetPublicAccessBlock both answer NotImplemented on this gateway, so
+     there is no bucket policy to open and no owner decision to put. A surface
+     whose every probe is UNREACHABLE by construction measures nothing.
+
+     Consequently no s3-specific selftest case was added either. The only check
+     such a surface could motivate — "a bucket that 403s anonymously must report
+     UNREACHABLE, not VERIFIED" — is ALREADY case B3, provider-agnostically. A
+     relabelled copy of B3 could not fail unless B3 also failed, and by R3 a
+     check that cannot independently fail is not a check.
+
+  Real AWS S3 keys, on an account whose bucket the owner chooses to open for
+  public read, would be a genuine seventh provider. These are not those keys.
+
 Never prints the Hugging Face token.
 """
 
@@ -448,14 +485,18 @@ SURFACES: list[Surface] = [
         note=(
             f"dataset {KAGGLE_OWNER}/{KAGGLE_SLUG}; per-file anonymous download. "
             "MEASURED 2026-09-17: a fresh, complete, byte-correct version can exist on Kaggle "
-            "while the anonymous default still serves an older one. Versions 30 and 31 carry the "
+            "while the anonymous default still serves an older one. Versions 30 and 31 carried the "
             "current root.json (24454 bytes, dedb49d0…); the version-less per-file endpoint, the "
             "version-less dataset zip and datasets/view all still resolved to version 29 "
             "(24310 bytes, d9639d9a…) for 20+ minutes after the push. The `?datasetVersionNumber=` "
             "parameter was proved falsifiable in the same run (v=28 → different bytes, v=32 → 404), "
-            "so this is Kaggle's current-version pointer lagging, not a failed upload. A reader "
-            "following the documented URL therefore still gets the stale copy, which is exactly why "
-            "this leg is probed anonymously rather than trusted from the upload's exit code."
+            "so this was Kaggle's current-version pointer lagging, not a failed upload. "
+            "RE-MEASURED later on 2026-09-17: the pointer has since caught up — the version-less "
+            "per-file endpoint now serves 24454 bytes, dedb49d0…, matching the bytes on disk, and "
+            "this leg VERIFIES. The lag was transient, so the stale window is recorded as history "
+            "rather than as the current state. Both readings are why this leg is probed "
+            "anonymously every run rather than trusted from the upload's exit code: the same URL "
+            "returned different bytes hours apart with no push in between."
         ),
         url_for=_kaggle_url,
         list_fn=kaggle_listing,
@@ -476,14 +517,17 @@ SURFACES: list[Surface] = [
         name="zenodo-mirror-deposit",
         provider="Zenodo",
         note=(
-            f"deposit {ZENODO_MIRROR_RECORD} — created on PRODUCTION zenodo.org 2026-09-17 to give "
+            f"record {ZENODO_MIRROR_RECORD} — created on PRODUCTION zenodo.org 2026-09-17 to give "
             "agent-population-2026-09-17.json and master-consolidation-rollup-v0.1.json a second "
-            "independent provider. MEASURED: it is state=unsubmitted. Both files are uploaded and "
-            "read back with matching md5 over the authenticated deposit API, but a Zenodo draft is "
-            "not public — /api/records/22806072 and its file contents both 404 anonymously, while a "
-            "published record's file (21991105/methodology.md) returns 200 in the same run. "
-            "Publishing mints the permanent DOI 10.5281/zenodo.22806072 and cannot be undone, so it "
-            "is left to the owner. Until then this surface is correctly NOT a verified mirror."
+            "independent provider. MEASURED 2026-09-17 (SUPERSEDES the earlier note on this "
+            "surface): the owner published it, and the anonymous probe now confirms it. "
+            "/api/records/22806072 returns 200 with state=done, submitted=true, DOI "
+            "10.5281/zenodo.22806072, publication_date 2026-09-17, carrying both files; both read "
+            "back anonymously with matching sha256. The previous note recorded state=unsubmitted "
+            "and a 404 to anonymous readers — that was true when written and is now false. It is "
+            "corrected rather than left standing, because this note is published verbatim into "
+            "mirror-manifest.json and a stale MEASURED claim there is a false claim. This is the "
+            "surface that moved both files off single-homed."
         ),
         url_for=_zenodo_mirror_url,
         list_fn=zenodo_mirror_listing,
