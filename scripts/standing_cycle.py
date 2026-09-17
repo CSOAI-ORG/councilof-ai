@@ -99,15 +99,70 @@ def hf_readback_anonymous(org: str, repo: str, filename: str) -> dict:
 
 
 def cycle_record_pick() -> dict:
-    """The pick phase. Picks ONE source from a non-empty pool, OR records NO_WORK."""
-    # Look at the available sources we can measure
-    sources = [
-        ("x402_payai",      "https://payai.x402.org/api/resources",          "json", "/resources", "count"),
-        ("x402_cdp",        "https://api.cdp.coinbase.com/x402/resources",  "json", "/resources", "count"),
-        ("councilof_ai",    "https://councilof.ai/api/gspc",                "json", "/totals/axes", "value"),
-        ("hf_csoai_org",    "https://huggingface.co/csoai",                  "html", None,         "fetch"),
-    ]
-    return {"phase": "pick", "candidates": sources, "picked_at": datetime.now(timezone.utc).isoformat()}
+    """The pick phase. Pulls candidates from the LIVE /api/gspc registry so
+    the cycle cannot drift from the canonical roster.
+
+    Per the Day-1 execution log + section 19 failure modes: "Stale
+    count/contract copied into code — fetch live source or label snapshot with
+    timestamp; fail closed on internal mismatch."
+
+    Returns a dict with `candidates` (the per-axis URL), `picked_at`, and
+    `roster_source` (the live URL the roster came from).
+    """
+    live = "https://councilof.ai/api/gspc"
+    try:
+        req = urllib.request.Request(live, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            body = resp.read()
+        roster = json.loads(body)
+        axes = roster.get("axes", [])
+    except Exception as e:
+        # Fail closed: do NOT fall back to a hardcoded list. Return NO_WORK with the reason.
+        return {
+            "phase": "pick",
+            "candidates": [],
+            "picked_at": datetime.now(timezone.utc).isoformat(),
+            "roster_source": live,
+            "roster_state": "UNREACHABLE",
+            "roster_reason": str(e)[:200],
+            "no_work": True,
+            "rule": "Per plan section 19, fail closed on internal mismatch — the cycle cannot use a hardcoded candidate list when the live source is unreachable.",
+        }
+    # Each axis becomes a candidate: probe the per-axis URL (the dataset)
+    candidates = []
+    for a in axes:
+        if not isinstance(a, dict):
+            continue
+        axis = a.get("axis", "?")
+        ds = a.get("dataset") or {}
+        ds_url = ds.get("dataset_url") if isinstance(ds, dict) else None
+        if ds_url:
+            candidates.append((axis, ds_url, "json", "/dataset", "fetch"))
+        # Also include the board roster URL itself as the system-of-record probe
+        candidates.append((f"gspc_axis:{axis}", live, "json", f"/axes", "value"))
+    if not candidates:
+        return {
+            "phase": "pick",
+            "candidates": [],
+            "picked_at": datetime.now(timezone.utc).isoformat(),
+            "roster_source": live,
+            "roster_state": "EMPTY_ROSTER",
+            "no_work": True,
+        }
+    # Keep the historical human-surfacing probes too (so the cycle still
+    # exercises councilof.ai + HF mirrors per the realignment brief).
+    candidates.extend([
+        ("councilof_ai_root_json", "https://councilof.ai/root.json", "json", "/root_hash", "value"),
+        ("hf_csoai_org", "https://huggingface.co/csoai", "html", None, "fetch"),
+    ])
+    return {
+        "phase": "pick",
+        "candidates": candidates,
+        "picked_at": datetime.now(timezone.utc).isoformat(),
+        "roster_source": live,
+        "roster_state": "REACHED",
+        "axes_in_roster": len(axes),
+    }
 
 
 def cycle_measure(pick: dict) -> dict:
@@ -175,9 +230,9 @@ def cycle_measure(pick: dict) -> dict:
     }
 
 
-def cycle_evidence_object(measure: dict) -> dict:
+def cycle_evidence_object(measure: dict, pick: dict | None = None) -> dict:
     """Build the canonical evidence object — the artifact a stranger can fetch."""
-    return {
+    obj = {
         "schema": "csoai.standing-cycle/0.1",
         "kind": "standing-cycle-evidence",
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -195,6 +250,13 @@ def cycle_evidence_object(measure: dict) -> dict:
             "An idle honest cycle beats a busy dishonest one. NO_WORK is valid.",
         ],
     }
+    if pick:
+        obj["roster_source"] = pick.get("roster_source")
+        obj["roster_state"] = pick.get("roster_state")
+        obj["roster_reason"] = pick.get("roster_reason")
+        obj["axes_in_roster"] = pick.get("axes_in_roster")
+        obj["candidates_count"] = len(pick.get("candidates", []))
+    return obj
 
 
 def cycle_mirror_and_readback(evidence: dict, org: str, repo: str) -> dict:
@@ -229,7 +291,7 @@ def cycle_run(org: str = "csoai", repo: str = "standing-cycle") -> dict:
     """One full cycle. Returns the manifest dict."""
     pick = cycle_record_pick()
     measure = cycle_measure(pick)
-    evidence = cycle_evidence_object(measure)
+    evidence = cycle_evidence_object(measure, pick=pick)
     evidence = cycle_mirror_and_readback(evidence, org, repo)
 
     # Final manifest — what the cycle DID and DID NOT do
@@ -276,7 +338,7 @@ def main() -> int:
         # Audit path — no write, no readback. For local sanity check.
         pick = cycle_record_pick()
         measure = cycle_measure(pick)
-        evidence = cycle_evidence_object(measure)
+        evidence = cycle_evidence_object(measure, pick=pick)
         print(json.dumps({"pick": pick, "measure": measure, "evidence_no_write": evidence}, indent=2))
         return 0
 
