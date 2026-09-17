@@ -10,13 +10,32 @@
     "state": "PRIMARY_ARTIFACT_FETCHED_DEADLINE_FROM_SECONDARY",
     "primary_artifact_fetched": true,
     "url": "https://github.com/OpenSecureAIAlliance/RFCs/blob/main/rfc-safe-proposal.md",
-    "deadline_provenance": "NOT_IN_PRIMARY_ARTIFACT. We fetched the RFC file and the alliance homepage on 17 September 2026 and neither states a closing date. The 21 September date appears in Linux Foundation and vendor coverage of the RFC. Treat the deadline as reported, not as published by the RFC, and say so wherever it is quoted.",
-    "checked_at": "2026-09-17T02:55Z"
+    "deadline_provenance": "NOT_IN_PRIMARY_ARTIFACT_BUT_STATED_BY_THE_BODY. We fetched the RFC file and the alliance homepage on 17 September 2026 and neither states a closing date. The Linux Foundation's own announcement does, verbatim: \"Developers, defenders, researchers and organizations are invited to contribute to the SAFE proposal by September 21\". So the date is the body's own, published somewhere other than the artifact it governs. Quote it as such.",
+    "checked_at": "2026-09-17T02:55Z",
+    "deadline_source_url": "https://www.linuxfoundation.org/blog/open-secure-ai-alliance-joins-the-linux-foundation-to-build-a-shared-open-defense-stack-for-the-ai-era"
   },
   "goals_touched": [
-    {"goal": "assurance", "what_the_source_raises": "turning incidents and near misses into evidence-based controls"},
-    {"goal": "provenance", "what_the_source_raises": "evidence preservation covering prompts, traces, tool calls, logs, configurations, model and safeguard versions and third-party dependencies"},
-    {"goal": "change", "what_the_source_raises": "machine-readable updates while a risk remains unresolved"},
-    {"goal": "agent-authority", "what_the_source_raises": "delegated authority in agentic incidents"}
-  ]
+    {
+      "goal": "assurance",
+      "what_the_source_raises": "turning incidents and near misses into evidence-based controls"
+    },
+    {
+      "goal": "provenance",
+      "what_the_source_raises": "evidence preservation covering prompts, traces, tool calls, logs, configurations, model and safeguard versions and third-party dependencies"
+    },
+    {
+      "goal": "change",
+      "what_the_source_raises": "machine-readable updates while a risk remains unresolved"
+    },
+    {
+      "goal": "agent-authority",
+      "what_the_source_raises": "delegated authority in agentic incidents"
+    }
+  ],
+  "our_contribution": {
+    "filed": "https://github.com/OpenSecureAIAlliance/RFCs/issues/32",
+    "published_citable_form": "https://councilof.ai/contributions/osaia-safe-discriminating-power-2026-09-17.md",
+    "measured_obstacle": "Our GitHub account is restricted, so issue 32 answers HTTP 404 to a logged-out visitor while issues 29 and 31 by other authors in the same repository answer 200, measured at the same moment on 17 September 2026. The contribution is therefore filed but unreadable by its intended audience, which is why the citable form is published on our own site.",
+    "the_only_route_the_body_offers": "The alliance homepage directs contributors to GitHub and gives no email, list or forum."
+  }
 }
