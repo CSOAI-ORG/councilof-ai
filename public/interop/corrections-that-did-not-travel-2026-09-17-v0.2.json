@@ -1,0 +1,304 @@
+{
+ "schema": "csoai.correction-propagation/0.2",
+ "as_of": "2026-09-17T13:02:34Z",
+ "signed": false,
+ "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
+ "title": "Corrections that did not travel",
+ "what_this_is": "Cases where an organisation publicly corrected a published evaluation number, and the superseded number is still being served somewhere today. Each row carries both values, the downstream citer, what that citer serves right now, and the UTC time it was fetched.",
+ "this_is_a_mechanism_failure_not_misconduct": "Every corrector here did the hard part: it found an error in its own published work and said so in public. That is rarer than it should be and it is the behaviour the field asks for. No motive is attributed to anyone. The finding is structural -- nothing binds a published number to the run that produced it, so a correction has no way to reach the places the number travelled to.",
+ "the_pattern": "In 7 of the 15 cases the stale number sits on the CORRECTOR'S OWN property. The most common shape is not downstream ignoring a correction -- it is the corrector's own surfaces disagreeing with each other.",
+ "the_machine_readable_corollary": "MLCommons shows the sharpest version. The withdrawal is recorded on the change-log HTML page while summary_results.json, which is what actually feeds downstream systems, still serves the withdrawn rows unflagged. A correction published only to humans does not reach software.",
+ "verification_levels": {
+  "verified_by_author_directly": [
+   "UK AISI / OpenAI GPT-5.5 system card",
+   "ARC Prize / ARC Prize R1 post",
+   "MLCommons / summary_results.json",
+   "Hugging Face / 1,332 model cards still showing DROP",
+   "Scale AI SEAL / MCP-Atlas page self-contradiction"
+  ],
+  "note": "Those three were re-fetched and grepped by the author against raw bytes. The remaining rows carry the fetching agent's URL and UTC timestamp and were not independently re-fetched."
+ },
+ "did_not_travel": [
+  {
+   "corrector": "UK AI Security Institute",
+   "original_value": "1 of 10 attempts",
+   "corrected_value": "2 of 10 attempts",
+   "correction_date": "2026-04-30",
+   "downstream_citer": "OpenAI GPT-5.5 system card",
+   "downstream_url": "https://deploymentsafety.openai.com/gpt-5-5/cybersecurity",
+   "downstream_value_now": "The model solved one of UK AISI's cyber ranges end-to-end in 1/10 attempts.",
+   "downstream_fetched_utc": "2026-09-17T12:42Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": false,
+   "note": "Verified directly by the author: the served document contains '1/10' and contains no '2/10' or '2 of 10' anywhere, on the web version or in the 2.37MB PDF. The document is NOT frozen -- its own change log carries entries dated 23 April, 24 April and 19 August 2026, so it was rebuilt after the correction and kept the old number. The PDF carries zero digital-signature markers."
+  },
+  {
+   "corrector": "ARC Prize",
+   "original_value": "$20/task and $3.4K/task",
+   "corrected_value": "$26/task and $4,560/task",
+   "correction_date": "2025-03-24 and 2025-12-10",
+   "downstream_citer": "ARC Prize itself (R1 analysis post)",
+   "downstream_url": "https://arcprize.org/blog/r1-zero-r1-results-analysis",
+   "downstream_value_now": "o3-preview (low) 75.7% ... $20 / o3-preview (high) 87.5% ... $3.4K",
+   "downstream_fetched_utc": "2026-09-17T12:47Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": true,
+   "note": "Verified directly by the author: the page contains '$20' and '$3.4K' and contains neither '$26' nor '$4,560'. The correction did not travel one hop inside the correcting organisation's own website."
+  },
+  {
+   "corrector": "MLCommons",
+   "original_value": "NVIDIA 5.0-5667/5668 llama2-70b Offline 573.765 tok/s",
+   "corrected_value": "withdrawn, no replacement",
+   "correction_date": "2025-09-09",
+   "downstream_citer": "MLCommons' own machine-readable summary_results.json",
+   "downstream_url": "https://raw.githubusercontent.com/mlcommons/inference_results_v5.0/main/summary_results.json",
+   "downstream_value_now": "573.765 still present; submission id 5.0-0078 still present",
+   "downstream_fetched_utc": "2026-09-17T12:47Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": true,
+   "note": "Verified directly by the author: 27,696,289 bytes fetched; the withdrawn value and submission id are both still served, unflagged. The withdrawal is recorded only on the change-log HTML page."
+  },
+  {
+   "corrector": "METR",
+   "original_value": "30% hidden / 88% visible catch rate",
+   "corrected_value": "52% hidden / 80% visible",
+   "correction_date": "2026-07-23",
+   "downstream_citer": "METR's own Substack mirror",
+   "downstream_url": "https://metr.substack.com/p/2026-01-19-early-work-on-monitorability-evaluations",
+   "downstream_value_now": "averaged monitor catch rate is 30% ... up to 88%",
+   "downstream_fetched_utc": "2026-09-17T12:45:28Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": true,
+   "note": "METR corrected the same numbers twice. The FIRST correction (2026-01-27) DID reach the mirror; the second did not. '52%' returns zero hits in the mirror's bytes. metr.org itself is consistent at 52/80."
+  },
+  {
+   "corrector": "ARC Prize",
+   "original_value": "$2,012 / $346,000 retail",
+   "corrected_value": "$2,680 / $456,000",
+   "correction_date": "2025-03-24 and 2025-12-10",
+   "downstream_citer": "arXiv 2511.23455 v2, revised 2026-03-23 AFTER both corrections",
+   "downstream_url": "https://arxiv.org/html/2511.23455v2",
+   "downstream_value_now": "OpenAI spent about $3,000 per task to run o3-high on ARC-AGI (Chollet, 2024)",
+   "downstream_fetched_utc": "2026-09-17T12:42:05Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": false,
+   "note": "The authors revised the paper in March 2026, after both corrections, and left the superseded figure in place."
+  },
+  {
+   "corrector": "ARC Prize",
+   "original_value": "~$3,000 per task",
+   "corrected_value": "$4,560 per task",
+   "correction_date": "2025-12-10",
+   "downstream_citer": "TechCrunch",
+   "downstream_url": "https://techcrunch.com/2025/04/02/openais-o3-model-might-be-costlier-to-run-than-originally-estimated/",
+   "downstream_value_now": "possibly around $30,000 per task",
+   "downstream_fetched_utc": "2026-09-17T12:45:09Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": false,
+   "note": "Press that correctly reported the FIRST correction is now itself stale, because ARC re-restated in December 2025. A correction can make a previously accurate article inaccurate."
+  },
+  {
+   "corrector": "NIST",
+   "original_value": "taxonomy index entries NISTAML.013/015/018",
+   "corrected_value": "NISTAML.016/017",
+   "correction_date": "2025-06-03",
+   "downstream_citer": "NIST's own served PDF",
+   "downstream_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-2e2025.pdf",
+   "downstream_value_now": "the original, superseded index entries on page x",
+   "downstream_fetched_utc": "2026-09-17T12:37:48Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": true,
+   "note": "15 and a half months. NIST's errata document disclaims itself: 'these proposed corrections are not official changes to the document.' This corrects identifiers, not a measured value."
+  },
+  {
+   "corrector": "MLCommons",
+   "original_value": "AMD 4.1-0070 Llama2-70B Offline 24,109.8 tok/s",
+   "corrected_value": "withdrawn",
+   "correction_date": "2025-04-02",
+   "downstream_citer": "AMD official blog",
+   "downstream_url": "https://www.amd.com/en/blogs/2024/engineering-insights-unveiling-mlperf-results-on.html",
+   "downstream_value_now": "Submission ID 4.1-0070 ... in the Preview category",
+   "downstream_fetched_utc": "2026-09-17T12:42:52Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": false
+  },
+  {
+   "corrector": "MLCommons",
+   "original_value": "UntetherAI 4.1-0075/76/77/78 ResNet-50 Offline 70,348.2 samples/s",
+   "corrected_value": "withdrawn",
+   "correction_date": "2025-04-02",
+   "downstream_citer": "aithority.com press-release mirror",
+   "downstream_url": "https://aithority.com/machine-learning/untether-ai-announces-speedai-accelerator-cards-",
+   "downstream_value_now": "it had a verified result of 70,348 samples/s, the highest throughput of any PCIe card submitted",
+   "downstream_fetched_utc": "2026-09-17T12:45:09Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": false,
+   "note": "The word 'verified' is still attached to a result invalidated 17 months ago."
+  },
+  {
+   "corrector": "Hugging Face Open LLM Leaderboard",
+   "original_value": "DROP score, published per model",
+   "corrected_value": "WITHDRAWN \u2014 benchmark removed",
+   "correction_date": "2023-12-01",
+   "downstream_citer": "1,332 Hugging Face model cards",
+   "downstream_url": "https://huggingface.co/search/full-text?q=%22DROP+(3-shot)%22&type=model",
+   "downstream_value_now": "1,332 results still displaying a DROP (3-shot) row, and the printed Avg. still INCLUDES it",
+   "downstream_fetched_utc": "2026-09-17T13:05Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": false,
+   "note": "Verified directly by the author: HF's full-text search returns '1,332 results' in the server HTML. This is the widest instance found and the only one where the stale value corrupts a DERIVED figure -- the model card's Avg. is a seven-way mean including a score its own producer called broken. On the sampled card that is 51.41 where it should be 58.19, an error of 6.78 points. The tables were written by the leaderboard's own PR bot; the correction landed at source (post-2023-12-03 results files contain no DROP key) and never reached the copies."
+  },
+  {
+   "corrector": "Scale AI SEAL",
+   "original_value": "Claude Opus 4.5 MCP-Atlas 62.3% pass rate",
+   "corrected_value": "69.8%",
+   "correction_date": "2026-04",
+   "downstream_citer": "Scale's own MCP-Atlas page, the same page as the notice",
+   "downstream_url": "https://labs.scale.com/leaderboard/mcp_atlas",
+   "downstream_value_now": "prose reads 'Top performer: Claude Opus 4.5 with 62.3% pass rate' above a table reading 69.8%",
+   "downstream_fetched_utc": "2026-09-17T13:05Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": true,
+   "note": "Verified directly by the author: one page, 199,903 bytes, contains the string 'We re-scored all leaderboard models', the superseded '62.3%' and the corrected '69.8' simultaneously. The correction did not travel forty lines up its own page."
+  },
+  {
+   "corrector": "Vals AI",
+   "original_value": "AlephProver ProofBench 99%, $8.80/task",
+   "corrected_value": "100%, $9.35/task",
+   "correction_date": "2026-09-10",
+   "downstream_citer": "Vals AI's own homepage update feed",
+   "downstream_url": "https://www.vals.ai/",
+   "downstream_value_now": "AlephProver ties Claude Opus 5 for first on ProofBench ... at 99% ... $8.80 per task",
+   "downstream_fetched_utc": "2026-09-17T12:42:46Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": true,
+   "note": "The leaderboard says 100% and $9.35. The corrector's own front page contradicts its own board."
+  },
+  {
+   "corrector": "LiveBench",
+   "original_value": "arXiv 2406.19314 v1: 'Contamination-Free', 110B, below 65%, claude-3-5-sonnet 61.2",
+   "corrected_value": "v2: 'Contamination-Limited', 405B, below 70%, 58.2",
+   "correction_date": "2025-04-18",
+   "downstream_citer": "LiveBench's own served PDF",
+   "downstream_url": "https://livebench.ai/livebench.pdf",
+   "downstream_value_now": "still the v1 paper: 'Contamination-Free', 'immune to', '110B', 'below 65%'",
+   "downstream_fetched_utc": "2026-09-17T12:52:57Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": true,
+   "note": "Confirmed by decompressing the PDF streams. Seventeen months after v2. The stale title also propagates onward through LiveBench's own README BibTeX into third-party eval documentation."
+  },
+  {
+   "corrector": "Hugging Face Open LLM Leaderboard",
+   "original_value": "llama-65b MMLU 0.488; falcon-40b ranked above it",
+   "corrected_value": "llama-65b MMLU 0.636; ranking flipped (llama-65b 64.2 > falcon-40b-instruct 63.5)",
+   "correction_date": "2023-06-23",
+   "downstream_citer": "TII's own model cards",
+   "downstream_url": "https://huggingface.co/tiiuae/falcon-40b",
+   "downstream_value_now": "It is the best open-source model currently available. Falcon-40B outperforms LLaMA...",
+   "downstream_fetched_utc": "2026-09-17T12:39:04Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": false,
+   "note": "The claim survived a post-correction README edit dated 2023-09-05."
+  },
+  {
+   "corrector": "Hugging Face Open LLM Leaderboard",
+   "original_value": "llama-65b MMLU 0.488",
+   "corrected_value": "0.636",
+   "correction_date": "2023-06-23",
+   "downstream_citer": "SaM Solutions blog",
+   "downstream_url": "https://sam-solutions.com/blog/falcon-llm-architecture/",
+   "downstream_value_now": "Falcon-40B outscored LLaMA-65B ... Falcon-40B topping the Hugging Face Open LLM Leaderboard",
+   "downstream_fetched_utc": "2026-09-17T12:45:03Z",
+   "verdict": "DID_NOT_TRAVEL",
+   "citer_is_the_corrector": false,
+   "note": "datePublished 2025-12-02, dateModified 2026-07-01 -- written and then revised two and a half years AFTER the fix."
+  }
+ ],
+ "travelled": [
+  {
+   "corrector": "Epoch AI",
+   "what": "FrontierMath v2 corrected 123 problems in Tiers 1-3 and 12 in Tier 4",
+   "date": "2026-06-12",
+   "citer": "Our World in Data",
+   "url": "https://ourworldindata.org/grapher/ai-frontiermath-over-time.csv",
+   "evidence": "serves the exact v2 values (o3 high 33.333336, GPT-5 high 55.438595)",
+   "fetched": "2026-09-17T12:40:10Z",
+   "verdict": "TRAVELLED"
+  },
+  {
+   "corrector": "METR",
+   "what": "first catch-rate erratum (92/39 -> 88/30)",
+   "date": "2026-01-27",
+   "citer": "METR's own Substack mirror",
+   "url": "https://metr.substack.com/p/2026-01-19-early-work-on-monitorability-evaluations",
+   "evidence": "92/39 absent; the first correction did land",
+   "fetched": "2026-09-17T12:45:28Z",
+   "verdict": "TRAVELLED"
+  },
+  {
+   "corrector": "ARC Prize",
+   "what": "o3 cost restatement",
+   "date": "2025-12-10",
+   "citer": "r40.io",
+   "url": "https://r40.io/blog/arc-agi-verified-cost-per-task-price-step/",
+   "evidence": "shows $26 / $4,560 / $2,680 / $456,000 exactly",
+   "fetched": "2026-09-17T12:40:53Z",
+   "verdict": "TRAVELLED"
+  },
+  {
+   "corrector": "Scale AI SEAL",
+   "what": "Humanity's Last Exam finalisation, 12 models re-scored",
+   "date": "2025-04-03",
+   "citer": "lastexam.ai and Wikipedia",
+   "url": "https://lastexam.ai",
+   "evidence": "both carry 2,500 questions and the corrected values; Scale uniquely keeps the pre-correction board live at /humanitys_last_exam_preview, which is what made the deltas checkable at all",
+   "fetched": "2026-09-17T12:48:01Z",
+   "verdict": "TRAVELLED"
+  }
+ ],
+ "nulls": [
+  {
+   "org": "Apollo Research",
+   "finding": "No published numeric correction exists to trace. All six science pages, blog, press and antischeming.ai grepped; arXiv 2412.04984 v1 and v2 diffed and the abstracts are byte-identical including the headline figure. A null result, recorded rather than omitted."
+  },
+  {
+   "org": "NIST CAISI",
+   "finding": "No correction to any evaluation result exists. nist.gov/errata returns 404. Seven CAISI pages carry a later 'Updated' date with no visible change note, and with archives offline today whether a number changed is UNCHECKABLE rather than absent."
+  },
+  {
+   "org": "Artificial Analysis",
+   "finding": "Publishes no errata at all and overwrites in place. /methodology, /changelog (30,902 visible chars), /methodology/intelligence-benchmarking (134,129) and /models grepped: zero correction vocabulary. The one admission -- 'corrected errors and ambiguities in answer keys' -- is folded into a version-bump article with no numbers and no statement that prior models were re-scored, and the v1.0 board is gone. Where no original value was ever published, downstream staleness is structurally UNPROVABLE. That is a finding about the publisher, not an absence of one."
+  }
+ ],
+ "method_limitations": [
+  "The Internet Archive served 'Temporarily Offline' throughout this work and archive.today timed out, so NO pre-correction value rests on an archived snapshot. Originals are established from live primary sources only.",
+  "DID_NOT_TRAVEL requires the stale value to have been SEEN in raw bytes today. 'Could not find an updated version' is UNCHECKABLE and is never recorded as a failure to travel.",
+  "Several surfaces are unreadable: ARC's leaderboard and every MLPerf results table are JavaScript shells, openai.com returns 403 to a plain client, and a GitHub issue sweep hit a rate limit after roughly 10 of 70 queries and is genuinely incomplete.",
+  "Search-engine summaries contradicted the raw bytes more than once during this work -- one asserted a GPT-5.5 correction to '3 of 10' that appears in no page actually fetched. None was used. Only strings seen in bytes are recorded here.",
+  "This is NOT a census. It is a set of confirmed instances, and the denominator is unknown: we did not establish how many published corrections exist in total, so no rate may be computed from it."
+ ],
+ "counts": {
+  "did_not_travel": 15,
+  "travelled": 4,
+  "stale_on_the_correctors_own_property": 7,
+  "organisations_with_no_correction_to_trace": 3,
+  "widest_single_instance": "1,332 Hugging Face model cards still displaying a withdrawn benchmark"
+ },
+ "prose_count_check": "The sentence above states a count that is computed, not typed. A draft of this file said 'five of the nine' while counts.stale_on_the_correctors_own_property said four. The artifact's own counter caught it before publication. Counts in prose and counts in fields must be the same count.",
+ "structural_findings": [
+  "THE CORRECTOR IS OFTEN ITS OWN WORST CITER. Scale's MCP-Atlas page carries the re-score notice and the superseded number on one screen. Vals's homepage says 99% while its leaderboard says 100%. LiveBench serves the superseded paper at its own domain. ARC's own R1 post, MLCommons' own JSON, METR's own mirror, NIST's own PDF.",
+  "WITHDRAWAL TRAVELS WORST OF ALL. A restated number can at least be compared. A withdrawn one leaves a hole that downstream copies fill with the old value -- and in the DROP case it is silently folded into an average, so the error is invisible even to a careful reader of the copy.",
+  "A CORRECTION WITH NO PUBLISHED ORIGINAL CANNOT BE SHOWN TO HAVE FAILED. Scale's MultiChallenge and Artificial Analysis's AA-LCR both say they re-ran without publishing before-and-after values, which makes downstream staleness unprovable rather than absent.",
+  "MACHINE-READABLE MIRRORS TRAVELLED; HAND-WRITTEN PROSE DID NOT. BenchLM carried the corrected ProofBench value and alphaxiv carried the corrected paper, while first-party prose pages and orphaned PDFs did not."
+ ],
+ "supersedes": {
+  "file": "public/interop/corrections-that-did-not-travel-2026-09-17.json",
+  "schema": "csoai.correction-propagation/0.1",
+  "what_changed": [
+   "Six further DID_NOT_TRAVEL rows from Hugging Face, Scale AI SEAL, Vals AI and LiveBench.",
+   "Artificial Analysis added as a null: it publishes no errata and overwrites in place.",
+   "Structural findings section added.",
+   "Two of the new rows were verified by the author directly: the 1,332 Hugging Face model cards, and Scale's single page carrying both the re-score notice and the superseded figure."
+  ]
+ }
+}
