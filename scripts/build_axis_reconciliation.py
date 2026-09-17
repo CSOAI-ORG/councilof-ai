@@ -155,8 +155,12 @@ def main() -> int:
 
         # DONE WHEN — line 1: signer_authority
         "done_when_1_signer_authority": {
-            "test": "scripts/test_signer_authority.py",
-            "expectation": "harvest-key signature is VALID (cryptographically) but signer_authority=NOT_ESTABLISHED",
+            "test": "scripts/test_harvest_signature_authority.py",
+            "expectation": "sign_harvest() returns a signature that VERIFIES against the harvest public key AND carries signer_authority=NOT_ESTABLISHED, with a tampered-bytes control proving the verify can fail",
+            "superseded_citation": {
+                "was": "scripts/test_signer_authority.py",
+                "why_changed": "that file assigns signer_authority as a LITERAL and compared it to itself, so the authority half could not fail and never called the production path. It is kept, rescoped to what it does prove: the harvest key exists, signs and verifies.",
+            },
         },
         # DONE WHEN — line 2: Rekor
         "done_when_2_rekor": {

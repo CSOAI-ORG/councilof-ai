@@ -1,0 +1,435 @@
+{
+  "schema": "csoai.public-root-churn/1",
+  "question": "is the public root append-only, monotonic, or re-derived each publish?",
+  "answer": "RE-DERIVED EACH PUBLISH — not append-only, not monotonic, membership largely transient",
+  "evidence_source": "local git history of public/root.json; these are the published bytes of each revision",
+  "not_a_live_endpoint": "successive published roots exist only in git; the live endpoint serves one snapshot. This is the one count in the M4 set that cannot come from a live URL, and it is labelled rather than dressed up as one.",
+  "revisions_examined": {
+    "value": 12,
+    "source": "git history of public/root.json → revisions walked, oldest first",
+    "read_at": "2026-09-17T06:31:41Z"
+  },
+  "window": {
+    "from": "2026-09-14T09:45:35Z",
+    "to": "2026-09-15T07:13:43Z"
+  },
+  "declared_counts_in_order": [
+    299,
+    299,
+    304,
+    300,
+    305,
+    304,
+    305,
+    303,
+    303,
+    312,
+    311,
+    305
+  ],
+  "declared_count_decreases": {
+    "value": 5,
+    "source": "git history of public/root.json → transitions where card_count went DOWN",
+    "read_at": "2026-09-17T06:31:41Z"
+  },
+  "append_only_transitions": {
+    "value": 0,
+    "source": "git history of public/root.json → transitions where the new leaf list extends the old one",
+    "read_at": "2026-09-17T06:31:41Z"
+  },
+  "distinct_leaves_across_window": {
+    "value": 1472,
+    "source": "git history of public/root.json → union of every published leaf",
+    "read_at": "2026-09-17T06:31:41Z"
+  },
+  "leaves_present_in_every_revision": {
+    "value": 0,
+    "source": "git history of public/root.json → intersection of all revisions",
+    "read_at": "2026-09-17T06:31:41Z"
+  },
+  "leaf_persistence": {
+    "present_in_1_of_12": {
+      "value": 997,
+      "source": "git history of public/root.json → leaves appearing in exactly 1 revisions",
+      "read_at": "2026-09-17T06:31:41Z"
+    },
+    "present_in_2_of_12": {
+      "value": 252,
+      "source": "git history of public/root.json → leaves appearing in exactly 2 revisions",
+      "read_at": "2026-09-17T06:31:41Z"
+    },
+    "present_in_8_of_12": {
+      "value": 40,
+      "source": "git history of public/root.json → leaves appearing in exactly 8 revisions",
+      "read_at": "2026-09-17T06:31:41Z"
+    },
+    "present_in_9_of_12": {
+      "value": 1,
+      "source": "git history of public/root.json → leaves appearing in exactly 9 revisions",
+      "read_at": "2026-09-17T06:31:41Z"
+    },
+    "present_in_10_of_12": {
+      "value": 182,
+      "source": "git history of public/root.json → leaves appearing in exactly 10 revisions",
+      "read_at": "2026-09-17T06:31:41Z"
+    }
+  },
+  "leaves_that_left_and_returned": {
+    "value": 16,
+    "source": "git history of public/root.json → absent in one revision, present in a later one",
+    "read_at": "2026-09-17T06:31:41Z"
+  },
+  "transitions": [
+    {
+      "from": "6868b2f3",
+      "to": "ab6cf25a",
+      "to_as_of": "2026-09-14T10:56:05Z",
+      "declared_from": {
+        "value": 299,
+        "source": "git history of public/root.json → 6868b2f3 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "declared_to": {
+        "value": 299,
+        "source": "git history of public/root.json → ab6cf25a → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "is_append_only": false,
+      "carried_over": {
+        "value": 221,
+        "source": "git history of public/root.json → |6868b2f3 ∩ ab6cf25a|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "dropped": {
+        "value": 78,
+        "source": "git history of public/root.json → |6868b2f3 \\ ab6cf25a|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "added": {
+        "value": 78,
+        "source": "git history of public/root.json → |ab6cf25a \\ 6868b2f3|",
+        "read_at": "2026-09-17T06:31:41Z"
+      }
+    },
+    {
+      "from": "ab6cf25a",
+      "to": "7ea8a6e7",
+      "to_as_of": "2026-09-14T12:34:56Z",
+      "declared_from": {
+        "value": 299,
+        "source": "git history of public/root.json → ab6cf25a → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "declared_to": {
+        "value": 304,
+        "source": "git history of public/root.json → 7ea8a6e7 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "is_append_only": false,
+      "carried_over": {
+        "value": 199,
+        "source": "git history of public/root.json → |ab6cf25a ∩ 7ea8a6e7|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "dropped": {
+        "value": 100,
+        "source": "git history of public/root.json → |ab6cf25a \\ 7ea8a6e7|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "added": {
+        "value": 105,
+        "source": "git history of public/root.json → |7ea8a6e7 \\ ab6cf25a|",
+        "read_at": "2026-09-17T06:31:41Z"
+      }
+    },
+    {
+      "from": "7ea8a6e7",
+      "to": "426045e0",
+      "to_as_of": "2026-09-14T15:16:53Z",
+      "declared_from": {
+        "value": 304,
+        "source": "git history of public/root.json → 7ea8a6e7 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "declared_to": {
+        "value": 300,
+        "source": "git history of public/root.json → 426045e0 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "is_append_only": false,
+      "carried_over": {
+        "value": 223,
+        "source": "git history of public/root.json → |7ea8a6e7 ∩ 426045e0|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "dropped": {
+        "value": 81,
+        "source": "git history of public/root.json → |7ea8a6e7 \\ 426045e0|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "added": {
+        "value": 77,
+        "source": "git history of public/root.json → |426045e0 \\ 7ea8a6e7|",
+        "read_at": "2026-09-17T06:31:41Z"
+      }
+    },
+    {
+      "from": "426045e0",
+      "to": "2eed1610",
+      "to_as_of": "2026-09-14T16:58:05Z",
+      "declared_from": {
+        "value": 300,
+        "source": "git history of public/root.json → 426045e0 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "declared_to": {
+        "value": 305,
+        "source": "git history of public/root.json → 2eed1610 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "is_append_only": false,
+      "carried_over": {
+        "value": 223,
+        "source": "git history of public/root.json → |426045e0 ∩ 2eed1610|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "dropped": {
+        "value": 77,
+        "source": "git history of public/root.json → |426045e0 \\ 2eed1610|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "added": {
+        "value": 82,
+        "source": "git history of public/root.json → |2eed1610 \\ 426045e0|",
+        "read_at": "2026-09-17T06:31:41Z"
+      }
+    },
+    {
+      "from": "2eed1610",
+      "to": "13ece08f",
+      "to_as_of": "2026-09-14T18:17:38Z",
+      "declared_from": {
+        "value": 305,
+        "source": "git history of public/root.json → 2eed1610 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "declared_to": {
+        "value": 304,
+        "source": "git history of public/root.json → 13ece08f → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "is_append_only": false,
+      "carried_over": {
+        "value": 207,
+        "source": "git history of public/root.json → |2eed1610 ∩ 13ece08f|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "dropped": {
+        "value": 98,
+        "source": "git history of public/root.json → |2eed1610 \\ 13ece08f|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "added": {
+        "value": 97,
+        "source": "git history of public/root.json → |13ece08f \\ 2eed1610|",
+        "read_at": "2026-09-17T06:31:41Z"
+      }
+    },
+    {
+      "from": "13ece08f",
+      "to": "2562e9b9",
+      "to_as_of": "2026-09-14T19:23:07Z",
+      "declared_from": {
+        "value": 304,
+        "source": "git history of public/root.json → 13ece08f → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "declared_to": {
+        "value": 305,
+        "source": "git history of public/root.json → 2562e9b9 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "is_append_only": false,
+      "carried_over": {
+        "value": 207,
+        "source": "git history of public/root.json → |13ece08f ∩ 2562e9b9|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "dropped": {
+        "value": 97,
+        "source": "git history of public/root.json → |13ece08f \\ 2562e9b9|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "added": {
+        "value": 98,
+        "source": "git history of public/root.json → |2562e9b9 \\ 13ece08f|",
+        "read_at": "2026-09-17T06:31:41Z"
+      }
+    },
+    {
+      "from": "2562e9b9",
+      "to": "efcc2136",
+      "to_as_of": "2026-09-14T22:21:53Z",
+      "declared_from": {
+        "value": 305,
+        "source": "git history of public/root.json → 2562e9b9 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "declared_to": {
+        "value": 303,
+        "source": "git history of public/root.json → efcc2136 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "is_append_only": false,
+      "carried_over": {
+        "value": 223,
+        "source": "git history of public/root.json → |2562e9b9 ∩ efcc2136|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "dropped": {
+        "value": 82,
+        "source": "git history of public/root.json → |2562e9b9 \\ efcc2136|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "added": {
+        "value": 80,
+        "source": "git history of public/root.json → |efcc2136 \\ 2562e9b9|",
+        "read_at": "2026-09-17T06:31:41Z"
+      }
+    },
+    {
+      "from": "efcc2136",
+      "to": "13c2a16f",
+      "to_as_of": "2026-09-15T00:27:33Z",
+      "declared_from": {
+        "value": 303,
+        "source": "git history of public/root.json → efcc2136 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "declared_to": {
+        "value": 303,
+        "source": "git history of public/root.json → 13c2a16f → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "is_append_only": false,
+      "carried_over": {
+        "value": 223,
+        "source": "git history of public/root.json → |efcc2136 ∩ 13c2a16f|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "dropped": {
+        "value": 80,
+        "source": "git history of public/root.json → |efcc2136 \\ 13c2a16f|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "added": {
+        "value": 80,
+        "source": "git history of public/root.json → |13c2a16f \\ efcc2136|",
+        "read_at": "2026-09-17T06:31:41Z"
+      }
+    },
+    {
+      "from": "13c2a16f",
+      "to": "4c4f7406",
+      "to_as_of": "2026-09-15T01:31:22Z",
+      "declared_from": {
+        "value": 303,
+        "source": "git history of public/root.json → 13c2a16f → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "declared_to": {
+        "value": 312,
+        "source": "git history of public/root.json → 4c4f7406 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "is_append_only": false,
+      "carried_over": {
+        "value": 206,
+        "source": "git history of public/root.json → |13c2a16f ∩ 4c4f7406|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "dropped": {
+        "value": 97,
+        "source": "git history of public/root.json → |13c2a16f \\ 4c4f7406|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "added": {
+        "value": 106,
+        "source": "git history of public/root.json → |4c4f7406 \\ 13c2a16f|",
+        "read_at": "2026-09-17T06:31:41Z"
+      }
+    },
+    {
+      "from": "4c4f7406",
+      "to": "6ae0ea4d",
+      "to_as_of": "2026-09-15T05:30:01Z",
+      "declared_from": {
+        "value": 312,
+        "source": "git history of public/root.json → 4c4f7406 → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "declared_to": {
+        "value": 311,
+        "source": "git history of public/root.json → 6ae0ea4d → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "is_append_only": false,
+      "carried_over": {
+        "value": 0,
+        "source": "git history of public/root.json → |4c4f7406 ∩ 6ae0ea4d|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "dropped": {
+        "value": 312,
+        "source": "git history of public/root.json → |4c4f7406 \\ 6ae0ea4d|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "added": {
+        "value": 311,
+        "source": "git history of public/root.json → |6ae0ea4d \\ 4c4f7406|",
+        "read_at": "2026-09-17T06:31:41Z"
+      }
+    },
+    {
+      "from": "6ae0ea4d",
+      "to": "76cf2bbe",
+      "to_as_of": "2026-09-15T07:13:43Z",
+      "declared_from": {
+        "value": 311,
+        "source": "git history of public/root.json → 6ae0ea4d → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "declared_to": {
+        "value": 305,
+        "source": "git history of public/root.json → 76cf2bbe → card_count",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "is_append_only": false,
+      "carried_over": {
+        "value": 230,
+        "source": "git history of public/root.json → |6ae0ea4d ∩ 76cf2bbe|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "dropped": {
+        "value": 81,
+        "source": "git history of public/root.json → |6ae0ea4d \\ 76cf2bbe|",
+        "read_at": "2026-09-17T06:31:41Z"
+      },
+      "added": {
+        "value": 75,
+        "source": "git history of public/root.json → |76cf2bbe \\ 6ae0ea4d|",
+        "read_at": "2026-09-17T06:31:41Z"
+      }
+    }
+  ],
+  "why_it_matters": [
+    "A consistency proof requires tree N+1 to EXTEND tree N. Zero transitions here do.",
+    "An inclusion proof handed to a reader is against ONE root. If that leaf is not in the next root, the proof still verifies against the old root but the leaf is no longer in the published set — the reader cannot tell which state is current.",
+    "Witness cosigning is not merely unimplemented here, it is not yet meaningful: there is no history for a witness to be consistent with."
+  ],
+  "what_this_does_NOT_say": [
+    "It does not say any card is wrong, or that any signature fails to verify.",
+    "It does not say leaves were deleted maliciously; the shape is consistent with a producer that re-harvests its inputs each run rather than appending to a log.",
+    "It does not measure the signed-card corpus, which is a SEPARATE corpus."
+  ]
+}

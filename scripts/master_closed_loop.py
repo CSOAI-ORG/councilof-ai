@@ -1,439 +1,490 @@
 #!/usr/bin/env python3
-"""CSOAI Master Closed-Loop Harness — own the entire measure pipeline end-to-end.
+"""Closed-loop integrity stage v0.2 (NOT a model-evaluation or FIX executor).
 
-Loop:
-  harvest → measure → fix → sign → root → anchor → rekor → ots → publish
-              ↑                                              ↓
-              └──────────── remeasure (after fix) ──────────┘
+Explicit migration from v0.1. Never rewrites historical/public cards. Imports
+source declarations, stores immutable exact-byte records, optionally signs with
+an explicitly supplied harvest key, builds verifiable inclusion proofs, and
+prepares a real Rekor entry. Network witness submission is separate and disabled
+here. Use a maintained external witness worker for public submission/verification.
 
-For every source in the master harness index, for every axis slot, for every
-goal-object, this produces the canonical measurement-card → signs it → roots it →
-records it in Sigstore Rekor → OTS-stamps it → publishes to the board.
-
-The six EXTERNAL blockers we cannot move (per M4 message 17 Sep 2026):
-  1. xAI spending limit                 (cannot submit to grok)
-  2. Cloudflare zone blocking curl     (cannot verify edge deploys without browser)
-  3. GitHub account restriction         (cannot push as csoai-bot)
-  4. Board signing key unreachable      (cannot sign with the master Ed25519 key)
-  5. OTS calendar rate limit            (recovery is in flight; calendar throttles)
-  6. COSE interop key (on this machine) (using it to fill sig:null would be forgery)
-
-What we CAN do today:
-  - Use the per-machine Ed25519 key for HARVEST/STAGE signatures
-  - Build the canonical measurement-card schema end-to-end
-  - Merkle-root per (axis × source) and publish the root
-  - Submit to Sigstore Rekor (FREE, no key needed for public entries)
-  - OTS-stamp every artifact (calendar pending is fine, that's still a real proof)
-  - Publish to public/interop/, git-track, and let the board ingest
-
-This script is the runnable version. It is idempotent. It can be triggered by
-the continuous-churn engine every tick.
+The payload, signature, proof, and witness receipt are separate files. A new
+receipt can never change bytes already signed or timestamped. Default output is
+private staging, not the public website. All JSON output is a new local format,
+NOT an implicit change to the existing board/COSE/3KB credential contract.
 """
 from __future__ import annotations
-import argparse, hashlib, io, json, os, pathlib, subprocess, sys, time
-from datetime import datetime, timezone
-from opentimestamps.core.timestamp import Timestamp
-from opentimestamps.core.op import OpSHA256
-from opentimestamps.core.serialize import BytesSerializationContext
-from opentimestamps.calendar import RemoteCalendar
 
-# ──────────────────────────────────────────────────────────────────────────────
-# 1. IDENTITY — read the per-machine Ed25519 keypair
-# ──────────────────────────────────────────────────────────────────────────────
-def machine_keypair():
-    """Return (private_path, public_path, fingerprint) for this machine.
-    The key is per-machine, NOT the board key. Used only for HARVEST/STAGE sigs.
+import argparse
+import base64
+import hashlib
+import json
+import math
+import os
+import pathlib
+import re
+import stat
+import sys
+import tempfile
+from dataclasses import dataclass
+from typing import Any, Iterable
+
+GOALS = frozenset((
+    'asset_classification', 'actor_identity', 'jurisdiction', 'disclosure',
+    'custody', 'transaction_integrity', 'market_integrity',
+    'customer_protection', 'reserves_collateral', 'settlement',
+    'agent_authority', 'provenance', 'assurance', 'change',
+))
+SCHEME = 'csoai-rfc6962-sha256-batch-v2'
+MAX_RECORD_BYTES = 2_000_000
+MAX_RECORDS = 10_000
+COMPACT_LIMIT = 3_000  # bytes, intentionally not an assumed existing COSE limit
+
+
+class IntegrityError(ValueError):
+    pass
+
+
+def _check_json(value: Any) -> None:
+    if isinstance(value, dict):
+        if not all(isinstance(k, str) for k in value):
+            raise IntegrityError('JSON object keys must be strings')
+        for item in value.values():
+            _check_json(item)
+    elif isinstance(value, (list, tuple)):
+        for item in value:
+            _check_json(item)
+    elif isinstance(value, float) and not math.isfinite(value):
+        raise IntegrityError('non-finite numeric value')
+    elif value is not None and not isinstance(value, (str, bool, int, float)):
+        raise IntegrityError(f'unsupported JSON value: {type(value).__name__}')
+
+
+def encoded(value: Any) -> bytes:
+    """Local encoding profile; NOT advertised as RFC 8785/JCS.
+
+    Sign and verify these exact bytes, rather than reserializing in another
+    language. Reject non-finite numbers and non-string keys before serialization.
     """
-    home = pathlib.Path(os.environ.get("HOME", "."))
-    pkdir = home / ".csoai" / "keys"
-    pkdir.mkdir(parents=True, exist_ok=True)
-    priv = pkdir / "harvest_ed25519.pem"
-    pub = pkdir / "harvest_ed25519.pub"
-    if not priv.exists():
-        # One-shot generate
-        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-        from cryptography.hazmat.primitives import serialization
-        k = Ed25519PrivateKey.generate()
-        priv.write_bytes(k.private_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PrivateFormat.PKCS8,
-            encryption_algorithm=serialization.NoEncryption()))
-        pub.write_bytes(k.public_key().public_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PublicFormat.SubjectPublicKeyInfo))
-    fp = hashlib.sha256(pub.read_bytes()).hexdigest()[:16]
-    return priv, pub, f"machine-harvest:{fp}"
+    _check_json(value)
+    return json.dumps(value, sort_keys=True, separators=(',', ':'),
+                      ensure_ascii=False, allow_nan=False).encode('utf-8')
 
 
-def sign_harvest(canonical_bytes: bytes) -> dict:
-    """Sign with the per-machine Ed25519 key.
-    This is a HARVEST/STAGE signature, NOT a board signature.
+def strict_load(raw: bytes) -> Any:
+    if len(raw) > 32_000_000:
+        raise IntegrityError('input exceeds 32 MB cap')
+    def unique(items):
+        result = {}
+        for key, value in items:
+            if key in result:
+                raise IntegrityError(f'duplicate JSON key: {key}')
+            result[key] = value
+        return result
+    def bad_constant(value):
+        raise IntegrityError(f'invalid JSON constant: {value}')
+    result = json.loads(raw, object_pairs_hook=unique, parse_constant=bad_constant)
+    _check_json(result)
+    return result
 
-    signer_authority is explicitly NOT_ESTABLISHED:
-      - This key has no allowlist granting it sovereign authority.
-      - COSE interop key in ~/.csoai-keys/ is a different system's key.
-      - Only the board key (via approved signer / GHA) carries authority.
+
+def sha256(raw: bytes) -> str:
+    return hashlib.sha256(raw).hexdigest()
+
+
+def require_digest(value: str) -> str:
+    if not isinstance(value, str) or not re.fullmatch(r'[0-9a-f]{64}', value):
+        raise IntegrityError('expected lowercase SHA-256 digest')
+    return value
+
+
+def first_present(mapping: dict, *keys: str, default=None):
+    """Preserve a real zero, false, empty list, or empty measurement object."""
+    for key in keys:
+        if key in mapping and mapping[key] is not None:
+            return mapping[key]
+    return default
+
+
+def immutable_write(path: pathlib.Path, raw: bytes) -> bool:
+    """Atomic no-overwrite publication on one local filesystem.
+
+    Returns False on an identical replay. Refuses conflicting content. This is
+    not a distributed queue or a network-filesystem transaction implementation.
+    The staging root must be owned by the operating account, not an attacker.
     """
-    from cryptography.hazmat.primitives import serialization
-    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-    priv_path = pathlib.Path(os.environ.get("CSOAI_HARVEST_PRIV", pathlib.Path.home() / ".csoai" / "keys" / "harvest_ed25519.pem"))
-    pub_path = pathlib.Path(os.environ.get("CSOAI_HARVEST_PUB", pathlib.Path.home() / ".csoai" / "keys" / "harvest_ed25519.pub"))
-    priv_bytes = priv_path.read_bytes()
-    k = serialization.load_pem_private_key(priv_bytes, password=None)
-    if isinstance(k, Ed25519PrivateKey):
-        sig = k.sign(canonical_bytes)
-    else:
-        raise RuntimeError(f"Expected Ed25519PrivateKey, got {type(k).__name__}")
-    fp = hashlib.sha256(pub_path.read_bytes()).hexdigest()[:16]
-    return {
-        "signature_kind": "harvest-stage",
-        "algorithm": "ed25519",
-        "key_fingerprint": f"machine-harvest:{fp}",
-        "signature_b64": __import__("base64").b64encode(sig).decode(),
-        "signer_authority": "NOT_ESTABLISHED",
-        "scope": "this signature attests the measurement artifact was produced by THIS MACHINE'S harvest pipeline. signer_authority is NOT_ESTABLISHED: no allowlist grants harvest authority. The COSE interop key in ~/.csoai-keys/ is a different system; using it for sig:null would be forgery. Only the board key (via approved signer / GHA) carries authority.",
-    }
+    path = pathlib.Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if any(p.is_symlink() for p in (path, *path.parents)):
+        raise IntegrityError('symlink in immutable artifact path')
+    fd, tmp = tempfile.mkstemp(prefix='.csoai-', dir=path.parent)
+    try:
+        with os.fdopen(fd, 'wb') as out:
+            out.write(raw)
+            out.flush()
+            os.fsync(out.fileno())
+        try:
+            os.link(tmp, path)  # atomic create-if-absent, never os.replace
+            if os.name == 'posix':
+                dfd = os.open(path.parent, os.O_RDONLY | getattr(os, 'O_DIRECTORY', 0))
+                try:
+                    os.fsync(dfd)
+                finally:
+                    os.close(dfd)
+            return True
+        except FileExistsError:
+            if path.is_symlink() or path.read_bytes() != raw:
+                raise IntegrityError(f'immutable-content conflict: {path.name}')
+            return False
+    finally:
+        os.unlink(tmp)
 
 
-# ──────────────────────────────────────────────────────────────────────────────
-# 2. ROOT — merkle tree per batch
-# ──────────────────────────────────────────────────────────────────────────────
+def leaf_hash(raw: bytes) -> bytes:
+    return hashlib.sha256(b'\x00' + raw).digest()
+
+
+def parent_hash(left: bytes, right: bytes) -> bytes:
+    return hashlib.sha256(b'\x01' + left + right).digest()
+
+
 def merkle_root(leaves: list[bytes]) -> tuple[bytes, list[list[bytes]]]:
-    """Build a binary Merkle tree, return (root, [proof_layers])."""
+    """New v2 format: input order and RFC 6962 domain separation; promote odd node.
+
+    This deliberately does NOT recompute or replace any old-format root.
+    """
     if not leaves:
-        return hashlib.sha256(b"").digest(), []
-    layer = sorted(hashlib.sha256(l).digest() for l in leaves)
+        return hashlib.sha256(b'').digest(), []
+    layer = [leaf_hash(raw) for raw in leaves]
     layers = [layer]
     while len(layer) > 1:
-        nxt = []
-        for i in range(0, len(layer), 2):
-            a = layer[i]
-            b = layer[i+1] if i+1 < len(layer) else a
-            nxt.append(hashlib.sha256(a + b).digest())
-        layer = nxt
+        layer = [parent_hash(layer[i], layer[i+1]) if i+1 < len(layer) else layer[i]
+                 for i in range(0, len(layer), 2)]
         layers.append(layer)
     return layer[0], layers
 
 
-def inclusion_proof(leaf_digest: bytes, layers: list[list[bytes]]) -> list[str]:
-    """Compute Merkle inclusion proof for one leaf.
-    layers[0] is the leaf layer (sorted digests). We track the leaf's index
-    across each upper layer. At each level, the sibling is at idx^1; if that
-    position is out of range, the sibling is the leaf itself (this happens
-    when the layer has an odd number of nodes — we duplicated last).
-    """
-    if not layers or leaf_digest not in layers[0]:
-        return []
-    idx = layers[0].index(leaf_digest)
-    proof = []
-    for layer in layers[1:]:
-        pair_idx = idx ^ 1
-        if pair_idx < len(layer):
-            sibling = layer[pair_idx]
-        else:
-            # Layer was extended by duplicating last; sibling = self
-            sibling = layer[idx] if idx < len(layer) else layer[-1]
-        proof.append(sibling.hex())
-        idx //= 2
-    return proof
+def inclusion_proof(index: int, layers: list[list[bytes]]) -> dict:
+    if type(index) is not int or not layers or not 0 <= index < len(layers[0]):
+        raise IntegrityError('leaf index out of range')
+    original = index
+    siblings = []
+    for layer in layers[:-1]:  # siblings belong to the CURRENT level
+        j = index ^ 1
+        if j < len(layer):
+            siblings.append(layer[j].hex())
+        index //= 2
+    return {'scheme': SCHEME, 'leaf_index': original,
+            'tree_size': len(layers[0]), 'siblings': siblings}
 
 
-def verify_inclusion(leaf: bytes, proof: list[str], root_hex: str) -> bool:
-    """Verify a leaf is in the Merkle tree."""
-    h = hashlib.sha256(leaf).digest()
-    for sib_hex in proof:
-        sib = bytes.fromhex(sib_hex)
-        h = hashlib.sha256(h + sib).digest() if h < sib else hashlib.sha256(sib + h).digest()
-    return h.hex() == root_hex
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# 3. SIGSTORE REKOR — FREE public log, no key needed
-# ──────────────────────────────────────────────────────────────────────────────
-def submit_rekor(artifact_canonical: bytes, sha256_hex: str, real_ed25519_pubkey_pem: bytes | None = None) -> dict:
-    """Submit a hash to the public Sigstore Rekor log.
-
-    Two paths:
-      A. If a real Ed25519 public key (PEM) is supplied, build a real hashedrekord
-         entry with a valid signature. The signature is computed over a synthetic
-         message; this is a measurement-artifact hash anchor, not a forgery of any
-         external signer.
-      B. Otherwise (default), DO NOT submit a zero-key hashedrekord (that gets rejected
-         by Sigstore's anti-spam policy). Record state = NOT_SUBMITTED with the reason.
-
-    Returns the log entry index + URL on success, NOT_SUBMITTED on refusal.
-    """
-    import urllib.request, urllib.error, urllib.parse
-    if real_ed25519_pubkey_pem is None:
-        return {
-            "state": "NOT_SUBMITTED",
-            "reason": "no real Ed25519 public key supplied; zero-key hashedrekord would be rejected by Sigstore anti-spam policy",
-            "submitted_at": datetime.now(timezone.utc).isoformat(),
-        }
-    # Path A: real key path (sketch — Sigstore v0.6+ requires a Fulcio-issued cert
-    # for full inclusion; the anonymous hashedrekord path is deprecated). Until the
-    # GHA-issued Fulcio path is restored, treat this as a best-effort attempt.
+def verify_inclusion(raw: bytes, proof: dict, root_hex: str) -> bool:
     try:
-        body = json.dumps({
-            "kind": "hashedrekord",
-            "spec": {
-                "data": {"hash": {"algorithm": "sha256", "value": sha256_hex}},
-                "signature": {
-                    "content": __import__("base64").b64encode(b"\x00" * 64).decode(),
-                    "public_key": {"content": __import__("base64").b64encode(real_ed25519_pubkey_pem).decode()}
-                }
-            }
-        }).encode()
-        req = urllib.request.Request(
-            "https://rekor.sigstore.dev/api/v1/log/entries",
-            data=body,
-            headers={"Content-Type": "application/json"},
-            method="POST")
-        with urllib.request.urlopen(req, timeout=20) as resp:
-            data = json.loads(resp.read())
-            return {
-                "state": "SUBMITTED",
-                "log_index": data.get("uuid") or data.get("logIndex"),
-                "log_url": f"https://rekor.sigstore.dev/api/v1/log/entries?uuid={data.get('uuid')}",
-                "submitted_at": datetime.now(timezone.utc).isoformat(),
-                "integrated_time": data.get("integratedTime"),
-            }
-    except Exception as e:
-        return {
-            "state": "NOT_SUBMITTED",
-            "reason": str(e)[:200],
-            "submitted_at": datetime.now(timezone.utc).isoformat(),
-        }
+        require_digest(root_hex)
+        if proof.get('scheme') != SCHEME:
+            return False
+        i, n = proof['leaf_index'], proof['tree_size']
+        siblings = proof['siblings']
+        if type(i) is not int or type(n) is not int or n < 1 or not 0 <= i < n:
+            return False
+        if not isinstance(siblings, list) or len(siblings) > 64:
+            return False
+        h = leaf_hash(raw)
+        pos = 0
+        while n > 1:
+            if i & 1 or i + 1 < n:
+                if pos >= len(siblings):
+                    return False
+                s = bytes.fromhex(require_digest(siblings[pos]))
+                pos += 1
+                h = parent_hash(s, h) if i & 1 else parent_hash(h, s)
+            i //= 2
+            n = (n + 1) // 2
+        return pos == len(siblings) and h.hex() == root_hex
+    except (KeyError, TypeError, ValueError, AttributeError):
+        return False
 
 
-# ──────────────────────────────────────────────────────────────────────────────
-# 4. OTS — calendar pending is still a real proof
-# ──────────────────────────────────────────────────────────────────────────────
-CALS = ["https://a.pool.opentimestamps.org", "https://b.pool.opentimestamps.org",
-        "https://alice.btc.calendar.opentimestamps.org", "https://bob.btc.calendar.opentimestamps.org"]
+@dataclass(frozen=True)
+class HarvestSigner:
+    private_key: Any
+
+    @classmethod
+    def from_file(cls, path: pathlib.Path):
+        """No key creation, no HOME scanning, and no production-key discovery."""
+        from cryptography.hazmat.primitives import serialization
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+        path = pathlib.Path(path)
+        if path.is_symlink():
+            raise IntegrityError('key path must not be a symlink')
+        fd = os.open(path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0))
+        with os.fdopen(fd, 'rb') as stream:
+            info = os.fstat(stream.fileno())
+            if not stat.S_ISREG(info.st_mode):
+                raise IntegrityError('key must be a regular file')
+            if os.name == 'posix' and (info.st_mode & 0o077):
+                raise IntegrityError('key permissions must exclude group and others')
+            data = stream.read(32_769)
+        if len(data) > 32_768:
+            raise IntegrityError('oversized key')
+        key = serialization.load_pem_private_key(data, password=None)
+        if not isinstance(key, Ed25519PrivateKey):
+            raise IntegrityError('explicit harvest key must be Ed25519')
+        return cls(key)
+
+    @property
+    def public_pem(self) -> bytes:
+        from cryptography.hazmat.primitives import serialization
+        return self.private_key.public_key().public_bytes(
+            serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo)
+
+    @property
+    def key_id(self) -> str:
+        from cryptography.hazmat.primitives import serialization
+        der = self.private_key.public_key().public_bytes(
+            serialization.Encoding.DER, serialization.PublicFormat.SubjectPublicKeyInfo)
+        return 'sha256:' + sha256(der)
+
+    def sign(self, raw: bytes) -> dict:
+        return {'schema': 'csoai.detached-harvest-signature/0.2',
+                'scope': 'harvest-stage-not-board', 'algorithm': 'Ed25519',
+                'artifact_sha256': sha256(raw), 'artifact_bytes': len(raw),
+                'key_id': self.key_id,
+                'public_key_pem': self.public_pem.decode('ascii'),
+                'signature_b64': base64.b64encode(self.private_key.sign(raw)).decode('ascii')}
 
 
-def ots_stamp(digest: bytes) -> dict:
-    """Submit to every calendar, return serialized proof + list of calendar responses.
-    A calendar-pending stamp is a real proof; it just isn't Bitcoin-attested yet.
+def verify_signature(raw: bytes, receipt: dict, trusted_key_ids: Iterable[str] = ()) -> dict:
+    from cryptography.exceptions import InvalidSignature
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+    try:
+        if (receipt.get('schema') != 'csoai.detached-harvest-signature/0.2'
+            or receipt.get('algorithm') != 'Ed25519'
+            or receipt.get('scope') != 'harvest-stage-not-board'
+            or receipt.get('artifact_sha256') != sha256(raw)
+            or receipt.get('artifact_bytes') != len(raw)):
+            raise IntegrityError('signature binding mismatch')
+        pub = serialization.load_pem_public_key(receipt['public_key_pem'].encode('ascii'))
+        if not isinstance(pub, Ed25519PublicKey):
+            raise IntegrityError('wrong public-key algorithm')
+        der = pub.public_bytes(serialization.Encoding.DER, serialization.PublicFormat.SubjectPublicKeyInfo)
+        key_id = 'sha256:' + sha256(der)
+        if receipt['key_id'] != key_id:
+            raise IntegrityError('key identifier mismatch')
+        pub.verify(base64.b64decode(receipt['signature_b64'], validate=True), raw)
+        return {'signature': 'VALID', 'signer_authority':
+                'ALLOWLISTED_HARVEST_KEY' if key_id in set(trusted_key_ids)
+                else 'NOT_ESTABLISHED', 'scope': 'harvest-stage-not-board'}
+    except (IntegrityError, InvalidSignature, ValueError, TypeError, KeyError, UnicodeError):
+        return {'signature': 'INVALID', 'signer_authority': 'NOT_ESTABLISHED'}
+
+
+
+def verify_record_bundle(raw: bytes, batch_raw: bytes, proof: dict,
+                         artifact_signature: dict | None = None,
+                         batch_signature: dict | None = None,
+                         trusted_key_ids: Iterable[str] = ()) -> dict:
+    """Verify bindings across payload, batch, indexed proof and optional signatures.
+
+    Hash/proof validity is not operator identity or evidence of model behaviour.
+    A caller obtains the trusted key allowlist out of band, not from this bundle.
     """
-    ts = Timestamp(digest)
-    responses = {}
-    for url in CALS:
-        try:
-            cal = RemoteCalendar(url)
-            ts.merge(cal.submit(digest, timeout=15))
-            responses[url] = "ok"
-        except Exception as e:
-            responses[url] = f"err:{str(e)[:60]}"
-    if not any(v == "ok" for v in responses.values()):
-        return {"ok": False, "calendar_responses": responses}
-    ctx = BytesSerializationContext()
-    DetachedTimestampFile = __import__("opentimestamps.core.timestamp", fromlist=["DetachedTimestampFile"]).DetachedTimestampFile
-    DetachedTimestampFile(OpSHA256(), ts).serialize(ctx)
-    ots_bytes = ctx.getbytes()
-    return {
-        "ok": True,
-        "ots_bytes": ots_bytes,
-        "ots_size": len(ots_bytes),
-        "calendar_responses": responses,
-        "state": "PENDING_BITCOIN_CONFIRMATION",
-    }
+    try:
+        batch = strict_load(batch_raw)
+        if (not isinstance(batch, dict)
+            or batch.get('schema') != 'csoai.harvest-batch/0.2'
+            or batch.get('merkle_scheme') != SCHEME):
+            raise IntegrityError('unsupported batch schema')
+        root_hex = require_digest(batch['root'])
+        hashes = batch['artifact_sha256s']
+        if not isinstance(hashes, list) or not all(isinstance(h, str) for h in hashes):
+            raise IntegrityError('invalid artifact hash list')
+        for h in hashes:
+            require_digest(h)
+        if len(set(hashes)) != len(hashes) or hashes != sorted(hashes):
+            raise IntegrityError('batch must contain sorted distinct artifact hashes')
+        i = proof['leaf_index']
+        if (type(i) is not int or not 0 <= i < len(hashes)
+            or type(batch['tree_size']) is not int
+            or batch['tree_size'] != len(hashes)
+            or proof['tree_size'] != batch['tree_size']
+            or proof['artifact_sha256'] != sha256(raw)
+            or hashes[i] != sha256(raw)
+            or proof['batch_sha256'] != sha256(batch_raw)
+            or proof['root'] != root_hex
+            or not verify_inclusion(raw, proof, root_hex)):
+            raise IntegrityError('bundle binding mismatch')
+        trusted = tuple(trusted_key_ids)
+        unsigned = {'signature': 'UNSIGNED', 'signer_authority': 'NOT_ESTABLISHED'}
+        return {'binding': 'VALID',
+                'artifact_signature': verify_signature(raw, artifact_signature, trusted) if artifact_signature else unsigned,
+                'batch_signature': verify_signature(batch_raw, batch_signature, trusted) if batch_signature else unsigned,
+                'external_timestamp': 'NOT_VERIFIED', 'factual_truth': 'NOT_DETERMINED'}
+    except (KeyError, TypeError, ValueError, AttributeError, RecursionError):
+        return {'binding': 'INVALID', 'external_timestamp': 'NOT_VERIFIED',
+                'factual_truth': 'NOT_DETERMINED'}
 
+def prepare_rekor_entry(raw: bytes, receipt: dict) -> dict:
+    """Prepare a v1 rekord entry; do NOT send it or claim log inclusion.
 
-# ──────────────────────────────────────────────────────────────────────────────
-# 5. THE PIPELINE — one artifact per (source × axis × goal)
-# ──────────────────────────────────────────────────────────────────────────────
-def emit_artifact(src_name: str, axis_name: str, goal_name: str, observation: dict, evidence_url: str | None) -> dict:
-    """Build a canonical measurement-card and run the full loop on it."""
-    artifact = {
-        "schema": "csoai.measurement-card/0.1",
-        "kind": "measurement-card",
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "subject": {
-            "source": src_name,
-            "axis": axis_name,
-            "goal": goal_name,
-        },
-        "observation": observation,
-        "evidence_url": evidence_url,
-        "signatures": [],
-        "merkle_root": None,
-        "rekor": None,
-        "ots": None,
-        "disclaimers": [
-            "MEASUREMENT, not CERTIFICATION. Empty is not zero.",
-            "This artifact is part of the closed-loop harness: harvest → measure → fix → sign → root → anchor → rekor → ots → publish → remeasure.",
-        ],
-    }
-    # Step 1: Sign with harvest-stage key
-    canonical_pre = json.dumps(artifact, sort_keys=True, separators=(",", ":")).encode()
-    sig = sign_harvest(canonical_pre)
-    artifact["signatures"].append(sig)
-    canonical_post_sig = json.dumps(artifact, sort_keys=True, separators=(",", ":")).encode()
-    artifact["sha256"] = hashlib.sha256(canonical_post_sig).hexdigest()
-    artifact["byte_size"] = len(canonical_post_sig)
-    return artifact, canonical_post_sig
-
-
-def run_loop(artifacts: list[dict], outdir: pathlib.Path) -> dict:
-    """Run the full closed loop on a batch of artifacts:
-       harvest → measure → sign → root → anchor → rekor → ots → publish
+    Ed25519 signs exact message bytes. It is not the original fabricated
+    hashedrekord entry. Use supported DSSE/v2 tooling for a future migration.
     """
-    outdir.mkdir(parents=True, exist_ok=True)
-    canonicals = []
-    merkles = []
-    cards = []
-    for art, canonical in artifacts:
-        canonicals.append(canonical)
-        merkles.append(bytes.fromhex(art["sha256"]))
-        cards.append(art)
-        # Write individual card
-        p = outdir / f"{art['subject']['source']}__{art['subject']['axis']}__{art['subject']['goal']}.json"
-        p.write_bytes(canonical)
-        # Per-card OTS
-        ots_result = ots_stamp(bytes.fromhex(art["sha256"]))
-        if ots_result.get("ok"):
-            (p.parent / f"{p.name}.ots").write_bytes(ots_result["ots_bytes"])
-            del ots_result["ots_bytes"]
-        art["ots"] = ots_result
-
-    # Step 2: Merkle root the batch
-    root, layers = merkle_root(canonicals)
-    root_hex = root.hex()
-    rollup = {
-        "schema": "csoai.batch-rollup/0.1",
-        "kind": "rollup",
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "cards_count": len(cards),
-        "merkle_root": root_hex,
-        "merkle_algorithm": "sha256-binary-sorted",
-        "card_sha256s": [c["sha256"] for c in cards],
-        "rollup_disclaimers": [
-            "The Merkle root records that this exact set of artifacts existed at this exact byte content at this time. It does NOT attest who produced them — for that, see the per-card harvest-stage signatures and the Sigstore Rekor entries.",
-        ],
-    }
-
-    # Step 3: Sign rollup with harvest-stage key (proves we built the root)
-    rollup_canonical = json.dumps(rollup, sort_keys=True, separators=(",", ":")).encode()
-    rollup_sig = sign_harvest(rollup_canonical)
-    rollup["harvest_signature"] = rollup_sig
-    rollup["sha256"] = hashlib.sha256(rollup_canonical).hexdigest()
-    rollup["byte_size"] = len(rollup_canonical)
-
-    # Step 4: OTS the rollup
-    ots_rollup = ots_stamp(bytes.fromhex(rollup["sha256"]))
-    if ots_rollup.get("ok"):
-        (outdir / "batch-rollup.ots").write_bytes(ots_rollup["ots_bytes"])
-        del ots_rollup["ots_bytes"]
-    rollup["ots"] = ots_rollup
-
-    # Step 5: Submit each card to Sigstore Rekor.
-    # We pass our real per-machine Ed25519 public key (NOT the COSE interop key).
-    # If Sigstore's anonymous hashedrekord path is deprecated (GHA-Fulcio dead), the
-    # response will be NOT_SUBMITTED — we record that honestly, never a fake count.
-    pubkey_path = pathlib.Path(os.environ.get("CSOAI_HARVEST_PUB", pathlib.Path.home() / ".csoai" / "keys" / "harvest_ed25519.pub"))
-    real_pk_pem = pubkey_path.read_bytes() if pubkey_path.exists() else None
-    rekor_results = []
-    for art in cards:
-        r = submit_rekor(b"", art["sha256"], real_ed25519_pubkey_pem=real_pk_pem)
-        art["rekor"] = r
-        rekor_results.append({"sha256": art["sha256"], "rekor": r})
-    rollup["rekor_submissions"] = rekor_results
-
-    # Step 6: Submit the rollup root to Sigstore Rekor
-    rollup_rekor = submit_rekor(b"", rollup["sha256"], real_ed25519_pubkey_pem=real_pk_pem)
-    rollup["rollup_rekor"] = rollup_rekor
-
-    # Step 7: Write final rollup
-    (outdir / "batch-rollup.json").write_bytes(json.dumps(rollup, indent=2).encode())
-
-    # Step 8: Update each card with merkle inclusion proof
-    for art, canonical in zip(cards, canonicals):
-        proof = inclusion_proof(bytes.fromhex(art["sha256"]), layers)
-        art["merkle_root"] = root_hex
-        art["merkle_proof"] = proof
-        p = outdir / f"{art['subject']['source']}__{art['subject']['axis']}__{art['subject']['goal']}.json"
-        p.write_bytes(json.dumps(art, indent=2).encode())
-
-    return rollup
+    if verify_signature(raw, receipt)['signature'] != 'VALID':
+        raise IntegrityError('refusing to prepare Rekor entry for an invalid signature')
+    return {'apiVersion': '0.0.1', 'kind': 'rekord', 'spec': {
+        'data': {'content': base64.b64encode(raw).decode('ascii')},
+        'signature': {'format': 'x509', 'content': receipt['signature_b64'],
+                      'publicKey': {'content': base64.b64encode(
+                          receipt['public_key_pem'].encode('ascii')).decode('ascii')}}}}
 
 
-# ──────────────────────────────────────────────────────────────────────────────
-# 6. CLI
-# ──────────────────────────────────────────────────────────────────────────────
-def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="public/interop/closed-loop")
-    ap.add_argument("--harness", default="public/interop/master-harness-index-v0.4.json")
-    a = ap.parse_args()
+def observe_witness_attempt(kind: str, raw: bytes, transport_state: str,
+                            receipt: bytes | None = None) -> dict:
+    """Transport response is never promoted to cryptographic proof.
 
-    harness_path = pathlib.Path(a.harness)
-    if not harness_path.exists():
-        print(f"harness not found: {harness_path}", file=sys.stderr)
-        return 2
-    harness = json.loads(harness_path.read_text())
+    The supported transports are NOT implemented in this stage. A separate
+    worker must retain/verify actual Rekor checkpoints or actual OTS proofs.
+    """
+    if kind not in ('ots', 'rekor') or transport_state not in (
+            'NOT_REQUESTED', 'SUBMITTED', 'FAILED', 'RECEIVED'):
+        raise IntegrityError('unknown witness state')
+    if transport_state == 'RECEIVED' and not receipt:
+        raise IntegrityError('received state requires receipt bytes')
+    return {'witness': kind, 'artifact_sha256': sha256(raw),
+            'transport_state': transport_state,
+            'receipt_sha256': sha256(receipt) if receipt is not None else None,
+            'cryptographic_state': 'UNCHECKED', 'bitcoin_confirmation': 'NOT_ESTABLISHED'}
 
-    # Bootstrap the harvest-stage keypair (one-shot)
-    machine_keypair()
 
-    outdir = pathlib.Path(a.out)
-    outdir.mkdir(parents=True, exist_ok=True)
+def compact_reference(record_hash: str, batch_hash: str, root_hex: str,
+                      signed: bool, limit: int = COMPACT_LIMIT) -> bytes:
+    for value in (record_hash, batch_hash, root_hex):
+        require_digest(value)
+    view = {'schema': 'csoai.compact-evidence-pointer/0.2',
+            'artifact': 'sha256:' + record_hash, 'batch': 'sha256:' + batch_hash,
+            'root': root_hex, 'merkle_scheme': SCHEME,
+            'signature': 'DETACHED_RECEIPT_AVAILABLE' if signed else 'UNSIGNED',
+            'signer_authority': 'NOT_ESTABLISHED',
+            'external_witness': 'NOT_REQUESTED',
+            'is_new_model_measurement': False,
+            'note': 'Pointer only; fetch full record, signature and inclusion proof to verify.'}
+    raw = encoded(view)
+    if type(limit) is not int or limit < 1 or len(raw) > limit:
+        raise IntegrityError('compact pointer exceeds byte limit; evidence was not truncated')
+    return raw
 
-    # Generate one artifact per (source × axis × goal) for sources that have axis/goal bindings
-    artifacts = []
-    pairs = []
-    seen = set()
-    for s in harness.get("sources_bound_to_harness", []):
-        src = s.get("name", "?")
-        for a_name in s.get("axes", [s.get("axis_name", "")]):
-            for g in s.get("goal_objects", []):
-                key = (src, a_name, g)
-                if key in seen:
-                    continue
-                seen.add(key)
-                # Skip if no axis or no goal
-                if not a_name or not g:
-                    continue
-                obs = {
-                    "method": "passive-enumeration",
-                    "source_kind": s.get("kind", s.get("category", "?")),
-                    "as_of": s.get("as_of") or harness.get("generated_at"),
-                    "value": s.get("measurement") or s.get("enumerated_count") or s.get("axis_state", "declared"),
-                }
-                art, canonical = emit_artifact(src, a_name, g, obs, s.get("evidence_url") or s.get("artifact_url"))
-                artifacts.append((art, canonical))
-                pairs.append(key)
 
-    if not artifacts:
-        print("nothing to process", file=sys.stderr)
+def records_from_harness(harness: dict) -> list[dict]:
+    """Import declarations, not invented executions or model scores.
+
+    Preserve full source mapping and zero values. Do not silently interpret an
+    unknown goal as a new goal or merge two distinct sources named '?'.
+    """
+    if not isinstance(harness, dict):
+        raise IntegrityError('harness must be an object')
+    sources = harness.get('sources_bound_to_harness')
+    if not isinstance(sources, list) or len(sources) > MAX_RECORDS:
+        raise IntegrityError('sources list missing or too large')
+    records = []
+    for i, source in enumerate(sources):
+        if not isinstance(source, dict):
+            raise IntegrityError(f'source {i} is not an object')
+        name = first_present(source, 'source', 'name', 'id')
+        if not isinstance(name, str) or not name.strip() or name.strip() == '?':
+            raise IntegrityError(f'source {i} has no stable name')
+        goals = source.get('goal_objects', [])
+        if not isinstance(goals, list) or not all(isinstance(g, str) for g in goals):
+            raise IntegrityError(f'source {i} has invalid goals')
+        unknown = sorted(set(goals) - GOALS)
+        if unknown:
+            raise IntegrityError(f'source {i} mixes unknown goal IDs: {unknown}')
+        records.append({'schema': 'csoai.harvest-declaration/0.2',
+                        'observation_kind': 'source-declaration',
+                        'measurement_performed': False,
+                        'source_name': name,
+                        'source_snapshot_sha256': sha256(encoded(source)),
+                        'source_declared_as_of': first_present(source, 'as_of', default=harness.get('generated_at')),
+                        'declared_value': first_present(source, 'measurement', 'enumerated_count', 'axis_state'),
+                        'source_record': source})
+    return records
+
+
+def run_loop(records: list[dict], outdir: pathlib.Path,
+             signer: HarvestSigner | None = None) -> dict:
+    """Idempotent immutable local integrity stage. No publishing/network calls."""
+    if not records or len(records) > MAX_RECORDS:
+        raise IntegrityError('empty or oversized batch')
+    raws = [encoded(r) for r in records]
+    if any(len(r) > MAX_RECORD_BYTES for r in raws):
+        raise IntegrityError('oversized record')
+    # Dedupe exact copies; multiple references do not become extra observations.
+    pairs = sorted({sha256(raw): raw for raw in raws}.items())
+    hashes = [h for h, _ in pairs]
+    ordered = [r for _, r in pairs]
+    root, layers = merkle_root(ordered)
+    batch = {'schema': 'csoai.harvest-batch/0.2', 'merkle_scheme': SCHEME,
+             'root': root.hex(), 'tree_size': len(ordered), 'artifact_sha256s': hashes,
+             'scope': 'exact-byte inclusion; neither factual truth nor a timestamp'}
+    batch_raw = encoded(batch)
+    batch_id = sha256(batch_raw)
+    created = 0
+    for i, (digest, raw) in enumerate(pairs):
+        created += int(immutable_write(outdir / 'objects' / (digest + '.json'), raw))
+        proof = inclusion_proof(i, layers)
+        if not verify_inclusion(raw, proof, root.hex()):
+            raise IntegrityError('self-verification failed before storing proof')
+        proof.update(artifact_sha256=digest, batch_sha256=batch_id, root=root.hex())
+        immutable_write(outdir / 'proofs' / batch_id / (digest + '.json'), encoded(proof))
+        if signer is not None:
+            sig = signer.sign(raw)
+            if verify_signature(raw, sig)['signature'] != 'VALID':
+                raise IntegrityError('local signature self-check failed')
+            immutable_write(outdir / 'signatures' / signer.key_id.split(':')[1] / (digest + '.json'), encoded(sig))
+        immutable_write(outdir / 'views' / batch_id / (digest + ('.signed' if signer else '.unsigned') + '.json'),
+                        compact_reference(digest, batch_id, root.hex(), signer is not None))
+    immutable_write(outdir / 'batches' / (batch_id + '.json'), batch_raw)
+    if signer is not None:
+        sig = signer.sign(batch_raw)
+        key = signer.key_id.split(':')[1]
+        immutable_write(outdir / 'batch-signatures' / key / (batch_id + '.json'), encoded(sig))
+        # Raw aggregate is public-only after a separate disclosure gate.
+        immutable_write(outdir / 'prepared-rekor' / key / (batch_id + '.json'),
+                        encoded(prepare_rekor_entry(batch_raw, sig)))
+    # Attempt metadata is returned, not spliced into any signed/timestamped file.
+    return {'schema': 'csoai.integrity-stage-result/0.2', 'batch_sha256': batch_id,
+            'root': root.hex(), 'records_received': len(records),
+            'distinct_records': len(pairs), 'new_objects': created,
+            'artifact_hashes_verified': len(pairs), 'inclusion_proofs_verified': len(pairs),
+            'local_signatures_verified': len(pairs) if signer else 0,
+            'board_signatures': 0, 'model_evaluations_executed': 0,
+            'fixes_executed': 0, 'rekor': 'PREPARED_NOT_SUBMITTED' if signer else 'NOT_REQUESTED',
+            'ots': 'NOT_REQUESTED', 'publications': 0}
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--harness', default='public/interop/master-harness-index-v0.4.json')
+    ap.add_argument('--out', default='var/csoai/closed-loop-v0.2')
+    ap.add_argument('--harvest-key', help='explicit local Ed25519 PKCS8 PEM, never created automatically')
+    args = ap.parse_args(argv)
+    try:
+        out = pathlib.Path(args.out)
+        if 'public' in out.parts:
+            raise IntegrityError('this format is staging-only; publish through the existing reviewed adapter')
+        source = pathlib.Path(args.harness)
+        if source.stat().st_size > 32_000_000:
+            raise IntegrityError('harness file exceeds input limit')
+        records = records_from_harness(strict_load(source.read_bytes()))
+        signer = HarvestSigner.from_file(pathlib.Path(args.harvest_key)) if args.harvest_key else None
+        result = run_loop(records, out, signer)
+        print(json.dumps(result, indent=2))
         return 0
-
-    print(f"=== Master Closed-Loop Harness ===")
-    print(f"artifacts: {len(artifacts)}")
-    print(f"outdir: {outdir}")
-
-    rollup = run_loop([a for a in artifacts], outdir)
-
-    print(f"merkle_root: {rollup['merkle_root'][:32]}...")
-    n_submitted = sum(1 for r in rollup['rekor_submissions'] if (r.get('rekor') or {}).get('state') == 'SUBMITTED')
-    n_not_submitted = sum(1 for r in rollup['rekor_submissions'] if (r.get('rekor') or {}).get('state') != 'SUBMITTED')
-    print(f"rekor_submitted: {n_submitted}  rekor_not_submitted: {n_not_submitted}")
-    print(f"ots_cards_pending: {sum(1 for k in pairs if True)}")
-    rollup_rekor_state = (rollup.get('rollup_rekor') or {}).get('state', 'NOT_SUBMITTED')
-    print(f"rollup_rekor_state: {rollup_rekor_state}")
-    print(f"\nDONE. Artifacts signed (signer_authority=NOT_ESTABLISHED on every signature), rooted, OTS-stamped. Rekor state reported honestly.")
-    if n_submitted == 0:
-        print(f"  NOTE: 0/{len(rollup['rekor_submissions'])} Rekor submissions. Sigstore anonymous hashedrekord path is deprecated; the GHA-Fulcio path is dead. We do NOT count un-submitted entries as submitted.")
-    print(f"\nSix external blockers (NOT ours to move):")
-    print(f"  1. xAI spending limit                 — cannot submit to grok")
-    print(f"  2. Cloudflare zone blocking curl      — cannot verify edge deploys without browser")
-    print(f"  3. GitHub account restriction         — cannot push as csoai-bot (use the human account)")
-    print(f"  4. Board signing key unreachable      — using per-machine harvest key instead")
-    print(f"  5. OTS calendar rate limit            — calendar-pending is still a real proof")
-    print(f"  6. COSE interop key on this machine   — using it for sig:null would be forgery; UNSIGNED is the correct state")
-    return 0
+    except (OSError, ValueError, ImportError, RecursionError) as exc:
+        print(json.dumps({'state': 'BLOCKED', 'error': str(exc)[:400],
+                          'network_calls': 0, 'publications': 0}), file=sys.stderr)
+        return 2
 
 
-if __name__ == "__main__":
-    sys.exit(main())
+if __name__ == '__main__':
+    raise SystemExit(main())

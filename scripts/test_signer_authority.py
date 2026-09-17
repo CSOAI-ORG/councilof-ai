@@ -1,12 +1,23 @@
 #!/usr/bin/env python3
-"""test_signer_authority.py — proves DONE WHEN line 1.
+"""test_signer_authority.py — key-material smoke test. NOT an authority proof.
 
-A harvest-key signature is CRYPTOGRAPHICALLY VALID but signer_authority is
-NOT_ESTABLISHED. We never conflate "the signature verifies" with "we have
-sovereign authority over the signed bytes".
+WHAT THIS PROVES: the per-machine harvest key exists, signs, and verifies against
+its own public key; and the COSE interop key is never touched.
 
-COSE interop key in ~/.csoai-keys/ is NEVER used by this test. Using it would
-be forgery (it is a different system's key).
+WHAT THIS DOES NOT PROVE, despite its name: that the production signing path
+emits signer_authority=NOT_ESTABLISHED. Line ~49 assigns that string as a LITERAL
+and `expectation_met` then compares it to itself, so that half of the assertion is
+true no matter what sign_harvest() does. It never calls the production path.
+
+A check that cannot fail is not a check. This file was cited as the proof of
+"DONE WHEN line 1" and could not carry that claim.
+
+THE REAL PROOF of signer authority is scripts/test_harvest_signature_authority.py,
+which calls the production signing path, verifies the actual signature it returns,
+and includes a tampered-bytes control that proves the verify can fail.
+
+Kept rather than deleted because the sign/verify half IS genuine and the
+COSE-forgery boundary it documents is worth keeping stated.
 """
 import hashlib, pathlib, sys
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
@@ -16,7 +27,7 @@ from cryptography.hazmat.primitives import serialization
 artifact = {
     "schema": "csoai.test.signer_authority/0.1",
     "kind": "signer-authority-test",
-    "subject": "DONE-WHEN-line-1-proof",
+    "subject": "harvest-key-material-smoke-test",
     "data": "synthetic",
 }
 import json
@@ -45,7 +56,10 @@ except Exception as e:
     sig_valid = False
     sig_error = str(e)
 
-# signer_authority is NEVER "established" by signing alone
+# NOTE: this is a LITERAL, not a reading of the production path. It makes the
+# `signer_authority == "NOT_ESTABLISHED"` half of expectation_met unfalsifiable.
+# See the module docstring; the real proof lives in
+# scripts/test_harvest_signature_authority.py.
 signer_authority = "NOT_ESTABLISHED"
 
 # Fingerprint
@@ -56,12 +70,16 @@ result = {
     "kind": "signer-authority-test",
     "verified_signature": sig_valid,
     "signature_error": sig_error,
-    "signer_authority": signer_authority,
+    "signer_authority_LITERAL_NOT_READ_FROM_CODE": signer_authority,
     "key_fingerprint": f"machine-harvest:{fp}",
     "key_location": str(priv_path),
-    "test_subject": "DONE-WHEN-line-1-proof",
-    "expectation": "sig_valid=True AND signer_authority=NOT_ESTABLISHED",
-    "expectation_met": sig_valid and signer_authority == "NOT_ESTABLISHED",
+    "test_subject": "harvest-key-material-smoke-test",
+    "not_a_proof_of": "signer authority — that assertion here is a literal compared to itself; see scripts/test_harvest_signature_authority.py",
+    "expectation": "sig_valid=True (the only falsifiable half)",
+    # expectation_met is now sig_valid ALONE. The old conjunct
+    # `and signer_authority == "NOT_ESTABLISHED"` compared a literal to itself,
+    # so it could never be False and only made the result look stronger.
+    "expectation_met": sig_valid,
     "disclaimers": [
         "A valid signature does NOT establish signer authority. Authority is granted by an explicit allowlist, not by possession of a private key.",
         "The COSE interop key in ~/.csoai-keys/cose-interop-1.pem is a different system's key. This test does not touch it; using it for sig:null would be forgery.",

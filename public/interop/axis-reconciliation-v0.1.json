@@ -236,12 +236,17 @@
   ],
   "axes_total_in_table": 23,
   "done_when_1_signer_authority": {
-    "test": "scripts/test_signer_authority.py",
-    "expectation": "harvest-key signature is VALID (cryptographically) but signer_authority=NOT_ESTABLISHED"
+    "test": "scripts/test_harvest_signature_authority.py",
+    "expectation": "sign_harvest() returns a signature that VERIFIES against the harvest public key AND carries signer_authority=NOT_ESTABLISHED, with a tampered-bytes control proving the verify can fail",
+    "superseded_citation": {
+      "was": "scripts/test_signer_authority.py",
+      "why_changed": "that file assigns signer_authority as a LITERAL and compared it to itself, so the authority half could not fail and never called the production path. It is kept, rescoped to what it does prove: the harvest key exists, signs and verifies.",
+      "corrected_on": "2026-09-17"
+    }
   },
   "done_when_2_rekor": {
     "expectation": "submit_rekor() with no real Ed25519 pubkey returns state=NOT_SUBMITTED with reason. Count = 0, never inflated by rejected entries.",
-    "implementation_note": "see scripts/master_closed_loop.py submit_rekor() \u2014 explicit NOT_SUBMITTED branch when real_ed25519_pubkey_pem is None."
+    "implementation_note": "see scripts/master_closed_loop.py submit_rekor() — explicit NOT_SUBMITTED branch when real_ed25519_pubkey_pem is None."
   },
   "done_when_3_counts_from_live": {
     "expectation": "every integer in this artifact has a source field beside it. Type-checking: any axis.X without a source field is a defect.",
@@ -253,13 +258,13 @@
     "gha_proof": "gh workflow run returns HTTP 422 'Actions has been disabled for this user' (ticket #4720908, day 15)",
     "signer_unreachable": true,
     "last_workflow_run": "2026-09-15T08:06Z",
-    "cose_interop_key_on_disk": "~/.csoai-keys/cose-interop-1.pem \u2014 MUST NOT be used; different system's key. Using it is forgery.",
+    "cose_interop_key_on_disk": "~/.csoai-keys/cose-interop-1.pem — MUST NOT be used; different system's key. Using it is forgery.",
     "hf_only_writable_publication": true
   },
   "never": [
     "Never sign with anything but the board key via the approved signer. COSE interop key is a different system's key; using it is forgery.",
-    "Never merge on 'no checks'. Every PR today gets zero checks because Actions is dead \u2014 that is not permission, it is the absence of a gate. Land work locally and say it is ungated.",
-    "Never print a banner claim (SIGNED \u2713) that a field in the artifact contradicts.",
+    "Never merge on 'no checks'. Every PR today gets zero checks because Actions is dead — that is not permission, it is the absence of a gate. Land work locally and say it is ungated.",
+    "Never print a banner claim (SIGNED ✓) that a field in the artifact contradicts.",
     "Never report a capped or partial walk as COMPLETE.",
     "Never print the harness's '15 measured' as the board's 22/23. They count different things.",
     "Never say 'reconciled 305 against 335'. They are SEPARATE_CORPORA."
@@ -268,22 +273,22 @@
     "MEASUREMENT, not CERTIFICATION.",
     "Counts read at publish time from https://councilof.ai/api/gspc (HTTPS). Re-run this script for fresh counts.",
     "Every count has a source field beside it; any bare integer is a defect.",
-    "This reconciliation does NOT reconcile root.json against card_chain \u2014 they are SEPARATE_CORPORA by design.",
+    "This reconciliation does NOT reconcile root.json against card_chain — they are SEPARATE_CORPORA by design.",
     "card_chain as_of is 2026-08-19, board as_of is 2026-09-15. ALL card_chain entries are stale relative to the board. The defect is FRESHNESS caused by the dead signer (GHA disabled), not a corpus-reconciliation problem."
   ],
   "count_source_map": {
-    "live_board.axes_total": "https://councilof.ai/api/gspc \u2192 totals.axes (live)",
-    "live_board.axes_measured": "https://councilof.ai/api/gspc \u2192 totals.measured_axes (live)",
-    "live_board.axes_unmeasured": "https://councilof.ai/api/gspc \u2192 totals.unmeasured_axes (live)",
-    "live_board.as_of": "https://councilof.ai/api/gspc \u2192 totals.as_of (live)",
+    "live_board.axes_total": "https://councilof.ai/api/gspc → totals.axes (live)",
+    "live_board.axes_measured": "https://councilof.ai/api/gspc → totals.measured_axes (live)",
+    "live_board.axes_unmeasured": "https://councilof.ai/api/gspc → totals.unmeasured_axes (live)",
+    "live_board.as_of": "https://councilof.ai/api/gspc → totals.as_of (live)",
     "root_json.count": "ground-truth-table (verified 2026-09-17)",
     "root_json.as_of": "ground-truth-table (verified 2026-09-17)",
     "card_chain.count": "ground-truth-table (verified 2026-09-17)",
     "card_chain.as_of": "ground-truth-table (verified 2026-09-17)",
     "overlap_root_json_vs_card_chain": "ground-truth-table (verified 2026-09-17)",
     "axes_total_in_table": "len(self.axes) at publish time",
-    "byte_size": "len(canonical_bytes) \u2014 self-evident",
-    "sha256": "hashlib.sha256(canonical_bytes).hexdigest() \u2014 self-evident"
+    "byte_size": "len(canonical_bytes) — self-evident",
+    "sha256": "hashlib.sha256(canonical_bytes).hexdigest() — self-evident"
   },
   "sha256": "9dc3657c294bdfc4dde9cbec3193a10326913b3b3130cc303932e21ccfb36b38",
   "byte_size": 9921
