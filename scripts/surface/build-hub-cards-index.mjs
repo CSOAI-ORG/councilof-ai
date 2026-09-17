@@ -3,6 +3,7 @@
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync, lstatSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { createHash } from "node:crypto";
+import { denominatorFields, DENOMINATOR_RULE, BOARD_AXIS_N_IS_NOT_CARD_N } from "./build-pod-cards-index.mjs";
 
 export const SCHEMA = "csoai.hub-cards-index/0.1";
 const CARD_URL = "https://councilof.ai/interop/mill-cards-signed/";
@@ -54,7 +55,10 @@ export function rowFromCard(name, wrap) {
   return {
     id: wrap.id, file: name, url: CARD_URL + name, subject: body.model,
     axis: typeof body.axis === "string" ? body.axis : null,
-    n: Number.isInteger(body.n) ? body.n : null,
+    // Same denominator vocabulary as the pod index. Hub card bodies carry no
+    // compute_evidence, so these read EXCLUSIONS_ABSENT with nulls: the hub route
+    // publishes no excluded-attempt counts, which is not the same as excluding none.
+    ...denominatorFields(body),
     status: typeof body.status === "string" ? body.status : null,
     run_id: typeof body.run_id === "string" ? body.run_id : null,
     evidence_schema: body.evidence.schema,
@@ -98,7 +102,16 @@ export function buildIndex(cardsDir, evidenceDir = "public/interop/mill-evidence
   }
   return { schema: SCHEMA, as_of: new Date().toISOString(),
     source: "reproducibly admitted signed Hub cards on the deployed commit",
-    count: cards.length, signed_files_seen: names.length,
+    count: cards.length,
+    denominator: {
+      rule: DENOMINATOR_RULE,
+      vocabulary: "attempted / graded_n / parse_errors_excluded / transport_errors_excluded — the same names /api/worker publishes.",
+      board_axis_n_is_not_card_n: BOARD_AXIS_N_IS_NOT_CARD_N,
+      rows_by_exclusions_state: cards.reduce((a, r) => ({ ...a, [r.exclusions_state]: (a[r.exclusions_state] ?? 0) + 1 }),
+        { EXCLUSIONS_PUBLISHED: 0, EXCLUSIONS_PARTIAL: 0, EXCLUSIONS_ABSENT: 0 }),
+      rows_with_excluded_attempts: cards.filter((r) => (r.parse_errors_excluded ?? 0) + (r.transport_errors_excluded ?? 0) > 0).length,
+    },
+    signed_files_seen: names.length,
     skipped_non_current_or_unreadable: skipped,
     withdrawn_excluded: withdrawnExcluded,
     withdrawn_ledger: "interop/mill-cards-signed/WITHDRAWN.jsonl — withdrawn cards still resolve and verify; they are not current measurements",

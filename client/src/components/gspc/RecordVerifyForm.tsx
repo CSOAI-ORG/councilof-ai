@@ -206,6 +206,29 @@ export default function RecordVerifyForm({
           <p className={`break-all font-mono text-[11px] ${light ? "text-slate-600" : "text-emerald-100/60"}`}>
             Input SHA-256: {verdict.inputHash}
           </p>
+          {/* THE DENOMINATOR. A verified signature says the bytes are genuine; it says
+              nothing about what the number inside them counts. This record's n is
+              graded_n — the attempts that returned a parseable label — and the attempts
+              it dropped were signed into the same bytes and were never shown. Without
+              this line a reader confirms a card and leaves believing "n: 235" meant 235
+              items were put to the model, when 237 were and 2 were excluded. Rendered
+              for a FAILED verdict too: what the record claims to count is worth reading
+              whether or not its signature checks out. */}
+          {verdict.result.denominator_sentence && (
+            <p
+              data-testid="record-denominator"
+              className={`text-[12px] ${light ? "text-slate-700" : "text-emerald-100/75"}`}
+            >
+              <strong>Denominator:</strong> {verdict.result.denominator_sentence}
+              {verdict.result.denominator?.exclusions_state === "EXCLUSIONS_PUBLISHED" && (
+                <span className={light ? "text-slate-600" : "text-emerald-100/60"}>
+                  {" "}The board (/api/gspc) publishes a per-axis n — the item count of that
+                  axis’s bank, i.e. the attempts — so a card’s n is the smaller number by
+                  exactly the excluded attempts above. Neither is adjusted to match the other.
+                </span>
+              )}
+            </p>
+          )}
           {/* Keyed by code+index, not by label: two checks can carry the same label
               and a duplicate React key silently drops a reported failure. */}
           {verdict.result.lines.map((l, i) => (

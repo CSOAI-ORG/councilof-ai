@@ -180,3 +180,38 @@ describe("/api/commissions — origin: a receipt is demand evidence only when an
   });
 });
 
+
+describe("/api/commissions — the denominator travels with the card, or says it is absent", () => {
+  // The requester's whole view of what was measured is this row. Handing back n: 235
+  // with the excluded attempts dropped let a paying reader conclude 235 items were put
+  // to the model when 237 were. /api/worker's names are used so the estate has one
+  // vocabulary; a count the index does not publish stays null, never 0.
+  const indexWith = (cards: unknown[]) => ({ schema: "csoai.pod-cards-index/0.1", cards });
+  const fetcherFor = (body: unknown) => (async () => new Response(JSON.stringify(body), { status: 200 })) as unknown as typeof fetch;
+  const kvOne = () => kvFrom({
+    "ras:one": JSON.stringify({ subject: "llama3.2:3b", model: "llama3.2:3b", fulfillment: "QUEUED", axis: "governance", tx: "0xe", as_of: "2026-09-12T06:15:53Z" }),
+  });
+  const rowOf = async (card: Record<string, unknown>) => {
+    const body = await buildCommissions({ REVENUE_KV: kvOne() }, "https://councilof.ai", fetcherFor(indexWith([card])));
+    return (body.commissions as Array<{ cards: Array<Record<string, unknown>> }>)[0].cards[0];
+  };
+  const base = { id: "e".repeat(64), url: "https://councilof.ai/interop/mill-cards-signed/signed-governan-e.json", subject: "llama3.2:3b", axis: "governance", n: 235, status: "MEASURED", run_id: null };
+
+  it("carries graded_n, attempted and both exclusion counts", async () => {
+    expect(await rowOf({ ...base, graded_n: 235, attempted: 237, parse_errors_excluded: 2, transport_errors_excluded: 0, exclusions_state: "EXCLUSIONS_PUBLISHED" }))
+      .toMatchObject({ n: 235, graded_n: 235, attempted: 237, parse_errors_excluded: 2, transport_errors_excluded: 0, exclusions_state: "EXCLUSIONS_PUBLISHED" });
+  });
+
+  it("an index row without the fields is reported as such — not filled in with 0", async () => {
+    const row = await rowOf(base);
+    expect(row).toMatchObject({ n: 235, graded_n: null, attempted: null, parse_errors_excluded: null, transport_errors_excluded: null, exclusions_state: "INDEX_WITHOUT_EXCLUSIONS" });
+  });
+
+  it("states the rule, and that the board's axis n is a different number", async () => {
+    const body = await buildCommissions({ REVENUE_KV: kvOne() }, "https://councilof.ai", fetcherFor(indexWith([base])));
+    const retrieval = (body as { retrieval: Record<string, string> }).retrieval;
+    expect(retrieval.denominator_rule).toMatch(/graded_n/);
+    expect(retrieval.denominator_rule).toMatch(/never 0/);
+    expect(retrieval.board_axis_n_is_not_card_n).toMatch(/\/api\/gspc/);
+  });
+});

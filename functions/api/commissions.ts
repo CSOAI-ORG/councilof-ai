@@ -14,12 +14,29 @@
  * payai-wrapper → UNFULFILLABLE, not a model mill target.
  */
 import { classifyCommissionTarget, type Fulfillment, type SubjectKind } from "./_commission_target";
+import { DENOMINATOR_RULE, BOARD_AXIS_N_IS_NOT_CARD_N, type ExclusionsState } from "../_lib/denominator";
 import { selfWallets } from "./_x402";
 
 type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> }; X402_PAY_TO?: string; X402_SELF_WALLETS?: string };
 
-/** One signed pod card as the build-time index (/interop/pod-cards-index.json) lists it. */
-type PodCard = { id: string; url: string; subject: string; axis: string | null; n: number | null; status: string | null; run_id: string | null };
+/**
+ * One signed pod card as the build-time index (/interop/pod-cards-index.json) lists it.
+ *
+ * `n` alone used to be the whole denominator a requester got back, and `n` is graded_n:
+ * a card at n 235 stands on 237 attempts with 2 excluded. The exclusion counts travel
+ * with it now, in /api/worker's vocabulary. A count the index does not publish stays
+ * null with a state — it is never filled in with 0.
+ */
+type PodCard = {
+  id: string; url: string; subject: string; axis: string | null;
+  n: number | null; status: string | null; run_id: string | null;
+  graded_n: number | null;
+  attempted: number | null;
+  parse_errors_excluded: number | null;
+  transport_errors_excluded: number | null;
+  /** INDEX_WITHOUT_EXCLUSIONS = the deployed index predates these fields; the card was not consulted. */
+  exclusions_state: ExclusionsState | "INDEX_WITHOUT_EXCLUSIONS";
+};
 type Delivery = { state: "CARDS_PUBLISHED" | "NONE" | "UNCHECKABLE"; count: number | null; note?: string };
 export const POD_CARDS_INDEX = "/interop/pod-cards-index.json";
 export const HUB_CARDS_INDEX = "/interop/hub-cards-index.json";
@@ -120,12 +137,22 @@ async function readCardsIndex(env: Env, origin: string, path: string, schema: st
     const by = new Map<string, PodCard[]>();
     for (const c of idx.cards as Array<Record<string, unknown>>) {
       if (typeof c.id !== "string" || typeof c.url !== "string" || typeof c.subject !== "string") continue;
+      const int = (v: unknown) => (Number.isInteger(v) ? (v as number) : null);
       const row: PodCard = {
         id: c.id, url: c.url, subject: c.subject,
         axis: typeof c.axis === "string" ? c.axis : null,
-        n: Number.isInteger(c.n) ? (c.n as number) : null,
+        n: int(c.n),
         status: typeof c.status === "string" ? c.status : null,
         run_id: typeof c.run_id === "string" ? c.run_id : null,
+        // Carried, never computed here: the index derived them from the signed bytes.
+        graded_n: int(c.graded_n),
+        attempted: int(c.attempted),
+        parse_errors_excluded: int(c.parse_errors_excluded),
+        transport_errors_excluded: int(c.transport_errors_excluded),
+        exclusions_state:
+          c.exclusions_state === "EXCLUSIONS_PUBLISHED" || c.exclusions_state === "EXCLUSIONS_PARTIAL" || c.exclusions_state === "EXCLUSIONS_ABSENT"
+            ? c.exclusions_state
+            : "INDEX_WITHOUT_EXCLUSIONS",
       };
       const k = c.subject.toLowerCase();
       by.set(k, [...(by.get(k) ?? []), row]);
@@ -218,6 +245,8 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
         index: POD_CARDS_INDEX,
         hub_index: HUB_CARDS_INDEX,
         state: (pod === null || hub === null) ? "UNCHECKABLE" : "READ",
+        denominator_rule: DENOMINATOR_RULE,
+        board_axis_n_is_not_card_n: BOARD_AXIS_N_IS_NOT_CARD_N,
         how: "each `cards[].url` is a signed card; verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json. When CARDS_PUBLISHED, fulfillment becomes RETRIEVABLE — publication is not a certificate and invents no MEASURED score.",
       },
       unfulfillable: commissions.filter((c) => c.fulfillment === "UNFULFILLABLE").length,
