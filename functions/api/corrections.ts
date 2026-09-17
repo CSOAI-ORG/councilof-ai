@@ -34,6 +34,42 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0917-02",
+      date: "2026-09-17",
+      first_observed_at: "2026-09-17T04:50Z",
+      what_was_wrong:
+        "Every public surface councilof.ai serves answers HTTP 403 to a plain standard-library HTTP " +
+        "client while answering normally to a browser. Measured 17 September 2026: 21 of 21 published " +
+        "URLs, including /.well-known/did.json, /.well-known/agent-card.json, /.well-known/x402.json, " +
+        "robots.txt and llms.txt. Those five exist only for machines. We have told correspondents, " +
+        "standards bodies and regulators in writing that they can fetch our evidence and verify it " +
+        "without our cooperation. For anyone using a standard client, that was not true.",
+      why_it_was_wrong:
+        "A Cloudflare Browser Integrity Check at the zone level rejects requests by client signature, " +
+        "returning error 1010. It was enabled for the website and silently covered the API and the " +
+        "well-known paths beneath it. An earlier check of ours missed it because we tested user-agent " +
+        "strings through curl rather than the actual clients, and the strings we happened to pick were " +
+        "allowed. Testing a sample that excludes the reported case is not testing.",
+      what_changed:
+        "The measurement is published at /interop/machine-reachability-2026-09-17.json and is " +
+        "reproducible by scripts/machine_reachability.py, whose selftest proves it can report both " +
+        "outcomes. The twelve artifacts a stranger most needs are mirrored to a host that does serve " +
+        "plain clients, at huggingface.co/datasets/csoai/councilof-ai-mirror, refreshed twice daily. " +
+        "The zone setting itself is a dashboard control we cannot reach with any credential we hold, " +
+        "and it is recorded as the owner's action.",
+      reached_the_public: true,
+      note:
+        "This one did reach the public, and it is the most consequential defect we have published " +
+        "against ourselves. An organisation whose entire output is machine-readable evidence was " +
+        "refusing machines at every address it publishes. Credit for first reporting it goes to an " +
+        "external agent correspondent who tested the payable door and wrote to us.",
+      evidence: [
+        "/interop/machine-reachability-2026-09-17.json",
+        "scripts/machine_reachability.py",
+        "https://huggingface.co/datasets/csoai/councilof-ai-mirror",
+      ],
+    },
+    {
       id: "C-2026-0916-03",
       date: "2026-09-16",
       first_observed_at: "2026-09-16T12:38Z",
