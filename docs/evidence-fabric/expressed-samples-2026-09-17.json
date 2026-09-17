@@ -1,0 +1,427 @@
+{
+  "schema": "csoai.evidence-fabric-samples/0.1",
+  "built_at": "2026-09-17T06:53:35Z",
+  "what_this_proves": "four producers with four different vocabularies, expressed in ONE object without inventing a field any of them lacks",
+  "adds_no_surface": "this is a reader. No endpoint, route or server was added.",
+  "expressed": {
+    "mill_card": {
+      "schema": "csoai.evidence-object/0.1",
+      "subject": {
+        "state": "PRESENT",
+        "value": {
+          "axis": "care",
+          "model": "ollama:llama3.1:8b@sha256:46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e"
+        },
+        "source": "/interop/mill-cards-signed/signed-care-26e1f64e1436.json → body.axis, body.model"
+      },
+      "instrument": {
+        "state": "PRESENT",
+        "value": {
+          "instrument_sha256": "943bda537de322d9a282980db8abccfff092a27f3f022095fe4a3f11a8f3443b",
+          "bank_sha256": "cee5e47a31f1db6c117a0b2f4a4c026f9ebe267c28106e4901ea44189de1767e",
+          "items_sha256": "37b4e6c1b0e20dcd981a1863a6dbb7616caf747ed870a06475da08fc6b8e527d",
+          "model_manifest_digest": "sha256:46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e"
+        },
+        "source": "/interop/mill-cards-signed/signed-care-26e1f64e1436.json → body.compute_evidence"
+      },
+      "run": {
+        "state": "PRESENT",
+        "value": {
+          "run_id": "20260914T025502.322185Z-e4b98adb1c"
+        },
+        "source": "/interop/mill-cards-signed/signed-care-26e1f64e1436.json → body.compute_evidence.run_id"
+      },
+      "observation": {
+        "state": "PRESENT",
+        "value": {
+          "accuracy": 0.2857,
+          "n_admitted": 49,
+          "n_attempted": 199,
+          "excluded": {
+            "parse_errors": 150,
+            "transport_errors": 0
+          },
+          "discarded_fraction": 0.7538
+        },
+        "source": "/interop/mill-cards-signed/signed-care-26e1f64e1436.json → body.accuracy, body.n, body.compute_evidence"
+      },
+      "admission": {
+        "state": "PRESENT",
+        "value": {
+          "decision": "MEASURED",
+          "rule": "n >= 30",
+          "rule_source": "scripts/sign_mill_cards.py:192 — the ONLY predicate; the exclusion ratio is never consulted",
+          "decided_from": {
+            "n_admitted": {
+              "state": "PRESENT",
+              "value": 49,
+              "source": "/interop/mill-cards-signed/signed-care-26e1f64e1436.json → body.n"
+            }
+          },
+          "rule_does_not_consider": [
+            "exclusion ratio",
+            "n_attempted",
+            "parse errors"
+          ]
+        },
+        "source": "/interop/mill-cards-signed/signed-care-26e1f64e1436.json → body.status"
+      },
+      "signature": {
+        "state": "PRESENT",
+        "value": {
+          "alg": "Ed25519",
+          "did": "did:web:csoai.org#board-attestation-1",
+          "signature": "96c473a386e99f5d41f93211bbded1b0…",
+          "authority_state": "BOARD_KEY_CLAIMED_did:web:csoai.org#board-attestation-1",
+          "authority_note": "this object does not verify the signature; it records what the artifact claims"
+        },
+        "source": "/interop/mill-cards-signed/signed-care-26e1f64e1436.json → alg, did, signature"
+      },
+      "corpus_inclusion": {
+        "state": "PRESENT",
+        "value": {
+          "corpus": "mill card-root",
+          "root": "public/interop/card-root-2026-09-14.json",
+          "note": "a SEPARATE corpus from the public root and from the signed card index; never add the three"
+        },
+        "source": "public/interop/card-root-2026-09-14.json → leaves[]"
+      },
+      "witness": {
+        "state": "ABSENT",
+        "reason": "no witness protocol exists for any CSOAI corpus"
+      },
+      "publication": {
+        "state": "PRESENT",
+        "value": {
+          "path": "/interop/mill-cards-signed/signed-care-26e1f64e1436.json"
+        },
+        "source": "this fetch"
+      },
+      "time": {
+        "observed_at": {
+          "state": "ABSENT",
+          "reason": "mill card carries no observation timestamp; run_id embeds one but the card does not publish it as a time"
+        },
+        "published_at": {
+          "state": "ABSENT",
+          "reason": "surface publishes no per-artifact publication time"
+        },
+        "read_at": {
+          "state": "PRESENT",
+          "value": "2026-09-17T06:53:34Z",
+          "source": "this process"
+        },
+        "witnessed_at": {
+          "state": "ABSENT",
+          "reason": "no independent witness exists; the public root is re-derived rather than appended, so there is nothing for a witness to be consistent with (docs/reconciliation/PUBLIC-ROOT-IS-NOT-A-LOG-2026-09-17.md)"
+        }
+      },
+      "not_a_certificate": true,
+      "what_this_is_not": "This object restates what a producer published, in one vocabulary. It does not re-measure, does not verify signatures, and does not grade. An ABSENT field means the producer did not publish it — not that it is zero.",
+      "one_concept_two_spellings": {
+        "field": "n",
+        "spellings": [
+          "body.n",
+          "n"
+        ],
+        "agree": true
+      }
+    },
+    "chain_card": {
+      "schema": "csoai.evidence-object/0.1",
+      "subject": {
+        "state": "PRESENT",
+        "value": {
+          "axis": "care-refusal-protect",
+          "model": "clan-csoai-plain:latest"
+        },
+        "source": "/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json → body.axis, body.model"
+      },
+      "instrument": {
+        "state": "ABSENT",
+        "reason": "chain card publishes no instrument, bank or items digest",
+        "would_be_called": "compute_evidence"
+      },
+      "run": {
+        "state": "ABSENT",
+        "reason": "chain card publishes no run id",
+        "would_be_called": "run_id"
+      },
+      "observation": {
+        "state": "PRESENT",
+        "value": {
+          "accuracy": 0.0968,
+          "n_admitted": "ABSENT — this corpus does not publish n",
+          "n_attempted": "ABSENT",
+          "excluded": "ABSENT"
+        },
+        "source": "/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json → body.accuracy"
+      },
+      "admission": {
+        "state": "ABSENT",
+        "reason": "chain card asserts no per-card admission decision. body.public_framing says '13 measured of 14 quotable', which is a board-level claim the live board now supersedes (23 axis · 22 measured) — and it is signed, so it cannot be edited"
+      },
+      "signature": {
+        "state": "PRESENT",
+        "value": {
+          "alg": "Ed25519",
+          "key": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+          "preimage_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
+          "authority_state": "CARD_ATTESTATION_KEY_CLAIMED",
+          "authority_note": "kid card-attestation-1 per the index; not verified here"
+        },
+        "source": "/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json → alg, pubkey, preimage_rule"
+      },
+      "corpus_inclusion": {
+        "state": "PRESENT",
+        "value": {
+          "corpus": "signed card index",
+          "root": "/signed/card_index.json",
+          "leaf": "82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c",
+          "note": "SEPARATE corpus; identifier overlap with the public root is 0"
+        },
+        "source": "/signed/card_index.json"
+      },
+      "witness": {
+        "state": "ABSENT",
+        "reason": "no witness protocol exists for any CSOAI corpus"
+      },
+      "publication": {
+        "state": "PRESENT",
+        "value": {
+          "path": "/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json"
+        },
+        "source": "this fetch"
+      },
+      "time": {
+        "observed_at": {
+          "state": "PRESENT",
+          "value": "2026-08-19T09:24:39.152331+00:00",
+          "source": "/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json → body.created"
+        },
+        "published_at": {
+          "state": "ABSENT",
+          "reason": "surface publishes no per-artifact publication time"
+        },
+        "read_at": {
+          "state": "PRESENT",
+          "value": "2026-09-17T06:53:35Z",
+          "source": "this process"
+        },
+        "witnessed_at": {
+          "state": "ABSENT",
+          "reason": "no independent witness exists; the public root is re-derived rather than appended, so there is nothing for a witness to be consistent with (docs/reconciliation/PUBLIC-ROOT-IS-NOT-A-LOG-2026-09-17.md)"
+        }
+      },
+      "not_a_certificate": true,
+      "what_this_is_not": "This object restates what a producer published, in one vocabulary. It does not re-measure, does not verify signatures, and does not grade. An ABSENT field means the producer did not publish it — not that it is zero."
+    },
+    "root_card": {
+      "schema": "csoai.evidence-object/0.1",
+      "subject": {
+        "state": "PRESENT",
+        "value": {
+          "subject": "XRPL RLUSD public state",
+          "surface": "xrpl.asset.state",
+          "tags": [
+            "reg.tag:public-ledger",
+            "framework:xrpl",
+            "jurisdiction:permissionless"
+          ]
+        },
+        "source": "/cards/056a1efd58d13249.json → card.subject, card.surface, card.tags"
+      },
+      "instrument": {
+        "state": "PRESENT",
+        "value": {
+          "source_urls": [
+            "https://xrpl.fi/api/metrics"
+          ]
+        },
+        "source": "/cards/056a1efd58d13249.json → card.source_urls"
+      },
+      "run": {
+        "state": "ABSENT",
+        "reason": "financial-fact cards are deterministic reads, not runs",
+        "would_be_called": "run_id"
+      },
+      "observation": {
+        "state": "PRESENT",
+        "value": {
+          "payload": {
+            "asset_class": "Stablecoin",
+            "holders": 41200,
+            "issuer": "Ripple",
+            "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "kind": "distributed",
+            "source": "xrpl.fi/api/metrics",
+            "supply": 676949657,
+            "symbol": "RLUSD",
+            "verified_domain": "ripple.com",
+            "verified_via": "Bidirectional domain match"
+          },
+          "unmeasured": []
+        },
+        "source": "/cards/056a1efd58d13249.json → card.payload"
+      },
+      "admission": {
+        "state": "ABSENT",
+        "reason": "card asserts no admission decision; it is a coverage harvest, and root.json says so: 'Leaves MAY carry attestations — coverage harvest, not grades. Not MEASURED.'"
+      },
+      "signature": {
+        "state": "PRESENT",
+        "value": {
+          "did": "did:web:csoai.org#board-attestation-1",
+          "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+          "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+          "authority_state": "BOARD_KEY_CLAIMED_did:web:csoai.org#board-attestation-1",
+          "authority_note": "not verified here"
+        },
+        "source": "/cards/056a1efd58d13249.json → card.did, card.sig_covers"
+      },
+      "corpus_inclusion": {
+        "state": "PRESENT",
+        "value": {
+          "corpus": "public root",
+          "root": "/root.json",
+          "leaf": "056a1efd58d1324912ee3fcfced1c7308e7571348167dfe27e0e261701dbce54",
+          "root_caveat": "the public root is RE-DERIVED on each publish, not appended: 0 of 27 transitions are append-only and roughly a quarter of leaves are dropped per publish. Inclusion is valid only against the root it names."
+        },
+        "source": "/root.json → card_sha256[]"
+      },
+      "witness": {
+        "state": "ABSENT",
+        "reason": "no witness protocol exists for any CSOAI corpus"
+      },
+      "publication": {
+        "state": "PRESENT",
+        "value": {
+          "path": "/cards/056a1efd58d13249.json"
+        },
+        "source": "this fetch"
+      },
+      "time": {
+        "observed_at": {
+          "state": "PRESENT",
+          "value": "2026-08-28T09:06:28.399Z",
+          "source": "/cards/056a1efd58d13249.json → card.as_of"
+        },
+        "published_at": {
+          "state": "ABSENT",
+          "reason": "surface publishes no per-artifact publication time"
+        },
+        "read_at": {
+          "state": "PRESENT",
+          "value": "2026-09-17T06:53:35Z",
+          "source": "this process"
+        },
+        "witnessed_at": {
+          "state": "ABSENT",
+          "reason": "no independent witness exists; the public root is re-derived rather than appended, so there is nothing for a witness to be consistent with (docs/reconciliation/PUBLIC-ROOT-IS-NOT-A-LOG-2026-09-17.md)"
+        }
+      },
+      "not_a_certificate": true,
+      "what_this_is_not": "This object restates what a producer published, in one vocabulary. It does not re-measure, does not verify signatures, and does not grade. An ABSENT field means the producer did not publish it — not that it is zero."
+    },
+    "board_axis": {
+      "schema": "csoai.evidence-object/0.1",
+      "subject": {
+        "state": "PRESENT",
+        "value": {
+          "axis": "governance",
+          "family": "gspc",
+          "kind": "model-comparison"
+        },
+        "source": "/api/gspc → axes[].axis"
+      },
+      "instrument": {
+        "state": "PRESENT",
+        "value": {
+          "bench": "GovBench",
+          "task": "EU AI Act risk-tier classification",
+          "dataset": "csoai/gspc-gov"
+        },
+        "source": "/api/gspc → axes[].bench, task, dataset"
+      },
+      "run": {
+        "state": "ABSENT",
+        "reason": "the board row carries no run id; measured_on is board-wide prose",
+        "would_be_called": "run_id"
+      },
+      "observation": {
+        "state": "PRESENT",
+        "value": {
+          "n_admitted": 237,
+          "n_attempted": "ABSENT — the board publishes the numerator only",
+          "fleet_mean": 0.49,
+          "mean_harm": 0.51,
+          "separation": "UNTESTED"
+        },
+        "source": "/api/gspc → axes[].n, fleet_mean, mean_harm, separation"
+      },
+      "admission": {
+        "state": "PRESENT",
+        "value": {
+          "decision": "MEASURED",
+          "rule": "board ruling; not a per-row predicate published on the row",
+          "rule_source": "ABSENT on the row itself",
+          "decided_from": {
+            "n_admitted": {
+              "state": "PRESENT",
+              "value": 237,
+              "source": "/api/gspc → axes[].n"
+            }
+          }
+        },
+        "source": "/api/gspc → axes[].status"
+      },
+      "signature": {
+        "state": "PRESENT",
+        "value": {
+          "signer": "did:web:csoai.org#board-attestation-1",
+          "scope": "integrity of the board snapshot as published — NOT a re-measurement",
+          "authority_state": "BOARD_SNAPSHOT_ATTESTATION_CLAIMED"
+        },
+        "source": "/api/gspc → site_attestation"
+      },
+      "corpus_inclusion": {
+        "state": "ABSENT",
+        "reason": "a board row is not a card and is in no card corpus. This is the binding that does not exist: the board asserts MEASURED for 22 axes while 9 of them have no card in either corpus (docs/reconciliation/axis-corpus-reconciliation-2026-09-17.json)"
+      },
+      "witness": {
+        "state": "ABSENT",
+        "reason": "no witness protocol exists for any CSOAI corpus"
+      },
+      "publication": {
+        "state": "PRESENT",
+        "value": {
+          "path": "/api/gspc"
+        },
+        "source": "this fetch"
+      },
+      "time": {
+        "observed_at": {
+          "state": "PRESENT",
+          "value": null,
+          "source": "/api/gspc → axes[].historical_measurement_record"
+        },
+        "published_at": {
+          "state": "ABSENT",
+          "reason": "surface publishes no per-artifact publication time"
+        },
+        "read_at": {
+          "state": "PRESENT",
+          "value": "2026-09-17T06:53:35Z",
+          "source": "this process"
+        },
+        "witnessed_at": {
+          "state": "ABSENT",
+          "reason": "no independent witness exists; the public root is re-derived rather than appended, so there is nothing for a witness to be consistent with (docs/reconciliation/PUBLIC-ROOT-IS-NOT-A-LOG-2026-09-17.md)"
+        }
+      },
+      "not_a_certificate": true,
+      "what_this_is_not": "This object restates what a producer published, in one vocabulary. It does not re-measure, does not verify signatures, and does not grade. An ABSENT field means the producer did not publish it — not that it is zero."
+    }
+  },
+  "refused": {}
+}

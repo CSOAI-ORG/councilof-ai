@@ -1,0 +1,304 @@
+{
+  "schema": "csoai.x402-buyers-eye-probe/0.1",
+  "probed_at": "2026-09-17T06:58:21Z",
+  "discovery": "https://councilof.ai/.well-known/x402.json",
+  "spent": "0 — no authorization signed, no payment sent",
+  "doors_advertised": 11,
+  "tally": {
+    "SELLABLE_AT_ZERO_declared_free": 1,
+    "SELLABLE": 10
+  },
+  "what_this_cannot_see": [
+    "whether a settle would actually succeed — that needs a funded buyer",
+    "whether the Bazaar indexed the door — the listing is written ONCE from a v2 settle carrying extensions.bazaar and is never refreshed",
+    "whether delivery after payment matches the advertised outputSchema"
+  ],
+  "rows": [
+    {
+      "url": "https://councilof.ai/api/free-door",
+      "advertised_amount": "0",
+      "advertised_accepts": 1,
+      "result": {
+        "status": 402,
+        "bytes": 5745,
+        "content_type": "application/json; charset=utf-8",
+        "body_head": "{\n  \"x402Version\": 2,\n  \"error\": \"Payment required\",\n  \"resource\": {\n    \"url\": \"https://councilof.ai/api/free-door\",\n    \"description\": \"CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion — a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement,",
+        "challenge": {
+          "has_accepts": true,
+          "n_accepts": 1,
+          "first": {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "maxAmountRequired": "0",
+            "resource": "https://councilof.ai/api/free-door"
+          },
+          "x402Version": 2,
+          "accepts_location": "top-level"
+        }
+      },
+      "verdict": "SELLABLE_AT_ZERO_declared_free"
+    },
+    {
+      "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+      "advertised_amount": null,
+      "advertised_accepts": 1,
+      "result": {
+        "status": 402,
+        "bytes": 8185,
+        "content_type": "application/json; charset=utf-8",
+        "body_head": "{\n  \"x402Version\": 2,\n  \"error\": \"Payment required\",\n  \"resource\": {\n    \"url\": \"https://councilof.ai/api/request-attestation\",\n    \"description\": \"A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. ",
+        "challenge": {
+          "has_accepts": true,
+          "n_accepts": 1,
+          "first": {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "maxAmountRequired": "10000",
+            "resource": "https://councilof.ai/api/request-attestation"
+          },
+          "x402Version": 2,
+          "accepts_location": "top-level"
+        }
+      },
+      "verdict": "SELLABLE"
+    },
+    {
+      "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+      "advertised_amount": null,
+      "advertised_accepts": 1,
+      "result": {
+        "status": 402,
+        "bytes": 22374,
+        "content_type": "application/json; charset=utf-8",
+        "body_head": "{\n  \"x402Version\": 2,\n  \"error\": \"Payment required\",\n  \"resource\": {\n    \"url\": \"https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1\",\n    \"description\": \"An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to EU-AI-ACT-50. Not a conformity determination.\",\n    \"mimeType\": \"application/json\",\n    \"serviceName\": \"CSOAI Evidence Bundle\",\n    \"tags\": [\n ",
+        "challenge": {
+          "has_accepts": true,
+          "n_accepts": 1,
+          "first": {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "maxAmountRequired": "10000",
+            "resource": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1"
+          },
+          "x402Version": 2,
+          "accepts_location": "top-level"
+        }
+      },
+      "verdict": "SELLABLE"
+    },
+    {
+      "url": "https://councilof.ai/api/eunomia-data?feed=1",
+      "advertised_amount": null,
+      "advertised_accepts": 1,
+      "result": {
+        "status": 402,
+        "bytes": 7722,
+        "content_type": "application/json; charset=utf-8",
+        "body_head": "{\n  \"x402Version\": 2,\n  \"error\": \"Payment required\",\n  \"resource\": {\n    \"url\": \"https://councilof.ai/api/eunomia-data?feed=1\",\n    \"description\": \"A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.\",\n    \"mimeType\": \"application/json\",\n    \"serviceName\": \"CSOAI Data Feed\",\n    \"tags\": [\n      \"data\",\n      \"feed\",\n      \"en",
+        "challenge": {
+          "has_accepts": true,
+          "n_accepts": 1,
+          "first": {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "maxAmountRequired": "10000",
+            "resource": "https://councilof.ai/api/eunomia-data?feed=1"
+          },
+          "x402Version": 2,
+          "accepts_location": "top-level"
+        }
+      },
+      "verdict": "SELLABLE"
+    },
+    {
+      "url": "https://councilof.ai/api/proof?bundle=1",
+      "advertised_amount": null,
+      "advertised_accepts": 1,
+      "result": {
+        "status": 402,
+        "bytes": 7058,
+        "content_type": "application/json; charset=utf-8",
+        "body_head": "{\n  \"x402Version\": 2,\n  \"error\": \"Payment required\",\n  \"resource\": {\n    \"url\": \"https://councilof.ai/api/proof?bundle=1\",\n    \"description\": \"Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.\",\n    \"mimeType\": \"application/json\",\n    \"serviceName\": \"CSOAI Proof Bundle\",\n    \"ta",
+        "challenge": {
+          "has_accepts": true,
+          "n_accepts": 1,
+          "first": {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "maxAmountRequired": "10000",
+            "resource": "https://councilof.ai/api/proof?bundle=1"
+          },
+          "x402Version": 2,
+          "accepts_location": "top-level"
+        }
+      },
+      "verdict": "SELLABLE"
+    },
+    {
+      "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+      "advertised_amount": null,
+      "advertised_accepts": 1,
+      "result": {
+        "status": 402,
+        "bytes": 7447,
+        "content_type": "application/json; charset=utf-8",
+        "body_head": "{\n  \"x402Version\": 2,\n  \"error\": \"Payment required\",\n  \"resource\": {\n    \"url\": \"https://councilof.ai/api/rwa/evidence?asset=RLUSD\",\n    \"description\": \"A signed XRPL evidence card for RLUSD: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.\",\n    \"mimeType\": \"application/json\",\n    \"serviceName\": \"CSOAI RWA Evidence\",\n    ",
+        "challenge": {
+          "has_accepts": true,
+          "n_accepts": 1,
+          "first": {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "maxAmountRequired": "10000",
+            "resource": "https://councilof.ai/api/rwa/evidence?asset=RLUSD"
+          },
+          "x402Version": 2,
+          "accepts_location": "top-level"
+        }
+      },
+      "verdict": "SELLABLE"
+    },
+    {
+      "url": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+      "advertised_amount": null,
+      "advertised_accepts": 1,
+      "result": {
+        "status": 402,
+        "bytes": 7745,
+        "content_type": "application/json; charset=utf-8",
+        "body_head": "{\n  \"x402Version\": 2,\n  \"error\": \"Payment required\",\n  \"resource\": {\n    \"url\": \"https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum\",\n    \"description\": \"A signed wrapped-asset parity card for usdc.e:arbitrum: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain, both at pinned finalized blocks, raw reads sha256'd. A ratio — not a rate, a grade ",
+        "challenge": {
+          "has_accepts": true,
+          "n_accepts": 1,
+          "first": {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "maxAmountRequired": "10000",
+            "resource": "https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum"
+          },
+          "x402Version": 2,
+          "accepts_location": "top-level"
+        }
+      },
+      "verdict": "SELLABLE"
+    },
+    {
+      "url": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+      "advertised_amount": null,
+      "advertised_accepts": 1,
+      "result": {
+        "status": 402,
+        "bytes": 6858,
+        "content_type": "application/json; charset=utf-8",
+        "body_head": "{\n  \"x402Version\": 2,\n  \"error\": \"Payment required\",\n  \"resource\": {\n    \"url\": \"https://councilof.ai/api/wrapper/changes?id=usdc.e%3Aarbitrum\",\n    \"description\": \"Delta of wrapped supply and escrow for usdc.e:arbitrum since the previous ledger snapshot. Returns per-field changes, not a rate or grade.\",\n    \"mimeType\": \"application/json\",\n    \"serviceName\": \"CSOAI Wrapped-Asset Changes\",\n    \"tag",
+        "challenge": {
+          "has_accepts": true,
+          "n_accepts": 1,
+          "first": {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "maxAmountRequired": "10000",
+            "resource": "https://councilof.ai/api/wrapper/changes?id=usdc.e%3Aarbitrum"
+          },
+          "x402Version": 2,
+          "accepts_location": "top-level"
+        }
+      },
+      "verdict": "SELLABLE"
+    },
+    {
+      "url": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+      "advertised_amount": null,
+      "advertised_accepts": 1,
+      "result": {
+        "status": 402,
+        "bytes": 11037,
+        "content_type": "application/json; charset=utf-8",
+        "body_head": "{\n  \"x402Version\": 2,\n  \"error\": \"Payment required\",\n  \"resource\": {\n    \"url\": \"https://councilof.ai/api/art50/marking-evidence\",\n    \"description\": \"A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.\",\n    \"mimeType\": \"application/json\",\n    \"serviceName\": \"CSOAI Article 50 marking eviden",
+        "challenge": {
+          "has_accepts": true,
+          "n_accepts": 1,
+          "first": {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "maxAmountRequired": "10000",
+            "resource": "https://councilof.ai/api/art50/marking-evidence"
+          },
+          "x402Version": 2,
+          "accepts_location": "top-level"
+        }
+      },
+      "verdict": "SELLABLE"
+    },
+    {
+      "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "advertised_amount": null,
+      "advertised_accepts": 1,
+      "result": {
+        "status": 402,
+        "bytes": 7289,
+        "content_type": "application/json; charset=utf-8",
+        "body_head": "{\n  \"x402Version\": 2,\n  \"error\": \"Payment required\",\n  \"resource\": {\n    \"url\": \"https://councilof.ai/api/feeds/provider-diff?history=1\",\n    \"description\": \"Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.\",\n    \"mimeType\": \"application/json\",\n    \"serviceName\": \"CSOAI Provider Diff Feed\",\n    \"tags",
+        "challenge": {
+          "has_accepts": true,
+          "n_accepts": 1,
+          "first": {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "maxAmountRequired": "10000",
+            "resource": "https://councilof.ai/api/feeds/provider-diff?history=1"
+          },
+          "x402Version": 2,
+          "accepts_location": "top-level"
+        }
+      },
+      "verdict": "SELLABLE"
+    },
+    {
+      "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+      "advertised_amount": null,
+      "advertised_accepts": 1,
+      "result": {
+        "status": 402,
+        "bytes": 9387,
+        "content_type": "application/json; charset=utf-8",
+        "body_head": "{\n  \"x402Version\": 2,\n  \"error\": \"Payment required\",\n  \"resource\": {\n    \"url\": \"https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-17T06%3A58%3A21Z\",\n    \"description\": \"Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.\",\n    \"mimeType\"",
+        "challenge": {
+          "has_accepts": true,
+          "n_accepts": 1,
+          "first": {
+            "scheme": "exact",
+            "network": "eip155:8453",
+            "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "maxAmountRequired": "10000",
+            "resource": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-17T06%3A58%3A21Z"
+          },
+          "x402Version": 2,
+          "accepts_location": "top-level"
+        }
+      },
+      "verdict": "SELLABLE"
+    }
+  ]
+}

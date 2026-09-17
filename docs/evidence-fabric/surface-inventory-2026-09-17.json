@@ -1,0 +1,1589 @@
+{
+  "schema": "csoai.surface-inventory/0.1",
+  "built_at": "2026-09-17T06:55:07Z",
+  "method": "git grep for the literal path across client, public, scripts, docs, functions, src, .github",
+  "signal_is_evidence_not_verdict": "zero in-repo references means INVESTIGATE, not dead. External agents, partners and dynamically built paths leave no trace here.",
+  "api_routes": {
+    "count": 125,
+    "source": "functions/api/ — files and directories, excluding _helpers and tests"
+  },
+  "api_routes_with_no_in_repo_reader": {
+    "count": 1,
+    "paths": [
+      "/api/[[path]]"
+    ]
+  },
+  "families": {
+    "mcp_manifest": {
+      "present": true,
+      "bytes": 2358
+    },
+    "a2a_agent_card": {
+      "present": true,
+      "bytes": 13018
+    },
+    "sitemap": {
+      "present": true,
+      "bytes": 93249
+    }
+  },
+  "rows": [
+    {
+      "surface": "/api/[[path]]",
+      "kind": "api-route",
+      "referenced_in_repo": 0,
+      "referenced_by": []
+    },
+    {
+      "surface": "/api/a2a",
+      "kind": "api-route",
+      "referenced_in_repo": 55,
+      "referenced_by": [
+        ".github/workflows/a2a-contract-selftest.yml",
+        "client/src/components/GspcCoverageLedger.tsx",
+        "client/src/components/OsPanels.test.ts",
+        "client/src/components/OsPanels.tsx",
+        "client/src/components/gspc/A2aReaderRail.tsx",
+        "client/src/components/gspc/ReaderRails.truth.test.ts"
+      ]
+    },
+    {
+      "surface": "/api/action-jobs",
+      "kind": "api-route",
+      "referenced_in_repo": 12,
+      "referenced_by": [
+        "docs/blueprints/COUNCIL_OS_PLATFORM_BLUEPRINT_2026-09-04.md",
+        "docs/blueprints/GSPC_INTEROP_GROWTH_BLUEPRINT_2026-09-04.md",
+        "docs/handoff/TUI2_BACKEND_EVIDENCE_2026-09-04.md",
+        "functions/api/fabric.test.ts",
+        "functions/api/fabric.ts",
+        "functions/api/openapi-artifact.test.ts"
+      ]
+    },
+    {
+      "surface": "/api/agentic-fix",
+      "kind": "api-route",
+      "referenced_in_repo": 14,
+      "referenced_by": [
+        "docs/CSOAI_NEXT_100_MOVES_2026-09-03.md",
+        "docs/INCIDENT_2026-09-03_OWNER_BLOCK.md",
+        "public/openapi.json",
+        "scripts/agent-preflight.sh",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.json"
+      ]
+    },
+    {
+      "surface": "/api/agui",
+      "kind": "api-route",
+      "referenced_in_repo": 18,
+      "referenced_by": [
+        "client/src/components/DashboardArenaPane.test.tsx",
+        "client/src/components/DashboardArenaPane.tsx",
+        "client/src/components/os/OsDoors.tsx",
+        "client/src/lib/aguiGspcStream.ts",
+        "client/src/lib/computeBridge.ts",
+        "client/src/pages/Harness.tsx"
+      ]
+    },
+    {
+      "surface": "/api/arena",
+      "kind": "api-route",
+      "referenced_in_repo": 34,
+      "referenced_by": [
+        "client/src/components/CouncilConsole.tsx",
+        "client/src/components/DashboardArenaPane.test.tsx",
+        "client/src/components/DashboardArenaPane.tsx",
+        "client/src/components/lobby/LobbyTaskRail.tsx",
+        "client/src/data/axis-sets.ts",
+        "client/src/data/facts.json"
+      ]
+    },
+    {
+      "surface": "/api/art50",
+      "kind": "api-route",
+      "referenced_in_repo": 61,
+      "referenced_by": [
+        "client/src/components/lobby/LobbyArt50Pane.tsx",
+        "client/src/lib/__fixtures__/x402-manifest-2026-09-06.json",
+        "client/src/lib/previewTemplate.test.ts",
+        "client/src/lib/servicesCatalogue.test.ts",
+        "client/src/lib/servicesCatalogue.ts",
+        "client/src/pages/Art50.tsx"
+      ]
+    },
+    {
+      "surface": "/api/article50",
+      "kind": "api-route",
+      "referenced_in_repo": 23,
+      "referenced_by": [
+        "docs/X402-DEMAND-MAP-2026-09-02.md",
+        "functions/api/detect.ts",
+        "public/attestations/detection/v1/index.html",
+        "public/interop/custom-gpt-bridge.json",
+        "public/interop/persona-tests.json",
+        "public/interop/strategy-synthesis-2026-09-05.json"
+      ]
+    },
+    {
+      "surface": "/api/assess",
+      "kind": "api-route",
+      "referenced_in_repo": 33,
+      "referenced_by": [
+        "client/src/components/DashboardRequestPane.test.tsx",
+        "client/src/components/DashboardRequestPane.tsx",
+        "client/src/pages/AssessTool.tsx",
+        "client/src/pages/Support.tsx",
+        "client/src/pages/WhyCSOAI.tsx",
+        "client/src/pages/assessHonesty.test.ts"
+      ]
+    },
+    {
+      "surface": "/api/atlas",
+      "kind": "api-route",
+      "referenced_in_repo": 6,
+      "referenced_by": [
+        "client/src/components/DashboardAtlasPane.tsx",
+        "public/interop/dashboard-wiring.json",
+        "public/interop/finish-chatgpt-features.json",
+        "public/openapi.json",
+        "scripts/badger/csoai-finish-chatgpt-features.py",
+        "scripts/badger/csoai-wire-dashboard-panes.py"
+      ]
+    },
+    {
+      "surface": "/api/auth",
+      "kind": "api-route",
+      "referenced_in_repo": 7,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        "client/src/contexts/AuthContext.tsx",
+        "client/src/pages/legal/PublicPrivacy.tsx",
+        "docs/CODE-HOME-OPTIONS-2026-09-02.md",
+        "docs/handoff/CLAUDE_MASTER_RELEASE_2026-09-04.md",
+        "docs/handoff/HANDOFF_TO_CLAUDE_2026-06-16.md"
+      ]
+    },
+    {
+      "surface": "/api/axis-register",
+      "kind": "api-route",
+      "referenced_in_repo": 24,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        "client/src/components/board/useLiveMeasurement.ts",
+        "docs/handoff/CLAUDE_MASTER_RELEASE_2026-09-04.md",
+        "docs/research-intake/2026-09-05/DELTA-2026-09-05.md",
+        "docs/research-intake/2026-09-05/permissionless-relentless-moves.moves.md",
+        "functions/api/_axis_register.ts"
+      ]
+    },
+    {
+      "surface": "/api/badge",
+      "kind": "api-route",
+      "referenced_in_repo": 64,
+      "referenced_by": [
+        "client/src/components/board/GspcTerminal.tsx",
+        "client/src/components/lobby/LobbyEmbedPane.tsx",
+        "client/src/lib/embedSnippet.test.ts",
+        "client/src/lib/embedSnippet.ts",
+        "client/src/lib/nSitesFlags.test.ts",
+        "client/src/lib/nSitesFlags.ts"
+      ]
+    },
+    {
+      "surface": "/api/bank-complete",
+      "kind": "api-route",
+      "referenced_in_repo": 28,
+      "referenced_by": [
+        "client/src/components/GspcCoverageLedger.tsx",
+        "client/src/components/OsPanels.test.ts",
+        "client/src/components/OsPanels.tsx",
+        "client/src/lib/coverageLedger.ts",
+        "client/src/lib/osPanels.ts",
+        "docs/product/PARTNERS-SHORTLIST.md"
+      ]
+    },
+    {
+      "surface": "/api/benchmark-quality",
+      "kind": "api-route",
+      "referenced_in_repo": 22,
+      "referenced_by": [
+        "client/src/pages/BenchmarkQuality.tsx",
+        "client/src/pages/BenchmarkView.tsx",
+        "docs/blueprints/COUNCIL_OS_PLATFORM_BLUEPRINT_2026-09-04.md",
+        "functions/api/a2a.test.ts",
+        "functions/api/a2a.ts",
+        "public/.well-known/agent-card.json"
+      ]
+    },
+    {
+      "surface": "/api/board-sign",
+      "kind": "api-route",
+      "referenced_in_repo": 45,
+      "referenced_by": [
+        ".github/workflows/auto-eat-sign.yml",
+        ".github/workflows/hf-fin-shells-measure.yml",
+        ".github/workflows/hf-fin-shells.yml",
+        ".github/workflows/hub-queue-land.yml",
+        ".github/workflows/public-root.yml",
+        "docs/CODE-HOME-OPTIONS-2026-09-02.md"
+      ]
+    },
+    {
+      "surface": "/api/body-state",
+      "kind": "api-route",
+      "referenced_in_repo": 7,
+      "referenced_by": [
+        "docs/operations/BODY-RUNBOOK.md",
+        "docs/operations/NEXT-100-MOVES.md",
+        "public/interop/pipeline-timestamps-2026-09-05.json",
+        "public/openapi.json",
+        "public/reports/report-2026-09.md",
+        "scripts/badger/generate-body-report.py"
+      ]
+    },
+    {
+      "surface": "/api/card_index",
+      "kind": "api-route",
+      "referenced_in_repo": 1,
+      "referenced_by": [
+        "scripts/generate-redirects.mjs"
+      ]
+    },
+    {
+      "surface": "/api/cards",
+      "kind": "api-route",
+      "referenced_in_repo": 50,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        ".github/workflows/health-inventory.yml",
+        ".github/workflows/post-deploy-verify.yml",
+        "client/src/components/board/useLiveMeasurement.ts",
+        "client/src/components/os/osChat.ts",
+        "client/src/components/os/useOsChat.ts"
+      ]
+    },
+    {
+      "surface": "/api/certificate-schema",
+      "kind": "api-route",
+      "referenced_in_repo": 2,
+      "referenced_by": [
+        "docs/PHASE3_PADDLE_RUNBOOK.md",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/challenge",
+      "kind": "api-route",
+      "referenced_in_repo": 23,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        "client/src/pages/Challenge.tsx",
+        "client/src/pages/ChallengeDoor.tsx",
+        "docs/ESTATE_AUDIT_RUNDOWN_2026-08-26.md",
+        "docs/HANDOFF-TO-CURSOR-2026-08-25.md",
+        "docs/handoff/CLAUDE_MASTER_RELEASE_2026-09-04.md"
+      ]
+    },
+    {
+      "surface": "/api/chat",
+      "kind": "api-route",
+      "referenced_in_repo": 39,
+      "referenced_by": [
+        "client/src/components/DashboardArenaPane.test.tsx",
+        "client/src/components/DashboardArenaPane.tsx",
+        "client/src/components/SovereignSpot.tsx",
+        "client/src/components/lobby/answerText.tsx",
+        "client/src/components/lobby/useLobbyChat.ts",
+        "client/src/lib/ai-surfaces.ts"
+      ]
+    },
+    {
+      "surface": "/api/checkout",
+      "kind": "api-route",
+      "referenced_in_repo": 21,
+      "referenced_by": [
+        "client/src/components/art50/Article50Kit.tsx",
+        "client/src/components/art50/README.md",
+        "docs/REVENUE-LOOPS.md",
+        "docs/handoff/ADVERSARIAL_AUDIT_2026-07-08.md",
+        "docs/operations/EXECUTION_ALIGNMENT_2026-08-26.md",
+        "functions/api/interop-bulk.ts"
+      ]
+    },
+    {
+      "surface": "/api/clarity",
+      "kind": "api-route",
+      "referenced_in_repo": 16,
+      "referenced_by": [
+        "docs/BLACK-SWAN-LOOPS-2026-09-02.md",
+        "docs/X402-DEMAND-MAP-2026-09-02.md",
+        "functions/api/fines.ts",
+        "public/llms.txt",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json"
+      ]
+    },
+    {
+      "surface": "/api/commission-queue",
+      "kind": "api-route",
+      "referenced_in_repo": 7,
+      "referenced_by": [
+        ".github/workflows/hub-queue-mill.yml",
+        "client/src/pages/YieldStatus.tsx",
+        "docs/measure/COMMISSION-MODEL-BANK-SCHEMA-2026-09-14.md",
+        "functions/api/request-attestation.ts",
+        "public/openapi.json",
+        "scripts/commission_priority.py"
+      ]
+    },
+    {
+      "surface": "/api/commissions",
+      "kind": "api-route",
+      "referenced_in_repo": 20,
+      "referenced_by": [
+        ".github/workflows/hub-queue-mill.yml",
+        "client/src/data/evidence-notes.json",
+        "client/src/pages/Quickstart.tsx",
+        "client/src/pages/Traction.test.ts",
+        "client/src/pages/Traction.tsx",
+        "docs/measure/COMMISSION-MODEL-BANK-SCHEMA-2026-09-14.md"
+      ]
+    },
+    {
+      "surface": "/api/comparison",
+      "kind": "api-route",
+      "referenced_in_repo": 12,
+      "referenced_by": [
+        "client/src/pages/BenchmarkView.tsx",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T101851Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T102515Z.json"
+      ]
+    },
+    {
+      "surface": "/api/compute",
+      "kind": "api-route",
+      "referenced_in_repo": 31,
+      "referenced_by": [
+        "client/src/components/home/HomeComposer.tsx",
+        "client/src/components/os/OsDoors.tsx",
+        "client/src/components/os/useOsChat.ts",
+        "client/src/lib/computeBridge.test.ts",
+        "client/src/lib/computeBridge.ts",
+        "client/src/pages/Harness.tsx"
+      ]
+    },
+    {
+      "surface": "/api/contact",
+      "kind": "api-route",
+      "referenced_in_repo": 13,
+      "referenced_by": [
+        "client/src/pages/legal/PublicPrivacy.tsx",
+        "functions/api/_invoice_handoff.ts",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T101851Z.json"
+      ]
+    },
+    {
+      "surface": "/api/corpus-watch",
+      "kind": "api-route",
+      "referenced_in_repo": 7,
+      "referenced_by": [
+        "client/src/pages/StatusCorpusWatch.tsx",
+        "functions/api/corrections.ts",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T045743Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T050200Z.json"
+      ]
+    },
+    {
+      "surface": "/api/corrections",
+      "kind": "api-route",
+      "referenced_in_repo": 305,
+      "referenced_by": [
+        ".github/ISSUE_TEMPLATE/open-design-partner.yml",
+        "client/src/components/DashboardAttestationsPane.tsx",
+        "client/src/components/Footer.corrections.test.ts",
+        "client/src/components/Footer.tsx",
+        "client/src/components/HeaderNav.tsx",
+        "client/src/components/HealthInventory.tsx"
+      ]
+    },
+    {
+      "surface": "/api/counters",
+      "kind": "api-route",
+      "referenced_in_repo": 19,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        "docs/handoff/CLAUDE_MASTER_RELEASE_2026-09-04.md",
+        "functions/api/_axis_register.ts",
+        "functions/api/axis-register.ts",
+        "functions/api/revenue.ts",
+        "public/interop/counters.json"
+      ]
+    },
+    {
+      "surface": "/api/coverage",
+      "kind": "api-route",
+      "referenced_in_repo": 23,
+      "referenced_by": [
+        "client/src/components/DashboardPane.tsx",
+        "client/src/components/GspcCoverageLedger.tsx",
+        "client/src/components/evidence-index/EvidenceIndexPane.tsx",
+        "client/src/components/evidence-index/evidenceIndex.test.ts",
+        "client/src/components/evidence-index/evidenceIndex.ts",
+        "client/src/components/evidence-index/mount.ts"
+      ]
+    },
+    {
+      "surface": "/api/coverage-truth",
+      "kind": "api-route",
+      "referenced_in_repo": 3,
+      "referenced_by": [
+        "functions/api/summary.test.ts",
+        "functions/api/summary.ts",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/cross",
+      "kind": "api-route",
+      "referenced_in_repo": 17,
+      "referenced_by": [
+        "docs/seals/DAY8_CSOAI_REDEPLOY_2026-06-15.md",
+        "functions/api/a2a.test.ts",
+        "functions/api/a2a.ts",
+        "public/.well-known/agent-card.json",
+        "public/.well-known/agent.json",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/dashboard",
+      "kind": "api-route",
+      "referenced_in_repo": 9,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        "client/src/pages/Dashboard.tsx",
+        "docs/handoff/CLAUDE_MASTER_RELEASE_2026-09-04.md",
+        "functions/api/corrections.ts",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json"
+      ]
+    },
+    {
+      "surface": "/api/decide",
+      "kind": "api-route",
+      "referenced_in_repo": 9,
+      "referenced_by": [
+        "functions/api/truth-facades.test.ts",
+        "public/interop/decide.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T045743Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T050200Z.json"
+      ]
+    },
+    {
+      "surface": "/api/detect",
+      "kind": "api-route",
+      "referenced_in_repo": 28,
+      "referenced_by": [
+        "docs/CSOAI_IP_VALUE_AUTOMATION_MAP_2026-09-03.md",
+        "docs/operations/EXECUTION_ALIGNMENT_2026-08-26.md",
+        "docs/operations/NEXT_100_MOVES_2026-08-28.md",
+        "docs/research-intake/2026-09-06/format-synergy-map.md",
+        "functions/api/a2a.test.ts",
+        "functions/api/a2a.ts"
+      ]
+    },
+    {
+      "surface": "/api/detector-interop",
+      "kind": "api-route",
+      "referenced_in_repo": 17,
+      "referenced_by": [
+        "docs/CSOAI_IP_VALUE_AUTOMATION_MAP_2026-09-03.md",
+        "functions/api/corrections.ts",
+        "public/interop/layer0-ceremony-2026-09-03.json",
+        "public/llms-sitemap.xml",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json"
+      ]
+    },
+    {
+      "surface": "/api/distribution-ledger",
+      "kind": "api-route",
+      "referenced_in_repo": 2,
+      "referenced_by": [
+        "functions/api/summary.ts",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/dorado",
+      "kind": "api-route",
+      "referenced_in_repo": 3,
+      "referenced_by": [
+        "functions/api/health.js",
+        "scripts/brand-gate.mjs",
+        "scripts/functions-guard.mjs"
+      ]
+    },
+    {
+      "surface": "/api/east-west-bench",
+      "kind": "api-route",
+      "referenced_in_repo": 17,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        "docs/handoff/CLAUDE_MASTER_RELEASE_2026-09-04.md",
+        "functions/api/dorado.ts",
+        "functions/api/evidence-pack.ts",
+        "public/catalog.json",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/embed",
+      "kind": "api-route",
+      "referenced_in_repo": 13,
+      "referenced_by": [
+        "client/src/pages/BadgeKit.tsx",
+        "client/src/pages/EmbedPage.tsx",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T101851Z.json"
+      ]
+    },
+    {
+      "surface": "/api/eu-ai-act",
+      "kind": "api-route",
+      "referenced_in_repo": 8,
+      "referenced_by": [
+        "docs/research-intake/2026-09-06/gate-coverage-map.md",
+        "public/interop/strategy-synthesis-2026-09-05.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/300-MOVES-PLAN.md",
+        "scripts/badger/csoai-finish-chatgpt-features.py",
+        "scripts/badger/csoai-synthesis-master.py"
+      ]
+    },
+    {
+      "surface": "/api/eunomia-data",
+      "kind": "api-route",
+      "referenced_in_repo": 144,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        "client/src/components/DashboardSwiftX402Pane.tsx",
+        "client/src/components/os/OsDoors.tsx",
+        "client/src/components/paidStep.node-test.ts",
+        "client/src/components/paidStep.test.ts",
+        "client/src/components/paidStep.ts"
+      ]
+    },
+    {
+      "surface": "/api/evidence",
+      "kind": "api-route",
+      "referenced_in_repo": 134,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        "client/src/components/DashboardRequestPane.test.tsx",
+        "client/src/components/EvidenceLifecycleView.test.tsx",
+        "client/src/lib/__fixtures__/x402-manifest-2026-09-06.json",
+        "client/src/lib/candidateEvidence.ts",
+        "client/src/lib/evidenceLifecycle.test.ts"
+      ]
+    },
+    {
+      "surface": "/api/evidence-bundle",
+      "kind": "api-route",
+      "referenced_in_repo": 111,
+      "referenced_by": [
+        "client/src/components/DashboardRequestPane.test.tsx",
+        "client/src/lib/__fixtures__/x402-manifest-2026-09-06.json",
+        "client/src/lib/fetchWithRetry.ts",
+        "client/src/lib/servicesCatalogue.test.ts",
+        "client/src/lib/servicesCatalogue.ts",
+        "client/src/pages/PricingFree.tsx"
+      ]
+    },
+    {
+      "surface": "/api/evidence-intake",
+      "kind": "api-route",
+      "referenced_in_repo": 13,
+      "referenced_by": [
+        "client/src/components/EvidenceLifecycleView.test.tsx",
+        "client/src/lib/candidateEvidence.ts",
+        "client/src/lib/evidenceLifecycle.test.ts",
+        "client/src/lib/evidenceLifecycle.ts",
+        "client/src/pages/legal/PublicPrivacy.tsx",
+        "docs/blueprints/COUNCIL_OS_PLATFORM_BLUEPRINT_2026-09-04.md"
+      ]
+    },
+    {
+      "surface": "/api/evidence-pack",
+      "kind": "api-route",
+      "referenced_in_repo": 23,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        "client/src/lib/healthInventory.ts",
+        "client/src/lib/permissionlessRevenue.ts",
+        "client/src/lib/productFill.ts",
+        "client/src/lib/staleCopy.test.ts",
+        "docs/ESTATE_AUDIT_RUNDOWN_2026-08-26.md"
+      ]
+    },
+    {
+      "surface": "/api/fabric",
+      "kind": "api-route",
+      "referenced_in_repo": 12,
+      "referenced_by": [
+        ".github/workflows/mcp-protocol-contract.yml",
+        "client/src/components/DashboardFabricPane.tsx",
+        "client/src/components/EvidenceLifecycleView.tsx",
+        "client/src/lib/capabilityFabric.ts",
+        "docs/blueprints/COUNCIL_OS_PLATFORM_BLUEPRINT_2026-09-04.md",
+        "docs/blueprints/GSPC_INTEROP_GROWTH_BLUEPRINT_2026-09-04.md"
+      ]
+    },
+    {
+      "surface": "/api/feed.xml",
+      "kind": "api-route",
+      "referenced_in_repo": 36,
+      "referenced_by": [
+        ".github/workflows/post-deploy-verify.yml",
+        "client/index.html",
+        "client/src/pages/Insurers.tsx",
+        "client/src/pages/Quickstart.tsx",
+        "docs/press/BACKLOG-05Sep2026.md",
+        "functions/adoption-loop.test.ts"
+      ]
+    },
+    {
+      "surface": "/api/feeds",
+      "kind": "api-route",
+      "referenced_in_repo": 51,
+      "referenced_by": [
+        "client/src/components/DashboardRequestPane.test.tsx",
+        "client/src/lib/__fixtures__/x402-manifest-2026-09-06.json",
+        "client/src/lib/servicesCatalogue.ts",
+        "docs/PROVIDER-DIFF-FEED.md",
+        "docs/github/PERSONAL-PROFILE-DRAFT.md",
+        "docs/github/PROFILE-README.md"
+      ]
+    },
+    {
+      "surface": "/api/files",
+      "kind": "api-route",
+      "referenced_in_repo": 6,
+      "referenced_by": [
+        "client/src/components/DashboardFilesPane.tsx",
+        "public/interop/dashboard-wiring.json",
+        "public/interop/finish-chatgpt-features.json",
+        "public/openapi.json",
+        "scripts/badger/csoai-finish-chatgpt-features.py",
+        "scripts/badger/csoai-wire-dashboard-panes.py"
+      ]
+    },
+    {
+      "surface": "/api/findings",
+      "kind": "api-route",
+      "referenced_in_repo": 17,
+      "referenced_by": [
+        "client/src/components/DashboardConsolePane.tsx",
+        "client/src/pages/FindingsExplorer.tsx",
+        "client/src/pages/RegulatorFindingsDetail.tsx",
+        "functions/api/hub-cards.ts",
+        "public/gspc-console.html",
+        "public/interop/layer0-ceremony-2026-09-03.json"
+      ]
+    },
+    {
+      "surface": "/api/fines",
+      "kind": "api-route",
+      "referenced_in_repo": 28,
+      "referenced_by": [
+        "client/src/data/enforcement.ts",
+        "client/src/pages/Art50.tsx",
+        "client/src/pages/PricingFree.tsx",
+        "docs/X402-DEMAND-MAP-2026-09-02.md",
+        "docs/product/W2-SIGNED-OFFERS-AND-RECEIPTS.md",
+        "docs/product/signed-data-feed.md"
+      ]
+    },
+    {
+      "surface": "/api/free-door",
+      "kind": "api-route",
+      "referenced_in_repo": 62,
+      "referenced_by": [
+        "client/src/components/DashboardSwiftX402Pane.tsx",
+        "client/src/components/os/OsDoors.tsx",
+        "client/src/lib/__fixtures__/x402-manifest-2026-09-06.json",
+        "client/src/lib/servicesCatalogue.test.ts",
+        "client/src/lib/servicesCatalogue.ts",
+        "client/src/pages/AssessTool.tsx"
+      ]
+    },
+    {
+      "surface": "/api/fulfill",
+      "kind": "api-route",
+      "referenced_in_repo": 19,
+      "referenced_by": [
+        "docs/REVENUE-LOOPS.md",
+        "docs/operations/EXECUTION_ALIGNMENT_2026-08-26.md",
+        "docs/operations/FULL_RUNDOWN_AND_AUDIT_2026-08-25.md",
+        "docs/operations/NEXT_100_MOVES_2026-08-28.md",
+        "docs/operations/OWNER_GATE_EXECUTION_PACK_2026-08-26.md",
+        "docs/operations/STATE_RUNWAY_2026-08-28.md"
+      ]
+    },
+    {
+      "surface": "/api/growth-loops",
+      "kind": "api-route",
+      "referenced_in_repo": 11,
+      "referenced_by": [
+        "functions/api/retired-runtime-surfaces.test.ts",
+        "functions/api/router.ts",
+        "public/interop/strategy-synthesis-2026-09-05.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T045743Z.json"
+      ]
+    },
+    {
+      "surface": "/api/gspc",
+      "kind": "api-route",
+      "referenced_in_repo": 4029,
+      "referenced_by": [
+        ".github/OVERNIGHT-EAT.md",
+        ".github/workflows/deploy.yml",
+        ".github/workflows/eat-overnight.yml",
+        ".github/workflows/gspc-spray.yml",
+        ".github/workflows/health-inventory.yml",
+        ".github/workflows/hf-fin-shells.yml"
+      ]
+    },
+    {
+      "surface": "/api/health",
+      "kind": "api-route",
+      "referenced_in_repo": 10,
+      "referenced_by": [
+        ".github/workflows/post-deploy-verify.yml",
+        "client/src/pages/YieldStatus.test.ts",
+        "client/src/pages/YieldStatus.tsx",
+        "docs/REVENUE-RESEARCH-2026-09-02.md",
+        "docs/handoff/ADVERSARIAL_AUDIT_2026-07-08.md",
+        "docs/seals/DAY2_MASTER_HANDOFF_2026-06-15.md"
+      ]
+    },
+    {
+      "surface": "/api/hf-spaces",
+      "kind": "api-route",
+      "referenced_in_repo": 15,
+      "referenced_by": [
+        "docs/blueprints/GSPC_INTEROP_GROWTH_BLUEPRINT_2026-09-04.md",
+        "functions/api/corrections.ts",
+        "public/hf-spaces.html",
+        "public/llms-sitemap.xml",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json"
+      ]
+    },
+    {
+      "surface": "/api/hub-cards",
+      "kind": "api-route",
+      "referenced_in_repo": 67,
+      "referenced_by": [
+        "client/src/components/PlaybookAudit.tsx",
+        "client/src/components/home/HomeGspcBoard.tsx",
+        "client/src/components/home/hubCardsFeed.ts",
+        "client/src/data/evidence-notes.json",
+        "client/src/data/evidence-notes.ts",
+        "client/src/lib/gspcSpaceTable.test.ts"
+      ]
+    },
+    {
+      "surface": "/api/include",
+      "kind": "api-route",
+      "referenced_in_repo": 9,
+      "referenced_by": [
+        "functions/api/truth-facades.test.ts",
+        "public/interop/include.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T045743Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T050200Z.json"
+      ]
+    },
+    {
+      "surface": "/api/interop-bulk",
+      "kind": "api-route",
+      "referenced_in_repo": 12,
+      "referenced_by": [
+        "public/interop/surface-catalog.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T101851Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T102515Z.json"
+      ]
+    },
+    {
+      "surface": "/api/intoto",
+      "kind": "api-route",
+      "referenced_in_repo": 46,
+      "referenced_by": [
+        "docs/CSOAI_IP_VALUE_AUTOMATION_MAP_2026-09-03.md",
+        "docs/interop/VOCABULARY-CROSSWALK.md",
+        "functions/api/corrections.ts",
+        "public/interop/layer0-ceremony-2026-09-03.json",
+        "scripts/badger/_queue/corrections-diff/corrections-20260903T062000Z.jsonl",
+        "scripts/badger/_queue/corrections-diff/corrections-20260903T070829Z.jsonl"
+      ]
+    },
+    {
+      "surface": "/api/lead",
+      "kind": "api-route",
+      "referenced_in_repo": 19,
+      "referenced_by": [
+        "client/src/pages/AssessTool.tsx",
+        "docs/X402-DEMAND-MAP-2026-09-02.md",
+        "docs/operations/READINESS-100-MINE.md",
+        "functions/api/_invoice_handoff.test.ts",
+        "functions/api/_invoice_handoff.ts",
+        "functions/api/corrections.ts"
+      ]
+    },
+    {
+      "surface": "/api/learn-loop",
+      "kind": "api-route",
+      "referenced_in_repo": 10,
+      "referenced_by": [
+        "docs/product/X402SCAN-REGISTRATION.md",
+        "functions/api/openapi-artifact.test.ts",
+        "public/interop/chatgpt-skills.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T045743Z.json"
+      ]
+    },
+    {
+      "surface": "/api/learning-scenarios",
+      "kind": "api-route",
+      "referenced_in_repo": 12,
+      "referenced_by": [
+        "client/src/components/DashboardLearningPane.test.ts",
+        "client/src/components/DashboardLearningPane.tsx",
+        "client/src/components/home/HomeFirstResult.tsx",
+        "client/src/data/learningDisplayLabels.ts",
+        "docs/handoff/TUI2_BACKEND_EVIDENCE_2026-09-04.md",
+        "public/interop/machine-reachability-2026-09-17.json"
+      ]
+    },
+    {
+      "surface": "/api/ledger",
+      "kind": "api-route",
+      "referenced_in_repo": 1,
+      "referenced_by": [
+        "functions/api/worker-proxy.test.ts"
+      ]
+    },
+    {
+      "surface": "/api/locale",
+      "kind": "api-route",
+      "referenced_in_repo": 13,
+      "referenced_by": [
+        "public/interop/financial-4axis-4way-unsigned-n30-2026-08-31.json",
+        "public/interop/financial-4axis-unsigned-n30-2026-08-28.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T101851Z.json"
+      ]
+    },
+    {
+      "surface": "/api/mcp",
+      "kind": "api-route",
+      "referenced_in_repo": 89,
+      "referenced_by": [
+        "client/src/components/gspc/McpReaderRail.tsx",
+        "client/src/components/gspc/ReaderRails.truth.test.ts",
+        "client/src/lib/sovTools.ts",
+        "client/src/pages/MCPRegistry.tsx",
+        "client/src/pages/McpFleet.tsx",
+        "docs/ABSORPTION.md"
+      ]
+    },
+    {
+      "surface": "/api/memory",
+      "kind": "api-route",
+      "referenced_in_repo": 6,
+      "referenced_by": [
+        "client/src/components/DashboardMemoryPane.tsx",
+        "public/interop/dashboard-wiring.json",
+        "public/interop/finish-chatgpt-features.json",
+        "public/openapi.json",
+        "scripts/badger/csoai-finish-chatgpt-features.py",
+        "scripts/badger/csoai-wire-dashboard-panes.py"
+      ]
+    },
+    {
+      "surface": "/api/methodology",
+      "kind": "api-route",
+      "referenced_in_repo": 15,
+      "referenced_by": [
+        "docs/HOW_TO_CITE_MEASUREMENT_STANDARD.md",
+        "docs/PRODUCT_DEMO_SPRAY_MAP.md",
+        "docs/product/W2-SIGNED-OFFERS-AND-RECEIPTS.md",
+        "public/interop/surface-catalog.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json"
+      ]
+    },
+    {
+      "surface": "/api/mint",
+      "kind": "api-route",
+      "referenced_in_repo": 5,
+      "referenced_by": [
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T045743Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T050200Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T051055Z.json"
+      ]
+    },
+    {
+      "surface": "/api/observability",
+      "kind": "api-route",
+      "referenced_in_repo": 3,
+      "referenced_by": [
+        "functions/api/coverage-truth.ts",
+        "functions/api/summary.ts",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/og",
+      "kind": "api-route",
+      "referenced_in_repo": 15,
+      "referenced_by": [
+        "docs/DEMO_READINESS.md",
+        "docs/seals/DAY6_SMITHERY_PR_DESCRIPTIONS_2026-06-16.md",
+        "public/interop/stablecoin-deep-2026-09/mirrors/118.html",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.json"
+      ]
+    },
+    {
+      "surface": "/api/openapi.json",
+      "kind": "api-route",
+      "referenced_in_repo": 18,
+      "referenced_by": [
+        "docs/PLUGINS.md",
+        "docs/blueprints/GSPC_INTEROP_GROWTH_BLUEPRINT_2026-09-04.md",
+        "docs/interop/CIRCLE-AGENTSTACK-MANIFEST-2026-09-06.md",
+        "docs/operations/AGENT-DISCOVERY-CONTRACT.md",
+        "functions/.well-known/api-catalog.test.ts",
+        "functions/.well-known/api-catalog.ts"
+      ]
+    },
+    {
+      "surface": "/api/operator",
+      "kind": "api-route",
+      "referenced_in_repo": 6,
+      "referenced_by": [
+        "client/src/components/DashboardOperatorPane.tsx",
+        "public/interop/dashboard-wiring.json",
+        "public/interop/finish-chatgpt-features.json",
+        "public/openapi.json",
+        "scripts/badger/csoai-finish-chatgpt-features.py",
+        "scripts/badger/csoai-wire-dashboard-panes.py"
+      ]
+    },
+    {
+      "surface": "/api/oracle-fleet",
+      "kind": "api-route",
+      "referenced_in_repo": 8,
+      "referenced_by": [
+        "client/src/lib/sovDataBus.ts",
+        "functions/_lib/capabilityActionContract.ts",
+        "functions/api/corrections.ts",
+        "functions/api/dashboard/absent-is-not-zero.test.ts",
+        "functions/api/dashboard/stats.test.ts",
+        "functions/api/dashboard/stats.ts"
+      ]
+    },
+    {
+      "surface": "/api/otel",
+      "kind": "api-route",
+      "referenced_in_repo": 18,
+      "referenced_by": [
+        ".github/workflows/health-inventory.yml",
+        "client/src/components/gspc/OtelReaderRail.tsx",
+        "client/src/components/gspc/ReaderRails.truth.test.ts",
+        "client/src/pages/OsLauncher.tsx",
+        "public/interop/otel.json",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/owasp-report",
+      "kind": "api-route",
+      "referenced_in_repo": 2,
+      "referenced_by": [
+        "public/interop/benchmarker-trust/evidence-2026-09-12.json",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/paddle-webhook",
+      "kind": "api-route",
+      "referenced_in_repo": 2,
+      "referenced_by": [
+        "docs/PHASE3_PADDLE_RUNBOOK.md",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/pqc",
+      "kind": "api-route",
+      "referenced_in_repo": 19,
+      "referenced_by": [
+        ".github/workflows/health-inventory.yml",
+        "client/src/pages/OsLauncher.test.ts",
+        "client/src/pages/OsLauncher.tsx",
+        "docs/CSOAI_IP_VALUE_AUTOMATION_MAP_2026-09-03.md",
+        "public/interop/layer0-ceremony-2026-09-03.json",
+        "public/llms-sitemap.xml"
+      ]
+    },
+    {
+      "surface": "/api/press.json",
+      "kind": "api-route",
+      "referenced_in_repo": 12,
+      "referenced_by": [
+        "docs/press/BACKLOG-05Sep2026.md",
+        "docs/press/drafts/README.md",
+        "docs/press/drafts/TRIGGER-first-settlement.md",
+        "docs/press/drafts/TRIGGER-surfaces-live.md",
+        "docs/tui6/outreach/OUTREACH-LOG-2026-09-12.md",
+        "functions/api/press.test.ts"
+      ]
+    },
+    {
+      "surface": "/api/prod-readiness",
+      "kind": "api-route",
+      "referenced_in_repo": 11,
+      "referenced_by": [
+        "functions/api/retired-runtime-surfaces.test.ts",
+        "functions/api/router.ts",
+        "public/interop/strategy-synthesis-2026-09-05.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T045743Z.json"
+      ]
+    },
+    {
+      "surface": "/api/proof",
+      "kind": "api-route",
+      "referenced_in_repo": 124,
+      "referenced_by": [
+        "client/src/components/DashboardAttestationsPane.tsx",
+        "client/src/components/DashboardSwiftX402Pane.tsx",
+        "client/src/components/ToolRunner.challenge.test.ts",
+        "client/src/components/gspc/PublicRootCatalogue.tsx",
+        "client/src/components/os/OsDoors.tsx",
+        "client/src/lib/__fixtures__/attestations/README.md"
+      ]
+    },
+    {
+      "surface": "/api/provider-canary",
+      "kind": "api-route",
+      "referenced_in_repo": 11,
+      "referenced_by": [
+        "docs/blueprints/COUNCIL_OS_PLATFORM_BLUEPRINT_2026-09-04.md",
+        "docs/handoff/TUI2_BACKEND_EVIDENCE_2026-09-04.md",
+        "functions/api/fabric.test.ts",
+        "functions/api/fabric.ts",
+        "functions/api/openapi-artifact.test.ts",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/receipt-status",
+      "kind": "api-route",
+      "referenced_in_repo": 2,
+      "referenced_by": [
+        "client/src/pages/ProofOfReceipt.tsx",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/receipts",
+      "kind": "api-route",
+      "referenced_in_repo": 111,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        "client/src/components/DashboardSwiftX402Pane.tsx",
+        "client/src/components/os/OsDoors.tsx",
+        "client/src/lib/__fixtures__/x402-manifest-2026-09-06.json",
+        "client/src/lib/previewTemplate.test.ts",
+        "client/src/lib/servicesCatalogue.test.ts"
+      ]
+    },
+    {
+      "surface": "/api/refund",
+      "kind": "api-route",
+      "referenced_in_repo": 3,
+      "referenced_by": [
+        "docs/PHASE3_PADDLE_RUNBOOK.md",
+        "functions/api/paddle-webhook.ts",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/registers",
+      "kind": "api-route",
+      "referenced_in_repo": 15,
+      "referenced_by": [
+        "client/src/pages/EunomiaCatalog.tsx",
+        "client/src/pages/Registers.tsx",
+        "docs/HANDOFF-TO-CURSOR-2026-08-25.md",
+        "functions/api/truth-facades.test.ts",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json"
+      ]
+    },
+    {
+      "surface": "/api/regulation",
+      "kind": "api-route",
+      "referenced_in_repo": 55,
+      "referenced_by": [
+        "client/src/components/HeaderNav.tsx",
+        "client/src/components/home/LivingStages.tsx",
+        "client/src/components/lobby/LobbyReports.tsx",
+        "client/src/components/lobby/asks.ts",
+        "client/src/components/lobby/tabs.ts",
+        "client/src/data/home-faq.ts"
+      ]
+    },
+    {
+      "surface": "/api/regulator-findings",
+      "kind": "api-route",
+      "referenced_in_repo": 17,
+      "referenced_by": [
+        "client/src/pages/RegulatorFindings.tsx",
+        "docs/ESTATE_AUDIT_RUNDOWN_2026-08-26.md",
+        "docs/HANDOFF-TO-CURSOR-2026-08-25.md",
+        "public/openapi.json",
+        "public/sitemap.xml",
+        "public/stack/white-label-e2e-latest.json"
+      ]
+    },
+    {
+      "surface": "/api/report",
+      "kind": "api-route",
+      "referenced_in_repo": 463,
+      "referenced_by": [
+        "client/src/components/CouncilConsole.tsx",
+        "client/src/components/ed25519-verify/Ed25519Verify.tsx",
+        "client/src/components/ed25519-verify/README.md",
+        "client/src/components/home/LivingStages.tsx",
+        "client/src/data/deckWorlds/pricingRisk.ts",
+        "client/src/data/home-faq.ts"
+      ]
+    },
+    {
+      "surface": "/api/reported",
+      "kind": "api-route",
+      "referenced_in_repo": 28,
+      "referenced_by": [
+        "client/src/components/CouncilConsole.tsx",
+        "client/src/components/home/LivingStages.tsx",
+        "client/src/data/deckWorlds/pricingRisk.ts",
+        "client/src/data/home-faq.ts",
+        "client/src/pages/BenchmarkIndex.tsx",
+        "client/src/pages/GspcScoreboard.tsx"
+      ]
+    },
+    {
+      "surface": "/api/request-attestation",
+      "kind": "api-route",
+      "referenced_in_repo": 190,
+      "referenced_by": [
+        "client/src/components/DashboardRequestPane.test.tsx",
+        "client/src/components/DashboardRequestPane.tsx",
+        "client/src/components/DashboardSwiftX402Pane.tsx",
+        "client/src/components/ToolRunner.challenge.test.ts",
+        "client/src/components/X402PayButton.test.ts",
+        "client/src/components/os/OsDoors.tsx"
+      ]
+    },
+    {
+      "surface": "/api/revenue",
+      "kind": "api-route",
+      "referenced_in_repo": 185,
+      "referenced_by": [
+        ".github/FUNDING.yml",
+        ".github/workflows/deploy.yml",
+        ".github/workflows/tui6-monitoring.yml",
+        "client/src/components/GspcCoverageLedger.tsx",
+        "client/src/components/evidence-index/evidenceIndex.test.ts",
+        "client/src/data/facts.json"
+      ]
+    },
+    {
+      "surface": "/api/root",
+      "kind": "api-route",
+      "referenced_in_repo": 76,
+      "referenced_by": [
+        "client/src/lib/__fixtures__/attestations/root-witness-latest.json",
+        "client/src/lib/__fixtures__/attestations/root-witness-pointer.json",
+        "docs/ROOT_WITNESS_B1_2026-09-02.md",
+        "docs/operations/ONBOARDING-24H.md",
+        "docs/operations/RAG_KNOWLEDGE_2026-09-05.md",
+        "docs/operations/RaaS-PROCEDURES.md"
+      ]
+    },
+    {
+      "surface": "/api/router",
+      "kind": "api-route",
+      "referenced_in_repo": 10,
+      "referenced_by": [
+        "functions/api/retired-runtime-surfaces.test.ts",
+        "public/interop/strategy-synthesis-2026-09-05.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T045743Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T050200Z.json"
+      ]
+    },
+    {
+      "surface": "/api/rwa",
+      "kind": "api-route",
+      "referenced_in_repo": 76,
+      "referenced_by": [
+        "client/src/components/DashboardRequestPane.test.tsx",
+        "client/src/components/DashboardSwiftX402Pane.tsx",
+        "client/src/components/os/OsDoors.tsx",
+        "client/src/lib/__fixtures__/x402-manifest-2026-09-06.json",
+        "client/src/lib/osPanels.test.ts",
+        "client/src/lib/osPanels.ts"
+      ]
+    },
+    {
+      "surface": "/api/sandbox",
+      "kind": "api-route",
+      "referenced_in_repo": 8,
+      "referenced_by": [
+        "client/src/components/DashboardSandboxPane.tsx",
+        "public/interop/chatgpt-skills.json",
+        "public/interop/dashboard-wiring.json",
+        "public/interop/finish-chatgpt-features.json",
+        "public/openapi.json",
+        "scripts/badger/csoai-finish-chatgpt-features.py"
+      ]
+    },
+    {
+      "surface": "/api/security",
+      "kind": "api-route",
+      "referenced_in_repo": 17,
+      "referenced_by": [
+        "docs/product/x402-census/rounds/2026-09-06/dry.jsonl",
+        "docs/product/x402-census/rounds/2026-09-06/settle.jsonl",
+        "docs/product/x402-settlement-census-2026-09-06.jsonl",
+        "docs/product/x402-settlement-census-dry-2026-09-06.jsonl",
+        "docs/product/x402-settlement-census-dry-2026-09-14.jsonl",
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/sov-arena",
+      "kind": "api-route",
+      "referenced_in_repo": 1,
+      "referenced_by": [
+        "scripts/machine-contract-guard.mjs"
+      ]
+    },
+    {
+      "surface": "/api/sov-town",
+      "kind": "api-route",
+      "referenced_in_repo": 1,
+      "referenced_by": [
+        "client/src/lib/ai-surfaces.ts"
+      ]
+    },
+    {
+      "surface": "/api/specialists",
+      "kind": "api-route",
+      "referenced_in_repo": 12,
+      "referenced_by": [
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T101851Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T102515Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T120014Z.json"
+      ]
+    },
+    {
+      "surface": "/api/state",
+      "kind": "api-route",
+      "referenced_in_repo": 212,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        ".github/workflows/post-deploy-verify.yml",
+        ".github/workflows/tui6-monitoring.yml",
+        "client/src/components/lobby/LobbyHeader.tsx",
+        "client/src/components/lobby/LobbyOverlay.tsx",
+        "client/src/components/lobby/LobbyStatePane.tsx"
+      ]
+    },
+    {
+      "surface": "/api/subscribe",
+      "kind": "api-route",
+      "referenced_in_repo": 20,
+      "referenced_by": [
+        "client/src/components/NewsletterSignup.tsx",
+        "client/src/components/evidence/EvidencePackage.tsx",
+        "client/src/components/evidence/README.md",
+        "client/src/data/blog-content.ts",
+        "client/src/lib/ai-surfaces.ts",
+        "client/src/pages/Blog.tsx"
+      ]
+    },
+    {
+      "surface": "/api/summary",
+      "kind": "api-route",
+      "referenced_in_repo": 1,
+      "referenced_by": [
+        "public/openapi.json"
+      ]
+    },
+    {
+      "surface": "/api/swift",
+      "kind": "api-route",
+      "referenced_in_repo": 260,
+      "referenced_by": [
+        ".github/workflows/health-inventory.yml",
+        "client/src/components/DashboardSwiftX402Pane.tsx",
+        "client/src/components/GspcCoverageLedger.tsx",
+        "client/src/components/OsPanels.test.ts",
+        "client/src/components/OsPanels.tsx",
+        "client/src/components/gspc/PublicRootCatalogue.tsx"
+      ]
+    },
+    {
+      "surface": "/api/synthesis",
+      "kind": "api-route",
+      "referenced_in_repo": 11,
+      "referenced_by": [
+        "functions/api/retired-runtime-surfaces.test.ts",
+        "functions/api/router.ts",
+        "public/interop/strategy-synthesis-2026-09-05.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T045743Z.json"
+      ]
+    },
+    {
+      "surface": "/api/tools",
+      "kind": "api-route",
+      "referenced_in_repo": 77,
+      "referenced_by": [
+        ".github/workflows/claims-e2e.yml",
+        ".github/workflows/sov-stack-e2e.yml",
+        "client/src/components/TrustMarquee.tsx",
+        "client/src/pages/ToolCommons.tsx",
+        "docs/AGENT_COORDINATION.md",
+        "docs/DEMO_READINESS.md"
+      ]
+    },
+    {
+      "surface": "/api/trace",
+      "kind": "api-route",
+      "referenced_in_repo": 17,
+      "referenced_by": [
+        "client/src/components/gspc/ReaderRails.truth.test.ts",
+        "client/src/components/gspc/TraceReaderRail.tsx",
+        "client/src/pages/OsLauncher.tsx",
+        "public/interop/trace.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json"
+      ]
+    },
+    {
+      "surface": "/api/verify",
+      "kind": "api-route",
+      "referenced_in_repo": 36,
+      "referenced_by": [
+        "client/src/components/gspc/RecordVerifyForm.tsx",
+        "docs/AGENT_COORDINATION.md",
+        "docs/PRODUCT_DEMO_SPRAY_MAP.md",
+        "docs/reports/functions-typecheck-2026-09-06.md",
+        "docs/research-intake/2026-09-05/DELTA-2026-09-05.md",
+        "docs/research-intake/2026-09-05/permissionless-relentless-moves.moves.md"
+      ]
+    },
+    {
+      "surface": "/api/verify-batch",
+      "kind": "api-route",
+      "referenced_in_repo": 10,
+      "referenced_by": [
+        "functions/api/truth-facades.test.ts",
+        "public/interop/verify-batch.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T045743Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T050200Z.json"
+      ]
+    },
+    {
+      "surface": "/api/verify-card",
+      "kind": "api-route",
+      "referenced_in_repo": 10,
+      "referenced_by": [
+        "functions/api/truth-facades.test.ts",
+        "public/interop/verify-card.json",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T043058Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T045743Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260905T050200Z.json"
+      ]
+    },
+    {
+      "surface": "/api/verify-tally",
+      "kind": "api-route",
+      "referenced_in_repo": 12,
+      "referenced_by": [
+        "client/src/components/gspc/RecordVerifyForm.tsx",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T101851Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T102515Z.json"
+      ]
+    },
+    {
+      "surface": "/api/wave-dashboard",
+      "kind": "api-route",
+      "referenced_in_repo": 13,
+      "referenced_by": [
+        ".github/workflows/deploy.yml",
+        "docs/handoff/CLAUDE_MASTER_RELEASE_2026-09-04.md",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T101851Z.json"
+      ]
+    },
+    {
+      "surface": "/api/webhooks",
+      "kind": "api-route",
+      "referenced_in_repo": 14,
+      "referenced_by": [
+        "client/src/pages/Webhooks.tsx",
+        "docs/blueprints/GSPC_INTEROP_GROWTH_BLUEPRINT_2026-09-04.md",
+        "docs/seals/DAY4_KEY_GEN_ROUTE_DISCOVERY_2026-06-16.md",
+        "public/openapi.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T071934Z.json",
+        "scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.json"
+      ]
+    },
+    {
+      "surface": "/api/witness",
+      "kind": "api-route",
+      "referenced_in_repo": 43,
+      "referenced_by": [
+        ".github/workflows/public-root.yml",
+        "client/src/pages/legal/PublicPrivacy.test.ts",
+        "docs/REVENUE-LOOPS.md",
+        "docs/X402-DEMAND-MAP-2026-09-02.md",
+        "docs/drafts/awesome-x402-entry-DRAFT.md",
+        "docs/drafts/outreach-2026-09-02/README.md"
+      ]
+    },
+    {
+      "surface": "/api/worker",
+      "kind": "api-route",
+      "referenced_in_repo": 28,
+      "referenced_by": [
+        "client/src/components/AnchoredToPanel.tsx",
+        "client/src/components/DashboardPane.tsx",
+        "client/src/components/evidence-index/EvidenceIndexPane.tsx",
+        "client/src/components/evidence-index/evidenceIndex.ts",
+        "client/src/components/evidence-index/mount.ts",
+        "client/src/components/lobby/tabs.ts"
+      ]
+    },
+    {
+      "surface": "/api/wrapper",
+      "kind": "api-route",
+      "referenced_in_repo": 34,
+      "referenced_by": [
+        "client/src/data/evidence-notes.json",
+        "client/src/lib/coverageLedger.ts",
+        "client/src/pages/Wrappers.tsx",
+        "docs/hermes/EXECUTION-LEDGER.json",
+        "docs/interop/door-listing-parity-2026-09-14.md",
+        "docs/outreach/drafts/chainlink-ccip.md"
+      ]
+    },
+    {
+      "surface": "/api/x402",
+      "kind": "api-route",
+      "referenced_in_repo": 386,
+      "referenced_by": [
+        "client/src/components/DashboardRequestPane.tsx",
+        "client/src/components/DashboardSwiftX402Pane.tsx",
+        "client/src/components/GspcCoverageLedger.tsx",
+        "client/src/components/evidence-index/evidenceIndex.test.ts",
+        "client/src/components/os/OsDoors.tsx",
+        "client/src/components/paidStep.node-test.ts"
+      ]
+    },
+    {
+      "surface": "/api/x402-trust-seller",
+      "kind": "api-route",
+      "referenced_in_repo": 18,
+      "referenced_by": [
+        "public/interop/x402-trust/2026-09-07.json",
+        "public/interop/x402-trust/2026-09-11.json",
+        "public/interop/x402-trust/2026-09-12.json",
+        "public/interop/x402-trust/20260912T153701Z.json",
+        "public/interop/x402-trust/20260912T203902Z.json",
+        "public/interop/x402-trust/20260913T045657Z.json"
+      ]
+    },
+    {
+      "surface": "/api/xrpl",
+      "kind": "api-route",
+      "referenced_in_repo": 269,
+      "referenced_by": [
+        "client/src/components/DashboardPane.tsx",
+        "client/src/components/DashboardSwiftX402Pane.tsx",
+        "client/src/components/GspcCoverageLedger.tsx",
+        "client/src/components/HeaderNav.tsx",
+        "client/src/components/OsPanels.test.ts",
+        "client/src/components/OsPanels.tsx"
+      ]
+    },
+    {
+      "surface": "/api/yield",
+      "kind": "api-route",
+      "referenced_in_repo": 3,
+      "referenced_by": [
+        "client/src/pages/YieldDashboard.test.tsx",
+        "client/src/pages/YieldDashboard.tsx",
+        "public/openapi.json"
+      ]
+    }
+  ]
+}
