@@ -1,0 +1,279 @@
+{
+  "schema": "csoai.registering-axes-adapter/0.1",
+  "generated_at": "2026-09-17T04:33:39.776118+00:00",
+  "title": "Registering Axes Adapter \u2014 closes the 9-axis gap",
+  "purpose": "Define measurement paths for the 9 REGISTERING GSPC axes that are declared but not yet measured.",
+  "axes_registering": [
+    {
+      "slot": 15,
+      "axis": "memory-poisoning",
+      "owasp_asi_mapping": "ASI06 Memory & Context Poisoning",
+      "what_it_measures": "Adversarial ability to corrupt agent memory / RAG context / state to misalign behavior",
+      "pre_release_signals": [
+        "arXiv preprints on 'memory poisoning', 'RAG injection', 'context manipulation'",
+        "OWASP ASI06 mitigations published",
+        "Model red-team reports (HELM, lm-eval-harness)",
+        "Bug bounty disclosures"
+      ],
+      "evidence_in_estate": [
+        "measurement/owasp-asi/asi-gspc-axis-map.json"
+      ],
+      "binding_to_goal_objects": [
+        "market_integrity",
+        "assurance",
+        "conformance"
+      ]
+    },
+    {
+      "slot": 16,
+      "axis": "oversight",
+      "owasp_asi_mapping": "ASI09 Human-Agent Trust Exploitation + ASI10 Rogue Agents",
+      "what_it_measures": "Whether humans / institutions retain meaningful control over agent behavior",
+      "pre_release_signals": [
+        "EU AI Act Art 14 (human oversight)",
+        "NIST AI RMF GOVERN function",
+        "Provider human-oversight documentation",
+        "Auditor / regulator reports"
+      ],
+      "evidence_in_estate": [
+        "public/interop/osaia-safe-evidence-adapter-v0.1.json",
+        "public/interop/digital-asset-regulatory-measurement-profile-v0.1.json"
+      ],
+      "binding_to_goal_objects": [
+        "governance",
+        "customer_protection",
+        "agent_authority"
+      ]
+    },
+    {
+      "slot": 17,
+      "axis": "agent-identity",
+      "owasp_asi_mapping": "ASI03 Identity & Privilege Abuse",
+      "what_it_measures": "Agent identity integrity: signing, DID, capability attestation, privilege scoping",
+      "pre_release_signals": [
+        "ERC-8004 trustless agent registry",
+        "a2a engine cards (12 engines)",
+        "TUI A enumeration",
+        "MCP server manifests",
+        "Provider identity docs (Anthropic, OpenAI, Google)"
+      ],
+      "evidence_in_estate": [
+        "public/interop/a2a-engine-cards.json",
+        "public/interop/tui-a-agent-enumeration-v0.1.json",
+        "public/interop/erc-8004.json",
+        "public/interop/mcp-directories.json"
+      ],
+      "binding_to_goal_objects": [
+        "actor_identity",
+        "agent_authority",
+        "provenance"
+      ]
+    },
+    {
+      "slot": 18,
+      "axis": "economic-behavior",
+      "owasp_asi_mapping": "ASI08 Cascading Failures (economic dimension)",
+      "what_it_measures": "How agent decisions affect markets, prices, resource allocation",
+      "pre_release_signals": [
+        "Pre-print papers on agent economics / mechanism design",
+        "x402 rail adoption data",
+        "Stablecoin supply changes around AI service launches",
+        "Bank pilot announcements (SWIFT 17 banks)"
+      ],
+      "evidence_in_estate": [
+        "public/interop/x402-census/",
+        "public/interop/stablecoin-universe-2026-09/",
+        "public/interop/swift-census-2026-09/"
+      ],
+      "binding_to_goal_objects": [
+        "market_integrity",
+        "transaction_integrity",
+        "settlement"
+      ]
+    },
+    {
+      "slot": 19,
+      "axis": "collusion",
+      "owasp_asi_mapping": "ASI07 Insecure Inter-Agent Communication",
+      "what_it_measures": "Whether agents can coordinate in ways that violate market integrity / consumer protection",
+      "pre_release_signals": [
+        "arXiv on multi-agent coordination",
+        "Byzantine fault tolerance papers",
+        "MCP server communication audit logs",
+        "Provider multi-agent feature docs"
+      ],
+      "evidence_in_estate": [
+        "public/interop/mcp-directories.json",
+        "public/interop/a2a-engine-cards.json",
+        "_quarantine/public-legacy/blog-byzantine-consensus.html (legacy reference)"
+      ],
+      "binding_to_goal_objects": [
+        "market_integrity",
+        "agent_authority",
+        "transaction_integrity"
+      ]
+    },
+    {
+      "slot": 20,
+      "axis": "deception",
+      "owasp_asi_mapping": "ASI01 Agent Goal Hijack + ASI09 Human-Agent Trust Exploitation",
+      "what_it_measures": "Whether agents produce deceptive outputs (sycophancy, hallucination, prompt-injection compliance)",
+      "pre_release_signals": [
+        "Hallucination benchmarks (HHEM, FACTS)",
+        "Sycophancy evals (Anthropic, OpenAI public evals)",
+        "Provider model cards (disclose deception handling)",
+        "EU AI Act Art 50 transparency compliance"
+      ],
+      "evidence_in_estate": [
+        "public/reports/qwen2.5-1.5b/care.json (hallucination proxy)",
+        "public/interop/osaia-safe-evidence-adapter-v0.1.json"
+      ],
+      "binding_to_goal_objects": [
+        "customer_protection",
+        "market_integrity",
+        "disclosure"
+      ]
+    },
+    {
+      "slot": 21,
+      "axis": "sycophancy",
+      "owasp_asi_mapping": "ASI09 Human-Agent Trust Exploitation",
+      "what_it_measures": "Whether agents preferentially agree with users even when wrong",
+      "pre_release_signals": [
+        "Anthropic 2023 sycophancy paper",
+        "OpenAI sycophancy evaluation",
+        "Public benchmark: TruthfulQA-sycophancy"
+      ],
+      "evidence_in_estate": [
+        "public/reports/sov-draw-cybersecurity-latest/care.json (proxy)",
+        "public/reports/withheld-name-1/care.json (withheld = honest framing)"
+      ],
+      "binding_to_goal_objects": [
+        "customer_protection",
+        "care",
+        "disclosure"
+      ]
+    },
+    {
+      "slot": 22,
+      "axis": "long-horizon-reliability",
+      "owasp_asi_mapping": "ASI08 Cascading Failures",
+      "what_it_measures": "Whether agents maintain alignment / correctness over extended operations",
+      "pre_release_signals": [
+        "LongBench / LOFT benchmarks",
+        "Multi-day agent task evals",
+        "Continuity axis (already measured) as proxy"
+      ],
+      "evidence_in_estate": [
+        "public/reports/qwen2.5-1.5b/continuity.json (proxy)",
+        "public/reports/llama3.2-3b/continuity.json (proxy)"
+      ],
+      "binding_to_goal_objects": [
+        "continuity",
+        "assurance",
+        "change"
+      ]
+    },
+    {
+      "slot": 23,
+      "axis": "effect-binding",
+      "owasp_asi_mapping": "ASI10 Rogue Agents",
+      "what_it_measures": "Whether agent actions are cryptographically / contractually bound to authorized effects",
+      "pre_release_signals": [
+        "EIP-712 typed structured data signing",
+        "x402 payment authorization receipts",
+        "XRPL transaction memos (issuer bound)",
+        "Agent capability manifests (a2a / MCP)"
+      ],
+      "evidence_in_estate": [
+        "public/interop/eip-712.json",
+        "public/interop/x402-census-cards/",
+        "public/interop/xrpl-two-way-check.json",
+        "public/interop/a2a-engine-cards.json",
+        "council-os/ADR-002-axis-23-effect-binding.md"
+      ],
+      "binding_to_goal_objects": [
+        "provenance",
+        "transaction_integrity",
+        "agent_authority",
+        "change"
+      ]
+    }
+  ],
+  "pre_release_adapters": [
+    {
+      "id": "pre.arxiv-asi",
+      "source": "arXiv preprints mentioning REGISTERING axes",
+      "tick": "6h",
+      "credential": "none",
+      "fetch": "https://arxiv.org/list/cs.AI/recent"
+    },
+    {
+      "id": "pre.owasp-asi-rss",
+      "source": "OWASP GenAI security advisories",
+      "tick": "daily",
+      "credential": "none",
+      "fetch": "https://genai.owasp.org/"
+    },
+    {
+      "id": "pre.hf-evals",
+      "source": "HuggingFace evals for memory-poisoning / collusion / sycophancy",
+      "tick": "1h",
+      "credential": "none",
+      "fetch": "https://huggingface.co/datasets?other=evals"
+    },
+    {
+      "id": "pre.provider-cards",
+      "source": "Provider model cards (Anthropic, OpenAI, Google)",
+      "tick": "6h",
+      "credential": "varies"
+    },
+    {
+      "id": "pre.bug-bounty",
+      "source": "Bug-bounty disclosures mentioning REGISTERING axes",
+      "tick": "1h",
+      "credential": "varies"
+    },
+    {
+      "id": "pre.research-papers",
+      "source": "ACL/NeurIPS/ICML pre-prints on agent identity, oversight, effect-binding",
+      "tick": "6h",
+      "credential": "none"
+    },
+    {
+      "id": "pre.arxiv-rag",
+      "source": "arXiv RAG / context-poisoning preprints",
+      "tick": "6h",
+      "credential": "none",
+      "fetch": "https://arxiv.org/list/cs.CL/recent"
+    },
+    {
+      "id": "pre.arxiv-collusion",
+      "source": "arXiv multi-agent / collusion / BFT preprints",
+      "tick": "6h",
+      "credential": "none"
+    },
+    {
+      "id": "pre.arxiv-sycophancy",
+      "source": "arXiv sycophancy / honesty / alignment preprints",
+      "tick": "6h",
+      "credential": "none"
+    },
+    {
+      "id": "pre.market-signals",
+      "source": "Real-time market signals for economic-behavior axis (x402 adoption, stablecoin supply)",
+      "tick": "5min",
+      "credential": "none"
+    }
+  ],
+  "honest_findings": [
+    "OWASP Top 10 for Agentic Applications (2026) already maps to 6 of our 22 measured axes (conformance, cross-reality, swarm, jail, affect, art5-safeguard).",
+    "The 9 REGISTERING axes each have at least one pre-release signal source defined.",
+    "None of the 9 REGISTERING axes are currently measured. They are declared-but-not-implemented.",
+    "To convert a REGISTERING axis to MEASURED, we need: (a) measurement script, (b) baseline measurement, (c) per-model data, (d) board integration.",
+    "Effect-binding (ADR-002) is special \u2014 it has an ADR but no implementation.",
+    "Pre-release measurement = measure BEFORE AI companies release the model."
+  ],
+  "sha256": "cadeb848daea2c2ef0ae13f3e79bc102cb5c2060064d2ff1fb1a73eec312a18a",
+  "byte_size": 7837
+}
