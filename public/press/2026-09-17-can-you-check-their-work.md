@@ -1,6 +1,6 @@
 # Can you check their work?
 
-**Fifteen organisations publish AI evaluation results. Thirteen of them keep a public record
+**Fifteen organisations publish AI evaluation results. Twelve of them keep a public record
 of their own mistakes. Not one of them signs a result.**
 
 17 September 2026 · Council of AI (CSOAI Ltd, UK) · nicholas@csoai.org
@@ -27,8 +27,9 @@ We ran them on fifteen organisations on 17 September 2026, and on ourselves.
 
 ## What came back
 
-The corrections column is the good news, and it is close to unanimous. Thirteen of fifteen keep
-a public record of their own mistakes, and several of them are unusually frank about it.
+The corrections column is the good news, and it is close to unanimous. Twelve of the fifteen
+keep a public record of their own mistakes — two more keep a partial one, and for a thirteenth
+we could not establish it either way. Several are unusually frank about it.
 Epoch AI's FrontierMath v2 changelog records corrections to 123 problems in Tiers 1–3 and
 addresses errors in 42% of problems overall, with v1 retained as a separate page so earlier
 results stay meaningful. Hugging Face wrote "all the errors in the below should be attributed
@@ -144,7 +145,39 @@ it, is better than the alternative — and stating why it is unsigned is part of
 
 ---
 
+## What we are not the first to do
+
+Two disclosures, because a claim of novelty is a claim like any other and ours did not survive
+contact with the literature.
+
+**The paired arm is not a new mechanism, and we are not its originators.** METR's HCAST
+(arXiv:2503.17354) and Kwa et al. (arXiv:2503.14499, peer-reviewed at NeurIPS 2025) already run
+humans and models on one task bank under identical environments and instructions. What our
+artifact does is smaller and should be described as what it is: it reconciles two separately
+published arms under a single grading rule, and it holds ungraded attempts apart from wrong
+ones. That is the claim the bytes support, and it is the only one we make.
+
+**On the census, the nearest concurrent work is "Evaluation Cards"** (EvalEval Coalition,
+arXiv:2606.09809, June 2026, preprint), which audits 101,955 results from 30 organisations and
+finds 96.5% missing a minimal reproducibility field. It measures whether a field is *present*.
+It never recomputes a score, and it does not examine signing at all. BetterBench (NeurIPS 2024)
+scores benchmarks rather than publishers and carries no cryptographic criterion; the Foundation
+Model Transparency Index scores model developers, not evaluators, and contains no signature,
+checksum or attestation indicator. We searched for someone who had already done this and did not
+find them — but three of four literature sources were unavailable during that search, and the
+honest statement is "we did not find it", never "it does not exist".
+
 ## What changed since this was first published
+
+**17 September 2026, third revision — a correction against ourselves.** The first two versions
+of this page said **thirteen of fifteen** organisations keep a public record of their own
+mistakes. That was wrong. The census has sixteen rows: fifteen other organisations and our own.
+Twelve of the fifteen others are YES on corrections; the thirteenth YES was **us**, counted into
+a sentence that was explicitly about everyone else. One word — "organisations" — meant fifteen in
+the subject and sixteen in the tally, which is the same defect this page exists to describe.
+The same revision corrects "six named third-party models" to eight named model identifiers
+across sixteen configurations, and adds the prior-art section above. The artifact's own bytes
+were right throughout; the prose over-counted. No cell changed.
 
 **17 September 2026, later the same day.** First published covering twelve organisations. Three
 were then added — MLCommons AILuminate, Stanford CRFM HELM and SWE-bench — and two of them
@@ -159,7 +192,8 @@ published — 8,114 files on Hugging Face, which a GitHub-and-website sweep miss
 stays PARTIAL because no attempts are published for the semi-private sets the headline numbers
 come from. And a new limit was found inside the published half: 16 of those 70 configurations
 carry `correct: null` on every attempt. The attempts exist; the grades do not. Anyone treating
-"not true" as "wrong" there will print 0.0% against six named third-party models. We nearly did
+"not true" as "wrong" there will print 0.0% against eight named third-party model identifiers,
+across sixteen configurations and 1,840 task files. We nearly did
 — our own grader did exactly that, twice, before its controls caught it. That measurement is
 published separately, with the failing controls, at
 `…/public/interop/paired-arm-arc-agi-2-2026-09-17.json`.
