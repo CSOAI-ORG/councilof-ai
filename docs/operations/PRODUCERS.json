@@ -108,7 +108,8 @@
       "mode": "delegate-to-check",
       "gated": false,
       "reason": "Already gated separately in pr-gates.yml, and its --check fetches the LIVE board, so running it here too would double-spend the <=20/hour self-probe budget for no extra coverage.",
-      "verified_2026_09_06": "check passes"
+      "verified_2026_09_06": "check passes",
+      "volatile": true
     },
     {
       "id": "service-heroes",
@@ -126,7 +127,8 @@
       "gated": false,
       "reason": "VOLATILE BY DESIGN. Each hero PLOTS a live quantity — 13 filled marks of 16 because 13 of 16 XRPL instruments are signed — so the committed bytes go stale the moment the board moves, and that is the feature, not the drift. Gating it would paint every lane's CI red on a data change nobody made in this repo. It also reads five live endpoints per run, against a <=20/hour self-probe budget already spent by llms-txt.",
       "refresh": "Re-run when a hero's number is quoted anywhere that matters, and always before the contact sheet goes to the owner. `--check` names which heroes moved and is safe to run by hand.",
-      "verified_2026_09_06": "check passes: 5 current against the live board (22 axes/22 measured, 13/16 XRPL signed, SWIFT n=26, 166 root leaves, 47 corrections)"
+      "verified_2026_09_06": "check passes: 5 current against the live board (22 axes/22 measured, 13/16 XRPL signed, SWIFT n=26, 166 root leaves, 47 corrections)",
+      "volatile": true
     },
     {
       "id": "ts-ratchet",
@@ -186,29 +188,22 @@
       "observed_2026_09_06": "0 pair(s): prints '1 round(s) on disk (2026-09-06): a delta needs two. Nothing written' and exits 0"
     },
     {
-      "id": "x402-census-leaves",
-      "command": "python3 harness/x402-census/build_cards.py --round-id <round_id>",
-      "check": "python3 harness/x402-census/build_cards.py --check",
-      "selftest": "python3 harness/x402-census/build_cards.py --selftest",
-      "outputs": [
-        "public/interop/x402-census/leaves/<round_id>/card-<sha256>-unsigned.json"
-      ],
-      "mode": "delegate-to-check",
-      "gated": false,
-      "reason": "No leaves are committed for round 2026-09-06. The same 316 purchases are already published as the 104 legacy cards under public/interop/x402-census-cards/, and staging a second set of 314 leaves for the same event would fork one corpus into two — the exact defect council-os/CARD-CORPORA.md exists to prevent. With nothing on disk the check has nothing to compare.",
-      "becomes_gated_when": "round 2026-09-13's leaves are committed — the first round whose leaves are the only cards for that round.",
-      "meanwhile": "the selftest runs on every PR and proves the property that actually matters: a leaf written for round 1 still reads observations=1 after round 2 exists. If it did not, every signature over an earlier leaf would break on the next round.",
-      "observed_2026_09_06": "generated to a temp dir: 314 leaves (PAID rows only — the 2 NO_CHALLENGE rows correctly produce none), largest 2,714 B against the 3,072 B cap, --check OK",
-    "id": "crosswalk-intoto",
+      "id": "crosswalk-intoto",
       "command": "python3 scripts/crosswalk/emit_intoto.py",
       "check": "python3 scripts/crosswalk/emit_intoto.py --check",
+      "selftest": "python3 harness/x402-census/build_cards.py --selftest",
       "outputs": [
         "public/interop/crosswalk/intoto/index.json"
       ],
       "mode": "delegate-to-check",
       "gated": true,
+      "reason": "No leaves are committed for round 2026-09-06. The same 316 purchases are already published as the 104 legacy cards under public/interop/x402-census-cards/, and staging a second set of 314 leaves for the same event would fork one corpus into two — the exact defect council-os/CARD-CORPORA.md exists to prevent. With nothing on disk the check has nothing to compare.",
+      "becomes_gated_when": "round 2026-09-13's leaves are committed — the first round whose leaves are the only cards for that round.",
+      "meanwhile": "the selftest runs on every PR and proves the property that actually matters: a leaf written for round 1 still reads observations=1 after round 2 exists. If it did not, every signature over an earlier leaf would break on the next round.",
+      "observed_2026_09_06": "generated to a temp dir: 314 leaves (PAID rows only — the 2 NO_CHALLENGE rows correctly produce none), largest 2,714 B against the 3,072 B cap, --check OK",
       "verified_2026_09_06": "check passes: 15 files, 14 axes, 878 MEASURED of 973 signed mill cards",
-      "note": "in-toto Statement v1 attestations DERIVED from the Ed25519-signed mill cards. No clock, no network, no signing key — the mill-card bodies carry no timestamp, so the output cannot drift with the wall clock. It HALTS rather than emits if any card's id stops equalling sha256(canonical(body)). Unsigned Statements by design: DSSE signing needs did:web:csoai.org#board-attestation-1, which this producer does not hold, and a fabricated signature would be worse than none. Tests: python3 scripts/crosswalk/test_emit_intoto.py."    }
+      "note": "in-toto Statement v1 attestations DERIVED from the Ed25519-signed mill cards. No clock, no network, no signing key — the mill-card bodies carry no timestamp, so the output cannot drift with the wall clock. It HALTS rather than emits if any card's id stops equalling sha256(canonical(body)). Unsigned Statements by design: DSSE signing needs did:web:csoai.org#board-attestation-1, which this producer does not hold, and a fabricated signature would be worse than none. Tests: python3 scripts/crosswalk/test_emit_intoto.py."
+    }
   ],
   "not_yet_classified": {
     "count_approx": 28,
