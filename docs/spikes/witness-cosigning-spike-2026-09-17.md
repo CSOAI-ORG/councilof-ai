@@ -66,22 +66,25 @@ I first wrote this section claiming the leaves were sorted by digest. **That was
 carried it over from a different file's merkle code without checking the published bytes. The
 leaves are not sorted. What the bytes actually show is worse.
 
-Twelve consecutive published revisions of `public/root.json` (2026-09-14T09:45Z → 2026-09-15T07:13Z),
-each declaring roughly 305 cards:
+Every revision of `public/root.json` in git history — **28 revisions, 2026-09-07 → 2026-09-15**:
 
 | measure | value |
 |---|---|
-| append-only transitions | **0 of 11** |
-| declared counts, in order | 299, 299, 304, 300, 305, 304, 305, 303, 303, 312, 311, 305 |
-| distinct leaves across the window | **1,472** |
+| append-only transitions | **0 of 27** |
+| transitions that lose leaves | **27 of 27** |
+| declared `card_count` decreases | **8** |
+| distinct leaves across the window | **2,557** |
 | leaves present in **every** revision | **0** |
-| leaves appearing in exactly **one** revision | **997** (68%) |
+| leaves appearing in exactly one revision | **2,022 (79%)** |
 | leaves that left and later returned | 16 |
+
+Declared counts, in publication order: 168, 167, 169, 167, 168, 197, 197, 228, 257, 257, 264, 269,
+294, 291, 297, 298, 299, 299, 304, 300, 305, 304, 305, 303, 303, 312, 311, 305.
 
 No transition extends its predecessor. The declared count goes **down** as often as up. Two-thirds
 of everything the root has ever anchored appears in a single publish and is gone from the next. One
-transition (2026-09-15T05:30Z) shares **zero** leaves with the revision before it — a 312-leaf set
-replaced wholesale.
+transition (2026-09-15T05:30Z) shares **zero** leaves with the revision before it — 312 in, 311 out,
+nothing in common.
 
 So `public/root.json` is not a log and not a growing catalogue. It is a **fresh snapshot of whatever
 the producer harvested that run**. The shape is consistent with a producer that re-derives its input
@@ -96,8 +99,9 @@ is issued against one root. If that leaf is not in the next root — a two-in-th
 evidence — the proof still verifies against the root it was cut from, while the leaf is absent from
 the published set. Nothing on the surface tells the reader which state is current.
 
-Reproduce: `python3 scripts/audit_root_leaf_churn.py` →
-`docs/reconciliation/public-root-churn-2026-09-17.json`.
+Reproduce: `python3 scripts/audit_root_leaf_churn.py 28` → machine artifact
+`docs/reconciliation/public-root-churn-2026-09-17.json`, write-up
+`docs/reconciliation/PUBLIC-ROOT-IS-NOT-A-LOG-2026-09-17.md` (including what it does NOT show).
 
 Options, none free:
 
