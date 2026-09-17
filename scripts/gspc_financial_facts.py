@@ -114,11 +114,55 @@ AUDITOR_RE = re.compile(
     r"\b(auditor|independent audit|deloitte|pwc|kpmg|ernst\s*[&]\s*young|\bey\b|grant thornton)\b",
     re.I,
 )
-DATED_COUNT_RE = re.compile(
-    r"\b(20\d{2}).{0,80}\b(\d{1,5})\s+(robots?|units?|humanoids?)\b"
-    r"|\b(\d{1,5})\s+(robots?|units?|humanoids?).{0,40}\b(20\d{2})\b",
-    re.I,
-)
+# A number near the word "robot" near a year is NOT a deployment disclosure.
+#
+# MEASURED 2026-09-17: the previous pattern graded sanctuary.ai as PASS -- a
+# published, dated deployment count -- on the strength of a press byline reading
+# "Sanctuary AI #1 Robotics Story of April 2026". It saw "1 Robot" and "2026"
+# within forty characters and asked nothing else. The page publishes no robot
+# count at all. That false PASS was live in the run artifact while the SIGNED
+# card for the same axis correctly recorded false, so our own two artifacts
+# disagreed about the same URL.
+#
+# Two additions, both narrowing:
+#   1. a DEPLOYMENT VERB must appear near the count. "deployed", "in operation",
+#      "shipped", "fleet of" -- a count with no deployment claim is a count.
+#   2. an ORDINAL/RANK immediately before the number disqualifies it. "#1", "No. 1"
+#      and "number 1" are rankings, which is exactly what fired here.
+# and "robots?" is anchored so it cannot match inside "Robotics".
+DEPLOY_CONTEXT = r"(?:deploy\w*|in\s+operation|operational|shipped|delivered|fleet\s+of|working\s+at)"
+_RANK_PREFIX = r"(?<!#)(?<!#\s)(?<![Nn]o\.\s)(?<![Nn]o\.)(?<![Nn]umber\s)"
+_COUNT_RE = re.compile(r"\b(\d{1,5})\s+(?:robots?|units?|humanoids?)(?![a-z])", re.I)
+_YEAR_RE = re.compile(r"\b20\d{2}\b")
+_DEPLOY_RE = re.compile(DEPLOY_CONTEXT, re.I)
+_RANK_RE = re.compile(r"(?:#|\bno\.?\s*|\bnumber\s+)$", re.I)
+_WINDOW = 120
+
+
+def has_dated_deployment_count(body: str) -> bool:
+    """True only when a COUNT, a DEPLOYMENT claim and a YEAR co-occur in one window.
+
+    Ordering-free by construction. An earlier version used two fixed alternations
+    (year->count->deploy, deploy->count->year) and silently missed the commonest
+    English ordering of all -- "In 2026 we deployed 120 robots" -- while still
+    accepting a press byline. Requiring co-occurrence in a window states the rule
+    once instead of enumerating word orders and getting the list wrong.
+    """
+    if not body:
+        return False
+    for m in _COUNT_RE.finditer(body):
+        # a rank immediately before the number is a ranking, not an inventory
+        if _RANK_RE.search(body[max(0, m.start() - 12):m.start()]):
+            continue
+        w = body[max(0, m.start() - _WINDOW): m.end() + _WINDOW]
+        if _DEPLOY_RE.search(w) and _YEAR_RE.search(w):
+            return True
+    return False
+
+
+# retained for callers that want the bare count pattern; the PREDICATE above is
+# what grades, because a count on its own is not a deployment disclosure.
+DATED_COUNT_RE = _COUNT_RE
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INTEROP = os.path.join(REPO, "dist", "client", "interop")
@@ -320,7 +364,7 @@ def grade_humanoid(http: int, body: str, page_state: str) -> dict[str, Any]:
             "fleet_size": None,
             "fleet_size_status": "UNMEASURED",
         }
-    hit = bool(DATED_COUNT_RE.search(body or ""))
+    hit = has_dated_deployment_count(body or "")
     return {
         "http": http,
         "page_state": page_state,
