@@ -49,27 +49,43 @@ def canonical_js_body_bytes(body: dict[str, Any]) -> bytes:
     return emit(body)
 
 
-def did_pubkey_bytes(did_doc: dict[str, Any], did: str = "did:web:csoai.org#card-attestation-1") -> bytes:
-    """Resolve Ed25519 JWK x for a DID fragment. Default mill pin is #card-attestation-1."""
+def did_pubkey_and_id(did_doc: dict[str, Any], did: str = "did:web:csoai.org#card-attestation-1") -> tuple[bytes, str]:
+    """Resolve (Ed25519 key bytes, the full verification-method id we matched)."""
+    # Resolve by the FULL verification-method id, never by fragment suffix alone.
+    # Suffix matching let "did:web:attacker.example#board-attestation-1" resolve to
+    # our own key, and the caller then printed that attacker-controlled string beside
+    # "VALID". No forged signature was ever accepted, but the issuer shown was wrong.
     frag = did.split("#", 1)[-1] if "#" in did else "card-attestation-1"
-    suffix = "#" + frag
+    doc_id = str(did_doc.get("id") or "").rstrip("#")
+    want_full = did if "#" in did else f"{doc_id}#{frag}"
     for vm in did_doc.get("verificationMethod") or []:
         vid = str(vm.get("id") or "")
-        if vid.endswith(suffix) or vid == did:
+        # A relative id ("#key-1") is resolved against the document's own id.
+        vid_abs = f"{doc_id}{vid}" if vid.startswith("#") else vid
+        if vid_abs == want_full:
             x = (vm.get("publicKeyJwk") or {}).get("x")
             if not x:
                 raise ValueError(f"{frag} missing JWK x")
             pad = "=" * ((4 - len(x) % 4) % 4)
-            return base64.urlsafe_b64decode(x + pad)
-    raise ValueError(f"did document has no {suffix}")
+            return base64.urlsafe_b64decode(x + pad), vid_abs
+    raise ValueError(f"did document has no {want_full}")
+
+
+def did_pubkey_bytes(did_doc: dict[str, Any], did: str = "did:web:csoai.org#card-attestation-1") -> bytes:
+    """Back-compatible: key bytes only."""
+    return did_pubkey_and_id(did_doc, did)[0]
 
 
 def did_card_pubkey_bytes(did_doc: dict[str, Any]) -> bytes:
     return did_pubkey_bytes(did_doc, "did:web:csoai.org#card-attestation-1")
 
 
-def verify_signed_card(blob: bytes, did_pubkey: bytes) -> tuple[str, str]:
-    """Return (VALID|INVALID|UNCHECKABLE, reason)."""
+def verify_signed_card(blob: bytes, did_pubkey: bytes, resolved_kid: str | None = None) -> tuple[str, str]:
+    """Return (VALID|INVALID|UNCHECKABLE, reason).
+
+    resolved_kid is the verification-method id the key was resolved from. When a
+    caller cannot supply it, we say so rather than quoting the card's own claim.
+    """
     try:
         wrap = json.loads(blob)
     except Exception as e:
@@ -93,8 +109,9 @@ def verify_signed_card(blob: bytes, did_pubkey: bytes) -> tuple[str, str]:
         from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
         Ed25519PublicKey.from_public_bytes(did_pubkey).verify(sigb, pre)
-        kid = wrap.get("did") or wrap.get("did_intended") or "did:web:csoai.org#card-attestation-1"
-        return "VALID", str(kid)
+        # Report the key we ACTUALLY verified against, resolved from the DID document.
+        # Echoing wrap["did"] reported an unsigned, caller-controlled field as the issuer.
+        return "VALID", str(resolved_kid or "key supplied directly by caller")
     except Exception as e:
         return "INVALID", type(e).__name__
 
@@ -107,7 +124,7 @@ def verify_signed_card_with_did_doc(blob: bytes, did_doc: dict[str, Any]) -> tup
         return "INVALID", f"json {e}"
     did = str(wrap.get("did") or wrap.get("did_intended") or "did:web:csoai.org#card-attestation-1")
     try:
-        pub = did_pubkey_bytes(did_doc, did)
+        pub, resolved_kid = did_pubkey_and_id(did_doc, did)
     except Exception as e:
         return "UNCHECKABLE", f"did {e}"
-    return verify_signed_card(blob, pub)
+    return verify_signed_card(blob, pub, resolved_kid)

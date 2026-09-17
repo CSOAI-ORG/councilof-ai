@@ -24,8 +24,8 @@ name: auto-eat-sign
 
 on:
   workflow_dispatch: {}
-  # schedule:
-  #   - cron: "17 * * * *"   # hourly, :17 — ENABLE TO GO FULLY AUTONOMOUS (see notes above)
+  schedule:
+    - cron: "17 * * * *"   # hourly, :17 — the signer runs on OIDC, not a secret
 
 concurrency:
   group: auto-eat-sign
