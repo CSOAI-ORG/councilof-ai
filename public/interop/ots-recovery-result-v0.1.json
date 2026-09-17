@@ -1,0 +1,18 @@
+{
+  "schema": "csoai.ots-recovery/0.1",
+  "kind": "recoverable-stamps-result",
+  "completed_at": "2026-09-17T05:16:45.546762+00:00",
+  "diagnosis_corrected": "Calendar was NEVER degraded. The 0xf008... bytes are healthy calendar response fragments. The defect was the producer writing HTTP responses straight to *.ots instead of assembling a detached proof.",
+  "recovered": 755,
+  "invalid_remaining": 1896,
+  "invalid_remaining_categories": {
+    "fixtures_outside_estate": "~1850 (no source JSON exists; cannot be recovered)",
+    "drafts": "~50"
+  },
+  "honest_finding": "OTS calendar IS healthy (172-207 byte responses starting 0xf008 is normal). Calendar-pending = real proof, awaiting Bitcoin attestation. We do not report pending as anchored.",
+  "external_blockers": [
+    "OTS calendar rate limit \u2014 pending proofs may take hours/days to reach Bitcoin attestation"
+  ],
+  "sha256": "a03c91f4d76073e688211ce5a18908dfb37203402fedad2118566e0ddea986b6",
+  "byte_size": 824
+}
