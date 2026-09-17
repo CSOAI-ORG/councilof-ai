@@ -1,0 +1,483 @@
+{
+ "schema": "csoai.lab-card-census/0.1",
+ "as_of": "2026-09-17T12:50:00Z",
+ "signed": false,
+ "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
+ "what_this_is": "The five CSOAI verifiability checks applied to ten frontier model providers' OWN published evaluation artifacts - system cards, model cards, safety and preparedness reports. Our published third-party census covers fifteen evaluators and no model provider. System cards are the only evaluation artifacts a regulator can now compel: EU AI Act Article 53 obligations for general-purpose AI models have been fine-backed since 2 August 2026. Each check is answerable by fetching public bytes with no cooperation from the subject. No lab was contacted.",
+ "what_this_is_not": [
+  "Not a ranking. There is no score, no league table and no ordering. Five columns, states in cells.",
+  "Not a certification. We measure; we never certify.",
+  "Not a judgement of safety, of research quality, or of whether a lab's evaluations are good ones. A lab can do excellent safety work and answer NO on every column here. These checks ask whether a reader can verify what was published, not whether what was published is true.",
+  "Not an Article 53 compliance assessment. Nothing here says whether any lab meets a legal obligation.",
+  "Not complete. Ten providers, on one day, on the artifacts each one's own index led to."
+ ],
+ "checks": {
+  "signed": "Is any published evaluation result cryptographically signed, with a resolvable public key?",
+  "content_addressed": "Is a published result identified by a digest of its own bytes, cited by the publisher?",
+  "bank_published": "Are the questions or tasks behind a published score available to read?",
+  "corrections": "Is there a public record of errors the lab found in its OWN published results - and when a named third-party evaluator later corrects a number the card cites, does the card change?",
+  "recomputable": "Can a third party reproduce a published score from published artifacts without contacting them?"
+ },
+ "state_meanings": {
+  "YES": "evidenced, with the artifact cited",
+  "PARTIAL": "true in a stated scope and not in another; both halves recorded",
+  "NO": "checked and absent; the places searched are recorded",
+  "UNCHECKABLE": "could not be determined from public sources. NOT the same as NO."
+ },
+ "rulings_applied": [
+  "A version string, a date, an arXiv version number or a human-readable filename is NOT a content address.",
+  "A digest the publisher never cites is at most PARTIAL. The reader supplying the pin does not count as the publisher committing to one. This ruling is already applied to METR, Arena, LiveBench and HELM in the third-party census and is applied unchanged here - which is why Anthropic's SHA-1 CDN paths and Hugging Face's LFS sha256 oids are PARTIAL and not YES.",
+  "Reusing a third party's public bank (MMLU, GPQA, SWE-bench) is not the lab publishing its bank; it is PARTIAL at most, and the distinction is recorded in the cell.",
+  "A git log or a commit history is a change record, not a declared erratum. It supports PARTIAL, not YES.",
+  "Signature absence is claimed only after a binary scan of the bytes for /Sig, /ByteRange and adbe.pkcs7, never from the absence of a signature page."
+ ],
+ "method_limitations": [
+  "The Internet Archive was INTERMITTENTLY OFFLINE throughout the measurement window. web.archive.org/cdx returned an 'Internet Archive: Temporarily Offline' HTML page at 12:31Z, 12:33Z, 12:40Z and 12:48Z, and HTTP 429 at 12:36Z, but served valid JSON between roughly 12:35Z and 12:40Z. The xAI and Mistral sweep obtained real CDX JSON in that window and its findings rest on data actually received; the OpenAI/Microsoft and Google DeepMind/Meta sweeps did not, and for them the Wayback silent-revision test could not be run at all. Where a sweep could not run it, the question is recorded as UNCHECKABLE rather than NO. No Wayback error page was ever treated as a result.",
+  "Substitutes were used where Wayback was unavailable: HTTP last-modified against the document's own printed date, in-band PDF /CreationDate and /ModDate, in-document changelog sections, git and Hugging Face commit histories, and arXiv version histories. These can establish THAT bytes changed at a stable URL; without an archived copy they cannot establish WHAT changed. The Google DeepMind corrections cell rests on this weaker form of evidence and says so.",
+  "The last-modified substitute is INVALID on deploymentsafety.openai.com, where the origin returns last-modified equal to CDN cache-fill time: three different cards reported last-modified within one second of the request, and gpt-6-astra reported a value equal to request time minus its own age header. That line of evidence was discarded rather than reported.",
+  "openai.com/index/* returns HTTP 403 to curl even with a browser User-Agent. System cards were read from deploymentsafety.openai.com, which does answer. System cards published only in blog form on openai.com/index/ were not examined.",
+  "Only 11 of the 26 model slugs on deploymentsafety.openai.com serve a PDF at /<slug>/<slug>.pdf; the rest return HTML there. For those, rendered HTML was scanned and NO claim is made about the signature state of any PDF form of those cards. Its sitemap.xml is also emitted with http://localhost:4321/ hostnames, a build defect; paths were used with the real host substituted, so any page whose real path differs would have been missed.",
+  "x.ai HTML pages are Cloudflare-blocked to both curl and WebFetch (x.ai/sitemap.xml, x.ai/news, x.ai/model-card and data.x.ai/ all returned 403). Those paths are UNCHECKABLE, not absent; xAI artifacts were reached only as direct PDF URLs and the artifact set was enumerated via Wayback CDX rather than via xAI's own index.",
+  "trust.mistral.ai returns HTTP 200 but is JS-rendered and yielded only a page title; its contents are UNCHECKABLE, not absent. developer.meta.com's sitemap returns HTTP 403, so Meta's surface could not be enumerated from a sitemap.",
+  "qwen.ai, moonshot.ai and kimi.com are JS-rendered SPAs with catch-all routing that return HTTP 200 with app HTML for ANY path, so absence of a page cannot be inferred from a status code there, and their /.well-known/security.txt 200s are catch-alls rather than real files. Content rendered only client-side on those hosts is UNCHECKABLE.",
+  "Meta's Hugging Face repos are gated (gated:'manual'); the commits API and paths-info both return HTTP 401, so Meta's HF-side revision history and LFS sha256 oids could not be read from public bytes at all. The public GitHub mirror meta-llama/llama-models was used instead and may diverge from the HF card.",
+  "GitHub code and repository SEARCH was unavailable: gh api search/repositories returned HTTP 422 'User flagged as spammy' for the authenticated account. Whether Qwen's in-house banks (QwenSWEBench, CoWorkBench, RecreationBench, ClawEval-MM, NL2Repo-Bench) exist anywhere on GitHub is therefore UNCHECKABLE, not NO. The Hugging Face half of that search did run and returned none.",
+  "PDF text extraction is lossy on kerned table cells. This was confirmed empirically on the Kimi K2 tech report, where 36 of 37 benchmark rows appeared to change between arXiv v1 and v2 and every difference proved to be an extraction artifact. Every number-change claim in this census rests on a normalised comparison, never on a raw diff. Numbers rendered only inside images or vector-drawn charts - including MAI-Transcribe-1's WER figures and Mistral's Shieldstral safety charts - are invisible to this method.",
+  "Signature checking covered security.txt, the downloaded PDFs' internals, GitHub release assets and Hugging Face repo trees. It did NOT cover detached signatures published out of band: a keyserver, a Sigstore transparency log, or ModelScope, which DeepSeek and Qwen also mirror to. Every SIGNED: NO means absent from the surfaces checked.",
+  "Coverage is the current flagship line plus predecessors. DeepSeek has 105 Hugging Face models, Qwen 465 and Moonshot 19; those 589 repos were not all tree-scanned, and Mistral's file lists were enumerated for 4 of more than 100 repos. A signature in an unsampled repo would not have been seen.",
+  "No Microsoft Responsible AI Transparency Report PDF was downloaded or scanned; no claim is made about its signature or corrections state. Azure AI Foundry Transparency Notes on learn.microsoft.com were read from server-rendered HTML (100,765 chars, no benchmark percentages found); numbers rendered client-side could not be ruled out.",
+  "One lead was chased to a conclusion and cleared rather than reported: OpenAI's GPT-5 system card cites METR's 50% time horizon as 'around 2h15m (65m - 4h30m 95% CI)', while METR's live report at https://metr.org/evaluations/gpt-5-report/ (fetched 2026-09-17T12:49Z) headlines 'around 2 hours 17 minutes'. That is not a stale number: METR's same live page states 'We ended up rescoring 18 tasks ... which reduced the central 50%-time horizon estimate from approximately 3 hours down to around 2h15m, and the upper confidence interval from 8 to 4.5 hours.' The card's figure appears verbatim in the evaluator's current text. Whether METR's March 2026 regularisation correction later moved this particular figure is UNCHECKABLE with Wayback down, but no divergence between card and evaluator is visible today.",
+  "No lab was contacted. Every cell is from public bytes fetched between 2026-09-17T12:31Z and 2026-09-17T12:50Z."
+ ],
+ "notable_findings": [
+  "SIGNED is NO for all ten. Not one frontier lab cryptographically signs any published evaluation result. 100-plus PDFs were binary-scanned for /Sig, /ByteRange and adbe.pkcs7 across the ten subjects with zero hits. The only PGP-signed artifact found anywhere is OpenAI's /.well-known/security.txt, a vulnerability-disclosure contact record, whose key resolves only from the origin the file itself names. Microsoft publishes an OpenPGP key for CSAF security advisories and does not sign model cards. The industry that asks to be trusted on measurement signs its bug-report inbox and not one measurement.",
+  "The Anthropic accidental content address HOLDS, and is broader than reported. All 34 PDFs fetched from www-cdn.anthropic.com have a 40-hex path component exactly equal to the SHA-1 of their bytes - as the filename in 29 cases and as a directory in 5, including the current Claude Opus 5 system card at ceaf5c7ff2783855203fde8208ec311252dced5b. It is not limited to the Claude 4 and 4.1 cards. It is a real content address, in a hash function broken for collision resistance since 2017, that no reader is told to rely on; the string 'sha1' appears once on /system-cards, inside CMS metadata for an Open Graph image. Anthropic also serves identical bytes under a non-addressed path on assets.anthropic.com and links THAT one from the Transparency Hub.",
+  "Because of that accidental content address, three distinct byte-versions of the Claude 4 system card are simultaneously live and distinguishable, which is how the census's sharpest corrections finding became visible at all. One of them carries a Changelog: 'September 2, 2025 - Fixed incorrect evaluation numbers for Claude Code Impossible Tasks', and its footnote 29 states the correction ran 'from 5% to 19% for Claude Opus 4 and from 10% to 7% for Claude Sonnet 4'. As of 2026-09-17, https://www.anthropic.com/system-cards still links the UNCORRECTED version showing 5% and 10%, on the same index page that links the Claude Opus 4.1 addendum showing the corrected 19% and 7%.",
+  "Meta is the census's confirmed case of a named evaluator's correction failing to reach the card. https://ai.meta.com/blog/llama-4-multimodal-intelligence/ still reads 'an experimental chat version scoring ELO of 1417 on LMArena' and hyperlinks to https://lmarena.ai/leaderboard, which today lists llama-4-maverick-17b-128e-instruct at rank 107 with rating 1145.28 - 272 Elo points lower - with the experimental variant no longer present at all. Meta's page carries no editor's note seventeen months later.",
+  "xAI's case is different from a stale number and arguably worse: two published artifacts were silently regenerated about two days after publication, at unchanged date-stamped URLs still reading 'Last updated: August 20, 2025', and the edit DELETED the UK AI Security Institute's attribution and its adverse finding that 'an un-safeguarded version of Grok 4 poses a plausible risk of assisting a non-expert in the creation of a chemical or biological weapon'. The numeric tables were untouched. A census that only compares numbers would have seen nothing.",
+  "Only OpenAI answers YES on corrections, and the disclosure has a seam: the same correction is published as '0.4% to 1.5%' in the GPT-5.6 card and '0.4% to 1.48%' in the GPT-5.5 card.",
+  "Anthropic's /system-cards index, the page its own sitemap advertises, stops at Claude Opus 4.5 (November 2025). System cards for Claude Opus 4.6, Sonnet 4.6, Opus 4.7, Opus 4.8, Mythos Preview, Fable 5 and Mythos 5, Sonnet 5 and Opus 5 are published and reachable through the Transparency Hub and through stable slugs, and none is listed on the index.",
+  "Google DeepMind overwrites model-card PDFs in place at stable URLs without updating the date printed on the card. Gemini-2-5-Pro-Model-Card.pdf reads 'Model card updated June 27, 2025' against bytes last written 2025-10-07; Gemini-2-0-Flash-Model-Card.pdf reads 'published April 15, 2025' against bytes written 2025-12-18. A reader citing either card cannot know which bytes they read. Its Frontier Safety Framework reports also attribute all external results to anonymous 'third party evaluator(s)', so the named-evaluator correction test cannot be run against DeepMind at all.",
+  "Moonshot's Kimi-K3 ships machine-readable eval records at .eval_results/*.yaml whose source.url points back at the model card that states the number - a provenance field that cites itself. They were added by Hugging Face staff pull requests merged by Moonshot. It is the clearest illustration in this census of why a content address has to come from the publisher.",
+  "github.com/microsoft/Phi-4-reasoning-vision-15B ships TRANSPARENCY_NOTE.md at 0 bytes - git blob e69de29bb2d1d6434b8b29ae775ad8c2e48c5391, the canonical empty-blob hash. The repository promises a transparency note and delivers an empty file.",
+  "Two apparent findings were chased down and DISPROVED, and are recorded so they are not repeated: DeepSeek-R1's arXiv v2 headline table is byte-identical to v1 (v2 is an expansion, not a restatement), and every one of 36 apparent numeric changes between Kimi K2's arXiv v1 and v2 is a PDF extraction artifact."
+ ],
+ "rows": [
+  {
+   "org": "Anthropic",
+   "url": "https://www.anthropic.com/system-cards",
+   "fetched": "2026-09-17T12:31Z",
+   "artifacts_examined": [
+    "https://www.anthropic.com/system-cards",
+    "https://www.anthropic.com/transparency",
+    "https://www.anthropic.com/.well-known/security.txt",
+    "https://www-cdn.anthropic.com/07b2a3f9902ee19fe39a36ca638e5ae987bc64dd.pdf",
+    "https://www-cdn.anthropic.com/6d8a8055020700718b0c49369f60816ba2a7c285.pdf",
+    "https://www-cdn.anthropic.com/6be99a52cb68eb70eb9572b4cafad13df32ed995.pdf",
+    "https://www-cdn.anthropic.com/9fa30625273bafdf5af82c93719d7ca606485a16.pdf",
+    "https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47.pdf",
+    "https://www-cdn.anthropic.com/ceaf5c7ff2783855203fde8208ec311252dced5b/Claude%20Opus%205%20System%20Card.pdf",
+    "https://assets.anthropic.com/m/785e231869ea8b3b/original/claude-3-7-sonnet-system-card.pdf"
+   ],
+   "signed": {
+    "state": "NO",
+    "evidence": "34 PDFs downloaded from www-cdn.anthropic.com (all 10 cards listed on /system-cards, 21 further PDFs linked from /transparency, and the Claude Opus 5, Sonnet 5 and Opus 4.8 system cards reached through their slug redirects) plus assets.anthropic.com/m/785e231869ea8b3b/original/claude-3-7-sonnet-system-card.pdf, binary-scanned for /ByteRange and adbe.pkcs7: 0 hits in 0 files. Fetched 2026-09-17T12:31Z-12:47Z. https://www.anthropic.com/.well-known/security.txt (HTTP 200, fetched 2026-09-17T12:35Z) carries only Contact, Expires, Preferred-Languages, Canonical, Policy and Hiring lines; there is no Encryption line and no key to resolve.",
+    "note": "No signature, no key, no detached .sig or .asc alongside any card."
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "Every PDF served by www-cdn.anthropic.com is addressed by the SHA-1 of its own bytes. Verified by download plus shasum -a 1 on 2026-09-17T12:31Z-12:47Z: 34 of 34 PDFs matched, with the 40-hex appearing either as the filename (e.g. 07b2a3f9902ee19fe39a36ca638e5ae987bc64dd.pdf, 4,967,773 bytes) or as the directory (ceaf5c7ff2783855203fde8208ec311252dced5b/Claude%20Opus%205%20System%20Card.pdf, 198 pages, 16,281,258 bytes; fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Claude_3_Addendum.pdf; bd2a28d2535bfb0494cc8e2a3bf135d2e7523226/Model-Card-Claude-2.pdf). One further 40-hex URL linked from /transparency, 53566bf5440a10affd749724787c8913a2ae0841.pdf, now 301-redirects to an HTML landing page and served no PDF bytes, so it was not testable.",
+    "note": "PARTIAL, not YES, on the ruling already applied to METR, Arena, LiveBench and HELM in the third-party census: the publisher never cites the digest. The string sha1 appears exactly once in the /system-cards HTML, inside Sanity CMS metadata for an Open Graph image (\"sha1hash\":\"6d4a0d28992ade92d6fa63646fd9c9d318245c6c\"), never for a system card and never addressed to a reader. Nothing on /system-cards or /transparency tells anyone the path is a digest or asks anyone to check it. Anthropic also serves identical bytes under a NON-content-addressed path and links that one from the Transparency Hub: https://assets.anthropic.com/m/785e231869ea8b3b/original/claude-3-7-sonnet-system-card.pdf returns the same 5,974,368 bytes, SHA-1 9ff93dfa8f445c932415d335c88852ef47f1201e, as www-cdn.anthropic.com/9ff93dfa8f445c932415d335c88852ef47f1201e.pdf. It is a real content address, in a hash function broken for collision resistance since 2017, that no reader is told to rely on and that the publisher itself routes around."
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "The cards report a mix of third-party public banks and undisclosed internal ones. Readable: SWE-bench Verified, LAB-Bench, CyberGym (1,505 tasks), BrowseComp-Plus, MMMLU (the Claude Opus 4.5 card, bf10f64990cfda0ba858290be7b8cc6317685f47.pdf, cites https://huggingface.co/datasets/openai/MMMLU) and METR's public Deduplicate Data task used at section 7.3.2 of the Claude 4 card. Not readable: Internal AI Research Evaluation Suites 1 and 2, the bioweapons acquisition uplift trial, ASL-3 and ASL-4 expert red teaming, the reward-hacking classifier prompts, and the Claude Code Impossible Tasks set that carries the corrected numbers recorded below. Fetched 2026-09-17T12:36Z.",
+    "note": "Where the bank is readable it is almost always a third party's bank rather than Anthropic's own. Every evaluation that carries an RSP determination runs on a bank no reader can see."
+   },
+   "corrections": {
+    "state": "PARTIAL",
+    "evidence": "A public self-correction record exists, is explicit, and is current. The Claude Opus 5 system card (https://www.anthropic.com/claude-opus-5-system-card -> www-cdn.anthropic.com/ceaf5c7ff2783855203fde8208ec311252dced5b/..., dated July 24 2026, fetched 2026-09-17T12:46Z) opens with a Changelog: 'August 19, 2026 - Added bug bounty results for prompt injection in Section 5.2.2.1... - Updated Cowork evaluation results in Section 5.2.2.4. We identified a mismatch between the harness used for Claude Opus 5 and the one used for previous models. The results for all other models have been updated to use the same harness as Opus 5.' The Claude 4 system card carries a comparable Changelog in the revision at www-cdn.anthropic.com/6d8a8055020700718b0c49369f60816ba2a7c285.pdf (124 pages, fetched 2026-09-17T12:37Z): 'September 2, 2025 - Fixed incorrect evaluation numbers for Claude Code Impossible Tasks. See footnote 29.' Its footnote 29 reads: 'For classifier hack rate with the anti-hack prompt, we found an error in the original number we reported for Claude Opus 4. The number reported above is corrected (from 5% to 19% for Claude Opus 4 and from 10% to 7% for Claude Sonnet 4).'",
+    "note": "PARTIAL because the correction never reached the index. Anthropic's slug redirects are mutable pointers that get repointed when a card is revised, but the /system-cards table hardcodes 40-hex CDN paths, so its rows freeze on whichever bytes were current when the row was written. As of 2026-09-17T12:38Z /system-cards still links the UNCORRECTED 123-page Claude 4 card (07b2a3f9902ee19fe39a36ca638e5ae987bc64dd.pdf), whose Table 6.2.A still reads Claude Opus 4 47%/5% and Claude Sonnet 4 45%/10% against the corrected 51%/19% and 51%/7%. The same index page simultaneously links the Claude Opus 4.1 System Card Addendum (9fa30625273bafdf5af82c93719d7ca606485a16.pdf) which carries the corrected 51%/19% and 51%/7% - two contradictory values for one measurement on one index page, twelve months after the stated fix of 2 September 2025. There is no errata page, changelog or revision notice anywhere on /system-cards itself. Separately, the correction fixed the table and left standing the sentence that only the wrong number supported: 'Claude Sonnet 4 had the lowest hacking rates across the board except on the Claude Code Impossible Tasks variant with anti-hack prompting, where Claude Opus 4 performed best... Claude Opus 4 may be more steerable than Claude Sonnet 4' is byte-identical in the uncorrected and corrected PDFs, although under the corrected numbers Opus 4 (19%) is worse than Sonnet 4 (7%). The Opus 4.1 addendum's own table caption does flip the conclusion: 'the lowest and least reward hack-prone model, which is Claude Sonnet 4 across all categories'."
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "Exactly one evaluation across the cards examined carries reproduction instructions: section 2.6.3 Reproducibility of the Claude Opus 4.5 system card, 'Researchers can reproduce this evaluation using the BrowseComp-Plus corpus available at Tevatron/browsecomp-plus-corpus on Huggingface, with a Qwen3-Embedding-8B search index configured as described in the paper (5 results; 2,048 character snippets).' A grep for section headings matching Reproducibility returns 1 in the Claude Opus 4.5 card and 0 in the Claude Sonnet 4.5, Claude 4 and Claude Opus 5 cards (fetched 2026-09-17T12:38Z-12:47Z). No scored run records, grader prompts or scoring code are published for any RSP or alignment evaluation.",
+    "note": "One evaluation of dozens. Every number that carries an ASL determination is graded by undisclosed classifiers on undisclosed prompts."
+   }
+  },
+  {
+   "org": "OpenAI",
+   "url": "https://deploymentsafety.openai.com/",
+   "fetched": "2026-09-17T12:32Z",
+   "artifacts_examined": [
+    "https://deploymentsafety.openai.com/",
+    "https://deploymentsafety.openai.com/sitemap.xml",
+    "https://deploymentsafety.openai.com/gpt-6-astra/gpt-6-astra.pdf",
+    "https://deploymentsafety.openai.com/gpt-5-6/gpt-5-6.pdf",
+    "https://deploymentsafety.openai.com/gpt-5-5/gpt-5-5.pdf",
+    "https://deploymentsafety.openai.com/gpt-5-4-thinking/gpt-5-4-thinking.pdf",
+    "https://deploymentsafety.openai.com/gpt-5-3-codex/gpt-5-3-codex.pdf",
+    "https://cdn.openai.com/pdf/18a02b5d-6b67-4cec-ab64-68cdfbddebcd/preparedness-framework-v2.pdf",
+    "https://cdn.openai.com/dd128428-0184-4e25-b155-3a7686c7d744/HealthBench-Professional.pdf",
+    "https://openai.com/.well-known/security.txt",
+    "https://cdn.openai.com/security/disclosure.asc.pub",
+    "https://github.com/openai/simple-evals",
+    "https://openaipublic.blob.core.windows.net/simple-evals/healthbench/2025-05-07-06-14-12_oss_eval.jsonl"
+   ],
+   "signed": {
+    "state": "NO",
+    "evidence": "Eleven system-card PDFs downloaded from deploymentsafety.openai.com (gpt-6-astra 9,655,714 bytes sha256 b9a50c7ea88fb2e2...; gpt-5-6 4,430,565 bytes sha256 aa8073bcfa154491...; gpt-5-5, gpt-5-4-thinking, gpt-5-3-codex, gpt-live, chatgpt-images-2-5, gpt-rosalind-5-5, gpt-5-6-preview, gpt-5-5-instant, gpt-5-6-august-update) plus cdn.openai.com/pdf/18a02b5d.../preparedness-framework-v2.pdf and cdn.openai.com/dd128428.../HealthBench-Professional.pdf, fetched 2026-09-17T12:33Z-12:43Z. strings -a <f> | grep -aE '/Sig|/ByteRange|adbe.pkcs7|/DocMDP|/Perms' plus grep -acE '/ByteRange' and grep -acE '/Sig' on every one: ByteRange=0 and Sig=0 on all 13, no adbe.pkcs7, no /DocMDP. No .sig/.asc/.jws/.minisig/.pem/.intoto sibling file beside any card. github.com/openai/simple-evals has 0 releases, so no signed release assets.",
+    "note": "OpenAI is the only subject in this census with any PGP-signed artifact at all, and it is not an evaluation artifact. https://openai.com/.well-known/security.txt (fetched 2026-09-17T12:32Z, 1,273 bytes) is a PGP cleartext-signed message; importing https://cdn.openai.com/security/disclosure.asc.pub (HTTP 200, 770 bytes) and running gpg --verify returns 'Good signature from \"OpenAI Coordinated Vulnerability Disclosure ... <disclosure@openai.com>\"', key FAE497A5E5C98A5265649BF02BC40DE98AD57FCA, signature made 2025-03-14T17:22:04Z. That is a vulnerability-disclosure contact record. The key resolves only from the same origin the file names (cdn.openai.com), so the trust root is self-asserted. Not one evaluation result is signed."
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "cdn.openai.com serves card-adjacent PDFs under random UUID path segments. https://cdn.openai.com/dd128428-0184-4e25-b155-3a7686c7d744/HealthBench-Professional.pdf was downloaded at 2026-09-17T12:40Z (1,154,664 bytes) and hashed: sha256 6fb95bee7caa319432c3349c22355c72aa979edbf011af582790658bb64e56e7, sha1 5ef12b2dea59171997b44fa7ff2affbeece8007a. Neither matches the path segment dd128428-0184-4e25-b155-3a7686c7d744, which is a UUID and not a digest. deploymentsafety.openai.com PDFs live at human-readable slug paths (/gpt-6-astra/gpt-6-astra.pdf). Grepping the extracted text of six cards for sha256|sha-256|digest|checksum returns 0 hits in every one. No git commit pin is cited in any card text.",
+    "note": "Cards carry a cover date (e.g. '2026-09-03') and a Change log. That is a version marker, not a content address, and is excluded by the same ruling applied to the third-party census."
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "Published side: github.com/openai/simple-evals (fetched 2026-09-17T12:40Z) ships healthbench_eval.py, gpqa_eval.py, browsecomp_eval.py and simpleqa_eval.py and cites live dataset URLs; https://openaipublic.blob.core.windows.net/simple-evals/healthbench/2025-05-07-06-14-12_oss_eval.jsonl returned HTTP 200 and 33,603,584 bytes before a 60s timeout, and its first record contains a real patient prompt plus example_tags and ideal_completions_data fields, i.e. actual readable questions. openai/mle-bench and openai/SWELancer-Benchmark are public. Not published: the evaluations that carry the cards' safety claims are named only. The GPT-5.6 card calls the hard-negative protein binding evaluation 'proprietary'. The GPT-6 Astra honeypot, ExploitGym, metagaming and oversight-gaming suites, and the UK AISI, Apollo Research and Irregular suites it summarises, have no published questions. The hub's own data tree was probed rather than guessed at from outside: https://deploymentsafety.openai.com/data/eval-sets/, /data/eval-sets/gpt-6-astra/ and /data/ all return 404 (2026-09-17T12:45Z), and the only resolving items under /data/eval-sets/ are figure images and chart PDFs."
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "OpenAI system cards carry an explicit dated 'Change log' section, and at least one entry is a numeric self-correction of a previously published score, propagated into the affected card. pdftotext of https://deploymentsafety.openai.com/gpt-5-6/gpt-5-6.pdf (fetched 2026-09-17T12:38Z), page 1: 'Change log - August 3, 2026: Added GPT-Red prompt-injection evaluation results. - August 19, 2026: We corrected GPT-5.5's pass@4 score on the hard-negative protein binding prediction evaluation from 0.4% to 1.5%. The previously reported value was its pass@1 score.' The same note is repeated inline at section 9.1.1.6. The correction reached the card it was about: https://deploymentsafety.openai.com/gpt-5-5/gpt-5-5.pdf section 9.1.1.6 reads 'August 19, 2026: We corrected GPT-5.5's pass@4 score on this evaluation from 0.4% to 1.48%.' The GPT-6 Astra card (cover date 2026-09-03, fetched 2026-09-17T12:34Z) carries two dated 'September 9, 2026' change-log entries, one stating 'We also removed a previous metric comparison plot to reduce confusion'. All 11 hub PDFs were scanned: change logs present in gpt-6-astra, gpt-5-6 and gpt-5-5; absent in gpt-5-4-thinking, gpt-5-3-codex, gpt-live, chatgpt-images-2-5, gpt-rosalind-5-5, gpt-5-6-preview, gpt-5-5-instant and gpt-5-6-august-update.",
+    "note": "This is the strongest corrections result in the census, and it is the only YES. Two defects sit inside it. First, the same correction is stated as '0.4% to 1.5%' in the GPT-5.6 card and '0.4% to 1.48%' in the GPT-5.5 card: the correction itself is published at two different precisions. Second, there is no site-level changelog (https://deploymentsafety.openai.com/changelog/, /updates/, /about/ and /methodology/ all return 404, 2026-09-17T12:34Z), so a reader must open each PDF to learn whether it moved, and the 8 cards with no change-log section cannot be distinguished from cards that were never revised. No change-log entry in any card is attributed to a third-party evaluator."
+   },
+   "recomputable": {
+    "state": "NO",
+    "evidence": "For the cards' own headline safety and preparedness numbers there is no path from published artifacts to the score. The measured object is a pre-deployment checkpoint nobody else can obtain: the GPT-6 Astra card says Apollo Research 'evaluated a near-final, representative version of Astra'. The banks behind the biological, cyber and alignment numbers are proprietary or third-party-private. Grepping all six card texts for sha256/digest/checksum returns 0, and the Astra PDF's extracted text contains exactly one URL (https://openai.com/index/mle-bench/). No seeds, no scaffold or harness release, no per-task raw results and no grader prompts for the safety evaluations. The narrow exception is the public-benchmark subset reachable through simple-evals, where code and data are both public, but those are not the numbers the Preparedness determinations rest on."
+   }
+  },
+  {
+   "org": "Google DeepMind",
+   "url": "https://deepmind.google/models/model-cards/",
+   "fetched": "2026-09-17T12:33Z",
+   "artifacts_examined": [
+    "https://deepmind.google/sitemap.xml",
+    "https://deepmind.google/models/model-cards/",
+    "https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-1-Pro-Model-Card.pdf",
+    "https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-2-5-Pro-Model-Card.pdf",
+    "https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-2-0-Flash-Model-Card.pdf",
+    "https://storage.googleapis.com/deepmind-media/gemini/gemini_3_pro_fsf_report.pdf",
+    "https://storage.googleapis.com/deepmind-media/gemini/gemini_3-7_flash_fsf_report.pdf",
+    "https://storage.googleapis.com/deepmind-media/DeepMind.com/Blog/strengthening-our-frontier-safety-framework/frontier-safety-framework_3.pdf",
+    "https://storage.googleapis.com/deepmind-media/DeepMind.com/Blog/strengthening-our-frontier-safety-framework/frontier-safety-framework_3-1.pdf",
+    "https://deepmind.google/frontier-safety/",
+    "https://github.com/UKGovernmentBEIS/inspect_evals/tree/main/src/inspect_evals/gdm_stealth"
+   ],
+   "signed": {
+    "state": "NO",
+    "evidence": "strings -a f.pdf | grep -aE '/Sig|/ByteRange|adbe.pkcs7' run on five DeepMind PDFs (Gemini-3-1-Pro-Model-Card, gemini_3_pro_fsf_report, gemini_3-7_flash_fsf_report, frontier-safety-framework_3, frontier-safety-framework_3-1) at 2026-09-17T12:35Z returned 0 hits in every file. No .sig/.asc/.jws/.minisig/.intoto/.sigstore alongside any storage.googleapis.com/deepmind-media path. https://deepmind.google/.well-known/security.txt returns 404 and https://ai.google.dev/.well-known/security.txt returns 404 (12:32Z); https://www.google.com/.well-known/security.txt returns 200 but is a vulnerability-reporting contact with a key for reporting TO Google, not an artifact-signing key. PDF /Producer is 'Skia/PDF m149 Google Docs Renderer' with no signature dictionary.",
+    "note": "SynthID and C2PA verified absent rather than assumed: grep -acE 'c2pa|jumbf|SynthID|contentauth' returned 0 on all five PDFs."
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "PDF paths are human-readable and unversioned, e.g. https://storage.googleapis.com/deepmind-media/Model-Cards/Gemini-3-1-Pro-Model-Card.pdf. Its bytes were hashed at 2026-09-17T12:33Z: sha1 db284bd1d6acecff40568b2c465d845d7750f42a, sha256 70bcda79a248255d2c858600cb1fecae9ea30278c942684754df0bca71ca8315. Neither appears in the filename, the linking page, or the document text. grep -inoE '[a-f0-9]{40,64}|sha-?256|checksum|digest|merkle' over the extracted text of all four DeepMind documents returned zero hits.",
+    "note": "Google Cloud Storage does emit x-goog-hash: md5=4WuyDzFnSSh8huGhUWcLQQ== and crc32c on HEAD (verified on Gemini-2-5-Pro-Model-Card.pdf, 12:33Z). That is auto-generated transport metadata present on every GCS object, it is MD5, and DeepMind cites it nowhere, so it is not a publishing act. Recorded NO rather than PARTIAL."
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "Real and substantial for dangerous-capability evaluations: gemini_3-7_flash_fsf_report.pdf states 'To enable third-party evaluation and reproducibility, we have made most of these evaluations publicly available on GitHub', and its PDF link annotation resolves to https://github.com/UKGovernmentBEIS/inspect_evals/tree/main/src/inspect_evals/gdm_stealth. Verified live via the GitHub contents API at 2026-09-17T12:36Z: gdm_stealth contains gdm_stealth.py, scorer_lib.py, rater_lib.py, eval.yaml, data/ and solver/. Six gdm_* suites exist (gdm_capabilities, gdm_in_house_ctf, gdm_intercode_ctf, gdm_self_proliferation, gdm_self_reasoning, gdm_stealth). Not published: the model card's content-safety query sets. Gemini-3-1-Pro-Model-Card.pdf reports Text-to-Text Safety +0.10%, Multilingual Safety +0.11%, Image-to-Text Safety -0.33%, Tone +0.02% and Unjustified-refusals -0.08% with no published prompt set, and states 'we... update query sets to ensure balance'. The CBRN and cyber banks are not published."
+   },
+   "corrections": {
+    "state": "NO",
+    "evidence": "No changelog, errata or revision-history section exists in any DeepMind artifact: grep -inE 'changelog|errata|revision|version history|corrigend' over the Gemini 3.1 Pro, Gemini 2.5 Pro, Gemini 2.0 Flash and Gemini 2.5 Flash card texts returned 0 hits each. Silent revision is evidenced from HTTP last-modified against each document's OWN printed date (curl -sI, 2026-09-17T12:40Z): Gemini-2-5-Pro-Model-Card.pdf says on page 1 'Model card updated June 27, 2025' but its bytes were last written Tue, 07 Oct 2025 08:33:11 GMT, about 3.5 months later, at a stable URL with no note of what changed; Gemini-2-0-Flash-Model-Card.pdf says 'Model card published April 15, 2025' against bytes last written Thu, 18 Dec 2025 17:13:09 GMT, 8 months later; Gemini-3-1-Pro-Model-Card.pdf says 'Published: February 2026' against bytes last written Thu, 23 Apr 2026 11:01:09 GMT. The card concedes revision without recording it: 'Model cards may be updated from time-to-time.' At that April rewrite the 3.1 Pro card still linked frontier-safety-framework_3.pdf (Published September 22, 2025) although FSF Version 3.1 (Published: April 17, 2026) was already live and listed on https://deepmind.google/frontier-safety/.",
+    "note": "The named-third-party correction test cannot be run against DeepMind at all, by construction: gemini_3_pro_fsf_report.pdf attributes external results only to anonymous 'third party evaluator(s)' (lines 337, 343, 441, 526, 590, 673). The only named external parties anywhere are UK AISI and Redwood Research in gemini_3-7_flash_fsf_report.pdf, credited as threat-model advisors rather than as the source of a cited number. The 3.1 Pro card also admits cross-card incomparability without restating prior cards: 'The performance results reported below are computed with improved evaluations and thus are not directly comparable with performance results found in previous Gemini model cards.'"
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "Recomputable: the six gdm_* suites in UKGovernmentBEIS/inspect_evals ship runnable solver and scorer code plus data, published by DeepMind for exactly this purpose. Not recomputable: every safety number in the model card is a relative delta against another proprietary model ('+0.10% ... vs. Gemini 3.0 Pro') over an unpublished and admittedly mutating query set; the FSF external-testing results come from unnamed evaluators using, in Google's words, 'methodologies and approaches defined by these groups'; and the stealth pass criteria depend on an unpublished human baseline ('top 50% of humans... due to having a small sample size of human participants')."
+   }
+  },
+  {
+   "org": "Meta",
+   "url": "https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md",
+   "fetched": "2026-09-17T12:36Z",
+   "artifacts_examined": [
+    "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama4/MODEL_CARD.md",
+    "https://api.github.com/repos/meta-llama/llama-models/commits?path=models/llama4/MODEL_CARD.md",
+    "https://api.github.com/repos/meta-llama/PurpleLlama/contents/CybersecurityBenchmarks/datasets",
+    "https://raw.githubusercontent.com/meta-llama/PurpleLlama/main/CybersecurityBenchmarks/README.md",
+    "https://ai.meta.com/blog/llama-4-multimodal-intelligence/",
+    "https://ai.meta.com/static-resource/Meta_Advanced-AI-Scaling-Framework-v2",
+    "https://lmarena.ai/leaderboard"
+   ],
+   "signed": {
+    "state": "NO",
+    "evidence": "Meta's frontier framework is published as 'Advanced AI Scaling Framework Version 2' at https://ai.meta.com/static-resource/Meta_Advanced-AI-Scaling-Framework-v2, found via the link in about.fb.com/news/2025/02/meta-approach-frontier-ai/ rather than guessed. Downloaded 2026-09-17T12:38Z, 668,289 bytes, sha256 d87aa9bf00456ec747e80b84216f9f2ffc427c1e98541f8b3c8f7f52c13c7b6a; strings -a | grep -aE '/Sig|/ByteRange|adbe.pkcs7' = 0 hits. Hugging Face sibling lists for meta-llama/Llama-4-Scout-17B-16E-Instruct (64 files) and meta-llama/Llama-Guard-4-12B (20 files) contain zero .sig/.asc/.jws/.pem/.intoto/sigstore/sha256/checksum files (API, 12:39Z). github.com/meta-llama/PurpleLlama has 0 releases (releases API, 12:34Z), so no signed release assets. security.txt: ai.meta.com 404; www.llama.com redirects to developer.meta.com, also 404 (12:32Z).",
+    "note": "One grep hit for 'c2pa' in the Meta PDF was checked and is a false positive: the string is '/h.plyc2pad1f0', a PDF named destination, not a C2PA manifest. Meta's checksum practice for weights does not extend to evaluation artifacts."
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "The Llama 4 model card is version-controlled in git (meta-llama/llama-models, models/llama4/MODEL_CARD.md), so every revision has a commit SHA that is a content address of the tree. Meta never cites one: the blog and docs link branch and main URLs, and grep -inoE '[a-f0-9]{40,64}|sha-?256|checksum|digest' over MODEL_CARD.md returns zero hits. Current bytes hashed at 12:36Z: sha256 a1739083c8a496ca0c121d90b98659a6aa7e36fcc0092581db35ef99736d104f, 23,764 bytes.",
+    "note": "The Hugging Face LFS oid sha256 route is unavailable on public bytes alone, not merely uncited: POST https://huggingface.co/api/models/meta-llama/Llama-4-Scout-17B-16E-Instruct/paths-info/main returned 401 'Access... is restricted... Please log in' (12:39Z), and the repos report gated:'manual'."
+   },
+   "bank_published": {
+    "state": "YES",
+    "evidence": "The CyberSecEval prompt bank is published as readable files in github.com/meta-llama/PurpleLlama/CybersecurityBenchmarks/datasets (GitHub contents API, 2026-09-17T12:37Z): mitre/mitre_benchmark_100_per_category_with_augmentation.json (4,488,580 bytes), mitre/mitre_prompts_multilingual_machine_translated.json (5,723,524), prompt_injection/prompt_injection.json (199,176), prompt_injection/prompt_injection_multilingual_machine_translated.json (1,067,207), plus nine further dataset directories (autocomplete, autonomous_uplift, autopatch, canary_exploit, crwd_meta, instruct, interpreter, mitre_frr, spear_phishing). The README documents the exact run commands per benchmark.",
+    "note": "Scope limit worth reading with the YES: this covers CyberSecEval, CyberSOCEval and AutoPatchBench only. The Llama 4 model card's own safety work (CBRNE helpfulness, child safety, GOAT red teaming) reports no scores against any published bank, and grep for 'CyberSecEval' in MODEL_CARD.md returns 0 hits, so the published bank is not the evidence behind the card's safety claims."
+   },
+   "corrections": {
+    "state": "NO",
+    "evidence": "No errata or changelog: grep -inE 'changelog|errata|updated|correction|revis' over the Llama 4 MODEL_CARD.md returns 0 hits. The git history of models/llama4/MODEL_CARD.md (GitHub commits API, 2026-09-17T12:36Z) is 4 commits all dated 2025-04-05 (5fdf8311 'feat: introduce llama4 support', 4daa9658 'Updated Model Card', 1ba7d45b, 038acb9f), i.e. launch-day edits only and zero post-launch corrections in the roughly 17 months since.",
+    "note": "This is the census's clearest instance of a named evaluator's correction failing to reach the card. https://ai.meta.com/blog/llama-4-multimodal-intelligence/ (fetched 2026-09-17T12:43Z) still reads verbatim: 'Llama 4 Maverick offers a best-in-class performance to cost ratio with an experimental chat version scoring ELO of 1417 on LMArena', hyperlinked to https://lmarena.ai/leaderboard. That linked leaderboard, fetched 2026-09-17T12:44Z, today lists llama-4-maverick-17b-128e-instruct at rank 107 with rating 1145.28 (rankUpper 95, rankLower 114); the experimental variant that scored 1417 no longer appears on it at all. LMArena withdrew the experimental submission and rewrote its policy in response, and the successor rule is live at https://lmarena.ai/blog/policy (HTTP 200, 12:43Z): 'The model provider must confirm in writing that the pre-release model is identical to the model they intend to release publicly. If it is determined that the publicly released model differs from the pre-release version tested on Arena, Arena will remove the model from the leaderboard.' Meta's page carries no editor's note, update, correction or clarification seventeen months later; a grep for those terms over the fetched HTML returns none. Note in Meta's favour: the phrase 'experimental chat version' was in the original text, and the model card itself never carried the ELO figure, so the uncorrected claim sits in the announcement rather than in MODEL_CARD.md."
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "Recomputable in principle for CyberSecEval: datasets plus runner code and documented commands are public (CybersecurityBenchmarks/README.md, fetched 12:39Z). Three blockers to a third party reproducing a published number without contacting Meta: the evaluated weights are gated (the HF API returns 401 for meta-llama/Llama-4-Scout-17B-16E-Instruct, gated:'manual'), so the artifact under test is not obtainable from public bytes alone; scoring depends on an external LLM judge, the README stating for the MITRE benchmark 'we recommend using GPT-3.5 including an OpenAI API key', a mutable and now-deprecated third-party dependency, so bit-exact reproduction is impossible; and the model card's benchmark table (MMLU 85.5, MMLU-Pro 62.9, MATH and others) publishes metric names and shot counts but no harness version, seeds or prompt templates."
+   }
+  },
+  {
+   "org": "xAI",
+   "url": "https://data.x.ai/2025-08-20-grok-4-model-card.pdf",
+   "fetched": "2026-09-17T12:33Z",
+   "artifacts_examined": [
+    "https://data.x.ai/2025-08-20-grok-4-model-card.pdf",
+    "https://data.x.ai/2025-08-20-xai-risk-management-framework.pdf",
+    "https://data.x.ai/2025-12-31-xai-frontier-artificial-intelligence-framework.pdf",
+    "https://data.x.ai/2026-04-07-grok-4-20-model-card.pdf",
+    "https://x.ai/.well-known/security.txt",
+    "https://api.github.com/orgs/xai-org/repos",
+    "https://huggingface.co/api/models?author=xai-org"
+   ],
+   "signed": {
+    "state": "NO",
+    "evidence": "Four PDFs fetched 2026-09-17T12:33Z-12:36Z. strings -a f.pdf | grep -aE '/Sig|/ByteRange|adbe.pkcs7' returned 0 matches on all four (Grok 4 card sha256 54068c0d9570d94dfc63c08247707b8c48045a79b5bbe865af709af95ee14415; Risk Management Framework sha256 39fab200a4b36f149c6e24ee00d3e31adc84ed59f95a734290ed80a69de73f74). https://x.ai/.well-known/security.txt (HTTP 200, 12:32Z) has Contact, Expires and Canonical only; no Encryption field, no signing key. Wayback CDX over data.x.ai returned 384 distinct archived URLs, 20 of them .pdf, and zero .sig/.asc/.jws/.minisig/.pem/.sigstore/.intoto. api.github.com/orgs/xai-org/repos lists 9 repos; the xai-org/grok-prompts releases API returns []. Hugging Face author=xai-org has 2 repos (grok-1, grok-2) and no evaluation artifacts."
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "The artifact is identified only by a date-stamped filename, 2025-08-20-grok-4-model-card.pdf, and by an in-document line 'Last updated: August 20, 2025'. A grep for sha256/digest strings across the extracted text of all four documents finds no self-digest cited by xAI anywhere.",
+    "note": "Disproved by demonstration: two different byte-streams have served under that one date-stamped name (Wayback digests PMZ5MA2G5UTTN2ELASSDFE7MCSNHIM7Z, captures 20250822000303-20250822065610, then AJF4GHIENZQ2XORNXF26ITS3MFXR5MSE, 20250828005111-20260916025529). The live HTTP ETag cdd4b61b1c23d3a8dd9b6ea74ece6ba9 does equal the MD5 of the bytes, but it is CDN-generated, MD5, and cited by the publisher nowhere; the reader supplying it does not count."
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "pdftotext of the live card (12:33Z) names third-party public banks: WMDP, MASK, AgentHarm, AgentDojo, CyBench, BioLP-Bench, VCT, OpenAI MakeMeSay, Anthropic sycophancy. Those are named third-party banks, so PARTIAL at most. xAI's own two banks are not published: the refusal set ('we constructed a broad set of harmful queries... totaling thousands of queries', graded by 'another model', unnamed) behind answer rates 0.00/0.00/0.01, and 'Soft Bias (Internal)' behind average bias 0.36. No reader can read either. The only published artifact is the system prompts at github.com/xai-org/grok-prompts."
+   },
+   "corrections": {
+    "state": "NO",
+    "evidence": "No changelog, errata, revision history or version number in any artifact: grep -niE 'changelog|errata|revision|corrected|version [0-9]' over the Grok 4 card text matched only 'Last updated: August 20, 2025'. Silent revision is proven on two documents. (a) Grok 4 card: Wayback shows two distinct digests at one URL, PMZ5MA2G5UTTN2ELASSDFE7MCSNHIM7Z (20250822000303, 20250822005628, 20250822065610) then AJF4GHIENZQ2XORNXF26ITS3MFXR5MSE (20250828005111 onward through 20260916025529). The archived original (sha256 e5056cab544e416cb68887ff558d47e9abe986d3c721528e419f9958ac18be7a) diffed against live shows 'third-party testing by the UK AI Security Institute (AISI) shows...' reduced to 'third-party testing shows...', and the whole paragraph beginning 'Third-party evaluations. The UK AI Security Institute conducted additional evaluations on the dual-use capabilities of our models... an un-safeguarded version of Grok 4 poses a plausible risk of assisting a non-expert in the creation of a chemical or biological weapon' deleted. AISI mentions fell from 4 to 1, and the survivor credits AISI only as author of the Inspect framework. (b) Risk Management Framework: Wayback digests TUQEZQ47BIJ5C2ME35PFHADPBYS62G7C (20250821224133) then CERTNCX4ELPMDKLTS4ID75OSW3CIHT6W (20250822181311 onward); the diff shows the source list 'NIST, AISI, RAND, and EBRC' become 'NIST, RAND, and EBRC'. Both documents still read 'Last updated: August 20, 2025' at unchanged URLs.",
+    "note": "Corroborated without Wayback from in-band bytes: the live Grok 4 card carries /CreationDate = /ModDate = D:20250822070214Z with HTTP Last-Modified 'Fri, 22 Aug 2025 08:06:17 GMT', against the archived original's D:20250821054650Z; the live Risk Management Framework carries D:20250822085748-07'00' against the archived original's D:20250820173713-07'00', with Last-Modified 'Fri, 22 Aug 2025 16:18:27 GMT'. Both in-band build timestamps are later than the stated 20 August publication date. The numeric tables (CyBench 0.43, WMDP Bio 0.87, MASK 0.43) are byte-identical across versions: what was removed was a named evaluator's attribution and its adverse finding, not a number."
+   },
+   "recomputable": {
+    "state": "NO",
+    "evidence": "No evaluation code, no per-item outputs, no seeds, and no judge specification ('we used another model to grade'); the two internal banks are unpublished. Grok 4 API and web endpoints are paid and versioned in place. Nothing in the four PDFs or the nine xai-org GitHub repos is a runnable reproduction of any reported number; xai-org/grok-prompts publishes system prompts only."
+   }
+  },
+  {
+   "org": "Mistral AI",
+   "url": "https://mistral.ai/sitemap.xml",
+   "fetched": "2026-09-17T12:32Z",
+   "artifacts_examined": [
+    "https://mistral.ai/sitemap-0.xml",
+    "https://mistral.ai/.well-known/security.txt",
+    "https://huggingface.co/mistralai/Mistral-Small-3.2-24B-Instruct-2506/raw/main/README.md",
+    "https://huggingface.co/api/models/mistralai/Mistral-Small-3.2-24B-Instruct-2506/commits/main",
+    "https://huggingface.co/mistralai/Pixtral-Large-Instruct-2411/raw/main/README.md",
+    "https://huggingface.co/datasets/mistralai/MM-MT-Bench/raw/main/README.md",
+    "https://github.com/mistralai/mistral-evals",
+    "https://mistral.ai/news/shieldstral",
+    "https://mistral.ai/news/mistral-3"
+   ],
+   "signed": {
+    "state": "NO",
+    "evidence": "https://mistral.ai/.well-known/security.txt (HTTP 200, 12:32Z) carries Contact, Expires, Policy, Preferred-Languages and Canonical only; no Encryption field, no signing key. Sibling file lists enumerated via the Hugging Face API with blobs=true for mistralai/Mistral-Large-Instruct-2411 (115 files), Mistral-Small-3.2-24B-Instruct-2506 (19), Magistral-Small-2506 (19) and Mixtral-8x7B-Instruct-v0.1 (36) at 12:37Z: zero .sig/.asc/.jws/.minisig/.pem/.sigstore files and no filename containing SIGN."
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "Every Hugging Face model-card revision is addressable by git commit SHA and served at that SHA; five distinct revisions of the Mistral-Small-3.2-24B-Instruct-2506 README were retrieved at 9151ac4804f1, db2ddba3b840, 42b16bced5ca, cb17b97769b0 and 95a6d26c4bfb (all HTTP 200, 12:37Z). Mistral does cite content addresses for dependencies inside the card: a git-SHA-pinned source URL github.com/mistralai/mistral-common/blob/535b4d0a0fc94674ea17db6cf8dc2079b81cbcfa/... and a docker image by digest sha256-de9032a92ffea7b5c007dad80b38fd44aac11eddc31c435f8e52f3b7404bbf39.",
+    "note": "PARTIAL, not YES: Mistral never cites a digest of the results artifact's own bytes. The revision SHA is assigned by Hugging Face infrastructure, not quoted by the publisher beside the scores. The HF API returned lfs.oid = None for all 12 LFS weight files in that repo, so publisher-side sha256 exposure for the weights could not be confirmed either way."
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "Mistral publishes some of its own eval bank: huggingface.co/datasets/mistralai/MM-MT-Bench (92 examples, split 'eval', paper arxiv.org/abs/2410.07073), plus gsm8k_speech, triviaqa_speech and mmlu_speech, four datasets under author=mistralai, and it is cited next to the score (Pixtral-12B-2409 README line 59 reports 'MM MT-Bench 6.05'; Pixtral-Large-Instruct-2411 README line 311 says 'See mistral-evals for open-source MM MT-Bench evaluation scripts'). But the current flagship and safety claims have no published bank: the Mistral-Small-3.2 README reports 'IF (Internal; accuracy) 84.78%'; mistral.ai/news/shieldstral (12:38Z) reports text safety, refusal detection, policy adaptability and multimodal safety as charts with no numeric text and no dataset link, only 'all evaluation samples are held out from training'; mistral.ai/news/mistral-3 (12:39Z) gives AIME '25 85% and an LMArena placement with no bank provenance."
+   },
+   "corrections": {
+    "state": "PARTIAL",
+    "evidence": "A real, public, per-revision change record exists and is reader-verifiable: huggingface.co/api/models/mistralai/Mistral-Small-3.2-24B-Instruct-2506/commits/main (12:37Z) returns 10 dated commits with titles (e.g. 'Update README.md (#31)' 2025-08-21, 'fix invalid json file (#18)' 2025-07-07), and each prior revision is retrievable and diffable. All five README revisions were diffed pairwise: no reported benchmark number was ever altered, zero changed lines matching a percentage.",
+    "note": "PARTIAL, not YES: a git log is a change record, not a declared erratum. There is no errata or changelog section declaring an error in Mistral's own published results, and no instance of a self-correction or a third-party-driven correction was observed. Unlike xAI, a Mistral card change cannot be silent, because the prior bytes stay addressable at their commit SHA."
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "For the multimodal line only, a third party can genuinely attempt reproduction without contacting Mistral: open weights (Apache-2.0), the published bank (MM-MT-Bench) and a published harness, github.com/mistralai/mistral-evals (17 files; eval/tasks for mm_mt_bench, vqav2, docvqa, mathvista, mmmu, chartqa), with an exact serving command 'vllm serve mistralai/Pixtral-12B-2409 --config_format mistral --tokenizer_mode mistral'. Blockers that make this PARTIAL and not YES: MM-MT-Bench 'requires calls to GPT-4o as a judge, hence you'll need to set the OPENAI_API_KEY', a paid and drifting third-party judge, so exact reproduction of 6.05 is impossible; the repo has license=None (GitHub API, 12:39Z) and was last pushed 2025-11-21; and it covers none of the current flagship or Shieldstral safety claims."
+   }
+  },
+  {
+   "org": "DeepSeek",
+   "url": "https://www.deepseek.com/en/transparency/",
+   "fetched": "2026-09-17T12:41Z",
+   "artifacts_examined": [
+    "https://www.deepseek.com/en/transparency/",
+    "https://fe-static.deepseek.com/chat/transparency/deepseek-V4-model-card-EN.pdf",
+    "https://fe-static.deepseek.com/chat/transparency/deepseek-v3.2-model-card-0414-EN.pdf",
+    "https://huggingface.co/deepseek-ai/DeepSeek-V3.2",
+    "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash",
+    "https://huggingface.co/deepseek-ai/DeepSeek-R1",
+    "https://arxiv.org/abs/2412.19437",
+    "https://arxiv.org/abs/2501.12948",
+    "https://github.com/deepseek-ai/DeepSeek-R1",
+    "https://github.com/deepseek-ai/DeepSeek-V3.2-Exp"
+   ],
+   "signed": {
+    "state": "NO",
+    "evidence": "https://deepseek.com/.well-known/security.txt and https://www.deepseek.com/.well-known/security.txt return HTTP 404 with a real Next.js 404 body, on a site whose sitemap.xml confirms the structure. gh api repos/deepseek-ai/{DeepSeek-V3,DeepSeek-R1}/releases: 1 release each, 0 assets matching .sig/.asc/.jws/.minisig/.sha256/.sigstore/.pem/.intoto. HF /api/models/<id>/tree/main?recursive=true: DeepSeek-V4-Flash 77 files, DeepSeek-V3.2 196, DeepSeek-R1 175, DeepSeek-V3 188, with 0 signature-like files in all four. strings -a | grep -E '/Sig|/ByteRange|adbe.pkcs7' on 6 DeepSeek PDFs (arXiv 2501.12948 v1 and v2, 2412.19437 v1 and v2, DeepSeek_R1.pdf, DeepSeek_V3_2.pdf and both model-card PDFs): 0 matches each. The only security contact is mailto:security@deepseek.com on the transparency page. Fetched 2026-09-17T12:33Z-12:44Z."
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "grep -aoiE 'sha-?256|digest|checksum|[0-9a-f]{40,64}' over the HF READMEs for DeepSeek-V3.2 (7,361 bytes), DeepSeek-V4-Flash (13,149 bytes) and DeepSeek-R1 (15,994 bytes) returns zero hits. pypdf text extraction of deepseek-V4-model-card-EN.pdf (5,343 chars) returns zero digest tokens. No commit sha or file digest is cited for any reported number.",
+    "note": "Hugging Face exposes LFS sha256 oids per file via tree/main?expand=true, and git commit sha1s exist, but the publisher's own text cites none; reader-supplied pins do not count."
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "https://huggingface.co/api/datasets?author=deepseek-ai returns 2 datasets only: DeepSeek-Prover-V1 and DeepSeek-ProverBench. The headline scores on the DeepSeek-V4-Flash HF README (AGIEval 82.6, MMLU 88.7, MMLU-Redux 89.4, MMLU-Pro 68.3, MMMLU, C-Eval, CMMLU, MultiLoKo, Simple-QA verified, SuperGPQA) are all third-party banks, and reusing a third party's public bank is not the lab publishing its bank. Genuine own-bytes exception: https://huggingface.co/deepseek-ai/DeepSeek-V3.2 ships assets/olympiad_cases/IMO2025.jsonl, CMO2025.jsonl and ioi_submissions_final.json, readable case bytes behind its olympiad claims."
+   },
+   "corrections": {
+    "state": "PARTIAL",
+    "evidence": "arXiv submission histories fetched: 2412.19437 v1 27 Dec 2024, v2 18 Feb 2025; 2501.12948 v1 22 Jan 2025 (928 KB), v2 4 Jan 2026 (1,562 KB). Neither carries an author version comment (the arxiv:comment element is absent), so revisions exist but nothing states what changed. gh api repos/deepseek-ai/DeepSeek-R1/commits/e06298d956 shows README.md +4/-2 AND DeepSeek_R1.pdf status=modified under the message 'Update README.md & DeepSeek_R1.pdf' with no reason given.",
+    "note": "Silent revision confirmed: commit e06298d956 (2025-01-23) changed the recommended evaluation prompt from 'put your final answer within \\boxed{}' to 'Please reason step by step, and put your final answer within \\boxed{}.' inside the section headed 'We recommend adhering to the following configurations ... including benchmarking', while simultaneously replacing the tech-report PDF. Separately, a pypdf diff of 2412.19437 v1 against v2 shows the FP8 Tensor-Core accumulation-precision passage materially rewritten with no changelog. Checked and DISPROVED, recorded so it is not misquoted later: R1's v1 headline table (AIME 2024 79.8, MATH-500 97.3, GPQA Diamond 71.5, Codeforces 96.3, SWE Verified 49.2) is reproduced byte-identically in v2; v2 is an expansion from 57k to 256k chars, not a restatement. Also noted: deepseek-V4-model-card-EN.pdf states 'Publication date: April 27, 2026 / Updated date: April 24, 2026', an updated date preceding its publication date."
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "Open weights under MIT plus open inference code (github.com/deepseek-ai/DeepSeek-V3.2-Exp ships inference/ and DeepSeek_V3_2.pdf). But no eval harness is published and no per-benchmark prompts or protocol are given: a grep of the DeepSeek-V3.2 README for reproduc|evaluation setup|eval harness|evalscope|lm-eval|lighteval returns 0 hits, and the only sampling guidance is deployment-oriented ('For local deployment, we recommend temperature = 1.0, top_p = 0.95'). The V4 model card contains no evaluation section at all. Open weights with an undisclosed harness is PARTIAL."
+   }
+  },
+  {
+   "org": "Alibaba Qwen",
+   "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
+   "fetched": "2026-09-17T12:38Z",
+   "artifacts_examined": [
+    "https://huggingface.co/Qwen/Qwen3.8-27B",
+    "https://huggingface.co/Qwen/Qwen3.8-27B/resolve/main/crc32.txt",
+    "https://huggingface.co/Qwen/Qwen3-235B-A22B",
+    "https://huggingface.co/api/models/Qwen/Qwen3.8-27B/commits/main",
+    "https://huggingface.co/api/datasets?author=Qwen",
+    "https://arxiv.org/abs/2505.09388",
+    "https://github.com/QwenLM/Qwen3.8",
+    "https://qwenlm.github.io/en/sitemap.xml"
+   ],
+   "signed": {
+    "state": "NO",
+    "evidence": "curl -L https://qwen.ai/.well-known/security.txt returns HTTP 200 but the final URL is https://qwen.ai/ and the body is the Qwen Studio SPA homepage HTML, i.e. a catch-all route and not a security.txt. https://qwenlm.github.io/.well-known/security.txt returns HTTP 404. www.qwen.ai does not resolve (NXDOMAIN). gh api repos/QwenLM/{Qwen3,Qwen3.8,Qwen3-VL,Qwen3Guard}/releases returns 0 releases each, so there are no release assets to sign. HF tree/main?recursive=true: Qwen3.8-27B 32 files, Qwen3-235B-A22B 128, Qwen3-8B 15, with 0 signature-like files. Fetched 2026-09-17T12:33Z-12:44Z."
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "https://huggingface.co/Qwen/Qwen3.8-27B/resolve/main/crc32.txt (fetched 2026-09-17T12:36Z) is a publisher-shipped checksum manifest of Qwen's own bytes: 8 lines, e.g. '6b61f895  tokenizer.json', 'da8db314  vocab.json', 'cf59f3ab  chat_template.jinja'. Qwen is the only lab in this census shipping any publisher-authored checksum of its own files.",
+    "note": "PARTIAL, not YES, on three grounds: CRC32 is a non-cryptographic error-detection code, not a digest that resists forgery; it covers only tokenizer and config files, no .safetensors weight file and no evaluation result; and no README or tech-report text cites it, so it identifies files but pins no reported number. grep for sha256|digest|checksum|40-64 hex over the 65,012-byte Qwen3.8-27B README returns zero hits."
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "Qwen does publish its own banks: https://huggingface.co/api/datasets?author=Qwen returns 10 datasets (PolyMath, ProcessBench, P-MMEval, CodeElo, Qwen3GuardTest, AgentWorldBench, DeepPlanning, Qwen-Image-Bench, RationaleRM, WebWorldData), plus GitHub QwenLM/PolyMath, ProcessBench, E-CommerceBench and Qwen-Image-Bench. But the flagship Qwen3.8-27B card reports 25 benchmarks of which several are unreadable: its own notes call QwenSWEBench, CoWorkBench and RecreationBench 'in-house', and none appears in Qwen's 10 published datasets nor in an HF dataset search. Two public banks were also privately modified before scoring, disclosed in the card's own notes: 'SWE-bench Pro: ... Problematic tasks were corrected, and all baseline models were re-evaluated on the refined benchmark' and 'A small number of incorrect ground-truth annotations in MathVision and CharXiv (RQ) were corrected following manual verification'. Neither refined bank is published. The remaining banks (GPQA Diamond, HLE, LiveCodeBench v6, OSWorld-Verified, AndroidWorld, SWE-bench Pro, DeepSWE 1.1) are third-party, which is PARTIAL at most by this census's ruling."
+   },
+   "corrections": {
+    "state": "PARTIAL",
+    "evidence": "arXiv 2505.09388 (Qwen3) submission history is v1 only, 14 May 2025, so no revision record exists there. https://huggingface.co/api/models/Qwen/Qwen3.8-27B/commits/main shows 16 commits, 8 of them titled only 'Update README.md' on 2026-08-13 and 2026-08-14. The Qwen3.8-27B card does publicly record corrections, but to OTHER parties' banks (SWE-bench Pro tasks, MathVision and CharXiv ground truth), not to Qwen's own previously published numbers. No public record of an error Qwen found in its own published results was located.",
+    "note": "Checked and DISPROVED as a silent number change: README revision sizes ran 08cb37595cfe = 17,850 bytes, then 0044cccea80f = 229 bytes, then ed1e737a7098 = 223 bytes, then 1d4bf0f2ff60 = 65,012 bytes, i.e. the card was blanked to a front-matter stub and rebuilt, every commit titled only 'Update README.md'. Each revision was fetched: the 17,850-byte pre-blank version contains no benchmark names at all (grep for Terminal Bench|SWE-bench Pro|GPQA|AIME|MMLU|LiveCodeBench returns 0 hits). The 25 benchmarks were therefore ADDED in the final revision, not silently altered. Recorded as churn, not as a changed number."
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "Open weights under Apache-2.0 and the best harness disclosure of the three Chinese labs: 16 evaluation notes in the Qwen3.8-27B card give per-benchmark harness and hyperparameters, e.g. 'SWE-bench Pro ... evaluated with the Claude Code harness at temp=1.0, top_p=0.95, and a 256K context window' and 'QwenSWEBench ... avg@3 with an 8-hour timeout, max_tokens=32,768, temperature=1.0'. Recomputation is nonetheless blocked by three facts Qwen itself publishes: the in-house banks QwenSWEBench, CoWorkBench and RecreationBench are not released; the SWE-bench Pro, MathVision and CharXiv scores are on privately refined banks that are not released; and two benchmarks use LLM judges ('HLE: Judged by GPT-4o'; 'Vision2Web ... judged by gpt-5.4-2026-03-05') which are non-deterministic and version-bound. A protocol asymmetry is also disclosed: 'MathVision: Qwen3.8-27B is evaluated using the fixed prompt ... For the remaining models, we report the higher score from two prompt variants.'"
+   }
+  },
+  {
+   "org": "Moonshot AI (Kimi)",
+   "url": "https://huggingface.co/moonshotai/Kimi-K3",
+   "fetched": "2026-09-17T12:37Z",
+   "artifacts_examined": [
+    "https://huggingface.co/moonshotai/Kimi-K3",
+    "https://huggingface.co/moonshotai/Kimi-K3/resolve/main/.eval_results/gpqa.yaml",
+    "https://huggingface.co/api/models/moonshotai/Kimi-K3/commits/main",
+    "https://huggingface.co/moonshotai/Kimi-K2-Instruct",
+    "https://arxiv.org/abs/2507.20534",
+    "https://github.com/MoonshotAI/Kimi-K3",
+    "https://github.com/MoonshotAI/K2-Vendor-Verifier",
+    "https://huggingface.co/api/datasets?author=moonshotai"
+   ],
+   "signed": {
+    "state": "NO",
+    "evidence": "curl -L https://moonshot.ai/.well-known/security.txt and https://kimi.com/.well-known/security.txt return HTTP 200, but the final URLs are https://www.moonshot.ai/ and https://www.kimi.com/ and the bodies are SPA app shells (vike-react and kimi-web-seo bundles), i.e. catch-all routes and not security.txt. https://www.moonshot.ai/robots.txt returns an nginx 404 and https://www.moonshot.ai/sitemap.xml returns HTTP 404, so no index advertises a security or system-card path. gh api repos/MoonshotAI/{Kimi-K2,Kimi-K2.5,Kimi-K3,Kimi-k1.5}/releases returns 0 releases each. HF tree/main?recursive=true: Kimi-K3 121 files, Kimi-K2.5 89, Kimi-K2-Instruct 86, with 0 signature-like files. strings -a | grep -E '/Sig|/ByteRange|adbe.pkcs7' on k3_tech_report.pdf (1,795,670 bytes), the Kimi-K2 tech report (5,112,422 bytes) and arXiv 2507.20534 v1 (6,335,018) and v2 (5,872,335): 0 matches each. Fetched 2026-09-17T12:33Z-12:44Z."
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "grep for sha256|digest|checksum|40-64 hex over the 45,261-byte Kimi-K3 README and the 25,517-byte Kimi-K2-Instruct README returns zero hits. No commit hash or file digest is cited for any reported number.",
+    "note": "Kimi-K3 uniquely ships machine-readable eval claims at .eval_results/*.yaml (gpqa.yaml, hle.yaml, deep-swe.yaml, apex-agents.yaml, moonshotai__Kimi-K3.yaml), e.g. 'dataset: {id: Idavidrein/gpqa, task_id: diamond}, value: 93.5'. But each record's provenance is circular: source.url is https://huggingface.co/moonshotai/Kimi-K3, the model card itself, with no digest, no revision pin and no harness. The commit history shows these came from third parties: 9f62e4e9fffb 'Add community evaluation results for GPQA, HLE, DEEP-SWE, APEX-AGENTS (#37)' and f831ab668142 'Add Toolathlon-Verified evaluation result (#183)' are Hugging Face staff PRs merged by Moonshot, transcribing numbers from the card and then citing the card as the source. A structured provenance field that points at itself is the sharpest illustration in this census of why a content address has to come from the publisher."
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "Moonshot publishes its own banks: https://huggingface.co/api/datasets?author=moonshotai returns 3 (WorldVQA, PerceptionBench, Kimi-Audio-GenTest), plus GitHub MoonshotAI/CombiBench, PerceptionBench, WorldVQA and Kimi-Audio-Evalkit. But the Kimi-K3 headline claims run on third-party banks: the .eval_results files cite Idavidrein/gpqa (diamond, 93.5) and hkust-nlp/Toolathlon (toolathlon_verified, 76.5), and the card also reports HLE, DEEP-SWE, APEX-AGENTS and ZeroBench. Reusing a third party's public bank is not the lab publishing its bank, so PARTIAL."
+   },
+   "corrections": {
+    "state": "PARTIAL",
+    "evidence": "The arXiv 2507.20534 submission history is v1 28 Jul 2025 (4,719 KB) and v2 3 Feb 2026 (4,612 KB), and the listing carries an author comment, 'tech report of Kimi K2, with minor updates'. That is the only stated-change record found across the three labs in this group, although it does not say what was updated. No other correction record exists: the GitHub MoonshotAI/Kimi-K3 README has 5 commits, all documentation and typo fixes.",
+    "note": "The v2 revision was tested rather than assumed. pypdf extraction plus normalised numeric comparison across 37 benchmark rows shows all 36 apparent changes are PDF kerning and extraction artifacts (e.g. '59.4*' extracting as '594*', '46.7' as '46', digits glued across adjacent cells). NO published benchmark value changed between v1 and v2. The one real content change detected is a citation renumbering, [35] to [36], implying an inserted reference. Recorded explicitly because the raw diff shows 287 changed numeric lines and would be a false finding if quoted uncritically."
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "Open weights plus real protocol disclosure: the Kimi-K3 card states 'All Kimi K3 results are obtained with reasoning effort set to max and temperature = 1.0. For single-step tasks, such as GPQA Diamond, HLE-Full, and vision benchmarks without tools, we set top-p = 0.95; for agentic tasks, we set top-p = 1.0', and marks which cells are with and without tool augmentation. Uniquely among these three, Moonshot publishes a runnable third-party verification harness: https://github.com/MoonshotAI/K2-Vendor-Verifier (tool_calls_eval.py, pyproject.toml) plus MoonshotAI/Kimi-Vendor-Verifier, explicitly so outsiders can check any vendor's K2 API toolcall precision at stated settings (temperature=1.0, max_tokens=64000). That harness covers vendor API fidelity only; no harness is published for the headline reasoning or agentic benchmarks, so those scores remain non-recomputable from published artifacts."
+   }
+  },
+  {
+   "org": "Microsoft",
+   "url": "https://microsoft.ai/",
+   "fetched": "2026-09-17T12:41Z",
+   "artifacts_examined": [
+    "https://huggingface.co/microsoft/Phi-4-reasoning-vision-15B",
+    "https://huggingface.co/microsoft/Phi-4-reasoning-vision-15B/raw/main/README.md",
+    "https://huggingface.co/microsoft/phi-4",
+    "https://github.com/microsoft/Phi-4-reasoning-vision-15B",
+    "https://raw.githubusercontent.com/microsoft/Phi-4-reasoning-vision-15B/main/TRANSPARENCY_NOTE.md",
+    "https://microsoft.ai/model-sitemap.xml",
+    "https://microsoft.ai/pdf/MAI-Transcribe-1-Model-Card.pdf",
+    "https://microsoft.ai/pdf/MAI-Cyber-1-Flash-Model-Card.pdf",
+    "https://microsoft.ai/pdf/MAI-Image-2.6-Model-Card.pdf",
+    "https://microsoft.ai/wp-content/uploads/2026/06/main_20260602_2.pdf",
+    "https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/transparency-note",
+    "https://www.microsoft.com/.well-known/security.txt"
+   ],
+   "signed": {
+    "state": "NO",
+    "evidence": "Six microsoft.ai PDFs downloaded (MAI-Transcribe-1-Model-Card.pdf 322,252 bytes sha256 f74f66eacf6f91bf...; MAI-Transcribe-2; MAI-Cyber-1-Flash 241,936 bytes; MAI-Code-1.1-Flash; MAI-Image-2.6) plus the MAI-Thinking-1 technical report https://microsoft.ai/wp-content/uploads/2026/06/main_20260602_2.pdf (3,317,663 bytes, sha256 a267d745b1eb3792a8abf58e71e204a6f44f9c18eeb5ad8671320deae71986bd), fetched 2026-09-17T12:41Z-12:42Z. grep -acE '/ByteRange' = 0 and grep -acE '/Sig' = 0 on every one; strings -a | grep -aE '/Sig|/ByteRange|adbe.pkcs7|/DocMDP' returned nothing. Full HF file trees listed for microsoft/Phi-4-reasoning-vision-15B (24 files), microsoft/phi-4 (22) and microsoft/Phi-4-reasoning-plus (19) at 2026-09-17T12:36Z: no .sig, .asc, .jws, .minisig, .pem, .intoto or .sigstore file in any. github.com/microsoft/Phi-4-reasoning-vision-15B has an empty releases array. https://www.microsoft.com/.well-known/security.txt (fetched 2026-09-17T12:44Z) contains 0 occurrences of 'BEGIN PGP SIGNED MESSAGE', so unlike OpenAI's it is not itself signed.",
+    "note": "MSRC does publish an OpenPGP key at https://msrc.microsoft.com/.well-known/csaf/openpgp/998D7EC1A516E3D17FF90480EF148D3CDE714E0D.asc (HTTP 200, 3,543 bytes), but it covers CSAF security advisories, not model or system cards. Microsoft signs its security advisories and does not sign its model evaluations."
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "Hugging Face exposes per-file digests. POST https://huggingface.co/api/models/microsoft/Phi-4-reasoning-vision-15B/paths-info/main (2026-09-17T12:36Z) returns for model-00001-of-00007.safetensors lfs.oid = df55fbc1ae0c0bc05382b542ecbfcc790b64b5a3c8ebde66823a1815fd24c97a (sha256) and xetHash 3ed31f7f2bd0056727bf1c257609bd96a1a947bdeaa8b8d230f954132ce5dd55, with the repo at commit c3e4fac79ddace21976ced56fbf1564b8bd8c89f. The publisher cites none of them: grepping the card body at https://huggingface.co/microsoft/Phi-4-reasoning-vision-15B/raw/main/README.md (24,590 bytes, fetched 2026-09-17T12:36Z) for sha256, digest, commit, checksum and signature returns 0 hits for each. The microsoft.ai MAI cards are served at plain descriptive filenames (/pdf/MAI-Cyber-1-Flash-Model-Card.pdf) with no digest in the path and 0 sha256/digest hits in their extracted text.",
+    "note": "PARTIAL only because the platform supplies the digest, under the rule that a digest the publisher never cites is at most PARTIAL. For the closed MAI models there is no digest at all: no weights, no hosted artifact, nothing addressable."
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "Capability numbers sit on public third-party banks a reader can open. The Phi-4-Reasoning-Vision-15B card's YAML model-index names AI2D 84.8, ChartQA 83.3, MathVista (MINI) 75.2, MMMU 54.3, OCRBench 76.0 and ScreenSpot-V2 88.2, all publicly distributed datasets. The MAI-Thinking-1 technical report (Appendix H) names AIME 2025 and 2026, HMMT Feb 2026 via MathArena, GPQA Diamond ('the Diamond subset, which contains 198 multiple-choice questions') and LiveCodeBench v6 ('the v6 split, which contains 1,055 problems released between May 2023 and Apr 2025'), and states it adopts 'the instruction prompt from OpenAI's simple-evals package'. Safety numbers have no readable bank. Phi-4-Reasoning-Vision-15B README section 3.1 reports 'Text to Text Safety ... 1.4%' and 'Image to Text Safety ... 4.5%' from an unnamed 'automated content safety evaluation' run 'on Azure', with no questions published. MAI-Cyber-1-Flash section 3.2 is entirely qualitative: 'we invited an independent third party to conduct its own assessment', the party unnamed, reporting only 'The independent assessment identified no critical-severity findings' with no number and no bank. MAI-Transcribe-1's card claims the 'lowest Word Error Rate' on FLEURS, but the WER values exist only inside a chart image: pdftotext of the 4-page card (5,462 chars) contains no WER figures at all. PyRIT is open at github.com/Azure/PyRIT, but the 'more than 1 million multi-turn jailbreak conversations' it drew on are not published."
+   },
+   "corrections": {
+    "state": "NO",
+    "evidence": "No correction, errata, changelog or revision-history section exists in any Microsoft card examined. Keyword scan of the 5 MAI PDFs' extracted text at 2026-09-17T12:44Z: 'change log|changelog' = 0 in all five, 'version history|revision' = 0 in all five; the 'correct' hits are ordinary prose ('transcribes them correctly', 'may be inaccurate, incomplete, or otherwise incorrect'). The same scan of the Phi-4-Reasoning-Vision-15B README returns correction=0, changelog=0, updated=0. A revision record exists but is not a correction record: HF repos are public git (microsoft/phi-4 has 9 commits since 2024-12-11, listed 2026-09-17T12:42Z) and the Azure Transparency Notes are authored in the public repo MicrosoftDocs/azure-ai-docs (15 commits on articles/foundry/responsible-ai/openai/transparency-note.md, latest 55f5c77fe8 2026-09-11). The two most recent content revisions of the phi-4 card (187ef0342f to b8beb3aca9) were diffed: the only change is the addition of a Data Summary link, and not one benchmark number moved. No commit message in either history announces a corrected result.",
+    "note": "A separate defect in the same corpus: github.com/microsoft/Phi-4-reasoning-vision-15B ships TRANSPARENCY_NOTE.md at size 0. Confirmed twice at 2026-09-17T12:37Z, via the GitHub contents API (size 0, blob sha e69de29bb2d1d6434b8b29ae775ad8c2e48c5391, the canonical git empty-blob hash) and via raw.githubusercontent.com (HTTP 200, 0 bytes downloaded). The repository promises a transparency note and delivers an empty file."
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "Open-weight Phi: weights, config, tokenizer and chat template are downloadable from HF and every capability benchmark named is public, so a third party can re-run them, but the card supplies no harness, seed, temperature, prompt version or rollout count (grep of README.md: harness=0, temperature=0, reproduc=0), so the published number can be approximated and not reproduced. Closed MAI: the MAI-Thinking-1 report gives materially more (pass@1 at a 256k max-output-token budget, 'averaged over 16 rollouts' for GPQA, boxed-answer regex extraction plus SymPy verification, and GPT-5-mini named as the default AI judge with its grading prompt printed at Figure 25) but the weights are not released and no endpoint or model version is pinned, so the run cannot be re-created. The report also states of its comparison table 'Other model numbers are taken from respective official model cards', i.e. cross-lab numbers copied by name with no digest and no re-run. The safety percentages (1.4% and 4.5%) are not recomputable at all, because the bank is unpublished."
+   }
+  }
+ ],
+ "tallies": {
+  "signed": {
+   "NO": 10
+  },
+  "content_addressed": {
+   "NO": 5,
+   "PARTIAL": 5
+  },
+  "bank_published": {
+   "PARTIAL": 9,
+   "YES": 1
+  },
+  "corrections": {
+   "NO": 4,
+   "PARTIAL": 5,
+   "YES": 1
+  },
+  "recomputable": {
+   "NO": 2,
+   "PARTIAL": 8
+  },
+  "row_count": 10
+ }
+}
