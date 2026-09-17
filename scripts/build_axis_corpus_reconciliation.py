@@ -74,6 +74,32 @@ def fetch_leaf_card(leaf: str) -> tuple[str, dict | None, str]:
     return leaf, card, "VERIFIED"
 
 
+def axis_tokens(axis: str) -> set[str]:
+    return {t for t in axis.replace("_", "-").split("-") if len(t) >= 4}
+
+
+def candidates_for(axis: str, signed_axis_ids: list[str], resolved: dict) -> dict:
+    """Anything in either corpus that SHARES A WORD with this axis but did not match.
+
+    The point is to separate two very different states that look identical in a
+    summary: an axis with no card anywhere, and an axis whose card exists under a
+    name my rules failed to recognise. A matcher defect must never be published as
+    a measurement gap.
+    """
+    toks = axis_tokens(axis)
+    if not toks:
+        return {"signed_index": [], "public_root": []}
+    signed_c = [cid for cid in signed_axis_ids if toks & axis_tokens(cid)]
+    root_c = []
+    for leaf, card in resolved.items():
+        hay = " ".join([str(card.get("subject") or ""),
+                        " ".join(str(t) for t in (card.get("tags") or []))]).lower()
+        if any(t in hay for t in toks):
+            root_c.append({"leaf": leaf[:16], "subject": str(card.get("subject") or "")[:120]})
+    return {"signed_index": sorted(set(signed_c)), "public_root": root_c[:5],
+            "public_root_truncated": len(root_c) > 5}
+
+
 def fetch_signed_body(entry: dict) -> tuple[str | None, str | None]:
     """(public_framing, created) from one live signed card body. None on failure."""
     url = entry.get("card_url")
@@ -240,10 +266,28 @@ def main() -> int:
         else:
             holder = "NEITHER_CORPUS"
 
+        no_card = holder == "NEITHER_CORPUS"
+        cands = candidates_for(axis, list(signed_by_axis), resolved) if no_card else None
+        if no_card:
+            any_cand = bool(cands["signed_index"] or cands["public_root"])
+            why_no_card = (
+                "CANDIDATES_EXIST_UNMATCHED — something in a corpus shares a word with this "
+                "axis but no stated rule claims it. Treat as an OPEN MATCHING QUESTION, not a "
+                "measurement gap, until a rule is written or the candidates are rejected."
+                if any_cand else
+                "NO_CANDIDATE_IN_EITHER_CORPUS — nothing in either corpus shares a word with "
+                "this axis id. On this evidence the axis is genuinely uncarded: it is measured "
+                "on the board and no card was ever signed for it."
+            )
+        else:
+            why_no_card = None
+
         rows.append({
             "axis": axis,
             "board_status": status,
             "card_held_in": holder,
+            "no_card_diagnosis": why_no_card,
+            "unmatched_candidates": cands,
             "signed_card_index": {
                 "cards": counted(len(signed_hits), f"{BASE}/signed/card_index.json",
                                  f"cards[] where axis == '{axis}'", read_at),
@@ -380,6 +424,63 @@ def main() -> int:
             ),
         },
     }
+
+    # ── the alias table, published on its own so a reader can reject ONE rule ──
+    alias_rules = [
+        {"rule": "exact", "pattern": "<axis>",
+         "why": "the card-index axis id is the board axis id",
+         "strength": "certain", "reject_by": "nothing to reject — identical strings"},
+        {"rule": "gspc_prefix", "pattern": "gspc-<axis>",
+         "why": "the signed index prefixes the board's own axis ids with the programme name",
+         "strength": "strong",
+         "reject_by": "show a gspc-<x> card whose body measures something other than axis <x>"},
+        {"rule": "board_axis_prefix", "pattern": "<axis>-<suffix>",
+         "why": "sub-banks hang off an axis id (care-refusal-protect, jail-escape-detection, swarm-candidates)",
+         "strength": "strong",
+         "reject_by": "show a <axis>-<suffix> card that belongs to a different axis"},
+        {"rule": "explicit_alias", "pattern": "gov → governance",
+         "why": "the board's own frozen-bank map sends governance → csoai/gspc-gov (.github/workflows/hub-queue-mill.yml:174)",
+         "strength": "evidenced, but a judgement call — this is the one to argue with",
+         "reject_by": "show that csoai/gspc-gov holds items for some axis other than governance"},
+        {"rule": "tag_exact (public-root only)", "pattern": "card.tags contains <axis> or gspc-<axis>",
+         "why": "a tag is an authored claim about what the card is",
+         "strength": "strong", "reject_by": "show a mis-tagged card"},
+        {"rule": "subject_substring_WEAK (public-root only)", "pattern": "<axis> appears in card.subject",
+         "why": "last resort when a card carries no tag",
+         "strength": "WEAK — 'safety' appears in prose that is not the safety axis",
+         "reject_by": "read the matched subjects, which are counted separately under match_basis"},
+    ]
+    alias_artifact = {
+        "schema": "csoai.axis-alias-table/1",
+        "built_at": read_at,
+        "why_this_is_separate": (
+            "the alias table is the load-bearing part of the reconciliation. Published alone so a "
+            "reader can reject ONE mapping without discarding the whole result."
+        ),
+        "what_goes_wrong_without_it": (
+            "an exact-match walk reports NEITHER_CORPUS for eight MEASURED axes. That reads as "
+            "eight missing cards. The false reading is more dangerous than the real gap."
+        ),
+        "rules": alias_rules,
+        "board_axis_ids": counted(len(board_axis_ids), f"{BASE}/api/gspc", "len(axes)", read_at),
+        "signed_index_axis_ids": {
+            cid: counted(len(v), f"{BASE}/signed/card_index.json",
+                         f"cards[] where axis == '{cid}'", read_at)
+            for cid, v in sorted(signed_by_axis.items())
+        },
+        "resolution": {
+            cid: ([b for b in board_axis_ids if signed_axis_match(b, cid)[0]] or "CLAIMED_BY_NO_BOARD_AXIS")
+            for cid in sorted(signed_by_axis)
+        },
+        "rule_applied": {
+            cid: next((signed_axis_match(b, cid)[1] for b in board_axis_ids if signed_axis_match(b, cid)[0]), None)
+            for cid in sorted(signed_by_axis)
+        },
+    }
+    alias_out = pathlib.Path("docs/reconciliation/axis-alias-table-2026-09-17.json")
+    alias_out.parent.mkdir(parents=True, exist_ok=True)
+    alias_out.write_text(json.dumps(alias_artifact, indent=2, ensure_ascii=False) + "\n")
+    print(f"wrote {alias_out}")
 
     out = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else
                        "docs/reconciliation/axis-corpus-reconciliation-2026-09-17.json")

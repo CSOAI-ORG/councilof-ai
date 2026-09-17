@@ -1,0 +1,197 @@
+{
+  "schema": "csoai.axis-alias-table/1",
+  "built_at": "2026-09-17T06:17:12Z",
+  "why_this_is_separate": "the alias table is the load-bearing part of the reconciliation. Published alone so a reader can reject ONE mapping without discarding the whole result.",
+  "what_goes_wrong_without_it": "an exact-match walk reports NEITHER_CORPUS for eight MEASURED axes. That reads as eight missing cards. The false reading is more dangerous than the real gap.",
+  "rules": [
+    {
+      "rule": "exact",
+      "pattern": "<axis>",
+      "why": "the card-index axis id is the board axis id",
+      "strength": "certain",
+      "reject_by": "nothing to reject — identical strings"
+    },
+    {
+      "rule": "gspc_prefix",
+      "pattern": "gspc-<axis>",
+      "why": "the signed index prefixes the board's own axis ids with the programme name",
+      "strength": "strong",
+      "reject_by": "show a gspc-<x> card whose body measures something other than axis <x>"
+    },
+    {
+      "rule": "board_axis_prefix",
+      "pattern": "<axis>-<suffix>",
+      "why": "sub-banks hang off an axis id (care-refusal-protect, jail-escape-detection, swarm-candidates)",
+      "strength": "strong",
+      "reject_by": "show a <axis>-<suffix> card that belongs to a different axis"
+    },
+    {
+      "rule": "explicit_alias",
+      "pattern": "gov → governance",
+      "why": "the board's own frozen-bank map sends governance → csoai/gspc-gov (.github/workflows/hub-queue-mill.yml:174)",
+      "strength": "evidenced, but a judgement call — this is the one to argue with",
+      "reject_by": "show that csoai/gspc-gov holds items for some axis other than governance"
+    },
+    {
+      "rule": "tag_exact (public-root only)",
+      "pattern": "card.tags contains <axis> or gspc-<axis>",
+      "why": "a tag is an authored claim about what the card is",
+      "strength": "strong",
+      "reject_by": "show a mis-tagged card"
+    },
+    {
+      "rule": "subject_substring_WEAK (public-root only)",
+      "pattern": "<axis> appears in card.subject",
+      "why": "last resort when a card carries no tag",
+      "strength": "WEAK — 'safety' appears in prose that is not the safety axis",
+      "reject_by": "read the matched subjects, which are counted separately under match_basis"
+    }
+  ],
+  "board_axis_ids": {
+    "value": 23,
+    "source": "https://councilof.ai/api/gspc → len(axes)",
+    "read_at": "2026-09-17T06:17:12Z"
+  },
+  "signed_index_axis_ids": {
+    "arc-30": {
+      "value": 23,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'arc-30'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "care": {
+      "value": 23,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'care'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "care-refusal-help": {
+      "value": 27,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'care-refusal-help'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "care-refusal-protect": {
+      "value": 27,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'care-refusal-protect'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "gov": {
+      "value": 23,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'gov'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "gsm8k-30": {
+      "value": 23,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'gsm8k-30'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "gspc-conformance": {
+      "value": 21,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'gspc-conformance'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "gspc-continuity": {
+      "value": 21,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'gspc-continuity'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "gspc-governance": {
+      "value": 21,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'gspc-governance'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "gspc-openness": {
+      "value": 21,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'gspc-openness'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "gspc-provenance": {
+      "value": 21,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'gspc-provenance'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "gspc-safety": {
+      "value": 21,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'gspc-safety'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "jail-escape-detection": {
+      "value": 8,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'jail-escape-detection'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "mmlu-30": {
+      "value": 23,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'mmlu-30'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "swag-30": {
+      "value": 25,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'swag-30'",
+      "read_at": "2026-09-17T06:17:12Z"
+    },
+    "swarm-candidates": {
+      "value": 7,
+      "source": "https://councilof.ai/signed/card_index.json → cards[] where axis == 'swarm-candidates'",
+      "read_at": "2026-09-17T06:17:12Z"
+    }
+  },
+  "resolution": {
+    "arc-30": "CLAIMED_BY_NO_BOARD_AXIS",
+    "care": [
+      "care"
+    ],
+    "care-refusal-help": [
+      "care"
+    ],
+    "care-refusal-protect": [
+      "care"
+    ],
+    "gov": [
+      "governance"
+    ],
+    "gsm8k-30": "CLAIMED_BY_NO_BOARD_AXIS",
+    "gspc-conformance": [
+      "conformance"
+    ],
+    "gspc-continuity": [
+      "continuity"
+    ],
+    "gspc-governance": [
+      "governance"
+    ],
+    "gspc-openness": [
+      "openness"
+    ],
+    "gspc-provenance": [
+      "provenance"
+    ],
+    "gspc-safety": [
+      "safety"
+    ],
+    "jail-escape-detection": [
+      "jail"
+    ],
+    "mmlu-30": "CLAIMED_BY_NO_BOARD_AXIS",
+    "swag-30": "CLAIMED_BY_NO_BOARD_AXIS",
+    "swarm-candidates": [
+      "swarm"
+    ]
+  },
+  "rule_applied": {
+    "arc-30": null,
+    "care": "exact",
+    "care-refusal-help": "board_axis_prefix",
+    "care-refusal-protect": "board_axis_prefix",
+    "gov": "explicit_alias (the board's own frozen-bank map sends governance → csoai/gspc-gov (.github/workflows/hub-queue-mill.yml:174))",
+    "gsm8k-30": null,
+    "gspc-conformance": "gspc_prefix",
+    "gspc-continuity": "gspc_prefix",
+    "gspc-governance": "gspc_prefix",
+    "gspc-openness": "gspc_prefix",
+    "gspc-provenance": "gspc_prefix",
+    "gspc-safety": "gspc_prefix",
+    "jail-escape-detection": "board_axis_prefix",
+    "mmlu-30": null,
+    "swag-30": null,
+    "swarm-candidates": "board_axis_prefix"
+  }
+}
