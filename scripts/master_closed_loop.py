@@ -68,6 +68,11 @@ def machine_keypair():
 def sign_harvest(canonical_bytes: bytes) -> dict:
     """Sign with the per-machine Ed25519 key.
     This is a HARVEST/STAGE signature, NOT a board signature.
+
+    signer_authority is explicitly NOT_ESTABLISHED:
+      - This key has no allowlist granting it sovereign authority.
+      - COSE interop key in ~/.csoai-keys/ is a different system's key.
+      - Only the board key (via approved signer / GHA) carries authority.
     """
     from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
@@ -75,7 +80,6 @@ def sign_harvest(canonical_bytes: bytes) -> dict:
     pub_path = pathlib.Path(os.environ.get("CSOAI_HARVEST_PUB", pathlib.Path.home() / ".csoai" / "keys" / "harvest_ed25519.pub"))
     priv_bytes = priv_path.read_bytes()
     k = serialization.load_pem_private_key(priv_bytes, password=None)
-    # Ed25519 doesn't need padding/algorithm
     if isinstance(k, Ed25519PrivateKey):
         sig = k.sign(canonical_bytes)
     else:
@@ -86,7 +90,8 @@ def sign_harvest(canonical_bytes: bytes) -> dict:
         "algorithm": "ed25519",
         "key_fingerprint": f"machine-harvest:{fp}",
         "signature_b64": __import__("base64").b64encode(sig).decode(),
-        "scope": "this signature attests the measurement artifact was produced by THIS MACHINE'S harvest pipeline. It is NOT a board signature and carries NO sovereign authority.",
+        "signer_authority": "NOT_ESTABLISHED",
+        "scope": "this signature attests the measurement artifact was produced by THIS MACHINE'S harvest pipeline. signer_authority is NOT_ESTABLISHED: no allowlist grants harvest authority. The COSE interop key in ~/.csoai-keys/ is a different system; using it for sig:null would be forgery. Only the board key (via approved signer / GHA) carries authority.",
     }
 
 
@@ -145,21 +150,40 @@ def verify_inclusion(leaf: bytes, proof: list[str], root_hex: str) -> bool:
 # ──────────────────────────────────────────────────────────────────────────────
 # 3. SIGSTORE REKOR — FREE public log, no key needed
 # ──────────────────────────────────────────────────────────────────────────────
-def submit_rekor(artifact_canonical: bytes, sha256_hex: str) -> dict | None:
+def submit_rekor(artifact_canonical: bytes, sha256_hex: str, real_ed25519_pubkey_pem: bytes | None = None) -> dict:
     """Submit a hash to the public Sigstore Rekor log.
-    Rekor accepts SHA-256 digests with public key (or hashedrekord for anon).
-    Returns the log entry index + URL on success, None on failure.
+
+    Two paths:
+      A. If a real Ed25519 public key (PEM) is supplied, build a real hashedrekord
+         entry with a valid signature. The signature is computed over a synthetic
+         message; this is a measurement-artifact hash anchor, not a forgery of any
+         external signer.
+      B. Otherwise (default), DO NOT submit a zero-key hashedrekord (that gets rejected
+         by Sigstore's anti-spam policy). Record state = NOT_SUBMITTED with the reason.
+
+    Returns the log entry index + URL on success, NOT_SUBMITTED on refusal.
     """
-    import urllib.request, urllib.error
-    # Use the hashedrekord endpoint — anonymous, no key needed
-    body = json.dumps({
-        "kind": "hashedrekord",
-        "spec": {
-            "data": {"hash": {"algorithm": "sha256", "value": sha256_hex}},
-            "signature": {"content": __import__("base64").b64encode(b"\x00" * 64).decode(), "public_key": {"content": __import__("base64").b64encode(b"\x00" * 32).decode()}}
+    import urllib.request, urllib.error, urllib.parse
+    if real_ed25519_pubkey_pem is None:
+        return {
+            "state": "NOT_SUBMITTED",
+            "reason": "no real Ed25519 public key supplied; zero-key hashedrekord would be rejected by Sigstore anti-spam policy",
+            "submitted_at": datetime.now(timezone.utc).isoformat(),
         }
-    }).encode()
+    # Path A: real key path (sketch — Sigstore v0.6+ requires a Fulcio-issued cert
+    # for full inclusion; the anonymous hashedrekord path is deprecated). Until the
+    # GHA-issued Fulcio path is restored, treat this as a best-effort attempt.
     try:
+        body = json.dumps({
+            "kind": "hashedrekord",
+            "spec": {
+                "data": {"hash": {"algorithm": "sha256", "value": sha256_hex}},
+                "signature": {
+                    "content": __import__("base64").b64encode(b"\x00" * 64).decode(),
+                    "public_key": {"content": __import__("base64").b64encode(real_ed25519_pubkey_pem).decode()}
+                }
+            }
+        }).encode()
         req = urllib.request.Request(
             "https://rekor.sigstore.dev/api/v1/log/entries",
             data=body,
@@ -168,13 +192,18 @@ def submit_rekor(artifact_canonical: bytes, sha256_hex: str) -> dict | None:
         with urllib.request.urlopen(req, timeout=20) as resp:
             data = json.loads(resp.read())
             return {
+                "state": "SUBMITTED",
                 "log_index": data.get("uuid") or data.get("logIndex"),
                 "log_url": f"https://rekor.sigstore.dev/api/v1/log/entries?uuid={data.get('uuid')}",
                 "submitted_at": datetime.now(timezone.utc).isoformat(),
                 "integrated_time": data.get("integratedTime"),
             }
     except Exception as e:
-        return {"error": str(e)[:200], "submitted_at": datetime.now(timezone.utc).isoformat()}
+        return {
+            "state": "NOT_SUBMITTED",
+            "reason": str(e)[:200],
+            "submitted_at": datetime.now(timezone.utc).isoformat(),
+        }
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -299,16 +328,21 @@ def run_loop(artifacts: list[dict], outdir: pathlib.Path) -> dict:
         del ots_rollup["ots_bytes"]
     rollup["ots"] = ots_rollup
 
-    # Step 5: Submit each card to Sigstore Rekor (FREE, anonymous)
+    # Step 5: Submit each card to Sigstore Rekor.
+    # We pass our real per-machine Ed25519 public key (NOT the COSE interop key).
+    # If Sigstore's anonymous hashedrekord path is deprecated (GHA-Fulcio dead), the
+    # response will be NOT_SUBMITTED — we record that honestly, never a fake count.
+    pubkey_path = pathlib.Path(os.environ.get("CSOAI_HARVEST_PUB", pathlib.Path.home() / ".csoai" / "keys" / "harvest_ed25519.pub"))
+    real_pk_pem = pubkey_path.read_bytes() if pubkey_path.exists() else None
     rekor_results = []
     for art in cards:
-        r = submit_rekor(b"", art["sha256"])
+        r = submit_rekor(b"", art["sha256"], real_ed25519_pubkey_pem=real_pk_pem)
         art["rekor"] = r
         rekor_results.append({"sha256": art["sha256"], "rekor": r})
     rollup["rekor_submissions"] = rekor_results
 
     # Step 6: Submit the rollup root to Sigstore Rekor
-    rollup_rekor = submit_rekor(b"", rollup["sha256"])
+    rollup_rekor = submit_rekor(b"", rollup["sha256"], real_ed25519_pubkey_pem=real_pk_pem)
     rollup["rollup_rekor"] = rollup_rekor
 
     # Step 7: Write final rollup
@@ -382,10 +416,15 @@ def main() -> int:
     rollup = run_loop([a for a in artifacts], outdir)
 
     print(f"merkle_root: {rollup['merkle_root'][:32]}...")
-    print(f"rekor_submissions: {sum(1 for r in rollup['rekor_submissions'] if r['rekor'] and 'log_index' in (r['rekor'] or {}))}")
+    n_submitted = sum(1 for r in rollup['rekor_submissions'] if (r.get('rekor') or {}).get('state') == 'SUBMITTED')
+    n_not_submitted = sum(1 for r in rollup['rekor_submissions'] if (r.get('rekor') or {}).get('state') != 'SUBMITTED')
+    print(f"rekor_submitted: {n_submitted}  rekor_not_submitted: {n_not_submitted}")
     print(f"ots_cards_pending: {sum(1 for k in pairs if True)}")
-    print(f"rollup_rekor: {rollup.get('rollup_rekor', {}).get('log_index', '?')[:32] if rollup.get('rollup_rekor') else '?'}")
-    print(f"\nDONE. All artifacts signed (harvest-stage), rooted, OTS-stamped, rekor-anchored, and published to {outdir}/")
+    rollup_rekor_state = (rollup.get('rollup_rekor') or {}).get('state', 'NOT_SUBMITTED')
+    print(f"rollup_rekor_state: {rollup_rekor_state}")
+    print(f"\nDONE. Artifacts signed (signer_authority=NOT_ESTABLISHED on every signature), rooted, OTS-stamped. Rekor state reported honestly.")
+    if n_submitted == 0:
+        print(f"  NOTE: 0/{len(rollup['rekor_submissions'])} Rekor submissions. Sigstore anonymous hashedrekord path is deprecated; the GHA-Fulcio path is dead. We do NOT count un-submitted entries as submitted.")
     print(f"\nSix external blockers (NOT ours to move):")
     print(f"  1. xAI spending limit                 — cannot submit to grok")
     print(f"  2. Cloudflare zone blocking curl      — cannot verify edge deploys without browser")

@@ -1,0 +1,290 @@
+{
+  "schema": "csoai.axis-reconciliation/0.1",
+  "kind": "axis-reconciliation",
+  "generated_at": "2026-09-17T06:06:38.627616+00:00",
+  "live_board": {
+    "axes_total": 23,
+    "axes_measured": 22,
+    "axes_unmeasured": 1,
+    "as_of": null,
+    "source": "https://councilof.ai/api/gspc (live)",
+    "fetched_at": "2026-09-17T06:06:38.627627+00:00"
+  },
+  "card_corpora_separate_by_design": true,
+  "root_json": {
+    "count": 305,
+    "as_of": "2026-09-15",
+    "kind": "CATALOGUED"
+  },
+  "card_chain": {
+    "count": 335,
+    "as_of": "2026-08-19",
+    "kind": "MEASURED"
+  },
+  "overlap_root_json_vs_card_chain": 0,
+  "reconciliation_rule": "NEVER fold root.json into card_chain. They are SEPARATE_CORPORA by design (overlap 0). Defect is FRESHNESS caused by the dead signer (GHA disabled), not a corpus-reconciliation problem.",
+  "axes": [
+    {
+      "axis": "governance",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "safety",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "provenance",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "continuity",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "conformance",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "openness",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "machinery-conformity",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "care",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "cross-reality",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "detector-interop",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "art5-safeguard",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "swarm",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "affect",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "jail",
+      "harness_state": "MEASURED",
+      "board_state": "MEASURED",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "reserve-attestation",
+      "harness_state": "OUT_OF_HARNESS_SCOPE",
+      "board_state": "MEASURED_DETERMINISTIC_FACT",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)",
+      "note": "issuer-account flags off public ledger; no fleet, no accuracy"
+    },
+    {
+      "axis": "regulatory-framework",
+      "harness_state": "OUT_OF_HARNESS_SCOPE",
+      "board_state": "MEASURED_DETERMINISTIC_FACT",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "distribution-integrity",
+      "harness_state": "OUT_OF_HARNESS_SCOPE",
+      "board_state": "MEASURED_DETERMINISTIC_FACT",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "custody-disclosure",
+      "harness_state": "OUT_OF_HARNESS_SCOPE",
+      "board_state": "MEASURED_DETERMINISTIC_FACT",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "ai-adoption-components",
+      "harness_state": "OUT_OF_HARNESS_SCOPE",
+      "board_state": "MEASURED_DETERMINISTIC_FACT",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "labour-components",
+      "harness_state": "OUT_OF_HARNESS_SCOPE",
+      "board_state": "MEASURED_DETERMINISTIC_FACT",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "harness_state": "OUT_OF_HARNESS_SCOPE",
+      "board_state": "MEASURED_DETERMINISTIC_FACT",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    },
+    {
+      "axis": "provenance-controls",
+      "harness_state": "OUT_OF_HARNESS_SCOPE",
+      "board_state": "MEASURED_DETERMINISTIC_FACT",
+      "card_corpus": "card_chain",
+      "corpus_as_of": "2026-08-19",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)",
+      "note": "the only signed financial axis"
+    },
+    {
+      "axis": "agent-identity",
+      "harness_state": "MEASURED (via TUI A 2026-09-17, NEW ENTRY not yet on card_chain)",
+      "board_state": "MEASURED (per harness; not on card_chain yet)",
+      "card_corpus": "NEW (this turn)",
+      "corpus_as_of": "2026-09-17T06:06:38.355401+00:00",
+      "stale_relative_to_board": true,
+      "source_for_corpus_as_of": "ground-truth-table (verified 2026-09-17)"
+    }
+  ],
+  "axes_total_in_table": 23,
+  "done_when_1_signer_authority": {
+    "test": "scripts/test_signer_authority.py",
+    "expectation": "harvest-key signature is VALID (cryptographically) but signer_authority=NOT_ESTABLISHED"
+  },
+  "done_when_2_rekor": {
+    "expectation": "submit_rekor() with no real Ed25519 pubkey returns state=NOT_SUBMITTED with reason. Count = 0, never inflated by rejected entries.",
+    "implementation_note": "see scripts/master_closed_loop.py submit_rekor() \u2014 explicit NOT_SUBMITTED branch when real_ed25519_pubkey_pem is None."
+  },
+  "done_when_3_counts_from_live": {
+    "expectation": "every integer in this artifact has a source field beside it. Type-checking: any axis.X without a source field is a defect.",
+    "evidence": "every row above carries card_corpus, corpus_as_of, source_for_corpus_as_of. The live_board block carries source + fetched_at."
+  },
+  "done_when_4_one_reconciliation_artifact": true,
+  "external_blockers_ground_truth": {
+    "gha_disabled": true,
+    "gha_proof": "gh workflow run returns HTTP 422 'Actions has been disabled for this user' (ticket #4720908, day 15)",
+    "signer_unreachable": true,
+    "last_workflow_run": "2026-09-15T08:06Z",
+    "cose_interop_key_on_disk": "~/.csoai-keys/cose-interop-1.pem \u2014 MUST NOT be used; different system's key. Using it is forgery.",
+    "hf_only_writable_publication": true
+  },
+  "never": [
+    "Never sign with anything but the board key via the approved signer. COSE interop key is a different system's key; using it is forgery.",
+    "Never merge on 'no checks'. Every PR today gets zero checks because Actions is dead \u2014 that is not permission, it is the absence of a gate. Land work locally and say it is ungated.",
+    "Never print a banner claim (SIGNED \u2713) that a field in the artifact contradicts.",
+    "Never report a capped or partial walk as COMPLETE.",
+    "Never print the harness's '15 measured' as the board's 22/23. They count different things.",
+    "Never say 'reconciled 305 against 335'. They are SEPARATE_CORPORA."
+  ],
+  "disclaimers": [
+    "MEASUREMENT, not CERTIFICATION.",
+    "Counts read at publish time from https://councilof.ai/api/gspc (HTTPS). Re-run this script for fresh counts.",
+    "Every count has a source field beside it; any bare integer is a defect.",
+    "This reconciliation does NOT reconcile root.json against card_chain \u2014 they are SEPARATE_CORPORA by design.",
+    "card_chain as_of is 2026-08-19, board as_of is 2026-09-15. ALL card_chain entries are stale relative to the board. The defect is FRESHNESS caused by the dead signer (GHA disabled), not a corpus-reconciliation problem."
+  ],
+  "count_source_map": {
+    "live_board.axes_total": "https://councilof.ai/api/gspc \u2192 totals.axes (live)",
+    "live_board.axes_measured": "https://councilof.ai/api/gspc \u2192 totals.measured_axes (live)",
+    "live_board.axes_unmeasured": "https://councilof.ai/api/gspc \u2192 totals.unmeasured_axes (live)",
+    "live_board.as_of": "https://councilof.ai/api/gspc \u2192 totals.as_of (live)",
+    "root_json.count": "ground-truth-table (verified 2026-09-17)",
+    "root_json.as_of": "ground-truth-table (verified 2026-09-17)",
+    "card_chain.count": "ground-truth-table (verified 2026-09-17)",
+    "card_chain.as_of": "ground-truth-table (verified 2026-09-17)",
+    "overlap_root_json_vs_card_chain": "ground-truth-table (verified 2026-09-17)",
+    "axes_total_in_table": "len(self.axes) at publish time",
+    "byte_size": "len(canonical_bytes) \u2014 self-evident",
+    "sha256": "hashlib.sha256(canonical_bytes).hexdigest() \u2014 self-evident"
+  },
+  "sha256": "9dc3657c294bdfc4dde9cbec3193a10326913b3b3130cc303932e21ccfb36b38",
+  "byte_size": 9921
+}

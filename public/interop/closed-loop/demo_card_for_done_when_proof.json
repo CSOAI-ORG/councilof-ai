@@ -1,0 +1,34 @@
+{
+  "schema": "csoai.measurement-card/0.1",
+  "kind": "measurement-card",
+  "generated_at": "2026-09-17T06:06:52.536899+00:00",
+  "subject": {
+    "source": "demo_source",
+    "axis": "demo_axis",
+    "goal": "demo_goal"
+  },
+  "observation": {
+    "value": "DONE-WHEN-line-1-demo",
+    "as_of": "2026-09-17"
+  },
+  "evidence_url": null,
+  "signatures": [
+    {
+      "signature_kind": "harvest-stage",
+      "algorithm": "ed25519",
+      "key_fingerprint": "machine-harvest:fbb1f336e409c74b",
+      "signature_b64": "mmE22vQ+ssPLW9mRGLuTzgZvzaCjpBYSpECps1eAlqv+ET9V/Q2Nvpy0tcDMS7NTS6I8A0eAZM8QaE5p35SyBQ==",
+      "signer_authority": "NOT_ESTABLISHED",
+      "scope": "this signature attests the measurement artifact was produced by THIS MACHINE'S harvest pipeline. signer_authority is NOT_ESTABLISHED: no allowlist grants harvest authority. The COSE interop key in ~/.csoai-keys/ is a different system; using it for sig:null would be forgery. Only the board key (via approved signer / GHA) carries authority."
+    }
+  ],
+  "merkle_root": null,
+  "rekor": null,
+  "ots": null,
+  "disclaimers": [
+    "MEASUREMENT, not CERTIFICATION. Empty is not zero.",
+    "This artifact is part of the closed-loop harness: harvest \u2192 measure \u2192 fix \u2192 sign \u2192 root \u2192 anchor \u2192 rekor \u2192 ots \u2192 publish \u2192 remeasure."
+  ],
+  "sha256": "a3765cdcb7e97f10f453ff0e03c9d7d5133a39dca91a5f465888c00956138979",
+  "byte_size": 1190
+}
