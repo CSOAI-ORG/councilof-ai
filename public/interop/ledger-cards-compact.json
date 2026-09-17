@@ -69664,7 +69664,7 @@
       "not_a_grade": true,
       "is_master_rollup": true
     },
-    "as_of": "2026-09-17T04:28:08.827184+00:00",
+    "as_of": "2026-09-17T04:29:43.962633+00:00",
     "totals": {
       "ledger_cards": 11539,
       "auto_eat_cards": 11529,
@@ -69694,7 +69694,7 @@
       "unsigned": 1921
     },
     "evidence_url": "/interop/master-consolidation-rollup-v0.1.json",
-    "sha256": "0f6c5f5c957b1cff540a6e47b52cd8a9792e903c4847e3d0a4233833f1a381aa",
+    "sha256": "18a70648f2653fd77f8c6e9de792c3678288cad00d3acae7e33e9ce3fa7deb56",
     "honesty": "Measurement, not certification. Empty is not zero. Engine calculates; nothing fabricated."
   },
   "white_paper_index.v0.1": {
@@ -185181,5 +185181,37 @@
     "size_b": 3191,
     "evidence_url": "/client/src/data/chain-facts.json",
     "honesty": "Evidence JSON harvested during final-pass consolidation (2026-09-17)."
+  },
+  "master_harness_index.v0.1": {
+    "kind": "csoai.master-harness-index/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": true,
+      "not_a_grade": true,
+      "is_master_harness": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-17T04:29:37.784735+00:00",
+    "sources_bound": 33,
+    "goal_objects_covered": 18,
+    "sha256": "ff9663fc16664de5ca3e1bc3f71196d33a323ca52c76027f4a640e2801b0f3b6",
+    "evidence_url": "/interop/master-harness-index-v0.1.json",
+    "honesty": "Master harness index \u2014 33 sources bound across 7 categories to 14 goal-objects."
+  },
+  "deep_research_regulatory.2026-09": {
+    "kind": "csoai.deep-research-regulatory/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "is_research": true,
+      "autoeat": true
+    },
+    "as_of": "2026-09-17T04:29:09.111674+00:00",
+    "frameworks": 4,
+    "standards": 10,
+    "sha256": "0293bc63a946d0e83663e681253979a3b1de1bbb0150a6444df1350f086cf2b0",
+    "evidence_url": "/interop/deep-research-regulatory-2026-09.json",
+    "honesty": "Bleeding-edge regulatory research (CLARITY, GENIUS, RegCryptoAssets, SWIFT ledger)."
   }
 }

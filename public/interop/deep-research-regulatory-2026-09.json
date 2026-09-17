@@ -1,0 +1,314 @@
+{
+  "schema": "csoai.deep-research-regulatory/0.1",
+  "generated_at": "2026-09-17T04:29:09.111674+00:00",
+  "purpose": "Bleeding-edge regulatory research consumed by the master harness",
+  "sources_researched": [
+    {
+      "framework": "CLARITY Act (H.R. 3633)",
+      "status": "Procedural vote scheduled; failed to advance 2026-09-16",
+      "passed_banking_committee": "2026-05 (15-9 bipartisan)",
+      "key_provisions": {
+        "TITLE_I": "Definitions; Rulemaking; Expedited Registration",
+        "TITLE_II": "Offers and Sales of Digital Commodities \u2014 \u00a7201 Investment contract assets, \u00a7202-204 Exemptions, \u00a7205 Mature blockchain system",
+        "TITLE_III": "SEC Registration for Intermediaries \u2014 \u00a7301-315 (treatment of stablecoins, anti-fraud, ATS eligibility, dual-registration)",
+        "TITLE_IV": "CFTC Registration for Digital Commodity Intermediaries \u2014 \u00a7401-415 (qualified digital asset custodians, futures commission merchants, digital commodity exchanges, brokers, dealers, associated persons, commodity pool operators)",
+        "TITLE_V": "Innovation and Technology Improvements \u2014 \u00a7501-512 (Strategic Hub for Innovation and Financial Technology, LabCFTC codification, DeFi study, NFT study)",
+        "TITLE_VI": "Anti-CBDC Surveillance State Act \u2014 \u00a7601-605 (prohibition on Fed issuing CBDC directly or indirectly)"
+      },
+      "source_urls": [
+        "https://www.congress.gov/119/cprt/HPRT61638/CPRT-119HPRT61638.pdf",
+        "https://www.lummis.senate.gov/press-releases/lummis-boozman-scott-release-final-clarity-act-text/",
+        "https://business.cch.com/srd/20260601_CLARITY_Act_hr3633rs061026.pdf"
+      ],
+      "ethics_additions": "Tillis-Gallego ethics proposal language + Treasury authority to prevent deposit flight + BRCA (Blockchain Regulatory Certainty Act) civil safe harbor + affiliate trading guardrails",
+      "jurisdiction_split": "SEC (Titles I, III) + CFTC (Titles I, IV) + Treasury (Title VI)"
+    },
+    {
+      "framework": "GENIUS Act (P.L. 119-27)",
+      "enacted": "2025-07-18",
+      "key_provisions": {
+        "payment_stablecoin_definition": "digital asset (i) used as means of payment or settlement, (ii) issued by permitted payment stablecoin issuer",
+        "reserve_requirement": "1:1 USD \u2014 coins, currency, deposits at insured banks, short-dated T-bills, repos, reverse repos, MMFs, central bank reserves",
+        "custody_segregation": "Required \u2014 no commingling with own funds (with exceptions)",
+        "bankruptcy_priority": "Stablecoin holders have priority over ALL other claims against issuer",
+        "foreign_issuer": "Section 18(a) \u2014 foreign issuer may offer if Treasury determines comparable regime + OCC registration",
+        "DASPs": "Digital Asset Service Providers \u2014 only offer foreign stablecoins with comparable reciprocal arrangement",
+        "AML": "FinCEN must facilitate novel methods to detect illicit activity",
+        "implementation": "Treasury 12 CFR Chapter XV Part 1523 \u2014 proposed Aug 2026"
+      },
+      "source_urls": [
+        "https://www.federalregister.gov/documents/2026/08/18/2026-16796/genius-act-regulations-on-payment-stablecoin-issuance-offer-and-sale",
+        "https://www.congress.gov/crs_external_products/IN/PDF/IN12553/IN12553.6.pdf",
+        "https://uscode.house.gov/view.xhtml?req=(title%3A12%20section%3A5909%20edition%3Aprelim)"
+      ]
+    },
+    {
+      "framework": "SEC Regulation Crypto Assets (Release 33-11434, File S7-2026-27)",
+      "published": "2026-08-21 (91 FR 54510)",
+      "comment_deadline": "2026-10-20",
+      "key_provisions": {
+        "Subpart_B_startup_exemption": "Up to $5M raised over rolling 4 years, no financial statements required, no non-accredited investor cap",
+        "Subpart_C_tier_1_fundraising": "Up to $20M / 12 months, $6M affiliate cap, financial statements required, 10% income/net worth non-accredited cap, U.S.-anchored required",
+        "Subpart_C_tier_2_fundraising": "Up to $75M / 12 months, $22.5M affiliate cap, financial statements required, 10% income/net worth non-accredited cap, U.S.-anchored required",
+        "Proposed_Rule_400": "Conditional safe harbor from 'investment contract' definition \u2014 issuer can certify essential managerial efforts completed/ceased",
+        "First_year_selling_securityholder": "Limited to 30% of aggregate offering price",
+        "Disclosure_Rule_103": "Principles-based narrative: terms, crypto asset mechanics + source code, token economics + supply + governance, management + conflicts, risk factors with annual updates within 30 days",
+        "State_preemption": "Preempts state securities law registration/qualification if within exemptions",
+        "Antifraud_antimanipulation": "Apply in full"
+      },
+      "exclusions": "Development-stage companies, investment companies",
+      "U.S._anchored_requirements": "U.S. citizens/residents >50% assets in U.S., business principally administered domestically",
+      "SEC_commissioners": "Atkins, Peirce, Uyeda (all-Republican panel after Crenshaw departed Jan 2, 2026)",
+      "source_urls": [
+        "https://www.sec.gov/files/rules/proposed/2026/33-11434.pdf",
+        "https://financefeeds.com/the-secs-crypto-rulebook-closes-for-comment-on-20-october-two-exemptions-and-a-safe-harbour-are-on-the-table",
+        "https://spotedcrypto.com/sec-crypto-safe-harbor-rule-2026",
+        "https://www.thompsoncoburn.com/insights/sec-proposes-new-rules-to-govern-the-issuance-and-sale-of-certain-crypto-assets/"
+      ]
+    },
+    {
+      "framework": "SWIFT Blockchain-Based Shared Ledger (Live 2026-07-09)",
+      "status": "LIVE \u2014 initial pilot of 17 banks from 6 continents",
+      "build_duration": "9 months (announced Sept 2025 Sibos \u2192 MVP 2026-03-30 \u2192 live 2026-07-09)",
+      "key_technical_details": {
+        "architecture": "Hyperledger Besu (EVM-compatible permissioned blockchain)",
+        "tech_partner": "Consensys",
+        "role": "Orchestration layer \u2014 NOT settlement. Records and validates interbank commitments. Final settlement through RTGS / correspondent banking.",
+        "use_case_1": "24/7 tokenized deposit cross-border payments (overnight, weekends)",
+        "use_case_2": "Programmable money + agentic commerce (future)",
+        "preserves": "Compliance, credit, risk, control standards from existing correspondent banking",
+        "iso_20022": "Integration with Swift's ISO 20022 messaging infrastructure (already deployed via Chainlink pilot with UBS Tokenize)"
+      },
+      "pilot_banks_17": [
+        "ANZ",
+        "BNP Paribas",
+        "BNY",
+        "Citi",
+        "DBS",
+        "First Abu Dhabi Bank (FAB)",
+        "FirstRand Bank Limited",
+        "HSBC",
+        "Ita\u00fa Unibanco",
+        "Lloyds Bank",
+        "Mashreq",
+        "MUFG Bank",
+        "OCBC",
+        "Standard Chartered",
+        "UBS",
+        "UOB",
+        "Wells Fargo"
+      ],
+      "market_size_quotes": {
+        "current_onchain_value_estimate": "$333B (tokenized assets on public blockchains, including stablecoins)",
+        "growth_estimate_2030": "$10T+",
+        "swift_daily_throughput": "Equivalent of global GDP every 2-3 days"
+      },
+      "competitive_thesis": "Bank-issued regulated digital money vs non-bank-issued unregulated money. Stablecoins lose monopoly on future of settlement.",
+      "swift_in_house_already": [
+        "Citi Token Services (live since 2024)",
+        "HSBC Tokenised Deposit Service",
+        "JPMorgan Kinexys"
+      ],
+      "source_urls": [
+        "https://www.theblock.co/news/ecosystems/2026-07-09-swift-launches-blockchain-ledger-for-tokenized-deposit-pilot-with-17-banks-407687",
+        "https://genfinity.io/2026/09/01/swift-nick-kerigan-blockchain-ledger-17-pilot-banks-tokenized-deposits-interview/",
+        "https://digitalblockchains.com/swift-blockchain-news-17-banks-live-2026/",
+        "https://solomon-grey-capital.ghost.io/swifts-quiet-counter-why-the-tokenised-deposit-ledger-just-disintermediated-the-stablecoin-trade/"
+      ],
+      "binding_to_goals": [
+        "asset_classification",
+        "settlement",
+        "custody",
+        "transaction_integrity",
+        "agent_authority"
+      ]
+    }
+  ],
+  "binding_to_harness": {
+    "CLARITY": [
+      "asset_classification",
+      "actor_identity",
+      "jurisdiction",
+      "custody",
+      "transaction_integrity"
+    ],
+    "GENIUS": [
+      "asset_classification",
+      "reserves_collateral",
+      "custody",
+      "settlement"
+    ],
+    "RegCryptoAssets": [
+      "disclosure",
+      "assurance",
+      "provenance",
+      "change"
+    ],
+    "SWIFT_ledger": [
+      "asset_classification",
+      "settlement",
+      "custody",
+      "transaction_integrity",
+      "agent_authority"
+    ],
+    "XRPL": [
+      "asset_classification",
+      "reserves_collateral",
+      "settlement",
+      "provenance",
+      "actor_identity"
+    ],
+    "Stablecoin_corpus": [
+      "asset_classification",
+      "reserves_collateral",
+      "custody",
+      "actor_identity"
+    ],
+    "ERC8004": [
+      "actor_identity",
+      "provenance",
+      "assurance"
+    ],
+    "x402": [
+      "agent_authority",
+      "settlement",
+      "transaction_integrity"
+    ],
+    "Ed25519": [
+      "assurance",
+      "provenance"
+    ],
+    "OTS": [
+      "change",
+      "provenance"
+    ],
+    "EU_AI_Act": [
+      "care",
+      "conformance",
+      "continuity",
+      "safety"
+    ],
+    "NIST_AI_RMF": [
+      "governance",
+      "provenance",
+      "conformance"
+    ],
+    "OSAIA_SAFE": [
+      "assurance",
+      "provenance",
+      "change"
+    ]
+  },
+  "honesty_disclaimers": [
+    "Web research sourced from congress.gov, federalregister.gov, SEC.gov, Treasury, and CRS.",
+    "This is research INPUT to the harness, not legal advice. The harness measures; it does not certify compliance.",
+    "Each framework's status (enacted, proposed, procedural) is documented; future updates must be re-verified against primary sources."
+  ],
+  "sha256": "0293bc63a946d0e83663e681253979a3b1de1bbb0150a6444df1350f086cf2b0",
+  "byte_size": 12102,
+  "standards_researched": [
+    {
+      "standard": "Ed25519 (RFC 8032)",
+      "use": "Signing all measurement cards, ledger entries, auto-eat cards",
+      "library": "PyNaCl / cryptography.io",
+      "in_estate": "Every signed card in /public/interop/mill-cards-signed/ has Ed25519 signature"
+    },
+    {
+      "standard": "OpenTimestamps (BIP-0080 style)",
+      "use": "Bitcoin anchoring of measurement artifacts",
+      "library": "opentimestamps-client 0.7.2",
+      "calendar_status": "DEGRADED \u2014 returns 0xf008... (Bitcoin script fragments) for all submissions as of 2026-09-17",
+      "in_estate": "207 valid .ots files on disk; 1904 quarantined .ots.invalid"
+    },
+    {
+      "standard": "CAIP-10 / CAIP-19 / CAIP-25 (Chain-Agnostic Improvement Proposals)",
+      "use": "Cross-chain agent identity (CAIP-10) and asset reference (CAIP-19)",
+      "in_estate": "/public/interop/caip-*.json \u2014 4 standards referenced"
+    },
+    {
+      "standard": "ISO 20022 (Universal Financial Industry Message Scheme)",
+      "use": "SWIFT messaging + bank integration with blockchain ledger",
+      "in_estate": "/public/interop/iso-20022.json"
+    },
+    {
+      "standard": "EIP-712 (Ethereum typed structured data signing)",
+      "use": "Off-chain message signing for x402 / a2a / XRPL",
+      "in_estate": "/public/interop/eip-712.json"
+    },
+    {
+      "standard": "EIP-3009 (Transferable tokenized currency)",
+      "use": "USDC/x402 payment flow",
+      "in_estate": "/public/interop/eip-3009.json"
+    },
+    {
+      "standard": "BIP-340 (Schnorr signatures, Taproot)",
+      "use": "Bitcoin Taproot signing",
+      "in_estate": "/public/interop/bip-340.json"
+    },
+    {
+      "standard": "ERC-8004 (Trustless Agents)",
+      "use": "Agent registry / on-chain reputation",
+      "in_estate": "/public/interop/erc-8004.json + /public/interop/erc8004-callable/ (4 pointer files)"
+    },
+    {
+      "standard": "x402 (HTTP 402 Payment Required for AI agents)",
+      "use": "Micropayments between AI agents + paid endpoints",
+      "in_estate": "/public/interop/x402-census-cards/ (104 cards) + /public/interop/ledger-card-x402-*.json"
+    },
+    {
+      "standard": "MCP (Model Context Protocol)",
+      "use": "AI agent tool/connector protocol",
+      "in_estate": "/public/interop/mcp-directories.json (catalog of 8 registries, 1272 entries)"
+    }
+  ],
+  "xrpl_research": {
+    "instrument_count": 16,
+    "instrument_types": [
+      "Mature tokens (XRP, ETH, BTC bridged)",
+      "XRPL-issued stablecoins (RLUSD, USDC, USDQ, USDB)",
+      "XRPL tokenized Treasuries (OUSG)",
+      "XRPL gold-backed (XAU.gh)",
+      "XRPL Eurozone stablecoins (EUR.bs, EUR.gh, EURCV, EUROP, EURQ)",
+      "XRPL UK pound (GBP.gh)",
+      "XRPL CBDC pilot (PSC Palau)"
+    ],
+    "issuers_in_estate": [
+      "Bitstamp",
+      "Braza Bank",
+      "Circle",
+      "Gatehub",
+      "Ondo Finance",
+      "Quantoz",
+      "Republic of Palau",
+      "Ripple",
+      "Schuman Financial",
+      "Societe Generale Forge"
+    ],
+    "two_way_check_status": "in /public/interop/xrpl-two-way-check.json \u2014 bidirectional verification of issuer registries vs on-chain state",
+    "supply_measure_2026-09-16": "/public/interop/xrpl-supply-2026-09-16.json \u2014 on-chain supply measured per instrument",
+    "binding_to_goals": [
+      "asset_classification",
+      "reserves_collateral",
+      "settlement",
+      "provenance",
+      "actor_identity"
+    ]
+  },
+  "stablecoin_research": {
+    "card_v0_corpus_count": "425 stablecoins across multiple chains (per public/interop/stablecoin-universe-2026-09/)",
+    "card_v0_extended": "/public/interop/stablecoins-extended.json \u2014 extended measurement",
+    "deep_corpus": "/public/interop/stablecoin-deep-2026-09/ \u2014 deep attestation per issuer",
+    "onchain_supply": [
+      "/public/interop/ots/stablecoin-universe-supply-2026-09-16.json.ots",
+      "/public/interop/ots/stablecoin-onchain-supply-2026-09-16.json.ots",
+      "/public/interop/ots/stablecoin-solana-supply-2026-09-16.json.ots"
+    ],
+    "cohorts": "/public/interop/stablecoin-cohort-2026-09/ \u2014 13 cohort cards",
+    "binding_to_goals": [
+      "asset_classification",
+      "reserves_collateral",
+      "custody",
+      "actor_identity"
+    ]
+  }
+}
