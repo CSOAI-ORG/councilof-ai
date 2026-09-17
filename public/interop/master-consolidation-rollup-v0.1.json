@@ -1,16 +1,16 @@
 {
   "schema": "csoai.master-consolidation-rollup/0.1",
-  "generated_at": "2026-09-17T03:53:12.978311+00:00",
+  "generated_at": "2026-09-17T04:23:32.007164+00:00",
   "title": "Master Consolidation Roll-up \u2014 GSPC Estate",
   "purpose": "One manifest that proves every signed/unsigned card, every OTS proof, and every strategic deliverable is live on GSPC.",
   "disclaimer": "Measurement, not certification. Empty is not zero. Engine calculates; nothing fabricated.",
   "totals": {
-    "ledger_cards": 11302,
-    "auto_eat_cards": 11292,
+    "ledger_cards": 11539,
+    "auto_eat_cards": 11529,
     "ots_files_on_disk": 2227,
     "ots_proofs_in_manifest": 2144,
     "unsigned_no_ots": 86,
-    "total_evidence_bytes": 88017259,
+    "total_evidence_bytes": 94511318,
     "white_papers_indexed": 1051,
     "benchmark_cards": 3998,
     "axes": 14,
@@ -66,7 +66,9 @@
     "17. OTS sweep v7: 245 unsigned-without-OTS files submitted; manifest now 566 proofs total.",
     "18. Final-sweep v8: +329 more evidence JSONs (unsigned cards missed by previous sweeps, plus 3 evidence incident files, 3 client fixtures, 2 script files, 1 council-os).",
     "19. FINAL: 0 unsigned evidence without OTS. ALL 649 OTS files on disk have pending Bitcoin-anchor proofs.",
-    "20. OTS sweeps v9-v14: 1,519 more unsigned JSONs submitted (manifest 566->2144)."
+    "20. OTS sweeps v9-v14: 1,519 more unsigned JSONs submitted (manifest 566->2144).",
+    "21. Final-pass consolidation: +237 evidence JSONs from evidence/incidents + harness + public/ + locks/ + packages/ + client/. ledger 11539 (now 11539).",
+    "22. OTS calendar status: degraded \u2014 returns 0xf008... (Bitcoin script fragments) instead of valid 0x004f7065... OpenTimestamps proofs. 93 valid .ots proofs on origin (56 BTC-attested, 37 calendar-pending)."
   ],
   "external_deliverables": {
     "OSAIA_SAFE_RFC": {
@@ -80,6 +82,6 @@
       "status": "DRAFT_READY"
     }
   },
-  "sha256": "3439c10f871d5bf96e5bfeba122d92f16bf9f52c15b9582663c0960c07f7264b",
-  "byte_size": 4384
+  "sha256": "9084423500af8cfa75d02ab1d6a501751302c6405486758b9bbe77a63c4b5bb3",
+  "byte_size": 4748
 }
