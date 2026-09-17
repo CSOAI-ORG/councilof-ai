@@ -106,6 +106,7 @@ import http.server
 import json
 import re
 import os
+import pathlib
 import socket
 import ssl
 import subprocess

@@ -70,6 +70,19 @@ def main():
                  "public/press/2026-09-17-can-you-check-their-work.md"]:
         check(f"real tree discovers {pathlib.Path(must).name[:34]}", must in real, True)
     print(f"\n  real tree: {len(real)} artifacts discovered")
+
+    # 4. EXERCISE main() ITSELF.
+    # The first version of this suite called discover_artifacts() directly and passed,
+    # while `mirror_fanout.py --no-write` died instantly with NameError: pathlib is not
+    # defined -- because the test supplied its own pathlib.Path and main()'s call site
+    # was never run. A test that never enters the entry point does not test the program.
+    import subprocess
+    repo = pathlib.Path(__file__).resolve().parent.parent
+    r = subprocess.run([sys.executable, "scripts/mirror_fanout.py", "--no-write",
+                        "--surface", "huggingface", "--out", "/dev/null"],
+                       cwd=repo, capture_output=True, text=True, timeout=900)
+    check("main() runs without an unhandled exception", "Traceback" not in r.stderr, True)
+    check("main() reports the discovery line", "[discover]" in (r.stdout + r.stderr), True)
     print(f"\n{'FAILURES: ' + '; '.join(fails) if fails else 'all controls pass — discovery includes, excludes, and the floor fires both ways'}")
     return 1 if fails else 0
 
