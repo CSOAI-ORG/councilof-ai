@@ -1,0 +1,86 @@
+{
+  "schema": "csoai.revenue/0.1",
+  "contract": {
+    "derivation": "Counts read from counters.json (the counter canon) and, where bound, the REVENUE_KV tallies. Nothing is fetched over HTTP and no count is typed by hand.",
+    "null_rule": "A count is null, never 0, when there is no source. The x402 rail is currently live — a facilitator is provisioned, so a settled receipt can be counted; every count stays null until one settles.",
+    "north_of_truth": "settled_usdc is the honest revenue number: USDC that cleared to the estate pay_to on Base, single-use. Chain adjudicates, not the CRM.",
+    "no_prices": "This surface never publishes a price. Metered amounts appear only in an x402 402 challenge (the accepts array), never here and never on the free board.",
+    "not_a_grade": "Revenue is earned on issuance, assembly, and a durable signature — never a grade."
+  },
+  "skus": {
+    "issuance": {
+      "sku": "SKU-1",
+      "id": "revenue_issuances",
+      "count": 8,
+      "status": "MEASURED",
+      "source": "REVENUE_KV",
+      "owner": "Revenue",
+      "note": "SKU-1. value is null, never 0 — 0 would assert a measured count. The rail state is NOT typed here: functions/api/revenue.ts derives it from railMode(env) and appends it when it serves this note. Source of truth is settled receipts on-chain, not intent. x402 rail: live — a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles."
+    },
+    "proofs": {
+      "sku": "SKU-2",
+      "id": "revenue_proofs",
+      "count": null,
+      "status": "UNMEASURED",
+      "source": "counters.json",
+      "owner": "Revenue",
+      "note": "SKU-2. Split new vs quarterly-recompute. Null until a bundle is actually delivered and settled; never inferred from a quote. x402 rail: live — a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles."
+    },
+    "licences": {
+      "sku": "SKU-3",
+      "id": "revenue_licences",
+      "count": null,
+      "status": "UNMEASURED",
+      "source": "counters.json",
+      "owner": "Revenue",
+      "note": "SKU-3. Meter on issuances/bundles, never seats. Null until a rail is licensed. x402 rail: live — a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles."
+    }
+  },
+  "settled_usdc": {
+    "id": "revenue_settled_usdc",
+    "count": 20000,
+    "status": "MEASURED",
+    "source": "REVENUE_KV settled:tx:* records (owner-controlled and zero-value settlements excluded)",
+    "owner": "Revenue",
+    "note": "The north-of-truth revenue number: bytes/chain adjudicate, not the CRM. Null until X402_PAY_TO + a facilitator are provisioned and a receipt settles. Fail-closed by design. x402 rail: live — a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles.",
+    "unit": "USDC atomic (6dp) on Base",
+    "excludes_self": true
+  },
+  "one_number": {
+    "id": "distinct_nonself_payers",
+    "definition": "Count of distinct payer wallets, excluding payTo and X402_SELF_WALLETS, across facilitator-confirmed settlements THAT MOVED A NON-ZERO AMOUNT. A wallet we control paying us is recorded but is neither revenue nor a buyer, and neither is a wallet that paid nothing: a settlement of zero is not a purchase.",
+    "status": "MEASURED",
+    "all_time": 1,
+    "last_30d": 1,
+    "settlements": 1,
+    "self_settlements": 10,
+    "settled_usdc_atomic": 20000,
+    "distinct_payers_by_door": {
+      "https://councilof.ai/api/eunomia-data?feed=1": 1
+    },
+    "zero_value_settlements": 6,
+    "zero_value_note": "Non-self settlements that moved 0, or carried no readable amount. Recorded for audit, never counted as a payer — paying nothing does not make a buyer. Seeds and probes land here.",
+    "records_unreadable": 0,
+    "source": "REVENUE_KV settled:tx:* records",
+    "indexing": {
+      "facilitator_bazaar_outcomes": {
+        "ABSENT": 17
+      },
+      "note": "Per settlement record, what the facilitator reported on the EXTENSION-RESPONSES sidechannel at settle time. REPORTED means it said something; UNREPORTED means it said nothing, which is NOT the same as not being indexed and is NOT evidence that we are. ABSENT means the record predates the field. Nothing here is a claim about any index — read the index itself: scripts/interop/x402-bazaar-audit.py walks PayAI and Coinbase CDP to completion and is the only thing that can say whether we are in one."
+    },
+    "gates": {
+      "0 for 30 days": "shape or price is wrong; do not add doors",
+      "≥1 repeat": "open the next door",
+      "≥5 distinct in 30d": "it is a product"
+    }
+  },
+  "provisioning": {
+    "kv_bound": true,
+    "gated": false,
+    "owner_switches": [
+      "bind REVENUE_KV (replay + tally store)",
+      "set X402_PAY_TO + choose facilitator (turns the rail live; see functions/api/_x402.ts)"
+    ]
+  },
+  "note": "Aggregate-only. NO telemetry, NO per-user data, NO fabricated counts. Measurement, never certification."
+}
