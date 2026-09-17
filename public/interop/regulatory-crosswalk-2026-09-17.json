@@ -1,0 +1,463 @@
+{
+  "schema": "csoai.regulatory-crosswalk/0.1",
+  "as_of": "2026-09-17",
+  "what_this_is": "Regulatory and assurance sources crosswalked against stable goal objects, so a source changing state does not invalidate the map.",
+  "what_this_is_not": [
+    "Not a statement of what any law requires. A goal is a question we can gather observable evidence against, never a legal conclusion.",
+    "Not a compliance determination. CSOAI measures and never certifies, so no goal ever resolves to compliant or non-compliant.",
+    "Not exhaustive. Goals are added when a source raises a question no existing goal can carry, and the addition is recorded."
+  ],
+  "verification_states_explained": {
+    "PRIMARY_SOURCE_FETCHED": "We retrieved the primary artifact ourselves.",
+    "PRIMARY_ARTIFACT_FETCHED_DEADLINE_FROM_SECONDARY": "We hold the artifact, but a date on the row is not stated in it.",
+    "REPORTED_BY_SECONDARY_SOURCES": "We have not retrieved a primary artifact. Anything published from such a row must say so."
+  },
+  "totals": {
+    "goals": 14,
+    "sources": 6,
+    "coverage": {
+      "HAS_A_VERIFIED_SOURCE": 14
+    },
+    "coverage_note": "NO_SOURCE means no source in this crosswalk raises that goal. It does not mean the goal is satisfied, and it does not mean no such source exists in the world."
+  },
+  "deadlines": [
+    {
+      "source_id": "osaia-safe",
+      "kind": "contribution_deadline",
+      "date": "2026-09-21",
+      "days_remaining": 4,
+      "provenance": "NOT_IN_PRIMARY_ARTIFACT. We fetched the RFC file and the alliance homepage on 17 September 2026 and neither states a closing date. The 21 September date appears in Linux Foundation and vendor coverage of the RFC. Treat the deadline as reported, not as published by the RFC, and say so wherever it is quoted."
+    },
+    {
+      "source_id": "sec-regulation-crypto-assets",
+      "kind": "comment_deadline",
+      "date": "2026-10-20",
+      "days_remaining": 33,
+      "provenance": "The page carries a Public Comments Due field reading Oct. 20, 2026."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "cftc-innovation-task-force",
+      "name": "CFTC Innovation Task Force",
+      "family": "regulation",
+      "jurisdiction": "US",
+      "issuing_bodies": [
+        "CFTC"
+      ],
+      "source_version": "Press release 9210-26",
+      "published": "2026-04-10",
+      "effective_state": "OPERATIVE",
+      "verification": {
+        "state": "PRIMARY_SOURCE_FETCHED",
+        "primary_artifact_fetched": true,
+        "url": "https://www.cftc.gov/PressRoom/PressReleases/9210-26",
+        "quoted_scope": "develop a clear regulatory framework for innovators focused on crypto assets and blockchain technologies; artificial intelligence and autonomous systems; and prediction markets and event contracts",
+        "checked_at": "2026-09-17T02:52Z"
+      },
+      "why_this_source_matters_most_to_us": "It is the only source in this crosswalk whose stated scope covers crypto and blockchain AND artificial intelligence and autonomous systems in one mandate. That intersection is where our measurement work already sits."
+    },
+    {
+      "source_id": "clarity",
+      "name": "CLARITY / Senate digital asset market structure text",
+      "family": "regulation",
+      "jurisdiction": "US",
+      "source_version": "2026-09-15 cloture vote",
+      "effective_state": "STALLED_NO_FLOOR_DEBATE",
+      "effective_state_note": "The Senate cloture vote on the motion to proceed failed 49 to 50 on 15 September 2026, eleven short of the 60 required. The Senate never reached debate, so no vote was taken on the bill's contents. STALLED is a statement about procedure, not about the merits, and not a prediction.",
+      "verification": {
+        "state": "REPORTED_BY_SECONDARY_SOURCES",
+        "primary_artifact_fetched": false,
+        "note": "The vote count and date come from press reporting, not from a Senate roll-call record we retrieved ourselves. Anything published from this row must say so until the roll call is fetched.",
+        "checked_at": "2026-09-17T02:50Z"
+      },
+      "why_still_indexed_though_stalled": "The goals this text raises did not vanish with the vote. Three other sources in this crosswalk address the same goals and remain operative. That is the whole reason the crosswalk is anchored to goals rather than to section numbers."
+    },
+    {
+      "source_id": "genius-stablecoin",
+      "name": "GENIUS Act implementation: FDIC prudential framework for permitted payment stablecoin issuers",
+      "family": "regulation",
+      "jurisdiction": "US",
+      "issuing_bodies": [
+        "FDIC"
+      ],
+      "source_version": "Notice of proposed rulemaking approved 2026-04-07",
+      "published": "2026-04-07",
+      "effective_state": "PROPOSED",
+      "verification": {
+        "state": "PRIMARY_SOURCE_FETCHED",
+        "primary_artifact_fetched": true,
+        "url": "https://www.fdic.gov/news/press-releases/2026/fdic-approves-proposal-implement-genius-act-requirements-and-standards",
+        "quoted_scope": "a prudential framework for FDIC-supervised permitted payment stablecoin issuers, including requirements related to reserve assets, redemption, capital, and risk management standards",
+        "deadline_provenance": "NOT_COMPUTABLE_FROM_PRIMARY. The release states only that comments are accepted for 60 days after Federal Register publication, and does not give that publication date. We do not carry a deadline we cannot compute from a source we fetched. The Federal Register itself refused our request, so the date stays absent rather than guessed.",
+        "note": "The underlying Act and the Federal Register text were NOT retrieved. This row covers the FDIC release only, and nothing here should be read as describing the statute.",
+        "checked_at": "2026-09-17T03:05Z"
+      }
+    },
+    {
+      "source_id": "osaia-safe",
+      "name": "Shared AI Findings Exchange (SAFE), Open Secure AI Alliance under the Linux Foundation",
+      "family": "assurance",
+      "jurisdiction": "none, voluntary",
+      "source_version": "rfc-safe-proposal.md, RFC open",
+      "effective_state": "RFC_OPEN_FOR_CONTRIBUTION",
+      "contribution_deadline": "2026-09-21",
+      "verification": {
+        "state": "PRIMARY_ARTIFACT_FETCHED_DEADLINE_FROM_SECONDARY",
+        "primary_artifact_fetched": true,
+        "url": "https://github.com/OpenSecureAIAlliance/RFCs/blob/main/rfc-safe-proposal.md",
+        "deadline_provenance": "NOT_IN_PRIMARY_ARTIFACT. We fetched the RFC file and the alliance homepage on 17 September 2026 and neither states a closing date. The 21 September date appears in Linux Foundation and vendor coverage of the RFC. Treat the deadline as reported, not as published by the RFC, and say so wherever it is quoted.",
+        "checked_at": "2026-09-17T02:55Z"
+      }
+    },
+    {
+      "source_id": "sec-cftc-interpretation",
+      "name": "Application of the Federal Securities Laws to Certain Types of Crypto Assets and Certain Transactions Involving Crypto Assets",
+      "family": "regulation",
+      "jurisdiction": "US",
+      "issuing_bodies": [
+        "SEC",
+        "CFTC"
+      ],
+      "source_version": "Release Nos. 33-11412; 34-105020; File No. S7-2026-09",
+      "published": "2026-03-23",
+      "effective_state": "OPERATIVE",
+      "effective_state_note": "Effective on its publication date of 23 March 2026.",
+      "verification": {
+        "state": "PRIMARY_SOURCE_FETCHED",
+        "primary_artifact_fetched": true,
+        "url": "https://www.cftc.gov/LawRegulation/FederalRegister/finalrules/2026-05635.html",
+        "checked_at": "2026-09-17T02:52Z"
+      }
+    },
+    {
+      "source_id": "sec-regulation-crypto-assets",
+      "name": "Regulation Crypto Assets",
+      "family": "regulation",
+      "jurisdiction": "US",
+      "issuing_bodies": [
+        "SEC"
+      ],
+      "source_version": "File No. S7-2026-27",
+      "published": "2026-08-21",
+      "effective_state": "PROPOSED_COMMENT_PERIOD_OPEN",
+      "comment_deadline": "2026-10-20",
+      "verification": {
+        "state": "PRIMARY_SOURCE_FETCHED",
+        "primary_artifact_fetched": true,
+        "url": "https://www.sec.gov/rules-regulations/2026/08/s7-2026-27",
+        "deadline_provenance": "The page carries a Public Comments Due field reading Oct. 20, 2026.",
+        "checked_at": "2026-09-17T02:48Z"
+      }
+    }
+  ],
+  "by_goal": {
+    "asset-classification": {
+      "question": "What is the instrument?",
+      "observable": "on-chain contract behaviour, issuer disclosure, transfer restrictions, redemption rights",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "cftc-innovation-task-force",
+          "source_name": "CFTC Innovation Task Force",
+          "family": "regulation",
+          "effective_state": "OPERATIVE",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "digital commodities"
+        },
+        {
+          "source_id": "clarity",
+          "source_name": "CLARITY / Senate digital asset market structure text",
+          "family": "regulation",
+          "effective_state": "STALLED_NO_FLOOR_DEBATE",
+          "verification_state": "REPORTED_BY_SECONDARY_SOURCES",
+          "what_the_source_raises": "allocation of digital assets between securities and digital commodities"
+        },
+        {
+          "source_id": "sec-cftc-interpretation",
+          "source_name": "Application of the Federal Securities Laws to Certain Types of Crypto Assets and Certain Transactions Involving Crypto Assets",
+          "family": "regulation",
+          "effective_state": "OPERATIVE",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "a classification covering digital commodities, digital collectibles, digital tools, stablecoins and digital securities, and application of the investment-contract analysis"
+        },
+        {
+          "source_id": "sec-regulation-crypto-assets",
+          "source_name": "Regulation Crypto Assets",
+          "family": "regulation",
+          "effective_state": "PROPOSED_COMMENT_PERIOD_OPEN",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "which offerings fall inside the proposed regime"
+        }
+      ]
+    },
+    "actor-identity": {
+      "question": "Who issued, controls or transacted?",
+      "observable": "signing keys, registered entity records, contract ownership, admin roles",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "clarity",
+          "source_name": "CLARITY / Senate digital asset market structure text",
+          "family": "regulation",
+          "effective_state": "STALLED_NO_FLOOR_DEBATE",
+          "verification_state": "REPORTED_BY_SECONDARY_SOURCES",
+          "what_the_source_raises": "registration categories for intermediaries"
+        },
+        {
+          "source_id": "genius-stablecoin",
+          "source_name": "GENIUS Act implementation: FDIC prudential framework for permitted payment stablecoin issuers",
+          "family": "regulation",
+          "effective_state": "PROPOSED",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "which entities may be permitted payment stablecoin issuers"
+        },
+        {
+          "source_id": "sec-regulation-crypto-assets",
+          "source_name": "Regulation Crypto Assets",
+          "family": "regulation",
+          "effective_state": "PROPOSED_COMMENT_PERIOD_OPEN",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "registration pathways and exemption conditions"
+        }
+      ]
+    },
+    "jurisdiction": {
+      "question": "Which authority and rules potentially attach?",
+      "observable": "venue, counterparty location, registration filings, declared governing law",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "clarity",
+          "source_name": "CLARITY / Senate digital asset market structure text",
+          "family": "regulation",
+          "effective_state": "STALLED_NO_FLOOR_DEBATE",
+          "verification_state": "REPORTED_BY_SECONDARY_SOURCES",
+          "what_the_source_raises": "allocation of responsibility between the SEC and the CFTC"
+        },
+        {
+          "source_id": "sec-cftc-interpretation",
+          "source_name": "Application of the Federal Securities Laws to Certain Types of Crypto Assets and Certain Transactions Involving Crypto Assets",
+          "family": "regulation",
+          "effective_state": "OPERATIVE",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "which federal securities laws attach to which crypto asset transactions"
+        }
+      ]
+    },
+    "disclosure": {
+      "question": "What information exists, and where?",
+      "observable": "published documents, their hashes, their dates, what is absent",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "clarity",
+          "source_name": "CLARITY / Senate digital asset market structure text",
+          "family": "regulation",
+          "effective_state": "STALLED_NO_FLOOR_DEBATE",
+          "verification_state": "REPORTED_BY_SECONDARY_SOURCES",
+          "what_the_source_raises": "issuer and intermediary disclosure obligations"
+        },
+        {
+          "source_id": "sec-regulation-crypto-assets",
+          "source_name": "Regulation Crypto Assets",
+          "family": "regulation",
+          "effective_state": "PROPOSED_COMMENT_PERIOD_OPEN",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "tailored disclosure for crypto asset offerings"
+        }
+      ]
+    },
+    "custody": {
+      "question": "Who controls the asset and the keys?",
+      "observable": "multisig configuration, custodian attestations, withdrawal controls, freeze authority",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "clarity",
+          "source_name": "CLARITY / Senate digital asset market structure text",
+          "family": "regulation",
+          "effective_state": "STALLED_NO_FLOOR_DEBATE",
+          "verification_state": "REPORTED_BY_SECONDARY_SOURCES",
+          "what_the_source_raises": "custody requirements for intermediaries"
+        },
+        {
+          "source_id": "genius-stablecoin",
+          "source_name": "GENIUS Act implementation: FDIC prudential framework for permitted payment stablecoin issuers",
+          "family": "regulation",
+          "effective_state": "PROPOSED",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "segregation of reserve assets from an issuer's operational funds"
+        }
+      ]
+    },
+    "transaction-integrity": {
+      "question": "What actually occurred?",
+      "observable": "ledger state, transaction receipts, reconciliations against the issuer's own record",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "sec-cftc-interpretation",
+          "source_name": "Application of the Federal Securities Laws to Certain Types of Crypto Assets and Certain Transactions Involving Crypto Assets",
+          "family": "regulation",
+          "effective_state": "OPERATIVE",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "treatment of protocol mining, protocol staking, wrapping and airdrops as distinct transaction types"
+        }
+      ]
+    },
+    "market-integrity": {
+      "question": "What manipulation or abuse observations exist?",
+      "observable": "surveillance findings, published enforcement, anomaly detection output",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "cftc-innovation-task-force",
+          "source_name": "CFTC Innovation Task Force",
+          "family": "regulation",
+          "effective_state": "OPERATIVE",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "prediction markets and event contracts"
+        },
+        {
+          "source_id": "sec-regulation-crypto-assets",
+          "source_name": "Regulation Crypto Assets",
+          "family": "regulation",
+          "effective_state": "PROPOSED_COMMENT_PERIOD_OPEN",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "antifraud and antimanipulation obligations"
+        }
+      ]
+    },
+    "customer-protection": {
+      "question": "What safeguards are observable?",
+      "observable": "segregation evidence, complaint handling records, disclosed limits",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "clarity",
+          "source_name": "CLARITY / Senate digital asset market structure text",
+          "family": "regulation",
+          "effective_state": "STALLED_NO_FLOOR_DEBATE",
+          "verification_state": "REPORTED_BY_SECONDARY_SOURCES",
+          "what_the_source_raises": "customer asset segregation and protection"
+        },
+        {
+          "source_id": "genius-stablecoin",
+          "source_name": "GENIUS Act implementation: FDIC prudential framework for permitted payment stablecoin issuers",
+          "family": "regulation",
+          "effective_state": "PROPOSED",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "capital and risk management standards applying to issuers"
+        }
+      ]
+    },
+    "reserves-collateral": {
+      "question": "What assets actually back the obligation?",
+      "observable": "attestation reports, on-chain reserve addresses, issued supply against reserve",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "genius-stablecoin",
+          "source_name": "GENIUS Act implementation: FDIC prudential framework for permitted payment stablecoin issuers",
+          "family": "regulation",
+          "effective_state": "PROPOSED",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "reserve asset requirements backing a payment stablecoin, and how pass-through insurance applies to deposits held as those reserves"
+        }
+      ]
+    },
+    "settlement": {
+      "question": "Where, how and when did finality occur?",
+      "observable": "ledger finality, settlement windows, failure and reversal records",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "genius-stablecoin",
+          "source_name": "GENIUS Act implementation: FDIC prudential framework for permitted payment stablecoin issuers",
+          "family": "regulation",
+          "effective_state": "PROPOSED",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "redemption obligations, and the treatment of tokenised deposits under the Federal Deposit Insurance Act"
+        }
+      ]
+    },
+    "agent-authority": {
+      "question": "What was an AI permitted to do?",
+      "observable": "spending limits, tool allowlists, delegation records, the evidence present when authority was granted",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "cftc-innovation-task-force",
+          "source_name": "CFTC Innovation Task Force",
+          "family": "regulation",
+          "effective_state": "OPERATIVE",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "autonomous systems acting in markets"
+        },
+        {
+          "source_id": "osaia-safe",
+          "source_name": "Shared AI Findings Exchange (SAFE), Open Secure AI Alliance under the Linux Foundation",
+          "family": "assurance",
+          "effective_state": "RFC_OPEN_FOR_CONTRIBUTION",
+          "verification_state": "PRIMARY_ARTIFACT_FETCHED_DEADLINE_FROM_SECONDARY",
+          "what_the_source_raises": "delegated authority in agentic incidents"
+        }
+      ]
+    },
+    "provenance": {
+      "question": "What produced the transaction or instruction?",
+      "observable": "signed content credentials, model and prompt identity, tool-call traces",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "osaia-safe",
+          "source_name": "Shared AI Findings Exchange (SAFE), Open Secure AI Alliance under the Linux Foundation",
+          "family": "assurance",
+          "effective_state": "RFC_OPEN_FOR_CONTRIBUTION",
+          "verification_state": "PRIMARY_ARTIFACT_FETCHED_DEADLINE_FROM_SECONDARY",
+          "what_the_source_raises": "evidence preservation covering prompts, traces, tool calls, logs, configurations, model and safeguard versions and third-party dependencies"
+        }
+      ]
+    },
+    "assurance": {
+      "question": "What evidence supports those assertions, and could it have failed?",
+      "observable": "measurement records, their banks and graders by hash, incident findings, whether the instrument can return a negative result",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "cftc-innovation-task-force",
+          "source_name": "CFTC Innovation Task Force",
+          "family": "regulation",
+          "effective_state": "OPERATIVE",
+          "verification_state": "PRIMARY_SOURCE_FETCHED",
+          "what_the_source_raises": "what a clear framework would require innovators to evidence"
+        },
+        {
+          "source_id": "osaia-safe",
+          "source_name": "Shared AI Findings Exchange (SAFE), Open Secure AI Alliance under the Linux Foundation",
+          "family": "assurance",
+          "effective_state": "RFC_OPEN_FOR_CONTRIBUTION",
+          "verification_state": "PRIMARY_ARTIFACT_FETCHED_DEADLINE_FROM_SECONDARY",
+          "what_the_source_raises": "turning incidents and near misses into evidence-based controls"
+        }
+      ]
+    },
+    "change": {
+      "question": "What changed since the last measurement, and what does that invalidate?",
+      "observable": "source version diffs, superseded records, re-measurement results",
+      "coverage": "HAS_A_VERIFIED_SOURCE",
+      "sources": [
+        {
+          "source_id": "osaia-safe",
+          "source_name": "Shared AI Findings Exchange (SAFE), Open Secure AI Alliance under the Linux Foundation",
+          "family": "assurance",
+          "effective_state": "RFC_OPEN_FOR_CONTRIBUTION",
+          "verification_state": "PRIMARY_ARTIFACT_FETCHED_DEADLINE_FROM_SECONDARY",
+          "what_the_source_raises": "machine-readable updates while a risk remains unresolved"
+        }
+      ]
+    }
+  },
+  "content_digest": "8e3e355641ed7364bcea78bcd96c93d88610577024a4beee21c539c2f98004f2"
+}
