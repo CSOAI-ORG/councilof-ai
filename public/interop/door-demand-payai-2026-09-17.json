@@ -1,0 +1,216 @@
+{
+ "schema": "csoai.door-demand/0.1",
+ "as_of": "2026-09-17T11:51:23Z",
+ "signed": false,
+ "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
+ "title": "What the PayAI Bazaar says about our x402 doors",
+ "what_this_is": "Settlement statistics for our own doors, read from PayAI's index rather than from our own logs. This is the first demand signal in the estate attested by a third party instead of by us.",
+ "who_measured_it": "PayAI, not CSOAI. We did not write these numbers and cannot edit them. Read from GET /discovery/resources/{resource}/stats on facilitator.payai.network.",
+ "critical_caveat_on_attribution": "THESE COUNTS ARE NOT THE ONE NUMBER. Our One Number counts distinct NON-SELF x402 payers. PayAI's unique-buyer bands include every payer, and we run our own rail-proof settlements against these same doors, so an unknown share of these settlements is us paying ourselves. Until each buyer address is checked against our own wallets, the honest statement is 'settlements occurred', never 'external demand of N'. Bands like '10+' and '1-9' are PayAI's own coarsening; they are not precise counts.",
+ "bazaar_context": {
+  "total_merchants": 25528,
+  "total_hosts": 1026,
+  "note": "our doors sit inside an index of this size; presence is distribution, never demand"
+ },
+ "doors": [
+  {
+   "door": "api/free-door",
+   "indexed": true,
+   "http": 200,
+   "settlements_total_band": "10+",
+   "last24h": 0,
+   "last7d": 3,
+   "last30d": 18,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "10+",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": 100,
+    "7d": 100,
+    "30d": 100,
+    "avgResponseMs": 852
+   },
+   "state": "MEASURED_BY_THIRD_PARTY"
+  },
+  {
+   "door": "api/request-attestation",
+   "indexed": true,
+   "http": 200,
+   "settlements_total_band": "1-9",
+   "last24h": 0,
+   "last7d": 5,
+   "last30d": 6,
+   "volume_usd_band": "<$10",
+   "unique_buyers_band": "1-9",
+   "reliability_pct": 86,
+   "uptime": {
+    "24h": 100,
+    "7d": 100,
+    "30d": 100,
+    "avgResponseMs": 877
+   },
+   "state": "MEASURED_BY_THIRD_PARTY"
+  },
+  {
+   "door": "api/evidence-bundle",
+   "indexed": true,
+   "http": 200,
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": null,
+    "7d": null,
+    "30d": null,
+    "avgResponseMs": null
+   },
+   "state": "MEASURED_BY_THIRD_PARTY"
+  },
+  {
+   "door": "api/eunomia-data",
+   "indexed": true,
+   "http": 200,
+   "settlements_total_band": "1-9",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 1,
+   "volume_usd_band": "<$10",
+   "unique_buyers_band": "1-9",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": 100,
+    "7d": 100,
+    "30d": 100,
+    "avgResponseMs": 764
+   },
+   "state": "MEASURED_BY_THIRD_PARTY"
+  },
+  {
+   "door": "api/proof",
+   "indexed": true,
+   "http": 200,
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": 100,
+    "7d": 100,
+    "30d": 100,
+    "avgResponseMs": 1178
+   },
+   "state": "MEASURED_BY_THIRD_PARTY"
+  },
+  {
+   "door": "api/rwa/evidence",
+   "indexed": true,
+   "http": 200,
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": 100,
+    "7d": 100,
+    "30d": 100,
+    "avgResponseMs": 658
+   },
+   "state": "MEASURED_BY_THIRD_PARTY"
+  },
+  {
+   "door": "api/wrapper",
+   "indexed": true,
+   "http": 200,
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": null,
+    "7d": null,
+    "30d": null,
+    "avgResponseMs": null
+   },
+   "state": "MEASURED_BY_THIRD_PARTY"
+  },
+  {
+   "door": "api/art50/marking-evidence",
+   "indexed": true,
+   "http": 200,
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": null,
+    "7d": null,
+    "30d": null,
+    "avgResponseMs": null
+   },
+   "state": "MEASURED_BY_THIRD_PARTY"
+  },
+  {
+   "door": "api/feeds/provider-diff",
+   "indexed": true,
+   "http": 200,
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": null,
+    "7d": null,
+    "30d": null,
+    "avgResponseMs": null
+   },
+   "state": "MEASURED_BY_THIRD_PARTY"
+  },
+  {
+   "door": "api/receipts/batch",
+   "indexed": true,
+   "http": 200,
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": 100,
+    "7d": 100,
+    "30d": 100,
+    "avgResponseMs": 467
+   },
+   "state": "MEASURED_BY_THIRD_PARTY"
+  }
+ ],
+ "findings": [
+  "api/free-door: 18 settlements in 30 days, 3 in the last 7, reliability 100. It costs zero and it is the most-used door we have.",
+  "api/request-attestation: 6 settlements in 30 days, 5 of them in the last 7 -- and reliability 86, meaning roughly one attempt in seven did not complete. That is a defect to chase, not a number to quote.",
+  "api/eunomia-data: 1 settlement in 30 days.",
+  "The other seven doors are indexed with zero settlements: listed and never used.",
+  "ALL TEN doors have a stats record. Our own Bazaar audit reported four of them as 'unseen' in its paginated catalog read and was careful to call that absence INDETERMINATE rather than absent. It was right to: the per-resource stats endpoint returns a record for every one of the ten. A mutable offset-paginated list is not a census, and this is the case that proves it."
+ ],
+ "why_the_listings_are_stale": "PayAI's API has no registration endpoint: its only writes are POST /verify and POST /settle (confirmed from its OpenAPI 3.1 spec, which advertises exactly those two writes). A Bazaar row is written when a signed payment passes through the facilitator, and is not refreshed afterwards. So five of our six rows still advertise maxTimeoutSeconds 600 while the live doors declare 300. Refreshing them requires a signed payment authorisation from the owner's wallet -- including for the zero-amount door, because a zero-value authorisation is still the owner's key signing a payment object. This is owner-gated by nature, not by budget.",
+ "corrected_before_publication": "A first draft of this file asserted that four doors had 'no stats record at all' and had never been verified or settled. That was read off the paginated catalog, not off the stats endpoint, and it was false: all ten return records. The claim was removed before this file was published anywhere."
+}
