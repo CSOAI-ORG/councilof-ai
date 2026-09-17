@@ -1,6 +1,6 @@
 {
   "artifact": "master-consolidation",
-  "as_of": "2026-09-16T16:34:29Z",
+  "as_of": "2026-09-17T03:12:46Z",
   "what_this_is": "A census of every artifact CSOAI holds across every surface, committed to one Merkle root.",
   "what_the_root_proves": "That these exact entries were in this set when the root was stamped. Nothing else.",
   "what_this_is_not": [
@@ -15,18 +15,18 @@
   },
   "merkle_rule": "leaf = sha256(bytes); pairs hashed in order; an odd node is carried up unchanged, never duplicated",
   "totals": {
-    "entries": 7940,
-    "bytes_leaves": 5773,
+    "entries": 7973,
+    "bytes_leaves": 5806,
     "record_leaves": 2167,
     "by_surface": {
       "github": 400,
       "huggingface": 1758,
       "kaggle": 20,
       "oracle_object_storage": 8,
-      "repo": 5754
+      "repo": 5787
     },
     "by_state": {
-      "INDEXED": 6427,
+      "INDEXED": 6460,
       "UNSIGNED": 1513
     },
     "state_meanings": {
@@ -51,9 +51,9 @@
     },
     "anchoring": {
       "source": "every .ots under public/, parsed and checked against the file it names",
-      "proofs": 85,
+      "proofs": 92,
       "bitcoin_attested": 56,
-      "calendar_pending": 29,
+      "calendar_pending": 36,
       "unreadable": 0,
       "does_not_establish": "A calendar-pending stamp is a REQUEST, not an anchor. Only the Bitcoin-attested count is evidence of a time."
     },
@@ -74,6 +74,11 @@
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
       "sig_status": "UNSIGNED_PENDING_OIDC",
       "honesty": "Cohort membership is now MEASURED against the primary source: the seventeen names below are the seventeen Swift names, and our earlier list matched it exactly. Everything else in this file is still the HTTP state of URLs WE chose \u2014 eleven are newsroom index pages we guessed, and a 404 on a path we invented is evidence about our guess, never about the bank. No bank here has been measured on tokenisation posture and none may be quoted as such."
+    },
+    "regulatory_crosswalk": {
+      "source": "public/interop/regulatory-crosswalk-2026-09-17.json",
+      "as_of": "2026-09-17",
+      "what_this_is": "Regulatory and assurance sources crosswalked against stable goal objects, so a source changing state does not invalidate the map."
     },
     "cobol_systems": {
       "source": "public/interop/cobol-measure.json",
@@ -101,10 +106,10 @@
       "not_a_supply_total": "This counts ASSETS with at least one measured deployment. It is not a sum of supply: the universe mixes peg currencies, and one asset may be deployed on several chains, so a sum would mix units or double-count a bridged token."
     }
   },
-  "merkle_root": "8348afa2b9c968ad3e5f2d7a3817f15a224dacb455244d5c5228add0b2c75879",
+  "merkle_root": "fdd79da876dd7ed212cfafb964f5ad9d8ae25cc191e8a328393a43986e83a497",
   "inclusion_self_check": {
-    "sampled": 204,
-    "verified": 204,
+    "sampled": 205,
+    "verified": 205,
     "a_leaf_outside_the_set_is_rejected": true
   },
   "entries": [
@@ -59732,12 +59737,75 @@
     },
     {
       "surface": "repo",
-      "kind": "interop_artifact",
-      "id": "public/interop/a2a-directories.json",
-      "digest": "d471ba8709c63616ed6423b4de656b66bfcf71ed717dd1fb3997d898f87a5f68",
+      "kind": "crosswalk_source",
+      "id": "measurement/crosswalk/goals.json",
+      "digest": "8090d3c9d601fee7177aa26775a55a232c01a30395a1b702d63d44329e2ec2ff",
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
-      "bytes": 7617
+      "bytes": 3352
+    },
+    {
+      "surface": "repo",
+      "kind": "crosswalk_source",
+      "id": "measurement/crosswalk/sources/cftc-innovation-task-force.json",
+      "digest": "6a1565563a5e9f7db9f7d7a5f7987d94034245510da92ca96a253aeb661085ec",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 1392
+    },
+    {
+      "surface": "repo",
+      "kind": "crosswalk_source",
+      "id": "measurement/crosswalk/sources/clarity.json",
+      "digest": "5ad9b10b4d302c93f6cbe5e4fa41f87bdd7ffedcb046b6e329cc7f0294721a34",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 1865
+    },
+    {
+      "surface": "repo",
+      "kind": "crosswalk_source",
+      "id": "measurement/crosswalk/sources/genius-stablecoin.json",
+      "digest": "3251e29744744f5406f8e3dd912e226e0fdcf1d23099c286fb0c0b96d1be2d83",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 2130
+    },
+    {
+      "surface": "repo",
+      "kind": "crosswalk_source",
+      "id": "measurement/crosswalk/sources/osaia-safe.json",
+      "digest": "e1b41435a5a442429f9081be4838a03fcb5f914bed64315c64bb9b0a814c35ff",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 2576
+    },
+    {
+      "surface": "repo",
+      "kind": "crosswalk_source",
+      "id": "measurement/crosswalk/sources/sec-cftc-interpretation.json",
+      "digest": "108c34f441912e6acbe077df656364ac28705e4e28b1f07394b03c28e839466b",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 1287
+    },
+    {
+      "surface": "repo",
+      "kind": "crosswalk_source",
+      "id": "measurement/crosswalk/sources/sec-regulation-crypto-assets.json",
+      "digest": "fd5ed8fc36d5a6166227fa8c2c32c142c9ab042662993ba312bd3bc79a3996ca",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 1095
+    },
+    {
+      "surface": "repo",
+      "kind": "interop_artifact",
+      "id": "public/interop/a2a-directories.json",
+      "digest": "882427dd8ccebb8d5c7fcb8cdd1372f44f1bb7f4b63c6f3e96f77dfc173308a7",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 7697
     },
     {
       "surface": "repo",
@@ -59752,10 +59820,10 @@
       "surface": "repo",
       "kind": "interop_artifact",
       "id": "public/interop/agent-card-jws-input.json",
-      "digest": "a64310d5398feca1a2c3ed91f9a05f6bfae18755bd075aaed1a6a6874eb0453f",
+      "digest": "5fd59f2280232b52232d08b6b7d679571b4a2485558b5bc411e2c5a91fa0941f",
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
-      "bytes": 14124
+      "bytes": 16556
     },
     {
       "surface": "repo",
@@ -59909,6 +59977,15 @@
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 12438
+    },
+    {
+      "surface": "repo",
+      "kind": "interop_artifact",
+      "id": "public/interop/benchmark-index-v0.1.json",
+      "digest": "24a68a8576aef6de021fd07be4c396457b58f11f3a872c983209723b647b5664",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 1362868
     },
     {
       "surface": "repo",
@@ -60395,6 +60472,15 @@
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 124
+    },
+    {
+      "surface": "repo",
+      "kind": "interop_artifact",
+      "id": "public/interop/digital-asset-regulatory-measurement-profile-v0.1.json",
+      "digest": "b54f58abf09a561dafc48a0eb3960d040aaa8eb30da36c584ca121b1a456c03f",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 18774
     },
     {
       "surface": "repo",
@@ -61300,7 +61386,7 @@
       "surface": "repo",
       "kind": "interop_artifact",
       "id": "public/interop/hub-cards-index.json",
-      "digest": "c511345fe4d608556bbf168626b5ffc8dc5b7ff7290faf20b2aa74f4ed3c46e7",
+      "digest": "ca4c74c43c9a6b952c976be0584333d9dcd7b309659d9da6843cd99d60d8e51d",
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 228564
@@ -62029,10 +62115,10 @@
       "surface": "repo",
       "kind": "interop_artifact",
       "id": "public/interop/ledger-cards-compact.json",
-      "digest": "1ce504f143ea7383f3a553a369472623546d46ac53e59d00f770cfb801247ba9",
+      "digest": "0de15ec7fc8ecd8e764c792480cd2d61865db859b8eff35b72a9dd23f97ec3c9",
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
-      "bytes": 35338
+      "bytes": 3799361
     },
     {
       "surface": "repo",
@@ -62078,6 +62164,33 @@
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 131
+    },
+    {
+      "surface": "repo",
+      "kind": "interop_artifact",
+      "id": "public/interop/master-consolidation-2026-09-16.json",
+      "digest": "a8599941dc545c18cea8f221f04622df4c7bb0dcd162ef11dbef57b86ac3d1ed",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 3089498
+    },
+    {
+      "surface": "repo",
+      "kind": "interop_artifact",
+      "id": "public/interop/master-consolidation-rollup-v0.1.json",
+      "digest": "bbdd6f6b2b3006d3ef6415c598255776c4f312100ae48c17d6c4609f8f35f3d5",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 4331
+    },
+    {
+      "surface": "repo",
+      "kind": "interop_artifact",
+      "id": "public/interop/master-consolidation-summary.json",
+      "digest": "c4eeaa9ecd3f88a1ccc0592ea3201f51cbe6e27fc9e3a70d03289835b1dc864a",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 6350
     },
     {
       "surface": "repo",
@@ -62307,6 +62420,15 @@
     {
       "surface": "repo",
       "kind": "interop_artifact",
+      "id": "public/interop/osaia-safe-evidence-adapter-v0.1.json",
+      "digest": "611586ad97fa2d6851d692586d5b9a6833dcb6245d171fe74967fbbe4b6afe45",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 6718
+    },
+    {
+      "surface": "repo",
+      "kind": "interop_artifact",
       "id": "public/interop/otel-traces.json",
       "digest": "6f13767ec82753b22db6abaebb0e4d5d7477948d8df8f2dac31d8df30569fafb",
       "leaf_class": "bytes_leaf",
@@ -62407,7 +62529,7 @@
       "surface": "repo",
       "kind": "interop_artifact",
       "id": "public/interop/pod-cards-index.json",
-      "digest": "5b1fbdd0464240c354ec0327427eae3ce9c69e1b400f7644837a468ce181fd9b",
+      "digest": "652c8fbab2355c37b51d2ee89d0cfdd21f3f261f95fcfcf6d05538e8ebe48214",
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 385538
@@ -62528,6 +62650,15 @@
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 5965
+    },
+    {
+      "surface": "repo",
+      "kind": "interop_artifact",
+      "id": "public/interop/regulatory-crosswalk-2026-09-17.json",
+      "digest": "3b66548090e7fd7b3c79dbe0ff11d61baab718ea82a3f807d61b270e34af10d8",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 24057
     },
     {
       "surface": "repo",
@@ -64188,6 +64319,15 @@
     {
       "surface": "repo",
       "kind": "interop_artifact",
+      "id": "public/interop/white-paper-index-v0.1.json",
+      "digest": "3fd48abc287764f261bf138aaca6e3100db93e9c27d8dee2bd92da6936a77629",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 90222
+    },
+    {
+      "surface": "repo",
+      "kind": "interop_artifact",
       "id": "public/interop/witness.json",
       "digest": "9a22a5339e3310840e71ac1e2c0f6076bfcbaae03497d97a46bb042dbbf5a4b5",
       "leaf_class": "bytes_leaf",
@@ -64413,6 +64553,51 @@
     {
       "surface": "repo",
       "kind": "ots_invalid",
+      "id": "public/interop/benchmark-index-v0.1.ots.invalid",
+      "digest": "ec44d93f806979d60cba10e10d97de0c47d2b60c8514dc454e9f5b0ee0a22cca",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 207
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_invalid",
+      "id": "public/interop/digital-asset-regulatory-measurement-profile-v0.1.ots.invalid",
+      "digest": "ba1e4ef98100ce5bc4384bcbe38ef6f4126988b0e56afd438d4a30ce51497540",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 242
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_invalid",
+      "id": "public/interop/master-consolidation-rollup-v0.1.ots.invalid",
+      "digest": "c429b706011e0a3c68547c1dcc74a07bdfe35f8475858ca9231afd19585295d9",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 242
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_invalid",
+      "id": "public/interop/measurement-root-2026-09-16.ots.invalid",
+      "digest": "ebce427fa2d253fc3e2fed8a5c3436576e449cc57c4af821704bfc2f2908680b",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 172
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_invalid",
+      "id": "public/interop/osaia-safe-evidence-adapter-v0.1.ots.invalid",
+      "digest": "ee023803ea8829cd2f9ac113a2d42cbaa599045dd55ff04f86db450f6f7a8f66",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 277
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_invalid",
       "id": "public/interop/ots/_invalid-2026-09-16/cobol-measure.ots.invalid",
       "digest": "beee9f20fbaacff37c20f8d81a5554da147de2c268c2c1240c142f15098540fd",
       "leaf_class": "bytes_leaf",
@@ -64436,6 +64621,24 @@
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 312
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_invalid",
+      "id": "public/interop/white-paper-index-v0.1.ots.invalid",
+      "digest": "ea765ef96cea4a54d434d5895f61002a2af65b23ae5b5a7f67cac46026e7a01e",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 207
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_proof",
+      "id": "public/interop/benchmark-index-v0.1.json.ots",
+      "digest": "01728baea279a52701505a99d9ca8bde1b7415e8e35da4f767dfa5d44fee1390",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 822
     },
     {
       "surface": "repo",
@@ -64508,6 +64711,15 @@
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 3622
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_proof",
+      "id": "public/interop/digital-asset-regulatory-measurement-profile-v0.1.json.ots",
+      "digest": "c821e8863c15d6b0e3d418c24866b42a64bdb7586a92d083179cb57704fb0b44",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 857
     },
     {
       "surface": "repo",
@@ -64683,6 +64895,42 @@
     {
       "surface": "repo",
       "kind": "ots_proof",
+      "id": "public/interop/master-consolidation-2026-09-16.json.ots",
+      "digest": "83a501f08954ec553db1a22b3b3a3ad05f49a871f479c549c3d2351cdd5b291b",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 787
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_proof",
+      "id": "public/interop/master-consolidation-rollup-v0.1.json.ots",
+      "digest": "d2bc52fd954de3c2086666ff2af8fcfe57208d899a2d7d30cee8bf8482c088a3",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 997
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_proof",
+      "id": "public/interop/measurement-root-2026-09-16.json.ots",
+      "digest": "71c8e8dd9d81b91b9cb1b9b082a6645a687c321399690ca75a75c1c3c3cd1c91",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 927
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_proof",
+      "id": "public/interop/osaia-safe-evidence-adapter-v0.1.json.ots",
+      "digest": "e03b5226549b815e004aecf674d211a309ab137de915a96dc3e0b8d5972148f7",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 997
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_proof",
       "id": "public/interop/ots/cobol-measure.json.ots",
       "digest": "7fba367ab119a5e23677866786b586e5bf65987c92d3b4026047eec702d7c360",
       "leaf_class": "bytes_leaf",
@@ -64769,6 +65017,15 @@
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 892
+    },
+    {
+      "surface": "repo",
+      "kind": "ots_proof",
+      "id": "public/interop/regulatory-crosswalk-2026-09-17.json.ots",
+      "digest": "e5465d448adf5ef021aa2eb6aaed0f489e5a9ba68a77dc8bd33759a9ce7d4d76",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 927
     },
     {
       "surface": "repo",
@@ -65195,12 +65452,30 @@
     },
     {
       "surface": "repo",
+      "kind": "ots_proof",
+      "id": "public/interop/white-paper-index-v0.1.json.ots",
+      "digest": "8c64221d2e45d45ed7e1c9de2343f42b8fcdafb2319a88fe9659a5b8c7bcaa72",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 927
+    },
+    {
+      "surface": "repo",
       "kind": "public_root",
       "id": "public/root.json",
       "digest": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4",
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 24454
+    },
+    {
+      "surface": "repo",
+      "kind": "published_contribution",
+      "id": "public/contributions/osaia-safe-discriminating-power-2026-09-17.md",
+      "digest": "ac3ff5535c2d2c53210cbb8152b2ea7f6f6087a6e736c26fb1b64dbf3f4084d5",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 5654
     },
     {
       "surface": "repo",
@@ -66477,6 +66752,15 @@
     {
       "surface": "repo",
       "kind": "written_document",
+      "id": "docs/DIGITAL-FINANCE-CROSSWALK-POSITION-2026-09-17.md",
+      "digest": "c5a41daa0a3690c40441a27f1dc7a54e3f502b6e2334d8387fc1f3633ff9f132",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 8284
+    },
+    {
+      "surface": "repo",
+      "kind": "written_document",
       "id": "docs/DISTRIBUTION_HIVE.md",
       "digest": "e9672e2624bc4f3dda11743fe855ae4434083b2673f182a055e4b58a12f180b5",
       "leaf_class": "bytes_leaf",
@@ -66671,6 +66955,15 @@
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 10902
+    },
+    {
+      "surface": "repo",
+      "kind": "written_document",
+      "id": "docs/MASTER-CONSOLIDATION-2026-09-16.md",
+      "digest": "c6887064d74fefe3b133e97db8bae2494d834e72a3aca1b7e802cc4597fe85c2",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 7037
     },
     {
       "surface": "repo",
@@ -72539,6 +72832,15 @@
       "leaf_class": "bytes_leaf",
       "state": "INDEXED",
       "bytes": 3223
+    },
+    {
+      "surface": "repo",
+      "kind": "written_document",
+      "id": "public/contributions/osaia-safe-discriminating-power-2026-09-17.md",
+      "digest": "ac3ff5535c2d2c53210cbb8152b2ea7f6f6087a6e736c26fb1b64dbf3f4084d5",
+      "leaf_class": "bytes_leaf",
+      "state": "INDEXED",
+      "bytes": 5654
     },
     {
       "surface": "repo",
