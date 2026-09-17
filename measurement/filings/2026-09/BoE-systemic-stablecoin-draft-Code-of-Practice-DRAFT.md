@@ -1,3 +1,17 @@
+# SUPERSEDED — DO NOT FILE
+
+Superseded 2026-09-17 by
+`BoE-systemic-stablecoin-Code-of-Practice-2026-09-22-DRAFT.md` in this directory.
+
+Why: this stub was written without reading the 38-page draft Code of Practice, so it answered
+Q4 only and marked itself "LOW RELEVANCE". The Code's own rule text (Safeguarding 3.17, 3.22,
+3.23; Guardrail 2.2) supports substantive answers to Q1, Q2 and Q3. The docket details in this
+stub were re-verified at source on 2026-09-17 and are correct — closing date 22 September 2026,
+email CP-systemicstablecoin@bankofengland.co.uk — but the response body below must not be sent.
+File exactly one response.
+
+---
+
 # DRAFT — not submitted · LOW RELEVANCE (owner may decide not to file)
 
 | Field | Value |
