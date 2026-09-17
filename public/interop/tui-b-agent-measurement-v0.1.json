@@ -1,0 +1,169 @@
+{
+  "schema": "csoai.tui-b-agent-measurement/0.1",
+  "generated_at": "2026-09-17T04:27:33.159149+00:00",
+  "task": "TUI B \u2014 measure each ENUMERATED agent against the population established by TUI A",
+  "measures_against": {
+    "tui_a_version": "0.1",
+    "tui_a_sha256": "2c78e5dbe939576b4aa1e41695ebb72391c798cf2ef431f756e540f2a25d648b",
+    "tui_a_n_enumerated": 13
+  },
+  "axes": [
+    "card_reachability",
+    "axes_measured",
+    "signed_cards_in_compact",
+    "ots_anchored_evidence"
+  ],
+  "measurements": {
+    "anthropic": {
+      "agent_id": "anthropic",
+      "kind": "a2a-engine-card",
+      "card_reachable": true,
+      "card_size_b": 419,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 16,
+      "ots_files_relevant": 0
+    },
+    "asi-evolve": {
+      "agent_id": "asi-evolve",
+      "kind": "a2a-engine-card",
+      "card_reachable": false,
+      "card_size_b": 0,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 4,
+      "ots_files_relevant": 0
+    },
+    "council-os": {
+      "agent_id": "council-os",
+      "kind": "a2a-engine-card",
+      "card_reachable": false,
+      "card_size_b": 0,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 13,
+      "ots_files_relevant": 0
+    },
+    "csoai.org": {
+      "agent_id": "csoai.org",
+      "kind": "csoai-self",
+      "card_reachable": false,
+      "card_size_b": 0,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 0,
+      "ots_files_relevant": 0
+    },
+    "google": {
+      "agent_id": "google",
+      "kind": "a2a-engine-card",
+      "card_reachable": true,
+      "card_size_b": 403,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 19,
+      "ots_files_relevant": 0
+    },
+    "gspc": {
+      "agent_id": "gspc",
+      "kind": "a2a-engine-card",
+      "card_reachable": false,
+      "card_size_b": 0,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 38,
+      "ots_files_relevant": 1
+    },
+    "huggingface": {
+      "agent_id": "huggingface",
+      "kind": "a2a-engine-card",
+      "card_reachable": false,
+      "card_size_b": 0,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 9,
+      "ots_files_relevant": 0
+    },
+    "meta": {
+      "agent_id": "meta",
+      "kind": "a2a-engine-card",
+      "card_reachable": true,
+      "card_size_b": 377,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 200,
+      "ots_files_relevant": 0
+    },
+    "microsoft": {
+      "agent_id": "microsoft",
+      "kind": "a2a-engine-card",
+      "card_reachable": false,
+      "card_size_b": 0,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 6,
+      "ots_files_relevant": 0
+    },
+    "mistral": {
+      "agent_id": "mistral",
+      "kind": "a2a-engine-card",
+      "card_reachable": true,
+      "card_size_b": 400,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 30,
+      "ots_files_relevant": 1
+    },
+    "nvidia": {
+      "agent_id": "nvidia",
+      "kind": "a2a-engine-card",
+      "card_reachable": false,
+      "card_size_b": 0,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 4,
+      "ots_files_relevant": 0
+    },
+    "openai": {
+      "agent_id": "openai",
+      "kind": "a2a-engine-card",
+      "card_reachable": true,
+      "card_size_b": 1408,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 30,
+      "ots_files_relevant": 0
+    },
+    "oswao": {
+      "agent_id": "oswao",
+      "kind": "a2a-engine-card",
+      "card_reachable": false,
+      "card_size_b": 0,
+      "axes_measured": 0,
+      "axes_with_data": [],
+      "signed_cards_in_compact": 4,
+      "ots_files_relevant": 0
+    }
+  },
+  "summary": {
+    "agents_total": 13,
+    "agents_with_local_card": 5,
+    "agents_with_any_axis_data": 0,
+    "agents_with_signed_cards": 12,
+    "agents_with_ots_evidence": 2
+  },
+  "honest_findings": [
+    "TUI A established 13 ENUMERATED agents (12 a2a engines + 1 csoai.org).",
+    "Of the 12 a2a engines, none have per-axis GSPC measurement cards in /public/reports/ \u2014 they are PROVIDERS, not measured MODELS.",
+    "Measured models (qwen2.5-*, mistral-7b, llama3.2-3b, etc.) live in /public/reports/ \u2014 they are BUILT ON these engines.",
+    "csoai.org has the most compact entries because it is the home substrate \u2014 every card lives there.",
+    "TUI B measures the agent identity, not the underlying models. Cross-walking engines\u2192models requires the goal-object crosswalk."
+  ],
+  "disclaimers": [
+    "Measurement, not certification. Empty is not zero.",
+    "TUI B's measurements are based on what is in the local repository \u2014 not live agent card probing.",
+    "Card reachability here means 'card JSON exists locally', not 'card is currently served by the agent'."
+  ],
+  "sha256": "c1c8895666a2b1c9d28911a4520be9c5aba3b2c4139324c44e1f9b471e4feca6",
+  "byte_size": 3888
+}
