@@ -1,6 +1,6 @@
 {
   "artifact": "master-consolidation",
-  "as_of": "2026-09-16T16:34:29Z",
+  "as_of": "2026-09-17T03:12:46Z",
   "what_this_is": "A census of every artifact CSOAI holds across every surface, committed to one Merkle root.",
   "what_the_root_proves": "That these exact entries were in this set when the root was stamped. Nothing else.",
   "what_this_is_not": [
@@ -15,18 +15,18 @@
   },
   "merkle_rule": "leaf = sha256(bytes); pairs hashed in order; an odd node is carried up unchanged, never duplicated",
   "totals": {
-    "entries": 7940,
-    "bytes_leaves": 5773,
+    "entries": 7973,
+    "bytes_leaves": 5806,
     "record_leaves": 2167,
     "by_surface": {
       "github": 400,
       "huggingface": 1758,
       "kaggle": 20,
       "oracle_object_storage": 8,
-      "repo": 5754
+      "repo": 5787
     },
     "by_state": {
-      "INDEXED": 6427,
+      "INDEXED": 6460,
       "UNSIGNED": 1513
     },
     "state_meanings": {
@@ -51,9 +51,9 @@
     },
     "anchoring": {
       "source": "every .ots under public/, parsed and checked against the file it names",
-      "proofs": 85,
+      "proofs": 92,
       "bitcoin_attested": 56,
-      "calendar_pending": 29,
+      "calendar_pending": 36,
       "unreadable": 0,
       "does_not_establish": "A calendar-pending stamp is a REQUEST, not an anchor. Only the Bitcoin-attested count is evidence of a time."
     },
@@ -74,6 +74,11 @@
       "url_provenance": "GUESSED_BY_US_NOT_PRIMARY_SOURCE",
       "sig_status": "UNSIGNED_PENDING_OIDC",
       "honesty": "Cohort membership is now MEASURED against the primary source: the seventeen names below are the seventeen Swift names, and our earlier list matched it exactly. Everything else in this file is still the HTTP state of URLs WE chose \u2014 eleven are newsroom index pages we guessed, and a 404 on a path we invented is evidence about our guess, never about the bank. No bank here has been measured on tokenisation posture and none may be quoted as such."
+    },
+    "regulatory_crosswalk": {
+      "source": "public/interop/regulatory-crosswalk-2026-09-17.json",
+      "as_of": "2026-09-17",
+      "what_this_is": "Regulatory and assurance sources crosswalked against stable goal objects, so a source changing state does not invalidate the map."
     },
     "cobol_systems": {
       "source": "public/interop/cobol-measure.json",
@@ -101,10 +106,10 @@
       "not_a_supply_total": "This counts ASSETS with at least one measured deployment. It is not a sum of supply: the universe mixes peg currencies, and one asset may be deployed on several chains, so a sum would mix units or double-count a bridged token."
     }
   },
-  "merkle_root": "8348afa2b9c968ad3e5f2d7a3817f15a224dacb455244d5c5228add0b2c75879",
+  "merkle_root": "fdd79da876dd7ed212cfafb964f5ad9d8ae25cc191e8a328393a43986e83a497",
   "inclusion_self_check": {
-    "sampled": 204,
-    "verified": 204,
+    "sampled": 205,
+    "verified": 205,
     "a_leaf_outside_the_set_is_rejected": true
   },
   "full_artifact": "/interop/master-consolidation-2026-09-16.json",

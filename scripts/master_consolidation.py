@@ -101,6 +101,8 @@ def _proofs(repo_rows, ots_state, card_verify):
          ("n", "n_measured", "n_unmeasured", "n_uncheckable", "as_of", "honesty")),
         ("swift_cohort", "public/interop/swift-measure.json",
          ("n", "status_all", "as_of", "url_provenance", "sig_status", "honesty")),
+        ("regulatory_crosswalk", "public/interop/regulatory-crosswalk-2026-09-17.json",
+         ("as_of", "what_this_is")),
         ("cobol_systems", "public/interop/cobol-measure.json",
          ("n", "n_ok", "n_http_error", "status_all", "as_of", "sig_status", "honesty")),
         ("x402_doors", "public/interop/x402-door-census-2026-09-16.json",
