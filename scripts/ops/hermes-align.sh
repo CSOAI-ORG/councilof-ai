@@ -146,7 +146,19 @@ if [ -d "$REPO" ]; then
       if [ "$ORPH" -gt 0 ]; then
         bad "a real proof no longer covers its artefact — the artefact was regenerated under its stamp"
         grep -A 1 'ORPHANED' /tmp/align-ots.log | tail -2 | sed 's/^/        /'
-        echo "        fix: re-stamp the artefact. Never regenerate underneath an existing stamp."
+        if [ "$APPLY" = "1" ]; then
+          # Re-stamping an orphan is safe: it produces a NEW proof over the bytes that are actually
+          # published. It is not editing a stamp, which nothing may do.
+          grep -oE 'public/[^ ]+\.ots' /tmp/align-ots.log | sort -u | while read -r stamp; do
+            src="${stamp%.ots}"
+            if [ -f "$REPO/$src" ]; then
+              ( cd "$REPO" && python3 scripts/ots/ots-stamp.py --file "$src" --out "$stamp" >/dev/null 2>&1 ) \
+                && echo "        re-stamped $src"
+            fi
+          done
+        else
+          echo "        fix: re-stamp the artefact. Never regenerate underneath an existing stamp."
+        fi
       fi
       if [ "$APPLY" = "1" ] && [ -f "$REPO/scripts/ots_manifest_rebuild.py" ]; then
         ( cd "$REPO" && python3 scripts/ots_manifest_rebuild.py --apply ) | sed 's/^/        /'
