@@ -1,0 +1,396 @@
+{
+  "schema": "csoai.mirror-manifest/0.2",
+  "as_of": "2026-09-17T05:20:42Z",
+  "generated_by": "scripts/mirror_fanout.py",
+  "method": {
+    "readback": "anonymous — no token, no cookie, no Authorization header",
+    "user_agent": "csoai-mirror-fanout/0.2 (+https://councilof.ai; anonymous readback probe)",
+    "digest": "sha256 of the exact bytes returned by the mirror",
+    "states": {
+      "VERIFIED_MATCHING_DIGEST": "2xx and sha256(body) == manifest sha256",
+      "REACHABLE_DIGEST_MISMATCH": "2xx but sha256(body) != manifest sha256 — stale or divergent copy",
+      "UNREACHABLE": "a URL exists, was fetched, and did not yield 2xx bytes",
+      "NOT_PUBLISHED": "no URL on this surface — the artifact was never put there"
+    },
+    "no_optimistic_defaults": "every state other than NOT_PUBLISHED is backed by an actual fetch in this run",
+    "independence": "independent_provider_count counts DISTINCT PROVIDERS that served matching bytes. Two hosts behind one provider count once."
+  },
+  "surfaces": [
+    {
+      "surface": "huggingface",
+      "provider": "Hugging Face",
+      "note": "dataset csoai/councilof-ai-mirror; we hold a write token, so this is the surface we can repair",
+      "listing": {
+        "files": 19,
+        "error": null
+      }
+    },
+    {
+      "surface": "cloudflare-pages-councilof",
+      "provider": "Cloudflare Pages",
+      "note": "origin of record; static host with no listing API, so every path is fetched. MEASURED 2026-09-17: Cloudflare bot management 403s the literal Python-urllib/* User-Agent while serving 200 to curl and to this prober. A reader whose client does not set a UA is locked out of this leg; the Hugging Face leg serves all of them.",
+      "listing": null
+    },
+    {
+      "surface": "cloudflare-pages-csoai",
+      "provider": "Cloudflare Pages",
+      "note": "same provider as councilof.ai and 308-redirects to it — NOT an independent mirror. A VERIFIED here and a VERIFIED on councilof.ai are one surviving copy, not two, which is why independence is counted by provider.",
+      "listing": null
+    },
+    {
+      "surface": "kaggle",
+      "provider": "Kaggle",
+      "note": "dataset nicktempleman/csoai-gspc-living-board; per-file anonymous download",
+      "listing": {
+        "files": 8,
+        "error": null
+      }
+    },
+    {
+      "surface": "zenodo",
+      "provider": "Zenodo",
+      "note": "record 21991104; immutable DOI-backed deposit",
+      "listing": {
+        "files": 3,
+        "error": null
+      }
+    },
+    {
+      "surface": "github-raw",
+      "provider": "GitHub",
+      "note": "account is flagged; anonymous readers see 404. Recorded, never relied on.",
+      "listing": null
+    }
+  ],
+  "totals": {
+    "artifacts": 4,
+    "mirror_probes": 24,
+    "VERIFIED_MATCHING_DIGEST": 8,
+    "REACHABLE_DIGEST_MISMATCH": 1,
+    "UNREACHABLE": 8,
+    "NOT_PUBLISHED": 7,
+    "artifacts_single_homed": 2
+  },
+  "artifacts": [
+    {
+      "path": "public/interop/agent-population-2026-09-17.json",
+      "public_path": "interop/agent-population-2026-09-17.json",
+      "sha256": "a0a37bd8a2a2993729eb39952a08abb4e524c6f3972f0718402b700bc92f6543",
+      "size": 3048,
+      "mirrors": [
+        {
+          "surface": "huggingface",
+          "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__agent-population-2026-09-17.json",
+          "last_verified_at": "2026-09-17T05:20:38Z",
+          "state": "VERIFIED_MATCHING_DIGEST",
+          "http_status": 200,
+          "sha256_received": "a0a37bd8a2a2993729eb39952a08abb4e524c6f3972f0718402b700bc92f6543",
+          "bytes_received": 3048,
+          "detail": "bytes served match the manifest digest",
+          "final_url": "https://huggingface.co/api/resolve-cache/datasets/csoai/councilof-ai-mirror/49fc087868756359a7fb523841abc024289a49ad/interop__agent-population-2026-09-17.json?%2Fdatasets%2Fcsoai%2Fcouncilof-ai-mirror%2Fresolve%2Fmain%2Finterop__agent-population-2026-09-17.json=&etag=%22c58a1dabcc48c445defff89a5fddee6ff72cf32a%22",
+          "elapsed_ms": 279
+        },
+        {
+          "surface": "cloudflare-pages-councilof",
+          "url": "https://councilof.ai/interop/agent-population-2026-09-17.json",
+          "last_verified_at": "2026-09-17T05:20:39Z",
+          "state": "UNREACHABLE",
+          "http_status": 404,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "HTTP 404 Not Found",
+          "elapsed_ms": 79
+        },
+        {
+          "surface": "cloudflare-pages-csoai",
+          "url": "https://csoai.org/interop/agent-population-2026-09-17.json",
+          "last_verified_at": "2026-09-17T05:20:39Z",
+          "state": "UNREACHABLE",
+          "http_status": 404,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "HTTP 404 Not Found",
+          "final_url": "https://councilof.ai/interop/agent-population-2026-09-17.json",
+          "elapsed_ms": 197
+        },
+        {
+          "surface": "kaggle",
+          "url": null,
+          "last_verified_at": "2026-09-17T05:20:39Z",
+          "state": "NOT_PUBLISHED",
+          "http_status": null,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "no URL on this surface for this artifact"
+        },
+        {
+          "surface": "zenodo",
+          "url": null,
+          "last_verified_at": "2026-09-17T05:20:39Z",
+          "state": "NOT_PUBLISHED",
+          "http_status": null,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "no URL on this surface for this artifact"
+        },
+        {
+          "surface": "github-raw",
+          "url": "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/public/interop/agent-population-2026-09-17.json",
+          "last_verified_at": "2026-09-17T05:20:39Z",
+          "state": "UNREACHABLE",
+          "http_status": 404,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "HTTP 404 Not Found",
+          "elapsed_ms": 181
+        }
+      ],
+      "verified_providers": [
+        "Hugging Face"
+      ],
+      "independent_provider_count": 1,
+      "single_homed": true
+    },
+    {
+      "path": "public/interop/master-consolidation-rollup-v0.1.json",
+      "public_path": "interop/master-consolidation-rollup-v0.1.json",
+      "sha256": "99c8c78479cf66f65850198e9ac729cb9596ab1667f6680fd2cb2a3b3128d45c",
+      "size": 8589,
+      "mirrors": [
+        {
+          "surface": "huggingface",
+          "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/interop__master-consolidation-rollup-v0.1.json",
+          "last_verified_at": "2026-09-17T05:20:39Z",
+          "state": "VERIFIED_MATCHING_DIGEST",
+          "http_status": 200,
+          "sha256_received": "99c8c78479cf66f65850198e9ac729cb9596ab1667f6680fd2cb2a3b3128d45c",
+          "bytes_received": 8589,
+          "detail": "bytes served match the manifest digest",
+          "final_url": "https://huggingface.co/api/resolve-cache/datasets/csoai/councilof-ai-mirror/49fc087868756359a7fb523841abc024289a49ad/interop__master-consolidation-rollup-v0.1.json?%2Fdatasets%2Fcsoai%2Fcouncilof-ai-mirror%2Fresolve%2Fmain%2Finterop__master-consolidation-rollup-v0.1.json=&etag=%22b3152f22b4d754e4851c4e3a072685fddc97b538%22",
+          "elapsed_ms": 335
+        },
+        {
+          "surface": "cloudflare-pages-councilof",
+          "url": "https://councilof.ai/interop/master-consolidation-rollup-v0.1.json",
+          "last_verified_at": "2026-09-17T05:20:39Z",
+          "state": "UNREACHABLE",
+          "http_status": 404,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "HTTP 404 Not Found",
+          "elapsed_ms": 70
+        },
+        {
+          "surface": "cloudflare-pages-csoai",
+          "url": "https://csoai.org/interop/master-consolidation-rollup-v0.1.json",
+          "last_verified_at": "2026-09-17T05:20:40Z",
+          "state": "UNREACHABLE",
+          "http_status": 404,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "HTTP 404 Not Found",
+          "final_url": "https://councilof.ai/interop/master-consolidation-rollup-v0.1.json",
+          "elapsed_ms": 199
+        },
+        {
+          "surface": "kaggle",
+          "url": null,
+          "last_verified_at": "2026-09-17T05:20:40Z",
+          "state": "NOT_PUBLISHED",
+          "http_status": null,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "no URL on this surface for this artifact"
+        },
+        {
+          "surface": "zenodo",
+          "url": null,
+          "last_verified_at": "2026-09-17T05:20:40Z",
+          "state": "NOT_PUBLISHED",
+          "http_status": null,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "no URL on this surface for this artifact"
+        },
+        {
+          "surface": "github-raw",
+          "url": "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/public/interop/master-consolidation-rollup-v0.1.json",
+          "last_verified_at": "2026-09-17T05:20:40Z",
+          "state": "UNREACHABLE",
+          "http_status": 404,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "HTTP 404 Not Found",
+          "elapsed_ms": 225
+        }
+      ],
+      "verified_providers": [
+        "Hugging Face"
+      ],
+      "independent_provider_count": 1,
+      "single_homed": true
+    },
+    {
+      "path": "public/root.json",
+      "public_path": "root.json",
+      "sha256": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4",
+      "size": 24454,
+      "mirrors": [
+        {
+          "surface": "huggingface",
+          "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/root.json",
+          "last_verified_at": "2026-09-17T05:20:40Z",
+          "state": "VERIFIED_MATCHING_DIGEST",
+          "http_status": 200,
+          "sha256_received": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4",
+          "bytes_received": 24454,
+          "detail": "bytes served match the manifest digest",
+          "final_url": "https://huggingface.co/api/resolve-cache/datasets/csoai/councilof-ai-mirror/49fc087868756359a7fb523841abc024289a49ad/root.json?%2Fdatasets%2Fcsoai%2Fcouncilof-ai-mirror%2Fresolve%2Fmain%2Froot.json=&etag=%22f9007f867851b3a5c839f2b3d9d9a42a3e5a35e0%22",
+          "elapsed_ms": 287
+        },
+        {
+          "surface": "cloudflare-pages-councilof",
+          "url": "https://councilof.ai/root.json",
+          "last_verified_at": "2026-09-17T05:20:40Z",
+          "state": "VERIFIED_MATCHING_DIGEST",
+          "http_status": 200,
+          "sha256_received": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4",
+          "bytes_received": 24454,
+          "detail": "bytes served match the manifest digest",
+          "elapsed_ms": 77
+        },
+        {
+          "surface": "cloudflare-pages-csoai",
+          "url": "https://csoai.org/root.json",
+          "last_verified_at": "2026-09-17T05:20:40Z",
+          "state": "VERIFIED_MATCHING_DIGEST",
+          "http_status": 200,
+          "sha256_received": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4",
+          "bytes_received": 24454,
+          "detail": "bytes served match the manifest digest",
+          "final_url": "https://councilof.ai/root.json",
+          "elapsed_ms": 219
+        },
+        {
+          "surface": "kaggle",
+          "url": "https://www.kaggle.com/api/v1/datasets/download/nicktempleman/csoai-gspc-living-board/root.json",
+          "last_verified_at": "2026-09-17T05:20:41Z",
+          "state": "REACHABLE_DIGEST_MISMATCH",
+          "http_status": 200,
+          "sha256_received": "d9639d9a96e0fa5b65aebff7ba3c8dd01315e2603676633b3a01d3456222b17a",
+          "bytes_received": 24310,
+          "detail": "reachable, but the bytes served are NOT the manifest bytes (stale or divergent copy)",
+          "final_url": "https://storage.googleapis.com:443/kagglesdsdata/datasets/11811119/19669483/root.json?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=gcp-kaggle-com%40kaggle-161607.iam.gserviceaccount.com%2F20260917%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260917T051934Z&X-Goog-Expires=259200&X-Goog-SignedHeaders=host&X-Goog-Signature=76acb7a73116368e363891e01de874faba5c4a591bca1f7dd4ad7107ff84e946fd5869195c28dd8270fbadf3f31fbac105c625b0c5caac328aca5b7705cdaa21f81ebf55b37985d3aad1bd932a7d0ec493cf3c10ffb0a83c65ff36b81f12d64749347896e901c1cf093ebd9c4aea905da9b45c83006934c949d90c6e8ac23adda4d57b630313a60828025db574ac160e31bd2f7f2d2b58b483fd752c2ff8c133b4b0e2cbefbcf6c563b8df296e52fd1335fbb9604e33ef081969dc4850c0da98dc0e17f718c033ab13632004c731a5f8637a7f355914784ebf444e1b41e061dc894e3df81a8f1be4f26c8db6e5945368f176ccc3a25d2cb550133457e3578fd7",
+          "elapsed_ms": 485
+        },
+        {
+          "surface": "zenodo",
+          "url": null,
+          "last_verified_at": "2026-09-17T05:20:41Z",
+          "state": "NOT_PUBLISHED",
+          "http_status": null,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "no URL on this surface for this artifact"
+        },
+        {
+          "surface": "github-raw",
+          "url": "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/public/root.json",
+          "last_verified_at": "2026-09-17T05:20:41Z",
+          "state": "UNREACHABLE",
+          "http_status": 404,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "HTTP 404 Not Found",
+          "elapsed_ms": 176
+        }
+      ],
+      "verified_providers": [
+        "Cloudflare Pages",
+        "Hugging Face"
+      ],
+      "independent_provider_count": 2,
+      "single_homed": false
+    },
+    {
+      "path": "public/signed/card_index.json",
+      "public_path": "signed/card_index.json",
+      "sha256": "4ff54c78dba0b15b56dc3fdeec62f11f98fa7bf5d4efffc9e54c6839247242a7",
+      "size": 197471,
+      "mirrors": [
+        {
+          "surface": "huggingface",
+          "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/signed__card_index.json",
+          "last_verified_at": "2026-09-17T05:20:41Z",
+          "state": "VERIFIED_MATCHING_DIGEST",
+          "http_status": 200,
+          "sha256_received": "4ff54c78dba0b15b56dc3fdeec62f11f98fa7bf5d4efffc9e54c6839247242a7",
+          "bytes_received": 197471,
+          "detail": "bytes served match the manifest digest",
+          "final_url": "https://huggingface.co/api/resolve-cache/datasets/csoai/councilof-ai-mirror/49fc087868756359a7fb523841abc024289a49ad/signed__card_index.json?%2Fdatasets%2Fcsoai%2Fcouncilof-ai-mirror%2Fresolve%2Fmain%2Fsigned__card_index.json=&etag=%22aab016a0497624ddeb0c3772f181814469ecaf93%22",
+          "elapsed_ms": 400
+        },
+        {
+          "surface": "cloudflare-pages-councilof",
+          "url": "https://councilof.ai/signed/card_index.json",
+          "last_verified_at": "2026-09-17T05:20:42Z",
+          "state": "VERIFIED_MATCHING_DIGEST",
+          "http_status": 200,
+          "sha256_received": "4ff54c78dba0b15b56dc3fdeec62f11f98fa7bf5d4efffc9e54c6839247242a7",
+          "bytes_received": 197471,
+          "detail": "bytes served match the manifest digest",
+          "elapsed_ms": 196
+        },
+        {
+          "surface": "cloudflare-pages-csoai",
+          "url": "https://csoai.org/signed/card_index.json",
+          "last_verified_at": "2026-09-17T05:20:42Z",
+          "state": "VERIFIED_MATCHING_DIGEST",
+          "http_status": 200,
+          "sha256_received": "4ff54c78dba0b15b56dc3fdeec62f11f98fa7bf5d4efffc9e54c6839247242a7",
+          "bytes_received": 197471,
+          "detail": "bytes served match the manifest digest",
+          "final_url": "https://councilof.ai/signed/card_index.json",
+          "elapsed_ms": 296
+        },
+        {
+          "surface": "kaggle",
+          "url": null,
+          "last_verified_at": "2026-09-17T05:20:42Z",
+          "state": "NOT_PUBLISHED",
+          "http_status": null,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "no URL on this surface for this artifact"
+        },
+        {
+          "surface": "zenodo",
+          "url": null,
+          "last_verified_at": "2026-09-17T05:20:42Z",
+          "state": "NOT_PUBLISHED",
+          "http_status": null,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "no URL on this surface for this artifact"
+        },
+        {
+          "surface": "github-raw",
+          "url": "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/public/signed/card_index.json",
+          "last_verified_at": "2026-09-17T05:20:42Z",
+          "state": "UNREACHABLE",
+          "http_status": 404,
+          "sha256_received": null,
+          "bytes_received": null,
+          "detail": "HTTP 404 Not Found",
+          "elapsed_ms": 192
+        }
+      ],
+      "verified_providers": [
+        "Cloudflare Pages",
+        "Hugging Face"
+      ],
+      "independent_provider_count": 2,
+      "single_homed": false
+    }
+  ]
+}
