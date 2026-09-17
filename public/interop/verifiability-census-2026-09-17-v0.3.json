@@ -1,0 +1,499 @@
+{
+ "schema": "csoai.verifiability-census/0.3",
+ "as_of": "2026-09-17T12:20:20Z",
+ "signed": false,
+ "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, which is disabled account-wide (HTTP 422). Nothing published today can be signed, and this file says so rather than implying otherwise.",
+ "what_this_is": "Five checks applied to organisations that publish AI evaluation results. Each check is answerable by fetching public bytes with no cooperation from the subject.",
+ "what_this_is_not": [
+  "Not a ranking. There is no score, no league table and no ordering. Five columns, states in cells.",
+  "Not a certification. We measure; we never certify.",
+  "Not a judgement of research quality. An organisation can do excellent evaluation work and score NO on every column here.",
+  "Not complete. Twelve organisations plus ourselves, on one day."
+ ],
+ "checks": {
+  "signed": "Is any published evaluation result cryptographically signed, with a resolvable public key?",
+  "content_addressed": "Is a published result identified by a digest of its own bytes, cited by the publisher?",
+  "bank_published": "Are the questions or tasks behind a published score available to read?",
+  "corrections": "Is there a public record of errors the organisation found in its OWN published results?",
+  "recomputable": "Can a third party reproduce a published score from published artifacts without contacting them?"
+ },
+ "state_meanings": {
+  "YES": "evidenced, with the artifact cited",
+  "PARTIAL": "true in a stated scope and not in another; both halves recorded",
+  "NO": "checked and absent; the places searched are recorded",
+  "UNCHECKABLE": "could not be determined from public sources. NOT the same as NO."
+ },
+ "method_limitations": [
+  "GitHub code search was unavailable for part of this work, so signatures embedded inside a JSON field would not have been caught. Filenames were swept exhaustively; file contents were not.",
+  "Artificial Analysis's changelog is infinite-scroll; only about three weeks were read. Its corrections state rests on dataset cards, not on a complete changelog read.",
+  "NIST's site search is JavaScript-rendered and could not be queried from a plain fetch, which is why CAISI's corrections cell is UNCHECKABLE rather than NO.",
+  "No organisation was contacted. Every cell is from public bytes only.",
+  "MLCommons is published as one row for AILuminate. The same organisation's MLPerf results answer differently on three checks and were not swept to the same depth; the difference is recorded in the AILuminate cells rather than averaged away.",
+  "AILuminate's published prompt_hash is a 40-hex value that could not be reproduced as sha1/sha256/md5 of the published prompt_text or release_prompt_id. It may be salted or computed pre-normalisation. It was not used in any cell.",
+  "'gated=auto' on Hugging Face — a signed-in account, auto-approved — is counted as published-with-an-account, not as held out. Anonymous fetches of those paths return 401 and that is recorded in the cell."
+ ],
+ "rows": [
+  {
+   "org": "METR",
+   "url": "https://metr.org",
+   "fetched": "2026-09-17T10:18Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "sitemap ~220 URLs enumerated; security.txt has no key line; hcast.pdf and june-2026-progress-report.pdf binary-scanned for /Sig,/ByteRange,adbe.pkcs7 -> 0; git trees of 4 repos swept -> 0 signature files"
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "eval-analysis-public holds runs.jsonl as git blobs at commit 52cb829c; METR's write-up links the repo, not a commit",
+    "note": "reader supplies the pin, so the publisher committed to nothing"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "public source repos for 16 of 79 task families; stated reason: keep tasks out of training data, avoid publishing unprotected solutions"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "metr.org/notes/2026-03-20: 'the recent update to fix a modeling mistake with regularization, which decreased recent models 50% time horizon results by up to 20%'",
+    "note": "no single errata index; corrections are individual posts"
+   },
+   "recomputable": {
+    "state": "YES",
+    "evidence": "scored run records + analysis code published; a third party can re-derive published p50/p80 horizons",
+    "note": "statistic only; cannot re-run agents on the full bank"
+   }
+  },
+  {
+   "org": "Apollo Research",
+   "url": "https://www.apolloresearch.ai",
+   "fetched": "2026-09-17T10:20Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "sitemap ~160 URLs; security.txt 404; full repo list and 2 repo trees swept -> 0"
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "insider-trading publishes prompts and evaluated completions as git blobs at commit 370fdc9f"
+   },
+   "bank_published": {
+    "state": "YES",
+    "evidence": "insider-trading/prompts/ published in full; ACCESS.md: 'Disclosure Level - Public / Persons with access - The world'",
+    "note": "in-context scheming has no task repo: UNCHECKABLE for that result"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "2025-07-03 research note: their own precursor evals had 'predictive power ranges from low to medium' and the hard versions 'are neutral or actively misleading'"
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "deception-detection has data + generators + stored rollouts + analysis; insider-trading has no scoring harness"
+   }
+  },
+  {
+   "org": "UK AI Security Institute",
+   "url": "https://www.aisi.gov.uk",
+   "fetched": "2026-09-17T10:20Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "sitemap ~200 URLs; security.txt 404; Frontier AI Trends Report PDF binary-scanned -> 0; only SHA256SUMS found are integrity lists for bundled third-party binaries, not signatures over results"
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "dhi1-analysis-public and sandbox_escape_bench ship results in git; the headline pre-deployment and cyber-capability posts are dated web pages with no digest"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "SandboxEscapeBench public with a stated private test set; inspect_evals publishes 200+ tasks; the cyber-range tasks behind the GPT-5.5/Mythos/Kimi results are not published, no stated reason found"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "GPT-5.5 cyber post footnote 1: 'We subsequently identified a grading issue in our setup... we have updated the result'"
+   },
+   "recomputable": {
+    "state": "NO",
+    "evidence": "Inspect is published but no .eval logs for those scores are; publishing the harness is not a results-recompute path",
+    "note": "exception: dhi1-analysis-public is recomputable end to end"
+   }
+  },
+  {
+   "org": "Epoch AI",
+   "url": "https://epoch.ai",
+   "fetched": "2026-09-17T10:19Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "sitemap-index + 7 children enumerated; security.txt 404; benchmark_data.zip 85 members listed, no .sig and no checksum file; 3 repo trees swept -> 0"
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "their own words: 'In the future, we plan to pin each benchmark run to the exact git revision for full auditability.' Data file sits at a mutable unversioned URL; CSV id is an Airtable record id, not a digest"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "FrontierMath: 12 problems public of 338; robots.txt blocks the benchmark-problem path 'to avoid contaminating training datasets'"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "FrontierMath v2 changelog: 'corrected 123 problems in Tiers 1-3 and 12 problems in Tier 4'; 'addressing errors in 42% of problems'; v1 retained as a separate page"
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "ECI fully recomputable (inputs + fit script + scores); hub scores use task definitions 'extremely close to' the run code, transcripts behind a CAPTCHA, no git revision pinned"
+   }
+  },
+  {
+   "org": "NIST CAISI",
+   "url": "https://www.nist.gov/caisi",
+   "fetched": "2026-09-17T10:22Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "both published report PDFs binary-scanned for /Sig,/ByteRange,adbe.pkcs7,ETSI.CAdES -> 0 in each; PDF Producer is Microsoft Word"
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "results are dated PDFs and HTML tables; 69-page DeepSeek report grepped for hash/checksum -> 0 hits; caisi-cyber-evals contains no results files"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "Inspect integrations and CVE-Bench task defs public; CVE-Bench is '15 challenges (including 8 private)'; PortBench, ARC-AGI-2 semi-private, CCP-Narrative-Bench and the jailbreak set unpublished"
+   },
+   "corrections": {
+    "state": "UNCHECKABLE",
+    "evidence": "no self-correction found in the reports or news items; NIST site search is JavaScript-rendered and could not be queried from a plain fetch, so absence is NOT established"
+   },
+   "recomputable": {
+    "state": "NO",
+    "evidence": "no .eval logs, no transcripts, no per-task score files found; cyber harness published but uncited by the report"
+   }
+  },
+  {
+   "org": "Arena (formerly LMArena / Chatbot Arena)",
+   "url": "https://arena.ai",
+   "fetched": "2026-09-17T10:21Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "29 HF dataset trees swept; HF commit metadata has no signature field; GitHub releases checked; security.txt has no key; leaderboard HTML grepped -> 0"
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "leaderboard-dataset is git at commit d25aabda with per-file LFS sha256; the rendered leaderboard at arena.ai is not",
+    "note": "publisher does not tell readers to pin"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "samples published (arena-human-preference-140k etc.); the complete vote log behind published ratings is held out"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "leaderboard-changelog, three entries with retroactive recomputation incl. removing rows where 'a model battles against itself'"
+   },
+   "recomputable": {
+    "state": "NO",
+    "evidence": "arena-rank harness is public but the full vote log is not; a third party can compute a leaderboard, not the published one"
+   }
+  },
+  {
+   "org": "Artificial Analysis",
+   "url": "https://artificialanalysis.ai",
+   "fetched": "2026-09-17T10:17Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "9 HF dataset trees; GitHub orgs checked; security.txt/pgp-key.txt 404; methodology and changelog HTML grepped -> only non-crypto uses"
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "results are web leaderboards plus a key-gated API whose only version id is 'major.minor only - patch versions are not reflected here'"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "'We maintain internal copies of all evaluation datasets.' AA-Omniscience public set is a 10% subset (600 of 6000); AA-LCR published in full"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "AA-LCR v1.1: 'Sixteen corrected answer keys... Four were corrections to the answer itself'; v1.0.0 pinned so earlier results stay reproducible",
+    "note": "changelog is infinite-scroll and only ~3 weeks were read: partial read, not a NO"
+   },
+   "recomputable": {
+    "state": "NO",
+    "evidence": "bank partial, Index runner/scorer not published, model outputs not found in either org"
+   }
+  },
+  {
+   "org": "LiveBench",
+   "url": "https://livebench.ai",
+   "fetched": "2026-09-17T10:27Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "some result commits carry a valid PGP signature, but the key is GitHub's web-flow key (github.com/web-flow.gpg), attesting only that the commit came through GitHub's web UI; no LiveBench-held key found; HF trees and security.txt checked"
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "every leaderboard version is a CSV in git: table_2024_06_24.csv .. table_2026_06_25.csv, each pinned by commit and blob sha"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "six HF datasets, all last modified 2025-04-07 and covering 2024 releases only; question generation for current releases is in a private repo; 2025-04-25 to 2026-06-25 questions not found publicly"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "PR #43: 'The stored integrals_with_game judgments scored CORRECT opus answers as 0 - each judgment was bound to a superseded answer_id.' claude-opus-4-8-xhigh-effort 51.0 -> 95.0. Plus changelog.md entries"
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "all three artifacts exist for the 2024-era boards; for table_2026_06_25.csv neither questions nor answers are public"
+   }
+  },
+  {
+   "org": "Scale Labs (formerly SEAL)",
+   "url": "https://labs.scale.com",
+   "fetched": "2026-09-17T10:20Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "33 HF dataset trees; GitHub releases; labs.scale.com security.txt 404, scale.com security.txt has contact only, no key; leaderboard HTML grepped -> 0"
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "all 40 leaderboard URLs fetched: plain HTML, no digest, no snapshot id. Superseded boards kept by NAME under Legacy, which is URL versioning"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "33 HF datasets, many ungated; HLE has 'an additional held-out private set'; swe_bench_pro_private board exists alongside the public one"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "HLE 'Update April 3, 2025: We removed all errors correctly flagged as part of our community feedback bug bounty program'; superseded board retained as Legacy",
+    "note": "errors were surfaced externally via bug bounty; they acted and re-versioned"
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "SWE-Bench Pro public has bank + harness + 9 per-model trajectory dirs; the private-set boards are not recomputable"
+   }
+  },
+  {
+   "org": "Vals AI",
+   "url": "https://www.vals.ai",
+   "fetched": "2026-09-17T10:17Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "HF org tree; Valkyrie releases are bare binaries with no .sig; security.txt has no key; methodology and benchmark HTML grepped -> 0"
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "results are HTML pages stamped 'Updated 9/10/2026'; 30 public repos hold harnesses and samples, no leaderboard/result file"
+   },
+   "bank_published": {
+    "state": "NO",
+    "evidence": "'Scores are based on our privately held test sets to preserve the integrity and signal of our results.' tax-agent-bench README: 'in data/public.json, the public sample of the question set. The scored set is held out.'",
+    "note": "exception: for public benchmarks they re-run (Terminal-Bench, SWE-bench, IOI) the tasks are open"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "ProgramBench: 'The published 2.00% Fully Resolved for Claude Fable 5 counts refusal-triggered fallbacks as successes... its score falls to 0.00%. The site provides a toggle to apply this correction.'",
+    "note": "headline number retained; correction offered as a toggle"
+   },
+   "recomputable": {
+    "state": "NO",
+    "evidence": "harness public, bank held out, no bulk output release tied to a published score"
+   }
+  },
+  {
+   "org": "ARC Prize",
+   "url": "https://arcprize.org",
+   "fetched": "2026-09-17T10:22Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "all 10 org repos listed; all 10 releases have empty asset lists; 36,023 HF paths enumerated -> 0 signature files; site, 38 blog posts and 4 leaderboard JSONs grepped -> 2 hits, both false positives. 'ARC Prize Verified' is defined procedurally and the badges are SVG/PNG images"
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "no result is identified by a digest of its own bytes; the pipeline computes a sha256 over TASKS, truncated to 5 hex chars per pair, and it reaches only console warning strings",
+    "note": "results ARE git/HF-commit pinnable, but ARC never cites a commit"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "ARC-AGI-1: 400 train + 400 public eval; ARC-AGI-2: 1000 train + 120 public eval. Held out: 100+100 (v1) and 120+120 (v2). The headline leaderboard runs on the semi-private sets",
+    "note": "A paired human arm exists for the ARC-AGI-2 public eval set (arcprize/arc_agi_2_human_testing), sharing 115 task ids with the model arm — the only such pairing found in this census."
+   },
+   "corrections": {
+    "state": "PARTIAL",
+    "evidence": "ARC-AGI-2/changelog.md is a real task-bank corrections register with per-task commit links. BUT its last entry is 2025-04-17 while data/evaluation kept changing: five public-eval tasks had their first test index removed on 2025-05-15, unrecorded. No record found of an error in ARC's own published scores"
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "public-eval attempts ARE published, on Hugging Face rather than GitHub: arcprize/arc_agi_v2_public_eval, 8,114 files across 70 configurations, each carrying answer grids, correct, cost, usage and timestamps. All 8,114 fetched and reconciled against the remote manifest. No attempts are published for the semi-private sets the headline numbers come from",
+    "note": "and a limit inside the published half: 16 of those 70 configurations carry correct: null on EVERY attempt — the attempts exist, the grades do not. A score that was never graded cannot be recomputed from these bytes. Measured in public/interop/paired-arm-arc-agi-2-2026-09-17.json"
+   }
+  },
+  {
+   "org": "Hugging Face Open LLM Leaderboard",
+   "url": "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard",
+   "fetched": "2026-09-17T10:23Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "no result-level signature. Of 5,572 commits in the results dataset, 5,484 carry a gpgsig and 88 do not - and the correction-shaped commits cluster in the 88. The signing key C8A817860F8BA646BF0612916A528E38E0733467 returns 404 from keys.openpgp.org and keyserver.ubuntu.com, so git reports E (key unavailable), never G: even the signed commits are not third-party verifiable"
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "results resolve by commit SHA and the declared tree oid matches the bytes (verified by git hash-object). But nothing in the result JSON is named by its own digest, and the harness SHA it records (8f1dc26 / 121ee91) does not resolve in EleutherAI's repo or HF's fork - a control SHA resolves fine, so the absence is real. A second sweep adds: each result JSON records digests of its INPUTS — task_hashes (40 sha256 entries), git_hash (harness commit) and model_sha (exact model revision). That strengthens provenance and does not change the state: the result is still not named by a digest of its own bytes, and the recorded harness SHA does not resolve"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "5 of 6 v2 banks public; GPQA is gated:auto and returns 401 anonymously. Stated reason: 'Access to GPQA is restricted through gating mechanisms to minimize the risk of data contamination'"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "'We have therefore taken the decision to remove DROP from the Open LLM Leaderboard until a new version arises.' and 'all the errors in the below should be attributed to us'. Corrected results were added alongside originals at stable paths rather than overwriting them",
+    "note": "v1's FLAGGED_MODELS register had 114 entries each linking a public discussion; v2 reduced it to a boolean with 1 flagged row of 4,576"
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "v1 pinned an exact harness commit (b281b092, still resolves) and published per-sample outputs anonymously. v2 says 'git checkout main' - a moving branch - and per-sample details are gated:auto, 401 anonymous"
+   }
+  },
+  {
+   "org": "MLCommons — AILuminate",
+   "url": "https://mlcommons.org/ailuminate/",
+   "fetched": "2026-09-17T10:31Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "published run page /benchmarks/general_purpose_ai_chat/1.0-en_us-official-ensemble/runs/1135 body-scanned: signature/signed/sha256/digest/checksum/hash all 0; complete git trees of ailuminate (13), modelbench (314), modelgauge (219) swept -> 0; code search org:mlcommons extension:asc = 0"
+   },
+   "content_addressed": {
+    "state": "NO",
+    "evidence": "AILuminate results are pages at sequential integer run ids; the page carries no JSON, no download link, no endpoint and no form action. ailuminate.mlcommons.org/sitemap.xml and /robots.txt both 404 — there is no machine-readable result artifact to digest",
+    "note": "the same organisation's MLPerf results ARE files in public git (inference_results_v5.1, with per-run mlperf_log_detail.txt) and are commit-pinnable. This row is AILuminate; MLPerf was not swept to the same depth"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "public: 1,200 demo prompts CC-BY-4.0 (counted, header [release_prompt_id, prompt_text, hazard, persona, locale, prompt_hash]). Members-only: 12,000 Public Practice per language. Held out: 12,000 Official Test — their FAQ: 'The Practice Test (public) and Official Test (hidden) prompt sets are disjoint prompt sets'",
+    "note": "the published grades come from the hidden 12,000; the readable 1,200 is a 10% sample of the PRACTICE set, itself disjoint from the scored set"
+   },
+   "corrections": {
+    "state": "PARTIAL",
+    "evidence": "a real org-level register exists at /results-change-log/ — 'Published results are sometimes modified or invalidated... contains all changes made to results after their initial publication', with named rows ('9/9/25 · 5.0-0078 · Google · Results invalidated'). But its sections cover only MLPerf Inference Datacenter, Inference Edge and MLPerf Training. Zero AILuminate rows; the ailuminate repo has no changelog; the 158-entry post sitemap has no errata post",
+    "note": "PARTIAL rather than YES because the register does not cover the benchmark this row is about"
+   },
+   "recomputable": {
+    "state": "NO",
+    "evidence": "harness exists (modelbench + modelgauge, public); bank absent (official prompts confidential); outputs absent. The SCORER is withheld too — 'the AILuminate Evaluator Model used for scoring the benchmark is not available to maintain the integrity of the evaluations'"
+   }
+  },
+  {
+   "org": "Stanford CRFM HELM",
+   "url": "https://crfm.stanford.edu/helm/",
+   "fetched": "2026-09-17T10:30Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "complete stanford-crfm/helm tree, 1,530 paths untruncated -> zero sig/asc/sigstore/gpg/ed25519/checksum paths (one false positive: a scenario file containing 'significant'); releases v0.5.16 down to v0.5.11 all have assets=[]; GCS listings for lite/, classic/, capabilities/ (1,000 objects each) -> zero .sig/.asc/.sha256/checksum/manifest"
+   },
+   "content_addressed": {
+    "state": "PARTIAL",
+    "evidence": "results are identified by a versioned PATH: releases/v1.13.0/summary.json contains only {release, suites, date} — no digest, no code commit. But the GCS JSON API serves a per-object md5Hash and an immutable generation for every result file (stats.json md5 Co2Oxa9gq5aW5OGLAp9wQQ==, generation 1781129143296828)",
+    "note": "PARTIAL, not YES: a reader can detect change, but HELM publishes no digest-based identifier of its own. Same ruling as METR, Arena and LiveBench — the reader supplies the pin"
+   },
+   "bank_published": {
+    "state": "YES",
+    "evidence": "every run directory publishes instances.json with full prompt text and gold references (gsm run: 1,000 instances). For canary-protected scenarios instances.json holds [encrypted_text_N] placeholders — but encryption_data.json sits BESIDE it with ciphertext/key/iv/tag, and decrypting entry 0 with the key HELM publishes in the same directory recovered the plaintext question",
+    "note": "the bank is obfuscated against crawlers, not withheld from readers"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "CHANGELOG.md v0.2.4 (2023-09-20) under Evaluations: 'Corrected evaluation results for AI21 Jurassic-2 and Writer Palmyra for the scenarios narrative_qa, natural_qa, quac and wikifact, as they were affected by the bug fixed by #1785'",
+    "note": "40 release bodies scanned; this is the one entry that restates already-published RESULTS. The rest is a feature/bugfix log, which is a different thing"
+   },
+   "recomputable": {
+    "state": "YES",
+    "evidence": "all three exist and none needs an account: bank (instances.json per run, GPQA decryptable), harness (pip package + docs/reproducing_leaderboards.md naming the exact run_entries/schema per leaderboard version, plus run_spec.json per run), outputs (scenario_state.json, display_requests.json, display_predictions.json, per_instance_stats.json, all anonymously downloadable)",
+    "note": "context: docs/maintenance_mode.md — 'HELM entered maintenance mode on June 1, 2026... no new evaluations will be added'"
+   }
+  },
+  {
+   "org": "SWE-bench",
+   "url": "https://www.swebench.com/",
+   "fetched": "2026-09-17T10:30Z",
+   "signed": {
+    "state": "NO",
+    "evidence": "complete trees of SWE-bench/experiments (4,355 paths untruncated) and SWE-bench/SWE-bench (1,226, untruncated) -> zero sig/asc/sigstore/pem/minisign; zero releases across four org repos, hence zero release assets; code search org:SWE-bench extension:sig = 0"
+   },
+   "content_addressed": {
+    "state": "YES",
+    "evidence": "results are files in git AND the entry pins its artifact repo by commit: experiments/blob/40f164d5.../evaluation/verified/20260901_mini-v2.4.2_gemini-3-5-flash/results/results.json fetches 200, and its sibling metadata.yaml carries info.commit 2f6637a2..., which resolves in the artifact repo and NOT in the agent repo (422) — i.e. it pins the artifacts deliberately",
+    "note": "the only YES in this column besides our own, and it is a stronger one: the publisher cites the pin"
+   },
+   "bank_published": {
+    "state": "YES",
+    "evidence": "SWE-bench, _Lite, _Verified and _Multimodal all gated=False private=False on HF. Checked the Multimodal TEST split specifically, since its evaluation is API-only: row 0 carries a populated patch (3,892 chars), test_patch (5,046), eval_script and FAIL_TO_PASS — gold patches and tests are public, not held out"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "two of them. A published investigation of their own leaderboard: '[SWE-bench Verified] Detecting cheating in submissions' (2025-11-19) examines an anomaly in a submission they had already published (2,236 predictions against a 500-instance split), concludes 'this appears to be a submission error' and records that it was removed. And a harness-repair report: 'we detail our resolution of evaluation harness failures... Severity: High (100+ Task Instances Affected)'",
+    "note": "link-rot note, not absence: the current README links that report at /main/docs/20240415_eval_bug, which now 404s. The document survives at tag v2.1.0"
+   },
+   "recomputable": {
+    "state": "YES",
+    "evidence": "all three, plus an official re-grader. Every entry's assets block names a public repo holding all_preds.jsonl, logs/<instance_id>/{patch.diff, report.json, test_output.txt.gz} and trajs/. Their README: 'Anyone can check your submission with swebench submit verify, which re-derives every verdict from the test output in your repository... No Docker, no re-execution'",
+    "note": "context: since 2025-11-18 the Verified/Multilingual boards accept submissions only from academic/research teams with an open publication"
+   }
+  },
+  {
+   "org": "CSOAI / Council of AI (us)",
+   "url": "https://councilof.ai",
+   "fetched": "2026-09-17T10:20Z",
+   "signed": {
+    "state": "YES",
+    "evidence": "signed measurement cards verify under did:web:csoai.org#card-attestation-1 with the key resolving in the live DID document; a tampered-byte control was REJECTED, so the check was shown capable of failing. SCOPE, stated because this is our own row: the signed card index holds 335 cards covering 9 of the 23 board axes (care, conformance, continuity, governance, jail, openness, provenance, safety, swarm). FOURTEEN axes carry no signed per-model card at all, including ALL EIGHT financial axes (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, provenance-controls, ai-adoption-components, labour-components, humanoid-labour-index).",
+    "note": "This YES means 'some published results are signed', which is the question the column asks, and it is the only YES in the column. It does NOT mean the board is signed. On 14 of 23 axes we would score NO against ourselves. Counted from public/signed/card_index.json against the live /api/gspc axis list, by an explicit axis mapping rather than prefix matching."
+   },
+   "content_addressed": {
+    "state": "YES",
+    "evidence": "card id recomputed as sha256 of the canonical body and matched exactly"
+   },
+   "bank_published": {
+    "state": "PARTIAL",
+    "evidence": "banks readable anonymously on Hugging Face; the board's grader is not public because our GitHub organisation returns 404 to logged-out visitors under an account restriction"
+   },
+   "corrections": {
+    "state": "YES",
+    "evidence": "58 entries at /api/corrections plus a 44-row withdrawal ledger",
+    "note": "against us: the register's own signature_state is STALE and correction_latency is computable for 0 of 58"
+   },
+   "recomputable": {
+    "state": "PARTIAL",
+    "evidence": "client-side verifier needs no account; the grader is not publicly readable, see above"
+   }
+  }
+ ],
+ "tallies": {
+  "signed": {
+   "NO": 15,
+   "YES": 1
+  },
+  "content_addressed": {
+   "PARTIAL": 7,
+   "NO": 7,
+   "YES": 2
+  },
+  "bank_published": {
+   "PARTIAL": 12,
+   "YES": 3,
+   "NO": 1
+  },
+  "corrections": {
+   "YES": 13,
+   "UNCHECKABLE": 1,
+   "PARTIAL": 2
+  },
+  "recomputable": {
+   "YES": 3,
+   "PARTIAL": 7,
+   "NO": 6
+  }
+ },
+ "supersedes": {
+  "file": "public/interop/verifiability-census-2026-09-17-v0.2.json",
+  "schema": "csoai.verifiability-census/0.2",
+  "what_changed": [
+   "OUR OWN ROW, and only our own row. The signed cell now states its scope: 9 of 23 board axes carry signed per-model cards, 14 do not, and 0 of the 8 financial axes do. The state is unchanged at YES because the column asks whether ANY published result is signed. But an unqualified YES from the organisation running the census, in a census about verifiability, was the least defensible cell in the file.",
+   "No other row changed. No other state changed. The fifteen other organisations are untouched.",
+   "Found by our own competitor sweep across the 23 axes, which checked our claims alongside everyone else's rather than exempting them."
+  ],
+  "note": "v0.1 and v0.2 are left exactly as published. Superseded, not edited."
+ }
+}
