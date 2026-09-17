@@ -1,63 +1,27 @@
 # Citable figures (signed + reproducible)
 
-### 1. None
+### 1. (uncategorized)
 
-Envelope schema is public-root-v0, not card-v0. This root.json envelope is Ed25519-signed over the compact preimage under did:web:csoai.org#board-attestation-1. Leaves MAY carry attestations — coverag
+We measured MCP disclosure-integrity before this incident; an incident in the measured surface validates (not exploits) the measurement.
 
-Source: `public/interop/root-f0d8f22f.json`
+Source: `public/interop/mcp-cve-advisory.json`
 
-### 2. benji-onchain-supply-unsigned
+### 2. ai-economy-index
 
-NO_LAPTOP_SIGN - unsigned atom; queued for GHA OIDC signing (hf-fin-shells-measure pattern) under did:web:csoai.org#card-attestation-1
+EU27 enterprises (10+ staff) using AI: 13.48% (2024), up from 8.06% (2023) — +5.42pp YoY (deterministic, citable, recomputable).
 
-Source: `public/interop/ledger-card-benji-onchain-supply-unsigned.json`
+Source: `public/interop/ai-economy-index.v0.1.json`
 
-### 3. a2a-agent-unsigned
+### 3. (uncategorized)
 
-NO_LAPTOP_SIGN - unsigned atom; queued for GHA OIDC signing under did:web:csoai.org#board-attestation-1
+312 canon entries; 311 unique ids (one duplicate id in the canon registry — recorded, not hidden).
 
-Source: `public/interop/ledger-card-a2a-agent-unsigned.json`
+Source: `public/interop/mcp-security-scorecard.json`
 
-### 4. swift-notice-unsigned
+### 4. (uncategorized)
 
-NO_LAPTOP_SIGN - unsigned atom; queued for GHA OIDC signing (hf-fin-shells-measure pattern) under did:web:csoai.org#card-attestation-1
+Live root.json bytes at fetch time. Witness 2026-09-02 stamped an earlier artifact sha; if diverge, attest CURRENT root and cite witness as time-proof of prior bytes.
 
-Source: `public/interop/ledger-card-swift-notice-unsigned.json`
-
-### 5. erc8004-callable-unsigned
-
-NO_LAPTOP_SIGN - unsigned atom; queued for GHA OIDC signing under did:web:csoai.org#board-attestation-1
-
-Source: `public/interop/ledger-card-erc8004-callable-unsigned.json`
-
-### 6. mcp-server-unsigned
-
-NO_LAPTOP_SIGN - unsigned atom; queued for GHA OIDC signing under did:web:csoai.org#board-attestation-1
-
-Source: `public/interop/ledger-card-mcp-server-unsigned.json`
-
-### 7. rwa-reserve-unsigned
-
-NO_LAPTOP_SIGN - unsigned atom; queued for GHA OIDC signing (hf-fin-shells-measure pattern) under did:web:csoai.org#card-attestation-1
-
-Source: `public/interop/ledger-card-rwa-reserve-unsigned.json`
-
-### 8. x402-settlement-unsigned
-
-Measurement, not certification. No host was contacted and none is ranked. Every USDC left our own wallet, so none of this is revenue.
-
-Source: `public/interop/ledger-card-x402-settlement-unsigned.json`
-
-### 9. unsigned
-
-NO_LAPTOP_SIGN — unsigned labelled-fact atom. Never invent %. Never MEASURED-from-listing.
-
-Source: `public/interop/erc8004-callable/card-unsigned.json`
-
-### 10. mistral-gpai-signatory-public-notice-unsigned
-
-UNSIGNED card-v0. SIGNED needs keystone. Voluntary-list appearance only — never MEASURED-as-compliance; never certify; never invent signatures.
-
-Source: `public/interop/gpai-signatory-2026-09/card-mistral-gpai-signatory-public-notice-unsigned.json`
+Source: `public/interop/eas-base-root-2026-09/mirrors/root.json.meta.json`
 
 _MEASUREMENT, not CERTIFICATION. Reproduce from the artifact._
