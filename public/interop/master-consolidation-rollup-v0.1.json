@@ -1,22 +1,21 @@
 {
   "schema": "csoai.master-consolidation-rollup/0.1",
-  "generated_at": "2026-09-17T02:58:42.484088+00:00",
+  "generated_at": "2026-09-17T03:10:00.659984+00:00",
   "title": "Master Consolidation Roll-up \u2014 GSPC Estate",
   "purpose": "One manifest that proves every signed/unsigned card, every OTS proof, and every strategic deliverable is live on GSPC.",
   "disclaimer": "Measurement, not certification. Empty is not zero. Engine calculates; nothing fabricated.",
   "totals": {
-    "ledger_cards": 4325,
-    "auto_eat_cards": 4315,
+    "ledger_cards": 4509,
+    "auto_eat_cards": 4499,
     "ots_files_on_disk": 332,
     "ots_proofs_in_manifest": 249,
     "unsigned_no_ots": 0,
-    "total_evidence_bytes": 5146998,
+    "total_evidence_bytes": 15075679,
     "white_papers_indexed": 1051,
     "benchmark_cards": 3998,
     "axes": 14,
     "models_benchmarked": 165,
-    "measurement_root_n_leaves": 10,
-    "measurement_root_inclusion_proofs_verify": true
+    "measurement_root_n_leaves": 10
   },
   "by_store": {
     "unknown": 39,
@@ -59,7 +58,8 @@
     "9. White paper index v0.1: 1051 .md files catalogued with sha256 (5.5 MB across docs/, blueprints/, public/, grants/, research/).",
     "10. Benchmark index v0.1: 3998 GSPC measurement cards across 14 axes x 165 models (2378 Ed25519-signed, 1620 unsigned).",
     "11. Both indexes have OTS pending proofs; total manifest now 248 proofs.",
-    "12. Canonical measurement-root-2026-09-16 wired (10 leaves, all inclusion proofs verify, unsigned per honest framing)."
+    "12. Canonical measurement-root-2026-09-16 wired (10 leaves, all inclusion proofs verify, unsigned per honest framing).",
+    "13. Signed-evidence harvest v4: 184 additional pre-signed evidence JSONs (with did/sha256/merkle_root) added to compacts."
   ],
   "external_deliverables": {
     "OSAIA_SAFE_RFC": {
@@ -73,6 +73,6 @@
       "status": "DRAFT_READY"
     }
   },
-  "sha256": "43ca1395076b0bb01e48b88469639644ffb843069df9be49d8d30824252086d7",
-  "byte_size": 3317
+  "sha256": "3cf90b984d4b77e9a73a14f9e3d8ec4796dbfd089afcaa1e8613aaa012f98745",
+  "byte_size": 3394
 }
