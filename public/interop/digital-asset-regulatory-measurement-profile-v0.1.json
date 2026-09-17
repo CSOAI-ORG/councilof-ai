@@ -1,0 +1,653 @@
+{
+  "schema": "csoai.digital-asset-regulatory-measurement-profile/0.1",
+  "generated_at": "2026-09-17T03:00:00Z",
+  "extends": "csoai.regulatory-crosswalk/0.2",
+  "disclaimer": "A measurement profile maps observable evidence to regulatory provisions and stable goal objects. It is not a legal determination, conformity assessment, or certification. Engine MUST calculate affected counts; never fabricate them.",
+  "goal_objects": [
+    "asset_classification",
+    "actor_identity",
+    "jurisdiction",
+    "disclosure",
+    "custody",
+    "transaction_integrity",
+    "market_integrity",
+    "customer_protection",
+    "reserves_collateral",
+    "settlement",
+    "agent_authority",
+    "provenance",
+    "assurance",
+    "change"
+  ],
+  "frameworks": [
+    {
+      "instrument": "Regulation (EU) 2024/1689",
+      "short_name": "EU AI Act",
+      "jurisdiction": "EU/EEA",
+      "legal_status": "BINDING_LAW",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+      "publication_date": "2024-07-12",
+      "entry_into_force": "2024-08-01",
+      "provisions": [
+        {
+          "id": "Art.5",
+          "title": "Prohibited AI practices",
+          "effective": "2025-02-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "art5-safeguard"
+          ]
+        },
+        {
+          "id": "Art.9",
+          "title": "Risk management system",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "governance",
+            "safety"
+          ]
+        },
+        {
+          "id": "Art.10",
+          "title": "Data and data governance",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "governance",
+            "provenance"
+          ]
+        },
+        {
+          "id": "Art.11",
+          "title": "Technical documentation",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "openness",
+            "provenance"
+          ]
+        },
+        {
+          "id": "Art.13",
+          "title": "Transparency",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "openness",
+            "care"
+          ]
+        },
+        {
+          "id": "Art.14",
+          "title": "Human oversight",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "governance",
+            "care"
+          ]
+        },
+        {
+          "id": "Art.15",
+          "title": "Accuracy, robustness, cybersecurity",
+          "effective": "2026-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "safety",
+            "continuity"
+          ]
+        },
+        {
+          "id": "Art.50",
+          "title": "Transparency for GPAI",
+          "effective": "2025-08-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "openness",
+            "provenance"
+          ]
+        },
+        {
+          "id": "Art.52",
+          "title": "AI literacy",
+          "effective": "2025-02-02",
+          "status": "IN_FORCE",
+          "gspc_axes": [
+            "governance"
+          ]
+        }
+      ],
+      "cards_linked": 5,
+      "cards_unlinked": 31,
+      "coverage_note": "5 PR#1888 cards mapped to Art.5 and Art.9-15. 31 unlinked cards have NO_REGULATION_SCORE."
+    },
+    {
+      "instrument": "UK Digital Regulation Cooperation Forum AI Principles",
+      "short_name": "UK DRCF",
+      "jurisdiction": "UNITED_KINGDOM",
+      "legal_status": "VOLUNTARY_FRAMEWORK",
+      "source_url": "https://www.gov.uk/government/publications/ai-regulation-a-pro-innovation-approach",
+      "publication_date": "2023-03-29",
+      "provisions": [
+        {
+          "id": "DRCF-1",
+          "title": "Safety & security",
+          "gspc_axes": [
+            "safety",
+            "continuity"
+          ]
+        },
+        {
+          "id": "DRCF-2",
+          "title": "Transparency & explainability",
+          "gspc_axes": [
+            "openness",
+            "provenance"
+          ]
+        },
+        {
+          "id": "DRCF-3",
+          "title": "Fairness",
+          "gspc_axes": [
+            "care",
+            "affect"
+          ]
+        },
+        {
+          "id": "DRCF-4",
+          "title": "Accountability & governance",
+          "gspc_axes": [
+            "governance"
+          ]
+        },
+        {
+          "id": "DRCF-5",
+          "title": "Contestability & redress",
+          "gspc_axes": [
+            "governance",
+            "care"
+          ]
+        }
+      ],
+      "cards_linked": 0,
+      "coverage_note": "UK DRCF principles mapped to GSPC axes. No cards currently linked to UK provisions."
+    },
+    {
+      "instrument": "NIST AI Risk Management Framework 1.0",
+      "short_name": "NIST AI RMF",
+      "jurisdiction": "UNITED_STATES",
+      "legal_status": "VOLUNTARY_FRAMEWORK",
+      "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "publication_date": "2023-01-26",
+      "provisions": [
+        {
+          "id": "GOVERN",
+          "title": "Govern \u2014 policies, accountability, oversight",
+          "gspc_axes": [
+            "governance",
+            "art5-safeguard",
+            "openness"
+          ]
+        },
+        {
+          "id": "MAP",
+          "title": "Map \u2014 context, intended use, risks",
+          "gspc_axes": [
+            "provenance",
+            "conformance",
+            "detector-interop"
+          ]
+        },
+        {
+          "id": "MEASURE",
+          "title": "Measure \u2014 risks analysed, assessed, tracked",
+          "gspc_axes": [
+            "safety",
+            "care",
+            "jail",
+            "affect",
+            "swarm",
+            "cross-reality",
+            "machinery-conformity"
+          ]
+        },
+        {
+          "id": "MANAGE",
+          "title": "Manage \u2014 risks prioritised, responded, monitored",
+          "gspc_axes": [
+            "continuity",
+            "safety",
+            "detector-interop"
+          ]
+        }
+      ],
+      "cards_linked": 36,
+      "coverage_note": "36 PR#1888 cards mapped to all 4 NIST functions via nist-airmf-gspc-crosswalk.json. DRAFT status \u2014 not submitted."
+    },
+    {
+      "instrument": "California SB 942 \u2014 California AI Transparency Act",
+      "short_name": "CA SB 942",
+      "jurisdiction": "US_CALIFORNIA",
+      "legal_status": "BINDING_LAW",
+      "source_url": "https://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=202320240SB942",
+      "publication_date": "2024-09-19",
+      "effective_date": "2026-01-01",
+      "provisions": [
+        {
+          "id": "SB942-1",
+          "title": "AI detection tools \u2014 providers must make available",
+          "gspc_axes": [
+            "detector-interop",
+            "openness"
+          ]
+        },
+        {
+          "id": "SB942-2",
+          "title": "Watermarking \u2014 AI-generated content must be watermarked",
+          "gspc_axes": [
+            "provenance",
+            "openness"
+          ]
+        },
+        {
+          "id": "SB942-3",
+          "title": "Disclosure \u2014 AI systems must disclose they are AI",
+          "gspc_axes": [
+            "openness",
+            "care"
+          ]
+        }
+      ],
+      "cards_linked": 0,
+      "coverage_note": "California provisions mapped to GSPC axes. No cards currently linked."
+    },
+    {
+      "instrument": "DORA \u2014 Digital Operational Resilience Act (EU 2022/2554)",
+      "short_name": "DORA",
+      "jurisdiction": "EU/EEA",
+      "legal_status": "BINDING_LAW",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2022/2554/oj",
+      "publication_date": "2022-12-14",
+      "effective_date": "2025-01-17",
+      "provisions": [
+        {
+          "id": "Art.6",
+          "title": "ICT risk management framework",
+          "gspc_axes": [
+            "governance",
+            "continuity"
+          ]
+        },
+        {
+          "id": "Art.9",
+          "title": "Protection and prevention",
+          "gspc_axes": [
+            "safety",
+            "machinery-conformity"
+          ]
+        },
+        {
+          "id": "Art.10",
+          "title": "Detection",
+          "gspc_axes": [
+            "detector-interop",
+            "safety"
+          ]
+        },
+        {
+          "id": "Art.11",
+          "title": "Response and recovery",
+          "gspc_axes": [
+            "continuity",
+            "safety"
+          ]
+        },
+        {
+          "id": "Art.28",
+          "title": "ICT third-party risk",
+          "gspc_axes": [
+            "provenance",
+            "governance"
+          ]
+        }
+      ],
+      "cards_linked": 0,
+      "coverage_note": "DORA provisions mapped to GSPC axes. Financial-sector specific. 417 frozen provisions in regulatory-inventory.json."
+    },
+    {
+      "instrument": "Digital Asset Market Structure (CLARITY Act / Senate Sept 14 text)",
+      "short_name": "CLARITY-Senate-MktStruct",
+      "jurisdiction": "US_FEDERAL_PROPOSED",
+      "legal_status": "PROPOSED_FAILED_PROCEDURAL",
+      "source_url": "https://www.congress.gov/bill/118th-congress/house-bill/968",
+      "publication_date": "2026-09-14",
+      "entry_into_force": null,
+      "legislative_state": "FAILED_PROCEDURAL_ADVANCEMENT_2026_09_16",
+      "note": "Senate Sept 14 text combines House CLARITY framework with Senate Banking/Agriculture work; failed procedural advancement but substance not disappeared.",
+      "provisions": [
+        {
+          "section": "sec-101",
+          "topic": "asset_taxonomy",
+          "goal_objects": [
+            "asset_classification"
+          ]
+        },
+        {
+          "section": "sec-102",
+          "topic": "SEC_CFTC_jurisdiction",
+          "goal_objects": [
+            "jurisdiction",
+            "actor_identity"
+          ]
+        },
+        {
+          "section": "sec-103",
+          "topic": "intermediaries",
+          "goal_objects": [
+            "actor_identity",
+            "agent_authority"
+          ]
+        },
+        {
+          "section": "sec-201",
+          "topic": "disclosures",
+          "goal_objects": [
+            "disclosure"
+          ]
+        },
+        {
+          "section": "sec-301",
+          "topic": "registration",
+          "goal_objects": [
+            "actor_identity",
+            "jurisdiction"
+          ]
+        },
+        {
+          "section": "sec-401",
+          "topic": "custody",
+          "goal_objects": [
+            "custody"
+          ]
+        },
+        {
+          "section": "sec-501",
+          "topic": "trading",
+          "goal_objects": [
+            "transaction_integrity",
+            "market_integrity"
+          ]
+        },
+        {
+          "section": "sec-601",
+          "topic": "customer_protection",
+          "goal_objects": [
+            "customer_protection"
+          ]
+        }
+      ]
+    },
+    {
+      "instrument": "SEC Regulation Crypto Assets (proposed)",
+      "short_name": "SEC-RegCryptoAssets",
+      "jurisdiction": "US_FEDERAL_PROPOSED",
+      "legal_status": "OPEN_FOR_COMMENT",
+      "source_url": "https://www.sec.gov/rules/proposed/2026/",
+      "publication_date": "2026-09-01",
+      "entry_into_force": null,
+      "comment_period_close": "2026-10-20",
+      "note": "Live proposal; comments open until October 20, 2026. Includes offering exemptions, disclosures, safe harbour, antifraud/antimanipulation.",
+      "provisions": [
+        {
+          "section": "sec-III.A",
+          "topic": "offering_exemptions",
+          "goal_objects": [
+            "disclosure",
+            "actor_identity"
+          ]
+        },
+        {
+          "section": "sec-III.B",
+          "topic": "disclosures",
+          "goal_objects": [
+            "disclosure",
+            "provenance"
+          ]
+        },
+        {
+          "section": "sec-III.C",
+          "topic": "safe_harbour_conditions",
+          "goal_objects": [
+            "assurance",
+            "provenance"
+          ]
+        },
+        {
+          "section": "sec-III.D",
+          "topic": "antifraud_antimanipulation",
+          "goal_objects": [
+            "market_integrity",
+            "transaction_integrity"
+          ]
+        }
+      ]
+    },
+    {
+      "instrument": "SEC/CFTC Joint Crypto Interpretation 2026",
+      "short_name": "SEC-CFTC-Interpretation-2026",
+      "jurisdiction": "US_FEDERAL_ACTIVE",
+      "legal_status": "OPERATIVE_INTERPRETATION",
+      "source_url": "https://www.sec.gov/cftc-joint-guidance-2026",
+      "publication_date": "2026-03-15",
+      "entry_into_force": "2026-03-15",
+      "note": "Joint guidance on digital commodities, digital securities, stablecoins, digital tools, tokenised securities, investment-contract treatment.",
+      "provisions": [
+        {
+          "section": "part-I",
+          "topic": "digital_commodities",
+          "goal_objects": [
+            "asset_classification",
+            "jurisdiction"
+          ]
+        },
+        {
+          "section": "part-II",
+          "topic": "digital_securities",
+          "goal_objects": [
+            "asset_classification",
+            "disclosure"
+          ]
+        },
+        {
+          "section": "part-III",
+          "topic": "stablecoins",
+          "goal_objects": [
+            "asset_classification",
+            "reserves_collateral"
+          ]
+        },
+        {
+          "section": "part-IV",
+          "topic": "digital_tools",
+          "goal_objects": [
+            "asset_classification",
+            "provenance"
+          ]
+        },
+        {
+          "section": "part-V",
+          "topic": "tokenised_securities",
+          "goal_objects": [
+            "asset_classification",
+            "settlement"
+          ]
+        },
+        {
+          "section": "part-VI",
+          "topic": "investment_contract_treatment",
+          "goal_objects": [
+            "asset_classification",
+            "disclosure"
+          ]
+        }
+      ]
+    },
+    {
+      "instrument": "GENIUS Act (Stablecoin Implementation)",
+      "short_name": "GENIUS-Act-Stablecoin",
+      "jurisdiction": "US_FEDERAL_PROPOSED",
+      "legal_status": "PROPOSED",
+      "source_url": "https://www.congress.gov/bill/118th-congress/senate-bill/",
+      "publication_date": "2026-06-01",
+      "entry_into_force": null,
+      "note": "Stablecoin implementation: payment stablecoins, permitted issuers, reserve/custody requirements, foreign issuers.",
+      "provisions": [
+        {
+          "section": "sec-101",
+          "topic": "payment_stablecoins_definition",
+          "goal_objects": [
+            "asset_classification"
+          ]
+        },
+        {
+          "section": "sec-102",
+          "topic": "permitted_issuers",
+          "goal_objects": [
+            "actor_identity",
+            "jurisdiction"
+          ]
+        },
+        {
+          "section": "sec-201",
+          "topic": "reserve_requirements",
+          "goal_objects": [
+            "reserves_collateral"
+          ]
+        },
+        {
+          "section": "sec-202",
+          "topic": "custody_requirements",
+          "goal_objects": [
+            "custody"
+          ]
+        },
+        {
+          "section": "sec-301",
+          "topic": "foreign_issuer_requirements",
+          "goal_objects": [
+            "actor_identity",
+            "jurisdiction"
+          ]
+        }
+      ]
+    },
+    {
+      "instrument": "CFTC Innovation Task Force Programme",
+      "short_name": "CFTC-Innovation-TF",
+      "jurisdiction": "US_FEDERAL_ACTIVE",
+      "legal_status": "ACTIVE_PROGRAMME",
+      "source_url": "https://www.cftc.gov/innovation-task-force",
+      "publication_date": "2026-01-15",
+      "entry_into_force": "2026-01-15",
+      "note": "Explicitly covers crypto/blockchain AND AI/autonomous systems \u2014 intersection with CSOAI convergence thesis. Industry participants include Fireblocks, Ondo, BitGo, Hedera, Moody's.",
+      "provisions": [
+        {
+          "section": "prog-I",
+          "topic": "digital_commodities",
+          "goal_objects": [
+            "asset_classification"
+          ]
+        },
+        {
+          "section": "prog-II",
+          "topic": "derivatives",
+          "goal_objects": [
+            "asset_classification",
+            "transaction_integrity"
+          ]
+        },
+        {
+          "section": "prog-III",
+          "topic": "tokenised_collateral",
+          "goal_objects": [
+            "reserves_collateral",
+            "settlement"
+          ]
+        },
+        {
+          "section": "prog-IV",
+          "topic": "stablecoins",
+          "goal_objects": [
+            "asset_classification"
+          ]
+        },
+        {
+          "section": "prog-V",
+          "topic": "autonomous_systems",
+          "goal_objects": [
+            "agent_authority",
+            "provenance"
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "frameworks_covered": 10,
+    "jurisdictions": [
+      "EU/EEA",
+      "UNITED_KINGDOM",
+      "UNITED_STATES",
+      "US_CALIFORNIA",
+      "US_FEDERAL_ACTIVE",
+      "US_FEDERAL_PROPOSED"
+    ],
+    "total_provisions_mapped": 54,
+    "previous_total": 26,
+    "previous_total_cards_linked": 41,
+    "delta_frameworks_added": 5,
+    "delta_provisions_added": 28,
+    "frozen_to_fluid_example": {
+      "event": "CLARITY failed procedural advancement 2026-09-16",
+      "state_transition": "ADVANCING -> STALLED",
+      "evidence_unchanged": true,
+      "active_frameworks": [
+        "SEC Regulation Crypto Assets (OPEN_FOR_COMMENT until 2026-10-20)",
+        "SEC/CFTC Joint Interpretation 2026 (OPERATIVE)",
+        "CFTC Innovation Task Force (ACTIVE)"
+      ]
+    }
+  },
+  "deliverables_target": [
+    {
+      "deliverable": "CSOAI Digital Asset Regulatory Measurement Profile v0.1",
+      "deadline": "2026-10-20",
+      "external_target": "SEC Regulation Crypto Assets comment submission",
+      "components": [
+        "CLARITY crosswalk",
+        "SEC/CFTC interpretation",
+        "Regulation Crypto Assets",
+        "GENIUS/stablecoin layer",
+        "22-axis mapping",
+        "GPI",
+        "evidence objects",
+        "SAFE security findings",
+        "XRPL reference asset/transaction",
+        "x402 RAS request",
+        "signed/rooted output",
+        "living change detection"
+      ]
+    },
+    {
+      "deliverable": "SAFE Evidence Adapter",
+      "deadline": "2026-09-21",
+      "external_target": "OSAIA SAFE RFC submission",
+      "components": [
+        "Finding -> measurement -> provenance -> remediation -> remeasurement"
+      ]
+    }
+  ],
+  "sha256": "fea439bb1477fa391b3f4ef334c7283fcedfcf1ca09fe8f22d0dd407ba0ae185",
+  "byte_size": 12127
+}
