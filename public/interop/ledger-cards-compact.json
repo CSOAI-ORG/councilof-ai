@@ -69664,14 +69664,18 @@
       "not_a_grade": true,
       "is_master_rollup": true
     },
-    "as_of": "2026-09-17T02:57:14.051285+00:00",
+    "as_of": "2026-09-17T02:57:59.842479+00:00",
     "totals": {
-      "ledger_cards": 4322,
-      "auto_eat_cards": 4312,
-      "ots_files_on_disk": 329,
-      "ots_proofs_in_manifest": 246,
-      "unsigned_no_ots": 43,
-      "total_evidence_bytes": 5146998
+      "ledger_cards": 4324,
+      "auto_eat_cards": 4314,
+      "ots_files_on_disk": 331,
+      "ots_proofs_in_manifest": 248,
+      "unsigned_no_ots": 0,
+      "total_evidence_bytes": 5146998,
+      "white_papers_indexed": 1051,
+      "benchmark_cards": 3998,
+      "axes": 14,
+      "models_benchmarked": 165
     },
     "by_store": {
       "unknown": 39,
@@ -69686,7 +69690,46 @@
       "unsigned": 1921
     },
     "evidence_url": "/interop/master-consolidation-rollup-v0.1.json",
-    "sha256": "60d2995db05d6a908cf7accd7e75391b6a5f3a07e33d3f51dec58659f232e2d5",
+    "sha256": "7bababc7a223beb8fd824c887580642c6767eb3d04e4fcaded7f9d5dde09748f",
     "honesty": "Measurement, not certification. Empty is not zero. Engine calculates; nothing fabricated."
+  },
+  "white_paper_index.v0.1": {
+    "kind": "csoai.white-paper-index/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "is_white_paper_index": true
+    },
+    "as_of": "2026-09-17T02:57:38.351383+00:00",
+    "total_papers": 1051,
+    "by_category": {
+      "other": 951,
+      "blueprint": 3,
+      "grant": 45,
+      "research": 43,
+      "handbook": 3,
+      "doc": 3,
+      "public": 3
+    },
+    "evidence_url": "/interop/white-paper-index-v0.1.json",
+    "sha256": "e190f2b67e81b671aadd70e66471e087b05d1e0988efabd55448afe55226889e",
+    "honesty": "Index of files. Not a certification. Engine calculates; nothing fabricated."
+  },
+  "benchmark_index.v0.1": {
+    "kind": "csoai.benchmark-index/0.1",
+    "flags": {
+      "measures": true,
+      "writes_board": false,
+      "not_a_grade": true,
+      "is_benchmark_index": true
+    },
+    "as_of": "2026-09-17T02:57:48.870296+00:00",
+    "cards_total": 3998,
+    "axes": 14,
+    "models": 165,
+    "evidence_url": "/interop/benchmark-index-v0.1.json",
+    "sha256": "36ed7f30d016b9f20ae040806cef147229c7e730fa5b8bb27cb3eebf73612288",
+    "honesty": "Measurement, not certification. Each card carries its own sha256 id + Ed25519 signature (signed) or unsigned status."
   }
 }

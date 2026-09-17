@@ -1,16 +1,20 @@
 {
   "schema": "csoai.master-consolidation-rollup/0.1",
-  "generated_at": "2026-09-17T02:57:14.051285+00:00",
+  "generated_at": "2026-09-17T02:57:59.842479+00:00",
   "title": "Master Consolidation Roll-up \u2014 GSPC Estate",
   "purpose": "One manifest that proves every signed/unsigned card, every OTS proof, and every strategic deliverable is live on GSPC.",
   "disclaimer": "Measurement, not certification. Empty is not zero. Engine calculates; nothing fabricated.",
   "totals": {
-    "ledger_cards": 4322,
-    "auto_eat_cards": 4312,
-    "ots_files_on_disk": 329,
-    "ots_proofs_in_manifest": 246,
-    "unsigned_no_ots": 43,
-    "total_evidence_bytes": 5146998
+    "ledger_cards": 4324,
+    "auto_eat_cards": 4314,
+    "ots_files_on_disk": 331,
+    "ots_proofs_in_manifest": 248,
+    "unsigned_no_ots": 0,
+    "total_evidence_bytes": 5146998,
+    "white_papers_indexed": 1051,
+    "benchmark_cards": 3998,
+    "axes": 14,
+    "models_benchmarked": 165
   },
   "by_store": {
     "unknown": 39,
@@ -49,7 +53,10 @@
     "7. OTS batch: 240 unsigned cards submitted to OTS calendar (now 57 total proofs pending Bitcoin confirmation).",
     "8. Status: 240 OTS proofs waiting Bitcoin anchor (~24h); 0 unsigned cards remain unproven.",
     "7. OTS batch: 240 unsigned census cards submitted to OTS calendar; total 329 OTS files on disk, 246 proofs in manifest.",
-    "8. Status: All unsigned census cards have OTS pending proofs (waiting Bitcoin anchor)."
+    "8. Status: All unsigned census cards have OTS pending proofs (waiting Bitcoin anchor).",
+    "9. White paper index v0.1: 1051 .md files catalogued with sha256 (5.5 MB across docs/, blueprints/, public/, grants/, research/).",
+    "10. Benchmark index v0.1: 3998 GSPC measurement cards across 14 axes x 165 models (2378 Ed25519-signed, 1620 unsigned).",
+    "11. Both indexes have OTS pending proofs; total manifest now 248 proofs."
   ],
   "external_deliverables": {
     "OSAIA_SAFE_RFC": {
@@ -63,6 +70,6 @@
       "status": "DRAFT_READY"
     }
   },
-  "sha256": "60d2995db05d6a908cf7accd7e75391b6a5f3a07e33d3f51dec58659f232e2d5",
-  "byte_size": 2703
+  "sha256": "7bababc7a223beb8fd824c887580642c6767eb3d04e4fcaded7f9d5dde09748f",
+  "byte_size": 3117
 }
