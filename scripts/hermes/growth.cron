@@ -1,0 +1,40 @@
+# /Users/nicholas/.csoai/hermes-growth.cron
+# Growth + outreach + standing-cycle + mass-outward — live, Hermes-only.
+# GHA is DEAD (ticket #4720908, day 15). All scheduled on Hermes.
+# Rules:
+#   - Every tick is operator-driven where the gate is OAuth.
+#   - MEASUREMENT, not CERTIFICATION.
+#   - NEVER pay for do-follow backlinks.
+#   - NEVER fabricate a click.
+#   - NEVER sign with anything but the board key.
+
+# Path to the project
+CSOAI=/Users/nicholas/clawd/councilof-ai-work
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Standing cycle — every minute: pick → measure → record exclusions → mirror HF
+# ─────────────────────────────────────────────────────────────────────────────
+* * * * * cd $CSOAI && /usr/bin/python3 scripts/standing_cycle.py --audit-only >> /tmp/standing-cycle.log 2>&1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Growth mining — every 6 hours: mine the entire corpus (542 JSON + 119 OTS-signed)
+# into leads / signals / registry-asks / citable figures / press release.
+# ─────────────────────────────────────────────────────────────────────────────
+0 */6 * * * cd $CSOAI && /usr/bin/python3 scripts/growth_mining.py >> /tmp/growth-mining.log 2>&1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Mass outward — every minute: 1 tick of 6 work-streams in parallel
+#   FUNDING / N_SITES / MCP / A2A / X402 / PLUG — operator-driven submit_via WebBridge.
+# ─────────────────────────────────────────────────────────────────────────────
+* * * * * cd $CSOAI && /usr/bin/python3 scripts/mass_outward.py --ticks 1 >> /tmp/mass-outward.log 2>&1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Refresh the csoai/hf organization mirror — every 15 minutes
+# (file-mirror only; HF token has no org-write scope until blocker #7 resolves)
+# ─────────────────────────────────────────────────────────────────────────────
+*/15 * * * * cd $CSOAI && /usr/bin/python3 scripts/mirror_fanout.py >> /tmp/mirror-fanout.log 2>&1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Daily growth report — every morning 07:00 UTC
+# ─────────────────────────────────────────────────────────────────────────────
+0 7 * * * cd $CSOAI && /usr/bin/python3 scripts/growth_mining.py > $CSOAI/public/interop/growth/daily-$(date -u +\%Y\%m\%d).log 2>&1
