@@ -61,3 +61,53 @@ The 31 Aug 2026 baseline digest is committed as
 
 Hub webhooks are limited to 1,000 events/day and cannot replace this census.
 SOV3 registration is out of band (port 3101).
+
+## Registry PRESENCE is not schema VALIDITY
+
+A registry serving a record is one fact. That record being well-formed against
+its own declared schema is a different fact. Recording the first in a field
+readers take to mean the second launders somebody else's defect into our
+evidence, so the two are kept as separate states and never collapsed.
+
+The worked example is MCP Registry issue #1546: the registry serves
+`ai.alpic.test/test-mcp-server@0.0.1` at HTTP 200 with `"repository": {}` while
+the 2025-09-29 schema that record itself declares sets
+`Repository.required = ["url", "source"]`. Reproduced 2026-09-17; pinned as
+`fixtures/registry-records/empty-repository-mcp-1546.json`.
+
+`registry_schema_validation.py` runs AFTER collection and never mutates the
+collected record — the served bytes are preserved and the verdict sits beside
+them, carrying `record_sha256`. States:
+
+| state | meaning |
+|---|---|
+| `SOURCE_ACCEPTED` | the upstream served it. That, and nothing more. |
+| `SCHEMA_VALID` | validates against the schema the record ITSELF declares |
+| `SCHEMA_INVALID` | does not, with the specific violations named |
+| `SCHEMA_UNDECLARED` | the record names no schema — neither a failure nor a pass |
+| `SCHEMA_UNFETCHABLE` | a schema was declared but could not be retrieved or used |
+| `RECORD_UNPARSEABLE` | the served bytes are not JSON, so they declare nothing |
+
+JSON parsing successfully is never sufficient for `SCHEMA_VALID`. Schemas are
+resolved from the URL the record declares — four different schema versions were
+live in a single 500-record sample — and cached under `schema-cache/`, so the
+test suite runs with no network at all.
+
+```bash
+# Offline. Proves each state fires, including that INVALID fires on repository:{}
+python3 -m unittest scripts/census/test_registry_schema_validation.py -v
+
+# One-off verdicts on served bytes
+python3 scripts/census/registry_schema_validation.py \
+  scripts/census/fixtures/registry-records/empty-repository-mcp-1546.json
+
+# Bounded live sample (a SAMPLE — never extrapolate it to the population)
+python3 scripts/census/validate-mcp-registry-sample.py --limit 500 --allow-network \
+  --out /tmp/mcp-registry-validation-sample.json
+```
+
+Sample of 500 records, 2026-09-17 (convenience sample in pagination order, not
+random, not the population): 496 `SCHEMA_VALID`, 4 `SCHEMA_INVALID`, 0
+`SCHEMA_UNDECLARED`, 0 `SCHEMA_UNFETCHABLE`, 0 `RECORD_UNPARSEABLE`. Three of the
+four invalid records carry the `repository: {}` defect, across two schema
+versions, and two of those are not test records.

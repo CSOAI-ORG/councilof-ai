@@ -21,7 +21,17 @@ while True:
                  "isLatest":bool(meta.get("isLatest")),"status":meta.get("status"),
                  "has_remote":bool(srv.get("remotes")),
                  "registryTypes":sorted({(p.get("registryType") or p.get("registry_name") or "?") for p in (srv.get("packages") or [])}),
-                 "repo":(srv.get("repository") or {}).get("url")}
+                 "repo":(srv.get("repository") or {}).get("url"),
+                 # `repo: None` alone cannot tell "no repository declared" from
+                 # "repository declared but empty" (MCP Registry #1546 serves the
+                 # latter at HTTP 200). Collapsing them here would erase the
+                 # defect before anything could measure it. Collection records
+                 # the shape; schema validity is decided by the separate stage in
+                 # registry_schema_validation.py, never by this collector.
+                 "repository_declared":("absent" if srv.get("repository") is None
+                                        else "empty" if srv.get("repository")=={}
+                                        else "present"),
+                 "declared_schema":srv.get("$schema")}
     nxt=(d.get("metadata") or {}).get("nextCursor")
     if not nxt: stop="cursor exhausted — clean end of registry"; break
     if nxt in seen:

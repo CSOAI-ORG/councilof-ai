@@ -1,0 +1,118 @@
+{
+  "collected_at": "2026-09-17T07:57:45Z",
+  "collection": {
+    "pages_fetched": 5,
+    "stop_reason": "limit reached"
+  },
+  "distribution_by_declared_schema": {
+    "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json": {
+      "RECORD_UNPARSEABLE": 0,
+      "SCHEMA_INVALID": 1,
+      "SCHEMA_UNDECLARED": 0,
+      "SCHEMA_UNFETCHABLE": 0,
+      "SCHEMA_VALID": 4
+    },
+    "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json": {
+      "RECORD_UNPARSEABLE": 0,
+      "SCHEMA_INVALID": 3,
+      "SCHEMA_UNDECLARED": 0,
+      "SCHEMA_UNFETCHABLE": 0,
+      "SCHEMA_VALID": 7
+    },
+    "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json": {
+      "RECORD_UNPARSEABLE": 0,
+      "SCHEMA_INVALID": 0,
+      "SCHEMA_UNDECLARED": 0,
+      "SCHEMA_UNFETCHABLE": 0,
+      "SCHEMA_VALID": 1
+    },
+    "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json": {
+      "RECORD_UNPARSEABLE": 0,
+      "SCHEMA_INVALID": 0,
+      "SCHEMA_UNDECLARED": 0,
+      "SCHEMA_UNFETCHABLE": 0,
+      "SCHEMA_VALID": 484
+    }
+  },
+  "invalid_records": [
+    {
+      "name": "ai.agentrapay/agentra",
+      "schema_url": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+      "version": "1.0.0",
+      "violations": [
+        {
+          "message": "'url' is a required property",
+          "path": "$.repository",
+          "validator": "required"
+        },
+        {
+          "message": "'source' is a required property",
+          "path": "$.repository",
+          "validator": "required"
+        }
+      ]
+    },
+    {
+      "name": "ai.aliengiraffe/spotdb",
+      "schema_url": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+      "version": "0.1.0",
+      "violations": [
+        {
+          "message": "'version' is a required property",
+          "path": "$.packages[0]",
+          "validator": "required"
+        }
+      ]
+    },
+    {
+      "name": "ai.alpic.test/test-mcp-server",
+      "schema_url": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+      "version": "0.0.1",
+      "violations": [
+        {
+          "message": "'url' is a required property",
+          "path": "$.repository",
+          "validator": "required"
+        },
+        {
+          "message": "'source' is a required property",
+          "path": "$.repository",
+          "validator": "required"
+        }
+      ]
+    },
+    {
+      "name": "ai.anzenna/anzenna",
+      "schema_url": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+      "version": "0.1",
+      "violations": [
+        {
+          "message": "'url' is a required property",
+          "path": "$.repository",
+          "validator": "required"
+        },
+        {
+          "message": "'source' is a required property",
+          "path": "$.repository",
+          "validator": "required"
+        }
+      ]
+    }
+  ],
+  "is_sample": true,
+  "population": null,
+  "population_note": "The registry population was not enumerated by this run. These counts describe the sampled records only and must not be extrapolated.",
+  "records_note": "Per-record rows omitted from the committed copy; re-run validate-mcp-registry-sample.py to regenerate them.",
+  "requested_limit": 500,
+  "sample_size": 500,
+  "sampling_method": "first N records in registry pagination order \u2014 convenience sample, not random",
+  "schema_state_distribution": {
+    "RECORD_UNPARSEABLE": 0,
+    "SCHEMA_INVALID": 4,
+    "SCHEMA_UNDECLARED": 0,
+    "SCHEMA_UNFETCHABLE": 0,
+    "SCHEMA_VALID": 496
+  },
+  "source": "https://registry.modelcontextprotocol.io/v0/servers",
+  "source_state_note": "Every sampled record is SOURCE_ACCEPTED: the upstream served it. That fact confers nothing about schema validity."
+}
