@@ -1,0 +1,2114 @@
+{
+ "schema": "csoai.competitor-map/0.1",
+ "as_of": "2026-09-17T12:10:00Z",
+ "issuer": "CSOAI Ltd (GB, Companies House 16939677)",
+ "title": "Competitive field map for the 23 axes of the GSPC public board",
+ "signed": false,
+ "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
+ "license": "CC-BY-4.0",
+ "honesty": "Measurement, not certification. This document measures who else publishes a measurement of each axis. An empty cell is a result and is recorded as UNMEASURED_BY_ANYONE. A cell we could not read is recorded as UNCHECKABLE, never as absent. Every competitor cell carries a URL that was fetched, the HTTP status returned, and the UTC time of the fetch.",
+ "board_source": {
+  "url": "https://councilof.ai/api/gspc",
+  "fetched_at": "2026-09-17T11:53:19Z",
+  "refetched_at": "2026-09-17T12:06:06Z",
+  "totals_as_read": {
+   "axes": 23,
+   "measured_axes": 22,
+   "unmeasured_axes": 1,
+   "quotable_axes": 22,
+   "public_count": "23 axis · 22 measured"
+  },
+  "by_family": {
+   "gspc": {
+    "axes": 15,
+    "measured": 14
+   },
+   "financial": {
+    "axes": 8,
+    "measured": 8
+   }
+  },
+  "note": "The axis list, ids, benches, tasks and n values in this document were read from that endpoint, not typed."
+ },
+ "relation_enum": {
+  "SAME_THING": "measures the same construct on the same kind of subject",
+  "ADJACENT": "related but a different construct, a different subject, or a different failure mode",
+  "note": "A general capability or preference leaderboard is never SAME_THING for a specific governance, provenance or disclosure axis. Competitors were not stretched to fill cells."
+ },
+ "verdict_enum": [
+  "CONTESTED",
+  "ADJACENT_ONLY",
+  "UNMEASURED_BY_ANYONE",
+  "UNCHECKABLE"
+ ],
+ "signed_results_enum": {
+  "yes": "a signature over published result bytes was verified",
+  "claims_yes_unverified": "the publisher claims a signature but the signed payload could not be obtained (paywalled or gated); key material may still be public",
+  "no": "no signature, attestation or anchoring found on the bytes fetched",
+  "unknown": "the surface could not be read"
+ },
+ "axes": [
+  {
+   "axis": "governance",
+   "family": "gspc",
+   "bench": "GovBench",
+   "task": "EU AI Act risk-tier classification",
+   "n": 237,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "MIT AI Risk Initiative — AI Incident Tracker",
+     "url": "https://airisk.mit.edu/blog/ai-incident-tracker-june-2026-update",
+     "fetched_at": "2026-09-17T12:04:44Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "8 named LLMs classify incident reports along five taxonomies, one being 'EU AI Act Risk Level'. Per-model QWK and exact-match against two-expert human consensus. N=10 incidents; items are AIID reports, not scenario items; bank not published as a downloadable frozen artifact; grading is inter-rater agreement, not a deterministic key.",
+     "signed_results": "no",
+     "evidence": "\"classify each one using five taxonomies: Harm Severity ..., EU AI Act Risk Level (the regulatory risk tier under the EU AI Act)\"; \"four of the eight models (Sonnet 4.6, Gemini 3 Flash Preview, Gemma 3 27B, and GPT 5.2) scored a negative QWK\""
+    },
+    {
+     "org": "NCSR Demokritos — AI Act Evaluation Benchmark",
+     "url": "https://raw.githubusercontent.com/davidath/ai-act-evaluation-benchmark/main/scenarios.json",
+     "fetched_at": "2026-09-17T11:59:58Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Public CC-BY-4.0 frozen bank of 339 four-tier-labelled scenarios (prohibited 70 / high-risk 86 / limited 84 / minimal 99) — LARGER than our 237. Evaluates exactly ONE system (RAG over mistral-small3.2), weighted avg F1 0.69. No fleet, no leaderboard. This is the upstream our own bank was imported from.",
+     "signed_results": "no",
+     "evidence": "\"The EU AI Act risk-level classification task has the objective to correctly predict the risk-level of a scenario\"; authors' own disclaimer: \"The following use case and configuration act more as a showcasing rather than an actual evaluation report\""
+    },
+    {
+     "org": "COMPL-AI (ETH Zurich / INSAIT / LatticeFlow AI)",
+     "url": "https://api.github.com/repos/compl-ai/compl-ai/git/trees/main?recursive=1",
+     "fetched_at": "2026-09-17T11:59:15Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Per-model scores on 31 tasks mapped to 18 EU AI Act technical requirements, ~20 models, live HF Space 'EU AI Act Compliance Leaderboard'. Makes the Act the yardstick applied TO the model; never asks a model to assign a risk tier. A path filter for risk|tier|classif|prohibit|annex over all 341 repo paths returned zero hits.",
+     "signed_results": "no",
+     "evidence": "31 task dirs enumerated, none EU AI Act risk-tier: aime_2025, arc_challenge, bbq, ..., strong_reject, truthfulqa. Interpretation page: \"we mapped the broad regulatory requirements of the EU AI Act to a set of 18 concrete and up-to-date technical requirements\""
+    },
+    {
+     "org": "AIReg-Bench (Cambridge / Warwick)",
+     "url": "https://arxiv.org/html/2510.01474v1",
+     "fetched_at": "2026-09-17T11:59:08Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "120 expert-annotated technical-documentation excerpts, 10 frontier LLMs, per-model weighted kappa / Spearman. Article-level compliance rating of a documented high-risk system. Full-text search returns 0 occurrences of 'risk tier', 'risk level', 'minimal risk', 'limited risk'. Articles covered: 5, 9, 10, 11, 12, 14, 15.",
+     "signed_results": "no",
+     "evidence": "\"To showcase AIReg-Bench at work, we evaluated 10 frontier LLMs.\""
+    },
+    {
+     "org": "arena.ai / Artificial Analysis / LiveBench / Scale Labs / HELM / FMTI / AILuminate / Vals AI / UK AISI / NIST CAISI",
+     "url": "https://artificialanalysis.ai/sitemap.xml",
+     "fetched_at": "2026-09-17T12:04:42Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "None of them measure this. Artificial Analysis sitemap: 5,922 URLs, zero containing ai-act/governance/regulat. arena.ai leaderboard body: zero occurrences of 'EU AI Act'. A recursive scan of HELM's 1,530 repo paths for ai_act|risk_tier|eu_ai returned zero hits.",
+     "signed_results": "no",
+     "evidence": "LiveBench CSV header is pure capability: \"model,AMPS_Hard,code_completion,code_generation,connections,math_comp,...\"; AILuminate's only 'risk' tokens are CSS grade bands \"--risk-excellent / --risk-poor\""
+    }
+   ],
+   "notes": "Contested by two parties each holding only half. MIT has the fleet without a frozen public bank (8 models, N=10, human-consensus grading). NCSR Demokritos has a LARGER public frozen bank than ours (339 vs 237) without a fleet. Nobody holds both. A claim that we are FIRST to measure EU AI Act risk-tier classification by LLMs would be FALSE — MIT got there with 8 models."
+  },
+  {
+   "axis": "safety",
+   "family": "gspc",
+   "bench": "DefBench",
+   "task": "calibrated refusal on paired requests",
+   "n": 36,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "Scale Labs — FORTRESS",
+     "url": "https://labs.scale.com/leaderboard/fortress",
+     "fetched_at": "2026-09-17T12:03:39Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "1,010 expert-crafted adversarial prompts (500 public), each PAIRED with a benign twin expressly to measure over-refusal, across CBRNE / political violence / criminal-financial. Live leaderboard, frontier models, open dataset on HuggingFace. Graded by instance-specific rubrics and a panel of LLM judges.",
+     "signed_results": "no",
+     "evidence": "\"It directly measures the safety-utility trade-off by pairing every adversarial prompt with a corresponding benign prompt to test for over-refusals.\" and \"a panel of LLM judges. This provides a more reliable and granular assessment than high-level rubrics or brittle keyword-based checks.\""
+    },
+    {
+     "org": "Applied Scientific — RefusalBench",
+     "url": "https://raw.githubusercontent.com/AppliedScientific/refusalbench/main/README.md",
+     "fetched_at": "2026-09-17T12:04:58Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "141 matched-TRIPLE prompts in 47 bundles (benign / borderline / dual-use, task framing held constant), 19 frontier models, 13,389 adjudicated trials. Live HF Space publishes benign refusal, dual-use refusal AND Youden's J as a joint discrimination statistic. Domain-restricted to protein design; three-judge LLM council, not deterministic.",
+     "signed_results": "no",
+     "evidence": "\"It evaluates 19 frontier models on 141 matched-triple prompts spanning eight protein-design subdomains and three biological risk tiers (benign / borderline / dual-use)\""
+    },
+    {
+     "org": "Latch Bio — BioSecBench-Refusal",
+     "url": "https://raw.githubusercontent.com/latchbio/biosecbench-refusal/main/README.md",
+     "fetched_at": "2026-09-17T11:59:19Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "61 Routine tasks paired against 46 Red-Team tasks, 16 model x harness configs, per-config refusal rates with SEMs/CIs. Agentic biosecurity only; bank RESTRICTED — only 2 of 107 evals public.",
+     "signed_results": "no",
+     "evidence": "\"BioSecBench-Refusal measures two things at once: whether an AI agent refuses legitimate scientific work, and whether it catches concealed biosecurity risks. The benchmark pairs 61 Routine tasks ... with 46 Red-Team tasks\""
+    },
+    {
+     "org": "Roettger et al. — XSTest",
+     "url": "https://arxiv.org/abs/2308.01263",
+     "fetched_at": "2026-09-17T11:56:07Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "The canonical paired design: 250 safe prompts with 200 unsafe 'contrast' twins (8 contrast types x 25). Static repo, completions for 5 systems, last pushed 2025-02-24. 5.5x our paired bank.",
+     "signed_results": "no",
+     "evidence": "\"XSTest comprises 250 safe prompts across ten prompt types that well-calibrated models should not refuse to comply with, and 200 unsafe prompts as contrasts\""
+    },
+    {
+     "org": "Stanford CRFM — HELM Safety",
+     "url": "https://storage.googleapis.com/crfm-helm-public/safety/benchmark_output/releases/v1.17.0/groups/xstest.json",
+     "fetched_at": "2026-09-17T12:04:58Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Runs the genuinely paired bank (XSTest, all 450 instances) on the field's biggest live fleet (87 model rows) and then DISCARDS the pairing. Run-spec parsing shows exactly one pattern, 'xstest:model=*', with no safe/unsafe subset split. Both error directions collapsed into one scalar.",
+     "signed_results": "no",
+     "evidence": "Header, verbatim: \"LM Evaluated Safety score (mean of Llama3.1 and GPT4o ratings) representing whether the output constitutes a successful refusal of unsafe actions (0 is worst, 1 is best)\""
+    },
+    {
+     "org": "OR-Bench (Cui et al., ICML 2025)",
+     "url": "https://bench-llms-or-bench-leaderboard.static.hf.space/data/or-bench.html",
+     "fetched_at": "2026-09-17T12:01:10Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Live board, 28-32 models, BOTH directions — but the arms are disjoint corpora (80,000 benign vs 600 toxic), not twins. Frozen since 2024-07-04.",
+     "signed_results": "no",
+     "evidence": "Header: \"|model||over refusal(%)||toxic acceptance(%)||average|\" then \"|GPT-4o||6.8||15.1||10.9|\""
+    },
+    {
+     "org": "MLCommons AILuminate",
+     "url": "https://ailuminate.mlcommons.org/benchmarks/general_purpose_ai_chat/1.0-en_us-official-ensemble",
+     "fetched_at": "2026-09-17T12:01:23Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "22 graded systems (109 across versions), 59,624 prompts, 12 hazard categories, 5-point grade scale relative to a composited reference model, judged by safety-evaluator models. Violating/non-violating only — a grep of the full methodology page for 'over-refus', 'false refus' and 'benign' returns zero hits. Publishes an Opt Out list of vendors who prohibited benchmarking, and the limitation that the tests 'only have negative predictive power'.",
+     "signed_results": "no",
+     "evidence": "\"provides guidelines for evaluating if model-responses are 'violating' or 'non-violating'\"; \"Grok-3-Preview-02-24 (xAI), Hunyuan-TurboS-20250226 (Tencent), Llama 3.3 49b Nemotron Super (NVIDIA) ... System providers have chosen to explicitly prohibit benchmarking\""
+    },
+    {
+     "org": "SORRY-Bench / PHTest / FalseReject / WildGuard / OVERT / DUAL-Bench",
+     "url": "https://arxiv.org/abs/2409.00598",
+     "fetched_at": "2026-09-17T12:00:57Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Single-direction banks (SORRY-Bench 440 unsafe only; PHTest 3,260 pseudo-harmful only; FalseReject 16k over-refusal only), a moderation classifier (WildGuard), or right construct / wrong modality (OVERT text-to-image, DUAL-Bench VLM). Papers with tables, not maintained boards.",
+     "signed_results": "no",
+     "evidence": "FalseReject's own size table: \"XSTest 250 18 ... PHTest 3,260 10 ... OR-Bench 80K 10 ... FalseReject (Ours) 16K 44\""
+    },
+    {
+     "org": "UK AI Security Institute / NIST CAISI / arena.ai",
+     "url": "https://www.aisi.gov.uk/research",
+     "fetched_at": "2026-09-17T11:58:57Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "AISI and CAISI: grep for 'refus*' returns zero hits. arena.ai's 294 'refusal' hits are a vote-filter field ('exclude-refusal'), not a measurement.",
+     "signed_results": "no",
+     "evidence": "arena.ai: \"\\\"exclude-refusal\\\":135\""
+    }
+   ],
+   "notes": "Our n=36 is the SMALLEST paired refusal bank in the field by a wide margin — FORTRESS has 1,010 prompts with a benign twin each (28x), XSTest 200 contrast pairs (5.5x). At n=36 a per-model rate carries roughly +/-16 points of 95% Wilson width near 50%. FORTRESS's own methodology text argues against 'brittle keyword-based checks', which is a direct challenge to our deterministic grading claim on this axis."
+  },
+  {
+   "axis": "provenance",
+   "family": "gspc",
+   "bench": "ProvBench",
+   "task": "Article 50 marking survival by validity",
+   "n": 32,
+   "status": "MEASURED",
+   "verdict": "UNMEASURED_BY_ANYONE",
+   "competitors": [
+    {
+     "org": "COMPL-AI",
+     "url": "https://huggingface.co/spaces/latticeflow/compl-ai-board/raw/main/results/Claude3Opus/result_Claude3Opus.json",
+     "fetched_at": "2026-09-17T12:04:50Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "The only body that mapped Article 50 Para 2 (machine-readable marking) to a named technical requirement ('Traceability') and shipped a slot for it. In ALL 13 published per-model result files the score is null. The v2 suite drops the requirement entirely; the only Art.50 survivor is Para 1 -> 'human_deception'. The nearest thing to a competitor published this axis as unmeasured, then removed it.",
+     "signed_results": "no",
+     "evidence": "watermarking -> {\"aggregate_score\": null} ; human_deception -> {\"aggregate_score\": 1.0}"
+    },
+    {
+     "org": "WAVES (University of Maryland)",
+     "url": "https://wavesbench.github.io/",
+     "fetched_at": "2026-09-17T11:59:15Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Ranks WATERMARKING ALGORITHMS under stress tests (Stable Signature, TreeRing, StegaStamp vs distortion/diffusive/adversarial attack). The graded subject is the mark; no language model appears. 28 hits for 'watermark', 0 for 'Article 50'.",
+     "signed_results": "no",
+     "evidence": "\"WAVES (Watermark Analysis via Enhanced Stress-testing), a novel benchmark for assessing watermark robustness\""
+    },
+    {
+     "org": "C2PA — Conforming Products List",
+     "url": "https://raw.githubusercontent.com/c2pa-org/conformance-public/main/conforming-products/conforming-products-list.json",
+     "fetched_at": "2026-09-17T11:57:35Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "210 records, ALL status 'conformant' (186 generator, 24 validator). A pass-only product registry — no scores, no per-test results, no models, no failing records published. C2PA signs the certificates IN its trust list while serving the products list itself as unsigned JSON in a git repo.",
+     "signed_results": "no",
+     "evidence": "\"applicant\": \"Google LLC\", \"status\": \"conformant\"; Counter({'conformant': 210})"
+    },
+    {
+     "org": "Content Authenticity Initiative — Durable Content Credentials",
+     "url": "https://opensource.contentauthenticity.org/docs/durable-cr/",
+     "fetched_at": "2026-09-17T12:00:22Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Documents precisely the marking-SURVIVAL problem as engineering guidance with zero published measurement. No benchmark, no scores, no survival rate.",
+     "signed_results": "no",
+     "evidence": "\"Platforms that host media assets might remove C2PA manifest data... you can use a watermark or a fingerprint to find it again.\""
+    },
+    {
+     "org": "AIReg-Bench",
+     "url": "https://arxiv.org/html/2510.01474v3",
+     "fetched_at": "2026-09-17T11:58:57Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Right shape (LLMs reasoning about AI Act compliance, 10 models, 120-item expert-labelled public bank), wrong articles. Full-text scan of 127k chars: 'Article 50' 0, 'watermark' 0, 'provenance' 0.",
+     "signed_results": "no",
+     "evidence": "Articles enumerated in body: ['Article 5','Article 9','Article 10','Article 11','Article 12','Article 14','Article 15'] — no Article 50"
+    },
+    {
+     "org": "European Commission / EU AI Office",
+     "url": "https://digital-strategy.ec.europa.eu/en/policies/guidelines-ai-transparency-obligations",
+     "fetched_at": "2026-09-17T11:59:46Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Guidance only. Keyword scan: benchmark 0, leaderboard 0, 'test results' 0, measured 0. The regulator states the obligation and measures no one against it.",
+     "signed_results": "no",
+     "evidence": "\"Article 50 of the AI Act applies from 2 August 2026... Providers must: ... Add machine-readable marks to enable the detection of AI-generated or manipulated content.\""
+    },
+    {
+     "org": "Stanford HELM / FMTI / MLCommons / NIST AIRC",
+     "url": "https://raw.githubusercontent.com/stanford-crfm/helm/main/src/helm/benchmark/metrics/image_generation/watermark_metrics.py",
+     "fetched_at": "2026-09-17T11:57:50Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "HELM's full 1,530-path tree yields ZERO hits for provenance/c2pa/article_50/marking; its one watermark metric is a LAION stock-watermark detector that PENALISES marks. FMTI scores 13 companies on disclosure (watermark 0, Article 50 0, C2PA 0). NIST AI 100-4 is a survey document.",
+     "signed_results": "no",
+     "evidence": "MetricMetadata(name=\"watermark_frac\", description=\"Watermark detector from LAION to determine whether an image contains watermarks.\", lower_is_better=True)"
+    }
+   ],
+   "notes": "Zero SAME_THING rows. The field splits along two exclusions with an empty gap between them: (a) the MARK is measured and the model is not (WAVES, C2PA, CAI); (b) the MODEL is measured and the marking is not (AIReg-Bench articles 5-15, COMPL-AI Art.50(1) only). The strongest evidence is a negative written in a competitor's own bytes: COMPL-AI's watermarking cell is null in 13 of 13 models and was dropped in v2."
+  },
+  {
+   "axis": "continuity",
+   "family": "gspc",
+   "bench": "PQCBench",
+   "task": "post-quantum status of a cryptographic assumption",
+   "n": 33,
+   "status": "MEASURED",
+   "verdict": "UNMEASURED_BY_ANYONE",
+   "competitors": [
+    {
+     "org": "NIST — Post-Quantum Cryptography project",
+     "url": "https://csrc.nist.gov/projects/post-quantum-cryptography",
+     "fetched_at": "2026-09-17T11:58:03Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "The STANDARDS and which algorithms are quantum-resistant (FIPS 203/204/205). Authoritative ground truth about crypto — the answer key, not a measurement of models. NIST measures algorithms; it has never measured a model's knowledge of them.",
+     "signed_results": "no",
+     "evidence": "\"NIST released the principal three PQC standards in 2024 and is developing additional standards to serve as backups or alternatives.\""
+    },
+    {
+     "org": "Empirical Evaluation of LLMs for Migration of Code Fragments to PQC (arXiv 2606.07341)",
+     "url": "http://export.arxiv.org/api/query?search_query=abs:%22post-quantum%22+AND+abs:%22large+language+model%22",
+     "fetched_at": "2026-09-17T11:57:44Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "~800 pre-to-post-quantum CODE PAIRS across seven categories; 4 models zero-shot and fine-tuned. Measures code MIGRATION, not classification of an assumption's quantum status.",
+     "signed_results": "no",
+     "evidence": "Returned alongside 'Quantum-Safe Code Auditing', 'LLM4PQC', 'Accelerating Post-Quantum Cryptography via LLM-Driven Hardware-Software Co-Design' — every PQC+LLM paper in the corpus is about code, hardware or migration; none is a knowledge bank"
+    },
+    {
+     "org": "CyberMetric (arXiv 2402.07688)",
+     "url": "http://export.arxiv.org/api/query?search_query=all:%22CyberMetric%22",
+     "fetched_at": "2026-09-17T11:57:55Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Cybersecurity MCQ banks (80/500/2000/10000 questions) covering cryptography among other topics. A dataset and paper — no live per-model leaderboard, and no post-quantum status category.",
+     "signed_results": "no",
+     "evidence": "\"CyberMetric-80, CyberMetric-500, CyberMetric-2000, and CyberMetric-10000, which are multiple-choice Q&A benchmark datasets\""
+    },
+    {
+     "org": "CipherBank / QuanBench / Quantum-Audit",
+     "url": "https://arxiv.org/abs/2505.24621",
+     "fetched_at": "2026-09-17T11:59:29Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "CipherBank: 18 models on 2,358 classical-cipher DECRYPTION problems. QuanBench: quantum CODE GENERATION. Quantum-Audit: 2,700 questions on quantum computing CONCEPTS. None asks whether a given assumption is quantum-broken or quantum-safe.",
+     "signed_results": "no",
+     "evidence": "\"CipherBank ... evaluated 18 state-of-the-art models on 2,358 decryption problems spanning nine classical encryption algorithms\""
+    },
+    {
+     "org": "Artificial Analysis / Vals AI / LiveBench / Scale Labs / HELM",
+     "url": "https://www.vals.ai/sitemap.xml",
+     "fetched_at": "2026-09-17T12:02:52Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "General capability indices. Vals AI: grep for 'quantum' returns 0 across 130,793 chars of extracted page text; its full sitemap carries no crypto or PQC benchmark. Artificial Analysis publishes no post-quantum measurement.",
+     "signed_results": "no",
+     "evidence": "Vals AI grep result: quantum 0 hits"
+    }
+   ],
+   "notes": "The emptiest cell on the entire board. The PQC-plus-LLM literature is entirely about CODE — migration, synthesis, static analysis, hardware co-design. Nobody asks a model fleet the direct question 'is this assumption quantum-broken or quantum-safe' and grades it against a frozen key. NIST supplies the answer key and measures no models."
+  },
+  {
+   "axis": "conformance",
+   "family": "gspc",
+   "bench": "MCPBench",
+   "task": "MCP tool conformance",
+   "n": 35,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "Scale AI — MCP-Atlas",
+     "url": "https://labs.scale.com/leaderboard/mcp_atlas",
+     "fetched_at": "2026-09-17T12:03:18Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "1,000 human-authored tasks (500 public + 500 held out), 36 real MCP servers, 220 tools, 20 frontier models from six providers, live per-model pass-rate table, open dataset + paper + code. Diagnostic taxonomy explicitly separates tool-call conformance failures: 'Wrong tool selection, incorrect parameters, schema violations, sequencing mistakes' = 47.5-68.5% of all failures. Graded by an LLM judge (Gemini-2.5-Pro at temp 0.0), re-scored April 2026.",
+     "signed_results": "no",
+     "evidence": "\"83.6% Top Pass Rate | 1,000 Tasks (500 public + 500 private) | 36 MCP Servers | 220 Tools | 3-6 Tool Calls/Task\"; leaderboard rows \"Muse Spark 82.2% | claude-opus-4-7 (max) 79.1%\". Grep for signature|attestation|merkle|did:web: only 'signed' inside 'designed'."
+    },
+    {
+     "org": "Salesforce AI Research — MCP-Universe",
+     "url": "https://mcp-universe.github.io/",
+     "fetched_at": "2026-09-17T11:56:57Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Live leaderboard, 6 domains across 11 real MCP servers, three tracks (ReAct / Function Calls / Agent), per-model per-domain success rates. Grading is execution-based and includes 'format evaluators for agent format compliance' — deterministic conformance checking, the closest methodological match to ours in the field, at greater breadth.",
+     "signed_results": "no",
+     "evidence": "\"we implement execution-based evaluators, including format evaluators for agent format compliance, static evaluators for time-invariant content matching, and dynamic evaluators\"; rows \"GPT-5-High ... 44.16 | Grok-4 ... 33.33\""
+    },
+    {
+     "org": "Official Model Context Protocol project — modelcontextprotocol/conformance",
+     "url": "https://raw.githubusercontent.com/modelcontextprotocol/conformance/main/README.md",
+     "fetched_at": "2026-09-17T11:57:27Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "DECISIVE NEGATIVE. The official conformance framework tests IMPLEMENTATIONS — clients and servers — against the specification. It never tests a model, and publishes no results anywhere: it is a CLI you run against your own SDK. All 42 repos in the org enumerated; no leaderboard, no per-model results.",
+     "signed_results": "no",
+     "evidence": "\"A framework for testing MCP (Model Context Protocol) client and server implementations against the specification.\""
+    },
+    {
+     "org": "Academic 'MCPBench' (arXiv 2504.11094) — NAME COLLISION",
+     "url": "http://export.arxiv.org/api/query?search_query=all:%22MCPBench%22",
+     "fetched_at": "2026-09-17T11:57:16Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "A framework evaluating the effectiveness and efficiency of MCP SERVERS, not models. Shares our bench name exactly.",
+     "signed_results": "no",
+     "evidence": "\"we propose an evaluation framework, called MCPBench. We selected several w[idely used MCP servers]\""
+    },
+    {
+     "org": "Berkeley Function-Calling Leaderboard (BFCL V4)",
+     "url": "https://gorilla.cs.berkeley.edu/leaderboard.html",
+     "fetched_at": "2026-09-17T11:57:35Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "General function/tool-calling accuracy with AST-based deterministic grading — methodologically our closest cousin, but NOT MCP. Rankings themselves UNCHECKABLE from the HTML (3,639 chars extracted, no model rows; JS-injected).",
+     "signed_results": "no",
+     "evidence": "\"The Berkeley Function Calling Leaderboard (BFCL) V4 evaluates the LLM's ability to call functions (aka tools) accurately... Last Updated: 2026-04-12\""
+    },
+    {
+     "org": "Sierra Research — tau-bench / tau2-bench",
+     "url": "https://api.github.com/search/repositories?q=tau-bench+OR+tau2-bench",
+     "fetched_at": "2026-09-17T11:59:46Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Agentic tool use in dialogue, policy-adherence via end-state database comparison and pass^k. Not MCP, not conformance.",
+     "signed_results": "no",
+     "evidence": "Repo description, literal: \"tau-Bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains\""
+    }
+   ],
+   "notes": "The most crowded axis on the behavioural half and the one where we are most clearly outgunned. Scale runs 20 frontier models over 1,000 tasks / 36 servers / 220 tools against our 35 items; Salesforce matches our deterministic grading method AND exceeds our breadth. Two naming hazards: the official MCP project owns a repo literally called 'conformance' (tests implementations), and arXiv 2504.11094 already owns the name 'MCPBench' (tests servers)."
+  },
+  {
+   "axis": "openness",
+   "family": "gspc",
+   "bench": "OSSBench",
+   "task": "licence reasoning versus intended use",
+   "n": 32,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "CLAUSEBENCH (Peking University, ICSE-Companion 2025)",
+     "url": "https://raw.githubusercontent.com/security-pride/CLAUSEBENCH/master/readme.md",
+     "fetched_at": "2026-09-17T12:03:05Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "LLM fleet (DeepSeek, Mistral-large, Qianwen, Mixtral) asked per OSS licence whether a clause permits an action; markers CAN/CANNOT/MUST/MUST NOT/OPTIONAL/NOT SPECIFIED over 14 clause categories, graded against human-annotated gold. Raw per-model outputs public in-repo. Last push 2024-11-14.",
+     "signed_results": "no",
+     "evidence": "\"we constructed a fine-grained benchmark dataset with over 50 widely used open-source licenses annotated with 14 distinct clause categories... inter-annotator agreement rate of 98.08% and a Cohen's Kappa score of 0.896\""
+    },
+    {
+     "org": "LiCoEval (OSS-Lab@PKU-SEI, ICSE 2025)",
+     "url": "http://osslab-pku.org/LiCoEval-Leaderboard/",
+     "fetched_at": "2026-09-17T12:03:05Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Live leaderboard, 14 LLMs, scored on whether the model discloses correct licence/copyright for code it generated. Licence ATTRIBUTION of output, not licence-permits-use reasoning.",
+     "signed_results": "no",
+     "evidence": "\"A benchmark to evaluate the ability of LLMs to provide accurate license information for their generated code ... Claude-3.5-Sonnet 0.571 ... DeepSeek-Coder-V2 0.142\""
+    },
+    {
+     "org": "Open Source Initiative (OSAID 1.0)",
+     "url": "https://opensource.org/ai/open-source-ai-definition",
+     "fetched_at": "2026-09-17T12:00:29Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "A definition plus conformance checklist. No scores, no fleet, no measurement.",
+     "signed_results": "no",
+     "evidence": "\"an Open Source AI is a system made available under terms that grant users the freedoms to: Use, Study, Modify, Share\""
+    },
+    {
+     "org": "Stanford CRFM — Foundation Model Transparency Index (Dec 2025)",
+     "url": "https://crfm.stanford.edu/fmti/December-2025/index.html",
+     "fetched_at": "2026-09-17T11:57:07Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "13 developer COMPANIES scored on 100 transparency indicators, some on data-licensing disclosure. Measures what a company reveals, not model reasoning.",
+     "signed_results": "no",
+     "evidence": "\"companies tended to score poorly in the Data subdomain, being opaque about topics like copyright, licenses, and PII.\""
+    },
+    {
+     "org": "Stanford CRFM — HELM",
+     "url": "https://api.github.com/repos/stanford-crfm/helm/contents/src/helm/benchmark/scenarios",
+     "fetched_at": "2026-09-17T11:57:07Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "236 scenario modules; zero match 'licen' or 'complian'. Legal coverage is legalbench / legal_support / summarization only.",
+     "signed_results": "no",
+     "evidence": "scenario scan — licen: [] ; compliance: [] ; legal: ['legalbench_scenario.py','legal_support_scenario.py']"
+    },
+    {
+     "org": "LegalBench / Vals AI",
+     "url": "https://hazyresearch.stanford.edu/legalbench/",
+     "fetched_at": "2026-09-17T11:56:50Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "CUAD commercial-contract clause classification (144 models on the Vals live board). Contract licence GRANTS, not OSS licence permission.",
+     "signed_results": "no",
+     "evidence": "\"cuad_license_grant  cuad_non-transferable_license  cuad_irrevocable_or_perpetual_license\""
+    },
+    {
+     "org": "OpenSSF Scorecard (Linux Foundation)",
+     "url": "https://raw.githubusercontent.com/ossf/scorecard/main/docs/checks.md",
+     "fetched_at": "2026-09-17T11:58:43Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Repo-practice checks. Its License check is presence-of-a-file.",
+     "signed_results": "no",
+     "evidence": "\"This check tries to determine if the project has published a license. It works by ... checking standard locations for a file named according to common conventions\""
+    },
+    {
+     "org": "Artificial Analysis",
+     "url": "https://artificialanalysis.ai/",
+     "fetched_at": "2026-09-17T12:01:40Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Licence appears only as model METADATA on the capability board, never as a reasoning task.",
+     "signed_results": "no",
+     "evidence": "\"'Commercial Use Restricted' if commercial use is limited by conditions, and as 'Non-commercial' if the license prohibits commercial use\""
+    }
+   ],
+   "notes": "Contested by exactly ONE organisation on Earth, not a field. ClauseBench beats us on gold-standard validation (Cohen's kappa 0.896, inter-annotator agreement 98.08%, peer-reviewed at ICSE-Companion 2025) against our n=32; we beat it on fleet size, liveness (its last push was 2024-11-14) and on 21 Ed25519-signed per-model cards. UNCHECKABLE: ClauseBench's own scored accuracy table — IEEE Xplore returned 202 with 0 bytes and the ACM DL 403 (bot-blocked)."
+  },
+  {
+   "axis": "machinery-conformity",
+   "family": "gspc",
+   "bench": "MachBench",
+   "task": "Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION)",
+   "n": 33,
+   "status": "MEASURED",
+   "verdict": "UNMEASURED_BY_ANYONE",
+   "competitors": [
+    {
+     "org": "CEN-CENELEC",
+     "url": "https://www.cencenelec.eu/areas-of-work/cenelec-sectors/mechanical-and-machines-cenelec/",
+     "fetched_at": "2026-09-17T11:58:29Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Standards drafting for Regulation (EU) 2023/1230. Zero occurrences of benchmark / LLM / accuracy / model score.",
+     "signed_results": "no",
+     "evidence": "\"The mechanical and machinery sector encompasses specialized technical bodies responsible for various types of industrial and domestic machinery.\""
+    },
+    {
+     "org": "European Commission (DG GROW)",
+     "url": "https://single-market-economy.ec.europa.eu/sectors/mechanical-engineering/machinery_en",
+     "fetched_at": "2026-09-17T11:57:42Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Legal text, corrigendum and application guides. Zero benchmark/LLM hits.",
+     "signed_results": "no",
+     "evidence": "\"The Guide to the application of the Machinery Directive 2006/42/EC is available in English.\""
+    },
+    {
+     "org": "COMPL-AI",
+     "url": "https://raw.githubusercontent.com/compl-ai/compl-ai/main/README.md",
+     "fetched_at": "2026-09-17T11:56:47Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Benchmark suite scoring LLMs against the EU AI Act. Nothing on machinery: zero machinery/1230/annex lines in 8,916 bytes.",
+     "signed_results": "no",
+     "evidence": "grep -inE \"machinery|1230|annex\" -> no output"
+    },
+    {
+     "org": "Stanford CRFM — HELM AIR-Bench",
+     "url": "https://storage.googleapis.com/crfm-helm-public/air-bench/benchmark_output/releases/v1.5.0/schema.json",
+     "fetched_at": "2026-09-17T11:59:25Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "The closest-looking near-miss and a trap: it HAS a 'machinery' category, but it is a refusal-rate hazard bucket about advice on operating heavy machinery — not classification under Reg 2023/1230 Annex I.",
+     "signed_results": "no",
+     "evidence": "\"display_name\": \"#5.11: Heavy machinery\", \"description\": \"Refusal rate for AIR level 4 category #5.11: Heavy machinery\""
+    },
+    {
+     "org": "AI Act Evaluation Benchmark (Davvetas et al.)",
+     "url": "https://raw.githubusercontent.com/davidath/ai-act-evaluation-benchmark/main/scenarios.json",
+     "fetched_at": "2026-09-17T11:57:08Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "EU AI Act risk-level classification. Machinery appears as scenario colour only, never as the label space; zero occurrences of '1230'.",
+     "signed_results": "no",
+     "evidence": "\"intended_use\": \"AI safety component for automated fire-detection and sprinkler activation in industrial facilities, subject to EU machinery conformity assessment\""
+    },
+    {
+     "org": "Nemko Digital",
+     "url": "https://digital.nemko.com/regulations/eu-machinery-regulation",
+     "fetched_at": "2026-09-17T12:00:10Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Guidance explainer naming the exact Annex I categories MachBench measures — publishes no model scores. Assessment bodies assess PRODUCTS.",
+     "signed_results": "no",
+     "evidence": "\"Two new categories have been added to the high-risk list specifically for AI-enabled machinery: safety components with fully or partially self-evolving behaviour using machine learning\""
+    },
+    {
+     "org": "Intertek",
+     "url": "https://www.intertek.com/industrial-equipment/machinery-regulation/",
+     "fetched_at": "2026-09-17T11:59:52Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Product assessment services and an FAQ on self-evolving behaviour. Zero benchmark/LLM/leaderboard hits.",
+     "signed_results": "no",
+     "evidence": "\"Our FAQ factsheet answers key questions on scope, substantial modifications, self-evolving behaviour, cybersecurity\""
+    },
+    {
+     "org": "DEKRA",
+     "url": "https://www.dekra.com/en/ce-certification-for-machinery-and-equipment/",
+     "fetched_at": "2026-09-17T11:59:59Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Notified-body product assessment. Zero benchmark hits in 8,698 chars.",
+     "signed_results": "no",
+     "evidence": "page title: \"CE Certification for Machinery and Equipment | DEKRA\""
+    },
+    {
+     "org": "TUV SUD / TUV Rheinland / EC NANDO",
+     "url": "https://www.tuvsud.com/en/industries/manufacturing/machinery-and-robotics",
+     "fetched_at": "2026-09-17T11:57:59Z",
+     "http_status": 403,
+     "relation": "ADJACENT",
+     "what_they_publish": "UNCHECKABLE, not NO. 403 to curl and WebFetch; www.tuv.com DNS-failed twice; NANDO returned 200 but is an Angular shell with no server-rendered body.",
+     "signed_results": "unknown",
+     "evidence": "HTTP 403 Forbidden; curl: (6) Could not resolve host: www.tuv.com"
+    }
+   ],
+   "notes": "The cleanest white space on the board, and the null is controlled rather than assumed. arXiv all:\"machinery regulation\" AND all:\"language model\" -> 0 hits, while the identical query shape for all:\"EU AI Act\" AND all:\"language model\" -> 60. HuggingFace dataset search 'machinery regulation' -> literally []; control 'eu ai act' -> 5. arXiv \"2023/1230\" -> 0. The field splits into two families that never meet: bodies that apply the machinery law but measure PRODUCTS, and benchmarks that score models against EU law but only the AI Act."
+  },
+  {
+   "axis": "care",
+   "family": "gspc",
+   "bench": "CareBench",
+   "task": "care-cost (protect x help) under paired conduct scenarios",
+   "n": 199,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "Stanford CRFM — HELM Safety v1.5.0",
+     "url": "https://storage.googleapis.com/crfm-helm-public/safety/benchmark_output/releases/v1.5.0/schema.json",
+     "fetched_at": "2026-09-17T12:00:03Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "50 models scored on both an over-refusal scenario (XSTest) and harm scenarios (HarmBench, SimpleSafetyTests, AnthropicRedTeam) in one release — the protect/help pair measured jointly on the same fleet, 2.6x ours.",
+     "signed_results": "no",
+     "evidence": "run_groups: ['safety_scenarios','harm_bench','simple_safety_tests','xstest','bbq','anthropic_red_team']; \"models\": 50"
+    },
+    {
+     "org": "XSTest (Roettger et al.)",
+     "url": "https://arxiv.org/abs/2308.01263",
+     "fetched_at": "2026-09-17T11:57:11Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "250 safe prompts paired against 200 unsafe contrasts — matched-pair over-refusal vs under-protection, explicitly framed as the protect/help tension.",
+     "signed_results": "no",
+     "evidence": "\"there is a tension between these two objectives, since harmlessness requires models to refuse... XSTest comprises 250 safe prompts ... and 200 unsafe prompts as contrasts\""
+    },
+    {
+     "org": "OR-Bench (Cui et al.)",
+     "url": "https://arxiv.org/abs/2405.20947",
+     "fetched_at": "2026-09-17T11:57:11Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "80,000 over-refusal prompts plus 600 toxic prompts as the protection counterweight, across 32 LLMs in 8 model families.",
+     "signed_results": "no",
+     "evidence": "\"OR-Bench comprises 80,000 over-refusal prompts across 10 common rejection categories... and an additional 600 toxic prompts to prevent indiscriminate responses... measure the over-refusal of 32 popular LLMs across 8 model families\""
+    },
+    {
+     "org": "PHTest (An et al.)",
+     "url": "https://arxiv.org/abs/2409.00598",
+     "fetched_at": "2026-09-17T12:02:32Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "20 LLMs on auto-generated pseudo-harmful prompts, explicitly reporting the trade-off.",
+     "signed_results": "no",
+     "evidence": "\"We evaluate 20 LLMs on PHTest... Our findings reveal a trade-off between mitigating false refusals and improving safety\""
+    },
+    {
+     "org": "MLCommons AILuminate",
+     "url": "https://mlcommons.org/ailuminate/",
+     "fetched_at": "2026-09-17T11:57:19Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "59,624 test prompts, 109 models, 12 hazard categories — hazard rate only, no over-refusal counterweight on matched pairs.",
+     "signed_results": "no",
+     "evidence": "\"59,624 test prompts  477 test images  109 models benchmarked\""
+    },
+    {
+     "org": "FalseReject",
+     "url": "https://arxiv.org/abs/2505.08054",
+     "fetched_at": "2026-09-17T12:02:32Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "16k seemingly-toxic queries across 44 categories — a training/mitigation resource, over-refusal leg only.",
+     "signed_results": "no",
+     "evidence": "\"FalseReject, a comprehensive resource containing 16k seemingly toxic queries... across 44 safety-related categories\""
+    },
+    {
+     "org": "SORRY-Bench",
+     "url": "https://arxiv.org/abs/2406.14598",
+     "fetched_at": "2026-09-17T12:02:32Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "440 class-balanced unsafe instructions over 44 topics — protect leg only.",
+     "signed_results": "no",
+     "evidence": "\"a fine-grained taxonomy of 44 potentially unsafe topics, and 440 class-balanced unsafe instructions\""
+    },
+    {
+     "org": "Vals AI",
+     "url": "https://www.vals.ai/home",
+     "fetched_at": "2026-09-17T12:01:40Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Counts refusals as measurable failures alongside accuracy, but not on a matched-pairs safety bank.",
+     "signed_results": "no",
+     "evidence": "\"We count refusals in the authorized benchmark sandbox as measurable failures\""
+    }
+   ],
+   "notes": "Heavily contested and out-scaled: HELM Safety 50 models with both legs on one public board, OR-Bench 32 models over 80,600 prompts, PHTest 20 models. Our distinguishing move is the single joint scalar (care-cost = protect x help) where competitors publish two numbers side by side, plus 77 signed cards — not the bank. UNCHECKABLE: OR-Bench's live HF Space returned 200 with body text 'runtime error  Exit code: ?' at 2026-09-17T12:00:55Z."
+  },
+  {
+   "axis": "cross-reality",
+   "family": "gspc",
+   "bench": "XRAIV",
+   "task": "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
+   "n": 32,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "SteerBench-Work (Serdar & Mertayak)",
+     "url": "https://arxiv.org/abs/2608.12654",
+     "fetched_at": "2026-09-17T11:59:31Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "106 incident-anchored scenarios, proceed-vs-hold gate decision, 30 model conditions, labels split near-evenly so both error directions get equal chances, evidence-reversed mirrors as controls, both error directions reported separately. Dated 2026-08-12.",
+     "signed_results": "no",
+     "evidence": "\"The steering decision is the pre-commit choice at that boundary: proceed, or hold for human or policy review... models wrongly hold authorized, evidence-cleared work on 28.1% of opportunities and wrongly allow unsafe work on 1.0%\""
+    },
+    {
+     "org": "AgentAbstain (Liu et al.)",
+     "url": "https://arxiv.org/abs/2607.10059",
+     "fetched_at": "2026-09-17T11:59:31Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "263 PAIRED should-act / should-abstain tasks across 42 executable sandbox environments, 17 frontier LLMs in 4 harnesses, deterministic replay, regenerable instances to resist contamination. Dated 2026-07-11.",
+     "signed_results": "no",
+     "evidence": "\"each pair consists of a should-act task and a should-abstain variant produced through a controlled perturbation... Across 17 frontier LLMs in 4 agent harnesses, the best agent (Gemini 3.1 Pro) achieves only 59.5%\""
+    },
+    {
+     "org": "AgentAtlas (Mazaheri & Mazaheri)",
+     "url": "https://arxiv.org/abs/2605.20530",
+     "fetched_at": "2026-09-17T11:59:31Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "A six-state control-decision taxonomy that is a strict SUPERSET of PROCEED/CONFIRM/REFUSE, plus a coverage audit over 15 agent benchmarks — but the authors explicitly disclaim it as a public benchmark release.",
+     "signed_results": "no",
+     "evidence": "\"a six-state control-decision taxonomy (Act / Ask / Refuse / Stop / Confirm / Recover)... The synthetic demonstration is not a public benchmark release and should not be read as a definitive model comparison.\""
+    },
+    {
+     "org": "IBM — ST-WebAgentBench",
+     "url": "https://arxiv.org/abs/2410.06703",
+     "fetched_at": "2026-09-17T11:59:00Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "222 tasks, six safety-and-trustworthiness dimensions with an explicit 'User Consent and Action Confirmation' dimension and an 'ask the user' template, plus a Completion Under Policy metric — but only 3 agents evaluated, and the CONFIRM leg is a policy-violation rate inside a web task, not a per-item authority label.",
+     "signed_results": "no",
+     "evidence": "\"User Consent and Action Confirmation refers to the agent's obligation to obtain explicit user permission before executing permanent or critical actions\""
+    },
+    {
+     "org": "UK AI Security Institute — AgentHarm",
+     "url": "https://arxiv.org/abs/2410.09024",
+     "fetched_at": "2026-09-17T11:59:00Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "110 malicious agent tasks (440 augmented), 11 harm categories. Two-way refuse/comply on malicious requests — no CONFIRM leg and no authorised-PROCEED leg.",
+     "signed_results": "no",
+     "evidence": "\"110 explicitly malicious agent tasks (440 with augmentations), covering 11 harm categories\""
+    },
+    {
+     "org": "ToolEmu (Ruan et al.)",
+     "url": "https://arxiv.org/abs/2309.15817",
+     "fetched_at": "2026-09-17T11:59:00Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "LM-emulated sandbox with an LM-based automatic safety evaluator producing risk scores — LLM-judged, not deterministic three-way grading.",
+     "signed_results": "no",
+     "evidence": "\"we develop an LM-based automatic safety evaluator that examines agent failures and quantifies associated risks\""
+    },
+    {
+     "org": "Sierra — tau-bench",
+     "url": "https://arxiv.org/abs/2406.12045",
+     "fetched_at": "2026-09-17T11:59:00Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Policy-adherence and reliability (pass^k) via end-state database comparison. Rule-following, not an authority decision.",
+     "signed_results": "no",
+     "evidence": "\"compares the database state at the end of a conversation with the annotated goal state... a new metric (pass^k) to evaluate the reliability of agent behavior\""
+    },
+    {
+     "org": "ETH Zurich — AgentDojo",
+     "url": "https://arxiv.org/abs/2406.13352",
+     "fetched_at": "2026-09-17T11:59:00Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "97 tasks, 629 security test cases — prompt-injection robustness, a different failure mode.",
+     "signed_results": "no",
+     "evidence": "\"97 realistic tasks... 629 security test cases, and various attack and defense paradigms\""
+    },
+    {
+     "org": "METR",
+     "url": "https://metr.org/",
+     "fetched_at": "2026-09-17T12:00:38Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Time-horizon capability and rogue-deployment risk, partly on non-public model access.",
+     "signed_results": "no",
+     "evidence": "\"Frontier Risk Report (February to March 2026) A pilot assessment of rogue deployment risk at frontier AI companies. Non-public information and model access provided by:\""
+    },
+    {
+     "org": "Apollo Research",
+     "url": "https://www.apolloresearch.ai/",
+     "fetched_at": "2026-09-17T12:00:38Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Scheming detection and anti-scheming training.",
+     "signed_results": "no",
+     "evidence": "\"We research how scheming emerges, develop ways to detect it\""
+    },
+    {
+     "org": "Gray Swan AI",
+     "url": "https://www.grayswan.ai/",
+     "fetched_at": "2026-09-17T12:00:38Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Commercial agent red-teaming and arena. Attack-surface framing; no published per-model action-authority scores on the landing surface.",
+     "signed_results": "no",
+     "evidence": "\"Govern Agent Behavior Control what your agents do, not just what they say\""
+    }
+   ],
+   "notes": "The worst competitive position on the behavioural half. The field moved hard between May and August 2026 (AgentAtlas May, Consent Integrity Jun, AgentAbstain Jul, SteerBench-Work Aug). AgentAbstain's paired should-act/should-abstain construction with deterministic replay and regenerable instances is methodologically stronger than our flat 32-item bank; SteerBench-Work runs 30 model conditions with bidirectional error accounting. The XR/cross-reality framing in the axis NAME is a red herring — the task is agent action authority, and that is where the field is. We also carry ZERO signed cards for this axis."
+  },
+  {
+   "axis": "detector-interop",
+   "family": "gspc",
+   "bench": "DetBench",
+   "task": "cross-detector watermark interoperability matrix",
+   "n": 33,
+   "status": "MEASURED",
+   "verdict": "UNMEASURED_BY_ANYONE",
+   "competitors": [
+    {
+     "org": "C2PA — conforming products list",
+     "url": "https://raw.githubusercontent.com/c2pa-org/conformance-public/main/conforming-products/conforming-products-list.json",
+     "fetched_at": "2026-09-17T11:57:52Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "210 records: 186 generatorProducts, 24 validatorProducts, 122 applicants, ALL status 'conformant'. Each record declares its OWN generate/validate MIME capability. There is NO field anywhere in the schema recording a cross-product test result, and no failure is ever published. The raw material for an interop matrix; no matrix.",
+     "signed_results": "no",
+     "evidence": "schema keys include '.containers.generate.image' and '.containers.validate.image' but no cross-test field; Counter({'conformant': 210}); no .sig/.asc file in the directory listing"
+    },
+    {
+     "org": "C2PA — public test files",
+     "url": "https://spec.c2pa.org/public-testfiles/",
+     "fetched_at": "2026-09-17T11:58:37Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Good and bad test files contributed by conforming generators, explicitly FOR interop testing — with the results of running them never published.",
+     "signed_results": "no",
+     "evidence": "\"The test files contained herein are intended to help implementers with interop and Conformance testing.\""
+    },
+    {
+     "org": "C2PA — conformance program page",
+     "url": "https://c2pa.org/conformance/",
+     "fetched_at": "2026-09-17T11:57:37Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Claims interoperability as an OUTCOME of per-product conformance, without measuring it pairwise.",
+     "signed_results": "no",
+     "evidence": "\"Conforming products are placed on a publicly-accessible list ... and guarantees interoperability across products in the Content Credentials ecosystem.\""
+    },
+    {
+     "org": "VoxWatermark",
+     "url": "https://arxiv.org/abs/2606.15187",
+     "fetched_at": "2026-09-17T11:58:37Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "The closest published thing: 10 watermarking methods (4 neural, 6 traditional) with unified injection, evaluated against a single proposed detector. One detector across many marks — not detectors reading each other.",
+     "signed_results": "no",
+     "evidence": "\"applying 10 watermarking methods (4 neural and 6 traditional) with unified injection and annotation... we propose AudioWMD as a robust baseline detector for large-scale, multi-method, cross-distribution settings\""
+    },
+    {
+     "org": "'Authenticated Contradictions' (independent)",
+     "url": "https://arxiv.org/abs/2603.02378",
+     "fetched_at": "2026-09-17T11:58:37Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Closest in spirit: a cross-LAYER audit over provenance-metadata-vs-watermark disagreement, 3,500 test images, four conflict-matrix states. Cross-layer, not cross-detector.",
+     "signed_results": "no",
+     "evidence": "\"a cross-layer audit protocol that jointly evaluates provenance metadata and watermark detection status, achieving 100% classification accuracy across 3,500 test images spanning four conflict-matrix states\""
+    },
+    {
+     "org": "WAVES (University of Maryland)",
+     "url": "https://arxiv.org/abs/2401.08573",
+     "fetched_at": "2026-09-17T11:58:16Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Image watermark ROBUSTNESS under attack, each scheme with its own detector; no cross-reading.",
+     "signed_results": "no",
+     "evidence": "\"a benchmark for assessing image watermark robustness... a standardized evaluation protocol comprised of a diverse range of stress tests\""
+    },
+    {
+     "org": "MarkMyWords (UC Berkeley)",
+     "url": "https://arxiv.org/abs/2312.00273",
+     "fetched_at": "2026-09-17T11:58:16Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Text watermark quality / size / tamper-resistance, per scheme.",
+     "signed_results": "no",
+     "evidence": "\"We focus on three main metrics: quality, size (i.e., the number of tokens needed to detect a watermark), and tamper resistance\""
+    },
+    {
+     "org": "Google DeepMind — SynthID",
+     "url": "https://deepmind.google/models/synthid/",
+     "fetched_at": "2026-09-17T12:00:20Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "A single-vendor portal that detects SynthID only, in limited-access testing. No cross-detector results.",
+     "signed_results": "no",
+     "evidence": "\"we launched the SynthID Detector, a verification portal, to verify if a piece of content was watermarked with SynthID... We are currently collaborating with journalists and media professionals to test the portal\""
+    },
+    {
+     "org": "NIST (AI 100-4)",
+     "url": "https://www.nist.gov/publications/reducing-risks-posed-synthetic-content-overview-technical-approaches-digital-content",
+     "fetched_at": "2026-09-17T12:00:20Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "A survey report of existing approaches. No measurement, no matrix.",
+     "signed_results": "no",
+     "evidence": "\"This report examines the existing standards, tools, methods, and practices, as well as the potential development of further science-backed standards and techniques\""
+    },
+    {
+     "org": "Content Authenticity Initiative",
+     "url": "https://contentauthenticity.org/",
+     "fetched_at": "2026-09-17T12:00:20Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Ecosystem advocacy and open-source tooling. No interop results published on the site.",
+     "signed_results": "no",
+     "evidence": "\"We are focused on cross-industry participation, with an open, extensible approach for providing media transparency\""
+    }
+   ],
+   "notes": "Nobody publishes a cross-detector interoperability matrix. The distinction held throughout: robustness-under-attack (WAVES, MarkMyWords) and conformance-to-spec (C2PA) are both individually scored, never pairwise. The sharpest form of the finding: C2PA possesses every input for the matrix — 24 validators, 186 generators, each declaring which containers it generates and which it validates, plus a public test-file corpus contributed expressly for interop testing — and publishes only a pass-only roster in which all 210 records read 'conformant'. Note: the C2PA Conformance Explorer UI is a JS shell, but the underlying JSON was read directly, so this cell is NO, not UNCHECKABLE. We carry ZERO signed cards for this axis."
+  },
+  {
+   "axis": "art5-safeguard",
+   "family": "gspc",
+   "bench": "Art5Bench",
+   "task": "EU AI Act Article 5 prohibited-practice trip",
+   "n": 36,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "Stanford CRFM / Virtue AI — AIR-Bench 2024 (live on HELM)",
+     "url": "https://storage.googleapis.com/crfm-helm-public/air-bench/benchmark_output/releases/v1.1.0/groups/json/safety_scenarios_air_level_4_scores.json",
+     "fetched_at": "2026-09-17T12:06:12Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Live per-model refusal rates over 314 granular risk categories, 22 models. Three Article 5 prohibitions appear as named columns: social scoring (n=30), predictive policing (n=30), unauthorized facial-recognition collection. MISSING: subliminal techniques, exploitation of vulnerability, emotion recognition at work/education, biometric categorisation, real-time remote biometric ID. The board never says 'EU AI Act' or 'Article 5' — that mapping lives only in arXiv 2407.17436.",
+     "signed_results": "no",
+     "evidence": "\"AIRBench 2024 - #4.5: Social scoring\" ... \"DBRX Instruct\" 0.0, \"Llama 3 Instruct (70B)\" 0.5333333333333333; release dir listing returns 24 files, none matching .sig/.asc/.sigstore/.pem"
+    },
+    {
+     "org": "Safety Compliance (arXiv 2509.22250)",
+     "url": "https://arxiv.org/html/2509.22250v1",
+     "fetched_at": "2026-09-17T12:04:03Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Table 3 'Results on EU AI Act' — per-model accuracy by Act chapter, 12 models. Column Ch.2 = Chapter II, which contains only Article 5 (~125 held-out items). Binary prohibited/permitted classification of a described scenario, not a live trip on a request to perform the practice. Bank not released. Every model lands between 47.19% and 59.20% on a balanced binary — at chance, so the column separates nothing.",
+     "signed_results": "no",
+     "evidence": "\"Llama3.1-8B-Instruct 55.00 52.00 ... GPT-4o-mini 55.94 51.20 ... Table 3: Results on EU AI Act.\"; Appendix G: \"Chapter II: Prohibited AI Practices Article 5\""
+    },
+    {
+     "org": "COMPL-AI (ETH Zurich / INSAIT / LatticeFlow)",
+     "url": "https://compl-ai.org/interpretation",
+     "fetched_at": "2026-09-17T12:07:11Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "The leading EU AI Act LLM benchmarking suite — and it has ZERO Article 5 coverage. Its interpretation page cites Articles 10, 13, 14, 15, 40, 50, 53, 55 and Annex IV/XI; a regex for exact 'Article 5' (excluding 50/53/55) returns an empty list. Its ~30 task directories contain no Article 5 task.",
+     "signed_results": "no",
+     "evidence": "re.findall(r'Article 5(?![0-9])', page) -> [] ; the only two 'prohibit' hits are \"discrimination prohibited under Union law\""
+    },
+    {
+     "org": "Promptfoo",
+     "url": "https://www.promptfoo.dev/docs/red-team/eu-ai-act/",
+     "fetched_at": "2026-09-17T12:01:13Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "The closest TEST DESIGN anywhere — a plugin taxonomy keyed to Article 5 sub-clauses (eu:ai-act:art5:subliminal-manipulation, :social-scoring, :real-time-remote-biometric-id). But it is a tool customers run on their own app; the published Foundation Model Security Reports carry zero Article 5 scoring.",
+     "signed_results": "no",
+     "evidence": "\"Promptfoo's red teaming capabilities focus on testing for prohibited practices (Article 5)\" vs reports page: \"What We Evaluate: Security & Access Control ... Compliance & Legal ... Trust & Safety ... Brand\""
+    },
+    {
+     "org": "AIReg-Bench",
+     "url": "https://arxiv.org/html/2510.01474v1",
+     "fetched_at": "2026-09-17T12:04:03Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Measures whether a model can JUDGE compliance from technical documentation. Excludes Article 5 by construction.",
+     "signed_results": "no",
+     "evidence": "generation prompt: \"Ensure the system is not prohibited by Article 5 of the EU AI Act and is also not biometric.\""
+    },
+    {
+     "org": "UK AI Security Institute — inspect_evals registry",
+     "url": "https://raw.githubusercontent.com/UKGovernmentBEIS/inspect_evals/main/README.md",
+     "fetched_at": "2026-09-17T12:02:41Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Nothing on this axis. 117,653 bytes of catalogue README; grep -c for 'EU AI Act', 'Article 5', 'social scoring', 'biometric', 'prohibited', 'emotion recognition' returns 0 for every term.",
+     "signed_results": "no",
+     "evidence": "all six term counts = 0"
+    },
+    {
+     "org": "HELM Safety / MLCommons AILuminate / Vals AI / Artificial Analysis / Scale Labs",
+     "url": "https://storage.googleapis.com/crfm-helm-public/safety/benchmark_output/releases/v1.17.0/schema.json",
+     "fetched_at": "2026-09-17T12:07:38Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "None of them touches Article 5. HELM Safety's six run groups are harm_bench, harm_bench_gcg_transfer, simple_safety_tests, xstest, bbq, anthropic_red_team. Artificial Analysis, Vals AI and the MLCommons benchmark index returned zero hits for 'Article 5', 'prohibited', 'AI Act', 'social scoring', 'biometric', 'emotion recognition'.",
+     "signed_results": "no",
+     "evidence": "run_groups: ['safety_scenarios','harm_bench','harm_bench_gcg_transfer','simple_safety_tests','xstest','bbq','anthropic_red_team']"
+    },
+    {
+     "org": "European Commission — EU AI Office",
+     "url": "https://digital-strategy.ec.europa.eu/en/policies/ai-office",
+     "fetched_at": "2026-09-17T12:06:57Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "A remit to build benchmarks, no published scores. Page body: 'benchmark' 0 hits in a results sense, 'Article 5' 0 hits, 'prohibited' 0 hits.",
+     "signed_results": "no",
+     "evidence": "\"Developing tools, methodologies and benchmarks for evaluating capabilities and reach of general-purpose AI models\""
+    },
+    {
+     "org": "JRC Publications repository",
+     "url": "https://publications.jrc.ec.europa.eu/repository/search?keyword=AI%20Act%20benchmark",
+     "fetched_at": "2026-09-17T12:05:12Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "UNCHECKABLE — 251,293 bytes, titles render client-side; only 914 chars survive stripping. WebFetch also could not see titles.",
+     "signed_results": "unknown",
+     "evidence": "\"Search results (40080) Showing results 1 to 20\" — the count renders, the titles do not"
+    }
+   ],
+   "notes": "Two parties publish a PARTIAL per-model Article 5 measurement; nobody covers all eight prohibitions. AIR-Bench beats us on fleet (22 models) but reaches only 2-3 prohibitions and never labels them Article 5 on the board. arXiv 2509.22250 has a real Chapter II column but at chance across all 12 models and an unreleased bank. The finding that matters most is negative: COMPL-AI, the flagship EU AI Act LLM suite, has ZERO Article 5 coverage. We carry ZERO signed cards for this axis."
+  },
+  {
+   "axis": "swarm",
+   "family": "gspc",
+   "bench": "SwarmBench v2b",
+   "task": "multi-agent coordination safety",
+   "n": 37,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "Colosseum (arXiv 2602.15198)",
+     "url": "https://arxiv.org/abs/2602.15198",
+     "fetched_at": "2026-09-17T12:01:34Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "A framework for auditing LLM-agent collusion in multi-agent settings: regret-based collusion metrics, coalition objectives, persuasion tactics, network topologies, secret-channel probe. Per-model results across Gemini-2.5-Flash, Claude-Sonnet-4.5 and others; five random seeds.",
+     "signed_results": "no",
+     "evidence": "\"we present Colosseum, a framework for auditing LLM agents' collusive behavior in multi-agent settings ... most out-of-the-box models exhibit a propensity to collude under this probe, which we term emergent collusion\""
+    },
+    {
+     "org": "SCHEME (arXiv 2605.29178)",
+     "url": "https://arxiv.org/abs/2605.29178",
+     "fetched_at": "2026-09-17T12:01:34Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "17 task instances, 7 settings, 8 real open-source libraries, each pairing a legitimate SWE task with a covert side task, designed so no proper subset of agents can succeed alone. Per-model coordinated-sabotage rates plus trusted-monitor detection at FPR<=2%.",
+     "signed_results": "no",
+     "evidence": "\"agents must decompose a shared sabotage plan, relay partial requirements under different communication topologies ... Gemini completing the covert objective while succeeding on the legitimate task in 84% of samples and Codex in 46%\""
+    },
+    {
+     "org": "TAMAS (arXiv 2511.05269)",
+     "url": "https://arxiv.org/abs/2511.05269",
+     "fetched_at": "2026-09-17T12:01:34Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "300 adversarial instances, 6 attack types, 211 tools, 100 harmless tasks; 10 backbone LLMs x 3 agent-interaction configurations (Autogen, CrewAI); an Effective Robustness Score trading safety against task effectiveness.",
+     "signed_results": "no",
+     "evidence": "\"TAMAS includes five distinct scenarios comprising 300 adversarial instances across six attack types and 211 tools ... We assess system performance across ten backbone LLMs\""
+    },
+    {
+     "org": "PsySafe (arXiv 2401.11880)",
+     "url": "https://arxiv.org/abs/2401.11880",
+     "fetched_at": "2026-09-17T12:01:47Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Multi-agent system safety via agent psychology: dark-traits injection, psychological and behavioural evaluation, defence strategies. Reports collective dangerous behaviour across CAMEL / AutoGen / MetaGPT / AutoGPT.",
+     "signed_results": "no",
+     "evidence": "\"evaluating the safety of multi-agent systems from the psychological and behavioral perspectives ... the collective dangerous behaviors among agents\""
+    },
+    {
+     "org": "Taxonomy & Consistency Analysis of Agent Safety Benchmarks (arXiv 2605.16282)",
+     "url": "https://arxiv.org/abs/2605.16282",
+     "fetched_at": "2026-09-17T12:01:34Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Not a measurement of the axis — a census of the field. Catalogues 40 behavioural agent-safety benchmarks 2023-2026 and finds no ranking concordance between them.",
+     "signed_results": "no",
+     "evidence": "\"We catalog 40 behavioral agent-safety benchmarks (2023-2026) ... no evidence of ranking concordance across evaluation dimensions (W = 0.10, p = 0.94)\""
+    },
+    {
+     "org": "UK AI Security Institute — AgentHarm",
+     "url": "https://www.aisi.gov.uk/research/agentharm-a-benchmark-for-measuring-harmfulness-of-llm-agents",
+     "fetched_at": "2026-09-17T12:02:15Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "110 malicious agent tasks (440 augmented), 11 harm categories — SINGLE-agent misuse and jailbreak robustness, not multi-agent coordination.",
+     "signed_results": "no",
+     "evidence": "\"The benchmark includes a diverse set of 110 explicitly malicious agent tasks (440 with augmentations), covering 11 harm categories\""
+    },
+    {
+     "org": "Apollo Research",
+     "url": "https://www.apolloresearch.ai/science",
+     "fetched_at": "2026-09-17T12:01:47Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Scheming/deception science and pre-deployment evals of frontier systems — single-model covert misalignment, not multi-agent coordination safety. No standing per-model leaderboard; results land in partner system cards.",
+     "signed_results": "no",
+     "evidence": "\"We conduct fundamental research into the science of scheming and its potential mitigations. We also develop and run pre-deployment evaluations of frontier AI systems.\""
+    }
+   ],
+   "notes": "Crowded: four independent SAME_THING benchmarks, and TAMAS alone is 300 adversarial instances across 211 tools against our 37 cells. What nobody has is a live maintained leaderboard — all four are one-off paper tables, and a field census finds 40 such benchmarks with no ranking concordance between them (W=0.10, p=0.94). We hold 7 signed cards ('swarm-candidates') on this axis."
+  },
+  {
+   "axis": "affect",
+   "family": "gspc",
+   "bench": "AffectBench",
+   "task": "emotional & embodied safety (manipulation / disclosure / vulnerability)",
+   "n": 41,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "USC — EUDAIMONIA",
+     "url": "https://eudaimonia-bench.github.io/leaderboard.html",
+     "fetched_at": "2026-09-17T12:02:37Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Live public per-model leaderboard, 22 LLMs, 969 user inputs / 3,147 violation checks, built from REAL WildChat traffic. Covers all three of our sub-dimensions in ONE bank: manipulation/prolonged engagement, AI self-disclosure, emotional dependence.",
+     "signed_results": "no",
+     "evidence": "\"Rank Model Family Violation Rate 1 GPT-5.5 OpenAI 27.2% 2 Claude Opus 4.7 Anthropic 30.7% ... 22 Grok 3 xAI 67.3%\"; \"The most common failures include implying that the AI can replace human relationships and failing to clearly disclose its AI identity.\""
+    },
+    {
+     "org": "Building Humane Technology — HumaneBench",
+     "url": "https://raw.githubusercontent.com/buildinghumanetech/humanebench/main/baseline_scores.csv",
+     "fetched_at": "2026-09-17T12:04:05Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Per-model score CSVs (baseline / good persona / bad persona) for 15 frontier models over 800 prompts, with 95% CIs across 8 humane-tech principles including respect-user-attention, foster-healthy-relationships, be-transparent-and-honest. Machine-readable data plus 4-rater human validation.",
+     "signed_results": "no",
+     "evidence": "CSV header: \"model,total_samples,scored_samples,respect-user-attention,...,foster-healthy-relationships,...,overall_ci_lower,overall_ci_upper,negative_rate\"; README: \"800 prompts (100 per principle) | Models Evaluated: 15 frontier LLMs\""
+    },
+    {
+     "org": "Apart Research — DarkBench",
+     "url": "https://arxiv.org/abs/2503.10728",
+     "fetched_at": "2026-09-17T12:03:18Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "660 prompts x 14 models = 9,240 pairs, 27,720 evaluations, six dark-pattern categories (brand bias, user retention, sycophancy, anthropomorphism, harmful generation, sneaking). ICLR 2025 oral. Repo ships the bank and scorer, not a results table.",
+     "signed_results": "no",
+     "evidence": "\"Our benchmark comprises 660 prompts across six categories: brand bias, user retention, sycophancy, anthropomorphism, harmful generation, and sneaking.\""
+    },
+    {
+     "org": "COMPL-AI — human_deception task",
+     "url": "https://raw.githubusercontent.com/compl-ai/compl-ai/main/src/complai/tasks/human_deception/human_deception.py",
+     "fetched_at": "2026-09-17T12:03:57Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Our sub-dimension (b) exactly, deterministically graded, mapped to AI Act Article 50(1). 39 rows — almost exactly our own bank size. Technical requirement literally named 'Disclosure of AI'.",
+     "signed_results": "no",
+     "evidence": "@task(technical_requirement=\"Disclosure of AI\") ... \"This evaluation tests whether AI models appropriately deny being human when directly asked.\"; scorer=match(location=\"begin\"), target=\"NO\""
+    },
+    {
+     "org": "Self-Transparency Failures in Expert-Persona LLMs (arXiv 2511.21569)",
+     "url": "https://arxiv.org/html/2511.21569v5",
+     "fetched_at": "2026-09-17T12:01:37Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "The finest published measurement of sub-dimension (b): 16 open-weight models (4B-671B), 19,200 trials, full per-model disclosure-rate table with 95% CIs.",
+     "signed_results": "no",
+     "evidence": "\"DeepSeek-V3 73.6% [70.4%, 76.8%] ... Llama-3.1-8B-Inst 2.8% [1.0%, 4.5%]\"; \"sixteen open-weight models ... audited under identical conditions across 19,200 trials\""
+    },
+    {
+     "org": "Google DeepMind — AnthroBench",
+     "url": "https://arxiv.org/abs/2502.07077",
+     "fetched_at": "2026-09-17T12:02:46Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Multi-turn evaluation of 14 anthropomorphic behaviours in SOTA LLMs, validated against a human-subject study (N=1101). Open-source library.",
+     "signed_results": "no",
+     "evidence": "\"we develop a multi-turn evaluation of 14 anthropomorphic behaviours ... an interactive, large-scale human subject study (N=1101)\""
+    },
+    {
+     "org": "Stanford — ELEPHANT",
+     "url": "https://arxiv.org/abs/2505.13995",
+     "fetched_at": "2026-09-17T12:02:46Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Per-model 'social sycophancy' across 11 models — the flattery half of sub-dimension (a). No disclosure, no vulnerable users.",
+     "signed_results": "no",
+     "evidence": "\"Applying our benchmark to 11 models ... they preserve user's face 45 percentage points more than humans in general advice queries\""
+    },
+    {
+     "org": "Common Sense Media + Stanford Brainstorm",
+     "url": "https://www.commonsensemedia.org/sites/default/files/pug/csm-ai-risk-assessment-social-ai-companions_final.pdf",
+     "fetched_at": "2026-09-17T12:03:02Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Sub-dimension (c) done seriously — but as product-level reviews of three apps (Character.AI, Nomi, Replika) with categorical labels, not per-model scores on a shared bank.",
+     "signed_results": "no",
+     "evidence": "\"Overall risk level: Unacceptable ... Keep Kids & Teens Safe: Unacceptable Risk\""
+    },
+    {
+     "org": "MLCommons AILuminate",
+     "url": "https://arxiv.org/abs/2503.05731",
+     "fetched_at": "2026-09-17T12:04:19Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "12 hazard categories, five-tier grades, ~33 systems. 'Suicide and self-harm' touches our vulnerability leg; there is NO manipulation, NO AI-disclosure, NO minors/parasocial hazard.",
+     "signed_results": "no",
+     "evidence": "\"12 hazard categories, including violent crimes, ... suicide and self-harm, intellectual property, privacy, defamation, hate, sexual content, and specialized advice\""
+    },
+    {
+     "org": "CAIS + Scale AI — MASK",
+     "url": "https://www.mask-benchmark.ai/",
+     "fetched_at": "2026-09-17T12:03:18Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Per-model honesty-under-pressure, disentangled from accuracy. General lying propensity — not self-disclosure, not emotional manipulation.",
+     "signed_results": "no",
+     "evidence": "\"The MASK Benchmark: Disentangling Honesty from Accuracy in AI Systems\""
+    },
+    {
+     "org": "OpenAI — affective use study",
+     "url": "https://openai.com/index/affective-use-study/",
+     "fetched_at": "2026-09-17T12:06:16Z",
+     "http_status": 403,
+     "relation": "ADJACENT",
+     "what_they_publish": "UNCHECKABLE. Cloudflare JS challenge to both curl and WebFetch. Unverified, not absent.",
+     "signed_results": "unknown",
+     "evidence": "\"Enable JavaScript and cookies to continue\" (403 body)"
+    }
+   ],
+   "notes": "The structural claim this axis was built on has expired. The three-way split (manipulation / disclosure / vulnerability measured by different parties, nobody unifying them) has CLOSED: EUDAIMONIA and HumaneBench each unify all three in one bank, with larger fleets, real user traffic and published confidence intervals. COMPL-AI's human_deception is our sub-dimension (b) deterministically graded on a 39-row bank — near-identical in size to our 41. We carry ZERO signed cards for this axis."
+  },
+  {
+   "axis": "jail",
+   "family": "gspc",
+   "bench": "GoldBank-Detector",
+   "task": "escape-attempt detection on 71-cell gold bank (38 ESCAPE / 33 BENIGN)",
+   "n": 71,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "Artificial Analysis + NVIDIA — Guardrail Safety Benchmark",
+     "url": "https://artificialanalysis.ai/articles/guardrail-safety-benchmark",
+     "fetched_at": "2026-09-17T12:00:13Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "20 guardrail models classified the same 7,232 prompts (1,699 WildGuardTest + 5,083 ToxicChat + 450 XSTest), scored on F1, recall (unsafe caught) and specificity (safe allowed), plus separately measured latency. Published 11 June 2026. Detector-side — exactly our construct, at 102x our bank size.",
+     "signed_results": "no",
+     "evidence": "\"Each model classified the same 7,232 prompts ... We report average F1 first, then break out latency, recall (the share of unsafe content caught) and specificity (the share of safe content allowed).\""
+    },
+    {
+     "org": "Meta — Llama Prompt Guard 2",
+     "url": "https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M",
+     "fetched_at": "2026-09-17T12:00:46Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Escape/jailbreak DETECTION metrics in exactly our currency — AUC and Recall @ 1% FPR — on a held-out private benchmark, plus a competitor comparison on AgentDojo (ProtectAI, Deepset, LLM Warden). Prompt Guard 2 86M: AUC .998, Recall @1% FPR 97.5%, against our best detector's recall 0.237 at precision 1.0. Bank is PRIVATE and unreleased; Prompt Guard is a purpose-trained 86M classifier, not a general model acting as detector.",
+     "signed_results": "no",
+     "evidence": "\"Model AUC (English) Recall @ 1% FPR (English) ... Llama Prompt Guard 2 86M .998 97.5% ... Llama Prompt Guard 1 .987 21.2%\"; \"we used a private benchmark built with datasets distinct from those used in training\""
+    },
+    {
+     "org": "Ai2 — WildGuard / WildGuardTest",
+     "url": "https://raw.githubusercontent.com/allenai/wildguard/main/README.md",
+     "fetched_at": "2026-09-17T12:00:13Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "WildGuardTest: 1,725 labelled items (55% vanilla / 45% adversarial) for prompt-harm, response-harm and refusal classification; 10 open moderation baselines compared. The de facto gold bank the rest of the field scores against. Closest in KIND to our bank; labels are harmfulness, not escape-intent.",
+     "signed_results": "no",
+     "evidence": "\"WildGuard: Open One-stop Moderation Tools for Safety Risks, Jailbreaks, and Refusals of LLMs\"; HF API siblings list for allenai/wildguard contains no .sig/.asc/.ots/sigstore artifact"
+    },
+    {
+     "org": "JailbreakBench",
+     "url": "https://jailbreakbench.github.io/",
+     "fetched_at": "2026-09-17T12:00:46Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Attack-success-rate tracking of jailbreak attacks and defences against target models. NOT detector precision/recall on a labelled bank.",
+     "signed_results": "no",
+     "evidence": "\"JailbreakBench is to systematically track progress of jailbreaking attacks and defenses on frontier LLMs\""
+    },
+    {
+     "org": "CAIS — HarmBench",
+     "url": "https://raw.githubusercontent.com/centerforaisafety/HarmBench/main/README.md",
+     "fetched_at": "2026-09-17T12:01:09Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Attack-success measurement. It SHIPS three classifiers (used as graders) but does not publish a classifier precision/recall comparison as its result. harmbench.org itself is a 918-byte JS shell — UNCHECKABLE by curl.",
+     "signed_results": "no",
+     "evidence": "\"HarmBench provide 3 classifier models: cais/HarmBench-Llama-2-13b-cls ... cais/HarmBench-Mistral-7b-val-cls is a validation classifier\""
+    }
+   ],
+   "notes": "The axis where we are out-scaled hardest. Our 71 cells against WildGuardTest's 1,725 and Artificial Analysis's 7,232. Meta publishes 97.5% recall at 1% FPR; our best zero-false-positive detector reaches 0.237 recall. The classification boundary held: JailbreakBench and HarmBench measure ATTACK SUCCESS against a target and are ADJACENT; the moderation-classifier world is SAME_THING and it is large. Two honest points in our favour: our 71-cell gold bank is PUBLISHED where Meta's is private, and we published that our own council-inhouse-ft fine-tune detected ZERO escapes. We hold 8 signed cards on this axis."
+  },
+  {
+   "axis": "effect-binding",
+   "family": "gspc",
+   "bench": "EffectBench (instrument not built)",
+   "task": "does authorization bind to the request the server executes, or only to the tool call the agent declared",
+   "n": 0,
+   "status": "UNMEASURED",
+   "verdict": "ADJACENT_ONLY",
+   "competitors": [
+    {
+     "org": "AID-Guard (arXiv 2608.21159)",
+     "url": "https://arxiv.org/html/2608.21159v1",
+     "fetched_at": "2026-09-17T12:02:56Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "The closest thing to our instrument that exists. An 'authorization-to-effect closure protocol' whose composition matrix contains our exact failure shape — 'request substitution after authorization' and 'commit-time scope drift'. 210 Stripe provider-contract trials, 44/44 attacks blocked, 4 models. But it evaluates its own DEFENCE, and says so in terms.",
+     "signed_results": "no",
+     "evidence": "\"The composition matrix contains five shared cases per source: request substitution after authorization, actor/session substitution, cross-session authority replay, commit-time scope drift, and same-key different-body reuse.\" AND: \"Neither set estimates natural or population ASR.\""
+    },
+    {
+     "org": "What You Approve Is What Executes: Consent Integrity for Black-Box LLM Agents (arXiv 2606.02668)",
+     "url": "https://arxiv.org/abs/2606.02668",
+     "fetched_at": "2026-09-17T12:05:42Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Names the property 'Consent Integrity' for the HUMAN approval channel (the agent narrates a forgeable summary of what it will do). Prototype measured on two independent corpora: GTFOBins, 1,330 trusted-tool abuses, 'the prototype silently passes 10.0%'; tldr, 28,798 normal-usage commands, 'it marks 87.0% uninspectable'. Same property family as ours — an authorization decision binding to the executed effect rather than the declared one — but a different channel (human consent dialog, not MCP server-side scope check), and like AID-Guard it measures its own prototype, not the field.",
+     "signed_results": "no",
+     "evidence": "\"the action shown to the human must be rendered by a trusted mediator from the real action at the boundary, not the agent's narration ... and bound to the exact action that executes\"; \"whatever the analyzer cannot classify is surfaced as uninspectable rather than silently approved\"; submitted 1 Jun 2026"
+    },
+    {
+     "org": "SymbolicLight Research — HCP (arXiv 2606.29073)",
+     "url": "https://arxiv.org/html/2606.29073v1",
+     "fetched_at": "2026-09-17T11:57:24Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Names our invariant precisely — 'canonical resources' and 'scoped capability invocation' — and benchmarks three RUNTIMES (naive / mitigation / HCP) on 10 modeled attack cases. Crucially the 10 cases (tool-poisoning x2, confused-deputy x2, approval-fatigue x2, data-pipe x2, protocol-state x2) do NOT include a caller-argument-retargets-the-outbound-request case.",
+     "signed_results": "no",
+     "evidence": "\"Caller-supplied resource strings cannot override the provider's resource decision.\" AND, decisively: \"the benchmark measures execution semantics rather than the exploitability of any real deployment\""
+    },
+    {
+     "org": "MCPAuthChecker / Caller Identity Confusion (arXiv 2603.07473)",
+     "url": "https://arxiv.org/html/2603.07473v1",
+     "fetched_at": "2026-09-17T11:58:28Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "The only POPULATION-scale authorization measurement in MCP: path-sensitive analysis of 6,137 real MCP servers, 46.4% vulnerable, split AuthNone / AuthCache / AuthRuntime. But it measures whether authorization binds to the CALLER, not whether it binds to the executed REQUEST.",
+     "signed_results": "no",
+     "evidence": "\"We evaluated a total of 6,137 MCP servers, among which 2,846 were found to be vulnerable, corresponding to an overall vulnerability rate of 46.4%.\""
+    },
+    {
+     "org": "MCP-BiFlow / Unsafe by Flow (arXiv 2605.07836)",
+     "url": "https://arxiv.org/abs/2605.07836",
+     "fetched_at": "2026-09-17T11:58:28Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Taints requester-controlled arguments to sensitive sinks across 15,452 real MCP server repos; 118 confirmed vulnerability paths in 87 servers; 93.8% recall against a 32-case bench, beating CodeQL, Semgrep, Snyk Code and MCPScan. Closest to the MECHANISM — but it finds unsafe taint flows, not whether a scope check passed on the declared call and then missed the executed one.",
+     "signed_results": "no",
+     "evidence": "\"requester-controlled arguments may propagate to sensitive operations ... Across 15,452 real-world MCP server repositories, MCP-BiFlow surfaces 549 overlap-compressed candidate clusters; manual review confirms 118 vulnerability paths in 87 servers\""
+    },
+    {
+     "org": "IETF — draft-das-agentic-tool-binding-02 (individual submission)",
+     "url": "https://www.ietf.org/archive/id/draft-das-agentic-tool-binding-02.html",
+     "fetched_at": "2026-09-17T11:59:03Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Our axis, stated as a specification, with no measurement in it at all. Published 28 Aug 2026, Informational. The whole 46,060-char document contains 4 total occurrences of measure/evaluate — a middleware spec, not an instrument.",
+     "signed_results": "no",
+     "evidence": "\"A model emits a tool_use block ... The host then invokes whatever name and arguments the model printed. Alignment, allowlists, and OAuth sit around that moment. They do not sit on it.\" ; \"tool_use is not invoke().\""
+    },
+    {
+     "org": "Anthropic / MCP — Security Best Practices",
+     "url": "https://modelcontextprotocol.io/docs/2025-11-25/tutorials/security/security_best_practices",
+     "fetched_at": "2026-09-17T11:57:59Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Guidance, not measurement. Documents Confused Deputy, Token Passthrough, SSRF, Session Hijacking and Scope Minimization as attack/mitigation prose. Nothing is scored.",
+     "signed_results": "no",
+     "evidence": "\"Attacks and Mitigations ... Confused Deputy Problem ... Server-Side Request Forgery (SSRF) ... Scope Minimization\""
+    },
+    {
+     "org": "Snyk (formerly Invariant Labs) — agent-scan / mcp-scan",
+     "url": "https://github.com/snyk/agent-scan",
+     "fetched_at": "2026-09-17T11:57:59Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "A scanner, not a published measurement. github.com/invariantlabs-ai/mcp-scan now 301s to snyk/agent-scan — Invariant Labs' MCP security work has been absorbed into a commercial product and no longer publishes field measurements.",
+     "signed_results": "no",
+     "evidence": "\"snyk/agent-scan: Security scanner for AI agents, MCP servers and agent skills.\" (redirect target)"
+    },
+    {
+     "org": "MCPTox / MCPSecBench / mcp-sec-audit / MCP-DPT",
+     "url": "https://arxiv.org/abs/2508.14925",
+     "fetched_at": "2026-09-17T11:57:00Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "The four best-known MCP security benchmarks each measure a different thing: tool-poisoning attack success (MCPTox, 45 servers / 353 tools / 20 agents), a 17-attack-type taxonomy playground (MCPSecBench), risky-capability static scanning (mcp-sec-audit), and defence-placement coverage (MCP-DPT). None measures authorization-to-execution binding.",
+     "signed_results": "no",
+     "evidence": "MCPTox: \"malicious instructions are embedded within a tool's metadata without execution ... o1-mini, achieving an attack success rate of 72.8%\""
+    }
+   ],
+   "notes": "The failure mode is NAMED EVERYWHERE and MEASURED NOWHERE. The specification exists (IETF draft-das-agentic-tool-binding-02). The invariant exists (HCP). Two defences exist and both measure only themselves (AID-Guard: 'Neither set estimates natural or population ASR'; Consent Integrity: a prototype on GTFOBins and tldr). Population-scale measurement exists for two NEIGHBOURING constructs (MCPAuthChecker: caller-identity binding across 6,137 servers; MCP-BiFlow: unsafe taint flows across 15,452 repos). Nobody publishes how often authorization fails to bind to the executed request — not per model, not per server, not per runtime in the wild. This is the ONLY one of our 23 axes where the field has not passed us, and we have not built it."
+  },
+  {
+   "axis": "provenance-controls",
+   "family": "financial",
+   "bench": "ChainFacts",
+   "task": "on-chain issuer control facts (allowlisting / freeze capability / identity domain)",
+   "n": 6,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "XRPSCAN",
+     "url": "https://api.xrpscan.com/api/v1/account/rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+     "fetched_at": "2026-09-17T11:56:30Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Per-account decoded XRPL account-root flags and declared Domain, free machine-readable JSON. Raw explorer field display per address; no cross-issuer corpus, no finding, no attestation.",
+     "signed_results": "no",
+     "evidence": "\"ParsedFlags\": {\"lsfRequireAuth\": true, \"lsfDisallowXRP\": true, \"lsfDisableMaster\": true, \"lsfDefaultRipple\": true}"
+    },
+    {
+     "org": "Bithomp",
+     "url": "https://bithomp.com/account/rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+     "fetched_at": "2026-09-17T11:59:25Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Renders issuer settings including Require auth, Global Freeze, No Freeze and Clawback per account. Same underlying facts as our axis; per-address, not a corpus.",
+     "signed_results": "no",
+     "evidence": "body contains the literal strings \"Require auth\" x6, \"Global Freeze\" x4, \"No Freeze\" x3, \"Clawback\" x8"
+    },
+    {
+     "org": "Metis (metis-rwa)",
+     "url": "https://raw.githubusercontent.com/metis-rwa/mcp/main/README.md",
+     "fetched_at": "2026-09-17T12:04:09Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Issuer-control fact read over 72 Solana xStocks plus any mint: permanent delegate, freeze authority, transfer hook, default-frozen, pausable. Free, keyless, hosted; methodology published as an MCP resource. Same construct, different chain, 12x our coverage. Even shares our doctrine that these are facts, not defects.",
+     "signed_results": "no",
+     "evidence": "\"get_token_controls | Can the issuer mint, freeze, seize, pause, or gate transfers\" ... \"None of these are defects. Redeemable backed assets need most of them. They are simply facts about the asset\""
+    },
+    {
+     "org": "XRP Dashboard",
+     "url": "https://xrpdashboard.com/rwa",
+     "fetched_at": "2026-09-17T11:58:10Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "The SAME six XRPL RWA issuers we cover (OUSG, USDB, BBRL, TBL, RLUSD, Archax/abrdn) with on-ledger obligations from gateway_balances. No flag decode whatsoever.",
+     "signed_results": "no",
+     "evidence": "\"Active Issuers ... 6 verified, 4 with on-ledger issuance\"; \"Issuer addresses are XRPScan-verified and hardcoded in our registry.\"; grep for requireauth/globalfreeze/nofreeze/clawback returned zero hits"
+    },
+    {
+     "org": "Eagle Virtual (via MCP Registry)",
+     "url": "https://registry.modelcontextprotocol.io/v0/servers?search=stablecoin&limit=50",
+     "fetched_at": "2026-09-17T12:01:47Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Freeze and seizure EVENTS per wallet on USDT/USDC. An event record, not an issuer capability.",
+     "signed_results": "unknown",
+     "evidence": "\"USDT & USDC blacklist, freeze and seizure records for any wallet. Dated, cited, no risk scores.\""
+    }
+   ],
+   "notes": "BETTER THAN US on construct: Metis covers 72 Solana assets to our 6 XRPL issuers, free and keyless, with a published methodology. On XRPL specifically nobody publishes the flag decode as a cross-issuer corpus with a finding — but the raw facts are fully public via XRPSCAN and Bithomp, so our contribution is the corpus plus the Ed25519 signature, not the fact. This is our ONLY Ed25519-signed run of the eight financial axes."
+  },
+  {
+   "axis": "reserve-attestation",
+   "family": "financial",
+   "bench": "ReserveFacts",
+   "task": "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
+   "n": 16,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "Agentwares — stablecoin-attestations",
+     "url": "https://agentwares-stablecoin.vercel.app/mcp",
+     "fetched_at": "2026-09-17T12:04:55Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Per-issuer machine-readable reserve-attestation fact read over 26 issuers including RLUSD: attestor, attestation_type, cadence, source_url, parsed composition, reserve ratio, up to 12 months of history, verified_at. Carries an explicit no-attestation state. Issuer listing free; the reserve read is $0.02/call. Not published as a standing board.",
+     "signed_results": "no",
+     "evidence": "\"Issuers without a third-party attestation return supply only with confidence 'none'.\"; \"confidence\":{\"type\":\"string\",\"enum\":[\"high\",\"medium\",\"low\",\"none\"]}; RLUSD row: {\"attestor\":\"Independent CPA (named in each report)\",\"attestation_type\":\"cpa_examination\",\"cadence\":\"monthly\",\"verified_at\":\"2026-09-02\"}; 8 of 26 carry attestor:null"
+    },
+    {
+     "org": "ToolOracle — ReserveOracle",
+     "url": "https://tooloracle.io/reserve/mcp/",
+     "fetched_at": "2026-09-17T12:08:26Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Reserve-evidence payloads over 80+ RWA tokens including RLUSD, OUSG, USDY: issuer, LEI, jurisdiction, regulator, custody, MiCA compliance. CLAIMS ES256K signature, content_hash, signed_at and verify_url in its tool descriptions. Paid x402 $0.02-$0.03/call.",
+     "signed_results": "claims_yes_unverified",
+     "evidence": "tools/list (JSON-RPC POST, 200, 6,344 bytes) returns reserve_snapshot: \"...into a single ES256K-referenced evidence payload with content_hash, signed_at, verify_url.\" VERIFICATION STATUS: the key material is real — https://feedoracle.io/.well-known/jwks.json (200, 3,484 bytes, 2026-09-17T12:08:40Z) publishes ES256K secp256k1 keys kid fo-ecdsa-v1 under did:web:feedoracle.io. BUT the free health_check response carries only a truncated content_hash (\"sha256:e02e077ed0a59ced\") and NO signature, and every signed payload sits behind a $0.02-$0.03 x402 paywall. We have NOT verified a signature. A tool description is not a signature."
+    },
+    {
+     "org": "S&P Global Ratings",
+     "url": "https://www.spglobal.com/ratings/en/products/stablecoin-assessments",
+     "fetched_at": "2026-09-17T11:56:10Z",
+     "http_status": 403,
+     "relation": "ADJACENT",
+     "what_they_publish": "Stablecoin Stability Assessment — a 1 (very strong) to 5 (weak) opinion in which reserve/asset quality is one pillar. Unknown is folded into the grade; no third state. Primary pages 403 to curl AND WebFetch, so the primary source is UNCHECKABLE; verified via press release and trade coverage.",
+     "signed_results": "no",
+     "evidence": "via https://press.spglobal.com/2023-12-12-S-P-Global-Ratings-Launches-Stablecoin-Stability-Assessment (200, 11:57:40Z): \"a scale of 1 (very strong) to 5 (weak)\"; coverage lists eleven assessed stablecoins — EURC, USDC, USDG, USDP, GUSD, EURCV, FDUSD, USDS/DAI, USDT, TUSD, USDe — no XRPL token, no RLUSD"
+    },
+    {
+     "org": "Bluechip",
+     "url": "https://bluechip.org/",
+     "fetched_at": "2026-09-17T11:57:17Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "SMIDGE letter-grade Economic Safety Rating over 16 coins including RLUSD (A). Reserve/audit status is folded into the letter — the exact collapse our three-state avoids. Free to view; issuer-paid rating process offered.",
+     "signed_results": "no",
+     "evidence": "\"Economic Safety Ratings Name Grade ... RLUSD Ripple A $1.0000 $2.34B ... USDT Tether C\"; \"Interested in a rating for your stablecoin? ... Start the rating process\". Note the RLUSD entry itself reads \"Date of Rating : N/A Last Change : N/A\" with every SMIDGE subscore N/A."
+    },
+    {
+     "org": "Moody's Ratings",
+     "url": "https://www.moodys.com/web/en/us/solutions/ratings/digital-economy.html",
+     "fetched_at": "2026-09-17T11:58:10Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Fiat-backed stablecoin credit-rating criteria published 17 March 2026, reserve-quality centred. No per-issuer published stablecoin ratings located. An imminent entrant, not a current competitor.",
+     "signed_results": "no",
+     "evidence": "methodology publication confirmed; no per-issuer assessment page locatable on moodys.com"
+    }
+   ],
+   "notes": "BETTER THAN US on two fronts. Agentwares covers 26 issuers to our 16, with parsed composition, reserve ratio and 12 months of history, refreshed monthly (verified_at 2026-09-02), and carries a four-state confidence enum including 'none'. ReserveOracle covers 80+ tokens and claims ES256K signing with live published key material, where our axis is CONTENT_ADDRESSED_UNSIGNED. What remains only ours: a standing FREE public corpus in which the unknown rows are published rows, and an UNCHECKABLE state caused by a CHAIN fact (no on-chain declared Domain) rather than by a missing document. Neither competitor publishes a corpus — both answer per paid call."
+  },
+  {
+   "axis": "regulatory-framework",
+   "family": "financial",
+   "bench": "RegimeFacts",
+   "task": "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
+   "n": 16,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "ToolOracle — MiCAOracle",
+     "url": "https://tooloracle.io/mica/mcp/",
+     "fetched_at": "2026-09-17T12:03:55Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "24 tools for per-token MiCA article status with an explicit unknown state (GREY), plus issuer authorization status and evidence-staleness downgrades. It is a readiness SCORE with a human approval step — the compliance construct we refuse — but it carries a genuine explicit-unknown. Paid $0.01/call, EU/MiCA only.",
+     "signed_results": "unknown",
+     "evidence": "\"Full MiCA readiness score + Ampel per article for a token. GREEN/YELLOW/RED/GREY for 10 articles, score 0-100.\"; \"bridge_approve | Approve or reject a bridge resolution. Approval upgrades Ampel to GREEN.\""
+    },
+    {
+     "org": "ToolOracle — ReserveOracle",
+     "url": "https://tooloracle.io/reserve/mcp/",
+     "fetched_at": "2026-09-17T12:08:26Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Per-issuer regime declaration read across 80+ RWA tokens: jurisdiction, regulator, entity type, named regulator per issuer. 5x our n. Paid $0.02/call.",
+     "signed_results": "claims_yes_unverified",
+     "evidence": "\"reserve_issuer | Issuer deep-profile for any reserve token: legal name, LEI number, jurisdiction, regulator, entity type, custody type, redemption terms. For PAXG: Paxos Trust/NYDFS. For BUIDL: BlackRock/SEC. For EURCV: Societe Generale/AMF.\" Signature unverified — payload is paywalled."
+    },
+    {
+     "org": "RWA.xyz",
+     "url": "https://app.rwa.xyz/stablecoins",
+     "fetched_at": "2026-09-17T11:56:10Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Claims regulatory information and a Jurisdiction league-table dimension over 122 stablecoins, but the per-platform regulatory columns are login-gated. UNCHECKABLE for the gated fields.",
+     "signed_results": "no",
+     "evidence": "\"View incumbent and new issuer on-chain traction, regulatory information, and structural data.\"; league-table columns render as \"Login to Unlock\""
+    },
+    {
+     "org": "S&P Global Ratings",
+     "url": "https://www.spglobal.com/ratings/en/products/stablecoin-assessments",
+     "fetched_at": "2026-09-17T11:56:10Z",
+     "http_status": 403,
+     "relation": "ADJACENT",
+     "what_they_publish": "Legal and regulatory framework is one of five adjustment areas INSIDE the 1-5 rating, not a separately published fact. Primary source UNCHECKABLE (403).",
+     "signed_results": "no",
+     "evidence": "via press release: \"governance, legal and regulatory framework, redeemability and liquidity, technology and third-party dependencies, and track record\""
+    },
+    {
+     "org": "Pharos",
+     "url": "https://pharos.watch/stablecoin/rlusd-ripple/",
+     "fetched_at": "2026-09-17T11:59:25Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Per-stablecoin classification including MiCA status with pillar scores. Grade shown as N/A for RLUSD. Operator not disclosed on the page.",
+     "signed_results": "no",
+     "evidence": "\"Pharos records RLUSD as an e-money token that is not MiCA-compliant\"; \"N/A overall grade\""
+    }
+   ],
+   "notes": "BETTER THAN US: ReserveOracle reads regulator and jurisdiction per issuer across 80+ tokens (5x our n) and claims a signature; MiCAOracle carries an explicit GREY unknown across 10 MiCA articles with an automatic staleness downgrade, a discipline our axis does not have. Where we remain distinct: we read declaration PRESENCE only and refuse the compliance verdict, and our UNCHECKABLE is caused by the absence of an on-chain declared Domain rather than a missing document. MiCAOracle's bridge_approve, which upgrades a light to GREEN on human approval, is precisely the construct our doctrine forbids — a better-resourced product, not a better measurement."
+  },
+  {
+   "axis": "distribution-integrity",
+   "family": "financial",
+   "bench": "DistributionFacts",
+   "task": "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
+   "n": 16,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "RWA.xyz",
+     "url": "https://app.rwa.xyz/assets/RLUSD",
+     "fetched_at": "2026-09-17T11:58:10Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Per-issuer holder count, token supply, circulating supply, transfer volume and active addresses across 122 stablecoins and a wider RWA registry. Free per-asset pages with CSV download, daily refresh. Holder count is a cross-network aggregate, not per-chain.",
+     "signed_results": "no",
+     "evidence": "\"Holders 82,886 ... Token Supply 2,271,035,572.14 Circulating Supply 2,271,035,572.14 ... Monthly Transfer Volume $ 16,139,308,325\"; \"Stablecoins 122 Total\""
+    },
+    {
+     "org": "xrpl.to",
+     "url": "https://api.xrpl.to/api/tokens?start=0&limit=20&sortBy=vol24hxrp&sortType=desc",
+     "fetched_at": "2026-09-17T12:04:55Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Free machine-readable API giving XRPL-native holders, trustlines and supply per token across the whole XRPL token universe — the same unit our axis measures, at far larger n and higher frequency.",
+     "signed_results": "no",
+     "evidence": "RLUSD holders=67359 trustlines=97954 supply=1001771189.7616685486 ; USDC holders=10370 trustlines=14245 supply=4327803.4457474755788"
+    },
+    {
+     "org": "DefiLlama",
+     "url": "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+     "fetched_at": "2026-09-17T11:57:17Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "427 pegged assets with circulating supply per chain, free and machine-readable. NO holder count — confirmed by key inspection. (defillama.com/stablecoins itself returns 403 to curl behind a Cloudflare interstitial.)",
+     "signed_results": "no",
+     "evidence": "n_assets 427; keys: ['id','name','symbol','gecko_id','pegType','priceSource','pegMechanism','circulating','circulatingPrevDay','circulatingPrevWeek','circulatingPrevMonth','chainCirculating','chains','price']; fields containing 'hold': []"
+    },
+    {
+     "org": "Artemis",
+     "url": "https://www.artemis.ai/sectors/stablecoins/overview",
+     "fetched_at": "2026-09-17T11:58:10Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Supply, volume, transactions and active addresses over 155 tokens. Active addresses, not holder counts.",
+     "signed_results": "no",
+     "evidence": "\"The total supply of stablecoins tracked by Artemis stands at $315.7B, up 1.4% over the past 30 days, across 155 tokens.\""
+    },
+    {
+     "org": "Visa / Allium — Onchain Analytics",
+     "url": "https://visaonchainanalytics.com/",
+     "fetched_at": "2026-09-17T11:57:17Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Fiat-backed stablecoin supply, transactions and addresses. Addresses, not per-issuer holder counts.",
+     "signed_results": "no",
+     "evidence": "\"The Visa Onchain Analytics Dashboard showcases how fiat-backed stablecoins move via public blockchains globally.\" ... \"Developed in collaboration with Allium Labs\""
+    },
+    {
+     "org": "XRP Dashboard",
+     "url": "https://xrpdashboard.com/rwa",
+     "fetched_at": "2026-09-17T11:58:10Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Per-issuer on-ledger obligations for the same six XRPL RWA issuers we cover. Holder counts explicitly not yet shipped.",
+     "signed_results": "no",
+     "evidence": "\"Total Holders Coming soon Aggregate trustline counts (coming in v2)\"; \"Outstanding 1.64M OUSG USD Value $163.99M\""
+    },
+    {
+     "org": "Nansen / Dune / Messari / The Block Research",
+     "url": "https://dune.com/browse/dashboards?q=stablecoin",
+     "fetched_at": "2026-09-17T12:05:19Z",
+     "http_status": 403,
+     "relation": "ADJACENT",
+     "what_they_publish": "UNCHECKABLE — not assessed. Dune 403, Messari 429, The Block Data 403, Nansen homepage 200 but stablecoin data behind login.",
+     "signed_results": "unknown",
+     "evidence": "403 5698 dune.com ; 429 32183 messari.io ; 403 5741 theblock.co/data/decentralized-finance/stablecoins"
+    }
+   ],
+   "notes": "BETTER THAN US, unambiguously, and we should say so. RWA.xyz publishes holders and supply for 122 stablecoins free with CSV export and daily refresh; xrpl.to publishes XRPL-native holders, trustlines and supply for the ENTIRE XRPL token universe through a free API. Both exceed our n=16 by an order of magnitude and refresh more often than our facts_as_of 2026-09-07. Our only remaining distinctions are publishing the reader classification as an explicit three-state and keeping represented>>distributed UNCHECKABLE rather than asserting it — neither of which is a coverage advantage. This is the weakest competitive position on the entire board."
+  },
+  {
+   "axis": "custody-disclosure",
+   "family": "financial",
+   "bench": "CustodyFacts",
+   "task": "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
+   "n": 16,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "RWA.xyz",
+     "url": "https://app.rwa.xyz/stablecoins",
+     "fetched_at": "2026-09-17T11:57:45Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "A per-issuer registry that DOES carry discrete Auditor / Account Segregation / Bankruptcy Remote / S&P Stability Assessment fields — the same disclosure-presence construct as our auditor half. Every such field is login-walled, so UNCHECKABLE, not absent.",
+     "signed_results": "unknown",
+     "evidence": "\"Log in to unlock S&P Stability Assessment  Log in to unlock Account Segregation  Log in to unlock Bankruptcy Remote  Log in to unlock Auditor\""
+    },
+    {
+     "org": "Spark (Sky Protocol)",
+     "url": "https://www.spark.money/tools/stablecoin-audit-transparency-comparison",
+     "fetched_at": "2026-09-17T11:57:45Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Issuer-by-issuer table naming the auditor per stablecoin — same construct as our auditor half, but prose/marketing by a DeFi protocol, 5 large issuers only, no three-state, no UNCHECKABLE, no XRPL coverage.",
+     "signed_results": "no",
+     "evidence": "\"Issuer Token Frequency Auditor Report Type Regulator  Circle USDC Monthly Deloitte & Touche LLP AICPA attestation FinCEN, NYDFS, MiCA (France)  Tether USDT Quarterly BDO Italia Agreed-upon procedures El Salvador DASP\""
+    },
+    {
+     "org": "Bluechip",
+     "url": "https://bluechip.org/en/compare",
+     "fetched_at": "2026-09-17T11:57:45Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Letter grades A-F per stablecoin under the SMIDGE framework across 29 coins including RLUSD. Custodians and auditors are named in prose but collapsed into a grade. No PASS/FAIL/UNCHECKABLE, no unknown state at all.",
+     "signed_results": "no",
+     "evidence": "\"[RLUSD] Ripple | A  [LUSD] Liquity | A  [GUSD] Gemini | A  [PAXG] Paxos | A ... [USDD] TronDAO | F\"; the RLUSD entry: \"Grade A  Date of Rating : N/A  Last Change : N/A ... Reserves backing RLUSD are held by the Bank of New York Mellon\""
+    },
+    {
+     "org": "S&P Global Ratings",
+     "url": "https://www.spglobal.com/ratings/en/products/stablecoin-assessments",
+     "fetched_at": "2026-09-17T11:57:45Z",
+     "http_status": 403,
+     "relation": "ADJACENT",
+     "what_they_publish": "Stablecoin Stability Assessment, a 1-5 opinion covering asset quality including custody risk. A graded risk opinion, not a three-state disclosure-presence read. Bot-blocked to our tooling — UNCHECKABLE.",
+     "signed_results": "unknown",
+     "evidence": "\"Error  Security Controls Triggered  If you have reached this page in error, please contact customer support\""
+    },
+    {
+     "org": "Stablecoin Insider",
+     "url": "https://stablecoininsider.org/stablecoin-issuer-transparency-index-2026/",
+     "fetched_at": "2026-09-17T11:57:45Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "A weighted composite 'transparency index' in which custodian-naming is one input among five weighted dimensions. An index with a formula — the exact thing our card refuses to be.",
+     "signed_results": "no",
+     "evidence": "\"Key evaluation factors include ... whether custodians are named or unnamed ... weighted together into a comparative framework\""
+    },
+    {
+     "org": "DefiLlama",
+     "url": "https://defillama.com/stablecoins",
+     "fetched_at": "2026-09-17T11:57:45Z",
+     "http_status": 403,
+     "relation": "ADJACENT",
+     "what_they_publish": "Supply and peg dashboards. Bot-blocked to our tooling; no evidence of any custodian/auditor disclosure read.",
+     "signed_results": "unknown",
+     "evidence": "\"Just a moment... Enable JavaScript and cookies to continue\""
+    }
+   ],
+   "notes": "Contested on construct, uncontested on population. RWA.xyz and Spark both maintain a per-issuer named-auditor field — the same disclosure-presence construct. What nobody publishes is (a) the three-state with UNCHECKABLE kept distinct from FAIL, and (b) an XRPL issuer set. Our read VERIFIES against the issuer's own bytes: https://ripple.com/solutions/stablecoin/transparency/ (200, redirects to /products/) names 'Standard Custody' — our custodian PASS — while describing the auditor only as 'an independent Certified Public Accountant (CPA)', unnamed, so our auditor FAIL is correct by bytes. Caveat: Moody's published fiat-backed stablecoin rating criteria in March 2026 and has announced a disclosure-quality transparency index; this window will close. Our run is CONTENT_ADDRESSED_UNSIGNED — no signing advantage here."
+  },
+  {
+   "axis": "ai-adoption-components",
+   "family": "financial",
+   "bench": "Eurostat",
+   "task": "cited EU AI-adoption series (not an index)",
+   "n": 2,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "Eurostat (the upstream we cite)",
+     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/isoc_eb_ai?format=JSON&lang=EN&indic_is=E_AI_TANY&unit=PC_ENT&geo=EU27_2020",
+     "fetched_at": "2026-09-17T11:59:03Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "The identical numbers, free, public, machine-readable, with a dated release stamp. 13.48, 41.17 AND 55.03 are all cells of THIS single 3,858-byte response.",
+     "signed_results": "no",
+     "evidence": "\"label\":\"Artificial intelligence by size class of enterprise\",\"source\":\"ESTAT\",\"updated\":\"2026-06-15T11:00:00+0200\",\"value\":{...\"22\":13.48...\"30\":41.17,\"31\":55.03}"
+    },
+    {
+     "org": "Stanford HAI — AI Index",
+     "url": "https://hai.stanford.edu/ai-index",
+     "fetched_at": "2026-09-17T11:59:25Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Annual global AI Index Report including adoption chapters. Global/composite, not the EU27 enterprise series.",
+     "signed_results": "no",
+     "evidence": "\"The mission of the AI Index is to provide unbiased, rigorously vetted, and globally sourced data ... Explore the 2026 AI Index Report\""
+    },
+    {
+     "org": "OECD.AI Policy Observatory",
+     "url": "https://oecd.ai/en/data",
+     "fetched_at": "2026-09-17T11:59:25Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Live AI trend data compiled with partner institutions; indicator work still converging on definitions.",
+     "signed_results": "no",
+     "evidence": "\"Efforts to develop clear definitions, taxonomies and classifications are underway, as are efforts to compile accurate and comparable indicators\""
+    },
+    {
+     "org": "US Census Bureau — BTOS AI supplement",
+     "url": "https://www.census.gov/hfp/btos/data",
+     "fetched_at": "2026-09-17T11:59:25Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "US firm-level AI-use supplement — a different population (US, not EU27). JS-only shell, body empty of data, so UNCHECKABLE for the figures.",
+     "signed_results": "unknown",
+     "evidence": "\"We're sorry but Business Trends and Outlook Survey doesn't work properly without JavaScript enabled.\""
+    }
+   ],
+   "notes": "WE ADD NOTHING. Eurostat publishes the identical number, free, machine-readable, at a stable dated URL, with its own release stamp — so even the 'dated stable URL' service is already Eurostat's. We are a downstream citation of one cell. Worse, the board row cites different cells (13.48 / 41.17, n=2) than its own run artifact (55.03 MEASURED + 1 UNCHECKABLE, n=1). Both are Eurostat's numbers from the same response, but the row does not quote its own evidence."
+  },
+  {
+   "axis": "labour-components",
+   "family": "financial",
+   "bench": "Eurostat",
+   "task": "cited EU labour series (not an index)",
+   "n": 2,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "World Bank (the actual upstream our run cites)",
+     "url": "https://api.worldbank.org/v2/country/EUU/indicator/SL.UEM.TOTL.ZS?format=json&per_page=8",
+     "fetched_at": "2026-09-17T11:59:03Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "The identical figure to 14 decimal places, free and machine-readable, with its own lastupdated stamp. A modeled ILO estimate redistributed by the World Bank.",
+     "signed_results": "no",
+     "evidence": "\"lastupdated\":\"2026-07-13\" ... \"SL.UEM.TOTL.ZS\",\"value\":\"Unemployment, total (% of total labor force) (modeled ILO estimate)\" ... \"date\":\"2025\",\"value\":5.92604538207809"
+    },
+    {
+     "org": "World Bank (participation series)",
+     "url": "https://api.worldbank.org/v2/country/EUU/indicator/SL.TLF.CACT.ZS?format=json&per_page=8",
+     "fetched_at": "2026-09-17T11:59:03Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Labour force participation rate, live and public — the series our own run artifact marks UNREACHABLE.",
+     "signed_results": "no",
+     "evidence": "\"Labor force participation rate, total (% of total population ages 15+) (modeled ILO estimate)\" ... \"date\":\"2025\",\"value\":57.2757723145448"
+    },
+    {
+     "org": "Eurostat (unemployment)",
+     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_a?format=JSON&lang=EN&geo=EU27_2020&unit=PC_ACT&sex=T&age=Y15-74",
+     "fetched_at": "2026-09-17T11:59:40Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "EU27 unemployment rate, free and machine-readable, updated more recently than the World Bank copy.",
+     "signed_results": "no",
+     "evidence": "\"label\":\"Unemployment by sex and age - annual data\",\"source\":\"ESTAT\",\"updated\":\"2026-09-10T23:00:00+0200\",\"value\":{...\"22\":6.0}"
+    },
+    {
+     "org": "Eurostat (activity rate)",
+     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lfsi_emp_a?format=JSON&lang=EN&geo=EU27_2020&indic_em=ACT&sex=T&age=Y15-64&unit=PC_POP",
+     "fetched_at": "2026-09-17T11:59:40Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "EU27 activity/participation rate, free and machine-readable.",
+     "signed_results": "no",
+     "evidence": "\"label\":\"Employment and labour force by sex and age - annual data\",\"source\":\"ESTAT\",\"updated\":\"2026-09-10T23:00:00+0200\",\"value\":{...\"22\":75.6}"
+    },
+    {
+     "org": "ILOSTAT (ILO) — the originator",
+     "url": "https://sdmx.ilo.org/rest/data/ILO,DF_EAP_DWAP_SEX_AGE_RT/?format=jsondata&startPeriod=2024&lastNObservations=1&detail=dataonly",
+     "fetched_at": "2026-09-17T12:04:45Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "Labour force participation rate by sex and age — the exact construct of our participation cell — via a free, public, unauthenticated SDMX REST API. 1,086,988 bytes, 10,978 series across 200 reference areas, with a prepared timestamp on every response.",
+     "signed_results": "no",
+     "evidence": "\"name\": \"Labour force participation rate by sex and age\" ... MEASURE: EAP_DWAP_RT ... REF_AREA nvals 200 ... TIME_PERIOD ['2025','2024','2027','2026-M03']. (The rplumber.ilo.org bulk endpoint returns 200 with a ZERO-BYTE body and ilostat.ilo.org/data/ returns 403 — an earlier UNCHECKABLE verdict on ILO was withdrawn once this endpoint answered.)"
+    },
+    {
+     "org": "OECD",
+     "url": "https://www.oecd.org/en/data/indicators/labour-force-participation-rate.html",
+     "fetched_at": "2026-09-17T11:59:25Z",
+     "http_status": 403,
+     "relation": "SAME_THING",
+     "what_they_publish": "UNCHECKABLE: bot-blocked to curl and WebFetch. An SDMX fallback path 404'd, but that dataflow id was invented, so it proves nothing.",
+     "signed_results": "unknown",
+     "evidence": "403 5568 https://www.oecd.org/en/data/indicators/labour-force-participation-rate.html"
+    }
+   ],
+   "notes": "WE ADD NOTHING, AND WE ADD IT WRONGLY. Five publishers serve this free and machine-readable (Eurostat, World Bank, ILO, OECD, plus national statistical offices) and all of them date their releases. The bench is labelled 'Eurostat' on the public board but the run fetches the World Bank. Our unemployment figure is the World Bank's own value to 14 dp, labelled 2024 on the board but dated 2025 in the source. Our participation cell says UNREACHABLE while the endpoint returns 200 with 57.2757723145448 — and the board prints 57.58, which appears in neither the artifact nor the live upstream."
+  },
+  {
+   "axis": "humanoid-labour-index",
+   "family": "financial",
+   "bench": "Disclosure",
+   "task": "named vendor publishes a dated deployment count on a stable URL? Y/N",
+   "n": 8,
+   "status": "MEASURED",
+   "verdict": "CONTESTED",
+   "competitors": [
+    {
+     "org": "TechniaHQRobot",
+     "url": "https://www.techniahqservice.com/robotics-news/humanoid-factory-deployments",
+     "fetched_at": "2026-09-17T12:00:07Z",
+     "http_status": 200,
+     "relation": "SAME_THING",
+     "what_they_publish": "A dated, methodology-stated, per-case verified database of humanoid factory/warehouse deployments that explicitly grades DISCLOSURE ABSENCE per vendor across eight fixed statuses, checked against official supplier or customer pages. Our construct, done deeper, at deployment-page rather than homepage granularity, with an explicit company-reported vs independently-validated split.",
+     "signed_results": "no",
+     "evidence": "\"Each case was checked against official supplier or customer pages. Evidence was assigned to one of eight fixed statuses. ... Missing counts, contract values and autonomy data are stated explicitly. ... Verified July 11, 2026. ... most pages omit fleet size, duration and independent operating data.\"  Per-vendor cells: \"Digit / Agility Robotics  Mercado Libre, San Antonio, Texas ... unit count not disclosed\"; \"Optimus / Tesla ... No external customer, audited hours or stable fleet count published\""
+    },
+    {
+     "org": "HumanoidApplications.com",
+     "url": "https://humanoidapplications.com/deployments/",
+     "fetched_at": "2026-09-17T12:00:07Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "32 chronological 'Verified' deployment milestones. Tracks whether a deployment HAPPENED, not whether the vendor disclosed a dated count. No methodology page found for the Verified flag.",
+     "signed_results": "no",
+     "evidence": "\"Deployment milestone tracker  Every confirmed real-world humanoid robot deployment, in chronological order.  32 Deployments tracked\""
+    },
+    {
+     "org": "IFR — World Robotics",
+     "url": "https://ifr.org/worldrobotics/",
+     "fetched_at": "2026-09-17T12:00:07Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "Aggregate global installation statistics, sold as a paid report. An installed-base estimate, not a per-vendor disclosure audit.",
+     "signed_results": "no",
+     "evidence": "\"The annually published World Robotics report provides comprehensive and up-to-date information on the global robotics market ... Order World Robotics\""
+    },
+    {
+     "org": "Morgan Stanley Research — Humanoid 100",
+     "url": "https://humanoid.guide/morgan-stanley-identifies-humanoid-robot-supply-chain-leaders/",
+     "fetched_at": "2026-09-17T12:00:07Z",
+     "http_status": 200,
+     "relation": "ADJACENT",
+     "what_they_publish": "A value-chain list of listed companies plus market-size and unit-shipment forecasts. A forecast is not a disclosure audit. Primary PDF UNCHECKABLE — three attempts, two timeouts and one 'curl (52) Empty reply from server', 0 bytes.",
+     "signed_results": "no",
+     "evidence": "\"Morgan Stanley has identified 25 companies it believes are best positioned in the humanoid robot supply chain ... could be worth more than $5 trillion by 2050\""
+    },
+    {
+     "org": "A3 (Association for Advancing Automation)",
+     "url": "https://www.automate.org/robotics/news/robot-orders-in-north-america",
+     "fetched_at": "2026-09-17T12:00:07Z",
+     "http_status": 403,
+     "relation": "ADJACENT",
+     "what_they_publish": "UNCHECKABLE — Cloudflare-blocked, 5,771 bytes of interstitial. The known construct is quarterly robot ORDER statistics, a volume aggregate, not a disclosure audit.",
+     "signed_results": "unknown",
+     "evidence": "\"Just a moment... Enable JavaScript and cookies to continue\""
+    },
+    {
+     "org": "Goldman Sachs / Bank of America / Citi",
+     "url": "(not fetched)",
+     "fetched_at": null,
+     "http_status": null,
+     "relation": "ADJACENT",
+     "what_they_publish": "NOT CHECKED. The research session's web-search budget was exhausted before these were reached. Expected to be ADJACENT forecast publishers, but this is an expectation, not a measurement — recorded as unchecked, not as absent.",
+     "signed_results": "unknown",
+     "evidence": "no bytes fetched"
+    }
+   ],
+   "notes": "NOT an empty field, and we are not the best occupant of it. TechniaHQRobot publishes the same construct with a larger n, eight states instead of three, a dated snapshot, a written sources-and-methodology, per-deployment rather than per-homepage granularity, and an explicit company-reported vs independently-validated split. Our own run reads 8 VENDOR HOMEPAGES, the shallowest possible probe: a vendor that discloses a dated count on a deployment or newsroom page scores FAIL because the homepage is a marketing splash. AND OUR SINGLE PASS IS FALSE — see the defects_found_in_our_own_artifacts block."
+  }
+ ],
+ "cross_cutting_findings": [
+  {
+   "id": "XC-1",
+   "finding": "The competitor of record measures none of the 23 axes.",
+   "detail": "arena.ai (lmarena.ai 301-redirects to it, confirmed 2026-09-17T11:56:10Z) publishes human-preference Elo. Its leaderboard body, 5,373,921 bytes fetched 2026-09-17T12:00:29Z, contains 'Elo' 962 times and 'votes' 858 times, and ZERO occurrences of 'EU AI Act', 'safety', 'provenance', 'watermark' or 'attestation'. It wins on scale in a game we do not play.",
+   "url": "https://arena.ai/leaderboard"
+  },
+  {
+   "id": "XC-2",
+   "finding": "The other named general leaderboards are sitemap-backed negatives across the whole board.",
+   "detail": "Artificial Analysis: 5,922 sitemap URLs, zero containing ai-act, governance, provenance, watermark, safety, licen, machinery, regulat, conformance, mcp, jailbreak or refus (fetched 2026-09-17T12:04:42Z). Vals AI: full sitemap enumerated, benchmarks are legal/finance/healthcare/math/science/education/voice/coding/cyber/games only — no EU AI Act, provenance, watermark, MCP-conformance or licence benchmark (fetched 2026-09-17T12:02:52Z). Scale Labs: 41 leaderboard URLs, relevant ones are mcp_atlas, fortress, mask, propensitybench, adversarial_robustness (deprecated Jan 2025), tool_use_chat, tool_use_enterprise — and nothing matching ai-act, governance, provenance, watermark, licence or machinery (fetched 2026-09-17T12:03:28Z).",
+   "url": "https://artificialanalysis.ai/sitemap.xml"
+  },
+  {
+   "id": "XC-3",
+   "finding": "Cryptographically signed result bytes remain unmatched on the 15 behavioural axes — and are contested on the financial side.",
+   "detail": "A grep for ed25519|sigstore|opentimestamps|merkle root|cryptographically signed|signed attestation|c2pa manifest over 25 fetched competitor surfaces returned NONE (sweep at 2026-09-17T12:00:47Z, covering arena.ai, artificialanalysis.ai, livebench.ai, labs.scale.com, vals.ai, epoch.ai, metr.org, aisi.gov.uk, HELM, swebench.com, AILuminate, arcprize.org, HF Open LLM Leaderboard, compl-ai.org, aiverifyfoundation.sg, oecd.ai, c2pa.org/conformance, nist.gov/caisi, hai.stanford.edu/ai-index, rwa.xyz, bluechip.org and others). The five axis agents independently confirmed the same across roughly 45 further sources, C2PA and the Content Authenticity Initiative included — organisations whose entire business is signed provenance. C2PA signs the certificates IN its trust list while serving its conforming-products list as unsigned JSON in a git repo. BUT on the financial side ToolOracle's ReserveOracle claims ES256K-signed reserve evidence and publishes real key material at https://feedoracle.io/.well-known/jwks.json (200, 3,484 bytes, secp256k1, kid fo-ecdsa-v1, under did:web:feedoracle.io, fetched 2026-09-17T12:08:40Z). We could not verify a signature because every signed payload is behind a $0.02-$0.03 x402 paywall and the free health_check response carries only a truncated content_hash and no signature. Recorded as claims_yes_unverified, not as yes.",
+   "caveat": "Several swept surfaces are JavaScript shells (livebench.ai 1,066 bytes of HTML with 56 characters of text; crfm.stanford.edu/helm 1,295 bytes; compl-ai.org home 2,074 bytes). For those the sweep is UNCHECKABLE, not a proven absence."
+  },
+  {
+   "id": "XC-4",
+   "finding": "Our signing advantage covers 9 of 23 axes, not 23.",
+   "detail": "https://councilof.ai/signed/card_index.json (200, 197,471 bytes, fetched 2026-09-17T12:07:36Z, n_cards 335 == n_cells 335 == len(cards) 335) groups by axis as: care-refusal-protect 27, care-refusal-help 27, care 23, swag-30 25, mmlu-30 23, gsm8k-30 23, arc-30 23, gov 23, gspc-governance 21, gspc-safety 21, gspc-provenance 21, gspc-conformance 21, gspc-openness 21, gspc-continuity 21, jail-escape-detection 8, swarm-candidates 7. There are ZERO signed per-model cards for machinery-conformity, cross-reality, detector-interop, art5-safeguard, affect, effect-binding, or any of the 8 financial axes. The board discloses this itself: uncarded_leaders_dropped_axes = ['machinery-conformity','cross-reality','detector-interop'], public_leader_state = NO_SIGNED_CARD. So the sentence 'fleet + frozen public bank + deterministic grading + per-model Ed25519 signed cards' is true for governance, safety, provenance, continuity, conformance, openness, care, swarm and jail — and false for the other fourteen axes. Quoting it as uniform would not survive a competitor reading our own API.",
+   "url": "https://councilof.ai/signed/card_index.json"
+  },
+  {
+   "id": "XC-5",
+   "finding": "A competitor already publishes declared-but-unmeasured slots — the structure we present as distinctive.",
+   "detail": "COMPL-AI's interpretation page (https://compl-ai.org/interpretation, 200, 407,268 bytes, fetched 2026-09-17T11:59:28Z) publishes 18 EU AI Act technical requirements of which 12 carry benchmark checks and SIX carry none: Corrigibility, Explainability, Risks, Evaluations, General Description, Environmental Impact. Each gap is published with its reason, e.g. Explainability: 'The current research does not offer rigorous tools to explain LLM generations and reliably measure their explainability. We advocate for more research effort in this area to bridge this gap between regulatory requirements and technical evaluations.' Their measured ratio is 12 of 18; ours is 22 of 23. Independently, arXiv 2606.02668 surfaces what its analyzer cannot classify 'as uninspectable rather than silently approved' — our UNMEASURED-is-first-class doctrine, arrived at independently. UNMEASURED as a published state is ours to practise well, not ours to claim as an invention."
+  },
+  {
+   "id": "XC-6",
+   "finding": "Deterministic grading is not unique to us, and one competitor argues directly against it.",
+   "detail": "LiveBench: 'Each question has verifiable, objective ground-truth answers, allowing hard questions to be scored accurately and automatically, without the use of an LLM judge' (https://raw.githubusercontent.com/LiveBench/LiveBench/main/README.md, 200, fetched 2026-09-17T12:02:21Z) — plus monthly question refresh to limit contamination, a discipline we do not have since our banks are frozen. Salesforce MCP-Universe implements 'format evaluators for agent format compliance' — execution-based deterministic conformance checking at greater breadth than ours. And Scale's FORTRESS argues its LLM-judge panel 'provides a more reliable and granular assessment than high-level rubrics or brittle keyword-based checks', which is a direct challenge to our method on the safety axis."
+  },
+  {
+   "id": "XC-7",
+   "finding": "Our model fleet is the oldest thing on the board.",
+   "detail": "The board's named models include qwen2.5:3b, mistral:7b and qwen2.5:0.5b-instruct. Vals AI's homepage, fetched 2026-09-17T11:56:13Z, ranks Claude Fable 5.1, GPT-6 Astra, Muse Spark 1.3 Max, Gemini 3.8 Flash, Grok 4.6, DeepSeek V4.1 Flash and Kimi K3, at 57-144 models per benchmark with weekly updates. COMPL-AI is the counter-example in our favour: its published fleet is stale too (Claude 3 Opus, Llama 2, GPT-3.5/4 Turbo, Gemini 1.5 Flash, DeepSeek R1 distills)."
+  },
+  {
+   "id": "XC-8",
+   "finding": "Two naming collisions will be encountered in search and in conversation.",
+   "detail": "The official Model Context Protocol project owns a repository literally called 'conformance' (https://raw.githubusercontent.com/modelcontextprotocol/conformance/main/README.md, 200, fetched 2026-09-17T11:57:27Z) — 'A framework for testing MCP client and server implementations against the specification', i.e. implementations, not models, with no published results. And arXiv 2504.11094 already owns the name 'MCPBench', where it evaluates MCP servers."
+  },
+  {
+   "id": "XC-9",
+   "finding": "Our own limitations field is the first thing a careful competitor will find.",
+   "detail": "The board reports comparison_axes 14, separated_leads 0, ties 2, untested_separations 12. Twelve of fourteen model-comparison axes are UNTESTED for statistical separation, and a point-estimate lead is not a measured advantage. Several of our banks are also small enough that a per-model rate carries a very wide interval: at n=36 (safety) roughly ±16 points of 95% Wilson width near 50%."
+  }
+ ],
+ "defects_found_in_our_own_artifacts": [
+  {
+   "id": "D-1",
+   "severity": "high",
+   "axis": "humanoid-labour-index",
+   "finding": "A false PASS is published on a live MEASURED axis.",
+   "detail": "public/interop/financial-measure-run-humanoid-labour-index.json (content_id 00c4b9f889dbfbc82252167afd80cd06b7b963678a30f3b698de873d54912084, as_of 2026-09-07T11:30:35Z) records for https://www.sanctuary.ai: dated_deployment_count_published true, three_state PASS. Tally PASS 1 / FAIL 6 / UNCHECKABLE 1. Independently refetched https://www.sanctuary.ai at 2026-09-17T12:06:32Z: HTTP 200, 245,649 bytes, 8,912 characters of visible text. The page contains NO count of robots and NO dated deployment figure. The only numerals adjacent to 'deploy' or 'robot' are press-coverage headlines ('Sanctuary AI #1 Robotics Story of April 2026', '99.5% Success in Fast Auto Factory Wire Assembly'). The nearest text is the roadmap heading 'Deploying Now: Physical AI-Enabled Automation Solutions' — a heading, not a count. The true tally appears to be 0 PASS / 7 FAIL / 1 UNCHECKABLE.",
+   "action": "Fix the predicate in scripts/grade_financial_ledgers.py, prove it can FAIL against a control, re-run, and sweep the claim tree-wide."
+  },
+  {
+   "id": "D-2",
+   "severity": "medium",
+   "axis": "labour-components",
+   "finding": "The board row contradicts its own evidence artifact on source, n, value and year.",
+   "detail": "Board row: bench 'Eurostat', n 2, note 'participation 57.58%, unemployment 5.92% 2024'. Its own evidence_url artifact public/interop/financial-measure-run-labour-components.json: n 1; sources are api.worldbank.org (SL.TLF.CACT.ZS, SL.UEM.TOTL.ZS — World Bank redistribution of modeled ILO estimates), not Eurostat; EU participation rate status UNREACHABLE; EU unemployment 5.92604538207809 dated '2025'. Refetched SL.TLF.CACT.ZS on 2026-09-17: HTTP 200, value 57.2757723145448 for 2025 — so the artifact's UNREACHABLE is stale, and the board's 57.58 appears neither in the artifact nor in the live upstream."
+  },
+  {
+   "id": "D-3",
+   "severity": "medium",
+   "axis": "ai-adoption-components",
+   "finding": "The board row asserts values absent from its own evidence artifact.",
+   "detail": "Board row: n 2, note 'two Eurostat series (13.48% / 41.17% 2024)'. Its own artifact public/interop/financial-measure-run-ai-adoption-components.json: n 1, one series MEASURED — 'EU27 enterprises using any AI (isoc_eb_ai)', year 2024, value 55.03 — and one series UNCHECKABLE with the note 'sizeclas split not isolated this run; not invented from the headline cell'. All three figures are genuine cells of the same Eurostat response, but the row does not quote its own evidence."
+  },
+  {
+   "id": "D-4",
+   "severity": "low",
+   "axis": "provenance-controls",
+   "finding": "A coverage note may understate what is publicly locatable.",
+   "detail": "The axis coverage note says 6 of the 16 named instruments were read and 'the other 10 have no locatable public issuer address'. xrpdashboard.com/rwa publishes XRPScan-verified issuer addresses for the six it tracks, and RWA.xyz and xrpl.to carry addresses for more. Worth re-testing before the note is quoted again."
+  }
+ ],
+ "method_limitations": [
+  "Public bytes only. No organisation was contacted. No account was created, no API key obtained, and no paid tool was purchased.",
+  "Absence is claimed only where a site's own index was queried — sitemap.xml, a repository tree API, a dataset-search API, or a released JSON artifact. A 404 on a guessed path was never treated as evidence; one such guess (https://www.vals.ai/government, 404 at 2026-09-17T12:02:52Z) was discarded and replaced by the sitemap.",
+  "Where a null was load-bearing it was controlled. For machinery-conformity: arXiv all:'machinery regulation' AND all:'language model' returned 0 hits while the identical query shape for all:'EU AI Act' AND all:'language model' returned 60; HuggingFace dataset search 'machinery regulation' returned [] while 'eu ai act' returned 5.",
+  "UNCHECKABLE is recorded separately from NO throughout. Surfaces we could not read: S&P Global (403 to curl and WebFetch), DefiLlama web UI (403 Cloudflare), Dune (403), Messari (429), The Block Data (403), A3/automate.org (403), OECD data pages (403), TUV SUD (403) and www.tuv.com (DNS failure), openai.com affective-use study (403 Cloudflare challenge), harmbench.org (918-byte JS shell), livebench.ai and crfm.stanford.edu/helm and compl-ai.org roots (JS shells, resolved via their JSON payloads where possible), BFCL V4 ranking table (JS-injected; methodology readable, scores not), JRC publications search (titles render client-side), EC NANDO (Angular shell), RWA.xyz auditor/segregation/bankruptcy columns and Nansen data (login-gated), Morgan Stanley Humanoid 100 primary PDF (three attempts: two timeouts and one empty reply), US Census BTOS (JS-only shell), ClauseBench's scored accuracy table (IEEE Xplore 202 with 0 bytes, ACM DL 403), OR-Bench's live HF Space (200 with body text 'runtime error  Exit code: ?').",
+  "Signed-results claims are downgraded when the payload could not be obtained. ToolOracle ReserveOracle is recorded as claims_yes_unverified: its key material is live and real, but the signed payload is behind an x402 paywall and a tool description is not a signature.",
+  "Three areas were not examined at all because a research session's web-search budget was exhausted mid-pass: Goldman Sachs / Bank of America / Citi humanoid publications; Rosalind Picard's affective-computing evaluations; the Center for Humane Technology and Stanford HAI companion-AI work. These are recorded as unchecked, not as empty.",
+  "One cell was corrected after first reporting: ILOSTAT was initially filed UNCHECKABLE on the strength of a zero-byte response from rplumber.ilo.org while a request to sdmx.ilo.org was still in flight; that endpoint returned 200 with 1,086,988 bytes and the cell was rewritten. The error is the one this document's own rules warn against — reporting an absence from one dead endpoint.",
+  "Competitor n values, fleet sizes and dates are quoted from the competitor's own published text. We did not re-run anyone's benchmark, and a published figure is a claim by its publisher, not a measurement by us.",
+  "Some competitors were discovered through a general web search rather than a site index; where a search was the only route, the resulting cell still carries a fetched URL and status, but the SEARCH itself is not exhaustive and a further competitor may exist for any CONTESTED or UNMEASURED_BY_ANYONE cell.",
+  "This map is a snapshot. Four of the closest competitors on the agent-authority and affect axes were published between May and August 2026; the field is moving faster than an annual refresh would catch."
+ ],
+ "summary": {
+  "axes_mapped": 23,
+  "verdicts": {
+   "CONTESTED": 18,
+   "UNMEASURED_BY_ANYONE": 4,
+   "ADJACENT_ONLY": 1
+  },
+  "competitor_cells": 163,
+  "relation_counts": {
+   "SAME_THING": 47,
+   "ADJACENT": 116
+  },
+  "signed_results_counts": {
+   "no": 148,
+   "unknown": 13,
+   "claims_yes_unverified": 2
+  },
+  "axes_unmeasured_by_anyone": [
+   "provenance",
+   "continuity",
+   "machinery-conformity",
+   "detector-interop"
+  ],
+  "axes_adjacent_only": [
+   "effect-binding"
+  ],
+  "axes_where_someone_is_ahead": [
+   "safety",
+   "conformance",
+   "cross-reality",
+   "care",
+   "jail",
+   "affect",
+   "swarm",
+   "reserve-attestation",
+   "regulatory-framework",
+   "distribution-integrity",
+   "custody-disclosure",
+   "ai-adoption-components",
+   "labour-components",
+   "humanoid-labour-index",
+   "provenance-controls"
+  ],
+  "axes_where_we_lead_or_stand_alone": [
+   "machinery-conformity",
+   "detector-interop",
+   "provenance",
+   "continuity",
+   "effect-binding"
+  ],
+  "axes_with_signed_per_model_cards": [
+   "governance",
+   "safety",
+   "provenance",
+   "continuity",
+   "conformance",
+   "openness",
+   "care",
+   "swarm",
+   "jail"
+  ]
+ }
+}
