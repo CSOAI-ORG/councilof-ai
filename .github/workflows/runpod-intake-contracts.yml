@@ -1,0 +1,26 @@
+name: RunPod intake execution-profile contracts
+on:
+  pull_request:
+    paths:
+      - 'scripts/verify_runpod_gspc_intake.py'
+      - 'scripts/runpod_gspc_worker.py'
+      - 'scripts/test_verify_runpod_gspc_intake.py'
+      - 'scripts/test_runpod_intake_execution_policy.py'
+      - '.github/workflows/runpod-intake-contracts.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Existing intake and execution-profile controls
+        env:
+          PYTHONPATH: scripts
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python -m unittest test_verify_runpod_gspc_intake test_runpod_intake_execution_policy -v

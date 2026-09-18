@@ -629,7 +629,18 @@ def _validate_semantics(
     )
     if run.get("schema") != RUN_SCHEMA:
         raise IntakeError("BAD_RUN", "run schema is not supported")
-    _require_exact_keys(run, RUN_FIELDS, "run")
+    # Optional compute execution metadata is a closed, named profile. It is
+    # preserved in the original run bytes, not treated as a new grading rule.
+    expected_run_fields = RUN_FIELDS
+    if "execution_policy" in run:
+        execution = _require_dict(run["execution_policy"], "BAD_EXECUTION_POLICY", "execution policy")
+        _require_exact_keys(execution, {"profile", "max_consecutive_transport_errors"}, "execution policy")
+        if (execution.get("profile") != "bounded-transport-v1"
+                or type(execution.get("max_consecutive_transport_errors")) is not int
+                or execution["max_consecutive_transport_errors"] != 3):
+            raise IntakeError("BAD_EXECUTION_POLICY", "unrecognised execution policy")
+        expected_run_fields = RUN_FIELDS | {"execution_policy"}
+    _require_exact_keys(run, expected_run_fields, "run")
     run_id = run.get("run_id")
     if (
         not isinstance(run_id, str)
