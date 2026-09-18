@@ -1,0 +1,17 @@
+name: Private draft contract checks
+on:
+  pull_request:
+    paths: ['scripts/mailops/**', '.github/workflows/mailops-checks.yml']
+  push:
+    branches: [master]
+    paths: ['scripts/mailops/**', '.github/workflows/mailops-checks.yml']
+permissions:
+  contents: read
+jobs:
+  offline-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Offline tests only; no mailbox credentials or sends
+        run: python3 -m unittest discover -s scripts/mailops -p 'test_mailops.py' -v
