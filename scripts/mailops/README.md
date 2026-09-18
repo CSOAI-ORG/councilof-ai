@@ -25,3 +25,11 @@ Only the Drafts folder is writable. Raw MIME is passed on stdin, never as positi
 Original bytes and manifests remain unchanged. Readback accepts MIME encoding/header changes only when decoded contract fields match; it additionally records tolerance for removal of the single terminal newline observed in the IMAP export. Other text changes fail. HTML-only/alternative bodies, Bcc, ambiguous addresses and nested attached messages are intentionally unsupported.
 
 Keep message bodies, mailbox exports, invoices, private replies and receipts outside the repository and public evidence graph. The code contains no account credentials. An unsigned local hash is not institutional authentication. A verified draft is not sent, delivered, accepted or approved.
+
+## Work-mail routing
+This CSOAI workflow composes and saves only messages whose From mailbox is
+`nicholas@csoai.org`. Each CLI call names the configured account explicitly
+(`--account default`, or another deliberately supplied account name). It never
+falls back to Gmail. The operator must verify that the named account is bound
+to the work mailbox; checking a From header does not authenticate an account.
+The tool still has no SMTP send operation, payment or agreement acceptance.
