@@ -111,6 +111,10 @@ import socket
 import ssl
 import subprocess
 import sys
+try:
+    from .mirror_source_guard import SourceRefused, approved_source, committed_snapshot, check_manifest_output
+except ImportError:
+    from mirror_source_guard import SourceRefused, approved_source, committed_snapshot, check_manifest_output
 import threading
 import time
 import urllib.error
@@ -185,6 +189,7 @@ PUBLISH_GLOBS = [
 # structural, and saying so here beats a rule that never executes.
 # test_mirror_discovery.py asserts every rule below actually fires.
 PUBLISH_EXCLUDE = [
+    (re.compile(r"^public/interop/mirror-manifest\.json$"), "generated fan-out output is not an input"),
     (re.compile(r"-unsigned\.json$"),  "unsigned staging drafts; the signed sibling is the artifact"),
     (re.compile(r"^public/interop/_"), "leading underscore marks work in progress by convention here"),
 ]
@@ -1022,6 +1027,7 @@ def main(argv=None) -> int:
     p.add_argument("--no-write", action="store_true", help="probe and print, do not write the manifest")
     p.add_argument("--browser-ua", action="store_true",
                    help="probe with a browser User-Agent instead of the tool UA (diagnostic only)")
+    p.add_argument("--check-inputs", action="store_true", help="validate committed inputs and exit; no remote calls or writes")
     args = p.parse_args(argv)
 
     if args.selftest:
@@ -1039,17 +1045,34 @@ def main(argv=None) -> int:
             print(f"    excluded  {rel}  -- {why}")
         if len(excluded) > 8:
             print(f"    ... and {len(excluded)-8} more exclusions")
+    try:
+        revision, blobs = approved_source(pathlib.Path(root), artifacts, PUBLISH_GLOBS, PUBLISH_EXCLUDE)
+        if not args.no_write and not args.check_inputs:
+            check_manifest_output(root, args.out)
+    except SourceRefused as exc:
+        print(f"SOURCE_REFUSED: {exc}", file=sys.stderr)
+        return 4
+    if args.check_inputs:
+        print(json.dumps({"state": "APPROVED_INPUTS_CHECKED", "source_revision": revision,
+                          "artifact_count": len(blobs), "network_calls": 0, "published": False}))
+        return 0
     ua = BROWSER_UA if args.browser_ua else DEFAULT_UA
 
-    if args.publish_hf:
-        print(f"== publishing {len(artifacts)} artifact(s) to {HF_REPO} ==")
-        flats = publish_hf(root, artifacts, dry_run=args.dry_run)
-        if not args.dry_run and flats:
-            print("== waiting for anonymous visibility ==")
-            wait_for_hf_readback(flats)
+    try:
+        with committed_snapshot(root, blobs) as snapshot:
+            if args.publish_hf:
+                print(f"== publishing {len(artifacts)} artifact(s) to {HF_REPO} ==")
+                flats = publish_hf(str(snapshot), artifacts, dry_run=args.dry_run)
+                if not args.dry_run and flats:
+                    print("== waiting for anonymous visibility ==")
+                    wait_for_hf_readback(flats)
 
-    print(f"\n== anonymous readback probe (UA: {'browser' if args.browser_ua else 'tool'}) ==")
-    manifest = build_manifest(root, artifacts, only_surfaces=args.surface, ua=ua)
+            print(f"\n== anonymous readback probe (UA: {'browser' if args.browser_ua else 'tool'}) ==")
+            manifest = build_manifest(str(snapshot), artifacts, only_surfaces=args.surface, ua=ua)
+    except SourceRefused as exc:
+        print(f"SOURCE_REFUSED: {exc}", file=sys.stderr)
+        return 4
+    manifest["source_snapshot"] = {"git_commit": revision, "artifact_count": len(blobs), "input": "committed Git blobs; original working files not uploaded"}
     summarize(manifest)
 
     if not args.no_write:

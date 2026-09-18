@@ -22,7 +22,7 @@ def main():
         r = pathlib.Path(td)
         for rel in ["public/interop/a.json", "public/interop/b.ots", "public/interop/c.ots.invalid",
                     "public/interop/_wip.json", "public/interop/d-unsigned.json",
-                    "public/interop/ots/e.json", "public/press/f.md", "public/press/g.txt",
+                    "public/interop/ots/e.json", "public/interop/mirror-manifest.json", "public/press/f.md", "public/press/g.txt",
                     "public/root.json", "public/signed/card_index.json",
                     "public/signed/other.json", "public/cards/h.json"]:
             p = r/rel; p.parent.mkdir(parents=True, exist_ok=True); p.write_text("{}")
@@ -45,6 +45,7 @@ def main():
         ex = {rel for rel, _ in excluded}
         check("the -unsigned rule actually FIRED", "public/interop/d-unsigned.json" in ex, True)
         check("the _wip rule actually FIRED", "public/interop/_wip.json" in ex, True)
+        check("generated manifest is excluded", "public/interop/mirror-manifest.json" in found, False)
         # every declared rule must be reachable, or it is decoration
         fired = {i for i, (rx, _) in enumerate(mf.PUBLISH_EXCLUDE)
                  for rel in ex if rx.search(rel)}
@@ -78,11 +79,11 @@ def main():
     # was never run. A test that never enters the entry point does not test the program.
     import subprocess
     repo = pathlib.Path(__file__).resolve().parent.parent
-    r = subprocess.run([sys.executable, "scripts/mirror_fanout.py", "--no-write",
-                        "--surface", "huggingface", "--out", "/dev/null"],
-                       cwd=repo, capture_output=True, text=True, timeout=900)
-    check("main() runs without an unhandled exception", "Traceback" not in r.stderr, True)
-    check("main() reports the discovery line", "[discover]" in (r.stdout + r.stderr), True)
+    r = subprocess.run([sys.executable, "-m", "unittest",
+                        "scripts.test_mirror_source_guard.GuardTests.test_cli_positive_offline"],
+                       cwd=repo, capture_output=True, text=True, timeout=30)
+    check("main() committed-input fixture exits successfully", r.returncode, 0)
+    check("main() fixture reports success without external probes", "OK" in r.stderr, True)
     print(f"\n{'FAILURES: ' + '; '.join(fails) if fails else 'all controls pass — discovery includes, excludes, and the floor fires both ways'}")
     return 1 if fails else 0
 

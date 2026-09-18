@@ -1,0 +1,21 @@
+name: Mirror input contracts
+on:
+  pull_request:
+    paths: ['scripts/mirror_fanout.py', 'scripts/mirror_source_guard.py', 'scripts/test_mirror*.py', '.github/workflows/mirror-input-contracts.yml']
+  push:
+    branches: [master]
+    paths: ['scripts/mirror_fanout.py', 'scripts/mirror_source_guard.py', 'scripts/test_mirror*.py', '.github/workflows/mirror-input-contracts.yml']
+permissions:
+  contents: read
+jobs:
+  offline-guards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Synthetic committed-source cases
+        run: python3 -m unittest discover -s scripts -p test_mirror_source_guard.py -v
+      - name: Discovery and real entrypoint fixture
+        run: python3 scripts/test_mirror_discovery.py
+      - name: Existing mirror state controls (loopback and injected data)
+        run: python3 scripts/mirror_fanout.py --selftest
