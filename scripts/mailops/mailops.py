@@ -20,6 +20,7 @@ import tempfile
 import unicodedata
 
 SCHEMA = 'csoai.private-draft/1'
+WORK_EMAIL = 'nicholas@csoai.org'
 MAX_BYTES = 5 * 1024 * 1024
 
 
@@ -128,6 +129,8 @@ def compose(spec, when=None):
     if not tos or not isinstance(tos, list) or not isinstance(ccs, list):
         raise ReviewRequired('RECIPIENT_LIST_REQUIRED')
     addresses([sender]); addresses(tos); addresses(ccs)
+    if addresses([sender]) != [WORK_EMAIL]:
+        raise ReviewRequired('WORK_SENDER_REQUIRED')
     if set(addresses(tos)) & set(addresses(ccs)):
         raise ReviewRequired('DUPLICATE_RECIPIENT_ROLES')
     if not meaningful(spec['text']):
@@ -226,12 +229,15 @@ def verify_export(raw, manifest):
 
 class HimalayaDrafts:
     """Uses existing authenticated CLI; never reads its config or credential values."""
-    def __init__(self, executable='/opt/homebrew/bin/himalaya', existing_uid=None):
+    def __init__(self, executable='/opt/homebrew/bin/himalaya', existing_uid=None, account='default'):
+        if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}', account):
+            raise ReviewRequired('INVALID_ACCOUNT_NAME')
+        self.account = account
         self.exe = executable
         self.existing_uid = existing_uid
 
     def run(self, args, raw=None):
-        p = subprocess.run([self.exe, '--quiet'] + args, input=raw, capture_output=True, timeout=35)
+        p = subprocess.run([self.exe, '--quiet'] + args + ['--account', self.account], input=raw, capture_output=True, timeout=35)
         if p.returncode:
             # Do not print potentially sensitive backend diagnostics into shared logs.
             raise ReviewRequired('MAIL_BACKEND_ERROR_' + str(p.returncode))
@@ -281,6 +287,8 @@ def save_draft(directory, backend):
     with os.fdopen(fd, 'a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         raw, manifest = validate_stage(directory)
+        if manifest['contract']['from'] != [WORK_EMAIL]:
+            raise ReviewRequired('WORK_SENDER_REQUIRED')
         found = backend.find(manifest)
         intent = directory / 'append-intent.json'
         if not found:
@@ -306,7 +314,7 @@ def main():
     sp = ap.add_subparsers(dest='command', required=True)
     s = sp.add_parser('stage'); s.add_argument('spec', type=Path); s.add_argument('--root', required=True, type=Path)
     c = sp.add_parser('check'); c.add_argument('directory', type=Path)
-    d = sp.add_parser('save-draft'); d.add_argument('directory', type=Path); d.add_argument('--allow-draft-write', action='store_true'); d.add_argument('--existing-uid')
+    d = sp.add_parser('save-draft'); d.add_argument('directory', type=Path); d.add_argument('--allow-draft-write', action='store_true'); d.add_argument('--existing-uid'); d.add_argument('--account', default='default')
     v = sp.add_parser('verify-export'); v.add_argument('directory', type=Path); v.add_argument('eml', type=Path)
     args = ap.parse_args()
     try:
@@ -316,7 +324,7 @@ def main():
             raw, m = validate_stage(args.directory); print(json.dumps({'state': 'READY_FOR_DRAFT_REVIEW', 'contract': m['contract'], 'sent': False}, indent=2))
         elif args.command == 'save-draft':
             if not args.allow_draft_write: raise ReviewRequired('EXPLICIT_DRAFT_WRITE_REQUIRED')
-            print(json.dumps(save_draft(args.directory, HimalayaDrafts(existing_uid=args.existing_uid)), indent=2))
+            print(json.dumps(save_draft(args.directory, HimalayaDrafts(existing_uid=args.existing_uid, account=args.account)), indent=2))
         elif args.command == 'verify-export':
             _, m = validate_stage(args.directory); print(json.dumps(verify_export(args.eml.read_bytes(), m), indent=2))
     except (ReviewRequired, OSError, ValueError, KeyError, subprocess.TimeoutExpired) as exc:

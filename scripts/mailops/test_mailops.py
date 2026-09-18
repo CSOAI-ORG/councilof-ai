@@ -153,6 +153,18 @@ class Tests(unittest.TestCase):
         raw,m=mo.compose(spec());b=mo.HimalayaDrafts(existing_uid='675')
         with patch.object(b,'read',return_value=self.raw(text='Different body')):
             with self.assertRaises(mo.ReviewRequired):b.find(m)
+    def test_personal_sender_refused(self):
+        with self.assertRaisesRegex(mo.ReviewRequired,'WORK_SENDER'):
+            self.raw(**{'from':'nick@example.net'})
+    def test_wrong_account_name_refused(self):
+        with self.assertRaisesRegex(mo.ReviewRequired,'INVALID_ACCOUNT'):
+            mo.HimalayaDrafts(account='--config=other')
+    def test_backend_uses_explicit_account(self):
+        b=mo.HimalayaDrafts('/fake/himalaya',account='default')
+        with patch('mailops.subprocess.run') as call:
+            call.return_value.returncode=0;call.return_value.stdout=b''
+            b.run(['message','save','-f','Drafts'],b'test')
+            self.assertEqual(call.call_args.args[0][-2:],['--account','default'])
     def test_permissions(self):
         p=mo.stage(spec(),self.root);self.assertEqual((p/'message.eml').stat().st_mode & 0o777,0o600)
 
