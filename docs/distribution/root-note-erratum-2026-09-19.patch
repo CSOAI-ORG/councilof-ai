@@ -1,0 +1,45 @@
+--- a/corrections/merkle-count-binding-2026-09-17.md
++++ b/corrections/merkle-count-binding-2026-09-17.md
+@@ -248,13 +248,9 @@
+-**RFC 6962 (Certificate Transparency) is not affected**, and the reason is worth naming
+-because it is the general fix. CT prefixes every leaf hash with `0x00` and every interior
+-node hash with `0x01` before hashing (RFC 6962 §2.1). A leaf digest can therefore never
+-equal an interior digest, the padding substitution above has no interior node to imitate,
+-and CT additionally signs `tree_size` in every Signed Tree Head. **This is a property of
+-the construction, not of Merkle trees.** Merkle trees are not the problem; unprefixed
+-trees with duplicated odd nodes and unbound sizes are.
+-
+-Carrying an odd node up unchanged instead of duplicating it — the other shape we run,
+-below — is not vulnerable to this particular padding construction: under promotion our
+-306-leaf forgery yields `6c9af103…`, not `e9f86358…`. It is still not domain-separated, so
+-it does not get CT's leaf/interior guarantee. Domain separation is the fix; odd-node
+-handling is a workaround.
++### Correction added 19 September 2026: separate domain separation from tree shape
++
++The earlier explanation incorrectly attributed the duplicate-last padding fix to the leaf/node prefixes alone. Prefixing leaves with `0x00` and interior nodes with `0x01` does not remove the demonstrated ambiguity while duplicate-last padding is retained.
++
++RFC 6962 section 2.1 defines both separate hash domains and a recursive tree shape: split at the largest power of two smaller than the list length, without duplicating an unmatched tail. These are distinct properties. The recursive shape distinguishes a list from the list with its last entry duplicated; domain separation provides the separate leaf/interior second-preimage property.
++
++For the existing duplicate-last construction, a separately authenticated count distinguishes the specific presentations in this note. Count binding alone is not a general collection-membership proof, and one inclusion proof is not append-only consistency evidence. A verifier must apply the exact declared construction, authenticated size and applicable proof rules.
++
++The promotion comparison below remains a historical report of that particular experiment, not a recommendation that promotion alone is a complete security fix. Any future migration must declare the full hashing and tree rules and preserve the original signed records under their historical rules. This explanatory correction does not change roots, signatures, witnesses, proofs or historical test outputs and does not claim a deployed v2 construction.
+@@ -291,6 +287,8 @@
+-Moving the public root to RFC 6962 domain separation would close this by construction. It
+-also changes every root we have ever published, which breaks every existing inclusion proof
+-and every anchored timestamp over the old bytes. That is a versioned migration with its own
+-disclosure, not a silent patch, and it is not what this note does. Until then the count
+-binding is the defence, the signature carries it, and this document plus
+-`scripts/verify_public_root.py` are how a stranger checks that for themselves.
++A future version could use RFC 6962's full Merkle tree construction: separate leaf/node
++hash domains and its recursive tree shape, without duplicate-last padding. That produces
++new roots and proofs; it does not invalidate historical signatures, proofs or timestamps
++when those are checked against their original bytes and declared rules. Such a migration
++needs an explicit version and disclosure. This note changes no root, signature, proof or
++witness. For the existing construction, authenticating and checking the count rejects the
++padded presentation demonstrated above; it is not a general collection-membership or
++append-only consistency proof.
+@@ -304,2 +302,2 @@
+-- **RFC 6962**, *Certificate Transparency*, §2.1 (Merkle Hash Trees) — the `0x00`/`0x01`
+-  domain-separation prefixes. <https://www.rfc-editor.org/rfc/rfc6962#section-2.1>
++- **RFC 6962**, *Certificate Transparency*, §2.1 (Merkle Hash Trees) — separate leaf/node
++  hash domains and the recursive split at the largest power of two below the list length. <https://www.rfc-editor.org/rfc/rfc6962#section-2.1>
