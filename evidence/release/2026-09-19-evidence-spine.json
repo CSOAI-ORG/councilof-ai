@@ -477,6 +477,12 @@
       "scope": "facts gate on rendered corrected public files",
       "result": "PASS",
       "note": "final protected CI still required after fallback metadata update"
+    },
+    {
+      "scope": "pressroom + MCP discovery stale-copy checks",
+      "result": "PASS",
+      "tests": 133,
+      "note": "Public press copy no longer freezes old counts or equates ledger observations with customer identity/delivery; MCP discovery prose now agrees with 13 total / 9 free / 4 metered."
     }
   ],
   "proof_state": {
@@ -493,10 +499,20 @@
     "independent_full_chain_validation": false,
     "historical_unbound_ots_quarantined": 14
   },
-  "release_state": "LOCAL_COMMIT_PENDING",
+  "release_state": "REVIEW_BRANCH_PUBLISHED_CI_ACCOUNT_RESTRICTED",
   "public_deployed": false,
   "outreach_sent": false,
   "github_write_blocker": "GitHub integration returned 403 Resource not accessible by integration; Chrome is open at GitHub sign-in/installations page for owner authorization.",
   "next_required": "Commit locally, push reviewed branch after GitHub installation write access, protected CI/merge/deploy, anonymous served-byte readback, then targeted outward distribution.",
-  "count_warning": "Test counts are separate scopes and must not be summed as one benchmark."
+  "count_warning": "Test counts are separate scopes and must not be summed as one benchmark.",
+  "updated_at": "2026-09-19T05:53:33.360506+00:00",
+  "review_branch": "https://github.com/CSOAI-ORG/councilof-ai/tree/release/evidence-spine-20260919",
+  "pull_request": "https://github.com/CSOAI-ORG/councilof-ai/pull/2647",
+  "github_actions": {
+    "repository_setting_observed": "enabled=true, allowed_actions=all",
+    "manual_dispatch_result": "HTTP 422 Actions has been disabled for this user",
+    "support_ticket": "4720908",
+    "bypass_attempted": false
+  },
+  "smtp_state": "PrivateEmail SMTP send attempt returned 535 authentication failed; no support/editor email send receipt exists."
 }

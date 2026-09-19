@@ -39,7 +39,10 @@ describe("stale copy honesty", () => {
   it("press and accessibility claims fail closed instead of freezing unsupported claims", () => {
     expect(pressroom).toContain('fetch("/api/revenue"');
     expect(pressroom).toContain('fetch("/api/coverage"');
-    expect(pressroom).toMatch(/not a grade, endorsement, customer count, signed measurement, or payment/i);
+    expect(pressroom).toMatch(/not a population census, grade, endorsement, customer count, signed measurement, or payment/i);
+    expect(pressroom).toMatch(/not independent customer[\s\S]*identity[\s\S]*end-to-end delivery proof[\s\S]*buyer acceptance/i);
+    expect(pressroom).not.toMatch(/305 signed cards|22 measured axes|500 MCP servers|100 x402 hosts/);
+    expect(pressroom).not.toMatch(/Live commercial proof/);
     expect(pressroom).toMatch(/UNCHECKABLE:[\s\S]*no previous count is reused/);
     expect(pressroom).not.toMatch(/first settlement.*NOT HAPPENED/i);
     expect(accessibility).toMatch(/working toward WCAG 2\.2 Level AA/);
@@ -59,7 +62,7 @@ describe("stale copy honesty", () => {
 
   it("publishes the current HTTP and npm tool boundaries", () => {
     const j = JSON.parse(mcp);
-    const twelve = [
+    const thirteen = [
       "board_totals",
       "get_axis",
       "verify_card",
@@ -68,22 +71,23 @@ describe("stale copy honesty", () => {
       "get_card",
       "verify_inclusion",
       "x402_trust",
+      "mcp_trust",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch",
     ];
-    expect(j.planted.tools).toEqual(twelve);
-    expect(j.measured.tools).toEqual(twelve);
-    expect(j.measured.total_tools).toBe(12);
-    expect(j.measured.free_tools).toBe(8);
+    expect(j.planted.tools).toEqual(thirteen);
+    expect(j.measured.tools).toEqual(thirteen);
+    expect(j.measured.total_tools).toBe(13);
+    expect(j.measured.free_tools).toBe(9);
     expect(j.measured.metered_tools).toBe(4);
     expect(j.measured.note).toMatch(/witness_hash (?:is|remains) quarantined/i);
     expect(j.servers[0].registry.version).toBe("1.4.0");
     const card = JSON.parse(mcpCard);
-    expect(card.capabilities.total_tools).toBe(12);
-    expect(card.capabilities.free_tools).toBe(8);
-    expect(card.capabilities.tools).toEqual(twelve);
+    expect(card.capabilities.total_tools).toBe(13);
+    expect(card.capabilities.free_tools).toBe(9);
+    expect(card.capabilities.tools).toEqual(thirteen);
     expect(card.description).toMatch(/server 1\.4\.0/);
     expect(card.endpoints.mcp.stdio).toBe(
       "npx -y csoai-gspc-mcp@0.2.1",

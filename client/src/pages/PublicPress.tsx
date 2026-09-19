@@ -45,7 +45,7 @@ const FACTS = [
   },
   {
     k: "Live evidence",
-    v: "305 signed cards, 22 measured axes, 500 MCP servers probed, 100 x402 hosts. Every number is fetchable at councilof.ai/api/state — we do not type them here.",
+    v: "Current board, coverage and evidence counts are read from the public APIs rather than frozen into this media page. Publication, measurement, settlement, delivery and customer acceptance remain separate states.",
   },
 ];
 const QUOTES = [
@@ -176,16 +176,18 @@ export default function Pressroom() {
         </div>
         <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
           <div className="text-xs font-bold uppercase tracking-wide text-emerald-800">
-            Live commercial proof
+            Live settlement observation
           </div>
           {revenue.state === "measured" ? (
             <p className="mt-2 text-sm text-emerald-950">
-              <strong>MEASURED:</strong> {revenue.payers.toLocaleString()}{" "}
-              outside {revenue.payers === 1 ? "payer" : "payers"},{" "}
+              <strong>LEDGER OBSERVATION:</strong> the revenue endpoint reports{" "}
+              {revenue.payers.toLocaleString()} distinct payer{" "}
+              {revenue.payers === 1 ? " identifier" : " identifiers"},{" "}
               {revenue.settlements.toLocaleString()} non-self{" "}
-              {revenue.settlements === 1 ? "settlement" : "settlements"},{" "}
-              {(revenue.usdcAtomic / 1_000_000).toFixed(2)} USDC settled on
-              Base.
+              {revenue.settlements === 1 ? " settlement" : " settlements"},{" "}
+              and {(revenue.usdcAtomic / 1_000_000).toFixed(2)} USDC settled on Base.
+              These are attributed ledger observations, not independent customer
+              identity, end-to-end delivery proof, or buyer acceptance.
             </p>
           ) : revenue.state === "loading" ? (
             <p className="mt-2 text-sm text-emerald-950">
@@ -207,7 +209,7 @@ export default function Pressroom() {
         <h2 className="mt-12 text-xl font-bold text-gray-900">Latest public finding</h2>
         <div className="mt-4 rounded-2xl border border-sky-200 bg-sky-50 p-5">
           <div className="text-xs font-bold uppercase tracking-wide text-sky-800">
-            x402 Bazaar conformance census
+            x402 Bazaar public coverage probe
           </div>
           {bazaar.state === "probed" ? (
             <>
@@ -215,7 +217,7 @@ export default function Pressroom() {
                 {bazaar.conformant.toLocaleString()} of {bazaar.hosts.toLocaleString()} public hosts answered a strict x402 v2 conformance probe ({bazaar.pct.toFixed(2)}%).
               </p>
               <p className="mt-2 text-sm leading-6 text-sky-950">
-                This is a daily, read-only probe of third-party doors. It is not a grade, endorsement, customer count, signed measurement, or payment. Snapshot: {bazaar.asOf}.
+                This is a dated, read-only probe of the public hosts represented by the named source. It is not a population census, grade, endorsement, customer count, signed measurement, or payment. Snapshot: {bazaar.asOf}.
               </p>
               <a className="mt-3 inline-block font-mono text-xs font-semibold text-sky-800 underline underline-offset-4" href={bazaar.source}>
                 Inspect the public dataset
@@ -277,10 +279,11 @@ export default function Pressroom() {
         <p className="mt-2 max-w-3xl text-sm text-gray-700 leading-relaxed">
           Council of AI (CSOAI Ltd, UK Companies House 16939677) is an
           independent measurement body for AI behaviour. We run systems against
-          frozen, published tests drawn from statute, sign the result, and
-          publish the parts we could not measure. We do not certify or
-          remediate. A grade is never sold. Verify stays free at
-          councilof.ai/gspc-verify. Live board counts are at GET
+          frozen, published tests, retain the evidence behind the result, and
+          publish what could not be measured. We do not certify, accredit, or
+          sell favourable grades. A measurement does not by itself establish
+          compliance, remediation, delivery, or customer acceptance. Verify stays
+          free at councilof.ai/gspc-verify. Live board counts are at GET
           councilof.ai/api/gspc.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">

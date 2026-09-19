@@ -1,7 +1,7 @@
 {
   "schema_version": "2026-07-28",
   "name": "csoai",
-  "description": "Council of AI measurement tools exposed over MCP. Independent AI-governance measurement body \u2014 not certification, not accreditation. Live board: GET /api/gspc (quote totals.public_count).",
+  "description": "Council of AI measurement tools exposed over MCP. Independent AI-governance measurement body — not certification, not accreditation. Live board: GET /api/gspc (quote totals.public_count).",
   "servers": [
     {
       "name": "csoai-gspc-mcp",
@@ -41,7 +41,7 @@
       "rwa_evidence",
       "receipts_batch"
     ],
-    "note": "POST /mcp tools/list: nine free readers plus four x402-metered evidence tools. mill-tool `measure` is dropped. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.0 points here. A listing does not prove paid settlement or delivery."
+    "note": "POST /mcp tools/list: eight free readers plus four x402-metered evidence tools. mill-tool `measure` is dropped. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.0 points here. A listing does not prove paid settlement or delivery."
   },
   "planted": {
     "tools": [
@@ -60,17 +60,10 @@
       "receipts_batch"
     ],
     "url": "https://councilof.ai/mcp",
-    "note": "The product door: nine free readers plus four x402-metered evidence tools. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. No 23rd axis. No jail run from MCP. mill-tool `measure` dropped."
+    "note": "The product door: eight free readers plus four x402-metered evidence tools. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. No 23rd axis. No jail run from MCP. mill-tool `measure` dropped."
   },
   "provider": {
     "name": "CSOAI Ltd",
     "url": "https://councilof.ai"
-  },
-  "correction": {
-    "state": "DISCOVERY_COPY_CORRECTED",
-    "corrected_at": "2026-09-19T05:53:10.629947+00:00",
-    "reason": "Tool arrays and numeric fields already reported 13 total / 9 free / 4 metered; prose still said eight free readers.",
-    "original_file_sha256": "55921e1a93dbb8f65c49cf8e2af211ce43ee2be16158c1b8bd85b1129b0cd247",
-    "original_copy": "evidence/quarantine/stale-public-claims-20260919/originals/well-known-mcp.pre-20260919.json"
   }
 }
