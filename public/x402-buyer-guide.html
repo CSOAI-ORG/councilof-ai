@@ -55,8 +55,10 @@ curl -i "https://councilof.ai/api/request-attestation?subject=USDC"
 # 3. Retry the same resource with the v2 PAYMENT-SIGNATURE header.
 curl -H "PAYMENT-SIGNATURE: &lt;base64-encoded-payment-payload&gt;" \
      "https://councilof.ai/api/request-attestation?subject=USDC"
-# → HTTP 200 + paid artefact only after verified settlement</code></pre>
+# Inspect the HTTP status, returned artefact and delivery status.
+# HTTP 202, queued or pending is not delivered.</code></pre>
 <p>The placeholder is a signed x402 payment payload, not a transaction hash or an offer-receipt JWS. Legacy v1 clients use <code>X-PAYMENT</code>. Read the current amount from the challenge, including any active promotion; a 402 is an offer, not proof of payment.</p>
+<p>Settlement alone does not prove artefact delivery. Even HTTP 200 can return a commission receipt with <code>fresh_run: UNMEASURED</code>; inspect the response and verify the returned artefact. Preserve pending responses for reconciliation and honor <code>retry_payment: false</code>.</p>
 <h2>The catalog</h2>
 <p>Existing resources are listed below. Read the current catalog and free previews at <a href="/.well-known/x402.json">/.well-known/x402.json</a>.</p>
 <table>
