@@ -64,20 +64,21 @@ describe("/api/commissions — requester retrieval (join to the signed pod-cards
     const body = await buildCommissions({ REVENUE_KV: kv() }, "https://councilof.ai", fetcherWith(200, index)) as { commissions: Array<Record<string, any>>; delivered: number | null; retrieval: Record<string, string> };
     const [subj, gov, wrap] = body.commissions;
     expect(subj.cards.map((c: any) => c.axis).sort()).toEqual(["governance", "swarm"]);
-    expect(subj.delivery).toEqual({ state: "CARDS_PUBLISHED", count: 2 });
+    expect(subj.delivery).toEqual({ state: "CANDIDATE_CARDS_PUBLISHED", count: 2 });
     expect(gov.cards.map((c: any) => c.id)).toEqual(["e".repeat(64)]);
     expect(gov.cards[0].url).toContain("/interop/mill-cards-signed/");
     expect(wrap.cards).toBeNull();
     expect(wrap.delivery.state).toBe("NONE");
-    expect(body.delivered).toBe(2);
+    expect(body.delivered).toBeNull();
     expect(body.retrieval.state).toBe("READ");
     expect(body.retrieval.index).toBe(POD_CARDS_INDEX);
-    // writer: DID-signed cards published → RETRIEVABLE (not stuck QUEUED)
-    expect(subj.fulfillment).toBe("RETRIEVABLE");
-    expect(gov.fulfillment).toBe("RETRIEVABLE");
+    // A candidate model/axis match is not completion of this request.
+    expect(subj.fulfillment).toBe("QUEUED");
+    expect(gov.fulfillment).toBe("QUEUED");
     expect(wrap.fulfillment).toBe("UNFULFILLABLE");
-    expect((body as any).retrievable).toBe(2);
-    expect((body as any).queued).toBe(0);
+    expect((body as any).retrievable).toBe(0);
+    expect((body as any).candidate_card_matches).toBe(2);
+    expect((body as any).queued).toBe(2);
   });
 
   it("is UNCHECKABLE with null cards when the index cannot be read — never an empty delivery", async () => {
@@ -93,7 +94,7 @@ describe("/api/commissions — requester retrieval (join to the signed pod-cards
   it("prefers the ASSETS binding when present", async () => {
     const ASSETS = { fetch: async (r: Request) => { expect(new URL(r.url).pathname).toBe(POD_CARDS_INDEX); return new Response(JSON.stringify(index), { status: 200 }); } };
     const body = await buildCommissions({ REVENUE_KV: kv(), ASSETS }, "https://councilof.ai") as { delivered: number | null };
-    expect(body.delivered).toBe(2);
+    expect(body.delivered).toBeNull();
   });
 
   it("joins a typed Hub commission only to the reproducibly admitted Hub index", async () => {
@@ -108,7 +109,7 @@ describe("/api/commissions — requester retrieval (join to the signed pod-cards
       return new Response(JSON.stringify(hub), { status: 200 });
     }) as typeof fetch;
     const body = await buildCommissions({ REVENUE_KV: store }, "https://councilof.ai", fetcher) as any;
-    expect(body.commissions[0].delivery).toEqual({ state: "CARDS_PUBLISHED", count: 1 });
+    expect(body.commissions[0].delivery).toEqual({ state: "CANDIDATE_CARDS_PUBLISHED", count: 1 });
     expect(body.commissions[0].cards[0].id).toBe("h".repeat(64));
     expect(body.retrieval.hub_index).toBe(HUB_CARDS_INDEX);
   });
@@ -136,7 +137,7 @@ describe("fulfillmentAfterDelivery — RETRIEVABLE writer", () => {
     const fetcher = (async () => new Response(JSON.stringify(index), { status: 200 })) as unknown as typeof fetch;
     const body = await buildCommissions({ REVENUE_KV: store }, "https://councilof.ai", fetcher) as any;
     expect(body.commissions[0].fulfillment).toBe("RETRIEVABLE");
-    expect(body.commissions[0].delivery.state).toBe("CARDS_PUBLISHED");
+    expect(body.commissions[0].delivery.state).toBe("CANDIDATE_CARDS_PUBLISHED");
     expect(body.retrievable).toBe(1);
     expect(body.queued).toBe(0);
   });

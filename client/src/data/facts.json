@@ -31,14 +31,14 @@
         "totals.quotable_axes"
       ],
       "observed": {
-        "value": "22 axes · 22 measured",
-        "axes": 22,
+        "value": "23 axis · 22 measured",
+        "axes": 23,
         "measured_axes": 22,
-        "unmeasured_axes": 0,
+        "unmeasured_axes": 1,
         "quotable_axes": 22,
-        "observed_at": "2026-09-01",
+        "observed_at": "2026-09-19",
         "binding": false,
-        "note": "Observation only, recorded so the gate can detect drift. If this disagrees with the endpoint, the ENDPOINT wins and this block is stale. Recorded after the measurement sweep measured every remaining slot, so all 22 axes now carry a run behind them."
+        "note": "Observation fallback only. Fresh read on 2026-09-19: 23 declared slots, 22 carrying measurements, 1 unmeasured. The endpoint remains authoritative; if reachable it overrides this snapshot."
       },
       "api_self_description": "Slot counts live in totals (public_count, axes, measured_axes, unmeasured_axes) and are derived from the axis array, never typed.",
       "numeric_field": "totals.axes",
@@ -46,15 +46,15 @@
       "gspc_family_axes": 14,
       "gspc_family_note": "The behavioural family's own size, 14, recorded so the gate can recognise the historical measurement stamp '13 canonical axes · jail' as a breakdown of THAT family rather than a competing claim about the GSPC board. Not a public count — quote totals.public_count.",
       "field_note": "TWO fields, deliberately. totals.public_count is the SENTENCE a surface quotes; totals.axes is the INTEGER the gate compares against. They are not interchangeable: public_count is a string, and a numeric comparison against it is a type error waiting to be noticed. Until 2026-08-26 the gate read totals.axes while this file declared public_count as the authority — masked only because both happened to yield 14. Both are now named for what they are.",
-      "grammar_warning": "The two numbers still mean different things — 22 counts SLOTS on the board and measured_axes counts slots with a run behind them — but they now coincide: every one of the 22 slots carries a measurement, so measured_axes is 22 and 0 slots are declared-but-unmeasured. Quoting '22 measured' asserts no measurement that does not exist. Quote totals.public_count, which still carries both numbers."
+      "grammar_warning": "23 counts declared board slots; 22 counts slots with a measurement behind them. They are different numbers. Quote totals.public_count or the explicit pair; an unmeasured declared slot is not a zero score."
     },
     "twenty_two_figure": {
       "status": "live",
       "public_claim": true,
       "authority": "Owner ruling 2026-08-24, csoai-static-deploy2 commit 2bdbac34986333f6de992fcd76cb08aa3e19d1cf; recorded in council-os/ADR-001-axis-count.md. Backed on the wire by GET /api/gspc -> totals.axes == 22 and totals.measured_axes == 22 after the sweep of 2026-08-26 wired the axes in and the later measurement sweep measured every remaining slot.",
       "note": "'22' is the MEASURED count. Since ADR-002 (2026-09-16) the board carries 23 slots: 14 GSPC behavioural + 8 financial/domain + 1 declared slot (effect-binding, UNMEASURED, n 0). 22 of the 23 carry a run. The gate never reads this block for a number; it reads numeric_field / measured_numeric_field off the live endpoint. This prose is documentation and was last true-as-written on 2026-09-01.",
-      "correct_forms_note": "HISTORICAL. Forms below were correct 2026-09-01 to 2026-09-15 (22 slots, 22 measured). From ADR-002 (2026-09-16) the correct form is the live totals.public_count sentence, which reads 23 axis \u00b7 22 measured; \"22 axes \u00b7 22 measured\" is now a wrong SLOT count.",
-  "correct_forms": [
+      "correct_forms_note": "HISTORICAL. Forms below were correct 2026-09-01 to 2026-09-15 (22 slots, 22 measured). From ADR-002 (2026-09-16) the correct form is the live totals.public_count sentence, which reads 23 axis · 22 measured; \"22 axes · 22 measured\" is now a wrong SLOT count.",
+      "correct_forms": [
         "22 axes · 22 measured",
         "22 axes, 22 of them measured",
         "22 measured axes of 22 on the board"
@@ -195,7 +195,9 @@
       },
       "merge_me_train": {
         "name": "merge-me train (live GitHub PR titles)",
-        "surfaces": ["/merge-me"],
+        "surfaces": [
+          "/merge-me"
+        ],
         "note": "noindex conductor page. Counts mirrored from open PR / mill titles are not board claims. Exonerated so a mill title like 9 axes (n>=30) cannot block unrelated tip deploys.",
         "why_scoped": "Derived from api.github.com PR titles; prerender may snapshot them. Not an authority for totals.public_count."
       }

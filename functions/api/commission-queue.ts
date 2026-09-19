@@ -14,6 +14,9 @@ import { readHubCardsIndex, readPodCardsIndex } from "./commissions";
 type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise<Response> } };
 
 type QueueRow = {
+  commission_id: string | null;
+  request_scope_sha256: string | null;
+  delivery_state?: "NOT_OBSERVED" | "EVIDENCE_PRESENT_NOT_REQUEST_BOUND" | "UNCHECKABLE";
   subject: string;
   subject_kind: string | null;
   model: string | null;
@@ -46,7 +49,10 @@ async function listPrefix(
   const rows: QueueRow[] = [];
   let unreadable = 0;
   let cursor: string | undefined;
+  const cursors = new Set<string>();
+  let pages = 0;
   do {
+    if (++pages > 10) throw new Error("QUEUE_PAGE_LIMIT");
     const page = await kv.list({ prefix, cursor, limit: 1000 });
     for (const k of page.keys) {
       const raw = await kv.get(k.name);
@@ -62,12 +68,19 @@ async function listPrefix(
         unreadable++;
       }
     }
-    cursor = page.list_complete ? undefined : page.cursor;
+    cursor = !page.list_complete && "cursor" in page ? page.cursor : undefined;
+    if (!page.list_complete && (!cursor || cursors.has(cursor))) throw new Error("QUEUE_CURSOR_INVALID");
+    if (cursor) cursors.add(cursor);
   } while (cursor);
   return { rows, unreadable };
 }
 
 function fromMillKey(name: string, r: Record<string, unknown>): QueueRow | null {
+  const versioned = r.schema === "csoai.commission-intent/0.2" || name.startsWith("mill:commission:v2:");
+  if (versioned && (r.schema !== "csoai.commission-intent/0.2" ||
+      typeof r.commission_id !== "string" || !/^[0-9a-f]{64}$/.test(r.commission_id) ||
+      name !== `mill:commission:v2:${r.commission_id}` || r.status !== "QUEUED" ||
+      typeof r.request_scope_sha256 !== "string" || !/^[0-9a-f]{64}$/.test(r.request_scope_sha256))) return null;
   const subject = typeof r.subject === "string" ? r.subject.trim() : name.slice("mill:commission:".length);
   if (!subject) return null;
   const fulfillment =
@@ -77,6 +90,8 @@ function fromMillKey(name: string, r: Record<string, unknown>): QueueRow | null 
   // Mill-visible queue is QUEUED only — RETRIEVABLE means signed cards already published.
   if (fulfillment !== "QUEUED") return null;
   return {
+    commission_id: typeof r.commission_id === "string" ? r.commission_id : null,
+    request_scope_sha256: typeof r.request_scope_sha256 === "string" ? r.request_scope_sha256 : null,
     subject,
     subject_kind: typeof r.subject_kind === "string" ? r.subject_kind : null,
     model: typeof r.model === "string" && r.model ? r.model : null,
@@ -94,6 +109,7 @@ function fromMillKey(name: string, r: Record<string, unknown>): QueueRow | null 
 
 /** Legacy ras:* → mill-visible only when QUEUED with a non-null model (Measure #2255 prefer-queue). */
 function fromRasKey(name: string, r: Record<string, unknown>): QueueRow | null {
+  if (r.commission_id != null && (r.queue_ack !== "QUEUE_READBACK_CONFIRMED" || r.enqueued !== true)) return null;
   const subject = typeof r.subject === "string" ? r.subject.trim() : "";
   if (!subject) return null;
   const classified = classifyCommissionTarget(subject);
@@ -113,6 +129,8 @@ function fromRasKey(name: string, r: Record<string, unknown>): QueueRow | null {
   const bank =
     typeof r.bank === "string" && r.bank ? r.bank : classified.bank;
   return {
+    commission_id: typeof r.commission_id === "string" ? r.commission_id : null,
+    request_scope_sha256: typeof r.request_scope_sha256 === "string" ? r.request_scope_sha256 : null,
     subject,
     subject_kind,
     model,
@@ -131,13 +149,14 @@ function fromRasKey(name: string, r: Record<string, unknown>): QueueRow | null {
 export async function listCommissionQueue(kv: KVNamespace): Promise<{ rows: QueueRow[]; unreadable: number }> {
   const mill = await listPrefix(kv, "mill:commission:", fromMillKey);
   const ras = await listPrefix(kv, "ras:", fromRasKey);
-  // Prefer explicit mill:commission enqueue over classified ras:* for the same subject.
-  const bySubject = new Map<string, QueueRow>();
-  for (const row of ras.rows) bySubject.set(row.subject, row);
-  for (const row of mill.rows) bySubject.set(row.subject, row);
-  const rows = [...bySubject.values()].sort((a, b) =>
-    String(a.as_of ?? "").localeCompare(String(b.as_of ?? "")),
-  );
+  // New requests retain their immutable commission identity. Legacy copies deduplicate
+  // only the same subject/axis scope; separate work must never collapse to one subject.
+  const identity = (row: QueueRow) => row.commission_id ? `id:${row.commission_id}` : JSON.stringify([row.subject,row.axis]);
+  const byRequest = new Map<string, QueueRow>();
+  for (const row of ras.rows) byRequest.set(identity(row), row);
+  for (const row of mill.rows) byRequest.set(identity(row), row);
+  const rows = [...byRequest.values()].sort((a,b) => String(a.as_of ?? "").localeCompare(String(b.as_of ?? "")));
+
   return { rows, unreadable: mill.unreadable + ras.unreadable };
 }
 
@@ -146,19 +165,24 @@ async function suppressDelivered(
   env: Env,
   origin: string,
   fetcher: typeof fetch,
-): Promise<{ rows: QueueRow[]; suppressed: number; state: "READ" | "UNCHECKABLE" }> {
+): Promise<{ rows: QueueRow[]; suppressed: number; candidate_matches: number; state: "READ" | "UNCHECKABLE" }> {
   const needsPod = rows.some((r) => r.subject_kind !== "hub_model" && r.model);
   const needsHub = rows.some((r) => r.subject_kind === "hub_model" && r.model);
   const pod = needsPod ? await readPodCardsIndex(env, origin, fetcher) : new Map();
   const hub = needsHub ? await readHubCardsIndex(env, origin, fetcher) : new Map();
-  if (pod === null || hub === null) return { rows, suppressed: 0, state: "UNCHECKABLE" };
-  const active = rows.filter((row) => {
-    if (!row.model) return true;
+  if (pod === null || hub === null) return { rows:rows.map(r=>({...r,delivery_state:"UNCHECKABLE" as const})), suppressed: 0, candidate_matches:0, state: "UNCHECKABLE" };
+  let candidate_matches = 0;
+  const observed = rows.map(row => {
     const index = row.subject_kind === "hub_model" ? hub : pod;
-    const cards = index.get(row.model.toLowerCase()) ?? [];
-    return !cards.some((card) => row.axis === null || card.axis === row.axis);
+    const cards = row.model ? index.get(row.model.toLowerCase()) ?? [] : [];
+    const candidate = cards.some(card => row.axis === null || card.axis === row.axis);
+    if (candidate) candidate_matches++;
+    return {...row,delivery_state:candidate ? "EVIDENCE_PRESENT_NOT_REQUEST_BOUND" as const : "NOT_OBSERVED" as const};
   });
-  return { rows: active, suppressed: rows.length - active.length, state: "READ" };
+  // A model/axis index hit does not bind a result to this request, time, bank or
+  // execution. No request disappears until an actual request-bound delivery exists.
+  return { rows:observed, suppressed:0, candidate_matches, state:"READ" };
+
 }
 
 export async function buildCommissionQueue(env: Env, origin = "https://councilof.ai", fetcher: typeof fetch = fetch) {
@@ -185,7 +209,8 @@ export async function buildCommissionQueue(env: Env, origin = "https://councilof
       delivery_reconciliation: {
         state: reconciled.state,
         suppressed: reconciled.suppressed,
-        meaning: "Signed cards already published for the requested model/axis leave the active mill queue. Index unreadable keeps work visible and reports UNCHECKABLE.",
+        candidate_matches: reconciled.candidate_matches,
+        meaning: "Model/axis index hits are candidates only, not request-bound delivery. They never suppress work here. Index unreadable keeps work visible and reports UNCHECKABLE.",
       },
       rows,
       records_unreadable: listed.unreadable,

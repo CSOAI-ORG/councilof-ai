@@ -34,8 +34,11 @@ import {
 import { railMode } from "./_x402_config";
 import { REQUEST_ATTESTATION_DESCRIPTION } from "./_x402_descriptions";
 import { AXES } from "./_axis_register";
-import { signPayload, cardV0 } from "../_lib/cardSign";
+import { AXES_A } from "./_gspc_axes_a";
+import { AXES_B } from "./_gspc_axes_b";
+import { signPayload, cardV0, canonicalBytes, PAYLOAD_CAP_BYTES } from "../_lib/cardSign";
 import { classifyCommissionTarget } from "./_commission_target";
+import { acknowledgeCommission, queueConfigured, ACK_LIMITS } from "./_commission_ack";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
@@ -77,9 +80,17 @@ async function reserveFor(origin: string, subject: string, axis: string): Promis
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
-  const resourceUrl = new URL("/api/request-attestation", origin).toString();
+
   const subject = (url.searchParams.get("subject") || "").trim();
   const axis = (url.searchParams.get("axis") || "").trim().toLowerCase();
+
+  if (["subject","axis"].some(k => url.searchParams.getAll(k).length > 1)) {
+    return json({schema:"csoai.request-attestation/0.2",error:"ambiguous_query",reason:"Use exactly one subject and one axis."},400);
+  }
+  const resource = new URL("/api/request-attestation", origin);
+  if (subject) resource.searchParams.set("subject",subject);
+  if (axis) resource.searchParams.set("axis",axis);
+  const resourceUrl = resource.toString();
 
   if (subject && !SUBJECT_RE.test(subject)) {
     return json({ schema: "csoai.request-attestation/0.2", error: "bad_request", reason: "subject: 1–120 chars of [A-Za-z0-9._:/@+-]" }, 400);
@@ -92,7 +103,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (hasPaymentHeader(request) && !subject) {
     return json({ schema: "csoai.request-attestation/0.2", error: "bad_request", reason: "pass subject=<id> (and optional axis=) before presenting payment", lid: CSOAI_LID }, 400);
   }
-  const knownAxis = axis ? AXES.some((a) => a.axis === axis) : null;
+  const knownAxis = axis ? AXES.some(a => a.axis === axis) || [...AXES_A,...AXES_B].some(a => a.kind === "model-comparison" && a.axis === axis) : null;
   // Typed contract: classify before admit. Ambiguous subjects never reach /verify|/settle.
   const targetEarly = subject ? classifyCommissionTarget(subject) : null;
   if (hasPaymentHeader(request) && targetEarly && !targetEarly.admit) {
@@ -109,6 +120,14 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }, 400);
   }
 
+  if (axis && !knownAxis) {
+    return json({schema:"csoai.request-attestation/0.2",error:"unknown_axis",axis,settlement_attempted:false},400);
+  }
+  if (hasPaymentHeader(request) && !queueConfigured(env.REVENUE_KV)) {
+    return json({schema:"csoai.request-attestation/0.2",error:"queue_unavailable",settlement_attempted:false,
+      reason:"No usable commission store is configured. Payment must not be settled for unrecordable work."},503);
+  }
+
   const description = REQUEST_ATTESTATION_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
@@ -116,6 +135,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // The free preview is the same whether or not the caller pays: what already exists.
   const reserve = subject ? await reserveFor(origin, subject, axis) : { cells: [], as_of: null, source: "no subject given" };
   const preview = {
+    commission_store: queueConfigured(env.REVENUE_KV) ? "CONFIGURED_NOT_EXECUTION_PROOF" : "UNAVAILABLE",
+    queue_binding_configured: queueConfigured(env.REVENUE_KV),
+    execution_readiness: "NOT_ESTABLISHED_BY_THIS_PREVIEW",
     subject: subject || null,
     axis: axis || null,
     axis_known: knownAxis,
@@ -175,20 +197,33 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const as_of = new Date().toISOString();
   const tx = payment.settlement?.transaction || null;
   const source_urls = [
-    resourceUrl + `?subject=${encodeURIComponent(subject)}` + (axis ? `&axis=${encodeURIComponent(axis)}` : ""),
+    resourceUrl,
     ...(tx ? [`https://basescan.org/tx/${tx}`] : []),
     reserve.source.startsWith("http") ? reserve.source : `${origin}/signed/card-matrix.json`,
   ];
   const target = targetEarly ?? classifyCommissionTarget(subject);
+  const ack = await acknowledgeCommission(env.REVENUE_KV!,subject,axis,target,payment.settlement || {},as_of);
+  if (ack.state !== "QUEUE_READBACK_CONFIRMED") {
+    return json({schema:"csoai.request-attestation/0.2",state:"SETTLED_QUEUE_UNCONFIRMED",
+      settlement:payment.settlement || null,payment_settled:ack.state === "SETTLEMENT_ID_MISSING" ? null : true,
+      settlement_state:ack.state === "SETTLEMENT_ID_MISSING" ? "UNCONFIRMED_MISSING_ID" : "REPORTED_SETTLED",enqueued:null,queue_ack:ack,
+      retry_payment:false,reason:"Payment was reported settled but queue acceptance is not confirmed. Preserve this response for reconciliation; do not automatically pay again.",
+      execution:"NOT_OBSERVED",delivery:"NOT_OBSERVED",limits:ACK_LIMITS},202,
+      payment.paymentResponse ? {"x-payment-response":payment.paymentResponse} : {});
+  }
   const queue_ref = `${origin}/api/commission-queue`;
+
   const payload: Record<string, unknown> = {
-    status: "COMMISSIONED",
+    status: target.fulfillment === "QUEUED" ? "COMMISSIONED" : "RECEIPT_ONLY",
     subject,
     subject_kind: target.subject_kind,
     model: target.model,
     bank: target.bank,
     fulfillment: target.fulfillment,
-    enqueued: true,
+    enqueued: target.fulfillment === "QUEUED",
+    commission_id: ack.commission_id,
+    request_scope_sha256: ack.scope_sha256,
+    queue_ack: ack.state,
     queue: "commission",
     queue_ref,
     axis: axis || null,
@@ -204,9 +239,18 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   };
   let leaf;
   try {
+    // Keep the full match count, but fit references within the existing card atom.
+    // Drop only displayed references, never underlying evidence or a count silently.
+    const refs = payload.reserve as Array<{axis:string;card:string}>;
+    while (refs.length && canonicalBytes(payload).byteLength > PAYLOAD_CAP_BYTES) {
+      refs.pop(); payload.reserve_returned = refs.length;
+    }
     leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
   } catch (e) {
-    return json({ schema: "csoai.request-attestation/0.2", error: "uncheckable", reason: (e as Error).message }, 500);
+    return json({schema:"csoai.request-attestation/0.2",state:"QUEUE_ACCEPTED_RECEIPT_UNAVAILABLE",queue_ack:ack,
+      enqueued:ack.enqueued,settlement:payment.settlement || null,retry_payment:false,
+      execution:"NOT_OBSERVED",delivery:"NOT_OBSERVED",reason:"The queue accepted this request but the receipt could not be assembled. Reconcile this commission id; do not automatically pay again."},202,
+      payment.paymentResponse ? {"x-payment-response":payment.paymentResponse} : {});
   }
   const card = cardV0({
     surface: "ras.commission",
@@ -219,50 +263,35 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     unmeasured: ["fresh_run_schedule"],
   });
 
-  // Tally + mill-visible enqueue when a store is bound. Absent store ⇒ nothing counted (null, never 0).
-  // Enqueue writes mill:commission:<subject> for GET /api/commission-queue. Failure never blocks receipt.
-  if (env.REVENUE_KV) {
+  // The queue write/readback occurred before claiming acceptance. Receipt indexing and
+  // telemetry are independent; failures here cannot erase or downgrade the observed job.
+  let receipt_indexed = false;
+  try {
+    await env.REVENUE_KV!.put(`ras:${leaf.sha256}`, JSON.stringify({subject,axis:axis || null,tx,
+      as_of,queued_at:ack.as_of,enqueued:target.fulfillment === "QUEUED",commission_id:ack.commission_id,
+      request_scope_sha256:ack.scope_sha256,queue_ack:ack.state,queue:"commission",
+      subject_kind:target.subject_kind,model:target.model,bank:target.bank,fulfillment:target.fulfillment}));
+    receipt_indexed = true;
+  } catch { /* explicitly reported below, not confused with queue acceptance */ }
+
+  // Preserve the existing issuance metric, but never let its best-effort KV
+  // read/modify/write decide whether a request reached the queue.
+  let issuance_counter = ack.reused ? "NOT_UPDATED_REUSED_INTENT" : "NOT_UPDATED";
+  if (!ack.reused && receipt_indexed) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:issuances")) || "0") + 1;
-      await env.REVENUE_KV.put("count:issuances", String(n));
-      await env.REVENUE_KV.put(
-        `ras:${leaf.sha256}`,
-        JSON.stringify({
-          subject,
-          axis: axis || null,
-          tx,
-          as_of,
-          enqueued: true,
-          queue: "commission",
-          subject_kind: target.subject_kind,
-          model: target.model,
-          bank: target.bank,
-          fulfillment: target.fulfillment,
-        }),
-      );
-      await env.REVENUE_KV.put(
-        `mill:commission:${subject}`,
-        JSON.stringify({
-          subject,
-          subject_kind: target.subject_kind,
-          model: target.model,
-          bank: target.bank,
-          axis: axis || null,
-          tx,
-          as_of,
-          receipt_sha: leaf.sha256,
-          card_sha: leaf.sha256,
-          status: "QUEUED",
-          fulfillment: target.fulfillment,
-        }),
-      );
-    } catch {
-      /* a tally/enqueue failure never blocks a paid deliverable */
-    }
+      const raw = await env.REVENUE_KV!.get("count:issuances");
+      const count = raw === null ? 0 : /^\d+$/.test(raw) ? Number(raw) : NaN;
+      if (!Number.isSafeInteger(count) || count < 0 || count >= Number.MAX_SAFE_INTEGER) {
+        issuance_counter = "INVALID_EXISTING_COUNTER";
+      } else {
+        await env.REVENUE_KV!.put("count:issuances", String(count + 1));
+        issuance_counter = "BEST_EFFORT_UPDATED_NOT_TRANSACTIONAL";
+      }
+    } catch { issuance_counter = "UPDATE_UNCONFIRMED"; }
   }
 
   return json(
-    { card, verify: `${origin}/gspc-verify`, signed: !!leaf.sig_ed25519, unsigned_reason: leaf.unsigned_reason, bytes: leaf.bytes, note: "Commission receipt. Not a grade, not a rank, not a certificate. Root inclusion follows the public-root workflow." },
+    { card, queue_ack:ack,receipt_indexed,issuance_counter,execution:"NOT_OBSERVED",delivery:"NOT_OBSERVED",limits:ACK_LIMITS, verify: `${origin}/gspc-verify`, signed: !!leaf.sig_ed25519, unsigned_reason: leaf.unsigned_reason, bytes: leaf.bytes, note: "Commission receipt. Not a grade, not a rank, not a certificate. Root inclusion follows the public-root workflow." },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
   );

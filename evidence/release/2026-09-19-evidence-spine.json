@@ -1,0 +1,502 @@
+{
+  "schema": "csoai.release-candidate-receipt/0.1",
+  "created_at": "2026-09-19T05:45:07.465588+00:00",
+  "branch": "release/evidence-spine-20260919",
+  "base_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+  "purpose": "Reviewed evidence-spine, claim-maintenance, truthful commission delivery, witness-state and public-claim correction release.",
+  "files_before_receipt": [
+    {
+      "path": "client/src/components/ServicePreview.tsx",
+      "git_status": " M",
+      "current_sha256": "df981a96cb7b090cb95721d42154e95c1ae85d905576b3e76994e7c5a98b8bab",
+      "bytes": 2479
+    },
+    {
+      "path": "client/src/data/facts.json",
+      "git_status": " M",
+      "current_sha256": "58508fae782787a37057539304d9dbf7ad12ccd517ea2536effc1c2dd07a47e2",
+      "bytes": 32349
+    },
+    {
+      "path": "client/src/lib/previewTemplate.ts",
+      "git_status": " M",
+      "current_sha256": "e74708fbbd269a2a7e189a478231fa2bf0d8019ebb114bfdd1218a649a6b778b",
+      "bytes": 3300
+    },
+    {
+      "path": "client/src/lib/servicesCatalogue.test.ts",
+      "git_status": " M",
+      "current_sha256": "d34ad17e6ff62fb56c6a90f20fe6d5d787beead5e639745dff5ccf4c22f568a6",
+      "bytes": 5550
+    },
+    {
+      "path": "client/src/lib/servicesCatalogue.ts",
+      "git_status": " M",
+      "current_sha256": "d759b4c339b815a24a90b42d3f9855c689b35755ee4d7d88a737eb4b0ef25c1c",
+      "bytes": 7483
+    },
+    {
+      "path": "client/src/pages/Quickstart.test.ts",
+      "git_status": " M",
+      "current_sha256": "678e9a7d7ff9b20e0d32daa618b5d0a35186b45f522a8bb5421c802b2ee3f837",
+      "bytes": 9661
+    },
+    {
+      "path": "client/src/pages/Quickstart.tsx",
+      "git_status": " M",
+      "current_sha256": "2b36aa8305fa548d2c4c7ca11db269172a15f0f9f1821e175917bee2e4ca6277",
+      "bytes": 27159
+    },
+    {
+      "path": "client/src/pages/Services.tsx",
+      "git_status": " M",
+      "current_sha256": "2895ce41a3bef433f0fa1fe84db4cb03258393df31f6c14b573877279cd457e6",
+      "bytes": 10568
+    },
+    {
+      "path": "client/src/pages/services.page.test.ts",
+      "git_status": " M",
+      "current_sha256": "d9d168147c0f2e943c5f0247a931a5a0f9bb9bdf36f83fc16dd9c462a876a6da",
+      "bytes": 3730
+    },
+    {
+      "path": "functions/api/commission-queue.test.ts",
+      "git_status": " M",
+      "current_sha256": "ceab0d3704331dce613e8c36581999d87146d4cf3f9d5cc6c42086f3f669f9d5",
+      "bytes": 5114
+    },
+    {
+      "path": "functions/api/commission-queue.ts",
+      "git_status": " M",
+      "current_sha256": "cf4910eda4f063e2ba7087da19386c9a909c8c277f12d1075f69015167e5a626",
+      "bytes": 10276
+    },
+    {
+      "path": "functions/api/commissions.test.ts",
+      "git_status": " M",
+      "current_sha256": "71ba29bc71a31c1f90ab6e32081af7b4ea3fab78a2ec9dd273ddd043a6fe7715",
+      "bytes": 11614
+    },
+    {
+      "path": "functions/api/commissions.ts",
+      "git_status": " M",
+      "current_sha256": "88d4862486af4d6689f1731eeb93a6a69722e5c3ae4090f436b1122e485c643f",
+      "bytes": 14094
+    },
+    {
+      "path": "functions/api/metered-endpoints.test.ts",
+      "git_status": " M",
+      "current_sha256": "4fd009bc9e6fc6db273cb785de57ebd2cc8ffcbec8073f4f5c23f84f47589b8a",
+      "bytes": 13348
+    },
+    {
+      "path": "functions/api/request-attestation.ts",
+      "git_status": " M",
+      "current_sha256": "3bcdae5363566583d1de62dd97c35365d934c58204aa7df854c520b3b9f7013d",
+      "bytes": 14929
+    },
+    {
+      "path": "harness/owem/card_pipeline.py",
+      "git_status": " M",
+      "current_sha256": "cab4e802a0177d7092b848f9e6a28b02f7de7204274a0a772aa7d9da658e97ce",
+      "bytes": 20641
+    },
+    {
+      "path": "mcp/gspc-server/index.mjs",
+      "git_status": " M",
+      "current_sha256": "7df1c3bf198793732ec62e0653de05abb4ed2f7be9b397329abbbf61bfa99af5",
+      "bytes": 29983
+    },
+    {
+      "path": "mcp/gspc-server/wired-tools.test.mjs",
+      "git_status": " M",
+      "current_sha256": "a69077a647385423b7aa32eb02a61b62b7839b61a6e136b757e1d33b216c5e65",
+      "bytes": 14437
+    },
+    {
+      "path": "plugins/gspc/README.md",
+      "git_status": " M",
+      "current_sha256": "62b2761c19061cba25f52e8d1c245b2e8393e7517d6eccc54129a0e9b37f5e8e",
+      "bytes": 2652
+    },
+    {
+      "path": "plugins/gspc/plugin.json",
+      "git_status": " M",
+      "current_sha256": "017eeee8befef355657349258f7f1f069e248aae874118a6f0091eb47f67d998",
+      "bytes": 382
+    },
+    {
+      "path": "public/interop/continuous-churn-engine-v0.1.json",
+      "git_status": " M",
+      "current_sha256": "9a1962975d799814c44589ef1a636a4e052fa3127bb4d5b07db3af9b6c221a2d",
+      "bytes": 9311
+    },
+    {
+      "path": "public/interop/ledger-card-stablecoin-deep-summary-2026-09-unsigned.ots",
+      "git_status": " D",
+      "original_sha256": "d4634e125e3853166980f64bbbc700b420e4b0149a06cb9366c10e58240a4451",
+      "original_bytes": 892
+    },
+    {
+      "path": "public/interop/ledger-card-x402-rail-weekly-2026-09-16-unsigned.ots",
+      "git_status": " D",
+      "original_sha256": "02cbfab7cea04f5cb818ad6f92f871dffa1e129ea0c21ac944b71163878e5832",
+      "original_bytes": 1032
+    },
+    {
+      "path": "public/interop/ledger-card-xrpl-reader-status-2026-09-16-unsigned.ots",
+      "git_status": " D",
+      "original_sha256": "36cd9945da95d9619becd790b3475895e15506f6feb3402ea1dc4614eb1818aa",
+      "original_bytes": 962
+    },
+    {
+      "path": "public/interop/master-consolidation-rollup-v0.1.json",
+      "git_status": " M",
+      "current_sha256": "4ad644fb304e298e30c18b79e38ad862fc7728832ebfc02343ee243f9a531efd",
+      "bytes": 9418
+    },
+    {
+      "path": "public/interop/master-harness-index-v0.1.json",
+      "git_status": " M",
+      "current_sha256": "fc5e5531b19da9dffa4e1c2a3e475af97dad9854ac739cccf355bec448b7c27b",
+      "bytes": 12019
+    },
+    {
+      "path": "public/interop/master-harness-index-v0.2.json",
+      "git_status": " M",
+      "current_sha256": "4ed80c274bb809d787cdbeb11277c1709f0547736704fdfe2c52ee040107b32c",
+      "bytes": 21188
+    },
+    {
+      "path": "public/interop/master-harness-index-v0.3.json",
+      "git_status": " M",
+      "current_sha256": "73c9d5b4f7e153b2f43789115a485b49f42bd67cdd00b9b266fe7d58daf8f0ef",
+      "bytes": 27708
+    },
+    {
+      "path": "public/interop/master-harness-index-v0.4.json",
+      "git_status": " M",
+      "current_sha256": "d14cdfc404e5d105375c8afb50090da0a311d827891a5347f33ae8af26be733c",
+      "bytes": 28187
+    },
+    {
+      "path": "public/interop/mill-receipt-readiness.json",
+      "git_status": " M",
+      "current_sha256": "3e95298ce15472bb2cb061ad8cfe675afa5e687a41e144408b07035823e64912",
+      "bytes": 27242
+    },
+    {
+      "path": "public/interop/ots/cobol-measure.json.ots",
+      "git_status": " D",
+      "original_sha256": "7fba367ab119a5e23677866786b586e5bf65987c92d3b4026047eec702d7c360",
+      "original_bytes": 892
+    },
+    {
+      "path": "public/interop/ots/measurement-root-2026-09-16.json.ots",
+      "git_status": " D",
+      "original_sha256": "6ef0c5d9a66eace9d0a07de53186d1230e61e01e718a79dbffab621eecaaf5d5",
+      "original_bytes": 927
+    },
+    {
+      "path": "public/interop/ots/stablecoin-corpus-index-2026-09-16.json.ots",
+      "git_status": " D",
+      "original_sha256": "c0c56612f4dc052dff36556409c93725360d2e26cac1652662a893fe08ebf41d",
+      "original_bytes": 682
+    },
+    {
+      "path": "public/interop/ots/stablecoin-onchain-supply-2026-09-16.json.ots",
+      "git_status": " D",
+      "original_sha256": "73befa682dcca6bf46d1c0ff1fbb31bfe599aad85406440459a41efd5da9b1cc",
+      "original_bytes": 752
+    },
+    {
+      "path": "public/interop/ots/stablecoin-solana-supply-2026-09-16.json.ots",
+      "git_status": " D",
+      "original_sha256": "5a246e7ad30f7556577b9da7abcfbabc75922ea5eaf43f19a5aa28b59f009b3a",
+      "original_bytes": 892
+    },
+    {
+      "path": "public/interop/ots/stablecoin-universe-supply-2026-09-16.json.ots",
+      "git_status": " D",
+      "original_sha256": "2ed9e379d5f5b3c0b4ab605de3454a4d5531def51ba386aa11239f499ba482ea",
+      "original_bytes": 927
+    },
+    {
+      "path": "public/interop/ots/stablecoins-extended.json.ots",
+      "git_status": " D",
+      "original_sha256": "a1e6cbdee2ed72aca85dc0da2290b26285c79f8c5911b74f6b74e795aeb181e8",
+      "original_bytes": 682
+    },
+    {
+      "path": "public/interop/ots/swift-measure.json.ots",
+      "git_status": " D",
+      "original_sha256": "41b1b3b39dd66a40890a8642ab26a7e0bdf4f6ff4f959528c3d941f73d694132",
+      "original_bytes": 892
+    },
+    {
+      "path": "public/interop/ots/x402-door-census-2026-09-16.json.ots",
+      "git_status": " D",
+      "original_sha256": "07436e78e7cbddc918b58d7978025e6e69d0a8d10991dacc45ced6435edc42a9",
+      "original_bytes": 822
+    },
+    {
+      "path": "public/interop/ots/xrpl-supply-2026-09-16.json.ots",
+      "git_status": " D",
+      "original_sha256": "9f8cb9f0b4e7cec1fb9f43a77e94489159b30da77b7397aa4d62c51e2d7c721d",
+      "original_bytes": 892
+    },
+    {
+      "path": "public/interop/root-witness-2026-09-15-dedb49d0.json",
+      "git_status": " M",
+      "current_sha256": "f9a3e1bbfd3ade86c550f821ad801eac530d82105acbd999139593472090a36e",
+      "bytes": 4566
+    },
+    {
+      "path": "public/interop/root-witness-latest.json",
+      "git_status": " M",
+      "current_sha256": "f9a3e1bbfd3ade86c550f821ad801eac530d82105acbd999139593472090a36e",
+      "bytes": 4566
+    },
+    {
+      "path": "public/interop/root-witness-pointer.json",
+      "git_status": " M",
+      "current_sha256": "f148f96ef7ef27fdfd4b0e8193c841abc65425d8687932c1d8c23ee9c824758d",
+      "bytes": 3152
+    },
+    {
+      "path": "public/interop/stablecoin-universe-2026-09/readiness.json",
+      "git_status": " M",
+      "current_sha256": "4d07ec3bd9534c09bf14fbe90c996f7851b8655fda624d25dbc3384f2f0ce285",
+      "bytes": 712271
+    },
+    {
+      "path": "public/press/2026-09-17-can-you-check-their-work.r2.md.ots",
+      "git_status": " D",
+      "original_sha256": "21e7b593c4cf84ec064ad167cef0d5b412f3651dcd1a3df96d3353c9fd085452",
+      "original_bytes": 670
+    },
+    {
+      "path": "public/quickstart.json",
+      "git_status": " M",
+      "current_sha256": "2d2b002528550f7ee58a30efb46210e6922f2a1ee3e0ae36687673c81c9e5b7b",
+      "bytes": 8069
+    },
+    {
+      "path": "public/signed/HOW-TO-VERIFY-ROOT.md",
+      "git_status": " M",
+      "current_sha256": "d497ea6d6f33d998b0d3e570c98ba7c5c82e661b301a5bc64fccd93185691924",
+      "bytes": 11558
+    },
+    {
+      "path": "scripts/facts-gate.mjs",
+      "git_status": " M",
+      "current_sha256": "b61ca053625314e94df0ac5d7be1b1803ce35ec8ef8d124f786f027520ddd8f4",
+      "bytes": 38060
+    },
+    {
+      "path": "scripts/generate-blog-index.mjs",
+      "git_status": " M",
+      "current_sha256": "71a2a0df6703832f5eeb7048c9500fc0d819dfacabdee17bdec7969100cc0db5",
+      "bytes": 5298
+    },
+    {
+      "path": "scripts/runpod_gspc_separation.py",
+      "git_status": " M",
+      "current_sha256": "7ae3e0c06b63b89d8c199c0a29fd2712f35ef6e0c42a2587206a22452cd5131e",
+      "bytes": 9560
+    },
+    {
+      "path": "client/src/lib/previewTemplate.resilience.test.ts",
+      "git_status": "??",
+      "current_sha256": "6dd1afeeba45fa810acaa52543653d57aa2c15729ed0013012b5d5d2f70426fa",
+      "bytes": 5328
+    },
+    {
+      "path": "client/src/lib/quickstartData.test.ts",
+      "git_status": "??",
+      "current_sha256": "c77fde5eb6b78098a6f93f4d3825192983f575da3a0285cd191edd839bfc47c1",
+      "bytes": 8105
+    },
+    {
+      "path": "client/src/lib/quickstartData.ts",
+      "git_status": "??",
+      "current_sha256": "3d8d4bf62f4acd41310d1f585ae34e6ab4589528bd0d452fbf8ed14095e3a6d3",
+      "bytes": 5863
+    },
+    {
+      "path": "client/src/lib/servicesCatalogue.resilience.test.ts",
+      "git_status": "??",
+      "current_sha256": "65d1681dff5f4a348801f62d7597bf12266046e5ce9419c5791817f7ee895fc4",
+      "bytes": 5484
+    },
+    {
+      "path": "client/src/pages/quickstart.receipt-copy.test.ts",
+      "git_status": "??",
+      "current_sha256": "82c08e49632f4c9225199cc63ccf302db5f69d9cd202ac234f9c2fc4e0611f7b",
+      "bytes": 1660
+    },
+    {
+      "path": "evidence/quarantine/",
+      "git_status": "??"
+    },
+    {
+      "path": "functions/api/_commission_ack.ts",
+      "git_status": "??",
+      "current_sha256": "84155e17464c617b0e2502cacda568a5a902029c3c4e972871a319bd0784081c",
+      "bytes": 3803
+    },
+    {
+      "path": "functions/api/commission-queue.delivery.test.ts",
+      "git_status": "??",
+      "current_sha256": "bbe3a771f9678b5c3cee02a7b787b8cf01cbe749f28af6d49d6dda15046274a9",
+      "bytes": 3742
+    },
+    {
+      "path": "functions/api/request-attestation.delivery.test.ts",
+      "git_status": "??",
+      "current_sha256": "c83d1d62e021cd4e03c89146af7f226466b4a172d4d00fa477a0b6672bc0e963",
+      "bytes": 13424
+    },
+    {
+      "path": "scripts/blog-data-boundary.node-test.mjs",
+      "git_status": "??",
+      "current_sha256": "f283d619270a26096e29bbd70150f96675ff79d0f6bab2c010436c5b952d7106",
+      "bytes": 2121
+    },
+    {
+      "path": "scripts/claim_maintenance/",
+      "git_status": "??"
+    },
+    {
+      "path": "scripts/test_separation_contract.py",
+      "git_status": "??",
+      "current_sha256": "731a5b6429438f2acb95a4b2414510e36d47d6f46332c2f1f7ddd75cd38d4928",
+      "bytes": 6616
+    },
+    {
+      "path": "scripts/watch_corrections.py",
+      "git_status": "??",
+      "current_sha256": "551d8e6e14f63f653f690b53bfd8ec1237f293a6597f6d6f6ffeb3e97e1b01cc",
+      "bytes": 5678
+    }
+  ],
+  "validation": [
+    {
+      "scope": "UI + commission delivery",
+      "result": "PASS",
+      "tests": 238,
+      "note": "14 focused Vitest files on clean origin/master-derived worktree"
+    },
+    {
+      "scope": "claim maintenance",
+      "result": "PASS",
+      "tests": 86,
+      "note": "52 core + 22 retained adapter + 12 watcher; counts not pooled with other suites"
+    },
+    {
+      "scope": "claim-maintenance CLI",
+      "result": "PASS",
+      "cases": 5
+    },
+    {
+      "scope": "statistics contracts",
+      "result": "PASS",
+      "tests": 30
+    },
+    {
+      "scope": "editorial strict-data boundary",
+      "result": "PASS",
+      "tests": 8
+    },
+    {
+      "scope": "MCP wired tools",
+      "result": "PASS",
+      "note": "bounded local fixture suite"
+    },
+    {
+      "scope": "facts-gate selftest",
+      "result": "PASS",
+      "tests": 44,
+      "fallback": "23 declared / 22 measured / 1 unmeasured"
+    },
+    {
+      "scope": "client production build",
+      "result": "PASS",
+      "note": "Vite/build chain passed before final facts fallback-only update; protected CI must rebuild final commit"
+    },
+    {
+      "scope": "evidence-integrity gate",
+      "result": "PASS"
+    },
+    {
+      "scope": "council-truth gate",
+      "result": "PASS",
+      "note": "BFT not live; PQC planned; n_eff=1"
+    },
+    {
+      "scope": "stablecoin-readiness gate",
+      "result": "PASS",
+      "note": "425 indexed; 1 measured; 424 unmeasured; current-root Bitcoin witness reflected"
+    },
+    {
+      "scope": "mill-receipt-readiness",
+      "result": "PASS",
+      "note": "36/36 outer VALID; 36/36 lifecycle SIGNED; 5 linked; 31 unlinked"
+    },
+    {
+      "scope": "sitemap truth",
+      "result": "PASS"
+    },
+    {
+      "scope": "x402 index audit",
+      "result": "PASS",
+      "tests": 7
+    },
+    {
+      "scope": "root-witness selftest",
+      "result": "PASS"
+    },
+    {
+      "scope": "root-witness candidate",
+      "result": "PASS"
+    },
+    {
+      "scope": "signed-json guard",
+      "result": "PASS"
+    },
+    {
+      "scope": "well-known index check",
+      "result": "PASS",
+      "doors": 304
+    },
+    {
+      "scope": "price gate",
+      "result": "PASS"
+    },
+    {
+      "scope": "facts gate on rendered corrected public files",
+      "result": "PASS",
+      "note": "final protected CI still required after fallback metadata update"
+    }
+  ],
+  "proof_state": {
+    "root_changed": false,
+    "new_signature_created": false,
+    "new_timestamp_submitted": false,
+    "ots_metadata_refreshed_from_existing_proof": true,
+    "ots_status": "CONFIRMED_BITCOIN",
+    "bitcoin_blocks": [
+      967093,
+      967098,
+      967150
+    ],
+    "independent_full_chain_validation": false,
+    "historical_unbound_ots_quarantined": 14
+  },
+  "release_state": "LOCAL_COMMIT_PENDING",
+  "public_deployed": false,
+  "outreach_sent": false,
+  "github_write_blocker": "GitHub integration returned 403 Resource not accessible by integration; Chrome is open at GitHub sign-in/installations page for owner authorization.",
+  "next_required": "Commit locally, push reviewed branch after GitHub installation write access, protected CI/merge/deploy, anonymous served-byte readback, then targeted outward distribution.",
+  "count_warning": "Test counts are separate scopes and must not be summed as one benchmark."
+}

@@ -1,27 +1,7 @@
-/**
- * servicesCatalogue — the Services section, read from /.well-known/x402.json.
- *
- * NEVER A TYPED LIST. The doors, their URLs, their free previews and whether they are paid at
- * all come from the rail's own manifest at run time. If a door is added there it appears here;
- * if one is withdrawn it disappears. Nothing about a door is restated in this file.
- *
- * THE ONE THING THAT IS NOT IN THE MANIFEST is the grouping. `/.well-known/x402.json` carries
- * no category field — the union of keys across its resources is
- * {amount, free_preview, indexed_in, method, note, paid_for, url} — so the section's five
- * groups have to be decided from each door's own path.
- *
- * That mapping is the risk, so it is built to fail loudly rather than quietly:
- * `groupFor()` returns null for a path it does not recognise, `buildCatalogue()` collects those
- * into `ungrouped`, and the test asserts `ungrouped` is empty against the LIVE nine. Add a
- * tenth door to the rail and the test goes red naming it — instead of the door silently never
- * appearing on the page, which is the failure mode this whole section exists to avoid.
- *
- * The better home for this is the producer that writes /.well-known/x402.json. Until a
- * category lands there, this is the mapping, in one place, tested. Filed as an owner-ask.
- *
- * Measured 2026-09-06: 9 resources, mode "live", network eip155:8453.
+/** First-party Services display projection, not payment verification or a liveness check.
+ * Group names are presentation policy. Resources remain source-derived; invalid and duplicate
+ * rows are withheld with explicit coverage. A zero declaration is not a permanent promise.
  */
-
 export type GroupId =
   | "finance-rwa"
   | "compliance"
@@ -80,92 +60,111 @@ const ROUTES: ReadonlyArray<[string, GroupId]> = [
   ["/api/swift", "legacy-systems"],
 ];
 
-/** The path part of a manifest url, without host or query. */
-export function pathOf(url: string): string {
-  try {
-    return new URL(url).pathname;
-  } catch {
-    return (url.split("?")[0] || "").replace(/^https?:\/\/[^/]+/, "");
-  }
-}
 
-export function groupFor(url: string): GroupId | null {
+const DEFAULT_ORIGIN = "https://councilof.ai";
+const MAX_ROWS = 1000;
+const record = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
+const text = (v: unknown, max = 4096): v is string => typeof v === "string" && v.length <= max;
+const optionalText = (v: unknown) => v === undefined || v === null || text(v);
+/** Preserve the original URL text, but permit navigable links only to this catalogue's origin. */
+function firstPartyUrl(value: unknown, origin: string): value is string {
+  if (!text(value) || !value || /[\x00-\x20\x7f\\]/.test(value)) return false;
+  if (!value.startsWith("/") && !/^https:\/\//i.test(value)) return false;
+  if (value.startsWith("//")) return false;
+  try {
+    const base = new URL(origin); const url = new URL(value, base);
+    return base.protocol === "https:" && url.protocol === "https:" && url.origin === base.origin && !url.username && !url.password && !url.hash;
+  } catch { return false; }
+}
+export function pathOf(url: string): string {
+  try { return new URL(url, DEFAULT_ORIGIN).pathname; } catch { return ""; }
+}
+export function groupFor(url: string, origin = DEFAULT_ORIGIN): GroupId | null {
+  if (!firstPartyUrl(url, origin)) return null;
   const path = pathOf(url);
-  for (const [prefix, id] of ROUTES) if (path.startsWith(prefix)) return id;
+  for (const [prefix, id] of ROUTES) {
+    if (prefix.endsWith("/") ? path.startsWith(prefix) : path === prefix) return id;
+  }
   return null;
 }
-
 export interface ManifestResource {
   method?: string;
   url: string;
+  description?: string | null;
   paid_for?: string | null;
   amount?: string | number | null;
   note?: string | null;
   free_preview?: string | null;
-  indexed_in?: string | null;
+  indexed_in?: string | string[] | null;
 }
-
+function identity(value: unknown, origin: string): string | null {
+  if (!record(value) || !firstPartyUrl(value.url, origin)) return null;
+  const method = value.method === undefined ? "GET" : value.method;
+  if (!text(method, 20) || !/^[A-Z]+$/.test(method)) return null;
+  return method + " " + new URL(value.url, origin).href;
+}
+function usable(value: unknown, origin: string): value is ManifestResource {
+  if (!record(value) || identity(value, origin) === null) return false;
+  if (![value.description, value.note, value.paid_for].every(optionalText)) return false;
+  if (value.free_preview !== undefined && value.free_preview !== null && !firstPartyUrl(value.free_preview, origin)) return false;
+  const a = value.amount;
+  return a === undefined || a === null || (typeof a === "number" && Number.isSafeInteger(a) && a >= 0) || (text(a, 100) && /^\d+$/.test(a));
+}
 export interface ServiceCard {
+  id: string;
   url: string;
   path: string;
+  displayPath: string;
   method: string;
   group: GroupId;
-  /** From the manifest's own paid_for/note — never written here. */
+  /** Source-reported description, not a verified performance claim. */
   measures: string;
   freePreview: string | null;
-  /** True only when the manifest itself says the amount is zero. */
-  freeForever: boolean;
+  zeroAmountDeclared: boolean;
   payLine: string;
 }
-
 const PAY_LINE = "Pay-as-you-go x402 at the 402.";
-
-export function toCard(r: ManifestResource, group: GroupId): ServiceCard {
+export function toCard(r: ManifestResource, group: GroupId, origin = DEFAULT_ORIGIN): ServiceCard {
+  if (!usable(r, origin)) throw new TypeError("UNREADABLE_RESOURCE_RECORD");
   const zero = r.amount === 0 || r.amount === "0";
+  const url = new URL(r.url, origin);
   return {
-    url: r.url,
-    path: pathOf(r.url),
-    method: r.method || "GET",
-    group,
-    measures: r.note?.trim() || (r.paid_for ? `Paid for ${r.paid_for}.` : "Free forever."),
-    freePreview: r.free_preview ?? null,
-    freeForever: zero,
-    payLine: zero ? "Free forever — it settles and charges nothing." : PAY_LINE,
+    id: identity(r, origin)!, url: r.url, path: url.pathname, displayPath: url.pathname + url.search,
+    method: r.method ?? "GET", group,
+    measures: r.description?.trim() || r.note?.trim() || (r.paid_for?.trim() ? `Paid for ${r.paid_for.trim()}.` : "Purpose not supplied by the manifest."),
+    freePreview: r.free_preview ?? null, zeroAmountDeclared: zero,
+    payLine: zero ? "Zero amount declared in this manifest. Check the current response before proceeding." : PAY_LINE,
   };
 }
-
 export interface Catalogue {
   groups: { group: ServiceGroup; cards: ServiceCard[] }[];
-  /** Doors the mapping did not recognise. Must be empty; the test enforces it. */
   ungrouped: string[];
-  total: number;
+  /** Number of source rows, not independent services or a reachable-service census. */
+  total: number | null;
+  displayed: number;
+  withheld: number;
+  coverage: "COMPLETE" | "PARTIAL" | "UNREADABLE";
   source: string;
   mode: string | null;
 }
-
-export function buildCatalogue(manifest: unknown): Catalogue {
-  const doc = (manifest ?? {}) as Record<string, unknown>;
-  const resources = Array.isArray(doc.resources) ? (doc.resources as ManifestResource[]) : [];
-  const ungrouped: string[] = [];
-  const byGroup = new Map<GroupId, ServiceCard[]>();
-
-  for (const r of resources) {
-    if (!r || typeof r.url !== "string") continue;
-    const g = groupFor(r.url);
-    if (!g) {
-      ungrouped.push(pathOf(r.url));
-      continue;
-    }
-    const list = byGroup.get(g) ?? [];
-    list.push(toCard(r, g));
-    byGroup.set(g, list);
+export function buildCatalogue(manifest: unknown, origin = DEFAULT_ORIGIN): Catalogue {
+  const result: Catalogue = {groups: GROUPS.map(group => ({group, cards: []})), ungrouped: [], total: null,
+    displayed: 0, withheld: 0, coverage: "UNREADABLE", source: "/.well-known/x402.json", mode: null};
+  if (!record(manifest) || !Array.isArray(manifest.resources) || manifest.resources.length > MAX_ROWS) return result;
+  if (manifest.mode !== undefined && manifest.mode !== null && !text(manifest.mode, 200)) return result;
+  result.total = manifest.resources.length;
+  result.mode = typeof manifest.mode === "string" && manifest.mode.trim() ? manifest.mode : null;
+  const rows: unknown[] = manifest.resources;
+  const counts = new Map<string, number>();
+  for (const row of rows) { const id = identity(row, origin); if (id !== null) counts.set(id, (counts.get(id) ?? 0) + 1); }
+  for (const row of rows) {
+    const id = identity(row, origin);
+    if (!usable(row, origin) || id === null || counts.get(id) !== 1) { result.withheld++; continue; }
+    const group = groupFor(row.url, origin);
+    if (!group) { result.ungrouped.push((row.method ?? "GET") + " " + new URL(row.url, origin).pathname + new URL(row.url, origin).search); continue; }
+    result.groups.find(g => g.group.id === group)!.cards.push(toCard(row, group, origin));
+    result.displayed++;
   }
-
-  return {
-    groups: GROUPS.map((group) => ({ group, cards: byGroup.get(group.id) ?? [] })),
-    ungrouped,
-    total: resources.length,
-    source: "/.well-known/x402.json",
-    mode: typeof doc.mode === "string" ? doc.mode : null,
-  };
+  result.coverage = result.withheld || result.ungrouped.length ? "PARTIAL" : "COMPLETE";
+  return result;
 }

@@ -129,14 +129,15 @@ describe("buildCommissionQueue delivery reconciliation", () => {
   const response = (cards: unknown[], status = 200) =>
     (async () => new Response(JSON.stringify({ schema: "csoai.pod-cards-index/0.1", cards }), { status })) as typeof fetch;
 
-  it("suppresses work when the exact model and axis already has a published signed card", async () => {
+  it("retains work when a model/axis card is not bound to the commission", async () => {
     const kv = fakeKv(new Map([["mill:commission:llama3.2:3b", queued]]));
     const body = await buildCommissionQueue({ REVENUE_KV: kv }, "https://councilof.ai", response([
       { id: "e".repeat(64), url: "https://councilof.ai/interop/mill-cards-signed/e.json",
         subject: "llama3.2:3b", axis: "governance", n: 235, status: "MEASURED", run_id: "r" },
     ])) as any;
-    expect(body.rows).toEqual([]);
-    expect(body.delivery_reconciliation).toMatchObject({ state: "READ", suppressed: 1 });
+    expect(body.rows).toHaveLength(1);
+    expect(body.rows[0].delivery_state).toBe("EVIDENCE_PRESENT_NOT_REQUEST_BOUND");
+    expect(body.delivery_reconciliation).toMatchObject({ state: "READ", suppressed: 0, candidate_matches: 1 });
   });
 
   it("keeps work visible and reports UNCHECKABLE when the signed-card index cannot be read", async () => {

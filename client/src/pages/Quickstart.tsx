@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
+import { parseManifest, parseChallenge, readQuickstartJson, type Manifest, type Challenge } from "../lib/quickstartData";
 
 /**
  * /quickstart — the public supply path: measurements, changes, verification and supported feeds.
@@ -38,43 +39,6 @@ const PAGE_LD = {
   ],
 };
 
-type Resource = { url: string; method?: string; description?: string; paid_for?: string; indexed_in?: string[] | string; note?: string };
-type Manifest = {
-  resources?: Resource[];
-  mcp?: { url?: string; transport?: string; free_tools?: string[]; paid_tools?: string[] };
-  verify?: string | Record<string, unknown>;
-  explainer?: string;
-  one_line?: string;
-  network?: string;
-  asset?: string;
-  scheme?: string;
-  x402Version?: number;
-};
-
-async function readJson(url: string, signal: AbortSignal): Promise<unknown | null> {
-  try {
-    const r = await fetch(url, { signal, headers: { accept: "application/json" } });
-    if (!r.ok) return null;
-    return await r.json();
-  } catch {
-    return null;
-  }
-}
-
-type Accept = { scheme?: string; network?: string; asset?: string; payTo?: string; amount?: string; maxAmountRequired?: string; maxTimeoutSeconds?: number };
-
-/** A 402 is the expected answer from a paid door, so this reader accepts it instead of treating it as an error. */
-async function readChallenge(url: string, signal: AbortSignal): Promise<{ x402Version?: number; accepts?: Accept[] } | null> {
-  try {
-    const r = await fetch(url, { signal, headers: { accept: "application/json" } });
-    if (r.status !== 402) return null;
-    const j = (await r.json()) as { x402Version?: number; accepts?: Accept[] };
-    return Array.isArray(j.accepts) ? j : null;
-  } catch {
-    return null;
-  }
-}
-
 const Code = ({ children }: { children: string }) => (
   <pre className="mt-3 overflow-x-auto rounded-lg border border-slate-200 bg-slate-950 p-4 text-xs leading-6 text-slate-100">
     <code>{children}</code>
@@ -92,19 +56,29 @@ function pathOf(url: string): string {
 
 export default function Quickstart() {
   const [manifest, setManifest] = useState<Manifest | null | undefined>(undefined);
-  const [challenge, setChallenge] = useState<{ x402Version?: number; accepts?: Accept[] } | null | undefined>(undefined);
+  const [challenge, setChallenge] = useState<Challenge | null | undefined>(undefined);
+  const [manifestAttempt, retryManifest] = useState(0);
+  const [challengeAttempt, retryChallenge] = useState(0);
 
   useEffect(() => {
-    const c = new AbortController();
-    void (async () => {
-      const m = (await readJson(MANIFEST, c.signal)) as Manifest | null;
-      setManifest(m && Array.isArray(m.resources) ? m : null);
-    })();
-    void (async () => {
-      setChallenge(await readChallenge(EXAMPLE_DOOR, c.signal));
-    })();
-    return () => c.abort();
-  }, []);
+    const controller = new AbortController();
+    let active = true;
+    setManifest(undefined);
+    void readQuickstartJson(MANIFEST, controller.signal, parseManifest).then(value => {
+      if (active) setManifest(value);
+    });
+    return () => { active = false; controller.abort(); };
+  }, [manifestAttempt]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+    setChallenge(undefined);
+    void readQuickstartJson(EXAMPLE_DOOR, controller.signal, parseChallenge, 402).then(value => {
+      if (active) setChallenge(value);
+    });
+    return () => { active = false; controller.abort(); };
+  }, [challengeAttempt]);
 
   const resources = manifest?.resources ?? [];
   const liveAccept = challenge?.accepts?.[0];
@@ -195,9 +169,13 @@ curl -s https://councilof.ai/interop/root-witness-pointer.json | jq '.witnesses'
         <Code>{`curl -s https://councilof.ai${MANIFEST} | jq '.resources[] | {url, method, paid_for}'`}</Code>
         <Code>{`# MCP (Streamable HTTP) — tools/list needs no wallet
 curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
-  -X POST ${mcpUrl} -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'`}</Code>
-        {manifest === undefined && <p className="mt-3 text-sm text-slate-500">Reading the live manifest…</p>}
-        {manifest === null && <p className="mt-3 text-sm text-amber-700">The manifest did not load in this browser. The command above reads it directly.</p>}
+  -X POST '${mcpUrl}' -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'`}</Code>
+        <div role="status" aria-live="polite" aria-atomic="true">
+          {manifest === undefined && <p className="mt-3 text-sm text-slate-500">Reading the manifest. This read stops after eight seconds.</p>}
+          {manifest === null && <p className="mt-3 text-sm text-amber-700">The manifest could not be read or its display fields were unsupported. Resource availability is unknown; the commands above remain available.</p>}
+          {manifest && resources.length === 0 && <p className="mt-3 text-sm text-slate-600">The retrieved manifest lists no resource entries.</p>}
+        </div>
+        {manifest === null && <button type="button" className="mt-3 min-h-11 rounded border border-slate-400 px-4 text-sm underline focus-visible:outline focus-visible:outline-2" onClick={() => retryManifest(n => n + 1)}>Retry manifest read</button>}
         {resources.length > 0 && (
           <ul className="mt-4 divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white text-sm">
             {resources.map((r) => (
@@ -303,13 +281,17 @@ jq '{x402Version, accepts: [.accepts[] | {scheme, network, asset, payTo, amount,
 }`}</Code>
         {liveAccept && (
           <p className="mt-3 text-sm text-slate-600">
-            Read from the live 402 in this browser just now:{" "}
+            Reported by the most recent 402 read in this browser (not automatically refreshed):{" "}
             <code className="font-mono text-emerald-800">
               x402Version {challenge?.x402Version} · {liveAccept.scheme} · {liveAccept.network} · asset {liveAccept.asset} · payTo {liveAccept.payTo} · amount {liveAccept.amount ?? liveAccept.maxAmountRequired} (atomic)
             </code>
           </p>
         )}
-        {challenge === null && <p className="mt-3 text-sm text-amber-700">The live 402 did not load in this browser. The command above reads it directly.</p>}
+        <div role="status" aria-live="polite" aria-atomic="true">
+          {challenge === undefined && <p className="mt-3 text-sm text-slate-500">Reading the 402 preview. This read stops after eight seconds.</p>}
+          {challenge === null && <p className="mt-3 text-sm text-amber-700">No supported 402 preview could be read. The amount is unknown; this is not a zero-price offer or a payment.</p>}
+        </div>
+        {challenge === null && <button type="button" className="mt-3 min-h-11 rounded border border-slate-400 px-4 text-sm underline focus-visible:outline focus-visible:outline-2" onClick={() => retryChallenge(n => n + 1)}>Retry 402 preview</button>}
         <Code>{`# check the signed offer offline (needs: pip install cryptography)
 curl -sO https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/scripts/verify_receipt.py
 python3 verify_receipt.py --url 'https://councilof.ai${EXAMPLE_DOOR}'
@@ -342,15 +324,32 @@ WALLET_KEY=0x… node pay.mjs`}</Code>
 
         <h3 id="step-receive" className="mt-8 text-lg font-bold">Step 5 · Receive</h3>
         <p className="mt-2 leading-7 text-slate-700">
-          A settled call returns 200 with one card-v0 commission receipt. The shape below is{" "}
-          <strong>from source</strong> (<code className="font-mono">functions/api/request-attestation.ts</code>), not from an
-          observed paid call. The <code className="font-mono">x-payment-response</code> header carries the settlement response;
+          A paid request can return HTTP 200 with a commission receipt, or HTTP 202 when queue acceptance or
+          receipt assembly remains unresolved. The shape below illustrates the signed HTTP 200 branch{" "}
+          <strong>from source</strong> (<code className="font-mono">functions/api/request-attestation.ts</code>), not an
+          observed paid call or evidence that this source revision is deployed. The <code className="font-mono">x-payment-response</code> header carries the settlement response;
           it includes a signed receipt at <code className="font-mono">extensions["offer-receipt"].info.receipt</code> only when the
           facilitator names a payer and the signing key is present. A commission receipt is not a grade and never adds a
           measured cell. Published commission subjects and card URLs are also listed at{" "}
           <a href="/api/commissions" className="underline decoration-emerald-600 underline-offset-4">/api/commissions</a>
           {" "}(no wallet needed to read).
         </p>
+        <aside data-testid="quickstart-commission-outcomes" aria-label="Commission response outcomes" className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
+          <h4 className="font-bold">Source-described outcomes — not a verified live transaction</h4>
+          <p className="mt-2"><strong>HTTP 202:</strong>{" "}
+            <code className="break-all">SETTLED_QUEUE_UNCONFIRMED</code> means payment was reported settled but queue acceptance is not confirmed;{" "}
+            <code className="break-all">QUEUE_ACCEPTED_RECEIPT_UNAVAILABLE</code> means the queue accepted the request but receipt assembly failed.
+            Preserve the response and any commission identifier for reconciliation.
+          </p>
+          <p className="mt-2"><strong>Do not automatically pay again</strong> when these states report{" "}
+            <code>retry_payment: false</code>. A missing receipt is not proof that no payment occurred.
+            A response without a card is not input for the card verifier.
+          </p>
+          <p className="mt-2"><strong>HTTP 200:</strong> inspect the returned card, its <code>signed</code> state and queue acknowledgement separately.
+            Receiving a receipt does not establish execution or delivery, a fresh measurement or root inclusion.
+          </p>
+        </aside>
+
         <Code>{`# after settle: list retrievable subjects and card URLs (no wallet needed to read)
 curl -s https://councilof.ai/api/commissions \
   | jq '{count, retrievable, queued, unfulfillable,

@@ -49,10 +49,25 @@ signature verifies over both, because the signature covers `merkle_root` and not
 array. `card_count` is inside the signed preimage and is the only field that tells them
 apart. A verifier that recomputes the root and stops has not finished.
 
-A future `csoai.public-root/v2` should adopt RFC 6962 domain separation (`0x00` before a
-leaf, `0x01` before a node), which removes the collision by construction. That changes every
-root, so it will be a declared version bump and never a silent one; roots already published
-under v0/v1 stay checkable under the rule above.
+### Correction added 18 September 2026: prefixes and tree shape are different properties
+
+The previous paragraph incorrectly said that RFC 6962 domain-separation prefixes alone
+remove odd-node-duplication ambiguity. They do not: retaining duplicate-last padding still
+maps `[A,B,C]` and `[A,B,C,C]` to the same root even with prefixed leaf and node hashes.
+
+A future `csoai.public-root/v2` could adopt the complete Merkle Tree Hash construction in
+[RFC 6962 section 2.1](https://www.rfc-editor.org/rfc/rfc6962.html#section-2.1):
+`0x00` distinguishes leaf hashing from `0x01` node hashing, while recursive splitting at the
+largest power of two smaller than the list length replaces duplicate-last padding.
+The latter tree shape distinguishes the demonstrated three-entry and four-entry lists.
+For the existing duplicate-last construction, an authenticated leaf count disambiguates
+this example; count binding alone is not a general proof of collection membership.
+
+A change to hashing rules requires an explicit versioned migration, not a silent rewrite.
+Published v0/v1 records remain verifiable under their declared historical rules. Neither a
+count comparison nor one inclusion proof establishes append-only history; that requires the
+relevant consistency evidence (RFC 6962 section 2.1.2). This explanatory correction does not
+alter any root, card, signature or witness, and does not claim a v2 migration has occurred.
 
 ## 2. Rekor (Sigstore transparency log)
 The sidecar `https://councilof.ai/interop/root-witness-latest.json` names the `logIndex`. The entry is type `rekord` (pki format x509): it carries the preimage bytes, the raw Ed25519 signature and the board's PEM public key. Pure Ed25519 is rejected by `hashedrekord`, which is why `rekord` is used.

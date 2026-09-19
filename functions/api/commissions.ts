@@ -5,8 +5,8 @@
  * Requester retrieval (2026-09-14): each QUEUED commission is joined to the signed pod cards
  * master carries for its subject (from /interop/pod-cards-index.json, a build-time index of
  * the signed bytes) as `cards[]` + `delivery`. Index unreadable → cards null, UNCHECKABLE.
- * When signed cards are published for a QUEUED model target, fulfillment becomes
- * RETRIEVABLE (requester can resolve card URLs). A card is never a certificate /
+ * A model/axis index match exposes candidate card URLs but does not prove this
+ * request was fulfilled. No fresh delivery state is inferred from old cards. A card is never a certificate /
  * MEASURED invent — only the retrieval state moves.
  *
  * Typed contract (Stage68): every row exposes subject_kind / model / bank / fulfillment.
@@ -20,11 +20,13 @@ type Env = { REVENUE_KV?: KVNamespace; ASSETS?: { fetch: (r: Request) => Promise
 
 /** One signed pod card as the build-time index (/interop/pod-cards-index.json) lists it. */
 type PodCard = { id: string; url: string; subject: string; axis: string | null; n: number | null; status: string | null; run_id: string | null };
-type Delivery = { state: "CARDS_PUBLISHED" | "NONE" | "UNCHECKABLE"; count: number | null; note?: string };
+type Delivery = { state: "CARDS_PUBLISHED" | "CANDIDATE_CARDS_PUBLISHED" | "NONE" | "UNCHECKABLE"; count: number | null; note?: string };
 export const POD_CARDS_INDEX = "/interop/pod-cards-index.json";
 export const HUB_CARDS_INDEX = "/interop/hub-cards-index.json";
 
 type Commission = {
+  commission_id: string | null;
+  request_scope_sha256: string | null;
   subject: string;
   subject_kind: SubjectKind;
   model: string | null;
@@ -68,8 +70,8 @@ function typedFields(subject: string, r: Record<string, unknown>) {
   return { subject_kind, model, bank, fulfillment };
 }
 
-export async function listCommissions(kv: KVNamespace): Promise<{ commissions: Omit<Commission, "cards" | "delivery">[]; unreadable: number }> {
-  const out: Omit<Commission, "cards" | "delivery">[] = [];
+export async function listCommissions(kv: KVNamespace): Promise<{ commissions: Omit<Commission, "cards" | "delivery" | "origin">[]; unreadable: number }> {
+  const out: Omit<Commission, "cards" | "delivery" | "origin">[] = [];
   let unreadable = 0;
   let cursor: string | undefined;
   do {
@@ -83,6 +85,8 @@ export async function listCommissions(kv: KVNamespace): Promise<{ commissions: O
         if (!subject) { unreadable++; continue; }
         const typed = typedFields(subject, r);
         out.push({
+          commission_id:typeof r.commission_id === "string" ? r.commission_id : null,
+          request_scope_sha256:typeof r.request_scope_sha256 === "string" ? r.request_scope_sha256 : null,
           subject,
           ...typed,
           axis: typeof r.axis === "string" && r.axis ? r.axis : null,
@@ -92,10 +96,18 @@ export async function listCommissions(kv: KVNamespace): Promise<{ commissions: O
         });
       } catch { unreadable++; }
     }
-    cursor = page.list_complete ? undefined : page.cursor;
+    cursor = !page.list_complete && "cursor" in page ? page.cursor : undefined;
   } while (cursor);
   out.sort((a, b) => String(a.as_of ?? "").localeCompare(String(b.as_of ?? "")));
-  return { commissions: out, unreadable };
+  // A refreshed receipt is not a second paid commission. Legacy rows without a
+  // commission identity remain separate; modern copies keep their latest receipt.
+  const modern = new Map<string, typeof out[number]>();
+  const legacy = out.filter(row => {
+    if (!row.commission_id) return true;
+    modern.set(row.commission_id,row); return false;
+  });
+  const unique = [...legacy,...modern.values()].sort((a,b)=>String(a.as_of ?? "").localeCompare(String(b.as_of ?? "")));
+  return { commissions: unique, unreadable };
 }
 
 /**
@@ -147,7 +159,7 @@ export function fulfillmentAfterDelivery(
   return fulfillment;
 }
 
-function joinDelivery(c: Omit<Commission, "cards" | "delivery">, pod: Map<string, PodCard[]> | null,
+function joinDelivery(c: Omit<Commission, "cards" | "delivery" | "origin">, pod: Map<string, PodCard[]> | null,
                       hub: Map<string, PodCard[]> | null): Pick<Commission, "cards" | "delivery"> {
   // QUEUED (awaiting mill) and RETRIEVABLE (cards already published) both join the index.
   if ((c.fulfillment !== "QUEUED" && c.fulfillment !== "RETRIEVABLE") || !c.model) {
@@ -158,7 +170,7 @@ function joinDelivery(c: Omit<Commission, "cards" | "delivery">, pod: Map<string
   if (index === null) return { cards: null, delivery: { state: "UNCHECKABLE", count: null, note: `${path} unreadable — null, never substituted` } };
   const all = index.get(c.model.toLowerCase()) ?? [];
   const cards = c.axis ? all.filter((k) => k.axis === c.axis) : all;
-  return { cards, delivery: { state: cards.length ? "CARDS_PUBLISHED" : "NONE", count: cards.length } };
+  return { cards, delivery: { state: cards.length ? "CANDIDATE_CARDS_PUBLISHED" : "NONE", count: cards.length } };
 }
 
 /**
@@ -201,7 +213,7 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
     const origins = await Promise.all(bare.map((c) => commissionOrigin(kv, c.tx, env)));
     const commissions: Commission[] = bare.map((c, i) => {
       const joined = joinDelivery(c, pod, hub);
-      // Writer: DID-signed cards in the published index → RETRIEVABLE (never invents MEASURED/scores).
+      // Candidate index hits never become request-bound delivery.
       return { ...c, ...joined, fulfillment: fulfillmentAfterDelivery(c.fulfillment, joined.delivery), origin: origins[i] };
     });
     const subjects = [...new Set(commissions.map((c) => c.subject))];
@@ -213,12 +225,15 @@ export async function buildCommissions(env: Env, origin = "https://councilof.ai"
       subjects,
       queued: commissions.filter((c) => c.fulfillment === "QUEUED").length,
       retrievable: commissions.filter((c) => c.fulfillment === "RETRIEVABLE").length,
-      delivered: (pod === null || hub === null) ? null : commissions.filter((c) => c.delivery.state === "CARDS_PUBLISHED").length,
+      retrievable_scope: "Stored legacy fulfillment labels, not newly verified request-bound delivery.",
+      delivered: null,
+      delivery_binding: "NOT_ESTABLISHED_BY_MODEL_AXIS_INDEX",
+      candidate_card_matches: (pod === null || hub === null) ? null : commissions.filter(c => c.delivery.state === "CANDIDATE_CARDS_PUBLISHED").length,
       retrieval: {
         index: POD_CARDS_INDEX,
         hub_index: HUB_CARDS_INDEX,
         state: (pod === null || hub === null) ? "UNCHECKABLE" : "READ",
-        how: "each `cards[].url` is a signed card; verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json. When CARDS_PUBLISHED, fulfillment becomes RETRIEVABLE — publication is not a certificate and invents no MEASURED score.",
+        how: "each `cards[].url` is a signed card; verify sha256(canonical body)==id and the Ed25519 signature under the kid in https://csoai.org/.well-known/did.json. Index matches are CANDIDATE_CARDS_PUBLISHED only: they do not prove this request was executed or delivered. Stored RETRIEVABLE labels are legacy records, not newly verified delivery.",
       },
       unfulfillable: commissions.filter((c) => c.fulfillment === "UNFULFILLABLE").length,
       // A receipt is not demand. Only OUTSIDE commissions are evidence that someone else asked.

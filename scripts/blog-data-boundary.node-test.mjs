@@ -1,0 +1,17 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+import {dirname,resolve} from 'node:path';
+const root=process.env.CSOAI_BLOG_ROOT || resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const target=process.env.CSOAI_BLOG_CANDIDATE || resolve(root,'scripts/generate-blog-index.mjs');
+const {parseBlogData,buildIndex}=await import(pathToFileURL(target).href);
+const wrap=x=>`export const blogdata: BlogDataEntry[] = ${x};\n`;
+test('strict JSON data parses',()=>assert.deepEqual(parseBlogData(wrap('[\n{"slug":"one"}\n]')),[{slug:'one'}]));
+test('current canonical corpus still parses',()=>{const data=parseBlogData(readFileSync(resolve(root,'client/src/data/blog-content.ts'),'utf8'));assert.ok(data.length>0);assert.equal(buildIndex(data).posts.length,data.length);});
+test('executable literal is rejected without executing',()=>{globalThis.__csoai_editorial_canary=0;assert.throws(()=>parseBlogData(wrap('[\n{"slug":(()=>{globalThis.__csoai_editorial_canary=1;return "bad"})()}\n]')),/strict JSON/);assert.equal(globalThis.__csoai_editorial_canary,0);delete globalThis.__csoai_editorial_canary;});
+test('trailing comma is not executable fallback',()=>assert.throws(()=>parseBlogData(wrap('[\n{"slug":"one"},\n]')),/strict JSON/));
+test('comments require explicit data conversion',()=>assert.throws(()=>parseBlogData(wrap('[\n/*not JSON*/{"slug":"one"}\n]')),/strict JSON/));
+test('missing array refuses',()=>assert.throws(()=>parseBlogData('export const blogdata=[]'),/not found/));
+test('dates are absent unless provided',()=>{const p=buildIndex([{slug:'one',title:'One',content:'<p>Text</p>'}]).posts[0];assert.equal('datePublished' in p,false);assert.equal('dateModified' in p,false);});
+test('external sources preserved without internal source laundering',()=>{const p=buildIndex([{slug:'one',title:'One',content:'<a href="https://www.w3.org/TR/prov-aq/">source</a><a href="https://councilof.ai/dashboard">internal</a>'}]).posts[0];assert.deepEqual(p.sources,['https://www.w3.org/TR/prov-aq/']);});

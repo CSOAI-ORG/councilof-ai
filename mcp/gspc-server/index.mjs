@@ -388,6 +388,7 @@ async function mcpTrust() {
       partial: d.partial ?? false,
       enumeration: d.enumeration ?? null,
       counts: d.counts ?? null,
+      headline: typeof d.headline === "string" ? d.headline : null,
       diff: d.diff ?? null,
       not_a_certification: true,
     };
@@ -610,6 +611,23 @@ async function callPaidTool(name, args) {
       note: paymentPresented
         ? `${tool.csoai.route} is not on ${ORIGIN}. Settlement is unconfirmed; inspect the wallet, chain and facilitator before signing or retrying.`
         : `${tool.csoai.route} is not on ${ORIGIN}. No payment authorization was presented; nothing was charged by this request.`,
+    };
+  }
+  // HTTP 202 acknowledges processing, not completion of the commissioned work.
+  // Retain the route's body and settlement evidence without inventing fulfilment.
+  if (res.status === 202) {
+    const settle = res.headers.get("x-payment-response");
+    return {
+      ...base,
+      status: "ACCEPTED_NONFINAL",
+      http_status: 202,
+      body,
+      delivery_state: "NOT_ESTABLISHED",
+      response_received: true,
+      retry_payment: false,
+      ...settlementFields(paymentPresented, settle),
+      receipt_state: settle ? inspectReceipt(settle) : paymentPresented ? "ABSENT" : "NOT_REQUESTED",
+      note: "Processing remains non-final. Preserve the route response and any commission identity; reconcile before any further payment. Receipt presence is not signature verification, executed work or accepted delivery.",
     };
   }
   if (res.ok) {

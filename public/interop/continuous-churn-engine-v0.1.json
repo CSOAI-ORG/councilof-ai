@@ -1,7 +1,7 @@
 {
   "schema": "csoai.continuous-churn-engine/0.1",
   "generated_at": "2026-09-17T04:31:04.218894+00:00",
-  "title": "Continuous Churn Engine \u2014 Permissionless, Relentless, Up-to-Date",
+  "title": "Continuous Churn Engine — Permissionless, Relentless, Up-to-Date",
   "purpose": "Every time the estate changes, the engine fires one canonical-object adapter per affected source. Every adapter emits the same canonical object. The roll-up indexes the universe. Nothing waits for owner approval.",
   "principle": "MEASURE EVERYTHING. DECIDE NOTHING. Measure before the model is released, not after. Permissionless: any source anyone can read without asking. Relentless: re-churn every source on every tick. Continuous: no pause, no batch window.",
   "adapters": [
@@ -181,7 +181,7 @@
     },
     {
       "id": "gspc.board",
-      "source": "GSPC board (22 axis slots)",
+      "source": "GSPC board (live slot/measured counts: https://councilof.ai/api/gspc)",
       "tick": "per-run",
       "credential": "none"
     },
@@ -236,9 +236,9 @@
   ],
   "engine_loop": [
     "1. Tick fires (per-adapter schedule).",
-    "2. Adapter fetches source \u2014 public, permissionless.",
+    "2. Adapter fetches source — public, permissionless.",
     "3. Adapter diffs against last-known state (sha256 of canonical object).",
-    "4. If changed: write new unsigned card \u2192 submit to OTS calendar \u2192 sign Ed25519 \u2192 write signed card.",
+    "4. If changed: write new unsigned card → submit to OTS calendar → sign Ed25519 → write signed card.",
     "5. Append to ledger-cards-compact.json AND auto-eat/cards-compact.json.",
     "6. Update roll-up deltas.",
     "7. Submit PR via gh CLI."
@@ -247,8 +247,8 @@
     "Permissionless = any source we can read without asking. We do NOT crawl authenticated registries.",
     "Relentless = no batch window. Each adapter fires on its own tick.",
     "Up-to-date = state at time of fetch, not at time of next manual review.",
-    "Measuring what AI companies do BEFORE they release = scrape model release notes, pre-publication papers, safety reports, evals from open weights. The estate has model reports in /public/reports/ \u2014 these are post-release. Pre-release coverage needs new adapters.",
-    "OTS calendar is currently degraded \u2014 submissions get rejected. Pipeline continues; signatures/roots may be incomplete."
+    "Measuring what AI companies do BEFORE they release = scrape model release notes, pre-publication papers, safety reports, evals from open weights. The estate has model reports in /public/reports/ — these are post-release. Pre-release coverage needs new adapters.",
+    "OTS calendar is currently degraded — submissions get rejected. Pipeline continues; signatures/roots may be incomplete."
   ],
   "next_pre_release_adapters": [
     {
@@ -290,6 +290,18 @@
       "credential": "varies"
     }
   ],
-  "sha256": "6a32c31c8250aa956aa281e3134320f51651fc05888a0de01dd23afc26d7d7ac",
-  "byte_size": 6359
+  "sha256": null,
+  "byte_size": null,
+  "correction": {
+    "state": "SERVING_COPY_CORRECTED_OR_SCOPED",
+    "corrected_at": "2026-09-19T05:42:39.214099+00:00",
+    "reason": "Remove stale live-board counts or overbroad liveness/anchoring wording while preserving the original bytes in non-served history.",
+    "original_file_sha256": "680b29f20df6abb43b692d07981609baa3b3c4cb0cec41b5a240fe54e4e6a1d5",
+    "original_repo_path": "evidence/quarantine/stale-public-claims-20260919/originals/continuous-churn-engine-v0.1.json",
+    "current_live_counts": "https://councilof.ai/api/gspc",
+    "current_root_witness": "https://councilof.ai/interop/root-witness-latest.json",
+    "original_internal_sha256": "6a32c31c8250aa956aa281e3134320f51651fc05888a0de01dd23afc26d7d7ac",
+    "original_internal_byte_size": 6359,
+    "internal_digest_state": "WITHHELD_AFTER_CORRECTION_UNTIL_REGENERATED_BY_AN_EXPLICIT_PRODUCER"
+  }
 }

@@ -54,8 +54,11 @@ export function sourcesOf(html) {
 export function parseBlogData(src) {
   const m = String(src).match(/export const blogdata[^=]*=\s*(\[[\s\S]*?\n\]);\n/);
   if (!m) throw new Error("blogdata array literal not found");
-  try { return JSON.parse(m[1]); } catch { /* not strict JSON (comments, trailing commas) */ }
-  return new Function(`return (${m[1]});`)();
+  // This is a data boundary. Do not execute an AI- or contributor-authored
+  // array literal while extracting editorial metadata. The current canonical
+  // corpus is strict JSON; future non-JSON inputs require explicit conversion.
+  try { return JSON.parse(m[1]); }
+  catch { throw new Error("blogdata must be a strict JSON array; executable literals refused"); }
 }
 
 export function buildIndex(data) {

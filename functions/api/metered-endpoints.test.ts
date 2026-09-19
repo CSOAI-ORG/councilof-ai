@@ -10,6 +10,12 @@ const ORIGIN = "https://councilof.ai";
 const ctx = (path: string, env: Record<string, unknown> = {}, headers: Record<string, string> = {}) =>
   ({ request: new Request(ORIGIN + path, { headers }), env, params: {} }) as never;
 
+function memoryKv(): KVNamespace {
+  const rows = new Map<string,string>();
+  return {get:async(k:string)=>rows.get(k)??null,put:async(k:string,v:string)=>{rows.set(k,v);},
+    list:async()=>({keys:[],list_complete:true})} as unknown as KVNamespace;
+}
+
 // Static-asset reads the Functions make. Anything else 404s so a missing stub is loud.
 const STATIC: Record<string, unknown> = {
   "/signed/card-matrix.json": {
@@ -82,7 +88,7 @@ describe("Tier 1 — /api/request-attestation", () => {
       new Response(JSON.stringify(p.endsWith("/verify") ? { isValid: true } : { success: true, transaction: "0xtx", network: "base", payer: "0xp" })),
     );
     const hdr = btoa(JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }));
-    const r = await ras(ctx("/api/request-attestation?subject=qwen3", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
+    const r = await ras(ctx("/api/request-attestation?subject=qwen3", { X402_FACILITATOR_URL: "https://f.example", REVENUE_KV: memoryKv() }, { "x-payment": hdr }));
     expect(r.status).toBe(200);
     expect(r.headers.get("x-payment-response")).toBeTruthy();
     const b = await r.json();
@@ -111,7 +117,7 @@ describe("Tier 1 — /api/request-attestation", () => {
       { "/signed/card-matrix.json": { as_of: "2026-09-12T00:00:00Z", cells } },
     );
     const hdr = btoa(JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }));
-    const r = await ras(ctx("/api/request-attestation?subject=target-model", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
+    const r = await ras(ctx("/api/request-attestation?subject=target-model", { X402_FACILITATOR_URL: "https://f.example", REVENUE_KV: memoryKv() }, { "x-payment": hdr }));
     expect(r.status).toBe(200);
     const b = await r.json();
     expect(b.card.payload.reserve).toHaveLength(24);

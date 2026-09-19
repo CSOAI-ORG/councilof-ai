@@ -15,6 +15,8 @@ are not paired -- a paired test over unpaired items is not a test.
 from __future__ import annotations
 
 import argparse
+import hashlib
+import re
 import json
 import sys
 from collections import defaultdict
@@ -43,22 +45,59 @@ def load_items(path: Path) -> list[dict]:
 
 
 def short(model: str) -> str:
-    return model.split("@")[0].replace("ollama:", "")
+    """Legacy public helper: retain the exact declared subject including revision."""
+    return model
 
 
-def collect(run_dirs: list[Path]) -> dict[tuple[str, str], dict[str, dict[str, bool]]]:
-    """(axis, bank_sha256) -> model -> item_id -> graded-correct."""
-    table: dict[tuple[str, str], dict[str, dict[str, bool]]] = defaultdict(lambda: defaultdict(dict))
+def collect(run_dirs: list[Path], audit: dict | None = None) -> dict:
+    """Read one declared observation per subject/item; never last-write-wins.
+
+    Exact copies deduplicate. Distinct repeat trials require an explicit selection
+    design rather than silent pooling. Instrument identities are retained, not
+    authenticated here. A null grade is counted as unscored, never false or zero.
+    """
+    info = audit if audit is not None else {}
+    info.update(rows_read=0, unique_observations=0, duplicate_copies=0,
+                unscored_observations=0, model_identity_verified=False,
+                instrument_compatibility_verified=False)
+    table = defaultdict(lambda: defaultdict(dict))
+    observations, instruments = {}, {}
     for p in run_dirs:
         for row in load_items(p):
-            axis = str(row.get("axis") or "")
-            bank = str(row.get("bank_sha256") or "")
-            model = short(str(row.get("model") or ""))
-            item = str(row.get("item_id") or "")
-            grade = row.get("grade")
-            if not (axis and bank and model and item) or not isinstance(grade, bool):
+            info['rows_read'] += 1
+            if not isinstance(row, dict):
+                raise ValueError('ROW_OBJECT_REQUIRED')
+            for name in ('axis', 'bank_sha256', 'model', 'item_id'):
+                value = row.get(name)
+                if not isinstance(value, str) or not value or len(value) > 512 or any(ord(c) < 32 for c in value):
+                    raise ValueError('INVALID_IDENTITY_FIELD:' + name)
+            axis, bank, model, item = (row[k] for k in ('axis','bank_sha256','model','item_id'))
+            if not re.fullmatch('[0-9a-f]{64}', bank):
+                raise ValueError('EXACT_BANK_DIGEST_REQUIRED')
+            if 'grade' not in row or (row['grade'] is not None and type(row['grade']) is not bool):
+                raise ValueError('BOOLEAN_OR_NULL_GRADE_REQUIRED')
+            instrument = row.get('instrument_sha256')
+            if instrument is not None and (not isinstance(instrument,str) or not re.fullmatch('[0-9a-f]{64}',instrument)):
+                raise ValueError('INVALID_INSTRUMENT_DIGEST')
+            group = (axis, bank, model)
+            if group in instruments and instruments[group] != instrument:
+                raise ValueError('MIXED_INSTRUMENT_FOR_SUBJECT')
+            instruments[group] = instrument
+            key = (*group, item)
+            fingerprint = hashlib.sha256(json.dumps(row,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+            if key in observations:
+                if observations[key] != fingerprint:
+                    raise ValueError('REPEATED_ITEM_SELECTION_REQUIRED')
+                info['duplicate_copies'] += 1
                 continue
-            table[(axis, bank)][model][item] = grade
+            observations[key] = fingerprint
+            info['unique_observations'] += 1
+            panel = table[(axis,bank)][model]
+            if row['grade'] is None:
+                info['unscored_observations'] += 1
+            else:
+                panel[item] = row['grade']
+    info['subjects_without_instrument_digest'] = sum(v is None for v in instruments.values())
     return table
 
 
@@ -79,7 +118,12 @@ def main() -> int:
     if not files:
         print("UNCHECKABLE — no items.jsonl found; that is not zero axes", file=sys.stderr)
         return 2
-    table = collect(files)
+    input_audit = {}
+    try:
+        table = collect(files, input_audit)
+    except (ValueError, TypeError) as error:
+        print("UNCHECKABLE — " + str(error), file=sys.stderr)
+        return 2
     axes_out = []
     for (axis, bank), by_model in sorted(table.items()):
         models = sorted(by_model)
@@ -90,6 +134,13 @@ def main() -> int:
                 "reason": "one model on this bank — a paired test needs two",
             })
             continue
+        panel = set.intersection(*(set(by_model[m]) for m in models))
+        if not panel:
+            axes_out.append({"axis":axis,"bank_sha256":bank,"models":models,
+                             "verdict":"UNCHECKABLE","reason":"no common scored panel"})
+            continue
+        observed_sizes = {m:len(by_model[m]) for m in models}
+        by_model = {m:{i:by_model[m][i] for i in panel} for m in models}
         acc = {m: (sum(by_model[m].values()) / len(by_model[m])) if by_model[m] else None for m in models}
         ranked = sorted(models, key=lambda m: (acc[m] is not None, acc[m] or 0), reverse=True)
         top, runner = ranked[0], ranked[1]
@@ -104,34 +155,40 @@ def main() -> int:
             "runner_up": runner, "runner_up_accuracy": round(acc[runner], 4) if acc[runner] is not None else None,
             "discordant": res["n_discordant"], "b": b, "c": c,
             "p": res["p"],
+            "p_unrounded": res["p_unrounded"],
+            "p_scientific": res["p_scientific"],
+            "nominal_p_below_alpha": res["significant"],
+            "observed_panel_sizes": observed_sizes,
+            "excluded_outside_common_panel": {m:observed_sizes[m]-len(panel) for m in models},
+            "comparison_selection": "POSTHOC_TOP_TWO_ON_COMMON_PANEL",
+            "confirmatory_separation": "NOT_ESTABLISHED",
             "quotable": shared >= QUOTABLE_N,
-            # Two separate judgements, deliberately not merged.
-            # A p above alpha is a TIE -- "no difference shown", never equality proven.
-            # And below n=30 nothing here is quotable at all, so the verdict is withheld
-            # rather than stated softly: swarm pairs on 8 items, and a SEPARATED or TIE
-            # printed against that n would contradict the same threshold the signer uses
-            # to decide MEASURED. Unquotable is not TIE.
+            # The n floor is a display policy, not statistical validity. The pair
+            # is selected after observing scores, so nominal p is exploratory only.
             "verdict": (
-                "SEPARATED" if res["significant"] else "TIE"
+                "EXPLORATORY"
             ) if shared >= QUOTABLE_N else "UNQUOTABLE",
             "verdict_withheld_reason": None if shared >= QUOTABLE_N else f"n={shared} < {QUOTABLE_N}",
         })
     report = {
-        "schema": "csoai.pod-fleet-separation/0.1",
+        "schema": "csoai.pod-fleet-separation/0.2",
         "not_board_separation": True,
         "board_separation_is": "McNemar exact p, leader vs best base — the pod has no tuned model, so it cannot produce it",
         "test": "McNemar exact two-sided on discordant pairs, alpha=0.05 (harness/owem/card_pipeline.mcnemar_exact)",
         "pairing": "item_id within one bank_sha256; runs on different bank bytes are never paired",
         "runs_read": len(files),
+        "input_audit": input_audit,
+        "multiplicity_adjustment": "NOT_PERFORMED",
+        "sampling_independence": "NOT_ESTABLISHED_BY_READER",
+        "limitations": "Posthoc model selection and common-panel missingness remain selection effects. No confirmatory superiority, equality or board separation is asserted.",
         "axes": axes_out,
     }
     Path(args.out).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    sep = sum(1 for a in axes_out if a["verdict"] == "SEPARATED")
-    tie = sum(1 for a in axes_out if a["verdict"] == "TIE")
+    exploratory = sum(1 for a in axes_out if a["verdict"] == "EXPLORATORY")
     unk = sum(1 for a in axes_out if a["verdict"] == "UNCHECKABLE")
     unq = sum(1 for a in axes_out if a["verdict"] == "UNQUOTABLE")
     print(
-        f"pod-fleet separation: SEPARATED {sep} · TIE {tie} · UNQUOTABLE {unq} · "
+        f"pod-fleet exploratory comparison: EXPLORATORY {exploratory} · UNQUOTABLE {unq} · "
         f"UNCHECKABLE {unk} · runs {len(files)}"
     )
     return 0

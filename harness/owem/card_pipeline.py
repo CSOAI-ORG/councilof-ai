@@ -79,18 +79,35 @@ def judge(response, exp, must_inc):
     return (None, "unmapped")
 
 def mcnemar_exact(b, c):
-    """McNemar exact binomial two-sided p-value on discordant pairs (b=correct-wrong, c=wrong-correct).
-    The field-standard paired test for 'does A beat B' (added per the governance-alignment research)."""
+    """Exact two-sided binomial McNemar test; no multiplicity correction.
+
+    Integer arithmetic avoids probability underflow during tail selection.
+    p remains rounded for legacy display; p_unrounded/p_scientific preserve
+    precision. This calculation alone does not establish sampling independence.
+    """
+    from decimal import Decimal, localcontext
+    if type(b) is not int or type(c) is not int or min(b, c) < 0:
+        raise ValueError("NONNEGATIVE_INTEGER_DISCORDANTS_REQUIRED")
     n = b + c
-    if n == 0:
-        return {"p": 1.0, "n_discordant": 0, "significant": False, "note": "no discordant pairs"}
-    # two-sided binomial exact test at p=0.5 on n discordant pairs
-    from math import comb
-    def binom(k): return comb(n, k) * (0.5 ** n)
-    p_obs = binom(min(b, c))
-    p = min(1.0, sum(binom(k) for k in range(n + 1) if binom(k) <= p_obs + 1e-12))
-    return {"p": round(p, 5), "n_discordant": n, "b": b, "c": c, "significant": p < 0.05,
-            "note": "McNemar exact two-sided, alpha=0.05 (Benjamini-Hochberg across axes"}
+    if n > 100000:
+        raise ValueError("DISCORDANT_COMPUTE_BOUND_EXCEEDED")
+    denominator = 1 << n
+    coefficient = total = 1
+    for k in range(1, min(b, c) + 1):
+        coefficient = coefficient * (n - k + 1) // k
+        total += coefficient
+    numerator = min(denominator, 2 * total)
+    with localcontext() as ctx:
+        ctx.prec = 25
+        decimal_p = Decimal(numerator) / Decimal(denominator)
+        scientific = format(decimal_p, '.16E')
+    p = float(decimal_p)
+    return {"p": round(p, 5), "p_unrounded": p,
+            "p_scientific": scientific, "p_float_underflow": p == 0.0 and numerator > 0,
+            "n_discordant": n, "b": b, "c": c,
+            "significant": numerator * 20 < denominator,
+            "multiple_testing_adjustment": "NOT_PERFORMED",
+            "note": "McNemar exact two-sided, nominal alpha=0.05; post-selection and dependence require separate treatment"}
 
 def bank(axis, n):
     p = os.path.join(BANKS, "gspc-%s.jsonl" % axis)

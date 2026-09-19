@@ -67,6 +67,13 @@ const routeServer = createServer((req, res) => {
     return answer(res, 200, { kind: "mcp-trust", counts: { total: 13 }, headline: "fixture mcp measurement", not_a_certification: true });
   }
   if (url.pathname === "/api/request-attestation") {
+    const subject = url.searchParams.get("subject");
+    if (subject?.startsWith("fixture-202-")) {
+      const state = subject === "fixture-202-queue" ? "SETTLED_QUEUE_UNCONFIRMED"
+        : subject === "fixture-202-receipt" ? "QUEUE_ACCEPTED_RECEIPT_UNAVAILABLE" : "FUTURE_PENDING_STATE";
+      return answer(res,202,{state,retry_payment:false,execution:"NOT_OBSERVED",delivery:"NOT_OBSERVED",
+        queue_ack:{commission_id:"synthetic-local-only"}},payment ? {"x-payment-response":routeReceipt} : {});
+    }
     return answer(
       res,
       402,
@@ -304,6 +311,24 @@ check(
     transportError.result?.structuredContent?.settlement_state === "UNCONFIRMED" &&
     !JSON.stringify(transportError).includes(transportToken),
 );
+
+// 202 receives a response, but does not establish completed commissioned work.
+for (const [subject,state] of [["fixture-202-queue","SETTLED_QUEUE_UNCONFIRMED"],
+  ["fixture-202-receipt","QUEUE_ACCEPTED_RECEIPT_UNAVAILABLE"],
+  ["fixture-202-other","FUTURE_PENDING_STATE"]]) {
+  const response=await rpc("tools/call",{name:"commission_card",arguments:{subject,x_payment:"synthetic-202-auth"}});
+  const p=response.result?.structuredContent;
+  check(`202 ${state} stays nonfinal`,p?.status==="ACCEPTED_NONFINAL" && p?.http_status===202 &&
+    p?.delivery_state==="NOT_ESTABLISHED" && p?.body?.state===state &&
+    p?.body?.queue_ack?.commission_id==="synthetic-local-only");
+  check(`202 ${state} preserves settlement separately and never invites repayment`,
+    p?.settlement_state==="REPORTED_BY_ROUTE" && p?.receipt_state==="PRESENT_UNVERIFIED" &&
+    p?.retry_payment===false && p?.deliverable===undefined && !JSON.stringify(response).includes("synthetic-202-auth"));
+}
+const pendingFree=await rpc("tools/call",{name:"commission_card",arguments:{subject:"fixture-202-queue"}});
+check("202 without authorisation remains nonfinal and unpaid",pendingFree.result?.structuredContent?.status==="ACCEPTED_NONFINAL" &&
+  pendingFree.result?.structuredContent?.settlement_state==="NOT_REQUESTED" &&
+  pendingFree.result?.structuredContent?.retry_payment===false);
 
 const childClosed = new Promise((resolve) => server.once("close", resolve));
 server.stdin.end();

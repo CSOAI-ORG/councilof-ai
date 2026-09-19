@@ -1,7 +1,7 @@
 {
   "schema": "csoai.master-harness-index/0.1",
   "generated_at": "2026-09-17T04:29:37.784735+00:00",
-  "title": "Master Measurement Harness \u2014 ONE Engine, Every Source, Every Goal",
+  "title": "Master Measurement Harness — ONE Engine, Every Source, Every Goal",
   "principle": "Every adapter outputs the same canonical object. Stop building bespoke integrations. Build an ingestion grammar for regulatory/assurance reality.",
   "canonical_object": [
     "subject",
@@ -175,7 +175,7 @@
     },
     {
       "category": "infrastructure",
-      "source": "XRPL two-way check (issuer registry \u2194 on-chain)",
+      "source": "XRPL two-way check (issuer registry ↔ on-chain)",
       "status": "MEASURED",
       "goal_objects": [
         "provenance",
@@ -222,7 +222,7 @@
     },
     {
       "category": "agent",
-      "source": "TUI A \u2014 Agent enumeration (13 ENUMERATED)",
+      "source": "TUI A — Agent enumeration (13 ENUMERATED)",
       "status": "ENUMERATED_v0.1",
       "goal_objects": [
         "actor_identity"
@@ -230,7 +230,7 @@
     },
     {
       "category": "agent",
-      "source": "TUI B \u2014 Agent measurement",
+      "source": "TUI B — Agent measurement",
       "status": "MEASURED_v0.1",
       "goal_objects": [
         "agent_authority",
@@ -274,7 +274,7 @@
     },
     {
       "category": "gspc_self",
-      "source": "GSPC measurement cards (3,998 across 14 axes \u00d7 165 models)",
+      "source": "GSPC measurement cards (historical 3,998-card × 165-model behavioural comparison matrix; this is not the live board slot count)",
       "status": "MEASURED",
       "goal_objects": [
         "assurance",
@@ -300,7 +300,7 @@
     },
     {
       "category": "gspc_self",
-      "source": "GSPC board (22 axis slots, 21 measured, 1 unmeasured)",
+      "source": "GSPC board (live slot/measured counts: https://councilof.ai/api/gspc)",
       "status": "ACTIVE",
       "goal_objects": [
         "governance",
@@ -424,13 +424,25 @@
   "binding_method": "Each source declares its goal-object mappings at adapter level. Each adapter outputs the canonical object. GSPC engine consumes the canonical objects and writes signed cards + OTS stamps + audit records.",
   "honest_findings": [
     "The estate already has 9 categories of sources bound to the goal-object ontology.",
-    "OTS calendar aggregator is currently degraded \u2014 1904 submissions received non-proof responses.",
+    "OTS calendar aggregator is currently degraded — 1904 submissions received non-proof responses.",
     "93 valid OTS proofs on origin (56 BTC-attested, 37 calendar-pending).",
-    "TUI A and TUI B establish the agent population boundary \u2014 TUI B measures against TUI A.",
+    "TUI A and TUI B establish the agent population boundary — TUI B measures against TUI A.",
     "Master roll-up at /public/interop/master-consolidation-rollup-v0.1.json is the single index.",
     "Strategic deliverables: digital-asset-regulatory-measurement-profile-v0.1, osaia-safe-evidence-adapter-v0.1, white-paper-index-v0.1, benchmark-index-v0.1.",
     "scripts/hermes-align.sh: 8 ok / 0 FAIL on this M4."
   ],
-  "sha256": "e902943ec446779b444e956931996dc9ed124b30540178e16056ee37f9f6b360",
-  "byte_size": 8056
+  "sha256": null,
+  "byte_size": null,
+  "correction": {
+    "state": "SERVING_COPY_CORRECTED_OR_SCOPED",
+    "corrected_at": "2026-09-19T05:42:39.214099+00:00",
+    "reason": "Remove stale live-board counts or overbroad liveness/anchoring wording while preserving the original bytes in non-served history.",
+    "original_file_sha256": "cce6c72d4ec842bb5a53e8f9b78aacfa89455cc4bd4634483a8f4d24a52e6c0f",
+    "original_repo_path": "evidence/quarantine/stale-public-claims-20260919/originals/master-harness-index-v0.1.json",
+    "current_live_counts": "https://councilof.ai/api/gspc",
+    "current_root_witness": "https://councilof.ai/interop/root-witness-latest.json",
+    "original_internal_sha256": "e902943ec446779b444e956931996dc9ed124b30540178e16056ee37f9f6b360",
+    "original_internal_byte_size": 8056,
+    "internal_digest_state": "WITHHELD_AFTER_CORRECTION_UNTIL_REGENERATED_BY_AN_EXPLICIT_PRODUCER"
+  }
 }

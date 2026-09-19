@@ -40,7 +40,7 @@ describe("every published door is grouped", () => {
       ],
     };
     const c = buildCatalogue(withNew);
-    expect(c.ungrouped).toEqual(["/api/brand-new-door"]);
+    expect(c.ungrouped).toEqual(["GET /api/brand-new-door"]);
     // and it is NOT quietly rendered anywhere
     expect(c.groups.flatMap((g) => g.cards).map((x) => x.path)).not.toContain("/api/brand-new-door");
   });
@@ -58,14 +58,15 @@ describe("every published door is grouped", () => {
 describe("card content comes from the manifest", () => {
   const cards = buildCatalogue(manifest).groups.flatMap((g) => g.cards);
 
-  it("marks free-door free because the MANIFEST says amount 0, not because we decided", () => {
+  it("marks a zero amount as a snapshot declaration, not a permanent price promise", () => {
     const free = cards.find((c) => c.path === "/api/free-door");
-    expect(free?.freeForever).toBe(true);
-    expect(free?.payLine).toMatch(/settles and charges nothing/i);
+    expect(free?.zeroAmountDeclared).toBe(true);
+    expect(free?.payLine).toMatch(/Zero amount declared in this manifest/);
+    expect(free?.payLine).not.toMatch(/forever|settles and charges nothing/i);
   });
 
   it("gives every paid door the pay-as-you-go line and no price", () => {
-    for (const c of cards.filter((c) => !c.freeForever)) {
+    for (const c of cards.filter((c) => !c.zeroAmountDeclared)) {
       expect(c.payLine).toBe("Pay-as-you-go x402 at the 402.");
       expect(c.payLine).not.toMatch(/\$|USD|\bprice\b|tier/i);
       expect(c.measures).not.toMatch(/\$\d/);
@@ -118,13 +119,14 @@ describe("the section names its source", () => {
 
   it("renders nothing rather than inventing doors when the manifest is unreachable", () => {
     const c = buildCatalogue(null);
-    expect(c.total).toBe(0);
+    expect(c.total).toBeNull();
+    expect(c.coverage).toBe("UNREADABLE");
     expect(c.groups.flatMap((g) => g.cards)).toEqual([]);
     expect(c.mode).toBeNull();
   });
 
   it("never claims a door is free unless the manifest said so", () => {
     const card = toCard({ url: "https://councilof.ai/api/x", paid_for: "assembly" }, "agent-rails");
-    expect(card.freeForever).toBe(false);
+    expect(card.zeroAmountDeclared).toBe(false);
   });
 });

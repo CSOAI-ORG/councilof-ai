@@ -1,7 +1,7 @@
 {
   "schema": "csoai.agent-quickstart/0.1",
   "human": "https://councilof.ai/quickstart/",
-  "one_line": "discover, request, read the 402, settle from your own wallet, receive a signed card, verify it offline",
+  "one_line": "discover and inspect public evidence, optionally authorise a request, preserve its response, reconcile nonfinal outcomes, and verify any returned card under the appropriate rule",
   "amounts": "No amount is written here. The only authority on an amount is accepts[] in the 402 you receive.",
   "self_payments": "Payments from the operator's own wallets are recorded as self-tests and never counted as buyers or revenue. Authoritative flag: settled_usdc.excludes_self=true on /api/revenue.",
   "revenue_contract": "https://councilof.ai/api/revenue",
@@ -32,7 +32,8 @@
       "name": "402",
       "method": "GET",
       "endpoint": "https://councilof.ai/api/request-attestation?subject=<id>",
-      "expect": "HTTP 402 with a PAYMENT-REQUIRED header and a JSON body: x402Version, accepts[] of {scheme, network, asset, payTo, amount, maxAmountRequired, maxTimeoutSeconds}, extensions.offer-receipt.info.offers[] (JWS, verifiable offline)"
+      "expect": "HTTP 402 with PAYMENT-REQUIRED and JSON payment requirements. Inspect accepts[] before authorisation. Signed offer material is optional and must be checked separately when present.",
+      "offer_signatures": "CONDITIONAL_ON_CONFIGURED_SIGNER_AND_ACCEPTED_REQUIREMENTS"
     },
     {
       "step": 4,
@@ -50,11 +51,82 @@
       "endpoint": "https://councilof.ai/api/request-attestation?subject=<id>",
       "observed": false,
       "source": "functions/api/request-attestation.ts",
-      "expect": "200 JSON {card, verify, signed, unsigned_reason, bytes, note}; card is a card-v0 with surface ras.commission and payload.settle {network, transaction, payer}; header x-payment-response carries the settlement response, with a signed receipt when the facilitator names a payer and the signing key is present",
+      "expect": "The inspected handler can return 200 with a commission acknowledgement or 202 with an unresolved queue or receipt outcome. Preserve the exact HTTP status, headers and raw response. A returned card may be unsigned. Neither a 200 nor a valid signature establishes execution, delivered work, a fresh measurement or root inclusion.",
       "also": [
         "GET https://councilof.ai/api/commissions"
       ],
-      "fulfillment_index": "https://councilof.ai/api/commissions"
+      "fulfillment_index": "https://councilof.ai/api/commissions",
+      "response_scope": "SELECTED_SOURCE_OUTCOMES_NOT_EXHAUSTIVE",
+      "outcomes": [
+        {
+          "http_status": 200,
+          "state": null,
+          "automatic_payment_retry": false,
+          "signature_emission": "CONDITIONAL",
+          "inspect": [
+            "card",
+            "queue_ack",
+            "signed",
+            "unsigned_reason",
+            "receipt_indexed",
+            "execution",
+            "delivery"
+          ],
+          "meaning": "A commission acknowledgement was returned. Read the explicit fields; acceptance, signature, execution and delivery are separate."
+        },
+        {
+          "http_status": 202,
+          "state": "SETTLED_QUEUE_UNCONFIRMED",
+          "automatic_payment_retry": false,
+          "inspect": [
+            "payment_settled",
+            "settlement_state",
+            "settlement",
+            "queue_ack",
+            "enqueued",
+            "retry_payment",
+            "execution",
+            "delivery"
+          ],
+          "meaning": "Queue acceptance is unconfirmed. Missing settlement identity can leave payment_settled null. Preserve the response and reconcile before any further payment."
+        },
+        {
+          "http_status": 202,
+          "state": "QUEUE_ACCEPTED_RECEIPT_UNAVAILABLE",
+          "automatic_payment_retry": false,
+          "inspect": [
+            "queue_ack",
+            "enqueued",
+            "settlement",
+            "retry_payment",
+            "execution",
+            "delivery"
+          ],
+          "meaning": "The queue accepted the request but a receipt could not be assembled. Retain the available commission identity; do not automatically pay again."
+        }
+      ],
+      "missing_settlement_identity": "DO_NOT_INFER_SETTLEMENT",
+      "retry_policy": {
+        "automatic_repayment": false,
+        "preserve_raw_response": true,
+        "distinguish_reread_from_repayment": true,
+        "unrecognised_outcome": "RECONCILE_BEFORE_ANOTHER_PAYMENT",
+        "note": "Read-only reconciliation is not permission to repeat a paid request. No response, unreadable content or missing receipt does not establish that no payment occurred."
+      },
+      "inferences_not_established": [
+        "execution",
+        "delivery",
+        "fresh_measurement",
+        "root_inclusion",
+        "independently_verified_settlement",
+        "signer_authority"
+      ],
+      "settlement_header": {
+        "name": "x-payment-response",
+        "basis": "CURRENT_HANDLER_SOURCE",
+        "universal_x402_header": false,
+        "note": "Header availability depends on the handler outcome. Do not generalise this source-specific name to all x402 versions or interpret its absence as proof of nonpayment."
+      }
     },
     {
       "step": 6,
@@ -66,10 +138,36 @@
         "https://councilof.ai/verifier/gspc-verify.mjs for the measurement cards the receipt references",
         "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/scripts/verify_receipt.py for the signed offer and receipt"
       ],
-      "expect": "VALID (exit 0), INVALID (exit 1) or UNCHECKABLE (exit 2)"
+      "expect": "Use the checker for the returned card rule. Exit meanings differ for an individual card-v0 payload and a GSPC card set. A nonfinal response without a card is not a verification success or proof of nonpayment.",
+      "checkers": [
+        {
+          "id": "card-v0-payload",
+          "endpoint": "https://councilof.ai/verifier/card-v0-verify.mjs",
+          "exit_codes": {
+            "0": "VALID_PAYLOAD_UNDER_SUPPLIED_KEY",
+            "1": "INVALID",
+            "2": "UNCHECKABLE"
+          },
+          "scope": "Payload-rule cards only; envelope fields outside the payload are not authenticated by this rule. Whole-card digest_covers inputs are uncheckable here."
+        },
+        {
+          "id": "gspc-card-set",
+          "endpoint": "https://councilof.ai/verifier/gspc-verify.mjs",
+          "exit_codes": {
+            "0": "VALID_CARDS_COMPLETE_CHECKED_SET",
+            "1": "INVALID",
+            "2": "UNCHECKABLE_OR_USAGE_ERROR",
+            "3": "VALID_CARDS_INCOMPLETE_OR_INCONSISTENT_SET"
+          },
+          "scope": "Signature and supplied-set checks under the chosen profile; not an independent claim that every real-world record was supplied."
+        }
+      ],
+      "non_receipt_response": "DO_NOT_TREAT_AS_A_CARD_OR_PROOF_OF_NONPAYMENT"
     }
   ],
   "excludes_self": true,
-  "excludes_self_path": "https://councilof.ai/api/revenue \u2192 settled_usdc.excludes_self",
-  "commissions_index": "https://councilof.ai/api/commissions"
+  "excludes_self_path": "https://councilof.ai/api/revenue → settled_usdc.excludes_self",
+  "commissions_index": "https://councilof.ai/api/commissions",
+  "description_revision": "2026-09-18.source-outcome-clarification",
+  "description_scope": "Instructions derived from the named local sources, not a live transaction or a deployment assertion."
 }

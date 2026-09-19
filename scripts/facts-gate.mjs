@@ -138,7 +138,7 @@ const CORRECTION_CTX =
 
 // "1 of 4 axes resolved", "the other 10 axes are ties" — breakdowns of a whole,
 // not an assertion of the board total.
-const BREAKDOWN_BEFORE = /\b(?:\d+\s+of|the other|remaining|only|another)\s+$/i;
+const BREAKDOWN_BEFORE = /\b(?:\d+\s+of(?:\s+the)?|the other|remaining|only|another)\s+$/i;
 
 // "13 axis signals", "5 axis lens" — the noun is qualified; not a board count.
 const QUALIFIED_AFTER = /^\s*(?:signals?|lens|families|groups?|pairs?)\b/i;
@@ -573,19 +573,20 @@ const SELFTEST_CASES = [
   //    remaining slot measured in the later measurement sweep) ───────────────────
   // These cases were first written when the board was 14 axes and "22" was a number
   // nobody was allowed to say, then again when the board was "22 axes · 15 measured"
-  // and "22 MEASURED" was the forbidden overclaim. The canon has moved once more:
-  // every slot now carries a run, so the board is "22 axes · 22 measured" and
-  // "22 measured" is simply true. The overclaim rule still guards the line — it
-  // catches a claim of MORE measured axes than the board actually carries (now 22).
+  // and "22 MEASURED" was the forbidden overclaim. The board has moved again: 23 declared slots, 22 measured and one explicitly unmeasured.
+  // "22 measured" is true; "all 22 axes" is not the board total. The overclaim rule still guards the line — it
+  // catches a claim of MORE measured axes than the board actually carries.
   ["prohibition form still passes", "<p>Cite live totals.public_count — do not invent 22 axes.</p>", false],
-  ["22 axes is now the canon and matches the live board", "<p>The board carries 22 axes across both families.</p>", false],
+  ["23 axes is the current observed fallback and matches the live board", "<p>The board carries 23 axes across both families.</p>", false],
   ["stale count: the pre-sweep 14", "<p>The board measures 14 axes across the fleet.</p>", true],
   ["board self-description: 13 canonical axes + jail (a GSPC-family stamp)", "<p>Measured on 2026-08-12 (13 canonical axes) · 2026-08-18 (jail).</p>", false],
-  ["honest swept grammar", "<p>22 axes · 22 measured — every slot has a run behind it.</p>", false],
-  ["derived triple flattened 22·22·0 axes · measured · unmeasured (reproduces 1804 deploy)", "<p>Living GSPC · derived totals 22·22·0 axes · measured · unmeasured — 22 axis · 22 measured</p>", false],
+  ["honest current grammar", "<p>23 axes · 22 measured · 1 unmeasured.</p>", false],
+  ["derived triple flattened 23·22·1 axes · measured · unmeasured", "<p>Living GSPC · derived totals 23·22·1 axes · measured · unmeasured — 22 axes measured</p>", false],
+  ["scoped ratio: 21 of the 21 axes carrying a frozen bank is not a board-total claim", "<p>21 of the 21 axes carrying a frozen bank resolve.</p>", false],
+  ["VIOLATION: a bare 21-axes board-total claim still fails", "<p>The board currently carries 21 axes.</p>", true],
   ["VIOLATION: a real 0-axes board-total claim still fails", "<p>The board currently carries 0 axes.</p>", true],
   ["22 measured is now true, not an overclaim", "<p>The board publishes 22 measured axes.</p>", false],
-  ["all 22 axes are measured is now honest", "<p>All 22 axes are measured and signed.</p>", false],
+  ["VIOLATION: all 22 axes are measured incorrectly collapses the 23-slot board", "<p>All 22 axes are measured and signed.</p>", true],
   ["VIOLATION: 30 measured axes (more than the board carries)", "<p>The board publishes 30 measured axes.</p>", true],
   // ── postfix measured grammar = the live totals.lid (2026-09-16, board 23 · 22) ──
   ["live lid verbatim: N axes measured is a MEASURED claim, not a slot count", "<p>Lid: 15 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.</p>", false],

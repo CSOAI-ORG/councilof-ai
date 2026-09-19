@@ -91,8 +91,9 @@ describe("/quickstart — the paid path is complete: discover → request → 40
     for (const f of ["PAYMENT-REQUIRED", '"x402Version": 2', '"scheme": "exact"', '"network": "eip155:8453"', '"asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"', '"payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"', '"amount"', '"maxAmountRequired"'])
       expect(s).toContain(f);
     expect(s).toContain("verify_receipt.py --url");
-    expect(page).toContain("readChallenge(EXAMPLE_DOOR");
-    expect(page).toMatch(/r\.status !== 402/);
+    expect(page).toContain("readQuickstartJson(EXAMPLE_DOOR, controller.signal, parseChallenge, 402)");
+    const reader = readFileSync(resolve(__dirname, "../lib/quickstartData.ts"), "utf8");
+    expect(reader).toContain("response.status !== expectedStatus");
   });
 
   it("settle: the public x402 client, the caller's own wallet, and no claim that a settlement happened", () => {
