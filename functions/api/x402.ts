@@ -86,6 +86,20 @@ export const onRequestGet: PagesFunction<{
         never: ["a paid artefact", "a grade", "a rank", "a certificate"],
       },
       {
+        id: "subject_discovery",
+        name: "Named-subject Bazaar discovery doors",
+        resource: u("/api/discover/<chainlink|ondo|ondo-ousg>"),
+        free_preview: u("/api/discover/<chainlink|ondo|ondo-ousg>"),
+        subjects: {
+          chainlink: ["Chainlink", "LINK"],
+          ondo: ["Ondo Finance", "ONDO"],
+          "ondo-ousg": ["Ondo Finance OUSG", "OUSG", "xrpl:OUSG"],
+        },
+        deliverable: "Subject identity plus links to existing evidence, board and verification routes through a genuine x402 challenge whose amount is zero.",
+        index_state: "PENDING_CONFIRMED_SETTLEMENT_AND_BAZAAR_READBACK",
+        never: ["a paid SKU", "a measurement", "a rating", "an endorsement", "a certificate"],
+      },
+      {
         id: "issuance",
         name: "Commission a signed card (request-attestation)",
         resource: u("/api/request-attestation?subject=<id>&axis=<slug>"),

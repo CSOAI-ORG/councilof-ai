@@ -103,6 +103,20 @@ export const onRequestGet: PagesFunction<{
         note: "Payable and priced at zero — it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
         indexed_in: "x402 Bazaar (PayAI)",
       },
+      ...[
+        ["chainlink", "Chainlink / LINK"],
+        ["ondo", "Ondo Finance / ONDO"],
+        ["ondo-ousg", "Ondo Finance OUSG on XRPL"],
+      ].map(([id, label]) => {
+        const resource = `${origin}/api/discover/${id}`;
+        const description = `Free ${label} discovery: subject identity, evidence routes, board and verification links. Discovery is not measurement or endorsement.`;
+        return {
+          method: "GET", url: resource, paid_for: null, amount: "0", description,
+          accepts: [req(resource, description)],
+          note: "Zero-priced discovery route using an existing free-door mechanism; not a new paid SKU. INDEXED may be claimed only after confirmed settlement and Bazaar readback.",
+          indexed_in: null,
+        };
+      }),
       { method: "GET", url: `${origin}/api/request-attestation?subject=model-or-subject-id`, paid_for: "issuance",
         description:
           REQUEST_ATTESTATION_DESCRIPTION,
