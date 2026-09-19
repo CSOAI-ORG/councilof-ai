@@ -1,0 +1,287 @@
+{
+  "contracts": [
+    {
+      "adapter_state": "CALLABLE_INSPECTED_NOT_EXECUTED",
+      "argument_template": [
+        "--raw",
+        "{staging}/raw.json",
+        "--output",
+        "{staging}/index.json"
+      ],
+      "bounded_subject_execution": false,
+      "contract_id": "stablecoin.discovery",
+      "execution_state": "NOT_RUN_BY_REGISTRY",
+      "instrument": {
+        "entrypoint": "main",
+        "invocation_kind": "CLI",
+        "path": "scripts/freeze_stablecoin_index.py",
+        "repository_base_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "sha256": "f02eacd1ebd9e24ec41307aaa4e70ac272d2df0b51427bf5aa3e28a56c560aee",
+        "source_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "source_state": "COMMITTED_AT_SOURCE_COMMIT"
+      },
+      "limitations": [
+        "Whole upstream population; index discovery only."
+      ],
+      "publication_authorized": false,
+      "signing_authorized": false,
+      "source_access": "PUBLIC_READ",
+      "spend_authorized_usd": 0
+    },
+    {
+      "adapter_state": "CALLABLE_INSPECTED_NOT_EXECUTED",
+      "argument_template": [
+        "--source-repo",
+        "{pinned_checkout}",
+        "--source-revision",
+        "{input_revision}",
+        "--output-dir",
+        "{new_empty_staging_directory}",
+        "--top-n",
+        "25"
+      ],
+      "bounded_subject_execution": false,
+      "contract_id": "stablecoin.disclosure",
+      "execution_state": "NOT_RUN_BY_REGISTRY",
+      "external_execution_evidence": [
+        {
+          "admission_state": "NOT_EVALUATED_BY_REGISTRY",
+          "executed_instrument_sha256_claim": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+          "instrument_digest_matches": true,
+          "raw_capture_validation": "NOT_REPERFORMED_BY_REGISTRY",
+          "receipt_path": "evidence/evidence-factory/cohort-finalization-receipt-2026-09-19.json",
+          "receipt_sha256": "a63696fb952e3604d68da52326efe6e72d44da494b13d8608cf3a15837a0c175",
+          "receipt_state": "RETAINED_EXTERNAL_EXECUTION_RECEIPT",
+          "run_finished_at_claim": "2026-09-19T09:24:09.134627Z"
+        }
+      ],
+      "instrument": {
+        "entrypoint": "main",
+        "invocation_kind": "CLI",
+        "path": "scripts/refresh_evidence_factory_cohorts.py",
+        "repository_base_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+        "source_commit": null,
+        "source_state": "UNTRACKED"
+      },
+      "limitations": [
+        "Combined read-only cohort collector: top 25 stablecoins from the pinned historical index, 16 named XRPL subjects and 26 public institution/disclosure subjects. Not an arbitrary per-row runner. Run this shared instrument once per pinned input revision and capture, not once per subject or family. Added inventory identities are not automatically in its cohort."
+      ],
+      "publication_authorized": false,
+      "signing_authorized": false,
+      "source_access": "PUBLIC_READ",
+      "spend_authorized_usd": 0
+    },
+    {
+      "adapter_state": "CALLABLE_INSPECTED_NOT_EXECUTED",
+      "argument_template": [
+        "--limit",
+        "{bounded_limit}",
+        "--out",
+        "{staging}/supply.json"
+      ],
+      "bounded_subject_execution": false,
+      "contract_id": "stablecoin.supply",
+      "execution_state": "NOT_RUN_BY_REGISTRY",
+      "instrument": {
+        "entrypoint": "main",
+        "invocation_kind": "CLI",
+        "path": "scripts/stablecoin_universe_supply.py",
+        "repository_base_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "sha256": "26c593b94ad5cabaf9891ce0a223c1ec5b274549c01e489021ea8b2b588aba0b",
+        "source_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "source_state": "COMMITTED_AT_SOURCE_COMMIT"
+      },
+      "limitations": [
+        "Prefix of frozen index; aggregator addresses and symbol match do not establish issuer identity or reserve safety."
+      ],
+      "publication_authorized": false,
+      "signing_authorized": false,
+      "source_access": "PUBLIC_READ",
+      "spend_authorized_usd": 0
+    },
+    {
+      "adapter_state": "CALLABLE_INSPECTED_NOT_EXECUTED",
+      "argument_template": [
+        "--source-repo",
+        "{pinned_checkout}",
+        "--source-revision",
+        "{input_revision}",
+        "--output-dir",
+        "{new_empty_staging_directory}",
+        "--top-n",
+        "25"
+      ],
+      "bounded_subject_execution": false,
+      "contract_id": "xrpl.public_facts",
+      "execution_state": "NOT_RUN_BY_REGISTRY",
+      "external_execution_evidence": [
+        {
+          "admission_state": "NOT_EVALUATED_BY_REGISTRY",
+          "executed_instrument_sha256_claim": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+          "instrument_digest_matches": true,
+          "raw_capture_validation": "NOT_REPERFORMED_BY_REGISTRY",
+          "receipt_path": "evidence/evidence-factory/cohort-finalization-receipt-2026-09-19.json",
+          "receipt_sha256": "a63696fb952e3604d68da52326efe6e72d44da494b13d8608cf3a15837a0c175",
+          "receipt_state": "RETAINED_EXTERNAL_EXECUTION_RECEIPT",
+          "run_finished_at_claim": "2026-09-19T09:24:09.134627Z"
+        }
+      ],
+      "instrument": {
+        "entrypoint": "main",
+        "invocation_kind": "CLI",
+        "path": "scripts/refresh_evidence_factory_cohorts.py",
+        "repository_base_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+        "source_commit": null,
+        "source_state": "UNTRACKED"
+      },
+      "limitations": [
+        "Combined read-only cohort collector: top 25 stablecoins from the pinned historical index, 16 named XRPL subjects and 26 public institution/disclosure subjects. Not an arbitrary per-row runner. Run this shared instrument once per pinned input revision and capture, not once per subject or family. Added inventory identities are not automatically in its cohort."
+      ],
+      "publication_authorized": false,
+      "signing_authorized": false,
+      "source_access": "PUBLIC_READ",
+      "spend_authorized_usd": 0
+    },
+    {
+      "adapter_state": "CALLABLE_INSPECTED_NOT_EXECUTED",
+      "argument_template": [
+        "--source-repo",
+        "{pinned_checkout}",
+        "--source-revision",
+        "{input_revision}",
+        "--output-dir",
+        "{new_empty_staging_directory}",
+        "--top-n",
+        "25"
+      ],
+      "bounded_subject_execution": false,
+      "contract_id": "institution.disclosure",
+      "execution_state": "NOT_RUN_BY_REGISTRY",
+      "external_execution_evidence": [
+        {
+          "admission_state": "NOT_EVALUATED_BY_REGISTRY",
+          "executed_instrument_sha256_claim": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+          "instrument_digest_matches": true,
+          "raw_capture_validation": "NOT_REPERFORMED_BY_REGISTRY",
+          "receipt_path": "evidence/evidence-factory/cohort-finalization-receipt-2026-09-19.json",
+          "receipt_sha256": "a63696fb952e3604d68da52326efe6e72d44da494b13d8608cf3a15837a0c175",
+          "receipt_state": "RETAINED_EXTERNAL_EXECUTION_RECEIPT",
+          "run_finished_at_claim": "2026-09-19T09:24:09.134627Z"
+        }
+      ],
+      "instrument": {
+        "entrypoint": "main",
+        "invocation_kind": "CLI",
+        "path": "scripts/refresh_evidence_factory_cohorts.py",
+        "repository_base_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+        "source_commit": null,
+        "source_state": "UNTRACKED"
+      },
+      "limitations": [
+        "Combined read-only cohort collector: top 25 stablecoins from the pinned historical index, 16 named XRPL subjects and 26 public institution/disclosure subjects. Not an arbitrary per-row runner. Run this shared instrument once per pinned input revision and capture, not once per subject or family. Added inventory identities are not automatically in its cohort."
+      ],
+      "publication_authorized": false,
+      "signing_authorized": false,
+      "source_access": "PUBLIC_READ",
+      "spend_authorized_usd": 0
+    },
+    {
+      "adapter_state": "CALLABLE_INSPECTED_NOT_EXECUTED",
+      "argument_template": [],
+      "bounded_subject_execution": false,
+      "contract_id": "institution.historical_projection",
+      "execution_state": "NOT_RUN_BY_REGISTRY",
+      "instrument": {
+        "entrypoint": "collect",
+        "invocation_kind": "PYTHON_CALLABLE",
+        "path": "scripts/adapters/swift_notices.py",
+        "repository_base_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "sha256": "b0cc97fd27091aa1ff0580c38b24ede639daf41f63bb0877fb18b9b396289184",
+        "source_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "source_state": "COMMITTED_AT_SOURCE_COMMIT"
+      },
+      "limitations": [
+        "Hardcoded historical 17-name cohort and date; hashes a URL, not fetched press bytes. Not a fresh collector."
+      ],
+      "publication_authorized": false,
+      "signing_authorized": false,
+      "source_access": "OFFLINE",
+      "spend_authorized_usd": 0
+    },
+    {
+      "adapter_state": "CALLABLE_INSPECTED_NOT_EXECUTED",
+      "argument_template": [],
+      "bounded_subject_execution": false,
+      "contract_id": "benji.legacy_notice",
+      "execution_state": "NOT_RUN_BY_REGISTRY",
+      "instrument": {
+        "entrypoint": "collect",
+        "invocation_kind": "PYTHON_CALLABLE",
+        "path": "scripts/adapters/benji.py",
+        "repository_base_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "sha256": "865861a84d0a720ea06a35a6ce1e069e6d8f7000646f9cef8a824f4bfc65d66c",
+        "source_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "source_state": "COMMITTED_AT_SOURCE_COMMIT"
+      },
+      "limitations": [
+        "Legacy fixed dates and secondary notices; does not read on-chain supply. Requires replacement before fresh evidence admission."
+      ],
+      "publication_authorized": false,
+      "signing_authorized": false,
+      "source_access": "PUBLIC_READ",
+      "spend_authorized_usd": 0
+    },
+    {
+      "adapter_state": "CALLABLE_INSPECTED_NOT_EXECUTED",
+      "argument_template": [
+        "--out",
+        "{fresh_private_staging_directory}"
+      ],
+      "bounded_subject_execution": false,
+      "contract_id": "token.public_metadata",
+      "execution_state": "NOT_RUN_BY_REGISTRY",
+      "instrument": {
+        "entrypoint": "main",
+        "invocation_kind": "CLI",
+        "path": "scripts/collect_public_token_evidence.py",
+        "repository_base_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+        "sha256": "40f4cb850e78c2b36727681d6628a0f2758cafc5d882adf256057bd11ad87c48",
+        "source_commit": null,
+        "source_state": "UNTRACKED"
+      },
+      "limitations": [
+        "Bounded ETH/LINK/ONDO cohort, official identity sources and two finalized-block RPC reads. Native ETH has no ERC-20 contract. Shared RPC agreement does not establish independence. Fresh run and controls require separate admission."
+      ],
+      "publication_authorized": false,
+      "signing_authorized": false,
+      "source_access": "PUBLIC_READ",
+      "spend_authorized_usd": 0
+    }
+  ],
+  "execution_rule": "An inspected callable is not a tested or running adapter. Review scope, output isolation, identity, controls and bounds before execution.",
+  "execution_state": "REGISTRY_GENERATION_ONLY",
+  "external_execution_evidence": [
+    {
+      "admission_state": "NOT_EVALUATED_BY_REGISTRY",
+      "executed_instrument_sha256_claim": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "raw_capture_validation": "NOT_REPERFORMED_BY_REGISTRY",
+      "receipt_path": "evidence/evidence-factory/cohort-finalization-receipt-2026-09-19.json",
+      "receipt_sha256": "a63696fb952e3604d68da52326efe6e72d44da494b13d8608cf3a15837a0c175",
+      "receipt_state": "RETAINED_EXTERNAL_EXECUTION_RECEIPT",
+      "run_finished_at_claim": "2026-09-19T09:24:09.134627Z"
+    }
+  ],
+  "generated_at": "2026-09-19T09:27:36.740413+00:00",
+  "generator": {
+    "path": "scripts/build_evidence_factory_registry.py",
+    "sha256": "477cc8962795a7e5f6f272f7b0c667e0a3445b195651e5fa00d60cb2bb4a9af3",
+    "source_state": "UNTRACKED"
+  },
+  "publication_state": "LOCAL_GENERATED_NOT_PUBLISHED",
+  "schema": "csoai.evidence-factory.contract-registry/0.1",
+  "source_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+  "writes_board": false
+}

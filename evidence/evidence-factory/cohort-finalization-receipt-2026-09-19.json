@@ -1,0 +1,23 @@
+{
+  "schema": "csoai.factory-finalization-receipt/0.1",
+  "finalized_at": "2026-09-19T09:25:52.653552+00:00",
+  "source_revision": "67155160e18ab521617f064ddafb34ca98331d48",
+  "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+  "original_dispositions_sha256": "d041a1566ebab3409dd4068ee3c21b05edc119338f29aebe8e5845a33123b1a9",
+  "original_run_receipt_sha256": "ecff2c1ae6822d340fbc760bd45ff765cb6a948e2a6fabddf1367e9872cde769",
+  "original_artifact_manifest_sha256": "92d4febef1888b6c3355ccdc2e5415a49a7ebe4f5ead80403159444725eabbac",
+  "derived_dispositions_sha256": "09ad93a9a692ec9f80e8ccb1061799f9d24e82b6ba2050866241c3513f5e3b71",
+  "transformation": "cohort-public-dispositions-v1: attach retained executed instrument digest; omit raw requests, bodies, headers, internal receipt paths; preserve structured observation states",
+  "original_capture_modified": false,
+  "run_finished_at": "2026-09-19T09:24:09.134627Z",
+  "run_elapsed_seconds": 10.01,
+  "run_status": "COMPLETED",
+  "validation": {
+    "all_manifest_files_match": 141,
+    "rows": 67,
+    "unique_subject_ids": 67,
+    "raw_body_digests": "PASS",
+    "source_pin": "8 inputs byte-matched git revision before live run"
+  },
+  "note": "CLI live smoke completed successfully. Retained instrument docstring preparation note predates the smoke; this receipt records actual observed execution, without rewriting the instrument."
+}

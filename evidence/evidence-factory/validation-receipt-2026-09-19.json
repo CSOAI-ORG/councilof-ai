@@ -1,0 +1,149 @@
+{
+  "schema": "csoai.evidence-factory-validation/1",
+  "verified_at": "2026-09-19T09:28:39.359160+00:00",
+  "source_base_commit": "67155160e18ab521617f064ddafb34ca98331d48",
+  "tests": {
+    "command": "python3 -m unittest discover -s scripts -p 'test_*evidence*.py' -v",
+    "passed": 64,
+    "failed": 0
+  },
+  "cross_artifact_integrity": "PASS",
+  "verified_private_capture_files": {
+    "cohort_v2": 141,
+    "tokens": 84
+  },
+  "raw_capture_publication": false,
+  "registry_rows": 473,
+  "run_dispositions": 70,
+  "unrun_subjects": 403,
+  "admitted_measurements": 0,
+  "signatures": 0,
+  "production_release": "NOT_DEPLOYED",
+  "files": [
+    {
+      "path": "evidence/evidence-factory/cohort-dispositions-2026-09-19.json",
+      "sha256": "09ad93a9a692ec9f80e8ccb1061799f9d24e82b6ba2050866241c3513f5e3b71",
+      "bytes": 138617
+    },
+    {
+      "path": "evidence/evidence-factory/cohort-finalization-receipt-2026-09-19.json",
+      "sha256": "a63696fb952e3604d68da52326efe6e72d44da494b13d8608cf3a15837a0c175",
+      "bytes": 1436
+    },
+    {
+      "path": "evidence/evidence-factory/gspc-receipt.json",
+      "sha256": "161553ac65c7f0f686ceb6c3d486556f50e49391bec86425d22899b01f701cab",
+      "bytes": 246
+    },
+    {
+      "path": "evidence/evidence-factory/gspc-response.json",
+      "sha256": "9699081c10c4106fbded54618c3e5ffbd85616f850448b025649fff5bb7bf631",
+      "bytes": 70527
+    },
+    {
+      "path": "evidence/evidence-factory/token-identities.json",
+      "sha256": "1ad79d85603e8f0dfd6abdb6077c2c6ade97cedea20689ac7f9a21df75f9a701",
+      "bytes": 2647
+    },
+    {
+      "path": "public/interop/evidence-factory/README.md",
+      "sha256": "e7bff64e4dfaf0769c865afa21db7c68b2aff12e10117cf3c15418c7f2d89f4d",
+      "bytes": 6286
+    },
+    {
+      "path": "public/interop/evidence-factory/axis-goal-reconciliation.json",
+      "sha256": "5a4013e00f7db46bb2bf1d595c1ad08701aac3865d30b803a51d2f11a5beea4f",
+      "bytes": 26417
+    },
+    {
+      "path": "public/interop/evidence-factory/contract-registry.json",
+      "sha256": "dbf18ce0daad9b80176b477f327f86d25686f4eb81987543a057adfbe3d4cba5",
+      "bytes": 12644
+    },
+    {
+      "path": "public/interop/evidence-factory/evidence-graph.json",
+      "sha256": "2856f8f36da280d21751194ea72e5dd7d13a4212eb39584775c29761973f4dc6",
+      "bytes": 287477
+    },
+    {
+      "path": "public/interop/evidence-factory/job-matrix.json",
+      "sha256": "b3e092928150a9a994176b4f073a26a26c10e73c7d4df96f59e94d01a81b5f7a",
+      "bytes": 1094787
+    },
+    {
+      "path": "public/interop/evidence-factory/stablecoin-discovery-delta-2026-09-19.json",
+      "sha256": "49cb6a70e942676a6c72c1a02bd79200b7329aa3ddd6104ba158ef69bd8b4611",
+      "bytes": 2166
+    },
+    {
+      "path": "public/interop/evidence-factory/stablecoin-index-2026-09-19.json",
+      "sha256": "b97292a14fb4e5bc2614c129fd933ec53ec75c8773bb3dd291c908aeb5b08f74",
+      "bytes": 216175
+    },
+    {
+      "path": "public/interop/evidence-factory/subject-registry.json",
+      "sha256": "0598a3f5db785179ecf5b2f076fc83791f66791f370eef25cfaed08c8698316f",
+      "bytes": 3072343
+    },
+    {
+      "path": "public/interop/evidence-factory/token-observations-2026-09-19.json",
+      "sha256": "964522736df8cf3a11f90251845f15720d230070c20fc45d54ffaff8ac073df3",
+      "bytes": 28289
+    },
+    {
+      "path": "public/interop/evidence-factory/token-source-manifest.json",
+      "sha256": "1ad79d85603e8f0dfd6abdb6077c2c6ade97cedea20689ac7f9a21df75f9a701",
+      "bytes": 2647
+    },
+    {
+      "path": "scripts/build_evidence_factory_registry.py",
+      "sha256": "477cc8962795a7e5f6f272f7b0c667e0a3445b195651e5fa00d60cb2bb4a9af3",
+      "bytes": 23057
+    },
+    {
+      "path": "scripts/build_evidence_factory_graph.py",
+      "sha256": "211a7c0e54131a1aafbc2b916d8faab904f77d400627db3ac23ee24092427d08",
+      "bytes": 17783
+    },
+    {
+      "path": "scripts/collect_public_token_evidence.py",
+      "sha256": "40f4cb850e78c2b36727681d6628a0f2758cafc5d882adf256057bd11ad87c48",
+      "bytes": 19297
+    },
+    {
+      "path": "scripts/reconcile_evidence_factory_bindings.py",
+      "sha256": "9d9081b7c7aa62ccd0da60ae7d4b6629c920c105d405fb12693ca21cf0091220",
+      "bytes": 7235
+    },
+    {
+      "path": "scripts/refresh_evidence_factory_cohorts.py",
+      "sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "bytes": 23803
+    },
+    {
+      "path": "scripts/test_evidence_factory_registry.py",
+      "sha256": "90225ad43e6ae3b540214b596f9d283b33f7108fa1314e463bbddf824cc649a5",
+      "bytes": 11478
+    },
+    {
+      "path": "scripts/test_evidence_factory_graph.py",
+      "sha256": "7d833692e1c80bb658d3dadadaec613ed80d3f96bf3e2c6d5940626d36e32512",
+      "bytes": 12059
+    },
+    {
+      "path": "scripts/test_public_token_evidence.py",
+      "sha256": "17f3c27ddcce5c4ed2aceba2f8d485b4f655143fffa54f0da6965a5b6040ad47",
+      "bytes": 5943
+    },
+    {
+      "path": "scripts/test_reconcile_evidence_factory_bindings.py",
+      "sha256": "4aceb18080c794afbbb6765df0f4eb94468f471632f6937ff26a93202e1891aa",
+      "bytes": 3891
+    },
+    {
+      "path": "scripts/test_refresh_evidence_factory_cohorts.py",
+      "sha256": "7f679281b07d0cf38bc743343f8f2973fc26250b8970a30cd09a107c6650ec0a",
+      "bytes": 7713
+    }
+  ]
+}

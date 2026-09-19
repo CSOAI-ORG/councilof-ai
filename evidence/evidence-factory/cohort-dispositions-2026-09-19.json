@@ -1,0 +1,3387 @@
+{
+  "schema": "csoai.factory-run-dispositions/0.1",
+  "generated_at": "2026-09-19T09:25:52.650261+00:00",
+  "source_revision": "67155160e18ab521617f064ddafb34ca98331d48",
+  "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+  "original_dispositions_sha256": "d041a1566ebab3409dd4068ee3c21b05edc119338f29aebe8e5845a33123b1a9",
+  "transformation": "cohort-public-dispositions-v1: attach retained executed instrument digest; omit raw requests, bodies, headers, internal receipt paths; preserve structured observation states",
+  "rows": [
+    {
+      "subject_id": "stablecoin:llama:1",
+      "source_key": "1",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:23:59.249751Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "1",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://tether.to/en/transparency/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": "daily",
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://tether.to/en/transparency/",
+          "retrieved_at": "2026-09-19T09:23:59.249751Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "451db55dc0835e116bc703cc17868bdd7bc848a22b93d8d7f83cec2e423ef412",
+          "meta_sha256": "366df95dc7619bf24b85a3194b862528aea67b462c6df064306f6eef3ea71a59"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/0"
+    },
+    {
+      "subject_id": "stablecoin:llama:2",
+      "source_key": "2",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:23:59.406032Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "2",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://www.circle.com/en/transparency",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": "Deloitte",
+          "cadence_claimed": "daily",
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://www.circle.com/en/transparency",
+          "retrieved_at": "2026-09-19T09:23:59.406032Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "c41767dd07c196f3723912477c6906878fe89df839709a54031012db406b04c7",
+          "meta_sha256": "b9e2c541a5a1d7e89346b264893e498d8e5164d370f3829525ab7a95aed039c0"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/1"
+    },
+    {
+      "subject_id": "stablecoin:llama:209",
+      "source_key": "209",
+      "family": "stablecoin",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Frozen registry has no attestation_page",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "209",
+      "registry_admission": false,
+      "observations": {
+        "source_url": null,
+        "source_bytes_observed": false,
+        "source_fetch_states": [],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/2"
+    },
+    {
+      "subject_id": "stablecoin:llama:5",
+      "source_key": "5",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:23:59.634493Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "5",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://makerdao.com/en/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://makerdao.com/en/",
+          "retrieved_at": "2026-09-19T09:23:59.634493Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "cc065d985e07d917b775baa46edfe7163ff2a984e804cd13da8fe88f7481c855",
+          "meta_sha256": "d00c9599624340558f0f99682b4d2674fb631dad013f2b4e9f152917f83d9acc"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/3"
+    },
+    {
+      "subject_id": "stablecoin:llama:146",
+      "source_key": "146",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:00.473835Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "146",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://app.ethena.fi/dashboards/transparency",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://app.ethena.fi/dashboards/transparency",
+          "retrieved_at": "2026-09-19T09:24:00.473835Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "1aa470f38fb4215d293a208c616360babfb7c8443f2e329bea7ff3aadf697367",
+          "meta_sha256": "57866bb9b676c395e034c767dbb76f50c7a99d963ca5f0db3d15a6abb95c617e"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/4"
+    },
+    {
+      "subject_id": "stablecoin:llama:262",
+      "source_key": "262",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:01.344111Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "262",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://worldlibertyfinancial.com/usd1",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": "real-time",
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://worldlibertyfinancial.com/usd1",
+          "retrieved_at": "2026-09-19T09:24:01.344111Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "aa1273d5d4dc76e47621e12ea7e0b6e19194d48bb6c7ba7f8d22a0a80b42b6a3",
+          "meta_sha256": "a5d9562650220d3a006e576096e202166714bb24be4e66d21ae14873a758345a"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/5"
+    },
+    {
+      "subject_id": "stablecoin:llama:286",
+      "source_key": "286",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:01.514966Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "286",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://paxos.com/usdg-transparency/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": "KPMG",
+          "cadence_claimed": "monthly",
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://paxos.com/usdg-transparency/",
+          "retrieved_at": "2026-09-19T09:24:01.514966Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "218551830383ad63fc81ec404f1afd00e23c92f203140e4f6cfefab9411a7ae9",
+          "meta_sha256": "9b235b04dd50f0e557103bcce15f7e1516f7e4611530a14b1dcbf2888aa5c0f9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/6"
+    },
+    {
+      "subject_id": "stablecoin:llama:120",
+      "source_key": "120",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:01.900020Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "120",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://paxos.com/pyusd-transparency/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": "KPMG",
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://paxos.com/pyusd-transparency/",
+          "retrieved_at": "2026-09-19T09:24:01.900020Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "35fb37151ff12ab6d69d3253079b1b72313541421aec435829f6ef820296b009",
+          "meta_sha256": "45f583dcf1094e355d85e6543bf2e9e06e7ef178928cb675b488fc22065a8801"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/7"
+    },
+    {
+      "subject_id": "stablecoin:llama:173",
+      "source_key": "173",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:02.248255Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "173",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://securitize.io/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://securitize.io/",
+          "retrieved_at": "2026-09-19T09:24:02.248255Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "a10fd5fa92999f1fdd90df5d32de045e5a7b46de16f872b190b3e56d1f2908d6",
+          "meta_sha256": "0b84190c6cdbae65a040d05297b8972a70f8ae88e2be1d11444c5518cb79d143"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/8"
+    },
+    {
+      "subject_id": "stablecoin:llama:237",
+      "source_key": "237",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:02.609736Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "237",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://usyc.hashnote.com/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://usyc.hashnote.com/",
+          "retrieved_at": "2026-09-19T09:24:02.609736Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "7e6fb55ce42d10bfd427c6ee23f153de725631105809f6aefc9af0f2660b7a8c",
+          "meta_sha256": "d6c692b8a05371d33f2c938739b59707532491fb533e0f13a9c417654d3e3a70"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/9"
+    },
+    {
+      "subject_id": "stablecoin:llama:250",
+      "source_key": "250",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:02.722243Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "250",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://ripple.com/stablecoin/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": "monthly",
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://ripple.com/stablecoin/",
+          "retrieved_at": "2026-09-19T09:24:02.722243Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "670de3c8e13c0ca65643a71c2a96c73923b9a64b38631e6da6707b22f2a40ce1",
+          "meta_sha256": "701c3ba00a19e6dba33d979a5c04abeaa51c926bb049bfb1d750d17222f3d06e"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/10"
+    },
+    {
+      "subject_id": "stablecoin:llama:129",
+      "source_key": "129",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:03.106822Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "129",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://ondo.finance/usdy",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": "daily",
+          "latest_report_date": "2026-09-17"
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://ondo.finance/usdy",
+          "retrieved_at": "2026-09-19T09:24:03.106822Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9ab2a1a48b95e3da4dbf9bf8b67924d3e1a7c8dfe76d07e2fc08036da0f48ecf",
+          "meta_sha256": "d889ec84d41265b204cbc347d7ed972b078e45332fc54948029445130d552158"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/11"
+    },
+    {
+      "subject_id": "stablecoin:llama:14",
+      "source_key": "14",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:03.483233Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "14",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://usdd.io/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://usdd.io/",
+          "retrieved_at": "2026-09-19T09:24:03.483233Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8ae43f986b232e7506df2dcb3c1710a74737a728460e2f0bc3ebb3e2dc39a3af",
+          "meta_sha256": "7ee75b04c119a3bc5d3f8dc5f04c07ca586311d7a72caca3fdb289e19950c2be"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/12"
+    },
+    {
+      "subject_id": "stablecoin:llama:347",
+      "source_key": "347",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:04.031800Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "347",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://usdgo.com/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": "monthly",
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://usdgo.com/",
+          "retrieved_at": "2026-09-19T09:24:04.031800Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "40dadd7360275383e90779d086f8f5defa021873ea693d772b1cd0af41c1df47",
+          "meta_sha256": "7fd6be81213848167f192b59f582ed1dbc9e2be007324d2cbbf117b8a2c2968c"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/13"
+    },
+    {
+      "subject_id": "stablecoin:llama:336",
+      "source_key": "336",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:06.308915Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "336",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://www.unitedstables.com/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://www.unitedstables.com/",
+          "retrieved_at": "2026-09-19T09:24:06.308915Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "214521e07ad8758ed2fdde52c49fb8110899f6fb286578418ba8b746bc376bb2",
+          "meta_sha256": "1fa4f4cfb9d451a475912c0ec2a6db17c84826d0e0fed9c8a2600c4dc20e8495"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/14"
+    },
+    {
+      "subject_id": "stablecoin:llama:246",
+      "source_key": "246",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:07.125830Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "246",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://falcon.finance/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://falcon.finance/",
+          "retrieved_at": "2026-09-19T09:24:07.125830Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "a97301f1e1fb4ddb756a0e1f373609c7d8cccd7f054ef0a1d9144e410d0691c6",
+          "meta_sha256": "6fbf985d111bcbf6d8c88ea53228f1c209ae364a81c262823eca245bf9c10d98"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/15"
+    },
+    {
+      "subject_id": "stablecoin:llama:118",
+      "source_key": "118",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:08.320355Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "118",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://gho.xyz/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://gho.xyz/",
+          "retrieved_at": "2026-09-19T09:24:08.320355Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "dce2b0ac91ce5936a1ebe26a3ccaa0a6a12f02a5df1dd3a798f04e522762be2a",
+          "meta_sha256": "525dfd8e8ef9c5412fc6e36cb4d8b960dc953486e96cbe706b851dcc67c0bec5"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/16"
+    },
+    {
+      "subject_id": "stablecoin:llama:214",
+      "source_key": "214",
+      "family": "stablecoin",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Frozen registry has no attestation_page",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "214",
+      "registry_admission": false,
+      "observations": {
+        "source_url": null,
+        "source_bytes_observed": false,
+        "source_fetch_states": [],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/17"
+    },
+    {
+      "subject_id": "stablecoin:llama:195",
+      "source_key": "195",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:08.652648Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "195",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://usual.money/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": "real-time",
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://usual.money/",
+          "retrieved_at": "2026-09-19T09:24:08.652648Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "b46ac609cd0b549643f66f427b2aa83f7cd123efb07ef904075a54208b4708bc",
+          "meta_sha256": "8fd85c2c0502dfe2907b5c2ec149a5685bac0c5e6a4bbb1f8d9133d39e612ad5"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/18"
+    },
+    {
+      "subject_id": "stablecoin:llama:221",
+      "source_key": "221",
+      "family": "stablecoin",
+      "execution_state": "DEEP_PROBED",
+      "observed_at": "2026-09-19T09:24:08.931821Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Served bytes inspected; extracted auditor, cadence, and dates are unreviewed candidates",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "221",
+      "registry_admission": false,
+      "observations": {
+        "source_url": "https://usdtb.money/",
+        "source_bytes_observed": true,
+        "source_fetch_states": [
+          "FETCHED"
+        ],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": "monthly",
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [
+        {
+          "source_url": "https://usdtb.money/",
+          "retrieved_at": "2026-09-19T09:24:08.931821Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "1eb40875226b1aac9e5a6cbe18d062179c113a012a115814070cddacd71edefb",
+          "meta_sha256": "e823e30fdf01048915cff5f8defe8016c71f7e5840e3a1ee82597647bf324b3b"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/19"
+    },
+    {
+      "subject_id": "stablecoin:llama:235",
+      "source_key": "235",
+      "family": "stablecoin",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Frozen registry has no attestation_page",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "235",
+      "registry_admission": false,
+      "observations": {
+        "source_url": null,
+        "source_bytes_observed": false,
+        "source_fetch_states": [],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/20"
+    },
+    {
+      "subject_id": "stablecoin:llama:4",
+      "source_key": "4",
+      "family": "stablecoin",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Frozen registry has no attestation_page",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "4",
+      "registry_admission": false,
+      "observations": {
+        "source_url": null,
+        "source_bytes_observed": false,
+        "source_fetch_states": [],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/21"
+    },
+    {
+      "subject_id": "stablecoin:llama:153",
+      "source_key": "153",
+      "family": "stablecoin",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Frozen registry has no attestation_page",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "153",
+      "registry_admission": false,
+      "observations": {
+        "source_url": null,
+        "source_bytes_observed": false,
+        "source_fetch_states": [],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/22"
+    },
+    {
+      "subject_id": "stablecoin:llama:6",
+      "source_key": "6",
+      "family": "stablecoin",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Frozen registry has no attestation_page",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "6",
+      "registry_admission": false,
+      "observations": {
+        "source_url": null,
+        "source_bytes_observed": false,
+        "source_fetch_states": [],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/23"
+    },
+    {
+      "subject_id": "stablecoin:llama:220",
+      "source_key": "220",
+      "family": "stablecoin",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-15T04:25:48.658623+00:00",
+      "reason": "Frozen registry has no attestation_page",
+      "evidence_sha256": "499f6def97e54106c44da418308afbbd7299d51e8f7458376648145c97fc6be2",
+      "evidence_row_key": "220",
+      "registry_admission": false,
+      "observations": {
+        "source_url": null,
+        "source_bytes_observed": false,
+        "source_fetch_states": [],
+        "extraction_review_state": "REVIEW_PENDING",
+        "extraction_candidates": {
+          "auditor": null,
+          "cadence_claimed": null,
+          "latest_report_date": null
+        }
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "extraction_semantics",
+        "reserve_adequacy",
+        "asset_supply",
+        "certification"
+      ],
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/24"
+    },
+    {
+      "subject_id": "xrpl:catalogue:rlusd",
+      "source_key": "RLUSD",
+      "family": "xrpl",
+      "execution_state": "OBSERVED",
+      "observed_at": "2026-09-19T09:23:59.471983Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "Account and obligations observed; issuer attribution and asset currency binding remain unverified",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "RLUSD",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "OBSERVED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "OBSERVED",
+        "account": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+        "ledger": {
+          "hash": "21A51D2C683E693E5DF31AF2B825AF7D14104DCF79478130F377B6AB720233DF",
+          "index": 107088776
+        },
+        "validated": true,
+        "flags_raw": 2174353408,
+        "domain_hex": "68747470733A2F2F726970706C652E636F6D2F",
+        "obligations_by_currency": {
+          "524C555344000000000000000000000000000000": "1036369020.819073"
+        },
+        "obligations_currency_count": 1,
+        "obligations_projection_limit": 50
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "raw_receipts": [
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:23:59.361714Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "76213e3fa194683b33023b322f7547b804c4954827a09c051e0a5cf73fec303f",
+          "meta_sha256": "30ffe3db75f63d12cf788f925f50592e154bb2184a4874acd3d991d1f16521bc"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:23:59.194826Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "58d683e3a70fe64a4e84522f75889138282a9385184d10e04f0f531d9ad85f45",
+          "meta_sha256": "785d65c3f7b97a52e81dcb59aa6555fff627948896062b0e01b88611caef8a24"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:23:59.471983Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "628001935e3acd53435dbd387a43cac559c573bcea1d4eb32eef2e8b95ae7317",
+          "meta_sha256": "a6cd8729a0a7d8070dff74ad31c3462e56f72ff4f06fc4fc390d8391ebb1e927"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/25"
+    },
+    {
+      "subject_id": "xrpl:catalogue:ondo-ousg",
+      "source_key": "Ondo OUSG",
+      "family": "xrpl",
+      "execution_state": "OBSERVED",
+      "observed_at": "2026-09-19T09:24:00.680419Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "Account and obligations observed; issuer attribution and asset currency binding remain unverified",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "Ondo OUSG",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "OBSERVED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "OBSERVED",
+        "account": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+        "ledger": {
+          "hash": "21A51D2C683E693E5DF31AF2B825AF7D14104DCF79478130F377B6AB720233DF",
+          "index": 107088776
+        },
+        "validated": true,
+        "flags_raw": 2147745792,
+        "domain_hex": "6F6E646F2E66696E616E6365",
+        "obligations_by_currency": {
+          "4F55534700000000000000000000000000000000": "1639899.441472341"
+        },
+        "obligations_currency_count": 1,
+        "obligations_projection_limit": 50
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+      "raw_receipts": [
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:00.560544Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8d4ff0b393270dc8eba2b949e83798645013e1eb102db679cee6657ce4ed14d9",
+          "meta_sha256": "33ec52e7a83766f32d9cdf8d50dafc524f827d974a61b51793dd0cc5657fcd68"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:23:59.194826Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "58d683e3a70fe64a4e84522f75889138282a9385184d10e04f0f531d9ad85f45",
+          "meta_sha256": "785d65c3f7b97a52e81dcb59aa6555fff627948896062b0e01b88611caef8a24"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:00.680419Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "96e1cf68310dbb3ec8d937049901598ce579328d06eca0d74e7b3181d22ce7bb",
+          "meta_sha256": "61d15f593a4f49f96e91e7e809822d1024f64661899bc30a9fd7e0d520ac01ea"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/26"
+    },
+    {
+      "subject_id": "xrpl:catalogue:archax-abrdn",
+      "source_key": "Archax×abrdn",
+      "family": "xrpl",
+      "execution_state": "OBSERVED",
+      "observed_at": "2026-09-19T09:24:00.902229Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "Account and obligations observed; issuer attribution and asset currency binding remain unverified",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "Archax×abrdn",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "OBSERVED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "OBSERVED",
+        "account": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+        "ledger": {
+          "hash": "21A51D2C683E693E5DF31AF2B825AF7D14104DCF79478130F377B6AB720233DF",
+          "index": 107088776
+        },
+        "validated": true,
+        "flags_raw": 2156134400,
+        "domain_hex": "6172636861782E636F6D",
+        "obligations_by_currency": {},
+        "obligations_currency_count": 0,
+        "obligations_projection_limit": 50
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+      "raw_receipts": [
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:00.798864Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "819fca3aa6ed5ed9a867f77dfb6a31a27bbb16b2ca09580a46b9fe42e83d5d62",
+          "meta_sha256": "7f3bd1838054463efa3c264251185a5cbf15fa38dae3d4066d6325af6ec070ce"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:23:59.194826Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "58d683e3a70fe64a4e84522f75889138282a9385184d10e04f0f531d9ad85f45",
+          "meta_sha256": "785d65c3f7b97a52e81dcb59aa6555fff627948896062b0e01b88611caef8a24"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:00.902229Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "f3acb993408a276174832e94bcf87b037b64f051ab87fbfdb2ac3b4a186c6dcf",
+          "meta_sha256": "e1a9b4fd5f14a3f8e42a23436106e4f2fa8e3c1983e285d34471082ae2b66314"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/27"
+    },
+    {
+      "subject_id": "xrpl:catalogue:openeden-tbill",
+      "source_key": "OpenEden TBILL",
+      "family": "xrpl",
+      "execution_state": "OBSERVED",
+      "observed_at": "2026-09-19T09:24:01.132717Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "Account and obligations observed; issuer attribution and asset currency binding remain unverified",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "OpenEden TBILL",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "OBSERVED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "OBSERVED",
+        "account": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+        "ledger": {
+          "hash": "21A51D2C683E693E5DF31AF2B825AF7D14104DCF79478130F377B6AB720233DF",
+          "index": 107088776
+        },
+        "validated": true,
+        "flags_raw": 10223616,
+        "domain_hex": "6F70656E6564656E2E636F6D",
+        "obligations_by_currency": {
+          "TBL": "9911068753.130067"
+        },
+        "obligations_currency_count": 1,
+        "obligations_projection_limit": 50
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+      "raw_receipts": [
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:01.013867Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "39ec36ff025afff6e6dd57540ed8c6ea2fb573b655d12c54eef5af495d56b7cc",
+          "meta_sha256": "c68990e47f5212860490417e26d8b6fd0a81c016612bd6ea4408f08b4f068002"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:23:59.194826Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "58d683e3a70fe64a4e84522f75889138282a9385184d10e04f0f531d9ad85f45",
+          "meta_sha256": "785d65c3f7b97a52e81dcb59aa6555fff627948896062b0e01b88611caef8a24"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:01.132717Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "bdcec08617c7859911e7bbdf6a502f8602d143f2a2a0eae8666a1e4cde41e61d",
+          "meta_sha256": "307eedb832436be7f0972358488935a1908e649ed711a5f92ce73dc218dc7a5b"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/28"
+    },
+    {
+      "subject_id": "xrpl:catalogue:braza-usdb",
+      "source_key": "Braza USDB",
+      "family": "xrpl",
+      "execution_state": "OBSERVED",
+      "observed_at": "2026-09-19T09:24:01.364555Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "Account and obligations observed; issuer attribution and asset currency binding remain unverified",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "Braza USDB",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "OBSERVED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "OBSERVED",
+        "account": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+        "ledger": {
+          "hash": "21A51D2C683E693E5DF31AF2B825AF7D14104DCF79478130F377B6AB720233DF",
+          "index": 107088776
+        },
+        "validated": true,
+        "flags_raw": 8388608,
+        "domain_hex": "746F6B656E732E6272617A6163726970746F2E636F6D2E6272",
+        "obligations_by_currency": {
+          "5553444200000000000000000000000000000000": "30301772.47000001"
+        },
+        "obligations_currency_count": 1,
+        "obligations_projection_limit": 50
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+      "raw_receipts": [
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:01.251971Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "af621d7a95ce07ce999c5931600903f28daab86c377ad312448db4c148f0438f",
+          "meta_sha256": "80c730d147962e008a834169080df30c50053440dd59ff877e27d03497b0545e"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:23:59.194826Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "58d683e3a70fe64a4e84522f75889138282a9385184d10e04f0f531d9ad85f45",
+          "meta_sha256": "785d65c3f7b97a52e81dcb59aa6555fff627948896062b0e01b88611caef8a24"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:01.364555Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "6de02279b2e91c0641f9ca276627ddc009b494fd3721a947a06bdc0391d53b2e",
+          "meta_sha256": "6aadfc730582f56b816b7a773990aa577fe0b7e84da86c49eb66ea89cb79faba"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/29"
+    },
+    {
+      "subject_id": "xrpl:catalogue:braza-bbrl",
+      "source_key": "Braza BBRL",
+      "family": "xrpl",
+      "execution_state": "OBSERVED",
+      "observed_at": "2026-09-19T09:24:01.613376Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "Account and obligations observed; issuer attribution and asset currency binding remain unverified",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "Braza BBRL",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "OBSERVED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "OBSERVED",
+        "account": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+        "ledger": {
+          "hash": "21A51D2C683E693E5DF31AF2B825AF7D14104DCF79478130F377B6AB720233DF",
+          "index": 107088776
+        },
+        "validated": true,
+        "flags_raw": 8388608,
+        "domain_hex": "746F6B656E732E6272617A6163726970746F2E636F6D2E6272",
+        "obligations_by_currency": {
+          "4242524C00000000000000000000000000000000": "92067503.74639076"
+        },
+        "obligations_currency_count": 1,
+        "obligations_projection_limit": 50
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+      "raw_receipts": [
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:01.505060Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "6a98c46788bddfc364e874039307729bb669970db7676787e0c483c8e2d9b064",
+          "meta_sha256": "b862e291677e874b5ede1f0aabb08738c1febba0b759154fde2a3f4e65eb3b73"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:23:59.194826Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "58d683e3a70fe64a4e84522f75889138282a9385184d10e04f0f531d9ad85f45",
+          "meta_sha256": "785d65c3f7b97a52e81dcb59aa6555fff627948896062b0e01b88611caef8a24"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:01.613376Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "54d61c51139b94f45a0fd1a9641efd3070619e8f56ebe061ff83aa90f99f6875",
+          "meta_sha256": "838ce6e5ffd7b0d8ca158ef9949ebad52cbe0654b3f01a5898860c0cfeda27bd"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/30"
+    },
+    {
+      "subject_id": "xrpl:catalogue:sg-forge-eurcv",
+      "source_key": "SG-FORGE EURCV",
+      "family": "xrpl",
+      "execution_state": "OBSERVED",
+      "observed_at": "2026-09-19T09:24:01.917859Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "Account and obligations observed; issuer attribution and asset currency binding remain unverified",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "SG-FORGE EURCV",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "OBSERVED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "OBSERVED",
+        "account": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+        "ledger": {
+          "hash": "21A51D2C683E693E5DF31AF2B825AF7D14104DCF79478130F377B6AB720233DF",
+          "index": 107088776
+        },
+        "validated": true,
+        "flags_raw": 2155872256,
+        "domain_hex": null,
+        "obligations_by_currency": {
+          "4555524356000000000000000000000000000000": "10000000"
+        },
+        "obligations_currency_count": 1,
+        "obligations_projection_limit": 50
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+      "raw_receipts": [
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:01.776228Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "d76ac5693993ef67c795f50520c32bc446ed3befb1522bea18c842112dfc5ae2",
+          "meta_sha256": "5d32810f3086ae511472d8a0935aa951488b30a047e955ff7220d12b9d4c4964"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:23:59.194826Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "58d683e3a70fe64a4e84522f75889138282a9385184d10e04f0f531d9ad85f45",
+          "meta_sha256": "785d65c3f7b97a52e81dcb59aa6555fff627948896062b0e01b88611caef8a24"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:01.917859Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "644205ce12120bd5dfaaa39ba0410b08bdd25c5d8505903d0816e090f09798dc",
+          "meta_sha256": "5cad7b2d8cd5c8041b00efc0d38ee4a4f2f5aa6002b392bd7674bdcc4674b108"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/31"
+    },
+    {
+      "subject_id": "xrpl:catalogue:schuman-europ",
+      "source_key": "Schuman EURoP",
+      "family": "xrpl",
+      "execution_state": "OBSERVED",
+      "observed_at": "2026-09-19T09:24:02.162364Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "Account and obligations observed; issuer attribution and asset currency binding remain unverified",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "Schuman EURoP",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "OBSERVED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "OBSERVED",
+        "account": "rMkEuRii9w9uBMQDnWV5AA43gvYZR9JxVK",
+        "ledger": {
+          "hash": "21A51D2C683E693E5DF31AF2B825AF7D14104DCF79478130F377B6AB720233DF",
+          "index": 107088776
+        },
+        "validated": true,
+        "flags_raw": 2156920832,
+        "domain_hex": null,
+        "obligations_by_currency": {
+          "4555524F50000000000000000000000000000000": "366212.3773202474"
+        },
+        "obligations_currency_count": 1,
+        "obligations_projection_limit": 50
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": "rMkEuRii9w9uBMQDnWV5AA43gvYZR9JxVK",
+      "raw_receipts": [
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:02.058432Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "daea8d1cccdde73c938940092c0da99b1ee8e5e9dfd1933984a3eab906959523",
+          "meta_sha256": "ccf7019a7244d83deac7851c1501dca0a54a23375316825adfa9c97781553158"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:23:59.194826Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "58d683e3a70fe64a4e84522f75889138282a9385184d10e04f0f531d9ad85f45",
+          "meta_sha256": "785d65c3f7b97a52e81dcb59aa6555fff627948896062b0e01b88611caef8a24"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:02.162364Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "e0af1dfd536d8a684d140f9c9a84e12802be06cb3156a12d0ebaa8d20528aace",
+          "meta_sha256": "0bd93a82000e9b09eccc11725958624862b0bec55c1763de89988cb330924aa2"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/32"
+    },
+    {
+      "subject_id": "xrpl:catalogue:gatehub-xau",
+      "source_key": "GateHub XAU",
+      "family": "xrpl",
+      "execution_state": "OBSERVED",
+      "observed_at": "2026-09-19T09:24:02.446821Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "Account and obligations observed; issuer attribution and asset currency binding remain unverified",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "GateHub XAU",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "OBSERVED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "OBSERVED",
+        "account": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+        "ledger": {
+          "hash": "21A51D2C683E693E5DF31AF2B825AF7D14104DCF79478130F377B6AB720233DF",
+          "index": 107088776
+        },
+        "validated": true,
+        "flags_raw": 13238272,
+        "domain_hex": null,
+        "obligations_by_currency": {
+          "XAU": "4132.852267201553"
+        },
+        "obligations_currency_count": 1,
+        "obligations_projection_limit": 50
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+      "raw_receipts": [
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:02.336018Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "d28a25f5cef733b1c18172f4832bf4a5d242a5018ce22c8a4d1a62e6afe4e55e",
+          "meta_sha256": "1f6284edde4adfeee6695b4ef55744f35fa2c8a98711ad707062728412774a5b"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:23:59.194826Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "58d683e3a70fe64a4e84522f75889138282a9385184d10e04f0f531d9ad85f45",
+          "meta_sha256": "785d65c3f7b97a52e81dcb59aa6555fff627948896062b0e01b88611caef8a24"
+        },
+        {
+          "source_url": "https://xrplcluster.com/",
+          "retrieved_at": "2026-09-19T09:24:02.446821Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "a321177ddf03b4cebaa21579de4013ca763cd08023bc654f2335c6592c0f0e28",
+          "meta_sha256": "128664c00cca63cc7a185f4beb52da539dc352e2fa3458c53878aa407305ea7b"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/33"
+    },
+    {
+      "subject_id": "xrpl:catalogue:aviva-usd-liquidity",
+      "source_key": "Aviva USD Liquidity",
+      "family": "xrpl",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "FROZEN_COHORT_HAS_NO_ISSUER_ADDRESS",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "Aviva USD Liquidity",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "UNMEASURED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": null,
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/34"
+    },
+    {
+      "subject_id": "xrpl:catalogue:guggenheim-dcp",
+      "source_key": "Guggenheim DCP",
+      "family": "xrpl",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "FROZEN_COHORT_HAS_NO_ISSUER_ADDRESS",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "Guggenheim DCP",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "UNMEASURED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": null,
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/35"
+    },
+    {
+      "subject_id": "xrpl:catalogue:ctrl-alt-dubai-land",
+      "source_key": "Ctrl Alt / Dubai Land",
+      "family": "xrpl",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "FROZEN_COHORT_HAS_NO_ISSUER_ADDRESS",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "Ctrl Alt / Dubai Land",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "UNMEASURED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": null,
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/36"
+    },
+    {
+      "subject_id": "xrpl:catalogue:sbi-start",
+      "source_key": "SBI START",
+      "family": "xrpl",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "FROZEN_COHORT_HAS_NO_ISSUER_ADDRESS",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "SBI START",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "UNMEASURED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": null,
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/37"
+    },
+    {
+      "subject_id": "xrpl:catalogue:justoken-jmwh",
+      "source_key": "Justoken JMWH",
+      "family": "xrpl",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "FROZEN_COHORT_HAS_NO_ISSUER_ADDRESS",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "Justoken JMWH",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "UNMEASURED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": null,
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/38"
+    },
+    {
+      "subject_id": "xrpl:catalogue:ctrl-alt-billiton",
+      "source_key": "Ctrl Alt / Billiton",
+      "family": "xrpl",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "FROZEN_COHORT_HAS_NO_ISSUER_ADDRESS",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "Ctrl Alt / Billiton",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "UNMEASURED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": null,
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/39"
+    },
+    {
+      "subject_id": "xrpl:catalogue:kyobo-life-pilot",
+      "source_key": "Kyobo Life pilot",
+      "family": "xrpl",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:09.115301Z",
+      "source_as_of": "2026-09-01T05:40:00Z",
+      "reason": "FROZEN_COHORT_HAS_NO_ISSUER_ADDRESS",
+      "evidence_sha256": "54876870b36ce06da29cb1c6d4026d4c1f083873290049bdd6e934043a0f27e0",
+      "evidence_row_key": "Kyobo Life pilot",
+      "registry_admission": false,
+      "observations": {
+        "account_state": "UNMEASURED",
+        "issuer_attribution": "UNVERIFIED",
+        "asset_supply": null,
+        "obligations_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "issuer_attribution",
+        "asset_currency_binding",
+        "asset_supply",
+        "reserve_adequacy",
+        "attestation",
+        "certification"
+      ],
+      "issuer_address": null,
+      "raw_receipts": [],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/40"
+    },
+    {
+      "subject_id": "institution:swift:hsbc",
+      "source_key": "hsbc",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:04.695727Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "hsbc",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 2,
+        "source_fetch_states": [
+          {
+            "url": "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "1e8e220d57399d949e5f207a1becd94da162b9841913f7b19053234e7f118195"
+          },
+          {
+            "url": "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "357eaf70e8cbde0a5fec30c17f45ef11d9de6fc0d34641b05925c11e1841033c"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "HSBC",
+      "raw_receipts": [
+        {
+          "source_url": "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/",
+          "retrieved_at": "2026-09-19T09:24:04.695727Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "1e8e220d57399d949e5f207a1becd94da162b9841913f7b19053234e7f118195",
+          "meta_sha256": "d707da70f59d72970dcb6bd981b756a44ba5065af271160c817c8c13b7705006"
+        },
+        {
+          "source_url": "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/",
+          "retrieved_at": "2026-09-19T09:24:04.532442Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "357eaf70e8cbde0a5fec30c17f45ef11d9de6fc0d34641b05925c11e1841033c",
+          "meta_sha256": "6c89bec34ee3225fe0b1a108c49846b15f52539af1862ab414440e1e8cf8d788"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/41"
+    },
+    {
+      "subject_id": "institution:swift:standard-chartered",
+      "source_key": "standard-chartered",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:04.532442Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "standard-chartered",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 1,
+        "source_responses_archived": 1,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "357eaf70e8cbde0a5fec30c17f45ef11d9de6fc0d34641b05925c11e1841033c"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Standard Chartered",
+      "raw_receipts": [
+        {
+          "source_url": "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/",
+          "retrieved_at": "2026-09-19T09:24:04.532442Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "357eaf70e8cbde0a5fec30c17f45ef11d9de6fc0d34641b05925c11e1841033c",
+          "meta_sha256": "6c89bec34ee3225fe0b1a108c49846b15f52539af1862ab414440e1e8cf8d788"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/42"
+    },
+    {
+      "subject_id": "institution:swift:uob",
+      "source_key": "uob",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:04.695727Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "uob",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 1,
+        "source_responses_archived": 1,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "1e8e220d57399d949e5f207a1becd94da162b9841913f7b19053234e7f118195"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "UOB",
+      "raw_receipts": [
+        {
+          "source_url": "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/",
+          "retrieved_at": "2026-09-19T09:24:04.695727Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "1e8e220d57399d949e5f207a1becd94da162b9841913f7b19053234e7f118195",
+          "meta_sha256": "d707da70f59d72970dcb6bd981b756a44ba5065af271160c817c8c13b7705006"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/43"
+    },
+    {
+      "subject_id": "institution:swift:anz",
+      "source_key": "anz",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:03.799402Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "anz",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "ANZ",
+      "raw_receipts": [
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/44"
+    },
+    {
+      "subject_id": "institution:swift:bnp-paribas",
+      "source_key": "bnp-paribas",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:03.799402Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "bnp-paribas",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "BNP Paribas",
+      "raw_receipts": [
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/45"
+    },
+    {
+      "subject_id": "institution:swift:bny",
+      "source_key": "bny",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:03.799402Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "bny",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "BNY",
+      "raw_receipts": [
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/46"
+    },
+    {
+      "subject_id": "institution:swift:citi",
+      "source_key": "citi",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:03.799402Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "citi",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Citi",
+      "raw_receipts": [
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/47"
+    },
+    {
+      "subject_id": "institution:swift:dbs",
+      "source_key": "dbs",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:03.799402Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "dbs",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "DBS",
+      "raw_receipts": [
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/48"
+    },
+    {
+      "subject_id": "institution:swift:fab",
+      "source_key": "fab",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:03.799402Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "fab",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "First Abu Dhabi Bank",
+      "raw_receipts": [
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/49"
+    },
+    {
+      "subject_id": "institution:swift:firstrand",
+      "source_key": "firstrand",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:03.799402Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "firstrand",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "FirstRand Bank Limited",
+      "raw_receipts": [
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/50"
+    },
+    {
+      "subject_id": "institution:swift:itau-unibanco",
+      "source_key": "itau-unibanco",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:03.799402Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "itau-unibanco",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Itaú Unibanco",
+      "raw_receipts": [
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/51"
+    },
+    {
+      "subject_id": "institution:swift:lloyds",
+      "source_key": "lloyds",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:03.799402Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "lloyds",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Lloyds Bank",
+      "raw_receipts": [
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/52"
+    },
+    {
+      "subject_id": "institution:swift:mashreq",
+      "source_key": "mashreq",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:03.799402Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "mashreq",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Mashreq",
+      "raw_receipts": [
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/53"
+    },
+    {
+      "subject_id": "institution:swift:mufg",
+      "source_key": "mufg",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "mufg",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 3,
+        "source_responses_archived": 3,
+        "sources_fetched": 2,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          },
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "MUFG Bank",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        },
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/54"
+    },
+    {
+      "subject_id": "institution:swift:ocbc",
+      "source_key": "ocbc",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "ocbc",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 3,
+        "source_responses_archived": 3,
+        "sources_fetched": 2,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          },
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "OCBC",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        },
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/55"
+    },
+    {
+      "subject_id": "institution:swift:ubs",
+      "source_key": "ubs",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:03.799402Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "ubs",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 2,
+        "source_responses_archived": 2,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "UBS",
+      "raw_receipts": [
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/56"
+    },
+    {
+      "subject_id": "institution:swift:wells-fargo",
+      "source_key": "wells-fargo",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "wells-fargo",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 3,
+        "source_responses_archived": 3,
+        "sources_fetched": 2,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          },
+          {
+            "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75"
+          },
+          {
+            "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+            "state": "UNCHECKABLE",
+            "http": 403,
+            "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Wells Fargo",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        },
+        {
+          "source_url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+          "retrieved_at": "2026-09-19T09:24:03.799402Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "8945154728a89b8356009a52d70ee467f3f7d6226dfe530848efe0633dcb3e75",
+          "meta_sha256": "4f1bfa0e5fabc4dbcf88e87e9a99b57ef5e7f3a3eca50acd66794df119751322"
+        },
+        {
+          "source_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+          "retrieved_at": "2026-09-19T09:24:03.486503Z",
+          "http": 403,
+          "fetch_state": "UNCHECKABLE",
+          "body_sha256": "ab7f10d0c14a5542f53c35bec7af05db75a10f4c0ffb6c47bd703679d26af0fd",
+          "meta_sha256": "3c38c007a6c4b54441eb19f99afe742a43163df2c65c752a43b57bb4924023c9"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/57"
+    },
+    {
+      "subject_id": "institution:swift:jpmorgan",
+      "source_key": "jpmorgan",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "jpmorgan",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 1,
+        "source_responses_archived": 1,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "JPMorgan",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/58"
+    },
+    {
+      "subject_id": "institution:swift:deutsche-bank",
+      "source_key": "deutsche-bank",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "deutsche-bank",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 1,
+        "source_responses_archived": 1,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Deutsche Bank",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/59"
+    },
+    {
+      "subject_id": "institution:swift:natwest",
+      "source_key": "natwest",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "natwest",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 1,
+        "source_responses_archived": 1,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "NatWest",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/60"
+    },
+    {
+      "subject_id": "institution:swift:rbc",
+      "source_key": "rbc",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "rbc",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 1,
+        "source_responses_archived": 1,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Royal Bank of Canada",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/61"
+    },
+    {
+      "subject_id": "institution:swift:saudi-awwal",
+      "source_key": "saudi-awwal",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "saudi-awwal",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 1,
+        "source_responses_archived": 1,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Saudi Awwal Bank",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/62"
+    },
+    {
+      "subject_id": "institution:swift:shinhan",
+      "source_key": "shinhan",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "shinhan",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 1,
+        "source_responses_archived": 1,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Shinhan Bank",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/63"
+    },
+    {
+      "subject_id": "institution:swift:socgen-forge",
+      "source_key": "socgen-forge",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "socgen-forge",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 1,
+        "source_responses_archived": 1,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Societe Generale-FORGE",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/64"
+    },
+    {
+      "subject_id": "institution:swift:td",
+      "source_key": "td",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "td",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 1,
+        "source_responses_archived": 1,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "TD Bank Group",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/65"
+    },
+    {
+      "subject_id": "institution:swift:westpac",
+      "source_key": "westpac",
+      "family": "swift",
+      "execution_state": "UNMEASURED",
+      "observed_at": "2026-09-19T09:24:05.430747Z",
+      "source_as_of": "2026-09-01",
+      "reason": "Source retrieval only; historical event, institution identity and settlement claims not revalidated",
+      "evidence_sha256": "35cf62d241bf369793a895297cc85ededc875440e1f2c1dc612d061acb1d86f0",
+      "evidence_row_key": "westpac",
+      "registry_admission": false,
+      "observations": {
+        "sources_expected": 1,
+        "source_responses_archived": 1,
+        "sources_fetched": 1,
+        "source_fetch_states": [
+          {
+            "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+            "state": "FETCHED",
+            "http": 200,
+            "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f"
+          }
+        ],
+        "source_content_claim_review": "NOT_PERFORMED",
+        "client_relationship": "NOT_CLAIMED",
+        "settlement_state": "UNMEASURED"
+      },
+      "unknowns": [
+        "institution_identity",
+        "source_claim_semantics",
+        "pilot_outcomes",
+        "settlement_bytes",
+        "iso20022_bytes",
+        "client_relationship"
+      ],
+      "name": "Westpac",
+      "raw_receipts": [
+        {
+          "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+          "retrieved_at": "2026-09-19T09:24:05.430747Z",
+          "http": 200,
+          "fetch_state": "FETCHED",
+          "body_sha256": "9fa3dad69278d31da3e11d103d00ac9bbb95ba94e26ab066b92f13e7a6508a2f",
+          "meta_sha256": "e6644e758372137c225b90b7710753120890545be55add7fe8344676f610d35c"
+        }
+      ],
+      "instrument_sha256": "1dd2862bf6befc82969433689c5e8d20a5e37143f1ab7069177ef1d1c2920444",
+      "original_row_pointer": "/rows/66"
+    }
+  ],
+  "family_counts": {
+    "stablecoin": 25,
+    "xrpl": 16,
+    "swift": 26
+  },
+  "published": false,
+  "signed": false,
+  "registry_admission": false
+}

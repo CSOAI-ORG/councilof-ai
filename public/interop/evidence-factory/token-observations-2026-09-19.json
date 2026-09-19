@@ -1,0 +1,632 @@
+{
+  "schema": "csoai.public-token-observation-summary/1",
+  "observed_at": "2026-09-19T09:19:10Z",
+  "collector_version": "1.0.1",
+  "instrument": {
+    "path": "scripts/collect_public_token_evidence.py",
+    "sha256": "40f4cb850e78c2b36727681d6628a0f2758cafc5d882adf256057bd11ad87c48"
+  },
+  "frozen_snapshot_sha256": "0061e403d89e0366b75b8c4129e80f5f26576ed0b6249abbaf3f30284989dc04",
+  "raw_capture": "PRIVATE",
+  "raw_capture_note": "Raw HTTP bodies, request bytes and response headers are retained privately; public receipts expose only URL, time, method, status and hashes.",
+  "evidence_digest_rule": "sha256 of UTF-8 JSON of each row.evidence with recursively sorted keys and compact separators",
+  "capture_integrity": {
+    "checked_files": 84,
+    "result": "PASS"
+  },
+  "receipt_count": 28,
+  "rows": [
+    {
+      "subject_id": "token:ethereum:eth",
+      "state": "OBSERVED",
+      "observed_at": "2026-09-19T09:19:10Z",
+      "evidence_sha256": "c5c9b1c7f009564d41656f83eda2b7948ca7deae73144da56e69aedccdaa4147",
+      "instrument_sha256": "40f4cb850e78c2b36727681d6628a0f2758cafc5d882adf256057bd11ad87c48",
+      "evidence": {
+        "identity": {
+          "id": "token:ethereum:eth",
+          "name": "Ether",
+          "symbol": "ETH",
+          "asset_kind": "native",
+          "contract_address": null,
+          "chain_id": 1,
+          "official_url": "https://ethereum.org/what-is-ether/"
+        },
+        "official_identity": {
+          "status": "SOURCE_CONFIRMED",
+          "receipt_id": "request-006",
+          "body_sha256": "a0c0de24fe9ff92ca2ed63f73c0009cfb141738fb9c9d42c7e47a20da8ddfd87",
+          "fetched_at": "2026-09-19T09:19:06Z",
+          "rule": "Official page states ETH is the native cryptocurrency and native ETH is not an ERC-20 token."
+        },
+        "block": {
+          "number": "0x18ce3a2",
+          "hash": "0xe616fa8d515deb3ffe746cfccb52da18c3fcfefd4db8746853d9d7757ab56f60",
+          "timestamp": "0x6aae4f57",
+          "stateRoot": "0x64689a7b425567037f211d477dba86c63782e6bb8f88f018390a6757eb173e18"
+        },
+        "observations": {
+          "chain_id": 1,
+          "finalized_block": {
+            "number": "0x18ce3a2",
+            "hash": "0xe616fa8d515deb3ffe746cfccb52da18c3fcfefd4db8746853d9d7757ab56f60",
+            "timestamp": "0x6aae4f57",
+            "stateRoot": "0x64689a7b425567037f211d477dba86c63782e6bb8f88f018390a6757eb173e18"
+          },
+          "gas_used": "29285398",
+          "gas_limit": "60000000",
+          "base_fee_per_gas_wei": "407923100",
+          "providers": [
+            "https://ethereum-rpc.publicnode.com",
+            "https://eth.drpc.org"
+          ]
+        },
+        "metadata": null,
+        "provider_agreement": null,
+        "source_receipts": [
+          {
+            "id": "request-001",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:05Z",
+            "http_status": 200,
+            "body_sha256": "208c0be5a34cd9b241311e625b3035aa89cb237969cbc1a0c9cbd8c8517087eb",
+            "request_sha256": "7cd718c15e7d48ea187956a752c86b96515cded0520142627ba5da9729233bee"
+          },
+          {
+            "id": "request-002",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "63f2899edc63d4634a2f596f80b0ba99cd62dcbcf13c99939a9cd95ad6a47618",
+            "request_sha256": "2daff10399667df91baec389c2101f0e6446e4a010915d4ba807a57460f2f853"
+          },
+          {
+            "id": "request-003",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "d237a6992065d027fd37fe679b04ee948e263d0ac4be81c3f2e72c6e236ebd04",
+            "request_sha256": "b06964a0f0ec2abce534895a56679dc8a57ed8c62c5935d55afc7afabefb775d"
+          },
+          {
+            "id": "request-004",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "61b4baba049a883c01d0953df803f3f58ef754994ca2865a36c940e41793af9e",
+            "request_sha256": "8d45e2ce8e59d0b1f3f69f59d5c710c4b241871af9a98f8fa2fd390040d4bef8"
+          },
+          {
+            "id": "request-005",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "d1b5a4dba925559a07f07a560a836fc81500885f8527c96248e25ad5a75b8dd8",
+            "request_sha256": "ef00cb700069427fc7c7f555946462e442c6ebe9d7d1953a632b08b83433359e"
+          },
+          {
+            "id": "request-006",
+            "url": "https://ethereum.org/what-is-ether/",
+            "method": "GET",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "a0c0de24fe9ff92ca2ed63f73c0009cfb141738fb9c9d42c7e47a20da8ddfd87",
+            "request_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "unknowns": [
+          "Observed public RPC responses, not independently replayed execution or a verified state proof.",
+          "Matching responses from two providers do not establish independent infrastructure or consensus verification.",
+          "Official documentation is a first-party identity declaration, not an endorsement or an independent audit.",
+          "No price, liquidity, holders, circulating supply, reserve, solvency, compliance, safety or investment conclusion.",
+          "Contract source/bytecode equivalence, upgrade powers and administrator controls are UNMEASURED.",
+          "No evidence admission, signing, root inclusion, anchoring or public delivery is claimed by this collector.",
+          "ETH is native: ERC-20 name/symbol/decimals/totalSupply methods are NOT_APPLICABLE. No native total supply is inferred from one block."
+        ]
+      },
+      "signed": false,
+      "admission": "NOT_EVALUATED",
+      "root_inclusion": "NOT_ATTEMPTED"
+    },
+    {
+      "subject_id": "token:ethereum:link",
+      "state": "OBSERVED",
+      "observed_at": "2026-09-19T09:19:10Z",
+      "evidence_sha256": "b6408886deb7544cfe16c6b74e90b2b38641b21fb02864ed4d66225b901440d9",
+      "instrument_sha256": "40f4cb850e78c2b36727681d6628a0f2758cafc5d882adf256057bd11ad87c48",
+      "evidence": {
+        "identity": {
+          "id": "token:ethereum:link",
+          "name": "Chainlink",
+          "symbol": "LINK",
+          "asset_kind": "erc20_compatible",
+          "contract_address": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+          "chain_id": 1,
+          "official_url": "https://docs.chain.link/resources/link-token-contracts.md"
+        },
+        "official_identity": {
+          "status": "SOURCE_CONFIRMED",
+          "receipt_id": "request-007",
+          "body_sha256": "f142c3ba2764d18782883341b406fc50c487b5353123e5a0bae356af5c338d6b",
+          "fetched_at": "2026-09-19T09:19:07Z",
+          "rule": "Exact contract occurs inside the official Ethereum Mainnet section, alongside chain ID 1, symbol LINK and decimals 18."
+        },
+        "block": {
+          "number": "0x18ce3a2",
+          "hash": "0xe616fa8d515deb3ffe746cfccb52da18c3fcfefd4db8746853d9d7757ab56f60",
+          "timestamp": "0x6aae4f57",
+          "stateRoot": "0x64689a7b425567037f211d477dba86c63782e6bb8f88f018390a6757eb173e18"
+        },
+        "observations": {
+          "https://ethereum-rpc.publicnode.com": {
+            "rpc": "https://ethereum-rpc.publicnode.com",
+            "receipt_ids": [
+              "request-008",
+              "request-009",
+              "request-010",
+              "request-011",
+              "request-012"
+            ],
+            "fields": {
+              "name": "ChainLink Token",
+              "symbol": "LINK",
+              "decimals": "18",
+              "totalSupply": "1000000000000000000000000000"
+            },
+            "errors": {},
+            "code": {
+              "bytes": 3153,
+              "sha256": "9792a60e149086e16264936114044e08b07981f87f64293339df5cd659e92a29",
+              "verified_source": false
+            }
+          },
+          "https://eth.drpc.org": {
+            "rpc": "https://eth.drpc.org",
+            "receipt_ids": [
+              "request-013",
+              "request-014",
+              "request-015",
+              "request-016",
+              "request-017"
+            ],
+            "fields": {
+              "name": "ChainLink Token",
+              "symbol": "LINK",
+              "decimals": "18",
+              "totalSupply": "1000000000000000000000000000"
+            },
+            "errors": {},
+            "code": {
+              "bytes": 3153,
+              "sha256": "9792a60e149086e16264936114044e08b07981f87f64293339df5cd659e92a29",
+              "verified_source": false
+            }
+          }
+        },
+        "metadata": {
+          "name": "ChainLink Token",
+          "symbol": "LINK",
+          "decimals": "18",
+          "totalSupply": "1000000000000000000000000000",
+          "total_supply_unit": "token atomic units; not circulating supply"
+        },
+        "provider_agreement": "AGREES",
+        "source_receipts": [
+          {
+            "id": "request-001",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:05Z",
+            "http_status": 200,
+            "body_sha256": "208c0be5a34cd9b241311e625b3035aa89cb237969cbc1a0c9cbd8c8517087eb",
+            "request_sha256": "7cd718c15e7d48ea187956a752c86b96515cded0520142627ba5da9729233bee"
+          },
+          {
+            "id": "request-002",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "63f2899edc63d4634a2f596f80b0ba99cd62dcbcf13c99939a9cd95ad6a47618",
+            "request_sha256": "2daff10399667df91baec389c2101f0e6446e4a010915d4ba807a57460f2f853"
+          },
+          {
+            "id": "request-003",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "d237a6992065d027fd37fe679b04ee948e263d0ac4be81c3f2e72c6e236ebd04",
+            "request_sha256": "b06964a0f0ec2abce534895a56679dc8a57ed8c62c5935d55afc7afabefb775d"
+          },
+          {
+            "id": "request-004",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "61b4baba049a883c01d0953df803f3f58ef754994ca2865a36c940e41793af9e",
+            "request_sha256": "8d45e2ce8e59d0b1f3f69f59d5c710c4b241871af9a98f8fa2fd390040d4bef8"
+          },
+          {
+            "id": "request-005",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "d1b5a4dba925559a07f07a560a836fc81500885f8527c96248e25ad5a75b8dd8",
+            "request_sha256": "ef00cb700069427fc7c7f555946462e442c6ebe9d7d1953a632b08b83433359e"
+          },
+          {
+            "id": "request-007",
+            "url": "https://docs.chain.link/resources/link-token-contracts.md",
+            "method": "GET",
+            "fetched_at": "2026-09-19T09:19:07Z",
+            "http_status": 200,
+            "body_sha256": "f142c3ba2764d18782883341b406fc50c487b5353123e5a0bae356af5c338d6b",
+            "request_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "id": "request-008",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:07Z",
+            "http_status": 200,
+            "body_sha256": "097cbab180c69aff9f466cf5b45c4eca701938ee6a7d193bb41677317e1ab8d4",
+            "request_sha256": "7abff730ccf05245d0c870de1b15dbd21c518d0de2d232728a1b83efcfcdc369"
+          },
+          {
+            "id": "request-009",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:07Z",
+            "http_status": 200,
+            "body_sha256": "46af29a1137820414cf533a4281418c733ba913bcc592c88fa24a0a75e151cb5",
+            "request_sha256": "a38acca4582c6424164efd91c7dfeabf2e6803930b7faf9e7acb5e69c2c082c3"
+          },
+          {
+            "id": "request-010",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:07Z",
+            "http_status": 200,
+            "body_sha256": "05330939c03bb2906b8dfc6868e627f1c554e67fba84a31ac1b9ad190fbb7641",
+            "request_sha256": "fe60afa54070a0278bcd5288097045bc1faf3a74b1fb655573129ba51c8581b9"
+          },
+          {
+            "id": "request-011",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:07Z",
+            "http_status": 200,
+            "body_sha256": "a2f618a7a40dc09f9676911447eefc4b8430e54a1a5802c9578b3ad008e24e59",
+            "request_sha256": "cd633f2fb84e23390040a14860e04784322fec025470b53b4f3274d097a9f237"
+          },
+          {
+            "id": "request-012",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:07Z",
+            "http_status": 200,
+            "body_sha256": "fc5f81c0b163783c096be09d2e3e58438b5dca1cd6027de5176d5b1f6787c7cf",
+            "request_sha256": "2d6d0b91e3a5d5b9e5d9a49c568a230a843a08c94ecb3ebd6066dba404637f64"
+          },
+          {
+            "id": "request-013",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:08Z",
+            "http_status": 200,
+            "body_sha256": "88cd350d8a7e7074f5e69619abf13462e4112f1315f7a7a053805704ac1bf50f",
+            "request_sha256": "2349d2d46095e3efa4ad4a68f0e2a72be1cf852b335e4768ef76fd235c330ce6"
+          },
+          {
+            "id": "request-014",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:08Z",
+            "http_status": 200,
+            "body_sha256": "7b38869e3e72bde191e1ae64430c2e7927504698204615ff972409b6a7b39793",
+            "request_sha256": "f088896b5337c21d3e2483a4400652769b249c2f73bca76fc0e9fda2697cef2b"
+          },
+          {
+            "id": "request-015",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:08Z",
+            "http_status": 200,
+            "body_sha256": "ee17f131fac8d14731bff32392544fd080dbf181bfd658da3101a58ce6880045",
+            "request_sha256": "96c6192320d2190938b2acbb4c3cf0400547294ea37e160d2bc15bc7f6d3cffe"
+          },
+          {
+            "id": "request-016",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:08Z",
+            "http_status": 200,
+            "body_sha256": "d77d4f77583d1878fe97ddb714c3a8acf75e584f02fbf7d9b67c93874fa62017",
+            "request_sha256": "903c04efb1bacf30b4554318fd52ed4dd5e6a19bcb9dfaf528dc815fb4448808"
+          },
+          {
+            "id": "request-017",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:08Z",
+            "http_status": 200,
+            "body_sha256": "6da82be41cf8e9c4d0595ab368bab2ceec933bd2ab40aa0e353df15a9e7d1356",
+            "request_sha256": "244138abf72d00773d1bf7975aa4c6bf02b7684743dadad414f064be4f6a1b61"
+          }
+        ],
+        "unknowns": [
+          "Observed public RPC responses, not independently replayed execution or a verified state proof.",
+          "Matching responses from two providers do not establish independent infrastructure or consensus verification.",
+          "Official documentation is a first-party identity declaration, not an endorsement or an independent audit.",
+          "No price, liquidity, holders, circulating supply, reserve, solvency, compliance, safety or investment conclusion.",
+          "Contract source/bytecode equivalence, upgrade powers and administrator controls are UNMEASURED.",
+          "No evidence admission, signing, root inclusion, anchoring or public delivery is claimed by this collector."
+        ]
+      },
+      "signed": false,
+      "admission": "NOT_EVALUATED",
+      "root_inclusion": "NOT_ATTEMPTED"
+    },
+    {
+      "subject_id": "token:ethereum:ondo",
+      "state": "OBSERVED",
+      "observed_at": "2026-09-19T09:19:10Z",
+      "evidence_sha256": "797365cc4af553abc175ba0da0e9aab6caea4d8a638b2d6baa24d0f2b235edaa",
+      "instrument_sha256": "40f4cb850e78c2b36727681d6628a0f2758cafc5d882adf256057bd11ad87c48",
+      "evidence": {
+        "identity": {
+          "id": "token:ethereum:ondo",
+          "name": "Ondo governance token",
+          "symbol": "ONDO",
+          "asset_kind": "erc20",
+          "contract_address": "0xfAbA6f8e4a5E8Ab82F62fe7C39859FA577269BE3",
+          "chain_id": 1,
+          "official_url": "https://docs.ondo.foundation/ondo-token"
+        },
+        "official_identity": {
+          "status": "SOURCE_CONFIRMED",
+          "receipt_id": "request-018",
+          "body_sha256": "b3ebc301e5f6c8c5cab7b03b47d2897096ba976e1a6ee5cf3b16d66537a11592",
+          "fetched_at": "2026-09-19T09:19:08Z",
+          "rule": "Official ONDO token page states the exact address and governance-token identity. This is not OUSG or USDY."
+        },
+        "block": {
+          "number": "0x18ce3a2",
+          "hash": "0xe616fa8d515deb3ffe746cfccb52da18c3fcfefd4db8746853d9d7757ab56f60",
+          "timestamp": "0x6aae4f57",
+          "stateRoot": "0x64689a7b425567037f211d477dba86c63782e6bb8f88f018390a6757eb173e18"
+        },
+        "observations": {
+          "https://ethereum-rpc.publicnode.com": {
+            "rpc": "https://ethereum-rpc.publicnode.com",
+            "receipt_ids": [
+              "request-019",
+              "request-020",
+              "request-021",
+              "request-022",
+              "request-023"
+            ],
+            "fields": {
+              "name": "Ondo",
+              "symbol": "ONDO",
+              "decimals": "18",
+              "totalSupply": "10000000000000000000000000000"
+            },
+            "errors": {},
+            "code": {
+              "bytes": 11822,
+              "sha256": "fac4203cd6d440c61254e05f369de80778de88874edec61d2593125ef6a09632",
+              "verified_source": false
+            }
+          },
+          "https://eth.drpc.org": {
+            "rpc": "https://eth.drpc.org",
+            "receipt_ids": [
+              "request-024",
+              "request-025",
+              "request-026",
+              "request-027",
+              "request-028"
+            ],
+            "fields": {
+              "name": "Ondo",
+              "symbol": "ONDO",
+              "decimals": "18",
+              "totalSupply": "10000000000000000000000000000"
+            },
+            "errors": {},
+            "code": {
+              "bytes": 11822,
+              "sha256": "fac4203cd6d440c61254e05f369de80778de88874edec61d2593125ef6a09632",
+              "verified_source": false
+            }
+          }
+        },
+        "metadata": {
+          "name": "Ondo",
+          "symbol": "ONDO",
+          "decimals": "18",
+          "totalSupply": "10000000000000000000000000000",
+          "total_supply_unit": "token atomic units; not circulating supply"
+        },
+        "provider_agreement": "AGREES",
+        "source_receipts": [
+          {
+            "id": "request-001",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:05Z",
+            "http_status": 200,
+            "body_sha256": "208c0be5a34cd9b241311e625b3035aa89cb237969cbc1a0c9cbd8c8517087eb",
+            "request_sha256": "7cd718c15e7d48ea187956a752c86b96515cded0520142627ba5da9729233bee"
+          },
+          {
+            "id": "request-002",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "63f2899edc63d4634a2f596f80b0ba99cd62dcbcf13c99939a9cd95ad6a47618",
+            "request_sha256": "2daff10399667df91baec389c2101f0e6446e4a010915d4ba807a57460f2f853"
+          },
+          {
+            "id": "request-003",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "d237a6992065d027fd37fe679b04ee948e263d0ac4be81c3f2e72c6e236ebd04",
+            "request_sha256": "b06964a0f0ec2abce534895a56679dc8a57ed8c62c5935d55afc7afabefb775d"
+          },
+          {
+            "id": "request-004",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "61b4baba049a883c01d0953df803f3f58ef754994ca2865a36c940e41793af9e",
+            "request_sha256": "8d45e2ce8e59d0b1f3f69f59d5c710c4b241871af9a98f8fa2fd390040d4bef8"
+          },
+          {
+            "id": "request-005",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:06Z",
+            "http_status": 200,
+            "body_sha256": "d1b5a4dba925559a07f07a560a836fc81500885f8527c96248e25ad5a75b8dd8",
+            "request_sha256": "ef00cb700069427fc7c7f555946462e442c6ebe9d7d1953a632b08b83433359e"
+          },
+          {
+            "id": "request-018",
+            "url": "https://docs.ondo.foundation/ondo-token",
+            "method": "GET",
+            "fetched_at": "2026-09-19T09:19:08Z",
+            "http_status": 200,
+            "body_sha256": "b3ebc301e5f6c8c5cab7b03b47d2897096ba976e1a6ee5cf3b16d66537a11592",
+            "request_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "id": "request-019",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:09Z",
+            "http_status": 200,
+            "body_sha256": "4dfa06310f1175fa328d639275dcce2009b59e674f9ba7d643a4612c8999a3b6",
+            "request_sha256": "9f6cfa17da39bc24d2fc46a88ce67dd5327cca201f6c936e59b0460906ec6a9a"
+          },
+          {
+            "id": "request-020",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:09Z",
+            "http_status": 200,
+            "body_sha256": "8f3aa07ea6c901c9268492ab2769ccec547167f13a92a760e7fbc748e04e90ca",
+            "request_sha256": "a1507b7b30a813c3b03882aacd181f0a46b4e18b444d8d810858a275b2cbfe62"
+          },
+          {
+            "id": "request-021",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:09Z",
+            "http_status": 200,
+            "body_sha256": "b401b778c67594d69201663d8ba1cb9ad9848f5986cda663a1a6563a772f1641",
+            "request_sha256": "5741068b0a1dd9c6aaae9c977bddcbdb678e7913125ff59da9fddd6afae637f4"
+          },
+          {
+            "id": "request-022",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:09Z",
+            "http_status": 200,
+            "body_sha256": "c4b81676058c5d408e1fb6ff8b6f21422816d325796acfe9736aa4918adda8b4",
+            "request_sha256": "fc87fab5129707ee893a3b10a8fdd5f264304c0458175b66531c683af718154f"
+          },
+          {
+            "id": "request-023",
+            "url": "https://ethereum-rpc.publicnode.com",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:09Z",
+            "http_status": 200,
+            "body_sha256": "12dc2b97bfbbb3f294d97bb36aff8f540067d8e05e94130998c910fb7ae21363",
+            "request_sha256": "1ded4ac71e07534b5ce68b2c6b8d8833a8aa818fb6c3d5ee43e0e667550514ac"
+          },
+          {
+            "id": "request-024",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:09Z",
+            "http_status": 200,
+            "body_sha256": "aa6ccf83972aa71d4cad27ca394ad85344ce0b2d1de4ec76d59ef5d7973840c9",
+            "request_sha256": "1696d4e13ca26cb5d4979256360303a86ff3504dffab0ecd4e97db989aa35f15"
+          },
+          {
+            "id": "request-025",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:10Z",
+            "http_status": 200,
+            "body_sha256": "03834268f0791cc7fb2f9d447636e8c94560fc36806f436db9884d0a2ce3bda5",
+            "request_sha256": "00c8f3272d0c7140374c8cc67767eb31fbb2978a8a0820cb6b95ced72d57c132"
+          },
+          {
+            "id": "request-026",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:10Z",
+            "http_status": 200,
+            "body_sha256": "5eb8849e389452d8aa755f17a988c43cc76220231988277d9463accfeb355b0a",
+            "request_sha256": "81ba8aa60117bc3046f5c297e3a4f375f4ad80edae8f8fec8403037bccebccab"
+          },
+          {
+            "id": "request-027",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:10Z",
+            "http_status": 200,
+            "body_sha256": "926aef71d6ea848008bb4e391476f6427f8e5b26e339ea8ce3f174894a2bff08",
+            "request_sha256": "95c605b05d0e3c0e779bb0b63220c7cc943106f7cba5dea1cb3d689cef6f1d9d"
+          },
+          {
+            "id": "request-028",
+            "url": "https://eth.drpc.org",
+            "method": "POST",
+            "fetched_at": "2026-09-19T09:19:10Z",
+            "http_status": 200,
+            "body_sha256": "4c6ac672b9e90fb4201ffb6781cc4e5a0f84e892499d674c9fb71797fdd22359",
+            "request_sha256": "7425edc71ec1e4fa1684859a7b8a7befb809fd8c9abfcc079d286259dd5aa821"
+          }
+        ],
+        "unknowns": [
+          "Observed public RPC responses, not independently replayed execution or a verified state proof.",
+          "Matching responses from two providers do not establish independent infrastructure or consensus verification.",
+          "Official documentation is a first-party identity declaration, not an endorsement or an independent audit.",
+          "No price, liquidity, holders, circulating supply, reserve, solvency, compliance, safety or investment conclusion.",
+          "Contract source/bytecode equivalence, upgrade powers and administrator controls are UNMEASURED.",
+          "No evidence admission, signing, root inclusion, anchoring or public delivery is claimed by this collector."
+        ]
+      },
+      "signed": false,
+      "admission": "NOT_EVALUATED",
+      "root_inclusion": "NOT_ATTEMPTED"
+    }
+  ],
+  "limitations": [
+    "Observed public RPC responses, not independently replayed execution or a verified state proof.",
+    "Matching responses from two providers do not establish independent infrastructure or consensus verification.",
+    "Official documentation is a first-party identity declaration, not an endorsement or an independent audit.",
+    "No price, liquidity, holders, circulating supply, reserve, solvency, compliance, safety or investment conclusion.",
+    "Contract source/bytecode equivalence, upgrade powers and administrator controls are UNMEASURED.",
+    "No evidence admission, signing, root inclusion, anchoring or public delivery is claimed by this collector."
+  ],
+  "signed": false,
+  "admission": "NOT_EVALUATED",
+  "root_inclusion": "NOT_ATTEMPTED"
+}

@@ -1,0 +1,833 @@
+{
+  "automatic_execution_authorized": false,
+  "board_axes_without_definition_mapping": [
+    {
+      "axis": "provenance-controls",
+      "binding_state": "NO_MAPPING_DEFINED",
+      "id": "board:provenance-controls"
+    },
+    {
+      "axis": "reserve-attestation",
+      "binding_state": "NO_MAPPING_DEFINED",
+      "id": "board:reserve-attestation"
+    },
+    {
+      "axis": "regulatory-framework",
+      "binding_state": "NO_MAPPING_DEFINED",
+      "id": "board:regulatory-framework"
+    },
+    {
+      "axis": "distribution-integrity",
+      "binding_state": "NO_MAPPING_DEFINED",
+      "id": "board:distribution-integrity"
+    },
+    {
+      "axis": "custody-disclosure",
+      "binding_state": "NO_MAPPING_DEFINED",
+      "id": "board:custody-disclosure"
+    },
+    {
+      "axis": "ai-adoption-components",
+      "binding_state": "NO_MAPPING_DEFINED",
+      "id": "board:ai-adoption-components"
+    },
+    {
+      "axis": "labour-components",
+      "binding_state": "NO_MAPPING_DEFINED",
+      "id": "board:labour-components"
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "binding_state": "NO_MAPPING_DEFINED",
+      "id": "board:humanoid-labour-index"
+    }
+  ],
+  "dimensions": [
+    {
+      "binding_state": "UNRESOLVED_GOAL_DEFINITION",
+      "board_axis_id": "governance",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:governance",
+        "goal:conformance"
+      ],
+      "historical_definition_position": 1,
+      "id": "board:governance",
+      "kind": "BOARD_REFERENCE",
+      "name": "governance"
+    },
+    {
+      "binding_state": "UNRESOLVED_GOAL_DEFINITION",
+      "board_axis_id": "safety",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:safety",
+        "goal:conformance"
+      ],
+      "historical_definition_position": 2,
+      "id": "board:safety",
+      "kind": "BOARD_REFERENCE",
+      "name": "safety"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": "provenance",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:provenance",
+        "goal:assurance"
+      ],
+      "historical_definition_position": 3,
+      "id": "board:provenance",
+      "kind": "BOARD_REFERENCE",
+      "name": "provenance"
+    },
+    {
+      "binding_state": "UNRESOLVED_GOAL_DEFINITION",
+      "board_axis_id": "continuity",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:continuity",
+        "goal:assurance"
+      ],
+      "historical_definition_position": 4,
+      "id": "board:continuity",
+      "kind": "BOARD_REFERENCE",
+      "name": "continuity"
+    },
+    {
+      "binding_state": "UNRESOLVED_GOAL_DEFINITION",
+      "board_axis_id": "conformance",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:conformance",
+        "goal:change"
+      ],
+      "historical_definition_position": 5,
+      "id": "board:conformance",
+      "kind": "BOARD_REFERENCE",
+      "name": "conformance"
+    },
+    {
+      "binding_state": "UNRESOLVED_GOAL_DEFINITION",
+      "board_axis_id": "openness",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:openness",
+        "goal:disclosure"
+      ],
+      "historical_definition_position": 6,
+      "id": "board:openness",
+      "kind": "BOARD_REFERENCE",
+      "name": "openness"
+    },
+    {
+      "binding_state": "UNRESOLVED_GOAL_DEFINITION",
+      "board_axis_id": "machinery-conformity",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:conformance",
+        "goal:change"
+      ],
+      "historical_definition_position": 7,
+      "id": "board:machinery-conformity",
+      "kind": "BOARD_REFERENCE",
+      "name": "machinery-conformity"
+    },
+    {
+      "binding_state": "UNRESOLVED_GOAL_DEFINITION",
+      "board_axis_id": "care",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:customer_protection",
+        "goal:care"
+      ],
+      "historical_definition_position": 8,
+      "id": "board:care",
+      "kind": "BOARD_REFERENCE",
+      "name": "care"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": "cross-reality",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:provenance",
+        "goal:asset_classification"
+      ],
+      "historical_definition_position": 9,
+      "id": "board:cross-reality",
+      "kind": "BOARD_REFERENCE",
+      "name": "cross-reality"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": "detector-interop",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:agent_authority",
+        "goal:transaction_integrity"
+      ],
+      "historical_definition_position": 10,
+      "id": "board:detector-interop",
+      "kind": "BOARD_REFERENCE",
+      "name": "detector-interop"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": "art5-safeguard",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:customer_protection",
+        "goal:disclosure"
+      ],
+      "historical_definition_position": 11,
+      "id": "board:art5-safeguard",
+      "kind": "BOARD_REFERENCE",
+      "name": "art5-safeguard"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": "swarm",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:agent_authority",
+        "goal:market_integrity"
+      ],
+      "historical_definition_position": 12,
+      "id": "board:swarm",
+      "kind": "BOARD_REFERENCE",
+      "name": "swarm"
+    },
+    {
+      "binding_state": "UNRESOLVED_GOAL_DEFINITION",
+      "board_axis_id": "affect",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:customer_protection",
+        "goal:care"
+      ],
+      "historical_definition_position": 13,
+      "id": "board:affect",
+      "kind": "BOARD_REFERENCE",
+      "name": "affect"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": "jail",
+      "board_status_observed": "MEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:market_integrity",
+        "goal:customer_protection"
+      ],
+      "historical_definition_position": 14,
+      "id": "board:jail",
+      "kind": "BOARD_REFERENCE",
+      "name": "jail"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": null,
+      "board_status_observed": null,
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:market_integrity",
+        "goal:assurance"
+      ],
+      "historical_definition_position": 15,
+      "id": "research:memory-poisoning",
+      "kind": "RESEARCH_DIMENSION",
+      "name": "memory-poisoning"
+    },
+    {
+      "binding_state": "UNRESOLVED_GOAL_DEFINITION",
+      "board_axis_id": null,
+      "board_status_observed": null,
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:governance",
+        "goal:customer_protection"
+      ],
+      "historical_definition_position": 16,
+      "id": "research:oversight",
+      "kind": "RESEARCH_DIMENSION",
+      "name": "oversight"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": null,
+      "board_status_observed": null,
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:actor_identity",
+        "goal:agent_authority"
+      ],
+      "historical_definition_position": 17,
+      "id": "research:agent-identity",
+      "kind": "RESEARCH_DIMENSION",
+      "name": "agent-identity"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": null,
+      "board_status_observed": null,
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:market_integrity",
+        "goal:transaction_integrity"
+      ],
+      "historical_definition_position": 18,
+      "id": "research:economic-behavior",
+      "kind": "RESEARCH_DIMENSION",
+      "name": "economic-behavior"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": null,
+      "board_status_observed": null,
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:market_integrity",
+        "goal:agent_authority"
+      ],
+      "historical_definition_position": 19,
+      "id": "research:collusion",
+      "kind": "RESEARCH_DIMENSION",
+      "name": "collusion"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": null,
+      "board_status_observed": null,
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:customer_protection",
+        "goal:market_integrity"
+      ],
+      "historical_definition_position": 20,
+      "id": "research:deception",
+      "kind": "RESEARCH_DIMENSION",
+      "name": "deception"
+    },
+    {
+      "binding_state": "UNRESOLVED_GOAL_DEFINITION",
+      "board_axis_id": null,
+      "board_status_observed": null,
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:customer_protection",
+        "goal:care"
+      ],
+      "historical_definition_position": 21,
+      "id": "research:sycophancy",
+      "kind": "RESEARCH_DIMENSION",
+      "name": "sycophancy"
+    },
+    {
+      "binding_state": "UNRESOLVED_GOAL_DEFINITION",
+      "board_axis_id": null,
+      "board_status_observed": null,
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:continuity",
+        "goal:assurance"
+      ],
+      "historical_definition_position": 22,
+      "id": "research:long-horizon-reliability",
+      "kind": "RESEARCH_DIMENSION",
+      "name": "long-horizon-reliability"
+    },
+    {
+      "binding_state": "REFERENCE_ONLY",
+      "board_axis_id": "effect-binding",
+      "board_status_observed": "UNMEASURED",
+      "execution_state": "NOT_ESTABLISHED_BY_MAPPING",
+      "goal_ids": [
+        "goal:provenance",
+        "goal:transaction_integrity",
+        "goal:change"
+      ],
+      "historical_definition_position": 23,
+      "id": "board:effect-binding",
+      "kind": "BOARD_REFERENCE",
+      "name": "effect-binding"
+    }
+  ],
+  "goals": [
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:actor_identity",
+      "name": "actor_identity",
+      "referenced_by": [
+        "axis_to_goal_mapping/agent-identity",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/0",
+        "sources_bound_to_harness/10",
+        "sources_bound_to_harness/13",
+        "sources_bound_to_harness/14",
+        "sources_bound_to_harness/15",
+        "sources_bound_to_harness/17",
+        "sources_bound_to_harness/18",
+        "sources_bound_to_harness/2",
+        "sources_bound_to_harness/20",
+        "sources_bound_to_harness/22",
+        "sources_bound_to_harness/28",
+        "sources_bound_to_harness/52"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:agent_authority",
+      "name": "agent_authority",
+      "referenced_by": [
+        "axis_to_goal_mapping/agent-identity",
+        "axis_to_goal_mapping/collusion",
+        "axis_to_goal_mapping/detector-interop",
+        "axis_to_goal_mapping/swarm",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/11",
+        "sources_bound_to_harness/17",
+        "sources_bound_to_harness/19",
+        "sources_bound_to_harness/21",
+        "sources_bound_to_harness/22",
+        "sources_bound_to_harness/23",
+        "sources_bound_to_harness/31",
+        "sources_bound_to_harness/4",
+        "sources_bound_to_harness/45",
+        "sources_bound_to_harness/47",
+        "sources_bound_to_harness/51",
+        "sources_bound_to_harness/52",
+        "sources_bound_to_harness/54",
+        "sources_bound_to_harness/58"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:asset_classification",
+      "name": "asset_classification",
+      "referenced_by": [
+        "axis_to_goal_mapping/cross-reality",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/0",
+        "sources_bound_to_harness/12",
+        "sources_bound_to_harness/14",
+        "sources_bound_to_harness/2",
+        "sources_bound_to_harness/3",
+        "sources_bound_to_harness/4",
+        "sources_bound_to_harness/44"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:assurance",
+      "name": "assurance",
+      "referenced_by": [
+        "axis_to_goal_mapping/continuity",
+        "axis_to_goal_mapping/long-horizon-reliability",
+        "axis_to_goal_mapping/memory-poisoning",
+        "axis_to_goal_mapping/provenance",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/1",
+        "sources_bound_to_harness/24",
+        "sources_bound_to_harness/38",
+        "sources_bound_to_harness/39",
+        "sources_bound_to_harness/50",
+        "sources_bound_to_harness/57",
+        "sources_bound_to_harness/7"
+      ]
+    },
+    {
+      "definition_state": "REFERENCED_NOT_DEFINED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:care",
+      "name": "care",
+      "referenced_by": [
+        "axis_to_goal_mapping/affect",
+        "axis_to_goal_mapping/care",
+        "axis_to_goal_mapping/sycophancy",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/43",
+        "sources_bound_to_harness/48",
+        "sources_bound_to_harness/5",
+        "sources_bound_to_harness/56"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:change",
+      "name": "change",
+      "referenced_by": [
+        "axis_to_goal_mapping/conformance",
+        "axis_to_goal_mapping/effect-binding",
+        "axis_to_goal_mapping/machinery-conformity",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/26",
+        "sources_bound_to_harness/35",
+        "sources_bound_to_harness/40",
+        "sources_bound_to_harness/42",
+        "sources_bound_to_harness/57",
+        "sources_bound_to_harness/58",
+        "sources_bound_to_harness/7"
+      ]
+    },
+    {
+      "definition_state": "REFERENCED_NOT_DEFINED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:conformance",
+      "name": "conformance",
+      "referenced_by": [
+        "axis_to_goal_mapping/conformance",
+        "axis_to_goal_mapping/governance",
+        "axis_to_goal_mapping/machinery-conformity",
+        "axis_to_goal_mapping/safety",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/27",
+        "sources_bound_to_harness/32",
+        "sources_bound_to_harness/36",
+        "sources_bound_to_harness/37",
+        "sources_bound_to_harness/40",
+        "sources_bound_to_harness/42",
+        "sources_bound_to_harness/5",
+        "sources_bound_to_harness/50",
+        "sources_bound_to_harness/6",
+        "sources_bound_to_harness/8"
+      ]
+    },
+    {
+      "definition_state": "REFERENCED_NOT_DEFINED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:continuity",
+      "name": "continuity",
+      "referenced_by": [
+        "axis_to_goal_mapping/continuity",
+        "axis_to_goal_mapping/long-horizon-reliability",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/39",
+        "sources_bound_to_harness/5",
+        "sources_bound_to_harness/57"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:custody",
+      "name": "custody",
+      "referenced_by": [
+        "sources_bound_to_harness/0",
+        "sources_bound_to_harness/11",
+        "sources_bound_to_harness/15",
+        "sources_bound_to_harness/3"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:customer_protection",
+      "name": "customer_protection",
+      "referenced_by": [
+        "axis_to_goal_mapping/affect",
+        "axis_to_goal_mapping/art5-safeguard",
+        "axis_to_goal_mapping/care",
+        "axis_to_goal_mapping/deception",
+        "axis_to_goal_mapping/jail",
+        "axis_to_goal_mapping/oversight",
+        "axis_to_goal_mapping/sycophancy",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/33",
+        "sources_bound_to_harness/43",
+        "sources_bound_to_harness/46",
+        "sources_bound_to_harness/48",
+        "sources_bound_to_harness/49",
+        "sources_bound_to_harness/51",
+        "sources_bound_to_harness/55",
+        "sources_bound_to_harness/56"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:disclosure",
+      "name": "disclosure",
+      "referenced_by": [
+        "axis_to_goal_mapping/art5-safeguard",
+        "axis_to_goal_mapping/openness",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/1",
+        "sources_bound_to_harness/2",
+        "sources_bound_to_harness/25",
+        "sources_bound_to_harness/33",
+        "sources_bound_to_harness/41",
+        "sources_bound_to_harness/46",
+        "sources_bound_to_harness/55",
+        "sources_bound_to_harness/56",
+        "sources_bound_to_harness/9"
+      ]
+    },
+    {
+      "definition_state": "REFERENCED_NOT_DEFINED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:governance",
+      "name": "governance",
+      "referenced_by": [
+        "axis_to_goal_mapping/governance",
+        "axis_to_goal_mapping/oversight",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/27",
+        "sources_bound_to_harness/32",
+        "sources_bound_to_harness/36",
+        "sources_bound_to_harness/51",
+        "sources_bound_to_harness/6",
+        "sources_bound_to_harness/8"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:jurisdiction",
+      "name": "jurisdiction",
+      "referenced_by": [
+        "sources_bound_to_harness/0"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:market_integrity",
+      "name": "market_integrity",
+      "referenced_by": [
+        "axis_to_goal_mapping/collusion",
+        "axis_to_goal_mapping/deception",
+        "axis_to_goal_mapping/economic-behavior",
+        "axis_to_goal_mapping/jail",
+        "axis_to_goal_mapping/memory-poisoning",
+        "axis_to_goal_mapping/swarm",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/34",
+        "sources_bound_to_harness/47",
+        "sources_bound_to_harness/49",
+        "sources_bound_to_harness/50",
+        "sources_bound_to_harness/53",
+        "sources_bound_to_harness/54",
+        "sources_bound_to_harness/55"
+      ]
+    },
+    {
+      "definition_state": "REFERENCED_NOT_DEFINED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:openness",
+      "name": "openness",
+      "referenced_by": [
+        "axis_to_goal_mapping/openness",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/32",
+        "sources_bound_to_harness/41"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:provenance",
+      "name": "provenance",
+      "referenced_by": [
+        "axis_to_goal_mapping/cross-reality",
+        "axis_to_goal_mapping/effect-binding",
+        "axis_to_goal_mapping/provenance",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/1",
+        "sources_bound_to_harness/13",
+        "sources_bound_to_harness/19",
+        "sources_bound_to_harness/20",
+        "sources_bound_to_harness/24",
+        "sources_bound_to_harness/26",
+        "sources_bound_to_harness/30",
+        "sources_bound_to_harness/35",
+        "sources_bound_to_harness/38",
+        "sources_bound_to_harness/4",
+        "sources_bound_to_harness/44",
+        "sources_bound_to_harness/52",
+        "sources_bound_to_harness/58",
+        "sources_bound_to_harness/6",
+        "sources_bound_to_harness/7",
+        "sources_bound_to_harness/9"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:reserves_collateral",
+      "name": "reserves_collateral",
+      "referenced_by": [
+        "sources_bound_to_harness/12",
+        "sources_bound_to_harness/14",
+        "sources_bound_to_harness/15",
+        "sources_bound_to_harness/16",
+        "sources_bound_to_harness/28",
+        "sources_bound_to_harness/29",
+        "sources_bound_to_harness/3",
+        "sources_bound_to_harness/30"
+      ]
+    },
+    {
+      "definition_state": "REFERENCED_NOT_DEFINED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:safety",
+      "name": "safety",
+      "referenced_by": [
+        "axis_to_goal_mapping/safety",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/32",
+        "sources_bound_to_harness/37",
+        "sources_bound_to_harness/5"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:settlement",
+      "name": "settlement",
+      "referenced_by": [
+        "sources_bound_to_harness/10",
+        "sources_bound_to_harness/11",
+        "sources_bound_to_harness/12",
+        "sources_bound_to_harness/16",
+        "sources_bound_to_harness/21",
+        "sources_bound_to_harness/29",
+        "sources_bound_to_harness/3",
+        "sources_bound_to_harness/53"
+      ]
+    },
+    {
+      "definition_state": "DECLARED",
+      "execution_state": "NOT_ESTABLISHED",
+      "id": "goal:transaction_integrity",
+      "name": "transaction_integrity",
+      "referenced_by": [
+        "axis_to_goal_mapping/detector-interop",
+        "axis_to_goal_mapping/economic-behavior",
+        "axis_to_goal_mapping/effect-binding",
+        "binding_to_harness/GSPC_23_axes",
+        "sources_bound_to_harness/10",
+        "sources_bound_to_harness/11",
+        "sources_bound_to_harness/34",
+        "sources_bound_to_harness/45",
+        "sources_bound_to_harness/53",
+        "sources_bound_to_harness/54",
+        "sources_bound_to_harness/58"
+      ]
+    }
+  ],
+  "historical_position_mismatches": [
+    {
+      "board_axis_at_that_position": "effect-binding",
+      "definition_dimension": "memory-poisoning",
+      "historical_position": 15,
+      "resolution": "USE_NAMESPACED_ID_NEVER_POSITION"
+    },
+    {
+      "board_axis_at_that_position": "provenance-controls",
+      "definition_dimension": "oversight",
+      "historical_position": 16,
+      "resolution": "USE_NAMESPACED_ID_NEVER_POSITION"
+    },
+    {
+      "board_axis_at_that_position": "reserve-attestation",
+      "definition_dimension": "agent-identity",
+      "historical_position": 17,
+      "resolution": "USE_NAMESPACED_ID_NEVER_POSITION"
+    },
+    {
+      "board_axis_at_that_position": "regulatory-framework",
+      "definition_dimension": "economic-behavior",
+      "historical_position": 18,
+      "resolution": "USE_NAMESPACED_ID_NEVER_POSITION"
+    },
+    {
+      "board_axis_at_that_position": "distribution-integrity",
+      "definition_dimension": "collusion",
+      "historical_position": 19,
+      "resolution": "USE_NAMESPACED_ID_NEVER_POSITION"
+    },
+    {
+      "board_axis_at_that_position": "custody-disclosure",
+      "definition_dimension": "deception",
+      "historical_position": 20,
+      "resolution": "USE_NAMESPACED_ID_NEVER_POSITION"
+    },
+    {
+      "board_axis_at_that_position": "ai-adoption-components",
+      "definition_dimension": "sycophancy",
+      "historical_position": 21,
+      "resolution": "USE_NAMESPACED_ID_NEVER_POSITION"
+    },
+    {
+      "board_axis_at_that_position": "labour-components",
+      "definition_dimension": "long-horizon-reliability",
+      "historical_position": 22,
+      "resolution": "USE_NAMESPACED_ID_NEVER_POSITION"
+    },
+    {
+      "board_axis_at_that_position": "humanoid-labour-index",
+      "definition_dimension": "effect-binding",
+      "historical_position": 23,
+      "resolution": "USE_NAMESPACED_ID_NEVER_POSITION"
+    }
+  ],
+  "rules": [
+    "Namespaced IDs are identities; historical positions are context only.",
+    "Referenced but undefined goals remain blocked for automated interpretation.",
+    "Board statuses are observations copied from the pinned response, not new measurements.",
+    "Research dimensions never become board slots or measurements through this projection.",
+    "No permission, execution, signing, root inclusion, legal conclusion or publication is inferred."
+  ],
+  "schema": "csoai.evidence-factory-bindings/1",
+  "sources": {
+    "board": {
+      "fetched_at": "2026-09-19T09:15:42.835705+00:00",
+      "http_status": 200,
+      "raw_file": "gspc-response.json",
+      "raw_sha256": "9699081c10c4106fbded54618c3e5ffbd85616f850448b025649fff5bb7bf631",
+      "source_url": "https://councilof.ai/api/gspc"
+    },
+    "definition": {
+      "filename": "master-harness-index-v0.4.json",
+      "sha256": "5f5a31448ecd09631d4d32f66096e39aecdf6b004815f164c0dae597bfe8bd00"
+    }
+  },
+  "state": "RECONCILED_REFERENCES_WITH_EXPLICIT_GAPS",
+  "summary": {
+    "board_axes_observed": 23,
+    "declared_goals": 14,
+    "definition_dimensions": 23,
+    "historical_position_mismatches": 9,
+    "new_measurements": 0,
+    "referenced_undefined_goals": 6,
+    "research_dimensions": 8
+  },
+  "unresolved_goal_ids": [
+    "goal:care",
+    "goal:conformance",
+    "goal:continuity",
+    "goal:governance",
+    "goal:openness",
+    "goal:safety"
+  ]
+}
