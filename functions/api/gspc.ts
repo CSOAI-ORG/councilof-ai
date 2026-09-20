@@ -68,7 +68,11 @@ const excludeOwnLeader = (a: AxisScore): PublicAxis => {
   } = a;
   return {
     ...rest,
-    leader: undefined,
+    // leader key OMITTED, never set to undefined: canonical() (site_attestation signer) emits
+    // an own undefined property as the literal `"leader":undefined`, while JSON.stringify drops
+    // the key — a payload signed that way can never verify from its served bytes
+    // (RECON-2026-0920-01). Omitting keeps served bytes identical and the preimage
+    // reconstructable.
     // No separation determination stands on the public board once the tested leader is
     // removed. UNTESTED (not SEPARATED/TIE) keeps this axis out of the separated/tie/mean
     // tallies below, which is the honest count of what the public board can still assert.
@@ -163,7 +167,7 @@ const dropUncardedLeader = (a: PublicAxis): PublicAxis => {
   } = a;
   return {
     ...rest,
-    leader: undefined,
+    // leader key OMITTED, never undefined — see excludeOwnLeader (RECON-2026-0920-01).
     // No separation determination stands once the tested leader is removed — UNTESTED keeps this
     // axis out of the separated/tie tallies, the honest count of what the public board can assert.
     separation: "UNTESTED",
