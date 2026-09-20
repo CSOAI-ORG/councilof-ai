@@ -1,0 +1,13 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,existsSync,rmSync,symlinkSync} from 'node:fs';import {join} from 'node:path';import {tmpdir} from 'node:os';
+import {makeArchive,verifyArchive,entries,pack,projection,eligiblePath,ARCHIVE_PATH} from './retired-proof-archive.mjs';
+function fixture(t){const dir=mkdtempSync(join(tmpdir(),'csoai-archive-fixture-'));t.after(()=>rmSync(dir,{recursive:true,force:true}));const root=join(dir,'client');mkdirSync(join(root,'interop/ots'),{recursive:true});writeFileSync(join(root,'interop/ots/old.ots.invalid'),Buffer.from([0,255,1,2]));writeFileSync(join(root,'interop/real.ots'),'untouched-fixture');return root;}
+test('only explicit invalid-marked files selected',t=>{const r=fixture(t);assert.equal(entries(r).length,1);assert.equal(eligiblePath('interop/../secret.invalid'),false);});
+test('roundtrip preserves exact bytes',t=>{const r=fixture(t),a=makeArchive(r);assert.equal(verifyArchive(a.doc,entries(r)),1);assert.deepEqual(Buffer.from(a.doc.members['/interop/ots/old.ots.invalid'].body_base64,'base64'),Buffer.from([0,255,1,2]));});
+test('tamper rejects before packing',t=>{const r=fixture(t),a=makeArchive(r);a.doc.members['/interop/ots/old.ots.invalid'].body_base64='AA==';assert.throws(()=>verifyArchive(a.doc,entries(r)));});
+test('packing retains build original and active proof',t=>{const r=fixture(t),a=pack(r);assert.equal(a.members,1);assert.ok(existsSync(join(a.retained_build_replicas,'interop/ots/old.ots.invalid')));assert.equal(readFileSync(join(r,'interop/real.ots'),'utf8'),'untouched-fixture');assert.ok(existsSync(join(r,ARCHIVE_PATH)));});
+test('repeated pack verifies existing archive',t=>{const r=fixture(t);pack(r);assert.equal(pack(r).state,'ALREADY_PACKED');});
+test('symlinks never packed',t=>{const r=fixture(t);symlinkSync('/etc/hosts',join(r,'interop/secret.invalid'));assert.equal(entries(r).length,1);});
+test('oversize member refuses projection',t=>{const r=fixture(t);writeFileSync(join(r,'interop/large.invalid'),Buffer.alloc(65537));assert.throws(()=>projection(r,20001));});
+test('projection is explicitly not physical admission',t=>{const r=fixture(t),p=projection(r,21000);assert.equal(p.projected,21000);assert.match(p.meaning,/SOURCE_PROJECTION_ONLY/);});
+test('resuming a partial pack cannot drop archived members',t=>{const r=fixture(t);pack(r);writeFileSync(join(r,'interop/new.invalid'),Buffer.from([3,4]));const result=pack(r);const doc=JSON.parse(readFileSync(join(r,ARCHIVE_PATH),'utf8'));assert.equal(verifyArchive(doc),2);assert.ok(doc.members['/interop/ots/old.ots.invalid']);assert.equal(result.members,1);});
