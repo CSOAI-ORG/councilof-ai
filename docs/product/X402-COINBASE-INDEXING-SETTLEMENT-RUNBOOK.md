@@ -63,6 +63,6 @@ Do not pay the other nine valid resources unless this first test produces `OBSER
 
 The first settlement completed and released the paid proof bundle with HTTP 200. Base transaction `0x4457e74d2a44dd7be4b5a03a21c93398208cf1bb05bc89ffaf09ac5afe6f9800` emitted the 10,000 atomic USDC transfer. The transfer was from and to the estate wallet, so this was a **SELF_TEST** and did not satisfy the planned different-buyer control. It is not revenue or demand evidence.
 
-The post-settlement validator observed 10 valid paid resources and 11 accepted resources, with zero Coinbase-indexed resources at `2026-09-20T02:17:52Z`. This is an early `VALIDATED_NOT_INDEXED` observation rather than the final 60-minute `OBSERVED_NOT_INDEXED` verdict. No expansion payment is authorized by this result.
+The post-settlement validator observed 10 valid paid resources and 11 accepted resources, with zero Coinbase-indexed resources at `2026-09-20T02:17:52Z` and again at `2026-09-20T02:22:05Z`. These are early `VALIDATED_NOT_INDEXED` observations rather than the final 60-minute `OBSERVED_NOT_INDEXED` verdict, which is due after `2026-09-20T03:13:59Z`. No expansion payment is authorized by this result.
 
 The machine-readable record is [`X402-SETTLEMENT-EVIDENCE-2026-09-20.json`](./X402-SETTLEMENT-EVIDENCE-2026-09-20.json). Its Layer-0 digest seal is `UNCHECKABLE`: the published governance MCP returned HTTP 405 from its default gateway and HTTP 404 from the current Council API gateway, so no signature was created.
