@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.gspc-board-signing-candidate/0.1",
+  "as_of": "2026-09-20T02:31:00Z",
+  "source_command": "node scripts/gspc-board-snapshot.mjs .gspc-work/gspc-board.snapshot.json",
+  "snapshot_path_local_only": ".gspc-work/gspc-board.snapshot.json",
+  "snapshot_sha256": "f9a90b78358a0a8e3b1e00a8166b0fb18412ee5448c556516cd512ad9f3e2cf7",
+  "snapshot": {
+    "schema": "csoai.gspc-axes/0.5",
+    "axis_slots": 23,
+    "measured_axes": 22,
+    "unmeasured_axes": 1,
+    "public_count": "23 axis · 22 measured",
+    "behavioural": {
+      "axis_slots": 15,
+      "measured_axes": 14
+    },
+    "financial": {
+      "axis_slots": 8,
+      "measured_axes": 8
+    },
+    "comparison_axes": 14,
+    "separated": 0,
+    "ties": 2,
+    "untested_separation": 12,
+    "site_attestation": null
+  },
+  "candidate_state": "AWAITING_OWNER_MPC_SIGNATURE",
+  "signing_command": "node scripts/gspc-board-sign.mjs .gspc-work/gspc-board.snapshot.json public/signed/gspc-board.signed.json",
+  "signing_requirements": [
+    "SSH tunnel to the custody service at loopback",
+    "CUSTODY_TOKEN",
+    "three-party MPC key gspc-board-22axis-2026 or an explicitly migrated replacement key",
+    "offline verification with scripts/gspc-board-verify.mjs before promotion"
+  ],
+  "promotion_rule": "Do not replace the preserved signed board or mark its status CURRENT until the MPC signature verifies over this exact snapshot digest and the live counts still agree.",
+  "caveat": "Measurement, not certification. This is an unsigned signing candidate, not a measurement card, signature, approval, or current signed board."
+}
