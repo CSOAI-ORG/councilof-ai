@@ -1,0 +1,60 @@
+{
+  "schema": "csoai.public-root-independent-verification/0.1",
+  "as_of": "2026-09-20T02:24:05Z",
+  "artifact": {
+    "path": "public/root.json",
+    "sha256": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4",
+    "root_as_of": "2026-09-15T07:13:43Z",
+    "card_count": 305,
+    "merkle_root": "07dd5eb3eb0e5c9eae40f56ce859a064dff95f2eed47acad64fb54a1aa0122e2"
+  },
+  "checks": {
+    "ed25519_envelope": "VALID",
+    "ed25519_preimage_bytes": 274,
+    "leaf_count_matches_signed_card_count": true,
+    "merkle_recomputation": "VALID",
+    "conflict_scan": "NONE"
+  },
+  "witnesses": {
+    "rekor": {
+      "state": "UNCHECKABLE",
+      "uuid": "108e9186e8c5677a330d12ba36c055849c6a11c64bd289723aee1d20794cfee847127e7c11cf6c04",
+      "entry_log_index": 2841551210,
+      "proof_log_index": 2719646948,
+      "proof_tree_size": 2771999233,
+      "body_preimage_sha256_matches": true,
+      "body_signature": "VALID",
+      "reason": "The returned inclusion proof names a different log index, and the entry log index is outside the proof tree size. The signed Rekor body is valid, but this response does not establish a consistent inclusion proof."
+    },
+    "open_timestamps": {
+      "state": "CONFIRMED_BITCOIN",
+      "proof_path": "public/interop/root-dedb49d0.json.ots",
+      "proof_sha256_recorded": "60ee5331703e9f723ab1689d5b96f4cdd8ce4710802a6c2a7af4431fdd30fbf9",
+      "proof_sha256_observed": "d88a9f574337b1f391554cf2847791152695271860534475c4c1adfa2b22d705",
+      "proof_digest_matches_sidecar": false,
+      "bitcoin_blocks": [
+        967093,
+        967098,
+        967150
+      ],
+      "selected_block": 967093,
+      "selected_block_hash": "000000000000000000010339a41298628851d62d73ebf8b1ceffcd2e8517e0ec",
+      "block_time": "2026-09-15T07:38:52Z",
+      "source_agreement": "BLOCKSTREAM_MEMPOOL_BYTE_IDENTICAL",
+      "metadata_refresh": "COMPLETED",
+      "reason": "The proof matured after the original sidecar was written. The repository's dedicated refresh path independently verified the block header and updated the proof digest and status."
+    },
+    "eas_base": "NOT_YET",
+    "xrpl_memo": "NOT_YET"
+  },
+  "gspc_snapshot": {
+    "path": "public/signed/gspc-board.signed.json",
+    "signature": "VALID",
+    "content_id": "72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10",
+    "signed_public_count": "22 axis · 22 measured",
+    "current_live_public_count": "23 axis · 22 measured",
+    "state": "SUPERSEDED_KNOWN_CLAIM_DEFECT"
+  },
+  "verdict": "ROOT_SIGNATURE_VALID_BITCOIN_CONFIRMED_REKOR_UNCHECKABLE",
+  "caveat": "Measurement, not certification. A valid root signature authenticates the signed statement. It does not make stale bytes current, repair an inconsistent transparency proof, confirm a pending Bitcoin timestamp, or update a superseded board snapshot."
+}

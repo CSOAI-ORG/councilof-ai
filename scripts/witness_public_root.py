@@ -70,6 +70,42 @@ def pem_of(raw_pub: bytes) -> bytes:
         serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo)
 
 
+def validate_rekor_entry(out: dict, preimage: bytes, sig: bytes, pem: bytes) -> tuple[str, dict]:
+    """Validate Rekor's returned body and inclusion coordinates before saying WITNESSED."""
+    if not isinstance(out, dict) or len(out) != 1:
+        raise ValueError("Rekor response must contain exactly one entry")
+    uuid, entry = next(iter(out.items()))
+    if not isinstance(entry, dict):
+        raise ValueError("Rekor entry is not an object")
+    try:
+        body = json.loads(base64.b64decode(entry["body"], validate=True))
+        spec = body["spec"]
+        proof = entry["verification"]["inclusionProof"]
+        entry_index = entry["logIndex"]
+        proof_index = proof["logIndex"]
+        tree_size = proof["treeSize"]
+    except Exception as exc:
+        raise ValueError(f"Rekor entry is missing required inclusion fields: {exc}") from exc
+    if body.get("kind") != "rekord":
+        raise ValueError("Rekor entry kind is not rekord")
+    if spec.get("data", {}).get("hash", {}).get("algorithm") != "sha256":
+        raise ValueError("Rekor entry does not use sha256")
+    if spec["data"]["hash"].get("value") != hashlib.sha256(preimage).hexdigest():
+        raise ValueError("Rekor entry hash does not bind the submitted preimage")
+    signature = spec.get("signature", {})
+    if signature.get("content") != base64.b64encode(sig).decode():
+        raise ValueError("Rekor entry signature differs from the submitted signature")
+    if signature.get("publicKey", {}).get("content") != base64.b64encode(pem).decode():
+        raise ValueError("Rekor entry public key differs from the submitted key")
+    if not isinstance(entry_index, int) or not isinstance(proof_index, int) or not isinstance(tree_size, int):
+        raise ValueError("Rekor inclusion coordinates are not integers")
+    if entry_index != proof_index:
+        raise ValueError(f"Rekor entry/proof logIndex mismatch: {entry_index} != {proof_index}")
+    if entry_index < 0 or tree_size <= entry_index:
+        raise ValueError(f"Rekor logIndex {entry_index} is outside treeSize {tree_size}")
+    return uuid, entry
+
+
 def rekor_upload(preimage: bytes, sig: bytes, pem: bytes) -> dict:
     body = {"apiVersion": "0.0.1", "kind": "rekord", "spec": {
         "data": {"content": base64.b64encode(preimage).decode()},
@@ -79,7 +115,7 @@ def rekor_upload(preimage: bytes, sig: bytes, pem: bytes) -> dict:
                                  headers={"Content-Type": "application/json", "Accept": "application/json", "User-Agent": "csoai-root-witness/1"}, method="POST")
     try:
         with urllib.request.urlopen(req, timeout=60) as r:
-            out = json.loads(r.read()); uuid = next(iter(out)); e = out[uuid]
+            out = json.loads(r.read()); uuid, e = validate_rekor_entry(out, preimage, sig, pem)
             return {"status": "WITNESSED", "uuid": uuid, "logIndex": e.get("logIndex"), "integratedTime": e.get("integratedTime"),
                     "logID": e.get("logID"), "entry": out, "new": True}
     except urllib.error.HTTPError as err:
@@ -89,12 +125,12 @@ def rekor_upload(preimage: bytes, sig: bytes, pem: bytes) -> dict:
             if m:
                 uuid = m.group(0)
                 with urllib.request.urlopen(f"{REKOR}/api/v1/log/entries/{uuid}", timeout=60) as r:
-                    out = json.loads(r.read()); e = out[uuid]
+                    out = json.loads(r.read()); uuid, e = validate_rekor_entry(out, preimage, sig, pem)
                 return {"status": "WITNESSED", "uuid": uuid, "logIndex": e.get("logIndex"), "integratedTime": e.get("integratedTime"),
                         "logID": e.get("logID"), "entry": out, "new": False}
         return {"status": "UNCHECKABLE", "reason": f"rekor HTTP {err.code}: {text[:160]}"}
-    except Exception as ex:  # network — never fake a witness
-        return {"status": "UNCHECKABLE", "reason": f"rekor unreachable: {ex}"[:200]}
+    except Exception as ex:  # network or invalid proof — never fake a witness
+        return {"status": "UNCHECKABLE", "reason": f"rekor witness uncheckable: {ex}"[:240]}
 
 
 def ots_stamp(path: Path, out: Path) -> dict:
@@ -326,6 +362,62 @@ def refresh_ots_metadata(public_dir: Path = PUB) -> int:
         f"refreshed OTS witness metadata for {root_sha[:16]}: "
         f"{status.get('status')} blocks={status.get('bitcoin_blocks', [])}"
     )
+    return 0
+
+
+def refresh_rekor_metadata(public_dir: Path = PUB) -> int:
+    """Re-evaluate the preserved Rekor response before retaining WITNESSED."""
+    root_path = public_dir / "root.json"
+    interop_dir = public_dir / "interop"
+    latest_path = interop_dir / "root-witness-latest.json"
+    pointer_path = interop_dir / "root-witness-pointer.json"
+    repo_root = public_dir.parent
+    try:
+        root = json.loads(root_path.read_text())
+        side = json.loads(latest_path.read_text())
+        pointer = json.loads(pointer_path.read_text())
+        current = ((side.get("witnesses") or {}).get("rekor") or {})
+        entry_name = Path(str(current.get("entry_file") or "")).name
+        if not entry_name:
+            raise ValueError("current witness has no Rekor entry file")
+        entry_path = interop_dir / entry_name
+        out = json.loads(entry_path.read_text())
+        preimage = canonical_bytes({k: root[k] for k in ENVELOPE_FIELDS})
+        sig = bytes.fromhex(root["sig_ed25519"])
+        pub = board_pubkey()
+        if not verify(preimage, sig, pub):
+            raise ValueError("root signature no longer verifies against the DID key")
+        uuid, entry = validate_rekor_entry(out, preimage, sig, pem_of(pub))
+        status = {
+            "status": "WITNESSED",
+            "uuid": uuid,
+            "logIndex": entry.get("logIndex"),
+            "integratedTime": entry.get("integratedTime"),
+            "logID": entry.get("logID"),
+            "url": f"{REKOR}/api/v1/log/entries?logIndex={entry.get('logIndex')}",
+            "type": "rekord/x509 over the preimage bytes with the board signature",
+            "entry_file": f"https://councilof.ai/interop/{entry_name}",
+        }
+    except Exception as exc:
+        status = {
+            "status": "UNCHECKABLE",
+            "reason": f"preserved Rekor response failed inclusion validation: {exc}"[:300],
+            "entry_file": current.get("entry_file") if "current" in locals() else None,
+        }
+
+    observed_at = now()
+    side.setdefault("witnesses", {})["rekor"] = status
+    side["as_of"] = observed_at
+    pointer.setdefault("witnesses", {})["rekor"] = status["status"]
+    pointer["as_of"] = observed_at
+    dated_value = (pointer.get("witness_sidecar") or {}).get("dated_copy")
+    dated_path = repo_root / dated_value if isinstance(dated_value, str) and dated_value.startswith("public/") else None
+    side_bytes = json.dumps(side, indent=1, ensure_ascii=False) + "\n"
+    latest_path.write_text(side_bytes)
+    if dated_path is not None and dated_path.is_file():
+        dated_path.write_text(side_bytes)
+    pointer_path.write_text(json.dumps(pointer, indent=1, ensure_ascii=False) + "\n")
+    print(f"refreshed Rekor witness metadata: {status['status']}")
     return 0
 
 
@@ -600,6 +692,7 @@ def main() -> int:
     parser.add_argument("--recheck", action="store_true")
     parser.add_argument("--refresh-eas", action="store_true")
     parser.add_argument("--refresh-ots", action="store_true")
+    parser.add_argument("--refresh-rekor", action="store_true")
     parser.add_argument("--public-dir", type=Path, default=PUB)
     parser.add_argument("--check-only", action="store_true")
     parser.add_argument("--output", type=Path)
@@ -614,6 +707,8 @@ def main() -> int:
         return refresh_eas_metadata(args.public_dir)
     if args.refresh_ots:
         return refresh_ots_metadata(args.public_dir)
+    if args.refresh_rekor:
+        return refresh_rekor_metadata(args.public_dir)
     if args.attempts < 1 or args.attempts > 20:
         parser.error("--attempts must be between 1 and 20")
     if args.retry_delay_seconds < 0 or args.retry_delay_seconds > 300:

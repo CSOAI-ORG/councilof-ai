@@ -1005,7 +1005,7 @@ def run_selftest() -> int:
         else {}
     )
     current_rekor_path = local_entry_path(current_rekor.get("entry_file"))
-    if current_rekor_path is not None and current_rekor_path.is_file():
+    if current_rekor.get("status") == "WITNESSED" and current_rekor_path is not None and current_rekor_path.is_file():
         rekor_snapshot = load_json(current_rekor_path)
         rekor_entry = rekor_snapshot.get(current_rekor.get("uuid"))
         if not isinstance(rekor_entry, dict) and len(rekor_snapshot) == 1:
@@ -1051,7 +1051,10 @@ def run_selftest() -> int:
 
     current_entry_files = [current_rekor_path] if current_rekor_path is not None and current_rekor_path.is_file() else []
     control_errors = _witness_errors(current_sidecar, current_entry_files)
-    assert not [e for e in control_errors if "bind" in e or "Rekor" in e], control_errors
+    if current_rekor.get("status") == "WITNESSED":
+        assert not [e for e in control_errors if "bind" in e or "Rekor" in e], control_errors
+    else:
+        assert any("no completed Rekor witness" in e for e in control_errors), control_errors
 
     synthetic_stale = json.loads(json.dumps(current_sidecar))
     synthetic_stale["artifact"]["sha256"] = "00" * 32
@@ -1069,7 +1072,7 @@ def run_selftest() -> int:
         assert any("sidecar sha256 does not bind current root" in e for e in real_stale_errors), real_stale_errors
         older_rekor = ((older.get("witnesses") or {}).get("rekor") or {})
         older_rekor_path = local_entry_path(older_rekor.get("entry_file"))
-        if current_entry_files and older_rekor_path is not None and older_rekor_path.is_file():
+        if current_rekor.get("status") == "WITNESSED" and current_entry_files and older_rekor_path is not None and older_rekor_path.is_file():
             repointed = json.loads(json.dumps(current_sidecar))
             for field in ("entry_file", "uuid", "logIndex", "logID", "integratedTime"):
                 if field in older_rekor:
