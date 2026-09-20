@@ -1,4 +1,4 @@
-name: Build + deploy site (prerender + fields + tour → both domains)
+name: Build + deploy site (gated production branch)
 
 on:
   push:
@@ -35,6 +35,21 @@ jobs:
 
       - name: No committed conflict markers (blocks the 2026-08-24 build break)
         run: node scripts/no-conflict-markers.mjs
+
+      # Trigger-coupling guard. workflow_run couples a follow-on workflow to THIS
+      # workflow by its `name:` string and nothing else. A rename here with no
+      # matching edit in the five followers stops them silently — no red anywhere
+      # (found 2026-09-20 in a local rename lane). Check the coupling here, in the
+      # renamed file's own guard chain, where a rename cannot avoid running.
+      - name: Trigger-coupling guard — follow-on workflows pin this workflow's exact name
+        run: |
+          set -eu
+          name=$(sed -n 's/^name: *//p' .github/workflows/deploy.yml | head -1 | tr -d '"' | tr -d "'")
+          for f in post-deploy-verify claims-e2e sov-stack-e2e hf-gspc-surface-sync gspc-spray; do
+            grep -qF "$name" ".github/workflows/$f.yml" \
+              || { echo "::error::$f.yml no longer references this workflow's name — a rename here must be applied there too"; exit 1; }
+          done
+          echo "trigger-coupling OK: 5 followers pin '$name'"
 
       - name: Wallet secret gate — no private key material in tracked release inputs
         run: |
@@ -90,7 +105,7 @@ jobs:
       # scripts/pages-size-guard.mjs already existed and was wired into NOTHING. It is wired
       # here, on public/, so the answer arrives in two seconds instead of twenty minutes.
       - name: Pages size guard — 25 MiB per-file limit (source assets)
-        run: node scripts/pages-size-guard.mjs public
+        run: node scripts/pages-size-guard.mjs public --packed-history-projection
 
       - name: Install deps
         run: npm ci --no-audit --no-fund
@@ -240,7 +255,7 @@ jobs:
       # were arena figures that needed labelling not changing, the 12 was the only genuinely
       # typed literal, and no rendered surface types a count any more.
       - name: Facts gate — no claim may contradict facts.json
-        run: node scripts/facts-gate.mjs dist/client
+        run: node scripts/facts-gate.mjs dist/client --board-reference prerender-board-reference.json
 
       - name: Dist bundle guard — stranger paths + API functions present
         run: |
@@ -260,11 +275,21 @@ jobs:
       # (councilof-ai.pages.dev), not a hash preview. --branch=main alone
       # published a fat preview (2026-08-22, 42596ad2.…) while production
       # kept a thin Vite shell + honest 404 catch-all. Ship the same tree
-      # to both names the dashboard has used as production_branch.
+      # to the verified production branch only (the preflight fails on branch drift).
       # Same limit, checked again on the tree that is actually uploaded — the build itself
       # can emit a large asset that never existed in public/.
       - name: Pages size guard — 25 MiB per-file limit (built tree)
         run: node scripts/pages-size-guard.mjs dist/client
+
+      # No alias guessing: the read-only API comparison must prove that master is
+      # still the production target and that its declared bindings match this file.
+      # Preview shares storage today; do not stamp unused main/production previews.
+      - name: Production target and binding preflight — read-only, never deployment authority
+        env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
+        run: |
+          node --test scripts/review/pages-release-target.test.mjs
+          node --test scripts/review/deploy-target-wiring.test.mjs
+          node scripts/review/pages-release-target.mjs --config wrangler.jsonc --branch master
 
       - name: Deploy → councilof.ai
         timeout-minutes: 8
@@ -272,10 +297,7 @@ jobs:
         run: |
           set -euo pipefail
           npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=master --commit-dirty=true
-          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=main --commit-dirty=true
-          # Custom domain follows whichever name the dashboard set as production_branch.
-          # master.pages.dev can be fat while councilof.ai is thin. Write the third name too.
-          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=production --commit-dirty=true
+          # The read-only preflight selected master. The later public readback still checks the apex.
 
       # continue-on-error: a thin apex right after upload used to FAIL this
       # step and skip Recheck + Anti-clobber, leaving councilof.ai on a 7KB
@@ -309,16 +331,15 @@ jobs:
 
       # Trailing clobber: master.* stays fat (~212KB) while apex + pages.dev go
       # thin (~7KB Vite) ~2–4 min later (Pages Git auto-build or Mac wrangler).
-      # Re-stamp all three alias names from the same gated dist/client.
+      # Re-check the production target, then re-stamp only that same gated branch.
       - name: Anti-clobber — redeploy gated tree if assert or recheck failed
         if: steps.immediate.outcome == 'failure' || steps.recheck.outcome == 'failure'
         env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
         run: |
           set -euo pipefail
-          echo "RECHECK FAILED — re-stamping master/main/production aliases"
+          echo "RECHECK FAILED — re-stamping the verified master production target"
+          node scripts/review/pages-release-target.mjs --config wrangler.jsonc --branch master
           npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=master --commit-dirty=true
-          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=main --commit-dirty=true
-          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=production --commit-dirty=true
           sleep 30
           node scripts/assert-prerender-live.mjs --label anti-clobber \
             --host https://councilof.ai \
@@ -339,10 +360,9 @@ jobs:
             echo "hold: production still fat"
             exit 0
           fi
-          echo "hold lost — rewriting master/main/production"
+          echo "hold lost — rechecking and rewriting the verified production target"
+          node scripts/review/pages-release-target.mjs --config wrangler.jsonc --branch master
           npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=master --commit-dirty=true
-          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=main --commit-dirty=true
-          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=production --commit-dirty=true
           sleep 25
           node scripts/assert-prerender-live.mjs --label hold-heal \
             --host https://councilof.ai \

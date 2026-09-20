@@ -1,0 +1,208 @@
+{
+  "kind": "csoai.discovery-audit/0.1",
+  "audit": "Goal 6 — public discovery, anchor and index evidence audit",
+  "operator_session": "kimi-k3 goal-6",
+  "audited_at": "2026-09-20T02:34+01:00",
+  "doctrine": "Measurement, never certification. Submission != acceptance; listing != indexing; HTTP 200 != correct bytes; discovery != customer use. Unknown is a first-class value.",
+  "field_definitions": {
+    "LOCAL": "artifact exists in the working tree (committed or not)",
+    "PUSHED": "on origin (any branch) — verified by rev-parse / ls-remote",
+    "MERGED": "contained in origin/master",
+    "DEPLOYED": "served by the production surface (inferred from PUBLIC_READBACK of live bytes; GHA-on-master is the only deploy path)",
+    "PUBLIC_READBACK": "anonymous HTTP fetch returned 200 AND bytes hashed/compared (mismatch or unverifiable = false-with-note)",
+    "LISTED": "present in the external registry/index's own API",
+    "INVOKED": "direct evidence of actual tool/API invocation (this session's calls count for MCP/API; third-party traffic = unknown)",
+    "CUSTOMER_USED": "no telemetry exists in this repo that could establish this; always UNKNOWN unless externally attested"
+  },
+  "git_state": {
+    "branch": "live-roster-cycle",
+    "head": "3ffcb2ad4672fc4811c005e14edc18d87bbfbec5",
+    "head_on_origin_branch": true,
+    "head_merged_to_master": "yes — PR #2640; origin/master is 2 commits ahead (67155160)",
+    "working_tree": "DIRTY: 113 modified, 873 untracked, 1 deleted at audit time — none of that is pushed",
+    "github_repo_public": false,
+    "github_evidence": "anonymous GET github.com/CSOAI-ORG and /councilof-ai both 404; api.github.com/repos/CSOAI-ORG/councilof-ai 404; orgs/CSOAI-ORG/repos 404"
+  },
+  "surfaces": [
+    {
+      "surface": "councilof.ai canonical site (robots.txt, sitemap.xml, llms.txt)",
+      "subject": "CSOAI",
+      "LOCAL": true, "PUSHED": true, "MERGED": true, "DEPLOYED": true,
+      "PUBLIC_READBACK": "PASS — /robots.txt 200 6126b sha16 7d4ec2fe0a7eda59; /sitemap.xml 200 94397b sha16 ed3683e47bd6647f; /llms.txt 200 17186b sha16 c655357cf53937b3",
+      "LISTED": "n/a (self-hosted)", "INVOKED": "n/a", "CUSTOMER_USED": "UNKNOWN",
+      "note": "sitemap generated from App.tsx routes with a truth gate; llms.txt derived from live /api/gspc"
+    },
+    {
+      "surface": "csoai.org",
+      "subject": "CSOAI",
+      "LOCAL": "separate repo (csoai-static-deploy2)", "PUSHED": "UNKNOWN", "MERGED": "UNKNOWN", "DEPLOYED": true,
+      "PUBLIC_READBACK": "PASS-AS-REDIRECT — https://csoai.org/ returns 308 → https://councilof.ai/ (final 200, 258765b)",
+      "LISTED": "n/a", "INVOKED": "n/a", "CUSTOMER_USED": "UNKNOWN",
+      "note": "csoai.org root is a redirect, not independently served bytes; .well-known/did.json on csoai.org is the DID anchor and was NOT re-fetched this session (UNKNOWN)"
+    },
+    {
+      "surface": "public root.json + Merkle root",
+      "subject": "CSOAI",
+      "LOCAL": true, "PUSHED": true, "MERGED": true, "DEPLOYED": true,
+      "PUBLIC_READBACK": "PASS-EXACT — served sha256 dedb49d05cf8a37a… == repo public/root.json sha256, byte-identical; as_of 2026-09-15T07:13:43Z; card_count 305; merkle 07dd5eb3eb0e5c9e…",
+      "LISTED": "n/a", "INVOKED": "YES — MCP get_root this session: VALID, same merkle/count/as_of as HTTP readback", "CUSTOMER_USED": "UNKNOWN",
+      "note": "root.json is 5 days stale relative to audit date (as_of 2026-09-15); public-root.yml runs hourly — freshness gap worth explaining, not an error per se"
+    },
+    {
+      "surface": "card inclusion proof (/api/proof?sha=)",
+      "subject": "CSOAI",
+      "LOCAL": true, "PUSHED": true, "MERGED": true, "DEPLOYED": true,
+      "PUBLIC_READBACK": "PASS — leaf 056a1efd58d1… (leaf[0] of 305) verified VALID against live merkle via MCP verify_inclusion",
+      "LISTED": "n/a", "INVOKED": "YES (this session)", "CUSTOMER_USED": "UNKNOWN"
+    },
+    {
+      "surface": "GSPC board /api/gspc",
+      "subject": "CSOAI",
+      "LOCAL": true, "PUSHED": true, "MERGED": true, "DEPLOYED": true,
+      "PUBLIC_READBACK": "PASS — 200, 70527b, sha16 9699081c10c4106f; 23 slots / 22 measured via MCP board_totals invocation",
+      "LISTED": "n/a", "INVOKED": "YES (this session)", "CUSTOMER_USED": "UNKNOWN",
+      "note": "living_stamp signed under did:web:csoai.org#board-attestation-1; embedded superseded v0.1 stamp is explicitly UNVERIFIABLE and tracked as correction C-2026-0826-08 — retained, not hidden"
+    },
+    {
+      "surface": "Sigstore/Rekor root witness",
+      "subject": "CSOAI",
+      "LOCAL": true, "PUSHED": true, "MERGED": true, "DEPLOYED": true,
+      "PUBLIC_READBACK": "PASS-INDEPENDENT — /interop/root-witness-latest.json 200; Rekor entry at logIndex 2841551210 fetched anonymously from rekor.sigstore.dev (200); entry kind rekord, data.hash sha256 b6220613… == witness preimage_sha256",
+      "LISTED": "YES (public Rekor log)", "INVOKED": "readback only; inclusion proof not re-verified offline this session", "CUSTOMER_USED": "UNKNOWN",
+      "note": "anchors witness preimage hash, i.e. existence of the root-witness document; does not prove semantic truth of the root"
+    },
+    {
+      "surface": "OpenTimestamps root proof",
+      "subject": "CSOAI",
+      "LOCAL": true, "PUSHED": true, "MERGED": true, "DEPLOYED": true,
+      "PUBLIC_READBACK": "PASS-BYTES — https://councilof.ai/interop/root-dedb49d0.json.ots 200, 5093b, valid OTS magic header; digest inside proof == served root.json sha256",
+      "LISTED": "PENDING — witness status STAMPED_PENDING_BITCOIN; a pending timestamp is NOT Bitcoin-confirmed existence evidence",
+      "INVOKED": "no independent ots verify run this session (client not installed locally)", "CUSTOMER_USED": "UNKNOWN"
+    },
+    {
+      "surface": "MCP door https://councilof.ai/mcp + .well-known/mcp/server.json",
+      "subject": "CSOAI",
+      "LOCAL": true, "PUSHED": true, "MERGED": true, "DEPLOYED": true,
+      "PUBLIC_READBACK": "PASS — server.json 200 705b sha16 696ed126c61b2bb1; three MCP tools invoked live this session (board_totals, get_root, verify_inclusion), all consistent with HTTP readbacks",
+      "LISTED": "PARTIAL/DISCREPANCY — see MCP Registry row", "INVOKED": "YES (this session)", "CUSTOMER_USED": "UNKNOWN",
+      "note": "DISCREPANCY: server.json declares name io.github.CSOAI-ORG/councilof-ai v1.4.0; server-card.json declares io.github.CSOAI-ORG/gspc; the registry carries gspc only. Two in-repo manifests disagree with each other."
+    },
+    {
+      "surface": "Official MCP Registry",
+      "subject": "CSOAI",
+      "LOCAL": "publish workflow mcp-registry-publish.yml (master-only, OIDC)", "PUSHED": true, "MERGED": true, "DEPLOYED": "n/a (external registry)",
+      "PUBLIC_READBACK": "PASS — registry API anonymous 200",
+      "LISTED": "YES — io.github.CSOAI-ORG/gspc, status active, latest 1.4.2 published 2026-09-14; io.github.CSOAI-ORG/councilof-ai → 404",
+      "INVOKED": "registry readback only", "CUSTOMER_USED": "UNKNOWN",
+      "note": "VERSION SKEW: registry latest is 1.4.2; repo manifests claim 1.4.0. Submission vs acceptance distinguished: 11 versions accepted."
+    },
+    {
+      "surface": "npm csoai-gspc-mcp",
+      "subject": "CSOAI",
+      "LOCAL": "mcp/gspc-server/package.json", "PUSHED": true, "MERGED": true, "DEPLOYED": "n/a",
+      "PUBLIC_READBACK": "PASS — registry.npmjs.org anonymous 200",
+      "LISTED": "YES — dist-tags.latest 0.2.2, 5 versions, modified 2026-09-16T09:20:14Z",
+      "INVOKED": "UNKNOWN (no install/download telemetry)", "CUSTOMER_USED": "UNKNOWN"
+    },
+    {
+      "surface": "npm @csoai/gspc-cli (and other packages/*)",
+      "subject": "CSOAI",
+      "LOCAL": "16 in-repo packages under packages/", "PUSHED": true, "MERGED": true, "DEPLOYED": "n/a",
+      "PUBLIC_READBACK": "FAIL-BY-DESIGN? — registry.npmjs.org/@csoai/gspc-cli → 404",
+      "LISTED": "NO — in-repo packages are not on npm", "INVOKED": "NO", "CUSTOMER_USED": "UNKNOWN",
+      "note": "any doc implying npm availability of @csoai/* packages would currently fail readback"
+    },
+    {
+      "surface": "PyPI csoai-gspc",
+      "subject": "CSOAI",
+      "LOCAL": "scripts/spray/pypi/csoai-gspc/pyproject.toml (repo says v0.2.20260912)", "PUSHED": true, "MERGED": true, "DEPLOYED": "n/a",
+      "PUBLIC_READBACK": "PASS — pypi.org/pypi/csoai-gspc/json anonymous 200",
+      "LISTED": "YES — live version 0.2.20260915, 9 releases (live is NEWER than the in-repo pyproject)",
+      "INVOKED": "UNKNOWN", "CUSTOMER_USED": "UNKNOWN",
+      "note": "version skew repo(0.2.20260912) vs PyPI(0.2.20260915) — mirror lag or out-of-band publish"
+    },
+    {
+      "surface": "Hugging Face spaces",
+      "subject": "CSOAI",
+      "LOCAL": "spaces/ dir (gspc-board, gspc-lookup, gspc-node, interop; gspc-live-board superseded)", "PUSHED": true, "MERGED": true, "DEPLOYED": "UNKNOWN per-space",
+      "PUBLIC_READBACK": "PASS — huggingface.co/api/spaces?author=csoai returns 38 public spaces; https://huggingface.co/spaces/csoai/gspc-board resolves (uppercase CSOAI 307→lowercase)",
+      "LISTED": "YES (38 spaces under author csoai)", "INVOKED": "UNKNOWN (no HF telemetry in repo)", "CUSTOMER_USED": "UNKNOWN",
+      "note": "spaces/gspc-live-board is superseded locally but its public state was not individually read back (UNKNOWN); 'interop' under uppercase author 401s but lowercase author listing works"
+    },
+    {
+      "surface": "GitHub org mirror (CSOAI-ORG)",
+      "subject": "CSOAI",
+      "LOCAL": true, "PUSHED": true, "MERGED": true, "DEPLOYED": "n/a",
+      "PUBLIC_READBACK": "FAIL — org page, repo page, and REST API all 404 anonymously",
+      "LISTED": "NO (not publicly visible)", "INVOKED": "n/a", "CUSTOMER_USED": "UNKNOWN",
+      "note": "CONTRADICTION: root AGENTS.md states public surfaces incl. GitHub org are GENERATED MIRRORS. Anonymously the org does not exist. Either the mirror is private, renamed, or removed — a public-discovery failure until explained."
+    },
+    {
+      "surface": "Kaggle",
+      "subject": "CSOAI",
+      "LOCAL": "gpu-offload/kaggle-community-cells + kaggle-community-cells.yml (manual workflow)", "PUSHED": true, "MERGED": true, "DEPLOYED": "UNKNOWN",
+      "PUBLIC_READBACK": "FAIL — www.kaggle.com/csoai → 404",
+      "LISTED": "UNKNOWN/NO (no public profile at that slug)", "INVOKED": "UNKNOWN", "CUSTOMER_USED": "UNKNOWN"
+    },
+    {
+      "surface": "ONDO evidence — local candidate (token-evidence-twin canary)",
+      "subject": "ONDO",
+      "LOCAL": "measurement/registers/2026-09-19/* (canary + source observations + proof attempts + collectors)", "PUSHED": "UNKNOWN (untracked-area check not definitive; files exist locally)", "MERGED": "UNKNOWN", "DEPLOYED": false,
+      "PUBLIC_READBACK": "NO (LOCAL_DRAFT_ONLY by its own schema)", "LISTED": "NO", "INVOKED": "NO", "CUSTOMER_USED": "NO",
+      "note": "ONDO subject is BLOCKED_IDENTITY_PIN; ETH/LINK PENDING_COLLECTION; Ed25519 signing BLOCKED (gateway 405); Rekor/OTS NOT_ATTEMPTED. Correctly stopped at CANDIDATE_UNMEASURED — nothing public to audit."
+    },
+    {
+      "surface": "ONDO public-adjacent surfaces (OUSG/USDY)",
+      "subject": "ONDO",
+      "LOCAL": true, "PUSHED": true, "MERGED": true, "DEPLOYED": true,
+      "PUBLIC_READBACK": "PASS — /api/xrpl 200 (16 XRPL assets incl. 'OUSG Ondo Finance'); /archive/evm-ousg-ethereum/2026-09.jsonl 200, served sha256 == local sha256 (5b1119d9…, byte-exact)",
+      "LISTED": "n/a", "INVOKED": "readback only", "CUSTOMER_USED": "UNKNOWN",
+      "note": "directory index /archive/evm-ousg-ethereum/ itself 404s (SPA fallback) — only exact file paths serve; rwa-attest cards (harness/rwa-attest/cards/ondo_stk.json) are local and self-declared UNMEASURED"
+    },
+    {
+      "surface": "Chainlink evidence — local candidate",
+      "subject": "Chainlink",
+      "LOCAL": "token:LINK row in canary = PENDING_COLLECTION, LOCAL_DRAFT_ONLY; docs/outreach/drafts/chainlink-ccip.md = draft", "PUSHED": "UNKNOWN", "MERGED": "UNKNOWN", "DEPLOYED": false,
+      "PUBLIC_READBACK": "NO", "LISTED": "NO", "INVOKED": "NO", "CUSTOMER_USED": "NO",
+      "note": "no frozen Chainlink candidate JSONL published; correctly at CANDIDATE_UNMEASURED"
+    },
+    {
+      "surface": "Chainlink public-adjacent surfaces (CCIP wrapped-asset parity)",
+      "subject": "Chainlink",
+      "LOCAL": true, "PUSHED": true, "MERGED": true, "DEPLOYED": true,
+      "PUBLIC_READBACK": "PASS — /interop/wrapped-asset-parity-latest.json 200, 77263b; /api/wrapper?id=ccip-usdc-arbitrum returns a correct x402 402 challenge (payment-gated, not free)",
+      "LISTED": "n/a", "INVOKED": "402 challenge only (no payment made; no card minted)", "CUSTOMER_USED": "UNKNOWN",
+      "note": "a 402 is a challenge, NOT delivery; no integration/partnership claim about Chainlink is evidenced anywhere public"
+    },
+    {
+      "surface": ".well-known index + agent doors",
+      "subject": "CSOAI",
+      "LOCAL": "public/.well-known/ (~304 doors) + agents/ descriptors", "PUSHED": true, "MERGED": true, "DEPLOYED": true,
+      "PUBLIC_READBACK": "PASS — /.well-known/index.json 200 59723b sha16 6f3e531366fa3e60; /.well-known/agent.json 200 13018b",
+      "LISTED": "self-declared", "INVOKED": "UNKNOWN for external agents", "CUSTOMER_USED": "UNKNOWN"
+    },
+    {
+      "surface": "evidence probes of MCP ecosystem (evidence/mcp-registry.json, council-mcp-door.json)",
+      "subject": "CSOAI",
+      "LOCAL": true, "PUSHED": true, "MERGED": true, "DEPLOYED": "partially (evidence/ is not all served)",
+      "PUBLIC_READBACK": "NOT-CHECKED as served URLs", "LISTED": "n/a", "INVOKED": "n/a", "CUSTOMER_USED": "UNKNOWN",
+      "note": "the two probes disagree (8 tools/2 servers on 2026-08-27 vs 7 tools on 2026-09-01) and both self-flag the disagreement — retained as explicit conflict, per doctrine"
+    }
+  ],
+  "stale_or_dead_routes_retained_as_failures": [
+    "post-deploy-verify.yml, claims-e2e.yml, hf-gspc-surface-sync.yml, gspc-spray.yml, sov-stack-e2e.yml — workflow_run triggers referenced the OLD deploy.yml name ONLY in the dirty local tree (uncommitted rename lane); origin/master is self-consistent and these fire in production. CORRECTED 2026-09-20: the audit's first draft wrongly implied production deadness. Latent defect fixed locally + guarded (deploy.yml guard step, pre-push-gates.sh, extended pin test)",
+    "/archive/evm-ousg-ethereum/ directory index 404 (file paths serve; index does not)",
+    "github.com/CSOAI-ORG org+repo 404 anonymously (see surfaces)",
+    "kaggle.com/csoai 404",
+    "@csoai/* npm scope 404",
+    "MCP Registry name councilof-ai 404 (only gspc exists)",
+    "spaces/gspc-live-board superseded locally; public state unverified"
+  ],
+  "claims_NOT_made_by_this_audit": [
+    "no customer use, revenue, or SKU claims",
+    "no certification/endorsement language; measurement only",
+    "no claim that Rekor/OTS entries prove semantic truth — Rekor anchors the witness preimage hash; OTS is PENDING and stays pending",
+    "no production deployment performed; no git mutation performed",
+    "no ONDO/Chainlink measurement claim — both remain CANDIDATE_UNMEASURED (local drafts, correctly unpublished)"
+  ]
+}

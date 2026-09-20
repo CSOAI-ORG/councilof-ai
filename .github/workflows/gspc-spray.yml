@@ -39,7 +39,7 @@ on:
     # The `name:` string below is deploy.yml's — a rename there would silently stop this trigger, so
     # scripts/spray/test_gspc_spray_skip.py pins the coupling.
     workflows:
-      - "Build + deploy site (prerender + fields + tour → both domains)"
+      - "Build + deploy site (gated production branch)"
     types: [completed]
   workflow_dispatch:
     inputs:

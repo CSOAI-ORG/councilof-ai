@@ -1,0 +1,11 @@
+PASS happy path verifies VALID from exact bytes
+PASS tampered manifest is INVALID
+PASS signer outage fails closed (refuses; UNSIGNED_DECLARED; no signature emitted)
+PASS mirror outage -> UNREACHABLE (no publication claim)
+PASS mirror serving released bytes -> READBACK_VERIFIED
+PASS mirror serving wrong bytes -> MISMATCH (HTTP 200 != correct bytes)
+PASS timestamp service outage -> UNCHECKABLE
+PASS unconfirmed stamp stays PENDING
+PASS confirmed stamp binds the exact manifest bytes
+
+FAIL-CLOSED SUMMARY: all rehearsals behaved as required

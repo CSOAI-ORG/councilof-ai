@@ -15,6 +15,7 @@
  */
 import { readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
+import { projection } from "./retired-proof-archive.mjs";
 
 const LIMIT = 25 * 1024 * 1024;
 const FILE_CAP = 20000;      // Cloudflare Pages: max files per deployment
@@ -41,8 +42,13 @@ const walk = (d, top) => {
 };
 walk(dist);
 
+if(process.argv.includes('--packed-history-projection')) {
+  const projected=projection(dist,files);
+  console.log('Historical evidence packaging projection:',JSON.stringify(projected));
+  files=projected.projected;
+}
 const reportsFiles = byTop.reports || 0;
-console.log(`pages-size-guard: ${dist} = ${files} files · ${(bytes / 1048576).toFixed(1)} MiB (Pages cap ${FILE_CAP} files; reports/ = ${reportsFiles} files)`);
+console.log(`pages-size-guard: ${dist} = ${files} ${process.argv.includes("--packed-history-projection") ? "projected deployment files" : "physical files"} · ${(bytes / 1048576).toFixed(1)} MiB (Pages cap ${FILE_CAP} files; reports/ = ${reportsFiles} files)`);
 if (files > FILE_CAP) {
   console.error(`✗ pages-size-guard: ${files} files exceeds Cloudflare Pages' ${FILE_CAP}-file deployment limit`);
   const top = Object.entries(byTop).sort((a, b) => b[1] - a[1]).slice(0, 8);

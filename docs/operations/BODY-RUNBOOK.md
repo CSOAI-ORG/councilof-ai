@@ -26,7 +26,7 @@
 | flip | hub-queue-land | on push / manual | push | `.github/workflows/hub-queue-land.yml` |
 | flip | sticky335-land-atomic | on push / manual | workflow_dispatch | `.github/workflows/sticky335-land-atomic.yml` |
 | anchor | public-root | cron 7 * * * * | schedule | `.github/workflows/public-root.yml` |
-| deliver | Build + deploy site (prerender + fields + tour → both domains) | cron 20 */3 * * * | push | `.github/workflows/deploy.yml` |
+| deliver | Build + deploy site (gated production branch) | cron 20 */3 * * * | push | `.github/workflows/deploy.yml` |
 | deliver | csoai-site deploy — full static site from csoai-static-deploy2 main | cron 15 7 * * * | workflow_dispatch | `.github/workflows/csoai-site-deploy.yml` |
 | ledger | Drift guard — live site vs ruled canon | cron */30 * * * * | schedule | `.github/workflows/drift-guard.yml` |
 | ledger | evidence-smoke | cron 17 */6 * * * | push | `.github/workflows/evidence-smoke.yml` |

@@ -133,7 +133,7 @@ echo
 
 # --- 1. Active deploy queue (no merge during a busy deploy) ---
 echo "--- 1. Active deploy queue ---"
-DEPLOY_RUNS=$(gh run list --repo CSOAI-ORG/councilof-ai --workflow "Build + deploy site (prerender + fields + tour → both domains)" --limit 5 --json status,conclusion 2>/dev/null | python3 -c "
+DEPLOY_RUNS=$(gh run list --repo CSOAI-ORG/councilof-ai --workflow "Build + deploy site (gated production branch)" --limit 5 --json status,conclusion 2>/dev/null | python3 -c "
 import json, sys
 runs = json.load(sys.stdin)
 busy = [r for r in runs if r.get('status') in ('in_progress', 'pending', 'queued')]
