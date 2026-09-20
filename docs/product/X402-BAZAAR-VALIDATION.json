@@ -1,0 +1,155 @@
+{
+  "schema": "csoai.x402-bazaar-validation/0.1",
+  "as_of": "2026-09-20T01:55:11Z",
+  "manifest": "https://councilof.ai/.well-known/x402.json",
+  "validator": "https://api.cdp.coinbase.com/platform/v2/x402/validate",
+  "declared": 11,
+  "valid": 10,
+  "accepted": 11,
+  "indexed": 0,
+  "one_validation_payment_each_atomic_by_network_asset": {
+    "eip155:8453:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": 100000
+  },
+  "results": [
+    {
+      "resource": "https://councilof.ai/api/free-door",
+      "valid": false,
+      "simulation_outcome": "accepted",
+      "index": null,
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "amount_atomic": "0",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "required_checks": 23,
+      "failed_required_checks": [
+        "accepts[0].amount"
+      ]
+    },
+    {
+      "resource": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index": null,
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "amount_atomic": "10000",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "required_checks": 23,
+      "failed_required_checks": []
+    },
+    {
+      "resource": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index": null,
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "amount_atomic": "10000",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "required_checks": 23,
+      "failed_required_checks": []
+    },
+    {
+      "resource": "https://councilof.ai/api/eunomia-data?feed=1",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index": null,
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "amount_atomic": "10000",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "required_checks": 23,
+      "failed_required_checks": []
+    },
+    {
+      "resource": "https://councilof.ai/api/proof?bundle=1",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index": null,
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "amount_atomic": "10000",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "required_checks": 23,
+      "failed_required_checks": []
+    },
+    {
+      "resource": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index": null,
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "amount_atomic": "10000",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "required_checks": 23,
+      "failed_required_checks": []
+    },
+    {
+      "resource": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index": null,
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "amount_atomic": "10000",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "required_checks": 23,
+      "failed_required_checks": []
+    },
+    {
+      "resource": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index": null,
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "amount_atomic": "10000",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "required_checks": 23,
+      "failed_required_checks": []
+    },
+    {
+      "resource": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index": null,
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "amount_atomic": "10000",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "required_checks": 23,
+      "failed_required_checks": []
+    },
+    {
+      "resource": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index": null,
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "amount_atomic": "10000",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "required_checks": 23,
+      "failed_required_checks": []
+    },
+    {
+      "resource": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+      "valid": true,
+      "simulation_outcome": "accepted",
+      "index": null,
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "amount_atomic": "10000",
+      "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "required_checks": 23,
+      "failed_required_checks": []
+    }
+  ],
+  "not_proof_of": [
+    "listing creation",
+    "settlement",
+    "revenue",
+    "demand"
+  ]
+}
