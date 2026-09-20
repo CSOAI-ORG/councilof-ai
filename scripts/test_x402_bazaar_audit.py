@@ -114,6 +114,19 @@ def test_manifest_coverage_separates_current_stale_and_missing():
     assert result["manifest_missing"] == ["https://councilof.ai/api/c"]
 
 
+def test_render_preserves_uncheckable_index_without_claiming_absence():
+    rendered = MODULE.render_markdown([{
+        "index": "moving index",
+        "url": "https://index.example/resources",
+        "status": "UNCHECKABLE",
+        "error_type": "ValueError",
+        "error": "pagination changed",
+    }], 60)
+    assert "status: **UNCHECKABLE**" in rendered
+    assert "no presence or absence conclusion" in rendered
+    assert "No matching listing" not in rendered
+
+
 if __name__ == "__main__":
     tests = [value for name, value in sorted(globals().items()) if name.startswith("test_")]
     for test in tests:
