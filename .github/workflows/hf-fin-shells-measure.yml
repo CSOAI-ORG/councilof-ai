@@ -17,6 +17,7 @@ on:
           - runpod
           - chainlink-ondo
           - global-index
+          - chainlink-ondo-global
         default: financial
       intake_run_id:
         description: "Successful RunPod intake run ID (required only for runpod)"
@@ -46,7 +47,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           # mill cards batch to the dispatch branch (auto-eat-feed / mill PR), never 90s-push master
-          ref: ${{ (inputs.target == 'mill' || inputs.target == 'runpod') && github.sha || 'master' }}
+          # Review-only targets must sign the exact bytes on the dispatched
+          # branch.  Checking out master here made the Chainlink/Ondo and
+          # global-index sources invisible to the signer.
+          ref: ${{ (inputs.target == 'mill' || inputs.target == 'runpod' || inputs.target == 'chainlink-ondo' || inputs.target == 'global-index' || inputs.target == 'chainlink-ondo-global') && github.sha || 'master' }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -124,6 +128,9 @@ jobs:
             python3 scripts/sign_chainlink_ondo_directory.py
           elif [ "$T" = "global-index" ]; then
             python3 scripts/sign_global_measurement_index.py
+          elif [ "$T" = "chainlink-ondo-global" ]; then
+            python3 scripts/sign_chainlink_ondo_directory.py
+            python3 scripts/sign_global_measurement_index.py
           else
             python3 scripts/sign_financial_runs.py
           fi
@@ -147,6 +154,8 @@ jobs:
             git add public/interop/chainlink-ondo-2026-09
           elif [ "$T" = "global-index" ]; then
             git add public/interop/global-index-2026-09
+          elif [ "$T" = "chainlink-ondo-global" ]; then
+            git add public/interop/chainlink-ondo-2026-09 public/interop/global-index-2026-09
           else
             git add public/interop/financial-measure-card-*.json
           fi
@@ -155,7 +164,7 @@ jobs:
             exit 0
           fi
           git commit -m "${T}-measure: sign compact cards via OIDC board-sign"
-          if [ "$T" = "mill" ] || [ "$T" = "runpod" ] || [ "$T" = "chainlink-ondo" ] || [ "$T" = "global-index" ]; then
+          if [ "$T" = "mill" ] || [ "$T" = "runpod" ] || [ "$T" = "chainlink-ondo" ] || [ "$T" = "global-index" ] || [ "$T" = "chainlink-ondo-global" ]; then
             git push origin "HEAD:$DISPATCH_BRANCH"
           else
             git push origin HEAD:master
