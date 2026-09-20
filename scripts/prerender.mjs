@@ -1,3 +1,5 @@
+import {captureBoardReference,finishBoardReference} from './surface/render-board-reference.mjs';
+import { parseRenderRequest, validateOfflineOrigin, allowOfflineRequest, snapshotFailure } from "./surface/prerender-io.mjs";
 /* prerender.mjs — turn a Vite SPA build into real HTML files, one per route.
  *
  * THE DIAGNOSIS THIS IMPLEMENTS. csoai.org is not a site with a broken prerenderer. It
@@ -121,6 +123,8 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
 // The remedy filed against that outage ("--prod-origin at a known-good origin") would therefore
 // have traded a dead board for sitewide wrong canonicals. Two questions, two flags.
 const DATA_ORIGIN = arg("data-origin", PROD_ORIGIN);
+const OFFLINE_REVIEW = arg("offline-review", "false") === "true";
+if (OFFLINE_REVIEW) validateOfflineOrigin(DATA_ORIGIN);
 
 // Delete any previous report BEFORE doing anything. A tracked prerender-report.json
 // survived a crashed run on 2026-08-26 — Playwright's chromium had been updated away, the
@@ -489,11 +493,21 @@ function restampShellAssetTags(capturedHtml, shellHtml) {
 }
 
 const shell = readFileSync(join(DIST, "index.html"), "utf8");
+// Freeze one validated full-board response for every headline in this renderer run.
+const BOARD_REFERENCE = 'prerender-board-reference.json';
+const frozenBoard = await captureBoardReference(DIST,new URL('/api/gspc',DATA_ORIGIN).href,BOARD_REFERENCE);
+
 // Every non-2xx or unreachable response the data proxy saw, so a failed run can name its cause
 // instead of leaving 19 identical BAKED-FETCH-FAILURE lines and no explanation.
 const dataMiss = [];
 const srv = http.createServer((q, r) => {
-  const p = decodeURIComponent(q.url.split("?")[0]);
+  if (!['GET','HEAD'].includes(q.method)) { r.writeHead(405); r.end('Prerender is read-only'); return; }
+  let parsed;
+  try { parsed=parseRenderRequest(q.url,DATA_ORIGIN); } catch { r.writeHead(400); r.end('Invalid render path'); return; }
+  const p = parsed.pathname;
+  if(p==='/api/gspc'&&!new URL(q.url,'http://render.invalid').search) {
+    r.writeHead(200,{'content-type':'application/json','cache-control':'no-store'});r.end(q.method==='HEAD'?undefined:frozenBoard);return;
+  }
   const f = join(DIST, p);
   try {
     if (existsSync(f) && statSync(f).isFile()) {
@@ -508,7 +522,7 @@ const srv = http.createServer((q, r) => {
   // 2026-08-25 /gspc-scoreboard defect). Proxy them to production so snapshots capture
   // the real board state.
   if (p.startsWith("/api/") || p.startsWith("/signed/")) {
-    fetch(DATA_ORIGIN + p).then(async res => {
+    fetch(parsed.target, {signal: AbortSignal.timeout(12000)}).then(async res => {
       const body = Buffer.from(await res.arrayBuffer());
       if (!res.ok) dataMiss.push(`${res.status} ${p}`);
       r.writeHead(res.status, { "content-type": res.headers.get("content-type") || "application/json" });
@@ -536,7 +550,7 @@ await new Promise((resolve, reject) => {
     else reject(e);
   };
   srv.once("error", onErr);
-  srv.listen(REQUESTED_PORT, () => { srv.off("error", onErr); resolve(); });
+  srv.listen(REQUESTED_PORT, "127.0.0.1", () => { srv.off("error", onErr); resolve(); });
 }).catch(e => { console.error(e.message); process.exit(1); });
 PORT = srv.address().port;
 
@@ -625,7 +639,8 @@ async function worker(id) {
   const errs = [];
   const openPage = async () => {
     gen = browserGen;
-    const pg = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    const pg = await browser.newPage({ viewport: { width: 1280, height: 900 }, serviceWorkers: 'block' });
+    if (OFFLINE_REVIEW) await pg.route('**/*', route => allowOfflineRequest(route.request().url(),route.request().method(),`http://localhost:${PORT}`) ? route.continue() : route.abort());
     pg.on("pageerror", e => errs.push(e.message.slice(0, 100)));
     return pg;
   };
@@ -639,6 +654,7 @@ async function worker(id) {
   let page = await openPage();
   while (queue.length) {
     const route = queue.shift();
+    errs.splice(0); // A failure belongs to this route, not the next one.
     const rec = { route, chars: 0, ok: false };
     // These pages call Pages Functions (/api/assess, /api/lead, MCP /tools, x402)
     // that do not exist on the Vite preview used for prerender. The snapshot then
@@ -734,8 +750,10 @@ async function worker(id) {
       // A snapshot that captured a data-fetch failure must be UNABLE to ship: it would
       // bake the error into the crawler-visible page (2026-08-25: /gspc-scoreboard went
       // live reading "Board fetch failed"). Refuse to write it, count it as an error.
-      if (/fetch failed|HTML instead of JSON|Failed to fetch/i.test(info.text)) {
-        rec.err = "BAKED-FETCH-FAILURE refused (page text contains a fetch error)";
+      const rejected = snapshotFailure(info.text, errs);
+      if (rejected) {
+        rec.err = rejected;
+        rec.errs = errs.splice(0);
         results.push(rec);
         console.log(`ERR  ${String(rec.chars).padStart(6)}ch  ${rec.route}  ${rec.err}`);
         continue;
@@ -880,5 +898,7 @@ if (dups.length) {
   dups.slice(0, 5).forEach(([t, v]) => console.log(`  ${v.length}×  "${t.slice(0, 60)}"`));
 }
 writeFileSync("prerender-report.json", JSON.stringify(results, null, 1));
+finishBoardReference(BOARD_REFERENCE,'prerender-report.json');
+writeFileSync("prerender-context.json", JSON.stringify({observed_at:new Date().toISOString(),mode:OFFLINE_REVIEW?'PRIVATE_OFFLINE_REVIEW':'CONFIGURED_DATA_ORIGIN',data_origin:DATA_ORIGIN,route_count:results.length,production_verified:false,external_browser_requests:OFFLINE_REVIEW?'BLOCKED':'NOT_MEASURED'},null,2));
 console.log(`\nwrote prerender-report.json`);
 console.log(`Ship only if THIN is small and you have looked at every route in it.`);

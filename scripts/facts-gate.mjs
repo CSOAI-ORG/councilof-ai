@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import {currentCountContent,isFrozenBankSubset} from './surface/facts-scope.mjs';
+import {verifyBoardReference,boardCounts} from './surface/render-board-reference.mjs';
 /**
  * facts-gate.mjs — fail any build whose PRERENDERED output contradicts facts.json.
  *
@@ -220,6 +222,7 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
     // A real sentence "The board carries 0 axes." has no N·M· before the digit.
     if (/\d{1,3}[·.]\d{1,3}[·.]\s*$/.test(before)) continue;
     if (QUALIFIED_AFTER.test(text.slice(COUNT_RE.lastIndex))) continue;
+    if (isFrozenBankSubset(n,liveCount,text.slice(COUNT_RE.lastIndex))) continue;
 
     // A subset claim is only a subset if it is SMALLER than the whole. "23 axes
     // carry X" against a 22-axis board is still a contradiction and still fails.
@@ -259,8 +262,8 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
       file,
       text: m[0],
       why:
-        `Hardcoded count "${m[0]}" disagrees with the live board ` +
-        `(${facts.counts.axis_count.endpoint} -> ${facts.counts.axis_count.field} = ${liveCount}). ` +
+        `Count "${m[0]}" disagrees with the selected board reference ` +
+        `(validated totals.axes = ${liveCount}; source and digest are printed above). ` +
         `facts.json: counts are a POINTER, never a typed integer.`,
       ctx: ctx(text, m.index, COUNT_RE.lastIndex),
     });
@@ -299,8 +302,8 @@ function ruleMeasuredOverclaim(facts, file, text, add, liveMeasured) {
         file,
         text: m[0],
         why:
-          `"${m[0]}" claims ${n} measured axes, but the live board reports only ${liveMeasured} ` +
-          `measured (${facts.counts.axis_count.endpoint} -> totals.measured_axes). The board's axis ` +
+          `"${m[0]}" claims ${n} measured axes, but the selected board reference reports only ${liveMeasured} ` +
+          `measured (validated totals.measured_axes). The board's axis ` +
           `count and its measured count are DIFFERENT NUMBERS: a published slot is not a measurement. ` +
           `Quote totals.public_count, which carries both.`,
         ctx: ctx(text, m.index, re.lastIndex),
@@ -486,45 +489,6 @@ function pick(obj, path) {
   return String(path || "").split(".").reduce((o, k) => (o == null ? o : o[k]), obj);
 }
 
-async function liveAxisCount(facts) {
-  const ac = facts.counts?.axis_count;
-  const ep = ac?.endpoint;
-  const numericPath = ac?.numeric_field || "totals.axes";
-  if (!ep || process.env.FACTS_GATE_OFFLINE === "1") {
-    return ac?.observed?.axes ?? null;
-  }
-  try {
-    const res = await fetch(ep, { signal: AbortSignal.timeout(20000) });
-    const j = await res.json();
-    const n = pick(j, numericPath);
-    if (typeof n === "number") return n;
-    console.warn(
-      `facts-gate: ${ep} -> ${numericPath} is ${typeof n}, not a number; ` +
-        `falling back to the recorded observation. Check facts.json numeric_field.`
-    );
-  } catch {
-    console.warn(
-      `facts-gate: could not reach ${ep}; falling back to recorded observation (non-binding).`
-    );
-  }
-  return facts.counts?.axis_count?.observed?.axes ?? null;
-}
-
-async function liveMeasuredCount(facts) {
-  const ac = facts.counts?.axis_count;
-  const ep = ac?.endpoint;
-  const path = ac?.measured_numeric_field || "totals.measured_axes";
-  if (!ep || process.env.FACTS_GATE_OFFLINE === "1") return ac?.observed?.measured_axes ?? null;
-  try {
-    const res = await fetch(ep, { signal: AbortSignal.timeout(20000) });
-    const n = pick(await res.json(), path);
-    if (typeof n === "number") return n;
-  } catch {
-    console.warn(`facts-gate: could not reach ${ep} for the measured count; using the recorded observation.`);
-  }
-  return ac?.observed?.measured_axes ?? null;
-}
-
 function runRules(facts, files, rootDir, liveCount, liveMeasured) {
   const violations = [];
   const add = (v) => violations.push(v);
@@ -533,7 +497,8 @@ function runRules(facts, files, rootDir, liveCount, liveMeasured) {
     const raw = readFileSync(f, "utf8");
     const text = contentOf(f, raw);
     ruleBoundary(facts, rel, text, add);
-    ruleAxisCount(facts, rel, text, add, liveCount, raw);
+    const countText=contentOf(f,currentCountContent(raw));
+    ruleAxisCount(facts, rel, countText, add, liveCount, raw);
     ruleMeasuredOverclaim(facts, rel, text, add, liveMeasured);
     ruleCapabilityTense(facts, rel, text, add);
     ruleAnchorCount(facts, rel, text, add);
@@ -665,7 +630,7 @@ async function selftest(facts) {
   const liveMeasured = facts.counts?.axis_count?.observed?.measured_axes ?? null;
   let pass = 0;
   let fail = 0;
-  console.log(`facts-gate --selftest  (live axis count = ${liveCount})\n`);
+  console.log(`facts-gate --selftest  (reference axis count = ${liveCount})\n`);
   for (const testCase of SELFTEST_CASES) {
     const [name, html, shouldFail, filePath] = testCase;
     const file = filePath || "selftest";
@@ -716,10 +681,24 @@ if (!root || !existsSync(root)) {
   process.exit(2);
 }
 
-const liveCount = await liveAxisCount(facts);
-const liveMeasured = await liveMeasuredCount(facts);
+const referenceFlag=args.indexOf('--board-reference');
+const referenceFile=referenceFlag<0?null:args[referenceFlag+1];
+let counts,referenceScope;
+if(referenceFlag>=0){
+  if(!referenceFile)throw new Error('Explicit board-reference path required');
+  const reference=verifyBoardReference(referenceFile,root);counts=reference.counts;referenceScope=reference.scope+' '+reference.board_sha256;
+}else{
+  // A live-only invocation requires one successful response, never a stale recorded count.
+  if(process.env.FACTS_GATE_OFFLINE==='1')throw new Error('Offline facts check requires an exact --board-reference from the completed render');
+  const ep=facts.counts?.axis_count?.endpoint;if(!ep)throw new Error('Board endpoint missing');
+  const response=await fetch(ep,{signal:AbortSignal.timeout(20000),redirect:'error'});
+  if(!response.ok||!response.headers.get('content-type')?.includes('application/json'))throw new Error('Board reference unavailable; no historical fallback');
+  const raw=Buffer.from(await response.arrayBuffer());counts=boardCounts(raw);referenceScope='ONE_CURRENT_RESPONSE_NOT_RENDER_BOUND';
+}
+const liveCount=counts.axes,liveMeasured=counts.measured_axes;
+console.log('facts-gate reference scope:',referenceScope);
 const files = walk(root);
-console.log(`facts-gate: scanning ${files.length} prerendered files in ${root} (live axis count = ${liveCount})`);
+console.log(`facts-gate: scanning ${files.length} prerendered files in ${root} (reference axis count = ${liveCount})`);
 
 const violations = runRules(facts, files, root, liveCount, liveMeasured);
 report(violations);

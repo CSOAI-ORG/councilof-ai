@@ -20,7 +20,7 @@ on:
     # release behind while faithfully copying yesterday's production bytes.
     workflows:
       - "public-root"
-      - "Build + deploy site (prerender + fields + tour → both domains)"
+      - "Build + deploy site (gated production branch)"
     types: [completed]
   workflow_dispatch:
     inputs:

@@ -10,7 +10,7 @@ name: Post-deploy verification
 
 on:
   workflow_run:
-    workflows: ["Build + deploy site (prerender + fields + tour → both domains)"]
+    workflows: ["Build + deploy site (gated production branch)"]
     types: [completed]
 
 concurrency:

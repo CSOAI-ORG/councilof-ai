@@ -62,6 +62,17 @@ node scripts/price-gate.mjs --json-only >/dev/null 2>&1 \
   || { echo "  ✖ price-gate: a published price is in public/ JSON (no public $ prices)"; \
        node scripts/price-gate.mjs --json-only 2>&1 | grep -E "^\s+\S+\.json:" | head -12; fail=1; }
 
+# ADDED 2026-09-20. workflow_run couples follow-on workflows to deploy.yml by its
+# `name:` STRING. A rename lane changed deploy.yml's name without touching the five
+# followers — every one of them would have gone silent on merge with no red anywhere.
+# The fix and the pin test exist (scripts/spray/test_gspc_spray_skip.py), but a pin
+# nobody runs is decoration. This is the one-second version, before the push.
+deploy_name=$(sed -n 's/^name: *//p' .github/workflows/deploy.yml | head -1 | tr -d '"' | tr -d "'")
+for f in post-deploy-verify claims-e2e sov-stack-e2e hf-gspc-surface-sync gspc-spray; do
+  grep -qF "$deploy_name" ".github/workflows/$f.yml" \
+    || { echo "  ✖ trigger-coupling: $f.yml does not reference deploy.yml's name ('$deploy_name') — a rename must be applied to all five followers"; fail=1; }
+done
+
 if [ "$fail" -ne 0 ]; then
   echo
   echo "  Push blocked. These are the same gates that will fail the deploy in ~12"
