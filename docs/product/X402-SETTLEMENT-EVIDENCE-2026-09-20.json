@@ -1,0 +1,96 @@
+{
+  "schema": "csoai.x402-settlement-evidence/0.1",
+  "as_of": "2026-09-20T02:17:52Z",
+  "classification": "SELF_TEST",
+  "revenue_recognition": false,
+  "demand_evidence": false,
+  "network": "eip155:8453",
+  "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  "asset_symbol": "USDC",
+  "amount_atomic": "10000",
+  "amount_display": "0.01 USDC",
+  "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+  "transaction": {
+    "hash": "0x4457e74d2a44dd7be4b5a03a21c93398208cf1bb05bc89ffaf09ac5afe6f9800",
+    "block_number": 51540546,
+    "block_timestamp": "2026-09-20T02:13:59Z",
+    "transaction_sender": "0xb2bd29925cbbcea7628279c91945ca5b98bf371b",
+    "usdc_transfer_from": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "usdc_transfer_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "transfer_interpretation": "Self-test EIP-3009 authorization relayed on Base; the USDC Transfer event moves 0.01 USDC from and to the estate wallet.",
+    "explorer": "https://basescan.org/tx/0x4457e74d2a44dd7be4b5a03a21c93398208cf1bb05bc89ffaf09ac5afe6f9800"
+  },
+  "delivery": {
+    "resource": "https://councilof.ai/api/proof?bundle=1",
+    "http_status": 200,
+    "settled": true,
+    "payment_response_header": null,
+    "body_schema": "csoai.public-root-proof/0.1",
+    "body_kind": "bundle",
+    "body_as_of": "2026-09-15T07:13:43Z",
+    "body_merkle_root": "07dd5eb3eb0e5c9eae40f56ce859a064dff95f2eed47acad64fb54a1aa0122e2",
+    "body_proof_count": 305
+  },
+  "bazaar_validation": {
+    "as_of": "2026-09-20T02:17:52Z",
+    "declared": 11,
+    "accepted": 11,
+    "valid_paid_resources": 10,
+    "coinbase_indexed": 0,
+    "state": "VALIDATED_NOT_INDEXED"
+  },
+  "gspc_state": {
+    "source": "https://councilof.ai/api/gspc",
+    "schema": "csoai.gspc-axes/0.5",
+    "axis_slots": 23,
+    "measured_axes": 22,
+    "unmeasured_axes": 1,
+    "unmeasured_axis": "effect-binding",
+    "financial_run_artifacts": 8,
+    "financial_ed25519_signed": 1,
+    "financial_content_addressed_unsigned": 7,
+    "verification_state": "SIGNED"
+  },
+  "public_root_state": {
+    "source": "https://councilof.ai/api/state",
+    "as_of": "2026-09-15T07:13:43Z",
+    "card_count": 305,
+    "merkle_root": "07dd5eb3eb0e5c9eae40f56ce859a064dff95f2eed47acad64fb54a1aa0122e2",
+    "signature_state": "SIGNED_ENVELOPE_PRESENT",
+    "freshness": "STALE_AT_OBSERVATION"
+  },
+  "root_refresh_attempt": {
+    "as_of": "2026-09-20T02:17:52Z",
+    "workflow": "public-root.yml",
+    "mode": "dry_run=true",
+    "result": "REJECTED",
+    "error": "Actions has been disabled for this user.",
+    "last_successful_run": "2026-09-14T10:43:35Z"
+  },
+  "digest_seal_attempt": {
+    "input": "sha256:ac1d81371d5f79fa7a74fe3aa8f8c5b0dedaf2a3cf5c46ed66140c89451448f6",
+    "payload_sent": "digest only",
+    "result": "UNREACHABLE",
+    "attempts": [
+      {
+        "gateway": "https://os.meok.ai/api",
+        "status": 405
+      },
+      {
+        "gateway": "https://councilof.ai/api",
+        "status": 404
+      }
+    ],
+    "signature": null,
+    "verification": "UNCHECKABLE",
+    "note": "No signature was invented or substituted. The governance MCP returned explicit endpoint failures."
+  },
+  "claims": [
+    "The x402 rail settled this self-test and released the paid artifact.",
+    "The transaction does not establish revenue, customer demand, or Coinbase Bazaar indexing.",
+    "The delivered root bundle was already signed but stale at observation time.",
+    "The attempted root dry run did not execute because GitHub Actions rejected dispatch for the user.",
+    "A Layer-0 digest seal was attempted through the published governance MCP and is UNCHECKABLE because both configured gateways were unreachable for signing."
+  ],
+  "caveat": "Measurement, not certification. This record distinguishes a self-test settlement, artifact delivery, discovery validation, indexing, revenue, and root freshness."
+}
