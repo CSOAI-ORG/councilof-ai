@@ -4,14 +4,16 @@
     "model": "chainlink-ondo-publisher-token-inventory-2026-09-20",
     "axis": "token_address_directory",
     "as_of": "2026-09-20T03:00:00Z",
-    "n": 1066,
+    "n": 1068,
     "status": "MEASURED",
     "measurement": {
       "chainlink_publisher_rows": 148,
       "chainlink_rpc_probed": 4,
       "ondo_publisher_rows": 918,
       "ondo_rpc_match": 918,
-      "ondo_rpc_mismatch": 0
+      "ondo_rpc_mismatch": 0,
+      "ondo_core_evm_probed": 2,
+      "ondo_ousg_xrpl_reference": 1
     },
     "evidence": [
       {
@@ -25,6 +27,10 @@
       {
         "path": "public/interop/ondo-token-onchain-probe-2026-09-20.json",
         "sha256": "7beb5352455d9c1a01b7a8c5d40c08416d3943a9f40d4887d817384527677615"
+      },
+      {
+        "path": "public/interop/ondo-core-token-probe-2026-09-20.json",
+        "sha256": "33cec0f6e61d95869b3f7efc338dba03373fc08308e8773aa7b82963446f9c33"
       }
     ],
     "source_sha256": {
@@ -45,6 +51,7 @@
     },
     "unmeasured": [
       "144 LINK directory rows lack this run\u2019s RPC metadata probe",
+      "issuer-authenticated ONDO contract-address directory and OUSG EVM address",
       "cross-chain supply reconciliation",
       "reserves/backing/price parity/redemption",
       "legal status",

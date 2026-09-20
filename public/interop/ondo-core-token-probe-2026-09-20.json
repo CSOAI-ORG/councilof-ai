@@ -1,0 +1,104 @@
+{
+  "schema": "csoai.ondo-core-token-probe/0.1",
+  "observed_at": "2026-09-20T02:47:00Z",
+  "status": "MEASURED_WITH_IDENTITY_GAP",
+  "rows": [
+    {
+      "instrument": "ONDO governance token",
+      "identity_source": "https://blog.ondo.foundation/unlocking-ondo-a-proposal-from-the-ondo-foundation/",
+      "address_sources": [
+        "https://routescan.io/token/0xfAbA6f8e4a5E8Ab82F62fe7C39859FA577269BE3?chainid=1",
+        "https://www.beaconcha.in/token/0xfAbA6f8e4a5E8Ab82F62fe7C39859FA577269BE3"
+      ],
+      "issuer_address_source": "UNMEASURED \u2014 no current Ondo-owned address directory located",
+      "onchain": {
+        "schema": "csoai.evm-erc20-reader/1.0",
+        "reader_revision": "scripts/readers/evm-erc20-reader.mjs@1.1.0",
+        "source": "https://ethereum-rpc.publicnode.com",
+        "endpoint_default": "https://eth.llamarpc.com",
+        "endpoint_used": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": true,
+        "endpoint_substitution_reason": "default returned non-JSON HTML during observation",
+        "chain": "ethereum",
+        "chainId": 1,
+        "contract": "0xfAbA6f8e4a5E8Ab82F62fe7C39859FA577269BE3",
+        "queried_at": "2026-09-20T02:45:15.090Z",
+        "terms_boundary": "Public RPC (llamarpc.com / base.org). No API key required. Rate limits apply.",
+        "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+        "block_finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL",
+        "observed_block": 26015746,
+        "endpoint_default_probe": {
+          "http_status": 525,
+          "probed_at": "2026-09-20T02:45:15.443Z"
+        },
+        "block_hash": "0x37b722f9b4d0111d880e72ea96b6b9c1c785927f0facda8a61cbd47da6a11b5b",
+        "block_timestamp": 1789871447,
+        "token": {
+          "name": "Ondo",
+          "symbol": "ONDO",
+          "decimals": 18,
+          "totalSupply_raw": "10000000000000000000000000000",
+          "totalSupply_normalized": "10000000000.000000000000000000"
+        },
+        "replay_hash": "d65822e5366717503648618ed419fdaa510a7a6d006d5ead69f43b26f43173de",
+        "raw_data_hash": "1c145e30daa54b835af9c03c1c8a688bbdc903ed3fe07e5d97388890d2681feb"
+      }
+    },
+    {
+      "instrument": "Ondo U.S. Dollar Yield",
+      "identity_and_address_source": "https://ondo.finance/usdy",
+      "onchain": {
+        "schema": "csoai.evm-erc20-reader/1.0",
+        "reader_revision": "scripts/readers/evm-erc20-reader.mjs@1.1.0",
+        "source": "https://ethereum-rpc.publicnode.com",
+        "endpoint_default": "https://eth.llamarpc.com",
+        "endpoint_used": "https://ethereum-rpc.publicnode.com",
+        "endpoint_substituted": true,
+        "endpoint_substitution_reason": "default returned non-JSON HTML during observation",
+        "chain": "ethereum",
+        "chainId": 1,
+        "contract": "0x96F6eF951840721AdBF46Ac996b59E0235CB985C",
+        "queried_at": "2026-09-20T02:45:15.844Z",
+        "terms_boundary": "Public RPC (llamarpc.com / base.org). No API key required. Rate limits apply.",
+        "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+        "block_finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL",
+        "observed_block": 26015746,
+        "endpoint_default_probe": {
+          "http_status": 525,
+          "probed_at": "2026-09-20T02:45:16.431Z"
+        },
+        "block_hash": "0x37b722f9b4d0111d880e72ea96b6b9c1c785927f0facda8a61cbd47da6a11b5b",
+        "block_timestamp": 1789871447,
+        "token": {
+          "name": "Ondo U.S. Dollar Yield",
+          "symbol": "USDY",
+          "decimals": 18,
+          "totalSupply_raw": "1032352521768677754106685207",
+          "totalSupply_normalized": "1032352521.768677754106685207"
+        },
+        "replay_hash": "ee57b498d78b175404b1c7ac88f7088b5afdaeeba8802ab5cb727b1202752751",
+        "raw_data_hash": "45c8796c400c1045ad43014b9bd6df9a1fd6fd5b9d44fbd0ffa7ae62c3854259"
+      }
+    },
+    {
+      "instrument": "Ondo OUSG on XRPL",
+      "onchain_reference": "public/interop/cards/xrpl/xrpl-asset-state-ousg.json",
+      "state": "MEASURED_REFERENCE",
+      "note": "Existing bidirectional-domain and XRPL account-state measurement; no EVM address asserted here."
+    }
+  ],
+  "not_measured": [
+    "issuer-authenticated ONDO address directory",
+    "OUSG EVM address",
+    "reserves/backing/price parity/redemption",
+    "legal status",
+    "safety/solvency/creditworthiness/investment merit/endorsement"
+  ],
+  "signature": {
+    "state": "UNSIGNED",
+    "sig_ed25519": null,
+    "route": "bound by chainlink-ondo directory signing candidate"
+  },
+  "measurement_not_certification": true,
+  "writes_gspc_board": false
+}
