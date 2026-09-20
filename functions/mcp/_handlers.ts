@@ -4,7 +4,7 @@
  * plus four paid tools; witness_hash stays quarantined. npm is an independent
  * release: ask that installed implementation for its current tools/list.
  */
-import { verifyCard, anchorsFromDid, type Anchor } from "../_lib/cardVerify";
+import { verifyCard, anchorsFromDid, cardState, type Anchor } from "../_lib/cardVerify";
 import GSPC_TOOLS from "./gspc-tools.json";
 import {
   FETCHABLE_ORIGINS,
@@ -49,8 +49,9 @@ async function verifyCardThreeState(
   const anchors = await loadAnchors(origin);
   const v = await verifyCard(card, anchors);
   const c = card as Record<string, unknown>;
+  const state = cardState(v.valid, v.reasons);
   return {
-    state: v.valid ? "VALID" : "INVALID",
+    state,
     id: v.id ?? c?.id ?? null,
     family: v.family ?? null,
     reason: v.valid ? null : v.reasons.join(", "),
@@ -68,7 +69,9 @@ async function verifyCardThreeState(
     not_a_certification: true,
     note: v.valid
       ? "The body reproduces its own id and the signature verifies under a published key. This is a verified measurement card — not a certification of anything."
-      : "This card fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE.",
+      : state === "UNCHECKABLE"
+        ? "The check could not be completed for the stated reason. UNCHECKABLE is not INVALID: nothing was judged."
+        : "This card fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE.",
   };
 }
 
@@ -246,6 +249,7 @@ export async function verifyToolResult(
   if (error) {
     const payload = {
       valid: false,
+      state: "UNCHECKABLE",
       reason: error,
       reasons: ["input_not_a_card"],
     };
@@ -258,9 +262,11 @@ export async function verifyToolResult(
 
   const anchors = await loadAnchors(origin);
   const v = await verifyCard(card, anchors);
+  const state = cardState(v.valid, v.reasons);
 
   const payload = {
     valid: v.valid,
+    state,
     family: v.family,
     family_label: v.family_label,
     id: v.id,
@@ -283,9 +289,12 @@ export async function verifyToolResult(
     rule: "https://councilof.ai/signed/HOW-TO-VERIFY.md",
   };
 
-  const summary = v.valid
-    ? `VALID — ${v.family} ${String(v.id).slice(0, 16)}… reproduces its own id and verifies under a published key.`
-    : `NOT VALID — ${v.reasons.join(", ")}`;
+  const summary =
+    state === "VALID"
+      ? `VALID — ${v.family} ${String(v.id).slice(0, 16)}… reproduces its own id and verifies under a published key.`
+      : state === "UNCHECKABLE"
+        ? `UNCHECKABLE — ${v.reasons.join(", ")} — nothing was judged; this is not a finding that the card is forged.`
+        : `INVALID — ${v.reasons.join(", ")}`;
 
   return {
     content: [

@@ -18,12 +18,20 @@
  * left the signer effectively unchecked.
  */
 
-import { verifyCard, anchorsFromDid, type Anchor, type CardVerdict } from "../../../functions/_lib/cardVerify";
+import { verifyCard, anchorsFromDid, type Anchor, type CardState, type CardVerdict } from "../../../functions/_lib/cardVerify";
 
 export interface RecordVerdict {
   lines: { label: string; ok: boolean | null; detail: string; code: string }[];
-  /** True only when nothing failed. Drives the headline and the tally opt-in. */
+  /** True only when nothing failed. Drives the tally opt-in. */
   valid: boolean;
+  /**
+   * Three states, never two. The headline renders this, not `valid`, so a record
+   * that could not be checked (bad JSON, unrecognised shape, unpinned key, no
+   * Ed25519 here) shows UNCHECKABLE — never painted as INVALID.
+   */
+  state: CardState;
+  /** Machine-readable reason codes behind the state. */
+  reasons: string[];
   family: string;
 }
 
@@ -41,8 +49,12 @@ export async function verifyRecord(raw: string): Promise<RecordVerdict> {
   try {
     rec = JSON.parse(raw);
   } catch {
+    // Unparsable input is UNCHECKABLE, not INVALID: nothing was checked, and
+    // "not JSON" is not a finding that the record is forged.
     return {
       valid: false,
+      state: "UNCHECKABLE",
+      reasons: ["parse_error"],
       family: "unknown",
       lines: [{ label: "Parse", ok: false, code: "parse_error", detail: "Not valid JSON — nothing was checked." }],
     };
@@ -53,6 +65,8 @@ export async function verifyRecord(raw: string): Promise<RecordVerdict> {
 
   return {
     valid: verdict.valid,
+    state: verdict.state,
+    reasons: verdict.reasons,
     family: verdict.family,
     lines: [
       { label: "Parse", ok: true, code: "parse_ok", detail: "Valid JSON." },

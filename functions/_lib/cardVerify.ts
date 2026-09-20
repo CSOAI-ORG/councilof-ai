@@ -285,6 +285,14 @@ export interface CardVerdict {
   /** Human label for the family. */
   family_label: string;
   valid: boolean;
+  /**
+   * Three outcomes, never two. VALID / INVALID / UNCHECKABLE. INVALID is a
+   * positive finding (a check ran and failed); UNCHECKABLE means the check
+   * could not be completed (unrecognised shape, unpinned DID key, no Ed25519
+   * in this runtime, uncomputable preimage). Never render UNCHECKABLE as
+   * INVALID — "could not check" is a different claim from "forged".
+   */
+  state: CardState;
   /** Stable failure codes — never collapse a preimage bug into a key-anchor bug. */
   reasons: string[];
   checks: CardCheck[];
@@ -292,6 +300,31 @@ export interface CardVerdict {
   id: string | null;
   /** The pinned trust anchor the signing key matched, or null when none matched / no key was read. */
   anchor_id?: string | null;
+}
+
+export type CardState = "VALID" | "INVALID" | "UNCHECKABLE";
+
+/**
+ * Reason codes that mean "could not check", not "checked and failed". A verdict
+ * whose reasons are ALL in this set is UNCHECKABLE; the moment any other reason
+ * is present (preimage_mismatch, signature_invalid, untrusted_signer, …) the
+ * verdict is INVALID, because a browser-independent failure must stay red even
+ * when a browser gap is also reported.
+ */
+export const UNCHECKABLE_REASONS = new Set([
+  "unrecognised_family",
+  "key_ambiguous",
+  "key_not_pinned",
+  "preimage_uncomputable",
+  "ed25519_unsupported",
+]);
+
+/** Derive the public three-state verdict from the boolean and the reason codes. */
+export function cardState(valid: boolean, reasons: string[]): CardState {
+  if (valid) return "VALID";
+  return reasons.length > 0 && reasons.every((r) => UNCHECKABLE_REASONS.has(r))
+    ? "UNCHECKABLE"
+    : "INVALID";
 }
 
 /** A trust anchor as published in a DID document. */
@@ -381,7 +414,7 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
         "(top-level id + body + pubkey + signature) or a content_id card " +
         "(top-level content_id + signature).",
     });
-    return { family, family_label: FAMILY_LABEL[family], valid: false, reasons: ["unrecognised_family"], checks, id: null };
+    return { family, family_label: FAMILY_LABEL[family], valid: false, state: "UNCHECKABLE", reasons: ["unrecognised_family"], checks, id: null };
   }
 
   const r = rec as Record<string, unknown>;
@@ -422,7 +455,7 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
           code: "key_ambiguous",
           detail: "UNCHECKABLE — the card names both an inline public key and a DID key reference; the verifier will not guess which authority controls the signature.",
         });
-        return { family, family_label: FAMILY_LABEL[family], valid: false, reasons: ["key_ambiguous"], checks, id: declaredId };
+        return { family, family_label: FAMILY_LABEL[family], valid: false, state: "UNCHECKABLE", reasons: ["key_ambiguous"], checks, id: declaredId };
       }
       if (hasDid) {
         namedKeyId = r.did as string;
@@ -434,7 +467,7 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
             code: "key_not_pinned",
             detail: `UNCHECKABLE — ${namedKeyId} is not in this verifier's offline pin set.`,
           });
-          return { family, family_label: FAMILY_LABEL[family], valid: false, reasons: ["key_not_pinned"], checks, id: declaredId };
+          return { family, family_label: FAMILY_LABEL[family], valid: false, state: "UNCHECKABLE", reasons: ["key_not_pinned"], checks, id: declaredId };
         }
         keyRaw = pin.hex;
       } else {
@@ -464,7 +497,7 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
       code: "preimage_uncomputable",
       detail: `The signed bytes could not be reconstructed: ${(e as Error).message}.`,
     });
-    return { family, family_label: FAMILY_LABEL[family], valid: false, reasons: ["preimage_uncomputable"], checks, id: null };
+    return { family, family_label: FAMILY_LABEL[family], valid: false, state: "UNCHECKABLE", reasons: ["preimage_uncomputable"], checks, id: null };
   }
 
   /* ---- 1. does the body hash to the id it declares? ---- */
@@ -650,5 +683,5 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
     });
   }
 
-  return { family, family_label: FAMILY_LABEL[family], valid, reasons, checks, id: declaredId, anchor_id: anchorId };
+  return { family, family_label: FAMILY_LABEL[family], valid, state: cardState(valid, reasons), reasons, checks, id: declaredId, anchor_id: anchorId };
 }

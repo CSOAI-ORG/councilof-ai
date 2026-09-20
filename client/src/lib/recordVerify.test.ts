@@ -36,6 +36,7 @@ afterEach(() => vi.unstubAllGlobals());
 describe("verifyRecord — family dispatch", () => {
   it("VALIDATES a genuine published measurement card (the regression)", async () => {
     const r = await verifyRecord(JSON.stringify(card));
+    expect(r.state).toBe("VALID");
     expect(line(r, "Family")?.detail).toMatch(/Measurement card/);
     expect(line(r, "Card id")?.ok).toBe(true);
     expect(line(r, "Signature")?.ok).toBe(true);
@@ -52,12 +53,15 @@ describe("verifyRecord — family dispatch", () => {
   it("says INVALID when a card body is altered", async () => {
     const t = { ...card, body: { ...card.body, accuracy: 0.4242 } };
     const r = await verifyRecord(JSON.stringify(t));
+    expect(r.state).toBe("INVALID");
     expect(line(r, "Card id")?.ok).toBe(false);
     expect(line(r, "Signature")?.ok).toBe(false);
   });
 
   it("says UNRECOGNISED — not INVALID — for a document of neither family", async () => {
     const r = await verifyRecord(JSON.stringify({ hello: "world" }));
+    // Three states, never two: "could not check" is a different claim from "forged".
+    expect(r.state).toBe("UNCHECKABLE");
     const f = line(r, "Family");
     expect(f?.ok).toBeNull();
     expect(f?.detail).toMatch(/UNRECOGNISED/);
@@ -67,6 +71,9 @@ describe("verifyRecord — family dispatch", () => {
 
   it("still reports bad JSON as bad JSON and checks nothing", async () => {
     const r = await verifyRecord("{not json");
+    // Unparsable input is UNCHECKABLE, not INVALID: nothing was judged.
+    expect(r.state).toBe("UNCHECKABLE");
+    expect(r.reasons).toEqual(["parse_error"]);
     expect(r.lines).toHaveLength(1);
     expect(r.lines[0].ok).toBe(false);
   });

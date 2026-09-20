@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schemas/signed-release-manifest/v0.1.json",
+  "title": "csoai.signed-release-manifest/0.1",
+  "description": "One release, exact bytes, declared signer authority, mirror readbacks, and explicit proof states. A manifest is evidence about a release process, never a certification. Three-state verification throughout: VALID / INVALID(reason) / UNCHECKABLE. Absence of a proof is a first-class state, not a zero.",
+  "type": "object",
+  "required": ["schema", "release_id", "created_at", "source", "files", "signer", "signature_state", "timestamp_proofs", "mirrors", "verification"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "csoai.signed-release-manifest/0.1" },
+    "release_id": { "type": "string", "pattern": "^[A-Za-z0-9._:@+-]{1,120}$" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "source": {
+      "type": "object",
+      "required": ["repo", "commit", "dirty_tree"],
+      "additionalProperties": false,
+      "properties": {
+        "repo": { "type": "string", "description": "canonical clone URL as reviewed" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "branch": { "type": "string" },
+        "dirty_tree": { "type": "boolean", "description": "was the working tree dirty at build time; a dirty build is allowed but must be declared" },
+        "build_command": { "type": "string" },
+        "build_runner": { "type": "string", "description": "e.g. gha-run-id, local hostname-free label; never secrets" }
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "description": "exact released bytes. Hashing rule is versioned and declared once here, never silently migrated.",
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "bytes"],
+        "additionalProperties": false,
+        "properties": {
+          "path": { "type": "string" },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "bytes": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "signer": {
+      "type": "object",
+      "required": ["did", "key_id", "alg", "authority_doc"],
+      "additionalProperties": false,
+      "properties": {
+        "did": { "type": "string", "pattern": "^did:web:" },
+        "key_id": { "type": "string" },
+        "alg": { "const": "Ed25519" },
+        "authority_doc": { "type": "string", "description": "URL or repo path documenting WHY this key may sign releases, plus rotation/compromise procedure" },
+        "preimage_rule": { "type": "string", "description": "exact byte rule the signature covers, e.g. 'Ed25519 over raw UTF-8 of canonical JSON of this manifest minus signature fields, keys sorted recursively, no whitespace, ensure_ascii=false'" }
+      }
+    },
+    "signature_state": {
+      "enum": ["SIGNED", "UNSIGNED_DECLARED"],
+      "description": "UNSIGNED_DECLARED is a first-class honest state (e.g. rehearsal), never a fabricated signature"
+    },
+    "signature": { "type": "string", "pattern": "^[0-9a-f]{128}$", "description": "absent iff signature_state == UNSIGNED_DECLARED" },
+    "timestamp_proofs": {
+      "type": "array",
+      "description": "existence-before evidence bound to EXACT bytes of this manifest. A pending stamp stays pending. A log entry never proves semantic truth, authorship beyond the bound identity, compliance, or current validity.",
+      "items": {
+        "type": "object",
+        "required": ["kind", "binds_sha256", "state"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "enum": ["opentimestamps", "rekor", "rfc3161"] },
+          "binds_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the exact manifest bytes the proof covers" },
+          "state": { "enum": ["PENDING", "CONFIRMED", "UNCHECKABLE"] },
+          "proof_ref": { "type": "string", "description": "path/URL of the proof artifact" },
+          "confirmed_at": { "type": "string", "format": "date-time" },
+          "block_or_log_ref": { "type": "string", "description": "e.g. Bitcoin block height or Rekor log index; only when CONFIRMED" }
+        }
+      }
+    },
+    "mirrors": {
+      "type": "array",
+      "description": "publication is only real with anonymous readback. Listing/submission is not acceptance; HTTP 200 is not correct bytes.",
+      "items": {
+        "type": "object",
+        "required": ["url", "state"],
+        "additionalProperties": false,
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "state": { "enum": ["PUBLISHED_READBACK_VERIFIED", "PUBLISHED_READBACK_MISMATCH", "PUBLISHED_NO_READBACK", "SUBMITTED_UNCONFIRMED", "UNREACHABLE"] },
+          "readback_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of bytes fetched anonymously; must equal the corresponding files entry for PUBLISHED_READBACK_VERIFIED" },
+          "readback_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["self_check", "what_this_does_not_establish"],
+      "additionalProperties": false,
+      "properties": {
+        "self_check": {
+          "type": "object",
+          "required": ["files_hashed", "verifier", "verdict"],
+          "additionalProperties": false,
+          "properties": {
+            "files_hashed": { "type": "integer", "minimum": 0 },
+            "verifier": { "type": "string", "description": "tool + version that re-hashed the files" },
+            "verdict": { "enum": ["VALID", "INVALID", "UNCHECKABLE"] }
+          }
+        },
+        "what_this_does_not_establish": { "type": "string" }
+      }
+    },
+    "not_a_certification": { "const": true }
+  }
+}
