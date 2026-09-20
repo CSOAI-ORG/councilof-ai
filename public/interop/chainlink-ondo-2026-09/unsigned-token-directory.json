@@ -57,8 +57,11 @@
   "signature": null,
   "did": "did:web:csoai.org#board-attestation-1",
   "signing": {
-    "state": "QUEUED_GHA_OIDC",
+    "state": "BLOCKED_GITHUB_ACTIONS",
     "route": ".github/workflows/hf-fin-shells-measure.yml target=chainlink-ondo",
-    "local_signing": "FORBIDDEN"
+    "local_signing": "FORBIDDEN",
+    "last_attempt": "2026-09-20T03:10:00Z",
+    "blocker": "HTTP 422: Actions has been disabled for this user",
+    "resume": "gh workflow run hf-fin-shells-measure.yml --ref codex/x402-bazaar-recovery-20260920 -f target=chainlink-ondo"
   }
 }
