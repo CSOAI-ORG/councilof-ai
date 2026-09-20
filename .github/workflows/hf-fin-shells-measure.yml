@@ -8,13 +8,14 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: "Which compact set to sign: financial, ledger, mill, or verified RunPod artifact"
+        description: "Which compact set to sign: financial, ledger, mill, verified RunPod artifact, or Chainlink/Ondo directory"
         type: choice
         options:
           - financial
           - ledger
           - mill
           - runpod
+          - chainlink-ondo
         default: financial
       intake_run_id:
         description: "Successful RunPod intake run ID (required only for runpod)"
@@ -118,6 +119,8 @@ jobs:
               --evidence-dir "$GITHUB_WORKSPACE/public/interop/mill-evidence" --require-hub-admission
           elif [ "$T" = "runpod" ]; then
             python3 scripts/sign_mill_cards.py --source-dir "$RUNNER_TEMP/runpod-signing-approved/cards"
+          elif [ "$T" = "chainlink-ondo" ]; then
+            python3 scripts/sign_chainlink_ondo_directory.py
           else
             python3 scripts/sign_financial_runs.py
           fi
@@ -137,6 +140,8 @@ jobs:
             git add public/interop/mill-cards-signed public/interop/mill-cards-unsigned
           elif [ "$T" = "runpod" ]; then
             git add public/interop/mill-cards-signed
+          elif [ "$T" = "chainlink-ondo" ]; then
+            git add public/interop/chainlink-ondo-2026-09
           else
             git add public/interop/financial-measure-card-*.json
           fi
@@ -145,7 +150,7 @@ jobs:
             exit 0
           fi
           git commit -m "${T}-measure: sign compact cards via OIDC board-sign"
-          if [ "$T" = "mill" ] || [ "$T" = "runpod" ]; then
+          if [ "$T" = "mill" ] || [ "$T" = "runpod" ] || [ "$T" = "chainlink-ondo" ]; then
             git push origin "HEAD:$DISPATCH_BRANCH"
           else
             git push origin HEAD:master

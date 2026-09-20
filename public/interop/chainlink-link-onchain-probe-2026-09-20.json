@@ -1,0 +1,163 @@
+{
+  "schema": "csoai.chainlink-link-onchain-probe/0.1",
+  "observed_at": "2026-09-20T03:00:00Z",
+  "status": "MEASURED",
+  "coverage": {
+    "official_directory_rows": 148,
+    "probed_rows": 4,
+    "unprobed_rows": 144,
+    "reason": "bounded reader supports Ethereum, Arbitrum, Base and Optimism public RPCs only; directory presence remains measured for all 148"
+  },
+  "rows": [
+    {
+      "schema": "csoai.evm-erc20-reader/1.0",
+      "reader_revision": "scripts/readers/evm-erc20-reader.mjs@1.1.0",
+      "source": "https://ethereum-rpc.publicnode.com",
+      "endpoint_default": "https://eth.llamarpc.com",
+      "endpoint_used": "https://ethereum-rpc.publicnode.com",
+      "endpoint_substituted": true,
+      "endpoint_substitution_reason": "default returned non-JSON HTML during observation",
+      "chain": "ethereum",
+      "chainId": 1,
+      "contract": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+      "queried_at": "2026-09-20T02:41:41.029Z",
+      "terms_boundary": "Public RPC (llamarpc.com / base.org). No API key required. Rate limits apply.",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+      "block_finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL",
+      "observed_block": 26015715,
+      "endpoint_default_probe": {
+        "http_status": 525,
+        "probed_at": "2026-09-20T02:41:42.168Z"
+      },
+      "block_hash": "0xd8ab8c3c66e313df7862c3904693dcc6e50bff9a892b4ed71870eacc614a0996",
+      "block_timestamp": 1789871063,
+      "token": {
+        "name": "ChainLink Token",
+        "symbol": "LINK",
+        "decimals": 18,
+        "totalSupply_raw": "1000000000000000000000000000",
+        "totalSupply_normalized": "1000000000.000000000000000000"
+      },
+      "replay_hash": "7ca6ce8f5f1d2af7b1015340355f294f554f6bd1fc67b33dce558f170aecefc5",
+      "raw_data_hash": "08033b228f2f0272e371d9fa482cead74ae3841eb9592b14be9cb1b5c6e9769c",
+      "directory_match": {
+        "symbol": true,
+        "decimals": true,
+        "code_identity_scope": "ERC-20 metadata only"
+      }
+    },
+    {
+      "schema": "csoai.evm-erc20-reader/1.0",
+      "reader_revision": "scripts/readers/evm-erc20-reader.mjs@1.1.0",
+      "source": "https://arb1.arbitrum.io/rpc",
+      "endpoint_default": "https://arb1.arbitrum.io/rpc",
+      "endpoint_used": "https://arb1.arbitrum.io/rpc",
+      "endpoint_substituted": false,
+      "endpoint_substitution_reason": null,
+      "chain": "arbitrum",
+      "chainId": 42161,
+      "contract": "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
+      "queried_at": "2026-09-20T02:41:23.243Z",
+      "terms_boundary": "Public RPC (llamarpc.com / base.org). No API key required. Rate limits apply.",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+      "block_finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL",
+      "observed_block": 506967939,
+      "block_hash": "0x4dddc68939c4bd32c6e6905b416462d18284282135b927eb3893548684fce7ca",
+      "block_timestamp": 1789870987,
+      "token": {
+        "name": "ChainLink Token",
+        "symbol": "LINK",
+        "decimals": 18,
+        "totalSupply_raw": "1941550555212257611066761",
+        "totalSupply_normalized": "1941550.555212257611066761"
+      },
+      "replay_hash": "57f46c4d6af5b27aaee9a131bd1e6ff37d014b66459329b6174c39a56d4c9b9c",
+      "raw_data_hash": "d9e8032f3d8446133c22458dccaa2b92a24b1170893c87cb37413e4d10236558",
+      "directory_match": {
+        "symbol": true,
+        "decimals": true,
+        "code_identity_scope": "ERC-20 metadata only"
+      }
+    },
+    {
+      "schema": "csoai.evm-erc20-reader/1.0",
+      "reader_revision": "scripts/readers/evm-erc20-reader.mjs@1.1.0",
+      "source": "https://mainnet.base.org",
+      "endpoint_default": "https://mainnet.base.org",
+      "endpoint_used": "https://mainnet.base.org",
+      "endpoint_substituted": false,
+      "endpoint_substitution_reason": null,
+      "chain": "base",
+      "chainId": 8453,
+      "contract": "0x88Fb150BDc53A65fe94Dea0c9BA0a6dAf8C6e196",
+      "queried_at": "2026-09-20T02:41:24.079Z",
+      "terms_boundary": "Public RPC (llamarpc.com / base.org). No API key required. Rate limits apply.",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+      "block_finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL",
+      "observed_block": 51540814,
+      "block_hash": "0x2a5a3d657a7edc58ed9321157f54ee68658b6ee06416ffb18e3b56e1d4b2b9cb",
+      "block_timestamp": 1789870975,
+      "token": {
+        "name": "ChainLink Token",
+        "symbol": "LINK",
+        "decimals": 18,
+        "totalSupply_raw": "196771766695240245438263",
+        "totalSupply_normalized": "196771.766695240245438263"
+      },
+      "replay_hash": "73f36ac4d852a1f8c02c2256ac37d0cc553dd601b097c3f034b66d3365c34b60",
+      "raw_data_hash": "90fd680b0ab55bdddac920561589e8168e116e9252ad2f1fe9fbdd71e462fe8c",
+      "directory_match": {
+        "symbol": true,
+        "decimals": true,
+        "code_identity_scope": "ERC-20 metadata only"
+      }
+    },
+    {
+      "schema": "csoai.evm-erc20-reader/1.0",
+      "reader_revision": "scripts/readers/evm-erc20-reader.mjs@1.1.0",
+      "source": "https://mainnet.optimism.io",
+      "endpoint_default": "https://mainnet.optimism.io",
+      "endpoint_used": "https://mainnet.optimism.io",
+      "endpoint_substituted": false,
+      "endpoint_substitution_reason": null,
+      "chain": "optimism",
+      "chainId": 10,
+      "contract": "0x350a791Bfc2C21F9Ed5d10980Dad2e2638ffa7f6",
+      "queried_at": "2026-09-20T02:41:24.741Z",
+      "terms_boundary": "Public RPC (llamarpc.com / base.org). No API key required. Rate limits apply.",
+      "correction_link": "https://github.com/CSOAI-ORG/councilof-ai/issues",
+      "block_finality": "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL",
+      "observed_block": 157136089,
+      "block_hash": "0xb615f7fa225eec9d773e71e0fb4d875c86da1e0bbb681b08d09fba0f14531266",
+      "block_timestamp": 1789870955,
+      "token": {
+        "name": "ChainLink Token",
+        "symbol": "LINK",
+        "decimals": 18,
+        "totalSupply_raw": "180315572215034615814749",
+        "totalSupply_normalized": "180315.572215034615814749"
+      },
+      "replay_hash": "ce2be26f4c8bf3f5cdeb31f2c4eddf9a338abb44569956f8aef245c6adba3b47",
+      "raw_data_hash": "cb38cffd46a8f31869ed518efc4aefdb37ea48e55191e65e6e90c5262b8da17f",
+      "directory_match": {
+        "symbol": true,
+        "decimals": true,
+        "code_identity_scope": "ERC-20 metadata only"
+      }
+    }
+  ],
+  "not_measured": [
+    "bytecode equivalence across networks",
+    "cross-chain supply reconciliation",
+    "market price",
+    "network safety, solvency, investment merit or endorsement"
+  ],
+  "signature": {
+    "state": "UNSIGNED",
+    "sig_ed25519": null,
+    "signer": "did:web:csoai.org#board-attestation-1",
+    "route": "GHA_OIDC_ONLY"
+  },
+  "measurement_not_certification": true,
+  "writes_gspc_board": false
+}

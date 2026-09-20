@@ -1,0 +1,64 @@
+{
+  "body": {
+    "schema": "https://councilof.ai/schema/card-v0.json",
+    "model": "chainlink-ondo-publisher-token-inventory-2026-09-20",
+    "axis": "token_address_directory",
+    "as_of": "2026-09-20T03:00:00Z",
+    "n": 1066,
+    "status": "MEASURED",
+    "measurement": {
+      "chainlink_publisher_rows": 148,
+      "chainlink_rpc_probed": 4,
+      "ondo_publisher_rows": 918,
+      "ondo_rpc_match": 918,
+      "ondo_rpc_mismatch": 0
+    },
+    "evidence": [
+      {
+        "path": "public/interop/chainlink-ondo-token-inventory-2026-09-20.json",
+        "sha256": "3b55cb27929e5739e61eec6ad9630c6853cc71fefdbddba0dd5364efe6f6fc6d"
+      },
+      {
+        "path": "public/interop/chainlink-link-onchain-probe-2026-09-20.json",
+        "sha256": "163b7a814392b69df18f9d360ed07f0b61dae209c1e50383bacaebf86079bc88"
+      },
+      {
+        "path": "public/interop/ondo-token-onchain-probe-2026-09-20.json",
+        "sha256": "7beb5352455d9c1a01b7a8c5d40c08416d3943a9f40d4887d817384527677615"
+      }
+    ],
+    "source_sha256": {
+      "chainlink": {
+        "url": "https://docs.chain.link/resources/link-token-contracts.md",
+        "sha256": "f142c3ba2764d18782883341b406fc50c487b5353123e5a0bae356af5c338d6b"
+      },
+      "ondo": {
+        "url": "https://raw.githubusercontent.com/ondoprotocol/ondo-global-markets-token-list/main/tokenlist.json",
+        "sha256": "002c6a555f6b1ad504e8c63282971372176f1632db8e9b42f9686e2d0f0a4b45",
+        "timestamp": "2026-09-17T22:31:11Z",
+        "version": {
+          "major": 13,
+          "minor": 0,
+          "patch": 0
+        }
+      }
+    },
+    "unmeasured": [
+      "144 LINK directory rows lack this run\u2019s RPC metadata probe",
+      "cross-chain supply reconciliation",
+      "reserves/backing/price parity/redemption",
+      "legal status",
+      "safety/solvency/creditworthiness/investment merit/endorsement"
+    ],
+    "signature_state": "STAGED_UNSIGNED",
+    "measurement_not_certification": true,
+    "writes_gspc_board": false
+  },
+  "signature": null,
+  "did": "did:web:csoai.org#board-attestation-1",
+  "signing": {
+    "state": "QUEUED_GHA_OIDC",
+    "route": ".github/workflows/hf-fin-shells-measure.yml target=chainlink-ondo",
+    "local_signing": "FORBIDDEN"
+  }
+}
