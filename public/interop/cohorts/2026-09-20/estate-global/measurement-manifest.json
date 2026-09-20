@@ -1,0 +1,179 @@
+{
+  "schema": "csoai.measurement-cohort/1",
+  "cohort_id": "csoai-estate-measurement-index-2026-09-20",
+  "subject_kind": "estate_measurement_index",
+  "as_of": "2026-09-20",
+  "status": "PARTIAL_MEASURED",
+  "method": "Hierarchical commitment over independently recomputable measurement-cohort manifests.",
+  "population": {
+    "child_cohorts": 11,
+    "atomic_observations_bound": 2912
+  },
+  "dispositions": {
+    "COHORTS_BOUND": 11,
+    "ATOMIC_OBSERVATIONS_BOUND": 2912
+  },
+  "unmeasured": [
+    "144 LINK directory rows without this run RPC replay",
+    "complete external index/search-engine/marketplace inclusion",
+    "future source changes after each cohort as_of",
+    "one GSPC axis and current owner MPC board signature",
+    "private SWIFT transaction telemetry",
+    "stablecoin reserves/backing/solvency/price parity unless separately measured"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/cohorts/2026-09-20/chainlink-directory/measurement-manifest.json",
+      "sha256": "dbc39e705ec981ca363ab0186517255691a8100ce03b8df0cf48c61999e0c7d0",
+      "bytes": 41524,
+      "role": "cohort_manifest"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/chainlink-rpc/measurement-manifest.json",
+      "sha256": "935f366a756da1d309630e95d18b0edff122821d0ff0f645df094b00b77a6b21",
+      "bytes": 2585,
+      "role": "cohort_manifest"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/gspc-live/measurement-manifest.json",
+      "sha256": "28c56cc252ae47207c5d5acb2351b17ecbff3bc284ebacee92268ff80af248ec",
+      "bytes": 7127,
+      "role": "cohort_manifest"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/ondo-core/measurement-manifest.json",
+      "sha256": "378c0068c0e724f37304ed92d2f7ebf5271cf150176b878c157a235001a9541d",
+      "bytes": 2107,
+      "role": "cohort_manifest"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/ondo-directory/measurement-manifest.json",
+      "sha256": "614b2d1b01a44bd357227e7e951240544ed57707c7650172ad8fef5c5e079a55",
+      "bytes": 256901,
+      "role": "cohort_manifest"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/ondo-rpc/measurement-manifest.json",
+      "sha256": "3870f01b12697c5cd57a0499f0978a006c512921e35e04c330f5b24b36092398",
+      "bytes": 271219,
+      "role": "cohort_manifest"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/stablecoin-catalog/measurement-manifest.json",
+      "sha256": "d0e842c953fe0ef0de1d690371e7ccaf7adc5226a62e9fab434b7f6f881d74a3",
+      "bytes": 111377,
+      "role": "cohort_manifest"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/stablecoin-supply/measurement-manifest.json",
+      "sha256": "a54325fa1ad70e1e7fcdee764c8d24aa436654671bfe4e43f44925a5a3df616d",
+      "bytes": 111599,
+      "role": "cohort_manifest"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/swift-17/measurement-manifest.json",
+      "sha256": "c3d13334c4f4f9ece9dbf31b405b8dc9a3007fbe86aa061ed53d3d6931a4556e",
+      "bytes": 5322,
+      "role": "cohort_manifest"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/x402-catalog/measurement-manifest.json",
+      "sha256": "26f1064dbb9af374d75b36ad242b42f4b843d12e8072d148ef82879db661fdad",
+      "bytes": 4367,
+      "role": "cohort_manifest"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/xrpl-16/measurement-manifest.json",
+      "sha256": "feb7209a22fd68a07aefe1895973925c63b543dd0840d2231949652281369fe8",
+      "bytes": 5131,
+      "role": "cohort_manifest"
+    }
+  ],
+  "atomic_observations": [],
+  "atomic_count": 0,
+  "atomic_merkle_root": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "child_cohorts": [
+    {
+      "path": "public/interop/cohorts/2026-09-20/chainlink-directory/measurement-manifest.json",
+      "cohort_id": "chainlink-link-publisher-directory-2026-09-20",
+      "manifest_sha256": "f53d44516aa63d7d93f01e5437d42e9991b1b8fbbaf5a2b4f7db7d3211d1a608",
+      "atomic_count": 148,
+      "atomic_merkle_root": "f25a0200710f06db28ee03545340e2c74db08dc694f11b1dae8b21910cc6e99a"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/chainlink-rpc/measurement-manifest.json",
+      "cohort_id": "chainlink-link-rpc-replay-2026-09-20",
+      "manifest_sha256": "c17c209dd2c30b7b8468adf204d552604c2483199d2d0214fc07d380db21f97d",
+      "atomic_count": 4,
+      "atomic_merkle_root": "143900a86f512af4d049b6cba2a29eaa1eb64200a8c8e78aaad9dcc0aeb9fd80"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/gspc-live/measurement-manifest.json",
+      "cohort_id": "gspc-live-board-2026-09-20",
+      "manifest_sha256": "1eff47937061cbbfbd2919be59785b161841cd0353967a9e947f8aa2570b3e06",
+      "atomic_count": 23,
+      "atomic_merkle_root": "2faa85e5dbeb6965407f44aa69248ffcaa678d001dc7395b44e4def5b46b0555"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/ondo-core/measurement-manifest.json",
+      "cohort_id": "ondo-core-token-rpc-replay-2026-09-20",
+      "manifest_sha256": "7b5561281c6b8914a00f37f78cb0cbfa2654ede42e5d514a70462fbe3a4b39b0",
+      "atomic_count": 3,
+      "atomic_merkle_root": "e27cbb6411aba5faf6384ca98db9be122b0753b209c2ae1bef04af62f3a0f3a4"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/ondo-directory/measurement-manifest.json",
+      "cohort_id": "ondo-global-markets-publisher-directory-2026-09-20",
+      "manifest_sha256": "68dba9931627f31b7e06a301fe4f383e5278c95fe6ffcc792cbabb47b8b73ff5",
+      "atomic_count": 918,
+      "atomic_merkle_root": "8558b21fa2c22f79c93d9501e70225f6cb05b0e4e410050417f63cdd258e6944"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/ondo-rpc/measurement-manifest.json",
+      "cohort_id": "ondo-global-markets-rpc-replay-2026-09-20",
+      "manifest_sha256": "5b995e30a6948ca1aa522a57493ea07c8006f4923befc85549a36126e4f14ae9",
+      "atomic_count": 918,
+      "atomic_merkle_root": "10b2959650bf7a4a6438072d5702c551277a23bc94e46db5c1e61958730d0783"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/stablecoin-catalog/measurement-manifest.json",
+      "cohort_id": "stablecoin-public-universe-2026-09-20",
+      "manifest_sha256": "68db2b73b01f4a8647bf7627f34d89dc53d65247f952ad1154dd39875b4b7cba",
+      "atomic_count": 427,
+      "atomic_merkle_root": "850caeb0ae019335ec41f8302b7dc7ea47922e52c4286301bfe73c6249cd61bb"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/stablecoin-supply/measurement-manifest.json",
+      "cohort_id": "stablecoin-supply-replay-2026-09-20",
+      "manifest_sha256": "dba90b1bb2e007cb92fabd5d1bbdad51c70caf2ff74e153799dda817b8561187",
+      "atomic_count": 427,
+      "atomic_merkle_root": "a958694702c437bea165ae2ea1f5a751ef1d6228253732eed9b30c459026092f"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/swift-17/measurement-manifest.json",
+      "cohort_id": "swift-public-disclosure-17-2026-09-16",
+      "manifest_sha256": "0da8ecdd4ebf06aac935ddd7393542499c66f38e2a6c7c6fad8b6f9b87c092db",
+      "atomic_count": 17,
+      "atomic_merkle_root": "3e63f4ebf0dd1a7e08fd2a9155fd570421f40f61a3c02247915362d85470292a"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/x402-catalog/measurement-manifest.json",
+      "cohort_id": "x402-public-resource-catalog-2026-09-20",
+      "manifest_sha256": "6ef7f1f571892ca0f86e8b8477376f0007d81d1954af0e493bef1a163985348d",
+      "atomic_count": 11,
+      "atomic_merkle_root": "bc94b0eb1f736c39c20bfab14250001aa56644ff7aed35c2c6b611e2769ecad6"
+    },
+    {
+      "path": "public/interop/cohorts/2026-09-20/xrpl-16/measurement-manifest.json",
+      "cohort_id": "xrpl-supply-16-2026-09-16",
+      "manifest_sha256": "725142e8e6cb33391c865375ef7c22ce5cd1a71e46d5cf16f66a495592fa3478",
+      "atomic_count": 16,
+      "atomic_merkle_root": "29e8d55a37d1df2c0b9a0c3d6b8813d96ebb20224dd2f29d4e5967968e1adbcd"
+    }
+  ],
+  "child_cohort_count": 11,
+  "child_cohort_merkle_root": "defdb007c9c13a7243762dc6c4a4ef8792f8afeac9294c33299633513390ffb8",
+  "merkle_rule": "sha256(raw_32_byte_left || raw_32_byte_right); duplicate odd tail",
+  "measurement_not_certification": true,
+  "manifest_sha256": "004c7e34041affc590d69d0c230d8565dd5a964db830e4e9afd21fac3cc308b9"
+}

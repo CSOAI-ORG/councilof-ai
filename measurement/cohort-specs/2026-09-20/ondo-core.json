@@ -1,0 +1,30 @@
+{
+  "cohort_id": "ondo-core-token-rpc-replay-2026-09-20",
+  "subject_kind": "token_rpc",
+  "axis": "core_token_identity",
+  "as_of": "2026-09-20T03:00:00Z",
+  "status": "PARTIAL_MEASURED",
+  "n": 3,
+  "method": "Core ONDO/USDY public RPC plus OUSG reference observation with issuer-authentication gaps retained.",
+  "population": {
+    "rows": 3
+  },
+  "dispositions": {
+    "OBSERVED": 3
+  },
+  "unmeasured": [
+    "issuer-authenticated ONDO address directory",
+    "OUSG EVM address",
+    "reserves",
+    "redemption",
+    "legal status",
+    "investment merit"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/ondo-core-token-probe-2026-09-20.json",
+      "role": "core_tokens",
+      "rows_pointer": "rows"
+    }
+  ]
+}

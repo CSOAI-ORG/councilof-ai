@@ -1,0 +1,3035 @@
+{
+  "schema": "csoai.measurement-cohort/1",
+  "cohort_id": "stablecoin-supply-replay-2026-09-20",
+  "subject_kind": "stablecoin_supply",
+  "as_of": "2026-09-20T03:05:00Z",
+  "status": "PARTIAL_MEASURED",
+  "method": "Read-only public endpoint/on-chain supply replay over the frozen 427-row universe.",
+  "population": {
+    "attempted": 427
+  },
+  "dispositions": {
+    "MEASURED": 286,
+    "UNMEASURED": 118,
+    "REJECTED": 15,
+    "UNCHECKABLE": 8
+  },
+  "unmeasured": [
+    "backing",
+    "circulating supply unless source says so",
+    "investment merit",
+    "legal status",
+    "price parity",
+    "reserves",
+    "solvency"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "sha256": "e9262f6fdc404fafd04169e75d337f173c94a839442200459e9a826d47663123",
+      "bytes": 324543,
+      "role": "supply_replay",
+      "rows_pointer": "rows",
+      "rows": 427
+    }
+  ],
+  "atomic_observations": [
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 0,
+      "row_id": "USDT",
+      "sha256": "8a3ae37cb77f32bc02e912775ac892c6c6f44bb8c575983ba1e27a873c063849"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 1,
+      "row_id": "USDC",
+      "sha256": "e79a4100cf6c56638a4440864294d17f30f5226a24c8d448a8d269a4f43cc84f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 2,
+      "row_id": "USDS",
+      "sha256": "bd630dfb602689dc69d3f392b24816287749c646654d3dcfa30dd2fa92c4119f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 3,
+      "row_id": "USDe",
+      "sha256": "2acb39040c18e0726497d3e28dcedead0ee75522edcf30d30a6d93989f14f091"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 4,
+      "row_id": "DAI",
+      "sha256": "66f447cb45305ff7d244a796cdfc12584ed9d742bfe8c6051da2249299c79e9e"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 5,
+      "row_id": "USD1",
+      "sha256": "531c9b4c9f434b50455ab1baa56fe6cd26d4587a696d472577479d2e0c579aed"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 6,
+      "row_id": "USDG",
+      "sha256": "27bf0fad711e9738eed17fd2d1a61844db413bd2759f8d2ee6c595e29eebedb1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 7,
+      "row_id": "PYUSD",
+      "sha256": "446f6b2daa8e9fb6afd1bab72348ca85410bec9de8d4137467cb4532dcb2f4b3"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 8,
+      "row_id": "USYC",
+      "sha256": "8578411cb8517f7f5329a5d922b6b9d0c0f38cc1f80805cc7535b39f82e5a6a7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 9,
+      "row_id": "RLUSD",
+      "sha256": "d4194a8a5030224fbc7c69ab34f491e10cd422a5762056652ff24a48c18453a5"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 10,
+      "row_id": "BUIDL",
+      "sha256": "82461bf57c6ea354223cb0af83b88df844a28d94ef810e38a8739bf6dd3e57f6"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 11,
+      "row_id": "USDY",
+      "sha256": "505e1521a847a0d06b881aa6e1d384f0048de67f28e1236c87eaca4c6cac60be"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 12,
+      "row_id": "USDD",
+      "sha256": "0cba4d91059b53e4a605edfaaf24cd2da4c28432f2e95e16667554f25b72d1d6"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 13,
+      "row_id": "U",
+      "sha256": "082ca84b07202b30ad64ed4f86b1603a54e69b2fd489acdd52ff051853faad2e"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 14,
+      "row_id": "USDGO",
+      "sha256": "a6d2ceb62d8870d073491ad731579bc05f92ebee3933e42399783380d2d6b1ca"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 15,
+      "row_id": "USDf",
+      "sha256": "cfc2fd0e87b4c41e5f2d0a27bc891c5c2a834c5c860981eb27e74a7815624888"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 16,
+      "row_id": "GHO",
+      "sha256": "0990297eebbf87154cd3bf31f4f8539a802eb0bf02bb3070cbad72ff2aff6c03"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 17,
+      "row_id": "USD0",
+      "sha256": "a16894087e740daf51de598684ed887fc023a36468d069a5d72c0fb348d9f058"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 18,
+      "row_id": "USDTB",
+      "sha256": "ff761c19da29c73847fe6dcc14a808c299b2247f4349ea8ba7ee43b75c5467fa"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 19,
+      "row_id": "YLDS",
+      "sha256": "efd69f1ec85029780489527fd5f40079601573931b4e9bc9c79089ad2f330503"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 20,
+      "row_id": "rwaUSDi",
+      "sha256": "26b6070e5d237d83b1edae010bc7d4629c920cb9c99d7cc1453094b649bd4c8a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 21,
+      "row_id": "TUSD",
+      "sha256": "11f5ab28c72ed82d3917da3979f6adc79e1ad27e6f3ad7e421aebfcdad26c92b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 22,
+      "row_id": "pUSD",
+      "sha256": "414241e0530d846dbda4da1df981d7666e3be3d1a6244912038adbace66ae7b7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 23,
+      "row_id": "SOFID",
+      "sha256": "608b46ef413b0c39d731e70842f917d4af9738f9d4047d42fd28e37ab7dfcff0"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 24,
+      "row_id": "FDUSD",
+      "sha256": "aa8ad5627c2b081a6d408b89d4af73200cf3afb33c4e00bc7957919eda864cd4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 25,
+      "row_id": "GUSD",
+      "sha256": "5d122cf8d4c186893a1b794d22379f9a7da2cd2ce19646f27e009f1a94f88bc5"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 26,
+      "row_id": "apxUSD",
+      "sha256": "bea44cfc97ec678bb12de6493aa87372bb56040d9b1d0b57bb1ffe68053b9d44"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 27,
+      "row_id": "USDai",
+      "sha256": "94fbe81632cf7891fb3820ce24e2d8261603cc878752c6471c3bed5ff114d0f9"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 28,
+      "row_id": "reUSD",
+      "sha256": "9bab0d144690bfe526c8ac55075dbaa7f90f34e6a189f1656278779cab9e4fb4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 29,
+      "row_id": "AUSD",
+      "sha256": "84d9cb6e015f21a82d6cc9e476456c1872baab6aad600048bbf4b2816b551756"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 30,
+      "row_id": "crvUSD",
+      "sha256": "ee659bd3bb8708be3e94a0ed17b163b40de7cf6658ee357574b4f011c3e45cfb"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 31,
+      "row_id": "BUSD",
+      "sha256": "0a314d725e2088f1b2ea30f001ac495a9a648b075248ffc295c01c65e04b48a1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 32,
+      "row_id": "USX",
+      "sha256": "de1bf3ab67b0dd5311a28953b977386377913859306b536e153952f256194c60"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 33,
+      "row_id": "HUSD",
+      "sha256": "9cfcd45396923a9fcb612e389337857fc7c9bd0c11511e4c1565b40db4df8d7a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 34,
+      "row_id": "M",
+      "sha256": "bc8cc60de4baa03c8e1efa03700c9eb06f499e060b4e66d79b0cb21f22ce2b48"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 35,
+      "row_id": "USAT",
+      "sha256": "cf8c6a2525c5e181f16932ec1424e227770dfc3291c29bf17c881013bf82c78c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 36,
+      "row_id": "FLEXUSD",
+      "sha256": "49b69bb76301ead41b5beaf18ddacafea272024c1328080da1533e09480df463"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 37,
+      "row_id": "satUSD",
+      "sha256": "ffc6c23e7e32fd8e537d8066d96fcea7b40cb0acbbff12a894cb093387f96a10"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 38,
+      "row_id": "MUST",
+      "sha256": "686c24a4423f5ab8d337349aef4f68dc14a500692b10d4e6c0f31a099429e67f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 39,
+      "row_id": "FRAX",
+      "sha256": "e98cc31219cf95236c1a99740ba6f9070c378673e74d87cafcc54219cf1cd97b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 40,
+      "row_id": "USDA",
+      "sha256": "2ba81a94238e05655eab90ae2eafd3c463b30798fb8896b9ce2a795b2b09a2bf"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 41,
+      "row_id": "CASH",
+      "sha256": "ae308d741a4b6d41a5a9a6bb6501f87a77d03d15c9978563630575a88c24a5b2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 42,
+      "row_id": "avUSD",
+      "sha256": "bbee9914dfd1cadae906f33737588339df569040100262fd7e059c4c803d89c4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 43,
+      "row_id": "MOVEUSD",
+      "sha256": "b6643ad3b1e5bf4cc6e01b79fc0b0cf410c26070b32bb53872645f80bdf6e918"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 44,
+      "row_id": "USDF",
+      "sha256": "57c9a840ac7ff4fbb28fe462dcdf510fc333bbcfd991c06534a2946d79cea348"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 45,
+      "row_id": "DOLA",
+      "sha256": "3c67026afefc72f9f960b5b034fc5a17a7cfd153c0ba9f06bdd6470503eeec2f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 46,
+      "row_id": "FRXUSD",
+      "sha256": "d0f61fa7730ff6025959f8e3fc872d07972d4fc3b1a11a3119c3f6b61dbcb51b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 47,
+      "row_id": "USDV",
+      "sha256": "75102f87b4ca2d4b1aa40b48f9cb1b0304616a713617d3f1e0d59e962078815a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 48,
+      "row_id": "USPD",
+      "sha256": "1f2338616b55b0ff81c7d8029ee9a30f5119f44afaacecc71391e04af269bdc8"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 49,
+      "row_id": "CUSD",
+      "sha256": "be684a71316273420b04ce7b2e5ec2e90a2e8f8aab879264f0e8e7cf5930983f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 50,
+      "row_id": "fxUSD",
+      "sha256": "795eafb85c92a3e9cc9f4715e67dc9adfd9cc6d41b8c5bfe99bdeed6d05602db"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 51,
+      "row_id": "USDB",
+      "sha256": "13d3b8a08af9ebad2f939412a886cd723259c1c5d685d5579c8b2fac38d19805"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 52,
+      "row_id": "USDA",
+      "sha256": "581a478a6af0e573acb379b5ed118b281c9ae727c7439f847d19fe5ec0425526"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 53,
+      "row_id": "cgUSD",
+      "sha256": "0c96355fe8896024e16b142df2be4bb92487e688c3c9044d510cbb3d5ca92b6d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 54,
+      "row_id": "USDSUI",
+      "sha256": "fa505aac06f64209691c97446c3e278eef86e35dc82f6b4aaeaa3ef5918f687a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 55,
+      "row_id": "LISUSD",
+      "sha256": "84ca3d4161d9408a2396b2460cd3f5540568520ab17eafad22a88a34cacb084f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 56,
+      "row_id": "USDAT",
+      "sha256": "306c004de81b1631748b77c9ffd15518cc54ac06227855273cce203565a116c3"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 57,
+      "row_id": "USDon",
+      "sha256": "178a5b60ffdc18f9354f5bc5b7ced3f364cd24ff93f93c986252d81ecd0ce2e7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 58,
+      "row_id": "SUSD",
+      "sha256": "d64d1989d8908cd48c21c824038bb2af28006a1904a06f9ea8ae1878b6cb2006"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 59,
+      "row_id": "trUSD",
+      "sha256": "4efc0bb5ce6566eba8495bbcc3bb07f4f356f48fd0f611a5d4e5a8410326e729"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 60,
+      "row_id": "USP",
+      "sha256": "2536a9dcb434d978f8e9dc5bf79a73306358d49a22e176b580e9004f35c85717"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 61,
+      "row_id": "YZUSD",
+      "sha256": "d146a39b09a129b3df81694e0db9f47ace90abddde2e026dc71c5ec4ac8b687e"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 62,
+      "row_id": "DUSD",
+      "sha256": "3ecfbe2b387bebe678e8e4219942cc823e73ebc4795cef0e6f2331906a116b5d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 63,
+      "row_id": "USDx",
+      "sha256": "468d9129bd9841b43cdbf66bc0028e8a4c9b1a29b5f6092b400888e2ffb3cc92"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 64,
+      "row_id": "MNEE",
+      "sha256": "3f79f82fbb38f108c65081116f3299d8c30e9430ab56707b10a61abdcfda32d9"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 65,
+      "row_id": "pathUSD",
+      "sha256": "f9b1f995e2eca0f3276114549d25f6c86350477c1143b81685e29ad978bb35ce"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 66,
+      "row_id": "FIDD",
+      "sha256": "5bed74049970dffe1240781e89f844b9a1d8f00c94af27c896dc8add923bdcb5"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 67,
+      "row_id": "USDKG",
+      "sha256": "c2d138501f7231d483194df310364c47f2dd6972cbc5285be9ce4f9d354423a8"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 68,
+      "row_id": "IUSD",
+      "sha256": "12c220f50fca61b3da9ba503595e995780152289047a0de5890e875900c8f665"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 69,
+      "row_id": "REUSD",
+      "sha256": "3fa13e36df0ca6c65133fe31e79bbc5bfe218de51218761a95397899de5602d6"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 70,
+      "row_id": "JUPUSD",
+      "sha256": "ccb70e5af698684e8b58c7d34308e8fb7c990f8662c824dbdf6a71ee855d3cd1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 71,
+      "row_id": "MSUSD",
+      "sha256": "bbe7f2360bcddd8c2ba445286078de28ed08e2bdcc572e52ffd85531f97128a4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 72,
+      "row_id": "pmUSD",
+      "sha256": "61aee10db1d03326ac12d2320a6f75f00c100e54e10c0a87e757d4334717e274"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 73,
+      "row_id": "NUSD",
+      "sha256": "ccebb383dab9bbd7db1bbb0bfb39fd812c8f73ca7ca0fafb6e8090f139a86c47"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 74,
+      "row_id": "USDU",
+      "sha256": "fdefa233da7d96e23258398b256f27296e0f0fe9616a57dfe080c28c5bc58e32"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 75,
+      "row_id": "MSUSD",
+      "sha256": "a66639f85508afd462d458b49a64c9127581449e7e98c05b2a1a0bac26ff784b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 76,
+      "row_id": "XUSD",
+      "sha256": "38bb2903d7b4034277ed81fdc09e284d9f5472a01a5dcc7d42c606cdb1e7ede3"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 77,
+      "row_id": "GUSD",
+      "sha256": "85c4f06416e01e026900b1716a228dc817d6a6c6ea17b5f1b4850d3e907c2822"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 78,
+      "row_id": "USN",
+      "sha256": "943d69a251d027a596f44d68506f3db8352660255458647a9d9f12af976af2d7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 79,
+      "row_id": "UUSD",
+      "sha256": "59bf9541d62357a35e4f61d2acaabb996f104ae6984e874509888b2b27071164"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 80,
+      "row_id": "BOLD",
+      "sha256": "2960d23976541109294ac4a76d9188dbf466e29c515104c9ac6d5a8a54c19387"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 81,
+      "row_id": "YUSD",
+      "sha256": "b4fef02c53ea2c89a6e6286b4d890854488cc4dbe9108b920ee839d9f961ef67"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 82,
+      "row_id": "BUSD",
+      "sha256": "97d9013f8c2fd461e6a2144e3b03258744929f9dd072907b475c910307a014c2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 83,
+      "row_id": "SPUSD",
+      "sha256": "dc818278271a86dde903cae78b43222bc598d325b95d74951f98b35be664f8de"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 84,
+      "row_id": "BEAN",
+      "sha256": "7c58af573d7b60c6a8881f24d2d2db87e6651b2d44456351445f68850b926d2f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 85,
+      "row_id": "USDU",
+      "sha256": "4ed325a2b7cd1c262cbfdad08d084e8a7dbee8c6ab57bf8233aebc2dba72f713"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 86,
+      "row_id": "MUSD",
+      "sha256": "9a3b010b7517033b0cee9c98b0c751db7a91167d386b3afb6be369a714a8c301"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 87,
+      "row_id": "MUSD",
+      "sha256": "d83bf5cf1dbbed4643374ebb3d34bc22dfa1f04593ce6c2624ed30c108e77477"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 88,
+      "row_id": "USDP",
+      "sha256": "461850abe4469d8b00a119e9f2134f9b2c0dfa4b97fc4dda3f014818827f2bbe"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 89,
+      "row_id": "ZeUSD",
+      "sha256": "899b8b4ae3f2a2d5944ea06d69d4bc78b4e04a0f11935801f0da83d384de3451"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 90,
+      "row_id": "GYD",
+      "sha256": "b5174e931d12b9a308013cee86853689fe90ba10cbe2112f72e098d98cc28f65"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 91,
+      "row_id": "LUSD",
+      "sha256": "77212bf3df92243debd8b0df45da22b9b275200af9b8fc178c2ff0b3ff48706c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 92,
+      "row_id": "BUCK",
+      "sha256": "ccfa227d94710b24c3abdf025bd85103d71113fbc6623869b1fdfc29ba94dc02"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 93,
+      "row_id": "EUSD",
+      "sha256": "c57ed45dd66526cfc85e54a064d66cb66f289f4e6ae42831e56fa8423ec3b407"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 94,
+      "row_id": "USDX",
+      "sha256": "841c07b5d19971f9b426c1e7023f1c7ab79dce48f44e7ec9c61f6fc53bd1c1f5"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 95,
+      "row_id": "UTY",
+      "sha256": "d1216eef7146edcf06e14aec958b14c025798f0fe11ca17a4148e954338bc916"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 96,
+      "row_id": "USX",
+      "sha256": "0cc5915395fe2d0934a3b8dc893c7dda030388d9abe1621c9bcacb624342695e"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 97,
+      "row_id": "HYUSD",
+      "sha256": "b77d40aa9ad34742d0a3a91f5cfcb7733ab01e5bbe5ebaaca35f2744ae6eaf70"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 98,
+      "row_id": "USDR",
+      "sha256": "21d1b1c736c3c6918e978df59eff811b544a3e199d12a519ee539e027764b79f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 99,
+      "row_id": "FUSD",
+      "sha256": "4f8edbcd02c1594bb72ad1681a26c0862f9a4bf80c1a2a75a37f93574f6285c2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 100,
+      "row_id": "AID",
+      "sha256": "e0101548ff419fab7c902ff08bbde7281b83177caeb33b946e0dfd57771acc3d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 101,
+      "row_id": "USDS",
+      "sha256": "a3db653d5c01f254c0d8993b0d5471ab9dc0dac5eb93c05ebf3af7d97d2bcc8e"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 102,
+      "row_id": "TOR",
+      "sha256": "08002a751b17e7fb9d3eba85890d4169c47d36529a3cf53241bc1bc9dab5a0a4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 103,
+      "row_id": "USDM",
+      "sha256": "72b02fb7ef7f42bf140ee32905b6ea3ae92f15c010f47284f0288cc9286b9ad0"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 104,
+      "row_id": "USDm",
+      "sha256": "b44c4472cf6c08ab216eb7062ddcff359404667ed51ff795eeb4177948778f83"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 105,
+      "row_id": "AZND",
+      "sha256": "e6d0250814aefd45e48bfe6b27f374859455de8b0eeadf915f81260aa4cb9417"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 106,
+      "row_id": "USDPT",
+      "sha256": "e7a04a7cc7fd706f369106246de328b2b5777476f39e1224d3b5d50749eaacb7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 107,
+      "row_id": "USDO",
+      "sha256": "4e5520c6e098144c62dfc4499a47eedf7d588bf194795768ec6032836ec2ce4c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 108,
+      "row_id": "USDM",
+      "sha256": "bd1c746a6d34eaa4f69a251955f4db25bbd754072c5ec43e8a4d7a4a0f23f930"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 109,
+      "row_id": "MONEY",
+      "sha256": "65d09efb85b2ab2f8c5d9f3cb37389323b9ccb4edd1dcca2813c437dc07ca1b4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 110,
+      "row_id": "SBC",
+      "sha256": "aa99453290a03e65e41c73a1bdc78615dbcd2a3b8e0230a6ef9d2a651b6a9ce3"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 111,
+      "row_id": "suiUSDe",
+      "sha256": "8f0ba114fe3ec3b3c27f511a8a56f0e5e8ca9e56584d70da2c70e771a71b097a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 112,
+      "row_id": "HOLLAR",
+      "sha256": "f002b337f6aec4ab38f7b120d5dacacc3431d1d656d0858d3f0e92ee54fe837e"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 113,
+      "row_id": "USDCV",
+      "sha256": "4e23d891f740230bf9e99b2de67bb1cd92aff8ca5737b640a9f586edb792b418"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 114,
+      "row_id": "USDSM",
+      "sha256": "0117cd1e603c6b0d3783efe3afd8e39173c8bc99135b9dce91d334ed5ec04497"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 115,
+      "row_id": "YUSD",
+      "sha256": "c33d4105d7760b311d09caa9a84e7446d1d68594d095ba87920af1c1b41b7a80"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 116,
+      "row_id": "USDB",
+      "sha256": "84b1d06676f7aaefef13a3d226f7eef7a58233cf4bff4d192fa9cbdfe79d1b5f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 117,
+      "row_id": "R",
+      "sha256": "55468eebb89e031fcd23ef6e4dff45f35c979a465928f961904920a3a4f1369c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 118,
+      "row_id": "PINTO",
+      "sha256": "6f057b11c49fe39ba12fc0c99a08f773deb0d8c456bc59f9ea3be3cb6e750636"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 119,
+      "row_id": "D",
+      "sha256": "389a5956e20ecd593cce39248da19788edea4339b87cf1954a01d70a70943683"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 120,
+      "row_id": "eUSD",
+      "sha256": "ef28b6d8d14a585cd6aa150bc18fc0b77a61390dfbb8d58d2474a9102d9fb2a8"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 121,
+      "row_id": "ALUSD",
+      "sha256": "192eb361e006f52e5c294316910eda5fca70634fa5348fe0f9f7485be7204e66"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 122,
+      "row_id": "USDX",
+      "sha256": "dfb35d177819c04be4398911eddbdfcc824ea651e3d0e9d92b5830831978acea"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 123,
+      "row_id": "FEUSD",
+      "sha256": "d8d8ae09fb229ef318eb0fa8a181749ee06bf9de3100843a01ab6baeaeb99962"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 124,
+      "row_id": "USDL",
+      "sha256": "ae7a8baf80220a27fbef2b0681a14acba240b0dc4fed76250e8ccd9559f49680"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 125,
+      "row_id": "RUSD",
+      "sha256": "5676b0d62c08d042c1a5dc3dc18bd8f18e646bc3641de6f6325a077b7912e4dd"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 126,
+      "row_id": "YU",
+      "sha256": "80c21ed798205a89c94c814094709e91cb6e4a1201819a9babc1a6204e5d3a72"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 127,
+      "row_id": "USDQ",
+      "sha256": "6f8b386eca0bc85380068c000b8a594bcf2be78155594234f69d2a7e9a4d5443"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 128,
+      "row_id": "NXUSD",
+      "sha256": "639729ecfbe88ff2447faea73754f44d8dcf2848e2323d12dc39695cf02cbc87"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 129,
+      "row_id": "USDH",
+      "sha256": "e09532469a08cea3c312cadfbf949238829cb65bf7337260ae178b46afd268ca"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 130,
+      "row_id": "USDz",
+      "sha256": "ad9f586f89270b66f5d5ded3afd82a4cba474262d25d86fd852c9916ea2cb301"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 131,
+      "row_id": "USBD",
+      "sha256": "be88f20a8cfe2a1983fa17f5df38b33266f836759d697d0887027f95231b488b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 132,
+      "row_id": "USDX",
+      "sha256": "1c11182379408a98d0ce3943ea178e8bb561dd38e5aaae483a394c980c8c1efc"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 133,
+      "row_id": "BUSD",
+      "sha256": "0da344a8c28722ad08b1619a0b92835609a041c78e72ccd8fa0fd7aa205d2e9e"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 134,
+      "row_id": "USDR",
+      "sha256": "0b1ed77b594df3b16f856145eaffdd4ea8e7a7b70d06b1c2f2d97f5df6bba12f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 135,
+      "row_id": "USDN",
+      "sha256": "dcb6649809b241112a7c0760bee0d78d6122c2bafcb0544c9b055c14ea9205d6"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 136,
+      "row_id": "OUSD",
+      "sha256": "5737bbdb8292bc43b1e7a029300786ea2fa2ed8221ca97877f10f9d8af49c79a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 137,
+      "row_id": "HOME",
+      "sha256": "f9dddd16e8015d346a19e19588cb2a5f6db6c6d142ad56202bc5f1d1b58fe3ee"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 138,
+      "row_id": "USP",
+      "sha256": "360276dcb340b5da1b48210d82cf0520b1b32498c878c0c2c81e2532a06bc345"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 139,
+      "row_id": "BtcUSD",
+      "sha256": "c86d2fe11bc9c5e28115dd10de10daef871ec158668dde685b16f0575718b8ed"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 140,
+      "row_id": "USDST",
+      "sha256": "754d358f6c248a1596c012783cdeaf0e03d3648a4ae73cc1f73415d99bf55345"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 141,
+      "row_id": "XAI",
+      "sha256": "592ba85bd32ec8e112ffef08235b621bc2018831bf3128fb0a1e1b916ffe90c0"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 142,
+      "row_id": "USDSC",
+      "sha256": "5b5fb211bdf7180bc97e354ee1e4f530d32e253ecebd16189ef06d218ff0fc80"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 143,
+      "row_id": "PAI",
+      "sha256": "75efe69fdf721695907a723be9f66f3c5b403314cdec85f60342004d7d3e05ea"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 144,
+      "row_id": "ctUSD",
+      "sha256": "e76ead57d057a862098eb886f26974c634f3c6da9a3d9f4f8d25e8bd489968b4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 145,
+      "row_id": "USDR",
+      "sha256": "c12807058387fabcff04345648df16de941d29597ee1fc955ff6b50cc64109b3"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 146,
+      "row_id": "USDA",
+      "sha256": "b3b65305cae8df1f149e0ddf97d64dc395a6b7624ef56932ca29956454c4457a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 147,
+      "row_id": "FEI",
+      "sha256": "d96c01fc985d8c4837648310d284f8f2c1eec2a466537f435c4f80a5ed13c2c6"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 148,
+      "row_id": "ftUSD",
+      "sha256": "ab69b29a1c029df868fa770d57b37626a73f02608aff4b0b9d9bc82739a33ca1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 149,
+      "row_id": "DLUSD",
+      "sha256": "a59a7e4a758df81a079df6594edb655524f5524152559420617bf190e08380b7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 150,
+      "row_id": "PUSD",
+      "sha256": "2da51f964d9fbbe0be06d3eb03a9f10ea44bded1cbda6a4984930515fd3d63b5"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 151,
+      "row_id": "USDso",
+      "sha256": "37e44940ae7020bc90be5083271aefaecdc5ea3dcb75918aa54c28238e6d64f9"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 152,
+      "row_id": "MUSD",
+      "sha256": "c7737163a08053ead76682afe1af2120f1fd2c905ee1a27831f1afb3a6e97054"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 153,
+      "row_id": "DUSD",
+      "sha256": "5a921e9ca783745938913cb75f65ded3d60aeed6a230deeec43d3deb548740c1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 154,
+      "row_id": "DOC",
+      "sha256": "c41183af9df38ce6067107ac2f048e5a571249ad9f92aa5051e9139acb82f8e8"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 155,
+      "row_id": "aSEED",
+      "sha256": "1da47b765fd4abfe5bbba186de2800cc9f9f03ea5a91aab625cb4ccb5657bd34"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 156,
+      "row_id": "pUSD",
+      "sha256": "392222c27b64ecb7000a4596f68285d23802ecc1a653cb3f79681533442bcc98"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 157,
+      "row_id": "USDP",
+      "sha256": "3b3084bf28b93be210cd0f32c8b956e5df2c566fee8073b44a30f00f0a38b01e"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 158,
+      "row_id": "USDnr",
+      "sha256": "eb709f0880f9dc65dd05c800df684892d03444c96cd003ae957353e89255004f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 159,
+      "row_id": "USDM",
+      "sha256": "8a7a42b1886f48d1a25259c2eece3ba14cfb921b903f86d3bc3dff9a36c4862b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 160,
+      "row_id": "USDRIF",
+      "sha256": "0bedf88af392e36983a085348a02c0a3da4f40640a6cd60bd05a76525c26da9d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 161,
+      "row_id": "NUSD",
+      "sha256": "d9091c5b9e3e39366e342b14fa82fadac38f0df119aa65ef0655b934bce64788"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 162,
+      "row_id": "syUSD",
+      "sha256": "2ee8697d9c5aa923ddb483e157232b5f7649573780e38284775307201eef80da"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 163,
+      "row_id": "USDH",
+      "sha256": "94d2f99930c0725f901991a853bfdbe0936f32be1cff9fc274f519efbd02de10"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 164,
+      "row_id": "XUSD",
+      "sha256": "a718f9991881d79855dd1f72f0274b8e189a748c02399a54849342a6a59c831f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 165,
+      "row_id": "FUSD",
+      "sha256": "4984777ca302b7b94a0d188bdcb91702b521107d3f488a8ee98b1b6a0d6d4d38"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 166,
+      "row_id": "cdxUSD",
+      "sha256": "effa4b89263a9968cb11e1f43207b97ad4c0804e12ed9fc55f58f8c88c0b8fd8"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 167,
+      "row_id": "beatUSD",
+      "sha256": "ab3642ac264fb2cd14b1b9bca785232b755729251fabb407e602172cb5907070"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 168,
+      "row_id": "VAI",
+      "sha256": "c34ba75cede76530c15c1641a39569a4e451b8c553e8b2c7da888e991de79aec"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 169,
+      "row_id": "USDN",
+      "sha256": "60db4d645d376e686e300c8f91d7b75aff6c9fdb4cba9a3c651b92de6cad2475"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 170,
+      "row_id": "USD3",
+      "sha256": "135452b1396d6fb278e1cc625b2a2004f8ebaace98aac6271fb8a522fdfc9128"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 171,
+      "row_id": "DLLR",
+      "sha256": "e66e8b4ee7741897d9f4f6129622fd7cfc6183eb6ffa9f23a25252998f827a82"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 172,
+      "row_id": "iUSD",
+      "sha256": "297b6d67beb538ce77530516ea4d3540653fb212fa53086a3f609a8ea7c198bb"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 173,
+      "row_id": "USD+",
+      "sha256": "af2975025a5fa7855b65314edd3d61d2c44b0155a981c336f8292c21cc315412"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 174,
+      "row_id": "FUSD",
+      "sha256": "cf83c83408d815545cc68f6795e2034faaa7ab289e01b4c1501a14309c6a2c0a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 175,
+      "row_id": "USDI",
+      "sha256": "17a25de64335953d15301e4a0f6ed5d489ef7ab3b3bb71465833d8c62ced8c45"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 176,
+      "row_id": "USDV",
+      "sha256": "b374f3a1f5975c82ac091b4c98d3931967a27ae09ae43d098ceeed01a38a5b06"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 177,
+      "row_id": "MIM",
+      "sha256": "87ba00e81016b875c68283a231a5e7e2cbbca5297dddb78c3f7898c307dfd39d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 178,
+      "row_id": "DJED",
+      "sha256": "a1595b07353e6e95fc809a20ec114934e5d53fe1c5b22919ae02892ef57b15fb"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 179,
+      "row_id": "USDp",
+      "sha256": "18e17d3479fb7cee6aa79862a44dbf38e01d996c86335422340646b164371a60"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 180,
+      "row_id": "USDW",
+      "sha256": "6744b1d6a8563d163242258b22a8f08e88ce8e0a3da1ef712a45845a15ad8128"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 181,
+      "row_id": "USN",
+      "sha256": "67611628d6475006b0eb7031957b7ac95d5de24851ee5a6c549771969a6691dd"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 182,
+      "row_id": "USDM",
+      "sha256": "7577344136e82c22983034e285223be6831439c02c978cc160de45bb2078e7b0"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 183,
+      "row_id": "dUSD",
+      "sha256": "cbd4986ac6666b404a516fd23626e52a1d01447c2ab0aeb751cca2194a30346f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 184,
+      "row_id": "IUSD",
+      "sha256": "5687e03775e7956d99789a4413be0381257754ec386177162cb418e86b8ff738"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 185,
+      "row_id": "USDL",
+      "sha256": "45e22faba710750b6a7ca0f918a58e0e512313420450e2e1bbec4a981bfca9d7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 186,
+      "row_id": "NOTE",
+      "sha256": "105868e54c6b74bbe7d2e9d7bdf3415314a30d08e1e6dfa185b7fbfc9303d86d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 187,
+      "row_id": "zkUSD",
+      "sha256": "a2519df861dfb95221243637dbac62d4a837440455e38492e98ff846e2c311b4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 188,
+      "row_id": "USDH",
+      "sha256": "b679e3a76bb3998f53a2ae4893a35bd61bc430de069b22772a7220d0c1f53c72"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 189,
+      "row_id": "UUSD",
+      "sha256": "45720aa01d923dfaa2e8e634200d9aeebc9d393c5077c955d51568a7ba5407e1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 190,
+      "row_id": "rwaUSD",
+      "sha256": "8e34c2ba08650ad520105775da9d567f608cb25572a88ccff9b3f8e864fc4945"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 191,
+      "row_id": "USDGLO",
+      "sha256": "6a80155013d989bb2d52a3bb301273ae3870a8fde350c3f13757ecbd1fed0a72"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 192,
+      "row_id": "USSD",
+      "sha256": "7a90b7f7ae0b9629378a2f55b75f2905f50d75325fde36c69e85518bf7a885f5"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 193,
+      "row_id": "FRNT",
+      "sha256": "0041b63d731a21097d73627147a8867a47373b215546c099c43c9ed3ab821ae2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 194,
+      "row_id": "CZUSD",
+      "sha256": "c8aa5d35133ed90b8d8748fe5534c2d329d93d51af6164f0569e581d4a11d259"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 195,
+      "row_id": "PINA",
+      "sha256": "d8a4e1616f3623a8ede04f930beb23ae57eb555cf6abd82880ce6b8059043d3c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 196,
+      "row_id": "USDA",
+      "sha256": "fb227b9568cff03d024073b81ec32b3f9cdfe712e0dbf7e1ef1fad12719e0085"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 197,
+      "row_id": "DUSD",
+      "sha256": "a68ab01a80b01c9bacfb47462eadcc2eff5eb966d29f8c001cab3c2b385251c7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 198,
+      "row_id": "sUSD",
+      "sha256": "4d8ffad53b6d53e8d85e0327d584834d29673b231710a68763b652ae9a329d82"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 199,
+      "row_id": "KUSD",
+      "sha256": "bc94efcd7467bb6468ea864daa7d2b2dd7e26e5ec26ea23d9a55f939ca827f4b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 200,
+      "row_id": "USP",
+      "sha256": "cd5c2e7605a6c4cde7190d2417d44a136ee27632f9b6143f92bd043949d235e2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 201,
+      "row_id": "USDN",
+      "sha256": "d4234999257ec17d11a1fac99b0adf0c4dcccbcd46c5c6d291377ca97502ccfc"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 202,
+      "row_id": "BNUSD",
+      "sha256": "9d077a118db13f30996caee42f37afabb7d86f0df845576a8f3bf7d0c1476b4b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 203,
+      "row_id": "SCUSD",
+      "sha256": "262d48442f177a9a1541cf0ef351eb52a772335eb178989fc87965f936fbc568"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 204,
+      "row_id": "PUSD",
+      "sha256": "052a850388d9c4749779aed206d512f84d163915145189bc68d88468ddf3a307"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 205,
+      "row_id": "BNBUSD",
+      "sha256": "bcf70cf68c6582f201d3a213120cd0d006a171453b1382e9f06d99ecc6ad9700"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 206,
+      "row_id": "WUSD",
+      "sha256": "0b37e95092c2eaeb1e9567499648defb63ebf847a72c7cfe68090d99795531b8"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 207,
+      "row_id": "FXD",
+      "sha256": "a319779749c4bc9bd25f5d3eeafa1084fab4f54b4f67bd362ef3bec7501b2fd1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 208,
+      "row_id": "USR",
+      "sha256": "6b2aa2978a93074bafc932e8cb29229524cabf9498b93864d6625d6ba48b8c9f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 209,
+      "row_id": "THUSD",
+      "sha256": "e62b2cce2d7bff2d4c4f3d80232e3d6e2eb3de03f36523791342a181c773f054"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 210,
+      "row_id": "GGUSD",
+      "sha256": "551de3223cce5fca0f9a4bc781c59d2709066fcd3533e0d062f41b1e41f42bcc"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 211,
+      "row_id": "PXDC",
+      "sha256": "6a9459fe5ff2a3613d2563885dcbdcc0e02e0552c67766f4211bed8bf35a5fe6"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 212,
+      "row_id": "USD+",
+      "sha256": "26cd17aff4e6f13c6eb12c75308a0ac124475bc39b852b3f82965c3d6f96b729"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 213,
+      "row_id": "USDS",
+      "sha256": "0603f1ce4a7c2adb96f315ceb35455b3e8438f0c99811e093a1d2c438fd17479"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 214,
+      "row_id": "elUSD",
+      "sha256": "e32002aa5960d9bfea7dcb99801c4c1be861b951c65ce1aef88b4c10f088d776"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 215,
+      "row_id": "WEUSD",
+      "sha256": "e2a09129d5d5288c00790fad56021382b5e80f879823db23c5ac06ccbdace9b1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 216,
+      "row_id": "USDK",
+      "sha256": "9c34ded618b00c56e95784041cc63899f2030d3fb8a366b7052419427f9ca842"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 217,
+      "row_id": "USDV",
+      "sha256": "88aed063f62a2ac07d8d8f347e085e7eb99bd6f38e6fd947af0ff8c97abbe1c4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 218,
+      "row_id": "mantraUSD",
+      "sha256": "06f5cc17f98af200b791016027dc483cad910ef3110a6a286ef77425530883f6"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 219,
+      "row_id": "3USD",
+      "sha256": "ba7dfa306d9df82817beb7958dacf2a176f27023d2cf19c3aa246bad4eb50192"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 220,
+      "row_id": "eUSD(v2)",
+      "sha256": "0f7e27156d18949c248b50fbe6f5a575d402e89bc4037e7d1043161ea48574da"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 221,
+      "row_id": "USDV",
+      "sha256": "9f762ee41a1f25ef290ee6a1d1032e11c3021aa4f57d15d76654054ebf7d614b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 222,
+      "row_id": "LVLUSD",
+      "sha256": "3a8d6cc5d26e44528f91b09fe6f0c254ece6275217dde94e3420bf7801076e92"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 223,
+      "row_id": "BREAD",
+      "sha256": "accec2bda0e73d82f95474f51dc160e82fb31c09ca3068bda80c8ae68a256cf4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 224,
+      "row_id": "KEI",
+      "sha256": "37d3419eea8b775471bc83feab88ea2f9c0c93135e32a36f6d7553792c8e5e6c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 225,
+      "row_id": "HAI",
+      "sha256": "e3159904eb983cefe94aca9b2d16b65ac8e9531b7800a8ed04581f4690a46cd1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 226,
+      "row_id": "aUSD",
+      "sha256": "37e18bd03b576fa2d49efb898ef647ea651bbd98d370b58cba29206a6bce4fb7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 227,
+      "row_id": "NECT",
+      "sha256": "a5804c482c38ae3ffdfedb70d6867a8751bb519126c934636265330a40f9b294"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 228,
+      "row_id": "GRAI",
+      "sha256": "384b2ea983c90a87f3f7862bf17d0128f014682e1fc7487f4009e632e44799de"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 229,
+      "row_id": "zunUSD",
+      "sha256": "7ac7575306a164898a544404394400f473c50cb694afdecb6599774d27a7ed87"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 230,
+      "row_id": "UXD",
+      "sha256": "c9769497baebec0b79c12df84a9ef44c09abedd49485bc2fc6ef965efc311ee1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 231,
+      "row_id": "CASH",
+      "sha256": "8f0ed98e8c330ad4ade64a9f01cd6f646ed32444f4eb32249f6c855f28ef81c2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 232,
+      "row_id": "USDJ",
+      "sha256": "5e3e7e28aa9610a9017b514c362706988303a3976ee5e29305d4c69a9ef24587"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 233,
+      "row_id": "BAI",
+      "sha256": "e065fcbf139b968c803adbbf5e9e1814aa0b44479460683d84145b92f5c2c957"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 234,
+      "row_id": "rUSD",
+      "sha256": "57a313ad514d6e64e642759712b51bdebf4ebdbed9fd611689b12772e72af07d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 235,
+      "row_id": "bitUSD",
+      "sha256": "f4a1e731c35e084776abb3b13fd98282c2f1a645f4f8c449c8dc651f822c75e6"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 236,
+      "row_id": "mkUSD",
+      "sha256": "ef984959e9b59442a2a767c1391dbf56b40dadea4714602dbf297ce32a3e4c7a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 237,
+      "row_id": "USDT+",
+      "sha256": "be6d91e18077a441ee223a34c437d01ed18f610b124806eefe2f4f80321f381a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 238,
+      "row_id": "USDaf",
+      "sha256": "da6f9a101e7d881e774a9ec90501b7cbd0d65ffc757b1f940fe869175428c9c5"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 239,
+      "row_id": "rUSD",
+      "sha256": "c21106ae082d7acc72c64da3195d0292b824d0faecc8979ccfa5f02ba9d59840"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 240,
+      "row_id": "USDCB",
+      "sha256": "0547498e7197798cb6c76f6fa77d2c329705136401a263a09c485b4bbbec3d61"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 241,
+      "row_id": "USDTZ",
+      "sha256": "6eab359cb117ee28c69b08087cc546e729a8191d94c6eacaa9ff4aff2e100b0b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 242,
+      "row_id": "IST",
+      "sha256": "5957e5a4bd4ddefe417a0914644b025cc66f0a04d2ef52b22a24f7235f3745e7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 243,
+      "row_id": "RSV",
+      "sha256": "40b18047cd68050001bc82b536bb7b3490995d4e0b39600d9aa4b787cebaa81d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 244,
+      "row_id": "BOLD",
+      "sha256": "1294d031f8d7142dba7be1b0b22904f2b0baeee3eec1d9f07f49a85d696042b0"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 245,
+      "row_id": "STBL",
+      "sha256": "8160e9c8976ac4f95b302a323d410938482306fe9a30b32ab85334c5d1d1ce47"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 246,
+      "row_id": "USDFC",
+      "sha256": "3623d9176d26aaaed45a63b0a17a37633c096cc714e2a62fd63d01514d2ef71b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 247,
+      "row_id": "USDL",
+      "sha256": "72c639ba1a721a4ad49317644116e9ef88484ecf47b536a59172453036190168"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 248,
+      "row_id": "SVUSD",
+      "sha256": "b034ec327cc5d868cf008ea36b0efba7595fa7c43e0bf1c8cf74b5838ae2337a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 249,
+      "row_id": "SIGUSD",
+      "sha256": "a7bedbbed15fe1810f282dc0f51abec020ebf4886fc9545a0cf615093484952b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 250,
+      "row_id": "USDB",
+      "sha256": "a5ed4443406ee5dcb0e94ffe8154dc4d66e42cfe68721a71f800a1d152795700"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 251,
+      "row_id": "USE",
+      "sha256": "4b32a238ae21d9236b8e3686fc1424ad0ab6c8167d7a9d435a82ca5567541a9c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 252,
+      "row_id": "DUSD",
+      "sha256": "bc16f45ea9d3e7b2481294952082b7cd1ff6956c364d060d07578c6ffa03a79c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 253,
+      "row_id": "BD",
+      "sha256": "685f26396e742ac47283c6051c381cfcba5481dfb04c0410e5bb28854b5456f8"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 254,
+      "row_id": "IAUSD",
+      "sha256": "9974bc8838d2f5d66844e72dd5acfacdca70229496f7af23bdc8e56509b69903"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 255,
+      "row_id": "ZUSD",
+      "sha256": "9e20dff7b8ac96dd7e5f299e526803a77f7bea6e66e2eb447515b56cff9591e7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 256,
+      "row_id": "USDQ",
+      "sha256": "9492289de5add10884394287ffdb0a2547c36d93a580b99fb8e85baec610e409"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 257,
+      "row_id": "USDXL",
+      "sha256": "64819061edfcfab8a062e0005ff9c4f3192f5104bb764d6e463947d9445c6151"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 258,
+      "row_id": "HYUSD",
+      "sha256": "16b9ebeaf307d5b4529e347d4d8fc5dc5d8b5dd4031c718bf22ed38a625ca5f8"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 259,
+      "row_id": "peUSD",
+      "sha256": "cedc5f04af780818c3b068af390b92483a3b69e25b394641569f53ef0c2bc8a1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 260,
+      "row_id": "USDS",
+      "sha256": "d65ddd0e6cc77ba5ca28b8b97a167dbbb72e42177e0abde25b83cb37d85236ea"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 261,
+      "row_id": "phUSD",
+      "sha256": "e8387307f13952a24ebf34cd268588543e674153ad44456fa394d1ce9614216c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 262,
+      "row_id": "EUSD",
+      "sha256": "b76b4f5b353430bc70d3550443043c7b9cc502901dfbd8293d4dac5162f59ea6"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 263,
+      "row_id": "USDS",
+      "sha256": "7a8e01ce01b9b2c7834e92700bd629eb4f79338fe3d31ef4e1aca45647b3c38c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 264,
+      "row_id": "HYDT",
+      "sha256": "2c8128b35642c184cb38aa34b800298952406122399b8812e30498ae8592aa63"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 265,
+      "row_id": "WEN",
+      "sha256": "f7f26c9a7d8b922a28e5dac2b112501fe7597bc4e93e31e132e5174c58b2d440"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 266,
+      "row_id": "ARUSD",
+      "sha256": "59f815114b2c92b542243ae8e0746aace214347610c5fe5b4c3c4230bac3bb2d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 267,
+      "row_id": "VST",
+      "sha256": "d11efea62d77fdac6b088d91dbe2239578899cb2518f2c58cb09aacc6841a0d4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 268,
+      "row_id": "MyUSD",
+      "sha256": "f4159bc9dc1775fd9bad7afab360302c7a87b20088a139faf21e3fcb63cac657"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 269,
+      "row_id": "STAR",
+      "sha256": "db011141374d56c9a465740f72d0fa45ed278fd775ce6b775866e182aedec0eb"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 270,
+      "row_id": "invUSD",
+      "sha256": "430bad6a0bc1622ec81f4a21935324fc79f780aaf3da855eba471f47455f2dd1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 271,
+      "row_id": "CASH",
+      "sha256": "5a2ef8acc72563b00464cb7f8d7ba28bb197bee6fe6b0ff027178339238fe5ee"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 272,
+      "row_id": "USC",
+      "sha256": "993b5d4d1c0bfd537272d8d47e7b71d46f2efe21adb9b1a3be17abb734244d75"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 273,
+      "row_id": "USDU",
+      "sha256": "639f5d2f89c6585b41c1fcaa7a118a1533f7cea1909b98d3b56ad367656d4d64"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 274,
+      "row_id": "VUSD",
+      "sha256": "7330b1dfd97770c7e7c5bec4f9e41000524a60b0354545425f35561dd215b2c2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 275,
+      "row_id": "UST1",
+      "sha256": "14cf4c305f3cde9a3e699157989131ecb7de8ab815762cf211e549de228d4a3b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 276,
+      "row_id": "HEXDC",
+      "sha256": "9978db75010871a1fc22fe719a7b57b3296e01ff33204cca025e7fbafd486868"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 277,
+      "row_id": "ERN",
+      "sha256": "a5def72209d1bc1fdcef67313ba0855a29625d36e75c1f294714c2fa20c5bfdc"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 278,
+      "row_id": "USDE",
+      "sha256": "72ca3151c4d623bddb55a73027b0c6adc99bad91e9440406ac2decfda3e44ec4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 279,
+      "row_id": "USDA+",
+      "sha256": "e693846c875c7f08cba1c42385a623c7e9e0a0107eb43a81534fcff132755ae7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 280,
+      "row_id": "BYC",
+      "sha256": "e1a8e0e023b11abddfacbcb9239014a9f6fb82883063e0c5b83cfb6b60ae4215"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 281,
+      "row_id": "RUSD",
+      "sha256": "1701332b23665ba9f4f15e6cb81f45841ee4755f46820cfc6d1abd4832d94096"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 282,
+      "row_id": "USH",
+      "sha256": "21100e10c24cbb47e7f7d9b7eb3136639e8589913f986cea882ca835efc95dc4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 283,
+      "row_id": "WAD",
+      "sha256": "5c6ee4589f88beef6eb5a5097e956dd6df293982deebdc5f98d66bb3605819f3"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 284,
+      "row_id": "USND",
+      "sha256": "c523fbce128b21f4796b3ae2744bb28b648a9f3e88c0110aa9dd7e774f109d74"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 285,
+      "row_id": "CUSD",
+      "sha256": "3e4c0fc950215332ff8bb23cf9c7f55abee7aaf15e44ee90f71c903b20656e4f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 286,
+      "row_id": "csUSDL",
+      "sha256": "a58c845ffe696b2e36487fe206b9633601311155378da75ba8524e886d9d60db"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 287,
+      "row_id": "HRUSD",
+      "sha256": "b8202d880b5ad3576da2d0590eff634d6a395b1b77827c7fd105a18e14df901f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 288,
+      "row_id": "MOD",
+      "sha256": "20fa871e3aed13b0a44aff5e6d65db8e1846b6b02b0837887b06402da644386f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 289,
+      "row_id": "DYAD",
+      "sha256": "f4a0b5765bf6053ec83106ff65eefbafb0ff0ae9624e5bf1bf2f50845a31a9df"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 290,
+      "row_id": "eUSD",
+      "sha256": "be6b6d40119e7caa7285cd8eabc4b537677d3eb7cb406be83c1a8af325408fcf"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 291,
+      "row_id": "BAOUSD",
+      "sha256": "9c410c8cc1f544b8b22aa9a1047e1897389333344e7b6da118ec60c7d650cbb5"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 292,
+      "row_id": "UNO",
+      "sha256": "571a41b79d70e7908220b7e73e166c72142fb6b7bec92bf908feaf8994d60d5d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 293,
+      "row_id": "clevUSD",
+      "sha256": "843a994a46f2ab6d5454c51d6fa00921210ad651c53a0be6bc95b0b6c837677b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 294,
+      "row_id": "DSU",
+      "sha256": "ac7af4b76d0e3537ca54c0c7f5346b5aa1cf557dcee4485ac2065928313a5920"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 295,
+      "row_id": "PAUSD",
+      "sha256": "0feac394cc1e2071156a68c05a3f9a64d127591bdbb3dcf18fa6f16fad7740e2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 296,
+      "row_id": "MONEY",
+      "sha256": "d6c00c23ca87f6c70365b604e54afb414d47a47a01a789ea67128bdab8a748a7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 297,
+      "row_id": "BOB",
+      "sha256": "df07262d3dc302040585eb9ff5a35afebbeebc2c0b7b84affe6a80c0f3274146"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 298,
+      "row_id": "EBUSD",
+      "sha256": "ca93d9c738e6eb0810f7a433d674c1c0dd921e721d9d6573bc3bbd40192db1a8"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 299,
+      "row_id": "DAI+",
+      "sha256": "b5d8aac0d48d1e9d15f8333fdef4f569e46155af9734197c80c351f93ca7a1bf"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 300,
+      "row_id": "FUSD",
+      "sha256": "88c254d8ef61adb0e6ae5c32adfb2ecc1dfc21cce7654d7b10d3f8c195673044"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 301,
+      "row_id": "USH",
+      "sha256": "114af3b3d79824aed23079ed355b3ceeefd6b74165fc033717dea30e361f1678"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 302,
+      "row_id": "GAI",
+      "sha256": "eb7bed17fc511b09e78b4519e19fc80f6e385a27143809267222c3c5cabd6d76"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 303,
+      "row_id": "USC",
+      "sha256": "965737c6075b85c44c8caf080c802b2e49810e37469c8ed4f78ba4e994bdbb92"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 304,
+      "row_id": "btcUSD",
+      "sha256": "fd7f198d3a8f9ef5493a432d80ccf680ef3b0790a6130da86f03668063cad4ec"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 305,
+      "row_id": "ULTRA",
+      "sha256": "b6ff376899769127ef3c29160551bdea7f63cff1e0550ace107d484544de5a0d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 306,
+      "row_id": "MEAD",
+      "sha256": "e41a51d236a4be44cdd3a8dacd6a0974bd75e47aaadff0e30dc64af35911938f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 307,
+      "row_id": "DCKUSD",
+      "sha256": "a67f1bbea5aced93114e5cbdef4a7441f4ff2909b2bc534268961d9acdd30584"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 308,
+      "row_id": "rgUSD",
+      "sha256": "ff1fd8902363fe28249be8d4ca156d3dca8d71c6da598e7e40097dacd66046c0"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 309,
+      "row_id": "MSD",
+      "sha256": "4b6f32990e7a220c09dcf32c7dff46eb0a3756d914f4c78b3141ae9738a6994a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 310,
+      "row_id": "ANONUSD",
+      "sha256": "af80f2452576f30120482200a21d9ef9705887db83070dfeebf1835daa5662a2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 311,
+      "row_id": "USC",
+      "sha256": "a6e03d235468582dc143d64e792849bb663b57f2c028fea15445f0e7452b02dd"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 312,
+      "row_id": "PUSD",
+      "sha256": "7e169e2e69111222c5a855a8f0a851f9a48caf739fdefb0d38a83c37ed962654"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 313,
+      "row_id": "JUSD",
+      "sha256": "50a269e2be51dcbc1d4913e9959356269e6858d9e59d14911fa19fb5a8329aeb"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 314,
+      "row_id": "NEX",
+      "sha256": "b329d85bfc81af34586f03d7a7ed6caa98f0ff79c67db8c438fd97ef85dba117"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 315,
+      "row_id": "USK",
+      "sha256": "0ff3071d2ae3907111b579dd70e03945f0be6c9042c6b42429e799aa916f5cd7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 316,
+      "row_id": "XY",
+      "sha256": "3c4a1ca2356e9d871ff18e79544e92a922e646df8b87808c84d5962513dd290c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 317,
+      "row_id": "FIAT",
+      "sha256": "80003bcf44679199af5a71ed4ea39e5cbaecc37abd5eab3bafca7116e47d7109"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 318,
+      "row_id": "USDI",
+      "sha256": "45e0521cc7685c6f96ea16b2593a1f6dd334056c51d37763a64a98727424f06f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 319,
+      "row_id": "KNOX",
+      "sha256": "589c0f931dd66e16189bacd75ba9f066e6a0100cfcde5c10eda572d4a00e28ce"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 320,
+      "row_id": "USDaf",
+      "sha256": "34a35f7fdd9947b887d3a8b75bca27a6dabc5e334b734b093cb30b34c98fddcf"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 321,
+      "row_id": "BPD",
+      "sha256": "58460d90691f4c86ffcb262451d1917ae84cce9204831f457ada5cadbc09b03f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 322,
+      "row_id": "USDK",
+      "sha256": "53f3ef5161ca0dfcf9fe947508d39111b7bb23c124808131d89f536d153e6e78"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 323,
+      "row_id": "paraUSD",
+      "sha256": "1a38f3c8f591ef6adc100f172f102979d2dead1d1e7ae09243ef73ac92d4944c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 324,
+      "row_id": "USDeAD",
+      "sha256": "15a2acb6e1d714c18f7283e28bcf20297e620d14ba91f7e95c393b509e3d92a0"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 325,
+      "row_id": "xpUSD",
+      "sha256": "be4f36775be649c9c6beb3d146e654ab280cb006f1deb124e269da8b992a7445"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 326,
+      "row_id": "kUSD",
+      "sha256": "5a2339ee3e36321ffce89c0d2a3f642f78243ef9114e7a988215831fce5512ba"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 327,
+      "row_id": "USDU",
+      "sha256": "d9c436ffdf9cf99c45d03ec1a701ab5ac8911cc9862e9b7da5e29d79d63bb9ad"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 328,
+      "row_id": "SCB",
+      "sha256": "3fb6796dec29d7412431a96f911963a0629402b10ed768497c64d99da4b3bf2e"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 329,
+      "row_id": "litUSD",
+      "sha256": "bb1785ec2184d2eda1b87717a596821f66abe3eb1bc30ac3a66ca015c1b1f82d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 330,
+      "row_id": "sLSD",
+      "sha256": "533a51fe870545d6cb4d58b3ecc0c6ca1166ee531712dadb5d706b424c3bb089"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 331,
+      "row_id": "d2O",
+      "sha256": "e1538ce0e0cd06d991187f21d9018abea2268aebc4ee767cea36c78b6dc86e42"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 332,
+      "row_id": "CASH",
+      "sha256": "d347fe0dc143463e0cf267e5405fe89ce39980bacb00ee21d456f7ee19dd04fe"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 333,
+      "row_id": "FUSD",
+      "sha256": "5a1012304316b0b2e13519af2188ecefeed1605132876e5550d26377f421be91"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 334,
+      "row_id": "cUSD",
+      "sha256": "afe199978a223dd9c10566f76ce649d20fd1280a6584c072e8dc3fc4039162a7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 335,
+      "row_id": "USDR",
+      "sha256": "b35055154a8132afbc41dcad2c1c2c457d2208ec0014abd4c8b9d5a05d088eba"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 336,
+      "row_id": "USDMO",
+      "sha256": "2ffb983ed07327c0a9ce883c6578b5b9a901f2444ee12b6865ffacadbdad21fe"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 337,
+      "row_id": "DEUSD",
+      "sha256": "39a47a1c79d4a1f03ec5cf3f8dce1ba18615d99274243f8eafb0ec8d171810fb"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 338,
+      "row_id": "EURE",
+      "sha256": "e52ce17093b468f65635369696c336145b570b0f2f7e041aeb05701d1670c85b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 339,
+      "row_id": "DCHF",
+      "sha256": "339bb7fef41bec4930eb28c8205956e581434b7b7253c112d79813c9aee84fdc"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 340,
+      "row_id": "SILK",
+      "sha256": "f7590f70d161b31c968d97151ff7b3c4c3c790da6c38ab796d742e6ae88e310c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 341,
+      "row_id": "GYEN",
+      "sha256": "39d1f258668c1c5322e5a5546aed39be6481050932f17946a24ed5504de59932"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 342,
+      "row_id": "LCNY",
+      "sha256": "92d3cf76131f1cfec9780707f108fc6977d6d683e24ffac7b6c536f7a5c5b49d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 343,
+      "row_id": "UAHT",
+      "sha256": "2dcd1d2fb7f08d4c1f8d8502385547ae8f4b83f884e78ccc8f31fd4532d304d8"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 344,
+      "row_id": "NARS",
+      "sha256": "e263337874daf6e5fcf6398746bcda9fc632fb9cbda86bb95736fd9cec61d53a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 345,
+      "row_id": "CDT",
+      "sha256": "54b8ee3027a21b87946c8cb28c279f4903af1ef807a5fd4e2d3e4f20f490b3bf"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 346,
+      "row_id": "eEUR",
+      "sha256": "dbeb351c5c1a0b8ff90daef289b458323a9f78aa45f6c343501cef37ca8db098"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 347,
+      "row_id": "eGBP",
+      "sha256": "c0b17c994cc6bcd196342267d4e6bafe7e2e47d798a8c18476aef8938423d063"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 348,
+      "row_id": "CADC",
+      "sha256": "f66d53c2418ea26dd65ebc26208d6341cf4cbba0a838bb6ee085ce9e0f1046f7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 349,
+      "row_id": "AEUR",
+      "sha256": "d6c85a034d41a1d8d15d0dd325a0631df593e164ea8ca102b39e9b582569d37d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 350,
+      "row_id": "VCHF",
+      "sha256": "a3592609c9d257d64002872ffb222b2c703f2f0e78ebc3996bfbef3d6a2fa5c3"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 351,
+      "row_id": "VEUR",
+      "sha256": "01cc86baf7743fbe16f9597dfa81358982c4ae58afe989bd0b2337b1b19821b0"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 352,
+      "row_id": "EURD",
+      "sha256": "ca7cf0f8106f163d03d7381a2c78d7828128a8fb7d6fc8d64519b4322b1c5c92"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 353,
+      "row_id": "AUDD",
+      "sha256": "3e9ff0d649871d358f2f5603f0fe9e305f71aaf0bcae85248f5c6578496f425f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 354,
+      "row_id": "fETH",
+      "sha256": "415fbeb5cad7947575b1159ae4b498482bc72a45450c3923db517102401376b5"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 355,
+      "row_id": "EURO3",
+      "sha256": "e0137f43059f35e5c65f1e5b4c3944ce7725397d4486b725adce42e4596a41e0"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 356,
+      "row_id": "CJPY",
+      "sha256": "5f0683ae3eaab90a8956a05d632a4c8bbf7c39fe7d3cdff52f9b80f59ef5eeab"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 357,
+      "row_id": "zunETH",
+      "sha256": "9e0dfd8054b32f32301ab88b0db9f34890fe8511f7a7563258e0f63f81d2e5c9"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 358,
+      "row_id": "ISC",
+      "sha256": "9ab5a67f7d5a81bf5e2a52a861b889e16a8c2db4958ff13a2e5d996a5513956f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 359,
+      "row_id": "BRLm",
+      "sha256": "84776181a58f7ba30e2a059a4c3c54bc0835f93cce93ec1a4ea9f1241e8d1d9e"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 360,
+      "row_id": "HCHF",
+      "sha256": "d31ddbec5792ef5ebc59f2ee2d84c731f11ba9ab37d1028e8aa8af38c444242a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 361,
+      "row_id": "ZCHF",
+      "sha256": "1118687e198c2454c8094c7f18e803fa376eb5620ad5b7b76562e880280279a4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 362,
+      "row_id": "EURR",
+      "sha256": "648b3698bdb3b23bc4d575b894dfe5e343b24d926199ac243be4d613b26cab46"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 363,
+      "row_id": "EUROP",
+      "sha256": "aab6889f30afe76b72c3b5a5770a3d0f9fd9045db386e87247d7876283846fef"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 364,
+      "row_id": "EURCV",
+      "sha256": "e12e2d24b6a1718b0b8137508ab207786fd8e92ee47ff5bbecb3a0e0aa66ab59"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 365,
+      "row_id": "A7A5",
+      "sha256": "93f9424052cc0ef17ada229ba2cf7359d768a1f7cc4ef6af5f9edb5a73df8704"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 366,
+      "row_id": "EURQ",
+      "sha256": "ea6971f33224c9e8bef44616de147ee30bf24f10b03c41a0f6d5fd496f7ff831"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 367,
+      "row_id": "CNHT",
+      "sha256": "a3221191d466b0e9fbfa24408a9bf66fc83ad23833c280453f43045211e42c22"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 368,
+      "row_id": "MXNT",
+      "sha256": "35deca6209981af8ebcfd05b3d8fad1b9c4757254a74eeea302b15197b3bc3cd"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 369,
+      "row_id": "XSGD",
+      "sha256": "07878d79b8835f0796df66eb100fd7c0966f7a8481ed0799f20e3b902b5985e9"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 370,
+      "row_id": "VGBP",
+      "sha256": "d431062e893bd9c03a5469fa9f3955cd43f6037e31862d51f9c0073964e1108f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 371,
+      "row_id": "PHT",
+      "sha256": "48dc1b3544511203d5107e4495ad97c78a115dff9cecc190f8d7095210e91751"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 372,
+      "row_id": "USTC",
+      "sha256": "e3b9ff0f2d268be7f31e0ed6c3cbf7d0f90c05acfe56672702623c22f2386d63"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 373,
+      "row_id": "TRYB",
+      "sha256": "d345442ce3c59265a626ed22aeb331e1a3c855cdc5c7a87c74e3045d42f963f6"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 374,
+      "row_id": "tGBP",
+      "sha256": "2ac1c6fd0d29f93ce1fe07d3902dedc3829898b891ef021b12d62cbed5bdd6ab"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 375,
+      "row_id": "EURAU",
+      "sha256": "41fe95bae5c7abe4c39ca417838f461c2fe5c42ab946684e1f81fbc8a274a392"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 376,
+      "row_id": "EURI",
+      "sha256": "69582a90750449a3648f15395b3b8aedf065f177ba41befae1eca3897b22e14f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 377,
+      "row_id": "AUDM",
+      "sha256": "8bfe592e74f87e5b4644dcbbf09e09395c50e4f71bd8805a2f41dfab23d62b15"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 378,
+      "row_id": "RUBT",
+      "sha256": "13773d293d463c3b8f1c3f92aa1155b5b1a8dda6f8193e146bb1e77e7b9e5534"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 379,
+      "row_id": "BRTH",
+      "sha256": "fdcb3b91848bd14c096707259d21ac39afd24896f9868018f616a95a9d096c09"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 380,
+      "row_id": "JPYC",
+      "sha256": "9fafaf6af51c92958c3f6bfce64c5df4db0daedef0d22c6a7290e0bc9d9f0d3e"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 381,
+      "row_id": "GBPm",
+      "sha256": "9061b98730a3a7258a4a9c06cc98481e4612ae0f3c700f19ef01351402b570e1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 382,
+      "row_id": "PHPm",
+      "sha256": "1d269abbb34056e8e8ac191f5ca61d097edd874339522db622d9e176bbb0f88a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 383,
+      "row_id": "CADm",
+      "sha256": "16c914a24e393752ff30053c56d73871a1b03d206b083c0761098b092c580bc4"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 384,
+      "row_id": "AUDm",
+      "sha256": "958294209fc775fc798a8c0770d375c7a97d502d53e8f694a533d8c628ec585a"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 385,
+      "row_id": "COPm",
+      "sha256": "a578a6a4f403fe0a337d98ea92fdbcbd36192359ac1b88c458af2b740db995aa"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 386,
+      "row_id": "JPYm",
+      "sha256": "b4b0740c6a2e9a59d358adad27877d46f330a7ed4ede17e8278a749485a30bf2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 387,
+      "row_id": "BRLA",
+      "sha256": "06d5eff89d1c426aace0e7c889831596b7791223e35b8bc169e30e31de12407c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 388,
+      "row_id": "KESm",
+      "sha256": "a2da4cec5045bcf309f8b926f3d4daa9d3675c0df7e24b1e700a88e569d24c5b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 389,
+      "row_id": "ZARm",
+      "sha256": "d2b175861551aa6b92448ab04210b368ae3eeeaee6c322cc5c1e24d249360c71"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 390,
+      "row_id": "NGNm",
+      "sha256": "885cea9cf346fdc8eee6818b0229d31ff4819af9520526f35134b8cd63617467"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 391,
+      "row_id": "CHFm",
+      "sha256": "54cf99b4fd2c3f877623c951acf01f6a69f644edf8c45f16d0a96183b17dae5c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 392,
+      "row_id": "XOFm",
+      "sha256": "f3339a7d6e2aedbd385d7fce7b29acdd4f7c6e14164a7f1e9554c0b1e401f118"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 393,
+      "row_id": "GHSm",
+      "sha256": "0219472c70a186372c72ceddd128f405286e5ebb23196620d2ae8dcdba0a725b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 394,
+      "row_id": "WARS",
+      "sha256": "d7514d2595bb632f9864cda0ac884ace7db774f89497128c709d1bc2f2f94507"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 395,
+      "row_id": "WBRL",
+      "sha256": "a1f8d185b5908ce87ed58762f049a4d5afb5b51afed22858c47766bfb4627f3d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 396,
+      "row_id": "WCLP",
+      "sha256": "48256bbd3db384155f369d766642417e6f772e9a4da3aba8db5ef843d84d673b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 397,
+      "row_id": "WCOP",
+      "sha256": "d96e62ecc80473e770376d058857c117876358b28c8d3a4654020ea606bd28ca"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 398,
+      "row_id": "WMXN",
+      "sha256": "b0a484b33416e0309eb93b6597facd26bc78d28489417d004d2db8294e470e66"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 399,
+      "row_id": "WPEN",
+      "sha256": "bf2b9a97b46591c0cea6c450fadb20015ea173f1f48634fd4a32ea218a898723"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 400,
+      "row_id": "CADD",
+      "sha256": "b230c0fc64b5c4e1232fd08352ebeadbfb97b0d7a37050573e4de0f6a627d949"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 401,
+      "row_id": "VOLT",
+      "sha256": "2c6b940b54e7f6cb681d61595fd03117078f6fdb1a2c4534c00d8ae5cd16fc00"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 402,
+      "row_id": "EURW",
+      "sha256": "c8d28ab8bee6e93594ec2f1157c66039753d4cc42887060df67ef8c4b7e39420"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 403,
+      "row_id": "haEUR",
+      "sha256": "4ef2fbdabd7c1661f088e5231813eba912c6105b9821f27b8625c4698ef4dbe0"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 404,
+      "row_id": "GBPA",
+      "sha256": "d703d57a100989b4e4c4960b3f4fd494160acd1ac01b20abce40fabcd64d26de"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 405,
+      "row_id": "RAI",
+      "sha256": "f7a4a2d65cb8c0d043137e191009351394c1dc94f7f2d2deefac110084c14af8"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 406,
+      "row_id": "FLOAT",
+      "sha256": "b9ba2bda4d3e1fb72f17c0e8abc75a2c5b53f5a9c773a37483cbb24bc215dcc9"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 407,
+      "row_id": "MYRT",
+      "sha256": "bd87a56d2ac7255e9f35204b666c0a486eb842b8f664a2fe613589e5fcd76557"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 408,
+      "row_id": "REUR",
+      "sha256": "5a8dc2421e64a30117b4037c71304e825b86e976a0c0c4e190f71f740fc8486f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 409,
+      "row_id": "AUDF",
+      "sha256": "6a7a815e19dea68299c83e12471f1f2d442b8e30588e89636be7ed14fc11ab6b"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 410,
+      "row_id": "dEURO",
+      "sha256": "9439878865da78af9007d37e759c26f61e5b930cdfc664bfa699945168a437e0"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 411,
+      "row_id": "QCAD",
+      "sha256": "1555dea6f6c005623512085bf1c03313ab4282f8f9c95e5d51120b1fdba910ef"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 412,
+      "row_id": "JPYSC",
+      "sha256": "7a45f6fb1298cc9be5b5224bd90ba1301473664a22bd867ef54767981fe8ab10"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 413,
+      "row_id": "KRWQ",
+      "sha256": "81c1b53f487c416723393b0281b8b8c7e11acfb1b0c3e86d34d6cc97836e1b88"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 414,
+      "row_id": "KRW1",
+      "sha256": "01b4c58a504837be3e019dfdeba5c7891f601ede86178b069b36b51970f484e1"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 415,
+      "row_id": "EURR",
+      "sha256": "20be635d88802900f3b32627f9680bc36750a7b16eb2f34629359239dc4876c7"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 416,
+      "row_id": "HKDAP",
+      "sha256": "d73a1f55753e72d1b0c37c2ca597d44cefce12113c65477f033400f6d6b6cf1c"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 417,
+      "row_id": "EURT",
+      "sha256": "13cd7c87a0e40d2f6878fe476427600844693e305d1a4370912557cb92329fe2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 418,
+      "row_id": "EURC",
+      "sha256": "3b44a0d7d4b3c98a13ddea9f20bd29a2d34b4420a9c9900bdb924e61cefcefb9"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 419,
+      "row_id": "EURS",
+      "sha256": "afab8af434c97faa2d77df920c0c897acc393cc52ea30667c1f5a4833492c868"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 420,
+      "row_id": "EURm",
+      "sha256": "aa3975077b62ab4b89cea56f8499040b61400e99cd7b8625a3bf7f420cf7e612"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 421,
+      "row_id": "SEUR",
+      "sha256": "ca6a68a762eb06b7f63428c04fe89b3927dea9aba555e7c67502744e169e16d2"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 422,
+      "row_id": "EURA",
+      "sha256": "af2f14a228e332984cabc1e44dee59990b07dff164e31fbf38d32c348e63c911"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 423,
+      "row_id": "PAR",
+      "sha256": "4076bf4334d9dc664e3e594bcdfc010d1c95ce2f4978e7289db28dea0d67a823"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 424,
+      "row_id": "FPI",
+      "sha256": "8c05fa3d420a65def5f5416ddfb9c6fff011b1b1650a1e1f37c1ac2907be962d"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 425,
+      "row_id": "IBEUR",
+      "sha256": "66afef8e1af2ae6af18f6b223421efdad3324beb7ffbdb6c4a3a339de8e9407f"
+    },
+    {
+      "evidence_path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 426,
+      "row_id": "EUROe",
+      "sha256": "7e56f5e82668c7d08cbc76b2c56ee58dd38098e59f9bccdf6c079dd4a55c7cfd"
+    }
+  ],
+  "atomic_count": 427,
+  "atomic_merkle_root": "a958694702c437bea165ae2ea1f5a751ef1d6228253732eed9b30c459026092f",
+  "child_cohorts": [],
+  "child_cohort_count": 0,
+  "child_cohort_merkle_root": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "merkle_rule": "sha256(raw_32_byte_left || raw_32_byte_right); duplicate odd tail",
+  "measurement_not_certification": true,
+  "manifest_sha256": "dba90b1bb2e007cb92fabd5d1bbdad51c70caf2ff74e153799dda817b8561187"
+}

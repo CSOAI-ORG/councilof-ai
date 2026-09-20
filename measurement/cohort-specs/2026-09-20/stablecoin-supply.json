@@ -1,0 +1,34 @@
+{
+  "cohort_id": "stablecoin-supply-replay-2026-09-20",
+  "subject_kind": "stablecoin_supply",
+  "axis": "onchain_supply",
+  "as_of": "2026-09-20T03:05:00Z",
+  "status": "PARTIAL_MEASURED",
+  "n": 427,
+  "method": "Read-only public endpoint/on-chain supply replay over the frozen 427-row universe.",
+  "population": {
+    "attempted": 427
+  },
+  "dispositions": {
+    "MEASURED": 286,
+    "UNMEASURED": 118,
+    "REJECTED": 15,
+    "UNCHECKABLE": 8
+  },
+  "unmeasured": [
+    "circulating supply unless source says so",
+    "reserves",
+    "backing",
+    "solvency",
+    "price parity",
+    "legal status",
+    "investment merit"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "role": "supply_replay",
+      "rows_pointer": "rows"
+    }
+  ]
+}

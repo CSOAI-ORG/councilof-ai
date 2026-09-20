@@ -1,0 +1,29 @@
+{
+  "cohort_id": "chainlink-link-publisher-directory-2026-09-20",
+  "subject_kind": "token_directory",
+  "axis": "publisher_contract_identity",
+  "as_of": "2026-09-20T03:00:00Z",
+  "status": "MEASURED",
+  "n": 148,
+  "method": "Normalize publisher-listed LINK deployments from the official Chainlink directory.",
+  "population": {
+    "publisher_rows": 148
+  },
+  "dispositions": {
+    "CATALOGUED": 148
+  },
+  "unmeasured": [
+    "onchain replay for 144 rows",
+    "bytecode equivalence",
+    "cross-chain supply",
+    "market price",
+    "investment merit"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/chainlink-ondo-token-inventory-2026-09-20.json",
+      "role": "chainlink_directory",
+      "rows_pointer": "chainlink_link"
+    }
+  ]
+}

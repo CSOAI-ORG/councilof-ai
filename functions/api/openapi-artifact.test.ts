@@ -126,7 +126,7 @@ describe("the free surface is declared, not probed", () => {
 
   it("keeps operator-only operations out of unauthenticated discovery", () => {
     for (const [path, method, scheme] of [
-      ["/api/board-sign", "post", "githubOidc"],
+      ["/api/board-sign", "post", "ciOidc"],
       ["/api/provider-canary", "post", "operatorBearer"],
       ["/api/action-jobs", "post", "operatorBearer"],
       ["/api/action-jobs", "patch", "operatorBearer"],

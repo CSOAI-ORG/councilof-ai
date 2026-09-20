@@ -145,17 +145,17 @@
       }
     },
     "securitySchemes": {
+      "ciOidc": {
+        "bearerFormat": "JWT",
+        "description": "Short-lived allowlisted CI OIDC token. GitHub Actions is supported; GitLab CI is disabled until an exact protected project/ref is configured at the signer.",
+        "scheme": "bearer",
+        "type": "http"
+      },
       "ed25519": {
         "description": "Ed25519 signature of canonical body, under did:web:csoai.org#card-attestation-1",
         "in": "header",
         "name": "X-CSOAI-Signed-Card",
         "type": "apiKey"
-      },
-      "githubOidc": {
-        "bearerFormat": "JWT",
-        "description": "GitHub Actions OIDC token satisfying the handler's issuer, audience, repository and workflow checks.",
-        "scheme": "bearer",
-        "type": "http"
       },
       "operatorBearer": {
         "description": "Operation-specific configured operator or writer credential. Not interchangeable across operations.",
@@ -732,7 +732,7 @@
     },
     "/api/board-sign": {
       "post": {
-        "description": "GitHub OIDC bearer required; token claims are validated by the handler. POST /api/board-sign \u2014 GitHub OIDC only. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.",
+        "description": "Allowlisted short-lived CI OIDC bearer required; GitHub Actions is supported and protected GitLab CI may be enabled explicitly. POST /api/board-sign \u2014 estate signing relay.",
         "operationId": "post__api_board-sign",
         "responses": {
           "200": {
@@ -747,10 +747,10 @@
         },
         "security": [
           {
-            "githubOidc": []
+            "ciOidc": []
           }
         ],
-        "summary": "POST /api/board-sign \u2014 GitHub OIDC only. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade."
+        "summary": "POST /api/board-sign \u2014 estate signing relay."
       }
     },
     "/api/body-state": {

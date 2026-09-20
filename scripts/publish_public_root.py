@@ -41,6 +41,7 @@ from adapters import (  # noqa: E402
     fin7_coverage,
     genai_mil_notices,
     hub_cite,
+    measurement_cohorts,
     provider_diff,
     rwa_reconciliation,
     stablecoin_deep,
@@ -258,7 +259,9 @@ def key_present() -> bool:
 
 
 def oidc_available() -> bool:
-    return bool(os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL") and os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN"))
+    github = bool(os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL") and os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN"))
+    gitlab = bool((os.environ.get("BOARD_SIGN_OIDC_TOKEN") or "").strip())
+    return github or gitlab
 
 
 def signer_available() -> bool:
@@ -271,20 +274,20 @@ def sign_via_oidc(payload: dict) -> str | None:
     req_url = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL") or ""
     req_tok = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN") or ""
     sign_url = os.environ.get("BOARD_SIGN_URL") or "https://councilof.ai/api/board-sign"
-    if not req_url or not req_tok:
-        return None
-    sep = "&" if "?" in req_url else "?"
     aud = "https://councilof.ai/api/board-sign"
-    token_req = urllib.request.Request(
-        req_url + sep + "audience=" + urllib.parse.quote(aud, safe=""),
-        headers={"Authorization": f"Bearer {req_tok}", "Accept": "application/json"},
-    )
-    try:
-        with urllib.request.urlopen(token_req, timeout=20) as resp:
-            oidc = json.loads(resp.read().decode("utf-8")).get("value")
-    except Exception as e:
-        print(f"oidc token request failed: {type(e).__name__}", file=sys.stderr)
-        return None
+    oidc = (os.environ.get("BOARD_SIGN_OIDC_TOKEN") or "").strip()
+    if not oidc and req_url and req_tok:
+        sep = "&" if "?" in req_url else "?"
+        token_req = urllib.request.Request(
+            req_url + sep + "audience=" + urllib.parse.quote(aud, safe=""),
+            headers={"Authorization": f"Bearer {req_tok}", "Accept": "application/json"},
+        )
+        try:
+            with urllib.request.urlopen(token_req, timeout=20) as resp:
+                oidc = json.loads(resp.read().decode("utf-8")).get("value") or ""
+        except Exception as e:
+            print(f"oidc token request failed: {type(e).__name__}", file=sys.stderr)
+            return None
     if not isinstance(oidc, str) or not oidc:
         return None
     body = json.dumps({"payload": payload}, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
@@ -593,6 +596,7 @@ def main() -> int:
     fin7_out = fin7_coverage.collect()
     genai_mil_out = genai_mil_notices.collect()
     staged_out = staged_leaves.collect(ROOT)
+    measurement_cohorts_out = measurement_cohorts.collect(ROOT)
     provider_diff_out = provider_diff.collect(ROOT)
     stablecoin_universe_out = stablecoin_universe.collect(ROOT)
     hub_out = hub_cite.collect(ROOT)
@@ -634,6 +638,7 @@ def main() -> int:
     # never raises). public.notice only; PROBED/DISCOVERED/UNMEASURED on the
     # payload; signed here or not at all. See scripts/adapters/staged_leaves.py.
     leaves.extend(staged_out["leaves"])
+    leaves.extend(measurement_cohorts_out["leaves"])
     # Witnessed digests from the x402 rail (/api/witness → WITNESS_KV, read over the
     # Cloudflare KV REST API; mirrors under public/interop/witness/ keep a landed leaf
     # landing). Hash only — never the bytes, never the URL. public.notice, PROBED,
@@ -652,6 +657,20 @@ def main() -> int:
     leaves.extend(rwa_reconciliation_out["leaves"])
     leaves.extend(stablecoin_deep_out["leaves"])
     leaves.extend(art50_census_out["leaves"])
+
+    if (measurement_cohorts_out.get("sidecar") or {}).get("n_skipped", 0):
+        print(
+            f"HALT: universal measurement cohort adapter skipped {measurement_cohorts_out['sidecar']['n_skipped']} cohort(s)",
+            file=sys.stderr,
+        )
+        write_halt_health(
+            committed,
+            reason="measurement-cohort-invalid",
+            have_key=signer_available(),
+            extra={"measurement_cohorts": measurement_cohorts_out["sidecar"]},
+            dry_run=args.dry_run,
+        )
+        return EXIT_BAD
 
     have_pkcs8 = key_present()
     have_key = signer_available()
@@ -745,6 +764,7 @@ def main() -> int:
                 "benji": {"status": "halt-before-write", "note": "GraphQL dark. Not issuer 7"},
                 "hub_cite": {"status": "cite-only", "note": "Health sidecar only. Not a card-v0 leaf."},
                 "staged_leaves": {"status": "halt-before-write", **staged_out["sidecar"]},
+                "measurement_cohorts": {"status": "halt-before-write", **measurement_cohorts_out["sidecar"]},
                 "witness_queue": {"status": "halt-before-write", **witness_out["sidecar"]},
                 "provider_diff": {"status": "halt-before-write", **provider_diff_out["sidecar"]},
                 "stablecoin_universe": {"status": "halt-before-write", **stablecoin_universe_out["sidecar"]},
@@ -893,6 +913,7 @@ def main() -> int:
         "swift": notices_out.get("sidecar") or {},
         "benji": benji_out.get("sidecar") or {},
         "staged_leaves": staged_out.get("sidecar") or {},
+        "measurement_cohorts": measurement_cohorts_out.get("sidecar") or {},
         "witness_queue": witness_out.get("sidecar") or {},
         "provider_diff": provider_diff_out.get("sidecar") or {},
         "stablecoin_universe": stablecoin_universe_out.get("sidecar") or {},

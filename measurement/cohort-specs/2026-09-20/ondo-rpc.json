@@ -1,0 +1,34 @@
+{
+  "cohort_id": "ondo-global-markets-rpc-replay-2026-09-20",
+  "subject_kind": "token_rpc",
+  "axis": "erc20_metadata",
+  "as_of": "2026-09-20T03:00:00Z",
+  "status": "MEASURED",
+  "n": 918,
+  "method": "Read-only RPC replay of every publisher-listed Ondo Global Markets address; bytecode, symbol and decimals checks.",
+  "population": {
+    "publisher_rows": 918,
+    "probed_rows": 918
+  },
+  "dispositions": {
+    "MEASURED": 918,
+    "MISMATCH": 0,
+    "UNREACHABLE": 0
+  },
+  "unmeasured": [
+    "reserves",
+    "backing",
+    "redemption",
+    "legal status",
+    "solvency",
+    "creditworthiness",
+    "investment merit"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/ondo-token-onchain-probe-2026-09-20.json",
+      "role": "rpc_replay",
+      "rows_pointer": "rows"
+    }
+  ]
+}

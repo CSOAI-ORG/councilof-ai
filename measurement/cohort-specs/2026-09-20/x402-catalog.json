@@ -1,0 +1,28 @@
+{
+  "cohort_id": "x402-public-resource-catalog-2026-09-20",
+  "subject_kind": "x402_resource",
+  "axis": "machine_commerce_surface",
+  "as_of": "2026-09-20",
+  "status": "MEASURED",
+  "n": 11,
+  "method": "Public GET /api/x402 catalogue snapshot; cataloguing is distinct from indexing, settlement, delivery and revenue.",
+  "population": {
+    "declared_resources": 11
+  },
+  "dispositions": {
+    "CATALOGUED": 11
+  },
+  "unmeasured": [
+    "Coinbase complete-index presence unless independently paged to completion",
+    "future settlement",
+    "future delivery",
+    "future demand"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "role": "x402_catalog",
+      "rows_pointer": "body.resources"
+    }
+  ]
+}

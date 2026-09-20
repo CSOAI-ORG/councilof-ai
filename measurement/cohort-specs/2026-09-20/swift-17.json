@@ -1,0 +1,28 @@
+{
+  "cohort_id": "swift-public-disclosure-17-2026-09-16",
+  "subject_kind": "swift_public_institution",
+  "axis": "public_disclosure",
+  "as_of": "2026-09-16T10:30:01Z",
+  "status": "PARTIAL_MEASURED",
+  "n": 17,
+  "method": "Public institution/disclosure observations only; no private SWIFT transaction telemetry.",
+  "population": {
+    "cohort": 17
+  },
+  "dispositions": {
+    "OBSERVED": 17
+  },
+  "unmeasured": [
+    "private SWIFT transaction counts",
+    "private messages",
+    "customer flows",
+    "legal/compliance verdict"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/swift-measure.json",
+      "role": "swift_public_measurement",
+      "rows_pointer": "rows"
+    }
+  ]
+}

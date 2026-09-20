@@ -1,0 +1,29 @@
+{
+  "cohort_id": "gspc-live-board-2026-09-20",
+  "subject_kind": "gspc_axis",
+  "axis": "gspc_board",
+  "as_of": "2026-09-20",
+  "status": "PARTIAL_MEASURED",
+  "n": 23,
+  "method": "Public GET /api/gspc capture; each axis row remains distinct and carries its own status/family/sample fields.",
+  "population": {
+    "axis_slots": 23,
+    "measured_axes": 22,
+    "unmeasured_axes": 1
+  },
+  "dispositions": {
+    "MEASURED": 22,
+    "UNMEASURED": 1
+  },
+  "unmeasured": [
+    "effect-binding",
+    "fresh owner MPC board signature"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/gspc-live-snapshot-2026-09-20.json",
+      "role": "live_board",
+      "rows_pointer": "body.axes"
+    }
+  ]
+}

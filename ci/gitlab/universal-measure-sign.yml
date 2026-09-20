@@ -1,0 +1,30 @@
+# Include from a protected GitLab project after Cloudflare is configured with
+# BOARD_SIGN_GITLAB_PROJECT_PATH=<exact project_path>.
+# This file contains no private signing key.
+
+stages: [verify, sign]
+
+variables:
+  MEASUREMENT_DATE: "2026-09-20"
+
+universal_measure_verify:
+  stage: verify
+  image: python:3.12
+  script:
+    - python3 scripts/measure_sign_all.py --date "${MEASUREMENT_DATE}"
+
+universal_measure_sign_canary:
+  stage: sign
+  image: python:3.12
+  rules:
+    - if: '$CI_COMMIT_REF_PROTECTED == "true"'
+  id_tokens:
+    BOARD_SIGN_OIDC_TOKEN:
+      aud: https://councilof.ai/api/board-sign
+  script:
+    - test -n "${BOARD_SIGN_OIDC_TOKEN}"
+    - python3 scripts/sign_measurement_bundle.py "public/interop/cohorts/${MEASUREMENT_DATE}/estate-global/unsigned-cohort-card.json"
+  artifacts:
+    when: always
+    paths:
+      - public/interop/cohorts/${MEASUREMENT_DATE}/estate-global/signed-cohort-*.json

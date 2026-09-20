@@ -1,0 +1,117 @@
+{
+  "schema": "csoai.measurement-cohort/1",
+  "cohort_id": "x402-public-resource-catalog-2026-09-20",
+  "subject_kind": "x402_resource",
+  "as_of": "2026-09-20",
+  "status": "MEASURED",
+  "method": "Public GET /api/x402 catalogue snapshot; cataloguing is distinct from indexing, settlement, delivery and revenue.",
+  "population": {
+    "declared_resources": 11
+  },
+  "dispositions": {
+    "CATALOGUED": 11
+  },
+  "unmeasured": [
+    "Coinbase complete-index presence unless independently paged to completion",
+    "future delivery",
+    "future demand",
+    "future settlement"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "sha256": "ec83bbc1ae1f1016902840fa465ebcc191faf34de6720c58269a7022476ca7e2",
+      "bytes": 13347,
+      "role": "x402_catalog",
+      "rows_pointer": "body.resources",
+      "rows": 11
+    }
+  ],
+  "atomic_observations": [
+    {
+      "evidence_path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "rows_pointer": "body.resources",
+      "row_index": 0,
+      "row_id": "free_door",
+      "sha256": "a44301a6f15048ee90aeb3dd0839b8651a4683d07f87a834bdeec5cd3b719b2e"
+    },
+    {
+      "evidence_path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "rows_pointer": "body.resources",
+      "row_index": 1,
+      "row_id": "issuance",
+      "sha256": "a4dff551a56e1f2a82d74265b33056cc9754924c75afe5cc9fbcdd094dd70d53"
+    },
+    {
+      "evidence_path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "rows_pointer": "body.resources",
+      "row_index": 2,
+      "row_id": "evidence_bundle",
+      "sha256": "50330b187cc91087e0c59c239e5a763ef735c770851599988944963d30d11413"
+    },
+    {
+      "evidence_path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "rows_pointer": "body.resources",
+      "row_index": 3,
+      "row_id": "data_feed",
+      "sha256": "306b9daa576f4015344179f78707401d7a12dbf1e3b5b06f44f05e09c98a1e20"
+    },
+    {
+      "evidence_path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "rows_pointer": "body.resources",
+      "row_index": 4,
+      "row_id": "proof_bundle",
+      "sha256": "ca1668541454bc5cd6196c62bc37fa1436728594ed6fd6030de434235e75dd5a"
+    },
+    {
+      "evidence_path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "rows_pointer": "body.resources",
+      "row_index": 5,
+      "row_id": "rwa_evidence",
+      "sha256": "40bb2721a9019246fbbd08a9e3063a593174d6db823b601140f00f3057c2a1e6"
+    },
+    {
+      "evidence_path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "rows_pointer": "body.resources",
+      "row_index": 6,
+      "row_id": "wrapper_parity",
+      "sha256": "70dabec12d25b2de058e1f10fde9baeff382bed38a1f4e578f7f3a7ab3668bd3"
+    },
+    {
+      "evidence_path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "rows_pointer": "body.resources",
+      "row_index": 7,
+      "row_id": "wrapper_changes",
+      "sha256": "72e23086ebb77be4bebae2b518fda7ebf6944cc03d87dd2e65377553038b2122"
+    },
+    {
+      "evidence_path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "rows_pointer": "body.resources",
+      "row_index": 8,
+      "row_id": "art50_marking_evidence",
+      "sha256": "cac49f576e1580ba0f7f072dfe672e67318e733f9512e21d59afd92de4879635"
+    },
+    {
+      "evidence_path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "rows_pointer": "body.resources",
+      "row_index": 9,
+      "row_id": "provider_diff_feed",
+      "sha256": "b0da4d90e205f3834702e4b95849ac682ee01bf34f1553f8b532600eecbf9af8"
+    },
+    {
+      "evidence_path": "public/interop/x402-catalog-snapshot-2026-09-20.json",
+      "rows_pointer": "body.resources",
+      "row_index": 10,
+      "row_id": "receipts_batch",
+      "sha256": "292a5e357cccc27bc193642dde41cd2be144dd5e2ce057bba4ae87d100ca9b92"
+    }
+  ],
+  "atomic_count": 11,
+  "atomic_merkle_root": "bc94b0eb1f736c39c20bfab14250001aa56644ff7aed35c2c6b611e2769ecad6",
+  "child_cohorts": [],
+  "child_cohort_count": 0,
+  "child_cohort_merkle_root": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "merkle_rule": "sha256(raw_32_byte_left || raw_32_byte_right); duplicate odd tail",
+  "measurement_not_certification": true,
+  "manifest_sha256": "6ef7f1f571892ca0f86e8b8477376f0007d81d1954af0e493bef1a163985348d"
+}

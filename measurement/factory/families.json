@@ -1,0 +1,234 @@
+{
+  "schema": "csoai.measurement-factory-family-registry/1",
+  "as_of": "2026-09-20",
+  "pipeline": [
+    "DISCOVER",
+    "FREEZE",
+    "FETCH",
+    "NORMALIZE",
+    "MEASURE",
+    "DISPOSITION",
+    "BIND_ATOMS",
+    "BUILD_COHORT",
+    "ADMIT",
+    "SIGN",
+    "ROOT",
+    "WITNESS",
+    "PUBLISH",
+    "READBACK",
+    "CORRECT"
+  ],
+  "signature_policy": {
+    "atomic": "Hash every observation; individual signature optional for high-value/public row cards.",
+    "cohort": "One compact signed admission leaf binds the manifest SHA and atomic Merkle root.",
+    "estate": "One signed public root binds all admitted cohort leaves.",
+    "witness": "OTS/Rekor/other witnesses remain separate evidence states."
+  },
+  "invariants": [
+    "Domain-specific methods stay domain-specific; only the evidence/output contract is universal.",
+    "catalogued != measured",
+    "measured != scored",
+    "signed != correct",
+    "rooted != complete",
+    "settled != delivered",
+    "delivered != accepted",
+    "scheduled != executed",
+    "missing != zero",
+    "unavailable != negative",
+    "corrections preserve original bytes"
+  ],
+  "families": [
+    {
+      "id": "gspc_axis",
+      "state": "ACTIVE_COHORT",
+      "current": "gspc-live",
+      "atomic": "one board axis row",
+      "producer": "GET /api/gspc or frozen GSPC instrument",
+      "sign": "cohort admission leaf; per-model cards remain separate where published"
+    },
+    {
+      "id": "stablecoin_catalog",
+      "state": "ACTIVE_COHORT",
+      "current": "stablecoin-catalog",
+      "atomic": "one asset identity row",
+      "producer": "frozen public stablecoin universe",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "stablecoin_supply",
+      "state": "ACTIVE_COHORT",
+      "current": "stablecoin-supply",
+      "atomic": "one asset replay row",
+      "producer": "public chain/API supply readers",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "xrpl_instrument",
+      "state": "ACTIVE_COHORT",
+      "current": "xrpl-16",
+      "atomic": "one issuer/instrument ledger row",
+      "producer": "XRPL readers",
+      "sign": "cohort admission leaf + existing asset cards where applicable"
+    },
+    {
+      "id": "swift_public_institution",
+      "state": "ACTIVE_COHORT",
+      "current": "swift-17",
+      "atomic": "one public institution/disclosure observation",
+      "producer": "public sources only",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "chainlink_link_directory",
+      "state": "ACTIVE_COHORT",
+      "current": "chainlink-directory",
+      "atomic": "one publisher-listed deployment",
+      "producer": "official Chainlink directory",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "chainlink_link_rpc",
+      "state": "ACTIVE_COHORT",
+      "current": "chainlink-rpc",
+      "atomic": "one public RPC observation",
+      "producer": "chain-specific RPC adapters",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "ondo_global_markets_directory",
+      "state": "ACTIVE_COHORT",
+      "current": "ondo-directory",
+      "atomic": "one publisher-listed token",
+      "producer": "Ondo token list",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "ondo_global_markets_rpc",
+      "state": "ACTIVE_COHORT",
+      "current": "ondo-rpc",
+      "atomic": "one public RPC contract observation",
+      "producer": "EVM RPC reader",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "ondo_core_token",
+      "state": "ACTIVE_COHORT",
+      "current": "ondo-core",
+      "atomic": "one core-token identity observation",
+      "producer": "public RPC + issuer references",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "x402_resource",
+      "state": "ACTIVE_COHORT",
+      "current": "x402-catalog",
+      "atomic": "one declared machine-commerce resource",
+      "producer": "GET /api/x402",
+      "sign": "cohort admission leaf; settlement receipts remain separate evidence"
+    },
+    {
+      "id": "model_run",
+      "state": "EXISTING_SIGNED_SURFACE",
+      "current": null,
+      "atomic": "one subject/axis run",
+      "producer": "GSPC mill/frozen banks",
+      "sign": "existing card-v0/v1 path; may additionally emit cohort"
+    },
+    {
+      "id": "mcp_server",
+      "state": "NEEDS_COHORT_ADAPTER",
+      "current": null,
+      "atomic": "one server handshake/tool observation",
+      "producer": "existing MCP census/liveness readers",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "a2a_agent",
+      "state": "NEEDS_COHORT_ADAPTER",
+      "current": null,
+      "atomic": "one agent-card/skill observation",
+      "producer": "existing A2A census",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "authority_source",
+      "state": "NEEDS_COHORT_ADAPTER",
+      "current": null,
+      "atomic": "one pinned source/version/effective-date row",
+      "producer": "authority graph",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "regulatory_obligation",
+      "state": "NEEDS_COHORT_ADAPTER",
+      "current": null,
+      "atomic": "one obligation-to-observable mapping",
+      "producer": "crosswalk engine",
+      "sign": "cohort admission leaf; never universal compliance verdict"
+    },
+    {
+      "id": "content_provenance",
+      "state": "NEEDS_COHORT_ADAPTER",
+      "current": null,
+      "atomic": "one C2PA/Article-50 observation",
+      "producer": "existing provenance/detect readers",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "otel_execution",
+      "state": "NEEDS_COHORT_ADAPTER",
+      "current": null,
+      "atomic": "one execution/export receipt",
+      "producer": "OTel pipeline",
+      "sign": "cohort admission leaf; emitted/accepted/persisted remain distinct"
+    },
+    {
+      "id": "settlement_receipt",
+      "state": "EXISTING_ROOT_ADAPTER",
+      "current": null,
+      "atomic": "one facilitator-confirmed settlement receipt",
+      "producer": "x402 receipt adapter",
+      "sign": "existing receipts.v1 leaf"
+    },
+    {
+      "id": "correction",
+      "state": "NEEDS_COHORT_ADAPTER",
+      "current": null,
+      "atomic": "one correction/supersession event",
+      "producer": "claim-maintenance ledger",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "incident",
+      "state": "NEEDS_COHORT_ADAPTER",
+      "current": null,
+      "atomic": "one observed incident record",
+      "producer": "incident register",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "code_release",
+      "state": "NEEDS_COHORT_ADAPTER",
+      "current": null,
+      "atomic": "one source/release/test receipt",
+      "producer": "forge/CI release evidence",
+      "sign": "cohort admission leaf + release signature"
+    },
+    {
+      "id": "frontend_surface",
+      "state": "NEEDS_COHORT_ADAPTER",
+      "current": null,
+      "atomic": "one public route audit observation",
+      "producer": "public-surface crawler",
+      "sign": "cohort admission leaf"
+    },
+    {
+      "id": "external_index",
+      "state": "NEEDS_COHORT_ADAPTER",
+      "current": null,
+      "atomic": "one complete-paging index observation",
+      "producer": "Bazaar/search/directory auditors",
+      "sign": "cohort admission leaf"
+    }
+  ]
+}

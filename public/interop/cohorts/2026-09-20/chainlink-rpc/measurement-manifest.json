@@ -1,0 +1,72 @@
+{
+  "schema": "csoai.measurement-cohort/1",
+  "cohort_id": "chainlink-link-rpc-replay-2026-09-20",
+  "subject_kind": "token_rpc",
+  "as_of": "2026-09-20T03:00:00Z",
+  "status": "PARTIAL_MEASURED",
+  "method": "Read-only public RPC replay of ERC-20 metadata at provider-reported finalized blocks.",
+  "population": {
+    "directory_rows": 148,
+    "probed_rows": 4
+  },
+  "dispositions": {
+    "MEASURED": 4,
+    "UNMEASURED": 144
+  },
+  "unmeasured": [
+    "144 directory rows",
+    "bytecode equivalence",
+    "cross-chain supply",
+    "investment merit",
+    "market price",
+    "network safety"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/chainlink-link-onchain-probe-2026-09-20.json",
+      "sha256": "163b7a814392b69df18f9d360ed07f0b61dae209c1e50383bacaebf86079bc88",
+      "bytes": 7044,
+      "role": "rpc_replay",
+      "rows_pointer": "rows",
+      "rows": 4
+    }
+  ],
+  "atomic_observations": [
+    {
+      "evidence_path": "public/interop/chainlink-link-onchain-probe-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 0,
+      "row_id": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+      "sha256": "1263f8541852b92676c25920b838990ffa98c9fd6cc45f78874e70c548869bbe"
+    },
+    {
+      "evidence_path": "public/interop/chainlink-link-onchain-probe-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 1,
+      "row_id": "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
+      "sha256": "847ea5cd7034e640b5d250f93c4b8b92c43894f8794cc46ed8cf6f58c445bece"
+    },
+    {
+      "evidence_path": "public/interop/chainlink-link-onchain-probe-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 2,
+      "row_id": "0x88Fb150BDc53A65fe94Dea0c9BA0a6dAf8C6e196",
+      "sha256": "f40e6095baea30066483a337f4e2f03fcaa07075da87ff67fdce7c11caaad486"
+    },
+    {
+      "evidence_path": "public/interop/chainlink-link-onchain-probe-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 3,
+      "row_id": "0x350a791Bfc2C21F9Ed5d10980Dad2e2638ffa7f6",
+      "sha256": "573869079c6e1ffb24a18e0a4467bd284bbc80621875736c5b881e79baa52d00"
+    }
+  ],
+  "atomic_count": 4,
+  "atomic_merkle_root": "143900a86f512af4d049b6cba2a29eaa1eb64200a8c8e78aaad9dcc0aeb9fd80",
+  "child_cohorts": [],
+  "child_cohort_count": 0,
+  "child_cohort_merkle_root": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "merkle_rule": "sha256(raw_32_byte_left || raw_32_byte_right); duplicate odd tail",
+  "measurement_not_certification": true,
+  "manifest_sha256": "c17c209dd2c30b7b8468adf204d552604c2483199d2d0214fc07d380db21f97d"
+}

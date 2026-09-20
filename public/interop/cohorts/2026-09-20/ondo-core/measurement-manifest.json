@@ -1,0 +1,63 @@
+{
+  "schema": "csoai.measurement-cohort/1",
+  "cohort_id": "ondo-core-token-rpc-replay-2026-09-20",
+  "subject_kind": "token_rpc",
+  "as_of": "2026-09-20T03:00:00Z",
+  "status": "PARTIAL_MEASURED",
+  "method": "Core ONDO/USDY public RPC plus OUSG reference observation with issuer-authentication gaps retained.",
+  "population": {
+    "rows": 3
+  },
+  "dispositions": {
+    "OBSERVED": 3
+  },
+  "unmeasured": [
+    "OUSG EVM address",
+    "investment merit",
+    "issuer-authenticated ONDO address directory",
+    "legal status",
+    "redemption",
+    "reserves"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/ondo-core-token-probe-2026-09-20.json",
+      "sha256": "33cec0f6e61d95869b3f7efc338dba03373fc08308e8773aa7b82963446f9c33",
+      "bytes": 4746,
+      "role": "core_tokens",
+      "rows_pointer": "rows",
+      "rows": 3
+    }
+  ],
+  "atomic_observations": [
+    {
+      "evidence_path": "public/interop/ondo-core-token-probe-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 0,
+      "row_id": null,
+      "sha256": "bf04d660daeb7d572617709923d79d62627385fe17750704ec3891d2c88f48ae"
+    },
+    {
+      "evidence_path": "public/interop/ondo-core-token-probe-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 1,
+      "row_id": null,
+      "sha256": "4b2a637051a97cdcfc1fc498830172d109fc1d15fdbc75737612d37a1ba57753"
+    },
+    {
+      "evidence_path": "public/interop/ondo-core-token-probe-2026-09-20.json",
+      "rows_pointer": "rows",
+      "row_index": 2,
+      "row_id": null,
+      "sha256": "e9f3bb209e2a6ae3d0ae760c437766c86274b6823a83f811bae832c7e4dfdea6"
+    }
+  ],
+  "atomic_count": 3,
+  "atomic_merkle_root": "e27cbb6411aba5faf6384ca98db9be122b0753b209c2ae1bef04af62f3a0f3a4",
+  "child_cohorts": [],
+  "child_cohort_count": 0,
+  "child_cohort_merkle_root": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "merkle_rule": "sha256(raw_32_byte_left || raw_32_byte_right); duplicate odd tail",
+  "measurement_not_certification": true,
+  "manifest_sha256": "7b5561281c6b8914a00f37f78cb0cbfa2654ede42e5d514a70462fbe3a4b39b0"
+}

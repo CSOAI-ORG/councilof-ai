@@ -302,13 +302,13 @@ def compose(fix: Path = FIX) -> dict:
     # Reviewed access contracts: a generic 200 response is not proof of public access.
     # Metadata only; access enforcement remains in the existing handlers.
     restricted = {
-        ("/api/board-sign", "post"): ("githubOidc", "GitHub OIDC bearer required; token claims are validated by the handler."),
+        ("/api/board-sign", "post"): ("ciOidc", "Allowlisted short-lived CI OIDC bearer required; GitHub Actions is supported and protected GitLab CI may be enabled explicitly."),
         ("/api/provider-canary", "post"): ("operatorBearer", "Configured operator bearer and same-origin request required."),
         ("/api/action-jobs", "post"): ("operatorBearer", "Configured writer bearer and exact same-origin Origin header required."),
         ("/api/action-jobs", "patch"): ("operatorBearer", "Configured writer bearer and exact same-origin Origin header required."),
     }
     base["components"]["securitySchemes"].update({
-        "githubOidc": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT", "description": "GitHub Actions OIDC token satisfying the handler's issuer, audience, repository and workflow checks."},
+        "ciOidc": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT", "description": "Short-lived allowlisted CI OIDC token. GitHub Actions is supported; GitLab CI is disabled until an exact protected project/ref is configured at the signer."},
         "operatorBearer": {"type": "http", "scheme": "bearer", "description": "Operation-specific configured operator or writer credential. Not interchangeable across operations."},
     })
     for (path, method), (scheme, note) in restricted.items():

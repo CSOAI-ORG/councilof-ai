@@ -1,0 +1,32 @@
+{
+  "cohort_id": "chainlink-link-rpc-replay-2026-09-20",
+  "subject_kind": "token_rpc",
+  "axis": "erc20_metadata",
+  "as_of": "2026-09-20T03:00:00Z",
+  "status": "PARTIAL_MEASURED",
+  "n": 4,
+  "method": "Read-only public RPC replay of ERC-20 metadata at provider-reported finalized blocks.",
+  "population": {
+    "directory_rows": 148,
+    "probed_rows": 4
+  },
+  "dispositions": {
+    "MEASURED": 4,
+    "UNMEASURED": 144
+  },
+  "unmeasured": [
+    "144 directory rows",
+    "bytecode equivalence",
+    "cross-chain supply",
+    "market price",
+    "network safety",
+    "investment merit"
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/chainlink-link-onchain-probe-2026-09-20.json",
+      "role": "rpc_replay",
+      "rows_pointer": "rows"
+    }
+  ]
+}
