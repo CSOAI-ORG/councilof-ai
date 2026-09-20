@@ -11,7 +11,7 @@ name: Sov Stack E2E (agentic globe/sim/hive)
 # starvation that stopped deploy.yml from running at all on 2026-08-26.
 on:
   workflow_run:
-    workflows: ["Build + deploy site (prerender + fields + tour → both domains)"]
+    workflows: ["Build + deploy site (gated production branch)"]
     types: [completed]
   schedule:
     - cron: "30 6 * * *" # daily 06:30 UTC (after claims-e2e)

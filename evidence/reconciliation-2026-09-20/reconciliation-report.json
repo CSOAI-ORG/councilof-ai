@@ -1,0 +1,174 @@
+{
+  "kind": "csoai.reconciliation-report/v1",
+  "as_of": "2026-09-20T01:42:58Z",
+  "operator": "Kimi K3 session — Goal 3 (signed-card and Merkle-root reconciliation)",
+  "scope": "Re-fetch live GSPC board + card/ledger surfaces; reconcile board slots, signed cards, roots, supersessions, withdrawals; recompute hashes and roots under the repo's declared versioned constructions; verify Ed25519 signatures. Measurement is never certification; nothing here is a conformity statement.",
+  "verdict_enum": ["VALID", "INVALID(reason)", "UNCHECKABLE"],
+  "denominator": {
+    "axis_slots": 23,
+    "measured": 22,
+    "unmeasured": 1,
+    "unmeasured_axis": "effect-binding (declared slot, UNMEASURED, n 0)",
+    "sources": [
+      "LIVE https://councilof.ai/api/gspc totals (fetched 2026-09-20T01:42:58Z)",
+      "canon.json ruling LIVE 2026-09-16 (ADR-002)",
+      "scripts/drift-guard.mjs: PASS — live site matches canon.json (all 9 checks)"
+    ],
+    "verdict": "RECONCILED"
+  },
+  "served_bytes_identity": [
+    {"surface": "https://councilof.ai/signed/card_index.json", "sha256": "4ff54c78dba0b15b56dc3fdeec62f11f98fa7bf5d4efffc9e54c6839247242a7", "repo_path": "public/signed/card_index.json", "byte_identical_to_repo": true},
+    {"surface": "https://councilof.ai/root.json", "sha256": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4", "repo_path": "public/root.json", "byte_identical_to_repo": true},
+    {"surface": "https://councilof.ai/.well-known/did.json", "sha256": "03b92739e3db6e6b429b295f26ef14a6e0fcb10ded25ca12adcea321a2ae0339", "repo_path": "public/.well-known/did.json", "byte_identical_to_repo": true},
+    {"surface": "https://csoai.org/.well-known/did.json", "repo_copy": "public/.well-known/did.json", "byte_identical_to_repo": true, "via": "scripts/verify-estate.mjs --did-drift (id + 5 keys match)"}
+  ],
+  "artifacts": [
+    {
+      "artifact": "signed measurement card corpus (335 cards)",
+      "source": "https://councilof.ai/signed/cards/<id>.json (live-fetched) + public/signed/cards/",
+      "checks": {
+        "index_declared_vs_rows": "335 == 335 (n_cards == n_cells == len(cards))",
+        "on_disk_files": "335 card files + index.html + README.md (337 entries; extras are navigation, not cards)",
+        "disk_ids_vs_index_ids": "exact set match, 0 orphans either direction",
+        "id_recompute_rule_A": "VALID 335/335 (sha256 of canonical body, ensure_ascii=True, per /signed/HOW-TO-VERIFY.md)",
+        "ed25519": "VALID 335/335 under pinned did:web:csoai.org#card-attestation-1 (d4cb0eaa…)",
+        "distinct_signing_keys": 1
+      },
+      "tool": "scripts/verify-estate.mjs (full run, exit 0, 2026-09-20T01:47Z)",
+      "verdict": "VALID",
+      "caveat": "One key signs every card: a pass proves CUSTODY of these bytes, not independence, not measurement correctness."
+    },
+    {
+      "artifact": "card chain manifest",
+      "source": "public/signed/chain.json",
+      "sha256_id": "f154f67cd2db8b2800adf4bb3722c7780c009324d6c87cd277cac030c5ecc2bb",
+      "checks": {
+        "id_recompute": "MATCH (Rule A)",
+        "ed25519": "VALID under pinned #card-attestation-1",
+        "chain_length": "335 == card_index.n_cards",
+        "head": "66856aca4a1f9390… == card_index.head"
+      },
+      "verdict": "VALID"
+    },
+    {
+      "artifact": "public root (notice/RWA corpus — NOT measurement cards)",
+      "source": "https://councilof.ai/root.json == public/root.json",
+      "kind": "csoai.public-root/v1",
+      "as_of": "2026-09-15T07:13:43Z",
+      "checks": {
+        "card_count_bound": "305 == len(card_sha256) == 305 unique leaves (count bound holds; CVE-2012-2459 ambiguity closed by the signed count)",
+        "merkle_recompute": "MATCH — 07dd5eb3eb0e5c9eae40f56ce859a064dff95f2eed47acad64fb54a1aa0122e2, under scripts/publish_public_root.py: sha256(left||right) over raw digests, Bitcoin-style odd duplication, no domain separation (declared construction, unchanged)",
+        "positional_proofs": "5/5 sampled indices recompute to the root (positional combining, published index required)",
+        "leaf_wrappers_on_disk": "305/305 leaves resolve to public/cards/<sha16>.json",
+        "envelope_ed25519": "VALID against #board-attestation-1 (verify-estate)",
+        "live_inclusion_spotcheck": "2/2 sampled leaves VALID via https://councilof.ai/api/proof; the merkle_root itself correctly returns INVALID('not a leaf')"
+      },
+      "verdict": "VALID",
+      "caveat": "Root is SIGNED, not timechain-anchored: proves WHO, not WHEN (verify-estate's own disclosure)."
+    },
+    {
+      "artifact": "frozen MPC-signed board snapshot",
+      "source": "public/signed/gspc-board.signed.json",
+      "checks": {
+        "verifier": "scripts/gspc-board-verify.mjs, exit 0",
+        "signer": "did:web:csoai.org#gspc-board-22axis-2026 (3-party MPC, Coinbase cb-mpc)",
+        "content": "22 axis · 22 measured — a 2026-08 snapshot; SUPERSEDED as current denominator by ADR-002 (23/22/1) but internally consistent with its measured_on dates"
+      },
+      "verdict": "VALID (historical artifact; not the live denominator)"
+    },
+    {
+      "artifact": "Rule-B signed boards",
+      "source": "live via verify-estate",
+      "checks": {"arena_scoreboard": "VALID under #card-attestation-1", "eat_compliance_board": "VALID under #card-attestation-1"},
+      "verdict": "VALID"
+    },
+    {
+      "artifact": "live board living stamp",
+      "source": "https://councilof.ai/api/gspc → measured_on.living_stamp (csoai.gspc-living/0.2)",
+      "checks": {
+        "ed25519": "VALID — signature over canonical(preimage) with embedded preimage, key = pinned #board-attestation-1 (9367cf59…), verified 2026-09-20T01:52Z via Node (JWK import, verbatim edge canonical())",
+        "axes_in_stamp": "23 slots listed; effect-binding UNMEASURED with n null"
+      },
+      "verdict": "VALID"
+    },
+    {
+      "artifact": "live board site attestation",
+      "source": "https://councilof.ai/api/gspc → site_attestation",
+      "checks": {
+        "published_rule": "Ed25519 over raw UTF-8 bytes of canonical JSON of payload minus site_attestation, keys sorted recursively, no whitespace, ensure_ascii=False, ECMAScript number rendering",
+        "attempts": "11 preimage variants (sans-site_attestation; envelope-blanked variants; living_stamp drop-set variants; pretty-printed) × 2 independent implementations (Node v22 with the edge canonical() copied verbatim from functions/api/gspc.ts; Python json.dumps ensure_ascii=False and =True)",
+        "result": "0/11 preimage variants verify; both implementations agree INVALID",
+        "controls": "same payload's living_stamp verifies VALID with the same key and same canonical(); served bytes byte-identical across cached and cache-bypassed fetches (sha256 9699081c…); echoed public_key_x == pinned did.json key"
+      },
+      "verdict": "INVALID (does not verify under its published rule as served 2026-09-20T01:52Z)",
+      "correction_status": "NOT on /api/corrections as of fetch — CANDIDATE for a new correction entry",
+      "root_cause": "FOUND 2026-09-20T03:05Z. functions/api/gspc.ts excludeOwnLeader() and dropUncardedLeader() returned { ...rest, leader: undefined } — an own property set to undefined. The edge signer's canonical() walks Object.keys and emits it as the literal `\"leader\":undefined`; JSON.stringify (serving) drops undefined properties. 11 axes carry public_leader_state (EXCLUDED_OWN_MODEL/NO_SIGNED_CARD), so the signed bytes contained 11 occurrences of `\"leader\":undefined` that the served bytes never carry: no reconstruction of the signed preimage from served bytes is possible. Consistent with all controls: living_stamp verifies because its preimage maps every field through explicit nulls; 214 bounded drop-1/drop-2/nested variants fail because the divergence is an added literal, not a removed field.",
+      "local_fix": "APPLIED (uncommitted, working tree): both functions now omit the leader key instead of setting it to undefined. Served bytes byte-equivalent (element-wise axes comparison + full-body comparison modulo attestation material: identical). End-to-end proof with a THROWAWAY local Ed25519 key through the real handler: site_attestation VALID from served bytes, living_stamp still VALID, 23 axes, totals unchanged. vitest functions/api/gspc.*.test.ts 16/16 PASS; tsc --noEmit clean for gspc.ts (pre-existing unrelated client errors only). NOT deployed: deploy path is GHA on protected master.",
+      "note": "Per estate doctrine (C-2026-0826-08 precedent): unverifiable attestation must not be read as validating the payload; the payload's living_stamp and the 335 cards verify independently.",
+      "proof_scripts": "/tmp/gspc_fix_proof.mts (end-to-end, throwaway key), /tmp/gspc_surface_compare2.mts (surface equivalence) — transient; verdicts reproducible via the handler harness described in README.md"
+    },
+    {
+      "artifact": "legacy living-board stamp",
+      "source": "https://councilof.ai/signed/board_living.json",
+      "checks": {"verification_state": "UNVERIFIABLE — carried verbatim via /api/cards board.signature"},
+      "verdict": "UNCHECKABLE (on the record as C-2026-0826-08: 58,184 reproduction attempts, 0 verified; signer not in did.json; retained published with its unverifiable_note — NOT a new finding)"
+    },
+    {
+      "artifact": "mill-card corpus commitment (card-root tree, separate corpus)",
+      "source": "public/interop/mill-cards-signed/ + public/interop/card-root-*.json",
+      "checks": {
+        "signed_files_on_disk": 2377,
+        "superseded_ledger_rows": 953,
+        "superseded_rows_resolve_to_disk_files": "953/953",
+        "withdrawn_ledger_rows": 44,
+        "current_active_set": "1424 leaves (scripts/card_root.py collect(): superseded excluded, unsigned excluded, identical-byte duplicates committed once) → root 3490a2751e46…",
+        "latest_commitment": "card-root-2026-09-14-bbcd1ba3f7bd.json, n=1424, as_of 2026-09-14T15:34:01Z — SAME COUNT, DIFFERENT SET than the current active set",
+        "commitment_integrity": "both 2026-09-14 roots recompute MATCH with leaf drift 0 (every committed leaf still reproduces from unchanged on-disk bytes — superseded, never edited)",
+        "churn_context": "SUPERSEDED.jsonl by day: 09-03:102, 09-09:56, 09-11:37, 09-12:56, 09-14:590, 09-15:112"
+      },
+      "verdict": "VALID (committed bytes intact); freshness gap CLOSED LOCALLY 2026-09-20T03:12Z: scripts/card_root.py (create-only) wrote public/interop/card-root-2026-09-20.json committing the current 1424-leaf active set, root 3490a2751e46c30ff39dcc93a6ee78e498b97174f630e901a6bd1451e5e10583 — identical to the independently recomputed current-set root in this report. card_root.py --verify: MATCH, leaf drift 0. Uncommitted in git; becomes public only via the normal GHA-on-master path.",
+      "ots_sidecars": "UNCHECKABLE locally — .ots files present for the 2026-09-14 roots; no ots client/module installed in this environment; no .ots sidecar created for the 2026-09-20 root (stamping is a publish-time choice; pending-vs-confirmed state not asserted)"
+    },
+    {
+      "artifact": "withdrawn card bytes",
+      "source": "public/interop/mill-cards-signed/signed-swarm-011690c6b88d.json (WITHDRAWN.jsonl row 1)",
+      "checks": {"signature_after_withdrawal": "VALID (style-C via scripts/verify_signed.py against pinned did.json copy) — doctrine: withdrawn bytes stay on disk and still verify; the WITHDRAWN ledger row carries reason + correction reference"},
+      "verdict": "VALID (bytes); withdrawal state recorded in ledger, not by editing bytes"
+    },
+    {
+      "artifact": "root witness",
+      "source": "public/interop/root-witness-latest.json",
+      "checks": {"as_of": "2026-09-18T06:48:55Z", "artifact_sha256": "dedb49d0… == sha256 of live-served root.json bytes (matches)"},
+      "verdict": "VALID (witness points at the bytes currently served)"
+    },
+    {
+      "artifact": "corrections surface",
+      "source": "https://councilof.ai/api/corrections",
+      "checks": {"rows": 58, "C-2026-0826-08_present": true},
+      "verdict": "REACHABLE; site_attestation finding above is NOT yet tracked here"
+    }
+  ],
+  "count_reconciliation": {
+    "card_index_n_cards": 335,
+    "card_index_rows_carried": 335,
+    "api_cards_count_endpoint": 336,
+    "api_cards_signed": 336,
+    "explanation": "/api/cards derives count per request as 335 index cards + 1 cross-border East-West card, and says so verbatim in its note field ('count = signed measurement cards in the living registry plus cross-border East-West card when published'). Two labelled numbers from two surfaces; the composition is disclosed on the surface itself.",
+    "verdict": "EXPLAINED — disclosed composition, not a hidden discrepancy",
+    "corpora_note": "Per council-os/CARD-CORPORA.md the three card counts (signed index 335, public-root leaves 305, mill-card root leaves 1424-current/1385-1387-committed) are SEPARATE_CORPORA with identifier_overlap 0 — never summed, never reconciled against each other. This report keeps them separate."
+  },
+  "discrepancies_open": [
+    {"id": "RECON-2026-0920-01", "severity": "HIGH", "status": "ROOT-CAUSE FOUND; LOCAL FIX APPLIED UNCOMMITTED", "what": "Live /api/gspc site_attestation does not verify under its published preimage rule (0/11 variants, 2 implementations): excludeOwnLeader()/dropUncardedLeader() set leader: undefined, which canonical() emits as literal \"leader\":undefined but JSON.stringify drops — signed bytes unreconstructable from served bytes.", "action": "DONE locally: functions/api/gspc.ts omits the key (served bytes unchanged); end-to-end throwaway-key proof VALID; 16/16 vitest PASS. REMAINING (owner-side): commit/merge via GHA-on-master, redeploy, verify live, file /api/corrections entry.", "local_fix_made": true},
+    {"id": "RECON-2026-0920-02", "severity": "MEDIUM", "status": "CLOSED LOCALLY, UNCOMMITTED", "what": "No card-root commitment covered the active mill-card set after the 2026-09-14/15 supersession churn.", "action": "DONE locally: public/interop/card-root-2026-09-20.json created (create-only; root 3490a2751e46…; --verify MATCH, drift 0). REMAINING: owner review, commit, optional OTS stamp, publish via GHA.", "local_fix_made": true},
+    {"id": "RECON-2026-0920-03", "severity": "LOW", "status": "OPEN", "what": "OTS sidecars (.ots) UNCHECKABLE in this environment (no ots client). Pending-vs-Bitcoin-confirmed state not asserted by this report.", "action": "Verify with an OpenTimestamps client in an environment that has one.", "local_fix_made": false}
+  ],
+  "retained_states": {
+    "unmeasured": ["effect-binding (axis slot 23, declared slot, n 0)"],
+    "unverifiable_on_record": ["board_living.json legacy stamp (C-2026-0826-08)"],
+    "uncheckable": ["OTS sidecar confirmation state (local environment)", "card-root OTS pending/confirmed status"],
+    "superseded_retained": ["953 superseded mill cards remain on disk, bytes unchanged, still excluded from collect()", "gspc-board.signed.json 22-axis snapshot retained as dated history", "2026-08-18 living stamp retained under living_stamp.superseded"],
+    "withdrawn_retained": ["44 withdrawn mill cards remain on disk and still verify"]
+  },
+  "not_a_certification": true,
+  "what_this_report_does_not_establish": "Signature validity is not measurement correctness; custody by one key is not independence; a signed root is not timechain anchoring; inclusion in a root is not endorsement of the leaf's content."
+}

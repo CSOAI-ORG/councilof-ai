@@ -15,7 +15,7 @@ name: Claims E2E (live truth check)
 # Running it when deploy.yml actually COMPLETES makes it both cheaper and true.
 on:
   workflow_run:
-    workflows: ["Build + deploy site (prerender + fields + tour → both domains)"]
+    workflows: ["Build + deploy site (gated production branch)"]
     types: [completed]
   schedule:
     - cron: "0 6 * * *" # daily 06:00 UTC

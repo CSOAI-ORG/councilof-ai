@@ -1,0 +1,14 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {parseRenderRequest,validateOfflineOrigin,allowOfflineRequest,snapshotFailure} from './prerender-io.mjs';
+test('proxy preserves all request query parameters',()=>assert.equal(parseRenderRequest('/api/gspc?axis=care&revision=a%2Fb','http://127.0.0.1:4321').target,'http://127.0.0.1:4321/api/gspc?axis=care&revision=a%2Fb'));
+test('signed lookup keeps digest query',()=>assert.match(parseRenderRequest('/signed/card.json?sha=abc','https://councilof.ai').target,/\?sha=abc$/));
+test('static route is never proxied',()=>assert.equal(parseRenderRequest('/dashboard?tab=board','https://councilof.ai').target,null));
+test('rejects absolute and network-path requests',()=>{for(const v of ['https://host/api/x','//host/api/x','/api/\\evil','/%00'])assert.throws(()=>parseRenderRequest(v,'https://councilof.ai'));});
+test('rejects encoded traversal after decoding',()=>assert.throws(()=>parseRenderRequest('/safe%2f..%2fprivate','https://councilof.ai')));
+test('rejects malformed encoding',()=>assert.throws(()=>parseRenderRequest('/%XX','https://councilof.ai')));
+test('origin cannot carry credentials or query',()=>{for(const o of ['https://u:p@host/','https://host/path','https://host/?x=1','file:///tmp/'])assert.throws(()=>parseRenderRequest('/api/x',o));});
+test('offline mode permits only an explicit loopback origin',()=>{assert.equal(validateOfflineOrigin('http://127.0.0.1:5555'),'http://127.0.0.1:5555');for(const o of ['https://councilof.ai','http://evil.localhost','http://127.0.0.1:55/path'])assert.throws(()=>validateOfflineOrigin(o));});
+test('offline browser does not send mutations or foreign requests',()=>{assert.equal(allowOfflineRequest('http://localhost:55/api/x','GET','http://localhost:55'),true);for(const [u,m] of [['http://localhost:55/api/x','POST'],['https://example.com/x','GET'],['http://localhost:56/x','GET']])assert.equal(allowOfflineRequest(u,m,'http://localhost:55'),false);});
+test('uncaught JS error cannot yield a passing snapshot',()=>assert.match(snapshotFailure('A lot of otherwise good text',['Cannot read properties of undefined']),/^JS_RUNTIME_FAILURE/));
+test('explicit fetch failure remains a blocker',()=>assert.match(snapshotFailure('Failed to fetch',[]),/^BAKED-FETCH/));
+test('honest unmeasured or unavailable state is not an invented page error',()=>assert.equal(snapshotFailure('UNMEASURED. Source unavailable; not zero.',[]),null));
