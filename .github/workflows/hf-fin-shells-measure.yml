@@ -16,6 +16,7 @@ on:
           - mill
           - runpod
           - chainlink-ondo
+          - global-index
         default: financial
       intake_run_id:
         description: "Successful RunPod intake run ID (required only for runpod)"
@@ -121,6 +122,8 @@ jobs:
             python3 scripts/sign_mill_cards.py --source-dir "$RUNNER_TEMP/runpod-signing-approved/cards"
           elif [ "$T" = "chainlink-ondo" ]; then
             python3 scripts/sign_chainlink_ondo_directory.py
+          elif [ "$T" = "global-index" ]; then
+            python3 scripts/sign_global_measurement_index.py
           else
             python3 scripts/sign_financial_runs.py
           fi
@@ -142,6 +145,8 @@ jobs:
             git add public/interop/mill-cards-signed
           elif [ "$T" = "chainlink-ondo" ]; then
             git add public/interop/chainlink-ondo-2026-09
+          elif [ "$T" = "global-index" ]; then
+            git add public/interop/global-index-2026-09
           else
             git add public/interop/financial-measure-card-*.json
           fi
@@ -150,7 +155,7 @@ jobs:
             exit 0
           fi
           git commit -m "${T}-measure: sign compact cards via OIDC board-sign"
-          if [ "$T" = "mill" ] || [ "$T" = "runpod" ] || [ "$T" = "chainlink-ondo" ]; then
+          if [ "$T" = "mill" ] || [ "$T" = "runpod" ] || [ "$T" = "chainlink-ondo" ] || [ "$T" = "global-index" ]; then
             git push origin "HEAD:$DISPATCH_BRANCH"
           else
             git push origin HEAD:master

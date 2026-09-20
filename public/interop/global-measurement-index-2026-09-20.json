@@ -1,0 +1,80 @@
+{
+  "schema": "csoai.global-measurement-index/0.1",
+  "observed_at": "2026-09-20T03:05:00Z",
+  "status": "PARTIAL_MEASURED",
+  "scope": "Public machine-readable coverage ledger; it is not a claim to cover every asset, country, chain, issuer, or search engine in the world.",
+  "coverage": {
+    "gspc": {
+      "axes": 23,
+      "measured": 22,
+      "unmeasured": 1,
+      "signature_state": "AWAITING_OWNER_MPC_SIGNATURE"
+    },
+    "stablecoins": {
+      "catalogued_assets": 427,
+      "reported_chains": 213,
+      "deployments": 1653,
+      "supply_rows": {
+        "MEASURED": 286,
+        "UNMEASURED": 118,
+        "REJECTED": 15,
+        "UNCHECKABLE": 8
+      },
+      "catalogue_state": "INDEXED_IN_CS0AI_CATALOGUE",
+      "external_search_index_state": "UNMEASURED"
+    },
+    "chainlink_link": {
+      "publisher_directory_rows": 148,
+      "rpc_probed": 4,
+      "remaining_rpc_unmeasured": 144
+    },
+    "ondo": {
+      "publisher_directory_rows": 918,
+      "rpc_match": 918,
+      "rpc_mismatch": 0
+    }
+  },
+  "truth_rules": [
+    "Catalogue inclusion is not independent measurement.",
+    "CSOAI catalogue indexing is not Google, Bing, Bazaar, marketplace, traffic, or customer use.",
+    "A reported chain is not a country or jurisdiction.",
+    "Issued totalSupply is not circulating supply, reserves, backing, solvency, or price parity.",
+    "A content hash is not a signature; a signature is not certification.",
+    "UNMEASURED, UNCHECKABLE and REJECTED rows remain visible and are never converted to zero."
+  ],
+  "evidence": [
+    {
+      "path": "public/interop/stablecoin-universe-2026-09-20/index.json",
+      "sha256": "3f70d877457f5ec8cc667d517f486acf46a23ef1000a5f381f52ba58646352af"
+    },
+    {
+      "path": "public/interop/stablecoin-universe-supply-2026-09-16.json",
+      "sha256": "92cfe969795947d14b3c43adb34c44cee95f971c33193b0a5c35ad5b3ac08ebc"
+    },
+    {
+      "path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+      "sha256": "e9262f6fdc404fafd04169e75d337f173c94a839442200459e9a826d47663123"
+    },
+    {
+      "path": "public/interop/canonical-23-axis-index-v0.1.json",
+      "sha256": "762d132fbb633d53effa23ed8b2416718cfa940c58cf41aa68099f3b262902e3"
+    },
+    {
+      "path": "public/interop/chainlink-ondo-token-inventory-2026-09-20.json",
+      "sha256": "3b55cb27929e5739e61eec6ad9630c6853cc71fefdbddba0dd5364efe6f6fc6d"
+    },
+    {
+      "path": "public/interop/ondo-token-onchain-probe-2026-09-20.json",
+      "sha256": "7beb5352455d9c1a01b7a8c5d40c08416d3943a9f40d4887d817384527677615"
+    }
+  ],
+  "signature": {
+    "state": "BLOCKED_GITHUB_ACTIONS",
+    "sig_ed25519": null,
+    "route": ".github/workflows/hf-fin-shells-measure.yml target=global-index",
+    "blocker": "HTTP 422: Actions has been disabled for this user",
+    "local_signing": "FORBIDDEN"
+  },
+  "measurement_not_certification": true,
+  "writes_gspc_board": false
+}

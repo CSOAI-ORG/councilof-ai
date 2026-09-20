@@ -1,0 +1,64 @@
+{
+  "body": {
+    "schema": "https://councilof.ai/schema/card-v0.json",
+    "model": "csoai-global-measurement-index-2026-09-20",
+    "axis": "global_public_coverage",
+    "as_of": "2026-09-20T03:05:00Z",
+    "n": 427,
+    "status": "PARTIAL_MEASURED",
+    "measurement": {
+      "gspc_axes": 23,
+      "gspc_measured": 22,
+      "stablecoin_assets": 427,
+      "reported_chains": 213,
+      "deployments": 1653,
+      "supply_measured": 286,
+      "supply_unmeasured": 118,
+      "supply_rejected": 15,
+      "supply_uncheckable": 8,
+      "chainlink_rows": 148,
+      "ondo_rows": 918
+    },
+    "evidence": [
+      {
+        "path": "public/interop/global-measurement-index-2026-09-20.json",
+        "sha256": "33231e765c5160790f02968db0cfa00bda29c9c6f2a1a8e748a08ddef6cf26ec"
+      },
+      {
+        "path": "public/interop/stablecoin-universe-2026-09-20/index.json",
+        "sha256": "3f70d877457f5ec8cc667d517f486acf46a23ef1000a5f381f52ba58646352af"
+      },
+      {
+        "path": "public/interop/stablecoin-universe-supply-2026-09-20.json",
+        "sha256": "e9262f6fdc404fafd04169e75d337f173c94a839442200459e9a826d47663123"
+      },
+      {
+        "path": "public/interop/stablecoin-universe-2026-09-20/delta-from-2026-09-15.json",
+        "sha256": "5f454625ef3e05072880540c9103da6872700a7d1e85001164ea138cd61a4a2f"
+      },
+      {
+        "path": "docs/product/GSPC-23-AXIS-MPC-SIGNING-CANDIDATE-2026-09-20.json",
+        "sha256": "46c822d5da784ffb462130e444ab87ce65dacd9a45aed6058c96c3d2e94cea8a"
+      }
+    ],
+    "unmeasured": [
+      "global completeness beyond named source universes",
+      "Google/Bing/Bazaar/marketplace inclusion, traffic or customer use",
+      "country and jurisdiction coverage",
+      "stablecoin reserves, backing, solvency, price parity and investment merit",
+      "144 LINK rows without chain-specific RPC replay",
+      "one GSPC axis and owner MPC signatures"
+    ],
+    "signature_state": "STAGED_UNSIGNED",
+    "measurement_not_certification": true,
+    "writes_gspc_board": false
+  },
+  "signature": null,
+  "did": "did:web:csoai.org#board-attestation-1",
+  "signing": {
+    "state": "BLOCKED_GITHUB_ACTIONS",
+    "route": ".github/workflows/hf-fin-shells-measure.yml target=global-index",
+    "blocker": "HTTP 422: Actions has been disabled for this user",
+    "local_signing": "FORBIDDEN"
+  }
+}

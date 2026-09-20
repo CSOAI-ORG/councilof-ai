@@ -13,7 +13,7 @@ is REJECTED, not measured.
 Ten EVM chains are read, each at its own head block, recorded per row. An asset on a chain
 with no endpoint here is UNMEASURED with that reason — not zero, and not silently dropped.
 """
-import json, re, sys, time, urllib.request
+import argparse, json, re, sys, time, urllib.request
 
 # Endpoints reused from scripts/readers/wrapped-asset-parity-reader.mjs (CHAINS), which records
 # why each was chosen: publicnode refuses pinned-block eth_call without a token since 2026-09-15,
@@ -68,9 +68,14 @@ def upstream_head(i, nbytes=3000):
 
 
 def main() -> int:
-    idx = json.load(open("public/interop/stablecoin-universe-2026-09/index.json"))
-    out_path = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else "public/interop/stablecoin-universe-supply.json"
-    limit = int(sys.argv[sys.argv.index("--limit") + 1]) if "--limit" in sys.argv else len(idx["assets"])
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--index", default="public/interop/stablecoin-universe-2026-09/index.json")
+    parser.add_argument("--out", default="public/interop/stablecoin-universe-supply.json")
+    parser.add_argument("--limit", type=int)
+    args = parser.parse_args()
+    idx = json.load(open(args.index))
+    out_path = args.out
+    limit = args.limit if args.limit is not None else len(idx["assets"])
     assets = idx["assets"][:limit]
     heads = {}
     for ch, ep in CHAIN_RPC.items():
