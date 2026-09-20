@@ -34,6 +34,40 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0920-01",
+      date: "2026-09-20",
+      first_observed_at: "2026-09-20T01:52Z",
+      what_was_wrong:
+        "The site_attestation on GET /api/gspc did not verify under its own published preimage " +
+        "rule. excludeOwnLeader() and dropUncardedLeader() in functions/api/gspc.ts returned " +
+        "leader: undefined as an own property on the 11 axes whose leader is excluded or " +
+        "uncarded; the edge signer's canonical() emits an own undefined property as the literal " +
+        "text \"leader\":undefined, while JSON.stringify — which produces the served bytes — drops " +
+        "the key entirely. The signed bytes were therefore unreconstructable from the served bytes " +
+        "by anyone. An outside reconciliation on 2026-09-20 tried 11 preimage variants across two " +
+        "independent implementations (Node with the signer's exact canonical(); Python " +
+        "ensure_ascii both ways); none verified, while the same payload's living_stamp verified " +
+        "under the same pinned key.",
+      why_it_was_wrong:
+        "The signer and the serializer disagreed about undefined-valued own properties, and no " +
+        "check verified the attestation from the served bytes — the only bytes a relying party " +
+        "has. The published preimage rule was correct; the bytes it pointed at could not be " +
+        "reproduced, which for a relying party is an unverifiable attestation regardless of cause.",
+      what_changed:
+        "The leader key is omitted instead of set to undefined. Served bytes are byte-equivalent " +
+        "(element-wise and full-body comparison against the live payload, modulo attestation " +
+        "material). An end-to-end proof through the real handler with a throwaway key shows the " +
+        "attestation verifying from served bytes, the living_stamp still verifying, and totals " +
+        "unchanged; the gspc truth tests pass 16/16. Merged as #2657. Until a deploy serves it, " +
+        "the live payload's site_attestation remains unverifiable and must not be read as " +
+        "validating the payload — the living_stamp and the 335 signed cards verify independently.",
+      reached_the_public: true,
+      note:
+        "Window start unknown (shipped with the leader-exclusion change); observed INVALID " +
+        "2026-09-20T01:52Z and still INVALID pre-deploy at 03:40Z. Full evidence bundle: " +
+        "evidence/reconciliation-2026-09-20/ (RECON-2026-0920-01).",
+    },
+    {
       id: "C-2026-0917-01",
       date: "2026-09-17",
       first_observed_at: "2026-09-17T04:30Z",
