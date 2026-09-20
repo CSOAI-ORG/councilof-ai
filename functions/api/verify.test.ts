@@ -75,6 +75,29 @@ describe("/api/verify", () => {
     expect(verifyCard).not.toHaveBeenCalled();
   });
 
+  it("a card that could not be checked is UNCHECKABLE, not INVALID", async () => {
+    // The same rule through the verifyCard door: an unrecognised shape or a browser
+    // gap means nothing was judged, so the endpoint must not paint it as a failure.
+    vi.mocked(verifyCard).mockResolvedValue({
+      valid: false, id: null, family: "unknown",
+      reasons: ["unrecognised_family"],
+      checks: [{ label: "family", ok: null, code: "unrecognised_family", detail: "not a shape we publish" }],
+    } as any);
+    const b = await (await call({ card: { hello: "world" } })).json();
+    expect(b.state).toBe("UNCHECKABLE");
+    expect(b.reason).toBe("unrecognised_family");
+  });
+
+  it("a browser gap never whitewashes a real failure — mixed reasons stay INVALID", async () => {
+    vi.mocked(verifyCard).mockResolvedValue({
+      valid: false, id: "e".repeat(64), family: "gspc.measurement-card",
+      reasons: ["preimage_mismatch", "ed25519_unsupported"],
+      checks: [{ label: "preimage", ok: false, code: "preimage_mismatch", detail: "bytes differ" }],
+    } as any);
+    const b = await (await call({ card: { id: "e".repeat(64) } })).json();
+    expect(b.state).toBe("INVALID");
+  });
+
   it("refuses to fetch a card from a host that is not ours", async () => {
     const b = await (await call({ card: "https://evil.example/card.json" })).json();
     expect(b.state).toBe("UNCHECKABLE");

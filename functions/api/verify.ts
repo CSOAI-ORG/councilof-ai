@@ -27,7 +27,7 @@
  * valid card UNCHECKABLE, and an unpinned signer cannot pass because the network was down.
  * Verification is free, forever. It certifies nothing.
  */
-import { verifyCard, PINNED_ANCHORS, type Anchor } from "../_lib/cardVerify";
+import { verifyCard, cardState, PINNED_ANCHORS, type Anchor } from "../_lib/cardVerify";
 
 const CORS = {
   "access-control-allow-origin": "*",
@@ -118,9 +118,12 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
   }
 
   const v = await verifyCard(card, await liveAnchors(origin));
+  // Derive the three-state verdict from the shared module's own rule, so this
+  // endpoint cannot paint "could not check" as INVALID.
+  const state = cardState(v.valid, v.reasons);
   return json({
     schema: "csoai.verify/0.1",
-    state: v.valid ? "VALID" : "INVALID",
+    state,
     id: v.id ?? null,
     family: v.family ?? null,
     reason: v.valid ? null : v.reasons.join(", "),
@@ -132,6 +135,8 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
     not_a_certification: true,
     note: v.valid
       ? "The body reproduces its own id and the signature verifies under a published key. A verified measurement card — not a certification of anything."
-      : "This card fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE.",
+      : state === "UNCHECKABLE"
+        ? "The check could not be completed for the stated reason. UNCHECKABLE is not INVALID: nothing was judged."
+        : "This card fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE.",
   });
 };

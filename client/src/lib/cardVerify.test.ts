@@ -20,6 +20,7 @@ import { resolve } from "node:path";
 import {
   verifyCard,
   anchorsFromDid,
+  cardState,
   pyCanonical,
   GSPC_FLOAT_FIELDS,
   detectFamily,
@@ -146,6 +147,41 @@ describe("failure modes stay distinct", () => {
     expect(v.family).toBe("unknown");
     expect(v.reasons).toEqual(["unrecognised_family"]);
     expect(v.checks[0].detail).toMatch(/gspc\.measurement-card/);
+  });
+});
+
+describe("three states, never two — the verdict's `state` field", () => {
+  const sample = () => readJson(resolve(CARD_DIR, cardFiles[0]));
+
+  it("a genuine published card is VALID", async () => {
+    expect((await verifyCard(sample(), ANCHORS)).state).toBe("VALID");
+  });
+
+  it("a tampered body is INVALID — a positive finding", async () => {
+    const card = sample();
+    card.body.accuracy = 0.9999;
+    expect((await verifyCard(card, ANCHORS)).state).toBe("INVALID");
+  });
+
+  it("an unrecognised shape is UNCHECKABLE — never INVALID", async () => {
+    expect((await verifyCard({ hello: "world" }, ANCHORS)).state).toBe("UNCHECKABLE");
+  });
+
+  it("an unpinned DID key is UNCHECKABLE — never INVALID", async () => {
+    const mill = readJson(resolve(MILL_DIR, readdirSync(MILL_DIR).filter((f) => f.startsWith("signed-") && f.endsWith(".json"))[0]));
+    const v = await verifyCard({ ...mill, did: "did:web:example.invalid#k1" }, ANCHORS);
+    expect(v.state).toBe("UNCHECKABLE");
+  });
+
+  it("cardState: a browser gap alone is UNCHECKABLE, but never whitewashes a real failure", () => {
+    expect(cardState(true, [])).toBe("VALID");
+    expect(cardState(false, ["ed25519_unsupported"])).toBe("UNCHECKABLE");
+    expect(cardState(false, ["unrecognised_family"])).toBe("UNCHECKABLE");
+    // A tampered body stays INVALID even when the runtime also lacks Ed25519 —
+    // the browser-independent failure decides, so tampering cannot masquerade
+    // as a capability gap.
+    expect(cardState(false, ["preimage_mismatch", "ed25519_unsupported"])).toBe("INVALID");
+    expect(cardState(false, ["untrusted_signer"])).toBe("INVALID");
   });
 });
 

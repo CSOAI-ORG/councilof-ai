@@ -191,17 +191,31 @@ export default function RecordVerifyForm({
               the first thing in that live region — so a screen-reader user hears the
               outcome in words before the per-check list. The headline states the
               verdict in words, not only a glyph: a reader who takes nothing else from
-              the panel must still leave knowing which way it went. */}
+              the panel must still leave knowing which way it went.
+              THREE STATES, NEVER TWO: UNCHECKABLE (could not check) is a different
+              claim from INVALID (checked and failed) and is never rendered as one. */}
           <p
             data-testid="record-verdict-headline"
             className={`text-[14px] font-bold ${
-              verdict.result.valid ? (light ? "text-emerald-800" : "text-emerald-300") : light ? "text-red-700" : "text-red-300"
+              verdict.result.state === "VALID"
+                ? light ? "text-emerald-800" : "text-emerald-300"
+                : verdict.result.state === "INVALID"
+                  ? light ? "text-red-700" : "text-red-300"
+                  : light ? "text-amber-700" : "text-amber-300"
             }`}
           >
-            {verdict.result.valid ? "✓ VERIFIED" : "✗ NOT VERIFIED"} —{" "}
-            {verdict.result.valid
-              ? "this record reproduces its own id and its signature checks out against a published key."
-              : "see which check failed below; each failure is reported for what it is."}
+            {verdict.result.state === "VALID"
+              ? "✓ VALID — "
+              : verdict.result.state === "INVALID"
+                ? "✗ INVALID — "
+                : "○ UNCHECKABLE — "}
+            {verdict.result.state === "VALID"
+              ? verdict.result.lines.some((l) => l.code === "signature_valid")
+                ? "this record reproduces its own id and its signature checks out against a published key."
+                : "this record reproduces its declared id, but it carries no signature — a hash match only, not proof of who wrote it."
+              : verdict.result.state === "INVALID"
+                ? `a check ran and failed (${verdict.result.reasons.join(", ")}); each failure below is reported for what it is.`
+                : `the check could not be completed (${verdict.result.reasons.join(", ") || "see below"}). This is not a finding that the record is forged.`}
           </p>
           <p className={`break-all font-mono text-[11px] ${light ? "text-slate-600" : "text-emerald-100/60"}`}>
             Input SHA-256: {verdict.inputHash}

@@ -1,0 +1,212 @@
+{
+  "kind": "csoai.recovery-inventory/1",
+  "evidence_audit_item": 3,
+  "title": "Repository recovery inventory: canonical candidates, origin URLs, refs, commit IDs, licence, latest verified build artifact",
+  "generated_at": "2026-09-20T02:36:00Z",
+  "method": "read-only git commands (remote/rev-parse/rev-list/for-each-ref/fsck/log/du) plus anonymous unauthenticated HTTP HEAD/GET (curl). No tracked files modified; no git mutations. Every row states command, observed value, and UNKNOWN where not determinable.",
+  "constraints": {
+    "git": "read-only (log/rev-list/remote/fsck only); tree is multi-lane dirty (1022 modified/untracked entries in git status --porcelain at time of audit)",
+    "network": "anonymous curl only; no authentication tokens used; HTTP statuses may reflect login-walls or bot-blocking rather than true absence"
+  },
+  "this_clone": {
+    "path": "/Users/nicholas/clawd/councilof-ai-work",
+    "origin_url": {
+      "checked": "git remote -v",
+      "observed": "origin https://github.com/CSOAI-ORG/councilof-ai.git (fetch and push)"
+    },
+    "current_branch": {
+      "checked": "git branch --show-current",
+      "observed": "fix/deploy-trigger-coupling"
+    },
+    "head_commit": {
+      "checked": "git rev-parse HEAD",
+      "observed": "3dfb20e36b20004024a1897481f66d9c9e4393ed"
+    },
+    "commit_count_head": {
+      "checked": "git rev-list --count HEAD",
+      "observed": 1036
+    },
+    "commit_count_origin_master": {
+      "checked": "git rev-list --count origin/master",
+      "observed": 1037,
+      "note": "local fix branch is 1 commit behind origin/master (or diverged by 1); exact relationship not further analysed"
+    },
+    "total_refs": {
+      "checked": "git for-each-ref | wc -l",
+      "observed": 132
+    },
+    "git_dir_size": {
+      "checked": "du -sh .git",
+      "observed": "459M"
+    },
+    "fsck_summary": {
+      "checked": "git fsck --no-progress | awk '{print $1}' | sort | uniq -c",
+      "observed": "46 dangling objects (dangling commits and dangling trees); no other error categories reported; completed within timeout"
+    },
+    "worktree_state": {
+      "checked": "git status --porcelain | wc -l",
+      "observed": "1022 modified/untracked entries (multi-lane dirty tree, expected)"
+    }
+  },
+  "nested_clones": [
+    {
+      "path": "/Users/nicholas/clawd/councilof-ai-work/condor",
+      "found_by": "find . -maxdepth 3 -name .git -not -path './.git'",
+      "origin_url": "https://github.com/hummingbot/condor.git",
+      "current_branch": "gspc-market-swarm-20260919",
+      "head_commit": "d89e74f2e3e273bea102c64e4977118e6a88084f",
+      "commit_count_head": 1,
+      "total_refs": 4,
+      "note": "shallow clone (depth 1); upstream hummingbot/condor reachable anonymously (HTTP 200, 2026-09-20T02:34:55Z)"
+    },
+    {
+      "path": "/Users/nicholas/clawd/councilof-ai-work/hummingbot-api",
+      "found_by": "find . -maxdepth 3 -name .git -not -path './.git'",
+      "origin_url": "https://github.com/hummingbot/hummingbot-api.git",
+      "current_branch": "main",
+      "head_commit": "2494e847538bb7b819495cbc30eb4ef828feaacd",
+      "commit_count_head": 1,
+      "total_refs": 3,
+      "note": "shallow clone (depth 1); upstream hummingbot/hummingbot-api reachable anonymously (HTTP 200, 2026-09-20T02:34:55Z)"
+    }
+  ],
+  "external_mirror_candidates": [
+    {
+      "mirror": "GitHub org CSOAI-ORG (declared canonical origin)",
+      "declared_url": "https://github.com/CSOAI-ORG/councilof-ai",
+      "declared_in": "git remote -v (this clone); CITATION.cff repository-code",
+      "reachability_checked": true,
+      "check_command": "curl -sIL https://github.com/CSOAI-ORG/councilof-ai ; curl -sL https://api.github.com/repos/CSOAI-ORG/councilof-ai",
+      "http_status": 404,
+      "checked_at": "2026-09-20T02:34:55Z",
+      "note": "404 to anonymous requests on both web and API. UNKNOWN whether the repo is private, renamed, or deleted; an authenticated check was out of scope (no authentication permitted)."
+    },
+    {
+      "mirror": "Hugging Face datasets org csoai",
+      "declared_url": "https://huggingface.co/datasets/csoai/gspc-agi (plus 40+ other csoai/* dataset repos referenced in repo docs; full unique list extracted by grep)",
+      "declared_in": "spaces/gspc-lookup/README.md, measurement/filings/2026-09/NIST-AI-200-2-ipd-TEVV-Athlon-DRAFT.md, functions/badge/__fixtures__/gspc-2026-09-05.json and others",
+      "reachability_checked": true,
+      "check_command": "curl -sIL https://huggingface.co/datasets/csoai/gspc-agi ; .../gspc-hub-cards ; .../x402-settlement-census",
+      "http_status": 200,
+      "checked_at": "2026-09-20T02:34:55Z",
+      "note": "three sampled dataset repos all 200; earlier audit (evidence/discovery-audit-2026-09-20/status-matrix.json) recorded huggingface.co/api/spaces?author=csoai returning 38 public spaces; that API endpoint itself re-checked as part of models?author=csoai (200)"
+    },
+    {
+      "mirror": "Hugging Face space csoai/gspc-board",
+      "declared_url": "https://huggingface.co/spaces/csoai/gspc-board",
+      "declared_in": "spaces/gspc-live-board/README.md, spaces/gspc-board/README.md",
+      "reachability_checked": true,
+      "check_command": "curl -sIL https://huggingface.co/spaces/csoai/gspc-board",
+      "http_status": 200,
+      "checked_at": "2026-09-20T02:34:55Z"
+    },
+    {
+      "mirror": "PyPI package csoai-gspc",
+      "declared_url": "https://pypi.org/project/csoai-gspc",
+      "declared_in": "docs (grep: pypi.org/project/csoai-gspc)",
+      "reachability_checked": true,
+      "check_command": "curl -sIL https://pypi.org/project/csoai-gspc ; curl -sL https://pypi.org/pypi/csoai-gspc/json",
+      "http_status": 200,
+      "checked_at": "2026-09-20T02:34:55Z",
+      "note": "both project page and JSON API return 200; package exists on PyPI"
+    },
+    {
+      "mirror": "npm package csoai-gspc",
+      "declared_url": "https://www.npmjs.com/package/csoai-gspc",
+      "declared_in": "docs (grep: npmjs.com/package/csoai-gspc)",
+      "reachability_checked": true,
+      "check_command": "curl -sIL https://www.npmjs.com/package/csoai-gspc ; curl -sL https://registry.npmjs.org/csoai-gspc",
+      "http_status": "403 (npmjs.com web, bot-block suspected) / 404 (registry.npmjs.org)",
+      "checked_at": "2026-09-20T02:35:15Z",
+      "note": "registry API 404 means package NOT currently published under this name; web 403 is bot-blocking and not evidence of existence"
+    },
+    {
+      "mirror": "npm package csoai-gspc-mcp",
+      "declared_url": "https://www.npmjs.com/package/csoai-gspc-mcp",
+      "declared_in": "docs; mcp/gspc-server/package.json name field",
+      "reachability_checked": true,
+      "check_command": "curl -sIL https://www.npmjs.com/package/csoai-gspc-mcp ; curl -sL https://registry.npmjs.org/csoai-gspc-mcp",
+      "http_status": "403 (npmjs.com web, bot-block suspected) / 200 (registry.npmjs.org)",
+      "checked_at": "2026-09-20T02:35:15Z",
+      "note": "registry API 200 confirms the package is published on npm"
+    },
+    {
+      "mirror": "Zenodo DOI 10.5281/zenodo.21991104",
+      "declared_url": "https://doi.org/10.5281/zenodo.21991104",
+      "declared_in": "CITATION.cff identifiers, BROWSER-PLAYBOOK.md",
+      "reachability_checked": true,
+      "check_command": "curl -sIL https://doi.org/10.5281/zenodo.21991104",
+      "http_status": 200,
+      "checked_at": "2026-09-20T02:34:55Z",
+      "note": "DOI resolves; described in CITATION.cff as 'Citable GSPC dataset record'"
+    },
+    {
+      "mirror": "Kaggle datasets nicktempleman/csoai-canonical-20260911 and nicktempleman/csoai-gspc-living-board",
+      "declared_url": "https://www.kaggle.com/datasets/nicktempleman/csoai-canonical-20260911",
+      "declared_in": "docs/gpu-offload (grep)",
+      "reachability_checked": true,
+      "check_command": "curl -sIL https://www.kaggle.com/datasets/nicktempleman/csoai-canonical-20260911",
+      "http_status": 404,
+      "checked_at": "2026-09-20T02:34:55Z",
+      "note": "404 to anonymous request; Kaggle pages may require login, so UNKNOWN whether dataset exists or was removed"
+    },
+    {
+      "mirror": "Upstream hummingbot repos (nested clone origins, not CSOAI mirrors)",
+      "declared_url": "https://github.com/hummingbot/condor ; https://github.com/hummingbot/hummingbot-api",
+      "declared_in": "condor/.git/config ; hummingbot-api/.git/config",
+      "reachability_checked": true,
+      "check_command": "curl -sIL (both URLs)",
+      "http_status": 200,
+      "checked_at": "2026-09-20T02:34:55Z"
+    }
+  ],
+  "licences": [
+    {
+      "path": "LICENSE",
+      "checked": "head -5 LICENSE",
+      "observed": "MIT License, Copyright (c) 2024-2026 COAI - Council of AIs"
+    },
+    {
+      "path": "condor/LICENSE",
+      "checked": "head -3 condor/LICENSE",
+      "observed": "MIT License, Copyright (c) 2023 Hummingbot Foundation"
+    },
+    {
+      "path": "hummingbot-api/LICENSE",
+      "checked": "head -3 hummingbot-api/LICENSE",
+      "observed": "MIT License, Copyright (c) 2023 Hummingbot Foundation"
+    },
+    {
+      "path": "CITATION.cff",
+      "checked": "cat CITATION.cff",
+      "observed": "license: MIT; title 'Council of AI'; version v0.1.0-evidence; DOI 10.5281/zenodo.21991104"
+    }
+  ],
+  "build_artifacts": [
+    {
+      "artifact": "dist/client (built static site output)",
+      "checked": "ls dist/client ; du -sh dist/client",
+      "observed": "present; 359M; contains _headers, _redirects, 404.html, hashed txt receipts, html pages",
+      "note": "build freshness UNKNOWN (no build timestamp recorded in this audit)"
+    },
+    {
+      "artifact": "public/root.json (published public root)",
+      "checked": "ls -la public/root.json ; grep as_of",
+      "observed": "present, 24454 bytes, mtime 2026-09-16 06:58 local; as_of 2026-09-15T07:13:43Z"
+    },
+    {
+      "artifact": "public/interop/card-root-2026-09-20.json (daily card Merkle root, committed today)",
+      "checked": "ls -la ; git log --format='%H %cI %s' -1",
+      "observed": "present, 546664 bytes; kind csoai.card-root/1; as_of 2026-09-20T02:12:24Z; n_leaves 1424; n_skipped 953; merkle_root 3490a2751e46c30ff39dcc93a6ee78e498b97174f630e901a6bd1451e5e10583; HEAD commit 3dfb20e36b20004024a1897481f66d9c9e4393ed at 2026-09-20T03:21:43+01:00 ('deploy: drop --packed-history-projection from the source-assets guard')",
+      "note": "file self-declares not_a_certificate: true; Bitcoin anchor status per anchor_rule requires independent chain validation not performed here"
+    }
+  ],
+  "unknowns": [
+    "Whether github.com/CSOAI-ORG/councilof-ai still exists (private vs renamed vs deleted) — anonymous 404 only",
+    "Whether Kaggle datasets nicktempleman/csoai-* still exist — anonymous 404 may be a login wall",
+    "Whether npmjs.com/package/csoai-gspc web page 403 hides content — registry 404 indicates package not published",
+    "Full reachability of all 40+ referenced csoai/* HF dataset repos — only 3 sampled (gspc-agi, gspc-hub-cards, x402-settlement-census)",
+    "Freshness of dist/client build output",
+    "Relationship between local fix/deploy-trigger-coupling (1036 commits) and origin/master (1037) — count differs by 1, ancestry not analysed"
+  ]
+}
