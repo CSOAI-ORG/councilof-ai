@@ -135,7 +135,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
     <link>https://councilof.ai/</link>
     <description>MEASURED boards, REPORTED context, regulation-change events and corrections from the independent AI-measurement body. Measurement, not certification. Verification free forever. Derived feeds at /feeds/.</description>
     <language>en-gb</language>
-    <atom:link href="${origin}/feed.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="${origin}/api/feed.xml" rel="self" type="application/rss+xml" />
     <atom:link href="${origin}/feeds" rel="alternate" type="text/html" />
 ${items}
   </channel>

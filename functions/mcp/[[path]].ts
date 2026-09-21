@@ -242,8 +242,10 @@ export const onRequest = async ({ request, env }: { request: Request; env?: unkn
       board: `${origin}/api/gspc`,
       signed_cards: `${origin}/signed/card_index.json`,
       how_to_verify: `${origin}/signed/HOW-TO-VERIFY.md`,
-      registry_evidence:
-        "evidence/mcp-registry.json in the repo; registry publication is separate from this runtime.",
+      registry_evidence: {
+        public_url: null,
+        state: "not_separately_published",
+      },
     };
     return new Response(
       request.method === "HEAD" ? null : JSON.stringify(document),

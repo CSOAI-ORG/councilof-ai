@@ -117,6 +117,10 @@ describe("MCP discovery keeps implementation identities truthful", () => {
     expect(discovery.paid_tools.how).toMatch(
       /challenge is not settlement, delivery or revenue/i,
     );
+    expect(discovery.registry_evidence).toEqual({
+      public_url: null,
+      state: "not_separately_published",
+    });
   });
 
   it("derives the remote count from the definitions served by tools/list", async () => {

@@ -65,7 +65,7 @@ describe("/api/feed.xml derives its items", () => {
     const xml = await res.text();
     expect(xml).toMatch(/^<\?xml version="1\.0"/);
     expect(xml).toMatch(/<rss version="2\.0"/);
-    expect(xml).toMatch(/<atom:link href="https:\/\/councilof\.ai\/feed\.xml" rel="self"/);
+    expect(xml).toMatch(/<atom:link href="https:\/\/councilof\.ai\/api\/feed\.xml" rel="self"/);
     expect((xml.match(/<item>/g) || []).length).toBe(4);
     expect(xml).toMatch(/&amp;axis=governance/);
   });
