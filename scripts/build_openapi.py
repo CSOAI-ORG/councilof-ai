@@ -506,8 +506,8 @@ def compose(fix: Path = FIX) -> dict:
         f"Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; "
         f"a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. "
         f"The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at "
-        f"https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to "
-        f"/api/receipts/verify, or run scripts/verify_receipt.py, which reads did.json and contacts nobody. {lid}"
+        f"https://csoai.org/.well-known/did.json. Check it without trusting this document: POST it to "
+        f"/api/receipts/verify. {lid}"
     )
     spec = {
         "openapi": "3.1.0",
@@ -608,7 +608,6 @@ def compose(fix: Path = FIX) -> dict:
                 "kid": "did:web:csoai.org#board-attestation-1",
                 "did_document": "https://csoai.org/.well-known/did.json",
                 "verify_hosted": f"{BASE}/api/receipts/verify",
-                "verify_offline": "scripts/verify_receipt.py",
                 "receipts_by_payer": f"{BASE}/api/receipts?payer=0x0000000000000000000000000000000000000000",
             },
             "schema_of_source": {"well_known": wk["schema"], "catalog": cat["schema"]},

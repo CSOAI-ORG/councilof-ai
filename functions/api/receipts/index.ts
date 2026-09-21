@@ -102,8 +102,7 @@ export async function handle(
         "did:web:csoai.org#board-attestation-1. The signature covers only the fields inside it " +
         "(version, network, resourceUrl, payer, issuedAt, transaction) — NOT amount, asset, " +
         "self or zero_value, which are this endpoint's own bookkeeping and are unsigned. " +
-        "Check the JWS, not this envelope: POST it to /api/receipts/verify, or run " +
-        "scripts/verify_receipt.py against /.well-known/did.json without asking us anything.",
+        "Check the JWS, not this envelope: use the free hosted verifier at POST /api/receipts/verify.",
       what_a_receipt_is_not:
         "These are payment receipts. /api/receipts/batch serves card-v0 measurement leaves under " +
         "the signed public root, which are a different artefact and are not evidence of payment.",

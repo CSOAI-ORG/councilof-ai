@@ -72,7 +72,6 @@ export const onRequestGet: PagesFunction<{
         kid: X402_SIGNER_KID,
         spec_commit: OFFER_RECEIPT_SPEC_SHA,
         verify_free: u("/api/receipts/verify"),
-        verify_without_us: "scripts/verify_receipt.py — reads /.well-known/did.json and nothing else",
         by_payer: u("/api/receipts?payer=0x0000000000000000000000000000000000000000"),
       },
     },
