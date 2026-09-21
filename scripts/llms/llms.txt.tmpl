@@ -43,7 +43,7 @@ Do not quote scores, n, leaders, or stamp tables from this file.
 - Signed offers: a 402 carries `extensions["offer-receipt"].info.offers[]` only when the Pages signing key is available — one server-signed offer per `accepts[]` entry (x402 Offer & Receipt extension, format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1)
 - Signed receipts: a settled 200 returns one in the X-PAYMENT-RESPONSE SettlementResponse at `extensions["offer-receipt"].info.receipt` only when settlement exposes the required payer and transaction evidence and the Pages signing key is available
 - Check either without trusting us: run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json or POST https://councilof.ai/api/receipts/verify
-- Your receipts: GET https://councilof.ai/api/receipts?payer=0x… — status UNRECORDED means no store is bound on that deployment, never that you did not pay
+- Your receipts: GET https://councilof.ai/api/receipts?payer=0x0000000000000000000000000000000000000000 — replace the all-zero example with your payer address. status UNRECORDED means no store is bound on that deployment, never that you did not pay
 - We emit jws only, never eip712: the edge holds one Ed25519 key and no secp256k1 signer. A format we cannot produce is declared missing, not faked
 - A receipt proves this server signed those bytes. It is not proof money moved; check `transaction` against Base yourself
 - Verify stays free: https://councilof.ai/gspc-verify

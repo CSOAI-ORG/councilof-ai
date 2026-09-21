@@ -1,5 +1,5 @@
 /**
- * GET /api/receipts?payer=0x… — settlement receipts for one payer.
+ * GET /api/receipts?payer=0x0000000000000000000000000000000000000000 — settlement receipts for one payer.
  *
  * WHY THIS EXISTS AND WHY IT IS EMPTY. After M-OS01 a buyer can sign an x402 authorization in
  * the browser, and a successful settle returns X-PAYMENT-RESPONSE carrying the facilitator's
@@ -122,7 +122,9 @@ export async function handle(
         status: "BAD_REQUEST",
         items: null,
         count: null,
-        reason: "?payer=0x… is required. This door answers for one payer, never for everyone.",
+        reason:
+          "A payer query parameter is required, for example ?payer=0x0000000000000000000000000000000000000000. " +
+          "Replace the all-zero example with the payer address. This door answers for one payer, never for everyone.",
       },
       { status: 400, headers: { "cache-control": "no-store" } },
     );

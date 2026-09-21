@@ -39,10 +39,9 @@ const BANNED = ["sov3", "sov6", "sov34", "sovos", "sovereign", "ceasai", "byzant
 const EXEMPT = /sov-arena/gi;
 
 /**
- * A URL carrying a placeholder is documentation, not a contract.
- * `/api/receipts?payer=0x…` is llms.txt telling a reader what shape to send; the ellipsis is
- * not an address, so the door correctly answers 400 and the guard read that as a dead link.
- * Fetching it asserts nothing about the live site.
+ * A URL carrying a placeholder is documentation, not a contract. The current x402 payer
+ * example uses the all-zero EVM address, a syntactically valid, non-sensitive request that
+ * the guard can fetch. Other documentation placeholders remain skipped below.
  */
 const PLACEHOLDER = /[\u2026<>{}]|\.\.\./;
 

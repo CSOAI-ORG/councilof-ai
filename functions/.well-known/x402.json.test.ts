@@ -37,6 +37,7 @@ const get = async (env: Record<string, string> = {}) => {
         facilitator_configured: boolean;
         offers: string;
         receipts: string;
+        receipts_by_payer: string;
       };
     };
   };
@@ -54,6 +55,10 @@ describe(".well-known/x402.json — every advertised resource is one that can ac
     expect(dormant.receipts).toMatch(/only after facilitator-confirmed settlement/i);
     expect(dormant.receipts).toMatch(/payer.*BOARD_SIGN_KEY_PKCS8_B64.*receiptGap/i);
     expect(JSON.stringify(dormant)).not.toMatch(/\bevery (?:HTTP )?402\b|\bevery settled\b/i);
+    expect(dormant.receipts_by_payer).toBe(
+      `${ORIGIN}/api/receipts?payer=0x0000000000000000000000000000000000000000`,
+    );
+    expect(dormant.receipts_by_payer).not.toContain("…");
 
     const provisioned = (await get({
       X402_FACILITATOR_URL: "https://f.example",

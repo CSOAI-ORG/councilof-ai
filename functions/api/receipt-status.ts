@@ -64,7 +64,7 @@ export async function buildReceiptStatus(env: Env) {
     schema: "csoai.receipt-status/0.1",
     as_of: new Date().toISOString(),
     endpoints: {
-      receipts: "/api/receipts?payer=0x…",
+      receipts: "/api/receipts?payer=0x0000000000000000000000000000000000000000",
       latest: "/api/receipts/latest",
       verify: "/api/receipts/verify",
       revenue: "/api/revenue",

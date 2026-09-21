@@ -77,7 +77,7 @@ export const onRequestGet: PagesFunction<{
           hosted: `${origin}/api/receipts/verify`,
           offline: "scripts/verify_receipt.py in github.com/CSOAI-ORG/councilof-ai — reads did.json, asks us nothing",
         },
-        receipts_by_payer: `${origin}/api/receipts?payer=0x…`,
+        receipts_by_payer: `${origin}/api/receipts?payer=0x0000000000000000000000000000000000000000`,
       },
     },
     resources: [

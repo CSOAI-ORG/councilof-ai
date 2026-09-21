@@ -19,7 +19,7 @@ export async function handle(env: Env = {}): Promise<Response> {
     as_of: new Date().toISOString(),
     privacy: "Aggregate-only. Wallets, transaction IDs, resources, amounts and JWS payloads are not exposed by this public feed.",
     endpoints: {
-      buyer_lookup: "/api/receipts?payer=0x…",
+      buyer_lookup: "/api/receipts?payer=0x0000000000000000000000000000000000000000",
       verifier: "/api/receipts/verify",
       revenue: "/api/revenue",
     },

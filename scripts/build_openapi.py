@@ -609,7 +609,7 @@ def compose(fix: Path = FIX) -> dict:
                 "did_document": "https://csoai.org/.well-known/did.json",
                 "verify_hosted": f"{BASE}/api/receipts/verify",
                 "verify_offline": "scripts/verify_receipt.py",
-                "receipts_by_payer": f"{BASE}/api/receipts?payer=0x…",
+                "receipts_by_payer": f"{BASE}/api/receipts?payer=0x0000000000000000000000000000000000000000",
             },
             "schema_of_source": {"well_known": wk["schema"], "catalog": cat["schema"]},
             "scheme": rail["scheme"],

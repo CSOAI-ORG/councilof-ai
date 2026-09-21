@@ -30,10 +30,10 @@ are reported as two labelled numbers and never reconciled.
 | `verify_inclusion` | GET `/api/proof?sha=`. VALID (included) / INVALID (not a leaf) / UNCHECKABLE (proof endpoint unreachable). |
 | `x402_trust` | Latest x402 catalog trust snapshot: counts of correct challenges and phantom resources. A 402 is a challenge, not delivery. |
 
-Eight free tools above; four metered ones below. `tools/list` returns all twelve, and
+Nine free tools above; four metered ones below. `tools/list` returns all thirteen, and
 `wired-tools.test.mjs` fails if a listed tool does not run or a running tool is not listed.
 
-The same eight free tools, from the same definitions file
+The same nine free tools, from the same definitions file
 (`functions/mcp/gspc-tools.json`), are served over HTTP at
 `https://councilof.ai/mcp` (streamable HTTP, JSON-RPC 2.0 POST). Use whichever
 transport your client speaks; the contracts are identical.

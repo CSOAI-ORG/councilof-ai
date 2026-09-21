@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import REGISTRY_DESCRIPTOR from "../../mcp/gspc-server/server.json";
 import NPM_PACKAGE from "../../mcp/gspc-server/package.json";
@@ -7,6 +8,15 @@ import PAID from "./paid-tools.json";
 
 const ORIGIN = "https://councilof.ai";
 const LEGACY_PROTOCOL = "2025-03-26";
+const PUBLIC_MCP = JSON.parse(
+  readFileSync(new URL("../../public/.well-known/mcp.json", import.meta.url), "utf8"),
+);
+const PUBLIC_MCP_CARD = JSON.parse(
+  readFileSync(
+    new URL("../../public/.well-known/mcp/server-card.json", import.meta.url),
+    "utf8",
+  ),
+);
 
 type Envelope = {
   jsonrpc: string;
@@ -136,6 +146,33 @@ describe("MCP discovery keeps implementation identities truthful", () => {
     expect(
       (PAID as { tools: { name: string }[] }).tools.map((tool) => tool.name),
     ).not.toContain("witness_hash");
+  });
+
+  it("keeps public well-known descriptions consistent with tools/list", () => {
+    const freeCount = (FREE as { tools: unknown[] }).tools.length;
+    const paidCount = (PAID as { tools: unknown[] }).tools.length;
+    const total = freeCount + paidCount;
+
+    for (const doc of [PUBLIC_MCP.measured, PUBLIC_MCP.planted]) {
+      expect(doc.tools).toHaveLength(total);
+      expect(doc.note).toContain(
+        `${freeCount} free readers plus ${paidCount} x402-metered evidence tools`,
+      );
+      expect(doc.note).toContain(`${total} total`);
+      expect(doc.note).not.toMatch(/eight free|twelve/i);
+    }
+    expect(PUBLIC_MCP_CARD.capabilities.tools).toHaveLength(total);
+    expect(PUBLIC_MCP_CARD.capabilities).toMatchObject({
+      total_tools: total,
+      free_tools: freeCount,
+      metered_tools: paidCount,
+    });
+    expect(PUBLIC_MCP_CARD.description).toContain(
+      `${freeCount} free readers plus ${paidCount} x402-metered evidence tools; ${total} total`,
+    );
+    expect(PUBLIC_MCP_CARD.endpoints.mcp.note).toContain(
+      `HTTP tools/list is thirteen: ${freeCount} free readers plus ${paidCount} x402-metered evidence tools`,
+    );
   });
 
   it("uses a new registry descriptor without pretending it is already published", () => {
