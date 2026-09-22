@@ -1,0 +1,105 @@
+{
+  "schema": "csoai.memberships-updates/0.1",
+  "as_of": "2026-09-22",
+  "signed": false,
+  "purpose": "The dated record of what changed in public/interop/memberships.json and why. One entry per change, newest first. Every entry names the manifest row it touches (or null when it touches the manifest as a whole) and carries the same kind of evidence the rows do: a public URL a stranger can open, or a dated mailbox record when the only evidence is private. This file exists so a reader can see that a row moved, when, and on what basis — a table that only ever shows its current state cannot be audited. scripts/memberships-check.mjs validates it and fails when an entry names a row that does not exist.",
+  "honesty_line": "An update is a record of a change, not an announcement of an achievement. Nothing here upgrades a row; the rows say what they prove.",
+  "kinds": [
+    { "id": "added", "label": "Row added" },
+    { "id": "corrected", "label": "Row corrected" },
+    { "id": "verified", "label": "Evidence re-checked" },
+    { "id": "recorded", "label": "Recorded" }
+  ],
+  "entries": [
+    {
+      "date": "2026-09-22",
+      "kind": "verified",
+      "row": null,
+      "headline": "Every public evidence URL in the manifest was re-fetched and answered with our name",
+      "detail": "scripts/memberships-check.mjs was run against the live web. Every public-evidence row answered HTTP 200 and named Council of AI, CSOAI or Templeman, except the US Treasury row, which is corrected below. Private-evidence rows were schema-validated and not fetched, because nothing on the network can confirm them; the manifest says so on each one. The check's own --selftest passed first, so the run is one that could have failed.",
+      "evidence": "node scripts/memberships-check.mjs",
+      "evidence_kind": "command"
+    },
+    {
+      "date": "2026-09-22",
+      "kind": "corrected",
+      "row": "us-treasury-genius-docket",
+      "headline": "Evidence moved from regulations.gov to the Federal Register document, same docket",
+      "detail": "regulations.gov answers HTTP 403 to every non-browser client, so the row was failing its own check for a reason that had nothing to do with the filing. The evidence is now Federal Register document 2026-16796, published 2026-08-18, which names docket TREAS-DO-2026-0496 and carries the closing date. The comment is still submitted at regulations.gov and the row still says PENDING: nothing has been filed.",
+      "evidence": "https://www.federalregister.gov/documents/2026/08/18/2026-16796/genius-act-regulations-on-payment-stablecoin-issuance-offer-and-sale",
+      "evidence_kind": "public_url"
+    },
+    {
+      "date": "2026-09-22",
+      "kind": "added",
+      "row": "openaire",
+      "headline": "OpenAIRE harvested the Zenodo deposit; the record names Council of AI",
+      "detail": "A query to OpenAIRE for DOI 10.5281/zenodo.21991105 returns one research product naming Council of AI, CSOAI and Templeman. Harvesting is automatic and the record's own status field read UNDER_CURATION, so the row is indexing, not review.",
+      "evidence": "https://explore.openaire.eu/search/publication?pid=10.5281%2Fzenodo.21991105",
+      "evidence_kind": "public_url"
+    },
+    {
+      "date": "2026-09-22",
+      "kind": "recorded",
+      "row": null,
+      "headline": "The named-and-not-listed list now carries the bodies we are not eligible for, with the reason",
+      "detail": "Absence from the table used to be a gap. It is now an answer. The European Commission's General-Purpose AI Code of Practice is limited to providers of general-purpose AI models and we provide none. OECD.AI's Network of Experts is nominated by countries, not applied to. GPAI membership is held by countries. LF AI & Data's free tier excludes for-profit companies. The IETF has no membership at all. Each of those is recorded with its source rather than left blank.",
+      "evidence": "https://councilof.ai/interop/memberships.json",
+      "evidence_kind": "public_url"
+    },
+    {
+      "date": "2026-09-22",
+      "kind": "added",
+      "row": "w3c-agent-conformance",
+      "headline": "Joined the W3C Agent Conformance and Benchmarking Community Group on behalf of csoai ltd",
+      "detail": "The join page reported that the organisation had already signed the group's Contributor License Agreement, and the public participants page names us the same day. Community Groups are free and open; this is participation, not W3C Membership.",
+      "evidence": "https://www.w3.org/community/agent-conformance/participants",
+      "evidence_kind": "public_url"
+    },
+    {
+      "date": "2026-09-22",
+      "kind": "added",
+      "row": "w3c-aikr",
+      "headline": "Became a participant in the W3C AI KR Community Group representing csoai ltd",
+      "detail": "The W3C Accounts Team recorded the participation at 04:27 UTC. The group has adopted nothing of ours and W3C has reviewed nothing of ours.",
+      "evidence": "https://www.w3.org/community/aikr/participants",
+      "evidence_kind": "public_url"
+    },
+    {
+      "date": "2026-09-22",
+      "kind": "recorded",
+      "row": "bank-of-england-code-of-practice",
+      "headline": "Consultation response sent to the Bank of England on the systemic stablecoin Code of Practice",
+      "detail": "Sent to the address the Bank published for the consultation, with Date and Message-ID headers. The Bank publishes no acknowledgement we can link to, so the row is marked private evidence. A response is a submission, not recognition.",
+      "evidence": "Sent 499 (2026-09-22, Message-ID <1509486989.87654.1790069007934@privateemail.com>)",
+      "evidence_kind": "private_email"
+    },
+    {
+      "date": "2026-09-21",
+      "kind": "added",
+      "row": "linux-foundation",
+      "headline": "Linux Foundation membership agreement completed at Silver, record M-018884",
+      "detail": "Completed via Docusign. The onboarding record states Silver Membership with an expiry of 2027-09-30. The public Linux Foundation members page did not name us on 2026-09-22, so the row is marked private evidence until it does. Silver is a paid participation tier and not an endorsement of anything we publish.",
+      "evidence": "INBOX 8987 (Docusign completed, 2026-09-21) and INBOX 8988 (2026-09-21)",
+      "evidence_kind": "private_email"
+    },
+    {
+      "date": "2026-09-21",
+      "kind": "added",
+      "row": "osaia",
+      "headline": "Recorded as a General Member of the Open Secure AI Alliance",
+      "detail": "The Alliance's onboarding mail opens \"Thank you for becoming a member\", following an application received on 2026-09-18. secureaialliance.org did not list members on 2026-09-22, so the evidence is private. The note we contributed to the Alliance's SAFE discussion asks the group questions; it proposes nothing for adoption.",
+      "evidence": "INBOX 8988 (The Linux Foundation, 2026-09-21) and INBOX 8859 (2026-09-18)",
+      "evidence_kind": "private_email"
+    },
+    {
+      "date": "2026-09-21",
+      "kind": "recorded",
+      "row": "dif",
+      "headline": "DIF asked which name to display for our Contributor Member listing; we answered the same day",
+      "detail": "The Contributor agreement was completed in the name of CSOAI LTD on 2026-08-18. DIF publishes no member roster we could find — identity.foundation/members answered 404 on 2026-09-22 — so no public page confirms this yet and the row says so.",
+      "evidence": "INBOX 8945 (DIF Membership, 2026-09-21) and Sent 487 (2026-09-21)",
+      "evidence_kind": "private_email"
+    }
+  ]
+}

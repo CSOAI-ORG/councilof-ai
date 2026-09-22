@@ -388,6 +388,23 @@
       "verified_on": "2026-09-22"
     },
     {
+      "id": "openaire",
+      "org": "OpenAIRE Explore \u2014 research product record harvested from Zenodo",
+      "short": "OpenAIRE",
+      "group": "scholarly",
+      "kind": "listed",
+      "since": "2026-09-22",
+      "since_basis": "OpenAIRE carries no date we can cite for when the record was harvested; the date given is when this check first queried OpenAIRE for the DOI and found the record naming us. The OpenAIRE record's own status field read UNDER_CURATION on that day.",
+      "evidence": "https://explore.openaire.eu/search/publication?pid=10.5281%2Fzenodo.21991105",
+      "evidence_kind": "public_url",
+      "public_evidence": true,
+      "check": { "expect": ["Council of AI", "CSOAI", "Templeman"] },
+      "what_it_proves": "The Zenodo deposit 10.5281/zenodo.21991105 has been harvested into OpenAIRE, the European open-science aggregator, and the record names Council of AI. It means the deposit is discoverable through OpenAIRE and through the services that consume it.",
+      "what_it_does_not_prove": "Harvesting is automatic. OpenAIRE aggregates from Zenodo without reviewing, refereeing or endorsing anything, and the record's own status field read UNDER_CURATION when checked. This is indexing, not peer review, not publication in a journal, and not a statement by OpenAIRE about the work.",
+      "state": "VERIFIED",
+      "verified_on": "2026-09-22"
+    },
+    {
       "id": "wikidata",
       "org": "Wikidata item Q141128616 (Council of AI)",
       "short": "Wikidata",
@@ -495,21 +512,29 @@
       "kind": "filed",
       "since": null,
       "since_basis": "Comment drafted; the owner submits it on regulations.gov by hand. Until a tracking number exists the row stays PENDING and claims nothing.",
-      "evidence": "https://www.regulations.gov/docket/TREAS-DO-2026-0496",
+      "evidence": "https://www.federalregister.gov/documents/2026/08/18/2026-16796/genius-act-regulations-on-payment-stablecoin-issuance-offer-and-sale",
       "evidence_kind": "public_url",
       "public_evidence": true,
+      "check": { "expect": ["TREAS-DO-2026-0496"] },
       "deadline": "2026-10-19",
-      "what_it_proves": "The docket is open for comment. Nothing more: no comment from Council of AI is on it yet.",
-      "what_it_does_not_prove": "Not filed. When it is filed, the row will carry the regulations.gov tracking number; a filing is still not recognition.",
+      "what_it_proves": "The rule is published and open for comment: Federal Register document 2026-16796, published 2026-08-18, docket TREAS-DO-2026-0496, comments close 2026-10-19. Nothing more: no comment from Council of AI is on it yet.",
+      "what_it_does_not_prove": "Not filed. The evidence link is the Federal Register document rather than the regulations.gov docket page because regulations.gov answers HTTP 403 to every non-browser client, which would make this row fail its own check for a reason that has nothing to do with the filing. Comments are still submitted at https://www.regulations.gov/docket/TREAS-DO-2026-0496. When the comment is filed, the row will carry the regulations.gov tracking number; a filing is still not recognition.",
       "state": "PENDING",
       "verified_on": "2026-09-22",
       "question": "Has Council of AI filed with the US Treasury on the GENIUS Act docket?",
-      "answer": "Not yet. A comment for docket TREAS-DO-2026-0496 at https://www.regulations.gov/docket/TREAS-DO-2026-0496 is drafted and will be submitted by hand; until a tracking number exists this entry is marked PENDING and claims nothing. The docket closes on 2026-10-19."
+      "answer": "Not yet. A comment on Treasury's GENIUS Act rule, Federal Register document 2026-16796 at https://www.federalregister.gov/documents/2026/08/18/2026-16796/genius-act-regulations-on-payment-stablecoin-issuance-offer-and-sale, docket TREAS-DO-2026-0496, is drafted and will be submitted by hand at regulations.gov; until a tracking number exists this entry is marked PENDING and claims nothing. Comments close on 2026-10-19."
     }
   ],
+  "excluded_note": "Bodies a reader might expect to find above, and are not there. Three reasons appear: we hold something weaker than the word would suggest, we are not eligible, or the body has no membership to hold. Each says which. This list exists so that absence from the table is an answer rather than a gap.",
   "excluded": [
-    { "org": "World Economic Forum", "why": "A personal Strategic Intelligence account was opened on 2026-09-21. That is an account, not a membership or partnership, so it is not listed." },
-    { "org": "NVIDIA Inception", "why": "No application or acceptance record exists in the mailbox as of 2026-09-22. Not listed." },
-    { "org": "Agentry", "why": "The operator's follow-up mail of 2026-09-15 says the agent is listed, but no public listing URL was located and the automated listing confirmation is not in the mailbox. Not listed until a stranger can open the page." }
+    { "org": "World Economic Forum \u2014 AI Governance Alliance", "reason": "not_open", "why": "A personal Strategic Intelligence account was opened on 2026-09-21. That is a reader account on My Forum, not a membership or a partnership. WEF corporate participation runs through Partnership, which is invitation-based, revenue-screened and charged in six figures a year, and the AI Governance Alliance is a community inside that structure rather than an open sign-up. weforum.org answers HTTP 403 to every automated client we tried on 2026-09-22, so even that description rests on secondary reporting and is not something we can evidence ourselves. Not listed.", "evidence": "https://www.weforum.org/communities/ai-governance-alliance/" },
+    { "org": "European Commission \u2014 General-Purpose AI Code of Practice", "reason": "not_eligible", "why": "The Commission's own text limits signing to providers of general-purpose AI models. Council of AI provides no general-purpose AI model; we measure models other people place on the market. Signing would misdescribe what we are, so we have not applied and will not. This is an eligibility answer, not a backlog item.", "evidence": "https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai" },
+    { "org": "OECD.AI Network of Experts (ONE AI)", "reason": "not_open", "why": "Members are nominated by OECD member countries and by stakeholder delegations, which renew or replace their representatives each year. There is no application form and no expression-of-interest route, so there is nothing for us to have applied to. The OECD door that is open to a company is the Catalogue of Tools & Metrics for Trustworthy AI, and that is a submission rather than a membership.", "evidence": "https://oecd.ai/en/network-of-experts" },
+    { "org": "Global Partnership on AI (GPAI)", "reason": "not_applicable", "why": "GPAI membership is held by countries, and its work has been integrated with the OECD. There has never been a company membership to apply for, so any claim of GPAI participation by a company is a category error." },
+    { "org": "LF AI & Data Foundation", "reason": "not_eligible", "why": "The free Associate tier is limited to government bodies, nonprofits and universities. CSOAI Ltd is a private for-profit company and fails that at the first requirement. The tier we could buy starts at USD 15,000 a year at our headcount, less an existing-Linux-Foundation-member discount, and we have not bought it. We do hold Linux Foundation membership at Silver, which is the row above; it is not the same thing.", "evidence": "https://lfaidata.foundation/join/" },
+    { "org": "IETF", "reason": "not_applicable", "why": "The IETF has no membership. What is true and checkable is listed above as three mailing-list rows and one Internet-Draft. Three further submissions uploaded on 2026-09-12 were never posted and are not documents on the Datatracker, so they are not participation and are not counted here." },
+    { "org": "C2PA conformance programme", "reason": "in_flight", "why": "Distinct from C2PA membership, which is listed above with public evidence. A conformance application has been in flight since 2026-08-17 and must be resubmitted on the programme's 0.2 intake form. An application is not a conformance result and nothing about it is claimed on any Council of AI surface." },
+    { "org": "NVIDIA Inception", "reason": "no_record", "why": "No application or acceptance record exists in the mailbox as of 2026-09-22. Not listed." },
+    { "org": "Agentry", "reason": "no_record", "why": "The operator's follow-up mail of 2026-09-15 says the agent is listed, but no public listing URL was located and the automated listing confirmation is not in the mailbox. Not listed until a stranger can open the page." }
   ]
 }

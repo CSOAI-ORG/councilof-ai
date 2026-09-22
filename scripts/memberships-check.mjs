@@ -25,11 +25,15 @@ import { dirname, join } from "node:path";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const MANIFEST_PATH = join(ROOT, "public/interop/memberships.json");
+export const UPDATES_PATH = join(ROOT, "public/interop/memberships-updates.json");
 
 export const SCHEMA = "csoai.memberships/0.1";
 export const KINDS = ["member", "participant", "contributor", "listed", "registered", "filed", "applied"];
 export const STATES = ["VERIFIED", "UNVERIFIED", "PENDING"];
 export const EVIDENCE_KINDS = ["public_url", "private_email", "account_page"];
+export const UPDATES_SCHEMA = "csoai.memberships-updates/0.1";
+export const UPDATE_KINDS = ["added", "corrected", "verified", "recorded"];
+export const UPDATE_EVIDENCE_KINDS = ["public_url", "private_email", "command"];
 /** Any one of these in the fetched body counts as "names us". A row may narrow it with check.expect. */
 export const DEFAULT_EXPECT = ["Council of AI", "CSOAI", "Templeman", "councilof.ai"];
 const UA = "Mozilla/5.0 (compatible; csoai-memberships-check/0.1; +https://councilof.ai/memberships)";
@@ -81,6 +85,38 @@ export function validateRow(row, groupIds = null) {
   if (row.check && typeof row.check.url === "string" && !/^https:\/\//.test(row.check.url)) p.push("check.url must be https://");
   if ((row.question && !row.answer) || (row.answer && !row.question)) p.push("question and answer travel together");
   return p;
+}
+
+/**
+ * The updates log is the dated record of what changed in the manifest. Its one load-bearing
+ * invariant is that an entry which names a row names a row that EXISTS: an update pointing at a
+ * deleted id renders a dead anchor and, worse, tells a reader something happened to a row that is
+ * no longer there. That is the same class of defect as a strip outliving its evidence, so it is
+ * checked here and it fails closed.
+ */
+export function validateUpdates(u, manifest) {
+  const problems = [];
+  if (!u || typeof u !== "object") return ["updates is not an object"];
+  if (u.schema !== UPDATES_SCHEMA) problems.push(`schema must be ${UPDATES_SCHEMA}`);
+  if (!DATE_RE.test(String(u.as_of ?? ""))) problems.push("as_of must be YYYY-MM-DD");
+  if (u.signed !== false) problems.push("signed must be false (this artifact carries no signature; say so)");
+  if (!Array.isArray(u.entries) || u.entries.length === 0) problems.push("entries[] missing");
+  const known = new Set((manifest?.rows ?? []).map((r) => r.id));
+  for (const [i, e] of (u.entries ?? []).entries()) {
+    const at = `entries[${i}]`;
+    if (!e || typeof e !== "object") { problems.push(`${at}: not an object`); continue; }
+    if (!DATE_RE.test(String(e.date ?? ""))) problems.push(`${at}: date must be YYYY-MM-DD`);
+    if (!UPDATE_KINDS.includes(e.kind)) problems.push(`${at}: kind must be one of ${UPDATE_KINDS.join("|")}`);
+    if (!UPDATE_EVIDENCE_KINDS.includes(e.evidence_kind)) problems.push(`${at}: evidence_kind must be one of ${UPDATE_EVIDENCE_KINDS.join("|")}`);
+    for (const f of ["headline", "detail", "evidence"]) {
+      if (typeof e[f] !== "string" || !e[f].trim()) problems.push(`${at}: ${f} missing`);
+    }
+    if (!(e.row === null || typeof e.row === "string")) problems.push(`${at}: row must be a manifest row id or null`);
+    if (typeof e.row === "string" && !known.has(e.row)) problems.push(`${at}: row ${e.row} is not in the manifest`);
+    if (e.evidence_kind === "public_url" && !/^https:\/\//.test(String(e.evidence))) problems.push(`${at}: public_url evidence must be https://`);
+    if (e.evidence_kind === "private_email" && !MAILBOX_RE.test(String(e.evidence))) problems.push(`${at}: private evidence must cite a mailbox record (INBOX <id> / Sent <id>)`);
+  }
+  return problems;
 }
 
 /* ── evaluation (pure) ──────────────────────────────────────────────────── */
@@ -164,8 +200,9 @@ export async function checkRow(row, fetcher = defaultFetcher) {
   return { id: row.id, ok: v.ok, reason: res?.error ? `${v.reason} (${res.error})` : v.reason, url };
 }
 
-export async function runChecks(manifest, fetcher = defaultFetcher) {
+export async function runChecks(manifest, fetcher = defaultFetcher, updates = undefined) {
   const schema = validateManifest(manifest);
+  if (updates !== undefined) for (const p of validateUpdates(updates, manifest)) schema.push(`updates: ${p}`);
   const results = [];
   if (schema.length === 0) {
     for (const row of manifest.rows) results.push(await checkRow(row, fetcher));
@@ -227,7 +264,17 @@ export async function selftest() {
     out.results.find((r) => r.id === "pending")?.ok === true;
   // The schema layer must fail closed too: a private row that cites no mailbox record.
   const badSchema = validateRow({ ...selftestManifest().rows[0], evidence_kind: "private_email", public_evidence: false, evidence: "someone told me" });
-  return { ok: ok && badSchema.length > 0, failedIds, badSchema };
+  // And the updates layer: an entry pointing at a row id the manifest does not have.
+  const badUpdate = validateUpdates(
+    {
+      schema: UPDATES_SCHEMA,
+      as_of: "2026-09-22",
+      signed: false,
+      entries: [{ date: "2026-09-22", kind: "added", row: "no-such-row", headline: "h", detail: "d", evidence: "https://example.test/x", evidence_kind: "public_url" }],
+    },
+    selftestManifest(),
+  );
+  return { ok: ok && badSchema.length > 0 && badUpdate.length > 0, failedIds, badSchema, badUpdate };
 }
 
 /* ── main ───────────────────────────────────────────────────────────────── */
@@ -237,17 +284,19 @@ if (isMain) {
   const args = process.argv.slice(2);
   if (args.includes("--selftest")) {
     const r = await selftest();
-    console.log(`[memberships-check] selftest ${r.ok ? "PASS" : "FAIL"} — bogus rows that went red: ${r.failedIds.join(", ") || "none"}; schema rejects an unsourced private row: ${r.badSchema.length > 0}`);
+    console.log(`[memberships-check] selftest ${r.ok ? "PASS" : "FAIL"} — bogus rows that went red: ${r.failedIds.join(", ") || "none"}; schema rejects an unsourced private row: ${r.badSchema.length > 0}; updates reject a dangling row ref: ${r.badUpdate.length > 0}`);
     process.exit(r.ok ? 0 : 1);
   }
   const manifest = JSON.parse(readFileSync(MANIFEST_PATH, "utf8"));
+  const updates = JSON.parse(readFileSync(UPDATES_PATH, "utf8"));
   if (args.includes("--schema-only")) {
     const problems = validateManifest(manifest);
+    for (const p of validateUpdates(updates, manifest)) problems.push(`updates: ${p}`);
     for (const p of problems) console.error(`[memberships-check] schema: ${p}`);
-    console.log(`[memberships-check] schema ${problems.length ? "FAIL" : "OK"} — ${manifest.rows?.length ?? 0} rows`);
+    console.log(`[memberships-check] schema ${problems.length ? "FAIL" : "OK"} — ${manifest.rows?.length ?? 0} rows, ${updates.entries?.length ?? 0} update(s)`);
     process.exit(problems.length ? 1 : 0);
   }
-  const out = await runChecks(manifest);
+  const out = await runChecks(manifest, defaultFetcher, updates);
   for (const p of out.schemaProblems) console.error(`[memberships-check] schema: ${p}`);
   for (const r of out.results) console.log(`${r.ok ? (r.skipped ? "skip" : " ok ") : "FAIL"} ${r.id.padEnd(22)} ${r.reason}${r.url ? `  ${r.url}` : ""}`);
   console.log(`[memberships-check] checked ${out.checked} public URL(s), skipped ${out.skipped} private row(s), ${out.failures.length} failure(s)`);

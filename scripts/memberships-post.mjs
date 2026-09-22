@@ -91,7 +91,13 @@ export function renderPost(m) {
   if (Array.isArray(m.excluded) && m.excluded.length) {
     lines.push("## Named and not listed");
     lines.push("");
-    for (const x of m.excluded) lines.push(`- **${x.org}** — ${x.why}`);
+    if (m.excluded_note) { lines.push(m.excluded_note); lines.push(""); }
+    // The reason and its source travel with the entry. Without them an exclusion reads as an
+    // omission, which is the thing this section exists to stop.
+    for (const x of m.excluded) {
+      lines.push(`- **${x.org}**${x.reason ? ` — _${String(x.reason).replace(/_/g, " ")}_` : ""} — ${x.why}`);
+      if (x.evidence) lines.push(`  - Source: <${x.evidence}>`);
+    }
     lines.push("");
   }
   lines.push("## How this is kept honest");
