@@ -216,7 +216,11 @@ for (const r of registries) {
 }
 const live = registries.filter((r) => !r.superseded_by);
 const superseded = registries.filter((r) => r.superseded_by);
-const asOf = new Date().toISOString().replace(/T.*/, "T00:00:00Z");
+// A full UTC instant, not a date. Two registers generated on the same day from different
+// registries would otherwise both claim the same as_of, and an archived snapshot could not be
+// told apart from the live document it no longer matches — one label over two byte-sets is the
+// defect this whole lane is about.
+const asOf = new Date().toISOString().replace(/\.\d+Z$/, "Z");
 
 const subjectRows = [];
 for (const r of live) {

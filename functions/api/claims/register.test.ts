@@ -70,7 +70,9 @@ describe("GET /api/claims/register", () => {
   });
 
   it("carries an as_of, and every state count sums to the claim count", () => {
+    // A full instant, not a date: two registers built the same day must be distinguishable.
     expect(register.as_of).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
+    expect(register.as_of).not.toMatch(/T00:00:00Z$/);
     const summed = Object.values(register.totals.by_state).reduce((a, b) => a + b, 0);
     const unknown = register.subjects.reduce((n, s) => n + s.claims_without_a_specification_state, 0);
     expect(summed + unknown).toBe(register.totals.claims);
