@@ -392,6 +392,17 @@ jobs:
             --public-dir dist/client \
             --live-timeout-seconds 30
 
+      # K-1 fleet-size lock (2026-09-22). One door carried three tool counts (8 · 12 · 13)
+      # because each surface typed its own. functions/mcp/tool-fleet.lock.json is the one
+      # committed list of NAMES; this compares it with what the deployed door actually serves.
+      # Only here is the live half of the lock test switched on — offline it reports SKIPPED,
+      # never a silent pass. An unreachable door fails this step: unchecked is not checked.
+      - name: MCP tool fleet lock — live tools/list must equal the committed lock
+        timeout-minutes: 3
+        env:
+          FLEET_LOCK_LIVE: "1"
+        run: npx vitest run functions/mcp/tool-fleet.lock.test.ts
+
       # csoai.org is the static apex (csoai-site-deploy.yml ← csoai-static-deploy2).
       # Do NOT redeploy the SPA to csoai-site — that overwrites did:web:csoai.org.
 
