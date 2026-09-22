@@ -12,6 +12,7 @@ import {
   quoteDoor,
   remainingDoors,
   retryDoorWithPayment,
+  sameResource,
   routeKey,
   selectDoor,
   unsettledReason,
@@ -275,6 +276,17 @@ describe("the listing column is the index's record, or an honest unknown", () =>
 
   it("NOT LISTED only when the index was read in full", () => {
     expect(listingFor(doors[2], reading({}))).toMatchObject({ status: "NOT_LISTED", scanned: 6715, declared: 6715 });
+  });
+
+  it("a row under the door's FULL url is found in either query spelling, and preferred over the bare-path row", () => {
+    const door = doors[2]; // …/rwa/evidence?asset=RLUSD
+    const bare = { resource: `${ORIGIN}/api/rwa/evidence`, route_key: `${ORIGIN}/api/rwa/evidence`, last_updated: "2026-09-01T00:00:00Z", amount: "10000", max_timeout_seconds: 300 };
+    const full = { resource: `${ORIGIN}/api/rwa/evidence?asset=RLUSD`, route_key: `${ORIGIN}/api/rwa/evidence`, last_updated: "2026-09-22T12:00:00Z", amount: "10000", max_timeout_seconds: 300 };
+    expect(listingFor(door, reading({ rows: [full] }))).toMatchObject({ status: "LISTED", lastUpdated: "2026-09-22T12:00:00Z" });
+    expect(listingFor(door, reading({ rows: [bare, full] }))).toMatchObject({ status: "LISTED", lastUpdated: "2026-09-22T12:00:00Z" });
+    expect(listingFor(door, reading({ rows: [bare] }))).toMatchObject({ status: "LISTED", lastUpdated: "2026-09-01T00:00:00Z" });
+    expect(sameResource(`${ORIGIN}/api/wrapper?id=usdc.e%3Aarbitrum`, `${ORIGIN}/api/wrapper?id=usdc.e:arbitrum`)).toBe(true);
+    expect(sameResource(`${ORIGIN}/api/wrapper?id=dai:optimism`, `${ORIGIN}/api/wrapper?id=usdc.e:arbitrum`)).toBe(false);
   });
 
   it("UNCHECKABLE — never NOT LISTED, never 0 — when the read was short, failed, or never happened", () => {

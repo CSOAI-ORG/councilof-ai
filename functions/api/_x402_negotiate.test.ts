@@ -213,3 +213,60 @@ describe("toDialectPayload — v2 is a different envelope, not a relabelled v1",
     expect(out.resource).toBeUndefined();
   });
 });
+
+describe("toDialectPayload — the bazaar echo (specs/extensions/bazaar.md, Client Behavior)", () => {
+  // "Clients are expected to echo the `bazaar` extension from `PaymentRequired` into their
+  // `PaymentPayload`. If the extension is omitted, discovery cataloging will not occur." The
+  // facilitator catalogues off the PaymentPayload it receives on settle, and until 2026-09-22 the
+  // envelope built here carried no `extensions` at all — so no door with a query string ever
+  // entered the index, whatever the buyer had echoed. The server knows its own declaration, so it
+  // supplies it; the buyer's own echo, if any, wins.
+  const serverBazaar = {
+    info: { input: { type: "http", method: "GET", queryParams: { id: "usdc.e:arbitrum" } } },
+    schema: { $schema: "https://json-schema.org/draft/2020-12/schema", type: "object", required: ["input"] },
+  };
+  const v1Envelope = {
+    x402Version: 1,
+    scheme: "exact",
+    network: "base",
+    payload: { signature: "0xsig", authorization: { from: "0xa", to: "0xb", value: "20000" } },
+  };
+  const accepted = { scheme: "exact", network: BASE_MAINNET, amount: "10000", payTo: "0xb" };
+  const resource = { url: "https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum", description: "d", mimeType: "application/json" };
+
+  it("v2 carries the server's extensions.bazaar — the echo the facilitator catalogues from", () => {
+    const out = toDialectPayload(v1Envelope, 2, { accepted, resource, extensions: { bazaar: serverBazaar } });
+    expect(out.extensions).toEqual({ bazaar: serverBazaar });
+    expect(out.resource).toEqual(resource);
+    expect(out.payload).toEqual(v1Envelope.payload);
+  });
+
+  it("v1 never carries it — the extension was formalised in v2 and a v1 facilitator is not expected to read it", () => {
+    const out = toDialectPayload(v1Envelope, 1, { accepted, resource, extensions: { bazaar: serverBazaar } });
+    expect(out.extensions).toBeUndefined();
+    expect(out.x402Version).toBe(1);
+  });
+
+  it("emits no extensions key at all when neither the door nor the buyer supplied one — nothing is invented", () => {
+    const out = toDialectPayload(v1Envelope, 2, { accepted, resource });
+    expect("extensions" in out).toBe(false);
+  });
+
+  it("a buyer who echoed extensions.bazaar keeps precedence — the spec puts the echo on the client", () => {
+    const buyerBazaar = { info: { input: { type: "http", method: "GET" } }, schema: { type: "object" } };
+    const buyer = { ...v1Envelope, x402Version: 2, network: BASE_MAINNET, extensions: { bazaar: buyerBazaar, other: 1 } };
+    const out = toDialectPayload(buyer, 2, { accepted, resource, extensions: { bazaar: serverBazaar } });
+    expect(out.extensions).toEqual({ bazaar: buyerBazaar, other: 1 });
+  });
+
+  it("a buyer who echoed some other extension still gets the server's bazaar block alongside it", () => {
+    const buyer = { ...v1Envelope, extensions: { "offer-receipt": { info: {} } } };
+    const out = toDialectPayload(buyer, 2, { accepted, resource, extensions: { bazaar: serverBazaar } });
+    expect(out.extensions).toEqual({ bazaar: serverBazaar, "offer-receipt": { info: {} } });
+  });
+
+  it("a buyer's malformed extensions field (not an object) is ignored, never spread", () => {
+    const out = toDialectPayload({ ...v1Envelope, extensions: ["bazaar"] }, 2, { accepted, resource, extensions: { bazaar: serverBazaar } });
+    expect(out.extensions).toEqual({ bazaar: serverBazaar });
+  });
+});

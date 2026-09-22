@@ -472,13 +472,21 @@ export async function recordSettlement(
  * requirements sent to the facilitator match what the client signed against — the previous
  * version rebuilt them from bare env vars (asset:null, amount:null when unset) and would have
  * rejected every honest receipt.
+ *
+ * `opts.bazaar` is the SAME info+schema block the door advertised under `extensions.bazaar` in
+ * its 402 (compute once, use twice). It is echoed into the v2 PaymentPayload sent to the
+ * facilitator, which is what the bazaar spec says gets catalogued; a door that omits it stays
+ * settleable and stays unindexed, exactly as before 2026-09-22.
  */
 export async function verifyX402Payment(
   request: Request,
   env: X402Env,
   resourceUrl: string,
   accept?: X402Accept,
-  opts?: { allowZeroAmount?: boolean },
+  opts?: {
+    allowZeroAmount?: boolean;
+    bazaar?: { info: Record<string, unknown>; schema: Record<string, unknown> };
+  },
 ): Promise<X402Result> {
   const header =
     request.headers.get("x-payment") ||
@@ -594,17 +602,26 @@ export async function verifyX402Payment(
     neg.candidates.length > 0 ? neg.candidates : [neg.version ?? clientVersion];
   const bodyFor = (v: 1 | 2): string => {
     const reqs = v === 2 ? toV2Requirements(entry) : toV1Requirements(entry);
-    // v2 repeats the accepted terms INSIDE paymentPayload and adds `resource`; see the envelope
-    // note in toDialectPayload. v1 ignores both.
+    // v2 repeats the accepted terms INSIDE paymentPayload and adds `resource` and the server's
+    // `extensions`; see the envelope note in toDialectPayload. v1 ignores all three.
     const v2ctx =
       v === 2
         ? {
             accepted: reqs,
             resource: {
-              url: resourceUrl.split("?")[0],
+              // THE FULL URL, QUERY INCLUDED. `…/wrapper?id=usdc.e:arbitrum` is the resource the
+              // door advertised in its 402 and the resource the buyer paid for; the bare path is
+              // a different resource. Until 2026-09-22 the query was stripped here, so the only
+              // resource the facilitator ever heard of was the base path — and the six rows the
+              // index held for us were exactly the six query-less base URLs. Probed 2026-09-22
+              // against PayAI /verify with the query kept and the bazaar block echoed: HTTP 200,
+              // invalid_exact_evm_insufficient_balance with the payer recovered, i.e. accepted in
+              // every respect but funding. No fallback to the base path is needed.
+              url: resourceUrl,
               description: entry.description || "",
               mimeType: entry.mimeType || "application/json",
             },
+            ...(opts?.bazaar ? { extensions: { bazaar: opts.bazaar } } : {}),
           }
         : undefined;
     return JSON.stringify({

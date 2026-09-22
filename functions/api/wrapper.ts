@@ -214,6 +214,15 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   const description = `A signed wrapped-asset parity card for ${id || "<id>"}: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain, both at pinned finalized blocks, raw reads sha256'd. A ratio — not a rate, a grade or a reserve attestation.`;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { id: id || "usdc.e:arbitrum" },
+    queryParamsSchema: { properties: { id: { type: "string", description: "roster id <wrapped-symbol>:<chain>, e.g. usdc.e:arbitrum (free ledger lists them)" } }, required: ["id"] },
+    outputExample: { schema: SCHEMA, surface: "public.notice", subject: "wrapped <SYMBOL> on <chain> vs <escrow> — ESCROW_PARITY_READ", payload: { kind: KIND, state: "ESCROW_PARITY_READ", reads: { wrapped_total_supply: {}, escrow_balance: {} }, escrow_over_wrapped: "<decimal>", inputs_sha256: "<hex>" }, sha256: "<hex>", sig_ed25519: "<hex or null>", unmeasured: [] },
+  });
   const challenge = (notPaidReason: string, extra: { error?: string; csoai?: Record<string, unknown> } = {}) => {
     const pr = buildPaymentRequiredV2({
       resourceUrl,
@@ -221,12 +230,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       serviceName: "CSOAI Wrapped-Asset Parity",
       tags: ["stablecoin", "bridge", "wrapped", "parity", "evidence", "x402"],
       accepts,
-      bazaar: declareBazaarHttpGet({
-        method: "GET",
-        queryParams: { id: id || "usdc.e:arbitrum" },
-        queryParamsSchema: { properties: { id: { type: "string", description: "roster id <wrapped-symbol>:<chain>, e.g. usdc.e:arbitrum (free ledger lists them)" } }, required: ["id"] },
-        outputExample: { schema: SCHEMA, surface: "public.notice", subject: "wrapped <SYMBOL> on <chain> vs <escrow> — ESCROW_PARITY_READ", payload: { kind: KIND, state: "ESCROW_PARITY_READ", reads: { wrapped_total_supply: {}, escrow_balance: {} }, escrow_over_wrapped: "<decimal>", inputs_sha256: "<hex>" }, sha256: "<hex>", sig_ed25519: "<hex or null>", unmeasured: [] },
-      }),
+      bazaar,
       csoai: {
         schema: "csoai.wrapper-parity/0.1",
         per: "pair-request",
@@ -245,7 +249,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   };
 
   if (!preview && !hasPaymentHeader(request)) {
-    return challenge((await verifyX402Payment(request, env, resourceUrl, accepts[0])).reason);
+    return challenge((await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar })).reason);
   }
 
   if (!valid) return bad("pass id=<roster id> (see known_ids)", 400);
@@ -301,7 +305,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (VERDICT_RE.test(text)) return json({ schema: "csoai.wrapper-parity/0.1", error: "refused", reason: `card carries a verdict word: ${text.match(VERDICT_RE)![0]}`, settled: false }, 500);
   if (bytes.byteLength > PAYLOAD_CAP_BYTES) return json({ schema: "csoai.wrapper-parity/0.1", error: "uncheckable", reason: `card ${bytes.byteLength}B > ${PAYLOAD_CAP_BYTES}B cap`, settled: false }, 500);
 
-  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
   if (!payment.ok) return challenge(payment.reason);
 
   if (env.REVENUE_KV) {

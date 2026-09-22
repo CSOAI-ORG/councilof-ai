@@ -305,6 +305,20 @@ export function doorFromSearch(search: string): string | null {
   return raw && raw.trim() ? raw.trim() : null;
 }
 
+/** Two spellings of one resource url: same route key, same decoded query entries (any order). */
+export function sameResource(a: string, b: string): boolean {
+  if (a === b) return true;
+  try {
+    if (routeKey(a) !== routeKey(b)) return false;
+    const q = (u: string) => [...new URL(u).searchParams.entries()].map(([k, v]) => `${k}=${v}`).sort();
+    const qa = q(a);
+    const qb = q(b);
+    return qa.length === qb.length && qa.every((e, i) => e === qb[i]);
+  } catch {
+    return false;
+  }
+}
+
 export function selectDoor(doors: Door[], wanted: string | null): Door | null {
   if (!wanted) return null;
   return (
@@ -336,7 +350,12 @@ export type Listing =
 export function listingFor(door: Door, reading: ListingReading | null | undefined): Listing {
   if (!reading) return { status: "UNCHECKABLE", reason: "the index has not been read" };
   const rows = Array.isArray(reading.rows) ? reading.rows : [];
-  const hit = rows.find((r) => (r.route_key || routeKey(r.resource)) === door.routeKey);
+  // A door is its FULL url; the index has written our rows by bare path so far and may write the
+  // full url once the settle envelope carries it (2026-09-22). Prefer the exact row, accept the
+  // route-key row — the same rule as functions/api/x402-listing.ts rowForDoor.
+  const hit =
+    rows.find((r) => typeof r.resource === "string" && sameResource(r.resource, door.url)) ||
+    rows.find((r) => (r.route_key || routeKey(r.resource)) === door.routeKey);
   if (hit) {
     return {
       status: "LISTED",

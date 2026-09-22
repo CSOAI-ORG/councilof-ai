@@ -15,6 +15,7 @@ import {
   USDC_BASE_EIP712,
 } from "./_x402_config";
 import { USDC_BASE } from "./_skus";
+import { _clearSupportedCache } from "./_x402_negotiate";
 
 const RESOURCE = "https://councilof.ai/api/request-attestation";
 const receipt = (v: 1 | 2) =>
@@ -556,6 +557,77 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
     expect(r.ok).toBe(false);
     expect(r.reason).toMatch(/insufficient_balance/);
     expect(verifyCalls).toBe(1); // one attempt only — the money answer is final
+  });
+});
+
+describe("the settle envelope — what the facilitator is told about the resource", () => {
+  // THE FINDING OF 2026-09-22, BY BYTES. The six rows PayAI's index held for us were exactly our
+  // six query-less base URLs, and the five doors with query strings were absent after confirmed
+  // settles. Two causes, both here: the envelope stripped the query from resource.url, and it
+  // carried no `extensions` — so the facilitator never received the bazaar block the door had
+  // advertised, whatever the buyer echoed. specs/extensions/bazaar.md: "If the extension is
+  // omitted, discovery cataloging will not occur."
+  const DOOR = "https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum";
+  const bazaar = {
+    info: { input: { type: "http", method: "GET", queryParams: { id: "usdc.e:arbitrum" } } },
+    schema: { $schema: "https://json-schema.org/draft/2020-12/schema", type: "object", required: ["input"] },
+  };
+  const FAC = "https://echo.example";
+  const req = (h: string) => new Request(DOOR, { headers: { "x-payment": h } });
+  const capture = (kinds: { x402Version: number; scheme: string; network: string }[]) => {
+    // /supported is cached per facilitator; a stale answer must never make a test pass or fail
+    // for the wrong reason.
+    _clearSupportedCache();
+    const seen: { url: string; body: Record<string, any> }[] = [];
+    vi.stubGlobal("fetch", async (u: string, init?: RequestInit) => {
+      if (String(u).endsWith("/supported"))
+        return new Response(JSON.stringify({ kinds }), { status: 200 });
+      seen.push({ url: String(u), body: JSON.parse(String(init?.body)) });
+      if (String(u).endsWith("/verify"))
+        return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      return new Response(
+        JSON.stringify({ success: true, transaction: "0xabc", network: "eip155:8453", payer: "0xpayer" }),
+        { status: 200 },
+      );
+    });
+    return seen;
+  };
+  const V2 = [{ x402Version: 2, scheme: "exact", network: "eip155:8453" }];
+  const V1 = [{ x402Version: 1, scheme: "exact", network: "base" }];
+
+  it("v2 carries the door's bazaar block and the FULL resource url, query included, on /verify and /settle alike", async () => {
+    const seen = capture(V2);
+    const [a] = x402Accepts({}, DOOR, { skuId: "request_attestation", tier: "per_request" });
+    const r = await verifyX402Payment(req(receipt(2)), { X402_FACILITATOR_URL: FAC }, DOOR, a, { bazaar });
+    expect(r.ok).toBe(true);
+    expect(seen.map((s) => s.url)).toEqual([`${FAC}/verify`, `${FAC}/settle`]);
+    for (const s of seen) {
+      expect(s.body.x402Version).toBe(2);
+      expect(s.body.paymentPayload.resource.url).toBe(DOOR);
+      expect(s.body.paymentPayload.extensions).toEqual({ bazaar });
+    }
+    // settle reuses the exact bytes /verify accepted
+    expect(JSON.stringify(seen[1].body)).toBe(JSON.stringify(seen[0].body));
+  });
+
+  it("a door that passes no block sends no extensions — nothing is invented on its behalf — and still settles", async () => {
+    const seen = capture(V2);
+    const [a] = x402Accepts({}, DOOR, { skuId: "request_attestation", tier: "per_request" });
+    const r = await verifyX402Payment(req(receipt(2)), { X402_FACILITATOR_URL: FAC }, DOOR, a);
+    expect(r.ok).toBe(true);
+    expect("extensions" in seen[0].body.paymentPayload).toBe(false);
+    expect(seen[0].body.paymentPayload.resource.url).toBe(DOOR);
+  });
+
+  it("v1 is untouched: flat envelope, slug network, no resource block and no extensions", async () => {
+    const seen = capture(V1);
+    const [a] = x402Accepts({}, DOOR, { skuId: "request_attestation", tier: "per_request" });
+    const r = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: FAC }, DOOR, a, { bazaar });
+    expect(r.ok).toBe(true);
+    expect(seen[0].body.x402Version).toBe(1);
+    expect(seen[0].body.paymentPayload.network).toBe("base");
+    expect(seen[0].body.paymentPayload.extensions).toBeUndefined();
+    expect(seen[0].body.paymentPayload.resource).toBeUndefined();
   });
 });
 
