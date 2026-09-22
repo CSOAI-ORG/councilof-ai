@@ -27,8 +27,10 @@ import argparse
 import collections
 import hashlib
 import json
+import re
 import sys
 import time
+import unicodedata
 from pathlib import Path
 from typing import Any, Iterable, Iterator, Sequence
 
@@ -152,6 +154,25 @@ def _accuracy(hits: int, n: int) -> float | None:
     return round(hits / n, 4) if n else None
 
 
+def states_label(text: str | None, label: str) -> bool:
+    """Does the answer contain this label at all, as a whole token?
+
+    The dividing line between reading and inferring. A parser that returns a
+    label the answer never mentions did not read it out -- it worked it out from
+    the content, which is answering the bank's question rather than reporting
+    what the subject answered. That is a grader wearing a parser's name.
+
+    Deliberately generous to the parser: any whole-token occurrence anywhere,
+    case-insensitive, counts as present. Anything that fails THIS is not a
+    borderline call.
+    """
+    if not text:
+        return False
+    body = unicodedata.normalize("NFKC", text)
+    pattern = rf"(?<![0-9A-Za-z_]){re.escape(label)}(?![0-9A-Za-z_])"
+    return re.search(pattern, body, re.IGNORECASE) is not None
+
+
 #: Descriptor fields that document the parser rather than configure it. They are
 #: excluded from the cache fingerprint because editing a docstring-shaped field
 #: must not throw away an hour of GPU time -- which it did once, on 2026-09-22,
@@ -269,6 +290,9 @@ def compare(
     cand_n: collections.Counter[tuple[str, str]] = collections.Counter()
 
     rec_hits = rec_n = 0
+    read_hits = read_n = 0
+    inferred_hits = inferred_n = 0
+    inferred_examples: list[dict[str, Any]] = []
     len_recovered = len_total = 0
 
     for item in items:
@@ -314,6 +338,24 @@ def compare(
         if b.label is None and c.label is not None:
             rec_n += 1
             rec_hits += int(c.label == expected)
+            if states_label(item.get("raw_output"), c.label):
+                read_n += 1
+                read_hits += int(c.label == expected)
+            else:
+                inferred_n += 1
+                inferred_hits += int(c.label == expected)
+                if len(inferred_examples) < 12:
+                    inferred_examples.append(
+                        {
+                            "item_id": item["item_id"],
+                            "model": item["model_transport"],
+                            "axis": item["axis"],
+                            "inferred": c.label,
+                            "expected": expected,
+                            "scored_correct": c.label == expected,
+                            "raw_output": (item.get("raw_output") or "")[:220],
+                        }
+                    )
             len_recovered += int(truncated)
             if len(recovered) < max(audit_sample, 40):
                 recovered.append(row)
@@ -371,6 +413,31 @@ def compare(
                 _accuracy(sum(base_hits.values()), total_base_n),
                 _accuracy(rec_hits, rec_n),
             ),
+        },
+        "recovery_provenance": {
+            "claim": (
+                "a recovery is only a recovery if the answer contains the label; "
+                "otherwise the parser worked the label out from the content, "
+                "which is grading"
+            ),
+            "read_from_the_answer": {
+                "items": read_n,
+                "accuracy": _accuracy(read_hits, read_n),
+            },
+            "inferred_not_stated": {
+                "items": inferred_n,
+                "accuracy": _accuracy(inferred_hits, inferred_n),
+            },
+            "share_inferred": (
+                round(inferred_n / rec_n, 4) if rec_n else None
+            ),
+            "note": (
+                "Compare each accuracy with the subject models' own measured "
+                "rate. Genuine reads should land near it -- they are the same "
+                "answers, read better. Inferences landing far above it are the "
+                "parser answering the bank's question itself."
+            ),
+            "examples_inferred": inferred_examples,
         },
         "truncated": {
             "done_reason_length_items": len_total,
