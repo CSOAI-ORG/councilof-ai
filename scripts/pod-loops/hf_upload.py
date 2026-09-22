@@ -3,7 +3,14 @@
 
     hf_upload.py --repo csoai/x402-settlement-census --file /path/a.jsonl --path-in-repo dry/a.jsonl \
                  [--config-name dry-2026-09-06] [--create] [--readme-if-absent README.md] [--private]
+    hf_upload.py --repo csoai/gspc-estate --folder /workspace/lanes/out/gspc-estate --create \
+                 [--config-name-from <name>=<path-in-repo> ...]
     hf_upload.py --flush            # push everything queued in $LANES/out/pending-upload.jsonl
+
+--folder uploads a whole directory tree in ONE commit (HfApi.upload_folder) instead of one
+commit per file. A publication of a thousand files is one publication, and a thousand
+commits makes the repo slow and its history unreadable. Same token rule, same queue
+behaviour: with no token the folder job is queued, not lost.
 
 Token: $LANES/.secrets/hf_token (owner-placed, mode 0600) or a NON-EMPTY $HF_TOKEN. Never printed.
 No token -> the upload is queued (one JSON line per file) and the exit code is 3 UNCHECKABLE; the
@@ -58,6 +65,28 @@ def add_config(readme_text, name, path):
     return "---\n" + fm + "\n---" + body, True
 
 
+def do_upload_folder(job, tok):
+    """One commit for a whole tree. Viewer configs are registered afterwards, from the
+    same README-rewriting path single-file uploads use, so the two cannot disagree."""
+    from huggingface_hub import HfApi, hf_hub_download
+    api = HfApi(token=tok)
+    repo = job["repo"]
+    if job.get("create"):
+        api.create_repo(repo, repo_type="dataset", private=bool(job.get("private")), exist_ok=True)
+    api.upload_folder(folder_path=job["folder"], repo_id=repo, repo_type="dataset",
+                      commit_message=job.get("commit_message") or f"publish {Path(job['folder']).name}")
+    n = sum(1 for p in Path(job["folder"]).rglob("*") if p.is_file())
+    for spec in job.get("configs") or []:
+        name, _, path = spec.partition("=")
+        local = hf_hub_download(repo, "README.md", repo_type="dataset", token=tok, force_download=True)
+        text = Path(local).read_text(encoding="utf-8")
+        new, changed = add_config(text, name, path)
+        if changed:
+            api.upload_file(path_or_fileobj=new.encode(), path_in_repo="README.md", repo_id=repo,
+                            repo_type="dataset", commit_message=f"pod loop: config {name}")
+    return f"UPLOADED {repo} <- {job['folder']} ({n} files, one commit)"
+
+
 def do_upload(job, tok):
     from huggingface_hub import HfApi, hf_hub_download
     from huggingface_hub.utils import HfHubHTTPError
@@ -86,6 +115,9 @@ def do_upload(job, tok):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo"); ap.add_argument("--file"); ap.add_argument("--path-in-repo")
+    ap.add_argument("--folder"); ap.add_argument("--commit-message")
+    ap.add_argument("--config-name-from", action="append", default=[],
+                    help="<config-name>=<path-in-repo>, repeatable; used with --folder")
     ap.add_argument("--config-name"); ap.add_argument("--create", action="store_true")
     ap.add_argument("--private", action="store_true"); ap.add_argument("--readme-if-absent")
     ap.add_argument("--flush", action="store_true")
@@ -97,16 +129,36 @@ def main():
         if not tok:
             print(f"UNCHECKABLE no token; {sum(1 for _ in QUEUE.open())} queued uploads remain"); return 3
         jobs = [json.loads(l) for l in QUEUE.open() if l.strip()]
+        # One upload per (repo, path): a loop re-run for the same date queues the same path twice, and the
+        # LAST entry points at the bytes that are on disk now. Both files are the same path anyway.
+        jobs = list({(j["repo"], j.get("path_in_repo") or "folder:" + j.get("folder", "")): j
+                     for j in jobs}.values())
         remaining, rc = [], 0
         for j in jobs:
             try:
-                print(do_upload(j, tok))
+                print(do_upload_folder(j, tok) if j.get("kind") == "folder" else do_upload(j, tok))
             except Exception as e:  # keep it queued; never drop a pending upload
-                print(f"FAILED {j['repo']}/{j['path_in_repo']}: {type(e).__name__}: {str(e)[:160]}"); remaining.append(j); rc = 1
+                print(f"FAILED {j['repo']}/{j.get('path_in_repo') or j.get('folder')}: {type(e).__name__}: {str(e)[:160]}"); remaining.append(j); rc = 1
         QUEUE.write_text("".join(json.dumps(j) + "\n" for j in remaining))
         return rc
+    if a.folder:
+        if not a.repo:
+            ap.error("--repo is required with --folder")
+        job = {"kind": "folder", "repo": a.repo, "folder": str(Path(a.folder).resolve()),
+               "create": a.create, "private": a.private, "configs": a.config_name_from,
+               "commit_message": a.commit_message,
+               "queued_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+        if not tok:
+            queue(job)
+            print(f"UNCHECKABLE no HF token on this pod; queued folder {a.folder} -> {a.repo}")
+            return 3
+        try:
+            print(do_upload_folder(job, tok)); return 0
+        except Exception as e:
+            queue(job)
+            print(f"FAILED {type(e).__name__}: {str(e)[:200]}; queued for --flush"); return 1
     if not (a.repo and a.file and a.path_in_repo):
-        ap.error("--repo, --file and --path-in-repo are required unless --flush")
+        ap.error("--repo, --file and --path-in-repo are required, or --folder, unless --flush")
     job = {"repo": a.repo, "file": str(Path(a.file).resolve()), "path_in_repo": a.path_in_repo,
            "config_name": a.config_name, "create": a.create, "private": a.private,
            "readme_if_absent": a.readme_if_absent, "queued_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}

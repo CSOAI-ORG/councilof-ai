@@ -52,16 +52,14 @@ jobs:
         with:
           python-version: "3.11"
 
+      # Was a hand-kept list of seven, and eleven of the eighteen loops in this directory were
+      # never syntax-checked by anything — a new loop lands unchecked unless someone remembers
+      # to add it here. The glob cannot forget. Verified 2026-09-22: all 18 parse clean.
       - name: Check pod-loop shell syntax
         run: |
-          bash -n \
-            scripts/pod-loops/container-start.sh \
-            scripts/pod-loops/commission-dispatch.sh \
-            scripts/pod-loops/lib.sh \
-            scripts/pod-loops/scheduler.sh \
-            scripts/pod-loops/start.sh \
-            scripts/pod-loops/stop.sh \
-            scripts/pod-loops/supervise.sh
+          set -euo pipefail
+          ls scripts/pod-loops/*.sh
+          bash -n scripts/pod-loops/*.sh
 
       - name: Run credential-free maintenance tests
         run: |

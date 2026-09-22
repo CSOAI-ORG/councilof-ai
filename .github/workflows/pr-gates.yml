@@ -303,6 +303,9 @@ jobs:
         run: |
           python3 -m pip install -q pytest cryptography
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
+          # The living-registry card count must be READ (cards.count), not derived from the
+          # length of the object that carries it — len() over it counted four keys and shipped 4.
+          python3 -m pytest -q scripts/spray/test_estate_bundle_corpora.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
           # C-2026-0914-01: a one-option exact-label menu is refused, and every signed card
