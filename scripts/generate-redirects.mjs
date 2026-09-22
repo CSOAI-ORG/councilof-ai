@@ -298,6 +298,13 @@ const EXISTING = [
   "/corrections/           /dashboard?tab=attestations  308",
   "/stack                  /stack/index.json        308",
   "/stack/                 /stack/index.json        308",
+  // 2026-09-22 owner decision — two trees leave the Pages upload and are served from the HF mirror
+  // (scripts/deploy-exclusions.json + scripts/drop-proofs-from-dist.mjs refuse to drop anything not
+  // listed here): proofs/ (3,993 .ots, the 20,000-file cap) and the axis-23 run artifact, whose bytes
+  // are sha256-pinned inside its signed companion and list third-party registry names the brand gate
+  // refuses on this surface. The companion (the board row's evidence_url) stays on-site.
+  "/interop/effect-binding-server-probe-2026-09-22.json  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-22.json  302",
+  "/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/proofs/:splat  302",
 ];
 
 const STOREFRONT = [
