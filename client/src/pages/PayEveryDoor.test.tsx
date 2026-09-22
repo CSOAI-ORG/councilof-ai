@@ -3,8 +3,18 @@ import { resolve } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Router } from "wouter";
 import { describe, expect, it } from "vitest";
-import PayEveryDoor, { DoorCard, OutcomeLine } from "./PayEveryDoor";
-import { THE_LINE, doorsFromManifest, challengeFromPaymentRequired, type Door } from "@/lib/payEveryDoor";
+import PayEveryDoor, { DoorCard, Index402Cell, OutcomeLine, SettleCell } from "./PayEveryDoor";
+import {
+  DELIST_RISK_DAYS,
+  THE_LINE,
+  challengeFromPaymentRequired,
+  doorsFromManifest,
+  index402For,
+  settleFor,
+  type Door,
+  type DoorSettlesReading,
+  type Index402Reading,
+} from "@/lib/payEveryDoor";
 import { PRIMARY_PATHS } from "@/data/library-ia";
 import { ROUTE_MANIFEST } from "@/data/route-manifest";
 import { ROUTE_HEAD, DESCRIPTION_MAX, DESCRIPTION_MIN, TITLE_MAX } from "@/lib/seoHead";
@@ -34,8 +44,31 @@ const doors: Door[] = doorsFromManifest({
   resources: [
     { method: "GET", url: "https://councilof.ai/api/free-door", paid_for: null, description: "the free door" },
     { method: "GET", url: "https://councilof.ai/api/proof?bundle=1", paid_for: "assembly", description: "a proof bundle" },
+    { method: "GET", url: "https://councilof.ai/api/pop/stablecoins", paid_for: "issuance", description: "a population door", free_preview: "https://councilof.ai/api/pop/stablecoins?preview=1" },
   ],
 });
+const NOW = Date.parse("2026-09-22T14:00:00.000Z");
+const DAY = 24 * 60 * 60 * 1000;
+const iso = (msAgo: number) => new Date(NOW - msAgo).toISOString();
+const INDEX402: Index402Reading = {
+  kind: "MEASURED",
+  as_of: "2026-09-22T14:08:21Z",
+  index: { name: "402 Index", url: "https://402index.io/api/v1/services", query: "councilof.ai" },
+  declared_total: 112,
+  scanned: 112,
+  absence_determinate: true,
+  rows: [{ url: "https://councilof.ai/api/proof?bundle=1", route_key: "https://councilof.ai/api/proof", health_status: "healthy", last_checked: "2026-09-22 08:35:46", domain_verified: false }],
+  reason: null,
+};
+const SETTLES: DoorSettlesReading = {
+  kind: "MEASURED",
+  as_of: "2026-09-22T14:08:21Z",
+  rows: [
+    { resource: "https://councilof.ai/api/proof?bundle=1", last_settle: iso(3 * DAY), tx: `0x${"ab".repeat(32)}`, network: "eip155:8453", self: true, settles: 2 },
+    { resource: "https://councilof.ai/api/pop/stablecoins", last_settle: iso(25 * DAY), tx: null, network: null, self: false, settles: 1 },
+  ],
+  reason: null,
+};
 const challenge = challengeFromPaymentRequired({
   x402Version: 2,
   resource: { url: doors[1].url, description: "a proof bundle", mimeType: "application/json" },
@@ -110,6 +143,9 @@ describe("every outcome renders as itself", () => {
         quote={{ kind: "challenge", http: 402, challenge, body: {} }}
         state={state}
         listing={{ status: "LISTED", lastUpdated: "2026-09-07T04:58:52.174Z", asOf: "2026-09-22T13:00:00Z", amount: "20000", maxTimeoutSeconds: 600 }}
+        index402={index402For(doors[1], INDEX402)}
+        settle={settleFor(doors[1], SETTLES)}
+        now={NOW}
         busy={false}
         onPay={() => {}}
       />,
@@ -170,6 +206,9 @@ describe("every outcome renders as itself", () => {
         quote={{ kind: "no-challenge", http: 200, detail: "the door answered without a payment challenge — there is nothing here to settle" }}
         state={{ kind: "idle" }}
         listing={{ status: "UNCHECKABLE", reason: "the index was not read in full; absence would be a guess" }}
+        index402={index402For(doors[0], null)}
+        settle={settleFor(doors[0], null)}
+        now={NOW}
         busy={false}
         onPay={() => {}}
       />,
@@ -178,6 +217,161 @@ describe("every outcome renders as itself", () => {
     expect(html).toContain("UNCHECKABLE");
     expect(html).toContain("absence would be a guess");
     expect(html).toContain("disabled");
+  });
+});
+
+describe("the status column: three cells per door, each from its own reader", () => {
+  const row = (door: Door, over: { index402?: Index402Reading | null; settles?: DoorSettlesReading | null; state?: Parameters<typeof OutcomeLine>[0]["state"] } = {}) =>
+    renderToStaticMarkup(
+      <DoorCard
+        door={door}
+        quote={{ kind: "challenge", http: 402, challenge, body: {} }}
+        state={over.state ?? { kind: "idle" }}
+        listing={{ status: "NOT_LISTED", asOf: "2026-09-22T13:00:00Z", scanned: 5000, declared: 5000 }}
+        index402={index402For(door, over.index402 === undefined ? INDEX402 : over.index402)}
+        settle={settleFor(door, over.settles === undefined ? SETTLES : over.settles)}
+        now={NOW}
+        busy={false}
+        onPay={() => {}}
+      />,
+    );
+  const cell = (html: string, id: string) => {
+    const m = html.match(new RegExp(`<p[^>]*data-testid="${id}"[^>]*>[\\s\\S]*?</p>`));
+    expect(m, id).toBeTruthy();
+    return m![0];
+  };
+
+  it("renders the three cells for a manifest door, a population door included, in a three-column strip", () => {
+    for (const d of [doors[1], doors[2]]) {
+      const html = row(d);
+      expect(html).toContain('data-testid="pay-status"');
+      expect(html).toContain("sm:grid-cols-3");
+      expect(html).toContain('data-testid="pay-listing"');
+      expect(html).toContain('data-testid="pay-status-402index"');
+      expect(html).toContain('data-testid="pay-status-settle"');
+      expect(html).toContain("PayAI indexed");
+      expect(html).toContain("402 Index listed");
+      expect(html).toContain("Last settle");
+    }
+  });
+
+  it("PayAI: yes / no / UNVERIFIED, with the row's last_updated when yes", () => {
+    const yes = renderToStaticMarkup(
+      <DoorCard door={doors[1]} quote="reading" state={{ kind: "idle" }} listing={{ status: "LISTED", lastUpdated: "2026-09-07T04:58:52.174Z", asOf: "x", amount: null, maxTimeoutSeconds: null }} index402={index402For(doors[1], INDEX402)} settle={settleFor(doors[1], SETTLES)} now={NOW} busy={false} onPay={() => {}} />,
+    );
+    expect(cell(yes, "pay-listing")).toMatch(/data-status="yes"[\s\S]*Yes[\s\S]*last updated 2026-09-07T04:58:52.174Z/);
+    expect(cell(row(doors[1]), "pay-listing")).toMatch(/data-status="no"[\s\S]*No[\s\S]*NOT LISTED/);
+    const unverified = renderToStaticMarkup(
+      <DoorCard door={doors[1]} quote="reading" state={{ kind: "idle" }} listing={{ status: "UNCHECKABLE", reason: "index answered HTTP 502 at offset 2" }} index402={index402For(doors[1], INDEX402)} settle={settleFor(doors[1], SETTLES)} now={NOW} busy={false} onPay={() => {}} />,
+    );
+    expect(cell(unverified, "pay-listing")).toMatch(/data-status="unverified"[\s\S]*UNVERIFIED[\s\S]*HTTP 502 at offset 2/);
+  });
+
+  it("402 Index: listed with the index's health word and probe time; not listed only when read in full; UNVERIFIED otherwise", () => {
+    expect(cell(row(doors[1]), "pay-status-402index")).toMatch(/data-status="yes"[\s\S]*health[\s\S]*healthy[\s\S]*last checked 2026-09-22 08:35:46/);
+    expect(cell(row(doors[2]), "pay-status-402index")).toMatch(/data-status="no"[\s\S]*not listed in the 402 Index[\s\S]*112 of 112 rows/);
+    const short = cell(row(doors[2], { index402: { ...INDEX402, absence_determinate: false, reason: "index answered HTTP 503 at offset 100" } }), "pay-status-402index");
+    expect(short).toMatch(/data-status="unverified"[\s\S]*UNVERIFIED[\s\S]*HTTP 503 at offset 100/);
+    const down = cell(row(doors[1], { index402: { ...INDEX402, rows: [{ ...INDEX402.rows[0], health_status: "down" }] } }), "pay-status-402index");
+    expect(down).toContain("down");
+    expect(down).toContain("text-amber-800");
+  });
+
+  it("last settle: a fresh settle is green with its date and tx; 25 days is red with the words delist risk", () => {
+    const fresh = cell(row(doors[1]), "pay-status-settle");
+    expect(fresh).toContain('data-risk="false"');
+    expect(fresh).toContain(iso(3 * DAY).slice(0, 10));
+    expect(fresh).toContain("3 days ago");
+    expect(fresh).toContain(`https://basescan.org/tx/0x${"ab".repeat(32)}`);
+    expect(fresh).toContain("self-funded heartbeat");
+    expect(fresh).not.toMatch(/delist risk/i);
+    expect(fresh).not.toContain("text-red-800");
+
+    const boundary = cell(row(doors[2]), "pay-status-settle");
+    expect(boundary).toContain('data-risk="true"');
+    expect(boundary).toContain("text-red-800");
+    expect(boundary).toMatch(/delist risk/i);
+    expect(boundary).toContain(`${DELIST_RISK_DAYS} days ago`);
+    expect(boundary).toContain("no transaction on the record");
+
+    const almost = cell(row(doors[2], { settles: { ...SETTLES, rows: [{ resource: doors[2].url, last_settle: iso(25 * DAY - 1) }] } }), "pay-status-settle");
+    expect(almost).toContain('data-risk="false"');
+    expect(almost).not.toMatch(/delist risk/i);
+  });
+
+  it("last settle: null is UNMEASURED and red — none on record, records unread, or a store that is not bound", () => {
+    const none = cell(row(doors[0]), "pay-status-settle");
+    expect(none).toContain('data-risk="true"');
+    expect(none).toContain("None on record");
+    expect(none).toContain("UNMEASURED");
+    expect(none).toMatch(/delist risk/i);
+    expect(none).toContain("nothing is inferred from a listing");
+
+    const unread = cell(row(doors[1], { settles: null }), "pay-status-settle");
+    expect(unread).toContain('data-risk="true"');
+    expect(unread).toContain("UNMEASURED");
+    expect(unread).toMatch(/delist risk/i);
+
+    const unbound = cell(row(doors[1], { settles: { kind: "UNMEASURED", as_of: "x", rows: [], reason: "no REVENUE_KV bound — nothing is recorded, so no door has a last settle here" } }), "pay-status-settle");
+    expect(unbound).toContain("no REVENUE_KV bound");
+    expect(unbound).toMatch(/delist risk/i);
+  });
+
+  it("a door DELIVERED on this page shows that settle and is not at risk, whatever the records say", () => {
+    const html = row(doors[0], { state: { kind: "delivered", paymentResponse: "x", settlement: { transaction: `0x${"cd".repeat(32)}`, network: "eip155:8453", payer: null, success: true } } });
+    const c = cell(html, "pay-status-settle");
+    expect(c).toContain('data-risk="false"');
+    expect(c).toContain("Settled this session");
+    expect(c).toContain("0xcdcdcd…cdcdcd");
+    expect(c).not.toMatch(/delist risk/i);
+  });
+
+  it("the cells never type a price, a door count, or a banned string", () => {
+    const html = row(doors[1]) + row(doors[0], { settles: null, index402: null });
+    for (const re of BANNED) expect(html).not.toMatch(re);
+    for (const re of TYPED_AMOUNT.slice(0, 1)) expect(cell(html, "pay-status-settle")).not.toMatch(re);
+    expect(html).not.toMatch(TYPED_COUNT);
+    expect(renderToStaticMarkup(<Index402Cell listing={{ status: "UNCHECKABLE", reason: "r" }} />)).toContain("UNVERIFIED");
+    expect(renderToStaticMarkup(<SettleCell settle={{ status: "NONE_ON_RECORD", lastSettle: null, asOf: "x" }} state={{ kind: "idle" }} now={NOW} />)).toMatch(/delist risk/i);
+  });
+});
+
+describe("Settle all is the monthly heartbeat, on one page", () => {
+  const page = renderToStaticMarkup(
+    <Router ssrPath="/pay">
+      <PayEveryDoor />
+    </Router>,
+  );
+
+  it("renders the Settle-all control before any door answers, disabled until the manifest is read, and the legend for the three cells", () => {
+    expect(page).toMatch(/<button[^>]*data-testid="settle-all"[^>]*disabled[^>]*>Settle all<\/button>/);
+    expect(page).toContain('data-testid="pay-status-legend"');
+    expect(page.replace(/&#x27;/g, "'")).toContain(`${DELIST_RISK_DAYS} days, or when there is nothing on record`);
+    expect(page).toContain("one wallet confirmation per door");
+    expect(page).toContain("self-settlement, never as a buyer");
+    // the tally appears only once a walk has queued doors
+    expect(page).not.toContain('data-testid="settle-all-tally"');
+  });
+
+  it("walks every door with a live challenge through payOne, one confirmation each, and tallies from the door states", () => {
+    const src = strip(pageSource);
+    expect(src).toContain("const queue = remainingDoors(visible, quotes, states);");
+    expect(src).toContain("setWalkQueue(queue.map((d) => d.url));");
+    expect(src).toContain("const final = await payOne(queue[i]);");
+    expect(src).toContain("walkTally(walkQueue, states)");
+    expect(src).toMatch(/tally\.delivered\} settled · \{tally\.unsettled\} unsettled · \{tally\.rejected\} declined/);
+    // one settle path: the walk calls payOne, which calls payDoor — never a second signing path
+    expect(src.match(/payDoor\(/g)).toHaveLength(1);
+    expect(src).not.toMatch(/Promise\.all\(\s*queue/);
+  });
+
+  it("reads the three readers live: manifest, PayAI listing, 402 Index listing, settlement records", () => {
+    const src = strip(pageSource);
+    expect(src).toContain("fetch(MANIFEST_PATH");
+    expect(src).toContain("fetch(LISTING_PATH");
+    expect(src).toContain("fetch(FOUR02_LISTING_PATH");
+    expect(src).toContain("fetch(DOOR_SETTLES_PATH");
+    expect(src).not.toMatch(/import .*402index.*\.json/);
   });
 });
 
