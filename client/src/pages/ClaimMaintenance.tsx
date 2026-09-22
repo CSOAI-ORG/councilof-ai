@@ -22,6 +22,10 @@ const REGISTER = "/api/claims/register";
 const REGISTER_STATIC = "/spec/claim-maintenance/register.json";
 const IMPL = "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/claim-capture.mjs";
 const CORRECTIONS = "/api/corrections";
+/** The archival deposit. A DOI makes a document citable and permanent; it does not make it right. */
+const DOI = "10.5281/zenodo.22901782";
+const DOI_URL = "https://doi.org/10.5281/zenodo.22901782";
+const CONCEPT_DOI_URL = "https://doi.org/10.5281/zenodo.22901781";
 
 const PAGE_DESCRIPTION =
   "Claim maintenance: the continuous, independent observation of the public claims an organisation makes about itself — captured verbatim with source and date, hashed and timestamped, re-read on a schedule, every observed change recorded, and measured only where public evidence can settle it. Specification, live register and runnable code from Council of AI.";
@@ -65,6 +69,12 @@ const PAGE_LD = {
     "https://councilof.ai" + CORRECTIONS,
   ],
   license: "https://creativecommons.org/publicdomain/zero/1.0/",
+  citation: {
+    "@type": "CreativeWork",
+    name: "Claim Maintenance, version 0.1",
+    identifier: "https://doi.org/10.5281/zenodo.22901782",
+    url: "https://councilof.ai/spec/claim-maintenance/v0.1/",
+  },
 };
 
 type SubjectRow = {
@@ -102,8 +112,16 @@ export default function ClaimMaintenance() {
 
   useEffect(() => {
     const ac = new AbortController();
-    fetch(REGISTER, { signal: ac.signal, headers: { accept: "application/json" } })
-      .then((r) => (r.ok ? r.json() : null))
+    const read = (u: string) =>
+      fetch(u, { signal: ac.signal, headers: { accept: "application/json" } }).then((r) =>
+        r.ok ? r.json() : Promise.reject(new Error(String(r.status))),
+      );
+    // The door first, then the static bytes it serves. They are the same bytes by construction
+    // (functions/api/claims/register.ts imports this file), so the fallback cannot disagree with
+    // the door — and the page still renders the register where Functions are not running, which
+    // is how the prerendered snapshot a crawler reads gets the table rather than an error state.
+    read(REGISTER)
+      .catch(() => read(REGISTER_STATIC))
       .then((j) => setReg(j as Register))
       .catch(() => setReg(null));
     return () => ac.abort();
@@ -141,7 +159,14 @@ export default function ClaimMaintenance() {
           </div>
           <p className="mt-5 text-sm text-slate-400">
             The specification is dedicated to the public domain under CC0 1.0 — adopt it, fork it or translate it
-            without asking us. The reference implementation is MIT.
+            without asking us. The reference implementation is MIT. Archived with a persistent identifier we do not
+            control: <a className="underline" href={DOI_URL}>{DOI}</a> (
+            <a className="underline" href={CONCEPT_DOI_URL}>all versions</a>). A DOI makes a document citable and
+            permanent; it does not make it right.
+          </p>
+          <p className="mt-3 text-sm text-slate-400">
+            Cite as: Council of AI. <em>Claim Maintenance, version 0.1.</em> CSOAI Ltd, 2026-09-22.{" "}
+            <a className="underline" href={DOI_URL}>{DOI_URL}</a>
           </p>
         </div>
       </header>

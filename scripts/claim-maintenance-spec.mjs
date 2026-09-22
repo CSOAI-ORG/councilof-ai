@@ -152,7 +152,7 @@ const DESCRIPTION =
   "makes about itself — captured verbatim, hashed, timestamped, re-read on a schedule, and measured " +
   "only where public evidence can settle it. Specification v0.1 by Council of AI. CC0.";
 
-function page({ version, bodyHtml, toc, mdName, mdDigest, date }) {
+function page({ version, bodyHtml, toc, mdName, mdDigest, date, deposit }) {
   const canonical = `${BASE}/spec/claim-maintenance/${version}/`;
   const ld = {
     "@context": "https://schema.org",
@@ -193,6 +193,13 @@ function page({ version, bodyHtml, toc, mdName, mdDigest, date }) {
     },
     isBasedOn: `${canonical}${mdName}`,
     mainEntityOfPage: canonical,
+    ...(deposit
+      ? {
+          identifier: deposit.doi_url,
+          sameAs: [deposit.doi_url, deposit.record_url],
+          archivedAt: deposit.record_url,
+        }
+      : {}),
   };
   return `<!doctype html>
 <html lang="en">
@@ -248,6 +255,7 @@ ${bodyHtml}
 <footer>
 Council of AI (CSOAI Ltd, UK Companies House 16939677). This specification is dedicated to the public domain under CC0 1.0 Universal — adopt it without asking us.
 Source of record: <a href="${mdName}">${esc(mdName)}</a>, SHA-256 <code>${mdDigest}</code>.
+${deposit ? `<br>Archived with a persistent identifier we do not control: <a href="${deposit.doi_url}">${esc(deposit.doi)}</a> (all versions: <a href="${deposit.concept_doi_url}">${esc(deposit.concept_doi)}</a>). A DOI makes a document citable and permanent; it does not make it right.` : ""}
 </footer>
 </div>
 </body>
@@ -272,7 +280,18 @@ for (const version of versions()) {
   const date = (md.match(/\|\s*\*\*Date\*\*\s*\|\s*(\d{4}-\d{2}-\d{2})\s*\|/) || [])[1];
   if (!date) throw new Error(`[spec] ${version}: no Date row in the front table — refusing to invent one`);
   const { html, toc } = mdToHtml(md);
-  stage(join(dir, "index.html"), page({ version, bodyHtml: html, toc, mdName, mdDigest, date }));
+  // The archival deposit, if one exists. It is a SIDECAR on purpose: writing the DOI into the
+  // document of record would change its bytes after they were deposited, and the published
+  // digest would then check out against neither copy.
+  const depositPath = join(dir, "deposit.json");
+  const deposit = existsSync(depositPath) ? JSON.parse(readFileSync(depositPath, "utf8")) : null;
+  if (deposit && deposit.document_sha256 !== mdDigest)
+    throw new Error(
+      `[spec] ${version}: deposit.json records document_sha256 ${deposit.document_sha256} but the ` +
+        `document of record hashes to ${mdDigest}. The deposited bytes and the served bytes have diverged — ` +
+        `deposit a new version rather than editing a published one.`,
+    );
+  stage(join(dir, "index.html"), page({ version, bodyHtml: html, toc, mdName, mdDigest, date, deposit }));
   stage(
     join(dir, "spec.json"),
     JSON.stringify(
@@ -286,6 +305,15 @@ for (const version of versions()) {
         document_of_record: `${BASE}/spec/claim-maintenance/${version}/${mdName}`,
         document_sha256: mdDigest,
         artifact_schema_url: `${BASE}/spec/claim-maintenance/${version}/schema/claim-artifact-${version}.schema.json`,
+        ...(deposit
+          ? {
+              doi: deposit.doi,
+              doi_url: deposit.doi_url,
+              concept_doi: deposit.concept_doi,
+              archived_at: deposit.record_url,
+              archive_repository: deposit.repository,
+            }
+          : {}),
         states: ["CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE"],
         register_url: `${BASE}/api/claims/register`,
         reference_implementation: "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/claim-capture.mjs",
@@ -332,6 +360,7 @@ stage(
           date: spec.date,
           status: v === latest ? "current" : "superseded",
           url: spec.canonical_url,
+          doi: spec.doi ?? null,
           document_sha256: spec.document_sha256,
         };
       }),

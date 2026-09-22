@@ -75,6 +75,7 @@ Claim maintenance is the continuous, independent observation of the public claim
 - Register of every subject we maintain claims on (generated from the registries on disk, never hand-listed): GET https://councilof.ai/api/claims/register — read `totals` and `as_of` live; filter with `?subject=` or `?state=`. Never freeze a subject count or a claim count in this file.
 - Reference implementation anyone can run, including against us (MIT): scripts/claim-capture.mjs in https://github.com/CSOAI-ORG/councilof-ai — captures a claim, hashes it, writes a conforming artifact, and REJECTS a tampered one.
 - Human page: https://councilof.ai/claim-maintenance/
+- Citable archival deposit with a persistent identifier we do not control: DOI 10.5281/zenodo.22901782 (all versions: 10.5281/zenodo.22901781), CC0. A DOI makes a document citable and permanent; it does not make it right.
 - States, and there are exactly four: CLAIM_CAPTURED · CLAIM_MEASURED · UNMEASURED · UNCHECKABLE. UNMEASURED and UNCHECKABLE are first-class and are published as prominently as the others.
 - What it is NOT: not fact-checking, not certification, not auditing, not reputation scoring, not adversarial journalism. No mark, badge, score, rank or index may be derived from any state. Nothing published asserts falsity about anyone. An observed change is never an allegation. A listing is not an endorsement and not an accusation.
 

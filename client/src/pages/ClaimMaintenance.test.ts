@@ -82,7 +82,8 @@ describe("/claim-maintenance — the page states the category and links every ar
   });
 
   it("types no count, no price and no verdict — every number is read from the live register", () => {
-    expect(page).toContain("fetch(REGISTER");
+    expect(page).toContain("read(REGISTER)");
+    expect(page).toContain("read(REGISTER_STATIC)");
     expect(page).toContain("reg?.as_of");
     // No frozen population figures.
     expect(page).not.toMatch(/\b\d+\s+(subjects?|claims?|registries|organisations)\b/i);
@@ -115,5 +116,22 @@ describe("the published specification is citable and self-describing", () => {
     // The digest in the footer is the digest of the .md the generator read.
     const digest = specJson.document_sha256;
     expect(specHtml).toContain(digest);
+  });
+
+  it("carries a persistent identifier we do not control, and the deposited bytes are the served bytes", () => {
+    const deposit = JSON.parse(
+      readFileSync(resolve(ROOT, "public/spec/claim-maintenance/v0.1/deposit.json"), "utf8"),
+    );
+    expect(deposit.doi).toMatch(/^10\.5281\/zenodo\.\d+$/);
+    expect(deposit.licence).toBe("CC0-1.0");
+    // The archived copy and the served copy must hash the same, or the DOI cites something else.
+    expect(deposit.document_sha256).toBe(specJson.document_sha256);
+    expect(specJson.doi).toBe(deposit.doi);
+    expect(specJson.concept_doi).toBe(deposit.concept_doi);
+    expect(specHtml).toContain(deposit.doi);
+    expect(page).toContain(deposit.doi);
+    // A deposit is storage and an identifier, never a review.
+    expect(deposit.does_not_prove.join(" ")).toMatch(/not a review/);
+    expect(page).toMatch(/does not make it right/);
   });
 });
