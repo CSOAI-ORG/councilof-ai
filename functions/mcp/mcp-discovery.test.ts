@@ -171,7 +171,7 @@ describe("MCP discovery keeps implementation identities truthful", () => {
       `${freeCount} free readers plus ${paidCount} x402-metered evidence tools; ${total} total`,
     );
     expect(PUBLIC_MCP_CARD.endpoints.mcp.note).toContain(
-      `HTTP tools/list is thirteen: ${freeCount} free readers plus ${paidCount} x402-metered evidence tools`,
+      `HTTP tools/list is ${total}: ${freeCount} free readers plus ${paidCount} x402-metered evidence tools`,
     );
   });
 
