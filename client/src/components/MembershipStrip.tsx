@@ -110,8 +110,10 @@ export function badgeRows(m: MembershipsManifest = MEMBERSHIPS): { label: string
     ...one(/^Decentralized Identity Foundation/, "DIF"),
     ...(w3c.length ? [{ label: "W3C Community Groups", kind: w3c[0].kind, href: "/memberships#standards", count: w3c.length }] : []),
     ...(ietf.length ? [{ label: "IETF", kind: "participant" as MembershipKind, href: "/memberships#standards", count: ietf.length }] : []),
-    ...group("registries", "Registries & indexes"),
-    ...group("scholarly", "Scholarly identifiers"),
+    // Every other declared group gets one pill, derived. A group added to the manifest appears
+    // here without anyone editing this file; `standards` is already covered by the named pills
+    // above, and `filings` is excluded on purpose (see the note on this function).
+    ...m.groups.filter((g) => g.id !== "standards" && g.id !== "filings").flatMap((g) => group(g.id, g.label)),
   ];
 }
 

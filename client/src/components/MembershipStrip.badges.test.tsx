@@ -50,11 +50,16 @@ describe("home badge row — links and legibility", () => {
     expect(badges).toContain(esc(HONESTY_LINE));
   });
 
-  it("derives every group pill's count from the rows and never types one", () => {
-    for (const id of ["registries", "scholarly"]) {
-      const pill = badgeRows().find((b) => b.href === `/memberships#${id}`);
-      expect(pill, `group pill for ${id}`).toBeTruthy();
-      expect(pill!.count).toBe(MEMBERSHIPS.rows.filter((r) => r.group === id).length);
+  it("gives every non-standards, non-filings group a pill whose count is derived, never typed", () => {
+    // Derived from m.groups, so a group added to the manifest reaches the hero with no code
+    // change — and this test walks the manifest rather than a list someone has to remember.
+    const expected = MEMBERSHIPS.groups.filter((g) => g.id !== "standards" && g.id !== "filings" && MEMBERSHIPS.rows.some((r) => r.group === g.id));
+    expect(expected.length).toBeGreaterThan(1);
+    for (const g of expected) {
+      const pill = badgeRows().find((b) => b.href === `/memberships#${g.id}`);
+      expect(pill, `group pill for ${g.id}`).toBeTruthy();
+      expect(pill!.count).toBe(MEMBERSHIPS.rows.filter((r) => r.group === g.id).length);
+      expect(badges, `pill label ${g.label}`).toContain(esc(g.label));
     }
     // A filing is a submission, not a standing: it gets no hero pill.
     expect(badgeRows().some((b) => b.href === "/memberships#filings")).toBe(false);
