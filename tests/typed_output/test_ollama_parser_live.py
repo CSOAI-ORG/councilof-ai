@@ -33,6 +33,7 @@ MODEL = DEFAULT_MODEL  # never one of the models the mill measures
 UNSTABLE_MODEL = "mistral:7b"  # the recorded load-boundary counter-example
 LABELS = ("COMPLY", "REFUSE")
 RISK_LABELS = ("HIGH_RISK", "LIMITED_RISK", "MINIMAL_RISK", "PROHIBITED")
+PROBE_TIMEOUT = 90.0
 
 
 def _tags() -> list[dict]:
@@ -47,12 +48,45 @@ def _has(model: str) -> bool:
     return any(m.get("name") == model for m in _tags())
 
 
-def _available() -> bool:
-    return _has(MODEL)
+def _reason_to_skip() -> str | None:
+    """One cheap probe for the whole module.
+
+    The per-test timeout has to be generous -- a cold load on a shared GPU
+    genuinely takes minutes -- but that makes a saturated server cost twelve
+    long timeouts before the suite gives up. So the decision is taken once,
+    here, with a short budget: if a four-token generate does not come back, the
+    server is busy and the whole module skips immediately.
+    """
+    if not _has(MODEL):
+        return f"{MODEL} is not installed on this Ollama"
+    request = urllib.request.Request(
+        f"{BASE_URL}/api/generate",
+        data=json.dumps(
+            {
+                "model": MODEL,
+                "prompt": "hi",
+                "stream": False,
+                "options": {"num_predict": 4, "temperature": 0, "seed": 0},
+            }
+        ).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=PROBE_TIMEOUT) as response:
+            json.loads(response.read().decode("utf-8"))
+    except (urllib.error.URLError, OSError, json.JSONDecodeError) as error:
+        return (
+            f"Ollama did not answer a 4-token probe within {PROBE_TIMEOUT}s "
+            f"({type(error).__name__}); it is saturated by other work on this "
+            "shared GPU, so these tests would time out rather than measure "
+            "anything"
+        )
+    return None
 
 
 pytestmark = pytest.mark.skipif(
-    not _available(), reason=f"loopback Ollama with {MODEL} not available"
+    _reason_to_skip() is not None, reason=_reason_to_skip() or ""
 )
 
 
