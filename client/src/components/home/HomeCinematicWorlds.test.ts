@@ -12,8 +12,17 @@ describe("cinematic three-world merge contract", () => {
     expect(CINEMATIC_VIDEO.coliseum).toBe("/videos/csoai-coliseum-plunge.mp4");
     expect(CINEMATIC_VIDEO.harness).toBe("/videos/csoai-harness-plugin.mp4");
     expect(CINEMATIC_VIDEO.os).toBe("/videos/csoai-council-os.mp4");
-    expect(home).toContain("<HomeCinematicWorlds");
-    expect(home.indexOf("<LivingStages")).toBeLessThan(home.indexOf("<HomeCinematicWorlds"));
+    // 2026-09-22: the FRONT DOOR no longer mounts this band. It was the second three-film row
+    // on one page, its copy restated ToolStack word for word ("Nine products. Each tile opens a
+    // page that exists today."), and its third film is already embedded inside LivingStages.
+    // The component and its merge contract are untouched and still ship - what this test now
+    // pins is that contract itself, plus the fact that the retirement was deliberate: the home
+    // page carries a single film band, HomeFilms, and it comes after LivingStages.
+    const homeFilms = readFileSync(resolve(__dirname, "HomeFilms.tsx"), "utf8");
+    expect(home).not.toContain("<HomeCinematicWorlds");
+    expect(home).toContain("<HomeFilms");
+    expect(home.indexOf("<LivingStages")).toBeLessThan(home.indexOf("<HomeFilms"));
+    expect(homeFilms).toContain("What this film is saying");
     expect(v3).not.toContain("HomeCinematicWorlds");
     expect(worlds).toContain("lg:grid-cols-3");
     expect(worlds).toContain("Arena. Harness. Front door.");

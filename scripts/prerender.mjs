@@ -302,6 +302,9 @@ function discover() {
     "/frameworks",
       "/wrappers",
       "/quickstart",
+      // /reach — the full funnel. Reached from the footer of every route, so a cold load
+      // must not land on the SPA shell.
+      "/reach",
       "/evaluator-access",
   ];
   for (const p of MUST) found.add(p);

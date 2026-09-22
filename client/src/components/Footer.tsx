@@ -8,7 +8,6 @@
 import { Link } from 'wouter';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import FooterVerifyStrip from './FooterVerifyStrip';
-import LiveCounters from './LiveCounters';
 import MembershipStrip from './MembershipStrip';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
@@ -38,6 +37,23 @@ export function Footer() {
         { name: 'Library', href: '/library' },
       ],
     },
+    // 2026-09-22: a fifth column. Every address below answers today (checked live) and each one
+    // is a door an AGENT needs and a human never guesses: the board, the tool surface, the A2A
+    // card, the payment manifest with its ten free population previews, the keys and llms.txt.
+    // They were reachable only from inside the home page before, so a reader arriving on any
+    // other route could not find them at all.
+    {
+      title: 'For machines',
+      links: [
+        { name: 'Board JSON — /api/gspc', href: '/api/gspc', external: true },
+        { name: 'Tool surface — /mcp', href: '/mcp', external: true },
+        { name: 'Agent card', href: '/.well-known/agent.json', external: true },
+        { name: 'Metered doors + free previews', href: '/.well-known/x402.json', external: true },
+        { name: 'Our public keys', href: '/.well-known/did.json', external: true },
+        { name: 'Signed evidence root', href: '/root.json', external: true },
+        { name: 'OpenAPI description', href: '/openapi.json', external: true },
+      ],
+    },
     {
       title: 'Evidence',
       links: [
@@ -46,6 +62,7 @@ export function Footer() {
         { name: 'Honesty gate', href: '/honesty' },
         // The readable ledger (DashboardAttestationsPane renders /api/corrections), not raw JSON.
         { name: 'Corrections', href: '/dashboard?tab=attestations' },
+        { name: 'How far this reaches', href: '/reach' },
         { name: 'llms.txt', href: '/llms.txt', external: true },
         { name: 'API docs', href: '/api-docs' },
       ],
@@ -140,7 +157,7 @@ export function Footer() {
         </div>
 
         {/* Link columns (4) */}
-        <div className="mb-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
+        <div className="mb-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-5">
           {footerSections.map((section) => (
             <div key={section.title}>
               <h3 className="t-kicker mb-3 text-foreground">{section.title}</h3>
@@ -268,12 +285,59 @@ export function Footer() {
           </a>
         </p>
 
-        {/* Adoption funnel, compact — every stage read live from /api/footprint, "—" until it lands */}
-        <LiveCounters variant="footer" />
+        {/*
+          OWNER RULING 2026-09-22: the seven-stage funnel came out of the site chrome. Four of the
+          seven can only say UNMEASURED today, and rendering that column at the foot of every
+          page — the home page included — made a row of absences the last thing every visitor
+          read. Nothing is hidden and no stage is dropped: the whole funnel, every stage with its
+          own state, source and as-of, is published at /api/footprint, and it is named here.
+          When the lane rebuilding that measurement lands, this is the line to revisit.
+        */}
+        <p className="text-muted-foreground text-xs text-center mt-4 mb-2">
+          {/* The stages are NAMED on the funnel surface itself, not here. Listing them in this
+              line put the commercial ones back on every page in prose, which is the same
+              placement problem as the pills. One link, and the discipline lives where it is
+              the argument. */}
+          Every stage of how far this work travels is measured separately and never added
+          together.{" "}
+          <Link href="/reach" className="text-primary hover:underline">
+            All seven stages, including the ones we cannot measure yet
+          </Link>
+        </p>
 
         {/* Where we take part — one line from public/interop/memberships.json; every name links to
             its evidence. Participation is not endorsement, a listing is not adoption. */}
         <MembershipStrip variant="footer" />
+
+        {/*
+          The trust row. A careful reader - and every serious agent - looks for exactly these
+          five before believing anything else on a site, and until now they were scattered
+          across three columns or not linked at all. Each href was fetched on 2026-09-22 and
+          answered 200; /security.txt (without .well-known) is a 404 and is deliberately not
+          linked. This row never carries a count, so it cannot go stale.
+        */}
+        <div className="border-t border-border pt-6 mb-6" data-testid="footer-trust-row">
+          <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 list-none p-0 m-0 text-xs">
+            {[
+              { href: '/.well-known/did.json', label: 'Our decentralised identifier', hint: 'the keys every signature is checked against' },
+              { href: '/.well-known/security.txt', label: 'Security contact', hint: 'how to report a vulnerability to us' },
+              { href: '/llms.txt', label: 'llms.txt', hint: 'what this site is, written for machines' },
+              { href: 'https://find-and-update.company-information.service.gov.uk/company/16939677', label: 'Companies House 16939677', hint: 'CSOAI Ltd on the public register' },
+              { href: '/api/corrections', label: 'Corrections ledger', hint: 'everything we have published and had to correct' },
+            ].map((l) => (
+              <li key={l.href}>
+                <a
+                  href={l.href}
+                  title={l.hint}
+                  {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  className="text-muted-foreground hover:text-primary underline decoration-dotted underline-offset-4 transition-colors"
+                >
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">

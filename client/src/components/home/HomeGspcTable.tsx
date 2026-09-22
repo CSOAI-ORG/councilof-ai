@@ -169,6 +169,7 @@ export default function HomeGspcTable({
   error: injectedError = null,
   hubData: injectedHub,
   hubError: injectedHubError = null,
+  showPublicCount = true,
 }: {
   className?: string;
   /** The page owns the heading text; the table owns everything read off the API. */
@@ -182,6 +183,12 @@ export default function HomeGspcTable({
   /** Same Hub feed as Council OS; kept distinct from the governance board instrument. */
   hubData?: HubCardsPayload | null;
   hubError?: string | null;
+  /**
+   * Print totals.public_count under the lid. TRUE everywhere this table is mounted on its own.
+   * The home page passes false because the count line moved into the first screen (HomeHero) on
+   * 2026-09-22 so a cold reader meets it before scrolling: one count line per page, still.
+   */
+  showPublicCount?: boolean;
 }) {
   const live = useGspcBoard();
   const data = injected !== undefined ? injected : live.data;
@@ -227,7 +234,7 @@ export default function HomeGspcTable({
       <p className="mt-3 text-base font-semibold text-slate-900" data-testid="home-lid">
         {unread ? unreadLine(error) : loading ? "reading GET /api/gspc…" : lid ?? "The board did not publish a lid sentence. Empty stays empty."}
       </p>
-      {!unread && !loading && publicCount ? (
+      {showPublicCount && !unread && !loading && publicCount ? (
         <p className="mt-1 font-mono text-sm text-emerald-900" data-testid="home-public-count">
           {publicCount}
         </p>

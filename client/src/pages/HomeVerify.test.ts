@@ -36,20 +36,27 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src.match(/<h1\b/g)?.length ?? 0).toBeLessThanOrEqual(1);
   });
 
-  it("is OpenRouter desk plus slides, nine products, and Council OS", () => {
-    expect(src).toMatch(/Explore measurements\. See what changed\./);
+  it("is the board, the verifier, the ledger, the data doors, nine products and the stages", () => {
+    // 2026-09-22. The three literals this test used to pin - "Explore measurements. See what
+    // changed.", HeroSlides and HomeCinematicWorlds - encoded a structure the owner retired:
+    // a seven-slide carousel as the first screen, four numbered buttons in place of navigation,
+    // and a second three-film band restating ToolStack. Every component still exists; what
+    // changed is which of them the FRONT DOOR mounts, so the pins move with it. The assertions
+    // that are real guarantees (verify and assess are reachable, the board is here, the films
+    // explain themselves, nothing sells a rank) are all kept below unchanged.
     expect(src).toContain('href="/gspc-verify"');
     expect(src).toContain('href="/assess"');
     expect(src).toContain('id="os-chat"');
     expect(src).toContain("The living board");
-    expect(src).toContain("HeroSlides");
+    expect(src).toContain("HomeHero");
+    expect(src).toContain("HomeStrengths");
+    expect(src).toContain("HomeNavigator");
+    expect(src).toContain("HomeWeakScore");
+    expect(src).toContain("HomeMachineSurface");
+    expect(src).toContain("HomeReach");
     expect(src).toContain("HomeFilms");
-    expect(src).toContain("HomeCinematicWorlds");
     expect(src).toContain("ToolStack");
     expect(src).toContain("LivingStages");
-    expect(src).toContain("Open Council OS");
-    expect(src).toContain("Empty means not measured");
-    expect(src).toContain("What this desk does");
     expect(src).toContain("What this film is saying");
     expect(src).toContain("HomeGspcTable");
     expect(src).toMatch(/totals\?\.lid/);
@@ -141,6 +148,37 @@ describe("/tools is the plugin snippet", () => {
   });
 });
 
+describe("owner rulings on the front door, 2026-09-22", () => {
+  const home = readFileSync(resolve(here, "HomeVerify.tsx"), "utf8");
+  const footer = readFileSync(resolve(here, "../components/Footer.tsx"), "utf8");
+
+  it("does not open on a withdrawal notice", () => {
+    // The record stays published and stays reachable; it simply does not get a section on the
+    // page a stranger lands on. The prop is what carries that, so the prop is what is pinned.
+    expect(home).toContain("showWithdrawn={false}");
+  });
+
+  it("does not render a column of UNMEASURED stages, on the page or in the chrome", () => {
+    // The complete funnel is published at /api/footprint, which is named in both places.
+    expect(home).not.toContain("<LiveCounters");
+    expect(footer).not.toContain("<LiveCounters");
+    expect(footer).toContain("/api/footprint");
+  });
+
+  it("gives participation a band of its own rather than a thin strip", () => {
+    expect(home).toContain('variant="home"');
+    expect(home).toContain('data-testid="home-participation"');
+    expect(home).not.toContain('variant="badges"');
+  });
+
+  it("leads with the credibility: signed evidence, corrections, anchoring, free re-checking", () => {
+    // HomeStrengths is the second band on the page, above the board and everything after it.
+    expect(home.indexOf("<HomeStrengths")).toBeLessThan(home.indexOf('id="board"'));
+    expect(home.indexOf("<HomeStrengths")).toBeLessThan(home.indexOf("<ToolStack"));
+    expect(home.indexOf("<HomeStrengths")).toBeLessThan(home.indexOf("<LivingStages"));
+  });
+});
+
 describe("home lock — later merges must not restore the desk video", () => {
   it("HomeVerify.tsx stays living-board first with no HomeDemoLoop", () => {
     const home = readFileSync(resolve(here, "HomeVerify.tsx"), "utf8");
@@ -148,7 +186,10 @@ describe("home lock — later merges must not restore the desk video", () => {
     expect(home).not.toContain("HfLivingRecord");
     expect(home).not.toContain("ReachStrip");
     expect(home).toContain("The living board");
-    expect(home).toMatch(/Explore measurements\. See what changed\./);
+    // The first screen must state what this business is, and must carry the one count line.
+    expect(home).toContain("<HomeHero");
+    expect(home).toContain("showPublicCount={false}");
+    expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<HomeGspcTable"));
     expect(home).not.toContain("HomeDemoLoop");
     expect(home).not.toContain("csoai-demo.mp4");
     expect(home).not.toContain("HomeBoard");

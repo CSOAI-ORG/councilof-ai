@@ -191,6 +191,10 @@ const Library = lazy(() => import("./pages/Library"));
 const Honesty = lazy(() => import("./pages/Honesty"));
 // /memberships — where we take part, every row from public/interop/memberships.json with its evidence.
 const Memberships = lazy(() => import("./pages/Memberships"));
+// /reach — the WHOLE funnel, including the four stages that carry no number and the
+// reason each one carries none. The home page and the footer show the two stages a stranger can
+// use; this is the one click behind them, and it is where the commercial stages live.
+const Reach = lazy(() => import("./pages/Reach"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const Doctrine = lazy(() => import("./pages/Doctrine"));
@@ -636,6 +640,7 @@ function App() {
                   <Route path="/library/:sector" component={Library} />
                   <Route path="/honesty" component={Honesty} />
                   <Route path="/memberships" component={Memberships} />
+                  <Route path="/reach" component={Reach} />
                   <Route path="/dispute" component={Dispute} />
                   <Route path="/east-west" component={EastWest} />
                   <Route path="/challenge" component={Challenge} />
