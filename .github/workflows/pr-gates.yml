@@ -312,6 +312,13 @@ jobs:
           python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
           # #2391: connector envelope validator (failing controls) + Kaggle adapter replay.
           python3 -m pytest -q scripts/adapters/test_connector_envelope.py scripts/adapters/test_kaggle_envelopes.py
+          # The mill signer must not spend a signature on a card it has already signed.
+          # No gate ran test_mill_honesty.py, so this test sat RED on master from #1888
+          # (which renamed the entry point its stub patched) until 2026-09-22. Scoped to
+          # the one test on purpose: three others in that file are red for unrelated
+          # reasons and a step that is green only because nobody looks is the defect
+          # this line exists to stop repeating.
+          python3 -m pytest -q harness/gspc-top100/test_mill_honesty.py -k sign_mill_skips_already_signed
 
       # TUI-1 (2026-09-14): 14 test files outside client/src, functions, scripts were never
       # run by any gate. These test council-os compose locks, chrome extension verify vectors,

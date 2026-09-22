@@ -29,7 +29,12 @@ from mill_hub_queue import (  # noqa: E402
     pick_emptiest,
     stage_unsigned,
 )
-from verify_card import canonical_body_bytes, verify_signed_card, verify_signed_card_with_did_doc  # noqa: E402
+from verify_card import (  # noqa: E402
+    canonical_body_bytes,
+    canonical_js_body_bytes,
+    verify_signed_card,
+    verify_signed_card_with_did_doc,
+)
 
 sys.path.insert(0, str(HERE.parents[1] / "scripts"))
 import flip_hub_queue as fq  # noqa: E402
@@ -364,9 +369,21 @@ def test_axis_prompt_asks_for_one_token() -> None:
 
 
 def test_sign_mill_skips_already_signed_same_id(tmp_path: Path | None = None) -> None:
-    """Re-running mill-sign must not OIDC-sign a body that already has a matching signature."""
+    """Re-running mill-sign must not spend a signature on a body already signed.
+
+    Two drifts had to be repaired together (2026-09-22) before this meant anything.
+    The stub was installed on sm.sign_via_oidc — a name #1888 renamed out of the
+    module — so it intercepted nothing and the real OIDC relay ran; a monkeypatch onto
+    a name nothing calls cannot fail for the reason the test was written. Pass 1 below
+    therefore PROVES the stub is on the path main() takes, so that called == [] in
+    pass 2 is evidence of a skip and not of a dead patch. And the fixture built the
+    pre-#1155 body (no signature_state), which content-addresses to a card the
+    signer never writes — the body now comes from sm.freeze_body, the signer's own
+    transform, so the fixture cannot drift away from it again.
+    """
     sys.path.insert(0, str(HERE.parents[1] / "scripts"))
     import sign_mill_cards as sm  # noqa: E402
+    from hashlib import sha256
 
     root = tmp_path or (HERE / "_mill_test_sign")
     if tmp_path is None:
@@ -374,20 +391,35 @@ def test_sign_mill_skips_already_signed_same_id(tmp_path: Path | None = None) ->
 
         shutil.rmtree(root, ignore_errors=True)
     src = root / "unsigned"
+    empty = root / "signed-empty"
     dst = root / "signed"
-    src.mkdir(parents=True, exist_ok=True)
-    dst.mkdir(parents=True, exist_ok=True)
+    for d in (src, empty, dst):
+        d.mkdir(parents=True, exist_ok=True)
     wrap = stage_unsigned("deepseek-ai/DeepSeek-R1", "safety", hits=12, n=30, reason="")
     (src / "unsigned-safety-deadbeef12.json").write_text(json.dumps(wrap, indent=2) + "\n")
-    # The already-signed card carries the body the signer WOULD produce (n>=30 →
-    # MEASURED) at the content-addressed path, so a re-run recognises it as the
-    # same card and must not spend an OIDC signature on it.
-    from hashlib import sha256
 
-    signed_body = dict(wrap["body"])
-    signed_body["status"] = "MEASURED"
-    signed_body["unmeasured"] = []
-    signed_id = sha256(canonical_body_bytes(signed_body)).hexdigest()
+    called: list[dict] = []
+
+    def boom(body):
+        called.append(body)
+        raise AssertionError("OIDC must not run for an already-signed matching id")
+
+    assert hasattr(sm, "sign_via_oidc_attested"), "signer entry point renamed — restub it here"
+    sm.sign_via_oidc_attested = boom
+
+    # Pass 1 — an EMPTY destination: the stub must be reached, and no card written.
+    assert sm.main(["--source-dir", str(src), "--dest-dir", str(empty)]) == 1
+    assert called, "the stub is not on the path main() takes — this test proves nothing"
+    assert not list(empty.glob("signed-*.json"))
+    called.clear()
+
+    # Pass 2 — the already-signed card carries the body the signer WOULD produce
+    # (n>=30 → MEASURED, signature_state SIGNED) at its content-addressed path, so a
+    # re-run recognises it as the same card and must not spend a signature on it.
+    signed_body = sm.freeze_body(dict(wrap["body"]))
+    assert signed_body["status"] == "MEASURED" and signed_body["signature_state"] == "SIGNED"
+    signed_id = sha256(canonical_js_body_bytes(signed_body)).hexdigest()
+    assert signed_id == sha256(canonical_body_bytes(signed_body)).hexdigest()
     already = {
         "alg": "Ed25519",
         "body": signed_body,
@@ -395,18 +427,11 @@ def test_sign_mill_skips_already_signed_same_id(tmp_path: Path | None = None) ->
         "signature": "ab" * 32,
         "did": "did:web:csoai.org#board-attestation-1",
     }
-    already_path = dst / f"signed-safety-{signed_id[:12]}.json"
-    already_path.write_text(json.dumps(already, indent=2) + "\n")
-    called = []
-
-    def boom(body):
-        called.append(body)
-        raise AssertionError("OIDC must not run for already-signed matching id")
-
-    sm.SRC = src
     sm.DST = dst
-    sm.sign_via_oidc = boom
-    rc = sm.main()
+    already_path = sm.card_path("safety", signed_id)
+    already_path.write_text(json.dumps(already, indent=2) + "\n")
+
+    rc = sm.main(["--source-dir", str(src), "--dest-dir", str(dst)])
     assert rc == 0
     assert called == []
     out = json.loads(already_path.read_text())
