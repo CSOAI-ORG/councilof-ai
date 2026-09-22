@@ -196,7 +196,9 @@ def main() -> int:
     prior_bytes = prior_path.read_bytes()
     prior = json.loads(prior_bytes)
 
-    records = build_records(run, prior)
+    # Normalise BEFORE the leaves are taken: a leaf over 0.0 cannot be recomputed by a reader who
+    # parsed 0 out of the published file, so the record and its leaf must agree with the bytes.
+    records = [c.json_roundtrip_stable(r) for r in build_records(run, prior)]
     leaves = [c.canonical_bytes(r) for r in records]
     root = mk.root_hex(leaves)
     leaf_index = [{"index": i, "id": r["id"], "state": r["state"],
@@ -275,6 +277,7 @@ def main() -> int:
                   "measured, each one states its window, denominator, method and sources, and each one states "
                   "what it does not prove. Claims that could not be moved say why."),
     }
+    doc = c.json_roundtrip_stable(doc)
     body = {k: v for k, v in doc.items()}
     digest = c.sha256_hex(json.dumps(body, sort_keys=True, indent=1).encode("utf-8"))
     doc["registry_digest"] = digest

@@ -129,6 +129,32 @@ def source(r: dict[str, Any], note: str = "") -> dict[str, Any]:
     return s
 
 
+def json_roundtrip_stable(value: Any) -> Any:
+    """Normalise a value so parsing the published JSON and re-serialising reproduces its bytes.
+
+    A float that happens to be integral — 0.0, 100.0 — is written by Python as `0.0` and by every
+    JSON parser that has only one number type (JavaScript's, and therefore the door's) as `0`. A
+    digest or a Merkle leaf computed over the re-serialised form then disagrees with the published
+    one, and the artifact reports itself as not reproducible. The fix belongs at the point the
+    bytes are written, not in each reader: emit the integer.
+
+    Also rejects the values JSON has no representation for, rather than writing `NaN` or
+    `Infinity`, which parse in Python and are invalid JSON everywhere else.
+    """
+    import math
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, float):
+        if math.isnan(value) or math.isinf(value):
+            raise ValueError(f"{value!r} has no JSON representation; a measurement must not emit one")
+        return int(value) if value == int(value) else value
+    if isinstance(value, dict):
+        return {k: json_roundtrip_stable(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [json_roundtrip_stable(v) for v in value]
+    return value
+
+
 def visible_text(html_bytes: bytes) -> str:
     """Script/style stripped, tags removed, entities unescaped, whitespace collapsed.
 

@@ -276,6 +276,45 @@ def test_presence_control_a_planted_removal_must_be_detected_without_an_allegati
     assert same["observed_change_requiring_review"] is False and same["review_note"] is None
 
 
+def test_control_an_integral_float_must_not_survive_into_published_bytes():
+    """FAILING CONTROL: 0.0 and 100.0 break every digest a reader recomputes after parsing.
+
+    Python writes `0.0`; a parser with one number type reads `0` and re-serialises `0`. The
+    published digest and Merkle leaves then do not reproduce, and the artifact reports itself
+    unreproducible. So the normaliser runs before the bytes are written.
+    """
+    import math
+    v = {"a": 0.0, "b": 100.0, "c": 0.4491, "d": [1.0, 2.5], "e": True, "f": {"g": -3.0}}
+    n = cm.json_roundtrip_stable(v)
+    assert cm.canonical_bytes(n) == b'{"a":0,"b":100,"c":0.4491,"d":[1,2.5],"e":true,"f":{"g":-3}}', cm.canonical_bytes(n)
+    assert n["e"] is True, "a bool was turned into a number"
+    # The reader that breaks is the one with a single number type. Run the real thing where node
+    # exists, and fall back to the textual signature of the defect where it does not — Python's own
+    # round trip preserves `0.0` and so cannot show this bug at all.
+    import shutil
+    import subprocess
+    node = shutil.which("node")
+    if node:
+        js = ("const o=JSON.parse(require('fs').readFileSync(0,'utf8'));"
+              "const c=x=>Array.isArray(x)?'['+x.map(c).join(',')+']':"
+              "(x&&typeof x==='object')?'{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+c(x[k])).join(',')+'}':"
+              "JSON.stringify(x);process.stdout.write(c(o));")
+        rt = lambda o: subprocess.run([node, "-e", js], input=cm.canonical_bytes(o),
+                                      capture_output=True).stdout
+        assert rt(n) == cm.canonical_bytes(n), "the normalised form did not survive a JS round trip"
+        assert rt(v) != cm.canonical_bytes(v), "the JS round trip no longer shows the defect"
+    else:
+        assert b"0.0" not in cm.canonical_bytes(n) and b"100.0" not in cm.canonical_bytes(n)
+        assert b"0.0" in cm.canonical_bytes(v), "the defect signature is gone from the planted input"
+    for bad in (float("nan"), float("inf")):
+        try:
+            cm.json_roundtrip_stable({"x": bad})
+        except ValueError:
+            continue
+        raise AssertionError(f"{bad!r} was accepted into published bytes")
+    assert math.isnan(float("nan"))
+
+
 # ---------------------------------------------------------------- the registry the watch maintains
 
 def _reg(tmp, name, supersedes=None):

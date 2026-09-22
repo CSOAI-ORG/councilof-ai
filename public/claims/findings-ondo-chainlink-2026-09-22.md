@@ -185,14 +185,14 @@ a term that exists only inside a `<script>` tag. A harness that has never failed
 tested.
 
 The registry commits its eight claim records to an **RFC 9162 Merkle root**
-(`63f30b871a4f48c1e036e20934916fc9ea00ca20d82bca9308f4c29897d81ca4`, 0x00 leaf / 0x01 node,
+(`3bf6cf4b4a97b9901d54cc0be3d5d76f76c647269f795d7ae80bc0220e4c1f34`, 0x00 leaf / 0x01 node,
 largest-power-of-two split, no odd-leaf duplication), so any single record can be proved to have
 been in this registry without republishing the rest. Inclusion proofs for all eight are in the
 file.
 
 The registry is signed by `did:web:csoai.org#board-attestation-1`; the signature is in
 `/claims/claimreg-ondo-chainlink-2026-09-22-rev2.signed.json`, which pins the file by sha256
-(`ccca1c4f50a0faa4c959e457ac99be695124a5d86914f36c7bafeb5aaa116387`) because a signature cannot
+(`65c3392bcf7f3f7ed180157f7e0d62558f5e5f840e096201ffc618f59ffb799a`) because a signature cannot
 live inside the bytes it covers. Both files have been **submitted to OpenTimestamps calendars and
 are pending**: that is a calendar's promise of future Bitcoin inclusion, not a Bitcoin
 attestation, and it will not be described as one until the proofs are upgraded and verified.
