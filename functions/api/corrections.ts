@@ -34,6 +34,39 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0922-01",
+      date: "2026-09-18",
+      first_observed_at: "2026-09-18T00:00Z",
+      what_was_wrong:
+        "The 17 September note on the public root's odd-node duplication (corrections/" +
+        "merkle-count-binding-2026-09-17.md in the csoai/councilof-ai-mirror dataset) said that " +
+        "RFC 6962 domain-separation prefixes are the general fix for the padding collision it " +
+        "demonstrated, and that moving the public root to domain separation would close it by " +
+        "construction. Prefixing 0x00 before leaves and 0x01 before nodes while keeping odd-node " +
+        "duplication leaves the collision intact: the forged 306-leaf set and the honest 305-leaf " +
+        "set still hash to one root, because the substitution pairs a leaf with a leaf.",
+      why_it_was_wrong:
+        "The prefixes stop a leaf digest from impersonating an interior digest — a different " +
+        "second-preimage class. What makes Certificate Transparency immune to the padding " +
+        "collision is that RFC 6962 never duplicates an odd node (it splits at the largest power " +
+        "of two below n) and signs tree_size. The note attributed CT's immunity to the wrong " +
+        "mechanism, so a reader building a v2 with prefixes alone would still ship a collidable " +
+        "root.",
+      what_changed:
+        "A dated superseding note, corrections/merkle-count-binding-2026-09-18-SUPERSEDES.md, is " +
+        "published beside the original in the same dataset and under public/corrections/ in the " +
+        "councilof-ai repository, with a standard-library reproduction over the live root run " +
+        "three ways (unprefixed duplicating: collides; prefixed duplicating: still collides; RFC " +
+        "6962 shape: does not). corrections/SUPERSESSIONS.md points both ways. The original file " +
+        "is not edited. The count-binding guidance in the original (bind card_count; reject " +
+        "index >= card_count) stands and is unaffected.",
+      reached_the_public: true,
+      note:
+        "Caught 2026-09-18 while re-reading the note for the W3C Agent Conformance CG text, " +
+        "published 2026-09-22. Live root at publication: as_of 2026-09-22T08:54:02Z, " +
+        "card_count 305, merkle_root 40ce3833…",
+    },
+    {
       id: "C-2026-0920-01",
       date: "2026-09-20",
       first_observed_at: "2026-09-20T01:52Z",
