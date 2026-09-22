@@ -5,11 +5,10 @@
 # ORDER IS LOAD-BEARING: every splat-free rule first (2000-rule static budget),
 # then every splat rule (100-rule dynamic budget), catch-all last. One splat placed
 # early makes Cloudflare count EVERY later rule as dynamic and stop parsing at 100 —
-# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 12/100.
+# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 13/100.
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
-/.well-known/scitt-configuration  /.well-known/scitt.json  308
 /favicon.ico           /csoai-icon.svg      308
 /schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308
 /schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308
@@ -182,8 +181,11 @@
 /claimguard.html        /honesty/                308
 /coming                 /honesty/                308
 /coming/                /honesty/                308
+/corrections            /dashboard?tab=attestations  308
+/corrections/           /dashboard?tab=attestations  308
 /stack                  /stack/index.json        308
 /stack/                 /stack/index.json        308
+/interop/effect-binding-server-probe-2026-09-22.json  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-22.json  302
 
 # --- persona bare paths → prerendered trailing-slash (gauntlet cold loads) ---
 /honesty  /honesty/  308
@@ -231,7 +233,7 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- every other concrete <Route> bare path → its prerendered trailing-slash (389) ---
+# --- every other concrete <Route> bare path → its prerendered trailing-slash (390) ---
 /ab-testing  /ab-testing/  308
 /accessibility  /accessibility/  308
 /accountability-loop  /accountability-loop/  308
@@ -344,6 +346,7 @@
 /energy-ai-act  /energy-ai-act/  308
 /enter  /enter/  308
 /enterprise-dashboard  /enterprise-dashboard/  308
+/estate  /estate/  308
 /eu-ai-act  /eu-ai-act/  308
 /eu-ai-act-checklist  /eu-ai-act-checklist/  308
 /eu-ai-act-classifier  /eu-ai-act-classifier/  308
@@ -391,9 +394,7 @@
 /glossary  /glossary/  308
 /gods-eye  /gods-eye/  308
 /gone-space  /gone-space/  308
-/governance  /governance-layer  308
-/governance/  /governance-layer  308
-/governance.html  /governance-layer  308
+/governance  /governance/  308
 /governance-commons  /governance-commons/  308
 /governance-council  /governance-council/  308
 /governance-graph  /governance-graph/  308
@@ -675,11 +676,9 @@
 
 # ================= DYNAMIC (splat) RULES — 100 MAX, NOTHING BELOW THE CATCH-ALL =================
 # --- static asset trees: served directly, never routed to the app ---
-# 2026-09-22: proofs (3,993 .ots) live on the HF mirror to keep the Pages upload under the 20,000-file cap.
-/proofs/* https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/proofs/:splat 302
-
 /sov-space/*    /gspc-arena             308
 /widget/*               /dashboard?tab=learn         308
+/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/proofs/:splat  302
 /benchmarks/*  /benchmarks/:splat  200
 /vendor/*  /vendor/:splat  200
 /.well-known/*  /.well-known/:splat  200
@@ -706,13 +705,3 @@
 # validated with the query string included). That flips every unknown path from
 # honest-404 to 200-plus-shell, which is an OWNER RULING, not a config tidy-up.
 /*  /index.html  200
-/pricing.html  /dashboard/?tab=measured&task=pricing-overview  308
-/press.html  /press  308
-/board.html  /board  308
-/blog.html  /blog  308
-/services.html  /services  308
-/tools.html  /tools  308
-/about.html  /about  308
-/dashboard.html  /dashboard  308
-
-# The pod deploy pipeline drops dist/client/proofs; this rule keeps every /proofs/* link resolving.
