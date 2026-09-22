@@ -1,6 +1,6 @@
 {
   "schema": "csoai.axis-doors/0.1",
-  "as_of": "2026-09-22T08:58:00.730Z",
+  "as_of": "2026-09-22T09:03:05.912Z",
   "signed": false,
   "unsigned_reason": "a probe record of HTTP codes and analyst judgement; not a measurement card and not under the board key",
   "producer": "scripts/axis-doors-probe.mjs",
@@ -271,7 +271,7 @@
     "x402_manifest": {
       "url": "https://councilof.ai/.well-known/x402.json",
       "http": 200,
-      "ms": 54,
+      "ms": 35,
       "content_type": "application/json; charset=utf-8",
       "location": null,
       "resources": 11,
@@ -285,7 +285,7 @@
     "a2a_agent_card": {
       "url": "https://councilof.ai/.well-known/agent.json",
       "http": 200,
-      "ms": 63,
+      "ms": 47,
       "content_type": "application/json",
       "location": null,
       "skills": [
@@ -302,7 +302,7 @@
     "a2a_gspc_board_send_message": {
       "url": "https://councilof.ai/api/a2a",
       "http": 200,
-      "ms": 66,
+      "ms": 64,
       "content_type": "application/json; charset=utf-8",
       "location": null,
       "bytes": 9425
@@ -310,7 +310,7 @@
     "llms_txt_live": {
       "url": "https://councilof.ai/llms.txt",
       "http": 200,
-      "ms": 97,
+      "ms": 87,
       "content_type": "text/plain; charset=utf-8",
       "location": null,
       "row_door_lines": 0
@@ -343,7 +343,7 @@
     "axis_page_200": 22,
     "mcp_get_axis_live": 23,
     "hub_bank_on_row": 22,
-    "hub_card_links_this_row": 0,
+    "hub_card_links_this_row": 22,
     "evidence_on_row": 9,
     "evidence_edge_200": 8,
     "evidence_mirror_200": 1,
@@ -370,7 +370,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=governance",
           "http": 200,
-          "ms": 133,
+          "ms": 45,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -380,7 +380,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/governance",
           "http": 200,
-          "ms": 60,
+          "ms": 50,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -394,7 +394,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 61,
+          "ms": 62,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -402,7 +402,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-gov",
           "http": 200,
-          "ms": 472,
+          "ms": 311,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -411,7 +411,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-gov/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -452,7 +452,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=safety",
           "http": 200,
-          "ms": 55,
+          "ms": 46,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -462,7 +462,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/safety",
           "http": 200,
-          "ms": 60,
+          "ms": 57,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -476,7 +476,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 55,
+          "ms": 57,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -484,7 +484,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-agi",
           "http": 200,
-          "ms": 289,
+          "ms": 197,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -493,7 +493,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-agi/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -534,7 +534,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=provenance",
           "http": 200,
-          "ms": 108,
+          "ms": 42,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -544,7 +544,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/provenance",
           "http": 200,
-          "ms": 63,
+          "ms": 47,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -558,7 +558,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 54,
+          "ms": 104,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -566,7 +566,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-prv",
           "http": 200,
-          "ms": 248,
+          "ms": 563,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -575,7 +575,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-prv/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -616,7 +616,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=continuity",
           "http": 200,
-          "ms": 49,
+          "ms": 51,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -626,7 +626,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/continuity",
           "http": 200,
-          "ms": 50,
+          "ms": 53,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -640,7 +640,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 124,
+          "ms": 55,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -648,7 +648,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-asi",
           "http": 200,
-          "ms": 192,
+          "ms": 217,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -657,7 +657,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-asi/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -698,7 +698,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=conformance",
           "http": 200,
-          "ms": 53,
+          "ms": 45,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -708,7 +708,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/conformance",
           "http": 200,
-          "ms": 100,
+          "ms": 52,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -722,7 +722,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 64,
+          "ms": 56,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -730,7 +730,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-mcp",
           "http": 200,
-          "ms": 269,
+          "ms": 655,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -739,7 +739,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-mcp/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -780,7 +780,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=openness",
           "http": 200,
-          "ms": 47,
+          "ms": 52,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -790,7 +790,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/openness",
           "http": 200,
-          "ms": 51,
+          "ms": 53,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -804,7 +804,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 55,
+          "ms": 61,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -812,7 +812,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-oss",
           "http": 200,
-          "ms": 309,
+          "ms": 325,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -821,7 +821,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-oss/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -862,7 +862,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=machinery-conformity",
           "http": 200,
-          "ms": 43,
+          "ms": 51,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -872,7 +872,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/machinery-conformity",
           "http": 200,
-          "ms": 54,
+          "ms": 101,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -886,7 +886,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 60,
+          "ms": 52,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -894,7 +894,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-mach",
           "http": 200,
-          "ms": 186,
+          "ms": 374,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -903,7 +903,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-mach/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -944,7 +944,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=care",
           "http": 200,
-          "ms": 102,
+          "ms": 41,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -954,7 +954,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/care",
           "http": 200,
-          "ms": 57,
+          "ms": 53,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -976,7 +976,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-care",
           "http": 200,
-          "ms": 276,
+          "ms": 311,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -985,7 +985,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-care/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -1026,7 +1026,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=cross-reality",
           "http": 200,
-          "ms": 44,
+          "ms": 39,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1036,7 +1036,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/cross-reality",
           "http": 200,
-          "ms": 59,
+          "ms": 50,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1050,7 +1050,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 59,
+          "ms": 55,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1058,7 +1058,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-xr",
           "http": 200,
-          "ms": 201,
+          "ms": 576,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -1067,7 +1067,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-xr/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -1108,7 +1108,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=detector-interop",
           "http": 200,
-          "ms": 46,
+          "ms": 43,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1118,7 +1118,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/detector-interop",
           "http": 200,
-          "ms": 60,
+          "ms": 51,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1132,7 +1132,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 64,
+          "ms": 65,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1140,7 +1140,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-det",
           "http": 200,
-          "ms": 171,
+          "ms": 323,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -1149,7 +1149,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-det/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -1190,7 +1190,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=art5-safeguard",
           "http": 200,
-          "ms": 64,
+          "ms": 72,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1200,7 +1200,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/art5-safeguard",
           "http": 200,
-          "ms": 50,
+          "ms": 52,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1214,7 +1214,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 60,
+          "ms": 56,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1222,7 +1222,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-art5",
           "http": 200,
-          "ms": 307,
+          "ms": 291,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -1231,7 +1231,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-art5/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -1272,7 +1272,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=swarm",
           "http": 200,
-          "ms": 48,
+          "ms": 45,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1282,7 +1282,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/swarm",
           "http": 200,
-          "ms": 51,
+          "ms": 130,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1296,7 +1296,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 64,
+          "ms": 99,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1304,7 +1304,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-swarm",
           "http": 200,
-          "ms": 178,
+          "ms": 293,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -1313,7 +1313,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-swarm/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -1354,7 +1354,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=affect",
           "http": 200,
-          "ms": 47,
+          "ms": 50,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1364,7 +1364,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/affect",
           "http": 200,
-          "ms": 55,
+          "ms": 53,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1378,7 +1378,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 116,
+          "ms": 56,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1386,7 +1386,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-affect",
           "http": 200,
-          "ms": 474,
+          "ms": 234,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -1395,7 +1395,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-affect/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -1436,7 +1436,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=jail",
           "http": 200,
-          "ms": 47,
+          "ms": 44,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1446,7 +1446,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/jail",
           "http": 200,
-          "ms": 51,
+          "ms": 45,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1460,7 +1460,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 60,
+          "ms": 46,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1468,7 +1468,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-jail-goldbank",
           "http": 200,
-          "ms": 175,
+          "ms": 592,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -1477,7 +1477,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-jail-goldbank/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
@@ -1518,7 +1518,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=effect-binding",
           "http": 200,
-          "ms": 43,
+          "ms": 107,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1528,7 +1528,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/effect-binding",
           "http": 404,
-          "ms": 60,
+          "ms": 50,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": false,
@@ -1542,7 +1542,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 52,
+          "ms": 47,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1555,7 +1555,7 @@
         "evidence_edge": {
           "url": "https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.signed.json",
           "http": 404,
-          "ms": 55,
+          "ms": 51,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "run artifact (edge)"
@@ -1563,7 +1563,7 @@
         "evidence_mirror": {
           "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-22.signed.json",
           "http": 200,
-          "ms": 374,
+          "ms": 206,
           "content_type": "text/plain; charset=utf-8",
           "location": null,
           "kind": "run artifact (public mirror)"
@@ -1602,7 +1602,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=provenance-controls",
           "http": 200,
-          "ms": 43,
+          "ms": 125,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1612,7 +1612,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/provenance-controls",
           "http": 200,
-          "ms": 54,
+          "ms": 51,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1626,7 +1626,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 54,
+          "ms": 51,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1634,7 +1634,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-provenance-controls",
           "http": 200,
-          "ms": 252,
+          "ms": 248,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -1643,13 +1643,13 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-provenance-controls/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
           "url": "https://councilof.ai/interop/financial-measure-run-v2.json",
           "http": 200,
-          "ms": 43,
+          "ms": 46,
           "content_type": "application/json",
           "location": null,
           "kind": "run artifact (edge)"
@@ -1689,7 +1689,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=reserve-attestation",
           "http": 200,
-          "ms": 41,
+          "ms": 42,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1699,7 +1699,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/reserve-attestation",
           "http": 200,
-          "ms": 129,
+          "ms": 50,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1713,7 +1713,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 58,
+          "ms": 53,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1721,7 +1721,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-reserve-attestation",
           "http": 200,
-          "ms": 183,
+          "ms": 297,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -1730,13 +1730,13 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-reserve-attestation/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
           "url": "https://councilof.ai/interop/financial-measure-run-reserve-attestation.json",
           "http": 200,
-          "ms": 50,
+          "ms": 41,
           "content_type": "application/json",
           "location": null,
           "kind": "run artifact (edge)"
@@ -1776,7 +1776,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=regulatory-framework",
           "http": 200,
-          "ms": 135,
+          "ms": 40,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1786,7 +1786,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/regulatory-framework",
           "http": 200,
-          "ms": 50,
+          "ms": 49,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1800,7 +1800,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 53,
+          "ms": 60,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1808,7 +1808,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-regulatory-framework",
           "http": 200,
-          "ms": 164,
+          "ms": 345,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -1817,13 +1817,13 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-regulatory-framework/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
           "url": "https://councilof.ai/interop/financial-measure-run-regulatory-framework.json",
           "http": 200,
-          "ms": 109,
+          "ms": 45,
           "content_type": "application/json",
           "location": null,
           "kind": "run artifact (edge)"
@@ -1863,7 +1863,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=distribution-integrity",
           "http": 200,
-          "ms": 46,
+          "ms": 119,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1873,7 +1873,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/distribution-integrity",
           "http": 200,
-          "ms": 53,
+          "ms": 58,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1887,7 +1887,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 51,
+          "ms": 52,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1895,7 +1895,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-distribution-integrity",
           "http": 200,
-          "ms": 201,
+          "ms": 225,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -1904,13 +1904,13 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-distribution-integrity/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
           "url": "https://councilof.ai/interop/financial-measure-run-distribution-integrity.json",
           "http": 200,
-          "ms": 41,
+          "ms": 45,
           "content_type": "application/json",
           "location": null,
           "kind": "run artifact (edge)"
@@ -1950,7 +1950,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=custody-disclosure",
           "http": 200,
-          "ms": 47,
+          "ms": 45,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -1974,7 +1974,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 53,
+          "ms": 50,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -1982,7 +1982,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-custody-disclosure",
           "http": 200,
-          "ms": 278,
+          "ms": 285,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -1991,13 +1991,13 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-custody-disclosure/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
           "url": "https://councilof.ai/interop/financial-measure-run-custody-disclosure.json",
           "http": 200,
-          "ms": 43,
+          "ms": 41,
           "content_type": "application/json",
           "location": null,
           "kind": "run artifact (edge)"
@@ -2037,7 +2037,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=ai-adoption-components",
           "http": 200,
-          "ms": 45,
+          "ms": 40,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -2047,7 +2047,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/ai-adoption-components",
           "http": 200,
-          "ms": 53,
+          "ms": 54,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -2061,7 +2061,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 60,
+          "ms": 54,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -2069,7 +2069,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-ai-economy-index",
           "http": 200,
-          "ms": 203,
+          "ms": 271,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -2078,13 +2078,13 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-ai-economy-index/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
           "url": "https://councilof.ai/interop/financial-measure-run-ai-adoption-components.json",
           "http": 200,
-          "ms": 39,
+          "ms": 41,
           "content_type": "application/json",
           "location": null,
           "kind": "run artifact (edge)"
@@ -2124,7 +2124,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=labour-components",
           "http": 200,
-          "ms": 43,
+          "ms": 58,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -2134,7 +2134,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/labour-components",
           "http": 200,
-          "ms": 137,
+          "ms": 125,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -2148,7 +2148,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 139,
+          "ms": 143,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -2156,7 +2156,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-human-labour-index",
           "http": 200,
-          "ms": 192,
+          "ms": 212,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -2165,13 +2165,13 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-human-labour-index/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
           "url": "https://councilof.ai/interop/financial-measure-run-labour-components.json",
           "http": 200,
-          "ms": 45,
+          "ms": 43,
           "content_type": "application/json",
           "location": null,
           "kind": "run artifact (edge)"
@@ -2211,7 +2211,7 @@
         "board_row": {
           "url": "https://councilof.ai/api/gspc?axis=humanoid-labour-index",
           "http": 200,
-          "ms": 54,
+          "ms": 43,
           "content_type": "application/json; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -2221,7 +2221,7 @@
         "axis_page": {
           "url": "https://councilof.ai/axis/humanoid-labour-index",
           "http": 200,
-          "ms": 54,
+          "ms": 51,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "names_axis": true,
@@ -2235,7 +2235,7 @@
         "mcp_get_axis": {
           "url": "https://councilof.ai/mcp",
           "http": 200,
-          "ms": 51,
+          "ms": 58,
           "state": "LIVE",
           "names_axis": true,
           "kind": "free MCP tool"
@@ -2243,7 +2243,7 @@
         "hub_bank": {
           "url": "https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index",
           "http": 200,
-          "ms": 407,
+          "ms": 231,
           "content_type": "text/html; charset=utf-8",
           "location": null,
           "kind": "frozen bank (Hub)"
@@ -2252,7 +2252,7 @@
           "url": "https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index/raw/main/README.md",
           "http": 200,
           "links_board": true,
-          "links_this_row": false,
+          "links_this_row": true,
           "names_axis": true
         },
         "evidence_edge": {
