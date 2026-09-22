@@ -1,35 +1,43 @@
 {
  "schema": "csoai.financial-measure-run/0.4",
  "axis": "ai-adoption-components",
- "as_of": "2026-09-07T11:30:35Z",
- "n": 1,
+ "as_of": "2026-09-17T12:32:42Z",
+ "n": 2,
  "n_unit": "public series",
  "status": "MEASURED",
  "risk_verdict": "UNMEASURED",
  "three_state": "PASS / FAIL / UNCHECKABLE per fact. UNREACHABLE page => UNCHECKABLE, never FAIL.",
- "producer": "scripts/grade_financial_ledgers.py",
+ "producer": "scripts/gspc_financial_facts.py (invoked from grade_financial_ledgers.py --gspc-facts)",
  "honesty": "Facts MEASURED from this run's fetches. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. No model, no accuracy, no leader. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
  "measured": [
   {
-   "series": "EU27 enterprises using any AI (isoc_eb_ai)",
+   "series": "EU27 enterprises with 10+ employees using any AI",
    "status": "MEASURED",
-   "year": 2024,
-   "value": 55.03,
+   "year": "2025",
+   "value": 19.95,
    "unit": "%",
+   "dimensions": {
+    "size_emp": "GE10"
+   },
    "source": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/isoc_eb_ai?format=JSON&lang=EN&indic_is=E_AI_TANY&unit=PC_ENT&geo=EU27_2020"
   },
   {
    "series": "EU27 large enterprises 250+ using any AI",
-   "status": "UNCHECKABLE",
-   "note": "sizeclas split not isolated this run; not invented from the headline cell",
+   "status": "MEASURED",
+   "year": "2025",
+   "value": 55.03,
+   "unit": "%",
+   "dimensions": {
+    "size_emp": "GE250"
+   },
    "source": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/isoc_eb_ai?format=JSON&lang=EN&indic_is=E_AI_TANY&unit=PC_ENT&geo=EU27_2020"
   }
  ],
+ "bench": "Eurostat",
  "index_formula": false,
  "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
  "tally": {
-  "UNCHECKABLE": 1,
-  "MEASURED": 1
+  "MEASURED": 2
  },
- "content_id": "a3ccf93a5ea63e6df9991f18f35dfb63ba2f1a533dad85a09ea52774cfe74267"
+ "content_id": "a6882222497d14c30b32ec4199f20676a29fe253a9fa0a07a8a1cb61c31efe64"
 }

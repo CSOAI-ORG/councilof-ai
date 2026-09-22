@@ -30,7 +30,7 @@ axes:
       - id: eu_enterprise_ai_adoption
         role: reference_input
         series_id: isoc_eb_ai
-        pin: "Eurostat isoc_eb_ai · 13.48% · vintage 2024 · fetched 2026-08-25"
+        pin: "Eurostat isoc_eb_ai size_emp=GE10 · 19.95% · vintage 2025 · fetched 2026-09-17"
       - id: anthropic_economic_index
         role: reference_input
         dataset: Anthropic/EconomicIndex
@@ -49,10 +49,14 @@ axes:
     components:
       - id: eu_participation
         role: reference_input
-        pin: "57.58% · vintage 2024 · fetched 2026-08-25"
+        # Re-pinned 2026-09-17 onto Eurostat. The old pin (57.58%) was the World Bank's
+        # modelled-ILO participation rate as a share of TOTAL population, carried under a
+        # label that said Eurostat. The activity rate below is a share of the population
+        # aged 15-64, so the two are different quantities and not a jump.
+        pin: "Eurostat lfsi_emp_a activity rate age 15-64 · 75.6% of population · vintage 2025 · fetched 2026-09-17"
       - id: eu_unemployment
         role: reference_input
-        pin: "5.92% · vintage 2024 · fetched 2026-08-25"
+        pin: "Eurostat une_rt_a age 15-74 · 6.0% of labour force · vintage 2025 · fetched 2026-09-17"
       - id: anthropic_index_labour
         role: reference_input
         dataset: Anthropic/EconomicIndex

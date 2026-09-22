@@ -57,6 +57,11 @@ export interface EstateFacts {
   verifiedSentence: string;
   /** true when these came off the live endpoint; false for the committed artifact. */
   live: boolean;
+  /** When the numbers were derived, read out of the artifact (never a render-time clock). */
+  asOf: string | null;
+  /** Render-ready provenance. Empty when live; otherwise names the committed derivation and
+   *  its date, so a prerendered page never shows a count without saying where it came from. */
+  provenanceNote: string;
 }
 
 function withheldSentenceOf(withheld: number, attested: number, manifestSigned: boolean): string {
@@ -100,6 +105,7 @@ function factsFrom(raw: {
   attested: number;
   manifestSigned: boolean;
   live: boolean;
+  asOf: string | null;
 }): EstateFacts {
   return {
     bodiesPublished: raw.published,
@@ -112,6 +118,10 @@ function factsFrom(raw: {
     withheldSentence: withheldSentenceOf(raw.withheld, raw.attested, raw.manifestSigned),
     verifiedSentence: verifiedSentenceOf(raw.published, raw.valid, raw.keys),
     live: raw.live,
+    asOf: raw.asOf,
+    provenanceNote: raw.live
+      ? ""
+      : ` (Showing the committed derivation of the signed card index${raw.asOf ? `, as of ${raw.asOf.slice(0, 10)}` : ""}; GET /api/state wins.)`,
   };
 }
 
@@ -127,6 +137,7 @@ export const ESTATE_FACTS_OBSERVED: EstateFacts = factsFrom({
   attested: Number(cf?.withheld?.attested_by_published_parent) || 0,
   manifestSigned: cf?.chain?.manifest_signed === true,
   live: false,
+  asOf: typeof cf?.as_of === "string" ? cf.as_of : null,
 });
 
 /** Read the facts out of a /api/state payload. Returns null rather than inventing. */
@@ -147,6 +158,7 @@ export function estateFactsFromPayload(payload: any): EstateFacts | null {
     attested,
     manifestSigned: c?.manifest_signed?.value === true,
     live: true,
+    asOf: typeof c?.bodies_verified_valid?.as_of === "string" ? c.bodies_verified_valid.as_of : null,
   });
 }
 
