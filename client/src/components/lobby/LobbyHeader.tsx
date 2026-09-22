@@ -8,6 +8,7 @@ import LobbyWorkspaceMenu from "./LobbyWorkspaceMenu";
 import { LOBBY_TABS, type LobbyTab, type LobbyTabId } from "./tabs";
 import { useOsSearch, type OsHit } from "./osSearch";
 import { UNMEASURED, provenance, quotable, quote, useLiveState, STATE_ENDPOINT } from "./liveState";
+import { BOARD_COUNT_OBSERVED, BOARD_LID_OBSERVED, BOARD_OBSERVED_AT } from "@/lib/boardCount";
 
 /**
  * LobbyHeader — the Council OS utility bar.
@@ -418,9 +419,15 @@ export default function LobbyHeader({
  * across kinds is how a fleet of one reachable server got published as 378.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-// BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — never print bare "22 measured" without leaders.
-const BOARD_LID =
-  "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
+// BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — never print a bare measured count without leaders.
+// /api/state carries public_count but not totals.lid, so the lid shown here is the one
+// last OBSERVED on GET /api/gspc (facts.json, refreshed by scripts/refresh-board-observation.mjs)
+// and is labelled with its date. Nothing in this file types a board number.
+const BOARD_LID = `${BOARD_LID_OBSERVED} (lid as observed ${BOARD_OBSERVED_AT}; live: GET /api/gspc totals.lid)`;
+const LEADER_CLAUSE =
+  BOARD_COUNT_OBSERVED.public_leader_count === null
+    ? ""
+    : ` · ${BOARD_COUNT_OBSERVED.public_leader_count} public leader scores`;
 
 function LiveStateBar({
   live,
@@ -465,7 +472,7 @@ function LiveStateBar({
         label="Board"
         value={
           quotable(board.publicCount)
-            ? `${quote(board.publicCount)} · 3 public leader scores`
+            ? `${quote(board.publicCount)}${LEADER_CLAUSE}`
             : quote(board.publicCount)
         }
         ok={quotable(board.publicCount)}

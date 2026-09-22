@@ -9,6 +9,7 @@ import {
   claimsByVerdict,
   keepCount,
 } from "./sovExternalAudit";
+import { BOARD_COUNT_OBSERVED, BOARD_OBSERVATION } from "./boardCount";
 
 const products = readFileSync(resolve(__dirname, "../pages/Products.tsx"), "utf8");
 
@@ -16,9 +17,14 @@ describe("External XRPL / T-REX form", () => {
   it("keeps the three-arm map and the living board pin", () => {
     expect(SOV_AUDIT_RULING).toMatch(/living board/);
     expect(keepCount()).toBeGreaterThanOrEqual(10);
-    expect(LIVE_PIN.public_count).toBe("22 axis · 22 measured");
-    expect(LIVE_PIN.measured_axes).toBe(22);
-    expect(LIVE_PIN.items).toBe(969);
+    // Board fields come from the recorded observation, never a number typed in the pin.
+    expect(LIVE_PIN.public_count).toBe(BOARD_COUNT_OBSERVED.public_count);
+    expect(LIVE_PIN.axes).toBe(BOARD_COUNT_OBSERVED.axes);
+    expect(LIVE_PIN.measured_axes).toBe(BOARD_COUNT_OBSERVED.measured_axes);
+    expect(LIVE_PIN.measured_axes).toBeLessThanOrEqual(LIVE_PIN.axes);
+    expect(LIVE_PIN.public_count).toContain(String(LIVE_PIN.measured_axes));
+    expect(LIVE_PIN.items).toBe(BOARD_OBSERVATION.items);
+    expect(LIVE_PIN.board_as_at).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(LIVE_PIN.corrections).toBe(39);
     // A pinned count is a dated snapshot, so it must carry its date.
     expect(LIVE_PIN.as_at).toBeTruthy();
