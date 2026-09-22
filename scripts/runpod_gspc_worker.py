@@ -40,6 +40,15 @@ from typing import Any, Callable, Iterator, Protocol
 WORKER_SCHEMA = "csoai.runpod-gspc-worker/0.1"
 DISPATCH_SCHEMA = "csoai.runpod-commission-dispatch/0.1"
 ITEM_SCHEMA = "csoai.runpod-gspc-item-evidence/0.1"
+ITEM_SCHEMA_PARSED_BY = "csoai.runpod-gspc-item-evidence/0.2"
+"""Item rows gain three keys -- label_parser, parse_reason, parse_confidence
+-- only when a NON-default parser read the labels, and the schema string
+says so.
+
+A default run therefore emits byte-identical rows, so items_sha256 and the
+card that carries it are unchanged for a run that behaves identically.
+Adding fields to a schema without moving its version is how a strict reader
+downstream breaks on bytes nobody meant to change."""
 RUN_SCHEMA = "csoai.runpod-gspc-run/0.1"
 DEFAULT_LABEL_PARSER = "exact-label"
 """The parser behind every card signed before 2026-09-22 and the default here.
@@ -1361,7 +1370,11 @@ def run_once(
                 transport_errors += 1
 
             row = {
-                "schema": ITEM_SCHEMA,
+                "schema": (
+                    ITEM_SCHEMA
+                    if config.label_parser == DEFAULT_LABEL_PARSER
+                    else ITEM_SCHEMA_PARSED_BY
+                ),
                 "run_id": run_id,
                 "sequence": sequence,
                 "item_id": item.item_id,
@@ -1399,17 +1412,18 @@ def run_once(
                     "eval_count": result.eval_count,
                 },
                 "parsed_label": parsed_label,
-                # Which parser read this label, and why it read it that way.
-                # Recorded per item so a later disagreement between parsers can
-                # be explained from the evidence rather than re-derived.
-                "label_parser": label_parser_id,
-                "parse_reason": parse_reason,
-                "parse_confidence": parse_confidence,
                 "grade": grade,
                 "started_at": started_at,
                 "finished_at": finished_at,
                 "elapsed_ms": elapsed_ms,
             }
+            if config.label_parser != DEFAULT_LABEL_PARSER:
+                # Which parser read this label, and why it read it that way.
+                # Per item, so a later disagreement between parsers can be
+                # explained from the evidence rather than re-derived.
+                row["label_parser"] = label_parser_id
+                row["parse_reason"] = parse_reason
+                row["parse_confidence"] = parse_confidence
             append_json_line(evidence_handle, row)
             health.update(
                 state="RUNNING",
