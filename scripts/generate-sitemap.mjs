@@ -408,6 +408,9 @@ paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 const MACHINE_PATHS = [
   ["/api/gspc", "daily", "0.8"],
   ["/api/feed.xml", "daily", "0.7"],
+  ["/.well-known/mcp.json", "daily", "0.7"],
+  ["/.well-known/mcp/server-card.json", "daily", "0.7"],
+  ["/.well-known/x402.json", "daily", "0.7"],
   ["/api/reported", "daily", "0.6"],
   ["/llms.txt", "daily", "0.6"],
   ["/.well-known/agent-card.json", "daily", "0.6"],

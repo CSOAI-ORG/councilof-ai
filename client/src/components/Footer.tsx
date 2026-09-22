@@ -6,7 +6,7 @@
  */
 
 import { Link } from 'wouter';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { Archive, Github, Linkedin, Mail } from 'lucide-react';
 import FooterVerifyStrip from './FooterVerifyStrip';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
@@ -71,7 +71,9 @@ export function Footer() {
   ];
 
   const socialLinks = [
-    { name: 'GitHub', icon: Github, href: 'https://github.com/CSOAI-ORG' },
+    { name: 'CSOAI source repository', icon: Github, href: 'https://github.com/CSOAI-ORG/councilof-ai' },
+    { name: 'CSOAI public GitHub profile', icon: Github, href: 'https://github.com/CouncilofAI-CSOAI' },
+    { name: 'Public evidence mirror', icon: Archive, href: 'https://github.com/CouncilofAI-CSOAI/csoai-public-evidence' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
     { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
   ];
