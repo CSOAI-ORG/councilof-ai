@@ -124,6 +124,9 @@ export const PRIMARY_PATHS = new Set<string>([
   // /press is the estate's press hub — must be primary or journalists
   // land on an "archived reference" page.
   "/press",
+  // /memberships — where we take part, from public/interop/memberships.json. Linked from the
+  // home strip and the footer; unregistered it would ship under the "archived" banner.
+  "/memberships",
   // /pricing — real pricing page (was a 308 redirect, now a live surface).
   "/pricing",
   // /governance — governance framework page.
