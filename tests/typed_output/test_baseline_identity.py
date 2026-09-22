@@ -22,7 +22,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from harness.typed_output import ExactLabelParser, ReadLabelParser  # noqa: E402
+from harness.typed_output import (  # noqa: E402
+    ExactLabelParser,
+    ReadLabelParser,
+    looks_like_menu_echo,
+)
+from harness.typed_output.base import looks_unfinished  # noqa: E402
 from harness.typed_output.replay import load_items  # noqa: E402
 
 CANDIDATE_ROOTS = [
@@ -114,3 +119,38 @@ def test_unparsed_items_leave_the_denominator_rather_than_scoring_zero(items):
         ]
         checked += 1
     assert checked > 0, "no run's arithmetic could be checked"
+
+
+def test_the_guards_never_reject_an_answer_a_string_match_could_read(items):
+    """A guard that fires on a real answer is not a guard, it is data loss.
+
+    `looks_like_menu_echo` and `looks_unfinished` run BEFORE a model-backed
+    parser is consulted, so a false positive silently removes an item from the
+    denominator. Measured on 2026-09-22 over the retained evidence: the echo
+    guard fires 271 times, the unfinished guard 8, and neither has ever fired on
+    an answer that either deterministic parser could read.
+    """
+    strict, forgiving = ExactLabelParser(), ReadLabelParser()
+    echo_fires = unfinished_fires = 0
+    false_positives = []
+    for item in items:
+        text = item.get("raw_output") or ""
+        readable = (
+            strict.extract_label(text, item.labels).label
+            or forgiving.extract_label(text, item.labels).label
+        )
+        echo = looks_like_menu_echo(text, item.labels)
+        unfinished = looks_unfinished(text)
+        echo_fires += echo
+        unfinished_fires += unfinished
+        if readable is not None and (echo or unfinished):
+            false_positives.append((item["item_id"], readable, text[:120]))
+
+    assert echo_fires > 0 and unfinished_fires > 0, (
+        "neither guard fired anywhere in the retained evidence, so this test is "
+        "vacuous and the guards are not being exercised by real bytes"
+    )
+    assert not false_positives, (
+        f"{len(false_positives)} answers a string match could read were thrown "
+        f"away by a guard; first: {false_positives[:3]}"
+    )
