@@ -217,7 +217,9 @@ describe("free preview — every reading is derived from the artifact bytes", ()
     stubDisk();
     // Every published registry, discovered from disk — so adding a superseding revision cannot
     // leave this test asserting yesterday's single file.
-    const files = readdirSync(resolve(PUBLIC, "./claims")).filter((f) => /^claimreg-.*\.json$/.test(f)).sort();
+    // The registries themselves. `.signed.json` sidecars sit beside them and are not registries:
+    // a signature cannot live inside the bytes it covers, so it is a separate file with the same stem.
+    const files = readdirSync(resolve(PUBLIC, "./claims")).filter((f) => /^claimreg-.*\.json$/.test(f) && !f.endsWith(".signed.json")).sort();
     expect(files.length, "no claim registry on disk").toBeGreaterThan(0);
     const b = await preview("claim-watch");
     const rows = b.head.registries as Record<string, unknown>[];
@@ -370,7 +372,7 @@ describe("paid: read before settle", () => {
     const sw = await (await call(door, ctx("/api/pop/swift", LIVE, { "x-payment": paymentHeader }))).json() as { rows: { rows: unknown[] } };
     expect(sw.rows.rows).toEqual(disk("/interop/swift-census.json").rows);
     const cw = await (await call(door, ctx("/api/pop/claim-watch", LIVE, { "x-payment": paymentHeader }))).json() as { rows: { registries: { registry: unknown }[] } };
-    const onDisk = readdirSync(resolve(PUBLIC, "./claims")).filter((f) => /^claimreg-.*\.json$/.test(f)).sort();
+    const onDisk = readdirSync(resolve(PUBLIC, "./claims")).filter((f) => /^claimreg-.*\.json$/.test(f) && !f.endsWith(".signed.json")).sort();
     expect(cw.rows.registries.length).toBe(onDisk.length);
     for (const f of onDisk) {
       const r = (cw.rows.registries as { file?: string; registry: unknown }[]).find((x) => x.file === "/claims/" + f);
