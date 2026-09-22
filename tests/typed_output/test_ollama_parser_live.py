@@ -25,7 +25,7 @@ from harness.typed_output.base import ParserTransportError  # noqa: E402
 from harness.typed_output.ollama_schema import NONE_TOKEN  # noqa: E402
 
 BASE_URL = "http://127.0.0.1:11434"
-MODEL = "qwen2.5:7b"
+MODEL = "mistral:7b"  # not a mill subject: see ollama_schema.DEFAULT_MODEL
 LABELS = ("COMPLY", "REFUSE")
 RISK_LABELS = ("HIGH_RISK", "LIMITED_RISK", "MINIMAL_RISK", "PROHIBITED")
 

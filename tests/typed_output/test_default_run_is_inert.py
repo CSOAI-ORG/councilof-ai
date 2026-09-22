@@ -174,10 +174,51 @@ def test_default_reads_exactly_what_the_strict_rule_reads(baseline):
     assert baseline["card"]["body"]["n"] == 3
 
 
-def test_the_run_record_always_names_the_parser(baseline):
-    """run.json is not hashed into anything, so it can say so unconditionally."""
-    assert baseline["run"]["label_parser"]["parser_id"] == "exact-label-v1"
-    assert baseline["run"]["label_parser"]["model_in_the_loop"] is False
+def test_the_default_run_record_gains_nothing_either(baseline):
+    """scripts/verify_runpod_gspc_intake.py pins the run record's key set EXACTLY.
+
+    `_require_exact_keys(run, RUN_FIELDS, "run")`. So a new key in run.json is
+    not free even though nothing hashes run.json: an unconditional one means a
+    default run stops passing intake. Measured, not assumed -- an earlier
+    revision of this change added it unconditionally and
+    scripts/test_verify_runpod_gspc_intake.py went red.
+    """
+    assert "label_parser" not in baseline["run"]
+
+
+def test_a_default_run_still_satisfies_the_pinned_intake_protocol(baseline):
+    """The gate itself, run against the run record this worker just wrote."""
+    intake = _intake()
+    if intake is None:
+        pytest.skip("intake verifier not importable here")
+    assert set(baseline["run"]) == intake.RUN_FIELDS
+
+
+def test_a_swapped_parser_is_rejected_by_intake_until_it_is_widened(forgiving):
+    """And that is the gate working, not the gate failing.
+
+    A card whose labels were read by a different parser should not enter the
+    control plane on a protocol that never mentioned parsers. Turning the
+    selector on in production is therefore a two-part change: this flag, and a
+    deliberate, reviewed widening of RUN_FIELDS. This test exists so nobody
+    discovers that at 3am.
+    """
+    intake = _intake()
+    if intake is None:
+        pytest.skip("intake verifier not importable here")
+    extra = set(forgiving["run"]) - intake.RUN_FIELDS
+    assert extra == {"label_parser"}
+
+
+def _intake():
+    path = REPO / "scripts" / "verify_runpod_gspc_intake.py"
+    if not path.exists():
+        return None
+    spec = importlib.util.spec_from_file_location("gspc_intake", path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["gspc_intake"] = module
+    spec.loader.exec_module(module)
+    return module if hasattr(module, "RUN_FIELDS") else None
 
 
 # ------------------------------------------------- a swap is loud, not silent
@@ -194,6 +235,7 @@ def test_a_swapped_parser_moves_every_hash_it_should(baseline, forgiving):
 def test_a_swapped_parser_is_named_in_every_artifact(worker, forgiving):
     assert forgiving["run"]["instrument"]["label_parser"]["id"] == "read-label"
     assert forgiving["run"]["label_parser"]["parser_id"] == "read-label-v1"
+    assert forgiving["run"]["label_parser"]["model_in_the_loop"] is False
     assert (
         forgiving["card"]["body"]["compute_evidence"]["label_parser"]
         == "read-label-v1"

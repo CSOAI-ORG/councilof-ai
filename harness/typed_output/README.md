@@ -38,7 +38,7 @@ so a change of parser is:
 |---|---|---|
 | `exact-label` *(default)* | deterministic | `raw.strip() in allowed_labels`, the rule behind every card on the board |
 | `read-label` | deterministic | the mill's forgiving reader: `<think>` stripped, `Answer:` prefix, last line |
-| `ollama-schema` | local model | JSON Schema in Ollama's `format`, enum-constrained, temperature 0, seed 0, model pinned by manifest digest |
+| `ollama-schema` | local model | JSON Schema in Ollama's `format`, enum-constrained, temperature 0, seed 0, reader model pinned by manifest digest and **never one of the models being measured** |
 | `jev` | hosted model | TypeSafe AI `Choice` via `langchain-typesafe`; **fails closed** without `TYPESAFE_API_KEY` |
 
 ## The two ways a parser lies
@@ -66,7 +66,7 @@ measured rate is the signature of a leak, not of a better parser.
 python3 harness/typed_output/replay.py \
   --runs-root /workspace/lanes/out/mill-restart-2026-09-22/runs \
   --parser read-label \
-  --parser 'ollama-schema:model=qwen2.5:7b' \
+  --parser 'ollama-schema:model=mistral:7b' \
   --out /tmp/replay.json --cache /tmp/replay-cache.json --audit-sample 25
 ```
 
@@ -77,7 +77,7 @@ run directory, and never touches a card.
 
 ```bash
 python3 scripts/runpod_gspc_worker.py --config JOB.json \
-  --label-parser ollama-schema --label-parser-option model=qwen2.5:7b
+  --label-parser ollama-schema --label-parser-option model=mistral:7b
 ```
 
 With no flag the worker builds `exact-label` and the instrument bytes are

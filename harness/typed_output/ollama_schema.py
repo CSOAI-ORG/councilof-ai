@@ -54,7 +54,16 @@ NONE_TOKEN = "NO_LABEL_STATED"
 enum holds only real labels forces a guess on every malformed answer."""
 
 DEFAULT_BASE_URL = "http://127.0.0.1:11434"
-DEFAULT_MODEL = "qwen2.5:7b"
+DEFAULT_MODEL = "mistral:7b"
+"""Deliberately NOT one of the models the mill measures.
+
+Two reasons, one methodological and one operational. Reading qwen2.5:7b's
+answers with qwen2.5:7b makes the reader and the subject the same system, and a
+shared failure mode would be invisible: the parser would misread exactly the
+answers the subject writes oddly. And Ollama serialises requests per model, so a
+parser sharing a model with a running mill job queues behind every one of its
+items -- measured on the pod on 2026-09-22, that wedged a sweep for tens of
+minutes at a time."""
 
 EXTRACTION_INSTRUCTION = (
     "You are reading one answer that another model wrote. Report which single "
@@ -100,7 +109,8 @@ class OllamaSchemaParser:
         seed: int = 0,
         num_predict: int = 32,
         guard: bool = True,
-        timeout: float = 60.0,
+        timeout: float = 180.0,
+        keep_alive: str = "10m",
     ) -> None:
         self.model = model
         self.base_url = _require_loopback(base_url)
@@ -108,6 +118,7 @@ class OllamaSchemaParser:
         self.num_predict = num_predict
         self.guard = guard
         self.timeout = timeout
+        self.keep_alive = keep_alive
         self._digest: str | None = None
         suffix = "" if guard else "-unguarded"
         self.parser_id = f"ollama-schema-v1{suffix}:{model}"
@@ -141,6 +152,7 @@ class OllamaSchemaParser:
             "stream": False,
             "think": False,
             "format": self.build_schema(allowed),
+            "keep_alive": self.keep_alive,
             "options": {
                 "temperature": 0,
                 "seed": self.seed,
@@ -187,6 +199,7 @@ class OllamaSchemaParser:
                 "num_predict": self.num_predict,
                 "think": False,
             },
+            "keep_alive": self.keep_alive,
             "deterministic_guard": self.guard,
             "guards": ["menu_echo", "unfinished"] if self.guard else [],
             "abstain_token": NONE_TOKEN,

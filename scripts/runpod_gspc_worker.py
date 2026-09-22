@@ -1516,11 +1516,6 @@ def run_once(
         "model_manifest_digest": model_manifest_digest,
         "instrument": instrument,
         "instrument_sha256": instrument_sha256,
-        # The FULL runtime descriptor of the parser that read every label in this
-        # run, including the digest of any model it used. It lives here rather
-        # than in `instrument` because instrument_sha256 has to stay derivable
-        # from the job's pins alone, and a live digest is not.
-        "label_parser": label_parser_descriptor,
         "items_sha256": evidence_sha256,
         "card_sha256": sha256_bytes(card_bytes.rstrip(b"\n")),
         "counts": {
@@ -1543,6 +1538,19 @@ def run_once(
             "ALL_UNPARSED" if graded_n == 0 else
             "COMPLETE_UNSIGNED"),
     }
+    if config.label_parser != DEFAULT_LABEL_PARSER:
+        # The FULL runtime descriptor of the parser that read every label in
+        # this run, including the digest of any model it used. It lives here
+        # rather than in `instrument` because instrument_sha256 has to stay
+        # derivable from the job's pins alone, and a live digest is not.
+        #
+        # Conditional, because verify_runpod_gspc_intake pins the run record's
+        # key set EXACTLY. A default run must keep passing intake unchanged.
+        # A non-default run is rejected by that gate until RUN_FIELDS is
+        # widened deliberately -- which is the gate working, not failing: a
+        # card read by a different parser should not slip into the control
+        # plane on a protocol that never mentioned parsers.
+        run_manifest["label_parser"] = label_parser_descriptor
     exclusive_write_bytes(
         run_dir / "run.json",
         json.dumps(run_manifest, indent=2, sort_keys=True).encode("utf-8") + b"\n",
