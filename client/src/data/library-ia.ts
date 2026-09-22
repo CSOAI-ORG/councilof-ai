@@ -54,6 +54,10 @@ export const PRIMARY_PATHS = new Set<string>([
   // A current page the badge block and census READMEs link to; unregistered it
   // would ship flagged "archived" under a link we actively promote.
   "/get-listed",
+  // Claim maintenance — the named category, its CC0 specification and the live register.
+  // A current front-door page; unregistered it would ship the ArchivedBanner under the one
+  // route that has to read as authoritative to a stranger who has never met us.
+  "/claim-maintenance",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
   "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",

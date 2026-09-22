@@ -306,6 +306,10 @@ function discover() {
       // must not land on the SPA shell.
       "/reach",
       "/evaluator-access",
+      // /claim-maintenance — the category page. The specification and the register it links are
+      // static files, but this route is React and must be snapshotted or a crawler cold-loading
+      // the name of the category gets the SPA shell.
+      "/claim-maintenance",
   ];
   for (const p of MUST) found.add(p);
 

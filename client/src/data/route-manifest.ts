@@ -323,6 +323,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "China Ai Law"
  },
  {
+  "path": "/claim-maintenance",
+  "comp": "ClaimMaintenance",
+  "title": "Claim Maintenance"
+ },
+ {
   "path": "/claims-register",
   "comp": "ClaimsRegister",
   "title": "Claims Register"
