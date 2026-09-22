@@ -1,25 +1,25 @@
 {
  "axis": "gov",
  "axis_status": "MEASURED",
- "content_id": "b680203c1449e876ddcca6f0a04149ac01eea22dd1c40ff406f193f95eb60310",
- "elo_decided_games": 111,
+ "content_id": "b63973dec86cafa72aee522abd83506d3a157dedc03360378fa4213b600f74e2",
+ "elo_decided_games": 123,
  "elo_leader": null,
  "elo_leader_score": null,
  "elo_ranked_models": 4,
  "elo_runner_up": {
   "ci": [
-   0.389,
-   0.59
+   0.42,
+   0.608
   ],
-  "elo": 1505.5,
-  "games": 92,
-  "model": "gemma3:12b",
-  "winrate": 0.489
+  "elo": 1507,
+  "games": 105,
+  "model": "mistral:7b",
+  "winrate": 0.514
  },
  "elo_separation": "TIE",
  "elo_source": {
-  "content_id": "8e13ff02cfb6f9a09b197d032e93252449e7c963ed9ce09d748f23f647edbee5",
-  "generated": "2026-09-22T21:36:34Z",
+  "content_id": "0da527ae8c22a47d05c6f6606591e46b8ac0ea7e0112cdf8fa76a5eb0cabf86e",
+  "generated": "2026-09-22T22:37:17Z",
   "path": "/arena/elo_reference.json",
   "schema": "csoai.arena-elo-reference/0.2"
  },
@@ -35,7 +35,7 @@
   "winrate": 0.684
  },
  "games_leader": null,
- "generated": "2026-09-22T21:36:35Z",
+ "generated": "2026-09-22T22:37:17Z",
  "majority_baseline": 0.2911,
  "models": 19,
  "not_a_certification": true,
@@ -47,21 +47,21 @@
  "signature": {
   "alg": "Ed25519",
   "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
-  "content_id": "b680203c1449e876ddcca6f0a04149ac01eea22dd1c40ff406f193f95eb60310",
+  "content_id": "b63973dec86cafa72aee522abd83506d3a157dedc03360378fa4213b600f74e2",
   "did": "did:web:csoai.org#board-attestation-1",
-  "payload_sha256": "b680203c1449e876ddcca6f0a04149ac01eea22dd1c40ff406f193f95eb60310",
+  "payload_sha256": "b63973dec86cafa72aee522abd83506d3a157dedc03360378fa4213b600f74e2",
   "preimage": "canonical(body minus content_id, signature)",
-  "sig_ed25519": "2b83a137edb29b47f39665c248cf9bc0fd6a5c6891c768cb89ad4af1259f188cdd9e59aff34168fbcc5ac84ab8fca7f2a7779834bfb865903028166b50062502",
-  "signed_at": "2026-09-22T21:36:35.424Z",
+  "sig_ed25519": "942d87ba0b2872cd86a0296859085a36cfda8041937c496167f94031af56c6f2727eecaa859862179d8550f69fc36c69aaf1fbae846c79bdaa60437a1023c001",
+  "signed_at": "2026-09-22T22:37:17.960Z",
   "signer_auth": "pod-token",
   "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
  "signer": "did:web:csoai.org#board-attestation-1",
  "status": "TIE",
  "supersedes": {
-  "content_id": "53282214c25c15cc6d00c76237d8bfcb5fa9ee999034ceeb09900c3f97dc5c9f",
+  "content_id": "b680203c1449e876ddcca6f0a04149ac01eea22dd1c40ff406f193f95eb60310",
   "elo_leader_then": null,
-  "generated": "2026-09-22T20:44:22Z",
+  "generated": "2026-09-22T21:36:35Z",
   "note": "superseded, never edited; new bytes, new signature",
   "signer": "did:web:csoai.org#board-attestation-1",
   "status_then": "TIE"
