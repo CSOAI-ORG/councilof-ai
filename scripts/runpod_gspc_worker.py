@@ -41,6 +41,12 @@ WORKER_SCHEMA = "csoai.runpod-gspc-worker/0.1"
 DISPATCH_SCHEMA = "csoai.runpod-commission-dispatch/0.1"
 ITEM_SCHEMA = "csoai.runpod-gspc-item-evidence/0.1"
 RUN_SCHEMA = "csoai.runpod-gspc-run/0.1"
+DEFAULT_LABEL_PARSER = "exact-label"
+"""The parser behind every card signed before 2026-09-22 and the default here.
+
+A parser decides WHICH label a model stated; the grader decides whether that
+label is the expected one. Swapping a parser changes what every accuracy on
+the board means, so the swap is explicit, recorded, and never silent."""
 MAX_CARD_BYTES = 3072
 MAX_HTTP_RESPONSE_BYTES = 2 * 1024 * 1024
 INTENDED_DID = "did:web:csoai.org#card-attestation-1"
@@ -271,6 +277,10 @@ class WorkerConfig:
     request_timeout_seconds: int
     max_tokens: int
     seed: int
+    # Selected on the command line rather than in the frozen config, so every
+    # config already on disk keeps loading unchanged and byte-identical.
+    label_parser: str = DEFAULT_LABEL_PARSER
+    label_parser_options: tuple[tuple[str, str], ...] = ()
 
     @classmethod
     def load(cls, path: Path) -> "WorkerConfig":
@@ -413,6 +423,34 @@ class WorkerConfig:
             seed=_require_int(raw, "seed", 0, 2**31 - 1),
         )
 
+    def build_label_parser(self) -> Any:
+        """Construct the selected parser, or halt.
+
+        A parser that cannot be built stops the run. It is never replaced by a
+        working one: a card that records `typesafe-jev-v1` and was in fact made
+        by a string comparison would be a card that lies about how it was made,
+        and no amount of graceful degradation is worth that.
+        """
+        repo_root = Path(__file__).resolve().parents[1]
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
+        try:
+            from harness.typed_output.registry import (
+                build_parser as build_label_parser,
+            )
+        except ImportError as error:
+            raise WorkerError(
+                "BAD_LABEL_PARSER", f"harness.typed_output unavailable: {error}"
+            ) from error
+        options = {key: value for key, value in self.label_parser_options}
+        try:
+            return build_label_parser(self.label_parser, **options)
+        except Exception as error:  # noqa: BLE001 - re-typed as a halt
+            raise WorkerError(
+                "BAD_LABEL_PARSER",
+                f"label parser {self.label_parser!r} could not be built: {error}",
+            ) from error
+
     def subject_id(self, model_manifest_digest: str) -> str:
         """An honest local subject, not an unproved Hugging Face identity."""
         return f"ollama:{self.model}@{model_manifest_digest}"
@@ -420,7 +458,7 @@ class WorkerConfig:
     def instrument_descriptor(
         self, bank_sha256: str, model_manifest_digest: str
     ) -> dict[str, Any]:
-        return {
+        descriptor: dict[str, Any] = {
             "schema": WORKER_SCHEMA,
             "axis": self.axis,
             "model_transport": self.model,
@@ -441,6 +479,19 @@ class WorkerConfig:
             },
             "prompt_adapter": "frozen-prompt-plus-public-label-set-v1",
         }
+        if self.label_parser != DEFAULT_LABEL_PARSER:
+            # Only a NON-default parser appears here, and only by the identity a
+            # caller can derive from the config alone. instrument_sha256 is the
+            # estate's "same instrument" key -- `_latest_matching_run` recomputes
+            # it from the job's pins without touching Ollama -- so it must stay
+            # derivable without a live call, and a behaviour-identical default run
+            # must keep hashing to exactly what it hashes to today. The default
+            # parser is already declared, in graders.exact_label.
+            descriptor["label_parser"] = {
+                "id": self.label_parser,
+                "options": [list(pair) for pair in self.label_parser_options],
+            }
+        return descriptor
 
 
 @dataclasses.dataclass(frozen=True)
@@ -1064,6 +1115,8 @@ def stage_unsigned_card(
     parse_errors: int,
     transport_errors: int,
     reason: str,
+    label_parser: str = DEFAULT_LABEL_PARSER,
+    label_parser_manifest_digest: str | None = None,
 ) -> dict[str, Any]:
     """Build a strict superset of mill_hub_queue.stage_unsigned's card shape."""
     accuracy: float | int | None
@@ -1095,6 +1148,18 @@ def stage_unsigned_card(
             "transport_errors_excluded": transport_errors,
         },
     }
+    if label_parser != DEFAULT_LABEL_PARSER:
+        # A card made by a non-default parser says so in its signed body, and if
+        # a model read those labels it pins that model the same way the subject
+        # is pinned. A reproducible subject read by an unidentified reader is not
+        # a reproducible measurement. The default is already recoverable through
+        # compute_evidence.instrument_sha256 -> instrument.graders.exact_label,
+        # so the default card's bytes are left exactly as they are.
+        body["compute_evidence"]["label_parser"] = label_parser
+        if label_parser_manifest_digest:
+            body["compute_evidence"]["label_parser_model_manifest_digest"] = (
+                label_parser_manifest_digest
+            )
     body_bytes = canonical_json_bytes(body)
     card: dict[str, Any] = {
         "alg": "Ed25519",
@@ -1179,6 +1244,18 @@ def run_once(
         health.update(state="ERROR", detail_code=error.code)
         return RunOutcome(None, 2, error.code, 0, 0, 0, 0)
 
+    try:
+        label_parser = config.build_label_parser()
+    except WorkerError as error:
+        health.update(state="ERROR", detail_code=error.code)
+        return RunOutcome(None, 2, error.code, 0, 0, 0, 0)
+    if hasattr(label_parser, "pin"):
+        # A model-backed parser is pinned by manifest digest exactly as the
+        # subject is. An unpinned reader makes a reproducible subject
+        # unreproducible.
+        label_parser.pin()
+    label_parser_descriptor = label_parser.describe()
+    label_parser_id = label_parser_descriptor.get("parser_id", config.label_parser)
     instrument = config.instrument_descriptor(bank_sha256, model_manifest_digest)
     instrument_sha256 = sha256_bytes(canonical_json_bytes(instrument))
     run_id = _run_id()
@@ -1246,12 +1323,23 @@ def run_once(
             attempted += 1
 
             parsed_label: str | None = None
+            parse_reason: str | None = None
+            parse_confidence: float | None = None
             grade: bool | None = None
             if result.transport_ok:
                 transport_ok += 1
                 raw_output = result.raw_output if result.raw_output is not None else ""
                 if item.predicate == "EXACT_LABEL":
-                    parsed_label = parse_exact_label(raw_output, config.allowed_labels)
+                    # The parser sees the answer and the label set. It is not
+                    # shown item.expected, and it is not shown item.prompt: the
+                    # comparison on the next line is the grader, and it stays a
+                    # deterministic string comparison whichever parser ran.
+                    extraction = label_parser.extract_label(
+                        raw_output, config.allowed_labels
+                    )
+                    parsed_label = extraction.label
+                    parse_reason = extraction.reason
+                    parse_confidence = extraction.confidence
                     grade = (
                         parsed_label == item.expected
                         if parsed_label is not None
@@ -1311,6 +1399,12 @@ def run_once(
                     "eval_count": result.eval_count,
                 },
                 "parsed_label": parsed_label,
+                # Which parser read this label, and why it read it that way.
+                # Recorded per item so a later disagreement between parsers can
+                # be explained from the evidence rather than re-derived.
+                "label_parser": label_parser_id,
+                "parse_reason": parse_reason,
+                "parse_confidence": parse_confidence,
                 "grade": grade,
                 "started_at": started_at,
                 "finished_at": finished_at,
@@ -1375,6 +1469,14 @@ def run_once(
         n=graded_n,
         transport_errors=transport_errors,
         reason=reason,
+        label_parser=(
+            config.label_parser
+            if config.label_parser == DEFAULT_LABEL_PARSER
+            else label_parser_id
+        ),
+        label_parser_manifest_digest=label_parser_descriptor.get(
+            "ollama_model_manifest_digest"
+        ),
     )
     card_bytes = canonical_json_bytes(card) + b"\n"
     # A run where nothing parsed measured nothing. It must not present a landable
@@ -1400,6 +1502,11 @@ def run_once(
         "model_manifest_digest": model_manifest_digest,
         "instrument": instrument,
         "instrument_sha256": instrument_sha256,
+        # The FULL runtime descriptor of the parser that read every label in this
+        # run, including the digest of any model it used. It lives here rather
+        # than in `instrument` because instrument_sha256 has to stay derivable
+        # from the job's pins alone, and a live digest is not.
+        "label_parser": label_parser_descriptor,
         "items_sha256": evidence_sha256,
         "card_sha256": sha256_bytes(card_bytes.rstrip(b"\n")),
         "counts": {
@@ -1507,7 +1614,11 @@ def quarantine_invalid_config(
 
 
 def discover_playlist(
-    config_dir: Path, state_dir: Path
+    config_dir: Path,
+    state_dir: Path,
+    *,
+    label_parser: str = DEFAULT_LABEL_PARSER,
+    label_parser_options: tuple[tuple[str, str], ...] = (),
 ) -> tuple[list[PlaylistEntry], int]:
     """Load direct-child JSON jobs in stable order; quarantine invalid bytes."""
     entries: list[PlaylistEntry] = []
@@ -1529,6 +1640,11 @@ def discover_playlist(
             continue
         try:
             config = WorkerConfig.load(path)
+            config = dataclasses.replace(
+                config,
+                label_parser=label_parser,
+                label_parser_options=label_parser_options,
+            )
         except WorkerError as error:
             quarantine_invalid_config(state_dir, path, fingerprint, error.code)
             invalid += 1
@@ -1667,6 +1783,8 @@ def run_playlist(
     client_factory: Callable[[WorkerConfig], InferenceClient] | None = None,
     disk_usage: Callable[[Path], Any] = shutil.disk_usage,
     wall_clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
+    label_parser: str = DEFAULT_LABEL_PARSER,
+    label_parser_options: tuple[tuple[str, str], ...] = (),
 ) -> int:
     """Run due jobs one at a time; never overlap access to the single GPU.
 
@@ -1683,7 +1801,12 @@ def run_playlist(
     successful_runs = 0
     failed_runs = 0
     while not stop_event.is_set():
-        entries, invalid = discover_playlist(config_dir, state_dir)
+        entries, invalid = discover_playlist(
+            config_dir,
+            state_dir,
+            label_parser=label_parser,
+            label_parser_options=label_parser_options,
+        )
         if invalid:
             aggregate = _aggregate_exit_code(aggregate, 2)
         health.update(
@@ -1818,6 +1941,23 @@ def build_parser() -> argparse.ArgumentParser:
         help="serve GET / and /health; 0 disables the listener",
     )
     parser.add_argument(
+        "--label-parser",
+        default=DEFAULT_LABEL_PARSER,
+        help=(
+            "how a model's answer is turned into a label, BEFORE grading "
+            "(default: %(default)s, the parser every signed card was made with). "
+            "Others: read-label, ollama-schema, jev. A non-default choice is "
+            "written into the run record and the signed card body."
+        ),
+    )
+    parser.add_argument(
+        "--label-parser-option",
+        action="append",
+        default=[],
+        metavar="KEY=VALUE",
+        help="option passed to the selected parser, e.g. model=qwen2.5:7b",
+    )
+    parser.add_argument(
         "--commission-dispatch-report",
         type=Path,
         help="sanitized read-only status source served at GET /commission-dispatch",
@@ -1825,8 +1965,25 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _label_parser_options(raw: list[str]) -> tuple[tuple[str, str], ...]:
+    options: list[tuple[str, str]] = []
+    for pair in raw:
+        key, sep, value = pair.partition("=")
+        if not sep or not key.strip():
+            raise WorkerError(
+                "BAD_LABEL_PARSER", f"--label-parser-option must be KEY=VALUE: {pair!r}"
+            )
+        options.append((key.strip(), value))
+    return tuple(options)
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    try:
+        selected_parser_options = _label_parser_options(args.label_parser_option)
+    except WorkerError as error:
+        print(f"HALT {error.code}: {error}", file=sys.stderr)
+        return 2
     config: WorkerConfig | None = None
     if args.config is not None:
         try:
@@ -1834,6 +1991,11 @@ def main(argv: list[str] | None = None) -> int:
         except WorkerError as error:
             print(f"HALT {error.code}: {error}", file=sys.stderr)
             return 2
+        config = dataclasses.replace(
+            config,
+            label_parser=args.label_parser,
+            label_parser_options=selected_parser_options,
+        )
         state_dir = (args.state_dir or config.output_dir).resolve()
     else:
         config_dir = args.config_dir.resolve()
@@ -1883,6 +2045,8 @@ def main(argv: list[str] | None = None) -> int:
                     health,
                     forever=args.forever,
                     stop_event=stop_event,
+                    label_parser=args.label_parser,
+                    label_parser_options=selected_parser_options,
                 )
 
             assert config is not None
