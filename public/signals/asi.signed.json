@@ -1,7 +1,7 @@
 {
  "axis": "asi",
  "axis_status": "MEASURED",
- "content_id": "5ee28a6768ab4dc99cbabb6379af1d6e21af4bba483de0fd119cd3fca53beee9",
+ "content_id": "18c45abe8920df1d235d05ef9f4244bd7abe93c5c05e15bea161c623c8f4b272",
  "elo_decided_games": 7,
  "elo_leader": null,
  "elo_leader_score": null,
@@ -9,8 +9,8 @@
  "elo_runner_up": null,
  "elo_separation": "TIE",
  "elo_source": {
-  "content_id": "6afa60281790fb05b2ff88b47a2e17a31fb99d68e6ecbc0e55799ccecf6e0e49",
-  "generated": "2026-09-22T13:33:55Z",
+  "content_id": "fb00783bc99ecb994b8fc9f88886156f404e7a12bd5afbb53c3fe266b7b09377",
+  "generated": "2026-09-22T14:48:39Z",
   "path": "/arena/elo_reference.json",
   "schema": "csoai.arena-elo-reference/0.2"
  },
@@ -26,7 +26,7 @@
   "winrate": 0.667
  },
  "games_leader": null,
- "generated": "2026-09-22T13:33:56Z",
+ "generated": "2026-09-22T14:48:40Z",
  "majority_baseline": 0.3939,
  "models": 19,
  "not_a_certification": true,
@@ -38,23 +38,23 @@
  "signature": {
   "alg": "Ed25519",
   "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
-  "content_id": "5ee28a6768ab4dc99cbabb6379af1d6e21af4bba483de0fd119cd3fca53beee9",
+  "content_id": "18c45abe8920df1d235d05ef9f4244bd7abe93c5c05e15bea161c623c8f4b272",
   "did": "did:web:csoai.org#board-attestation-1",
-  "payload_sha256": "5ee28a6768ab4dc99cbabb6379af1d6e21af4bba483de0fd119cd3fca53beee9",
+  "payload_sha256": "18c45abe8920df1d235d05ef9f4244bd7abe93c5c05e15bea161c623c8f4b272",
   "preimage": "canonical(body minus content_id, signature)",
-  "sig_ed25519": "dc4f9442807fc45caab004ab488fe99d48329e779c7ad6d231efdc29dfe09f69f1a60583f0865a55d5be0558fe1b61da063f84131dfe0fcb8c2ade8c9f7e990c",
-  "signed_at": "2026-09-22T13:33:57.379Z",
+  "sig_ed25519": "145c14c28a630e0def4cbb144ddaafa92d16a3fadb32100cbea63c125202124fdd39efcb89454cb7da81c70c70a0819b4b23d3e48f6a5dbbc4edeb23d1a55d0c",
+  "signed_at": "2026-09-22T14:48:42.709Z",
   "signer_auth": "pod-token",
   "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
  "signer": "did:web:csoai.org#board-attestation-1",
  "status": "TIE",
  "supersedes": {
-  "content_id": "d2249c22dcd392d59edc12d90fb9be807bb4c6823197f322d6f3c01a0d9075e9",
+  "content_id": "5ee28a6768ab4dc99cbabb6379af1d6e21af4bba483de0fd119cd3fca53beee9",
   "elo_leader_then": null,
-  "generated": "2026-08-24T09:11:56Z",
+  "generated": "2026-09-22T13:33:56Z",
   "note": "superseded, never edited; new bytes, new signature",
-  "signer": "city_ed25519 (pubkey j5oAooz8duNg...; not bound in did.json)",
-  "status_then": "MEASURED"
+  "signer": "did:web:csoai.org#board-attestation-1",
+  "status_then": "TIE"
  }
 }
