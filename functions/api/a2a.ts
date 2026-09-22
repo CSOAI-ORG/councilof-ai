@@ -10,7 +10,11 @@
  *
  * WHAT IT DOES
  *   SendMessage             -> a Message (never a Task). One explicit Part.data
- *                              {skill,input} selects one of the seven skills on the public card.
+ *                              {skill,input} selects one of the skills on the public card (SKILL_IDS;
+ *                              the card is RENDERED from council-os/capabilities.json, so the two sets
+ *                              are one). The count is never typed here: it named a smaller figure while SKILL_IDS
+ *                              held one more, on a contract GET /api/a2a serves. Describe the defect, never
+ *                              reproduce the stale token: a guard that reads this file would match it.
  *                              Each skill calls a fixed same-origin, free handler. The legacy
  *                              one-part text "board" request remains a narrow compatibility alias.
  *   GetTask / CancelTask    -> TaskNotFoundError (-32001): this agent keeps no task store.
@@ -67,7 +71,11 @@ export const A2A_ERROR = {
 // Every v1.0 method name and what this door does with it. Exposed on GET so a stranger
 // can read the contract before sending anything.
 export const METHODS: Record<string, string> = {
-  SendMessage: "answered with a Message from one explicit {skill,input} selector; seven card skills route to fixed free handlers",
+  SendMessage:
+    "answered with a Message from one explicit {skill,input} selector; every card skill routes to a fixed, free, " +
+    "same-origin handler. The set is the skills array on this response - read it rather than a number: this " +
+    "string once named a smaller figure than SKILL_IDS actually held, and scripts/capability-registry.mjs --check " +
+    "now fails on any skill count typed into this file.",
   SendStreamingMessage: "UnsupportedOperationError -32004 (streaming is false on the card)",
   GetTask: "TaskNotFoundError -32001 (no task store)",
   ListTasks: "UnsupportedOperationError -32004 (no task store)",
@@ -606,6 +614,9 @@ export const onRequestGet: PagesFunction = async (context) => {
     endpoint: new URL("/api/a2a", origin).toString(),
     agent_card: new URL(CARD_PATH, origin).toString(),
     methods: METHODS,
+    // Derived, never typed: the skill ids this router accepts. A reader counts this array; no
+    // sentence on this endpoint states how many there are.
+    skills: [...SKILL_IDS],
     version_rule:
       "Send `A2A-Version: 1.0`. An absent header is served as 1.0 for v1.0 method names; any other version, and the 0.3 method names such as message/send, get VersionNotSupportedError -32009.",
     tasks: "none kept — every SendMessage answers with a Message, so GetTask can only ever say TaskNotFound",

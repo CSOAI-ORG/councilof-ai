@@ -39,7 +39,8 @@
       "get_root",
       "get_card",
       "verify_inclusion",
-      "x402_trust"
+      "x402_trust",
+      "mcp_trust"
     ],
     "how": "tools/call without x_payment returns the route's 402 challenge as structuredContent; pay, then call again with x_payment",
     "paid_tools": [
@@ -103,7 +104,7 @@
     {
       "accepts": [
         {
-          "description": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+          "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
           "extra": {
             "name": "USDC",
             "version": "2"
@@ -119,7 +120,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+      "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
       "method": "GET",
       "paid_for": "issuance",
       "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id"
@@ -249,6 +250,31 @@
     {
       "accepts": [
         {
+          "description": "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+          "scheme": "exact"
+        }
+      ],
+      "description": "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
+      "free_preview": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum&preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "url": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum"
+    },
+    {
+      "accepts": [
+        {
           "description": "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.",
           "extra": {
             "name": "USDC",
@@ -319,6 +345,266 @@
       "method": "GET",
       "paid_for": "assembly",
       "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z"
+    },
+    {
+      "accepts": [
+        {
+          "description": "Stablecoin universe slice — every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/stablecoins",
+          "scheme": "exact"
+        }
+      ],
+      "description": "Stablecoin universe slice — every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",
+      "free_preview": "https://councilof.ai/api/pop/stablecoins?preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "population": "stablecoins",
+      "url": "https://councilof.ai/api/pop/stablecoins"
+    },
+    {
+      "accepts": [
+        {
+          "description": "SWIFT-linked bank census slice — every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.",
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/swift",
+          "scheme": "exact"
+        }
+      ],
+      "description": "SWIFT-linked bank census slice — every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.",
+      "free_preview": "https://councilof.ai/api/pop/swift?preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "population": "swift",
+      "url": "https://councilof.ai/api/pop/swift"
+    },
+    {
+      "accepts": [
+        {
+          "description": "XRPL issued-asset slice — the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.",
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/xrpl",
+          "scheme": "exact"
+        }
+      ],
+      "description": "XRPL issued-asset slice — the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.",
+      "free_preview": "https://councilof.ai/api/pop/xrpl?preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "population": "xrpl",
+      "url": "https://councilof.ai/api/pop/xrpl"
+    },
+    {
+      "accepts": [
+        {
+          "description": "x402 Bazaar listings slice — the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.",
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/x402-bazaar",
+          "scheme": "exact"
+        }
+      ],
+      "description": "x402 Bazaar listings slice — the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.",
+      "free_preview": "https://councilof.ai/api/pop/x402-bazaar?preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "population": "x402-bazaar",
+      "url": "https://councilof.ai/api/pop/x402-bazaar"
+    },
+    {
+      "accepts": [
+        {
+          "description": "MCP registry listings slice — every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.",
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/mcp-registry",
+          "scheme": "exact"
+        }
+      ],
+      "description": "MCP registry listings slice — every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.",
+      "free_preview": "https://councilof.ai/api/pop/mcp-registry?preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "population": "mcp-registry",
+      "url": "https://councilof.ai/api/pop/mcp-registry"
+    },
+    {
+      "accepts": [
+        {
+          "description": "A2A registry population slice — the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.",
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/a2a",
+          "scheme": "exact"
+        }
+      ],
+      "description": "A2A registry population slice — the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.",
+      "free_preview": "https://councilof.ai/api/pop/a2a?preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "population": "a2a",
+      "url": "https://councilof.ai/api/pop/a2a"
+    },
+    {
+      "accepts": [
+        {
+          "description": "OpenTimestamps proof manifest slice — every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.",
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/ots-proofs",
+          "scheme": "exact"
+        }
+      ],
+      "description": "OpenTimestamps proof manifest slice — every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.",
+      "free_preview": "https://councilof.ai/api/pop/ots-proofs?preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "population": "ots-proofs",
+      "url": "https://councilof.ai/api/pop/ots-proofs"
+    },
+    {
+      "accepts": [
+        {
+          "description": "Layer-0 ceremony slice — every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.",
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/layer0",
+          "scheme": "exact"
+        }
+      ],
+      "description": "Layer-0 ceremony slice — every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.",
+      "free_preview": "https://councilof.ai/api/pop/layer0?preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "population": "layer0",
+      "url": "https://councilof.ai/api/pop/layer0"
+    },
+    {
+      "accepts": [
+        {
+          "description": "Corrections ledger slice, full history — every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.",
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/corrections",
+          "scheme": "exact"
+        }
+      ],
+      "description": "Corrections ledger slice, full history — every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.",
+      "free_preview": "https://councilof.ai/api/pop/corrections?preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "population": "corrections",
+      "url": "https://councilof.ai/api/pop/corrections"
+    },
+    {
+      "accepts": [
+        {
+          "description": "Claim-maintenance registries slice — each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.",
+          "extra": {
+            "name": "USDC",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/claim-watch",
+          "scheme": "exact"
+        }
+      ],
+      "description": "Claim-maintenance registries slice — each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.",
+      "free_preview": "https://councilof.ai/api/pop/claim-watch?preview=1",
+      "method": "GET",
+      "paid_for": "assembly",
+      "population": "claim-watch",
+      "url": "https://councilof.ai/api/pop/claim-watch"
     }
   ],
   "schema": "csoai.x402/0.2",

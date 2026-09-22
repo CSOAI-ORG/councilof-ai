@@ -130,6 +130,12 @@ def discover_endpoints() -> list[dict]:
             "unsigned_static": "@openapi-unsigned-static" in text,
             # Deployed GET that returns 404 by contract (door closed). Not absent.
             "door_closed": "@openapi-closed" in text,
+            # RETIRED is not QUARANTINED_PRE_RELEASE. Four handlers served
+            # `{"schema":"csoai.retired-endpoint/0.1","code":"RETIRED"}` while this document
+            # marked them QUARANTINED_PRE_RELEASE — "withdrawn" catalogued as "not yet released",
+            # two vocabularies for one route, and both 503 so no status probe could ever tell
+            # them apart. The marker now exists, so the catalogue can say what the bytes say.
+            "retired": "@openapi-retired" in text,
         })
     return endpoints
 
@@ -167,6 +173,7 @@ def build_openapi(endpoints: list[dict]) -> dict:
             method_not_allowed = verb in ep.get("method_not_allowed_methods", [])
             unsigned_static = bool(ep.get("unsigned_static"))
             door_closed = bool(ep.get("door_closed"))
+            retired = bool(ep.get("retired"))
             if method_not_allowed:
                 response_status = "405"
                 response_description = "Method not allowed — use the documented read method"
@@ -179,6 +186,11 @@ def build_openapi(endpoints: list[dict]) -> dict:
                 response_status = "501"
                 response_description = (
                     "Not implemented — no input was accepted, persisted, or signed"
+                )
+            elif retired:
+                response_status = "503"
+                response_description = (
+                    "Retired — withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
                 )
             elif unavailable:
                 response_status = "503"
@@ -212,6 +224,14 @@ def build_openapi(endpoints: list[dict]) -> dict:
                     "configured": False,
                     "public_prices": False,
                 }
+            elif retired:
+                op["x-csoai-lifecycle"] = "RETIRED"
+                op["responses"]["503"]["content"]["application/json"]["example"] = {
+                    "schema": "csoai.retired-endpoint/0.1",
+                    "status": "UNAVAILABLE",
+                    "code": "RETIRED",
+                    "endpoint": path,
+                }
             elif not_implemented:
                 op["x-csoai-lifecycle"] = "NOT_IMPLEMENTED"
                 op["responses"]["501"]["content"]["application/json"]["example"] = {
@@ -232,7 +252,7 @@ def build_openapi(endpoints: list[dict]) -> dict:
                     "measurement_not_certification": True,
                 }
             if (not unavailable and not not_implemented and not method_not_allowed
-                    and not unsigned_static and not door_closed
+                    and not unsigned_static and not door_closed and not retired
                     and "live" in ep and ep["live"].get("ok")):
                 op["responses"]["200"]["content"]["application/json"]["example"] = {
                     "_top_keys": ep["live"].get("top_keys", []),

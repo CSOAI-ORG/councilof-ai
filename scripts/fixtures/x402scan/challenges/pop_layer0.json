@@ -1,0 +1,275 @@
+{
+  "accepts": [
+    {
+      "amount": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "csoai_pricing": {
+        "campaign_id": "csoai-launch-30d-20260911",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true,
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "10000",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "product_id": "csoai.product.population.layer0",
+        "sku_id": "issuance",
+        "starts_at": "2026-09-11T00:00:00Z",
+        "tier": "reserve"
+      },
+      "description": "Population door: Layer-0 machine-surface ceremony — 29 live probes of the estate's machine surface in the ceremony, as of 2026-09-03T05:10:26Z, state MEASURED. one row per protocol rail and per probe of the estate's own machine surface, with the HTTP status each returned at the ceremony's as_of, and the state of the ceremony artifact's own .ots proof. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "10000",
+      "maxTimeoutSeconds": 300,
+      "mimeType": "application/json",
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resource": "https://councilof.ai/api/pop/layer0",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "all_doors": [
+      "https://councilof.ai/api/pop/stablecoins",
+      "https://councilof.ai/api/pop/swift",
+      "https://councilof.ai/api/pop/xrpl",
+      "https://councilof.ai/api/pop/x402-bazaar",
+      "https://councilof.ai/api/pop/mcp-registry",
+      "https://councilof.ai/api/pop/a2a",
+      "https://councilof.ai/api/pop/ots-proofs",
+      "https://councilof.ai/api/pop/layer0",
+      "https://councilof.ai/api/pop/corrections",
+      "https://councilof.ai/api/pop/claim-watch"
+    ],
+    "catalog": "https://councilof.ai/api/x402",
+    "deliverable": "the Layer-0 machine-surface ceremony slice: the population rows verbatim from the artifact(s) in source[], plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record",
+    "free_preview": "https://councilof.ai/api/pop/layer0?preview=1",
+    "free_sources": [
+      "/interop/layer0-ceremony-2026-09-03.json",
+      "/interop/ots/manifest.json"
+    ],
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "a grade",
+      "a rank",
+      "a verdict about any row",
+      "a paywall on the source artifact",
+      "a certificate"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "offer_receipt": {
+      "alg": "EdDSA",
+      "extension": "offer-receipt",
+      "format": "jws",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "reason": "1 of 1 accepts entries signed",
+      "signed": true,
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    },
+    "per": "population-slice",
+    "population": "layer0",
+    "preview": {
+      "as_of": "2026-09-03T05:10:26Z",
+      "head": {
+        "digest_covers": "whole-artifact-except-sha256-and-seal",
+        "identification": "a probe is one HTTP request the ceremony made to a named surface of this estate at as_of, recorded with its status; a rail is a protocol surface the ceremony names. Self-attestation: the estate probing itself.",
+        "kind": "layer0.surface-attestation",
+        "ots": {
+          "manifest_as_of": "2026-09-22T13:22:29Z",
+          "path": "/interop/ots/manifest.json",
+          "proof": "/interop/layer0-ceremony-2026-09-03.json.ots",
+          "sha256_of_proof": "9a7031bb38cefe42484700493ef896545eaabd0a661cbeccd3eb52cae2cc6d3c",
+          "state": "BITCOIN",
+          "subject_present": true
+        },
+        "probes_by_http_status": {
+          "200": 28,
+          "400": 1
+        },
+        "rails": 14,
+        "rails_serving": 14,
+        "rails_total": 14,
+        "schema": "csoai.layer0-ceremony/0.3",
+        "sha256": "672bd5416c4c8d33fc0d03293495bcb3a5c5a0a95d8a13657f2e1d65661abbbc",
+        "what_this_does_not_claim": [
+          "CORRECTION (v0.3). v0.2 listed /api/intoto as a rail returning 404 and said 'the handler exists in master but is inside an undeployed window'. That was WRONG. functions/api/intoto.ts exports no onRequest handler at all — it is a helper module (subjectDigest, toInTotoStatement, toDsse) imported by functions/api/detect.ts and functions/api/detector-interop.ts, both of which serve 200. It was never a route and no deploy would ever have made it one. The only thing on the estate advertising /api/intoto as an endpoint was this artifact. It is removed from the rail list; in-toto capability is real and reachable through /api/detect and /api/detector-interop.",
+          "Not a certification, conformity mark, or trust label. We measure; we never certify.",
+          "A 200 means the door answered at as_of. It does not mean the content behind it is correct, current, or complete.",
+          "The A2A card carries version 1.0.0 (the AGENT's version). protocolVersion is ABSENT; a strict A2A client may reject the card on that basis. Recorded, not hidden.",
+          "x402 is challenge-only: pay_to is configured, facilitator_configured is FALSE. Nothing can currently be paid for. Stated by the rail itself.",
+          "The signed card index was packaged 2026-08-28; it is STALE relative to as_of.",
+          "This artifact carries NO Ed25519 seal. The board signing key is on an isolated signing node and is deliberately unreachable from any tool that could produce this file. seal.state is UNMEASURED until an owner ceremony signs it.",
+          "The OpenTimestamps proof for THIS artifact is a detached sidecar at /interop/layer0-ceremony-2026-09-03.json.ots. At as_of it carries PENDING calendar attestations only. It becomes a Bitcoin proof after a calendar commits (~1-6h) AND scripts/ots-upgrade.py is run. An unupgraded stamp is not a proof."
+        ]
+      },
+      "n": 29,
+      "n_unit": "live probes of the estate's machine surface in the ceremony",
+      "reason": null,
+      "source": [
+        "/interop/layer0-ceremony-2026-09-03.json",
+        "/interop/ots/manifest.json"
+      ],
+      "state": "MEASURED",
+      "unmeasured": [
+        "reliability over time: this artifact is one dated ceremony, not a series; the hourly reliability slice is not published in this repository"
+      ]
+    },
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.population-door/0.1"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "as_of": "2026-09-03T05:10:26Z",
+            "attestation": {
+              "payload": {
+                "kind": "csoai.population.slice/0.1",
+                "rows_sha256": "<hex>"
+              },
+              "schema": "https://councilof.ai/schema/card-v0.json",
+              "sha256": "<hex>",
+              "sig_ed25519": "<hex or null>",
+              "surface": "population.slice"
+            },
+            "id": "layer0",
+            "kind": "slice",
+            "n": 29,
+            "n_unit": "live probes of the estate's machine surface in the ceremony",
+            "rows": "<the population rows / artifact bytes, verbatim>",
+            "schema": "csoai.population-door/0.1",
+            "settle": {
+              "network": "<caip2 or null>",
+              "payer": "<0x… or null>",
+              "transaction": "<0x… or null>"
+            },
+            "source": [
+              "/interop/layer0-ceremony-2026-09-03.json",
+              "/interop/ots/manifest.json"
+            ],
+            "state": "MEASURED"
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "acceptIndex": 0,
+            "format": "jws",
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvbGF5ZXIwIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwMDkzMDM1LCJ2ZXJzaW9uIjoxfQ.zOvH3-rBbsOfSBYzT9Dt9_7zYl8ha2ji6nQ7ocN-DuxtnH04C3dPoBakqGu57SxL8-CFqklykN1y0ooOj3KDDQ"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "offers": {
+            "items": {
+              "properties": {
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "format": {
+                  "const": "jws",
+                  "type": "string"
+                },
+                "signature": {
+                  "description": "JWS compact serialization containing the offer payload",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "offers"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Population door: Layer-0 machine-surface ceremony — 29 live probes of the estate's machine surface in the ceremony, as of 2026-09-03T05:10:26Z, state MEASURED. one row per protocol rail and per probe of the estate's own machine surface, with the HTTP status each returned at the ceremony's as_of, and the state of the ceremony artifact's own .ots proof. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Population Door",
+    "tags": [
+      "population",
+      "layer0",
+      "rails",
+      "ceremony",
+      "x402"
+    ],
+    "url": "https://councilof.ai/api/pop/layer0"
+  },
+  "x402Version": 2
+}

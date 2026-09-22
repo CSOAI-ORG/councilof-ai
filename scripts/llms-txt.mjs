@@ -16,6 +16,7 @@
  *   {{MCP_TOOLS}} {{MCP_FREE}} {{MCP_PAID}} {{MCP_FREE_WORD}} {{MCP_PAID_WORD}}
  *                                                                      functions/mcp/{gspc,paid}-tools.json
  *   {{AXIS_DOORS_SECTION}} {{AXIS_DEEP_SECTION}}                       GET /api/gspc → axes[] (one entry per row)
+ *   {{PAID_DOORS_SECTION}}                                            council-os/capabilities.json (the ONE declaration)
  *
  * The per-axis sections were the second exception. llms-full.txt typed a "deep reference" block per
  * axis — family, kind, status, n, page URL — for 22 axes, with n values frozen in the template, and
@@ -151,6 +152,39 @@ function axisDeepSection(b) {
   return rows.map(block).join("\n\n") + "\n";
 }
 
+// The paid HTTP doors, derived from council-os/capabilities.json — the ONE declaration that
+// /.well-known/x402.json, public/openapi.json and this file are all rendered from.
+//
+// WHY THIS IS DERIVED. This file used to carry a hand-typed list of ten door URLs. The live
+// manifest advertises twenty-one resources: the ten named doors, the free door, and the ten
+// /api/pop/* population doors that functions/.well-known/x402.json.ts derives from the
+// population registry. Every population door was therefore advertised to agents that read the
+// manifest and absent from the file that AI crawlers read first — a door nobody could find from
+// here, added by code that never touched this list. A list maintained beside the thing it
+// describes goes stale the first time the thing moves.
+function paidDoorsSection() {
+  const reg = readJSON("council-os/capabilities.json");
+  const doors = reg.capabilities
+    .filter((c) => c.payment === "x402" || c.payment === "free_preview_then_x402")
+    .filter((c) => c.path)
+    .sort((a, b) => a.path.localeCompare(b.path));
+  if (!doors.length) throw new Error("council-os/capabilities.json declares no paid door — absent is not zero");
+  const lines = doors.map((c) => {
+    const req = c.probe?.request ?? c.path;
+    const preview = c.free_preview ? ` · free preview: ${SITE}${c.free_preview}` : "";
+    return `  - ${SITE}${req}${preview}\n    ${c.description}`;
+  });
+  const freeDoors = reg.capabilities
+    .filter((c) => c.kind !== "mcp_tool" && c.kind !== "a2a_skill" && c.payment === "free" && (c.probe?.expect_status ?? []).includes(402))
+    .map((c) => `  - ${SITE}${c.path} — a live 402 route priced at zero: it settles, and charges nothing.`);
+  return `- HTTP doors (GET or POST -> 402 unless \`X-PAYMENT\` / facilitator settlement). Derived from
+  council-os/capabilities.json at generation; the same declaration renders /.well-known/x402.json
+  and every operation in /openapi.json carrying x-payment-info. Do not count this list to learn how
+  many doors there are — fetch GET ${SITE}/.well-known/x402.json and count \`resources\`.
+${lines.join("\n")}
+${freeDoors.length ? freeDoors.join("\n") + "\n" : ""}- Free preview: omit \`bundle=1\` or add \`preview=1\` as the 402 body documents. Verify stays free: ${SITE}/gspc-verify`;
+}
+
 function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
   const map = {
     LID: t.lid,                                  // verbatim, never re-phrased
@@ -160,6 +194,7 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
     MODEL_FLEETS: t.model_fleets, FACT_RUNS: t.fact_runs,
     DOI: t.doi, BOARD_SNAPSHOT_JSON: snapshotJson, CARD_CORPORA_SECTION: corpora,
     AXIS_DOORS_SECTION: axisDoors, AXIS_DEEP_SECTION: axisDeep,
+    PAID_DOORS_SECTION: paidDoorsSection(),
     ...(() => {
       const m = mcpCounts();
       return { MCP_TOOLS: m.total, MCP_FREE: m.free, MCP_PAID: m.paid,

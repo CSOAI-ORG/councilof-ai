@@ -1,0 +1,279 @@
+{
+  "accepts": [
+    {
+      "amount": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "csoai_pricing": {
+        "campaign_id": "csoai-launch-30d-20260911",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true,
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "10000",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "product_id": "csoai.product.population.claim-watch",
+        "sku_id": "issuance",
+        "starts_at": "2026-09-11T00:00:00Z",
+        "tier": "reserve"
+      },
+      "description": "Population door: Claim-maintenance registries — 8 claims captured across the published registries, as of 2026-09-22, state INDEXED. one row per published claim registry (a vendor's public claims captured, hashed, source-cited, each with a measurement plan), with the file's digest, its digest-reproducibility and its .ots state read from bytes. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "10000",
+      "maxTimeoutSeconds": 300,
+      "mimeType": "application/json",
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resource": "https://councilof.ai/api/pop/claim-watch",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "all_doors": [
+      "https://councilof.ai/api/pop/stablecoins",
+      "https://councilof.ai/api/pop/swift",
+      "https://councilof.ai/api/pop/xrpl",
+      "https://councilof.ai/api/pop/x402-bazaar",
+      "https://councilof.ai/api/pop/mcp-registry",
+      "https://councilof.ai/api/pop/a2a",
+      "https://councilof.ai/api/pop/ots-proofs",
+      "https://councilof.ai/api/pop/layer0",
+      "https://councilof.ai/api/pop/corrections",
+      "https://councilof.ai/api/pop/claim-watch"
+    ],
+    "catalog": "https://councilof.ai/api/x402",
+    "deliverable": "the Claim-maintenance registries slice: the population rows verbatim from the artifact(s) in source[], plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record",
+    "free_preview": "https://councilof.ai/api/pop/claim-watch?preview=1",
+    "free_sources": [
+      "/claims/claimreg-ondo-chainlink-2026-09-22.json",
+      "/claims/claimreg-ondo-chainlink-2026-09-22.json.ots"
+    ],
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "a grade",
+      "a rank",
+      "a verdict about any row",
+      "a paywall on the source artifact",
+      "a certificate"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "offer_receipt": {
+      "alg": "EdDSA",
+      "extension": "offer-receipt",
+      "format": "jws",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "reason": "1 of 1 accepts entries signed",
+      "signed": true,
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    },
+    "per": "population-slice",
+    "population": "claim-watch",
+    "preview": {
+      "as_of": "2026-09-22",
+      "head": {
+        "identification": "a claim is a sentence captured verbatim from the vendor's public page or API at the registry's created_utc, typed by kind, with the plan by which it could be measured; the file bytes are served unchanged and never edited",
+        "registries": [
+          {
+            "claims": 8,
+            "claims_per_subject": {
+              "chainlink": 5,
+              "ondo": 3
+            },
+            "created_utc": "2026-09-22",
+            "file": "/claims/claimreg-ondo-chainlink-2026-09-22.json",
+            "file_sha256": "acc0f9ac2712f8b9cbc5c707142b4e7954d16e1582ddcdd5adb2afaf0e0908fe",
+            "maintainer": "CSOAI Ltd — claim maintenance (measurement, not certification)",
+            "notes": "First live claim-maintenance pass executed permissionlessly from public pages/APIs. States: CLAIM_CAPTURED (hashed, timestamped, source-cited). CLAIM_MEASURED requires the harness runs queued in measurement_plan. No claim of falsity is made about any entry.",
+            "ots": {
+              "bytes": 735,
+              "path": "/claims/claimreg-ondo-chainlink-2026-09-22.json.ots",
+              "sha256": "143108bfe12fa10b3ddedd06c19f48877e5507bdf3e7471ca5b0c297a4ef128f",
+              "state": "PENDING"
+            },
+            "registry_digest": "cbec2409cbce299326f8781d9c1b32095809c2ad38e219d61908c22fe17869e6",
+            "registry_digest_reproducible": true,
+            "registry_digest_rule": "sha256 of python json.dumps(sort_keys=True, indent=1) [ensure_ascii default] over the file minus registry_digest — recomputed from the served bytes at request time",
+            "registry_id": "claimreg-ondo-chainlink-2026-09-22",
+            "schema": "csoai.claim-registry/0.1",
+            "signature_state": "UNSIGNED — signer ceremony pending; OTS-anchored instead (no key required)",
+            "states": {
+              "CLAIM_CAPTURED": 8
+            },
+            "subjects": [
+              "chainlink",
+              "ondo"
+            ]
+          }
+        ]
+      },
+      "n": 8,
+      "n_unit": "claims captured across the published registries",
+      "reason": null,
+      "source": [
+        "/claims/claimreg-ondo-chainlink-2026-09-22.json",
+        "/claims/claimreg-ondo-chainlink-2026-09-22.json.ots"
+      ],
+      "state": "INDEXED",
+      "unmeasured": [
+        "CLAIM_MEASURED: no claim in any registry has been measured yet; every row is CLAIM_CAPTURED with its measurement plan. No claim of falsity is made about any entry."
+      ]
+    },
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.population-door/0.1"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "as_of": "2026-09-22",
+            "attestation": {
+              "payload": {
+                "kind": "csoai.population.slice/0.1",
+                "rows_sha256": "<hex>"
+              },
+              "schema": "https://councilof.ai/schema/card-v0.json",
+              "sha256": "<hex>",
+              "sig_ed25519": "<hex or null>",
+              "surface": "population.slice"
+            },
+            "id": "claim-watch",
+            "kind": "slice",
+            "n": 8,
+            "n_unit": "claims captured across the published registries",
+            "rows": "<the population rows / artifact bytes, verbatim>",
+            "schema": "csoai.population-door/0.1",
+            "settle": {
+              "network": "<caip2 or null>",
+              "payer": "<0x… or null>",
+              "transaction": "<0x… or null>"
+            },
+            "source": [
+              "/claims/claimreg-ondo-chainlink-2026-09-22.json",
+              "/claims/claimreg-ondo-chainlink-2026-09-22.json.ots"
+            ],
+            "state": "INDEXED"
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "acceptIndex": 0,
+            "format": "jws",
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvY2xhaW0td2F0Y2giLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTAwOTMwMzUsInZlcnNpb24iOjF9.nqwSzvpMVUO9bP4nZBbCQx3Q8AyXH3IOW-paRnRh9_ofh8SxQsSFUXcw0Sy7D2tW8_JxXKT6cl60biCKtSQABA"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "offers": {
+            "items": {
+              "properties": {
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "format": {
+                  "const": "jws",
+                  "type": "string"
+                },
+                "signature": {
+                  "description": "JWS compact serialization containing the offer payload",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "offers"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Population door: Claim-maintenance registries — 8 claims captured across the published registries, as of 2026-09-22, state INDEXED. one row per published claim registry (a vendor's public claims captured, hashed, source-cited, each with a measurement plan), with the file's digest, its digest-reproducibility and its .ots state read from bytes. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Population Door",
+    "tags": [
+      "population",
+      "claims",
+      "watch",
+      "registry",
+      "x402"
+    ],
+    "url": "https://councilof.ai/api/pop/claim-watch"
+  },
+  "x402Version": 2
+}

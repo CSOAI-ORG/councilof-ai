@@ -15,7 +15,7 @@
         "starts_at": "2026-09-11T00:00:00Z",
         "tier": "per_request"
       },
-      "description": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+      "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
       "extra": {
         "decimals": 6,
         "name": "USD Coin",
@@ -33,7 +33,7 @@
   ],
   "csoai": {
     "catalog": "https://councilof.ai/api/x402",
-    "deliverable": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+    "deliverable": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
     "explainer": "https://councilof.ai/pricing",
     "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
     "never": [
@@ -73,7 +73,14 @@
       "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
       "pay_to_configured": true
     },
-    "schema": "csoai.request-attestation/0.2"
+    "schema": "csoai.request-attestation/0.2",
+    "signer": {
+      "checked_how": "read at challenge time from the Pages env field the paid path signs with; the offer in extensions[\"offer-receipt\"] on this same response is signed with the same key, so verify that before paying",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "key_present": true,
+      "receipt_will_be": "SIGNED",
+      "unsigned_reason": null
+    }
   },
   "error": "Payment required",
   "extensions": {
@@ -172,7 +179,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzg5MzE1MTc3LCJ2ZXJzaW9uIjoxfQ.DtunHm4mvTVLpUH9Kb0tiV8cClXdHxJcw9jRklSGmPFKMv2E6_5pbtTf_Ct355hshvsySCaAin5cOjrTLtZ0BA"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwMDkzMDMxLCJ2ZXJzaW9uIjoxfQ.Yi8b7ZNVCOrQK4PkrM0LKgjy1_NROq9KHQJge-NzkzxB6qaGZFF_9-Rz-FfZARFObR6HTaGtwgAidKoQFn5EBw"
           }
         ]
       },
@@ -211,7 +218,7 @@
     }
   },
   "resource": {
-    "description": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+    "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
     "mimeType": "application/json",
     "serviceName": "CSOAI Request Attest",
     "tags": [
