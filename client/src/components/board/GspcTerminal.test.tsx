@@ -168,5 +168,11 @@ describe("canonical GSPC terminal evidence truth", () => {
         signature: { alg: "Ed25519", pubkey: "public", sig: "signature" },
       }),
     ).toBe("Elo reference Ed25519-signed · content_id abcdef1234…");
+    expect(
+      eloReferenceEvidence({
+        content_id: "abcdef1234567890",
+        signature: { alg: "Ed25519", did: "did:web:csoai.org#board-attestation-1", sig_ed25519: "ab".repeat(64) },
+      }),
+    ).toBe("Elo reference Ed25519-signed · content_id abcdef1234…");
   });
 });

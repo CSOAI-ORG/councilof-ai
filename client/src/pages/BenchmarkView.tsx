@@ -5,7 +5,7 @@
 // and (2) the assessed third-party benchmark-quality register (/api/benchmark-quality).
 // MEASURED (ours, signed) vs REPORTED (third-party, attributed) — never blended.
 import { useEffect, useState } from "react";
-import { sha256Hex, verifyEd25519Detached } from "@/lib/verify";
+import { verifyCard } from "../../../functions/_lib/cardVerify";
 
 interface EloRow { model: string; elo: number; games: number; winrate: number; ci: number[] }
 interface EloRef {
@@ -20,15 +20,6 @@ interface EloRef {
 }
 interface RegRecord { id: string; benchmark: string; publisher: string; tally: { checked: number; pass: number; fail: number; unknown: number } }
 
-function sortKeysDeep(v: unknown): unknown {
-  if (Array.isArray(v)) return v.map(sortKeysDeep);
-  if (v && typeof v === "object") {
-    const out: Record<string, unknown> = {};
-    for (const k of Object.keys(v as Record<string, unknown>).sort()) out[k] = sortKeysDeep((v as Record<string, unknown>)[k]);
-    return out;
-  }
-  return v;
-}
 
 export default function BenchmarkView() {
   const [elo, setElo] = useState<EloRef | null>(null);
@@ -51,20 +42,12 @@ export default function BenchmarkView() {
     if (!elo) return;
     setVerifyState("checking");
     try {
-      const body: Record<string, unknown> = {};
-      for (const [k, v] of Object.entries(elo)) {
-        if (k !== "content_id" && k !== "signature") body[k] = v;
-      }
-      const canonSorted = JSON.stringify(sortKeysDeep(body));
-      const want = await sha256Hex(canonSorted);
-      const res = await verifyEd25519Detached(
-        new TextEncoder().encode(canonSorted),
-        elo.signature?.sig || "",
-        elo.signature?.pubkey || "",
-        want,
-        undefined,
-      );
-      setVerifyState(res.ok ? "ok" : "bad");
+      // The shared verifier (functions/_lib/cardVerify) decides against its pinned anchor
+      // set: the board-signed reference (did:web:csoai.org#board-attestation-1, signature
+      // over the canonical envelope) and the older inline-pubkey style are both recognised;
+      // a key that is not published is reported, never trusted.
+      const v = await verifyCard(elo, []);
+      setVerifyState(v.valid ? "ok" : "bad");
     } catch (e) {
       setVerifyState("bad");
     }

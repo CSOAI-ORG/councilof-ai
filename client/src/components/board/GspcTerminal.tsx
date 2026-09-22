@@ -76,7 +76,7 @@ type Elo = {
   content_id?: string;
   method?: string;
   register?: string;
-  signature?: { alg?: string; pubkey?: string; sig?: string; content_id?: string };
+  signature?: { alg?: string; pubkey?: string; sig?: string; content_id?: string; did?: string; sig_ed25519?: string };
 };
 
 type CardIndex = { cards?: { axis?: string; card?: string; card_url?: string; signed?: boolean }[]; n_cards?: number };
@@ -91,8 +91,14 @@ export function eloReferenceEvidence(elo: Elo | undefined): string {
     signature?.alg?.toLowerCase() === "ed25519" &&
     typeof signature.pubkey === "string" && signature.pubkey.trim().length > 0 &&
     typeof signature.sig === "string" && signature.sig.trim().length > 0;
+  // 2026-09-22: board-signed reference — the key is named by DID (did:web:csoai.org#board-attestation-1)
+  // and the hex signature covers the canonical envelope bytes; no inline pubkey by design.
+  const boardSigned =
+    signature?.alg?.toLowerCase() === "ed25519" &&
+    typeof signature.did === "string" && signature.did.trim().length > 0 &&
+    typeof signature.sig_ed25519 === "string" && signature.sig_ed25519.trim().length > 0;
 
-  if (explicitlySigned) {
+  if (explicitlySigned || boardSigned) {
     return contentId
       ? `Elo reference Ed25519-signed · content_id ${contentId.slice(0, 10)}…`
       : "Elo reference Ed25519-signed";
