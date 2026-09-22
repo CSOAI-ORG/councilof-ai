@@ -371,6 +371,58 @@ stage(
   ) + "\n",
 );
 
+// The version index as a page, not only as JSON. The specification's own navigation links
+// here ("All versions"), and until this existed that link was a 404 on a published document —
+// exactly the class of defect this specification asks other people to correct. Generated from
+// the same staged bytes as index.json, so the two can never disagree. [spec-index-html]
+{
+  const idx = JSON.parse(staged.get(join(SPEC_DIR, "index.json")));
+  const rows = idx.versions
+    .map(
+      (v) =>
+        `<tr><td><a href="${esc(v.url)}">v${esc(v.version)}</a></td><td>${esc(v.date)}</td>` +
+        `<td>${esc(v.status)}</td>` +
+        `<td>${v.doi ? `<a href="https://doi.org/${esc(v.doi)}">${esc(v.doi)}</a>` : "&mdash;"}</td>` +
+        `<td><code>${esc(v.document_sha256)}</code></td></tr>`,
+    )
+    .join("\n");
+  stage(
+    join(SPEC_DIR, "index.html"),
+    `<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claim Maintenance — all versions | Council of AI</title>
+<meta name="description" content="Every published version of the Claim Maintenance specification, with its date, its persistent identifier and the digest of the document of record.">
+<link rel="canonical" href="https://councilof.ai/spec/claim-maintenance/">
+<style>
+:root{color-scheme:light dark;--fg:#0f172a;--muted:#475569;--line:#cbd5e1;--bg:#ffffff}
+@media (prefers-color-scheme:dark){:root{--fg:#e2e8f0;--muted:#94a3b8;--line:#334155;--bg:#0b1220}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:56rem;margin:0 auto;padding:2.5rem 1rem 4rem}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 .5rem}
+p.lede{color:var(--muted);margin:0 0 2rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:.6rem .5rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+code{font-size:.8rem;word-break:break-all}
+nav{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;font-size:.9rem}
+a{color:inherit}
+.note{margin-top:2rem;color:var(--muted);font-size:.9rem}
+</style></head>
+<body><main>
+<nav><a href="/">Council of AI</a><a href="/claim-maintenance">Claim maintenance</a><a href="/api/claims/register">Register (JSON)</a><a href="index.json">This index as JSON</a></nav>
+<h1>Claim Maintenance — all versions</h1>
+<p class="lede">${esc(idx.note)}</p>
+<table><thead><tr><th>Version</th><th>Date</th><th>Status</th><th>Persistent identifier</th><th>Digest of the document of record</th></tr></thead>
+<tbody>
+${rows}
+</tbody></table>
+<p class="note">Licence ${esc(idx.licence)}. The digest is of the Markdown, which is the document of record; the page you are reading and the JSON beside it are generated from it. A persistent identifier makes a document citable and permanent; it does not make it right.</p>
+</main></body></html>
+`,
+  );
+}
+
 let bad = 0;
 for (const w of writes) {
   const existing = existsSync(w.path) ? readFileSync(w.path, "utf8") : null;
