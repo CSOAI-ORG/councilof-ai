@@ -623,18 +623,17 @@ function LiveBoard() {
         <RotatingHighlight {...SECTION_TITLES.board} />
       </Heading>
       <Body>
-        A filled cell is a measurement. A dash is honest emptiness. Every count in this section is read
-        live from <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/gspc</code> — we
-        do not type numbers into the page, because a typed number is the first thing to go stale.
+        A filled cell is a measurement. A dash is honest emptiness. Every figure in this band is read
+        live from <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/gspc</code> as
+        the page loads — we do not type numbers into a page, because a typed number is the first
+        thing to go stale.
       </Body>
+      {/* 2026-09-22: the paragraph that used to sit here explained WHERE on this page the count
+          line is printed. That is a note to ourselves about layout, not a fact about AI, and it
+          was the only thing this band said before the jail paragraph. The band now carries what
+          is actually its own: the hardest slot on the board, and the human figures kept beside
+          the machine ones. The count line itself lives in the first screen. */}
       <p className="mt-6 text-[15px] leading-relaxed text-gray-700">
-        The count line is printed once on this page, on{" "}
-        <a href="#measurements" className="font-semibold text-emerald-800 underline underline-offset-4">
-          the living board
-        </a>{" "}
-        above, straight off totals.public_count.
-      </p>
-      <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
         The last slot is jail, containment: whether a model can be talked out of its own guardrails.
         It is measured{jail?.n ? ` on ${jail.n} gold cells` : ""}, on a smaller fleet than the rest of
         the board, and its separation is TIE on the live board — a tie is not a separated leader. We

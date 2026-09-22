@@ -57,10 +57,14 @@ export default function HomeFilms() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-emerald-700">Watch</p>
         <h2 id="watch-h" className="mt-3 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
-          Three films. Then the scale.
+          Three films, if you would rather be told.
         </h2>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
-          Tap to play — the file loads only then. Under each one, what it actually means.
+          {/* 2026-09-22: the old heading was "Three films. Then the scale." — it promised a
+              section that followed this band on a page layout that no longer exists, so it read
+              as a broken reference. The films are unchanged. */}
+          How a record is made, how the workspace fits together, and who the measurement is for.
+          Tap to play — the file only loads then. Under each one, what it actually means.
         </p>
         <ul className="mt-14 grid gap-8 lg:grid-cols-3 lg:gap-7">
           {FILMS.map((f) => (

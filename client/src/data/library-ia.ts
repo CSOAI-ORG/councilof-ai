@@ -131,6 +131,10 @@ export const PRIMARY_PATHS = new Set<string>([
   // /memberships — where we take part, from public/interop/memberships.json. Linked from the
   // home strip and the footer; unregistered it would ship under the "archived" banner.
   "/memberships",
+  // /reach — the full seven-stage funnel. Linked from the home page and from the footer
+  // of every route, so unregistered it would ship the "archived" banner under a link the site
+  // is actively promoting, on the page whose whole point is that the number is current.
+  "/reach",
   // /pricing — real pricing page (was a 308 redirect, now a live surface).
   "/pricing",
   // /governance — governance framework page.

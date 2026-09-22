@@ -162,12 +162,39 @@ function slug(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
-export default function HomeEvidenceShowcase() {
+/**
+ * Which halves render. The home page passes "reading" from 2026-09-22: its nine hand-written
+ * participation records were a third copy of the participation story on one page, and the live
+ * manifest behind /memberships carries 28 rows with evidence for each. The records half is not
+ * deleted — it still renders by default, and anywhere else this band is mounted.
+ */
+export type ShowcaseSections = "all" | "records" | "reading";
+
+export default function HomeEvidenceShowcase({
+  sections = "all",
+  showWithdrawn = true,
+}: {
+  sections?: ShowcaseSections;
+  /**
+   * Render the withdrawal record as its own labelled block.
+   *
+   * OWNER RULING 2026-09-22: false on the front door. A visitor's first impression of a
+   * measurement body should not be a notice headed "This material is under review". The record
+   * is not hidden and nothing about it is softened — it is still served at its own route, it is
+   * still reachable from the refutation ledger, which is where a reader looking for what we got
+   * wrong will go, and the guarantee below it is untouched: a withdrawn entry can NEVER be
+   * promoted as ready reading (featuredEvidencePosts filters on state AND isWithdrawnPath), and
+   * scripts/content-promise-gate.mjs still fails the build if a promoted link is withdrawn.
+   * What changes is only which page gives it a section of its own.
+   */
+  showWithdrawn?: boolean;
+} = {}) {
   const posts = featuredEvidencePosts();
   const withdrawn = withdrawnReadingRecords();
 
   return (
     <>
+      {sections !== "reading" ? (
       <section aria-labelledby="public-records-h" className="mt-20 sm:mt-24" data-testid="home-public-records">
         <div className="max-w-3xl">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">Public record</p>
@@ -225,7 +252,9 @@ export default function HomeEvidenceShowcase() {
           })}
         </div>
       </section>
+      ) : null}
 
+      {sections !== "records" ? (
       <section aria-labelledby="field-notes-h" className="mt-20 sm:mt-24" data-testid="home-featured-posts">
         <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div className="max-w-3xl">
@@ -268,7 +297,7 @@ export default function HomeEvidenceShowcase() {
           })}
         </div>
 
-        {withdrawn.length ? (
+        {showWithdrawn && withdrawn.length ? (
           <aside
             aria-labelledby="withdrawn-reading-h"
             data-testid="home-withdrawn-reading"
@@ -297,6 +326,7 @@ export default function HomeEvidenceShowcase() {
           </aside>
         ) : null}
       </section>
+      ) : null}
     </>
   );
 }
