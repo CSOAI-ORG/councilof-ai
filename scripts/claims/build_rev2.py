@@ -61,7 +61,8 @@ def build_records(run: Path, prior: dict) -> list[dict]:
     recs: list[dict] = []
 
     def rec(cid: str, state: str, measurement, method: str, window, denominator,
-            sources: list, does_not_prove: list, settles=None, note: str | None = None) -> None:
+            sources: list, does_not_prove: list, settles=None, note: str | None = None,
+            reason: str | None = None) -> None:
         subj, orig = prior_by_id[cid]
         r = {
             "id": cid, "subject": subj, "text": orig["text"], "type": orig["type"],
@@ -74,6 +75,12 @@ def build_records(run: Path, prior: dict) -> list[dict]:
             r["settles"] = settles
         if note:
             r["note"] = note
+        # A state that is not MEASURED must carry, at the top of the record, why. A reader should
+        # not have to descend into the measurement to find out that nothing was established.
+        if state in ("UNMEASURED", "UNCHECKABLE"):
+            r["state_reason"] = reason or (isinstance(measurement, dict) and measurement.get("reason")) or None
+            if not r["state_reason"]:
+                raise SystemExit(f"ABORT {cid} is {state} with no reason; an unmeasured claim must say why")
         recs.append(r)
 
     # ---- CL-1 restatement watch
@@ -124,7 +131,7 @@ def build_records(run: Path, prior: dict) -> list[dict]:
                                                             "measured_at", "denominator")}},
         corr.get("method", ""), corr.get("window"), corr.get("denominator"),
         _sources(base.get("sources"), *[o.get("sources") for o in corr.get("organisations", [])]),
-        corr.get("does_not_prove", []),
+        corr.get("does_not_prove", []), reason=corr.get("reason"),
         note=("NOT_FOUND means this search did not find it. SEARCH_INCONCLUSIVE means we could not look — "
               "several of these organisations answer an automated reader with a block, and that is recorded "
               "as its own state rather than collapsed into an absence. Neither is a statement about anyone."))
@@ -164,6 +171,7 @@ def build_records(run: Path, prior: dict) -> list[dict]:
     m = _load(run, "ON-2")
     corr, base = m.get("corroboration", {}), m.get("testimonial_persistence", {})
     org = (corr.get("organisations") or [{}])[0]
+    on2_reason = corr.get("reason") or org.get("meaning")
     rec("ON-2", corr.get("state", "UNMEASURED"),
         {"corroboration": {k: org.get(k) for k in ("organisation", "status", "meaning", "reach",
                                                    "corroborations")},
@@ -171,6 +179,7 @@ def build_records(run: Path, prior: dict) -> list[dict]:
                                                                        "absent", "measured_at")}},
         corr.get("method", ""), corr.get("window"), corr.get("denominator"),
         _sources(base.get("sources"), org.get("sources")), corr.get("does_not_prove", []),
+        reason=on2_reason,
         note=("UNMEASURED where the corroboration search could not reach the organisation's own record at "
               "all. A search that was turned away is not an absence, and the HTTP statuses that turned it "
               "away are in the sources. The persistence baseline makes a later removal of the testimonial "
@@ -283,7 +292,28 @@ def main() -> int:
     doc["registry_digest"] = digest
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    # Read the published bytes back and recompute everything a stranger would recompute. An
+    # artifact whose own digest or root does not reproduce from what is served is not evidence of
+    # anything, and it should fail here rather than be discovered by a reader.
+    served = json.loads(out.read_text(encoding="utf-8"))
+    rebody = {k: v for k, v in served.items() if k != "registry_digest"}
+    if c.sha256_hex(json.dumps(rebody, sort_keys=True, indent=1).encode("utf-8")) != served["registry_digest"]:
+        raise SystemExit("ABORT registry_digest does not reproduce from the bytes just written")
+    byid = {cl["id"]: dict(cl, subject=subj) for subj, sv in served["subjects"].items() for cl in sv["claims"]}
+    releaves = [c.canonical_bytes(byid[l["id"]]) for l in served["merkle"]["leaves"]]
+    if mk.root_hex(releaves) != served["merkle"]["root"]:
+        raise SystemExit("ABORT the Merkle root does not reproduce from the claim records as served")
+    for i, l in enumerate(served["merkle"]["leaves"]):
+        if not mk.verify_inclusion(releaves[i], i, len(releaves),
+                                   [bytes.fromhex(h) for h in l["inclusion_proof"]],
+                                   bytes.fromhex(served["merkle"]["root"])):
+            raise SystemExit(f"ABORT inclusion proof {i} ({l['id']}) does not verify against the published root")
+    # And the reader with one number type: normalising the served structure must change nothing.
+    if c.canonical_bytes(c.json_roundtrip_stable(served)) != c.canonical_bytes(served):
+        raise SystemExit("ABORT the file carries numbers a single-number-type JSON reader cannot return unchanged")
     print(f"WROTE {out}")
+    print("  self-check: registry_digest, Merkle root and all inclusion proofs reproduce from the served bytes")
     print(f"  claims={len(records)} states={tally}")
     print(f"  merkle_root={root}")
     print(f"  registry_digest={digest}")

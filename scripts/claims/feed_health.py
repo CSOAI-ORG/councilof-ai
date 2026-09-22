@@ -132,7 +132,11 @@ def analyse(rounds: list[dict], heartbeat_s: int, threshold_pct: float, decimals
         pa, pb = a["answer_raw"] / scale, b["answer_raw"] / scale
         dev = abs(pb - pa) / abs(pa) * 100 if pa else None
         intervals.append({
-            "from_round": a["round_id"], "to_round": b["round_id"],
+            # Decimal STRINGS. A Chainlink proxy round id is (phaseId << 64) | aggregatorRoundId,
+            # a uint80 far beyond the 2**53-1 that JSON's one number type can carry exactly. Left
+            # as a number it is silently rounded by every JavaScript reader — the digest stops
+            # reproducing and, worse, the id reads back as a different round.
+            "from_round": str(a["round_id"]), "to_round": str(b["round_id"]),
             "gap_s": gap, "deviation_pct": round(dev, 6) if dev is not None else None,
             "excess_over_declared_heartbeat_s": gap - heartbeat_s,
             "over_declared_heartbeat": gap > heartbeat_s,
@@ -172,6 +176,7 @@ def analyse(rounds: list[dict], heartbeat_s: int, threshold_pct: float, decimals
         "deviation_max_pct": max((i["deviation_pct"] for i in intervals if i["deviation_pct"] is not None), default=None),
         "intervals_exceeding_heartbeat_beyond_grace": misses[:20],
         "latest_answer": round(rs[-1]["answer_raw"] / scale, max(0, decimals - 2)),
+        "latest_round_id": str(rs[-1]["round_id"]),
     }
 
 

@@ -21,6 +21,9 @@ from typing import Any
 
 UA = "Mozilla/5.0 (X11; Linux x86_64) csoai-claim-watch/0.1 (+https://councilof.ai/claims)"
 
+#: The largest integer a JSON number carries exactly (IEEE-754 double, i.e. 2**53 - 1).
+JSON_SAFE_INT = 9007199254740991
+
 #: Header names a keyless harness must never send.
 FORBIDDEN_HEADERS = ("authorization", "x-api-key", "api-key", "cookie", "x-auth-token", "proxy-authorization")
 
@@ -138,11 +141,21 @@ def json_roundtrip_stable(value: Any) -> Any:
     one, and the artifact reports itself as not reproducible. The fix belongs at the point the
     bytes are written, not in each reader: emit the integer.
 
-    Also rejects the values JSON has no representation for, rather than writing `NaN` or
-    `Infinity`, which parse in Python and are invalid JSON everywhere else.
+    Also rejects the values JSON cannot carry faithfully, rather than writing them and letting a
+    reader silently get something else back:
+      * `NaN` and `Infinity`, which parse in Python and are invalid JSON everywhere else;
+      * any integer outside +/-(2**53 - 1), which a single-number-type parser rounds. An on-chain
+        round id or token amount is an IDENTIFIER or an exact quantity, so the producer must emit
+        it as a decimal string; this refuses to guess on its behalf.
     """
     import math
     if isinstance(value, bool):
+        return value
+    if isinstance(value, int):
+        if abs(value) > JSON_SAFE_INT:
+            raise ValueError(
+                f"{value} exceeds the {JSON_SAFE_INT} a JSON number carries exactly; publish it as a "
+                "decimal string — a reader would otherwise get a different number back")
         return value
     if isinstance(value, float):
         if math.isnan(value) or math.isinf(value):

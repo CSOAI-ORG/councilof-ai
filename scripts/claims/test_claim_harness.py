@@ -315,6 +315,31 @@ def test_control_an_integral_float_must_not_survive_into_published_bytes():
     assert math.isnan(float("nan"))
 
 
+def test_control_an_integer_json_cannot_carry_must_be_refused_not_published():
+    """FAILING CONTROL: a uint80 round id is silently rounded by every JSON reader with doubles.
+
+    Chainlink proxy round ids are (phaseId << 64) | aggregatorRoundId — around 5.5e19. Published
+    as numbers they come back as a DIFFERENT round, and the registry's own digest stops
+    reproducing. The normaliser refuses them so a producer has to decide, and feed_health decides:
+    decimal strings.
+    """
+    assert cm.json_roundtrip_stable({"n": cm.JSON_SAFE_INT})["n"] == cm.JSON_SAFE_INT
+    for bad in (55340232221128654849, -(cm.JSON_SAFE_INT + 1)):
+        try:
+            cm.json_roundtrip_stable({"round": bad})
+        except ValueError as e:
+            assert "decimal string" in str(e)
+            continue
+        raise AssertionError(f"{bad} was accepted into published bytes")
+    # and the producer actually emits strings
+    a = fh.analyse(_rounds([600, 600]), heartbeat_s=3600, threshold_pct=0.5, decimals=8)
+    assert isinstance(a["intervals"], int)
+    iv = fh.analyse(_rounds([7200]), heartbeat_s=3600, threshold_pct=0.5,
+                    decimals=8)["intervals_exceeding_heartbeat_beyond_grace"][0]
+    assert isinstance(iv["from_round"], str) and isinstance(iv["to_round"], str), iv
+    assert cm.json_roundtrip_stable(iv) == iv
+
+
 # ---------------------------------------------------------------- the registry the watch maintains
 
 def _reg(tmp, name, supersedes=None):

@@ -4,15 +4,15 @@
     "schema": "csoai.signed-artifact/0.1",
     "artifact": {
       "path": "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
-      "sha256": "65c3392bcf7f3f7ed180157f7e0d62558f5e5f840e096201ffc618f59ffb799a",
+      "sha256": "4c8efe065cffbba0c7674907ddb882eb1d4144af543e263a16ac318b0cf2ca59",
       "schema": "csoai.claim-registry/0.2",
       "as_of": "2026-09-22"
     },
     "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
-    "registry_digest": "2f4683d967cb6b045b9a2bad622b2d58f800d9900bbddfc7176198b85152fd86",
+    "registry_digest": "5edb8b0bb8c54daa04ab06a0a6a7738d12bf0bce54e72d6adf5162e2119bb0bb",
     "merkle": {
       "algorithm": "RFC 9162 §2.1.1 Merkle Tree Hash",
-      "root": "3bf6cf4b4a97b9901d54cc0be3d5d76f76c647269f795d7ae80bc0220e4c1f34",
+      "root": "81d1b4d0eb671da534a4de471f03c02f2ed4ae2fa3d0a58f590a7ce7697be102",
       "n_leaves": 8
     },
     "supersedes": {
@@ -30,11 +30,11 @@
   "signature": {
     "did": "did:web:csoai.org#board-attestation-1",
     "alg": "Ed25519",
-    "sig_ed25519": "d754a2f7b6ae861d9a957c7f7d65e8a37836d13ad1001f00af2353eb6a5012dbe874315237a55e71c28fd2e1e7bd2dc95291b42db0675e275e929b2d1c7b7c03",
-    "payload_sha256": "2e1732ab9b0fd3f6666f90db4491dd2c576bdb52f07ddf332a035cebc8dbe2a5",
+    "sig_ed25519": "10972821e0174ea4e043fa4df06eb5c065094b03f2fbb60999a8bf7c3477cd8204057d93692438d45546b22df87aa10215c485cb6b9c8222e068fbe7e5738600",
+    "payload_sha256": "7c6f35a62a0267cd3ac341eaac7575ce97079289e3a48ca10f3db9bb048c41e9",
     "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
     "signer_auth": "pod-token",
-    "signed_at": "2026-09-22T16:48:53.893Z"
+    "signed_at": "2026-09-22T17:28:07.138Z"
   },
   "verify": "canonicalise payload (sort_keys, separators=(',',':'), ensure_ascii=False, UTF-8); its sha256 must equal signature.payload_sha256; verify sig_ed25519 (hex) with #board-attestation-1 from https://csoai.org/.well-known/did.json. Then check payload.artifact.sha256 against the registry file's bytes, and recompute the Merkle root from the registry's claim records with scripts/claims/merkle_rfc9162.py.",
   "control_run": "the same signature over the payload plus one trailing space was rejected before this file was written"

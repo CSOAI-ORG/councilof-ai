@@ -2,7 +2,7 @@
  "schema": "csoai.claim-registry/0.2",
  "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
  "created_utc": "2026-09-22",
- "built_at_utc": "2026-09-22T16:48:40Z",
+ "built_at_utc": "2026-09-22T17:27:57Z",
  "maintainer": "CSOAI Ltd — claim maintenance (measurement, not certification)",
  "supersedes": {
   "registry_id": "claimreg-ondo-chainlink-2026-09-22",
@@ -87,7 +87,8 @@
       "a page that renders the figure only in client-side JavaScript would read as absent here, which would be a limit of the reader, not a statement about the publisher",
       "the figure is not recomputed and cannot be: the watch is over how it is published, never over whether it is right"
      ],
-     "note": "UNMEASURED by design at rev2: the series holds today's reading and no other date. One capture is not a measurement, so this claim does not move until the weekly loop has added a second dated point. The series is published so anyone can check ours against theirs."
+     "note": "UNMEASURED by design at rev2: the series holds today's reading and no other date. One capture is not a measurement, so this claim does not move until the weekly loop has added a second dated point. The series is published so anyone can check ours against theirs.",
+     "state_reason": "the series holds 1 reading(s) on 1 distinct UTC date(s). One capture is not a measurement: a restatement watch needs at least two dated points before it can report anything about how the figure behaves, so this claim stays UNMEASURED"
     },
     {
      "id": "CL-2",
@@ -1680,14 +1681,14 @@
      "denominator": {
       "feeds_attempted": 10,
       "feeds_measured": 10,
-      "intervals_measured": 384,
+      "intervals_measured": 353,
       "declared_parameters_from": "the feed's own published heartbeat and threshold, not a figure we chose"
      },
      "measurement": {
       "totals": {
        "grace_s": 60,
        "intervals_exceeding_declared_heartbeat_beyond_grace": 3,
-       "intervals_exceeding_declared_heartbeat_zero_tolerance": 155,
+       "intervals_exceeding_declared_heartbeat_zero_tolerance": 144,
        "feeds_with_at_least_one_interval_beyond_grace": 2,
        "largest_single_excess_s": 90
       },
@@ -1701,26 +1702,26 @@
         "reason": null,
         "rounds_read": 40,
         "intervals": 39,
-        "window_start_utc": "2026-09-21T17:15:23Z",
-        "window_end_utc": "2026-09-22T16:00:11Z",
-        "window_s": 81888,
+        "window_start_utc": "2026-09-21T17:54:59Z",
+        "window_end_utc": "2026-09-22T17:00:35Z",
+        "window_s": 83136,
         "declared_heartbeat_s": 3600,
         "declared_deviation_threshold_pct": 0.5,
         "grace_s": 60,
         "gap_min_s": 324,
         "gap_max_s": 3636,
-        "gap_mean_s": 2099.69,
+        "gap_mean_s": 2131.69,
         "excess_max_s": 36,
         "excess_over_grace_count": 0,
-        "intervals_over_declared_heartbeat_zero_tolerance": 12,
+        "intervals_over_declared_heartbeat_zero_tolerance": 13,
         "interval_excess_buckets": {
-         "within_declared_heartbeat": 27,
-         "over_by_1_to_60s": 12,
+         "within_declared_heartbeat": 26,
+         "over_by_1_to_60s": 13,
          "over_by_60s_to_10pct_of_heartbeat": 0,
          "over_by_more_than_10pct_of_heartbeat": 0
         },
         "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
-        "intervals_at_or_over_declared_deviation_threshold": 26,
+        "intervals_at_or_over_declared_deviation_threshold": 25,
         "deviation_max_pct": 0.859885,
         "intervals_exceeding_heartbeat_beyond_grace": []
        },
@@ -1733,26 +1734,26 @@
         "reason": null,
         "rounds_read": 40,
         "intervals": 39,
-        "window_start_utc": "2026-09-21T11:29:35Z",
-        "window_end_utc": "2026-09-22T15:44:59Z",
-        "window_s": 101724,
+        "window_start_utc": "2026-09-21T13:09:11Z",
+        "window_end_utc": "2026-09-22T16:52:11Z",
+        "window_s": 99780,
         "declared_heartbeat_s": 3600,
         "declared_deviation_threshold_pct": 0.5,
         "grace_s": 60,
         "gap_min_s": 324,
         "gap_max_s": 3636,
-        "gap_mean_s": 2608.31,
+        "gap_mean_s": 2558.46,
         "excess_max_s": 36,
         "excess_over_grace_count": 0,
-        "intervals_over_declared_heartbeat_zero_tolerance": 14,
+        "intervals_over_declared_heartbeat_zero_tolerance": 13,
         "interval_excess_buckets": {
-         "within_declared_heartbeat": 25,
-         "over_by_1_to_60s": 14,
+         "within_declared_heartbeat": 26,
+         "over_by_1_to_60s": 13,
          "over_by_60s_to_10pct_of_heartbeat": 0,
          "over_by_more_than_10pct_of_heartbeat": 0
         },
         "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
-        "intervals_at_or_over_declared_deviation_threshold": 23,
+        "intervals_at_or_over_declared_deviation_threshold": 24,
         "deviation_max_pct": 0.824074,
         "intervals_exceeding_heartbeat_beyond_grace": []
        },
@@ -1765,15 +1766,15 @@
         "reason": null,
         "rounds_read": 40,
         "intervals": 39,
-        "window_start_utc": "2026-09-22T05:39:23Z",
-        "window_end_utc": "2026-09-22T16:11:47Z",
-        "window_s": 37944,
+        "window_start_utc": "2026-09-22T06:23:47Z",
+        "window_end_utc": "2026-09-22T16:51:23Z",
+        "window_s": 37656,
         "declared_heartbeat_s": 3600,
         "declared_deviation_threshold_pct": 0.5,
         "grace_s": 60,
         "gap_min_s": 12,
         "gap_max_s": 3300,
-        "gap_mean_s": 972.92,
+        "gap_mean_s": 965.54,
         "excess_max_s": -300,
         "excess_over_grace_count": 0,
         "intervals_over_declared_heartbeat_zero_tolerance": 0,
@@ -1795,29 +1796,29 @@
         "proxy": "0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6",
         "state": "CLAIM_MEASURED",
         "reason": null,
-        "rounds_read": 40,
-        "intervals": 39,
-        "window_start_utc": "2026-09-03T07:01:11Z",
-        "window_end_utc": "2026-09-22T08:00:23Z",
-        "window_s": 1645152,
+        "rounds_read": 9,
+        "intervals": 8,
+        "window_start_utc": "2026-09-14T21:15:23Z",
+        "window_end_utc": "2026-09-22T08:31:23Z",
+        "window_s": 645360,
         "declared_heartbeat_s": 82800,
         "declared_deviation_threshold_pct": 0.25,
         "grace_s": 60,
-        "gap_min_s": 3540,
+        "gap_min_s": 65616,
         "gap_max_s": 82836,
-        "gap_mean_s": 42183.38,
+        "gap_mean_s": 80670,
         "excess_max_s": 36,
         "excess_over_grace_count": 0,
-        "intervals_over_declared_heartbeat_zero_tolerance": 19,
+        "intervals_over_declared_heartbeat_zero_tolerance": 7,
         "interval_excess_buckets": {
-         "within_declared_heartbeat": 20,
-         "over_by_1_to_60s": 19,
+         "within_declared_heartbeat": 1,
+         "over_by_1_to_60s": 7,
          "over_by_60s_to_10pct_of_heartbeat": 0,
          "over_by_more_than_10pct_of_heartbeat": 0
         },
         "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
         "intervals_at_or_over_declared_deviation_threshold": 0,
-        "deviation_max_pct": 0.007383,
+        "deviation_max_pct": 0.007634,
         "intervals_exceeding_heartbeat_beyond_grace": []
        },
        {
@@ -1829,15 +1830,15 @@
         "reason": null,
         "rounds_read": 40,
         "intervals": 39,
-        "window_start_utc": "2026-09-21T01:04:59Z",
-        "window_end_utc": "2026-09-22T16:21:59Z",
-        "window_s": 141420,
+        "window_start_utc": "2026-09-21T02:05:23Z",
+        "window_end_utc": "2026-09-22T17:22:11Z",
+        "window_s": 141408,
         "declared_heartbeat_s": 3600,
         "declared_deviation_threshold_pct": 0.25,
         "grace_s": 60,
         "gap_min_s": 3600,
         "gap_max_s": 3636,
-        "gap_mean_s": 3626.15,
+        "gap_mean_s": 3625.85,
         "excess_max_s": 36,
         "excess_over_grace_count": 0,
         "intervals_over_declared_heartbeat_zero_tolerance": 38,
@@ -1861,26 +1862,26 @@
         "reason": null,
         "rounds_read": 40,
         "intervals": 39,
-        "window_start_utc": "2026-09-22T13:35:29Z",
-        "window_end_utc": "2026-09-22T16:11:33Z",
-        "window_s": 9364,
+        "window_start_utc": "2026-09-22T14:09:59Z",
+        "window_end_utc": "2026-09-22T17:20:37Z",
+        "window_s": 11438,
         "declared_heartbeat_s": 1200,
         "declared_deviation_threshold_pct": 0.15,
         "grace_s": 60,
         "gap_min_s": 30,
         "gap_max_s": 1230,
-        "gap_mean_s": 240.1,
+        "gap_mean_s": 293.28,
         "excess_max_s": 30,
         "excess_over_grace_count": 0,
-        "intervals_over_declared_heartbeat_zero_tolerance": 1,
+        "intervals_over_declared_heartbeat_zero_tolerance": 2,
         "interval_excess_buckets": {
-         "within_declared_heartbeat": 38,
-         "over_by_1_to_60s": 1,
+         "within_declared_heartbeat": 37,
+         "over_by_1_to_60s": 2,
          "over_by_60s_to_10pct_of_heartbeat": 0,
          "over_by_more_than_10pct_of_heartbeat": 0
         },
         "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
-        "intervals_at_or_over_declared_deviation_threshold": 39,
+        "intervals_at_or_over_declared_deviation_threshold": 38,
         "deviation_max_pct": 0.280158,
         "intervals_exceeding_heartbeat_beyond_grace": []
        },
@@ -1893,15 +1894,15 @@
         "reason": null,
         "rounds_read": 40,
         "intervals": 39,
-        "window_start_utc": "2026-09-22T13:49:05Z",
-        "window_end_utc": "2026-09-22T16:26:43Z",
-        "window_s": 9458,
+        "window_start_utc": "2026-09-22T14:36:07Z",
+        "window_end_utc": "2026-09-22T17:20:43Z",
+        "window_s": 9876,
         "declared_heartbeat_s": 1200,
         "declared_deviation_threshold_pct": 0.1,
         "grace_s": 60,
         "gap_min_s": 30,
         "gap_max_s": 870,
-        "gap_mean_s": 242.51,
+        "gap_mean_s": 253.23,
         "excess_max_s": -330,
         "excess_over_grace_count": 0,
         "intervals_over_declared_heartbeat_zero_tolerance": 0,
@@ -1913,7 +1914,7 @@
         },
         "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
         "intervals_at_or_over_declared_deviation_threshold": 39,
-        "deviation_max_pct": 0.185169,
+        "deviation_max_pct": 0.192146,
         "intervals_exceeding_heartbeat_beyond_grace": []
        },
        {
@@ -1925,15 +1926,15 @@
         "reason": null,
         "rounds_read": 40,
         "intervals": 39,
-        "window_start_utc": "2026-09-22T04:04:39Z",
-        "window_end_utc": "2026-09-22T16:11:51Z",
-        "window_s": 43632,
+        "window_start_utc": "2026-09-22T04:23:41Z",
+        "window_end_utc": "2026-09-22T16:50:51Z",
+        "window_s": 44830,
         "declared_heartbeat_s": 86400,
         "declared_deviation_threshold_pct": 0.5,
         "grace_s": 60,
         "gap_min_s": 30,
         "gap_max_s": 5524,
-        "gap_mean_s": 1118.77,
+        "gap_mean_s": 1149.49,
         "excess_max_s": -80876,
         "excess_over_grace_count": 0,
         "intervals_over_declared_heartbeat_zero_tolerance": 0,
@@ -1980,8 +1981,8 @@
         "deviation_max_pct": 0.016938,
         "intervals_exceeding_heartbeat_beyond_grace": [
          {
-          "from_round": 55340232221128654849,
-          "to_round": 55340232221128654850,
+          "from_round": "55340232221128654849",
+          "to_round": "55340232221128654850",
           "gap_s": 86470,
           "deviation_pct": 0.004835,
           "excess_over_declared_heartbeat_s": 70,
@@ -1990,8 +1991,8 @@
           "deviation_at_or_over_declared_threshold": false
          },
          {
-          "from_round": 55340232221128654851,
-          "to_round": 55340232221128654852,
+          "from_round": "55340232221128654851",
+          "to_round": "55340232221128654852",
           "gap_s": 86490,
           "deviation_pct": 0.001081,
           "excess_over_declared_heartbeat_s": 90,
@@ -2033,8 +2034,8 @@
         "deviation_max_pct": 0.050062,
         "intervals_exceeding_heartbeat_beyond_grace": [
          {
-          "from_round": 36893488147419103359,
-          "to_round": 36893488147419103360,
+          "from_round": "36893488147419103359",
+          "to_round": "36893488147419103360",
           "gap_s": 86476,
           "deviation_pct": 0.000715,
           "excess_over_declared_heartbeat_s": 76,
@@ -2050,7 +2051,7 @@
       {
        "url": "https://reference-data-directory.vercel.app/feeds-mainnet.json",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:25:56Z",
+       "accessed_utc": "2026-09-22T17:23:29Z",
        "response_bytes": 381452,
        "response_sha256": "95b588debe51919f54c276eb2463f5eb4fe39043ea11cc9ff4856c707ee4067f",
        "note": "Chainlink's published feed directory for ethereum-mainnet: declared heartbeat and deviation threshold per feed"
@@ -2058,37 +2059,37 @@
       {
        "url": "https://ethereum-rpc.publicnode.com",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:26:11Z",
+       "accessed_utc": "2026-09-22T17:23:44Z",
        "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419 (ethereum-mainnet chain 1) for ETH / USD; fallback node https://eth.drpc.org"
       },
       {
        "url": "https://ethereum-rpc.publicnode.com",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:26:25Z",
+       "accessed_utc": "2026-09-22T17:23:56Z",
        "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c (ethereum-mainnet chain 1) for BTC / USD; fallback node https://eth.drpc.org"
       },
       {
        "url": "https://ethereum-rpc.publicnode.com",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:26:38Z",
+       "accessed_utc": "2026-09-22T17:24:07Z",
        "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x2c1d072e956AFFC0D435Cb7AC38EF18d24d9127c (ethereum-mainnet chain 1) for LINK / USD; fallback node https://eth.drpc.org"
       },
       {
        "url": "https://ethereum-rpc.publicnode.com",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:26:52Z",
+       "accessed_utc": "2026-09-22T17:24:08Z",
        "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6 (ethereum-mainnet chain 1) for USDC / USD; fallback node https://eth.drpc.org"
       },
       {
        "url": "https://ethereum-rpc.publicnode.com",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:27:02Z",
+       "accessed_utc": "2026-09-22T17:24:20Z",
        "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9 (ethereum-mainnet chain 1) for DAI / USD; fallback node https://eth.drpc.org"
       },
       {
        "url": "https://reference-data-directory.vercel.app/feeds-ethereum-mainnet-base-1.json",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:27:02Z",
+       "accessed_utc": "2026-09-22T17:24:21Z",
        "response_bytes": 250349,
        "response_sha256": "f4b0eb8ab8fd7e316ea3669e8ee27d9408ed86ebc0f3a33ff08ada0ca694a947",
        "note": "Chainlink's published feed directory for base-mainnet: declared heartbeat and deviation threshold per feed"
@@ -2096,31 +2097,31 @@
       {
        "url": "https://mainnet.base.org",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:27:17Z",
+       "accessed_utc": "2026-09-22T17:24:44Z",
        "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0xa4250cE1aA15Ff4cb5E5a8655293b65694e436Ed (base-mainnet chain 8453) for ETH / USD; fallback node https://base-rpc.publicnode.com"
       },
       {
        "url": "https://mainnet.base.org",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:27:37Z",
+       "accessed_utc": "2026-09-22T17:25:09Z",
        "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x32F587986D3fb47601157c19615d568BeD0BCabc (base-mainnet chain 8453) for BTC / USD; fallback node https://base-rpc.publicnode.com"
       },
       {
        "url": "https://mainnet.base.org",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:27:50Z",
+       "accessed_utc": "2026-09-22T17:25:31Z",
        "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x17CAb8FE31E32f08326e5E27412894e49B0f9D65 (base-mainnet chain 8453) for LINK / USD; fallback node https://base-rpc.publicnode.com"
       },
       {
        "url": "https://mainnet.base.org",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:28:09Z",
+       "accessed_utc": "2026-09-22T17:25:50Z",
        "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x7e860098F58bBFC8648a4311b374B1D669a2bc6B (base-mainnet chain 8453) for USDC / USD; fallback node https://base-rpc.publicnode.com"
       },
       {
        "url": "https://mainnet.base.org",
        "status": 200,
-       "accessed_utc": "2026-09-22T16:28:31Z",
+       "accessed_utc": "2026-09-22T17:26:11Z",
        "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x591e79239a7d679378eC8c847e5038150364C78F (base-mainnet chain 8453) for DAI / USD; fallback node https://base-rpc.publicnode.com"
       }
      ],
@@ -2310,7 +2311,8 @@
       "whole-site full text is not searched: slugs across the published index, plus the full text of the pages actually fetched. A mention in body text on a page outside that set would not be found",
       "pages behind a login, a paywall, a regional redirect, a bot challenge or a robots rule were not read"
      ],
-     "note": "UNMEASURED where the corroboration search could not reach the organisation's own record at all. A search that was turned away is not an absence, and the HTTP statuses that turned it away are in the sources. The persistence baseline makes a later removal of the testimonial visible; it says nothing about the testimonial itself."
+     "note": "UNMEASURED where the corroboration search could not reach the organisation's own record at all. A search that was turned away is not an absence, and the HTTP statuses that turned it away are in the sources. The persistence baseline makes a later removal of the testimonial visible; it says nothing about the testimonial itself.",
+     "state_reason": "no organisation in this run could be reached conclusively: every one is SEARCH_INCONCLUSIVE, so this run measured nothing and claims nothing"
     },
     {
      "id": "ON-3",
@@ -2482,18 +2484,18 @@
   "odd_leaf_handling": "none — no duplication and no carry-up; the split rule handles every n",
   "record_bytes": "JSON of the claim record with sort_keys=True, separators=(',',':'), ensure_ascii=False, UTF-8",
   "n_leaves": 8,
-  "root": "3bf6cf4b4a97b9901d54cc0be3d5d76f76c647269f795d7ae80bc0220e4c1f34",
+  "root": "81d1b4d0eb671da534a4de471f03c02f2ed4ae2fa3d0a58f590a7ce7697be102",
   "leaves": [
    {
     "index": 0,
     "id": "CL-1",
     "state": "UNMEASURED",
-    "leaf_sha256": "78a992a941aa1d85697baf8f9c62443ae00459105df06229e5fa951d05f4292f",
-    "record_sha256": "523cef703626e1866f0e961f417f9c40c48062d8d4a0660bb58205730bd75e3d",
+    "leaf_sha256": "a6c093c705f5f884c37e72a07b39d120786ee3402edf82766afd116ddbc4c693",
+    "record_sha256": "eddb92cab088483ab2b91338c01196f4606965612e7749763058fac141aac5d3",
     "inclusion_proof": [
      "cc5cc653ff18f5443cbb6a8f3f5b45794b8afc6863ec5b1626c898112b467594",
      "8b17e8a610f71ee8a65c6dab47ca65c526f165257192bf40d3d89f4e05ef6dec",
-     "08b909696e79ed20eaeade391901ffc621ffd1f74c7e53b803ce46cf62b4a18b"
+     "c8cb6f3bbe1afe1580fa9201d3bcf504b03bfdd48ccf242f62e80e1e063108a6"
     ]
    },
    {
@@ -2503,9 +2505,9 @@
     "leaf_sha256": "cc5cc653ff18f5443cbb6a8f3f5b45794b8afc6863ec5b1626c898112b467594",
     "record_sha256": "9c1851cc0bccd18deba8edc8e4d7411aea3db7800cb0307b2ca96622e34bbf11",
     "inclusion_proof": [
-     "78a992a941aa1d85697baf8f9c62443ae00459105df06229e5fa951d05f4292f",
+     "a6c093c705f5f884c37e72a07b39d120786ee3402edf82766afd116ddbc4c693",
      "8b17e8a610f71ee8a65c6dab47ca65c526f165257192bf40d3d89f4e05ef6dec",
-     "08b909696e79ed20eaeade391901ffc621ffd1f74c7e53b803ce46cf62b4a18b"
+     "c8cb6f3bbe1afe1580fa9201d3bcf504b03bfdd48ccf242f62e80e1e063108a6"
     ]
    },
    {
@@ -2516,8 +2518,8 @@
     "record_sha256": "1cb3a986b65dc4b4c551d2a234cdb5262bdea277af605c29e3696e4591fff1f6",
     "inclusion_proof": [
      "e5b3ac220e2c25fe5304b185cbb78a16b69edfe94f9e5d435303248f3a3f737d",
-     "c552a451b73dc7f0184fbf9ae92cf8aa604c598b323826a080e40eb759e8135b",
-     "08b909696e79ed20eaeade391901ffc621ffd1f74c7e53b803ce46cf62b4a18b"
+     "d6e9823412018c026c40475c28ab526d8961ac15c687aa02622f916e08dadefe",
+     "c8cb6f3bbe1afe1580fa9201d3bcf504b03bfdd48ccf242f62e80e1e063108a6"
     ]
    },
    {
@@ -2528,20 +2530,20 @@
     "record_sha256": "703863274eec02557fbf1f5e4439391a69448704917af1c888c1de6fbca343d7",
     "inclusion_proof": [
      "8a3c92ecaac3d7fed2bb8de3b56407c9ffdb2f6fbfc06f81fa1c2d757a88c33f",
-     "c552a451b73dc7f0184fbf9ae92cf8aa604c598b323826a080e40eb759e8135b",
-     "08b909696e79ed20eaeade391901ffc621ffd1f74c7e53b803ce46cf62b4a18b"
+     "d6e9823412018c026c40475c28ab526d8961ac15c687aa02622f916e08dadefe",
+     "c8cb6f3bbe1afe1580fa9201d3bcf504b03bfdd48ccf242f62e80e1e063108a6"
     ]
    },
    {
     "index": 4,
     "id": "CL-5",
     "state": "CLAIM_MEASURED",
-    "leaf_sha256": "0bff2864394b8db6bf068d0ae307bcdde97a0329f1d6e6cf8c5b3b9b467e6a9c",
-    "record_sha256": "4085cdb3db4eda5b1eb3fcdbc4370391c4d73d0aad13a4256995a1a5fd5b6131",
+    "leaf_sha256": "06e867ca5a0843b83c3a28f54ca68f2a6f7dae2793f0d0ed007b2294862140f6",
+    "record_sha256": "981e7891c78ac519a678daed53742ca213c2f62c3c873d272843e97d3b76a493",
     "inclusion_proof": [
      "dc9b2f33ede44a1b06c99b70071f06f37eeed41ce449dc08a4928d7bb823880f",
-     "6f40a894423a2ce0e88d808d5dca20c8b086bc19340dc9c8dc6e9bca9ae3db7c",
-     "762dc680d257ca65b26e13d76598a6a21d2837d91a6817efe93828cb9d1ce2b5"
+     "63c010964da2aa499b36fac9b44cf81dbe4f8ebd6dc42007848623af1317136c",
+     "5771baabc0e184e8cbc17d2fe8a3fb078f03cd3455fa9b3fc872980144a1a4ee"
     ]
    },
    {
@@ -2551,21 +2553,21 @@
     "leaf_sha256": "dc9b2f33ede44a1b06c99b70071f06f37eeed41ce449dc08a4928d7bb823880f",
     "record_sha256": "e6d3bffbf542b5b7531bab94bdc52afe6fffc728e6bec98f9265d2e4e01d0755",
     "inclusion_proof": [
-     "0bff2864394b8db6bf068d0ae307bcdde97a0329f1d6e6cf8c5b3b9b467e6a9c",
-     "6f40a894423a2ce0e88d808d5dca20c8b086bc19340dc9c8dc6e9bca9ae3db7c",
-     "762dc680d257ca65b26e13d76598a6a21d2837d91a6817efe93828cb9d1ce2b5"
+     "06e867ca5a0843b83c3a28f54ca68f2a6f7dae2793f0d0ed007b2294862140f6",
+     "63c010964da2aa499b36fac9b44cf81dbe4f8ebd6dc42007848623af1317136c",
+     "5771baabc0e184e8cbc17d2fe8a3fb078f03cd3455fa9b3fc872980144a1a4ee"
     ]
    },
    {
     "index": 6,
     "id": "ON-2",
     "state": "UNMEASURED",
-    "leaf_sha256": "708b33c7a498fd47d68e545cc933fccb43cee55954d03607ab091ad7cc586220",
-    "record_sha256": "9d0356ed198ab2c019cb35dcee8eda85cc69e7f6a678b036e82d2608d57056c4",
+    "leaf_sha256": "ee70ab971d766fb577f4e238a738f0003f8d0035343491863aa6d4076bdbe475",
+    "record_sha256": "a5bbbbe38686a39eae6dedf3100744ad585b298d736efa2ab400a303be06f00c",
     "inclusion_proof": [
      "7140d3915ddcae2483f7441e3eac7a610f2a20854e377dfc56f9a94081e59d72",
-     "0188777ae145efdec5e8901968851b8d528e7ef34fcf1322c1b6ce1809862910",
-     "762dc680d257ca65b26e13d76598a6a21d2837d91a6817efe93828cb9d1ce2b5"
+     "a30fc768237269e9b1d6a71ce0331d2baca7e0ba1c8967d2d77dad78585b222b",
+     "5771baabc0e184e8cbc17d2fe8a3fb078f03cd3455fa9b3fc872980144a1a4ee"
     ]
    },
    {
@@ -2575,9 +2577,9 @@
     "leaf_sha256": "7140d3915ddcae2483f7441e3eac7a610f2a20854e377dfc56f9a94081e59d72",
     "record_sha256": "d7ba6622698507fb315405ec9cc24c6f42129341166139ac5964fcdb07b5c232",
     "inclusion_proof": [
-     "708b33c7a498fd47d68e545cc933fccb43cee55954d03607ab091ad7cc586220",
-     "0188777ae145efdec5e8901968851b8d528e7ef34fcf1322c1b6ce1809862910",
-     "762dc680d257ca65b26e13d76598a6a21d2837d91a6817efe93828cb9d1ce2b5"
+     "ee70ab971d766fb577f4e238a738f0003f8d0035343491863aa6d4076bdbe475",
+     "a30fc768237269e9b1d6a71ce0331d2baca7e0ba1c8967d2d77dad78585b222b",
+     "5771baabc0e184e8cbc17d2fe8a3fb078f03cd3455fa9b3fc872980144a1a4ee"
     ]
    }
   ],
@@ -2599,5 +2601,5 @@
  },
  "signature_state": "SIGNED BY SIDECAR — the signature is over these bytes, not inside them. See /claims/claimreg-ondo-chainlink-2026-09-22-rev2.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing and certifies nobody.",
  "notes": "Second pass of claim maintenance on named subjects: every claim the public record allows was measured, each one states its window, denominator, method and sources, and each one states what it does not prove. Claims that could not be moved say why.",
- "registry_digest": "2f4683d967cb6b045b9a2bad622b2d58f800d9900bbddfc7176198b85152fd86"
+ "registry_digest": "5edb8b0bb8c54daa04ab06a0a6a7738d12bf0bce54e72d6adf5162e2119bb0bb"
 }
