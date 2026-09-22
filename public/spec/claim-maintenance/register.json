@@ -25,12 +25,14 @@
   "right_of_reply": "A defect in any record here is a defect in this register. Report it to nicholas@csoai.org; corrections are published at https://councilof.ai/api/corrections.",
   "totals": {
     "registries": 1,
+    "registry_files_on_disk": 2,
+    "registries_superseded": 1,
     "subjects": 2,
     "claims": 8,
     "by_state": {
-      "CLAIM_CAPTURED": 8,
-      "CLAIM_MEASURED": 0,
-      "UNMEASURED": 0,
+      "CLAIM_CAPTURED": 1,
+      "CLAIM_MEASURED": 5,
+      "UNMEASURED": 2,
       "UNCHECKABLE": 0
     },
     "claims_conforming_to_artifact_schema": 0,
@@ -40,6 +42,7 @@
     {
       "kind": "vocabulary",
       "registry_id": "claimreg-ondo-chainlink-2026-09-22",
+      "registry_status": "SUPERSEDED",
       "quoted": "UNSIGNED — signer ceremony pending; OTS-anchored instead (no key required)",
       "disclosure": "That sentence is the source registry's own wording, quoted. This register does not confirm anchoring for it: a receipt file is SUBMITTED until its upgrade has been run and its attestation path verified. The receipt's state here is RECEIPT_PRESENT_UPGRADE_UNVERIFIED (spec 8.1-8.3)."
     }
@@ -53,9 +56,9 @@
       "source": "https://chain.link/ (captured 2026-09-22)",
       "claim_count": 5,
       "states": {
-        "CLAIM_CAPTURED": 5,
-        "CLAIM_MEASURED": 0,
-        "UNMEASURED": 0,
+        "CLAIM_CAPTURED": 0,
+        "CLAIM_MEASURED": 4,
+        "UNMEASURED": 1,
         "UNCHECKABLE": 0
       },
       "first_captured": "2026-09-22T00:00:00Z",
@@ -64,10 +67,10 @@
       "last_read_basis": "registry.created_utc",
       "next_scheduled_read": null,
       "next_scheduled_read_state": "UNSCHEDULED",
-      "registry_id": "claimreg-ondo-chainlink-2026-09-22",
-      "registry_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22.json",
-      "registry_schema": "csoai.claim-registry/0.1",
-      "timestamp_receipt": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22.json.ots",
+      "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+      "registry_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+      "registry_schema": "csoai.claim-registry/0.2",
+      "timestamp_receipt": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 0,
       "claims_without_a_specification_state": 0
@@ -80,9 +83,9 @@
       "source": "https://ondo.finance/ (captured 2026-09-22) + api.llama.fi/protocol/ondo-finance",
       "claim_count": 3,
       "states": {
-        "CLAIM_CAPTURED": 3,
-        "CLAIM_MEASURED": 0,
-        "UNMEASURED": 0,
+        "CLAIM_CAPTURED": 1,
+        "CLAIM_MEASURED": 1,
+        "UNMEASURED": 1,
         "UNCHECKABLE": 0
       },
       "first_captured": "2026-09-22T00:00:00Z",
@@ -91,23 +94,48 @@
       "last_read_basis": "registry.created_utc",
       "next_scheduled_read": null,
       "next_scheduled_read_state": "UNSCHEDULED",
-      "registry_id": "claimreg-ondo-chainlink-2026-09-22",
-      "registry_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22.json",
-      "registry_schema": "csoai.claim-registry/0.1",
-      "timestamp_receipt": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22.json.ots",
+      "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+      "registry_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+      "registry_schema": "csoai.claim-registry/0.2",
+      "timestamp_receipt": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 0,
       "claims_without_a_specification_state": 0
     }
   ],
+  "non_registry_files_in_claims_dir": [
+    {
+      "file": "claimreg-ondo-chainlink-2026-09-22-rev2.signed.json",
+      "schema": "csoai.signed-run/0.1"
+    }
+  ],
   "registries": [
     {
+      "status": "LIVE",
+      "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+      "url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+      "schema": "csoai.claim-registry/0.2",
+      "created": "2026-09-22T00:00:00Z",
+      "signature_state_verbatim": "SIGNED BY SIDECAR — the signature is over these bytes, not inside them. See /claims/claimreg-ondo-chainlink-2026-09-22-rev2.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing and certifies nobody.",
+      "signed": true,
+      "signature_binding": "sidecar",
+      "signature_sidecar_url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.signed.json",
+      "sidecar_pin_verified": true,
+      "subjects": 2,
+      "claims": 8
+    },
+    {
+      "status": "SUPERSEDED",
+      "superseded_by": "claimreg-ondo-chainlink-2026-09-22-rev2",
+      "file_sha256": "acc0f9ac2712f8b9cbc5c707142b4e7954d16e1582ddcdd5adb2afaf0e0908fe",
+      "supersession_sha256_matches": true,
       "registry_id": "claimreg-ondo-chainlink-2026-09-22",
       "url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22.json",
       "schema": "csoai.claim-registry/0.1",
       "created": "2026-09-22T00:00:00Z",
       "signature_state_verbatim": "UNSIGNED — signer ceremony pending; OTS-anchored instead (no key required)",
       "signed": false,
+      "signature_binding": "none",
       "subjects": 2,
       "claims": 8
     }
@@ -116,7 +144,8 @@
     "that any claim listed here is false — this register makes no such statement about anyone",
     "that a claim in CLAIM_CAPTURED or UNMEASURED has been checked; it has not",
     "that the subjects here are the only organisations making claims worth observing — this is what we maintain, not a survey",
+    "that a superseded registry was wrong; it was replaced, its bytes are unchanged, and it is still served at its own URL",
     "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified"
   ],
-  "register_digest": "ef202b557fb297526e43c5ae4c578e80869bee6141081b3ef3e13b278d6c6266"
+  "register_digest": "10629b17f2b13a8143eec22d05e492bce5caf314c3d154994abbc7262dde0ecd"
 }

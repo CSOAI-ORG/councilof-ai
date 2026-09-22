@@ -21,20 +21,52 @@ describe("GET /api/claims/register", () => {
   });
 
   it("counts what is on disk, not what we wish existed", () => {
-    // The register is generated from public/claims/*.json. Read the same files here and compare,
-    // so a hand-edited register fails rather than quietly overstating the population (spec 7.5).
-    const registries = readFileSync(
-      resolve(ROOT, "public/claims", register.registries[0].url.split("/").pop()!),
-      "utf8",
-    );
-    const doc = JSON.parse(registries);
-    const onDisk = Object.values(doc.subjects as Record<string, { claims: unknown[] }>).reduce(
-      (n, s) => n + s.claims.length,
-      0,
-    );
-    expect(register.totals.claims).toBe(onDisk);
-    expect(register.totals.subjects).toBe(Object.keys(doc.subjects).length);
+    // The register is generated from public/claims/*.json. Read the same LIVE registries here and
+    // compare, so a hand-edited register fails rather than quietly overstating the population (7.5).
+    const liveFiles = register.registries.filter((r) => r.status === "LIVE");
+    let onDiskClaims = 0;
+    const onDiskSubjects = new Set<string>();
+    for (const r of liveFiles) {
+      const doc = JSON.parse(readFileSync(resolve(ROOT, "public/claims", r.url.split("/").pop()!), "utf8"));
+      for (const [k, s] of Object.entries(doc.subjects as Record<string, { claims: unknown[] }>)) {
+        onDiskSubjects.add(k);
+        onDiskClaims += s.claims.length;
+      }
+    }
+    expect(register.totals.claims).toBe(onDiskClaims);
+    expect(register.totals.subjects).toBe(onDiskSubjects.size);
     expect(register.subjects.reduce((n, s) => n + s.claim_count, 0)).toBe(register.totals.claims);
+  });
+
+  it("resolves supersession instead of double-counting it, and CHECKS the declared bytes", () => {
+    // A revision leaves the prior registry on disk unedited, which is right and which is exactly
+    // how a register comes to report a population nobody maintains. Superseded registries are
+    // listed, excluded from the totals, and their declared sha256 is checked against the file.
+    const superseded = register.registries.filter((r) => r.status === "SUPERSEDED");
+    for (const r of superseded) {
+      expect(r.superseded_by, `${r.registry_id} is SUPERSEDED by nothing`).toBeTruthy();
+      expect(r.file_sha256).toMatch(/^[0-9a-f]{64}$/);
+      // null means the revision declared no sha256; false means it declared one that is wrong.
+      expect(r.supersession_sha256_matches, `${r.registry_id}: declared sha256 does not match the bytes on disk`).not.toBe(false);
+      // Its subjects must not appear twice in the live rows.
+      const rows = register.subjects.filter((s) => s.registry_id === r.registry_id);
+      expect(rows).toHaveLength(0);
+    }
+    expect(register.totals.registries + register.totals.registries_superseded).toBe(
+      register.totals.registry_files_on_disk,
+    );
+    // No subject is listed twice.
+    const keys = register.subjects.map((s) => `${s.registry_id}::${s.subject_key}`);
+    expect(new Set(keys).size).toBe(keys.length);
+    const names = register.subjects.map((s) => s.subject);
+    expect(new Set(names).size, "the same subject is listed more than once").toBe(names.length);
+  });
+
+  it("does not mistake a signed-run envelope for a registry", () => {
+    for (const f of register.non_registry_files_in_claims_dir) {
+      expect(f.schema).not.toMatch(/^csoai\.claim-registry\//);
+    }
+    expect(register.totals.registries).toBeLessThanOrEqual(register.totals.registry_files_on_disk);
   });
 
   it("carries an as_of, and every state count sums to the claim count", () => {
@@ -58,8 +90,17 @@ describe("GET /api/claims/register", () => {
         expect(d, `registry ${r.registry_id} quotes "anchored" with no disclosure beside it`).toBeTruthy();
         expect(d!.disclosure).toMatch(/SUBMITTED until its upgrade/);
       }
-      expect(r.signed).toBe(false);
+      // "signed" is derived from bytes, never from a prose field: a sidecar counts only when the
+      // digest it pins is the digest the file actually has.
+      if (r.signature_binding === "sidecar") {
+        expect(r.signed).toBe(r.sidecar_pin_verified);
+        expect(r.signature_sidecar_url).toContain("/claims/");
+      } else if (r.signature_binding === "none") {
+        expect(r.signed).toBe(false);
+      }
     }
+    // Every quoted signature_state is disclosed, live or superseded, because the register prints it.
+    for (const d of register.disclosures) expect(["LIVE", "SUPERSEDED"]).toContain(d.registry_status);
     expect(register.does_not_prove.join(" ")).toMatch(/receipt is anchored in a block/);
   });
 

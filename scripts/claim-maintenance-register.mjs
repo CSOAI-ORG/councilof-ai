@@ -134,7 +134,48 @@ function readRegistry(file) {
     // they are a quotation, so this register never asserts the source's vocabulary as its own —
     // and `signed` below is derived here rather than trusted from that sentence.
     signature_state_verbatim: doc.signature_state ?? null,
-    signed: Boolean(doc.sig || doc.sig_ed25519 || doc.signature),
+    supersedes: doc.supersedes ?? null,
+    ...signatureOf(file, raw, doc),
+  };
+}
+
+
+/**
+ * Is this registry signed, and over WHICH bytes? A registry may carry the signature inside it, or
+ * — as the rev2 registry does — in a sidecar that pins the registry by sha256. A sidecar is only
+ * a signature of this file if the digest it pins is the digest this file actually has, so that is
+ * checked rather than assumed: an unchecked claim about bytes is the failure this lane exists to
+ * stop, and reading "signed" off a prose field would have reported a signed registry as unsigned.
+ */
+function signatureOf(file, raw, doc) {
+  const inline = Boolean(doc.sig || doc.sig_ed25519 || doc.signature);
+  if (inline) return { signed: true, signature_binding: "inline" };
+  const sidecarFile = file.replace(/\.json$/, ".signed.json");
+  const sidecarPath = join(CLAIMS_DIR, sidecarFile);
+  if (!existsSync(sidecarPath)) return { signed: false, signature_binding: "none" };
+  let sidecar;
+  try {
+    sidecar = JSON.parse(readFileSync(sidecarPath, "utf8"));
+  } catch {
+    return { signed: false, signature_binding: "sidecar_unparseable", signature_sidecar_url: `${BASE}/claims/${sidecarFile}` };
+  }
+  const pinned = sidecar?.payload?.artifact?.sha256 ?? null;
+  const actual = sha256(Buffer.from(raw, "utf8"));
+  const ok = Boolean(pinned) && pinned === actual;
+  return {
+    signed: ok,
+    signature_binding: "sidecar",
+    signature_sidecar_url: `${BASE}/claims/${sidecarFile}`,
+    sidecar_pins_sha256: pinned,
+    file_sha256_read_here: actual,
+    sidecar_pin_verified: ok,
+    ...(ok
+      ? {}
+      : {
+          sidecar_pin_note:
+            "The sidecar does not pin the bytes of this file as read here. That is recorded, not resolved: " +
+            "a signature over other bytes is not a signature over these.",
+        }),
   };
 }
 
@@ -142,11 +183,43 @@ const files = existsSync(CLAIMS_DIR)
   ? readdirSync(CLAIMS_DIR).filter((f) => f.endsWith(".json")).sort()
   : [];
 
-const registries = files.map(readRegistry);
+const all = files.map(readRegistry);
+// A directory of .json files is not a set of registries. public/claims/ also holds signed-run
+// envelopes (csoai.signed-run/0.1) that carry a payload, not subjects; counting those as
+// registries inflates totals.registries with files that hold no claims. Only a document that
+// declares a claim-registry schema, or that carries an artifact array, is a registry here.
+const isRegistry = (r) =>
+  /^csoai\.claim-registry\//.test(String(r.schema || "")) || r.subjects.length > 0;
+const registries = all.filter(isRegistry);
+const nonRegistryFiles = all.filter((r) => !isRegistry(r)).map((r) => ({ file: r.file, schema: r.schema }));
+
+// SUPERSESSION. A revision declares `supersedes: { registry_id, file, sha256 }` and the prior
+// file stays on disk, unedited, served at its own URL — which is right, and which means a naive
+// read of the directory counts the same subject twice and reports a population nobody maintains.
+// The superseded registry is therefore resolved out of the live totals and reported separately,
+// and the recorded sha256 is CHECKED against the bytes on disk: a supersession is a claim about
+// specific bytes, and an unchecked claim about bytes is the thing this whole lane exists to stop.
+const supersededIds = new Map();
+for (const r of registries) {
+  const sup = r.supersedes;
+  if (!sup) continue;
+  const id = sup.registry_id || (sup.file || "").split("/").pop()?.replace(/\.json$/, "");
+  if (id) supersededIds.set(id, { by: r.registry_id, declared_sha256: sup.sha256 ?? null });
+}
+for (const r of registries) {
+  const hit = supersededIds.get(r.registry_id);
+  if (!hit) continue;
+  r.superseded_by = hit.by;
+  const actual = sha256(readFileSync(join(CLAIMS_DIR, r.file)));
+  r.supersession_sha256_matches = hit.declared_sha256 ? actual === hit.declared_sha256 : null;
+  r.file_sha256 = actual;
+}
+const live = registries.filter((r) => !r.superseded_by);
+const superseded = registries.filter((r) => r.superseded_by);
 const asOf = new Date().toISOString().replace(/T.*/, "T00:00:00Z");
 
 const subjectRows = [];
-for (const r of registries) {
+for (const r of live) {
   for (const s of r.subjects) {
     const min = (a) => (a.length ? a.slice().sort()[0] : null);
     const max = (a) => (a.length ? a.slice().sort().slice(-1)[0] : null);
@@ -182,7 +255,9 @@ for (const r of registries) {
 subjectRows.sort((a, b) => (a.subject < b.subject ? -1 : a.subject > b.subject ? 1 : 0));
 
 const totals = {
-  registries: registries.length,
+  registries: live.length,
+  registry_files_on_disk: registries.length,
+  registries_superseded: superseded.length,
   subjects: subjectRows.length,
   claims: subjectRows.reduce((n, s) => n + s.claim_count, 0),
   by_state: Object.fromEntries(
@@ -199,11 +274,15 @@ const totals = {
  * source bytes are not edited (they may be signed, and signed bytes are superseded, never edited);
  * the register quotes them and records the distinction beside the quotation.
  */
+// Computed over EVERY registry the register prints, live or superseded: if these bytes carry
+// the word, these bytes carry the disclosure. Scoping this to live registries only would print
+// a superseded registry's "OTS-anchored" wording with nothing beside it.
 const disclosures = registries
   .filter((r) => /anchor/i.test(String(r.signature_state_verbatim || "")))
   .map((r) => ({
     kind: "vocabulary",
     registry_id: r.registry_id,
+    registry_status: r.superseded_by ? "SUPERSEDED" : "LIVE",
     quoted: r.signature_state_verbatim,
     disclosure:
       "That sentence is the source registry's own wording, quoted. This register does not confirm " +
@@ -248,13 +327,26 @@ const register = {
   totals,
   disclosures,
   subjects: subjectRows,
+  non_registry_files_in_claims_dir: nonRegistryFiles,
   registries: registries.map((r) => ({
+    status: r.superseded_by ? "SUPERSEDED" : "LIVE",
+    ...(r.superseded_by
+      ? {
+          superseded_by: r.superseded_by,
+          file_sha256: r.file_sha256,
+          supersession_sha256_matches: r.supersession_sha256_matches,
+        }
+      : {}),
     registry_id: r.registry_id,
     url: r.registry_url,
     schema: r.schema,
     created: r.created,
     signature_state_verbatim: r.signature_state_verbatim,
     signed: r.signed,
+    signature_binding: r.signature_binding,
+    ...(r.signature_sidecar_url ? { signature_sidecar_url: r.signature_sidecar_url } : {}),
+    ...(r.sidecar_pin_verified === undefined ? {} : { sidecar_pin_verified: r.sidecar_pin_verified }),
+    ...(r.sidecar_pin_note ? { sidecar_pin_note: r.sidecar_pin_note } : {}),
     subjects: r.subjects.length,
     claims: r.subjects.reduce((n, s) => n + s.claims.length, 0),
     ...(r.error ? { error: r.error } : {}),
@@ -263,6 +355,7 @@ const register = {
     "that any claim listed here is false — this register makes no such statement about anyone",
     "that a claim in CLAIM_CAPTURED or UNMEASURED has been checked; it has not",
     "that the subjects here are the only organisations making claims worth observing — this is what we maintain, not a survey",
+    "that a superseded registry was wrong; it was replaced, its bytes are unchanged, and it is still served at its own URL",
     "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified",
   ],
 };
@@ -292,12 +385,14 @@ if (CHECK) {
     process.exit(1);
   }
   console.log(
-    `[register] OK — ${totals.subjects} subject(s), ${totals.claims} claim(s), ${totals.registries} registry file(s) on disk`,
+    `[register] OK — ${totals.subjects} subject(s), ${totals.claims} claim(s), ` +
+      `${totals.registries} live registry file(s) (${totals.registries_superseded} superseded)`,
   );
 } else {
   writeFileSync(OUT, body);
   console.log(
     `[register] wrote ${OUT.replace(ROOT + "/", "")} — ${totals.subjects} subject(s), ${totals.claims} claim(s) ` +
-      `(${STATES.map((s) => `${s} ${totals.by_state[s]}`).join(", ")}) as_of ${asOf}`,
+      `(${STATES.map((s) => `${s} ${totals.by_state[s]}`).join(", ")}) across ${totals.registries} live registry ` +
+      `file(s), ${totals.registries_superseded} superseded, as_of ${asOf}`,
   );
 }
