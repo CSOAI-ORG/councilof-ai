@@ -109,10 +109,11 @@ describe("toPill / pillsFor", () => {
       reason: "697 of 721 counters answered",
     };
 
-    it("prints the window beside the figure, so nobody assumes which one it is", () => {
+    it("prints the window beside the figure, in plain words, so nobody assumes which one it is", () => {
       const p = toPill("gross_distribution", measured);
-      expect(p.window).toBe("2026-08-23..2026-09-21 (30 complete UTC days)");
-      expect(p.title).toContain("window 2026-08-23..2026-09-21");
+      expect(p.window).toBe("30 days to 21 Sep 2026");
+      // The exact span the artifact measured is still one hover away, unrounded.
+      expect(p.title).toContain("window 2026-08-23..2026-09-21 (30 complete UTC days)");
     });
 
     it("prefers the evidence artifact over the upstream counter for its link", () => {
@@ -155,12 +156,13 @@ describe("toPill / pillsFor", () => {
     const tones = pillsFor(
       {
         gross_distribution: { state: "STALE", value: 10 },
-        economic_use: { state: "PARTIAL", value: 2 },
-        registry_listings: { state: "READ", value: 41 },
+        registry_listings: { state: "PARTIAL", value: 41 },
+        economic_use: { state: "READ", value: 2 },
       },
-      HERO_STAGES,
+      FULL_FUNNEL_STAGES,
     ).map((p) => p.tone);
-    expect(tones).toEqual(["STALE", "PARTIAL", "numeric"]);
+    expect(tones.slice(0, 3)).toEqual(["PARTIAL", "STALE", "UNCHECKABLE"]);
+    expect(pillsFor({ economic_use: { state: "READ", value: 2 } }, ["economic_use"])[0].tone).toBe("numeric");
   });
 
   it("the funnel view covers all seven stages; stages the payload lacks are UNCHECKABLE", () => {
@@ -285,7 +287,7 @@ describe("LiveCounters.tsx — no typed figure, dash until the payload lands", (
     expect(component).toContain("data-state={placeholder ? \"pending\" : pill.tone}");
     expect(component).toContain("data-window=");
     expect(component).toContain('data-testid={`live-counters-${variant}`}');
-    expect(component).toMatch(/variant === "hero" \? HERO_STAGES : FOOTER_STAGES/);
+    expect(component).toContain("stagesFor(variant)");
   });
 
   it("links the evidence artifact when the row names one, and the upstream source otherwise", () => {
