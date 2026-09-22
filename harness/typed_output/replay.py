@@ -180,9 +180,18 @@ def run_parser(
     """Extract a label for every item, returning {item_id: Extraction}."""
     out: dict[str, Extraction] = {}
     started = time.monotonic()
+    # A parser id names the implementation, not its settings. Two runs of
+    # `ollama-schema-v1:qwen2.5:7b` with different guards, a different seed or a
+    # different model digest are different parsers, and a cache keyed on the id
+    # alone would serve one run's answers to the other -- silently, and in a
+    # comparison whose whole value is that the bytes are identical. The key
+    # carries the full descriptor instead.
+    fingerprint = hashlib.sha256(
+        json.dumps(parser.describe(), sort_keys=True, default=str).encode("utf-8")
+    ).hexdigest()[:16]
     for index, item in enumerate(items, start=1):
         text = item.get("raw_output") or ""
-        key = cache.key(parser.parser_id, text, item.labels)
+        key = cache.key(f"{parser.parser_id}@{fingerprint}", text, item.labels)
         found = cache.get(key)
         if found is None:
             found = _extract_with_retry(parser, text, item.labels)
@@ -455,7 +464,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"  parser {name} {options}", file=sys.stderr, flush=True)
         try:
             parser = build_parser(name, **options)
-        except ParserError as error:
+        except (ParserError, ImportError) as error:
             report["parsers"][name] = {
                 "status": "UNAVAILABLE",
                 "error": str(error).splitlines()[0],
