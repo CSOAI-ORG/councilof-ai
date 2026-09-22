@@ -43,6 +43,38 @@ BASELINES = {
 }
 
 
+def head_registry(repo: Path) -> dict:
+    """The registry nothing else supersedes — the head of the chain, not the last name in a sort.
+
+    Sorting the filenames gets this wrong: "...2026-09-22.json" sorts after
+    "...2026-09-22-rev2.json" because "." outranks "-", so a lexical pick names the file that was
+    superseded. The chain is in the bytes, so read it from there.
+    """
+    d = repo / "public" / "claims"
+    files = [p for p in sorted(d.glob("claimreg-*.json")) if not p.name.endswith(".signed.json")] \
+        if d.exists() else []
+    superseded: set[str] = set()
+    parsed: dict[Path, dict] = {}
+    for p in files:
+        try:
+            j = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        parsed[p] = j
+        sup = j.get("supersedes") or {}
+        if isinstance(sup, dict) and sup.get("file"):
+            superseded.add(str(sup["file"]).split("/")[-1])
+    heads = [p for p in parsed if p.name not in superseded]
+    if len(heads) != 1:
+        return {"registry": None, "registry_sha256": None,
+                "registry_note": (f"{len(heads)} registries are superseded by nothing ({sorted(p.name for p in heads)}); "
+                                  "the watch names none rather than guessing which one it maintains")
+                if parsed else "no registry is present in this checkout"}
+    p = heads[0]
+    return {"registry": f"/claims/{p.name}", "registry_sha256": c.sha256_hex(p.read_bytes()),
+            "registry_supersedes": (parsed[p].get("supersedes") or {}).get("registry_id")}
+
+
 def previous(out: Path, cid: str) -> dict | None:
     runs = sorted(p for p in out.glob("run-*") if (p / f"{cid}.json").exists())
     return json.loads((runs[-1] / f"{cid}.json").read_text(encoding="utf-8")) if runs else None
@@ -124,12 +156,7 @@ def main() -> int:
         "run_id": run_id,
         "ran_at_utc": c.now_iso(),
         "cadence": "weekly",
-        "registry": next((f"/claims/{p.name}" for p in sorted(
-            (repo / "public" / "claims").glob("claimreg-*.json"), reverse=True)
-            if not p.name.endswith(".signed.json")), None),
-        "registry_sha256": next((c.sha256_hex(p.read_bytes()) for p in sorted(
-            (repo / "public" / "claims").glob("claimreg-*.json"), reverse=True)
-            if not p.name.endswith(".signed.json")), None),
+        **head_registry(repo),
         "claims_touched": sorted(results),
         "states": {k: v.get("state") for k, v in sorted(results.items())},
         "artifacts": {f"{k}.json": c.sha256_hex((rundir / f"{k}.json").read_bytes()) for k in sorted(results)},

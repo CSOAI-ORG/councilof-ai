@@ -24,6 +24,7 @@ import merkle_rfc9162 as mk  # noqa: E402
 import oracle_share as osh  # noqa: E402
 import presence  # noqa: E402
 import restatement as rs  # noqa: E402
+import watch_run  # noqa: E402
 
 
 # ---------------------------------------------------------------- RFC 9162 Merkle
@@ -273,6 +274,48 @@ def test_presence_control_a_planted_removal_must_be_detected_without_an_allegati
     assert "not an allegation" in d["review_note"]
     same = presence.diff(before, before)
     assert same["observed_change_requiring_review"] is False and same["review_note"] is None
+
+
+# ---------------------------------------------------------------- the registry the watch maintains
+
+def _reg(tmp, name, supersedes=None):
+    import json as _j
+    d = tmp / "public" / "claims"
+    d.mkdir(parents=True, exist_ok=True)
+    body = {"registry_id": name, "subjects": {}}
+    if supersedes:
+        body["supersedes"] = {"registry_id": supersedes, "file": "/claims/" + supersedes + ".json"}
+    (d / (name + ".json")).write_text(_j.dumps(body), encoding="utf-8")
+
+
+def test_watch_names_the_head_of_the_supersession_chain_not_the_last_name_in_a_sort():
+    """FAILING CONTROL: a lexical pick names the SUPERSEDED file, because '.' outranks '-'."""
+    import tempfile
+    from pathlib import Path as _P
+    with tempfile.TemporaryDirectory() as t:
+        tmp = _P(t)
+        _reg(tmp, "claimreg-x-2026-09-22")
+        _reg(tmp, "claimreg-x-2026-09-22-rev2", supersedes="claimreg-x-2026-09-22")
+        names = sorted((tmp / "public" / "claims").glob("claimreg-*.json"), reverse=True)
+        assert names[0].name == "claimreg-x-2026-09-22.json", "the lexical trap this rule exists for is gone"
+        got = watch_run.head_registry(tmp)
+        assert got["registry"] == "/claims/claimreg-x-2026-09-22-rev2.json", got
+        assert got["registry_supersedes"] == "claimreg-x-2026-09-22"
+
+
+def test_watch_refuses_to_guess_when_two_registries_are_superseded_by_nothing():
+    """FAILING CONTROL: two heads is ambiguous, so the watch names none instead of picking one."""
+    import tempfile
+    from pathlib import Path as _P
+    with tempfile.TemporaryDirectory() as t:
+        tmp = _P(t)
+        _reg(tmp, "claimreg-a-2026-09-22")
+        _reg(tmp, "claimreg-b-2026-09-22")
+        got = watch_run.head_registry(tmp)
+        assert got["registry"] is None and "guessing" in got["registry_note"], got
+    with tempfile.TemporaryDirectory() as t:
+        got = watch_run.head_registry(_P(t))
+        assert got["registry"] is None and "no registry" in got["registry_note"], got
 
 
 # ---------------------------------------------------------------- language boundary
