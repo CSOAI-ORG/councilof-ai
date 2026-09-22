@@ -1,0 +1,146 @@
+{
+  "schema": "csoai.axis-market-map/0.1",
+  "as_of": "2026-09-22",
+  "kind": "analyst judgement",
+  "note": "Who has the exact problem each axis's data answers, and the standards or regulatory hook where the connection is real. This file is analyst input to scripts/axis-doors-probe.mjs, not a measurement: nothing here is derived from an endpoint and nothing here is a claim about any buyer having bought. 'none identified' is a first-class answer. Axis ids are the board's own; the probe refuses an id the board does not carry.",
+  "axes": {
+    "governance": {
+      "buyer": "AI Act compliance lead at a provider or deployer who must place a system in a risk tier (Art. 6 / Annex III) and defend the classification",
+      "hook": "EU AI Act Art. 6 + Annex III (high-risk classification); Art. 5 (prohibited practices)",
+      "x402_door": "commission_card / api/request-attestation (a signed card for a named subject on this frozen bank)",
+      "gap": "No public leader (own model led); the buyer gets a fleet mean and harm tail, not a vendor ranking"
+    },
+    "safety": {
+      "buyer": "Model provider trust-and-safety / red-team lead measuring over- and under-refusal on paired requests",
+      "hook": "none identified (NIST AI 600-1 lists refusal calibration as a suggested action, not a requirement)",
+      "x402_door": "commission_card / api/request-attestation",
+      "gap": "Leader is a TIE; the sellable result is the paired-item card, not a rank"
+    },
+    "provenance": {
+      "buyer": "Provider of a generative system that must mark outputs machine-readably, and the platform ingesting them",
+      "hook": "EU AI Act Art. 50(2) (machine-readable marking of synthetic content); C2PA manifests",
+      "x402_door": "api/evidence-bundle?obligation=article-50 (OSCAL bundle of already-signed cards); art50_marking_evidence for a named URL",
+      "gap": "No public leader (own model led)"
+    },
+    "continuity": {
+      "buyer": "CISO / crypto-agility programme owner asking whether an assistant reasons correctly about post-quantum status of an assumption",
+      "hook": "NIST FIPS 203/204/205 and NIST IR 8547 transition timeline (the facts the bank grades against)",
+      "x402_door": "commission_card / api/request-attestation",
+      "gap": "No public leader (own model led)"
+    },
+    "conformance": {
+      "buyer": "MCP host, gateway or tool-platform team checking whether a model honours tool contracts",
+      "hook": "none identified (the Model Context Protocol specification is the reference; no regulatory hook)",
+      "x402_door": "commission_card / api/request-attestation",
+      "gap": "No public leader (own model led)"
+    },
+    "openness": {
+      "buyer": "OSPO / open-source compliance counsel deciding whether a licence matches an intended use, incl. the GPAI open-source carve-out",
+      "hook": "EU AI Act Art. 53(2) free-and-open-source GPAI exemption; OSI Open Source AI Definition",
+      "x402_door": "api/evidence-bundle?obligation=article-53",
+      "gap": "No public leader (own model led)"
+    },
+    "machinery-conformity": {
+      "buyer": "Machinery OEM regulatory-affairs lead and notified bodies classifying self-evolving safety functions",
+      "hook": "Regulation (EU) 2023/1230 (Machinery), Annex I Part A self-evolving behaviour (mandatory third-party assessment from 20 Jan 2027)",
+      "x402_door": "commission_card / api/request-attestation",
+      "gap": "Public leader dropped: no signed per-model card in the index"
+    },
+    "care": {
+      "buyer": "Consumer-facing assistant provider weighing protect-versus-help conduct under paired scenarios",
+      "hook": "none identified with confidence (adjacent, unverified: EU AI Act Art. 5(1)(b) vulnerable-group exploitation)",
+      "x402_door": "commission_card / api/request-attestation",
+      "gap": "No public leader (own model led)"
+    },
+    "cross-reality": {
+      "buyer": "Agent-platform / computer-use product team deciding when an autonomous action needs confirmation",
+      "hook": "EU AI Act Art. 14 human oversight (only where the deployment is high-risk)",
+      "x402_door": "commission_card / api/request-attestation",
+      "gap": "Public leader dropped: no signed per-model card in the index"
+    },
+    "detector-interop": {
+      "buyer": "Watermark and detector vendors, and platforms that must detect marks from other vendors' generators",
+      "hook": "EU AI Act Art. 50(2) wording: marking must be 'effective, interoperable, robust and reliable'",
+      "x402_door": "art50_marking_evidence / api/art50/marking-evidence; api/evidence-bundle?obligation=article-50",
+      "gap": "Public leader dropped: no signed per-model card in the index"
+    },
+    "art5-safeguard": {
+      "buyer": "Deployer compliance / DPO checking whether a system trips an Art. 5 prohibited practice",
+      "hook": "EU AI Act Art. 5 (applies since 2 Feb 2025)",
+      "x402_door": "commission_card / api/request-attestation",
+      "gap": "No public leader (own model led)"
+    },
+    "swarm": {
+      "buyer": "Multi-agent orchestration vendor measuring coordination safety across agents",
+      "hook": "none identified",
+      "x402_door": "commission_card / api/request-attestation",
+      "gap": "Separation UNTESTED: a point leader without a paired test"
+    },
+    "affect": {
+      "buyer": "Companion / assistant app provider and its trust-and-safety lead (manipulation, disclosure, vulnerability)",
+      "hook": "EU AI Act Art. 5(1)(a) manipulation, Art. 5(1)(f) emotion recognition in workplace/education, Art. 50(1) disclosure of AI interaction",
+      "x402_door": "commission_card / api/request-attestation",
+      "gap": "No public leader (own model led)"
+    },
+    "jail": {
+      "buyer": "Agent sandbox / runtime-security team that needs an escape-attempt detector with a known false-positive rate",
+      "hook": "EU AI Act Art. 15 robustness (only where high-risk); otherwise none identified",
+      "x402_door": "commission_card / api/request-attestation",
+      "gap": "Recall of the best zero-FP detector is low; the honest result is the miss rate"
+    },
+    "effect-binding": {
+      "buyer": "MCP server operators, agent-gateway and enterprise IAM teams asking whether authorization binds to the executed request",
+      "hook": "MCP authorization specification (OAuth 2.1, RFC 8707 resource indicators); regulatory: none identified",
+      "x402_door": "none per-axis (mcp_trust is the free census; the signed probe artifact is the result)",
+      "gap": "No Hub bank (server probe, not a bank); the evidence artifact 404s on the edge today and is only reachable from the mirror; no per-axis page until this branch deploys"
+    },
+    "provenance-controls": {
+      "buyer": "Exchange listing / due-diligence analyst and RWA issuer needing on-ledger control facts (freeze, allowlist, domain)",
+      "hook": "GENIUS Act (US, 2025) requirement that a permitted issuer can freeze/seize; MiCA issuer obligations indirectly",
+      "x402_door": "rwa_evidence / api/rwa/evidence?asset=<symbol>",
+      "gap": "n=6 instruments; unsigned run artifact was upgraded to Ed25519 on the board"
+    },
+    "reserve-attestation": {
+      "buyer": "Exchange listing team, treasurer or risk lead wanting an independent read of whether reserve-attestation language exists",
+      "hook": "MiCA Title III/IV reserve-of-assets rules; GENIUS Act monthly reserve reports examined by a registered accounting firm; NYDFS June 2022 reserve guidance",
+      "x402_door": "rwa_evidence / api/rwa/evidence?asset=<symbol>",
+      "gap": "9 of 16 UNCHECKABLE (no on-chain Domain); risk verdict UNMEASURED by design"
+    },
+    "regulatory-framework": {
+      "buyer": "Exchange or custodian compliance lead confirming which regime an issuer declares",
+      "hook": "MiCA authorisation (EMT/ART issuers); GENIUS Act permitted-issuer status; NYDFS",
+      "x402_door": "rwa_evidence / api/rwa/evidence?asset=<symbol>",
+      "gap": "Declaration presence only, never compliance; 9 of 16 UNCHECKABLE"
+    },
+    "distribution-integrity": {
+      "buyer": "Market-structure analyst or listing team reading chain supply and holder distribution",
+      "hook": "none identified (supply and holder facts feed MiCA significance thresholds but no article requires this reading)",
+      "x402_door": "rwa_evidence / api/rwa/evidence?asset=<symbol>",
+      "gap": "represented-vs-distributed stays UNCHECKABLE without a same-unit pair"
+    },
+    "custody-disclosure": {
+      "buyer": "Exchange listing / treasury lead checking whether a custodian and auditor are named and confirmable",
+      "hook": "MiCA Art. 37 custody of reserve assets; GENIUS Act reserve custody and audit provisions",
+      "x402_door": "rwa_evidence / api/rwa/evidence?asset=<symbol>",
+      "gap": "Disclosure only, never custodian quality; 9 of 16 UNCHECKABLE"
+    },
+    "ai-adoption-components": {
+      "buyer": "Policy analyst or macro strategist citing EU AI-adoption series with a recomputable source",
+      "hook": "none identified",
+      "x402_door": "none per-axis (api/eunomia-data?feed=1 is the only data feed door and is not axis-scoped)",
+      "gap": "Two public series, not an index; bank dataset keeps the retired name gspc-ai-economy-index"
+    },
+    "labour-components": {
+      "buyer": "Policy analyst or macro strategist citing EU labour series with a recomputable source",
+      "hook": "none identified",
+      "x402_door": "none per-axis",
+      "gap": "Two public series, not an index; bank dataset keeps the retired name gspc-human-labour-index"
+    },
+    "humanoid-labour-index": {
+      "buyer": "Robotics analyst or investor checking whether a vendor publishes a dated deployment count on a stable URL",
+      "hook": "none identified",
+      "x402_door": "none per-axis",
+      "gap": "Disclosure facts on 8 frozen URLs; fleet size, hours and incidents stay UNMEASURED"
+    }
+  }
+}

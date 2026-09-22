@@ -69,3 +69,64 @@ describe("llms.txt derives the tool counts it publishes", () => {
   });
 
 });
+
+/**
+ * The per-axis sections. llms-full.txt used to type a "deep reference" block per axis with n frozen
+ * in the template, and no block at all for the slot ADR-002 added; llms.txt listed axis NAMES but
+ * no door that serves one axis's result. Both are now rendered from GET /api/gspc → axes[], so the
+ * only offline check that means anything is self-consistency: the axis ids behind the row-door
+ * lines in llms.txt must be exactly the ids in the board snapshot llms-full.txt took from the same
+ * fetch. A missing or extra line here is a producer bug, not a board change.
+ */
+describe("llms.txt derives one row door per axis on the live board", () => {
+  const snapshotAxes = (): string[] => {
+    const full = R("public/llms-full.txt");
+    const m = full.match(/## 2\. CURRENT BOARD SNAPSHOT\s*```json\s*([\s\S]*?)```/);
+    expect(m, "llms-full.txt carries the board snapshot").toBeTruthy();
+    const snap = JSON.parse(m![1]);
+    return (snap.axes as { axis: string }[]).map((a) => a.axis);
+  };
+
+  it("the templates hold the placeholders, and llms-full no longer types n per axis", () => {
+    expect(R("scripts/llms/llms.txt.tmpl")).toMatch(/\{\{AXIS_DOORS_SECTION\}\}/);
+    const full = R("scripts/llms/llms-full.txt.tmpl");
+    expect(full).toMatch(/\{\{AXIS_DEEP_SECTION\}\}/);
+    expect(full, "a typed n is a number nothing retires").not.toMatch(/^- n: \d+/m);
+    expect(full, "a typed per-axis page URL is a list the board outgrows").not.toMatch(/^- page: https:/m);
+  });
+
+  it("the producer names GET /api/gspc axes[] as the source of both sections", () => {
+    const s = R("scripts/llms-txt.mjs");
+    expect(s).toMatch(/function axisDoorsSection\(b\)/);
+    expect(s).toMatch(/function axisDeepSection\(b\)/);
+    expect(s).toMatch(/\/api\/gspc\?axis=/);
+  });
+
+  it("row-door lines in llms.txt are exactly the axes in the llms-full snapshot", () => {
+    const out = R("public/llms.txt");
+    const section = out.match(/## Axis doors[\s\S]*?\n## /);
+    expect(section, "llms.txt carries the Axis doors section").toBeTruthy();
+    const lines = section![0].split("\n").filter((l) => l.startsWith("- ") && l.includes("?axis="));
+    const ids = lines.map((l) => l.match(/\?axis=([a-z0-9-]+)/)![1]);
+    expect(ids.sort()).toEqual([...snapshotAxes()].sort());
+    for (const l of lines) {
+      expect(l, "every door line names the per-axis page as the edge serves it (slashless; .html is a 308)").toMatch(/https:\/\/councilof\.ai\/axis\/[a-z0-9-]+( |$)/);
+      expect(l, "every door line names what stands behind the row, or says the row carries nothing").toMatch(/bank https:|evidence https:|bank: none/);
+    }
+  });
+
+  it("llms-full.txt carries one deep block per snapshot axis, each with the row door", () => {
+    const full = R("public/llms-full.txt");
+    for (const id of snapshotAxes()) {
+      expect(full).toContain(`### ${id}\n`);
+      expect(full).toContain(`- row: https://councilof.ai/api/gspc?axis=${id}`);
+    }
+  });
+
+  it("no typed board count survives in the prose the template controls", () => {
+    const t = R("scripts/llms/llms.txt.tmpl");
+    expect(t).not.toMatch(/"22 measured"/);
+    expect(t).not.toMatch(/Do not bump the board to 23/);
+    expect(t, "the status of the newest slot is read from its row, never typed").not.toMatch(/effect-binding, a declared slot with no run behind it/);
+  });
+});

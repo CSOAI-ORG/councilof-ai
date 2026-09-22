@@ -112,6 +112,15 @@ export async function getAxisTool(origin: string, args: Record<string, unknown>)
     interval: row.interval ?? null,
     leader: row.leader ?? null,
     dataset: row.dataset ?? null,
+    // The doors behind the row, copied from it: a model-comparison axis carries a frozen bank on
+    // the Hub, a deterministic-facts axis carries a run artifact, and a row that carries neither
+    // returns null for both rather than an invented URL. row_url is the same board filtered to
+    // this one axis, so a caller can re-fetch exactly what this tool read.
+    kind: row.kind ?? null,
+    dataset_url: row.dataset_url ?? null,
+    evidence_url: typeof row.evidence_url === "string" && row.evidence_url.startsWith("/")
+      ? `${origin}${row.evidence_url}` : (row.evidence_url ?? null),
+    row_url: `${origin}/api/gspc?axis=${encodeURIComponent(String(row.axis))}`,
     note: row.note ?? null,
     as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
     source: `${origin}/api/gspc`,

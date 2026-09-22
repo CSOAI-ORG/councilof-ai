@@ -2,7 +2,7 @@
 
 ## 1. THE LID
 
-The GSPC board: **23 axis · 22 measured** = 14 model-comparison + 8 deterministic-fact.
+The GSPC board: **23 axis · 23 measured** = 14 model-comparison + 9 deterministic-fact.
 Measurement, not certification. Anyone can re-check.
 
 ## 1b. x402 catalog trust (counts only — fetch, never freeze)
@@ -39,18 +39,18 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
   "as_of": null,
   "totals": {
     "axes": 23,
-    "measured_axes": 22,
-    "unmeasured_axes": 1,
-    "quotable_axes": 22,
-    "public_count": "23 axis · 22 measured",
+    "measured_axes": 23,
+    "unmeasured_axes": 0,
+    "quotable_axes": 23,
+    "public_count": "23 axis · 23 measured",
     "model_fleets": 14,
-    "fact_runs": 8,
-    "count_grammar": "23 axis are on the board; 22 of them carry a measurement and 1 are declared slots with no run behind them. The larger number counts slots, the smaller counts measurements — quote both or quote the smaller. A published slot exists so the gap is visible; it is not evidence of anything having been measured.",
+    "fact_runs": 9,
+    "count_grammar": "23 axis are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own.",
     "by_family": {
       "gspc": {
         "axes": 15,
-        "measured": 14,
-        "note": "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically."
+        "measured": 15,
+        "note": "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically. Plus effect-binding (ADR-002), a deterministic-facts probe of tool-call SERVERS, not a fleet: n counts servers probed, it has no leader, no accuracy and no separation, and it joins no mean."
       },
       "financial": {
         "axes": 8,
@@ -65,10 +65,11 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     },
     "sweep_note": "<not mirrored: a dated prose note. Read it live at GET /api/gspc -> totals.sweep_note>",
     "financial_run_attestations": {
-      "run_artifacts": 8,
-      "ed25519_signed": 1,
+      "run_artifacts": 9,
+      "ed25519_signed": 2,
       "content_addressed_unsigned": 7,
       "signed_axes": [
+        "effect-binding",
         "provenance-controls"
       ],
       "unsigned_axes": [
@@ -80,11 +81,11 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
         "labour-components",
         "humanoid-labour-index"
       ],
-      "note": "Derived from each deterministic-facts axis's run_attestation field. A content_id proves identity of bytes, not signer authorization."
+      "note": "Derived from each deterministic-facts axis's run_attestation field, in BOTH families since 2026-09-22 (effect-binding is a gspc-family fact run). A content_id proves identity of bytes, not signer authorization."
     },
     "license": "CC-BY-4.0",
     "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
-    "items": 969,
+    "items": 1230,
     "items_note": "items sums each axis's n. Financial-axis n values count issuer accounts, public series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
     "comparison_axes": 14,
     "separated_leads": 0,
@@ -93,7 +94,7 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     "separation_scope_note": "Separation asks whether a leader's lead over a fleet is statistically real, so it applies only to the model-comparison axes. The financial axes have no fleet and no leader: they are not counted as untested, because no separation test is applicable to them.",
     "externally_led_axes": 3,
     "public_leader_count": 3,
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "lid": "23 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
     "own_leaders_excluded": 8,
     "own_leaders_excluded_axes": [
       "governance",
@@ -250,10 +251,10 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     },
     {
       "axis": "effect-binding",
-      "status": "UNMEASURED",
+      "status": "MEASURED",
       "family": "gspc",
-      "kind": "declared-slot",
-      "n": 0,
+      "kind": "deterministic-facts",
+      "n": 261,
       "accuracy": null,
       "separation": null
     },
@@ -333,7 +334,9 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 }
 ```
 
-## 3. THE AXES — deep reference (23 axis · 22 measured, read live at generation)
+## 3. THE AXES — deep reference (23 axis · 23 measured, read live at generation)
+
+Every block below is rendered from the same GET /api/gspc fetch as the snapshot above; nothing in it is typed. The `row` URL filters the live board to that one axis; `page` is the per-axis reference page; `bank`/`evidence` is what stands behind the row.
 
 ### governance
 - family: `gspc`
@@ -341,16 +344,19 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - status: `MEASURED`
 - n: 237
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/governance.html
+- row: https://councilof.ai/api/gspc?axis=governance
+- page: https://councilof.ai/axis/governance
+- bank: https://huggingface.co/datasets/csoai/gspc-gov
 
 ### safety
 - family: `gspc`
 - kind: `model-comparison`
 - status: `MEASURED`
 - n: 36
-- accuracy: 0.944
 - separation: `TIE`
-- page: https://councilof.ai/axis/safety.html
+- row: https://councilof.ai/api/gspc?axis=safety
+- page: https://councilof.ai/axis/safety
+- bank: https://huggingface.co/datasets/csoai/gspc-agi
 
 ### provenance
 - family: `gspc`
@@ -358,7 +364,9 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - status: `MEASURED`
 - n: 32
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/provenance.html
+- row: https://councilof.ai/api/gspc?axis=provenance
+- page: https://councilof.ai/axis/provenance
+- bank: https://huggingface.co/datasets/csoai/gspc-prv
 
 ### continuity
 - family: `gspc`
@@ -366,7 +374,9 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - status: `MEASURED`
 - n: 33
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/continuity.html
+- row: https://councilof.ai/api/gspc?axis=continuity
+- page: https://councilof.ai/axis/continuity
+- bank: https://huggingface.co/datasets/csoai/gspc-asi
 
 ### conformance
 - family: `gspc`
@@ -374,7 +384,9 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - status: `MEASURED`
 - n: 35
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/conformance.html
+- row: https://councilof.ai/api/gspc?axis=conformance
+- page: https://councilof.ai/axis/conformance
+- bank: https://huggingface.co/datasets/csoai/gspc-mcp
 
 ### openness
 - family: `gspc`
@@ -382,7 +394,9 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - status: `MEASURED`
 - n: 32
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/openness.html
+- row: https://councilof.ai/api/gspc?axis=openness
+- page: https://councilof.ai/axis/openness
+- bank: https://huggingface.co/datasets/csoai/gspc-oss
 
 ### machinery-conformity
 - family: `gspc`
@@ -390,7 +404,9 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - status: `MEASURED`
 - n: 33
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/machinery-conformity.html
+- row: https://councilof.ai/api/gspc?axis=machinery-conformity
+- page: https://councilof.ai/axis/machinery-conformity
+- bank: https://huggingface.co/datasets/csoai/gspc-mach
 
 ### care
 - family: `gspc`
@@ -398,7 +414,9 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - status: `MEASURED`
 - n: 199
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/care.html
+- row: https://councilof.ai/api/gspc?axis=care
+- page: https://councilof.ai/axis/care
+- bank: https://huggingface.co/datasets/csoai/gspc-care
 
 ### cross-reality
 - family: `gspc`
@@ -406,7 +424,9 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - status: `MEASURED`
 - n: 32
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/cross-reality.html
+- row: https://councilof.ai/api/gspc?axis=cross-reality
+- page: https://councilof.ai/axis/cross-reality
+- bank: https://huggingface.co/datasets/csoai/gspc-xr
 
 ### detector-interop
 - family: `gspc`
@@ -414,7 +434,9 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - status: `MEASURED`
 - n: 33
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/detector-interop.html
+- row: https://councilof.ai/api/gspc?axis=detector-interop
+- page: https://councilof.ai/axis/detector-interop
+- bank: https://huggingface.co/datasets/csoai/gspc-det
 
 ### art5-safeguard
 - family: `gspc`
@@ -422,16 +444,19 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - status: `MEASURED`
 - n: 36
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/art5-safeguard.html
+- row: https://councilof.ai/api/gspc?axis=art5-safeguard
+- page: https://councilof.ai/axis/art5-safeguard
+- bank: https://huggingface.co/datasets/csoai/gspc-art5
 
 ### swarm
 - family: `gspc`
 - kind: `model-comparison`
 - status: `MEASURED`
 - n: 37
-- accuracy: 0.4444 (signed candidate-card point estimate)
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/swarm.html
+- row: https://councilof.ai/api/gspc?axis=swarm
+- page: https://councilof.ai/axis/swarm
+- bank: https://huggingface.co/datasets/csoai/gspc-swarm
 
 ### affect
 - family: `gspc`
@@ -439,80 +464,108 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - status: `MEASURED`
 - n: 41
 - separation: `UNTESTED`
-- page: https://councilof.ai/axis/affect.html
+- row: https://councilof.ai/api/gspc?axis=affect
+- page: https://councilof.ai/axis/affect
+- bank: https://huggingface.co/datasets/csoai/gspc-affect
 
 ### jail
 - family: `gspc`
 - kind: `model-comparison`
 - status: `MEASURED`
 - n: 71
-- accuracy: 0.5915
 - separation: `TIE`
-- page: https://councilof.ai/axis/jail.html
+- row: https://councilof.ai/api/gspc?axis=jail
+- page: https://councilof.ai/axis/jail
+- bank: https://huggingface.co/datasets/csoai/gspc-jail-goldbank
+
+### effect-binding
+- family: `gspc`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 261 (tool-call servers probed)
+- row: https://councilof.ai/api/gspc?axis=effect-binding
+- page: https://councilof.ai/axis/effect-binding
+- evidence: https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.signed.json
 
 ### provenance-controls
 - family: `financial`
 - kind: `deterministic-facts`
 - status: `MEASURED`
-- n: 6
-- separation: `None`
-- page: https://councilof.ai/axis/provenance-controls.html
+- n: 6 (issuer accounts (not bank items))
+- row: https://councilof.ai/api/gspc?axis=provenance-controls
+- page: https://councilof.ai/axis/provenance-controls
+- bank: https://huggingface.co/datasets/csoai/gspc-provenance-controls
+- evidence: https://councilof.ai/interop/financial-measure-run-v2.json
 
 ### reserve-attestation
 - family: `financial`
 - kind: `deterministic-facts`
 - status: `MEASURED`
-- n: 16
-- separation: `None`
-- page: https://councilof.ai/axis/reserve-attestation.html
+- n: 16 (issuer accounts (not bank items))
+- row: https://councilof.ai/api/gspc?axis=reserve-attestation
+- page: https://councilof.ai/axis/reserve-attestation
+- bank: https://huggingface.co/datasets/csoai/gspc-reserve-attestation
+- evidence: https://councilof.ai/interop/financial-measure-run-reserve-attestation.json
 
 ### regulatory-framework
 - family: `financial`
 - kind: `deterministic-facts`
 - status: `MEASURED`
-- n: 16
-- separation: `None`
-- page: https://councilof.ai/axis/regulatory-framework.html
+- n: 16 (issuer accounts (not bank items))
+- row: https://councilof.ai/api/gspc?axis=regulatory-framework
+- page: https://councilof.ai/axis/regulatory-framework
+- bank: https://huggingface.co/datasets/csoai/gspc-regulatory-framework
+- evidence: https://councilof.ai/interop/financial-measure-run-regulatory-framework.json
 
 ### distribution-integrity
 - family: `financial`
 - kind: `deterministic-facts`
 - status: `MEASURED`
-- n: 16
-- separation: `None`
-- page: https://councilof.ai/axis/distribution-integrity.html
+- n: 16 (issuer accounts (not bank items))
+- row: https://councilof.ai/api/gspc?axis=distribution-integrity
+- page: https://councilof.ai/axis/distribution-integrity
+- bank: https://huggingface.co/datasets/csoai/gspc-distribution-integrity
+- evidence: https://councilof.ai/interop/financial-measure-run-distribution-integrity.json
 
 ### custody-disclosure
 - family: `financial`
 - kind: `deterministic-facts`
 - status: `MEASURED`
-- n: 16
-- separation: `None`
-- page: https://councilof.ai/axis/custody-disclosure.html
+- n: 16 (issuer accounts (not bank items))
+- row: https://councilof.ai/api/gspc?axis=custody-disclosure
+- page: https://councilof.ai/axis/custody-disclosure
+- bank: https://huggingface.co/datasets/csoai/gspc-custody-disclosure
+- evidence: https://councilof.ai/interop/financial-measure-run-custody-disclosure.json
 
 ### ai-adoption-components
 - family: `financial`
 - kind: `deterministic-facts`
 - status: `MEASURED`
-- n: 2
-- separation: `None`
-- page: https://councilof.ai/axis/ai-adoption-components.html
+- n: 2 (public series)
+- row: https://councilof.ai/api/gspc?axis=ai-adoption-components
+- page: https://councilof.ai/axis/ai-adoption-components
+- bank: https://huggingface.co/datasets/csoai/gspc-ai-economy-index
+- evidence: https://councilof.ai/interop/financial-measure-run-ai-adoption-components.json
 
 ### labour-components
 - family: `financial`
 - kind: `deterministic-facts`
 - status: `MEASURED`
-- n: 2
-- separation: `None`
-- page: https://councilof.ai/axis/labour-components.html
+- n: 2 (public series)
+- row: https://councilof.ai/api/gspc?axis=labour-components
+- page: https://councilof.ai/axis/labour-components
+- bank: https://huggingface.co/datasets/csoai/gspc-human-labour-index
+- evidence: https://councilof.ai/interop/financial-measure-run-labour-components.json
 
 ### humanoid-labour-index
 - family: `financial`
 - kind: `deterministic-facts`
 - status: `MEASURED`
-- n: 8
-- separation: `None`
-- page: https://councilof.ai/axis/humanoid-labour-index.html
+- n: 8 (frozen vendor URLs)
+- row: https://councilof.ai/api/gspc?axis=humanoid-labour-index
+- page: https://councilof.ai/axis/humanoid-labour-index
+- bank: https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index
+- evidence: https://councilof.ai/interop/financial-measure-run-humanoid-labour-index.json
 
 ## 4. THE CORRECTIONS LEDGER
 
