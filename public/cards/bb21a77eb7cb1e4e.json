@@ -1,0 +1,80 @@
+{
+  "card": {
+    "as_of": "2026-09-22T08:45:38.618Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 2,
+      "issuer": "Quantoz",
+      "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1000000,
+      "symbol": "EURQ",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "product": {
+      "sku": "xrpl-asset-state",
+      "tier": "free",
+      "free_fields": [
+        "issuer",
+        "currency",
+        "holders",
+        "supply",
+        "trust_lines"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "bb21a77eb7cb1e4e76dc6852c1e77ae6eeb7147f6dc3a4be05607b9886ddc065",
+    "sig_ed25519": null,
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EURQ public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml",
+      "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "f7305ae77b43e26f963f3ac26238e3799ff7dc1d85e2dea437f870f0bdd66647",
+    "a49f5bfdfe5d50757f40bff0d9b3a6d49298d31e037e0a0b0b9cf376de9a73c8",
+    "af492c3ebccb309627afd7f933d640d8df260cd3b1acfff4500c2cb3ae1e4451",
+    "45d286baa09ff83d417cd4edb0d0f30590d46f64393fb05fb20c83a05cc1c0dd",
+    "42bead95c24b1083352b01cd495fd9ab7ea2d695dce9a216d80f44f21aeb49f0",
+    "3a15901dff2e484b6a9bbbffe215c101e60739da1338837ef8cb8e2cf1ed9011",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "afe81754a325cb9a9851eb9adf1a09b0a6f5ab638bfb302b55e6ee63cf62ff53",
+    "6b08948158e0fbc2cdc8388434c5cae8ed2797c65f7074439cd12330623557cd"
+  ]
+}

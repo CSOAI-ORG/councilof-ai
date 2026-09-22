@@ -224,3 +224,133 @@ def test_kinds_index_counts_every_leaf_and_types_nothing() -> None:
     assert idx["by_kind"]["?"] == 1
     assert idx["by_kind_state"]["csoai.wrapper.parity/0.1|PROBED"] == 1
     assert "MEASURED" not in json.dumps(idx["by_kind"])
+
+
+# --- pod caller token path (2026-09-22) -------------------------------------------------
+# The board signer accepts a second bearer beside GitHub OIDC. These tests prove the
+# publisher (a) sends that bearer to BOARD_SIGN_URL and accepts a signature only when the
+# signer's payload_sha256 equals the local canonical digest, and (b) fails CLOSED with no
+# network call when neither a key, OIDC nor a pod token is configured.
+
+_SIGNER_ENV = (
+    "ACTIONS_ID_TOKEN_REQUEST_URL",
+    "ACTIONS_ID_TOKEN_REQUEST_TOKEN",
+    "BOARD_SIGN_KEY_PKCS8_B64",
+    "BOARD_SIGN_POD_TOKEN",
+    "BOARD_SIGN_POD_TOKEN_FILE",
+)
+
+
+class _FakeResp:
+    def __init__(self, body: dict) -> None:
+        self._b = json.dumps(body).encode("utf-8")
+
+    def read(self) -> bytes:
+        return self._b
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+
+def _pub_module():
+    import publish_public_root as pub  # scripts/ is on sys.path above
+    return pub
+
+
+def test_pod_token_path_signs_and_binds_digest() -> None:
+    import hashlib
+    import os
+    import tempfile
+    from unittest import mock
+
+    pub = _pub_module()
+    payload = {"kind": "csoai.public-root/v1", "card_count": 3, "as_of": "2026-09-22T00:00:00Z"}
+    digest = hashlib.sha256(pub.canonical_bytes(payload)).hexdigest()
+    tokfile = Path(tempfile.mkdtemp()) / "tok"
+    tokfile.write_text("unit-test-token-not-real\n", encoding="utf-8")
+    seen: dict = {}
+
+    def fake_urlopen(req, timeout=0):
+        seen["auth"] = req.get_header("Authorization")
+        seen["url"] = req.full_url
+        seen["body"] = json.loads(req.data)
+        return _FakeResp({"did": pub.DID, "sig_ed25519": "ab" * 32, "payload_sha256": digest, "signer_auth": "pod-token"})
+
+    env = {"BOARD_SIGN_POD_TOKEN_FILE": str(tokfile), "BOARD_SIGN_URL": "https://signer.test/api/board-sign"}
+    with mock.patch.dict(os.environ, env), mock.patch.object(pub.urllib.request, "urlopen", fake_urlopen):
+        for k in _SIGNER_ENV:
+            if k != "BOARD_SIGN_POD_TOKEN_FILE":
+                os.environ.pop(k, None)
+        assert pub.pod_token_available()
+        assert pub.signer_available()
+        assert not pub.oidc_available()
+        assert pub.signer_path() == "pod-token"
+        assert pub.sign_payload(payload, None) == "ab" * 32
+    assert seen["auth"] == "Bearer unit-test-token-not-real"
+    assert seen["url"] == env["BOARD_SIGN_URL"]
+    assert seen["body"] == {"payload": payload}
+
+    # Control: a signer whose payload_sha256 names OTHER bytes is refused, so a signature
+    # over a differently-canonicalised preimage can never be attached to a leaf.
+    def wrong_digest(req, timeout=0):
+        return _FakeResp({"sig_ed25519": "ab" * 32, "payload_sha256": "0" * 64})
+
+    with mock.patch.dict(os.environ, env), mock.patch.object(pub.urllib.request, "urlopen", wrong_digest):
+        for k in _SIGNER_ENV:
+            if k != "BOARD_SIGN_POD_TOKEN_FILE":
+                os.environ.pop(k, None)
+        assert pub.sign_via_pod_token(payload) is None
+        try:
+            pub.sign_payload(payload, None)
+        except RuntimeError:
+            pass
+        else:
+            raise AssertionError("accepted a signature whose attested digest is not the preimage digest")
+
+
+def test_pod_token_absent_fails_closed_without_network() -> None:
+    import os
+    import tempfile
+    from unittest import mock
+
+    pub = _pub_module()
+    payload = {"kind": "csoai.public-root/v1", "card_count": 3}
+
+    def never(req, timeout=0):
+        raise AssertionError("signer contacted with no credential configured")
+
+    # (1) nothing configured at all
+    with mock.patch.dict(os.environ, {}), mock.patch.object(pub.urllib.request, "urlopen", never):
+        for k in _SIGNER_ENV:
+            os.environ.pop(k, None)
+        assert not pub.pod_token_available()
+        assert not pub.signer_available()
+        assert pub.signer_path() == "none"
+        assert pub.sign_via_pod_token(payload) is None
+        try:
+            pub.sign_payload(payload, None)
+        except RuntimeError:
+            pass
+        else:
+            raise AssertionError("signed with no signer")
+
+    # (2) a token FILE that is named but missing, and (3) one that is empty — both ABSENT
+    missing = str(Path(tempfile.mkdtemp()) / "does-not-exist")
+    empty = Path(tempfile.mkdtemp()) / "empty"
+    empty.write_text("\n", encoding="utf-8")
+    for path in (missing, str(empty)):
+        with mock.patch.dict(os.environ, {"BOARD_SIGN_POD_TOKEN_FILE": path}), mock.patch.object(pub.urllib.request, "urlopen", never):
+            for k in _SIGNER_ENV:
+                if k != "BOARD_SIGN_POD_TOKEN_FILE":
+                    os.environ.pop(k, None)
+            assert not pub.pod_token_available(), path
+            assert not pub.signer_available(), path
+            try:
+                pub.sign_payload(payload, None)
+            except RuntimeError:
+                pass
+            else:
+                raise AssertionError(f"signed with an absent token file: {path}")
