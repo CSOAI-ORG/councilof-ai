@@ -13,7 +13,7 @@
     },
     {
       "name": "get_axis",
-      "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc: n, accuracy, interval, MEASURED or UNMEASURED status, family, and dates. An unmeasured axis is a first-class answer \u2014 a declared slot with no run behind it, published so the gap is visible \u2014 never an error and never a zero. Never a certification.",
+      "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc \u2014 every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer \u2014 a declared slot with no run behind it, published so the gap is visible \u2014 never an error and never a zero. Never a certification.",
       "inputSchema": {
         "type": "object",
         "properties": {

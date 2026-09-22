@@ -1,0 +1,2287 @@
+{
+  "schema": "csoai.axis-doors/0.1",
+  "as_of": "2026-09-22T08:58:00.730Z",
+  "signed": false,
+  "unsigned_reason": "a probe record of HTTP codes and analyst judgement; not a measurement card and not under the board key",
+  "producer": "scripts/axis-doors-probe.mjs",
+  "site": "https://councilof.ai",
+  "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36 csoai-axis-doors-probe/0.1",
+  "board": {
+    "url": "https://councilof.ai/api/gspc",
+    "http": 200,
+    "measured_on": {
+      "model": "The 14 behavioural (model-comparison) axes: 19-model fleet (8 tuned council specialists + 6 base models + frontier cross-lab models). Jail (slot 14): 7-model fleet — smaller, stated on the axis, never conflated with the board fleet. The 8 financial/domain axes are not a model comparison: they are measured as deterministic facts (issuer-account reads + public series), with no fleet, no leader and no accuracy.",
+      "endpoint": "A100 · local Ollama (board v2) · OpenRouter (cross-lab models) · 3090 pod (jail)",
+      "date": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+      "grading": "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+      "note": "GSPC (Governance · Safety · Provenance · Continuity) board. Slot counts live in totals (public_count, measured_axes, quotable_axes) and are derived, never typed. The measured canonical axes used the same fleet, same rows, same grader. Per-axis numbers show the board LEADER (whoever leads — tuned or base), its Wilson interval where n is honestly independent, and whether the lead is statistically separated (McNemar p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living board; its separation is TIE (determined 2026-08-25) — a TIE is not a separated leader. slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
+      "living_stamp": {
+        "schema": "csoai.gspc-living/0.2",
+        "gold_run": "2026-08-18T03:22:16Z",
+        "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
+        "signed": true,
+        "signer": "did:web:csoai.org#board-attestation-1",
+        "signer_anchored": true,
+        "alg": "Ed25519",
+        "signature": "18eb719d07a7ba67e268ea3ba9a58c4a7fbd6122c4a249a0d4f58ba43ece521bb8d7d4401c85dabe86dc6b38915beaa4ba7d971531b621e6ad4c4072f55d8801",
+        "public_key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+        "preimage": {
+          "schema": "csoai.gspc-living/0.2",
+          "gold_run": "2026-08-18T03:22:16Z",
+          "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
+          "axes": [
+            {
+              "axis": "governance",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 237,
+              "accuracy": null,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "safety",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 36,
+              "accuracy": 0.944,
+              "separation": "TIE"
+            },
+            {
+              "axis": "provenance",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 32,
+              "accuracy": null,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "continuity",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 33,
+              "accuracy": null,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "conformance",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 35,
+              "accuracy": null,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "openness",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 32,
+              "accuracy": null,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "machinery-conformity",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 33,
+              "accuracy": null,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "care",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 199,
+              "accuracy": null,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "cross-reality",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 32,
+              "accuracy": null,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "detector-interop",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 33,
+              "accuracy": null,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "art5-safeguard",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 36,
+              "accuracy": null,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "swarm",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 37,
+              "accuracy": 0.4444,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "affect",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 41,
+              "accuracy": null,
+              "separation": "UNTESTED"
+            },
+            {
+              "axis": "jail",
+              "family": "gspc",
+              "kind": "model-comparison",
+              "status": "MEASURED",
+              "n": 71,
+              "accuracy": 0.5915,
+              "separation": "TIE"
+            },
+            {
+              "axis": "effect-binding",
+              "family": "gspc",
+              "kind": "deterministic-facts",
+              "status": "MEASURED",
+              "n": 261,
+              "accuracy": null,
+              "separation": null
+            },
+            {
+              "axis": "provenance-controls",
+              "family": "financial",
+              "kind": "deterministic-facts",
+              "status": "MEASURED",
+              "n": 6,
+              "accuracy": null,
+              "separation": null
+            },
+            {
+              "axis": "reserve-attestation",
+              "family": "financial",
+              "kind": "deterministic-facts",
+              "status": "MEASURED",
+              "n": 16,
+              "accuracy": null,
+              "separation": null
+            },
+            {
+              "axis": "regulatory-framework",
+              "family": "financial",
+              "kind": "deterministic-facts",
+              "status": "MEASURED",
+              "n": 16,
+              "accuracy": null,
+              "separation": null
+            },
+            {
+              "axis": "distribution-integrity",
+              "family": "financial",
+              "kind": "deterministic-facts",
+              "status": "MEASURED",
+              "n": 16,
+              "accuracy": null,
+              "separation": null
+            },
+            {
+              "axis": "custody-disclosure",
+              "family": "financial",
+              "kind": "deterministic-facts",
+              "status": "MEASURED",
+              "n": 16,
+              "accuracy": null,
+              "separation": null
+            },
+            {
+              "axis": "ai-adoption-components",
+              "family": "financial",
+              "kind": "deterministic-facts",
+              "status": "MEASURED",
+              "n": 2,
+              "accuracy": null,
+              "separation": null
+            },
+            {
+              "axis": "labour-components",
+              "family": "financial",
+              "kind": "deterministic-facts",
+              "status": "MEASURED",
+              "n": 2,
+              "accuracy": null,
+              "separation": null
+            },
+            {
+              "axis": "humanoid-labour-index",
+              "family": "financial",
+              "kind": "deterministic-facts",
+              "status": "MEASURED",
+              "n": 8,
+              "accuracy": null,
+              "separation": null
+            }
+          ]
+        },
+        "sig_input": "Ed25519 over the RAW UTF-8 BYTES (not a digest) of canonical JSON of the `preimage` object only ({schema, gold_run, source, axes}). Canonical JSON: object keys sorted by code point, recursively; no whitespace (separators ',' and ':'); non-ASCII emitted LITERALLY as UTF-8 (ensure_ascii=False); numbers by ECMAScript Number::toString (integral float renders 0, not 0.0). Envelope fields (signature, public_key_x, sig_input, signer, signed, signer_anchored, alg, verification_state, verifiable, superseded, tracked_as, verify) are NOT in the preimage.",
+        "sig_input_ensure_ascii": false,
+        "sig_input_is_digest": false,
+        "verification_state": "SIGNED",
+        "verifiable": true,
+        "verify": "fetch https://csoai.org/.well-known/did.json → #board-attestation-1 → Ed25519-verify `signature` over the raw UTF-8 bytes of canonical(`preimage`), ensure_ascii=False",
+        "superseded": {
+          "source": "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
+          "updated": "2026-08-18T03:22:16Z",
+          "signed": true,
+          "verification_state": "UNVERIFIABLE",
+          "verifiable": false,
+          "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
+          "signer_anchored": false,
+          "signature": "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
+          "sig_input": "sha256(canonical board minus signature fields, sort_keys) — AS PUBLISHED WHEN SIGNED, AND NOT REPRODUCIBLE. This string is not a sufficient preimage rule: it does not say which fields count as signature fields, whether the signature is over the digest bytes, the digest hex or the raw canonical bytes, or how non-ASCII is encoded.",
+          "unverifiable_note": "DO NOT TREAT THIS AS A VALID ATTESTATION. This stamp was signed, but no published bytes reproduce it: 58,184 readings were attempted on 2026-08-26 across both published signatures, all five published keys, nine candidate payloads, raw/digest/hex message forms, both ensure_ascii settings and every drop-set of up to three fields. None verified. Two different signatures are published for this one stamp (53aa09fa… in /signed/board_living.json, bd199fd3… here), the signer is not among the verification methods in /.well-known/did.json, and board_living.json's own note says its axes were re-snapshotted from the live board six days after the signature date — so the signed bytes are not the published bytes. Nothing here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party is the same thing. The two attestations on this site that DO verify are the 150 measurement cards under #card-attestation-1 and site_attestation on this payload under #board-attestation-1; check those instead.",
+          "supersedes_note": "site_attestation on this payload signs this whole body, including this block. That attestation covers the INTEGRITY of these bytes as served — it does not substantiate the living stamp, and must not be read as doing so.",
+          "reproduction_attempts": 58184,
+          "reproduction_verified": 0,
+          "tracked_as": "/api/corrections C-2026-0826-08"
+        },
+        "tracked_as": "/api/corrections C-2026-0826-08"
+      }
+    },
+    "public_count": "23 axis · 23 measured",
+    "axes_probed": 23
+  },
+  "once_per_run": {
+    "x402_manifest": {
+      "url": "https://councilof.ai/.well-known/x402.json",
+      "http": 200,
+      "ms": 54,
+      "content_type": "application/json; charset=utf-8",
+      "location": null,
+      "resources": 11,
+      "axis_scoped_resources": 0
+    },
+    "mcp_tools_list": {
+      "http": 200,
+      "tools": 13,
+      "get_axis_description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc: n, accuracy, interval, MEASURED or UNMEASURED status, family, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification."
+    },
+    "a2a_agent_card": {
+      "url": "https://councilof.ai/.well-known/agent.json",
+      "http": 200,
+      "ms": 63,
+      "content_type": "application/json",
+      "location": null,
+      "skills": [
+        "gspc-board",
+        "east-west-crosswalk",
+        "measured-badge",
+        "benchmark-quality-register",
+        "article50-detect",
+        "eu-ai-act-screen",
+        "x402-discovery",
+        "estate-index"
+      ]
+    },
+    "a2a_gspc_board_send_message": {
+      "url": "https://councilof.ai/api/a2a",
+      "http": 200,
+      "ms": 66,
+      "content_type": "application/json; charset=utf-8",
+      "location": null,
+      "bytes": 9425
+    },
+    "llms_txt_live": {
+      "url": "https://councilof.ai/llms.txt",
+      "http": 200,
+      "ms": 97,
+      "content_type": "text/plain; charset=utf-8",
+      "location": null,
+      "row_door_lines": 0
+    },
+    "llms_txt_branch": {
+      "path": "public/llms.txt",
+      "row_door_lines": 24
+    },
+    "payai_door_demand": {
+      "path": "public/interop/door-demand-payai-2026-09-22.json",
+      "as_of": "2026-09-22T02:35:53Z",
+      "doors": [
+        "api/free-door",
+        "api/request-attestation",
+        "api/evidence-bundle",
+        "api/eunomia-data",
+        "api/proof",
+        "api/rwa/evidence",
+        "api/wrapper",
+        "api/art50/marking-evidence",
+        "api/feeds/provider-diff",
+        "api/receipts/batch"
+      ],
+      "note": "PayAI's bazaar records demand per DOOR; no door is axis-scoped, so no axis can appear here until one is"
+    }
+  },
+  "totals": {
+    "axes": 23,
+    "board_row_200": 23,
+    "axis_page_200": 22,
+    "mcp_get_axis_live": 23,
+    "hub_bank_on_row": 22,
+    "hub_card_links_this_row": 0,
+    "evidence_on_row": 9,
+    "evidence_edge_200": 8,
+    "evidence_mirror_200": 1,
+    "llms_live_row_lines": 0,
+    "llms_branch_row_lines": 23,
+    "x402_axis_scoped": 0,
+    "hook_identified": 15,
+    "note": "Counts are over the rows above and derived here; they are not board totals. A door that returned no answer is UNREACHABLE on its row and is not counted as absent."
+  },
+  "axes": [
+    {
+      "axis": "governance",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 237,
+      "n_unit": null,
+      "dataset": "csoai/gspc-gov",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-gov",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": "EXCLUDED_OWN_MODEL",
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=governance",
+          "http": 200,
+          "ms": 133,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/governance",
+          "http": 200,
+          "ms": 60,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/governance.html",
+            "http": 308,
+            "location": "/axis/governance"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 61,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-gov",
+          "http": 200,
+          "ms": 472,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-gov/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": true,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "AI Act compliance lead at a provider or deployer who must place a system in a risk tier (Art. 6 / Annex III) and defend the classification",
+        "hook": "EU AI Act Art. 6 + Annex III (high-risk classification); Art. 5 (prohibited practices)",
+        "x402_door": "commission_card / api/request-attestation (a signed card for a named subject on this frozen bank)",
+        "gap": "No public leader (own model led); the buyer gets a fleet mean and harm tail, not a vendor ranking"
+      }
+    },
+    {
+      "axis": "safety",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 36,
+      "n_unit": null,
+      "dataset": "csoai/gspc-agi",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-agi",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=safety",
+          "http": 200,
+          "ms": 55,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/safety",
+          "http": 200,
+          "ms": 60,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/safety.html",
+            "http": 308,
+            "location": "/axis/safety"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 55,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-agi",
+          "http": 200,
+          "ms": 289,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-agi/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Model provider trust-and-safety / red-team lead measuring over- and under-refusal on paired requests",
+        "hook": "none identified (NIST AI 600-1 lists refusal calibration as a suggested action, not a requirement)",
+        "x402_door": "commission_card / api/request-attestation",
+        "gap": "Leader is a TIE; the sellable result is the paired-item card, not a rank"
+      }
+    },
+    {
+      "axis": "provenance",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 32,
+      "n_unit": null,
+      "dataset": "csoai/gspc-prv",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-prv",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": "EXCLUDED_OWN_MODEL",
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=provenance",
+          "http": 200,
+          "ms": 108,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/provenance",
+          "http": 200,
+          "ms": 63,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/provenance.html",
+            "http": 308,
+            "location": "/axis/provenance"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 54,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-prv",
+          "http": 200,
+          "ms": 248,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-prv/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": true,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Provider of a generative system that must mark outputs machine-readably, and the platform ingesting them",
+        "hook": "EU AI Act Art. 50(2) (machine-readable marking of synthetic content); C2PA manifests",
+        "x402_door": "api/evidence-bundle?obligation=article-50 (OSCAL bundle of already-signed cards); art50_marking_evidence for a named URL",
+        "gap": "No public leader (own model led)"
+      }
+    },
+    {
+      "axis": "continuity",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 33,
+      "n_unit": null,
+      "dataset": "csoai/gspc-asi",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-asi",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": "EXCLUDED_OWN_MODEL",
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=continuity",
+          "http": 200,
+          "ms": 49,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/continuity",
+          "http": 200,
+          "ms": 50,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/continuity.html",
+            "http": 308,
+            "location": "/axis/continuity"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 124,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-asi",
+          "http": 200,
+          "ms": 192,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-asi/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "CISO / crypto-agility programme owner asking whether an assistant reasons correctly about post-quantum status of an assumption",
+        "hook": "NIST FIPS 203/204/205 and NIST IR 8547 transition timeline (the facts the bank grades against)",
+        "x402_door": "commission_card / api/request-attestation",
+        "gap": "No public leader (own model led)"
+      }
+    },
+    {
+      "axis": "conformance",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 35,
+      "n_unit": null,
+      "dataset": "csoai/gspc-mcp",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-mcp",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": "EXCLUDED_OWN_MODEL",
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=conformance",
+          "http": 200,
+          "ms": 53,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/conformance",
+          "http": 200,
+          "ms": 100,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/conformance.html",
+            "http": 308,
+            "location": "/axis/conformance"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 64,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-mcp",
+          "http": 200,
+          "ms": 269,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-mcp/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "MCP host, gateway or tool-platform team checking whether a model honours tool contracts",
+        "hook": "none identified (the Model Context Protocol specification is the reference; no regulatory hook)",
+        "x402_door": "commission_card / api/request-attestation",
+        "gap": "No public leader (own model led)"
+      }
+    },
+    {
+      "axis": "openness",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 32,
+      "n_unit": null,
+      "dataset": "csoai/gspc-oss",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-oss",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": "EXCLUDED_OWN_MODEL",
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=openness",
+          "http": 200,
+          "ms": 47,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/openness",
+          "http": 200,
+          "ms": 51,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/openness.html",
+            "http": 308,
+            "location": "/axis/openness"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 55,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-oss",
+          "http": 200,
+          "ms": 309,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-oss/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "OSPO / open-source compliance counsel deciding whether a licence matches an intended use, incl. the GPAI open-source carve-out",
+        "hook": "EU AI Act Art. 53(2) free-and-open-source GPAI exemption; OSI Open Source AI Definition",
+        "x402_door": "api/evidence-bundle?obligation=article-53",
+        "gap": "No public leader (own model led)"
+      }
+    },
+    {
+      "axis": "machinery-conformity",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 33,
+      "n_unit": null,
+      "dataset": "csoai/gspc-mach",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-mach",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": "NO_SIGNED_CARD",
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=machinery-conformity",
+          "http": 200,
+          "ms": 43,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/machinery-conformity",
+          "http": 200,
+          "ms": 54,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/machinery-conformity.html",
+            "http": 308,
+            "location": "/axis/machinery-conformity"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 60,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-mach",
+          "http": 200,
+          "ms": 186,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-mach/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Machinery OEM regulatory-affairs lead and notified bodies classifying self-evolving safety functions",
+        "hook": "Regulation (EU) 2023/1230 (Machinery), Annex I Part A self-evolving behaviour (mandatory third-party assessment from 20 Jan 2027)",
+        "x402_door": "commission_card / api/request-attestation",
+        "gap": "Public leader dropped: no signed per-model card in the index"
+      }
+    },
+    {
+      "axis": "care",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 199,
+      "n_unit": null,
+      "dataset": "csoai/gspc-care",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-care",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": "EXCLUDED_OWN_MODEL",
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=care",
+          "http": 200,
+          "ms": 102,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/care",
+          "http": 200,
+          "ms": 57,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/care.html",
+            "http": 308,
+            "location": "/axis/care"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 54,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-care",
+          "http": 200,
+          "ms": 276,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-care/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Consumer-facing assistant provider weighing protect-versus-help conduct under paired scenarios",
+        "hook": "none identified with confidence (adjacent, unverified: EU AI Act Art. 5(1)(b) vulnerable-group exploitation)",
+        "x402_door": "commission_card / api/request-attestation",
+        "gap": "No public leader (own model led)"
+      }
+    },
+    {
+      "axis": "cross-reality",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 32,
+      "n_unit": null,
+      "dataset": "csoai/gspc-xr",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-xr",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": "NO_SIGNED_CARD",
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=cross-reality",
+          "http": 200,
+          "ms": 44,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/cross-reality",
+          "http": 200,
+          "ms": 59,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/cross-reality.html",
+            "http": 308,
+            "location": "/axis/cross-reality"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 59,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-xr",
+          "http": 200,
+          "ms": 201,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-xr/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Agent-platform / computer-use product team deciding when an autonomous action needs confirmation",
+        "hook": "EU AI Act Art. 14 human oversight (only where the deployment is high-risk)",
+        "x402_door": "commission_card / api/request-attestation",
+        "gap": "Public leader dropped: no signed per-model card in the index"
+      }
+    },
+    {
+      "axis": "detector-interop",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 33,
+      "n_unit": null,
+      "dataset": "csoai/gspc-det",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-det",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": "NO_SIGNED_CARD",
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=detector-interop",
+          "http": 200,
+          "ms": 46,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/detector-interop",
+          "http": 200,
+          "ms": 60,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/detector-interop.html",
+            "http": 308,
+            "location": "/axis/detector-interop"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 64,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-det",
+          "http": 200,
+          "ms": 171,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-det/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Watermark and detector vendors, and platforms that must detect marks from other vendors' generators",
+        "hook": "EU AI Act Art. 50(2) wording: marking must be 'effective, interoperable, robust and reliable'",
+        "x402_door": "art50_marking_evidence / api/art50/marking-evidence; api/evidence-bundle?obligation=article-50",
+        "gap": "Public leader dropped: no signed per-model card in the index"
+      }
+    },
+    {
+      "axis": "art5-safeguard",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 36,
+      "n_unit": null,
+      "dataset": "csoai/gspc-art5",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-art5",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": "EXCLUDED_OWN_MODEL",
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=art5-safeguard",
+          "http": 200,
+          "ms": 64,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/art5-safeguard",
+          "http": 200,
+          "ms": 50,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/art5-safeguard.html",
+            "http": 308,
+            "location": "/axis/art5-safeguard"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 60,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-art5",
+          "http": 200,
+          "ms": 307,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-art5/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Deployer compliance / DPO checking whether a system trips an Art. 5 prohibited practice",
+        "hook": "EU AI Act Art. 5 (applies since 2 Feb 2025)",
+        "x402_door": "commission_card / api/request-attestation",
+        "gap": "No public leader (own model led)"
+      }
+    },
+    {
+      "axis": "swarm",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 37,
+      "n_unit": null,
+      "dataset": "csoai/gspc-swarm",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-swarm",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=swarm",
+          "http": 200,
+          "ms": 48,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/swarm",
+          "http": 200,
+          "ms": 51,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/swarm.html",
+            "http": 308,
+            "location": "/axis/swarm"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 64,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-swarm",
+          "http": 200,
+          "ms": 178,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-swarm/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Multi-agent orchestration vendor measuring coordination safety across agents",
+        "hook": "none identified",
+        "x402_door": "commission_card / api/request-attestation",
+        "gap": "Separation UNTESTED: a point leader without a paired test"
+      }
+    },
+    {
+      "axis": "affect",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 41,
+      "n_unit": null,
+      "dataset": "csoai/gspc-affect",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-affect",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": "EXCLUDED_OWN_MODEL",
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=affect",
+          "http": 200,
+          "ms": 47,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/affect",
+          "http": 200,
+          "ms": 55,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/affect.html",
+            "http": 308,
+            "location": "/axis/affect"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 116,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-affect",
+          "http": 200,
+          "ms": 474,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-affect/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Companion / assistant app provider and its trust-and-safety lead (manipulation, disclosure, vulnerability)",
+        "hook": "EU AI Act Art. 5(1)(a) manipulation, Art. 5(1)(f) emotion recognition in workplace/education, Art. 50(1) disclosure of AI interaction",
+        "x402_door": "commission_card / api/request-attestation",
+        "gap": "No public leader (own model led)"
+      }
+    },
+    {
+      "axis": "jail",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 71,
+      "n_unit": null,
+      "dataset": "csoai/gspc-jail-goldbank",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-jail-goldbank",
+      "evidence_url": null,
+      "run_attestation": null,
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=jail",
+          "http": 200,
+          "ms": 47,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/jail",
+          "http": 200,
+          "ms": 51,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/jail.html",
+            "http": 308,
+            "location": "/axis/jail"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 60,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-jail-goldbank",
+          "http": 200,
+          "ms": 175,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-jail-goldbank/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "state": "NONE_ON_ROW"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Agent sandbox / runtime-security team that needs an escape-attempt detector with a known false-positive rate",
+        "hook": "EU AI Act Art. 15 robustness (only where high-risk); otherwise none identified",
+        "x402_door": "commission_card / api/request-attestation",
+        "gap": "Recall of the best zero-FP detector is low; the honest result is the miss rate"
+      }
+    },
+    {
+      "axis": "effect-binding",
+      "family": "gspc",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 261,
+      "n_unit": "tool-call servers probed",
+      "dataset": null,
+      "dataset_url": null,
+      "evidence_url": "https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.signed.json",
+      "run_attestation": "ED25519_SIGNED",
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=effect-binding",
+          "http": 200,
+          "ms": 43,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/effect-binding",
+          "http": 404,
+          "ms": 60,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": false,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/effect-binding.html",
+            "http": 404,
+            "location": null
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 52,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "state": "NONE_ON_ROW",
+          "note": "the row carries no dataset; a server probe or fact run is not a bank"
+        },
+        "hub_card_links_row": null,
+        "evidence_edge": {
+          "url": "https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.signed.json",
+          "http": 404,
+          "ms": 55,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "run artifact (edge)"
+        },
+        "evidence_mirror": {
+          "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-22.signed.json",
+          "http": 200,
+          "ms": 374,
+          "content_type": "text/plain; charset=utf-8",
+          "location": null,
+          "kind": "run artifact (public mirror)"
+        }
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "MCP server operators, agent-gateway and enterprise IAM teams asking whether authorization binds to the executed request",
+        "hook": "MCP authorization specification (OAuth 2.1, RFC 8707 resource indicators); regulatory: none identified",
+        "x402_door": "none per-axis (mcp_trust is the free census; the signed probe artifact is the result)",
+        "gap": "No Hub bank (server probe, not a bank); the evidence artifact 404s on the edge today and is only reachable from the mirror; no per-axis page until this branch deploys"
+      }
+    },
+    {
+      "axis": "provenance-controls",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 6,
+      "n_unit": "issuer accounts (not bank items)",
+      "dataset": "csoai/gspc-provenance-controls",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-provenance-controls",
+      "evidence_url": "https://councilof.ai/interop/financial-measure-run-v2.json",
+      "run_attestation": "ED25519_SIGNED",
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=provenance-controls",
+          "http": 200,
+          "ms": 43,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/provenance-controls",
+          "http": 200,
+          "ms": 54,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/provenance-controls.html",
+            "http": 308,
+            "location": "/axis/provenance-controls"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 54,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-provenance-controls",
+          "http": 200,
+          "ms": 252,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-provenance-controls/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "url": "https://councilof.ai/interop/financial-measure-run-v2.json",
+          "http": 200,
+          "ms": 43,
+          "content_type": "application/json",
+          "location": null,
+          "kind": "run artifact (edge)"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Exchange listing / due-diligence analyst and RWA issuer needing on-ledger control facts (freeze, allowlist, domain)",
+        "hook": "GENIUS Act (US, 2025) requirement that a permitted issuer can freeze/seize; MiCA issuer obligations indirectly",
+        "x402_door": "rwa_evidence / api/rwa/evidence?asset=<symbol>",
+        "gap": "n=6 instruments; unsigned run artifact was upgraded to Ed25519 on the board"
+      }
+    },
+    {
+      "axis": "reserve-attestation",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)",
+      "dataset": "csoai/gspc-reserve-attestation",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-reserve-attestation",
+      "evidence_url": "https://councilof.ai/interop/financial-measure-run-reserve-attestation.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=reserve-attestation",
+          "http": 200,
+          "ms": 41,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/reserve-attestation",
+          "http": 200,
+          "ms": 129,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/reserve-attestation.html",
+            "http": 308,
+            "location": "/axis/reserve-attestation"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 58,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-reserve-attestation",
+          "http": 200,
+          "ms": 183,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-reserve-attestation/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "url": "https://councilof.ai/interop/financial-measure-run-reserve-attestation.json",
+          "http": 200,
+          "ms": 50,
+          "content_type": "application/json",
+          "location": null,
+          "kind": "run artifact (edge)"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Exchange listing team, treasurer or risk lead wanting an independent read of whether reserve-attestation language exists",
+        "hook": "MiCA Title III/IV reserve-of-assets rules; GENIUS Act monthly reserve reports examined by a registered accounting firm; NYDFS June 2022 reserve guidance",
+        "x402_door": "rwa_evidence / api/rwa/evidence?asset=<symbol>",
+        "gap": "9 of 16 UNCHECKABLE (no on-chain Domain); risk verdict UNMEASURED by design"
+      }
+    },
+    {
+      "axis": "regulatory-framework",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)",
+      "dataset": "csoai/gspc-regulatory-framework",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-regulatory-framework",
+      "evidence_url": "https://councilof.ai/interop/financial-measure-run-regulatory-framework.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=regulatory-framework",
+          "http": 200,
+          "ms": 135,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/regulatory-framework",
+          "http": 200,
+          "ms": 50,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/regulatory-framework.html",
+            "http": 308,
+            "location": "/axis/regulatory-framework"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 53,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-regulatory-framework",
+          "http": 200,
+          "ms": 164,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-regulatory-framework/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "url": "https://councilof.ai/interop/financial-measure-run-regulatory-framework.json",
+          "http": 200,
+          "ms": 109,
+          "content_type": "application/json",
+          "location": null,
+          "kind": "run artifact (edge)"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Exchange or custodian compliance lead confirming which regime an issuer declares",
+        "hook": "MiCA authorisation (EMT/ART issuers); GENIUS Act permitted-issuer status; NYDFS",
+        "x402_door": "rwa_evidence / api/rwa/evidence?asset=<symbol>",
+        "gap": "Declaration presence only, never compliance; 9 of 16 UNCHECKABLE"
+      }
+    },
+    {
+      "axis": "distribution-integrity",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)",
+      "dataset": "csoai/gspc-distribution-integrity",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-distribution-integrity",
+      "evidence_url": "https://councilof.ai/interop/financial-measure-run-distribution-integrity.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=distribution-integrity",
+          "http": 200,
+          "ms": 46,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/distribution-integrity",
+          "http": 200,
+          "ms": 53,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/distribution-integrity.html",
+            "http": 308,
+            "location": "/axis/distribution-integrity"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 51,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-distribution-integrity",
+          "http": 200,
+          "ms": 201,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-distribution-integrity/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "url": "https://councilof.ai/interop/financial-measure-run-distribution-integrity.json",
+          "http": 200,
+          "ms": 41,
+          "content_type": "application/json",
+          "location": null,
+          "kind": "run artifact (edge)"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Market-structure analyst or listing team reading chain supply and holder distribution",
+        "hook": "none identified (supply and holder facts feed MiCA significance thresholds but no article requires this reading)",
+        "x402_door": "rwa_evidence / api/rwa/evidence?asset=<symbol>",
+        "gap": "represented-vs-distributed stays UNCHECKABLE without a same-unit pair"
+      }
+    },
+    {
+      "axis": "custody-disclosure",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)",
+      "dataset": "csoai/gspc-custody-disclosure",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-custody-disclosure",
+      "evidence_url": "https://councilof.ai/interop/financial-measure-run-custody-disclosure.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=custody-disclosure",
+          "http": 200,
+          "ms": 47,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/custody-disclosure",
+          "http": 200,
+          "ms": 55,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/custody-disclosure.html",
+            "http": 308,
+            "location": "/axis/custody-disclosure"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 53,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-custody-disclosure",
+          "http": 200,
+          "ms": 278,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-custody-disclosure/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "url": "https://councilof.ai/interop/financial-measure-run-custody-disclosure.json",
+          "http": 200,
+          "ms": 43,
+          "content_type": "application/json",
+          "location": null,
+          "kind": "run artifact (edge)"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Exchange listing / treasury lead checking whether a custodian and auditor are named and confirmable",
+        "hook": "MiCA Art. 37 custody of reserve assets; GENIUS Act reserve custody and audit provisions",
+        "x402_door": "rwa_evidence / api/rwa/evidence?asset=<symbol>",
+        "gap": "Disclosure only, never custodian quality; 9 of 16 UNCHECKABLE"
+      }
+    },
+    {
+      "axis": "ai-adoption-components",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 2,
+      "n_unit": "public series",
+      "dataset": "csoai/gspc-ai-economy-index",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-ai-economy-index",
+      "evidence_url": "https://councilof.ai/interop/financial-measure-run-ai-adoption-components.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=ai-adoption-components",
+          "http": 200,
+          "ms": 45,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/ai-adoption-components",
+          "http": 200,
+          "ms": 53,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/ai-adoption-components.html",
+            "http": 308,
+            "location": "/axis/ai-adoption-components"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 60,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-ai-economy-index",
+          "http": 200,
+          "ms": 203,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-ai-economy-index/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "url": "https://councilof.ai/interop/financial-measure-run-ai-adoption-components.json",
+          "http": 200,
+          "ms": 39,
+          "content_type": "application/json",
+          "location": null,
+          "kind": "run artifact (edge)"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Policy analyst or macro strategist citing EU AI-adoption series with a recomputable source",
+        "hook": "none identified",
+        "x402_door": "none per-axis (api/eunomia-data?feed=1 is the only data feed door and is not axis-scoped)",
+        "gap": "Two public series, not an index; bank dataset keeps the retired name gspc-ai-economy-index"
+      }
+    },
+    {
+      "axis": "labour-components",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 2,
+      "n_unit": "public series",
+      "dataset": "csoai/gspc-human-labour-index",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-human-labour-index",
+      "evidence_url": "https://councilof.ai/interop/financial-measure-run-labour-components.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=labour-components",
+          "http": 200,
+          "ms": 43,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/labour-components",
+          "http": 200,
+          "ms": 137,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/labour-components.html",
+            "http": 308,
+            "location": "/axis/labour-components"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 139,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-human-labour-index",
+          "http": 200,
+          "ms": 192,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-human-labour-index/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "url": "https://councilof.ai/interop/financial-measure-run-labour-components.json",
+          "http": 200,
+          "ms": 45,
+          "content_type": "application/json",
+          "location": null,
+          "kind": "run artifact (edge)"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Policy analyst or macro strategist citing EU labour series with a recomputable source",
+        "hook": "none identified",
+        "x402_door": "none per-axis",
+        "gap": "Two public series, not an index; bank dataset keeps the retired name gspc-human-labour-index"
+      }
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 8,
+      "n_unit": "frozen vendor URLs",
+      "dataset": "csoai/gspc-humanoid-labour-index",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index",
+      "evidence_url": "https://councilof.ai/interop/financial-measure-run-humanoid-labour-index.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "public_leader_state": null,
+      "doors": {
+        "board_row": {
+          "url": "https://councilof.ai/api/gspc?axis=humanoid-labour-index",
+          "http": 200,
+          "ms": 54,
+          "content_type": "application/json; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "rows_returned": 1,
+          "kind": "free endpoint"
+        },
+        "axis_page": {
+          "url": "https://councilof.ai/axis/humanoid-labour-index",
+          "http": 200,
+          "ms": 54,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "names_axis": true,
+          "kind": "free page",
+          "html_alias": {
+            "url": "https://councilof.ai/axis/humanoid-labour-index.html",
+            "http": 308,
+            "location": "/axis/humanoid-labour-index"
+          }
+        },
+        "mcp_get_axis": {
+          "url": "https://councilof.ai/mcp",
+          "http": 200,
+          "ms": 51,
+          "state": "LIVE",
+          "names_axis": true,
+          "kind": "free MCP tool"
+        },
+        "hub_bank": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index",
+          "http": 200,
+          "ms": 407,
+          "content_type": "text/html; charset=utf-8",
+          "location": null,
+          "kind": "frozen bank (Hub)"
+        },
+        "hub_card_links_row": {
+          "url": "https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index/raw/main/README.md",
+          "http": 200,
+          "links_board": true,
+          "links_this_row": false,
+          "names_axis": true
+        },
+        "evidence_edge": {
+          "url": "https://councilof.ai/interop/financial-measure-run-humanoid-labour-index.json",
+          "http": 200,
+          "ms": 43,
+          "content_type": "application/json",
+          "location": null,
+          "kind": "run artifact (edge)"
+        },
+        "evidence_mirror": null
+      },
+      "discoverable": {
+        "llms_txt_live_row_line": false,
+        "llms_txt_branch_row_line": true,
+        "mcp_tool_description_covers_every_axis": false,
+        "a2a_skill_names_axis": true,
+        "a2a_card_names_axis": false,
+        "x402_resource_names_axis": false,
+        "payai_demand_record_names_axis": false
+      },
+      "market": {
+        "source": "scripts/axis-doors/market-map-2026-09-22.json (analyst judgement)",
+        "buyer": "Robotics analyst or investor checking whether a vendor publishes a dated deployment count on a stable URL",
+        "hook": "none identified",
+        "x402_door": "none per-axis",
+        "gap": "Disclosure facts on 8 frozen URLs; fleet size, hours and incidents stay UNMEASURED"
+      }
+    }
+  ],
+  "doctrine": "Measurement, not certification. A door serves a recomputable result; a listing is distribution, not authority. No price appears here: x402 amounts live only inside a 402 challenge."
+}
