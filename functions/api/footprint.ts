@@ -28,6 +28,10 @@ import packages from "../../public/interop/footprint-packages.json";
 export const SCHEMA = "csoai.footprint/0.1";
 export const TTL_SECONDS = 3600;
 export const FETCH_TIMEOUT_MS = 8000;
+// The official MCP registry answered the first page in >8 s from Cloudflare's edge on 2026-09-22
+// (row read UNCHECKABLE with "timeout after 8000ms"); it gets its own, longer budget. Everything
+// else keeps the 8 s cap so one slow counter cannot hold the whole payload.
+export const REGISTRY_TIMEOUT_MS = 20000;
 export const REGISTRY_PAGE_CAP = 20;
 export const REGISTRY_SEARCH =
   "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG&limit=100";
@@ -72,11 +76,16 @@ export interface Deps {
 }
 
 /** One upstream read, its own try/catch, its own timeout. Never throws. */
-export async function fetchJson(deps: Deps, url: string, headers: Record<string, string> = {}): Promise<Fetched> {
+export async function fetchJson(
+  deps: Deps,
+  url: string,
+  headers: Record<string, string> = {},
+  timeoutMs: number = FETCH_TIMEOUT_MS,
+): Promise<Fetched> {
   try {
     const r = await deps.fetch(url, {
       headers: { accept: "application/json", "user-agent": "councilof.ai footprint (nicholas@csoai.org)", ...headers },
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      signal: AbortSignal.timeout(timeoutMs),
     });
     if (!r.ok) return { ok: false, status: r.status, reason: `http ${r.status}` };
     const text = await r.text();
@@ -86,7 +95,7 @@ export async function fetchJson(deps: Deps, url: string, headers: Record<string,
       return { ok: false, status: r.status, reason: "not json" };
     }
   } catch (e) {
-    const msg = (e as Error)?.name === "TimeoutError" ? `timeout after ${FETCH_TIMEOUT_MS}ms` : (e as Error)?.message ?? "unknown";
+    const msg = (e as Error)?.name === "TimeoutError" ? `timeout after ${timeoutMs}ms` : (e as Error)?.message ?? "unknown";
     return { ok: false, status: null, reason: `fetch failed: ${msg}` };
   }
 }
@@ -124,7 +133,7 @@ export async function registryListings(deps: Deps): Promise<Row> {
     }
     const url = cursor ? `${REGISTRY_SEARCH}&cursor=${encodeURIComponent(cursor)}` : REGISTRY_SEARCH;
     pageUrls.push(url);
-    const got = await fetchJson(deps, url);
+    const got = await fetchJson(deps, url, {}, REGISTRY_TIMEOUT_MS);
     if (!got.ok) {
       // A listing that broke midway is not a smaller listing; it is an unread one.
       return uncheckable(`registry page ${pages + 1}: ${got.reason}`, {
