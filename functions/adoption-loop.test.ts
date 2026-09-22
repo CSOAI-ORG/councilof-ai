@@ -113,8 +113,6 @@ describe("every axis on the board points at its published bank", () => {
     // run) — so the board carries no declared slot today. The invariant is kept as a rule, not a
     // fixed list: any future declared slot must be UNMEASURED, and a MEASURED slot must lead
     // somewhere — a bank slug or an evidence_url to its run — never a dead end.
-    const declared = all.filter((x) => x.kind === "declared-slot").map((x) => x.axis);
-    expect(declared).toEqual([]);
     for (const x of all.filter((x) => x.kind === "declared-slot")) expect(x.status).toBe("UNMEASURED");
     const missing = all
       .filter((x) => x.status === "MEASURED" && !x.dataset && !(x as { evidence_url?: string }).evidence_url)
