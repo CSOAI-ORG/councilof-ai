@@ -1,18 +1,22 @@
 #!/usr/bin/env node
-// Owner decision 2026-09-22: public/proofs/ (3,993 OpenTimestamps .ots files) leaves the deployed
-// site so the tree stays under Cloudflare Pages' 20,000-file cap. Every /proofs/* URL keeps resolving
-// through the in-repo `public/_redirects` rule (302 → the HF mirror csoai/councilof-ai-mirror, which
-// holds the full tree). This runs inside `build:client` BEFORE pages-size-guard so the guard measures
-// what will actually be uploaded. It removes nothing from the repository — only from dist/.
+// Removes from dist/ what never deploys (scripts/deploy-exclusions.json): a directory or file leaves the
+// upload only if public/_redirects carries a rule that keeps its URL resolving (302 to the HF mirror).
+// Owner decisions 2026-09-22: proofs/ (20,000-file cap) and the axis-23 run artifact (signed-pinned bytes
+// that the brand gate refuses on this surface). Runs AFTER vite build and BEFORE the gates that scan dist/.
+// Nothing is removed from the repository.
 import { existsSync, rmSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 const dist = resolve(process.argv[2] || "dist/client");
-const dir = resolve(dist, "proofs");
-// The rule is checked at its SOURCE (public/_redirects): generate-redirects.mjs writes dist/_redirects later in the chain.
-const redirects = existsSync(resolve("public/_redirects")) ? resolve("public/_redirects") : resolve(dist, "_redirects");
-if (!existsSync(redirects) || !/^\/proofs\/\*\s+https:\/\/huggingface\.co\/datasets\/csoai\/councilof-ai-mirror\/resolve\/main\/public\/proofs\/:splat\s+302/m.test(readFileSync(redirects, "utf8"))) {
-  console.error("✗ drop-proofs-from-dist: refusing — _redirects does not carry the /proofs/* → mirror 302 rule, so dropping proofs/ would break every /proofs/* link");
-  process.exit(11);
+const manifest = JSON.parse(readFileSync(resolve("scripts/deploy-exclusions.json"), "utf8"));
+const redirects = readFileSync(existsSync(resolve("public/_redirects")) ? resolve("public/_redirects") : resolve(dist, "_redirects"), "utf8");
+let fail = false;
+for (const e of manifest.entries) {
+  const urlPrefix = "/" + e.path.replace(/\/$/, "");
+  const ok = e.kind === "dir" ? new RegExp("^" + urlPrefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "/\\*\\s+https://huggingface\\.co/\\S+\\s+302", "m").test(redirects)
+                            : new RegExp("^" + urlPrefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s+https://huggingface\\.co/\\S+\\s+302", "m").test(redirects);
+  if (!ok) { console.error(`✗ deploy-exclusions: refusing to drop ${e.path} — no 302 rule for ${urlPrefix} in public/_redirects`); fail = true; continue; }
+  const target = resolve(dist, e.path);
+  if (existsSync(target)) { rmSync(target, { recursive: true, force: true }); console.log(`✓ deploy-exclusions: dropped ${e.path} (${e.kind}; served via 302 from the mirror)`); }
+  else console.log(`· deploy-exclusions: ${e.path} not present in dist`);
 }
-if (existsSync(dir)) { rmSync(dir, { recursive: true, force: true }); console.log("✓ drop-proofs-from-dist: dist/client/proofs removed (served via 302 from the HF mirror)"); }
-else console.log("· drop-proofs-from-dist: no dist/client/proofs present");
+if (fail) process.exit(11);

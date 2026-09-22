@@ -676,6 +676,9 @@
 # ================= DYNAMIC (splat) RULES — 100 MAX, NOTHING BELOW THE CATCH-ALL =================
 # --- static asset trees: served directly, never routed to the app ---
 # 2026-09-22: proofs (3,993 .ots) live on the HF mirror to keep the Pages upload under the 20,000-file cap.
+# 2026-09-22: the axis-23 run artifact is pinned by sha256 inside its signed companion; its bytes list third-party registry
+# names the brand gate refuses on this surface, so the file itself is served from the mirror (never edited).
+/interop/effect-binding-server-probe-2026-09-22.json https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-22.json 302
 /proofs/* https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/proofs/:splat 302
 
 /sov-space/*    /gspc-arena             308
