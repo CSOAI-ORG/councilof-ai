@@ -238,6 +238,18 @@ function publicJsonCodenameHit(rel, raw) {
 }
 
 const DISPLAY_KEYS = /^(name|title|label|headline|criteria|tagline|cta|heading|display_name|badge_name)$/i;
+
+/**
+ * An MCP Registry server identifier: `io.github.<owner>/<server>` and nothing else in the string.
+ * It lands in a `name` key because that is what the registry calls the field, but it is the
+ * address of a published artifact, not copy anyone wrote for a reader. Renaming one would
+ * falsify the record and break every lookup that resolves it — the same reason the defoneos rule
+ * already spares `csoai-defoneos-mcp`. Caught 2026-09-22: the effect-binding probe artifact
+ * quotes `io.github.CSOAI-ORG/bft-progress-council-mcp`, whose bytes are pinned by a signed
+ * companion and must not be edited at all, and the whole public sweep was failing on it.
+ * Estate prose that USES the word, anywhere, is untouched by this.
+ */
+const REGISTRY_IDENTIFIER = /^io\.github\.[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+$/;
 function jsonDisplayHits(obj, rel) {
   const hits = [];
   (function rec(node, at, key) {
@@ -246,6 +258,7 @@ function jsonDisplayHits(obj, rel) {
       // `packages[i].name` in a distribution catalogue is the registry's identifier for the
       // artifact, not display copy. See stripPackageIdentifiers.
       if (DISTRIBUTION_CATALOGUE.test(rel) && /(^|\.)packages\[\d+\]\.name$/.test(at)) return;
+      if (REGISTRY_IDENTIFIER.test(node.trim())) return;
       for (const rule of RULES) {
         if (rule.allowOn && rule.allowOn.test(rel)) continue;
         const re = new RegExp(rule.pattern.source, "gi");
@@ -340,6 +353,13 @@ if (SELFTEST) {
   }
   if (!jsonDisplayHits({ title: "SOVOS downloads" }, "/interop/footprint-packages.json").length) {
     console.error("\u2716 selftest: catalogue display copy no longer gated"); bad++;
+  }
+  // A whole-string MCP Registry identifier is an address, not copy; the same words as prose still fail.
+  if (jsonDisplayHits({ servers: [{ name: "io.github.CSOAI-ORG/bft-progress-council-mcp" }] }, "/interop/effect-binding-server-probe-2026-09-22.json").length) {
+    console.error("\u2716 selftest: an MCP Registry identifier now fails the display sweep"); bad++;
+  }
+  if (!jsonDisplayHits({ name: "the BFT progress council" }, "/interop/anything.json").length) {
+    console.error("\u2716 selftest: the retracted claim no longer fails as prose"); bad++;
   }
   for (const [rel, obj] of SWEEP_CATCH) {
     if (jsonDisplayHits(obj, rel).length === 0) {
