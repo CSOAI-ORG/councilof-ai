@@ -1,0 +1,830 @@
+{
+  "schema": "csoai.regulatory-windows/0.1",
+  "generated_at": "2026-09-17T14:05:00Z",
+  "generated_by": "CSOAI Ltd (UK company 16939677) — councilof.ai",
+  "signed": false,
+  "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
+  "purpose": "Register of AI/digital regulatory consultations, comment windows, standards input routes and reporting routes that CSOAI Ltd can still file into, plus windows already missed. Reconnaissance only: nothing was submitted, no account was created, no terms accepted.",
+  "what_csoai_measures": "Whether published AI evaluation results are cryptographically signed, content-addressed, independently recomputable, and whether corrections reach the places the numbers travelled to.",
+  "method": {
+    "primary_source_rule": "A closing date is recorded only where it was read on the issuing body's own page or its own JSON/content API. Dates from search summaries, aggregators, law-firm notes or news sites are NOT recorded.",
+    "apis_treated_as_primary": [
+      "ec.europa.eu/info/law/better-regulation/brpapi (European Commission Have Your Say API)",
+      "www.gov.uk/api/content (GOV.UK content API)",
+      "www.federalregister.gov/api/v1 (Federal Register API)"
+    ],
+    "unreadable_pages": "recorded under `uncheckable` with the reason; no date guessed",
+    "no_submission": true,
+    "no_registration": true,
+    "github_untouched": "CSOAI-ORG GitHub account not touched in any way."
+  },
+  "confirmed_missed": [
+    {
+      "name": "Targeted consultation on safeguarding the EU's data sovereignty",
+      "body": "European Commission, DG CNECT (Shaping Europe's digital future)",
+      "url_fetched": "https://digital-strategy.ec.europa.eu/en/consultations/targeted-consultation-safeguarding-eus-data-sovereignty",
+      "fetched_at_utc": "2026-09-17T13:41Z",
+      "opening_date": "2026-07-08",
+      "closing_date": "2026-09-15",
+      "closing_time_verbatim": "15 September 2026 at 23:59 CEST",
+      "status": "CLOSED",
+      "who_may_submit": "targeted — actors in the data value chain across sectors (not a general public consultation)",
+      "format": "EUSurvey online questionnaire",
+      "csoai_standing": "plausible — data dependencies and third-country access to sensitive data touches where measurement artefacts are hosted and who can reach them",
+      "outcome": "NO SUBMISSION MADE. Confirmed closed from the issuing body's own consultation page.",
+      "note": "Cross-checked against the digital-strategy consultations index, which lists this as the second-most-recent consultation. No Commission consultation has opened on that index since 2026-07-14.",
+      "closes_in_days": -2
+    },
+    {
+      "name": "NIST AI Standards \"Zero Drafts\" pilot — input on the initial public draft \"Guidance and Templates for Public-Facing AI Documentation\"",
+      "body": "NIST (National Institute of Standards and Technology), US Department of Commerce",
+      "url_fetched": "https://www.nist.gov/artificial-intelligence/ai-research/nists-ai-standards-zero-drafts-pilot-project-accelerate",
+      "fetched_at_utc": "2026-09-17T13:42Z",
+      "opening_date": "2026-07-29",
+      "closing_date": "2026-09-16",
+      "closing_verbatim": "NIST will consider input received by September 16, 2026, for the subsequent (possibly final) revision.",
+      "status": "CLOSED (soft cut-off, one day ago)",
+      "who_may_submit": "all stakeholders; no nationality restriction stated",
+      "format": "email to ai-standards+doczd [at] nist.gov",
+      "csoai_standing": "strong — the draft is about what a public-facing AI documentation artifact must contain; whether that artifact is signed, content-addressed and recomputable is exactly our measurement surface",
+      "outcome": "NO SUBMISSION MADE. Confirmed from NIST's own page (page Updated 2026-08-14).",
+      "important_caveat": "This was a cut-off for one revision, not a hard docket close. The ai-standards+doczd@nist.gov address is still published with no end date, and the same page carries a standing Invitation for Input on the pilot as a whole. Late input can still reach a later revision. Treat as recoverable, not lost.",
+      "sibling_still_open": "The second Zero Drafts topic — AI TEVV — is at draft-outline stage with NO stated deadline and its own address ai-standards+tevvzd [at] nist.gov. See rolling_routes.",
+      "closes_in_days": -1
+    }
+  ],
+  "also_missed_found_during_sweep": [
+    {
+      "name": "Empowering people through data intermediaries",
+      "body": "DSIT + DCMS (UK)",
+      "url_fetched": "https://www.gov.uk/government/consultations/empowering-people-through-data-intermediaries",
+      "fetched_at_utc": "2026-09-17T13:42Z",
+      "opening_date": "2026-05-01",
+      "closing_date": "2026-09-07",
+      "status": "CLOSED",
+      "who_may_submit": "anyone",
+      "format": "online",
+      "csoai_standing": "high — closest UK fit to our remit all year, and DSIT's only 2026 consultation",
+      "outcome": "NO SUBMISSION MADE. Closed ten days before this sweep.",
+      "closes_in_days": -10
+    },
+    {
+      "name": "FTC Policy Statement Concerning the Suppression of Accuracy in Artificial Intelligence Systems",
+      "body": "US Federal Trade Commission",
+      "file_no": "P264200",
+      "docket": "FTC-2026-0859",
+      "url_fetched": "https://www.federalregister.gov/api/v1 (Federal Register API record for the notice)",
+      "fetched_at_utc": "2026-09-17T13:46Z",
+      "opening_date": "2026-07-07",
+      "closing_date": "2026-07-31",
+      "status": "CLOSED",
+      "comments_received": 40,
+      "who_may_submit": "anyone",
+      "format": "regulations.gov",
+      "csoai_standing": "high — a policy statement on deception in how AI systems are represented; we measure whether published evaluation results are what they claim",
+      "outcome": "NO SUBMISSION MADE. Missed by seven weeks.",
+      "closes_in_days": -48
+    },
+    {
+      "name": "UN Independent International Scientific Panel on AI — call for nominations",
+      "body": "United Nations",
+      "url_fetched": "https://www.un.org/independent-international-scientific-panel-ai/en/faq",
+      "fetched_at_utc": "2026-09-17T13:38Z",
+      "opening_date": "2025-09-25",
+      "closing_date": "2025-10-31",
+      "status": "CLOSED — 40 members seated, term 2026-02-12 to 2029-02-11",
+      "who_may_submit": "nominations",
+      "format": "nomination form",
+      "outcome": "NO SUBMISSION MADE. Long past; no further open call.",
+      "closes_in_days": -321
+    },
+    {
+      "name": "AI Act Scientific Panel of independent experts — call for expression of interest",
+      "body": "European Commission / European AI Office",
+      "url_fetched": "https://digital-strategy.ec.europa.eu/en/news/commission-seeks-experts-ai-scientific-panel",
+      "fetched_at_utc": "2026-09-17T13:52Z",
+      "opening_date": "2025-06-16",
+      "closing_date": "2025-09-14",
+      "status": "CLOSED — 60 experts recruited",
+      "who_may_submit": "individual experts with PhD-or-equivalent, independent of any AI provider; EU citizenship not required but 80% must be from EU/EFTA",
+      "csoai_standing": "would have been high — the panel advises on GPAI evaluation methodologies",
+      "outcome": "NO SUBMISSION MADE.",
+      "closes_in_days": -368
+    },
+    {
+      "name": "AI Act Advisory Forum — call for applications",
+      "body": "European Commission / European AI Office",
+      "url_fetched": "https://digital-strategy.ec.europa.eu/en/funding/european-commission-launches-call-applications-join-ai-act-advisory-forum",
+      "fetched_at_utc": "2026-09-17T13:53Z",
+      "opening_date": "2025-07-17",
+      "closing_date": "2025-09-14",
+      "status": "CLOSED",
+      "who_may_submit": "experts from organisations with a proven track record in AI-related fields",
+      "outcome": "NO SUBMISSION MADE.",
+      "closes_in_days": -368
+    }
+  ],
+  "enisa_single_reporting_platform": {
+    "question_asked": "What does CRA manufacturer reporting through the ENISA Single Reporting Platform oblige or offer, does a body like CSOAI have standing, and is anything open to us?",
+    "urls_fetched": [
+      "https://www.enisa.europa.eu/topics/product-security/single-reporting-platform-srp",
+      "https://www.enisa.europa.eu/topics/product-security/single-reporting-platform-srp/frequently-asked-questions",
+      "https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act"
+    ],
+    "fetched_at_utc": "2026-09-17T13:40Z / 13:51Z",
+    "what_it_is_verbatim": "The online tool developed, operated and maintained by ENISA to enable manufacturers and, once applicable, open-source software stewards to meet their reporting obligations.",
+    "start_date_verbatim": "From 11 September 2026, manufacturers are required to submit these mandatory notifications through the SRP.",
+    "cra_timeline_verbatim": {
+      "entry_into_force": "The CRA entered into force on 10 December 2024.",
+      "reporting_obligations": "reporting obligations to apply as of 11 September 2026",
+      "main_obligations": "The main obligations introduced by the Act will apply from 11 December 2027"
+    },
+    "verdict": "NOT A CONSULTATION AND NOT AN INPUT ROUTE. It is an obligation channel, not an opportunity.",
+    "who_may_use_it": "Manufacturers and (from 11 December 2027) open-source software stewards, acting through Assigned Representatives who need an EU Login account with MFA.",
+    "third_party_standing_verbatim": "FAQ 30: If you are not a manufacturer and would like to report a vulnerability or security issue, please contact the relevant national CSIRT directly. Your submission might be marked as 'invalid' in the SRP.",
+    "voluntary_reporting_verbatim": "FAQ 27: The platform has not yet implemented the voluntary reporting functionality provided for under Art. 15(1) and (2) of the CRA.",
+    "future_opening": "When Art. 15 voluntary reporting is implemented, FAQ 6 says any natural or legal person will be able to voluntarily report vulnerabilities, cyber threats, incidents and near misses. NO DATE IS PUBLISHED for that. This is the only SRP door that could ever open to CSOAI as a third party. Diary it; do not assume it.",
+    "the_obligation_to_check": "CSOAI publishes software (npm packages, an MCP server, signing and verification tooling). If any of that is 'placed on the EU market' as a product with digital elements, CSOAI is itself a CRA manufacturer and the Article 14 reporting duty already applies as of 11 September 2026 — six days ago. This is a liability to assess, not an opportunity to file into. Owner/counsel question, flagged here because it was surfaced by this sweep.",
+    "csoai_standing": "NONE as a participant. Possible standing as an obligated manufacturer — unresolved."
+  },
+  "open_windows": [
+    {
+      "rank": 1,
+      "name": "IETF 127 — cut-off date for BOF proposal requests",
+      "body": "IETF (Internet Engineering Task Force)",
+      "url_fetched": "https://datatracker.ietf.org/meeting/important-dates/",
+      "fetched_at_utc": "2026-09-17T13:22Z",
+      "opening_date": null,
+      "closing_date": "2026-09-18",
+      "closing_verbatim": "2026-09-18 Friday Cut-off date for BOF proposal requests",
+      "who_may_submit": "anyone may file a BOF request in the Datatracker; approval requires an Area Director to sponsor it",
+      "format": "Datatracker BOF request",
+      "relevance": "high",
+      "csoai_standing": "strong subject-matter fit, impractical timing — 24 hours is not enough to build AD support from cold. The workable follow-on is 2026-10-02 (revised BOF proposal cut-off to Area Directors) and 2026-10-09 (AD approval), and those only matter if an AD is already engaged.",
+      "related_dates": {
+        "revised_bof_cutoff": "2026-10-02",
+        "ad_bof_approval": "2026-10-09",
+        "wg_meeting_request_cutoff": "2026-10-02",
+        "id_submission_cutoff": "2026-11-02 23:59 UTC",
+        "meeting": "2026-11-14, San Francisco, US"
+      },
+      "closes_in_days": 1
+    },
+    {
+      "rank": 2,
+      "name": "OECD Hiroshima AI Process (HAIP) Reporting Framework — cut-off for the next analytical review",
+      "body": "OECD",
+      "url_fetched": "https://oecd.ai/en/transparency/overview",
+      "fetched_at_utc": "2026-09-17T13:33Z",
+      "opening_date": "2025-02-07",
+      "closing_date": "2026-09-30",
+      "closing_verbatim": "Submissions received by 30 September 2026 will feed into the next analytical review.",
+      "rolling_verbatim": "Organisations can submit reports on a rolling basis.",
+      "who_may_submit": "organisations based in a jurisdiction that is an OECD member, a GPAI member, or an Adherent to the OECD Recommendation on AI. The UK qualifies on all three.",
+      "format": "OECD.AI transparency reporting form; reports published on the OECD.AI Policy Observatory",
+      "relevance": "high",
+      "csoai_standing": "jurisdictionally clear, role-ambiguous. The framework addresses 'organisations across the AI value chain, including developers, deployers, and providers of advanced AI systems'. CSOAI measures rather than develops. No text excluding a measurement body was found. Published output on a multilateral observatory for zero cost.",
+      "caveat": "transparency.oecd.ai does not resolve; the live path is oecd.ai/en/transparency/.",
+      "closes_in_days": 13
+    },
+    {
+      "rank": 3,
+      "name": "Smart Data: multi-sector call for evidence",
+      "body": "Department for Business and Trade (UK)",
+      "url_fetched": "https://www.gov.uk/government/calls-for-evidence/smart-data-multi-sector-call-for-evidence",
+      "fetched_at_utc": "2026-09-17T13:47Z",
+      "opening_date": "2026-07-08",
+      "closing_date": "2026-10-01",
+      "closing_verbatim": "2026-10-01 23:59 BST",
+      "who_may_submit": "anyone",
+      "format": "Qualtrics form, or SmartDataCfEInbox@businessandtrade.gov.uk",
+      "relevance": "medium",
+      "csoai_standing": "fair — asks about governance models and data availability under the Data (Use and Access) Act 2025; correction-propagation in published data is on-topic",
+      "closes_in_days": 14
+    },
+    {
+      "rank": 4,
+      "name": "Ofcom — Giving users more choice, control and trust in their online experience",
+      "body": "Ofcom (UK)",
+      "url_fetched": "https://www.ofcom.org.uk/online-safety/illegal-and-harmful-content/giving-users-more-choice-control-and-trust-in-their-online-experience",
+      "fetched_at_utc": "2026-09-17T13:43Z",
+      "opening_date": "2026-07-10",
+      "closing_date": "2026-10-02",
+      "closing_verbatim": "5pm 2 October 2026",
+      "who_may_submit": "anyone — \"We invite feedback from all stakeholders\"",
+      "format": "webform, or ODT response form to cat1additionalduties@ofcom.org.uk",
+      "relevance": "medium",
+      "csoai_standing": "moderate — transparency and accountability duties on Category 1 services; the page itself does not mention AI or automated classification",
+      "closes_in_days": 15
+    },
+    {
+      "rank": 5,
+      "name": "Ofcom — Fraudulent Advertising Codes of Practice",
+      "body": "Ofcom (UK)",
+      "url_fetched": "https://www.ofcom.org.uk/online-safety/online-fraud/consultation-fraudulent-advertising-code-of-practice",
+      "fetched_at_utc": "2026-09-17T13:48Z",
+      "opening_date": "2026-07-10",
+      "closing_date": "2026-10-02",
+      "closing_verbatim": "Please submit responses using the response form no later than 2 October 2026.",
+      "who_may_submit": "anyone",
+      "format": "response form",
+      "relevance": "low-medium",
+      "csoai_standing": "contingent on the detection-accuracy content in Volumes 1-4, which was not read in this sweep",
+      "closes_in_days": 15
+    },
+    {
+      "rank": 6,
+      "name": "Make Work Pay: workplace monitoring technologies",
+      "body": "Department for Business and Trade (UK)",
+      "url_fetched": "https://www.gov.uk/government/consultations/make-work-pay-workplace-monitoring-technologies",
+      "fetched_at_utc": "2026-09-17T13:47Z",
+      "opening_date": "2026-07-08",
+      "closing_date": "2026-09-30",
+      "closing_verbatim": "2026-09-30 23:59 BST",
+      "who_may_submit": "anyone — \"views from all parts of society\"",
+      "format": "Qualtrics, email, post",
+      "relevance": "medium",
+      "csoai_standing": "moderate — covers technologies used to make decisions about workers; evidence standards for such claims are our lane",
+      "closes_in_days": 13
+    },
+    {
+      "rank": 7,
+      "name": "ITU-T Focus Group on Trust and Identity for Humans and Agentic AI (FG-TIDA) — preparatory e-meeting",
+      "body": "ITU-T",
+      "url_fetched": "https://www.itu.int/en/ITU-T/focusgroups/tida/Pages/default.aspx",
+      "fetched_at_utc": "2026-09-17T13:41Z",
+      "opening_date": "2026-06",
+      "closing_date": "2026-09-30",
+      "closing_verbatim": "e-meeting 2026-09-30, 14:00-15:30 Geneva",
+      "who_may_submit": "OPEN — free ITU user account needed; no ITU membership or sector membership required. Mailing list fgtida [at] lists.itu.int",
+      "format": "meeting participation and written contributions (per-meeting contribution deadlines not published on this page)",
+      "relevance": "high",
+      "csoai_standing": "strong. ITU Focus Groups are the one part of ITU open to non-members, and this group's charter is 'trust management and interoperable digital identity infrastructure for humans and for agentic AI'. Further dates: e-meeting 2026-11-04 14:00-16:00 Geneva; face-to-face kick-off 1-4 December 2026, Paris.",
+      "closes_in_days": 13
+    },
+    {
+      "rank": 8,
+      "name": "NIST AI 200-2 ipd — \"The TEVV-Athlon Framework for Evaluating AI Systems\"",
+      "body": "NIST ITL AI Program, US Department of Commerce",
+      "url_fetched": "https://www.nist.gov/artificial-intelligence/ai-research/tevv-athlon-framework-evaluating-ai-systems",
+      "fetched_at_utc": "2026-09-17T13:45Z",
+      "opening_date": "2026-08-07",
+      "closing_date": "2026-10-06",
+      "closing_verbatim": "October 6, 2026",
+      "who_may_submit": "verbatim: \"NIST encourages all stakeholders to provide input, including organizations with experience conducting AI evaluations as well as users of AI evaluation reports - for instance, business decision-makers, procurement specialists, researchers, and technical staff.\" No nationality restriction.",
+      "format": "email TEVV-Athlon [at] nist.gov with \"NIST AI 200-2\" in the subject; HTML, ASCII, Word, RTF, Excel or PDF attachments",
+      "draft": "https://doi.org/10.6028/NIST.AI.200-2.ipd",
+      "relevance": "highest",
+      "csoai_standing": "BEST FIT IN THIS SWEEP. NIST's question 1 asks about definitions and usage of testing/evaluation/validation/verification terminology, and question 5 about elements warranting clarification, revision, removal or expansion. A TEVV framework produces assessment records; it says nothing today about whether those records are signed, content-addressed, recomputable, or whether corrections propagate. We are literally, in NIST's own words, a 'user of AI evaluation reports'. Email route, no account, no fee, no nationality bar.",
+      "questions_nist_asks": [
+        "Definitions and usage of testing, evaluation, validation and verification (TEVV) and related measurement terminology",
+        "The framework's flexibility, scope, and applicability across AI TEVV contexts",
+        "AI TEVV processes potentially underaddressed by the current framework",
+        "The framework's utility for novel or emerging AI systems",
+        "Elements that may warrant clarification, revision, removal, or expansion",
+        "Additional concepts, provisions, examples, or supporting materials"
+      ],
+      "closes_in_days": 19
+    },
+    {
+      "rank": 9,
+      "name": "Fraud: Anonymous access to phone numbers and call routing",
+      "body": "Home Office / HM Treasury / DSIT (UK)",
+      "url_fetched": "https://www.gov.uk/api/content (GOV.UK content API record)",
+      "fetched_at_utc": "2026-09-17T13:47Z",
+      "opening_date": null,
+      "closing_date": "2026-10-07",
+      "closing_verbatim": "2026-10-07 23:59 BST",
+      "who_may_submit": "anyone",
+      "format": "online",
+      "relevance": "low",
+      "csoai_standing": "weak — listed for completeness as DSIT co-sponsored",
+      "closes_in_days": 20
+    },
+    {
+      "rank": 10,
+      "name": "Call for evidence on the impact and effectiveness of Sections 1 to 13 of the Telecommunications (Security) Act 2021",
+      "body": "DCMS / DSIT (UK)",
+      "url_fetched": "https://www.gov.uk/api/content (GOV.UK content API record)",
+      "fetched_at_utc": "2026-09-17T13:47Z",
+      "opening_date": null,
+      "closing_date": "2026-10-12",
+      "closing_verbatim": "2026-10-12 23:59 BST",
+      "who_may_submit": "anyone",
+      "format": "SmartSurvey",
+      "relevance": "low",
+      "csoai_standing": "weak",
+      "closes_in_days": 25
+    },
+    {
+      "rank": 11,
+      "name": "NIST RFI — Modernizing the National Vulnerability Database in the Age of Artificial Intelligence",
+      "body": "NIST, US Department of Commerce",
+      "docket": "NIST-2026-0100 (regulations.gov); Docket Number 260805-0401",
+      "url_fetched": "https://www.federalregister.gov/api/v1/documents/2026-16371.json",
+      "fetched_at_utc": "2026-09-17T13:43Z",
+      "opening_date": "2026-08-12",
+      "closing_date": "2026-10-13",
+      "closing_verbatim": "Comments in response to this notice must be received on or before October 13, 2026, at 11:59 p.m. Eastern Time.",
+      "who_may_submit": "the broader community; no nationality restriction stated. UK entities may comment.",
+      "format": "regulations.gov ONLY — verbatim: \"NIST will not accept comments for this notice by postal mail, fax, or email.\" All comments posted publicly without redaction; no CBI accepted.",
+      "relevance": "high",
+      "csoai_standing": "good. Q3(b) asks \"How might transparency and auditability in AI-driven prioritization decisions be enhanced?\" and Q5(e) asks about machine-readable data quality. Signed, content-addressed enrichment records with correction propagation is a direct answer. 48 comments filed as of NIST's own 2026-09-17T08:55Z check.",
+      "closes_in_days": 26
+    },
+    {
+      "rank": 12,
+      "name": "ICO — Consultation on draft guidance about anonymisation, pseudonymisation and research",
+      "body": "Information Commissioner's Office (UK)",
+      "url_fetched": "https://citizen-space.ico.org.uk/regulatory-risk/consultation-on-draft-guidance-about-anonymisation/",
+      "fetched_at_utc": "2026-09-17T13:46Z",
+      "opening_date": "2026-08-24",
+      "closing_date": "2026-10-19",
+      "closing_verbatim": "19 Oct 2026 (no time stated on page)",
+      "who_may_submit": "anyone",
+      "format": "Citizen Space online survey; anonymisation [at] ico.org.uk",
+      "relevance": "medium",
+      "csoai_standing": "moderate. This is the ICO's ONLY open consultation — confirmed by their own Citizen Space finder returning 1 result under status=Open.",
+      "closes_in_days": 32
+    },
+    {
+      "rank": 13,
+      "name": "NIST SP 1353 ipd — CSF 2.0 Quick-Start Guide for Using AI for CSF Analysis and Reporting",
+      "body": "NIST",
+      "url_fetched": "https://csrc.nist.gov/pubs/sp/1353/ipd",
+      "fetched_at_utc": "2026-09-17T13:44Z",
+      "opening_date": "2026-08-19",
+      "closing_date": "2026-10-15",
+      "closing_verbatim": "October 15, 2026, 11:59 PM",
+      "who_may_submit": "anyone",
+      "format": "email to the SP 1353 comment address on the publication page",
+      "relevance": "medium",
+      "csoai_standing": "moderate — AI-generated compliance artefacts with no provenance or recomputability is precisely our point, but this is a quick-start guide, not a measurement standard",
+      "closes_in_days": 28
+    },
+    {
+      "rank": 14,
+      "name": "EDPB Guidelines 03/2026 on web scraping in the context of generative AI",
+      "body": "European Data Protection Board",
+      "url_fetched": "https://www.edpb.europa.eu/public-consultations_en",
+      "fetched_at_utc": "2026-09-17T13:50Z",
+      "opening_date": "2026-07-08",
+      "closing_date": "2026-10-30",
+      "closing_verbatim": "08 July - 30 October 2026",
+      "who_may_submit": "anyone — EDPB public consultations are open to all interested stakeholders and citizens; responses are published",
+      "format": "EDPB online feedback form",
+      "relevance": "medium",
+      "csoai_standing": "moderate — training-data provenance; our angle is that a provenance claim about a corpus is only a claim unless it is content-addressed and recomputable",
+      "closes_in_days": 43
+    },
+    {
+      "rank": 15,
+      "name": "EDPB Guidelines 02/2026 on Anonymisation",
+      "body": "European Data Protection Board",
+      "url_fetched": "https://www.edpb.europa.eu/public-consultations_en",
+      "fetched_at_utc": "2026-09-17T13:50Z",
+      "opening_date": "2026-07-08",
+      "closing_date": "2026-10-30",
+      "closing_verbatim": "08 July - 30 October 2026",
+      "who_may_submit": "anyone",
+      "format": "EDPB online feedback form",
+      "relevance": "low-medium",
+      "csoai_standing": "weak-moderate",
+      "closes_in_days": 43
+    },
+    {
+      "rank": 16,
+      "name": "IETF 127 — Internet-Draft submission cut-off (all I-Ds including -00)",
+      "body": "IETF",
+      "url_fetched": "https://datatracker.ietf.org/submit/",
+      "fetched_at_utc": "2026-09-17T13:24Z",
+      "opening_date": null,
+      "closing_date": "2026-11-02",
+      "closing_verbatim": "The last submission time for new Internet-Drafts before the meeting is 2026-11-02 23:59 UTC. After that, you will not be able to submit Internet-Drafts until after 2026-11-14 23:59 PST",
+      "who_may_submit": "ANYONE — no membership, no sponsor, no fee",
+      "format": "Datatracker I-D submission",
+      "relevance": "highest",
+      "csoai_standing": "This is the hard gate for revising draft-templeman-scitt-framing-space-00 or filing a new -00 before IETF 127. SCITT already carries 23 related individual drafts including 'A SCITT Profile for Pre-Run Evaluation Criteria (PRML)', 'SCITT Profile for Independently Derived Subjects', 'Verifiable AI Refusal Events using SCITT' and 'A SCITT Profile for EU AI Act Article 50 Transparency Receipts'. Independent recomputation of published evaluation results, and correction propagation, are UNCLAIMED in that list.",
+      "closes_in_days": 46
+    },
+    {
+      "rank": 17,
+      "name": "Vision for an AI-enabled clean energy system",
+      "body": "DESNZ (UK)",
+      "url_fetched": "https://www.gov.uk/government/calls-for-evidence/vision-for-an-ai-enabled-clean-energy-system",
+      "fetched_at_utc": "2026-09-17T13:47Z",
+      "opening_date": "2026-09-08",
+      "closing_date": "2026-11-06",
+      "closing_verbatim": "2026-11-06 23:45 GMT",
+      "who_may_submit": "industry, academia, system operators, regulators and other energy stakeholders",
+      "format": "email aiforenergy [at] energysecurity.gov.uk",
+      "relevance": "low-medium",
+      "csoai_standing": "fair — the only AI-titled open window on gov.uk; domain-specific, but 'risks and barriers to adoption' admits an evaluation-integrity argument",
+      "closes_in_days": 50
+    },
+    {
+      "rank": 18,
+      "name": "Cloud and AI Development Act — feedback on the adopted Commission proposal",
+      "body": "European Commission (Secretariat-General / DG CNECT), Have Your Say",
+      "url_fetched": "https://ec.europa.eu/info/law/better-regulation/brpapi/groupInitiatives/14628 (Commission's own Have Your Say API)",
+      "fetched_at_utc": "2026-09-17T13:47Z",
+      "opening_date": "2026-07-02",
+      "closing_date": "2026-11-11",
+      "closing_verbatim": "feedbackEndDate 2026/11/11 23:59:59, receivingFeedbackStatus OPEN, stage ADOPTION_WORKFLOW (PROP_REG)",
+      "feedback_received_so_far": 94,
+      "who_may_submit": "anyone — Have Your Say feedback on adopted proposals is open to all, including non-EU respondents. Requires an EU Login account (NOT created in this sweep).",
+      "format": "Have Your Say feedback form; feedback is forwarded to the European Parliament and Council",
+      "relevance": "medium",
+      "csoai_standing": "fair. It is an infrastructure-and-capacity Act, not an evaluation Act, but it is the only EU legislative window open with real reach, feedback goes to co-legislators, and secure-processing provisions bear on where measurement artefacts are hosted.",
+      "note": "Verified from the Commission's own API. The Have Your Say HTML page is JavaScript-rendered and returned no dates to a non-JS fetch.",
+      "closes_in_days": 55
+    },
+    {
+      "rank": 19,
+      "name": "Modernising corporate reporting",
+      "body": "DBIST (UK)",
+      "url_fetched": "https://www.gov.uk/government/consultations/modernising-corporate-reporting",
+      "fetched_at_utc": "2026-09-17T13:47Z",
+      "opening_date": "2026-09-07",
+      "closing_date": "2026-11-30",
+      "closing_verbatim": "2026-11-30 23:59 GMT",
+      "who_may_submit": "anyone",
+      "format": "Qualtrics, email, post",
+      "relevance": "low",
+      "csoai_standing": "fair on the digital-reporting limb only",
+      "closes_in_days": 74
+    },
+    {
+      "rank": 20,
+      "name": "Evaluation survey for the Software Security Code of Practice",
+      "body": "DSIT (UK) with NCSC",
+      "url_fetched": "https://www.gov.uk/api/content/government/calls-for-evidence/evaluation-survey-for-the-software-security-code-of-practice",
+      "fetched_at_utc": "2026-09-17T13:56Z",
+      "opening_date": "2024-06-25",
+      "closing_date": "2026-12-16",
+      "closing_verbatim": "closing_date 2026-12-16T23:59:00.000+00:00 (GOV.UK content API)",
+      "who_may_submit": "anyone — \"open to both organisations that develop and sell software, and their customers\"",
+      "format": "online survey",
+      "relevance": "high",
+      "csoai_standing": "STRONGEST OPEN UK WINDOW. It evaluates the NCSC self-attestation form. Whether a self-attestation is signed, content-addressed and recomputable — rather than a typed-in claim — is exactly what we measure, and the survey explicitly invites software buyers as well as suppliers. Three months of runway. This is the only DSIT window open at all.",
+      "closes_in_days": 90
+    },
+    {
+      "rank": 21,
+      "name": "NHTSA — Updating and Expanding Guidance on Safe Development and Deployment of Automated Driving Systems",
+      "body": "US DOT / NHTSA",
+      "docket": "NHTSA-2026-1520",
+      "url_fetched": "https://www.federalregister.gov/api/v1/documents/2026-15484.json",
+      "fetched_at_utc": "2026-09-17T13:45Z",
+      "opening_date": "2026-07-31",
+      "closing_date": "2027-07-31",
+      "closing_verbatim": "The public comment period is open for one year and may be extended as necessary",
+      "who_may_submit": "anyone via regulations.gov",
+      "format": "regulations.gov",
+      "relevance": "low-medium",
+      "csoai_standing": "a standing, low-urgency door for evidence-integrity comment on ADS safety cases; draft chapters are released over time with comment invited on each",
+      "closes_in_days": 317
+    }
+  ],
+  "rolling_routes_no_deadline": [
+    {
+      "name": "NIST AI Standards Zero Drafts — AI TEVV topic and general pilot input",
+      "body": "NIST",
+      "url_fetched": "https://www.nist.gov/artificial-intelligence/ai-research/nists-ai-standards-zero-drafts-pilot-project-accelerate",
+      "fetched_at_utc": "2026-09-17T13:42Z",
+      "who_may_submit": "anyone; no nationality restriction",
+      "format": "email ai-standards+tevvzd [at] nist.gov (TEVV), ai-standards+doczd [at] nist.gov (documentation), ai-standards [at] nist.gov (other). NIST also welcomes organisations proposing to host listening sessions.",
+      "status": "TEVV zero draft is at draft-outline stage with NO deadline stated. The standing Invitation for Input covers initial public drafts, prioritisation of future topics, scoping, and the process itself.",
+      "csoai_standing": "high — and note that NIST's own shelved-topic list names 'digital content transparency, provenance data tracking, signed metadata, watermarking' and 'Methods and metrics for evaluating and reporting the effectiveness of such measures'. That is our subject matter, parked, on a page that invites input on reprioritising it."
+    },
+    {
+      "name": "NIST AI Consortium (formerly AISIC) — letters of interest",
+      "body": "NIST",
+      "url_fetched": "https://www.federalregister.gov/api/v1 (FR 2026-10779, published 2026-05-29, docket NIST 2026-0034, full text read)",
+      "fetched_at_utc": "2026-09-17T13:46Z",
+      "who_may_submit": "verbatim: \"Participation ... is open to all interested organizations that can contribute their expertise, products, data, and/or models.\" No nationality bar for general membership; national-security task groups are eligibility-gated at NIST's sole discretion.",
+      "format": "LOI via webform, email or hardcopy. Selected participants must sign a CRADA (non-CRADA agreements possible at NIST's discretion).",
+      "deadline_verbatim": "NIST will accept letters of interest from new organizations to participate in this Consortium on an ongoing basis with regular periods of review ... likely occurring biannually.",
+      "csoai_standing": "high — the Consortium's stated purpose is 'guidelines and standards for AI measurement'. Closest institutional fit found. Costs nothing to file an LOI. NOTE: filing an LOI is a registration and was NOT done in this sweep."
+    },
+    {
+      "name": "IETF Internet-Draft submission and working-group mailing lists",
+      "body": "IETF",
+      "url_fetched": "https://www.ietf.org/participate/ and https://www.ietf.org/how/lists/",
+      "fetched_at_utc": "2026-09-17T13:24Z",
+      "who_may_submit": "ANYONE — verbatim: \"Anyone can contribute to this work\" and \"Anyone can subscribe to a working group list and the archives are all public.\" No membership, no sponsor, no fee.",
+      "format": "Datatracker I-D submission; WG mailing lists",
+      "csoai_standing": "highest structural fit. CSOAI already holds draft-templeman-scitt-framing-space-00 ('Measuring the CBOR Framing Space of COSE_Sign1 Data-Hash Pre-images'), confirmed live at https://datatracker.ietf.org/group/scitt/documents/. Relevant WGs: SCITT, RATS, COSE, WIMSE, AIPREF."
+    },
+    {
+      "name": "W3C Community Groups",
+      "body": "W3C",
+      "url_fetched": "https://www.w3.org/community/ and https://www.w3.org/groups/cg/",
+      "fetched_at_utc": "2026-09-17T13:30Z",
+      "who_may_submit": "anyone — verbatim: \"W3C Membership is not required to join a Community or Business Group\" and \"There is no fee to join a Community Group\". Requires a free W3C account (NOT created in this sweep).",
+      "format": "join an existing CG or propose a new one",
+      "directly_relevant_groups": [
+        "Agent Conformance and Benchmarking CG",
+        "AI Computed Provenance CG",
+        "AI Judgement Event CG",
+        "Agentic Integrity Verification Specification CG",
+        "Agent Trust Protocol CG",
+        "Agent Declaration and Assurance CG",
+        "Credentials CG"
+      ],
+      "csoai_standing": "high — 'Agent Conformance and Benchmarking' and 'AI Computed Provenance' are on our exact subject."
+    },
+    {
+      "name": "OECD Catalogue of Tools & Metrics for Trustworthy AI — tool submission",
+      "body": "OECD",
+      "url_fetched": "https://oecd.ai/en/catalogue/tools/submit",
+      "fetched_at_utc": "2026-09-17T13:35Z",
+      "who_may_submit": "no eligibility restriction stated",
+      "format": "online submission form",
+      "deadline": "none — explicitly rolling",
+      "csoai_standing": "genuine listing route for CSOAI's measurement tooling. A past campaign date of 'before 5 June 2026' appears on the catalogue overview page but the submit form itself carries no deadline, so nothing was lost."
+    },
+    {
+      "name": "C2PA Conformance Program",
+      "body": "C2PA",
+      "url_fetched": "https://c2pa.org/conformance/",
+      "fetched_at_utc": "2026-09-17T13:43Z",
+      "who_may_submit": "open, via an Expression of Interest form; covers generator, validator and CA products; aligned to the C2PA 2.x series",
+      "deadline": "none stated",
+      "csoai_standing": "high, and matches a standing estate item — the v0.2 resubmit is outstanding. The legacy Interim Trust List was frozen 2026-01-01 and is superseded by this programme."
+    },
+    {
+      "name": "NIST Trustworthy AI in Critical Infrastructure Profile — Community of Interest",
+      "body": "NIST",
+      "url_fetched": "https://www.nist.gov/programs-projects/concept-note-ai-rmf-profile-trustworthy-ai-critical-infrastructure",
+      "fetched_at_utc": "2026-09-17T13:45Z",
+      "who_may_submit": "open sign-up, no restriction stated",
+      "format": "mailing list + Slack where NIST 'will share discussion drafts and solicit real time feedback'",
+      "deadline": "none"
+    },
+    {
+      "name": "FCA AI Spotlight",
+      "body": "Financial Conduct Authority (UK)",
+      "url_fetched": "https://www.fca.org.uk/firms/innovation/ai-lab",
+      "fetched_at_utc": "2026-09-17T13:45Z",
+      "who_may_submit": "any organisation building AI solutions for financial services",
+      "format": "participation pack / digital sandbox platform",
+      "deadline": "none — verbatim: \"Applications ... will remain open.\"",
+      "note": "On the same page: AI Live Testing cohort 2 ran 19 January to 24 March 2026 (closed); Supercharged Sandbox closed; AI Input Zone ran 14 May to 19 June 2026 (closed)."
+    },
+    {
+      "name": "EU AI Pact (Pillar I) and Apply AI Alliance",
+      "body": "European Commission / European AI Office",
+      "url_fetched": "https://digital-strategy.ec.europa.eu/en/policies/ai-pact and https://digital-strategy.ec.europa.eu/en/policies/apply-ai-alliance",
+      "fetched_at_utc": "2026-09-17T13:53Z",
+      "who_may_submit": "AI Pact Pillar I is open to all stakeholders including companies, non-profits, academics and civil servants. The Apply AI Alliance is open to all stakeholders, from companies to individual citizens, academia, civil society, governments and social partners.",
+      "format": "join via the respective Commission forms (NOT done in this sweep)",
+      "deadline": "none — rolling",
+      "csoai_standing": "medium — coordination forum access rather than a filing route, but it is the standing door into AI Office policy discussion and the estate already identified it as the route after the AI Office declined review in writing on 2026-08-17."
+    },
+    {
+      "name": "EU Code of Practice on Transparency of AI-generated Content — signatory form",
+      "body": "European Commission / European AI Office",
+      "url_fetched": "https://digital-strategy.ec.europa.eu/en/policies/code-practice-ai-generated-content",
+      "fetched_at_utc": "2026-09-17T13:52Z",
+      "status": "Drafting closed. Final code published at the Closing Plenary on 10 June 2026. The signatory form remains open (~190 entities had signed by July 2026).",
+      "who_may_submit": "signatories are providers and deployers of AI systems generating synthetic content; CSOAI's fit as a measurement body is unverified",
+      "deadline": "none stated",
+      "csoai_standing": "UNRESOLVED — read the signatory eligibility before assuming standing. Recorded because the drafting window (call for expression of interest, September 2025) is closed and will not reopen."
+    }
+  ],
+  "members_only_or_nomination_only": [
+    {
+      "name": "ISO/IEC JTC1/SC42 (Artificial intelligence)",
+      "route": "national-body only — a UK entity participates via the BSI mirror committee. ISO drafts are not open to direct public comment.",
+      "status": "UNVERIFIED on iso.org itself (403) — see uncheckable"
+    },
+    {
+      "name": "CEN/CENELEC JTC21 membership",
+      "url_fetched": "https://www.cencenelec.eu/areas-of-work/cen-cenelec-topics/artificial-intelligence/",
+      "fetched_at_utc": "2026-09-17T13:45Z",
+      "route": "verbatim: \"European organisations interested in becoming a member of the CEN/CLC/JTC 21 ... should contact the CEN and CENELEC Project Manager\"; general engagement routes you to your National Standards Body. JTC 21 has over 300 experts from more than 20 countries, established 2021-06-01."
+    },
+    {
+      "name": "CEN/CENELEC Enquiry-stage commenting",
+      "url_fetched": "https://www.cencenelec.eu/european-standardization/european-standards/",
+      "fetched_at_utc": "2026-09-17T13:47Z",
+      "route": "at Enquiry \"everyone who has an interest (e.g. manufacturers, public authorities, consumers, etc.) may comment on the draft\", but comments go THROUGH the national member — for a UK entity, BSI. Not a direct-to-CEN route."
+    },
+    {
+      "name": "OECD.AI Network of Experts",
+      "url_fetched": "https://oecd.ai/en/network-of-experts",
+      "fetched_at_utc": "2026-09-17T13:33Z",
+      "route": "NOMINATION ONLY — members are nominated by OECD Members and DPC partner countries and stakeholder groups. No public application, no deadline."
+    },
+    {
+      "name": "UN Independent International Scientific Panel on AI",
+      "url_fetched": "https://www.un.org/independent-international-scientific-panel-ai/en/faq",
+      "fetched_at_utc": "2026-09-17T13:38Z",
+      "route": "closed; 40 members seated. Future engagement discretionary — \"The Panel may also consult informally with external experts\". No open call."
+    },
+    {
+      "name": "ITU-T Study Groups (as distinct from Focus Groups)",
+      "route": "ITU membership required. Only FG-TIDA is open to non-members."
+    },
+    {
+      "name": "UK AI Security Institute",
+      "url_fetched": "https://www.aisi.gov.uk/grants",
+      "fetched_at_utc": "2026-09-17T13:43Z",
+      "route": "verbatim: \"Our programmes are not currently accepting applications.\" Alignment Project (up to GBP 1m), Challenge Fund (up to GBP 200k, UK and international academic institutions and non-profits) and Systemic Safety Grants are ALL CLOSED. The only current collaboration named is a bilateral MOU with Google DeepMind — invitation only."
+    },
+    {
+      "name": "NIST CAISI",
+      "url_fetched": "https://www.nist.gov/caisi",
+      "fetched_at_utc": "2026-09-17T13:42Z",
+      "route": "NO open call, RFI or comment window on the page. Input routes are voluntary agreements with AI developers and evaluators, and CRADAs. One CRADA is signed with OpenMined, a 501(c)(3) non-profit — precedent that a non-corporate evaluator can get in. Only a general inquiries email is published."
+    },
+    {
+      "name": "ENISA Single Reporting Platform",
+      "route": "manufacturers and (from 2027-12-11) open-source stewards only. See enisa_single_reporting_platform."
+    }
+  ],
+  "checked_nil_returns": [
+    {
+      "body": "DSIT (UK)",
+      "finding": "ZERO open consultations. Verified twice — GOV.UK's own finder returns 'There are no matching results' and the search API returns total 0. DSIT's entire consultation history is 11 items, all closed. The only DSIT-badged open item is the Software Security Code of Practice evaluation survey (a call for evidence, listed above).",
+      "fetched_at_utc": "2026-09-17T13:41Z"
+    },
+    {
+      "body": "Regulatory Horizons Council (UK)",
+      "finding": "No open calls. The body became part of the Regulatory Innovation Office in October 2025; RIO's own page also shows no open consultation, call for evidence or sandbox application.",
+      "fetched_at_utc": "2026-09-17T13:44Z"
+    },
+    {
+      "body": "CMA (UK)",
+      "finding": "No open consultation remaining. Its only one (strategic review of markets remedies) closed 2026-09-11.",
+      "fetched_at_utc": "2026-09-17T13:44Z"
+    },
+    {
+      "body": "MHRA AI Airlock (UK)",
+      "finding": "Nothing open. Pilot closed April 2025, Phase 2 completed May 2026, Phase 3 design 'in progress ... to be announced later in the year'. Diary note.",
+      "fetched_at_utc": "2026-09-17T13:45Z"
+    },
+    {
+      "body": "ESMA",
+      "finding": "12 open consultations; NONE AI-specific. The only ones closing on or after today are the Prospectus Regulation disclosure guidelines (09/11/2026) and EMIR third-country CCP reporting (12/10/2026). The joint ESMA-EBA suitability consultation that touched AI closed 25/05/2026.",
+      "url_fetched": "https://www.esma.europa.eu/press-news/consultations",
+      "fetched_at_utc": "2026-09-17T13:51Z"
+    },
+    {
+      "body": "European Commission — digital-strategy consultations index",
+      "finding": "NO consultation currently open. The two most recent both closed this month (WRC-2027 position, 11 September 2026; data sovereignty, 15 September 2026). Nothing has opened on that index since 2026-07-14.",
+      "url_fetched": "https://digital-strategy.ec.europa.eu/en/consultations",
+      "fetched_at_utc": "2026-09-17T13:44Z"
+    },
+    {
+      "body": "European Commission — AI Act guidelines consultations",
+      "finding": "All three 2026 AI Act consultations are closed: transparency obligations guidelines (closed 2026-06-03), high-risk classification guidelines (extended, closed 2026-07-23), text and data mining (closed 2026-01-09).",
+      "fetched_at_utc": "2026-09-17T13:52Z"
+    },
+    {
+      "body": "NTIA",
+      "finding": "No open AI RFC. Federal Register API shows 2 open-comment NTIA documents, both PRA/OMB information-collection notices, neither AI-substantive.",
+      "fetched_at_utc": "2026-09-17T13:44Z"
+    },
+    {
+      "body": "FTC",
+      "finding": "5 open-comment documents, NONE AI. The AI-accuracy policy statement closed 2026-07-31.",
+      "fetched_at_utc": "2026-09-17T13:46Z"
+    },
+    {
+      "body": "OSTP / Executive Office of the President",
+      "finding": "OSTP has 1 document since May (a climate-report notice, comments closed 2026-09-09); EOP has 0 open. No open AI RFI.",
+      "fetched_at_utc": "2026-09-17T13:45Z"
+    },
+    {
+      "body": "Federal Register — provenance and synthetic content",
+      "finding": "The terms 'provenance', 'watermarking', 'content provenance' and 'deepfake' each returned ZERO open-comment federal documents. There is no open US federal docket on content provenance or synthetic-content measurement right now.",
+      "fetched_at_utc": "2026-09-17T13:45Z"
+    },
+    {
+      "body": "W3C workshops",
+      "finding": "https://www.w3.org/events/workshops/ returns 'There are no results' for upcoming. No open call for position papers.",
+      "fetched_at_utc": "2026-09-17T13:29Z"
+    },
+    {
+      "body": "UN Global Dialogue on AI Governance",
+      "finding": "Verbatim: 'The submission form for inputs is now closed (1 Feb - 21 Feb 2025).'",
+      "url_fetched": "https://www.un.org/global-digital-compact/en/ai",
+      "fetched_at_utc": "2026-09-17T13:38Z"
+    },
+    {
+      "body": "ENISA ad-hoc working group calls",
+      "finding": "Every listed call for expression of interest has a closing date in the past; the most recent is Security Architecture Engineering and Vulnerability Management, closed 15 April 2026. No AI-specific AHWG call is open.",
+      "url_fetched": "https://www.enisa.europa.eu/working-with-us/ad-hoc-working-groups-calls",
+      "fetched_at_utc": "2026-09-17T13:58Z"
+    }
+  ],
+  "uncheckable": [
+    {
+      "item": "ISO/IEC JTC1/SC42 work items and DIS/FDIS ballot stages",
+      "url": "https://www.iso.org/committee/6794475.html",
+      "reason": "HTTP 403 to WebFetch and to curl with a browser user-agent, verified twice. https://www.iec.ch/ords/f?p=103:7:::::FSP_ORG_ID:21538 also 403.",
+      "consequence": "No SC42 ballot stage or closing date recorded. No date guessed."
+    },
+    {
+      "item": "BSI Standards Development Portal — UK public comment windows (Drafts for Public Comment)",
+      "url": "https://standardsdevelopment.bsigroup.com/",
+      "reason": "Infinite redirect loop to WebFetch; curl exits 47 (too many redirects). Every public search endpoint returns 404; browse-by-category shows only a 'Latest standards activities' slice with zero AI-related projects.",
+      "partial": "The data shape was confirmed on an unrelated live project page (/projects/2026-02190 shows a comment period 13/09/2026-04/11/2026), so the portal does publish comment windows. Of four AI project pages found, BS ISO/IEC 42001:2023 (/projects/2020-02322) renders as '(Withdrawn Standard)' with no comment period, /projects/9023-09334 has no comment period, and two 404.",
+      "commenting_route_read": "Register/Login is offered, and the site banner states comments may alternatively be emailed on a template to admin.start [at] bsigroup.com. No account was created.",
+      "consequence": "NO EVIDENCE of an AI standard currently at public comment, but this is NOT a clean negative. This is the portal that would carry UK public-enquiry windows for both ISO and CEN drafts. Re-check by hand."
+    },
+    {
+      "item": "CEN/CENELEC work-item database — JTC21 Enquiry and Formal Vote dates",
+      "url": "https://standards.cencenelec.eu/",
+      "reason": "JavaScript redirect shell; the REG105 deep link returns HTTP 500.",
+      "consequence": "No JTC21 Enquiry or Formal Vote dates recorded."
+    },
+    {
+      "item": "CEN national members list — confirmation that BSI is still a CEN member",
+      "reason": "every candidate URL under cencenelec.eu/about-cen/...members... returns 404.",
+      "consequence": "Treat 'BSI is still a CEN member' as UNVERIFIED in this sweep. The JTC21 topic page does direct participants to their National Standards Body but does not enumerate members."
+    },
+    {
+      "item": "Ofcom closing dates for 6 of its 10 open items",
+      "url": "https://www.ofcom.org.uk/consultations-and-statements?ContentStatus=Open",
+      "reason": "the listing confirms exactly 10 open items and gives publication dates, but the result cards' links are JavaScript-rendered and closing dates are not in the served HTML.",
+      "unread": [
+        "Call for Evidence: A Safer Life Online for Women and Girls (published 9 Sep 2026) — page not locatable; do NOT confuse with the 2025 consultation that closed 23 May 2025",
+        "Code of Practice for Designated Radio Selection Services (14 Sep 2026) — algorithmic selection by voice assistants, potentially relevant",
+        "Revising the Enforcement guidelines for Competition Act investigations (11 Sep 2026)",
+        "Call for input on UK preparations for WRC-27 (1 Sep 2026)",
+        "Enabling drone innovation and security",
+        "three Code-powers items (low relevance)"
+      ],
+      "consequence": "No dates guessed. Two of these could be relevant; re-check by hand."
+    },
+    {
+      "item": "AI Standards Hub (aistandardshub.org)",
+      "reason": "its 'open for comment' filter reports 55 pages of results but renders no deadlines.",
+      "consequence": "finder only, not a source of dates."
+    },
+    {
+      "item": "NIST NCCoE project descriptions open for comment",
+      "url": "https://www.nccoe.nist.gov/",
+      "reason": "HTTP 403 Cloudflare interstitial on / and /get-involved/provide-feedback.",
+      "partial": "Cross-checked from the authoritative CSRC 'Drafts Open for Comment' list, which by CSRC's own definition includes NCCoE Project Descriptions: no NCCoE project description is currently open."
+    },
+    {
+      "item": "regulations.gov general 'who may submit' rule",
+      "url": "https://www.regulations.gov/faq",
+      "reason": "HTTP 403 CloudFront block.",
+      "partial": "Answered affirmatively from the issuing notices instead: neither the NVD RFI, the NHTSA dockets, the TEVV-Athlon call, the Zero Drafts page nor the AI Consortium notice states any citizenship, residency or US-entity condition. No restriction on CSOAI Ltd as a UK company was found anywhere in this sweep."
+    },
+    {
+      "item": "federalregister.gov HTML pages",
+      "reason": "WebFetch is redirected to unblock.federalregister.gov.",
+      "consequence": "All Federal Register facts here come from the site's own JSON API and its own full_text endpoint, not from the HTML. Both are issuing-body sources."
+    },
+    {
+      "item": "IETF Last Call listing filter",
+      "url": "https://datatracker.ietf.org/doc/search/?states=last-call",
+      "reason": "returns 'No documents match your query'; states=16 and states=18 return identical unfiltered results — the state filter is not applying. The URL https://datatracker.ietf.org/doc/ancp/last-call/ is a 404.",
+      "partial": "Two live Last Calls were recovered from the 'Active with the IESG' listing and confirmed on their own document pages — draft-ietf-dance-client-auth and draft-ietf-netconf-yang-notifications-versioning, both 'In Last Call (ends 2026-09-29)', both LOW relevance to CSOAI. There may be other open Last Calls not surfaced."
+    },
+    {
+      "item": "W3C per-specification comment deadlines",
+      "url": "https://www.w3.org/TR/?status=cr",
+      "reason": "lists 93 Candidate Recommendations with publication/status dates only — no review or comment deadlines are displayed for any specification.",
+      "partial": "Spot-checked the closest fit, https://www.w3.org/TR/did-resolution/ (CR, 28 August 2026): it requests experimental implementations and sets exit criteria of 'at least two independent interoperable implementations', but states NO comment deadline. Other adjacent CRs with publication dates only: Data Integrity BBS Cryptosuites v1.0 (10 Sep 2026), DIDs v1.1 (5 Mar 2026), Verifiable Credentials JSON Schema (4 Feb 2025).",
+      "consequence": "W3C's real open door is the Community Groups, not spec comment deadlines."
+    },
+    {
+      "item": "C2PA specification index",
+      "url": "https://spec.c2pa.org/specifications/",
+      "reason": "JavaScript redirect shell, no content.",
+      "partial": "Read https://spec.c2pa.org/specifications/specifications/2.3/index.html: version 2.3, copyright 2026, NO public-review notice or comment deadline anywhere on it. Whether a newer draft is in public review could not be established."
+    },
+    {
+      "item": "European Commission Have Your Say HTML initiative pages",
+      "reason": "JavaScript-rendered; a non-JS fetch of the Cloud and AI Development Act page returned no dates.",
+      "partial": "Dates were taken instead from the Commission's own Have Your Say API (brpapi), which is an issuing-body source."
+    },
+    {
+      "item": "ENISA EU Managed Security Services (EUMSS) candidate certification scheme public consultation",
+      "reason": "the news item is dated 24 July 2026 on certification.enisa.europa.eu/news_en and is headlined 'Have your say on the certification of EU Managed Security Services', but the item's own page returned 404 to a direct fetch, so the closing date could not be read.",
+      "consequence": "NO DATE RECORDED. Possibly still open, possibly closed. Low CSOAI relevance (managed security services certification), but re-check by hand if MSS certification matters."
+    }
+  ],
+  "closing_within_14_days": [
+    "2026-09-18 — IETF 127 BOF proposal request cut-off (impractical from cold; the real follow-on is 2026-10-02)",
+    "2026-09-30 — OECD HAIP Reporting Framework cut-off for the next analytical review (rolling thereafter)",
+    "2026-09-30 — ITU-T FG-TIDA preparatory e-meeting (open to non-members, free ITU account)",
+    "2026-09-30 — Make Work Pay: workplace monitoring technologies (DBT, UK)",
+    "2026-10-01 — Smart Data: multi-sector call for evidence (DBT, UK)"
+  ],
+  "best_fit_single_route": {
+    "name": "NIST AI 200-2 ipd — The TEVV-Athlon Framework for Evaluating AI Systems",
+    "closing_date": "2026-10-06",
+    "closes_in_days": 19,
+    "why": "It is the only open window anywhere in this sweep whose subject IS the evaluation of AI systems, it explicitly invites 'users of AI evaluation reports', it asks directly what warrants expansion, it takes email with no account and no fee, and it applies no nationality bar to a UK company. A TEVV framework produces assessment records and says nothing today about whether those records are signed, content-addressed, independently recomputable, or whether corrections propagate to where the numbers travelled. That gap is the whole of what CSOAI measures.",
+    "runner_up": "NIST RFI on Modernizing the National Vulnerability Database in the Age of AI (closes 2026-10-13, regulations.gov NIST-2026-0100) — its Q3(b) on transparency and auditability of AI-driven prioritization is a direct opening.",
+    "standing_door": "The NIST Zero Drafts TEVV address (ai-standards+tevvzd@nist.gov) has no deadline at all, and NIST's own shelved-topic list names signed metadata and provenance tracking as a parked topic while inviting input on reprioritisation."
+  }
+}

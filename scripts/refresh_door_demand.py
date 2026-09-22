@@ -47,7 +47,7 @@ def main():
         res = f"https://councilof.ai/api/{d}"
         s, j = get(f"{FACILITATOR}/discovery/resources/{urllib.parse.quote(res, safe='')}/stats")
         if not isinstance(j, dict):
-            rows.append({"door": f"api/{d}", "http": s, "state": "NOT_IN_INDEX",
+            rows.append({"door": f"api/{d}", "http": s, "state": "NOT_IN_INDEX" if s == 404 else "UNCHECKABLE",
                          "note": "no stats record returned for this resource on this read"})
             continue
         reachable += 1

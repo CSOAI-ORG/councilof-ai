@@ -1010,8 +1010,28 @@ def summarize(manifest: dict) -> None:
             print(f"      {m['surface']:28s} {m['state']:26s} {m['detail']}")
 
 
+def check_committed_inputs(root, artifacts):
+    """Fail closed before credentials/network when disk bytes differ from HEAD."""
+    base = pathlib.Path(root).resolve()
+    head = subprocess.run(["git", "-C", str(base), "rev-parse", "--verify", "HEAD"], capture_output=True)
+    if head.returncode:
+        raise ValueError("source has no committed HEAD")
+    for rel in artifacts:
+        path = pathlib.Path(rel)
+        if path.is_absolute() or ".." in path.parts:
+            raise ValueError("unsafe artifact path: " + rel)
+        target = base / path
+        if any(parent.is_symlink() for parent in [target, *list(target.parents)[:len(path.parts)-1]]):
+            raise ValueError("symlink artifact rejected: " + rel)
+        committed = subprocess.run(["git", "-C", str(base), "show", "HEAD:" + rel], capture_output=True)
+        if committed.returncode or not target.is_file() or target.read_bytes() != committed.stdout:
+            raise ValueError("uncommitted or changed artifact: " + rel)
+    return head.stdout.decode().strip()
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("--check-inputs", action="store_true", help="verify artifact bytes against committed HEAD; no network or writes")
     p.add_argument("--selftest", action="store_true", help="prove every check can fail, then exit")
     p.add_argument("--root", default=os.getcwd(), help="repo root (default: cwd)")
     p.add_argument("--artifact", action="append", default=None, help="repo-relative artifact path (repeatable)")
@@ -1039,6 +1059,15 @@ def main(argv=None) -> int:
             print(f"    excluded  {rel}  -- {why}")
         if len(excluded) > 8:
             print(f"    ... and {len(excluded)-8} more exclusions")
+    if args.check_inputs or args.publish_hf:
+        try:
+            commit = check_committed_inputs(root, artifacts)
+        except ValueError as error:
+            print("[committed-inputs] HELD: " + str(error), file=sys.stderr)
+            return 2
+        print(f"[committed-inputs] PASS {len(artifacts)} artifacts at {commit}")
+        if args.check_inputs:
+            return 0
     ua = BROWSER_UA if args.browser_ua else DEFAULT_UA
 
     if args.publish_hf:
