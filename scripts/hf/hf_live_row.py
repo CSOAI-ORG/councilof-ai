@@ -86,14 +86,15 @@ def main() -> int:
         except Exception as e:  # noqa: BLE001
             entry["state"] = f"UNREACHABLE: {type(e).__name__}: {e}"
             ledger["cards"].append(entry); print(f"{axis:24} {repo:40} {entry['state']}"); continue
-        fm, body = card.split_front_matter(text)
+        # Spliced on the raw text, not through split/join_front_matter: re-serialising the YAML
+        # would re-indent every tag list and turn a one-block edit into a whole-card diff. The
+        # markers live in the body, so the front matter stays byte-identical.
         block = card.live_row_block(axis)
-        had_block = card.LIVE_ROW_OPEN in body
-        new_body = card.splice(body, block, card.LIVE_ROW_OPEN, card.LIVE_ROW_CLOSE, before=card.HUB_OPEN)
-        stale = STALE_PAIR in new_body
+        had_block = card.LIVE_ROW_OPEN in text
+        new = card.splice(text, block, card.LIVE_ROW_OPEN, card.LIVE_ROW_CLOSE, before=card.HUB_OPEN)
+        stale = STALE_PAIR in new
         if stale:
-            new_body = new_body.replace(STALE_PAIR, STALE_FIX)
-        new = card.join_front_matter(fm, new_body)
+            new = new.replace(STALE_PAIR, STALE_FIX)
         changed = new != text
         entry.update({"had_live_row_block": had_block, "stale_typed_pair_dropped": stale, "changed": changed})
         if changed and args.push:
