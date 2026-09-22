@@ -55,7 +55,10 @@ describe("Health inventory — correct facts, not a score", () => {
     ).toBe(
       "22 measured of 22 declared; verify pass; evidence present; rerun empty; eligibility ELIGIBLE; corrections touching this digest 0.",
     );
-    expect(boardHealthLine()).toMatch(/22 measured of 22 declared/);
+    // The board line quotes the recorded observation, never a pair typed in this test.
+    expect(boardHealthLine()).toMatch(
+      new RegExp(`^${BOARD_COUNT_OBSERVED.measured_axes} measured of ${BOARD_COUNT_OBSERVED.axes} declared`),
+    );
     // The board line must NOT answer the per-digest question with the whole-ledger
     // total. No per-digest query exists, so the only true answer is "unknown".
     expect(boardHealthLine()).toMatch(/corrections touching this digest unknown/);
