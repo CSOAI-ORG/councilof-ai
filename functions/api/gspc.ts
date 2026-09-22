@@ -383,6 +383,22 @@ export const onRequestGet: PagesFunction = async (context) => {
         const all = selected.filter((a) => a.family === fam);
         return { axes: all.length, measured: all.filter((a) => a.status === "MEASURED").length };
       };
+      // ── the lid's four numbers, derived ONCE ────────────────────────────
+      // G-3 (2026-09-22): the lid used to compose its own counts inline, and one of them
+      // came from a DIFFERENT expression than the totals field beside it: the lid read
+      // `bySelectedFamily("financial").measured` (8) while `totals.fact_runs` read
+      // `factRuns.length` (9). They agreed until ADR-002 made effect-binding a
+      // deterministic-facts axis in the GSPC family — then the served payload carried
+      // "8 fact runs" in the lid and `"fact_runs": 9` two fields away, on the same object.
+      // Two derivations of one quantity will always drift; there is now exactly one.
+      //
+      // factRunCount counts deterministic-facts axes that carry a MEASURED run. A declared
+      // slot with no run behind it is not a run, so it is not counted as one — the same
+      // rule measured_axes keeps. Today all 9 are measured, so this number is unchanged.
+      const modelFleetCount = selected.filter((a: any) => a.kind === "model-comparison").length;
+      const factRunCount = factRuns.filter((a) => a.status === "MEASURED").length;
+      const publicLeaderScoreCount = externallyLedAxes.length;
+
       return {
         axes: selected.length,
         measured_axes: measured,
@@ -391,8 +407,8 @@ export const onRequestGet: PagesFunction = async (context) => {
         // what we measured, so quotable_axes == measured_axes by construction.
         quotable_axes: measured,
         public_count: `${selected.length} axis · ${measured} measured`,
-        model_fleets: selected.filter((a: any) => a.kind === "model-comparison").length,
-        fact_runs: factRuns.length,
+        model_fleets: modelFleetCount,
+        fact_runs: factRunCount,
         count_grammar:
           unmeasured === 0
             ? `${selected.length} axis are on the board and every one carries a measurement — no ` +
@@ -467,10 +483,14 @@ export const onRequestGet: PagesFunction = async (context) => {
         // BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — public leaders ≠ measured axes.
         // Same derivation as externally_led_axes (carded external leaders only).
         // Keep measured_axes unchanged; do not invent leaders for withheld axes.
-        public_leader_count: externallyLedAxes.length,
+        public_leader_count: publicLeaderScoreCount,
+        // Every number here is the SAME binding the totals field beside it publishes.
+        // functions/api/gspc.lid-truth.test.ts re-parses this string and asserts each
+        // number against measured_axes / model_fleets / public_leader_count / fact_runs,
+        // so a lid can never again read a count the payload contradicts.
         lid:
-          `${measured} axes measured · ${cmp.length} model fleets · ${externallyLedAxes.length} public leader scores · ` +
-          `${bySelectedFamily("financial").measured} fact runs · TIE is TIE · not a certificate.`,
+          `${measured} axes measured · ${modelFleetCount} model fleets · ${publicLeaderScoreCount} public leader scores · ` +
+          `${factRunCount} fact runs · TIE is TIE · not a certificate.`,
         own_leaders_excluded: ownLedExcludedAxes.length,
         own_leaders_excluded_axes: ownLedExcludedAxes,
         own_model_exclusion_note:
