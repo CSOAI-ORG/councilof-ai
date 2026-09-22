@@ -31,6 +31,13 @@ describe("anchoring claim — ledger is a pointer, not a grade", () => {
     expect(dashboardAttestations).toMatch(/timestamped historical observation/);
     expect(dashboardAttestations).toMatch(/exact-byte check is shown above/);
   });
+
+  it("keeps the public root, signed-card index, and board as separate count scopes", () => {
+    expect(dashboardAttestations).toContain("Three distinct count scopes:");
+    expect(dashboardAttestations).toMatch(/GSPC board[\s\S]*third scope: an axis snapshot/i);
+    expect(dashboardAttestations).toMatch(/Do not add or substitute these figures/);
+    expect(dashboardAttestations).toMatch(/does not anchor the signed-card index or the board/);
+  });
 });
 
 describe("OTS state follows the current root sidecar", () => {

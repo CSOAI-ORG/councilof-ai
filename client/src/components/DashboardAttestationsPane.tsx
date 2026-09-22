@@ -324,12 +324,14 @@ export default function DashboardAttestationsPane() {
         </dl>
         <p className="mt-3 rounded border border-border bg-muted/40 p-3 text-xs text-muted-foreground" data-testid="root-corpus-boundary">
           <strong className="text-foreground">
-            {corpus.relationship === "SEPARATE_CORPORA" ? "Two separate corpora:" : "Corpus relationship uncheckable:"}
+            {corpus.relationship === "SEPARATE_CORPORA" ? "Three distinct count scopes:" : "Corpus relationship uncheckable:"}
           </strong>{" "}
           {corpus.relationship === "SEPARATE_CORPORA" ? (
             <>
-              {corpus.publicRootLeaves} public-root leaves; a separate index of {corpus.separatelyIndexedSignedCards} signed cards; {corpus.identifierOverlap} identifier overlap.
-              The OpenTimestamps proof witnesses the exact <Mono>root.json</Mono> bytes only — it does not anchor the signed-card index.
+              {corpus.publicRootLeaves} public-root leaves; a separate index of {corpus.separatelyIndexedSignedCards} signed cards; {corpus.identifierOverlap} identifier overlap. The living{" "}
+              <a className="underline underline-offset-2 hover:text-foreground" href="/api/gspc">GSPC board</a>{" "}
+              is a third scope: an axis snapshot, not either card collection. Do not add or substitute these figures. The OpenTimestamps proof witnesses the exact{" "}
+              <Mono>root.json</Mono> bytes only — it does not anchor the signed-card index or the board.
             </>
           ) : (
             <>{corpus.reason} No zero counts or separation claim are inferred while either document is missing or malformed.</>
