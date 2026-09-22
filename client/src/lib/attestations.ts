@@ -573,7 +573,12 @@ export function latestCorrections(doc: CorrectionsDoc | null, n?: number): Corre
   return typeof n === "number" ? sorted.slice(0, n) : sorted;
 }
 
-/** The ledger's own declared signature state, verbatim — STALE today, and it says so itself. */
+/**
+ * The ledger's own signature state, verbatim. Since 2026-09-22 it is EARNED on each request —
+ * /api/corrections verifies its Ed25519 signature under did:web:csoai.org#board-attestation-1
+ * and publishes the check beside it — so VALID, STALE, INVALID_SIGNATURE, UNSIGNED and
+ * UNCHECKABLE are all things the endpoint established, not a label it typed. Print it as-is.
+ */
 export function ledgerSignatureState(doc: CorrectionsDoc | null): string {
   if (!doc) return "not read";
   return typeof doc.signature_state === "string" && doc.signature_state ? doc.signature_state : "not declared";
