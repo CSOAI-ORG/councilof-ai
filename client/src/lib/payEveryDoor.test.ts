@@ -2,8 +2,16 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { challengeFromResult } from "@/components/ToolRunner";
 import { buildTypedData, type EIP1193Provider, type X402Challenge } from "./x402Wallet";
 import {
+  DELIST_RISK_DAYS,
   challengeFromPaymentRequired,
+  daysSince,
   decodeSettlement,
+  delistRisk,
+  index402For,
+  settleFor,
+  walkTally,
+  type DoorSettlesReading,
+  type Index402Reading,
   doorFromSearch,
   doorsFromManifest,
   explorerTxUrl,
@@ -295,5 +303,119 @@ describe("the listing column is the index's record, or an honest unknown", () =>
     expect(listingFor(doors[2], null)).toMatchObject({ status: "UNCHECKABLE" });
     // a row seen in a short read is still LISTED — presence is observed, only absence is not
     expect(listingFor(doors[0], reading({ absence_determinate: false }))).toMatchObject({ status: "LISTED" });
+  });
+});
+
+describe("the 402 Index cell is that index's record, or an honest unknown", () => {
+  const doors = doorsFromManifest(MANIFEST);
+  const reading = (over: Partial<Index402Reading> = {}): Index402Reading => ({
+    kind: "MEASURED",
+    as_of: "2026-09-22T14:08:21Z",
+    declared_total: 112,
+    scanned: 112,
+    absence_determinate: true,
+    rows: [{ url: `${ORIGIN}/api/free-door`, route_key: `${ORIGIN}/api/free-door`, health_status: "healthy", last_checked: "2026-09-22 10:00:13", domain_verified: false }],
+    reason: null,
+    ...over,
+  });
+
+  it("LISTED with the row's health word and probe time, exactly as the index wrote them", () => {
+    expect(index402For(doors[0], reading())).toEqual({ status: "LISTED", health: "healthy", lastChecked: "2026-09-22 10:00:13", domainVerified: false, asOf: "2026-09-22T14:08:21Z", exact: true });
+  });
+
+  it("NOT LISTED only when the search was read in full; a route-key row counts and says it was not exact", () => {
+    expect(index402For(doors[2], reading())).toMatchObject({ status: "NOT_LISTED", scanned: 112, declared: 112 });
+    const byRoute = reading({ rows: [{ url: `${ORIGIN}/api/rwa/evidence`, health_status: "down" }] });
+    expect(index402For(doors[2], byRoute)).toMatchObject({ status: "LISTED", health: "down", lastChecked: null, domainVerified: null, exact: false });
+  });
+
+  it("UNCHECKABLE — never NOT LISTED — when the read was short, failed, or never happened", () => {
+    expect(index402For(doors[2], reading({ absence_determinate: false, reason: "index answered HTTP 503 at offset 100" }))).toEqual({ status: "UNCHECKABLE", reason: "index answered HTTP 503 at offset 100" });
+    expect(index402For(doors[2], reading({ kind: "UNCHECKABLE", absence_determinate: false, reason: null }))).toMatchObject({ status: "UNCHECKABLE", reason: expect.stringMatching(/not read in full/) });
+    expect(index402For(doors[2], null)).toMatchObject({ status: "UNCHECKABLE" });
+    expect(index402For(doors[0], reading({ absence_determinate: false }))).toMatchObject({ status: "LISTED" });
+  });
+});
+
+describe("the last-settle cell is this site's record, or null", () => {
+  const doors = doorsFromManifest(MANIFEST);
+  const reading = (over: Partial<DoorSettlesReading> = {}): DoorSettlesReading => ({
+    kind: "MEASURED",
+    as_of: "2026-09-22T14:08:21Z",
+    rows: [{ resource: `${ORIGIN}/api/rwa/evidence?asset=RLUSD`, route_key: `${ORIGIN}/api/rwa/evidence`, last_settle: "2026-09-20T09:30:00.000Z", tx: "0x3", network: "eip155:8453", self: true, zero_value: false, settles: 3 }],
+    reason: null,
+    ...over,
+  });
+
+  it("SETTLED carries the record's own instant, tx and self flag", () => {
+    expect(settleFor(doors[2], reading())).toEqual({ status: "SETTLED", lastSettle: "2026-09-20T09:30:00.000Z", tx: "0x3", network: "eip155:8453", self: true, settles: 3, asOf: "2026-09-22T14:08:21Z", exact: true });
+  });
+
+  it("a door with no record is NONE_ON_RECORD with lastSettle null — never a date borrowed from elsewhere", () => {
+    expect(settleFor(doors[0], reading())).toEqual({ status: "NONE_ON_RECORD", lastSettle: null, asOf: "2026-09-22T14:08:21Z" });
+    const unreadableTime = reading({ rows: [{ resource: `${ORIGIN}/api/free-door`, last_settle: "yesterday-ish" }] });
+    expect(settleFor(doors[0], unreadableTime)).toMatchObject({ status: "NONE_ON_RECORD", lastSettle: null });
+  });
+
+  it("UNMEASURED with the reason when the records were not read, or the store is not bound", () => {
+    expect(settleFor(doors[2], null)).toMatchObject({ status: "UNMEASURED", lastSettle: null });
+    expect(settleFor(doors[2], reading({ kind: "UNMEASURED", rows: [], reason: "no REVENUE_KV bound — nothing is recorded, so no door has a last settle here" }))).toEqual({
+      status: "UNMEASURED",
+      lastSettle: null,
+      reason: "no REVENUE_KV bound — nothing is recorded, so no door has a last settle here",
+    });
+  });
+
+  it("a bare-path record matches the door by route and says it was not exact", () => {
+    const bare = reading({ rows: [{ resource: `${ORIGIN}/api/rwa/evidence`, last_settle: "2026-09-01T00:00:00Z" }] });
+    expect(settleFor(doors[2], bare)).toMatchObject({ status: "SETTLED", lastSettle: "2026-09-01T00:00:00Z", tx: null, exact: false });
+  });
+});
+
+describe("the delist alarm: red at 25 days, red on null, and not a day early", () => {
+  const NOW = Date.parse("2026-09-22T12:00:00.000Z");
+  const DAY = 24 * 60 * 60 * 1000;
+  const at = (ms: number) => new Date(NOW - ms).toISOString();
+
+  it("is 25 days, stated once", () => {
+    expect(DELIST_RISK_DAYS).toBe(25);
+  });
+
+  it("null, undefined and an unreadable instant are all risk — nothing on record is not recent", () => {
+    expect(delistRisk(null, NOW)).toBe(true);
+    expect(delistRisk(undefined, NOW)).toBe(true);
+    expect(delistRisk("", NOW)).toBe(true);
+    expect(delistRisk("not a date", NOW)).toBe(true);
+  });
+
+  it("boundary: one millisecond short of 25 days is not risk; exactly 25 days is; a day later still is", () => {
+    expect(delistRisk(at(25 * DAY - 1), NOW)).toBe(false);
+    expect(delistRisk(at(25 * DAY), NOW)).toBe(true);
+    expect(delistRisk(at(26 * DAY), NOW)).toBe(true);
+    expect(delistRisk(at(0), NOW)).toBe(false);
+    expect(delistRisk(at(24 * DAY), new Date(NOW))).toBe(false);
+  });
+
+  it("a settle in the future (clock skew) is not risk, and daysSince floors", () => {
+    expect(delistRisk(at(-DAY), NOW)).toBe(false);
+    expect(daysSince(at(2.9 * DAY), NOW)).toBe(2);
+    expect(daysSince(null, NOW)).toBeNull();
+    expect(daysSince("nope", NOW)).toBeNull();
+  });
+});
+
+describe("the Settle-all tally reads the door states and counts each door once", () => {
+  it("delivered / unsettled / rejected / failed / pending", () => {
+    const q = ["a", "b", "c", "d", "e", "f"];
+    const tally = walkTally(q, {
+      a: { kind: "delivered", paymentResponse: null, settlement: null },
+      b: { kind: "unsettled", reason: "x" },
+      c: { kind: "rejected", detail: "y" },
+      d: { kind: "wrong-network", detail: "z" },
+      e: { kind: "signing", wallet: "MetaMask" },
+      z: { kind: "delivered", paymentResponse: null, settlement: null }, // not in the queue: not counted
+    });
+    expect(tally).toEqual({ queued: 6, delivered: 1, unsettled: 1, rejected: 1, failed: 1, pending: 2 });
+    expect(walkTally([], {})).toEqual({ queued: 0, delivered: 0, unsettled: 0, rejected: 0, failed: 0, pending: 0 });
   });
 });

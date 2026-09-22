@@ -1,0 +1,12 @@
+{
+  "what": "Two pages of https://402index.io/api/v1/services?q=councilof.ai&limit=100&offset=N, saved byte-for-byte as the index answered. Nothing in the two response files was edited, trimmed or invented.",
+  "fetched_at": "2026-09-22T14:08:21Z",
+  "requests": [
+    "https://402index.io/api/v1/services?q=councilof.ai&limit=100&offset=0",
+    "https://402index.io/api/v1/services?q=councilof.ai&limit=100&offset=100"
+  ],
+  "declared_total_at_fetch": 112,
+  "used_by": "functions/api/x402-listing-402index.test.ts",
+  "note": "The search population (q=councilof.ai) is what the index offers for a host; rows whose url host is not ours are third-party services the search also matched and are kept only because the bytes are real.",
+  "fetched_by": "curl from the Mac lane, two sequential GETs; file mtime converted from local (BST) to UTC"
+}
