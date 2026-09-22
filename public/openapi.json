@@ -732,7 +732,7 @@
     },
     "/api/board-sign": {
       "post": {
-        "description": "GitHub OIDC bearer required; token claims are validated by the handler. POST /api/board-sign \u2014 GitHub OIDC only. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.",
+        "description": "GitHub OIDC bearer required; token claims are validated by the handler. POST /api/board-sign \u2014 two callers, one key. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.",
         "operationId": "post__api_board-sign",
         "responses": {
           "200": {
@@ -750,7 +750,7 @@
             "githubOidc": []
           }
         ],
-        "summary": "POST /api/board-sign \u2014 GitHub OIDC only. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade."
+        "summary": "POST /api/board-sign \u2014 two callers, one key. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade."
       }
     },
     "/api/body-state": {

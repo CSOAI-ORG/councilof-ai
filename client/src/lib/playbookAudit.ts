@@ -45,7 +45,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
         id: "empty-names",
         claim: "The 2026-08-30 brief listed seven financial/domain axes as empty (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-economy-index, human-labour-index, humanoid-labour-index).",
         verdict: "stale",
-        live: "GET /api/gspc totals 22·22·0 — those axes are MEASURED today (unsigned fact runs still count). Empty-as-finding only when unmeasured_axes>0. Do not paint seven-empty chrome on /products.",
+        live: "GET /api/gspc totals (derived live) — those axes are MEASURED today (unsigned fact runs still count). Empty-as-finding only when unmeasured_axes>0. Do not paint seven-empty chrome on /products.",
   },
   {
         id: "ailuminate-bind",
@@ -111,7 +111,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
         id: "forbid-week-fill",
         claim: "The brief said: fill each then-empty axis in seven days and mark it MEASURED.",
         verdict: "forbidden",
-        live: "MEASURED needs Card v2, a bolted instrument, n, evidence and verify. Live board is 22·22·0 — refuse week-to-MEASURED shortcuts; do not paint empty placeholders as current UNMEASURED.",
+        live: "MEASURED needs Card v2, a bolted instrument, n, evidence and verify. Live board totals are derived on GET /api/gspc — refuse week-to-MEASURED shortcuts; do not paint empty placeholders as current UNMEASURED.",
   },
   {
         id: "forbid-xrpl-mainnet",

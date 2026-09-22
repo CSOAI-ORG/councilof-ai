@@ -34,7 +34,7 @@ export default function PlaybookAudit({ tone = "dark" }: { tone?: "dark" | "ligh
         </h2>
         <p className={`mt-3 text-sm ${title}`}>{PLAYBOOK_PITCH}</p>
         <p className={`mt-2 text-sm ${body}`}>
-          {PLAYBOOK_SOURCE.title}. {PLAYBOOK_SOURCE.role} Living board cite: GET /api/gspc (22·22·0). Hub cells: GET /api/hub-cards (1191+).
+          {PLAYBOOK_SOURCE.title}. {PLAYBOOK_SOURCE.role} Living board cite: GET /api/gspc (quote totals.public_count). Hub cells: GET /api/hub-cards (1191+).
         </p>
       </div>
       {GROUPS.map((group) => {
