@@ -1,7 +1,7 @@
 {
   "schema": "csoai.a2a-agent-index/0.1",
-  "note": "Twelve cards = the twelve MCP tools on POST /mcp (eight free readers, four x402-metered). Not twelve human analysts. Measurement, not certification.",
-  "count": 12,
+  "note": "13 cards = the 13 MCP tools on POST /mcp (9 free readers, 4 x402-metered). Not 13 human analysts. Count and names are locked by functions/mcp/tool-fleet.lock.json; the lock test fails if this index and the door disagree. Measurement, not certification.",
+  "count": 13,
   "agents": [
     {
       "id": "board_totals",
@@ -41,6 +41,11 @@
     {
       "id": "x402_trust",
       "href": "https://councilof.ai/.well-known/agents/x402_trust.json",
+      "paid": false
+    },
+    {
+      "id": "mcp_trust",
+      "href": "https://councilof.ai/.well-known/agents/mcp_trust.json",
       "paid": false
     },
     {

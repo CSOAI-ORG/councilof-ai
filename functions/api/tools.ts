@@ -11,6 +11,16 @@
  *
  * It now derives everything from evidence/mcp-registry.json (scripts/mcp-probe.mjs).
  *
+ * WHAT CHANGED (2026-09-22, K-1 fleet-size lock)
+ * The registry had not been re-probed since 2026-08-27. That probe saw a PREVIOUS /mcp
+ * implementation (measure · verify · jail-probe · enter-arena) and a four-tool stdio package, so
+ * this route said `total: 8` while /tools said 13 and the well-known descriptors said 12 — three
+ * counts for one door. The registry is re-probed against the live door, and the fleet is locked
+ * by NAME in functions/mcp/tool-fleet.lock.json; functions/mcp/tool-fleet.lock.test.ts fails
+ * when this registry, the manifests, the descriptors or the live door disagree with it.
+ * `total` stays the (server × tool) ROW count the tests already contract on; the number a reader
+ * means by "how many tools" is `distinct_tool_names`, the set of names the probes returned.
+ *
  * KNOWN CONSEQUENCE, STATED RATHER THAN PAPERED OVER:
  * `?q=governance` now returns total=0, because no tool on any reachable server matches that string.
  * scripts/claims-e2e.mjs asserts `total > 0` for that query and will therefore fail. That failure is
@@ -49,6 +59,11 @@ export const onRequestGet: PagesFunction = async (context) => {
     }))
   );
 
+  // The fleet-size number: distinct names across probed servers. Two implementations of the
+  // same door (Pages HTTP + the stdio package) each contribute their full list to `all`, so the
+  // row count reads 2× the fleet; the set does not. Locked in functions/mcp/tool-fleet.lock.json.
+  const distinctTools = [...new Set(all.map((t) => t.name))].sort();
+
   const tools = q
     ? all.filter(
         (t) =>
@@ -64,6 +79,12 @@ export const onRequestGet: PagesFunction = async (context) => {
       total: tools.length,
       total_kind: "probed",
       catalogue_total: all.length,
+      // Derived, never asserted: the set of tool NAMES the probes returned. `total` and
+      // `catalogue_total` are (server × tool) rows and double the fleet when two implementations
+      // of one door are both probed. This is the count the K-1 lock is about.
+      distinct_tool_names: distinctTools.length,
+      distinct_tools: distinctTools,
+      fleet_lock: "functions/mcp/tool-fleet.lock.json",
       server_count: probedServers.length,
       query: q || null,
       probe_method: (registry as any).probe_method,
