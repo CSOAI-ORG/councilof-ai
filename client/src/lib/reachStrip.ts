@@ -7,6 +7,8 @@
  * fetched in ReachStrip only when Hugging Face answers; otherwise links alone.
  */
 
+import { BOARD_LID_OBSERVED } from "./boardCount";
+
 export type ReachSurface = {
   id: string;
   label: string;
@@ -18,9 +20,12 @@ export type ReachSurface = {
 export const REACH_RULING =
   "Printers of the live board. Reach is distribution — not a grade, not a certificate, not measurement authority. Cite GET /api/gspc.";
 
-/** Fallback lid if /api/gspc has not answered yet. Matches live totals.lid grammar. */
-export const REACH_LID_FALLBACK =
-  "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
+/**
+ * Fallback lid if /api/gspc has not answered yet: the lid as last OBSERVED on the
+ * endpoint (facts.json counts.axis_count.observed.lid, written by
+ * scripts/refresh-board-observation.mjs), never a sentence typed here.
+ */
+export const REACH_LID_FALLBACK = BOARD_LID_OBSERVED;
 
 export const REACH_SURFACES: ReachSurface[] = [
   {

@@ -525,7 +525,12 @@ function report(violations) {
 // Selftest cases: [name, html, shouldFail] OR [name, html, shouldFail, filePath]
 // When filePath is provided, the test simulates a file at that path with the given content.
 // This allows testing file-path-based scoping rules (e.g. unsigned interop files).
-const SELFTEST_CASES = [
+// The board-canon cases below are written against the RECORDED OBSERVATION (facts.json
+// counts.axis_count.observed: N slots, M measured, U unmeasured), never a typed number.
+// Until 2026-09-22 they typed 22, so the selftest itself went red the moment the board
+// moved to 23 — the exact defect the gate exists to catch, reproduced inside the gate.
+function selftestCases(N, M, U) {
+  return [
   // [name, html, shouldFail]
   ["negation: we do not certify", "<p>We measure. We do not certify, accredit or approve anything.</p>", false],
   ["negation: not a certification body", "<p>We are a measurement body, not a certification body.</p>", false],
@@ -534,24 +539,24 @@ const SELFTEST_CASES = [
   ["VIOLATION: we certify", "<p>We certify that this model meets the standard.</p>", true],
   ["VIOLATION: our certification", "<p>Ask about our certification programme for vendors.</p>", true],
   ["VIOLATION: accredited by us", "<p>Labs accredited by us receive a badge.</p>", true],
-  // ── the 22-axis canon (ADR-001, swept into the signed data 2026-08-26; every
-  //    remaining slot measured in the later measurement sweep) ───────────────────
+  // ── the board canon (ADR-001 derived counts; ADR-002 slot 23) ───────────────────
   // These cases were first written when the board was 14 axes and "22" was a number
   // nobody was allowed to say, then again when the board was "22 axes · 15 measured"
-  // and "22 MEASURED" was the forbidden overclaim. The canon has moved once more:
-  // every slot now carries a run, so the board is "22 axes · 22 measured" and
-  // "22 measured" is simply true. The overclaim rule still guards the line — it
-  // catches a claim of MORE measured axes than the board actually carries (now 22).
-  ["prohibition form still passes", "<p>Cite live totals.public_count — do not invent 22 axes.</p>", false],
-  ["22 axes is now the canon and matches the live board", "<p>The board carries 22 axes across both families.</p>", false],
+  // and "22 MEASURED" was the forbidden overclaim, then typed at 22·22·0. They now
+  // read N·M·U off the observation, so the selftest moves with the board. The
+  // overclaim rule still guards the line — it catches a claim of MORE measured axes
+  // than the board actually carries (M).
+  ["prohibition form still passes", `<p>Cite live totals.public_count — do not invent ${N} axes.</p>`, false],
+  [`${N} axes is the observed slot count and matches the live board`, `<p>The board carries ${N} axes across both families.</p>`, false],
   ["stale count: the pre-sweep 14", "<p>The board measures 14 axes across the fleet.</p>", true],
   ["board self-description: 13 canonical axes + jail (a GSPC-family stamp)", "<p>Measured on 2026-08-12 (13 canonical axes) · 2026-08-18 (jail).</p>", false],
-  ["honest swept grammar", "<p>22 axes · 22 measured — every slot has a run behind it.</p>", false],
-  ["derived triple flattened 22·22·0 axes · measured · unmeasured (reproduces 1804 deploy)", "<p>Living GSPC · derived totals 22·22·0 axes · measured · unmeasured — 22 axis · 22 measured</p>", false],
+  ["honest swept grammar", `<p>${N} axes · ${M} measured — every slot has a run behind it.</p>`, false],
+  [`derived triple flattened ${N}·${M}·${U} axes · measured · unmeasured (reproduces 1804 deploy)`, `<p>Living GSPC · derived totals ${N}·${M}·${U} axes · measured · unmeasured — ${N} axis · ${M} measured</p>`, false],
   ["VIOLATION: a real 0-axes board-total claim still fails", "<p>The board currently carries 0 axes.</p>", true],
-  ["22 measured is now true, not an overclaim", "<p>The board publishes 22 measured axes.</p>", false],
-  ["all 22 axes are measured is now honest", "<p>All 22 axes are measured and signed.</p>", false],
-  ["VIOLATION: 30 measured axes (more than the board carries)", "<p>The board publishes 30 measured axes.</p>", true],
+  [`${M} measured is the observed measured count, not an overclaim`, `<p>The board publishes ${M} measured axes.</p>`, false],
+  // "All N axes are measured" is honest only while no slot is declared-but-unmeasured.
+  [`all ${N} axes are measured is ${U === 0 ? "honest" : "an OVERCLAIM"} (U = ${U})`, `<p>All ${N} axes are measured and signed.</p>`, U !== 0],
+  [`VIOLATION: ${N + 8} measured axes (more than the board carries)`, `<p>The board publishes ${N + 8} measured axes.</p>`, true],
   // ── postfix measured grammar = the live totals.lid (2026-09-16, board 23 · 22) ──
   ["live lid verbatim: N axes measured is a MEASURED claim, not a slot count", "<p>Lid: 15 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.</p>", false],
   ["VIOLATION: postfix overclaim still fails", "<p>Board right now: 30 axes measured · 14 model fleets.</p>", true],
@@ -623,15 +628,22 @@ const SELFTEST_CASES = [
     true,
     "subdomains/proofs/index.html",
   ],
-];
+  ];
+}
 
 async function selftest(facts) {
-  const liveCount = facts.counts?.axis_count?.observed?.axes ?? 14;
-  const liveMeasured = facts.counts?.axis_count?.observed?.measured_axes ?? null;
+  const observed = facts.counts?.axis_count?.observed ?? {};
+  if (typeof observed.axes !== "number" || typeof observed.measured_axes !== "number") {
+    console.error("facts-gate --selftest: facts.json counts.axis_count.observed carries no axes/measured_axes — run scripts/refresh-board-observation.mjs");
+    process.exit(2);
+  }
+  const liveCount = observed.axes;
+  const liveMeasured = observed.measured_axes;
+  const liveUnmeasured = typeof observed.unmeasured_axes === "number" ? observed.unmeasured_axes : liveCount - liveMeasured;
   let pass = 0;
   let fail = 0;
-  console.log(`facts-gate --selftest  (reference axis count = ${liveCount})\n`);
-  for (const testCase of SELFTEST_CASES) {
+  console.log(`facts-gate --selftest  (reference axis count = ${liveCount} · measured ${liveMeasured} · unmeasured ${liveUnmeasured}, observed ${observed.observed_at})\n`);
+  for (const testCase of selftestCases(liveCount, liveMeasured, liveUnmeasured)) {
     const [name, html, shouldFail, filePath] = testCase;
     const file = filePath || "selftest";
     const violations = [];

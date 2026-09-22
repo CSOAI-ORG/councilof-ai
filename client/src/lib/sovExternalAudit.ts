@@ -4,9 +4,12 @@
  * An outside brief (2026-08-30) mapped three commercial arms onto Council.
  * Keep the map. Do not keep its stale board counts, public seat prices,
  * fused investable index, Council-minted bonds, or “300+ MCP servers are
- * this product.” Living board: GET /api/gspc — 22 axis · 22 measured.
+ * this product.” Living board: GET /api/gspc — quote its totals.public_count;
+ * the pin below derives its board fields from the recorded observation.
  * Public names only: Council of AI, Council Space, GSPC — never SOVOS/sov-*.
  */
+
+import { BOARD_COUNT_OBSERVED, BOARD_OBSERVATION, BOARD_OBSERVED_AT } from "./boardCount";
 
 export type AuditVerdict = "keep" | "stale" | "false" | "forbidden";
 
@@ -28,10 +31,13 @@ export const SOV_AUDIT_SOURCE = {
 
 export const LIVE_PIN = {
   board_schema: "csoai.gspc-axes/0.5",
-  public_count: "22 axis · 22 measured",
-  axes: 22,
-  measured_axes: 22,
-  items: 969,
+  // Board fields: the recorded observation of GET /api/gspc (facts.json, written by
+  // scripts/refresh-board-observation.mjs), dated by board_as_at. Never typed here.
+  public_count: BOARD_COUNT_OBSERVED.public_count,
+  axes: BOARD_COUNT_OBSERVED.axes,
+  measured_axes: BOARD_COUNT_OBSERVED.measured_axes,
+  items: BOARD_OBSERVATION.items,
+  board_as_at: BOARD_OBSERVED_AT,
   corrections: 39,
   as_at: "2 September 2026",
   index_schema: "csoai.sov-signal-index/1",
@@ -124,7 +130,7 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
   },
   {
     id: "stale-board-counts",
-    claim: "13 measured axes, 14-slot instrument, 818 items, 7-model fleet.",
+    claim: "Brief dated 2026-08-30: 13 measured axes, 14-slot instrument, 818 items, 7-model fleet.",
     verdict: "stale",
     live: "GET /api/gspc is the living board — quote its totals.public_count, never a number copied out of it.",
   },

@@ -79,7 +79,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
   },
   {
         id: "stale-13",
-        claim: "The brief still says 13 measured axes and a 14-slot instrument.",
+        claim: "The brief (dated 2026-08-30) still says 13 measured axes and a 14-slot instrument.",
         verdict: "stale",
         live: "Living board: quote totals.public_count from GET /api/gspc — the count is derived there, never typed here.",
   },

@@ -50,7 +50,7 @@ export default function SovExternalAudit({ tone = "dark" }: { tone?: "dark" | "l
           {SOV_AUDIT_RULING}
         </h2>
         <p className={`mt-3 text-sm ${body}`}>
-          {SOV_AUDIT_SOURCE.title}. {SOV_AUDIT_SOURCE.role} Pinned as at {LIVE_PIN.as_at} — previously read; the live board supersedes this pin:{" "}
+          {SOV_AUDIT_SOURCE.title}. {SOV_AUDIT_SOURCE.role} Board previously read as at {LIVE_PIN.board_as_at}; the live board supersedes this pin:{" "}
           {LIVE_PIN.public_count}, {LIVE_PIN.index_public_label}. Issuer {LIVE_PIN.issuer}.
           Corrections and items move, so this brief no longer restates the corrections count —
           the health inventory below reads it live. The living board is{" "}

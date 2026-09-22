@@ -1,5 +1,7 @@
 # GSPC Completion Review
 
+> **Erratum, 2026-09-22.** This is a dated document. Every board count typed below was read when this document was written (31 Aug 2026; last revised 17 Sep 2026) and is superseded: the living board is `GET https://councilof.ai/api/gspc` — quote its `totals.public_count` (and `totals.lid`) rather than any figure on this page. The text is left as written; this estate supersedes records, it does not rewrite them. Found by the pod's drift loop (D-2026-09-22T14-06).
+
 Living board: GET https://councilof.ai/api/gspc. Measurement, not certification.
 
 ---
