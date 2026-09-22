@@ -3,9 +3,13 @@
  *
  * The funnel enforces download ≠ user ≠ execution ≠ customer ≠ recurring customer: each pill is
  * one stage, read from its own source, and nothing is added across stages. A pill prints a
- * number ONLY when the payload carries one for that stage; UNCHECKABLE and UNMEASURED print as
- * those words. Before the payload lands — and in an automated snapshot, where a baked number
- * would be stale the moment it was read — every pill prints "—". No number in this file is typed.
+ * number ONLY when the payload carries one for that stage, and never bare: PARTIAL prints "≥ N"
+ * and STALE prints "N · stale", so the state travels with the figure instead of beside it.
+ * UNCHECKABLE and UNMEASURED print as those words. Download pills also print the window the
+ * figure covers, because a 30-day count and a cumulative count are different measurements and a
+ * reader who is not told which one they are looking at will assume. Before the payload lands —
+ * and in an automated snapshot, where a baked number would be stale the moment it was read —
+ * every pill prints "—". No number in this file is typed; every figure comes from /api/footprint.
  *
  * Variants:
  *   hero   — home page, the three stages a first reader should see, plus the honesty line once.
@@ -59,8 +63,12 @@ function useFootprint(): Status {
   return status;
 }
 
-const TONE: Record<Pill["tone"], string> = {
+/** Every tone the formatter can produce must have a class here: a state with no colour is a
+ *  state a reader does not see. The test asserts this map is exhaustive over Pill["tone"]. */
+export const TONE: Record<Pill["tone"], string> = {
   numeric: "border-emerald-600/30 bg-white text-slate-900",
+  PARTIAL: "border-sky-500/40 bg-sky-50 text-sky-900",
+  STALE: "border-orange-400/60 bg-orange-50 text-orange-900",
   UNCHECKABLE: "border-amber-400/50 bg-amber-50 text-amber-900",
   UNMEASURED: "border-slate-300 bg-slate-50 text-slate-600",
 };
@@ -68,24 +76,33 @@ const TONE: Record<Pill["tone"], string> = {
 function PillView({ pill, compact, placeholder }: { pill: Pill; compact: boolean; placeholder: string | null }) {
   const text = placeholder ?? pill.text;
   const tone = placeholder ? "border-slate-200 bg-white text-slate-500" : TONE[pill.tone];
+  // The evidence artifact when the row was read out of one, otherwise the upstream source.
+  const link = placeholder ? null : (pill.evidenceHref ?? pill.href);
+  const linkLabel = pill.evidenceHref ? "evidence" : "source";
   return (
     <li
       data-stage={pill.key}
       data-state={placeholder ? "pending" : pill.tone}
+      data-window={placeholder ? undefined : (pill.window ?? undefined)}
       title={placeholder ? `${pill.label} · reading ${FOOTPRINT_ENDPOINT}` : pill.title}
       className={`inline-flex items-center gap-1.5 rounded-full border ${compact ? "px-2.5 py-0.5 text-[11px]" : "px-3 py-1 text-xs"} ${tone}`}
     >
       <span className="font-semibold uppercase tracking-wide text-[0.85em] text-slate-500">{pill.label}</span>
       <span className="font-black tabular-nums">{text}</span>
-      {!placeholder && pill.href && (
+      {!placeholder && pill.window && (
+        <span data-testid={`window-${pill.key}`} className="font-normal text-[0.85em] text-slate-500">
+          {pill.window}
+        </span>
+      )}
+      {link && (
         <a
-          href={pill.href}
+          href={link}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`Source for ${pill.label}`}
+          aria-label={`${linkLabel === "evidence" ? "Evidence" : "Source"} for ${pill.label}`}
           className="text-[0.8em] font-medium text-emerald-700 underline decoration-dotted underline-offset-2 hover:text-emerald-900"
         >
-          source
+          {linkLabel}
         </a>
       )}
     </li>
@@ -125,7 +142,11 @@ export default function LiveCounters({ variant, showBoard = false }: LiveCounter
         {pills.map((pill) => (
           <PillView
             key={pill.key}
-            pill={failed ? { ...pill, text: "UNCHECKABLE", tone: "UNCHECKABLE", title: `${pill.label} · ${failed}` } : pill}
+            pill={
+              failed
+                ? { ...pill, text: "UNCHECKABLE", tone: "UNCHECKABLE", href: null, evidenceHref: null, window: null, title: `${pill.label} · ${failed}` }
+                : pill
+            }
             compact={compact}
             placeholder={placeholder}
           />

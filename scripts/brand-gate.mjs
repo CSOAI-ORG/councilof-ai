@@ -172,15 +172,53 @@ const RULES = [
 
 const PATH_BANNED = /\b(sovos|sov3\d*|dorado|cibola|ceasai)\b/i;
 
+/** The distribution catalogues: a confirmed list of package names and the measurement over it. */
+const DISTRIBUTION_CATALOGUE = /^\/interop\/(footprint-packages|distribution-(latest|\d{4}-\d{2}-\d{2}))\.json$/;
+
+/**
+ * Strip the registry identifiers out of a distribution catalogue, leaving every word of its prose
+ * to be gated. `packages[].name` is what PyPI, npm and the Hub call the artifact — the string the
+ * measurement loop fetches by. Some of those names carry an internal codename because that is the
+ * name they were published under years ago and it is public on pypi.org today. Renaming them here
+ * would falsify the record and break the measurement, the same reason the defoneos rule already
+ * spares `csoai-defoneos-mcp`. Withholding them is not an option either: a catalogue that silently
+ * omits rows understates the estate, which is the defect this file's own /api/footprint had.
+ */
+function stripPackageIdentifiers(node) {
+  if (Array.isArray(node)) return node.map(stripPackageIdentifiers);
+  if (!node || typeof node !== "object") return node;
+  const out = {};
+  for (const [k, v] of Object.entries(node)) {
+    if (k === "packages" && Array.isArray(v)) {
+      out[k] = v.map((row) =>
+        row && typeof row === "object" && !Array.isArray(row)
+          ? Object.fromEntries(Object.entries(row).map(([rk, rv]) => (rk === "name" || rk === "source_url" ? [rk, ""] : [rk, stripPackageIdentifiers(rv)])))
+          : stripPackageIdentifiers(row),
+      );
+    } else {
+      out[k] = stripPackageIdentifiers(v);
+    }
+  }
+  return out;
+}
+
 /**
  * Whole-body public-JSON codename scan. `/signed/` is evidence (real model ids).
  * `/fleet/*.lock.json` is a catalog of other people's models — a Kaggle author
- * named "Jhoan Dorado" is not our product (brand-gate #1694). Estate prose on
- * those files (note, coverage_note, …) is still gated.
+ * named "Jhoan Dorado" is not our product (brand-gate #1694). `/interop/footprint-packages.json`
+ * and `/interop/distribution-*.json` are catalogs of registry identifiers we published. Estate
+ * prose on all of those files (note, purpose, reason, coverage_note, …) is still gated.
  */
 function publicJsonCodenameHit(rel, raw) {
   if (/^\/signed\//.test(rel)) return null;
   let scan = raw;
+  if (DISTRIBUTION_CATALOGUE.test(rel)) {
+    try {
+      return JSON.stringify(stripPackageIdentifiers(JSON.parse(raw))).match(PATH_BANNED);
+    } catch {
+      /* unparseable catalogue: keep scanning the whole body */
+    }
+  }
   if (/^\/fleet\/[^/]+\.lock\.json$/.test(rel)) {
     try {
       const lock = JSON.parse(raw);
@@ -205,6 +243,9 @@ function jsonDisplayHits(obj, rel) {
   (function rec(node, at, key) {
     if (typeof node === "string") {
       if (!DISPLAY_KEYS.test(key || "")) return;
+      // `packages[i].name` in a distribution catalogue is the registry's identifier for the
+      // artifact, not display copy. See stripPackageIdentifiers.
+      if (DISTRIBUTION_CATALOGUE.test(rel) && /(^|\.)packages\[\d+\]\.name$/.test(at)) return;
       for (const rule of RULES) {
         if (rule.allowOn && rule.allowOn.test(rel)) continue;
         const re = new RegExp(rule.pattern.source, "gi");
@@ -279,6 +320,26 @@ if (SELFTEST) {
     models: [],
   }))) {
     console.error("\u2716 selftest: fleet lock estate prose no longer catches Dorado in note"); bad++;
+  }
+  // Distribution catalogues quote registry identifiers we published. The sweep must not read one
+  // as product copy; estate prose in the same file must still fail.
+  if (publicJsonCodenameHit("/interop/footprint-packages.json", JSON.stringify({
+    purpose: "The confirmed list of what this estate publishes.",
+    pypi: { packages: [{ name: "sovos-city", role: "Owner", source_url: "https://pypi.org/project/sovos-city/" }] },
+  }))) {
+    console.error("\u2716 selftest: a published package identifier now fails the public-json sweep"); bad++;
+  }
+  if (!publicJsonCodenameHit("/interop/footprint-packages.json", JSON.stringify({
+    purpose: "The SOVOS estate's distribution",
+    pypi: { packages: [] },
+  }))) {
+    console.error("\u2716 selftest: catalogue prose no longer catches an internal codename"); bad++;
+  }
+  if (jsonDisplayHits({ pypi: { packages: [{ name: "sovos-city" }] } }, "/interop/footprint-packages.json").length) {
+    console.error("\u2716 selftest: package identifier now fails the display sweep"); bad++;
+  }
+  if (!jsonDisplayHits({ title: "SOVOS downloads" }, "/interop/footprint-packages.json").length) {
+    console.error("\u2716 selftest: catalogue display copy no longer gated"); bad++;
   }
   for (const [rel, obj] of SWEEP_CATCH) {
     if (jsonDisplayHits(obj, rel).length === 0) {
