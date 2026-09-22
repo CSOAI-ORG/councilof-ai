@@ -72,6 +72,29 @@ export function evidenceHref(row: MembershipRow): string {
   return row.evidence_kind === "public_url" ? row.evidence : `/memberships#${row.id}`;
 }
 
+/**
+ * badgeRows — the compact home row: one pill per body the owner asked to see on the first screen
+ * (Linux Foundation, OSAIA, C2PA, DIF), plus W3C and IETF aggregated into one pill each. Derived
+ * from the manifest by predicate, so a body that leaves the manifest leaves the row.
+ */
+export function badgeRows(m: MembershipsManifest = MEMBERSHIPS): { label: string; kind: MembershipKind; href: string; count?: number }[] {
+  const std = m.rows.filter((r) => r.group === "standards");
+  const one = (re: RegExp, label: string) => {
+    const r = std.find((x) => re.test(x.org));
+    return r ? [{ label, kind: r.kind, href: evidenceHref(r) }] : [];
+  };
+  const w3c = std.filter((x) => /^W3C /.test(x.org));
+  const ietf = std.filter((x) => /^IETF /.test(x.org));
+  return [
+    ...one(/^The Linux Foundation/, "Linux Foundation"),
+    ...one(/^Open Secure AI Alliance/, "Open Secure AI Alliance"),
+    ...one(/^C2PA/, "C2PA"),
+    ...one(/^Decentralized Identity Foundation/, "DIF"),
+    ...(w3c.length ? [{ label: "W3C Community Groups", kind: w3c[0].kind, href: "/memberships#standards", count: w3c.length }] : []),
+    ...(ietf.length ? [{ label: "IETF", kind: "participant" as MembershipKind, href: "/memberships#standards", count: ietf.length }] : []),
+  ];
+}
+
 export function groupedRows(m: MembershipsManifest = MEMBERSHIPS): { id: string; label: string; rows: MembershipRow[] }[] {
   return m.groups
     .map((g) => ({ ...g, rows: m.rows.filter((r) => r.group === g.id) }))
@@ -117,8 +140,22 @@ function Pill({ row }: { row: MembershipRow }) {
   );
 }
 
-export default function MembershipStrip({ variant = "home" }: { variant?: "home" | "footer" }) {
+export default function MembershipStrip({ variant = "home" }: { variant?: "home" | "footer" | "badges" }) {
   const groups = groupedRows();
+
+  if (variant === "badges") {
+    const badges = badgeRows();
+    return (
+      <div data-testid="membership-strip-badges" className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[12px]">
+        {badges.map((b) => (
+          <Link key={b.label} href={b.href} className="rounded-full border border-border px-3 py-1 text-foreground/80 hover:text-foreground">
+            {b.label} · {KIND_LABEL[b.kind]}{b.count && b.count > 1 ? ` · ${b.count}` : ""}
+          </Link>
+        ))}
+        <Link href="/memberships" className="px-2 py-1 underline-offset-2 hover:underline">Where we take part →</Link>
+      </div>
+    );
+  }
 
   if (variant === "footer") {
     return (
