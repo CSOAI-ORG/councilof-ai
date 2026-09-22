@@ -1,0 +1,47 @@
+--- a/functions/api/_population_door.ts
++++ b/functions/api/_population_door.ts
+@@ -34,6 +34,8 @@
+ import { signPayload, canonicalBytes, sha256Hex } from "../_lib/cardSign";
+ import { POPULATIONS, POPULATION_IDS, findPopulation, makeIo, toPreview, type Reading } from "./_population";
+ 
++import { CAPTURE_POPULATIONS, readClaimCapture } from "./_claim_capture";
++
+ type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
+ 
+ export const SCHEMA = "csoai.population-door/0.1";
+@@ -68,7 +70,13 @@
+   const origin = url.origin;
+   const id = populationIdFromPath(url.pathname);
+   const preview = url.searchParams.get("preview") === "1";
+-  const entry = id && ID_RE.test(id) ? findPopulation(id) : undefined;
++  const original = id && ID_RE.test(id) ? findPopulation(id) : undefined;
++  const captureRequested = url.searchParams.get("capture") === "latest";
++  const entry = original && captureRequested && CAPTURE_POPULATIONS[id] ? {
++    ...original, title: original.title + " — current claim capture",
++    population: "source-scoped upstream claim records from a pinned public snapshot; not the frozen universe and not verified truth",
++    read: (_io: ReturnType<typeof makeIo>, full: boolean) => readClaimCapture(id, full),
++  } : original;
+   const known = [...POPULATION_IDS];
+ 
+   if (!entry) {
+@@ -84,7 +92,10 @@
+   const paid = hasPaymentHeader(request);
+   // Read once: the head for a bare GET or a preview, the full slice when a payment is presented.
+   const reading = await entry.read(io, paid && !preview);
+-  const head = toPreview(reading);
++  const head = { ...toPreview(reading), ...(CAPTURE_POPULATIONS[id] ? {
++    capture_mode: captureRequested ? "latest" : "frozen-default",
++    latest_capture_preview: `${resourceUrl}?capture=latest&preview=1`,
++  } : {}) };
+   const description = describe(entry, reading);
+   const accepts = x402Accepts(env, resourceUrl, { ...SKU, description, productId: `csoai.product.population.${entry.id}` });
+ 
+@@ -153,7 +164,7 @@
+   }
+ 
+   // READ BEFORE SETTLE: a slice that could not be read is never charged for.
+-  if (reading.state === "UNMEASURED" || reading.rows === undefined) {
++  if (reading.state === "UNMEASURED" || reading.state === "UNCHECKABLE" || reading.rows === undefined) {
+     return challenge(
+       `read before settle: the population read came back ${reading.state}${reading.reason ? ` (${reading.reason})` : ""}. The payment was not sent to the facilitator, so nothing was settled. Check the free preview before paying again.`,
+       { error: `Population read ${reading.state} — payment not settled`, csoai: { read_before_settle: { state: reading.state, reason: reading.reason, unmeasured: reading.unmeasured, settled: false } } },
