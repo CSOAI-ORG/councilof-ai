@@ -25,16 +25,25 @@ const HERE = fileURLToPath(new URL(".", import.meta.url));
 const REPO = join(HERE, "..", "..");
 
 /**
- * mDNS / LAN machine names and the vendor string that gives them away. `\b` on both ends
- * so "localhost", "local.json", "locale" and "$LOCAL" are not hostnames.
+ * mDNS / LAN machine names and the vendor strings that give them away.
+ *
+ * The trailing `(?![\w-])` is load-bearing and was added after the first run of this
+ * guard. `\.local\b` alone matched the schema name `csoai.local-json-canonicalize-result`
+ * in functions/_lib/phase1ActionExecutor.ts — a word boundary sits between `l` and `-`,
+ * so a hyphenated identifier read as a hostname. A guard that fires on an identifier is
+ * one somebody silences. The lookahead requires `.local` to END the label, which is what
+ * an mDNS name does.
+ *
+ * The leading `\b[A-Za-z0-9]` keeps "localhost", "locale", "local.json" and "$LOCAL" out:
+ * each needs a label and a dot before `local` to match at all.
  */
 const HOSTNAME_PATTERNS: Array<[string, RegExp]> = [
-  ["mDNS .local hostname", /\b[A-Za-z0-9][A-Za-z0-9-]{1,62}\.local\b/],
+  ["mDNS .local hostname", /\b[A-Za-z0-9][A-Za-z0-9-]{1,62}\.local(?![\w-])/],
   ["MacBook machine name", /MacBook/i],
   ["iMac machine name", /\biMac\b/],
   ["Mac mini machine name", /\bMac[- ]mini\b/i],
-  [".lan hostname", /\b[A-Za-z0-9][A-Za-z0-9-]{1,62}\.lan\b/],
-  [".home.arpa hostname", /\b[A-Za-z0-9][A-Za-z0-9-]{1,62}\.home\.arpa\b/],
+  [".lan hostname", /\b[A-Za-z0-9][A-Za-z0-9-]{1,62}\.lan(?![\w-])/],
+  [".home.arpa hostname", /\b[A-Za-z0-9][A-Za-z0-9-]{1,62}\.home\.arpa(?![\w-])/],
 ];
 
 /**
@@ -42,7 +51,7 @@ const HOSTNAME_PATTERNS: Array<[string, RegExp]> = [
  * that the site does not serve as its own claim. Kept deliberately tiny: an exclusion is
  * how a guard goes quiet.
  */
-const SKIP_DIRS = new Set(["node_modules", ".git", "dist", "proofs"]);
+const SKIP_DIRS = new Set(["node_modules", ".git", "dist"]);
 
 function walk(dir: string, exts: string[], out: string[] = []): string[] {
   let entries: string[];
@@ -66,6 +75,10 @@ function walk(dir: string, exts: string[], out: string[] = []): string[] {
   return out;
 }
 
+/**
+ * Six regexes against the whole file, not against every line: public/ is ~17,000 JSON
+ * files and 378 MB, and the per-line form took longer than the 5 s default timeout.
+ */
 function offenders(file: string): string[] {
   let text: string;
   try {
@@ -74,13 +87,9 @@ function offenders(file: string): string[] {
     return [];
   }
   const hits: string[] = [];
-  for (const line of text.split("\n")) {
-    for (const [label, re] of HOSTNAME_PATTERNS) {
-      const m = line.match(re);
-      // A test file may quote the defect it guards against; nothing under a *.test.* path
-      // is served, so quoting it there is documentation, not publication.
-      if (m) hits.push(`${label}: ${m[0]}`);
-    }
+  for (const [label, re] of HOSTNAME_PATTERNS) {
+    const m = text.match(re);
+    if (m) hits.push(`${label}: ${m[0]}`);
   }
   return hits;
 }
@@ -106,7 +115,6 @@ describe("no machine hostname reaches a served surface", () => {
   });
 
   it("the patterns catch the exact string that shipped, and spare the false friends", () => {
-    expect(offenders.length).toBeGreaterThan(0); // function exists
     const caught = HOSTNAME_PATTERNS.filter(([, re]) => re.test('"probe_host": "NICHOLASs-MacBook-Air-2.local"'));
     expect(caught.map(([label]) => label)).toEqual(
       expect.arrayContaining(["mDNS .local hostname", "MacBook machine name"]),
@@ -117,6 +125,9 @@ describe("no machine hostname reaches a served surface", () => {
       '"locale": "en-GB"',
       "public/local.json",
       "localStorage",
+      // the real 2026-09-22 false positive: a schema name, not a machine
+      '"schema": "csoai.local-json-canonicalize-result/0.1"',
+      '"schema": "csoai.local-sha256-compare-result/0.1"',
     ]) {
       for (const [label, re] of HOSTNAME_PATTERNS) {
         expect(re.test(spared), `${label} must not match ${spared}`).toBe(false);
@@ -124,12 +135,12 @@ describe("no machine hostname reaches a served surface", () => {
     }
   });
 
-  it("no served JSON contains a machine hostname", () => {
+  it("no served JSON contains a machine hostname", { timeout: 120_000 }, () => {
     const bad = SERVED_JSON.map((f) => [relative(REPO, f), offenders(f)] as const).filter(([, h]) => h.length > 0);
     expect(bad.map(([f, h]) => `${f} -> ${h.join(", ")}`)).toEqual([]);
   });
 
-  it("no functions/ handler source contains a machine hostname", () => {
+  it("no functions/ handler source contains a machine hostname", { timeout: 120_000 }, () => {
     const bad = HANDLER_SOURCES.map((f) => [relative(REPO, f), offenders(f)] as const).filter(([, h]) => h.length > 0);
     expect(bad.map(([f, h]) => `${f} -> ${h.join(", ")}`)).toEqual([]);
   });
