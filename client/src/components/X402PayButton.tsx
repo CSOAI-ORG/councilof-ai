@@ -46,7 +46,10 @@ export function classifyPayError(error: unknown): PayState {
         "You declined the signature in your wallet. Nothing was sent and nothing was charged.",
     };
   }
-  if (/wallet is on chain|unsupported network/i.test(message)) {
+  // x402Wallet throws "wallet stayed on chain N; the 402 requires M" after a refused or failed
+  // wallet_switchEthereumChain. The earlier pattern here read "wallet is on chain", which that
+  // message never contains, so a wrong-chain wallet was shown as a generic error.
+  if (/wallet (?:is|stayed) on chain|unsupported network/i.test(message)) {
     return { kind: "wrong-network", detail: message };
   }
   return { kind: "error", detail: message };
