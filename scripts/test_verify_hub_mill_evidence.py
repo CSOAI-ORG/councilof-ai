@@ -112,7 +112,11 @@ class EvidenceV02Test(unittest.TestCase):
              mock.patch.object(signer, "sign_via_oidc_attested", return_value=("aa", "f" * 64)):
             self.assertEqual(signer.main(["--source-dir", str(source), "--evidence-dir",
                                           str(self.evidence), "--require-hub-admission"]), 0)
-        signed = json.loads(next((self.root / "signed").glob("signed-*.json")).read_text())
+        # The legacy card seeded above also matches signed-*.json and Path.glob returns
+        # directory order, not sorted order; select the card this run produced.
+        produced = sorted(p for p in (self.root / "signed").glob("signed-*.json") if p != legacy_path)
+        self.assertEqual(len(produced), 1, produced)
+        signed = json.loads(produced[0].read_text())
         self.assertEqual(signed["body"]["admission"], admitted["admission"])
         self.assertEqual(signed["body"]["status"], "MEASURED")
         self.assertEqual(validate_signed_admission(signed, self.evidence)["source_card_id"], admitted["id"])

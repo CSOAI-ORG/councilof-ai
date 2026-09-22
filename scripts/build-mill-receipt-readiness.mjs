@@ -43,13 +43,25 @@ for (const file of files) {
   const verdict = await verifyCard(card);
   const rawLinkage = card.body?.regulatory_crosswalk?.linkage_status ?? "UNLINKED";
   const linkage = rawLinkage === "DIRECT" ? "LINKED" : "UNLINKED";
+  // A date is only ever read off the signed bytes. When it is absent the artifact says why,
+  // because a bare null cannot tell an UNMEASURED cell apart from a dateless MEASURED one.
+  const measuredAt = typeof card.body.measured_at === "string" ? card.body.measured_at : null;
+  const status = typeof card.body.status === "string" ? card.body.status : null;
+  const unmeasuredReasons = Array.isArray(card.body.unmeasured) ? card.body.unmeasured : [];
+  const measuredAtAbsence = measuredAt !== null ? null
+    : status === "UNMEASURED"
+      ? `the signed body carries no measured_at field: this card is UNMEASURED (${unmeasuredReasons.join("; ") || "no reason recorded"}), so there is no measurement date to record`
+      : `the signed body carries no measured_at field: this card is ${status ?? "of unrecorded status"} but was signed without a date, and signed bytes are superseded, never edited`;
   rows.push({
     id: card.id,
     card_url: `/interop/mill-cards-signed/${currentFile}`,
     supersedes_staged_id: original.id,
     model: card.body.model,
     axis: card.body.axis,
-    measured_at: card.body.measured_at ?? null,
+    status,
+    unmeasured: unmeasuredReasons,
+    measured_at: measuredAt,
+    measured_at_absence: measuredAtAbsence,
     outer_signature: { state: verdict.state, alg: card.alg ?? null, key: card.did ?? null },
     declared_lifecycle: card.body.signature_state,
     regulatory_linkage: {
@@ -69,18 +81,26 @@ const counts = {
   regulatory_linked: rows.filter((row) => row.regulatory_linkage.state === "LINKED").length,
   regulatory_unlinked: rows.filter((row) => row.regulatory_linkage.state === "UNLINKED").length,
   regulation_score_eligible: rows.filter((row) => row.regulatory_linkage.regulation_score_eligible).length,
+  measured_at_recorded: rows.filter((row) => row.measured_at !== null).length,
+  measured_at_absent_unmeasured_card: rows.filter((row) => row.measured_at === null && row.status === "UNMEASURED").length,
+  measured_at_absent_dateless_card: rows.filter((row) => row.measured_at === null && row.status !== "UNMEASURED").length,
 };
 
 if (counts.receipts !== 36 || counts.outer_signature_valid !== 36 ||
     counts.declared_staged_unsigned !== 0 || counts.declared_signed !== 36 || counts.regulatory_linked !== 5 ||
-    counts.regulatory_unlinked !== 31 || counts.regulation_score_eligible !== 5) {
+    counts.regulatory_unlinked !== 31 || counts.regulation_score_eligible !== 5 ||
+    counts.measured_at_recorded !== 34 || counts.measured_at_absent_unmeasured_card !== 1 ||
+    counts.measured_at_absent_dateless_card !== 1) {
   throw new Error(`mill receipt truth drift: ${JSON.stringify(counts)}`);
+}
+if (rows.some((row) => (row.measured_at === null) !== (row.measured_at_absence !== null))) {
+  throw new Error("every absent measured_at must carry a stated reason, and every present one must carry none");
 }
 
 const document = {
   schema: "csoai.mill-receipt-readiness/v2",
   derived_from: "the 36 original STAGED_UNSIGNED wrappers resolved through public/interop/mill-cards-signed/SUPERSEDED.jsonl to their terminal immutable replacements",
-  truth_rule: "Outer cryptographic validity, inner declared lifecycle, and regulatory linkage are independent states. UNLINKED receipts are not regulation-scored.",
+  truth_rule: "Outer cryptographic validity, inner declared lifecycle, and regulatory linkage are independent states. UNLINKED receipts are not regulation-scored. measured_at is read off the signed bytes and is never supplied by this generator; where it is null, measured_at_absence states why, and an UNMEASURED card having no date is not the same defect as a MEASURED card signed without one.",
   counts,
   receipts: rows,
 };
