@@ -54,7 +54,17 @@ def main() -> int:
         return 0
     out = Path(sys.argv[sys.argv.index("--out") + 1]) if "--out" in sys.argv else Path("/workspace/lanes/out/claim-watch")
     series = Path(sys.argv[sys.argv.index("--series") + 1]) if "--series" in sys.argv else out / "series"
+    repo = Path(sys.argv[sys.argv.index("--repo") + 1]) if "--repo" in sys.argv else Path(__file__).resolve().parents[2]
     out.mkdir(parents=True, exist_ok=True)
+    series.mkdir(parents=True, exist_ok=True)
+    # Seed the loop's series from the PUBLISHED one on first run, so the weekly readings continue
+    # that file instead of starting a second series that disagrees with it.
+    published_series = repo / "public" / "claims" / "series"
+    for src in sorted(published_series.glob("*.jsonl")) if published_series.exists() else []:
+        dst = series / src.name
+        if not dst.exists():
+            dst.write_bytes(src.read_bytes())
+            print(f"SEEDED {dst.name} from the published series ({len(src.read_bytes())} bytes)")
     run_id = c.now_iso().replace(":", "").replace("-", "")
     rundir = out / f"run-{run_id}"
 
@@ -114,9 +124,12 @@ def main() -> int:
         "run_id": run_id,
         "ran_at_utc": c.now_iso(),
         "cadence": "weekly",
-        "registry": "/claims/" + sorted(p.name for p in (Path(__file__).resolve().parents[2] /
-                                                         "public" / "claims").glob("claimreg-*.json"))[-1]
-        if (Path(__file__).resolve().parents[2] / "public" / "claims").exists() else None,
+        "registry": next((f"/claims/{p.name}" for p in sorted(
+            (repo / "public" / "claims").glob("claimreg-*.json"), reverse=True)
+            if not p.name.endswith(".signed.json")), None),
+        "registry_sha256": next((c.sha256_hex(p.read_bytes()) for p in sorted(
+            (repo / "public" / "claims").glob("claimreg-*.json"), reverse=True)
+            if not p.name.endswith(".signed.json")), None),
         "claims_touched": sorted(results),
         "states": {k: v.get("state") for k, v in sorted(results.items())},
         "artifacts": {f"{k}.json": c.sha256_hex((rundir / f"{k}.json").read_bytes()) for k in sorted(results)},

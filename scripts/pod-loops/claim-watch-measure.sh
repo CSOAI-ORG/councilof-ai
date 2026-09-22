@@ -34,9 +34,12 @@ mkdir -p "$WORK" "$OUTDIR"
 if [ ! -d "$WORK/repo/.git" ]; then
   git clone -q --no-checkout "$REPO_SRC" "$WORK/repo" || { log claim-watch-measure "ABORT clone failed"; exit 1; }
   git -C "$WORK/repo" sparse-checkout init --cone >/dev/null 2>&1
-  git -C "$WORK/repo" sparse-checkout set scripts/claims >/dev/null 2>&1
+  # public/claims too: the loop names the registry it maintains and seeds the counter series
+  # from the published one, so its series continues that file rather than forking a second.
+  git -C "$WORK/repo" sparse-checkout set scripts/claims public/claims >/dev/null 2>&1
 fi
 git -C "$WORK/repo" fetch -q origin '+refs/heads/*:refs/remotes/origin/*' 2>/dev/null
+git -C "$WORK/repo" sparse-checkout set scripts/claims public/claims >/dev/null 2>&1
 git -C "$WORK/repo" checkout -q -f "$REF" 2>/dev/null || { log claim-watch-measure "ABORT no such ref $REF"; exit 1; }
 HEAD_SHA=$(git -C "$WORK/repo" rev-parse --short HEAD 2>/dev/null)
 
@@ -47,6 +50,7 @@ fi
 
 log claim-watch-measure "START ref=$REF head=$HEAD_SHA out=$OUTDIR"
 python3 "$WORK/repo/scripts/claims/watch_run.py" --now --out "$OUTDIR" --series "$OUTDIR/series" \
+  --repo "$WORK/repo" \
   > "$LOGS/claim-watch-measure.run.log" 2>&1
 rc=$?
 
