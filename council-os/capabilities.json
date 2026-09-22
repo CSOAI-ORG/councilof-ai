@@ -1226,7 +1226,7 @@
         "csoai.claim-maintenance.register/0.1"
       ],
       "surfaces": [
-        "openapi"
+        "llms"
       ],
       "probe": {
         "method": "GET",
@@ -1236,7 +1236,8 @@
         ],
         "safe": true
       },
-      "source": "functions/api/claims/register.ts"
+      "source": "functions/api/claims/register.ts",
+      "surfaces_note": "Named in llms.txt and llms-full.txt, which is where it is actually published today. NOT declared for the openapi surface, because it is not in the OpenAPI document yet and scripts/build_openapi.py composes that document from the x402 catalogue rather than from this registry. Declaring a surface the door does not appear on is the kind of claim this registry exists to stop."
     },
     {
       "id": "api-clarity",
