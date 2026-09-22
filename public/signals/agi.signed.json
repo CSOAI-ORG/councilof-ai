@@ -1,23 +1,51 @@
 {
  "axis": "agi",
- "content_id": "2e7ff8f640f7c8fce1d6043aba19cb0cf48add65112f2c6dd8f2b606941d1717",
+ "axis_status": "MEASURED",
+ "content_id": "f1f736e234154e0314c327ed6d00981ea1487f88251f6f69297e74856f887687",
+ "elo_decided_games": 0,
  "elo_leader": null,
  "elo_leader_score": null,
+ "elo_ranked_models": 0,
+ "elo_runner_up": null,
+ "elo_separation": "UNMEASURED",
+ "elo_source": {
+  "content_id": "6afa60281790fb05b2ff88b47a2e17a31fb99d68e6ecbc0e55799ccecf6e0e49",
+  "generated": "2026-09-22T13:33:55Z",
+  "path": "/arena/elo_reference.json",
+  "schema": "csoai.arena-elo-reference/0.2"
+ },
+ "elo_ties": 77,
+ "elo_top": null,
  "games_leader": null,
- "generated": "2026-08-24T09:11:56Z",
+ "generated": "2026-09-22T13:33:56Z",
  "majority_baseline": 0.5278,
  "models": 19,
  "not_a_certification": true,
- "note": "From the live axis register + signed per-axis Elo leaderboard. Honest signals only; thin-n axes say so. Measurement, not certification.",
- "register": "MEASURED",
- "schema": "csoai.axis-signal/0.1",
+ "note": "From the axis register + the per-axis Elo reference rebuilt from recorded rounds (deterministic grader on frozen banks). Honest signals only; thin-n axes say so. Measurement, not certification.",
+ "rank_rule": "leader named only when >=2 models each have >=5 decided games on this axis and the top model's Wilson 95% win-rate CI lower bound exceeds the runner-up's upper bound; TIE = ranked, not separated; UNMEASURED = not sufficient to rank.",
+ "register": "UNMEASURED",
+ "schema": "csoai.axis-signal/0.2",
  "scored_items": 36,
  "signature": {
   "alg": "Ed25519",
-  "content_id": "2e7ff8f640f7c8fce1d6043aba19cb0cf48add65112f2c6dd8f2b606941d1717",
-  "note": "Ed25519 over canonical content_id. Verify: recompute, sha256=content_id, ed25519==sig with PUBKEY.",
-  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
-  "sig": "f6Q9Sh08l/Qo8D46zFNz9EonP26UV/Hae0GJA8g5q14cqGfaN7aHEAREwlID3cbe/UL4zPl0cKpzKD0oi1jmDA=="
+  "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
+  "content_id": "f1f736e234154e0314c327ed6d00981ea1487f88251f6f69297e74856f887687",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "payload_sha256": "f1f736e234154e0314c327ed6d00981ea1487f88251f6f69297e74856f887687",
+  "preimage": "canonical(body minus content_id, signature)",
+  "sig_ed25519": "e9c0933f49323294cb78547c322339251031cf9a822153933bb8bd9c900e9c450738f45dc6fb56c2e75faf9f57bf62260940e735893cd39031104b8ed7af810a",
+  "signed_at": "2026-09-22T13:33:56.957Z",
+  "signer_auth": "pod-token",
+  "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
- "status": "MEASURED"
+ "signer": "did:web:csoai.org#board-attestation-1",
+ "status": "UNMEASURED",
+ "supersedes": {
+  "content_id": "2e7ff8f640f7c8fce1d6043aba19cb0cf48add65112f2c6dd8f2b606941d1717",
+  "elo_leader_then": null,
+  "generated": "2026-08-24T09:11:56Z",
+  "note": "superseded, never edited; new bytes, new signature",
+  "signer": "city_ed25519 (pubkey j5oAooz8duNg...; not bound in did.json)",
+  "status_then": "MEASURED"
+ }
 }

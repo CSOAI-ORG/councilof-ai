@@ -1,23 +1,69 @@
 {
  "axis": "oss",
- "content_id": "0febc3df70f26d9d41f1d70a78ac5648eee1584b065e3b77582d452569d7cc65",
+ "axis_status": "MEASURED",
+ "content_id": "ed28d0edaa05913002f7f8d6360bbd5ae49d00a3709512af7752486cedc1ecbc",
+ "elo_decided_games": 12,
  "elo_leader": null,
  "elo_leader_score": null,
+ "elo_ranked_models": 2,
+ "elo_runner_up": {
+  "ci": [
+   0.022,
+   0.471
+  ],
+  "elo": 1417.3,
+  "games": 8,
+  "model": "phi4:14b",
+  "winrate": 0.125
+ },
+ "elo_separation": "TIE",
+ "elo_source": {
+  "content_id": "6afa60281790fb05b2ff88b47a2e17a31fb99d68e6ecbc0e55799ccecf6e0e49",
+  "generated": "2026-09-22T13:33:55Z",
+  "path": "/arena/elo_reference.json",
+  "schema": "csoai.arena-elo-reference/0.2"
+ },
+ "elo_ties": 53,
+ "elo_top": {
+  "ci": [
+   0.3,
+   0.903
+  ],
+  "elo": 1524.8,
+  "games": 6,
+  "model": "gemma3:12b",
+  "winrate": 0.667
+ },
  "games_leader": null,
- "generated": "2026-08-24T09:11:56Z",
+ "generated": "2026-09-22T13:33:56Z",
  "majority_baseline": 0.5,
  "models": 19,
  "not_a_certification": true,
- "note": "From the live axis register + signed per-axis Elo leaderboard. Honest signals only; thin-n axes say so. Measurement, not certification.",
- "register": "MEASURED",
- "schema": "csoai.axis-signal/0.1",
+ "note": "From the axis register + the per-axis Elo reference rebuilt from recorded rounds (deterministic grader on frozen banks). Honest signals only; thin-n axes say so. Measurement, not certification.",
+ "rank_rule": "leader named only when >=2 models each have >=5 decided games on this axis and the top model's Wilson 95% win-rate CI lower bound exceeds the runner-up's upper bound; TIE = ranked, not separated; UNMEASURED = not sufficient to rank.",
+ "register": "TIE",
+ "schema": "csoai.axis-signal/0.2",
  "scored_items": 32,
  "signature": {
   "alg": "Ed25519",
-  "content_id": "0febc3df70f26d9d41f1d70a78ac5648eee1584b065e3b77582d452569d7cc65",
-  "note": "Ed25519 over canonical content_id. Verify: recompute, sha256=content_id, ed25519==sig with PUBKEY.",
-  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
-  "sig": "KviNnZzVNOnVj7gf8rP5AJUXGnkQilkFY5FRp2C9NeT3o7t/B5kMgQtCTfbnRnpXHTgmtLB6VSve/ZH7BpQxCQ=="
+  "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
+  "content_id": "ed28d0edaa05913002f7f8d6360bbd5ae49d00a3709512af7752486cedc1ecbc",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "payload_sha256": "ed28d0edaa05913002f7f8d6360bbd5ae49d00a3709512af7752486cedc1ecbc",
+  "preimage": "canonical(body minus content_id, signature)",
+  "sig_ed25519": "35780a9cf4e8bb043c12cf15dcf89fd31e4f89cea14196a2bb09c1201d9c2f22f278c6855ccce98b4271445f862f4dc4e4ac738d3d2fdb97f4bb04d4a265fd09",
+  "signed_at": "2026-09-22T13:33:57.903Z",
+  "signer_auth": "pod-token",
+  "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
- "status": "MEASURED"
+ "signer": "did:web:csoai.org#board-attestation-1",
+ "status": "TIE",
+ "supersedes": {
+  "content_id": "0febc3df70f26d9d41f1d70a78ac5648eee1584b065e3b77582d452569d7cc65",
+  "elo_leader_then": null,
+  "generated": "2026-08-24T09:11:56Z",
+  "note": "superseded, never edited; new bytes, new signature",
+  "signer": "city_ed25519 (pubkey j5oAooz8duNg...; not bound in did.json)",
+  "status_then": "MEASURED"
+ }
 }
