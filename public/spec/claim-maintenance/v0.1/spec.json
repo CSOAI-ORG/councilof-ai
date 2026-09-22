@@ -1,0 +1,33 @@
+{
+  "schema": "csoai.claim-maintenance.spec/0.1",
+  "name": "Claim Maintenance",
+  "version": "0.1",
+  "date": "2026-09-22",
+  "status": "published",
+  "canonical_url": "https://councilof.ai/spec/claim-maintenance/v0.1/",
+  "document_of_record": "https://councilof.ai/spec/claim-maintenance/v0.1/claim-maintenance-v0.1.md",
+  "document_sha256": "9615da80f2ad016a68664536025dabf5c06fc9861e87a75bdd4f359c3227a4d6",
+  "artifact_schema_url": "https://councilof.ai/spec/claim-maintenance/v0.1/schema/claim-artifact-v0.1.schema.json",
+  "states": [
+    "CLAIM_CAPTURED",
+    "CLAIM_MEASURED",
+    "UNMEASURED",
+    "UNCHECKABLE"
+  ],
+  "register_url": "https://councilof.ai/api/claims/register",
+  "reference_implementation": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/claim-capture.mjs",
+  "licence": "CC0-1.0",
+  "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "reference_implementation_licence": "MIT",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "cite_as": "Council of AI. Claim Maintenance, version 0.1. CSOAI Ltd, 2026-09-22. https://councilof.ai/spec/claim-maintenance/v0.1/",
+  "not": [
+    "not fact-checking",
+    "not certification",
+    "not auditing",
+    "not reputation scoring",
+    "not adversarial journalism"
+  ],
+  "asserts_no_falsity": true,
+  "derives_no_mark_or_score": true
+}
