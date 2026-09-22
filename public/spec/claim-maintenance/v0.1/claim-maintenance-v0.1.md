@@ -200,8 +200,9 @@ disqualifying:
 - **The subject's own restatement.** A subject confirming its own claim is not evidence; it is
   the claim again.
 - **The absence of contradicting evidence.** Not finding a counterexample is not a measurement.
-- **A language model's opinion**, a model-as-judge score, or any automated grader whose output
-  has not itself been measured against a labelled ground truth published with the result.
+- **A language model's opinion**, a score produced by a language model acting as the grader, or
+  any automated grader whose output has not itself been measured against a labelled ground truth
+  published with the result.
 - **A partial read totalled as a population.** Where a fan-out over `N` sources returns only `k`
   of them, the result covers `k`; the remaining `N − k` are `UNMEASURED` and MUST be reported as
   such. Dividing by `k` and presenting the ratio as the population figure understates the
@@ -625,3 +626,12 @@ The reference implementation is licensed separately under MIT, as the repository
 
 This is version 0.1. It will be wrong in places. Corrections are published at
 https://councilof.ai/api/corrections and may be sent to nicholas@csoai.org.
+
+**Record of one correction to this version, made before it was ever served.** The first archival
+deposit of v0.1 (Zenodo record 10.5281/zenodo.22901782, 2026-09-22) phrased §4.6's third bullet
+using a term of art that the publisher's own public-surface gate forbids on any page it ships. The
+wording was replaced with a plain-English equivalent of identical meaning, and the document was
+deposited again as a new version under the same concept DOI. The first record remains citable and
+immutable: a published version is superseded, never edited (§9.4, §12). No normative requirement
+changed. This note is here rather than in a changelog nobody reads, because a specification that
+tells others to disclose their corrections has to carry its own.

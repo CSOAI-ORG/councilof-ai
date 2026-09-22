@@ -23,8 +23,8 @@ const REGISTER_STATIC = "/spec/claim-maintenance/register.json";
 const IMPL = "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/claim-capture.mjs";
 const CORRECTIONS = "/api/corrections";
 /** The archival deposit. A DOI makes a document citable and permanent; it does not make it right. */
-const DOI = "10.5281/zenodo.22901782";
-const DOI_URL = "https://doi.org/10.5281/zenodo.22901782";
+const DOI = "10.5281/zenodo.22901908";
+const DOI_URL = "https://doi.org/10.5281/zenodo.22901908";
 const CONCEPT_DOI_URL = "https://doi.org/10.5281/zenodo.22901781";
 
 const PAGE_DESCRIPTION =
@@ -72,7 +72,7 @@ const PAGE_LD = {
   citation: {
     "@type": "CreativeWork",
     name: "Claim Maintenance, version 0.1",
-    identifier: "https://doi.org/10.5281/zenodo.22901782",
+    identifier: "https://doi.org/10.5281/zenodo.22901908",
     url: "https://councilof.ai/spec/claim-maintenance/v0.1/",
   },
 };
