@@ -690,7 +690,13 @@ const corrections: PopulationEntry = {
   },
 };
 
-const CLAIM_REGISTRIES = ["/claims/claimreg-ondo-chainlink-2026-09-22.json"];
+// Newest last. A superseding registry is a NEW file: the prior bytes are never edited, stay
+// served at their own URL and stay covered by their own .ots, so both rows are read and the
+// `supersedes` chain is reported from the bytes rather than asserted here.
+const CLAIM_REGISTRIES = [
+  "/claims/claimreg-ondo-chainlink-2026-09-22.json",
+  "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+];
 const claimWatch: PopulationEntry = {
   id: "claim-watch",
   title: "Claim-maintenance registries",
@@ -737,10 +743,14 @@ const claimWatch: PopulationEntry = {
       if (!ots.ok) unmeasured.push(ots.reason);
       const created = str(j.created_utc);
       if (created && (!latest || created > latest)) latest = created;
+      const sup = isObj(j.supersedes) ? j.supersedes : null;
+      const mrk = isObj(j.merkle) ? j.merkle : null;
       const row: Record<string, unknown> = {
         registry_id: str(j.registry_id),
         schema: str(j.schema),
         created_utc: created,
+        supersedes: sup ? { registry_id: str(sup.registry_id), file: str(sup.file), sha256: str(sup.sha256) } : null,
+        merkle: mrk ? { algorithm: str(mrk.algorithm), root: str(mrk.root), n_leaves: mrk.n_leaves ?? null } : null,
         file: path,
         file_sha256: fileSha,
         registry_digest: typeof registry_digest === "string" ? registry_digest : null,
@@ -761,6 +771,21 @@ const claimWatch: PopulationEntry = {
     }
     const n = registries.reduce((a, r) => a + (r.claims as number), 0);
     if (registries.length === 0) return unread(source, unmeasured.join("; ") || "no registry readable", unit, { unmeasured });
+    // Counted from the served bytes, never typed here: a number in this file goes stale the day
+    // a registry is republished, and the door would then be the last place anyone looked.
+    const stateTotals: Record<string, number> = {};
+    for (const r of registries) {
+      for (const [k, v] of Object.entries((r.states as Record<string, number>) || {})) {
+        stateTotals[k] = (stateTotals[k] || 0) + v;
+      }
+    }
+    const superseded = new Set(
+      registries.map((r) => (isObj(r.supersedes) ? str((r.supersedes as Record<string, unknown>).registry_id) : null))
+        .filter((x): x is string => !!x),
+    );
+    const measured = stateTotals["CLAIM_MEASURED"] || 0;
+    const stillCaptured = stateTotals["CLAIM_CAPTURED"] || 0;
+    const notMeasured = (stateTotals["UNMEASURED"] || 0) + (stateTotals["UNCHECKABLE"] || 0);
     const reading: Reading = {
       state: "INDEXED",
       n,
@@ -768,9 +793,15 @@ const claimWatch: PopulationEntry = {
       as_of: latest,
       source,
       reason: null,
-      unmeasured: [...unmeasured, "CLAIM_MEASURED: no claim in any registry has been measured yet; every row is CLAIM_CAPTURED with its measurement plan. No claim of falsity is made about any entry."],
+      unmeasured: [
+        ...unmeasured,
+        `${measured} of ${n} claim rows across the published registries are CLAIM_MEASURED, ${stillCaptured} remain CLAIM_CAPTURED and ${notMeasured} are UNMEASURED or UNCHECKABLE — counted from the served bytes at request time, not typed here. A measured claim carries its method, window, denominator and sources. No claim of falsity is made about any entry.`,
+      ],
       head: {
         registries,
+        claim_states_across_registries: stateTotals,
+        superseded_registry_ids: [...superseded],
+        supersession_rule: "a superseding registry is a new file; the prior bytes are never edited and both remain served",
         identification: "a claim is a sentence captured verbatim from the vendor's public page or API at the registry's created_utc, typed by kind, with the plan by which it could be measured; the file bytes are served unchanged and never edited",
       },
     };

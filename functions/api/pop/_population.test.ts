@@ -215,20 +215,45 @@ describe("free preview — every reading is derived from the artifact bytes", ()
 
   it("claim-watch: file_sha256 is the served bytes, registry_digest reproduces under sorted-indent-1, .ots state is read from the proof bytes", async () => {
     stubDisk();
-    const path = "/claims/claimreg-ondo-chainlink-2026-09-22.json";
-    const raw = readFileSync(resolve(PUBLIC, "." + path));
-    const file = JSON.parse(raw.toString("utf8"));
+    // Every published registry, discovered from disk — so adding a superseding revision cannot
+    // leave this test asserting yesterday's single file.
+    const files = readdirSync(resolve(PUBLIC, "./claims")).filter((f) => /^claimreg-.*\.json$/.test(f)).sort();
+    expect(files.length, "no claim registry on disk").toBeGreaterThan(0);
     const b = await preview("claim-watch");
-    const claims = Object.values(file.subjects as Record<string, { claims: unknown[] }>).reduce((a, s) => a + s.claims.length, 0);
+    const rows = b.head.registries as Record<string, unknown>[];
+    expect(rows.length).toBe(files.length);
+    let claims = 0;
+    for (const f of files) {
+      const path = "/claims/" + f;
+      const raw = readFileSync(resolve(PUBLIC, "." + path));
+      const file = JSON.parse(raw.toString("utf8"));
+      const row = rows.find((r) => r.file === path) as Record<string, unknown>;
+      expect(row, path).toBeTruthy();
+      const n = Object.values(file.subjects as Record<string, { claims: unknown[] }>).reduce((a, s) => a + s.claims.length, 0);
+      claims += n;
+      expect(row.registry_id).toBe(file.registry_id);
+      expect(row.file_sha256).toBe(sha256(raw));
+      expect(row.registry_digest).toBe(file.registry_digest);
+      expect(row.signature_state).toBe(file.signature_state);
+      // States are tallied from the file's own claim rows, never typed on either side.
+      const states: Record<string, number> = {};
+      for (const s of Object.values(file.subjects as Record<string, { claims: { state: string }[] }>)) {
+        for (const cl of s.claims) states[cl.state] = (states[cl.state] || 0) + 1;
+      }
+      expect(row.states).toEqual(states);
+      // A superseding registry names its predecessor by that file's real sha256.
+      if (file.supersedes) {
+        const prior = readFileSync(resolve(PUBLIC, "./claims/" + String(file.supersedes.file).split("/").pop()));
+        expect(file.supersedes.sha256, "supersedes.sha256 must be the prior file's bytes").toBe(sha256(prior));
+        expect((row.supersedes as Record<string, unknown>).registry_id).toBe(file.supersedes.registry_id);
+      }
+    }
     expect(b.state).toBe("INDEXED");
     expect(b.n).toBe(claims);
-    expect(b.as_of).toBe(file.created_utc);
-    const row = (b.head.registries as Record<string, unknown>[])[0];
-    expect(row.registry_id).toBe(file.registry_id);
-    expect(row.file_sha256).toBe(sha256(raw));
-    expect(row.registry_digest).toBe(file.registry_digest);
-    expect(row.signature_state).toBe(file.signature_state);
-    expect(row.states).toEqual({ CLAIM_CAPTURED: claims });
+    const path = "/claims/" + files[0];
+    const raw = readFileSync(resolve(PUBLIC, "." + path));
+    const file = JSON.parse(raw.toString("utf8"));
+    const row = rows.find((r) => r.file === path) as Record<string, unknown>;
     // Independent reproduction of the file's own digest with python's json.dumps, not our port.
     const { registry_digest, ...rest } = file;
     let py: string | null = null;
@@ -345,7 +370,13 @@ describe("paid: read before settle", () => {
     const sw = await (await call(door, ctx("/api/pop/swift", LIVE, { "x-payment": paymentHeader }))).json() as { rows: { rows: unknown[] } };
     expect(sw.rows.rows).toEqual(disk("/interop/swift-census.json").rows);
     const cw = await (await call(door, ctx("/api/pop/claim-watch", LIVE, { "x-payment": paymentHeader }))).json() as { rows: { registries: { registry: unknown }[] } };
-    expect(cw.rows.registries[0].registry).toEqual(disk("/claims/claimreg-ondo-chainlink-2026-09-22.json"));
+    const onDisk = readdirSync(resolve(PUBLIC, "./claims")).filter((f) => /^claimreg-.*\.json$/.test(f)).sort();
+    expect(cw.rows.registries.length).toBe(onDisk.length);
+    for (const f of onDisk) {
+      const r = (cw.rows.registries as { file?: string; registry: unknown }[]).find((x) => x.file === "/claims/" + f);
+      expect(r, f).toBeTruthy();
+      expect(r!.registry).toEqual(disk("/claims/" + f));
+    }
     const cx = await (await call(door, ctx("/api/pop/corrections", LIVE, { "x-payment": paymentHeader }))).json() as { rows: { entries: { id: string; entry_sha256: string }[] } };
     expect(cx.rows.entries.map((e) => e.id)).toEqual(LEDGER.corrections.map((c) => c.id));
     expect(cx.rows.entries.every((e) => /^[0-9a-f]{64}$/.test(e.entry_sha256))).toBe(true);
