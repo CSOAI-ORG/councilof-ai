@@ -22,3 +22,6 @@ artefacts (`root-<sha8>.json`; a dated sidecar only once its OTS state is final)
 | root-witness-latest.json.ots | eff684ac62db63aefabfdb16cd93a13e3951c3bc687248c3c7e439f684eb1776 | eff684ac62db63aefabfdb16cd93a13e3951c3bc687248c3c7e439f684eb1776 (MATCH) | none | 3 |
 | root-witness-pointer.json.ots | 4ad46e54378233aa82a1409ca4cd1fcbfad7a85b611e5610293bd8629f68c30a | 4ad46e54378233aa82a1409ca4cd1fcbfad7a85b611e5610293bd8629f68c30a (MATCH) | none | 3 |
 | root-witness-2026-09-15-dedb49d0.json.ots | eff684ac62db63aefabfdb16cd93a13e3951c3bc687248c3c7e439f684eb1776 | eff684ac62db63aefabfdb16cd93a13e3951c3bc687248c3c7e439f684eb1776 (MATCH) | none | 3 |
+| root.json.ots | dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4 | dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4 (MATCH) | none | 3 |
+
+Added after the first two commits: root.json.ots was not in the gate output because witness_public_root.py ots_stamp() had already unlinked it (public/root.json.ots is its temp path). Same class: a stamp of a file every publish rewrites.

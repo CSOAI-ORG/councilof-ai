@@ -172,3 +172,17 @@ The gate therefore cannot go green on this branch alone: the 17 remaining issues
 - No GitHub write, no email, no payment. Rekor upload and OTS calendar submission are the only outward writes.
 - Pod token never printed; read only via BOARD_SIGN_POD_TOKEN_FILE.
 - Node_modules symlinked into the clone and excluded via .git/info/exclude (not committed).
+
+## Addendum (after push)
+- `public/root.json.ots` (master 12cf8f3bb; a SECOND pending-only stamp of the 15 Sep root bytes dedb49d0…,
+  different bytes from `root-dedb49d0.json.ots`, 3 calendars, no Bitcoin attestation) was silently unlinked
+  by `witness_public_root.py`'s `ots_stamp()` — `public/root.json.ots` is that function's own temp path and
+  it `unlink`s it before stamping. Restored from git and moved into
+  `_quarantine/ots-of-regenerated-files-2026-09-22/` (commit 3). Any future stamp placed at
+  `public/root.json.ots` will be deleted by the next witness run: do not put one there.
+- Master on the bare repo moved f5a576372 → b8bbf586f (8 commits: instrument-controls census, proofs/ dist
+  exclusion, pages-size-guard, tool-fleet lock, reconciliation) while this lane ran. `git diff --name-only`
+  overlap with this branch: **0 files**; master's `public/root.json` is still the 15 Sep root, so the
+  halt-on-split premise of this run still holds and the merge should be clean.
+- Branch `root/refresh-2026-09-22` on `/workspace/git/councilof-ai.git`: commits 25eb5f27c (root + code + tests
+  + notes), d02576235 (quarantine four stamps), then commit 3 (this addendum + root.json.ots).
