@@ -265,7 +265,11 @@ describe("registry_listings — a failed page is a lower bound, not a null", () 
     );
     expect(REAL_REGISTRY_PAGE._fixture.fetched).toBe("2026-09-22T15:35Z");
     expect(row.state).toBe("READ");
-    expect(row.value).toBe(4);
+    // The registry paginates by name@version, not by name: these four real rows are four
+    // versions of ONE server. That is why a 100-per-page walk needs many pages for ~350 servers,
+    // and why `value` counts distinct names while `versions` counts the rows.
+    expect(row.value).toBe(1);
+    expect(row.versions).toBe(4);
   });
 
   it("retries a failing page before giving up on it", async () => {
@@ -311,13 +315,9 @@ describe("registry_listings — a failed page is a lower bound, not a null", () 
   });
 
   it("a walk that runs out of budget reports what it read, not a null", async () => {
-    // A clock that jumps past the budget after the first page answers.
-    let t = 0;
-    const clock = () => {
-      const v = t;
-      t += REGISTRY_BUDGET_MS;
-      return v;
-    };
+    // A clock that stays inside the budget long enough for page 1 to answer, then jumps past it.
+    let ticks = 0;
+    const clock = () => (ticks++ < 3 ? 0 : REGISTRY_BUDGET_MS + 1);
     const row = await registryListings(
       deps({ "registry.modelcontextprotocol.io": () => registryPage(["io.github.CSOAI-ORG/a"], "page-2") }, [], clock),
     );
@@ -442,6 +442,13 @@ describe("/api/footprint — cache and handler", () => {
     const text = JSON.stringify(p);
     expect(text).not.toMatch(/certif/i);
     expect(text).not.toMatch(/[$£€]\s?\d/);
-    expect(text).not.toMatch(/\busers\b(?!\s+and)/i);
+    // "downloads are not users and users are not customers" is the doctrine and must stay. What
+    // must never happen is a row whose UNIT is people: a download count is not a headcount.
+    for (const row of Object.values(p as Record<string, { unit?: unknown }>)) {
+      if (row && typeof row === "object" && typeof row.unit === "string") {
+        expect(row.unit).not.toMatch(/\busers?\b|\bpeople\b|\bhumans?\b/i);
+      }
+    }
+    expect(String(p.gross_distribution.note)).toContain("not a count of people");
   });
 });
