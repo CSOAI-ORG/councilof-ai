@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { PRIMARY_PATHS, isLibraried } from "../data/library-ia";
 
 const page = readFileSync(resolve(__dirname, "ClaimMaintenance.tsx"), "utf8");
 const app = readFileSync(resolve(__dirname, "../App.tsx"), "utf8");
@@ -27,6 +28,14 @@ describe("/claim-maintenance — the four wirings a new page needs", () => {
     expect(prerender).toContain('"/claim-maintenance"');
     // Without PRIMARY_PATHS the page ships flagged "archived" under a link we actively promote.
     expect(library).toContain('"/claim-maintenance"');
+  });
+
+  it("is PRIMARY, so it does not ship marked archived — checked against the module, with a control", () => {
+    expect(PRIMARY_PATHS.has("/claim-maintenance")).toBe(true);
+    expect(isLibraried("/claim-maintenance")).toBe(false);
+    // The control matters: an assertion that a predicate is false is worth nothing unless the
+    // same predicate is shown to be true for something. /pdca is a libraried reference page.
+    expect(isLibraried("/pdca")).toBe(true);
   });
 
   it("keeps the trailing-slash canonical constant and leaves the canonical tag to the central writer", () => {
