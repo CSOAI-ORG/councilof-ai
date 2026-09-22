@@ -47,11 +47,13 @@ def _sources(*blocks) -> list:
     out, seen = [], set()
     for b in blocks:
         for s in (b or []):
+            if not isinstance(s, dict) or not s.get("url"):
+                continue
             k = (s.get("url"), s.get("accessed_utc"))
             if k not in seen:
                 seen.add(k)
                 out.append(s)
-    return out[:24]
+    return out[:40]
 
 
 def build_records(run: Path, prior: dict) -> list[dict]:
@@ -91,7 +93,12 @@ def build_records(run: Path, prior: dict) -> list[dict]:
     m = _load(run, "CL-2")
     rec("CL-2", m.get("state", "UNMEASURED"),
         {k: m.get(k) for k in ("categories_declared", "counterexample_counts", "counterexamples_per_category")},
-        m.get("method", ""), m.get("window"), m.get("denominator"), _sources(),
+        m.get("method", ""), m.get("window"), m.get("denominator"),
+        _sources(m.get("sources"), [{"url": r["source_url"], "accessed_utc": r.get("accessed_utc"),
+                                     "response_sha256": r.get("response_sha256"),
+                                     "note": f"{cat} / {r['competitor']} — matched {r.get('matched_text')!r}"}
+                                    for cat, rows in (m.get("counterexamples_per_category") or {}).items()
+                                    for r in rows if r.get("source_url")]),
         m.get("does_not_prove", []),
         note=("a counterexample bears on exclusivity in one declared category and nothing else. No finding of "
               "falsity is made or implied about anyone, and 'all-in-one' is not a defined term."))
@@ -116,7 +123,8 @@ def build_records(run: Path, prior: dict) -> list[dict]:
          "adopter_list_baseline": {k: base.get(k) for k in ("url", "page_sha256", "present", "absent",
                                                             "measured_at", "denominator")}},
         corr.get("method", ""), corr.get("window"), corr.get("denominator"),
-        _sources(base.get("sources")), corr.get("does_not_prove", []),
+        _sources(base.get("sources"), *[o.get("sources") for o in corr.get("organisations", [])]),
+        corr.get("does_not_prove", []),
         note=("NOT_FOUND means this search did not find it. SEARCH_INCONCLUSIVE means we could not look — "
               "several of these organisations answer an automated reader with a block, and that is recorded "
               "as its own state rather than collapsed into an absence. Neither is a statement about anyone."))
@@ -162,8 +170,11 @@ def build_records(run: Path, prior: dict) -> list[dict]:
          "testimonial_persistence_baseline": {k: base.get(k) for k in ("url", "page_sha256", "present",
                                                                        "absent", "measured_at")}},
         corr.get("method", ""), corr.get("window"), corr.get("denominator"),
-        _sources(base.get("sources")), corr.get("does_not_prove", []),
-        note="the persistence baseline makes a later removal visible; it says nothing about the testimonial itself.")
+        _sources(base.get("sources"), org.get("sources")), corr.get("does_not_prove", []),
+        note=("UNMEASURED where the corroboration search could not reach the organisation's own record at "
+              "all. A search that was turned away is not an absence, and the HTTP statuses that turned it "
+              "away are in the sources. The persistence baseline makes a later removal of the testimonial "
+              "visible; it says nothing about the testimonial itself."))
 
     # ---- ON-3 issuer publications
     m = _load(run, "ON-3")
@@ -254,7 +265,12 @@ def main() -> int:
             "tests": "python3 scripts/claims/test_claim_harness.py   (and --controls to print the planted-input rejections)",
             "requirements": "python3 standard library only; a public RPC and public HTTP; no key, no account, no payment",
         },
-        "signature_state": "UNSIGNED — see the .signed.json sidecar beside this file once the signer has run",
+        # A signature cannot live inside the bytes it covers. The sidecar pins this file by sha256,
+        # so these bytes stay exactly as signed and as anchored.
+        "signature_state": ("SIGNED BY SIDECAR — the signature is over these bytes, not inside them. See "
+                            "/claims/" + out.stem + ".signed.json, which pins this file by sha256 and carries "
+                            "the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature "
+                            "proves these bytes were signed at that time; it grades nothing and certifies nobody."),
         "notes": ("Second pass of claim maintenance on named subjects: every claim the public record allows was "
                   "measured, each one states its window, denominator, method and sources, and each one states "
                   "what it does not prove. Claims that could not be moved say why."),

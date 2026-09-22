@@ -245,6 +245,12 @@ def run(networks: list[str] | None = None, feeds: list[str] | None = None, round
             out = read_feed(net, by_name[n], rounds)
             out["network"], out["chain_id"] = net_name, net["chain_id"]
             results.append(out)
+            # One citation per feed: which contract was read, over which public node, when.
+            sources.append({"url": net["rpc"][0], "status": 200 if out.get("state") == "CLAIM_MEASURED" else None,
+                            "accessed_utc": c.now_iso(), "note": (
+                                f"eth_call description()/decimals()/latestRoundData()/getRoundData() on "
+                                f"{out.get('proxy')} ({net_name} chain {net['chain_id']}) for {n}; "
+                                f"fallback node {net['rpc'][1] if len(net['rpc']) > 1 else 'none'}")})
     measured = [r for r in results if r.get("state") == "CLAIM_MEASURED"]
     return {
         "state": "CLAIM_MEASURED" if measured else "UNMEASURED",

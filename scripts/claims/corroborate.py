@@ -301,8 +301,14 @@ def run(term: str, orgs: list[str], pause: float = 0.4) -> dict:
     results = [check(o, term, pause=pause) for o in orgs]
     tally = {s: sum(1 for r in results if r["status"] == s)
              for s in ("CORROBORATED", "NOT_FOUND", "SEARCH_INCONCLUSIVE", "NOT_SEARCHED")}
+    # A run that reached no verdict for any organisation has not measured anything. Reporting it
+    # as CLAIM_MEASURED would let a run that was blocked everywhere read as a finding.
+    conclusive_any = any(r["status"] in ("CORROBORATED", "NOT_FOUND") for r in results)
     return {
-        "state": "CLAIM_MEASURED",
+        "state": "CLAIM_MEASURED" if conclusive_any else "UNMEASURED",
+        "reason": None if conclusive_any else (
+            "no organisation in this run could be reached conclusively: every one is "
+            "SEARCH_INCONCLUSIVE, so this run measured nothing and claims nothing"),
         "measured_at": c.now_iso(),
         "term": term,
         "method": ("for each named organisation, enumerate its own published index (robots.txt -> sitemaps, "
