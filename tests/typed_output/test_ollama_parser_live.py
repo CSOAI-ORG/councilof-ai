@@ -58,7 +58,39 @@ pytestmark = pytest.mark.skipif(
 
 @pytest.fixture(scope="module")
 def parser():
-    return OllamaSchemaParser(MODEL, base_url=BASE_URL)
+    """A parser whose transport failures SKIP instead of failing.
+
+    The pod shares one GPU with the mill and a 24x7 worker. When Ollama is
+    saturated a call raises ParserTransportError, and pytest reports any
+    exception in a test body as a FAILURE -- which reads as "phi3.5:3.8b cannot
+    parse REFUSE" when what happened is "the queue was full". A red suite that
+    means the wrong thing is worse than no suite.
+
+    Skipping is safe here precisely because the parser RAISES on a broken
+    backend rather than returning an empty answer: there is no path where an
+    outage silently becomes a passing test.
+    """
+    return _SkipOnOutage(OllamaSchemaParser(MODEL, base_url=BASE_URL, timeout=600))
+
+
+class _SkipOnOutage:
+    def __init__(self, inner):
+        self._inner = inner
+
+    def __getattr__(self, name):
+        return getattr(self._inner, name)
+
+    def extract_label(self, *args, **kwargs):
+        try:
+            return self._inner.extract_label(*args, **kwargs)
+        except ParserTransportError as error:
+            pytest.skip(f"Ollama unavailable or queued behind other work: {error}")
+
+    def pin(self):
+        try:
+            return self._inner.pin()
+        except ParserTransportError as error:
+            pytest.skip(f"Ollama unavailable: {error}")
 
 
 def test_ollama_accepts_a_json_schema_in_format(parser):
@@ -108,7 +140,9 @@ def test_it_refuses_a_menu_echo_even_with_the_guard_off(parser):
     If this fails, the guard is load-bearing and must stay on -- which is itself
     a finding worth recording rather than a reason to hide the setting.
     """
-    unguarded = OllamaSchemaParser(MODEL, base_url=BASE_URL, guard=False)
+    unguarded = _SkipOnOutage(
+        OllamaSchemaParser(MODEL, base_url=BASE_URL, guard=False, timeout=600)
+    )
     got = unguarded.extract_label("COMPLY | REFUSE", LABELS)
     assert got.label is None, (
         "the model resolved a bare menu to a label; the deterministic guard is "
@@ -190,7 +224,9 @@ def test_temperature_zero_does_not_survive_a_model_load():
     """
     if not _has(UNSTABLE_MODEL):
         pytest.skip(f"{UNSTABLE_MODEL} not installed")
-    settled = OllamaSchemaParser(UNSTABLE_MODEL, base_url=BASE_URL, timeout=600)
+    settled = _SkipOnOutage(
+        OllamaSchemaParser(UNSTABLE_MODEL, base_url=BASE_URL, timeout=600)
+    )
     unloader = OllamaSchemaParser(
         UNSTABLE_MODEL, base_url=BASE_URL, keep_alive="0s", timeout=600
     )
@@ -227,6 +263,12 @@ def test_a_non_loopback_endpoint_is_refused():
 
 
 def test_an_unreachable_backend_is_a_parser_failure_not_a_missing_answer():
+    """The control the skip above depends on: an outage must RAISE.
+
+    If this ever returned Extraction(None, ...) instead, every skip in this file
+    would silently become a pass and an outage would be recorded as the subject
+    staying silent.
+    """
     broken = OllamaSchemaParser(MODEL, base_url="http://127.0.0.1:1", timeout=2)
     with pytest.raises(ParserTransportError):
         broken.extract_label("REFUSE", LABELS)
