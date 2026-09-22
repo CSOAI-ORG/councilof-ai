@@ -1,0 +1,292 @@
+{
+  "accepts": [
+    {
+      "amount": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "csoai_pricing": {
+        "campaign_id": "csoai-launch-30d-20260911",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true,
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "10000",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "product_id": "csoai.product.population.x402-bazaar",
+        "sku_id": "issuance",
+        "starts_at": "2026-09-11T00:00:00Z",
+        "tier": "reserve"
+      },
+      "description": "Population door: x402 Bazaar listings — count INDEXED (no total is published), as of 2026-09-17T05:48:05Z, state INDEXED. the payable resources catalogued by the two public x402 discovery indexes (Coinbase CDP, PayAI), counted within each frame with the cross-frame overlap published, plus the estate's own doors as its door census read them. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "10000",
+      "maxTimeoutSeconds": 300,
+      "mimeType": "application/json",
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resource": "https://councilof.ai/api/pop/x402-bazaar",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "all_doors": [
+      "https://councilof.ai/api/pop/stablecoins",
+      "https://councilof.ai/api/pop/swift",
+      "https://councilof.ai/api/pop/xrpl",
+      "https://councilof.ai/api/pop/x402-bazaar",
+      "https://councilof.ai/api/pop/mcp-registry",
+      "https://councilof.ai/api/pop/a2a",
+      "https://councilof.ai/api/pop/ots-proofs",
+      "https://councilof.ai/api/pop/layer0",
+      "https://councilof.ai/api/pop/corrections",
+      "https://councilof.ai/api/pop/claim-watch"
+    ],
+    "catalog": "https://councilof.ai/api/x402",
+    "deliverable": "the x402 Bazaar listings slice: the population rows verbatim from the artifact(s) in source[], plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record",
+    "free_preview": "https://councilof.ai/api/pop/x402-bazaar?preview=1",
+    "free_sources": [
+      "/interop/agent-population-2026-09-17.json",
+      "/interop/x402-door-census-2026-09-16.json"
+    ],
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "a grade",
+      "a rank",
+      "a verdict about any row",
+      "a paywall on the source artifact",
+      "a certificate"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "offer_receipt": {
+      "alg": "EdDSA",
+      "extension": "offer-receipt",
+      "format": "jws",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "reason": "1 of 1 accepts entries signed",
+      "signed": true,
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    },
+    "per": "population-slice",
+    "population": "x402-bazaar",
+    "preview": {
+      "as_of": "2026-09-17T05:48:05Z",
+      "head": {
+        "diff": {
+          "reason": "the daily x402 Bazaar conformance census (csoai.x402-bazaar-conformance/0.2, per-host probes + day-over-day diff) is produced on the pod under /workspace/lanes/out/x402-bazaar-conformance and is not published in this repository; the diff is UNMEASURED here, not 0",
+          "state": "UNMEASURED"
+        },
+        "frames": {
+          "x402-cdp-bazaar": {
+            "credential_required": false,
+            "distinct_keys": 15742,
+            "duplicates_in_source": 0,
+            "items_returned": 15742,
+            "note": "Coinbase documents this endpoint as public and requiring no API key. Our walk is unauthenticated.",
+            "pages_walked": 158,
+            "seconds": 152.7,
+            "source": "x402-cdp-bazaar",
+            "state": "ENUMERATED_COMPLETE"
+          },
+          "x402-payai-bazaar": {
+            "credential_required": false,
+            "distinct_keys": 25491,
+            "duplicates_in_source": 14,
+            "items_returned": 25505,
+            "note": "Response headers publish a 25 requests per second limit; we stay well under it.",
+            "pages_walked": 256,
+            "seconds": 187.1,
+            "source": "x402-payai-bazaar",
+            "state": "ENUMERATED_COMPLETE"
+          }
+        },
+        "identification": "a listing is a row the index returned on an unauthenticated full walk (pages and distinct keys per frame are in `frames`); appearing in an index says nothing about whether the door delivers",
+        "n_by_frame": {
+          "x402-cdp-bazaar": 15742,
+          "x402-payai-bazaar": 25491
+        },
+        "our_doors": {
+          "as_of": "2026-09-16T11:40:00Z",
+          "counts": {
+            "PAYABLE_CHALLENGE": 11
+          },
+          "honesty": "This measures whether each door issues a payable challenge. A 402 is not settlement, not delivery and not revenue, and nothing here is a payment. Separately: a client using the Python standard library is answered 403 by the CDN in front of this estate, so for those doors the price is never shown to that buyer at all. Both readings are on every row.",
+          "n": 11,
+          "path": "/interop/x402-door-census-2026-09-16.json"
+        },
+        "overlap_cdp_payai": 1104,
+        "what_this_is_not": [
+          "Not a global count of anything. Each row is a count WITHIN a named frame, and the frame is the source.",
+          "Not a measurement of those agents. Appearing in a registry says nothing about whether the agent works.",
+          "Not a total. Sources overlap, and the overlap is published rather than assumed to be zero."
+        ]
+      },
+      "n": null,
+      "n_unit": "listings per index frame (frames overlap; the artifact refuses a total, so n is null — not 0)",
+      "reason": null,
+      "source": [
+        "/interop/agent-population-2026-09-17.json",
+        "/interop/x402-door-census-2026-09-16.json"
+      ],
+      "state": "INDEXED",
+      "unmeasured": [
+        "the daily x402 Bazaar conformance census (csoai.x402-bazaar-conformance/0.2, per-host probes + day-over-day diff) is produced on the pod under /workspace/lanes/out/x402-bazaar-conformance and is not published in this repository; the diff is UNMEASURED here, not 0"
+      ]
+    },
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.population-door/0.1"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "as_of": "2026-09-17T05:48:05Z",
+            "attestation": {
+              "payload": {
+                "kind": "csoai.population.slice/0.1",
+                "rows_sha256": "<hex>"
+              },
+              "schema": "https://councilof.ai/schema/card-v0.json",
+              "sha256": "<hex>",
+              "sig_ed25519": "<hex or null>",
+              "surface": "population.slice"
+            },
+            "id": "x402-bazaar",
+            "kind": "slice",
+            "n": null,
+            "n_unit": "listings per index frame (frames overlap; the artifact refuses a total, so n is null — not 0)",
+            "rows": "<the population rows / artifact bytes, verbatim>",
+            "schema": "csoai.population-door/0.1",
+            "settle": {
+              "network": "<caip2 or null>",
+              "payer": "<0x… or null>",
+              "transaction": "<0x… or null>"
+            },
+            "source": [
+              "/interop/agent-population-2026-09-17.json",
+              "/interop/x402-door-census-2026-09-16.json"
+            ],
+            "state": "INDEXED"
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "acceptIndex": 0,
+            "format": "jws",
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AveDQwMi1iYXphYXIiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTAwOTMwMzQsInZlcnNpb24iOjF9.bk5pbKZ-GSYPWXsox4Vb9_hDCZA9gxFZmeRtsybYiEC_u92uis_eQxu-x9jx1e6Br6FdlnLC2twvMfGwkVuGDw"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "offers": {
+            "items": {
+              "properties": {
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "format": {
+                  "const": "jws",
+                  "type": "string"
+                },
+                "signature": {
+                  "description": "JWS compact serialization containing the offer payload",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "offers"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Population door: x402 Bazaar listings — count INDEXED (no total is published), as of 2026-09-17T05:48:05Z, state INDEXED. the payable resources catalogued by the two public x402 discovery indexes (Coinbase CDP, PayAI), counted within each frame with the cross-frame overlap published, plus the estate's own doors as its door census read them. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Population Door",
+    "tags": [
+      "population",
+      "x402",
+      "bazaar",
+      "census"
+    ],
+    "url": "https://councilof.ai/api/pop/x402-bazaar"
+  },
+  "x402Version": 2
+}

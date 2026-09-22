@@ -1,0 +1,254 @@
+{
+  "accepts": [
+    {
+      "amount": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "csoai_pricing": {
+        "campaign_id": "csoai-launch-30d-20260911",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true,
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "10000",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "product_id": "csoai.product.population.corrections",
+        "sku_id": "issuance",
+        "starts_at": "2026-09-11T00:00:00Z",
+        "tier": "reserve"
+      },
+      "description": "Population door: Corrections ledger, full history — 60 correction entries in the source-maintained ledger, as of 2026-09-20, state INDEXED. one row per published correction in the estate's own ledger — what was wrong, how it was caught, the fix, dated — the same source object the free GET /api/corrections serves. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "10000",
+      "maxTimeoutSeconds": 300,
+      "mimeType": "application/json",
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resource": "https://councilof.ai/api/pop/corrections",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "all_doors": [
+      "https://councilof.ai/api/pop/stablecoins",
+      "https://councilof.ai/api/pop/swift",
+      "https://councilof.ai/api/pop/xrpl",
+      "https://councilof.ai/api/pop/x402-bazaar",
+      "https://councilof.ai/api/pop/mcp-registry",
+      "https://councilof.ai/api/pop/a2a",
+      "https://councilof.ai/api/pop/ots-proofs",
+      "https://councilof.ai/api/pop/layer0",
+      "https://councilof.ai/api/pop/corrections",
+      "https://councilof.ai/api/pop/claim-watch"
+    ],
+    "catalog": "https://councilof.ai/api/x402",
+    "deliverable": "the Corrections ledger, full history slice: the population rows verbatim from the artifact(s) in source[], plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record",
+    "free_preview": "https://councilof.ai/api/pop/corrections?preview=1",
+    "free_sources": [
+      "functions/api/corrections.ts#LEDGER",
+      "/api/corrections"
+    ],
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "a grade",
+      "a rank",
+      "a verdict about any row",
+      "a paywall on the source artifact",
+      "a certificate"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "offer_receipt": {
+      "alg": "EdDSA",
+      "extension": "offer-receipt",
+      "format": "jws",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "reason": "1 of 1 accepts entries signed",
+      "signed": true,
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    },
+    "per": "population-slice",
+    "population": "corrections",
+    "preview": {
+      "as_of": "2026-09-20",
+      "head": {
+        "entries_with_detected_at": 0,
+        "first_date": "2026-08-19",
+        "free_endpoint": "/api/corrections serves the whole ledger free and stays free; this door meters the assembled full-history slice with per-entry content digests",
+        "identification": "an entry is a fact about the estate's own history, never a claim about anyone else; ids are the ledger's own",
+        "last_date": "2026-09-20",
+        "license": "CC-BY-4.0",
+        "policy": "Public, source-maintained corrections record. Each entry states what was wrong, how it was caught, and the fix. No append-only storage property is claimed.",
+        "reached_the_public_true": 3,
+        "schema": "csoai.corrections/0.1"
+      },
+      "n": 60,
+      "n_unit": "correction entries in the source-maintained ledger",
+      "reason": null,
+      "source": [
+        "functions/api/corrections.ts#LEDGER",
+        "/api/corrections"
+      ],
+      "state": "INDEXED",
+      "unmeasured": [
+        "append-only storage proof: none is claimed by the ledger",
+        "correction latency: computable only for the 0 entries carrying detected_at; never inferred from prose"
+      ]
+    },
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.population-door/0.1"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "as_of": "2026-09-20",
+            "attestation": {
+              "payload": {
+                "kind": "csoai.population.slice/0.1",
+                "rows_sha256": "<hex>"
+              },
+              "schema": "https://councilof.ai/schema/card-v0.json",
+              "sha256": "<hex>",
+              "sig_ed25519": "<hex or null>",
+              "surface": "population.slice"
+            },
+            "id": "corrections",
+            "kind": "slice",
+            "n": 60,
+            "n_unit": "correction entries in the source-maintained ledger",
+            "rows": "<the population rows / artifact bytes, verbatim>",
+            "schema": "csoai.population-door/0.1",
+            "settle": {
+              "network": "<caip2 or null>",
+              "payer": "<0x… or null>",
+              "transaction": "<0x… or null>"
+            },
+            "source": [
+              "functions/api/corrections.ts#LEDGER",
+              "/api/corrections"
+            ],
+            "state": "INDEXED"
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "acceptIndex": 0,
+            "format": "jws",
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvY29ycmVjdGlvbnMiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTAwOTMwMzUsInZlcnNpb24iOjF9.cK-PEWsGi6XMk3UuxgpY6_hRahpwJiSZqjRTkHwhpYeutvTaHPr4WHCbfJBAIMFpGEO2kIY2XE1oPOKHOs29Cw"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "offers": {
+            "items": {
+              "properties": {
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "format": {
+                  "const": "jws",
+                  "type": "string"
+                },
+                "signature": {
+                  "description": "JWS compact serialization containing the offer payload",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "offers"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Population door: Corrections ledger, full history — 60 correction entries in the source-maintained ledger, as of 2026-09-20, state INDEXED. one row per published correction in the estate's own ledger — what was wrong, how it was caught, the fix, dated — the same source object the free GET /api/corrections serves. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Population Door",
+    "tags": [
+      "population",
+      "corrections",
+      "ledger",
+      "x402"
+    ],
+    "url": "https://councilof.ai/api/pop/corrections"
+  },
+  "x402Version": 2
+}

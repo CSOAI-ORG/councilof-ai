@@ -1,6 +1,6 @@
 /**
  * /api/synthesis — retired until mappings is derived from current evidence.
- * @openapi-unavailable
+ * @openapi-retired
  */
 
 const json = (body: unknown, status = 200) =>

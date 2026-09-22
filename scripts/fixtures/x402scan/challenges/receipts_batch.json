@@ -27,7 +27,7 @@
       "mimeType": "application/json",
       "network": "eip155:8453",
       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-      "resource": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-13T15%3A44%3A39Z",
+      "resource": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-22T15%3A48%3A53Z",
       "scheme": "exact"
     }
   ],
@@ -35,7 +35,7 @@
     "catalog": "https://councilof.ai/api/x402",
     "deliverable": "the canonical batch (hashes to preview.batch_sha256) + one signed manifest card-v0 (surface receipts.batch)",
     "explainer": "https://councilof.ai/pricing",
-    "free_preview": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-13T15%3A44%3A39Z&preview=1",
+    "free_preview": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-22T15%3A48%3A53Z&preview=1",
     "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "settlement or payment receipts — none are published (/api/receipts/latest is UNPUBLISHED)",
@@ -56,14 +56,14 @@
     },
     "per": "batch",
     "preview": {
-      "batch_bytes": 542400,
-      "batch_sha256": "3a64058fb9de691a2f5186734898ae0d663cf2267ae53b0e058c708cb1ea3118",
+      "batch_bytes": 600256,
+      "batch_sha256": "61f54293e096c96760e8692bf119c23e0cdc104867b065b8da94f63d2bb75d66",
       "cap": 200,
       "count": 200,
-      "matched": 2265,
-      "next_from": "2026-09-02T07:56:40Z",
-      "roots_in_window": 30,
-      "roots_indexed_total": 30,
+      "matched": 4084,
+      "next_from": "2026-09-02T04:15:21.472Z",
+      "roots_in_window": 67,
+      "roots_indexed_total": 67,
       "sources": {
         "current_root": "https://councilof.ai/root.json",
         "leaves": "https://councilof.ai/cards-bundle.json",
@@ -72,7 +72,7 @@
       },
       "span": {
         "first_as_of": "2026-08-28T09:06:28.399Z",
-        "last_as_of": "2026-09-02T07:56:40Z"
+        "last_as_of": "2026-09-02T04:15:21.472Z"
       },
       "truncated": true,
       "what_this_is": "card-v0 measurement leaves published under signed public roots, assembled for a time window with their inclusion paths and carrying roots",
@@ -83,7 +83,7 @@
       ],
       "window": {
         "from": "2026-01-01T00:00:00Z",
-        "to": "2026-09-13T15:44:39Z"
+        "to": "2026-09-22T15:48:53Z"
       }
     },
     "rail": {
@@ -102,7 +102,7 @@
           "method": "GET",
           "queryParams": {
             "from": "2026-01-01T00:00:00Z",
-            "to": "2026-09-13T15:44:39Z"
+            "to": "2026-09-22T15:48:53Z"
           },
           "type": "http"
         },
@@ -204,7 +204,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZWNlaXB0cy9iYXRjaCIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc4OTMxNTE3OSwidmVyc2lvbiI6MX0.6yF463Z2mGZP3jfMAMkiLG3-r5GmW19hWW-E37uWPDPSZzAa0fUO5vOkvUlDB2S_BGCtDFv5jGawrjUcFWT4Cw"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZWNlaXB0cy9iYXRjaCIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc5MDA5MzAzMywidmVyc2lvbiI6MX0.eSgWISPOEYMdcLM-QjeylBhjMWA5URQcLk6l8hrG5Y2hu_HcQ-8Zqgijawq6uGA4OgkyuBSsWOp6Kl2FyCtoCw"
           }
         ]
       },
@@ -253,7 +253,7 @@
       "attestation",
       "x402"
     ],
-    "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-13T15%3A44%3A39Z"
+    "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-22T15%3A48%3A53Z"
   },
   "x402Version": 2
 }

@@ -175,6 +175,19 @@ def sku_default_usd() -> dict[tuple[str, str], float]:
     return out
 
 
+def handler_methods(path: str) -> list[str]:
+    """The verbs a door's own handler exports. Every x402 door does `onRequestPost = onRequestGet`
+    or re-exports both from a shared module, so the door answers POST with the same 402 — and this
+    document said GET only, because the door loop REPLACED the walker's path item instead of
+    merging into it. An agent reading the document concluded POST was unsupported on 21 doors."""
+    f = REPO / "functions" / "api" / (path.removeprefix("/api/") + ".ts")
+    if not f.exists():
+        return ["get"]
+    text = f.read_text()
+    verbs = {m.group(1).lower() for m in re.finditer(r"\bonRequest(Get|Post|Put|Patch|Delete)\b", text)}
+    return sorted(verbs) or ["get"]
+
+
 def handler_sku(path: str) -> tuple[str, str] | None | str:
     """(skuId, tier) the door's handler passes to x402Accepts; 'zero' for a door that pins X402_AMOUNT '0'."""
     f = REPO / "functions" / "api" / (path.removeprefix("/api/") + ".ts")
@@ -491,7 +504,14 @@ def compose(fix: Path = FIX) -> dict:
         }
         if r.get("indexed_in"):
             op["x-csoai"]["indexed_in"] = r["indexed_in"]
-        paths[path] = {method: op}
+        # One door, every verb its handler actually exports. The 402 contract is identical on
+        # each; only operationId differs, because operationIds must be unique.
+        item = {}
+        for verb in sorted({method} | set(handler_methods(path))):
+            vop = json.loads(json.dumps(op))
+            vop["operationId"] = f"x402_{did}" if verb == method else f"x402_{did}_{verb}"
+            item[verb] = vop
+        paths[path] = item
         door_paths.append(path)
 
     # 3. the document
@@ -645,6 +665,67 @@ def compose(fix: Path = FIX) -> dict:
     return spec
 
 
+# ───────────────────────────── the capability registry cross-check ─────────────────────────────
+REGISTRY = REPO / "council-os" / "capabilities.json"
+
+
+def registry_crosscheck(spec: dict) -> list[str]:
+    """council-os/capabilities.json is the ONE declaration; this document is one of its renders.
+
+    Three ways they can disagree, all the same defect in different directions:
+      · the document carries an operation no capability declares — the catalogue claims something
+        the registry does not know about, which is how a dead path survives a purge;
+      · a capability declares surface "openapi" and the document does not carry it — the catalogue
+        is missing a door the estate advertises. This is exactly how the ten /api/pop/* doors and
+        /api/wrapper/changes sat in /.well-known/x402.json and in no OpenAPI operation until
+        2026-09-22, invisible to every indexer that reads this document;
+      · a capability's lifecycle and the document's x-csoai-lifecycle marker disagree — one route,
+        two vocabularies.
+    A route the OpenAPI producer cannot reach at all is NAMED in registry.openapi_gap, never
+    counted: a new one has to be added there deliberately, and a stale exemption fails here.
+    """
+    if not REGISTRY.exists():
+        return ["council-os/capabilities.json is missing — the document has no declaration behind it"]
+    reg = json.loads(REGISTRY.read_text())
+    errs: list[str] = []
+    declared: dict[tuple[str, str], dict] = {}
+    for c in reg["capabilities"]:
+        if c.get("path"):
+            declared[(c["path"], c["method"].lower())] = c
+    gap = {(g["path"], g["method"].lower()) for g in reg.get("openapi_gap", [])}
+    verbs = {"get", "post", "put", "patch", "delete", "head", "options"}
+
+    documented: set[tuple[str, str]] = set()
+    for path, item in spec["paths"].items():
+        for method, op in item.items():
+            if method.lower() not in verbs:
+                continue
+            key = (path, method.lower())
+            documented.add(key)
+            c = declared.get(key)
+            if c is None:
+                errs.append(f"{method.upper()} {path}: documented here and declared by no capability entry")
+                continue
+            if key in gap:
+                errs.append(
+                    f"{method.upper()} {path}: named in registry.openapi_gap as unreachable by this producer, "
+                    "yet the document carries it — remove the stale exemption"
+                )
+            want, got = c["lifecycle"], op.get("x-csoai-lifecycle", "LIVE")
+            if want != got:
+                errs.append(
+                    f"{method.upper()} {path}: the registry says lifecycle {want}, the document marks it {got} "
+                    "— one route, two vocabularies"
+                )
+
+    for (path, method), c in sorted(declared.items()):
+        if "openapi" in c.get("surfaces", []) and (path, method) not in documented:
+            errs.append(
+                f"{method.upper()} {path} ({c['id']}): declared for the openapi surface and absent from the document"
+            )
+    return errs
+
+
 def render(spec: dict) -> str:
     return json.dumps(spec, indent=2, sort_keys=True) + "\n"
 
@@ -672,7 +753,24 @@ def main() -> int:
             print("✖ build_openapi selftest: a moved amount did not change the rendered bytes")
             return 1
         print("✓ build_openapi selftest: a moved 402 amount changes the rendered bytes, so --check can go red")
-        return 0
+        # and prove the registry cross-check can go red in each of its three directions
+        planted = compose()
+        planted["paths"]["/api/a-path-no-capability-declares"] = {"get": {"responses": {"200": {"description": "x"}}}}
+        e1 = registry_crosscheck(planted)
+        planted2 = compose()
+        del planted2["paths"][planted2["x-x402"]["doors"][0]]
+        e2 = registry_crosscheck(planted2)
+        planted3 = compose()
+        next(iter(planted3["paths"]["/api/gspc"].values()))["x-csoai-lifecycle"] = "RETIRED"
+        e3 = registry_crosscheck(planted3)
+        checks = (
+            (any("declared by no capability entry" in x for x in e1), "an operation no capability declares"),
+            (any("absent from the document" in x for x in e2), "a declared door missing from the document"),
+            (any("two vocabularies" in x for x in e3), "a lifecycle the registry contradicts"),
+        )
+        for ok, label in checks:
+            print(("✓ " if ok else "✖ ") + f"registry cross-check catches {label}")
+        return 0 if all(ok for ok, _ in checks) else 1
 
     if args.fetch:
         budget = Budget(args.max_requests)
@@ -685,6 +783,13 @@ def main() -> int:
     spec = compose()
     text = render(spec)
     doors = spec["x-x402"]["doors"]
+    xerrs = registry_crosscheck(spec)
+    if xerrs:
+        print(f"\u2716 openapi vs council-os/capabilities.json: {len(xerrs)} disagreement(s)")
+        for e in xerrs:
+            print("    " + e)
+        print("  fix: reconcile the declaration (node scripts/capability-seed.mjs) or the producer — never both by hand")
+        return 1
     if args.check:
         if not out.exists():
             print(f"✖ {out.relative_to(REPO)} is missing — run: python3 scripts/build_openapi.py")

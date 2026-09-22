@@ -14,7 +14,7 @@ Public lock (language only — every count lives on the API, none is frozen here
 Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO numbers and they always travel together: `totals.axes` counts SLOTS on the board, `totals.measured_axes` counts slots with a real run behind them, and `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone would claim measurements that do not exist — quote both, or quote the smaller. In-lane honesty probes are not board-quotable. Slot-15 stays unnamed and empty on public chrome if present.
 
 Lid (BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — measured ≠ scored; do not invent leaders for the withheld model axes — their count is `totals.own_leaders_excluded` + `totals.uncarded_leaders_dropped`, read live):
-23 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.
+23 axes measured · 14 model fleets · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.
 Also quote `totals.public_leader_count` beside any "23 measured" claim. Public point leaders are shown on safety (TIE), swarm (UNTESTED for separation), and jail (TIE). The 8 financial axes are fact runs, not leader scores. TIE is TIE; UNTESTED is not a win. Not a certificate.
 
 (Historical note, kept so the correction is legible: this file used to freeze the count at "14 quotable board slots" and to instruct readers not to say 22. That lock was written while the 8 financial/domain axes were ruled in but absent from the signed payload — a guardrail against typing a number the artifact could not back. The 2026-08-26 sweep wired them in and re-signed, so the API now backs the larger count. The guardrail is retired; the rule it protected — never type a count, never call a slot a measurement — is not.)
@@ -93,19 +93,53 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - Catalog: GET https://councilof.ai/api/x402
 - Manifest: GET https://councilof.ai/.well-known/x402.json (mode live, Base eip155:8453, USDC)
 - MCP: POST https://councilof.ai/mcp — tools/call without `x_payment` returns the route's 402 as structuredContent; pay, then call again with `x_payment`. Quote `paid_tools.names` from GET https://councilof.ai/mcp — do not freeze the list here.
-- HTTP doors (GET → 402 unless `X-PAYMENT` / facilitator settlement):
-  - https://councilof.ai/api/request-attestation?subject=<id>
-    - Follow a commission (free): GET https://councilof.ai/api/commissions — per subject `fulfillment` QUEUED | RETRIEVABLE | UNFULFILLABLE, `retrieval` points at the signed cards, `by_origin` separates OUTSIDE from SELF_TEST. Quote it live; a settled request is not a measurement until a signed card is retrievable.
+- HTTP doors (GET or POST -> 402 unless `X-PAYMENT` / facilitator settlement). Derived from
+  council-os/capabilities.json at generation; the same declaration renders /.well-known/x402.json
+  and every operation in /openapi.json carrying x-payment-info. Do not count this list to learn how
+  many doors there are — fetch GET https://councilof.ai/.well-known/x402.json and count `resources`.
+  - https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png · free preview: https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1
+    Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.
   - https://councilof.ai/api/eunomia-data?feed=1
-  - https://councilof.ai/api/proof?bundle=1
-  - https://councilof.ai/api/rwa/evidence?asset=<symbol>
-  - https://councilof.ai/api/receipts/batch?from=<iso>
-  - https://councilof.ai/api/art50/marking-evidence?url=<https-url>
+    Signed derivative data feed — validated measurement series, authenticated and ready to build on.
+  - https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1
+    Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.
   - https://councilof.ai/api/feeds/provider-diff?history=1
-  - https://councilof.ai/api/evidence-bundle?obligation=article-50&subject=<id>&bundle=1
-  - https://councilof.ai/api/wrapper?id=<pair>
-  - https://councilof.ai/api/wrapper/changes?id=<pair>
+    Provider change record — measurable differences between two measurement rounds for a named model provider.
+  - https://councilof.ai/api/pop/a2a · free preview: https://councilof.ai/api/pop/a2a?preview=1
+    A2A registry population slice — the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.
+  - https://councilof.ai/api/pop/claim-watch · free preview: https://councilof.ai/api/pop/claim-watch?preview=1
+    Claim-maintenance registries slice — each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.
+  - https://councilof.ai/api/pop/corrections · free preview: https://councilof.ai/api/pop/corrections?preview=1
+    Corrections ledger slice, full history — every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.
+  - https://councilof.ai/api/pop/layer0 · free preview: https://councilof.ai/api/pop/layer0?preview=1
+    Layer-0 ceremony slice — every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.
+  - https://councilof.ai/api/pop/mcp-registry · free preview: https://councilof.ai/api/pop/mcp-registry?preview=1
+    MCP registry listings slice — every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.
+  - https://councilof.ai/api/pop/ots-proofs · free preview: https://councilof.ai/api/pop/ots-proofs?preview=1
+    OpenTimestamps proof manifest slice — every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.
+  - https://councilof.ai/api/pop/stablecoins · free preview: https://councilof.ai/api/pop/stablecoins?preview=1
+    Stablecoin universe slice — every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.
+  - https://councilof.ai/api/pop/swift · free preview: https://councilof.ai/api/pop/swift?preview=1
+    SWIFT-linked bank census slice — every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.
+  - https://councilof.ai/api/pop/x402-bazaar · free preview: https://councilof.ai/api/pop/x402-bazaar?preview=1
+    x402 Bazaar listings slice — the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.
+  - https://councilof.ai/api/pop/xrpl · free preview: https://councilof.ai/api/pop/xrpl?preview=1
+    XRPL issued-asset slice — the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.
+  - https://councilof.ai/api/proof?bundle=1
+    Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.
+  - https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z · free preview: https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1
+    Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.
+  - https://councilof.ai/api/request-attestation?subject=model-or-subject-id
+    A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions["offer-receipt"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.
+  - https://councilof.ai/api/rwa/evidence?asset=RLUSD · free preview: https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1
+    RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.
+  - https://councilof.ai/api/wrapper?id=usdc.e:arbitrum · free preview: https://councilof.ai/api/wrapper?id=<wrapped-symbol:chain>&preview=1
+    Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.
+  - https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum · free preview: https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum&preview=1
+    Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.
+  - https://councilof.ai/api/free-door — a live 402 route priced at zero: it settles, and charges nothing.
 - Free preview: omit `bundle=1` or add `preview=1` as the 402 body documents. Verify stays free: https://councilof.ai/gspc-verify
+- Follow a commission (free): GET https://councilof.ai/api/commissions — per subject `fulfillment` QUEUED | RETRIEVABLE | UNFULFILLABLE, `retrieval` points at the signed cards, `by_origin` separates OUTSIDE from SELF_TEST. Quote it live; a settled request is not a measurement until a signed card is retrievable.
 
 ## Overlay notes (ARC-AGI is an overlay, not an axis)
 
@@ -175,7 +209,7 @@ Printers of the live board. Reach is distribution. Authority stays GET /api/gspc
 - Zenodo DOI (from live GET /api/gspc `doi`): https://doi.org/10.5281/zenodo.21991104
 - Where we take part (standards bodies, registries, scholarly ids, regulator filings — each row with its evidence URL, date, what it proves and what it does not): https://councilof.ai/memberships · machine-readable: https://councilof.ai/interop/memberships.json. Participation is not endorsement, and a listing is not adoption. Do not count the rows; read them.
 
-Lid (quote live `totals.lid`): 23 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.
+Lid (quote live `totals.lid`): 23 axes measured · 14 model fleets · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.
 
 ## Card corpora (THREE, and they share no members)
 
@@ -208,7 +242,7 @@ Apex https://csoai.org/mcp may still require Infra secrets; prefer councilof.ai/
 
 ## AEO
 
-Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify — live numbers: GET https://councilof.ai/api/gspc (`totals.public_count` + `totals.public_leader_count` + `totals.lid`) — the board's size is not frozen in this file; quote 23 measured beside 3 public leader scores. Lid: 23 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate. This is measurement, not certification. A grade is never sold.
+Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify — live numbers: GET https://councilof.ai/api/gspc (`totals.public_count` + `totals.public_leader_count` + `totals.lid`) — the board's size is not frozen in this file; quote 23 measured beside 3 public leader scores. Lid: 23 axes measured · 14 model fleets · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate. This is measurement, not certification. A grade is never sold.
 
 ## What we do not do
 

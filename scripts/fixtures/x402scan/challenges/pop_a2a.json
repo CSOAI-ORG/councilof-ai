@@ -1,0 +1,301 @@
+{
+  "accepts": [
+    {
+      "amount": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "csoai_pricing": {
+        "campaign_id": "csoai-launch-30d-20260911",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true,
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "10000",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "product_id": "csoai.product.population.a2a",
+        "sku_id": "issuance",
+        "starts_at": "2026-09-11T00:00:00Z",
+        "tier": "reserve"
+      },
+      "description": "Population door: A2A agent registry population — 391 distinct agents in the a2aregistry-org frame (one frame; not a global count), as of 2026-09-17T05:48:05Z, state INDEXED. the agents enumerable without a credential from the public A2A registry frame, counted within that frame, with the estate's own A2A directory-listing state reported beside it. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "10000",
+      "maxTimeoutSeconds": 300,
+      "mimeType": "application/json",
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resource": "https://councilof.ai/api/pop/a2a",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "all_doors": [
+      "https://councilof.ai/api/pop/stablecoins",
+      "https://councilof.ai/api/pop/swift",
+      "https://councilof.ai/api/pop/xrpl",
+      "https://councilof.ai/api/pop/x402-bazaar",
+      "https://councilof.ai/api/pop/mcp-registry",
+      "https://councilof.ai/api/pop/a2a",
+      "https://councilof.ai/api/pop/ots-proofs",
+      "https://councilof.ai/api/pop/layer0",
+      "https://councilof.ai/api/pop/corrections",
+      "https://councilof.ai/api/pop/claim-watch"
+    ],
+    "catalog": "https://councilof.ai/api/x402",
+    "deliverable": "the A2A agent registry population slice: the population rows verbatim from the artifact(s) in source[], plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record",
+    "free_preview": "https://councilof.ai/api/pop/a2a?preview=1",
+    "free_sources": [
+      "/interop/agent-population-2026-09-17.json",
+      "/interop/a2a-directories.json"
+    ],
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "a grade",
+      "a rank",
+      "a verdict about any row",
+      "a paywall on the source artifact",
+      "a certificate"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "offer_receipt": {
+      "alg": "EdDSA",
+      "extension": "offer-receipt",
+      "format": "jws",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "reason": "1 of 1 accepts entries signed",
+      "signed": true,
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+    },
+    "per": "population-slice",
+    "population": "a2a",
+    "preview": {
+      "as_of": "2026-09-17T05:48:05Z",
+      "head": {
+        "frame": {
+          "credential_required": false,
+          "distinct_keys": 391,
+          "duplicates_in_source": 0,
+          "items_returned": 391,
+          "note": "Returns 403 to a request with no User-Agent. Permissionless only if you send one.",
+          "pages_walked": 4,
+          "seconds": 2.7,
+          "source": "a2aregistry-org",
+          "state": "ENUMERATED_COMPLETE"
+        },
+        "identification": "an agent is counted because the registry returned it on an unauthenticated full walk; nothing is measured about the agent",
+        "on_the_figure_750000": "A figure of 750,000 A2A agents was circulating when this was built. We searched for a published source and found none: no crawl, no method, no denominator. The largest independently measured A2A population we could find is in the hundreds, and this census counts the same order. We record the discrepancy rather than repeating the figure.",
+        "our_listing_state": {
+          "as_of": "20260905T185400Z",
+          "directories": 3,
+          "path": "/interop/a2a-directories.json",
+          "totals": {
+            "agents_on_1_x": 93,
+            "agents_scanned": 370,
+            "directories_probed": 3,
+            "healthy": 363,
+            "index_declared_total": 370,
+            "listed": 1,
+            "note": "Counts are DERIVED by paginating to the index's OWN declared total (the `total` field it returns beside `limit` and `offset`), not by reading one page. They are not typed.",
+            "ours_in_index": 1,
+            "page_size": 50,
+            "pages_fetched": 8,
+            "protocol_versions": {
+              "0.2.0": 2,
+              "0.2.5": 2,
+              "0.3": 17,
+              "0.3.0": 227,
+              "1.0": 83,
+              "1.0.0": 8,
+              "1.0.1": 1,
+              "1.2": 1,
+              "2.0": 1,
+              "2025-06-27": 1,
+              "9.3.5": 1,
+              "unknown": 26
+            },
+            "real_directories": 1
+          }
+        },
+        "totals": {
+          "a2aregistry-org": 391,
+          "mcp-official-registry": 32670,
+          "x402-cdp-bazaar": 15742,
+          "x402-payai-bazaar": 25491
+        },
+        "what_this_is_not": [
+          "Not a global count of anything. Each row is a count WITHIN a named frame, and the frame is the source.",
+          "Not a measurement of those agents. Appearing in a registry says nothing about whether the agent works.",
+          "Not a total. Sources overlap, and the overlap is published rather than assumed to be zero."
+        ]
+      },
+      "n": 391,
+      "n_unit": "distinct agents in the a2aregistry-org frame (one frame; not a global count)",
+      "reason": null,
+      "source": [
+        "/interop/agent-population-2026-09-17.json",
+        "/interop/a2a-directories.json"
+      ],
+      "state": "INDEXED",
+      "unmeasured": [
+        "per-agent rows: the census artifact publishes frame counts, page hashes and overlap, not a row per agent"
+      ]
+    },
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.population-door/0.1"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "as_of": "2026-09-17T05:48:05Z",
+            "attestation": {
+              "payload": {
+                "kind": "csoai.population.slice/0.1",
+                "rows_sha256": "<hex>"
+              },
+              "schema": "https://councilof.ai/schema/card-v0.json",
+              "sha256": "<hex>",
+              "sig_ed25519": "<hex or null>",
+              "surface": "population.slice"
+            },
+            "id": "a2a",
+            "kind": "slice",
+            "n": 391,
+            "n_unit": "distinct agents in the a2aregistry-org frame (one frame; not a global count)",
+            "rows": "<the population rows / artifact bytes, verbatim>",
+            "schema": "csoai.population-door/0.1",
+            "settle": {
+              "network": "<caip2 or null>",
+              "payer": "<0x… or null>",
+              "transaction": "<0x… or null>"
+            },
+            "source": [
+              "/interop/agent-population-2026-09-17.json",
+              "/interop/a2a-directories.json"
+            ],
+            "state": "INDEXED"
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "acceptIndex": 0,
+            "format": "jws",
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvYTJhIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwMDkzMDM0LCJ2ZXJzaW9uIjoxfQ.D7HH47wbGrVj_E8wdm9j1sbRI3VudbB3hSmlanxtfbh1iMbq7iGFUpn4EnxFAgaTBPv9OqiZZvlFPayJPCtHAw"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "offers": {
+            "items": {
+              "properties": {
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "format": {
+                  "const": "jws",
+                  "type": "string"
+                },
+                "signature": {
+                  "description": "JWS compact serialization containing the offer payload",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "offers"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Population door: A2A agent registry population — 391 distinct agents in the a2aregistry-org frame (one frame; not a global count), as of 2026-09-17T05:48:05Z, state INDEXED. the agents enumerable without a credential from the public A2A registry frame, counted within that frame, with the estate's own A2A directory-listing state reported beside it. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Population Door",
+    "tags": [
+      "population",
+      "a2a",
+      "agents",
+      "census",
+      "x402"
+    ],
+    "url": "https://councilof.ai/api/pop/a2a"
+  },
+  "x402Version": 2
+}
