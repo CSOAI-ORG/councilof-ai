@@ -160,7 +160,23 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     const description =
       "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one obligation. Not a conformity determination.";
     const accepts = x402Accepts(env, resourceUrl, { skuId: "evidence_bundle", tier: "bundle", description });
-    const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+    // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+    // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+    // Behavior) — that echo is what gets a resource catalogued.
+    const bazaar = declareBazaarHttpGet({
+      method: "GET",
+      queryParams: { obligation: "article-50", bundle: "1" },
+      queryParamsSchema: {
+        properties: {
+          obligation: { type: "string", enum: Object.keys(OBLIGATIONS) },
+          subject: { type: "string" },
+          bundle: { type: "string", const: "1" },
+        },
+        required: ["obligation", "bundle"],
+      },
+      outputExample: { schema: "csoai.evidence-bundle/0.1", kind: "bundle" },
+    });
+    const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
     if (!payment.ok) {
       return paymentRequiredResponseSigned(
         buildPaymentRequiredV2({
@@ -169,19 +185,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
           serviceName: "CSOAI Evidence Bundle",
           tags: ["evidence", "oscal", "eu-ai-act", "dora", "cra"],
           accepts,
-          bazaar: declareBazaarHttpGet({
-            method: "GET",
-            queryParams: { obligation: "article-50", bundle: "1" },
-            queryParamsSchema: {
-              properties: {
-                obligation: { type: "string", enum: Object.keys(OBLIGATIONS) },
-                subject: { type: "string" },
-                bundle: { type: "string", const: "1" },
-              },
-              required: ["obligation", "bundle"],
-            },
-            outputExample: { schema: "csoai.evidence-bundle/0.1", kind: "bundle" },
-          }),
+          bazaar,
           csoai: { ...listing, lid: CSOAI_LID },
         }),
         env,
@@ -273,7 +277,23 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const description =
     `An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to ${ob.control_id}. Not a conformity determination.`;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "evidence_bundle", tier: "bundle", description });
-  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { obligation: ob.id, bundle: "1", ...(subject ? { subject } : {}) },
+    queryParamsSchema: {
+      properties: {
+        obligation: { type: "string", enum: Object.keys(OBLIGATIONS) },
+        subject: { type: "string", description: "Subject the cards must name (model id / instrument / vendor)" },
+        bundle: { type: "string", const: "1" },
+      },
+      required: ["obligation", "bundle"],
+    },
+    outputExample: { schema: "csoai.evidence-bundle/0.1", kind: "bundle", oscal: { "assessment-results": {} }, cards: {}, manifest_card: { surface: "evidence.bundle" } },
+  });
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
 
   if (!payment.ok) {
     const paymentRequired = buildPaymentRequiredV2({
@@ -282,19 +302,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       serviceName: "CSOAI Evidence Bundle",
       tags: ["evidence", "oscal", "eu-ai-act", "dora", "cra"],
       accepts,
-      bazaar: declareBazaarHttpGet({
-        method: "GET",
-        queryParams: { obligation: ob.id, bundle: "1", ...(subject ? { subject } : {}) },
-        queryParamsSchema: {
-          properties: {
-            obligation: { type: "string", enum: Object.keys(OBLIGATIONS) },
-            subject: { type: "string", description: "Subject the cards must name (model id / instrument / vendor)" },
-            bundle: { type: "string", const: "1" },
-          },
-          required: ["obligation", "bundle"],
-        },
-        outputExample: { schema: "csoai.evidence-bundle/0.1", kind: "bundle", oscal: { "assessment-results": {} }, cards: {}, manifest_card: { surface: "evidence.bundle" } },
-      }),
+      bazaar,
       csoai: { schema: "csoai.evidence-bundle/0.1", per: "bundle", lid: CSOAI_LID, never: ["conformity determination", "certificate", "score", "rank"], preview,
         free_preview: `${origin}/api/evidence-bundle?obligation=${encodeURIComponent(ob.id)}`,
         deliverable: "one pack for this subject and obligation: the bench JSON, its detached Ed25519 signature, and the OSCAL assessment-results wrapper — assembled from already-signed cards, never a conformity determination",

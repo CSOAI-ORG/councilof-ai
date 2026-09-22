@@ -318,7 +318,16 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   const description = `A signed XRPL evidence card for ${asset || "<asset>"}: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.`;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
-  const payment = preview ? { ok: false as const, reason: "preview" } : await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { asset: asset || "RLUSD" },
+    queryParamsSchema: { properties: { asset: { type: "string", description: "XRPL issued-asset symbol (see /api/xrpl) or issuer r-address" } }, required: ["asset"] },
+    outputExample: { schema: SCHEMA, surface: "public.notice", subject: "XRPL <SYMBOL> (<issuer>) two-way domain <PASS|FAIL|UNCHECKABLE> + on-chain obligation", payload: { kind: KIND, state: "PROBED", account_root: { flags_decoded: {} }, onchain_obligation: {}, inputs_sha256: "<hex>" }, sha256: "<hex>", sig_ed25519: "<hex or null>", unmeasured: [] },
+  });
+  const payment = preview ? { ok: false as const, reason: "preview" } : await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
 
   if (!preview && !payment.ok) {
     return paymentRequiredResponseSigned(
@@ -328,12 +337,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         serviceName: "CSOAI RWA Evidence",
         tags: ["rwa", "xrpl", "evidence", "attestation", "x402"],
         accepts,
-        bazaar: declareBazaarHttpGet({
-          method: "GET",
-          queryParams: { asset: asset || "RLUSD" },
-          queryParamsSchema: { properties: { asset: { type: "string", description: "XRPL issued-asset symbol (see /api/xrpl) or issuer r-address" } }, required: ["asset"] },
-          outputExample: { schema: SCHEMA, surface: "public.notice", subject: "XRPL <SYMBOL> (<issuer>) two-way domain <PASS|FAIL|UNCHECKABLE> + on-chain obligation", payload: { kind: KIND, state: "PROBED", account_root: { flags_decoded: {} }, onchain_obligation: {}, inputs_sha256: "<hex>" }, sha256: "<hex>", sig_ed25519: "<hex or null>", unmeasured: [] },
-        }),
+        bazaar,
         csoai: {
           schema: "csoai.rwa-evidence/0.1",
           per: "asset-request",

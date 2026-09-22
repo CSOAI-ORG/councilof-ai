@@ -57,49 +57,53 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     description: DESCRIPTION,
   });
 
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = {
+    info: {
+      // NO queryParams. The facilitator validates info.input against the schema below, which
+      // sets additionalProperties:false on {type, method}. Sending queryParams therefore failed
+      // its own declaration — probed 2026-09-05, the EXTENSION-RESPONSES sidechannel answered
+      // {"bazaar":{"status":"rejected","rejectedReason":"Bazaar extension validation failed:
+      // /input: must NOT have additional properties"}}. This door takes no parameters, so the
+      // honest fix is to stop declaring one rather than widen the schema to admit an empty object.
+      input: { type: "http", method: "GET" },
+      output: {
+        type: "json",
+        example: {
+          schema: "csoai.free-door/0.1",
+          price_usdc: 0,
+          board: "https://councilof.ai/api/gspc",
+          root: "https://councilof.ai/root.json",
+          verify: "https://councilof.ai/gspc-verify",
+        },
+      },
+    },
+    schema: {
+      $schema: "https://json-schema.org/draft/2020-12/schema",
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          properties: {
+            type: { type: "string", const: "http" },
+            method: { type: "string", enum: ["GET"] },
+          },
+          required: ["type", "method"],
+          additionalProperties: false,
+        },
+        output: { type: "object", properties: { type: { type: "string" } }, required: ["type"] },
+      },
+      required: ["input"],
+    },
+  };
   const body = buildPaymentRequiredV2({
     resourceUrl,
     description: DESCRIPTION,
     serviceName: "CSOAI Free Door",
     accepts,
-    bazaar: {
-      info: {
-        // NO queryParams. The facilitator validates info.input against the schema below, which
-        // sets additionalProperties:false on {type, method}. Sending queryParams therefore failed
-        // its own declaration — probed 2026-09-05, the EXTENSION-RESPONSES sidechannel answered
-        // {"bazaar":{"status":"rejected","rejectedReason":"Bazaar extension validation failed:
-        // /input: must NOT have additional properties"}}. This door takes no parameters, so the
-        // honest fix is to stop declaring one rather than widen the schema to admit an empty object.
-        input: { type: "http", method: "GET" },
-        output: {
-          type: "json",
-          example: {
-            schema: "csoai.free-door/0.1",
-            price_usdc: 0,
-            board: "https://councilof.ai/api/gspc",
-            root: "https://councilof.ai/root.json",
-            verify: "https://councilof.ai/gspc-verify",
-          },
-        },
-      },
-      schema: {
-        $schema: "https://json-schema.org/draft/2020-12/schema",
-        type: "object",
-        properties: {
-          input: {
-            type: "object",
-            properties: {
-              type: { type: "string", const: "http" },
-              method: { type: "string", enum: ["GET"] },
-            },
-            required: ["type", "method"],
-            additionalProperties: false,
-          },
-          output: { type: "object", properties: { type: { type: "string" } }, required: ["type"] },
-        },
-        required: ["input"],
-      },
-    },
+    bazaar,
   });
 
   // FULFILMENT. Until 2026-09-05 this handler returned 402 unconditionally and had no payment
@@ -117,6 +121,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // door can never fulfil, however correctly the caller pays.
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], {
     allowZeroAmount: true,
+    bazaar,
   });
   if (payment.ok) {
     const links = {

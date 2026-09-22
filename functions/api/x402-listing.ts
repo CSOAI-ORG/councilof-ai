@@ -63,6 +63,48 @@ export function routeKey(url: string): string {
   }
 }
 
+/**
+ * sameResource — two spellings of one resource url. `…/wrapper?id=usdc.e:arbitrum` and
+ * `…/wrapper?id=usdc.e%3Aarbitrum` are the same door (encodeURIComponent writes the second, the
+ * manifest the first); the query is compared decoded, entry by entry, order-insensitively.
+ */
+export function sameResource(a: string, b: string): boolean {
+  if (a === b) return true;
+  try {
+    const ua = new URL(a);
+    const ub = new URL(b);
+    if (routeKey(a) !== routeKey(b)) return false;
+    const qa = [...ua.searchParams.entries()].map(([k, v]) => `${k}=${v}`).sort();
+    const qb = [...ub.searchParams.entries()].map(([k, v]) => `${k}=${v}`).sort();
+    return qa.length === qb.length && qa.every((e, i) => e === qb[i]);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * matchesDoor — does an index row describe this door? A door is its FULL url. The index has so
+ * far written our rows keyed by the bare path (the settle envelope stripped the query until
+ * 2026-09-22); once it receives the full url it may write that instead, or as well. Both are the
+ * same door, so a row matches on the exact resource OR on the route key — and a caller choosing
+ * among several rows should prefer the exact one (see `rowForDoor`).
+ */
+export function matchesDoor(row: { resource: string; route_key?: string }, doorUrl: string): boolean {
+  if (!row || typeof row.resource !== "string" || !row.resource) return false;
+  if (sameResource(row.resource, doorUrl)) return true;
+  return (row.route_key || routeKey(row.resource)) === routeKey(doorUrl);
+}
+
+/** The row for a door: the exact-resource row when the index holds one, else the route-key row. */
+export function rowForDoor<T extends { resource: string; route_key?: string }>(rows: T[], doorUrl: string): T | null {
+  const list = Array.isArray(rows) ? rows : [];
+  return (
+    list.find((r) => r && typeof r.resource === "string" && sameResource(r.resource, doorUrl)) ||
+    list.find((r) => matchesDoor(r, doorUrl)) ||
+    null
+  );
+}
+
 function resourceUrl(value: unknown): string {
   if (typeof value === "string") return value;
   if (value && typeof value === "object") {

@@ -77,7 +77,16 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   const description = "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.";
   const accepts = x402Accepts(env, resourceUrl, { skuId: "issuance", tier: "reserve", description });
-  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { feed: "1" },
+    queryParamsSchema: { properties: { feed: { type: "string", const: "1" } }, required: ["feed"] },
+    outputExample: { schema: "csoai.eunomia-data/0.2", kind: "feed", blocks: { signals: {}, first_fine_watch: {}, root: {}, card_index: {} } },
+  });
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
 
   if (!payment.ok) {
     const paymentRequired = buildPaymentRequiredV2({
@@ -86,12 +95,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       serviceName: "CSOAI Data Feed",
       tags: ["data", "feed", "enforcement", "signed", "x402"],
       accepts,
-      bazaar: declareBazaarHttpGet({
-        method: "GET",
-        queryParams: { feed: "1" },
-        queryParamsSchema: { properties: { feed: { type: "string", const: "1" } }, required: ["feed"] },
-        outputExample: { schema: "csoai.eunomia-data/0.2", kind: "feed", blocks: { signals: {}, first_fine_watch: {}, root: {}, card_index: {} } },
-      }),
+      bazaar,
       csoai: { schema: "csoai.eunomia-data/0.2", per: "feed-pull", lid: CSOAI_LID, ...preview,
         // named in the challenge so a buyer knows where to look for free and what settling buys
         free_preview: `${origin}/api/eunomia-data`,

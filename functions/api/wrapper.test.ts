@@ -12,11 +12,12 @@ const ctx = (path: string, env: Record<string, unknown> = {}, headers: Record<st
 const hex = (n: bigint) => "0x" + n.toString(16).padStart(64, "0");
 
 /** A fake chain: finalized block per host, decimals 6 (18 for DAI), fixed supplies and escrow balances. */
-function stubChain(opts: { down?: string; rpcError?: { host: string; message: string }; facilitatorCalls?: string[] } = {}) {
+function stubChain(opts: { down?: string; rpcError?: { host: string; message: string }; facilitatorCalls?: string[]; facilitatorBodies?: { path: string; body: any }[] } = {}) {
   vi.stubGlobal("fetch", async (u: string | URL | Request, init?: RequestInit) => {
     const url = new URL(String(u instanceof Request ? u.url : u));
     if (url.host === "f.example") {
       opts.facilitatorCalls?.push(url.pathname);
+      if (init?.body) opts.facilitatorBodies?.push({ path: url.pathname, body: JSON.parse(String(init.body)) });
       if (url.pathname.endsWith("/supported")) return new Response("nope", { status: 404 });
       if (url.pathname.endsWith("/settle")) return new Response(JSON.stringify({ success: true, transaction: "0xtx", network: "base", payer: "0xp" }));
       return new Response(JSON.stringify({ isValid: true }));
@@ -166,6 +167,28 @@ describe("/api/wrapper — reads the chain before it settles", () => {
     expect(String(b.csoai.not_paid_reason)).toMatch(/UNMEASURED/);
     expect(facilitatorCalls.filter((p) => p.endsWith("/settle"))).toEqual([]);
     expect(facilitatorCalls.filter((p) => p.endsWith("/verify"))).toEqual([]);
+  });
+
+  it("the bazaar block the 402 advertises is byte-for-byte the block the settle envelope echoes, under the door's full url", async () => {
+    // specs/extensions/bazaar.md, Client Behavior: the `bazaar` extension from PaymentRequired is
+    // echoed into PaymentPayload, and the facilitator catalogues off that. One object, used twice.
+    const facilitatorBodies: { path: string; body: any }[] = [];
+    stubChain({ facilitatorBodies });
+    const unpaid = await wrapper(ctx("/api/wrapper?id=usdc.e:arbitrum", { X402_FACILITATOR_URL: "https://f.example" }));
+    expect(unpaid.status).toBe(402);
+    const advertised = (await unpaid.json()).extensions.bazaar;
+    expect(advertised.info.input.queryParams).toEqual({ id: "usdc.e:arbitrum" });
+
+    const paid = await wrapper(paidCtx());
+    expect(paid.status).toBe(200);
+    const settle = facilitatorBodies.find((b) => b.path.endsWith("/settle"));
+    const verify = facilitatorBodies.find((b) => b.path.endsWith("/verify"));
+    expect(settle && verify).toBeTruthy();
+    for (const sent of [verify!, settle!]) {
+      expect(JSON.stringify(sent.body.paymentPayload.extensions.bazaar)).toBe(JSON.stringify(advertised));
+      // the full resource, query included — the bare path is a different resource
+      expect(sent.body.paymentPayload.resource.url).toBe(`${ORIGIN}/api/wrapper?id=usdc.e%3Aarbitrum`);
+    }
   });
 
   it("control: a successful read verifies, settles once, and delivers the card with the payment response", async () => {

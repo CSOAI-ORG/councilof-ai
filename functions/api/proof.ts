@@ -41,8 +41,33 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
   const accepts = bundle
     ? x402Accepts(env as X402Env, resourceUrl, { skuId: "issuance", tier: "reserve", description })
     : [];
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { bundle: "1" },
+    queryParamsSchema: {
+      properties: {
+        bundle: {
+          type: "string",
+          const: "1",
+          description: "Must be 1 to request the paid proof bundle",
+        },
+      },
+      required: ["bundle"],
+    },
+    outputExample: {
+      schema: "csoai.public-root-proof/0.1",
+      kind: "bundle",
+      merkle_root: "<hex>",
+      n: 0,
+      proofs: [],
+      note: "Paid bundle of inclusion proofs. Not a grade.",
+    },
+  });
   const payment = bundle
-    ? await verifyX402Payment(request, env as X402Env, resourceUrl, accepts[0])
+    ? await verifyX402Payment(request, env as X402Env, resourceUrl, accepts[0], { bazaar })
     : { ok: false, reason: "not a bundle request" };
   const paid = payment.ok;
 
@@ -56,28 +81,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
         serviceName: "CSOAI Proof Bundle",
         tags: ["proof", "merkle", "measurement", "attestation"],
         accepts,
-        bazaar: declareBazaarHttpGet({
-          method: "GET",
-          queryParams: { bundle: "1" },
-          queryParamsSchema: {
-            properties: {
-              bundle: {
-                type: "string",
-                const: "1",
-                description: "Must be 1 to request the paid proof bundle",
-              },
-            },
-            required: ["bundle"],
-          },
-          outputExample: {
-            schema: "csoai.public-root-proof/0.1",
-            kind: "bundle",
-            merkle_root: "<hex>",
-            n: 0,
-            proofs: [],
-            note: "Paid bundle of inclusion proofs. Not a grade.",
-          },
-        }),
+        bazaar,
         csoai: {
           schema: "csoai.public-root-proof/0.1",
           per: "proof-bundle",

@@ -121,7 +121,16 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   // x402 setup
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
-  const payment = preview ? { ok: false as const, reason: "preview" } : await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { id },
+    queryParamsSchema: { properties: { id: { type: "string", description: "pair id (e.g. usdc.e:arbitrum)" } }, required: ["id"] },
+    outputExample: { schema: "csoai.wrapper.changes/0.1", id, wrapped_supply_delta: "<decimal>", escrow_delta: "<decimal>", state: "DELTA_READ" },
+  });
+  const payment = preview ? { ok: false as const, reason: "preview" } : await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
 
   if (!preview && !payment.ok) {
     return paymentRequiredResponseSigned(
@@ -131,12 +140,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         serviceName: "CSOAI Wrapped-Asset Changes",
         tags: ["stablecoin", "bridge", "wrapped", "changes", "delta", "x402"],
         accepts,
-        bazaar: declareBazaarHttpGet({
-          method: "GET",
-          queryParams: { id },
-          queryParamsSchema: { properties: { id: { type: "string", description: "pair id (e.g. usdc.e:arbitrum)" } }, required: ["id"] },
-          outputExample: { schema: "csoai.wrapper.changes/0.1", id, wrapped_supply_delta: "<decimal>", escrow_delta: "<decimal>", state: "DELTA_READ" },
-        }),
+        bazaar,
         csoai: {
           schema: "csoai.wrapper.changes/0.1",
           per: "pair-request",

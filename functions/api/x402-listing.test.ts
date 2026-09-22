@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { isOurs, onRequestGet, readListing, routeKey, rowFrom } from "./x402-listing";
+import { isOurs, matchesDoor, onRequestGet, readListing, routeKey, rowForDoor, rowFrom, sameResource } from "./x402-listing";
 
 /**
  * The index reader, fed pages by hand. What it must never do: report a short read as absence,
@@ -92,6 +92,27 @@ describe("/api/x402-listing reads the PayAI index for our doors", () => {
     expect(isOurs({ resource: "https://councilof.ai.evil.test/api/free-door" })).toBe(false);
     expect(routeKey("https://councilof.ai/api/proof/?bundle=1")).toBe("https://councilof.ai/api/proof");
     expect(rowFrom({ resource: "https://councilof.ai/api/x" })).toMatchObject({ last_updated: null, amount: null, max_timeout_seconds: null });
+  });
+
+  it("a row matches a door on its exact resource (either query spelling) or on its route key, and the exact row wins", () => {
+    // The settle envelope stripped the query until 2026-09-22, so the index wrote our rows by
+    // bare path. Now that it receives the full url it may write that instead, or as well.
+    const door = "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum";
+    const bare = { resource: "https://councilof.ai/api/wrapper", route_key: "https://councilof.ai/api/wrapper" };
+    const full = { resource: "https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum", route_key: "https://councilof.ai/api/wrapper" };
+    const otherId = { resource: "https://councilof.ai/api/wrapper?id=dai:optimism" };
+    expect(sameResource(full.resource, door)).toBe(true);
+    expect(sameResource(otherId.resource, door)).toBe(false);
+    expect(sameResource("not a url", door)).toBe(false);
+    expect(matchesDoor(bare, door)).toBe(true);
+    expect(matchesDoor(full, door)).toBe(true);
+    expect(matchesDoor(otherId, door)).toBe(true); // same route: the index's bare-path convention
+    expect(matchesDoor({ resource: "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum" }, door)).toBe(false);
+    expect(matchesDoor({ resource: "" }, door)).toBe(false);
+    expect(rowForDoor([bare, full], door)).toBe(full);
+    expect(rowForDoor([otherId, full], door)).toBe(full);
+    expect(rowForDoor([bare], door)).toBe(bare);
+    expect(rowForDoor([], door)).toBeNull();
   });
 
   it("serves JSON with a short public cache only when the read was complete", async () => {

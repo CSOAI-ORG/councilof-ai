@@ -136,7 +136,29 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   const description = REQUEST_ATTESTATION_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
-  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { subject: subject || "model-or-subject-id", ...(axis ? { axis } : {}) },
+    queryParamsSchema: {
+      properties: {
+        subject: { type: "string", description: "Subject to commission (model id, instrument id, or card sha)" },
+        axis: { type: "string", description: "Optional axis slug; omit for the subject-level commission" },
+      },
+      required: ["subject"],
+    },
+    outputExample: {
+      schema: "https://councilof.ai/schema/card-v0.json",
+      surface: "ras.commission",
+      subject: "model-or-subject-id",
+      payload: { status: "COMMISSIONED", reserve: [], fresh_run: "UNMEASURED" },
+      sig_ed25519: "<hex or null>",
+      unmeasured: ["root_inclusion"],
+    },
+  });
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
 
   // The free preview is the same whether or not the caller pays: what already exists.
   const reserve = subject ? await reserveFor(origin, subject, axis) : { cells: [], as_of: null, source: "no subject given" };
@@ -160,25 +182,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       serviceName: "CSOAI Request Attest",
       tags: ["attestation", "ras", "measurement", "x402"],
       accepts,
-      bazaar: declareBazaarHttpGet({
-        method: "GET",
-        queryParams: { subject: subject || "model-or-subject-id", ...(axis ? { axis } : {}) },
-        queryParamsSchema: {
-          properties: {
-            subject: { type: "string", description: "Subject to commission (model id, instrument id, or card sha)" },
-            axis: { type: "string", description: "Optional axis slug; omit for the subject-level commission" },
-          },
-          required: ["subject"],
-        },
-        outputExample: {
-          schema: "https://councilof.ai/schema/card-v0.json",
-          surface: "ras.commission",
-          subject: "model-or-subject-id",
-          payload: { status: "COMMISSIONED", reserve: [], fresh_run: "UNMEASURED" },
-          sig_ed25519: "<hex or null>",
-          unmeasured: ["root_inclusion"],
-        },
-      }),
+      bazaar,
       csoai: {
         schema: "csoai.request-attestation/0.2",
         per: "request",
