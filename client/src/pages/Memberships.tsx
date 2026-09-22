@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import FaqBlock from "@/components/FaqBlock";
 import MembershipStrip, { HONESTY_LINE, KIND_LABEL, MEMBERSHIPS, evidenceHref, groupedRows } from "@/components/MembershipStrip";
+import MembershipUpdates from "@/components/MembershipUpdates";
 
 /**
  * /memberships — every body Council of AI takes part in, with the evidence and the two columns
@@ -18,10 +19,32 @@ import MembershipStrip, { HONESTY_LINE, KIND_LABEL, MEMBERSHIPS, evidenceHref, g
 
 const CANONICAL = "https://councilof.ai/memberships";
 
+/**
+ * A body a reader might expect to find in the table, and does not. Three shapes: we hold
+ * something weaker than the word would suggest, we are not eligible, or there is no membership
+ * to hold. The manifest carries the reason; this page prints it, so absence is an answer rather
+ * than a gap.
+ */
+export interface ExcludedEntry {
+  org: string;
+  why: string;
+  reason?: string;
+  evidence?: string;
+}
+
+const EXCLUDED_REASON_LABEL: Record<string, string> = {
+  not_eligible: "not eligible",
+  not_open: "not open to us",
+  not_applicable: "no membership exists",
+  in_flight: "application in flight",
+  no_record: "no record",
+};
+
 export default function Memberships() {
   const m = MEMBERSHIPS;
   const groups = groupedRows(m);
   const faq = m.rows.filter((r) => r.question && r.answer).map((r) => ({ q: r.question as string, a: r.answer as string }));
+  const excluded = (m.excluded ?? []) as ExcludedEntry[];
 
   useEffect(() => {
     document.title = "Where Council of AI takes part, and what each listing does not mean";
@@ -74,7 +97,7 @@ export default function Memberships() {
           Every entry, with what it proves and what it does not
         </h2>
         {groups.map((g) => (
-          <div key={g.id} className="mt-8">
+          <div key={g.id} id={g.id} className="mt-8 scroll-mt-24">
             <h3 className="text-lg font-bold text-slate-900">{g.label}</h3>
             <div className="mt-3 overflow-x-auto rounded-2xl border border-slate-200 bg-white">
               <table className="w-full min-w-[56rem] border-collapse text-left text-sm">
@@ -132,6 +155,37 @@ export default function Memberships() {
         </p>
       </section>
 
+      {excluded.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16" aria-labelledby="memberships-excluded-h" data-testid="memberships-excluded">
+          <h2 id="memberships-excluded-h" className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
+            Named, and not listed
+          </h2>
+          {m.excluded_note && <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-700">{m.excluded_note}</p>}
+          <ul className="mt-6 list-none space-y-3 p-0">
+            {excluded.map((x) => (
+              <li key={x.org} className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <h3 className="text-base font-bold text-slate-900">{x.org}</h3>
+                  {x.reason && (
+                    <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-slate-700">
+                      {EXCLUDED_REASON_LABEL[x.reason] ?? x.reason}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-700">{x.why}</p>
+                {x.evidence && (
+                  <p className="mt-2 text-xs">
+                    <a href={x.evidence} rel="noopener noreferrer" className="break-all text-emerald-800 underline underline-offset-4">{x.evidence}</a>
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <MembershipUpdates />
+
       {faq.length > 0 && (
         <FaqBlock
           title="What each entry does and does not mean"
@@ -145,7 +199,8 @@ export default function Memberships() {
         <h2 id="memberships-method-h" className="text-xl font-bold text-slate-900">How this page is kept honest</h2>
         <ul className="mt-3 max-w-3xl list-disc space-y-2 pl-6 text-sm text-slate-700">
           <li>One committed manifest, <a className="underline underline-offset-4" href="/interop/memberships.json">/interop/memberships.json</a>, is the only source for the strip on the home page, the footer line, this table and the FAQ.</li>
-          <li>A row exists only when a stranger can open its evidence, or a dated, message-identified mail exists and the row says so. Bodies with neither are named in the manifest's <code>excluded</code> list with the reason.</li>
+          <li>A row exists only when a stranger can open its evidence, or a dated, message-identified mail exists and the row says so. Bodies with neither — and bodies we are not eligible for — are named above under <a className="underline underline-offset-4" href="#memberships-excluded-h">Named, and not listed</a>, with the reason and its source.</li>
+          <li>Every change to the manifest is recorded, dated, in <a className="underline underline-offset-4" href="/interop/memberships-updates.json">/interop/memberships-updates.json</a> and rendered above. A table that only shows its current state cannot be audited; the log is the trace.</li>
           <li><code>scripts/memberships-check.mjs</code> re-fetches every public evidence URL and exits non-zero when one stops answering 200 with our name; its <code>--selftest</code> proves it goes red on a bogus row.</li>
           <li>Nothing here is a score. We measure AI systems; we do not grade the bodies we take part in, and they do not grade us by listing us.</li>
         </ul>
