@@ -1,7 +1,7 @@
 /**
  * Axis honesty for /products — empty-as-finding only when unmeasured_axes > 0.
  *
- * Live board is GET /api/gspc → totals 22·22·0 (unmeasured_axes=0). Do not paint
+ * Live board is GET /api/gspc → totals (never typed here). Do not paint
  * Seven empty / empty-slot chrome as if current UNMEASURED. Live financial ids:
  * ai-adoption-components, labour-components (not retired ai-economy-index /
  * human-labour-index labels).

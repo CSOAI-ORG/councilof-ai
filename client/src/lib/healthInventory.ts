@@ -74,7 +74,7 @@ export const HEALTH_FACTS: HealthFact[] = [
     access: "GET /api/gspc totals.axes",
     href: "https://councilof.ai/api/gspc",
     state: "present",
-    means: "How many instruments exist on the board. Today every declared slot is measured (22·22·0).",
+    means: "How many instruments exist on the board. Read totals.measured_axes beside it; never type the pair.",
   },
   {
     id: "measured-slots",
@@ -90,7 +90,7 @@ export const HEALTH_FACTS: HealthFact[] = [
     access: "GET /api/gspc totals.unmeasured_axes",
     href: "https://councilof.ai/api/gspc",
     state: "present",
-    means: "Live board 22·22·0 — unmeasured_axes is 0 today. Empty-as-finding only when that count is >0. Do not paint seven-empty chrome or zero-fill.",
+    means: "Read unmeasured_axes live. Empty-as-finding only when that count is >0. Do not paint seven-empty chrome or zero-fill.",
   },
   {
     id: "index-rows",

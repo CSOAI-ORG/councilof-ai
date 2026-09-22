@@ -1,7 +1,15 @@
 /**
- * POST /api/board-sign — GitHub OIDC only.
+ * POST /api/board-sign — two callers, one key.
  * Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64.
  * The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.
+ *
+ * Caller authentication (the key is the same either way; the response names which):
+ *   - GitHub OIDC bearer (a JWT) from an allow-listed workflow — the original path.
+ *   - The pod caller token (Pages secret BOARD_SIGN_POD_TOKEN), ruled 2026-09-22 when
+ *     GitHub Actions had been disabled on the account for a week and the RunPod pod
+ *     became the CI/deploy host. The token is a bearer capability held only on the
+ *     pod (mode 600) and in the Pages secret; it is compared by digest, never echoed.
+ *     A JWT-shaped bearer is never tried against the pod token, and vice versa.
  */
 import { canonicalBytes, signLabelViolation } from "../_lib/cardSign";
 
@@ -59,12 +67,36 @@ async function verifyOidc(token: string): Promise<void> {
   if (!ok) throw new Error("sig");
 }
 
-export const onRequestPost: PagesFunction<{ BOARD_SIGN_KEY_PKCS8_B64: string }> = async ({ request, env }) => {
+type Env = { BOARD_SIGN_KEY_PKCS8_B64: string; BOARD_SIGN_POD_TOKEN?: string };
+
+// Constant-time-by-construction: compare SHA-256 digests of both strings, so neither the
+// length nor the position of the first mismatch is observable from timing.
+async function podTokenMatches(presented: string, expected: string): Promise<boolean> {
+  if (!expected || expected.length < 32 || !presented) return false;
+  const enc = new TextEncoder();
+  const a = new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode(presented)));
+  const b = new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode(expected)));
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+  return diff === 0;
+}
+
+export type SignerAuth = "github-oidc" | "pod-token";
+
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  let signerAuth: SignerAuth;
   try {
     const auth = request.headers.get("authorization") || "";
     const tok = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
-    if (!tok) return json({ error: "unauthorized", reason: "GitHub OIDC bearer required" }, 401);
-    await verifyOidc(tok);
+    if (!tok) return json({ error: "unauthorized", reason: "bearer required (GitHub OIDC JWT or the pod caller token)" }, 401);
+    if (tok.split(".").length === 3) {
+      await verifyOidc(tok);
+      signerAuth = "github-oidc";
+    } else if (await podTokenMatches(tok, (env.BOARD_SIGN_POD_TOKEN || "").trim())) {
+      signerAuth = "pod-token";
+    } else {
+      return json({ error: "unauthorized", reason: "pod token rejected" }, 401);
+    }
   } catch (e) {
     return json({ error: "unauthorized", reason: "OIDC rejected", detail: String((e as Error).message || e) }, 401);
   }
@@ -113,6 +145,8 @@ export const onRequestPost: PagesFunction<{ BOARD_SIGN_KEY_PKCS8_B64: string }> 
       payload_sha256: [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes as BufferSource))]
         .map((b) => b.toString(16).padStart(2, "0"))
         .join(""),
+      signer_auth: signerAuth,
+      signed_at: new Date().toISOString(),
       note: "Signed on Pages. PKCS8 never left Cloudflare. Not a certificate.",
     });
   } catch (e) {
