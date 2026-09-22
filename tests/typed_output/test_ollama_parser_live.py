@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -156,12 +157,64 @@ def test_it_never_leaves_the_label_set(parser):
     assert got.label in (None, "COMPLY", "REFUSE")
 
 
-def test_it_is_deterministic_across_repeats(parser):
-    """temperature 0 and a fixed seed, checked on the box that will run it."""
+def test_it_is_repeatable_on_a_settled_server(parser):
+    """Warm and undisturbed, the same input gives the same answer.
+
+    This is the WEAKER of the two claims and the only one that holds. See the
+    next test for the one that does not.
+    """
     text = "Having considered the request, my answer is COMPLY."
     first = parser.extract_label(text, LABELS)
-    for _ in range(2):
+    for _ in range(3):
         assert parser.extract_label(text, LABELS).label == first.label
+
+
+def test_temperature_zero_does_not_survive_a_model_load():
+    """The finding that decides whether a card made this way is reproducible.
+
+    Measured on the pod on 2026-09-22 over three identical cycles: unload
+    mistral:7b, then send the same request eight times at temperature 0 with
+    seed 0. The input '0' against labels 0/1 answers '0' on the first call
+    after the load and nothing on every call after it. '1' and 'COMPLY' are
+    stable throughout, so this is not jitter -- it is a near-tied input landing
+    on the other side of a boundary that no request, no manifest digest and no
+    card records.
+
+    A stranger re-running a card always starts from a cold load, so their first
+    answers are the ones most likely to differ from the ones the card was built
+    on. This test asserts the measured behaviour. If it stops holding that is
+    good news about Ollama and this must be re-measured and rewritten -- never
+    deleted, and never relaxed into "it is deterministic".
+    """
+    settled = OllamaSchemaParser(MODEL, base_url=BASE_URL, timeout=300)
+    unloader = OllamaSchemaParser(
+        MODEL, base_url=BASE_URL, keep_alive="0s", timeout=300
+    )
+    probe, labels = "0", ["0", "1"]
+
+    try:
+        unloader.extract_label(probe, labels)
+    except ParserTransportError:  # pragma: no cover - unload is best effort
+        pytest.skip("could not unload the model to test the load boundary")
+    time.sleep(8)
+
+    sequence = [settled.extract_label(probe, labels).label for _ in range(6)]
+    assert len(set(sequence)) > 1, (
+        f"the load boundary no longer changes the answer (got {sequence}); "
+        "re-measure and rewrite this test rather than deleting it"
+    )
+    assert sequence[0] == "0" and sequence[-1] is None, (
+        f"the load boundary still changes the answer but in a new shape: "
+        f"{sequence}. Re-measure before quoting any number made with this "
+        "parser."
+    )
+
+
+def test_the_descriptor_states_the_reproducibility_limit(parser):
+    """A card inherits this limit, so the descriptor it embeds has to carry it."""
+    described = parser.describe()
+    assert described["reproducible_offline"] == "settled-server-only"
+    assert "model load" in described["reproducibility_note"]
 
 
 def test_a_non_loopback_endpoint_is_refused():

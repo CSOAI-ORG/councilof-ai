@@ -22,6 +22,7 @@ from .base import (
 )
 from .deterministic import ExactLabelParser, ReadLabelParser
 from .ollama_schema import OllamaSchemaParser
+from .qualify import qualify
 from .registry import DEFAULT_PARSER, PARSER_NAMES, build_parser, describe_parser
 
 __all__ = [
@@ -37,6 +38,7 @@ __all__ = [
     "REASONS",
     "ReadLabelParser",
     "build_parser",
+    "qualify",
     "describe_parser",
     "forbid_answer_key",
     "looks_like_menu_echo",

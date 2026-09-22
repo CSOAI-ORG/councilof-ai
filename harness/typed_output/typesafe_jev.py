@@ -33,10 +33,16 @@ it does not quietly become the keyword matcher, and it does not stage a card.
 
 TWO THINGS THE OWNER SHOULD WEIGH BEFORE PAYING
 -----------------------------------------------
-  * Reproducibility.  A card must be re-runnable by a stranger.  The local path
-    pins `model@sha256:...` and decodes at temperature 0, seed 0.  `jev-latest`
-    is a moving pointer behind someone else's API; pinning a concrete model id
-    helps, but no external version of it can be fetched and re-run.
+  * Reproducibility.  A card must be re-runnable by a stranger.  Jev is worse
+    here than the local path but the local path is not clean either, and the
+    honest comparison is between two flawed options rather than between a
+    hosted service and a guarantee.  The local reader pins `model@sha256:...`
+    and yet still answers a near-tied input differently on the first call after
+    a model load than on every call after it (measured 2026-09-22, three
+    identical cycles).  `jev-latest` adds to that a moving pointer behind
+    someone else's API, no fetchable weights, and decode settings the caller
+    cannot set at all.  Neither is reproducible the way `exact-label` is, which
+    is reproducible by reading four lines of Python.
   * The bar.  Whatever Jev's accuracy, it has to beat the local path's measured
     agreement and failure modes, on the same retained bytes, to be worth a paid
     dependency in a measurement instrument.  Those numbers are in the replay

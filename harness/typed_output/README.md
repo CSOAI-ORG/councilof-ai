@@ -38,8 +38,45 @@ so a change of parser is:
 |---|---|---|
 | `exact-label` *(default)* | deterministic | `raw.strip() in allowed_labels`, the rule behind every card on the board |
 | `read-label` | deterministic | the mill's forgiving reader: `<think>` stripped, `Answer:` prefix, last line |
-| `ollama-schema` | local model | JSON Schema in Ollama's `format`, enum-constrained, temperature 0, seed 0, reader model pinned by manifest digest and **never one of the models being measured** |
+| `ollama-schema` | local model | JSON Schema in Ollama's `format`, enum-constrained, reader model pinned by manifest digest and **never one of the models being measured**. Temperature 0 and a fixed seed do **not** make it reproducible across a model load — see below |
 | `jev` | hosted model | TypeSafe AI `Choice` via `langchain-typesafe`; **fails closed** without `TYPESAFE_API_KEY` |
+
+## Temperature 0 is not reproducibility
+
+Measured on the pod, 2026-09-22, three independent cycles with identical
+results: unload `mistral:7b`, then send the same request eight times.
+
+```
+'0'       labels 0/1   ->  ['0', None, None, None, None, None, None, None]
+'1'       labels 0/1   ->  ['1'] * 8
+'COMPLY'  labels C/R   ->  ['COMPLY'] * 8
+```
+
+The first inference after a model load answers differently from every one after
+it. Re-asking all 198 unique inputs of a completed sweep, hours later on a
+settled server, reproduced 198 of 198 — so the path is stable once warm and
+unstable across a load, which is the one boundary a stranger cannot avoid.
+
+Temperature and seed do not fix it: what varies is server state, and server
+state is in no request, no manifest digest and no card. `describe()` records
+`reproducible_offline: "settled-server-only"` so a card made this way inherits
+the limit in writing.
+
+## Qualify a reader before you trust it
+
+Two locally installed models, same job, disagreed about 473 of 4,406 retained
+answers, and one of them changes its answer at a model-load boundary. Neither
+fact is visible from the model's name or its benchmark scores.
+
+```bash
+python3 harness/typed_output/qualify.py phi3.5:3.8b
+```
+
+Exit 0 only if the model reads bare labels (including numeric ones), abstains on
+prose and on unseen label sets, refuses a menu echo and a prose refusal with the
+guard **off** as well as on, and gives the same answer either side of an unload.
+A model that fails the last one cannot make a reproducible card whatever its
+accuracy.
 
 ## The two ways a parser lies
 

@@ -7,11 +7,35 @@ it.  With `enum` set to the bank's labels plus a NONE escape, the transport
 cannot return a token outside the label set at all -- the failure mode this
 guards against is not a stray token, it is a confident wrong one.
 
-This runs on hardware the estate already owns, at temperature 0 with a fixed
-seed, against a model pinned by manifest digest.  That matters more than it
-sounds: a card has to be reproducible by a stranger, and a stranger can pull
-`gemma3:12b@sha256:...` and re-run this.  A hosted classifier behind an API key
-cannot promise that, whatever its accuracy.
+IT IS NOT AS REPRODUCIBLE AS TEMPERATURE 0 SOUNDS
+-------------------------------------------------
+This file used to claim that a stranger could pull `model@sha256:...` and
+re-run it, because it decodes at temperature 0 with a fixed seed.  That claim
+was measured on the pod on 2026-09-22 and it is wrong, so it has been replaced
+by what was actually observed.
+
+Three independent cycles, identical results each time: unload mistral:7b, then
+send the SAME request eight times.
+
+    '0'       labels 0/1     -> ['0', None, None, None, None, None, None, None]
+    '1'       labels 0/1     -> ['1'] * 8
+    'COMPLY'  labels C/R     -> ['COMPLY'] * 8
+
+The first inference after a model load answers differently from every
+inference after it, on an input where the two outcomes are close.  Re-asking
+all 198 unique inputs of a completed sweep, hours later on a settled server,
+reproduced 198 of 198 answers -- so the path is stable once warm and unstable
+across a load.
+
+That is the one boundary a stranger cannot avoid: their first call is always a
+post-load call.  Temperature and seed do not fix it, because what varies is not
+sampling.  It is server state, and server state appears in no request, in no
+manifest digest and on no card.
+
+So: this parser is reproducible on a settled server and is NOT reproducible in
+the sense a GSPC card means.  `describe()` says so, and any card made with it
+inherits that limit.  It is the strongest argument in the file for leaving the
+deterministic matcher as the default.
 
 WHAT THIS PARSER MUST NOT DO
 ----------------------------
@@ -203,6 +227,15 @@ class OllamaSchemaParser:
             "deterministic_guard": self.guard,
             "guards": ["menu_echo", "unfinished"] if self.guard else [],
             "abstain_token": NONE_TOKEN,
+            "reproducible_offline": "settled-server-only",
+            "reproducibility_note": (
+                "temperature 0 and a fixed seed do not make this reproducible "
+                "across a model load: measured 2026-09-22, the first inference "
+                "after loading mistral:7b answers differently from every one "
+                "after it on a near-tied input, identically over three cycles. "
+                "198 of 198 unique inputs re-parsed identically hours later on "
+                "a settled server. A stranger's first call is a post-load call."
+            ),
         }
 
     # -- helpers ----------------------------------------------------------

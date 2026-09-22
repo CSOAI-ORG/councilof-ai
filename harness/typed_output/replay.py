@@ -152,6 +152,47 @@ def _accuracy(hits: int, n: int) -> float | None:
     return round(hits / n, 4) if n else None
 
 
+#: Descriptor fields that document the parser rather than configure it. They are
+#: excluded from the cache fingerprint because editing a docstring-shaped field
+#: must not throw away an hour of GPU time -- which it did once, on 2026-09-22,
+#: when a reproducibility note was added to OllamaSchemaParser.describe().
+_PROSE_FIELDS = frozenset(
+    {
+        "reproducibility_note",
+        "reproducible_offline",
+        "rule",
+        "source",
+        "kind",
+        "vendor",
+        "package",
+        "endpoint",
+        "question_type",
+        "sees_expected_label",
+        "sees_item_prompt",
+        "model_in_the_loop",
+    }
+)
+
+
+def behaviour_fingerprint(parser: Any) -> str:
+    """Hash the settings that could change an answer, and nothing else.
+
+    A parser id names the implementation, not its settings. Two runs of
+    `ollama-schema-v1:mistral:7b` with different guards, a different seed or a
+    different model digest are different parsers, and a cache keyed on the id
+    alone would serve one run's answers to the other -- silently, and in a
+    comparison whose whole value is that the bytes are identical.
+    """
+    described = {
+        key: value
+        for key, value in parser.describe().items()
+        if key not in _PROSE_FIELDS
+    }
+    return hashlib.sha256(
+        json.dumps(described, sort_keys=True, default=str).encode("utf-8")
+    ).hexdigest()[:16]
+
+
 def _extract_with_retry(parser: Any, text: str, labels: Sequence[str]) -> Extraction:
     """One retry, then record the parser's failure AS a parser failure.
 
@@ -180,15 +221,8 @@ def run_parser(
     """Extract a label for every item, returning {item_id: Extraction}."""
     out: dict[str, Extraction] = {}
     started = time.monotonic()
-    # A parser id names the implementation, not its settings. Two runs of
-    # `ollama-schema-v1:qwen2.5:7b` with different guards, a different seed or a
-    # different model digest are different parsers, and a cache keyed on the id
-    # alone would serve one run's answers to the other -- silently, and in a
-    # comparison whose whole value is that the bytes are identical. The key
-    # carries the full descriptor instead.
-    fingerprint = hashlib.sha256(
-        json.dumps(parser.describe(), sort_keys=True, default=str).encode("utf-8")
-    ).hexdigest()[:16]
+    # The key carries a fingerprint of the settings, not just the id.
+    fingerprint = behaviour_fingerprint(parser)
     for index, item in enumerate(items, start=1):
         text = item.get("raw_output") or ""
         key = cache.key(f"{parser.parser_id}@{fingerprint}", text, item.labels)
