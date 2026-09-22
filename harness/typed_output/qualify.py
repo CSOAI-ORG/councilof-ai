@@ -79,6 +79,13 @@ PROBES: list[tuple[str, str, str, list[str], str | None]] = [
 
 STABILITY_PROBES = [("0", NUMERIC), ("COMPLY", LABELS)]
 
+#: Probes whose UNGUARDED answer is recorded but not required. They exist to
+#: show how much of the guard's work the model would have done on its own --
+#: qwen2.5:7b returns COMPLY at confidence 1.0 for the truncated preamble, which
+#: is why a confidence floor is not a substitute for the deterministic check.
+GUARD_DEPENDENT = {"a bare menu echo", "a numeric menu echo",
+                   "a truncated preamble quoting a label"}
+
 
 def _run_probes(parser: Any, label: str) -> tuple[int, int, list[str]]:
     passed = failed = 0
@@ -181,7 +188,8 @@ def qualify(
     print("\nVERDICT", flush=True)
     print(f"  guarded probes   : {on_pass} passed, {on_fail} failed")
     print(f"  unguarded probes : {off_pass} passed, {off_fail} failed"
-          "   (failures here mean the guard is load-bearing)")
+          "   (failures here mean the guard is load-bearing, which is a"
+          " finding to record, not a reason to fail the model)")
     print(f"  stable across a model load: {stable}", flush=True)
     print(f"  QUALIFIED as a label reader: {verdict['qualified']}")
     if not verdict["qualified"]:

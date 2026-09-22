@@ -78,8 +78,9 @@ NONE_TOKEN = "NO_LABEL_STATED"
 enum holds only real labels forces a guess on every malformed answer."""
 
 DEFAULT_BASE_URL = "http://127.0.0.1:11434"
-DEFAULT_MODEL = "mistral:7b"
-"""Deliberately NOT one of the models the mill measures.
+DEFAULT_MODEL = "phi3.5:3.8b"
+"""Deliberately NOT one of the models the mill measures, and the better of the
+two candidates that were actually tested.
 
 Two reasons, one methodological and one operational. Reading qwen2.5:7b's
 answers with qwen2.5:7b makes the reader and the subject the same system, and a
@@ -87,7 +88,15 @@ shared failure mode would be invisible: the parser would misread exactly the
 answers the subject writes oddly. And Ollama serialises requests per model, so a
 parser sharing a model with a running mill job queues behind every one of its
 items -- measured on the pod on 2026-09-22, that wedged a sweep for tens of
-minutes at a time."""
+minutes at a time.
+
+phi3.5:3.8b over mistral:7b on measurement, not preference. Over the same 4,406
+retained answers, mistral:7b refused 473 that the signed baseline read -- 472 of
+them a bare "0" on the care axis, at confidence 0.99 -- and changed its answer
+at a model-load boundary. phi3.5:3.8b refused none of them and did not move
+across three unload cycles. Neither is fit to make cards; see the reproducibility
+note below. This is the default for the experimental path, not a recommendation
+to turn it on."""
 
 EXTRACTION_INSTRUCTION = (
     "You are reading one answer that another model wrote. Report which single "
