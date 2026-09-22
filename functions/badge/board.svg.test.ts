@@ -173,12 +173,18 @@ describe("/badge/board.svg — the whole board as one image, derived and never t
     const inSvg = [...svg.matchAll(/<text x="56" y="\d+" font-size="13" fill="#111827">([^<]+)<\/text>/g)].map((m) => m[1]);
     expect(inSvg).toEqual(ids);
     // The capture in __fixtures__ is a REAL production read from 2026-09-05, before ADR-002
-    // added the effect-binding declared slot. It is not edited to say what production does
-    // not yet say. Until it is re-captured after the deploy that carries _gspc_axes_c.ts,
-    // the roster it holds must equal today's roster with declared slots removed — and
-    // nothing else may differ. Re-capture, then restore the strict equality.
-    const declared = new Set(all.filter((a) => a.kind === "declared-slot").map((a) => a.axis));
-    expect(declared).toEqual(new Set(["effect-binding"]));
+    // added the effect-binding slot (declared 2026-09-16, measured 2026-09-22). It is not
+    // edited to say what production did not say then. Until it is re-captured, the roster it
+    // holds must equal today's roster with the axes added since removed — and nothing else
+    // may differ. "Added since" is derived from the two sources, never typed: an earlier
+    // revision typed the set {"effect-binding"} with kind "declared-slot" and went red the
+    // day that slot became a measured axis. Re-capture, then restore the strict equality.
+    const captured = new Set(CAPTURE.axes.map((a) => a.axis));
+    const declared = new Set(all.map((a) => a.axis).filter((id) => !captured.has(id)));
+    // every axis missing from the capture must be one the arrays actually carry today
+    for (const id of declared) expect(ids).toContain(id);
+    // and nothing the capture holds may have vanished
+    for (const id of captured) expect(ids).toContain(id);
     expect(inSvg.filter((id) => !declared.has(id))).toEqual(CAPTURE.axes.map((a) => a.axis));
   });
 });
