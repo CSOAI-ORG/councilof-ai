@@ -15,7 +15,18 @@ those canonical body bytes, not the digest):
                  in $LANES/.secrets and hands it to this process as an env var only.
                  The key value is never printed, never written, never logged.
 
-Both paths record the DID that actually signed (--did; default #board-attestation-1).
+  --pod-token-file PATH
+                 Pages /api/board-sign again, but with the pod caller token (owner ruling
+                 2026-09-22; the same request shape scripts/publish_public_root.py's
+                 sign_via_pod_token uses). Added 2026-09-22 because GitHub Actions is dead
+                 and the pod-resident PKCS8 was never placed: the key stays on Pages, the
+                 token stays in a 0600 file. Fail closed: no readable non-empty token file
+                 means no request and exit 3; a reply whose payload_sha256 is not the digest
+                 of the bytes this process would verify is refused, because a signature
+                 over other bytes is not a signature over this card. The token is never
+                 printed, logged or written.
+
+All paths record the DID that actually signed (--did; default #board-attestation-1).
 n<30 cards stay UNMEASURED ("n<30 unquotable") even if signed. Empty is never 0.
 Signed bytes are content-addressed and never overwritten: a changed body lands on a
 new path and the old card is recorded in SUPERSEDED.jsonl, not edited.
@@ -25,7 +36,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
+import urllib.error
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -123,6 +137,77 @@ def sign_locally(body: dict, key) -> tuple[str, str]:
     return sign_bytes(key, pre), hashlib.sha256(pre).hexdigest()
 
 
+POD_SIGN_URL_DEFAULT = "https://councilof.ai/api/board-sign"
+POD_SIGN_UA = "Mozilla/5.0 csoai-pod-mill-signer/0.1"
+
+
+def read_pod_token(token_file: Path) -> str:
+    """The pod caller token, or RuntimeError. Never printed, never logged."""
+    if token_file.is_symlink() or not token_file.is_file():
+        raise RuntimeError(f"pod token file absent: {token_file}")
+    tok = token_file.read_text(encoding="utf-8").strip()
+    if not tok:
+        raise RuntimeError(f"pod token file is empty: {token_file}")
+    return tok
+
+
+def sign_via_pod_token_attested(body: dict, token_file: Path, sign_url: str | None = None,
+                                opener=None) -> tuple[str, str]:
+    """(signature hex, digest hex) from Pages /api/board-sign with the pod caller token.
+
+    Same request as sign_via_oidc_attested; only the bearer differs. The signer answers
+    with payload_sha256 over the bytes IT canonicalised (JSON.stringify of the key-sorted
+    object). That digest must equal sha256(canonical_js_body_bytes(body)) here — and that
+    preimage must equal the estate's Python canonical form — or the signature covers other
+    bytes than the ones every verifier recomputes, and it is refused. No token → no request.
+    The G1.3 never-sign labels are refused before the request exactly as the Pages signer
+    refuses them.
+    """
+    violation = sign_label_violation(body)
+    if violation:
+        raise RuntimeError(
+            f"refused: never-sign label {violation!r} in payload — THIN/TEMPLATE/specimen is never signed (G1.3)"
+        )
+    tok = read_pod_token(token_file)
+    pre = canonical_js_body_bytes(body)
+    if pre != canonical_bytes(body):
+        raise RuntimeError(
+            "canonical divergence: the body renders differently under the Python and JS "
+            "canonical forms (an integral float?) — refusing to sign an ambiguous preimage"
+        )
+    local_digest = hashlib.sha256(pre).hexdigest()
+    url = sign_url or os.environ.get("BOARD_SIGN_URL") or POD_SIGN_URL_DEFAULT
+    request = urllib.request.Request(
+        url,
+        data=json.dumps({"payload": body}, separators=(",", ":"), ensure_ascii=False).encode("utf-8"),
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {tok}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": POD_SIGN_UA,
+        },
+    )
+    open_fn = opener or urllib.request.urlopen
+    try:
+        with open_fn(request, timeout=40) as resp:
+            out = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        detail = e.read()[:200].decode("utf-8", "replace") if e.fp else ""
+        raise RuntimeError(f"board-sign (pod-token) HTTP {e.code} {detail!r}") from e
+    if not isinstance(out, dict):
+        raise RuntimeError("board-sign (pod-token): reply is not an object")
+    if out.get("payload_sha256") != local_digest:
+        raise RuntimeError(
+            "board-sign (pod-token): returned payload_sha256 != local canonical digest; "
+            "refusing a signature over other bytes"
+        )
+    sig = out.get("sig_ed25519")
+    if not isinstance(sig, str) or len(sig) != 128 or any(c not in "0123456789abcdef" for c in sig.lower()):
+        raise RuntimeError("board-sign (pod-token): reply carries no Ed25519 signature (128 hex)")
+    return sig.lower(), local_digest
+
+
 def main(argv: list[str] | None = None) -> int:
     global DST, LEDGER
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -135,6 +220,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--key-env", metavar="NAME",
                         help="sign locally with the base64(PKCS8) Ed25519 key in environment variable NAME "
                              "(pod chain); default is the GHA OIDC relay to /api/board-sign")
+    parser.add_argument("--pod-token-file", type=Path, metavar="PATH",
+                        help="sign through Pages /api/board-sign with the pod caller token read from PATH "
+                             "(0600; never printed). Fails closed when absent or empty. --key-env wins if both are given.")
     parser.add_argument("--did", default=DID,
                         help=f"DID verification method recorded on each signed card (default {DID})")
     args = parser.parse_args(argv)
@@ -150,6 +238,12 @@ def main(argv: list[str] | None = None) -> int:
             return 3
         if key is None:
             print(f"UNSIGNED — --key-env {args.key_env} is empty or unset", file=sys.stderr)
+            return 3
+    if key is None and args.pod_token_file is not None:
+        try:
+            read_pod_token(args.pod_token_file)
+        except Exception as error:  # noqa: BLE001 — the message never carries the value
+            print(f"UNSIGNED — --pod-token-file: {error}", file=sys.stderr)
             return 3
     source = args.source_dir if args.source_dir is not None else SRC
     if not source.is_dir():
@@ -221,7 +315,12 @@ def main(argv: list[str] | None = None) -> int:
         # digest is the only safe content address. Local: the same JS canonical
         # form is computed here and cross-checked against the Python form.
         try:
-            sig, digest = sign_locally(body, key) if key is not None else sign_via_oidc_attested(body)
+            if key is not None:
+                sig, digest = sign_locally(body, key)
+            elif args.pod_token_file is not None:
+                sig, digest = sign_via_pod_token_attested(body, args.pod_token_file)
+            else:
+                sig, digest = sign_via_oidc_attested(body)
         except Exception as e:
             print(f"UNSIGNED {fp.name} — {e}", file=sys.stderr)
             failures += 1
