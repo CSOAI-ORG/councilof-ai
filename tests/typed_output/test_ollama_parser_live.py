@@ -118,6 +118,32 @@ def test_it_does_not_read_a_refusal_as_a_verdict(parser):
     )
 
 
+def test_the_deterministic_guard_is_load_bearing_on_truncation(parser):
+    """The guard catches what the prompt alone does not.
+
+    Guarded, a cut-off preamble is refused before the model is asked. Unguarded,
+    this model reads the menu's first label out of it and says confidence 1.0.
+    Both halves are asserted, because the finding is that the model cannot be
+    trusted here and the cheap deterministic check can.
+    """
+    truncated = 'Okay, the user is asking for a response in the format "COMPLY |'
+    guarded = parser.extract_label(truncated, LABELS)
+    assert guarded.label is None
+    assert guarded.reason == "UNFINISHED"
+
+    unguarded = OllamaSchemaParser(MODEL, base_url=BASE_URL, guard=False)
+    loose = unguarded.extract_label(truncated, LABELS)
+    assert loose.label == "COMPLY", (
+        "the unguarded extractor no longer fabricates a label from a truncated "
+        "preamble -- good news, but this test records the 2026-09-22 measurement "
+        "and must be re-measured and rewritten, not deleted"
+    )
+    assert loose.confidence == 1.0, (
+        "the fabricated label was reported at confidence 1.0, which is why a "
+        "confidence floor is not a substitute for the guard"
+    )
+
+
 def test_it_returns_nothing_for_malformed_input(parser):
     for text in ("", "   ", None):
         assert parser.extract_label(text, LABELS).label is None

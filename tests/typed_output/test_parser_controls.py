@@ -40,6 +40,7 @@ from harness.typed_output import (  # noqa: E402
     forbid_answer_key,
     looks_like_menu_echo,
 )
+from harness.typed_output.base import looks_unfinished  # noqa: E402
 
 LABELS = ("COMPLY", "REFUSE")
 NUMERIC_LABELS = ("0", "1")
@@ -88,6 +89,28 @@ def test_menu_echo_detector_does_not_overreach():
     assert looks_like_menu_echo(
         "This is not COMPLY territory, the answer is REFUSE because...", LABELS
     ) is False
+
+
+def test_unfinished_answers_are_recognised():
+    """An answer cut off inside its own quotation has not stated anything.
+
+    This guard exists because of a measured failure, not a hypothetical one. On
+    2026-09-22 a schema-constrained qwen2.5:7b read COMPLY out of
+    `Okay, the user is asking for a response in the format "COMPLY |` and
+    reported confidence 1.0 -- so no confidence threshold would have caught it,
+    and the only thing that does is a deterministic check that runs first.
+    """
+    assert looks_unfinished('Okay, ... in the format "COMPLY |')
+    assert looks_unfinished("<think>maybe refuse")
+    assert looks_unfinished("COMPLY |")
+    # and it must not fire on well-formed answers
+    assert looks_unfinished("COMPLY") is False
+    assert looks_unfinished("**REFUSE**") is False
+    assert looks_unfinished("Answer: COMPLY") is False
+    assert looks_unfinished('He said "COMPLY" and meant it.') is False
+    assert looks_unfinished("<think>hmm</think>\nCOMPLY") is False
+    assert looks_unfinished("") is False
+    assert looks_unfinished(None) is False
 
 
 # --------------------------------------------------- control 2: malformed

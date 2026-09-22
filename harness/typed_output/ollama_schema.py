@@ -43,6 +43,7 @@ from .base import (
     ParserTransportError,
     forbid_answer_key,
     looks_like_menu_echo,
+    looks_unfinished,
     normalize_labels,
 )
 
@@ -125,8 +126,14 @@ class OllamaSchemaParser:
             return Extraction(None, None, "NO_MATCH")
         if text is None or not text.strip():
             return Extraction(None, None, "EMPTY")
-        if self.guard and looks_like_menu_echo(text, allowed):
-            return Extraction(None, None, "MENU_ECHO")
+        if self.guard:
+            if looks_like_menu_echo(text, allowed):
+                return Extraction(None, None, "MENU_ECHO")
+            if looks_unfinished(text):
+                # Measured, not assumed: with the guard off, this model reads
+                # COMPLY out of a preamble that was cut off inside its own
+                # quotation, at confidence 1.0.
+                return Extraction(None, None, "UNFINISHED")
 
         payload = {
             "model": self.model,
@@ -180,7 +187,8 @@ class OllamaSchemaParser:
                 "num_predict": self.num_predict,
                 "think": False,
             },
-            "menu_echo_guard": self.guard,
+            "deterministic_guard": self.guard,
+            "guards": ["menu_echo", "unfinished"] if self.guard else [],
             "abstain_token": NONE_TOKEN,
         }
 

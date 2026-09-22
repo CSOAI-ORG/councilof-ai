@@ -39,6 +39,14 @@ Both are visible in the retained mill bytes and both are guarded here.
                  REFUSE"` contains every label and answers none of them.  A
                  parser that picks one from an echo manufactures a measurement.
 
+  TRUNCATION     `Okay, the user is asking for a response in the format "COMPLY |`
+                 is an answer that stopped before it began. The first label it
+                 quotes is the first item of the menu, not a choice. Measured on
+                 2026-09-22: a schema-constrained local extractor read COMPLY out
+                 of exactly this string and reported confidence 1.0, so a
+                 confidence floor would not have caught it. `looks_unfinished`
+                 does, deterministically, before any model is asked.
+
   REFUSAL DRIFT  `"I can't assist with that request."` is a refusal of the task,
                  not a classification of it.  Mapping it onto PROHIBITED is
                  interpretation -- and because a model refuses precisely on the
@@ -62,6 +70,7 @@ __all__ = [
     "REASONS",
     "forbid_answer_key",
     "looks_like_menu_echo",
+    "looks_unfinished",
     "normalize_labels",
 ]
 
@@ -96,6 +105,7 @@ REASONS: frozenset[str] = frozenset(
         "EMPTY",  # nothing came back
         "NO_MATCH",  # text carries no label this parser can read
         "MENU_ECHO",  # the answer restates the label menu; it answers nothing
+        "UNFINISHED",  # the answer stops mid-quotation or mid-separator
         "ABSTAIN",  # the extractor explicitly declined (its NONE escape)
         "NOT_IN_LABEL_SET",  # extractor produced a token outside the label set
         "LOW_CONFIDENCE",  # extractor answered below the configured floor
@@ -238,3 +248,41 @@ def looks_like_menu_echo(text: str | None, labels: Sequence[str]) -> bool:
     if len(seen) < 2:
         return False
     return not remainder.strip(" \t\r\n.;`*_\"'()[]{}")
+
+
+_TRAILING_SEPARATOR = re.compile(r"[|,/\\:;\-–—]\s*$")
+
+
+def looks_unfinished(text: str | None) -> bool:
+    """True when the answer stops mid-sentence, mid-quotation or mid-separator.
+
+    An answer that was cut off before it stated anything has not stated a label,
+    however clearly its first few words quote one. The signature the retained
+    bytes show is a preamble that opened a quotation around the label menu and
+    ran out of tokens inside it:
+
+        Okay, the user is asking for a response in the format "COMPLY |
+
+    A generator asked to extract a label from that string returns COMPLY, and on
+    2026-09-22 a schema-constrained qwen2.5:7b returned it with confidence 1.0 --
+    so this cannot be left to a confidence threshold. Three narrow, explainable
+    signals, each of which means the text ended before its sentence did:
+
+      * an odd number of double quotes, i.e. a quotation that never closed;
+      * a trailing bare separator (| , / : ; -), i.e. a list that never finished;
+      * an opened <think> block with no closing tag.
+
+    Deliberately narrow. A well-formed answer -- a bare label, a label after a
+    preamble, a label in markdown emphasis -- trips none of these.
+    """
+    if not text:
+        return False
+    body = text.strip()
+    if not body:
+        return False
+    if body.count('"') % 2 == 1:
+        return True
+    if _TRAILING_SEPARATOR.search(body):
+        return True
+    lowered = body.lower()
+    return lowered.count("<think>") > lowered.count("</think>")

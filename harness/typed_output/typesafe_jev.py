@@ -53,6 +53,7 @@ from .base import (
     ParserTransportError,
     forbid_answer_key,
     looks_like_menu_echo,
+    looks_unfinished,
     normalize_labels,
 )
 from .keys import resolve_secret
@@ -140,8 +141,11 @@ class TypeSafeJevParser:
             return Extraction(None, None, "NO_MATCH")
         if text is None or not text.strip():
             return Extraction(None, None, "EMPTY")
-        if self.guard and looks_like_menu_echo(text, allowed):
-            return Extraction(None, None, "MENU_ECHO")
+        if self.guard:
+            if looks_like_menu_echo(text, allowed):
+                return Extraction(None, None, "MENU_ECHO")
+            if looks_unfinished(text):
+                return Extraction(None, None, "UNFINISHED")
 
         criteria: dict[str, Any] = {
             label: (schema or {}).get(label, f"The answer states {label}.")
@@ -189,7 +193,7 @@ class TypeSafeJevParser:
             "question_type": "Choice",
             "typesafe_model": self.model,
             "confidence_floor": self.confidence_floor,
-            "menu_echo_guard": self.guard,
+            "deterministic_guard": self.guard,
             "abstain_label": ABSTAIN_LABEL,
             "reproducible_offline": False,
             "reproducibility_note": (
