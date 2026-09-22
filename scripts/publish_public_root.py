@@ -9,6 +9,10 @@ Halt-on-split: live apex merkle is newer than committed.
 Halt-on-unsigned-leaf: any leaf not in the 07:38Z unsigned set must be signed.
 Halt-on-missing-key: exit 3. Never publish unsigned NEW leaves.
 Never print BOARD_SIGN_KEY. Never stamp MEASURED. Never certify.
+
+Signer callers (the PKCS8 never leaves Cloudflare Pages): GitHub OIDC (GHA), or since
+2026-09-22 the pod caller token — BOARD_SIGN_POD_TOKEN_FILE (a mode-600 file) or
+BOARD_SIGN_POD_TOKEN. Never print either. Absent everything -> fail closed, exit 3.
 """
 from __future__ import annotations
 
@@ -261,9 +265,48 @@ def oidc_available() -> bool:
     return bool(os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL") and os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN"))
 
 
+POD_TOKEN_FILE_ENV = "BOARD_SIGN_POD_TOKEN_FILE"
+POD_TOKEN_ENV = "BOARD_SIGN_POD_TOKEN"
+
+
+def _pod_token() -> str | None:
+    """The pod caller bearer for /api/board-sign, or None. Never printed, never logged.
+
+    File first: BOARD_SIGN_POD_TOKEN_FILE names a mode-600 file on the pod
+    (rp-3090-now:/workspace/secrets/board-sign-pod-token); else BOARD_SIGN_POD_TOKEN carries
+    the value. A named file that is missing or empty is ABSENT, not an error: the caller then
+    fails closed exactly as it does without OIDC (exit 3), never half-signs.
+    """
+    path = os.environ.get(POD_TOKEN_FILE_ENV, "").strip()
+    if path:
+        try:
+            tok = Path(path).read_text(encoding="utf-8").strip()
+        except OSError:
+            tok = ""
+        if tok:
+            return tok
+    tok = os.environ.get(POD_TOKEN_ENV, "").strip()
+    return tok or None
+
+
+def pod_token_available() -> bool:
+    return _pod_token() is not None
+
+
 def signer_available() -> bool:
-    """GHA PKCS8 or Pages OIDC relay. Never a laptop key."""
-    return key_present() or oidc_available()
+    """GHA PKCS8, Pages OIDC relay, or the pod caller token. Never a laptop key."""
+    return key_present() or oidc_available() or pod_token_available()
+
+
+def signer_path() -> str:
+    """Which caller will sign this run — presence only, for the health sidecar."""
+    if key_present():
+        return "pkcs8"
+    if oidc_available():
+        return "github-oidc"
+    if pod_token_available():
+        return "pod-token"
+    return "none"
 
 
 def sign_via_oidc(payload: dict) -> str | None:
@@ -313,6 +356,54 @@ def sign_via_oidc(payload: dict) -> str | None:
     return sig if isinstance(sig, str) and len(sig) >= 64 else None
 
 
+def sign_via_pod_token(payload: dict) -> str | None:
+    """Ask Pages /api/board-sign with the pod caller token (owner ruling 2026-09-22).
+
+    Same request shape as sign_via_oidc; only the bearer differs. The signer answers with
+    payload_sha256 over the bytes IT canonicalised (JSON.stringify of the key-sorted object).
+    That digest must equal sha256(canonical_bytes(payload)) here, or the signature covers
+    other bytes than the leaf/envelope preimage and is refused. Any failure returns None,
+    which the callers turn into an unsigned card -> HALT-ON-UNSIGNED-LEAF. Never prints the token.
+    """
+    tok = _pod_token()
+    if not tok:
+        return None
+    sign_url = os.environ.get("BOARD_SIGN_URL") or "https://councilof.ai/api/board-sign"
+    body = json.dumps({"payload": payload}, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    sign_req = urllib.request.Request(
+        sign_url,
+        data=body,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {tok}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": UA,
+        },
+    )
+    try:
+        with urllib.request.urlopen(sign_req, timeout=30) as resp:
+            out = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        err = e.read()[:240].decode("utf-8", "replace") if e.fp else ""
+        print(f"board-sign (pod-token) HTTP {e.code} {err}", file=sys.stderr)
+        return None
+    except Exception as e:
+        print(f"board-sign (pod-token) failed: {type(e).__name__}", file=sys.stderr)
+        return None
+    if not isinstance(out, dict):
+        return None
+    if out.get("payload_sha256") != sha256_hex(canonical_bytes(payload)):
+        print(
+            "board-sign (pod-token): returned payload_sha256 != local canonical digest; "
+            "refusing a signature over other bytes",
+            file=sys.stderr,
+        )
+        return None
+    sig = out.get("sig_ed25519")
+    return sig if isinstance(sig, str) and len(sig) >= 64 else None
+
+
 def load_key():
     try:
         return _estate_load_key("BOARD_SIGN_KEY_PKCS8_B64")
@@ -324,10 +415,12 @@ def load_key():
 def sign_payload(payload: dict, key) -> str:
     if key is not None:
         return _estate_sign_bytes(key, canonical_bytes(payload))
-    remote = sign_via_oidc(payload)
+    remote = sign_via_oidc(payload) if oidc_available() else None
+    if not remote and pod_token_available():
+        remote = sign_via_pod_token(payload)
     if remote:
         return remote
-    raise RuntimeError("no PKCS8 and OIDC board-sign unavailable")
+    raise RuntimeError("no PKCS8, no OIDC and no pod-token board-sign available")
 
 
 # Compact CARD envelope — same reason as ENVELOPE_PREIMAGE_KEYS above: board-sign
@@ -565,6 +658,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="One writer for csoai.public-root/v1")
     ap.add_argument("--dry-run", action="store_true", help="run adapters + halts; do not write")
     ap.add_argument(
+        "--dry-run-out",
+        type=Path,
+        default=None,
+        help="with --dry-run: write the candidate {root, cards, proofs, health} to this path (outside the tree) for inspection",
+    )
+    ap.add_argument(
         "--validate-committed",
         action="store_true",
         help="only verify the committed tree + split check",
@@ -574,9 +673,13 @@ def main() -> int:
     # Never print the secret. Presence only.
     print(
         f"BOARD_SIGN_KEY_PKCS8_B64: {'present' if key_present() else 'absent'}; "
-        f"oidc: {'yes' if oidc_available() else 'no'}",
+        f"oidc: {'yes' if oidc_available() else 'no'}; "
+        f"pod-token: {'yes' if pod_token_available() else 'no'}",
         flush=True,
     )
+    if args.dry_run_out is not None and not args.dry_run:
+        print("--dry-run-out requires --dry-run", file=sys.stderr)
+        return EXIT_BAD
 
     committed = load_committed()
     validate_committed(committed)
@@ -758,7 +861,7 @@ def main() -> int:
             },
         }
         if not have_key:
-            print("HALT-ON-MISSING-KEY: no PKCS8 and no GHA OIDC board-sign; fail closed.", file=sys.stderr)
+            print("HALT-ON-MISSING-KEY: no PKCS8, no GHA OIDC and no pod-token board-sign; fail closed.", file=sys.stderr)
             write_halt_health(
                 committed,
                 reason="missing-key",
@@ -830,7 +933,7 @@ def main() -> int:
             "Envelope schema is public-root-v1, not card-v0. Leaves are card-v1: "
             "the digest covers the whole card, so a card's subject and source_urls "
             "cannot be rewritten without moving the root. "
-            "Unsigned until GHA signs this envelope (sig_ed25519). "
+            "Unsigned until the board signer (/api/board-sign) signs this envelope (sig_ed25519). "
             "did_intended names the intended leaf attestation identity only. "
             "Leaves MAY carry attestations — coverage harvest, not grades. "
             "Not MEASURED. Not a certificate. Free; not paywalled."
@@ -858,7 +961,7 @@ def main() -> int:
         root_body["sig_preimage"] = (
             "Ed25519 over canonical JSON of {kind, schema, as_of, merkle_root, "
             "card_count, did_intended} only. card_sha256[] is bound by merkle_root. "
-            "PKCS8 stays on Pages (OIDC). Not a certificate."
+            "PKCS8 stays on Pages; the caller authenticates by GitHub OIDC or the pod token. Not a certificate."
         )
         root_body["note"] = (
             "Envelope schema is public-root-v1, not a measurement card. This root.json envelope "
@@ -884,6 +987,7 @@ def main() -> int:
         "writer": "scripts/publish_public_root.py",
         "dry_run": bool(args.dry_run),
         "key": "present" if have_key else "absent",
+        "signer_path": signer_path(),
         "envelope": "signed" if envelope_sig else "unsigned",
         "halt": {"split": False, "unsigned_new_leaves": 0, "missing_key": not have_key},
         "xrpl_basket_merkle": basket_hex,
@@ -934,7 +1038,11 @@ def main() -> int:
     )
 
     if args.dry_run:
-        print("dry-run: no files written")
+        if args.dry_run_out is not None:
+            write_pretty(args.dry_run_out, {"root": root_body, "cards": cards, "proofs": proofs, "health": health})
+            print(f"dry-run: candidate written to {args.dry_run_out} (not the tree)")
+        else:
+            print("dry-run: no files written")
         return EXIT_OK
 
     cards_dir = ROOT / "public" / "cards"

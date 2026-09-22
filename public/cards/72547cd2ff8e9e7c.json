@@ -1,0 +1,77 @@
+{
+  "card": {
+    "as_of": "2026-09-22T08:45:38.618Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 70328,
+      "issuer": "Ripple",
+      "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 1100719020.819176,
+      "symbol": "RLUSD",
+      "verified_domain": "ripple.com",
+      "verified_via": "Bidirectional domain match"
+    },
+    "product": {
+      "sku": "xrpl-asset-state",
+      "tier": "free",
+      "free_fields": [
+        "issuer",
+        "currency",
+        "holders",
+        "supply",
+        "trust_lines"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "72547cd2ff8e9e7c48826d1f7697b8c19172531e6315d01a752bb91ad3b5d918",
+    "sig_ed25519": "075303884670e84d229ad04263aef8e0faea73e9780aca41a44fbac13608db0a0bf97ce5e9a799f6b744e18d1f3c52f3301d3185f91bfc016088fac6081b5e07",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL RLUSD public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "a80be648819b60ae7f3651ce2fb727c60d7f7a32ce10428432936c750d29d614",
+    "d7b4bbfaf60b5bf915883101a887808a2b11f3a79bf0b94c279cc427bfaf9351",
+    "a29d25b6214e5f62e6574cd21ab5e306bb5ba8449b43e7fbc3911e73f7be52b1",
+    "ffc90a321ec8f9d921dff1731afc829f13e50782122ae3bbae1d5a8a11c09ce7",
+    "42bead95c24b1083352b01cd495fd9ab7ea2d695dce9a216d80f44f21aeb49f0",
+    "3a15901dff2e484b6a9bbbffe215c101e60739da1338837ef8cb8e2cf1ed9011",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "afe81754a325cb9a9851eb9adf1a09b0a6f5ab638bfb302b55e6ee63cf62ff53",
+    "6b08948158e0fbc2cdc8388434c5cae8ed2797c65f7074439cd12330623557cd"
+  ]
+}
