@@ -804,26 +804,57 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "aa7a8211d3671330e0dcacf1a719125f9cb09dd4ba80272fc1fac617e652f367",
-    signer: "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
-    signature: "dff4ab2c4e1c8d80c9022330343f43145af4673a0a214cf24c9e2964d204f917aa8bdcbf6bc76fec8db0ff828524f057078e087fa53d4281b448bbce44e5ac00",
-    sig_input: "sha256(Python json.dumps(canonical LEDGER minus signature fields, sort_keys=True, separators=(',',':')) — ensure_ascii escapes non-ASCII as \\uXXXX)",
-    key_source: "did:web:csoai.org (estate signing key d4cb0eaa)",
-    note: "SIGNED 2026-08-22 (re-issue: 15th entry — 15-slot canon fix) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append MUST re-issue the signature over the new bytes; a stale signature is a published defect, never a silent edit, and never a bare id bump.",
+    id: "57e1d9d5502e5b313aaee9c6825a88cfd0d92c18eb3c52654db169a51b9f292b",
+    signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+    did: "did:web:csoai.org#board-attestation-1",
+    signature: "f56f102a2680a502399a3bc6152a11256fc2ba2076a089f90b70d8ade0c9d9474796a9349b49a364d776f1091d030c6aeaa95bcf1f1b123b64d80238135b430a",
+    attestation: {
+          "artifact": "csoai.corrections/0.1",
+          "content_id": "57e1d9d5502e5b313aaee9c6825a88cfd0d92c18eb3c52654db169a51b9f292b",
+          "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
+          "entries": 61,
+          "latest_entry_id": "C-2026-0922-02",
+          "ledger_canonical_bytes": 87374,
+          "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
+          "schema": "csoai.corrections-attestation/0.1",
+          "signed_at": "2026-09-22T17:29:58Z"
+    },
+    sig_input:
+      "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
+      "The attestation names the digest of the ledger body and the rule that produces it.",
+    key_source: "https://csoai.org/.well-known/did.json (did:web:csoai.org#board-attestation-1)",
+    note:
+      "RE-ISSUED 2026-09-22 over the current body through POST /api/board-sign on the pod caller token. " +
+      "The 2026-08-22 signature was under did:web:csoai.org#card-attestation-1 (d4cb0eaa) and covered a " +
+      "15-entry ledger; 46 appends followed and none re-issued it, which is why this endpoint read STALE " +
+      "for a month. Every append MUST re-issue: run scripts/sign-corrections-ledger.mjs. Bumping id alone " +
+      "cannot green the flag any more - id is inside the signed attestation, and the handler verifies the " +
+      "Ed25519 bytes at request time, not just a digest match.",
   },
 };
 
-// Serve-time staleness guard: recompute content_id of the committed body; if it
-// does not match the embedded signature's id, serve with a VISIBLE flag rather
-// than silently serving a broken signature. Doctrine: a stale signature is a
-// published defect, never a silent edit.
-// NOTE: the canonical MUST match the off-chain signer exactly. The estate signs
-// with Python json.dumps(body, sort_keys=True, separators=(",",":")) — recursive
-// key sort, compact separators, and ensure_ascii=True (every non-ASCII char as
-// \uXXXX). (An earlier version used an array-replacer JSON.stringify which emits
-// a top-level-only key whitelist and serializes every nested entry as {} — a
-// hash no signer could ever reproduce, so the guard flagged VALID ledgers as
-// STALE forever. Fix: reproduce the signer's canonical byte-for-byte.)
+// Serve-time signature check. Two independent things are established on every request, from the
+// same bytes the reader is about to receive:
+//
+//   1. the ledger body still canonicalises to the digest the signed attestation names, and
+//   2. the Ed25519 signature over that attestation verifies under did:web:csoai.org#board-attestation-1.
+//
+// BOTH, because either alone is a hole. A digest match alone is what this endpoint used to do,
+// and its own note warned about the consequence: "Updating id alone would make this field read
+// VALID while the Ed25519 bytes still cover the older content." Nothing stopped that from
+// happening — the flag was a string comparison, not a verification. It is a verification now, and
+// the id is INSIDE the signed attestation, so there is no id left to bump.
+//
+// The state is derived here, never typed. VALID is only ever printed after the check ran and
+// passed. A runtime that cannot do Ed25519 reports UNCHECKABLE, never VALID and never INVALID —
+// "we could not check" and "it does not verify" are different facts and must not share a word.
+//
+// NOTE: the canonical MUST match the off-chain signer exactly. The content digest is over
+// Python json.dumps(body, sort_keys=True, separators=(",",":")) with ensure_ascii=True (every
+// non-ASCII char as \uXXXX). (An earlier version used an array-replacer JSON.stringify which
+// emits a top-level-only key whitelist and serializes every nested entry as {} — a hash no
+// signer could ever reproduce, so the guard flagged VALID ledgers as STALE forever. Fix:
+// reproduce the signer's canonical byte-for-byte.)
 function canonJson(obj: unknown): string {
   const j = (o: unknown): string => {
     if (Array.isArray(o)) return "[" + o.map(j).join(",") + "]";
@@ -835,13 +866,174 @@ function canonJson(obj: unknown): string {
     return JSON.stringify(o);
   };
   // ensure_ascii=True: escape every non-ASCII char as \uXXXX (4-digit lowercase hex)
-  return j(obj).replace(/[\u0080-\uffff]/g, (c) => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0"));
+  return j(obj).replace(/[-￿]/g, (c) => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0"));
 }
+
+// The attestation is ASCII-only by construction (scripts/sign-corrections-ledger.mjs refuses to
+// sign one that is not), so canonJson reproduces the signer's own preimage rule — functions/_lib
+// /cardSign.ts canonicalBytes, which is the same sort and separators with ensure_ascii=false —
+// byte for byte over that object. One rule, no branch.
+
+/**
+ * did:web:csoai.org#board-attestation-1, mirrored from https://csoai.org/.well-known/did.json.
+ *
+ * Pinned rather than fetched. A Pages Function that fetched its own trust root on every request
+ * would make this flag depend on a second origin being reachable, and "UNCHECKABLE because
+ * csoai.org was slow" is not a fact about this ledger. The pin is compared against the live DID
+ * document by scripts/verify_corrections_signature.py, which the trust-chain pod loop runs on a
+ * schedule — a key rotation is supposed to be noticed there, loudly, not absorbed here silently.
+ */
+const BOARD_DID = "did:web:csoai.org#board-attestation-1";
+const BOARD_KEY_HEX = "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170";
+
+/**
+ * Keys this handler ADDS to the response at request time. They are computed from the ledger and
+ * are not part of the signed body, so a third party recomputing content_id from the served JSON
+ * strips exactly these first. Published in signature_check.unsigned_wrapper_fields so nobody has
+ * to read this file to reproduce the digest. Kept in lockstep with the same list in
+ * scripts/sign-corrections-ledger.mjs and scripts/verify_corrections_signature.py.
+ */
+const UNSIGNED_WRAPPER_FIELDS = [
+  "signature",
+  "signature_state",
+  "signature_check",
+  "correction_latency",
+  "note",
+  "fix_requires",
+];
 
 async function sha256Hex(s: string): Promise<string> {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
+
+function hexToBytes(h: string): Uint8Array {
+  const clean = h.trim().toLowerCase();
+  if (!/^[0-9a-f]*$/.test(clean) || clean.length % 2) throw new Error("not hex");
+  return Uint8Array.from(clean.match(/../g) ?? [], (b) => parseInt(b, 16));
+}
+
+/** true = verified, false = does not verify, null = this runtime could not check it. */
+async function verifyEd25519(msg: string, sigHex: string, pubHex: string): Promise<boolean | null> {
+  try {
+    const key = await crypto.subtle.importKey(
+      "raw",
+      hexToBytes(pubHex) as BufferSource,
+      { name: "Ed25519" },
+      false,
+      ["verify"],
+    );
+    return await crypto.subtle.verify(
+      { name: "Ed25519" },
+      key,
+      hexToBytes(sigHex) as BufferSource,
+      new TextEncoder().encode(msg),
+    );
+  } catch {
+    return null;
+  }
+}
+
+type LedgerSignature = {
+  id?: string;
+  signer?: string;
+  did?: string;
+  signature?: string;
+  attestation?: { content_id?: string; entries?: number; [k: string]: unknown };
+};
+
+export type SignatureState = "VALID" | "STALE" | "INVALID_SIGNATURE" | "UNSIGNED" | "UNCHECKABLE";
+
+export type SignatureCheck = {
+  state: SignatureState;
+  checked_at: string;
+  recomputed_content_id: string;
+  attested_content_id: string | null;
+  content_id_matches: boolean;
+  ed25519_verified: boolean | null;
+  key: string;
+  key_ed25519_hex: string;
+  unsigned_wrapper_fields: string[];
+  how: string;
+  means: string;
+};
+
+/**
+ * Exported so the check is testable without a running edge, and so nothing else in this estate
+ * can invent a second opinion about what VALID means.
+ */
+export async function checkSignature(ledger: Record<string, unknown>): Promise<SignatureCheck> {
+  const body = { ...ledger } as Record<string, unknown>;
+  for (const k of UNSIGNED_WRAPPER_FIELDS) delete body[k];
+  const recomputed = await sha256Hex(canonJson(body));
+
+  const sig = (ledger.signature ?? null) as LedgerSignature | null;
+  const att = sig?.attestation ?? null;
+  const attested = typeof att?.content_id === "string" ? att.content_id : null;
+  const contentIdMatches = attested !== null && attested === recomputed && sig?.id === recomputed;
+
+  const verified =
+    att && typeof sig?.signature === "string"
+      ? await verifyEd25519(canonJson(att), sig.signature, BOARD_KEY_HEX)
+      : null;
+
+  const state: SignatureState =
+    !sig || !att || typeof sig.signature !== "string"
+      ? "UNSIGNED"
+      : verified === null
+        ? "UNCHECKABLE"
+        : verified === false
+          ? "INVALID_SIGNATURE"
+          : contentIdMatches
+            ? "VALID"
+            : "STALE";
+
+  return {
+    state,
+    checked_at: new Date().toISOString(),
+    recomputed_content_id: recomputed,
+    attested_content_id: attested,
+    content_id_matches: contentIdMatches,
+    ed25519_verified: verified,
+    key: BOARD_DID,
+    key_ed25519_hex: BOARD_KEY_HEX,
+    unsigned_wrapper_fields: UNSIGNED_WRAPPER_FIELDS,
+    how:
+      "Computed on this request, from these bytes. Strip unsigned_wrapper_fields from this " +
+      "document, canonicalise with json.dumps(sort_keys=True, separators=(',',':'), " +
+      "ensure_ascii=True), SHA-256 it: that is recomputed_content_id and it must equal " +
+      "signature.attestation.content_id and signature.id. Then verify signature.signature as " +
+      "Ed25519 over the same canonical form of signature.attestation under key_ed25519_hex, " +
+      "which is the published key for " + BOARD_DID + ". Both must hold.",
+    means:
+      "VALID: both held. STALE: the signature verifies but the body has moved since it was " +
+      "issued, so it no longer describes what you are reading. INVALID_SIGNATURE: the bytes do " +
+      "not verify under the published key. UNSIGNED: no signature is published. UNCHECKABLE: " +
+      "this runtime could not perform Ed25519 — not a claim about the signature either way.",
+  };
+}
+
+const STATE_NOTE: Record<SignatureState, string> = {
+  VALID:
+    "The signature was verified on this request over these bytes, under " +
+    "did:web:csoai.org#board-attestation-1. Re-issued 2026-09-22 after a month of reading STALE: " +
+    "the ledger had been appended 46 times since it was signed on 2026-08-22 and nothing re-signed " +
+    "it. See signature_check for how to reproduce this yourself.",
+  STALE:
+    "The published signature verifies, but it was issued over an earlier body: the ledger has been " +
+    "appended since. A stale signature is a published defect, never a silent edit. TO CLEAR IT: " +
+    "re-issue over the current bytes with scripts/sign-corrections-ledger.mjs, which signs through " +
+    "POST /api/board-sign. signature.id is inside the signed attestation, so there is nothing that " +
+    "can be bumped to turn this field green without a real signature.",
+  INVALID_SIGNATURE:
+    "The published signature does NOT verify under the published key. Read nothing in this ledger " +
+    "as attested until that is resolved. This is a louder failure than STALE and is never to be " +
+    "downgraded to one.",
+  UNSIGNED: "No signature is published with this ledger. Unsigned is honest; a fabricated signature is not.",
+  UNCHECKABLE:
+    "This runtime could not perform the Ed25519 verification, so the signature is neither confirmed " +
+    "nor refuted here. UNCHECKABLE is a first-class state and is never printed as VALID.",
+};
 
 export const onRequestGet: PagesFunction = async () => {
   // TUI-4 (2026-09-13): correction latency, honestly bounded. Entries MAY now carry an
@@ -865,30 +1057,20 @@ export const onRequestGet: PagesFunction = async () => {
     note: "Measured only where both dates are explicit fields; never inferred from prose.",
   };
 
-  const body = { ...LEDGER } as Record<string, unknown>;
-  delete body.signature;
-  const canonical = canonJson(body);
-  const cid = await sha256Hex(canonical);
-  const embeddedId = (LEDGER.signature as { id?: string } | undefined)?.id ?? null;
-  const signatureState = embeddedId && cid === embeddedId ? "VALID" : "STALE";
-  const out0 =
-    signatureState === "VALID"
-      ? LEDGER
-      : {
-          ...LEDGER,
-        signature_state: "STALE",
-        note:
-          "Signature is stale because the ledger was appended after signing. A stale signature is a " +
-          "published defect, never a silent edit. TO CLEAR IT: re-sign the ledger with the estate key " +
-          "(did:web:csoai.org, signer d4cb0eaa) over the canonical form named in signature.sig_input — " +
-          "Python json.dumps(body minus signature, sort_keys=True, separators=(',',':'), ensure_ascii=True) " +
-          "— then update BOTH signature.id and signature.signature together. Updating id alone would make " +
-          "this field read VALID while the Ed25519 bytes still cover the older content, which is a worse " +
-          "defect than the stale flag it hides. The key is not in this repository, so this is an " +
-          "owner-supervised re-sign.",
-        fix_requires: "estate signing key (not in repo)",
-      };
-  const out = { ...out0, correction_latency: correctionLatency };
+  const check = await checkSignature(LEDGER as unknown as Record<string, unknown>);
+
+  // signature_state is ALWAYS emitted. It used to appear only when the check failed, so a reader
+  // could not tell a verified ledger from one where the field had been dropped — absence is not
+  // a pass.
+  const out: Record<string, unknown> = {
+    ...LEDGER,
+    signature_state: check.state,
+    signature_check: check,
+    note: STATE_NOTE[check.state],
+    correction_latency: correctionLatency,
+  };
+  if (check.state !== "VALID") out.fix_requires = "re-issue over the current bytes: scripts/sign-corrections-ledger.mjs";
+
   return new Response(JSON.stringify(out, null, 2), {
     headers: {
       "content-type": "application/json",
