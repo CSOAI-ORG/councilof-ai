@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import HeroSlides from "@/components/HeroSlides";
 import LiveCounters from "@/components/LiveCounters";
-import MembershipStrip from "@/components/MembershipStrip";
 import HomeComposer from "@/components/home/HomeComposer";
 import ToolStack from "@/components/home/ToolStack";
 import LivingStages from "@/components/home/LivingStages";
@@ -73,7 +72,6 @@ export default function HomeVerify() {
 
       {/* Where we take part — text pills read from the committed manifest, each linking to its
           evidence. No logos, no count. Participation is not endorsement. */}
-      <MembershipStrip variant="home" />
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:py-24" style={{ paddingBottom: "calc(6rem + var(--cookie-banner-h, 0px))" }}>
         <section aria-labelledby="os-h1">
