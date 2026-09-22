@@ -97,6 +97,34 @@ without measuring anything.
 `accuracy.baseline`. Recovered items scoring far above the subject's own
 measured rate is the signature of a leak, not of a better parser.
 
+## What the comparison found
+
+Offline replay over 4,406 retained exact-label answers from the 2026-09-22 mill
+restart (77 runs, snapshot `11502e7e…`). The baseline is `exact-label`, and
+replaying it reproduces all 4,406 stored labels with 0 mismatches.
+
+| parser | agreement | n | recovered | of which inferred | cells moved |
+|---|---|---|---|---|---|
+| `read-label` | 99.93% | +3 | 3 | 0 | 1 |
+| `ollama-schema` phi3.5:3.8b | 98.41% | +70 | 70 @ 0.80 | 50 (71%) @ 0.90 | 9, two cross n≥30 |
+| `ollama-schema` qwen2.5:7b | 98.82% | +52 | 52 @ 0.81 | — | 6 |
+| `ollama-schema` mistral:7b | 88.29% | **−430** | 43 @ 0.77 | — | 8, two cross n≥30 |
+
+The subject models' own measured accuracy over the same items is **0.5597**.
+
+* **Truncation.** Of the 43 answers cut off at the token budget, `read-label`
+  recovers 0 and the typed path recovers 33. That is the one thing typed output
+  does that a string match cannot.
+* **Inference.** 50 of phi3.5's 70 recoveries returned a label the answer does
+  not contain anywhere. Those score **0.90**, against **0.589** for the subjects
+  on the same cells. On `llama3.1:8b / care` the parser scores 0.96 where the
+  model it is reading scores 0.29 — the parser is doing the task, not reading
+  the answer.
+* **Reproducibility.** Two runs of the identical parser, 75 minutes apart over
+  identical bytes, recovered the same 70 items and gave one of them a different
+  label — moving `llama3.1:8b / safety` from 0.9333 to 0.9667. That cell is also
+  the one this parser would newly publish.
+
 ## Running the comparison
 
 ```bash

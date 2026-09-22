@@ -176,7 +176,12 @@ class TypeSafeJevParser:
 
         answer = response.choices.get("stated_label")
         if answer is None:
-            return Extraction(None, None, "TRANSPORT_ERROR")
+            # Our instrument failing, not the subject declining to answer. It is
+            # raised so it can never be counted as a non-answer and quietly
+            # leave the denominator.
+            raise ParserTransportError(
+                "TypeSafe returned no choice answer for 'stated_label'"
+            )
         confidence = float(answer.confidence)
         if answer.choice == ABSTAIN_LABEL:
             return Extraction(None, confidence, "ABSTAIN")

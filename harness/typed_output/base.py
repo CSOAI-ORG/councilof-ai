@@ -109,7 +109,11 @@ REASONS: frozenset[str] = frozenset(
         "ABSTAIN",  # the extractor explicitly declined (its NONE escape)
         "NOT_IN_LABEL_SET",  # extractor produced a token outside the label set
         "LOW_CONFIDENCE",  # extractor answered below the configured floor
-        # the parser itself failed -- distinct from "the model did not answer"
+        # The parser itself failed. Implementations RAISE ParserTransportError
+        # rather than returning this; it exists for a caller that has retried,
+        # given up, and wants to record the failure as a parser failure. It must
+        # never be used to mean "the subject did not answer", because that would
+        # put our own outages into the board as a smaller denominator.
         "TRANSPORT_ERROR",
     }
 )

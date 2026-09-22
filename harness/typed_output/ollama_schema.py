@@ -194,20 +194,37 @@ class OllamaSchemaParser:
         }
         body = self._post("/api/generate", payload)
         raw = body.get("response")
+        # From here on, anything wrong is OUR instrument failing, and it is
+        # raised rather than returned. Returning Extraction(None, ...) would
+        # record our own outage as "the subject did not answer" -- it would
+        # leave the denominator quietly, and a run could lose half its items to
+        # a busy server while reporting a clean, smaller n. Measured on the pod
+        # on 2026-09-22: with the mill saturating Ollama, every call that
+        # reached the model came back empty, and this path turned three
+        # infrastructure failures into three assertion failures about the
+        # model's behaviour.
         if not isinstance(raw, str) or not raw.strip():
-            return Extraction(None, None, "TRANSPORT_ERROR")
+            raise ParserTransportError(
+                f"ollama returned no response body for {self.model!r}"
+            )
         try:
             parsed = json.loads(raw)
-        except json.JSONDecodeError:
-            # The schema should make this impossible; if it happens the parser
-            # failed, which is not the same fact as "the model did not answer".
-            return Extraction(None, None, "TRANSPORT_ERROR")
+        except json.JSONDecodeError as error:
+            raise ParserTransportError(
+                f"ollama returned non-JSON under a JSON schema: {raw[:120]!r}"
+            ) from error
         if not isinstance(parsed, dict):
-            return Extraction(None, None, "TRANSPORT_ERROR")
+            raise ParserTransportError(
+                f"ollama returned a non-object under an object schema: {raw[:120]!r}"
+            )
 
         label = parsed.get("label")
         confidence = _clamp_confidence(parsed.get("confidence"))
-        if label == NONE_TOKEN or label is None:
+        if label is None:
+            raise ParserTransportError(
+                "ollama omitted the required 'label' field despite the schema"
+            )
+        if label == NONE_TOKEN:
             return Extraction(None, confidence, "ABSTAIN")
         if not isinstance(label, str) or label not in allowed:
             # Belt and braces: the enum already forbids this. We re-check anyway
