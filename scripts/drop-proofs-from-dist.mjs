@@ -8,9 +8,10 @@ import { existsSync, rmSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 const dist = resolve(process.argv[2] || "dist/client");
 const dir = resolve(dist, "proofs");
-const redirects = resolve(dist, "_redirects");
+// The rule is checked at its SOURCE (public/_redirects): generate-redirects.mjs writes dist/_redirects later in the chain.
+const redirects = existsSync(resolve("public/_redirects")) ? resolve("public/_redirects") : resolve(dist, "_redirects");
 if (!existsSync(redirects) || !/^\/proofs\/\*\s+https:\/\/huggingface\.co\/datasets\/csoai\/councilof-ai-mirror\/resolve\/main\/public\/proofs\/:splat\s+302/m.test(readFileSync(redirects, "utf8"))) {
-  console.error("✗ drop-proofs-from-dist: refusing — dist/_redirects does not carry the /proofs/* → mirror 302 rule, so dropping proofs/ would break every /proofs/* link");
+  console.error("✗ drop-proofs-from-dist: refusing — _redirects does not carry the /proofs/* → mirror 302 rule, so dropping proofs/ would break every /proofs/* link");
   process.exit(11);
 }
 if (existsSync(dir)) { rmSync(dir, { recursive: true, force: true }); console.log("✓ drop-proofs-from-dist: dist/client/proofs removed (served via 302 from the HF mirror)"); }
