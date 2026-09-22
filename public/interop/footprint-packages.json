@@ -1,0 +1,33 @@
+{
+  "schema": "csoai.footprint-packages/0.1",
+  "as_of": "2026-09-22",
+  "purpose": "The committed list of package names /api/footprint sums third-party download counters over. Names only. No count lives here: every number is read from the registry counter at request time and carries its own source_url and as_of.",
+  "derivation": "Seeded 2026-09-22 by grepping this repository for pypi.org/project/<name> and npmjs.com/package/<name>, then asking each registry (https://pypi.org/pypi/<name>/json, https://registry.npmjs.org/<name>) whether the name exists. A name is kept only if the registry answered 200 on the check date AND the registry's author record names CSOAI (author or author_email at csoai.org). Names published under MEOK AI Labs (meok.ai) answered 200 but are a different entity's distribution and are not counted here.",
+  "checked": "2026-09-22",
+  "pypi": [
+    { "name": "csoai-gspc", "registry_status": 200, "author": "CSOAI Ltd <nicholas@csoai.org>", "checked": "2026-09-22" },
+    { "name": "inspect-signed-receipt", "registry_status": 200, "author": "CSOAI Ltd (Council of AI) <nicholas@csoai.org>", "checked": "2026-09-22" },
+    { "name": "csoai", "registry_status": 200, "author": "Council of AI (CSOAI LTD, UK 16939677)", "checked": "2026-09-22" },
+    { "name": "claimguard", "registry_status": 200, "author": "CSOAI Ltd <nicholas@csoai.org>", "checked": "2026-09-22" },
+    { "name": "agent-incident-reporter-mcp", "registry_status": 200, "author": "MEOK AI Labs / CSOAI LTD <nicholas@csoai.org>", "checked": "2026-09-22", "note": "joint authorship; kept by the csoai.org author-email rule" }
+  ],
+  "npm": [
+    { "name": "csoai-gspc-mcp", "registry_status": 200, "maintainer": "csga_global", "checked": "2026-09-22" },
+    { "name": "csoai-governance-mcp", "registry_status": 200, "maintainer": "csga_global", "checked": "2026-09-22" }
+  ],
+  "unresolved": {
+    "note": "Grepped from the repository but the registry answered 404 on the check date. Not counted; listed so the gap is visible.",
+    "pypi": ["csoai-gspc-mcp"],
+    "npm": ["gspc-card-verifier", "csoai-gspc", "csoai-api-server", "@csoai/layer0", "@csoai/gspc-svg", "@csoai/gspc-pdf", "@csoai/gspc-evm-bridge", "@csoai/gspc-cli", "@csoai/gspc-arith"]
+  },
+  "excluded_by_author_rule": {
+    "count": 29,
+    "registry": "pypi",
+    "reason": "Answered 200 on 2026-09-22 but the PyPI author record is MEOK AI Labs / meok.ai. CSOAI measures; MEOK hosts. Their downloads are not this estate's distribution. Re-derive with the grep in `derivation`."
+  },
+  "huggingface": {
+    "author": "csoai",
+    "listing": "https://huggingface.co/api/datasets?author=csoai&expand[]=downloads&limit=1000",
+    "note": "Datasets are enumerated live from the listing, not from this file."
+  }
+}
