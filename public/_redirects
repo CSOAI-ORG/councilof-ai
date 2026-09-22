@@ -675,6 +675,9 @@
 
 # ================= DYNAMIC (splat) RULES — 100 MAX, NOTHING BELOW THE CATCH-ALL =================
 # --- static asset trees: served directly, never routed to the app ---
+# 2026-09-22: proofs (3,993 .ots) live on the HF mirror to keep the Pages upload under the 20,000-file cap.
+/proofs/* https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/proofs/:splat 302
+
 /sov-space/*    /gspc-arena             308
 /widget/*               /dashboard?tab=learn         308
 /benchmarks/*  /benchmarks/:splat  200
@@ -711,3 +714,5 @@
 /tools.html  /tools  308
 /about.html  /about  308
 /dashboard.html  /dashboard  308
+
+# The pod deploy pipeline drops dist/client/proofs; this rule keeps every /proofs/* link resolving.
