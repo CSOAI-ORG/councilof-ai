@@ -126,6 +126,59 @@ have zero identifier overlap. Machine-readable state: `/interop/root-witness-lat
 
 `POST https://councilof.ai/mcp` — {{MCP_TOOLS}} tools: {{MCP_FREE_WORD}} free readers plus {{MCP_PAID_WORD}} x402-metered evidence tools. Quote live `tools/list` and GET https://councilof.ai/mcp; do not freeze names here. tools/call without `x_payment` returns the route's 402 as structuredContent. A 402 is not settlement. Measurement, not certification.
 
+## 7b. CLAIM MAINTENANCE — the category, the specification, the register
+
+Claim maintenance: the continuous, independent observation of the public claims an organisation
+makes about itself or its products. Each claim is captured verbatim with its source URL and access
+date, hashed and timestamped so the record cannot be quietly rewritten, re-read on a schedule, every
+observed change recorded without alleging anything, and measured against public evidence where — and
+only where — public evidence can settle it.
+
+Specification v0.1, dedicated to the public domain under CC0 1.0 so it can be adopted, forked or
+translated without our permission: https://councilof.ai/spec/claim-maintenance/v0.1/
+  · document of record (Markdown, digest published in spec.json):
+    https://councilof.ai/spec/claim-maintenance/v0.1/claim-maintenance-v0.1.md
+  · artifact JSON Schema:
+    https://councilof.ai/spec/claim-maintenance/v0.1/schema/claim-artifact-v0.1.schema.json
+  · version index (a published version is never edited; v0.2 supersedes by existing):
+    https://councilof.ai/spec/claim-maintenance/
+  · cite as: Council of AI. Claim Maintenance, version 0.1. CSOAI Ltd, 2026-09-22.
+    DOI 10.5281/zenodo.22901908 · all versions 10.5281/zenodo.22901781 · https://zenodo.org/records/22901782
+    The deposited bytes and the served bytes are identical (same SHA-256), which is why the DOI is
+    recorded in a sidecar rather than written into the document of record.
+
+Register of every subject we maintain claims on — GENERATED from the registry files on disk, never
+hand-listed, carrying its own `as_of`:
+  GET https://councilof.ai/api/claims/register        (same bytes: /spec/claim-maintenance/register.json)
+Read `totals.subjects`, `totals.claims` and `totals.by_state` LIVE. Do not freeze any of them here:
+this register's whole discipline is that it counts what exists, and a number typed into a file is a
+number nothing retires.
+
+Reference implementation (MIT), runnable by a stranger with no dependencies:
+  node scripts/claim-capture.mjs --url <url> --claim "<verbatim text>" --out artifact.json
+  node scripts/claim-capture.mjs --verify artifact.json
+It extracts visible text by the specification's §6.3 rules, computes the claim and artifact digests
+by §6, and rejects an artifact whose bytes have been altered after the digest was taken — including
+a rewritten evidence URL, the field that has historically sat outside the hash.
+
+The four states, and there are only four:
+  CLAIM_CAPTURED  read from its public source, recorded verbatim, hashed, dated, scheduled. Nothing measured.
+  CLAIM_MEASURED  a measurement exists beside the claim, with window, denominator, method and result. NOT a verdict.
+  UNMEASURED      settleable in principle, not yet measured. First-class; published as prominently as any other.
+  UNCHECKABLE     no public evidence can settle it. A statement about the evidence, never about the subject.
+
+What claim maintenance is NOT: not fact-checking (no verdict is reached), not certification (no mark,
+badge or grade arises from any state), not auditing (no engagement, no non-public records, no opinion),
+not reputation scoring (no score, rank or index may be derived from these counts), not adversarial
+journalism (no theory of anyone's intent). It asserts no falsity about anyone. The boundary between an
+OBSERVED CHANGE (the bytes at this URL differ from the previous read — that is the whole statement) and
+a FINDING (a measurement produced this value, over this window, by this method) is the discipline that
+makes it honest. `submitted` is not `anchored`: a timestamp receipt is submitted until its upgrade has
+been run and its attestation path verified.
+
+Human page: https://councilof.ai/claim-maintenance/
+Right of reply: nicholas@csoai.org; corrections published at https://councilof.ai/api/corrections
+
 ## 8. THE ACCESS SURFACES
 
 The count is not in this heading on purpose: it was "THE 5 ACCESS SURFACES" while two live
