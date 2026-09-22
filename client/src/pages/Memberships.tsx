@@ -38,6 +38,7 @@ const EXCLUDED_REASON_LABEL: Record<string, string> = {
   not_applicable: "no membership exists",
   in_flight: "application in flight",
   no_record: "no record",
+  unverified: "cannot verify",
 };
 
 export default function Memberships() {

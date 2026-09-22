@@ -37,6 +37,10 @@ Yes, at the Silver tier: CSOAI LTD completed the Linux Foundation membership agr
 
 Yes, as a General Member: the Alliance's onboarding mail of 2026-09-21 records CSOAI LTD as a member after an application received on 2026-09-18. The evidence is private correspondence because the Alliance's site did not list members on 2026-09-22. Membership is not adoption: the note we contributed to the Alliance's SAFE discussion asks questions of the group and requests nothing be adopted.
 
+## Has Council of AI joined the EU AI Pact?
+
+Yes. The European Commission's AI Office wrote on 2026-08-20 thanking Council of AI for having joined the AI Pact and invited us to its community. The evidence is that correspondence rather than a public page, because the Commission's AI Pact page did not name us when checked on 2026-09-22. We have not signed the AI Pact's voluntary pledges, so this is participation in the community and not a signatory claim, and it says nothing about whether any AI system complies with the AI Act.
+
 ## Does being in the MCP Registry mean the servers are endorsed?
 
 No. Servers under io.github.CSOAI-ORG are in the official MCP Registry, and the registry API at https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG returns them. Entries are self-published under a GitHub namespace; the registry reviews and ranks nothing, and a listing says nothing about whether any client uses them.
@@ -52,6 +56,10 @@ No. Council of AI has filed public comments with NIST (on AI 200-2, AI 300-1 and
 ## Has Council of AI filed with the US Treasury on the GENIUS Act docket?
 
 Not yet. A comment on Treasury's GENIUS Act rule, Federal Register document 2026-16796 at https://www.federalregister.gov/documents/2026/08/18/2026-16796/genius-act-regulations-on-payment-stablecoin-issuance-offer-and-sale, docket TREAS-DO-2026-0496, is drafted and will be submitted by hand at regulations.gov; until a tracking number exists this entry is marked PENDING and claims nothing. Comments close on 2026-10-19.
+
+## Is Council of AI a member of the Open Invention Network?
+
+Yes. CSOAI LTD signed the OIN 2.0 License Agreement on 2026-08-15 and is named on Open Invention Network's public list of licensees at https://openinventionnetwork.com/community-of-licensees/. That is a royalty-free patent cross-licence covering the Linux System definition — a patent non-aggression arrangement, not a standards body and not an endorsement of anything Council of AI measures or publishes.
 
 ## Every entry, with what it proves and what it does not
 
@@ -112,9 +120,19 @@ Not yet. A comment on Treasury's GENIUS Act rule, Federal Register document 2026
   - Date basis: Application received 2026-09-18 (INBOX 8859); the Alliance's onboarding mail of 2026-09-21 opens 'Thank you for becoming a member' (INBOX 8988), the same day the participation agreement was completed.
   - What it proves: The Open Secure AI Alliance records CSOAI LTD as a General Member and has begun onboarding.
   - What it does not prove: secureaialliance.org did not list us on 2026-09-22. The discussion note we sent to the Alliance's SAFE thread on 2026-09-21 is a contribution, not adoption; membership is not an endorsement of Council of AI tooling.
+- **BSI — comments on draft BS ISO/IEC 4213 (project 2024-01986), committee ART/1** — a contributor to this body, since 2026-09-15; state VERIFIED.
+  - Evidence: private evidence (private email): INBOX 8363 (AdminStart@bsigroup.com, 2026-09-15) and INBOX 7116 (2026-08-22)
+  - Date basis: Fourteen comments on the draft were sent to the BSI project mailbox on 2026-09-15; BSI Standards Assist replied the same day that the comments "have now been shared with the committee manager of ART/1" (INBOX 8363). A BSI Standards Development account was created on 2026-08-22 (INBOX 7116).
+  - What it proves: BSI received fourteen comments from Council of AI on a draft British Standard and passed them to the manager of committee ART/1, the UK committee for artificial intelligence.
+  - What it does not prove: We are NOT a member of ART/1 and have not been nominated to it. Commenting on a public draft is open to anyone; it is not committee membership, it is not a vote, and no comment of ours has been accepted into any standard. ART/1 mirrors ISO/IEC JTC 1/SC 42 and CEN-CENELEC JTC 21, and this row says nothing about our standing in either.
 
 ### Registries & indexes
 
+- **mcpservers.org directory — server "Council of AI — GSPC"** — listed in this body, since 2026-09-05; state VERIFIED.
+  - Evidence: private evidence (private email): INBOX 7848 (contact@mcpservers.org, 2026-09-05)
+  - Date basis: mcpservers.org wrote on 2026-09-05 that the submission "has been approved and is now live", naming the listing URL https://mcpservers.org/servers/csoai-org/councilof-ai (INBOX 7848).
+  - What it proves: A Council of AI MCP server was accepted into the mcpservers.org directory.
+  - What it does not prove: The listing is self-submitted and the directory reviewed the submission, not the measurements. The row is private evidence because mcpservers.org answers HTTP 403 to every automated client: the only place our name appears in that response is the URL we ourselves requested, echoed back in the challenge, which proves nothing about the page.
 - **MCP Registry (registry.modelcontextprotocol.io), namespace io.github.CSOAI-ORG** — listed in this body, since 2026-05-07; state VERIFIED.
   - Evidence: <https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG>
   - Date basis: Earliest publishedAt among the io.github.CSOAI-ORG servers returned by the registry API on 2026-09-22.
@@ -156,7 +174,7 @@ Not yet. A comment on Treasury's GENIUS Act rule, Federal Register document 2026
   - What it proves: The gspc server has a page in the Smithery directory.
   - What it does not prove: A directory page is a listing. Any score the directory shows is the directory's, not a measurement of ours, and a listing is not adoption.
 
-### Scholarly ids
+### Scholarly identifiers
 
 - **ORCID iD 0009-0001-3869-1068 (Nicholas Templeman)** — registered with this body, since 2026-08-22; state VERIFIED.
   - Evidence: <https://orcid.org/0009-0001-3869-1068>
@@ -213,6 +231,27 @@ Not yet. A comment on Treasury's GENIUS Act rule, Federal Register document 2026
   - What it does not prove: Not filed. The evidence link is the Federal Register document rather than the regulations.gov docket page because regulations.gov answers HTTP 403 to every non-browser client, which would make this row fail its own check for a reason that has nothing to do with the filing. Comments are still submitted at https://www.regulations.gov/docket/TREAS-DO-2026-0496. When the comment is filed, the row will carry the regulations.gov tracking number; a filing is still not recognition.
   - Closes: 2026-10-19
 
+### Policy programmes
+
+- **European Commission — AI Pact** — a participant in this body, since 2026-08-20; state VERIFIED.
+  - Evidence: private evidence (private email): INBOX 7036 (EU-AI-PACT@ec.europa.eu, 2026-08-20) and INBOX 7035 (2026-08-20)
+  - Date basis: The AI Office wrote on 2026-08-20 opening "Thank you for having recently joined the AI Pact" and invited this address to the AI Pact community on Microsoft Teams (INBOX 7036); the Teams guest invitation arrived the same day (INBOX 7035).
+  - What it proves: The European Commission's AI Office records this address as having joined the AI Pact and invited it to the AI Pact community.
+  - What it does not prove: We have not signed the AI Pact's voluntary pledges, and the Commission's public AI Pact page did not name Council of AI when checked on 2026-09-22 — so this row is private evidence, not a signatory claim. Joining the community is not a statement by anyone that we comply with the AI Act, and it is not a relationship with the AI Office: the AI Office declined in writing on 2026-08-17 to review or validate our work.
+
+### Open-source commons
+
+- **Open Invention Network — OIN 2.0 licensee** — a member of this body, since 2026-08-15; state VERIFIED.
+  - Evidence: <https://openinventionnetwork.com/community-of-licensees/>
+  - Date basis: The OIN 2.0 License Agreement was signed on 2026-08-15 and OIN wrote the same day, "Welcome to OIN 2.0 — You're Officially Part of the Community!" (INBOX 6827). OIN's public community page lists us as CSOAI LTD.
+  - What it proves: CSOAI LTD has signed the OIN 2.0 License Agreement and appears by name on Open Invention Network's public list of licensees, which means we grant and receive a royalty-free patent cross-licence covering the Linux System definition.
+  - What it does not prove: This is a patent non-aggression arrangement and nothing else. It is not a standards body, it is not an AI governance body, and OIN has reviewed, endorsed or adopted nothing we publish. It says nothing about our measurements.
+- **LOT Network — member** — a member of this body, since 2026-08-23; state VERIFIED.
+  - Evidence: <https://lotnet.com/members/?dir=1&name_directory_startswith=C>
+  - Date basis: LOT Network wrote on 2026-08-23 with the subject "Welcome CSOAI LTD to LOT Network" (INBOX 7148), after the joining mail of 2026-08-14 (INBOX 6829). The public member directory lists CSOAI LTD under C.
+  - What it proves: CSOAI LTD appears by name in LOT Network's public member directory, which means we take part in its licence-on-transfer arrangement against patent assertion entities.
+  - What it does not prove: Like the OIN row, this is a patent arrangement and nothing more. LOT Network is not a standards body, not an AI governance body, and has adopted, reviewed or endorsed nothing we publish.
+
 ## Named and not listed
 
 Bodies a reader might expect to find above, and are not there. Three reasons appear: we hold something weaker than the word would suggest, we are not eligible, or the body has no membership to hold. Each says which. This list exists so that absence from the table is an answer rather than a gap.
@@ -228,6 +267,9 @@ Bodies a reader might expect to find above, and are not there. Three reasons app
   - Source: <https://lfaidata.foundation/join/>
 - **IETF** — _not applicable_ — The IETF has no membership. What is true and checkable is listed above as three mailing-list rows and one Internet-Draft. Three further submissions uploaded on 2026-09-12 were never posted and are not documents on the Datatracker, so they are not participation and are not counted here.
 - **C2PA conformance programme** — _in flight_ — Distinct from C2PA membership, which is listed above with public evidence. A conformance application has been in flight since 2026-08-17 and must be resubmitted on the programme's 0.2 intake form. An application is not a conformance result and nothing about it is claimed on any Council of AI surface.
+- **MLCommons** — _no record_ — A full sweep of nicholas@csoai.org across the whole of 2026 — every folder, headers and full-text body search — returns exactly one message containing the word MLCommons, and it is outbound: a note we wrote on 2026-09-17 about a measurement WE published, in which MLCommons AILuminate is one of fifteen organisations we examined. There is no welcome, no invoice, no agreement and no confirmation of any kind. Council of AI is not a member of MLCommons and no row claims otherwise. MLCommons does publish a free Observer tier for organisations of nought to nine employees, which we would qualify for; if we ever apply, the conflict — that we have published a measurement about them — is declared in the application and recorded here.
+- **OpenML** — _unverified_ — A sign-up mail arrived on 2026-08-19 (INBOX 7000) and it is a verification request: "To verify your email address, please click". No confirmation followed, no later OpenML mail exists, and openml.org serves its profiles from a client-side application that we could not query for a user. We therefore cannot show that the account was ever completed. Signing up is not registration, so there is no row — and this entry exists so the absence is recorded rather than read as an oversight.
+- **Glama** — _unverified_ — Glama mail confirms an account from 2026-04-16 and several approved MCP-server listings. We cannot show it publicly: Glama's index requires an API key, and its terms require visible attribution and a link wherever its records are displayed, which is a condition on republishing rather than an evidence URL a stranger can open. Listed here rather than as a row until a stable public URL exists.
 - **NVIDIA Inception** — _no record_ — No application or acceptance record exists in the mailbox as of 2026-09-22. Not listed.
 - **Agentry** — _no record_ — The operator's follow-up mail of 2026-09-15 says the agent is listed, but no public listing URL was located and the automated listing confirmation is not in the mailbox. Not listed until a stranger can open the page.
 
